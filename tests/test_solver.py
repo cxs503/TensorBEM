@@ -23,5 +23,14 @@ def test_solver_rejects_wrong_boundary_value_shape():
 def test_constant_boundary_value_has_near_zero_flux():
     mesh = regular_polygon(48)
     result = solve_laplace_dirichlet(mesh, np.ones(48))
-    # Constant Dirichlet data represent a constant harmonic field.
-    assert np.sqrt(np.mean(result.normal_derivative**2)) < 0.15
+    assert np.sqrt(np.mean(result.normal_derivative**2)) < 1.0e-8
+
+
+def test_manufactured_linear_harmonic_solution_improves_with_refinement():
+    errors = []
+    for n in (24, 48):
+        mesh = regular_polygon(n)
+        result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
+        theta = np.arctan2(mesh.centers[:, 1], mesh.centers[:, 0])
+        errors.append(np.sqrt(np.mean((result.normal_derivative - np.cos(theta)) ** 2)))
+    assert errors[1] < errors[0]
