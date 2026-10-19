@@ -90,3 +90,41 @@ def solve_laplace_dirichlet(
         condition_number=condition,
         residual_l2=residual,
     )
+
+
+def evaluate_interior_field(
+    mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
+) -> FloatArray:
+    """Evaluate the harmonic potential at interior points from its boundary traces.
+
+    The boundary representation uses midpoint quadrature and is intended for
+    points strictly inside the domain, away from the boundary.
+    """
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 2:
+        raise ValueError("points must have shape (M, 2)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    if (
+        result.normal_derivative.shape != (mesh.panel_count,)
+        or result.boundary_values.shape != (mesh.panel_count,)
+    ):
+        raise ValueError("result boundary traces must match the mesh panel count")
+
+    delta = targets[:, None, :] - mesh.centers[None, :, :]
+    distance_squared = np.sum(delta**2, axis=2)
+    if np.any(distance_squared == 0.0):
+        raise ValueError("evaluation points must not coincide with panel centers")
+    distances = np.sqrt(distance_squared)
+    single_layer = -np.log(distances / REFERENCE_LENGTH) / (2.0 * np.pi)
+    double_layer = np.sum(
+        delta * mesh.normals[None, :, :], axis=2
+    ) / (2.0 * np.pi * distance_squared)
+    return np.sum(
+        (
+            single_layer * result.normal_derivative[None, :]
+            - double_layer * result.boundary_values[None, :]
+        )
+        * mesh.lengths[None, :],
+        axis=1,
+    )
