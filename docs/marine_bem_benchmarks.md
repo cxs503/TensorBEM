@@ -22,12 +22,16 @@ TensorBEM 当前是二维有界域 Laplace BEM 原型，采用直线常数面元
 |---|---|---|---|
 | 制造解 / 调和场 | 圆域或多边形域的线性调和势，边界势与法向导数已知 | 核函数符号、边界积分方程、网格收敛 | 已有单位圆制造解 |
 | 二维圆柱附加质量 | 无限流体中圆柱横向平移；\(m_A'=\rho\pi a^2\) | 势与通量边界迹、法向和力积分、几何离散收敛 | 本文实现；仅验证一个特定 Fourier 模态 |
-| 三维球体附加质量 | 球体平移；\(m_A=\tfrac12\rho V\) | 三维曲面网格、面元积分及方向性 | 需要三维曲面 BEM |
-| 自由液面圆柱辐射 / 绕射 | 圆柱简谐升沉等解析或级数解；比较频率相关的附加质量、阻尼及波浪力 | 自由液面条件、辐射条件、频率扫掠和波浪力 | 需自由液面 Green 函数或相应边界条件；Ursell [2] 是重要解析参照 |
+| 三维球体附加质量 | 无界流体中球体平移；\(m_A=\tfrac12\rho V\) | 三维曲面网格、面元积分及方向性 | 需要三维曲面 BEM；可作为不含自由液面的首个三维基准 [1, 4] |
+| 垂直圆柱规则波绕射 | MacCamy–Fuchs 圆柱绕射级数；比较无量纲波浪力随 \(ka\) 的变化 | 入射波、自由液面/海床条件、辐射条件及压力积分 | 需要自由液面模型；垂直贯底圆柱是经典解析基准 [5] |
+| 自由液面圆柱辐射 | 圆柱简谐升沉；比较频率相关的附加质量与阻尼 | 自由液面条件、辐射条件、频率扫掠 | 需要相应边界条件；Ursell [2] 是重要解析参照 |
+| 浮动半球辐射 / 绕射 | 强迫简谐运动浮动半球的波浪力与运动势 | 三维自由液面、刚体运动与辐射/绕射耦合 | 中阶解析/理论参照；几何简单但边界条件比球体附加质量复杂 [6] |
 | 有限水深与复杂截面 | 矩形驳船、带棱角浮体、近自由液面结构 | 角点/水线附近奇异性、近奇异积分及网格敏感性 | 需强化积分和几何处理 |
 | 船型模型试验对比 | Wigley 等规则船型或标准集装箱船的运动响应、波浪载荷 | 工程几何、边界条件与试验可比性 | 属于确认；须明确船模、航速、波况、尺度和数据来源 |
 
 实现顺序宜为：先用制造解验证数值实现，再用圆柱/球体解析解验证几何和积分量，继而验证自由液面圆柱辐射与绕射，最后开展有限水深、复杂船型和试验对比。对试验基准，应报告实验条件及不确定度；不可将与某一组试验吻合等同于通用正确性。
+
+对自由液面问题，可将独立势流程序（例如 WAMIT、NEMOH 或 Capytaine）作为数值互证来源；它们不是解析真值。比较前必须统一时间因子、坐标、法向、系数定义和正负号，并报告参考网格与收敛信息。Capytaine 的公开方法论文可作为软件和数值方法的可追溯来源 [7]。
 
 ## 3. 已实现基准：二维圆柱横向平移
 
@@ -93,6 +97,8 @@ python -m tensorbem.benchmarks.cylinder_added_mass --panels 64
 
 后续宜先实现外域势流的独立解析基准，再实现 Ursell 型自由液面圆柱辐射/绕射解 [2]，接着增加三维球体附加质量，最后采用公开船模试验数据开展确认。
 
+辐射/绕射系数的对比报告还应明确复势时间因子、法向取向和力正方向；不同惯例会改变附加质量、阻尼或激励力分量的符号。圆柱绕射基准需注明贯底/非贯底、水深及入射波定义，不能只报告 \(ka\)。
+
 ## 6. 结论
 
 船海 BEM 的基准体系应包括数学制造解、简单体解析势流、自由液面频域解、几何/奇异积分测试以及有条件可追溯的船模试验。本文完成了当前 TensorBEM 能力范围内最直接的海洋势流应用基准：二维圆柱横向平移附加质量。网格细化显示附加质量与边界通量误差均收敛至解析结果。此结果适合作为原型代码的回归验证，不应被外推为复杂船型、三维自由液面或黏性流动的验证。
@@ -106,3 +112,9 @@ python -m tensorbem.benchmarks.cylinder_added_mass --panels 64
 [3] John F. On the motion of floating bodies. II. Simple harmonic motions. *Communications on Pure and Applied Mathematics*, 1950, 3(1): 45–101. https://doi.org/10.1002/cpa.3160030105.
 
 [4] Lamb H. *Hydrodynamics*. 6th ed. Cambridge: Cambridge University Press, 1932.
+
+[5] MacCamy R C, Fuchs R A. *Wave Forces on Piles: A Diffraction Theory*. Beach Erosion Board Technical Memorandum No. 69. U.S. Army Corps of Engineers, 1954.
+
+[6] Hulme A. The wave forces acting on a floating hemisphere undergoing forced periodic oscillations. *Journal of Fluid Mechanics*, 1982, 121: 443–463. https://doi.org/10.1017/S0022112082001930.
+
+[7] Ancellin M, Dias F. Capytaine: a Python-based linear potential flow solver. *Journal of Open Source Software*, 2019, 4(36): 1345. https://doi.org/10.21105/joss.01345.
