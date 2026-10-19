@@ -59,7 +59,9 @@ def plot_field_comparison(
     coordinates = np.linspace(-1.05, 1.05, grid_size)
     grid_x, grid_y = np.meshgrid(coordinates, coordinates)
     grid_points = np.column_stack((grid_x.ravel(), grid_y.ravel()))
-    inside = PolygonPath(mesh.vertices).contains_points(grid_points)
+    inside = PolygonPath(mesh.vertices).contains_points(grid_points) & (
+        np.sum(grid_points**2, axis=1) <= 0.9**2
+    )
 
     numerical = np.full(len(grid_points), np.nan)
     numerical[inside] = evaluate_interior_field(mesh, result, grid_points[inside])
@@ -73,6 +75,7 @@ def plot_field_comparison(
     error_max = max(float(np.nanmax(error)), np.finfo(float).eps)
     error_levels = np.linspace(0.0, error_max, 21)
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), constrained_layout=True)
+    fig.suptitle("Unit-disk interior field comparison (r ≤ 0.9)")
     for axis, values, title, levels in (
         (axes[0], numerical, "BEM potential", field_levels),
         (axes[1], exact, "Analytical potential", field_levels),
