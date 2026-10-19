@@ -43,9 +43,9 @@ def run(
     exact_normal_derivative = -speed * np.cos(normal_angle)
     flux_error = result.normal_derivative - exact_normal_derivative
     added_mass = float(
-        -density
-        / speed
-        * np.sum(boundary_potential * mesh.normals[:, 0] * mesh.lengths)
+        density
+        / speed**2
+        * np.sum(boundary_potential * result.normal_derivative * mesh.lengths)
     )
     exact_added_mass = density * np.pi * radius**2
 
@@ -59,13 +59,16 @@ def run(
         "exact_added_mass_per_unit_span": exact_added_mass,
         "added_mass_relative_error": abs(added_mass - exact_added_mass)
         / exact_added_mass,
+        "added_mass_method": "boundary_energy_integral_using_computed_flux",
         "normal_derivative_rmse": float(np.sqrt(np.mean(flux_error**2))),
         "residual_l2": result.residual_l2,
         "single_layer_condition_number": result.condition_number,
         "note": (
-            "The polygon approximates the circular body. This verifies the "
-            "circular-cylinder boundary trace and integrated added mass; it "
-            "does not validate a general exterior-domain solver."
+            "The polygon approximates the circular body. Added mass uses the "
+            "computed boundary flux in the boundary energy integral. For this "
+            "first angular mode, the bounded-domain flux trace matches the "
+            "exterior fluid-normal trace; this does not validate a general "
+            "exterior-domain solver."
         ),
     }
 
