@@ -26,9 +26,13 @@ jobs:
         run: python -m tensorbem.benchmarks.cylinder_added_mass --panels 32
       - name: Generate reproducible refinement report
         run: python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
+      - name: Generate analytical verification report
+        run: python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output artifacts/analytical-study.json
       - name: Upload benchmark evidence
         uses: actions/upload-artifact@v4
         with:
           name: tensorbem-2d-refinement-report
-          path: artifacts/refinement-study.json
+          path: |
+            artifacts/refinement-study.json
+            artifacts/analytical-study.json
           if-no-files-found: error
