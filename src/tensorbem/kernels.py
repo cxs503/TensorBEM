@@ -7,14 +7,20 @@ from numpy.typing import NDArray
 
 FloatArray = NDArray[np.float64]
 _TWO_PI = 2.0 * np.pi
+REFERENCE_LENGTH = 2.0
 
 
 def fundamental_solution(distance: FloatArray | float) -> FloatArray:
-    r"""Return G(r) = -(1/(2*pi))*log(r), with -Laplacian(G)=delta."""
+    r"""Return G(r) = -(1/(2*pi))*log(r/2), with -Laplacian(G)=delta.
+
+    In two dimensions the fundamental solution is defined up to an additive
+    constant. The reference length avoids the unit-capacity degeneracy of the
+    single-layer operator for a unit circle with the unshifted logarithm.
+    """
     r = np.asarray(distance, dtype=float)
     if np.any(r <= 0.0):
         raise ValueError("distance must be positive; handle singular panel integrals separately")
-    return -np.log(r) / _TWO_PI
+    return -np.log(r / REFERENCE_LENGTH) / _TWO_PI
 
 
 def double_layer_kernel(
