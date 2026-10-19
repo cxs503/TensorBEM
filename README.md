@@ -16,9 +16,12 @@ Requires Python 3.10+ and NumPy.
 python -m pip install -e ".[dev]"
 pytest
 python -m tensorbem.benchmarks.unit_disk --panels 64
+python -m tensorbem.benchmarks.cylinder_added_mass --panels 64
 ```
 
 The benchmark writes JSON to stdout. The manufactured field is \(u(r,\theta)=r\cos\theta\), with exact outward normal derivative \(q=\cos\theta\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
+
+The circular-cylinder benchmark reports the added mass per unit span for a translating cylinder, with the analytical reference \(\rho\pi a^2\). It is a restricted boundary-trace verification case, not evidence that TensorBEM supports general exterior-flow or wave-body problems. See [the marine BEM benchmark report](docs/marine_bem_benchmarks.md) for the benchmark landscape, derivation, and limitations.
 
 ## Project layout
 
@@ -26,8 +29,10 @@ The benchmark writes JSON to stdout. The manufactured field is \(u(r,\theta)=r\c
 - `src/tensorbem/kernels.py`: 2-D Laplace kernels
 - `src/tensorbem/solver.py`: collocation assembly and solve
 - `src/tensorbem/benchmarks/unit_disk.py`: manufactured-solution benchmark
+- `src/tensorbem/benchmarks/cylinder_added_mass.py`: translating-cylinder added-mass benchmark
 - `tests/`: unit and numerical regression tests
 - `docs/verification.md`: equations, conventions, and verification plan
+- `docs/marine_bem_benchmarks.md`: marine BEM benchmark survey and numerical report
 
 ## Numerical conventions
 
