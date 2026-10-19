@@ -2,7 +2,7 @@
 
 Boundary equation at a smooth collocation point:
     c*u = integral(G*q ds) - integral((dG/dn_y)*u ds)
-with G = -(1/(2*pi))*log(r), -Delta(G)=delta, and c=1/2.
+with G = -(1/(2*pi))*log(r/2), -Delta(G)=delta, and c=1/2.
 Thus Gmat*q = (0.5*I + Hmat)*u. The diagonal H principal-value
 contribution is zero for a straight panel collocated at its midpoint.
 """
@@ -14,7 +14,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from .geometry import PanelMesh
-from .kernels import double_layer_kernel, fundamental_solution
+from .kernels import REFERENCE_LENGTH, double_layer_kernel, fundamental_solution
 
 FloatArray = NDArray[np.float64]
 
@@ -35,7 +35,7 @@ def assemble_matrices(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
     """Assemble midpoint-collocation single- and double-layer matrices.
 
     Off-diagonal panel integrals use midpoint quadrature. The logarithmic
-    single-layer self-panel integral is integrated analytically.
+    single-layer self-panel integral is evaluated analytically.
     """
     centers = mesh.centers
     normals = mesh.normals
@@ -47,11 +47,10 @@ def assemble_matrices(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
     for i, target in enumerate(centers):
         for j, source in enumerate(centers):
             if i == j:
-                # Integral_{-L/2}^{L/2} -log(|s|)/(2*pi) ds.
+                # Integral -log(|s|/reference_length)/(2*pi) ds.
                 single[i, j] = -lengths[j] / (2.0 * np.pi) * (
-                    np.log(lengths[j] / 2.0) - 1.0
+                    np.log(lengths[j] / (2.0 * REFERENCE_LENGTH)) - 1.0
                 )
-                # Principal value of the straight-panel self contribution.
                 double[i, j] = 0.0
             else:
                 delta = target - source
@@ -68,7 +67,7 @@ def solve_laplace_dirichlet(
 ) -> LaplaceDirichletResult:
     """Solve for the unknown outward normal derivative given boundary values.
 
-    This baseline is intended for smooth, closed, simply connected 2-D domains.
+    The baseline targets smooth, closed, simply connected 2-D domains.
     Boundary values are piecewise constant at panel midpoints.
     """
     values = np.asarray(boundary_values, dtype=float)
