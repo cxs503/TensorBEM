@@ -5,8 +5,10 @@
 For the 2-D Laplace equation \(\nabla^2 u=0\), use the fundamental solution
 
 \[
-G(x,y)=-\frac{1}{2\pi}\log|x-y|, \qquad -\nabla_y^2 G=\delta(x-y).
+G(x,y)=-\frac{1}{2\pi}\log\left(\frac{|x-y|}{2}\right), \qquad -\nabla_y^2 G=\delta(x-y).
 \]
+
+In two dimensions the fundamental solution may be shifted by an additive constant. The reference length of 2 avoids the single-layer capacity degeneracy for the unit circle.
 
 With outward normal derivative \(q=\partial u/\partial n\), the boundary integral equation at a smooth boundary point is
 
@@ -21,13 +23,14 @@ where \(c=1/2\) at a smooth boundary point. Constant panels and midpoint colloca
 \mathbf G\mathbf q=(\tfrac12\mathbf I+\mathbf H)\mathbf u.
 \]
 
-The self-panel single-layer logarithmic integral is evaluated analytically. Off-diagonal integrals use midpoint quadrature, and the straight-panel self double-layer principal value is zero.
+The self-panel logarithmic integral is evaluated analytically. Off-diagonal integrals use midpoint quadrature, and the straight-panel self double-layer principal value is zero.
 
 ## What the tests establish
 
 - geometry validation, panel normals, and kernel sign convention;
 - finite output and small algebraic linear-system residual;
-- basic constant-boundary-value behavior.
+- constant-boundary-value behavior;
+- a refinement trend for a linear harmonic manufactured solution.
 
 These tests are necessary but not sufficient to claim a production-quality BEM solver. The unit-disk benchmark compares against the circular harmonic reference on a polygonal geometry; convergence trends must be checked over increasing panel counts.
 
