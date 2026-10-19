@@ -28,11 +28,16 @@ jobs:
         run: python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
       - name: Generate analytical verification report
         run: python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output artifacts/analytical-study.json
+      - name: Run sphere added-mass benchmark
+        run: python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
+      - name: Generate three-dimensional verification report
+        run: python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
       - name: Upload benchmark evidence
         uses: actions/upload-artifact@v4
         with:
-          name: tensorbem-2d-refinement-report
+          name: tensorbem-verification-reports
           path: |
             artifacts/refinement-study.json
             artifacts/analytical-study.json
+            artifacts/three-dimensional-study.json
           if-no-files-found: error
