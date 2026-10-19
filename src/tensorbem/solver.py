@@ -5,6 +5,9 @@ Boundary equation at a smooth collocation point:
 with G = -(1/(2*pi))*log(r/2), -Delta(G)=delta, and c=1/2.
 Thus Gmat*q = (0.5*I + Hmat)*u. The diagonal H principal-value
 contribution is zero for a straight panel collocated at its midpoint.
+
+All straight-panel matrix entries are integrated analytically. This removes
+the off-diagonal midpoint-quadrature error and improves near-panel accuracy.
 """
 
 from __future__ import annotations
@@ -14,7 +17,10 @@ import numpy as np
 from numpy.typing import NDArray
 
 from .geometry import PanelMesh
-from .kernels import REFERENCE_LENGTH, double_layer_kernel, fundamental_solution
+from .kernels import (
+    integrate_double_layer_panel,
+    integrate_single_layer_panel,
+)
 
 FloatArray = NDArray[np.float64]
 
@@ -32,33 +38,24 @@ class LaplaceDirichletResult:
 
 
 def assemble_matrices(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
-    """Assemble midpoint-collocation single- and double-layer matrices.
-
-    Off-diagonal panel integrals use midpoint quadrature. The logarithmic
-    single-layer self-panel integral is evaluated analytically.
-    """
+    """Assemble analytically integrated single- and double-layer matrices."""
     centers = mesh.centers
+    starts = mesh.vertices
+    tangents = mesh.vectors / mesh.lengths[:, None]
     normals = mesh.normals
     lengths = mesh.lengths
     n = mesh.panel_count
     single = np.empty((n, n), dtype=float)
-    double = np.zeros((n, n), dtype=float)
+    double = np.empty((n, n), dtype=float)
 
     for i, target in enumerate(centers):
-        for j, source in enumerate(centers):
-            if i == j:
-                # Integral -log(|s|/reference_length)/(2*pi) ds.
-                single[i, j] = -lengths[j] / (2.0 * np.pi) * (
-                    np.log(lengths[j] / (2.0 * REFERENCE_LENGTH)) - 1.0
-                )
-                double[i, j] = 0.0
-            else:
-                delta = target - source
-                distance = float(np.linalg.norm(delta))
-                single[i, j] = float(fundamental_solution(distance)) * lengths[j]
-                double[i, j] = (
-                    double_layer_kernel(target, source, normals[j]) * lengths[j]
-                )
+        for j in range(n):
+            single[i, j] = integrate_single_layer_panel(
+                target, starts[j], tangents[j], float(lengths[j])
+            )
+            double[i, j] = integrate_double_layer_panel(
+                target, starts[j], tangents[j], normals[j], float(lengths[j])
+            )
     return single, double
 
 
@@ -95,10 +92,11 @@ def solve_laplace_dirichlet(
 def evaluate_interior_field(
     mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
 ) -> FloatArray:
-    """Evaluate the harmonic potential at interior points from its boundary traces.
+    """Evaluate the harmonic potential at interior points using exact panel integrals.
 
-    The boundary representation uses midpoint quadrature and is intended for
-    points strictly inside the domain, away from the boundary.
+    Points must be strictly inside the domain and not on the boundary. The
+    representation integrates each constant-panel kernel analytically rather
+    than sampling the kernel at the panel midpoint.
     """
     targets = np.asarray(points, dtype=float)
     if targets.ndim != 2 or targets.shape[1] != 2:
@@ -111,20 +109,24 @@ def evaluate_interior_field(
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
 
-    delta = targets[:, None, :] - mesh.centers[None, :, :]
-    distance_squared = np.sum(delta**2, axis=2)
-    if np.any(distance_squared == 0.0):
-        raise ValueError("evaluation points must not coincide with panel centers")
-    distances = np.sqrt(distance_squared)
-    single_layer = -np.log(distances / REFERENCE_LENGTH) / (2.0 * np.pi)
-    double_layer = np.sum(
-        delta * mesh.normals[None, :, :], axis=2
-    ) / (2.0 * np.pi * distance_squared)
-    return np.sum(
-        (
-            single_layer * result.normal_derivative[None, :]
-            - double_layer * result.boundary_values[None, :]
-        )
-        * mesh.lengths[None, :],
-        axis=1,
-    )
+    lengths = mesh.lengths
+    tangents = mesh.vectors / lengths[:, None]
+    normals = mesh.normals
+    values = np.zeros(len(targets), dtype=float)
+    for i, target in enumerate(targets):
+        for j in range(mesh.panel_count):
+            single = integrate_single_layer_panel(
+                target, mesh.vertices[j], tangents[j], float(lengths[j])
+            )
+            double = integrate_double_layer_panel(
+                target,
+                mesh.vertices[j],
+                tangents[j],
+                normals[j],
+                float(lengths[j]),
+            )
+            values[i] += (
+                single * result.normal_derivative[j]
+                - double * result.boundary_values[j]
+            )
+    return values
