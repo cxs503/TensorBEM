@@ -22,3 +22,13 @@ jobs:
         run: pytest
       - name: Run unit-disk benchmark
         run: python -m tensorbem.benchmarks.unit_disk --panels 64
+      - name: Run cylinder added-mass benchmark
+        run: python -m tensorbem.benchmarks.cylinder_added_mass --panels 32
+      - name: Generate reproducible refinement report
+        run: python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
+      - name: Upload benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: tensorbem-2d-refinement-report
+          path: artifacts/refinement-study.json
+          if-no-files-found: error

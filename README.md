@@ -17,13 +17,16 @@ python -m pip install -e ".[dev]"
 pytest
 python -m tensorbem.benchmarks.unit_disk --panels 64
 python -m tensorbem.benchmarks.cylinder_added_mass --panels 64
+python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
 ```
 
-The benchmark writes JSON to stdout. The manufactured field is \(u(r,\theta)=r\cos\theta\), with exact outward normal derivative \(q=\cos\theta\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
+The benchmark writes JSON to stdout; the refinement study can also persist a machine-readable JSON report. The manufactured field is \\(u(r,\\theta)=r\\cos\\theta\\), with exact outward normal derivative \\(q=\\cos\\theta\\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
 
-The circular-cylinder benchmark reports the added mass per unit span for a translating cylinder, with the analytical reference \(\rho\pi a^2\). It is a restricted boundary-trace verification case, not evidence that TensorBEM supports general exterior-flow or wave-body problems. See [the marine BEM benchmark report](docs/marine_bem_benchmarks.md) for the benchmark landscape, derivation, and limitations.
+The circular-cylinder benchmark reports the added mass per unit span for a translating cylinder, with the analytical reference \\(\\rho\\pi a^2\\). It is a restricted boundary-trace verification case, not evidence that TensorBEM supports general exterior-flow or wave-body problems. See [the marine BEM benchmark report](docs/marine_bem_benchmarks.md) for the benchmark landscape, derivation, and limitations.
 
-Install the optional plotting dependency and generate unit-disk field cloudplots (BEM potential, analytical \(u=x\), and absolute error) over the interior region \(r\le0.9\), avoiding the near-boundary region where midpoint field evaluation is less accurate:
+CI runs both benchmark families, executes the refinement study at 16/32/64/128 panels, and uploads the resulting JSON evidence as a workflow artifact. This is a reproducibility gate, not a claim of general exterior-flow validation.
+
+Install the optional plotting dependency and generate unit-disk field cloudplots (BEM potential, analytical \\(u=x\\), and absolute error) over the interior region \\(r\\le0.9\\), avoiding the near-boundary region where midpoint field evaluation is less accurate:
 
 ```bash
 python -m pip install -e ".[visualization]"
@@ -37,13 +40,14 @@ python -m tensorbem.benchmarks.unit_disk --panels 64 --plot unit_disk_comparison
 - `src/tensorbem/solver.py`: collocation assembly and solve
 - `src/tensorbem/benchmarks/unit_disk.py`: manufactured-solution benchmark
 - `src/tensorbem/benchmarks/cylinder_added_mass.py`: translating-cylinder added-mass benchmark
+- `src/tensorbem/benchmarks/refinement_study.py`: reproducible multi-resolution JSON report
 - `tests/`: unit and numerical regression tests
 - `docs/verification.md`: equations, conventions, and verification plan
 - `docs/marine_bem_benchmarks.md`: marine BEM benchmark survey and numerical report
 
 ## Numerical conventions
 
-The fundamental solution is \(G(x,y)=-\frac{1}{2\pi}\log(|x-y|/2)\), satisfying \(-\nabla^2G=\delta\). In 2-D it is defined up to an additive constant; the reference length of 2 avoids the unit-capacity degeneracy of the single-layer matrix on a unit circle. Panels are ordered counter-clockwise with outward normals. The baseline uses constant boundary elements and midpoint collocation; diagonal single-layer integrals are analytic while off-diagonal integrals use midpoint quadrature. This is a correctness-oriented baseline, not a high-order production method.
+The fundamental solution is \\(G(x,y)=-\\frac{1}{2\\pi}\\log(|x-y|/2)\\), satisfying \\(-\\nabla^2G=\\delta\\). In 2-D it is defined up to an additive constant; the reference length of 2 avoids the unit-capacity degeneracy of the single-layer matrix on a unit circle. Panels are ordered counter-clockwise with outward normals. The baseline uses constant boundary elements and midpoint collocation; diagonal single-layer integrals are analytic while off-diagonal integrals use midpoint quadrature. This is a correctness-oriented baseline, not a high-order production method.
 
 ## Roadmap
 
