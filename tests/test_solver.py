@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from tensorbem import regular_polygon, solve_laplace_dirichlet
-from tensorbem.solver import evaluate_interior_field
+from tensorbem.solver import assemble_matrices, evaluate_interior_field
 
 
 def test_solver_returns_finite_solution_and_small_algebraic_residual():
@@ -41,9 +41,7 @@ def test_interior_field_matches_linear_harmonic_solution():
     mesh = regular_polygon(64)
     result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
     points = np.array([[0.1, 0.2], [-0.3, 0.1], [0.6, -0.2]])
-
     values = evaluate_interior_field(mesh, result, points)
-
     assert values.shape == (len(points),)
     assert np.sqrt(np.mean((values - points[:, 0]) ** 2)) < 2.0e-2
 
@@ -51,8 +49,25 @@ def test_interior_field_matches_linear_harmonic_solution():
 def test_interior_field_rejects_invalid_evaluation_points():
     mesh = regular_polygon(16)
     result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
-
     with pytest.raises(ValueError, match=r"shape \(M, 2\)"):
         evaluate_interior_field(mesh, result, np.array([0.0, 0.0]))
     with pytest.raises(ValueError, match="finite"):
         evaluate_interior_field(mesh, result, np.array([[np.nan, 0.0]]))
+
+
+def test_assembled_double_layer_matrix_has_zero_self_terms_and_finite_entries():
+    single, double = assemble_matrices(regular_polygon(32))
+    assert np.isfinite(single).all()
+    assert np.isfinite(double).all()
+    assert np.allclose(np.diag(double), 0.0)
+    assert np.all(np.diag(single) > 0.0)
+
+
+def test_exact_panel_integration_preserves_refinement_trend():
+    errors = []
+    for n in (16, 32, 64):
+        mesh = regular_polygon(n)
+        result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
+        theta = np.arctan2(mesh.normals[:, 1], mesh.normals[:, 0])
+        errors.append(np.sqrt(np.mean((result.normal_derivative - np.cos(theta)) ** 2)))
+    assert all(b < a for a, b in zip(errors, errors[1:]))
