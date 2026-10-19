@@ -30,14 +30,17 @@ The self-panel logarithmic integral is evaluated analytically. Off-diagonal inte
 - geometry validation, panel normals, and kernel sign convention;
 - finite output and small algebraic linear-system residual;
 - constant-boundary-value behavior;
-- a refinement trend for a linear harmonic manufactured solution.
+- a refinement trend for a linear harmonic manufactured solution;
+- convergence of the translating circular-cylinder added mass and boundary normal derivative against analytical potential-flow values.
 
 These tests are necessary but not sufficient to claim a production-quality BEM solver. The unit-disk benchmark compares against the circular harmonic reference on a polygonal geometry; convergence trends must be checked over increasing panel counts.
 
 ## Verification roadmap
 
-1. Add a circle-specific quadrature/reference study and publish convergence tables.
-2. Add independent manufactured solutions with known boundary flux.
-3. Compare with an independent trusted implementation or published benchmark.
-4. Add robust near-singular and corner quadrature, mesh quality diagnostics, and conditioning safeguards.
+1. Add independent manufactured solutions with known boundary flux and document convergence studies.
+2. Compare with an independent trusted implementation or published benchmark.
+3. Add robust near-singular and corner quadrature, mesh quality diagnostics, and conditioning safeguards.
+4. Implement and verify an exterior-domain formulation before applying the solver to general body-flow problems.
 5. Only then extend to 3-D surface BEM, ship potential flow, wave radiation/diffraction, or acoustics.
+
+The circular-cylinder added-mass benchmark is a narrow analytical boundary-trace check. Its exact result does not verify free-surface conditions, radiation/diffraction, arbitrary exterior geometry, or 3-D surface discretization; see `marine_bem_benchmarks.md`.
