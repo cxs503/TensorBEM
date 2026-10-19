@@ -1,12 +1,12 @@
 import numpy as np
 import pytest
 
-from tensorbem.kernels import double_layer_kernel, fundamental_solution
+from tensorbem.kernels import fundamental_solution, double_layer_kernel
 
 
-def test_fundamental_solution_known_value():
-    assert np.isclose(float(fundamental_solution(1.0)), 0.0)
-    assert np.isclose(float(fundamental_solution(np.e)), -1.0 / (2.0 * np.pi))
+def test_fundamental_solution_reference_length_convention():
+    assert np.isclose(float(fundamental_solution(2.0)), 0.0)
+    assert np.isclose(float(fundamental_solution(1.0)), np.log(2.0) / (2.0 * np.pi))
 
 
 def test_fundamental_solution_rejects_singularity():
