@@ -11,9 +11,12 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
+
 import numpy as np
 
 from tensorbem import regular_polygon, solve_laplace_dirichlet
+from tensorbem.solver import evaluate_interior_field
 
 
 def run(panel_count: int) -> dict[str, float | int | str]:
@@ -41,11 +44,64 @@ def run(panel_count: int) -> dict[str, float | int | str]:
     }
 
 
+def plot_field_comparison(
+    panel_count: int, output_path: str | Path, grid_size: int = 121
+) -> None:
+    """Save BEM, analytical, and absolute-error potential cloudplots."""
+    if grid_size < 3:
+        raise ValueError("grid_size must be at least 3")
+
+    import matplotlib.pyplot as plt
+    from matplotlib.path import Path as PolygonPath
+
+    mesh = regular_polygon(panel_count)
+    result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
+    coordinates = np.linspace(-1.05, 1.05, grid_size)
+    grid_x, grid_y = np.meshgrid(coordinates, coordinates)
+    grid_points = np.column_stack((grid_x.ravel(), grid_y.ravel()))
+    inside = PolygonPath(mesh.vertices).contains_points(grid_points)
+
+    numerical = np.full(len(grid_points), np.nan)
+    numerical[inside] = evaluate_interior_field(mesh, result, grid_points[inside])
+    exact = grid_x.ravel()
+    error = np.abs(numerical - exact)
+    numerical = numerical.reshape(grid_x.shape)
+    exact = exact.reshape(grid_x.shape)
+    error = error.reshape(grid_x.shape)
+
+    field_levels = np.linspace(-1.0, 1.0, 31)
+    error_max = max(float(np.nanmax(error)), np.finfo(float).eps)
+    error_levels = np.linspace(0.0, error_max, 21)
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), constrained_layout=True)
+    for axis, values, title, levels in (
+        (axes[0], numerical, "BEM potential", field_levels),
+        (axes[1], exact, "Analytical potential", field_levels),
+        (axes[2], error, "Absolute error", error_levels),
+    ):
+        image = axis.contourf(
+            grid_x, grid_y, values, levels=levels, cmap="viridis"
+        )
+        axis.set_title(title)
+        axis.set_xlabel("x")
+        axis.set_ylabel("y")
+        axis.set_aspect("equal")
+        fig.colorbar(image, ax=axis)
+    fig.savefig(output_path, dpi=160)
+    plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--panels", type=int, default=64)
+    parser.add_argument(
+        "--plot",
+        type=Path,
+        help="save BEM, analytical, and absolute-error potential cloudplots",
+    )
     args = parser.parse_args()
     print(json.dumps(run(args.panels), indent=2, sort_keys=True))
+    if args.plot:
+        plot_field_comparison(args.panels, args.plot)
 
 
 if __name__ == "__main__":
