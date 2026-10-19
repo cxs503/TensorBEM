@@ -23,7 +23,7 @@ The benchmark writes JSON to stdout. The manufactured field is \(u(r,\theta)=r\c
 
 The circular-cylinder benchmark reports the added mass per unit span for a translating cylinder, with the analytical reference \(\rho\pi a^2\). It is a restricted boundary-trace verification case, not evidence that TensorBEM supports general exterior-flow or wave-body problems. See [the marine BEM benchmark report](docs/marine_bem_benchmarks.md) for the benchmark landscape, derivation, and limitations.
 
-Install the optional plotting dependency and generate unit-disk field cloudplots (BEM potential, analytical \(u=x\), and absolute error) with:
+Install the optional plotting dependency and generate unit-disk field cloudplots (BEM potential, analytical \(u=x\), and absolute error) over the interior region \(r\le0.9\), avoiding the near-boundary region where midpoint field evaluation is less accurate:
 
 ```bash
 python -m pip install -e ".[visualization]"
