@@ -117,7 +117,6 @@ def recover_tangent_gradient(
             )
 
     centroids = mesh.centroids
-    first, second = tangent_basis(mesh.normals)
     scale = max(mesh.h_mean, np.finfo(float).tiny)
 
     index = np.zeros((mesh.panel_count, width), dtype=np.int64)
