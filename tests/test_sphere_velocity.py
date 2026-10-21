@@ -90,27 +90,58 @@ def test_analytic_sphere_velocity_decays_like_one_over_radius_cubed():
     assert np.allclose(far, near / 8.0, atol=1.0e-12)
 
 
-def test_on_surface_velocity_is_reported_as_a_diagnostic():
+def test_on_surface_velocity_is_an_accuracy_claim():
     result = run(2)
-    # The constant-panel trace degrades the reconstructed gradient near the
-    # surface.  The number is reported so the limitation stays visible; it is
-    # not an accuracy claim and must not be presented as one.
-    assert result["surface_velocity_relative_l2_error"] > result["velocity_relative_l2_error"]
+    # The recovered surface velocity is an accuracy claim: it must be small.
+    assert result["surface_velocity_relative_l2_error"] < 0.1
     assert math.isfinite(result["surface_velocity_max_abs_error"])
 
 
-def test_on_surface_velocity_matches_the_interior_limit_of_the_off_surface_one():
+def test_representation_surface_velocity_is_much_worse_than_the_recovered_one():
+    result = run(2)
+    # Differentiating the Green formula with the piecewise-constant traces
+    # amplifies the O(h) trace error to O(1).  The number stays visible as a
+    # diagnostic of that effect.
+    assert (
+        result["representation_surface_velocity_relative_l2_error"]
+        > 10.0 * result["surface_velocity_relative_l2_error"]
+    )
+    assert math.isfinite(result["representation_surface_velocity_max_abs_error"])
+
+
+def test_recovered_surface_velocity_matches_the_exact_interior_velocity():
     mesh = icosphere(1, radius=1.0)
     boundary = mesh.centroids[:, 0].copy()
     result = solve_laplace_surface(mesh, boundary, domain="interior")
     on_surface = evaluate_surface_velocity_at_panels(mesh, result)
+    # The interior harmonic extension of u = x is the linear function x, so
+    # the exact interior velocity is the constant (1, 0, 0).
+    exact = np.tile([1.0, 0.0, 0.0], (mesh.panel_count, 1))
+    assert np.allclose(on_surface, exact, rtol=5.0e-2, atol=5.0e-2)
+
+
+def test_representation_velocity_degrades_in_a_boundary_layer():
+    # The representation path differentiates the Green formula with the
+    # piecewise-constant traces, so it is inaccurate in a layer of thickness
+    # O(h) around the body, and accurate away from it.  The recovered surface
+    # velocity does not have that defect.
+    mesh = icosphere(1, radius=1.0)
+    boundary = mesh.centroids[:, 0].copy()
+    result = solve_laplace_surface(mesh, boundary, domain="interior")
+    exact = np.array([1.0, 0.0, 0.0])
+
     index = 7
     target = mesh.centroids[index]
     inward = target - 1.0e-3 * mesh.normals[index]
     approaching = evaluate_surface_velocity(
         mesh, result, inward[None, :], minimum_clearance_factor=0.0
     )[0]
-    assert np.allclose(on_surface[index], approaching, rtol=1.0e-2, atol=1.0e-2)
+    assert not np.allclose(approaching, exact, rtol=0.1, atol=0.1)
+
+    far = evaluate_surface_velocity(
+        mesh, result, np.array([[0.0, 0.0, 0.0]]), minimum_clearance_factor=0.0
+    )[0]
+    assert np.allclose(far, exact, rtol=5.0e-2, atol=5.0e-2)
 
 
 def test_velocity_evaluation_rejects_points_too_close_to_the_surface():
