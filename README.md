@@ -22,6 +22,7 @@ python -m tensorbem.benchmarks.cylinder_added_mass --panels 64
 python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
 python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output artifacts/analytical-study.json
 python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
+python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2
 python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
 ```
 
@@ -31,6 +32,7 @@ The circular-cylinder benchmark reports the added mass per unit span for a trans
 
 The 3-D sphere benchmark reports the added mass of a translating sphere, with analytical reference \\(\\tfrac12\\rho V\\). The surface is a flat-faceted icosphere, the boundary trace is the sphere solution at panel-centroid angular coordinates, and the solve uses the exterior Dirichlet equation \\(\\mathbf S\\mathbf q_e=(\\tfrac12\\mathbf I-\\mathbf H)\\mathbf u\\). At 20/80/320/1280 panels the relative error is \\(2.13\\times10^{-1}\\), \\(6.48\\times10^{-2}\\), \\(1.74\\times10^{-2}\\),
 \\(4.47\\times10^{-3}\\), with observed order near 2. The pointwise exterior flux converges only near first order because of polyhedral-edge singularities; the integral added mass is the primary benchmark. This is a Laplace verification case, not free-surface, wave-body, or ship-hull validation. See [the three-dimensional verification report](docs/three_dimensional_bem.md).
+The 3-D **velocity** field is available through `evaluate_surface_velocity`. The single-layer gradient kernel is integrable and uses the same fixed-order Duffy rule as the potential; the double-layer gradient is hypersingular and is evaluated from the closed-form gradient of each panel's signed solid angle, which is exact for constant panels. Against the exact exterior velocity of a translating sphere the relative L2 error is \\(1.02\\times10^{-1}\\), \\(2.76\\times10^{-2}\\), and \\(7.07\\times10^{-3}\\) at 80/320/1280 panels, with observed order 2.03 and 2.01. The reconstructed velocity **on** the surface is a different matter: the constant-panel trace makes the interior-limit gradient degrade to 53-65% error that does not vanish under refinement. That number is reported by the benchmark as a diagnostic; do not use the current discretization for hull-surface velocity or force integration.
 
 CI runs the 2-D and 3-D benchmark families, executes both refinement studies, and uploads the resulting JSON evidence as a workflow artifact. This is a reproducibility gate, not a claim of general exterior-flow validation.
 
@@ -58,6 +60,7 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `src/tensorbem/benchmarks/refinement_study.py`: reproducible 2-D multi-resolution JSON report
 - `src/tensorbem/benchmarks/analytical_suite.py`: four additional 2-D analytical cases and convergence plots
 - `src/tensorbem/benchmarks/sphere_added_mass.py`: translating-sphere added-mass benchmark
+- `src/tensorbem/benchmarks/sphere_velocity.py`: translating-sphere velocity-field benchmark
 - `src/tensorbem/benchmarks/three_dimensional_study.py`: 3-D verification cases, refinement study, and plots
 - `tests/`: unit and numerical regression tests
 - `docs/verification.md`: 2-D analytical verification cases, equations, numerical results, and limitations
