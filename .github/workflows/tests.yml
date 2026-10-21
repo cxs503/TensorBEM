@@ -32,6 +32,8 @@ jobs:
         run: python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
       - name: Run sphere velocity benchmark
         run: python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2 --output artifacts/sphere-velocity.json
+      - name: Generate the surface-velocity accuracy study
+        run: python -m tensorbem.benchmarks.surface_velocity_study --levels 1 2 3 --output artifacts/surface-velocity-study.json
       - name: Generate three-dimensional verification report
         run: python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
       - name: Upload benchmark evidence
@@ -43,4 +45,5 @@ jobs:
             artifacts/analytical-study.json
             artifacts/three-dimensional-study.json
             artifacts/sphere-velocity.json
+            artifacts/surface-velocity-study.json
           if-no-files-found: error
