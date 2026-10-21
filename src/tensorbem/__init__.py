@@ -7,6 +7,8 @@ from .solver3d import (
     LaplaceSurfaceResult,
     assemble_surface_matrices,
     evaluate_surface_field,
+    evaluate_surface_velocity,
+    evaluate_surface_velocity_at_panels,
     solve_laplace_surface,
 )
 
@@ -21,5 +23,7 @@ __all__ = [
     "solve_laplace_surface",
     "assemble_surface_matrices",
     "evaluate_surface_field",
+    "evaluate_surface_velocity",
+    "evaluate_surface_velocity_at_panels",
 ]
 __version__ = "0.2.0"
