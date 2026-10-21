@@ -204,13 +204,20 @@ def integrate_single_layer_triangle(
     return float(np.sum(weights / (_FOUR_PI * distances)))
 
 
-def integrate_single_layer_triangle_self(vertices: FloatArray, order: int = 64) -> float:
-    r"""Integrate ``G`` over a flat triangle at its centroid.
+def _polar_sectors(
+    vertices: FloatArray, order: int
+) -> tuple[FloatArray, FloatArray, FloatArray, FloatArray]:
+    """Return the polar-sector quadrature data of a triangle about its centroid.
 
-    The triangle is split into three polar sectors about the centroid. In each
-    sector ``dS = r dr dtheta`` and the ``1/r`` kernel reduces to an inner
-    integral over ``dr`` equal to the radial extent ``R(theta)``, so the only
-    numerical quadrature is one-dimensional and smooth.
+    The triangle is split into three sectors, each bounded by the rays to two
+    adjacent vertices and by the edge that joins them.  In every sector
+    ``dS = r dr dtheta`` and the radial extent ``R(theta)`` of the edge is
+    available in closed form, so the only numerical quadrature is
+    one-dimensional and smooth.
+
+    Returns ``(theta, weights, radial_extent, in_plane_unit)`` where the first
+    three arrays have length ``3 * order`` and the last has shape
+    ``(3 * order, 3)`` and holds the in-plane unit direction of each ray.
     """
     points = _validate_vertices(vertices)
     order = _validate_order(order)
@@ -218,7 +225,10 @@ def integrate_single_layer_triangle_self(vertices: FloatArray, order: int = 64) 
     normal = np.cross(points[1] - points[0], points[2] - points[0])
     normal /= np.linalg.norm(normal)
     nodes, weights = leggauss(order)
-    total = 0.0
+    theta_all: list[FloatArray] = []
+    weight_all: list[FloatArray] = []
+    extent_all: list[FloatArray] = []
+    direction_all: list[FloatArray] = []
     for index in range(3):
         a = points[index] - centroid
         b = points[(index + 1) % 3] - centroid
@@ -240,8 +250,68 @@ def integrate_single_layer_triangle_self(vertices: FloatArray, order: int = 64) 
         theta = angle_a + 0.5 * dtheta * (nodes + 1.0)
         cosine = np.cos(theta) * edge_normal[0] + np.sin(theta) * edge_normal[1]
         radial_extent = offset / cosine
-        total += 0.5 * dtheta * float(np.dot(weights, radial_extent))
-    return total / _FOUR_PI
+        theta_all.append(theta)
+        weight_all.append(0.5 * dtheta * weights)
+        extent_all.append(radial_extent)
+        direction_all.append(
+            np.cos(theta)[:, None] * e1[None, :] + np.sin(theta)[:, None] * e2[None, :]
+        )
+    return (
+        np.concatenate(theta_all),
+        np.concatenate(weight_all),
+        np.concatenate(extent_all),
+        np.concatenate(direction_all, axis=0),
+    )
+
+
+def integrate_single_layer_triangle_self(vertices: FloatArray, order: int = 64) -> float:
+    r"""Integrate ``G`` over a flat triangle at its centroid.
+
+    The triangle is split into three polar sectors about the centroid. In each
+    sector ``dS = r dr dtheta`` and the ``1/r`` kernel reduces to an inner
+    integral over ``dr`` equal to the radial extent ``R(theta)``, so the only
+    numerical quadrature is one-dimensional and smooth.
+    """
+    _, weights, radial_extent, _ = _polar_sectors(vertices, order)
+    return float(np.dot(weights, radial_extent)) / _FOUR_PI
+
+
+def gradient_single_layer_triangle_self(
+    vertices: FloatArray, order: int = 64
+) -> FloatArray:
+    r"""Integrate ``grad_x G`` over a flat triangle at its centroid.
+
+    With the target at the centroid the kernel is
+    ``grad_x G = (y - x) / (4*pi*|y - x|**3)``.  In the polar sectors of
+    :func:`_polar_sectors` the source offset is ``r*u(theta)`` so the kernel
+    becomes ``u(theta) / (4*pi*r**2)``; multiplying by ``dS = r dr dtheta``
+    leaves the radial integral equal to ``R(theta)``.  The result is therefore
+    a smooth one-dimensional quadrature of the in-plane unit direction.
+    """
+    _, weights, radial_extent, direction = _polar_sectors(vertices, order)
+    return np.sum(
+        (weights * radial_extent)[:, None] * direction, axis=0
+    ) / _FOUR_PI
+
+
+def gradient_single_layer_triangle(
+    target: FloatArray, vertices: FloatArray, order: int = 8
+) -> FloatArray:
+    """Integrate ``grad_x G`` over a flat triangle that does not contain the target.
+
+    The kernel is ``grad_x G = -(x - y) / (4*pi*|x - y|**3)``.  Because the
+    target is not in the plane of the panel, the distance stays bounded away
+    from zero and the fixed-order Duffy rule is adequate.
+    """
+    vertices = _validate_vertices(vertices)
+    x = np.asarray(target, dtype=float)
+    if x.shape != (3,) or not np.isfinite(x).all():
+        raise ValueError("target must be a finite array of shape (3,)")
+    points, weights = duffy_quadrature(vertices, order=order)
+    delta = x[None, :] - points
+    r2 = np.sum(delta * delta, axis=1)
+    r3 = r2 * np.sqrt(r2)
+    return -np.sum((weights / r3)[:, None] * delta, axis=0) / _FOUR_PI
 
 
 def solid_angle_triangle(target: FloatArray, vertices: FloatArray) -> float:
@@ -270,6 +340,157 @@ def solid_angle_triangle(target: FloatArray, vertices: FloatArray) -> float:
         + float(np.dot(c, a)) * norm_b
     )
     return 2.0 * math.atan2(determinant, denominator)
+
+
+def gradient_solid_angle_triangle(
+    target: FloatArray, vertices: FloatArray
+) -> FloatArray:
+    r"""Return the gradient of the signed solid angle with respect to the target.
+
+    The solid angle is ``Omega = 2*atan2(D, N)`` with
+    ``D = a.(b x c)`` and ``N = |a||b||c| + (a.b)|c| + (b.c)|a| + (c.a)|b|``,
+    where ``a``, ``b`` and ``c`` are the vertex offsets from the target.  Both
+    ``D`` and ``N`` are differentiated analytically and the chain rule is
+    applied.
+
+    This closed form is what makes the gradient of the double-layer operator
+    usable: the hypersingular kernel ``grad_x(dG/dn_y)`` is not integrable by
+    ordinary quadrature, but the *integral* over a flat panel with constant
+    density is the gradient of the panel's solid angle, which is available in
+    closed form.
+
+    The result is continuous across the panel plane; only the solid angle
+    *value* jumps there, not its gradient.
+    """
+    points = _validate_vertices(vertices)
+    x = np.asarray(target, dtype=float)
+    if x.shape != (3,) or not np.isfinite(x).all():
+        raise ValueError("target must be a finite array of shape (3,)")
+    a = points[0] - x
+    b = points[1] - x
+    c = points[2] - x
+    norm_a = float(np.linalg.norm(a))
+    norm_b = float(np.linalg.norm(b))
+    norm_c = float(np.linalg.norm(c))
+    dot_ab = float(np.dot(a, b))
+    dot_bc = float(np.dot(b, c))
+    dot_ca = float(np.dot(c, a))
+    determinant = float(np.dot(a, np.cross(b, c)))
+    denominator = (
+        norm_a * norm_b * norm_c
+        + dot_ab * norm_c
+        + dot_bc * norm_a
+        + dot_ca * norm_b
+    )
+    # dD/dx: D is quadratic in the target because the cubic terms cancel.
+    grad_determinant = -(
+        np.cross(b, c) + np.cross(c, a) + np.cross(a, b)
+    )
+    grad_denominator = (
+        -norm_b * norm_c * a / norm_a
+        - norm_a * norm_c * b / norm_b
+        - norm_a * norm_b * c / norm_c
+        - norm_c * (a + b)
+        - norm_a * (b + c)
+        - norm_b * (c + a)
+        - dot_ab * c / norm_c
+        - dot_bc * a / norm_a
+        - dot_ca * b / norm_b
+    )
+    scale = determinant * determinant + denominator * denominator
+    if scale <= 0.0:
+        raise ValueError(
+            "solid-angle gradient is undefined at a target inside the panel"
+        )
+    return 2.0 * (
+        denominator * grad_determinant - determinant * grad_denominator
+    ) / scale
+
+
+def gradient_solid_angle_triangles_batch(
+    target: FloatArray, v0: FloatArray, v1: FloatArray, v2: FloatArray
+) -> FloatArray:
+    """Gradients of the signed solid angles of ``F`` triangles seen from one point.
+
+    Returns an array of shape ``(F, 3)``.  This is the batched counterpart of
+    :func:`gradient_solid_angle_triangle` and uses the same closed form.
+    """
+    x = np.asarray(target, dtype=float)
+    v0 = np.asarray(v0, dtype=float)
+    v1 = np.asarray(v1, dtype=float)
+    v2 = np.asarray(v2, dtype=float)
+    if x.shape != (3,) or not np.isfinite(x).all():
+        raise ValueError("target must be a finite array of shape (3,)")
+    if v0.ndim != 2 or v0.shape[1] != 3 or v1.shape != v0.shape or v2.shape != v0.shape:
+        raise ValueError("v0, v1, and v2 must all have shape (F, 3)")
+    if not (np.isfinite(v0).all() and np.isfinite(v1).all() and np.isfinite(v2).all()):
+        raise ValueError("triangle vertices must all be finite")
+    a = v0 - x
+    b = v1 - x
+    c = v2 - x
+    norm_a = np.linalg.norm(a, axis=1)
+    norm_b = np.linalg.norm(b, axis=1)
+    norm_c = np.linalg.norm(c, axis=1)
+    dot_ab = np.einsum("ij,ij->i", a, b)
+    dot_bc = np.einsum("ij,ij->i", b, c)
+    dot_ca = np.einsum("ij,ij->i", c, a)
+    determinant = np.einsum("ij,ij->i", a, np.cross(b, c))
+    denominator = (
+        norm_a * norm_b * norm_c
+        + dot_ab * norm_c
+        + dot_bc * norm_a
+        + dot_ca * norm_b
+    )
+    grad_determinant = -(
+        np.cross(b, c) + np.cross(c, a) + np.cross(a, b)
+    )
+    grad_denominator = (
+        -(norm_b * norm_c)[:, None] * a / norm_a[:, None]
+        - (norm_a * norm_c)[:, None] * b / norm_b[:, None]
+        - (norm_a * norm_b)[:, None] * c / norm_c[:, None]
+        - norm_c[:, None] * (a + b)
+        - norm_a[:, None] * (b + c)
+        - norm_b[:, None] * (c + a)
+        - dot_ab[:, None] * c / norm_c[:, None]
+        - dot_bc[:, None] * a / norm_a[:, None]
+        - dot_ca[:, None] * b / norm_b[:, None]
+    )
+    scale = determinant * determinant + denominator * denominator
+    if np.any(scale <= 0.0):
+        raise ValueError(
+            "solid-angle gradient is undefined at a target inside a panel"
+        )
+    return 2.0 * (
+        denominator[:, None] * grad_determinant
+        - determinant[:, None] * grad_denominator
+    ) / scale[:, None]
+
+
+def gradient_single_layer_triangles_batch(
+    target: FloatArray, v0: FloatArray, v1: FloatArray, v2: FloatArray, order: int = 8
+) -> FloatArray:
+    """Integrate ``grad_x G`` over ``F`` flat triangles seen from one target.
+
+    Returns an array of shape ``(F, 3)``.  The target must not lie in the plane
+    of a panel; the self-panel case is handled by
+    :func:`gradient_single_layer_triangle_self`.
+    """
+    x = np.asarray(target, dtype=float)
+    v0 = np.asarray(v0, dtype=float)
+    v1 = np.asarray(v1, dtype=float)
+    v2 = np.asarray(v2, dtype=float)
+    if x.shape != (3,) or not np.isfinite(x).all():
+        raise ValueError("target must be a finite array of shape (3,)")
+    if v0.ndim != 2 or v0.shape[1] != 3 or v1.shape != v0.shape or v2.shape != v0.shape:
+        raise ValueError("v0, v1, and v2 must all have shape (F, 3)")
+    if not (np.isfinite(v0).all() and np.isfinite(v1).all() and np.isfinite(v2).all()):
+        raise ValueError("triangle vertices must all be finite")
+    order = _validate_order(order)
+    points, weights = duffy_quadrature_batch(v0, v1, v2, order=order)
+    delta = x[None, None, :] - points
+    r2 = np.sum(delta * delta, axis=2)
+    r3 = r2 * np.sqrt(r2)
+    return -np.sum((weights / r3)[:, :, None] * delta, axis=1) / _FOUR_PI
 
 
 def solid_angle_triangles_batch(

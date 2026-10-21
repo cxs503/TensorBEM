@@ -30,6 +30,8 @@ jobs:
         run: python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output artifacts/analytical-study.json
       - name: Run sphere added-mass benchmark
         run: python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
+      - name: Run sphere velocity benchmark
+        run: python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2 --output artifacts/sphere-velocity.json
       - name: Generate three-dimensional verification report
         run: python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
       - name: Upload benchmark evidence
@@ -40,4 +42,5 @@ jobs:
             artifacts/refinement-study.json
             artifacts/analytical-study.json
             artifacts/three-dimensional-study.json
+            artifacts/sphere-velocity.json
           if-no-files-found: error

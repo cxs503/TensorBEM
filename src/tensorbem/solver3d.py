@@ -28,6 +28,9 @@ from numpy.typing import NDArray
 from .geometry3d import TriangleMesh
 from .kernels3d import (
     duffy_quadrature_batch,
+    gradient_single_layer_triangle_self,
+    gradient_single_layer_triangles_batch,
+    gradient_solid_angle_triangles_batch,
     integrate_single_layer_triangle_self,
     solid_angle_triangles_batch,
 )
@@ -238,4 +241,121 @@ def evaluate_surface_field(
         else:
             contribution += double_row @ result.boundary_values
         values[index] = contribution
+    return values
+
+
+def evaluate_surface_velocity(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
+    points: FloatArray,
+    domain: str | None = None,
+    quadrature_order: int = 8,
+    minimum_clearance_factor: float = 0.05,
+) -> FloatArray:
+    """Evaluate the harmonic velocity ``grad(phi)`` at points away from the surface.
+
+    The velocity is obtained by differentiating the Green representation used
+    by :func:`evaluate_surface_field`:
+
+    * the single-layer term contributes
+      ``sum_j q_j * integral_{T_j} grad_x G dS``, whose kernel
+      ``-(x - y)/(4*pi*|x - y|**3)`` is integrable and is evaluated with the
+      same fixed-order Duffy rule;
+    * the double-layer term contributes ``sum_j u_j * grad(Omega_j)/(4*pi)``
+      for the interior and its negative for the exterior, where ``Omega_j`` is
+      the signed solid angle of panel ``j``.  The hypersingular kernel
+      ``grad_x(dG/dn_y)`` is not integrable by ordinary quadrature, but the
+      integral of a constant density over a flat panel is the gradient of the
+      panel's closed-form solid angle, which is what is used here.
+
+    Returns an array of shape ``(M, 3)``.  Points closer than
+    ``minimum_clearance_factor * h_max`` to the surface are rejected, for the
+    same reason as in :func:`evaluate_surface_field`.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if not isinstance(result, LaplaceSurfaceResult):
+        raise TypeError("result must be a LaplaceSurfaceResult")
+    if domain is None:
+        domain = result.domain
+    domain = _validate_domain(domain)
+    if domain != result.domain:
+        raise ValueError("domain must match the result's boundary-value problem")
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 3:
+        raise ValueError("points must have shape (M, 3)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    if (
+        result.normal_derivative.shape != (mesh.panel_count,)
+        or result.boundary_values.shape != (mesh.panel_count,)
+    ):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    order = _validate_order(quadrature_order)
+    clearance = minimum_clearance_factor * mesh.h_max
+    values = np.empty((len(targets), 3), dtype=float)
+    for index, target in enumerate(targets):
+        if _minimum_distance_to_mesh(mesh, target) < clearance:
+            raise ValueError(
+                "evaluation point is too close to the boundary for the fixed-order "
+                "field quadrature; choose a point farther from the surface"
+            )
+        single_gradients = gradient_single_layer_triangles_batch(
+            target, mesh.v0, mesh.v1, mesh.v2, order=order
+        )
+        contribution = result.normal_derivative @ single_gradients
+        solid_angle_gradients = gradient_solid_angle_triangles_batch(
+            target, mesh.v0, mesh.v1, mesh.v2
+        )
+        double_term = (result.boundary_values @ solid_angle_gradients) / _FOUR_PI
+        if domain == "interior":
+            contribution += double_term
+        else:
+            contribution -= double_term
+        values[index] = contribution
+    return values
+
+
+def evaluate_surface_velocity_at_panels(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
+    quadrature_order: int = 8,
+) -> FloatArray:
+    """Evaluate the velocity on each panel centroid, from the stated domain's side.
+
+    The single-layer self term is evaluated with the polar rule that removes
+    the logarithmic-type singularity of the ``1/r`` kernel; the double-layer
+    self term uses the closed-form solid-angle gradient, which is continuous
+    across the panel plane.
+
+    The constant-panel trace makes the reconstructed gradient degrade as the
+    evaluation point approaches the surface, so this quantity is a diagnostic
+    rather than an accuracy claim; see the module notes in
+    :mod:`tensorbem.benchmarks.sphere_velocity`.
+
+    Returns an array of shape ``(F, 3)``.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if not isinstance(result, LaplaceSurfaceResult):
+        raise TypeError("result must be a LaplaceSurfaceResult")
+    order = _validate_order(quadrature_order)
+    sign = 1.0 if result.domain == "interior" else -1.0
+    panel_count = mesh.panel_count
+    values = np.empty((panel_count, 3), dtype=float)
+    for index in range(panel_count):
+        target = mesh.centroids[index]
+        single_gradients = gradient_single_layer_triangles_batch(
+            target, mesh.v0, mesh.v1, mesh.v2, order=order
+        )
+        single_gradients[index] = gradient_single_layer_triangle_self(
+            mesh.vertices[mesh.faces[index]]
+        )
+        solid_angle_gradients = gradient_solid_angle_triangles_batch(
+            target, mesh.v0, mesh.v1, mesh.v2
+        )
+        values[index] = (
+            result.normal_derivative @ single_gradients
+            + sign * (result.boundary_values @ solid_angle_gradients) / _FOUR_PI
+        )
     return values
