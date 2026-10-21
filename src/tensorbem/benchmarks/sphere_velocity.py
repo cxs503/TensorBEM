@@ -28,6 +28,15 @@ prescribed at panel centroids using the angular coordinate of each centroid,
 so no artificial radial-depth bias is introduced.  This is a verification
 case, not a free-surface or ship-hydrodynamics validation.
 
+Two surface velocities are reported.  The *recovered* one builds the
+velocity from the exact identity ``grad(phi)|_Gamma = grad_tan(u) + n*q``,
+where the tangential derivative of the boundary values is recovered by a
+superconvergent least-squares patch fit; it converges at second order in
+the panel size.  The *representation* one differentiates the Green formula
+with the piecewise-constant traces of the discretisation; the potential is
+then accurate to ``O(h)`` but the gradient amplifies that error to ``O(1)``,
+so it is reported as a diagnostic only.
+
 Run: python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2
 """
 from __future__ import annotations
@@ -42,6 +51,7 @@ import numpy as np
 
 from tensorbem.geometry3d import icosphere
 from tensorbem.solver3d import (
+    evaluate_representation_surface_velocity_at_panels,
     evaluate_surface_velocity,
     evaluate_surface_velocity_at_panels,
     solve_laplace_surface,
@@ -168,14 +178,18 @@ def run(
             }
         )
 
-    # Diagnostic only: the reconstructed velocity evaluated on the panel
-    # centroids.  The constant-panel trace makes the interior-limit gradient
-    # degrade as the evaluation point approaches the surface; see the module
-    # docstring and the verification report.  This number is reported so the
-    # limitation stays visible, not so it can be used as an accuracy claim.
+    # The surface velocity on the panel centroids.  The recovered path builds
+    # the velocity from the exact identity grad(phi) = grad_tan(u) + n*q and
+    # converges at second order; the representation path differentiates the
+    # Green formula with the piecewise-constant traces and is reported as a
+    # diagnostic of that amplification.
     surface_velocity = evaluate_surface_velocity_at_panels(mesh, result)
     surface_exact = analytic_sphere_velocity(centroids, radius=radius, speed=speed)
     surface_error = surface_velocity - surface_exact
+    representation_velocity = evaluate_representation_surface_velocity_at_panels(
+        mesh, result
+    )
+    representation_error = representation_velocity - surface_exact
 
     return {
         "benchmark": "three_dimensional_translating_sphere_velocity",
@@ -198,6 +212,15 @@ def run(
             )
         ),
         "surface_velocity_max_abs_error": float(np.max(np.abs(surface_error))),
+        "representation_surface_velocity_relative_l2_error": float(
+            math.sqrt(
+                float(np.sum(representation_error**2))
+                / float(np.sum(surface_exact**2))
+            )
+        ),
+        "representation_surface_velocity_max_abs_error": float(
+            np.max(np.abs(representation_error))
+        ),
         "h_max": mesh.h_max,
         "h_mean": mesh.h_mean,
         "surface_area": mesh.surface_area,
@@ -210,10 +233,12 @@ def run(
             "Flat triangular panels approximate the sphere. Boundary values use "
             "the sphere solution at the centroid angular coordinate. The velocity "
             "is the exact exterior field of the translating sphere. The "
-            "surface_velocity_* numbers are a diagnostic of the constant-panel "
-            "trace: the reconstructed interior-limit gradient degrades as the "
-            "evaluation point approaches the surface, so it is not an accuracy "
-            "claim. No free-surface, wave, viscosity, or ship-hull physics is "
+            "surface_velocity_* numbers use the recovered surface velocity, "
+            "grad(phi) = grad_tan(u) + n*q, and are an accuracy claim. The "
+            "representation_surface_velocity_* numbers differentiate the Green "
+            "formula with the piecewise-constant traces and are reported as a "
+            "diagnostic: the gradient amplifies the O(h) trace error to O(1). "
+            "No free-surface, wave, viscosity, or ship-hull physics is "
             "included."
         ),
     }

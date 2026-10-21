@@ -34,6 +34,7 @@ from .kernels3d import (
     integrate_single_layer_triangle_self,
     solid_angle_triangles_batch,
 )
+from .recovery import recover_tangent_gradient
 
 FloatArray = NDArray[np.float64]
 _FOUR_PI = 4.0 * np.pi
@@ -319,19 +320,63 @@ def evaluate_surface_velocity(
 def evaluate_surface_velocity_at_panels(
     mesh: TriangleMesh,
     result: LaplaceSurfaceResult,
+) -> FloatArray:
+    """Evaluate the surface velocity ``grad(phi)`` on each panel centroid.
+
+    The velocity is built from the exact identity that holds for a harmonic
+    function on a surface,
+
+        grad(phi)|_Gamma = grad_tan(u) + n * dphi/dn,
+
+    where ``u`` is the prescribed potential on the boundary, ``grad_tan(u)``
+    is its tangential derivative and ``dphi/dn`` the normal derivative.  The
+    tangential derivative is recovered from the cell-centred boundary values
+    by a superconvergent least-squares patch fit
+    (:func:`tensorbem.recovery.recover_tangent_gradient`), and the normal
+    derivative is the solved flux.  For the exterior problem the stored flux
+    is the derivative along the fluid-domain normal, so the sign is flipped
+    to obtain the derivative along the outward panel normal, exactly as in
+    :func:`evaluate_surface_field`.
+
+    Unlike
+    :func:`evaluate_representation_surface_velocity_at_panels`, this
+    reconstruction does not amplify the ``O(h)`` error of the constant-panel
+    trace into an ``O(1)`` error of the gradient, and it converges at second
+    order in the panel size.
+
+    Returns an array of shape ``(F, 3)``.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if not isinstance(result, LaplaceSurfaceResult):
+        raise TypeError("result must be a LaplaceSurfaceResult")
+    if result.boundary_values.shape != (mesh.panel_count,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    sign = 1.0 if result.domain == "interior" else -1.0
+    tangent = recover_tangent_gradient(mesh, result.boundary_values)
+    normal_component = sign * result.normal_derivative
+    return tangent + normal_component[:, None] * mesh.normals
+
+
+def evaluate_representation_surface_velocity_at_panels(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
     quadrature_order: int = 8,
 ) -> FloatArray:
-    """Evaluate the velocity on each panel centroid, from the stated domain's side.
+    """Differentiate the Green representation on each panel centroid.
 
     The single-layer self term is evaluated with the polar rule that removes
     the logarithmic-type singularity of the ``1/r`` kernel; the double-layer
     self term uses the closed-form solid-angle gradient, which is continuous
     across the panel plane.
 
-    The constant-panel trace makes the reconstructed gradient degrade as the
-    evaluation point approaches the surface, so this quantity is a diagnostic
-    rather than an accuracy claim; see the module notes in
-    :mod:`tensorbem.benchmarks.sphere_velocity`.
+    This path differentiates the continuous representation formula with the
+    piecewise-constant boundary traces of the discretisation.  The potential
+    is then accurate to ``O(h)``, but the gradient amplifies that error to
+    ``O(1)``, so the surface velocity is inaccurate by tens of percent and
+    does not improve under refinement.  The quantity is kept as a diagnostic
+    that documents the effect; use
+    :func:`evaluate_surface_velocity_at_panels` for the surface velocity.
 
     Returns an array of shape ``(F, 3)``.
     """
