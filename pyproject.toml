@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tensorbem"
-version = "0.2.0"
+version = "0.3.0"
 description = "A verifiable boundary-element method prototype for the Tensor scientific-computing ecosystem"
 readme = "README.md"
 requires-python = ">=3.10"

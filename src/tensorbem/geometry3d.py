@@ -261,3 +261,65 @@ def icosphere(subdivisions: int, radius: float = 1.0) -> TriangleMesh:
 
     coordinates = radius * np.asarray(vertices, dtype=float)
     return TriangleMesh(coordinates, np.asarray(faces, dtype=np.int64))
+
+
+def _validate_semi_axes(semi_axes: FloatArray) -> FloatArray:
+    axes = np.asarray(semi_axes, dtype=float)
+    if axes.shape != (3,):
+        raise ValueError("semi_axes must have shape (3,)")
+    if not np.isfinite(axes).all():
+        raise ValueError("semi_axes must all be finite")
+    if np.any(axes <= 0.0):
+        raise ValueError("semi_axes must all be positive")
+    return axes
+
+
+def ellipsoid_mesh(subdivisions: int, semi_axes: FloatArray) -> TriangleMesh:
+    """Return a flat-faceted ellipsoid mesh with the icosphere topology.
+
+    The unit icosphere is scaled axis by axis, so the connectivity, the
+    outward orientation and the closure checks are those of
+    :func:`icosphere`; the vertices lie on
+    ``x**2/a**2 + y**2/b**2 + z**2/c**2 = 1`` and the flat panels lie inside
+    it. The panel count is ``20 * 4**subdivisions``.
+
+    Scaling by a positive diagonal has positive determinant, so the signed
+    volume stays positive and the outward normals are preserved. A mesh built
+    this way is *not* an equi-angular parametrisation of the ellipsoid, which
+    is deliberate: it keeps a controlled, isotropic-in-index distribution of
+    panels across the three principal directions.
+    """
+    axes = _validate_semi_axes(semi_axes)
+    base = icosphere(subdivisions, radius=1.0)
+    return TriangleMesh(base.vertices * axes, base.faces)
+
+
+def project_to_ellipsoid(points: FloatArray, semi_axes: FloatArray) -> FloatArray:
+    """Project points radially from the origin onto an ellipsoid.
+
+    Parameters
+    ----------
+    points:
+        Array of shape ``(M, 3)``. The origin is not a valid direction and is
+        rejected.
+    semi_axes:
+        Positive semi-axes of shape ``(3,)``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Points of shape ``(M, 3)`` on the ellipsoid, each along the ray from
+        the origin through the corresponding input point.
+    """
+    axes = _validate_semi_axes(semi_axes)
+    coordinates = np.asarray(points, dtype=float)
+    if coordinates.ndim != 2 or coordinates.shape[1] != 3:
+        raise ValueError("points must have shape (M, 3)")
+    if not np.isfinite(coordinates).all():
+        raise ValueError("points must all be finite")
+    norms = np.linalg.norm(coordinates, axis=1)
+    if np.any(norms <= 0.0):
+        raise ValueError("points must not contain the origin")
+    directions = coordinates / norms[:, None]
+    scale = 1.0 / np.sqrt(np.sum((directions / axes[None, :]) ** 2, axis=1))
+    return scale[:, None] * directions
