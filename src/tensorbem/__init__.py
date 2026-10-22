@@ -17,6 +17,7 @@ from .analytic import (
     ursell_cylinder_coefficients,
 )
 from .geometry import PanelMesh, ellipse_mesh, regular_polygon
+from .clearance import SurfaceClearanceReport, diagnose_surface_clearance
 from .geometry3d import (
     TriangleMesh,
     ellipsoid_mesh,
@@ -54,6 +55,8 @@ __all__ = [
     "icosphere",
     "ellipsoid_mesh",
     "project_to_ellipsoid",
+    "SurfaceClearanceReport",
+    "diagnose_surface_clearance",
     "LaplaceSurfaceResult",
     "solve_laplace_surface",
     "assemble_surface_matrices",
