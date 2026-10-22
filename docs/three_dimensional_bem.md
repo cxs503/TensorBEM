@@ -448,3 +448,22 @@ python -m tensorbem.benchmarks.surface_velocity_study --levels 1 2 3 \
 - Duffy M G. Quadrature over a pyramid or cube of integrands with a singularity at a vertex. *SIAM Journal on Numerical Analysis*, 1982, 19(6): 1260–1262. https://doi.org/10.1137/0719090.（三角形/四面体奇异积分变换。）
 - Van Oosterom A, Strackee J. The solid angle of a plane triangle. *IEEE Transactions on Biomedical Engineering*, 1983, BME-30(2): 125–126. https://doi.org/10.1109/TBME.1983.325207.（三角形立体角闭式公式。）
 - 实现与原始数据生成入口：`src/tensorbem/geometry3d.py`、`src/tensorbem/kernels3d.py`、`src/tensorbem/solver3d.py`、`src/tensorbem/benchmarks/sphere_added_mass.py`、`src/tensorbem/benchmarks/sphere_velocity.py`、`src/tensorbem/benchmarks/three_dimensional_study.py`、`src/tensorbem/recovery.py`、`src/tensorbem/benchmarks/surface_velocity_study.py`；回归测试：`tests/test_geometry3d.py`、`tests/test_kernels3d.py`、`tests/test_kernels3d_gradients.py`、`tests/test_solver3d.py`、`tests/test_sphere_benchmark.py`、`tests/test_sphere_velocity.py`、`tests/test_surface_velocity_recovery.py`、`tests/test_surface_velocity_study.py`。
+
+
+## 10. 近体测点的 clearance 诊断契约
+
+三维场/速度求值器已有硬性数值门槛：测点距离表面小于默认的 0.05 h_max 时会拒绝求值，因为当前固定阶 Duffy 求积不是近奇异求积格式。该门槛解决的是求积适用性，不等同于速度精度保证。速度表示公式在约 O(h) 近体层内仍可能有较大误差，因此新增独立诊断接口：
+
+```python
+from tensorbem import diagnose_surface_clearance
+report = diagnose_surface_clearance(mesh, probe_points, warning_factor=1.0, policy="warn")
+print(report.to_dict())
+```
+
+返回每个测点到三角形表面的最小距离、无量纲距离 distance / h_max、警戒阈值、危险测点索引和处理策略。policy 支持：
+
+- warn：默认策略；警戒层内有点时发出 RuntimeWarning。
+- raise：存在警戒层内测点时抛出 ValueError。
+- ignore：只记录诊断量，适用于已明确标记为诊断用途的基准。
+
+球体速度基准的 JSON 现在包含 probe_clearance，使 TensorPlatform/Agent 可以在消费速度误差之前检查采样点与网格尺度的关系。警戒层外不代表已证明准确；该字段是可追溯性和风险提示，不是误差估计器，也不替代解析基准。表面速度仍应使用恢复路径，表示公式路径仍为诊断用途。
