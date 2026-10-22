@@ -24,9 +24,15 @@ that do not involve a free surface:
   to the disc, and a slender spheroid returns ``rho*V`` for transverse motion
   and zero for axial motion.
 
+* **Ursell cylinder.** For a circular cylinder submerged in deep water, the
+  multipole solution reduces the body condition to an infinite system whose
+  coefficients have a closed form involving an exponential integral. See
+  :func:`ursell_cylinder_coefficients`. This is the first reference here that
+  involves a free surface.
+
 Every reference here is independent of the boundary-element discretisation:
-the numbers come from one-dimensional quadrature of a classical integral, not
-from another BEM solve.
+the numbers come from one-dimensional quadrature of a classical integral or
+from a truncated analytical system, not from another BEM solve.
 """
 
 from __future__ import annotations
@@ -379,3 +385,184 @@ def ellipsoid_translation_trace_scale(
         raise ValueError("axis must be 0, 1 or 2")
     factor = ellipsoid_shape_factors(axes)[int(axis)]
     return float(factor / (_SHAPE_FACTOR_SUM - factor))
+
+
+# --------------------------------------------------------------------------
+# Ursell's circular cylinder in deep water
+# --------------------------------------------------------------------------
+
+_EULER_GAMMA = 0.5772156649015328606065120900824024310422
+
+
+def exponential_integral(x: float) -> float:
+    """The exponential integral ``Ei(x)`` for real ``x > 0``.
+
+    Power series below ``x = 60``, then the divergent asymptotic series
+    ``e**x/x * sum_k k!/x**k`` truncated at its smallest term. Truncating at the
+    minimum matters: continuing past it adds terms that grow without bound and
+    destroys the answer. The break is placed where the asymptotic truncation
+    error, about ``x!/x**x ~ sqrt(2*pi*x)*exp(-x)``, is already ``1e-25``, so
+    both branches reach full double precision.
+    """
+    value = float(x)
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError("x must be a positive finite number")
+    if value > 700.0:
+        raise ValueError("Ei overflows double precision beyond x = 700")
+    if value <= 60.0:
+        total = _EULER_GAMMA + math.log(value)
+        term = 1.0
+        for k in range(1, 600):
+            term *= value / k
+            increment = term / k
+            total += increment
+            if abs(increment) < 1e-17 * abs(total):
+                return total
+        return total
+    return math.exp(value) * _scaled_exponential_integral(value)
+
+
+def _scaled_exponential_integral(x: float) -> float:
+    """Return ``exp(-x)*Ei(x)`` without forming ``exp(x)``.
+
+    Used for the free-surface term, where ``exp(-2Kf)*Ei(2Kf)`` stays ``O(1/x)``
+    while both factors are individually enormous. Computing the product from
+    the asymptotic series avoids the overflow of ``Ei(x)`` for large ``x`` and
+    keeps full relative accuracy in the cancellation that follows.
+    """
+    total = 0.0
+    term = 1.0
+    previous = math.inf
+    for k in range(0, 400):
+        if k > 0:
+            term *= k / x
+        if term > previous:
+            break
+        previous = term
+        total += term
+    return total / x
+
+
+def ursell_cylinder_coefficients(
+    ka: float, a_over_f: float, terms: int = 40
+) -> tuple[float, float]:
+    """Dimensionless added mass and damping of Ursell's circular cylinder.
+
+    A circular cylinder of radius ``a`` whose axis lies a distance ``f`` below
+    the free surface of deep water, oscillating in heave or sway. In infinite
+    depth the heave and sway coefficients are *identical* (Ursell 1949; the
+    matrix below does not depend on the mode); this function therefore returns
+    a single pair, valid for either motion.
+
+    The method of multipoles expands the potential in wave-free harmonics and
+    reduces the body condition to the infinite system
+
+        -a_m/m + sum_n a_n A_mn = -delta_{m1},      m = 1, 2, ...
+
+    with, for deep water,
+
+        A_mn = (-ka)**(m+n)/(m! n!) * [
+                   (m+n-1)!/(2kf)**(m+n)
+                 + 2 sum_{r=1}^{m+n-1} (r-1)!/(2kf)**r
+                 + 2 exp(-2kf) * (i*pi - Ei(2kf)) ].
+
+    The principal-value integral of the underlying representation collapses to
+    that finite sum plus an exponential integral (Evans et al. 1979), so nothing
+    here is quadrature: it is a closed-form matrix whose only numerically
+    special ingredient is :func:`exponential_integral`. The hydrodynamic
+    coefficients follow from the first coefficient,
+
+        mu + i*nu = -1 + 2*a_1,
+
+    where ``mu = A/(rho*pi*a**2)`` is the added mass and ``nu = B/(omega*rho*pi*a**2)``
+    the damping, both normalised by the displaced mass per unit span. Note the
+    ``-1`` applies to the real part only.
+
+    Parameters
+    ----------
+    ka:
+        Wavenumber times radius, ``k*a`` with ``k = omega**2/g``.
+    a_over_f:
+        Radius over submergence of the *axis*. Must lie strictly between zero
+        and one for a fully submerged cylinder.
+    terms:
+        Truncation order of the infinite system.
+
+    Returns
+    -------
+    ``(mu, nu)``, the dimensionless added mass and damping.
+    """
+    k_a = float(ka)
+    ratio = float(a_over_f)
+    if not math.isfinite(k_a) or k_a <= 0.0:
+        raise ValueError("ka must be a positive finite number")
+    if not math.isfinite(ratio) or not 0.0 < ratio < 1.0:
+        raise ValueError("a_over_f must lie strictly between 0 and 1")
+    if isinstance(terms, bool) or not isinstance(terms, (int, np.integer)):
+        raise ValueError("terms must be a positive integer")
+    if int(terms) < 1:
+        raise ValueError("terms must be a positive integer")
+
+    count = int(terms)
+    k_f = k_a / ratio
+    x = 2.0 * k_f
+    if x > 700.0:
+        raise ValueError("2*k*f is too large for double precision")
+    log_x = math.log(x)
+    # log(n!) up to 2*count, so that (m+n-1)! never overflows.
+    log_factorial = [math.lgamma(n + 1) for n in range(2 * count + 2)]
+    scaled_ei = _scaled_exponential_integral(x) if x > 60.0 else (
+        math.exp(-x) * exponential_integral(x)
+    )
+
+    matrix = np.zeros((count, count), dtype=np.complex128)
+    for m in range(1, count + 1):
+        for n in range(1, count + 1):
+            order = m + n
+            bracket = math.exp(log_factorial[order - 1] - order * log_x)
+            for r in range(1, order):
+                bracket += 2.0 * math.exp(log_factorial[r - 1] - r * log_x)
+            bracket += 2.0 * math.exp(-x) * 1j * math.pi - 2.0 * scaled_ei
+            matrix[m - 1, n - 1] = (
+                (-k_a) ** order
+                * math.exp(-log_factorial[m] - log_factorial[n])
+                * bracket
+            )
+    matrix[np.diag_indices(count)] -= 1.0 / np.arange(1, count + 1)
+    right_hand_side = np.zeros(count, dtype=np.complex128)
+    right_hand_side[0] = -1.0
+    coefficients = np.linalg.solve(matrix, right_hand_side)
+    first = coefficients[0]
+    return float(-1.0 + 2.0 * first.real), float(2.0 * first.imag)
+
+
+def ursell_cylinder_added_mass(
+    radius: float,
+    submergence: float,
+    omega: float,
+    density: float = 1025.0,
+    *,
+    gravity: float = 9.80665,
+    terms: int = 40,
+) -> tuple[float, float]:
+    """Dimensional added mass and damping of a deeply submerged cylinder.
+
+    Returns ``(A, B)`` in the convention
+
+        F = -(A * acceleration) - (B * velocity)
+
+    for a unit-length section oscillating in heave or sway, so ``A`` has units
+    of mass per unit span and ``B`` of mass per unit span per unit time. The
+    wave frequency is ``omega``, the axis sits ``submergence`` below the still
+    water level, and the wavenumber is ``k = omega**2/g``.
+    """
+    a = _positive("radius", radius)
+    f = _positive("submergence", submergence)
+    w = _positive("omega", omega)
+    rho = _positive("density", density)
+    g = _positive("gravity", gravity)
+    if f <= a:
+        raise ValueError("the cylinder must be fully submerged: submergence > radius")
+    mu, nu = ursell_cylinder_coefficients(w * w * a / g, a / f, terms)
+    displaced = rho * math.pi * a * a
+    return mu * displaced, nu * displaced * w
