@@ -10,6 +10,32 @@ from numpy.typing import NDArray
 FloatArray = NDArray[np.float64]
 
 
+def _validate_panel_count(panel_count: int) -> int:
+    """Return a validated integer panel count.
+
+    Floats, booleans and non-integral values are rejected rather than silently
+    truncated: a report that claims ``panels: 3.5`` while the mesh has four
+    panels is not reproducible.
+    """
+    if isinstance(panel_count, (bool, np.bool_)) or not isinstance(
+        panel_count, (int, np.integer)
+    ):
+        raise ValueError("panel_count must be an integer >= 3")
+    count = int(panel_count)
+    if count < 3:
+        raise ValueError("panel_count must be at least 3")
+    return count
+
+
+def _validate_length(name: str, value: float) -> float:
+    if isinstance(value, (bool, np.bool_)):
+        raise ValueError(f"{name} must be a positive finite number")
+    number = float(value)
+    if not math.isfinite(number) or number <= 0.0:
+        raise ValueError(f"{name} must be a positive finite number")
+    return number
+
+
 @dataclass(frozen=True)
 class PanelMesh:
     """A closed, counter-clockwise polygon discretized into straight panels.
@@ -67,13 +93,41 @@ class PanelMesh:
     def perimeter(self) -> float:
         return float(np.sum(self.lengths))
 
+    @property
+    def area(self) -> float:
+        """Enclosed area of the polygon."""
+        points = self.vertices
+        return float(
+            0.5
+            * np.sum(
+                points[:, 0] * np.roll(points[:, 1], -1)
+                - points[:, 1] * np.roll(points[:, 0], -1)
+            )
+        )
+
 
 def regular_polygon(panel_count: int, radius: float = 1.0) -> PanelMesh:
     """Return a counter-clockwise regular polygon approximating a circle."""
-    if panel_count < 3:
-        raise ValueError("panel_count must be at least 3")
-    if not math.isfinite(radius) or radius <= 0.0:
-        raise ValueError("radius must be a positive finite number")
-    theta = 2.0 * np.pi * np.arange(panel_count) / panel_count
+    count = _validate_panel_count(panel_count)
+    radius = _validate_length("radius", radius)
+    theta = 2.0 * np.pi * np.arange(count) / count
     vertices = radius * np.column_stack((np.cos(theta), np.sin(theta)))
+    return PanelMesh(vertices)
+
+
+def ellipse_mesh(
+    panel_count: int, semi_major: float = 1.5, semi_minor: float = 0.75
+) -> PanelMesh:
+    """Return a counter-clockwise inscribed polygon approximating an ellipse.
+
+    Vertices lie on ``x**2/semi_major**2 + y**2/semi_minor**2 = 1`` at uniform
+    angle steps. Uniform angle steps do not give uniform arc length on an
+    ellipse; that is intentional, because a benchmark that only ever sees
+    equal-length panels cannot expose a length-dependent assembly error.
+    """
+    count = _validate_panel_count(panel_count)
+    major = _validate_length("semi_major", semi_major)
+    minor = _validate_length("semi_minor", semi_minor)
+    theta = 2.0 * np.pi * np.arange(count) / count
+    vertices = np.column_stack((major * np.cos(theta), minor * np.sin(theta)))
     return PanelMesh(vertices)

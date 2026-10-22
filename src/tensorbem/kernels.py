@@ -11,17 +11,44 @@ _TWO_PI = 2.0 * np.pi
 REFERENCE_LENGTH = 2.0
 
 
-def fundamental_solution(distance: FloatArray | float) -> FloatArray:
-    r"""Return G(r) = -(1/(2*pi))*log(r/2), with -Laplacian(G)=delta.
+def validate_reference_length(reference_length: float) -> float:
+    """Return a validated logarithmic reference length.
+
+    The single-layer kernel is ``-(1/(2*pi))*log(r/reference_length)``. The
+    reference length shifts the kernel by a constant. For a bounded domain that
+    shift is immaterial (a harmonic Dirichlet problem has zero net flux, so the
+    solution is unchanged), and for the exterior problem as well the solution
+    is unchanged. What the shift does change is *conditioning*: integrating a
+    constant density over a closed curve gives ``a*log(reference_length/a)``
+    for a circle of radius ``a``, so the single-layer matrix approaches rank
+    deficiency when the curve's logarithmic capacity equals the reference
+    length. The value must therefore be positive, finite and explicit.
+    """
+    if isinstance(reference_length, (bool, np.bool_)):
+        raise ValueError("reference_length must be a positive finite number")
+    value = float(reference_length)
+    if not math.isfinite(value) or value <= 0.0:
+        raise ValueError("reference_length must be a positive finite number")
+    return value
+
+
+def fundamental_solution(
+    distance: FloatArray | float, reference_length: float = REFERENCE_LENGTH
+) -> FloatArray:
+    r"""Return G(r) = -(1/(2*pi))*log(r/reference_length), with -Laplacian(G)=delta.
 
     In two dimensions the fundamental solution is defined up to an additive
-    constant. The reference length avoids the unit-capacity degeneracy of the
-    single-layer operator for a unit circle with the unshifted logarithm.
+    constant. The reference length carries that constant: it avoids the
+    unit-capacity degeneracy of the single-layer operator for a unit circle
+    with the unshifted logarithm. A closed curve whose logarithmic capacity
+    equals ``reference_length`` still makes the single-layer matrix singular;
+    see :func:`validate_reference_length`.
     """
+    reference = validate_reference_length(reference_length)
     r = np.asarray(distance, dtype=float)
     if np.any(r <= 0.0):
         raise ValueError("distance must be positive; handle singular panel integrals separately")
-    return -np.log(r / REFERENCE_LENGTH) / _TWO_PI
+    return -np.log(r / reference) / _TWO_PI
 
 
 def double_layer_kernel(
@@ -46,7 +73,11 @@ def _log_distance_primitive(z: float, normal_distance: float) -> float:
 
 
 def integrate_single_layer_panel(
-    target: FloatArray, start: FloatArray, tangent: FloatArray, length: float
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
 ) -> float:
     r"""Integrate G(target, y) exactly over a straight constant panel.
 
@@ -63,13 +94,14 @@ def integrate_single_layer_panel(
         raise ValueError("panel integral inputs must be finite")
     if not math.isfinite(length) or length <= 0.0:
         raise ValueError("length must be a positive finite number")
+    reference = validate_reference_length(reference_length)
     xi = float(np.dot(x - a, t))
     normal_distance = float(np.dot(x - a, np.array([-t[1], t[0]])))
     integral_log_r = (
         _log_distance_primitive(length - xi, normal_distance)
         - _log_distance_primitive(-xi, normal_distance)
     )
-    return -(integral_log_r - length * math.log(REFERENCE_LENGTH)) / _TWO_PI
+    return -(integral_log_r - length * math.log(reference)) / _TWO_PI
 
 
 def integrate_double_layer_panel(
