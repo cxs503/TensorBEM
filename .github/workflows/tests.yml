@@ -42,6 +42,8 @@ jobs:
           python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis y
       - name: Run ellipsoid added-mass benchmark
         run: python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
+      - name: Run Ursell submerged-cylinder radiation benchmark
+        run: python -m tensorbem.benchmarks.ursell_cylinder --panels 64 --ka 0.6 --output artifacts/ursell.json
       - name: Generate classical benchmark study
         run: python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
       - name: Upload benchmark evidence

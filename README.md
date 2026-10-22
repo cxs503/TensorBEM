@@ -10,7 +10,9 @@ The second milestone adds a 3-D Laplace surface-element baseline: closed triangu
 
 The third milestone adds the classical benchmark layer that does not need a free surface: a **2-D exterior** Dirichlet formulation (`solve_laplace_exterior_dirichlet`, with an explicit logarithmic reference length and a reported capacity degeneracy), the **translating elliptic cylinder** added mass per unit span (\(\rho\pi b^2\) and \(\rho\pi a^2\)), the **translating ellipsoid** added mass along all three principal axes (\(\rho V\alpha_i/(2-\alpha_i)\) with Lamb's shape factors), and **interior solid harmonics** of degree 1-3 on the faceted sphere. Every reference is a classical closed form, checked against the sphere, thin-disc and slender-body limits. See [the classical benchmark report](docs/classical_benchmarks.md).
 
-This is a research prototype, not yet a validated ship-hydrodynamics, free-surface, acoustics, or 3-D ship-flow package.
+The fourth milestone adds the first free-surface layer: a deep-water frequency-domain Green function (principal-value integral evaluated by split Gauss-Legendre/Laguerre rules), the **indirect** source formulation that keeps the radiation condition intact, and the **Ursell submerged cylinder** radiation benchmark. The reference is Ursell's multipole solution, an independent analytical construction which reproduces the published zero-damping frequencies to machine precision; the panel solution is within \\(7.7\times10^{-3}\\) in added mass at 128 panels and a method-of-fundamental-solutions check within \\(2\times10^{-4}\\), with the near/far-field energy identity closing to \\(6\times10^{-3}\\) and improving under refinement. See section 4.6 of [the benchmark report](docs/marine_bem_benchmarks.md). This layer is two-dimensional, deep-water, submerged-body and radiation-only: there is no incident wave, diffraction, waterline geometry, finite depth or three-dimensional free-surface kernel.
+
+This is a research prototype, not yet a validated ship-hydrodynamics, acoustics, or 3-D ship-flow package.
 
 ## Quick start
 
@@ -31,6 +33,7 @@ python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis y
 python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
 python -m tensorbem.benchmarks.interior_harmonics --subdivisions 1 2 3 --degrees 1 2 3
 python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
+python -m tensorbem.benchmarks.ursell_cylinder --panels 128 --ka 0.6 --output artifacts/ursell.json
 ```
 
 The benchmark writes JSON to stdout; the refinement study can also persist a machine-readable JSON report. The manufactured field is \\(u(r,\\theta)=r\\cos\\theta\\), with exact outward normal derivative \\(q=\\cos\\theta\\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
