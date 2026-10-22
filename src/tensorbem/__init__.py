@@ -12,6 +12,9 @@ from .analytic import (
     solid_harmonic,
     solid_harmonic_degree,
     solid_harmonic_names,
+    exponential_integral,
+    ursell_cylinder_added_mass,
+    ursell_cylinder_coefficients,
 )
 from .geometry import PanelMesh, ellipse_mesh, regular_polygon
 from .geometry3d import (
@@ -62,6 +65,9 @@ __all__ = [
     "SOLID_HARMONICS",
     "solid_harmonic",
     "solid_harmonic_names",
+    "exponential_integral",
+    "ursell_cylinder_added_mass",
+    "ursell_cylinder_coefficients",
     "solid_harmonic_degree",
     "ellipse_added_mass",
     "ellipse_translation_trace_scale",
