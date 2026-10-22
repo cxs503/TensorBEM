@@ -8,7 +8,11 @@ The first milestone is a transparent 2-D Laplace BEM implementation with closed 
 
 The second milestone adds a 3-D Laplace surface-element baseline: closed triangular meshes, constant panels, centroid collocation with the \(c=1/2\) free term, analytic double-layer solid angles, Duffy single-layer quadrature, an exact centroid self-panel integral, and interior/exterior Dirichlet formulations. The sphere added-mass benchmark, three cross-verification cases, and a refinement study are included.
 
-This is a research prototype, not yet a validated ship-hydrodynamics, free-surface, acoustics, or 3-D ship-flow package.
+The third milestone adds the classical benchmark layer that does not need a free surface: a **2-D exterior** Dirichlet formulation (`solve_laplace_exterior_dirichlet`, with an explicit logarithmic reference length and a reported capacity degeneracy), the **translating elliptic cylinder** added mass per unit span (\(\rho\pi b^2\) and \(\rho\pi a^2\)), the **translating ellipsoid** added mass along all three principal axes (\(\rho V\alpha_i/(2-\alpha_i)\) with Lamb's shape factors), and **interior solid harmonics** of degree 1-3 on the faceted sphere. Every reference is a classical closed form, checked against the sphere, thin-disc and slender-body limits. See [the classical benchmark report](docs/classical_benchmarks.md).
+
+The fourth milestone adds the first free-surface layer: a deep-water frequency-domain Green function (principal-value integral evaluated by split Gauss-Legendre/Laguerre rules), the **indirect** source formulation that keeps the radiation condition intact, and the **Ursell submerged cylinder** radiation benchmark. The reference is Ursell's multipole solution, an independent analytical construction which reproduces the published zero-damping frequencies to machine precision; the panel solution is within \\(7.7\times10^{-3}\\) in added mass at 128 panels and a method-of-fundamental-solutions check within \\(2\times10^{-4}\\), with the near/far-field energy identity closing to \\(6\times10^{-3}\\) and improving under refinement. See section 4.6 of [the benchmark report](docs/marine_bem_benchmarks.md). This layer is two-dimensional, deep-water, submerged-body and radiation-only: there is no incident wave, diffraction, waterline geometry, finite depth or three-dimensional free-surface kernel.
+
+This is a research prototype, not yet a validated ship-hydrodynamics, acoustics, or 3-D ship-flow package.
 
 ## Quick start
 
@@ -24,6 +28,12 @@ python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output a
 python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
 python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2
 python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
+python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis x
+python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis y
+python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
+python -m tensorbem.benchmarks.interior_harmonics --subdivisions 1 2 3 --degrees 1 2 3
+python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
+python -m tensorbem.benchmarks.ursell_cylinder --panels 128 --ka 0.6 --output artifacts/ursell.json
 ```
 
 The benchmark writes JSON to stdout; the refinement study can also persist a machine-readable JSON report. The manufactured field is \\(u(r,\\theta)=r\\cos\\theta\\), with exact outward normal derivative \\(q=\\cos\\theta\\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
@@ -35,6 +45,8 @@ The 3-D sphere benchmark reports the added mass of a translating sphere, with an
 The 3-D **velocity** field is available through `evaluate_surface_velocity`. The single-layer gradient kernel is integrable and uses the same fixed-order Duffy rule as the potential; the double-layer gradient is hypersingular and is evaluated from the closed-form gradient of each panel's signed solid angle, which is exact for constant panels. Against the exact exterior velocity of a translating sphere the relative L2 error is \\(1.02\\times10^{-1}\\), \\(2.76\\times10^{-2}\\), and \\(7.07\\times10^{-3}\\) at 80/320/1280 panels, with observed order 2.03 and 2.01. The reconstructed velocity **on** the surface is a different matter. Differentiating the Green formula with the piecewise-constant traces of the discretization amplifies the \(O(h)\) trace error into an \(O(1)\) gradient error, so that path stops at 53-65% and does not improve under refinement; the cause is confirmed by four controlled experiments in `tensorbem.benchmarks.surface_velocity_study`. The **recovered** surface velocity `evaluate_surface_velocity_at_panels` avoids that amplification: it uses the exact identity \(\nabla\phi|_\Gamma=\nabla_{\mathrm{tan}}u+n\,q\), with the tangential derivative of the boundary values recovered by a superconvergent least-squares patch fit. Its relative L2 error is \(1.50\times10^{-1}\), \(4.37\times10^{-2}\), and \(1.38\times10^{-2}\) at 80/320/1280 panels, with observed order 1.78 and 1.67, so the surface velocity is usable. The same diagnosis shows that the representation path is also unreliable in a boundary layer of thickness \(O(h)\) around the body, so off-body velocity for force integration must be evaluated clear of that layer.
 
 CI runs the 2-D and 3-D benchmark families, executes both refinement studies, and uploads the resulting JSON evidence as a workflow artifact. This is a reproducibility gate, not a claim of general exterior-flow validation.
+
+The classical benchmark layer reports \(h^2\) convergence for both added-mass families. The elliptic cylinder reaches a relative error of \(7.54\times10^{-4}\) (\(x\)) and \(9.00\times10^{-4}\) (\(y\)) at 128 panels, with observed order 2.00; the ellipsoid reaches \(4.17\times10^{-3}\), \(4.46\times10^{-3}\) and \(4.94\times10^{-3}\) along \((1.5,1.0,0.75)\) at 1280 panels, with observed order 1.99-2.01. Its per-panel flux still converges only near first order because of polyhedral-edge singularities, exactly as for the sphere, so both numbers are reported. The interior solid-harmonic suite quantifies the degree dependence that the earlier linear-field verification could not show: the flux error at 1280 panels grows from \(3.76\times10^{-3}\) (degree 1) to \(1.19\times10^{-2}\) (degree 3) while the interior probe error stays near \(2\times10^{-4}\).
 
 The additional analytical suite covers a cubic harmonic field on a disk, a quadratic field on an ellipse, a separated solution on a square, and a singular field at an L-shaped re-entrant corner. It reports boundary-flux errors, fixed-probe field errors, flux balance, conditioning, and observed convergence orders. See [the analytical verification report](docs/verification.md) for case definitions, measured results, and limitations. CI also archives this suite's JSON evidence.
 
@@ -49,9 +61,10 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 
 ## Project layout
 
-- `src/tensorbem/geometry.py`: 2-D panel geometry and validation
-- `src/tensorbem/kernels.py`: 2-D Laplace kernels and exact straight-panel integrals
-- `src/tensorbem/solver.py`: 2-D collocation assembly, solve, and interior field evaluation
+- `src/tensorbem/geometry.py`: 2-D panel geometry and validation, regular polygons and ellipses
+- `src/tensorbem/kernels.py`: 2-D Laplace kernels, exact straight-panel integrals, reference length
+- `src/tensorbem/solver.py`: 2-D collocation assembly, interior and exterior solves, field evaluation
+- `src/tensorbem/analytic.py`: closed-form references (solid harmonics, ellipse and ellipsoid added mass, Lamb shape factors)
 - `src/tensorbem/geometry3d.py`: closed triangular surface meshes, icosphere generation, and quality diagnostics
 - `src/tensorbem/kernels3d.py`: 3-D Laplace kernels, solid angles, Duffy and self-panel quadrature
 - `src/tensorbem/solver3d.py`: 3-D collocation assembly, interior/exterior Dirichlet solves, and field evaluation
@@ -63,10 +76,15 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `src/tensorbem/benchmarks/sphere_velocity.py`: translating-sphere velocity-field benchmark
 - `src/tensorbem/benchmarks/surface_velocity_study.py`: controlled study of the surface-velocity accuracy and its cause
 - `src/tensorbem/benchmarks/three_dimensional_study.py`: 3-D verification cases, refinement study, and plots
+- `src/tensorbem/benchmarks/ellipse_added_mass.py`: elliptic-cylinder added mass through the 2-D exterior solve
+- `src/tensorbem/benchmarks/ellipsoid_added_mass.py`: ellipsoid and spheroid added mass along three axes
+- `src/tensorbem/benchmarks/interior_harmonics.py`: interior solid harmonics of degree 1-3
+- `src/tensorbem/benchmarks/classical_study.py`: reproducible study of the classical benchmark layer
 - `tests/`: unit and numerical regression tests
 - `docs/verification.md`: 2-D analytical verification cases, equations, numerical results, and limitations
 - `docs/marine_bem_benchmarks.md`: marine BEM benchmark survey and numerical report
 - `docs/three_dimensional_bem.md`: 3-D formulation, quadrature, verification cases, results, and limitations
+- `docs/classical_benchmarks.md`: exterior 2-D formulation, ellipse/ellipsoid added mass, solid harmonics, and the free-surface roadmap
 
 ## Numerical conventions
 
@@ -77,9 +95,11 @@ The 3-D fundamental solution is \\(G(x,y)=1/(4\\pi|x-y|)\\), satisfying \\(-\\na
 ## Roadmap
 
 1. **Done:** reproducible Laplace benchmarks and convergence/error studies for 2-D polygons and 3-D triangles.
-2. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, mesh-quality metrics, and conditioning/residual reporting are in place; graded meshes, higher-order/curved panels, and near-singular field quadrature remain.
-3. **Partially done:** 3-D constant triangular surface elements, interior/exterior Dirichlet formulations, and the sphere added-mass benchmark. Free-surface conditions, wave radiation/diffraction, ship-hull geometry, and fast solvers remain.
-4. **Future:** expose a stable task/result contract for TensorPlatform.
+2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) and a real 2-D exterior formulation.
+3. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, mesh-quality metrics, and conditioning/residual reporting are in place; graded meshes, higher-order/curved panels, and near-singular field quadrature remain.
+4. **Partially done:** 3-D constant triangular surface elements, interior/exterior Dirichlet formulations, and the sphere added-mass benchmark. Free-surface conditions, wave radiation/diffraction, ship-hull geometry, and fast solvers remain.
+5. **Next, needs new physics:** frequency-domain free-surface layer, then Ursell cylinder radiation, MacCamy-Fuchs diffraction and the Hulme hemisphere; the required components are itemised in `docs/classical_benchmarks.md`.
+6. **Future:** expose a stable task/result contract for TensorPlatform.
 
 ## License
 
