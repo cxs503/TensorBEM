@@ -49,6 +49,7 @@ from typing import Any, Sequence
 
 import numpy as np
 
+from tensorbem.clearance import diagnose_surface_clearance
 from tensorbem.geometry3d import icosphere
 from tensorbem.solver3d import (
     evaluate_representation_surface_velocity_at_panels,
@@ -155,6 +156,12 @@ def run(
     result = solve_laplace_surface(mesh, boundary_potential, domain="exterior")
 
     points, radii = _probe_radii(radius, probe_radii, probe_count)
+    # Record how far every velocity probe is from the faceted body. The
+    # benchmark probes are intentionally evaluated with diagnostics only;
+    # this report is not an accuracy certificate.
+    clearance_report = diagnose_surface_clearance(
+        mesh, points, warning_factor=1.0, policy="ignore"
+    )
     numerical = evaluate_surface_velocity(mesh, result, points, domain="exterior")
     exact = analytic_sphere_velocity(points, radius=radius, speed=speed)
     error = numerical - exact
@@ -200,6 +207,7 @@ def run(
         "speed": speed,
         "probe_radii": [float(value) for value in probe_radii],
         "probe_count": int(probe_count),
+        "probe_clearance": clearance_report.to_dict(),
         "velocity_relative_l2_error": relative_l2,
         "velocity_max_abs_error": float(np.max(np.abs(error))),
         "velocity_rmse": float(np.sqrt(np.mean(error**2))),
