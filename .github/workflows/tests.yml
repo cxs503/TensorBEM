@@ -44,6 +44,16 @@ jobs:
         run: python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
       - name: Run Ursell submerged-cylinder radiation benchmark
         run: python -m tensorbem.benchmarks.ursell_cylinder --panels 64 --ka 0.6 --output artifacts/ursell.json
+      - name: Run rigid-body Neumann added-mass and rotational-inertia benchmark
+        run: python -m tensorbem.benchmarks.rigid_body_added_mass --panels 16 32 64 128 --subdivisions 0 1 2 --output artifacts/rigid-body-added-mass.json
+      - name: Run Dean submerged-cylinder wave-diffraction benchmark
+        run: python -m tensorbem.benchmarks.dean_diffraction --panels 64 --ka 0.6 --output artifacts/dean-diffraction.json
+      - name: Run MacCamy-Fuchs vertical-cylinder diffraction and CHIEF benchmark
+        run: python -m tensorbem.benchmarks.maccamy_fuchs --panels 16 32 64 128 --output artifacts/maccamy-fuchs.json
+      - name: Run Hulme 3-D floating-hemisphere radiation, diffraction and CHIEF benchmark
+        run: python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3 --output artifacts/floating-hemisphere.json
+      - name: Run Wang/Linton 3-D submerged-sphere wave benchmark
+        run: python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2 --output artifacts/submerged-sphere-wave.json
       - name: Generate classical benchmark study
         run: python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
       - name: Upload benchmark evidence
@@ -57,4 +67,10 @@ jobs:
             artifacts/sphere-velocity.json
             artifacts/surface-velocity-study.json
             artifacts/classical-study.json
+            artifacts/ursell.json
+            artifacts/rigid-body-added-mass.json
+            artifacts/dean-diffraction.json
+            artifacts/maccamy-fuchs.json
+            artifacts/floating-hemisphere.json
+            artifacts/submerged-sphere-wave.json
           if-no-files-found: error

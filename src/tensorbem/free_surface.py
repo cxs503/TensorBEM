@@ -28,7 +28,7 @@ with ``A = -(z + z0) > 0`` (the sum of the two depths) and ``X = x - x0``,
 
     G = (1/2pi) * [ log(r) - log(r1)
                     - 2 * PV integral_0^inf exp(-k A) cos(k X)/(k - nu) dk ]
-        + i * exp(-nu A) * cos(nu X)
+        - i * exp(-nu A) * cos(nu X)
 
 with ``r`` the distance between the points and ``r1`` the distance to the image
 of the source in the free surface. The last term is the residue at ``k = nu``
@@ -178,20 +178,37 @@ def _broadcast_inputs(x, z, source_x, source_z):
     return field_x, field_z, s_x, s_z
 
 
-def green_function(x, z, source_x, source_z, nu: float, *,
-                   outgoing: bool = True) -> ComplexArray:
-    """Free-surface Green function ``G(x, z; source_x, source_z)``."""
+def green_function(
+    x,
+    z,
+    source_x,
+    source_z,
+    nu: float,
+    *,
+    outgoing: bool = True,
+    include_rankine: bool = True,
+) -> ComplexArray:
+    """Free-surface Green function ``G(x, z; source_x, source_z)``.
+
+    When ``include_rankine=False`` the direct ``log(r)/(2*pi)`` singularity is
+    omitted so the smooth free-surface/image remainder can be integrated with
+    standard Gauss rules even across a collocation point ``r = 0``.
+    """
     frequency = _validate_frequency(nu)
     field_x, field_z, s_x, s_z = _broadcast_inputs(x, z, source_x, source_z)
     offset = field_x - s_x
     depth = -(field_z + s_z)
     _check_scaled_depth(frequency, depth)
-    r = np.hypot(offset, field_z - s_z)
     r_image = np.hypot(offset, field_z + s_z)
     integral = _pv_cosine(frequency, depth, offset)
-    value = (1.0 / (2.0 * math.pi)) * (
-        np.log(r) - np.log(r_image) - 2.0 * integral
-    ) + 1.0j * _RESIDUE_SIGN * np.exp(-frequency * depth) * np.cos(frequency * offset)
+    if include_rankine:
+        r = np.hypot(offset, field_z - s_z)
+        real_part = np.log(r) - np.log(r_image) - 2.0 * integral
+    else:
+        real_part = -np.log(r_image) - 2.0 * integral
+    value = (1.0 / (2.0 * math.pi)) * real_part + (
+        1.0j * _RESIDUE_SIGN * np.exp(-frequency * depth) * np.cos(frequency * offset)
+    )
     return value if outgoing else np.conj(value)
 
 
@@ -250,8 +267,16 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
     return dg_d_source_x, dg_d_source_z
 
 
-def green_gradient_field(x, z, source_x, source_z, nu: float, *,
-                         outgoing: bool = True):
+def green_gradient_field(
+    x,
+    z,
+    source_x,
+    source_z,
+    nu: float,
+    *,
+    outgoing: bool = True,
+    include_rankine: bool = True,
+):
     """Derivatives of ``G`` with respect to the *field* coordinates.
 
     These are **not** minus the source derivatives. A free surface breaks
@@ -262,13 +287,16 @@ def green_gradient_field(x, z, source_x, source_z, nu: float, *,
     plausible-looking but wrong solution -- the method of fundamental solutions
     in this package was built on that mistake and disagreed with the panel
     method by 4% in added mass before the finite-difference check caught it.
+
+    Setting ``include_rankine=False`` drops the singular ``grad_P(log r / 2pi)``
+    part analytically instead of forming ``1/r**2`` and subtracting it later,
+    which avoids ``0/0`` when a Gauss node coincides with a collocation centre.
     """
     frequency = _validate_frequency(nu)
     field_x, field_z, s_x, s_z = _broadcast_inputs(x, z, source_x, source_z)
     offset = field_x - s_x
     depth = -(field_z + s_z)
     _check_scaled_depth(frequency, depth)
-    radial2 = offset * offset + (field_z - s_z) ** 2
     image2 = offset * offset + (field_z + s_z) ** 2
 
     cos_integral = _pv_cosine(frequency, depth, offset)
@@ -277,14 +305,23 @@ def green_gradient_field(x, z, source_x, source_z, nu: float, *,
     elementary_sin = offset / (depth * depth + offset * offset)
     residue = np.exp(-frequency * depth) * np.cos(frequency * offset)
 
+    if include_rankine:
+        radial2 = offset * offset + (field_z - s_z) ** 2
+        rankine_x = offset / radial2
+        rankine_z = (field_z - s_z) / radial2
+    else:
+        rankine_x = 0.0
+        rankine_z = 0.0
+
     dg_d_x = (1.0 / (2.0 * math.pi)) * (
-        offset * (1.0 / radial2 - 1.0 / image2)
+        rankine_x
+        - offset / image2
         + 2.0 * (elementary_sin + frequency * sin_integral)
     ) - 1.0j * _RESIDUE_SIGN * frequency * np.exp(-frequency * depth) * np.sin(
         frequency * offset
     )
     dg_d_z = (1.0 / (2.0 * math.pi)) * (
-        (field_z - s_z) / radial2
+        rankine_z
         + depth / image2
         - 2.0 * (elementary_cos + frequency * cos_integral)
     ) + 1.0j * _RESIDUE_SIGN * frequency * residue

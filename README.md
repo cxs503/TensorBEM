@@ -10,9 +10,19 @@ The second milestone adds a 3-D Laplace surface-element baseline: closed triangu
 
 The third milestone adds the classical benchmark layer that does not need a free surface: a **2-D exterior** Dirichlet formulation (`solve_laplace_exterior_dirichlet`, with an explicit logarithmic reference length and a reported capacity degeneracy), the **translating elliptic cylinder** added mass per unit span (\(\rho\pi b^2\) and \(\rho\pi a^2\)), the **translating ellipsoid** added mass along all three principal axes (\(\rho V\alpha_i/(2-\alpha_i)\) with Lamb's shape factors), and **interior solid harmonics** of degree 1-3 on the faceted sphere. Every reference is a classical closed form, checked against the sphere, thin-disc and slender-body limits. See [the classical benchmark report](docs/classical_benchmarks.md).
 
-The fourth milestone adds the first free-surface layer: a deep-water frequency-domain Green function (principal-value integral evaluated by split Gauss-Legendre/Laguerre rules), the **indirect** source formulation that keeps the radiation condition intact, and the **Ursell submerged cylinder** radiation benchmark. The reference is Ursell's multipole solution, an independent analytical construction which reproduces the published zero-damping frequencies to machine precision; the panel solution is within \\(7.7\times10^{-3}\\) in added mass at 128 panels and a method-of-fundamental-solutions check within \\(2\times10^{-4}\\), with the near/far-field energy identity closing to \\(6\times10^{-3}\\) and improving under refinement. See section 4.6 of [the benchmark report](docs/marine_bem_benchmarks.md). This layer is two-dimensional, deep-water, submerged-body and radiation-only: there is no incident wave, diffraction, waterline geometry, finite depth or three-dimensional free-surface kernel.
+The fourth milestone adds the first free-surface layer: a deep-water frequency-domain Green function (principal-value integral evaluated by split Gauss-Legendre/Laguerre rules), the **indirect** source formulation that keeps the radiation condition intact, and the **Ursell submerged cylinder** radiation benchmark. The reference is Ursell's multipole solution, an independent analytical construction which reproduces the published zero-damping frequencies to machine precision; the panel solution is within \\(7.7\times10^{-3}\\) in added mass at 128 panels and a method-of-fundamental-solutions check within \\(2\times10^{-4}\\), with the near/far-field energy identity closing to \\(6\times10^{-3}\\) and improving under refinement.
 
-This is a research prototype, not yet a validated ship-hydrodynamics, acoustics, or 3-D ship-flow package.
+The fifth milestone expands the naval-architecture & ocean-engineering verification layer across three previously uncovered regimes (see §§4.7-4.9 of [the marine BEM benchmark report](docs/marine_bem_benchmarks.md)):
+1. **Exterior Neumann rigid-body tensors (`solve_laplace_exterior_neumann`, `solve_laplace_surface_neumann`, `compute_added_mass_matrix_2d`, `compute_added_mass_matrix_3d`)**: solves the physical rigid-body no-penetration condition \(\partial\phi_j/\partial n_{\text{body}}=n_j\) via the well-conditioned second-kind operator \((\tfrac12\mathbf I-\mathbf H)\boldsymbol\phi=\mathbf S(-\mathbf n)\) without prescribing analytical surface traces, verifying 2-D \((3\times 3)\) and 3-D \((6\times 6)\) translational added masses and rotational added moments of inertia against Lamb's (1932) closed forms at \(O(h^2)\) with \(O(1)\) condition numbers;
+2. **2-D deep-water wave diffraction & Haskind reciprocity (`solve_diffraction_indirect`, `haskind_excitation_force`, `dean_cylinder_diffraction`)**: verifies Dean's (1948) zero-reflection theorem (\(|R|\approx 2\times 10^{-15}\)), Ursell/Ogilvie transmission phase shift, circular wave-load polarisation \(F_z=-\mathrm i F_x\), wave-energy conservation \(|R|^2+|T|^2=1\), and Haskind-Newman radiation-diffraction reciprocity on circular and elliptic submerged cylinders;
+3. **MacCamy-Fuchs vertical-pile diffraction & CHIEF irregular-frequency suppression (`tensorbem.helmholtz`, `maccamy_fuchs_diffraction`)**: implements vectorised pure-NumPy Bessel/Hankel functions and a 2-D exterior Helmholtz BEM solver with Schenck (1968) interior CHIEF null-field augmentation, verifying \(O(h^2)\) convergence of 3-D horizontal wave force \(F_x\) and seabed overturning moment \(M_y\), the long-wave Morison limit \(C_M\to 2.0\), and suppression of the interior \(J_0/J_1\) irregular-frequency resonances (reducing condition numbers from \(665\text{-}1003\) to \(\sim 3\) and cutting the \(J_1\) dipole force error from \(10.35\%\) to \(0.28\%\) at 64 panels).
+
+The sixth milestone (`v0.5.0`) delivers general **3-D deep-water free-surface radiation and diffraction** for both submerged (`TriangleMesh`) and waterline-piercing (`WettedHullMesh`) three-dimensional hulls (see §§4.10-4.11 of [the marine BEM benchmark report](docs/marine_bem_benchmarks.md)):
+1. **3-D Kelvin/Havelock/Delhommeau Green function (`tensorbem.free_surface3d`)**: pure-NumPy vectorised Struve functions \(\mathbf H_0,\mathbf H_1\) and a 4-region dimensionless wave evaluator (near-axis factorial recurrence cone, Havelock finite-interval ODE representation, pole-subtracted Gauss-Legendre/Laguerre quadrature, and 17-term Newman asymptotic Legendre expansion) achieving \(10^{-11}\text{-}10^{-13}\) continuity across all seams and `< 1e-14` free-surface boundary-condition residual on \(z=0\);
+2. **3-D 6-DOF wave radiation, diffraction, Kochin & CHIEF solver (`tensorbem.free_surface_solver3d`)**: splits both direct \(1/(4\pi r)\) and mirror-image \(1/(4\pi r_1)\) Rankine terms into analytic Van Oosterom-Strackee solid angles and polar/Duffy rules, evaluates 3-D azimuthal Kochin far-field damping and Haskind excitation reciprocity, and suppresses surface-piercing irregular frequencies via lid-free 3-D interior CHIEF null-field constraints;
+3. **Hulme (1982) floating hemisphere & Wang/Linton submerged sphere benchmarks (`floating_hemisphere`, `submerged_sphere_wave`)**: verifies \(O(h^2)\) convergence (observed orders \(1.93\text{-}2.06\)) against Hulme's semi-analytical wave-free multipole expansion and an independent closed-form factorial/\(\operatorname{Ei}(2\nu f)\) submerged-sphere multipole solver, while demonstrating how 5 interior 3-D CHIEF equations eliminate the \(Ka\approx 2.58\) unphysical negative-damping resonance (\(B_{33}'=-0.104\to +0.0687\), condition number \(145.7\to 4.24\)).
+
+Finite-depth 3-D John eigenseries kernels (e.g. Garrett's truncated dock), forward-speed Rankine-source wave resistance (Wigley hull), and Kutta lifting wakes remain outside current scope.
 
 ## Quick start
 
@@ -34,6 +44,11 @@ python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
 python -m tensorbem.benchmarks.interior_harmonics --subdivisions 1 2 3 --degrees 1 2 3
 python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
 python -m tensorbem.benchmarks.ursell_cylinder --panels 128 --ka 0.6 --output artifacts/ursell.json
+python -m tensorbem.benchmarks.rigid_body_added_mass --panels 16 32 64 128 --subdivisions 0 1 2 --output artifacts/rigid-body-added-mass.json
+python -m tensorbem.benchmarks.dean_diffraction --panels 128 --ka 0.6 --output artifacts/dean-diffraction.json
+python -m tensorbem.benchmarks.maccamy_fuchs --panels 16 32 64 128 --output artifacts/maccamy-fuchs.json
+python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3 --output artifacts/floating-hemisphere.json
+python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2 --output artifacts/submerged-sphere-wave.json
 ```
 
 The benchmark writes JSON to stdout; the refinement study can also persist a machine-readable JSON report. The manufactured field is \\(u(r,\\theta)=r\\cos\\theta\\), with exact outward normal derivative \\(q=\\cos\\theta\\) on the unit circle. The polygon approximates the circle, so results should be assessed by refinement trends, not by treating the polygon as an exact circle.
@@ -65,11 +80,15 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 
 - `src/tensorbem/geometry.py`: 2-D panel geometry and validation, regular polygons and ellipses
 - `src/tensorbem/kernels.py`: 2-D Laplace kernels, exact straight-panel integrals, reference length
-- `src/tensorbem/solver.py`: 2-D collocation assembly, interior and exterior solves, field evaluation
-- `src/tensorbem/analytic.py`: closed-form references (solid harmonics, ellipse and ellipsoid added mass, Lamb shape factors)
-- `src/tensorbem/geometry3d.py`: closed triangular surface meshes, icosphere generation, and quality diagnostics
+- `src/tensorbem/solver.py`: 2-D collocation assembly, interior/exterior Dirichlet & exterior Neumann solves, `(3, 3)` rigid-body added-mass tensor
+- `src/tensorbem/analytic.py`: closed-form references (solid harmonics, ellipse/ellipsoid translational & rotational added mass, Bessel/Hankel/Struve functions, Ursell radiation, Dean diffraction, MacCamy-Fuchs pile loads, Hulme floating hemisphere, and Wang/Linton submerged-sphere multipoles)
+- `src/tensorbem/geometry3d.py`: closed triangular surface meshes (`TriangleMesh`), waterline-truncated floating hull meshes (`WettedHullMesh`), icosphere/ellipsoid/hemisphere generation, and quality diagnostics
 - `src/tensorbem/kernels3d.py`: 3-D Laplace kernels, solid angles, Duffy and self-panel quadrature
-- `src/tensorbem/solver3d.py`: 3-D collocation assembly, interior/exterior Dirichlet solves, and field evaluation
+- `src/tensorbem/solver3d.py`: 3-D collocation assembly, interior/exterior Dirichlet & exterior Neumann solves, `(6, 6)` rigid-body added-mass tensor, and field/velocity evaluation
+- `src/tensorbem/recovery.py` & `clearance.py`: superconvergent surface tangential gradient recovery and near-surface clearance diagnostics
+- `src/tensorbem/free_surface.py` & `free_surface_solver.py`: 2-D deep-water Green function, indirect radiation/diffraction panel & MFS solvers, and Haskind excitation forces
+- `src/tensorbem/free_surface3d.py` & `free_surface_solver3d.py`: 3-D deep-water Kelvin/Delhommeau Green function, 6-DOF radiation/diffraction panel solver, azimuthal Kochin far-field damping, Haskind reciprocity, and lid-free 3-D CHIEF irregular-frequency suppression
+- `src/tensorbem/helmholtz.py`: 2-D exterior Helmholtz solver, Schenck CHIEF irregular-frequency suppression, and 3-D vertical-cylinder diffraction loads
 - `src/tensorbem/benchmarks/unit_disk.py`: manufactured-solution benchmark
 - `src/tensorbem/benchmarks/cylinder_added_mass.py`: translating-cylinder added-mass benchmark
 - `src/tensorbem/benchmarks/refinement_study.py`: reproducible 2-D multi-resolution JSON report
@@ -78,10 +97,16 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `src/tensorbem/benchmarks/sphere_velocity.py`: translating-sphere velocity-field benchmark
 - `src/tensorbem/benchmarks/surface_velocity_study.py`: controlled study of the surface-velocity accuracy and its cause
 - `src/tensorbem/benchmarks/three_dimensional_study.py`: 3-D verification cases, refinement study, and plots
-- `src/tensorbem/benchmarks/ellipse_added_mass.py`: elliptic-cylinder added mass through the 2-D exterior solve
+- `src/tensorbem/benchmarks/ellipse_added_mass.py`: elliptic-cylinder added mass through the 2-D exterior Dirichlet solve
 - `src/tensorbem/benchmarks/ellipsoid_added_mass.py`: ellipsoid and spheroid added mass along three axes
+- `src/tensorbem/benchmarks/rigid_body_added_mass.py`: 2-D `(3, 3)` and 3-D `(6, 6)` exterior Neumann added-mass and rotational-inertia benchmark
 - `src/tensorbem/benchmarks/interior_harmonics.py`: interior solid harmonics of degree 1-3
 - `src/tensorbem/benchmarks/classical_study.py`: reproducible study of the classical benchmark layer
+- `src/tensorbem/benchmarks/ursell_cylinder.py`: 2-D deep-water submerged-cylinder wave radiation benchmark
+- `src/tensorbem/benchmarks/dean_diffraction.py`: 2-D deep-water wave diffraction, Dean's zero-reflection theorem, and Haskind reciprocity benchmark
+- `src/tensorbem/benchmarks/maccamy_fuchs.py`: MacCamy-Fuchs vertical-pile wave diffraction and CHIEF irregular-frequency benchmark
+- `src/tensorbem/benchmarks/floating_hemisphere.py`: Hulme (1982) 3-D floating-hemisphere radiation, diffraction, and 3-D CHIEF irregular-frequency benchmark
+- `src/tensorbem/benchmarks/submerged_sphere_wave.py`: Wang/Linton 3-D submerged-sphere wave radiation and diffraction benchmark
 - `tests/`: unit and numerical regression tests
 - `docs/verification.md`: 2-D analytical verification cases, equations, numerical results, and limitations
 - `docs/marine_bem_benchmarks.md`: marine BEM benchmark survey and numerical report
@@ -97,11 +122,12 @@ The 3-D fundamental solution is \\(G(x,y)=1/(4\\pi|x-y|)\\), satisfying \\(-\\na
 ## Roadmap
 
 1. **Done:** reproducible Laplace benchmarks and convergence/error studies for 2-D polygons and 3-D triangles.
-2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) and a real 2-D exterior formulation.
-3. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, mesh-quality metrics, and conditioning/residual reporting are in place; graded meshes, higher-order/curved panels, and near-singular field quadrature remain.
-4. **Partially done:** 3-D constant triangular surface elements, interior/exterior Dirichlet formulations, and the sphere added-mass benchmark. Free-surface conditions, wave radiation/diffraction, ship-hull geometry, and fast solvers remain.
-5. **Next, needs new physics:** frequency-domain free-surface layer, then Ursell cylinder radiation, MacCamy-Fuchs diffraction and the Hulme hemisphere; the required components are itemised in `docs/classical_benchmarks.md`.
-6. **Future:** expose a stable task/result contract for TensorPlatform.
+2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) plus exterior Neumann `3x3`/`6x6` rigid-body translational and rotational added-mass tensors.
+3. **Done:** 2-D deep-water free-surface radiation (Ursell 1949), incident-wave diffraction, Dean's zero-reflection theorem, and Haskind reciprocity, plus vertical-cylinder wave diffraction (MacCamy-Fuchs 1954) with Schenck CHIEF irregular-frequency suppression.
+4. **Done:** 3-D deep-water Kelvin/Delhommeau free-surface Green function, 6-DOF radiation/diffraction BEM for submerged and waterline-piercing hulls (`WettedHullMesh`), lid-free 3-D CHIEF irregular-frequency suppression, Hulme's (1982) floating hemisphere, and Wang/Linton's submerged sphere.
+5. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, superconvergent tangential gradient recovery, and clearance diagnostics are in place; graded meshes, symmetry-plane reduction, higher-order/curved panels, and near-singular field quadrature remain.
+6. **Next, needs new physics:** finite-depth 3-D John eigenseries Green function (Garrett's truncated vertical cylinder & multi-body gap resonance), hydrostatic restoring + 6-DOF frequency-domain RAO coupling, forward-speed Rankine-source wave resistance (Wigley hull), and Kutta-condition lifting hydrofoils.
+7. **Future:** expose a stable task/result contract for TensorPlatform.
 
 ## License
 
