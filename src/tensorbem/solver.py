@@ -170,6 +170,129 @@ def solve_laplace_exterior_dirichlet(
     return _solve(mesh, boundary_values, "exterior", reference_length)
 
 
+@dataclass(frozen=True)
+class RigidBodyAddedMass2DResult:
+    """Full ``(3, 3)`` rigid-body added-mass tensor in 2-D unbounded fluid.
+
+    Modes are ``(surge_x, heave_y, roll_xy)`` about ``center``.
+    """
+
+    added_mass_matrix: FloatArray
+    mode_potentials: FloatArray
+    mode_normals: FloatArray
+    center: tuple[float, float]
+    condition_number: float
+    max_relative_residual_l2: float
+    symmetry_error: float
+
+
+def solve_laplace_exterior_neumann(
+    mesh: PanelMesh,
+    normal_derivative: FloatArray,
+    reference_length: float = REFERENCE_LENGTH,
+) -> LaplaceDirichletResult:
+    """Solve the exterior 2-D Laplace Neumann boundary-value problem.
+
+    Given the fluid-domain normal derivative ``q_e = grad(u) . n_e`` (with
+    ``n_e = -n_body`` opposite the polygon's outward normal, matching
+    :func:`solve_laplace_exterior_dirichlet`), solve the second-kind boundary
+    integral equation
+
+        (1/2 I - H) u = S q_e
+
+    for the boundary potential ``u``. Unlike the first-kind Dirichlet operator
+    ``S``, the second-kind operator ``1/2 I - H`` has ``O(1)`` condition number
+    independent of mesh refinement and no logarithmic-capacity degeneracy.
+    When ``q_e`` has zero net flux ``integral(q_e ds) = 0`` (which holds
+    identically for rigid-body translations and rotations of a closed body),
+    the exterior potential decays as ``O(1/r)`` and ``u`` is invariant to
+    ``reference_length``.
+    """
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    flux = np.asarray(normal_derivative, dtype=float)
+    n = mesh.panel_count
+    if flux.shape != (n,):
+        raise ValueError(f"normal_derivative must have shape ({n},)")
+    if not np.isfinite(flux).all():
+        raise ValueError("normal_derivative must all be finite")
+    reference = validate_reference_length(reference_length)
+
+    single, double = assemble_matrices(mesh, reference_length=reference)
+    system = 0.5 * np.eye(n) - double
+    rhs = single @ flux
+    condition = float(np.linalg.cond(system))
+    potential = np.linalg.solve(system, rhs)
+    residual = float(np.linalg.norm(system @ potential - rhs))
+    rhs_norm = float(np.linalg.norm(rhs))
+    return LaplaceDirichletResult(
+        normal_derivative=flux.copy(),
+        boundary_values=potential,
+        single_layer_matrix=single,
+        double_layer_matrix=double,
+        condition_number=condition,
+        residual_l2=residual,
+        relative_residual_l2=residual / rhs_norm if rhs_norm > 0.0 else residual,
+        domain="exterior",
+        reference_length=reference,
+    )
+
+
+def compute_added_mass_matrix_2d(
+    mesh: PanelMesh,
+    density: float = 1.0,
+    center: tuple[float, float] | FloatArray = (0.0, 0.0),
+    reference_length: float = REFERENCE_LENGTH,
+) -> RigidBodyAddedMass2DResult:
+    """Compute the ``(3, 3)`` rigid-body added-mass matrix per unit span.
+
+    Solves the exterior Neumann boundary-value problem ``d(phi_j)/dn_body = n_j``
+    simultaneously for the three planar rigid-body modes ``(surge_x, heave_y,
+    roll_xy)`` about ``center`` using ``(1/2 I - H) phi_j = S (-n_j)``, then
+    evaluates ``A_ij = -rho * integral(phi_j * n_i ds)``.
+    """
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    if isinstance(density, (bool, np.bool_)) or not math.isfinite(float(density)) or float(density) <= 0.0:
+        raise ValueError("density must be a positive finite number")
+    rho = float(density)
+    origin = np.asarray(center, dtype=float)
+    if origin.shape != (2,) or not np.isfinite(origin).all():
+        raise ValueError("center must be a finite 2-vector")
+    reference = validate_reference_length(reference_length)
+
+    single, double = assemble_matrices(mesh, reference_length=reference)
+    n = mesh.panel_count
+    rel = mesh.centers - origin[None, :]
+    normals = mesh.normals
+    mode_normals = np.column_stack(
+        (
+            normals[:, 0],
+            normals[:, 1],
+            rel[:, 0] * normals[:, 1] - rel[:, 1] * normals[:, 0],
+        )
+    )
+    system = 0.5 * np.eye(n) - double
+    rhs = single @ (-mode_normals)
+    condition = float(np.linalg.cond(system))
+    potentials = np.linalg.solve(system, rhs)
+    residuals = np.linalg.norm(system @ potentials - rhs, axis=0)
+    rhs_norms = np.linalg.norm(rhs, axis=0)
+    rel_residuals = np.where(rhs_norms > 0.0, residuals / rhs_norms, residuals)
+
+    added_mass = -rho * ((mode_normals * mesh.lengths[:, None]).T @ potentials)
+    symmetry_error = float(np.max(np.abs(added_mass - added_mass.T)))
+    return RigidBodyAddedMass2DResult(
+        added_mass_matrix=added_mass,
+        mode_potentials=potentials,
+        mode_normals=mode_normals,
+        center=(float(origin[0]), float(origin[1])),
+        condition_number=condition,
+        max_relative_residual_l2=float(np.max(rel_residuals)),
+        symmetry_error=symmetry_error,
+    )
+
+
 def evaluate_interior_field(
     mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
 ) -> FloatArray:
