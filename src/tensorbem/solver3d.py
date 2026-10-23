@@ -57,10 +57,37 @@ class LaplaceSurfaceResult:
     quadrature_order: int
 
 
+@dataclass(frozen=True)
+class RigidBodyAddedMass3DResult:
+    """Full ``(6, 6)`` rigid-body added-mass tensor in 3-D unbounded fluid.
+
+    Modes are ``(surge, sway, heave, roll, pitch, yaw)`` about ``center``.
+    """
+
+    added_mass_matrix: FloatArray
+    mode_potentials: FloatArray
+    mode_normals: FloatArray
+    center: tuple[float, float, float]
+    condition_number: float
+    max_relative_residual_l2: float
+    double_layer_row_sum_error: float
+    symmetry_error: float
+    quadrature_order: int
+
+
 def _validate_domain(domain: str) -> str:
     if domain not in _DOMAINS:
         raise ValueError(f"domain must be one of {_DOMAINS}")
     return domain
+
+
+def _validate_clearance_factor(factor: float) -> float:
+    if isinstance(factor, (bool, np.bool_)):
+        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
+    value = float(factor)
+    if not math.isfinite(value) or value < 0.0:
+        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
+    return value
 
 
 def _validate_order(order: int) -> int:
@@ -151,6 +178,110 @@ def solve_laplace_surface(
     )
 
 
+def solve_laplace_surface_neumann(
+    mesh: TriangleMesh,
+    normal_derivative: FloatArray,
+    quadrature_order: int = 8,
+) -> LaplaceSurfaceResult:
+    """Solve the exterior 3-D Laplace Neumann boundary-value problem.
+
+    Given the fluid-domain normal derivative ``q_e = grad(u) . n_e`` (with
+    ``n_e = -n_body`` opposite the outward triangle normal, matching
+    :func:`solve_laplace_surface` with ``domain='exterior'``), solve the
+    second-kind Fredholm equation
+
+        (1/2 I - H) u = S q_e
+
+    for the constant-panel boundary potential ``u``. Because all eigenvalues of
+    ``2 H`` on a smooth simply connected closed surface lie in ``[-1, 1)``,
+    ``1/2 I - H`` is nonsingular and maintains an ``O(1)`` condition number
+    under mesh refinement.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    flux = np.asarray(normal_derivative, dtype=float)
+    panel_count = mesh.panel_count
+    if flux.shape != (panel_count,):
+        raise ValueError(f"normal_derivative must have shape ({panel_count},)")
+    if not np.isfinite(flux).all():
+        raise ValueError("normal_derivative must all be finite")
+    order = _validate_order(quadrature_order)
+
+    single, double = assemble_surface_matrices(mesh, quadrature_order=order)
+    system = 0.5 * np.eye(panel_count) - double
+    rhs = single @ flux
+    condition = float(np.linalg.cond(system))
+    potential = np.linalg.solve(system, rhs)
+    residual = float(np.linalg.norm(system @ potential - rhs))
+    rhs_norm = float(np.linalg.norm(rhs))
+    return LaplaceSurfaceResult(
+        normal_derivative=flux.copy(),
+        boundary_values=potential,
+        single_layer_matrix=single,
+        double_layer_matrix=double,
+        condition_number=condition,
+        residual_l2=residual,
+        relative_residual_l2=residual / rhs_norm if rhs_norm > 0.0 else residual,
+        double_layer_row_sum_error=float(np.max(np.abs(np.sum(double, axis=1) + 0.5))),
+        domain="exterior",
+        quadrature_order=order,
+    )
+
+
+def compute_added_mass_matrix_3d(
+    mesh: TriangleMesh,
+    density: float = 1.0,
+    center: tuple[float, float, float] | FloatArray = (0.0, 0.0, 0.0),
+    quadrature_order: int = 8,
+) -> RigidBodyAddedMass3DResult:
+    """Compute the ``(6, 6)`` rigid-body added-mass matrix of a 3-D closed body.
+
+    Solves the exterior Neumann boundary-value problem ``d(phi_j)/dn_body = n_j``
+    simultaneously for all six rigid-body degrees of freedom ``(surge, sway,
+    heave, roll, pitch, yaw)`` about ``center``, where ``(n_1, n_2, n_3) = n``
+    and ``(n_4, n_5, n_6) = (x - center) x n``. Then evaluates
+
+        A_ij = -rho * integral_Gamma phi_j * n_i dS.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if isinstance(density, (bool, np.bool_)) or not math.isfinite(float(density)) or float(density) <= 0.0:
+        raise ValueError("density must be a positive finite number")
+    rho = float(density)
+    origin = np.asarray(center, dtype=float)
+    if origin.shape != (3,) or not np.isfinite(origin).all():
+        raise ValueError("center must be a finite 3-vector")
+    order = _validate_order(quadrature_order)
+
+    single, double = assemble_surface_matrices(mesh, quadrature_order=order)
+    panel_count = mesh.panel_count
+    rel = mesh.centroids - origin[None, :]
+    normals = mesh.normals
+    mode_normals = np.hstack((normals, np.cross(rel, normals)))
+
+    system = 0.5 * np.eye(panel_count) - double
+    rhs = single @ (-mode_normals)
+    condition = float(np.linalg.cond(system))
+    potentials = np.linalg.solve(system, rhs)
+    residuals = np.linalg.norm(system @ potentials - rhs, axis=0)
+    rhs_norms = np.linalg.norm(rhs, axis=0)
+    rel_residuals = np.where(rhs_norms > 0.0, residuals / rhs_norms, residuals)
+
+    added_mass = -rho * ((mode_normals * mesh.areas[:, None]).T @ potentials)
+    symmetry_error = float(np.max(np.abs(added_mass - added_mass.T)))
+    return RigidBodyAddedMass3DResult(
+        added_mass_matrix=added_mass,
+        mode_potentials=potentials,
+        mode_normals=mode_normals,
+        center=(float(origin[0]), float(origin[1]), float(origin[2])),
+        condition_number=condition,
+        max_relative_residual_l2=float(np.max(rel_residuals)),
+        double_layer_row_sum_error=float(np.max(np.abs(np.sum(double, axis=1) + 0.5))),
+        symmetry_error=symmetry_error,
+        quadrature_order=order,
+    )
+
+
 def _minimum_distance_to_mesh(mesh: TriangleMesh, point: FloatArray) -> float:
     """Distance from a point to the closed triangulated surface."""
     v0, v1, v2 = mesh.v0, mesh.v1, mesh.v2
@@ -220,13 +351,15 @@ def evaluate_surface_field(
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
     order = _validate_order(quadrature_order)
+    factor = _validate_clearance_factor(minimum_clearance_factor)
     points_quad, weights = duffy_quadrature_batch(
         mesh.v0, mesh.v1, mesh.v2, order=order
     )
-    clearance = minimum_clearance_factor * mesh.h_max
+    clearance = factor * mesh.h_max
     values = np.empty(len(targets), dtype=float)
     for index, target in enumerate(targets):
-        if _minimum_distance_to_mesh(mesh, target) < clearance:
+        dist = _minimum_distance_to_mesh(mesh, target)
+        if dist <= 1.0e-14 * mesh.h_max or dist < clearance:
             raise ValueError(
                 "evaluation point is too close to the boundary for the fixed-order "
                 "field quadrature; choose a point farther from the surface"
@@ -293,10 +426,12 @@ def evaluate_surface_velocity(
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
     order = _validate_order(quadrature_order)
-    clearance = minimum_clearance_factor * mesh.h_max
+    factor = _validate_clearance_factor(minimum_clearance_factor)
+    clearance = factor * mesh.h_max
     values = np.empty((len(targets), 3), dtype=float)
     for index, target in enumerate(targets):
-        if _minimum_distance_to_mesh(mesh, target) < clearance:
+        dist = _minimum_distance_to_mesh(mesh, target)
+        if dist <= 1.0e-14 * mesh.h_max or dist < clearance:
             raise ValueError(
                 "evaluation point is too close to the boundary for the fixed-order "
                 "field quadrature; choose a point farther from the surface"
