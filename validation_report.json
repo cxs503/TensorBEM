@@ -1,0 +1,96 @@
+{
+  "mission": "m238",
+  "repo": "TensorBEM",
+  "upstream_sha": "0cd793da",
+  "branch": "agent/m238",
+  "audit_date": "2026-10-24",
+  "test_baseline": {
+    "command": "PYTHONPATH=<worktree>/src /nfs/wangxi/hermes-agent/.venv/bin/python -m pytest tests/",
+    "passed": 270,
+    "failed": 0,
+    "skipped": 0,
+    "wall_clock_seconds": 119.23,
+    "result": "ALL_GREEN"
+  },
+  "benchmark_recomputations": [
+    {
+      "name": "cylinder_added_mass_16_panels",
+      "benchmark_command": "python -m tensorbem.benchmarks.cylinder_added_mass --panels 16",
+      "source_file": "src/tensorbem/benchmarks/cylinder_added_mass.py",
+      "readme_claim": {"added_mass_relative_error": 2.62e-2},
+      "measured": {"added_mass_relative_error": 2.623278e-2},
+      "deviation_pct": 0.13,
+      "verdict": "PASS"
+    },
+    {
+      "name": "cylinder_added_mass_128_panels",
+      "benchmark_command": "python -m tensorbem.benchmarks.cylinder_added_mass --panels 128",
+      "source_file": "src/tensorbem/benchmarks/cylinder_added_mass.py",
+      "readme_claim": {"added_mass_relative_error": 4.02e-4, "condition_number": 76.11},
+      "measured": {"added_mass_relative_error": 4.023222e-4, "condition_number": 76.1136},
+      "deviation_pct": 0.08,
+      "verdict": "PASS"
+    },
+    {
+      "name": "ursell_cylinder_radiation_128_panels",
+      "benchmark_command": "python -m tensorbem.benchmarks.ursell_cylinder --panels 128",
+      "source_file": "src/tensorbem/benchmarks/ursell_cylinder.py",
+      "readme_claim": {
+        "added_mass_relative_error": 7.7e-3,
+        "damping_relative_error": 1.3e-2,
+        "near_far_field_relative_difference": 6.0e-3
+      },
+      "measured": {
+        "added_mass_relative_error": 8.513031e-3,
+        "damping_relative_error": 1.336059e-2,
+        "near_far_field_relative_difference": 5.341374e-3
+      },
+      "deviation_pct": {"added_mass": 10.56, "damping": 2.77, "near_far": -10.98},
+      "verdict": "HONEST_FAIL",
+      "fail_reason": "added_mass error 8.51e-3 vs README claim 7.7e-3, deviation 10.6%; convergence trend correct (O(h) first-order)"
+    },
+    {
+      "name": "ellipsoid_added_mass_320_panels",
+      "benchmark_command": "python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2",
+      "source_file": "src/tensorbem/benchmarks/ellipsoid_added_mass.py",
+      "doc_claim": {
+        "source": "docs/marine_bem_benchmarks.md line 210",
+        "x_axis_relative_error": 1.6313e-2,
+        "y_axis_relative_error": 1.7371e-2,
+        "z_axis_relative_error": 1.9080e-2
+      },
+      "measured": {
+        "x_axis_relative_error": 1.6313e-2,
+        "y_axis_relative_error": 1.7371e-2,
+        "z_axis_relative_error": 1.9080e-2
+      },
+      "deviation_pct": 0.0,
+      "verdict": "PASS"
+    }
+  ],
+  "milestone_verification": {
+    "milestone_1_2d_laplace": {"code": "src/tensorbem/solver.py", "test": "tests/test_unit_disk_benchmark.py", "present": true},
+    "milestone_2_3d_laplace": {"code": "src/tensorbem/solver3d.py", "test": "tests/test_sphere_benchmark.py", "present": true},
+    "milestone_3_classical": {"code": "src/tensorbem/benchmarks/{ellipse,ellipsoid,interior_harmonics}.py", "test": "tests/test_{ellipse,ellipsoid,interior_harmonics}_benchmark.py", "present": true},
+    "milestone_4_2d_free_surface": {"code": "src/tensorbem/free_surface.py", "test": "tests/test_ursell_benchmark.py", "present": true},
+    "milestone_5_neumann_chief": {"code": "src/tensorbem/helmholtz.py", "test": "tests/test_exterior_neumann_added_mass.py", "present": true},
+    "milestone_6_3d_free_surface": {"code": "src/tensorbem/free_surface_solver3d.py", "test": "tests/test_floating_hemisphere_3d.py", "present": true}
+  },
+  "roadmap_status": {
+    "item_1_laplace_done": true,
+    "item_2_classical_done": true,
+    "item_3_2d_free_surface_done": true,
+    "item_4_3d_free_surface_done": true,
+    "item_5_conditioning_in_progress": {"clearance_py": true, "graded_mesh": false, "higher_order": false},
+    "item_6_finite_depth_rao_next": {"finite_depth": false, "hydrostatic_restoring": false, "RAO": false, "forward_speed": false, "kutta": false},
+    "item_7_tensor_platform_future": true
+  },
+  "summary": {
+    "tests": "270/270 PASS",
+    "benchmarks_checked": 4,
+    "benchmarks_passed": 3,
+    "benchmarks_honest_fail": 1,
+    "honest_fail_details": "Ursell 128-panel added-mass error 8.51e-3 vs README 7.7e-3 (10.6% deviation)",
+    "overall_verdict": "PASS_WITH_HONEST_FAIL"
+  }
+}
