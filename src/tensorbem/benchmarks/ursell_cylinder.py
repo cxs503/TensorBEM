@@ -60,6 +60,7 @@ from tensorbem.free_surface_solver import (
     solve_radiation_indirect,
 )
 from tensorbem.geometry import PanelMesh
+from tensorbem.quadrature_diagnostics_2d import diagnose_near_singular_quadrature_2d
 
 _MOTIONS = {"heave": 1, "sway": 0}
 
@@ -125,6 +126,9 @@ def run(
         gravity=gravity,
     )
 
+    # Compute near-singular quadrature diagnostics
+    quadrature_diag = diagnose_near_singular_quadrature_2d(mesh)
+
     return {
         "benchmark": "ursell_submerged_circular_cylinder_deep_water",
         "motion": "heave",
@@ -181,6 +185,7 @@ def run(
         "panel_relative_residual": panel.relative_residual,
         "panel_condition_number": panel.condition_number,
         "displaced_mass_per_unit_span": density * math.pi * radius**2,
+        "near_singular_quadrature": quadrature_diag,
         "note": (
             "The reference is Ursell's multipole solution, an independent "
             "analytical construction. The panel solver converges only at first "
