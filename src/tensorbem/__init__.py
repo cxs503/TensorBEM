@@ -94,6 +94,20 @@ from .helmholtz import (
     solve_helmholtz_diffraction,
     solve_vertical_cylinder_diffraction,
 )
+from .hydrostatic import (
+    HydrostaticProperties,
+    compute_displaced_volume_and_buoyancy,
+    compute_hydrostatic_restoring_matrix,
+    compute_mass_matrix,
+    compute_waterplane_properties,
+)
+from .rao import (
+    RAOResult,
+    RAOSpectrum,
+    compute_rao_at_frequency,
+    compute_rao_spectrum,
+    estimate_natural_frequency,
+)
 from .recovery import recover_tangent_gradient
 from .solver import (
     LaplaceDirichletResult,
@@ -151,6 +165,16 @@ __all__ = [
     "evaluate_surface_velocity_at_panels",
     "evaluate_representation_surface_velocity_at_panels",
     "recover_tangent_gradient",
+    "compute_waterplane_properties",
+    "compute_displaced_volume_and_buoyancy",
+    "compute_hydrostatic_restoring_matrix",
+    "compute_mass_matrix",
+    "HydrostaticProperties",
+    "compute_rao_at_frequency",
+    "compute_rao_spectrum",
+    "estimate_natural_frequency",
+    "RAOResult",
+    "RAOSpectrum",
     "green_function",
     "green_gradient",
     "green_gradient_field",
