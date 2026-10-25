@@ -28,6 +28,7 @@ from pathlib import Path
 
 import numpy as np
 
+from tensorbem.conditioning import estimate_operator_conditions
 from tensorbem.geometry3d import icosphere
 from tensorbem.solver3d import solve_laplace_surface
 
@@ -62,6 +63,12 @@ def run(
     )
     exact_added_mass = 0.5 * density * 4.0 / 3.0 * math.pi * radius**3
     quality = mesh.quality
+
+    # Compute conditioning diagnostics
+    conditioning = estimate_operator_conditions(
+        mesh, boundary_potential, domain="exterior"
+    )
+
     return {
         "benchmark": "three_dimensional_translating_sphere",
         "subdivisions": int(subdivisions),
