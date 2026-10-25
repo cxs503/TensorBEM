@@ -1,0 +1,93 @@
+{
+  "mission": "m280",
+  "repo": "TensorBEM",
+  "task": "EXPAND-FOLLOW",
+  "upstream_range": "0cd793da..bb200d27",
+  "follow_date": "2026-10-25",
+  "commits_reviewed": 3,
+  "commits": [
+    {
+      "sha": "546450a",
+      "author": "tensor-agent",
+      "subject": "TensorBEM 扩编首波审计：测试基线 270/270 PASS...",
+      "nature": "本线 m238 审计文档提交",
+      "new_code": false,
+      "new_claims": false,
+      "verdict": "PASS"
+    },
+    {
+      "sha": "92883db",
+      "author": "tensor-agent",
+      "subject": "添加 validation_report.json 判据工件",
+      "nature": "本线 m238 验证工件提交",
+      "new_code": false,
+      "new_claims": false,
+      "verdict": "PASS"
+    },
+    {
+      "sha": "bb200d2",
+      "author": "chuxsen",
+      "subject": "Merge pull request #17 from cxs503/agent/m238",
+      "nature": "上游合并本线 m238 审计 PR",
+      "new_code": false,
+      "new_claims": false,
+      "verdict": "PASS"
+    }
+  ],
+  "collision_check": {
+    "upstream_implemented_our_proposals": false,
+    "proposals_still_pending": [
+      "tensorbem-hydrostatic-rao (P0, m273 done, awaiting merge)",
+      "tensorbem-conditioning-diagnostics (P1, m272 done, awaiting merge)",
+      "ursell-benchmark-digit-correction (P0)",
+      "finite-depth-green-function (P1)"
+    ]
+  },
+  "branch_conflict_check": {
+    "agent_m272_vs_main": "no conflict (based on bb200d2)",
+    "agent_m273_vs_main": "no conflict (based on bb200d2)",
+    "agent_m272_vs_m273": "conflict in src/tensorbem/__init__.py (both add imports); resolve by merging m272 first then rebasing m273"
+  },
+  "test_gates": [
+    {
+      "branch": "main (m280 worktree)",
+      "head": "bb200d2",
+      "passed": 270,
+      "failed": 0,
+      "skipped": 0,
+      "wall_clock_seconds": 131.17,
+      "result": "ALL_GREEN"
+    },
+    {
+      "branch": "agent/m272",
+      "head": "54697f6",
+      "passed": 308,
+      "failed": 0,
+      "wall_clock_seconds": 132.11,
+      "result": "ALL_GREEN"
+    },
+    {
+      "branch": "agent/m273",
+      "head": "67b9655",
+      "passed": 284,
+      "failed": 0,
+      "wall_clock_seconds": 119.60,
+      "result": "ALL_GREEN"
+    }
+  ],
+  "regression": {
+    "detected": false,
+    "diagnosis": "上游 0cd793da→bb200d2 仅合入审计文档（expand_audit_tensorbem.md + validation_report.json），无代码变更。main 测试 270/270 全绿，与 m238 审计基线一致。"
+  },
+  "actions": {
+    "fix_mission_needed": false,
+    "backlog_updated": true,
+    "context_updated": true,
+    "merge_strategy": "先 m272 后 m273，rebase 解决 __init__.py import 冲突"
+  },
+  "deliverables": [
+    "follow_bb200d27.md（逐 commit 评审 + 套件门禁数字）",
+    "backlog.md TensorBEM 节（m280 跟进备注）",
+    "context.md 交接笔记（m280 段落）"
+  ]
+}
