@@ -33,6 +33,17 @@ from .analytic import (
     ursell_cylinder_coefficients,
 )
 from .clearance import SurfaceClearanceReport, diagnose_surface_clearance
+from .conditioning import (
+    ConditioningReport,
+    estimate_condition_number,
+    estimate_operator_conditions,
+)
+from .diagnostics_report import (
+    DiagnosticsReport,
+    load_diagnostics_report,
+    run_diagnostics,
+    save_diagnostics_report,
+)
 from .free_surface import (
     green_function,
     green_gradient,
@@ -93,6 +104,18 @@ from .helmholtz import (
     points_inside_polygon,
     solve_helmholtz_diffraction,
     solve_vertical_cylinder_diffraction,
+)
+from .mesh_quality import (
+    MeshQualityReport,
+    diagnose_mesh_quality,
+    identify_low_quality_panels,
+    mesh_quality_summary,
+)
+from .quadrature_diagnostics import (
+    NearSingularReport,
+    diagnose_near_singular_quadrature,
+    identify_problematic_panels,
+    near_singular_by_panel,
 )
 from .hydrostatic import (
     HydrostaticProperties,

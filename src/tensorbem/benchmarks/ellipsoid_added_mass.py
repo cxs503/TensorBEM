@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from dataclasses import asdict
 from pathlib import Path
 
 import numpy as np
@@ -44,7 +45,10 @@ from tensorbem.analytic import (
     ellipsoid_translation_trace_scale,
     ellipsoid_volume,
 )
+from tensorbem.conditioning import estimate_operator_conditions
 from tensorbem.geometry3d import ellipsoid_mesh, project_to_ellipsoid
+from tensorbem.mesh_quality import diagnose_mesh_quality
+from tensorbem.quadrature_diagnostics import diagnose_near_singular_quadrature
 from tensorbem.solver3d import solve_laplace_surface
 
 _AXIS_NAMES = ("x", "y", "z")
@@ -79,11 +83,22 @@ def run(
     exact_volume = ellipsoid_volume(axes)
     quality = mesh.quality
 
+    # Compute mesh quality diagnostics
+    mesh_quality = diagnose_mesh_quality(mesh)
+
     rows: list[dict[str, object]] = []
     for axis, axis_name in enumerate(_AXIS_NAMES):
         trace_scale = ellipsoid_translation_trace_scale(axes, axis)
         boundary = -speed * trace_scale * projected[:, axis].copy()
         result = solve_laplace_surface(mesh, boundary, domain="exterior")
+
+        # Compute conditioning diagnostics
+        conditioning = estimate_operator_conditions(
+            mesh, boundary, domain="exterior"
+        )
+
+        # Compute near-singular quadrature diagnostics
+        quadrature_diag = diagnose_near_singular_quadrature(mesh)
 
         exact_flux = -speed * mesh.normals[:, axis]
         flux_error = result.normal_derivative - exact_flux
@@ -120,6 +135,9 @@ def run(
                 "relative_residual_l2": result.relative_residual_l2,
                 "single_layer_condition_number": result.condition_number,
                 "double_layer_row_sum_error": result.double_layer_row_sum_error,
+                "single_layer_condition": conditioning.single_layer_condition,
+                "double_layer_condition": conditioning.double_layer_condition,
+                "near_singular_ratio": quadrature_diag.near_singular_fraction,
             }
         )
 
@@ -145,6 +163,7 @@ def run(
         "volume_ratio": mesh.volume / exact_volume,
         "max_aspect_ratio": quality["max_aspect_ratio"],
         "min_angle_degrees": quality["min_angle_degrees"],
+        "mesh_quality": asdict(mesh_quality),
         "added_mass_method": "boundary_energy_integral_using_computed_flux",
         "axes": rows,
         "note": (
