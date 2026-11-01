@@ -81,9 +81,12 @@ def compute_waterplane_properties(
 ) -> tuple[float, FloatArray, FloatArray]:
     """Compute waterplane area, centroid, and second moments.
 
-    The waterplane is the intersection of the hull with z=0. We extract the
-    boundary polygon from the WettedHullMesh and compute its properties using
-    the divergence theorem (Green's theorem in 2D).
+    The waterplane is the intersection of the hull with z=0. Every closed
+    waterline loop of the ``WettedHullMesh`` is traced and the reported
+    properties are those of the union of the loops, so a single hull (one loop)
+    and a multi-hull arrangement such as a catamaran (one loop per hull) are
+    both handled. Loop properties are computed with Green's theorem in 2D and
+    combined through the parallel axis theorem about the pooled centroid.
 
     Parameters
     ----------
@@ -114,87 +117,92 @@ def compute_waterplane_properties(
         adj.setdefault(i, []).append(j)
         adj.setdefault(j, []).append(i)
 
-    # Trace the boundary polygon
-    if not adj:
-        return 0.0, np.zeros(2), np.zeros(3)
+    # The waterline must be a union of simple closed loops: a single-hull
+    # waterplane has one loop, while a twin-hull (catamaran) waterplane has one
+    # loop per hull. Every waterline vertex therefore has exactly two incident
+    # waterline edges; anything else makes the enclosed area ambiguous.
+    for vertex, neighbours in adj.items():
+        if len(neighbours) != 2:
+            raise ValueError(
+                "waterline edges must form closed loops: vertex "
+                f"{vertex} has {len(neighbours)} incident waterline edges"
+            )
 
-    start = next(iter(adj))
-    ordered = [start]
-    visited = {start}
-    current = start
-
-    while True:
-        neighbors = adj[current]
-        next_v = None
-        for n in neighbors:
-            if n not in visited:
-                next_v = n
+    # Trace every loop in the waterline graph.
+    loops: list[list[int]] = []
+    visited: set[int] = set()
+    for start in adj:
+        if start in visited:
+            continue
+        loop = [start]
+        visited.add(start)
+        previous = -1
+        current = start
+        for _ in range(len(edge_list) + 1):
+            a, b = adj[current]
+            step = b if a == previous else a
+            if step == start:
                 break
-        if next_v is None:
-            # Try to close the loop
-            for n in neighbors:
-                if n == start and len(ordered) > 2:
-                    break
-            break
-        ordered.append(next_v)
-        visited.add(next_v)
-        current = next_v
+            if step in visited:
+                raise ValueError("waterline edges do not form disjoint loops")
+            loop.append(step)
+            visited.add(step)
+            previous, current = current, step
+        loops.append(loop)
 
-    if len(ordered) < 3:
+    # Shoelace terms are accumulated over every loop. Each loop is oriented
+    # individually (clockwise or counter-clockwise) and normalised to a positive
+    # area by its own sign, so the pooled properties are the union of the loops.
+    total_area = 0.0
+    x_moment = 0.0
+    y_moment = 0.0
+    i_xx_origin = 0.0
+    i_yy_origin = 0.0
+    i_xy_origin = 0.0
+
+    for loop in loops:
+        if len(loop) < 3:
+            continue
+        xy = vertices[loop][:, :2]
+        x = xy[:, 0]
+        y = xy[:, 1]
+        x_next = np.roll(x, -1)
+        y_next = np.roll(y, -1)
+        cross = x * y_next - x_next * y
+        area = 0.5 * np.sum(cross)
+        if abs(area) < 1.0e-14:
+            continue
+        sign = 1.0 if area > 0.0 else -1.0
+        total_area += abs(area)
+        x_moment += sign * np.sum((x + x_next) * cross) / 6.0
+        y_moment += sign * np.sum((y + y_next) * cross) / 6.0
+        i_xx_origin += (
+            sign
+            * np.sum((y**2 + y * y_next + y_next**2) * cross)
+            / 12.0
+        )
+        i_yy_origin += (
+            sign
+            * np.sum((x**2 + x * x_next + x_next**2) * cross)
+            / 12.0
+        )
+        i_xy_origin += (
+            sign
+            * np.sum((x * y_next + 2.0 * x * y + 2.0 * x_next * y_next + x_next * y) * cross)
+            / 24.0
+        )
+
+    if total_area < 1.0e-14:
         return 0.0, np.zeros(2), np.zeros(3)
 
-    # Get (x, y) coordinates of waterplane vertices
-    xy = np.array([[vertices[i, 0], vertices[i, 1]] for i in ordered])
+    centroid = np.array([x_moment / total_area, y_moment / total_area])
 
-    # Compute area and moments using the shoelace formula
-    # A = (1/2) Σ (x_i * y_{i+1} - x_{i+1} * y_i)
-    # I_xx = (1/12) Σ (y_i² + y_i*y_{i+1} + y_{i+1}²) * (x_i*y_{i+1} - x_{i+1}*y_i)
-    # I_yy = (1/12) Σ (x_i² + x_i*x_{i+1} + x_{i+1}²) * (x_i*y_{i+1} - x_{i+1}*y_i)
-    # I_xy = (1/24) Σ (x_i*y_{i+1} + 2*x_i*y_i + 2*x_{i+1}*y_{i+1} + x_{i+1}*y_i) * (x_i*y_{i+1} - x_{i+1}*y_i)
-
-    n = len(xy)
-    x = xy[:, 0]
-    y = xy[:, 1]
-
-    # Shoelace terms
-    cross = np.zeros(n)
-    for i in range(n):
-        j = (i + 1) % n
-        cross[i] = x[i] * y[j] - x[j] * y[i]
-
-    area = 0.5 * np.sum(cross)
-
-    if abs(area) < 1e-14:
-        return 0.0, np.zeros(2), np.zeros(3)
-
-    # Centroid
-    cx = np.sum((x + np.roll(x, -1)) * cross) / (6.0 * area)
-    cy = np.sum((y + np.roll(y, -1)) * cross) / (6.0 * area)
-    centroid = np.array([cx, cy])
-
-    # Second moments about origin
-    i_xx_orig = 0.0
-    i_yy_orig = 0.0
-    i_xy_orig = 0.0
-
-    for i in range(n):
-        j = (i + 1) % n
-        c = cross[i]
-        i_xx_orig += (y[i] ** 2 + y[i] * y[j] + y[j] ** 2) * c
-        i_yy_orig += (x[i] ** 2 + x[i] * x[j] + x[j] ** 2) * c
-        i_xy_orig += (x[i] * y[j] + 2 * x[i] * y[i] + 2 * x[j] * y[j] + x[j] * y[i]) * c
-
-    i_xx_orig /= 12.0
-    i_yy_orig /= 12.0
-    i_xy_orig /= 24.0
-
-    # Shift to centroid using parallel axis theorem
-    # I_xx = I_xx_orig - A * cy²
-    # I_yy = I_yy_orig - A * cx²
-    # I_xy = I_xy_orig - A * cx * cy
-    i_xx = i_xx_orig - area * cy**2
-    i_yy = i_yy_orig - area * cx**2
-    i_xy = i_xy_orig - area * cx * cy
+    # Shift to the pooled centroid using the parallel axis theorem
+    # I_xx = I_xx_origin - A * cy², I_yy = I_yy_origin - A * cx²,
+    # I_xy = I_xy_origin - A * cx * cy.
+    i_xx = i_xx_origin - total_area * centroid[1] ** 2
+    i_yy = i_yy_origin - total_area * centroid[0] ** 2
+    i_xy = i_xy_origin - total_area * centroid[0] * centroid[1]
 
     # Ensure moments are positive (they should be by definition)
     i_xx = abs(i_xx)
@@ -202,7 +210,7 @@ def compute_waterplane_properties(
 
     moments = np.array([i_xx, i_yy, i_xy])
 
-    return abs(area), centroid, moments
+    return total_area, centroid, moments
 
 
 def compute_displaced_volume_and_buoyancy(
