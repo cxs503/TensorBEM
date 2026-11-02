@@ -124,6 +124,14 @@ from .hydrostatic import (
     compute_mass_matrix,
     compute_waterplane_properties,
 )
+from .pressure import (
+    PressureLoads,
+    bernoulli_pressure,
+    hydrostatic_pressure,
+    integrate_pressure_loads,
+    steady_pressure_coefficient,
+    steady_pressure_loads,
+)
 from .rao import (
     RAOResult,
     RAOSpectrum,
@@ -268,5 +276,11 @@ __all__ = [
     "ellipsoid_added_mass_matrix",
     "ellipsoid_volume",
     "ellipsoid_translation_trace_scale",
+    "PressureLoads",
+    "bernoulli_pressure",
+    "hydrostatic_pressure",
+    "integrate_pressure_loads",
+    "steady_pressure_coefficient",
+    "steady_pressure_loads",
 ]
 __version__ = "0.5.0"
