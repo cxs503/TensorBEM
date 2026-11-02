@@ -1,5 +1,9 @@
 # TensorBEM
 
+**Tensor ecosystem vision:** [AI-era ecosystem vision](https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md).
+
+**Project charter:** [docs/PROJECT_CHARTER.md](docs/PROJECT_CHARTER.md) — mission, ownership, non-goals, integration, quality gates, and agent rules.
+
 **TensorBEM** is the boundary-element solver in the Tensor scientific-computing ecosystem. Its goal is to provide verifiable boundary-integral solvers that can run independently and later be orchestrated by TensorPlatform agents. The current baseline includes a 2-D polygonal constant-panel Laplace solver and a 3-D triangular-surface constant-panel Laplace solver with interior and exterior Dirichlet formulations.
 
 ## Current milestones
