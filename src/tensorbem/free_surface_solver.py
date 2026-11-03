@@ -234,6 +234,33 @@ def assemble_indirect_matrix(mesh: PanelMesh, nu: float, *,
     return matrix
 
 
+def _log_panel_primitive(z: FloatArray, h: FloatArray) -> FloatArray:
+    """Antiderivative of ``log|P - Q|`` along a straight panel.
+
+    ``z`` is the coordinate along the panel measured from the foot of the
+    perpendicular and ``h`` the perpendicular distance from the field point to
+    the panel line, so ``log r = 0.5 * log(z**2 + h**2)``. The closed form is
+    ``0.5 z log(z^2+h^2) - z + h atan(z/h)``, with the collinear limit
+    ``z log|z| - z`` when ``h = 0`` (the quadrature point sits on the panel).
+
+    Integrating this analytically instead of with a uniform Gauss rule is what
+    makes the self-panel contribution exact: a 24-point rule straddling the
+    ``log r`` singularity is only accurate to about ``1e-4`` here, which used to
+    bias the documented Ursell number (see
+    ``docs/ursell_quadrature_provenance.md``).
+    """
+    coplanar = h <= 1.0e-14
+    h_safe = np.where(coplanar, 1.0, h)
+    z_abs = np.where(np.abs(z) <= 1.0e-14, 1.0, np.abs(z))
+    collinear = np.where(np.abs(z) <= 1.0e-14, 0.0, z * np.log(z_abs) - z)
+    general = (
+        0.5 * z * np.log(z * z + h_safe * h_safe)
+        - z
+        + h_safe * np.arctan(z / h_safe)
+    )
+    return np.where(coplanar, collinear, general)
+
+
 def _evaluate_source_potential(
     mesh: PanelMesh, sources: ComplexArray, nu: float, panel_nodes: int
 ) -> ComplexArray:
@@ -254,16 +281,8 @@ def _evaluate_source_potential(
     xi = np.einsum("mpk,pk->mp", delta_a, tangents)
     h = np.abs(np.einsum("mpk,pk->mp", delta_a, normals))
 
-    def _vec_log_primitive(z: FloatArray) -> FloatArray:
-        coplanar = h <= 1.0e-14
-        h_safe = np.where(coplanar, 1.0, h)
-        z_abs = np.where(np.abs(z) <= 1.0e-14, 1.0, np.abs(z))
-        collinear = np.where(np.abs(z) <= 1.0e-14, 0.0, z * np.log(z_abs) - z)
-        general = 0.5 * z * np.log(z * z + h_safe * h_safe) - z + h_safe * np.arctan(z / h_safe)
-        return np.where(coplanar, collinear, general)
-
     rankine_potential = (
-        _vec_log_primitive(lengths[None, :] - xi) - _vec_log_primitive(-xi)
+        _log_panel_primitive(lengths[None, :] - xi, h) - _log_panel_primitive(-xi, h)
     ) / (2.0 * math.pi)
 
     smooth_nodes = min(panel_nodes, 6)
