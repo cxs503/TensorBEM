@@ -9,13 +9,30 @@ different well-posed problem -- the circulation is fixed by the Kutta condition
 at the trailing edge, not by the boundary data -- and README roadmap item 6
 lists "Kutta-condition lifting hydrofoils" as not implemented.
 
-This module supplies the part of that work that can be verified against exact
-mathematics independent of any discretisation: the closed-form solution of the
-symmetric Joukowski family in steady incompressible flow, meshes that sit
-exactly on that analytic surface, and the checks that couple the existing
-exterior-Neumann solver to the analytic field. The Kutta closure itself is *not*
-implemented here; see ``docs/lifting_foil.md`` for the measured status of the
-attempted point-vortex closure and its open defect.
+This module supplies the closed-form solution of the symmetric Joukowski family
+in steady incompressible flow, meshes that sit exactly on that analytic surface,
+and - since the point-vortex closure was re-derived and verified against that
+exact solution - a lifting boundary-element solve,
+:func:`solve_lifting_flow`.  See ``docs/lifting_kutta_closure.md`` for the
+verification numbers and ``docs/lifting_foil.md`` for the history of the
+closure that was previously (and wrongly) reported as sign-inverted.
+
+Circulation sign convention
+--------------------------
+Two conventions coexist in this module and mixing them reads as a 100% error:
+
+* :meth:`JoukowskiAirfoil.exact_circulation` returns ``Gamma = 4 pi a U sin(alpha)``,
+  the value that enters the complex potential below together with
+  ``C_L = 2 Gamma / (U c)``.  Call that the *clockwise* value: it is minus the
+  contour integral of the velocity taken counter clockwise.
+* :func:`vortex_velocity_field` and :func:`solve_lifting_flow` use the
+  counter-clockwise positive circulation ``Gamma_ccw = closed_integral(v . ds)``
+  of a point vortex.  The lift follows Kutta-Joukowski as ``L' = -rho U Gamma_ccw``,
+  i.e. ``C_L = -2 Gamma_ccw / (U c)``.
+
+For the Kutta solution of this module the two are related by
+``Gamma_ccw = -exact_circulation()``; the earlier closure attempt compared them
+without the sign change and concluded that its circulation was inverted.
 
 Analytic solution
 -----------------
@@ -48,7 +65,8 @@ The offset was confirmed numerically against the solver to 2e-3 absolute.
 
 Limitations
 -----------
-* Analytic reference only: no lifting boundary-element solve is shipped here.
+* The lifting solve is 2-D, steady, inviscid and unbounded; see
+  :func:`solve_lifting_flow` for the closure it uses.
 * Symmetric (zero-camber) Joukowski sections only.
 * Steady, inviscid, incompressible, infinite domain; no free surface, no
   forward speed, no boundary layer.
@@ -393,3 +411,181 @@ def _three_point_slopes(samples: FloatArray, values: FloatArray) -> FloatArray:
             total += ua * (2.0 * s_target - sb - sc) / ((sa - sb) * (sa - sc))
         slopes[index] = total
     return slopes
+
+
+def vortex_velocity_field(
+    points: FloatArray,
+    center: tuple[float, float] | FloatArray,
+    circulation: float = 1.0,
+) -> FloatArray:
+    """Velocity of a point vortex, ``Gamma`` counter-clockwise positive.
+
+    ``v = Gamma/(2 pi) * (-(y-y0), (x-x0)) / r**2``.  The vector field is
+    single valued everywhere except at ``center``; the potential is not, which
+    is exactly what carries the circulation of the lifting flow.
+    """
+    coordinates = np.atleast_2d(np.asarray(points, dtype=float))
+    if coordinates.ndim != 2 or coordinates.shape[1] != 2:
+        raise ValueError("points must have shape (n, 2)")
+    origin = np.asarray(center, dtype=float).reshape(2)
+    if not np.isfinite(origin).all():
+        raise ValueError("center must be finite")
+    if not math.isfinite(circulation):
+        raise ValueError("circulation must be finite")
+    delta = coordinates - origin
+    radius_squared = np.sum(delta * delta, axis=1)
+    if np.any(radius_squared <= 0.0):
+        raise ValueError("a target point coincides with the vortex centre")
+    scale = circulation / (_TWO_PI * radius_squared)
+    return np.column_stack((-delta[:, 1] * scale, delta[:, 0] * scale))
+
+
+@dataclass(frozen=True)
+class LiftingFlowResult:
+    """Lifting boundary-element solution for a symmetric Joukowski section.
+
+    All velocities are normalised by the free-stream speed ``U``; ``rho = 1``.
+    The circulation is the *counter-clockwise* value, so the lift coefficient is
+    ``-2 * circulation_ccw / (U * chord)``.
+    """
+
+    mesh: PanelMesh
+    alpha_deg: float
+    speed: float
+    panel_count: int
+    vortex_center: FloatArray
+    vortex_fraction: float
+    circulation_ccw: float
+    lift_coefficient_from_circulation: float
+    lift_coefficient_from_pressure: float
+    surface_speed: FloatArray
+    surface_tangential_velocity: FloatArray
+    boundary_values: FloatArray
+    base_tangential_velocity: FloatArray
+    vortex_tangential_velocity: FloatArray
+    kutta_base_sum: float
+    kutta_response_sum: float
+    condition_number: float
+    relative_residual_l2: float
+
+    @property
+    def kutta_residual(self) -> float:
+        """Residual of the two-panel Kutta condition, normalised by the peak speed.
+
+        It vanishes by construction (the circulation is solved for it); it is
+        reported so a caller can see the closure really was imposed.
+        """
+        peak = float(np.max(np.abs(self.surface_tangential_velocity)))
+        if peak == 0.0:
+            return 0.0
+        mismatch = self.surface_tangential_velocity[0] + self.surface_tangential_velocity[-1]
+        return abs(float(mismatch)) / peak
+
+
+def solve_lifting_flow(
+    foil: JoukowskiAirfoil,
+    panel_count: int,
+    speed: float = 1.0,
+    vortex_fraction: float = 0.25,
+    reference_length: float = REFERENCE_LENGTH,
+) -> LiftingFlowResult:
+    """Lift the exterior-Neumann solver with an explicit Kutta closure.
+
+    The disturbance is split as ``phi = phi_U + Gamma phi_v``:
+
+    * ``phi_U`` is the non-lifting disturbance already used by
+      :func:`compare_nonlifting_field` (flux ``U . n_body``);
+    * ``phi_v`` is the response to a unit point vortex placed inside the section
+      at ``leading_edge + vortex_fraction * chord``, plus the Neumann
+      correction that cancels its normal velocity on the wall
+      (flux ``v_vortex . n_body``).  By construction its circulation around the
+      section is exactly ``1``: the correction is single valued on the contour,
+      so ``closed_integral(grad(phi_v) . ds) = 1``.
+
+    ``Gamma`` then follows from the Kutta condition at the cusp trailing edge:
+    the two panels adjacent to the cusp must carry the *same* velocity vector,
+    and because their tangents are almost exactly opposite that is
+
+        ``v_t[0] + v_t[-1] = 0``,
+
+    one linear equation in ``Gamma``.  Surface velocities are reconstructed
+    from the boundary potential with :func:`_three_point_slopes` (one-sided
+    stencils at the ends, so the two sides of the cusp never mix).
+
+    The Kutta value of this family is a *stagnation* point at the cusp, so a
+    converged solution has both trailing-edge panels slow, not fast.
+
+    Notes
+    -----
+    A layer-gradient reconstruction of the same surface velocity was tried and
+    rejected: for a circle it is an order of magnitude more accurate than the
+    three-point rule, but the piecewise-constant single-layer density is
+    logarithmically singular at panel ends, and at the cusp the two panels that
+    define the closure sit right in that singularity.  It returned a
+    circulation 30% too large at every mesh (see ``docs/lifting_kutta_closure.md``).
+    """
+    if not isinstance(foil, JoukowskiAirfoil):
+        raise TypeError("foil must be a JoukowskiAirfoil")
+    count = _validate_panel_count(panel_count)
+    speed = _positive("speed", speed)
+    fraction = float(vortex_fraction)
+    if not math.isfinite(fraction) or not 0.0 < fraction < 1.0:
+        raise ValueError("vortex_fraction must lie strictly between 0 and 1")
+
+    mesh = foil.mesh(count)
+    tangents = panel_tangents(mesh)
+    alpha = math.radians(foil.alpha_deg)
+    stream = speed * np.array([math.cos(alpha), math.sin(alpha)])
+
+    base = solve_laplace_exterior_neumann(
+        mesh, tangency_flux(mesh, foil.alpha_deg, speed), reference_length
+    )
+    centre = np.asarray(foil.leading_edge, dtype=float) + fraction * (
+        np.asarray(foil.trailing_edge, dtype=float) - np.asarray(foil.leading_edge, dtype=float)
+    )
+    vortex = vortex_velocity_field(mesh.centers, centre, 1.0)
+    response = solve_laplace_exterior_neumann(
+        mesh, np.sum(mesh.normals * vortex, axis=1), reference_length
+    )
+
+    arc = surface_arc_coordinates(mesh)
+    base_tangential = tangents @ stream + _three_point_slopes(arc, base.boundary_values)
+    vortex_tangential = np.sum(tangents * vortex, axis=1) + _three_point_slopes(
+        arc, response.boundary_values
+    )
+
+    kutta_base = float(base_tangential[0] + base_tangential[-1])
+    kutta_response = float(vortex_tangential[0] + vortex_tangential[-1])
+    if not math.isfinite(kutta_response) or abs(kutta_response) < 1.0e-12:
+        raise ValueError("the vortex response is Kutta-degenerate on this mesh")
+    circulation = -kutta_base / kutta_response
+
+    tangential = base_tangential + circulation * vortex_tangential
+    surface_speed = np.abs(tangential)
+    pressure_coefficient = 1.0 - (surface_speed / speed) ** 2
+    # L' = -closed_integral(p n_y ds) with p = 0.5 rho U^2 C_p, rho = 1
+    lift_pressure = -0.5 * speed**2 * float(
+        np.sum(pressure_coefficient * mesh.normals[:, 1] * mesh.lengths)
+    )
+    lift_coefficient_pressure = lift_pressure / (0.5 * speed**2 * foil.chord)
+
+    return LiftingFlowResult(
+        mesh=mesh,
+        alpha_deg=float(foil.alpha_deg),
+        speed=speed,
+        panel_count=count,
+        vortex_center=centre,
+        vortex_fraction=fraction,
+        circulation_ccw=circulation,
+        lift_coefficient_from_circulation=-2.0 * circulation / (speed * foil.chord),
+        lift_coefficient_from_pressure=lift_coefficient_pressure,
+        surface_speed=surface_speed,
+        surface_tangential_velocity=tangential,
+        boundary_values=base.boundary_values + circulation * response.boundary_values,
+        base_tangential_velocity=base_tangential,
+        vortex_tangential_velocity=vortex_tangential,
+        kutta_base_sum=kutta_base,
+        kutta_response_sum=kutta_response,
+        condition_number=response.condition_number,
+        relative_residual_l2=max(base.relative_residual_l2, response.relative_residual_l2),
+    )
