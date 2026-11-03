@@ -1,0 +1,154 @@
+{
+  "nu": 1.0,
+  "source": [
+    0.0,
+    0.0,
+    -1.5
+  ],
+  "deep_water_limit": [
+    {
+      "nu_h": 25.0,
+      "k0": 0.9999999999999964,
+      "k0_over_nu": 0.9999999999999964,
+      "rel_err_total": 2.4324824254100953e-05,
+      "rel_err_real": 9.063152008835805e-05,
+      "rel_err_imag": 3.1811408465419916e-15,
+      "observed_order": 3.089639844210908
+    },
+    {
+      "nu_h": 50.0,
+      "k0": 0.9999999999999964,
+      "k0_over_nu": 0.9999999999999964,
+      "rel_err_total": 2.8574289619762418e-06,
+      "rel_err_real": 1.0646454324320358e-05,
+      "rel_err_imag": 3.1811408465419916e-15,
+      "observed_order": 3.0471126068610976
+    },
+    {
+      "nu_h": 100.0,
+      "k0": 0.9999999999999964,
+      "k0_over_nu": 0.9999999999999964,
+      "rel_err_total": 3.457029992844808e-07,
+      "rel_err_real": 1.2880499360226546e-06,
+      "rel_err_imag": 3.1811408465419916e-15,
+      "observed_order": 3.0186170906189402
+    },
+    {
+      "nu_h": 200.0,
+      "k0": 0.9999999999999964,
+      "k0_over_nu": 0.9999999999999964,
+      "rel_err_total": 4.26588219291794e-08,
+      "rel_err_real": 1.5894190380299656e-07,
+      "rel_err_imag": 3.1811408465419916e-15,
+      "observed_order": 3.0124149260404565
+    },
+    {
+      "nu_h": 400.0,
+      "k0": 0.9999999999999964,
+      "k0_over_nu": 0.9999999999999964,
+      "rel_err_total": 5.286662739266405e-09,
+      "rel_err_real": 1.9697502240881144e-08,
+      "rel_err_imag": 3.1811408465419916e-15
+    }
+  ],
+  "practical_deviation": [
+    {
+      "nu_h": 0.5,
+      "k0": 1.5434046384182096,
+      "phase_speed_ratio": 1.5434046384182096,
+      "max_rel_deviation_of_deep_water": 0.4489096330405001
+    },
+    {
+      "nu_h": 1.0,
+      "k0": 1.1996786402577335,
+      "phase_speed_ratio": 1.1996786402577335,
+      "max_rel_deviation_of_deep_water": 0.2045541319590392
+    },
+    {
+      "nu_h": 2.0,
+      "k0": 1.0326690694873513,
+      "phase_speed_ratio": 1.0326690694873513,
+      "max_rel_deviation_of_deep_water": 0.04757560159020746
+    },
+    {
+      "nu_h": 5.0,
+      "k0": 1.0000907216367843,
+      "phase_speed_ratio": 1.0000907216367843,
+      "max_rel_deviation_of_deep_water": 0.018584890641080872
+    },
+    {
+      "nu_h": 10.0,
+      "k0": 1.0000000041223096,
+      "phase_speed_ratio": 1.0000000041223096,
+      "max_rel_deviation_of_deep_water": 0.016406638917281065
+    },
+    {
+      "nu_h": 25.0,
+      "k0": 0.9999999999999964,
+      "phase_speed_ratio": 0.9999999999999964,
+      "max_rel_deviation_of_deep_water": 0.023734304018776502
+    },
+    {
+      "nu_h": 50.0,
+      "k0": 0.9999999999999964,
+      "phase_speed_ratio": 0.9999999999999964,
+      "max_rel_deviation_of_deep_water": 0.027527212990853634
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "nu_h": 1.0,
+      "free_surface_residual_step_0.001h": 3.428157224754837e-07,
+      "free_surface_residual_step_0.0001h": 3.3904733476118216e-09,
+      "bottom_normal_derivative_times_h_over_g": 9.926159147621964e-07
+    },
+    {
+      "nu_h": 5.0,
+      "free_surface_residual_step_0.001h": 4.349073505064884e-06,
+      "free_surface_residual_step_0.0001h": 4.375863360275885e-08,
+      "bottom_normal_derivative_times_h_over_g": 6.473780024349374e-06
+    },
+    {
+      "nu_h": 20.0,
+      "free_surface_residual_step_0.001h": 9.474184667323174e-06,
+      "free_surface_residual_step_0.0001h": 9.522636735706368e-08,
+      "bottom_normal_derivative_times_h_over_g": 6.290043553582991e-06
+    }
+  ],
+  "bessel": {
+    "scipy": true,
+    "k0_max_rel_err": 6.824818135751961e-10,
+    "k0_max_rel_err_small_argument": 6.824818135751961e-10,
+    "j0_max_rel_err": 1.2390858106418073e-10,
+    "y0_max_rel_err": 8.159795445603706e-11
+  },
+  "mode_sensitivity": [
+    {
+      "nu_h": 1.0,
+      "rel_change_with_10x_modes": 0.0,
+      "evanescent_mode_residual": 1.2576606422953773e-12
+    },
+    {
+      "nu_h": 5.0,
+      "rel_change_with_10x_modes": 0.0,
+      "evanescent_mode_residual": 3.7991831902672857e-13
+    },
+    {
+      "nu_h": 20.0,
+      "rel_change_with_10x_modes": 0.0,
+      "evanescent_mode_residual": 3.2884805989397137e-13
+    }
+  ],
+  "far_field_phase": {
+    "nu_h": 3.0,
+    "k0": 1.0048275920112566,
+    "max_phase_step_error": 0.00015114115970105146,
+    "mean_phase_wavenumber": 1.0050971203469679
+  },
+  "figures": [
+    "fig_freesurface_curves.png",
+    "fig_field_map.png",
+    "fig_limit_convergence.png",
+    "fig_practical_deviation.png"
+  ]
+}
