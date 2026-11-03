@@ -270,14 +270,36 @@ def wigley_hull_mesh(
 
 
 def wigley_hull_properties(L: float, B: float, T: float) -> dict[str, float]:
-    """Analytical properties of the Wigley hullform."""
-    volume = (4.0 / 3.0) * L * B * T * 0.5
+    """Analytical properties of the Wigley hullform.
+
+    With ``y(x, z) = (B/2)(1 - (2x/L)^2)(1 - (z/T)^2)`` each of the two
+    normalised factors integrates to ``2/3`` over its own range::
+
+        integral_{-L/2}^{L/2} (1 - (2x/L)^2) dx = 2L/3
+        integral_{-T}^{0}     (1 - (z/T)^2) dz = 2T/3
+
+    The two-sided hull then has
+
+        volume = 2 * (B/2) * (2L/3) * (2T/3) = 4LBT/9,
+        Cb     = (4LBT/9) / (LBT)            = 4/9 = 0.444...,
+
+    the waterplane area is ``2LB/3`` and the midship section area is
+    ``2BT/3`` (so ``Cm = Cp = 2/3`` and ``Cb = Cm * Cp = 4/9``).  Earlier
+    versions of this function returned ``2LBT/3`` and ``Cb = 2/3``; that is
+    the *prismatic* coefficient ``Cp``, not ``Cb``, and it contradicts both
+    the closed-form integral above and the volume of the generated mesh
+    (which converges to ``4LBT/9``, see ``benchmarks.wigley_verification``).
+    """
+    volume = 4.0 * L * B * T / 9.0
     waterplane_area = (2.0 / 3.0) * L * B
-    Cb = volume / (L * B * T)
+    midship_section_area = (2.0 / 3.0) * B * T
     return {
         "volume": volume,
         "waterplane_area": waterplane_area,
-        "Cb": Cb,
+        "midship_section_area": midship_section_area,
+        "Cb": volume / (L * B * T),
+        "Cm": midship_section_area / (B * T),
+        "Cp": volume / (midship_section_area * L),
         "L": L,
         "B": B,
         "T": T,
@@ -334,7 +356,25 @@ def michell_wave_resistance(
     g: float = _DEFAULT_GRAVITY,
     n_quad: int = 256,
 ) -> float:
-    """Compute wave resistance using Michell's thin-ship theory."""
+    """Compute wave resistance using Michell's thin-ship theory.
+
+    The Kochin integral is
+
+        Rw = (4 rho / U^2) * integral_{1}^{lambda_max}
+                 |H(k0 lambda)|^2 / (lambda^2 sqrt(lambda^2 - 1)) dlambda,
+
+    whose integrand carries an *integrable* inverse-square-root endpoint at
+    ``lambda = 1`` (the transverse-wave cusp).  Applying Gauss-Legendre
+    directly on ``[1, lambda_max]`` resolves that endpoint only algebraically:
+    with ``n_quad = 256`` the quadrature error reaches 1.4-2.6 % and even
+    ``n_quad = 1024`` stays at the 0.3-0.6 % level (measured, see
+    ``benchmarks.wigley_verification``).  The substitution
+
+        lambda = 1 + s^2,  dlambda = 2 s ds,  sqrt(lambda^2 - 1) = s sqrt(2 + s^2)
+
+    cancels the singular factor exactly and leaves a smooth integrand, so the
+    same 256 Gauss nodes reproduce the converged reference to ~1e-7 relative.
+    """
     if U <= 0:
         return 0.0
 
@@ -342,17 +382,17 @@ def michell_wave_resistance(
     lambda_max = max(5.0, 10.0 / (k0 * T))
 
     nodes, weights = leggauss(n_quad)
-    lam = 0.5 * (lambda_max - 1.0) * (nodes + 1.0) + 1.0
-    w = 0.5 * (lambda_max - 1.0) * weights
+
+    # lambda = 1 + s^2 on the half-open interval s in [0, sqrt(lambda_max - 1)]
+    s_max = math.sqrt(lambda_max - 1.0)
+    s = 0.5 * s_max * (nodes + 1.0)
+    w = 0.5 * s_max * weights
+    lam = 1.0 + s * s
 
     integrand = np.zeros(n_quad, dtype=float)
     for i in range(n_quad):
-        k = lam[i] * k0
-        Hk = michell_kochin_function(L, B, T, k)
-        abs_H2 = abs(Hk) ** 2
-        denom = lam[i] ** 2 * math.sqrt(max(lam[i] ** 2 - 1.0, 0.0))
-        if denom > 1e-30:
-            integrand[i] = abs_H2 / denom
+        Hk = michell_kochin_function(L, B, T, lam[i] * k0)
+        integrand[i] = abs(Hk) ** 2 * 2.0 / (lam[i] ** 2 * math.sqrt(2.0 + s[i] * s[i]))
 
     Rw = (4.0 * rho / U**2) * float(np.sum(w * integrand))
     return max(Rw, 0.0)
