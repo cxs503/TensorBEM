@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+from typing import Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -787,6 +788,165 @@ def rectangular_barge_hull_mesh(
     _wall_strip(bottom_loop, top_loop, coords, faces)
 
     return WettedHullMesh(np.asarray(coords, dtype=float), np.asarray(faces, dtype=np.int64))
+
+
+def box_hull_mesh(
+    length: float,
+    beam: float,
+    draft: float,
+    *,
+    center_xy: tuple[float, float] = (0.0, 0.0),
+    n_length: int = 1,
+    n_beam: int = 1,
+    n_draft: int = 1,
+    length_subdivisions: int | None = None,
+    beam_subdivisions: int | None = None,
+) -> WettedHullMesh:
+    """Return a wall-sided (barge-like) wetted hull mesh in ``z <= 0``.
+
+    A rectangular box of ``length`` x ``beam`` x ``draft`` whose keel lies at
+    ``z = -draft`` and whose flat waterplane lies at ``z = 0``; the keel and the
+    four vertical sides are meshed (no waterplane lid panel), so the mesh has a
+    single rectangular waterline loop.
+
+    Every panel is planar and every waterline edge is a straight segment, hence
+    all hydrostatic integrals of this mesh (displaced volume, waterplane area
+    and second moments) are *exact* and reproduce the classical barge formulas
+    analytically to round-off. This makes the geometry a machine-precision
+    verification case for :mod:`tensorbem.hydrostatic`.
+
+    Parameters
+    ----------
+    length, beam, draft :
+        Box principal dimensions (m), strictly positive and finite.
+    center_xy :
+        Waterplane centre offset (m).
+    n_length, n_beam, n_draft :
+        Panel-edge counts along the length, beam and vertical directions
+        (each >= 1). The triangulated solid is invariant to these counts; they
+        exist so that mesh-count invariance of the hydrostatics can be tested.
+    length_subdivisions, beam_subdivisions :
+        Aliases for ``n_length`` / ``n_beam`` accepted for backward
+        compatibility.
+
+    Returns
+    -------
+    hull :
+        Wetted hull mesh with outward panel normals and one waterline loop.
+    """
+    for name, value in (("length", length), ("beam", beam), ("draft", draft)):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be a positive finite number")
+    if length_subdivisions is not None:
+        n_length = length_subdivisions
+    if beam_subdivisions is not None:
+        n_beam = beam_subdivisions
+    for name, value in (("n_length", n_length), ("n_beam", n_beam), ("n_draft", n_draft)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)):
+            raise ValueError(f"{name} must be an integer")
+        if value < 1:
+            raise ValueError(f"{name} must be at least 1")
+    nx, ny, nz = int(n_length), int(n_beam), int(n_draft)
+
+    xy = np.asarray(center_xy, dtype=float)
+    if xy.shape != (2,) or not np.isfinite(xy).all():
+        raise ValueError("center_xy must be a finite 2-tuple")
+    x0, y0 = float(xy[0]), float(xy[1])
+
+    xs = np.linspace(-0.5 * float(length), 0.5 * float(length), nx + 1) + x0
+    ys = np.linspace(-0.5 * float(beam), 0.5 * float(beam), ny + 1) + y0
+    keel = -float(draft)
+
+    coords: list[tuple[float, float, float]] = []
+    bottom = np.zeros((nx + 1, ny + 1), dtype=np.int64)
+    for i in range(nx + 1):
+        for j in range(ny + 1):
+            bottom[i, j] = len(coords)
+            coords.append((float(xs[i]), float(ys[j]), keel))
+
+    faces: list[tuple[int, int, int]] = []
+    down = np.array([0.0, 0.0, -1.0])
+    for i in range(nx):
+        for j in range(ny):
+            q = (
+                bottom[i, j],
+                bottom[i + 1, j],
+                bottom[i + 1, j + 1],
+                bottom[i, j + 1],
+            )
+            pts = [np.array(coords[v], dtype=float) for v in q]
+            for tri in ((0, 1, 2), (0, 2, 3)):
+                order = _oriented_triangle(pts[tri[0]], pts[tri[1]], pts[tri[2]], down)
+                if order is None:
+                    raise ValueError("degenerate bottom triangle")
+                faces.append(tuple(q[tri[order[k]]] for k in range(3)))
+
+    # Boundary loop of the keel grid, one closed polygon in the x-y plane.
+    loop: list[tuple[int, int]] = []
+    loop.extend((i, 0) for i in range(0, nx))
+    loop.extend((nx, j) for j in range(0, ny))
+    loop.extend((i, ny) for i in range(nx, 0, -1))
+    loop.extend((0, j) for j in range(ny, 0, -1))
+
+    level_below = [bottom[ij] for ij in loop]
+    for layer in range(nz):
+        z = keel + float(draft) * (layer + 1) / nz
+        if layer + 1 == nz:
+            z = 0.0
+        level_above: list[int] = []
+        for ij in loop:
+            level_above.append(len(coords))
+            coords.append((coords[bottom[ij]][0], coords[bottom[ij]][1], z))
+        _wall_strip(
+            np.asarray(level_below, dtype=np.int64),
+            np.asarray(level_above, dtype=np.int64),
+            coords,
+            faces,
+        )
+        level_below = level_above
+
+    return WettedHullMesh(np.asarray(coords, dtype=float), np.asarray(faces, dtype=np.int64))
+
+
+def spheroid_hull_mesh(
+    semi_axes: Sequence[float],
+    subdivisions: int = 2,
+    center_xy: tuple[float, float] = (0.0, 0.0),
+) -> WettedHullMesh:
+    """Return a floating spheroid (half-ellipsoid) wetted hull in ``z <= 0``.
+
+    The waterplane is the principal ellipse ``x**2/a**2 + y**2/b**2 = 1`` at
+    ``z = 0`` and the keel is the point ``(0, 0, -c)``; the block coefficient of
+    the enclosed half-ellipsoid is therefore ``Cb = pi/6`` independently of the
+    semi-axes. The surface is the (inscribed, flat-faceted) refinement of the
+    lower octahedron projected onto the unit sphere and then scaled by the
+    semi-axes, so panel vertices lie on the spheroid and the computed
+    hydrostatics converge to the closed forms with the panel size.
+
+    Parameters
+    ----------
+    semi_axes :
+        ``(a, b, c)`` semi-axes (m), strictly positive and finite.
+    subdivisions :
+        Refinement level; the panel count is ``4 * 4**subdivisions``.
+    center_xy :
+        Waterplane centre offset (m).
+
+    Returns
+    -------
+    hull :
+        Wetted hull mesh with outward panel normals and one waterline loop.
+    """
+    axes = _validate_semi_axes(semi_axes)
+    base = hemisphere_hull_mesh(subdivisions, radius=1.0, center_xy=(0.0, 0.0))
+    coords = np.asarray(base.vertices, dtype=float) * axes
+    xy = np.asarray(center_xy, dtype=float)
+    if xy.shape != (2,) or not np.isfinite(xy).all():
+        raise ValueError("center_xy must be a finite 2-tuple")
+    coords[:, 0] += float(xy[0])
+    coords[:, 1] += float(xy[1])
+    coords[np.abs(coords[:, 2]) < 1.0e-15, 2] = 0.0
+    return WettedHullMesh(coords, np.asarray(base.faces, dtype=np.int64))
 
 
 def elliptic_cylinder_hull_mesh(

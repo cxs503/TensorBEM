@@ -157,7 +157,9 @@ def compute_rao_at_frequency(
     gravity :
         Gravitational acceleration (m/s²).
     inertia :
-        Inertia tensor about the origin (3×3). If None, approximated.
+        Inertia tensor about the centre of gravity (3×3). If None, the
+        diagonal heuristic of :func:`tensorbem.hydrostatic.compute_mass_matrix`
+        is used.
     extra_damping :
         Additional damping matrix (6×6) to add (e.g., viscous damping).
     chief_points :
@@ -267,7 +269,7 @@ def compute_rao_spectrum(
     gravity :
         Gravitational acceleration (m/s²).
     inertia :
-        Inertia tensor about the origin (3×3).
+        Inertia tensor about the centre of gravity (3×3).
     extra_damping :
         Additional damping matrix (6×6).
     chief_points :

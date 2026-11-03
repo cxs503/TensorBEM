@@ -373,31 +373,53 @@ def compute_mass_matrix(
 ) -> FloatArray:
     """Compute the 6×6 rigid-body mass matrix M.
 
-    The mass matrix relates accelerations to inertial forces:
+    The mass matrix relates the generalised velocity ``x = (v, omega)`` of the
+    reference point (the origin) to the generalised momentum
+    ``y = (p, h_O) = M x``:
 
-        M = [[m*I_3,    -m*S^T],
-             [-m*S,  J + m*S*S^T]]
+        M = [[m*I_3,          -m*S(r_g) ],
+             [ m*S(r_g)^T,  J_cg + m*S(r_g)*S(r_g)^T]]
 
-    where m is the mass, S is the skew-symmetric matrix of the center of
-    gravity coordinates, and J is the inertia tensor about the origin.
+    where ``m`` is the mass, ``S(r_g)`` is the skew-symmetric matrix of the
+    centre-of-gravity position ``r_g`` relative to the reference point and
+    ``J_cg`` is the inertia tensor **about the centre of gravity**. The
+    translation/rotation coupling ``-m*S(r_g)`` and the parallel-axis term
+    ``m*S*S^T = m*(|r_g|^2*I - r_g⊗r_g)`` follow directly from the rigid-body
+    kinetic energy
 
-    For simplicity, if inertia is not provided, we use a diagonal approximation
-    with the moments of inertia computed from the mass and CG.
+        T = 0.5*m*|v + omega x r_g|^2 + 0.5*omega.J_cg.omega
+
+    i.e. the rotational block is the inertia about the *reference point*
+    ``J_O = J_cg + m*S*S^T``. An inertia tensor referred to any other point
+    (in particular the reference point itself) would therefore receive the
+    parallel-axis transfer twice.
+
+    For simplicity, if inertia is not provided, a diagonal heuristic for the
+    inertia *about the centre of gravity* is used.
 
     Parameters
     ----------
     mass :
         Body mass (kg).
     center_of_gravity :
-        Center of gravity coordinates (m).
+        Center of gravity coordinates (m), relative to the reference point.
     inertia :
-        Inertia tensor about the origin (3×3). If None, a diagonal approximation
-        is used.
+        Inertia tensor about the centre of gravity (3×3), expressed in the
+        reference-frame axes (``J_cg``). If None, the diagonal heuristic
+        ``J_cg = m*(0.4*|r_g|)^2*I`` is used (0.4 m radius of gyration when the
+        CG sits on the reference point); pass an explicit tensor for any
+        quantitative roll/pitch work.
 
     Returns
     -------
     M :
         6×6 mass matrix (kg or kg·m²).
+
+    Notes
+    -----
+    ``M`` is symmetric and positive definite for any positive mass and any
+    positive-definite ``J_cg``. With ``r_g = 0`` the coupling blocks vanish and
+    ``M = diag(m, m, m) + J_cg`` (block diagonal).
     """
     cg = np.asarray(center_of_gravity, dtype=float)
 
@@ -406,31 +428,26 @@ def compute_mass_matrix(
     x, y, z = cg
     s = np.array([[0, -z, y], [z, 0, -x], [-y, x, 0]])
 
-    # Mass matrix blocks
+    # Mass matrix blocks. The v-omega coupling is -m*S(r_g) (not its transpose):
+    # p = m*(v + omega x r_g) = m*v - m*S(r_g)*omega and
+    # h_O = m*S(r_g)*v + J_O*omega with J_O = J_cg + m*S*S^T.
     m11 = mass * np.eye(3)
-    m12 = -mass * s.T
-    m21 = -mass * s
+    m12 = -mass * s
+    m21 = m12.T
 
     if inertia is not None:
-        j = np.asarray(inertia, dtype=float)
+        j_cg = np.asarray(inertia, dtype=float)
     else:
-        # Default approximation: assume body has radius of gyration k = 0.4 * characteristic_length
-        # where characteristic_length is estimated from CG distance to origin
-        # This provides a more realistic inertia than point-mass approximation
+        # Diagonal heuristic for the inertia about the CG: radius of gyration
+        # k = 0.4*|r_g|, falling back to 0.4 m for a CG on the reference point.
+        # NOTE: this is J_cg, not J_O; the parallel-axis transfer below is
+        # applied exactly once.
         r = np.linalg.norm(cg)
-        if r > 1e-10:
-            # Use radius of gyration k = 0.4 * r (typical for ship-like bodies)
-            k = 0.4 * r
-            # Inertia about CG: J_cg = m * k^2 * I
-            # Inertia about origin: J = J_cg + m * (|cg|^2 * I - cg⊗cg)
-            j_cg = mass * k**2 * np.eye(3)
-            j = j_cg + mass * (r**2 * np.eye(3) - np.outer(cg, cg))
-        else:
-            # CG at origin: use a default radius of gyration
-            k = 0.4  # meters
-            j = mass * k**2 * np.eye(3)
+        k = 0.4 * r if r > 1e-10 else 0.4
+        j_cg = mass * k**2 * np.eye(3)
 
-    m22 = j + mass * (s @ s.T)
+    # Parallel-axis transfer to the reference point, applied exactly once.
+    m22 = j_cg + mass * (s @ s.T)
 
     # Assemble full 6×6 matrix
     m = np.zeros((6, 6), dtype=float)

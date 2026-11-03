@@ -194,30 +194,64 @@ def run_box_hydrostatics(
 
 
 def run_mass_matrix_check(mass: float = 8200.0, kg: float = 0.5) -> dict[str, Any]:
-    """Compare the rigid-body mass matrix with the exact block form."""
-    cg = np.array([0.0, 0.0, -kg])
+    """Compare the rigid-body mass matrix with an independent momentum map.
+
+    The reference is *not* a restatement of the skew-matrix assembly used by
+    :func:`tensorbem.hydrostatic.compute_mass_matrix`. It is built from the
+    rigid-body velocity field ``u(r) = v + omega x r`` of the reference point,
+
+        p(v, omega)   = m*(v + omega x r_g)
+        h_O(v, omega) = m*(r_g x v) + J_cg*omega + m*(r_g x (omega x r_g))
+
+    (both cross products are evaluated geometrically, so a sign error in the
+    ``v``-``omega`` coupling or a doubly applied parallel-axis term shows up as
+    a non-zero residual). Column ``j`` of the reference matrix is the response
+    to the unit generalised velocity ``e_j``.
+
+    Parameters
+    ----------
+    mass :
+        Body mass (kg).
+    kg :
+        Height of the centre of gravity below the waterplane (m); the CG is
+        placed at ``(0, 0, -kg)``, so it is off the reference point.
+
+    Returns
+    -------
+    dict
+        Residuals of the comparison together with the reported blocks.
+    """
+    cg = np.array([0.0, 0.0, -kg], dtype=float)
     inertia = np.diag([1.0e4, 8.0e3, 1.2e4]) + np.array(
         [[0.0, 0.0, 2.0e2], [0.0, 0.0, 0.0], [2.0e2, 0.0, 0.0]]
-    )  # symmetric, about the origin
-    s = np.array([[0.0, -cg[2], cg[1]], [cg[2], 0.0, -cg[0]], [-cg[1], cg[0], 0.0]])
-    zeros = np.zeros((3, 3))
-    exact = np.block(
-        [
-            [mass * np.eye(3), -mass * s.T],
-            [-mass * s, inertia + mass * (s @ s.T)],
-        ]
-    )
+    )  # symmetric, about the centre of gravity
+    inertia = 0.5 * (inertia + inertia.T)
+
+    exact = np.zeros((6, 6))
+    for column in range(6):
+        x = np.zeros(6)
+        x[column] = 1.0
+        v, omega = x[:3], x[3:]
+        exact[:3, column] = mass * (v + np.cross(omega, cg))
+        exact[3:, column] = (
+            mass * np.cross(cg, v)
+            + inertia @ omega
+            + mass * np.cross(cg, np.cross(omega, cg))
+        )
+
     measured = compute_mass_matrix(mass, cg, inertia)
     return {
         "mass": mass,
         "center_of_gravity": cg.tolist(),
-        "inertia_tensor_about_origin": inertia.tolist(),
+        "inertia_tensor_about_cg": inertia.tolist(),
+        "reference": "momentum map of the rigid-body velocity field",
         "max_abs_difference": float(np.max(np.abs(measured - exact))),
         "scale": float(np.max(np.abs(exact))),
         "max_relative_error": float(np.max(np.abs(measured - exact)))
         / float(np.max(np.abs(exact))),
         "symmetry_error": float(np.max(np.abs(measured - measured.T))),
         "diagonal": np.diag(measured).tolist(),
+        "coupling_block": measured[:3, 3:].tolist(),
     }
 
 
