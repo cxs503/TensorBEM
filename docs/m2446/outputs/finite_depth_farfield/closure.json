@@ -1,0 +1,275 @@
+{
+ "benchmark": "finite_depth_farfield_closure",
+ "problem": {
+  "geometry": "submerged circular cylinder, 2-D, heave",
+  "radius": 1.0,
+  "submergence": 2.0,
+  "ka": 0.6,
+  "nu": 0.6,
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "depths": [
+   3.2,
+   5.0,
+   50.0
+  ],
+  "panels": [
+   64,
+   128
+  ]
+ },
+ "deep_water_ursell_reference": {
+  "added_mass": 2545.167247813704,
+  "damping": 2718.1539515727764,
+  "omega": 2.4256937152080846
+ },
+ "cases": [
+  {
+   "kind": "finite_depth",
+   "depth": 3.2,
+   "panels": 64,
+   "near_damping": 2349.826936697506,
+   "far_damping": 2374.4299344282763,
+   "far_over_near": 1.0104701317984497,
+   "mfs_near_damping": 2254.9777047130615,
+   "direct_amplitude_rel_dev": 6.513783736152045e-05,
+   "midpoint_vs_gauss_amplitude_rel_dev": 6.513779992031663e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0104701317984497,
+    "half_factor": 0.5052350658992248,
+    "phase_velocity": 1.7601171160437978,
+    "deep_water_cg": 0.8800585580218989
+   }
+  },
+  {
+   "kind": "finite_depth",
+   "depth": 5.0,
+   "panels": 64,
+   "near_damping": 2974.6611058196763,
+   "far_damping": 3006.1229885487655,
+   "far_over_near": 1.0105766275921437,
+   "mfs_near_damping": 2881.769887068341,
+   "direct_amplitude_rel_dev": 3.946348590420094e-05,
+   "midpoint_vs_gauss_amplitude_rel_dev": 3.9463472431328634e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0105766275921437,
+    "half_factor": 0.5052883137960719,
+    "phase_velocity": 1.9641239938460133,
+    "deep_water_cg": 0.9820619969230067
+   }
+  },
+  {
+   "kind": "finite_depth",
+   "depth": 50.0,
+   "panels": 64,
+   "near_damping": 2789.084805692243,
+   "far_damping": 2818.845257208426,
+   "far_over_near": 1.0106703286524112,
+   "mfs_near_damping": 2710.086019780976,
+   "direct_amplitude_rel_dev": 3.888778008346599e-05,
+   "midpoint_vs_gauss_amplitude_rel_dev": 3.8880178977787506e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0106703286524112,
+    "half_factor": 0.5053351643262056,
+    "phase_velocity": 2.0213406573048225,
+    "deep_water_cg": 1.0106703286524112
+   }
+  },
+  {
+   "kind": "deep_water",
+   "depth": null,
+   "panels": 64,
+   "near_damping": 2787.2367800364336,
+   "far_damping": 2758.177419909607,
+   "far_over_near": 0.9895741329423593,
+   "mfs_near_damping": null,
+   "direct_amplitude_rel_dev": NaN,
+   "midpoint_vs_gauss_amplitude_rel_dev": NaN,
+   "wrong_coefficient_ratios": {}
+  },
+  {
+   "kind": "finite_depth",
+   "depth": 3.2,
+   "panels": 128,
+   "near_damping": 2309.140082628479,
+   "far_damping": 2321.428762783318,
+   "far_over_near": 1.0053217560282661,
+   "mfs_near_damping": 2262.749064823829,
+   "direct_amplitude_rel_dev": 1.6119218660147225e-05,
+   "midpoint_vs_gauss_amplitude_rel_dev": 1.6119181160106596e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0053217560282661,
+    "half_factor": 0.5026608780141331,
+    "phase_velocity": 1.7511492662996422,
+    "deep_water_cg": 0.8755746331498211
+   }
+  },
+  {
+   "kind": "finite_depth",
+   "depth": 5.0,
+   "panels": 128,
+   "near_damping": 2935.7950897422675,
+   "far_damping": 2951.5142185821246,
+   "far_over_near": 1.0053543004056311,
+   "mfs_near_damping": 2890.138348962116,
+   "direct_amplitude_rel_dev": 9.783995698815332e-06,
+   "midpoint_vs_gauss_amplitude_rel_dev": 9.783982210717317e-06,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0053543004056311,
+    "half_factor": 0.5026771502028156,
+    "phase_velocity": 1.9539740479134784,
+    "deep_water_cg": 0.9769870239567392
+   }
+  },
+  {
+   "kind": "finite_depth",
+   "depth": 50.0,
+   "panels": 128,
+   "near_damping": 2756.29460378337,
+   "far_damping": 2771.315425231005,
+   "far_over_near": 1.005449642947099,
+   "mfs_near_damping": 2717.3452089486427,
+   "direct_amplitude_rel_dev": 9.647302694086013e-06,
+   "midpoint_vs_gauss_amplitude_rel_dev": 9.63963000073016e-06,
+   "wrong_coefficient_ratios": {
+    "correct": 1.005449642947099,
+    "half_factor": 0.5027248214735495,
+    "phase_velocity": 2.010899285894198,
+    "deep_water_cg": 1.005449642947099
+   }
+  },
+  {
+   "kind": "deep_water",
+   "depth": null,
+   "panels": 128,
+   "near_damping": 2754.470100002123,
+   "far_damping": 2739.835613241619,
+   "far_over_near": 0.9946870046763284,
+   "mfs_near_damping": null,
+   "direct_amplitude_rel_dev": NaN,
+   "midpoint_vs_gauss_amplitude_rel_dev": NaN,
+   "wrong_coefficient_ratios": {}
+  }
+ ],
+ "summary": {
+  "deep_water": {
+   "panels": [
+    64,
+    128
+   ],
+   "far_over_near": [
+    0.9895741329423593,
+    0.9946870046763284
+   ],
+   "observed_order": 0.9725700209546719,
+   "extrapolated_ratio": 1.0,
+   "near_error_vs_ursell_deep_water": [
+    0.025415347951018186,
+    0.013360592915766745
+   ],
+   "mfs_near_damping": [
+    null,
+    null
+   ],
+   "direct_amplitude_rel_dev": [
+    NaN,
+    NaN
+   ],
+   "max_quadrature_rel_dev": NaN,
+   "wrong_coefficient_ratios": {}
+  },
+  "finite_depth@h=3.2": {
+   "panels": [
+    64,
+    128
+   ],
+   "far_over_near": [
+    1.0104701317984497,
+    1.0053217560282661
+   ],
+   "observed_order": 0.9763053253221131,
+   "extrapolated_ratio": 1.0,
+   "near_error_vs_ursell_deep_water": [
+    -0.1355063110616488,
+    -0.1504748723697692
+   ],
+   "mfs_near_damping": [
+    2254.9777047130615,
+    2262.749064823829
+   ],
+   "direct_amplitude_rel_dev": [
+    6.513783736152045e-05,
+    1.6119218660147225e-05
+   ],
+   "max_quadrature_rel_dev": 6.513779992031663e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0053217560282661,
+    "half_factor": 0.5026608780141331,
+    "phase_velocity": 1.7511492662996422,
+    "deep_water_cg": 0.8755746331498211
+   }
+  },
+  "finite_depth@h=5": {
+   "panels": [
+    64,
+    128
+   ],
+   "far_over_near": [
+    1.0105766275921437,
+    1.0053543004056311
+   ],
+   "observed_order": 0.9821097011505464,
+   "extrapolated_ratio": 1.0,
+   "near_error_vs_ursell_deep_water": [
+    0.0943681479477938,
+    0.08006946701586193
+   ],
+   "mfs_near_damping": [
+    2881.769887068341,
+    2890.138348962116
+   ],
+   "direct_amplitude_rel_dev": [
+    3.946348590420094e-05,
+    9.783995698815332e-06
+   ],
+   "max_quadrature_rel_dev": 3.9463472431328634e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.0053543004056311,
+    "half_factor": 0.5026771502028156,
+    "phase_velocity": 1.9539740479134784,
+    "deep_water_cg": 0.9769870239567392
+   }
+  },
+  "finite_depth@h=50": {
+   "panels": [
+    64,
+    128
+   ],
+   "far_over_near": [
+    1.0106703286524112,
+    1.005449642947099
+   ],
+   "observed_order": 0.9693709979449955,
+   "extrapolated_ratio": 1.0,
+   "near_error_vs_ursell_deep_water": [
+    0.026095230580455153,
+    0.014031821924039622
+   ],
+   "mfs_near_damping": [
+    2710.086019780976,
+    2717.3452089486427
+   ],
+   "direct_amplitude_rel_dev": [
+    3.888778008346599e-05,
+    9.647302694086013e-06
+   ],
+   "max_quadrature_rel_dev": 3.8880178977787506e-05,
+   "wrong_coefficient_ratios": {
+    "correct": 1.005449642947099,
+    "half_factor": 0.5027248214735495,
+    "phase_velocity": 2.010899285894198,
+    "deep_water_cg": 1.005449642947099
+   }
+  }
+ }
+}
