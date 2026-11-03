@@ -1,0 +1,104 @@
+{
+  "geometry": {
+    "thickness": 0.1,
+    "transform_radius": 1.0,
+    "chord": 4.033333333333333,
+    "thickness_ratio": 0.11785034399181857,
+    "trailing_edge": [
+      2.0,
+      0.0
+    ],
+    "leading_edge": [
+      -2.033333333333333,
+      0.0
+    ],
+    "alpha_deg": 4.0
+  },
+  "analytic_lift": [
+    {
+      "alpha_deg": 0.0,
+      "circulation": 0.0,
+      "lift_coefficient_from_circulation": 0.0,
+      "lift_coefficient_from_pressure": 5.50523813863714e-17,
+      "thin_aerofoil_lift_coefficient": 0.0,
+      "pressure_vs_circulation_gap": 0.0
+    },
+    {
+      "alpha_deg": 2.0,
+      "circulation": 0.48241601080005636,
+      "lift_coefficient_from_circulation": 0.2392145508099453,
+      "lift_coefficient_from_pressure": 0.23919224353145768,
+      "thin_aerofoil_lift_coefficient": 0.24120800540002818,
+      "pressure_vs_circulation_gap": 9.325218057217621e-05
+    },
+    {
+      "alpha_deg": 4.0,
+      "circulation": 0.9642442720014428,
+      "lift_coefficient_from_circulation": 0.47813765553790555,
+      "lift_coefficient_from_pressure": 0.47721916649595036,
+      "thin_aerofoil_lift_coefficient": 0.4821221360007214,
+      "pressure_vs_circulation_gap": 0.001920971986449974
+    },
+    {
+      "alpha_deg": 6.0,
+      "circulation": 1.4448977500878393,
+      "lift_coefficient_from_circulation": 0.7164782231840525,
+      "lift_coefficient_from_pressure": 0.7129211256511777,
+      "thin_aerofoil_lift_coefficient": 0.7224488750439196,
+      "pressure_vs_circulation_gap": 0.004964697345673608
+    }
+  ],
+  "nonlifting_refinement": [
+    {
+      "panels": 32,
+      "panel_length_min": 0.24383740617253197,
+      "panel_length_max": 0.2571881816312987,
+      "relative_potential_error": 0.046687482929128804,
+      "potential_rms_error": 0.004799968886184851,
+      "relative_speed_error": 0.07534157460005202,
+      "speed_max_abs_error": 0.5094325952134204,
+      "condition_number": 61.24365727819981,
+      "relative_residual_l2": 2.304146946348617e-16
+    },
+    {
+      "panels": 64,
+      "panel_length_min": 0.1231793420113775,
+      "panel_length_max": 0.128594112024422,
+      "relative_potential_error": 0.03310115333846451,
+      "potential_rms_error": 0.0026113028054385356,
+      "relative_speed_error": 0.07626322433025232,
+      "speed_max_abs_error": 0.6322622533880058,
+      "condition_number": 91.92721668118475,
+      "relative_residual_l2": 3.9620906525699915e-16
+    },
+    {
+      "panels": 128,
+      "panel_length_min": 0.06280572688683068,
+      "panel_length_max": 0.06429706063307469,
+      "relative_potential_error": 0.02389098828047127,
+      "potential_rms_error": 0.0013929897408479065,
+      "relative_speed_error": 0.07982216786994156,
+      "speed_max_abs_error": 0.5700486157934046,
+      "condition_number": 137.61158154336113,
+      "relative_residual_l2": 5.766398568234178e-16
+    },
+    {
+      "panels": 256,
+      "panel_length_min": 0.03187527337530221,
+      "panel_length_max": 0.0321485391484598,
+      "relative_potential_error": 0.01681620218777133,
+      "potential_rms_error": 0.0007361321552426909,
+      "relative_speed_error": 0.08243664720539409,
+      "speed_max_abs_error": 0.4888232612435419,
+      "condition_number": 205.12014344957592,
+      "relative_residual_l2": 7.229065080387407e-16
+    }
+  ],
+  "decay_offset": 0.09975640502598243,
+  "verdict": {
+    "analytic_pressure_vs_circulation_max_gap": 0.004964697345673608,
+    "analytic_pressure_vs_circulation_gap_at_4deg": 0.001920971986449974,
+    "best_relative_potential_error": 0.01681620218777133,
+    "lifting_bem_shipped": false
+  }
+}
