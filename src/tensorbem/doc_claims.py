@@ -1,0 +1,390 @@
+"""Machine-checkable registry of published benchmark numbers.
+
+TensorBEM's reports state concrete numbers (``7.7e-3`` at 128 panels, and so
+on).  Those numbers are the project's public claims, and a claim that no test
+reads is a claim that can silently drift away from the code that produced it.
+This module closes that gap for the Ursell benchmark table: it
+
+* holds the claim registry (:data:`CLAIMS`), each entry naming the document,
+  the quantity, and the tolerance implied by how many digits are printed;
+* parses the numbers back out of the markdown sources
+  (:func:`parse_ursell_table`, :func:`parse_readme_claims`) instead of
+  trusting a hand-copied transcript;
+* compares them against a measurement artifact written by
+  :func:`write_artifact`, which runs the benchmark itself; and
+* can regenerate that artifact from scratch::
+
+      python -m tensorbem.doc_claims --write
+
+The companion test ``tests/test_doc_claims.py`` fails when a document and the
+code disagree, so documentation drift is a red build rather than a footnote in
+a later audit.
+
+Design notes
+------------
+Tolerances come from the printed precision, not from physics: a value printed
+as ``8.51e-3`` is compared to 3 significant figures, a table entry printed as
+``2566.83`` to 6.  The live reproduction check is separate and tight
+(``1e-9``): it proves the artifact is still what this code computes.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import re
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+ARTIFACT = REPO_ROOT / "artifacts" / "ursell_doc_claims.json"
+MARINE_DOC = REPO_ROOT / "docs" / "marine_bem_benchmarks.md"
+README = REPO_ROOT / "README.md"
+
+#: Panel counts printed in the results table (``docs/marine_bem_benchmarks.md`` §4.6).
+TABLE_PANELS = (64, 128, 256)
+
+#: Mesh at which the method-of-fundamental-solutions cross-check is quoted.
+#: The MFS places sources on an interior curve but takes its body-condition
+#: points from the panel mesh, so its accuracy depends on that mesh; 128 panels
+#: is the mesh the published row refers to.
+MFS_PANELS = 128
+
+
+@dataclass(frozen=True)
+class Claim:
+    """One published number.
+
+    ``key`` is the benchmark output field, ``where`` a human-readable locator
+    used in failure messages, ``rel_tol`` the tolerance implied by the number
+    of printed significant digits.
+    """
+
+    key: str
+    where: str
+    rel_tol: float
+
+
+def _panel_claims(panels: int) -> list[Claim]:
+    return [
+        Claim(f"panel_added_mass_{panels}", f"table row {panels}: A", 1.0e-5),
+        Claim(
+            f"panel_added_mass_relative_error_{panels}",
+            f"table row {panels}: A relative error",
+            5.0e-3,
+        ),
+        Claim(f"panel_damping_{panels}", f"table row {panels}: B", 1.0e-5),
+        Claim(
+            f"panel_damping_relative_error_{panels}",
+            f"table row {panels}: B relative error",
+            5.0e-3,
+        ),
+        Claim(
+            f"near_far_field_relative_difference_{panels}",
+            f"table row {panels}: near/far-field damping ratio",
+            5.0e-3,
+        ),
+    ]
+
+
+#: Every number the documents publish for the Ursell benchmark.
+CLAIMS: tuple[Claim, ...] = (
+    *_panel_claims(64),
+    *_panel_claims(128),
+    *_panel_claims(256),
+    Claim("reference_added_mass", "table: Ursell reference A", 1.0e-5),
+    Claim("reference_damping", "table: Ursell reference B", 1.0e-5),
+    Claim("mfs_added_mass", "table: MFS A", 1.0e-5),
+    Claim("mfs_added_mass_relative_error", "table: MFS A relative error", 1.0e-2),
+    Claim("mfs_damping", "table: MFS B", 1.0e-5),
+    Claim("mfs_damping_relative_error", "table: MFS B relative error", 1.0e-2),
+    Claim("headline_added_mass_error_128", "README/abstract: 128-panel A error", 1.0e-2),
+    Claim("headline_damping_error_128", "README/abstract: 128-panel B error", 1.0e-2),
+)
+
+
+# --------------------------------------------------------------------------
+# measurement
+# --------------------------------------------------------------------------
+def measure(panel_counts: tuple[int, ...] = TABLE_PANELS) -> dict[str, object]:
+    """Run the Ursell benchmark and flatten the results into claim keys."""
+    from tensorbem.benchmarks import ursell_cylinder
+
+    data: dict[str, object] = {}
+    runs: dict[int, dict[str, float]] = {}
+    for panels in panel_counts:
+        result = ursell_cylinder.run(panel_count=panels)
+        runs[panels] = result
+        data[f"panel_added_mass_{panels}"] = result["panel_added_mass"]
+        data[f"panel_added_mass_relative_error_{panels}"] = result[
+            "panel_added_mass_relative_error"
+        ]
+        data[f"panel_damping_{panels}"] = result["panel_damping"]
+        data[f"panel_damping_relative_error_{panels}"] = result[
+            "panel_damping_relative_error"
+        ]
+        data[f"near_far_field_relative_difference_{panels}"] = result[
+            "near_far_field_relative_difference"
+        ]
+
+    finest = runs[max(panel_counts)]
+    data["reference_added_mass"] = finest["reference_added_mass"]
+    data["reference_damping"] = finest["reference_damping"]
+    # The reference values are mesh independent, but read them off the finest
+    # run so that a mismatch between runs would surface here.
+    mfs = runs[MFS_PANELS]
+    data["mfs_added_mass"] = mfs["reference_solution_added_mass"]
+    data["mfs_added_mass_relative_error"] = mfs[
+        "reference_solution_added_mass_relative_error"
+    ]
+    data["mfs_damping"] = mfs["reference_solution_damping"]
+    data["mfs_damping_relative_error"] = mfs[
+        "reference_solution_damping_relative_error"
+    ]
+    data["headline_added_mass_error_128"] = data["panel_added_mass_relative_error_128"]
+    data["headline_damping_error_128"] = data["panel_damping_relative_error_128"]
+    return data
+
+
+def write_artifact(
+    path: Path = ARTIFACT, panel_counts: tuple[int, ...] = TABLE_PANELS
+) -> dict[str, object]:
+    """Measure and persist the numbers the documents are checked against."""
+    import numpy as np
+
+    data = measure(panel_counts)
+    payload = {
+        "benchmark": "ursell_submerged_circular_cylinder_deep_water",
+        "parameters": {
+            "radius": 1.0,
+            "submergence": 2.0,
+            "ka": 0.6,
+            "density": 1025.0,
+            "gravity": 9.80665,
+        },
+        "numpy": np.__version__,
+        "mfs_panels": MFS_PANELS,
+        "values": data,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    return payload
+
+
+# --------------------------------------------------------------------------
+# document parsing
+# --------------------------------------------------------------------------
+_NUM = r"[-+]?\d+(?:\.\d+)?"
+#: A number printed in LaTeX: ``\(7.72\times10^{-3}\)`` or plain ``2566.83``.
+_PRINTED = re.compile(
+    r"\\?\s*\(?\s*(" + _NUM + r")\s*\\times\s*10\^\{?\s*([-+]?\d+)\s*\}?\s*\)?"
+)
+_URSELL_HEADING = "### 4.6 Ursell"
+
+
+def _to_float(text: str) -> float:
+    """Turn a printed number back into a float (handles ``\(a\times10^{b}\)``)."""
+    cleaned = text.strip().replace("\\(", "").replace("\\)", "").replace("$", "")
+    match = _PRINTED.fullmatch(cleaned)
+    if match:
+        return float(match.group(1)) * 10.0 ** int(match.group(2))
+    return float(cleaned)
+
+
+def _cells(line: str) -> list[str]:
+    return [c.strip() for c in line.strip().strip("|").split("|")]
+
+
+def ursell_section(text: str) -> str:
+    """Return the body of §4.6, the only place the Ursell table is printed.
+
+    Scoping matters: the report prints several panel-convergence tables whose
+    first column is also a panel count, and a whole-document scan silently
+    mixes them up (an earlier version of this parser did exactly that).
+    """
+    start = text.find(_URSELL_HEADING)
+    if start < 0:
+        raise ValueError("Ursell section heading not found in the document")
+    end = text.find("\n### ", start + 1)
+    return text[start : end if end > 0 else len(text)]
+
+
+def parse_ursell_table(text: str) -> dict[str, float]:
+    """Parse the Ursell results table out of the marine benchmark report.
+
+    Rows are keyed by the leading panel count; the trailing reference and MFS
+    rows by their leading label.  The last column is the near/far-field
+    damping *ratio*, stored here as its deviation from unity so it lives on
+    the same error scale as the other claims.
+    """
+    found: dict[str, float] = {}
+    pending = ""
+    for line in ursell_section(text).splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        cells = _cells(line)
+        if len(cells) < 6:
+            continue
+        head = cells[0]
+        if re.fullmatch(r"\d+", head):
+            panels = int(head)
+            try:
+                found[f"panel_added_mass_{panels}"] = _to_float(cells[1])
+                found[f"panel_added_mass_relative_error_{panels}"] = _to_float(cells[2])
+                found[f"panel_damping_{panels}"] = _to_float(cells[3])
+                found[f"panel_damping_relative_error_{panels}"] = _to_float(cells[4])
+                found[f"near_far_field_relative_difference_{panels}"] = abs(
+                    _to_float(cells[5]) - 1.0
+                )
+            except ValueError:
+                continue
+            continue
+        if "参考解" in head or "Ursell" in head:
+            pending = "reference"
+        elif "基本解" in head or "MFS" in head:
+            pending = "mfs"
+        else:
+            continue
+        try:
+            if pending == "reference":
+                found["reference_added_mass"] = _to_float(cells[1])
+                found["reference_damping"] = _to_float(cells[3])
+            else:
+                found["mfs_added_mass"] = _to_float(cells[1])
+                found["mfs_added_mass_relative_error"] = _to_float(cells[2])
+                found["mfs_damping"] = _to_float(cells[3])
+                found["mfs_damping_relative_error"] = _to_float(cells[4])
+        except ValueError:
+            pass
+        pending = ""
+    return found
+
+
+#: README, milestone 4: "within \(7.7\times10^{-3}\) in added mass at 128 panels".
+_README_ADDED_MASS = re.compile(
+    r"within\s*\\\(\s*(" + _NUM + r")\s*\\times\s*10\^\{?\s*([-+]?\d+)\s*\}?\s*\\\)"
+    r"\s*in added mass"
+)
+
+#: Abstract, item 2: "128 面元附加质量与阻尼误差分别为 \(X\) 与 \(Y\)".
+_ABSTRACT_PAIR = re.compile(
+    r"128\s*面元附加质量与阻尼误差分别为\s*\\\(\s*(" + _NUM
+    + r")\s*\\times\s*10\^\{?\s*([-+]?\d+)\s*\}?\s*\\\)\s*与\s*\\\(\s*(" + _NUM
+    + r")\s*\\times\s*10\^\{?\s*([-+]?\d+)\s*\}?\s*\\\)"
+)
+
+
+def parse_readme_claims(text: str) -> dict[str, float]:
+    """Extract the headline 128-panel errors quoted in prose (README/abstract).
+
+    These are matched by sentence context rather than table position, because
+    both passages are prose: the README says the panel solution is "within X
+    in added mass at 128 panels", the abstract lists the added-mass and
+    damping errors as "X 与 Y".
+    """
+    found: dict[str, float] = {}
+    # GitHub-flavoured markdown writes \( ... \) as \\( ... \\); normalise
+    # the doubled escape so both spellings match the same pattern.
+    text = text.replace("\\\\", "\\")
+    added = _README_ADDED_MASS.search(text)
+    if added:
+        found["headline_added_mass_error_128"] = float(added.group(1)) * 10.0 ** int(
+            added.group(2)
+        )
+    pair = _ABSTRACT_PAIR.search(text)
+    if pair:
+        found["headline_added_mass_error_128"] = float(pair.group(1)) * 10.0 ** int(
+            pair.group(2)
+        )
+        found["headline_damping_error_128"] = float(pair.group(3)) * 10.0 ** int(
+            pair.group(4)
+        )
+    return found
+
+
+# --------------------------------------------------------------------------
+# comparison
+# --------------------------------------------------------------------------
+@dataclass
+class Report:
+    """Outcome of a claim comparison."""
+
+    checked: int = 0
+    missing: list[str] = field(default_factory=list)
+    failures: list[str] = field(default_factory=list)
+
+    @property
+    def ok(self) -> bool:
+        return not self.failures and not self.missing
+
+    def describe(self) -> str:
+        lines = [f"checked {self.checked} published numbers"]
+        if self.missing:
+            lines.append("missing from documents: " + ", ".join(sorted(self.missing)))
+        for failure in self.failures:
+            lines.append("FAIL " + failure)
+        if self.ok:
+            lines.append("all published numbers reproduce")
+        return "\n".join(lines)
+
+
+def compare(claimed: dict[str, float], measured: dict[str, float]) -> Report:
+    """Check every registry entry that the documents actually state."""
+    report = Report()
+    for claim in CLAIMS:
+        if claim.key not in claimed:
+            report.missing.append(claim.key)
+            continue
+        if claim.key not in measured:
+            report.missing.append(claim.key + " (no measurement)")
+            continue
+        expected = float(measured[claim.key])
+        stated = float(claimed[claim.key])
+        report.checked += 1
+        denom = abs(expected) if expected != 0.0 else 1.0
+        rel = abs(stated - expected) / denom
+        if not math.isfinite(rel) or rel > claim.rel_tol:
+            report.failures.append(
+                f"{claim.where}: document says {stated:.6g}, code gives "
+                f"{expected:.6g} (relative difference {rel:.3g} > {claim.rel_tol:.1g})"
+            )
+    return report
+
+
+def check_documents(
+    artifact: Path = ARTIFACT,
+    marine_doc: Path = MARINE_DOC,
+    readme: Path = README,
+) -> Report:
+    """Compare ``docs/marine_bem_benchmarks.md`` and README against the artifact."""
+    measured = json.loads(artifact.read_text())["values"]
+    claimed = parse_ursell_table(marine_doc.read_text())
+    claimed.update(parse_readme_claims(marine_doc.read_text()))
+    claimed.update(parse_readme_claims(readme.read_text()))
+    return compare(claimed, measured)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="re-measure the benchmark and rewrite the artifact",
+    )
+    parser.add_argument("--artifact", type=Path, default=ARTIFACT)
+    args = parser.parse_args(argv)
+
+    if args.write:
+        payload = write_artifact(args.artifact)
+        print(f"wrote {args.artifact} ({len(payload['values'])} values)")
+        return 0
+
+    report = check_documents(artifact=args.artifact)
+    print(report.describe())
+    return 0 if report.ok else 1
+
+
+if __name__ == "__main__":  # pragma: no cover
+    sys.exit(main())
