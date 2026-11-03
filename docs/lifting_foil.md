@@ -144,6 +144,18 @@ gradient analytically, double-layer gradient by quadrature on the offset
 surface) instead of differencing the boundary potential; that removes both the
 piecewise-constant derivative noise and the branch-cut bookkeeping.
 
+## 4b. Status update (m2573): the Kutta closure IS now shipped
+
+The superposition route recommended at the end of section 4 was not the one that
+worked. The shipped lifting solve is an independent linear-strength vortex panel
+method in `src/tensorbem/lifting_solver.py` (`gamma_TE = 0` imposed as
+`gamma_N = -gamma_0`), which reproduces the exact Joukowski circulation to
+0.40 % at 256 panels and 0.73 % at 128 panels; see `docs/lifting_kutta.md` for
+the tables, the error budget and the two formulations that were rejected
+(constant-strength source/vortex assembly: 6.9 % lift error at 128 panels).
+The analytic reference and the non-lifting harness in this module are unchanged
+and remain the reference the solver is checked against.
+
 ## 5. Limitations
 
 * Symmetric (zero-camber) Joukowski sections only; no camber, no flap, no
