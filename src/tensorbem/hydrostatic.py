@@ -25,8 +25,31 @@ where:
     I_L   = second moment of waterplane area about longitudinal axis (x-axis)
     KG    = height of center of gravity above keel
 
-For small-angle linearization, all off-diagonal terms are zero (no cross-coupling
-between heave/roll/pitch, and surge/sway/yaw have no hydrostatic restoring).
+For small-angle linearization the heave/roll/pitch block is
+
+    C[2,2] = rho g A_wp            C[3,3] = rho g grad GM_T
+    C[4,4] = rho g grad GM_L       C[4,5] = C[5,4] = -rho g I_xy
+    C[2,3] = C[3,2] =  rho g A_wp  y_f
+    C[2,4] = C[4,2] = -rho g A_wp  x_f
+
+with ``(x_f, y_f)`` the waterplane centroid, so heave is coupled to roll when
+the waterplane centroid is off the centreline and to pitch when it is off the
+pitch axis (the usual case for a real hull, whose longitudinal centre of
+flotation is not amidships). The coupling vanishes only in the special frame
+whose origin sits at the waterplane centroid; it is not a second-order effect
+and it is frame dependent by construction (a moment taken about an axis at
+``x = 0`` differs from one taken at ``x = x_0`` by ``x_0`` times the heave
+force). Surge, sway and yaw have no hydrostatic restoring. The equations of
+motion therefore use the full small-angle matrix, not its diagonal.
+
+Derivation: the waterplane rise of a point ``(x, y)`` under the displacement
+``(xi_3, xi_4, xi_5)`` is ``zeta = xi_3 + xi_4 y - xi_5 x`` (z up, roll positive
+to starboard, pitch positive bow up), and the hydrostatic potential energy is
+
+    E = 1/2 rho g ∬_A zeta^2 dA + 1/2 rho g grad (z_B - z_G) (xi_4^2 + xi_5^2)
+
+whose Hessian is ``C``. The first term gives every coupling entry above; the
+second gives the ``KB - KG`` part of the roll and pitch diagonals.
 """
 
 from __future__ import annotations
@@ -336,8 +359,15 @@ def compute_hydrostatic_restoring_matrix(
         C[2,2] = ρ g A_wp          (heave)
         C[3,3] = ρ g ∇ GM_T        (roll)
         C[4,4] = ρ g ∇ GM_L        (pitch)
+        C[2,3] = C[3,2] =  ρ g A_wp y_f   (heave-roll coupling)
+        C[2,4] = C[4,2] = -ρ g A_wp x_f   (heave-pitch coupling)
+        C[3,4] = C[4,3] = -ρ g I_xy       (roll-pitch coupling)
 
-    All other terms are zero under the small-angle assumption.
+    where ``(x_f, y_f)`` is the waterplane centroid and ``I_xy`` the waterplane
+    product of inertia, both in the frame of ``hull`` (origin on the calm
+    waterplane). All other terms are zero: surge, sway and yaw are not
+    restored by hydrostatics, and there is no heave-surge or heave-sway
+    coupling.
 
     Parameters
     ----------
@@ -367,7 +397,14 @@ def compute_hydrostatic_restoring_matrix(
     is the transverse metacentric radius, and KG is the vertical position of
     the center of gravity.
 
-    For a stable floating body, GM_T > 0 and GM_L > 0.
+    For a stable floating body, GM_T > 0 and GM_L > 0. The coupling entries are
+    expressed in the frame of the mesh: if the pitch reference axis is moved to
+    ``x = x_0`` the entry becomes ``C[2,4] + ρ g A_wp x_0`` and if the roll axis
+    is moved to ``y = y_0`` it becomes ``C[2,3] - ρ g A_wp y_0`` (a moment about
+    a shifted axis picks up ``x_0`` times the heave force), so the matrix is
+    deliberately frame dependent -- compare matrices only in the same frame. The diagonal uses ``mass = ρ ∇`` (the equilibrium condition); a body
+    whose mass does not equal the displaced mass is not in hydrostatic
+    equilibrium and its ``KB - KG`` term would need the actual weight.
     """
     center_of_gravity = np.asarray(center_of_gravity, dtype=float)
 
@@ -398,22 +435,42 @@ def compute_hydrostatic_restoring_matrix(
     # Heights above keel
     kb = center_of_buoyancy[2] - z_min  # height of buoyancy center above keel
     kg = center_of_gravity[2] - z_min  # height of gravity center above keel
+    z_g = float(center_of_gravity[2])  # centre of gravity, waterplane frame
 
-    # Metacentric heights
+    # Metacentric heights (centroid-frame, i.e. the classical BM = I_c / grad)
     gm_t = kb + bm_t - kg  # transverse metacentric height (roll)
     gm_l = kb + bm_l - kg  # longitudinal metacentric height (pitch)
 
-    # Build restoring matrix
+    # Build restoring matrix (heave, roll, pitch block; surge/sway/yaw are
+    # unrestored by hydrostatics).
+    rho_g = density * gravity
     c = np.zeros((6, 6), dtype=float)
 
     # Heave restoring
-    c[2, 2] = density * gravity * wp_area
+    c[2, 2] = rho_g * wp_area
 
-    # Roll restoring
-    c[3, 3] = density * gravity * volume * gm_t
+    # Waterplane first moments and second moments about the *origin* of the
+    # mesh. The displacement field zeta = xi_3 + xi_4 y - xi_5 x is taken about
+    # that origin, so the Hessian needs I_xx^origin = I_xx^centroid + A y_f^2
+    # (parallel axis), not the centroidal moment that BM_T uses.
+    x_f = float(wp_center[0])
+    y_f = float(wp_center[1])
+    i_xx_origin = float(wp_moments[0]) + wp_area * y_f**2
+    i_yy_origin = float(wp_moments[1]) + wp_area * x_f**2
+    i_xy_origin = float(wp_moments[2]) + wp_area * x_f * y_f
 
-    # Pitch restoring
-    c[4, 4] = density * gravity * volume * gm_l
+    # Roll / pitch restoring: rho g (I_origin + grad (z_B - z_G)). In the frame
+    # whose origin is the waterplane centroid this is exactly rho g grad GM_T
+    # with the classical BM = I_centroid / grad.
+    c[3, 3] = rho_g * (i_xx_origin + volume * (center_of_buoyancy[2] - z_g))
+    c[4, 4] = rho_g * (i_yy_origin + volume * (center_of_buoyancy[2] - z_g))
+
+    # Waterplane coupling terms: the waterplane rise zeta = xi_3 + xi_4 y
+    # - xi_5 x gives a heave-roll term from the y first moment, a heave-pitch
+    # term from the x first moment, and a roll-pitch term from I_xy.
+    c[2, 3] = c[3, 2] = rho_g * wp_area * y_f
+    c[2, 4] = c[4, 2] = -rho_g * wp_area * x_f
+    c[3, 4] = c[4, 3] = -rho_g * i_xy_origin
 
     return HydrostaticProperties(
         displaced_volume=volume,
