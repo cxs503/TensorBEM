@@ -1,0 +1,276 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.02623278,
+      "description": "relative error of the cylinder added mass at 16 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_16",
+      "measured": 0.026232783866355507,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": 1.473864190752047e-07,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0004023222,
+      "description": "relative error of the cylinder added mass at 128 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_128",
+      "measured": 0.00040232221672928506,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 4.158180945009392e-08,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0041679,
+      "description": "relative error, longest semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_x",
+      "measured": 0.004167936438948101,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 8.74275968718613e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0044621,
+      "description": "relative error, intermediate semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_y",
+      "measured": 0.004462121490841226,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 4.816306498179276e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0049359,
+      "description": "relative error, shortest semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_z",
+      "measured": 0.004935932283260787,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 6.5405013851290325e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2545.17,
+      "description": "Ursell multipole added mass, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_added_mass",
+      "measured": 2545.167247813704,
+      "parameters": {},
+      "relative_deviation": -1.0813369229640125e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2718.15,
+      "description": "Ursell multipole damping, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_damping",
+      "measured": 2718.1539515727764,
+      "parameters": {},
+      "relative_deviation": 1.4537728882729528e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.016736,
+      "description": "panel added-mass error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_64",
+      "measured": 0.016735833486585378,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -9.949415309672355e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.025415,
+      "description": "panel damping error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_damping_64",
+      "measured": 0.025415347951018234,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 1.3690773882909675e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.008513,
+      "description": "panel added-mass error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_128",
+      "measured": 0.008513030527356396,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 3.5859692700834613e-06,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.013361,
+      "description": "panel damping error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_damping_128",
+      "measured": 0.013360592915766837,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -3.046809618763498e-05,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 0.006,
+      "description": "near-field/far-field damping closure at 128 panels (upper bound)",
+      "group": "ursell",
+      "key": "ursell_near_far_128",
+      "measured": 0.005341374018855711,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -0.10977099685738156,
+      "source": "README.md (Milestone 4): 'closing to 6e-3'",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000757,
+      "description": "method-of-fundamental-solutions added-mass error, 64 panels (the pre-2026-11-03 table claimed 1.9e-4, which no source count reproduces; the source curve is converged from 16 sources up)",
+      "group": "ursell",
+      "key": "ursell_mfs_added_mass_64",
+      "measured": 0.0007569804876068797,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -2.5775948639777612e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.003526,
+      "description": "method-of-fundamental-solutions damping error, 64 panels (the pre-2026-11-03 table claimed 8.8e-4; measured 3.526e-3)",
+      "group": "ursell",
+      "key": "ursell_mfs_damping_64",
+      "measured": 0.003526389876668117,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.00011057194217724091,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.004293,
+      "description": "panel added-mass error at 256 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_256",
+      "measured": 0.0042929825339061934,
+      "parameters": {
+        "panels": 256
+      },
+      "relative_deviation": -4.068505428955261e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0068412,
+      "description": "panel damping error at 256 panels",
+      "group": "ursell",
+      "key": "ursell_damping_256",
+      "measured": 0.006841164059987114,
+      "parameters": {
+        "panels": 256
+      },
+      "relative_deviation": -5.253466188207659e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "15eb985",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 16,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 16,
+    "verdict": "PASS",
+    "worst_relative_deviation": 0.10977099685738156
+  },
+  "tiers": [
+    "fast",
+    "heavy",
+    "standard"
+  ]
+}

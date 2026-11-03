@@ -1,0 +1,224 @@
+{
+  "added_mass_error_monotone": true,
+  "axes": {
+    "x": {
+      "error_decay_order": 1.6972363168077327,
+      "extrapolation": {
+        "added_mass": [
+          958.4859947592242,
+          1136.423797972352,
+          1191.2955950090695
+        ],
+        "exact_added_mass": 1211.051995240953,
+        "extrapolated_added_mass": 1215.7614422693007,
+        "extrapolation_vs_analytic": 0.003888724057145679,
+        "finest_relative_error": 0.016313420323421063,
+        "motion_axis": "x",
+        "observed_order": 0.8486181584038663,
+        "panels": [
+          20,
+          80,
+          320
+        ]
+      },
+      "levels": [
+        {
+          "added_mass": 958.4859947592242,
+          "added_mass_relative_error": 0.20855091397746117,
+          "exact_added_mass": 1211.051995240953,
+          "h_mean": 1.1673403692185245,
+          "normal_derivative_relative_l2_error": 0.09832697311732125,
+          "panels": 20,
+          "subdivisions": 0
+        },
+        {
+          "added_mass": 1136.423797972352,
+          "added_mass_relative_error": 0.06162262030190759,
+          "exact_added_mass": 1211.051995240953,
+          "h_mean": 0.6465938371443319,
+          "normal_derivative_relative_l2_error": 0.06164803931432126,
+          "panels": 80,
+          "subdivisions": 1
+        },
+        {
+          "added_mass": 1191.2955950090695,
+          "added_mass_relative_error": 0.016313420323421063,
+          "exact_added_mass": 1211.051995240953,
+          "h_mean": 0.3323886391941554,
+          "normal_derivative_relative_l2_error": 0.0272899477480737,
+          "panels": 320,
+          "subdivisions": 2
+        }
+      ],
+      "motion_axis": "x"
+    },
+    "y": {
+      "error_decay_order": 1.6295480773953346,
+      "extrapolation": {
+        "added_mass": [
+          1922.280060363366,
+          2279.4002968400105,
+          2394.8177826981614
+        ],
+        "exact_added_mass": 2437.153501509733,
+        "extrapolated_added_mass": 2449.9317439904053,
+        "extrapolation_vs_analytic": 0.0052431012132623895,
+        "finest_relative_error": 0.01737096936460751,
+        "motion_axis": "y",
+        "observed_order": 0.8147740386976673,
+        "panels": [
+          20,
+          80,
+          320
+        ]
+      },
+      "levels": [
+        {
+          "added_mass": 1922.280060363366,
+          "added_mass_relative_error": 0.21126016101465114,
+          "exact_added_mass": 2437.153501509733,
+          "h_mean": 1.1673403692185245,
+          "normal_derivative_relative_l2_error": 0.0728191427324797,
+          "panels": 20,
+          "subdivisions": 0
+        },
+        {
+          "added_mass": 2279.4002968400105,
+          "added_mass_relative_error": 0.06472846481438274,
+          "exact_added_mass": 2437.153501509733,
+          "h_mean": 0.6465938371443319,
+          "normal_derivative_relative_l2_error": 0.053261228321893846,
+          "panels": 80,
+          "subdivisions": 1
+        },
+        {
+          "added_mass": 2394.8177826981614,
+          "added_mass_relative_error": 0.01737096936460751,
+          "exact_added_mass": 2437.153501509733,
+          "h_mean": 0.3323886391941554,
+          "normal_derivative_relative_l2_error": 0.028423109571790933,
+          "panels": 320,
+          "subdivisions": 2
+        }
+      ],
+      "motion_axis": "y"
+    },
+    "z": {
+      "error_decay_order": 1.6022019940152057,
+      "extrapolation": {
+        "added_mass": [
+          3241.20487660794,
+          3890.642146050627,
+          4104.549811866565
+        ],
+        "exact_added_mass": 4184.38918975305,
+        "extrapolated_added_mass": 4209.609236332315,
+        "extrapolation_vs_analytic": 0.0060271751588081195,
+        "finest_relative_error": 0.019080294462570657,
+        "motion_axis": "z",
+        "observed_order": 0.8011009970076028,
+        "panels": [
+          20,
+          80,
+          320
+        ]
+      },
+      "levels": [
+        {
+          "added_mass": 3241.20487660794,
+          "added_mass_relative_error": 0.2254054941769826,
+          "exact_added_mass": 4184.38918975305,
+          "h_mean": 1.1673403692185245,
+          "normal_derivative_relative_l2_error": 0.07986771862141744,
+          "panels": 20,
+          "subdivisions": 0
+        },
+        {
+          "added_mass": 3890.642146050627,
+          "added_mass_relative_error": 0.070200698448836,
+          "exact_added_mass": 4184.38918975305,
+          "h_mean": 0.6465938371443319,
+          "normal_derivative_relative_l2_error": 0.06057678117366789,
+          "panels": 80,
+          "subdivisions": 1
+        },
+        {
+          "added_mass": 4104.549811866565,
+          "added_mass_relative_error": 0.019080294462570657,
+          "exact_added_mass": 4184.38918975305,
+          "h_mean": 0.3323886391941554,
+          "normal_derivative_relative_l2_error": 0.03348262491625473,
+          "panels": 320,
+          "subdivisions": 2
+        }
+      ],
+      "motion_axis": "z"
+    }
+  },
+  "benchmark": "translating_ellipsoid_mesh_refinement",
+  "fluid_density": 1025.0,
+  "levels": [
+    0,
+    1,
+    2
+  ],
+  "meshes": [
+    {
+      "exact_volume": 4.71238898038469,
+      "h_max": 1.5771933363574009,
+      "h_mean": 1.1673403692185245,
+      "max_aspect_ratio": 2.2029008014459186,
+      "min_angle_degrees": 42.23611349540969,
+      "panels": 20,
+      "relative_residual_l2": 2.813804805637736e-16,
+      "shape_factor_identity_error": 1.8534063173092363e-12,
+      "shape_factor_sum": 1.9999999999981466,
+      "subdivisions": 0,
+      "surface_area": 11.001718269068075,
+      "vertices": 12,
+      "volume": 2.853169548885461,
+      "volume_relative_error": 0.39453861708747434
+    },
+    {
+      "exact_volume": 4.71238898038469,
+      "h_max": 0.9270509831248421,
+      "h_mean": 0.6465938371443319,
+      "max_aspect_ratio": 2.3983275861266375,
+      "min_angle_degrees": 36.87097681540715,
+      "panels": 80,
+      "relative_residual_l2": 3.8237973208912605e-16,
+      "shape_factor_identity_error": 1.8534063173092363e-12,
+      "shape_factor_sum": 1.9999999999981466,
+      "subdivisions": 1,
+      "surface_area": 13.415572349301701,
+      "vertices": 42,
+      "volume": 4.1160512345761795,
+      "volume_relative_error": 0.12654679999693677
+    },
+    {
+      "exact_volume": 4.71238898038469,
+      "h_max": 0.48737954434935943,
+      "h_mean": 0.3323886391941554,
+      "max_aspect_ratio": 2.460749549083607,
+      "min_angle_degrees": 33.35602422642662,
+      "panels": 320,
+      "relative_residual_l2": 7.813018967572538e-16,
+      "shape_factor_identity_error": 1.8534063173092363e-12,
+      "shape_factor_sum": 1.9999999999981466,
+      "subdivisions": 2,
+      "surface_area": 14.18069408028465,
+      "vertices": 162,
+      "volume": 4.5529252649762055,
+      "volume_relative_error": 0.033839251401412654
+    }
+  ],
+  "note": "Geometry is validated before the flux: the faceted volume must converge to 4*pi*a1*a2*a3/3 and Lamb's shape factors must sum to 2. The extrapolated added mass is compared with the analytic value; the discrepancy measures how far the analytic reference can be trusted, since the two sides share no discretisation.",
+  "semi_axes": [
+    1.5,
+    1.0,
+    0.75
+  ],
+  "speed": 1.0,
+  "volume_error_decay_order": 1.5314302314754604,
+  "volume_error_monotone": true
+}
