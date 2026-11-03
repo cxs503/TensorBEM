@@ -119,6 +119,10 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `docs/three_dimensional_bem.md`: 3-D formulation, quadrature, verification cases, results, and limitations
 - `src/tensorbem/hydrostatic.py`: hydrostatic restoring matrix `C` for a floating hull (`WettedHullMesh`), with waterplane area, centroid and second moments traced over every closed waterline loop (single- and multi-hull waterplanes)
 - `src/tensorbem/rao.py`: frequency-domain 6-DOF RAO solver with hydrostatic restoring, added mass/damping and wave excitation
+- `src/tensorbem/symmetry.py`: symmetry-plane (half-model) reduction for the 3-D Laplace solver -- mirrors the hidden half into the
+  layer matrices by mode parity, so a symmetric body solves an `n x n` system instead of `2n x 2n` and reproduces the full model to roundoff
+- `src/tensorbem/benchmarks/half_model_symmetry.py`: involution, closed-form accuracy, order and cost study; regenerates `docs/half_model_symmetry.md`
+- `docs/half_model_symmetry.md`: half-model formulation, parity table, verification tables and limitations
 - `src/tensorbem/benchmarks/hydrostatic_benchmarks.py`: barge and half-ellipsoid hydrostatics against closed-form solutions, with mesh-refinement study, report and figure generation
 - `docs/hydrostatic_verification.md`: hydrostatic verification against closed-form solutions, error table, and limitations
 - `docs/hydrostatic_benchmarks_report.md`: generated closed-form verification report (barge/spheroid/hemisphere refinement tables) for `hydrostatic_benchmarks`, regenerable via `--report`
@@ -136,7 +140,7 @@ The 3-D fundamental solution is \\(G(x,y)=1/(4\\pi|x-y|)\\), satisfying \\(-\\na
 2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) plus exterior Neumann `3x3`/`6x6` rigid-body translational and rotational added-mass tensors.
 3. **Done:** 2-D deep-water free-surface radiation (Ursell 1949), incident-wave diffraction, Dean's zero-reflection theorem, and Haskind reciprocity, plus vertical-cylinder wave diffraction (MacCamy-Fuchs 1954) with Schenck CHIEF irregular-frequency suppression.
 4. **Done:** 3-D deep-water Kelvin/Delhommeau free-surface Green function, 6-DOF radiation/diffraction BEM for submerged and waterline-piercing hulls (`WettedHullMesh`), lid-free 3-D CHIEF irregular-frequency suppression, Hulme's (1982) floating hemisphere, and Wang/Linton's submerged sphere.
-5. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, superconvergent tangential gradient recovery, and clearance diagnostics are in place; graded meshes, symmetry-plane reduction, higher-order/curved panels, and near-singular field quadrature remain.
+5. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, superconvergent tangential gradient recovery, and clearance diagnostics are in place; graded meshes and higher-order/curved panels remain; the symmetry-plane (half-model) reduction landed in `symmetry.py` with an exact half-vs-full involution check (`docs/half_model_symmetry.md`).
 6. **In progress:** hydrostatic restoring (`hydrostatic.py`) and 6-DOF frequency-domain RAO coupling (`rao.py`) are implemented for the deep-water 3-D solver. **Next, needs new physics:** finite-depth 3-D John eigenseries Green function (Garrett's truncated vertical cylinder & multi-body gap resonance), forward-speed Rankine-source wave resistance (Wigley hull), and three-dimensional lifting flows (the steady 2-D Kutta closure is shipped; see `docs/lifting_kutta_closure.md`).
 7. **Future:** expose a stable task/result contract for TensorPlatform.
 

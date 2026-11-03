@@ -152,6 +152,14 @@ from .solver import (
     solve_laplace_exterior_dirichlet,
     solve_laplace_exterior_neumann,
 )
+from .symmetry import (
+    HalfModelAddedMass3DResult,
+    HalfSurface,
+    MODE_PARITIES,
+    assemble_half_surface_matrices,
+    compute_added_mass_matrix_3d_half,
+    half_ellipsoid_surface,
+)
 from .solver3d import (
     LaplaceSurfaceResult,
     RigidBodyAddedMass3DResult,
@@ -166,6 +174,13 @@ from .solver3d import (
 )
 
 __all__ = [
+    "HalfModelAddedMass3DResult",
+    "HalfSurface",
+    "MODE_PARITIES",
+    "assemble_half_surface_matrices",
+    "compute_added_mass_matrix_3d_half",
+    "half_ellipsoid_surface",
+
     "PanelMesh",
     "regular_polygon",
     "ellipse_mesh",
