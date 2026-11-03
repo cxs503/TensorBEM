@@ -254,13 +254,12 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
         1.0j * _RESIDUE_SIGN * dresidue_d_depth
     )
 
-    # Vertical source derivative: both r and r1 depend on source_z, as well as A.
+    # Vertical source derivative. Two paths carry the source_z dependence: the
+    # depth sum A = -(z + z0) and the Rankine radius r = |P - S|, so
+    #   dG/ds_z = -dG/dA - (z - z0) / (2*pi*r^2),
+    # i.e. the depth derivative dg_d_depth is reused rather than re-expanded.
     dg_d_source_x = -dg_d_offset
-    dg_d_source_z = (1.0 / (2.0 * math.pi)) * (
-        -(field_z - s_z) / r2 + depth / r_image2 - 2.0 * (
-            elementary_cos + frequency * cos_integral
-        )
-    ) + 1.0j * _RESIDUE_SIGN * (frequency * residue)
+    dg_d_source_z = -dg_d_depth - (field_z - s_z) / (2.0 * math.pi * r2)
     if not outgoing:
         dg_d_source_x = np.conj(dg_d_source_x)
         dg_d_source_z = np.conj(dg_d_source_z)

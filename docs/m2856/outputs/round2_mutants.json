@@ -1,0 +1,136 @@
+{
+  "closed": 5,
+  "total": 5,
+  "rows": [
+    {
+      "key": "tensorbem.hydrostatic:236:20:swap_binop",
+      "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "before": {
+        "tests": [
+          "tests/test_hydrostatic_analytic_benchmark.py"
+        ],
+        "pytest_exit": 0,
+        "verdict": "survived",
+        "failing": []
+      },
+      "after": {
+        "tests": [
+          "tests/test_mutation_gaps_round2.py"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps_round2.py::test_eccentric_waterplane_centroid_is_pinned_by_closed_form[x_range0-y_range0]"
+        ]
+      },
+      "round1_alone": null,
+      "closed": true
+    },
+    {
+      "key": "tensorbem.hydrostatic:255:15:shift_constant",
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "before": {
+        "tests": [
+          "tests/test_hydrostatic_analytic_benchmark.py"
+        ],
+        "pytest_exit": 0,
+        "verdict": "survived",
+        "failing": []
+      },
+      "after": {
+        "tests": [
+          "tests/test_mutation_gaps_round2.py"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps_round2.py::test_cancelling_waterline_loop_reports_zero_area"
+        ]
+      },
+      "round1_alone": null,
+      "closed": true
+    },
+    {
+      "key": "tensorbem.hydrostatic:314:29:shift_constant",
+      "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "before": {
+        "tests": [
+          "tests/test_hydrostatic_analytic_benchmark.py"
+        ],
+        "pytest_exit": 0,
+        "verdict": "survived",
+        "failing": []
+      },
+      "after": {
+        "tests": [
+          "tests/test_mutation_gaps_round2.py"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps_round2.py::test_zero_volume_hull_reports_a_three_component_centre"
+        ]
+      },
+      "round1_alone": null,
+      "closed": true
+    },
+    {
+      "key": "tensorbem.free_surface:243:37:swap_binop",
+      "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "before": {
+        "tests": [
+          "tests/test_free_surface_kernel.py"
+        ],
+        "pytest_exit": 0,
+        "verdict": "survived",
+        "failing": []
+      },
+      "after": {
+        "tests": [
+          "tests/test_mutation_gaps_round2.py",
+          "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps_round2.py::test_source_vertical_gradient_matches_finite_differences[0.8--0.9--0.4--1.1-0.6-True]"
+        ]
+      },
+      "round1_alone": {
+        "tests": [
+          "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference"
+        ]
+      },
+      "closed": true
+    },
+    {
+      "key": "tensorbem.hydrostatic:161:15:shift_constant",
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "before": {
+        "tests": [
+          "tests/test_hydrostatic_analytic_benchmark.py"
+        ],
+        "pytest_exit": 0,
+        "verdict": "survived",
+        "failing": []
+      },
+      "after": {
+        "tests": [
+          "tests/test_mutation_gaps_round2.py"
+        ],
+        "pytest_exit": 1,
+        "verdict": "killed",
+        "failing": [
+          "FAILED tests/test_mutation_gaps_round2.py::test_waterplane_is_empty_for_a_fully_submerged_hull"
+        ]
+      },
+      "round1_alone": null,
+      "closed": true
+    }
+  ]
+}
