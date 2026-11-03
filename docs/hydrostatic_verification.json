@@ -1,0 +1,415 @@
+{
+  "benchmark": "hydrostatic_analytic_verification",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "barge": {
+    "case": {
+      "length": 30.0,
+      "beam": 8.0,
+      "draft": 2.5,
+      "kg_above_keel": 1.25,
+      "density": 1025.0,
+      "gravity": 9.80665,
+      "waterplane_center": [
+        2.0,
+        -1.0
+      ]
+    },
+    "reference": {
+      "displaced_volume": 600.0,
+      "waterplane_area": 240.0,
+      "waterplane_i_xx": 1280.0,
+      "waterplane_i_yy": 18000.0,
+      "center_of_buoyancy_z": -1.25,
+      "kb_above_keel": 1.25,
+      "bm_transverse": 2.1333333333333333,
+      "bm_longitudinal": 30.0,
+      "gm_transverse": 2.1333333333333333,
+      "gm_longitudinal": 30.0,
+      "c_heave": 2412435.9,
+      "c_roll": 12866324.8,
+      "c_pitch": 180932692.5
+    },
+    "panelizations": [
+      {
+        "length_subdivisions": 1,
+        "beam_subdivisions": 1,
+        "panel_count": 10,
+        "max_relative_error": 0.0,
+        "comparisons": [
+          {
+            "name": "displaced_volume",
+            "computed": 600.0,
+            "reference": 600.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "center_of_buoyancy_z",
+            "computed": -1.25,
+            "reference": -1.25,
+            "relative_error": 0.0
+          },
+          {
+            "name": "center_of_buoyancy_x",
+            "computed": 2.0,
+            "reference": 2.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "center_of_buoyancy_y",
+            "computed": -1.0,
+            "reference": -1.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_area",
+            "computed": 240.0,
+            "reference": 240.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_center_x",
+            "computed": 2.0,
+            "reference": 2.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_center_y",
+            "computed": -1.0,
+            "reference": -1.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_xx",
+            "computed": 1280.0,
+            "reference": 1280.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_yy",
+            "computed": 18000.0,
+            "reference": 18000.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_xy",
+            "computed": 0.0,
+            "reference": 0.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "gm_transverse",
+            "computed": 2.1333333333333333,
+            "reference": 2.1333333333333333,
+            "relative_error": 0.0
+          },
+          {
+            "name": "gm_longitudinal",
+            "computed": 30.0,
+            "reference": 30.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "c_heave",
+            "computed": 2412435.9,
+            "reference": 2412435.9,
+            "relative_error": 0.0
+          },
+          {
+            "name": "c_roll",
+            "computed": 12866324.8,
+            "reference": 12866324.8,
+            "relative_error": 0.0
+          },
+          {
+            "name": "c_pitch",
+            "computed": 180932692.5,
+            "reference": 180932692.5,
+            "relative_error": 0.0
+          }
+        ]
+      },
+      {
+        "length_subdivisions": 3,
+        "beam_subdivisions": 2,
+        "panel_count": 32,
+        "max_relative_error": 2.8953802708772855e-16,
+        "comparisons": [
+          {
+            "name": "displaced_volume",
+            "computed": 600.0,
+            "reference": 600.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "center_of_buoyancy_z",
+            "computed": -1.2500000000000002,
+            "reference": -1.25,
+            "relative_error": 1.7763568394002506e-16
+          },
+          {
+            "name": "center_of_buoyancy_x",
+            "computed": 2.0,
+            "reference": 2.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "center_of_buoyancy_y",
+            "computed": -1.0,
+            "reference": -1.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_area",
+            "computed": 240.0,
+            "reference": 240.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_center_x",
+            "computed": 2.0,
+            "reference": 2.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_center_y",
+            "computed": -1.0,
+            "reference": -1.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_xx",
+            "computed": 1280.0,
+            "reference": 1280.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_yy",
+            "computed": 18000.0,
+            "reference": 18000.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "waterplane_i_xy",
+            "computed": 0.0,
+            "reference": 0.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "gm_transverse",
+            "computed": 2.133333333333333,
+            "reference": 2.1333333333333333,
+            "relative_error": 2.0816681711721685e-16
+          },
+          {
+            "name": "gm_longitudinal",
+            "computed": 30.0,
+            "reference": 30.0,
+            "relative_error": 0.0
+          },
+          {
+            "name": "c_heave",
+            "computed": 2412435.9,
+            "reference": 2412435.9,
+            "relative_error": 0.0
+          },
+          {
+            "name": "c_roll",
+            "computed": 12866324.799999997,
+            "reference": 12866324.8,
+            "relative_error": 2.8953802708772855e-16
+          },
+          {
+            "name": "c_pitch",
+            "computed": 180932692.5,
+            "reference": 180932692.5,
+            "relative_error": 0.0
+          }
+        ]
+      }
+    ]
+  },
+  "hemisphere_convergence": {
+    "case": {
+      "radius": 1.0,
+      "kg_above_keel": 0.625,
+      "density": 1025.0,
+      "gravity": 9.80665
+    },
+    "reference": {
+      "displaced_volume": 2.0943951023931953,
+      "waterplane_area": 3.141592653589793,
+      "waterplane_i_xx": 0.7853981633974483,
+      "waterplane_i_yy": 0.7853981633974483,
+      "center_of_buoyancy_z": -0.375,
+      "kb_above_keel": 0.625,
+      "bm_transverse": 0.375,
+      "gm_transverse": 0.375,
+      "c_heave": 31578.712086234504,
+      "c_roll": 7894.678021558626
+    },
+    "levels": [
+      {
+        "subdivisions": 1,
+        "panel_count": 16,
+        "panel_size": 0.5705740399303423,
+        "relative_panel_size": 0.16095596498573037,
+        "volume_relative_error": 0.29745609168503756,
+        "waterplane_area_relative_error": 0.09968368384289397,
+        "waterplane_i_xx_relative_error": 0.18758253177273554,
+        "kb_relative_error": 0.07184910359318372,
+        "gm_relative_error": 0.2761423749153972,
+        "computed_volume": 1.4714045207910313,
+        "computed_waterplane_area": 2.82842712474619,
+        "computed_gm_transverse": 0.47855339059327395
+      },
+      {
+        "subdivisions": 2,
+        "panel_count": 64,
+        "panel_size": 0.3056101943085896,
+        "relative_panel_size": 0.08621104412745603,
+        "volume_relative_error": 0.08858418942396099,
+        "waterplane_area_relative_error": 0.025504641595567434,
+        "waterplane_i_xx_relative_error": 0.05023098901134309,
+        "kb_relative_error": 0.019534524112122042,
+        "gm_relative_error": 0.0746384432912149,
+        "computed_volume": 1.9088648099141803,
+        "computed_waterplane_area": 3.061467458920718,
+        "computed_gm_transverse": 0.4029894162342056
+      },
+      {
+        "subdivisions": 3,
+        "panel_count": 256,
+        "panel_size": 0.15567509100727553,
+        "relative_panel_size": 0.04391513238207692,
+        "volume_relative_error": 0.023202304233173817,
+        "waterplane_area_relative_error": 0.006413148855794295,
+        "waterplane_i_xx_relative_error": 0.01277697976905196,
+        "kb_relative_error": 0.004984137896369134,
+        "gm_relative_error": 0.01897985826413162,
+        "computed_volume": 2.045800310042999,
+        "computed_waterplane_area": 3.121445152258052,
+        "computed_gm_transverse": 0.38211744684904936
+      },
+      {
+        "subdivisions": 4,
+        "panel_count": 1024,
+        "panel_size": 0.07820770581207559,
+        "relative_panel_size": 0.022061986486170186,
+        "volume_relative_error": 0.005869620423973357,
+        "waterplane_area_relative_error": 0.001605606964381869,
+        "waterplane_i_xx_relative_error": 0.0032081209281857284,
+        "kb_relative_error": 0.0012523123052385898,
+        "gm_relative_error": 0.004764400899539704,
+        "computed_volume": 2.0821017981243184,
+        "computed_waterplane_area": 3.1365484905459384,
+        "computed_gm_transverse": 0.3767866503373274
+      },
+      {
+        "subdivisions": 5,
+        "panel_count": 4096,
+        "panel_size": 0.039150488772720184,
+        "relative_panel_size": 0.011044148978186055,
+        "volume_relative_error": 0.0014717694793728278,
+        "waterplane_area_relative_error": 0.0004015468503208683,
+        "waterplane_i_xx_relative_error": 0.000802900221675242,
+        "kb_relative_error": 0.0003134701514182936,
+        "gm_relative_error": 0.0011923053823975256,
+        "computed_volume": 2.091312635603745,
+        "computed_waterplane_area": 3.140331156954753,
+        "computed_gm_transverse": 0.37544711451839907
+      }
+    ],
+    "observed_order": {
+      "volume_relative_error": 1.9837046695589262,
+      "waterplane_area_relative_error": 2.051594630946128,
+      "waterplane_i_xx_relative_error": 2.031666142593175,
+      "kb_relative_error": 2.025508449987787,
+      "gm_relative_error": 2.029208677821034
+    }
+  },
+  "mass_matrix_energy": {
+    "mass": 1000.0,
+    "center_of_gravity": [
+      0.3,
+      -0.4,
+      -0.6
+    ],
+    "inertia_about_cg": [
+      [
+        500.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        700.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        900.0
+      ]
+    ],
+    "samples": 16,
+    "symmetric": true,
+    "max_relative_energy_error": 3.6530758641208617e-16,
+    "coupling_block": [
+      [
+        -0.0,
+        -600.0,
+        400.0
+      ],
+      [
+        600.0,
+        -0.0,
+        300.0
+      ],
+      [
+        -400.0,
+        -300.0,
+        -0.0
+      ]
+    ]
+  },
+  "long_wave_heave_rao": {
+    "case": {
+      "length": 30.0,
+      "beam": 8.0,
+      "draft": 2.5,
+      "panel_count": 10,
+      "density": 1025.0,
+      "gravity": 9.80665
+    },
+    "levels": [
+      {
+        "omega": 0.2,
+        "ka": 0.06118297277867571,
+        "heave_rao_amplitude": 1.0000530902714138,
+        "relative_error_vs_long_wave_limit": 5.3090271413758217e-05,
+        "heave_rao_phase": -0.0038373235910556564,
+        "impedance_residual": 4.711041846379449e-10
+      },
+      {
+        "omega": 0.4,
+        "ka": 0.24473189111470284,
+        "heave_rao_amplitude": 1.0013119133525852,
+        "relative_error_vs_long_wave_limit": 0.0013119133525851812,
+        "heave_rao_phase": -0.05416829976906616,
+        "impedance_residual": 6.814236273964008e-11
+      },
+      {
+        "omega": 0.6,
+        "ka": 0.5506467550080812,
+        "heave_rao_amplitude": 1.01188606456465,
+        "relative_error_vs_long_wave_limit": 0.011886064564649912,
+        "heave_rao_phase": -0.22443358614656955,
+        "impedance_residual": 6.614448725049115e-10
+      }
+    ]
+  }
+}
