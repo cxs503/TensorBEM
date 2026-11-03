@@ -1,0 +1,149 @@
+{
+  "panel_level": [
+    {
+      "clearance": 1.0,
+      "exact_max_rel_error": 3.1643828126897193e-15,
+      "legacy_max_rel_error": 3.286089843947016e-15
+    },
+    {
+      "clearance": 0.25,
+      "exact_max_rel_error": 2.9848923646868414e-15,
+      "legacy_max_rel_error": 3.376022407699022e-09
+    },
+    {
+      "clearance": 0.05,
+      "exact_max_rel_error": 6.932490523915347e-11,
+      "legacy_max_rel_error": 0.001004306293403891
+    },
+    {
+      "clearance": 0.02,
+      "exact_max_rel_error": 2.7045648626566243e-09,
+      "legacy_max_rel_error": 0.01697237261399533
+    },
+    {
+      "clearance": 0.005,
+      "exact_max_rel_error": 9.56692852945083e-09,
+      "legacy_max_rel_error": 0.0692576304543676
+    },
+    {
+      "clearance": 0.001,
+      "exact_max_rel_error": 1.2495507350201863e-08,
+      "legacy_max_rel_error": 0.09590202973697486
+    }
+  ],
+  "spheres": [
+    {
+      "subdivisions": 2,
+      "panels": 320,
+      "h_max": 0.3249196962329064,
+      "h_mean": 0.2993320753185588,
+      "condition_number": 37.56559992086565,
+      "relative_residual": 4.1914595253563364e-16,
+      "rows": [
+        {
+          "clearance": 0.3,
+          "clearance_over_hmax": 0.9233050611525758,
+          "exact_rule": 0.013039175277943273,
+          "legacy_duffy": 0.013039175278081539,
+          "legacy_would_refuse": false
+        },
+        {
+          "clearance": 0.05,
+          "clearance_over_hmax": 0.15388417685876266,
+          "exact_rule": 0.011912757109718687,
+          "legacy_duffy": 0.011912107485169366,
+          "legacy_would_refuse": false
+        },
+        {
+          "clearance": 0.01,
+          "clearance_over_hmax": 0.030776835371752527,
+          "exact_rule": 0.009636689729376475,
+          "legacy_duffy": 0.009646282616067915,
+          "legacy_would_refuse": true
+        },
+        {
+          "clearance": 0.002,
+          "clearance_over_hmax": 0.006155367074350506,
+          "exact_rule": 0.008340808870493679,
+          "legacy_duffy": 0.007886259463132398,
+          "legacy_would_refuse": true
+        },
+        {
+          "clearance": 0.0005,
+          "clearance_over_hmax": 0.0015388417685876265,
+          "exact_rule": 0.007917350455530848,
+          "legacy_duffy": 0.007679956223757287,
+          "legacy_would_refuse": true
+        }
+      ]
+    },
+    {
+      "subdivisions": 3,
+      "panels": 1280,
+      "h_max": 0.1646471600639204,
+      "h_mean": 0.1507297051948821,
+      "condition_number": 76.12545458214439,
+      "relative_residual": 7.689784785512108e-16,
+      "rows": [
+        {
+          "clearance": 0.3,
+          "clearance_over_hmax": 1.82207819365686,
+          "exact_rule": 0.0033288154930916085,
+          "legacy_duffy": 0.0033288154930917525,
+          "legacy_would_refuse": false
+        },
+        {
+          "clearance": 0.05,
+          "clearance_over_hmax": 0.30367969894281,
+          "exact_rule": 0.0032272674901437925,
+          "legacy_duffy": 0.003227273223183436,
+          "legacy_would_refuse": false
+        },
+        {
+          "clearance": 0.01,
+          "clearance_over_hmax": 0.060735939788562,
+          "exact_rule": 0.0026678707175101903,
+          "legacy_duffy": 0.0026805969884158977,
+          "legacy_would_refuse": false
+        },
+        {
+          "clearance": 0.002,
+          "clearance_over_hmax": 0.012147187957712401,
+          "exact_rule": 0.002195735171070273,
+          "legacy_duffy": 0.002009838673819253,
+          "legacy_would_refuse": true
+        },
+        {
+          "clearance": 0.0005,
+          "clearance_over_hmax": 0.0030367969894281002,
+          "exact_rule": 0.002019147703569835,
+          "legacy_duffy": 0.0018345108721527434,
+          "legacy_would_refuse": true
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "panel_triangle": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.3,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.3,
+        0.0
+      ]
+    ],
+    "panel_area": 0.045,
+    "edge_order": 24,
+    "legacy_duffy_order": 8,
+    "reference": "polar/analytic-radial (independent scheme)"
+  }
+}
