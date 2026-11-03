@@ -1,0 +1,150 @@
+{
+  "case": {
+    "axis_submergence": 2.0,
+    "body": "submerged circular cylinder, heave",
+    "density": 1025.0,
+    "depths": [
+      8.0,
+      16.0,
+      32.0
+    ],
+    "gravity": 9.80665,
+    "nu": 0.6,
+    "nu_times_radius": 0.6,
+    "omega": 2.4256937152080846,
+    "panels": 64,
+    "radius": 1.0
+  },
+  "deep_water_limit": [
+    {
+      "depth": 8.0,
+      "mfs_added_mass": 2653.5347916242613,
+      "mfs_added_mass_vs_ursell": 0.042577788847923737,
+      "mfs_damping": 2809.01680774017,
+      "mfs_damping_vs_ursell": 0.033428130908024434,
+      "nu_times_depth": 4.8,
+      "panel_added_mass": 2700.9126273060024,
+      "panel_added_mass_vs_deep_water": 0.04372498388441981,
+      "panel_damping": 2892.6766962467777,
+      "panel_damping_vs_deep_water": 0.03782955110436137
+    },
+    {
+      "depth": 16.0,
+      "mfs_added_mass": 2563.423513900984,
+      "mfs_added_mass_vs_ursell": 0.007172933039913509,
+      "mfs_damping": 2728.2286562330446,
+      "mfs_damping_vs_ursell": 0.0037064332017409107,
+      "nu_times_depth": 9.6,
+      "panel_added_mass": 2608.311338764735,
+      "panel_added_mass_vs_deep_water": 0.007940679937196826,
+      "panel_damping": 2807.795458613957,
+      "panel_damping_vs_deep_water": 0.007376007207128943
+    },
+    {
+      "depth": 32.0,
+      "mfs_added_mass": 2547.711837371037,
+      "mfs_added_mass_vs_ursell": 0.0009997918294077923,
+      "mfs_damping": 2713.179178106319,
+      "mfs_damping_vs_ursell": 0.0018302207651520463,
+      "nu_times_depth": 19.2,
+      "panel_added_mass": 2592.1391916640277,
+      "panel_added_mass_vs_deep_water": 0.0016912093688361551,
+      "panel_damping": 2791.8220555470043,
+      "panel_damping_vs_deep_water": 0.0016450972315709134
+    }
+  ],
+  "deep_water_reference": {
+    "added_mass": 2545.1672,
+    "damping": 2718.154,
+    "source": "Ursell (1949) multipole solution, deep water, per unit span"
+  },
+  "energy_identity": [
+    {
+      "case": "deep water",
+      "condition_number": 2.446175121149249,
+      "depth": null,
+      "far_field_damping": 2758.177419909607,
+      "mfs_relative_residual": 0.000803965355988352,
+      "near_field_damping": 2787.2367800364336,
+      "panel_relative_residual": 0.010425867057640741,
+      "relative_residual": 6.77045003252303e-16
+    },
+    {
+      "case": "h = 8 m",
+      "condition_number": 2.4648632540078803,
+      "depth": 8.0,
+      "far_field_damping": 2862.531803510305,
+      "mfs_relative_residual": 0.000768897524121745,
+      "near_field_damping": 2892.6766962467777,
+      "panel_relative_residual": 0.010421106781682659,
+      "relative_residual": 5.715558698681032e-16
+    },
+    {
+      "case": "h = 16 m",
+      "condition_number": 2.4494909202327175,
+      "depth": 16.0,
+      "far_field_damping": 2778.539038495542,
+      "mfs_relative_residual": 0.0008509639514921293,
+      "near_field_damping": 2807.795458613957,
+      "panel_relative_residual": 0.0104197120301837,
+      "relative_residual": 5.814648089908532e-16
+    },
+    {
+      "case": "h = 32 m",
+      "condition_number": 2.446867555345002,
+      "depth": 32.0,
+      "far_field_damping": 2762.544248556864,
+      "mfs_relative_residual": 0.0007028560921830219,
+      "near_field_damping": 2791.8220555470043,
+      "panel_relative_residual": 0.010486988929673627,
+      "relative_residual": 8.122759418684638e-16
+    }
+  ],
+  "mode_normalisation": [
+    {
+      "depth": 50.0,
+      "far_field_damping": 2758.177419909637,
+      "far_field_damping_deep_water": 2758.177419909607,
+      "nu_times_depth": 30.0,
+      "relative_deviation": 1.0880185641326534e-14
+    },
+    {
+      "depth": 200.0,
+      "far_field_damping": 2758.177419909637,
+      "far_field_damping_deep_water": 2758.177419909607,
+      "nu_times_depth": 120.0,
+      "relative_deviation": 1.0880185641326534e-14
+    },
+    {
+      "depth": 800.0,
+      "far_field_damping": 2758.177419909637,
+      "far_field_damping_deep_water": 2758.177419909607,
+      "nu_times_depth": 480.0,
+      "relative_deviation": 1.0880185641326534e-14
+    }
+  ],
+  "panel_convergence": [
+    {
+      "added_mass_relative_error": 0.03571695164529858,
+      "condition_number": 2.4773482960132336,
+      "damping_relative_error": 0.060914891602182115,
+      "depth": 16.0,
+      "mfs_added_mass": 2556.963904818001,
+      "mfs_damping": 2698.5532834013475,
+      "panel_added_mass": 2648.2908609651595,
+      "panel_damping": 2862.935364142453,
+      "panels": 32
+    },
+    {
+      "added_mass_relative_error": 0.017510889098244022,
+      "condition_number": 2.4494909202327175,
+      "damping_relative_error": 0.029164271916553023,
+      "depth": 16.0,
+      "mfs_added_mass": 2563.423513900984,
+      "mfs_damping": 2728.2286562330446,
+      "panel_added_mass": 2608.311338764735,
+      "panel_damping": 2807.795458613957,
+      "panels": 64
+    }
+  ]
+}

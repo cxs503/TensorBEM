@@ -129,9 +129,60 @@ def _validate_mesh_depth(mesh: PanelMesh, nu: float) -> float:
     return float(nu)
 
 
+def _validate_water_depth(mesh: PanelMesh, depth: float | None) -> float | None:
+    """Validate a finite water depth and that the body clears the sea bed."""
+    if depth is None:
+        return None
+    if isinstance(depth, (bool, np.bool_)) or not math.isfinite(float(depth)):
+        raise ValueError("depth must be a positive finite number, or None")
+    value = float(depth)
+    if value <= 0.0:
+        raise ValueError("depth must be a positive finite number, or None")
+    if np.any(mesh.vertices[:, 1] <= -value) or np.any(mesh.centers[:, 1] <= -value):
+        raise ValueError(
+            "the body must lie strictly above the sea bed z = -depth when a "
+            "finite depth is given"
+        )
+    return value
+
+
+def _kernel_providers(depth: float | None):
+    """Return the ``(potential, gradient)`` pair for the selected water depth.
+
+    Both kernels carry the platform sign convention and the same
+    ``include_rankine`` semantics, so the assembly, the source-potential
+    evaluation and the method of fundamental solutions are written once and
+    only the kernel switches. ``depth=None`` is the deep-water kernel, whose
+    free-surface condition is the ``k0 -> inf`` limit of the finite-depth one.
+    """
+    if depth is None:
+        def potential(x, z, source_x, source_z, nu, **kwargs):
+            return green_function(x, z, source_x, source_z, nu, **kwargs)
+
+        def gradient(x, z, source_x, source_z, nu, **kwargs):
+            return green_gradient_field(x, z, source_x, source_z, nu, **kwargs)
+
+        return potential, gradient
+
+    from . import finite_depth
+
+    def finite_potential(x, z, source_x, source_z, nu, **kwargs):
+        return finite_depth.green_function(
+            x, z, source_x, source_z, nu, depth, **kwargs
+        )
+
+    def finite_gradient(x, z, source_x, source_z, nu, **kwargs):
+        return finite_depth.green_gradient(
+            x, z, source_x, source_z, nu, depth, **kwargs
+        )
+
+    return finite_potential, finite_gradient
+
+
 def radiation_reference(
     mesh: PanelMesh, nu: float, direction: str, *, source_count: int = 48,
     source_radius_ratio: float = 0.55, density: float = 1025.0,
+    depth: float | None = None,
 ) -> RadiationResult:
     """Independent reference solution by the method of fundamental solutions.
 
@@ -176,8 +227,11 @@ def radiation_reference(
     if np.any(sources[:, 1] >= 0.0):
         raise ValueError("fundamental solutions must lie below the free surface")
 
+    depth = _validate_water_depth(mesh, depth)
+    kernel_potential, kernel_gradient = _kernel_providers(depth)
+
     targets = mesh.centers
-    gradient_x, gradient_z = green_gradient_field(
+    gradient_x, gradient_z = kernel_gradient(
         targets[:, 0][:, None],
         targets[:, 1][:, None],
         sources[None, :, 0],
@@ -189,7 +243,7 @@ def radiation_reference(
     data = normals @ direction_vector
     strengths, *_ = np.linalg.lstsq(kernel, data, rcond=None)
 
-    potential = green_function(
+    potential = kernel_potential(
         targets[:, 0][:, None],
         targets[:, 1][:, None],
         sources[None, :, 0],
@@ -211,7 +265,8 @@ def radiation_reference(
 
 
 def assemble_indirect_matrix(mesh: PanelMesh, nu: float, *,
-                             panel_nodes: int = 24) -> ComplexArray:
+                             panel_nodes: int = 24,
+                             depth: float | None = None) -> ComplexArray:
     """Normal-derivative matrix ``K'`` of the indirect (source) formulation.
 
     ``K'[i, j] = integral_{panel j} dG(P_i, Q)/dn_i ds``, the derivative taken
@@ -229,8 +284,11 @@ def assemble_indirect_matrix(mesh: PanelMesh, nu: float, *,
     """
     wavenumber = _validate_mesh_depth(mesh, nu)
     nodes_count = _validate_panel_nodes(panel_nodes)
+    depth = _validate_water_depth(mesh, depth)
     matrix = _rankine_normal_derivative_matrix(mesh)
-    matrix += _free_surface_only_normal_derivative(mesh, wavenumber, nodes_count)
+    matrix += _free_surface_only_normal_derivative(
+        mesh, wavenumber, nodes_count, depth
+    )
     return matrix
 
 
@@ -262,7 +320,8 @@ def _log_panel_primitive(z: FloatArray, h: FloatArray) -> FloatArray:
 
 
 def _evaluate_source_potential(
-    mesh: PanelMesh, sources: ComplexArray, nu: float, panel_nodes: int
+    mesh: PanelMesh, sources: ComplexArray, nu: float, panel_nodes: int,
+    depth: float | None = None,
 ) -> ComplexArray:
     """Evaluate ``phi(P_i) = integral G(P_i, Q) sigma(Q) ds(Q)`` at panel centres.
 
@@ -295,7 +354,8 @@ def _evaluate_source_potential(
         starts[:, 1][:, None] + fraction[None, :] * mesh.vectors[:, 1][:, None]
     ).ravel()
     jacobian = np.tile(weights, count) * np.repeat(0.5 * lengths, smooth_nodes)
-    smooth = green_function(
+    kernel_potential, _ = _kernel_providers(depth)
+    smooth = kernel_potential(
         mesh.centers[:, 0][:, None],
         mesh.centers[:, 1][:, None],
         source_x[None, :],
@@ -311,7 +371,7 @@ def _evaluate_source_potential(
 
 def solve_radiation_indirect(
     mesh: PanelMesh, nu: float, direction: str, *, density: float = 1025.0,
-    panel_nodes: int = 24,
+    panel_nodes: int = 24, depth: float | None = None,
 ) -> RadiationResult:
     """Radiation solve through the indirect formulation.
 
@@ -328,14 +388,18 @@ def solve_radiation_indirect(
     nodes_count = _validate_panel_nodes(panel_nodes)
     wavenumber = _validate_mesh_depth(mesh, nu)
     count = mesh.panel_count
-    matrix = assemble_indirect_matrix(mesh, wavenumber, panel_nodes=nodes_count)
+    matrix = assemble_indirect_matrix(
+        mesh, wavenumber, panel_nodes=nodes_count, depth=depth
+    )
     data = mesh.normals @ direction_vector
     # The derivative of the single-layer potential jumps by one half across the
     # surface. The sign is fixed once, by requiring the potential to satisfy the
     # body condition, and is asserted in the tests.
     system = matrix + 0.5 * np.eye(count)
     sources = np.linalg.solve(system, data)
-    potential = _evaluate_source_potential(mesh, sources, wavenumber, nodes_count)
+    potential = _evaluate_source_potential(
+        mesh, sources, wavenumber, nodes_count, depth
+    )
     force = -(potential * mesh.lengths) @ mesh.normals
     omega = math.sqrt(wavenumber * _GRAVITY)
     residual = system @ sources - data
@@ -400,7 +464,8 @@ def _rankine_normal_derivative_matrix(mesh: PanelMesh) -> ComplexArray:
 
 
 def _free_surface_only_normal_derivative(
-    mesh: PanelMesh, nu: float, panel_nodes: int
+    mesh: PanelMesh, nu: float, panel_nodes: int,
+    depth: float | None = None,
 ) -> ComplexArray:
     """Gauss quadrature of ``d(dG/dn - dG_R/dn)``, whose integrand is smooth."""
     count = mesh.panel_count
@@ -413,11 +478,12 @@ def _free_surface_only_normal_derivative(
         mesh.vertices[:, 1][:, None] + fraction[None, :] * mesh.vectors[:, 1][:, None]
     ).ravel()
     jacobian = np.tile(weights, count) * np.repeat(0.5 * mesh.lengths, panel_nodes)
+    _, kernel_gradient = _kernel_providers(depth)
     matrix = np.zeros((count, count), dtype=complex)
     for row in range(count):
         target = mesh.centers[row]
         normal = mesh.normals[row]
-        gradient_x, gradient_z = green_gradient_field(
+        gradient_x, gradient_z = kernel_gradient(
             target[0],
             target[1],
             source_x,
@@ -432,7 +498,7 @@ def _free_surface_only_normal_derivative(
 
 def wave_amplitude(
     mesh: PanelMesh, potential: ComplexArray, normal_velocity: ComplexArray,
-    nu: float,
+    nu: float, *, depth: float | None = None,
 ) -> complex:
     """Outgoing-wave coefficient of the radiated field (Haskind integral).
 
@@ -450,7 +516,32 @@ def wave_amplitude(
     rather than half of it. The benchmark asserts that this far-field damping
     agrees with the near-field ``omega*rho*Im(force)`` as the mesh refines,
     which is the check that pins the constant down.
+
+    With a finite depth the propagating mode replaces ``exp(nu*z)`` by
+    ``phi_0(z)/phi_0(0)``; the bracket is the same Haskind flux, and
+    :func:`far_field_damping` carries the mode normalisation and ``c_g``.
     """
+    if depth is not None:
+        depth = _validate_water_depth(mesh, depth)
+        from . import finite_depth
+
+        wavenumber = finite_depth.finite_depth_wavenumber(nu, depth)
+        # phi_0(z)/phi_0(0) is the vertical shape of the propagating mode,
+        # normalised so that the deep-water limit is exp(nu*z) and the formula
+        # below degenerates into the deep-water one term by term.
+        shape = finite_depth.wave_amplitude_coefficient(
+            mesh.centers[:, 1], nu, depth
+        )
+        slope = finite_depth.wave_amplitude_slope(
+            mesh.centers[:, 1], nu, depth
+        )
+        phase = np.exp(-1j * wavenumber * mesh.centers[:, 0])
+        stream = shape * normal_velocity - potential * (
+            slope * mesh.normals[:, 1]
+            - 1j * wavenumber * shape * mesh.normals[:, 0]
+        )
+        return 1j * np.sum(phase * stream * mesh.lengths)
+
     phase = np.exp(nu * mesh.centers[:, 1]) * np.exp(-1j * nu * mesh.centers[:, 0])
     stream = normal_velocity - nu * potential * (
         mesh.normals[:, 1] - 1j * mesh.normals[:, 0]
@@ -461,11 +552,43 @@ def wave_amplitude(
 def far_field_damping(
     mesh: PanelMesh, potential: ComplexArray, normal_velocity: ComplexArray,
     nu: float, density: float = 1025.0, *, gravity: float = 9.80665,
+    depth: float | None = None,
 ) -> float:
-    """Damping from the far-field wave amplitude, ``B = omega*rho*|a_w|**2``."""
-    amplitude = wave_amplitude(mesh, potential, normal_velocity, nu)
+    """Damping from the far-field wave amplitude, ``B = omega*rho*|a_w|**2``.
+
+    In finite depth the radiated energy per unit crest length is
+    ``0.5*rho*g*c_g*|eta|**2`` with ``eta = i*omega*phi(x, 0)/g``, so dividing
+    out the mode normalisation of :func:`wave_amplitude` gives
+
+        B = rho*omega**2*c_g*|a_w|**2 / (2*g*k0**2*N0hat**2),
+        N0hat = N0/cosh(k0*h)**2.
+
+    In the deep-water limit ``N0hat -> 1/(2*k0)`` and ``c_g -> g/(2*omega)``,
+    which collapses to ``omega*rho*|a_w|**2`` term for term -- asserted in
+    ``tests/test_finite_depth_radiation.py`` so the constant is not fitted.
+    """
+    amplitude = wave_amplitude(mesh, potential, normal_velocity, nu, depth=depth)
     omega = math.sqrt(nu * gravity)
-    return omega * density * float(abs(amplitude) ** 2)
+    if depth is None:
+        return omega * density * float(abs(amplitude) ** 2)
+
+    from . import finite_depth
+
+    wavenumber = finite_depth.finite_depth_wavenumber(nu, depth)
+    # N0/cosh(k0*h)**2 written so that cosh never overflows:
+    # (h/2)*(sech(k0*h)**2 + tanh(k0*h)/(k0*h)), which tends to 1/(2*k0) in
+    # deep water and to h in shallow water.
+    scaled = wavenumber * depth
+    tanh_scaled = math.tanh(scaled)
+    mode_norm = 0.5 * depth * (
+        (1.0 - tanh_scaled * tanh_scaled) + tanh_scaled / scaled
+    )
+    group = finite_depth.group_velocity(nu, depth, gravity=gravity)
+    factor = (
+        density * omega**2 * group
+        / (2.0 * gravity * wavenumber**2 * mode_norm**2)
+    )
+    return factor * float(abs(amplitude) ** 2)
 
 
 # --------------------------------------------------------------------------

@@ -398,7 +398,7 @@ def _modal_terms(
 
 def green_function(
     x, z, source_x, source_z, nu: float, depth: float, *,
-    modes: int | None = None,
+    modes: int | None = None, include_rankine: bool = True,
 ) -> ComplexArray:
     """Finite-depth free-surface Green function (platform sign convention).
 
@@ -424,7 +424,19 @@ def green_function(
             nu, depth, modes,
         )
         result[start:stop] = propagating + evanescent
-    return result.reshape(np.broadcast(x, z).shape)
+    result = result.reshape(np.broadcast(x, z).shape)
+    if not include_rankine:
+        # The singular part is the Rankine ``log(r)/(2*pi)`` of the platform
+        # convention, exactly as in ``free_surface.green_function``. Removing it
+        # leaves a bounded remainder that Gauss rules integrate across a
+        # collocation point, which is what the boundary-element assembly needs.
+        offset_all = np.asarray(x) - np.asarray(source_x)
+        normal_all = np.asarray(z) - np.asarray(source_z)
+        radius2 = offset_all * offset_all + normal_all * normal_all
+        result = result - np.where(
+            radius2 > 0.0, 0.5 * np.log(np.where(radius2 > 0.0, radius2, 1.0)), 0.0
+        ) / (2.0 * math.pi)
+    return result
 
 
 def green_gradient(
@@ -551,4 +563,22 @@ def wave_amplitude_coefficient(z: FloatArray, nu: float, depth: float) -> FloatA
     nu = _validate_nu(nu)
     z = np.asarray(z, dtype=float)
     k0 = finite_depth_wavenumber(nu, depth)
-    return np.cosh(k0 * (z + depth)) / math.cosh(k0 * depth)
+    # cosh(k0*(z+h))/cosh(k0*h), rearranged so that cosh(k0*h) never overflows:
+    # (exp(k0*z) + exp(-k0*(z+2h))) / (1 + exp(-2*k0*h)).
+    scale = math.exp(-2.0 * k0 * depth)
+    return (np.exp(k0 * z) + np.exp(-k0 * (z + 2.0 * depth))) / (1.0 + scale)
+
+
+def wave_amplitude_slope(z, nu: float, depth: float) -> FloatArray:
+    """Vertical derivative of :func:`wave_amplitude_coefficient`.
+
+    ``k0*sinh(k0*(z+h))/cosh(k0*h)`` in the overflow-free form
+    ``k0*(exp(k0*z) - exp(-k0*(z+2h)))/(1 + exp(-2*k0*h))``. It is the factor
+    that multiplies the ``n_z`` component in the Haskind flux.
+    """
+    depth = _validate_depth(depth)
+    nu = _validate_nu(nu)
+    z = np.asarray(z, dtype=float)
+    k0 = finite_depth_wavenumber(nu, depth)
+    scale = math.exp(-2.0 * k0 * depth)
+    return k0 * (np.exp(k0 * z) - np.exp(-k0 * (z + 2.0 * depth))) / (1.0 + scale)
