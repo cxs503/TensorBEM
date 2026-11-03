@@ -19,8 +19,15 @@ class TestHydrostaticProperties:
     """Test hydrostatic property calculations."""
 
     def test_hemisphere_waterplane_area(self):
-        """Test waterplane area calculation for hemisphere."""
-        hull = hemisphere_hull_mesh(subdivisions=2)
+        """Waterplane area must match ``pi R^2`` on a mesh-resolved hemisphere.
+
+        ``subdivisions=2`` (64 panels) carries ~2.6 % discretization error, which
+        is invisible against a 5 % tolerance; the tolerance here reflects the
+        measured second-order convergence instead (see
+        ``benchmarks/hydrostatic_convergence.py`` and
+        ``tests/test_hydrostatic_convergence.py``).
+        """
+        hull = hemisphere_hull_mesh(subdivisions=4)
         
         mass = 1000.0
         cg = np.array([0.0, 0.0, -0.1])
@@ -29,12 +36,12 @@ class TestHydrostaticProperties:
         # For hemisphere with radius R, waterplane area = pi R^2
         expected_area = np.pi * 1.0**2
         
-        # Allow 5% tolerance due to discretization
-        assert abs(props.waterplane_area - expected_area) / expected_area < 0.05
+        # 1024 panels: measured error 1.6e-3, so 0.5 % is a real check.
+        assert abs(props.waterplane_area - expected_area) / expected_area < 0.005
 
     def test_hemisphere_displaced_volume(self):
-        """Test displaced volume calculation for hemisphere."""
-        hull = hemisphere_hull_mesh(subdivisions=2)
+        """Displaced volume must match ``(2/3) pi R^3`` on a resolved mesh."""
+        hull = hemisphere_hull_mesh(subdivisions=4)
         
         mass = 1000.0
         cg = np.array([0.0, 0.0, -0.1])
@@ -43,8 +50,8 @@ class TestHydrostaticProperties:
         # For hemisphere with radius R, displaced volume = (2/3) pi R^3
         expected_volume = (2.0 / 3.0) * np.pi * 1.0**3
         
-        # Allow 10% tolerance (subdivisions=2 gives 64 panels, coarse mesh)
-        assert abs(props.displaced_volume - expected_volume) / expected_volume < 0.10
+        # 1024 panels: measured error 5.9e-3, tolerance 1 % (was 10 %).
+        assert abs(props.displaced_volume - expected_volume) / expected_volume < 0.01
 
     def test_restoring_matrix_symmetry(self):
         """Test that restoring matrix is symmetric."""
