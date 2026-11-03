@@ -45,7 +45,9 @@ from typing import Callable, Iterable, Sequence
 from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
+    ellipse_added_mass as ellipse_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    sphere_added_mass as sphere_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -77,8 +79,8 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipse``, ``ellipsoid``,
+    ``sphere``, ``ursell`` or ``ursell_reference``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -261,6 +263,126 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
     ),
 )
 
+#: The Laplace convergence tables (``docs/marine_bem_benchmarks.md`` Tables 2-4,
+#: mirrored in ``docs/classical_benchmarks.md`` and
+#: ``docs/three_dimensional_bem.md``) quote a whole ladder per mesh, but until
+#: 2026-11-03 only the two 1280-panel ellipsoid cells were registered -- every
+#: other row, including the *entire* sphere table and the two-dimensional
+#: ellipse table, was prose. This section turns each quoted cell into a gate.
+#: Tiers follow cost: a 20- or 80-panel three-dimensional solve is
+#: sub-second, a 320-panel ellipsoid is three solves of a 320x320 system, and
+#: 1280 panels is minutes.
+_SPHERE_TABLE = (
+    # (subdivisions, panels, added-mass relative error, flux relative L2 error)
+    (0, 20, 2.1268e-1, 3.3338e-2),
+    (1, 80, 6.4759e-2, 2.7884e-2),
+    (2, 320, 1.7381e-2, 1.4542e-2),
+    (3, 1280, 4.4674e-3, 6.8458e-3),
+)
+
+_ELLIPSE_TABLE = (
+    # (panels, x-axis relative error, y-axis relative error)
+    (16, 4.7727e-2, 5.5063e-2),
+    (32, 1.2045e-2, 1.4169e-2),
+    (64, 3.0149e-3, 3.5820e-3),
+    (128, 7.5356e-4, 8.9977e-4),
+)
+
+_ELLIPSOID_TABLE = (
+    # (subdivisions, panels, x, y, z relative errors)
+    (0, 20, 2.0855e-1, 2.1126e-1, 2.2541e-1),
+    (1, 80, 6.1623e-2, 6.4728e-2, 7.0201e-2),
+    (2, 320, 1.6313e-2, 1.7371e-2, 1.9080e-2),
+)
+
+#: Panels at or below this count are exercised by the ``fast`` tier; 320-panel
+#: three-dimensional solves and 128-panel two-dimensional ones by ``standard``;
+#: 1280 panels by ``heavy``, which no routine test run pays for.
+_THREE_D_SPHERE_SOURCE = (
+    "docs/marine_bem_benchmarks.md Table 2 (section 4.2); "
+    "docs/three_dimensional_bem.md sphere table"
+)
+_ELLIPSE_SOURCE = "docs/marine_bem_benchmarks.md Table 3 (section 4.3)"
+_ELLIPSOID_SOURCE = "docs/marine_bem_benchmarks.md Table 4 (section 4.4)"
+
+
+
+def _laplace_table_rows() -> tuple[DeclaredNumber, ...]:
+    """Registry rows for every cell of the Laplace convergence tables."""
+    rows: list[DeclaredNumber] = []
+    for subdivisions, panels, added_mass, flux in _SPHERE_TABLE:
+        tier = "fast" if panels <= 80 else ("standard" if panels <= 320 else "heavy")
+        parameters = {"subdivisions": subdivisions}
+        rows.append(
+            DeclaredNumber(
+                key=f"sphere_added_mass_{panels}",
+                description=f"relative error of the sphere added mass, {panels} panels",
+                source=_THREE_D_SPHERE_SOURCE,
+                group="sphere",
+                quantity="added_mass_relative_error",
+                parameters=parameters,
+                declared=added_mass,
+                tier=tier,
+            )
+        )
+        rows.append(
+            DeclaredNumber(
+                key=f"sphere_flux_l2_{panels}",
+                description=(
+                    f"relative L2 error of the per-panel sphere flux, {panels} panels"
+                ),
+                source=_THREE_D_SPHERE_SOURCE,
+                group="sphere",
+                quantity="normal_derivative_relative_l2_error",
+                parameters=parameters,
+                declared=flux,
+                tier=tier,
+            )
+        )
+    for panels, error_x, error_y in _ELLIPSE_TABLE:
+        tier = "fast" if panels <= 64 else "standard"
+        for axis, declared in (("x", error_x), ("y", error_y)):
+            rows.append(
+                DeclaredNumber(
+                    key=f"ellipse_added_mass_{axis}_{panels}",
+                    description=(
+                        f"relative error of the ellipse added mass, {axis} motion,"
+                        f" {panels} panels"
+                    ),
+                    source=_ELLIPSE_SOURCE,
+                    group="ellipse",
+                    quantity=f"added_mass_relative_error_{axis}",
+                    parameters={"panels": panels},
+                    declared=declared,
+                    tier=tier,
+                )
+            )
+    for subdivisions, panels, error_x, error_y, error_z in _ELLIPSOID_TABLE:
+        tier = "fast" if panels <= 80 else "standard"
+        for axis, declared in (("x", error_x), ("y", error_y), ("z", error_z)):
+            rows.append(
+                DeclaredNumber(
+                    key=f"ellipsoid_added_mass_{panels}_{axis}",
+                    description=(
+                        f"relative error of the ellipsoid added mass, {axis} motion,"
+                        f" {panels} panels"
+                    ),
+                    source=_ELLIPSOID_SOURCE,
+                    group="ellipsoid",
+                    quantity=f"added_mass_relative_error_{axis}",
+                    parameters={"subdivisions": subdivisions},
+                    declared=declared,
+                    tier=tier,
+                )
+            )
+    return tuple(rows)
+
+
+#: Registry rows for the Laplace tables, kept in a separate statement so the
+#: hand-written rows above stay readable.
+DECLARED_NUMBERS = DECLARED_NUMBERS + _laplace_table_rows()
+
+
 _URSELL_RADIUS = 1.0
 _URSELL_SUBMERGENCE = 2.0
 _URSELL_KA = 0.6
@@ -275,6 +397,30 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
         return {
             "added_mass_relative_error": float(row["added_mass_relative_error"]),
             "panels": float(row["panels"]),
+        }
+    if group == "ellipse":
+        values: dict[str, float] = {}
+        for axis in ("x", "y"):
+            row = ellipse_benchmark.run(
+                panel_count=int(parameters["panels"]), axis=axis
+            )
+            values[f"added_mass_relative_error_{axis}"] = float(
+                row["added_mass_relative_error"]
+            )
+            values[f"added_mass_per_unit_span_{axis}"] = float(
+                row["added_mass_per_unit_span"]
+            )
+            values["panels"] = float(row["panels"])
+        return values
+    if group == "sphere":
+        row = sphere_benchmark.run(subdivisions=int(parameters["subdivisions"]))
+        return {
+            "panels": float(row["panels"]),
+            "added_mass": float(row["added_mass"]),
+            "added_mass_relative_error": float(row["added_mass_relative_error"]),
+            "normal_derivative_relative_l2_error": float(
+                row["normal_derivative_relative_l2_error"]
+            ),
         }
     if group == "ellipsoid":
         row = ellipsoid_benchmark.run(int(parameters["subdivisions"]))

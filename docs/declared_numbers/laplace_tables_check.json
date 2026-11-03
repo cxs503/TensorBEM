@@ -1,0 +1,563 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.02623278,
+      "description": "relative error of the cylinder added mass at 16 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_16",
+      "measured": 0.026232783866355507,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": 1.473864190752047e-07,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0004023222,
+      "description": "relative error of the cylinder added mass at 128 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_128",
+      "measured": 0.00040232221672928506,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 4.158180945009392e-08,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2545.17,
+      "description": "Ursell multipole added mass, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_added_mass",
+      "measured": 2545.167247813704,
+      "parameters": {},
+      "relative_deviation": -1.0813369229640125e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2718.15,
+      "description": "Ursell multipole damping, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_damping",
+      "measured": 2718.1539515727764,
+      "parameters": {},
+      "relative_deviation": 1.4537728882729528e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.016736,
+      "description": "panel added-mass error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_64",
+      "measured": 0.016735833486585378,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -9.949415309672355e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.025415,
+      "description": "panel damping error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_damping_64",
+      "measured": 0.025415347951018234,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 1.3690773882909675e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.008513,
+      "description": "panel added-mass error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_128",
+      "measured": 0.008513030527356396,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 3.5859692700834613e-06,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.013361,
+      "description": "panel damping error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_damping_128",
+      "measured": 0.013360592915766837,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -3.046809618763498e-05,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 0.006,
+      "description": "near-field/far-field damping closure at 128 panels (upper bound)",
+      "group": "ursell",
+      "key": "ursell_near_far_128",
+      "measured": 0.005341374018855711,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -0.10977099685738156,
+      "source": "README.md (Milestone 4): 'closing to 6e-3'",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000757,
+      "description": "method-of-fundamental-solutions added-mass error, 64 panels (the pre-2026-11-03 table claimed 1.9e-4, which no source count reproduces; the source curve is converged from 16 sources up)",
+      "group": "ursell",
+      "key": "ursell_mfs_added_mass_64",
+      "measured": 0.0007569804876068797,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -2.5775948639777612e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.003526,
+      "description": "method-of-fundamental-solutions damping error, 64 panels (the pre-2026-11-03 table claimed 8.8e-4; measured 3.526e-3)",
+      "group": "ursell",
+      "key": "ursell_mfs_damping_64",
+      "measured": 0.003526389876668117,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.00011057194217724091,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.21268,
+      "description": "relative error of the sphere added mass, 20 panels",
+      "group": "sphere",
+      "key": "sphere_added_mass_20",
+      "measured": 0.21268127760057987,
+      "parameters": {
+        "subdivisions": 0
+      },
+      "relative_deviation": 6.007149613774667e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.033338,
+      "description": "relative L2 error of the per-panel sphere flux, 20 panels",
+      "group": "sphere",
+      "key": "sphere_flux_l2_20",
+      "measured": 0.03333814761927449,
+      "parameters": {
+        "subdivisions": 0
+      },
+      "relative_deviation": 4.427958320587629e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.064759,
+      "description": "relative error of the sphere added mass, 80 panels",
+      "group": "sphere",
+      "key": "sphere_added_mass_80",
+      "measured": 0.06475922589787647,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 3.488285434828988e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.027884,
+      "description": "relative L2 error of the per-panel sphere flux, 80 panels",
+      "group": "sphere",
+      "key": "sphere_flux_l2_80",
+      "measured": 0.027884179766218663,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 6.446930808505318e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.017381,
+      "description": "relative error of the sphere added mass, 320 panels",
+      "group": "sphere",
+      "key": "sphere_added_mass_320",
+      "measured": 0.017380688694954495,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": -1.7910652177986494e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.014542,
+      "description": "relative L2 error of the per-panel sphere flux, 320 panels",
+      "group": "sphere",
+      "key": "sphere_flux_l2_320",
+      "measured": 0.014541554464665653,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": -3.0637830721101356e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 2 (section 4.2); docs/three_dimensional_bem.md sphere table",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.047727,
+      "description": "relative error of the ellipse added mass, x motion, 16 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_x_16",
+      "measured": 0.04772744362679322,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": 9.295090687121312e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.055063,
+      "description": "relative error of the ellipse added mass, y motion, 16 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_y_16",
+      "measured": 0.05506299530862111,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": -8.520020502936585e-08,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.012045,
+      "description": "relative error of the ellipse added mass, x motion, 32 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_x_32",
+      "measured": 0.012044894219702475,
+      "parameters": {
+        "panels": 32
+      },
+      "relative_deviation": -8.782091948921096e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.014169,
+      "description": "relative error of the ellipse added mass, y motion, 32 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_y_32",
+      "measured": 0.014168827015130232,
+      "parameters": {
+        "panels": 32
+      },
+      "relative_deviation": -1.2208685847061151e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0030149,
+      "description": "relative error of the ellipse added mass, x motion, 64 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_x_64",
+      "measured": 0.0030148877420280735,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -4.065797182845764e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.003582,
+      "description": "relative error of the ellipse added mass, y motion, 64 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_y_64",
+      "measured": 0.003581964679633829,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -9.860515402377825e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00075356,
+      "description": "relative error of the ellipse added mass, x motion, 128 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_x_128",
+      "measured": 0.0007535592473139912,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -9.988401836474894e-07,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00089977,
+      "description": "relative error of the ellipse added mass, y motion, 128 panels",
+      "group": "ellipse",
+      "key": "ellipse_added_mass_y_128",
+      "measured": 0.0008997715295849107,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 1.6999732272275723e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 3 (section 4.3)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.20855,
+      "description": "relative error of the ellipsoid added mass, x motion, 20 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_20_x",
+      "measured": 0.20855091397746117,
+      "parameters": {
+        "subdivisions": 0
+      },
+      "relative_deviation": 4.382533978225095e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.21126,
+      "description": "relative error of the ellipsoid added mass, y motion, 20 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_20_y",
+      "measured": 0.21126016101465114,
+      "parameters": {
+        "subdivisions": 0
+      },
+      "relative_deviation": 7.621634532800086e-07,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.22541,
+      "description": "relative error of the ellipsoid added mass, z motion, 20 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_20_z",
+      "measured": 0.2254054941769826,
+      "parameters": {
+        "subdivisions": 0
+      },
+      "relative_deviation": -1.9989454848463772e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.061623,
+      "description": "relative error of the ellipsoid added mass, x motion, 80 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_80_x",
+      "measured": 0.06162262030190759,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": -6.161629463107403e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.064728,
+      "description": "relative error of the ellipsoid added mass, y motion, 80 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_80_y",
+      "measured": 0.06472846481438274,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 7.181040395924012e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.070201,
+      "description": "relative error of the ellipsoid added mass, z motion, 80 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_80_z",
+      "measured": 0.070200698448836,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": -4.295539436725243e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.016313,
+      "description": "relative error of the ellipsoid added mass, x motion, 320 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_320_x",
+      "measured": 0.016313420323421063,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 2.5766163247823283e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.017371,
+      "description": "relative error of the ellipsoid added mass, y motion, 320 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_320_y",
+      "measured": 0.01737096936460751,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": -1.7635940642553868e-06,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.01908,
+      "description": "relative error of the ellipsoid added mass, z motion, 320 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_320_z",
+      "measured": 0.019080294462570657,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 1.5433048776560125e-05,
+      "source": "docs/marine_bem_benchmarks.md Table 4 (section 4.4)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "71e51fc",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 34,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 34,
+    "verdict": "PASS",
+    "worst_relative_deviation": 0.10977099685738156
+  },
+  "tiers": [
+    "fast",
+    "standard"
+  ]
+}

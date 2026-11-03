@@ -27,11 +27,14 @@ import pytest
 from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
+    _laplace_table_rows,
     DeclaredNumber,
     check,
     richardson_limit,
     ursell_refinement,
 )
+
+LAPLACE_ROWS = _laplace_table_rows()
 
 HEAVY = pytest.mark.skipif(
     not os.environ.get("TENSORBEM_HEAVY_TESTS"),
@@ -60,7 +63,38 @@ def test_registry_is_well_formed():
 
 def test_registry_covers_every_documented_benchmark_family():
     groups = {entry.group for entry in DECLARED_NUMBERS}
-    assert {"cylinder", "ellipsoid", "ursell", "ursell_reference"} <= groups
+    assert {
+        "cylinder",
+        "ellipse",
+        "ellipsoid",
+        "sphere",
+        "ursell",
+        "ursell_reference",
+    } <= groups
+
+
+def test_registry_covers_every_row_of_the_laplace_tables():
+    """Tables 2, 3 and 4 of docs/marine_bem_benchmarks.md quote a whole ladder.
+
+    Before 2026-11-03 only the two 1280-panel ellipsoid cells were registered,
+    so a kernel change could have invalidated the sphere table, the ellipse
+    table and the coarse ellipsoid rows without any test noticing. This test
+    pins the coverage itself: every documented mesh size must have a row.
+    """
+
+    keys = {entry.key for entry in DECLARED_NUMBERS}
+    expected = set()
+    for panels in (20, 80, 320, 1280):
+        expected.add(f"sphere_added_mass_{panels}")
+        expected.add(f"sphere_flux_l2_{panels}")
+    for panels in (16, 32, 64, 128):
+        for axis in ("x", "y"):
+            expected.add(f"ellipse_added_mass_{axis}_{panels}")
+    for panels in (20, 80, 320):
+        for axis in ("x", "y", "z"):
+            expected.add(f"ellipsoid_added_mass_{panels}_{axis}")
+    missing = sorted(expected - keys)
+    assert not missing, f"unregistered documented rows: {missing}"
 
 
 # --------------------------------------------------------------------------
@@ -92,6 +126,37 @@ def test_standard_tier_reproduces_the_documented_ursell_numbers():
         for row in report["checks"]
         if row["verdict"] != "PASS"
     ]
+
+
+def test_laplace_tables_reproduce_and_converge_geometrically():
+    """The three Laplace ladders: reproduce every cell and check the trend.
+
+    The tier tests catch a drifted cell; they do not catch a family that is
+    *convergent but wrong* -- a first-order kernel would still pass a
+    reproduction test after the declared values were updated. The icosphere and
+    the ellipse refine by a factor of four (resp. two) in panel count, which at
+    the documented observed order of about two in the panel size buys at least a
+    factor of three in error per step; a first-order family buys less than two,
+    so the ratio separates the two.
+    """
+
+    report = check(tiers=("fast", "standard"), entries=LAPLACE_ROWS)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+
+    families = (
+        ("sphere added mass", [f"sphere_added_mass_{n}" for n in (20, 80, 320)]),
+        ("ellipsoid x added mass", [f"ellipsoid_added_mass_{n}_x" for n in (20, 80, 320)]),
+        ("ellipse x added mass", [f"ellipse_added_mass_x_{n}" for n in (16, 32, 64)]),
+    )
+    for label, keys in families:
+        errors = [measured[key] for key in keys]
+        ratios = [errors[i] / errors[i + 1] for i in range(len(errors) - 1)]
+        assert all(r >= 3.0 for r in ratios), f"{label}: error ratios {ratios}"
 
 
 def test_report_is_strict_json():
