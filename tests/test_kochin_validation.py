@@ -152,8 +152,15 @@ class TestKochinHulmeComparison:
         assert rel_diff < 0.02, f"Heave damping vs Hulme difference {rel_diff:.4e} exceeds 2%"
 
     def test_surge_damping_vs_hulme(self):
-        """Surge radiation damping matches Hulme (1982) at ka=1.0."""
-        mesh = hemisphere_hull_mesh(3, radius=1.0)
+        """Surge radiation damping matches Hulme (1982) at ka=1.0.
+
+        Run at 1024 panels (subdivisions=4): the m2609 panel study
+        (``tensorbem.benchmarks.kochin_hulme_convergence``) proved the
+        256-panel 3.53 % offset is a discretisation error converging to
+        Hulme at order ~2 in h (40.2/13.0/3.53/0.90 % over 16/64/256/1024
+        panels), so the gate is met with margin at this resolution.
+        """
+        mesh = hemisphere_hull_mesh(4, radius=1.0)
         ka = 1.0
         ops = assemble_free_surface_operators_3d(mesh, ka, chief_points="auto")
         rad = solve_radiation_3d(mesh, ka, operators=ops)
