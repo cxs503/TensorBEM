@@ -188,15 +188,38 @@ Michell's thin-ship theory is expected to agree with experiment within:
 
 ### Expected Agreement
 
-For the two paths to agree within 5%, we would need:
-1. Exact wave potential on the hull surface
-2. No numerical integration errors
-3. Thin-ship approximation valid
+**Withdrawn (2026-11-03).** An earlier version of this section listed "thin-ship
+approximation marginally valid (`B/L = 0.1`)" and "potential evaluated on the hull
+instead of the centreplane" as the reasons the two paths disagree by 103–284 %.
+Both explanations are wrong and are retracted: the discrepancy is a *formulation*
+error in the pressure path, and in first-order thin-ship theory "two independent
+paths" is not an achievable acceptance criterion at all. See
+`docs/wigley_pressure_path_audit.md` (root cause, machine-checkable verdict,
+`tests/test_wigley_pressure_path_audit.py`). In summary:
 
-In practice, the two paths **do not agree within 5%** because:
-1. **Thin-ship approximation**: Michell theory assumes `B/L << 1`. For the standard Wigley hull (`B/L = 0.1`), this is marginally valid.
-2. **Pressure on hull**: The Michell wave potential is evaluated on the actual hull surface, but Michell theory assumes the potential is evaluated on the centerplane (`y = 0`).
-3. **Numerical integration**: Both paths use numerical quadrature, introducing errors.
+1. the pressure path superposes Laplace modes `exp(kz)exp(ikx)` over
+   `k in [k0, k_max]` with plain `dk` weights, but the steady free-surface
+   condition admits only `k = k0` in two dimensions and, in three dimensions,
+   requires the Kelvin wake curve `l^2 = k0^2 k^4 - k^2` integrated with the
+   Jacobian `1/sqrt(k0^2 k^4 - k^2)`. The mode field therefore has a free-surface
+   residual of 0.75–0.93 (1 for the sign convention printed in the legacy
+   docstring), and no quadrature node lies on the dispersion curve;
+2. `k_max = k0 * max(10, 20/(k0 T))` is an arbitrary truncation — sweeping it
+   swings `R_W` by 37.6 % of the Kochin value with no limit;
+3. the sampled integral *is* converged (seven digits from 128 nodes), so the
+   failure is the integrand, not the quadrature;
+4. mesh refinement drives `R_W -> 0` (relative difference to Kochin 1.47 -> 1.03),
+   and the pressure/Kochin ratio spans -0.77 … -0.20 over `Fr = 0.20…0.40`, so no
+   sign flip or constant factor can repair it.
+
+Because the free-surface condition collapses the near-field synthesis onto the
+same wake curve that the Kochin integral already integrates, the pressure path
+can never be independent of it. The path is therefore kept as a *diagnostic*
+only (`wave_resistance_pressure`, documented as invalid for verification), and
+the verified statement of this module is the Kochin path plus the two exact
+checks in `benchmarks/wigley_verification.py`. A genuinely independent second
+path needs a Rankine/Dawson panel method with free-surface panels, or a
+literature `Cw` with a stated reference area (still UNSUPPORTED).
 
 ### Observed Discrepancy
 
@@ -223,20 +246,23 @@ Facts measured over the whole ladder (Fr = 0.25/0.30/0.35, 4×2 → 24×12):
   UNSUPPORTED by `tests/test_wigley_verification.py`.
 
 Consequence: the pressure path is an *audited* path, not a verification path
-for the Kochin route — it evaluates Michell's potential on the actual hull
-surface, which the thin-ship theory does not provide. A valid second path needs
-a Rankine panel method with free-surface panels (Dawson), which this module
-does not implement.
+for the Kochin route. Its failure is root-caused in
+`docs/wigley_pressure_path_audit.md`; a valid second path needs a Rankine panel
+method with free-surface panels (Dawson), which this module does not implement.
 
 ### Root Cause Analysis
 
-The discrepancy arises because:
-1. **Michell theory** computes the wave resistance from the far-field wave pattern, which is correct within the thin-ship approximation.
-2. **Pressure integration** uses the Michell wave potential on the hull surface, but this potential is not accurate for finite-thickness hulls.
+The root cause is the integrand, not the hull thickness: the pressure path
+integrates a mode superposition that is off the steady dispersion curve
+everywhere, weighted by an arbitrary `dk` instead of the Kelvin wake Jacobian
+(quantified in `docs/wigley_pressure_path_audit.md` §3.1–3.5). A thin-ship
+potential evaluated on the *centreplane* would already reproduce the far-field
+result, because in this theory the two integrals coincide.
 
-To achieve better agreement, one would need:
-- A Rankine panel method with free-surface panels (Dawson method)
-- Or a higher-order panel method with the exact free-surface condition
+To obtain an independent second number one would need:
+- A Rankine panel method with free-surface panels (Dawson method), i.e. a
+  different approximation order, or
+- A published `Cw` with a stated reference area and line convention.
 
 ## Mesh Convergence
 
@@ -310,8 +336,12 @@ This implementation provides:
 - ❌ Two-path agreement within 5% (honest FAIL: 103-284% discrepancy over the
   mesh ladder; the previously quoted "50-200%" band is mesh-specific)
 
-The two-path discrepancy is a known limitation of the thin-ship approximation
-and is documented transparently.
+The discrepancy is **not** a limitation of the thin-ship approximation: it is a
+formulation error in the pressure path (off-dispersion integrand, arbitrary
+cut-off), root-caused in `docs/wigley_pressure_path_audit.md`. In first-order
+thin-ship theory the near-field and far-field integrals coincide, so the
+"two independent paths" criterion is withdrawn; the pressure path is retained as
+a diagnostic only.
 
 ## Verification of the declared numbers (2026-11-03)
 

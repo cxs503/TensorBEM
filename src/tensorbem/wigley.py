@@ -402,6 +402,18 @@ def michell_wave_resistance(
 # Wave resistance via pressure integration
 # ============================================================================
 
+def _legacy_k_max_factor(k0: float, T: float) -> float:
+    """High-wavenumber cut-off factor used by the legacy pressure path.
+
+    ``k_max = k0 * factor``.  The value is an arbitrary truncation of the
+    wave-number integral (``max(10, 20/(k0 T))`` since the first version of
+    this module); it has no derivation in the thin-ship formulation and it is
+    what :mod:`tensorbem.benchmarks.wigley_pressure_audit` sweeps.  It is kept
+    here, unchanged, so that the legacy numbers remain reproducible.
+    """
+    return max(10.0, 20.0 / (k0 * T))
+
+
 def wave_resistance_pressure(
     mesh: WigleyHullMesh,
     L: float,
@@ -411,8 +423,32 @@ def wave_resistance_pressure(
     rho: float = _DEFAULT_DENSITY,
     g: float = _DEFAULT_GRAVITY,
     n_quad: int = 128,
+    k_max_factor: float | None = None,
 ) -> float:
-    """Compute wave resistance by pressure integration on the hull."""
+    """Wave resistance from the legacy "pressure integration" path.
+
+    .. warning::
+
+        This path is **not** a valid near-field representation of the
+        thin-ship boundary-value problem and must not be used to verify
+        :func:`wave_resistance_kochin`.  It superposes wave components
+        ``exp(k z) exp(i k x)`` over ``k in [k0, k_max]`` with plain ``dk``
+        weights, but the steady free-surface condition ``dphi/dz + k0
+        d^2phi/dx^2 = 0`` only admits ``k = 1/k0`` in two dimensions and, in
+        three dimensions, requires the Kelvin-wake Jacobian
+        ``1/sqrt(k0^2 k^4 - k^2)`` that is absent here.  The result is
+        therefore cut-off dependent, negative over the whole Wigley Froude
+        range, and mesh non-convergent; see
+        ``docs/wigley_pressure_path_audit.md`` and
+        :mod:`tensorbem.benchmarks.wigley_pressure_audit`.  It is retained as
+        a *diagnostic* only.
+
+    Parameters
+    ----------
+    k_max_factor:
+        Override the legacy cut-off factor ``max(10, 20/(k0 T))``; used by the
+        cut-off sensitivity audit.  ``None`` reproduces the legacy numbers.
+    """
     if U <= 0:
         return 0.0
 
@@ -421,25 +457,27 @@ def wave_resistance_pressure(
     normals = mesh.normals
     areas = mesh.areas
 
-    k_max = k0 * max(10.0, 20.0 / (k0 * T))
+    factor = _legacy_k_max_factor(k0, T) if k_max_factor is None else float(k_max_factor)
+    if not factor > 1.0:
+        raise ValueError("k_max_factor must exceed 1")
+    k_max = k0 * factor
     nodes, weights = leggauss(n_quad)
     k_pts = 0.5 * (k_max - k0) * (nodes + 1.0) + k0
     w_pts = 0.5 * (k_max - k0) * weights
 
-    dphi_dx = np.zeros(mesh.panel_count, dtype=float)
+    # The Kochin function does not depend on the panel, so it is evaluated once
+    # per wave number instead of once per (panel, wave number) pair.
+    amplitudes = np.empty(n_quad, dtype=complex)
+    for j in range(n_quad):
+        amplitudes[j] = 1j * k_pts[j] * michell_kochin_function(L, B, T, k_pts[j])
 
-    for i in range(mesh.panel_count):
-        x_i = centroids[i, 0]
-        z_i = centroids[i, 2]
-
-        integrand = np.zeros(n_quad, dtype=float)
-        for j in range(n_quad):
-            k = k_pts[j]
-            Hk = michell_kochin_function(L, B, T, k)
-            val = 1j * k * Hk * math.exp(k * z_i) * np.exp(1j * k * x_i)
-            integrand[j] = val.real
-
-        dphi_dx[i] = (U / math.pi) * float(np.sum(w_pts * integrand))
+    x_c = centroids[:, 0:1]
+    z_c = centroids[:, 2:3]
+    decay = np.exp(k_pts[None, :] * z_c)
+    phase = k_pts[None, :] * x_c
+    # Re[amp * exp(i k x)] = Re[amp] cos(kx) - Im[amp] sin(kx)
+    real_part = amplitudes.real[None, :] * np.cos(phase) - amplitudes.imag[None, :] * np.sin(phase)
+    dphi_dx = (U / math.pi) * ((real_part * decay) @ w_pts)
 
     Rw = -rho * U * float(np.sum(dphi_dx * normals[:, 0] * areas))
     return Rw
