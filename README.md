@@ -123,6 +123,7 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `docs/hydrostatic_verification.md`: hydrostatic verification against closed-form solutions, error table, and limitations
 - `docs/hydrostatic_benchmarks_report.md`: generated closed-form verification report (barge/spheroid/hemisphere refinement tables) for `hydrostatic_benchmarks`, regenerable via `--report`
 - `docs/classical_benchmarks.md`: exterior 2-D formulation, ellipse/ellipsoid added mass, solid harmonics, and the free-surface roadmap
+- `docs/exterior_field_verification.md`: exterior-domain potential reconstruction, closed-form harmonic convergence study, and the non-decaying (non-zero mean) data limitation
 
 ## Numerical conventions
 
@@ -133,7 +134,7 @@ The 3-D fundamental solution is \\(G(x,y)=1/(4\\pi|x-y|)\\), satisfying \\(-\\na
 ## Roadmap
 
 1. **Done:** reproducible Laplace benchmarks and convergence/error studies for 2-D polygons and 3-D triangles.
-2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) plus exterior Neumann `3x3`/`6x6` rigid-body translational and rotational added-mass tensors.
+2. **Done:** classical no-free-surface benchmarks with closed-form references (elliptic cylinder, ellipsoid, interior solid harmonics) plus exterior Neumann `3x3`/`6x6` rigid-body translational and rotational added-mass tensors, and exterior-domain potential reconstruction (`evaluate_exterior_field`) verified against closed-form exterior harmonics; see [the exterior-field report](docs/exterior_field_verification.md).
 3. **Done:** 2-D deep-water free-surface radiation (Ursell 1949), incident-wave diffraction, Dean's zero-reflection theorem, and Haskind reciprocity, plus vertical-cylinder wave diffraction (MacCamy-Fuchs 1954) with Schenck CHIEF irregular-frequency suppression.
 4. **Done:** 3-D deep-water Kelvin/Delhommeau free-surface Green function, 6-DOF radiation/diffraction BEM for submerged and waterline-piercing hulls (`WettedHullMesh`), lid-free 3-D CHIEF irregular-frequency suppression, Hulme's (1982) floating hemisphere, and Wang/Linton's submerged sphere.
 5. **In progress:** improve geometry, quadrature, and conditioning diagnostics. Exact 2-D panel integrals, analytic 3-D double-layer solid angles, self-panel polar integration, superconvergent tangential gradient recovery, and clearance diagnostics are in place; graded meshes, symmetry-plane reduction, higher-order/curved panels, and near-singular field quadrature remain.

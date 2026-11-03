@@ -31,6 +31,9 @@ _DOMAINS = ("interior", "exterior")
 # Beyond this condition number the dense solve is no longer meaningful in
 # double precision; it is the logarithmic-capacity degeneracy in practice.
 _MAX_CONDITION = 1.0e13
+# Relative tolerance on the exterior net flux below which the exterior
+# potential is treated as decaying (O(1/r)) instead of logarithmically growing.
+_NET_FLUX_TOL = 1.0e-8
 
 
 @dataclass(frozen=True)
@@ -293,23 +296,15 @@ def compute_added_mass_matrix_2d(
     )
 
 
-def evaluate_interior_field(
+def _validate_field_request(
     mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
-) -> FloatArray:
-    """Evaluate the harmonic potential at interior points using exact panel integrals.
-
-    Points must be strictly inside the domain and not on the boundary. The
-    representation integrates each constant-panel kernel analytically rather
-    than sampling the kernel at the panel midpoint.
-    """
+) -> tuple[FloatArray, str]:
+    """Shared validation for the interior/exterior field evaluators."""
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
-    if result.domain != "interior":
-        raise ValueError(
-            "evaluate_interior_field requires a result from "
-            "solve_laplace_dirichlet; the exterior formulation is not implemented "
-            "for field evaluation"
-        )
+    domain = _validate_domain(result.domain)
     targets = np.asarray(points, dtype=float)
     if targets.ndim != 2 or targets.shape[1] != 2:
         raise ValueError("points must have shape (M, 2)")
@@ -320,7 +315,23 @@ def evaluate_interior_field(
         or result.boundary_values.shape != (mesh.panel_count,)
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
+    return targets, domain
 
+
+def _panel_representation_field(
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    targets: FloatArray,
+    *,
+    double_layer_sign: float,
+) -> FloatArray:
+    """Single/double-layer representation of the harmonic field at off-body points.
+
+    The constant-panel kernels are integrated analytically over each straight
+    panel, so the only error left is the piecewise-constant boundary trace.
+    ``double_layer_sign = -1`` reproduces the interior representation
+    ``u = S[q] - D[u]``; ``+1`` gives the exterior one ``u = S[q_e] + D[u]``.
+    """
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
@@ -340,6 +351,124 @@ def evaluate_interior_field(
             )
             values[i] += (
                 single * result.normal_derivative[j]
-                - double * result.boundary_values[j]
+                + double_layer_sign * double * result.boundary_values[j]
             )
     return values
+
+
+def evaluate_interior_field(
+    mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
+) -> FloatArray:
+    """Evaluate the harmonic potential at interior points using exact panel integrals.
+
+    Points must be strictly inside the domain and not on the boundary. The
+    representation integrates each constant-panel kernel analytically rather
+    than sampling the kernel at the panel midpoint.
+    """
+    targets, domain = _validate_field_request(mesh, result, points)
+    if domain != "interior":
+        raise ValueError(
+            "evaluate_interior_field requires a result from "
+            "solve_laplace_dirichlet; use evaluate_exterior_field for the "
+            "exterior formulation"
+        )
+    return _panel_representation_field(mesh, result, targets, double_layer_sign=-1.0)
+
+
+def exterior_net_flux(mesh: PanelMesh, result: LaplaceDirichletResult) -> float:
+    """Return ``integral(q_e ds)`` over the boundary for an exterior result.
+
+    A closed body in an unbounded fluid admits a *bounded* exterior potential
+    only when this integral vanishes (rigid-body translations and rotations
+    always satisfy it). A non-zero value means the trace pair has no decaying
+    harmonic extension, so the field grows like ``-(Q/2) log r`` and no
+    bounded solution exists.
+    """
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    flux = np.asarray(result.normal_derivative, dtype=float)
+    if flux.shape != (mesh.panel_count,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    return float(np.sum(flux * mesh.lengths))
+
+
+def exterior_dirichlet_decay_ratio(
+    mesh: PanelMesh, result: LaplaceDirichletResult
+) -> float:
+    """Return ``|integral(q_e ds)| / integral(|q_e| ds)``, the decay diagnostic.
+
+    ``0`` means the boundary data lie in the decaying class the exterior
+    single-layer representation spans; ``1`` means a pure capacity/constant
+    mode (necessarily spurious, since the bounded solution then has zero flux).
+    """
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    flux = np.asarray(result.normal_derivative, dtype=float)
+    if flux.shape != (mesh.panel_count,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    scale = float(np.sum(np.abs(flux) * mesh.lengths))
+    if scale == 0.0:
+        return 0.0
+    return abs(float(np.sum(flux * mesh.lengths))) / scale
+
+
+def evaluate_exterior_field(
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    points: FloatArray,
+    *,
+    require_decaying: bool = True,
+) -> FloatArray:
+    """Evaluate the harmonic potential in the *exterior* fluid domain.
+
+    Accepts a result from :func:`solve_laplace_exterior_dirichlet` or
+    :func:`solve_laplace_exterior_neumann` and evaluates
+
+        u(x) = integral(G q_e ds) + integral(u dG/dn ds),   x outside the body,
+
+    where ``n`` is the body outward normal and ``q_e = grad(u) . n_e`` is the
+    trace along the fluid-domain normal ``n_e = -n`` (the convention used by
+    both exterior solvers). The sign of the double-layer term is the only
+    difference from :func:`evaluate_interior_field`: the jump relation flips it
+    as the observation point leaves the closed curve, and getting it wrong
+    doubles the double-layer contribution instead of cancelling it.
+
+    Points must lie outside the body and off its boundary. Both panel kernels
+    are integrated analytically, so the remaining error is the
+    piecewise-constant boundary trace.
+
+    Scope: the representation is exact for any exterior trace pair
+    ``(q_e, u)`` that satisfies the exterior boundary integral equation. When
+    ``integral(q_e ds) != 0`` no bounded harmonic exterior solution exists and
+    the representation reproduces the ``log r`` growth, whose additive
+    constant is set by ``result.reference_length``; rigid-body translations and
+    rotations of a closed body always have zero net flux, so this does not
+    arise for the added-mass modes.
+    """
+    targets, domain = _validate_field_request(mesh, result, points)
+    if domain != "exterior":
+        raise ValueError(
+            "evaluate_exterior_field requires a result from an exterior solve "
+            "(domain='exterior'); use evaluate_interior_field for "
+            "solve_laplace_dirichlet"
+        )
+    if require_decaying:
+        ratio = exterior_dirichlet_decay_ratio(mesh, result)
+        if ratio > _NET_FLUX_TOL:
+            raise ValueError(
+                "the exterior trace pair carries a non-zero net flux "
+                f"(|Q|/sum|q|ds = {ratio:.3e} > {_NET_FLUX_TOL:.0e}), so it has "
+                "no bounded harmonic extension: the reconstructed potential "
+                "grows like -(Q/2) log r and is not a solution of the exterior "
+                "Dirichlet problem. Non-zero net flux arises when the Dirichlet "
+                "data have a non-zero boundary mean, which the decaying "
+                "single-layer representation cannot represent; see "
+                "docs/exterior_field_verification.md. Pass "
+                "require_decaying=False to obtain the (unbounded) "
+                "representation anyway."
+            )
+    return _panel_representation_field(mesh, result, targets, double_layer_sign=1.0)

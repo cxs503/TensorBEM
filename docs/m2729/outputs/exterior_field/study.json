@@ -1,0 +1,188 @@
+{
+  "case": {
+    "body": "regular polygon approximating a unit circle",
+    "panels": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "probe_radii": [
+      1.1,
+      1.5,
+      2.0,
+      4.0,
+      8.0
+    ],
+    "angles_per_ring": 48,
+    "reference_solution": "closed-form exterior harmonics r^(-m) cos(m theta)",
+    "reference_length": 1.0
+  },
+  "dipole": [
+    {
+      "mode": 1,
+      "panels": 32,
+      "max_abs_error": 0.004506809980994064,
+      "max_rel_error": 0.0049574909790934705
+    },
+    {
+      "mode": 1,
+      "panels": 64,
+      "max_abs_error": 0.0010957412273671086,
+      "max_rel_error": 0.0012053153501038194
+    },
+    {
+      "mode": 1,
+      "panels": 128,
+      "max_abs_error": 0.00027347978373815085,
+      "max_rel_error": 0.00030082776211196597
+    },
+    {
+      "mode": 1,
+      "panels": 256,
+      "max_abs_error": 6.841315860772745e-05,
+      "max_rel_error": 7.52544744685002e-05
+    }
+  ],
+  "dipole_observed_orders": [
+    2.0401994949812434,
+    2.0024010338246385,
+    1.9990884442695305
+  ],
+  "quadrupole": [
+    {
+      "mode": 2,
+      "panels": 32,
+      "max_abs_error": 0.010213916425911518,
+      "max_rel_error": 0.012358838875352938
+    },
+    {
+      "mode": 2,
+      "panels": 64,
+      "max_abs_error": 0.0023649376997399996,
+      "max_rel_error": 0.0028615746166853998
+    },
+    {
+      "mode": 2,
+      "panels": 128,
+      "max_abs_error": 0.0005843458373616661,
+      "max_rel_error": 0.000707058463207616
+    },
+    {
+      "mode": 2,
+      "panels": 256,
+      "max_abs_error": 0.0001456555442016505,
+      "max_rel_error": 0.00017624320848399713
+    }
+  ],
+  "quadrupole_observed_orders": [
+    2.1106620757086265,
+    2.0169078117397543,
+    2.00426184490605
+  ],
+  "neumann": [
+    {
+      "panels": 32,
+      "radius": 1.2,
+      "max_abs_error": 0.0027047617301837468,
+      "rel_error": 0.003245714076220496
+    },
+    {
+      "panels": 32,
+      "radius": 2.0,
+      "max_abs_error": 0.0016123271126542438,
+      "rel_error": 0.0032246542253084876
+    },
+    {
+      "panels": 32,
+      "radius": 5.0,
+      "max_abs_error": 0.0006449308428044254,
+      "rel_error": 0.003224654214022127
+    },
+    {
+      "panels": 64,
+      "radius": 1.2,
+      "max_abs_error": 0.0006710984375311035,
+      "rel_error": 0.0008053181250373242
+    },
+    {
+      "panels": 64,
+      "radius": 2.0,
+      "max_abs_error": 0.00040264406993090196,
+      "rel_error": 0.0008052881398618039
+    },
+    {
+      "panels": 64,
+      "radius": 5.0,
+      "max_abs_error": 0.00016105762797252732,
+      "rel_error": 0.0008052881398626366
+    },
+    {
+      "panels": 128,
+      "radius": 1.2,
+      "max_abs_error": 0.00016758253806747891,
+      "rel_error": 0.00020109904568097468
+    },
+    {
+      "panels": 128,
+      "radius": 2.0,
+      "max_abs_error": 0.00010054952277688267,
+      "rel_error": 0.00020109904555376534
+    },
+    {
+      "panels": 128,
+      "radius": 5.0,
+      "max_abs_error": 4.0219809111230465e-05,
+      "rel_error": 0.00020109904555615232
+    },
+    {
+      "panels": 256,
+      "radius": 1.2,
+      "max_abs_error": 4.186630636215938e-05,
+      "rel_error": 5.023956763459125e-05
+    },
+    {
+      "panels": 256,
+      "radius": 2.0,
+      "max_abs_error": 2.5119783817140195e-05,
+      "rel_error": 5.023956763428039e-05
+    },
+    {
+      "panels": 256,
+      "radius": 5.0,
+      "max_abs_error": 1.0047913527905239e-05,
+      "rel_error": 5.0239567639526195e-05
+    }
+  ],
+  "far_field": {
+    "panels": 128.0,
+    "fitted_decay_exponent": -0.9999999999999385,
+    "fitted_amplitude": 0.9996991764048972,
+    "r_times_u_min": 0.999699176404962,
+    "r_times_u_max": 0.9996991764052109,
+    "r_times_u_max_deviation": 0.00030082359503802447
+  },
+  "nondecaying": {
+    "panels": 128.0,
+    "boundary_mean": 1.0,
+    "net_flux": 9.061454475175779,
+    "flux_uniformity_spread": 4.885629026925076e-14,
+    "flux_to_equilibrium_ratio": 1.4423200741808233,
+    "decay_ratio": 1.0,
+    "log_law_max_deviation": 5.728750807065808e-14,
+    "guard_raised": 1.0,
+    "dirichlet_condition_number": 76.11357941479734,
+    "bounded_solution_is_one_max_error": 4.9985588927726194
+  },
+  "verdict": {
+    "dipole_rel_error_128": 0.00030082776211196597,
+    "dipole_rel_error_256": 7.52544744685002e-05,
+    "quadrupole_rel_error_128": 0.000707058463207616,
+    "quadrupole_rel_error_256": 0.00017624320848399713,
+    "neumann_rel_error_128_r2": 0.00020109904555376534,
+    "dipole_below_1pct": true,
+    "quadrupole_below_1pct": true,
+    "neumann_below_1pct": true,
+    "decay_exponent_within_1pct": true
+  }
+}
