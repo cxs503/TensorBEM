@@ -1,0 +1,358 @@
+{
+  "amplitude_scaling": [
+    {
+      "amplitude": 0.5,
+      "condition_number": 5.057827104845846,
+      "discrepancy_normalised": 0.0012780519419723566,
+      "energy_balance_error": 8.881784197001252e-16,
+      "far_field_force_x": 76.19970835747132,
+      "force_ratio_far": 0.030322762160508585,
+      "force_ratio_far_over_amplitude_squared": 304.7988334298853,
+      "force_ratio_near": 0.03160081410248094,
+      "force_ratio_near_over_amplitude_squared": 317.6455767085471,
+      "near_field_force_x": 79.41139417713677,
+      "near_field_force_z": 2476.8752964642717,
+      "panels": 32,
+      "reflection_modulus": 0.24626312009924906,
+      "relative_discrepancy": 0.042148269184950814,
+      "relative_residual": 6.356919600805622e-16,
+      "transmission_modulus": 0.9692030105602147
+    },
+    {
+      "amplitude": 1.0,
+      "condition_number": 5.057827104845846,
+      "discrepancy_normalised": 0.0012780519419723566,
+      "energy_balance_error": 8.881784197001252e-16,
+      "far_field_force_x": 304.7988334298853,
+      "force_ratio_far": 0.030322762160508585,
+      "force_ratio_far_over_amplitude_squared": 304.7988334298853,
+      "force_ratio_near": 0.03160081410248094,
+      "force_ratio_near_over_amplitude_squared": 317.6455767085471,
+      "near_field_force_x": 317.6455767085471,
+      "near_field_force_z": 9907.501185857087,
+      "panels": 32,
+      "reflection_modulus": 0.24626312009924906,
+      "relative_discrepancy": 0.042148269184950814,
+      "relative_residual": 6.356919600805622e-16,
+      "transmission_modulus": 0.9692030105602147
+    },
+    {
+      "amplitude": 2.0,
+      "condition_number": 5.057827104845846,
+      "discrepancy_normalised": 0.0012780519419723566,
+      "energy_balance_error": 8.881784197001252e-16,
+      "far_field_force_x": 1219.1953337195412,
+      "force_ratio_far": 0.030322762160508585,
+      "force_ratio_far_over_amplitude_squared": 304.7988334298853,
+      "force_ratio_near": 0.03160081410248094,
+      "force_ratio_near_over_amplitude_squared": 317.6455767085471,
+      "near_field_force_x": 1270.5823068341883,
+      "near_field_force_z": 39630.00474342835,
+      "panels": 32,
+      "reflection_modulus": 0.24626312009924906,
+      "relative_discrepancy": 0.042148269184950814,
+      "relative_residual": 6.356919600805622e-16,
+      "transmission_modulus": 0.9692030105602147
+    }
+  ],
+  "band_sensitivity": [
+    {
+      "mode_count": 3,
+      "mode_fraction": 0.1,
+      "near_field_force_x": 301.7308406547201,
+      "relative_change_vs_default": -0.010065631618865527,
+      "relative_discrepancy": -0.010065631618865527
+    },
+    {
+      "mode_count": 4,
+      "mode_fraction": 0.15,
+      "near_field_force_x": 313.0887018809792,
+      "relative_change_vs_default": 0.027197835233844135,
+      "relative_discrepancy": 0.027197835233844135
+    },
+    {
+      "mode_count": 8,
+      "mode_fraction": 0.25,
+      "near_field_force_x": 317.6455767085471,
+      "relative_change_vs_default": 0.042148269184950814,
+      "relative_discrepancy": 0.042148269184950814
+    },
+    {
+      "mode_count": 11,
+      "mode_fraction": 0.35,
+      "near_field_force_x": 317.9141535493444,
+      "relative_change_vs_default": 0.043029430171608936,
+      "relative_discrepancy": 0.043029430171608936
+    }
+  ],
+  "benchmark": "two_dimensional_deep_water_mean_drift_force",
+  "circle": [
+    {
+      "condition_number": 2.473905212123576,
+      "discrepancy_normalised": 2.7312212089838847e-16,
+      "energy_balance_error": 0.0,
+      "far_field_force_x": 9.190133104506664e-27,
+      "force_ratio_far": 9.142758757161587e-31,
+      "force_ratio_near": 2.7312212089838936e-16,
+      "near_field_force_x": 2.745373373080895e-12,
+      "near_field_force_z": 2562.050740188525,
+      "panels": 32,
+      "reflection_modulus": 1.3522395318257477e-15,
+      "relative_discrepancy": 298730534352609.94,
+      "relative_residual": 6.172745082644465e-16,
+      "transmission_modulus": 1.0
+    },
+    {
+      "condition_number": 2.446175121149249,
+      "discrepancy_normalised": 5.0520516663588e-16,
+      "energy_balance_error": 0.0,
+      "far_field_force_x": 8.776996921424152e-27,
+      "force_ratio_far": 8.731752255642508e-31,
+      "force_ratio_near": 5.052051666358808e-16,
+      "near_field_force_x": 5.078229503574505e-12,
+      "near_field_force_z": 2544.0392112245363,
+      "panels": 64,
+      "reflection_modulus": 1.3214955357959034e-15,
+      "relative_discrepancy": 578583944945773.6,
+      "relative_residual": 6.6865476751737e-16,
+      "transmission_modulus": 1.0
+    },
+    {
+      "condition_number": 2.4312454300018804,
+      "discrepancy_normalised": 1.2007467335869598e-15,
+      "energy_balance_error": 0.0,
+      "far_field_force_x": 6.951518948819344e-27,
+      "force_ratio_far": 6.915684465301824e-31,
+      "force_ratio_near": 1.2007467335869606e-15,
+      "near_field_force_x": 1.206968552880383e-11,
+      "near_field_force_z": 2526.355609022517,
+      "panels": 128,
+      "reflection_modulus": 1.1760684049239503e-15,
+      "relative_discrepancy": 1736265932333214.2,
+      "relative_residual": 1.017617792923099e-15,
+      "transmission_modulus": 1.0
+    }
+  ],
+  "ellipse": [
+    {
+      "condition_number": 5.057827104845846,
+      "discrepancy_normalised": 0.0012780519419723566,
+      "energy_balance_error": 8.881784197001252e-16,
+      "far_field_force_x": 304.7988334298853,
+      "force_ratio_far": 0.030322762160508585,
+      "force_ratio_near": 0.03160081410248094,
+      "near_field_force_x": 317.6455767085471,
+      "near_field_force_z": 9907.501185857087,
+      "panels": 32,
+      "reflection_modulus": 0.24626312009924906,
+      "relative_discrepancy": 0.042148269184950814,
+      "relative_residual": 6.356919600805622e-16,
+      "transmission_modulus": 0.9692030105602147
+    },
+    {
+      "condition_number": 4.995442189717566,
+      "discrepancy_normalised": 0.0008956487574584119,
+      "energy_balance_error": 4.440892098500626e-16,
+      "far_field_force_x": 299.3025112026714,
+      "force_ratio_far": 0.02977596324471922,
+      "force_ratio_near": 0.030671612002177634,
+      "near_field_force_x": 308.30540793718416,
+      "near_field_force_z": 9853.567300885825,
+      "panels": 64,
+      "reflection_modulus": 0.2440326340665085,
+      "relative_discrepancy": 0.03007958970453309,
+      "relative_residual": 8.349426691006478e-16,
+      "transmission_modulus": 0.9697670202221572
+    },
+    {
+      "condition_number": 4.9649559088015724,
+      "discrepancy_normalised": 0.0005041564055291233,
+      "energy_balance_error": 4.440892098500626e-16,
+      "far_field_force_x": 297.0932271753352,
+      "force_ratio_far": 0.029556173708938937,
+      "force_ratio_near": 0.030060330114468063,
+      "near_field_force_x": 302.1609147249744,
+      "near_field_force_z": 9790.288243093755,
+      "panels": 128,
+      "reflection_modulus": 0.243130309541772,
+      "relative_discrepancy": 0.01705756673695035,
+      "relative_residual": 1.119461960026204e-15,
+      "transmission_modulus": 0.9699936353307286
+    }
+  ],
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "exact_references": {
+    "circle_basis": "Dean (1948) / Ursell (1950) zero reflection in deep water",
+    "circle_drift_force": 0.0,
+    "far_field_formula": "F_x = (rho*g/2)*|R*A|^2",
+    "near_field_formula": "F_j = (rho/2)*oint<|grad phi|^2> n_j ds"
+  },
+  "note": "Both routes are dimensionless-normalised by rho*g*A^2, the mean momentum flux scale of the incident wave train. The circular cylinder must give exactly zero; the ellipse gives the non-zero case where the two routes can be compared with each other.",
+  "recovery": {
+    "field": {
+      "coefficient_abs": 0.7,
+      "coefficient_phase": 1.0471975511965976,
+      "mu": 0.9,
+      "nu": 0.6
+    },
+    "note": "Analytic two-mode harmonic field (nu = 0.6, mu = 0.9, complex coefficient) on a circle; the reference integral is a spectrally accurate trapezoidal evaluation of the exact surface tangential derivative, so no boundary-element discretisation enters the truth value.",
+    "observed_orders": [
+      1.9893077601589542,
+      1.9928862897681052,
+      1.9982201998029285,
+      1.9995549644165855
+    ],
+    "panel_counts": [
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "reference_force_x": -10.198018025397552,
+    "rows": [
+      {
+        "force_x": -9.58470735977629,
+        "panels": 16,
+        "relative_error": 0.06014018254271056
+      },
+      {
+        "force_x": -10.043549780926863,
+        "panels": 32,
+        "relative_error": 0.015146888747008952
+      },
+      {
+        "force_x": -10.159210079187991,
+        "panels": 64,
+        "relative_error": 0.003805440048538047
+      },
+      {
+        "force_x": -10.188304062472698,
+        "panels": 128,
+        "relative_error": 0.0009525343944933335
+      },
+      {
+        "force_x": -10.195588785421716,
+        "panels": 256,
+        "relative_error": 0.00023820706825444
+      }
+    ]
+  },
+  "schema": "tensorbem-drift-force/1",
+  "settings": {
+    "circle_submergence": 2.0,
+    "ellipse_semi_major": 1.4,
+    "ellipse_semi_minor": 0.7,
+    "ellipse_submergence": 1.2,
+    "energy_scale": 10051.81625,
+    "fluid_density": 1025.0,
+    "fluid_density_units": "kg/m^3",
+    "force_units": "N/m (per unit crest length)",
+    "gravity": 9.80665,
+    "ka": 0.6,
+    "mode_fraction": 0.25,
+    "panel_nodes": 24,
+    "radius": 1.0,
+    "wave_amplitude": 1.0,
+    "wavenumber": 0.6
+  },
+  "submergence_decay": [
+    {
+      "clearance_over_semi_minor": 0.7142857142857143,
+      "condition_number": 5.057827104845846,
+      "discrepancy_normalised": 0.0012780519419723566,
+      "energy_balance_error": 8.881784197001252e-16,
+      "far_field_force_x": 304.7988334298853,
+      "force_ratio_far": 0.030322762160508585,
+      "force_ratio_near": 0.03160081410248094,
+      "near_field_force_x": 317.6455767085471,
+      "near_field_force_z": 9907.501185857087,
+      "panels": 32,
+      "reflection_modulus": 0.24626312009924906,
+      "relative_discrepancy": 0.042148269184950814,
+      "relative_residual": 6.356919600805622e-16,
+      "submergence": 1.2,
+      "transmission_modulus": 0.9692030105602147
+    },
+    {
+      "clearance_over_semi_minor": 1.285714285714286,
+      "condition_number": 3.9856023553197213,
+      "discrepancy_normalised": 0.00040557886182231715,
+      "energy_balance_error": 4.440892098500626e-16,
+      "far_field_force_x": 122.67647628294964,
+      "force_ratio_far": 0.01220440895772937,
+      "force_ratio_near": 0.012609987819551687,
+      "near_field_force_x": 126.75328047687171,
+      "near_field_force_z": 4303.9873825819595,
+      "panels": 32,
+      "reflection_modulus": 0.15623321642806545,
+      "relative_discrepancy": 0.033232159232541414,
+      "relative_residual": 7.2208128281520225e-16,
+      "submergence": 1.6,
+      "transmission_modulus": 0.987720194227364
+    },
+    {
+      "clearance_over_semi_minor": 1.8571428571428574,
+      "condition_number": 3.5057738503031413,
+      "discrepancy_normalised": 0.0001437108206264769,
+      "energy_balance_error": 2.220446049250313e-16,
+      "far_field_force_x": 48.709302801978495,
+      "force_ratio_far": 0.004845821052685727,
+      "force_ratio_near": 0.004989531873312204,
+      "near_field_force_x": 50.15385756405255,
+      "near_field_force_z": 2345.2317165435998,
+      "panels": 32,
+      "reflection_modulus": 0.09844613809272283,
+      "relative_discrepancy": 0.029656650351714334,
+      "relative_residual": 5.785806930076267e-16,
+      "submergence": 2.0,
+      "transmission_modulus": 0.9951423807147541
+    },
+    {
+      "clearance_over_semi_minor": 2.714285714285715,
+      "condition_number": 3.2200792379243204,
+      "discrepancy_normalised": 3.4466499565434543e-05,
+      "energy_balance_error": 0.0,
+      "far_field_force_x": 12.680619714120924,
+      "force_ratio_far": 0.0012615252207899168,
+      "force_ratio_near": 0.0012959917203553514,
+      "near_field_force_x": 13.027070634533377,
+      "near_field_force_z": 1091.1871407974513,
+      "panels": 32,
+      "reflection_modulus": 0.050229975528361885,
+      "relative_discrepancy": 0.02732129250959643,
+      "relative_residual": 5.366974099256591e-16,
+      "submergence": 2.6,
+      "transmission_modulus": 0.9987376780508584
+    },
+    {
+      "clearance_over_semi_minor": 4.0,
+      "condition_number": 3.125303571132337,
+      "discrepancy_normalised": 4.359939871975326e-06,
+      "energy_balance_error": 0.0,
+      "far_field_force_x": 1.6871248824968168,
+      "force_ratio_far": 0.00016784278985370598,
+      "force_ratio_near": 0.0001722027297256813,
+      "near_field_force_x": 1.7309501969509613,
+      "near_field_force_z": 378.4647397513915,
+      "panels": 32,
+      "reflection_modulus": 0.018321724255850266,
+      "relative_discrepancy": 0.02597633104034739,
+      "relative_residual": 6.773083513426494e-16,
+      "submergence": 3.5,
+      "transmission_modulus": 0.9998321431221806
+    }
+  ],
+  "unfiltered_difference": {
+    "far_field_force_x": 304.7988334298853,
+    "note": "central difference of the panel trace without band limiting; the panel-scale sawtooth is amplified by 1/h and swamps the force",
+    "panels": 32,
+    "raw_force_x": 1263.7142612825346,
+    "relative_error": 3.14606003265178,
+    "submergence": 1.2
+  }
+}

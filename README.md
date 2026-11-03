@@ -116,6 +116,7 @@ python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --plot a
 - `docs/marine_bem_benchmarks.md`: marine BEM benchmark survey and numerical report
 - `docs/three_dimensional_bem.md`: 3-D formulation, quadrature, verification cases, results, and limitations
 - `src/tensorbem/hydrostatic.py`: hydrostatic restoring matrix `C` for a floating hull (`WettedHullMesh`), with waterplane area, centroid and second moments traced over every closed waterline loop (single- and multi-hull waterplanes)
+- `src/tensorbem/drift.py`: 2-D deep-water mean second-order wave-drift force from both the far-field momentum theorem and near-field pressure integration, with band-limited surface tangential-velocity recovery (verified in `docs/drift_force_2d.md`)
 - `src/tensorbem/rao.py`: frequency-domain 6-DOF RAO solver with hydrostatic restoring, added mass/damping and wave excitation
 - `docs/classical_benchmarks.md`: exterior 2-D formulation, ellipse/ellipsoid added mass, solid harmonics, and the free-surface roadmap
 

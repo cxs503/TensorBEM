@@ -44,6 +44,13 @@ from .diagnostics_report import (
     run_diagnostics,
     save_diagnostics_report,
 )
+from .drift import (
+    MeanDriftForce,
+    mean_drift_force,
+    mean_drift_force_far_field,
+    mean_drift_force_near_field,
+    surface_tangential_velocity,
+)
 from .free_surface import (
     green_function,
     green_gradient,
@@ -276,6 +283,11 @@ __all__ = [
     "ellipsoid_added_mass_matrix",
     "ellipsoid_volume",
     "ellipsoid_translation_trace_scale",
+    "MeanDriftForce",
+    "mean_drift_force",
+    "mean_drift_force_far_field",
+    "mean_drift_force_near_field",
+    "surface_tangential_velocity",
     "PressureLoads",
     "bernoulli_pressure",
     "hydrostatic_pressure",
