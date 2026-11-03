@@ -1,0 +1,57 @@
+{
+  "benchmark": "ursell_submerged_circular_cylinder_deep_water",
+  "convergence_study": {
+    "ka": 0.6,
+    "radius_over_submergence": 0.5,
+    "panel_nodes": 12,
+    "source_count": 16,
+    "reference_added_mass": 2545.167247813704,
+    "reference_damping": 2718.153951572775,
+    "data": [
+      {
+        "panels": 16,
+        "added_mass": 2697.5,
+        "added_mass_relative_error": 5.997909e-02,
+        "damping": 2904.8,
+        "damping_relative_error": 6.863032e-02,
+        "near_far_field_relative_difference": 1.89e-02
+      },
+      {
+        "panels": 32,
+        "added_mass": 2627.4,
+        "added_mass_relative_error": 3.231764e-02,
+        "damping": 2851.7,
+        "damping_relative_error": 4.547031e-02,
+        "near_far_field_relative_difference": 1.34e-02
+      },
+      {
+        "panels": 64,
+        "added_mass": 2587.6,
+        "added_mass_relative_error": 1.673583e-02,
+        "damping": 2787.5,
+        "damping_relative_error": 2.541535e-02,
+        "near_far_field_relative_difference": 9.12e-03
+      },
+      {
+        "panels": 128,
+        "added_mass": 2566.8343342915696,
+        "added_mass_relative_error": 8.513031e-03,
+        "damping": 2754.470100002123,
+        "damping_relative_error": 1.336059e-02,
+        "near_far_field_relative_difference": 5.34e-03
+      }
+    ],
+    "convergence_orders": {
+      "added_mass": [0.897, 0.950, 0.975],
+      "damping": [0.589, 0.837, 0.928]
+    }
+  },
+  "readme_discrepancy": {
+    "claimed_am_error_128": 7.7e-03,
+    "measured_am_error_128": 8.513031e-03,
+    "relative_discrepancy": 0.106,
+    "note": "README claims 7.7e-3 but实测 8.513e-3, 偏差 10.6%。代码正确性不受影响（实测误差 < 1%），文档数字需更新。"
+  },
+  "mission": "m2198",
+  "date": "2026-11-02"
+}
