@@ -6,7 +6,7 @@ Dirichlet and zero-net-flux Neumann problems have unique circulation-free
 solutions, and the free-surface solvers are radiation/diffraction problems of
 the same kind. This note records what is now in the package
 (`src/tensorbem/lifting.py`), what it was checked against, and what is still
-missing.
+missing (`solve_lifting_flow` and its verification: `docs/lifting_kutta_closure.md`).
 
 ## 1. What is shipped
 
@@ -101,55 +101,52 @@ of order `O(h)` in the position of the stagnation point swamps the local value.
 That is a property of constant panels at a stagnation point, not of the lifting
 formulation.
 
-## 4. What is NOT shipped: the Kutta closure (honest negative result)
+## 4. The Kutta closure: what was wrong with the first attempt
 
-The intended closure was exact superposition: represent the disturbance as
-`phi_U + Gamma phi_v`, where `phi_v` is the response to an interior unit vortex
-(a point vortex of unit strength plus the exterior-Neumann correction that
-cancels its normal velocity, which is a zero-net-flux problem), and fix `Gamma`
-from the equal-and-opposite tangential velocity at the two panels adjacent to
-the trailing edge. A linear solve, no iteration.
+The first closure (2026-10) superimposed `phi_U + Gamma phi_v` and reported an
+**honest negative result**: the magnitude converged (2.3% low at 128 panels) but
+the circulation came out with "the opposite sign to the exact Kutta value", and
+the pressure integral of the composite field disagreed with its own circulation
+lift, which was read as "not physical".
 
-Measured status at `alpha = 4 deg` (exact `Gamma = 0.9642`):
+The closure has since been re-derived, and that diagnosis was wrong in one
+place: **the sign was a bookkeeping error, not a physical defect.**
+`JoukowskiAirfoil.exact_circulation()` quotes `Gamma_doc = 4 pi a U sin(alpha)`,
+the value that pairs with `C_L = 2 Gamma/(U c)` in the complex potential, i.e.
+the *clockwise* orientation. A point vortex inside the section carries the
+counter-clockwise value `Gamma_ccw = closed_integral(v.ds) = -Gamma_doc`, and
+Kutta-Joukowski in that convention is `C_L = -2 Gamma_ccw/(U c)`. Comparing
+`Gamma_ccw` against `Gamma_doc`, and then forming `2 Gamma_ccw/(U c)` instead of
+its negative, produces exactly the two symptoms that were reported: an inverted
+circulation and a pressure lift that "disagrees" with it by about 200%.
 
-| panels | \|Gamma\| | sign | C_L from C_p |
-|---|---|---|---|
-| 32 | 0.8618 (10.6% low) | inverted | +0.886 |
-| 128 | 0.9422 (2.3% low) | inverted | +0.936 |
-| 256 | 0.9531 (1.2% low) | inverted | +0.944 |
+Measured on the same mesh with the sign bookkeeping fixed, the composite field
+is consistent and reproduces the exact surface pressure distribution:
+circulation lift and pressure lift agree to `0.12%` at 128 panels and both are
+`2.3%` below the exact value (`docs/lifting_kutta_closure.md`, all numbers
+machine-generated). So the closure itself was sound; it was validated against
+the wrong reference convention.
 
-The magnitude converges, but the returned circulation has the **opposite sign**
-to the exact Kutta value, and the pressure integral of the composite field
-(`+0.94`) disagrees with its own circulation lift, so the closure as implemented
-is not physical. Diagnostics that isolate the cause (recorded here so a follow-up
-does not repeat them):
+The shipped solver is `tensorbem.lifting.solve_lifting_flow`. Two further
+findings from the re-derivation:
 
-* The base (non-lifting) solve is correct: boundary values match `phi_d` to
-  `+/- 2e-3`, and surface speeds match the exact field to ~1-2% away from the
-  leading edge.
-* The unit-vortex response has the correct *total* circulation (`+0.955` against
-  `+1`), but its tangential velocity has the wrong sign at mid-chord
-  (`+0.081` against `-0.053` at panel 32), so the error is in the response
-  field, not in the free stream or in the base solve.
-* The vortex potential must be added to the correction potential *and* its
-  branch cut placed along the wake (through the trailing edge), otherwise the
-  along-contour potential difference picks up a spurious jump. Both are already
-  done in the diagnostic code, and both were necessary but not sufficient.
-
-Shipping a solver that returns a circulation of the wrong sign would have been
-worse than shipping nothing, so `solve_lifting_flow` is **not** in the module.
-Recommended next step: keep the exact superposition idea but compute the surface
-velocity as the *limit from outside* using the layer gradients (single-layer
-gradient analytically, double-layer gradient by quadrature on the offset
-surface) instead of differencing the boundary potential; that removes both the
-piecewise-constant derivative noise and the branch-cut bookkeeping.
+* The singular point of the response does not set the circulation (uniqueness of
+  the potential-flow solution); moving it from 0.15 c to 0.75 c changes
+  `Gamma_ccw` by less than 1% at 128 panels.
+* This note previously recommended replacing the three-point surface-velocity
+  rule by the exterior limit of the layer gradients. **That recommendation is
+  withdrawn for cusp trailing edges**: the piecewise-constant single-layer
+  density is logarithmically singular at panel ends and the two panels that
+  define the closure sit in that singularity. The layer route returns a
+  circulation ~29% too large at 64 panels, while the three-point rule gives
+  ~4.7%. It is kept only as a negative control in the benchmark module.
 
 ## 5. Limitations
 
 * Symmetric (zero-camber) Joukowski sections only; no camber, no flap, no
   rounded or blunt trailing edge.
-* Analytic reference plus a verification harness: no lifting boundary-element
-  solve, so no lift can be computed for an arbitrary hull appendage yet.
+* `solve_lifting_flow` computes the lift of *this* section family only: no
+  lift for an arbitrary hull appendage or a cambered/flapped section yet.
 * Steady, inviscid, incompressible, infinite domain: no free surface, no
   forward speed, no viscous boundary layer, no separation.
 * `plots` in `docs/m2480/outputs/lifting_foil/` are generated by the benchmark
