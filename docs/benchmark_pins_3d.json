@@ -1,0 +1,518 @@
+{
+  "schema": "tensorbem.doc_pins_3d.v1",
+  "generated_by": "python -m tensorbem.benchmarks.doc_pins_3d --write",
+  "commit": "71e51fcb7d626e0457de61e8ceff27a704093b0c",
+  "doc": "docs/three_dimensional_bem.md",
+  "relative_tolerance": 0.005,
+  "max_level": 2,
+  "summary": {
+    "pins": 49,
+    "passed": 49,
+    "failed": 0,
+    "worst": {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "relative_residual",
+      "declared": 3.69e-16,
+      "measured": 7.482563695516839e-16,
+      "drift": 0.0037925636955168387,
+      "absolute_difference": 3.792563695516839e-16,
+      "passed": true
+    },
+    "failures": []
+  },
+  "notes": [],
+  "pins": [
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "h_max",
+      "declared": 1.05146,
+      "measured": 1.0514622242382672,
+      "drift": 2.115380772567067e-06,
+      "absolute_difference": 2.2242382671233685e-06,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "E_q",
+      "declared": 0.146,
+      "measured": 0.14600400718391715,
+      "drift": 2.744646518602463e-05,
+      "absolute_difference": 4.007183917159596e-06,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "E_u",
+      "declared": 0.014321,
+      "measured": 0.014321171338562737,
+      "drift": 1.1964147946168023e-05,
+      "absolute_difference": 1.7133856273707226e-07,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "kappa",
+      "declared": 9.13,
+      "measured": 9.13481975758336,
+      "drift": 0.0005279033497655052,
+      "absolute_difference": 0.004819757583359063,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "row_sum_error",
+      "declared": 1.1000000000000001e-16,
+      "measured": 1.6653345369377348e-16,
+      "drift": 0.0005653345369377346,
+      "absolute_difference": 5.653345369377347e-17,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 20,
+      "column": "relative_residual",
+      "declared": 1.4599999999999998e-16,
+      "measured": 2.7873961923598233e-16,
+      "drift": 0.0013273961923598236,
+      "absolute_difference": 1.3273961923598235e-16,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "h_max",
+      "declared": 0.61803,
+      "measured": 0.6180339887498949,
+      "drift": 6.453974556144931e-06,
+      "absolute_difference": 3.9887498949342515e-06,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "E_q",
+      "declared": 0.043804,
+      "measured": 0.04380445537965208,
+      "drift": 1.0395846317163661e-05,
+      "absolute_difference": 4.55379652077037e-07,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "E_u",
+      "declared": 0.0036991999999999997,
+      "measured": 0.0036991690799616467,
+      "drift": 8.358574381771777e-06,
+      "absolute_difference": 3.0920038353050155e-08,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "kappa",
+      "declared": 18.62,
+      "measured": 18.62149308405364,
+      "drift": 8.018711351442977e-05,
+      "absolute_difference": 0.0014930840536386825,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "row_sum_error",
+      "declared": 2.2000000000000002e-16,
+      "measured": 2.220446049250313e-16,
+      "drift": 2.044604925031283e-05,
+      "absolute_difference": 2.044604925031283e-18,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 80,
+      "column": "relative_residual",
+      "declared": 2.69e-16,
+      "measured": 3.0429382064913467e-16,
+      "drift": 0.0003529382064913469,
+      "absolute_difference": 3.5293820649134687e-17,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "h_max",
+      "declared": 0.32492,
+      "measured": 0.3249196962329064,
+      "drift": 9.348981090426751e-07,
+      "absolute_difference": 3.03767093590146e-07,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "E_q",
+      "declared": 0.012334000000000001,
+      "measured": 0.012333812983012235,
+      "drift": 1.5162719942095975e-05,
+      "absolute_difference": 1.8701698776581177e-07,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "E_u",
+      "declared": 0.0009205500000000001,
+      "measured": 0.0009205471450012725,
+      "drift": 3.1014053855465277e-06,
+      "absolute_difference": 2.8549987276648564e-09,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "kappa",
+      "declared": 37.57,
+      "measured": 37.56559992086565,
+      "drift": 0.00011711682550836453,
+      "absolute_difference": 0.004400079134349255,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "row_sum_error",
+      "declared": 5.599999999999999e-16,
+      "measured": 5.551115123125783e-16,
+      "drift": 4.888487687421659e-05,
+      "absolute_difference": 4.888487687421659e-18,
+      "passed": true
+    },
+    {
+      "table": "interior_laplace",
+      "panels": 320,
+      "column": "relative_residual",
+      "declared": 3.69e-16,
+      "measured": 7.482563695516839e-16,
+      "drift": 0.0037925636955168387,
+      "absolute_difference": 3.792563695516839e-16,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 20,
+      "column": "h_max",
+      "declared": 1.05146,
+      "measured": 1.0514622242382672,
+      "drift": 2.115380772567067e-06,
+      "absolute_difference": 2.2242382671233685e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 20,
+      "column": "m_A",
+      "declared": 1690.18039,
+      "measured": 1690.1803881212086,
+      "drift": 1.1115922417438129e-09,
+      "absolute_difference": 1.8787914086715318e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 20,
+      "column": "rel_err",
+      "declared": 0.21267999999999998,
+      "measured": 0.21268127760057987,
+      "drift": 6.0071496139051715e-06,
+      "absolute_difference": 1.2776005798853518e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 20,
+      "column": "flux_rel_l2",
+      "declared": 0.033338,
+      "measured": 0.03333814761927449,
+      "drift": 4.427958320587629e-06,
+      "absolute_difference": 1.4761927449175039e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 80,
+      "column": "h_max",
+      "declared": 0.61803,
+      "measured": 0.6180339887498949,
+      "drift": 6.453974556144931e-06,
+      "absolute_difference": 3.9887498949342515e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 80,
+      "column": "m_A",
+      "declared": 2007.73279,
+      "measured": 2007.732789258856,
+      "drift": 3.691447651474094e-10,
+      "absolute_difference": 7.41144049243303e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 80,
+      "column": "rel_err",
+      "declared": 0.064759,
+      "measured": 0.06475922589787647,
+      "drift": 3.488285434828988e-06,
+      "absolute_difference": 2.2589787647409043e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 80,
+      "column": "flux_rel_l2",
+      "declared": 0.027884000000000003,
+      "measured": 0.027884179766218663,
+      "drift": 6.446930808380892e-06,
+      "absolute_difference": 1.7976621866089282e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 320,
+      "column": "h_max",
+      "declared": 0.32492,
+      "measured": 0.3249196962329064,
+      "drift": 9.348981090426751e-07,
+      "absolute_difference": 3.03767093590146e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 320,
+      "column": "m_A",
+      "declared": 2109.4429,
+      "measured": 2109.4428999421184,
+      "drift": 2.7439286013800997e-11,
+      "absolute_difference": 5.788160706288181e-08,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 320,
+      "column": "rel_err",
+      "declared": 0.017381,
+      "measured": 0.017380688694954495,
+      "drift": 1.7910652177986494e-05,
+      "absolute_difference": 3.1130504550558324e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_added_mass",
+      "panels": 320,
+      "column": "flux_rel_l2",
+      "declared": 0.014542,
+      "measured": 0.014541554464665653,
+      "drift": 3.0637830721101356e-05,
+      "absolute_difference": 4.455353343462559e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 20,
+      "column": "total_flux",
+      "declared": 10.490397,
+      "measured": 10.490396508659854,
+      "drift": 4.6837135473396045e-08,
+      "absolute_difference": 4.913401454587074e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 20,
+      "column": "rel_err",
+      "declared": 0.1652,
+      "measured": 0.16520077032641164,
+      "drift": 4.662992806483019e-06,
+      "absolute_difference": 7.703264116309949e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 20,
+      "column": "mean_flux",
+      "declared": 1.095655,
+      "measured": 1.0956552474655183,
+      "drift": 2.2586080317193838e-07,
+      "absolute_difference": 2.4746551829935015e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 80,
+      "column": "total_flux",
+      "declared": 11.948642,
+      "measured": 11.948641558170985,
+      "drift": 3.697734138020179e-08,
+      "absolute_difference": 4.4182901426381704e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 80,
+      "column": "rel_err",
+      "declared": 0.049157000000000006,
+      "measured": 0.04915731639192058,
+      "drift": 6.436355362869775e-06,
+      "absolute_difference": 3.163919205725896e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 80,
+      "column": "mean_flux",
+      "declared": 1.02603,
+      "measured": 1.0260295018708683,
+      "drift": 4.854917806699212e-07,
+      "absolute_difference": 4.981291317207592e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 320,
+      "column": "total_flux",
+      "declared": 12.402917,
+      "measured": 12.402917073521552,
+      "drift": 5.92776292169998e-09,
+      "absolute_difference": 7.352155151352235e-08,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 320,
+      "column": "rel_err",
+      "declared": 0.013007,
+      "measured": 0.013007219495090145,
+      "drift": 1.6875151083661342e-05,
+      "absolute_difference": 2.194950901451831e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_constant_dirichlet",
+      "panels": 320,
+      "column": "mean_flux",
+      "declared": 1.006737,
+      "measured": 1.0067371546686268,
+      "drift": 1.5363359725035362e-07,
+      "absolute_difference": 1.5466862679502924e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 80,
+      "column": "h_max",
+      "declared": 0.61803,
+      "measured": 0.6180339887498949,
+      "drift": 6.453974556144931e-06,
+      "absolute_difference": 3.9887498949342515e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 80,
+      "column": "E_v",
+      "declared": 0.10171,
+      "measured": 0.10170974675317143,
+      "drift": 2.48989114701802e-06,
+      "absolute_difference": 2.532468285632028e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 80,
+      "column": "max_abs",
+      "declared": 0.029189,
+      "measured": 0.029189473929828402,
+      "drift": 1.6236590099099262e-05,
+      "absolute_difference": 4.7392982840260833e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 80,
+      "column": "E_surf_recovered",
+      "declared": 0.15027000000000001,
+      "measured": 0.15026695393753853,
+      "drift": 2.0270596003773045e-05,
+      "absolute_difference": 3.046062461486976e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 80,
+      "column": "E_surf_representation",
+      "declared": 0.65314,
+      "measured": 0.6531385430176716,
+      "drift": 2.2307351080190997e-06,
+      "absolute_difference": 1.4569823284515948e-06,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 320,
+      "column": "h_max",
+      "declared": 0.32492,
+      "measured": 0.3249196962329064,
+      "drift": 9.348981090426751e-07,
+      "absolute_difference": 3.03767093590146e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 320,
+      "column": "E_v",
+      "declared": 0.027635,
+      "measured": 0.027634550468215165,
+      "drift": 1.6266755376678342e-05,
+      "absolute_difference": 4.4953178483450595e-07,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 320,
+      "column": "max_abs",
+      "declared": 0.0078167,
+      "measured": 0.007816746605918024,
+      "drift": 5.962352146578711e-06,
+      "absolute_difference": 4.660591802416181e-08,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 320,
+      "column": "E_surf_recovered",
+      "declared": 0.043731,
+      "measured": 0.04373095156802237,
+      "drift": 1.1074976019247299e-06,
+      "absolute_difference": 4.843197762977036e-08,
+      "passed": true
+    },
+    {
+      "table": "exterior_velocity",
+      "panels": 320,
+      "column": "E_surf_representation",
+      "declared": 0.5687800000000001,
+      "measured": 0.5687846829990338,
+      "drift": 8.23341016522772e-06,
+      "absolute_difference": 4.6829990337782235e-06,
+      "passed": true
+    }
+  ],
+  "elapsed_seconds": 61.555
+}
