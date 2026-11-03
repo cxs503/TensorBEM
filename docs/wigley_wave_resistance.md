@@ -19,10 +19,16 @@ y(x, z) = (B/2) * (1 - (2x/L)²) * (1 - (z/T)²)
 
 for `x ∈ [-L/2, L/2]`, `z ∈ [-T, 0]`, symmetric about `y = 0`.
 
-**Analytical properties:**
-- Volume: `∇ = 2LBT/3`
-- Block coefficient: `Cb = 2/3`
+**Analytical properties:** each normalised factor integrates to `2/3` over its
+own range, so
+
+- Volume: `∇ = 2 · (B/2) · (2L/3) · (2T/3) = 4LBT/9`  *(corrected 2026-11-03; this
+  document previously stated `2LBT/3`, which is 1.5× too large)*
+- Block coefficient: `Cb = ∇/(LBT) = 4/9 = 0.4444`  *(corrected; the previous
+  `Cb = 2/3` is the prismatic coefficient `Cp = Cm = 2/3`)*
 - Waterplane area: `A_wp = 2LB/3`
+- Midship section area: `A_m = 2BT/3`, hence `Cm = 2/3`, `Cp = 2/3` and
+  `Cb = Cm·Cp = 4/9`
 
 ### Linearized Free-Surface Condition
 
@@ -138,16 +144,34 @@ k_max = k₀ * max(10.0, 20.0 / (k₀T))
 
 ## Benchmark Comparison
 
-### Reference Data
+### Reference Data — WITHHELD (no reproducible provenance)
 
-Published Wigley hull wave resistance data (from Journée, 1992; Wigley, 1934):
+The following table was carried by this document until 2026-11-03. It gives
+neither a reference area for `Cw` nor a page/source, and the shipped code
+differs from it by up to a factor ~30 on a wetted-surface basis (`Cw×10³` =
+0.09 … 1.9 over Fr = 0.2 … 0.35, see §"Verification of the declared numbers"),
+so it cannot be reproduced and is **not** used as an acceptance criterion.
 
-| Fr   | Cw × 10³ (exp) | Uncertainty |
-|------|----------------|-------------|
-| 0.20 | ~2.5           | ±20%        |
-| 0.25 | ~3.5           | ±20%        |
-| 0.30 | ~5.0           | ±20%        |
-| 0.35 | ~7.0           | ±20%        |
+| Fr   | Cw × 10³ (previously claimed) | provenance |
+|------|-------------------------------|------------|
+| 0.20 | ~2.5                          | none stated |
+| 0.25 | ~3.5                          | none stated |
+| 0.30 | ~5.0                          | none stated |
+| 0.35 | ~7.0                          | none stated |
+
+What *is* verified instead, and can be re-run at will:
+
+1. the Kochin (far-field) resistance against a converged quadrature reference
+   and against the exact analytic yardstick
+   `∫₁^∞ dλ/(λ²√(λ²−1)) = 1` — both to ≲1e-5 relative;
+2. the closed-form Kochin function against a direct 2-D integral over the hull
+   — agreement to 4e-12 relative;
+3. the hullform volume/`Cb` against both the closed-form integral and the
+   generated panel mesh — `Cb = 4/9` to 5e-4 at 64×32 panels, second order.
+
+A literature comparison remains open and is registered as UNSUPPORTED rather
+than silently inherited: it needs a publication whose `Cw` normalization is
+stated (wetted-surface area, ITTC-78 line, or `L·T`).
 
 **Note:** Experimental data for the Wigley hull has significant scatter (±20%) due to:
 - Viscous resistance separation
@@ -176,10 +200,33 @@ In practice, the two paths **do not agree within 5%** because:
 
 ### Observed Discrepancy
 
-Typical relative differences between the two paths:
-- **Kochin path**: Always positive, physically correct
-- **Pressure path**: May be negative or have wrong magnitude
-- **Relative difference**: 50-200% (does not meet 5% criterion)
+Measured with the shipped code (`benchmarks/wigley_verification.py`, mesh
+ladder 4×2 → 24×12, Fr = 0.25/0.30/0.35):
+
+| mesh (nx×nz) | panels | Rw_pressure / Rw_Kochin |
+|---:|---:|---:|
+| 4×2 | 32 | -0.76 … 2.23 |
+| 8×4 | 128 | -1.84 … -0.47 |
+| 16×8 | 512 | -0.77 … -0.21 |
+| 24×12 | 1152 | -0.31 … -0.08 |
+
+Facts measured over the whole ladder (Fr = 0.25/0.30/0.35, 4×2 → 24×12):
+
+- **Kochin path**: always positive (non-negative by construction)
+- **Pressure path**: `Rw_pressure / Rw_Kochin` ranges from -1.84 to 2.23 —
+  the sign is not even consistent (positive at the coarsest 4×2 mesh for some
+  Froude numbers) and `|Rw_pressure|` is not monotone in the panel count, so no
+  convergence order can be extracted from it
+- **Relative difference**: 103 %–284 %
+  across the ladder; the previously quoted "50-200 %" band is a property of the
+  16×8 mesh used for the example, not of the method. That claim is recorded as
+  UNSUPPORTED by `tests/test_wigley_verification.py`.
+
+Consequence: the pressure path is an *audited* path, not a verification path
+for the Kochin route — it evaluates Michell's potential on the actual hull
+surface, which the thin-ship theory does not provide. A valid second path needs
+a Rankine panel method with free-surface panels (Dawson), which this module
+does not implement.
 
 ### Root Cause Analysis
 
@@ -212,6 +259,13 @@ The observed convergence rate for the pressure path is typically:
 
 ## Limitations
 
+0. **Quadrature near the transverse-wave cusp**: the Kochin integral carries
+   `1/√(λ²−1)` at `λ = 1`. The scheme shipped until 2026-11-03 placed
+   Gauss-Legendre nodes directly on `[1, λ_max]` and lost 1.4–2.6 % of the
+   resistance; the current code substitutes `λ = 1 + s²`, which reproduces the
+   converged reference to ≤2.6e-5 (974× smaller error, same 256 nodes).
+   Brute-force refinement does *not* fix the old scheme: 1024 nodes still
+   leaves 0.3–0.6 %.
 1. **Thin-ship approximation**: Valid only for `B/L < 0.15`
 2. **Linearized free surface**: Not valid for high Fr or large wave amplitudes
 3. **No viscous effects**: Wave resistance only, no friction or form drag
@@ -253,6 +307,44 @@ This implementation provides:
 - ✅ Pressure integration wave resistance
 - ✅ Mesh convergence study
 - ✅ Benchmark comparison with published data
-- ❌ Two-path agreement within 5% (honest FAIL: 50-200% discrepancy)
+- ❌ Two-path agreement within 5% (honest FAIL: 103-284% discrepancy over the
+  mesh ladder; the previously quoted "50-200%" band is mesh-specific)
 
-The two-path discrepancy is a known limitation of the thin-ship approximation and is documented transparently.
+The two-path discrepancy is a known limitation of the thin-ship approximation
+and is documented transparently.
+
+## Verification of the declared numbers (2026-11-03)
+
+`python -m tensorbem.benchmarks.wigley_verification` writes
+`artifacts/wigley_verification/wigley_verification.json` and two figures, and
+`tests/test_wigley_verification.py` keeps every number below honest.
+
+**Wave resistance vs Froude number** (converged reference, `ρ = 1025`,
+`g = 9.80665`, `L = 2 m`, `B = 0.2 m`, `T = 0.125 m`):
+
+| Fr | Rw [N] (reference) | Rw [N] (production) | rel. error |
+|---:|---:|---:|---:|
+| 0.20 | 2.0601e-02 | 2.0601e-02 | 7.8e-06 |
+| 0.25 | 2.8774e-02 | 2.8774e-02 | 1.5e-06 |
+| 0.30 | 9.8341e-02 | 9.8341e-02 | 1.4e-07 |
+| 0.35 | 3.7499e-02 | 3.7499e-02 | 1.5e-07 |
+| 0.40 | 2.1059e-01 | 2.1059e-01 | 1.2e-08 |
+
+**Cw on two reference-area conventions** (this is why the old table could not
+be adjudicated):
+
+| Fr | Cw (`S_ref = L·T`) | Cw (wetted surface, 0.5951 m²) |
+|---:|---:|---:|
+| 0.20 | 2.05e-04 | 8.61e-05 |
+| 0.25 | 1.83e-04 | 7.70e-05 |
+| 0.30 | 4.35e-04 | 1.83e-04 |
+| 0.35 | 1.22e-04 | 5.12e-05 |
+| 0.40 | 5.24e-04 | 2.20e-04 |
+
+**Quadrature error budget** (max over Fr = 0.15 … 0.45):
+
+| scheme | nodes | max rel. error vs converged reference |
+|---|---:|---:|
+| legacy (direct on `[1, λ_max]`) | 256 | 2.56e-02 |
+| legacy | 384 | 1.7e-02 |
+| production (`λ = 1 + s²`) | 256 | **2.6e-05** |
