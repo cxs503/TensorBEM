@@ -129,6 +129,7 @@ def run_refinement_study(
         e_a33 = abs(a33_dim - ref.heave_added_mass_dimless) / ref.heave_added_mass_dimless
         e_b33 = abs(b33_dim - ref.heave_damping_dimless) / ref.heave_damping_dimless
         e_a11 = abs(a11_dim - ref.surge_added_mass_dimless) / ref.surge_added_mass_dimless
+        e_b11 = abs(b11_dim - ref.surge_damping_dimless) / ref.surge_damping_dimless
         e_fz = abs(fz_bem - ref.excitation_force_z) / abs(ref.excitation_force_z)
         e_fx = abs(fx_bem - ref.excitation_force_x) / abs(ref.excitation_force_x)
 
@@ -150,6 +151,7 @@ def run_refinement_study(
                 "heave_added_mass_dimless": a33_dim,
                 "heave_damping_dimless": b33_dim,
                 "surge_added_mass_rel_error": e_a11,
+                "surge_damping_rel_error": e_b11,
                 "heave_added_mass_rel_error": e_a33,
                 "heave_damping_rel_error": e_b33,
                 "excitation_force_x_rel_error": e_fx,
