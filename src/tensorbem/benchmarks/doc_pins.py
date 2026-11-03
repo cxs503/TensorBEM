@@ -38,7 +38,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Mapping
 
-from . import cylinder_added_mass, ursell_cylinder
+from . import (
+    cylinder_added_mass,
+    ellipsoid_added_mass,
+    sphere_added_mass,
+    ursell_cylinder,
+)
 
 PIN_SCHEMA = "tensorbem-doc-pins/1"
 DEFAULT_PIN_PATH = Path(__file__).resolve().parents[3] / "docs" / "benchmark_pins.json"
@@ -159,6 +164,70 @@ CASES: tuple[PinCase, ...] = (
         caption="refinement row; takes about 90 s, excluded from the default check",
     ),
 )
+
+_THREE_DIM_METRICS = (
+    "h_max",
+    "added_mass",
+    "added_mass_relative_error",
+    "normal_derivative_relative_l2_error",
+)
+
+_ELLIPSOID_METRICS = (
+    "h_max",
+    "volume_ratio",
+    "axes.0.added_mass",
+    "axes.0.added_mass_relative_error",
+    "axes.1.added_mass",
+    "axes.1.added_mass_relative_error",
+    "axes.2.added_mass",
+    "axes.2.added_mass_relative_error",
+)
+
+
+def _sphere(subdivisions: int) -> dict[str, object]:
+    return {"subdivisions": subdivisions}
+
+
+def _ellipsoid(subdivisions: int) -> dict[str, object]:
+    return {"subdivisions": subdivisions}
+
+
+#: Panel count of a recursively subdivided icosphere: 20 * 4**subdivisions.
+_SPHERE_PANELS = {0: 20, 1: 80, 2: 320, 3: 1280}
+
+#: How long each row takes on a single core (measured, m2638): subdivision 2
+#: about 20 s, subdivision 3 about 2 min.  Slower rows are opt-in.
+_SLOW_SUBDIVISION = 2
+
+for _subdivisions, _panels in _SPHERE_PANELS.items():
+    CASES += (
+        PinCase(
+            name=f"sphere_added_mass_3d_{_panels}",
+            doc=(
+                "docs/marine_bem_benchmarks.md section 4.2, table 2 "
+                f"(sphere, {_panels} panels; pinned in docs/benchmark_pins.json)"
+            ),
+            runner="sphere_added_mass.run",
+            run=sphere_added_mass.run,
+            settings=_sphere(_subdivisions),
+            metrics=_THREE_DIM_METRICS,
+            slow=_subdivisions >= _SLOW_SUBDIVISION,
+            caption=f"table 2 row {_panels}",
+        ),
+        PinCase(
+            name=f"ellipsoid_added_mass_3d_{_panels}",
+            doc=(
+                "docs/marine_bem_benchmarks.md section 4.4, table 4 "
+                f"(ellipsoid, {_panels} panels; pinned in docs/benchmark_pins.json)"
+            ),
+            runner="ellipsoid_added_mass.run",
+            run=ellipsoid_added_mass.run,
+            settings=_ellipsoid(_subdivisions),
+            metrics=_ELLIPSOID_METRICS,
+            slow=_subdivisions >= _SLOW_SUBDIVISION,
+            caption=f"table 4 row {_panels}",
+        ),
+    )
 
 CASES_BY_NAME = {case.name: case for case in CASES}
 
