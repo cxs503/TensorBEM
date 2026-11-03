@@ -1,0 +1,41 @@
+{
+  "added_mass_relative_error": [
+    0.0167358334865852,
+    0.008513030527356396,
+    0.0042929825339061934
+  ],
+  "benchmark": "ursell_refinement_extrapolation",
+  "damping_relative_error": [
+    0.025415347951018918,
+    0.013360592915767345,
+    0.0068411640599881215
+  ],
+  "extrapolated_added_mass": 2544.769808678387,
+  "extrapolated_damping": 2715.8779678679816,
+  "extrapolation_vs_reference_added_mass": 0.00015615442783107657,
+  "extrapolation_vs_reference_damping": 0.0008373270040412666,
+  "near_far_field_relative_difference": [
+    0.010535710979672697,
+    0.005341374018855711,
+    0.0026891252854966386
+  ],
+  "observed_order_added_mass": 0.9623708519922274,
+  "observed_order_damping": 0.8867848485547303,
+  "panel_added_mass": [
+    2587.7627430686243,
+    2566.8343342915696,
+    2556.093606354438
+  ],
+  "panel_counts": [
+    64,
+    128,
+    256
+  ],
+  "panel_damping": [
+    2787.236780036434,
+    2754.470100002123,
+    2736.7492886957893
+  ],
+  "reference_added_mass": 2545.167247813704,
+  "reference_damping": 2718.153951572775
+}
