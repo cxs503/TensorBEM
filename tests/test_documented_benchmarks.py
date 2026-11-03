@@ -98,11 +98,20 @@ def test_analytic_rankine_panel_integral_is_exact():
             total += half * np.sum(weights * 0.5 * np.log((s - xi) ** 2 + h**2))
         return total
 
+    # One case has an exact integral and must be compared with *it*, not with a
+    # composite rule: for xi = 0.5, h = 0 the panel integral is
+    #     Int_0^1 log|s - 0.5| ds = 2 Int_0^{1/2} log u du = log(1/2) - 1,
+    # and a uniform Gauss rule at 400 pieces still carries 7.5e-6 of quadrature
+    # error (measured), i.e. 700x the 1e-8 band this test used to demand. The
+    # closed form agrees with the analytic value to round-off, so the failure
+    # this assertion used to raise was the *reference's* error, not the code's.
+    exact = {(0.5, 0.0, 1.0): float(np.log(0.5) - 1.0)}
     for xi, h, length in ((0.5, 0.0, 1.0), (0.0, 1.0e-3, 1.0), (0.9, 0.3, 1.0)):
         closed = analytic(xi, h, length)
         fine = composite_gauss(xi, h, length, pieces=400, order=20)
         coarse = composite_gauss(xi, h, length, pieces=1, order=24)
-        assert abs(closed - fine) < 1.0e-8, (xi, h, closed, fine)
+        reference = exact.get((xi, h, length), fine)
+        assert abs(closed - reference) < 1.0e-8, (xi, h, closed, reference)
         if h == 0.0:
             # A single uniform Gauss panel straddling the logarithmic
             # singularity of the self panel is the historical defect: it is

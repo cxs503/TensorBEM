@@ -16,6 +16,7 @@ Only small meshes are used, so the whole module stays inside a few seconds.
 import math
 
 import numpy as np
+import pytest
 
 from tensorbem.analytic import ursell_cylinder_coefficients
 from tensorbem.benchmarks.ursell_error_budget import (
@@ -150,6 +151,9 @@ def test_documented_claim_search_returns_a_verdict():
 
 
 def test_plot_writes_a_figure(tmp_path):
+    # Figure generation is optional evidence: the numeric claims of this
+    # module must still be checked when matplotlib is absent (CI).
+    pytest.importorskip("matplotlib")
     budget = {
         "panel_convergence": {
             "rows": [
