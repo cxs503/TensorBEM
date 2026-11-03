@@ -245,21 +245,20 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
     dresidue_d_offset = -frequency * np.exp(-frequency * depth) * np.sin(
         frequency * offset
     )
-    dresidue_d_depth = -frequency * residue
 
     dg_d_offset = (1.0 / (2.0 * math.pi)) * df_d_offset + (
         1.0j * _RESIDUE_SIGN * dresidue_d_offset
     )
-    dg_d_depth = (1.0 / (2.0 * math.pi)) * df_d_depth + (
-        1.0j * _RESIDUE_SIGN * dresidue_d_depth
-    )
 
-    # Vertical source derivative: both r and r1 depend on source_z, as well as A.
+    # Vertical source derivative: both r and r1 depend on source_z, as well as
+    # the depth A = -(z + z0), for which dA/dz0 = -1. The free-surface part is
+    # therefore exactly ``-df_d_depth`` and is written that way, so the depth
+    # derivative has a single source of truth instead of two copies (a copy that
+    # nothing reads cannot be policed by a test -- see
+    # ``tests/test_mutation_gaps_round2.py``).
     dg_d_source_x = -dg_d_offset
     dg_d_source_z = (1.0 / (2.0 * math.pi)) * (
-        -(field_z - s_z) / r2 + depth / r_image2 - 2.0 * (
-            elementary_cos + frequency * cos_integral
-        )
+        -(field_z - s_z) / r2 - df_d_depth
     ) + 1.0j * _RESIDUE_SIGN * (frequency * residue)
     if not outgoing:
         dg_d_source_x = np.conj(dg_d_source_x)
@@ -304,6 +303,8 @@ def green_gradient_field(
     elementary_cos = depth / (depth * depth + offset * offset)
     elementary_sin = offset / (depth * depth + offset * offset)
     residue = np.exp(-frequency * depth) * np.cos(frequency * offset)
+    # dG/dA with A = -(z + z0) the image submergence; shared with green_gradient.
+    df_d_depth = -depth / image2 + 2.0 * (elementary_cos + frequency * cos_integral)
 
     if include_rankine:
         radial2 = offset * offset + (field_z - s_z) ** 2
@@ -322,8 +323,7 @@ def green_gradient_field(
     )
     dg_d_z = (1.0 / (2.0 * math.pi)) * (
         rankine_z
-        + depth / image2
-        - 2.0 * (elementary_cos + frequency * cos_integral)
+        - df_d_depth
     ) + 1.0j * _RESIDUE_SIGN * frequency * residue
     if not outgoing:
         return np.conj(dg_d_x), np.conj(dg_d_z)

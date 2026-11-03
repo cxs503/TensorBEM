@@ -1,0 +1,333 @@
+{
+  "waterplane": {
+    "length": 2.0,
+    "beam": 1.0,
+    "draft": 0.5,
+    "exact": {
+      "area": 2.0,
+      "centroid_x": 1.0,
+      "centroid_y": 0.5,
+      "i_xx": 0.16666666666666666,
+      "i_yy": 0.6666666666666666,
+      "i_xy": 0.0
+    },
+    "measured": {
+      "area": 2.0,
+      "centroid_x": 1.0,
+      "centroid_y": 0.5,
+      "i_xx": 0.16666666666666663,
+      "i_yy": 0.6666666666666665,
+      "i_xy": 0.0
+    },
+    "relative_error": {
+      "area": 0.0,
+      "centroid_x": 0.0,
+      "centroid_y": 0.0,
+      "i_xx": 1.6653345369377348e-16,
+      "i_yy": 1.6653345369377348e-16,
+      "i_xy": 0.0
+    },
+    "volume": 0.9999999999999999,
+    "centre_of_buoyancy": [
+      1.0000000000000002,
+      0.5000000000000002,
+      -0.25000000000000006
+    ],
+    "mutant_centroid_x": 6.0,
+    "waterline_vertices": [
+      [
+        0.5,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.5,
+        1.0
+      ],
+      [
+        1.5,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        2.0,
+        0.0
+      ],
+      [
+        1.5,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.3333333333333333
+      ],
+      [
+        0.0,
+        0.3333333333333333
+      ],
+      [
+        2.0,
+        0.6666666666666666
+      ],
+      [
+        0.0,
+        0.6666666666666666
+      ],
+      [
+        2.0,
+        1.0
+      ]
+    ]
+  },
+  "finite_difference": {
+    "source": [
+      0.25,
+      -1.1
+    ],
+    "field": [
+      0.4,
+      -0.12
+    ],
+    "nu": 0.6,
+    "analytic_source_gradient": [
+      [
+        -0.05383251275923748,
+        -0.02593604452912564
+      ],
+      [
+        -0.17892542380291213,
+        -0.2873997707216561
+      ]
+    ],
+    "analytic_field_gradient": [
+      [
+        0.05383251275923748,
+        0.02593604452912564
+      ],
+      [
+        0.13844530410441805,
+        -0.2873997707216561
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0.01,
+        "source_z_rel_error": 3.1407256155798923e-05,
+        "field_z_rel_error": 5.850561451013814e-06
+      },
+      {
+        "step": 0.003,
+        "source_z_rel_error": 2.8265606220574427e-06,
+        "field_z_rel_error": 5.265591514811658e-07
+      },
+      {
+        "step": 0.001,
+        "source_z_rel_error": 3.1406120709493257e-07,
+        "field_z_rel_error": 5.8506670397377616e-08
+      },
+      {
+        "step": 0.0003,
+        "source_z_rel_error": 2.826469948321493e-08,
+        "field_z_rel_error": 5.265448933882135e-09
+      },
+      {
+        "step": 0.0001,
+        "source_z_rel_error": 3.1406957165553466e-09,
+        "field_z_rel_error": 5.848579754093395e-10
+      },
+      {
+        "step": 3e-05,
+        "source_z_rel_error": 2.827283142947272e-10,
+        "field_z_rel_error": 5.6526172563938517e-11
+      },
+      {
+        "step": 1e-05,
+        "source_z_rel_error": 4.126441625152156e-11,
+        "field_z_rel_error": 8.025633977564578e-12
+      },
+      {
+        "step": 1e-06,
+        "source_z_rel_error": 7.873964518893751e-11,
+        "field_z_rel_error": 4.1999517275219665e-11
+      }
+    ]
+  },
+  "mutation": {
+    "before": {
+      "overall": {
+        "invalid": 0,
+        "killed": 2,
+        "mutants": 7,
+        "mutation_score": 0.2857142857142857,
+        "survived": 5,
+        "survivors": [
+          "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+          "negate_constant in compute_waterplane_properties: 0.0 -> -0.0",
+          "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+          "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3",
+          "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4"
+        ],
+        "tests": [],
+        "timeout": 0
+      },
+      "mutants": [
+        {
+          "key": "tensorbem.free_surface:243:37:swap_binop",
+          "operator": "swap_binop",
+          "function": "green_gradient",
+          "verdict": "killed",
+          "stage": 2,
+          "killed_by": "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference",
+          "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)"
+        },
+        {
+          "key": "tensorbem.free_surface:307:35:swap_binop",
+          "operator": "swap_binop",
+          "function": "green_gradient_field",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+          "summary": "swap_binop in green_gradient_field: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)"
+        },
+        {
+          "key": "tensorbem.hydrostatic:236:20:swap_binop",
+          "operator": "swap_binop",
+          "function": "compute_waterplane_properties",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:255:15:negate_constant",
+          "operator": "negate_constant",
+          "function": "compute_waterplane_properties",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "negate_constant in compute_waterplane_properties: 0.0 -> -0.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:255:15:shift_constant",
+          "operator": "shift_constant",
+          "function": "compute_waterplane_properties",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:314:29:negate_constant",
+          "operator": "negate_constant",
+          "function": "compute_displaced_volume_and_buoyancy",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3"
+        },
+        {
+          "key": "tensorbem.hydrostatic:314:29:shift_constant",
+          "operator": "shift_constant",
+          "function": "compute_displaced_volume_and_buoyancy",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4"
+        }
+      ]
+    },
+    "after": {
+      "overall": {
+        "invalid": 0,
+        "killed": 6,
+        "mutants": 7,
+        "mutation_score": 0.8571428571428571,
+        "survived": 1,
+        "survivors": [
+          "negate_constant in compute_waterplane_properties: 0.0 -> -0.0"
+        ],
+        "tests": [],
+        "timeout": 0
+      },
+      "mutants": [
+        {
+          "key": "tensorbem.free_surface:243:37:swap_binop",
+          "operator": "swap_binop",
+          "function": "green_gradient",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_mutation_gaps_round2.py::test_deep_water_source_derivatives_match_finite_differences[source0-field0-0.6]",
+          "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)"
+        },
+        {
+          "key": "tensorbem.free_surface:307:35:swap_binop",
+          "operator": "swap_binop",
+          "function": "green_gradient_field",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+          "summary": "swap_binop in green_gradient_field: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)"
+        },
+        {
+          "key": "tensorbem.hydrostatic:236:20:swap_binop",
+          "operator": "swap_binop",
+          "function": "compute_waterplane_properties",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_mutation_gaps_round2.py::test_eccentric_barge_waterplane_matches_closed_form",
+          "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:255:15:negate_constant",
+          "operator": "negate_constant",
+          "function": "compute_waterplane_properties",
+          "verdict": "survived",
+          "stage": 2,
+          "killed_by": null,
+          "summary": "negate_constant in compute_waterplane_properties: 0.0 -> -0.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:255:15:shift_constant",
+          "operator": "shift_constant",
+          "function": "compute_waterplane_properties",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_mutation_gaps_round2.py::test_degenerate_waterline_loop_returns_zero_waterplane",
+          "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0"
+        },
+        {
+          "key": "tensorbem.hydrostatic:314:29:negate_constant",
+          "operator": "negate_constant",
+          "function": "compute_displaced_volume_and_buoyancy",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_mutation_gaps_round2.py::test_zero_volume_guard_returns_a_three_vector",
+          "summary": "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3"
+        },
+        {
+          "key": "tensorbem.hydrostatic:314:29:shift_constant",
+          "operator": "shift_constant",
+          "function": "compute_displaced_volume_and_buoyancy",
+          "verdict": "killed",
+          "stage": 1,
+          "killed_by": "tests/test_mutation_gaps_round2.py::test_zero_volume_guard_returns_a_three_vector",
+          "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4"
+        }
+      ]
+    }
+  }
+}

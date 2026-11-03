@@ -1,0 +1,176 @@
+{
+  "broaden": true,
+  "generated_by": "tensorbem.benchmarks.mutation_audit",
+  "isolated_package": "/tmp/tensorbem-mutation-q97g6zi1/src/tensorbem/__init__.py",
+  "jobs": 4,
+  "max_per_module": 10,
+  "modules": {
+    "tensorbem.free_surface": {
+      "invalid": 0,
+      "killed": 2,
+      "mutants": 2,
+      "mutation_score": 1.0,
+      "survived": 0,
+      "survivors": [],
+      "tests": [
+        "tests/test_free_surface_kernel.py",
+        "tests/test_mutation_gaps_round2.py"
+      ],
+      "timeout": 0
+    },
+    "tensorbem.hydrostatic": {
+      "invalid": 0,
+      "killed": 4,
+      "mutants": 5,
+      "mutation_score": 0.8,
+      "survived": 1,
+      "survivors": [
+        "negate_constant in compute_waterplane_properties: 0.0 -> -0.0"
+      ],
+      "tests": [
+        "tests/test_hydrostatic_analytic_benchmark.py",
+        "tests/test_mutation_gaps_round2.py"
+      ],
+      "timeout": 0
+    }
+  },
+  "mutant_filter": [
+    "hydrostatic:236:20",
+    "hydrostatic:255:15",
+    "hydrostatic:314:29",
+    "2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 /"
+  ],
+  "mutants": [
+    {
+      "col": 37,
+      "family_tests": [],
+      "function": "green_gradient",
+      "key": "tensorbem.free_surface:243:37:swap_binop",
+      "killed_by": "tests/test_mutation_gaps_round2.py::test_deep_water_source_derivatives_match_finite_differences[source0-field0-0.6]",
+      "lineno": 243,
+      "module": "tensorbem.free_surface",
+      "operator": "swap_binop",
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "seconds": 1.32,
+      "stage": 1,
+      "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "verdict": "killed"
+    },
+    {
+      "col": 35,
+      "family_tests": [],
+      "function": "green_gradient_field",
+      "key": "tensorbem.free_surface:307:35:swap_binop",
+      "killed_by": "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+      "lineno": 307,
+      "module": "tensorbem.free_surface",
+      "operator": "swap_binop",
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "seconds": 1.28,
+      "stage": 1,
+      "summary": "swap_binop in green_gradient_field: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "verdict": "killed"
+    },
+    {
+      "col": 20,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:236:20:swap_binop",
+      "killed_by": "tests/test_mutation_gaps_round2.py::test_eccentric_barge_waterplane_matches_closed_form",
+      "lineno": 236,
+      "module": "tensorbem.hydrostatic",
+      "operator": "swap_binop",
+      "original": "sign * np.sum((x + x_next) * cross) / 6.0",
+      "replacement": "sign * np.sum((x + x_next) * cross) * 6.0",
+      "seconds": 1.33,
+      "stage": 1,
+      "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 15,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:255:15:negate_constant",
+      "killed_by": null,
+      "lineno": 255,
+      "module": "tensorbem.hydrostatic",
+      "operator": "negate_constant",
+      "original": "0.0",
+      "replacement": "-0.0",
+      "seconds": 14.61,
+      "stage": 2,
+      "summary": "negate_constant in compute_waterplane_properties: 0.0 -> -0.0",
+      "verdict": "survived"
+    },
+    {
+      "col": 15,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:255:15:shift_constant",
+      "killed_by": "tests/test_mutation_gaps_round2.py::test_degenerate_waterline_loop_returns_zero_waterplane",
+      "lineno": 255,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "0.0",
+      "replacement": "1.0",
+      "seconds": 1.41,
+      "stage": 1,
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 29,
+      "family_tests": [],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:314:29:negate_constant",
+      "killed_by": "tests/test_mutation_gaps_round2.py::test_zero_volume_guard_returns_a_three_vector",
+      "lineno": 314,
+      "module": "tensorbem.hydrostatic",
+      "operator": "negate_constant",
+      "original": "3",
+      "replacement": "-3",
+      "seconds": 1.83,
+      "stage": 1,
+      "summary": "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3",
+      "verdict": "killed"
+    },
+    {
+      "col": 29,
+      "family_tests": [],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:314:29:shift_constant",
+      "killed_by": "tests/test_mutation_gaps_round2.py::test_zero_volume_guard_returns_a_three_vector",
+      "lineno": 314,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "3",
+      "replacement": "4",
+      "seconds": 1.75,
+      "stage": 1,
+      "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "verdict": "killed"
+    }
+  ],
+  "overall": {
+    "invalid": 0,
+    "killed": 6,
+    "mutants": 7,
+    "mutation_score": 0.8571428571428571,
+    "survived": 1,
+    "survivors": [
+      "negate_constant in compute_waterplane_properties: 0.0 -> -0.0"
+    ],
+    "tests": [],
+    "timeout": 0
+  },
+  "seed": 20261103,
+  "timeout_seconds": 300.0
+}

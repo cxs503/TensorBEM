@@ -455,6 +455,7 @@ def sweep(
     broaden: bool,
     jobs: int,
     out_dir: Path,
+    mutant_filter: tuple[str, ...] = (),
 ) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(seed)
@@ -462,7 +463,17 @@ def sweep(
     for target in targets:
         source = target.source.read_text(encoding="utf-8")
         mutants = enumerate_mutants(target.module, source, target.source)
-        if max_per_module and len(mutants) > max_per_module:
+        if mutant_filter:
+            # Re-check mode: select by substring of ``key`` or ``summary`` over
+            # the *full* enumeration, without sampling.  Sampling by seed cannot
+            # be used to re-check a named survivor, because a survivor's line
+            # number moves as soon as the module is edited.
+            mutants = [
+                m
+                for m in mutants
+                if any(pattern in f"{m.key} {m.summary}" for pattern in mutant_filter)
+            ]
+        elif max_per_module and len(mutants) > max_per_module:
             mutants = sorted(rng.sample(mutants, max_per_module), key=lambda m: (m.lineno, m.col))
         plan.append((target, mutants))
         print(f"{target.module}: {len(mutants)} mutants selected", flush=True)
@@ -502,6 +513,7 @@ def sweep(
         "timeout_seconds": timeout,
         "isolated_package": isolated,
         "broaden": broaden,
+        "mutant_filter": list(mutant_filter),
         "modules": modules,
         "mutants": results,
         "overall": _score(results, ()),
@@ -570,6 +582,14 @@ def main(argv: list[str] | None = None) -> dict:
     )
     parser.add_argument("--no-broaden", action="store_true")
     parser.add_argument(
+        "--mutant",
+        action="append",
+        default=None,
+        help="re-check only mutants whose 'key' or 'summary' contains this "
+        "substring (repeatable); skips seed sampling, so a named survivor can be "
+        "re-tested after its line number moved",
+    )
+    parser.add_argument(
         "--extra-test",
         action="append",
         default=None,
@@ -597,6 +617,7 @@ def main(argv: list[str] | None = None) -> dict:
         broaden=broaden,
         jobs=args.jobs,
         out_dir=args.out,
+        mutant_filter=tuple(args.mutant or ()),
     )
     print(render_markdown(payload))
     return payload

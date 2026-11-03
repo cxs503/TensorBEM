@@ -1,0 +1,204 @@
+{
+  "broaden": true,
+  "generated_by": "tensorbem.benchmarks.mutation_audit",
+  "isolated_package": "/tmp/tensorbem-mutation-99ow4lc0/src/tensorbem/__init__.py",
+  "jobs": 4,
+  "max_per_module": 10,
+  "modules": {
+    "tensorbem.free_surface": {
+      "invalid": 0,
+      "killed": 2,
+      "mutants": 2,
+      "mutation_score": 1.0,
+      "survived": 0,
+      "survivors": [],
+      "tests": [
+        "tests/test_free_surface_kernel.py"
+      ],
+      "timeout": 0
+    },
+    "tensorbem.hydrostatic": {
+      "invalid": 0,
+      "killed": 0,
+      "mutants": 5,
+      "mutation_score": 0.0,
+      "survived": 5,
+      "survivors": [
+        "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+        "negate_constant in compute_waterplane_properties: 0.0 -> -0.0",
+        "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+        "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3",
+        "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4"
+      ],
+      "tests": [
+        "tests/test_hydrostatic_analytic_benchmark.py"
+      ],
+      "timeout": 0
+    }
+  },
+  "mutant_filter": [
+    "hydrostatic:236:20",
+    "hydrostatic:255:15",
+    "hydrostatic:314:29",
+    "2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 /"
+  ],
+  "mutants": [
+    {
+      "col": 37,
+      "family_tests": [
+        "tests/test_finite_depth.py",
+        "tests/test_free_surface3d.py",
+        "tests/test_mutation_gaps.py"
+      ],
+      "function": "green_gradient",
+      "key": "tensorbem.free_surface:243:37:swap_binop",
+      "killed_by": "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference",
+      "lineno": 243,
+      "module": "tensorbem.free_surface",
+      "operator": "swap_binop",
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "seconds": 4.97,
+      "stage": 2,
+      "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "verdict": "killed"
+    },
+    {
+      "col": 35,
+      "family_tests": [],
+      "function": "green_gradient_field",
+      "key": "tensorbem.free_surface:307:35:swap_binop",
+      "killed_by": "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+      "lineno": 307,
+      "module": "tensorbem.free_surface",
+      "operator": "swap_binop",
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "seconds": 1.82,
+      "stage": 1,
+      "summary": "swap_binop in green_gradient_field: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "verdict": "killed"
+    },
+    {
+      "col": 20,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:236:20:swap_binop",
+      "killed_by": null,
+      "lineno": 236,
+      "module": "tensorbem.hydrostatic",
+      "operator": "swap_binop",
+      "original": "sign * np.sum((x + x_next) * cross) / 6.0",
+      "replacement": "sign * np.sum((x + x_next) * cross) * 6.0",
+      "seconds": 15.83,
+      "stage": 2,
+      "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "verdict": "survived"
+    },
+    {
+      "col": 15,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:255:15:negate_constant",
+      "killed_by": null,
+      "lineno": 255,
+      "module": "tensorbem.hydrostatic",
+      "operator": "negate_constant",
+      "original": "0.0",
+      "replacement": "-0.0",
+      "seconds": 16.28,
+      "stage": 2,
+      "summary": "negate_constant in compute_waterplane_properties: 0.0 -> -0.0",
+      "verdict": "survived"
+    },
+    {
+      "col": 15,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:255:15:shift_constant",
+      "killed_by": null,
+      "lineno": 255,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "0.0",
+      "replacement": "1.0",
+      "seconds": 15.28,
+      "stage": 2,
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "verdict": "survived"
+    },
+    {
+      "col": 29,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:314:29:negate_constant",
+      "killed_by": null,
+      "lineno": 314,
+      "module": "tensorbem.hydrostatic",
+      "operator": "negate_constant",
+      "original": "3",
+      "replacement": "-3",
+      "seconds": 3.52,
+      "stage": 2,
+      "summary": "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3",
+      "verdict": "survived"
+    },
+    {
+      "col": 29,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:314:29:shift_constant",
+      "killed_by": null,
+      "lineno": 314,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "3",
+      "replacement": "4",
+      "seconds": 3.51,
+      "stage": 2,
+      "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "verdict": "survived"
+    }
+  ],
+  "overall": {
+    "invalid": 0,
+    "killed": 2,
+    "mutants": 7,
+    "mutation_score": 0.2857142857142857,
+    "survived": 5,
+    "survivors": [
+      "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "negate_constant in compute_waterplane_properties: 0.0 -> -0.0",
+      "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "negate_constant in compute_displaced_volume_and_buoyancy: 3 -> -3",
+      "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4"
+    ],
+    "tests": [],
+    "timeout": 0
+  },
+  "seed": 20261103,
+  "timeout_seconds": 300.0
+}
