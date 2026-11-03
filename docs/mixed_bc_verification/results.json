@@ -1,0 +1,540 @@
+{
+  "cases": {
+    "annulus_dirichlet": {
+      "128": {
+        "metrics": {
+          "condition_number": 222.15422641660237,
+          "field_rel_max": 4.5940230429658784e-05,
+          "flux_rel_l2_all": 0.00021423653683325529,
+          "flux_rel_l2_inner": 0.0001973348460074233,
+          "flux_rel_l2_outer": 0.0002715185127692774,
+          "flux_rel_max": 0.00019733484612266606,
+          "rank_deficiency": 0.0,
+          "reference_length": 1.0,
+          "relative_residual": 1.9813085948371275e-15
+        },
+        "notes": [],
+        "panel_count": 256
+      },
+      "16": {
+        "metrics": {
+          "condition_number": 27.396681239041115,
+          "field_rel_max": 0.004074040804518911,
+          "flux_rel_l2_all": 0.01243246771768001,
+          "flux_rel_l2_inner": 0.011092280158038982,
+          "flux_rel_l2_outer": 0.016753404171632597,
+          "flux_rel_max": 0.011092280158041173,
+          "rank_deficiency": 0.0,
+          "reference_length": 1.0,
+          "relative_residual": 7.568963312709928e-16
+        },
+        "notes": [],
+        "panel_count": 32
+      },
+      "32": {
+        "metrics": {
+          "condition_number": 55.358767919427514,
+          "field_rel_max": 0.0008150916008518675,
+          "flux_rel_l2_all": 0.003287302252431146,
+          "flux_rel_l2_inner": 0.0029918496526888895,
+          "flux_rel_l2_outer": 0.00426932349641204,
+          "flux_rel_max": 0.0029918496526981837,
+          "rank_deficiency": 0.0,
+          "reference_length": 1.0,
+          "relative_residual": 5.200312154180152e-16
+        },
+        "notes": [],
+        "panel_count": 64
+      },
+      "64": {
+        "metrics": {
+          "condition_number": 111.00473111363074,
+          "field_rel_max": 0.00018747343599834,
+          "flux_rel_l2_all": 0.0008451139696651402,
+          "flux_rel_l2_inner": 0.0007755154757134127,
+          "flux_rel_l2_outer": 0.001079532813920843,
+          "flux_rel_max": 0.0007755154757458787,
+          "rank_deficiency": 0.0,
+          "reference_length": 1.0,
+          "relative_residual": 1.3941155875296853e-15
+        },
+        "notes": [],
+        "panel_count": 128
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.01243246771768001,
+          0.003287302252431146,
+          0.0008451139696651402,
+          0.00021423653683325529
+        ],
+        "expected_order": 2.0,
+        "finite_error": 0.00021423653683325529,
+        "metric": "flux_rel_l2_all",
+        "observed_orders": [
+          1.9191366681727249,
+          1.959686294362651,
+          1.9799413676877757
+        ]
+      }
+    },
+    "annulus_mixed_hole_dirichlet": {
+      "128": {
+        "metrics": {
+          "condition_number": 109.78015009322027,
+          "dirichlet_flux_rel_l2": 7.420381447040612e-05,
+          "dirichlet_flux_rel_max": 7.42038154076082e-05,
+          "field_rel_max": 0.00010519709028568641,
+          "neumann_trace_rel_l2": 0.00015781870681318307,
+          "neumann_trace_rel_max": 0.00015781870688952074,
+          "rank_deficiency": 0.0,
+          "relative_residual": 9.178029102263204e-15
+        },
+        "notes": [],
+        "panel_count": 256
+      },
+      "16": {
+        "metrics": {
+          "condition_number": 13.933562108475536,
+          "dirichlet_flux_rel_l2": 0.005757583130836644,
+          "dirichlet_flux_rel_max": 0.005757583130853196,
+          "field_rel_max": 0.006879393968511441,
+          "neumann_trace_rel_l2": 0.010062181583357453,
+          "neumann_trace_rel_max": 0.010062181583359238,
+          "rank_deficiency": 0.0,
+          "relative_residual": 6.526149226868793e-16
+        },
+        "notes": [],
+        "panel_count": 32
+      },
+      "32": {
+        "metrics": {
+          "condition_number": 27.54351135830267,
+          "dirichlet_flux_rel_l2": 0.0012829511773298082,
+          "dirichlet_flux_rel_max": 0.0012829511774049192,
+          "field_rel_max": 0.001757003381992945,
+          "neumann_trace_rel_l2": 0.002500973729531891,
+          "neumann_trace_rel_max": 0.002500973729533801,
+          "rank_deficiency": 0.0,
+          "relative_residual": 1.6517817232411108e-15
+        },
+        "notes": [],
+        "panel_count": 64
+      },
+      "64": {
+        "metrics": {
+          "condition_number": 54.929247563847234,
+          "dirichlet_flux_rel_l2": 0.0003043458895822402,
+          "dirichlet_flux_rel_max": 0.00030434588993030553,
+          "field_rel_max": 0.0004214033720128265,
+          "neumann_trace_rel_l2": 0.000628456621992844,
+          "neumann_trace_rel_max": 0.0006284566219967619,
+          "rank_deficiency": 0.0,
+          "relative_residual": 3.5119603994480146e-15
+        },
+        "notes": [],
+        "panel_count": 128
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.005757583130836644,
+          0.0012829511773298082,
+          0.0003043458895822402,
+          7.420381447040612e-05
+        ],
+        "expected_order": 2.0,
+        "finite_error": 7.420381447040612e-05,
+        "metric": "dirichlet_flux_rel_l2",
+        "observed_orders": [
+          2.1659970667601054,
+          2.0756824833642464,
+          2.036146625220014
+        ]
+      }
+    },
+    "annulus_mixed_outer_dirichlet": {
+      "128": {
+        "metrics": {
+          "condition_number": 115.19619327896135,
+          "dirichlet_flux_rel_l2": 7.419830867320619e-05,
+          "dirichlet_flux_rel_max": 7.419830891307218e-05,
+          "field_rel_max": 0.00015201927372779985,
+          "neumann_trace_rel_l2": 0.00027378312022840123,
+          "neumann_trace_rel_max": 0.00027378312023522346,
+          "rank_deficiency": 0.0,
+          "relative_residual": 9.066109891507547e-16
+        },
+        "notes": [],
+        "panel_count": 256
+      },
+      "16": {
+        "metrics": {
+          "condition_number": 14.291408090622307,
+          "dirichlet_flux_rel_l2": 0.00572462313723159,
+          "dirichlet_flux_rel_max": 0.005724623137238327,
+          "field_rel_max": 0.009954980520495985,
+          "neumann_trace_rel_l2": 0.016177384700283137,
+          "neumann_trace_rel_max": 0.016177384700285104,
+          "rank_deficiency": 0.0,
+          "relative_residual": 2.6683627007123344e-16
+        },
+        "notes": [],
+        "panel_count": 32
+      },
+      "32": {
+        "metrics": {
+          "condition_number": 28.746481026451274,
+          "dirichlet_flux_rel_l2": 0.0012813073225909312,
+          "dirichlet_flux_rel_max": 0.0012813073226030985,
+          "field_rel_max": 0.002417987924916486,
+          "neumann_trace_rel_l2": 0.004200582102631736,
+          "neumann_trace_rel_max": 0.004200582102634656,
+          "rank_deficiency": 0.0,
+          "relative_residual": 4.313697517689646e-16
+        },
+        "notes": [],
+        "panel_count": 64
+      },
+      "64": {
+        "metrics": {
+          "condition_number": 57.57685905285094,
+          "dirichlet_flux_rel_l2": 0.0003042532913439846,
+          "dirichlet_flux_rel_max": 0.0003042532914167032,
+          "field_rel_max": 0.0006040784785156781,
+          "neumann_trace_rel_l2": 0.0010785269611175354,
+          "neumann_trace_rel_max": 0.0010785269611231238,
+          "rank_deficiency": 0.0,
+          "relative_residual": 7.659877130383502e-16
+        },
+        "notes": [],
+        "panel_count": 128
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.00572462313723159,
+          0.0012813073225909312,
+          0.0003042532913439846,
+          7.419830867320619e-05
+        ],
+        "expected_order": 2.0,
+        "finite_error": 7.419830867320619e-05,
+        "metric": "dirichlet_flux_rel_l2",
+        "observed_orders": [
+          2.159564172243439,
+          2.074271773861025,
+          2.0358146632154024
+        ]
+      }
+    },
+    "annulus_pure_neumann": {
+      "128": {
+        "metrics": {
+          "condition_number": 2.4141370886947156e+16,
+          "flux_integral": -7.78449595073029e-15,
+          "gauge_removed": -7.549051951886407e-16,
+          "potential_rel_l2_up_to_constant": 0.00027156550617379036,
+          "potential_rel_max_up_to_constant": 0.0002715655061854625,
+          "rank_deficiency": 1.0,
+          "relative_residual": 7.416632295365958e-05,
+          "solvability_residual": 7.416632295366522e-05
+        },
+        "notes": [
+          "pure Neumann solve: minimum-norm, zero-constant gauge"
+        ],
+        "panel_count": 256
+      },
+      "16": {
+        "metrics": {
+          "condition_number": 4.1769951969166e+16,
+          "flux_integral": -5.644330910903555e-17,
+          "gauge_removed": 4.755612457716749e-16,
+          "potential_rel_l2_up_to_constant": 0.01690824354754768,
+          "potential_rel_max_up_to_constant": 0.01690824354755118,
+          "rank_deficiency": 1.0,
+          "relative_residual": 0.005575117633637869,
+          "solvability_residual": 0.00557511763363782
+        },
+        "notes": [
+          "pure Neumann solve: minimum-norm, zero-constant gauge"
+        ],
+        "panel_count": 32
+      },
+      "32": {
+        "metrics": {
+          "condition_number": 3.0383065917237972e+16,
+          "flux_integral": 1.4494480494520863e-15,
+          "gauge_removed": 4.965353757703291e-16,
+          "potential_rel_l2_up_to_constant": 0.004280305577444972,
+          "potential_rel_max_up_to_constant": 0.004280305577449974,
+          "rank_deficiency": 1.0,
+          "relative_residual": 0.0012726774969244212,
+          "solvability_residual": 0.001272677496924641
+        },
+        "notes": [
+          "pure Neumann solve: minimum-norm, zero-constant gauge"
+        ],
+        "panel_count": 64
+      },
+      "64": {
+        "metrics": {
+          "condition_number": 7.1792056260191656e+16,
+          "flux_integral": -2.6430294518754702e-15,
+          "gauge_removed": -1.18783588702836e-15,
+          "potential_rel_l2_up_to_constant": 0.0010802623708483013,
+          "potential_rel_max_up_to_constant": 0.0010802623708608707,
+          "rank_deficiency": 1.0,
+          "relative_residual": 0.0003037328146733809,
+          "solvability_residual": 0.0003037328146733701
+        },
+        "notes": [
+          "pure Neumann solve: minimum-norm, zero-constant gauge"
+        ],
+        "panel_count": 128
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.01690824354754768,
+          0.004280305577444972,
+          0.0010802623708483013,
+          0.00027156550617379036
+        ],
+        "expected_order": 2.0,
+        "finite_error": 0.00027156550617379036,
+        "metric": "potential_rel_l2_up_to_constant",
+        "observed_orders": [
+          1.9819410967314974,
+          1.986332044125941,
+          1.9920096048805975
+        ]
+      }
+    },
+    "circle_mixed": {
+      "128": {
+        "metrics": {
+          "circle_radius": 1.5,
+          "condition_number": 53.222377862465315,
+          "dirichlet_flux_rel_l2": 0.0003407443913769061,
+          "dirichlet_flux_rel_max": 0.0008905216095207166,
+          "field_abs_max": 0.0001472529017643165,
+          "neumann_trace_rel_l2": 0.0001064211154320598,
+          "rank_deficiency": 0.0,
+          "relative_residual": 8.878904495789692e-16
+        },
+        "notes": [],
+        "panel_count": 128
+      },
+      "16": {
+        "metrics": {
+          "circle_radius": 1.5,
+          "condition_number": 6.473947939132293,
+          "dirichlet_flux_rel_l2": 0.019421557220316042,
+          "dirichlet_flux_rel_max": 0.023709991491043768,
+          "field_abs_max": 0.009820775026672113,
+          "neumann_trace_rel_l2": 0.007195309154363432,
+          "rank_deficiency": 0.0,
+          "relative_residual": 2.8958225671739925e-16
+        },
+        "notes": [],
+        "panel_count": 16
+      },
+      "32": {
+        "metrics": {
+          "circle_radius": 1.5,
+          "condition_number": 13.213899169710878,
+          "dirichlet_flux_rel_l2": 0.005064674000572102,
+          "dirichlet_flux_rel_max": 0.0076996079346994695,
+          "field_abs_max": 0.0023726777228292306,
+          "neumann_trace_rel_l2": 0.0017573489642028753,
+          "rank_deficiency": 0.0,
+          "relative_residual": 3.413820848687701e-16
+        },
+        "notes": [],
+        "panel_count": 32
+      },
+      "64": {
+        "metrics": {
+          "circle_radius": 1.5,
+          "condition_number": 26.573424799926787,
+          "dirichlet_flux_rel_l2": 0.0013145497963110001,
+          "dirichlet_flux_rel_max": 0.0025886945169440504,
+          "field_abs_max": 0.0005908700679826406,
+          "neumann_trace_rel_l2": 0.0004308497239982608,
+          "rank_deficiency": 0.0,
+          "relative_residual": 5.57156435869075e-16
+        },
+        "notes": [],
+        "panel_count": 64
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.019421557220316042,
+          0.005064674000572102,
+          0.0013145497963110001,
+          0.0003407443913769061
+        ],
+        "expected_order": 2.0,
+        "finite_error": 0.0003407443913769061,
+        "metric": "dirichlet_flux_rel_l2",
+        "observed_orders": [
+          1.9391175659401134,
+          1.945900616062368,
+          1.947806977854039
+        ]
+      }
+    },
+    "square_mixed": {
+      "128": {
+        "metrics": {
+          "condition_number": 448.44414176072445,
+          "dirichlet_flux_rel_l2": 0.005901712617401678,
+          "dirichlet_flux_rel_l2_away_from_junction": 0.002491051502784327,
+          "dirichlet_flux_rel_max": 0.04754082470041787,
+          "field_rel_max": 2.1650103415665684e-05,
+          "junction_panel_flux_abs_max": 0.09508164940083574,
+          "neumann_trace_rel_l2": 0.00017611058114786374,
+          "neumann_trace_rel_max": 0.0011710758669913294,
+          "rank_deficiency": 0.0,
+          "relative_residual": 1.1818782073669812e-15
+        },
+        "notes": [
+          "flux error is concentrated on the panels adjacent to a Dirichlet/Neumann junction at a 90-degree corner; see circle_mixed for the same BC switch on a smooth boundary"
+        ],
+        "panel_count": 512
+      },
+      "16": {
+        "metrics": {
+          "condition_number": 55.61988736176415,
+          "dirichlet_flux_rel_l2": 0.01669223239807093,
+          "dirichlet_flux_rel_l2_away_from_junction": 0.007373645666507726,
+          "dirichlet_flux_rel_max": 0.047540068603537655,
+          "field_rel_max": 0.0006574450485359865,
+          "junction_panel_flux_abs_max": 0.09508013720707531,
+          "neumann_trace_rel_l2": 0.003662613457595154,
+          "neumann_trace_rel_max": 0.00913666224404371,
+          "rank_deficiency": 0.0,
+          "relative_residual": 5.837366548192214e-16
+        },
+        "notes": [
+          "flux error is concentrated on the panels adjacent to a Dirichlet/Neumann junction at a 90-degree corner; see circle_mixed for the same BC switch on a smooth boundary"
+        ],
+        "panel_count": 64
+      },
+      "32": {
+        "metrics": {
+          "condition_number": 111.88827199325335,
+          "dirichlet_flux_rel_l2": 0.011795094266361139,
+          "dirichlet_flux_rel_l2_away_from_junction": 0.005065327811499217,
+          "dirichlet_flux_rel_max": 0.047537518014597824,
+          "field_rel_max": 0.00021443606571164647,
+          "junction_panel_flux_abs_max": 0.09507503602919565,
+          "neumann_trace_rel_l2": 0.0013451472668801635,
+          "neumann_trace_rel_max": 0.004633728587924777,
+          "rank_deficiency": 0.0,
+          "relative_residual": 5.340932485964109e-16
+        },
+        "notes": [
+          "flux error is concentrated on the panels adjacent to a Dirichlet/Neumann junction at a 90-degree corner; see circle_mixed for the same BC switch on a smooth boundary"
+        ],
+        "panel_count": 128
+      },
+      "64": {
+        "metrics": {
+          "condition_number": 224.12350946117274,
+          "dirichlet_flux_rel_l2": 0.008343235380592725,
+          "dirichlet_flux_rel_l2_away_from_junction": 0.0035414090290476815,
+          "dirichlet_flux_rel_max": 0.04753704166447692,
+          "field_rel_max": 6.851514828070865e-05,
+          "junction_panel_flux_abs_max": 0.09507408332895384,
+          "neumann_trace_rel_l2": 0.0004885426109261014,
+          "neumann_trace_rel_max": 0.0023336885011312866,
+          "rank_deficiency": 0.0,
+          "relative_residual": 6.793461592752825e-16
+        },
+        "notes": [
+          "flux error is concentrated on the panels adjacent to a Dirichlet/Neumann junction at a 90-degree corner; see circle_mixed for the same BC switch on a smooth boundary"
+        ],
+        "panel_count": 256
+      },
+      "headline": {
+        "below_3_percent": true,
+        "errors": [
+          0.01669223239807093,
+          0.011795094266361139,
+          0.008343235380592725,
+          0.005901712617401678
+        ],
+        "expected_order": 2.0,
+        "finite_error": 0.005901712617401678,
+        "metric": "dirichlet_flux_rel_l2",
+        "observed_orders": [
+          0.5009899631774258,
+          0.4995080960194811,
+          0.49947327674366154
+        ]
+      }
+    }
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "reference_length_sweep": [
+    {
+      "condition_number": 349.842253498462,
+      "flux_rel_l2_all": 0.00079684959499108,
+      "flux_rel_l2_outer": 0.0008768135700042051,
+      "reference_length": 0.25
+    },
+    {
+      "condition_number": 229.9677062438657,
+      "flux_rel_l2_all": 0.0008082244789506949,
+      "flux_rel_l2_outer": 0.0009274569894711604,
+      "reference_length": 0.5
+    },
+    {
+      "condition_number": 111.00473111363074,
+      "flux_rel_l2_all": 0.0008451139696651402,
+      "flux_rel_l2_outer": 0.001079532813920843,
+      "reference_length": 1.0
+    },
+    {
+      "condition_number": 66.46407452809272,
+      "flux_rel_l2_all": 0.0009678033312026499,
+      "flux_rel_l2_outer": 0.0015093892321965232,
+      "reference_length": 1.5
+    },
+    {
+      "condition_number": 609.3347640542162,
+      "flux_rel_l2_all": 0.09423327082949051,
+      "flux_rel_l2_outer": 0.21070539722615145,
+      "reference_length": 2.0
+    },
+    {
+      "condition_number": 88.0594570021774,
+      "flux_rel_l2_all": 0.0007033758474057767,
+      "flux_rel_l2_outer": 0.0002580372201513165,
+      "reference_length": 3.0
+    }
+  ],
+  "setup": {
+    "amplitude": 1.0,
+    "annulus_inner_radius": 1.0,
+    "annulus_outer_radius": 2.0,
+    "offset": 0.5,
+    "panels": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "radial_potential": "u = A log r + B",
+    "reference_length": 1.0,
+    "square_potential": "u = x^2 - y^2"
+  }
+}

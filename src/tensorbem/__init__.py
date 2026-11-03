@@ -141,6 +141,15 @@ from .rao import (
     compute_rao_spectrum,
     estimate_natural_frequency,
 )
+from .mixed_bc import (
+    MixedBoundaryResult,
+    PanelSet,
+    assemble_panels,
+    circle_loop,
+    evaluate_field,
+    flux_integral,
+    solve_mixed,
+)
 from .recovery import recover_tangent_gradient
 from .solver import (
     LaplaceDirichletResult,
@@ -177,6 +186,13 @@ __all__ = [
     "compute_added_mass_matrix_2d",
     "assemble_matrices",
     "evaluate_interior_field",
+    "MixedBoundaryResult",
+    "PanelSet",
+    "assemble_panels",
+    "circle_loop",
+    "evaluate_field",
+    "flux_integral",
+    "solve_mixed",
     "TriangleMesh",
     "WettedHullMesh",
     "SurfaceMesh3D",
