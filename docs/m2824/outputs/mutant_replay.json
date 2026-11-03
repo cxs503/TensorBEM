@@ -1,0 +1,66 @@
+{
+  "generated_by": "docs/m2824/tools/mutant_replay.py",
+  "worktree": "/root/tp-agent/work/m2824",
+  "backfill": "tests/test_mutation_gap_closure.py",
+  "baseline_green": true,
+  "baseline_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n10 passed, 1 warning in 0.34s",
+  "mutants": [
+    {
+      "id": "hydrostatic:236 x_moment /6.0 -> *6.0",
+      "module": "hydrostatic",
+      "unit_test": "tests/test_hydrostatic_analytic_benchmark.py",
+      "applicable": true,
+      "pre_suite_green": true,
+      "post_suite_green": false,
+      "verdict": "killed by the backfilled test",
+      "backfill_tail": "=========================== short test summary info ============================\nFAILED tests/test_mutation_gap_closure.py::test_eccentric_waterplane_centroid_and_moments_are_pinned\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 10 passed, 1 warning in 0.60s",
+      "pre_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n10 passed, 1 warning in 0.60s"
+    },
+    {
+      "id": "hydrostatic empty-waterline guard 0.0 -> 1.0",
+      "module": "hydrostatic",
+      "unit_test": "tests/test_hydrostatic_analytic_benchmark.py",
+      "applicable": true,
+      "pre_suite_green": true,
+      "post_suite_green": false,
+      "verdict": "killed by the backfilled test",
+      "backfill_tail": "=========================== short test summary info ============================\nFAILED tests/test_mutation_gap_closure.py::test_fully_submerged_body_returns_no_waterplane\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 12 passed, 1 warning in 0.72s",
+      "pre_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n10 passed, 1 warning in 0.52s"
+    },
+    {
+      "id": "hydrostatic zero-total-area guard 0.0 -> 1.0",
+      "module": "hydrostatic",
+      "unit_test": "tests/test_hydrostatic_analytic_benchmark.py",
+      "applicable": true,
+      "pre_suite_green": true,
+      "post_suite_green": false,
+      "verdict": "killed by the backfilled test",
+      "backfill_tail": "=========================== short test summary info ============================\nFAILED tests/test_mutation_gap_closure.py::test_zero_area_waterline_loop_returns_no_waterplane\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 13 passed, 1 warning in 0.77s",
+      "pre_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n10 passed, 1 warning in 0.54s"
+    },
+    {
+      "id": "hydrostatic:314 zero-volume np.zeros(3) -> np.zeros(4)",
+      "module": "hydrostatic",
+      "unit_test": "tests/test_hydrostatic_analytic_benchmark.py",
+      "applicable": true,
+      "pre_suite_green": true,
+      "post_suite_green": false,
+      "verdict": "killed by the backfilled test",
+      "backfill_tail": "=========================== short test summary info ============================\nFAILED tests/test_mutation_gap_closure.py::test_zero_face_hull_returns_a_three_vector\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 14 passed, 1 warning in 0.63s",
+      "pre_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n10 passed, 1 warning in 0.60s"
+    },
+    {
+      "id": "free_surface:243 depth term 2.0 * (...) -> 2.0 / (...)",
+      "module": "free_surface",
+      "unit_test": "tests/test_free_surface_kernel.py",
+      "applicable": true,
+      "pre_suite_green": true,
+      "post_suite_green": false,
+      "verdict": "killed by the backfilled test",
+      "backfill_tail": "=========================== short test summary info ============================\nFAILED tests/test_mutation_gap_closure.py::test_source_depth_derivative_matches_a_finite_difference[1.0--1.0-0.0--1.2-0.6]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed, 16 passed, 1 warning in 0.59s",
+      "pre_tail": "    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n11 passed, 1 warning in 0.35s"
+    }
+  ],
+  "killed": 5,
+  "total": 5
+}
