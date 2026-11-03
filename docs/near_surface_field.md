@@ -14,8 +14,13 @@ arbitrary positive clearance, and an analytic verification.
 `d = 1e-5 · panel size`), and the near-wall potential is accurate to
 0.2–0.7 % at 320 panels / 0.35 % at 1280 panels. The near-wall **velocity and
 pressure do not meet the 3 % bar**, and the report says so explicitly (§6):
-the residual error there is *not* quadrature error but cancellation inside the
-closed-form solid-angle gradient of the constant-panel double layer.
+the residual error there is *not* quadrature error: it is the differentiation of a
+piecewise-constant density, which does not converge under mesh refinement at all.
+On 2026-11-03 the previously documented cause ("cancellation inside the closed-form
+solid-angle gradient") was measured and refuted -- the closed form agrees with an
+independent finite-difference oracle to 2.5e-8 relative and the closed-mesh sum
+`sum_j grad(Omega_j)` vanishes to 2.2e-13. See
+[near_surface_error_budget.md](near_surface_error_budget.md).
 
 ---
 
@@ -180,18 +185,30 @@ tests/test_solver3d.py tests/test_pressure.py -q` → **34 passed** in 42 s.
 
 ## 5. Notes, limits, traps
 
-* **Operational envelope for velocity.** Use `d >= 0.1 h_max` for <3 % velocity
-  error, `d >= 0.5 h_max` for <0.1 %. Below `0.02 h_max` the velocity error is
-  discretisation-driven (12–49 %), not quadrature-driven.
-* **Diagnosed cause of the Cp failure.** The double-layer term is integrated with
-  the closed form `grad(Omega_j)`, whose denominator collapses when the target is
-  close to a panel *plane*. At 320 panels the equator point at `d = 0.03 h_max`
-  sits within `0.03 h` of several panel planes at once and the closed form loses
-  digits through cancellation (`velerr = 3.4` there versus `8.9e-2` at the pole
-  with the same clearance). A faceted mesh makes this worse than a smooth surface
-  would. The cure is a regularised or finite-part hypersingular quadrature for the
-  double-layer gradient, or moving the traces to a higher-order representation —
-  both are follow-up work, not a tweak.
+* **Operational envelope for velocity (revised 2026-11-03).** `d >= 0.5 h_max` is
+  the clearance that meets 3 % at the worst probe (2.66 % of the local gradient
+  scale with exact traces). The earlier "3 % at `d >= 0.1 h_max`" does not
+  reproduce: the equator error there is 79 % of the local scale. Below
+  `0.5 h_max` the error is representation-driven and does **not** improve with
+  mesh refinement, so a tighter clearance cannot be bought with panels. See
+  [near_surface_error_budget.md](near_surface_error_budget.md).
+* **Cause of the Cp failure (measured, corrected 2026-11-03).** Not the closed
+  form and not the quadrature. The double-layer term differentiates a
+  *piecewise-constant* trace, so a trace error `dmu_j` on panel `j` moves the
+  velocity by `grad(Omega_j) dmu_j/(4 pi)`: an amplification
+  `max_j |grad(Omega_j)|/(4 pi)` that grows like `1/d` (0.09 at `d = h_max`, 7.3
+  at `d = 0.03 h_max`, 320 panels) and turns the `O(h)` intra-panel variation of
+  the trace into an `O(1)` velocity error. Because the amplification is `O(1/h)`
+  and the variation `O(h)`, the product does not shrink: refining 320 -> 1280
+  panels changes the equator error by 3 % (observed order -0.03), while
+  quadrupling the single-layer quadrature changes it by 0. The closed-form
+  `grad(Omega_j)` itself reproduces an independent finite-difference oracle to
+  2.5e-8 relative, and `sum_j grad(Omega_j) = 2.2e-13` on the closed mesh, so
+  there is no cancellation anywhere in the chain. A regularised hypersingular
+  quadrature would therefore not help; the cure is a higher-order (linear or
+  quadratic) density representation, or not differentiating the representation at
+  all — the tangential-recovery route already gives 2.4 % on the surface. Budget,
+  oracle and mesh ladder: [near_surface_error_budget.md](near_surface_error_budget.md).
 * **Do not use the surface-exact point.** Both entry points still reject targets
   on the surface; the representation jumps there.
 * **Cost.** Work per target is logarithmic in `h/d`; the whole benchmark, dense
@@ -216,4 +233,8 @@ tests/test_solver3d.py tests/test_pressure.py -q` → **34 passed** in 42 s.
 | surface Cp (existing recovery path), 320 panels | analytic | RMS 5.5e-2 of scale | **yes** |
 
 No reference value was adjusted to make a metric pass; the Cp result is reported
-as a failure with its cause.
+as a failure with its cause. The follow-up audit
+[near_surface_error_budget.md](near_surface_error_budget.md) re-measured that cause
+(piecewise-constant density with `1/d` amplification; no convergence under mesh
+refinement) and corrected the two cure/envelope statements that did not reproduce.
+The FAIL itself is unchanged.
