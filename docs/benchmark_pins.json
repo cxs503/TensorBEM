@@ -1,7 +1,7 @@
 {
-  "commit": "f0bfb41",
+  "commit": "29236f0",
   "generated_by": "python -m tensorbem.benchmarks.doc_pins --write",
-  "note": "Numbers quoted in README.md and docs/marine_bem_benchmarks.md. Regenerate with --write after any intentional change; --check is what CI and tests/test_documented_benchmarks.py enforce.",
+  "note": "Numbers quoted in README.md and docs/marine_bem_benchmarks.md (Tables 1-2, 10, 12). Regenerate with --write after any intentional change; --check is what CI and tests/test_documented_benchmarks.py enforce. The 1280-panel sphere row was measured by sphere_added_mass.run(subdivisions=3) on this commit (artifacts/m2798_doc_pins/sphere_1280.json).",
   "pins": {
     "cylinder_added_mass_2d_128": {
       "caption": "4.02e-4 at 128 panels",
@@ -45,6 +45,175 @@
       "runner": "cylinder_added_mass.run",
       "settings": {
         "panel_count": 64
+      },
+      "slow": false
+    },
+    "hulme_hemisphere_16": {
+      "caption": "first row of the Hulme table",
+      "doc": "docs/marine_bem_benchmarks.md section 4.10 (Hulme, 16 panels)",
+      "metrics": {
+        "condition_number": 3.8925506264896836,
+        "excitation_force_z_rel_error": 0.06671639860233952,
+        "heave_added_mass_rel_error": 0.12012810014703698,
+        "heave_damping_rel_error": 0.12189977674905007,
+        "surge_added_mass_rel_error": 0.18023724418320536,
+        "surge_damping_rel_error": 0.4024097060515509
+      },
+      "rtol": 0.005,
+      "runner": "floating_hemisphere.run_refinement_study",
+      "settings": {
+        "subdivisions": 1
+      },
+      "slow": false
+    },
+    "hulme_hemisphere_256": {
+      "caption": "headline Hulme row (A33 7.41e-3, B11 3.53e-2)",
+      "doc": "docs/marine_bem_benchmarks.md section 4.10 (Hulme, 256 panels)",
+      "metrics": {
+        "condition_number": 2.78287825558641,
+        "excitation_force_z_rel_error": 0.005667905840101258,
+        "heave_added_mass_rel_error": 0.007405440541471733,
+        "heave_damping_rel_error": 0.01181192783863598,
+        "surge_added_mass_rel_error": 0.013038378960299251,
+        "surge_damping_rel_error": 0.03527451400663637
+      },
+      "rtol": 0.005,
+      "runner": "floating_hemisphere.run_refinement_study",
+      "settings": {
+        "subdivisions": 3
+      },
+      "slow": false
+    },
+    "hulme_hemisphere_64": {
+      "caption": "second row of the Hulme table",
+      "doc": "docs/marine_bem_benchmarks.md section 4.10 (Hulme, 64 panels)",
+      "metrics": {
+        "condition_number": 3.0515487523933436,
+        "excitation_force_z_rel_error": 0.022094068100671525,
+        "heave_added_mass_rel_error": 0.02973591800839022,
+        "heave_damping_rel_error": 0.0450225113637059,
+        "surge_added_mass_rel_error": 0.05050798435588557,
+        "surge_damping_rel_error": 0.13049228123102583
+      },
+      "rtol": 0.005,
+      "runner": "floating_hemisphere.run_refinement_study",
+      "settings": {
+        "subdivisions": 2
+      },
+      "slow": false
+    },
+    "sphere_added_mass_3d_1280": {
+      "caption": "headline 3-D number 4.47e-3; takes about 10 min, excluded from the default check",
+      "doc": "README.md + docs/marine_bem_benchmarks.md section 4.2 (sphere, 1280 panels)",
+      "metrics": {
+        "added_mass": 2137.1645590574453,
+        "added_mass_relative_error": 0.004467403585941484,
+        "h_max": 0.1646471600639204,
+        "normal_derivative_relative_l2_error": 0.006845781173787856
+      },
+      "rtol": 0.0001,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "sphere_added_mass_3d_20": {
+      "caption": "2.13e-1 at 20 panels",
+      "doc": "docs/marine_bem_benchmarks.md section 4.2 (sphere, 20 panels)",
+      "metrics": {
+        "added_mass": 1690.1803881212086,
+        "added_mass_relative_error": 0.21268127760057987,
+        "h_max": 1.0514622242382672,
+        "normal_derivative_relative_l2_error": 0.03333814761927449
+      },
+      "rtol": 0.0001,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 0
+      },
+      "slow": false
+    },
+    "sphere_added_mass_3d_320": {
+      "caption": "1.74e-2 at 320 panels",
+      "doc": "docs/marine_bem_benchmarks.md section 4.2 (sphere, 320 panels)",
+      "metrics": {
+        "added_mass": 2109.4428999421184,
+        "added_mass_relative_error": 0.017380688694954495,
+        "h_max": 0.3249196962329064,
+        "normal_derivative_relative_l2_error": 0.014541554464665653
+      },
+      "rtol": 0.0001,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 2
+      },
+      "slow": false
+    },
+    "sphere_added_mass_3d_80": {
+      "caption": "6.48e-2 at 80 panels",
+      "doc": "docs/marine_bem_benchmarks.md section 4.2 (sphere, 80 panels)",
+      "metrics": {
+        "added_mass": 2007.732789258856,
+        "added_mass_relative_error": 0.06475922589787647,
+        "h_max": 0.6180339887498949,
+        "normal_derivative_relative_l2_error": 0.027884179766218663
+      },
+      "rtol": 0.0001,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 1
+      },
+      "slow": false
+    },
+    "submerged_sphere_20": {
+      "caption": "first row of the Wang/Linton table",
+      "doc": "docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 20 panels)",
+      "metrics": {
+        "condition_number": 2.407465553503791,
+        "excitation_force_x_rel_error": 0.36029014823478045,
+        "excitation_force_z_rel_error": 0.36977052909136576,
+        "heave_added_mass_rel_error": 0.2549667474006816,
+        "surge_added_mass_rel_error": 0.2679942590131578
+      },
+      "rtol": 0.05,
+      "runner": "submerged_sphere_wave.run_refinement_study",
+      "settings": {
+        "subdivisions": 0
+      },
+      "slow": false
+    },
+    "submerged_sphere_320": {
+      "caption": "headline Wang/Linton row (A33 1.85e-2, A11 2.08e-2)",
+      "doc": "docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 320 panels)",
+      "metrics": {
+        "condition_number": 2.1879938690916583,
+        "excitation_force_x_rel_error": 0.03100047197268868,
+        "excitation_force_z_rel_error": 0.03197229226250085,
+        "heave_added_mass_rel_error": 0.018508892187259006,
+        "surge_added_mass_rel_error": 0.020765722298705085
+      },
+      "rtol": 0.05,
+      "runner": "submerged_sphere_wave.run_refinement_study",
+      "settings": {
+        "subdivisions": 2
+      },
+      "slow": false
+    },
+    "submerged_sphere_80": {
+      "caption": "second row of the Wang/Linton table",
+      "doc": "docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 80 panels)",
+      "metrics": {
+        "condition_number": 2.258714554852114,
+        "excitation_force_x_rel_error": 0.11594161971983795,
+        "excitation_force_z_rel_error": 0.11934619738279592,
+        "heave_added_mass_rel_error": 0.0729881047456501,
+        "surge_added_mass_rel_error": 0.08016429776590614
+      },
+      "rtol": 0.05,
+      "runner": "submerged_sphere_wave.run_refinement_study",
+      "settings": {
+        "subdivisions": 1
       },
       "slow": false
     },

@@ -38,7 +38,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Mapping
 
-from . import cylinder_added_mass, ursell_cylinder
+from . import (
+    cylinder_added_mass,
+    floating_hemisphere,
+    sphere_added_mass,
+    submerged_sphere_wave,
+    ursell_cylinder,
+)
 
 PIN_SCHEMA = "tensorbem-doc-pins/1"
 DEFAULT_PIN_PATH = Path(__file__).resolve().parents[3] / "docs" / "benchmark_pins.json"
@@ -77,6 +83,51 @@ def _cylinder(panels: int) -> dict[str, object]:
 
 def _ursell(panels: int) -> dict[str, object]:
     return {"panel_count": panels}
+
+
+def _sphere(subdivisions: int) -> dict[str, object]:
+    return {"subdivisions": subdivisions}
+
+
+def _hulme_level(subdivisions: int) -> dict[str, object]:
+    """One row of Table 10: the refinement study at a single level."""
+    study = floating_hemisphere.run_refinement_study(
+        subdivisions=(subdivisions,), ka=1.0
+    )
+    return study["levels"][0]
+
+
+def _submerged_sphere_level(subdivisions: int) -> dict[str, object]:
+    """One row of Table 12: the refinement study at a single level."""
+    study = submerged_sphere_wave.run_refinement_study(
+        subdivisions=(subdivisions,), ka=0.8, submergence=1.5
+    )
+    return study["levels"][0]
+
+
+_SPHERE_METRICS = (
+    "h_max",
+    "added_mass",
+    "added_mass_relative_error",
+    "normal_derivative_relative_l2_error",
+)
+
+_HULME_METRICS = (
+    "condition_number",
+    "heave_added_mass_rel_error",
+    "heave_damping_rel_error",
+    "surge_added_mass_rel_error",
+    "surge_damping_rel_error",
+    "excitation_force_z_rel_error",
+)
+
+_SUBMERGED_SPHERE_METRICS = (
+    "condition_number",
+    "heave_added_mass_rel_error",
+    "surge_added_mass_rel_error",
+    "excitation_force_x_rel_error",
+    "excitation_force_z_rel_error",
+)
 
 
 _URSELL_METRICS = (
@@ -157,6 +208,110 @@ CASES: tuple[PinCase, ...] = (
         metrics=_URSELL_METRICS,
         slow=True,
         caption="refinement row; takes about 90 s, excluded from the default check",
+    ),
+    # --- 3-D translating sphere, Table 2 (section 4.2) -------------------
+    PinCase(
+        name="sphere_added_mass_3d_20",
+        doc="docs/marine_bem_benchmarks.md section 4.2 (sphere, 20 panels)",
+        runner="sphere_added_mass.run",
+        run=sphere_added_mass.run,
+        settings=_sphere(0),
+        metrics=_SPHERE_METRICS,
+        rtol=1.0e-4,
+        caption="2.13e-1 at 20 panels",
+    ),
+    PinCase(
+        name="sphere_added_mass_3d_80",
+        doc="docs/marine_bem_benchmarks.md section 4.2 (sphere, 80 panels)",
+        runner="sphere_added_mass.run",
+        run=sphere_added_mass.run,
+        settings=_sphere(1),
+        metrics=_SPHERE_METRICS,
+        rtol=1.0e-4,
+        caption="6.48e-2 at 80 panels",
+    ),
+    PinCase(
+        name="sphere_added_mass_3d_320",
+        doc="docs/marine_bem_benchmarks.md section 4.2 (sphere, 320 panels)",
+        runner="sphere_added_mass.run",
+        run=sphere_added_mass.run,
+        settings=_sphere(2),
+        metrics=_SPHERE_METRICS,
+        rtol=1.0e-4,
+        caption="1.74e-2 at 320 panels",
+    ),
+    PinCase(
+        name="sphere_added_mass_3d_1280",
+        doc="README.md + docs/marine_bem_benchmarks.md section 4.2 (sphere, 1280 panels)",
+        runner="sphere_added_mass.run",
+        run=sphere_added_mass.run,
+        settings=_sphere(3),
+        metrics=_SPHERE_METRICS,
+        rtol=1.0e-4,
+        slow=True,
+        caption="headline 3-D number 4.47e-3; takes about 10 min, excluded from the default check",
+    ),
+    # --- Hulme floating hemisphere, Table 10 (section 4.10) ---------------
+    PinCase(
+        name="hulme_hemisphere_16",
+        doc="docs/marine_bem_benchmarks.md section 4.10 (Hulme, 16 panels)",
+        runner="floating_hemisphere.run_refinement_study",
+        run=_hulme_level,
+        settings={"subdivisions": 1},
+        metrics=_HULME_METRICS,
+        rtol=5.0e-3,
+        caption="first row of the Hulme table",
+    ),
+    PinCase(
+        name="hulme_hemisphere_64",
+        doc="docs/marine_bem_benchmarks.md section 4.10 (Hulme, 64 panels)",
+        runner="floating_hemisphere.run_refinement_study",
+        run=_hulme_level,
+        settings={"subdivisions": 2},
+        metrics=_HULME_METRICS,
+        rtol=5.0e-3,
+        caption="second row of the Hulme table",
+    ),
+    PinCase(
+        name="hulme_hemisphere_256",
+        doc="docs/marine_bem_benchmarks.md section 4.10 (Hulme, 256 panels)",
+        runner="floating_hemisphere.run_refinement_study",
+        run=_hulme_level,
+        settings={"subdivisions": 3},
+        metrics=_HULME_METRICS,
+        rtol=5.0e-3,
+        caption="headline Hulme row (A33 7.41e-3, B11 3.53e-2)",
+    ),
+    # --- Wang/Linton submerged sphere, Table 12 (section 4.11) ------------
+    PinCase(
+        name="submerged_sphere_20",
+        doc="docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 20 panels)",
+        runner="submerged_sphere_wave.run_refinement_study",
+        run=_submerged_sphere_level,
+        settings={"subdivisions": 0},
+        metrics=_SUBMERGED_SPHERE_METRICS,
+        rtol=5.0e-2,
+        caption="first row of the Wang/Linton table",
+    ),
+    PinCase(
+        name="submerged_sphere_80",
+        doc="docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 80 panels)",
+        runner="submerged_sphere_wave.run_refinement_study",
+        run=_submerged_sphere_level,
+        settings={"subdivisions": 1},
+        metrics=_SUBMERGED_SPHERE_METRICS,
+        rtol=5.0e-2,
+        caption="second row of the Wang/Linton table",
+    ),
+    PinCase(
+        name="submerged_sphere_320",
+        doc="docs/marine_bem_benchmarks.md section 4.11 (submerged sphere, 320 panels)",
+        runner="submerged_sphere_wave.run_refinement_study",
+        run=_submerged_sphere_level,
+        settings={"subdivisions": 2},
+        metrics=_SUBMERGED_SPHERE_METRICS,
+        rtol=5.0e-2,
+        caption="headline Wang/Linton row (A33 1.85e-2, A11 2.08e-2)",
     ),
 )
 
