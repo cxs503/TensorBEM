@@ -46,6 +46,7 @@ from .diagnostics_report import (
 )
 from .free_surface import (
     green_function,
+    green_depth_gradient,
     green_gradient,
     green_gradient_field,
     principal_value_integral,
@@ -211,6 +212,7 @@ __all__ = [
     "RAOResult",
     "RAOSpectrum",
     "green_function",
+    "green_depth_gradient",
     "green_gradient",
     "green_gradient_field",
     "principal_value_integral",

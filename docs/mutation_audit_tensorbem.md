@@ -77,6 +77,21 @@ TensorBEM 已有 63 个测试文件、数百条断言，全部绿。但“绿”
 
 其中 3 条判为**等价变异体**（`0.0`/`-0.0` 相等、阈值边界、护栏区间内同真同假），它们不是缺陷，也不该为它们写测试；4 条判为**真实/疑似的覆盖缺口**，已登记为下一单待办（偏心水线面形心、两个退化分支、`dg_d_depth` 导数路径）。
 
+### 5.1 结案（m2829，2026-11-03）
+
+上表 4 条真实/疑似覆盖缺口已全部关闭，详见 `docs/mutation_gaps_closure.md`：
+
+| 缺口 | 回填测试 | 钉桩判定 |
+|---|---|---|
+| `hydrostatic:236` 水线面一阶矩乘除互换 | `test_eccentric_barge_waterplane_centroid_and_second_moments` | killed |
+| `hydrostatic:255` 无水线面出口 `0.0 → 1.0` | `test_fully_submerged_hull_reports_an_exactly_empty_waterplane` | killed |
+| `hydrostatic:314` 零排水量出口 `np.zeros(3) → np.zeros(4)` | `test_degenerate_displaced_volume_returns_a_three_vector`（两条出口各一 pin） | killed |
+| `free_surface:243` 水深偏导乘除互换（原为无消费者的死代码） | `test_depth_derivative_matches_finite_differences_and_the_field_gradient` | killed |
+
+判定不再是一次性人工结论：`tensorbem.benchmarks.mutation_regression` 把这 5 个 mutant 钉桩，
+`tests/test_mutation_regression_pins.py` 在常规套件里重放并强制要求指定的那条测试变红。
+`solver.py:243` 与 `finite_depth` 的其余条目维持原判。
+
 ## 6. 注意点与局限
 
 1. **抽样而非穷举**：全量枚举器能生成 kernels/free_surface/hydrostatic/solver/finite_depth = 67/232/233/62/372 个变异体，本单按种子各抽 8 个。score 是抽样估计，不是全量结论。

@@ -1,0 +1,82 @@
+{
+  "all_killed": true,
+  "killed": 5,
+  "pins": 5,
+  "rows": [
+    {
+      "failing_test": "tests/test_mutation_gaps.py::test_eccentric_barge_waterplane_centroid_and_second_moments",
+      "mutant": "tensorbem.hydrostatic:236:20:swap_binop",
+      "mutated_source": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "pin": {
+        "function": "compute_waterplane_properties",
+        "gap": "waterplane first moment -> centroid (off-centre waterplane)",
+        "module": "tensorbem.hydrostatic",
+        "occurrence": 0,
+        "operator": "swap_binop",
+        "original": "sign * np.sum((x + x_next) * cross) / 6.0",
+        "test": "tests/test_mutation_gaps.py::test_eccentric_barge_waterplane_centroid_and_second_moments"
+      },
+      "verdict": "killed"
+    },
+    {
+      "failing_test": "tests/test_mutation_gaps.py::test_fully_submerged_hull_reports_an_exactly_empty_waterplane",
+      "mutant": "tensorbem.hydrostatic:161:15:shift_constant",
+      "mutated_source": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "pin": {
+        "function": "compute_waterplane_properties",
+        "gap": "no-waterplane branch returns area 1.0 instead of 0.0",
+        "module": "tensorbem.hydrostatic",
+        "occurrence": 0,
+        "operator": "shift_constant",
+        "original": "0.0",
+        "test": "tests/test_mutation_gaps.py::test_fully_submerged_hull_reports_an_exactly_empty_waterplane"
+      },
+      "verdict": "killed"
+    },
+    {
+      "failing_test": "tests/test_mutation_gaps.py::test_degenerate_displaced_volume_returns_a_three_vector",
+      "mutant": "tensorbem.hydrostatic:300:29:shift_constant",
+      "mutated_source": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "pin": {
+        "function": "compute_displaced_volume_and_buoyancy",
+        "gap": "zero-displacement exit returns a length-4 centre (first exit)",
+        "module": "tensorbem.hydrostatic",
+        "occurrence": 0,
+        "operator": "shift_constant",
+        "original": "3",
+        "test": "tests/test_mutation_gaps.py::test_degenerate_displaced_volume_returns_a_three_vector"
+      },
+      "verdict": "killed"
+    },
+    {
+      "failing_test": "tests/test_mutation_gaps.py::test_degenerate_displaced_volume_returns_a_three_vector",
+      "mutant": "tensorbem.hydrostatic:314:29:shift_constant",
+      "mutated_source": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "pin": {
+        "function": "compute_displaced_volume_and_buoyancy",
+        "gap": "zero-displacement exit returns a length-4 centre (second exit)",
+        "module": "tensorbem.hydrostatic",
+        "occurrence": 1,
+        "operator": "shift_constant",
+        "original": "3",
+        "test": "tests/test_mutation_gaps.py::test_degenerate_displaced_volume_returns_a_three_vector"
+      },
+      "verdict": "killed"
+    },
+    {
+      "failing_test": "tests/test_mutation_gaps.py::test_depth_derivative_matches_finite_differences_and_the_field_gradient",
+      "mutant": "tensorbem.free_surface:248:37:swap_binop",
+      "mutated_source": "swap_binop in _source_gradient_terms: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "pin": {
+        "function": "_source_gradient_terms",
+        "gap": "depth derivative (dG/dA) had no consumer and no test",
+        "module": "tensorbem.free_surface",
+        "occurrence": 0,
+        "operator": "swap_binop",
+        "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+        "test": "tests/test_mutation_gaps.py::test_depth_derivative_matches_finite_differences_and_the_field_gradient"
+      },
+      "verdict": "killed"
+    }
+  ]
+}

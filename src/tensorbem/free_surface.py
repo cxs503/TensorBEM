@@ -212,9 +212,14 @@ def green_function(
     return value if outgoing else np.conj(value)
 
 
-def green_gradient(x, z, source_x, source_z, nu: float, *,
-                   outgoing: bool = True):
+def _source_gradient_terms(x, z, source_x, source_z, nu: float, *,
+                          outgoing: bool = True):
     """Derivatives of ``G`` with respect to the *source* coordinates.
+
+    Returns ``(dG/dx0, dG/dz0, dG/dA)``, where ``A = -(z + z0)`` is the depth
+    sum. The third entry is the free-surface derivative only (the Rankine part
+    does not depend on ``A``); it is exposed through
+    :func:`green_depth_gradient` and is not part of the double-layer kernel.
 
     The direct boundary integral equation needs source derivatives, because its
     double-layer kernel is taken along the source normal. They are analytic; no
@@ -264,7 +269,53 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
     if not outgoing:
         dg_d_source_x = np.conj(dg_d_source_x)
         dg_d_source_z = np.conj(dg_d_source_z)
+        # G_incoming is the complex conjugate of G_outgoing *everywhere*,
+        # including in its dependence on the depth sum; leaving this term
+        # unconjugated was the defect the mutation audit flagged at
+        # free_surface.py:243 (tests/test_mutation_gaps.py now pins both).
+        dg_d_depth = np.conj(dg_d_depth)
+    return dg_d_source_x, dg_d_source_z, dg_d_depth
+
+
+def green_gradient(x, z, source_x, source_z, nu: float, *,
+                   outgoing: bool = True):
+    """Derivatives of ``G`` with respect to the *source* coordinates.
+
+    See :func:`_source_gradient_terms` for the derivation and the sign
+    conventions; this wrapper is the public two-tuple form used by the
+    double-layer kernel.
+    """
+    dg_d_source_x, dg_d_source_z, _ = _source_gradient_terms(
+        x, z, source_x, source_z, nu, outgoing=outgoing
+    )
     return dg_d_source_x, dg_d_source_z
+
+
+def green_depth_gradient(x, z, source_x, source_z, nu: float, *,
+                         outgoing: bool = True):
+    """Derivative of the free-surface part of ``G`` w.r.t. the depth sum.
+
+    The deep-water kernel depends on the field point ``(x, z)`` and the source
+    point ``(x0, z0)`` only through the offset ``X = x - x0`` and the depth sum
+    ``A = -(z + z0)``.  This function returns ``dG/dA`` of the free-surface
+    part; the Rankine term ``log(r)/(2*pi)`` depends on ``z - z0`` and therefore
+    contributes nothing.
+
+    Because ``dA/dz = -1``, the same quantity is minus the free-surface part of
+    the vertical field gradient::
+
+        green_depth_gradient(...) == -green_gradient_field(..., include_rankine=False)[1]
+
+    which is what ``tests/test_mutation_gaps.py`` checks, together with an
+    independent finite difference of :func:`green_function`.
+
+    ``outgoing=False`` returns the incoming-wave kernel derivative, i.e. the
+    complex conjugate, consistently with :func:`green_function`.
+    """
+    _, _, dg_d_depth = _source_gradient_terms(
+        x, z, source_x, source_z, nu, outgoing=outgoing
+    )
+    return dg_d_depth
 
 
 def green_gradient_field(
