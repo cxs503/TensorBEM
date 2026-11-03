@@ -1,0 +1,262 @@
+{
+  "broaden": true,
+  "generated_by": "tensorbem.benchmarks.mutation_audit",
+  "isolated_package": "/tmp/tensorbem-mutation-j9x9qw4r/src/tensorbem/__init__.py",
+  "jobs": 4,
+  "max_per_module": 12,
+  "modules": {
+    "tensorbem.hydrostatic": {
+      "invalid": 0,
+      "killed": 7,
+      "mutants": 12,
+      "mutation_score": 0.5833333333333334,
+      "survived": 5,
+      "survivors": [
+        "shift_constant in compute_waterplane_properties: 1 -> 2",
+        "flip_compare in compute_waterplane_properties: len(loop) >= 3 -> len(loop) > 3",
+        "shift_constant in compute_waterplane_properties: 3 -> 4",
+        "flip_compare in compute_displaced_volume_and_buoyancy: abs(total_volume) < 1e-14 -> abs(total_volume) <= 1e-14",
+        "negate_constant in compute_mass_matrix: 2 -> -2"
+      ],
+      "tests": [
+        "tests/test_hydrostatic_analytic_benchmark.py",
+        "tests/test_hydrostatic_waterplane_gaps.py"
+      ],
+      "timeout": 0
+    }
+  },
+  "mutants": [
+    {
+      "col": 12,
+      "family_tests": [],
+      "function": "_point_in_polygon",
+      "key": "tensorbem.hydrostatic:122:12:flip_compare",
+      "killed_by": "tests/test_hydrostatic_analytic_benchmark.py::test_moonpool_waterplane_subtracts_the_hole",
+      "lineno": 122,
+      "module": "tensorbem.hydrostatic",
+      "operator": "flip_compare",
+      "original": "y1 > py",
+      "replacement": "y1 >= py",
+      "seconds": 1.55,
+      "stage": 1,
+      "summary": "flip_compare in _point_in_polygon: y1 > py -> y1 >= py",
+      "verdict": "killed"
+    },
+    {
+      "col": 15,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:161:15:shift_constant",
+      "killed_by": "tests/test_hydrostatic_waterplane_gaps.py::TestDegenerateSentinels::test_fully_submerged_body_has_no_waterplane",
+      "lineno": 161,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "0.0",
+      "replacement": "1.0",
+      "seconds": 1.74,
+      "stage": 1,
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 40,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:192:40:shift_constant",
+      "killed_by": null,
+      "lineno": 192,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "1",
+      "replacement": "2",
+      "seconds": 17.1,
+      "stage": 2,
+      "summary": "shift_constant in compute_waterplane_properties: 1 -> 2",
+      "verdict": "survived"
+    },
+    {
+      "col": 59,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:206:59:flip_compare",
+      "killed_by": null,
+      "lineno": 206,
+      "module": "tensorbem.hydrostatic",
+      "operator": "flip_compare",
+      "original": "len(loop) >= 3",
+      "replacement": "len(loop) > 3",
+      "seconds": 15.45,
+      "stage": 2,
+      "summary": "flip_compare in compute_waterplane_properties: len(loop) >= 3 -> len(loop) > 3",
+      "verdict": "survived"
+    },
+    {
+      "col": 58,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_rao_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:207:58:shift_constant",
+      "killed_by": null,
+      "lineno": 207,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "3",
+      "replacement": "4",
+      "seconds": 15.79,
+      "stage": 2,
+      "summary": "shift_constant in compute_waterplane_properties: 3 -> 4",
+      "verdict": "survived"
+    },
+    {
+      "col": 52,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:215:52:shift_constant",
+      "killed_by": "tests/test_hydrostatic_analytic_benchmark.py::test_twin_box_waterplane_keeps_both_loops",
+      "lineno": 215,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "1.0",
+      "replacement": "2.0",
+      "seconds": 1.49,
+      "stage": 1,
+      "summary": "shift_constant in compute_waterplane_properties: 1.0 -> 2.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 29,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:229:29:shift_constant",
+      "killed_by": "tests/test_hydrostatic_analytic_benchmark.py::test_twin_box_waterplane_keeps_both_loops",
+      "lineno": 229,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "1",
+      "replacement": "2",
+      "seconds": 1.55,
+      "stage": 1,
+      "summary": "shift_constant in compute_waterplane_properties: 1 -> 2",
+      "verdict": "killed"
+    },
+    {
+      "col": 11,
+      "family_tests": [],
+      "function": "compute_waterplane_properties",
+      "key": "tensorbem.hydrostatic:262:11:swap_binop",
+      "killed_by": "tests/test_hydrostatic_waterplane_gaps.py::TestEccentricWaterplaneCentroid::test_centroid_and_second_moments_of_an_offset_barge[shift0]",
+      "lineno": 262,
+      "module": "tensorbem.hydrostatic",
+      "operator": "swap_binop",
+      "original": "i_xx_origin - total_area * centroid[1] ** 2",
+      "replacement": "i_xx_origin + total_area * centroid[1] ** 2",
+      "seconds": 1.74,
+      "stage": 1,
+      "summary": "swap_binop in compute_waterplane_properties: i_xx_origin - total_area * centroid[1] ** 2 -> i_xx_origin + total_area * centroid[1] ** 2",
+      "verdict": "killed"
+    },
+    {
+      "col": 50,
+      "family_tests": [],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:309:50:shift_constant",
+      "killed_by": "tests/test_hydrostatic_analytic_benchmark.py::test_moonpool_waterplane_subtracts_the_hole",
+      "lineno": 309,
+      "module": "tensorbem.hydrostatic",
+      "operator": "shift_constant",
+      "original": "6.0",
+      "replacement": "12.0",
+      "seconds": 1.12,
+      "stage": 1,
+      "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 6.0 -> 12.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 7,
+      "family_tests": [
+        "tests/test_hydrostatic_convergence.py",
+        "tests/test_hydrostatic_verification.py",
+        "tests/test_waterplane_multi_loop.py"
+      ],
+      "function": "compute_displaced_volume_and_buoyancy",
+      "key": "tensorbem.hydrostatic:313:7:flip_compare",
+      "killed_by": null,
+      "lineno": 313,
+      "module": "tensorbem.hydrostatic",
+      "operator": "flip_compare",
+      "original": "abs(total_volume) < 1e-14",
+      "replacement": "abs(total_volume) <= 1e-14",
+      "seconds": 3.51,
+      "stage": 2,
+      "summary": "flip_compare in compute_displaced_volume_and_buoyancy: abs(total_volume) < 1e-14 -> abs(total_volume) <= 1e-14",
+      "verdict": "survived"
+    },
+    {
+      "col": 14,
+      "family_tests": [],
+      "function": "compute_hydrostatic_restoring_matrix",
+      "key": "tensorbem.hydrostatic:410:14:swap_binop",
+      "killed_by": "tests/test_hydrostatic_analytic_benchmark.py::test_twin_box_restoring_uses_total_waterplane",
+      "lineno": 410,
+      "module": "tensorbem.hydrostatic",
+      "operator": "swap_binop",
+      "original": "density * gravity * wp_area",
+      "replacement": "density * gravity / wp_area",
+      "seconds": 1.86,
+      "stage": 1,
+      "summary": "swap_binop in compute_hydrostatic_restoring_matrix: density * gravity * wp_area -> density * gravity / wp_area",
+      "verdict": "killed"
+    },
+    {
+      "col": 29,
+      "family_tests": [
+        "tests/test_hydrostatic_rao.py",
+        "tests/test_mutation_gaps.py"
+      ],
+      "function": "compute_mass_matrix",
+      "key": "tensorbem.hydrostatic:485:29:negate_constant",
+      "killed_by": null,
+      "lineno": 485,
+      "module": "tensorbem.hydrostatic",
+      "operator": "negate_constant",
+      "original": "2",
+      "replacement": "-2",
+      "seconds": 12.35,
+      "stage": 2,
+      "summary": "negate_constant in compute_mass_matrix: 2 -> -2",
+      "verdict": "survived"
+    }
+  ],
+  "overall": {
+    "invalid": 0,
+    "killed": 7,
+    "mutants": 12,
+    "mutation_score": 0.5833333333333334,
+    "survived": 5,
+    "survivors": [
+      "shift_constant in compute_waterplane_properties: 1 -> 2",
+      "flip_compare in compute_waterplane_properties: len(loop) >= 3 -> len(loop) > 3",
+      "shift_constant in compute_waterplane_properties: 3 -> 4",
+      "flip_compare in compute_displaced_volume_and_buoyancy: abs(total_volume) < 1e-14 -> abs(total_volume) <= 1e-14",
+      "negate_constant in compute_mass_matrix: 2 -> -2"
+    ],
+    "tests": [],
+    "timeout": 0
+  },
+  "seed": 20261103,
+  "timeout_seconds": 300.0
+}

@@ -212,6 +212,50 @@ def green_function(
     return value if outgoing else np.conj(value)
 
 
+def _depth_derivative(offset, depth, r_image2, frequency, cos_integral, *,
+                      outgoing: bool = True):
+    """``dG/dA`` of the *smooth* part of the deep-water kernel, ``A = depth``.
+
+    ``A = -(z + source_z)`` is the source depth below the free surface as seen
+    from the field point.  The smooth part is ``G`` with the Rankine
+    singularity removed, i.e. ``include_rankine=False``: ``-log(r_image)`` and
+    the principal-value integral plus the residue.  The Rankine term is the
+    only piece that depends on ``source_z`` *outside* ``A``, so the vertical
+    source derivative in :func:`green_gradient` is ``-dG/dA`` plus that single
+    explicit term.  Keeping this derivative in one place is what makes it
+    testable against a finite difference (see
+    ``tests/test_free_surface_smooth_depth_derivative.py``).
+    """
+    elementary_cos = depth / (depth * depth + offset * offset)
+    residue = np.exp(-frequency * depth) * np.cos(frequency * offset)
+    value = (1.0 / (2.0 * math.pi)) * (
+        -depth / r_image2 + 2.0 * (elementary_cos + frequency * cos_integral)
+    ) - 1.0j * _RESIDUE_SIGN * frequency * residue
+    return value if outgoing else np.conj(value)
+
+
+def smooth_depth_derivative(x, z, source_x, source_z, nu: float, *,
+                            outgoing: bool = True):
+    """Public wrapper around :func:`_depth_derivative` for verification.
+
+    Returns ``dG/dA`` for the smooth (non-Rankine) part of the deep-water
+    Green function, with ``A = -(z + source_z)``.  Because ``dA/dsource_z =
+    -1``, this equals ``-d/dsource_z`` of ``green_function(...,
+    include_rankine=False)``, which is the finite-difference reference used in
+    the test suite.
+    """
+    frequency = _validate_frequency(nu)
+    field_x, field_z, s_x, s_z = _broadcast_inputs(x, z, source_x, source_z)
+    offset = field_x - s_x
+    depth = -(field_z + s_z)
+    _check_scaled_depth(frequency, depth)
+    r_image2 = offset * offset + (field_z + s_z) ** 2
+    cos_integral = _pv_cosine(frequency, depth, offset)
+    return _depth_derivative(
+        offset, depth, r_image2, frequency, cos_integral, outgoing=outgoing
+    )
+
+
 def green_gradient(x, z, source_x, source_z, nu: float, *,
                    outgoing: bool = True):
     """Derivatives of ``G`` with respect to the *source* coordinates.
@@ -240,27 +284,25 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
     df_d_offset = offset * (1.0 / r2 - 1.0 / r_image2) + 2.0 * (
         elementary_sin + frequency * sin_integral
     )
-    df_d_depth = -depth / r_image2 + 2.0 * (elementary_cos + frequency * cos_integral)
     residue = np.exp(-frequency * depth) * np.cos(frequency * offset)
     dresidue_d_offset = -frequency * np.exp(-frequency * depth) * np.sin(
         frequency * offset
     )
-    dresidue_d_depth = -frequency * residue
 
     dg_d_offset = (1.0 / (2.0 * math.pi)) * df_d_offset + (
         1.0j * _RESIDUE_SIGN * dresidue_d_offset
     )
-    dg_d_depth = (1.0 / (2.0 * math.pi)) * df_d_depth + (
-        1.0j * _RESIDUE_SIGN * dresidue_d_depth
-    )
 
-    # Vertical source derivative: both r and r1 depend on source_z, as well as A.
+    # Vertical source derivative: both r and A depend on source_z.  The smooth
+    # part contributes -dG/dA (A = -(z + source_z)), the Rankine part only
+    # through r = |P - Q|, whose source_z derivative is -(z - source_z)/r^2.
+    dg_d_depth = _depth_derivative(
+        offset, depth, r_image2, frequency, cos_integral
+    )
     dg_d_source_x = -dg_d_offset
-    dg_d_source_z = (1.0 / (2.0 * math.pi)) * (
-        -(field_z - s_z) / r2 + depth / r_image2 - 2.0 * (
-            elementary_cos + frequency * cos_integral
-        )
-    ) + 1.0j * _RESIDUE_SIGN * (frequency * residue)
+    dg_d_source_z = -dg_d_depth + (1.0 / (2.0 * math.pi)) * (
+        -(field_z - s_z) / r2
+    )
     if not outgoing:
         dg_d_source_x = np.conj(dg_d_source_x)
         dg_d_source_z = np.conj(dg_d_source_z)
