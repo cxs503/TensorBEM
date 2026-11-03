@@ -577,18 +577,44 @@ def _ursell_multipole_system(
         math.exp(-x) * exponential_integral(x)
     )
 
+    # The bracket of entry (m, n) is dominated by (m+n-1)!/(2kf)**(m+n) and the
+    # prefactor by (-ka)**(m+n)/(m! n!), which for large truncation are of order
+    # exp(+10**2) and exp(-10**2) respectively: evaluated separately they
+    # overflow (audit: terms > ~80 for a/f = 0.5 raises OverflowError), while
+    # the product is O(1). Assemble each entry as
+    #
+    #     A_mn = exp(log_prefactor + log_scale) * scaled_bracket,
+    #
+    # i.e. factor out the largest log-magnitude of the bracket, so no
+    # intermediate leaves the double range, and the highest-order terms can be
+    # used to demonstrate truncation convergence.
     matrix = np.zeros((count, count), dtype=np.complex128)
     for m in range(1, count + 1):
         for n in range(1, count + 1):
             order = m + n
-            bracket = math.exp(log_factorial[order - 1] - order * log_x)
-            for r in range(1, order):
-                bracket += 2.0 * math.exp(log_factorial[r - 1] - r * log_x)
-            bracket += 2.0 * math.exp(-x) * 1j * math.pi - 2.0 * scaled_ei
+            # Bracket entries, as log-magnitudes:
+            #   (m+n-1)! / (2kf)**(m+n)  and  2 (r-1)! / (2kf)**r, r = 1..m+n-1
+            bracket_logs = [log_factorial[order - 1] - order * log_x]
+            bracket_logs.extend(
+                math.log(2.0) + log_factorial[r - 1] - r * log_x
+                for r in range(1, order)
+            )
+            # Free-surface term 2 exp(-2kf) (i pi - Ei(2kf)), kept complex; it is
+            # already O(1/(2kf)) because exp(-2kf) Ei(2kf) is evaluated scaled.
+            free_surface = 2.0 * math.exp(-x) * 1j * math.pi - 2.0 * scaled_ei
+            log_scale = max(bracket_logs + [math.log(abs(free_surface))])
+            scaled_bracket = math.fsum(
+                math.exp(value - log_scale) for value in bracket_logs
+            ) + free_surface * math.exp(-log_scale)
             matrix[m - 1, n - 1] = (
-                (-k_a) ** order
-                * math.exp(-log_factorial[m] - log_factorial[n])
-                * bracket
+                (-1.0) ** order
+                * math.exp(
+                    order * math.log(k_a)
+                    - log_factorial[m]
+                    - log_factorial[n]
+                    + log_scale
+                )
+                * scaled_bracket
             )
     matrix[np.diag_indices(count)] -= 1.0 / np.arange(1, count + 1)
     return matrix, log_factorial, k_a, x
