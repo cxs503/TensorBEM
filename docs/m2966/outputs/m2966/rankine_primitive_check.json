@@ -1,0 +1,494 @@
+{
+  "closed_form_vs_mpmath": [
+    {
+      "label": "self panel, singularity centred",
+      "xi": 0.5,
+      "h": 0.0,
+      "length": 1.0,
+      "closed_form": -1.6931471805599454,
+      "mpmath_40dps": -1.6931471805599454,
+      "abs_error": 0.0,
+      "rel_error": 0.0
+    },
+    {
+      "label": "self panel, singularity at end point",
+      "xi": 0.0,
+      "h": 0.0,
+      "length": 1.0,
+      "closed_form": -1.0,
+      "mpmath_40dps": -1.0,
+      "abs_error": 0.0,
+      "rel_error": 0.0
+    },
+    {
+      "label": "field point at far end point",
+      "xi": 1.0,
+      "h": 0.0,
+      "length": 1.0,
+      "closed_form": -1.0,
+      "mpmath_40dps": -1.0,
+      "abs_error": 0.0,
+      "rel_error": 0.0
+    },
+    {
+      "label": "coplanar, off-centre",
+      "xi": 0.25,
+      "h": 0.0,
+      "length": 1.0,
+      "closed_form": -1.5623351446188085,
+      "mpmath_40dps": -1.5623351446188083,
+      "abs_error": 2.220446049250313e-16,
+      "rel_error": 1.421235422436891e-16
+    },
+    {
+      "label": "nearly coplanar h=1e-3",
+      "xi": 0.0,
+      "h": 0.001,
+      "length": 1.0,
+      "closed_form": -0.9984297036731218,
+      "mpmath_40dps": -0.9984297036731218,
+      "abs_error": 0.0,
+      "rel_error": 0.0
+    },
+    {
+      "label": "smooth panel h=0.3",
+      "xi": 0.9,
+      "h": 0.3,
+      "length": 1.0,
+      "closed_form": -0.6913025886572551,
+      "mpmath_40dps": -0.6913025886572551,
+      "abs_error": 0.0,
+      "rel_error": 0.0
+    }
+  ],
+  "max_abs_error": 2.220446049250313e-16,
+  "max_rel_error": 1.421235422436891e-16,
+  "uniform_gauss_referee": {
+    "coplanar_panel_observed_order_sing_on_edge": 0.9999999995657501,
+    "coplanar_panel_observed_order_sing_inside_piece": 1.0000000000463591,
+    "order_fit_window_pieces": [
+      100,
+      1600
+    ],
+    "coplanar_panel_observed_order_full_range": 1.690626582813244,
+    "err_at_400_pieces_on_edge": 7.515237499422511e-06,
+    "err_at_400_pieces_inside_piece": 4.1460122041980796e-05,
+    "single_panel_24pt_bias": 0.04445536819132556,
+    "rows": [
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 0.0021254877015368656,
+        "err_sing_inside_piece": 0.0019214610173110547
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 6.012189999138329e-05,
+        "err_sing_inside_piece": 0.0003316809763524997
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 3.0060949995247555e-05,
+        "err_sing_inside_piece": 0.0001658404881759168
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 1.5030474997068666e-05,
+        "err_sing_inside_piece": 8.292024408773635e-05
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 7.515237499422511e-06,
+        "err_sing_inside_piece": 4.1460122041980796e-05
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 3.7576187488230772e-06,
+        "err_sing_inside_piece": 2.0730061021767554e-05
+      },
+      {
+        "label": "self panel, singularity centred",
+        "xi": 0.5,
+        "h": 0.0,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 1.8788093769650516e-06,
+        "err_sing_inside_piece": 1.0365030509662532e-05
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 6.012189999116124e-05,
+        "err_sing_inside_piece": 8.236700298747124e-05
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 3.0060949995358577e-05,
+        "err_sing_inside_piece": 4.1183501493957664e-05
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 1.5030474998178889e-05,
+        "err_sing_inside_piece": 2.059175074686781e-05
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 7.515237499644556e-06,
+        "err_sing_inside_piece": 1.0295875372823282e-05
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 3.757618750155345e-06,
+        "err_sing_inside_piece": 5.14793768635613e-06
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 1.8788093761878955e-06,
+        "err_sing_inside_piece": 2.573968843955221e-06
+      },
+      {
+        "label": "self panel, singularity at end point",
+        "xi": 0.0,
+        "h": 0.0,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 9.394046883715035e-07,
+        "err_sing_inside_piece": 1.2869844215890325e-06
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 6.012189999116124e-05,
+        "err_sing_inside_piece": 3.787679699363e-05
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 3.00609499954696e-05,
+        "err_sing_inside_piece": 1.8938398496981534e-05
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 1.50304749977348e-05,
+        "err_sing_inside_piece": 9.469199248490767e-06
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 7.515237498534333e-06,
+        "err_sing_inside_piece": 4.7345996245784505e-06
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 3.757618749822278e-06,
+        "err_sing_inside_piece": 2.367299811845136e-06
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 1.8788093755217616e-06,
+        "err_sing_inside_piece": 1.18364990553399e-06
+      },
+      {
+        "label": "field point at far end point",
+        "xi": 1.0,
+        "h": 0.0,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 9.394046872612805e-07,
+        "err_sing_inside_piece": 5.9182495204535e-07
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 0.0017514790283088555,
+        "err_sing_inside_piece": 0.0004356205830908788
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 0.0010627438507684328,
+        "err_sing_inside_piece": 0.0009607305086554163
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 3.00609499954696e-05,
+        "err_sing_inside_piece": 0.00016584048817613883
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 1.5030474997956844e-05,
+        "err_sing_inside_piece": 8.292024408818044e-05
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 7.515237499200467e-06,
+        "err_sing_inside_piece": 4.1460122044423287e-05
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 3.757618749045122e-06,
+        "err_sing_inside_piece": 2.0730061020213242e-05
+      },
+      {
+        "label": "coplanar, off-centre",
+        "xi": 0.25,
+        "h": 0.0,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 1.8788093780752746e-06,
+        "err_sing_inside_piece": 1.03650305129932e-05
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 4.834734512737526e-08,
+        "err_sing_inside_piece": 3.2888018219878745e-07
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 1.291472595532639e-09,
+        "err_sing_inside_piece": 8.278901120206683e-09
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 3.4094949086238557e-13,
+        "err_sing_inside_piece": 3.785727287208829e-11
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 3.3306690738754696e-16,
+        "err_sing_inside_piece": 1.7985612998927536e-14
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 1.3322676295501878e-15,
+        "err_sing_inside_piece": 3.3306690738754696e-16
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 9.992007221626409e-16,
+        "err_sing_inside_piece": 5.551115123125783e-16
+      },
+      {
+        "label": "nearly coplanar h=1e-3",
+        "xi": 0.0,
+        "h": 0.001,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 2.220446049250313e-16,
+        "err_sing_inside_piece": 1.1102230246251565e-15
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 25,
+        "order": 20,
+        "err_sing_on_edge": 0.0,
+        "err_sing_inside_piece": 2.220446049250313e-16
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 50,
+        "order": 20,
+        "err_sing_on_edge": 1.1102230246251565e-16,
+        "err_sing_inside_piece": 1.1102230246251565e-16
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 100,
+        "order": 20,
+        "err_sing_on_edge": 0.0,
+        "err_sing_inside_piece": 2.220446049250313e-16
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 200,
+        "order": 20,
+        "err_sing_on_edge": 3.3306690738754696e-16,
+        "err_sing_inside_piece": 5.551115123125783e-16
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 400,
+        "order": 20,
+        "err_sing_on_edge": 1.1102230246251565e-16,
+        "err_sing_inside_piece": 0.0
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 800,
+        "order": 20,
+        "err_sing_on_edge": 5.551115123125783e-16,
+        "err_sing_inside_piece": 4.440892098500626e-16
+      },
+      {
+        "label": "smooth panel h=0.3",
+        "xi": 0.9,
+        "h": 0.3,
+        "pieces": 1600,
+        "order": 20,
+        "err_sing_on_edge": 8.881784197001252e-16,
+        "err_sing_inside_piece": 8.881784197001252e-16
+      }
+    ]
+  },
+  "settings": {
+    "gauss_order_per_piece": 20,
+    "mpmath_dps": 40,
+    "case_grid": [
+      [
+        0.5,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.25,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.001,
+        1.0
+      ],
+      [
+        0.9,
+        0.3,
+        1.0
+      ]
+    ]
+  }
+}

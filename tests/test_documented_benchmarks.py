@@ -72,23 +72,80 @@ def test_pinned_cases_reference_existing_docs():
     assert "benchmark_pins.json" in text, "docs must point at the pin file"
 
 
-def test_analytic_rankine_panel_integral_is_exact():
-    """The close-form ``log`` panel integral must beat a uniform Gauss rule.
-
-    ``_evaluate_source_potential`` integrates ``log|P-Q|`` over a straight
-    panel analytically. This checks the closed form against a composite
-    Gauss rule refined until it is converged, including the self panel where
-    a uniform rule is exactly what the old code got wrong.
-    """
+def _rankine_panel_integral(xi: float, h: float, length: float) -> float:
+    """Close-form ``int_0^L log|P - Q| ds`` for a point at ``(xi, h)``."""
     from tensorbem.free_surface_solver import _log_panel_primitive  # noqa: PLC0415
 
-    def analytic(xi: float, h: float, length: float) -> float:
-        upper = _log_panel_primitive(np.array([[length - xi]]), np.array([[h]]))
-        lower = _log_panel_primitive(np.array([[-xi]]), np.array([[h]]))
-        return float((upper - lower)[0, 0])
+    upper = _log_panel_primitive(np.array([[length - xi]]), np.array([[h]]))
+    lower = _log_panel_primitive(np.array([[-xi]]), np.array([[h]]))
+    return float((upper - lower)[0, 0])
 
-    def composite_gauss(xi: float, h: float, length: float, pieces: int, order: int) -> float:
-        nodes, weights = np.polynomial.legendre.leggauss(order)
+
+def test_analytic_rankine_panel_integral_is_exact():
+    """The close-form ``log`` panel integral must match a reference quadrature.
+
+    ``_evaluate_source_potential`` integrates ``log|P-Q|`` over a straight
+    panel analytically. Certifying that closed form needs a referee with the
+    right error mechanism: a composite *uniform* Gauss rule restricted to
+    pieces that still contain the ````log r```` singularity converges only as
+    ``O(1/pieces)`` in the coplanar case (measured below), so it cannot
+    certify ``1e-8`` -- the ~1e-8 tolerance this test used to demand was an
+    artefact of the referee, not a defect of the closed form (see
+    ``docs/rankine_primitive_referee_study.md``). The referee used here is
+    ``mpmath.quad`` (tanh-sinh, arbitrary precision) with the singular point
+    fed in as a subdivision point, which reaches machine precision.
+    """
+    mpmath = pytest.importorskip(
+        "mpmath", reason="needs an arbitrary-precision referee for the closed form"
+    )
+
+    cases = (
+        (0.5, 0.0, 1.0),  # self panel: singularity at the panel midpoint
+        (0.0, 0.0, 1.0),  # self panel: singularity at the panel end point
+        (1.0, 0.0, 1.0),  # field point at the far end of the panel
+        (0.25, 0.0, 1.0),  # off-centre coplanar point
+        (0.0, 1.0e-3, 1.0),  # nearly-coplanar (h < 1e-14 is the switch-over)
+        (0.9, 0.3, 1.0),  # ordinary smooth panel
+    )
+    with mpmath.workdps(40):
+        for xi, h, length in cases:
+            closed = _rankine_panel_integral(xi, h, length)
+            points = [mpmath.mpf(0.0)]
+            if 0.0 < xi < length:
+                points.append(mpmath.mpf(xi))
+            points.append(mpmath.mpf(length))
+            referee = float(
+                mpmath.quad(
+                    lambda s: mpmath.mpf("0.5")
+                    * mpmath.log((s - mpmath.mpf(xi)) ** 2 + mpmath.mpf(h) ** 2),
+                    points,
+                )
+            )
+            assert abs(closed - referee) <= 1.0e-13 * max(1.0, abs(referee)), (
+                xi,
+                h,
+                closed,
+                referee,
+            )
+
+
+def test_uniform_gauss_referee_cannot_resolve_the_coplanar_log_singularity():
+    """Pin the ``O(1/N)`` resolution limit of a uniform-piece Gauss referee.
+
+    Historical context: the panel potential used to be integrated with a
+    single uniform Gauss rule per panel, which straddles the ``log r``
+    singularity of the self panel and is biased by ~1e-4 in the potential
+    (``test_legacy_log_singular_quadrature_bias_is_quantified``); the analytic
+    primitive replaced it. This test records *why* a uniform rule cannot be
+    used to certify the replacement: on a coplanar panel the composite rule
+    converges with observed order ~1 (error 7.5e-6 at 400 pieces), so the
+    ``1e-8`` tolerance that used to sit in this file was unattainable by the
+    referee, no matter how the code behaved.
+    """
+    xi, h, length = 0.5, 0.0, 1.0
+    nodes, weights = np.polynomial.legendre.leggauss(20)
+
+    def composite_gauss(pieces: int) -> float:
         edges = np.linspace(0.0, length, pieces + 1)
         total = 0.0
         for start, stop in zip(edges[:-1], edges[1:]):
@@ -98,16 +155,18 @@ def test_analytic_rankine_panel_integral_is_exact():
             total += half * np.sum(weights * 0.5 * np.log((s - xi) ** 2 + h**2))
         return total
 
-    for xi, h, length in ((0.5, 0.0, 1.0), (0.0, 1.0e-3, 1.0), (0.9, 0.3, 1.0)):
-        closed = analytic(xi, h, length)
-        fine = composite_gauss(xi, h, length, pieces=400, order=20)
-        coarse = composite_gauss(xi, h, length, pieces=1, order=24)
-        assert abs(closed - fine) < 1.0e-8, (xi, h, closed, fine)
-        if h == 0.0:
-            # A single uniform Gauss panel straddling the logarithmic
-            # singularity of the self panel is the historical defect: it is
-            # biased by orders of magnitude more than the closed form.
-            assert abs(coarse - fine) > 1.0e-4, (coarse, fine)
+    exact = _rankine_panel_integral(xi, h, length)
+    pieces = (100, 200, 400, 800)
+    errors = [abs(composite_gauss(n) - exact) for n in pieces]
+
+    observed_order = math.log2(errors[0] / errors[-1]) / math.log2(
+        pieces[-1] / pieces[0]
+    )
+    assert 0.8 < observed_order < 1.2, (observed_order, errors)
+    assert errors[2] > 1.0e-6, errors  # 400 pieces is still 1e-6 away
+    # A single uniform rule straddling the singularity (the historical
+    # scheme) is off by orders of magnitude more than the closed form.
+    assert abs(composite_gauss(1) - exact) > 1.0e-4
 
 
 def test_legacy_log_singular_quadrature_bias_is_quantified():

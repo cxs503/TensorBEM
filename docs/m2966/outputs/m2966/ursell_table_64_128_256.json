@@ -1,0 +1,75 @@
+{
+  "benchmark": "ursell_submerged_circular_cylinder_deep_water",
+  "parameters": {
+    "radius": 1.0,
+    "submergence": 2.0,
+    "ka": 0.6,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "panel_nodes": 24,
+    "source_count": 24
+  },
+  "reference": {
+    "omega": 2.4256937152080846,
+    "added_mass": 2545.167247813704,
+    "damping": 2718.1539515727764
+  },
+  "rows": [
+    {
+      "panels": 64,
+      "added_mass": 2587.762743068625,
+      "added_mass_relative_error": 0.016735833486585378,
+      "damping": 2787.2367800364336,
+      "damping_relative_error": 0.025415347951018234,
+      "near_over_far_field_damping": 1.0105357109796724,
+      "condition_number": 2.446175121149249,
+      "relative_residual": 6.77045003252303e-16
+    },
+    {
+      "panels": 128,
+      "added_mass": 2566.8343342915696,
+      "added_mass_relative_error": 0.008513030527356396,
+      "damping": 2754.470100002123,
+      "damping_relative_error": 0.013360592915766837,
+      "near_over_far_field_damping": 1.0053413740188557,
+      "condition_number": 2.4312454300018804,
+      "relative_residual": 9.167504373550889e-16
+    },
+    {
+      "panels": 256,
+      "added_mass": 2556.093606354438,
+      "added_mass_relative_error": 0.0042929825339061934,
+      "damping": 2736.749288695788,
+      "damping_relative_error": 0.006841164059987114,
+      "near_over_far_field_damping": 1.0026891252854961,
+      "condition_number": 2.4235291384292585,
+      "relative_residual": 1.2608790076574555e-15
+    }
+  ],
+  "mfs": [
+    {
+      "panels": 64,
+      "method": "mfs",
+      "added_mass": 2543.240605869413,
+      "added_mass_relative_error": 0.0007569804876068797,
+      "damping": 2708.5686809947247,
+      "damping_relative_error": 0.003526389876668117
+    },
+    {
+      "panels": 128,
+      "method": "mfs",
+      "added_mass": 2544.6864273460715,
+      "added_mass_relative_error": 0.0001889150774061737,
+      "damping": 2715.7555545010223,
+      "damping_relative_error": 0.0008823624836872476
+    },
+    {
+      "panels": 256,
+      "method": "mfs",
+      "added_mass": 2545.0470952767964,
+      "added_mass_relative_error": 4.7208110591017944e-05,
+      "damping": 2717.5542223063094,
+      "damping_relative_error": 0.0002206384469577048
+    }
+  ]
+}

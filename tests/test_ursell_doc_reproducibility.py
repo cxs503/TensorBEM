@@ -17,6 +17,7 @@ loose enough to absorb three-significant-figure rounding in the document.
 from __future__ import annotations
 
 import math
+import re
 from pathlib import Path
 
 import numpy as np
@@ -111,3 +112,26 @@ def test_document_contains_the_generated_rows(full_table):
     assert not missing, "documentation table drifted from the code:\n" + "\n".join(
         missing
     )
+
+
+def test_every_panel_column_has_a_generated_mfs_row():
+    """A hand-edited MFS row must not survive alone.
+
+    The verbatim check above only constrains the rows the generator emits, so
+    deleting one row and relabelling another used to slip through: an audit of
+    the published table found a single MFS row labelled "64 面元" carrying the
+    128-panel numbers (2544.69 / 2715.76), with the genuine 64-panel row gone.
+    Counting columns instead of trusting the labels closes that hole.
+    """
+    document = DOC_PATH.read_text()
+    start = document.index("| 面元数 |")
+    block = document[start : start + document[start:].index("\n\n")]
+    panel_counts = {int(m.group(1)) for m in re.finditer(r"(?m)^\| (\d+) \|", block)}
+    mfs_counts = {
+        int(m.group(1))
+        for m in re.finditer(
+            r"(?m)^\| 基本解方法（MFS，配点网格 (\d+) 面元）", block
+        )
+    }
+    assert panel_counts <= mfs_counts, (sorted(panel_counts), sorted(mfs_counts))
+    assert {64, 128} <= mfs_counts, sorted(mfs_counts)
