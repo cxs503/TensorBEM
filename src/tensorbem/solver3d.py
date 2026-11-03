@@ -34,6 +34,7 @@ from .kernels3d import (
     integrate_single_layer_triangle_self,
     solid_angle_triangles_batch,
 )
+from .near_singular import single_layer_gradients, single_layer_integrals
 from .recovery import recover_tangent_gradient
 
 FloatArray = NDArray[np.float64]
@@ -444,6 +445,158 @@ def evaluate_surface_velocity(
             target, mesh.v0, mesh.v1, mesh.v2
         )
         double_term = (result.boundary_values @ solid_angle_gradients) / _FOUR_PI
+        if domain == "interior":
+            contribution += double_term
+        else:
+            contribution -= double_term
+        values[index] = contribution
+    return values
+
+
+def evaluate_surface_field_near_surface(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
+    points: FloatArray,
+    domain: str | None = None,
+    quadrature_order: int = 8,
+    split_ratio: float = 1.0,
+    max_level: int = 24,
+) -> FloatArray:
+    """Evaluate the harmonic field at points arbitrarily close to the surface.
+
+    This is :func:`evaluate_surface_field` with the one change that made the
+    clearance restriction necessary: the weakly singular single-layer integral
+    ``int_{T_j} G dS`` is no longer evaluated by a fixed-order rule.  It is
+    evaluated by the adapt-until-well-separated rule of
+    :mod:`tensorbem.near_singular`, which bisects only the sub-triangles that
+    contain the singular peak, so the quadrature error is independent of the
+    clearance instead of growing like ``(h/d)``.
+
+    The double-layer term needs no treatment here: for constant panel density it
+    is the closed-form signed solid angle, which is exact at any clearance.
+
+    Parameters
+    ----------
+    quadrature_order, split_ratio, max_level:
+        Passed to :func:`tensorbem.near_singular.single_layer_integrals`.
+        ``split_ratio`` is how well separated a sub-triangle must be
+        (``distance >= split_ratio * size``) before the Gauss-Duffy rule is
+        applied to it; ``max_level`` caps the bisection depth.
+
+    Returns an array of shape ``(M,)``.  Points that lie on the surface itself
+    are still rejected (the representation is discontinuous there); unlike
+    :func:`evaluate_surface_field`, points at any positive clearance are
+    accepted.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if not isinstance(result, LaplaceSurfaceResult):
+        raise TypeError("result must be a LaplaceSurfaceResult")
+    if domain is None:
+        domain = result.domain
+    domain = _validate_domain(domain)
+    if domain != result.domain:
+        raise ValueError("domain must match the result's boundary-value problem")
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 3:
+        raise ValueError("points must have shape (M, 3)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    if (
+        result.normal_derivative.shape != (mesh.panel_count,)
+        or result.boundary_values.shape != (mesh.panel_count,)
+    ):
+        raise ValueError("result boundary traces must match the mesh panel count")
+
+    values = np.empty(len(targets), dtype=float)
+    for index, target in enumerate(targets):
+        clearance = _minimum_distance_to_mesh(mesh, target)
+        if clearance <= 1.0e-14 * mesh.h_max:
+            raise ValueError(
+                "evaluation point lies on the surface, where the representation "
+                "is discontinuous; move it off the surface by a positive clearance"
+            )
+        single_row = single_layer_integrals(
+            target,
+            mesh.v0,
+            mesh.v1,
+            mesh.v2,
+            order=quadrature_order,
+            split_ratio=split_ratio,
+            max_level=max_level,
+        )
+        solid_angles = solid_angle_triangles_batch(target, mesh.v0, mesh.v1, mesh.v2)
+        double_row = -solid_angles / _FOUR_PI
+        contribution = single_row @ result.normal_derivative
+        if domain == "interior":
+            contribution -= double_row @ result.boundary_values
+        else:
+            contribution += double_row @ result.boundary_values
+        values[index] = contribution
+    return values
+
+
+def evaluate_surface_velocity_near_surface(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
+    points: FloatArray,
+    domain: str | None = None,
+    quadrature_order: int = 8,
+    split_ratio: float = 1.0,
+    max_level: int = 24,
+) -> FloatArray:
+    """Evaluate ``grad(phi)`` at points arbitrarily close to the surface.
+
+    Counterpart of :func:`evaluate_surface_velocity` with the near-singular
+    single-layer gradient of :mod:`tensorbem.near_singular`.  The double-layer
+    term is the closed-form gradient of the panel solid angle, which stays
+    accurate at small clearance as long as the target is genuinely off the panel
+    plane; that is the same regularisation the existing far-field path uses.
+
+    Returns an array of shape ``(M, 3)``.
+    """
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    if not isinstance(result, LaplaceSurfaceResult):
+        raise TypeError("result must be a LaplaceSurfaceResult")
+    if domain is None:
+        domain = result.domain
+    domain = _validate_domain(domain)
+    if domain != result.domain:
+        raise ValueError("domain must match the result's boundary-value problem")
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 3:
+        raise ValueError("points must have shape (M, 3)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    if (
+        result.normal_derivative.shape != (mesh.panel_count,)
+        or result.boundary_values.shape != (mesh.panel_count,)
+    ):
+        raise ValueError("result boundary traces must match the mesh panel count")
+
+    values = np.empty((len(targets), 3), dtype=float)
+    for index, target in enumerate(targets):
+        clearance = _minimum_distance_to_mesh(mesh, target)
+        if clearance <= 1.0e-14 * mesh.h_max:
+            raise ValueError(
+                "evaluation point lies on the surface, where the gradient of the "
+                "representation is hypersingular; move it off by a positive clearance"
+            )
+        single_gradients = single_layer_gradients(
+            target,
+            mesh.v0,
+            mesh.v1,
+            mesh.v2,
+            order=quadrature_order,
+            split_ratio=split_ratio,
+            max_level=max_level,
+        )
+        solid_angle_gradients = gradient_solid_angle_triangles_batch(
+            target, mesh.v0, mesh.v1, mesh.v2
+        )
+        double_term = (result.boundary_values @ solid_angle_gradients) / _FOUR_PI
+        contribution = result.normal_derivative @ single_gradients
         if domain == "interior":
             contribution += double_term
         else:
