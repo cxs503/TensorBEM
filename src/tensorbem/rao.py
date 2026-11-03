@@ -329,11 +329,19 @@ def estimate_natural_frequency(
     added_mass_inf: FloatArray,
     restoring_matrix: FloatArray,
     dof: int,
+    *,
+    mass_matrix: FloatArray | None = None,
 ) -> float:
     """Estimate natural frequency for a single DOF.
 
     The natural frequency is:
         ω_n = sqrt(C[i,i] / (M[i,i] + A_∞[i,i]))
+
+    For translational DOFs (i = 0, 1, 2) ``M[i,i]`` is simply the body mass.
+    For rotational DOFs (i = 3, 4, 5) ``M[i,i]`` is a moment of inertia, so a
+    scalar mass is dimensionally invalid: pass the 6×6 ``mass_matrix`` from
+    :func:`tensorbem.hydrostatic.compute_mass_matrix` (its diagonal already
+    includes the parallel-axis transfer to the reference point).
 
     Parameters
     ----------
@@ -351,7 +359,26 @@ def estimate_natural_frequency(
     omega_n :
         Natural circular frequency (rad/s).
     """
-    m_eff = mass + added_mass_inf[dof, dof]
+    if isinstance(dof, (bool, np.bool_)) or not isinstance(dof, (int, np.integer)):
+        raise ValueError("dof must be an integer in [0, 5]")
+    dof = int(dof)
+    if dof < 0 or dof > 5:
+        raise ValueError("dof must be an integer in [0, 5]")
+
+    if mass_matrix is not None:
+        mm = np.asarray(mass_matrix, dtype=float)
+        if mm.shape != (6, 6):
+            raise ValueError("mass_matrix must have shape (6, 6)")
+        inertial = float(mm[dof, dof])
+    elif dof < 3:
+        inertial = float(mass)
+    else:
+        raise ValueError(
+            "rotational DOF requires the 6x6 mass_matrix keyword; a scalar mass "
+            "is dimensionally invalid for roll/pitch/yaw natural frequencies"
+        )
+
+    m_eff = inertial + added_mass_inf[dof, dof]
     c = restoring_matrix[dof, dof]
 
     if m_eff <= 0 or c <= 0:
