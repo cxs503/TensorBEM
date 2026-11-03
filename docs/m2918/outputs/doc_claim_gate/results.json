@@ -1,0 +1,222 @@
+{
+  "repo_root": "/root/tp-agent/work/m2918",
+  "repo_root_source": "discovered (module file -> parents, then cwd -> parents)",
+  "artifact_used": "/root/tp-agent/work/m2918/artifacts/ursell_doc_claims.json",
+  "artifact_kind": "generated artifacts/",
+  "pinned_artifact_exists": true,
+  "generated_artifact_exists": true,
+  "claims_checked": 23,
+  "claims_failed": 0,
+  "claims_missing": 0,
+  "gate_ok": true,
+  "max_relative_difference": 0.007745950519393112,
+  "rows": [
+    {
+      "key": "panel_added_mass_64",
+      "where": "table row 64: A",
+      "stated": 2587.76,
+      "measured": 2587.762743068625,
+      "rel_diff": 1.0600155025476478e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_added_mass_relative_error_64",
+      "where": "table row 64: A relative error",
+      "stated": 0.0167,
+      "measured": 0.016735833486585378,
+      "rel_diff": 0.0021411235128564704,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_64",
+      "where": "table row 64: B",
+      "stated": 2787.24,
+      "measured": 2787.2367800364336,
+      "rel_diff": 1.1552529692546028e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_relative_error_64",
+      "where": "table row 64: B relative error",
+      "stated": 0.025400000000000002,
+      "measured": 0.025415347951018234,
+      "rel_diff": 0.0006038851424663225,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "near_far_field_relative_difference_64",
+      "where": "table row 64: near/far-field damping ratio",
+      "stated": 0.010499999999999954,
+      "measured": 0.010535710979672533,
+      "rel_diff": 0.003389517778295081,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "panel_added_mass_128",
+      "where": "table row 128: A",
+      "stated": 2566.83,
+      "measured": 2566.8343342915696,
+      "rel_diff": 1.6885747209099582e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_added_mass_relative_error_128",
+      "where": "table row 128: A relative error",
+      "stated": 0.00851,
+      "measured": 0.008513030527356396,
+      "rel_diff": 0.000355986901099113,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_128",
+      "where": "table row 128: B",
+      "stated": 2754.47,
+      "measured": 2754.470100002123,
+      "rel_diff": 3.630539442689025e-08,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_relative_error_128",
+      "where": "table row 128: B relative error",
+      "stated": 0.0134,
+      "measured": 0.013360592915766837,
+      "rel_diff": 0.002949501154747371,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "near_far_field_relative_difference_128",
+      "where": "table row 128: near/far-field damping ratio",
+      "stated": 0.005300000000000082,
+      "measured": 0.005341374018855711,
+      "rel_diff": 0.007745950519393112,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "panel_added_mass_256",
+      "where": "table row 256: A",
+      "stated": 2556.09,
+      "measured": 2556.093606354438,
+      "rel_diff": 1.4108851213698316e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_added_mass_relative_error_256",
+      "where": "table row 256: A relative error",
+      "stated": 0.00429,
+      "measured": 0.0042929825339061934,
+      "rel_diff": 0.000694746340716931,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_256",
+      "where": "table row 256: B",
+      "stated": 2736.75,
+      "measured": 2736.749288695788,
+      "rel_diff": 2.5990843039814024e-07,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "panel_damping_relative_error_256",
+      "where": "table row 256: B relative error",
+      "stated": 0.00684,
+      "measured": 0.006841164059987114,
+      "rel_diff": 0.00017015525090566328,
+      "rel_tol": 0.005,
+      "pass": true
+    },
+    {
+      "key": "near_far_field_relative_difference_256",
+      "where": "table row 256: near/far-field damping ratio",
+      "stated": 0.0026999999999999247,
+      "measured": 0.002689125285496139,
+      "rel_diff": 0.00404395978217851,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "reference_added_mass",
+      "where": "table: Ursell reference A",
+      "stated": 2545.17,
+      "measured": 2545.167247813704,
+      "rel_diff": 1.0813380922548178e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "reference_damping",
+      "where": "table: Ursell reference B",
+      "stated": 2718.15,
+      "measured": 2718.1539515727764,
+      "rel_diff": 1.4537707748204145e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "mfs_added_mass",
+      "where": "table: MFS A",
+      "stated": 2544.69,
+      "measured": 2544.6864273460715,
+      "rel_diff": 1.4039662766276881e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "mfs_added_mass_relative_error",
+      "where": "table: MFS A relative error",
+      "stated": 0.00019,
+      "measured": 0.0001889150774061737,
+      "rel_diff": 0.005742911623161162,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "mfs_damping",
+      "where": "table: MFS B",
+      "stated": 2715.76,
+      "measured": 2715.7555545010223,
+      "rel_diff": 1.6369289830087322e-06,
+      "rel_tol": 1e-05,
+      "pass": true
+    },
+    {
+      "key": "mfs_damping_relative_error",
+      "where": "table: MFS B relative error",
+      "stated": 0.0008800000000000001,
+      "measured": 0.0008823624836872476,
+      "rel_diff": 0.002677452555977961,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "headline_added_mass_error_128",
+      "where": "README/abstract: 128-panel A error",
+      "stated": 0.00851,
+      "measured": 0.008513030527356396,
+      "rel_diff": 0.000355986901099113,
+      "rel_tol": 0.01,
+      "pass": true
+    },
+    {
+      "key": "headline_damping_error_128",
+      "where": "README/abstract: 128-panel B error",
+      "stated": 0.0134,
+      "measured": 0.013360592915766837,
+      "rel_diff": 0.002949501154747371,
+      "rel_tol": 0.01,
+      "pass": true
+    }
+  ]
+}
