@@ -227,6 +227,27 @@ def test_refinement_extrapolates_onto_the_ursell_reference():
     json.dumps(study, allow_nan=False)
 
 
+@HEAVY
+def test_heavy_tier_reproduces_the_documented_ellipsoid_numbers():
+    """The 1280-panel ellipsoid row (subdivisions=3) was the one the 2026-10-24
+    expansion audit left unverified: it registered the declared values but never
+    ran the solve. The heavy tier must reproduce all three axes within the
+    registry tolerance, which is the direct reproduction the audit asked for."""
+    report = check(tiers=("heavy",))
+    keys = {row["key"] for row in report["checks"]}
+    assert {
+        "ellipsoid_added_mass_1280_x",
+        "ellipsoid_added_mass_1280_y",
+        "ellipsoid_added_mass_1280_z",
+    } <= keys
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    json.dumps(report, allow_nan=False)
+
+
 # --------------------------------------------------------------------------
 # The command line
 # --------------------------------------------------------------------------
