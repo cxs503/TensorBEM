@@ -231,7 +231,10 @@ def _vectorized_single_layer_rankine(
         out[start:stop] = (areas[None, :] / _FOUR_PI) * ((1.0 / dist) @ w_ref)
 
     if self_diagonal:
-        for idx in range(p_cnt):
+        # only source panels that are also targets (the leading min(m, p) block)
+        # have a singular self term; rectangular operator blocks with extra
+        # image sources never contain the target itself.
+        for idx in range(min(m_cnt, p_cnt)):
             tri = np.stack((v0[idx], v1[idx], v2[idx]), axis=0)
             out[idx, idx] = integrate_single_layer_triangle_self(tri)
     return out
