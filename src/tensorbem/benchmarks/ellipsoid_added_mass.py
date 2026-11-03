@@ -49,7 +49,7 @@ from tensorbem.conditioning import estimate_operator_conditions
 from tensorbem.geometry3d import ellipsoid_mesh, project_to_ellipsoid
 from tensorbem.mesh_quality import diagnose_mesh_quality
 from tensorbem.quadrature_diagnostics import diagnose_near_singular_quadrature
-from tensorbem.solver3d import solve_laplace_surface
+from tensorbem.solver3d import assembled_surface, solve_laplace_surface
 
 _AXIS_NAMES = ("x", "y", "z")
 
@@ -68,8 +68,17 @@ def run(
     semi_axes: tuple[float, float, float] = (1.5, 1.0, 0.75),
     speed: float = 1.0,
     density: float = 1025.0,
+    reuse_assembly: bool = True,
 ) -> dict[str, object]:
-    """Run the translating-ellipsoid benchmark along all three axes."""
+    """Run the translating-ellipsoid benchmark along all three axes.
+
+    ``reuse_assembly`` assembles the dense single- and double-layer matrices
+    once for the three translation axes and reuses them for the solve and for
+    the condition-number diagnostic. The assembly does not depend on the
+    boundary data, so the default (``True``) gives bitwise identical numbers
+    for a sixth of the assembly cost; pass ``False`` to reproduce the
+    pre-2026-11-03 behaviour when checking that claim.
+    """
     for name, value in (("speed", speed), ("density", density)):
         if not math.isfinite(value) or value <= 0.0:
             raise ValueError(f"{name} must be a positive finite number")
@@ -86,19 +95,23 @@ def run(
     # Compute mesh quality diagnostics
     mesh_quality = diagnose_mesh_quality(mesh)
 
+    # One O(N^2) assembly serves all three axes, and the near-singular
+    # quadrature diagnostic is a property of the mesh only.
+    matrices = assembled_surface(mesh) if reuse_assembly else None
+    quadrature_diag = diagnose_near_singular_quadrature(mesh)
+
     rows: list[dict[str, object]] = []
     for axis, axis_name in enumerate(_AXIS_NAMES):
         trace_scale = ellipsoid_translation_trace_scale(axes, axis)
         boundary = -speed * trace_scale * projected[:, axis].copy()
-        result = solve_laplace_surface(mesh, boundary, domain="exterior")
-
-        # Compute conditioning diagnostics
-        conditioning = estimate_operator_conditions(
-            mesh, boundary, domain="exterior"
+        result = solve_laplace_surface(
+            mesh, boundary, domain="exterior", assembled=matrices
         )
 
-        # Compute near-singular quadrature diagnostics
-        quadrature_diag = diagnose_near_singular_quadrature(mesh)
+        # Compute conditioning diagnostics, reusing the matrices of the solve
+        conditioning = estimate_operator_conditions(
+            mesh, boundary, domain="exterior", assembled=matrices
+        )
 
         exact_flux = -speed * mesh.normals[:, axis]
         flux_error = result.normal_derivative - exact_flux
@@ -185,6 +198,13 @@ def main() -> None:
     )
     parser.add_argument("--speed", type=float, default=1.0)
     parser.add_argument("--density", type=float, default=1025.0)
+    parser.add_argument(
+        "--no-reuse-assembly",
+        dest="reuse_assembly",
+        action="store_false",
+        help="assemble per axis (pre-2026-11-03 behaviour; identical numbers, "
+        "six times the assembly cost)",
+    )
     parser.add_argument("--output", type=Path, help="also write machine-readable JSON")
     args = parser.parse_args()
     try:
@@ -193,6 +213,7 @@ def main() -> None:
             tuple(args.semi_axes),
             args.speed,
             args.density,
+            reuse_assembly=args.reuse_assembly,
         )
     except ValueError as error:
         parser.error(str(error))

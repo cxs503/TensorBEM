@@ -15,7 +15,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from .geometry3d import TriangleMesh
-from .solver3d import solve_laplace_surface
+from .solver3d import AssembledSurface, solve_laplace_surface
 
 FloatArray = NDArray[np.float64]
 
@@ -134,6 +134,10 @@ def estimate_condition_number(
         'power_iteration': always use power iteration
     power_iterations : int
         Number of iterations for power method.
+    assembled : AssembledSurface, optional
+        Matrices already assembled for this mesh. The routine only needs
+        ``S`` and ``H``, so passing them avoids a second O(N^2) assembly; the
+        condition numbers are identical to those computed from a fresh solve.
 
     Returns
     -------
@@ -171,6 +175,7 @@ def estimate_operator_conditions(
     domain: str = "exterior",
     method: Literal["auto", "direct", "power_iteration"] = "auto",
     power_iterations: int = 50,
+    assembled: AssembledSurface | None = None,
 ) -> ConditioningReport:
     """Estimate condition numbers for BEM operators on a mesh.
 
@@ -202,7 +207,9 @@ def estimate_operator_conditions(
         boundary_values = np.ones(n)
 
     # Solve to get the matrices
-    result = solve_laplace_surface(mesh, boundary_values, domain=domain)
+    result = solve_laplace_surface(
+        mesh, boundary_values, domain=domain, assembled=assembled
+    )
 
     S = result.single_layer_matrix
     H = result.double_layer_matrix

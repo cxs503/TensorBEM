@@ -98,6 +98,55 @@ def _validate_order(order: int) -> int:
     return int(order)
 
 
+@dataclass(frozen=True)
+class AssembledSurface:
+    """Single- and double-layer matrices of one mesh at one quadrature order.
+
+    The dense assembly is O(N^2) and depends only on the geometry and the
+    quadrature order -- never on ``boundary_values``. Carrying the pair in one
+    object lets a caller solve several right-hand sides (for instance the three
+    translation axes of an ellipsoid) with one assembly, and lets diagnostics
+    such as the condition-number estimate reuse a matrix that a solve has
+    already produced instead of assembling a second one.
+    """
+
+    single: FloatArray
+    double: FloatArray
+    panel_count: int
+    quadrature_order: int
+
+
+def _validate_assembled(mesh: TriangleMesh, assembled: AssembledSurface) -> None:
+    """Reject an assembly that does not belong to ``mesh``."""
+    if not isinstance(assembled, AssembledSurface):
+        raise TypeError("assembled must be an AssembledSurface")
+    if assembled.panel_count != mesh.panel_count:
+        raise ValueError(
+            "assembled matrices were built for a mesh with "
+            f"{assembled.panel_count} panels, not {mesh.panel_count}"
+        )
+    expected = (mesh.panel_count, mesh.panel_count)
+    if assembled.single.shape != expected or assembled.double.shape != expected:
+        raise ValueError(
+            f"assembled matrices must have shape {expected}, got "
+            f"{assembled.single.shape} and {assembled.double.shape}"
+        )
+
+
+def assembled_surface(
+    mesh: TriangleMesh, quadrature_order: int = 8
+) -> AssembledSurface:
+    """Assemble the surface matrices once for reuse across right-hand sides."""
+    order = _validate_order(quadrature_order)
+    single, double = assemble_surface_matrices(mesh, quadrature_order=order)
+    return AssembledSurface(
+        single=single,
+        double=double,
+        panel_count=mesh.panel_count,
+        quadrature_order=order,
+    )
+
+
 def assemble_surface_matrices(
     mesh: TriangleMesh, quadrature_order: int = 8
 ) -> tuple[FloatArray, FloatArray]:
@@ -138,12 +187,17 @@ def solve_laplace_surface(
     boundary_values: FloatArray,
     domain: str = "interior",
     quadrature_order: int = 8,
+    assembled: AssembledSurface | None = None,
 ) -> LaplaceSurfaceResult:
     """Solve the interior or exterior 3-D Laplace Dirichlet problem.
 
     ``boundary_values`` are constant per triangle, prescribed at centroids.
     ``domain='exterior'`` returns the trace of ``dG/dn`` along the fluid-domain
     normal, i.e. the negative of the body-outward normal derivative.
+
+    Pass ``assembled`` (from :func:`assembled_surface`) to reuse matrices that
+    were already built for this mesh and quadrature order; the result is
+    bitwise the same as a fresh assembly, minus the O(N^2) assembly cost.
     """
     if not isinstance(mesh, TriangleMesh):
         raise TypeError("mesh must be a TriangleMesh")
@@ -155,7 +209,18 @@ def solve_laplace_surface(
     if not np.isfinite(values).all():
         raise ValueError("boundary_values must all be finite")
 
-    single, double = assemble_surface_matrices(mesh, quadrature_order=quadrature_order)
+    quadrature_order = _validate_order(quadrature_order)
+    if assembled is None:
+        matrices = assembled_surface(mesh, quadrature_order=quadrature_order)
+    else:
+        _validate_assembled(mesh, assembled)
+        if assembled.quadrature_order != quadrature_order:
+            raise ValueError(
+                "assembled.quadrature_order is "
+                f"{assembled.quadrature_order}, not {quadrature_order}"
+            )
+        matrices = assembled
+    single, double = matrices.single, matrices.double
     if domain == "interior":
         rhs = 0.5 * values + double @ values
     else:

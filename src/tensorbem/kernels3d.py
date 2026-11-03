@@ -16,6 +16,7 @@ Gauss rule.
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 import numpy as np
 from numpy.polynomial.legendre import leggauss
@@ -23,6 +24,26 @@ from numpy.typing import NDArray
 
 FloatArray = NDArray[np.float64]
 _FOUR_PI = 4.0 * np.pi
+
+
+@lru_cache(maxsize=32)
+def gauss_legendre_nodes(order: int) -> tuple[FloatArray, FloatArray]:
+    """Return cached Gauss-Legendre nodes and weights on ``[-1, 1]``.
+
+    ``numpy.polynomial.legendre.leggauss`` builds a Jacobi matrix and calls
+    ``eigvalsh`` on every call. The 3-D assembly evaluates the self-panel
+    integral once per panel, so ``leggauss`` was rebuilt thousands of times per
+    benchmark and dominated the assembly cost. The values only depend on
+    ``order``, so they are memoised here and returned read-only; a caller that
+    needs to modify them must copy first.
+
+    Numerical results are unchanged: the cached arrays are the same arrays
+    ``leggauss`` returns on the first call.
+    """
+    nodes, weights = leggauss(int(order))
+    nodes.setflags(write=False)
+    weights.setflags(write=False)
+    return nodes, weights
 
 
 def fundamental_solution_3d(distance: FloatArray | float) -> FloatArray:
@@ -82,7 +103,7 @@ def duffy_quadrature(vertices: FloatArray, order: int = 8) -> tuple[FloatArray, 
     order = _validate_order(order)
     v0, v1, v2 = points
     area = 0.5 * float(np.linalg.norm(np.cross(v1 - v0, v2 - v0)))
-    nodes, gauss_weights = leggauss(order)
+    nodes, gauss_weights = gauss_legendre_nodes(order)
     u = 0.5 * (nodes + 1.0)
     v = 0.5 * (nodes + 1.0)
     du = 0.5 * gauss_weights
@@ -123,7 +144,7 @@ def duffy_quadrature_batch(
         raise ValueError("triangles must be non-degenerate")
     order = _validate_order(order)
     areas = 0.5 * np.linalg.norm(np.cross(v1 - v0, v2 - v0), axis=1)
-    nodes, gauss_weights = leggauss(order)
+    nodes, gauss_weights = gauss_legendre_nodes(order)
     u = 0.5 * (nodes + 1.0)
     v = 0.5 * (nodes + 1.0)
     du = 0.5 * gauss_weights
@@ -224,7 +245,7 @@ def _polar_sectors(
     centroid = points.mean(axis=0)
     normal = np.cross(points[1] - points[0], points[2] - points[0])
     normal /= np.linalg.norm(normal)
-    nodes, weights = leggauss(order)
+    nodes, weights = gauss_legendre_nodes(order)
     theta_all: list[FloatArray] = []
     weight_all: list[FloatArray] = []
     extent_all: list[FloatArray] = []

@@ -1,0 +1,39 @@
+{
+ "panels": 1280,
+ "wall_seconds": 35.27865660004318,
+ "axes": [
+  {
+   "axis": "x",
+   "added_mass": 1206.0044075005273,
+   "exact": 1211.051995240953,
+   "measured_rel_error": 0.004167936438948101,
+   "declared_rel_error": 0.0041679,
+   "rel_dev_of_error": 8.74275968718613e-06,
+   "within_tol_1.5pct": true,
+   "normal_derivative_rel_l2": 0.012911645206959553,
+   "cond": 92.11197263419443
+  },
+  {
+   "axis": "y",
+   "added_mass": 2426.2786264941674,
+   "exact": 2437.153501509733,
+   "measured_rel_error": 0.004462121490841226,
+   "declared_rel_error": 0.0044621,
+   "rel_dev_of_error": 4.816306498179276e-06,
+   "within_tol_1.5pct": true,
+   "normal_derivative_rel_l2": 0.0140287689246097,
+   "cond": 92.11197263419443
+  },
+  {
+   "axis": "z",
+   "added_mass": 4163.735328065621,
+   "exact": 4184.38918975305,
+   "measured_rel_error": 0.004935932283260787,
+   "declared_rel_error": 0.0049359,
+   "rel_dev_of_error": 6.5405013851290325e-06,
+   "within_tol_1.5pct": true,
+   "normal_derivative_rel_l2": 0.016628501053842868,
+   "cond": 92.11197263419443
+  }
+ ]
+}
