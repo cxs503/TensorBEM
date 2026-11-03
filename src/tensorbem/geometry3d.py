@@ -850,3 +850,164 @@ def elliptic_cylinder_hull_mesh(
         faces,
     )
     return WettedHullMesh(np.asarray(coords, dtype=float), np.asarray(faces, dtype=np.int64))
+
+
+def _weld_quads_to_wetted_hull(
+    points: FloatArray,
+    quads: list[tuple[int, int, int, int]],
+    outward: FloatArray,
+) -> WettedHullMesh:
+    """Triangulate a quad sheet, make the winding outward, and build the hull.
+
+    ``outward`` holds, per quad, a direction the outward panel normal must have
+    a positive projection on (a face normal for the barge, the sheet normal
+    ``(0, +-1, 0)`` for the Wigley hull, which is a height field over
+    ``(x, z)``). This orients every panel without relying on a body centroid.
+    """
+    verts: list[tuple[float, float, float]] = []
+    index: dict[tuple[float, float, float], int] = {}
+
+    def vid(k: int) -> int:
+        p = points[k]
+        key = (float(p[0]), float(p[1]), float(p[2]))
+        key = (key[0] + 0.0, key[1] + 0.0, key[2] + 0.0)
+        if key not in index:
+            index[key] = len(verts)
+            verts.append(key)
+        return index[key]
+
+    faces: list[tuple[int, int, int]] = []
+    for k, (a, b, c, d) in enumerate(quads):
+        pa, pb, pc, pd = (points[j] for j in (a, b, c, d))
+        n = np.cross(pb - pa, pc - pa) + np.cross(pc - pa, pd - pa)
+        tri = [(a, b, c), (a, c, d)]
+        if float(np.dot(n, outward[k])) < 0.0:
+            tri = [(a, c, b), (a, d, c)]
+        for t in tri:
+            ia, ib, ic = (vid(j) for j in t)
+            if ia == ib or ib == ic or ic == ia:
+                continue
+            faces.append((ia, ib, ic))
+    return WettedHullMesh(
+        np.asarray(verts, dtype=float), np.asarray(faces, dtype=np.int64)
+    )
+
+
+def box_hull_mesh(
+    length: float = 10.0,
+    beam: float = 4.0,
+    draft: float = 2.0,
+    *,
+    n_length: int = 4,
+    n_beam: int = 3,
+    n_draft: int = 3,
+) -> WettedHullMesh:
+    """Return the wetted surface of a rectangular barge (``L x B x T``).
+
+    The submerged surface is the flat bottom plus four flat sides; the
+    waterplane lid is omitted, as required by :class:`WettedHullMesh`. Because
+    every panel is planar and exactly on the analytic surface, the discretely
+    displaced volume, waterplane area and waterplane second moments are
+    *exact* to round-off for any subdivision. This makes the barge the
+    reference case that separates discretisation error from implementation
+    error in the hydrostatic module.
+    """
+    for name, value in (("length", length), ("beam", beam), ("draft", draft)):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be a positive finite number")
+    for name, value in (
+        ("n_length", n_length),
+        ("n_beam", n_beam),
+        ("n_draft", n_draft),
+    ):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(
+            value, (int, np.integer)
+        ):
+            raise ValueError(f"{name} must be a positive integer")
+        if value < 1:
+            raise ValueError(f"{name} must be a positive integer")
+
+    xs = np.linspace(-0.5 * length, 0.5 * length, int(n_length) + 1)
+    ys = np.linspace(-0.5 * beam, 0.5 * beam, int(n_beam) + 1)
+    zs = np.linspace(-draft, 0.0, int(n_draft) + 1)
+
+    points: list[tuple[float, float, float]] = []
+    pos: dict[tuple[float, float, float], int] = {}
+
+    def pid(p: tuple[float, float, float]) -> int:
+        if p not in pos:
+            pos[p] = len(points)
+            points.append(p)
+        return pos[p]
+
+    quads: list[tuple[int, int, int, int]] = []
+    outward: list[tuple[float, float, float]] = []
+    # bottom, z = -draft
+    for i in range(int(n_length)):
+        for j in range(int(n_beam)):
+            quads.append(
+                (
+                    pid((float(xs[i]), float(ys[j]), -draft)),
+                    pid((float(xs[i + 1]), float(ys[j]), -draft)),
+                    pid((float(xs[i + 1]), float(ys[j + 1]), -draft)),
+                    pid((float(xs[i]), float(ys[j + 1]), -draft)),
+                )
+            )
+            outward.append((0.0, 0.0, -1.0))
+    # side shells: y = -B/2, y = +B/2, x = -L/2, x = +L/2
+    for i in range(int(n_length)):
+        for k in range(int(n_draft)):
+            for y_side, sgn in ((-0.5 * beam, -1.0), (0.5 * beam, 1.0)):
+                quads.append(
+                    (
+                        pid((float(xs[i]), y_side, float(zs[k]))),
+                        pid((float(xs[i + 1]), y_side, float(zs[k]))),
+                        pid((float(xs[i + 1]), y_side, float(zs[k + 1]))),
+                        pid((float(xs[i]), y_side, float(zs[k + 1]))),
+                    )
+                )
+                outward.append((0.0, sgn, 0.0))
+    for j in range(int(n_beam)):
+        for k in range(int(n_draft)):
+            for x_side, sgn in ((-0.5 * length, -1.0), (0.5 * length, 1.0)):
+                quads.append(
+                    (
+                        pid((x_side, float(ys[j]), float(zs[k]))),
+                        pid((x_side, float(ys[j + 1]), float(zs[k]))),
+                        pid((x_side, float(ys[j + 1]), float(zs[k + 1]))),
+                        pid((x_side, float(ys[j]), float(zs[k + 1]))),
+                    )
+                )
+                outward.append((sgn, 0.0, 0.0))
+    return _weld_quads_to_wetted_hull(
+        np.asarray(points, dtype=float), quads, np.asarray(outward, dtype=float)
+    )
+
+
+def spheroid_hull_mesh(
+    semi_axes: tuple[float, float, float] = (1.0, 1.0, 1.0),
+    *,
+    subdivisions: int = 3,
+) -> WettedHullMesh:
+    """Return the wetted half-ellipsoid (spheroid) hull in ``z <= 0``.
+
+    The body is the lower half of the ellipsoid with semi-axes
+    ``(a, b, c)`` (length, beam, draft), i.e. the ellipsoid is truncated by the
+    calm waterplane through its centre. Every hydrostatic property of this body
+    has a closed form (see :mod:`tensorbem.benchmarks.hydrostatic_benchmarks`),
+    and the waterplane is an ellipse rather than a rectangle, so the hull is a
+    ship-like verification case for the curved-waterline integration path.
+
+    The mesh is the geodesic hemisphere of :func:`hemisphere_hull_mesh` scaled
+    anisotropically, which keeps panel normals outward and the waterline on
+    ``z = 0`` for any positive semi-axes.
+    """
+    axes = np.asarray(semi_axes, dtype=float)
+    if axes.shape != (3,):
+        raise ValueError("semi_axes must be a 3-tuple (a, b, c)")
+    if not np.isfinite(axes).all() or np.any(axes <= 0.0):
+        raise ValueError("semi_axes must all be positive and finite")
+    base = hemisphere_hull_mesh(subdivisions)
+    verts = base.vertices * axes
+    verts[np.abs(verts[:, 2]) <= 1.0e-12, 2] = 0.0
+    return WettedHullMesh(verts, base.faces)
