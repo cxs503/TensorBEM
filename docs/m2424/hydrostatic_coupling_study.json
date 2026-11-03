@@ -1,0 +1,1849 @@
+{
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "finite_difference_step": 2e-05,
+  "cases": {
+    "symmetric_barge": {
+      "title": "symmetric barge, origin at the waterplane centroid",
+      "waterplane_area": 8.0,
+      "displaced_volume": 8.0,
+      "mass": 8200.0,
+      "waterplane_center": [
+        0.0,
+        0.0
+      ],
+      "waterplane_moments_about_origin": [
+        2.6666666666666665,
+        10.666666666666666,
+        0.0
+      ],
+      "center_of_buoyancy": [
+        0.0,
+        0.0,
+        -0.5
+      ],
+      "center_of_gravity": [
+        0.0,
+        0.0,
+        -0.35
+      ],
+      "equilibrium_relative_mismatch": 0.0,
+      "diagonal_adequate": true,
+      "notes": [],
+      "legacy_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          80414.53,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          14742.663833333325,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          95157.19383333331,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "complete_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          80414.53,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          14742.663833333325,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          95157.19383333331,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "coupling_terms": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "oracle_matrix": [
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          3.6379788070917124e-07,
+          80414.52999896137,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          1.7068013669074841e-07,
+          2.7899394600128243e-08,
+          14742.663837660506,
+          -0.0,
+          -0.0
+        ],
+        [
+          1.920130721089208e-07,
+          -0.0,
+          5.579878920025649e-08,
+          1.3949697300064123e-07,
+          95157.19384838454,
+          -1.1159757840051297e-07
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "entries": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "complete": 80414.53,
+          "legacy": 80414.53,
+          "closed_form": 80414.53,
+          "oracle": 80414.52999896137,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.2915929465849713e-11,
+          "legacy_relative_error": 0.0
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "complete": 14742.663833333325,
+          "legacy": 14742.663833333325,
+          "closed_form": 14742.66383333333,
+          "oracle": 14742.663837660506,
+          "error_vs_closed_form": 3.701480459928349e-16,
+          "error_vs_oracle": 2.9351419852534443e-10,
+          "legacy_relative_error": 0.0
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "complete": 95157.19383333331,
+          "legacy": 95157.19383333331,
+          "closed_form": 95157.19383333332,
+          "oracle": 95157.19384838454,
+          "error_vs_closed_form": 1.529250143068989e-16,
+          "error_vs_oracle": 1.5817233032281157e-10,
+          "legacy_relative_error": 0.0
+        }
+      ],
+      "max_error_vs_closed_form": 3.701480459928349e-16,
+      "max_error_vs_oracle": 2.9351419852534443e-10,
+      "max_coupling_over_diagonal": 0.0
+    },
+    "eccentric_barge": {
+      "title": "rectangular barge offset 1.0 m / 0.8 m from the origin",
+      "waterplane_area": 7.999999999999998,
+      "displaced_volume": 7.999999999999998,
+      "mass": 8199.999999999998,
+      "waterplane_center": [
+        3.0,
+        1.7999999999999998
+      ],
+      "waterplane_moments_about_origin": [
+        28.58666666666666,
+        82.66666666666667,
+        43.199999999999996
+      ],
+      "center_of_buoyancy": [
+        3.0000000000000004,
+        1.7999999999999998,
+        -0.5
+      ],
+      "center_of_gravity": [
+        3.0000000000000004,
+        1.7999999999999998,
+        -0.35
+      ],
+      "equilibrium_relative_mismatch": 0.0,
+      "diagonal_adequate": false,
+      "notes": [
+        "waterplane centroid is offset in y from the roll axis through the origin (y_c = 1.8 m): heave-roll coupling C[2,3] = 144746 N/rad and a parallel-axis correction of 260543 on C[3,3] are required",
+        "waterplane centroid is offset in x from the pitch axis through the origin (x_c = 3 m): heave-pitch coupling C[2,4] = -241244 N/rad and a parallel-axis correction of 723731 on C[4,4] are required",
+        "waterplane product of inertia about the origin is non-zero (I_xy_O = 43.2 m^4): roll-pitch coupling C[3,4] = -434238 N/rad is required"
+      ],
+      "legacy_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          80414.53,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          14742.663833333305,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          95157.19383333337,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "complete_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          80414.53,
+          144746.15399999998,
+          -241243.59,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          144746.15399999998,
+          275285.74103333324,
+          -434238.46199999994,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -241243.59,
+          -434238.46199999994,
+          818887.9638333332,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "coupling_terms": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          144746.15399999998,
+          -241243.59,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          144746.15399999998,
+          260543.07719999994,
+          -434238.46199999994,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -241243.59,
+          -434238.46199999994,
+          723730.7699999999,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "oracle_matrix": [
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          3.6379788070917124e-07,
+          -3.6379788070917124e-07,
+          80414.52999968897,
+          144746.15401886695,
+          -241243.59003217248,
+          -3.6379788070917124e-07
+        ],
+        [
+          -0.0,
+          -7.275957614183425e-07,
+          144746.15399885806,
+          275285.74107127497,
+          -434238.46205841977,
+          -7.275957614183425e-07
+        ],
+        [
+          -7.275957614183425e-07,
+          2.1827872842550278e-06,
+          -241243.58999906687,
+          -434238.46205914736,
+          818887.9639477817,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "entries": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "complete": 80414.53,
+          "legacy": 80414.53,
+          "closed_form": 80414.52999999998,
+          "oracle": 80414.52999968897,
+          "error_vs_closed_form": 1.809612669298304e-16,
+          "error_vs_oracle": 3.867866119358194e-12,
+          "legacy_relative_error": 0.0
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "complete": 144746.15399999998,
+          "legacy": 0.0,
+          "closed_form": 144746.15399999995,
+          "oracle": 144746.15401886695,
+          "error_vs_closed_form": 2.0106807436647824e-16,
+          "error_vs_oracle": 1.3034519416111064e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "complete": -241243.59,
+          "legacy": 0.0,
+          "closed_form": -241243.58999999997,
+          "oracle": -241243.59003217248,
+          "error_vs_closed_form": 1.2064084461988692e-16,
+          "error_vs_oracle": 1.3336097399491855e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "heave",
+          "complete": 144746.15399999998,
+          "legacy": 0.0,
+          "closed_form": 144746.15399999995,
+          "oracle": 144746.15399885806,
+          "error_vs_closed_form": 2.0106807436647824e-16,
+          "error_vs_oracle": 7.889106965843138e-12,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "complete": 275285.74103333324,
+          "legacy": 14742.663833333305,
+          "closed_form": 275285.74103333324,
+          "oracle": 275285.74107127497,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3782672615533293e-10,
+          "legacy_relative_error": 0.946445959104187
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "complete": -434238.46199999994,
+          "legacy": 0.0,
+          "closed_form": -434238.46199999994,
+          "oracle": -434238.46205841977,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3453397833169602e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "heave",
+          "complete": -241243.59,
+          "legacy": 0.0,
+          "closed_form": -241243.58999999997,
+          "oracle": -241243.58999906687,
+          "error_vs_closed_form": 1.2064084461988692e-16,
+          "error_vs_oracle": 3.8679867602028145e-12,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "roll",
+          "complete": -434238.46199999994,
+          "legacy": 0.0,
+          "closed_form": -434238.46199999994,
+          "oracle": -434238.46205914736,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3620954561808334e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "complete": 818887.9638333332,
+          "legacy": 95157.19383333337,
+          "closed_form": 818887.9638333335,
+          "oracle": 818887.9639477817,
+          "error_vs_closed_form": 2.8432539484883327e-16,
+          "error_vs_oracle": 1.3976085865143116e-10,
+          "legacy_relative_error": 0.88379705400982
+        }
+      ],
+      "max_error_vs_closed_form": 2.8432539484883327e-16,
+      "max_error_vs_oracle": 1.3976085865143116e-10,
+      "max_coupling_over_diagonal": 0.88379705400982
+    },
+    "trapezoid_waterplane": {
+      "title": "trapezoidal waterplane (no mirror symmetry)",
+      "waterplane_area": 3.5549999999999997,
+      "displaced_volume": 2.844,
+      "mass": 2915.1,
+      "waterplane_center": [
+        0.2624472573839663,
+        0.0839662447257384
+      ],
+      "waterplane_moments_about_origin": [
+        0.755775,
+        1.812975,
+        0.20966249999999997
+      ],
+      "center_of_buoyancy": [
+        0.2624472573839663,
+        0.08396624472573837,
+        -0.4
+      ],
+      "center_of_gravity": [
+        0.2624472573839663,
+        0.08396624472573837,
+        -0.45
+      ],
+      "equilibrium_relative_mismatch": 1.5599717021250183e-16,
+      "diagonal_adequate": false,
+      "notes": [
+        "waterplane centroid is offset in y from the roll axis through the origin (y_c = 0.0839662 m): heave-roll coupling C[2,3] = 3000.47 N/rad and a parallel-axis correction of 251.938 on C[3,3] are required",
+        "waterplane centroid is offset in x from the pitch axis through the origin (x_c = 0.262447 m): heave-pitch coupling C[2,4] = -9378.34 N/rad and a parallel-axis correction of 2461.32 on C[4,4] are required",
+        "waterplane product of inertia about the origin is non-zero (I_xy_O = 0.209662 m^4): roll-pitch coupling C[3,4] = -2107.49 N/rad is required"
+      ],
+      "legacy_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          35734.206768749995,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          8774.341738032832,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          17191.739027691852,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "complete_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          35734.206768749995,
+          3000.4671506249997,
+          -9378.34456125,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3000.4671506249997,
+          9026.279697093747,
+          -2107.4889245156246,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -9378.34456125,
+          -2107.4889245156246,
+          19653.059836593748,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "coupling_terms": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          3000.4671506249997,
+          -9378.34456125,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3000.4671506249997,
+          251.9379590609151,
+          -2107.4889245156246,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -9378.34456125,
+          -2107.4889245156246,
+          2461.3208089018954,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "oracle_matrix": [
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          2.7284841053187847e-07,
+          35734.2067688478,
+          3000.467151014163,
+          -9378.344562537677,
+          -0.0
+        ],
+        [
+          3.410605131648481e-08,
+          -0.0,
+          3000.4671506048903,
+          9026.279698025519,
+          -2107.4889247984174,
+          2.2737367544323203e-08
+        ],
+        [
+          -1.1368683772161602e-07,
+          -6.821210263296962e-08,
+          -9378.344561241647,
+          -2107.4889247984174,
+          19653.059838992704,
+          4.5474735088646405e-08
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "entries": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "complete": 35734.206768749995,
+          "legacy": 35734.206768749995,
+          "closed_form": 35734.206768749995,
+          "oracle": 35734.2067688478,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 2.736969170262481e-12,
+          "legacy_relative_error": 0.0
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "complete": 3000.4671506249997,
+          "legacy": 0.0,
+          "closed_form": 3000.4671506249997,
+          "oracle": 3000.467151014163,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.2970088111553042e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "complete": -9378.34456125,
+          "legacy": 0.0,
+          "closed_form": -9378.34456125,
+          "oracle": -9378.344562537677,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3730324603404324e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "heave",
+          "complete": 3000.4671506249997,
+          "legacy": 0.0,
+          "closed_form": 3000.4671506249997,
+          "oracle": 3000.4671506048903,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 6.702083906954798e-12,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "complete": 9026.279697093747,
+          "legacy": 8774.341738032832,
+          "closed_form": 9026.279697093749,
+          "oracle": 9026.279698025519,
+          "error_vs_closed_form": 2.0152149773638507e-16,
+          "error_vs_oracle": 1.0322878265097007e-10,
+          "legacy_relative_error": 0.027911605613332953
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "complete": -2107.4889245156246,
+          "legacy": 0.0,
+          "closed_form": -2107.4889245156246,
+          "oracle": -2107.4889247984174,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3418472681466614e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "heave",
+          "complete": -9378.34456125,
+          "legacy": 0.0,
+          "closed_form": -9378.34456125,
+          "oracle": -9378.344561241647,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 8.906475216953709e-13,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "roll",
+          "complete": -2107.4889245156246,
+          "legacy": 0.0,
+          "closed_form": -2107.4889245156246,
+          "oracle": -2107.4889247984174,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3418472681466614e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "complete": 19653.059836593748,
+          "legacy": 17191.739027691852,
+          "closed_form": 19653.059836593748,
+          "oracle": 19653.059838992704,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.2206526642256448e-10,
+          "legacy_relative_error": 0.12523855467630274
+        }
+      ],
+      "max_error_vs_closed_form": 2.0152149773638507e-16,
+      "max_error_vs_oracle": 1.3730324603404324e-10,
+      "max_coupling_over_diagonal": 0.2624472573839663
+    },
+    "triangle_waterplane": {
+      "title": "triangular waterplane (no mirror symmetry)",
+      "waterplane_area": 1.9649999999999999,
+      "displaced_volume": 1.7685,
+      "mass": 1812.7124999999999,
+      "waterplane_center": [
+        1.3666666666666665,
+        0.6333333333333332
+      ],
+      "waterplane_moments_about_origin": [
+        1.070925,
+        4.195274999999999,
+        1.8028875
+      ],
+      "center_of_buoyancy": [
+        1.3666666666666667,
+        0.6333333333333333,
+        -0.45
+      ],
+      "center_of_gravity": [
+        1.3666666666666667,
+        0.6333333333333333,
+        -0.5
+      ],
+      "equilibrium_relative_mismatch": 0.0,
+      "diagonal_adequate": false,
+      "notes": [
+        "waterplane centroid is offset in y from the roll axis through the origin (y_c = 0.633333 m): heave-roll coupling C[2,3] = 12509.5 N/rad and a parallel-axis correction of 7922.67 on C[3,3] are required",
+        "waterplane centroid is offset in x from the pitch axis through the origin (x_c = 1.36667 m): heave-pitch coupling C[2,4] = -26994.2 N/rad and a parallel-axis correction of 36892 on C[4,4] are required",
+        "waterplane product of inertia about the origin is non-zero (I_xy_O = 1.80289 m^4): roll-pitch coupling C[3,4] = -18122.3 N/rad is required"
+      ],
+      "legacy_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          19751.81893125,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          3730.8991314583336,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          6166.95679964584,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "complete_matrix": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          19751.81893125,
+          12509.485323124996,
+          -26994.152539374994,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          12509.485323124996,
+          11653.573169437495,
+          -18122.293869421876,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -26994.152539374994,
+          -18122.293869421876,
+          43058.965270124994,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "coupling_terms": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          12509.485323124996,
+          -26994.152539374994,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          12509.485323124996,
+          7922.674037979162,
+          -18122.293869421876,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -26994.152539374994,
+          -18122.293869421876,
+          36892.00847047915,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "oracle_matrix": [
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          9.094947017729281e-08,
+          2.7284841053187847e-07,
+          19751.818931308662,
+          12509.485324790146,
+          -26994.152542829393,
+          -0.0
+        ],
+        [
+          4.5474735088646405e-08,
+          9.094947017729281e-08,
+          12509.485323153056,
+          11653.573170815433,
+          -18122.293871783768,
+          -0.0
+        ],
+        [
+          -9.094947017729281e-08,
+          -1.8189894035458562e-07,
+          -26994.152539555213,
+          -18122.293871874717,
+          43058.965275577066,
+          -9.094947017729281e-08
+        ],
+        [
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "entries": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "complete": 19751.81893125,
+          "legacy": 19751.81893125,
+          "closed_form": 19751.81893125,
+          "oracle": 19751.818931308662,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 2.9699749915964526e-12,
+          "legacy_relative_error": 0.0
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "complete": 12509.485323124996,
+          "legacy": 0.0,
+          "closed_form": 12509.485323124996,
+          "oracle": 12509.485324790146,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3311100742507588e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "complete": -26994.152539374994,
+          "legacy": 0.0,
+          "closed_form": -26994.152539374994,
+          "oracle": -26994.152542829393,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.2796842262373286e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "heave",
+          "complete": 12509.485323124996,
+          "legacy": 0.0,
+          "closed_form": 12509.485323124996,
+          "oracle": 12509.485323153056,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 2.2430763388184525e-12,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "complete": 11653.573169437495,
+          "legacy": 3730.8991314583336,
+          "closed_form": 11653.573169437499,
+          "oracle": 11653.573170815433,
+          "error_vs_closed_form": 3.121771111913234e-16,
+          "error_vs_oracle": 1.1824160743182605e-10,
+          "legacy_relative_error": 0.6798493408662899
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "complete": -18122.293869421876,
+          "legacy": 0.0,
+          "closed_form": -18122.293869421876,
+          "oracle": -18122.293871783768,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3033075580299673e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "heave",
+          "complete": -26994.152539374994,
+          "legacy": 0.0,
+          "closed_form": -26994.152539374994,
+          "oracle": -26994.152539555213,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 6.6761938120796414e-12,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "roll",
+          "complete": -18122.293869421876,
+          "legacy": 0.0,
+          "closed_form": -18122.293869421876,
+          "oracle": -18122.293871874717,
+          "error_vs_closed_form": 0.0,
+          "error_vs_oracle": 1.3534940690934225e-10,
+          "legacy_relative_error": 1.0
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "complete": 43058.965270124994,
+          "legacy": 6166.95679964584,
+          "closed_form": 43058.96527012499,
+          "oracle": 43058.965275577066,
+          "error_vs_closed_form": 1.6897660147053288e-16,
+          "error_vs_oracle": 1.2661872985010996e-10,
+          "legacy_relative_error": 0.8567787971457694
+        }
+      ],
+      "max_error_vs_closed_form": 3.121771111913234e-16,
+      "max_error_vs_oracle": 1.3534940690934225e-10,
+      "max_coupling_over_diagonal": 0.8567787971457694
+    }
+  },
+  "rao_impact": [
+    {
+      "case": "eccentric_barge",
+      "wave_angle": 1.5707963267948966,
+      "omegas": [
+        0.8,
+        1.0,
+        1.2,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.4
+      ],
+      "rows": [
+        {
+          "omega": 0.8,
+          "surge": {
+            "legacy": 0.22739614628263072,
+            "complete": 0.09942218833110424,
+            "relative_error": 1.2871770386438963
+          },
+          "sway": {
+            "legacy": 0.9531240579223391,
+            "complete": 0.9365595679379384,
+            "relative_error": 0.017686531163064685
+          },
+          "heave": {
+            "legacy": 0.8791894339625974,
+            "complete": 0.5566491102909166,
+            "relative_error": 0.5794320294576856
+          },
+          "roll": {
+            "legacy": 2.018035086228254,
+            "complete": 0.19351021760545456,
+            "relative_error": 9.428571220682514
+          },
+          "pitch": {
+            "legacy": 0.16708820031719426,
+            "complete": 0.016771220664014253,
+            "relative_error": 8.962793028876712
+          },
+          "yaw": {
+            "legacy": 0.25738660961148024,
+            "complete": 0.15565022016227453,
+            "relative_error": 0.6536218795138197
+          }
+        },
+        {
+          "omega": 1.0,
+          "surge": {
+            "legacy": 0.1493399135328481,
+            "complete": 0.09377547134091034,
+            "relative_error": 0.5925263973341107
+          },
+          "sway": {
+            "legacy": 0.9138515889365919,
+            "complete": 0.9102377891042717,
+            "relative_error": 0.003970171174585529
+          },
+          "heave": {
+            "legacy": 0.9105132736941458,
+            "complete": 0.564276918252589,
+            "relative_error": 0.6135929793367342
+          },
+          "roll": {
+            "legacy": 1.3473468561349762,
+            "complete": 0.2196726964984204,
+            "relative_error": 5.133428858532105
+          },
+          "pitch": {
+            "legacy": 0.051500991551407256,
+            "complete": 0.020799299198079026,
+            "relative_error": 1.4760926347058734
+          },
+          "yaw": {
+            "legacy": 0.2066810370164895,
+            "complete": 0.1535141231162544,
+            "relative_error": 0.3463323948375253
+          }
+        },
+        {
+          "omega": 1.2,
+          "surge": {
+            "legacy": 0.11066902078593088,
+            "complete": 0.0888258768264849,
+            "relative_error": 0.24590969140800062
+          },
+          "sway": {
+            "legacy": 0.871913922725335,
+            "complete": 0.8794402992235281,
+            "relative_error": 0.008558143747606583
+          },
+          "heave": {
+            "legacy": 0.9567102637941783,
+            "complete": 0.5697603796386429,
+            "relative_error": 0.6791449493222911
+          },
+          "roll": {
+            "legacy": 1.1486059173998873,
+            "complete": 0.3036585703740363,
+            "relative_error": 2.7825572187377206
+          },
+          "pitch": {
+            "legacy": 0.24018139337965227,
+            "complete": 0.07899528550933674,
+            "relative_error": 2.0404522476377958
+          },
+          "yaw": {
+            "legacy": 0.18848420153530165,
+            "complete": 0.15518671943440768,
+            "relative_error": 0.21456399247467647
+          }
+        },
+        {
+          "omega": 1.4,
+          "surge": {
+            "legacy": 0.09555767184912607,
+            "complete": 0.10022853659324989,
+            "relative_error": 0.04660214448784424
+          },
+          "sway": {
+            "legacy": 0.8192664446544108,
+            "complete": 0.8617779107149146,
+            "relative_error": 0.049329955585931784
+          },
+          "heave": {
+            "legacy": 1.0404250990414217,
+            "complete": 0.6443946555656035,
+            "relative_error": 0.6145774798957806
+          },
+          "roll": {
+            "legacy": 1.6948500563630275,
+            "complete": 0.8046689854514013,
+            "relative_error": 1.1062698911059117
+          },
+          "pitch": {
+            "legacy": 0.7881830730395376,
+            "complete": 0.4027544900551262,
+            "relative_error": 0.9569814676222645
+          },
+          "yaw": {
+            "legacy": 0.22991300088256428,
+            "complete": 0.19991444441870063,
+            "relative_error": 0.15005697337724483
+          }
+        },
+        {
+          "omega": 1.6,
+          "surge": {
+            "legacy": 0.08194159473092247,
+            "complete": 0.04402175330414153,
+            "relative_error": 0.8613887130936576
+          },
+          "sway": {
+            "legacy": 0.798323415993506,
+            "complete": 0.7533757180963568,
+            "relative_error": 0.05966172895872432
+          },
+          "heave": {
+            "legacy": 1.1043477295836075,
+            "complete": 0.37979022966741743,
+            "relative_error": 1.9077834112549068
+          },
+          "roll": {
+            "legacy": 1.0209592690264888,
+            "complete": 0.5784803658670681,
+            "relative_error": 0.764898740333566
+          },
+          "pitch": {
+            "legacy": 0.9139919894921635,
+            "complete": 0.46706044159718146,
+            "relative_error": 0.9569030217301947
+          },
+          "yaw": {
+            "legacy": 0.20502310984261843,
+            "complete": 0.09487086640458564,
+            "relative_error": 1.161075550509661
+          }
+        },
+        {
+          "omega": 1.8,
+          "surge": {
+            "legacy": 0.05843367313178809,
+            "complete": 0.06031064374854574,
+            "relative_error": 0.03112171418005979
+          },
+          "sway": {
+            "legacy": 0.7301263202820895,
+            "complete": 0.7186727689557987,
+            "relative_error": 0.01593708822853036
+          },
+          "heave": {
+            "legacy": 1.3657071089891528,
+            "complete": 0.43542903263118554,
+            "relative_error": 2.136463135534478
+          },
+          "roll": {
+            "legacy": 0.11938759953490259,
+            "complete": 0.17694163786983766,
+            "relative_error": 0.3252713099517771
+          },
+          "pitch": {
+            "legacy": 0.23536613357531724,
+            "complete": 0.2086138295132705,
+            "relative_error": 0.12823840166524025
+          },
+          "yaw": {
+            "legacy": 0.1264805670538528,
+            "complete": 0.09457958218829364,
+            "relative_error": 0.3372925120566628
+          }
+        },
+        {
+          "omega": 2.0,
+          "surge": {
+            "legacy": 0.0671390271357076,
+            "complete": 0.0768984120561364,
+            "relative_error": 0.12691269766798796
+          },
+          "sway": {
+            "legacy": 0.6715071008435004,
+            "complete": 0.6674627361406111,
+            "relative_error": 0.006059311604831318
+          },
+          "heave": {
+            "legacy": 1.9873692852122529,
+            "complete": 0.44308233284839704,
+            "relative_error": 3.485327303474864
+          },
+          "roll": {
+            "legacy": 0.01126760857975902,
+            "complete": 0.092495847370826,
+            "relative_error": 0.8781825465678914
+          },
+          "pitch": {
+            "legacy": 0.09876924027973714,
+            "complete": 0.15354340141317657,
+            "relative_error": 0.3567340610492617
+          },
+          "yaw": {
+            "legacy": 0.10912080475975114,
+            "complete": 0.09103258963805222,
+            "relative_error": 0.19870043457643138
+          }
+        },
+        {
+          "omega": 2.4,
+          "surge": {
+            "legacy": 0.10137620280866427,
+            "complete": 0.11205028790370071,
+            "relative_error": 0.0952615588476672
+          },
+          "sway": {
+            "legacy": 0.546540457835115,
+            "complete": 0.5517726998017946,
+            "relative_error": 0.00948260392106949
+          },
+          "heave": {
+            "legacy": 1.207642573056849,
+            "complete": 0.5256369722240116,
+            "relative_error": 1.2974840752681793
+          },
+          "roll": {
+            "legacy": 0.031063743236744212,
+            "complete": 0.028790423873343088,
+            "relative_error": 0.07896095498288164
+          },
+          "pitch": {
+            "legacy": 0.023384932455952648,
+            "complete": 0.1246708724748795,
+            "relative_error": 0.8124266559483284
+          },
+          "yaw": {
+            "legacy": 0.08586338125873431,
+            "complete": 0.08235117768572318,
+            "relative_error": 0.04264909952368566
+          }
+        }
+      ],
+      "worst_relative_error": 9.428571220682514,
+      "worst_mode": "roll",
+      "worst_omega": 0.8
+    },
+    {
+      "case": "trapezoid_waterplane",
+      "wave_angle": 0.0,
+      "omegas": [
+        0.8,
+        1.0,
+        1.2,
+        1.4,
+        1.6,
+        1.8,
+        2.0,
+        2.4
+      ],
+      "rows": [
+        {
+          "omega": 0.8,
+          "surge": {
+            "legacy": 0.9501084332444582,
+            "complete": 0.9467085540572334,
+            "relative_error": 0.0035912627731672425
+          },
+          "sway": {
+            "legacy": 0.031162817112814996,
+            "complete": 0.015271955201405238,
+            "relative_error": 1.0405257022982606
+          },
+          "heave": {
+            "legacy": 1.0059319977650332,
+            "complete": 1.0239293562925351,
+            "relative_error": 0.01757675802231822
+          },
+          "roll": {
+            "legacy": 0.37928891392074293,
+            "complete": 0.014277226856123582,
+            "relative_error": 25.566007372647707
+          },
+          "pitch": {
+            "legacy": 0.5452851983818587,
+            "complete": 0.09524412582979384,
+            "relative_error": 4.72513206070379
+          },
+          "yaw": {
+            "legacy": 0.5209414678521654,
+            "complete": 0.5791460637293072,
+            "relative_error": 0.10050071911452478
+          }
+        },
+        {
+          "omega": 1.0,
+          "surge": {
+            "legacy": 0.9245463781786482,
+            "complete": 0.9234121887085296,
+            "relative_error": 0.0012282591501253878
+          },
+          "sway": {
+            "legacy": 0.03182258540809587,
+            "complete": 0.017194499161975203,
+            "relative_error": 0.8507422116993072
+          },
+          "heave": {
+            "legacy": 1.0126625674051353,
+            "complete": 1.045547474745412,
+            "relative_error": 0.031452332997393743
+          },
+          "roll": {
+            "legacy": 0.40596281329748984,
+            "complete": 0.022014940947157932,
+            "relative_error": 17.440331694366797
+          },
+          "pitch": {
+            "legacy": 0.5546642121850671,
+            "complete": 0.15654874306047245,
+            "relative_error": 2.5430767525920572
+          },
+          "yaw": {
+            "legacy": 0.5158673999161383,
+            "complete": 0.5868890706273826,
+            "relative_error": 0.12101378994044373
+          }
+        },
+        {
+          "omega": 1.2,
+          "surge": {
+            "legacy": 0.8911548186631248,
+            "complete": 0.8938423962156336,
+            "relative_error": 0.0030067689381119284
+          },
+          "sway": {
+            "legacy": 0.032883744577574384,
+            "complete": 0.01962679831465415,
+            "relative_error": 0.6754512911574614
+          },
+          "heave": {
+            "legacy": 1.0247621903298512,
+            "complete": 1.083448973665639,
+            "relative_error": 0.05416663337381961
+          },
+          "roll": {
+            "legacy": 0.4461747006302629,
+            "complete": 0.03508038394671554,
+            "relative_error": 11.71863789484085
+          },
+          "pitch": {
+            "legacy": 0.5795440021331529,
+            "complete": 0.2414535369069043,
+            "relative_error": 1.4002299140335395
+          },
+          "yaw": {
+            "legacy": 0.5039460651315757,
+            "complete": 0.5955152163332854,
+            "relative_error": 0.15376458684888117
+          }
+        },
+        {
+          "omega": 1.4,
+          "surge": {
+            "legacy": 0.8487398482759079,
+            "complete": 0.8574222129830322,
+            "relative_error": 0.010126125234052194
+          },
+          "sway": {
+            "legacy": 0.03483819108192679,
+            "complete": 0.022657601306964505,
+            "relative_error": 0.5375939672492255
+          },
+          "heave": {
+            "legacy": 1.0459705678762494,
+            "complete": 1.1529417268180466,
+            "relative_error": 0.09278106295712119
+          },
+          "roll": {
+            "legacy": 0.509472727418526,
+            "complete": 0.06499983924974063,
+            "relative_error": 6.838061344444924
+          },
+          "pitch": {
+            "legacy": 0.6341183262785964,
+            "complete": 0.3624961026765298,
+            "relative_error": 0.7493107418162956
+          },
+          "yaw": {
+            "legacy": 0.47797682456138424,
+            "complete": 0.6041382390867025,
+            "relative_error": 0.20882871893035773
+          }
+        },
+        {
+          "omega": 1.6,
+          "surge": {
+            "legacy": 0.7954165332869007,
+            "complete": 0.8134856757335418,
+            "relative_error": 0.02221199830021312
+          },
+          "sway": {
+            "legacy": 0.03871081954792455,
+            "complete": 0.026671560139973283,
+            "relative_error": 0.4513893954747609
+          },
+          "heave": {
+            "legacy": 1.083050969035319,
+            "complete": 1.2944203851579446,
+            "relative_error": 0.16329271274326726
+          },
+          "roll": {
+            "legacy": 0.6175437862276489,
+            "complete": 0.1426740605736839,
+            "relative_error": 3.3283536176410915
+          },
+          "pitch": {
+            "legacy": 0.7429878973099262,
+            "complete": 0.5533246076197906,
+            "relative_error": 0.3427703866379644
+          },
+          "yaw": {
+            "legacy": 0.4237116509393517,
+            "complete": 0.613933217152528,
+            "relative_error": 0.3098408115062406
+          }
+        },
+        {
+          "omega": 1.8,
+          "surge": {
+            "legacy": 0.7269278461276761,
+            "complete": 0.7634289290398258,
+            "relative_error": 0.04781202483125388
+          },
+          "sway": {
+            "legacy": 0.04667495044003415,
+            "complete": 0.03451161971927332,
+            "relative_error": 0.352441607194927
+          },
+          "heave": {
+            "legacy": 1.148443230234346,
+            "complete": 1.6632067415180678,
+            "relative_error": 0.3095006161494265
+          },
+          "roll": {
+            "legacy": 0.8253974503789753,
+            "complete": 0.3810146700778112,
+            "relative_error": 1.1663140954924696
+          },
+          "pitch": {
+            "legacy": 0.954925541283316,
+            "complete": 0.9475832517012844,
+            "relative_error": 0.007748437479080851
+          },
+          "yaw": {
+            "legacy": 0.31343427702603355,
+            "complete": 0.6513321934358319,
+            "relative_error": 0.5187796946245794
+          }
+        },
+        {
+          "omega": 2.0,
+          "surge": {
+            "legacy": 0.6294661438809764,
+            "complete": 0.8536478109199899,
+            "relative_error": 0.26261610956093157
+          },
+          "sway": {
+            "legacy": 0.06433912224687276,
+            "complete": 0.1090032568424822,
+            "relative_error": 0.4097504596596819
+          },
+          "heave": {
+            "legacy": 1.262952664140267,
+            "complete": 3.8334821751572385,
+            "relative_error": 0.6705468797207947
+          },
+          "roll": {
+            "legacy": 1.302275494588009,
+            "complete": 1.9439564927771986,
+            "relative_error": 0.3300902055027289
+          },
+          "pitch": {
+            "legacy": 1.4041230071140105,
+            "complete": 2.9427626595611187,
+            "relative_error": 0.5228555036363618
+          },
+          "yaw": {
+            "legacy": 0.20919003192407595,
+            "complete": 1.3128127343947058,
+            "relative_error": 0.8406550862560557
+          }
+        },
+        {
+          "omega": 2.4,
+          "surge": {
+            "legacy": 1.1792831921390088,
+            "complete": 0.6421765383854517,
+            "relative_error": 0.8363847348019604
+          },
+          "sway": {
+            "legacy": 0.41000159328715907,
+            "complete": 0.12284963114673333,
+            "relative_error": 2.337426327291511
+          },
+          "heave": {
+            "legacy": 3.229029960810989,
+            "complete": 0.7226059081855633,
+            "relative_error": 3.468590588913069
+          },
+          "roll": {
+            "legacy": 11.510228495846066,
+            "complete": 1.1457531764018662,
+            "relative_error": 9.045993092502604
+          },
+          "pitch": {
+            "legacy": 9.150796363476763,
+            "complete": 0.7070955826728098,
+            "relative_error": 11.941385277626685
+          },
+          "yaw": {
+            "legacy": 7.670345358477878,
+            "complete": 0.5333897992468761,
+            "relative_error": 13.380375045244737
+          }
+        }
+      ],
+      "worst_relative_error": 25.566007372647707,
+      "worst_mode": "roll",
+      "worst_omega": 0.8
+    }
+  ]
+}

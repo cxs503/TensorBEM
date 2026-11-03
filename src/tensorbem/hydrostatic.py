@@ -25,8 +25,25 @@ where:
     I_L   = second moment of waterplane area about longitudinal axis (x-axis)
     KG    = height of center of gravity above keel
 
-For small-angle linearization, all off-diagonal terms are zero (no cross-coupling
-between heave/roll/pitch, and surge/sway/yaw have no hydrostatic restoring).
+Linearising about the static equilibrium of a body whose reference frame has its
+origin ``O`` on the calm waterplane ``z = 0``, the *complete* matrix also carries
+the heave-roll-pitch cross-coupling terms that arise whenever the waterplane is
+eccentric or has a non-zero product of inertia about ``O``:
+
+    C[2,3] = C[3,2] =  rho g A_wp y_c      (heave <-> roll)
+    C[2,4] = C[4,2] = -rho g A_wp x_c      (heave <-> pitch)
+    C[3,4] = C[4,3] = -rho g I_xy_O        (roll  <-> pitch)
+
+and the diagonal entries are referred to the roll/pitch axes *through O*, i.e.
+``C[3,3] = rho g (I_xx_O + volume*z_B) - mass*g*z_G`` (and likewise for pitch),
+where ``I_xx_O`` is the waterplane second moment about the x-axis through ``O``.
+
+:func:`compute_hydrostatic_restoring_matrix` returns only the diagonal reference
+form (its historical contract); :func:`compute_hydrostatic_restoring_matrix_full`
+returns the complete matrix and reports how far the body is from the diagonal
+domain.  Surge, sway and yaw carry no hydrostatic restoring: the potential energy
+depends on the vertical position of the hull only, so those three rows/columns
+are identically zero.
 """
 
 from __future__ import annotations
@@ -363,6 +380,369 @@ def compute_hydrostatic_restoring_matrix(
         waterplane_center=wp_center,
         waterplane_moments=wp_moments,
         restoring_matrix=c,
+    )
+
+
+#: Physical source of every non-zero entry of the complete 6x6 hydrostatic
+#: restoring matrix, keyed by ``(row, column)`` in the ordering
+#: ``(surge, sway, heave, roll, pitch, yaw)``.  The symbols are: ``A`` waterplane
+#: area, ``x_c, y_c`` waterplane centroid, ``I_xx_O, I_yy_O, I_xy_O`` waterplane
+#: second moments about the axes through the reference origin ``O``,
+#: ``volume`` displaced volume, ``z_B`` / ``z_G`` buoyancy / gravity centre
+#: heights (``z = 0`` at the calm waterplane, negative below it), ``mass`` body
+#: mass, ``rho`` density and ``g`` gravity.
+RESTORING_MATRIX_TERM_SOURCES: tuple[tuple[int, int, str, str], ...] = (
+    (
+        2,
+        2,
+        "rho g A",
+        "change of displaced volume in heave (waterplane area times the vertical "
+        "sinkage); pure buoyancy term",
+    ),
+    (
+        2,
+        3,
+        "rho g A y_c",
+        "heave-roll coupling: the buoyancy lost/gained in heave acts through the "
+        "waterplane centroid, which is offset by y_c from the roll axis through O",
+    ),
+    (
+        2,
+        4,
+        "-rho g A x_c",
+        "heave-pitch coupling: the buoyancy lost/gained in heave acts through the "
+        "waterplane centroid, which is offset by x_c from the pitch axis through O",
+    ),
+    (
+        3,
+        3,
+        "rho g (I_xx_O + volume z_B) - mass g z_G",
+        "roll restoring = waterplane transverse second moment about the x-axis "
+        "through O (BM term) + rotation of the buoyancy vector about the centre of "
+        "buoyancy (KB term) - vertical offset of weight (KG term)",
+    ),
+    (
+        3,
+        4,
+        "-rho g I_xy_O",
+        "roll-pitch coupling: a roll rotates the waterplane about x, a pitch does "
+        "the same about y, and the mixed second moment of the waterplane couples "
+        "the two changes of the displaced-volume moment (non-zero only when the "
+        "waterplane product of inertia about O is non-zero)",
+    ),
+    (
+        4,
+        4,
+        "rho g (I_yy_O + volume z_B) - mass g z_G",
+        "pitch restoring: longitudinal waterplane second moment about the y-axis "
+        "through O (BM_L) + KB term - KG term",
+    ),
+)
+
+
+@dataclass(frozen=True)
+class FullRestoringProperties:
+    """Complete 6x6 hydrostatic restoring matrix and its validity diagnostics.
+
+    Attributes
+    ----------
+    displaced_volume, center_of_buoyancy, waterplane_area, waterplane_center,
+    waterplane_moments :
+        The same hydrostatic integrals that
+        :func:`compute_hydrostatic_restoring_matrix` reports; the waterplane
+        moments are referenced to the waterplane centroid.
+    restoring_matrix :
+        Complete 6x6 matrix ``C`` in the ordering
+        ``(surge, sway, heave, roll, pitch, yaw)`` with the sign convention
+        ``F_restoring = -C xi``.
+    diagonal_matrix :
+        The historical diagonal-only matrix, identical (bit for bit) to
+        ``compute_hydrostatic_restoring_matrix(...).restoring_matrix``.
+    coupling_terms :
+        ``restoring_matrix - diagonal_matrix``: every entry contributed by the
+        coupling / parallel-axis corrections.
+    waterplane_moments_about_origin :
+        ``[I_xx_O, I_yy_O, I_xy_O]``, the waterplane second moments about the
+        reference origin ``O`` (m⁴).
+    equilibrium_relative_mismatch :
+        ``|mass - rho*volume| / (rho*volume)``.  The linearisation assumes the
+        body floats in equilibrium; a non-zero value means the weight terms are
+        not balanced by buoyancy.
+    diagonal_adequate :
+        ``True`` when every coupling term is negligible relative to the diagonal
+        restoring magnitude, i.e. when the diagonal-only matrix is justified.
+    notes :
+        Human-readable findings, one per detected deviation from the diagonal
+        domain.
+    """
+
+    displaced_volume: float
+    center_of_buoyancy: FloatArray
+    waterplane_area: float
+    waterplane_center: FloatArray
+    waterplane_moments: FloatArray
+    restoring_matrix: FloatArray
+    diagonal_matrix: FloatArray
+    coupling_terms: FloatArray
+    waterplane_moments_about_origin: FloatArray
+    equilibrium_relative_mismatch: float
+    diagonal_adequate: bool
+    notes: tuple[str, ...]
+
+    def as_hydrostatic_properties(self) -> HydrostaticProperties:
+        """Wrap the complete matrix so it can be fed to the RAO chain."""
+        return HydrostaticProperties(
+            displaced_volume=self.displaced_volume,
+            center_of_buoyancy=self.center_of_buoyancy,
+            waterplane_area=self.waterplane_area,
+            waterplane_center=self.waterplane_center,
+            waterplane_moments=self.waterplane_moments,
+            restoring_matrix=self.restoring_matrix,
+        )
+
+
+def waterplane_second_moments_about_origin(
+    waterplane_area: float,
+    waterplane_center: FloatArray,
+    waterplane_moments: FloatArray,
+) -> FloatArray:
+    """Transfer the waterplane second moments from the centroid to the origin.
+
+    ``compute_waterplane_properties`` reports the moments about axes through the
+    waterplane *centroid*.  The restoring matrix, however, must be referred to
+    the roll/pitch axes through the body reference origin ``O`` (the point about
+    which the rigid-body degrees of freedom are defined).  The parallel-axis
+    theorem gives::
+
+        I_xx_O = I_xx_c + A y_c^2
+        I_yy_O = I_yy_c + A x_c^2
+        I_xy_O = I_xy_c + A x_c y_c
+
+    Parameters
+    ----------
+    waterplane_area :
+        Waterplane area ``A`` (m²).
+    waterplane_center :
+        Waterplane centroid ``(x_c, y_c)`` (m).
+    waterplane_moments :
+        Centroidal moments ``[I_xx_c, I_yy_c, I_xy_c]`` (m⁴).
+
+    Returns
+    -------
+    moments :
+        ``[I_xx_O, I_yy_O, I_xy_O]`` about the origin (m⁴).
+    """
+    area = float(waterplane_area)
+    center = np.asarray(waterplane_center, dtype=float)
+    moments = np.asarray(waterplane_moments, dtype=float)
+    x_c = float(center[0])
+    y_c = float(center[1])
+    return np.array(
+        [
+            float(moments[0]) + area * y_c * y_c,
+            float(moments[1]) + area * x_c * x_c,
+            float(moments[2]) + area * x_c * y_c,
+        ]
+    )
+
+
+def compute_hydrostatic_restoring_matrix_full(
+    hull: WettedHullMesh,
+    mass: float,
+    center_of_gravity: FloatArray,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+    relative_tolerance: float = 1.0e-6,
+) -> FullRestoringProperties:
+    """Compute the complete 6x6 hydrostatic restoring matrix, coupling included.
+
+    The matrix is the Hessian of the potential energy
+    (weight + displaced-fluid) with respect to the six rigid-body modes, taken
+    about the static equilibrium and linearised for small displacements.  With
+    the body reference origin ``O`` on the calm waterplane ``z = 0``::
+
+        C = [[0,   0,   0,        0,         0,         0],
+             [0,   0,   0,        0,         0,         0],
+             [0,   0,   rho g A,  rho g A y_c, -rho g A x_c, 0],
+             [0,   0,   rho g A y_c, S_44,    -rho g I_xy_O, 0],
+             [0,   0,  -rho g A x_c, -rho g I_xy_O, S_55,    0],
+             [0,   0,   0,        0,         0,         0]]
+
+        S_44 = rho g (I_xx_O + volume z_B) - mass g z_G
+        S_55 = rho g (I_yy_O + volume z_B) - mass g z_G
+
+    Derivation (each term's physical source is tagged in
+    :data:`RESTORING_MATRIX_TERM_SOURCES`):
+
+    * The vertical coordinate of a body point ``r`` after a small motion is
+      ``Z(r) = xi_3 - xi_5 x + xi_4 y + z (1 - (xi_4^2 + xi_5^2)/2)``; the
+      quadratic bracket is what produces the KB/KG terms below.
+    * Weight: ``V_w = mass g Z(r_G)``; its Hessian contributes ``-mass g z_G``
+      to both C[3,3] and C[4,4] and nothing else (a vertical force at the centre
+      of gravity produces moments only about the horizontal axes).
+    * Buoyancy: ``V_b = -rho g int_{Z<=0} Z dV``.  Expanding the displaced
+      region to second order gives ``rho g/2 int_{A} delta^2 dA`` with
+      ``delta = xi_3 + xi_4 y - xi_5 x``, plus ``rho g (xi_4^2 + xi_5^2)/2
+      * volume z_B`` from the rotation of the region.  The first term yields
+      ``rho g A``, ``rho g A y_c``, ``-rho g A x_c``, ``rho g I_xx_O``,
+      ``-rho g I_xy_O`` and ``rho g I_yy_O``; the second yields the ``volume z_B``
+      (KB) contributions.
+    * Surge, sway and yaw do not appear: the potential energy depends on the
+      vertical position only, so those rows and columns vanish identically.
+
+    Parameters
+    ----------
+    hull :
+        Wetted hull mesh (submerged part of the floating body, ``z <= 0``).
+    mass :
+        Body mass (kg).  ``mass = rho*volume`` for a body in equilibrium; any
+        mismatch is reported in ``equilibrium_relative_mismatch``.
+    center_of_gravity :
+        Centre of gravity ``(x_G, y_G, z_G)`` (m) in the body frame.
+    density :
+        Fluid density (kg/m³).  Default: 1025.0 (seawater).
+    gravity :
+        Gravitational acceleration (m/s²).  Default: 9.80665.
+    relative_tolerance :
+        Threshold used to decide whether the coupling terms are negligible
+        (``diagonal_adequate``) and whether the body floats in equilibrium.
+
+    Returns
+    -------
+    properties :
+        :class:`FullRestoringProperties` with the complete matrix, the diagonal
+        reference matrix, the coupling corrections and validity notes.
+
+    Notes
+    -----
+    The diagonal entries are assembled as
+    ``diagonal_reference + correction`` so that a hull which satisfies the
+    diagonal domain (waterplane centroid on the reference vertical axis, zero
+    product of inertia, mass equal to the displaced mass) reproduces
+    :func:`compute_hydrostatic_restoring_matrix` bit for bit.  This makes the
+    coupling corrections directly readable as additive deltas.
+    """
+    center_of_gravity = np.asarray(center_of_gravity, dtype=float)
+
+    wp_area, wp_center, wp_moments = compute_waterplane_properties(hull)
+    volume, center_of_buoyancy = compute_displaced_volume_and_buoyancy(hull)
+
+    i_xx = wp_moments[0]
+    i_yy = wp_moments[1]
+
+    if volume > 1e-14:
+        bm_t = i_xx / volume
+        bm_l = i_yy / volume
+    else:
+        bm_t = 0.0
+        bm_l = 0.0
+
+    z_min = np.min(hull.vertices[:, 2])
+    kb = center_of_buoyancy[2] - z_min
+    kg = center_of_gravity[2] - z_min
+
+    gm_t = kb + bm_t - kg
+    gm_l = kb + bm_l - kg
+
+    # --- diagonal reference matrix (identical to the historical contract) ---
+    diagonal = np.zeros((6, 6), dtype=float)
+    diagonal[2, 2] = density * gravity * wp_area
+    diagonal[3, 3] = density * gravity * volume * gm_t
+    diagonal[4, 4] = density * gravity * volume * gm_l
+
+    # --- corrections: parallel-axis transfer of the roll/pitch reference axis
+    # (waterplane centroid -> reference origin) and the flotation mismatch of
+    # the weight term.  Both vanish identically for a hull inside the diagonal
+    # domain, so the sum below is bit-for-bit the diagonal reference there. ---
+    moments_about_origin = waterplane_second_moments_about_origin(
+        wp_area, wp_center, wp_moments
+    )
+    displaced_mass = density * volume
+    vertical_mismatch = (displaced_mass - mass) * gravity * center_of_gravity[2]
+    roll_axis_correction = gravity * (
+        density * wp_area * wp_center[1] * wp_center[1]
+    )
+    pitch_axis_correction = gravity * (
+        density * wp_area * wp_center[0] * wp_center[0]
+    )
+
+    meter = density * gravity
+    full = diagonal.copy()
+    full[3, 3] = diagonal[3, 3] + roll_axis_correction + vertical_mismatch
+    full[4, 4] = diagonal[4, 4] + pitch_axis_correction + vertical_mismatch
+    # heave-roll: buoyancy increment of a heave acts through the waterplane
+    # centroid, offset y_c from the roll axis through O.
+    full[2, 3] += meter * wp_area * wp_center[1]
+    full[3, 2] += meter * wp_area * wp_center[1]
+    # heave-pitch: same mechanism about the pitch axis (sign from xi_5 = -theta
+    # acting on the x-offset of the waterplane centroid).
+    full[2, 4] += -meter * wp_area * wp_center[0]
+    full[4, 2] += -meter * wp_area * wp_center[0]
+    # roll-pitch: mixed waterplane second moment about the origin.
+    full[3, 4] += -meter * moments_about_origin[2]
+    full[4, 3] += -meter * moments_about_origin[2]
+
+    coupling = full - diagonal
+
+    # --- validity diagnostics ------------------------------------------------
+    scale = max(abs(full[2, 2]), abs(full[3, 3]), abs(full[4, 4]), 1.0e-30)
+    coupling_scale = float(np.max(np.abs(coupling)))
+    equilibrium_relative_mismatch = (
+        abs(displaced_mass - mass) / displaced_mass if displaced_mass > 0.0 else 0.0
+    )
+
+    notes: list[str] = []
+    waterplane_scale = max(
+        math.sqrt(wp_area) if wp_area > 0.0 else 0.0,
+        float(np.max(np.abs(wp_center))) if wp_area > 0.0 else 0.0,
+        1.0,
+    )
+    if abs(wp_center[1]) > relative_tolerance * waterplane_scale:
+        notes.append(
+            "waterplane centroid is offset in y from the roll axis through the "
+            f"origin (y_c = {wp_center[1]:.6g} m): heave-roll coupling "
+            f"C[2,3] = {full[2, 3]:.6g} N/rad and a parallel-axis correction of "
+            f"{roll_axis_correction:.6g} on C[3,3] are required"
+        )
+    if abs(wp_center[0]) > relative_tolerance * waterplane_scale:
+        notes.append(
+            "waterplane centroid is offset in x from the pitch axis through the "
+            f"origin (x_c = {wp_center[0]:.6g} m): heave-pitch coupling "
+            f"C[2,4] = {full[2, 4]:.6g} N/rad and a parallel-axis correction of "
+            f"{pitch_axis_correction:.6g} on C[4,4] are required"
+        )
+    inertia_scale = max(
+        abs(moments_about_origin[0]), abs(moments_about_origin[1]), 1.0e-30
+    )
+    if abs(moments_about_origin[2]) > relative_tolerance * inertia_scale:
+        notes.append(
+            "waterplane product of inertia about the origin is non-zero "
+            f"(I_xy_O = {moments_about_origin[2]:.6g} m^4): roll-pitch coupling "
+            f"C[3,4] = {full[3, 4]:.6g} N/rad is required"
+        )
+    if equilibrium_relative_mismatch > relative_tolerance:
+        notes.append(
+            "body is not in flotation equilibrium: mass exceeds/falls short of "
+            f"the displaced mass by {equilibrium_relative_mismatch:.3%}, so the "
+            f"weight terms leave a residual {-vertical_mismatch:.6g} N*m that is "
+            "attributed to the diagonal entries by this linearisation"
+        )
+
+    diagonal_adequate = not notes
+
+    return FullRestoringProperties(
+        displaced_volume=volume,
+        center_of_buoyancy=center_of_buoyancy,
+        waterplane_area=wp_area,
+        waterplane_center=wp_center,
+        waterplane_moments=wp_moments,
+        restoring_matrix=full,
+        diagonal_matrix=diagonal,
+        coupling_terms=coupling,
+        waterplane_moments_about_origin=moments_about_origin,
+        equilibrium_relative_mismatch=equilibrium_relative_mismatch,
+        diagonal_adequate=diagonal_adequate,
+        notes=tuple(notes),
     )
 
 
