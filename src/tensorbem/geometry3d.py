@@ -658,3 +658,195 @@ def submerged_sphere_mesh(
     base = icosphere(subdivisions, radius=radius)
     offset = np.array([float(xy[0]), float(xy[1]), -float(submergence)])
     return TriangleMesh(base.vertices + offset, base.faces)
+
+
+def _oriented_triangle(
+    p0: FloatArray,
+    p1: FloatArray,
+    p2: FloatArray,
+    outward: FloatArray,
+) -> tuple[int, int, int] | None:
+    """Return index order (0,1,2)/(0,2,1) whose normal agrees with ``outward``."""
+    normal = np.cross(p1 - p0, p2 - p0)
+    if not np.isfinite(normal).all() or float(np.linalg.norm(normal)) == 0.0:
+        return None
+    if float(np.dot(normal, outward)) >= 0.0:
+        return (0, 1, 2)
+    return (0, 2, 1)
+
+
+def _wall_strip(
+    bottom_loop: IntArray,
+    top_loop: IntArray,
+    coords: list[tuple[float, float, float]],
+    faces: list[tuple[int, int, int]],
+) -> None:
+    """Append an outward-oriented vertical wall strip between two closed loops.
+
+    ``bottom_loop`` and ``top_loop`` hold vertex indices of the same closed
+    polygon at two z levels (``top_loop`` strictly above). Triangle orientation
+    is fixed per quad by testing the geometric normal against the horizontal
+    outward direction, which is derived from the loop's signed area so that the
+    same helper serves clockwise and counter-clockwise loops.
+    """
+    xy = np.array([[coords[i][0], coords[i][1]] for i in bottom_loop], dtype=float)
+    x_next = np.roll(xy[:, 0], -1)
+    y_next = np.roll(xy[:, 1], -1)
+    twice_area = float(np.sum(xy[:, 0] * y_next - x_next * xy[:, 1]))
+    sign = 1.0 if twice_area > 0.0 else -1.0
+    n = len(bottom_loop)
+    for k in range(n):
+        k2 = (k + 1) % n
+        b0 = np.array(coords[bottom_loop[k]], dtype=float)
+        b1 = np.array(coords[bottom_loop[k2]], dtype=float)
+        t0 = np.array(coords[top_loop[k]], dtype=float)
+        t1 = np.array(coords[top_loop[k2]], dtype=float)
+        d = b1 - b0
+        outward = np.array([sign * d[1], -sign * d[0], 0.0], dtype=float)
+        if float(np.linalg.norm(outward)) == 0.0:
+            raise ValueError("degenerate vertical wall edge (zero length in xy)")
+        outward /= np.linalg.norm(outward)
+        corners = (b0, t0, t1, b1)
+        for tri in ((0, 1, 2), (0, 2, 3)):
+            order = _oriented_triangle(
+                corners[tri[0]], corners[tri[1]], corners[tri[2]], outward
+            )
+            if order is None:
+                raise ValueError("degenerate vertical wall triangle")
+            quad = (bottom_loop[k], top_loop[k], top_loop[k2], bottom_loop[k2])
+            faces.append(tuple(int(quad[tri[order[j]]]) for j in range(3)))
+
+
+def rectangular_barge_hull_mesh(
+    length: float,
+    beam: float,
+    draft: float,
+    nx: int = 1,
+    ny: int = 1,
+) -> WettedHullMesh:
+    """Return a wall-sided rectangular barge hull in ``z <= 0``.
+
+    The wetted surface is the flat bottom at ``z = -draft`` plus the four
+    vertical sides up to the calm waterline ``z = 0``. Cell counts ``nx``/``ny``
+    refine the bottom and the sides while keeping the geometry exactly
+    wall-sided, so every hydrostatic quantity for this hull has a closed-form
+    reference: ``V = L B T``, ``A_wp = L B``, ``I_T = L B^3 / 12``,
+    ``I_L = B L^3 / 12``, ``KB = T / 2`` and ``BM_T = B^2 / (12 T)``.
+    """
+    for name, value in (("length", length), ("beam", beam), ("draft", draft)):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be a positive finite number")
+    if int(nx) != nx or int(ny) != ny:
+        raise ValueError("nx and ny must be integers")
+    nx, ny = int(nx), int(ny)
+    if nx < 1 or ny < 1:
+        raise ValueError("nx and ny must be at least 1")
+
+    half_l, half_b = 0.5 * float(length), 0.5 * float(beam)
+    coords: list[tuple[float, float, float]] = []
+    bottom = np.zeros((nx + 1, ny + 1), dtype=np.int64)
+    for i in range(nx + 1):
+        x = -half_l + float(length) * i / nx
+        for j in range(ny + 1):
+            y = -half_b + float(beam) * j / ny
+            bottom[i, j] = len(coords)
+            coords.append((x, y, -float(draft)))
+
+    # Boundary loop in clockwise order seen from above, matching the ordering
+    # used by the bottom-face triangulation below.
+    loop: list[tuple[int, int]] = []
+    loop.extend((0, j) for j in range(ny + 1))
+    loop.extend((i, ny) for i in range(1, nx + 1))
+    loop.extend((nx, j) for j in range(ny - 1, -1, -1))
+    loop.extend((i, 0) for i in range(nx - 1, 0, -1))
+
+    top_of: dict[tuple[int, int], int] = {}
+    for ij in loop:
+        top_of[ij] = len(coords)
+        coords.append((coords[bottom[ij]][0], coords[bottom[ij]][1], 0.0))
+
+    faces: list[tuple[int, int, int]] = []
+    down = np.array([0.0, 0.0, -1.0])
+    for i in range(nx):
+        for j in range(ny):
+            q = (
+                bottom[i, j],
+                bottom[i + 1, j],
+                bottom[i + 1, j + 1],
+                bottom[i, j + 1],
+            )
+            pts = [np.array(coords[v], dtype=float) for v in q]
+            for tri in ((0, 1, 2), (0, 2, 3)):
+                order = _oriented_triangle(pts[tri[0]], pts[tri[1]], pts[tri[2]], down)
+                if order is None:
+                    raise ValueError("degenerate bottom triangle")
+                faces.append(tuple(q[tri[order[k]]] for k in range(3)))
+
+    bottom_loop = np.array([bottom[ij] for ij in loop], dtype=np.int64)
+    top_loop = np.array([top_of[ij] for ij in loop], dtype=np.int64)
+    _wall_strip(bottom_loop, top_loop, coords, faces)
+
+    return WettedHullMesh(np.asarray(coords, dtype=float), np.asarray(faces, dtype=np.int64))
+
+
+def elliptic_cylinder_hull_mesh(
+    semi_axis_x: float,
+    semi_axis_y: float,
+    draft: float,
+    panels: int = 64,
+    phase: float = 0.0,
+) -> WettedHullMesh:
+    """Return a wall-sided elliptic-cylinder hull in ``z <= 0``.
+
+    The waterplane is a ``panels``-sided polygon inscribed in the ellipse, so
+    the exact reference values are the polygon values ``A_wp = (n/2) ab
+    sin(2 pi / n)`` and ``V = A_wp * draft``, while the ellipse values
+    ``pi a b`` / ``(pi/4) a b^3`` bound the discretization error as
+    ``O(n^-2)``. Useful as a curved-waterplane convergence case.
+    """
+    for name, value in (
+        ("semi_axis_x", semi_axis_x),
+        ("semi_axis_y", semi_axis_y),
+        ("draft", draft),
+    ):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be a positive finite number")
+    if int(panels) != panels or int(panels) < 8:
+        raise ValueError("panels must be an integer >= 8")
+
+    coords: list[tuple[float, float, float]] = []
+    n = int(panels)
+    angles = np.arange(n) * (2.0 * math.pi / n) + float(phase)
+    xs = float(semi_axis_x) * np.cos(angles)
+    ys = float(semi_axis_y) * np.sin(angles)
+    bottom = []
+    for x, y in zip(xs, ys):
+        bottom.append(len(coords))
+        coords.append((float(x), float(y), -float(draft)))
+    top = []
+    for x, y in zip(xs, ys):
+        top.append(len(coords))
+        coords.append((float(x), float(y), 0.0))
+
+    faces: list[tuple[int, int, int]] = []
+    down = np.array([0.0, 0.0, -1.0])
+    center_bottom = len(coords)
+    coords.append((0.0, 0.0, -float(draft)))
+    for k in range(n):
+        k2 = (k + 1) % n
+        p0 = np.array(coords[bottom[k]], dtype=float)
+        p1 = np.array(coords[bottom[k2]], dtype=float)
+        p2 = np.array(coords[center_bottom], dtype=float)
+        order = _oriented_triangle(p0, p1, p2, down)
+        if order is None:
+            raise ValueError("degenerate bottom triangle")
+        tri = (bottom[k], bottom[k2], center_bottom)
+        faces.append(tuple(tri[order[j]] for j in range(3)))
+
+    _wall_strip(
+        np.asarray(bottom, dtype=np.int64),
+        np.asarray(top, dtype=np.int64),
+        coords,
+        faces,
+    )
+    return WettedHullMesh(np.asarray(coords, dtype=float), np.asarray(faces, dtype=np.int64))
