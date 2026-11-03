@@ -1,0 +1,87 @@
+{
+  "benchmark": "finite_depth_energy_identity",
+  "ka": 0.6,
+  "radius": 1.0,
+  "submergence": 2.0,
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "motion": "heave",
+  "refinement_depth": 5.0,
+  "cases": [
+    {
+      "solver": "finite_depth",
+      "depth": 5.0,
+      "panels": 64,
+      "motion": "heave",
+      "B_near": 2974.6611058196763,
+      "B_far": 3006.1229885487655,
+      "ratio": 1.0105766275921437,
+      "offset": 0.010576627592143728,
+      "residual": 6.591810555399813e-16
+    },
+    {
+      "solver": "finite_depth",
+      "depth": 5.0,
+      "panels": 128,
+      "motion": "heave",
+      "B_near": 2935.7950897422675,
+      "B_far": 2951.5142185821246,
+      "ratio": 1.0053543004056311,
+      "offset": 0.005354300405631118,
+      "residual": 1.08834117762675e-15
+    },
+    {
+      "solver": "finite_depth",
+      "depth": 5.0,
+      "panels": 256,
+      "motion": "heave",
+      "B_near": 2914.8577403484187,
+      "B_far": 2922.7169352798996,
+      "ratio": 1.0026962533446113,
+      "offset": 0.0026962533446113213,
+      "residual": 1.4618766222564998e-15
+    },
+    {
+      "solver": "deep_water",
+      "depth": null,
+      "panels": 64,
+      "motion": "heave",
+      "B_near": 2787.2367800364336,
+      "B_far": 2758.177419909607,
+      "ratio": 0.9895741329423593,
+      "offset": -0.010425867057640703,
+      "residual": 6.77045003252303e-16
+    },
+    {
+      "solver": "deep_water",
+      "depth": null,
+      "panels": 128,
+      "motion": "heave",
+      "B_near": 2754.470100002123,
+      "B_far": 2739.835613241619,
+      "ratio": 0.9946870046763284,
+      "offset": -0.0053129953236715766,
+      "residual": 9.167504373550889e-16
+    },
+    {
+      "solver": "deep_water",
+      "depth": null,
+      "panels": 256,
+      "motion": "heave",
+      "B_near": 2736.749288695788,
+      "B_far": 2729.409564421627,
+      "ratio": 0.9973180867153312,
+      "offset": -0.0026819132846688243,
+      "residual": 1.2608790076574555e-15
+    }
+  ],
+  "finite_depth_refinement_orders": [
+    0.9821097011505463,
+    0.989742023355758
+  ],
+  "deep_water_orders": [
+    0.9725700209546719,
+    0.9862628522133051
+  ],
+  "elapsed_s": 113.34171462059021
+}
