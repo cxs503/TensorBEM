@@ -1,0 +1,166 @@
+{
+  "reference": {
+    "added_mass": 2545.167247813704,
+    "damping": 2718.153951572775,
+    "method": "ursell_multipole_closed_form_infinite_system"
+  },
+  "provenance": {
+    "current": {
+      "tree": "agent/m2223 worktree (HEAD of this branch)",
+      "solver": "analytic log primitive + smooth free-surface quadrature",
+      "command": "python -m tensorbem.benchmarks.ursell_cylinder --panels P --ka 0.6 --panel-nodes N --output raw/current_panelsP_nodesN.json",
+      "note": "effective smooth quadrature nodes are min(panel_nodes, 6)"
+    },
+    "legacy878834a": {
+      "tree": "git archive 878834a",
+      "solver": "full Green function quadratured with panel_nodes Gauss-Legendre nodes",
+      "command": "python -m tensorbem.benchmarks.ursell_cylinder --panels P --ka 0.6 --panel-nodes N --output raw/legacy878834a_panelsP_nodesN.json",
+      "note": "878834a is the commit whose printed table is quoted in docs/ \u00a74.6"
+    }
+  },
+  "panel_sweep_current_nodes24": [
+    {
+      "panels": 32,
+      "panel_added_mass": 2627.4210441229425,
+      "panel_added_mass_relative_error": 0.03231763899991034,
+      "panel_damping": 2841.7492451278245,
+      "panel_damping_relative_error": 0.04547030659670138,
+      "near_far_field_relative_difference": 0.020486537329351517,
+      "panel_condition_number": 2.473905212123576,
+      "source_file": "current_panels32_nodes24.json",
+      "panel_nodes": 24
+    },
+    {
+      "panels": 64,
+      "panel_added_mass": 2587.762743068625,
+      "panel_added_mass_relative_error": 0.016735833486585378,
+      "panel_damping": 2787.2367800364336,
+      "panel_damping_relative_error": 0.025415347951018748,
+      "near_far_field_relative_difference": 0.010535710979672533,
+      "panel_condition_number": 2.446175121149249,
+      "source_file": "current_panels64_nodes24.json",
+      "panel_nodes": 24
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2566.8343342915696,
+      "panel_added_mass_relative_error": 0.008513030527356396,
+      "panel_damping": 2754.470100002123,
+      "panel_damping_relative_error": 0.013360592915767345,
+      "near_far_field_relative_difference": 0.005341374018855711,
+      "panel_condition_number": 2.4312454300018804,
+      "source_file": "current_panels128_nodes24.json",
+      "panel_nodes": 24
+    },
+    {
+      "panels": 256,
+      "panel_added_mass": 2556.093606354438,
+      "panel_added_mass_relative_error": 0.0042929825339061934,
+      "panel_damping": 2736.749288695788,
+      "panel_damping_relative_error": 0.006841164059987619,
+      "near_far_field_relative_difference": 0.002689125285496139,
+      "panel_condition_number": 2.4235291384292585,
+      "source_file": "current_panels256_nodes24.json",
+      "panel_nodes": 24
+    }
+  ],
+  "node_sweep_current_panels128": [
+    {
+      "panels": 128,
+      "panel_added_mass": 2566.8343342915696,
+      "panel_added_mass_relative_error": 0.008513030527356396,
+      "panel_damping": 2754.470100002123,
+      "panel_damping_relative_error": 0.013360592915767345,
+      "near_far_field_relative_difference": 0.005341374018856045,
+      "panel_condition_number": 2.43124543000188,
+      "source_file": "current_panels128_nodes6.json",
+      "panel_nodes": 6
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2566.8343342915696,
+      "panel_added_mass_relative_error": 0.008513030527356396,
+      "panel_damping": 2754.470100002123,
+      "panel_damping_relative_error": 0.013360592915767345,
+      "near_far_field_relative_difference": 0.005341374018855711,
+      "panel_condition_number": 2.4312454300018813,
+      "source_file": "current_panels128_nodes12.json",
+      "panel_nodes": 12
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2566.8343342915696,
+      "panel_added_mass_relative_error": 0.008513030527356396,
+      "panel_damping": 2754.470100002123,
+      "panel_damping_relative_error": 0.013360592915767345,
+      "near_far_field_relative_difference": 0.005341374018855711,
+      "panel_condition_number": 2.4312454300018804,
+      "source_file": "current_panels128_nodes24.json",
+      "panel_nodes": 24
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2566.8343342915696,
+      "panel_added_mass_relative_error": 0.008513030527356396,
+      "panel_damping": 2754.470100002123,
+      "panel_damping_relative_error": 0.013360592915767345,
+      "near_far_field_relative_difference": 0.005341374018856045,
+      "panel_condition_number": 2.4312454300018804,
+      "source_file": "current_panels128_nodes48.json",
+      "panel_nodes": 48
+    }
+  ],
+  "node_sweep_legacy_panels128": [
+    {
+      "panels": 128,
+      "panel_added_mass": 2562.8702784475004,
+      "panel_added_mass_relative_error": 0.006955547085954136,
+      "panel_damping": 2752.582874117814,
+      "panel_damping_relative_error": 0.012666288649735104,
+      "near_far_field_relative_difference": 0.006048050466070619,
+      "panel_condition_number": 2.43124543000188,
+      "source_file": "legacy878834a_panels128_nodes12.json",
+      "panel_nodes": 12
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2564.8137809276313,
+      "panel_added_mass_relative_error": 0.007719152103188441,
+      "panel_damping": 2753.5081456909174,
+      "panel_damping_relative_error": 0.013006693052719055,
+      "near_far_field_relative_difference": 0.005701456357404409,
+      "panel_condition_number": 2.4312454300018795,
+      "source_file": "legacy878834a_panels128_nodes24.json",
+      "panel_nodes": 24
+    },
+    {
+      "panels": 128,
+      "panel_added_mass": 2565.813896163009,
+      "panel_added_mass_relative_error": 0.008112098867781851,
+      "panel_damping": 2753.984285138429,
+      "panel_damping_relative_error": 0.013181863207167532,
+      "near_far_field_relative_difference": 0.005523193885402004,
+      "panel_condition_number": 2.4312454300018804,
+      "source_file": "legacy878834a_panels128_nodes48.json",
+      "panel_nodes": 48
+    }
+  ],
+  "node_sensitivity_current_panels128": {
+    "added_mass_spread": 0.0,
+    "damping_spread": 0.0,
+    "added_mass_spread_relative": 0.0,
+    "damping_spread_relative": 0.0
+  },
+  "node_sensitivity_legacy_panels128": {
+    "added_mass_spread": 2.9436177155084806,
+    "damping_spread": 1.4014110206153418,
+    "added_mass_spread_relative": 0.001156551781827715,
+    "damping_spread_relative": 0.0005155745574324291
+  },
+  "legacy_finest_gap_to_converged": {
+    "added_mass": -1.020438128560727,
+    "added_mass_relative": -0.00039754732704335653,
+    "damping": -0.4858148636940314,
+    "damping_relative": -0.00017637325730769665
+  }
+}
