@@ -254,13 +254,14 @@ def green_gradient(x, z, source_x, source_z, nu: float, *,
         1.0j * _RESIDUE_SIGN * dresidue_d_depth
     )
 
-    # Vertical source derivative: both r and r1 depend on source_z, as well as A.
+    # Vertical source derivative. It is the chain rule of the two ways G sees
+    # source_z: through the depth sum A = -(z + z0), with d/ds_z0 = -d/dA, and
+    # through the Rankine term's difference z - z0, with d/ds_z0 (1/(2 pi)) log r
+    # = -(z - z0)/(2 pi r^2). Writing it as -dg_d_depth plus that Rankine piece
+    # keeps a single source for the A-derivative instead of restating it inline,
+    # so a defect in df_d_depth can no longer hide in an unread local.
     dg_d_source_x = -dg_d_offset
-    dg_d_source_z = (1.0 / (2.0 * math.pi)) * (
-        -(field_z - s_z) / r2 + depth / r_image2 - 2.0 * (
-            elementary_cos + frequency * cos_integral
-        )
-    ) + 1.0j * _RESIDUE_SIGN * (frequency * residue)
+    dg_d_source_z = -dg_d_depth - (1.0 / (2.0 * math.pi)) * (field_z - s_z) / r2
     if not outgoing:
         dg_d_source_x = np.conj(dg_d_source_x)
         dg_d_source_z = np.conj(dg_d_source_z)
