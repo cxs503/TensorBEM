@@ -1,0 +1,51 @@
+{
+  "all_within_tolerance": true,
+  "documented": {
+    "constant_flux_1280": 0.00332,
+    "d1": 0.003764,
+    "d2": 0.0073437,
+    "d3": 0.011908,
+    "ellipse_x_128": 0.00075356,
+    "ellipse_y_128": 0.00089977,
+    "ellipsoid_x_1280": 0.0041679,
+    "ellipsoid_y_1280": 0.0044621,
+    "ellipsoid_z_1280": 0.0049359,
+    "sphere_added_mass_3d_1280": 0.0044674,
+    "sphere_added_mass_3d_20": 0.21268,
+    "sphere_added_mass_3d_320": 0.017381,
+    "sphere_added_mass_3d_80": 0.064759
+  },
+  "generated_by": "python -m tensorbem.benchmarks.doc_pins --write + /tmp/make_docs.py",
+  "max_abs_deviation": 0.0006194857824655318,
+  "measured": {
+    "constant_flux_1280": 0.0033179433072022145,
+    "d1": 0.0037639539729950548,
+    "d2": 0.007343746340594511,
+    "d3": 0.01190779829009714,
+    "ellipse_x_128": 0.0007535592473139912,
+    "ellipse_y_128": 0.0008997715295849107,
+    "ellipsoid_x_1280": 0.004167936438948101,
+    "ellipsoid_y_1280": 0.004462121490841226,
+    "ellipsoid_z_1280": 0.004935932283260787,
+    "sphere_added_mass_3d_1280": 0.004467403585941484,
+    "sphere_added_mass_3d_20": 0.21268127760057987,
+    "sphere_added_mass_3d_320": 0.017380688694954495,
+    "sphere_added_mass_3d_80": 0.06475922589787647
+  },
+  "relative_deviation": {
+    "constant_flux_1280": -0.0006194857824655318,
+    "d1": -1.2228215979072482e-05,
+    "d2": 6.3102515776790735e-06,
+    "d3": -1.6939024425636144e-05,
+    "ellipse_x_128": -9.988401836474894e-07,
+    "ellipse_y_128": 1.6999732272275723e-06,
+    "ellipsoid_x_1280": 8.74275968718613e-06,
+    "ellipsoid_y_1280": 4.816306498179276e-06,
+    "ellipsoid_z_1280": 6.5405013851290325e-06,
+    "sphere_added_mass_3d_1280": 8.026909351874798e-07,
+    "sphere_added_mass_3d_20": 6.007149613774667e-06,
+    "sphere_added_mass_3d_320": -1.7910652177986494e-05,
+    "sphere_added_mass_3d_80": 3.488285434828988e-06
+  },
+  "tolerance": 0.03
+}

@@ -1,8 +1,22 @@
 {
-  "commit": "f0bfb41",
+  "commit": "71e51fc",
   "generated_by": "python -m tensorbem.benchmarks.doc_pins --write",
   "note": "Numbers quoted in README.md and docs/marine_bem_benchmarks.md. Regenerate with --write after any intentional change; --check is what CI and tests/test_documented_benchmarks.py enforce.",
   "pins": {
+    "constant_dirichlet_3d_1280": {
+      "caption": "3.32e-3 total-flux error, capacitance 4*pi*a",
+      "doc": "docs/three_dimensional_bem.md section 5 (exterior constant Dirichlet, 1280 panels)",
+      "metrics": {
+        "exact_total_flux": 12.566370614359172,
+        "total_flux_relative_error": 0.0033179433072022145
+      },
+      "rtol": 1e-06,
+      "runner": "three_dimensional_study.run_constant_dirichlet_case",
+      "settings": {
+        "subdivisions": 3
+      },
+      "slow": true
+    },
     "cylinder_added_mass_2d_128": {
       "caption": "4.02e-4 at 128 panels",
       "doc": "README.md line 66 + docs/marine_bem_benchmarks.md (2-D circle, 128 panels)",
@@ -48,18 +62,197 @@
       },
       "slow": false
     },
+    "ellipse_added_mass_2d_128_x": {
+      "caption": "7.54e-4 along the major axis",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 3 (ellipse, 128 panels, x)",
+      "metrics": {
+        "added_mass_per_unit_span": 1809.959573997701,
+        "added_mass_relative_error": 0.0007535592473139912,
+        "normal_derivative_relative_l2_error": 0.0005650727507866058
+      },
+      "rtol": 1e-06,
+      "runner": "ellipse_added_mass.run",
+      "settings": {
+        "axis": "x",
+        "panel_count": 128
+      },
+      "slow": false
+    },
+    "ellipse_added_mass_2d_128_y": {
+      "caption": "9.00e-4 along the minor axis",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 3 (ellipse, 128 panels, y)",
+      "metrics": {
+        "added_mass_per_unit_span": 7238.778944426107,
+        "added_mass_relative_error": 0.0008997715295849107,
+        "normal_derivative_relative_l2_error": 0.0008749614727566018
+      },
+      "rtol": 1e-06,
+      "runner": "ellipse_added_mass.run",
+      "settings": {
+        "axis": "y",
+        "panel_count": 128
+      },
+      "slow": false
+    },
+    "ellipsoid_added_mass_3d_1280": {
+      "caption": "4.17e-3 / 4.46e-3 / 4.94e-3 at 1280 panels",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 4 (ellipsoid, 1280 panels)",
+      "metrics": {
+        "axes.0.added_mass_relative_error": 0.004167936438948101,
+        "axes.0.exact_added_mass": 1211.051995240953,
+        "axes.1.added_mass_relative_error": 0.004462121490841226,
+        "axes.1.exact_added_mass": 2437.153501509733,
+        "axes.2.added_mass_relative_error": 0.004935932283260787,
+        "axes.2.exact_added_mass": 4184.38918975305,
+        "volume_ratio": 0.9913938426297547
+      },
+      "rtol": 1e-06,
+      "runner": "ellipsoid_added_mass.run",
+      "settings": {
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "ellipsoid_added_mass_3d_20": {
+      "caption": "2.1e-1 on all three axes at 20 panels",
+      "doc": "docs/marine_bem_benchmarks.md table 4 (ellipsoid, 20 panels)",
+      "metrics": {
+        "axes.0.added_mass_relative_error": 0.20855091397746117,
+        "axes.0.exact_added_mass": 1211.051995240953,
+        "axes.1.added_mass_relative_error": 0.21126016101465114,
+        "axes.1.exact_added_mass": 2437.153501509733,
+        "axes.2.added_mass_relative_error": 0.2254054941769826,
+        "axes.2.exact_added_mass": 4184.38918975305,
+        "volume_ratio": 0.6054613829125256
+      },
+      "rtol": 1e-06,
+      "runner": "ellipsoid_added_mass.run",
+      "settings": {
+        "subdivisions": 0
+      },
+      "slow": false
+    },
+    "interior_harmonic_degree1_1280": {
+      "caption": "3.76e-3 flux error, degree 1",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 5 (u = x, 1280 panels)",
+      "metrics": {
+        "field_rmse": 0.00022928512290010822,
+        "normal_derivative_relative_l2_error": 0.0037639539729950548
+      },
+      "rtol": 1e-06,
+      "runner": "interior_harmonics.run_case",
+      "settings": {
+        "harmonic": "x",
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "interior_harmonic_degree2_1280": {
+      "caption": "7.34e-3 flux error, degree 2",
+      "doc": "docs/marine_bem_benchmarks.md table 5 (u = x^2-y^2, 1280 panels)",
+      "metrics": {
+        "field_rmse": 0.00023075028376939288,
+        "normal_derivative_relative_l2_error": 0.007343746340594511
+      },
+      "rtol": 1e-06,
+      "runner": "interior_harmonics.run_case",
+      "settings": {
+        "harmonic": "x2-y2",
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "interior_harmonic_degree3_1280": {
+      "caption": "1.19e-2 flux error, degree 3",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 5 (u = x^3-3xy^2, 1280 panels)",
+      "metrics": {
+        "field_rmse": 0.00018240135166573012,
+        "normal_derivative_relative_l2_error": 0.01190779829009714
+      },
+      "rtol": 1e-06,
+      "runner": "interior_harmonics.run_case",
+      "settings": {
+        "harmonic": "x3-3xy2",
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "sphere_added_mass_3d_1280": {
+      "caption": "headline 4.47e-3 at 1280 panels",
+      "doc": "README.md line 70 + docs/marine_bem_benchmarks.md table 2 (3-D sphere, 1280 panels)",
+      "metrics": {
+        "added_mass_relative_error": 0.004467403585941484,
+        "normal_derivative_relative_l2_error": 0.006845781173787856,
+        "surface_area_ratio": 0.9952350696770933,
+        "volume_ratio": 0.9913938426297549
+      },
+      "rtol": 1e-06,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 3
+      },
+      "slow": true
+    },
+    "sphere_added_mass_3d_20": {
+      "caption": "2.13e-1 at 20 panels",
+      "doc": "docs/marine_bem_benchmarks.md table 2 (3-D sphere, 20 panels)",
+      "metrics": {
+        "added_mass_relative_error": 0.21268127760057987,
+        "normal_derivative_relative_l2_error": 0.03333814761927449,
+        "surface_area_ratio": 0.7619177944929801,
+        "volume_ratio": 0.6054613829125258
+      },
+      "rtol": 1e-06,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 0
+      },
+      "slow": false
+    },
+    "sphere_added_mass_3d_320": {
+      "caption": "1.74e-2 at 320 panels",
+      "doc": "docs/marine_bem_benchmarks.md table 2 (3-D sphere, 320 panels)",
+      "metrics": {
+        "added_mass_relative_error": 0.017380688694954495,
+        "normal_derivative_relative_l2_error": 0.014541554464665653,
+        "surface_area_ratio": 0.9811781757531297,
+        "volume_ratio": 0.9661607485985872
+      },
+      "rtol": 1e-06,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 2
+      },
+      "slow": true
+    },
+    "sphere_added_mass_3d_80": {
+      "caption": "6.48e-2 at 80 panels",
+      "doc": "docs/marine_bem_benchmarks.md table 2 (3-D sphere, 80 panels)",
+      "metrics": {
+        "added_mass_relative_error": 0.06475922589787647,
+        "normal_derivative_relative_l2_error": 0.027884179766218663,
+        "surface_area_ratio": 0.928345323381442,
+        "volume_ratio": 0.8734532000030633
+      },
+      "rtol": 1e-06,
+      "runner": "sphere_added_mass.run",
+      "settings": {
+        "subdivisions": 1
+      },
+      "slow": false
+    },
     "ursell_cylinder_128": {
       "caption": "headline Ursell number",
       "doc": "README.md line 13 + docs/marine_bem_benchmarks.md section 4.6 (Ursell, 128 panels)",
       "metrics": {
-        "near_over_far_field_damping": 1.0053413740188557,
-        "panel_added_mass": 2566.8343342915696,
-        "panel_added_mass_relative_error": 0.008513030527356396,
-        "panel_damping": 2754.470100002123,
-        "panel_damping_relative_error": 0.013360592915767345,
-        "reference_added_mass": 2545.167247813704,
-        "reference_damping": 2718.153951572775,
-        "reference_solution_added_mass_relative_error": 0.0001889150774061737
+        "near_over_far_field_damping": 1.0053413740188561,
+        "panel_added_mass": 2566.834334291569,
+        "panel_added_mass_relative_error": 0.008513030527356578,
+        "panel_damping": 2754.4701000021237,
+        "panel_damping_relative_error": 0.013360592915767173,
+        "reference_added_mass": 2545.167247813703,
+        "reference_damping": 2718.153951572776,
+        "reference_solution_added_mass_relative_error": 0.00018891507740581643
       },
       "rtol": 1e-06,
       "runner": "ursell_cylinder.run",
@@ -72,14 +265,14 @@
       "caption": "refinement row; takes about 90 s, excluded from the default check",
       "doc": "docs/marine_bem_benchmarks.md section 4.6 (Ursell, 256 panels)",
       "metrics": {
-        "near_over_far_field_damping": 1.0026891252854961,
-        "panel_added_mass": 2556.093606354438,
-        "panel_added_mass_relative_error": 0.0042929825339061934,
-        "panel_damping": 2736.749288695788,
-        "panel_damping_relative_error": 0.006841164059987619,
-        "reference_added_mass": 2545.167247813704,
-        "reference_damping": 2718.153951572775,
-        "reference_solution_added_mass_relative_error": 4.720811059173263e-05
+        "near_over_far_field_damping": 1.0026891252854964,
+        "panel_added_mass": 2556.0936063544377,
+        "panel_added_mass_relative_error": 0.004292982533906374,
+        "panel_damping": 2736.7492886957884,
+        "panel_damping_relative_error": 0.006841164059987449,
+        "reference_added_mass": 2545.167247813703,
+        "reference_damping": 2718.153951572776,
+        "reference_solution_added_mass_relative_error": 4.720811059066062e-05
       },
       "rtol": 1e-06,
       "runner": "ursell_cylinder.run",
@@ -92,14 +285,14 @@
       "caption": "first row of the Ursell table",
       "doc": "docs/marine_bem_benchmarks.md section 4.6 (Ursell, 64 panels)",
       "metrics": {
-        "near_over_far_field_damping": 1.0105357109796724,
-        "panel_added_mass": 2587.762743068625,
-        "panel_added_mass_relative_error": 0.016735833486585378,
-        "panel_damping": 2787.2367800364336,
-        "panel_damping_relative_error": 0.025415347951018748,
-        "reference_added_mass": 2545.167247813704,
-        "reference_damping": 2718.153951572775,
-        "reference_solution_added_mass_relative_error": 0.0007569804876068797
+        "near_over_far_field_damping": 1.0105357109796727,
+        "panel_added_mass": 2587.7627430686243,
+        "panel_added_mass_relative_error": 0.016735833486585566,
+        "panel_damping": 2787.236780036434,
+        "panel_damping_relative_error": 0.025415347951018574,
+        "reference_added_mass": 2545.167247813703,
+        "reference_damping": 2718.153951572776,
+        "reference_solution_added_mass_relative_error": 0.0007569804876065225
       },
       "rtol": 1e-06,
       "runner": "ursell_cylinder.run",

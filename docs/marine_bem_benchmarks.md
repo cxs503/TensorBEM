@@ -516,3 +516,5 @@ python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 [15] Newman J N. Algorithms for the free-surface Green function. *Journal of Engineering Mathematics*, 1985, 19(1): 57–67. https://doi.org/10.1007/BF00055041.
 
 [16] Telste J G, Noblesse F. Numerical evaluation of the Green function of water-wave radiation and diffraction. *Journal of Ship Research*, 1986, 30(2): 69–84. https://doi.org/10.5957/jsr.1986.30.2.69.
+
+Every number quoted in the benchmark tables above is pinned in `docs/benchmark_pins.json` and rechecked by `python -m tensorbem.benchmarks.doc_pins --check` (see `tests/test_documented_benchmarks.py` and `tests/test_three_dimensional_pins.py`); the 3-D tables can be regenerated with `--table threedim`.

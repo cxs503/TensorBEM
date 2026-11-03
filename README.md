@@ -143,3 +143,5 @@ The 3-D fundamental solution is \\(G(x,y)=1/(4\\pi|x-y|)\\), satisfying \\(-\\na
 ## License
 
 Apache-2.0.
+
+Every number quoted in the benchmark tables above is pinned in `docs/benchmark_pins.json` and rechecked by `python -m tensorbem.benchmarks.doc_pins --check` (see `tests/test_documented_benchmarks.py` and `tests/test_three_dimensional_pins.py`); the 3-D tables can be regenerated with `--table threedim`.
