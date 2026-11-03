@@ -4,6 +4,7 @@ import math
 import numpy as np
 import pytest
 
+from tensorbem.benchmarks.wigley_verification import converged_wave_resistance
 from tensorbem.wigley import (
     WigleyHullMesh,
     WigleyWaveResistanceResult,
@@ -43,16 +44,23 @@ class TestWigleyHullMesh:
         assert 0.5 * S_approx < mesh.surface_area < 2.0 * S_approx
 
     def test_hull_properties(self):
-        """Test analytical hull properties."""
+        """Test analytical hull properties.
+
+        Volume = 2 * (B/2) * (2L/3) * (2T/3) = 4LBT/9 and Cb = 4/9: the
+        two normalised factors of the Wigley surface each integrate to 2/3,
+        so 2/3 is Cp (and Cm), not Cb.  Verified independently against the
+        meshed hull in ``tests/test_wigley_verification.py``.
+        """
         L, B, T = 2.0, 0.2, 0.125
         props = wigley_hull_properties(L, B, T)
-        
-        # Volume = 2*L*B*T/3
-        expected_volume = 2.0 * L * B * T / 3.0
-        assert abs(props["volume"] - expected_volume) < 1e-10
-        
-        # Cb = 2/3
-        assert abs(props["Cb"] - 2.0 / 3.0) < 1e-10
+
+        expected_volume = 4.0 * L * B * T / 9.0
+        assert abs(props["volume"] - expected_volume) < 1e-12
+
+        assert abs(props["Cb"] - 4.0 / 9.0) < 1e-12
+        assert abs(props["Cm"] - 2.0 / 3.0) < 1e-12
+        assert abs(props["Cp"] - 2.0 / 3.0) < 1e-12
+        assert abs(props["waterplane_area"] - 2.0 * L * B / 3.0) < 1e-12
 
     def test_halfbreadths(self):
         """Test Wigley half-breadth formula."""
@@ -140,18 +148,6 @@ class TestWaveResistance:
         assert math.isfinite(result.wave_resistance_pressure)
         assert math.isfinite(result.relative_difference)
 
-    def test_froude_number(self):
-        """Test Froude number calculation."""
-        L, B, T = 2.0, 0.2, 0.125
-        U = 1.0
-        g = 9.80665
-        
-        result = compute_wigley_wave_resistance(L, B, T, U)
-        
-        expected_Fn = U / math.sqrt(g * L)
-        assert abs(result.froude_number - expected_Fn) < 1e-10
-
-
 class TestMeshConvergence:
     """Tests for mesh convergence study."""
 
@@ -184,42 +180,38 @@ class TestMeshConvergence:
 
 
 class TestBenchmarkComparison:
-    """Tests for benchmark comparison with published data."""
+    """Quantitative benchmarks for the Kochin (Michell) path.
 
-    def test_wigley_fn02(self):
-        """Test wave resistance at Fr=0.2 against published data.
-        
-        Reference: Wigley (1934), as reported in:
-        - Journée, J.M.J. (1992). "Verification and validation of ship 
-          motion prediction programs."
-        - Expected Cw ~ 2.5e-3 at Fr=0.2 (approximate, uncertainty ±20%)
-        """
+    The earlier version of these tests only asserted ``0 < Cw < 1e-2``, which
+    any implementation that returns a small positive number would pass, and the
+    "published data" it referred to carried neither a reference area nor a
+    source page.  They now pin the *computed* value to the converged
+    quadrature reference (``benchmarks.wigley_verification``), i.e. they test
+    the implementation instead of the plausibility of its magnitude.  The
+    published-reference comparison is registered separately as an
+    UNSUPPORTED claim in ``tests/test_wigley_verification.py`` because its
+    normalization is not reproducible from the document.
+    """
+
+    @pytest.mark.parametrize("froude", [0.20, 0.30, 0.40])
+    def test_kochin_matches_converged_reference(self, froude):
         L, B, T = 2.0, 0.2, 0.125
         g = 9.80665
-        
-        # Fr = 0.2 => U = 0.2 * sqrt(g*L)
-        Fn_target = 0.2
-        U = Fn_target * math.sqrt(g * L)
-        
-        result = compute_wigley_wave_resistance(L, B, T, U, nx=16, nz=8)
-        
-        # Kochin path should give reasonable Cw
-        # Note: Michell theory is approximate, so we allow wide tolerance
-        assert result.cw_kochin > 0
-        assert result.cw_kochin < 1e-2  # Upper bound
+        U = froude * math.sqrt(g * L)
 
-    def test_wigley_fn03(self):
-        """Test wave resistance at Fr=0.3."""
-        L, B, T = 2.0, 0.2, 0.125
-        g = 9.80665
-        
-        Fn_target = 0.3
-        U = Fn_target * math.sqrt(g * L)
-        
         result = compute_wigley_wave_resistance(L, B, T, U, nx=16, nz=8)
-        
-        assert result.cw_kochin > 0
-        assert result.cw_kochin < 1e-2
+        reference = converged_wave_resistance(L, B, T, U)
+
+        assert result.wave_resistance_kochin == pytest.approx(reference, rel=1e-4)
+        assert result.froude_number == pytest.approx(froude, rel=1e-12)
+
+    def test_froude_number(self):
+        """Fr = U / sqrt(g L)."""
+        L, B, T = 2.0, 0.2, 0.125
+        U = 1.0
+        g = 9.80665
+        result = compute_wigley_wave_resistance(L, B, T, U, nx=16, nz=8)
+        assert abs(result.froude_number - U / math.sqrt(g * L)) < 1e-12
 
 
 if __name__ == "__main__":
