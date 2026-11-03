@@ -33,6 +33,16 @@ from .analytic import (
     ursell_cylinder_coefficients,
 )
 from .clearance import SurfaceClearanceReport, diagnose_surface_clearance
+from .panel_smoothing import (
+    panel_to_vertex_field,
+    smooth_and_recover_tangent_gradient,
+    smooth_panel_field,
+    vertex_to_panel_field,
+)
+from .recovery_uncertainty import (
+    RecoveryUncertainty,
+    estimate_recovery_uncertainty,
+)
 from .conditioning import (
     ConditioningReport,
     estimate_condition_number,
@@ -189,6 +199,12 @@ __all__ = [
     "project_to_ellipsoid",
     "SurfaceClearanceReport",
     "diagnose_surface_clearance",
+    "RecoveryUncertainty",
+    "estimate_recovery_uncertainty",
+    "panel_to_vertex_field",
+    "smooth_and_recover_tangent_gradient",
+    "smooth_panel_field",
+    "vertex_to_panel_field",
     "LaplaceSurfaceResult",
     "RigidBodyAddedMass3DResult",
     "solve_laplace_surface",
