@@ -1,0 +1,275 @@
+{
+  "barge": {
+    "case": "wall_sided_barge",
+    "length": 10.0,
+    "beam": 4.0,
+    "draft": 1.0,
+    "reference": {
+      "displaced_volume": 40.0,
+      "waterplane_area": 40.0,
+      "i_transverse": 53.333333333333336,
+      "i_longitudinal": 333.3333333333333,
+      "kb": 0.5,
+      "bm_transverse": 1.3333333333333335,
+      "bm_longitudinal": 8.333333333333332
+    },
+    "metacentric": {
+      "kg": 1.0,
+      "gm_transverse": 0.8333333333333335,
+      "gm_longitudinal": 7.833333333333332
+    },
+    "rows": [
+      {
+        "nx": 1,
+        "ny": 1,
+        "panels": 10,
+        "displaced_volume": 40.00000000000001,
+        "displaced_volume_error": 1.7763568394002506e-16,
+        "waterplane_area": 40.0,
+        "waterplane_area_error": 0.0,
+        "i_transverse_error": 0.0,
+        "i_longitudinal_error": 0.0,
+        "i_product": 0.0,
+        "kb": 0.5000000000000001,
+        "kb_error": 2.220446049250313e-16,
+        "c_heave": 402072.65,
+        "c_roll": 335060.5416666668,
+        "c_pitch": 3149569.091666667,
+        "c_heave_error": 0.0,
+        "c_roll_error": 1.7372281625263711e-16,
+        "c_pitch_error": 1.4784920532139334e-16
+      },
+      {
+        "nx": 3,
+        "ny": 2,
+        "panels": 32,
+        "displaced_volume": 40.0,
+        "displaced_volume_error": 0.0,
+        "waterplane_area": 40.0,
+        "waterplane_area_error": 0.0,
+        "i_transverse_error": 0.0,
+        "i_longitudinal_error": 1.7053025658242405e-16,
+        "i_product": 2.3684757858670005e-15,
+        "kb": 0.4999999999999998,
+        "kb_error": 4.440892098500626e-16,
+        "c_heave": 402072.65,
+        "c_roll": 335060.5416666666,
+        "c_pitch": 3149569.0916666673,
+        "c_heave_error": 0.0,
+        "c_roll_error": 3.4744563250527423e-16,
+        "c_pitch_error": 2.956984106427867e-16
+      },
+      {
+        "nx": 5,
+        "ny": 3,
+        "panels": 62,
+        "displaced_volume": 39.999999999999986,
+        "displaced_volume_error": 3.552713678800501e-16,
+        "waterplane_area": 40.0,
+        "waterplane_area_error": 0.0,
+        "i_transverse_error": 0.0,
+        "i_longitudinal_error": 0.0,
+        "i_product": 2.3684757858670005e-15,
+        "kb": 0.49999999999999967,
+        "kb_error": 6.661338147750939e-16,
+        "c_heave": 402072.65,
+        "c_roll": 335060.5416666666,
+        "c_pitch": 3149569.0916666663,
+        "c_heave_error": 0.0,
+        "c_roll_error": 3.4744563250527423e-16,
+        "c_pitch_error": 0.0
+      }
+    ],
+    "max_error": 6.661338147750939e-16
+  },
+  "hemisphere": {
+    "case": "hemisphere",
+    "radius": 1.0,
+    "reference": {
+      "displaced_volume": 2.0943951023931953,
+      "waterplane_area": 3.141592653589793,
+      "i_transverse": 0.7853981633974483,
+      "i_longitudinal": 0.7853981633974483,
+      "kb": 0.625,
+      "bm_transverse": 0.375,
+      "bm_longitudinal": 0.375
+    },
+    "levels": [
+      {
+        "subdivisions": 1,
+        "panels": 16,
+        "displaced_volume": 1.4714045207910313,
+        "displaced_volume_error": 0.29745609168503756,
+        "waterplane_area": 2.82842712474619,
+        "waterplane_area_error": 0.09968368384289397,
+        "i_transverse": 0.6380711874576983,
+        "i_transverse_error": 0.18758253177273554,
+        "i_longitudinal": 0.6380711874576982,
+        "i_longitudinal_error": 0.18758253177273568,
+        "kb": 0.6699056897457398,
+        "kb_error": 0.07184910359318372
+      },
+      {
+        "subdivisions": 2,
+        "panels": 64,
+        "displaced_volume": 1.9088648099141803,
+        "displaced_volume_error": 0.08858418942396099,
+        "displaced_volume_order": 1.7475555904190925,
+        "waterplane_area": 3.061467458920718,
+        "waterplane_area_error": 0.025504641595567434,
+        "waterplane_area_order": 1.9665975572312044,
+        "i_transverse": 0.745946836882302,
+        "i_transverse_error": 0.05023098901134309,
+        "i_transverse_order": 1.9008759001687727,
+        "i_longitudinal": 0.7459468368823018,
+        "i_longitudinal_error": 0.050230989011343374,
+        "i_longitudinal_order": 1.9008759001687654,
+        "kb": 0.6372090775700763,
+        "kb_error": 0.019534524112122042,
+        "kb_order": 1.8789440474681867
+      },
+      {
+        "subdivisions": 3,
+        "panels": 256,
+        "displaced_volume": 2.045800310042999,
+        "displaced_volume_error": 0.023202304233173817,
+        "displaced_volume_order": 1.9327811411274027,
+        "waterplane_area": 3.121445152258052,
+        "waterplane_area_error": 0.006413148855794295,
+        "waterplane_area_order": 1.9916550282637049,
+        "i_transverse": 0.7753631469530685,
+        "i_transverse_error": 0.01277697976905196,
+        "i_transverse_order": 1.9750308295226564,
+        "i_longitudinal": 0.7753631469530685,
+        "i_longitudinal_error": 0.01277697976905196,
+        "i_longitudinal_order": 1.9750308295226646,
+        "kb": 0.6281150861852307,
+        "kb_error": 0.004984137896369134,
+        "kb_order": 1.9706102207781662
+      },
+      {
+        "subdivisions": 4,
+        "panels": 1024,
+        "displaced_volume": 2.0821017981243184,
+        "displaced_volume_error": 0.005869620423973357,
+        "displaced_volume_order": 1.9829289718736687,
+        "waterplane_area": 3.1365484905459384,
+        "waterplane_area_error": 0.001605606964381869,
+        "waterplane_area_order": 1.997914114431188,
+        "i_transverse": 0.7828785111124943,
+        "i_transverse_error": 0.0032081209281857284,
+        "i_transverse_order": 1.993746421923386,
+        "i_longitudinal": 0.7828785111124942,
+        "i_longitudinal_error": 0.00320812092818587,
+        "i_longitudinal_order": 1.9937464219233225,
+        "kb": 0.6257826951907741,
+        "kb_error": 0.0012523123052385898,
+        "kb_order": 1.992749593451414
+      },
+      {
+        "subdivisions": 5,
+        "panels": 4096,
+        "displaced_volume": 2.091312635603745,
+        "displaced_volume_error": 0.0014717694793728278,
+        "displaced_volume_order": 1.9957154879534795,
+        "waterplane_area": 3.140331156954753,
+        "waterplane_area_error": 0.0004015468503208683,
+        "waterplane_area_order": 1.9994785510196034,
+        "i_transverse": 0.7847675670379531,
+        "i_transverse_error": 0.000802900221675242,
+        "i_transverse_order": 1.9984359074960094,
+        "i_longitudinal": 0.7847675670379536,
+        "i_longitudinal_error": 0.0008029002216746765,
+        "i_longitudinal_order": 1.9984359074970892,
+        "kb": 0.6251959188446364,
+        "kb_error": 0.0003134701514182936,
+        "kb_order": 1.9981944091014852
+      }
+    ],
+    "richardson": {
+      "displaced_volume": 2.0943951023931953,
+      "displaced_volume_error": 0.0,
+      "waterplane_area": 3.141592653589793,
+      "waterplane_area_error": 0.0,
+      "i_transverse": 0.7853981633974483,
+      "i_transverse_error": 0.0
+    },
+    "panels_total": 5456
+  },
+  "elliptic": {
+    "case": "elliptic_cylinder",
+    "semi_axis_x": 5.0,
+    "semi_axis_y": 2.0,
+    "draft": 1.0,
+    "ellipse_area": 31.41592653589793,
+    "levels": [
+      {
+        "panels_in_waterline": 16,
+        "panels": 48,
+        "polygon_area_exact_error": 1.1604610293826104e-16,
+        "waterplane_area": 30.61467458920718,
+        "waterplane_area_error_vs_ellipse": 0.025504641595567375,
+        "i_transverse_error_vs_polygon": 2.3813450926671465e-16
+      },
+      {
+        "panels_in_waterline": 32,
+        "panels": 96,
+        "polygon_area_exact_error": 2.2763261922000903e-16,
+        "waterplane_area": 31.214451522580525,
+        "waterplane_area_error_vs_ellipse": 0.006413148855794126,
+        "i_transverse_error_vs_polygon": 6.872999495968194e-16,
+        "waterplane_area_order_vs_ellipse": 1.9916550282637395
+      },
+      {
+        "panels_in_waterline": 64,
+        "panels": 192,
+        "polygon_area_exact_error": 0.0,
+        "waterplane_area": 31.365484905459393,
+        "waterplane_area_error_vs_ellipse": 0.0016056069643815862,
+        "i_transverse_error_vs_polygon": 3.4035105335998925e-16,
+        "waterplane_area_order_vs_ellipse": 1.997914114431404
+      },
+      {
+        "panels_in_waterline": 128,
+        "panels": 384,
+        "polygon_area_exact_error": 0.0,
+        "waterplane_area": 31.40331156954753,
+        "waterplane_area_error_vs_ellipse": 0.0004015468503208683,
+        "i_transverse_error_vs_polygon": 5.658862936018678e-16,
+        "waterplane_area_order_vs_ellipse": 1.9994785510193493
+      }
+    ]
+  },
+  "hemisphere_restoring": {
+    "case": "hemisphere_restoring",
+    "subdivisions": 4,
+    "panels": 1024,
+    "kg_above_keel": 0.6,
+    "center_of_gravity_z": -0.4,
+    "computed": {
+      "volume": 2.0821017981243184,
+      "kb": 0.6257826951907741,
+      "bm": 0.3760039551465533,
+      "gm": 0.4017866503373274,
+      "c_heave": 31528.009086182636,
+      "c_roll": 8408.95451003777,
+      "c_pitch": 8408.95451003777
+    },
+    "analytic": {
+      "volume": 2.0943951023931953,
+      "kb": 0.625,
+      "bm": 0.375,
+      "gm": 0.4,
+      "c_heave": 31578.712086234504,
+      "c_roll": 8420.989889662535
+    },
+    "error": {
+      "volume": 0.005869620423973357,
+      "kb": 0.0012523123052385898,
+      "bm": 0.0026772137241422023,
+      "gm": 0.0044666258433184725,
+      "c_heave": 0.0016056069643818685,
+      "c_roll": 0.0014292119789311342
+    }
+  }
+}
