@@ -76,6 +76,57 @@ class HydrostaticProperties:
     restoring_matrix: FloatArray
 
 
+def _trace_waterline_loops(edges: NDArray[np.integer] | list[tuple[int, int]]) -> list[list[int]]:
+    """Trace every disjoint closed waterline loop from an undirected edge list."""
+    adjacency: dict[int, list[int]] = {}
+    for edge in edges:
+        i, j = int(edge[0]), int(edge[1])
+        adjacency.setdefault(i, []).append(j)
+        adjacency.setdefault(j, []).append(i)
+    for vertex, neighbours in adjacency.items():
+        if len(neighbours) != 2:
+            raise ValueError(
+                "waterline edges must form closed loops: vertex "
+                f"{vertex} has {len(neighbours)} incident waterline edges"
+            )
+    loops: list[list[int]] = []
+    visited: set[int] = set()
+    for start in adjacency:
+        if start in visited:
+            continue
+        loop = [start]
+        visited.add(start)
+        previous, current = -1, start
+        for _ in range(len(edges) + 1):
+            a, b = adjacency[current]
+            step = b if a == previous else a
+            if step == start:
+                break
+            if step in visited:
+                raise ValueError("waterline edges do not form disjoint loops")
+            loop.append(step)
+            visited.add(step)
+            previous, current = current, step
+        else:
+            raise ValueError("waterline loop did not close")
+        loops.append(loop)
+    return loops
+
+
+def _point_in_polygon(point: FloatArray, polygon: FloatArray) -> bool:
+    """Return whether a 2-D point is inside a polygon using ray crossing."""
+    px, py = float(point[0]), float(point[1])
+    inside = False
+    x0, y0 = polygon[-1]
+    for x1, y1 in polygon:
+        if (y1 > py) != (y0 > py):
+            x_cross = (x0 - x1) * (py - y1) / (y0 - y1) + x1
+            if px < x_cross:
+                inside = not inside
+        x0, y0 = x1, y1
+    return inside
+
+
 def compute_waterplane_properties(
     hull: WettedHullMesh,
 ) -> tuple[float, FloatArray, FloatArray]:
@@ -150,9 +201,19 @@ def compute_waterplane_properties(
             previous, current = current, step
         loops.append(loop)
 
-    # Shoelace terms are accumulated over every loop. Each loop is oriented
-    # individually (clockwise or counter-clockwise) and normalised to a positive
-    # area by its own sign, so the pooled properties are the union of the loops.
+    # Nested loops represent holes; disjoint outer loops (e.g. twin hulls)
+    # remain additive. Determine nesting independently of each loop's winding.
+    polygons = [vertices[loop][:, :2] for loop in loops if len(loop) >= 3]
+    valid_loops = [loop for loop in loops if len(loop) >= 3]
+    nesting_signs: list[float] = []
+    for i, loop in enumerate(valid_loops):
+        point = vertices[loop[0], :2]
+        depth = sum(
+            1 for j, polygon in enumerate(polygons)
+            if i != j and _point_in_polygon(point, polygon)
+        )
+        nesting_signs.append(-1.0 if depth % 2 else 1.0)
+
     total_area = 0.0
     x_moment = 0.0
     y_moment = 0.0
@@ -160,9 +221,7 @@ def compute_waterplane_properties(
     i_yy_origin = 0.0
     i_xy_origin = 0.0
 
-    for loop in loops:
-        if len(loop) < 3:
-            continue
+    for loop, nesting_sign in zip(valid_loops, nesting_signs):
         xy = vertices[loop][:, :2]
         x = xy[:, 0]
         y = xy[:, 1]
@@ -172,8 +231,8 @@ def compute_waterplane_properties(
         area = 0.5 * np.sum(cross)
         if abs(area) < 1.0e-14:
             continue
-        sign = 1.0 if area > 0.0 else -1.0
-        total_area += abs(area)
+        sign = (1.0 if area > 0.0 else -1.0) * nesting_sign
+        total_area += nesting_sign * abs(area)
         x_moment += sign * np.sum((x + x_next) * cross) / 6.0
         y_moment += sign * np.sum((y + y_next) * cross) / 6.0
         i_xx_origin += (
