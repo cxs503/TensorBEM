@@ -130,6 +130,50 @@ def test_panel_added_mass_approaches_the_ursell_value():
     assert errors[-1] < 1.0e-2
 
 
+# The 128-panel numbers quoted in README.md and docs/marine_bem_benchmarks.md
+# are pinned here.  They moved once already without anyone noticing: the table in
+# the benchmark report was generated at panel_nodes=24, before the singular part
+# of the free-surface kernel was integrated analytically, and the number in the
+# docs stayed at the pre-refactor value for two commits.  The clamp is tight
+# enough to catch a 1e-3 relative drift (the size of that episode) and loose
+# enough to survive a different BLAS.
+PINNED_128 = {
+    "panel_added_mass": 2566.8343342915696,
+    "panel_damping": 2754.470100002123,
+    "panel_added_mass_relative_error": 8.513030527356396e-03,
+    "panel_damping_relative_error": 1.3360592915767345e-02,
+}
+
+
+def test_documented_128_panel_values_are_pinned():
+    """The published 128-panel accuracy must stay reproducible to 1e-5."""
+    result = run(128, RADIUS, SUBMERGENCE, NU, DENSITY, GRAVITY)
+    for key, expected in PINNED_128.items():
+        assert math.isclose(result[key], expected, rel_tol=1.0e-5), key
+    assert math.isclose(
+        result["reference_added_mass"], 2545.167247813704, rel_tol=1.0e-12
+    )
+    assert result["panel_relative_residual"] < 1.0e-10
+
+
+def test_panel_quadrature_is_node_converged():
+    """The smooth remainder is node converged; the panel count alone sets the error.
+
+    Before the singular ``log(r)`` part of the free-surface kernel was integrated
+    analytically, the result still depended on ``panel_nodes`` (128 panels moved
+    by 8e-4 relative between 16 and 48 nodes), which silently contaminated the
+    error quoted in the benchmark report.  Coarse panels keep this test cheap.
+    """
+    coarse = run(32, RADIUS, SUBMERGENCE, NU, DENSITY, GRAVITY, panel_nodes=8)
+    dense = run(32, RADIUS, SUBMERGENCE, NU, DENSITY, GRAVITY, panel_nodes=40)
+    assert math.isclose(
+        coarse["panel_added_mass"], dense["panel_added_mass"], rel_tol=1.0e-12
+    )
+    assert math.isclose(
+        coarse["panel_damping"], dense["panel_damping"], rel_tol=1.0e-12
+    )
+
+
 def test_radiation_condition_energy_identity():
     """Near-field and far-field damping must agree; that is the radiation test."""
     mesh = submerged_circle_mesh(64, RADIUS, SUBMERGENCE)
