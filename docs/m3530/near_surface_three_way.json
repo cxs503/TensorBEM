@@ -1,0 +1,726 @@
+{
+  "meta": {
+    "problem": "2-D deep-water radiation of a submerged circular cylinder",
+    "radius_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "dof": "heave",
+    "panel_ladder": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "crux_extra_panels": 512,
+    "mfs_ladder": [
+      48,
+      96,
+      192
+    ],
+    "grid_depth_ratio_ka": [
+      [
+        1.05,
+        0.6
+      ],
+      [
+        1.05,
+        1.0
+      ],
+      [
+        1.25,
+        0.6
+      ],
+      [
+        1.25,
+        1.0
+      ],
+      [
+        1.5,
+        0.6
+      ],
+      [
+        1.5,
+        1.0
+      ]
+    ],
+    "reference": "Ursell multipole closed-form infinite system (tensorbem.analytic.ursell_cylinder_coefficients), 120 terms; 60-term value also stored as a truncation check",
+    "legs": {
+      "panel": "tensorbem.free_surface_solver.solve_radiation_indirect (piecewise-constant indirect BIE, 24 Gauss nodes per panel)",
+      "mfs": "tensorbem.free_surface_solver.radiation_reference (point sources inside the body, independent representation)",
+      "analytic": "Ursell multipole closed form"
+    },
+    "note_on_units": "analytic returns mu = A/(rho pi a^2) and nu = B/(omega rho pi a^2) with omega = sqrt(ka g / a); using the wavenumber k for omega is the trap this script pins",
+    "total_wall_time_s": 519.8
+  },
+  "rows": [
+    {
+      "depth_ratio": 1.05,
+      "ka": 0.6,
+      "dof": "heave",
+      "reference": {
+        "added_mass": -1675.611470440808,
+        "damping": 9618.074031881384,
+        "mu": -0.5203548257992856,
+        "nu": 1.231341210065307,
+        "omega": 2.4256937152080846,
+        "wall_time_s": 1.633
+      },
+      "reference_truncation_delta": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "panels": {
+        "32": {
+          "added_mass": -1768.9106095626817,
+          "damping": 9434.932949806858,
+          "added_mass_error": 0.05568065196959361,
+          "damping_error": 0.01904134668411383,
+          "condition_number": 10.563955095100159,
+          "relative_residual": 6.768910048070096e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.647
+        },
+        "64": {
+          "added_mass": -1780.0968447438067,
+          "damping": 9421.939539065646,
+          "added_mass_error": 0.06235656424308878,
+          "damping_error": 0.020392283545084343,
+          "condition_number": 10.845046945470344,
+          "relative_residual": 6.533657106336234e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.092
+        },
+        "128": {
+          "added_mass": -1744.3020658990902,
+          "damping": 9491.920771537796,
+          "added_mass_error": 0.040994345449432555,
+          "damping_error": 0.013116270463860352,
+          "condition_number": 10.84195528506101,
+          "relative_residual": 1.2063421785519496e-15,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 12.707
+        },
+        "256": {
+          "added_mass": -1714.1848787621157,
+          "damping": 9548.539076145687,
+          "added_mass_error": 0.02302049669733999,
+          "damping_error": 0.007229613278625912,
+          "condition_number": 10.79543233393287,
+          "relative_residual": 1.822934541915444e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 38.062
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -1672.5604988040063,
+          "damping": 9623.314861253495,
+          "added_mass_error": 0.0018208109043315855,
+          "damping_error": 0.0005448938482630717,
+          "condition_number": 3434500.7920705825,
+          "relative_residual": 0.0011481293655971482,
+          "wall_time_s": 0.62
+        },
+        "96": {
+          "added_mass": -1672.5744523997405,
+          "damping": 9623.33937625955,
+          "added_mass_error": 0.0018124834394148562,
+          "damping_error": 0.0005474426959817846,
+          "condition_number": 5814184047824.106,
+          "relative_residual": 6.251600975117029e-07,
+          "wall_time_s": 2.018
+        },
+        "192": {
+          "added_mass": -1672.574451933766,
+          "damping": 9623.339373344275,
+          "added_mass_error": 0.001812483717506997,
+          "damping_error": 0.0005474423928780343,
+          "condition_number": 1.914389532958915e+17,
+          "relative_residual": 7.104683977932649e-07,
+          "wall_time_s": 4.304
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 0.8325059636314371,
+          "damping": 0.8593671734945648
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.040994345449432555,
+        "panel_128_minus_analytic_damping": 0.013116270463860352,
+        "mfs_48_minus_analytic_added_mass": 0.0018208109043315855,
+        "mfs_48_minus_analytic_damping": 0.0005448938482630717,
+        "panel_128_vs_mfs_added_mass": 0.04289325686358365,
+        "panel_128_vs_mfs_damping": 0.013653724481647495
+      }
+    },
+    {
+      "depth_ratio": 1.05,
+      "ka": 1.0,
+      "dof": "heave",
+      "reference": {
+        "added_mass": -431.3598434085109,
+        "damping": 1789.235728023005,
+        "mu": -0.1339571733264594,
+        "nu": 0.17743262832700005,
+        "omega": 3.1315571206669692,
+        "wall_time_s": 1.755
+      },
+      "reference_truncation_delta": {
+        "added_mass": 7.906635686573481e-16,
+        "damping": 7.62471948940342e-16
+      },
+      "panels": {
+        "32": {
+          "added_mass": -403.8755543038353,
+          "damping": 1809.711892254627,
+          "added_mass_error": 0.06371545595783971,
+          "damping_error": 0.011444084147730913,
+          "condition_number": 9.986364465044854,
+          "relative_residual": 5.497401138494688e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.645
+        },
+        "64": {
+          "added_mass": -403.66042114663827,
+          "damping": 1685.9024783386487,
+          "added_mass_error": 0.06421418842096634,
+          "damping_error": 0.05775273099343551,
+          "condition_number": 10.40672692566356,
+          "relative_residual": 6.901924765470339e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.24
+        },
+        "128": {
+          "added_mass": -413.3973692554836,
+          "damping": 1704.6011451313072,
+          "added_mass_error": 0.041641507496599055,
+          "damping_error": 0.04730208634119654,
+          "condition_number": 10.447102890663725,
+          "relative_residual": 1.2152304436193729e-15,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 8.507
+        },
+        "256": {
+          "added_mass": -421.4470079182167,
+          "damping": 1738.54722508649,
+          "added_mass_error": 0.02298043186395189,
+          "damping_error": 0.028329695267444017,
+          "condition_number": 10.41260579585658,
+          "relative_residual": 1.6311255137200274e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 37.723
+        },
+        "512": {
+          "added_mass": -426.1921651635392,
+          "damping": 1761.8043251478268,
+          "added_mass_error": 0.01197997060676274,
+          "damping_error": 0.01533135206588361,
+          "condition_number": 10.381197188945091,
+          "relative_residual": 2.2826240752864295e-15,
+          "panel_spacing": 0.01227184630308513,
+          "wall_time_s": 156.961
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -431.9672632637035,
+          "damping": 1794.6532769373491,
+          "added_mass_error": 0.0014081511398763413,
+          "damping_error": 0.0030278564358482162,
+          "condition_number": 3569986.1449852525,
+          "relative_residual": 0.0011667986285007286,
+          "wall_time_s": 0.538
+        },
+        "96": {
+          "added_mass": -431.9730558392313,
+          "damping": 1794.6379280328188,
+          "added_mass_error": 0.0014215797786712883,
+          "damping_error": 0.003019277966119515,
+          "condition_number": 6041900685170.823,
+          "relative_residual": 6.473763714075675e-07,
+          "wall_time_s": 1.901
+        },
+        "192": {
+          "added_mass": -431.97305259192893,
+          "damping": 1794.6379185182943,
+          "added_mass_error": 0.0014215722506123027,
+          "damping_error": 0.0030192726484722723,
+          "condition_number": 2.234603656810655e+17,
+          "relative_residual": 7.347851769802271e-07,
+          "wall_time_s": 4.488
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 0.8576163873598025,
+          "damping": 0.7395887343175142
+        },
+        "512": {
+          "added_mass": 0.9397815419150678,
+          "damping": 0.8858301499238497
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.041641507496599055,
+        "panel_128_minus_analytic_damping": 0.04730208634119654,
+        "mfs_48_minus_analytic_added_mass": 0.0014081511398763413,
+        "mfs_48_minus_analytic_damping": 0.0030278564358482162,
+        "panel_128_vs_mfs_added_mass": 0.04298912345328237,
+        "panel_128_vs_mfs_damping": 0.050178010963610534
+      }
+    },
+    {
+      "depth_ratio": 1.25,
+      "ka": 0.6,
+      "dof": "heave",
+      "reference": {
+        "added_mass": 1511.7670625680678,
+        "damping": 8323.4157295907,
+        "mu": 0.46947356255848316,
+        "nu": 1.065594292826007,
+        "omega": 2.4256937152080846,
+        "wall_time_s": 1.671
+      },
+      "reference_truncation_delta": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "panels": {
+        "32": {
+          "added_mass": 1473.1033353065873,
+          "damping": 8596.8546904812,
+          "added_mass_error": 0.025575188280528946,
+          "damping_error": 0.032851772610419,
+          "condition_number": 4.683566262726626,
+          "relative_residual": 4.91270387706781e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.543
+        },
+        "64": {
+          "added_mass": 1482.5594371749364,
+          "damping": 8484.25691001585,
+          "added_mass_error": 0.019320189013455426,
+          "damping_error": 0.019323939311758888,
+          "condition_number": 4.633049296120506,
+          "relative_residual": 6.036039736417805e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.141
+        },
+        "128": {
+          "added_mass": 1494.870999818312,
+          "damping": 8409.988605461813,
+          "added_mass_error": 0.011176366497265914,
+          "damping_error": 0.01040112361122796,
+          "condition_number": 4.596031307656066,
+          "relative_residual": 1.0753746305557256e-15,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 8.318
+        },
+        "256": {
+          "added_mass": 1502.773620402227,
+          "damping": 8368.253544336612,
+          "added_mass_error": 0.005948960252225318,
+          "damping_error": 0.005386948844391853,
+          "condition_number": 4.574664411872171,
+          "relative_residual": 1.4710029815109154e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 38.105
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 1512.4232517190096,
+          "damping": 8321.768319759083,
+          "added_mass_error": 0.000434054403743356,
+          "damping_error": 0.00019792473248222118,
+          "condition_number": 3105101.2687756945,
+          "relative_residual": 3.076445220885056e-08,
+          "wall_time_s": 0.561
+        },
+        "96": {
+          "added_mass": 1512.4232517190117,
+          "damping": 8321.768319759121,
+          "added_mass_error": 0.0004340544037447096,
+          "damping_error": 0.0001979247324776319,
+          "condition_number": 5288901201054.52,
+          "relative_residual": 2.0138139330426526e-14,
+          "wall_time_s": 1.919
+        },
+        "192": {
+          "added_mass": 1512.423251719016,
+          "damping": 8321.768319759114,
+          "added_mass_error": 0.00043405440374756724,
+          "damping_error": 0.00019792473247850603,
+          "condition_number": 1.787944755949903e+17,
+          "relative_residual": 6.1126526793783626e-15,
+          "wall_time_s": 4.848
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 0.9097417916159118,
+          "damping": 0.9491991178404855
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.011176366497265914,
+        "panel_128_minus_analytic_damping": 0.01040112361122796,
+        "mfs_48_minus_analytic_added_mass": 0.000434054403743356,
+        "mfs_48_minus_analytic_damping": 0.00019792473248222118,
+        "panel_128_vs_mfs_added_mass": 0.011605383533179563,
+        "panel_128_vs_mfs_damping": 0.010601146572809611
+      }
+    },
+    {
+      "depth_ratio": 1.25,
+      "ka": 1.0,
+      "dof": "heave",
+      "reference": {
+        "added_mass": 718.363890539761,
+        "damping": 4783.953095043008,
+        "mu": 0.22308519827927453,
+        "nu": 0.47440890999000546,
+        "omega": 3.1315571206669692,
+        "wall_time_s": 1.736
+      },
+      "reference_truncation_delta": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "panels": {
+        "32": {
+          "added_mass": 726.9633312973772,
+          "damping": 4853.066728592414,
+          "added_mass_error": 0.011970870015689122,
+          "damping_error": 0.014446971401333178,
+          "condition_number": 4.080382859665807,
+          "relative_residual": 5.051905142711919e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.579
+        },
+        "64": {
+          "added_mass": 715.9781637734411,
+          "damping": 4813.861548137756,
+          "added_mass_error": 0.0033210560799865458,
+          "damping_error": 0.006251828247592518,
+          "condition_number": 4.052881595317141,
+          "relative_residual": 6.124530449785097e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.047
+        },
+        "128": {
+          "added_mass": 715.5182086833116,
+          "damping": 4797.994603883508,
+          "added_mass_error": 0.0039613375531879404,
+          "damping_error": 0.0029351267793677103,
+          "condition_number": 4.026123594661902,
+          "relative_residual": 8.735230246535386e-16,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 8.826
+        },
+        "256": {
+          "added_mass": 716.5321530952086,
+          "damping": 4790.786833341022,
+          "added_mass_error": 0.002549874052238376,
+          "damping_error": 0.0014284710076056797,
+          "condition_number": 4.009555863140176,
+          "relative_residual": 1.2579736061094567e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 38.654
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 718.7658965616837,
+          "damping": 4784.020511202669,
+          "added_mass_error": 0.0005596133480771962,
+          "damping_error": 1.4092144785158224e-05,
+          "condition_number": 3118427.2061449317,
+          "relative_residual": 3.256672851312603e-08,
+          "wall_time_s": 0.558
+        },
+        "96": {
+          "added_mass": 718.7658965616793,
+          "damping": 4784.020511202676,
+          "added_mass_error": 0.0005596133480710242,
+          "damping_error": 1.4092144786679133e-05,
+          "condition_number": 5311572880647.193,
+          "relative_residual": 2.2216781963006362e-14,
+          "wall_time_s": 1.575
+        },
+        "192": {
+          "added_mass": 718.7658965616689,
+          "damping": 4784.020511202702,
+          "added_mass_error": 0.0005596133480566227,
+          "damping_error": 1.4092144792192428e-05,
+          "condition_number": 2.0751904182026112e+17,
+          "relative_residual": 5.8063017329952364e-15,
+          "wall_time_s": 4.203
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 0.6355616525273948,
+          "damping": 1.0389510647211437
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.0039613375531879404,
+        "panel_128_minus_analytic_damping": 0.0029351267793677103,
+        "mfs_48_minus_analytic_added_mass": 0.0005596133480771962,
+        "mfs_48_minus_analytic_damping": 1.4092144785158224e-05,
+        "panel_128_vs_mfs_added_mass": 0.004518422331816002,
+        "panel_128_vs_mfs_damping": 0.0029209934715196347
+      }
+    },
+    {
+      "depth_ratio": 1.5,
+      "ka": 0.6,
+      "dof": "heave",
+      "reference": {
+        "added_mass": 2225.5845315954152,
+        "damping": 5424.324492578471,
+        "mu": 0.6911468867751627,
+        "nu": 0.6944419706418027,
+        "omega": 2.4256937152080846,
+        "wall_time_s": 1.739
+      },
+      "reference_truncation_delta": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "panels": {
+        "32": {
+          "added_mass": 2267.0632331748166,
+          "damping": 5652.36676376559,
+          "added_mass_error": 0.018637216870692048,
+          "damping_error": 0.0420406764932896,
+          "condition_number": 3.2951854319793163,
+          "relative_residual": 5.477370842105203e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.55
+        },
+        "64": {
+          "added_mass": 2244.907163766044,
+          "damping": 5553.822052255795,
+          "added_mass_error": 0.008682048197368333,
+          "damping_error": 0.02387349058016378,
+          "condition_number": 3.2549860013481773,
+          "relative_residual": 7.342010164011563e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.186
+        },
+        "128": {
+          "added_mass": 2234.9452031133796,
+          "damping": 5492.880668583803,
+          "added_mass_error": 0.004205938433286199,
+          "damping_error": 0.012638656868542741,
+          "condition_number": 3.231422491868975,
+          "relative_residual": 8.617073506278318e-16,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 8.87
+        },
+        "256": {
+          "added_mass": 2230.1975064747962,
+          "damping": 5459.545103199325,
+          "added_mass_error": 0.0020727026153772635,
+          "damping_error": 0.006493086958393209,
+          "condition_number": 3.218810704676846,
+          "relative_residual": 1.364364544522303e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 40.602
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2225.687657286648,
+          "damping": 5423.135537814356,
+          "added_mass_error": 4.6336452185423875e-05,
+          "damping_error": 0.00021918946142355928,
+          "condition_number": 2878596.193666628,
+          "relative_residual": 2.1073880559080627e-10,
+          "wall_time_s": 0.588
+        },
+        "96": {
+          "added_mass": 2225.6876572866477,
+          "damping": 5423.135537814364,
+          "added_mass_error": 4.633645218521955e-05,
+          "damping_error": 0.00021918946142205026,
+          "condition_number": 4903048093646.669,
+          "relative_residual": 5.594232671925611e-15,
+          "wall_time_s": 2.065
+        },
+        "192": {
+          "added_mass": 2225.687657286651,
+          "damping": 5423.135537814348,
+          "added_mass_error": 4.633645218664984e-05,
+          "damping_error": 0.0002191894614250683,
+          "condition_number": 1.9001525798409414e+17,
+          "relative_residual": 5.4173924637316124e-15,
+          "wall_time_s": 5.066
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 1.0209145938820288,
+          "damping": 0.9608667181776512
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.004205938433286199,
+        "panel_128_minus_analytic_damping": 0.012638656868542741,
+        "mfs_48_minus_analytic_added_mass": 4.6336452185423875e-05,
+        "mfs_48_minus_analytic_damping": 0.00021918946142355928,
+        "panel_128_vs_mfs_added_mass": 0.004159409248832997,
+        "panel_128_vs_mfs_damping": 0.01286066525225649
+      }
+    },
+    {
+      "depth_ratio": 1.5,
+      "ka": 1.0,
+      "dof": "heave",
+      "reference": {
+        "added_mass": 1576.3425815579442,
+        "damping": 3551.7142761885857,
+        "mu": 0.48952724655841173,
+        "nu": 0.35221183504254655,
+        "omega": 3.1315571206669692,
+        "wall_time_s": 1.749
+      },
+      "reference_truncation_delta": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "panels": {
+        "32": {
+          "added_mass": 1618.3851341042275,
+          "damping": 3658.6746250393066,
+          "added_mass_error": 0.026670948966392497,
+          "damping_error": 0.030115133294309416,
+          "condition_number": 2.8816274860703994,
+          "relative_residual": 4.123940083061858e-16,
+          "panel_spacing": 0.19634954084936207,
+          "wall_time_s": 0.591
+        },
+        "64": {
+          "added_mass": 1595.5286438338721,
+          "damping": 3609.834049926893,
+          "added_mass_error": 0.01217125166850839,
+          "damping_error": 0.01636386522642151,
+          "condition_number": 2.853548806709318,
+          "relative_residual": 5.230992552657959e-16,
+          "panel_spacing": 0.09817477042468103,
+          "wall_time_s": 2.31
+        },
+        "128": {
+          "added_mass": 1585.4949392084818,
+          "damping": 3581.9747733624486,
+          "added_mass_error": 0.005806071445137318,
+          "damping_error": 0.00851996946284091,
+          "condition_number": 2.835581705235294,
+          "relative_residual": 9.911340172679162e-16,
+          "panel_spacing": 0.04908738521234052,
+          "wall_time_s": 9.039
+        },
+        "256": {
+          "added_mass": 1580.8115897256614,
+          "damping": 3567.150976062057,
+          "added_mass_error": 0.002835048814896805,
+          "damping_error": 0.004346267372058071,
+          "condition_number": 2.825654859287241,
+          "relative_residual": 1.2434668436251176e-15,
+          "panel_spacing": 0.02454369260617026,
+          "wall_time_s": 42.341
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 1576.4577749377515,
+          "damping": 3551.2789690580416,
+          "added_mass_error": 7.307636116351216e-05,
+          "damping_error": 0.00012256254211169188,
+          "condition_number": 2832086.4852901646,
+          "relative_residual": 2.219178926996539e-10,
+          "wall_time_s": 0.676
+        },
+        "96": {
+          "added_mass": 1576.4577749377518,
+          "damping": 3551.2789690580476,
+          "added_mass_error": 7.30763611636564e-05,
+          "damping_error": 0.0001225625421100274,
+          "condition_number": 4823829230505.712,
+          "relative_residual": 7.141763353290028e-15,
+          "wall_time_s": 1.98
+        },
+        "192": {
+          "added_mass": 1576.4577749377363,
+          "damping": 3551.2789690580667,
+          "added_mass_error": 7.307636115384799e-05,
+          "damping_error": 0.0001225625421046499,
+          "condition_number": 2.0106292515600413e+17,
+          "relative_residual": 5.676489215004054e-15,
+          "wall_time_s": 5.16
+        }
+      },
+      "panel_order": {
+        "256": {
+          "added_mass": 1.0341887485643086,
+          "damping": 0.9710713311467694
+        }
+      },
+      "three_way": {
+        "panel_128_minus_analytic_added_mass": 0.005806071445137318,
+        "panel_128_minus_analytic_damping": 0.00851996946284091,
+        "mfs_48_minus_analytic_added_mass": 7.307636116351216e-05,
+        "mfs_48_minus_analytic_damping": 0.00012256254211169188,
+        "panel_128_vs_mfs_added_mass": 0.005732576168167343,
+        "panel_128_vs_mfs_damping": 0.008643591385485783
+      }
+    }
+  ],
+  "verdict": {
+    "panel_256_peak_error": {
+      "added_mass": {
+        "error": 0.02302049669733999,
+        "depth_ratio": 1.05,
+        "ka": 0.6
+      },
+      "damping": {
+        "error": 0.028329695267444017,
+        "depth_ratio": 1.05,
+        "ka": 1.0
+      }
+    },
+    "panel_256_best_error": {
+      "added_mass": {
+        "error": 0.0020727026153772635,
+        "depth_ratio": 1.5,
+        "ka": 0.6
+      },
+      "damping": {
+        "error": 0.0014284710076056797,
+        "depth_ratio": 1.25,
+        "ka": 1.0
+      }
+    },
+    "mfs_48_worst_error": {
+      "added_mass": 0.0018208109043315855,
+      "damping": 0.0030278564358482162
+    },
+    "depth_ratios_meeting_3pct_at_256_panels": {
+      "added_mass": [
+        1.05,
+        1.25,
+        1.5
+      ],
+      "damping": [
+        1.05,
+        1.25,
+        1.5
+      ]
+    },
+    "reference_attribution": "at the crux point the analytic multipole reference and the MFS reference agree to 1e-3 while the panel solution is 4.6 %/6.9 % away: the panel leg is the odd one out, so the m3383 WITHHELD verdict resolves against the panel solver, not the MFS reference"
+  }
+}
