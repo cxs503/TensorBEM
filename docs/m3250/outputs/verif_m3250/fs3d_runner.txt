@@ -1,0 +1,52 @@
+if group == "hemisphere3d":
+        study = floating_hemisphere_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"]),
+            ka=float(parameters.get("ka", _HEMISPHERE_KA)),
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        values = _flatten_refinement_levels(study["levels"], _HEMISPHERE_ORDER_LABELS)
+        values.update(_reference_values(study["exact_reference"]))
+        return values
+    if group == "hemisphere3d_chief":
+        ka = parameters["ka"]
+        ka_values = tuple(
+            float(value) for value in (ka if isinstance(ka, (list, tuple)) else (ka,))
+        )
+        rows = floating_hemisphere_benchmark.run_irregular_frequency_study(
+            subdivision=int(parameters["subdivisions"]),
+            ka_values=ka_values,
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        if len(rows) != 1:
+            raise ValueError("the chief group runs exactly one Ka per registry row")
+        row = rows[0]
+        values = {
+            "exact_a33": float(row["exact_a33"]),
+            "exact_b33": float(row["exact_b33"]),
+        }
+        for branch in ("unregularized", "chief_regularized"):
+            branch_values = row[branch]
+            for name, value in branch_values.items():
+                if isinstance(value, bool) or not isinstance(value, numbers.Real):
+                    continue
+                values[f"{branch}.{name}"] = float(value)
+            values[f"{branch}.b33_dimless_abs"] = abs(
+                float(branch_values["b33_dimless"])
+            )
+        return values
+    if group == "submerged_sphere3d":
+        study = submerged_sphere_wave_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"]),
+            ka=float(parameters.get("ka", _SPHERE_KA)),
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            submergence=float(parameters.get("submergence", _SPHERE_SUBMERGENCE)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        values = _flatten_refinement_levels(study["levels"], _SPHERE_ORDER_LABELS)
+        values.update(_reference_values(study["exact_reference"]))
+        return values

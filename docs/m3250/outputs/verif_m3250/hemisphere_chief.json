@@ -1,0 +1,22 @@
+[
+  {
+    "chief_regularized": {
+      "a33_dimless": 0.3919084438208462,
+      "b33_dimless": 0.06870788329461958,
+      "b33_rel_error": 0.08849395023246329,
+      "chief_point_count": 5,
+      "condition_number": 4.244971303652851,
+      "passivity_violated": false
+    },
+    "exact_a33": 0.4007373824061046,
+    "exact_b33": 0.06312197075596611,
+    "ka": 2.58,
+    "unregularized": {
+      "a33_dimless": 0.34806205885162744,
+      "b33_dimless": -0.10415462852558684,
+      "b33_rel_error": 2.6500534960838884,
+      "condition_number": 145.65862687433562,
+      "passivity_violated": true
+    }
+  }
+]

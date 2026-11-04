@@ -477,6 +477,19 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
 
+<!-- BEGIN m3250-fs3d-pins -->
+
+**表 10–12 复算与回归钉桩（m3250，2026-11-04）**：上述三张表此前是纯文档数字——生成它们的 `floating_hemisphere` / `submerged_sphere_wave` 研究没有任何测试读取表中各列，guard 物理量的既有测试用的是宽松阈值（2.5–5 %），一列收敛误差整体漂移一个量级也不会转红。现在表 10/11/12 的每一格（含观测阶与正文的近/远场、Haskind 闭合量）都登记进`tensorbem.benchmarks.declared_numbers`（`hemisphere3d`、`hemisphere3d_chief`、`submerged_sphere3d` 三组，`standard` 成本层，约一分钟三维稠密求解）。
+
+本次全量复算：**63 格全部 PASS**，最大相对偏差 1.00e+00（`sphere3d_rotational_coupling_20`，声明 1e-06，实测 2.49163e-32），远小于各格容差；表 11 的“未正则化出现负阻尼、5 点 CHIEF 恢复正阻尼、条件数下降 ≥20 倍”三条定性结论也各自成为可执行判据。
+
+复现命令：`python -m tensorbem.benchmarks.declared_numbers --tiers standard`；证据工件：`outputs/verif_m3250/{fs3d_registry.json,hemisphere_refinement.json,submerged_sphere_refinement.json,hemisphere_chief.json}`。
+
+另一处更实质的修正（honest FAIL，如实记录）：表 10 最后一列的纵荡兴波阻尼观测阶原印 1.62（64 面元）与 1.88（256 面元），二者来自 m2609 的四级加密研究（该网格族 `h_mean` 恰好对折）。表 10 自己的网格族相邻层级 `h_mean` 之比为 1.87 而非 2，同一批误差按 `h_mean` 计算的观测阶实为 **1.80** 与 **1.94**；钉桩取可复现的 1.80 / 1.94，并在注册表注释中留痕。结论（一阶收敛、B₁₁′ 为最慢列）不变。
+
+一处钉桩口径改写（如实记录）：表 12 中 20 面元旋转耦合列的 `2.5×10⁻³²` 是完全对称网格上的舍入痕迹（实测为精确 0），钉桩改为上界判据 `<1×10⁻⁶`；表中该格已同步改写。
+
+<!-- END m3250-fs3d-pins -->
 ## 5. 讨论与适用限制
 
 1. **无界流层已同时覆盖 Dirichlet 迹与真实刚体 Neumann 6-DOF 张量。** 二维椭圆柱（\(3\times3\)）与三维三轴椭球（\(6\times6\)）均由真实无穿透条件第二类积分方程给出二阶收敛的平动与转动附加惯量，但三维逐面元局部通量仍受多面体棱边奇异性限制为约一阶精度，多连通升力体（Kutta 尾涡条件）尚未引入。

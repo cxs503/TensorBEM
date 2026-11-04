@@ -28,6 +28,17 @@ reference itself is right: the panel family extrapolated to zero mesh size
 agrees with Ursell's multipole solution to about ``1e-5``. The source strings
 keep the citation; the original values are recorded in
 ``dev_report_tensorbem_declared_numbers.md`` rather than silently overwritten.
+
+Provenance note (2026-11-04). The three-dimensional free-surface tables of
+``docs/marine_bem_benchmarks.md`` (sections 4.10-4.11: the Hulme floating
+hemisphere refinement, the interior-CHIEF irregular-frequency comparison and
+the Wang/Linton submerged-sphere refinement) were documentation-only: the
+numbers came from the ``floating_hemisphere`` and ``submerged_sphere_wave``
+command-line studies, and the tests that did exist guard the *physics* at a
+few-percent threshold, not the quoted convergence columns. Every column of
+those three tables is now registered (``hemisphere3d``,
+``hemisphere3d_chief``, ``submerged_sphere3d`` groups) and recomputed on the
+``standard`` tier, which costs about a minute of three-dimensional solves.
 """
 
 from __future__ import annotations
@@ -35,6 +46,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import numbers
 import platform
 import subprocess
 import sys
@@ -46,7 +58,9 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    floating_hemisphere as floating_hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
+    submerged_sphere_wave as submerged_sphere_wave_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -78,8 +92,9 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``,
+    ``interior_harmonics``, ``ursell``, ``ursell_reference``, ``hemisphere3d``,
+    ``hemisphere3d_chief`` or ``submerged_sphere3d``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -90,6 +105,336 @@ class DeclaredNumber:
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
 
+
+# --------------------------------------------------------------------------
+# 3-D free-surface tables (docs/marine_bem_benchmarks.md sections 4.10-4.11)
+# --------------------------------------------------------------------------
+# The numbers below are the columns of tables 10, 11 and 12 of
+# ``docs/marine_bem_benchmarks.md`` as printed. They are registered with the
+# mesh level they belong to, so that a stale column is reported per cell rather
+# than as one lumped "the table moved" failure.
+
+_FS3D_RADIUS = 1.0
+_FS3D_DENSITY = 1025.0
+_FS3D_GRAVITY = 9.80665
+_HEMISPHERE_KA = 1.0
+_HEMISPHERE_CHIEF_KA = 2.58
+_HEMISPHERE_CHIEF_SUBDIVISION = 3
+_SPHERE_KA = 0.8
+_SPHERE_SUBMERGENCE = 1.5
+
+#: Columns are quoted to three significant digits; 1.5 % tolerance covers the
+#: printing truncation with a wide margin while still catching a kernel change
+#: (those move an error by tens of percent).
+_FS3D_TOLERANCE = 1.5e-2
+
+#: Some columns are quoted to two significant digits only (the rotational
+#: decoupling ratio), so they need a wider band.
+_FS3D_COARSE_TOLERANCE = 5.0e-2
+
+#: Table 10: floating hemisphere at ``Ka = 1``, keyed by the quantity name that
+#: :func:`_flatten_refinement_levels` produces. ``order_*`` entries are the
+#: observed convergence orders printed in the last column of the table.
+_HEMISPHERE_TABLE: dict[int, dict[str, float]] = {
+#: ``order_b11`` (1.80 / 1.94): the table printed 1.62 / 1.88, inherited from the
+#: m2609 panel study whose mesh family gives an exactly halving ``h_mean``; the
+#: table-10 meshes do not (h_mean ratio 1.87 between consecutive levels), so the
+#: h_mean-based order of *this* run is 1.80 / 1.94. Reproducing the printed pair
+#: required changing the mesh family, not the solver: recorded as a doc correction
+#: (see dev_report_m3250_free_surface3d_pins.md section 5).
+    16: {
+        "condition_number": 3.893,
+        "heave_added_mass_rel_error": 1.20e-1,
+        "heave_damping_rel_error": 1.22e-1,
+        "surge_added_mass_rel_error": 1.80e-1,
+        "surge_damping_rel_error": 4.02e-1,
+        "excitation_force_z_rel_error": 6.67e-2,
+    },
+    64: {
+        "condition_number": 3.052,
+        "heave_added_mass_rel_error": 2.97e-2,
+        "heave_damping_rel_error": 4.50e-2,
+        "surge_added_mass_rel_error": 5.05e-2,
+        "surge_damping_rel_error": 1.30e-1,
+        "excitation_force_z_rel_error": 2.21e-2,
+        "order_a33": 2.23,
+        "order_b33": 1.59,
+        "order_a11": 2.04,
+        "order_b11": 1.80,
+        "order_fz": 1.77,
+    },
+    256: {
+        "condition_number": 2.783,
+        "heave_added_mass_rel_error": 7.41e-3,
+        "heave_damping_rel_error": 1.18e-2,
+        "surge_added_mass_rel_error": 1.30e-2,
+        "surge_damping_rel_error": 3.53e-2,
+        "excitation_force_z_rel_error": 5.67e-3,
+        "order_a33": 2.06,
+        "order_b33": 1.98,
+        "order_a11": 2.01,
+        "order_b11": 1.94,
+        "order_fz": 2.02,
+    },
+}
+
+#: Closures quoted in the section 4.10 prose at the finest hemisphere mesh: the
+#: near-field/far-field damping identity and the two Haskind residuals.
+_HEMISPHERE_CLOSURES: dict[str, float] = {
+    "far_field_damping_rel_diff_heave": 5.45e-4,
+    "haskind_reciprocity_rel_diff_x": 2.09e-4,
+    "haskind_reciprocity_rel_diff_z": 8.09e-4,
+}
+
+#: Table 12: submerged sphere at ``Ka = 0.8``, ``f/a = 1.5``.
+_SPHERE_TABLE: dict[int, dict[str, float]] = {
+    20: {
+        "condition_number": 2.407,
+        "heave_added_mass_rel_error": 2.55e-1,
+        "surge_added_mass_rel_error": 2.68e-1,
+        "excitation_force_x_rel_error": 3.60e-1,
+        "excitation_force_z_rel_error": 3.70e-1,
+    },
+    80: {
+        "condition_number": 2.259,
+        "heave_added_mass_rel_error": 7.30e-2,
+        "surge_added_mass_rel_error": 8.02e-2,
+        "excitation_force_x_rel_error": 1.16e-1,
+        "excitation_force_z_rel_error": 1.19e-1,
+        "order_a33": 2.12,
+        "order_b33": 1.72,
+        "order_a11": 2.04,
+        "order_fz": 1.91,
+    },
+    320: {
+        "condition_number": 2.188,
+        "heave_added_mass_rel_error": 1.85e-2,
+        "surge_added_mass_rel_error": 2.08e-2,
+        "excitation_force_x_rel_error": 3.10e-2,
+        "excitation_force_z_rel_error": 3.20e-2,
+        "order_a33": 2.06,
+        "order_b33": 1.93,
+        "order_a11": 2.03,
+        "order_fz": 1.98,
+    },
+}
+
+#: Rotational decoupling about the sphere centre, ``max |A_ij| / A_33`` over the
+#: rotation block. The table prints ``2.5e-32`` at 20 panels, a roundoff
+#: artefact of an exactly symmetric mesh; the reproducible statement is "below
+#: 1e-6", registered as an upper-bound claim.
+_SPHERE_ROTATION: dict[int, tuple[float, str]] = {
+    20: (1.0e-6, "upper"),
+    80: (2.2e-4, "value"),
+    320: (2.6e-5, "value"),
+}
+
+#: Table 11: interior-CHIEF regularisation at the first interior waterline
+#: resonance (``Ka = 2.58``, 256 panels). Damping *magnitudes* are registered
+#: because the claim of the table is about the sign of ``B_33``; the sign
+#: itself is asserted in ``tests/test_declared_numbers.py``.
+_HEMISPHERE_CHIEF: dict[str, dict[str, float]] = {
+    "unregularized": {
+        "condition_number": 145.66,
+        "a33_dimless": 0.3481,
+        "b33_dimless_abs": 0.1042,
+    },
+    "chief_regularized": {
+        "condition_number": 4.24,
+        "a33_dimless": 0.3919,
+        "b33_dimless_abs": 0.0687,
+    },
+}
+
+#: Which level column drives which observed-order label.
+_HEMISPHERE_ORDER_LABELS = {
+    "heave_added_mass_rel_error": "a33",
+    "heave_damping_rel_error": "b33",
+    "surge_added_mass_rel_error": "a11",
+    "surge_damping_rel_error": "b11",
+    "excitation_force_z_rel_error": "fz",
+}
+
+_SPHERE_ORDER_LABELS = {
+    "heave_added_mass_rel_error": "a33",
+    "heave_damping_rel_error": "b33",
+    "surge_added_mass_rel_error": "a11",
+    "excitation_force_z_rel_error": "fz",
+}
+
+_LEVEL_META = frozenset({"subdivisions", "panel_count", "h_mean"})
+
+
+def _flatten_refinement_levels(
+    levels: Sequence[dict], order_labels: dict[str, str]
+) -> dict[str, float]:
+    """Flatten refinement rows to ``<panels>.<quantity>`` and add orders.
+
+    The benchmarks already report four observed orders, but the registry also
+    needs the surge-damping order (the slowest converging column of table 10),
+    so the order is recomputed here from the same rows instead of duplicating
+    the arithmetic in the benchmark.
+    """
+    values: dict[str, float] = {}
+    h_values = [float(row["h_mean"]) for row in levels]
+    for row in levels:
+        panels = int(row["panel_count"])
+        for name, value in row.items():
+            if name in _LEVEL_META or name.startswith("observed_order"):
+                continue
+            if isinstance(value, bool) or value is None:
+                continue
+            if isinstance(value, numbers.Real):
+                values[f"{panels}.{name}"] = float(value)
+    for source, label in order_labels.items():
+        if not all(row.get(source) is not None for row in levels):
+            continue
+        for idx in range(1, len(levels)):
+            h0, h1 = h_values[idx - 1], h_values[idx]
+            e0 = float(levels[idx - 1][source])
+            e1 = float(levels[idx][source])
+            if e0 <= 0.0 or e1 <= 0.0 or h0 <= h1:
+                continue
+            values[f"{int(levels[idx]['panel_count'])}.order_{label}"] = float(
+                math.log(e0 / e1) / math.log(h0 / h1)
+            )
+    return values
+
+
+def _reference_values(reference: dict) -> dict[str, float]:
+    """Flatten the exact-reference block (complex forces become re/im pairs)."""
+    values: dict[str, float] = {}
+    for name, value in reference.items():
+        if isinstance(value, (list, tuple)):
+            values[f"reference_{name}_re"] = float(value[0])
+            values[f"reference_{name}_im"] = float(value[1])
+        elif isinstance(value, numbers.Real) and not isinstance(value, bool):
+            values[f"reference_{name}"] = float(value)
+    return values
+
+
+def _free_surface_three_dimensional_numbers() -> tuple[DeclaredNumber, ...]:
+    """Registry rows for the 3-D free-surface tables 10, 11 and 12."""
+    rows: list[DeclaredNumber] = []
+
+    hemisphere_levels = tuple(sorted(_HEMISPHERE_TABLE))
+    hemisphere_parameters = {
+        "subdivisions": list(hemisphere_levels),
+        "ka": _HEMISPHERE_KA,
+        "radius": _FS3D_RADIUS,
+        "density": _FS3D_DENSITY,
+        "gravity": _FS3D_GRAVITY,
+    }
+    for panels, columns in _HEMISPHERE_TABLE.items():
+        for quantity, declared in columns.items():
+            rows.append(
+                DeclaredNumber(
+                    key=f"hemisphere3d_{quantity}_{panels}",
+                    description=f"{quantity} at {panels} panels, Ka={_HEMISPHERE_KA}",
+                    source=(
+                        "docs/marine_bem_benchmarks.md table 10 "
+                        "(Hulme floating hemisphere)"
+                    ),
+                    group="hemisphere3d",
+                    quantity=f"{panels}.{quantity}",
+                    declared=declared,
+                    parameters=dict(hemisphere_parameters),
+                tier="standard",
+                )
+            )
+    finest_hemisphere = max(hemisphere_levels)
+    for quantity, declared in _HEMISPHERE_CLOSURES.items():
+        rows.append(
+            DeclaredNumber(
+                key=f"hemisphere3d_{quantity}_{finest_hemisphere}",
+                description=(
+                    f"{quantity} at {finest_hemisphere} panels (prose closure)"
+                ),
+                source="docs/marine_bem_benchmarks.md section 4.10 prose",
+                group="hemisphere3d",
+                quantity=f"{finest_hemisphere}.{quantity}",
+                declared=declared,
+                parameters=dict(hemisphere_parameters),
+                tier="standard",
+            )
+        )
+
+    chief_parameters = {
+        "subdivisions": _HEMISPHERE_CHIEF_SUBDIVISION,
+        "ka": [_HEMISPHERE_CHIEF_KA],
+        "radius": _FS3D_RADIUS,
+        "density": _FS3D_DENSITY,
+        "gravity": _FS3D_GRAVITY,
+    }
+    for branch, columns in _HEMISPHERE_CHIEF.items():
+        for quantity, declared in columns.items():
+            rows.append(
+                DeclaredNumber(
+                    key=f"chief3d_{branch}_{quantity}",
+                    description=(
+                        f"{branch} {quantity} at Ka={_HEMISPHERE_CHIEF_KA}, "
+                        f"subdivisions={_HEMISPHERE_CHIEF_SUBDIVISION}"
+                    ),
+                    source=(
+                        "docs/marine_bem_benchmarks.md table 11 "
+                        "(3-D interior CHIEF at the waterline resonance)"
+                    ),
+                    group="hemisphere3d_chief",
+                    quantity=f"{branch}.{quantity}",
+                    declared=declared,
+                    parameters=dict(chief_parameters),
+                tier="standard",
+                )
+            )
+
+    sphere_levels = tuple(sorted(_SPHERE_TABLE))
+    sphere_parameters = {
+        "subdivisions": list(sphere_levels),
+        "ka": _SPHERE_KA,
+        "radius": _FS3D_RADIUS,
+        "submergence": _SPHERE_SUBMERGENCE,
+        "density": _FS3D_DENSITY,
+        "gravity": _FS3D_GRAVITY,
+    }
+    for panels, columns in _SPHERE_TABLE.items():
+        for quantity, declared in columns.items():
+            rows.append(
+                DeclaredNumber(
+                    key=f"sphere3d_{quantity}_{panels}",
+                    description=f"{quantity} at {panels} panels, Ka={_SPHERE_KA}",
+                    source=(
+                        "docs/marine_bem_benchmarks.md table 12 "
+                        "(Wang/Linton submerged sphere)"
+                    ),
+                    group="submerged_sphere3d",
+                    quantity=f"{panels}.{quantity}",
+                    declared=declared,
+                    parameters=dict(sphere_parameters),
+                tier="standard",
+                )
+            )
+    for panels, (declared, kind) in _SPHERE_ROTATION.items():
+        rows.append(
+            DeclaredNumber(
+                key=f"sphere3d_rotational_coupling_{panels}",
+                description=(
+                    "max rotational/translational added-mass ratio at "
+                    f"{panels} panels"
+                ),
+                source=(
+                    "docs/marine_bem_benchmarks.md table 12 "
+                    "(rotational decoupling column)"
+                ),
+                group="submerged_sphere3d",
+                quantity=f"{panels}.rotational_added_mass_max_ratio",
+                declared=declared,
+                parameters=dict(sphere_parameters),
+                tier="standard",
+                kind=kind,
+                tolerance=_FS3D_COARSE_TOLERANCE,
+            )
+        )
+    return tuple(rows)
 
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
@@ -321,6 +666,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.824e-4,
         tier="standard",
     ),
+    *_free_surface_three_dimensional_numbers(),
 )
 
 _URSELL_RADIUS = 1.0
@@ -382,6 +728,58 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "reference_added_mass": float(added_mass),
             "reference_damping": float(damping),
         }
+    if group == "hemisphere3d":
+        study = floating_hemisphere_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"]),
+            ka=float(parameters.get("ka", _HEMISPHERE_KA)),
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        values = _flatten_refinement_levels(study["levels"], _HEMISPHERE_ORDER_LABELS)
+        values.update(_reference_values(study["exact_reference"]))
+        return values
+    if group == "hemisphere3d_chief":
+        ka = parameters["ka"]
+        ka_values = tuple(
+            float(value) for value in (ka if isinstance(ka, (list, tuple)) else (ka,))
+        )
+        rows = floating_hemisphere_benchmark.run_irregular_frequency_study(
+            subdivision=int(parameters["subdivisions"]),
+            ka_values=ka_values,
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        if len(rows) != 1:
+            raise ValueError("the chief group runs exactly one Ka per registry row")
+        row = rows[0]
+        values = {
+            "exact_a33": float(row["exact_a33"]),
+            "exact_b33": float(row["exact_b33"]),
+        }
+        for branch in ("unregularized", "chief_regularized"):
+            branch_values = row[branch]
+            for name, value in branch_values.items():
+                if isinstance(value, bool) or not isinstance(value, numbers.Real):
+                    continue
+                values[f"{branch}.{name}"] = float(value)
+            values[f"{branch}.b33_dimless_abs"] = abs(
+                float(branch_values["b33_dimless"])
+            )
+        return values
+    if group == "submerged_sphere3d":
+        study = submerged_sphere_wave_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"]),
+            ka=float(parameters.get("ka", _SPHERE_KA)),
+            radius=float(parameters.get("radius", _FS3D_RADIUS)),
+            submergence=float(parameters.get("submergence", _SPHERE_SUBMERGENCE)),
+            density=float(parameters.get("density", _FS3D_DENSITY)),
+            gravity=float(parameters.get("gravity", _FS3D_GRAVITY)),
+        )
+        values = _flatten_refinement_levels(study["levels"], _SPHERE_ORDER_LABELS)
+        values.update(_reference_values(study["exact_reference"]))
+        return values
     raise ValueError(f"unknown benchmark group: {group!r}")
 
 
