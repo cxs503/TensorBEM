@@ -21,6 +21,17 @@ Three candidate causes are separated, each with its own axis:
    Their mutual offset is the reference's own internal error and sets the
    floor any BEM number can reach.
 
+Order convention (m3280).  The ``orders`` field of each row reports the
+observed order in the panel size ``h`` -- the convention the documentation
+uses (``docs/marine_bem_benchmarks.md`` table 10 and the m2609 paragraph:
+"对 h 观测阶 1.62/1.88/1.96").  In three dimensions the panel count scales
+as ``N ~ h**-2``, so ``h_lo/h_hi = sqrt(N_hi/N_lo)`` and the per-panel-count
+reading is exactly half of it for a 4x panel refinement.  The legacy
+per-panel-count value is kept under ``orders_vs_panels`` so both
+conventions stay reproducible from one artefact; before m3280 the field
+named ``orders`` silently carried the per-panel-count value, which is why
+the module printed 0.81/0.94 where the documentation quotes 1.62/1.88.
+
 Usage::
 
     PYTHONPATH=src python3 -m tensorbem.benchmarks.kochin_hulme_convergence \
@@ -122,14 +133,20 @@ def run_study(
     # reference internal consistency (its own near/far offset)
     ref["self_offset_b11"] = _rel(ref["b11_far"], ref["b11_near"])
     ref["self_offset_b33"] = _rel(ref["b33_far"], ref["b33_near"])
-    # convergence orders between successive meshes
+    # Convergence orders between successive meshes.  ``orders`` is the order
+    # in h (documentation convention); ``orders_vs_panels`` is the legacy
+    # order in the panel count N.  With N ~ h**-2 the two differ by exactly
+    # a factor of 2, which the regression test pins.
     for i in range(1, len(rows)):
         lo, hi = rows[i - 1], rows[i]
         for key in ("err_b11_near", "err_b33_near", "err_b11_far", "err_b33_far"):
             if abs(lo[key]) > 1e-12 and abs(hi[key]) > 1e-12:
+                log_ratio = math.log2(abs(lo[key] / hi[key]))
                 hi.setdefault("orders", {})[key] = float(
-                    math.log2(abs(lo[key] / hi[key]))
-                    / math.log2(hi["panels"] / lo["panels"])
+                    log_ratio / math.log2(math.sqrt(hi["panels"] / lo["panels"]))
+                )
+                hi.setdefault("orders_vs_panels", {})[key] = float(
+                    log_ratio / math.log2(hi["panels"] / lo["panels"])
                 )
     return {"reference": ref, "rows": rows}
 
@@ -158,9 +175,15 @@ def _print_table(study: dict) -> None:
         if "orders" in r:
             o = r["orders"]
             print(
-                f"    orders: "
+                f"    orders (in h): "
                 + " ".join(f"{k}={v:.2f}" for k, v in o.items())
             )
+            op = r.get("orders_vs_panels")
+            if op:
+                print(
+                    f"    orders (in N): "
+                    + " ".join(f"{k}={v:.2f}" for k, v in op.items())
+                )
 
 
 def _write_figures(study: dict, outdir: Path) -> list[str]:
