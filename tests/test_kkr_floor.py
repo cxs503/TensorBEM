@@ -78,14 +78,27 @@ def test_reference_pair_has_an_algebraic_added_mass_tail():
     assert tail["damping"] [-1] < tail["damping"][0] * 1e-12
 
 
-def test_analytic_deficit_grows_towards_low_frequency():
-    """The constant extension below ka_min is wrong because A - A_inf grows as
-    ka -> 0; verify the growth on the reference itself."""
-    ka, mass, _ = module.analytic_sweep(0.01, 0.1, 8)
+def test_analytic_deficit_saturates_towards_low_frequency():
+    """The constant extension below ka_min is wrong because A - A_inf tends to
+    the *nonzero* limit A(0) - A_inf as ka -> 0 (an extended Ursell sweep,
+    1e-4..1e-1 with terms 40 vs 120 bit-identical, saturates at ~808 kg/m for
+    this case).  The earlier m3051 wording claimed the deficit *grows* towards
+    ka -> 0; the reference itself shows it saturates after a hump that peaks
+    near ka ~ 0.1, so that claim is corrected here.  What survives -- and what
+    the KK floor argument needs -- is that the deficit at the band edge sits
+    well above the saturated limit, so extending the last node constantly below
+    ka_min misestimates the low-frequency contribution by a bounded but
+    non-negligible ~25%."""
+    ka, mass, _ = module.analytic_sweep(0.001, 0.1, 8)
     deficit = mass - module.ADDED_MASS_INF
     assert np.all(deficit > 0.0)
-    assert deficit[0] > deficit[-1], (deficit[0], deficit[-1])
-    assert deficit[0] > 1.0e3
+    # ka = 1e-3 is already on the saturated plateau A(0) - A_inf ~ 8.1e2
+    assert deficit[0] < 1.0e3
+    # ...while the value at the ka_min = 5e-2 band edge overestimates the
+    # plateau by >20%: a constant extension below the band is measurably wrong
+    edge = float(np.interp(0.05, ka, deficit))
+    assert edge > 1.2 * deficit[0], (edge, deficit[0])
+    assert deficit[-1] > deficit[0]
 
 
 @pytest.mark.slow
