@@ -98,16 +98,35 @@ def test_analytic_rankine_panel_integral_is_exact():
             total += half * np.sum(weights * 0.5 * np.log((s - xi) ** 2 + h**2))
         return total
 
+    def elementary_log_integral(xi: float, length: float) -> float:
+        """``int_0^L log|s-xi| ds`` for an interior collocation point, in closed form.
+
+        Independent of the panel primitive under test: split the panel at
+        ``xi``, where ``int_0^a log u du = a log a - a``.  The composite Gauss
+        rule cannot serve as the reference for this case: with the singularity
+        *inside* a subinterval its error decays only like ``1/pieces`` (measured
+        7.5e-6 at 400 pieces, 7.5e-7 at 4000), so it is the reference that is
+        inexact, not the analytic primitive.
+        """
+        left, right = xi, length - xi
+        assert left > 0.0 and right > 0.0, "interior point required"
+        return (left * math.log(left) - left) + (right * math.log(right) - right)
+
     for xi, h, length in ((0.5, 0.0, 1.0), (0.0, 1.0e-3, 1.0), (0.9, 0.3, 1.0)):
         closed = analytic(xi, h, length)
-        fine = composite_gauss(xi, h, length, pieces=400, order=20)
-        coarse = composite_gauss(xi, h, length, pieces=1, order=24)
-        assert abs(closed - fine) < 1.0e-8, (xi, h, closed, fine)
         if h == 0.0:
+            # Self panel: the logarithmic singularity sits at an interior
+            # point, so the reference is the elementary integral and the
+            # composite rule is the *defect* being demonstrated.
+            fine = elementary_log_integral(xi, length)
+            coarse = composite_gauss(xi, h, length, pieces=1, order=24)
             # A single uniform Gauss panel straddling the logarithmic
             # singularity of the self panel is the historical defect: it is
             # biased by orders of magnitude more than the closed form.
             assert abs(coarse - fine) > 1.0e-4, (coarse, fine)
+        else:
+            fine = composite_gauss(xi, h, length, pieces=400, order=20)
+        assert abs(closed - fine) < 1.0e-8, (xi, h, closed, fine)
 
 
 def test_legacy_log_singular_quadrature_bias_is_quantified():

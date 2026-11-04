@@ -124,6 +124,11 @@ def mfs_row(panel_count: int = 64, **overrides: float) -> dict[str, float]:
     return {
         "panels": int(panel_count),
         "method": "mfs",
+        #: The fundamental-solution count matters as much as the panel count:
+        #: the published row must say which discretisation produced it, so the
+        #: source count travels with the row instead of staying an implicit
+        #: default (m3229).
+        "sources": int(params["source_count"]),
         "added_mass": added_mass,
         "added_mass_relative_error": abs(added_mass - exact["added_mass"])
         / abs(exact["added_mass"]),
@@ -191,7 +196,7 @@ def format_markdown(table: dict) -> str:
     )
     for mfs in table.get("mfs", []):
         lines.append(
-            f"| 基本解方法（MFS，配点网格 {mfs['panels']} 面元） | "
+            f"| 基本解方法（MFS，{mfs['panels']} 面元、{mfs['sources']} 源） | "
             f"{mfs['added_mass']:.2f} | {sci(mfs['added_mass_relative_error'])} | "
             f"{mfs['damping']:.2f} | {sci(mfs['damping_relative_error'])} | — |"
         )
