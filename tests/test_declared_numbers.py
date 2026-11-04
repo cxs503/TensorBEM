@@ -28,6 +28,7 @@ from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
     DeclaredNumber,
+    _run_group,
     check,
     richardson_limit,
     ursell_refinement,
@@ -86,7 +87,10 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme_chief",
+        "hulme_hemisphere",
         "interior_harmonics",
+        "submerged_sphere_wave",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -316,3 +320,94 @@ def test_cli_writes_strict_json_and_passes(tmp_path):
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["summary"]["verdict"] == "PASS"
     assert payload["benchmark"] == "declared_numbers_recomputation"
+
+
+# --------------------------------------------------------------------------
+# The 3-D free-surface tables (docs/marine_bem_benchmarks.md sections 4.10-4.11)
+# --------------------------------------------------------------------------
+
+FREE_SURFACE_3D_GROUPS = ("hulme_hemisphere", "hulme_chief", "submerged_sphere_wave")
+
+
+def _free_surface_entries(tier: str) -> tuple:
+    return tuple(
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group in FREE_SURFACE_3D_GROUPS and entry.tier == tier
+    )
+
+
+def test_standard_tier_reproduces_the_3d_free_surface_coarse_rows():
+    """One coarse level per family keeps the 3-D free-surface path in CI.
+
+    The published tables are registered in the heavy tier (a 256-panel
+    free-surface solve costs seconds), which would leave the default test run
+    without any coverage of ``free_surface_solver3d`` through the registry. The
+    documented 64-panel hemisphere and 80-panel sphere cells are therefore
+    recomputed here as well.
+    """
+    entries = _free_surface_entries("standard")
+    assert len(entries) == 9
+    report = check(tiers=("standard",), entries=entries)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    assert all(
+        row["parameters"]["subdivisions"] in ([2], [1]) for row in report["checks"]
+    )
+
+
+@HEAVY
+def test_documented_3d_free_surface_tables_are_reproduced():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md, recomputed end to end.
+
+    These numbers carried the solver's three-dimensional free-surface claims
+    (Hulme hemisphere radiation/diffraction, the interior-waterline CHIEF
+    comparison, and the Wang/Linton submerged sphere) but had never been
+    executable: nothing in the test suite recomputed them. The run is shared
+    between all rows by the registry cache, and the captured values are reused
+    for the passivity assertions below so that the expensive study runs once.
+    """
+    entries = _free_surface_entries("heavy")
+    assert len(entries) == 47
+    captured: dict[str, list] = {}
+
+    def recording_runner(group: str, parameters: dict) -> dict:
+        values = _run_group(group, parameters)
+        captured.setdefault(group, []).append(values)
+        return values
+
+    report = check(tiers=("heavy",), entries=entries, runner=recording_runner)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+
+    # Passivity is the physics behind table 11: the unregularized boundary
+    # integral equation returns a negative heave damping at Ka=2.58, the CHIEF
+    # augmented system must return a positive one. The registry only stores the
+    # magnitude (a `declared` value has to be positive), so the sign is pinned
+    # here from the same run.
+    chief = captured["hulme_chief"][0]
+    assert chief["ka2.58.unregularized.b33_dimless"] < 0.0
+    assert chief["ka2.58.chief_regularized.b33_dimless"] > 0.0
+    assert chief["ka2.58.unregularized.b33_magnitude"] == pytest.approx(
+        -chief["ka2.58.unregularized.b33_dimless"], rel=0.0, abs=0.0
+    )
+
+    # The documented convergence orders are only meaningful if the error of the
+    # finest level is genuinely smaller than the coarsest one: an order can be
+    # quoted from a family that is not converging at all.
+    hulme = captured["hulme_hemisphere"][0]
+    for quantity in (
+        "heave_added_mass_rel_error",
+        "heave_damping_rel_error",
+        "surge_added_mass_rel_error",
+    ):
+        assert hulme[f"panels16.{quantity}"] > hulme[f"panels256.{quantity}"]
+    sphere = captured["submerged_sphere_wave"][0]
+    for quantity in ("heave_added_mass_rel_error", "surge_added_mass_rel_error"):
+        assert sphere[f"panels20.{quantity}"] > sphere[f"panels320.{quantity}"]

@@ -477,6 +477,15 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
 
+**表 10–12 的可执行化（m3245）。** 上述三张表的每一个数字现已登记进
+`tensorbem.benchmarks.declared_numbers` 的三维自由液面组
+（`hulme_hemisphere`、`hulme_chief`、`submerged_sphere_wave`）：注册表按本文档的原算例参数重算
+并判 `PASS/DRIFT`，因此本文数字不再可能静默腐化。复算明细、观测阶与"哪些量仍未 <3%"的逐项判定见
+[free_surface3d_registry.md](free_surface3d_registry.md)；回归门为
+`tests/test_declared_numbers.py::test_documented_3d_free_surface_tables_are_reproduced`
+（`TENSORBEM_HEAVY_TESTS=1` 时执行）与默认层
+`test_standard_tier_reproduces_the_3d_free_surface_coarse_rows`。
+
 ## 5. 讨论与适用限制
 
 1. **无界流层已同时覆盖 Dirichlet 迹与真实刚体 Neumann 6-DOF 张量。** 二维椭圆柱（\(3\times3\)）与三维三轴椭球（\(6\times6\)）均由真实无穿透条件第二类积分方程给出二阶收敛的平动与转动附加惯量，但三维逐面元局部通量仍受多面体棱边奇异性限制为约一阶精度，多连通升力体（Kutta 尾涡条件）尚未引入。

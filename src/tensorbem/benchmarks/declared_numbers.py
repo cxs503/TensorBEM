@@ -46,7 +46,9 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    floating_hemisphere as floating_hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
+    submerged_sphere_wave as submerged_sphere_wave_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -78,8 +80,9 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics``, ``hulme_hemisphere``,
+    ``hulme_chief`` or ``submerged_sphere_wave``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -90,6 +93,435 @@ class DeclaredNumber:
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
 
+
+
+#: Quantities of one refinement level that the 3-D free-surface tables quote.
+#: ``None`` entries (an observed order is undefined at the coarsest level) are
+#: dropped during flattening instead of being smuggled in as NaN.
+_FREE_SURFACE_3D_QUANTITIES = (
+    "heave_added_mass_rel_error",
+    "heave_damping_rel_error",
+    "surge_added_mass_rel_error",
+    "surge_damping_rel_error",
+    "excitation_force_x_rel_error",
+    "excitation_force_z_rel_error",
+    "observed_order_a33",
+    "observed_order_b33",
+    "observed_order_a11",
+    "observed_order_fz",
+    "condition_number",
+    "relative_residual",
+    "haskind_reciprocity_rel_diff_x",
+    "haskind_reciprocity_rel_diff_z",
+    "far_field_damping_rel_diff_heave",
+    "rotational_added_mass_max_ratio",
+)
+
+
+def _flatten_levels(levels: Sequence[dict]) -> dict[str, float]:
+    """Key one refinement row per panel count: ``panels256.heave_damping...``."""
+    values: dict[str, float] = {}
+    for row in levels:
+        prefix = f"panels{int(row['panel_count'])}"
+        for quantity in _FREE_SURFACE_3D_QUANTITIES:
+            value = row.get(quantity)
+            if value is None:
+                continue
+            values[f"{prefix}.{quantity}"] = float(value)
+    return values
+
+
+def _flatten_reference(reference: dict) -> dict[str, float]:
+    """Expose the semi-analytical reference values as ``reference.<name>``."""
+    values: dict[str, float] = {}
+    for key, value in reference.items():
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            values[f"reference.{key}"] = float(value)
+        elif isinstance(value, list) and len(value) == 2:
+            values[f"reference.{key}_abs"] = math.hypot(float(value[0]), float(value[1]))
+    return values
+
+
+def _flatten_chief_rows(rows: Sequence[dict]) -> dict[str, float]:
+    """Flatten the unregularized/CHIEF comparison of ``hulme_chief``."""
+    values: dict[str, float] = {}
+    for row in rows:
+        tag = f"ka{float(row['ka']):.2f}"
+        values[f"{tag}.exact_a33"] = float(row["exact_a33"])
+        values[f"{tag}.exact_b33"] = float(row["exact_b33"])
+        for scheme in ("unregularized", "chief_regularized"):
+            for key, value in row[scheme].items():
+                if isinstance(value, bool):
+                    continue
+                values[f"{tag}.{scheme}.{key}"] = float(value)
+        # The unregularized heave damping is *negative* (it violates passivity),
+        # and the well-formedness gate only admits positive ``declared`` values,
+        # so the quoted magnitude is registered and the sign is asserted in
+        # tests/test_declared_numbers.py instead of being lost.
+        values[f"{tag}.unregularized.b33_magnitude"] = abs(
+            float(row["unregularized"]["b33_dimless"])
+        )
+    return values
+
+
+
+#: Parametric settings shared by every row of one documented table, so that the
+#: ``(group, parameters)`` cache in :func:`check` runs each study once.
+_HULME_REFINEMENT = {
+    "subdivisions": [1, 2, 3],
+    "ka": 1.0,
+    "radius": 1.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+}
+_HULME_COARSE = {
+    "subdivisions": [2],
+    "ka": 1.0,
+    "radius": 1.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+}
+_SPHERE_REFINEMENT = {
+    "subdivisions": [0, 1, 2],
+    "ka": 0.8,
+    "radius": 1.0,
+    "submergence": 1.5,
+    "density": 1025.0,
+    "gravity": 9.80665,
+}
+_SPHERE_COARSE = {
+    "subdivisions": [1],
+    "ka": 0.8,
+    "radius": 1.0,
+    "submergence": 1.5,
+    "density": 1025.0,
+    "gravity": 9.80665,
+}
+_HULME_CHIEF = {
+    "subdivision": 3,
+    "ka_values": [2.58],
+    "radius": 1.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+}
+
+_HULME_SOURCE = (
+    "docs/marine_bem_benchmarks.md section 4.10 table 10 "
+    "(Hulme 1982 floating hemisphere, Ka=1.0)"
+)
+_HULME_CHIEF_SOURCE = (
+    "docs/marine_bem_benchmarks.md section 4.10 table 11 "
+    "(3-D CHIEF at the interior waterline resonance Ka=2.58, N=256)"
+)
+_SPHERE_SOURCE = (
+    "docs/marine_bem_benchmarks.md section 4.11 table 12 "
+    "(Wang/Linton submerged sphere, f/a=1.5, Ka=0.8)"
+)
+
+_HULME_TABLE_10 = {
+    16: {
+        "heave_added_mass_rel_error": 1.20e-1,
+        "heave_damping_rel_error": 1.22e-1,
+        "surge_added_mass_rel_error": 1.80e-1,
+        "surge_damping_rel_error": 4.02e-1,
+        "excitation_force_z_rel_error": 6.67e-2,
+    },
+    64: {
+        "heave_added_mass_rel_error": 2.97e-2,
+        "heave_damping_rel_error": 4.50e-2,
+        "surge_added_mass_rel_error": 5.05e-2,
+        "surge_damping_rel_error": 1.30e-1,
+        "excitation_force_z_rel_error": 2.21e-2,
+    },
+    256: {
+        "heave_added_mass_rel_error": 7.41e-3,
+        "heave_damping_rel_error": 1.18e-2,
+        "surge_added_mass_rel_error": 1.30e-2,
+        "surge_damping_rel_error": 3.53e-2,
+        "excitation_force_z_rel_error": 5.67e-3,
+    },
+}
+_HULME_TABLE_10_ORDERS = {
+    256: {
+        "observed_order_a33": 2.06,
+        "observed_order_b33": 1.98,
+        "observed_order_a11": 2.01,
+        "observed_order_fz": 2.02,
+    },
+}
+_SPHERE_TABLE_12 = {
+    20: {
+        "heave_added_mass_rel_error": 2.55e-1,
+        "surge_added_mass_rel_error": 2.68e-1,
+        "excitation_force_x_rel_error": 3.60e-1,
+        "excitation_force_z_rel_error": 3.70e-1,
+    },
+    80: {
+        "heave_added_mass_rel_error": 7.30e-2,
+        "surge_added_mass_rel_error": 8.02e-2,
+        "excitation_force_x_rel_error": 1.16e-1,
+        "excitation_force_z_rel_error": 1.19e-1,
+    },
+    320: {
+        "heave_added_mass_rel_error": 1.85e-2,
+        "surge_added_mass_rel_error": 2.08e-2,
+        "excitation_force_x_rel_error": 3.10e-2,
+        "excitation_force_z_rel_error": 3.20e-2,
+    },
+}
+_SPHERE_TABLE_12_ORDERS = {
+    320: {
+        "observed_order_a33": 2.06,
+        "observed_order_b33": 1.93,
+        "observed_order_a11": 2.03,
+        "observed_order_fz": 1.98,
+    },
+}
+#: Human-readable description of each flattened suffix, used to build the
+#: registry rows without repeating the same sentence forty times.
+_QUANTITY_LABEL = {
+    "heave_added_mass_rel_error": "heave added mass A33' relative error",
+    "heave_damping_rel_error": "heave damping B33' relative error",
+    "surge_added_mass_rel_error": "surge added mass A11' relative error",
+    "surge_damping_rel_error": "surge damping B11' relative error",
+    "excitation_force_x_rel_error": "horizontal wave force relative error",
+    "excitation_force_z_rel_error": "vertical wave force relative error",
+    "observed_order_a33": "observed order of A33'",
+    "observed_order_b33": "observed order of B33'",
+    "observed_order_a11": "observed order of A11'",
+    "observed_order_fz": "observed order of Fz",
+}
+
+
+def _table_rows(
+    group: str,
+    parameters: dict,
+    source: str,
+    table: dict,
+    tier: str,
+    key_suffix: str = "",
+) -> tuple:
+    """One registry row per quoted table cell, with the doc value as declared."""
+    return tuple(
+        DeclaredNumber(
+            key=f"{group}_{panels}_{quantity}{key_suffix}",
+            description=f"{_QUANTITY_LABEL[quantity]} at {panels} panels",
+            source=source,
+            group=group,
+            quantity=f"panels{panels}.{quantity}",
+            parameters=dict(parameters),
+            declared=float(declared),
+            tier=tier,
+        )
+        for panels, row in table.items()
+        for quantity, declared in row.items()
+    )
+
+
+def _free_surface_3d_rows() -> tuple:
+    """The 3-D free-surface tables, which quoted numbers no gate recomputed.
+
+    Before this block the Hulme hemisphere, the interior-resonance CHIEF
+    comparison and the Wang/Linton submerged sphere existed only as prose and
+    tables in ``docs/marine_bem_benchmarks.md``: every number could rot without
+    a single test noticing. The registration cost is the reason they were left
+    out (a 256-panel free-surface solve is seconds, not milliseconds), so the
+    mesh-refinement tables live in the ``heavy`` tier while one coarse level per
+    family stays in ``standard`` so that the default test run still executes the
+    three-dimensional free-surface path.
+    """
+    return (
+        *_table_rows(
+            "hulme_hemisphere",
+            _HULME_REFINEMENT,
+            _HULME_SOURCE,
+            _HULME_TABLE_10,
+            "heavy",
+        ),
+        *_table_rows(
+            "hulme_hemisphere",
+            _HULME_REFINEMENT,
+            _HULME_SOURCE,
+            _HULME_TABLE_10_ORDERS,
+            "heavy",
+        ),
+        # The same documented 64-panel cell is recomputed a second time from a
+        # single-level run in the cheap tier, so the default ``pytest`` run
+        # still exercises the three-dimensional free-surface path. The key
+        # carries ``_standard_guard`` because it is a different run setting
+        # (one level instead of the three-level ladder), not a second document.
+        *_table_rows(
+            "hulme_hemisphere",
+            _HULME_COARSE,
+            _HULME_SOURCE,
+            {64: _HULME_TABLE_10[64]},
+            "standard",
+            key_suffix="_standard_guard",
+        ),
+        DeclaredNumber(
+            key="hulme_hemisphere_256_far_field_damping_rel_diff_heave",
+            description="near-field vs Kochin far-field heave damping gap at 256 panels",
+            source=_HULME_SOURCE,
+            group="hulme_hemisphere",
+            quantity="panels256.far_field_damping_rel_diff_heave",
+            parameters=dict(_HULME_REFINEMENT),
+            declared=1.0e-3,
+            tier="heavy",
+            kind="upper",
+        ),
+        DeclaredNumber(
+            key="hulme_hemisphere_256_haskind_reciprocity_rel_diff_z",
+            description="boundary-Haskind vs diffraction vertical force gap at 256 panels",
+            source=_HULME_SOURCE,
+            group="hulme_hemisphere",
+            quantity="panels256.haskind_reciprocity_rel_diff_z",
+            parameters=dict(_HULME_REFINEMENT),
+            declared=1.0e-3,
+            tier="heavy",
+            kind="upper",
+        ),
+        DeclaredNumber(
+            key="hulme_hemisphere_256_haskind_reciprocity_rel_diff_x",
+            description="boundary-Haskind vs diffraction horizontal force gap at 256 panels",
+            source=_HULME_SOURCE,
+            group="hulme_hemisphere",
+            quantity="panels256.haskind_reciprocity_rel_diff_x",
+            parameters=dict(_HULME_REFINEMENT),
+            declared=1.0e-3,
+            tier="heavy",
+            kind="upper",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_unregularized_condition_number",
+            description="condition number of the unregularized BIE at Ka=2.58, N=256",
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.unregularized.condition_number",
+            parameters=dict(_HULME_CHIEF),
+            declared=145.66,
+            tier="heavy",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_unregularized_a33",
+            description="heave added mass from the unregularized BIE at Ka=2.58 (exact 0.4007)",
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.unregularized.a33_dimless",
+            parameters=dict(_HULME_CHIEF),
+            declared=0.3481,
+            tier="heavy",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_unregularized_b33_magnitude",
+            description=(
+                "magnitude of the unphysical negative heave damping of the "
+                "unregularized BIE at Ka=2.58 (sign asserted in the test suite)"
+            ),
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.unregularized.b33_magnitude",
+            parameters=dict(_HULME_CHIEF),
+            declared=0.1042,
+            tier="heavy",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_chief_condition_number",
+            description="condition number with 5 interior 3-D CHIEF points at Ka=2.58",
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.chief_regularized.condition_number",
+            parameters=dict(_HULME_CHIEF),
+            declared=4.24,
+            tier="heavy",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_chief_a33",
+            description="heave added mass with 5 CHIEF points at Ka=2.58 (exact 0.4007)",
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.chief_regularized.a33_dimless",
+            parameters=dict(_HULME_CHIEF),
+            declared=0.3919,
+            tier="heavy",
+        ),
+        DeclaredNumber(
+            key="hulme_chief_ka2_58_chief_b33",
+            description="heave damping with 5 CHIEF points at Ka=2.58 (exact 0.0631, positive)",
+            source=_HULME_CHIEF_SOURCE,
+            group="hulme_chief",
+            quantity="ka2.58.chief_regularized.b33_dimless",
+            parameters=dict(_HULME_CHIEF),
+            declared=0.0687,
+            tier="heavy",
+        ),
+        *_table_rows(
+            "submerged_sphere_wave",
+            _SPHERE_REFINEMENT,
+            _SPHERE_SOURCE,
+            _SPHERE_TABLE_12,
+            "heavy",
+        ),
+        *_table_rows(
+            "submerged_sphere_wave",
+            _SPHERE_REFINEMENT,
+            _SPHERE_SOURCE,
+            _SPHERE_TABLE_12_ORDERS,
+            "heavy",
+        ),
+        *_table_rows(
+            "submerged_sphere_wave",
+            _SPHERE_COARSE,
+            _SPHERE_SOURCE,
+            {80: _SPHERE_TABLE_12[80]},
+            "standard",
+            key_suffix="_standard_guard",
+        ),
+        DeclaredNumber(
+            key="submerged_sphere_wave_320_haskind_reciprocity_rel_diff_z",
+            description=(
+                "Newman Haskind reciprocity residual for the vertical force at "
+                "320 panels, an upper bound because the reference satisfies it "
+                "to machine precision"
+            ),
+            source=_SPHERE_SOURCE,
+            group="submerged_sphere_wave",
+            quantity="panels320.haskind_reciprocity_rel_diff_z",
+            parameters=dict(_SPHERE_REFINEMENT),
+            declared=4.0e-3,
+            tier="heavy",
+            kind="upper",
+        ),
+        DeclaredNumber(
+            key="submerged_sphere_wave_320_haskind_reciprocity_rel_diff_x",
+            description=(
+                "Haskind reciprocity residual for the horizontal force at 320 "
+                "panels, registered as an upper bound"
+            ),
+            source=_SPHERE_SOURCE,
+            group="submerged_sphere_wave",
+            quantity="panels320.haskind_reciprocity_rel_diff_x",
+            parameters=dict(_SPHERE_REFINEMENT),
+            declared=4.0e-3,
+            tier="heavy",
+            kind="upper",
+        ),
+        DeclaredNumber(
+            key="submerged_sphere_wave_320_rotational_coupling_ratio",
+            description=(
+                "spurious heave-rotation coupling at 320 panels; zero by the "
+                "sphere's symmetry, so the quoted 2.6e-5 is registered as a bound"
+            ),
+            source=_SPHERE_SOURCE,
+            group="submerged_sphere_wave",
+            quantity="panels320.rotational_added_mass_max_ratio",
+            parameters=dict(_SPHERE_REFINEMENT),
+            declared=1.0e-4,
+            tier="heavy",
+            kind="upper",
+        ),
+    )
 
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
@@ -321,6 +753,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.824e-4,
         tier="standard",
     ),
+    *_free_surface_3d_rows(),
 )
 
 _URSELL_RADIUS = 1.0
@@ -382,6 +815,38 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "reference_added_mass": float(added_mass),
             "reference_damping": float(damping),
         }
+    if group == "hulme_hemisphere":
+        study = floating_hemisphere_benchmark.run_refinement_study(
+            tuple(int(sub) for sub in parameters.get("subdivisions", (1, 2, 3))),
+            ka=float(parameters.get("ka", 1.0)),
+            radius=float(parameters.get("radius", 1.0)),
+            density=float(parameters.get("density", 1025.0)),
+            gravity=float(parameters.get("gravity", 9.80665)),
+        )
+        values = _flatten_levels(study["levels"])
+        values.update(_flatten_reference(study["exact_reference"]))
+        return values
+    if group == "submerged_sphere_wave":
+        study = submerged_sphere_wave_benchmark.run_refinement_study(
+            tuple(int(sub) for sub in parameters.get("subdivisions", (0, 1, 2))),
+            ka=float(parameters.get("ka", 0.8)),
+            radius=float(parameters.get("radius", 1.0)),
+            submergence=float(parameters.get("submergence", 1.5)),
+            density=float(parameters.get("density", 1025.0)),
+            gravity=float(parameters.get("gravity", 9.80665)),
+        )
+        values = _flatten_levels(study["levels"])
+        values.update(_flatten_reference(study["exact_reference"]))
+        return values
+    if group == "hulme_chief":
+        rows = floating_hemisphere_benchmark.run_irregular_frequency_study(
+            subdivision=int(parameters.get("subdivision", 3)),
+            ka_values=tuple(float(ka) for ka in parameters.get("ka_values", (2.58,))),
+            radius=float(parameters.get("radius", 1.0)),
+            density=float(parameters.get("density", 1025.0)),
+            gravity=float(parameters.get("gravity", 9.80665)),
+        )
+        return _flatten_chief_rows(rows)
     raise ValueError(f"unknown benchmark group: {group!r}")
 
 
