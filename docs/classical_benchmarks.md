@@ -262,6 +262,23 @@ m_{A,i}=\rho V\frac{\alpha_i}{2-\alpha_i},
 
 **度依赖是本次新增信息**：在同一 1280 面元网格上，通量误差从度 1 的 \(3.76\times10^{-3}\) 增至度 3 的 \(1.19\times10^{-2}\)（约 3.2 倍），而探针 RMSE 基本不变（\(1.8\text{–}2.3\times10^{-4}\)）。也就是说，**更强的角向变化主要伤害边界通量，而不明显伤害内部场**。此前只用线性场的三维验证会低估这一效应，因此这一项应作为后续高阶面元的对照基线。
 
+**复算与回归钉桩（m3059）。**
+ 表 3 的 \(N=1280\) 列此前只是文档数字，没有任何计算复核。现将该列、
+以及三维椭球 1280 面元行（2026-10-24 扩编审计遗留的待复现项）纳入
+`tensorbem.benchmarks.declared_numbers` 注册表，由
+`python -m tensorbem.benchmarks.declared_numbers --tiers fast,standard,heavy`
+一键重算并判 PASS/DRIFT；下表的实测列由该命令的 JSON 程序化注入。
+
+| 度 | 算例 | 声明通量误差（1280） | 实测通量误差 | 相对偏差 | 实测探针 RMSE | 判定 |
+|---:|---|---:|---:|---:|---:|---|
+| 1 | \(x\) | \(3.7640\times10^{-3}\) | \(3.7640\times10^{-3}\) | -1.22e-05 | \(2.2929\times10^{-4}\) | PASS / PASS |
+| 2 | \(x2-y2\) | \(7.3437\times10^{-3}\) | \(7.3437\times10^{-3}\) | +6.31e-06 | \(2.3075\times10^{-4}\) | PASS / PASS |
+| 3 | \(x3-3xy2\) | \(1.1908\times10^{-2}\) | \(1.1908\times10^{-2}\) | -1.69e-05 | \(1.8240\times10^{-4}\) | PASS / PASS |
+
+三维椭球 1280 面元（\(subdivisions=3\)）实测：x 轴 \(4.1679\times10^{-3}\)（声明 \(4.1679\times10^{-3}\)，偏差 +8.74e-06）、y 轴 \(4.4621\times10^{-3}\)（声明 \(4.4621\times10^{-3}\)，偏差 +4.82e-06）、z 轴 \(4.9359\times10^{-3}\)（声明 \(4.9359\times10^{-3}\)，偏差 +6.54e-06）。该行自 2026-10-24 审计起登记为「未直接复现」，本次直接复现并判定 PASS；注册表全部 22 条声明数字的最坏相对偏差为 1.10e-01，均低于各自容差。
+
+复算命令与工件：`python -m tensorbem.benchmarks.interior_harmonics --subdivisions 2 3 --degrees 1 2 3`、`python -m tensorbem.benchmarks.declared_numbers --tiers fast,standard,heavy`；原始 JSON 见 `outputs/verif_m3059/`，回归钉桩见 `tests/test_declared_numbers.py`（1280 面元行）与 `tests/test_interior_harmonics.py`（320 面元行）。
+
 ## 6. 三类基准与既有验证的关系
 
 | 基准 | 参考量来源 | 检验的算子 | 与既有基准的关系 |
