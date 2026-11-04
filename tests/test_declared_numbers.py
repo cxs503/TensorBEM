@@ -28,6 +28,7 @@ from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
     DeclaredNumber,
+    _run_group,
     check,
     richardson_limit,
     ursell_refinement,
@@ -77,7 +78,9 @@ def test_registry_is_well_formed():
         assert entry.source.strip()
         assert entry.description.strip()
         assert math.isfinite(entry.declared)
-        assert entry.declared > 0.0
+        # sign-bearing quantities exist (e.g. the unphysical negative B33' that
+        # table 11 quotes as the defect CHIEF removes), so only zero is illegal
+        assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
 
@@ -86,7 +89,10 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme_chief",
+        "hulme_hemisphere",
         "interior_harmonics",
+        "submerged_sphere",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -115,12 +121,60 @@ def test_standard_tier_reproduces_the_documented_ursell_numbers():
         "ursell_added_mass_128",
         "ursell_damping_128",
         "ursell_near_far_128",
+        # tables 10-12 of docs/marine_bem_benchmarks.md: the 3-D free-surface
+        # rows that were documentation-only until the m3150 recomputation
+        "hulme_hemisphere_256_heave_added_mass_error",
+        "hulme_hemisphere_256_order_a33",
+        "hulme_chief_2_58_chief_b33",
+        "hulme_chief_2_58_unregularized_b33",
+        "submerged_sphere_320_heave_added_mass_error",
+        "submerged_sphere_320_order_a33",
     } <= keys
     assert report["summary"]["verdict"] == "PASS", [
         (row["key"], row["declared"], row["measured"])
         for row in report["checks"]
         if row["verdict"] != "PASS"
     ]
+
+
+def test_3d_free_surface_rows_are_guarded_by_the_default_tiers():
+    """Tables 10-12 quote 62 numbers; all of them must run in a plain CI sweep.
+
+    The 3-D free-surface solves cost seconds, not the minutes that put a row in
+    the heavy tier, so no quoted 3-D free-surface number may hide behind
+    ``TENSORBEM_HEAVY_TESTS``.
+    """
+    groups = {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
+    rows = [entry for entry in DECLARED_NUMBERS if entry.group in groups]
+    assert len(rows) >= 60
+    assert {entry.group for entry in rows} == groups
+    assert all(entry.tier in {"fast", "standard"} for entry in rows)
+    assert all("marine_bem_benchmarks.md" in entry.source for entry in rows)
+    assert len({entry.key for entry in rows}) == len(rows)
+
+
+def test_chief_regularisation_restores_passive_heave_damping():
+    """Table 11's claim, checked on the signs rather than on a quoted value.
+
+    The unregularized surface-piercing BIE returns a negative heave damping at
+    the first interior waterplane resonance (a passivity violation); the interior
+    CHIEF equations must restore a positive damping and cut the condition number
+    by more than an order of magnitude.
+    """
+    values = _run_group("hulme_chief", {"subdivision": 3, "ka_values": [2.58]})
+    plain = values["ka2.58_unregularized_b33_dimless"]
+    chief = values["ka2.58_chief_regularized_b33_dimless"]
+    assert plain < 0.0
+    assert chief > 0.0
+    assert (
+        values["ka2.58_chief_regularized_condition_number"]
+        < 0.05 * values["ka2.58_unregularized_condition_number"]
+    )
+    # the regularized A33' is closer to Hulme's exact 0.4007 as well
+    exact = 0.4007373824061046
+    assert abs(values["ka2.58_chief_regularized_a33_dimless"] - exact) < abs(
+        values["ka2.58_unregularized_a33_dimless"] - exact
+    )
 
 
 @HEAVY
