@@ -71,8 +71,8 @@ def solution(panels: int, panel_nodes: int = 24) -> dict:
 
 
 # --------------------------------------------------------------------------
-# Reference solution: the truncation is saturated, and an oversized request is
-# rejected instead of overflowing somewhere inside math.exp.
+# Reference solution: the truncation is saturated, and a truncation that is
+# large but still valid must remain computable.
 # --------------------------------------------------------------------------
 def test_reference_truncation_is_saturated():
     coarse = ursell_cylinder_coefficients(KA, RADIUS / SUBMERGENCE, terms=20)
@@ -81,9 +81,27 @@ def test_reference_truncation_is_saturated():
     assert math.isclose(coarse[1], fine[1], rel_tol=1.0e-14)
 
 
-@pytest.mark.parametrize("terms", [101, 120, 400])
-def test_oversized_truncation_is_rejected(terms):
-    with pytest.raises(ValueError, match="must not exceed"):
+# ``_ursell_multipole_system`` used to evaluate (m+n-1)!/(2kf)**(m+n) and
+# (-ka)**(m+n)/(m! n!) separately, so any truncation above ~100 terms over-
+# flowed and the function rejected it with "must not exceed".  The 2026-11
+# log-domain assembly factored the largest log-magnitude out of every bracket,
+# which made those truncations computable, so the guard is gone by design (see
+# ``tests/test_ursell_error_budget.py::test_multipole_system_stays_computable_at_high_truncation``,
+# which pins the 200-term case).  What must stay true is the contract that
+# replaced it: a large-but-valid truncation returns a finite value that agrees
+# with the converged one, and an *invalid* truncation is still rejected.
+@pytest.mark.parametrize("terms", [101, 120])
+def test_large_truncation_converges_instead_of_raising(terms):
+    mu, nu = ursell_cylinder_coefficients(KA, RADIUS / SUBMERGENCE, terms=terms)
+    converged = ursell_cylinder_coefficients(KA, RADIUS / SUBMERGENCE, terms=40)
+    assert math.isfinite(mu) and math.isfinite(nu)
+    assert math.isclose(mu, converged[0], rel_tol=1.0e-11)
+    assert math.isclose(nu, converged[1], rel_tol=1.0e-11)
+
+
+@pytest.mark.parametrize("terms", [0, -5, 2.5])
+def test_invalid_truncation_is_still_rejected(terms):
+    with pytest.raises(ValueError):
         ursell_cylinder_coefficients(KA, RADIUS / SUBMERGENCE, terms=terms)
 
 
@@ -185,25 +203,51 @@ def test_documented_panel_table_matches_the_code():
     )
 
 
-def test_documented_mfs_row_is_labelled_with_the_right_panel_count():
+def test_documented_mfs_rows_are_labelled_with_the_right_panel_count():
+    """Every published MFS row must quote the panel count that produced it.
+
+    The historical defect was a single row labelled "MFS, 64 面元" carrying the
+    128-panel numbers.  The table now publishes one MFS row per panel count
+    (that is what ``ursell_convergence_table.format_markdown`` emits), so the
+    check walks *all* of them: the label must name the panel count and the
+    source count, and the numbers must be what that discretisation produces.
+    """
     section = _section(
         (_ROOT / "docs" / "marine_bem_benchmarks.md").read_text(encoding="utf-8"),
         "### 4.6",
         "### 4.7",
     )
-    match = re.search(r"^\|\s*基本解方法（MFS[^|]*）\s*\|(.+)$", section, flags=re.MULTILINE)
-    assert match is not None
-    assert "128" in match.group(0), "the MFS row must quote the panel count it used"
-    reference = radiation_reference(
-        submerged_circle_mesh(128, RADIUS, SUBMERGENCE), WAVENUMBER, "heave",
-        density=DENSITY, source_count=24,
+    published = re.findall(
+        r"^\|\s*(基本解方法（MFS[^|]*）)\s*\|(.+)$", section, flags=re.MULTILINE
     )
-    numbers = _table_row(section, "基本解方法（MFS，128 面元、24 源）")
-    assert math.isclose(numbers[0], float(reference.added_mass[1]), rel_tol=1.0e-4)
-    assert math.isclose(numbers[2], float(reference.damping[1]), rel_tol=1.0e-4)
+    assert published, "the section publishes no MFS row"
+    labelled = {}
+    for label, cells in published:
+        panel_match = re.search(r"(\d+)\s*面元", label)
+        assert panel_match, f"the MFS row must quote its panel count: {label!r}"
+        assert re.search(r"\d+\s*源", label), f"the MFS row must quote its source count: {label!r}"
+        labelled[int(panel_match.group(1))] = [
+            _cell_value(cell) for cell in cells.split("|")
+        ]
+    assert 128 in labelled, "the 128-panel MFS row must stay published"
+    for panels, numbers in sorted(labelled.items()):
+        reference = radiation_reference(
+            submerged_circle_mesh(panels, RADIUS, SUBMERGENCE), WAVENUMBER, "heave",
+            density=DENSITY, source_count=24,
+        )
+        assert math.isclose(
+            numbers[0], float(reference.added_mass[1]), rel_tol=1.0e-4
+        ), f"{panels}-panel MFS added mass"
+        assert math.isclose(
+            numbers[2], float(reference.damping[1]), rel_tol=1.0e-4
+        ), f"{panels}-panel MFS damping"
 
 
 def test_readme_quotes_the_reproduced_error():
     readme = (_ROOT / "README.md").read_text(encoding="utf-8")
-    assert "8.5\\times10^{-3}" in readme
+    # The headline used to be the stale 7.7e-3; the reproduced 128-panel error
+    # is 8.51e-3 and the README must quote it at the precision the doc claims
+    # (``tensorbem.doc_claims`` parses this sentence and compares it with the
+    # measured artifact, so quoting a rounded 8.5 here would weaken that gate).
+    assert "8.51\\times10^{-3}" in readme
     assert "7.7\\times10^{-3}" not in readme
