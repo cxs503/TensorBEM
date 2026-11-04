@@ -38,7 +38,8 @@ from tensorbem.benchmarks.ursell_cylinder import run
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STUDY_JSON = ROOT / "outputs" / "ursell_reproducibility_study.json"
+STUDY_JSON = ROOT / "docs" / "ursell_reproducibility" / "ursell_reproducibility_study.json"
+REGEN = "PYTHONPATH=src python3 examples/ursell_reproducibility_study.py"
 
 BASE = dict(radius=1.0, submergence=2.0, ka=0.6, density=1025.0, gravity=9.80665)
 
@@ -98,8 +99,10 @@ def test_smooth_part_quadrature_saturates_above_six_nodes() -> None:
 
 def test_study_artifact_matches_the_current_code(result64: dict) -> None:
     """The committed study artifact must still describe the committed code."""
-    if not STUDY_JSON.exists():  # pragma: no cover - artifact is committed
-        pytest.skip("reproducibility study artifact not present")
+    # This artifact is committed and tracked, so a missing file is a defect, not
+    # a reason to skip: an earlier revision pointed at an untracked ``outputs/``
+    # path and this guard silently never ran (docs/m3487/dead_skip_gate_audit.md).
+    assert STUDY_JSON.is_file(), f"study artifact missing; regenerate with: {REGEN}"
     payload = json.loads(STUDY_JSON.read_text())
     row = next(r for r in payload["panel_sweep"] if r["panels"] == 64)
 
@@ -117,8 +120,7 @@ def test_study_artifact_matches_the_current_code(result64: dict) -> None:
 
 def test_recorded_convergence_is_first_order() -> None:
     """The study artifact must show the first-order trend the report claims."""
-    if not STUDY_JSON.exists():  # pragma: no cover
-        pytest.skip("reproducibility study artifact not present")
+    assert STUDY_JSON.is_file(), f"study artifact missing; regenerate with: {REGEN}"
     payload = json.loads(STUDY_JSON.read_text())
     rows = payload["panel_sweep"]
     panels = [r["panels"] for r in rows]

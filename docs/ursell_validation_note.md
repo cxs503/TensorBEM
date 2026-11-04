@@ -40,7 +40,7 @@ python -m tensorbem.benchmarks.ursell_cylinder --panels 128
 
 ## 4. 收口后的实测数字（全部由脚本重算，零手抄）
 
-`examples/ursell_reproducibility_study.py` 从当前代码重新生成整张表，工件 `outputs/ursell_reproducibility_study.json`：
+`examples/ursell_reproducibility_study.py` 从当前代码重新生成整张表，工件 `docs/ursell_reproducibility/ursell_reproducibility_study.json`（本仓跟踪）：
 
 | 面元数 | A 旧/新 | A 相对误差 旧/新（变化） | B 旧/新 | B 相对误差 旧/新（变化） |
 |---|---|---|---|---|
@@ -95,5 +95,6 @@ PYTHONPATH=src python3 examples/ursell_reproducibility_study.py   # 重算全表
 PYTHONPATH=src python3 -m pytest tests/test_ursell_reference_pinning.py -q
 ```
 
-工件：`outputs/ursell_reproducibility_study.json`、`outputs/ursell_reproducibility_table.md`、
-`outputs/ursell_legacy_snapshot_878834a.json`（旧快照对照）、`docs/figures/ursell_reproducibility.png`。
+工件：`docs/ursell_reproducibility/ursell_reproducibility_study.json`、`docs/ursell_reproducibility/ursell_reproducibility_table.md`、
+`docs/figures/ursell_reproducibility.png`（旧的 `outputs/` 目录未被 git 跟踪，`tests/test_ursell_reference_pinning.py` 因此从未真正执行过，
+已由 m3487 收口：见 `docs/m3487/dead_skip_gate_audit.md`）。
