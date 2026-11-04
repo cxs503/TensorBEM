@@ -1,0 +1,221 @@
+{
+  "dimensional_gap": {
+    "implemented_prefactor": "4*rho/U^2",
+    "homogeneous_prefactor": "4*rho*g^2/U^2  (up to a dimensionless constant)",
+    "prefactor_ratio_dims": "g^2 : m^2 s^-4",
+    "implemented_output_dims": "kg s^2 m^-1",
+    "required_output_dims": "kg m s^-2 (force)",
+    "missing_factor": "g^2 / C,  C dimensionless",
+    "note": "a purely dimensionless constant cannot repair the mismatch, and no other combination of rho, U, g supplies m^2 s^-4; therefore every Cw in docs/wigley_wave_resistance.md is off by g^2/C = 96.17/C, i.e. by a factor between ~24 and ~96 for C in [1, 4]"
+  },
+  "force_unit_response": {
+    "mass": 1.0,
+    "length": 1.0,
+    "time": -2.0
+  },
+  "unit_change": {
+    "mass": 5.0,
+    "length": 2.0,
+    "time": 3.0
+  },
+  "unit_rescaling": {
+    "kochin": {
+      "path": "kochin",
+      "ratio": 22.500000000000014,
+      "required_ratio": 1.1111111111111112,
+      "implied_response": {
+        "mass": 0.0
+      },
+      "homogeneous": false,
+      "detail": "ratio=22.5, force requires 1.11111"
+    },
+    "pressure": {
+      "path": "pressure",
+      "ratio": 1.111111111111106,
+      "required_ratio": 1.1111111111111112,
+      "implied_response": {
+        "mass": 0.0
+      },
+      "homogeneous": true,
+      "detail": "ratio=1.11111 equals the force response"
+    }
+  },
+  "implied_output_dimensions": {
+    "kochin": {
+      "mass": 1.0,
+      "length": -1.0,
+      "time": 2.0
+    },
+    "pressure": {
+      "mass": 1.0,
+      "length": 1.0,
+      "time": -2.0
+    }
+  },
+  "scale_invariance": {
+    "kochin": {
+      "Rw": 0.09834106094270018,
+      "Rw_scaled": 0.7867284875416017,
+      "ratio": 8.000000000000004,
+      "expected": 8.0,
+      "rel_error": 4.440892098500626e-16
+    },
+    "pressure": {
+      "Rw": -0.02030028406413125,
+      "Rw_scaled": -0.16240227251304903,
+      "ratio": 7.999999999999952,
+      "expected": 8.0,
+      "rel_error": 5.995204332975845e-15
+    }
+  },
+  "froude_ladder": {
+    "S_wet": 0.5948865363689297,
+    "S_LT": 0.25,
+    "rows": [
+      {
+        "Fr": 0.2,
+        "U": 0.8857381102786533,
+        "Rw_kochin": 0.020601162839827783,
+        "Rw_pressure": -0.004961647338582389,
+        "ratio_pressure_over_kochin": -0.2408430716828345,
+        "Cw_kochin_S_LT": 0.0002049496561363006,
+        "Cw_kochin_S_wet": 8.612972542094872e-05,
+        "Cw_pressure_S_wet": -2.074374763358041e-05,
+        "Cw_corrected_band": {
+          "C=1": 0.008283128786711065,
+          "C=2": 0.0041415643933555325,
+          "C=pi": 0.0026366017813436796,
+          "C=4": 0.0020707821966777663,
+          "C=2pi": 0.0013183008906718398,
+          "C=4pi": 0.0006591504453359199
+        }
+      },
+      {
+        "Fr": 0.25,
+        "U": 1.1071726378483167,
+        "Rw_kochin": 0.028773753201936883,
+        "Rw_pressure": -0.011410823699848825,
+        "ratio_pressure_over_kochin": -0.3965705697051963,
+        "Cw_kochin_S_LT": 0.00018320273263291705,
+        "Cw_kochin_S_wet": 7.699061982102941e-05,
+        "Cw_pressure_S_wet": -3.0532213964381814e-05,
+        "Cw_corrected_band": {
+          "C=1": 0.007404217489716823,
+          "C=2": 0.0037021087448584115,
+          "C=pi": 0.002356835626431794,
+          "C=4": 0.0018510543724292057,
+          "C=2pi": 0.001178417813215897,
+          "C=4pi": 0.0005892089066079485
+        }
+      },
+      {
+        "Fr": 0.3,
+        "U": 1.3286071654179799,
+        "Rw_kochin": 0.09834106094270018,
+        "Rw_pressure": -0.02030028406413125,
+        "ratio_pressure_over_kochin": -0.20642734448390282,
+        "Cw_kochin_S_LT": 0.00043481831650827934,
+        "Cw_kochin_S_wet": 0.0001827316176805432,
+        "Cw_pressure_S_wet": -3.772080259104232e-05,
+        "Cw_corrected_band": {
+          "C=1": 0.017573369881936814,
+          "C=2": 0.008786684940968407,
+          "C=pi": 0.005593777366984962,
+          "C=4": 0.004393342470484203,
+          "C=2pi": 0.002796888683492481,
+          "C=4pi": 0.0013984443417462405
+        }
+      },
+      {
+        "Fr": 0.35,
+        "U": 1.5500416929876433,
+        "Rw_kochin": 0.037498682686740455,
+        "Rw_pressure": -0.029019907478072687,
+        "ratio_pressure_over_kochin": -0.7738913849454806,
+        "Cw_kochin_S_LT": 0.00012181348635455328,
+        "Cw_kochin_S_wet": 5.119189917210045e-05,
+        "Cw_pressure_S_wet": -3.961696974828622e-05,
+        "Cw_corrected_band": {
+          "C=1": 0.004923144612460379,
+          "C=2": 0.0024615723062301896,
+          "C=pi": 0.0015670856012586058,
+          "C=4": 0.0012307861531150948,
+          "C=2pi": 0.0007835428006293029,
+          "C=4pi": 0.00039177140031465145
+        }
+      },
+      {
+        "Fr": 0.4,
+        "U": 1.7714762205573067,
+        "Rw_kochin": 0.21059095863111754,
+        "Rw_pressure": -0.04152110765615894,
+        "ratio_pressure_over_kochin": -0.19716472124945092,
+        "Cw_kochin_S_LT": 0.0005237634507871091,
+        "Cw_kochin_S_wet": 0.0002201106508411075,
+        "Cw_pressure_S_wet": -4.339805511712218e-05,
+        "Cw_corrected_band": {
+          "C=1": 0.02116812586285385,
+          "C=2": 0.010584062931426925,
+          "C=pi": 0.006738023734129165,
+          "C=4": 0.005292031465713463,
+          "C=2pi": 0.0033690118670645823,
+          "C=4pi": 0.0016845059335322912
+        }
+      }
+    ]
+  },
+  "pressure_mesh_ladder": {
+    "Fr": 0.3,
+    "rows": [
+      {
+        "nx": 8,
+        "nz": 4,
+        "panels": 128,
+        "Rw_pressure": -0.046374924853751,
+        "Rw_kochin": 0.09834106094270018,
+        "ratio_pressure_over_kochin": -0.4715723463749492
+      },
+      {
+        "nx": 16,
+        "nz": 8,
+        "panels": 512,
+        "Rw_pressure": -0.02030028406413125,
+        "Rw_kochin": 0.09834106094270018,
+        "ratio_pressure_over_kochin": -0.20642734448390282
+      },
+      {
+        "nx": 24,
+        "nz": 12,
+        "panels": 1152,
+        "Rw_pressure": -0.008061887364261361,
+        "Rw_kochin": 0.09834106094270018,
+        "ratio_pressure_over_kochin": -0.08197885285129002
+      },
+      {
+        "nx": 32,
+        "nz": 16,
+        "panels": 2048,
+        "Rw_pressure": -0.007171324237782872,
+        "Rw_kochin": 0.09834106094270018,
+        "ratio_pressure_over_kochin": -0.07292299034643675
+      },
+      {
+        "nx": 48,
+        "nz": 24,
+        "panels": 4608,
+        "Rw_pressure": -0.005731417990744631,
+        "Rw_kochin": 0.09834106094270018,
+        "ratio_pressure_over_kochin": -0.05828102662105836
+      }
+    ]
+  },
+  "verdict": {
+    "kochin_path_dimensionally_homogeneous": false,
+    "pressure_path_dimensionally_homogeneous": true,
+    "pressure_path_sign": "negative at all five Froude numbers (non-physical)",
+    "pressure_path_mesh_convergent": false,
+    "absolute_cw_magnitude": "WITHHELD",
+    "reason": "the missing factor is g^2/C with C dimensionless and undetermined inside this repository; the pressure path cannot pin C because it is negative and mesh-unconvergent; no primary literature value for Wigley Cw was re-verified in this session, so none is asserted",
+    "two_path_gap_interpretation": "the documented 103-284 % gap is |difference|/max of a sign-flipped pair; it is not a convergence measure and must not be quoted as one"
+  }
+}
