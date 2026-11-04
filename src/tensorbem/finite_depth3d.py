@@ -265,11 +265,52 @@ def vertical_mode(z: ArrayLike, k0: float, depth: float) -> FloatArray:
 
 
 def wave_amplitude_coefficient(z: ArrayLike, nu: float, depth: float) -> FloatArray:
-    """Normalised propagating-mode shape ``phi_0(z) / N_0`` of the strip."""
-    k0 = finite_depth_wavenumber(nu, depth)
-    norm = propagating_mode_norm(k0, depth)
-    return vertical_mode(z, k0, depth) / norm
+    """Normalised propagating-mode shape ``phi_0(z) / N_0`` of the strip.
 
+    Evaluated through the log-scaled factors, so it stays finite (and
+    positive) for ``k0*h`` beyond the floating-point range of ``cosh`` where
+    ``phi_0`` and ``N_0`` individually overflow.
+    """
+    z = np.asarray(z, dtype=float)
+    if np.any(z > 1e-12) or np.any(z < -depth - 1e-12):
+        raise ValueError("elevation z outside the fluid domain [-h, 0]")
+    k0 = finite_depth_wavenumber(nu, depth)
+    u, _, weight = _propagating_factors_3d(k0, depth)
+    return u(np.clip(z, -depth, 0.0)) * math.exp(-k0 * depth) / weight
+
+
+
+def _propagating_factors_3d(k0: float, depth: float):
+    """Return ``(u, v, w)`` with ``cosh(k0*(z + h)) = exp(k0*h)*u(z)``.
+
+    Copy of :func:`tensorbem.finite_depth._scaled_mode_factors` for the 3-D
+    kernel.  In deep water (``k0*h >> 1``) the propagating mode is
+    ``O(exp(k0*h))`` and so is its norm ``N_0``, so the *ratio*
+    ``phi_0(z)*phi_0(zeta)/N_0`` is ``O(1)`` while every individual factor
+    overflows (``cosh`` at ``k0*h >~ 710``, ``N_0`` earlier).  Factoring out
+    ``exp(2*k0*h)`` (``N_0 = exp(2*k0*h)*w``) keeps the wave term finite for the
+    whole deep-water regime instead of returning ``nan``::
+
+        u(z) = (exp(k0*z) + exp(-k0*(z + 2*h)))/2,
+        v(z) = (exp(k0*z) - exp(-k0*(z + 2*h)))/2,      # u' = k0*v
+        w    = -expm1(-4*k0*h)/(8*k0) + (h/2)*exp(-2*k0*h).
+
+    ``u``, ``v`` and ``w`` are all bounded on ``-h <= z <= 0``; the products
+    below use ``u/sqrt(w)`` so no intermediate is large.
+    """
+    decay4 = math.exp(-4.0 * k0 * depth)
+    weight = -math.expm1(-4.0 * k0 * depth) / (8.0 * k0) + 0.5 * depth * math.exp(
+        -2.0 * k0 * depth
+    )
+    del decay4
+
+    def u(z):
+        return 0.5 * (np.exp(k0 * z) + np.exp(-k0 * (z + 2.0 * depth)))
+
+    def v(z):
+        return 0.5 * (np.exp(k0 * z) - np.exp(-k0 * (z + 2.0 * depth)))
+
+    return u, v, weight
 
 # ---------------------------------------------------------------------------
 # Green function
@@ -339,8 +380,11 @@ def green_function_3d(
     count = _resolve_mode_count(depth, modes, r_min=r_min)
     k0, mu, norms, norm0 = depth_modes(nu, depth, modes=count)
 
-    phi0_t = np.cosh(k0 * (z + depth))
-    phi0_s = np.cosh(k0 * (zeta + depth))
+    mode_u, _, mode_weight = _propagating_factors_3d(k0, depth)
+    # phi_0(z)*phi_0(zeta)/N_0 == u(z)*u(zeta)/w, finite for every k0*h
+    wave_factor = (mode_u(z) / math.sqrt(mode_weight)) * (
+        mode_u(zeta) / math.sqrt(mode_weight)
+    )
 
     result = np.zeros(horiz.shape, dtype=complex)
     safe_horiz = np.maximum(horiz, 1e-300)
@@ -357,7 +401,7 @@ def green_function_3d(
 
     if include_wave:
         wave = hankel_h0(k0 * safe_horiz, outgoing=outgoing)
-        result = result + 0.25j * (phi0_t * phi0_s / norm0) * wave
+        result = result + 0.25j * wave_factor * wave
     return result.reshape(horiz.shape)
 
 
@@ -380,8 +424,11 @@ def green_gradient_z_3d(
     k0, mu, norms, norm0 = depth_modes(nu, depth, modes=count)
     safe_horiz = np.maximum(horiz, 1e-300)
 
-    phi0_s = np.cosh(k0 * (zeta + depth))
-    dphi0_t = k0 * np.sinh(k0 * (z + depth))
+    mode_u, mode_v, mode_weight = _propagating_factors_3d(k0, depth)
+    # dphi_0(z)/dz * phi_0(zeta)/N_0 == k0*v(z)*u(zeta)/w
+    gradient_factor = k0 * (mode_v(z) / math.sqrt(mode_weight)) * (
+        mode_u(zeta) / math.sqrt(mode_weight)
+    )
 
     deriv = np.zeros(horiz.shape, dtype=complex)
     for start in range(0, count, _CHUNK):
@@ -393,7 +440,7 @@ def green_gradient_z_3d(
         deriv += np.sum(dz_t * cs * kern * (1.0 / nb), axis=-1)
     deriv = deriv / _TWO_PI
     wave = hankel_h0(k0 * safe_horiz, outgoing=outgoing)
-    deriv = deriv + 0.25j * (dphi0_t * phi0_s / norm0) * wave
+    deriv = deriv + 0.25j * gradient_factor * wave
     return deriv.reshape(horiz.shape)
 
 
