@@ -80,6 +80,7 @@ def test_registry_is_well_formed():
         assert math.isfinite(entry.declared)
         # sign-bearing quantities exist (e.g. the unphysical negative B33' that
         # table 11 quotes as the defect CHIEF removes), so only zero is illegal
+        # -- and a machine-zero cell is registered as an ``upper`` row instead.
         assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
@@ -96,11 +97,6 @@ def test_registry_covers_every_documented_benchmark_family():
         "ursell",
         "ursell_reference",
     } <= groups
-
-
-# --------------------------------------------------------------------------
-# The quoted numbers
-# --------------------------------------------------------------------------
 
 
 def test_fast_tier_reproduces_the_documented_numbers():
@@ -310,6 +306,120 @@ def test_repeated_quantities_share_one_solve():
     report = check(tiers=("standard",), entries=entries, runner=runner)
     assert len(calls) == 1
     assert report["summary"]["verdict"] == "PASS"
+
+
+# --------------------------------------------------------------------------
+# Table-coverage invariants carried over from PR #128 (m3181)
+# --------------------------------------------------------------------------
+# m3181 registered tables 10-12 table-driven under its own groups ``hulme3d`` /
+# ``hulme3d_chief`` / ``wang_linton3d``; the merged registry keeps the group and
+# quantity naming already used by the m3150 rows (``hulme_hemisphere`` /
+# ``hulme_chief`` / ``submerged_sphere``, quantities ``sub<level>_<quantity>``)
+# because the table rows, the documents and the tests on both sides of the merge
+# resolve through those names. The invariants below are m3181's, restated --
+# they cost nothing and they still pin the coverage of every quoted cell.
+
+
+def test_three_dimensional_free_surface_tables_are_fully_registered():
+    """Every cell of tables 10-12 has a registry row, and the rows of one table
+    share a single solve (identical parameters)."""
+    hulme = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme_hemisphere"]
+    chief = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme_chief"]
+    sphere = [entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"]
+    # Table 10: 6 columns x 3 mesh levels + 5 observed orders x 2 refined levels,
+    # plus the Haskind reciprocity and near/far-field closures of the finest mesh.
+    assert len(hulme) == 31
+    # Table 11: 2 exact + 3 unregularized + 4 CHIEF cells.
+    assert len(chief) == 9
+    # Table 12: 6 rows x 3 mesh levels (one of them a machine-zero upper bound)
+    # + 4 observed orders x 2 refined levels.
+    assert len(sphere) == 26
+    for table in (hulme, chief, sphere):
+        # one cache key per table: every row reuses the same solve
+        assert len({json.dumps(entry.parameters, sort_keys=True) for entry in table}) == 1
+        # these settles cost seconds, so no cell may hide behind the heavy tier
+        assert {entry.tier for entry in table} <= {"fast", "standard"}
+    keys = {entry.key for entry in DECLARED_NUMBERS}
+    assert {
+        "hulme_chief_2_58_exact_a33",
+        "hulme_chief_2_58_exact_b33",
+        "hulme_chief_2_58_chief_point_count",
+        "submerged_sphere_20_rotational_coupling",
+    } <= keys
+    # The passivity claim of table 11 needs the sign of both dampings.
+    signed = {entry.key: entry.declared for entry in chief}
+    assert signed["hulme_chief_2_58_unregularized_b33"] < 0.0
+    assert signed["hulme_chief_2_58_chief_b33"] > 0.0
+    # The 20-panel rotational coupling is quoted as machine zero: upper bound.
+    machine_zero = [
+        entry
+        for entry in sphere
+        if entry.key == "submerged_sphere_20_rotational_coupling"
+    ]
+    assert machine_zero[0].kind == "upper"
+
+
+def test_documented_hulme_tables_are_reproduced():
+    """Tables 10 and 11 of docs/marine_bem_benchmarks.md.
+
+    Table 10 (mesh refinement at Ka = 1.0) and table 11 (the lid-free, five-point
+    3-D CHIEF suppression of the waterplane resonance at Ka = 2.58). The
+    reference is Hulme's semi-analytical wave-free multipole solution, which
+    shares no code with the panel assembly, so a drift here separates an assembly
+    regression from a reference regression.
+    """
+    entries = tuple(
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group in {"hulme_hemisphere", "hulme_chief"}
+    )
+    report = check(entries=entries)
+    assert report["summary"]["checked"] == len(entries) == 40
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    # Second-order convergence is the physical content of the table, not a
+    # coincidence of three decimals: the finest level must land near 2.
+    for mode in ("a33", "b33", "a11", "b11", "fz"):
+        assert 1.7 <= measured[f"hulme_hemisphere_256_order_{mode}"] <= 2.3
+    # Lid-free CHIEF must restore conditioning and passivity at the same time.
+    assert (
+        measured["hulme_chief_2_58_chief_condition_number"]
+        < 0.1 * measured["hulme_chief_2_58_unregularized_condition_number"]
+    )
+    assert measured["hulme_chief_2_58_unregularized_b33"] < 0.0
+    assert measured["hulme_chief_2_58_chief_b33"] > 0.0
+    # ... and it must move B33' towards the exact 0.0631, not away from it.
+    assert abs(measured["hulme_chief_2_58_chief_b33"] - 0.0631) < abs(
+        measured["hulme_chief_2_58_unregularized_b33"] - 0.0631
+    )
+
+
+def test_documented_wang_linton_table_is_reproduced():
+    """Table 12: submerged sphere, f/a = 1.5, Ka = 0.8, 20/80/320 panels.
+
+    The reference is the closed-form Thorne/Wang/Linton multipole system (exact
+    factorials and Ei(2*nu*f), no numerical quadrature), an anchor independent of
+    the Kelvin kernel used by the panel solver.
+    """
+    entries = tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"
+    )
+    report = check(entries=entries)
+    assert report["summary"]["checked"] == len(entries) == 26
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    for mode in ("a33", "b33", "a11", "fz"):
+        assert 1.7 <= measured[f"submerged_sphere_320_order_{mode}"] <= 2.3
+    # Rotational coupling about the sphere centre must stay negligible.
+    assert measured["submerged_sphere_20_rotational_coupling"] < 1.0e-20
 
 
 # --------------------------------------------------------------------------

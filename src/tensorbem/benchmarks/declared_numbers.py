@@ -93,6 +93,27 @@ class DeclaredNumber:
     declared`` (for sentences of the form "within 6e-3")."""
 
 
+# --------------------------------------------------------------------------
+# 3-D deep-water free-surface tables (Hulme 1982 / Wang & Linton)
+# --------------------------------------------------------------------------
+# docs/marine_bem_benchmarks.md sections 4.10-4.11 quote three convergence
+# tables and one irregular-frequency (CHIEF) study for the three-dimensional
+# Kelvin-Green-function solver. Until now none of those numbers was executable:
+# a revision of ``tensorbem.free_surface3d`` or of the multipole reference could
+# have invalidated the tables without a single test turning red. They are
+# registered below as one heavy-tier group per study, so that every row of a
+# table shares one solve (the cache key is ``(group, parameters)``).
+
+# The rows below are stated one per quoted cell, in the naming this module and
+# its tests already use: quantities ``sub<level>_<quantity>``, groups
+# ``hulme_hemisphere`` / ``hulme_chief`` / ``submerged_sphere``. PR #128
+# (m3181) registered the same cells table-driven under the groups ``hulme3d`` /
+# ``hulme3d_chief`` / ``wang_linton3d`` with ``level<sub>_`` quantities; the two
+# sets cover the same numbers (the mapping is in docs/m3686/merge_report.md), so
+# the merge keeps one registry rather than two, and adopts from m3181 the cells
+# only that registry had: the two exact Hulme values, the CHIEF point count and
+# the 20-panel machine-zero rotational coupling (an ``upper`` row).
+
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
 DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
@@ -621,6 +642,36 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
     # --- 3-D irregular-frequency (Ka ~ 2.58) CHIEF comparison --------------
     # Source: docs/marine_bem_benchmarks.md table 11 (Ka=2.58, N=256).
     DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33",
+        description="Hulme exact A33' at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.4007,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33",
+        description="Hulme exact B33' at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.0631,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_chief_point_count",
+        description="number of interior CHIEF points at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_chief_regularized_chief_point_count",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=5.0,
+        tier="standard",
+    ),
+    DeclaredNumber(
         key="hulme_chief_2_58_unregularized_condition_number",
         description="unregularized BIE condition number at Ka=2.58, 256 panels",
         source="docs/marine_bem_benchmarks.md section 4.10 table 11",
@@ -726,6 +777,16 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_condition_number",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.407,
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description="sphere-centre rotational coupling ratio at 20 panels",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-20,
+        kind="upper",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_heave_added_mass_error",
@@ -964,6 +1025,10 @@ def _chief_rows(rows) -> dict[str, float]:
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
+        # The semi-analytical reference of the same study, quoted in table 11
+        # next to the two numerical schemes (contribution of PR #128/m3181).
+        values[prefix + "exact_a33_dimless"] = float(row["exact_a33"])
+        values[prefix + "exact_b33_dimless"] = float(row["exact_b33"])
         for scheme in ("unregularized", "chief_regularized"):
             for key, value in row[scheme].items():
                 if isinstance(value, bool) or not isinstance(value, (int, float)):

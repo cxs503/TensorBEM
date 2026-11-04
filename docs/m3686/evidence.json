@@ -1,0 +1,23 @@
+{
+ "mapped_cells": 63,
+ "adopted_from_branch": 4,
+ "main_only_cells": 3,
+ "merged_3d_cells": 66,
+ "measurement_summary": {
+  "checked": 66,
+  "passed": 66,
+  "drifted": 0,
+  "drifted_keys": [],
+  "worst_relative_deviation": 0.9999999999975083,
+  "verdict": "PASS"
+ },
+ "worst_value_deviation": 0.00378677870019862,
+ "report_lines": 209,
+ "meta": {
+  "baseline_sha": "b420b2e",
+  "old_sha": "55db3976dc283e9522334f2ab7309fc655f3ae27",
+  "new_sha": "6af7f4350860031341af5bd0af1f77a820e20a1f",
+  "base_sha": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+  "check_wall_seconds": 29.0
+ }
+}
