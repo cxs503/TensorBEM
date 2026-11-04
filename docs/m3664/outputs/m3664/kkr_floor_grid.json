@@ -1,0 +1,183 @@
+{
+  "truncation_floor": {
+    "case": "ursell_submerged_circular_cylinder_deep_water_heave",
+    "radius": 1.0,
+    "submergence": 2.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "ka_min": 0.05,
+    "bands": [
+      1.0,
+      3.0,
+      10.0,
+      30.0
+    ],
+    "sample_counts": [
+      16,
+      24,
+      32,
+      64
+    ],
+    "added_mass_high_frequency_limit": 2845.7367316322266,
+    "added_mass_limit_residual": 0.3414001201949759,
+    "displaced_mass_per_span": 3220.132469929538,
+    "rows": [
+      {
+        "points": 16,
+        "ka_max": 1.0,
+        "max_damping_relative_error": 0.6495797332374117,
+        "max_added_mass_relative_error": 0.057285353288305606
+      },
+      {
+        "points": 16,
+        "ka_max": 3.0,
+        "max_damping_relative_error": 0.22313509731245312,
+        "max_added_mass_relative_error": 0.010115709740965954
+      },
+      {
+        "points": 16,
+        "ka_max": 10.0,
+        "max_damping_relative_error": 0.06122098758987786,
+        "max_added_mass_relative_error": 0.00819994665785249
+      },
+      {
+        "points": 16,
+        "ka_max": 30.0,
+        "max_damping_relative_error": 0.06877834051861663,
+        "max_added_mass_relative_error": 0.010506412015989664
+      },
+      {
+        "points": 24,
+        "ka_max": 1.0,
+        "max_damping_relative_error": 0.727381435495687,
+        "max_added_mass_relative_error": 0.06783051333802277
+      },
+      {
+        "points": 24,
+        "ka_max": 3.0,
+        "max_damping_relative_error": 0.25144332306611994,
+        "max_added_mass_relative_error": 0.009853187452494224
+      },
+      {
+        "points": 24,
+        "ka_max": 10.0,
+        "max_damping_relative_error": 0.0735505426774757,
+        "max_added_mass_relative_error": 0.008075675056504307
+      },
+      {
+        "points": 24,
+        "ka_max": 30.0,
+        "max_damping_relative_error": 0.052166570020771415,
+        "max_added_mass_relative_error": 0.006683901029402377
+      },
+      {
+        "points": 32,
+        "ka_max": 1.0,
+        "max_damping_relative_error": 0.5807248389874685,
+        "max_added_mass_relative_error": 0.04680061041830289
+      },
+      {
+        "points": 32,
+        "ka_max": 3.0,
+        "max_damping_relative_error": 0.19038623236957186,
+        "max_added_mass_relative_error": 0.009709029969843089
+      },
+      {
+        "points": 32,
+        "ka_max": 10.0,
+        "max_damping_relative_error": 0.045749853987675435,
+        "max_added_mass_relative_error": 0.007992680067669962
+      },
+      {
+        "points": 32,
+        "ka_max": 30.0,
+        "max_damping_relative_error": 0.047026058444150795,
+        "max_added_mass_relative_error": 0.006673742674222296
+      },
+      {
+        "points": 64,
+        "ka_max": 1.0,
+        "max_damping_relative_error": 0.7098275523028291,
+        "max_added_mass_relative_error": 0.064561808576665
+      },
+      {
+        "points": 64,
+        "ka_max": 3.0,
+        "max_damping_relative_error": 0.24221313137651354,
+        "max_added_mass_relative_error": 0.010343572525658536
+      },
+      {
+        "points": 64,
+        "ka_max": 10.0,
+        "max_damping_relative_error": 0.06940665915766328,
+        "max_added_mass_relative_error": 0.00872588837690123
+      },
+      {
+        "points": 64,
+        "ka_max": 30.0,
+        "max_damping_relative_error": 0.043732526964433416,
+        "max_added_mass_relative_error": 0.007506938396391665
+      }
+    ]
+  },
+  "detection_window": {
+    "clean_max_damping_relative_error": 0.19038623236957186,
+    "rows": [
+      {
+        "damping_gain": 1.02,
+        "max_damping_relative_error": 0.186965246965322,
+        "ratio_to_clean": 0.9820313403880531
+      },
+      {
+        "damping_gain": 1.05,
+        "max_damping_relative_error": 0.18207812495925074,
+        "ratio_to_clean": 0.9563618266567002
+      },
+      {
+        "damping_gain": 1.1,
+        "max_damping_relative_error": 0.17452530004077701,
+        "ratio_to_clean": 0.9166907599809734
+      },
+      {
+        "damping_gain": 1.25,
+        "max_damping_relative_error": 0.26431932717773265,
+        "ratio_to_clean": 1.388332149273505
+      },
+      {
+        "damping_gain": 1.5,
+        "max_damping_relative_error": 0.3864779402251968,
+        "ratio_to_clean": 2.0299678995431654
+      }
+    ]
+  },
+  "panel_audit": {
+    "panels": [
+      32,
+      64
+    ],
+    "points": 20,
+    "ka_max": 3.0,
+    "added_mass_high_frequency_limit": 2845.7367316322266,
+    "added_mass_limit_over_displaced_mass": 0.8837328147852552,
+    "cases": {
+      "analytic_multipole": {
+        "kkr_damping": 0.23861591528284834,
+        "kkr_added_mass": 0.011647936742453058,
+        "mass_error_vs_ursell": 0.0,
+        "damping_error_vs_ursell": 0.0
+      },
+      "panels_32": {
+        "kkr_damping": 0.18656421940365484,
+        "kkr_added_mass": 0.036802027725975635,
+        "mass_error_vs_ursell": 0.04241053564113208,
+        "damping_error_vs_ursell": 0.05076344736446195
+      },
+      "panels_64": {
+        "kkr_damping": 0.1867741991589156,
+        "kkr_added_mass": 0.025166773110438502,
+        "mass_error_vs_ursell": 0.02279255027714299,
+        "damping_error_vs_ursell": 0.028319751351543892
+      }
+    }
+  }
+}
