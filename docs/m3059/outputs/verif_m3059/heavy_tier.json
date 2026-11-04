@@ -1,0 +1,102 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.0041679,
+      "description": "relative error, longest semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_x",
+      "measured": 0.004167936438948101,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 8.74275968718613e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0044621,
+      "description": "relative error, intermediate semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_y",
+      "measured": 0.004462121490841226,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 4.816306498179276e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0049359,
+      "description": "relative error, shortest semi-axis, 1280 panels",
+      "group": "ellipsoid",
+      "key": "ellipsoid_added_mass_1280_z",
+      "measured": 0.004935932283260787,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 6.5405013851290325e-06,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 3 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.004293,
+      "description": "panel added-mass error at 256 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_256",
+      "measured": 0.0042929825339061934,
+      "parameters": {
+        "panels": 256
+      },
+      "relative_deviation": -4.068505428955261e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0068412,
+      "description": "panel damping error at 256 panels",
+      "group": "ursell",
+      "key": "ursell_damping_256",
+      "measured": 0.006841164059987114,
+      "parameters": {
+        "panels": 256
+      },
+      "relative_deviation": -5.253466188207659e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "heavy",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "d22b6ad",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 5,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 5,
+    "verdict": "PASS",
+    "worst_relative_deviation": 8.74275968718613e-06
+  },
+  "tiers": [
+    "heavy"
+  ]
+}
