@@ -1,0 +1,1330 @@
+{
+ "benchmark": "declared_numbers_recomputation",
+ "tiers": [
+  "heavy"
+ ],
+ "checks": [
+  {
+   "key": "hulme_condition_number_16",
+   "description": "condition number, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 3.893,
+   "measured": 3.8925506264896836,
+   "relative_deviation": -0.00011543116113952052,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_added_mass_rel_error_16",
+   "description": "A33 relative error, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.12,
+   "measured": 0.12012810014703698,
+   "relative_deviation": 0.001067501225308215,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_damping_rel_error_16",
+   "description": "B33 relative error, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.122,
+   "measured": 0.12189977674905007,
+   "relative_deviation": -0.0008215020569665903,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_added_mass_rel_error_16",
+   "description": "A11 relative error, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.18,
+   "measured": 0.18023724418320536,
+   "relative_deviation": 0.0013180232400298061,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_damping_rel_error_16",
+   "description": "B11 relative error, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.402,
+   "measured": 0.4024097060515509,
+   "relative_deviation": 0.0010191692824648864,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_excitation_force_z_rel_error_16",
+   "description": "Fz relative error, 16 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0667,
+   "measured": 0.06671639860233952,
+   "relative_deviation": 0.0002458561070393745,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_condition_number_64",
+   "description": "condition number, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 3.052,
+   "measured": 3.0515487523933436,
+   "relative_deviation": -0.00014785308212860116,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_added_mass_rel_error_64",
+   "description": "A33 relative error, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0297,
+   "measured": 0.02973591800839022,
+   "relative_deviation": 0.0012093605518592068,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_damping_rel_error_64",
+   "description": "B33 relative error, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.045,
+   "measured": 0.0450225113637059,
+   "relative_deviation": 0.0005002525267978126,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_added_mass_rel_error_64",
+   "description": "A11 relative error, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0505,
+   "measured": 0.05050798435588557,
+   "relative_deviation": 0.00015810605713993304,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_damping_rel_error_64",
+   "description": "B11 relative error, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.13,
+   "measured": 0.13049228123102583,
+   "relative_deviation": 0.00378677870019862,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_excitation_force_z_rel_error_64",
+   "description": "Fz relative error, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0221,
+   "measured": 0.022094068100671525,
+   "relative_deviation": -0.00026841173432022434,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_a33_64",
+   "description": "observed order of A33, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.23,
+   "measured": 2.234179228700528,
+   "relative_deviation": 0.0018740935876807193,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_b33_64",
+   "description": "observed order of B33, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.59,
+   "measured": 1.5938400485093713,
+   "relative_deviation": 0.0024151248486611646,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_a11_64",
+   "description": "observed order of A11, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.04,
+   "measured": 2.035659945142291,
+   "relative_deviation": -0.002127477871426006,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_b11_64",
+   "description": "observed order of B11, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.62,
+   "measured": 1.6247006308715708,
+   "relative_deviation": 0.0029016239947967206,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_fz_64",
+   "description": "observed order of Fz, 64 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.77,
+   "measured": 1.7684279790689237,
+   "relative_deviation": -0.0008881474186871946,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_condition_number_256",
+   "description": "condition number, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.783,
+   "measured": 2.78287825558641,
+   "relative_deviation": -4.3745746888221086e-05,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_added_mass_rel_error_256",
+   "description": "A33 relative error, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.00741,
+   "measured": 0.007405440541471733,
+   "relative_deviation": -0.0006153115422762354,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_heave_damping_rel_error_256",
+   "description": "B33 relative error, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0118,
+   "measured": 0.01181192783863598,
+   "relative_deviation": 0.0010108337827101884,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_added_mass_rel_error_256",
+   "description": "A11 relative error, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.013,
+   "measured": 0.013038378960299251,
+   "relative_deviation": 0.0029522277153270727,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_surge_damping_rel_error_256",
+   "description": "B11 relative error, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0353,
+   "measured": 0.03527451400663637,
+   "relative_deviation": -0.0007219828148336025,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_excitation_force_z_rel_error_256",
+   "description": "Fz relative error, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.00567,
+   "measured": 0.005667905840101258,
+   "relative_deviation": -0.0003693403701485087,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_a33_256",
+   "description": "observed order of A33, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.06,
+   "measured": 2.05917114611911,
+   "relative_deviation": -0.00040235625285935334,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_b33_256",
+   "description": "observed order of B33, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.98,
+   "measured": 1.982014890025804,
+   "relative_deviation": 0.0010176212251536,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_a11_256",
+   "description": "observed order of A11, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.01,
+   "measured": 2.0059839284095102,
+   "relative_deviation": -0.0019980455674077397,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_b11_256",
+   "description": "observed order of B11, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.88,
+   "measured": 1.8872663608505282,
+   "relative_deviation": 0.0038650855587916712,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_observed_order_fz_256",
+   "description": "observed order of Fz, 256 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+   "group": "hulme3d",
+   "parameters": {
+    "subdivisions": [
+     1,
+     2,
+     3
+    ],
+    "ka": 1.0
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.02,
+   "measured": 2.0152496421519017,
+   "relative_deviation": -0.0023516623010387608,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_exact_a33_dimless",
+   "description": "Ka = 2.58, 256 panels, exact: A33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.4007,
+   "measured": 0.4007373824061046,
+   "relative_deviation": 9.329275294390971e-05,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_exact_b33_dimless",
+   "description": "Ka = 2.58, 256 panels, exact: B33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0631,
+   "measured": 0.06312197075596611,
+   "relative_deviation": 0.00034818947648344395,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_unregularized_condition_number",
+   "description": "Ka = 2.58, 256 panels, unregularized: condition number",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 145.66,
+   "measured": 145.65862687433562,
+   "relative_deviation": -9.426923413238433e-06,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_unregularized_a33_dimless",
+   "description": "Ka = 2.58, 256 panels, unregularized: A33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.3481,
+   "measured": 0.34806205885162744,
+   "relative_deviation": -0.00010899496803383447,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_unregularized_b33_dimless",
+   "description": "Ka = 2.58, 256 panels, unregularized: B33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": -0.1042,
+   "measured": -0.10415462852558684,
+   "relative_deviation": 0.00043542681778468246,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_chief_regularized_chief_point_count",
+   "description": "Ka = 2.58, 256 panels, chief_regularized: number of interior CHIEF points",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 5.0,
+   "measured": 5.0,
+   "relative_deviation": 0.0,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_chief_regularized_condition_number",
+   "description": "Ka = 2.58, 256 panels, chief_regularized: condition number",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 4.24,
+   "measured": 4.244971303652851,
+   "relative_deviation": 0.001172477276615731,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_chief_regularized_a33_dimless",
+   "description": "Ka = 2.58, 256 panels, chief_regularized: A33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.3919,
+   "measured": 0.3919084438208462,
+   "relative_deviation": 2.154585569327236e-05,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "hulme_chief_chief_regularized_b33_dimless",
+   "description": "Ka = 2.58, 256 panels, chief_regularized: B33 dimensionless",
+   "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+   "group": "hulme3d_chief",
+   "parameters": {
+    "subdivision": 3,
+    "ka_values": [
+     2.58
+    ]
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0687,
+   "measured": 0.06870788329461958,
+   "relative_deviation": 0.00011474955778135268,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_condition_number_20",
+   "description": "condition number, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.407,
+   "measured": 2.407465553503791,
+   "relative_deviation": 0.00019341649513542202,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_heave_added_mass_rel_error_20",
+   "description": "A33 relative error, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.255,
+   "measured": 0.2549667474006816,
+   "relative_deviation": -0.00013040235026828175,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_surge_added_mass_rel_error_20",
+   "description": "A11 relative error, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.268,
+   "measured": 0.2679942590131578,
+   "relative_deviation": -2.1421592694758853e-05,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_x_rel_error_20",
+   "description": "Fx relative error, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.36,
+   "measured": 0.36029014823478045,
+   "relative_deviation": 0.0008059673188346193,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_z_rel_error_20",
+   "description": "Fz relative error, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.37,
+   "measured": 0.36977052909136576,
+   "relative_deviation": -0.000620191644957386,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_rotational_added_mass_max_ratio_20",
+   "description": "rotational coupling about the body centre, 20 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "upper",
+   "declared": 1e-20,
+   "measured": 2.4916296163167963e-32,
+   "relative_deviation": -0.9999999999975083,
+   "tolerance": 0.025,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_condition_number_80",
+   "description": "condition number, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.259,
+   "measured": 2.258714554852114,
+   "relative_deviation": -0.00012635907387604096,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_heave_added_mass_rel_error_80",
+   "description": "A33 relative error, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.073,
+   "measured": 0.0729881047456501,
+   "relative_deviation": -0.00016294868972465933,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_surge_added_mass_rel_error_80",
+   "description": "A11 relative error, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0802,
+   "measured": 0.08016429776590614,
+   "relative_deviation": -0.0004451650136390771,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_x_rel_error_80",
+   "description": "Fx relative error, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.116,
+   "measured": 0.11594161971983795,
+   "relative_deviation": -0.000503278277259112,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_z_rel_error_80",
+   "description": "Fz relative error, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.119,
+   "measured": 0.11934619738279592,
+   "relative_deviation": 0.0029092217041674488,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_rotational_added_mass_max_ratio_80",
+   "description": "rotational coupling about the body centre, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.00022,
+   "measured": 0.00021509883822866093,
+   "relative_deviation": -0.022278008051541277,
+   "tolerance": 0.025,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_a33_80",
+   "description": "observed order of A33, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.12,
+   "measured": 2.1165479890606136,
+   "relative_deviation": -0.0016283070468804332,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_b33_80",
+   "description": "observed order of B33, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.72,
+   "measured": 1.7158637111509416,
+   "relative_deviation": -0.002404819098289748,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_a11_80",
+   "description": "observed order of A11, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.04,
+   "measured": 2.042181042736688,
+   "relative_deviation": 0.001069138596415773,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_fz_80",
+   "description": "observed order of Fz, 80 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.91,
+   "measured": 1.9135248601497852,
+   "relative_deviation": 0.0018454765182121771,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_condition_number_320",
+   "description": "condition number, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.188,
+   "measured": 2.1879938690916583,
+   "relative_deviation": -2.802060485326682e-06,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_heave_added_mass_rel_error_320",
+   "description": "A33 relative error, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0185,
+   "measured": 0.018508892187259006,
+   "relative_deviation": 0.0004806587707571265,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_surge_added_mass_rel_error_320",
+   "description": "A11 relative error, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.0208,
+   "measured": 0.020765722298705085,
+   "relative_deviation": -0.0016479664084093138,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_x_rel_error_320",
+   "description": "Fx relative error, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.031,
+   "measured": 0.03100047197268868,
+   "relative_deviation": 1.5224925441338318e-05,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_excitation_force_z_rel_error_320",
+   "description": "Fz relative error, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 0.032,
+   "measured": 0.03197229226250085,
+   "relative_deviation": -0.0008658667968485575,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_rotational_added_mass_max_ratio_320",
+   "description": "rotational coupling about the body centre, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.6e-05,
+   "measured": 2.648089431086153e-05,
+   "relative_deviation": 0.01849593503313589,
+   "tolerance": 0.025,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_a33_320",
+   "description": "observed order of A33, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.06,
+   "measured": 2.061973475376134,
+   "relative_deviation": 0.0009579977554048616,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_b33_320",
+   "description": "observed order of B33, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.93,
+   "measured": 1.9289780646984946,
+   "relative_deviation": -0.0005295001562203599,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_a11_320",
+   "description": "observed order of A11, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 2.03,
+   "measured": 2.030007005400829,
+   "relative_deviation": 3.4509363690677495e-06,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  },
+  {
+   "key": "wang_linton_observed_order_fz_320",
+   "description": "observed order of Fz, 320 panels",
+   "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+   "group": "wang_linton3d",
+   "parameters": {
+    "subdivisions": [
+     0,
+     1,
+     2
+    ],
+    "ka": 0.8
+   },
+   "tier": "heavy",
+   "comparison": "value",
+   "declared": 1.98,
+   "measured": 1.9794876753296529,
+   "relative_deviation": -0.0002587498335086463,
+   "tolerance": 0.005,
+   "verdict": "PASS"
+  }
+ ],
+ "summary": {
+  "checked": 63,
+  "passed": 63,
+  "drifted": 0,
+  "drifted_keys": [],
+  "worst_relative_deviation": 0.9999999999975083,
+  "verdict": "PASS"
+ },
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "commit": "6025970"
+ },
+ "elapsed_seconds": 98.13810396194458,
+ "python": "3.11.6",
+ "note": "heavy tier, 3-D deep-water Kelvin Green function; every row of a table shares one solve"
+}
