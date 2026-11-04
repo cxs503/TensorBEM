@@ -274,6 +274,13 @@ python -m tensorbem.benchmarks.ursell_cylinder --panels 128 --ka 0.6 --output ou
 
 输出为严格 JSON（`allow_nan=False`），同时给出参考解、面元解、MFS 解、远近场阻尼与残差。
 
+**精度声明的作用域（m3019）**：上文 128 面元 $8.5\times10^{-3}$（附加质量）与
+$1.34\times10^{-2}$（阻尼）是在 $ka=0.6$、$a/f=0.5$ 这一个点上测得的。21 节点
+$(ka,a/f)$ 包络审计（[`ursell_band_audit.md`](ursell_band_audit.md)，$N=32\ldots256$）
+给出的适用范围是 $a/f\le0.5$、$ka\ge0.4$：全带 128 面元最差 $2.39\times10^{-2}$
+出现在 $ka=0.2$、$a/f=0.75$（长波 + 浅潜没），256 面元最差 $1.22\times10^{-2}$，
+即把 1 % 当作全带目标时 $N\le256$ 不够。所有节点对 Ursell 解析解的误差仍 $<3\%$。
+
 ### 4.7 外域刚体 Neumann 附加质量张量与转动附加惯性矩（Lamb 1932）
 
 §4.1–§4.4 的无自由液面基准均采用预设解析表面势 \(\phi|_\Gamma\)、求解第一类积分方程 \(\mathbf S\mathbf q_e=(\tfrac12\mathbf I-\mathbf H)\boldsymbol\phi\) 的策略。然而对一般船体截面以及**刚体转动模态（横摇/纵摇/首摇）**，表面势在求解前是未知量；工程水动力程序（如 WAMIT 零频/高频极限）实际施加的是刚体无穿透 **Neumann 边界条件**
