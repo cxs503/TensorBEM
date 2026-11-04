@@ -101,6 +101,16 @@ TARGETS: tuple[Target, ...] = (
         SRC_ROOT / "tensorbem" / "finite_depth.py",
         ("tests/test_finite_depth.py",),
     ),
+    # The analytic oracle itself: every benchmark above is judged against these
+    # closed forms, so a wrong factor here shifts every reference at once.  The
+    # 2026-11-03 audit left it unaudited because its unit test file was measured
+    # at >100 s; re-measured on 2026-11-04 it runs in ~30 s (load15 ~90), which
+    # is well inside the per-mutant timeout, so it enters the sweep here.
+    Target(
+        "tensorbem.analytic",
+        SRC_ROOT / "tensorbem" / "analytic.py",
+        ("tests/test_analytic_references.py",),
+    ),
 )
 
 
@@ -279,6 +289,29 @@ SLOW_TESTS = frozenset({"tests/test_analytic_references.py"})
 _FAMILY_CACHE: dict[str, list[str]] = {}
 
 
+def _family_names(function: str) -> tuple[str, ...]:
+    """Names to grep for when looking for the tests that police ``function``.
+
+    A private helper is never named by a test -- tests call the public entry
+    point.  Before 2026-11-04 the family for ``submerged_sphere_wave_multipole
+    ._solve_azimuthal`` was therefore empty, so every defect seeded inside a
+    helper was reported as a survivor simply because stage 2 had nothing to run
+    (``tests/test_submerged_sphere_wave_3d.py`` polices it).  Private helpers now
+    inherit their enclosing public function's name.
+    """
+    parts = [p for p in function.split(".") if p and p != "<module>"]
+    names: list[str] = []
+    for index in range(len(parts) - 1, -1, -1):
+        candidate = parts[index]
+        if len(candidate) <= 2:
+            continue
+        if not candidate.startswith("_"):
+            names.append(candidate)
+        elif index > 0:
+            names.append(parts[index - 1])
+    return tuple(dict.fromkeys(names))
+
+
 def sibling_tests(function: str, limit: int = 8) -> tuple[str, ...]:
     """Test files that name ``function`` -- a cheap, automatic re-check family.
 
@@ -290,19 +323,20 @@ def sibling_tests(function: str, limit: int = 8) -> tuple[str, ...]:
     """
     if function in _FAMILY_CACHE:
         return tuple(_FAMILY_CACHE[function])
-    name = function.split(".")[-1]
+    names = _family_names(function)
+    seen: set[str] = set()
     hits: list[str] = []
-    if name and name != "<module>" and len(name) > 2:
-        for path in sorted((REPO_ROOT / "tests").glob("test_*.py")):
-            rel = f"tests/{path.name}"
-            if rel in SLOW_TESTS:
-                continue
-            try:
-                text = path.read_text(encoding="utf-8", errors="ignore")
-            except OSError:
-                continue
-            if name in text:
-                hits.append(rel)
+    for path in sorted((REPO_ROOT / "tests").glob("test_*.py")):
+        rel = f"tests/{path.name}"
+        if rel in SLOW_TESTS or rel in seen:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        if any(name in text for name in names):
+            hits.append(rel)
+            seen.add(rel)
     _FAMILY_CACHE[function] = hits[:limit]
     return tuple(hits[:limit])
 

@@ -1,0 +1,49 @@
+{
+  "tensorbem.analytic:351:20:shift_constant": {
+    "verdict": "killed",
+    "failing": "tests/test_mutation_gaps_analytic.py::test_ellipsoid_shape_factors_accept_the_documented_minimum_node_count",
+    "rc": 1,
+    "tests": [
+      "tests/test_mutation_gaps_analytic.py"
+    ],
+    "summary": "shift_constant in ellipsoid_shape_factors: 16 -> 17"
+  },
+  "tensorbem.analytic:599:55:swap_binop": {
+    "verdict": "killed",
+    "failing": "tests/test_ursell_benchmark.py::test_deep_submergence_recovers_the_displaced_mass",
+    "rc": 1,
+    "tests": [
+      "tests/test_ursell_benchmark.py",
+      "tests/test_ursell_reproducibility.py"
+    ],
+    "summary": "swap_binop in _ursell_multipole_system: r * log_x -> r / log_x"
+  },
+  "tensorbem.analytic:670:21:negate_constant": {
+    "verdict": "killed",
+    "failing": "tests/test_mutation_gaps_analytic.py::test_ursell_cylinder_default_density_is_seawater",
+    "rc": 1,
+    "tests": [
+      "tests/test_mutation_gaps_analytic.py",
+      "tests/test_ursell_benchmark.py"
+    ],
+    "summary": "negate_constant in ursell_cylinder_added_mass: 1025.0 -> -1025.0"
+  },
+  "tensorbem.analytic:1025:40:shift_constant": {
+    "verdict": "survived",
+    "failing": null,
+    "rc": 0,
+    "tests": [
+      "tests/test_helmholtz_maccamy_fuchs.py"
+    ],
+    "summary": "shift_constant in maccamy_fuchs_diffraction: 50.0 -> 100.0"
+  },
+  "tensorbem.analytic:1414:17:swap_binop": {
+    "verdict": "killed",
+    "failing": "tests/test_mutation_gaps_analytic.py::test_submerged_sphere_far_field_damping_is_consistent_with_haskind",
+    "rc": 1,
+    "tests": [
+      "tests/test_mutation_gaps_analytic.py"
+    ],
+    "summary": "swap_binop in submerged_sphere_wave_multipole: b33_ff_phys / (rho * omega * volume) -> b33_ff_phys * (rho * omega * volume)"
+  }
+}

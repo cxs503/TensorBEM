@@ -1,0 +1,459 @@
+{
+  "extra_tests": [],
+  "max_per_module": 24,
+  "module": "tensorbem.analytic",
+  "mutants": [
+    {
+      "col": 21,
+      "family_tests": [],
+      "function": "_harmonic_x2_minus_y2",
+      "key": "tensorbem.analytic:105:21:shift_constant",
+      "killed_by": "tests/test_analytic_references.py::test_solid_harmonics_are_harmonic",
+      "lineno": 105,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "2",
+      "replacement": "3",
+      "seconds": 1.25,
+      "stage": 1,
+      "summary": "shift_constant in _harmonic_x2_minus_y2: 2 -> 3",
+      "verdict": "killed"
+    },
+    {
+      "col": 25,
+      "family_tests": [],
+      "function": "_harmonic_2z2_minus_x2_minus_y2",
+      "key": "tensorbem.analytic:119:25:swap_binop",
+      "killed_by": "tests/test_analytic_references.py::test_solid_harmonic_gradients_match_central_differences",
+      "lineno": 119,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "-2.0 * x",
+      "replacement": "-2.0 / x",
+      "seconds": 1.14,
+      "stage": 1,
+      "summary": "swap_binop in _harmonic_2z2_minus_x2_minus_y2: -2.0 * x -> -2.0 / x",
+      "verdict": "killed"
+    },
+    {
+      "col": 28,
+      "family_tests": [],
+      "function": "_harmonic_x3_minus_3xy2",
+      "key": "tensorbem.analytic:126:28:shift_constant",
+      "killed_by": "tests/test_analytic_references.py::test_solid_harmonics_are_harmonic",
+      "lineno": 126,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "2",
+      "replacement": "3",
+      "seconds": 1.15,
+      "stage": 1,
+      "summary": "shift_constant in _harmonic_x3_minus_3xy2: 2 -> 3",
+      "verdict": "killed"
+    },
+    {
+      "col": 41,
+      "family_tests": [],
+      "function": "_harmonic_z_2z2_minus_3r2",
+      "key": "tensorbem.analytic:154:41:negate_constant",
+      "killed_by": "tests/test_analytic_references.py::test_solid_harmonic_gradients_match_central_differences",
+      "lineno": 154,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "6.0",
+      "replacement": "-6.0",
+      "seconds": 1.17,
+      "stage": 1,
+      "summary": "negate_constant in _harmonic_z_2z2_minus_3r2: 6.0 -> -6.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 20,
+      "family_tests": [
+        "tests/test_ellipsoid_1280_verification.py",
+        "tests/test_published_reference_columns.py"
+      ],
+      "function": "ellipsoid_shape_factors",
+      "key": "tensorbem.analytic:351:20:shift_constant",
+      "killed_by": null,
+      "lineno": 351,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "16",
+      "replacement": "17",
+      "seconds": 74.01,
+      "stage": 2,
+      "summary": "shift_constant in ellipsoid_shape_factors: 16 -> 17",
+      "verdict": "timeout"
+    },
+    {
+      "col": 15,
+      "family_tests": [
+        "tests/test_exterior_neumann_added_mass.py"
+      ],
+      "function": "ellipsoid_added_moment_of_inertia",
+      "key": "tensorbem.analytic:475:15:swap_binop",
+      "killed_by": "tests/test_exterior_neumann_added_mass.py::TestAnalyticalRotationalAddedMass::test_sphere_and_spheroid_rotational_added_inertia",
+      "lineno": 475,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "aj2 - ak2",
+      "replacement": "aj2 + ak2",
+      "seconds": 5.35,
+      "stage": 2,
+      "summary": "swap_binop in ellipsoid_added_moment_of_inertia: aj2 - ak2 -> aj2 + ak2",
+      "verdict": "killed"
+    },
+    {
+      "col": 55,
+      "family_tests": [],
+      "function": "_ursell_multipole_system",
+      "key": "tensorbem.analytic:599:55:swap_binop",
+      "killed_by": null,
+      "lineno": 599,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "r * log_x",
+      "replacement": "r / log_x",
+      "seconds": 4.36,
+      "stage": 3,
+      "summary": "swap_binop in _ursell_multipole_system: r * log_x -> r / log_x",
+      "verdict": "survived"
+    },
+    {
+      "col": 21,
+      "family_tests": [
+        "tests/test_causality.py",
+        "tests/test_finite_depth_solver.py",
+        "tests/test_published_reference_columns.py",
+        "tests/test_ursell_benchmark.py",
+        "tests/test_ursell_quadrature_convergence.py",
+        "tests/test_ursell_reproducibility.py"
+      ],
+      "function": "ursell_cylinder_added_mass",
+      "key": "tensorbem.analytic:670:21:negate_constant",
+      "killed_by": null,
+      "lineno": 670,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "1025.0",
+      "replacement": "-1025.0",
+      "seconds": 74.07,
+      "stage": 2,
+      "summary": "negate_constant in ursell_cylinder_added_mass: 1025.0 -> -1025.0",
+      "verdict": "timeout"
+    },
+    {
+      "col": 10,
+      "family_tests": [
+        "tests/test_dean_diffraction.py"
+      ],
+      "function": "dean_cylinder_diffraction",
+      "key": "tensorbem.analytic:750:10:swap_binop",
+      "killed_by": "tests/test_dean_diffraction.py::TestDeanAnalyticalReference::test_zero_reflection_unit_transmission_and_circular_polarisation",
+      "lineno": 750,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "(-k_a) ** m",
+      "replacement": "-k_a * m",
+      "seconds": 5.55,
+      "stage": 2,
+      "summary": "swap_binop in dean_cylinder_diffraction: (-k_a) ** m -> -k_a * m",
+      "verdict": "killed"
+    },
+    {
+      "col": 19,
+      "family_tests": [
+        "tests/test_helmholtz_maccamy_fuchs.py"
+      ],
+      "function": "bessel_jn_yn",
+      "key": "tensorbem.analytic:897:19:shift_constant",
+      "killed_by": "tests/test_helmholtz_maccamy_fuchs.py::TestHelmholtzAndVerticalCylinderBEM::test_quadratic_convergence_of_force_moment_and_surface_potential",
+      "lineno": 897,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "0",
+      "replacement": "1",
+      "seconds": 5.88,
+      "stage": 2,
+      "summary": "shift_constant in bessel_jn_yn: 0 -> 1",
+      "verdict": "killed"
+    },
+    {
+      "col": 13,
+      "family_tests": [
+        "tests/test_helmholtz_maccamy_fuchs.py"
+      ],
+      "function": "maccamy_fuchs_surface_potential",
+      "key": "tensorbem.analytic:973:13:swap_binop",
+      "killed_by": "tests/test_helmholtz_maccamy_fuchs.py::TestHelmholtzAndVerticalCylinderBEM::test_quadratic_convergence_of_force_moment_and_surface_potential",
+      "lineno": 973,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "jp + 1.0j * yp",
+      "replacement": "jp - 1j * yp",
+      "seconds": 5.98,
+      "stage": 2,
+      "summary": "swap_binop in maccamy_fuchs_surface_potential: jp + 1.0j * yp -> jp - 1j * yp",
+      "verdict": "killed"
+    },
+    {
+      "col": 53,
+      "family_tests": [
+        "tests/test_helmholtz_maccamy_fuchs.py"
+      ],
+      "function": "maccamy_fuchs_surface_potential",
+      "key": "tensorbem.analytic:975:53:swap_binop",
+      "killed_by": "tests/test_helmholtz_maccamy_fuchs.py::TestHelmholtzAndVerticalCylinderBEM::test_quadratic_convergence_of_force_moment_and_surface_potential",
+      "lineno": 975,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "m * theta",
+      "replacement": "m / theta",
+      "seconds": 5.52,
+      "stage": 2,
+      "summary": "swap_binop in maccamy_fuchs_surface_potential: m * theta -> m / theta",
+      "verdict": "killed"
+    },
+    {
+      "col": 40,
+      "family_tests": [
+        "tests/test_helmholtz_maccamy_fuchs.py"
+      ],
+      "function": "maccamy_fuchs_diffraction",
+      "key": "tensorbem.analytic:1025:40:shift_constant",
+      "killed_by": null,
+      "lineno": 1025,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "50.0",
+      "replacement": "100.0",
+      "seconds": 8.38,
+      "stage": 2,
+      "summary": "shift_constant in maccamy_fuchs_diffraction: 50.0 -> 100.0",
+      "verdict": "survived"
+    },
+    {
+      "col": 22,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1171:22:swap_binop",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_floating_hemisphere_irregular_frequency_chief_suppression",
+      "lineno": 1171,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "g * nu",
+      "replacement": "g / nu",
+      "seconds": 16.22,
+      "stage": 2,
+      "summary": "swap_binop in hulme_hemisphere_radiation: g * nu -> g / nu",
+      "verdict": "killed"
+    },
+    {
+      "col": 8,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1176:8:swap_binop",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_hulme_reference_limits_tables_and_reciprocity",
+      "lineno": 1176,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "0.5 * weights",
+      "replacement": "0.5 / weights",
+      "seconds": 6.03,
+      "stage": 2,
+      "summary": "swap_binop in hulme_hemisphere_radiation: 0.5 * weights -> 0.5 / weights",
+      "verdict": "killed"
+    },
+    {
+      "col": 24,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1198:24:swap_binop",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_hulme_reference_limits_tables_and_reciprocity",
+      "lineno": 1198,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "2 * m_max + 4",
+      "replacement": "2 * m_max - 4",
+      "seconds": 5.88,
+      "stage": 2,
+      "summary": "swap_binop in hulme_hemisphere_radiation: 2 * m_max + 4 -> 2 * m_max - 4",
+      "verdict": "killed"
+    },
+    {
+      "col": 43,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1207:43:swap_binop",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_hulme_reference_limits_tables_and_reciprocity",
+      "lineno": 1207,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "2 * n",
+      "replacement": "2 / n",
+      "seconds": 5.38,
+      "stage": 2,
+      "summary": "swap_binop in hulme_hemisphere_radiation: 2 * n -> 2 / n",
+      "verdict": "killed"
+    },
+    {
+      "col": 30,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1235:30:negate_constant",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_hulme_reference_limits_tables_and_reciprocity",
+      "lineno": 1235,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "1",
+      "replacement": "-1",
+      "seconds": 4.96,
+      "stage": 2,
+      "summary": "negate_constant in hulme_hemisphere_radiation: 1 -> -1",
+      "verdict": "killed"
+    },
+    {
+      "col": 14,
+      "family_tests": [
+        "tests/test_floating_hemisphere_3d.py",
+        "tests/test_hulme_diffraction_verification.py",
+        "tests/test_kochin_validation.py"
+      ],
+      "function": "hulme_hemisphere_radiation",
+      "key": "tensorbem.analytic:1238:14:negate_constant",
+      "killed_by": "tests/test_floating_hemisphere_3d.py::test_hulme_reference_limits_tables_and_reciprocity",
+      "lineno": 1238,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "2",
+      "replacement": "-2",
+      "seconds": 5.15,
+      "stage": 2,
+      "summary": "negate_constant in hulme_hemisphere_radiation: 2 -> -2",
+      "verdict": "killed"
+    },
+    {
+      "col": 15,
+      "family_tests": [
+        "tests/test_submerged_sphere_wave_3d.py"
+      ],
+      "function": "submerged_sphere_wave_multipole",
+      "key": "tensorbem.analytic:1345:15:shift_constant",
+      "killed_by": "tests/test_submerged_sphere_wave_3d.py::test_submerged_sphere_multipole_deep_limit_and_exact_haskind",
+      "lineno": 1345,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "1.0",
+      "replacement": "2.0",
+      "seconds": 5.07,
+      "stage": 2,
+      "summary": "shift_constant in submerged_sphere_wave_multipole: 1.0 -> 2.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 17,
+      "family_tests": [
+        "tests/test_submerged_sphere_wave_3d.py"
+      ],
+      "function": "submerged_sphere_wave_multipole",
+      "key": "tensorbem.analytic:1348:17:negate_constant",
+      "killed_by": "tests/test_submerged_sphere_wave_3d.py::test_submerged_sphere_multipole_deep_limit_and_exact_haskind",
+      "lineno": 1348,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "1",
+      "replacement": "-1",
+      "seconds": 5.17,
+      "stage": 2,
+      "summary": "negate_constant in submerged_sphere_wave_multipole: 1 -> -1",
+      "verdict": "killed"
+    },
+    {
+      "col": 30,
+      "family_tests": [
+        "tests/test_submerged_sphere_wave_3d.py"
+      ],
+      "function": "submerged_sphere_wave_multipole._solve_azimuthal",
+      "key": "tensorbem.analytic:1374:30:shift_constant",
+      "killed_by": "tests/test_submerged_sphere_wave_3d.py::test_submerged_sphere_multipole_deep_limit_and_exact_haskind",
+      "lineno": 1374,
+      "module": "tensorbem.analytic",
+      "operator": "shift_constant",
+      "original": "0.5",
+      "replacement": "1.0",
+      "seconds": 5.1,
+      "stage": 2,
+      "summary": "shift_constant in submerged_sphere_wave_multipole._solve_azimuthal: 0.5 -> 1.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 23,
+      "family_tests": [
+        "tests/test_submerged_sphere_wave_3d.py"
+      ],
+      "function": "submerged_sphere_wave_multipole._solve_azimuthal",
+      "key": "tensorbem.analytic:1393:23:negate_constant",
+      "killed_by": "tests/test_submerged_sphere_wave_3d.py::test_submerged_sphere_multipole_deep_limit_and_exact_haskind",
+      "lineno": 1393,
+      "module": "tensorbem.analytic",
+      "operator": "negate_constant",
+      "original": "1.0",
+      "replacement": "-1.0",
+      "seconds": 5.72,
+      "stage": 2,
+      "summary": "negate_constant in submerged_sphere_wave_multipole._solve_azimuthal: 1.0 -> -1.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 17,
+      "family_tests": [
+        "tests/test_submerged_sphere_wave_3d.py"
+      ],
+      "function": "submerged_sphere_wave_multipole",
+      "key": "tensorbem.analytic:1414:17:swap_binop",
+      "killed_by": null,
+      "lineno": 1414,
+      "module": "tensorbem.analytic",
+      "operator": "swap_binop",
+      "original": "b33_ff_phys / (rho * omega * volume)",
+      "replacement": "b33_ff_phys * (rho * omega * volume)",
+      "seconds": 14.58,
+      "stage": 2,
+      "summary": "swap_binop in submerged_sphere_wave_multipole: b33_ff_phys / (rho * omega * volume) -> b33_ff_phys * (rho * omega * volume)",
+      "verdict": "survived"
+    }
+  ],
+  "score": {
+    "done": 24,
+    "invalid": 0,
+    "killed": 19,
+    "selected": 24,
+    "survived": 3,
+    "timeout": 2
+  },
+  "seed": 20261104,
+  "unit_tests": [
+    "tests/test_analytic_references.py"
+  ]
+}
