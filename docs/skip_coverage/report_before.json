@@ -1,0 +1,115 @@
+{
+  "rows": [
+    {
+      "artifact": "outputs/finite_depth_energy_identity/convergence.json",
+      "constant": "ARTIFACT",
+      "module": "test_finite_depth_energy_convergence.py",
+      "module_visible": false,
+      "skip_reasons": [
+        "benchmark artifact not generated"
+      ],
+      "tests": [
+        "test_committed_artifact_is_reproducible",
+        "test_deep_water_control_shows_the_same_offset",
+        "test_report_tables_match_the_artifact_verbatim"
+      ],
+      "verdict": "UNTRACKED"
+    },
+    {
+      "artifact": "docs/finite_depth_envelope/benchmark.json",
+      "constant": "ARTIFACT",
+      "module": "test_finite_depth_envelope.py",
+      "module_visible": true,
+      "skip_reasons": [
+        "; regenerate with python -m tensorbem.benchmarks.finite_depth_envelope",
+        "missing artifact "
+      ],
+      "tests": [
+        "artifact"
+      ],
+      "verdict": "VERSIONED"
+    },
+    {
+      "artifact": "docs/m2952/outputs/finite_depth_refinement/benchmark.json",
+      "constant": "ARTEFACT",
+      "module": "test_finite_depth_refinement.py",
+      "module_visible": true,
+      "skip_reasons": [
+        "benchmark artefact not present"
+      ],
+      "tests": [
+        "test_committed_artefact_is_internally_consistent"
+      ],
+      "verdict": "VERSIONED"
+    },
+    {
+      "artifact": "docs/mixed_boundary/outputs/study.json",
+      "constant": "ARTIFACT",
+      "module": "test_mixed_boundary.py",
+      "module_visible": true,
+      "skip_reasons": [
+        "study artifact not committed"
+      ],
+      "tests": [
+        "test_committed_artifact_reproduces_the_study"
+      ],
+      "verdict": "VERSIONED"
+    },
+    {
+      "artifact": "docs/m3383/near_surface_band_study.json",
+      "constant": "STUDY",
+      "module": "test_near_surface_band.py",
+      "module_visible": true,
+      "skip_reasons": [
+        "band study artifact missing: "
+      ],
+      "tests": [
+        "study_rows",
+        "test_pinned_working_point_is_reproducible"
+      ],
+      "verdict": "VERSIONED"
+    },
+    {
+      "artifact": "outputs/ursell_reproducibility_study.json",
+      "constant": "STUDY_JSON",
+      "module": "test_ursell_reference_pinning.py",
+      "module_visible": false,
+      "skip_reasons": [
+        "reproducibility study artifact not present"
+      ],
+      "tests": [
+        "test_recorded_convergence_is_first_order",
+        "test_study_artifact_matches_the_current_code"
+      ],
+      "verdict": "UNTRACKED"
+    }
+  ],
+  "summary": {
+    "ci_generated": 0,
+    "dark_modules": [
+      "test_finite_depth_energy_convergence.py",
+      "test_ursell_reference_pinning.py"
+    ],
+    "guarded_artifacts": 6,
+    "modules_with_guards": [
+      "test_finite_depth_energy_convergence.py",
+      "test_finite_depth_envelope.py",
+      "test_finite_depth_refinement.py",
+      "test_mixed_boundary.py",
+      "test_near_surface_band.py",
+      "test_ursell_reference_pinning.py"
+    ],
+    "untracked": 2,
+    "untracked_paths": [
+      "outputs/finite_depth_energy_identity/convergence.json",
+      "outputs/ursell_reproducibility_study.json"
+    ],
+    "versioned": 4,
+    "visible_modules": [
+      "test_finite_depth_envelope.py",
+      "test_finite_depth_refinement.py",
+      "test_mixed_boundary.py",
+      "test_near_surface_band.py"
+    ]
+  }
+}

@@ -39,6 +39,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDY_JSON = ROOT / "outputs" / "ursell_reproducibility_study.json"
+#: Versioned copy of the same study, committed by m2232.  ``outputs/`` is
+#: git-ignored, so a clean checkout -- and therefore CI -- only ever sees this
+#: archive.  Guarding on ``STUDY_JSON.exists()`` alone made the two artifact
+#: tests below silently skip everywhere except on the machine that generated
+#: the file; see docs/skip_coverage/audit.md.
+STUDY_ARCHIVE = (
+    ROOT / "docs" / "m2232" / "outputs" / "ursell_reproducibility_study.json"
+)
+
+
+def _study() -> dict:
+    """The reproducibility study, from the fresh or the archived location.
+
+    A missing study is a failure, not a skip: both copies are part of the
+    checkout contract (one regenerated, one committed).
+    """
+    for candidate in (STUDY_JSON, STUDY_ARCHIVE):
+        if candidate.exists():
+            return json.loads(candidate.read_text())
+    raise AssertionError(
+        f"no Ursell reproducibility study in {STUDY_JSON} or {STUDY_ARCHIVE}; "
+        "regenerate with `python examples/ursell_reproducibility_study.py`"
+    )
 
 BASE = dict(radius=1.0, submergence=2.0, ka=0.6, density=1025.0, gravity=9.80665)
 
@@ -97,10 +120,8 @@ def test_smooth_part_quadrature_saturates_above_six_nodes() -> None:
 
 
 def test_study_artifact_matches_the_current_code(result64: dict) -> None:
-    """The committed study artifact must still describe the committed code."""
-    if not STUDY_JSON.exists():  # pragma: no cover - artifact is committed
-        pytest.skip("reproducibility study artifact not present")
-    payload = json.loads(STUDY_JSON.read_text())
+    """The study artifact, fresh or archived, must describe the current code."""
+    payload = _study()
     row = next(r for r in payload["panel_sweep"] if r["panels"] == 64)
 
     assert row["added_mass"] == pytest.approx(result64["panel_added_mass"], rel=1.0e-6)
@@ -117,9 +138,7 @@ def test_study_artifact_matches_the_current_code(result64: dict) -> None:
 
 def test_recorded_convergence_is_first_order() -> None:
     """The study artifact must show the first-order trend the report claims."""
-    if not STUDY_JSON.exists():  # pragma: no cover
-        pytest.skip("reproducibility study artifact not present")
-    payload = json.loads(STUDY_JSON.read_text())
+    payload = _study()
     rows = payload["panel_sweep"]
     panels = [r["panels"] for r in rows]
     assert panels == [64, 128, 256]

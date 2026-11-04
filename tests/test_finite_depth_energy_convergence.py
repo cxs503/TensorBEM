@@ -30,12 +30,31 @@ from tensorbem.benchmarks.finite_depth_energy_convergence import (
 from tensorbem.benchmarks.finite_depth_radiation import submerged_circle_mesh
 from tensorbem.finite_depth_solver import _solve_sources
 
-ARTIFACT = (
-    Path(__file__).resolve().parents[1]
+_ROOT = Path(__file__).resolve().parents[1]
+ARTIFACT = _ROOT / "outputs" / "finite_depth_energy_identity" / "convergence.json"
+#: Versioned copy of the same convergence study, committed by m2498.  The
+#: ``outputs/`` copy is git-ignored, so on a clean checkout (and on CI) only
+#: this archive exists; see docs/skip_coverage/audit.md.
+ARTIFACT_ARCHIVE = (
+    _ROOT
+    / "docs"
+    / "m2498"
     / "outputs"
     / "finite_depth_energy_identity"
     / "convergence.json"
 )
+
+
+def _artifact() -> dict:
+    """The convergence study JSON, from the fresh or the archived location."""
+    for candidate in (ARTIFACT, ARTIFACT_ARCHIVE):
+        if candidate.exists():
+            return json.loads(candidate.read_text())
+    raise AssertionError(
+        f"no convergence study in {ARTIFACT} or {ARTIFACT_ARCHIVE}; regenerate with "
+        "`python -m tensorbem.benchmarks.finite_depth_energy_convergence --json "
+        "outputs/finite_depth_energy_identity/convergence.json`"
+    )
 
 SHALLOW_DEPTH = 3.2
 KA = 0.6
@@ -128,7 +147,6 @@ def test_mfs_reference_is_independent_but_converged():
     assert 1.0e-3 < gap < 1.0e-1
 
 
-@pytest.mark.skipif(not ARTIFACT.exists(), reason="benchmark artifact not generated")
 def test_report_tables_match_the_artifact_verbatim():
     """The tables in the report are generated from the JSON, not transcribed."""
     import importlib.util
@@ -142,16 +160,15 @@ def test_report_tables_match_the_artifact_verbatim():
     spec = importlib.util.spec_from_file_location("_fd_energy_tables", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    payload = json.loads(ARTIFACT.read_text())
+    payload = _artifact()
     report = (path.parent / "report.md").read_text()
     for name, block in module.blocks(payload).items():
         assert f"<!-- BEGIN:{name} -->\n{block}\n<!-- END:{name} -->" in report, name
 
 
-@pytest.mark.skipif(not ARTIFACT.exists(), reason="benchmark artifact not generated")
 def test_committed_artifact_is_reproducible():
     """The numbers quoted in the documentation come from this file."""
-    payload = json.loads(ARTIFACT.read_text())
+    payload = _artifact()
     rows = [
         row for row in payload["rows"]
         if row["depth"] == pytest.approx(SHALLOW_DEPTH)
@@ -178,14 +195,13 @@ def test_committed_artifact_is_reproducible():
     assert summary["near_vs_far_limit_rel"] < 5.0e-3
 
 
-@pytest.mark.skipif(not ARTIFACT.exists(), reason="benchmark artifact not generated")
 def test_deep_water_control_shows_the_same_offset():
     """The already-verified deep-water solver shows the same 1 % at 64 panels.
 
     That is the reason the offset is attributed to the panel discretisation:
     it is not a property of the finite-depth kernel.
     """
-    payload = json.loads(ARTIFACT.read_text())
+    payload = _artifact()
     rows = [
         row for row in payload["deep_water_control"]
         if row["motion"] == "heave" and row["panels"] == 64
