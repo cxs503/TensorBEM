@@ -36,6 +36,16 @@ def _validate_length(name: str, value: float) -> float:
     return number
 
 
+def _as_point_array(points: FloatArray) -> FloatArray:
+    """Return ``points`` as a finite ``(M, 2)`` float array."""
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 2:
+        raise ValueError("points must have shape (M, 2)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    return targets
+
+
 @dataclass(frozen=True)
 class PanelMesh:
     """A closed, counter-clockwise polygon discretized into straight panels.
@@ -104,6 +114,47 @@ class PanelMesh:
                 - points[:, 1] * np.roll(points[:, 0], -1)
             )
         )
+
+
+
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """Return ``True`` for points strictly inside the closed polygon.
+
+        The test is a ray cast along ``+x`` with the half-open rule
+        ``(y_start > y) != (y_end > y)``, so a ray that passes exactly through a
+        vertex is counted once by that vertex's incident edges. Points that lie
+        *on* the boundary are not classified here; :meth:`boundary_clearance`
+        returns ``0`` for them.
+        """
+        targets = _as_point_array(points)
+        inside = np.zeros(len(targets), dtype=bool)
+        x_coords = targets[:, 0]
+        y_coords = targets[:, 1]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            for start, end in zip(self.vertices, self.ends):
+                straddles = (start[1] > y_coords) != (end[1] > y_coords)
+                crossing_x = start[0] + (end[0] - start[0]) * (
+                    y_coords - start[1]
+                ) / (end[1] - start[1])
+                inside ^= straddles & (x_coords < crossing_x)
+        return inside
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to the polygon boundary."""
+        targets = _as_point_array(points)
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        lengths_squared = np.sum(self.vectors**2, axis=1)
+        for start, segment, length_squared in zip(
+            self.vertices, self.vectors, lengths_squared
+        ):
+            projection = np.clip(
+                (targets - start) @ segment / length_squared, 0.0, 1.0
+            )
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
 
 
 def regular_polygon(panel_count: int, radius: float = 1.0) -> PanelMesh:
