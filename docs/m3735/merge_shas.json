@@ -1,0 +1,22 @@
+{
+  "repo": "cxs503/TensorBEM",
+  "pr": 128,
+  "merge_base": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+  "main_sha_before": "b420b2ee1e98276f341a10eafe3fda2d80807756",
+  "agent_m3181_sha_before": "55db3976dc283e9522334f2ab7309fc655f3ae27",
+  "agent_m3181_sha_after": "resolve with: git rev-parse agent/m3735  (platform pushes this branch; a SHA cannot be recorded inside the commit it identifies)",
+  "merge_commit": "same as agent/m3735 tip (parent: b420b2e = origin/main before the merge)",
+  "strategy": "git merge --no-ff origin/agent/m3181 on top of origin/main + manual semantic union of 2 conflicted files",
+  "conflicted_files": [
+    "src/tensorbem/benchmarks/declared_numbers.py",
+    "tests/test_declared_numbers.py"
+  ],
+  "auto_merged_reviewed": [
+    "docs/marine_bem_benchmarks.md"
+  ],
+  "line_audit": {
+    "m3181": "3033/3033",
+    "main": "16899/16899",
+    "silent_loss": 0
+  }
+}
