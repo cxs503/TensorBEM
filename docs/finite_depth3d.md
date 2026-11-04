@@ -36,9 +36,9 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 
 | $h$ [m] | free-surface residual $\|\partial_zG-\nu G\|/\|\nu G\|$ | bottom residual |
 |---|---|---|
-| 2 | 1.260e-15 | 0.000e+00 |
-| 4 | 7.192e-15 | 0.000e+00 |
-| 10 | 7.847e-15 | 0.000e+00 |
+| 2 | 1.476e-15 | 0.000e+00 |
+| 4 | 7.239e-15 | 0.000e+00 |
+| 10 | 8.098e-15 | 0.000e+00 |
 | 40 | 2.430e-12 | 0.000e+00 |
 
 ### 3.3 Deep-water limit against the independent Kelvin kernel
@@ -55,7 +55,7 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 
 ### 3.4 Far field ($h=4$ m, $k_0=$ 0.609242 1/m)
 
-* spreading: $\mathrm{ptp}(|G|\sqrt{k_0R})/\mathrm{mean} = 2.254e-04> 25$ m;
+* spreading: $\mathrm{ptp}(|G|\sqrt{k_0R})/\mathrm{mean} = 2.254e-04$ for $k_0R > 25$ m;
 
 * phase slope $\mathrm{d}\arg G/\mathrm{d}(k_0R) = 1.000124$ (1.0 expected);
 
@@ -94,7 +94,13 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 * Far field: spreading flatness 2.254e-04, phase slope 1.000124.
 * Singularity strength extrapolates to 1 within 1.176e-03 at $r=2.5\times10^-3$ m.
 
-## 6. Limitations / next step
+## 6. Declared-number gate
+
+* Every cell of the tables above and every number of the verdict section is re-measured by `src/tensorbem/benchmarks/finite_depth3d_pins.py`, which parses this document, recomputes the quantity from `tensorbem.finite_depth3d` (and from `tensorbem.free_surface3d` for the deep-water column) and judges it against the half-ulp of the digit printed here.  The strict ledger is `docs/finite_depth3d_pins.json`; `tests/test_finite_depth3d_doc_pins.py` re-runs it, so a kernel change that moves any published number fails the suite instead of silently invalidating this document.
+* Four quantities are compared with references that share no code with the implementation: $k_0$ against an independent bisection of $k\tanh(kh)=\nu$, $c_g$ against a central difference of $\omega(k)=\sqrt{gk\tanh(kh)}$, the far-field phase slope against the analytic value one, and $4\pi rG$ against the analytic value one.  The document is also checked against itself: the verdict section must quote the extremes of the tables above, and the tables must agree with the `study.json` written by this script.
+* Reproduce: `PYTHONPATH=src python3 -m tensorbem.benchmarks.finite_depth3d_pins --check` (exit status is non-zero on drift), or `--write` to refresh the ledger.
+
+## 7. Limitations / next step
 
 * **No BEM solver yet.** Panel integration, the single/double-layer jump relations and the CHIEF/lid treatment for surface-piercing hulls in finite depth are the next increment; Garrett's truncated dock is the natural first diffraction benchmark.
 * Only $\partial G/\partial z$ is analytic; a horizontal derivative needs $K_1$/$H_1$ and belongs to the panel layer.
