@@ -1,0 +1,59 @@
+{
+  "comment": "Explicit, reviewable exceptions for docs/m3737/verify_merge_union.py. Every entry is a line that one side of the m3181<->main merge added and that the merged blob does not contain verbatim, together with the reason. No entry here removes content: each is an identifier rename or a comment rewrite that keeps the original statement's meaning, and the original wording is reproduced verbatim in docs/m3737/merge_report.md.",
+  "allow": [
+    {
+      "path": "src/tensorbem/benchmarks/declared_numbers.py",
+      "side": "theirs",
+      "line": "def _chief_rows():",
+      "reason": "Identifier de-collision: main also defines _chief_rows(rows) (the measurement flattener, defined later in the file and therefore silently shadowing this registry builder at import time). Renamed to _free_surface_3d_chief_rows(); docstring kept and extended with the reason."
+    },
+    {
+      "path": "src/tensorbem/benchmarks/declared_numbers.py",
+      "side": "theirs",
+      "line": "        + _chief_rows()",
+      "reason": "Call site of the renamed _free_surface_3d_chief_rows() inside _free_surface_3d_rows()."
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "side": "ours",
+      "line": "        # sign-bearing quantities exist (e.g. the unphysical negative B33' that",
+      "reason": "Both sides rewrote the same two-line comment to say the same thing; the merge keeps one comment containing both statements (see merged lines 81-84)."
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "side": "ours",
+      "line": "        # table 11 quotes as the defect CHIEF removes), so only zero is illegal",
+      "reason": "Same comment rewrite as above; the merged comment states 'table 11 quotes as the defect CHIEF removes' and 'so only an exact zero is illegal'."
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "side": "theirs",
+      "line": "        # A quote may legitimately be non-positive: the unregularized",
+      "reason": "Same comment rewrite as above; 'a quote may legitimately be non-positive' is preserved in the merged comment."
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "side": "theirs",
+      "line": "        # 3-D BIE produces an unphysical negative heave damping, and that",
+      "reason": "Same comment rewrite as above; 'the 3-D BIE produces that negative heave damping' is preserved in the merged comment."
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "side": "theirs",
+      "line": "        # sign is exactly the claim the table makes.",
+      "reason": "Same comment rewrite as above; 'the sign is the claim the table makes' is preserved in the merged comment."
+    },
+    {
+      "path": "docs/marine_bem_benchmarks.md",
+      "side": "theirs",
+      "line": "**结论**：三维自由液面层（Kelvin/Havelock Green 函数、6-DOF 辐射–绕射、Kochin/Haskind 守恒、免盖板 CHIEF）的文档数字在四位有效数字上全部可复现，未发现腐化；文档不需要改数。",
+      "reason": "Rewritten, not dropped: the unconditional 'the document needs no number change' is false once merged with m3150's four-cell re-quote. The conclusion is replaced by the same sentence restricted to 59/63 cells plus a pointer to the new reconciliation table; the original wording is quoted in docs/m3737/merge_report.md."
+    },
+    {
+      "path": "src/tensorbem/benchmarks/declared_numbers.py",
+      "side": "theirs",
+      "line": "    \"\"\"One :class:`DeclaredNumber` per cell of the irregular-frequency table.\"\"\"",
+      "reason": "Docstring of the renamed _free_surface_3d_chief_rows(); original sentence kept verbatim as its first line, extended with the rename reason."
+    }
+  ]
+}

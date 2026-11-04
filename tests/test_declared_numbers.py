@@ -19,6 +19,7 @@ table, not a regression gate.
 import json
 import math
 import os
+from pathlib import Path
 import subprocess
 import sys
 
@@ -78,8 +79,10 @@ def test_registry_is_well_formed():
         assert entry.source.strip()
         assert entry.description.strip()
         assert math.isfinite(entry.declared)
-        # sign-bearing quantities exist (e.g. the unphysical negative B33' that
-        # table 11 quotes as the defect CHIEF removes), so only zero is illegal
+        # Sign-bearing quantities are legal (e.g. the unphysical negative
+        # B33' that table 11 quotes as the defect CHIEF removes): the plain
+        # 3-D BIE produces that negative heave damping and the sign is the
+        # claim the table makes, so only an exact zero is illegal.
         assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
@@ -89,18 +92,108 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme3d",
+        "hulme3d_chief",
         "hulme_chief",
         "hulme_hemisphere",
         "interior_harmonics",
         "submerged_sphere",
         "ursell",
         "ursell_reference",
+        "wang_linton3d",
     } <= groups
+
+
+def test_three_dimensional_free_surface_tables_are_fully_registered():
+    """Every cell of tables 10-12 has a registry row, and the rows of one table
+    share a single solve (identical parameters)."""
+    hulme = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme3d"]
+    chief = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme3d_chief"]
+    sphere = [entry for entry in DECLARED_NUMBERS if entry.group == "wang_linton3d"]
+    # Table 10: 6 columns x 3 mesh levels + 5 observed orders x 2 refined levels.
+    assert len(hulme) == 28
+    # Table 11: 2 exact + 3 unregularized + 4 CHIEF cells.
+    assert len(chief) == 9
+    # Table 12: 6 columns x 3 mesh levels + 4 observed orders x 2 refined levels.
+    assert len(sphere) == 26
+    for table in (hulme, chief, sphere):
+        assert len({json.dumps(entry.parameters, sort_keys=True) for entry in table}) == 1
+        assert {entry.tier for entry in table} == {"heavy"}
+    # The passivity claim of table 11 needs the sign of both dampings.
+    signed = {entry.key: entry.declared for entry in chief}
+    assert signed["hulme_chief_unregularized_b33_dimless"] < 0.0
+    assert signed["hulme_chief_chief_regularized_b33_dimless"] > 0.0
+    # The 20-panel rotational coupling is quoted as machine zero: upper bound.
+    machine_zero = [
+        entry
+        for entry in sphere
+        if entry.key == "wang_linton_rotational_added_mass_max_ratio_20"
+    ]
+    assert machine_zero[0].kind == "upper"
 
 
 # --------------------------------------------------------------------------
 # The quoted numbers
 # --------------------------------------------------------------------------
+
+
+def test_three_dimensional_b11_order_conventions_are_reconciled():
+    """The merge of agent/m3181 into main keeps *two* registrations of table
+    10's ``B11'`` observed order and of table 12's rotational coupling.
+
+    ``hulme3d`` / ``wang_linton3d`` (this branch) normalise the order by
+    ``log2(e0/e1)``, i.e. ideal ``h`` halving; ``hulme_hemisphere`` /
+    ``submerged_sphere`` (main, m3150) normalise by the measured ``h_mean``
+    ratio and quote the rotational couplings with four significant digits.
+    Both are reproducible, so both must survive; dropping either side would make
+    the document silently self-contradictory.  This test pins the coexistence
+    and the exact algebraic relation between the two conventions.
+    """
+    by_key = {entry.key: entry for entry in DECLARED_NUMBERS}
+    # --- table 10, observed order of B11' (one registration per convention) --
+    log2_order = {64: by_key["hulme_observed_order_b11_64"].declared,
+                  256: by_key["hulme_observed_order_b11_256"].declared}
+    measured_order = {64: by_key["hulme_hemisphere_64_order_b11"].declared,
+                      256: by_key["hulme_hemisphere_256_order_b11"].declared}
+    # both sides of the merge contributed their rows
+    assert by_key["hulme_observed_order_b11_64"].group == "hulme3d"
+    assert by_key["hulme_hemisphere_64_order_b11"].group == "hulme_hemisphere"
+    # log2(e0/e1) <= log_h(e0/e1) whenever h_ratio < 2, i.e. the two are not
+    # copies of each other; an accidental dedupe shows up as equality here.
+    for panels in (64, 256):
+        assert log2_order[panels] < measured_order[panels]
+        # order_h = order_log2 * ln2 / ln(h_ratio)  ->  h_ratio = 2**(log2/h)
+        h_ratio = 2.0 ** (log2_order[panels] / measured_order[panels])
+        assert 1.80 < h_ratio < 2.00, (panels, h_ratio)
+    # meshes refine towards h_ratio -> 2, so the implied ratio must grow.
+    h_ratio_16_64 = 2.0 ** (log2_order[64] / measured_order[64])
+    h_ratio_64_256 = 2.0 ** (log2_order[256] / measured_order[256])
+    assert h_ratio_16_64 < h_ratio_64_256
+    # The m3150 note quotes h0/h1 = 1.87 for the first pair; the identity must
+    # reproduce the measured-h order from it to better than the registry band.
+    assert abs(log2_order[64] * math.log(2.0) / math.log(1.87)
+               - measured_order[64]) < 0.02
+
+    # --- table 12, rotational coupling: 2 vs 4 significant digits ----------
+    two_sig = {80: by_key["wang_linton_rotational_added_mass_max_ratio_80"],
+               320: by_key["wang_linton_rotational_added_mass_max_ratio_320"]}
+    four_sig = {80: by_key["submerged_sphere_80_rotational_coupling"],
+                320: by_key["submerged_sphere_320_rotational_coupling"]}
+    for panels in (80, 320):
+        assert two_sig[panels].group == "wang_linton3d"
+        assert four_sig[panels].group == "submerged_sphere"
+        assert two_sig[panels].declared != four_sig[panels].declared
+        # the two-significant-digit registration carries the rounding band as
+        # its tolerance, and the four-significant-digit value sits inside it.
+        rel = abs(two_sig[panels].declared / four_sig[panels].declared - 1.0)
+        assert rel <= two_sig[panels].tolerance, (panels, rel)
+
+    # --- the document states both conventions, explicitly reconciled -------
+    text = (Path(__file__).resolve().parents[1] / "docs/marine_bem_benchmarks.md").read_text()
+    assert "2.23 / 1.59 / 2.04 / 1.80 / 1.77" in text, "table 10's measured-h row"
+    assert "2.06 / 1.98 / 2.01 / 1.94 / 2.02" in text, "table 10's measured-h row"
+    assert "口径对齐" in text, "the reconciliation block must stay in section 4.12"
+    assert "1.8021" in text and "1.9377" in text
 
 
 def test_fast_tier_reproduces_the_documented_numbers():
@@ -310,6 +403,72 @@ def test_repeated_quantities_share_one_solve():
     report = check(tiers=("standard",), entries=entries, runner=runner)
     assert len(calls) == 1
     assert report["summary"]["verdict"] == "PASS"
+
+
+@HEAVY
+def test_documented_hulme_tables_are_reproduced():
+    """Tables 10 and 11 of docs/marine_bem_benchmarks.md.
+
+    Table 10 (mesh refinement at Ka = 1.0) and table 11 (the lid-free, five-point
+    3-D CHIEF suppression of the waterplane resonance at Ka = 2.58) quote
+    thirty-seven numbers that no test recomputed. The reference is Hulme's
+    semi-analytical wave-free multipole solution, which shares no code with the
+    panel assembly, so a drift here separates an assembly regression from a
+    reference regression.
+    """
+    report = check(
+        tiers=("heavy",),
+        entries=tuple(
+            entry
+            for entry in DECLARED_NUMBERS
+            if entry.group in {"hulme3d", "hulme3d_chief"}
+        ),
+    )
+    assert report["summary"]["checked"] == 37
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    # Second-order convergence is the physical content of the table, not a
+    # coincidence of three decimals: the finest level must land near 2.
+    for mode in ("a33", "b33", "a11", "b11", "fz"):
+        assert 1.7 <= measured[f"hulme_observed_order_{mode}_256"] <= 2.3
+    # Lid-free CHIEF must restore conditioning and passivity at the same time.
+    assert (
+        measured["hulme_chief_chief_regularized_condition_number"]
+        < 0.1 * measured["hulme_chief_unregularized_condition_number"]
+    )
+    assert measured["hulme_chief_unregularized_b33_dimless"] < 0.0
+    assert measured["hulme_chief_chief_regularized_b33_dimless"] > 0.0
+
+
+@HEAVY
+def test_documented_wang_linton_table_is_reproduced():
+    """Table 12: submerged sphere, f/a = 1.5, Ka = 0.8, 20/80/320 panels.
+
+    The reference is the closed-form Thorne/Wang/Linton multipole system (exact
+    factorials and Ei(2*nu*f), no numerical quadrature), an anchor independent of
+    the Kelvin kernel used by the panel solver.
+    """
+    report = check(
+        tiers=("heavy",),
+        entries=tuple(
+            entry for entry in DECLARED_NUMBERS if entry.group == "wang_linton3d"
+        ),
+    )
+    assert report["summary"]["checked"] == 26
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    for mode in ("a33", "b33", "a11", "fz"):
+        assert 1.7 <= measured[f"wang_linton_observed_order_{mode}_320"] <= 2.3
+    # Rotational coupling about the sphere centre must stay negligible.
+    assert measured["wang_linton_rotational_added_mass_max_ratio_20"] < 1.0e-20
 
 
 # --------------------------------------------------------------------------
