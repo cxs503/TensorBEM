@@ -1,0 +1,206 @@
+[
+ {
+  "module": "kernels",
+  "function": "_log_distance_primitive",
+  "old": 0,
+  "new": 2
+ },
+ {
+  "module": "free_surface",
+  "function": "_validate_frequency",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "free_surface",
+  "function": "_check_scaled_depth",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "free_surface",
+  "function": "_pv_cosine",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "free_surface",
+  "function": "_pv_sine",
+  "old": 0,
+  "new": 7
+ },
+ {
+  "module": "free_surface",
+  "function": "_broadcast_inputs",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "hydrostatic",
+  "function": "_trace_waterline_loops",
+  "old": 1,
+  "new": 1
+ },
+ {
+  "module": "hydrostatic",
+  "function": "_point_in_polygon",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "solver",
+  "function": "_validate_domain",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "solver",
+  "function": "_solve",
+  "old": 8,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_validate_nu",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_resolve_modes",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_validate_depth",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_scaled_mode_factors",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_log_series",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_cos_series",
+  "old": 0,
+  "new": 7
+ },
+ {
+  "module": "finite_depth",
+  "function": "_sin_series",
+  "old": 0,
+  "new": 7
+ },
+ {
+  "module": "finite_depth",
+  "function": "_broadcast",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "finite_depth",
+  "function": "_modal_terms",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "analytic",
+  "function": "_as_points",
+  "old": 0,
+  "new": 1
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_x",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_y",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_z",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_x2_minus_y2",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_2xy",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_2z2_minus_x2_minus_y2",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_x3_minus_3xy2",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_3x2y_minus_y3",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_x_4z2_minus_r2",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_harmonic_z_2z2_minus_3r2",
+  "old": 0,
+  "new": 0
+ },
+ {
+  "module": "analytic",
+  "function": "_positive",
+  "old": 6,
+  "new": 8
+ },
+ {
+  "module": "analytic",
+  "function": "_as_semi_axes",
+  "old": 0,
+  "new": 4
+ },
+ {
+  "module": "analytic",
+  "function": "_scaled_exponential_integral",
+  "old": 0,
+  "new": 8
+ },
+ {
+  "module": "analytic",
+  "function": "_ursell_multipole_system",
+  "old": 3,
+  "new": 8
+ }
+]

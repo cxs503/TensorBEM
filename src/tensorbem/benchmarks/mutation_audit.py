@@ -276,23 +276,90 @@ def apply_mutant(source: str, mutant: Mutant) -> str:
 #: Test files too slow to sit in an automatic re-check family (>100 s each).
 SLOW_TESTS = frozenset({"tests/test_analytic_references.py"})
 
-_FAMILY_CACHE: dict[str, list[str]] = {}
+_FAMILY_CACHE: dict[tuple[str, tuple[str, ...]], list[str]] = {}
 
 
-def sibling_tests(function: str, limit: int = 8) -> tuple[str, ...]:
-    """Test files that name ``function`` -- a cheap, automatic re-check family.
+def _module_call_graph(source: str) -> dict[str, frozenset[str]]:
+    """Map each module-level function to the module-level functions it calls.
+
+    Only module-level ``def``s participate: the audit locates mutants by their
+    enclosing function, and the family search only needs to know which entry
+    points reach a given helper.  Method calls (``self.x``) are ignored; the
+    audited modules are function-centric.
+    """
+    tree = ast.parse(source)
+    defs = {
+        node.name
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    }
+    graph: dict[str, set[str]] = {}
+    for node in tree.body:
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        called = {
+            sub.id
+            for sub in ast.walk(node)
+            if isinstance(sub, ast.Name) and sub.id in defs and sub.id != node.name
+        }
+        graph[node.name] = frozenset(called)
+    return graph
+
+
+def caller_names(source: str, function: str) -> tuple[str, ...]:
+    """Module-level functions that (transitively) call ``function``.
+
+    m3414 recorded this as a known limitation: for a module-level private
+    helper no test file names the helper, so the stage-2 family was empty and
+    the re-check spun idle even when a test of a public caller would kill the
+    mutant.  The transitive caller set is the AST answer to "who calls it":
+    any test that exercises a caller exercises the helper.
+    """
+    name = function.split(".")[-1]
+    if not name or name == "<module>":
+        return ()
+    graph = _module_call_graph(source)
+    if name not in graph:
+        return ()
+    seen: set[str] = set()
+    frontier = {name}
+    while frontier:
+        reached = {
+            f for f, callees in graph.items() if f not in seen and callees & frontier
+        }
+        frontier = reached - seen
+        seen |= frontier
+    return tuple(sorted(seen))
+
+
+def sibling_tests(
+    function: str,
+    limit: int = 8,
+    extra_names: tuple[str, ...] = (),
+) -> tuple[str, ...]:
+    """Test files that name ``function`` (or any of ``extra_names``).
 
     A survivor against the mapped unit tests is only a blind spot if the rest of
     the suite that *talks about* the mutated function also misses it.  Matching
     is textual on the function name, which is deliberately conservative: it can
     over-select (extra tests only make the verdict harsher), never under-select
     the closest tests.
+
+    ``extra_names`` (m3531): transitive callers of the mutated function from
+    the AST call graph.  A test that exercises a public caller exercises the
+    private helper too, so its file belongs to the re-check family even when it
+    never spells the helper's name.
     """
-    if function in _FAMILY_CACHE:
-        return tuple(_FAMILY_CACHE[function])
-    name = function.split(".")[-1]
+    cache_key = (function, extra_names)
+    if cache_key in _FAMILY_CACHE:
+        return tuple(_FAMILY_CACHE[cache_key])
+    names = {
+        n
+        for n in {function.split(".")[-1], *extra_names}
+        if n and n != "<module>" and len(n) > 2
+    }
     hits: list[str] = []
-    if name and name != "<module>" and len(name) > 2:
+    if names:
         for path in sorted((REPO_ROOT / "tests").glob("test_*.py")):
             rel = f"tests/{path.name}"
             if rel in SLOW_TESTS:
@@ -301,9 +368,9 @@ def sibling_tests(function: str, limit: int = 8) -> tuple[str, ...]:
                 text = path.read_text(encoding="utf-8", errors="ignore")
             except OSError:
                 continue
-            if name in text:
+            if any(n in text for n in names):
                 hits.append(rel)
-    _FAMILY_CACHE[function] = hits[:limit]
+    _FAMILY_CACHE[cache_key] = hits[:limit]
     return tuple(hits[:limit])
 
 
@@ -423,9 +490,14 @@ def _run_one(
     if verdict == "survived" and broaden:
         # A survival against the mapped unit tests only means the *closest*
         # tests miss it; re-check against every test file that names the
-        # mutated function before calling it a blind spot.
+        # mutated function before calling it a blind spot.  m3531: a private
+        # helper is exercised through its public callers, so the family also
+        # includes tests that name any transitive caller (AST call graph).
+        extra = caller_names(original, mutant.function)
         family = tuple(
-            t for t in sibling_tests(mutant.function) if t not in target.unit_tests
+            t
+            for t in sibling_tests(mutant.function, extra_names=extra)
+            if t not in target.unit_tests
         )
         if family:
             stage_rc, stage_out = run_tests(shadow_src, family, timeout)
