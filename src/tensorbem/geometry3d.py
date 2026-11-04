@@ -660,6 +660,117 @@ def submerged_sphere_mesh(
     return TriangleMesh(base.vertices + offset, base.faces)
 
 
+def floating_sphere_hull_mesh(
+    subdivisions: int,
+    radius: float = 1.0,
+    center: tuple[float, float, float] = (0.0, 0.0, -0.5),
+) -> WettedHullMesh:
+    """Return the wetted cap of a floating sphere truncated at ``z = 0``.
+
+    The body is the sphere of ``radius`` centred at ``center = (x0, y0, z0)``
+    with ``-radius < z0 < 0`` (centre below the calm waterplane, sphere
+    piercing it). The returned :class:`WettedHullMesh` contains the part of
+    the sphere with ``z <= 0``; its open boundary is the circular waterline of
+    radius ``sqrt(radius**2 - z0**2)`` centred at ``(x0, y0)``.
+
+    The geodesic sphere of :func:`icosphere` is clipped against the plane
+    ``z = 0`` triangle by triangle (Sutherland-Hodgman). Points are welded by
+    coordinates rounded to ``1e-12`` of the radius, which both closes the
+    waterline (cut points on a shared edge agree up to round-off) and keeps a
+    below-water vertex distinct from a waterline point above it. Clipping
+    preserves the counter-clockwise ordering of the source panels, hence
+    panel normals stay outward (into the fluid).
+    """
+    if isinstance(subdivisions, (bool, np.bool_)) or not isinstance(
+        subdivisions, (int, np.integer)
+    ):
+        raise ValueError("subdivisions must be a non-negative integer")
+    if subdivisions < 0:
+        raise ValueError("subdivisions must be a non-negative integer")
+    if not math.isfinite(radius) or radius <= 0.0:
+        raise ValueError("radius must be a positive finite number")
+    c = np.asarray(center, dtype=float)
+    if c.shape != (3,) or not np.isfinite(c).all():
+        raise ValueError("center must be a finite 3-tuple")
+    if not (-radius < c[2] < 0.0):
+        raise ValueError(
+            "center z must lie strictly between -radius and 0 "
+            "(the sphere must pierce the calm waterplane)"
+        )
+
+    base = icosphere(subdivisions, radius=radius)
+    verts = base.vertices + c
+    faces = base.faces
+
+    def key_of(point: np.ndarray) -> tuple[float, float, float]:
+        scale = 1.0e-12 * radius
+        return (
+            round(float(point[0]) / scale) * scale,
+            round(float(point[1]) / scale) * scale,
+            round(float(point[2]) / scale) * scale,
+        )
+
+    new_verts: list[tuple[float, float, float]] = []
+    point_map: dict[tuple[float, float, float], int] = {}
+
+    def weld(point: np.ndarray) -> int:
+        key = key_of(point)
+        if key not in point_map:
+            point_map[key] = len(new_verts)
+            new_verts.append(
+                (float(point[0]), float(point[1]), 0.0 if abs(point[2]) < 1.0e-15 else float(point[2]))
+            )
+        return point_map[key]
+
+    new_faces: list[tuple[int, int, int]] = []
+    for a, b, cc in faces:
+        z = verts[[a, b, cc], 2]
+        if np.all(z > 0.0):
+            continue  # panel entirely above the waterplane
+        if np.all(z <= 0.0):
+            new_faces.append((weld(verts[a]), weld(verts[b]), weld(verts[cc])))
+            continue
+        # Clip the triangle against z <= 0 (Sutherland-Hodgman).
+        order = (a, b, cc)
+        polygon: list[np.ndarray] = []
+        for i in range(3):
+            current = verts[order[i]]
+            following = verts[order[(i + 1) % 3]]
+            current_in = current[2] <= 0.0
+            following_in = following[2] <= 0.0
+            if current_in:
+                polygon.append(current)
+            if current_in != following_in:
+                t = -current[2] / (following[2] - current[2])
+                if 0.0 < t < 1.0:
+                    polygon.append(current + t * (following - current))
+        # Drop consecutive duplicates (a vertex sitting exactly on the
+        # waterplane is emitted both as a kept vertex and as a cut).
+        deduped: list[np.ndarray] = []
+        for point in polygon:
+            if deduped and np.array_equal(deduped[-1], point):
+                continue
+            deduped.append(point)
+        if len(deduped) < 3:
+            continue
+        coords = np.asarray(deduped, dtype=float)
+        area = 0.0
+        for k in range(1, len(coords) - 1):
+            tri = np.array([coords[0], coords[k], coords[k + 1]])
+            area += 0.5 * float(
+                np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0]))
+            )
+        if area <= 1.0e-14 * radius * radius:
+            continue  # sliver on the waterplane: no fluid-side area
+        indices = [weld(p) for p in coords]
+        for k in range(1, len(coords) - 1):
+            new_faces.append((indices[0], indices[k], indices[k + 1]))
+
+    return WettedHullMesh(
+        np.asarray(new_verts, dtype=float), np.asarray(new_faces, dtype=np.int64)
+    )
+
+
 def _oriented_triangle(
     p0: FloatArray,
     p1: FloatArray,
