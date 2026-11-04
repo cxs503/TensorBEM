@@ -1,0 +1,132 @@
+{
+  "case": {
+    "length": 2.0,
+    "beam": 1.0,
+    "draft": 1.0,
+    "rho": 1025.0,
+    "gravity": 9.80665
+  },
+  "headline": {
+    "volume": 1.9999999999999998,
+    "center_of_buoyancy": [
+      1.2999999999999998,
+      0.4499999999999999,
+      -0.49999999999999994
+    ],
+    "rows": [
+      {
+        "entry": "C33 heave",
+        "code": 20103.632499999992,
+        "closed_form": 20103.6325,
+        "energy_hessian": 20103.632459722576,
+        "pre_fix": 20103.6325,
+        "rel_err_closed_form": 3.6192253458476887e-16,
+        "rel_err_energy": 2.003489507785421e-09,
+        "pre_fix_rel_err": 2.0034898697079553e-09
+      },
+      {
+        "entry": "C34 heave-roll",
+        "code": 9046.634624999997,
+        "closed_form": 9046.634625,
+        "energy_hessian": 9046.634568221634,
+        "pre_fix": 0.0,
+        "rel_err_closed_form": 4.021361512568378e-16,
+        "rel_err_energy": 6.276186163663241e-09,
+        "pre_fix_rel_err": 1.0
+      },
+      {
+        "entry": "C35 heave-pitch",
+        "code": -26134.72224999999,
+        "closed_form": -26134.72225,
+        "energy_hessian": -26134.722088499984,
+        "pre_fix": 0.0,
+        "rel_err_closed_form": 2.784019508432061e-16,
+        "rel_err_energy": 6.1795188344805335e-09,
+        "pre_fix_rel_err": 1.0
+      },
+      {
+        "entry": "C44 roll",
+        "code": 5746.288289583332,
+        "closed_form": 5746.288289583333,
+        "energy_hessian": 5746.288297814317,
+        "pre_fix": 1675.3027083333332,
+        "rel_err_closed_form": 1.582751603533132e-16,
+        "rel_err_energy": 1.4324003308077472e-09,
+        "pre_fix_rel_err": 0.7084548109132363
+      },
+      {
+        "entry": "C45 roll-pitch",
+        "code": -11760.625012499997,
+        "closed_form": -11760.6250125,
+        "energy_hessian": -11760.62473859929,
+        "pre_fix": 0.0,
+        "rel_err_closed_form": 3.093355062296633e-16,
+        "rel_err_energy": 2.3289639190408195e-08,
+        "pre_fix_rel_err": 1.0
+      },
+      {
+        "entry": "C55 pitch",
+        "code": 40676.349758333316,
+        "closed_form": 40676.34975833334,
+        "energy_hessian": 40676.34922648722,
+        "pre_fix": 6701.210833333333,
+        "rel_err_closed_form": 5.366232038429009e-16,
+        "rel_err_energy": 1.3075069598436439e-08,
+        "pre_fix_rel_err": 0.8352553520469408
+      }
+    ],
+    "symmetric_residual": 0.0,
+    "yaw_row_max": 0.0,
+    "max_rel_err_energy": 1.3075069598436439e-08
+  },
+  "lcf_sweep": [
+    {
+      "lcf_over_length": 0.0,
+      "c_heave_pitch": -0.0,
+      "abs_ratio_to_c33": 0.0,
+      "pitch_amplification": 1.0,
+      "heave_response_per_unit_pitch_moment": 0.0,
+      "heave_unseen_by_pre_fix": 0.0
+    },
+    {
+      "lcf_over_length": 0.125,
+      "c_heave_pitch": -5025.908125,
+      "abs_ratio_to_c33": 0.25,
+      "pitch_amplification": 1.1875,
+      "heave_response_per_unit_pitch_moment": 3.73066907187047e-05,
+      "heave_unseen_by_pre_fix": 3.73066907187047e-05
+    },
+    {
+      "lcf_over_length": 0.25,
+      "c_heave_pitch": -10051.81625,
+      "abs_ratio_to_c33": 0.5,
+      "pitch_amplification": 1.75,
+      "heave_response_per_unit_pitch_moment": 7.46133814374094e-05,
+      "heave_unseen_by_pre_fix": 7.46133814374094e-05
+    },
+    {
+      "lcf_over_length": 0.375,
+      "c_heave_pitch": -15077.724375,
+      "abs_ratio_to_c33": 0.75,
+      "pitch_amplification": 2.6874999999999996,
+      "heave_response_per_unit_pitch_moment": 0.00011192007215611405,
+      "heave_unseen_by_pre_fix": 0.00011192007215611405
+    },
+    {
+      "lcf_over_length": 0.5,
+      "c_heave_pitch": -20103.6325,
+      "abs_ratio_to_c33": 1.0,
+      "pitch_amplification": 4.000000000000001,
+      "heave_response_per_unit_pitch_moment": 0.00014922676287481881,
+      "heave_unseen_by_pre_fix": 0.00014922676287481881
+    },
+    {
+      "lcf_over_length": 0.65,
+      "c_heave_pitch": -26134.72224999999,
+      "abs_ratio_to_c33": 1.2999999999999998,
+      "pitch_amplification": 6.0699999999999985,
+      "heave_response_per_unit_pitch_moment": 0.0001939947917372644,
+      "heave_unseen_by_pre_fix": 0.0001939947917372644
+    }
+  ]
+}
