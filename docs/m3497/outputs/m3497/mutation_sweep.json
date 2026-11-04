@@ -1,0 +1,249 @@
+{
+  "before": [
+    {
+      "mutant": "M1_pv_cosine_regulariser_sign",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "32 passed, 1 warning in 2.69s",
+      "description": "PV cosine integrand: subtract the removable reference with the wrong sign (exp(-kd)cos(kx) + exp(-nu d)cos(nu x))"
+    },
+    {
+      "mutant": "M2_pv_sine_regulariser_dropped",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "32 passed, 1 warning in 2.66s",
+      "description": "PV sine integrand: drop the removable-point regulariser entirely (integrate exp(-kd)sin(kx)/(k-nu) through k = nu)"
+    },
+    {
+      "mutant": "M3_green_function_wave_scale",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_deep_water_limit_matches_free_surface_kernel",
+        "tests/test_finite_depth.py::test_gradient_matches_numerical_derivative_of_the_kernel",
+        "tests/test_free_surface_kernel.py::test_field_gradient_matches_finite_differences",
+        "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+        "tests/test_free_surface_kernel.py::test_source_gradient_agrees_with_the_image_of_the_field_gradient",
+        "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference"
+      ],
+      "tail": "6 failed, 26 passed, 1 warning in 1.93s",
+      "description": "Free-surface Green function: scale the whole kernel by 1+1e-3 (a 0.1% kernel error a converged solver would carry into A and B)"
+    },
+    {
+      "mutant": "M4_green_gradient_components_swapped",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_free_surface_kernel.py::test_source_gradient_agrees_with_the_image_of_the_field_gradient",
+        "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference"
+      ],
+      "tail": "2 failed, 30 passed, 1 warning in 2.91s",
+      "description": "Free-surface Green gradient: return (dg/dz, dg/dx) instead of (dg/dx, dg/dz)"
+    },
+    {
+      "mutant": "M5_scaled_depth_guard_disabled",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "32 passed, 1 warning in 2.86s",
+      "description": "Free-surface kernel: accept nu*depth below the documented validity floor instead of raising"
+    },
+    {
+      "mutant": "M6_finite_depth_wavenumber_is_deep_water",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_dispersion_limits",
+        "tests/test_finite_depth.py::test_dispersion_relation_is_solved",
+        "tests/test_finite_depth.py::test_group_velocity_matches_numerical_derivative",
+        "tests/test_finite_depth.py::test_invalid_inputs_are_rejected",
+        "tests/test_finite_depth.py::test_strip_boundary_conditions",
+        "tests/test_mutation_gaps.py::test_propagating_mode_norm_matches_its_own_quadrature"
+      ],
+      "tail": "6 failed, 26 passed, 1 warning in 2.63s",
+      "description": "Finite-depth dispersion: return the deep-water root nu instead of solving k tanh(k h) = nu (i.e. silently ignore the bottom)"
+    },
+    {
+      "mutant": "M7_mode_norm_factor",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_mutation_gaps.py::test_propagating_mode_norm_matches_its_own_quadrature"
+      ],
+      "tail": "1 failed, 31 passed, 1 warning in 2.96s",
+      "description": "Propagating mode norm: drop the sinh(2 k0 h)/(2 k0 h) term (N0 = h instead of (h/2)(1 + sinh/(2k0 h)))"
+    },
+    {
+      "mutant": "M8_group_velocity_is_half_phase",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_group_velocity_limits",
+        "tests/test_finite_depth.py::test_group_velocity_matches_numerical_derivative"
+      ],
+      "tail": "2 failed, 30 passed, 1 warning in 2.84s",
+      "description": "Finite-depth group velocity: return cp/2 (the deep-water shortcut) at every depth"
+    },
+    {
+      "mutant": "M9_evanescent_roots_unpolished",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_deep_water_limit_matches_free_surface_kernel",
+        "tests/test_finite_depth.py::test_evanescent_roots_are_ordered_and_alternate",
+        "tests/test_finite_depth.py::test_gradient_matches_numerical_derivative_of_the_kernel",
+        "tests/test_finite_depth.py::test_strip_boundary_conditions"
+      ],
+      "tail": "4 failed, 28 passed, 1 warning in 1.98s",
+      "description": "Evanescent roots: return the bracket midpoints without Newton polish"
+    },
+    {
+      "mutant": "M10_wave_amplitude_coefficient_scale",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "32 passed, 1 warning in 2.84s",
+      "description": "Wave amplitude coefficient: scale by 1+1e-2 (a 1% error in the far-field amplitude = 2% in radiated damping)"
+    }
+  ],
+  "after": [
+    {
+      "mutant": "M1_pv_cosine_regulariser_sign",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "59 passed, 1 warning in 3.65s",
+      "description": "PV cosine integrand: subtract the removable reference with the wrong sign (exp(-kd)cos(kx) + exp(-nu d)cos(nu x))"
+    },
+    {
+      "mutant": "M2_pv_sine_regulariser_dropped",
+      "returncode": 0,
+      "killed": false,
+      "killing_tests": [],
+      "tail": "59 passed, 1 warning in 3.41s",
+      "description": "PV sine integrand: drop the removable-point regulariser entirely (integrate exp(-kd)sin(kx)/(k-nu) through k = nu)"
+    },
+    {
+      "mutant": "M3_green_function_wave_scale",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_deep_water_limit_matches_free_surface_kernel",
+        "tests/test_finite_depth.py::test_gradient_matches_numerical_derivative_of_the_kernel",
+        "tests/test_free_surface_kernel.py::test_field_gradient_matches_finite_differences",
+        "tests/test_free_surface_kernel.py::test_free_surface_condition_holds_on_the_surface",
+        "tests/test_free_surface_kernel.py::test_source_gradient_agrees_with_the_image_of_the_field_gradient",
+        "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_deep_water_kernel_matches_an_independent_assembly[field0-source0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_deep_water_kernel_matches_an_independent_assembly[field1-source1]"
+      ],
+      "tail": "8 failed, 51 passed, 1 warning in 2.77s",
+      "description": "Free-surface Green function: scale the whole kernel by 1+1e-3 (a 0.1% kernel error a converged solver would carry into A and B)"
+    },
+    {
+      "mutant": "M4_green_gradient_components_swapped",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_free_surface_kernel.py::test_source_gradient_agrees_with_the_image_of_the_field_gradient",
+        "tests/test_mutation_gaps.py::test_deep_water_source_gradient_matches_a_finite_difference",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_horizontal_reciprocity_ties_truth_to_two_code_paths[field0-source0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_horizontal_reciprocity_ties_truth_to_two_code_paths[field1-source1]"
+      ],
+      "tail": "4 failed, 55 passed, 1 warning in 3.46s",
+      "description": "Free-surface Green gradient: return (dg/dz, dg/dx) instead of (dg/dx, dg/dz)"
+    },
+    {
+      "mutant": "M5_scaled_depth_guard_disabled",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_mutation_gaps_freesurface_2d.py::test_the_scaled_depth_floor_is_enforced"
+      ],
+      "tail": "1 failed, 58 passed, 1 warning in 3.45s",
+      "description": "Free-surface kernel: accept nu*depth below the documented validity floor instead of raising"
+    },
+    {
+      "mutant": "M6_finite_depth_wavenumber_is_deep_water",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_dispersion_limits",
+        "tests/test_finite_depth.py::test_dispersion_relation_is_solved",
+        "tests/test_finite_depth.py::test_group_velocity_matches_numerical_derivative",
+        "tests/test_finite_depth.py::test_invalid_inputs_are_rejected",
+        "tests/test_finite_depth.py::test_strip_boundary_conditions",
+        "tests/test_mutation_gaps.py::test_propagating_mode_norm_matches_its_own_quadrature",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_finite_depth_wavenumber_matches_independent_bisection[0.2]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_finite_depth_wavenumber_matches_independent_bisection[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_finite_depth_wavenumber_matches_independent_bisection[6.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[0.3]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[5.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[0.5]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[3.0]"
+      ],
+      "tail": "15 failed, 44 passed, 1 warning in 3.41s",
+      "description": "Finite-depth dispersion: return the deep-water root nu instead of solving k tanh(k h) = nu (i.e. silently ignore the bottom)"
+    },
+    {
+      "mutant": "M7_mode_norm_factor",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_mutation_gaps.py::test_propagating_mode_norm_matches_its_own_quadrature",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_mode_norm_is_the_defining_integral[0.5]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_mode_norm_is_the_defining_integral[2.0]"
+      ],
+      "tail": "3 failed, 56 passed, 1 warning in 3.37s",
+      "description": "Propagating mode norm: drop the sinh(2 k0 h)/(2 k0 h) term (N0 = h instead of (h/2)(1 + sinh/(2k0 h)))"
+    },
+    {
+      "mutant": "M8_group_velocity_is_half_phase",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_group_velocity_limits",
+        "tests/test_finite_depth.py::test_group_velocity_matches_numerical_derivative",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[0.3]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_group_velocity_from_the_implicit_dispersion_curve[5.0]"
+      ],
+      "tail": "5 failed, 54 passed, 1 warning in 3.33s",
+      "description": "Finite-depth group velocity: return cp/2 (the deep-water shortcut) at every depth"
+    },
+    {
+      "mutant": "M9_evanescent_roots_unpolished",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_finite_depth.py::test_deep_water_limit_matches_free_surface_kernel",
+        "tests/test_finite_depth.py::test_evanescent_roots_are_ordered_and_alternate",
+        "tests/test_finite_depth.py::test_gradient_matches_numerical_derivative_of_the_kernel",
+        "tests/test_finite_depth.py::test_strip_boundary_conditions",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_evanescent_roots_satisfy_their_own_transcendental_equation[0.5]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_evanescent_roots_satisfy_their_own_transcendental_equation[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_evanescent_roots_satisfy_their_own_transcendental_equation[3.0]"
+      ],
+      "tail": "7 failed, 52 passed, 1 warning in 2.93s",
+      "description": "Evanescent roots: return the bracket midpoints without Newton polish"
+    },
+    {
+      "mutant": "M10_wave_amplitude_coefficient_scale",
+      "returncode": 1,
+      "killed": true,
+      "killing_tests": [
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[0.5]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[1.0]",
+        "tests/test_mutation_gaps_freesurface_2d.py::test_wave_factor_is_the_cosh_ratio[3.0]"
+      ],
+      "tail": "3 failed, 56 passed, 1 warning in 3.65s",
+      "description": "Wave amplitude coefficient: scale by 1+1e-2 (a 1% error in the far-field amplitude = 2% in radiated damping)"
+    }
+  ],
+  "before_kill_ratio": 0.6,
+  "after_kill_ratio": 0.8
+}

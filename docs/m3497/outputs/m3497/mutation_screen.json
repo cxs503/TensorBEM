@@ -1,0 +1,65 @@
+{
+  "probe_points": 14,
+  "rows": [
+    {
+      "mutant": "M1_pv_cosine_regulariser_sign",
+      "description": "PV cosine integrand: subtract the removable reference with the wrong sign (exp(-kd)cos(kx) + exp(-nu d)cos(nu x))",
+      "probe_max_rel_deviation": 2.9916204204924115e-15,
+      "equivalent": true
+    },
+    {
+      "mutant": "M2_pv_sine_regulariser_dropped",
+      "description": "PV sine integrand: drop the removable-point regulariser entirely (integrate exp(-kd)sin(kx)/(k-nu) through k = nu)",
+      "probe_max_rel_deviation": 3.926251241367438e-15,
+      "equivalent": true
+    },
+    {
+      "mutant": "M3_green_function_wave_scale",
+      "description": "Free-surface Green function: scale the whole kernel by 1+1e-3 (a 0.1% kernel error a converged solver would carry into A and B)",
+      "probe_max_rel_deviation": 0.0009990009990009736,
+      "equivalent": false
+    },
+    {
+      "mutant": "M4_green_gradient_components_swapped",
+      "description": "Free-surface Green gradient: return (dg/dz, dg/dx) instead of (dg/dx, dg/dz)",
+      "probe_max_rel_deviation": 1.3189212650680135,
+      "equivalent": false
+    },
+    {
+      "mutant": "M5_scaled_depth_guard_disabled",
+      "description": "Free-surface kernel: accept nu*depth below the documented validity floor instead of raising",
+      "probe_max_rel_deviation": 0.0,
+      "equivalent": true
+    },
+    {
+      "mutant": "M6_finite_depth_wavenumber_is_deep_water",
+      "description": "Finite-depth dispersion: return the deep-water root nu instead of solving k tanh(k h) = nu (i.e. silently ignore the bottom)",
+      "probe_max_rel_deviation": 1.204339518905942,
+      "equivalent": false
+    },
+    {
+      "mutant": "M7_mode_norm_factor",
+      "description": "Propagating mode norm: drop the sinh(2 k0 h)/(2 k0 h) term (N0 = h instead of (h/2)(1 + sinh/(2k0 h)))",
+      "probe_max_rel_deviation": 0.5,
+      "equivalent": false
+    },
+    {
+      "mutant": "M8_group_velocity_is_half_phase",
+      "description": "Finite-depth group velocity: return cp/2 (the deep-water shortcut) at every depth",
+      "probe_max_rel_deviation": 0.4795216419025867,
+      "equivalent": false
+    },
+    {
+      "mutant": "M9_evanescent_roots_unpolished",
+      "description": "Evanescent roots: return the bracket midpoints without Newton polish",
+      "probe_max_rel_deviation": 0.7584995270274772,
+      "equivalent": false
+    },
+    {
+      "mutant": "M10_wave_amplitude_coefficient_scale",
+      "description": "Wave amplitude coefficient: scale by 1+1e-2 (a 1% error in the far-field amplitude = 2% in radiated damping)",
+      "probe_max_rel_deviation": 0.009900990099009912,
+      "equivalent": false
+    }
+  ]
+}
