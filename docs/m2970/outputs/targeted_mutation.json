@@ -1,0 +1,167 @@
+{
+  "generated_by": "docs/m2970/tools/targeted_mutation.py",
+  "new_tests": "tests/test_mutation_gaps_hydrostatic.py",
+  "baseline_tests": {
+    "tensorbem.hydrostatic": [
+      "tests/test_hydrostatic_analytic_benchmark.py",
+      "tests/test_waterplane_multi_loop.py",
+      "tests/test_hydrostatic_convergence.py"
+    ],
+    "tensorbem.free_surface": [
+      "tests/test_free_surface_kernel.py",
+      "tests/test_ursell_benchmark.py"
+    ]
+  },
+  "rows": [
+    {
+      "mutant": "tensorbem.hydrostatic:236:20:swap_binop",
+      "summary": "swap_binop in compute_waterplane_properties: sign * np.sum((x + x_next) * cross) / 6.0 -> sign * np.sum((x + x_next) * cross) * 6.0",
+      "module": "tensorbem.hydrostatic",
+      "function": "compute_waterplane_properties",
+      "operator": "swap_binop",
+      "source": "current",
+      "lineno": 236,
+      "original": "sign * np.sum((x + x_next) * cross) / 6.0",
+      "replacement": "sign * np.sum((x + x_next) * cross) * 6.0",
+      "baseline": {
+        "flavour": "current",
+        "tests": 3,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 1.9
+      },
+      "with_new_tests": {
+        "flavour": "current",
+        "tests": 4,
+        "verdict": "killed",
+        "failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_eccentric_waterplane_pins_the_centroid_away_from_the_origin",
+        "seconds": 1.9
+      }
+    },
+    {
+      "mutant": "tensorbem.hydrostatic:255:15:shift_constant",
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "module": "tensorbem.hydrostatic",
+      "function": "compute_waterplane_properties",
+      "operator": "shift_constant",
+      "source": "current",
+      "lineno": 255,
+      "original": "0.0",
+      "replacement": "1.0",
+      "baseline": {
+        "flavour": "current",
+        "tests": 3,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 2.1
+      },
+      "with_new_tests": {
+        "flavour": "current",
+        "tests": 4,
+        "verdict": "killed",
+        "failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_waterline_with_cancelling_signed_area_reports_no_waterplane",
+        "seconds": 1.7
+      }
+    },
+    {
+      "mutant": "tensorbem.hydrostatic:161:15:shift_constant",
+      "summary": "shift_constant in compute_waterplane_properties: 0.0 -> 1.0",
+      "module": "tensorbem.hydrostatic",
+      "function": "compute_waterplane_properties",
+      "operator": "shift_constant",
+      "source": "current",
+      "lineno": 161,
+      "original": "0.0",
+      "replacement": "1.0",
+      "baseline": {
+        "flavour": "current",
+        "tests": 3,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 2.1
+      },
+      "with_new_tests": {
+        "flavour": "current",
+        "tests": 4,
+        "verdict": "killed",
+        "failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_submerged_hull_without_waterline_reports_exactly_zero_area",
+        "seconds": 1.4
+      }
+    },
+    {
+      "mutant": "tensorbem.hydrostatic:314:29:shift_constant",
+      "summary": "shift_constant in compute_displaced_volume_and_buoyancy: 3 -> 4",
+      "module": "tensorbem.hydrostatic",
+      "function": "compute_displaced_volume_and_buoyancy",
+      "operator": "shift_constant",
+      "source": "current",
+      "lineno": 314,
+      "original": "3",
+      "replacement": "4",
+      "baseline": {
+        "flavour": "current",
+        "tests": 3,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 1.7
+      },
+      "with_new_tests": {
+        "flavour": "current",
+        "tests": 4,
+        "verdict": "killed",
+        "failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_zero_displacement_branch_returns_a_three_component_centre",
+        "seconds": 1.7
+      }
+    },
+    {
+      "mutant": "tensorbem.free_surface:243:37:swap_binop",
+      "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "module": "tensorbem.free_surface",
+      "function": "green_gradient",
+      "operator": "swap_binop",
+      "source": "legacy",
+      "lineno": 243,
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "baseline": {
+        "flavour": "legacy",
+        "tests": 2,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 51.0
+      },
+      "with_new_tests": {
+        "flavour": "legacy",
+        "tests": 3,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 47.1
+      }
+    },
+    {
+      "mutant": "tensorbem.free_surface:243:37:swap_binop",
+      "summary": "swap_binop in green_gradient: 2.0 * (elementary_cos + frequency * cos_integral) -> 2.0 / (elementary_cos + frequency * cos_integral)",
+      "module": "tensorbem.free_surface",
+      "function": "green_gradient",
+      "operator": "swap_binop",
+      "source": "current",
+      "lineno": 243,
+      "original": "2.0 * (elementary_cos + frequency * cos_integral)",
+      "replacement": "2.0 / (elementary_cos + frequency * cos_integral)",
+      "baseline": {
+        "flavour": "current",
+        "tests": 2,
+        "verdict": "survived",
+        "failing_test": null,
+        "seconds": 48.6
+      },
+      "with_new_tests": {
+        "flavour": "current",
+        "tests": 3,
+        "verdict": "killed",
+        "failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_source_depth_derivative_matches_finite_difference_of_green_function[0.9--0.3-0.3--2.0-0.6]",
+        "seconds": 41.6
+      }
+    }
+  ]
+}
