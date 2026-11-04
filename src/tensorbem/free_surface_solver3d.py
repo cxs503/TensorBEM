@@ -577,6 +577,57 @@ def solve_diffraction_3d(
     )
 
 
+def _kochin_patch_values(
+    v0: FloatArray,
+    v1: FloatArray,
+    v2: FloatArray,
+    areas: FloatArray,
+    normals: FloatArray,
+    phi: ComplexArray,
+    vn: ComplexArray,
+    nu: float,
+    azimuth: ArrayLike,
+) -> ComplexArray:
+    """Assemble the Kochin integral on a bare panel set (no mesh validation).
+
+    This is the numerical core of :func:`kochin_function_3d`, split out so that a
+    half surface (:mod:`tensorbem.symmetry3d`) can be integrated with the same
+    formula and the same 3-point degree-2 rule -- the folded far-field values are
+    then algebraically the same sum as the full-surface ones, not a re-derivation:
+
+        K(theta) = sum_p A_p * (1/3) sum_q exp(nu*z_q - i*nu*(x_q cos + y_q sin))
+                   * [-vn_p + nu*phi_p*(n_z - i*(n_x cos + n_y sin))]
+    """
+    theta = np.asarray(azimuth, dtype=float)
+    orig_shape = theta.shape
+    th_flat = theta.ravel()
+    cos_t = np.cos(th_flat)
+    sin_t = np.sin(th_flat)
+
+    qpts = (
+        _BARY_DEG2[None, :, 0, None] * v0[:, None, :]
+        + _BARY_DEG2[None, :, 1, None] * v1[:, None, :]
+        + _BARY_DEG2[None, :, 2, None] * v2[:, None, :]
+    )  # (P, 3, 3)
+    phase = np.exp(
+        nu * qpts[:, :, 2, None]
+        - 1.0j
+        * nu
+        * (
+            qpts[:, :, 0, None] * cos_t[None, None, :]
+            + qpts[:, :, 1, None] * sin_t[None, None, :]
+        )
+    )
+    avg_phase = np.mean(phase, axis=1)  # (P, T)
+
+    dir_factor = normals[:, 2, None] - 1.0j * (
+        normals[:, 0, None] * cos_t[None, :] + normals[:, 1, None] * sin_t[None, :]
+    )
+    integrand = -vn[:, None] + nu * phi[:, None] * dir_factor
+    values = np.sum(areas[:, None] * avg_phase * integrand, axis=0)
+    return values.reshape(orig_shape)
+
+
 def kochin_function_3d(
     mesh: SurfaceMesh3D,
     potential: ArrayLike,
@@ -602,36 +653,17 @@ def kochin_function_3d(
     if phi.shape != (mesh.panel_count,) or vn.shape != (mesh.panel_count,):
         raise ValueError("potential and normal_velocity_body must have shape (panel_count,)")
 
-    theta = np.asarray(azimuth, dtype=float)
-    orig_shape = theta.shape
-    th_flat = theta.ravel()
-    cos_t = np.cos(th_flat)
-    sin_t = np.sin(th_flat)
-
-    v0, v1, v2 = mesh.v0, mesh.v1, mesh.v2
-    qpts = (
-        _BARY_DEG2[None, :, 0, None] * v0[:, None, :]
-        + _BARY_DEG2[None, :, 1, None] * v1[:, None, :]
-        + _BARY_DEG2[None, :, 2, None] * v2[:, None, :]
-    )  # (P, 3, 3)
-    phase = np.exp(
-        freq * qpts[:, :, 2, None]
-        - 1.0j
-        * freq
-        * (
-            qpts[:, :, 0, None] * cos_t[None, None, :]
-            + qpts[:, :, 1, None] * sin_t[None, None, :]
-        )
+    return _kochin_patch_values(
+        mesh.v0,
+        mesh.v1,
+        mesh.v2,
+        mesh.areas,
+        mesh.normals,
+        phi,
+        vn,
+        freq,
+        azimuth,
     )
-    avg_phase = np.mean(phase, axis=1)  # (P, T)
-
-    normals = mesh.normals
-    dir_factor = normals[:, 2, None] - 1.0j * (
-        normals[:, 0, None] * cos_t[None, :] + normals[:, 1, None] * sin_t[None, :]
-    )
-    integrand = -vn[:, None] + freq * phi[:, None] * dir_factor
-    values = np.sum(mesh.areas[:, None] * avg_phase * integrand, axis=0)
-    return values.reshape(orig_shape)
 
 
 def far_field_damping_matrix_3d(

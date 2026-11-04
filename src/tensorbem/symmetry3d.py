@@ -66,9 +66,28 @@ Limitations
   splits a panel, so a mesh whose seam is not a panel edge is rejected.
 * The expansion point must lie on the symmetry plane (``center[1] == 0``),
   otherwise the generalized normals have no definite parity.
-* Far-field post-processing (:func:`tensorbem.free_surface_solver3d.\
-far_field_damping_matrix_3d`, :func:`...haskind_excitation_force_3d`) is not
-  folded here; those helpers expect a full-surface potential.
+* Far-field post-processing is folded, but only for parity-definite data:
+  :func:`folded_kochin_function_3d`, :func:`far_field_damping_matrix_3d_symmetric`
+  and :func:`haskind_excitation_force_3d_symmetric` are exact for the radiation
+  and diffraction solutions of this module (each mode carries a definite parity),
+  not for an arbitrary half-surface field.
+
+Far-field post-processing
+-------------------------
+The Kochin function is the one far-field quantity that is *not* a surface
+integral of a folding weight: the full-surface Kochin integral of a
+parity-definite potential reduces exactly to two half-surface integrals, the
+second at the reflected azimuth::
+
+    K_full(theta) = K_half(theta) + s * K_half(-theta)
+
+because the reflection ``M: y -> -y`` sends ``theta -> -theta`` in the phase
+``exp(-i nu (x cos theta + y sin theta))`` and in the direction factor
+``n_z - i (n_x cos theta + n_y sin theta)`` simultaneously.  Both half-surface
+integrals reuse the same 3-point rule as the full-surface path, so the folded
+Kochin value is the *same sum* as the full one up to floating-point order --
+which is what makes the agreement in ``tests/test_symmetry3d_far_field.py`` a
+round-off-level statement rather than a discretisation-error statement.
 """
 
 from __future__ import annotations
@@ -86,6 +105,7 @@ from .free_surface_solver3d import (
     Radiation3DResult,
     _auto_chief_points_3d,
     _build_target_operators_3d,
+    _kochin_patch_values,
     _solve_system,
     _validate_positive,
     incident_airy_wave_3d,
@@ -99,6 +119,7 @@ IntArray = NDArray[np.int64]
 _DEFAULT_DENSITY = 1025.0
 _DEFAULT_GRAVITY = 9.80665
 _PLANE_TOL = 1.0e-12
+_FOUR_PI = 4.0 * math.pi
 
 #: Parity ``s_i`` of the six rigid-body modes for a body symmetric about ``y = 0``.
 MODE_PARITY: dict[int, float] = {0: 1.0, 1: -1.0, 2: 1.0, 3: -1.0, 4: 1.0, 5: -1.0}
@@ -621,3 +642,213 @@ def solve_diffraction_3d_symmetric(
         condition_number=worst_condition,
         relative_residual=worst_residual,
     )
+
+
+# ---------------------------------------------------------------------------
+# Far-field post-processing: Kochin function, far-field damping, Haskind loads
+# ---------------------------------------------------------------------------
+
+
+def _validate_parity(parity: float) -> float:
+    if isinstance(parity, (bool, np.bool_)):
+        raise ValueError("parity must be +1 or -1")
+    value = float(parity)
+    if value not in (1.0, -1.0):
+        raise ValueError("parity must be +1 or -1")
+    return value
+
+
+def folded_kochin_function_3d(
+    patch: PanelPatch,
+    potential: ArrayLike,
+    normal_velocity_body: ArrayLike,
+    nu: float,
+    azimuth: ArrayLike,
+    *,
+    parity: float,
+) -> ComplexArray:
+    """Far-field Kochin function of a parity-definite field from half-surface data.
+
+    ``potential`` and ``normal_velocity_body`` are the retained-half values of a
+    field with definite parity ``s = parity`` under ``M: (x, y, z) -> (x, -y, z)``:
+
+        phi(M x) = s phi(x),      vn(M x) = s vn(x)
+
+    (``vn`` is the same normal-derivative-like panel quantity that
+    :func:`tensorbem.free_surface_solver3d.kochin_function_3d` consumes; for a
+    rigid-body mode ``j`` it flips sign with ``n_j``, so ``vn`` has parity
+    ``s_j`` inherited from the generalized normal).  Then
+
+        K_full(theta) = K_half(theta) + s * K_half(-theta)
+
+    exactly: reflection maps the phase ``exp(nu z - i nu (x cos + y sin))`` and
+    the direction factor ``n_z - i (n_x cos + n_y sin)`` onto their
+    ``theta -> -theta`` images at the same time, while ``z``, ``x`` and ``n_z``
+    are untouched and both ``phi`` and ``vn`` pick up ``s``.
+    """
+    if not isinstance(patch, PanelPatch):
+        raise ValueError("patch must be a PanelPatch (use split_patch to obtain one)")
+    freq = _validate_positive("nu", nu)
+    s = _validate_parity(parity)
+    phi = np.asarray(potential, dtype=np.complex128)
+    vn = np.asarray(normal_velocity_body, dtype=np.complex128)
+    if phi.shape != (patch.panel_count,) or vn.shape != (patch.panel_count,):
+        raise ValueError(
+            "potential and normal_velocity_body must have shape (panel_count,)"
+        )
+    theta = np.asarray(azimuth, dtype=float)
+    if not np.isfinite(theta).all():
+        raise ValueError("azimuth must be finite")
+
+    def _integral(angles: FloatArray) -> ComplexArray:
+        return _kochin_patch_values(
+            patch.v0,
+            patch.v1,
+            patch.v2,
+            patch.areas,
+            patch.normals,
+            phi,
+            vn,
+            freq,
+            angles,
+        )
+
+    return _integral(theta) + s * _integral(-theta)
+
+
+def far_field_damping_matrix_3d_symmetric(
+    patch: PanelPatch,
+    radiation: Radiation3DResult,
+    *,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+    n_azimuth: int = 72,
+) -> FloatArray:
+    """Far-field radiation damping ``B_ij`` from a half-surface radiation solve.
+
+    Same energy identity as
+    :func:`tensorbem.free_surface_solver3d.far_field_damping_matrix_3d`,
+
+        B_ij = (omega rho nu / 4pi) * int_0^{2pi} Re[K_i(theta) conj(K_j(theta))] dtheta,
+
+    with each mode's Kochin function taken from the folded half-surface data at
+    its own parity ``MODE_PARITY[mode]``.  The returned matrix is indexed by
+    ``radiation.modes`` (not silently padded to 6x6).
+    """
+    if not isinstance(patch, PanelPatch):
+        raise ValueError("patch must be a PanelPatch (use split_patch to obtain one)")
+    if not isinstance(radiation, Radiation3DResult):
+        raise ValueError("radiation must be a Radiation3DResult")
+    rho = _validate_positive("density", density)
+    g = _validate_positive("gravity", gravity)
+    if isinstance(n_azimuth, (bool, np.bool_)) or not isinstance(
+        n_azimuth, (int, np.integer)
+    ) or int(n_azimuth) < 16:
+        raise ValueError("n_azimuth must be an integer >= 16")
+    if radiation.potentials.shape[0] != patch.panel_count:
+        raise ValueError(
+            "radiation potentials are not defined on this half patch "
+            f"({radiation.potentials.shape[0]} rows vs {patch.panel_count} panels)"
+        )
+
+    n_az = int(n_azimuth)
+    freq = radiation.wavenumber
+    omega = math.sqrt(g * freq)
+    azimuths = (2.0 * math.pi / n_az) * np.arange(n_az, dtype=float)
+    dtheta = 2.0 * math.pi / n_az
+
+    m_cnt = radiation.modes.size
+    kochin_rows = np.empty((m_cnt, n_az), dtype=np.complex128)
+    for idx in range(m_cnt):
+        kochin_rows[idx] = folded_kochin_function_3d(
+            patch,
+            radiation.potentials[:, idx],
+            radiation.normal_velocities[:, idx],
+            freq,
+            azimuths,
+            parity=MODE_PARITY[int(radiation.modes[idx])],
+        )
+
+    prefactor = (omega * rho * freq / _FOUR_PI) * dtheta
+    hermitian = kochin_rows @ np.conj(kochin_rows.T)
+    return np.asarray(prefactor * hermitian.real, dtype=float)
+
+
+def haskind_excitation_force_3d_symmetric(
+    patch: PanelPatch,
+    radiation: Radiation3DResult,
+    *,
+    amplitude: float = 1.0,
+    wave_angle: float = 0.0,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+) -> dict[str, ComplexArray]:
+    """Wave exciting loads of a half hull from its radiation solution.
+
+    Mirrors :func:`tensorbem.free_surface_solver3d.haskind_excitation_force_3d`
+    and returns both estimators:
+
+    * ``boundary_haskind`` -- the near-field boundary integral
+      ``-i omega rho int_{Gamma_B} (phi_I n_j - phi_j d(phi_I)/dn) dS``, folded as
+      a half-surface sum plus its image (the mirrored panel carries ``s_j`` on
+      both ``n_j`` and ``phi_j``, while ``phi_I`` and its normal derivative are
+      evaluated at the mirrored centroids);
+    * ``kochin_haskind`` -- the far-field Kochin reciprocity
+      ``rho g A K_j(beta + pi)``, folded by :func:`folded_kochin_function_3d`.
+
+    The two are independent formulas for the same load, so their agreement is a
+    check on the half-surface data, not on the discretisation of the body.
+    """
+    if not isinstance(patch, PanelPatch):
+        raise ValueError("patch must be a PanelPatch (use split_patch to obtain one)")
+    if not isinstance(radiation, Radiation3DResult):
+        raise ValueError("radiation must be a Radiation3DResult")
+    amp = _validate_positive("amplitude", amplitude)
+    rho = _validate_positive("density", density)
+    g = _validate_positive("gravity", gravity)
+    beta = float(wave_angle)
+    if not math.isfinite(beta):
+        raise ValueError("wave_angle must be finite")
+    if radiation.potentials.shape[0] != patch.panel_count:
+        raise ValueError(
+            "radiation potentials are not defined on this half patch "
+            f"({radiation.potentials.shape[0]} rows vs {patch.panel_count} panels)"
+        )
+
+    freq = radiation.wavenumber
+    omega = math.sqrt(g * freq)
+    mirror = mirror_patch(patch)
+    phi_inc_half, grad_half = incident_airy_wave_3d(
+        patch.centroids, freq, amplitude=amp, wave_angle=beta, gravity=g
+    )
+    phi_inc_mirror, grad_mirror = incident_airy_wave_3d(
+        mirror.centroids, freq, amplitude=amp, wave_angle=beta, gravity=g
+    )
+    dphi_inc_dn_half = np.einsum("pk,pk->p", grad_half, patch.normals)
+    dphi_inc_dn_mirror = np.einsum("pk,pk->p", grad_mirror, mirror.normals)
+
+    m_cnt = radiation.modes.size
+    boundary_forces = np.empty(m_cnt, dtype=np.complex128)
+    kochin_forces = np.empty(m_cnt, dtype=np.complex128)
+    for idx in range(m_cnt):
+        mode = int(radiation.modes[idx])
+        s = MODE_PARITY[mode]
+        phi_j = radiation.potentials[:, idx]
+        n_j = radiation.normal_velocities[:, idx]
+        half_integral = np.sum(
+            patch.areas * (phi_inc_half * n_j - phi_j * dphi_inc_dn_half)
+        )
+        image_integral = np.sum(
+            patch.areas * (phi_inc_mirror * n_j - phi_j * dphi_inc_dn_mirror)
+        )
+        boundary_forces[idx] = (
+            -1.0j * omega * rho * (half_integral + s * image_integral)
+        )
+        kochin_forces[idx] = rho * g * amp * folded_kochin_function_3d(
+            patch, phi_j, n_j, freq, beta + math.pi, parity=s
+        )
+
+    return {
+        "boundary_haskind": boundary_forces,
+        "kochin_haskind": kochin_forces,
+    }
