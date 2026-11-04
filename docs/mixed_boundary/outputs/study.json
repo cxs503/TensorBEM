@@ -1,0 +1,242 @@
+{
+  "schema": "tensorbem.mixed_boundary.study/1",
+  "panels_per_side": [
+    2,
+    4,
+    8,
+    16
+  ],
+  "reference_length": 2.0,
+  "cases": [
+    {
+      "name": "adjacent_mixed",
+      "description": "u = exp(x)*cos(y); Dirichlet on x=0 and y=0, Neumann on x=1 and y=1",
+      "dirichlet_sides": [
+        "left",
+        "bottom"
+      ],
+      "neumann_sides": [
+        "right",
+        "top"
+      ],
+      "rows": [
+        {
+          "panels_per_side": 2,
+          "panel_count": 8,
+          "h_max": 0.5,
+          "condition_number": 7.612387244588216,
+          "relative_residual_l2": 2.3355196837648043e-16,
+          "q_unknown_side_rel_l2": 0.11052188973289631,
+          "u_unknown_side_rel_l2": 0.028051002847045838,
+          "interior_field_rel_l2": 0.021888192356964275,
+          "interior_field_max_abs": 0.09937744169978391,
+          "pure_neumann_gauge": null
+        },
+        {
+          "panels_per_side": 4,
+          "panel_count": 16,
+          "h_max": 0.25,
+          "condition_number": 16.31302425012408,
+          "relative_residual_l2": 2.6975938734842203e-16,
+          "q_unknown_side_rel_l2": 0.07418802223929563,
+          "u_unknown_side_rel_l2": 0.011150788875563315,
+          "interior_field_rel_l2": 0.00511631704050935,
+          "interior_field_max_abs": 0.02610391080457286,
+          "pure_neumann_gauge": null
+        },
+        {
+          "panels_per_side": 8,
+          "panel_count": 32,
+          "h_max": 0.125,
+          "condition_number": 33.5216646682259,
+          "relative_residual_l2": 4.572668650135925e-16,
+          "q_unknown_side_rel_l2": 0.049398278172449836,
+          "u_unknown_side_rel_l2": 0.00400792473096831,
+          "interior_field_rel_l2": 0.0013479324891593409,
+          "interior_field_max_abs": 0.007594080439375039,
+          "pure_neumann_gauge": null
+        },
+        {
+          "panels_per_side": 16,
+          "panel_count": 64,
+          "h_max": 0.0625,
+          "condition_number": 68.26068482821742,
+          "relative_residual_l2": 6.210985555042461e-16,
+          "q_unknown_side_rel_l2": 0.03395208204697367,
+          "u_unknown_side_rel_l2": 0.0013907646368409461,
+          "interior_field_rel_l2": 0.0003950301050727,
+          "interior_field_max_abs": 0.0022653544427304606,
+          "pure_neumann_gauge": null
+        }
+      ],
+      "observed_order": {
+        "q_unknown_side_rel_l2": [
+          0.5750739494474956,
+          0.5867255244264009,
+          0.5409607083567294
+        ],
+        "u_unknown_side_rel_l2": [
+          1.3309065704231033,
+          1.476218458885861,
+          1.5269771258566396
+        ],
+        "interior_field_rel_l2": [
+          2.0969752430940742,
+          1.9243574244908195,
+          1.7707137315768677
+        ]
+      }
+    },
+    {
+      "name": "pure_neumann",
+      "description": "u = x^2 - y^2; pure Neumann, mean_zero gauge",
+      "dirichlet_sides": [],
+      "neumann_sides": [
+        "bottom",
+        "right",
+        "top",
+        "left"
+      ],
+      "rows": [
+        {
+          "panels_per_side": 2,
+          "panel_count": 8,
+          "h_max": 0.5,
+          "condition_number": 15.56750975009551,
+          "relative_residual_l2": 2.6497225108004173e-16,
+          "q_unknown_side_rel_l2": 0.0,
+          "u_unknown_side_rel_l2": 0.05390461548984825,
+          "interior_field_rel_l2": 0.07755352024945295,
+          "interior_field_max_abs": 0.0889634340054214,
+          "pure_neumann_gauge": "mean_zero"
+        },
+        {
+          "panels_per_side": 4,
+          "panel_count": 16,
+          "h_max": 0.25,
+          "condition_number": 29.778394970865474,
+          "relative_residual_l2": 4.954200389667558e-16,
+          "q_unknown_side_rel_l2": 0.0,
+          "u_unknown_side_rel_l2": 0.021134381736587864,
+          "interior_field_rel_l2": 0.017874484028387146,
+          "interior_field_max_abs": 0.02048105201342143,
+          "pure_neumann_gauge": "mean_zero"
+        },
+        {
+          "panels_per_side": 8,
+          "panel_count": 32,
+          "h_max": 0.125,
+          "condition_number": 52.51041414632269,
+          "relative_residual_l2": 1.084201023724691e-15,
+          "q_unknown_side_rel_l2": 0.0,
+          "u_unknown_side_rel_l2": 0.008253343112640857,
+          "interior_field_rel_l2": 0.004709937892678988,
+          "interior_field_max_abs": 0.005598617132287265,
+          "pure_neumann_gauge": "mean_zero"
+        },
+        {
+          "panels_per_side": 16,
+          "panel_count": 64,
+          "h_max": 0.0625,
+          "condition_number": 89.4322599042984,
+          "relative_residual_l2": 1.4647559003493992e-15,
+          "q_unknown_side_rel_l2": 0.0,
+          "u_unknown_side_rel_l2": 0.0031567122853195643,
+          "interior_field_rel_l2": 0.0014405717306013991,
+          "interior_field_max_abs": 0.0018219793014423447,
+          "pure_neumann_gauge": "mean_zero"
+        }
+      ],
+      "observed_order": {
+        "q_unknown_side_rel_l2": [],
+        "u_unknown_side_rel_l2": [
+          1.350816898036739,
+          1.3565413852399364,
+          1.3865558441871018
+        ],
+        "interior_field_rel_l2": [
+          2.117290671334265,
+          1.9241216560494694,
+          1.7090665373355445
+        ]
+      }
+    }
+  ],
+  "dirichlet_regression": {
+    "name": "dirichlet_regression",
+    "description": "all-Dirichlet mixed assembly vs solve_laplace_dirichlet",
+    "rows": [
+      {
+        "panels_per_side": 2,
+        "panel_count": 8,
+        "q_max_abs_difference": 9.992007221626409e-16,
+        "q_rel_l2_difference": 3.6579883246776217e-16,
+        "mixed_condition_number": 9.57193076753154,
+        "dirichlet_condition_number": 9.57193076753154,
+        "condition_number_difference": 0.0
+      },
+      {
+        "panels_per_side": 4,
+        "panel_count": 16,
+        "q_max_abs_difference": 3.4416913763379853e-15,
+        "q_rel_l2_difference": 1.1517354336778463e-15,
+        "mixed_condition_number": 18.14837360016146,
+        "dirichlet_condition_number": 18.14837360016146,
+        "condition_number_difference": 0.0
+      },
+      {
+        "panels_per_side": 8,
+        "panel_count": 32,
+        "q_max_abs_difference": 1.2434497875801753e-14,
+        "q_rel_l2_difference": 2.981898904737631e-15,
+        "mixed_condition_number": 35.560594597572106,
+        "dirichlet_condition_number": 35.560594597572106,
+        "condition_number_difference": 0.0
+      },
+      {
+        "panels_per_side": 16,
+        "panel_count": 64,
+        "q_max_abs_difference": 3.68594044175552e-14,
+        "q_rel_l2_difference": 7.745798219446555e-15,
+        "mixed_condition_number": 70.80944850166013,
+        "dirichlet_condition_number": 70.80944850166013,
+        "condition_number_difference": 0.0
+      }
+    ]
+  },
+  "dirichlet_flux_baseline": {
+    "name": "dirichlet_flux_baseline",
+    "description": "all four sides Dirichlet, same analytic field (corner-limited flux)",
+    "rows": [
+      {
+        "panels_per_side": 2,
+        "panel_count": 8,
+        "q_rel_l2": 0.09685947706646189,
+        "condition_number": 9.57193076753154
+      },
+      {
+        "panels_per_side": 4,
+        "panel_count": 16,
+        "q_rel_l2": 0.0750225453017565,
+        "condition_number": 18.14837360016146
+      },
+      {
+        "panels_per_side": 8,
+        "panel_count": 32,
+        "q_rel_l2": 0.055112618459556534,
+        "condition_number": 35.560594597572106
+      },
+      {
+        "panels_per_side": 16,
+        "panel_count": 64,
+        "q_rel_l2": 0.03981146737352582,
+        "condition_number": 70.80944850166013
+      }
+    ],
+    "observed_order": [
+      0.36856900363810996,
+      0.4449415375864524,
+      0.4691986254337571
+    ]
+  }
+}
