@@ -1,0 +1,390 @@
+{
+  "case": {
+    "deep_reference": "tensorbem.free_surface3d.green_function_3d",
+    "kernel": "tensorbem.finite_depth3d.green_function_3d",
+    "numpy": "2.4.6",
+    "python": "3.11.6",
+    "shallow_reference": "(i/(4h))*H_0^{(1)}(k0*R)",
+    "z_over_h": -0.5
+  },
+  "crossover_1pct": {
+    "deep_water_surrogate_valid_from_k0h": {
+      "100.0": 4999.999999999982,
+      "20.0": 999.9999999999965,
+      "5.0": 249.99999999999912,
+      "800.0": 39999.999999999854
+    },
+    "notes": "Deep-water crossover is taken on the fixed-nu depth ladder: the deviation is dominated by the wave-term normalisation ratio, so it closes only once the source sits many wavelengths deep. On the similarity map (R/h fixed) the same deviation is a function of k0*h alone; at k0*h = 3 it is still 9.7e-2.",
+    "shallow_surrogate_valid_until_k0h": {
+      "1.0": 0.2,
+      "5.0": 0.2,
+      "50.0": 0.2
+    }
+  },
+  "deep_water_limit": {
+    "nu": 50.0,
+    "rows": [
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 1.0,
+        "finite": true,
+        "gradient_z_real": -0.045358764083996375,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 49.99999999999982,
+        "real": 0.030269762647286168,
+        "relative_deviation": 0.36525940027685166
+      },
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 2.0,
+        "finite": true,
+        "gradient_z_real": -0.03266040983588672,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 99.99999999999964,
+        "real": 0.023995047095580986,
+        "relative_deviation": 0.08225042888682044
+      },
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 5.0,
+        "finite": true,
+        "gradient_z_real": -0.02895350302102363,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 249.99999999999912,
+        "real": 0.02230224269083363,
+        "relative_deviation": 0.005899743440709315
+      },
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 20.0,
+        "finite": true,
+        "gradient_z_real": -0.028682673461678878,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 999.9999999999965,
+        "real": 0.022173506386812716,
+        "relative_deviation": 9.33401573584014e-05
+      },
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 100.0,
+        "finite": true,
+        "gradient_z_real": -0.028678393812244702,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 4999.999999999982,
+        "real": 0.022171453439840838,
+        "relative_deviation": 7.459343946969454e-07
+      },
+      {
+        "deep_water_real": 0.022171436901403475,
+        "depth": 800.0,
+        "finite": true,
+        "gradient_z_real": -0.028678359423542077,
+        "imag": 2.6912004626641912e-22,
+        "k0h": 39999.999999999854,
+        "real": 0.02217143693366961,
+        "relative_deviation": 1.455301879005333e-09
+      }
+    ]
+  },
+  "shallow_water_limit": {
+    "analytic_model_max_relative_error": 0.008553464018191237,
+    "depth": 1.0,
+    "max_deviation_at_k0h_0p1": 0.0008351329753873982,
+    "orders": [
+      {
+        "k0h_high": 0.05,
+        "k0h_low": 0.02,
+        "order": 2.0004959375354114
+      },
+      {
+        "k0h_high": 0.1,
+        "k0h_low": 0.05,
+        "order": 2.0023316338963233
+      },
+      {
+        "k0h_high": 0.2,
+        "k0h_low": 0.1,
+        "order": 2.009175321957843
+      },
+      {
+        "k0h_high": 0.4,
+        "k0h_low": 0.2,
+        "order": 2.0343813283698378
+      },
+      {
+        "k0h_high": 0.8,
+        "k0h_low": 0.4,
+        "order": 2.105841322813699
+      }
+    ],
+    "rows": [
+      {
+        "analytic_deviation": 3.3333333333333335e-05,
+        "imag": 0.24936707728316918,
+        "k0": 0.02,
+        "k0h": 0.02,
+        "nu": 0.0003999466751986186,
+        "r_over_h": 5.0,
+        "real": 0.3835468764075471,
+        "reference_abs": 0.45749983644953246,
+        "relative_deviation": 3.3336221906377084e-05
+      },
+      {
+        "analytic_deviation": 0.00020833333333333337,
+        "imag": 0.2460576818693541,
+        "k0": 0.05,
+        "k0h": 0.05,
+        "nu": 0.002497918747893999,
+        "r_over_h": 5.0,
+        "real": 0.2328447105443123,
+        "reference_abs": 0.33883462039632334,
+        "relative_deviation": 0.0002084460880859007
+      },
+      {
+        "analytic_deviation": 0.0008333333333333335,
+        "imag": 0.2344215150395947,
+        "k0": 0.1,
+        "k0h": 0.1,
+        "nu": 0.009966799462495582,
+        "r_over_h": 5.0,
+        "real": 0.11103687531358539,
+        "reference_abs": 0.2596057688521452,
+        "relative_deviation": 0.0008351329753214509
+      },
+      {
+        "analytic_deviation": 0.003333333333333334,
+        "imag": 0.19065630265836744,
+        "k0": 0.2,
+        "k0h": 0.2,
+        "nu": 0.0394750640449808,
+        "r_over_h": 5.0,
+        "real": -0.021990064497465937,
+        "reference_abs": 0.1925676490298655,
+        "relative_deviation": 0.003361844880060638
+      },
+      {
+        "analytic_deviation": 0.013333333333333336,
+        "imag": 0.0552018557716846,
+        "k0": 0.4,
+        "k0h": 0.4,
+        "nu": 0.15197958490208996,
+        "r_over_h": 5.0,
+        "real": -0.12583673332324594,
+        "reference_abs": 0.13933108236704345,
+        "relative_deviation": 0.013771697449068032
+      },
+      {
+        "analytic_deviation": 0.053333333333333344,
+        "imag": -0.09340168302210126,
+        "k0": 0.8,
+        "k0h": 0.8,
+        "nu": 0.5312294162142793,
+        "r_over_h": 5.0,
+        "real": 0.003984122992504246,
+        "reference_abs": 0.09937773899488565,
+        "relative_deviation": 0.05928009314718882
+      },
+      {
+        "analytic_deviation": 3.3333333333333335e-05,
+        "imag": 0.24749799213686668,
+        "k0": 0.02,
+        "k0h": 0.02,
+        "nu": 0.0003999466751986186,
+        "r_over_h": 10.0,
+        "real": 0.27026732060127634,
+        "reference_abs": 0.3664814254944656,
+        "relative_deviation": 3.333622191936669e-05
+      },
+      {
+        "analytic_deviation": 0.00020833333333333337,
+        "imag": 0.23456854672017557,
+        "k0": 0.05,
+        "k0h": 0.05,
+        "nu": 0.002497918747893999,
+        "r_over_h": 10.0,
+        "real": 0.11110651882890359,
+        "reference_abs": 0.2596057688521452,
+        "relative_deviation": 0.0002084460880948935
+      },
+      {
+        "analytic_deviation": 0.0008333333333333335,
+        "imag": 0.19113966118430809,
+        "k0": 0.1,
+        "k0h": 0.1,
+        "nu": 0.009966799462495582,
+        "r_over_h": 10.0,
+        "real": -0.022045814478637082,
+        "reference_abs": 0.1925676490298655,
+        "relative_deviation": 0.0008351329753873982
+      },
+      {
+        "analytic_deviation": 0.003333333333333334,
+        "imag": 0.05578452326794164,
+        "k0": 0.2,
+        "k0h": 0.2,
+        "nu": 0.0394750640449808,
+        "r_over_h": 10.0,
+        "real": -0.12716496720198453,
+        "reference_abs": 0.13933108236704345,
+        "relative_deviation": 0.0033618448796779443
+      },
+      {
+        "analytic_deviation": 0.013333333333333336,
+        "imag": -0.09792009571786281,
+        "k0": 0.4,
+        "k0h": 0.4,
+        "nu": 0.15197958490208996,
+        "r_over_h": 10.0,
+        "real": 0.004176859147462222,
+        "reference_abs": 0.09937773899488565,
+        "relative_deviation": 0.013771697371001368
+      },
+      {
+        "analytic_deviation": 0.053333333333333344,
+        "imag": 0.0403688328196472,
+        "k0": 0.8,
+        "k0h": 0.8,
+        "nu": 0.5312294162142793,
+        "r_over_h": 10.0,
+        "real": -0.052567778661565874,
+        "reference_abs": 0.07045648293850389,
+        "relative_deviation": 0.05928009328153527
+      }
+    ]
+  },
+  "transition_map": [
+    {
+      "depth": 1.0,
+      "dev_from_deep": 9.501554727609257,
+      "dev_from_shallow": 0.0002084460880859007,
+      "k0h": 0.05
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 6.641347226357803,
+      "dev_from_shallow": 0.0008351329753214509,
+      "k0h": 0.1
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 4.17697243948826,
+      "dev_from_shallow": 0.003361844880060638,
+      "k0h": 0.2
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 2.037865037302404,
+      "dev_from_shallow": 0.021871645313919608,
+      "k0h": 0.5
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 1.189087643890067,
+      "dev_from_shallow": 0.09609249959739992,
+      "k0h": 1.0
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 0.3756797123725775,
+      "dev_from_shallow": 0.3912167917727191,
+      "k0h": 2.0
+    },
+    {
+      "depth": 1.0,
+      "dev_from_deep": 0.09684793496300044,
+      "dev_from_shallow": 0.6803092134062041,
+      "k0h": 3.0
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 9.501554727610609,
+      "dev_from_shallow": 0.00020844608794279296,
+      "k0h": 0.05
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 6.641347226357738,
+      "dev_from_shallow": 0.0008351329753329972,
+      "k0h": 0.1
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 4.176972439488222,
+      "dev_from_shallow": 0.003361844880080289,
+      "k0h": 0.2
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 2.0378650373023746,
+      "dev_from_shallow": 0.021871645313909283,
+      "k0h": 0.5
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 1.1890876438901539,
+      "dev_from_shallow": 0.09609249959741446,
+      "k0h": 1.0
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 0.3756797123723862,
+      "dev_from_shallow": 0.3912167917729512,
+      "k0h": 2.0
+    },
+    {
+      "depth": 5.0,
+      "dev_from_deep": 0.09684793498663628,
+      "dev_from_shallow": 0.6803092133998478,
+      "k0h": 3.0
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 9.501554727621418,
+      "dev_from_shallow": 0.00020844608679781995,
+      "k0h": 0.05
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 6.641347226360434,
+      "dev_from_shallow": 0.0008351329748673697,
+      "k0h": 0.1
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 4.176972439488925,
+      "dev_from_shallow": 0.0033618448797199108,
+      "k0h": 0.2
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 2.0378650373021734,
+      "dev_from_shallow": 0.021871645313838117,
+      "k0h": 0.5
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 1.1890876438902431,
+      "dev_from_shallow": 0.09609249959743121,
+      "k0h": 1.0
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 0.37567971237283887,
+      "dev_from_shallow": 0.39121679177283686,
+      "k0h": 2.0
+    },
+    {
+      "depth": 50.0,
+      "dev_from_deep": 0.09684793505970916,
+      "dev_from_shallow": 0.6803092133702402,
+      "k0h": 3.0
+    }
+  ],
+  "verdict": {
+    "analytic_model_within_5pct": true,
+    "deep_water_limit_holds": true,
+    "no_nan_for_any_depth": true,
+    "shallow_water_limit_holds": true,
+    "shallow_water_order_quadratic": true
+  }
+}
