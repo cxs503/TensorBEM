@@ -101,6 +101,40 @@ TARGETS: tuple[Target, ...] = (
         SRC_ROOT / "tensorbem" / "finite_depth.py",
         ("tests/test_finite_depth.py",),
     ),
+    # --- ship-facing modules (m3426): hydrostatics/RAO, hull loads, geometry
+    # diagnostics and the Kramers-Kronig causality gate had no mutation face at
+    # all until this batch, so a sign/factor defect there could survive a green
+    # suite.  They are cheap to run, which keeps the audit affordable.
+    Target(
+        "tensorbem.rao",
+        SRC_ROOT / "tensorbem" / "rao.py",
+        ("tests/test_hydrostatic_rao.py",),
+    ),
+    Target(
+        "tensorbem.pressure",
+        SRC_ROOT / "tensorbem" / "pressure.py",
+        ("tests/test_pressure.py",),
+    ),
+    Target(
+        "tensorbem.clearance",
+        SRC_ROOT / "tensorbem" / "clearance.py",
+        ("tests/test_clearance.py",),
+    ),
+    Target(
+        "tensorbem.mesh_quality",
+        SRC_ROOT / "tensorbem" / "mesh_quality.py",
+        ("tests/test_mesh_quality.py",),
+    ),
+    Target(
+        "tensorbem.causality",
+        SRC_ROOT / "tensorbem" / "causality.py",
+        ("tests/test_causality.py",),
+    ),
+    Target(
+        "tensorbem.symmetry3d",
+        SRC_ROOT / "tensorbem" / "symmetry3d.py",
+        ("tests/test_symmetry3d.py",),
+    ),
 )
 
 

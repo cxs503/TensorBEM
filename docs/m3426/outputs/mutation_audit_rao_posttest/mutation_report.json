@@ -1,0 +1,170 @@
+{
+  "broaden": false,
+  "generated_by": "tensorbem.benchmarks.mutation_audit",
+  "isolated_package": "/tmp/tensorbem-mutation-zd8zrtcu/src/tensorbem/__init__.py",
+  "jobs": 6,
+  "max_per_module": 8,
+  "modules": {
+    "tensorbem.rao": {
+      "invalid": 0,
+      "killed": 6,
+      "mutants": 8,
+      "mutation_score": 0.75,
+      "survived": 2,
+      "survivors": [
+        "swap_binop in compute_rao_at_frequency: omega * omega -> omega / omega",
+        "negate_constant in estimate_natural_frequency: 0.0 -> -0.0"
+      ],
+      "tests": [
+        "tests/test_hydrostatic_rao.py",
+        "tests/test_mutation_gaps_shipfront.py"
+      ],
+      "timeout": 0
+    }
+  },
+  "mutants": [
+    {
+      "col": 23,
+      "family_tests": [],
+      "function": "compute_rao_at_frequency",
+      "key": "tensorbem.rao:130:23:negate_constant",
+      "killed_by": "tests/test_hydrostatic_rao.py::TestRAOComputation::test_rao_single_frequency",
+      "lineno": 130,
+      "module": "tensorbem.rao",
+      "operator": "negate_constant",
+      "original": "1.0",
+      "replacement": "-1.0",
+      "seconds": 2.53,
+      "stage": 1,
+      "summary": "negate_constant in compute_rao_at_frequency: 1.0 -> -1.0",
+      "verdict": "killed"
+    },
+    {
+      "col": 15,
+      "family_tests": [],
+      "function": "compute_rao_at_frequency",
+      "key": "tensorbem.rao:207:15:swap_binop",
+      "killed_by": null,
+      "lineno": 207,
+      "module": "tensorbem.rao",
+      "operator": "swap_binop",
+      "original": "omega * omega",
+      "replacement": "omega / omega",
+      "seconds": 14.18,
+      "stage": 1,
+      "summary": "swap_binop in compute_rao_at_frequency: omega * omega -> omega / omega",
+      "verdict": "survived"
+    },
+    {
+      "col": 8,
+      "family_tests": [],
+      "function": "compute_rao_at_frequency",
+      "key": "tensorbem.rao:208:8:swap_binop",
+      "killed_by": "tests/test_mutation_gaps_shipfront.py::test_impedance_matrix_pins_the_equation_of_motion",
+      "lineno": 208,
+      "module": "tensorbem.rao",
+      "operator": "swap_binop",
+      "original": "-omega_sq * (m + added_mass) + 1j * omega * damping + c",
+      "replacement": "-omega_sq * (m + added_mass) + 1j * omega * damping - c",
+      "seconds": 14.06,
+      "stage": 1,
+      "summary": "swap_binop in compute_rao_at_frequency: -omega_sq * (m + added_mass) + 1j * omega * damping + c -> -omega_sq * (m + added_mass) + 1j * omega * damping - c",
+      "verdict": "killed"
+    },
+    {
+      "col": 21,
+      "family_tests": [],
+      "function": "compute_rao_at_frequency",
+      "key": "tensorbem.rao:208:21:swap_binop",
+      "killed_by": "tests/test_mutation_gaps_shipfront.py::test_impedance_matrix_pins_the_equation_of_motion",
+      "lineno": 208,
+      "module": "tensorbem.rao",
+      "operator": "swap_binop",
+      "original": "m + added_mass",
+      "replacement": "m - added_mass",
+      "seconds": 13.65,
+      "stage": 1,
+      "summary": "swap_binop in compute_rao_at_frequency: m + added_mass -> m - added_mass",
+      "verdict": "killed"
+    },
+    {
+      "col": 19,
+      "family_tests": [],
+      "function": "compute_rao_at_frequency",
+      "key": "tensorbem.rao:218:19:swap_binop",
+      "killed_by": "tests/test_mutation_gaps_shipfront.py::test_reported_impedance_residual_is_the_actual_residual",
+      "lineno": 218,
+      "module": "tensorbem.rao",
+      "operator": "swap_binop",
+      "original": "z @ rao - f_exc",
+      "replacement": "z @ rao + f_exc",
+      "seconds": 13.64,
+      "stage": 1,
+      "summary": "swap_binop in compute_rao_at_frequency: z @ rao - f_exc -> z @ rao + f_exc",
+      "verdict": "killed"
+    },
+    {
+      "col": 12,
+      "family_tests": [],
+      "function": "estimate_natural_frequency",
+      "key": "tensorbem.rao:381:12:swap_binop",
+      "killed_by": "tests/test_hydrostatic_rao.py::TestRAOComputation::test_natural_frequency_estimation",
+      "lineno": 381,
+      "module": "tensorbem.rao",
+      "operator": "swap_binop",
+      "original": "inertial + added_mass_inf[dof, dof]",
+      "replacement": "inertial - added_mass_inf[dof, dof]",
+      "seconds": 10.46,
+      "stage": 1,
+      "summary": "swap_binop in estimate_natural_frequency: inertial + added_mass_inf[dof, dof] -> inertial - added_mass_inf[dof, dof]",
+      "verdict": "killed"
+    },
+    {
+      "col": 16,
+      "family_tests": [],
+      "function": "estimate_natural_frequency",
+      "key": "tensorbem.rao:384:16:shift_constant",
+      "killed_by": "tests/test_mutation_gaps_shipfront.py::test_natural_frequency_only_rejects_non_positive_effective_mass",
+      "lineno": 384,
+      "module": "tensorbem.rao",
+      "operator": "shift_constant",
+      "original": "0",
+      "replacement": "1",
+      "seconds": 16.72,
+      "stage": 1,
+      "summary": "shift_constant in estimate_natural_frequency: 0 -> 1",
+      "verdict": "killed"
+    },
+    {
+      "col": 15,
+      "family_tests": [],
+      "function": "estimate_natural_frequency",
+      "key": "tensorbem.rao:385:15:negate_constant",
+      "killed_by": null,
+      "lineno": 385,
+      "module": "tensorbem.rao",
+      "operator": "negate_constant",
+      "original": "0.0",
+      "replacement": "-0.0",
+      "seconds": 13.1,
+      "stage": 1,
+      "summary": "negate_constant in estimate_natural_frequency: 0.0 -> -0.0",
+      "verdict": "survived"
+    }
+  ],
+  "overall": {
+    "invalid": 0,
+    "killed": 6,
+    "mutants": 8,
+    "mutation_score": 0.75,
+    "survived": 2,
+    "survivors": [
+      "swap_binop in compute_rao_at_frequency: omega * omega -> omega / omega",
+      "negate_constant in estimate_natural_frequency: 0.0 -> -0.0"
+    ],
+    "tests": [],
+    "timeout": 0
+  },
+  "seed": 20261103,
+  "timeout_seconds": 300.0
+}
