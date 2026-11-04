@@ -1,0 +1,791 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.008513,
+      "description": "panel added-mass error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_128",
+      "measured": 0.008513030527356396,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 3.5859692700834613e-06,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.013361,
+      "description": "panel damping error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_damping_128",
+      "measured": 0.013360592915766837,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -3.046809618763498e-05,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 0.006,
+      "description": "near-field/far-field damping closure at 128 panels (upper bound)",
+      "group": "ursell",
+      "key": "ursell_near_far_128",
+      "measured": 0.005341374018855711,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -0.10977099685738156,
+      "source": "README.md (Milestone 4): 'closing to 6e-3'",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0001824,
+      "description": "interior probe RMSE, degree 3 (x3-3xy2), 1280 panels",
+      "group": "interior_harmonics",
+      "key": "interior_harmonic_deg3_field_rmse_1280",
+      "measured": 0.00018240135166573012,
+      "parameters": {
+        "harmonic": "x3-3xy2",
+        "subdivisions": 3
+      },
+      "relative_deviation": 7.410448081879263e-06,
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.078,
+      "description": "conditioning of (1/2 I - H), 2-D ellipse, 16 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_conditioning_16",
+      "measured": 3.0775669656433142,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0001406869254989033,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00264,
+      "description": "relative error of A[surge_x], 2-D ellipse, 16 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_surge_x_16",
+      "measured": 0.0026365129431077873,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0013208548834138878,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00515,
+      "description": "relative error of A[heave_y], 2-D ellipse, 16 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_heave_y_16",
+      "measured": 0.0051495169048570945,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -9.380488211759491e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0323,
+      "description": "relative error of A[roll_xy], 2-D ellipse, 16 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_xy_16",
+      "measured": 0.03231602745519722,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 0.0004962060432574317,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-11,
+      "description": "antisymmetry residual bound of A, 2-D ellipse, 16 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_symmetry_16",
+      "measured": 5.975301589032532e-13,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.9402469841096748,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.019,
+      "description": "conditioning of (1/2 I - H), 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_conditioning_32",
+      "measured": 3.0190093621605576,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 3.1010800124110526e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000742,
+      "description": "relative error of A[surge_x], 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_surge_x_32",
+      "measured": 0.0007418032988811076,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.000265095847563997,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00141,
+      "description": "relative error of A[heave_y], 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_heave_y_32",
+      "measured": 0.0014136929168418661,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 0.002619089958770296,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00871,
+      "description": "relative error of A[roll_xy], 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_xy_32",
+      "measured": 0.008707702995839804,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0002637203398618319,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-11,
+      "description": "antisymmetry residual bound of A, 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_symmetry_32",
+      "measured": 6.339494881531977e-13,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.9366050511846803,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 1.936,
+      "description": "observed order of roll_xy, 2-D ellipse, 32 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_order_32",
+      "measured": 1.935705964683338,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.00015187774620962485,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.005,
+      "description": "conditioning of (1/2 I - H), 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_conditioning_64",
+      "measured": 3.0047676022208187,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -7.733703134148397e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000194,
+      "description": "relative error of A[surge_x], 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_surge_x_64",
+      "measured": 0.000193888123562814,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0005766826659071929,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000375,
+      "description": "relative error of A[heave_y], 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_heave_y_64",
+      "measured": 0.00037530251383002073,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 0.0008067035467219352,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00225,
+      "description": "relative error of A[roll_xy], 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_xy_64",
+      "measured": 0.0022459748098862258,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0017889733838995843,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-11,
+      "description": "antisymmetry residual bound of A, 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_symmetry_64",
+      "measured": 6.413629577369567e-13,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.9358637042263043,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 1.966,
+      "description": "observed order of roll_xy, 2-D ellipse, 64 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_order_64",
+      "measured": 1.9660618539597123,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 3.146183098289203e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.001,
+      "description": "conditioning of (1/2 I - H), 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_conditioning_128",
+      "measured": 3.001197213498696,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 6.571592758948961e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 4.94e-05,
+      "description": "relative error of A[surge_x], 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_surge_x_128",
+      "measured": 4.938326768708358e-05,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0003387107877818643,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 9.7e-05,
+      "description": "relative error of A[heave_y], 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_heave_y_128",
+      "measured": 9.696573407819595e-05,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.00035325692581491814,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00057,
+      "description": "relative error of A[roll_xy], 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_xy_128",
+      "measured": 0.0005695860618986422,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.0007262071953645062,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-11,
+      "description": "antisymmetry residual bound of A, 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_symmetry_128",
+      "measured": 1.1386427415037259e-12,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": -0.8861357258496274,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 1.982,
+      "description": "observed order of roll_xy, 2-D ellipse, 128 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_2d_roll_order_128",
+      "measured": 1.9821556024909017,
+      "parameters": {
+        "case": "ellipse"
+      },
+      "relative_deviation": 7.850781579300736e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 5 (2-D ellipse)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.447,
+      "description": "conditioning of (1/2 I - H), 3-D ellipsoid, 20 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_conditioning_20",
+      "measured": 2.4474842630475258,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.0001979007141502617,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.263,
+      "description": "largest translational relative error, 20 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_max_translation_20",
+      "measured": 0.26291630707746716,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0003182240400488669,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.49,
+      "description": "relative error of A[roll_x], 3-D ellipsoid, 20 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_roll_x_20",
+      "measured": 0.49033503512749893,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.0006837451581611008,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.519,
+      "description": "relative error of A[pitch_y], 3-D ellipsoid, 20 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_pitch_y_20",
+      "measured": 0.5194564313165972,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.0008794437699368551,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.511,
+      "description": "relative error of A[yaw_z], 3-D ellipsoid, 20 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_yaw_z_20",
+      "measured": 0.5106305278480893,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0007230374792773846,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.246,
+      "description": "conditioning of (1/2 I - H), 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_conditioning_80",
+      "measured": 2.246292607454082,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.0001302793651300559,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0811,
+      "description": "largest translational relative error, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_max_translation_80",
+      "measured": 0.08105752753680151,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0005237048483168333,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.163,
+      "description": "relative error of A[roll_x], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_roll_x_80",
+      "measured": 0.16342192013820428,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.002588467105547691,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.068,
+      "description": "observed order of A[roll_x], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_roll_x_order_80",
+      "measured": 2.0676830658818797,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.00015325634338510315,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.178,
+      "description": "relative error of A[pitch_y], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_pitch_y_80",
+      "measured": 0.17832504457077106,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.0018260930942194712,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.012,
+      "description": "observed order of A[pitch_y], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_pitch_y_order_80",
+      "measured": 2.01202071723087,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 1.0296834428398464e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.174,
+      "description": "relative error of A[yaw_z], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_yaw_z_80",
+      "measured": 0.17435532379218546,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.002042090759686636,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.022,
+      "description": "observed order of A[yaw_z], 3-D ellipsoid, 80 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_yaw_z_order_80",
+      "measured": 2.022137551471327,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 6.802743389086253e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.13,
+      "description": "conditioning of (1/2 I - H), 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_conditioning_320",
+      "measured": 2.1304866002120275,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.00022845080376883634,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0214,
+      "description": "largest translational relative error, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_max_translation_320",
+      "measured": 0.02137494958121534,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0011705803170401128,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.046,
+      "description": "relative error of A[roll_x], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_roll_x_320",
+      "measured": 0.04599566806678106,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -9.417246128121598e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 1.972,
+      "description": "observed order of A[roll_x], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_roll_x_order_320",
+      "measured": 1.9717828089459537,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0001101374513419234,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0484,
+      "description": "relative error of A[pitch_y], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_pitch_y_320",
+      "measured": 0.048415976530203166,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": 0.00033009359923898704,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.028,
+      "description": "observed order of A[pitch_y], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_pitch_y_order_320",
+      "measured": 2.0277578610537903,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.00011939790247027837,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0485,
+      "description": "relative error of A[yaw_z], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_yaw_z_320",
+      "measured": 0.04845205444486364,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0009885681471414663,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 1.992,
+      "description": "observed order of A[yaw_z], 3-D ellipsoid, 320 panels",
+      "group": "rigid_body",
+      "key": "rigid_body_3d_yaw_z_order_320",
+      "measured": 1.9915855278451622,
+      "parameters": {
+        "case": "ellipsoid"
+      },
+      "relative_deviation": -0.0002080683508221929,
+      "source": "docs/marine_bem_benchmarks.md section 4.7 tables 6 (3-D ellipsoid)",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "4f5b73e",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 48,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 48,
+    "verdict": "PASS",
+    "worst_relative_deviation": 0.9402469841096748
+  },
+  "tiers": [
+    "standard"
+  ]
+}

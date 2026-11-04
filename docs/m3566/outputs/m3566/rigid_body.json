@@ -1,0 +1,315 @@
+{
+  "benchmark": "rigid_body_neumann_added_mass_and_rotational_inertia",
+  "ellipse_2d": {
+    "case": "two_dimensional_ellipse_rigid_body_neumann",
+    "exact_diagonal": [
+      1811.324514335365,
+      7245.29805734146,
+      1146.228794227848
+    ],
+    "fluid_density": 1025.0,
+    "levels": [
+      {
+        "area_ratio": 0.9744953584044328,
+        "computed_diagonal": [
+          1806.5489338091513,
+          7282.607842168468,
+          1109.1872330436433
+        ],
+        "condition_number": 3.0775669656433142,
+        "diagonal_relative_errors": {
+          "heave_y": 0.0051495169048570945,
+          "roll_xy": 0.03231602745519722,
+          "surge_x": 0.0026365129431077873
+        },
+        "exact_diagonal": [
+          1811.324514335365,
+          7245.29805734146,
+          1146.228794227848
+        ],
+        "h_max": 0.5768571567542988,
+        "max_off_diagonal_abs": 4.0607883957055617e-13,
+        "max_relative_residual_l2": 3.4590109631591723e-16,
+        "panels": 16,
+        "symmetry_error": 5.975301589032532e-13
+      },
+      {
+        "area_ratio": 0.9935868511442058,
+        "computed_diagonal": [
+          1809.9808678352867,
+          7255.5406838855315,
+          1136.2477743224324
+        ],
+        "condition_number": 3.0190093621605576,
+        "diagonal_relative_errors": {
+          "heave_y": 0.0014136929168418661,
+          "roll_xy": 0.008707702995839804,
+          "surge_x": 0.0007418032988811076
+        },
+        "exact_diagonal": [
+          1811.324514335365,
+          7245.29805734146,
+          1146.228794227848
+        ],
+        "h_max": 0.29299010903094963,
+        "max_off_diagonal_abs": 5.487778393392773e-13,
+        "max_relative_residual_l2": 4.583135979178472e-16,
+        "panels": 32,
+        "symmetry_error": 6.339494881531977e-13
+      },
+      {
+        "area_ratio": 0.9983943930356184,
+        "computed_diagonal": [
+          1810.9733200241171,
+          7248.017235915828,
+          1143.654393229646
+        ],
+        "condition_number": 3.0047676022208187,
+        "diagonal_relative_errors": {
+          "heave_y": 0.00037530251383002073,
+          "roll_xy": 0.0022459748098862258,
+          "surge_x": 0.000193888123562814
+        },
+        "exact_diagonal": [
+          1811.324514335365,
+          7245.29805734146,
+          1146.228794227848
+        ],
+        "h_max": 0.14707005865761005,
+        "max_off_diagonal_abs": 6.202429445251419e-13,
+        "max_relative_residual_l2": 4.5561844302111045e-16,
+        "panels": 64,
+        "symmetry_error": 6.413629577369567e-13
+      },
+      {
+        "area_ratio": 0.9995984531496791,
+        "computed_diagonal": [
+          1811.2350652120053,
+          7246.000602986205,
+          1145.575918282909
+        ],
+        "condition_number": 3.001197213498696,
+        "diagonal_relative_errors": {
+          "heave_y": 9.696573407819595e-05,
+          "roll_xy": 0.0005695860618986422,
+          "surge_x": 4.938326768708358e-05
+        },
+        "exact_diagonal": [
+          1811.324514335365,
+          7245.29805734146,
+          1146.228794227848
+        ],
+        "h_max": 0.07360705563677267,
+        "max_off_diagonal_abs": 9.246828912082851e-13,
+        "max_relative_residual_l2": 6.260322007038928e-16,
+        "panels": 128,
+        "symmetry_error": 1.1386427415037259e-12
+      }
+    ],
+    "modes": [
+      "surge_x",
+      "heave_y",
+      "roll_xy"
+    ],
+    "observed_orders": {
+      "heave_y": [
+        null,
+        1.9081650654249296,
+        1.9242178269780748,
+        1.9552686617829282
+      ],
+      "roll_xy": [
+        null,
+        1.935705964683338,
+        1.9660618539597123,
+        1.9821556024909017
+      ],
+      "surge_x": [
+        null,
+        1.871898229913333,
+        1.946814872560033,
+        1.975921025410226
+      ]
+    },
+    "semi_major": 1.5,
+    "semi_minor": 0.75
+  },
+  "ellipsoid_3d": {
+    "case": "three_dimensional_ellipsoid_rigid_body_neumann",
+    "exact_diagonal": [
+      1211.051995240953,
+      2437.153501509733,
+      4184.38918975305,
+      100.84180458746818,
+      767.0438666513049,
+      250.8776480497712
+    ],
+    "fluid_density": 1025.0,
+    "levels": [
+      {
+        "computed_diagonal": [
+          892.6466769734033,
+          1797.0880321211018,
+          3142.7836862025533,
+          51.39553479275158,
+          368.59799701733414,
+          122.77186220082936
+        ],
+        "condition_number": 2.4474842630475258,
+        "diagonal_relative_errors": {
+          "heave_z": 0.24892653534743722,
+          "pitch_y": 0.5194564313165972,
+          "roll_x": 0.49033503512749893,
+          "surge_x": 0.26291630707746716,
+          "sway_y": 0.26262829526007797,
+          "yaw_z": 0.5106305278480893
+        },
+        "double_layer_row_sum_error": 2.220446049250313e-16,
+        "exact_diagonal": [
+          1211.051995240953,
+          2437.153501509733,
+          4184.38918975305,
+          100.84180458746818,
+          767.0438666513049,
+          250.8776480497712
+        ],
+        "h_max": 1.5771933363574009,
+        "max_off_diagonal_abs": 0.0022704427099211636,
+        "max_relative_residual_l2": 2.6690865371253623e-16,
+        "panels": 20,
+        "subdivisions": 0,
+        "symmetry_error": 0.0024928730005645606,
+        "vertices": 12,
+        "volume_ratio": 0.6054613829125256
+      },
+      {
+        "computed_diagonal": [
+          1112.887114788211,
+          2246.180762128627,
+          3879.5366503777022,
+          84.36204325158255,
+          630.2607349429744,
+          207.1357944918314
+        ],
+        "condition_number": 2.246292607454082,
+        "diagonal_relative_errors": {
+          "heave_z": 0.07285472874317875,
+          "pitch_y": 0.17832504457077106,
+          "roll_x": 0.16342192013820428,
+          "surge_x": 0.08105752753680151,
+          "sway_y": 0.0783589294899992,
+          "yaw_z": 0.17435532379218546
+        },
+        "double_layer_row_sum_error": 2.220446049250313e-16,
+        "exact_diagonal": [
+          1211.051995240953,
+          2437.153501509733,
+          4184.38918975305,
+          100.84180458746818,
+          767.0438666513049,
+          250.8776480497712
+        ],
+        "h_max": 0.9270509831248421,
+        "max_off_diagonal_abs": 0.004139244987790899,
+        "max_relative_residual_l2": 3.819927402536551e-16,
+        "panels": 80,
+        "subdivisions": 1,
+        "symmetry_error": 0.0019054956515112019,
+        "vertices": 42,
+        "volume_ratio": 0.8734532000030633
+      },
+      {
+        "computed_diagonal": [
+          1185.1658199024473,
+          2387.6172226701947,
+          4106.589978211573,
+          96.20351841640779,
+          729.9066888058791,
+          238.72211058746436
+        ],
+        "condition_number": 2.1304866002120275,
+        "diagonal_relative_errors": {
+          "heave_z": 0.018592728356147174,
+          "pitch_y": 0.048415976530203166,
+          "roll_x": 0.04599566806678106,
+          "surge_x": 0.02137494958121534,
+          "sway_y": 0.020325465264642625,
+          "yaw_z": 0.04845205444486364
+        },
+        "double_layer_row_sum_error": 4.440892098500626e-16,
+        "exact_diagonal": [
+          1211.051995240953,
+          2437.153501509733,
+          4184.38918975305,
+          100.84180458746818,
+          767.0438666513049,
+          250.8776480497712
+        ],
+        "h_max": 0.48737954434935943,
+        "max_off_diagonal_abs": 0.0011957701585990617,
+        "max_relative_residual_l2": 5.285754297054498e-16,
+        "panels": 320,
+        "subdivisions": 2,
+        "symmetry_error": 0.0003384026612261855,
+        "vertices": 162,
+        "volume_ratio": 0.9661607485985874
+      }
+    ],
+    "modes": [
+      "surge_x",
+      "sway_y",
+      "heave_z",
+      "roll_x",
+      "pitch_y",
+      "yaw_z"
+    ],
+    "observed_orders": {
+      "heave_z": [
+        null,
+        2.3122038698070835,
+        2.1240597167696724
+      ],
+      "pitch_y": [
+        null,
+        2.01202071723087,
+        2.0277578610537903
+      ],
+      "roll_x": [
+        null,
+        2.0676830658818797,
+        1.9717828089459537
+      ],
+      "surge_x": [
+        null,
+        2.2143221243701103,
+        2.073112305037065
+      ],
+      "sway_y": [
+        null,
+        2.2759772433045757,
+        2.098752755241947
+      ],
+      "yaw_z": [
+        null,
+        2.022137551471327,
+        1.9915855278451622
+      ]
+    },
+    "semi_axes": [
+      1.5,
+      1.0,
+      0.75
+    ],
+    "shape_factors": [
+      0.4009275745546657,
+      0.6707129177975155,
+      0.9283595076459654
+    ]
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "note": "Solved from the rigid-body no-penetration Neumann boundary condition without prescribing an analytical surface potential. The second-kind operator (1/2 I - H) maintains O(1) conditioning across refinement. No free-surface or wave effects are included."
+}
