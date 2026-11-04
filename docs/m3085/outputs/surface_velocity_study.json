@@ -1,0 +1,271 @@
+{
+  "cases": {
+    "constant_trace": {
+      "checks": {
+        "exact": true
+      },
+      "results": [
+        {
+          "benchmark": "surface_velocity_constant_trace",
+          "panels": 80,
+          "recovered_max_abs_error": 3.303828255605676e-15,
+          "recovered_relative_l2_error": 1.592005317744867e-14,
+          "representation_max_abs_error": 1.5630177156383126e-15,
+          "representation_relative_l2_error": 6.67533469482203e-15,
+          "subdivisions": 1
+        },
+        {
+          "benchmark": "surface_velocity_constant_trace",
+          "panels": 320,
+          "recovered_max_abs_error": 1.4497917893280253e-14,
+          "recovered_relative_l2_error": 9.775088416308746e-14,
+          "representation_max_abs_error": 3.9220044045465125e-15,
+          "representation_relative_l2_error": 3.013736767863661e-14,
+          "subdivisions": 2
+        },
+        {
+          "benchmark": "surface_velocity_constant_trace",
+          "panels": 1280,
+          "recovered_max_abs_error": 8.674058569015104e-14,
+          "recovered_relative_l2_error": 9.690789585582434e-13,
+          "representation_max_abs_error": 1.7777062809432952e-14,
+          "representation_relative_l2_error": 2.1580569863394412e-13,
+          "subdivisions": 3
+        }
+      ]
+    },
+    "linear_trace": {
+      "checks": {
+        "recovered_error_converges": true,
+        "representation_error_does_not_vanish_under_refinement": true
+      },
+      "results": [
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.4856983469716094,
+          "representation_relative_l2_error": 0.465854275585623,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 5.551115123125783e-16,
+          "panels": 320,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.012232478890094267,
+          "recovered_relative_l2_error": 0.007169047078034255,
+          "relative_residual_l2": 7.482563695516839e-16,
+          "representation_max_abs_error": 0.49392645527136747,
+          "representation_relative_l2_error": 0.4802908797064481,
+          "subdivisions": 2
+        },
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 1.6653345369377348e-15,
+          "panels": 1280,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.005035100504757195,
+          "recovered_relative_l2_error": 0.0021853708279718875,
+          "relative_residual_l2": 1.2250549388382264e-15,
+          "representation_max_abs_error": 0.5014670659097368,
+          "representation_relative_l2_error": 0.4896511124470986,
+          "subdivisions": 3
+        }
+      ]
+    },
+    "quadrature_order": {
+      "checks": {
+        "representation_error_is_quadrature_converged": true
+      },
+      "results": [
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.4856983469716094,
+          "representation_relative_l2_error": 0.465854275585623,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 16,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.48569435337682265,
+          "representation_relative_l2_error": 0.46585020092506374,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 32,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.48569435292804763,
+          "representation_relative_l2_error": 0.46585019977840897,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 48,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.48569435292804775,
+          "representation_relative_l2_error": 0.46585019977840864,
+          "subdivisions": 1
+        }
+      ]
+    },
+    "scaled_linear_trace": {
+      "checks": {
+        "representation_error_is_scale_invariant": true
+      },
+      "results": [
+        {
+          "amplitude": 1.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.04106400184481984,
+          "recovered_relative_l2_error": 0.025434605496925042,
+          "relative_residual_l2": 3.0429382064913467e-16,
+          "representation_max_abs_error": 0.4856983469716094,
+          "representation_relative_l2_error": 0.465854275585623,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 10.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.4106400184481718,
+          "recovered_relative_l2_error": 0.025434605496924983,
+          "relative_residual_l2": 3.666979223124903e-16,
+          "representation_max_abs_error": 4.856983469716095,
+          "representation_relative_l2_error": 0.465854275585623,
+          "subdivisions": 1
+        },
+        {
+          "amplitude": 100.0,
+          "benchmark": "surface_velocity_linear_trace",
+          "double_layer_row_sum_error": 2.220446049250313e-16,
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 4.106400184482041,
+          "recovered_relative_l2_error": 0.025434605496925066,
+          "relative_residual_l2": 3.441716990341532e-16,
+          "representation_max_abs_error": 48.56983469716096,
+          "representation_relative_l2_error": 0.4658542755856229,
+          "subdivisions": 1
+        }
+      ]
+    },
+    "translating_sphere": {
+      "checks": {
+        "recovered_beats_representation": true
+      },
+      "results": [
+        {
+          "benchmark": "surface_velocity_translating_sphere",
+          "panels": 80,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.2104361706758492,
+          "recovered_relative_l2_error": 0.15026695393753853,
+          "representation_max_abs_error": 0.644002928403547,
+          "representation_relative_l2_error": 0.6531385430176716,
+          "subdivisions": 1
+        },
+        {
+          "benchmark": "surface_velocity_translating_sphere",
+          "panels": 320,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.0632906056800997,
+          "recovered_relative_l2_error": 0.04373095156802237,
+          "representation_max_abs_error": 0.566534231151692,
+          "representation_relative_l2_error": 0.5687846829990338,
+          "subdivisions": 2
+        },
+        {
+          "benchmark": "surface_velocity_translating_sphere",
+          "panels": 1280,
+          "quadrature_order": 8,
+          "recovered_max_abs_error": 0.02129606553788066,
+          "recovered_relative_l2_error": 0.013755967520046257,
+          "representation_max_abs_error": 0.5303517814593723,
+          "representation_relative_l2_error": 0.53161811683764,
+          "subdivisions": 3
+        }
+      ]
+    }
+  },
+  "checks": {
+    "all_outputs_finite": true,
+    "constant_trace_is_exact": true,
+    "recovered_beats_representation": true,
+    "recovered_constant_trace_is_exact": true,
+    "recovered_error_converges": true,
+    "representation_error_does_not_vanish_under_refinement": true,
+    "representation_error_is_quadrature_converged": true,
+    "representation_error_is_scale_invariant": true
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "finding": "Differentiating the Green representation with the piecewise-constant traces of the discretisation gives a surface velocity that is exact for a boundary value without jumps and wrong by tens of percent for one that jumps at every panel edge. The relative error is unchanged by the data amplitude and by the quadrature order, and it does not vanish under refinement, because the O(h) error of the constant-panel potential is amplified to O(1) by the gradient. Building the same velocity from the exact identity grad(phi) = grad_tan(u) + n*q, with the tangential derivative recovered by a superconvergent least-squares patch fit, removes the amplification and converges at second order. The boundary integral equations are unchanged; only the post-processing of the surface velocity differs.",
+  "levels": [
+    1,
+    2,
+    3
+  ],
+  "observed_orders": {
+    "recovered_linear_trace": [
+      1.8269394461758695,
+      1.7139032597852883
+    ],
+    "recovered_translating_sphere": [
+      1.7808011265042711,
+      1.668597126671351
+    ],
+    "representation_linear_trace": [
+      -0.04402967900291022,
+      -0.027845748899599284
+    ],
+    "representation_translating_sphere": [
+      0.1995064324494935,
+      0.09749234406477984
+    ]
+  },
+  "radius": 1.0,
+  "schema_version": 1,
+  "scope": "Constant triangular panels on flat-faceted icospheres, centroid collocation, c=1/2, analytic double-layer solid angles and their closed-form gradients, Duffy single-layer quadrature with a polar self-panel rule, and dense direct solves. This study characterises the accuracy of the reconstructed surface velocity; it does not add free-surface, wave, viscosity or ship-hull physics.",
+  "speed": 1.0,
+  "study": "tensorbem_surface_velocity_accuracy"
+}
