@@ -1,0 +1,760 @@
+{
+ "seed": 20261103,
+ "max_per_module": 120,
+ "jobs": 8,
+ "modules": [
+  "tensorbem.finite_depth3d",
+  "tensorbem.free_surface3d",
+  "tensorbem.kernels3d"
+ ],
+ "score_before": 0.7416666666666667,
+ "score_after": 0.7638888888888888,
+ "per_module": {
+  "tensorbem.finite_depth3d": {
+   "mutants": 120,
+   "score_before": 0.7083,
+   "score_after": 0.7167
+  },
+  "tensorbem.free_surface3d": {
+   "mutants": 120,
+   "score_before": 0.7,
+   "score_after": 0.7083
+  },
+  "tensorbem.kernels3d": {
+   "mutants": 120,
+   "score_before": 0.8167,
+   "score_after": 0.8667
+  }
+ },
+ "killed_by_backfill": [
+  {
+   "key": "tensorbem.kernels3d:44:49:swap_binop",
+   "summary": "swap_binop in double_layer_kernel_3d: _FOUR_PI * r2 * math.sqrt(r2) -> _FOUR_PI * r2 / math.sqrt(r2)",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_double_layer_point_kernel_scales_like_inverse_cube"
+  },
+  {
+   "key": "tensorbem.kernels3d:62:11:shift_constant",
+   "summary": "shift_constant in triangle_area: 0.5 -> 1.0",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_duffy_quadrature_defaults_and_exactness_on_skewed_panel"
+  },
+  {
+   "key": "tensorbem.kernels3d:75:56:negate_constant",
+   "summary": "negate_constant in duffy_quadrature: 8 -> -8",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_duffy_quadrature_defaults_and_exactness_on_skewed_panel"
+  },
+  {
+   "key": "tensorbem.kernels3d:107:65:negate_constant",
+   "summary": "negate_constant in duffy_quadrature_batch: 8 -> -8",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_duffy_quadrature_defaults_and_exactness_on_skewed_panel"
+  },
+  {
+   "key": "tensorbem.kernels3d:180:9:swap_binop",
+   "summary": "swap_binop in _barycentric_in_plane: (d1 * c22 - d2 * c12) / determinant -> (d1 * c22 - d2 * c12) * determinant",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_in_plane_singular_detection_on_skewed_panel"
+  },
+  {
+   "key": "tensorbem.kernels3d:180:10:swap_binop",
+   "summary": "swap_binop in _barycentric_in_plane: d1 * c22 - d2 * c12 -> d1 * c22 + d2 * c12",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_in_plane_singular_detection_on_skewed_panel"
+  },
+  {
+   "key": "tensorbem.free_surface3d:300:18:shift_constant",
+   "summary": "shift_constant in _wave_complex_and_partials: 1.0e-15 -> 1.0",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_finite_depth_kernel_with_off_axis_source_recovers_deep_water"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:334:48:swap_binop",
+   "summary": "swap_binop in green_function_3d: tgt[..., 1] - src[..., 1] -> tgt[..., 1] + src[..., 1]",
+   "killed_by": "tests/test_mutation_gaps_3d.py::test_finite_depth_kernel_with_off_axis_source_recovers_deep_water"
+  }
+ ],
+ "survivors_after": [
+  {
+   "key": "tensorbem.kernels3d:53:47:swap_binop",
+   "module": "tensorbem.kernels3d",
+   "line": 53,
+   "function": "_validate_vertices",
+   "summary": "swap_binop in _validate_vertices: points[1] - points[0] -> points[1] + points[0]",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:54:15:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 54,
+   "function": "_validate_vertices",
+   "summary": "negate_constant in _validate_vertices: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:103:28:shift_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 103,
+   "function": "duffy_quadrature",
+   "summary": "shift_constant in duffy_quadrature: 1 -> 2",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:121:62:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 121,
+   "function": "duffy_quadrature_batch",
+   "summary": "negate_constant in duffy_quadrature_batch: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:125:66:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 125,
+   "function": "duffy_quadrature_batch",
+   "summary": "negate_constant in duffy_quadrature_batch: 1 -> -1",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:159:11:swap_binop",
+   "module": "tensorbem.kernels3d",
+   "line": 159,
+   "function": "_plane_geometry",
+   "summary": "swap_binop in _plane_geometry: 0.5 * double_area -> 0.5 / double_area",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:169:9:swap_binop",
+   "module": "tensorbem.kernels3d",
+   "line": 169,
+   "function": "_barycentric_in_plane",
+   "summary": "swap_binop in _barycentric_in_plane: v1 - v0 -> v1 + v0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:197:18:flip_compare",
+   "module": "tensorbem.kernels3d",
+   "line": 197,
+   "function": "integrate_single_layer_triangle",
+   "summary": "flip_compare in integrate_single_layer_triangle: barycentric >= -1.0e-10 -> barycentric > -1e-10",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:197:34:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 197,
+   "function": "integrate_single_layer_triangle",
+   "summary": "negate_constant in integrate_single_layer_triangle: 1.0e-10 -> -1e-10",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:241:50:shift_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 241,
+   "function": "_polar_sectors",
+   "summary": "shift_constant in _polar_sectors: 2.0 -> 4.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:248:11:flip_compare",
+   "module": "tensorbem.kernels3d",
+   "line": 248,
+   "function": "_polar_sectors",
+   "summary": "flip_compare in _polar_sectors: offset <= 0.0 -> offset < 0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:248:21:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 248,
+   "function": "_polar_sectors",
+   "summary": "negate_constant in _polar_sectors: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:312:36:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 312,
+   "function": "gradient_single_layer_triangle",
+   "summary": "negate_constant in gradient_single_layer_triangle: 1 -> -1",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.kernels3d:401:16:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 401,
+   "function": "gradient_solid_angle_triangle",
+   "summary": "negate_constant in gradient_solid_angle_triangle: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:534:24:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 534,
+   "function": "integrate_double_layer_triangle",
+   "summary": "negate_constant in integrate_double_layer_triangle: 1.0e-12 -> -1e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.kernels3d:535:15:negate_constant",
+   "module": "tensorbem.kernels3d",
+   "line": 535,
+   "function": "integrate_double_layer_triangle",
+   "summary": "negate_constant in integrate_double_layer_triangle: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:81:30:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 81,
+   "function": "<module>",
+   "summary": "shift_constant in <module>: 20 -> 21",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:103:12:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 103,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: y_flat > 0.0 -> y_flat >= 0.0",
+   "category": "equivalent: selects a representation, both branches compute the same function"
+  },
+  {
+   "key": "tensorbem.free_surface3d:103:47:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 103,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: x_flat <= 0.35 * y_flat -> x_flat < 0.35 * y_flat",
+   "category": "equivalent: selects a representation, both branches compute the same function"
+  },
+  {
+   "key": "tensorbem.free_surface3d:118:36:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 118,
+   "function": "_eval_wave_block",
+   "summary": "shift_constant in _eval_wave_block: 1.0 -> 2.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:119:26:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 119,
+   "function": "_eval_wave_block",
+   "summary": "shift_constant in _eval_wave_block: 24 -> 25",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:155:13:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 155,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: y_flat > 4.5 -> y_flat >= 4.5",
+   "category": "equivalent: selects a representation, both branches compute the same function"
+  },
+  {
+   "key": "tensorbem.free_surface3d:155:31:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 155,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: d_flat < 26.0 -> d_flat <= 26.0",
+   "category": "equivalent: selects a representation, both branches compute the same function"
+  },
+  {
+   "key": "tensorbem.free_surface3d:184:14:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 184,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: ux2 > 1.0e-15 -> ux2 >= 1e-15",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:195:49:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 195,
+   "function": "_eval_wave_block",
+   "summary": "flip_compare in _eval_wave_block: x_flat > 0.25 -> x_flat >= 0.25",
+   "category": "equivalent: selects a representation, both branches compute the same function"
+  },
+  {
+   "key": "tensorbem.free_surface3d:210:17:swap_binop",
+   "module": "tensorbem.free_surface3d",
+   "line": 210,
+   "function": "_eval_wave_block",
+   "summary": "swap_binop in _eval_wave_block: -(xc * inv_d3) * p_curr -> -(xc * inv_d3) / p_curr",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:248:22:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 248,
+   "function": "wave_function_3d",
+   "summary": "negate_constant in wave_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:248:45:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 248,
+   "function": "wave_function_3d",
+   "summary": "negate_constant in wave_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:250:24:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 250,
+   "function": "wave_function_3d",
+   "summary": "negate_constant in wave_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:250:41:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 250,
+   "function": "wave_function_3d",
+   "summary": "negate_constant in wave_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:288:54:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 288,
+   "function": "_broadcast_points_3d",
+   "summary": "shift_constant in _broadcast_points_3d: 0.0 -> 1.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:357:23:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 357,
+   "function": "green_function_3d",
+   "summary": "negate_constant in green_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:406:35:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 406,
+   "function": "green_gradient_source_3d",
+   "summary": "negate_constant in green_gradient_source_3d: 1.0 -> -1.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:449:23:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 449,
+   "function": "pure_wave_value_and_source_gradient_3d",
+   "summary": "negate_constant in pure_wave_value_and_source_gradient_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:449:23:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 449,
+   "function": "pure_wave_value_and_source_gradient_3d",
+   "summary": "shift_constant in pure_wave_value_and_source_gradient_3d: 0.0 -> 1.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:457:35:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 457,
+   "function": "pure_wave_value_and_source_gradient_3d",
+   "summary": "shift_constant in pure_wave_value_and_source_gradient_3d: 1.0 -> 2.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:465:62:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 465,
+   "function": "pure_wave_value_and_source_gradient_3d",
+   "summary": "negate_constant in pure_wave_value_and_source_gradient_3d: 3 -> -3",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:504:35:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 504,
+   "function": "green_gradient_field_3d",
+   "summary": "shift_constant in green_gradient_field_3d: 1.0 -> 2.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.free_surface3d:520:27:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 520,
+   "function": "green_gradient_field_3d",
+   "summary": "negate_constant in green_gradient_field_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.free_surface3d:537:7:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 537,
+   "function": "verify_free_surface_bc_3d",
+   "summary": "flip_compare in verify_free_surface_bc_3d: xy.ndim < 1 -> xy.ndim <= 1",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:537:17:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 537,
+   "function": "verify_free_surface_bc_3d",
+   "summary": "shift_constant in verify_free_surface_bc_3d: 1 -> 2",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:542:38:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 542,
+   "function": "verify_free_surface_bc_3d",
+   "summary": "negate_constant in verify_free_surface_bc_3d: 0.0 -> -0.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:550:70:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 550,
+   "function": "verify_laplace_3d",
+   "summary": "negate_constant in verify_laplace_3d: 1.0e-4 -> -0.0001",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:550:70:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 550,
+   "function": "verify_laplace_3d",
+   "summary": "shift_constant in verify_laplace_3d: 1.0e-4 -> 0.0002",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:557:7:flip_compare",
+   "module": "tensorbem.free_surface3d",
+   "line": 557,
+   "function": "verify_laplace_3d",
+   "summary": "flip_compare in verify_laplace_3d: tgt[2] + step > 0.0 -> tgt[2] + step >= 0.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:557:23:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 557,
+   "function": "verify_laplace_3d",
+   "summary": "negate_constant in verify_laplace_3d: 0.0 -> -0.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:561:22:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 561,
+   "function": "verify_laplace_3d",
+   "summary": "negate_constant in verify_laplace_3d: 3 -> -3",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:566:54:swap_binop",
+   "module": "tensorbem.free_surface3d",
+   "line": 566,
+   "function": "verify_laplace_3d",
+   "summary": "swap_binop in verify_laplace_3d: step * step -> step / step",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:581:42:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 581,
+   "function": "verify_radiation_condition_3d",
+   "summary": "shift_constant in verify_radiation_condition_3d: 0.0 -> 1.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:583:17:shift_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 583,
+   "function": "verify_radiation_condition_3d",
+   "summary": "shift_constant in verify_radiation_condition_3d: 0.0 -> 1.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.free_surface3d:583:17:negate_constant",
+   "module": "tensorbem.free_surface3d",
+   "line": 583,
+   "function": "verify_radiation_condition_3d",
+   "summary": "negate_constant in verify_radiation_condition_3d: 0.0 -> -0.0",
+   "category": "diagnostic-helper constant (verify_* gates), no kernel value"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:82:11:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 82,
+   "function": "<module>",
+   "summary": "negate_constant in <module>: 4.0 -> -4.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:86:12:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 86,
+   "function": "<module>",
+   "summary": "shift_constant in <module>: 40000 -> 40001",
+   "category": "unobservable: safety margin / truncation cap saturated at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:108:34:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 108,
+   "function": "_bessel_k0_small",
+   "summary": "negate_constant in _bessel_k0_small: 1e-18 -> -1e-18",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:133:12:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 133,
+   "function": "bessel_k0",
+   "summary": "flip_compare in bessel_k0: x < _K0_SERIES_LIMIT -> x <= _K0_SERIES_LIMIT",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:150:22:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 150,
+   "function": "_j0_y0_series",
+   "summary": "shift_constant in _j0_y0_series: 60 -> 61",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:156:11:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 156,
+   "function": "_j0_y0_series",
+   "summary": "flip_compare in _j0_y0_series: np.max(np.abs(term)) < 1e-18 -> np.max(np.abs(term)) <= 1e-18",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:190:14:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 190,
+   "function": "bessel_j0_y0",
+   "summary": "flip_compare in bessel_j0_y0: x <= 0.0 -> x < 0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:238:30:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 238,
+   "function": "depth_modes",
+   "summary": "flip_compare in depth_modes: nu <= 0.0 -> nu < 0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:238:36:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 238,
+   "function": "depth_modes",
+   "summary": "negate_constant in depth_modes: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:240:42:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 240,
+   "function": "depth_modes",
+   "summary": "negate_constant in depth_modes: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:251:11:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 251,
+   "function": "_resolve_mode_count",
+   "summary": "flip_compare in _resolve_mode_count: wanted < 1 -> wanted <= 1",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:251:20:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 251,
+   "function": "_resolve_mode_count",
+   "summary": "negate_constant in _resolve_mode_count: 1 -> -1",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:255:73:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 255,
+   "function": "_resolve_mode_count",
+   "summary": "negate_constant in _resolve_mode_count: 1e-9 -> -1e-09",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:256:34:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 256,
+   "function": "_resolve_mode_count",
+   "summary": "negate_constant in _resolve_mode_count: 32 -> -32",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:262:18:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 262,
+   "function": "vertical_mode",
+   "summary": "shift_constant in vertical_mode: 1e-12 -> 2e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:262:48:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 262,
+   "function": "vertical_mode",
+   "summary": "shift_constant in vertical_mode: 1e-12 -> 2e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:262:48:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 262,
+   "function": "vertical_mode",
+   "summary": "negate_constant in vertical_mode: 1e-12 -> -1e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:264:44:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 264,
+   "function": "vertical_mode",
+   "summary": "negate_constant in vertical_mode: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:321:36:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 321,
+   "function": "green_function_3d",
+   "summary": "negate_constant in green_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:329:18:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 329,
+   "function": "green_function_3d",
+   "summary": "shift_constant in green_function_3d: 1e-12 -> 2e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:329:35:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 329,
+   "function": "green_function_3d",
+   "summary": "flip_compare in green_function_3d: zeta > 1e-12 -> zeta >= 1e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:329:42:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 329,
+   "function": "green_function_3d",
+   "summary": "shift_constant in green_function_3d: 1e-12 -> 2e-12",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:331:50:swap_binop",
+   "module": "tensorbem.finite_depth3d",
+   "line": 331,
+   "function": "green_function_3d",
+   "summary": "swap_binop in green_function_3d: -depth - 1e-9 -> -depth + 1e-09",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:335:14:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 335,
+   "function": "green_function_3d",
+   "summary": "flip_compare in green_function_3d: horiz <= 0.0 -> horiz < 0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:335:39:flip_compare",
+   "module": "tensorbem.finite_depth3d",
+   "line": 335,
+   "function": "green_function_3d",
+   "summary": "flip_compare in green_function_3d: np.abs(z - zeta) <= 0.0 -> np.abs(z - zeta) < 0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:335:46:swap_binop",
+   "module": "tensorbem.finite_depth3d",
+   "line": 335,
+   "function": "green_function_3d",
+   "summary": "swap_binop in green_function_3d: z - zeta -> z + zeta",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:335:59:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 335,
+   "function": "green_function_3d",
+   "summary": "negate_constant in green_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:338:64:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 338,
+   "function": "green_function_3d",
+   "summary": "negate_constant in green_function_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:338:74:shift_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 338,
+   "function": "green_function_3d",
+   "summary": "shift_constant in green_function_3d: 1.0 -> 2.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:346:35:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 346,
+   "function": "green_function_3d",
+   "summary": "negate_constant in green_function_3d: 1e-300 -> -1e-300",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:378:64:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 378,
+   "function": "green_gradient_z_3d",
+   "summary": "negate_constant in green_gradient_z_3d: 0.0 -> -0.0",
+   "category": "equivalent: epsilon/boundary literal (result unchanged at double precision)"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:378:74:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 378,
+   "function": "green_gradient_z_3d",
+   "summary": "negate_constant in green_gradient_z_3d: 1.0 -> -1.0",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:393:61:negate_constant",
+   "module": "tensorbem.finite_depth3d",
+   "line": 393,
+   "function": "green_gradient_z_3d",
+   "summary": "negate_constant in green_gradient_z_3d: 1 -> -1",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  },
+  {
+   "key": "tensorbem.finite_depth3d:402:11:swap_binop",
+   "module": "tensorbem.finite_depth3d",
+   "line": 402,
+   "function": "dispersion_residual",
+   "summary": "swap_binop in dispersion_residual: abs(k0 * math.tanh(k0 * depth) - nu) / nu -> abs(k0 * math.tanh(k0 * depth) - nu) * nu",
+   "category": "guard/validation path: no computed kernel value at test resolutions"
+  }
+ ],
+ "survivor_categories": {
+  "unobservable: safety margin / truncation cap saturated at test resolutions": 1,
+  "diagnostic-helper constant (verify_* gates), no kernel value": 12,
+  "equivalent: epsilon/boundary literal (result unchanged at double precision)": 43,
+  "equivalent: selects a representation, both branches compute the same function": 5,
+  "guard/validation path: no computed kernel value at test resolutions": 24
+ }
+}
