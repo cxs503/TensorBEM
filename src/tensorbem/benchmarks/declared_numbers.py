@@ -46,6 +46,7 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    interior_harmonics as interior_harmonics_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -259,6 +260,67 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=6.8412e-3,
         tier="heavy",
     ),
+    # --- 3-D interior solid harmonics (Laplace, exact polynomial truth) -----
+    DeclaredNumber(
+        key="interior_harmonic_deg1_flux_1280",
+        description="flux relative L2 error, degree 1 (x), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="normal_derivative_relative_l2_error",
+        parameters={"harmonic": "x", "subdivisions": 3},
+        declared=3.7640e-3,
+        tier="heavy",
+    ),
+    DeclaredNumber(
+        key="interior_harmonic_deg2_flux_1280",
+        description="flux relative L2 error, degree 2 (x2-y2), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="normal_derivative_relative_l2_error",
+        parameters={"harmonic": "x2-y2", "subdivisions": 3},
+        declared=7.3437e-3,
+        tier="heavy",
+    ),
+    DeclaredNumber(
+        key="interior_harmonic_deg3_flux_1280",
+        description="flux relative L2 error, degree 3 (x3-3xy2), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="normal_derivative_relative_l2_error",
+        parameters={"harmonic": "x3-3xy2", "subdivisions": 3},
+        declared=1.1908e-2,
+        tier="heavy",
+    ),
+    DeclaredNumber(
+        key="interior_harmonic_deg1_field_rmse_1280",
+        description="interior probe RMSE, degree 1 (x), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="field_rmse",
+        parameters={"harmonic": "x", "subdivisions": 3},
+        declared=2.293e-4,
+        tier="heavy",
+    ),
+    DeclaredNumber(
+        key="interior_harmonic_deg2_field_rmse_1280",
+        description="interior probe RMSE, degree 2 (x2-y2), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="field_rmse",
+        parameters={"harmonic": "x2-y2", "subdivisions": 3},
+        declared=2.308e-4,
+        tier="heavy",
+    ),
+    DeclaredNumber(
+        key="interior_harmonic_deg3_field_rmse_1280",
+        description="interior probe RMSE, degree 3 (x3-3xy2), 1280 panels",
+        source="docs/classical_benchmarks.md section 5.2 table 3",
+        group="interior_harmonics",
+        quantity="field_rmse",
+        parameters={"harmonic": "x3-3xy2", "subdivisions": 3},
+        declared=1.824e-4,
+        tier="standard",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -296,6 +358,17 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "panel_damping",
         )
         return {key: float(row[key]) for key in keys}
+    if group == "interior_harmonics":
+        row = interior_harmonics_benchmark.run_case(
+            str(parameters["harmonic"]), int(parameters["subdivisions"])
+        )
+        return {
+            "normal_derivative_relative_l2_error": float(
+                row["normal_derivative_relative_l2_error"]
+            ),
+            "field_rmse": float(row["field_rmse"]),
+            "panels": float(row["panels"]),
+        }
     if group == "ursell_reference":
         omega = math.sqrt(_URSELL_KA * _URSELL_GRAVITY / _URSELL_RADIUS)
         added_mass, damping = ursell_cylinder_added_mass(
