@@ -1,0 +1,113 @@
+{
+ "schema": "tensorbem.annulus_log_potential.study/1",
+ "reference_solution": "u = A log r + B, A = 1, B = 0",
+ "geometry": {
+  "outer_radius": 1.0,
+  "inner_radius": 0.5,
+  "outer_panels": "2 x panels_per_loop",
+  "inner_panels": "panels_per_loop (wound clockwise)"
+ },
+ "reference_length": 0.5,
+ "rows": [
+  {
+   "panels_per_loop": 8,
+   "panel_count": 24,
+   "h_max": 0.7368128791039503,
+   "condition_number": 14.2447536547377,
+   "relative_residual_l2": 9.166618505597813e-16,
+   "q_relative_l2_error": 0.1650013599315217,
+   "q_max_abs_error": 0.8708059092391296,
+   "flux_outer": 6.291759067363406,
+   "flux_inner": -6.364670588165307,
+   "flux_net": -0.07291152080190066,
+   "flux_outer_rel_error": 0.0013645563141393424,
+   "flux_inner_rel_error": 0.012968785258109516,
+   "flux_net_over_exact": 0.011604228943970044,
+   "interior_field_relative_l2_error": 0.3231284590732078,
+   "interior_field_max_abs_error": 0.43005171994903574
+  },
+  {
+   "panels_per_loop": 16,
+   "panel_count": 48,
+   "h_max": 0.5710695820026781,
+   "condition_number": 29.836238132110232,
+   "relative_residual_l2": 1.348112695185865e-15,
+   "q_relative_l2_error": 0.1716398590428273,
+   "q_max_abs_error": 1.2149813689292708,
+   "flux_outer": 6.203531679227236,
+   "flux_inner": -6.237788192779046,
+   "flux_net": -0.03425651355181003,
+   "flux_outer_rel_error": -0.012677268623819238,
+   "flux_inner_rel_error": -0.007225175158954267,
+   "flux_net_over_exact": 0.005452093464865067,
+   "interior_field_relative_l2_error": 0.30175564633166435,
+   "interior_field_max_abs_error": 0.3917110411654733
+  },
+  {
+   "panels_per_loop": 32,
+   "panel_count": 96,
+   "h_max": 0.518859055617968,
+   "condition_number": 68.58143163670144,
+   "relative_residual_l2": 1.7922158755580786e-15,
+   "q_relative_l2_error": 0.14503909032967086,
+   "q_max_abs_error": 1.3436103731178064,
+   "flux_outer": 6.208021897503931,
+   "flux_inner": -6.226303351486405,
+   "flux_net": -0.018281453982473828,
+   "flux_outer_rel_error": -0.011962628189521651,
+   "flux_inner_rel_error": -0.009053044421303946,
+   "flux_net_over_exact": 0.0029095837682177254,
+   "interior_field_relative_l2_error": 0.29156899181641405,
+   "interior_field_max_abs_error": 0.3561910864907175
+  },
+  {
+   "panels_per_loop": 64,
+   "panel_count": 192,
+   "h_max": 0.5047923071202681,
+   "condition_number": 169.23267597761208,
+   "relative_residual_l2": 3.9677339853244786e-15,
+   "q_relative_l2_error": 0.10921512083773263,
+   "q_max_abs_error": 1.3583614735276492,
+   "flux_outer": 6.235354964759868,
+   "flux_inner": -6.244987595794282,
+   "flux_net": -0.009632631034414807,
+   "flux_outer_rel_error": -0.007612435425876196,
+   "flux_inner_rel_error": -0.00607935458176867,
+   "flux_net_over_exact": 0.0015330808441075135,
+   "interior_field_relative_l2_error": 0.2856963163491926,
+   "interior_field_max_abs_error": 0.32738519318810066
+  }
+ ],
+ "observed_orders": {
+  "q_relative_l2_error": [
+   -0.05690670627552651,
+   0.24294283961599453,
+   0.4092691705167375
+  ],
+  "interior_field_relative_l2_error": [
+   0.09872705311619219,
+   0.04954346827935838,
+   0.029354863211765354
+  ],
+  "flux_outer_rel_error": [
+   -3.215740103821373,
+   0.08370955916353286,
+   0.6521043942607851
+  ],
+  "flux_net_over_exact": [
+   1.08976846488407,
+   0.9059975118549444,
+   0.9243790057360398
+  ]
+ },
+ "wrong_winding_control": {
+  "panels_per_loop": 64,
+  "relative_residual_l2": 4.0776688585029014e-15,
+  "q_relative_l2_error": 1.086995901748506
+ },
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+ }
+}
