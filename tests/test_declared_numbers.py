@@ -190,13 +190,13 @@ def test_standard_tier_reproduces_the_3d_free_surface_tables(standard_report):
     r"""Tables 10-12 of docs/marine_bem_benchmarks.md are now executable.
 
     Sections 4.10-4.11 were the last documented benchmark family outside the
-    registry: 65 quoted numbers (Hulme floating-hemisphere refinement, its
+    registry: 67 quoted numbers (Hulme floating-hemisphere refinement, its
     CHIEF regularisation table, the Kochin/Haskind closure sentence, and the
     Wang/Linton submerged sphere) were guarded only by ad-hoc tests with 2-10 %
     gates, which pin an accuracy level but not the quoted value.
     """
     rows = _free_surface_rows(standard_report)
-    assert len(rows) == 65
+    assert len(rows) == 67
     drifted = [
         (key, row["declared"], row["measured"])
         for key, row in rows.items()
