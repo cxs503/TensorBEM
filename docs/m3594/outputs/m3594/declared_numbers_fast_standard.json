@@ -1,0 +1,548 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.02623278,
+      "description": "relative error of the cylinder added mass at 16 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_16",
+      "measured": 0.026232783866355507,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": 1.473864190752047e-07,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0004023222,
+      "description": "relative error of the cylinder added mass at 128 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_128",
+      "measured": 0.00040232221672928506,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 4.158180945009392e-08,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2545.17,
+      "description": "Ursell multipole added mass, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_added_mass",
+      "measured": 2545.167247813704,
+      "parameters": {},
+      "relative_deviation": -1.0813369229640125e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2718.15,
+      "description": "Ursell multipole damping, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_damping",
+      "measured": 2718.1539515727764,
+      "parameters": {},
+      "relative_deviation": 1.4537728882729528e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.016736,
+      "description": "panel added-mass error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_64",
+      "measured": 0.016735833486585378,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -9.949415309672355e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.025415,
+      "description": "panel damping error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_damping_64",
+      "measured": 0.025415347951018234,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 1.3690773882909675e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.008513,
+      "description": "panel added-mass error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_128",
+      "measured": 0.008513030527356396,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 3.5859692700834613e-06,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.013361,
+      "description": "panel damping error at 128 panels",
+      "group": "ursell",
+      "key": "ursell_damping_128",
+      "measured": 0.013360592915766837,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -3.046809618763498e-05,
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 0.006,
+      "description": "near-field/far-field damping closure at 128 panels (upper bound)",
+      "group": "ursell",
+      "key": "ursell_near_far_128",
+      "measured": 0.005341374018855711,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": -0.10977099685738156,
+      "source": "README.md (Milestone 4): 'closing to 6e-3'",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000757,
+      "description": "method-of-fundamental-solutions added-mass error, 64 panels (the pre-2026-11-03 table claimed 1.9e-4, which no source count reproduces; the source curve is converged from 16 sources up)",
+      "group": "ursell",
+      "key": "ursell_mfs_added_mass_64",
+      "measured": 0.0007569804876068797,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -2.5775948639777612e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.003526,
+      "description": "method-of-fundamental-solutions damping error, 64 panels (the pre-2026-11-03 table claimed 8.8e-4; measured 3.526e-3)",
+      "group": "ursell",
+      "key": "ursell_mfs_damping_64",
+      "measured": 0.003526389876668117,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.00011057194217724091,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0001824,
+      "description": "interior probe RMSE, degree 3 (x3-3xy2), 1280 panels",
+      "group": "interior_harmonics",
+      "key": "interior_harmonic_deg3_field_rmse_1280",
+      "measured": 0.00018240135166573012,
+      "parameters": {
+        "harmonic": "x3-3xy2",
+        "subdivisions": 3
+      },
+      "relative_deviation": 7.410448081879263e-06,
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "tier": "standard",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.12,
+      "description": "relative error of heave added mass A33', 16 panels (subdivision 1)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a33_error_16",
+      "measured": 0.12012810014703698,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 0.001067501225308215,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.122,
+      "description": "relative error of heave wave damping B33', 16 panels (subdivision 1)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b33_error_16",
+      "measured": 0.12189977674905007,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": -0.0008215020569665903,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.18,
+      "description": "relative error of surge added mass A11', 16 panels (subdivision 1)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a11_error_16",
+      "measured": 0.18023724418320536,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 0.0013180232400298061,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.402,
+      "description": "relative error of surge wave damping B11', 16 panels (subdivision 1)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b11_error_16",
+      "measured": 0.4024097060515509,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 0.0010191692824648864,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0667,
+      "description": "relative error of the heave excitation force Fz, 16 panels (subdivision 1)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_fz_error_16",
+      "measured": 0.06671639860233952,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": 0.0002458561070393745,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.893,
+      "description": "BEM system condition number at Ka = 1.0, 16 panels",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_condition_16",
+      "measured": 3.8925506264896836,
+      "parameters": {
+        "subdivisions": 1
+      },
+      "relative_deviation": -0.00011543116113952052,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.0005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0297,
+      "description": "relative error of heave added mass A33', 64 panels (subdivision 2)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a33_error_64",
+      "measured": 0.02973591800839022,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 0.0012093605518592068,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.045,
+      "description": "relative error of heave wave damping B33', 64 panels (subdivision 2)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b33_error_64",
+      "measured": 0.0450225113637059,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 0.0005002525267978126,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0505,
+      "description": "relative error of surge added mass A11', 64 panels (subdivision 2)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a11_error_64",
+      "measured": 0.05050798435588557,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 0.00015810605713993304,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.13,
+      "description": "relative error of surge wave damping B11', 64 panels (subdivision 2)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b11_error_64",
+      "measured": 0.13049228123102583,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": 0.00378677870019862,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0221,
+      "description": "relative error of the heave excitation force Fz, 64 panels (subdivision 2)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_fz_error_64",
+      "measured": 0.022094068100671525,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": -0.00026841173432022434,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 3.052,
+      "description": "BEM system condition number at Ka = 1.0, 64 panels",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_condition_64",
+      "measured": 3.0515487523933436,
+      "parameters": {
+        "subdivisions": 2
+      },
+      "relative_deviation": -0.00014785308212860116,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "fast",
+      "tolerance": 0.0005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00741,
+      "description": "relative error of heave added mass A33', 256 panels (subdivision 3)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a33_error_256",
+      "measured": 0.007405440541471733,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0006153115422762354,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0118,
+      "description": "relative error of heave wave damping B33', 256 panels (subdivision 3)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b33_error_256",
+      "measured": 0.01181192783863598,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 0.0010108337827101884,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.013,
+      "description": "relative error of surge added mass A11', 256 panels (subdivision 3)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_a11_error_256",
+      "measured": 0.013038378960299251,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": 0.0029522277153270727,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0353,
+      "description": "relative error of surge wave damping B11', 256 panels (subdivision 3)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_b11_error_256",
+      "measured": 0.03527451400663637,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0007219828148336025,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00567,
+      "description": "relative error of the heave excitation force Fz, 256 panels (subdivision 3)",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_fz_error_256",
+      "measured": 0.005667905840101258,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0003693403701485087,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.783,
+      "description": "BEM system condition number at Ka = 1.0, 256 panels",
+      "group": "floating_hemisphere",
+      "key": "floating_hemisphere_condition_256",
+      "measured": 2.78287825558641,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -4.3745746888221086e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "tier": "standard",
+      "tolerance": 0.0005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000545,
+      "description": "near-field vs 3-D Kochin far-field heave damping at 256 panels, Ka = 1.0",
+      "group": "floating_hemisphere",
+      "key": "hulme_far_field_damping_rel_diff_heave_256",
+      "measured": 0.0005447827675709889,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0003985916128643997,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000209,
+      "description": "boundary Haskind reciprocity residual, surge at 256 panels, Ka = 1.0",
+      "group": "floating_hemisphere",
+      "key": "hulme_haskind_reciprocity_rel_diff_x_256",
+      "measured": 0.00020891813552235155,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0003916960653036214,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000809,
+      "description": "boundary Haskind reciprocity residual, heave at 256 panels, Ka = 1.0",
+      "group": "floating_hemisphere",
+      "key": "hulme_haskind_reciprocity_rel_diff_z_256",
+      "measured": 0.0008085367576005749,
+      "parameters": {
+        "subdivisions": 3
+      },
+      "relative_deviation": -0.0005726111241348607,
+      "source": "docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+      "tier": "standard",
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "4f5b73e",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 33,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 33,
+    "verdict": "PASS",
+    "worst_relative_deviation": 0.10977099685738156
+  },
+  "tiers": [
+    "fast",
+    "standard"
+  ]
+}

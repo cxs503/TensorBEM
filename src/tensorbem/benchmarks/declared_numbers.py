@@ -46,6 +46,7 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    floating_hemisphere as floating_hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
@@ -78,8 +79,8 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics`` or ``floating_hemisphere``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -321,8 +322,247 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.824e-4,
         tier="standard",
     ),
+    # --- 3-D floating hemisphere (deep-water free surface, Hulme 1982) -----
+    # docs/marine_bem_benchmarks.md section 4.10, table 10: Ka = 1.0, radius
+    # 1 m, density 1025 kg/m^3, deep water. The 16/64-panel levels are cheap
+    # enough for the fast tier; the 256-panel assembly costs ~10 s, so that
+    # level is the most expensive 'standard' entry in the registry.
+    # Tolerances follow the printed resolution
+    # (three significant digits -> 5e-3; four-digit condition numbers 5e-4).
+    DeclaredNumber(
+        key="floating_hemisphere_a33_error_16",
+        description="relative error of heave added mass A33', 16 panels (subdivision 1)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error",
+        parameters={"subdivisions": 1},
+        declared=1.200e-01,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b33_error_16",
+        description="relative error of heave wave damping B33', 16 panels (subdivision 1)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error",
+        parameters={"subdivisions": 1},
+        declared=1.220e-01,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_a11_error_16",
+        description="relative error of surge added mass A11', 16 panels (subdivision 1)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error",
+        parameters={"subdivisions": 1},
+        declared=1.800e-01,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b11_error_16",
+        description="relative error of surge wave damping B11', 16 panels (subdivision 1)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error",
+        parameters={"subdivisions": 1},
+        declared=4.020e-01,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_fz_error_16",
+        description="relative error of the heave excitation force Fz, 16 panels (subdivision 1)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error",
+        parameters={"subdivisions": 1},
+        declared=6.670e-02,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_condition_16",
+        description="BEM system condition number at Ka = 1.0, 16 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number",
+        parameters={"subdivisions": 1},
+        declared=3.893,
+        tier="fast",
+        tolerance=5.0e-4,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_a33_error_64",
+        description="relative error of heave added mass A33', 64 panels (subdivision 2)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error",
+        parameters={"subdivisions": 2},
+        declared=2.970e-02,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b33_error_64",
+        description="relative error of heave wave damping B33', 64 panels (subdivision 2)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error",
+        parameters={"subdivisions": 2},
+        declared=4.500e-02,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_a11_error_64",
+        description="relative error of surge added mass A11', 64 panels (subdivision 2)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error",
+        parameters={"subdivisions": 2},
+        declared=5.050e-02,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b11_error_64",
+        description="relative error of surge wave damping B11', 64 panels (subdivision 2)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error",
+        parameters={"subdivisions": 2},
+        declared=1.300e-01,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_fz_error_64",
+        description="relative error of the heave excitation force Fz, 64 panels (subdivision 2)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error",
+        parameters={"subdivisions": 2},
+        declared=2.210e-02,
+        tier="fast",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_condition_64",
+        description="BEM system condition number at Ka = 1.0, 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number",
+        parameters={"subdivisions": 2},
+        declared=3.052,
+        tier="fast",
+        tolerance=5.0e-4,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_a33_error_256",
+        description="relative error of heave added mass A33', 256 panels (subdivision 3)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error",
+        parameters={"subdivisions": 3},
+        declared=7.410e-03,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b33_error_256",
+        description="relative error of heave wave damping B33', 256 panels (subdivision 3)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error",
+        parameters={"subdivisions": 3},
+        declared=1.180e-02,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_a11_error_256",
+        description="relative error of surge added mass A11', 256 panels (subdivision 3)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error",
+        parameters={"subdivisions": 3},
+        declared=1.300e-02,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_b11_error_256",
+        description="relative error of surge wave damping B11', 256 panels (subdivision 3)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error",
+        parameters={"subdivisions": 3},
+        declared=3.530e-02,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_fz_error_256",
+        description="relative error of the heave excitation force Fz, 256 panels (subdivision 3)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error",
+        parameters={"subdivisions": 3},
+        declared=5.670e-03,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="floating_hemisphere_condition_256",
+        description="BEM system condition number at Ka = 1.0, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number",
+        parameters={"subdivisions": 3},
+        declared=2.783,
+        tier="standard",
+        tolerance=5.0e-4,
+    ),
+    DeclaredNumber(
+        key="hulme_far_field_damping_rel_diff_heave_256",
+        description="near-field vs 3-D Kochin far-field heave damping at 256 panels, Ka = 1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+        group="floating_hemisphere",
+        quantity="far_field_damping_rel_diff_heave",
+        parameters={"subdivisions": 3},
+        declared=5.450e-04,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="hulme_haskind_reciprocity_rel_diff_x_256",
+        description="boundary Haskind reciprocity residual, surge at 256 panels, Ka = 1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+        group="floating_hemisphere",
+        quantity="haskind_reciprocity_rel_diff_x",
+        parameters={"subdivisions": 3},
+        declared=2.090e-04,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
+    DeclaredNumber(
+        key="hulme_haskind_reciprocity_rel_diff_z_256",
+        description="boundary Haskind reciprocity residual, heave at 256 panels, Ka = 1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 (256-panel identity sentence)",
+        group="floating_hemisphere",
+        quantity="haskind_reciprocity_rel_diff_z",
+        parameters={"subdivisions": 3},
+        declared=8.090e-04,
+        tier="standard",
+        tolerance=5.0e-3,
+    ),
 )
 
+_HULME_KA = 1.0
 _URSELL_RADIUS = 1.0
 _URSELL_SUBMERGENCE = 2.0
 _URSELL_KA = 0.6
@@ -369,6 +609,25 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "field_rmse": float(row["field_rmse"]),
             "panels": float(row["panels"]),
         }
+    if group == "floating_hemisphere":
+        study = floating_hemisphere_benchmark.run_refinement_study(
+            subdivisions=(int(parameters["subdivisions"]),),
+            ka=float(parameters.get("ka", _HULME_KA)),
+        )
+        row = study["levels"][0]
+        keys = (
+            "heave_added_mass_rel_error",
+            "heave_damping_rel_error",
+            "surge_added_mass_rel_error",
+            "surge_damping_rel_error",
+            "excitation_force_z_rel_error",
+            "far_field_damping_rel_diff_heave",
+            "haskind_reciprocity_rel_diff_x",
+            "haskind_reciprocity_rel_diff_z",
+            "condition_number",
+            "panel_count",
+        )
+        return {key: float(row[key]) for key in keys}
     if group == "ursell_reference":
         omega = math.sqrt(_URSELL_KA * _URSELL_GRAVITY / _URSELL_RADIUS)
         added_mass, damping = ursell_cylinder_added_mass(

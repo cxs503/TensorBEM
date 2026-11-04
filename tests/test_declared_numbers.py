@@ -86,6 +86,7 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "floating_hemisphere",
         "interior_harmonics",
         "ursell",
         "ursell_reference",
@@ -95,6 +96,24 @@ def test_registry_covers_every_documented_benchmark_family():
 # --------------------------------------------------------------------------
 # The quoted numbers
 # --------------------------------------------------------------------------
+
+
+def test_table_10_free_surface_rows_are_reproduced():
+    """The 3-D free-surface table (Hulme hemisphere, table 10) is executable.
+
+    Only the 256-panel level is exercised here (the 16/64-panel levels are in
+    the fast tier and run with the rest of it); one solve of the group feeds
+    every row through the registry cache.
+    """
+    entries = [
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group == "floating_hemisphere" and entry.tier == "standard"
+    ]
+    assert len(entries) == 9
+    report = check(("standard",), entries=entries)
+    assert report["summary"]["verdict"] == "PASS", report["summary"]
+    assert {row["key"] for row in report["checks"]} == {entry.key for entry in entries}
 
 
 def test_fast_tier_reproduces_the_documented_numbers():

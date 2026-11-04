@@ -446,6 +446,16 @@ G(\mathbf x,\boldsymbol\xi;\nu)=\frac{1}{4\pi r}+\frac{1}{4\pi r_1}+\frac{\nu}{2
 
 256 面元（单频组装求解耗时约 1.1 s）下，近场压力积分阻尼与远场三维 Kochin 方位角积分阻尼相对差仅 \(5.45\times10^{-4}\)，三维直接绕射解与边界 Haskind 互易积分相对差为 \(2.09\times10^{-4}\)（纵荡）与 \(8.09\times10^{-4}\)（垂荡）。
 
+**表 10 与 §4.10 恒等式的复算与回归钉桩（m3594）**：表 10 的 15 个误差格（5 个量 × 3 个细分层级）、3 个条件数，以及上段正文中的近场/远场 Kochin 阻尼差（\(5.45\times10^{-4}\)）与 Haskind 互易残差（纵荡 \(2.09\times10^{-4}\)、垂荡 \(8.09\times10^{-4}\)）此前没有任何测试读取——它们是"散文数字"，代码一改就静默落后（本仓已有 Ursell、MFS、Wigley 三起同型事故）。m3594 把这 21 个数字登记进 `tensorbem.benchmarks.declared_numbers`（新组 `floating_hemisphere`，16/64 面元层入 `fast`、256 面元层入 `standard`，容差按印出的有效位取 \(5\times10^{-3}\)，条件数取 \(5\times10^{-4}\)）：
+
+```bash
+python -m tensorbem.benchmarks.declared_numbers --tiers fast,standard --strict
+```
+
+复算结果（`outputs/m3594/declared_numbers_fast_standard.json`）：33 条注册项全 PASS，其中新增 21 条的最大相对偏差 \(3.8\times10^{-3}\)，即表 10 与上述正文数字**逐位成立**，只需把"读者要信的数字"变成"CI 会跑的数字"。`tests/test_declared_numbers.py::test_table_10_free_surface_rows_are_reproduced` 钉住 256 面元层与三条恒等式行。
+
+**同一次尝试的负结果（三维 Kramers-Kronig 不能当门用）**：本单还想给三维自由液面加一道"整条频率曲线必须因果"的全局检查（二维侧由 `kkr_causality` 提供）。实测否定：`tensorbem.benchmarks.kkr_floating_hemisphere` 在 \(Ka\in[1,4]\) 上把面板扫频与 Hulme 半解析解送入同一因果变换，**半解析参考解自身的残差地板就有 \(0.435\)（纵荡）/ \(0.733\)（垂荡）**——根因是三维附加质量没有闭式的 \(A_\infty\)（二维 Ursell 有 `ursell_high_frequency_limit` 闭式极限），\(A_\infty+c/\omega^2\) 尾部拟合识别不出它，残差被未知的 \(A_\infty\) 主导而非被面板解主导；相应地，把阻尼人为放大 10% 残差只动 9%（\(1.09\) 倍），即该指标**没有分辨力**。面板解本身并不比参考解更违反因果（残差比 0.96 / 1.43），所以结论是"面板解无异常、该门不可用"，而非"面板解有问题"。此负结果由 `tests/test_kkr_floating_hemisphere.py` 钉住，避免后来者重复踩坑；要在三维拿到可用的因果门，先得给出三维 \(A_\infty\) 的闭式或高精度极限。
+
 **三维穿水浮体不规则频率与免盖板三维 CHIEF 消除：**
 当波数接近半球内域水线问题的第一轴对称特征值 \(Ka\approx 2.58\) 时，在流体外域 \(\Omega_f\) 对船体内部水线以下点 \(\mathbf x_{\text{int}}\in\Omega_B\ (z_{\text{int}}<0)\) 应用 Green 第二恒等式，由于外自由液面 \(\Gamma_F\) 与无穷远柱面上的边界积分精确抵消，**无需像传统盖板法（extended-boundary lid method）那样额外剖分内部水线面网格**，即可直接追加严格零场方程 \(-\mathbf H_\nu^{\text{int}}\boldsymbol\phi=\mathbf S_\nu^{\text{int}}\mathbf q_e\)：
 
