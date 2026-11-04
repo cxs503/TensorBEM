@@ -84,6 +84,7 @@ def run_refinement_study(
     err_a33: list[float] = []
     err_b33: list[float] = []
     err_a11: list[float] = []
+    err_b11: list[float] = []
     err_fz: list[float] = []
 
     for sub in subdivisions:
@@ -137,6 +138,7 @@ def run_refinement_study(
         err_a33.append(e_a33)
         err_b33.append(e_b33)
         err_a11.append(e_a11)
+        err_b11.append(e_b11)
         err_fz.append(e_fz)
 
         levels.append(
@@ -173,11 +175,13 @@ def run_refinement_study(
     orders_a33 = _observed_orders(h_list, err_a33)
     orders_b33 = _observed_orders(h_list, err_b33)
     orders_a11 = _observed_orders(h_list, err_a11)
+    orders_b11 = _observed_orders(h_list, err_b11)
     orders_fz = _observed_orders(h_list, err_fz)
     for idx, row in enumerate(levels):
         row["observed_order_a33"] = orders_a33[idx]
         row["observed_order_b33"] = orders_b33[idx]
         row["observed_order_a11"] = orders_a11[idx]
+        row["observed_order_b11"] = orders_b11[idx]
         row["observed_order_fz"] = orders_fz[idx]
 
     return {

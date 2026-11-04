@@ -89,6 +89,9 @@ def test_registry_covers_every_documented_benchmark_family():
         "interior_harmonics",
         "ursell",
         "ursell_reference",
+        "hulme_hemisphere",
+        "hulme_chief",
+        "submerged_sphere",
     } <= groups
 
 
@@ -155,6 +158,43 @@ def test_documented_1280_panel_harmonic_rows_are_reproduced():
         flux["interior_harmonic_deg1_flux_1280"]
         < flux["interior_harmonic_deg2_flux_1280"]
         < flux["interior_harmonic_deg3_flux_1280"]
+    )
+
+
+def test_standard_tier_reproduces_the_documented_3d_free_surface_numbers():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md were documentation-only.
+
+    The 2026-11-04 heavy-tier settlement (m3059) closed the 2-D and
+    unbounded-flow families and explicitly deferred the 3-D free-surface
+    family because the *full* suites (frequency sweeps) cost minutes.  The
+    tables quote only the refinement studies (~15 s total), so the family
+    is judged in the standard tier: every quoted error is a pure
+    discretisation error against the Hulme (1982) wave-free-potential
+    reference or the zero-quadrature Thorne multipole expansion.
+    """
+    report = check(
+        tiers=("standard",),
+        entries=tuple(
+            entry
+            for entry in DECLARED_NUMBERS
+            if entry.group in {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
+        ),
+    )
+    assert report["summary"]["checked"] == 66
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    # The CHIEF row is the physical claim: without regularisation the
+    # unregularized BIE must still produce the unphysical negative damping,
+    # and the 5-point interior CHIEF must remove it.
+    by_key = {row["key"]: row for row in report["checks"]}
+    assert by_key["chief_b33_unregularized_magnitude"]["measured"] > 0.0
+    assert by_key["chief_b33_chief"]["measured"] > 0.0
+    assert (
+        by_key["chief_cond_unregularized"]["measured"]
+        > by_key["chief_cond_chief"]["measured"]
     )
 
 
