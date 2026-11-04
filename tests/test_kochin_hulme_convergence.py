@@ -10,6 +10,14 @@ gate test moved to 1024 panels.  These pins lock the *behaviour* at the cheap
 resolutions so a future change that flips the error's sign, breaks monotone
 convergence, or degrades the order is caught without paying the 1024-panel
 cost.
+
+m3280 adds the order-convention pin: the module's ``orders`` field must
+report the order in the panel size ``h`` (the convention quoted in
+``docs/marine_bem_benchmarks.md`` table 10 and the m2609 paragraph), and the
+legacy per-panel-count reading must stay available under
+``orders_vs_panels``.  Before m3280 the field named ``orders`` silently
+carried the per-panel-count value (0.81/0.94 where the documentation quotes
+1.62/1.88), which is exactly half for a 4x panel refinement in 3-D.
 """
 
 from __future__ import annotations
@@ -67,3 +75,36 @@ def test_far_near_energy_identity_improves_with_refinement(study):
     lo, hi = _row(study, 2), _row(study, 3)
     assert lo["ratio_b11"] < hi["ratio_b11"] < 1.0
     assert lo["ratio_b33"] < hi["ratio_b33"] < 1.0
+
+
+def test_orders_field_uses_h_convention(study):
+    """``orders`` is the order in h; the per-panel-count value is separate.
+
+    The documentation (``docs/marine_bem_benchmarks.md`` table 10 and the
+    m2609 paragraph) quotes "对 h 观测阶 1.62/1.88/1.96".  The icosphere
+    subdivision halves the panel edge per level, so for s=2 -> s=3 the
+    h-order is exactly ``log2(|e_lo/e_hi|)``; the per-panel-count reading is
+    exactly half of it (N ~ h**-2).  Both must be present and consistent.
+    """
+    lo, hi = _row(study, 2), _row(study, 3)
+    keys = ("err_b11_near", "err_b33_near", "err_b11_far", "err_b33_far")
+    for key in keys:
+        assert key in hi["orders"], f"orders lost key {key}"
+        assert key in hi["orders_vs_panels"], f"orders_vs_panels lost key {key}"
+        # h halves per level: the h-order equals the raw log2 error ratio.
+        expected_h = math.log2(abs(lo[key] / hi[key]))
+        assert abs(hi["orders"][key] - expected_h) < 1e-12, (
+            f"{key}: orders {hi['orders'][key]:.6f} != h-order {expected_h:.6f}"
+        )
+        # N quadruples per level: the two conventions differ by exactly 2.
+        assert abs(hi["orders"][key] - 2.0 * hi["orders_vs_panels"][key]) < 1e-12, (
+            f"{key}: orders {hi['orders'][key]:.6f} != 2*orders_vs_panels "
+            f"{2.0 * hi['orders_vs_panels'][key]:.6f}"
+        )
+    # The documented 64 -> 256 B11' h-order is 1.88; keep the pin in a band
+    # wide enough for BLAS-level jitter but tight enough to catch a
+    # convention regression (which would land near 0.94).
+    assert 1.6 < hi["orders"]["err_b11_near"] < 2.2, (
+        f"B11' h-order {hi['orders']['err_b11_near']:.3f} outside (1.6, 2.2); "
+        "a value near 0.94 would mean the per-panel-count convention crept back"
+    )
