@@ -193,10 +193,26 @@ For the two paths to agree within 5%, we would need:
 2. No numerical integration errors
 3. Thin-ship approximation valid
 
-In practice, the two paths **do not agree within 5%** because:
-1. **Thin-ship approximation**: Michell theory assumes `B/L << 1`. For the standard Wigley hull (`B/L = 0.1`), this is marginally valid.
-2. **Pressure on hull**: The Michell wave potential is evaluated on the actual hull surface, but Michell theory assumes the potential is evaluated on the centerplane (`y = 0`).
-3. **Numerical integration**: Both paths use numerical quadrature, introducing errors.
+In practice, the two paths **do not agree within 5%**. The attribution that this
+document carried until 2026-11-04 (thin-ship approximation, centreplane-vs-hull
+evaluation, numerical quadrature) was **measured and refuted**; see
+`docs/wigley_pressure_path_diagnosis/wigley_pressure_path_diagnosis.md` and
+`tensorbem.benchmarks.wigley_pressure_path_diagnosis`. The measurements:
+
+1. **Not thin-ship.** Sweeping `B/L` from 0.2 down to 0.00625 (32x) at fixed
+   `L`, `T`, `Fr` leaves `Rw_pressure / Rw_kochin` **scale invariant** (relative
+   spread `5.2e-15`, both paths exactly `O(B^2)`). A thin-ship error would have
+   to fall like `O(B/L)`; the gap does not move at all.
+2. **Not quadrature.** Sweeping the `k`-integral from 128 to 16384 effective
+   Gauss nodes, with and without composite panels, moves `Rw_pressure` by
+   `1.3e-13` relative: the integral is converged.
+3. **Formulation defect.** The potential the pressure path differentiates is a
+   function of `(x, z)` only, so `dphi/dy = 0` identically while the hull
+   condition requires a transverse flux (area-weighted mean `1.12 m/s` at
+   `Fr = 0.30`, i.e. `1.0` relative residual); and the same potential violates
+   the steady free-surface condition `phi_z = phi_xx/k0` with a residual of
+   `4.02x` its own `phi_z` scale, because the spectral weight `k - k^2/k0`
+   vanishes only at the band edge `k = k0`.
 
 ### Observed Discrepancy
 
@@ -230,13 +246,20 @@ does not implement.
 
 ### Root Cause Analysis
 
-The discrepancy arises because:
-1. **Michell theory** computes the wave resistance from the far-field wave pattern, which is correct within the thin-ship approximation.
-2. **Pressure integration** uses the Michell wave potential on the hull surface, but this potential is not accurate for finite-thickness hulls.
+The discrepancy arises because the pressure path does not, in fact, differentiate
+a valid steady potential: the field it uses is the `y`-integrated (2-D) wave
+potential, so it satisfies neither the 3-D body condition (`dphi/dy = 0` where
+`U dY/dx` is required) nor the free-surface condition on its `k > k0` band. The
+discrepancy is therefore a property of the *representation*, not a statement
+about how good the thin-ship approximation is - which also means the two-path
+comparison cannot be used as evidence about Michell's validity. Evidence and
+per-test numbers: `docs/wigley_pressure_path_diagnosis/wigley_pressure_path_diagnosis.md`.
 
-To achieve better agreement, one would need:
-- A Rankine panel method with free-surface panels (Dawson method)
-- Or a higher-order panel method with the exact free-surface condition
+To achieve better agreement, one would need a near-field potential that
+actually satisfies both conditions:
+- A Rankine panel method with free-surface panels (Dawson method), or
+- The full Havelock free-surface Green function with the radiation-condition
+  pole treated, instead of the `y`-integrated reduction currently coded.
 
 ## Mesh Convergence
 
