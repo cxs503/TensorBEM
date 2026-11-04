@@ -98,6 +98,12 @@ from .geometry3d import (
     project_to_ellipsoid,
     submerged_sphere_mesh,
 )
+from .mixed import (
+    LaplaceMixedResult,
+    MixedBoundary,
+    evaluate_mixed_interior_field,
+    solve_laplace_mixed,
+)
 from .helmholtz import (
     HelmholtzDiffractionResult,
     VerticalCylinderDiffractionResult,
@@ -243,6 +249,10 @@ __all__ = [
     "kochin_function_3d",
     "far_field_damping_matrix_3d",
     "haskind_excitation_force_3d",
+    "LaplaceMixedResult",
+    "MixedBoundary",
+    "evaluate_mixed_interior_field",
+    "solve_laplace_mixed",
     "HelmholtzDiffractionResult",
     "VerticalCylinderDiffractionResult",
     "points_inside_polygon",
