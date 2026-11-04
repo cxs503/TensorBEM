@@ -1,0 +1,312 @@
+{
+  "before": {
+    "claim_count": 19,
+    "passed": 17,
+    "drifted": [
+      "near_singular_field",
+      "finite_depth3d_kernel"
+    ],
+    "stale_hits": 4
+  },
+  "after": {
+    "claim_count": 19,
+    "passed": 19,
+    "drifted": []
+  },
+  "probes": [
+    {
+      "claim": "near_singular_field",
+      "probe": "near_singular_clearance_1e3",
+      "value": 1.8857595205617244e-14,
+      "limit": 1e-10,
+      "mode": "<",
+      "passed": true
+    },
+    {
+      "claim": "finite_depth3d_kernel",
+      "probe": "deep_water_limit_k0h77",
+      "value": 2.9079154330228966e-07,
+      "limit": 1e-05,
+      "mode": "<",
+      "passed": true
+    },
+    {
+      "claim": "finite_depth3d_kernel",
+      "probe": "free_surface_residual",
+      "value": 2.4304249660143904e-12,
+      "limit": 1e-10,
+      "mode": "<",
+      "passed": true
+    },
+    {
+      "claim": "declared_number_registry",
+      "probe": "registry_size",
+      "value": 22.0,
+      "limit": 20.0,
+      "mode": ">",
+      "passed": true
+    }
+  ],
+  "defects": [
+    {
+      "id": "D1",
+      "claim": "near_singular_field",
+      "source": "README.md (Numerical conventions)",
+      "sentence": "near-boundary near-singular quadrature is not implemented",
+      "fix": "replaced by a description of the two near-surface entry points and their honest limits"
+    },
+    {
+      "id": "D2",
+      "claim": "near_singular_field",
+      "source": "README.md (roadmap item 5)",
+      "sentence": "near-singular field quadrature remain",
+      "fix": "removed from the remaining-gap list; the shipped rule is named"
+    },
+    {
+      "id": "D3",
+      "claim": "finite_depth3d_kernel",
+      "source": "README.md (roadmap item 6)",
+      "sentence": "**Next, needs new physics:** finite-depth 3-D John eigenseries Green function",
+      "fix": "gap narrowed to the BEM solver layer; the verified kernel is named"
+    }
+  ],
+  "rows": [
+    {
+      "key": "exterior_neumann_2d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 5 item 1)",
+      "evidence": [
+        "module:tensorbem.solver",
+        "tests:tests/test_exterior_neumann_added_mass.py(9)",
+        "tests:tests/test_exterior_solver.py(12)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "rigid_body_added_mass_3d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 5 item 1)",
+      "evidence": [
+        "module:tensorbem.solver3d",
+        "tests:tests/test_exterior_neumann_added_mass.py(9)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "ursell_2d_radiation",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 4); docs/marine_bem_benchmarks.md section 4.6",
+      "evidence": [
+        "module:tensorbem.free_surface_solver",
+        "module:tensorbem.benchmarks.ursell_cylinder",
+        "tests:tests/test_ursell_benchmark.py(15)",
+        "tests:tests/test_ursell_reference_pinning.py(6)",
+        "doc:docs/marine_bem_benchmarks.md"
+      ],
+      "problems": []
+    },
+    {
+      "key": "dean_diffraction_haskind",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 5 item 2)",
+      "evidence": [
+        "module:tensorbem.benchmarks.dean_diffraction",
+        "tests:tests/test_dean_diffraction.py(6)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "helmholtz_maccamy_fuchs",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 5 item 3)",
+      "evidence": [
+        "module:tensorbem.helmholtz",
+        "module:tensorbem.benchmarks.maccamy_fuchs",
+        "tests:tests/test_helmholtz_maccamy_fuchs.py(6)",
+        "tests:tests/test_doc_numbers_maccamy_fuchs.py(5)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "kelvin_kernel_3d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 item 1)",
+      "evidence": [
+        "module:tensorbem.free_surface3d",
+        "tests:tests/test_free_surface3d.py(4)",
+        "tests:tests/test_free_surface_kernel.py(10)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "solver3d_6dof",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 item 2)",
+      "evidence": [
+        "module:tensorbem.free_surface_solver3d",
+        "tests:tests/test_floating_hemisphere_3d.py(5)",
+        "tests:tests/test_submerged_sphere_wave_3d.py(4)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "near_singular_field",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Numerical conventions, 3-D paragraph; roadmap item 5)",
+      "evidence": [
+        "module:tensorbem.near_singular",
+        "module:tensorbem.solver3d",
+        "tests:tests/test_near_singular.py(10)",
+        "tests:tests/test_near_surface_error_budget.py(8)",
+        "doc:docs/near_surface_field.md",
+        "doc:docs/near_surface_error_budget.md",
+        "probe:near_singular_clearance_1e3=1.886e-14 < 1.0e-10"
+      ],
+      "problems": []
+    },
+    {
+      "key": "finite_depth3d_kernel",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 closing paragraph)",
+      "evidence": [
+        "module:tensorbem.finite_depth3d",
+        "tests:tests/test_finite_depth3d.py(16)",
+        "doc:docs/finite_depth3d.md",
+        "probe:deep_water_limit_k0h77=2.908e-07 < 1.0e-05",
+        "probe:free_surface_residual=2.430e-12 < 1.0e-10"
+      ],
+      "problems": []
+    },
+    {
+      "key": "finite_depth_2d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 4/6); docs/finite_depth_radiation.md",
+      "evidence": [
+        "module:tensorbem.finite_depth",
+        "module:tensorbem.finite_depth_solver",
+        "tests:tests/test_finite_depth.py(14)",
+        "tests:tests/test_finite_depth_solver.py(9)",
+        "tests:tests/test_finite_depth_energy_convergence.py(8)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "symmetry3d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (roadmap item 5)",
+      "evidence": [
+        "module:tensorbem.symmetry3d",
+        "tests:tests/test_symmetry3d.py(14)",
+        "doc:docs/symmetry3d.md"
+      ],
+      "problems": []
+    },
+    {
+      "key": "hydrostatics_restoring",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (roadmap item 6)",
+      "evidence": [
+        "module:tensorbem.hydrostatic",
+        "module:tensorbem.benchmarks.hydrostatic_benchmarks",
+        "tests:tests/test_hydrostatic_verification.py(15)",
+        "tests:tests/test_waterplane_multi_loop.py(5)",
+        "doc:docs/hydrostatic_verification.md"
+      ],
+      "problems": []
+    },
+    {
+      "key": "rao_6dof",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (roadmap item 6)",
+      "evidence": [
+        "module:tensorbem.rao",
+        "tests:tests/test_rao_verification.py(24)",
+        "tests:tests/test_hydrostatic_rao.py(14)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "lifting_kutta_2d",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 closing paragraph; roadmap item 6)",
+      "evidence": [
+        "module:tensorbem.lifting",
+        "tests:tests/test_lifting_flow.py(12)",
+        "tests:tests/test_lifting_foil.py(12)",
+        "doc:docs/lifting_kutta_closure.md"
+      ],
+      "problems": []
+    },
+    {
+      "key": "causality_kkr",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "README.md / docs/marine_bem_benchmarks.md",
+      "evidence": [
+        "module:tensorbem.causality",
+        "tests:tests/test_causality.py(7)"
+      ],
+      "problems": []
+    },
+    {
+      "key": "declared_number_registry",
+      "status": "shipped",
+      "verdict": "PASS",
+      "source": "docs/classical_benchmarks.md sections 2, 3, 5.2; docs/marine_bem_benchmarks.md section 4.6",
+      "evidence": [
+        "module:tensorbem.benchmarks.declared_numbers",
+        "tests:tests/test_declared_numbers.py(15)",
+        "probe:registry_size=2.200e+01 > 2.0e+01"
+      ],
+      "problems": []
+    },
+    {
+      "key": "finite_depth3d_bem_solver",
+      "status": "absent",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 closing paragraph)",
+      "evidence": [
+        "stated-gap:3-D finite-depth *boundary element solver*",
+        "absent-module:tensorbem.finite_depth3d_solver"
+      ],
+      "problems": []
+    },
+    {
+      "key": "forward_speed_rankine",
+      "status": "absent",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 closing paragraph)",
+      "evidence": [
+        "stated-gap:Forward-speed Rankine-source wave resistance",
+        "absent-module:tensorbem.rankine",
+        "absent-module:tensorbem.wave_resistance"
+      ],
+      "problems": []
+    },
+    {
+      "key": "lifting_3d",
+      "status": "absent",
+      "verdict": "PASS",
+      "source": "README.md (Milestone 6 closing paragraph; roadmap item 6)",
+      "evidence": [
+        "stated-gap:three-dimensional lifting wakes",
+        "absent-module:tensorbem.lifting3d"
+      ],
+      "problems": []
+    }
+  ]
+}
