@@ -1,0 +1,42 @@
+{
+  "registry": {
+    "pr": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme3d": 28,
+      "hulme3d_chief": 9,
+      "wang_linton3d": 26
+    },
+    "main": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme_hemisphere": 31,
+      "hulme_chief": 6,
+      "submerged_sphere": 25
+    },
+    "merged": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme_hemisphere": 31,
+      "hulme_chief": 6,
+      "submerged_sphere": 25,
+      "hulme3d": 28,
+      "hulme3d_chief": 9,
+      "wang_linton3d": 26
+    }
+  },
+  "tests": {
+    "merged (final)": {},
+    "pr branch": {},
+    "main baseline": {}
+  }
+}
