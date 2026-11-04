@@ -1,0 +1,122 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "tiers": [
+    "heavy"
+  ],
+  "checks": [
+    {
+      "key": "interior_harmonic_deg1_flux_1280",
+      "description": "flux relative L2 error, degree 1 (x), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x",
+        "subdivisions": 3
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.003764,
+      "measured": 0.0037639539729950548,
+      "relative_deviation": -1.2228215979072482e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "interior_harmonic_deg2_flux_1280",
+      "description": "flux relative L2 error, degree 2 (x2-y2), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x2-y2",
+        "subdivisions": 3
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.0073437,
+      "measured": 0.007343746340594511,
+      "relative_deviation": 6.3102515776790735e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "interior_harmonic_deg3_flux_1280",
+      "description": "flux relative L2 error, degree 3 (x3-3xy2), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x3-3xy2",
+        "subdivisions": 3
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.011908,
+      "measured": 0.01190779829009714,
+      "relative_deviation": -1.6939024425636144e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "interior_harmonic_deg1_field_rmse_1280",
+      "description": "interior probe RMSE, degree 1 (x), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x",
+        "subdivisions": 3
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.0002293,
+      "measured": 0.00022928512290010822,
+      "relative_deviation": -6.48805054154835e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "interior_harmonic_deg2_field_rmse_1280",
+      "description": "interior probe RMSE, degree 2 (x2-y2), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x2-y2",
+        "subdivisions": 3
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.0002308,
+      "measured": 0.00023075028376939288,
+      "relative_deviation": -0.00021540827819374478,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "interior_harmonic_deg3_field_rmse_1280",
+      "description": "interior probe RMSE, degree 3 (x3-3xy2), 1280 panels",
+      "source": "docs/classical_benchmarks.md section 5.2 table 3",
+      "group": "interior_harmonics",
+      "parameters": {
+        "harmonic": "x3-3xy2",
+        "subdivisions": 3
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0001824,
+      "measured": 0.00018240135166573012,
+      "relative_deviation": 7.410448081879263e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ],
+  "summary": {
+    "checked": 6,
+    "passed": 6,
+    "drifted": 0,
+    "drifted_keys": [],
+    "worst_relative_deviation": 0.00021540827819374478,
+    "verdict": "PASS"
+  },
+  "provenance": {
+    "runner": "tensorbem.benchmarks.interior_harmonics --subdivisions 2 3 --degrees 1 2 3",
+    "artifact": "outputs/verif_m3059/interior_harmonics_1280.json"
+  }
+}
