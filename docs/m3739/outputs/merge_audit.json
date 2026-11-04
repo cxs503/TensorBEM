@@ -1,0 +1,735 @@
+{
+  "git": {
+    "merge_base": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+    "main_tip": "b420b2ee1e98276f341a10eafe3fda2d80807756",
+    "other_old": "55db3976dc283e9522334f2ab7309fc655f3ae27",
+    "other_new": "fd5e3596a5f3aca8b41771ad11e588a8ad415b27",
+    "conflicted": [
+      "src/tensorbem/benchmarks/declared_numbers.py",
+      "tests/test_declared_numbers.py"
+    ],
+    "auto_merged": "docs/marine_bem_benchmarks.md"
+  },
+  "preservation": {
+    "src/tensorbem/benchmarks/declared_numbers.py": {
+      "file": "src/tensorbem/benchmarks/declared_numbers.py",
+      "main": {
+        "added_lines": 656,
+        "preserved": 656,
+        "renamed": {},
+        "missing": [],
+        "ratio": 1.0,
+        "accounted_ratio": 1.0
+      },
+      "m3181": {
+        "added_lines": 249,
+        "preserved": 247,
+        "renamed": {
+          "def _chief_rows():": "def _free_surface_chief_rows():",
+          "+ _chief_rows()": "+ _free_surface_chief_rows()"
+        },
+        "missing": [],
+        "ratio": 0.9919678714859438,
+        "accounted_ratio": 1.0
+      }
+    },
+    "tests/test_declared_numbers.py": {
+      "file": "tests/test_declared_numbers.py",
+      "main": {
+        "added_lines": 49,
+        "preserved": 49,
+        "renamed": {},
+        "missing": [],
+        "ratio": 1.0,
+        "accounted_ratio": 1.0
+      },
+      "m3181": {
+        "added_lines": 93,
+        "preserved": 93,
+        "renamed": {},
+        "missing": [],
+        "ratio": 1.0,
+        "accounted_ratio": 1.0
+      }
+    }
+  },
+  "registry": {
+    "main": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme_hemisphere": 31,
+      "hulme_chief": 6,
+      "submerged_sphere": 25
+    },
+    "m3181": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme3d": 28,
+      "hulme3d_chief": 9,
+      "wang_linton3d": 26
+    },
+    "merged": {
+      "cylinder": 2,
+      "ellipsoid": 3,
+      "ursell_reference": 2,
+      "ursell": 9,
+      "interior_harmonics": 6,
+      "hulme_hemisphere": 31,
+      "hulme_chief": 6,
+      "submerged_sphere": 25,
+      "hulme3d": 28,
+      "hulme3d_chief": 9,
+      "wang_linton3d": 26
+    },
+    "groups": [
+      "cylinder",
+      "ellipsoid",
+      "hulme3d",
+      "hulme3d_chief",
+      "hulme_chief",
+      "hulme_hemisphere",
+      "interior_harmonics",
+      "submerged_sphere",
+      "ursell",
+      "ursell_reference",
+      "wang_linton3d"
+    ],
+    "total": {
+      "main": 84,
+      "m3181": 85,
+      "merged": 147
+    },
+    "duplicate_keys": 0,
+    "union_holds": true
+  },
+  "tests": {
+    "baseline_main": {
+      "counts": {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 3,
+        "error": 0
+      },
+      "seconds": 295.52,
+      "log": "/tmp/base_declared.log"
+    },
+    "merged": {
+      "counts": {
+        "passed": 15,
+        "failed": 0,
+        "skipped": 5,
+        "error": 0
+      },
+      "seconds": 311.53,
+      "log": "/tmp/merged_declared.log"
+    },
+    "baseline_main_full": {
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "error": 0
+      },
+      "seconds": null,
+      "log": "/tmp/base_full.log"
+    },
+    "merged_full": {
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "error": 0
+      },
+      "seconds": null,
+      "log": "/tmp/merged_full.log"
+    },
+    "baseline_main_core2": {
+      "counts": {
+        "passed": 25,
+        "failed": 0,
+        "skipped": 0,
+        "error": 0
+      },
+      "seconds": 5.85,
+      "log": "/tmp/base_core2.log"
+    },
+    "merged_core2": {
+      "counts": {
+        "passed": 25,
+        "failed": 0,
+        "skipped": 0,
+        "error": 0
+      },
+      "seconds": 5.71,
+      "log": "/tmp/merged_core2.log"
+    }
+  },
+  "heavy": {
+    "counts": {
+      "passed": 9,
+      "failed": 0
+    },
+    "seconds": null,
+    "group": "hulme3d_chief",
+    "checked": 9,
+    "verdict": "PASS",
+    "worst": 0.001172477276615731
+  },
+  "cross_registry": {
+    "cells": [
+      {
+        "family": "hulme",
+        "level": "16",
+        "quantity": "a11_rel_error",
+        "main_key": "hulme_hemisphere_16_surge_added_mass_error",
+        "main": 0.18,
+        "m3181_key": "hulme_surge_added_mass_rel_error_16",
+        "m3181": 0.18,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "16",
+        "quantity": "a33_rel_error",
+        "main_key": "hulme_hemisphere_16_heave_added_mass_error",
+        "main": 0.12,
+        "m3181_key": "hulme_heave_added_mass_rel_error_16",
+        "m3181": 0.12,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "16",
+        "quantity": "b11_rel_error",
+        "main_key": "hulme_hemisphere_16_surge_damping_error",
+        "main": 0.402,
+        "m3181_key": "hulme_surge_damping_rel_error_16",
+        "m3181": 0.402,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "16",
+        "quantity": "b33_rel_error",
+        "main_key": "hulme_hemisphere_16_heave_damping_error",
+        "main": 0.122,
+        "m3181_key": "hulme_heave_damping_rel_error_16",
+        "m3181": 0.122,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "16",
+        "quantity": "condition_number",
+        "main_key": "hulme_hemisphere_16_condition_number",
+        "main": 3.893,
+        "m3181_key": "hulme_condition_number_16",
+        "m3181": 3.893,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "a11_rel_error",
+        "main_key": "hulme_hemisphere_256_surge_added_mass_error",
+        "main": 0.013,
+        "m3181_key": "hulme_surge_added_mass_rel_error_256",
+        "m3181": 0.013,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "a33_rel_error",
+        "main_key": "hulme_hemisphere_256_heave_added_mass_error",
+        "main": 0.00741,
+        "m3181_key": "hulme_heave_added_mass_rel_error_256",
+        "m3181": 0.00741,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "b11_rel_error",
+        "main_key": "hulme_hemisphere_256_surge_damping_error",
+        "main": 0.0353,
+        "m3181_key": "hulme_surge_damping_rel_error_256",
+        "m3181": 0.0353,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "b33_rel_error",
+        "main_key": "hulme_hemisphere_256_heave_damping_error",
+        "main": 0.0118,
+        "m3181_key": "hulme_heave_damping_rel_error_256",
+        "m3181": 0.0118,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "condition_number",
+        "main_key": "hulme_hemisphere_256_condition_number",
+        "main": 2.783,
+        "m3181_key": "hulme_condition_number_256",
+        "m3181": 2.783,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "order_a11",
+        "main_key": "hulme_hemisphere_256_order_a11",
+        "main": 2.01,
+        "m3181_key": "hulme_observed_order_a11_256",
+        "m3181": 2.01,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "order_a33",
+        "main_key": "hulme_hemisphere_256_order_a33",
+        "main": 2.06,
+        "m3181_key": "hulme_observed_order_a33_256",
+        "m3181": 2.06,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "order_b33",
+        "main_key": "hulme_hemisphere_256_order_b33",
+        "main": 1.98,
+        "m3181_key": "hulme_observed_order_b33_256",
+        "m3181": 1.98,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "256",
+        "quantity": "order_fz",
+        "main_key": "hulme_hemisphere_256_order_fz",
+        "main": 2.02,
+        "m3181_key": "hulme_observed_order_fz_256",
+        "m3181": 2.02,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "a11_rel_error",
+        "main_key": "hulme_hemisphere_64_surge_added_mass_error",
+        "main": 0.0505,
+        "m3181_key": "hulme_surge_added_mass_rel_error_64",
+        "m3181": 0.0505,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "a33_rel_error",
+        "main_key": "hulme_hemisphere_64_heave_added_mass_error",
+        "main": 0.0297,
+        "m3181_key": "hulme_heave_added_mass_rel_error_64",
+        "m3181": 0.0297,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "b11_rel_error",
+        "main_key": "hulme_hemisphere_64_surge_damping_error",
+        "main": 0.13,
+        "m3181_key": "hulme_surge_damping_rel_error_64",
+        "m3181": 0.13,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "b33_rel_error",
+        "main_key": "hulme_hemisphere_64_heave_damping_error",
+        "main": 0.045,
+        "m3181_key": "hulme_heave_damping_rel_error_64",
+        "m3181": 0.045,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "condition_number",
+        "main_key": "hulme_hemisphere_64_condition_number",
+        "main": 3.052,
+        "m3181_key": "hulme_condition_number_64",
+        "m3181": 3.052,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "order_a11",
+        "main_key": "hulme_hemisphere_64_order_a11",
+        "main": 2.04,
+        "m3181_key": "hulme_observed_order_a11_64",
+        "m3181": 2.04,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "order_a33",
+        "main_key": "hulme_hemisphere_64_order_a33",
+        "main": 2.23,
+        "m3181_key": "hulme_observed_order_a33_64",
+        "m3181": 2.23,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "order_b33",
+        "main_key": "hulme_hemisphere_64_order_b33",
+        "main": 1.59,
+        "m3181_key": "hulme_observed_order_b33_64",
+        "m3181": 1.59,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme",
+        "level": "64",
+        "quantity": "order_fz",
+        "main_key": "hulme_hemisphere_64_order_fz",
+        "main": 1.77,
+        "m3181_key": "hulme_observed_order_fz_64",
+        "m3181": 1.77,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "chief_a33",
+        "main_key": "hulme_chief_2_58_chief_a33",
+        "main": 0.3919,
+        "m3181_key": "hulme_chief_chief_regularized_a33_dimless",
+        "m3181": 0.3919,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "chief_b33",
+        "main_key": "hulme_chief_2_58_chief_b33",
+        "main": 0.0687,
+        "m3181_key": "hulme_chief_chief_regularized_b33_dimless",
+        "m3181": 0.0687,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "chief_condition_number",
+        "main_key": "hulme_chief_2_58_chief_condition_number",
+        "main": 4.24,
+        "m3181_key": "hulme_chief_chief_regularized_condition_number",
+        "m3181": 4.24,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "unreg_a33",
+        "main_key": "hulme_chief_2_58_unregularized_a33",
+        "main": 0.3481,
+        "m3181_key": "hulme_chief_unregularized_a33_dimless",
+        "m3181": 0.3481,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "unreg_b33",
+        "main_key": "hulme_chief_2_58_unregularized_b33",
+        "main": -0.1042,
+        "m3181_key": "hulme_chief_unregularized_b33_dimless",
+        "m3181": -0.1042,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "hulme_chief",
+        "level": "ka2.58",
+        "quantity": "unreg_condition_number",
+        "main_key": "hulme_chief_2_58_unregularized_condition_number",
+        "main": 145.66,
+        "m3181_key": "hulme_chief_unregularized_condition_number",
+        "m3181": 145.66,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "20",
+        "quantity": "a11_rel_error",
+        "main_key": "submerged_sphere_20_surge_added_mass_error",
+        "main": 0.268,
+        "m3181_key": "wang_linton_surge_added_mass_rel_error_20",
+        "m3181": 0.268,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "20",
+        "quantity": "a33_rel_error",
+        "main_key": "submerged_sphere_20_heave_added_mass_error",
+        "main": 0.255,
+        "m3181_key": "wang_linton_heave_added_mass_rel_error_20",
+        "m3181": 0.255,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "20",
+        "quantity": "condition_number",
+        "main_key": "submerged_sphere_20_condition_number",
+        "main": 2.407,
+        "m3181_key": "wang_linton_condition_number_20",
+        "m3181": 2.407,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "20",
+        "quantity": "fx_rel_error",
+        "main_key": "submerged_sphere_20_force_x_error",
+        "main": 0.36,
+        "m3181_key": "wang_linton_excitation_force_x_rel_error_20",
+        "m3181": 0.36,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "20",
+        "quantity": "fz_rel_error",
+        "main_key": "submerged_sphere_20_force_z_error",
+        "main": 0.37,
+        "m3181_key": "wang_linton_excitation_force_z_rel_error_20",
+        "m3181": 0.37,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "a11_rel_error",
+        "main_key": "submerged_sphere_320_surge_added_mass_error",
+        "main": 0.0208,
+        "m3181_key": "wang_linton_surge_added_mass_rel_error_320",
+        "m3181": 0.0208,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "a33_rel_error",
+        "main_key": "submerged_sphere_320_heave_added_mass_error",
+        "main": 0.0185,
+        "m3181_key": "wang_linton_heave_added_mass_rel_error_320",
+        "m3181": 0.0185,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "condition_number",
+        "main_key": "submerged_sphere_320_condition_number",
+        "main": 2.188,
+        "m3181_key": "wang_linton_condition_number_320",
+        "m3181": 2.188,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "fx_rel_error",
+        "main_key": "submerged_sphere_320_force_x_error",
+        "main": 0.031,
+        "m3181_key": "wang_linton_excitation_force_x_rel_error_320",
+        "m3181": 0.031,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "fz_rel_error",
+        "main_key": "submerged_sphere_320_force_z_error",
+        "main": 0.032,
+        "m3181_key": "wang_linton_excitation_force_z_rel_error_320",
+        "m3181": 0.032,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "order_a11",
+        "main_key": "submerged_sphere_320_order_a11",
+        "main": 2.03,
+        "m3181_key": "wang_linton_observed_order_a11_320",
+        "m3181": 2.03,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "order_a33",
+        "main_key": "submerged_sphere_320_order_a33",
+        "main": 2.06,
+        "m3181_key": "wang_linton_observed_order_a33_320",
+        "m3181": 2.06,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "order_b33",
+        "main_key": "submerged_sphere_320_order_b33",
+        "main": 1.93,
+        "m3181_key": "wang_linton_observed_order_b33_320",
+        "m3181": 1.93,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "order_fz",
+        "main_key": "submerged_sphere_320_order_fz",
+        "main": 1.98,
+        "m3181_key": "wang_linton_observed_order_fz_320",
+        "m3181": 1.98,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "320",
+        "quantity": "rot_coupling",
+        "main_key": "submerged_sphere_320_rotational_coupling",
+        "main": 2.6481e-05,
+        "m3181_key": "wang_linton_rotational_added_mass_max_ratio_320",
+        "m3181": 2.6e-05,
+        "rel_diff": 0.0181639666175749
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "a11_rel_error",
+        "main_key": "submerged_sphere_80_surge_added_mass_error",
+        "main": 0.0802,
+        "m3181_key": "wang_linton_surge_added_mass_rel_error_80",
+        "m3181": 0.0802,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "a33_rel_error",
+        "main_key": "submerged_sphere_80_heave_added_mass_error",
+        "main": 0.073,
+        "m3181_key": "wang_linton_heave_added_mass_rel_error_80",
+        "m3181": 0.073,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "condition_number",
+        "main_key": "submerged_sphere_80_condition_number",
+        "main": 2.259,
+        "m3181_key": "wang_linton_condition_number_80",
+        "m3181": 2.259,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "fx_rel_error",
+        "main_key": "submerged_sphere_80_force_x_error",
+        "main": 0.116,
+        "m3181_key": "wang_linton_excitation_force_x_rel_error_80",
+        "m3181": 0.116,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "fz_rel_error",
+        "main_key": "submerged_sphere_80_force_z_error",
+        "main": 0.119,
+        "m3181_key": "wang_linton_excitation_force_z_rel_error_80",
+        "m3181": 0.119,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "order_a11",
+        "main_key": "submerged_sphere_80_order_a11",
+        "main": 2.04,
+        "m3181_key": "wang_linton_observed_order_a11_80",
+        "m3181": 2.04,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "order_a33",
+        "main_key": "submerged_sphere_80_order_a33",
+        "main": 2.12,
+        "m3181_key": "wang_linton_observed_order_a33_80",
+        "m3181": 2.12,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "order_b33",
+        "main_key": "submerged_sphere_80_order_b33",
+        "main": 1.72,
+        "m3181_key": "wang_linton_observed_order_b33_80",
+        "m3181": 1.72,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "order_fz",
+        "main_key": "submerged_sphere_80_order_fz",
+        "main": 1.91,
+        "m3181_key": "wang_linton_observed_order_fz_80",
+        "m3181": 1.91,
+        "rel_diff": 0.0
+      },
+      {
+        "family": "wang_linton",
+        "level": "80",
+        "quantity": "rot_coupling",
+        "main_key": "submerged_sphere_80_rotational_coupling",
+        "main": 0.0002151,
+        "m3181_key": "wang_linton_rotational_added_mass_max_ratio_80",
+        "m3181": 0.00022,
+        "rel_diff": 0.022780102278010278
+      }
+    ],
+    "shared": 54,
+    "max_rel_diff": 0.022780102278010278,
+    "median_rel_diff": 0.0,
+    "within_3pct": 54,
+    "exact": 52,
+    "only_main": 0,
+    "only_m3181": 6
+  }
+}

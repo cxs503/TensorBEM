@@ -1,0 +1,193 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "tiers": [
+    "heavy"
+  ],
+  "checks": [
+    {
+      "key": "hulme_chief_exact_a33_dimless",
+      "description": "Ka = 2.58, 256 panels, exact: A33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.4007,
+      "measured": 0.4007373824061046,
+      "relative_deviation": 9.329275294390971e-05,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_exact_b33_dimless",
+      "description": "Ka = 2.58, 256 panels, exact: B33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.0631,
+      "measured": 0.06312197075596611,
+      "relative_deviation": 0.00034818947648344395,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_unregularized_condition_number",
+      "description": "Ka = 2.58, 256 panels, unregularized: condition number",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 145.66,
+      "measured": 145.65862687433562,
+      "relative_deviation": -9.426923413238433e-06,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_unregularized_a33_dimless",
+      "description": "Ka = 2.58, 256 panels, unregularized: A33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.3481,
+      "measured": 0.34806205885162744,
+      "relative_deviation": -0.00010899496803383447,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_unregularized_b33_dimless",
+      "description": "Ka = 2.58, 256 panels, unregularized: B33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": -0.1042,
+      "measured": -0.10415462852558684,
+      "relative_deviation": 0.00043542681778468246,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_chief_regularized_chief_point_count",
+      "description": "Ka = 2.58, 256 panels, chief_regularized: number of interior CHIEF points",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 5.0,
+      "measured": 5.0,
+      "relative_deviation": 0.0,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_chief_regularized_condition_number",
+      "description": "Ka = 2.58, 256 panels, chief_regularized: condition number",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 4.24,
+      "measured": 4.244971303652851,
+      "relative_deviation": 0.001172477276615731,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_chief_regularized_a33_dimless",
+      "description": "Ka = 2.58, 256 panels, chief_regularized: A33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.3919,
+      "measured": 0.3919084438208462,
+      "relative_deviation": 2.154585569327236e-05,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_chief_regularized_b33_dimless",
+      "description": "Ka = 2.58, 256 panels, chief_regularized: B33 dimensionless",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme3d_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "heavy",
+      "comparison": "value",
+      "declared": 0.0687,
+      "measured": 0.06870788329461958,
+      "relative_deviation": 0.00011474955778135268,
+      "tolerance": 0.005,
+      "verdict": "PASS"
+    }
+  ],
+  "summary": {
+    "checked": 9,
+    "passed": 9,
+    "drifted": 0,
+    "drifted_keys": [],
+    "worst_relative_deviation": 0.001172477276615731,
+    "verdict": "PASS"
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "commit": "fd5e359"
+  }
+}
