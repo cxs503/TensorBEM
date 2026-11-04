@@ -98,6 +98,12 @@ from .geometry3d import (
     project_to_ellipsoid,
     submerged_sphere_mesh,
 )
+from .mixed import (
+    LaplaceMixedResult,
+    MixedBoundary,
+    evaluate_mixed_interior_field,
+    solve_laplace_mixed,
+)
 from .helmholtz import (
     HelmholtzDiffractionResult,
     VerticalCylinderDiffractionResult,
@@ -118,6 +124,14 @@ from .quadrature_diagnostics import (
     diagnose_near_singular_quadrature,
     identify_problematic_panels,
     near_singular_by_panel,
+)
+from .finite_depth3d import (
+    bessel_k0,
+    depth_modes as finite_depth_modes,
+    green_function_3d as finite_depth_green_function_3d,
+    green_gradient_z_3d as finite_depth_green_gradient_z_3d,
+    hankel_h0,
+    wave_amplitude_coefficient as finite_depth_wave_amplitude_coefficient,
 )
 from .hydrostatic import (
     HydrostaticProperties,
@@ -243,6 +257,10 @@ __all__ = [
     "kochin_function_3d",
     "far_field_damping_matrix_3d",
     "haskind_excitation_force_3d",
+    "LaplaceMixedResult",
+    "MixedBoundary",
+    "evaluate_mixed_interior_field",
+    "solve_laplace_mixed",
     "HelmholtzDiffractionResult",
     "VerticalCylinderDiffractionResult",
     "points_inside_polygon",
@@ -286,5 +304,11 @@ __all__ = [
     "integrate_pressure_loads",
     "steady_pressure_coefficient",
     "steady_pressure_loads",
+    "bessel_k0",
+    "hankel_h0",
+    "finite_depth_modes",
+    "finite_depth_green_function_3d",
+    "finite_depth_green_gradient_z_3d",
+    "finite_depth_wave_amplitude_coefficient",
 ]
 __version__ = "0.5.0"

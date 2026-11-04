@@ -1,0 +1,222 @@
+{
+  "mutants": [
+    {
+      "key": "tensorbem.hydrostatic:236:20:swap_binop",
+      "source": "current",
+      "baseline": "survived",
+      "after": "killed",
+      "baseline_failing_test": null,
+      "after_failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_eccentric_waterplane_pins_the_centroid_away_from_the_origin"
+    },
+    {
+      "key": "tensorbem.hydrostatic:255:15:shift_constant",
+      "source": "current",
+      "baseline": "survived",
+      "after": "killed",
+      "baseline_failing_test": null,
+      "after_failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_waterline_with_cancelling_signed_area_reports_no_waterplane"
+    },
+    {
+      "key": "tensorbem.hydrostatic:161:15:shift_constant",
+      "source": "current",
+      "baseline": "survived",
+      "after": "killed",
+      "baseline_failing_test": null,
+      "after_failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_submerged_hull_without_waterline_reports_exactly_zero_area"
+    },
+    {
+      "key": "tensorbem.hydrostatic:314:29:shift_constant",
+      "source": "current",
+      "baseline": "survived",
+      "after": "killed",
+      "baseline_failing_test": null,
+      "after_failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_zero_displacement_branch_returns_a_three_component_centre"
+    },
+    {
+      "key": "tensorbem.free_surface:243:37:swap_binop",
+      "source": "legacy",
+      "baseline": "survived",
+      "after": "survived",
+      "baseline_failing_test": null,
+      "after_failing_test": null
+    },
+    {
+      "key": "tensorbem.free_surface:243:37:swap_binop",
+      "source": "current",
+      "baseline": "survived",
+      "after": "killed",
+      "baseline_failing_test": null,
+      "after_failing_test": "tests/test_mutation_gaps_hydrostatic.py::test_source_depth_derivative_matches_finite_difference_of_green_function[0.9--0.3-0.3--2.0-0.6]"
+    }
+  ],
+  "waterplane_eccentric": {
+    "area": 2.0,
+    "centroid": [
+      1.0,
+      0.5
+    ],
+    "moments": [
+      0.16666666666666663,
+      0.6666666666666665,
+      0.0
+    ],
+    "loop_vertices": 4,
+    "unused_edge_vertices": 8,
+    "loop": [
+      [
+        2.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        2.0,
+        1.0,
+        0.0
+      ],
+      [
+        2.0,
+        1.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        2.0,
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "source_depth_derivative_fd": {
+    "cases": [
+      {
+        "nu": 0.6,
+        "steps": [
+          1e-08,
+          3.162277660168379e-08,
+          1e-07,
+          3.162277660168379e-07,
+          1e-06,
+          3.162277660168379e-06,
+          1e-05,
+          3.1622776601683795e-05,
+          0.0001,
+          0.00031622776601683794,
+          0.001,
+          0.0031622776601683794,
+          0.01
+        ],
+        "relative_error": [
+          3.102006537061106e-08,
+          8.302850049909484e-09,
+          5.7257462387762225e-09,
+          1.3363407372838414e-09,
+          2.047450844274377e-10,
+          4.1823212799193697e-11,
+          2.6257569156251795e-11,
+          9.701409948419395e-11,
+          1.0079374818119047e-09,
+          1.0077730328019664e-08,
+          1.0076567817862588e-07,
+          1.0076570296368315e-06,
+          1.0076589521164666e-05
+        ],
+        "best_step": 1e-05,
+        "min_relative_error": 2.6257569156251795e-11
+      },
+      {
+        "nu": 1.2,
+        "steps": [
+          1e-08,
+          3.162277660168379e-08,
+          1e-07,
+          3.162277660168379e-07,
+          1e-06,
+          3.162277660168379e-06,
+          1e-05,
+          3.1622776601683795e-05,
+          0.0001,
+          0.00031622776601683794,
+          0.001,
+          0.0031622776601683794,
+          0.01
+        ],
+        "relative_error": [
+          5.972060259548274e-09,
+          5.514624625174193e-09,
+          1.2956615914918456e-09,
+          3.895641307664371e-10,
+          2.851452221846739e-10,
+          4.395039524015418e-11,
+          2.1540645893207494e-10,
+          2.095809423131847e-09,
+          2.095345682379858e-08,
+          2.0953777495793056e-07,
+          2.095379067251214e-06,
+          2.095424571219258e-05,
+          0.00020958785291720744
+        ],
+        "best_step": 3.162277660168379e-06,
+        "min_relative_error": 4.395039524015418e-11
+      },
+      {
+        "nu": 0.35,
+        "steps": [
+          1e-08,
+          3.162277660168379e-08,
+          1e-07,
+          3.162277660168379e-07,
+          1e-06,
+          3.162277660168379e-06,
+          1e-05,
+          3.1622776601683795e-05,
+          0.0001,
+          0.00031622776601683794,
+          0.001,
+          0.0031622776601683794,
+          0.01
+        ],
+        "relative_error": [
+          1.9451068886322394e-08,
+          7.12828896694883e-09,
+          2.9863635159906183e-09,
+          9.193374944099297e-10,
+          1.7559146401154145e-10,
+          2.8837570329064533e-11,
+          4.461782002427922e-11,
+          3.055627305519781e-11,
+          3.123641183940842e-10,
+          3.149506111110057e-09,
+          3.1504144039512646e-08,
+          3.150539388045381e-07,
+          3.1505459136991285e-06
+        ],
+        "best_step": 3.162277660168379e-06,
+        "min_relative_error": 2.8837570329064533e-11
+      }
+    ]
+  }
+}

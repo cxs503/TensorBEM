@@ -1,5 +1,23 @@
 name: tests
 
+# Ordering contract (m3229, 2026-11-04)
+# -------------------------------------
+# The benchmark steps in this job are not decoration: several test modules read
+# the files they write (``artifacts/ursell_doc_claims.json`` backs the
+# document-versus-code gate in ``tests/test_doc_claims.py``, and
+# ``artifacts/*.json`` is the evidence uploaded at the end).  ``pytest`` used to
+# run *before* those steps, so the suite always saw a tree without them.  The
+# evidence generation therefore runs first and the test suite runs last, on a
+# tree that already holds the artifacts it is asking about.
+#
+# ``matplotlib`` is the other half of the same failure mode: it is an optional
+# extra (``.[visualization]``), yet four test modules exercise the plotting
+# entry points.  Two of them (``tests/test_ursell_error_budget.py``,
+# ``tests/test_ursell_band_audit.py``) call ``plot()`` without
+# ``pytest.importorskip``, so a CI install that omits the extra turned them red
+# with ``ModuleNotFoundError``.  The job installs ``.[dev,visualization]`` so the
+# figures are actually rendered where CI claims to check them.
+
 on:
   push:
     branches: [main]
@@ -17,9 +35,13 @@ jobs:
           python-version: "3.11"
           cache: pip
       - name: Install package and test dependencies
-        run: python -m pip install -e ".[dev]"
-      - name: Run test suite
-        run: pytest
+        # ``visualization`` supplies matplotlib, which the plotting tests
+        # exercise (see the ordering contract above).
+        run: python -m pip install -e ".[dev,visualization]"
+
+      # ------------------------------------------------------------------
+      # Evidence generation: must precede the test suite.
+      # ------------------------------------------------------------------
       - name: Run unit-disk benchmark
         run: python -m tensorbem.benchmarks.unit_disk --panels 64
       - name: Run cylinder added-mass benchmark
@@ -44,6 +66,10 @@ jobs:
         run: python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
       - name: Run Ursell submerged-cylinder radiation benchmark
         run: python -m tensorbem.benchmarks.ursell_cylinder --panels 64 --ka 0.6 --output artifacts/ursell.json
+      - name: Re-measure the Ursell document-claim artifact
+        # Backs the document-versus-code gate in tests/test_doc_claims.py; without
+        # this file the gate can only compare against the pinned copy under tests/data/.
+        run: python -m tensorbem.doc_claims --write
       - name: Run rigid-body Neumann added-mass and rotational-inertia benchmark
         run: python -m tensorbem.benchmarks.rigid_body_added_mass --panels 16 32 64 128 --subdivisions 0 1 2 --output artifacts/rigid-body-added-mass.json
       - name: Run Dean submerged-cylinder wave-diffraction benchmark
@@ -56,6 +82,13 @@ jobs:
         run: python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2 --output artifacts/submerged-sphere-wave.json
       - name: Generate classical benchmark study
         run: python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
+
+      # ------------------------------------------------------------------
+      # Test suite: runs on a tree that already holds the evidence above.
+      # ------------------------------------------------------------------
+      - name: Run test suite
+        run: pytest
+
       - name: Upload benchmark evidence
         uses: actions/upload-artifact@v4
         with:
@@ -68,6 +101,7 @@ jobs:
             artifacts/surface-velocity-study.json
             artifacts/classical-study.json
             artifacts/ursell.json
+            artifacts/ursell_doc_claims.json
             artifacts/rigid-body-added-mass.json
             artifacts/dean-diffraction.json
             artifacts/maccamy-fuchs.json
