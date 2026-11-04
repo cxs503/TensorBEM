@@ -120,8 +120,10 @@ def test_velocity_order_convention_ambiguity_is_real_and_documented():
 def test_result_tables_are_fully_protected(report):
     """Coverage: every printed number of the four tables is registry-backed."""
     coverage = pins.coverage()
-    assert coverage["protected_in_tables"] >= 60
-    assert coverage["protected_fraction"] > 0.2
+    # m3449 raised this floor: Table 1 (section 3.1, 28 decimal cells) is now
+    # guarded by tensorbem.benchmarks.mesh_doc_pins, 86 -> 114 protected tokens.
+    assert coverage["protected_in_tables"] >= 114
+    assert coverage["protected_fraction"] > 0.45
     # The prose numbers are grouped by section so a later shift can see what is
     # still unguarded instead of assuming full coverage.
     assert isinstance(coverage["unguarded_by_section"], dict)
