@@ -28,6 +28,21 @@ reference itself is right: the panel family extrapolated to zero mesh size
 agrees with Ursell's multipole solution to about ``1e-5``. The source strings
 keep the citation; the original values are recorded in
 ``dev_report_tensorbem_declared_numbers.md`` rather than silently overwritten.
+
+Provenance note (2026-11-05). The 3-D free-surface layer (``docs/marine_bem_benchmarks.md``
+sections 4.10-4.11, tables 10-12 and the Kochin/Haskind closure sentence) was the last
+documented benchmark family that the registry did not touch: it is expensive (256-panel
+Kelvin-Green assembly) and was quoted only in prose. It is registered here as the
+``floating_hemisphere`` and ``submerged_sphere`` groups. Registering it exposed one
+inconsistency in table 10 that had survived three audits: its single "observed order"
+column mixes two length metrics -- the \(A_{33}'/B_{33}'/A_{11}'/F_z\) entries use the mean
+panel edge length ``h_mean`` (the metric the benchmark emits), but the \(B_{11}'\) entry
+(1.62, 1.88) was computed with \(h\propto N^{-1/2}\) in the m2609 Kochin study, which
+gives 1.80/1.94 on the ``h_mean`` metric. Both are reproducible, so the document is not
+wrong, but a reader cannot tell which metric produced which cell. The registry pins both:
+``observed_order_b11@N`` is the ``h_mean`` value, ``surge_damping_rel_error_panel_law_order@N``
+is the \(N^{-1/2}\) value the table quotes, and ``docs/marine_bem_benchmarks.md`` section
+4.10 now says so in a generated footnote.
 """
 
 from __future__ import annotations
@@ -46,7 +61,9 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    floating_hemisphere as floating_hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
+    submerged_sphere_wave as submerged_sphere_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -321,6 +338,698 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.824e-4,
         tier="standard",
     ),
+    # --- 3-D floating hemisphere, Hulme (1982), table 10 --------------
+    DeclaredNumber(
+        key="hulme_a33_rel_error_16",
+        description="relative error of heave added mass A33 at 16 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error@16",
+        declared=0.12,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b33_rel_error_16",
+        description="relative error of heave damping B33 at 16 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error@16",
+        declared=0.122,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a11_rel_error_16",
+        description="relative error of surge added mass A11 at 16 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error@16",
+        declared=0.18,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_rel_error_16",
+        description="relative error of surge damping B11 at 16 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error@16",
+        declared=0.402,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_fz_rel_error_16",
+        description="relative error of vertical excitation force Fz at 16 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error@16",
+        declared=0.0667,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_condition_number_16",
+        description="condition number of the 3-D free-surface system at 16 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number@16",
+        declared=3.893,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a33_rel_error_64",
+        description="relative error of heave added mass A33 at 64 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error@64",
+        declared=0.0297,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b33_rel_error_64",
+        description="relative error of heave damping B33 at 64 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error@64",
+        declared=0.045,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a11_rel_error_64",
+        description="relative error of surge added mass A11 at 64 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error@64",
+        declared=0.0505,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_rel_error_64",
+        description="relative error of surge damping B11 at 64 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error@64",
+        declared=0.13,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_fz_rel_error_64",
+        description="relative error of vertical excitation force Fz at 64 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error@64",
+        declared=0.0221,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_condition_number_64",
+        description="condition number of the 3-D free-surface system at 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number@64",
+        declared=3.052,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a33_rel_error_256",
+        description="relative error of heave added mass A33 at 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_added_mass_rel_error@256",
+        declared=0.00741,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b33_rel_error_256",
+        description="relative error of heave damping B33 at 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="heave_damping_rel_error@256",
+        declared=0.0118,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a11_rel_error_256",
+        description="relative error of surge added mass A11 at 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_added_mass_rel_error@256",
+        declared=0.013,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_rel_error_256",
+        description="relative error of surge damping B11 at 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error@256",
+        declared=0.0353,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_fz_rel_error_256",
+        description="relative error of vertical excitation force Fz at 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="excitation_force_z_rel_error@256",
+        declared=0.00567,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_condition_number_256",
+        description="condition number of the 3-D free-surface system at 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="condition_number@256",
+        declared=2.783,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a33_order_64",
+        description="observed order of heave added mass A33 at 64 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_a33@64",
+        declared=2.23,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b33_order_64",
+        description="observed order of heave damping B33 at 64 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_b33@64",
+        declared=1.59,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a11_order_64",
+        description="observed order of surge added mass A11 at 64 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_a11@64",
+        declared=2.04,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_fz_order_64",
+        description="observed order of vertical excitation force Fz at 64 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_fz@64",
+        declared=1.77,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a33_order_256",
+        description="observed order of heave added mass A33 at 256 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_a33@256",
+        declared=2.06,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b33_order_256",
+        description="observed order of heave damping B33 at 256 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_b33@256",
+        declared=1.98,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_a11_order_256",
+        description="observed order of surge added mass A11 at 256 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_a11@256",
+        declared=2.01,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_fz_order_256",
+        description="observed order of vertical excitation force Fz at 256 panels (h_mean metric)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="observed_order_fz@256",
+        declared=2.02,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_panel_law_order_64",
+        description="observed order of B11 at 64 panels in the h ~ N^-1/2 metric that table 10 quotes",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error_panel_law_order@64",
+        declared=1.62,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_panel_law_order_256",
+        description="observed order of B11 at 256 panels in the h ~ N^-1/2 metric that table 10 quotes",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+        group="floating_hemisphere",
+        quantity="surge_damping_rel_error_panel_law_order@256",
+        declared=1.88,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_h_mean_order_64",
+        description=(
+            "observed order of surge damping B11 at 64 panels in the h_mean metric "
+            "(the metric the benchmark emits, and the one the other four cells use)"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.10 B11 metric note (generated)",
+        group="floating_hemisphere",
+        quantity="observed_order_b11@64",
+        declared=1.802,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_b11_h_mean_order_256",
+        description=(
+            "observed order of surge damping B11 at 256 panels in the h_mean metric"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.10 B11 metric note (generated)",
+        group="floating_hemisphere",
+        quantity="observed_order_b11@256",
+        declared=1.938,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+    ),
+    DeclaredNumber(
+        key="hulme_far_field_damping_closure_256",
+        description="relative difference between the near-field and 3-D Kochin far-field heave damping, 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 Kochin/Haskind closure sentence",
+        group="floating_hemisphere",
+        quantity="far_field_damping_rel_diff_heave@256",
+        declared=0.000545,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_haskind_reciprocity_256_x",
+        description="relative difference between the direct diffraction solve and the Haskind reciprocity integral, surge, 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 Kochin/Haskind closure sentence",
+        group="floating_hemisphere",
+        quantity="haskind_reciprocity_rel_diff_x@256",
+        declared=0.000209,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_haskind_reciprocity_256_z",
+        description="relative difference between the direct diffraction solve and the Haskind reciprocity integral, heave, 256 panels, Ka=1.0",
+        source="docs/marine_bem_benchmarks.md section 4.10 Kochin/Haskind closure sentence",
+        group="floating_hemisphere",
+        quantity="haskind_reciprocity_rel_diff_z@256",
+        declared=0.000809,
+        tier="standard",
+        parameters={"study": "refinement", "subdivisions": [1, 2, 3], "ka": 1.0},
+        tolerance=0.01,
+    ),
+    # --- 3-D floating hemisphere, CHIEF at the waterline resonance, table 11 ---
+    DeclaredNumber(
+        key="hulme_chief_exact_a33",
+        description="exact heave added mass A33 that table 11 compares against, Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="exact_heave_added_mass",
+        declared=0.4007,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_exact_b33",
+        description="exact heave damping B33 that table 11 compares against, Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="exact_heave_damping",
+        declared=0.0631,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_unregularized_condition_number",
+        description="condition number of the unregularized exterior BIE at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="unregularized_condition_number",
+        declared=145.66,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_unregularized_a33",
+        description="unregularized A33 at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="unregularized_heave_added_mass",
+        declared=0.3481,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_unregularized_b33",
+        description="unregularized B33 at Ka=2.58, 256 panels (non-physical negative damping)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="unregularized_heave_damping",
+        declared=-0.1042,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_regularized_condition_number",
+        description="condition number after 5 interior 3-D CHIEF constraints at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="chief_condition_number",
+        declared=4.24,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_regularized_a33",
+        description="CHIEF-regularized A33 at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="chief_heave_added_mass",
+        declared=0.3919,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_regularized_b33",
+        description="CHIEF-regularized B33 at Ka=2.58, 256 panels (passivity restored)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="chief_heave_damping",
+        declared=0.0687,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_point_count",
+        description="number of interior 3-D CHIEF zero-field constraints that a lid-free mesh needs",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="floating_hemisphere",
+        quantity="chief_point_count",
+        declared=5.0,
+        tier="standard",
+        parameters={"study": "irregular_frequency", "subdivision": 3, "ka_values": [2.58], "ka": 2.58},
+        tolerance=0.01,
+    ),
+    # --- 3-D submerged sphere, Wang/Linton, table 12 ------------------
+    DeclaredNumber(
+        key="wlt_sphere_a33_rel_error_20",
+        description="relative error of heave added mass A33 at 20 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="heave_added_mass_rel_error@20",
+        declared=0.255,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a11_rel_error_20",
+        description="relative error of surge added mass A11 at 20 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="surge_added_mass_rel_error@20",
+        declared=0.268,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fx_rel_error_20",
+        description="relative error of horizontal excitation force Fx at 20 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_x_rel_error@20",
+        declared=0.36,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fz_rel_error_20",
+        description="relative error of vertical excitation force Fz at 20 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_z_rel_error@20",
+        declared=0.37,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_condition_number_20",
+        description="condition number of the submerged-sphere system at 20 panels",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="condition_number@20",
+        declared=2.407,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a33_rel_error_80",
+        description="relative error of heave added mass A33 at 80 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="heave_added_mass_rel_error@80",
+        declared=0.073,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a11_rel_error_80",
+        description="relative error of surge added mass A11 at 80 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="surge_added_mass_rel_error@80",
+        declared=0.0802,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fx_rel_error_80",
+        description="relative error of horizontal excitation force Fx at 80 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_x_rel_error@80",
+        declared=0.116,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fz_rel_error_80",
+        description="relative error of vertical excitation force Fz at 80 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_z_rel_error@80",
+        declared=0.119,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_condition_number_80",
+        description="condition number of the submerged-sphere system at 80 panels",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="condition_number@80",
+        declared=2.259,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_rotational_coupling_80",
+        description="largest rotational-to-translational added mass ratio about the sphere centre at 80 panels (must vanish by symmetry)",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="rotational_added_mass_max_ratio@80",
+        declared=0.00022,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+        tolerance=0.05,
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a33_rel_error_320",
+        description="relative error of heave added mass A33 at 320 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="heave_added_mass_rel_error@320",
+        declared=0.0185,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a11_rel_error_320",
+        description="relative error of surge added mass A11 at 320 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="surge_added_mass_rel_error@320",
+        declared=0.0208,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fx_rel_error_320",
+        description="relative error of horizontal excitation force Fx at 320 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_x_rel_error@320",
+        declared=0.031,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fz_rel_error_320",
+        description="relative error of vertical excitation force Fz at 320 panels, Ka=0.8, f/a=1.5",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="excitation_force_z_rel_error@320",
+        declared=0.032,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_condition_number_320",
+        description="condition number of the submerged-sphere system at 320 panels",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="condition_number@320",
+        declared=2.188,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_rotational_coupling_320",
+        description="largest rotational-to-translational added mass ratio about the sphere centre at 320 panels (must vanish by symmetry)",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="rotational_added_mass_max_ratio@320",
+        declared=2.6e-05,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+        tolerance=0.05,
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a33_order_80",
+        description="observed order of heave added mass A33 at 80 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_a33@80",
+        declared=2.12,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_b33_order_80",
+        description="observed order of heave damping B33 at 80 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_b33@80",
+        declared=1.72,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a11_order_80",
+        description="observed order of surge added mass A11 at 80 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_a11@80",
+        declared=2.04,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fz_order_80",
+        description="observed order of vertical excitation force Fz at 80 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_fz@80",
+        declared=1.91,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a33_order_320",
+        description="observed order of heave added mass A33 at 320 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_a33@320",
+        declared=2.06,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_b33_order_320",
+        description="observed order of heave damping B33 at 320 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_b33@320",
+        declared=1.93,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_a11_order_320",
+        description="observed order of surge added mass A11 at 320 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_a11@320",
+        declared=2.03,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
+    DeclaredNumber(
+        key="wlt_sphere_fz_order_320",
+        description="observed order of vertical excitation force Fz at 320 panels, Ka=0.8",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="observed_order_fz@320",
+        declared=1.98,
+        tier="standard",
+        parameters={"subdivisions": [0, 1, 2]},
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -328,6 +1037,107 @@ _URSELL_SUBMERGENCE = 2.0
 _URSELL_KA = 0.6
 _URSELL_DENSITY = 1025.0
 _URSELL_GRAVITY = 9.80665
+
+
+_HULME_KA = 1.0
+_HULME_SUBDIVISIONS = (1, 2, 3)
+_WLT_SPHERE_SUBDIVISIONS = (0, 1, 2)
+
+#: Fields of a 3-D free-surface convergence row that the documentation quotes.
+_FREE_SURFACE_LEVEL_FIELDS = (
+    "heave_added_mass_rel_error",
+    "heave_damping_rel_error",
+    "surge_added_mass_rel_error",
+    "surge_damping_rel_error",
+    "excitation_force_x_rel_error",
+    "excitation_force_z_rel_error",
+    "condition_number",
+    "rotational_added_mass_max_ratio",
+    "observed_order_a33",
+    "observed_order_b33",
+    "observed_order_a11",
+    "observed_order_b11",
+    "observed_order_fz",
+    "far_field_damping_rel_diff_heave",
+    "haskind_reciprocity_rel_diff_x",
+    "haskind_reciprocity_rel_diff_z",
+)
+
+
+def _level_quantities(levels: Sequence[dict]) -> dict[str, float]:
+    """Flatten per-level rows into ``field@panels`` keys, dropping absent values.
+
+    A level is identified by its panel count, which is the axis the documents
+    tabulate on, so a row can be cited as e.g. ``heave_damping_rel_error@256``.
+    Quantities that are ``None`` (a first level has no observed order) or
+    non-finite are omitted, because a missing entry must fail loudly at lookup
+    rather than be compared against a placeholder.
+    """
+    values: dict[str, float] = {}
+    for row in levels:
+        tag = int(row["panel_count"])
+        for name in _FREE_SURFACE_LEVEL_FIELDS:
+            raw = row.get(name)
+            if raw is None:
+                continue
+            value = float(raw)
+            if math.isfinite(value):
+                values[f"{name}@{tag}"] = value
+    return values
+
+
+def _panel_law_orders(levels: Sequence[dict], field: str) -> dict[str, float]:
+    """Observed order of ``field`` against h proportional to N^{-1/2}.
+
+    The 3-D free-surface documentation quotes the \(B_{11}'\) convergence order in
+    this metric while the other four quantities use the mean panel edge length.
+    Both are legitimate length measures; keeping them as separate keys is what
+    makes the distinction auditable instead of invisible.
+    """
+    orders: dict[str, float] = {}
+    for coarse, fine in zip(levels, levels[1:]):
+        e0, e1 = float(coarse[field]), float(fine[field])
+        n0, n1 = float(coarse["panel_count"]), float(fine["panel_count"])
+        if e0 > 0.0 and e1 > 0.0 and n1 > n0:
+            orders[f"{field}_panel_law_order@{int(n1)}"] = math.log(e0 / e1) / math.log(
+                math.sqrt(n1 / n0)
+            )
+    return orders
+
+
+def _floating_hemisphere_quantities(parameters: dict) -> dict[str, float]:
+    """Hulme (1982) floating hemisphere: mesh refinement or CHIEF study."""
+    study = str(parameters.get("study", "refinement"))
+    if study == "refinement":
+        report = floating_hemisphere_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"]),
+            ka=float(parameters.get("ka", _HULME_KA)),
+        )
+        values = _level_quantities(report["levels"])
+        values.update(
+            _panel_law_orders(report["levels"], "surge_damping_rel_error")
+        )
+        return values
+    if study == "irregular_frequency":
+        rows = floating_hemisphere_benchmark.run_irregular_frequency_study(
+            subdivision=int(parameters["subdivision"]),
+            ka_values=tuple(float(k) for k in parameters["ka_values"]),
+        )
+        target = float(parameters["ka"])
+        row = min(rows, key=lambda r: abs(float(r["ka"]) - target))
+        plain, chief = row["unregularized"], row["chief_regularized"]
+        return {
+            "exact_heave_added_mass": float(row["exact_a33"]),
+            "exact_heave_damping": float(row["exact_b33"]),
+            "unregularized_condition_number": float(plain["condition_number"]),
+            "unregularized_heave_added_mass": float(plain["a33_dimless"]),
+            "unregularized_heave_damping": float(plain["b33_dimless"]),
+            "chief_condition_number": float(chief["condition_number"]),
+            "chief_heave_added_mass": float(chief["a33_dimless"]),
+            "chief_heave_damping": float(chief["b33_dimless"]),
+            "chief_point_count": float(chief["chief_point_count"]),
+        }
+    raise ValueError(f"unknown floating_hemisphere study: {study!r}")
 
 
 def _run_group(group: str, parameters: dict) -> dict[str, float]:
@@ -369,6 +1179,13 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "field_rmse": float(row["field_rmse"]),
             "panels": float(row["panels"]),
         }
+    if group == "floating_hemisphere":
+        return _floating_hemisphere_quantities(parameters)
+    if group == "submerged_sphere":
+        report = submerged_sphere_benchmark.run_refinement_study(
+            subdivisions=tuple(int(s) for s in parameters["subdivisions"])
+        )
+        return _level_quantities(report["levels"])
     if group == "ursell_reference":
         omega = math.sqrt(_URSELL_KA * _URSELL_GRAVITY / _URSELL_RADIUS)
         added_mass, damping = ursell_cylinder_added_mass(

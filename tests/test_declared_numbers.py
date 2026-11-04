@@ -77,7 +77,11 @@ def test_registry_is_well_formed():
         assert entry.source.strip()
         assert entry.description.strip()
         assert math.isfinite(entry.declared)
-        assert entry.declared > 0.0
+        # A quoted number may be signed: table 11 of marine_bem_benchmarks.md
+        # quotes the non-physical negative heave damping (-0.1042) that the
+        # unregularized BIE produces at the waterline resonance, and the judge
+        # compares against |declared|.
+        assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
 
@@ -86,7 +90,9 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "floating_hemisphere",
         "interior_harmonics",
+        "submerged_sphere",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -107,9 +113,20 @@ def test_fast_tier_reproduces_the_documented_numbers():
     assert report["summary"]["checked"] >= 6
 
 
-def test_standard_tier_reproduces_the_documented_ursell_numbers():
+@pytest.fixture(scope="module")
+def standard_report():
+    """One standard-tier recomputation, shared by the tests that judge it.
+
+    The 3-D free-surface rows added in m3365 bring 256-panel Kelvin-Green
+    assemblies into the standard tier, so a per-test rerun would multiply a
+    half-minute solve by the number of assertions made about it.
+    """
+    return check(tiers=("standard",))
+
+
+def test_standard_tier_reproduces_the_documented_ursell_numbers(standard_report):
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = standard_report
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -156,6 +173,87 @@ def test_documented_1280_panel_harmonic_rows_are_reproduced():
         < flux["interior_harmonic_deg2_flux_1280"]
         < flux["interior_harmonic_deg3_flux_1280"]
     )
+
+
+FREE_SURFACE_GROUPS = ("floating_hemisphere", "submerged_sphere")
+
+
+def _free_surface_rows(report):
+    return {
+        row["key"]: row
+        for row in report["checks"]
+        if row["group"] in FREE_SURFACE_GROUPS
+    }
+
+
+def test_standard_tier_reproduces_the_3d_free_surface_tables(standard_report):
+    r"""Tables 10-12 of docs/marine_bem_benchmarks.md are now executable.
+
+    Sections 4.10-4.11 were the last documented benchmark family outside the
+    registry: 65 quoted numbers (Hulme floating-hemisphere refinement, its
+    CHIEF regularisation table, the Kochin/Haskind closure sentence, and the
+    Wang/Linton submerged sphere) were guarded only by ad-hoc tests with 2-10 %
+    gates, which pin an accuracy level but not the quoted value.
+    """
+    rows = _free_surface_rows(standard_report)
+    assert len(rows) == 65
+    drifted = [
+        (key, row["declared"], row["measured"])
+        for key, row in rows.items()
+        if row["verdict"] != "PASS"
+    ]
+    assert not drifted, drifted
+    # every table keeps at least its three mesh levels
+    for n in (16, 64, 256):
+        assert f"hulme_b33_rel_error_{n}" in rows
+    for n in (20, 80, 320):
+        assert f"wlt_sphere_a33_rel_error_{n}" in rows
+    assert rows["hulme_chief_regularized_condition_number"]["measured"] < rows[
+        "hulme_chief_unregularized_condition_number"
+    ]["measured"]
+
+
+def test_the_quoted_b11_order_is_in_the_panel_count_metric(standard_report):
+    """Table 10's order column mixes two length metrics; both are pinned.
+
+    The \(B_{11}'\) cell (1.62 / 1.88) was produced with \(h\propto N^{-1/2}\),
+    while the four neighbouring cells use the mean panel edge length. The
+    registry stores the \(N^{-1/2}\) value under its own key; recomputing it
+    from the registered error column proves the key is wired to that metric
+    rather than to the module's ``h_mean`` order.
+    """
+    rows = _free_surface_rows(standard_report)
+    for coarse, fine, key in ((16, 64, "hulme_b11_panel_law_order_64"),
+                              (64, 256, "hulme_b11_panel_law_order_256")):
+        e_coarse = rows[f"hulme_b11_rel_error_{coarse}"]["measured"]
+        e_fine = rows[f"hulme_b11_rel_error_{fine}"]["measured"]
+        rebuilt = math.log(e_coarse / e_fine) / math.log(math.sqrt(fine / coarse))
+        assert rebuilt == pytest.approx(rows[key]["measured"], rel=1e-12)
+        # and it is not the h_mean order, which is what the other four cells use
+        assert abs(rebuilt - rows[f"hulme_a33_order_{fine}"]["measured"]) > 0.02
+
+
+def test_h_mean_and_panel_count_orders_are_related_by_the_edge_length_ratio():
+    r"""The two metrics differ by exactly the edge-length ratio they measure.
+
+    This is the invariant that makes the mixed-metric footnote checkable: if a
+    future mesh change moved the mean edge length away from N^-1/2, the table's
+    B11 order and the module's B11 order would drift apart and the pins would
+    notice. It also guards the newly emitted ``observed_order_b11`` field.
+    """
+    from tensorbem.benchmarks import floating_hemisphere
+
+    report = floating_hemisphere.run_refinement_study(subdivisions=(1, 2))
+    coarse, fine = report["levels"]
+    assert fine["observed_order_b11"] is not None
+    h_ratio = math.log(coarse["h_mean"] / fine["h_mean"]) / math.log(
+        math.sqrt(fine["panel_count"] / coarse["panel_count"])
+    )
+    panel_law = float(fine["observed_order_b11"]) * h_ratio
+    assert panel_law == pytest.approx(1.625, abs=0.01)
+    # the h_mean order of B11 is measurably larger, which is why the table's
+    # column cannot be read as one metric
+    assert float(fine["observed_order_b11"]) - panel_law > 0.1
 
 
 def test_report_is_strict_json():
