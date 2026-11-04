@@ -1,0 +1,110 @@
+{
+  "pr": 128,
+  "branch": "agent/m3181",
+  "shas": {
+    "branch_agent_m3181_before": "55db3976dc283e9522334f2ab7309fc655f3ae27",
+    "main_tip_at_merge": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+    "merge_commit": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+    "merge_parents": [
+      "b420b2ee1e98276f341a10eafe3fda2d80807756",
+      "a94e21d8353413f30f1268c56e92ab83c91f572c"
+    ]
+  },
+  "registry": {
+    "rows": {
+      "main": 84,
+      "pr": 85,
+      "merged": 147
+    },
+    "unique_keys": 147,
+    "duplicate_keys": [],
+    "groups": {
+      "main": {
+        "cylinder": 2,
+        "ellipsoid": 3,
+        "hulme_chief": 6,
+        "hulme_hemisphere": 31,
+        "interior_harmonics": 6,
+        "submerged_sphere": 25,
+        "ursell": 9,
+        "ursell_reference": 2
+      },
+      "pr": {
+        "cylinder": 2,
+        "ellipsoid": 3,
+        "hulme3d": 28,
+        "hulme3d_chief": 9,
+        "interior_harmonics": 6,
+        "ursell": 9,
+        "ursell_reference": 2,
+        "wang_linton3d": 26
+      },
+      "merged": {
+        "cylinder": 2,
+        "ellipsoid": 3,
+        "hulme3d": 28,
+        "hulme3d_chief": 9,
+        "hulme_chief": 6,
+        "hulme_hemisphere": 31,
+        "interior_harmonics": 6,
+        "submerged_sphere": 25,
+        "ursell": 9,
+        "ursell_reference": 2,
+        "wang_linton3d": 26
+      }
+    },
+    "shared_groups": [
+      "cylinder",
+      "ellipsoid",
+      "interior_harmonics",
+      "ursell",
+      "ursell_reference"
+    ],
+    "pr_only_groups": [
+      "hulme3d",
+      "hulme3d_chief",
+      "wang_linton3d"
+    ],
+    "main_only_groups": [
+      "hulme_chief",
+      "hulme_hemisphere",
+      "submerged_sphere"
+    ]
+  },
+  "resolution": {
+    "conflicted_files": [
+      "src/tensorbem/benchmarks/declared_numbers.py",
+      "tests/test_declared_numbers.py"
+    ],
+    "auto_merged_files": [
+      "docs/marine_bem_benchmarks.md"
+    ],
+    "symbol_collision_renamed": {
+      "before": "_chief_rows() (agent/m3181, DeclaredNumber builder)",
+      "after": "_free_surface_chief_rows()",
+      "why": "main defines _chief_rows(rows) as a value flattener; keeping both names would have let the later definition win silently"
+    }
+  },
+  "tests": {
+    "main_baseline": {
+      "passed": 53,
+      "failed": 0,
+      "skipped": 3,
+      "xfailed": 0,
+      "raw_tail": [
+        "EXIT=0"
+      ],
+      "exit_code": 0
+    },
+    "merged": {
+      "passed": 54,
+      "failed": 0,
+      "skipped": 5,
+      "xfailed": 0,
+      "raw_tail": [
+        "EXIT=0"
+      ],
+      "exit_code": 0
+    }
+  }
+}
