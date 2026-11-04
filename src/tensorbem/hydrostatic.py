@@ -25,8 +25,12 @@ where:
     I_L   = second moment of waterplane area about longitudinal axis (x-axis)
     KG    = height of center of gravity above keel
 
-For small-angle linearization, all off-diagonal terms are zero (no cross-coupling
-between heave/roll/pitch, and surge/sway/yaw have no hydrostatic restoring).
+For small-angle linearization the matrix is symmetric and surge/sway/yaw carry no
+hydrostatic restoring diagonal, but the off-diagonal terms are **not** zero in
+general: they are the waterplane first moments (``C[2,3]``, ``C[2,4]``) and the
+waterplane product moment (``C[3,4]``), so a hull whose waterplane centroid is
+displaced from the origin (``LCF``/``TCF`` != 0) couples heave into roll and
+pitch. See :func:`compute_hydrostatic_restoring_matrix`.
 """
 
 from __future__ import annotations
@@ -321,6 +325,42 @@ def compute_displaced_volume_and_buoyancy(
     return abs(total_volume), center
 
 
+def _waterplane_integrals_about_origin(
+    wp_area: float,
+    wp_center: FloatArray,
+    wp_moments: FloatArray,
+) -> tuple[float, float, float, float, float]:
+    """Return ``(S_x, S_y, I_xx, I_yy, I_xy)``: waterplane integrals about the origin.
+
+    :func:`compute_waterplane_properties` reports the area, the centroid and the
+    second moments **about the centroid**. The restoring matrix needs the same
+    integrals about the coordinate origin, obtained with the parallel-axis
+    theorem::
+
+        S_x  = A x_c,          S_y  = A y_c
+        I_xx = I_xx^c + A y_c^2
+        I_yy = I_yy^c + A x_c^2
+        I_xy = I_xy^c + A x_c y_c
+
+    Maintaining one source of truth (the centroidal properties) keeps the
+    waterline-integration code single-purpose; the shift is exact algebra, so no
+    accuracy is lost.
+    """
+    area = float(wp_area)
+    x_c = float(wp_center[0])
+    y_c = float(wp_center[1])
+    i_xx_c = float(wp_moments[0])
+    i_yy_c = float(wp_moments[1])
+    i_xy_c = float(wp_moments[2])
+
+    s_x = area * x_c
+    s_y = area * y_c
+    i_xx = i_xx_c + area * y_c**2
+    i_yy = i_yy_c + area * x_c**2
+    i_xy = i_xy_c + area * x_c * y_c
+    return s_x, s_y, i_xx, i_yy, i_xy
+
+
 def compute_hydrostatic_restoring_matrix(
     hull: WettedHullMesh,
     mass: float,
@@ -328,23 +368,59 @@ def compute_hydrostatic_restoring_matrix(
     density: float = _DEFAULT_DENSITY,
     gravity: float = _DEFAULT_GRAVITY,
 ) -> HydrostaticProperties:
-    """Compute the 6×6 hydrostatic restoring matrix C.
+    """Compute the 6×6 hydrostatic restoring matrix ``C``.
 
-    For a floating body in equilibrium, the restoring matrix relates small
-    displacements to restoring forces/moments:
+    The restoring matrix is the Hessian of the hydrostatic potential energy in
+    the six rigid-body modes ``(surge, sway, heave, roll, pitch, yaw)`` at
+    equilibrium flotation. With the waterplane integrals taken *about the
+    coordinate origin*
 
-        C[2,2] = ρ g A_wp          (heave)
-        C[3,3] = ρ g ∇ GM_T        (roll)
-        C[4,4] = ρ g ∇ GM_L        (pitch)
+        ``A = ∫∫ dA``, ``S_x = ∫∫ x dA``, ``S_y = ∫∫ y dA``,
+        ``I_xx = ∫∫ y² dA``, ``I_yy = ∫∫ x² dA``, ``I_xy = ∫∫ x y dA``,
 
-    All other terms are zero under the small-angle assumption.
+    and ``∇`` the displaced volume, ``(x_B, y_B, z_B)`` the centre of buoyancy and
+    ``(x_G, y_G, z_G)`` the centre of gravity, the non-zero entries are
+    (Journée & Massie, *Offshore Hydromechanics*, §3.2.2)::
+
+        C[2,2]          = ρ g A                            heave
+        C[2,3] = C[3,2] = +ρ g S_y                          heave-roll
+        C[2,4] = C[4,2] = -ρ g S_x                          heave-pitch
+        C[3,3]          = ρ g I_xx + ρ g ∇ (z_B - z_G)      roll
+        C[3,4] = C[4,3] = -ρ g I_xy                         roll-pitch
+        C[4,4]          = ρ g I_yy + ρ g ∇ (z_B - z_G)      pitch
+
+    The opposite signs of the two heave couplings are not a typo: the vertical
+    displacement of a point on the waterplane is ``w = ξ3 + y ξ4 - x ξ5`` for
+    rotations about the positive x and y axes, so the heave-roll cross term of
+    ``½ρg ∫∫ w² dA`` carries ``+S_y`` while the heave-pitch term carries ``-S_x``.
+    Both are confirmed against an independent numerical Hessian of the potential
+    energy (``tensorbem.benchmarks.hydrostatic_energy_reference``).
+
+    Surge, sway and yaw carry no hydrostatic restoring at all: the hydrostatic
+    force and the body weight are vertical, and a vertical force exerts no moment
+    about a vertical axis, so all entries in the surge, sway and yaw rows and
+    columns vanish (verified as ~1e-9 of the largest entry by the same energy
+    Hessian). The matrix is symmetric because it is a Hessian. The diagonal roll/pitch entries are the
+    familiar metacentric stiffness: ``C[3,3] = ρ g ∇ GM_T`` with
+    ``GM_T = I_T^centroid / ∇ + z_B - z_G`` and ``I_T = I_xx``.
+
+    The off-diagonal entries are not zero in general. ``-C[2,3] / (ρ g)`` and
+    ``-C[2,4] / (ρ g)`` are the beamwise and lengthwise first moments of the
+    waterplane, so a hull whose waterplane centroid is displaced from the origin
+    (``TCF``/``LCF`` != 0 — i.e. almost every real ship) couples heave into roll
+    and pitch; ``C[3,4]`` couples roll and pitch through the waterplane product
+    moment. A body whose waterplane centroid sits on the origin (a symmetric
+    barge, a floating hemisphere) and whose waterplane has a symmetry axis gets a
+    strictly diagonal heave/roll/pitch block, which is the case every earlier
+    validation case in this repository exercised.
 
     Parameters
     ----------
     hull :
         Wetted hull mesh (intersection of floating body with free surface).
     mass :
-        Mass of the floating body (kg). For equilibrium, mass = ρ ∇.
+        Mass of the floating body (kg). For equilibrium, ``mass = ρ ∇``; see the
+        notes below.
     center_of_gravity :
         Coordinates of center of gravity (m).
     density :
@@ -359,61 +435,54 @@ def compute_hydrostatic_restoring_matrix(
 
     Notes
     -----
-    The metacentric heights are computed as:
-        GM_T = KB + BM_T - KG
-        GM_L = KB + BM_L - KG
+    The gravity terms are evaluated at the equilibrium mass ``m = ρ ∇``. This is
+    the same assumption the metacentric form ``GM = KB + BM - KG`` makes, and it
+    keeps the result independent of a mass supplied out of equilibrium (a
+    floating body out of equilibrium is not a restoring problem — it
+    accelerates). ``mass`` is therefore accepted for API compatibility and is
+    not consumed; the equilibrium condition is what fixes `m`.
 
-    where KB is the vertical position of the center of buoyancy, BM_T = I_T/∇
-    is the transverse metacentric radius, and KG is the vertical position of
-    the center of gravity.
-
-    For a stable floating body, GM_T > 0 and GM_L > 0.
+    Fully submerged bodies (no waterplane) have no heave, roll or pitch restoring
+    from the free surface: their ``C`` block is exactly zero.
     """
     center_of_gravity = np.asarray(center_of_gravity, dtype=float)
 
-    # Compute waterplane properties
+    # Waterplane geometry and submerged volume
     wp_area, wp_center, wp_moments = compute_waterplane_properties(hull)
-
-    # Compute displaced volume and center of buoyancy
     volume, center_of_buoyancy = compute_displaced_volume_and_buoyancy(hull)
 
-    # Metacentric radii
-    # I_xx is the transverse moment (about x-axis, for roll)
-    # I_yy is the longitudinal moment (about y-axis, for pitch)
-    i_xx = wp_moments[0]  # transverse moment for roll
-    i_yy = wp_moments[1]  # longitudinal moment for pitch
+    s_x, s_y, i_xx, i_yy, i_xy = _waterplane_integrals_about_origin(
+        wp_area, wp_center, wp_moments
+    )
 
-    if volume > 1e-14:
-        bm_t = i_xx / volume  # transverse metacentric radius
-        bm_l = i_yy / volume  # longitudinal metacentric radius
-    else:
-        bm_t = 0.0
-        bm_l = 0.0
+    z_g = float(center_of_gravity[2])
+    z_b = float(center_of_buoyancy[2])
 
-    # Vertical positions (z-coordinate, z=0 is free surface, z<0 is submerged)
-    # For metacentric height, we need distances from keel (lowest point)
-    # Find the keel (minimum z-coordinate of the hull)
-    z_min = np.min(hull.vertices[:, 2])
-    
-    # Heights above keel
-    kb = center_of_buoyancy[2] - z_min  # height of buoyancy center above keel
-    kg = center_of_gravity[2] - z_min  # height of gravity center above keel
+    rho_g = density * gravity
+    # Equilibrium mass (m = ρ ∇): potential energy of the body weight.
+    weight = rho_g * volume
 
-    # Metacentric heights
-    gm_t = kb + bm_t - kg  # transverse metacentric height (roll)
-    gm_l = kb + bm_l - kg  # longitudinal metacentric height (pitch)
-
-    # Build restoring matrix
     c = np.zeros((6, 6), dtype=float)
 
-    # Heave restoring
-    c[2, 2] = density * gravity * wp_area
+    # Heave-roll and heave-pitch: the waterplane first moments. The signs differ
+    # because w = xi3 + y*xi4 - x*xi5 (rotations about +x and +y move a point
+    # vertically in opposite directions).
+    c[2, 2] = rho_g * wp_area
+    c[2, 3] = c[3, 2] = rho_g * s_y
+    c[2, 4] = c[4, 2] = -rho_g * s_x
 
-    # Roll restoring
-    c[3, 3] = density * gravity * volume * gm_t
+    # Roll: waterplane transverse inertia (about the origin) plus the
+    # buoyancy/weight couple through the vertical separation of B and G.
+    vertical_separation = weight * (z_b - z_g)
+    c[3, 3] = rho_g * i_xx + vertical_separation
+    c[4, 4] = rho_g * i_yy + vertical_separation
 
-    # Pitch restoring
-    c[4, 4] = density * gravity * volume * gm_l
+    # Roll-pitch: waterplane product of inertia about the origin.
+    c[3, 4] = c[4, 3] = -rho_g * i_xy
+
+    # Surge, sway and yaw stay identically zero: the hydrostatic force and the
+    # weight are vertical, and a vertical force has no moment about a vertical
+    # axis, so no yaw entry can be non-zero.
 
     return HydrostaticProperties(
         displaced_volume=volume,
