@@ -412,7 +412,23 @@ def wave_resistance_pressure(
     g: float = _DEFAULT_GRAVITY,
     n_quad: int = 128,
 ) -> float:
-    """Compute wave resistance by pressure integration on the hull."""
+    """Compute wave resistance by pressure integration on the hull.
+
+    .. warning::
+       This is **not** a verification path (audited in mission m3100, see
+       ``docs/m3100/wigley_pressure_path_audit.md``).  The routine sums
+       ``p = -rho U dphi/dx`` of the *wave part only* of the Michell potential,
+       evaluated on the centreplane, over both sides of the hull.  For a fore-aft
+       symmetric hull that integrand is odd in ``x`` (``dphi/dx`` even,
+       ``n_x dS = -b_x dx dz`` odd), so its exact value is **zero**: the
+       first-order pressure carries no wave resistance (d'Alembert), the
+       resistance being second order in the disturbance.  The non-zero number
+       returned here is centroid-rule aliasing of that zero integrand -- it is
+       always negative and decays like the panel size ``h`` (measured
+       ``|Rw_pressure|/Rw_Kochin`` = 0.47, 0.21, 0.073, 0.028, 0.0059 for
+       128 ... 32768 panels at Fr = 0.30).  Use :func:`wave_resistance_kochin`
+       for physics; use this routine only as a discretisation-artefact probe.
+    """
     if U <= 0:
         return 0.0
 
