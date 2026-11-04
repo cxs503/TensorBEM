@@ -11,6 +11,11 @@ away from the number the code produces. These tests check three layers:
   extrapolation used as evidence for the reference solution recovers a
   synthetic first-order family exactly.
 
+The 3-D free-surface tables (``docs/marine_bem_benchmarks.md`` sections 4.10
+and 4.11) are recomputed once per session and shared by the tests that read
+them: a 320-panel Kelvin-Green-function solve is seconds rather than minutes, so
+they stay on the ``standard`` tier and a plain ``pytest`` run guards them.
+
 The 256-panel extrapolation study is skipped unless ``TENSORBEM_HEAVY_TESTS``
 is set; it is minutes of dense solves and its purpose is a published evidence
 table, not a regression gate.
@@ -37,6 +42,19 @@ HEAVY = pytest.mark.skipif(
     not os.environ.get("TENSORBEM_HEAVY_TESTS"),
     reason="set TENSORBEM_HEAVY_TESTS=1 to run the multi-minute refinement study",
 )
+
+#: The groups whose numbers are the 3-D free-surface tables 10-12.
+FREE_SURFACE_3D = ("hulme_chief", "hulme_hemisphere", "submerged_sphere")
+
+
+@pytest.fixture(scope="session")
+def standard_tier_report():
+    """Every ``standard`` row, recomputed once for the whole session.
+
+    The 3-D free-surface rows cost about a minute together; the 2-D rows are
+    milliseconds. Recomputing per test would pay the minute three times.
+    """
+    return check(tiers=("standard",))
 
 
 @HEAVY
@@ -86,7 +104,10 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme_chief",
+        "hulme_hemisphere",
         "interior_harmonics",
+        "submerged_sphere",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -107,9 +128,9 @@ def test_fast_tier_reproduces_the_documented_numbers():
     assert report["summary"]["checked"] >= 6
 
 
-def test_standard_tier_reproduces_the_documented_ursell_numbers():
+def test_standard_tier_reproduces_the_documented_ursell_numbers(standard_tier_report):
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = standard_tier_report
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -121,6 +142,73 @@ def test_standard_tier_reproduces_the_documented_ursell_numbers():
         for row in report["checks"]
         if row["verdict"] != "PASS"
     ]
+
+
+def test_standard_tier_reproduces_the_documented_free_surface_3d_numbers(
+    standard_tier_report,
+):
+    """Tables 10-12 of ``docs/marine_bem_benchmarks.md``, cell by cell.
+
+    This block was the last set of quoted results that no test read. The 3-D
+    Kelvin-Green-function solver, its two convergence tables (Hulme's floating
+    hemisphere at ``Ka = 1``, the Wang/Linton submerged sphere at ``f/a = 1.5``)
+    and the CHIEF regularisation comparison of table 11 were pinned only by spot
+    assertions inside the benchmark tests: retune the wave kernel, the mesh
+    generator or the CHIEF point heuristic and the documents would have kept
+    their numbers while the solver moved.
+    """
+    rows = [r for r in standard_tier_report["checks"] if r["group"] in FREE_SURFACE_3D]
+    assert len(rows) == 67
+    assert {r["group"] for r in rows} == set(FREE_SURFACE_3D)
+    drifted = [
+        (r["key"], r["declared"], r["measured"])
+        for r in rows
+        if r["verdict"] != "PASS"
+    ]
+    assert not drifted, drifted
+
+    values = [abs(r["relative_deviation"]) for r in rows if r["comparison"] == "value"]
+    # The two-significant-figure cells are the loosest thing in the tables; a
+    # four-figure cell that moves by more than a percent is a solver change.
+    assert max(values) < 5.0e-2
+    four_figure = [
+        abs(r["relative_deviation"])
+        for r in rows
+        if r["comparison"] == "value"
+        and not r["key"].startswith("sphere_rot_coupling")
+        and "kappa" not in r["key"]
+    ]
+    assert max(four_figure) < 5.0e-3
+
+
+def test_free_surface_3d_rows_live_on_the_standard_tier():
+    """Guards the guard: a re-tiering must not silently stop pytest reading them."""
+    rows = [entry for entry in DECLARED_NUMBERS if entry.group in FREE_SURFACE_3D]
+    assert len(rows) == 67
+    assert {entry.tier for entry in rows} == {"standard"}
+    # One refinement study feeds every cell of its table, including the observed
+    # orders, which need two meshes; quoting one level at a time would both cost
+    # more and lose those rows.
+    parameters = {entry.group: entry.parameters for entry in rows}
+    assert parameters["hulme_hemisphere"]["subdivisions"] == (1, 2, 3)
+    assert parameters["submerged_sphere"]["subdivisions"] == (0, 1, 2)
+
+
+def test_a_perturbed_free_surface_3d_cell_is_reported_as_drift():
+    """Negative control: the 3-D rows are judged, not merely recomputed."""
+    entries = tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"
+    )[:2]
+    perturbed = entries[1]
+
+    def runner(group, parameters):
+        values = {entry.quantity: entry.declared for entry in entries}
+        values[perturbed.quantity] = perturbed.declared * 1.2
+        return values
+
+    report = check(tiers=("standard",), entries=entries, runner=runner)
+    assert report["summary"]["drifted_keys"] == [perturbed.key]
+    assert report["summary"]["verdict"] == "DRIFT"
 
 
 @HEAVY
