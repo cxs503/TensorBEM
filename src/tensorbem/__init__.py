@@ -127,10 +127,15 @@ from .quadrature_diagnostics import (
 )
 from .finite_depth3d import (
     bessel_k0,
+    bessel_k1,
     depth_modes as finite_depth_modes,
     green_function_3d as finite_depth_green_function_3d,
+    green_gradient_3d as finite_depth_green_gradient_3d,
+    green_gradient_horizontal_3d as finite_depth_green_gradient_horizontal_3d,
+    green_gradient_source_3d as finite_depth_green_gradient_source_3d,
     green_gradient_z_3d as finite_depth_green_gradient_z_3d,
     hankel_h0,
+    hankel_h1,
     wave_amplitude_coefficient as finite_depth_wave_amplitude_coefficient,
 )
 from .hydrostatic import (
@@ -305,9 +310,14 @@ __all__ = [
     "steady_pressure_coefficient",
     "steady_pressure_loads",
     "bessel_k0",
+    "bessel_k1",
     "hankel_h0",
+    "hankel_h1",
     "finite_depth_modes",
     "finite_depth_green_function_3d",
+    "finite_depth_green_gradient_3d",
+    "finite_depth_green_gradient_horizontal_3d",
+    "finite_depth_green_gradient_source_3d",
     "finite_depth_green_gradient_z_3d",
     "finite_depth_wave_amplitude_coefficient",
 ]

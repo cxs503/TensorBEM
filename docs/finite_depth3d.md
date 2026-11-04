@@ -97,7 +97,7 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 ## 6. Limitations / next step
 
 * **No BEM solver yet.** Panel integration, the single/double-layer jump relations and the CHIEF/lid treatment for surface-piercing hulls in finite depth are the next increment; Garrett's truncated dock is the natural first diffraction benchmark.
-* Only $\partial G/\partial z$ is analytic; a horizontal derivative needs $K_1$/$H_1$ and belongs to the panel layer.
+* The full target gradient is analytic: $\nabla_x G$ (`green_gradient_3d`, `green_gradient_horizontal_3d`), $\nabla_\xi G$ (`green_gradient_source_3d`) and the order-1 Bessel layer (`bessel_k1`, `hankel_h1`) are delivered and verified in [the gradient report](finite_depth3d_gradient.md) (symmetry identity, free-surface closure, singularity strength and the deep-water collapse of the gradient, all to $\lesssim10^{-8}$).
 * Constant depth, linearised potential flow; no sloping bottom, current or nonlinearity.
 * Cost grows like $h/(\pi R)$ modes; for $R\lesssim10^{-3}$ m with $h=5$ m the 40000-mode cap binds (truncation error still $<10^{-10}$).
 

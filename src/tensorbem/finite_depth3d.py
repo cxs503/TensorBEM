@@ -67,11 +67,13 @@ import math
 from typing import Optional
 
 import numpy as np
+from numpy.polynomial.legendre import leggauss
 from numpy.typing import ArrayLike, NDArray
 
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
 
+from .analytic import bessel_j01_y01
 from .finite_depth import (
     evanescent_wavenumbers,
     finite_depth_wavenumber,
@@ -84,9 +86,19 @@ _TWO_PI = 2.0 * math.pi
 _EULER_GAMMA = 0.5772156649015328606065120900824024
 _LOG_DECAY = 30.0  # exp(-30) ~ 1e-13 evanescent-mode cut-off
 MODES_CAP = 40000
-_K0_SERIES_LIMIT = 9.0
+_K0_SERIES_LIMIT = 4.0  # ascending K_0/K_1 series below this argument
 _BESSEL_SERIES_LIMIT = 16.0
+#: Above this argument the 25-term asymptotic series of ``K_0``/``K_1`` is at
+#: machine precision (``6e-14`` at 14, ``2e-15`` at 16).  Between
+#: ``_K0_SERIES_LIMIT`` and this value the ascending series has already lost
+#: accuracy to cancellation (``1/K_0`` amplification) while the asymptotic
+#: series has not converged yet, so the Laplace-integral quadrature below is
+#: used instead -- without it ``K_0`` carried a ``2.1e-8`` relative-accuracy
+#: cliff at ``x ~ 8.9`` (see :mod:`tensorbem.benchmarks.finite_depth3d_gradient`).
+_K_ASYMPTOTIC_LIMIT = 16.0
+_QUAD_NODES = 96  # Gauss-Legendre nodes for the K_0/K_1 Laplace integral
 _CHUNK = 2000  # modes evaluated per vectorised block
+_LEGENDRE_CACHE: Optional[tuple[FloatArray, FloatArray]] = None
 
 
 # ---------------------------------------------------------------------------
@@ -124,17 +136,123 @@ def _bessel_k0_large(x: FloatArray) -> FloatArray:
     return np.sqrt(math.pi / (2.0 * x)) * np.exp(-x) * poly
 
 
+def _bessel_k1_small(x: FloatArray) -> FloatArray:
+    """``K_1`` by the ascending series (A&S 9.6.11, accurate for ``x <~ 4``)."""
+    x = np.asarray(x, dtype=float)
+    x2 = 0.25 * x * x
+    # I_1(x) = sum_k (x/2)^(2k+1) / (k! (k+1)!)
+    i1 = np.zeros_like(x)
+    term = 0.5 * x
+    k = 0
+    while True:
+        i1 = i1 + term
+        k += 1
+        term = term * x2 / (k * (k + 1))
+        if np.max(np.abs(term)) < 1e-20:
+            break
+    # K_1 = 1/x + ln(x/2) I_1 - (x/4) sum_k (H_k + H_{k+1} - 2 gamma)/(k!(k+1)!) (x^2/4)^k
+    series = np.zeros_like(x)
+    power = np.ones_like(x)
+    harmonic = 0.0
+    k = 0
+    while True:
+        next_harmonic = harmonic + 1.0 / (k + 1)
+        series = series + power * (harmonic + next_harmonic - 2.0 * _EULER_GAMMA)
+        harmonic = next_harmonic
+        power = power * x2 / ((k + 1) * (k + 2))
+        k += 1
+        if np.max(np.abs(power)) < 1e-22:
+            break
+    return 1.0 / x + np.log(0.5 * x) * i1 - 0.25 * x * series
+
+
+def _bessel_k1_large(x: FloatArray) -> FloatArray:
+    """``K_1`` by the asymptotic expansion (``x >= 16``)."""
+    x = np.asarray(x, dtype=float)
+    inv = 1.0 / x
+    coeff = 1.0
+    poly = np.ones_like(x)
+    power = np.ones_like(x)
+    for k in range(1, 26):
+        # a_k = (mu - 1)(mu - 9)...(mu - (2k-1)^2) / (k! 8^k), mu = 4*nu^2 = 4
+        coeff = coeff * (4.0 - (2.0 * k - 1.0) ** 2) / (8.0 * k)
+        power = power * inv
+        poly = poly + coeff * power
+    return np.sqrt(math.pi / (2.0 * x)) * np.exp(-x) * poly
+
+
+def _legendre_nodes() -> tuple[FloatArray, FloatArray]:
+    """Cached Gauss-Legendre nodes/weights on ``[-1, 1]``."""
+    global _LEGENDRE_CACHE
+    if _LEGENDRE_CACHE is None:
+        _LEGENDRE_CACHE = leggauss(_QUAD_NODES)
+    return _LEGENDRE_CACHE
+
+
+def _bessel_k0_k1_quad(x: FloatArray) -> tuple[FloatArray, FloatArray]:
+    """``(K_0, K_1)`` from the Laplace integral, cancellation free.
+
+    With ``K_nu(x) = int_0^inf exp(-x cosh t) cosh(nu t) dt`` and the
+    substitution ``cosh t = 1 + u**2``,
+
+        K_0(x) = 2 exp(-x) int_0^inf exp(-x u^2) / sqrt(u^2 + 2) du,
+        K_1(x) = 2 exp(-x) int_0^inf exp(-x u^2) (1 + u^2) / sqrt(u^2 + 2) du.
+
+    Both integrands are positive and analytic, so Gauss-Legendre on
+    ``u in [0, 8/sqrt(x)]`` (where ``exp(-x u^2) <= exp(-64)``) reaches
+    ``~5e-15`` relative accuracy -- the regime where the ascending series
+    cancels and the asymptotic series diverges.
+    """
+    x = np.asarray(x, dtype=float)
+    nodes, weights = _legendre_nodes()
+    upper = 8.0 / np.sqrt(x)
+    u = 0.5 * upper[..., None] * (nodes + 1.0)
+    jacobian = 0.5 * upper
+    expo = np.exp(-x[..., None] * u * u)
+    inv = 1.0 / np.sqrt(u * u + 2.0)
+    prefactor = 2.0 * np.exp(-x)
+    k0 = prefactor * np.sum(weights * expo * inv, axis=-1) * jacobian
+    k1 = prefactor * np.sum(weights * expo * (1.0 + u * u) * inv, axis=-1) * jacobian
+    return k0, k1
+
+
+def _select_branches(x: FloatArray):
+    """Boolean masks for the series / quadrature / asymptotic branches."""
+    small = x < _K0_SERIES_LIMIT
+    large = x >= _K_ASYMPTOTIC_LIMIT
+    middle = ~small & ~large
+    return small, middle, large
+
+
 def bessel_k0(x: ArrayLike) -> FloatArray:
     """Modified Bessel function ``K_0`` for positive real argument."""
     x = np.asarray(x, dtype=float)
     if np.any(x <= 0.0):
         raise ValueError("K_0 argument must be strictly positive")
     out = np.empty_like(x)
-    small = x < _K0_SERIES_LIMIT
+    small, middle, large = _select_branches(x)
     if np.any(small):
         out[small] = _bessel_k0_small(x[small])
-    if np.any(~small):
-        out[~small] = _bessel_k0_large(x[~small])
+    if np.any(middle):
+        out[middle] = _bessel_k0_k1_quad(x[middle])[0]
+    if np.any(large):
+        out[large] = _bessel_k0_large(x[large])
+    return out
+
+
+def bessel_k1(x: ArrayLike) -> FloatArray:
+    """Modified Bessel function ``K_1`` for positive real argument."""
+    x = np.asarray(x, dtype=float)
+    if np.any(x <= 0.0):
+        raise ValueError("K_1 argument must be strictly positive")
+    out = np.empty_like(x)
+    small, middle, large = _select_branches(x)
+    if np.any(small):
+        out[small] = _bessel_k1_small(x[small])
+    if np.any(middle):
+        out[middle] = _bessel_k0_k1_quad(x[middle])[1]
+    if np.any(large):
+        out[large] = _bessel_k1_large(x[large])
     return out
 
 
@@ -207,6 +325,13 @@ def hankel_h0(x: ArrayLike, *, outgoing: bool = True) -> ComplexArray:
     """``H_0^{(1)}(x)`` (outgoing) or its conjugate ``H_0^{(2)}(x)``."""
     j0, y0 = bessel_j0_y0(x)
     wave = j0 + 1j * y0
+    return wave if outgoing else np.conjugate(wave)
+
+
+def hankel_h1(x: ArrayLike, *, outgoing: bool = True) -> ComplexArray:
+    """``H_1^{(1)}(x)`` (outgoing) or its conjugate ``H_1^{(2)}(x)``."""
+    _, j1, _, y1 = bessel_j01_y01(x)
+    wave = j1 + 1j * y1
     return wave if outgoing else np.conjugate(wave)
 
 
@@ -442,6 +567,173 @@ def green_gradient_z_3d(
     wave = hankel_h0(k0 * safe_horiz, outgoing=outgoing)
     deriv = deriv + 0.25j * gradient_factor * wave
     return deriv.reshape(horiz.shape)
+
+
+def green_gradient_horizontal_3d(
+    targets,
+    sources,
+    nu: float,
+    depth: float,
+    *,
+    outgoing: bool = True,
+    modes: Optional[int] = None,
+) -> ComplexArray:
+    """Horizontal target gradient ``(dG/dx, dG/dy)`` of the finite-depth kernel.
+
+    ``G`` depends on the horizontal coordinates only through the radial
+    separation ``R``, so with ``dK_0/dR = -K_1`` and ``dH_0^{(1)}/dR = -H_1^{(1)}``
+
+        dG/dR = -(1/2pi) sum_n mu_n phi_n(z) phi_n(zeta)/N_n K_1(mu_n R)
+                - (i/4) k0 phi_0(z) phi_0(zeta)/N_0 H_1^{(1)}(k0 R),
+
+    and ``dG/dx = (x - xi)/R dG/dR``, ``dG/dy = (y - eta)/R dG/dR``.  Together
+    with :func:`green_gradient_z_3d` this completes ``nabla_x G``, which is what
+    a boundary-element panel layer needs (the Rankine part of
+    :mod:`tensorbem.free_surface_solver3d` splits off its ``1/(4 pi r)``
+    singularity analytically; in finite depth the singular part is carried by
+    the modal sum itself, so ``K_1`` must be accurate at small and moderate
+    ``mu_n R``).
+
+    Returns
+    -------
+    Complex array of shape ``(*broadcast_shape, 2)`` holding ``(dG/dx, dG/dy)``.
+    """
+    if not np.isfinite(nu) or nu <= 0.0:
+        raise ValueError("nu = omega**2/g must be finite and positive")
+    if not np.isfinite(depth) or depth <= 0.0:
+        raise ValueError("depth h must be finite and positive")
+
+    tgt, src = _broadcast_points_3d(targets, sources)
+    z = tgt[..., 2]
+    zeta = src[..., 2]
+    if np.any(z > 1e-12) or np.any(zeta > 1e-12):
+        raise ValueError("targets/sources must satisfy z <= 0 (z = 0 is the free surface)")
+    if np.any(z < -depth - 1e-9) or np.any(zeta < -depth - 1e-9):
+        raise ValueError("targets/sources must lie inside the fluid, z >= -depth")
+
+    dx = tgt[..., 0] - src[..., 0]
+    dy = tgt[..., 1] - src[..., 1]
+    horiz = np.hypot(dx, dy)
+    if np.any(horiz <= 0.0) and np.any(np.abs(z - zeta) <= 0.0):
+        raise ValueError("coincident target and source is singular")
+
+    r_min = float(np.min(horiz[horiz > 0.0])) if np.any(horiz > 0.0) else 1.0
+    count = _resolve_mode_count(depth, modes, r_min=r_min)
+    k0, mu, norms, norm0 = depth_modes(nu, depth, modes=count)
+
+    mode_u, _, mode_weight = _propagating_factors_3d(k0, depth)
+    wave_factor = (mode_u(z) / math.sqrt(mode_weight)) * (
+        mode_u(zeta) / math.sqrt(mode_weight)
+    )
+    safe_horiz = np.maximum(horiz, 1e-300)
+
+    radial = np.zeros(horiz.shape, dtype=complex)
+    for start in range(0, count, _CHUNK):
+        block = mu[start : start + _CHUNK]
+        nb = norms[start : start + _CHUNK]
+        cz = np.cos(np.multiply.outer(z, block) + block * depth)
+        cs = np.cos(np.multiply.outer(zeta, block) + block * depth)
+        arg = np.multiply.outer(safe_horiz, block)
+        # d/dR K_0(mu*R) = -mu*K_1(mu*R)
+        kern = -block * bessel_k1(arg)
+        radial += np.sum(cz * cs * kern * (1.0 / nb), axis=-1)
+    radial = radial / _TWO_PI
+    # d/dR H_0^{(sigma)}(k0*R) = -k0*H_1^{(sigma)}(k0*R)
+    radial = radial - 0.25j * k0 * wave_factor * hankel_h1(
+        k0 * safe_horiz, outgoing=outgoing
+    )
+
+    nonzero = horiz > 0.0
+    safe_r = np.where(nonzero, horiz, 1.0)
+    scale = np.where(nonzero, radial / safe_r, 0.0j)
+    gx = scale * dx
+    gy = scale * dy
+    return np.stack((gx, gy), axis=-1)
+
+
+def green_gradient_source_3d(
+    targets,
+    sources,
+    nu: float,
+    depth: float,
+    *,
+    outgoing: bool = True,
+    modes: Optional[int] = None,
+) -> ComplexArray:
+    """Gradient ``nabla_xi G(x, xi)`` with respect to the *source* coordinates.
+
+    The kernel is symmetric, ``G(x, xi) = G(xi, x)``, so the horizontal part is
+    minus the field gradient while the vertical part is a genuinely different
+    expression (the free surface breaks vertical translation invariance):
+
+        dG/dzeta = (1/2pi) sum_n phi_n(z) phi_n'(zeta)/N_n K_0(mu_n R)
+                   + (i/4) k0 phi_0(z) phi_0'(zeta)/N_0 H_0^{(1)}(k0 R),
+
+    with ``phi_n'(zeta) = -mu_n sin(mu_n(zeta + h))`` and
+    ``phi_0'(zeta) = k0 sinh(k0(zeta + h))``.  The identity
+    ``nabla_x G(x, xi) == nabla_xi G(xi, x)`` therefore cross-validates *both*
+    analytic derivatives (:mod:`tensorbem.benchmarks.finite_depth3d_gradient`).
+
+    Returns
+    -------
+    Complex array of shape ``(*broadcast_shape, 3)`` holding
+    ``(dG/dxi, dG/deta, dG/dzeta)``.
+    """
+    horizontal = green_gradient_horizontal_3d(
+        targets, sources, nu, depth, outgoing=outgoing, modes=modes
+    )
+    tgt, src = _broadcast_points_3d(targets, sources)
+    z = tgt[..., 2]
+    zeta = src[..., 2]
+    horiz = np.hypot(tgt[..., 0] - src[..., 0], tgt[..., 1] - src[..., 1])
+    r_min = float(np.min(horiz[horiz > 0.0])) if np.any(horiz > 0.0) else 1.0
+    count = _resolve_mode_count(depth, modes, r_min=r_min)
+    k0, mu, norms, norm0 = depth_modes(nu, depth, modes=count)
+    safe_horiz = np.maximum(horiz, 1e-300)
+
+    mode_u, mode_v, mode_weight = _propagating_factors_3d(k0, depth)
+    # phi_0(z) * dphi_0(zeta)/dzeta / N_0 == k0 * u(z) * v(zeta) / w
+    wave_factor = k0 * (mode_u(z) / math.sqrt(mode_weight)) * (
+        mode_v(zeta) / math.sqrt(mode_weight)
+    )
+
+    vertical = np.zeros(horiz.shape, dtype=complex)
+    for start in range(0, count, _CHUNK):
+        block = mu[start : start + _CHUNK]
+        nb = norms[start : start + _CHUNK]
+        cz = np.cos(np.multiply.outer(z, block) + block * depth)
+        dzeta = -block * np.sin(np.multiply.outer(zeta, block) + block * depth)
+        kern = bessel_k0(np.multiply.outer(safe_horiz, block))
+        vertical += np.sum(cz * dzeta * kern * (1.0 / nb), axis=-1)
+    vertical = vertical / _TWO_PI
+    wave = hankel_h0(k0 * safe_horiz, outgoing=outgoing)
+    vertical = vertical + 0.25j * wave_factor * wave
+
+    return np.concatenate((-horizontal, vertical[..., None]), axis=-1)
+
+
+def green_gradient_3d(
+    targets,
+    sources,
+    nu: float,
+    depth: float,
+    *,
+    outgoing: bool = True,
+    modes: Optional[int] = None,
+) -> ComplexArray:
+    """Full target gradient ``nabla_x G(x, xi)`` of the finite-depth kernel.
+
+    Stacks :func:`green_gradient_horizontal_3d` and
+    :func:`green_gradient_z_3d` into one ``(..., 3)`` complex array, matching
+    the layout of :func:`tensorbem.free_surface3d.green_gradient_field_3d`.
+    """
+    horizontal = green_gradient_horizontal_3d(
+        targets, sources, nu, depth, outgoing=outgoing, modes=modes
+    )
+    vertical = green_gradient_z_3d(
+        targets, sources, nu, depth, outgoing=outgoing, modes=modes
+    )
+    return np.concatenate((horizontal, vertical[..., None]), axis=-1)
 
 
 def dispersion_residual(k0: float, nu: float, depth: float) -> float:
