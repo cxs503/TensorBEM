@@ -459,8 +459,11 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.write:
-        payload = write_artifact(args.artifact)
-        print(f"wrote {args.artifact} ({len(payload['values'])} values)")
+        # ``--artifact`` defaults to ``None`` so that ``check_documents`` can
+        # fall back to the tracked copy; ``write_artifact`` needs a real path.
+        artifact = args.artifact or ARTIFACT
+        payload = write_artifact(artifact)
+        print(f"wrote {artifact} ({len(payload['values'])} values)")
         return 0
 
     report = check_documents(artifact=args.artifact)
