@@ -490,7 +490,20 @@ python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
    * **第一步（有限水深三维核与多浮体窄缝共振）：** 扩展 `free_surface3d.py` 支持有限水深 John 特征级数与镜像级数，覆盖 **Garrett (1971) 截断直立圆柱**及双船并靠窄缝波面共振算例；
    * **第二步（对称面加速与完整 6-DOF RAO 静水恢复力耦合）：** 利用 `WettedHullMesh` 水线面几何自动积分静水恢复力矩阵 \(\mathbf C_{\text{hydrostatic}}\)，形成包含惯性矩阵、附加质量 \(\mathbf A(\omega)\)、辐射阻尼 \(\mathbf B(\omega)\) 与波浪激励力 \(\mathbf F_{\text{exc}}(\omega,\beta)\) 的频域 6-DOF 运动响应算子（RAO）基准；
    * **第三步（有航速 Rankine 源与二阶漂移力）：** 引入自由液面 Rankine 面元验证 **Wigley 标准船型**兴波阻力，并结合 `recovery.py` 表面切向速度恢复层构建平均二阶波浪漂移力（Maruo 远场动量法与近场压力积分对比）。
-6. **验证数字的机器可读来源。** 文中引用的固定数值（二维圆柱 16/64/128 面元的附加质量与相对误差、Ursell 64/128/256 面元行）除正文表格外，另有一份可机器校验的副本 [`benchmark_pins.json`](benchmark_pins.json)（schema `tensorbem-doc-pins/1`）：每条 pin 记录指标值、`rtol` 与它出自哪一行文字。`tests/test_documented_benchmarks.py` 会用当前求解器逐条重跑并比对，因此求解器或量化后处理一旦改动，pin 文件与正文会同时失配并在 CI 里变红，而不是让文档悄悄过期。
+6. **验证数字的机器可读来源。** 文中引用的固定数值（二维圆柱 16/64/128 面元的附加质量与相对误差、Ursell 64/128/256 面元行，以及**三维深水自由液面三张表：Hulme 漂浮半球表 10、三维内部 CHIEF 表 11、Wang/Linton 潜没球体表 12**）除正文表格外，另有一份可机器校验的副本 [`benchmark_pins.json`](benchmark_pins.json)（schema `tensorbem-doc-pins/1`）：每条 pin 记录指标值、`rtol` 与它出自哪一行文字。`tests/test_documented_benchmarks.py` 会用当前求解器逐条重跑并比对，因此求解器或量化后处理一旦改动，pin 文件与正文会同时失配并在 CI 里变红，而不是让文档悄悄过期。
+
+7. **三维自由液面三张表并入同一注册表（m3638）。** 表 10/11/12 的 44 个数此前只有正文、没有机器判据：注册表在三维侧只到无界流椭球，Kelvin/Havelock 核、6-DOF 组装或 CHIEF 增广一旦改动，表 10–12 会静默过期。现登记为 `declared_numbers` 的 `hulme`、`hulme_chief`、`submerged_sphere` 三组（成本层 `standard`，三组合计复算 83 s），并做了两件事：
+
+   * **把物理不变量也当声明数字**：近/远场 Kochin 阻尼相对差（5.448e-04）、三维直接绕射解与边界 Haskind 互易积分的相对差（纵荡 2.089e-04、垂荡 8.085e-04）、观测阶（h 的 2.06/1.98/2.01/2.02）都进了判据，而不是只判误差量；
+   * **判符号而不只判幅值**：表 11 的结论是未增广时 \(B_{33}'=-0.104\)（违背无源耗散性）、增广后 \(B_{33}'=+0.0687\)，注册表登记带符号的值，另有测试断言 \(B_{33}'<0\) 与 \(B_{33}'>0\) 的翻转及条件数降到 1/10 以下——只判幅值的 pin 会让一个符号错误存活。
+
+   复算命令（`--tiers standard` 也包含二维 Ursell 与三维椭球/谐波行）：
+
+   ```bash
+   PYTHONPATH=src python -m tensorbem.benchmarks.declared_numbers --tiers standard
+   ```
+
+   本次实测：44 条全部 PASS，最大相对偏差（去掉 `upper` 型上界声明）为 2.95e-03，容差沿用注册表默认 1.5e-2。
 
 ## 6. 结论
 

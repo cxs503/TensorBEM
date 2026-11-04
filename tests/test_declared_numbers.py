@@ -24,6 +24,21 @@ import sys
 
 import pytest
 
+from functools import lru_cache
+
+
+@lru_cache(maxsize=1)
+def _standard_report():
+    """Recompute the ``standard`` cost tier once per test session.
+
+    Three tests below look at the same recomputation; before the cache each of
+    them re-solved the 256-panel Ursell ladder and the three-dimensional Kelvin
+    assemblies, which is where the whole file's runtime came from.  The report
+    is read-only, so sharing it cannot mask a regression.
+    """
+    return check(tiers=("standard",))
+
+
 from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
@@ -77,7 +92,10 @@ def test_registry_is_well_formed():
         assert entry.source.strip()
         assert entry.description.strip()
         assert math.isfinite(entry.declared)
-        assert entry.declared > 0.0
+        # Signed physics quantities are legitimate (table 11 quotes
+        # B33' with its sign: negative means passivity is broken);
+        # a zeroed declaration is the real typo risk.
+        assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
 
@@ -86,7 +104,10 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme",
+        "hulme_chief",
         "interior_harmonics",
+        "submerged_sphere",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -109,7 +130,7 @@ def test_fast_tier_reproduces_the_documented_numbers():
 
 def test_standard_tier_reproduces_the_documented_ursell_numbers():
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = _standard_report()
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -121,6 +142,67 @@ def test_standard_tier_reproduces_the_documented_ursell_numbers():
         for row in report["checks"]
         if row["verdict"] != "PASS"
     ]
+
+
+def test_standard_tier_guards_the_three_dimensional_free_surface_tables():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md, the 3-D Kelvin layer.
+
+    Those tables were documentation-only until now: the 3-D free-surface rows
+    of the registry stopped at the unbounded-flow ellipsoid, so a change in the
+    Kelvin/Havelock kernel or in the CHIEF augmentation could move the quoted
+    numbers without any test noticing.  The three groups are asserted here as a
+    block because they share one cost class (~20-45 s per group).
+    """
+    report = _standard_report()
+    rows = {row["key"]: row for row in report["checks"]}
+    expected = {
+        # Hulme (1982) floating hemisphere, table 10
+        "hulme_condition_number_256",
+        "hulme_heave_added_mass_256",
+        "hulme_surge_damping_256",
+        "hulme_excitation_z_256",
+        "hulme_order_heave_added_mass_256",
+        "hulme_far_field_damping_256",
+        "hulme_haskind_surge_256",
+        "hulme_haskind_heave_256",
+        # 3-D CHIEF interior null-field augmentation, table 11
+        "hulme_chief_condition_unregularized",
+        "hulme_chief_condition_augmented",
+        "hulme_chief_heave_damping_unregularized",
+        "hulme_chief_heave_damping_augmented",
+        # Wang / Linton submerged sphere, table 12
+        "linton_condition_number_320",
+        "linton_heave_added_mass_320",
+        "linton_excitation_z_320",
+        "linton_order_heave_added_mass_320",
+    }
+    assert expected <= set(rows)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+
+
+def test_chief_regularisation_restores_passivity():
+    """Table 11 is a claim about a *sign*, not only about magnitudes.
+
+    The unregularised exterior BIE at the first interior waterline eigenvalue
+    returns a negative heave damping (non-physical energy production); the
+    interior null-field points must flip it positive.  A magnitude-only pin
+    would survive a sign error in the augmentation, so the sign is asserted.
+    """
+    report = _standard_report()
+    rows = {row["key"]: row for row in report["checks"]}
+    assert rows["hulme_chief_heave_damping_unregularized"]["measured"] < 0.0
+    assert rows["hulme_chief_heave_damping_augmented"]["measured"] > 0.0
+    exact = 0.06312197075596611
+    assert abs(rows["hulme_chief_heave_damping_augmented"]["measured"] - exact) < 1.0e-2
+    # the conditioning claim: augmentation must reduce the condition number
+    assert (
+        rows["hulme_chief_condition_augmented"]["measured"]
+        < 0.1 * rows["hulme_chief_condition_unregularized"]["measured"]
+    )
 
 
 @HEAVY
