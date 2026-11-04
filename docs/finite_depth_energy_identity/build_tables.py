@@ -21,8 +21,18 @@ REPORT = Path(__file__).resolve().parent / "report.md"
 DEPTH_LABELS = {"shallow": "3.2", "medium": "5.0", "deep": "20.0"}
 
 
+#: Magnitudes below this are float noise in the least-squares extrapolation and
+#: are printed as an unsigned zero, so the report is byte-stable across BLAS and
+#: numpy builds (the sign of a 1e-19 value is not a physical result).
+_NOISE_FLOOR = 1.0e-12
+
+
 def _sci(value: float, digits: int = 3) -> str:
-    return f"{value:.{digits}e}"
+    return f"{0.0 if abs(value) < _NOISE_FLOOR else value:.{digits}e}"
+
+
+def _signed_sci(value: float, digits: int = 3) -> str:
+    return f"{0.0 if abs(value) < _NOISE_FLOOR else value:+.{digits}e}"
 
 
 def load(path: Path = ARTIFACT) -> dict:
@@ -63,11 +73,11 @@ def summary_table(payload: dict) -> str:
     for key, summary in payload["summaries"].items():
         label, motion = key.split(":")
         lines.append(
-            "| \\(h/a={d}\\), {m} | {order:.2f} | {offset:+.3e} | {near:.2f} | {far:.2f} | {rel:.2e} |".format(
+            "| \\(h/a={d}\\), {m} | {order:.2f} | {offset} | {near:.2f} | {far:.2f} | {rel:.2e} |".format(
                 d=DEPTH_LABELS[label],
                 m="垂荡" if motion == "heave" else "横荡",
                 order=summary["median_order"],
-                offset=summary["offset_limit"],
+                offset=_signed_sci(summary["offset_limit"]),
                 near=summary["damping_near_limit"],
                 far=summary["damping_far_limit"],
                 rel=summary["near_vs_far_limit_rel"],
