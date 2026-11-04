@@ -1,0 +1,64 @@
+{
+  "benchmark": "two_dimensional_translating_ellipse",
+  "density": 1025.0,
+  "rows": {
+    "128": {
+      "x": {
+        "added_mass_per_unit_span": 1809.959573997701,
+        "added_mass_relative_error": 0.0007535592473139912,
+        "h_max": 0.07360705563677267,
+        "normal_derivative_relative_l2_error": 0.0005650727507866058
+      },
+      "y": {
+        "added_mass_per_unit_span": 7238.778944426107,
+        "added_mass_relative_error": 0.0008997715295849107,
+        "h_max": 0.07360705563677267,
+        "normal_derivative_relative_l2_error": 0.0008749614727566018
+      }
+    },
+    "16": {
+      "x": {
+        "added_mass_per_unit_span": 1724.8746256875952,
+        "added_mass_relative_error": 0.04772744362679322,
+        "h_max": 0.5768571567542988,
+        "normal_derivative_relative_l2_error": 0.03423566971718322
+      },
+      "y": {
+        "added_mass_per_unit_span": 6846.350244400505,
+        "added_mass_relative_error": 0.05506299530862111,
+        "h_max": 0.5768571567542988,
+        "normal_derivative_relative_l2_error": 0.05045783615138363
+      }
+    },
+    "32": {
+      "x": {
+        "added_mass_per_unit_span": 1789.5073021626415,
+        "added_mass_relative_error": 0.012044894219702475,
+        "h_max": 0.29299010903094963,
+        "normal_derivative_relative_l2_error": 0.008876259842801895
+      },
+      "y": {
+        "added_mass_per_unit_span": 7142.6406824939295,
+        "added_mass_relative_error": 0.014168827015130232,
+        "h_max": 0.29299010903094963,
+        "normal_derivative_relative_l2_error": 0.013282554614285453
+      }
+    },
+    "64": {
+      "x": {
+        "added_mass_per_unit_span": 1805.8635742602603,
+        "added_mass_relative_error": 0.0030148877420280735,
+        "h_max": 0.14707005865761005,
+        "normal_derivative_relative_l2_error": 0.002243730576766157
+      },
+      "y": {
+        "added_mass_per_unit_span": 7219.345655606643,
+        "added_mass_relative_error": 0.003581964679633829,
+        "h_max": 0.14707005865761005,
+        "normal_derivative_relative_l2_error": 0.0034346282993247264
+      }
+    }
+  },
+  "semi_major": 1.5,
+  "semi_minor": 0.75
+}
