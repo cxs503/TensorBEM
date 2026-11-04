@@ -1,0 +1,855 @@
+{
+  "summary": {
+    "REAL": 28,
+    "WITHHELD": 0,
+    "STUB": 0,
+    "MOCK": 0,
+    "MISSING": 0,
+    "STALE_CLAIM": 0,
+    "NOT_SUPPORTED": 0,
+    "total": 28
+  },
+  "rows": [
+    {
+      "key": "laplace-2d",
+      "title": "2-D Laplace BEM (interior / exterior)",
+      "claim": "Constant-panel indirect BEM, analytic panel integrals, circle solid-angle identity.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.solver",
+        "tensorbem.kernels"
+      ],
+      "symbols": [
+        "solve_laplace_dirichlet",
+        "integrate_single_layer_panel"
+      ],
+      "test_files": [
+        "tests/test_solver.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "laplace-3d",
+      "title": "3-D Laplace BEM (interior / exterior)",
+      "claim": "Triangular constant panels with Duffy quadrature; sphere and interior-harmonic references.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.solver3d",
+        "tensorbem.kernels3d"
+      ],
+      "symbols": [
+        "solve_laplace_surface",
+        "duffy_quadrature"
+      ],
+      "test_files": [
+        "tests/test_solver3d.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "free-surface-2d",
+      "title": "2-D deep-water free-surface Green function",
+      "claim": "Wave/Rankine split; the singular log term is integrated analytically per panel.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.free_surface"
+      ],
+      "symbols": [
+        "green_function",
+        "principal_value_integral"
+      ],
+      "test_files": [
+        "tests/test_free_surface_kernel.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "free-surface-3d",
+      "title": "3-D Delhommeau / Kelvin free-surface Green function",
+      "claim": "Region-split evaluator with continuous seams and free-surface residual below 1e-14.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.free_surface3d"
+      ],
+      "symbols": [
+        "green_function_3d",
+        "wave_function_3d"
+      ],
+      "test_files": [
+        "tests/test_free_surface3d.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "ursell-radiation",
+      "title": "Ursell submerged-cylinder radiation benchmark",
+      "claim": "Multipole reference independent of the panel code; first-order convergence pinned.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.ursell_cylinder"
+      ],
+      "symbols": [
+        "run",
+        "submerged_circle_mesh"
+      ],
+      "test_files": [
+        "tests/test_ursell_benchmark.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "hulme-hemisphere",
+      "title": "Hulme floating hemisphere (3-D radiation)",
+      "claim": "Semi-analytical reference, convergence orders 1.93-2.06, Haskind reciprocity below 0.2%.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.floating_hemisphere",
+        "tensorbem.benchmarks.hulme_diffraction_verification"
+      ],
+      "symbols": [
+        "run"
+      ],
+      "test_files": [
+        "tests/test_floating_hemisphere_3d.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "maccamy-fuchs",
+      "title": "MacCamy-Fuchs vertical pile (Helmholtz + CHIEF)",
+      "claim": "Bessel/Hankel reference; CHIEF removes the irregular-frequency instability.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.helmholtz",
+        "tensorbem.benchmarks.maccamy_fuchs"
+      ],
+      "symbols": [
+        "solve_helmholtz_diffraction",
+        "solve_vertical_cylinder_diffraction"
+      ],
+      "test_files": [
+        "tests/test_helmholtz_maccamy_fuchs.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "dean-diffraction",
+      "title": "Dean diffraction (zero-reflection theorem)",
+      "claim": "Reflection modulus at round-off and exact energy balance at ka=0.6.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.dean_diffraction"
+      ],
+      "symbols": [
+        "run"
+      ],
+      "test_files": [
+        "tests/test_dean_diffraction.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "added-mass-neumann",
+      "title": "Rigid-body added mass (2-D / 3-D Neumann)",
+      "claim": "Lamb closed forms for cylinder, ellipse and ellipsoid; free-surface-free Neumann solve.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.rigid_body_added_mass",
+        "tensorbem.benchmarks.ellipsoid_added_mass"
+      ],
+      "symbols": [
+        "run",
+        "run_ellipsoid_neumann_study"
+      ],
+      "test_files": [
+        "tests/test_exterior_neumann_added_mass.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "surface-velocity-recovery",
+      "title": "Surface velocity recovery",
+      "claim": "Patch fit recovers the tangential gradient from the potential jump on the surface.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.recovery",
+        "tensorbem.solver3d"
+      ],
+      "symbols": [
+        "recover_tangent_gradient",
+        "evaluate_surface_velocity"
+      ],
+      "test_files": [
+        "tests/test_surface_velocity_recovery.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "hydrostatics",
+      "title": "Hydrostatics (volume, Cb, waterplane, restoration)",
+      "claim": "Closed-form barge/spheroid/hemisphere values reproduced by the meshed hull.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.hydrostatic",
+        "tensorbem.wigley_hydrostatics"
+      ],
+      "symbols": [
+        "compute_hydrostatic_restoring_matrix",
+        "compute_displaced_volume_and_buoyancy"
+      ],
+      "test_files": [
+        "tests/test_hydrostatic_verification.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "rao",
+      "title": "6-DOF heave RAO coupling",
+      "claim": "Radiation plus hydrostatic coupling reproduces the analytic single-DOF oscillator RAO.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.rao"
+      ],
+      "symbols": [
+        "compute_rao_at_frequency",
+        "estimate_natural_frequency"
+      ],
+      "test_files": [
+        "tests/test_hydrostatic_rao.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "finite-depth-2d",
+      "title": "Finite-depth kernels + solver (2-D)",
+      "claim": "Dispersion relation, evanescent modes and bottom condition at arbitrary depth h.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.finite_depth",
+        "tensorbem.finite_depth_solver"
+      ],
+      "symbols": [
+        "finite_depth_wavenumber",
+        "evanescent_wavenumbers"
+      ],
+      "test_files": [
+        "tests/test_finite_depth.py",
+        "tests/test_finite_depth_solver.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "Published as out of scope on 2026-10-29; shipped later with a dedicated suite.",
+      "published_2026_10_29": "NOT_SUPPORTED"
+    },
+    {
+      "key": "finite-depth-3d",
+      "title": "Finite-depth kernels + solver (3-D)",
+      "claim": "Vertical mode expansion, bessel_k0 evaluator and analytic gradients in the 3-D kernel.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.finite_depth3d",
+        "tensorbem.benchmarks.finite_depth_radiation"
+      ],
+      "symbols": [
+        "depth_modes",
+        "bessel_k0"
+      ],
+      "test_files": [
+        "tests/test_finite_depth3d.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "Published as out of scope on 2026-10-29; shipped later with a dedicated suite.",
+      "published_2026_10_29": "NOT_SUPPORTED"
+    },
+    {
+      "key": "forward-speed-wave-resistance",
+      "title": "Forward-speed wave resistance (Wigley, Michell/Kochin)",
+      "claim": "Michell-Kochin integral and pressure-integral forms agree; Wigley Cb = 4/9 verified.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.wigley",
+        "tensorbem.benchmarks.wigley_verification"
+      ],
+      "symbols": [
+        "michell_wave_resistance",
+        "compute_wigley_wave_resistance"
+      ],
+      "test_files": [
+        "tests/test_wigley_verification.py",
+        "tests/test_wigley_wave_resistance.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "Published as out of scope on 2026-10-29; shipped later with a dedicated suite.",
+      "published_2026_10_29": "NOT_SUPPORTED"
+    },
+    {
+      "key": "kutta-lifting",
+      "title": "Kutta condition / lifting foil",
+      "claim": "Joukowski foil circulation enforces the Kutta condition; lift within 3% of the exact value.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.lifting",
+        "tensorbem.benchmarks.lifting_foil"
+      ],
+      "symbols": [
+        "JoukowskiAirfoil",
+        "compare_nonlifting_field"
+      ],
+      "test_files": [
+        "tests/test_lifting_foil.py",
+        "tests/test_lifting_flow.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "Published as out of scope on 2026-10-29; shipped later with a dedicated suite.",
+      "published_2026_10_29": "NOT_SUPPORTED"
+    },
+    {
+      "key": "mixed-boundary",
+      "title": "Mixed Dirichlet / Neumann boundaries",
+      "claim": "Per-panel boundary-type assembly validated against a manufactured mixed field.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.mixed",
+        "tensorbem.benchmarks.mixed_boundary"
+      ],
+      "symbols": [
+        "solve_laplace_mixed",
+        "evaluate_mixed_interior_field"
+      ],
+      "test_files": [
+        "tests/test_mixed_boundary.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "near-singular",
+      "title": "Near-singular panel integration",
+      "claim": "Adaptive subdivision keeps the near-field integral converging as the clearance shrinks.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.near_singular",
+        "tensorbem.benchmarks.near_surface_error_budget"
+      ],
+      "symbols": [
+        "single_layer_integrals",
+        "single_layer_gradients"
+      ],
+      "test_files": [
+        "tests/test_near_singular.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "symmetry3d",
+      "title": "Symmetry reduction (3-D)",
+      "claim": "Half-domain assembly reproduces the full-domain answer to solver tolerance.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.symmetry3d",
+        "tensorbem.benchmarks.symmetry_reduction"
+      ],
+      "symbols": [
+        "assemble_symmetric_operators_3d",
+        "split_patch"
+      ],
+      "test_files": [
+        "tests/test_symmetry3d.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "pressure-forces",
+      "title": "Pressure integration and force recovery",
+      "claim": "Bernoulli pressure integrated on the panels reproduces the classical closed force.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.pressure"
+      ],
+      "symbols": [
+        "integrate_pressure_loads",
+        "bernoulli_pressure"
+      ],
+      "test_files": [
+        "tests/test_pressure.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "conditioning",
+      "title": "Conditioning diagnostics",
+      "claim": "Condition number, operator conditions and their trend are reported and pinned.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.conditioning"
+      ],
+      "symbols": [
+        "estimate_condition_number",
+        "estimate_operator_conditions"
+      ],
+      "test_files": [
+        "tests/test_conditioning.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "mesh-quality",
+      "title": "Mesh quality gates",
+      "claim": "Degenerate and low-quality panels are diagnosed before assembly.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.mesh_quality"
+      ],
+      "symbols": [
+        "diagnose_mesh_quality",
+        "identify_low_quality_panels"
+      ],
+      "test_files": [
+        "tests/test_mesh_quality.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "declared-numbers",
+      "title": "Declared-number registry",
+      "claim": "Every number printed in the documents is registered, re-measured and judged per tier.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.declared_numbers"
+      ],
+      "symbols": [
+        "check",
+        "richardson_limit"
+      ],
+      "test_files": [
+        "tests/test_declared_numbers.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "doc-claim-gate",
+      "title": "Document-versus-artifact claim gate",
+      "claim": "Published Ursell numbers are parsed from the documents and compared with a measured artifact.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.doc_claims",
+        "tensorbem.benchmarks.doc_pins"
+      ],
+      "symbols": [
+        "parse_ursell_table"
+      ],
+      "test_files": [
+        "tests/test_doc_claims.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "kkr-causality",
+      "title": "Kramers-Kronig causality check",
+      "claim": "Hilbert-transform consistency of added mass and damping on the exact causal pair.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.causality",
+        "tensorbem.benchmarks.kkr_causality"
+      ],
+      "symbols": [
+        "kkr_check",
+        "kkr_damping"
+      ],
+      "test_files": [
+        "tests/test_causality.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "clearance",
+      "title": "Body / free-surface clearance diagnostics",
+      "claim": "Minimum clearance is classified far/near deterministically and feeds the error budget.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.clearance"
+      ],
+      "symbols": [
+        "diagnose_surface_clearance"
+      ],
+      "test_files": [
+        "tests/test_clearance.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "benchmark-cli-contract",
+      "title": "Benchmark drivers expose a runnable entry point",
+      "claim": "Each benchmark driver parses its documented CLI and keeps its analytic reference path wired.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.benchmarks.finite_depth_kernel",
+        "tensorbem.benchmarks.hulme_diffraction_verification",
+        "tensorbem.benchmarks.hydrostatic_verification",
+        "tensorbem.benchmarks.kkr_causality",
+        "tensorbem.benchmarks.lifting_solver",
+        "tensorbem.benchmarks.symmetry_reduction",
+        "tensorbem.benchmarks.lifting_foil"
+      ],
+      "symbols": [
+        "main"
+      ],
+      "test_files": [
+        "tests/test_benchmark_cli_contract.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "Entry-point contract only; the numerical verification of these drivers is cited per capability above.",
+      "published_2026_10_29": "REAL"
+    },
+    {
+      "key": "capability-evidence",
+      "title": "Machine-derived capability evidence registry",
+      "claim": "The baseline's capability table is derived from code/test/doc evidence and drift-gated.",
+      "declared": "REAL",
+      "level": "REAL",
+      "ok": true,
+      "modules": [
+        "tensorbem.capability_evidence"
+      ],
+      "symbols": [
+        "audit",
+        "document_drift"
+      ],
+      "test_files": [
+        "tests/test_capability_evidence.py"
+      ],
+      "test_nodes": 2,
+      "missing_modules": [],
+      "missing_symbols": [],
+      "stub_symbols": [],
+      "mock_markers": [],
+      "missing_tests": [],
+      "detached_tests": [],
+      "missing_docs": [],
+      "reasons": [],
+      "note": "This capability: the table below is its own output.",
+      "published_2026_10_29": "REAL"
+    }
+  ],
+  "untested_modules": {
+    "unexplained": [],
+    "explained": [
+      "tensorbem.benchmarks.hydrostatic_figures",
+      "tensorbem.benchmarks.ursell_quadrature_study"
+    ],
+    "stale_reasons": []
+  },
+  "generated": "2026-11-04T07:02:59"
+}
