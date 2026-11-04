@@ -1,0 +1,77 @@
+{
+  "registry_summary": {
+    "checked": 62,
+    "passed": 62,
+    "drifted": 0,
+    "drifted_keys": [],
+    "worst_relative_deviation": 0.00378677870019862,
+    "verdict": "PASS"
+  },
+  "convergence": {
+    "Hulme (1982) floating hemisphere, Ka=1.0": {
+      "panels": [
+        16,
+        64,
+        256
+      ],
+      "h_mean": [
+        0.8826834323650896,
+        0.47250002419904896,
+        0.2405530308975098
+      ],
+      "heave_added_mass_rel_error": [
+        0.12012810014703698,
+        0.02973591800839022,
+        0.007405440541471733
+      ],
+      "heave_damping_rel_error": [
+        0.12189977674905007,
+        0.0450225113637059,
+        0.01181192783863598
+      ]
+    },
+    "Wang/Linton submerged sphere, Ka=0.8, f/a=1.5": {
+      "panels": [
+        20,
+        80,
+        320
+      ],
+      "h_mean": [
+        1.051462224238267,
+        0.5822835232876192,
+        0.29933207531855877
+      ],
+      "heave_added_mass_rel_error": [
+        0.2549667474006816,
+        0.0729881047456501,
+        0.018508892187259006
+      ],
+      "heave_damping_rel_error": [
+        0.5711266962687945,
+        0.20717640815158445,
+        0.05739866846139534
+      ]
+    }
+  },
+  "chief": {
+    "schemes": {
+      "unregularized": [
+        145.65862687433562,
+        0.34806205885162744,
+        -0.10415462852558684
+      ],
+      "chief_regularized": [
+        4.244971303652851,
+        0.3919084438208462,
+        0.06870788329461958
+      ]
+    },
+    "ka": 2.58,
+    "panels": 256
+  },
+  "figures": [
+    "figures/fig_registry_deviation_3d.png",
+    "figures/fig_convergence_3d.png",
+    "figures/fig_chief_passivity.png"
+  ]
+}
