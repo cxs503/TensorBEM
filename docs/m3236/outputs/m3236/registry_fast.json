@@ -1,0 +1,322 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "checks": [
+    {
+      "comparison": "value",
+      "declared": 0.02623278,
+      "description": "relative error of the cylinder added mass at 16 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_16",
+      "measured": 0.026232783866355507,
+      "parameters": {
+        "panels": 16
+      },
+      "relative_deviation": 1.473864190752047e-07,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.0004023222,
+      "description": "relative error of the cylinder added mass at 128 panels",
+      "group": "cylinder",
+      "key": "cylinder_added_mass_128",
+      "measured": 0.00040232221672928506,
+      "parameters": {
+        "panels": 128
+      },
+      "relative_deviation": 4.158180945009392e-08,
+      "source": "README.md (Milestone 3); docs/classical_benchmarks.md section 2",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2545.17,
+      "description": "Ursell multipole added mass, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_added_mass",
+      "measured": 2545.167247813704,
+      "parameters": {},
+      "relative_deviation": -1.0813369229640125e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2718.15,
+      "description": "Ursell multipole damping, a=1, f=2, ka=0.6, rho=1025",
+      "group": "ursell_reference",
+      "key": "ursell_reference_damping",
+      "measured": 2718.1539515727764,
+      "parameters": {},
+      "relative_deviation": 1.4537728882729528e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (reference row)",
+      "tier": "fast",
+      "tolerance": 1e-05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.016736,
+      "description": "panel added-mass error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_added_mass_64",
+      "measured": 0.016735833486585378,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -9.949415309672355e-06,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.025415,
+      "description": "panel damping error at 64 panels",
+      "group": "ursell",
+      "key": "ursell_damping_64",
+      "measured": 0.025415347951018234,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 1.3690773882909675e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000757,
+      "description": "method-of-fundamental-solutions added-mass error, 64 panels (the pre-2026-11-03 table claimed 1.9e-4, which no source count reproduces; the source curve is converged from 16 sources up)",
+      "group": "ursell",
+      "key": "ursell_mfs_added_mass_64",
+      "measured": 0.0007569804876068797,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -2.5775948639777612e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.003526,
+      "description": "method-of-fundamental-solutions damping error, 64 panels (the pre-2026-11-03 table claimed 8.8e-4; measured 3.526e-3)",
+      "group": "ursell",
+      "key": "ursell_mfs_damping_64",
+      "measured": 0.003526389876668117,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.00011057194217724091,
+      "source": "docs/marine_bem_benchmarks.md section 4.6 table (MFS row)",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-12,
+      "description": "reflected-wave modulus, submerged circle a=1 f=2 ka=0.6, 64 panels (docs quote 2.20e-15, a roundoff-level quantity; the physical claim is Dean's R=0, guarded here as an upper bound)",
+      "group": "dean",
+      "key": "dean_cylinder_reflection_64",
+      "measured": 1.3214955357959034e-15,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -0.998678504464204,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00839,
+      "description": "transmission coefficient error vs multipole, 64 panels",
+      "group": "dean",
+      "key": "dean_cylinder_transmission_error_64",
+      "measured": 0.00839365553213987,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.00043570108937667943,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-12,
+      "description": "wave-energy balance |R|^2+|T|^2-1, 64 panels (docs quote 0.0, machine precision; guarded as an upper bound)",
+      "group": "dean",
+      "key": "dean_cylinder_energy_balance_64",
+      "measured": 0.0,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -1.0,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "upper",
+      "declared": 1e-10,
+      "description": "circular polarisation error |Fz+iFx|/|Fx|, 64 panels (docs quote 1.10e-14, roundoff-level; the physical claim is Fz=-iFx exactly)",
+      "group": "dean",
+      "key": "dean_circular_polarisation_64",
+      "measured": 6.33908105839913e-15,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -0.9999366091894161,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.16e-05,
+      "description": "Haskind-Newman vs diffraction force, horizontal, 64 panels",
+      "group": "dean",
+      "key": "dean_haskind_x_64",
+      "measured": 2.1640428243880098e-05,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.0018716779574119576,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 2.16e-05,
+      "description": "Haskind-Newman vs diffraction force, vertical, 64 panels",
+      "group": "dean",
+      "key": "dean_haskind_z_64",
+      "measured": 2.1640428243995196e-05,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.0018716779627405793,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00151,
+      "description": "method-of-fundamental-solutions independent reference, horizontal force relative error, 64 panels",
+      "group": "dean",
+      "key": "dean_mfs_force_x_64",
+      "measured": 0.001505840465024568,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -0.0027546589241272293,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.09751,
+      "description": "reflected-wave modulus, submerged ellipse a=1.4 b=0.7 f=2, 64 panels",
+      "group": "dean",
+      "key": "dean_ellipse_reflection_64",
+      "measured": 0.09751386944800083,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 3.96825761545938e-05,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.995234,
+      "description": "transmission modulus, submerged ellipse, 64 panels",
+      "group": "dean",
+      "key": "dean_ellipse_transmission_64",
+      "measured": 0.9952341660460005,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 1.668411654996204e-07,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.000797,
+      "description": "Haskind-Newman vs diffraction force, horizontal, ellipse, 64 panels",
+      "group": "dean",
+      "key": "dean_ellipse_haskind_x_64",
+      "measured": 0.0007968538145395204,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": -0.00018341964928427789,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "comparison": "value",
+      "declared": 0.00199,
+      "description": "Haskind-Newman vs diffraction force, vertical, ellipse, 64 panels",
+      "group": "dean",
+      "key": "dean_ellipse_haskind_z_64",
+      "measured": 0.001994909173404533,
+      "parameters": {
+        "panels": 64
+      },
+      "relative_deviation": 0.0024669213088105075,
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "tier": "fast",
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    }
+  ],
+  "environment": {
+    "commit": "6025970",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "summary": {
+    "checked": 19,
+    "drifted": 0,
+    "drifted_keys": [],
+    "passed": 19,
+    "verdict": "PASS",
+    "worst_relative_deviation": 1.0
+  },
+  "tiers": [
+    "fast"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "benchmark": "dean_submerged_cylinder_wave_diffraction_deep_water",
+  "circular_cylinder": {
+    "exact_force_x_real_imag": [
+      2422.747483987926,
+      -10226.918082293312
+    ],
+    "exact_force_z_real_imag": [
+      -10226.918082293312,
+      -2422.747483987926
+    ],
+    "exact_reflection_modulus": 0.0,
+    "exact_transmission_phase_degrees": 26.65524448182779,
+    "exact_transmission_real_imag": [
+      0.8937220928061408,
+      0.448621021386885
+    ],
+    "haskind_diffraction_force_x_relative_difference": 9.65287528535098e-05,
+    "haskind_diffraction_force_z_relative_difference": 9.652875285333989e-05,
+    "haskind_force_x_real_imag": [
+      2528.761377413681,
+      -10332.919201766023
+    ],
+    "haskind_force_z_real_imag": [
+      -10332.919201765964,
+      -2528.761377413651
+    ],
+    "mfs_force_x_relative_error": 0.006016459219712433,
+    "mfs_reflection_modulus": 2.773148610356407e-15,
+    "mfs_transmission_error": 0.005097253448942966,
+    "panel_circular_polarisation_error": 6.080031819324975e-15,
+    "panel_condition_number": 2.473905212123576,
+    "panel_energy_balance_error": 0.0,
+    "panel_force_x_real_imag": [
+      2527.737590914665,
+      -10332.840233865703
+    ],
+    "panel_force_x_relative_error": 0.014190229283002617,
+    "panel_force_z_real_imag": [
+      -10332.840233865645,
+      -2527.7375909146367
+    ],
+    "panel_force_z_relative_error": 0.014190229282996795,
+    "panel_reflection_modulus": 1.3522395318257477e-15,
+    "panel_relative_residual": 6.172745082644465e-16,
+    "panel_transmission_error": 0.01461719820971615,
+    "panel_transmission_modulus": 1.0,
+    "panel_transmission_phase_degrees": 27.49275570369387,
+    "panel_vertical_over_horizontal_force_modulus": 0.999999999999994,
+    "reference_method": "ursell_ogilvie_multipole_closed_form"
+  },
+  "elliptic_cylinder": {
+    "condition_number": 3.5057738503031413,
+    "energy_balance_error": 2.220446049250313e-16,
+    "haskind_diffraction_force_x_relative_difference": 0.0016387155954888553,
+    "haskind_diffraction_force_z_relative_difference": 0.004158958637600165,
+    "reflection_modulus": 0.09844613809272283,
+    "relative_residual": 5.785806930076267e-16,
+    "semi_major": 1.4,
+    "semi_minor": 0.7,
+    "submergence": 2.0,
+    "transmission_modulus": 0.9951423807147541
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "fluid_density": 1025.0,
+  "gravity": 9.80665,
+  "ka": 0.6,
+  "note": "Two-dimensional deep-water linear diffraction around fully submerged cylinders. Dean's zero-reflection theorem holds for the circular cross-section and breaks for the ellipse, while |R|**2 + |T|**2 = 1 and Haskind reciprocity hold for both.",
+  "panels": 32,
+  "radius": 1.0,
+  "submergence": 2.0,
+  "wave_amplitude": 1.0,
+  "wavenumber": 0.6
+}

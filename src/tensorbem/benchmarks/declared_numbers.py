@@ -45,6 +45,7 @@ from typing import Callable, Iterable, Sequence
 from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
+    dean_diffraction as dean_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
     ursell_cylinder as ursell_benchmark,
@@ -321,6 +322,136 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.824e-4,
         tier="standard",
     ),
+    # --- 2-D Dean-Ursell-Ogilvie diffraction (free surface, deep water) ---
+    # Table 7 of docs/marine_bem_benchmarks.md (section 4.8), ka=0.6, N=64.
+    # The three roundoff-level rows (zero reflection, energy balance, circular
+    # polarisation) are guarded as upper bounds with a margin, following the
+    # three_dimensional_pins precedent: the quoted value is platform-specific,
+    # the physical claim (R=0, |R|^2+|T|^2=1, Fz=-iFx) is what must survive.
+    DeclaredNumber(
+        key="dean_cylinder_reflection_64",
+        description=(
+            "reflected-wave modulus, submerged circle a=1 f=2 ka=0.6, 64 panels "
+            "(docs quote 2.20e-15, a roundoff-level quantity; the physical claim "
+            "is Dean's R=0, guarded here as an upper bound)"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="cylinder_reflection_modulus",
+        parameters={"panels": 64},
+        declared=1.0e-12,
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="dean_cylinder_transmission_error_64",
+        description="transmission coefficient error vs multipole, 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="cylinder_transmission_error",
+        parameters={"panels": 64},
+        declared=8.39e-3,
+    ),
+    DeclaredNumber(
+        key="dean_cylinder_energy_balance_64",
+        description=(
+            "wave-energy balance |R|^2+|T|^2-1, 64 panels (docs quote 0.0, "
+            "machine precision; guarded as an upper bound)"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="cylinder_energy_balance_error",
+        parameters={"panels": 64},
+        declared=1.0e-12,
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="dean_circular_polarisation_64",
+        description=(
+            "circular polarisation error |Fz+iFx|/|Fx|, 64 panels (docs quote "
+            "1.10e-14, roundoff-level; the physical claim is Fz=-iFx exactly)"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="circular_polarisation_error",
+        parameters={"panels": 64},
+        declared=1.0e-10,
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="dean_haskind_x_64",
+        description="Haskind-Newman vs diffraction force, horizontal, 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="cylinder_haskind_x",
+        parameters={"panels": 64},
+        declared=2.16e-5,
+    ),
+    DeclaredNumber(
+        key="dean_haskind_z_64",
+        description="Haskind-Newman vs diffraction force, vertical, 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="cylinder_haskind_z",
+        parameters={"panels": 64},
+        declared=2.16e-5,
+    ),
+    DeclaredNumber(
+        key="dean_mfs_force_x_64",
+        description=(
+            "method-of-fundamental-solutions independent reference, horizontal "
+            "force relative error, 64 panels"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="mfs_force_x_relative_error",
+        parameters={"panels": 64},
+        declared=1.51e-3,
+        tolerance=5.0e-2,
+    ),
+    DeclaredNumber(
+        key="dean_ellipse_reflection_64",
+        description=(
+            "reflected-wave modulus, submerged ellipse a=1.4 b=0.7 f=2, 64 panels"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="ellipse_reflection_modulus",
+        parameters={"panels": 64},
+        declared=9.751e-2,
+    ),
+    DeclaredNumber(
+        key="dean_ellipse_transmission_64",
+        description="transmission modulus, submerged ellipse, 64 panels",
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="ellipse_transmission_modulus",
+        parameters={"panels": 64},
+        declared=0.995234,
+    ),
+    DeclaredNumber(
+        key="dean_ellipse_haskind_x_64",
+        description=(
+            "Haskind-Newman vs diffraction force, horizontal, ellipse, 64 panels"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="ellipse_haskind_x",
+        parameters={"panels": 64},
+        declared=7.97e-4,
+        tolerance=5.0e-2,
+    ),
+    DeclaredNumber(
+        key="dean_ellipse_haskind_z_64",
+        description=(
+            "Haskind-Newman vs diffraction force, vertical, ellipse, 64 panels"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.8 table 7",
+        group="dean",
+        quantity="ellipse_haskind_z",
+        parameters={"panels": 64},
+        declared=1.99e-3,
+        tolerance=5.0e-2,
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -381,6 +512,45 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
         return {
             "reference_added_mass": float(added_mass),
             "reference_damping": float(damping),
+        }
+    if group == "dean":
+        row = dean_benchmark.run(panel_count=int(parameters["panels"]))
+        circle = row["circular_cylinder"]
+        ellipse = row["elliptic_cylinder"]
+        return {
+            "cylinder_reflection_modulus": float(
+                circle["panel_reflection_modulus"]
+            ),
+            "cylinder_transmission_error": float(
+                circle["panel_transmission_error"]
+            ),
+            "cylinder_energy_balance_error": float(
+                circle["panel_energy_balance_error"]
+            ),
+            "circular_polarisation_error": float(
+                circle["panel_circular_polarisation_error"]
+            ),
+            "cylinder_haskind_x": float(
+                circle["haskind_diffraction_force_x_relative_difference"]
+            ),
+            "cylinder_haskind_z": float(
+                circle["haskind_diffraction_force_z_relative_difference"]
+            ),
+            "mfs_force_x_relative_error": float(
+                circle["mfs_force_x_relative_error"]
+            ),
+            "ellipse_reflection_modulus": float(
+                ellipse["reflection_modulus"]
+            ),
+            "ellipse_transmission_modulus": float(
+                ellipse["transmission_modulus"]
+            ),
+            "ellipse_haskind_x": float(
+                ellipse["haskind_diffraction_force_x_relative_difference"]
+            ),
+            "ellipse_haskind_z": float(
+                ellipse["haskind_diffraction_force_z_relative_difference"]
+            ),
         }
     raise ValueError(f"unknown benchmark group: {group!r}")
 
