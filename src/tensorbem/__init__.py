@@ -125,6 +125,14 @@ from .quadrature_diagnostics import (
     identify_problematic_panels,
     near_singular_by_panel,
 )
+from .finite_depth3d import (
+    bessel_k0,
+    depth_modes as finite_depth_modes,
+    green_function_3d as finite_depth_green_function_3d,
+    green_gradient_z_3d as finite_depth_green_gradient_z_3d,
+    hankel_h0,
+    wave_amplitude_coefficient as finite_depth_wave_amplitude_coefficient,
+)
 from .hydrostatic import (
     HydrostaticProperties,
     compute_displaced_volume_and_buoyancy,
@@ -296,5 +304,11 @@ __all__ = [
     "integrate_pressure_loads",
     "steady_pressure_coefficient",
     "steady_pressure_loads",
+    "bessel_k0",
+    "hankel_h0",
+    "finite_depth_modes",
+    "finite_depth_green_function_3d",
+    "finite_depth_green_gradient_z_3d",
+    "finite_depth_wave_amplitude_coefficient",
 ]
 __version__ = "0.5.0"
