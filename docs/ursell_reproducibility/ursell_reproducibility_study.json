@@ -1,0 +1,95 @@
+{
+  "case": {
+    "benchmark": "ursell_submerged_circular_cylinder_deep_water",
+    "fluid_density": 1025.0,
+    "gravity": 9.80665,
+    "ka": 0.6,
+    "omega": 2.4256937152080846,
+    "radius": 1.0,
+    "radius_over_submergence": 0.5,
+    "submergence": 2.0
+  },
+  "displaced_mass_per_unit_span": 3220.132469929538,
+  "node_sweep": [
+    {
+      "added_mass": 2566.8343342915696,
+      "added_mass_error": 0.008513030527356396,
+      "damping": 2754.470100002123,
+      "damping_error": 0.013360592915766837,
+      "heave_sway_added_mass_difference": 9.035298688885019e-15,
+      "near_over_far": 1.0053413740188561,
+      "panel_nodes": 6,
+      "panels": 128,
+      "reference_solution_added_mass_error": 0.0001889150774061737
+    },
+    {
+      "added_mass": 2566.8343342915696,
+      "added_mass_error": 0.008513030527356396,
+      "damping": 2754.470100002123,
+      "damping_error": 0.013360592915766837,
+      "heave_sway_added_mass_difference": 9.212461408274922e-15,
+      "near_over_far": 1.0053413740188557,
+      "panel_nodes": 12,
+      "panels": 128,
+      "reference_solution_added_mass_error": 0.0001889150774061737
+    },
+    {
+      "added_mass": 2566.8343342915696,
+      "added_mass_error": 0.008513030527356396,
+      "damping": 2754.470100002123,
+      "damping_error": 0.013360592915766837,
+      "heave_sway_added_mass_difference": 9.212461408274922e-15,
+      "near_over_far": 1.0053413740188557,
+      "panel_nodes": 24,
+      "panels": 128,
+      "reference_solution_added_mass_error": 0.0001889150774061737
+    }
+  ],
+  "observed_convergence_rates": {
+    "added_mass": [
+      0.9751956936575725,
+      0.9876925007225572
+    ],
+    "damping": [
+      0.9277159491771335,
+      0.9656702998377243
+    ]
+  },
+  "panel_sweep": [
+    {
+      "added_mass": 2587.762743068625,
+      "added_mass_error": 0.016735833486585378,
+      "damping": 2787.2367800364336,
+      "damping_error": 0.025415347951018234,
+      "heave_sway_added_mass_difference": 9.840875759515741e-15,
+      "near_over_far": 1.0105357109796724,
+      "panel_nodes": 24,
+      "panels": 64,
+      "reference_solution_added_mass_error": 0.0007569804876068797
+    },
+    {
+      "added_mass": 2566.8343342915696,
+      "added_mass_error": 0.008513030527356396,
+      "damping": 2754.470100002123,
+      "damping_error": 0.013360592915766837,
+      "heave_sway_added_mass_difference": 9.212461408274922e-15,
+      "near_over_far": 1.0053413740188557,
+      "panel_nodes": 24,
+      "panels": 128,
+      "reference_solution_added_mass_error": 0.0001889150774061737
+    },
+    {
+      "added_mass": 2556.093606354438,
+      "added_mass_error": 0.0042929825339061934,
+      "damping": 2736.749288695788,
+      "damping_error": 0.006841164059987114,
+      "heave_sway_added_mass_difference": 1.2275593950535113e-14,
+      "near_over_far": 1.0026891252854961,
+      "panel_nodes": 24,
+      "panels": 256,
+      "reference_solution_added_mass_error": 4.7208110591017944e-05
+    }
+  ],
+  "reference_added_mass": 2545.167247813704,
+  "reference_damping": 2718.1539515727764
+}
