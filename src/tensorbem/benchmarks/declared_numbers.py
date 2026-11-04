@@ -51,6 +51,12 @@ from tensorbem.benchmarks import (
     submerged_sphere_wave as sphere_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
+# The 3-D free-surface registry (tables 10-12) was written against the module
+# names it grew up with; keep both aliases so neither side's call sites change.
+from tensorbem.benchmarks import (  # noqa: E402  (alias block)
+    floating_hemisphere as hulme_benchmark,
+    submerged_sphere_wave as wang_linton_benchmark,
+)
 
 __all__ = [
     "DECLARED_NUMBERS",
@@ -92,6 +98,207 @@ class DeclaredNumber:
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
 
+
+#: Hulme (1982) floating hemisphere, Ka = 1.0, a = 1 m, rho = 1025,
+#: octahedral hull subdivisions 1/2/3 -> 16/64/256 panels.
+_HULME_REFINEMENT_PARAMETERS = {"subdivisions": [1, 2, 3], "ka": 1.0}
+#: 3-D interior-CHIEF study at the first waterplane resonance.
+_HULME_CHIEF_PARAMETERS = {"subdivision": 3, "ka_values": [2.58]}
+#: Wang (1986) / Linton (1991) submerged sphere, f/a = 1.5, Ka = 0.8.
+_WANG_LINTON_PARAMETERS = {"subdivisions": [0, 1, 2], "ka": 0.8}
+
+#: Table 10: (subdivisions, panels, quantity, documented value).
+#: Columns A33 / B33 / A11 / B11 / Fz are the relative errors of the heave and
+#: surge added mass and damping and of the vertical wave force; the B11 order is
+#: quoted in the table but is not emitted by the benchmark, so the runner
+#: derives it from the consecutive-level error ratio divided by the *measured*
+#: mean-edge ratio (the same estimator the benchmark uses for the other four
+#: columns). The 1.62 / 1.88 pair this table carried until the m3150
+#: recomputation divided by a nominal factor of two instead, which assumes the
+#: octahedral subdivision halves the edge length exactly -- it does not
+#: (h0/h1 = 1.87), and the documentation's column was corrected to 1.80 / 1.94.
+#: The registry follows the documentation it guards, so it carries those.
+_TABLE_HULME = (
+    (1, 16, "condition_number", 3.893),
+    (1, 16, "heave_added_mass_rel_error", 1.20e-1),
+    (1, 16, "heave_damping_rel_error", 1.22e-1),
+    (1, 16, "surge_added_mass_rel_error", 1.80e-1),
+    (1, 16, "surge_damping_rel_error", 4.02e-1),
+    (1, 16, "excitation_force_z_rel_error", 6.67e-2),
+    (2, 64, "condition_number", 3.052),
+    (2, 64, "heave_added_mass_rel_error", 2.97e-2),
+    (2, 64, "heave_damping_rel_error", 4.50e-2),
+    (2, 64, "surge_added_mass_rel_error", 5.05e-2),
+    (2, 64, "surge_damping_rel_error", 1.30e-1),
+    (2, 64, "excitation_force_z_rel_error", 2.21e-2),
+    (2, 64, "observed_order_a33", 2.23),
+    (2, 64, "observed_order_b33", 1.59),
+    (2, 64, "observed_order_a11", 2.04),
+    (2, 64, "observed_order_b11", 1.80),
+    (2, 64, "observed_order_fz", 1.77),
+    (3, 256, "condition_number", 2.783),
+    (3, 256, "heave_added_mass_rel_error", 7.41e-3),
+    (3, 256, "heave_damping_rel_error", 1.18e-2),
+    (3, 256, "surge_added_mass_rel_error", 1.30e-2),
+    (3, 256, "surge_damping_rel_error", 3.53e-2),
+    (3, 256, "excitation_force_z_rel_error", 5.67e-3),
+    (3, 256, "observed_order_a33", 2.06),
+    (3, 256, "observed_order_b33", 1.98),
+    (3, 256, "observed_order_a11", 2.01),
+    (3, 256, "observed_order_b11", 1.94),
+    (3, 256, "observed_order_fz", 2.02),
+)
+
+#: Table 11: (block, quantity, documented value) at Ka = 2.58, 256 panels.
+#: ``exact`` is the Hulme semi-analytical reference; ``unregularized`` is the
+#: plain exterior BIE (which produces an unphysical negative heave damping);
+#: ``chief_regularized`` is the five-point 3-D interior null-field (CHIEF)
+#: augmentation, without waterplane lid panels.
+_TABLE_HULME_CHIEF = (
+    ("exact", "a33_dimless", 0.4007),
+    ("exact", "b33_dimless", 0.0631),
+    ("unregularized", "condition_number", 145.66),
+    ("unregularized", "a33_dimless", 0.3481),
+    ("unregularized", "b33_dimless", -0.1042),
+    ("chief_regularized", "chief_point_count", 5.0),
+    ("chief_regularized", "condition_number", 4.24),
+    ("chief_regularized", "a33_dimless", 0.3919),
+    ("chief_regularized", "b33_dimless", 0.0687),
+)
+
+#: Table 12: (subdivisions, panels, quantity, documented value).
+#: ``rotational_added_mass_max_ratio`` was quoted at two significant digits only
+#: (2.2e-4 / 2.6e-5) until the m3150 recomputation replaced them with the
+#: reproducible 2.15e-4 / 2.65e-5; the registry carries the documentation's
+#: values and therefore needs no extra rounding band. The 20-panel cell is a
+#: machine-zero claim (2.5e-32) and stays registered as an upper bound.
+_TABLE_WANG_LINTON = (
+    (0, 20, "condition_number", 2.407),
+    (0, 20, "heave_added_mass_rel_error", 2.55e-1),
+    (0, 20, "surge_added_mass_rel_error", 2.68e-1),
+    (0, 20, "excitation_force_x_rel_error", 3.60e-1),
+    (0, 20, "excitation_force_z_rel_error", 3.70e-1),
+    (0, 20, "rotational_added_mass_max_ratio", 1.0e-20),
+    (1, 80, "condition_number", 2.259),
+    (1, 80, "heave_added_mass_rel_error", 7.30e-2),
+    (1, 80, "surge_added_mass_rel_error", 8.02e-2),
+    (1, 80, "excitation_force_x_rel_error", 1.16e-1),
+    (1, 80, "excitation_force_z_rel_error", 1.19e-1),
+    (1, 80, "rotational_added_mass_max_ratio", 2.15e-4),
+    (1, 80, "observed_order_a33", 2.12),
+    (1, 80, "observed_order_b33", 1.72),
+    (1, 80, "observed_order_a11", 2.04),
+    (1, 80, "observed_order_fz", 1.91),
+    (2, 320, "condition_number", 2.188),
+    (2, 320, "heave_added_mass_rel_error", 1.85e-2),
+    (2, 320, "surge_added_mass_rel_error", 2.08e-2),
+    (2, 320, "excitation_force_x_rel_error", 3.10e-2),
+    (2, 320, "excitation_force_z_rel_error", 3.20e-2),
+    (2, 320, "rotational_added_mass_max_ratio", 2.65e-5),
+    (2, 320, "observed_order_a33", 2.06),
+    (2, 320, "observed_order_b33", 1.93),
+    (2, 320, "observed_order_a11", 2.03),
+    (2, 320, "observed_order_fz", 1.98),
+)
+
+#: Human-readable names for the quantities the tables quote.
+_QUANTITY_LABEL = {
+    "condition_number": "condition number",
+    "heave_added_mass_rel_error": "A33 relative error",
+    "heave_damping_rel_error": "B33 relative error",
+    "surge_added_mass_rel_error": "A11 relative error",
+    "surge_damping_rel_error": "B11 relative error",
+    "excitation_force_z_rel_error": "Fz relative error",
+    "excitation_force_x_rel_error": "Fx relative error",
+    "observed_order_a33": "observed order of A33",
+    "observed_order_b33": "observed order of B33",
+    "observed_order_a11": "observed order of A11",
+    "observed_order_b11": "observed order of B11",
+    "observed_order_fz": "observed order of Fz",
+    "rotational_added_mass_max_ratio": "rotational coupling about the body centre",
+    "a33_dimless": "A33 dimensionless",
+    "b33_dimless": "B33 dimensionless",
+    "chief_point_count": "number of interior CHIEF points",
+}
+
+_REFINEMENT_TOLERANCE = 5.0e-3
+"""Tables 10 and 12 quote three to four significant digits. The values are
+deterministic (fixed mesh, fixed solver), so a 5e-3 relative band is still five
+orders of magnitude above the reproducibility floor while catching any kernel
+revision that would move a quoted digit."""
+
+
+def _refinement_rows(
+    prefix, table, *, group, source, parameters, upper=(), tolerances=None
+):
+    """One :class:`DeclaredNumber` per quoted table cell."""
+    tolerances = tolerances or {}
+    rows = []
+    for subdivisions, panels, quantity, declared in table:
+        is_upper = quantity in upper and declared <= 1.0e-15  # machine-zero cell
+        rows.append(
+            DeclaredNumber(
+                key=f"{prefix}_{quantity}_{panels}",
+                description=(
+                    f"{_QUANTITY_LABEL.get(quantity, quantity)}, "
+                    f"{panels} panels"
+                ),
+                source=source,
+                group=group,
+                quantity=f"level{subdivisions}_{quantity}",
+                parameters=dict(parameters),
+                declared=declared,
+                tier="heavy",
+                tolerance=tolerances.get(quantity, _REFINEMENT_TOLERANCE),
+                kind="upper" if is_upper else "value",
+            )
+        )
+    return tuple(rows)
+
+
+def _chief_registry_rows():
+    """One :class:`DeclaredNumber` per cell of the irregular-frequency table."""
+    rows = []
+    for block, quantity, declared in _TABLE_HULME_CHIEF:
+        rows.append(
+            DeclaredNumber(
+                key=f"hulme_chief_{block}_{quantity}",
+                description=(
+                    f"Ka = 2.58, 256 panels, {block}: "
+                    f"{_QUANTITY_LABEL.get(quantity, quantity)}"
+                ),
+                source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+                group="hulme3d_chief",
+                quantity=f"ka2p58_{block}_{quantity}",
+                parameters=dict(_HULME_CHIEF_PARAMETERS),
+                declared=declared,
+                tier="heavy",
+                tolerance=_REFINEMENT_TOLERANCE,
+            )
+        )
+    return tuple(rows)
+
+
+def _free_surface_3d_rows() -> tuple[DeclaredNumber, ...]:
+    """The 3-D Kelvin-Green-function tables of docs/marine_bem_benchmarks.md."""
+    return (
+        _refinement_rows(
+            "hulme",
+            _TABLE_HULME,
+            group="hulme3d",
+            source="docs/marine_bem_benchmarks.md section 4.10 table 10",
+            parameters=_HULME_REFINEMENT_PARAMETERS,
+        )
+        + _chief_registry_rows()
+        + _refinement_rows(
+            "wang_linton",
+            _TABLE_WANG_LINTON,
+            group="wang_linton3d",
+            source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+            parameters=_WANG_LINTON_PARAMETERS,
+            upper=("rotational_added_mass_max_ratio",),
+        )
+    )
 
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
@@ -917,7 +1124,10 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
-)
+    # --- 3-D Kelvin Green function, tables 10-12 (m3181) -------------------
+    # Generated from the quoted tables; one group per study so that every row of
+    # a table is judged against a single solve.
+) + _free_surface_3d_rows()
 
 _URSELL_RADIUS = 1.0
 _URSELL_SUBMERGENCE = 2.0
@@ -1043,6 +1253,64 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             ka_values=tuple(float(v) for v in parameters.get("ka_values", (2.58,))),
         )
         return _chief_rows(rows)
+    if group == "hulme3d":
+        levels = hulme_benchmark.run_refinement_study(
+            [int(value) for value in parameters["subdivisions"]],
+            ka=float(parameters.get("ka", 1.0)),
+        )["levels"]
+        values: dict[str, float] = {}
+        previous = None
+        for level in levels:
+            tag = f"level{int(level['subdivisions'])}"
+            for key, value in level.items():
+                if value is None or isinstance(value, bool):
+                    continue
+                if isinstance(value, (int, float)):
+                    values[f"{tag}_{key}"] = float(value)
+            if previous is not None:
+                # B11 is quoted in table 10 but not emitted by the benchmark, so
+                # it is derived here: log(error ratio) / log(measured edge
+                # ratio), the estimator ``_study_rows`` uses for the same column.
+                e0 = previous["surge_damping_rel_error"]
+                e1 = level["surge_damping_rel_error"]
+                h0 = previous.get("h_mean")
+                h1 = level.get("h_mean")
+                if e0 > 0.0 and e1 > 0.0 and h0 and h1 and h0 > h1:
+                    values[f"{tag}_observed_order_b11"] = math.log(e0 / e1) / math.log(
+                        h0 / h1
+                    )
+            previous = level
+        return values
+    if group == "hulme3d_chief":
+        rows = hulme_benchmark.run_irregular_frequency_study(
+            subdivision=int(parameters["subdivision"]),
+            ka_values=[float(ka) for ka in parameters["ka_values"]],
+        )
+        values = {}
+        for row in rows:
+            tag = f"ka{float(row['ka']):.2f}".replace(".", "p")
+            values[f"{tag}_exact_a33_dimless"] = float(row["exact_a33"])
+            values[f"{tag}_exact_b33_dimless"] = float(row["exact_b33"])
+            for scheme in ("unregularized", "chief_regularized"):
+                for key, value in row[scheme].items():
+                    if isinstance(value, bool) or not isinstance(value, (int, float)):
+                        continue
+                    values[f"{tag}_{scheme}_{key}"] = float(value)
+        return values
+    if group == "wang_linton3d":
+        levels = wang_linton_benchmark.run_refinement_study(
+            [int(value) for value in parameters["subdivisions"]],
+            ka=float(parameters.get("ka", 0.8)),
+        )["levels"]
+        values = {}
+        for level in levels:
+            tag = f"level{int(level['subdivisions'])}"
+            for key, value in level.items():
+                if value is None or isinstance(value, bool):
+                    continue
+                if isinstance(value, (int, float)):
+                    values[f"{tag}_{key}"] = float(value)
+        return values
     raise ValueError(f"unknown benchmark group: {group!r}")
 
 
