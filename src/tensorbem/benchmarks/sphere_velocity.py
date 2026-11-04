@@ -31,8 +31,11 @@ case, not a free-surface or ship-hydrodynamics validation.
 Two surface velocities are reported.  The *recovered* one builds the
 velocity from the exact identity ``grad(phi)|_Gamma = grad_tan(u) + n*q``,
 where the tangential derivative of the boundary values is recovered by a
-superconvergent least-squares patch fit; it converges at second order in
-the panel size.  The *representation* one differentiates the Green formula
+least-squares patch fit.  The composite velocity error falls at observed
+order 1.78 and 1.67 (README table), while the recovery step on its own,
+measured against the analytic tangential gradient, is first order; see
+``tensorbem.benchmarks.recovery_order`` and
+``docs/m3692/recovery_order_audit.md``.  The *representation* one differentiates the Green formula
 with the piecewise-constant traces of the discretisation; the potential is
 then accurate to ``O(h)`` but the gradient amplifies that error to ``O(1)``,
 so it is reported as a diagnostic only.

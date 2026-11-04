@@ -134,8 +134,10 @@ the target" for a quantity compared with a reference:
 
 The observed order of the `Cp` error drifts from `2.21` (20->80 panels) to
 `1.66` (80->320) and `1.31` (320->1280); the mesh sequence is therefore still
-pre-asymptotic in this measure at the finest level available, and the `1.31`
-value should not be read as the asymptotic order of the method. The boundary
+the order of the recovered velocity, not pre-asymptoticity: the recovery step
+that supplies `grad_tan(u)` is itself first order in the panel size (measured,
+`error/h -> 0.20`; see `docs/m3692/recovery_order_audit.md`), so `1.31` is the
+order of the recovered velocity rather than the order of the potential. The boundary
 potential itself converges at second order (see `docs/three_dimensional_bem.md`);
 `Cp = 1 - |v|^2/U^2` squares the recovered velocity, so it inherits a doubled
 relative error of the tangential-gradient recovery rather than the order of the

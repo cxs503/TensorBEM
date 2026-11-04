@@ -10,9 +10,22 @@ of interest, the affine function
 
     u(x) ~ c + g . (x - x_c),      g in the tangent plane of the panel
 
-to the cell-centred samples by least squares, and returns ``g``.  The panel
-centroid is a superconvergence point of that fit for a smooth field, so the
-recovered gradient is second-order accurate in the panel size.
+to the cell-centred samples by least squares, and returns ``g``.
+
+On the panel topology used here the centroid is only a *weak*
+superconvergence point of the fit: the patch offsets about it are not
+symmetric, so the third moment that multiplies the second derivative of the
+field does not vanish and the recovered gradient is **first-order accurate**
+in the panel size, not second-order.  Measured on a flat-faceted icosphere with
+analytic harmonic fields, the relative L2 error against the panel-plane
+projection of the analytic gradient is ``2.00e-1``, ``7.10e-2``,
+``3.10e-2`` and ``1.48e-2`` at 80/320/1280/5120 panels, observed orders
+``1.49``, ``1.19`` and ``1.07``, i.e. ``error/h`` settles near ``0.20``.
+The error is reproduced to round-off by fitting the ``O(h**2)`` curvature
+residual alone, which confirms the patch asymmetry as its only cause.  The
+measurement is ``tensorbem.benchmarks.recovery_order``, audited in
+``docs/m3692/recovery_order_audit.md`` and pinned by
+``tests/test_recovery_order.py``.
 
 The recovery is used by
 :func:`tensorbem.solver3d.evaluate_surface_velocity_at_panels` to build the
