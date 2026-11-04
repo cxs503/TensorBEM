@@ -101,6 +101,25 @@ TARGETS: tuple[Target, ...] = (
         SRC_ROOT / "tensorbem" / "finite_depth.py",
         ("tests/test_finite_depth.py",),
     ),
+    # --- 3-D BEM core (m3471) -------------------------------------------------
+    # The 2026-10-24 audit (docs/mutation_audit_tensorbem.md) only sampled the
+    # 2-D modules.  These three carry the 3-D free-surface kernel, its gradients
+    # and the panel solver, and had never been mutation-tested.
+    Target(
+        "tensorbem.kernels3d",
+        SRC_ROOT / "tensorbem" / "kernels3d.py",
+        ("tests/test_kernels3d.py", "tests/test_kernels3d_gradients.py"),
+    ),
+    Target(
+        "tensorbem.free_surface3d",
+        SRC_ROOT / "tensorbem" / "free_surface3d.py",
+        ("tests/test_free_surface3d.py",),
+    ),
+    Target(
+        "tensorbem.solver3d",
+        SRC_ROOT / "tensorbem" / "solver3d.py",
+        ("tests/test_solver3d.py",),
+    ),
 )
 
 
