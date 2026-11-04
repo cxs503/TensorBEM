@@ -130,3 +130,22 @@ $$\left[\tfrac12 I - H_{\rm half} - s\,H_{\rm mirror}\right] \phi_{\rm half} = \
 PYTHONPATH=src python -m pytest tests/test_symmetry3d.py -q
 PYTHONPATH=src python -m tensorbem.benchmarks.symmetry_reduction --subdivisions 2 3 --output docs/symmetry3d
 ```
+
+---
+
+## 远场后处理（m3224 结清的限制）
+
+`docs/symmetry3d.md` 早先声明「远场后处理未折叠：`far_field_damping_matrix_3d` /
+`haskind_excitation_force_3d` 需要全表面势」。该限制已结清：宇称确定的势满足
+
+```
+K_full(theta) = K_half(theta) + s * K_half(-theta)
+```
+
+因为反射 `M: y -> -y` 同时把相位 `exp(νz - iν(x cosθ + y sinθ))` 与方向因子
+`n_z - i(n_x cosθ + n_y sinθ)` 映成 `-θ` 的形式。基于此新增
+`folded_kochin_function_3d` / `far_field_damping_matrix_3d_symmetric` /
+`haskind_excitation_force_3d_symmetric`，半域解由此可直接给出远场阻尼 `B_ij^far`、
+Kochin 函数与 Haskind 激励力（RAO 右端项）。验证：折叠恒等式到舍入量级（2e-14），
+端到端与全域解一致到 1e-8（`B_ij^far`、激励力）量级，详见
+`docs/m3224/symmetry_far_field.md`。
