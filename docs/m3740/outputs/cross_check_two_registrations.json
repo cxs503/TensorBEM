@@ -1,0 +1,30 @@
+{
+  "paired_cells": 59,
+  "identical_declared": 57,
+  "mismatched": [
+    {
+      "main_key": "hulme_hemisphere_64_order_b11",
+      "m3181_key": "hulme_observed_order_b11_64",
+      "main_declared": 1.8021,
+      "m3181_declared": 1.62,
+      "main_tolerance": 0.015,
+      "m3181_tolerance": 0.005,
+      "same_declared": false
+    },
+    {
+      "main_key": "hulme_hemisphere_256_order_b11",
+      "m3181_key": "hulme_observed_order_b11_256",
+      "main_declared": 1.9377,
+      "m3181_declared": 1.88,
+      "main_tolerance": 0.015,
+      "m3181_tolerance": 0.005,
+      "same_declared": false
+    }
+  ],
+  "main_rows_without_counterpart": [
+    "hulme_hemisphere_256_near_far_damping_closure",
+    "hulme_hemisphere_256_haskind_surge",
+    "hulme_hemisphere_256_haskind_heave"
+  ],
+  "m3181_rows_total": 63
+}
