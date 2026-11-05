@@ -1,0 +1,364 @@
+{
+  "check": {
+    "schema_version": 1,
+    "document": "docs/three_dimensional_bem.md",
+    "claims": 10,
+    "numeric_tokens_bound": 23,
+    "qualitative_claims": 2,
+    "drift": 0,
+    "verdict": "PASS",
+    "findings": [
+      {
+        "id": "abstract-band",
+        "section": "摘要",
+        "group": "representation_band",
+        "anchor": "表示公式路径在紧贴表面处重构误差达 53%–65%",
+        "tokens": [
+          "53",
+          "65"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s55-band",
+        "section": "5.5",
+        "group": "representation_band",
+        "anchor": "在面元质心（配点）上重构的速度有 53%–65% 的误差",
+        "tokens": [
+          "53",
+          "65"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s55-layer",
+        "section": "5.5",
+        "group": "layered_probe",
+        "anchor": "速度为 0.518 而正确值为 1.000（相对误差 48%）",
+        "tokens": [
+          "0.518",
+          "1.000",
+          "48"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "0.518",
+            "printed": 0.518,
+            "measured": 0.5180171523786159,
+            "relative_deviation": 3.311270003065859e-05,
+            "tolerance": 0.006,
+            "status": "PASS"
+          },
+          {
+            "token": "1.000",
+            "printed": 1.0,
+            "measured": 1.0,
+            "relative_deviation": 0.0,
+            "tolerance": 0.0006,
+            "status": "PASS"
+          },
+          {
+            "token": "48",
+            "printed": 48.0,
+            "measured": 48.198284762138414,
+            "relative_deviation": 0.004130932544550288,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s55-centre",
+        "section": "5.5",
+        "group": "centre_probe",
+        "anchor": "在体心处则为 0.984（1.6%）",
+        "tokens": [
+          "0.984",
+          "1.6"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "0.984",
+            "printed": 0.984,
+            "measured": 0.9844470725285124,
+            "relative_deviation": 0.00045434200052072495,
+            "tolerance": 0.006,
+            "status": "PASS"
+          },
+          {
+            "token": "1.6",
+            "printed": 1.6,
+            "measured": 1.555292747148762,
+            "relative_deviation": 0.02794203303202375,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s64-band",
+        "section": "6.4",
+        "group": "representation_band",
+        "anchor": "停在 53%–65% 且几乎不降",
+        "tokens": [
+          "53",
+          "65"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s7-band",
+        "section": "7",
+        "group": "representation_band",
+        "anchor": "重构误差为 53%–65% 且不随加密下降",
+        "tokens": [
+          "53",
+          "65"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s7-layer",
+        "section": "7",
+        "group": "centre_probe_plus_layered",
+        "anchor": "紧贴表面误差 48%，体心处 1.6%",
+        "tokens": [
+          "48",
+          "1.6"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "48",
+            "printed": 48.0,
+            "measured": 48.198284762138414,
+            "relative_deviation": 0.004130932544550288,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "1.6",
+            "printed": 1.6,
+            "measured": 1.555292747148762,
+            "relative_deviation": 0.02794203303202375,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s9-band",
+        "section": "9",
+        "group": "representation_band",
+        "anchor": "停在 53%–65%",
+        "tokens": [
+          "53",
+          "65"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s9-layer",
+        "section": "9",
+        "group": "centre_probe_plus_layered",
+        "anchor": "紧贴表面误差 48%，体心处 1.6%",
+        "tokens": [
+          "48",
+          "1.6"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "48",
+            "printed": 48.0,
+            "measured": 48.198284762138414,
+            "relative_deviation": 0.004130932544550288,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "1.6",
+            "printed": 1.6,
+            "measured": 1.555292747148762,
+            "relative_deviation": 0.02794203303202375,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      },
+      {
+        "id": "s11-index",
+        "section": "11",
+        "group": "band_plus_layered",
+        "anchor": "如 53%–65%、48%、1.6%",
+        "tokens": [
+          "53",
+          "65",
+          "48",
+          "1.6"
+        ],
+        "status": "PASS",
+        "cells": [
+          {
+            "token": "53",
+            "printed": 53.0,
+            "measured": 53.16181168376401,
+            "relative_deviation": 0.0030530506370567423,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "65",
+            "printed": 65.0,
+            "measured": 65.31385430176717,
+            "relative_deviation": 0.004828527719494848,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "48",
+            "printed": 48.0,
+            "measured": 48.198284762138414,
+            "relative_deviation": 0.004130932544550288,
+            "tolerance": 0.06,
+            "status": "PASS"
+          },
+          {
+            "token": "1.6",
+            "printed": 1.6,
+            "measured": 1.555292747148762,
+            "relative_deviation": 0.02794203303202375,
+            "tolerance": 0.06,
+            "status": "PASS"
+          }
+        ]
+      }
+    ],
+    "qualitative": [
+      {
+        "id": "representation-does-not-converge",
+        "section": "5.5",
+        "anchor": "且不随加密下降",
+        "status": "PASS",
+        "measured": true
+      },
+      {
+        "id": "recovered-path-has-no-defect",
+        "section": "5.5",
+        "anchor": "恢复路径没有这一缺陷",
+        "status": "PASS",
+        "measured": true
+      }
+    ]
+  },
+  "coverage": {
+    "numeric_tokens_total": 249,
+    "protected_in_tables": 86,
+    "bound_by_prose_claims": 7,
+    "bound_tokens": [
+      "53",
+      "65",
+      "0.518",
+      "1.000",
+      "48",
+      "0.984",
+      "1.6"
+    ],
+    "guarded_total": 93,
+    "guarded_fraction": 0.37349397590361444,
+    "unguarded_before": 163,
+    "unguarded_after": 156
+  }
+}
