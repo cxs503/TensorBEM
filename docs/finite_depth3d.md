@@ -101,3 +101,23 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 * Constant depth, linearised potential flow; no sloping bottom, current or nonlinearity.
 * Cost grows like $h/(\pi R)$ modes; for $R\lesssim10^{-3}$ m with $h=5$ m the 40000-mode cap binds (truncation error still $<10^{-10}$).
 
+## 7. 机器判据（m3173 起：本文件的每个数字都被测试读取）
+
+本文档此前是**无人守**的：数字由 `docs/m3015/finite_depth3d_report.py` 一次写出，
+此后没有任何测试再读它（覆盖审计 `python -m tensorbem.benchmarks.doc_claim_audit`
+把本文归类为 `UNGUARDED`，112 个数字 token，全仓论文级未守文档之首）。
+
+现由 `src/tensorbem/benchmarks/finite_depth3d_pins.py` 从**本文件的表格里解析数值**，
+用 `tensorbem.finite_depth3d` / `tensorbem.free_surface3d` 重新计算并逐项判定：
+
+```bash
+PYTHONPATH=src python3 -m tensorbem.benchmarks.finite_depth3d_pins \
+    --json docs/finite_depth3d_pins/check.json --strict
+PYTHONPATH=src python3 -m pytest tests/test_finite_depth3d_pins.py -q
+```
+
+判据取「打印精度」而非物理容差（三位有效数字 → rtol 5e-3，六位 → 1e-6），
+打印为 `0.000e+00` 的两行（海床残差）改用绝对地板 5e-16。首次运行结果：
+**64 个被钉数值全部复现，最大相对偏差 9.63e-3（截断梯级 `modes=40` 行），
+其余 63 项 < 1e-3**。测试还含两条负控：改一个打印数字必须触发 `DRIFT`；
+把结果表整段删掉必须让解析行数归零（防空表绿灯）。
