@@ -1,0 +1,44 @@
+{
+  "case": "annulus r_in=0.5 m, r_out=1.0 m, MultiComponentMesh domain-guard protocol",
+  "panel_counts": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "rows": [
+    {
+      "panels_per_loop": 32,
+      "panel_size": 0.19634954084936207,
+      "max_abs_error": 0.004813488460817056,
+      "max_rel_error": 0.09626024992574919,
+      "error_within_chord_sagitta": true,
+      "contains_point_agreement": 1.0
+    },
+    {
+      "panels_per_loop": 64,
+      "panel_size": 0.09817477042468103,
+      "max_abs_error": 0.0012040975779484264,
+      "max_rel_error": 0.024079571735612905,
+      "error_within_chord_sagitta": true,
+      "contains_point_agreement": 1.0
+    },
+    {
+      "panels_per_loop": 128,
+      "panel_size": 0.04908738521234052,
+      "max_abs_error": 0.00030106974956772836,
+      "max_rel_error": 0.006020800035470975,
+      "error_within_chord_sagitta": true,
+      "contains_point_agreement": 1.0
+    },
+    {
+      "panels_per_loop": 256,
+      "panel_size": 0.02454369260617026,
+      "max_abs_error": 7.527027229800587e-05,
+      "max_rel_error": 0.001505256706986475,
+      "error_within_chord_sagitta": true,
+      "contains_point_agreement": 1.0
+    }
+  ],
+  "observed_order": 1.9996196103427801
+}

@@ -73,6 +73,15 @@ G = 9.80665
 #: Absolute floor for rows whose printed value is ``0.000e+00``.
 ZERO_FLOOR = 5.0e-16
 
+#: Absolute floor for the *scale* of a relative comparison.  The free-surface and
+#: bottom residuals of the boundary-condition table are round-off level numbers
+#: (1e-15..1e-14): their last two digits move with the BLAS/SIMD kernel that ran
+#: the solve, so comparing them at 5e-3 *relative* tolerance measures the
+#: floating-point noise of the machine, not reproducibility of the physics.
+#: Any quantity whose magnitude sits below this floor is therefore judged on the
+#: absolute scale instead of its own magnitude.
+ROUND_OFF_FLOOR = 1.0e-12
+
 
 @dataclass(frozen=True)
 class Row:
@@ -86,8 +95,8 @@ class Row:
 
     @property
     def rel_deviation(self) -> float:
-        scale = abs(self.declared)
-        if scale < 1e-300:
+        scale = max(abs(self.declared), ROUND_OFF_FLOOR)
+        if self.declared == 0.0:
             return abs(self.recomputed) if abs(self.recomputed) <= ZERO_FLOOR else math.inf
         return abs(self.recomputed - self.declared) / scale
 
@@ -246,7 +255,7 @@ def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
-    dev = abs(recomputed - declared) / abs(declared)
+    dev = abs(recomputed - declared) / max(abs(declared), ROUND_OFF_FLOOR)
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 
 

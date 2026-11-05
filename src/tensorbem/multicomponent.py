@@ -229,6 +229,38 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """Alias of :meth:`fluid_contains` for the interior-field domain guard.
+
+        :func:`tensorbem.solver.evaluate_interior_field` screens its targets with
+        ``mesh.contains_point``.  A multi-component fluid region answers exactly
+        that question with the loop-parity test in :meth:`fluid_contains`, so the
+        alias keeps the guard working for annulus meshes instead of raising
+        ``AttributeError``.
+        """
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to any boundary panel.
+
+        The quantity :meth:`tensorbem.geometry.PanelMesh.boundary_clearance`
+        returns, minimised over every panel of every loop, so that the
+        interior-field clearance guard also screens points sitting close to a
+        hole: a point is only as safe as its nearest panel.
+        """
+        targets = np.asarray(points, dtype=float)
+        if targets.ndim != 2 or targets.shape[1] != 2:
+            raise ValueError("points must have shape (M, 2)")
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        length_squared = np.sum(self.vectors**2, axis=1)
+        for start, segment, squared in zip(self.vertices, self.vectors, length_squared):
+            projection = np.clip((targets - start) @ segment / squared, 0.0, 1.0)
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,
