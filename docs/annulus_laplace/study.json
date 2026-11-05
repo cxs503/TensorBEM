@@ -1,0 +1,309 @@
+{
+  "schema": "tensorbem-annulus-laplace/1",
+  "summary": "Analytic verification of 2-D Laplace BEM on a multiply connected (annular) domain",
+  "conventions": {
+    "reference_length": 2.0,
+    "panels": "constant strength, midpoint collocation, analytic straight-panel kernels",
+    "normal_derivative": "du/dn along the domain-outward normal; on the inner loop that points into the hole",
+    "ladder": [
+      "16/8",
+      "32/16",
+      "64/32",
+      "128/64"
+    ]
+  },
+  "parameters": {
+    "outer_radius": 1.0,
+    "inner_radius": 0.5,
+    "radial_A": 0.7,
+    "radial_B": 1.3,
+    "angular_c": 0.4,
+    "probe_radii": [
+      0.6,
+      0.75,
+      0.9
+    ],
+    "probe_angles": 16
+  },
+  "cases": [
+    {
+      "name": "radial_log",
+      "declared_solution": "u = 0.7 log r + 1.3",
+      "outer_radius": 1.0,
+      "inner_radius": 0.5,
+      "levels": [
+        {
+          "outer_panels": 16,
+          "inner_panels": 8,
+          "panel_count": 24,
+          "condition_number": 17.60619732685078,
+          "relative_residual": 3.219965685597209e-16,
+          "flux_outer": 4.518720538341682,
+          "flux_inner": -4.494120432707751,
+          "exact_flux_outer": 4.455637029304338,
+          "exact_flux_inner": -4.639191898578664,
+          "flux_imbalance": 0.024600105633931335,
+          "flux_scale": 9.094828927883002,
+          "flux_relative_error": 0.017393811482057053,
+          "q_relative_l2_error": 0.027183696877061382,
+          "q_relative_linf_error": 0.031270848251690145,
+          "field_rmse": 0.007007515695902677,
+          "field_max_abs_error": 0.011868099149682232,
+          "field_scale": 1.2262476390395218
+        },
+        {
+          "outer_panels": 32,
+          "inner_panels": 16,
+          "panel_count": 48,
+          "condition_number": 33.07775688723453,
+          "relative_residual": 2.568089767269934e-16,
+          "flux_outer": 4.42348557735631,
+          "flux_inner": -4.417888954902787,
+          "exact_flux_outer": 4.4124148704009585,
+          "exact_flux_inner": -4.455637029304338,
+          "flux_imbalance": 0.0055966224535231035,
+          "flux_scale": 8.868051899705296,
+          "flux_relative_error": 0.004435922702510979,
+          "q_relative_l2_error": 0.007097187241082764,
+          "q_relative_linf_error": 0.008471981481730157,
+          "field_rmse": 0.0016023862074219025,
+          "field_max_abs_error": 0.002238244076040119,
+          "field_scale": 1.2262476390395218
+        },
+        {
+          "outer_panels": 64,
+          "inner_panels": 32,
+          "panel_count": 96,
+          "condition_number": 65.23748034791345,
+          "relative_residual": 3.349876872389594e-16,
+          "flux_outer": 4.4039357176312555,
+          "flux_inner": -4.402600051001236,
+          "exact_flux_outer": 4.401765739344266,
+          "exact_flux_inner": -4.4124148704009585,
+          "flux_imbalance": 0.0013356666300197162,
+          "flux_scale": 8.814180609745225,
+          "flux_relative_error": 0.0011404168302181015,
+          "q_relative_l2_error": 0.0018404089333642652,
+          "q_relative_linf_error": 0.0022243645912816833,
+          "field_rmse": 0.000362645757687608,
+          "field_max_abs_error": 0.0004905406846844595,
+          "field_scale": 1.2262476390395218
+        },
+        {
+          "outer_panels": 128,
+          "inner_panels": 64,
+          "panel_count": 192,
+          "condition_number": 130.02072302965854,
+          "relative_residual": 4.603749491574943e-16,
+          "flux_outer": 4.399580054366465,
+          "flux_inner": -4.399253872370803,
+          "exact_flux_outer": 4.39911308191944,
+          "exact_flux_inner": -4.401765739344266,
+          "flux_imbalance": 0.00032618199566236683,
+          "flux_scale": 8.800878821263705,
+          "flux_relative_error": 0.0002903011090589593,
+          "q_relative_l2_error": 0.0004700813685208857,
+          "q_relative_linf_error": 0.0005706498533600389,
+          "field_rmse": 8.764959802069925e-05,
+          "field_max_abs_error": 0.000117533721572749,
+          "field_scale": 1.2262476390395218
+        }
+      ],
+      "observed_order_q_relative_l2": [
+        1.9374223965990578,
+        1.9472210042235534,
+        1.9690439582668684
+      ],
+      "observed_order_field_rmse": [
+        2.128681162422113,
+        2.1435890311395123,
+        2.04874159241917
+      ],
+      "fixture": true
+    },
+    {
+      "name": "angular_cos",
+      "declared_solution": "u = (r + 0.16/r) cos(theta)",
+      "outer_radius": 1.0,
+      "inner_radius": 0.5,
+      "levels": [
+        {
+          "outer_panels": 16,
+          "inner_panels": 8,
+          "panel_count": 24,
+          "condition_number": 17.60619732685078,
+          "relative_residual": 3.010570046926244e-16,
+          "flux_outer": 7.7021722333370235e-16,
+          "flux_inner": -2.7755575615628914e-16,
+          "exact_flux_outer": -2.498001805406602e-16,
+          "exact_flux_inner": 8.326672684688674e-17,
+          "flux_imbalance": 4.926614671774132e-16,
+          "flux_scale": 3.835064396541312,
+          "flux_relative_error": 2.8212193986711454e-16,
+          "q_relative_l2_error": 0.10742980428648737,
+          "q_relative_linf_error": 0.13885244314638995,
+          "field_rmse": 0.007282921036231471,
+          "field_max_abs_error": 0.017447976632396722,
+          "field_scale": 1.0777777777777777
+        },
+        {
+          "outer_panels": 32,
+          "inner_panels": 16,
+          "panel_count": 48,
+          "condition_number": 33.07775688723453,
+          "relative_residual": 3.369388403192579e-16,
+          "flux_outer": 5.273559366969494e-16,
+          "flux_inner": -5.360295540768334e-16,
+          "exact_flux_outer": 5.898059818321144e-17,
+          "exact_flux_inner": 6.765421556309548e-17,
+          "flux_imbalance": 8.673617379884035e-18,
+          "flux_scale": 4.023146997549809,
+          "flux_relative_error": 1.8991956064011812e-16,
+          "q_relative_l2_error": 0.025582134954658213,
+          "q_relative_linf_error": 0.03496386554891781,
+          "field_rmse": 0.0017892019191189988,
+          "field_max_abs_error": 0.0033050344443060764,
+          "field_scale": 1.0777777777777777
+        },
+        {
+          "outer_panels": 64,
+          "inner_panels": 32,
+          "panel_count": 96,
+          "condition_number": 65.23748034791345,
+          "relative_residual": 3.1071592023127385e-16,
+          "flux_outer": -7.077671781985373e-16,
+          "flux_inner": 4.904930628324422e-16,
+          "exact_flux_outer": -1.3877787807814457e-17,
+          "exact_flux_inner": -4.336808689942018e-19,
+          "flux_imbalance": 2.172741153660951e-16,
+          "flux_scale": 4.066038681319169,
+          "flux_relative_error": 2.0904745336655035e-16,
+          "q_relative_l2_error": 0.006315115584567711,
+          "q_relative_linf_error": 0.008742335310374924,
+          "field_rmse": 0.0003968707215560252,
+          "field_max_abs_error": 0.0006810778861686684,
+          "field_scale": 1.0777777777777777
+        },
+        {
+          "outer_panels": 128,
+          "inner_panels": 64,
+          "panel_count": 192,
+          "condition_number": 130.02072302965854,
+          "relative_residual": 4.3802672032540304e-16,
+          "flux_outer": -1.457167719820518e-15,
+          "flux_inner": 7.546047120499111e-16,
+          "exact_flux_outer": -8.326672684688674e-17,
+          "exact_flux_inner": 8.673617379884035e-18,
+          "flux_imbalance": 7.025630077706069e-16,
+          "flux_scale": 4.076525101066245,
+          "flux_relative_error": 3.8349702790167107e-16,
+          "q_relative_l2_error": 0.0015721700513976387,
+          "q_relative_linf_error": 0.002183513401695844,
+          "field_rmse": 9.848274920931963e-05,
+          "field_max_abs_error": 0.00016719996298608653,
+          "field_scale": 1.0777777777777777
+        }
+      ],
+      "observed_order_q_relative_l2": [
+        2.0701857218861375,
+        2.018255624434656,
+        2.00605186670978
+      ],
+      "observed_order_field_rmse": [
+        2.025200992162385,
+        2.172575171837128,
+        2.010726192700244
+      ],
+      "fixture": false
+    }
+  ],
+  "orientation_control": [
+    {
+      "case": "radial_log",
+      "outer_panels": 64,
+      "inner_panels": 32,
+      "correct_convention_q_relative_l2_error": 0.0018404089333642652,
+      "unflipped_inner_loop_q_relative_l2_error": 1.660114328882567
+    },
+    {
+      "case": "angular_cos",
+      "outer_panels": 64,
+      "inner_panels": 32,
+      "correct_convention_q_relative_l2_error": 0.006315115584567711,
+      "unflipped_inner_loop_q_relative_l2_error": 1.5141124749618398
+    }
+  ],
+  "capacity_sweep": [
+    {
+      "outer_radius": 1.0,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 33.07775688723453,
+      "q_relative_l2_error": 0.007097187241082764
+    },
+    {
+      "outer_radius": 1.5,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 23.86683471516221,
+      "q_relative_l2_error": 0.009213286609482875
+    },
+    {
+      "outer_radius": 1.9,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 27.094313930899716,
+      "q_relative_l2_error": 0.011211314862842726
+    },
+    {
+      "outer_radius": 1.99,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 57.441382626790045,
+      "q_relative_l2_error": 0.03376647416164156
+    },
+    {
+      "outer_radius": 2.0,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 129.91107669360326,
+      "q_relative_l2_error": 0.07394259855341534
+    },
+    {
+      "outer_radius": 2.01,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 489.2489402335713,
+      "q_relative_l2_error": 0.2773538910154397
+    },
+    {
+      "outer_radius": 2.5,
+      "inner_radius": 0.5,
+      "reference_length": 2.0,
+      "condition_number": 35.168406901565554,
+      "q_relative_l2_error": 0.01065668259305674
+    }
+  ],
+  "finest_level": {
+    "radial_log": {
+      "panel_count": 192,
+      "q_relative_l2_error": 0.0004700813685208857,
+      "field_rmse": 8.764959802069925e-05,
+      "flux_relative_error": 0.0002903011090589593,
+      "condition_number": 130.02072302965854
+    },
+    "angular_cos": {
+      "panel_count": 192,
+      "q_relative_l2_error": 0.0015721700513976387,
+      "field_rmse": 9.848274920931963e-05,
+      "flux_relative_error": 3.8349702790167107e-16,
+      "condition_number": 130.02072302965854
+    }
+  },
+  "acceptance": {
+    "q_relative_l2_error_lt": 0.03,
+    "field_rmse_lt": 0.001,
+    "flux_relative_error_lt": 0.03,
+    "min_observed_order": 1.5
+  }
+}
