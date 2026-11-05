@@ -38,7 +38,7 @@ import math
 import platform
 import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
 
@@ -80,8 +80,9 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics``, ``hulme_hemisphere``,
+    ``hulme_chief`` or ``submerged_sphere``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -93,8 +94,19 @@ class DeclaredNumber:
     declared`` (for sentences of the form "within 6e-3")."""
 
 
-#: The registry. ``source`` cites the current wording; every value below is the
-#: number a reader of the docs will find there after the 2026-11-03 audit.
+#: Settings of the three-dimensional free-surface families. These are the
+#: settings the documentation quotes and the ones the benchmarks default to, so
+#: the registry reproduces a reader's copy-paste of the ``--help`` command.
+_HULME_KA = 1.0
+_HULME_RADIUS = 1.0
+_HULME_DENSITY = 1025.0
+_HULME_GRAVITY = 9.80665
+_HULME_CHIEF_KA = 2.58
+_HULME_CHIEF_SUBDIVISION = 3
+_SPHERE_KA = 0.8
+_SPHERE_RADIUS = 1.0
+_SPHERE_SUBMERGENCE = 1.5
+
 DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
     # --- 2-D translating cylinder (Laplace, no free surface) ---------------
     DeclaredNumber(
@@ -321,7 +333,10 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="field_rmse",
         parameters={"harmonic": "x3-3xy2", "subdivisions": 3},
         declared=1.824e-4,
-        tier="standard",
+        # A 1280-panel three-dimensional dense solve belongs to the heavy class
+        # like its five sibling harmonic rows; it was left on ``standard`` by
+        # mistake, which made the default standard-tier run cost minutes.
+        tier="heavy",
     ),
     # --- 3-D floating hemisphere, Hulme (1982) reference (free surface) -----
     # Source: docs/marine_bem_benchmarks.md table 10 (Ka=1.0, a=1, rho=1025).
@@ -333,6 +348,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_heave_added_mass_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.20e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_16_heave_damping_error",
@@ -342,6 +358,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_heave_damping_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.22e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_16_surge_added_mass_error",
@@ -351,6 +368,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_surge_added_mass_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.80e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_16_surge_damping_error",
@@ -360,6 +378,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_surge_damping_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=4.02e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_16_vertical_force_error",
@@ -369,6 +388,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_excitation_force_z_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=6.67e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_16_condition_number",
@@ -378,6 +398,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_condition_number",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=3.893,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_heave_added_mass_error",
@@ -387,6 +408,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_heave_added_mass_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=2.97e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_heave_damping_error",
@@ -396,6 +418,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_heave_damping_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=4.50e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_surge_added_mass_error",
@@ -405,6 +428,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_surge_added_mass_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=5.05e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_surge_damping_error",
@@ -414,6 +438,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_surge_damping_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.30e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_vertical_force_error",
@@ -423,6 +448,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_excitation_force_z_rel_error",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=2.21e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_condition_number",
@@ -432,6 +458,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_condition_number",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=3.052,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_order_a33",
@@ -441,6 +468,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_observed_order_a33",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=2.23,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_order_b33",
@@ -450,6 +478,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_observed_order_b33",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.59,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_order_a11",
@@ -459,6 +488,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_observed_order_a11",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=2.04,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_order_b11",
@@ -468,6 +498,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_observed_order_b11",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.8021,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_64_order_fz",
@@ -477,6 +508,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub2_observed_order_fz",
         parameters={"subdivisions": [1, 2, 3], "ka": 1.0},
         declared=1.77,
+        tier="standard",
     ),
     DeclaredNumber(
         key="hulme_hemisphere_256_heave_added_mass_error",
@@ -690,6 +722,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_heave_added_mass_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.55e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_20_surge_added_mass_error",
@@ -699,6 +732,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_surge_added_mass_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.68e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_20_force_x_error",
@@ -708,6 +742,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_excitation_force_x_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=3.60e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_20_force_z_error",
@@ -717,6 +752,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_excitation_force_z_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=3.70e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_20_condition_number",
@@ -726,6 +762,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_condition_number",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.407,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_heave_added_mass_error",
@@ -735,6 +772,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_heave_added_mass_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=7.30e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_surge_added_mass_error",
@@ -744,6 +782,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_surge_added_mass_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=8.02e-2,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_force_x_error",
@@ -753,6 +792,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_excitation_force_x_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=1.16e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_force_z_error",
@@ -762,6 +802,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_excitation_force_z_rel_error",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=1.19e-1,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_condition_number",
@@ -771,6 +812,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_condition_number",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.259,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_rotational_coupling",
@@ -780,6 +822,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_rotational_added_mass_max_ratio",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.1510e-04,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_order_a33",
@@ -789,6 +832,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_observed_order_a33",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.12,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_order_b33",
@@ -798,6 +842,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_observed_order_b33",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=1.72,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_order_a11",
@@ -807,6 +852,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_observed_order_a11",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.04,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_order_fz",
@@ -816,6 +862,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub1_observed_order_fz",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=1.91,
+        tier="standard",
     ),
     DeclaredNumber(
         key="submerged_sphere_320_heave_added_mass_error",
@@ -917,6 +964,94 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
+    # --- cells that only the m3264 branch declared (kept by the merge) ------
+    # The two registries quote the same tables; main's literal block above already
+    # carries every cell of tables 10-12 except the exact reference values behind
+    # table 11, the sign policy of the unregularised scheme and the prose bounds
+    # of sections 4.10/4.11. Those are re-declared here under main's key style so
+    # the merge loses nothing the branch had pinned.
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33",
+        description="Hulme exact heave added mass at Ka=2.58 (reference value)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=4.007e-1,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33",
+        description="Hulme exact heave damping at Ka=2.58 (reference value)",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=6.31e-2,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_unregularized_passivity",
+        description="1.0 = the unregularised scheme radiates energy at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_unregularized_passivity",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=1.0,
+        tier="standard",
+        tolerance=1.0e-12,
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description="rotational added-mass coupling at the coarsest mesh is zero",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        # The cell is a round-off, not a converged number: the sphere's
+        # rotational added mass vanishes by symmetry, so what can be quoted is a
+        # bound on the coupling ratio, not a value with a tolerance. The branch
+        # carried the bound at 1e-30 (kind="upper", so the 2.5e-32 recomputation
+        # is judged one-sidedly and passes with 40x margin); the merge keeps
+        # that claim rather than loosening it. The key names the mesh the cell
+        # belongs to (subdivision 0 = 20 panels), like its 80/320 siblings.
+        declared=1.0e-30,
+        tier="standard",
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_320_kochin_heave_bound",
+        description="far/near-field heave-damping closure stays under 0.4%",
+        source="docs/marine_bem_benchmarks.md section 4.11 (prose)",
+        group="submerged_sphere",
+        quantity="sub2_far_field_damping_rel_diff_heave",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=4.0e-3,
+        tier="standard",
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_320_haskind_x_bound",
+        description="Haskind reciprocity residual, surge, stays under 0.4%",
+        source="docs/marine_bem_benchmarks.md section 4.11 (prose)",
+        group="submerged_sphere",
+        quantity="sub2_haskind_reciprocity_rel_diff_x",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=4.0e-3,
+        tier="standard",
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_320_haskind_z_bound",
+        description="Haskind reciprocity residual, heave, stays under 0.4%",
+        source="docs/marine_bem_benchmarks.md section 4.11 (prose)",
+        group="submerged_sphere",
+        quantity="sub2_haskind_reciprocity_rel_diff_z",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=4.0e-3,
+        tier="standard",
+        kind="upper",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -964,9 +1099,20 @@ def _chief_rows(rows) -> dict[str, float]:
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
+        # The exact reference values of table 11 are quoted as their own cells so
+        # a solver change cannot drift them without a test noticing.
+        for key in ("exact_a33", "exact_b33"):
+            if key in row:
+                values[prefix + key] = float(row[key])
         for scheme in ("unregularized", "chief_regularized"):
             for key, value in row[scheme].items():
-                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                if isinstance(value, bool):
+                    # The sign of the damping is the physical claim of table 11;
+                    # it is carried as a 0/1 flag because a signed value cannot be
+                    # guarded against zero.
+                    values[prefix + scheme + "_passivity"] = float(value)
+                    continue
+                if not isinstance(value, (int, float)):
                     continue
                 values[prefix + scheme + "_" + key] = float(value)
     return values
@@ -1027,20 +1173,31 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
     if group == "hulme_hemisphere":
         study = hemisphere_benchmark.run_refinement_study(
             subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (1, 2, 3))),
-            ka=float(parameters.get("ka", 1.0)),
+            ka=float(parameters.get("ka", _HULME_KA)),
+            radius=_HULME_RADIUS,
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _study_rows(study)
     if group == "submerged_sphere":
         study = sphere_benchmark.run_refinement_study(
             subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (0, 1, 2))),
-            ka=float(parameters.get("ka", 0.8)),
-            submergence=float(parameters.get("submergence", 1.5)),
+            ka=float(parameters.get("ka", _SPHERE_KA)),
+            radius=_SPHERE_RADIUS,
+            submergence=float(parameters.get("submergence", _SPHERE_SUBMERGENCE)),
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _study_rows(study)
     if group == "hulme_chief":
         rows = hemisphere_benchmark.run_irregular_frequency_study(
             subdivision=int(parameters.get("subdivision", 3)),
-            ka_values=tuple(float(v) for v in parameters.get("ka_values", (2.58,))),
+            ka_values=tuple(
+                float(v) for v in parameters.get("ka_values", (_HULME_CHIEF_KA,))
+            ),
+            radius=_HULME_RADIUS,
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _chief_rows(rows)
     raise ValueError(f"unknown benchmark group: {group!r}")
@@ -1112,6 +1269,17 @@ def check(
 
     drifted = [row for row in rows if row["verdict"] != "PASS"]
     worst = max((abs(row["relative_deviation"]) for row in rows), default=0.0)
+    # Upper-bound rows are judged on one side only, so their relative deviation
+    # is a distance from the bound, not an error; the headline accuracy figure
+    # is therefore reported over the equality rows.
+    worst_value = max(
+        (
+            abs(row["relative_deviation"])
+            for row in rows
+            if row["comparison"] == "value"
+        ),
+        default=0.0,
+    )
     return {
         "benchmark": "declared_numbers_recomputation",
         "tiers": sorted(selected_tiers),
@@ -1122,6 +1290,7 @@ def check(
             "drifted": len(drifted),
             "drifted_keys": [row["key"] for row in drifted],
             "worst_relative_deviation": worst,
+            "worst_value_relative_deviation": worst_value,
             "verdict": "PASS" if not drifted else "DRIFT",
         },
         "environment": _environment(),

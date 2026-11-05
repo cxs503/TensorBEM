@@ -1,0 +1,1232 @@
+{
+  "branch_rows": 67,
+  "merged_rows": 69,
+  "branch_rows_mapped": 67,
+  "branch_rows_unmapped": [],
+  "merged_rows_unique": [
+    {
+      "key": "hulme_hemisphere_64_order_b11",
+      "group": "hulme_hemisphere",
+      "quantity": "sub2_observed_order_b11",
+      "declared": 1.8021,
+      "kind": "value",
+      "tier": "standard"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_b11",
+      "group": "hulme_hemisphere",
+      "quantity": "sub3_observed_order_b11",
+      "declared": 1.9377,
+      "kind": "value",
+      "tier": "standard"
+    }
+  ],
+  "mapping": [
+    {
+      "branch": {
+        "key": "hulme_kappa_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.condition_number",
+        "declared": 3.893,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_condition_number",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_condition_number",
+        "declared": 3.893,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a33_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.heave_added_mass_rel_error",
+        "declared": 0.12,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_heave_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_heave_added_mass_rel_error",
+        "declared": 0.12,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b33_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.heave_damping_rel_error",
+        "declared": 0.122,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_heave_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_heave_damping_rel_error",
+        "declared": 0.122,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a11_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.surge_added_mass_rel_error",
+        "declared": 0.18,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_surge_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_surge_added_mass_rel_error",
+        "declared": 0.18,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b11_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.surge_damping_rel_error",
+        "declared": 0.402,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_surge_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_surge_damping_rel_error",
+        "declared": 0.402,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_fz_1",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1.excitation_force_z_rel_error",
+        "declared": 0.0667,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_16_vertical_force_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub1_excitation_force_z_rel_error",
+        "declared": 0.0667,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_kappa_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.condition_number",
+        "declared": 3.052,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_condition_number",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_condition_number",
+        "declared": 3.052,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a33_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.heave_added_mass_rel_error",
+        "declared": 0.0297,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_heave_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_heave_added_mass_rel_error",
+        "declared": 0.0297,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b33_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.heave_damping_rel_error",
+        "declared": 0.045,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_heave_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_heave_damping_rel_error",
+        "declared": 0.045,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a11_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.surge_added_mass_rel_error",
+        "declared": 0.0505,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_surge_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_surge_added_mass_rel_error",
+        "declared": 0.0505,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b11_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.surge_damping_rel_error",
+        "declared": 0.13,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_surge_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_surge_damping_rel_error",
+        "declared": 0.13,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_fz_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.excitation_force_z_rel_error",
+        "declared": 0.0221,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_vertical_force_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_excitation_force_z_rel_error",
+        "declared": 0.0221,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_a33_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.observed_order_a33",
+        "declared": 2.23,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_order_a33",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_observed_order_a33",
+        "declared": 2.23,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_b33_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.observed_order_b33",
+        "declared": 1.59,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_order_b33",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_observed_order_b33",
+        "declared": 1.59,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_a11_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.observed_order_a11",
+        "declared": 2.04,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_order_a11",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_observed_order_a11",
+        "declared": 2.04,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_fz_2",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2.observed_order_fz",
+        "declared": 1.77,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_64_order_fz",
+        "group": "hulme_hemisphere",
+        "quantity": "sub2_observed_order_fz",
+        "declared": 1.77,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_kappa_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.condition_number",
+        "declared": 2.783,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_condition_number",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_condition_number",
+        "declared": 2.783,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a33_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.heave_added_mass_rel_error",
+        "declared": 0.00741,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_heave_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_heave_added_mass_rel_error",
+        "declared": 0.00741,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b33_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.heave_damping_rel_error",
+        "declared": 0.0118,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_heave_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_heave_damping_rel_error",
+        "declared": 0.0118,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_a11_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.surge_added_mass_rel_error",
+        "declared": 0.013,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_surge_added_mass_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_surge_added_mass_rel_error",
+        "declared": 0.013,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_b11_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.surge_damping_rel_error",
+        "declared": 0.0353,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_surge_damping_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_surge_damping_rel_error",
+        "declared": 0.0353,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_fz_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.excitation_force_z_rel_error",
+        "declared": 0.00567,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_vertical_force_error",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_excitation_force_z_rel_error",
+        "declared": 0.00567,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_a33_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.observed_order_a33",
+        "declared": 2.06,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_order_a33",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_observed_order_a33",
+        "declared": 2.06,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_b33_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.observed_order_b33",
+        "declared": 1.98,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_order_b33",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_observed_order_b33",
+        "declared": 1.98,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_a11_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.observed_order_a11",
+        "declared": 2.01,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_order_a11",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_observed_order_a11",
+        "declared": 2.01,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_order_fz_3",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.observed_order_fz",
+        "declared": 2.02,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_order_a11",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_observed_order_a11",
+        "declared": 2.01,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_kappa_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.condition_number",
+        "declared": 2.407,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_20_condition_number",
+        "group": "submerged_sphere",
+        "quantity": "sub0_condition_number",
+        "declared": 2.407,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a33_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.heave_added_mass_rel_error",
+        "declared": 0.255,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_20_heave_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub0_heave_added_mass_rel_error",
+        "declared": 0.255,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a11_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.surge_added_mass_rel_error",
+        "declared": 0.268,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_20_surge_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub0_surge_added_mass_rel_error",
+        "declared": 0.268,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fx_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.excitation_force_x_rel_error",
+        "declared": 0.36,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_20_force_x_error",
+        "group": "submerged_sphere",
+        "quantity": "sub0_excitation_force_x_rel_error",
+        "declared": 0.36,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fz_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.excitation_force_z_rel_error",
+        "declared": 0.37,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_20_force_z_error",
+        "group": "submerged_sphere",
+        "quantity": "sub0_excitation_force_z_rel_error",
+        "declared": 0.37,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_rot_coupling_0",
+        "group": "submerged_sphere",
+        "quantity": "sub0.rotational_added_mass_max_ratio",
+        "declared": 1e-30,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_40_rotational_coupling",
+        "group": "submerged_sphere",
+        "quantity": "sub0_rotational_added_mass_max_ratio",
+        "declared": 1e-30,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_kappa_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.condition_number",
+        "declared": 2.259,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_condition_number",
+        "group": "submerged_sphere",
+        "quantity": "sub1_condition_number",
+        "declared": 2.259,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a33_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.heave_added_mass_rel_error",
+        "declared": 0.073,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_heave_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub1_heave_added_mass_rel_error",
+        "declared": 0.073,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a11_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.surge_added_mass_rel_error",
+        "declared": 0.0802,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_surge_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub1_surge_added_mass_rel_error",
+        "declared": 0.0802,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fx_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.excitation_force_x_rel_error",
+        "declared": 0.116,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_force_x_error",
+        "group": "submerged_sphere",
+        "quantity": "sub1_excitation_force_x_rel_error",
+        "declared": 0.116,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fz_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.excitation_force_z_rel_error",
+        "declared": 0.119,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_force_z_error",
+        "group": "submerged_sphere",
+        "quantity": "sub1_excitation_force_z_rel_error",
+        "declared": 0.119,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_rot_coupling_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.rotational_added_mass_max_ratio",
+        "declared": 0.00022,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_rotational_coupling",
+        "group": "submerged_sphere",
+        "quantity": "sub1_rotational_added_mass_max_ratio",
+        "declared": 0.0002151,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_a33_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.observed_order_a33",
+        "declared": 2.12,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_order_a33",
+        "group": "submerged_sphere",
+        "quantity": "sub1_observed_order_a33",
+        "declared": 2.12,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_b33_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.observed_order_b33",
+        "declared": 1.72,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_order_b33",
+        "group": "submerged_sphere",
+        "quantity": "sub1_observed_order_b33",
+        "declared": 1.72,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_a11_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.observed_order_a11",
+        "declared": 2.04,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_order_a11",
+        "group": "submerged_sphere",
+        "quantity": "sub1_observed_order_a11",
+        "declared": 2.04,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_fz_1",
+        "group": "submerged_sphere",
+        "quantity": "sub1.observed_order_fz",
+        "declared": 1.91,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_order_fz",
+        "group": "submerged_sphere",
+        "quantity": "sub1_observed_order_fz",
+        "declared": 1.91,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_kappa_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.condition_number",
+        "declared": 2.188,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_condition_number",
+        "group": "submerged_sphere",
+        "quantity": "sub2_condition_number",
+        "declared": 2.188,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a33_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.heave_added_mass_rel_error",
+        "declared": 0.0185,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_heave_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub2_heave_added_mass_rel_error",
+        "declared": 0.0185,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_a11_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.surge_added_mass_rel_error",
+        "declared": 0.0208,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_surge_added_mass_error",
+        "group": "submerged_sphere",
+        "quantity": "sub2_surge_added_mass_rel_error",
+        "declared": 0.0208,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fx_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.excitation_force_x_rel_error",
+        "declared": 0.031,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_force_x_error",
+        "group": "submerged_sphere",
+        "quantity": "sub2_excitation_force_x_rel_error",
+        "declared": 0.031,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_fz_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.excitation_force_z_rel_error",
+        "declared": 0.032,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_force_z_error",
+        "group": "submerged_sphere",
+        "quantity": "sub2_excitation_force_z_rel_error",
+        "declared": 0.032,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_rot_coupling_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.rotational_added_mass_max_ratio",
+        "declared": 2.6e-05,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_rotational_coupling",
+        "group": "submerged_sphere",
+        "quantity": "sub2_rotational_added_mass_max_ratio",
+        "declared": 2.6481e-05,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_a33_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.observed_order_a33",
+        "declared": 2.06,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_order_a33",
+        "group": "submerged_sphere",
+        "quantity": "sub2_observed_order_a33",
+        "declared": 2.06,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_b33_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.observed_order_b33",
+        "declared": 1.93,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_order_b33",
+        "group": "submerged_sphere",
+        "quantity": "sub2_observed_order_b33",
+        "declared": 1.93,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_a11_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.observed_order_a11",
+        "declared": 2.03,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_80_order_a11",
+        "group": "submerged_sphere",
+        "quantity": "sub1_observed_order_a11",
+        "declared": 2.04,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_order_fz_2",
+        "group": "submerged_sphere",
+        "quantity": "sub2.observed_order_fz",
+        "declared": 1.98,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_order_fz",
+        "group": "submerged_sphere",
+        "quantity": "sub2_observed_order_fz",
+        "declared": 1.98,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_exact_a33",
+        "group": "hulme_chief",
+        "quantity": "exact_a33",
+        "declared": 0.4007,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_exact_a33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_exact_a33",
+        "declared": 0.4007,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_exact_b33",
+        "group": "hulme_chief",
+        "quantity": "exact_b33",
+        "declared": 0.0631,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_exact_b33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_exact_b33",
+        "declared": 0.0631,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_unregularized_condition_number",
+        "group": "hulme_chief",
+        "quantity": "unregularized.condition_number",
+        "declared": 145.66,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_unregularized_condition_number",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_unregularized_condition_number",
+        "declared": 145.66,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_unregularized_a33_dimless",
+        "group": "hulme_chief",
+        "quantity": "unregularized.a33_dimless",
+        "declared": 0.3481,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_unregularized_a33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_unregularized_a33_dimless",
+        "declared": 0.3481,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_unregularized_b33_magnitude",
+        "group": "hulme_chief",
+        "quantity": "unregularized.b33_magnitude",
+        "declared": 0.1042,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_unregularized_b33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_unregularized_b33_dimless",
+        "declared": -0.1042,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_unregularized_passivity_violated",
+        "group": "hulme_chief",
+        "quantity": "unregularized.passivity_violated",
+        "declared": 1.0,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_unregularized_passivity",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_unregularized_passivity",
+        "declared": 1.0,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_chief_regularized_condition_number",
+        "group": "hulme_chief",
+        "quantity": "chief_regularized.condition_number",
+        "declared": 4.24,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_chief_condition_number",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_chief_regularized_condition_number",
+        "declared": 4.24,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_chief_regularized_a33_dimless",
+        "group": "hulme_chief",
+        "quantity": "chief_regularized.a33_dimless",
+        "declared": 0.3919,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_chief_a33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_chief_regularized_a33_dimless",
+        "declared": 0.3919,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_chief_chief_regularized_b33_dimless",
+        "group": "hulme_chief",
+        "quantity": "chief_regularized.b33_dimless",
+        "declared": 0.0687,
+        "kind": "value",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_chief_2_58_chief_b33",
+        "group": "hulme_chief",
+        "quantity": "ka2.58_chief_regularized_b33_dimless",
+        "declared": 0.0687,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_kochin_heave_3_bound",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.far_field_damping_rel_diff_heave",
+        "declared": 0.000545,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_near_far_damping_closure",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_far_field_damping_rel_diff_heave",
+        "declared": 0.000545,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_haskind_x_3_bound",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.haskind_reciprocity_rel_diff_x",
+        "declared": 0.000209,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_haskind_surge",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_haskind_reciprocity_rel_diff_x",
+        "declared": 0.000209,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "hulme_haskind_z_3_bound",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3.haskind_reciprocity_rel_diff_z",
+        "declared": 0.000809,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "hulme_hemisphere_256_haskind_heave",
+        "group": "hulme_hemisphere",
+        "quantity": "sub3_haskind_reciprocity_rel_diff_z",
+        "declared": 0.000809,
+        "kind": "value",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_kochin_heave_2_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2.far_field_damping_rel_diff_heave",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_kochin_heave_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2_far_field_damping_rel_diff_heave",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_haskind_x_2_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2.haskind_reciprocity_rel_diff_x",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_kochin_heave_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2_far_field_damping_rel_diff_heave",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      }
+    },
+    {
+      "branch": {
+        "key": "sphere_haskind_z_2_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2.haskind_reciprocity_rel_diff_z",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      },
+      "merged": {
+        "key": "submerged_sphere_320_kochin_heave_bound",
+        "group": "submerged_sphere",
+        "quantity": "sub2_far_field_damping_rel_diff_heave",
+        "declared": 0.004,
+        "kind": "upper",
+        "tier": "standard"
+      }
+    }
+  ]
+}

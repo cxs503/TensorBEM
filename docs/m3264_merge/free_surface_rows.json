@@ -1,0 +1,1475 @@
+{
+  "summary": {
+    "checked": 72,
+    "passed": 72,
+    "drifted": 0,
+    "drifted_keys": [],
+    "worst_relative_deviation": 0.9999999999975083,
+    "worst_value_relative_deviation": 0.00378677870019862,
+    "verdict": "PASS"
+  },
+  "registry_size": 91,
+  "free_surface_rows": 69,
+  "rows": [
+    {
+      "key": "hulme_hemisphere_16_heave_added_mass_error",
+      "description": "A33' relative error at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.12,
+      "measured": 0.12012810014703698,
+      "relative_deviation": 0.001067501225308215,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_16_heave_damping_error",
+      "description": "B33' relative error at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.122,
+      "measured": 0.12189977674905007,
+      "relative_deviation": -0.0008215020569665903,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_16_surge_added_mass_error",
+      "description": "A11' relative error at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.18,
+      "measured": 0.18023724418320536,
+      "relative_deviation": 0.0013180232400298061,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_16_surge_damping_error",
+      "description": "B11' relative error at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.402,
+      "measured": 0.4024097060515509,
+      "relative_deviation": 0.0010191692824648864,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_16_vertical_force_error",
+      "description": "Fz relative error at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0667,
+      "measured": 0.06671639860233952,
+      "relative_deviation": 0.0002458561070393745,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_16_condition_number",
+      "description": "condition number at 16 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 3.893,
+      "measured": 3.8925506264896836,
+      "relative_deviation": -0.00011543116113952052,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_heave_added_mass_error",
+      "description": "A33' relative error at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0297,
+      "measured": 0.02973591800839022,
+      "relative_deviation": 0.0012093605518592068,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_heave_damping_error",
+      "description": "B33' relative error at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.045,
+      "measured": 0.0450225113637059,
+      "relative_deviation": 0.0005002525267978126,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_surge_added_mass_error",
+      "description": "A11' relative error at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0505,
+      "measured": 0.05050798435588557,
+      "relative_deviation": 0.00015810605713993304,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_surge_damping_error",
+      "description": "B11' relative error at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.13,
+      "measured": 0.13049228123102583,
+      "relative_deviation": 0.00378677870019862,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_vertical_force_error",
+      "description": "Fz relative error at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0221,
+      "measured": 0.022094068100671525,
+      "relative_deviation": -0.00026841173432022434,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_condition_number",
+      "description": "condition number at 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 3.052,
+      "measured": 3.0515487523933436,
+      "relative_deviation": -0.00014785308212860116,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_order_a33",
+      "description": "observed order of A33', 16 -> 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.23,
+      "measured": 2.234179228700528,
+      "relative_deviation": 0.0018740935876807193,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_order_b33",
+      "description": "observed order of B33', 16 -> 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.59,
+      "measured": 1.5938400485093713,
+      "relative_deviation": 0.0024151248486611646,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_order_a11",
+      "description": "observed order of A11', 16 -> 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.04,
+      "measured": 2.035659945142291,
+      "relative_deviation": -0.002127477871426006,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_order_b11",
+      "description": "observed order of B11', 16 -> 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.8021,
+      "measured": 1.8020558782321292,
+      "relative_deviation": -2.4483529144237584e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_64_order_fz",
+      "description": "observed order of Fz, 16 -> 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.77,
+      "measured": 1.7684279790689237,
+      "relative_deviation": -0.0008881474186871946,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_heave_added_mass_error",
+      "description": "A33' relative error at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.00741,
+      "measured": 0.007405440541471733,
+      "relative_deviation": -0.0006153115422762354,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_heave_damping_error",
+      "description": "B33' relative error at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0118,
+      "measured": 0.01181192783863598,
+      "relative_deviation": 0.0010108337827101884,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_surge_added_mass_error",
+      "description": "A11' relative error at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.013,
+      "measured": 0.013038378960299251,
+      "relative_deviation": 0.0029522277153270727,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_surge_damping_error",
+      "description": "B11' relative error at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0353,
+      "measured": 0.03527451400663637,
+      "relative_deviation": -0.0007219828148336025,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_vertical_force_error",
+      "description": "Fz relative error at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.00567,
+      "measured": 0.005667905840101258,
+      "relative_deviation": -0.0003693403701485087,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_condition_number",
+      "description": "condition number at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.783,
+      "measured": 2.78287825558641,
+      "relative_deviation": -4.3745746888221086e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_a33",
+      "description": "observed order of A33', 64 -> 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.06,
+      "measured": 2.05917114611911,
+      "relative_deviation": -0.00040235625285935334,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_b33",
+      "description": "observed order of B33', 64 -> 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.98,
+      "measured": 1.982014890025804,
+      "relative_deviation": 0.0010176212251536,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_a11",
+      "description": "observed order of A11', 64 -> 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.01,
+      "measured": 2.0059839284095102,
+      "relative_deviation": -0.0019980455674077397,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_b11",
+      "description": "observed order of B11', 64 -> 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.9377,
+      "measured": 1.9377258540482194,
+      "relative_deviation": 1.3342647581885885e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_order_fz",
+      "description": "observed order of Fz, 64 -> 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 10",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.02,
+      "measured": 2.0152496421519017,
+      "relative_deviation": -0.0023516623010387608,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_near_far_damping_closure",
+      "description": "near-field vs Kochin far-field heave damping difference at 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 running text",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.000545,
+      "measured": 0.0005447827675709889,
+      "relative_deviation": -0.0003985916128643997,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_haskind_surge",
+      "description": "Haskind reciprocity difference, surge, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 running text",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.000209,
+      "measured": 0.00020891813552235155,
+      "relative_deviation": -0.0003916960653036214,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_hemisphere_256_haskind_heave",
+      "description": "Haskind reciprocity difference, heave, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 running text",
+      "group": "hulme_hemisphere",
+      "parameters": {
+        "subdivisions": [
+          1,
+          2,
+          3
+        ],
+        "ka": 1.0
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.000809,
+      "measured": 0.0008085367576005749,
+      "relative_deviation": -0.0005726111241348607,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_unregularized_condition_number",
+      "description": "unregularized BIE condition number at Ka=2.58, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 145.66,
+      "measured": 145.65862687433562,
+      "relative_deviation": -9.426923413238433e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_unregularized_a33",
+      "description": "unregularized A33' at Ka=2.58, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.3481,
+      "measured": 0.34806205885162744,
+      "relative_deviation": -0.00010899496803383447,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_unregularized_b33",
+      "description": "unregularized B33' at Ka=2.58, 256 panels (non-physical negative)",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": -0.1042,
+      "measured": -0.10415462852558684,
+      "relative_deviation": 0.00043542681778468246,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_chief_condition_number",
+      "description": "CHIEF-regularized condition number at Ka=2.58, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 4.24,
+      "measured": 4.244971303652851,
+      "relative_deviation": 0.001172477276615731,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_chief_a33",
+      "description": "CHIEF-regularized A33' at Ka=2.58, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.3919,
+      "measured": 0.3919084438208462,
+      "relative_deviation": 2.154585569327236e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_chief_b33",
+      "description": "CHIEF-regularized B33' at Ka=2.58, 256 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0687,
+      "measured": 0.06870788329461958,
+      "relative_deviation": 0.00011474955778135268,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_20_heave_added_mass_error",
+      "description": "A33' relative error at 20 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.255,
+      "measured": 0.2549667474006816,
+      "relative_deviation": -0.00013040235026828175,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_20_surge_added_mass_error",
+      "description": "A11' relative error at 20 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.268,
+      "measured": 0.2679942590131578,
+      "relative_deviation": -2.1421592694758853e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_20_force_x_error",
+      "description": "horizontal excitation force relative error at 20 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.36,
+      "measured": 0.36029014823478045,
+      "relative_deviation": 0.0008059673188346193,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_20_force_z_error",
+      "description": "vertical excitation force relative error at 20 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.37,
+      "measured": 0.36977052909136576,
+      "relative_deviation": -0.000620191644957386,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_20_condition_number",
+      "description": "condition number at 20 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.407,
+      "measured": 2.407465553503791,
+      "relative_deviation": 0.00019341649513542202,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_heave_added_mass_error",
+      "description": "A33' relative error at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.073,
+      "measured": 0.0729881047456501,
+      "relative_deviation": -0.00016294868972465933,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_surge_added_mass_error",
+      "description": "A11' relative error at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0802,
+      "measured": 0.08016429776590614,
+      "relative_deviation": -0.0004451650136390771,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_force_x_error",
+      "description": "horizontal excitation force relative error at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.116,
+      "measured": 0.11594161971983795,
+      "relative_deviation": -0.000503278277259112,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_force_z_error",
+      "description": "vertical excitation force relative error at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.119,
+      "measured": 0.11934619738279592,
+      "relative_deviation": 0.0029092217041674488,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_condition_number",
+      "description": "condition number at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.259,
+      "measured": 2.258714554852114,
+      "relative_deviation": -0.00012635907387604096,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_rotational_coupling",
+      "description": "sphere-centre rotational coupling ratio at 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0002151,
+      "measured": 0.00021509883822866093,
+      "relative_deviation": -5.401075495445206e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_order_a33",
+      "description": "observed order of A33', 20 -> 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.12,
+      "measured": 2.1165479890606136,
+      "relative_deviation": -0.0016283070468804332,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_order_b33",
+      "description": "observed order of B33', 20 -> 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.72,
+      "measured": 1.7158637111509416,
+      "relative_deviation": -0.002404819098289748,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_order_a11",
+      "description": "observed order of A11', 20 -> 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.04,
+      "measured": 2.042181042736688,
+      "relative_deviation": 0.001069138596415773,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_80_order_fz",
+      "description": "observed order of Fz, 20 -> 80 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.91,
+      "measured": 1.9135248601497852,
+      "relative_deviation": 0.0018454765182121771,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_heave_added_mass_error",
+      "description": "A33' relative error at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0185,
+      "measured": 0.018508892187259006,
+      "relative_deviation": 0.0004806587707571265,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_surge_added_mass_error",
+      "description": "A11' relative error at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0208,
+      "measured": 0.020765722298705085,
+      "relative_deviation": -0.0016479664084093138,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_force_x_error",
+      "description": "horizontal excitation force relative error at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.031,
+      "measured": 0.03100047197268868,
+      "relative_deviation": 1.5224925441338318e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_force_z_error",
+      "description": "vertical excitation force relative error at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.032,
+      "measured": 0.03197229226250085,
+      "relative_deviation": -0.0008658667968485575,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_condition_number",
+      "description": "condition number at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.188,
+      "measured": 2.1879938690916583,
+      "relative_deviation": -2.802060485326682e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_rotational_coupling",
+      "description": "sphere-centre rotational coupling ratio at 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.6481e-05,
+      "measured": 2.648089431086153e-05,
+      "relative_deviation": -3.9911309417265934e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_order_a33",
+      "description": "observed order of A33', 80 -> 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.06,
+      "measured": 2.061973475376134,
+      "relative_deviation": 0.0009579977554048616,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_order_b33",
+      "description": "observed order of B33', 80 -> 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.93,
+      "measured": 1.9289780646984946,
+      "relative_deviation": -0.0005295001562203599,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_order_a11",
+      "description": "observed order of A11', 80 -> 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 2.03,
+      "measured": 2.030007005400829,
+      "relative_deviation": 3.4509363690677495e-06,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_order_fz",
+      "description": "observed order of Fz, 80 -> 320 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.98,
+      "measured": 1.9794876753296529,
+      "relative_deviation": -0.0002587498335086463,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_exact_a33",
+      "description": "Hulme exact heave added mass at Ka=2.58 (reference value)",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.4007,
+      "measured": 0.4007373824061046,
+      "relative_deviation": 9.329275294390971e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_exact_b33",
+      "description": "Hulme exact heave damping at Ka=2.58 (reference value)",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 0.0631,
+      "measured": 0.06312197075596611,
+      "relative_deviation": 0.00034818947648344395,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "hulme_chief_2_58_unregularized_passivity",
+      "description": "1.0 = the unregularised scheme radiates energy at Ka=2.58",
+      "source": "docs/marine_bem_benchmarks.md section 4.10 table 11",
+      "group": "hulme_chief",
+      "parameters": {
+        "subdivision": 3,
+        "ka_values": [
+          2.58
+        ]
+      },
+      "tier": "standard",
+      "comparison": "value",
+      "declared": 1.0,
+      "measured": 1.0,
+      "relative_deviation": 0.0,
+      "tolerance": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_40_rotational_coupling",
+      "description": "rotational added-mass coupling at the coarsest mesh is zero",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 table 12",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "upper",
+      "declared": 1e-20,
+      "measured": 2.4916296163167963e-32,
+      "relative_deviation": -0.9999999999975083,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_kochin_heave_bound",
+      "description": "far/near-field heave-damping closure stays under 0.4%",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 (prose)",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "upper",
+      "declared": 0.004,
+      "measured": 0.003760615098969307,
+      "relative_deviation": -0.05984622525767331,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_haskind_x_bound",
+      "description": "Haskind reciprocity residual, surge, stays under 0.4%",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 (prose)",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "upper",
+      "declared": 0.004,
+      "measured": 0.00030780378460677603,
+      "relative_deviation": -0.923049053848306,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "submerged_sphere_320_haskind_z_bound",
+      "description": "Haskind reciprocity residual, heave, stays under 0.4%",
+      "source": "docs/marine_bem_benchmarks.md section 4.11 (prose)",
+      "group": "submerged_sphere",
+      "parameters": {
+        "subdivisions": [
+          0,
+          1,
+          2
+        ],
+        "ka": 0.8,
+        "submergence": 1.5
+      },
+      "tier": "standard",
+      "comparison": "upper",
+      "declared": 0.004,
+      "measured": 0.0004500947044312592,
+      "relative_deviation": -0.8874763238921852,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    }
+  ]
+}

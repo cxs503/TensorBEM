@@ -11,6 +11,11 @@ away from the number the code produces. These tests check three layers:
   extrapolation used as evidence for the reference solution recovers a
   synthetic first-order family exactly.
 
+The 3-D free-surface tables (``docs/marine_bem_benchmarks.md`` sections 4.10
+and 4.11) are recomputed once per session and shared by the tests that read
+them: a 320-panel Kelvin-Green-function solve is seconds rather than minutes, so
+they stay on the ``standard`` tier and a plain ``pytest`` run guards them.
+
 The 256-panel extrapolation study is skipped unless ``TENSORBEM_HEAVY_TESTS``
 is set; it is minutes of dense solves and its purpose is a published evidence
 table, not a regression gate.
@@ -38,6 +43,19 @@ HEAVY = pytest.mark.skipif(
     not os.environ.get("TENSORBEM_HEAVY_TESTS"),
     reason="set TENSORBEM_HEAVY_TESTS=1 to run the multi-minute refinement study",
 )
+
+#: The groups whose numbers are the 3-D free-surface tables 10-12.
+FREE_SURFACE_3D = ("hulme_chief", "hulme_hemisphere", "submerged_sphere")
+
+
+@pytest.fixture(scope="session")
+def standard_tier_report():
+    """Every ``standard`` row, recomputed once for the whole session.
+
+    The 3-D free-surface rows cost about a minute together; the 2-D rows are
+    milliseconds. Recomputing per test would pay the minute three times.
+    """
+    return check(tiers=("standard",))
 
 
 @HEAVY
@@ -113,9 +131,9 @@ def test_fast_tier_reproduces_the_documented_numbers():
     assert report["summary"]["checked"] >= 6
 
 
-def test_standard_tier_reproduces_the_documented_ursell_numbers():
+def test_standard_tier_reproduces_the_documented_ursell_numbers(standard_tier_report):
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = standard_tier_report
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -137,22 +155,131 @@ def test_standard_tier_reproduces_the_documented_ursell_numbers():
     ]
 
 
-def test_3d_free_surface_rows_are_guarded_by_the_default_tiers():
-    """Tables 10-12 quote 62 numbers; all of them must run in a plain CI sweep.
+def test_standard_tier_reproduces_the_documented_free_surface_3d_numbers(
+    standard_tier_report,
+):
+    """Tables 10-12 of ``docs/marine_bem_benchmarks.md``, cell by cell.
 
-    The 3-D free-surface solves cost seconds, not the minutes that put a row in
-    the heavy tier, so no quoted 3-D free-surface number may hide behind
-    ``TENSORBEM_HEAVY_TESTS``.
+    This block was the last set of quoted results that no test read. The 3-D
+    Kelvin-Green-function solver, its two convergence tables (Hulme's floating
+    hemisphere at ``Ka = 1``, the Wang/Linton submerged sphere at ``f/a = 1.5``)
+    and the CHIEF regularisation comparison of table 11 were pinned only by spot
+    assertions inside the benchmark tests: retune the wave kernel, the mesh
+    generator or the CHIEF point heuristic and the documents would have kept
+    their numbers while the solver moved.
     """
-    groups = {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
-    rows = [entry for entry in DECLARED_NUMBERS if entry.group in groups]
-    assert len(rows) >= 60
-    assert {entry.group for entry in rows} == groups
-    assert all(entry.tier in {"fast", "standard"} for entry in rows)
+    rows = [r for r in standard_tier_report["checks"] if r["group"] in FREE_SURFACE_3D]
+    assert len(rows) == 69
+    assert {r["group"] for r in rows} == set(FREE_SURFACE_3D)
+    drifted = [
+        (r["key"], r["declared"], r["measured"])
+        for r in rows
+        if r["verdict"] != "PASS"
+    ]
+    assert not drifted, drifted
+
+    values = [abs(r["relative_deviation"]) for r in rows if r["comparison"] == "value"]
+    # The two-significant-figure cells are the loosest thing in the tables; a
+    # four-figure cell that moves by more than a percent is a solver change.
+    assert max(values) < 5.0e-2
+    four_figure = [
+        abs(r["relative_deviation"])
+        for r in rows
+        if r["comparison"] == "value"
+        and "rotational_coupling" not in r["key"]
+        and "kappa" not in r["key"]
+    ]
+    assert max(four_figure) < 5.0e-3
+
+
+def test_free_surface_3d_rows_live_on_the_standard_tier():
+    """Guards the guard: a re-tiering must not silently stop pytest reading them.
+
+    This is the merge of the two versions of the guard: main counted the block
+    (62 rows then) and required every row to cite the document and carry a unique
+    key, the branch required the whole family to sit on the ``standard`` tier and
+    to be fed by one refinement study per family. All of it is asserted here, on
+    the 69 rows of the merged registry.
+    """
+    rows = [entry for entry in DECLARED_NUMBERS if entry.group in FREE_SURFACE_3D]
+    assert len(rows) == 69
+    assert {entry.group for entry in rows} == set(FREE_SURFACE_3D)
+    assert {entry.tier for entry in rows} == {"standard"}
+    # every cell must cite the document it guards, and no cell may appear twice
     assert all("marine_bem_benchmarks.md" in entry.source for entry in rows)
     assert len({entry.key for entry in rows}) == len(rows)
+    # One refinement study feeds every cell of its table, including the observed
+    # orders, which need two meshes; quoting one level at a time would both cost
+    # more and lose those rows.
+    levels: dict[str, set[int]] = {}
+    for entry in rows:
+        for level in entry.parameters.get("subdivisions", ()):
+            levels.setdefault(entry.group, set()).add(int(level))
+    assert levels["hulme_hemisphere"] == {1, 2, 3}
+    assert levels["submerged_sphere"] == {0, 1, 2}
+    assert {
+        entry.parameters["subdivision"] for entry in rows if entry.group == "hulme_chief"
+    } == {3}
 
 
+def test_a_perturbed_free_surface_3d_cell_is_reported_as_drift():
+    """Negative control: the 3-D rows are judged, not merely recomputed."""
+    entries = tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"
+    )[:2]
+    perturbed = entries[1]
+
+    def runner(group, parameters):
+        values = {entry.quantity: entry.declared for entry in entries}
+        values[perturbed.quantity] = perturbed.declared * 1.2
+        return values
+
+    report = check(tiers=("standard",), entries=entries, runner=runner)
+    assert report["summary"]["drifted_keys"] == [perturbed.key]
+    assert report["summary"]["verdict"] == "DRIFT"
+
+
+def test_table11_reference_and_sign_cells_are_declared(standard_tier_report):
+    """The merge of the two registries keeps every cell either side had pinned.
+
+    Main's literal table 10-12 block and the m3264 branch's generated one quote
+    the same tables; main already carried every drift-guarded cell except the
+    exact reference values behind table 11, the sign policy of the unregularised
+    scheme and the prose bounds of section 4.11, which are re-declared here so
+    the conflict resolution loses nothing.
+    """
+    by_key = {row["key"]: row for row in standard_tier_report["checks"]}
+    for key in (
+        "hulme_chief_2_58_exact_a33",
+        "hulme_chief_2_58_exact_b33",
+        "hulme_chief_2_58_unregularized_passivity",
+    ):
+        assert key in by_key, key
+        assert by_key[key]["verdict"] == "PASS", by_key[key]
+    # Hulme's exact A33' at Ka = 2.58 is the same number the sign test uses.
+    assert abs(by_key["hulme_chief_2_58_exact_a33"]["measured"] - 0.4007373824061046) < 1.0e-12
+    assert by_key["hulme_chief_2_58_unregularized_passivity"]["measured"] == 1.0
+
+    upper = {
+        row["key"]: row
+        for row in standard_tier_report["checks"]
+        if row["comparison"] == "upper"
+    }
+    # The 2-D Ursell family has its own upper-bound row; the four added here are
+    # the prose bounds and the numerically-zero coupling of tables 11-12.
+    expected = {
+        "submerged_sphere_20_rotational_coupling",
+        "submerged_sphere_320_kochin_heave_bound",
+        "submerged_sphere_320_haskind_x_bound",
+        "submerged_sphere_320_haskind_z_bound",
+    }
+    assert expected <= set(upper)
+    assert all(upper[key]["verdict"] == "PASS" for key in expected)
+
+
+
+
+@HEAVY
 def test_chief_regularisation_restores_passive_heave_damping():
     """Table 11's claim, checked on the signs rather than on a quoted value.
 
@@ -177,7 +304,6 @@ def test_chief_regularisation_restores_passive_heave_damping():
     )
 
 
-@HEAVY
 def test_documented_1280_panel_harmonic_rows_are_reproduced():
     """Table 3 of docs/classical_benchmarks.md quotes 1280-panel numbers.
 
