@@ -60,6 +60,8 @@ ARTIFACT_GATES: dict[tuple[str, str], str] = {
         "docs/m2952/outputs/finite_depth_refinement/benchmark.json"
     ),
     ("test_mixed_boundary.py", "ARTIFACT"): "docs/mixed_boundary/outputs/study.json",
+    ("test_lifting_camber.py", "ARTIFACT"): "docs/lifting_camber_artifact/benchmark.json",
+    ("test_near_surface_three_way.py", "ARTIFACT"): "docs/m3530/near_surface_three_way.json",
     ("test_near_surface_band.py", "STUDY"): "docs/m3383/near_surface_band_study.json",
     ("test_three_dimensional_doc_pins.py", "pins.PINS_FILE"): "docs/three_dimensional_pins.json",
     ("test_ursell_quadrature_convergence.py", "summary_path"): "docs/ursell_quadrature_study/summary.json",
