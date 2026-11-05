@@ -229,6 +229,33 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """Alias of :meth:`fluid_contains`.
+
+        ``tensorbem.solver.evaluate_interior_field`` is duck-typed on the panel
+        arrays of a mesh and asks it for ``contains_point`` and
+        ``boundary_clearance`` before it evaluates anything.  A multi-loop mesh
+        that answers half of that protocol raises ``AttributeError`` *inside* the
+        guard, so the guard never runs and every multi-component field
+        evaluation dies with an unrelated error.
+        """
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to any loop's panels."""
+        targets = np.asarray(points, dtype=float)
+        if targets.ndim != 2 or targets.shape[1] != 2:
+            raise ValueError("points must have shape (M, 2)")
+        lengths_squared = np.sum(self.vectors**2, axis=1)
+        offsets = targets[:, None, :] - self.vertices[None, :, :]
+        projection = np.clip(
+            np.einsum("mnk,nk->mn", offsets, self.vectors) / lengths_squared[None, :],
+            0.0,
+            1.0,
+        )
+        closest = self.vertices[None, :, :] + projection[:, :, None] * self.vectors[None, :, :]
+        return np.min(np.linalg.norm(targets[:, None, :] - closest, axis=2), axis=1)
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,

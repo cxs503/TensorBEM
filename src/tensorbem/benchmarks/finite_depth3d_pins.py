@@ -72,6 +72,13 @@ NU = 0.6
 G = 9.80665
 #: Absolute floor for rows whose printed value is ``0.000e+00``.
 ZERO_FLOOR = 5.0e-16
+#: Absolute floor for rows whose printed value is a solver *residual* sitting on
+#: the roundoff floor (``1e-15``).  A relative comparison of two roundoff-level
+#: numbers measures the summation order of the platform, not the physics: the
+#: same code prints 1.26e-15 on one BLAS and 1.48e-15 on another (rel 0.17).
+#: Such rows are therefore judged against this absolute floor; a real
+#: regression (residual jumping to 1e-10) still drifts by orders of magnitude.
+RESIDUAL_ATOL = 1.0e-13
 
 
 @dataclass(frozen=True)
@@ -83,13 +90,17 @@ class Row:
     recomputed: float
     rtol: float
     verdict: str
+    atol: float = 0.0
 
     @property
     def rel_deviation(self) -> float:
         scale = abs(self.declared)
         if scale < 1e-300:
             return abs(self.recomputed) if abs(self.recomputed) <= ZERO_FLOOR else math.inf
-        return abs(self.recomputed - self.declared) / scale
+        difference = abs(self.recomputed - self.declared)
+        if self.atol > 0.0:
+            difference = max(0.0, difference - self.atol)
+        return difference / scale
 
 
 # ---------------------------------------------------------------------------
@@ -242,11 +253,16 @@ def truncation_ladder(modes=(40, 80, 160, 320, 640)):
 # ---------------------------------------------------------------------------
 # the pinned tables
 # ---------------------------------------------------------------------------
-def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]:
+def _judge(
+    declared: float, recomputed: float, rtol: float, atol: float = 0.0
+) -> tuple[str, float]:
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
-    dev = abs(recomputed - declared) / abs(declared)
+    difference = abs(recomputed - declared)
+    if atol > 0.0 and difference <= atol:
+        return "PASS", 0.0
+    dev = difference / abs(declared)
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 
 
@@ -255,9 +271,17 @@ def collect(doc_path: Path = DOC_PATH) -> list[Row]:
     sections = split_sections(text)
     rows: list[Row] = []
 
-    def add(table: str, key: str, quantity: str, declared: float, recomputed: float, rtol: float):
-        verdict, _ = _judge(declared, recomputed, rtol)
-        rows.append(Row(table, key, quantity, declared, recomputed, rtol, verdict))
+    def add(
+        table: str,
+        key: str,
+        quantity: str,
+        declared: float,
+        recomputed: float,
+        rtol: float,
+        atol: float = 0.0,
+    ):
+        verdict, _ = _judge(declared, recomputed, rtol, atol)
+        rows.append(Row(table, key, quantity, declared, recomputed, rtol, verdict, atol))
 
     # --- 3.1 dispersion ladder ------------------------------------------------
     section = next((v for k, v in sections.items() if k.startswith("3.1")), [])
@@ -294,8 +318,24 @@ def collect(doc_path: Path = DOC_PATH) -> list[Row]:
         values = _numbers(" ".join(cells[1:]))
         if len(values) < 2:
             continue
-        add("3.2", f"h={depth:g}", "free_surface_residual", values[0], bc[depth]["free_surface"], 5e-3)
-        add("3.2", f"h={depth:g}", "bottom_residual", values[1], bc[depth]["bottom"], 5e-3)
+        add(
+            "3.2",
+            f"h={depth:g}",
+            "free_surface_residual",
+            values[0],
+            bc[depth]["free_surface"],
+            5e-3,
+            RESIDUAL_ATOL,
+        )
+        add(
+            "3.2",
+            f"h={depth:g}",
+            "bottom_residual",
+            values[1],
+            bc[depth]["bottom"],
+            5e-3,
+            RESIDUAL_ATOL,
+        )
 
     # --- 3.3 deep-water limit ------------------------------------------------
     section = next((v for k, v in sections.items() if k.startswith("3.3")), [])

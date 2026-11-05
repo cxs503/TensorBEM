@@ -200,19 +200,57 @@ For the two paths to agree within 5%, we would need:
 2. No numerical integration errors
 3. Thin-ship approximation valid
 
-The measured facts (all re-runnable, `tests/test_wigley_pressure_path_audit.py`):
-1. **Parity**: `dphi_dx(x, z)` on the centreplane is *even* in `x` (source
-   density odd -> potential odd -> `phi_x` even), while the area element is
+In practice, the two paths **do not agree within 5%**, and the explanation this
+document carried until 2026-11-04 (thin-ship approximation, centreplane-versus-
+hull evaluation, numerical quadrature) was **measured and refuted**. Two
+independent audits were run in parallel and agree on the diagnosis:
+
+- the m3100 integrand audit — `docs/m3100/wigley_pressure_path_audit.md`,
+  re-runnable as `tests/test_wigley_pressure_path_audit.py`;
+- the m3322 formulation diagnosis —
+  `docs/wigley_pressure_path_diagnosis/wigley_pressure_path_diagnosis.md`,
+  re-runnable as `tensorbem.benchmarks.wigley_pressure_path_diagnosis` and
+  `tests/test_wigley_pressure_path_diagnosis.py`.
+
+The measured facts:
+
+1. **Parity: first-order pressure gives no resistance** (m3100).
+   `dphi_dx(x, z)` on the centreplane is *even* in `x` (source density odd ->
+   potential odd -> `phi_x` even), while the area element is
    `n_x dS = -b_x dx dz`, *odd* in `x`. The product is odd, so its integral over
-   `x in [-L/2, L/2]` vanishes **identically**; evaluated on an x-symmetric
-   grid it comes out at `1e-14` relative to `Rw_Kochin` (roundoff).
-2. **Centroid aliasing**: the triangulation's panel abscissae are
-   `-L/2 + h(3i+2)/3`, which admit no mirror partner (`3(i+j)+4 = 3L/h` has no
-   integer solution), so the odd integrand cannot cancel pairwise either. The
-   non-zero number the routine returns is that aliasing, and it decays like `h`.
-3. **Not a finite-B/L effect**: in the thin-ship limit `B/L = 0.1 -> 0.0125`
-   (L, Fr fixed) the ratio `Rw_pressure/Rw_Kochin` does not move towards 1; it
-   changes sign and stays order one in magnitude.
+   `x in [-L/2, L/2]` vanishes **identically**: on an x-symmetric grid the
+   routine returns `1e-14` relative to `Rw_Kochin`, i.e. roundoff.
+2. **Centroid aliasing is what the routine actually returns** (m3100). The
+   triangulation's panel abscissae are `-L/2 + h(3i+2)/3`, which admit no mirror
+   partner (`3(i+j)+4 = 3L/h` has no integer solution), so the odd integrand
+   cannot cancel pairwise either. The non-zero number the routine returns is
+   that aliasing; it decays like `h` and converges to the exact value zero
+   (measured ladder at `Fr = 0.30`, `|Rw_pressure|/Rw_Kochin`:
+   0.472 / 0.206 / 0.0729 / 0.0276 / 0.0059 for 128 / 512 / 2048 / 8192 /
+   32768 panels, sign always negative).
+3. **Not thin-ship** (m3322). Sweeping `B/L` from 0.2 down to 0.00625 (32x) at
+   fixed `L`, `T`, `Fr` leaves `Rw_pressure / Rw_kochin` **scale invariant**
+   (relative spread `5.2e-15`, both paths exactly `O(B^2)`). A thin-ship error
+   would have to fall like `O(B/L)`; the gap does not move at all.
+4. **Not quadrature** (m3322). Sweeping the `k`-integral from 128 to 16384
+   effective Gauss nodes, with and without composite panels, moves
+   `Rw_pressure` by `1.3e-13` relative: the integral is converged.
+5. **Formulation defect** (m3322). The potential the pressure path
+   differentiates is a function of `(x, z)` only, so `dphi/dy = 0` identically
+   while the hull condition requires a transverse flux (area-weighted mean
+   `1.12 m/s` at `Fr = 0.30`, i.e. `1.0` relative residual); and the same
+   potential violates the steady free-surface condition `phi_z = phi_xx/k0` with
+   a residual of `4.02x` its own `phi_z` scale, because the spectral weight
+   `k - k^2/k0` vanishes only at the band edge `k = k0`.
+
+The two `B/L` probes use different meshes (m3100: `B/L = 0.1 -> 0.0125` along its
+mesh ladder; m3322: `B/L = 0.2 -> 0.00625` at a fixed mesh), which is why m3100
+reports the ratio changing sign while m3322 finds exact `B/L` invariance. The
+fixed-mesh probe is the sharper statement; recorded interpretation (consistent
+with both probes, not separately measured): the sign of the returned number is
+set by the mesh aliasing pattern, not by `B/L`. Either way the residual lives in
+the discretisation/representation, not in the physics.
+origin/main
 
 ### Observed Discrepancy
 
@@ -239,33 +277,51 @@ Facts measured over the whole ladder (Fr = 0.25/0.30/0.35, 4×2 → 24×12):
   UNSUPPORTED by `tests/test_wigley_verification.py`.
 
 Consequence: the pressure path is an *audited* path, not a verification path
-for the Kochin route — it evaluates Michell's potential on the actual hull
-surface, which the thin-ship theory does not provide. A valid second path needs
-a Rankine panel method with free-surface panels (Dawson), which this module
-does not implement.
+for the Kochin route — its integrand is the `y`-integrated Michell potential
+multiplied by a non-symmetric area element, and the measured cause is the
+formulation defect below, not the accuracy of the thin-ship approximation. A
+valid second path needs a quadratic near-field pressure term or a Rankine
+panel method with free-surface panels (Dawson), neither of which this module
+implements.
 
 ### Root Cause Analysis (measured, m3100)
 
 `wave_resistance_pressure` integrates the steady linearised Bernoulli pressure
 `p = -rho U phi_x` with the *wave part only* of the Michell potential, evaluated
-on the centreplane `y = 0`, over both sides of the hull. Two consequences:
+on the centreplane `y = 0`, over both sides of the hull. Consequences, measured
+by both audits:
 
 1. **First-order pressure gives zero resistance** for a fore-aft symmetric hull
    (the parity argument above). The resistance of a wave-making body is a
    second-order quantity in the disturbance: the near-field route needs the
-   quadratic term `(rho/2)|grad phi|^2` plus the waterline term, not `p = -rho U phi_x`.
-2. **The potential used is y-independent**, while the area element it is
-   multiplied by is not symmetric; the mismatch is what the routine reports.
-   Measured ladder at Fr = 0.30 (`|Rw_pressure|/Rw_Kochin`): 0.472 (128 panels),
-   0.206 (512), 0.0729 (2048), 0.0276 (8192), 0.0059 (32768) -- sign always
-   negative, residual `prop h`, i.e. converging to the exact value zero.
+   quadratic term `(rho/2)|grad phi|^2` plus the waterline term, not
+   `p = -rho U phi_x`.
+2. **The potential used is `y`-independent** (the `y`-integrated, 2-D reduction),
+   while the area element it is multiplied by is not symmetric. It satisfies
+   neither the 3-D body condition (`dphi/dy = 0` where `U dY/dx` is required:
+   area-weighted mean required flux `1.12 m/s` at `Fr = 0.30`, relative residual
+   `1.0`) nor the free-surface condition on its `k > k0` band (residual `4.02x`
+   the `phi_z` scale; the spectral weight `k - k^2/k0` vanishes only at the band
+   edge `k = k0`). The mismatch between the `y`-independent potential and the
+   area element is what the routine reports: the artefact decays like `h` towards
+   the exact value zero.
+3. Because of 1-2, the discrepancy is a property of the *representation*, not a
+   statement about how good the thin-ship approximation is - which also means
+   the two-path comparison cannot be used as evidence about Michell's validity,
+   nor as an acceptance test.
 
-So the two-path criterion cannot be used as an acceptance test at all. A valid
-second path needs either (a) the quadratic near-field pressure term with the
-total (local + wave) potential and its gradient on the hull, or (b) a Rankine
-panel method with free-surface panels (Dawson). Neither is implemented; the
-Kochin far-field route remains the only verified route, and it is verified
-against its own quadrature reference and the analytic `lambda`-integral yardstick.
+To achieve better agreement, one would need a near-field route that actually
+carries resistance and satisfies both conditions:
+- The quadratic near-field pressure term `(rho/2)|grad phi|^2` with the total
+  (local + wave) potential and its gradient on the hull, or
+- A Rankine panel method with free-surface panels (Dawson method), or
+- The full Havelock free-surface Green function with the radiation-condition
+  pole treated, instead of the `y`-integrated reduction currently coded.
+
+Neither is implemented; the Kochin far-field route remains the only verified
+route, and it is verified against its own quadrature reference and the analytic
+`lambda`-integral yardstick.
+origin/main
 
 ## Mesh Convergence
 
@@ -284,7 +340,8 @@ Typical convergence behavior:
 
 The observed convergence rate for the pressure path is typically:
 - **Order**: 1.5-2.0 (close to theoretical O(h²))
-- **Asymptotic value**: May not match Kochin path due to thin-ship approximation
+- **Asymptotic value**: converges to zero (the aliasing residual of the
+  formulation defect above), so it does not match the Kochin path
 
 ## Limitations
 

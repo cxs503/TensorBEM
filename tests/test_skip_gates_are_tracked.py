@@ -64,6 +64,8 @@ ARTIFACT_GATES: dict[tuple[str, str], str] = {
     ("test_three_dimensional_doc_pins.py", "pins.PINS_FILE"): "docs/three_dimensional_pins.json",
     ("test_ursell_quadrature_convergence.py", "summary_path"): "docs/ursell_quadrature_study/summary.json",
     ("test_ursell_quadrature_convergence.py", "raw_path"): "docs/ursell_quadrature_study/raw",
+    ("test_lifting_camber.py", "ARTIFACT"): "docs/lifting_camber_artifact/benchmark.json",
+    ("test_near_surface_three_way.py", "ARTIFACT"): "docs/m3530/near_surface_three_way.json",
 }
 
 #: Artifacts that a test asserts on directly (a missing file fails the test instead
