@@ -96,8 +96,13 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 
 ## 6. Limitations / next step
 
-* **No BEM solver yet.** Panel integration, the single/double-layer jump relations and the CHIEF/lid treatment for surface-piercing hulls in finite depth are the next increment; Garrett's truncated dock is the natural first diffraction benchmark.
-* Only $\partial G/\partial z$ is analytic; a horizontal derivative needs $K_1$/$H_1$ and belongs to the panel layer.
+* **No BEM solver yet.** Panel integration, the single/double-layer jump relations and the CHIEF/lid treatment for surface-piercing hulls in finite depth are the next increment; Garrett's truncated dock is the natural first diffraction benchmark.  The gradient prerequisite is now met, but the eigenseries carries the $1/(4\pi r)$ singularity inside the mode sum, so self-panel and near-singular quadrature still have to be built (the analogue of `tensorbem.near_singular`).
+* ~~Only $\partial G/\partial z$ is analytic; a horizontal derivative needs $K_1$/$H_1$~~ --
+  **done**: the full analytic gradient $\nabla_x G$ / $\nabla_\xi G$ is shipped
+  (`green_gradient_3d`, `green_gradient_source_3d`, with `bessel_k1` and `hankel_h1`),
+  verified against central differences of $G$, the deep-water Kelvin gradient, the
+  free-surface/bottom conditions and a panel-level $\int\partial_nG\,dS$; see
+  [finite_depth3d_gradients.md](finite_depth3d_gradients.md).
 * Constant depth, linearised potential flow; no sloping bottom, current or nonlinearity.
 * Cost grows like $h/(\pi R)$ modes; for $R\lesssim10^{-3}$ m with $h=5$ m the 40000-mode cap binds (truncation error still $<10^{-10}$).
 
