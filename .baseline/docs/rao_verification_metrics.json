@@ -1,0 +1,260 @@
+{
+  "benchmark": "hydrostatic_restoring_rao_closed_form_verification",
+  "box_hydrostatics": {
+    "geometry": {
+      "beam": 2.0,
+      "draft": 1.0,
+      "kg": 0.5,
+      "length": 4.0
+    },
+    "max_offdiagonal_restoring": 0.0,
+    "max_relative_error": 0.0,
+    "measured": {
+      "c33": 80414.53,
+      "c44": 26804.843333333327,
+      "c55": 107219.37333333332,
+      "center_of_buoyancy_z": -0.5,
+      "displaced_volume": 8.0,
+      "waterplane_area": 8.0,
+      "waterplane_moment_xx": 2.6666666666666665,
+      "waterplane_moment_yy": 10.666666666666666
+    },
+    "panel_count": 10,
+    "reference": {
+      "c33": 80414.53,
+      "c44": 26804.843333333327,
+      "c55": 107219.37333333332,
+      "center_of_buoyancy_z": -0.5,
+      "displaced_volume": 8.0,
+      "gm_longitudinal": 1.3333333333333333,
+      "gm_transverse": 0.33333333333333326,
+      "waterplane_area": 8.0,
+      "waterplane_moment_xx": 2.6666666666666665,
+      "waterplane_moment_yy": 10.666666666666666
+    },
+    "relative_error": {
+      "c33": 0.0,
+      "c44": 0.0,
+      "c55": 0.0,
+      "center_of_buoyancy_z": 0.0,
+      "displaced_volume": 0.0,
+      "waterplane_area": 0.0,
+      "waterplane_moment_xx": 0.0,
+      "waterplane_moment_yy": 0.0
+    },
+    "waterplane_centroid": [
+      -0.0,
+      -0.0
+    ]
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "hulme_crosscheck": {
+    "c33": 30773.30835242548,
+    "displaced_volume_error": 0.08858418942396099,
+    "displaced_volume_exact": 2.0943951023931953,
+    "displaced_volume_mesh": 1.9088648099141803,
+    "frequencies": [
+      {
+        "chain_coherence_max_abs": 0.0,
+        "chain_condition_number": 2.550072639073118,
+        "excitation_heave": 23921.14639955976,
+        "excitation_heave_error": 0.016163129050456037,
+        "excitation_heave_phase_error_rad": 0.0009113936632462425,
+        "excitation_heave_reference": 24314.138965408376,
+        "excitation_surge": 5414.143379590599,
+        "excitation_surge_error": 0.07830327957010301,
+        "excitation_surge_reference": 5874.105071205351,
+        "heave_added_mass": 1659.9050348603093,
+        "heave_added_mass_error": 0.02603543279056294,
+        "heave_added_mass_reference": 1704.2766141033246,
+        "heave_damping": 812.2530278320356,
+        "heave_damping_error": 0.032798981355163535,
+        "heave_damping_reference": 839.7975314067583,
+        "heave_rao_amplitude": 1.0090125549640847,
+        "impedance_residual": 3.760704411652916e-12,
+        "ka": 0.2,
+        "omega": 1.400474919446971,
+        "radiation_relative_residual": 0.0008088938044642106,
+        "surge_added_mass": 1112.3205149439596,
+        "surge_added_mass_error": 0.060545267015318815,
+        "surge_added_mass_reference": 1184.0065049330026,
+        "surge_damping": 21.055200910701075,
+        "surge_damping_error": 0.14099468380115193,
+        "surge_damping_reference": 24.511141565306776,
+        "surge_rao_amplitude": 0.8337994785530166,
+        "wavenumber": 0.2
+      },
+      {
+        "chain_coherence_max_abs": 8.829596408280667e-12,
+        "chain_condition_number": 2.9048459510849756,
+        "excitation_heave": 16904.645155490518,
+        "excitation_heave_error": 0.002276729550383763,
+        "excitation_heave_phase_error_rad": 0.0031808390696637127,
+        "excitation_heave_reference": 16943.220285793846,
+        "excitation_surge": 11882.072062753521,
+        "excitation_surge_error": 0.08064999838402766,
+        "excitation_surge_reference": 12924.42708638495,
+        "heave_added_mass": 1234.3312408239565,
+        "heave_added_mass_error": 0.019018819862867985,
+        "heave_added_mass_reference": 1258.261897186864,
+        "heave_damping": 1601.7426858046265,
+        "heave_damping_error": 0.006317640509488572,
+        "heave_damping_reference": 1611.9262564204969,
+        "heave_rao_amplitude": 1.0879942612772584,
+        "impedance_residual": 5.519442563796588e-12,
+        "ka": 0.5,
+        "omega": 2.2143452756966333,
+        "radiation_relative_residual": 0.0008365050889784265,
+        "surge_added_mass": 1285.6244921451992,
+        "surge_added_mass_error": 0.06993091853976328,
+        "surge_added_mass_reference": 1382.2892490165673,
+        "surge_damping": 401.6348603261792,
+        "surge_damping_error": 0.14371426968058504,
+        "surge_damping_reference": 469.04303797794205,
+        "surge_rao_amplitude": 0.5488641494266494,
+        "wavenumber": 0.5
+      },
+      {
+        "chain_coherence_max_abs": 0.0,
+        "chain_condition_number": 3.0515487523933436,
+        "excitation_heave": 10463.718463271663,
+        "excitation_heave_error": 0.020321959439486687,
+        "excitation_heave_phase_error_rad": 0.008583074586491523,
+        "excitation_heave_reference": 10255.310460062921,
+        "excitation_surge": 15986.963211940554,
+        "excitation_surge_error": 0.07578211187445619,
+        "excitation_surge_reference": 17297.829242803964,
+        "heave_added_mass": 892.4520928009151,
+        "heave_added_mass_error": 0.029735918008389654,
+        "heave_added_mass_reference": 919.8032879554042,
+        "heave_damping": 1745.3997498221138,
+        "heave_damping_error": 0.04502251136370644,
+        "heave_damping_reference": 1670.203015573748,
+        "heave_rao_amplitude": 1.6995499427149916,
+        "impedance_residual": 2.0550263151589862e-11,
+        "ka": 1.0,
+        "omega": 3.1315571206669692,
+        "radiation_relative_residual": 0.0011748598023846185,
+        "surge_added_mass": 1169.9014844464689,
+        "surge_added_mass_error": 0.05050798435588516,
+        "surge_added_mass_reference": 1232.1340939900722,
+        "surge_damping": 2066.291429712792,
+        "surge_damping_error": 0.13049228123102583,
+        "surge_damping_reference": 2376.3922793442157,
+        "surge_rao_amplitude": 1.3300188023535042,
+        "wavenumber": 1.0
+      }
+    ],
+    "mass": 1956.5864301620347,
+    "max_heave_added_mass_error": 0.029735918008389654,
+    "max_heave_damping_error": 0.04502251136370644,
+    "max_heave_excitation_error": 0.020321959439486687,
+    "max_impedance_residual": 2.0550263151589862e-11,
+    "max_surge_added_mass_error": 0.06993091853976328,
+    "max_surge_damping_error": 0.14371426968058504,
+    "max_surge_excitation_error": 0.08064999838402766,
+    "panel_count": 64,
+    "radius": 1.0,
+    "subdivisions": 2,
+    "waterplane_area_error": 0.025504641595567434,
+    "waterplane_area_exact": 3.141592653589793,
+    "waterplane_area_mesh": 3.061467458920718
+  },
+  "long_wave_limit": {
+    "abs_deviation": 0.009012554964084707,
+    "heave_excitation_over_rho_g_awp": 0.7773342445214978,
+    "heave_rao_amplitude": 1.0090125549640847,
+    "impedance_residual": 3.760704411652916e-12,
+    "ka": 0.2,
+    "panel_count": 64,
+    "reference": 1.0,
+    "relative_deviation": 0.009012554964084707,
+    "subdivisions": 2
+  },
+  "mass_matrix": {
+    "center_of_gravity": [
+      0.0,
+      0.0,
+      -0.5
+    ],
+    "diagonal": [
+      8200.0,
+      8200.0,
+      8200.0,
+      12050.0,
+      10050.0,
+      12000.0
+    ],
+    "inertia_tensor_about_origin": [
+      [
+        10000.0,
+        0.0,
+        200.0
+      ],
+      [
+        0.0,
+        8000.0,
+        0.0
+      ],
+      [
+        200.0,
+        0.0,
+        12000.0
+      ]
+    ],
+    "mass": 8200.0,
+    "max_abs_difference": 0.0,
+    "max_relative_error": 0.0,
+    "scale": 12050.0,
+    "symmetry_error": 0.0
+  },
+  "mesh_convergence": {
+    "coarse_panels": 64,
+    "coarse_subdivisions": 2,
+    "errors": {
+      "excitation_heave_error": {
+        "coarse": 0.002276729550383763,
+        "fine": 0.00043557211956772184,
+        "reduction_factor": 5.2269864119018346
+      },
+      "excitation_surge_error": {
+        "coarse": 0.08064999838402766,
+        "fine": 0.021162665862485,
+        "reduction_factor": 3.810956469666503
+      },
+      "heave_added_mass_error": {
+        "coarse": 0.019018819862867985,
+        "fine": 0.004529064325116687,
+        "reduction_factor": 4.199282345670368
+      },
+      "heave_damping_error": {
+        "coarse": 0.006317640509488572,
+        "fine": 0.00130628570282892,
+        "reduction_factor": 4.8363390151227685
+      },
+      "surge_added_mass_error": {
+        "coarse": 0.06993091853976328,
+        "fine": 0.01835446377132337,
+        "reduction_factor": 3.810022423483811
+      },
+      "surge_damping_error": {
+        "coarse": 0.14371426968058504,
+        "fine": 0.038734221704321774,
+        "reduction_factor": 3.710266099513498
+      }
+    },
+    "fine_max_error": 0.038734221704321774,
+    "fine_panels": 256,
+    "fine_subdivisions": 3,
+    "ka": 0.5
+  },
+  "references": {
+    "box_hydrostatics": "Biran & Pulido, Ship Hydrostatics and Stability; Rawson & Tupper, Basic Ship Theory (wall-sided pontoon closed forms)",
+    "hemisphere": "Hulme (1982) J. Fluid Mech. 121:443-463, tables 1-2",
+    "long_wave_limit": "freely floating body heave RAO -> 1 as ka -> 0"
+  }
+}
