@@ -229,6 +229,30 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """Alias for :meth:`fluid_contains` (duck-typing compatibility with PanelMesh)."""
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to any boundary loop."""
+        targets = np.asarray(points, dtype=float)
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        for loop in self.loop_vertices:
+            ends = np.roll(loop, -1, axis=0)
+            vectors = ends - loop
+            lengths_squared = np.sum(vectors**2, axis=1)
+            for start, segment, length_squared in zip(
+                loop, vectors, lengths_squared
+            ):
+                projection = np.clip(
+                    (targets - start) @ segment / length_squared, 0.0, 1.0
+                )
+                closest = start + projection[:, None] * segment
+                clearance = np.minimum(
+                    clearance, np.linalg.norm(targets - closest, axis=1)
+                )
+        return clearance
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,
