@@ -1,0 +1,66 @@
+{
+  "pr": 128,
+  "branch": "agent/m3181",
+  "merge_base": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+  "parents": {
+    "main": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+    "branch": "55db3976dc283e9522334f2ab7309fc655f3ae27"
+  },
+  "union": {
+    "src/tensorbem/benchmarks/declared_numbers.py": {
+      "main": {
+        "kept": 654,
+        "rule_rewritten": 2,
+        "lost": 0
+      },
+      "branch": {
+        "kept": 249,
+        "rule_rewritten": 0,
+        "lost": 0
+      }
+    },
+    "tests/test_declared_numbers.py": {
+      "main": {
+        "kept": 47,
+        "rule_rewritten": 2,
+        "lost": 0
+      },
+      "branch": {
+        "kept": 91,
+        "rule_rewritten": 2,
+        "lost": 0
+      }
+    },
+    "docs/marine_bem_benchmarks.md": {
+      "main": {
+        "kept": 8,
+        "rule_rewritten": 0,
+        "lost": 0
+      },
+      "branch": {
+        "kept": 94,
+        "rule_rewritten": 0,
+        "lost": 0
+      }
+    }
+  },
+  "additions_total": {
+    "src/tensorbem/benchmarks/declared_numbers.py": 905,
+    "tests/test_declared_numbers.py": 142,
+    "docs/marine_bem_benchmarks.md": 102
+  },
+  "additions_lost": 0,
+  "verdict": "verdict: PASS - zero silent loss",
+  "pytest": {
+    "baseline_main": {
+      "passed": 23,
+      "reached_percent": 100,
+      "complete": false
+    },
+    "merged": {
+      "passed": 36,
+      "reached_percent": 100,
+      "complete": false
+    }
+  }
+}
