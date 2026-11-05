@@ -32,6 +32,23 @@ def validate_reference_length(reference_length: float) -> float:
     return value
 
 
+def validate_clearance_factor(factor: float) -> float:
+    """Return a validated field-evaluation clearance factor.
+
+    ``factor`` multiplies the largest panel size to give the distance below
+    which a field-evaluation target is rejected. Negative, non-finite and
+    boolean inputs are refused: a factor of ``0`` or less silently disables the
+    guard, and the evaluation still returns a finite (wrong) number, which the
+    caller cannot detect from the value itself.
+    """
+    if isinstance(factor, (bool, np.bool_)):
+        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
+    value = float(factor)
+    if not math.isfinite(value) or value < 0.0:
+        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
+    return value
+
+
 def fundamental_solution(
     distance: FloatArray | float, reference_length: float = REFERENCE_LENGTH
 ) -> FloatArray:

@@ -26,6 +26,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from .geometry3d import TriangleMesh
+from .kernels import validate_clearance_factor
 from .kernels3d import (
     duffy_quadrature_batch,
     gradient_single_layer_triangle_self,
@@ -80,15 +81,6 @@ def _validate_domain(domain: str) -> str:
     if domain not in _DOMAINS:
         raise ValueError(f"domain must be one of {_DOMAINS}")
     return domain
-
-
-def _validate_clearance_factor(factor: float) -> float:
-    if isinstance(factor, (bool, np.bool_)):
-        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
-    value = float(factor)
-    if not math.isfinite(value) or value < 0.0:
-        raise ValueError("minimum_clearance_factor must be a finite non-negative number")
-    return value
 
 
 def _validate_order(order: int) -> int:
@@ -352,7 +344,7 @@ def evaluate_surface_field(
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
     order = _validate_order(quadrature_order)
-    factor = _validate_clearance_factor(minimum_clearance_factor)
+    factor = validate_clearance_factor(minimum_clearance_factor)
     points_quad, weights = duffy_quadrature_batch(
         mesh.v0, mesh.v1, mesh.v2, order=order
     )
@@ -427,7 +419,7 @@ def evaluate_surface_velocity(
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
     order = _validate_order(quadrature_order)
-    factor = _validate_clearance_factor(minimum_clearance_factor)
+    factor = validate_clearance_factor(minimum_clearance_factor)
     clearance = factor * mesh.h_max
     values = np.empty((len(targets), 3), dtype=float)
     for index, target in enumerate(targets):
