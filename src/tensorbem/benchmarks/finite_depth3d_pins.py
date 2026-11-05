@@ -32,8 +32,12 @@ Pinned tables
 ====================================  ========================================
 
 Tolerances come from the printed precision (three or more significant digits),
-not from physics, except for the two rows whose *printed* value is an exact
-zero (the bottom residual), which are compared against an absolute floor.
+not from physics, with two documented exceptions: rows whose *printed* value is
+an exact zero (the bottom residual) are compared against an absolute zero floor,
+and the free-surface residual rows of §3.2 -- a difference of two ``O(|G|)``
+quantities, hence round-off below ~1e-12 -- are compared on the scale of that
+round-off (:data:`RESIDUAL_SCALE`) rather than on their own printed magnitude.
+Everything that prints a physically meaningful number keeps a relative gate.
 
 Usage::
 
@@ -73,6 +77,17 @@ G = 9.80665
 #: Absolute floor for rows whose printed value is ``0.000e+00``.
 ZERO_FLOOR = 5.0e-16
 
+#: Comparison scale for cancellation-limited rows (§3.2 free-surface residual).
+#: ``|d_zG - nu G| / |nu G|`` is a difference of two O(|G|) quantities, so its
+#: value is round-off dominated below ~1e-12: on one machine the series
+#: summation order alone moves the printed 1.260e-15 by one ulp (2.2e-16, i.e.
+#: 17 % in relative terms).  Such a row is therefore judged on this scale --
+#: effective absolute tolerance ``rtol * RESIDUAL_SCALE`` = 5e-15 -- instead of
+#: on its own printed magnitude.  Rows that carry real information stay above
+#: the floor (h = 40 m prints 2.430e-12, i.e. ~2400x the floor) and keep their
+#: full relative gate.
+RESIDUAL_SCALE = 1.0e-12
+
 
 @dataclass(frozen=True)
 class Row:
@@ -83,12 +98,15 @@ class Row:
     recomputed: float
     rtol: float
     verdict: str
+    #: Comparison scale floor for round-off dominated rows (``0.0`` = judge on
+    #: the printed magnitude alone).
+    atol: float = 0.0
 
     @property
     def rel_deviation(self) -> float:
-        scale = abs(self.declared)
-        if scale < 1e-300:
+        if abs(self.declared) < 1e-300:
             return abs(self.recomputed) if abs(self.recomputed) <= ZERO_FLOOR else math.inf
+        scale = max(abs(self.declared), self.atol)
         return abs(self.recomputed - self.declared) / scale
 
 
@@ -242,11 +260,20 @@ def truncation_ladder(modes=(40, 80, 160, 320, 640)):
 # ---------------------------------------------------------------------------
 # the pinned tables
 # ---------------------------------------------------------------------------
-def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]:
+def _judge(
+    declared: float, recomputed: float, rtol: float, atol: float = 0.0
+) -> tuple[str, float]:
+    """Verdict + deviation for one pinned number.
+
+    ``atol`` raises the scale the deviation is measured on (a combined
+    relative-plus-absolute tolerance: ``|d| <= rtol * max(|declared|, atol)``).
+    It is only used for rows whose printed value is round-off (see
+    :data:`RESIDUAL_SCALE`); the relative gate is unchanged everywhere else.
+    """
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
-    dev = abs(recomputed - declared) / abs(declared)
+    dev = abs(recomputed - declared) / max(abs(declared), atol)
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 
 
@@ -255,9 +282,28 @@ def collect(doc_path: Path = DOC_PATH) -> list[Row]:
     sections = split_sections(text)
     rows: list[Row] = []
 
-    def add(table: str, key: str, quantity: str, declared: float, recomputed: float, rtol: float):
-        verdict, _ = _judge(declared, recomputed, rtol)
-        rows.append(Row(table, key, quantity, declared, recomputed, rtol, verdict))
+    def add(
+        table: str,
+        key: str,
+        quantity: str,
+        declared: float,
+        recomputed: float,
+        rtol: float,
+        atol: float = 0.0,
+    ):
+        verdict, _ = _judge(declared, recomputed, rtol, atol)
+        rows.append(
+            Row(
+                table=table,
+                key=key,
+                quantity=quantity,
+                declared=declared,
+                recomputed=recomputed,
+                rtol=rtol,
+                verdict=verdict,
+                atol=atol,
+            )
+        )
 
     # --- 3.1 dispersion ladder ------------------------------------------------
     section = next((v for k, v in sections.items() if k.startswith("3.1")), [])
@@ -294,7 +340,15 @@ def collect(doc_path: Path = DOC_PATH) -> list[Row]:
         values = _numbers(" ".join(cells[1:]))
         if len(values) < 2:
             continue
-        add("3.2", f"h={depth:g}", "free_surface_residual", values[0], bc[depth]["free_surface"], 5e-3)
+        add(
+            "3.2",
+            f"h={depth:g}",
+            "free_surface_residual",
+            values[0],
+            bc[depth]["free_surface"],
+            5e-3,
+            atol=RESIDUAL_SCALE,
+        )
         add("3.2", f"h={depth:g}", "bottom_residual", values[1], bc[depth]["bottom"], 5e-3)
 
     # --- 3.3 deep-water limit ------------------------------------------------

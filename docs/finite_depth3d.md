@@ -126,3 +126,13 @@ PYTHONPATH=src python3 -m pytest tests/test_finite_depth3d_pins.py -q
 **64 个被钉数值全部复现，最大相对偏差 9.63e-3（截断梯级 `modes=40` 行），
 其余 63 项 < 1e-3**。测试还含两条负控：改一个打印数字必须触发 `DRIFT`；
 把结果表整段删掉必须让解析行数归零（防空表绿灯）。
+
+**§3.2 自由面残差的特殊处理（2026-11-05，main 修复）。** 该残差是
+$\partial_zG-\nu G$ 两个 $O(|G|)$ 量相减后的比值，属于**舍入噪声主导**的量：
+三种水深打印的 1e-15 级数值，换一次求和顺序或 BLAS 就漂一个 ulp
+（$2.2\times10^{-16}$，在 $1.26\times10^{-15}$ 上相当于 17 %），按打印值判
+相对容差必然随机红绿。故这四行改按**舍入刻度** `RESIDUAL_SCALE = 1e-12` 比较
+（等效绝对容差 $\mathrm{rtol}\times10^{-12}=5\times10^{-15}$）；真正携带信息的
+$h=40$ 行（$2.430\times10^{-12}$，根截断残差，约为刻度的 2400 倍）仍按原相对容差
+判定，虚高一个量级的残差照样判 `DRIFT`。对应负控见
+`tests/test_finite_depth3d_pins.py::test_round_off_floor_is_not_a_rubber_stamp`。

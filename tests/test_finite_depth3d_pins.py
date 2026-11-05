@@ -21,7 +21,6 @@ The gates below are, in order:
 
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
 import pytest
@@ -72,6 +71,26 @@ def test_worst_deviation_is_small(rows):
         f"worst pinned deviation {worst.rel_deviation:.2e} in "
         f"{worst.table}/{worst.key}/{worst.quantity}"
     )
+
+
+def test_round_off_floor_is_not_a_rubber_stamp():
+    """The §3.2 round-off floor must not swallow a physically meaningful change.
+
+    The free-surface residual is a difference of two ``O(|G|)`` quantities, so
+    its printed 1e-15-level value moves by one ulp (17 %) when the summation
+    order changes.  Judging it on that scale is right; judging a *real* change
+    on it would be a rubber stamp, hence this negative control.
+    """
+    declared, floor = 1.260e-15, pins.RESIDUAL_SCALE
+    # observed spread on the current machine: one ulp, must stay green
+    assert pins._judge(declared, 1.476491e-15, 5e-3, floor)[0] == "PASS"
+    # 80x the observed round-off -> a real residual change, must go red
+    assert pins._judge(declared, 1.0e-13, 5e-3, floor)[0] == "DRIFT"
+    # a residual of the size the h=40 row reports is gross drift at h=2
+    assert pins._judge(declared, 2.430e-12, 5e-3, floor)[0] == "DRIFT"
+    # the h=40 row sits above the floor and keeps the plain relative gate
+    assert pins._judge(2.430e-12, 2.440e-12, 5e-3, floor)[0] == "PASS"
+    assert pins._judge(2.430e-12, 2.600e-12, 5e-3, floor)[0] == "DRIFT"
 
 
 def test_mutated_document_is_caught(tmp_path, rows):
