@@ -101,6 +101,33 @@ TARGETS: tuple[Target, ...] = (
         SRC_ROOT / "tensorbem" / "finite_depth.py",
         ("tests/test_finite_depth.py",),
     ),
+    # --- wave-load chain, added by m3108 -------------------------------------
+    # The five modules above are the Laplace/free-surface *kernels*.  The modules
+    # below are what actually turns those kernels into the numbers the package
+    # reports: the 3-D Kelvin single-layer integrals, the wave-exciting pressure,
+    # the Helmholtz/MacCamy-Fuchs diffraction solve and the RAO assembly.  They
+    # were never mutation-audited, so "does the suite notice a dropped factor
+    # here?" was an open question.
+    Target(
+        "tensorbem.kernels3d",
+        SRC_ROOT / "tensorbem" / "kernels3d.py",
+        ("tests/test_kernels3d.py", "tests/test_kernels3d_gradients.py"),
+    ),
+    Target(
+        "tensorbem.pressure",
+        SRC_ROOT / "tensorbem" / "pressure.py",
+        ("tests/test_pressure.py",),
+    ),
+    Target(
+        "tensorbem.helmholtz",
+        SRC_ROOT / "tensorbem" / "helmholtz.py",
+        ("tests/test_helmholtz_maccamy_fuchs.py",),
+    ),
+    Target(
+        "tensorbem.rao",
+        SRC_ROOT / "tensorbem" / "rao.py",
+        ("tests/test_rao_verification.py",),
+    ),
 )
 
 

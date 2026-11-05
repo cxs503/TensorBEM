@@ -1,0 +1,38 @@
+[
+  {
+    "desc": "dynamic-pressure sign in steady_pressure_loads",
+    "module": "pressure",
+    "site": "302:43",
+    "orig": "0.5",
+    "repl": "-0.5",
+    "before": "survived",
+    "after": "killed"
+  },
+  {
+    "desc": "v**2 -> v*2 in PressureLoads.coefficients",
+    "module": "pressure",
+    "site": "129:28",
+    "orig": "2",
+    "repl": "*2",
+    "before": "?",
+    "after": "?"
+  },
+  {
+    "desc": "inside-predicate parity",
+    "module": "helmholtz",
+    "site": "139:82",
+    "orig": "1",
+    "repl": "-1",
+    "before": "survived",
+    "after": "survived"
+  },
+  {
+    "desc": "documented default quadrature order",
+    "module": "kernels3d",
+    "site": "107:65",
+    "orig": "8",
+    "repl": "-8",
+    "before": "survived",
+    "after": "killed"
+  }
+]
