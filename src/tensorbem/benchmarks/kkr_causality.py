@@ -19,7 +19,13 @@ The analytical reference is not a control experiment: it is run through the
 *same* transform on the *same* grid, so its residual is the transform's own
 floor (piecewise-linear interpolation of the sweep plus the two truncated
 bands). A panel residual has to be read against that floor, and the report
-records both.
+records both. That floor is dominated by *band truncation*, not by the sweep
+resolution: on a fixed narrow band it does not fall when the samples are
+refined, and it only falls when the upper band is pushed out (``ka_max``
+3 -> 30 takes it from ~20 % to ~4 %). :func:`truncation_floor` measures that
+floor on a ladder of bands, and the record carries it as
+``analytic_truncation_floor``; a panel residual below the value for the audited
+band is not resolvable by this audit.
 
 The infinite-frequency added mass ``A_inf`` that eq. (1) requires is taken from
 the analytical high-frequency limit for every solution (see
@@ -55,6 +61,15 @@ _DENSITY = 1025.0
 _DEFAULT_PANELS = (32, 64, 128)
 _HIGH_FREQUENCY_KA = (8.0, 12.0, 16.0, 20.0, 25.0, 30.0)
 
+#: Terms of the Ursell multipole series.  40 terms reproduce the 80-term
+#: values to better than ``1e-10`` relative over the whole audited band
+#: (``ka <= 30``) at about one sixth of the cost; both facts are pinned by
+#: ``tests/test_kkr_causality.py``.
+_SERIES_TERMS = 40
+
+#: ``ka_max`` values of the truncation ladder of :func:`truncation_floor`.
+TRUNCATION_BANDS = (1.0, 3.0, 10.0, 30.0)
+
 
 def ursell_high_frequency_limit(
     radius: float = 1.0,
@@ -62,7 +77,7 @@ def ursell_high_frequency_limit(
     density: float = _DENSITY,
     gravity: float = _GRAVITY,
     *,
-    terms: int = 80,
+    terms: int = _SERIES_TERMS,
 ) -> tuple[float, float]:
     """High-frequency added-mass limit of the submerged cylinder.
 
@@ -124,7 +139,7 @@ def _analytic_pair(
     density: float,
     gravity: float,
     *,
-    terms: int = 80,
+    terms: int = _SERIES_TERMS,
 ) -> tuple[np.ndarray, np.ndarray]:
     pairs = np.array(
         [
@@ -135,6 +150,78 @@ def _analytic_pair(
         ]
     )
     return pairs[:, 0], pairs[:, 1]
+
+
+def truncation_floor(
+    radius: float = 1.0,
+    submergence: float = 2.0,
+    density: float = _DENSITY,
+    gravity: float = _GRAVITY,
+    *,
+    points: int = 32,
+    ka_min: float = 0.05,
+    bands: tuple[float, ...] = TRUNCATION_BANDS,
+    band_of_interest: float | None = None,
+    terms: int = _SERIES_TERMS,
+) -> dict[str, object]:
+    """Causality residual of the exactly causal reference, against band width.
+
+    The analytical Ursell pair satisfies the Kramers-Kronig relations exactly,
+    so whatever residual :func:`tensorbem.causality.kkr_check` returns for it is
+    produced by the *audit itself*: piecewise-linear interpolation of the swept
+    samples plus the truncation of the two tails.  This function measures that
+    residual on a ladder of growing upper bands, because the two effects do not
+    decay the same way: refining ``points`` at a fixed narrow band does **not**
+    reduce the residual -- the truncated tail dominates and the residual
+    wanders -- whereas widening the band does, roughly like the missing tail
+    integral.  The ladder therefore separates a genuine causality violation
+    (which survives band widening) from a grid artefact (which does not), and
+    the value for the audited band is the resolution limit below which a panel
+    residual cannot be distinguished from truncation.
+
+    Returns a JSON-serialisable record with one row per band, plus
+    ``floor_at_band`` -- the row matching ``band_of_interest`` (default: the
+    widest band) -- and ``floor_widest``.  Passing the band the audit actually
+    sweeps makes ``floor_at_band`` the resolution limit of that audit.
+    """
+    added_mass_inf, limit_residual = ursell_high_frequency_limit(
+        radius, submergence, density, gravity, terms=terms
+    )
+    rows = []
+    for band in bands:
+        ka, omega = _sweep(ka_min, float(band), points, radius, gravity)
+        mass, damping = _analytic_pair(
+            omega, radius, submergence, density, gravity, terms=terms
+        )
+        report = kkr_check(omega, mass, damping, added_mass_inf=added_mass_inf)
+        rows.append(
+            {
+                "ka_max": float(band),
+                "points": int(points),
+                "max_damping_relative_error": report.max_damping_relative_error,
+                "max_added_mass_relative_error": report.max_added_mass_relative_error,
+            }
+        )
+    widest = max(rows, key=lambda row: row["ka_max"])
+    target = float(band_of_interest) if band_of_interest is not None else widest["ka_max"]
+    nearest = min(rows, key=lambda row: abs(row["ka_max"] - target))
+    return {
+        "description": (
+            "Kramers-Kronig residual of the exactly causal Ursell multipole pair:"
+            " the audit's own truncation floor"
+        ),
+        "ka_min": ka_min,
+        "added_mass_inf": added_mass_inf,
+        "added_mass_limit_residual": limit_residual,
+        "bands": rows,
+        "floor_at_band": nearest,
+        "floor_widest": widest,
+    }
+
+
+def _ladder_for(ka_max: float) -> tuple[float, ...]:
+    """Ladder bands, always containing the band the audit actually sweeps."""
+    return tuple(sorted({*TRUNCATION_BANDS, float(ka_max)}))
 
 
 def run(
@@ -148,6 +235,8 @@ def run(
     gravity: float = _GRAVITY,
     panel_nodes: int = 24,
     include_3d: bool = True,
+    terms: int = _SERIES_TERMS,
+    floor_points: int = 32,
 ) -> dict[str, object]:
     """Run the causality audit and return a JSON-serialisable record."""
     if submergence <= radius:
@@ -157,10 +246,10 @@ def run(
 
     ka, omega = _sweep(ka_min, ka_max, points, radius, gravity)
     added_mass_inf, limit_residual = ursell_high_frequency_limit(
-        radius, submergence, density, gravity
+        radius, submergence, density, gravity, terms=terms
     )
     reference_mass, reference_damping = _analytic_pair(
-        omega, radius, submergence, density, gravity
+        omega, radius, submergence, density, gravity, terms=terms
     )
     scaled_mass = reference_mass / added_mass_inf
 
@@ -234,6 +323,19 @@ def run(
         "cases": cases,
     }
 
+    if floor_points > 0:
+        record["analytic_truncation_floor"] = truncation_floor(
+            radius,
+            submergence,
+            density,
+            gravity,
+            points=floor_points,
+            ka_min=ka_min,
+            bands=_ladder_for(ka_max),
+            band_of_interest=ka_max,
+            terms=terms,
+        )
+
     if include_3d:
         record["three_dimensional"] = _hulme_causality()
 
@@ -278,6 +380,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--points", type=int, default=48)
     parser.add_argument("--panel-nodes", type=int, default=24)
     parser.add_argument("--no-3d", action="store_true")
+    parser.add_argument(
+        "--floor-points",
+        type=int,
+        default=32,
+        help="samples per band of the analytic truncation-floor ladder (0 disables)",
+    )
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args(argv)
 
@@ -288,6 +396,7 @@ def main(argv: list[str] | None = None) -> int:
         points=args.points,
         panel_nodes=args.panel_nodes,
         include_3d=not args.no_3d,
+        floor_points=args.floor_points,
     )
     text = json.dumps(record, indent=2, sort_keys=False)
     if args.output is None:
