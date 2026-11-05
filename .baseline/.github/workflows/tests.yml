@@ -1,0 +1,110 @@
+name: tests
+
+# Ordering contract (m3229, 2026-11-04)
+# -------------------------------------
+# The benchmark steps in this job are not decoration: several test modules read
+# the files they write (``artifacts/ursell_doc_claims.json`` backs the
+# document-versus-code gate in ``tests/test_doc_claims.py``, and
+# ``artifacts/*.json`` is the evidence uploaded at the end).  ``pytest`` used to
+# run *before* those steps, so the suite always saw a tree without them.  The
+# evidence generation therefore runs first and the test suite runs last, on a
+# tree that already holds the artifacts it is asking about.
+#
+# ``matplotlib`` is the other half of the same failure mode: it is an optional
+# extra (``.[visualization]``), yet four test modules exercise the plotting
+# entry points.  Two of them (``tests/test_ursell_error_budget.py``,
+# ``tests/test_ursell_band_audit.py``) call ``plot()`` without
+# ``pytest.importorskip``, so a CI install that omits the extra turned them red
+# with ``ModuleNotFoundError``.  The job installs ``.[dev,visualization]`` so the
+# figures are actually rendered where CI claims to check them.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package and test dependencies
+        # ``visualization`` supplies matplotlib, which the plotting tests
+        # exercise (see the ordering contract above).
+        run: python -m pip install -e ".[dev,visualization]"
+
+      # ------------------------------------------------------------------
+      # Evidence generation: must precede the test suite.
+      # ------------------------------------------------------------------
+      - name: Run unit-disk benchmark
+        run: python -m tensorbem.benchmarks.unit_disk --panels 64
+      - name: Run cylinder added-mass benchmark
+        run: python -m tensorbem.benchmarks.cylinder_added_mass --panels 32
+      - name: Generate reproducible refinement report
+        run: python -m tensorbem.benchmarks.refinement_study --panels 16 32 64 128 --output artifacts/refinement-study.json
+      - name: Generate analytical verification report
+        run: python -m tensorbem.benchmarks.analytical_suite --panels 16 32 64 128 --output artifacts/analytical-study.json
+      - name: Run sphere added-mass benchmark
+        run: python -m tensorbem.benchmarks.sphere_added_mass --subdivisions 2
+      - name: Run sphere velocity benchmark
+        run: python -m tensorbem.benchmarks.sphere_velocity --subdivisions 2 --output artifacts/sphere-velocity.json
+      - name: Generate the surface-velocity accuracy study
+        run: python -m tensorbem.benchmarks.surface_velocity_study --levels 1 2 3 --output artifacts/surface-velocity-study.json
+      - name: Generate three-dimensional verification report
+        run: python -m tensorbem.benchmarks.three_dimensional_study --levels 0 1 2 3 --output artifacts/three-dimensional-study.json
+      - name: Run elliptic-cylinder added-mass benchmark
+        run: |
+          python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis x
+          python -m tensorbem.benchmarks.ellipse_added_mass --panels 64 --axis y
+      - name: Run ellipsoid added-mass benchmark
+        run: python -m tensorbem.benchmarks.ellipsoid_added_mass --subdivisions 2
+      - name: Run Ursell submerged-cylinder radiation benchmark
+        run: python -m tensorbem.benchmarks.ursell_cylinder --panels 64 --ka 0.6 --output artifacts/ursell.json
+      - name: Re-measure the Ursell document-claim artifact
+        # Backs the document-versus-code gate in tests/test_doc_claims.py; without
+        # this file the gate can only compare against the pinned copy under tests/data/.
+        run: python -m tensorbem.doc_claims --write
+      - name: Run rigid-body Neumann added-mass and rotational-inertia benchmark
+        run: python -m tensorbem.benchmarks.rigid_body_added_mass --panels 16 32 64 128 --subdivisions 0 1 2 --output artifacts/rigid-body-added-mass.json
+      - name: Run Dean submerged-cylinder wave-diffraction benchmark
+        run: python -m tensorbem.benchmarks.dean_diffraction --panels 64 --ka 0.6 --output artifacts/dean-diffraction.json
+      - name: Run MacCamy-Fuchs vertical-cylinder diffraction and CHIEF benchmark
+        run: python -m tensorbem.benchmarks.maccamy_fuchs --panels 16 32 64 128 --output artifacts/maccamy-fuchs.json
+      - name: Run Hulme 3-D floating-hemisphere radiation, diffraction and CHIEF benchmark
+        run: python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3 --output artifacts/floating-hemisphere.json
+      - name: Run Wang/Linton 3-D submerged-sphere wave benchmark
+        run: python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2 --output artifacts/submerged-sphere-wave.json
+      - name: Generate classical benchmark study
+        run: python -m tensorbem.benchmarks.classical_study --panels 16 32 64 128 --subdivisions 0 1 2 3 --harmonic-levels 1 2 3 --output artifacts/classical-study.json
+
+      # ------------------------------------------------------------------
+      # Test suite: runs on a tree that already holds the evidence above.
+      # ------------------------------------------------------------------
+      - name: Run test suite
+        run: pytest
+
+      - name: Upload benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: tensorbem-verification-reports
+          path: |
+            artifacts/refinement-study.json
+            artifacts/analytical-study.json
+            artifacts/three-dimensional-study.json
+            artifacts/sphere-velocity.json
+            artifacts/surface-velocity-study.json
+            artifacts/classical-study.json
+            artifacts/ursell.json
+            artifacts/ursell_doc_claims.json
+            artifacts/rigid-body-added-mass.json
+            artifacts/dean-diffraction.json
+            artifacts/maccamy-fuchs.json
+            artifacts/floating-hemisphere.json
+            artifacts/submerged-sphere-wave.json
+          if-no-files-found: error

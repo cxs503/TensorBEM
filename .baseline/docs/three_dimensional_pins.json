@@ -1,0 +1,999 @@
+{
+  "artifacts": "docs/m3085/outputs",
+  "bounds": [
+    {
+      "documented_bound": 2e-15,
+      "exceeds_original_bound": true,
+      "id": "section_6_5_row_sum_bound",
+      "measured_worst": 1.6653345369377348e-15,
+      "original_documented_bound": 1.6e-15,
+      "quantity": "double_layer_row_sum_error",
+      "ratio_to_documented": 0.8326672684688673,
+      "status": "PASS",
+      "why": "Section 6.5 claimed the double-layer row sums close to 1.6e-15 or better. That is a round-off quantity, so it is platform-specific: it is not a statement about the discretisation, and on another BLAS it moves. Measured here it exceeds the claim, so the claim is restated with a margin and the original number is kept in this registry.",
+      "worst_case": "interior_linear_harmonic @ 1280 panels"
+    },
+    {
+      "documented_bound": 2e-15,
+      "exceeds_original_bound": true,
+      "id": "section_6_5_residual_bound",
+      "measured_worst": 1.2418067794795945e-15,
+      "original_documented_bound": 6.6e-16,
+      "quantity": "relative_residual_l2",
+      "ratio_to_documented": 0.6209033897397972,
+      "status": "PASS",
+      "why": "Same failure mode, larger factor: the documented relative algebraic residual bound is exceeded by the dense solve on this platform at 1280 panels. Round-off again -- the linear systems are solved to machine precision in both cases -- but the printed bound was a single-platform observation presented as a property of the method.",
+      "worst_case": "exterior_translating_sphere @ 1280 panels"
+    }
+  ],
+  "cells": [
+    {
+      "column": 1,
+      "declared": 1.05146,
+      "kind": "value",
+      "measured": 1.0514622242382672,
+      "panels": 20,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 1,
+      "declared": 0.61803,
+      "kind": "value",
+      "measured": 0.6180339887498949,
+      "panels": 80,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 1,
+      "declared": 0.32492,
+      "kind": "value",
+      "measured": 0.3249196962329064,
+      "panels": 320,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 1,
+      "declared": 0.16465,
+      "kind": "value",
+      "measured": 0.1646471600639204,
+      "panels": 1280,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 2,
+      "declared": 0.146,
+      "kind": "value",
+      "measured": 0.14600400718391715,
+      "panels": 20,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 2,
+      "declared": 0.043804,
+      "kind": "value",
+      "measured": 0.04380445537965208,
+      "panels": 80,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 2,
+      "declared": 0.012334000000000001,
+      "kind": "value",
+      "measured": 0.012333812983012235,
+      "panels": 320,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 2,
+      "declared": 0.003764,
+      "kind": "value",
+      "measured": 0.003763953972995055,
+      "panels": 1280,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 3,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 20,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "N/A",
+      "table": "interior"
+    },
+    {
+      "column": 3,
+      "declared": 2.266,
+      "kind": "order",
+      "measured": 2.26554949222268,
+      "panels": 80,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 3,
+      "declared": 1.971,
+      "kind": "order",
+      "measured": 1.9711652258811978,
+      "panels": 320,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 3,
+      "declared": 1.746,
+      "kind": "order",
+      "measured": 1.7459857796462712,
+      "panels": 1280,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 4,
+      "declared": 0.014321,
+      "kind": "value",
+      "measured": 0.014321171338562737,
+      "panels": 20,
+      "quantity": "field_rmse",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 4,
+      "declared": 0.0036991999999999997,
+      "kind": "value",
+      "measured": 0.0036991690799616467,
+      "panels": 80,
+      "quantity": "field_rmse",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 4,
+      "declared": 0.0009205500000000001,
+      "kind": "value",
+      "measured": 0.0009205471450012725,
+      "panels": 320,
+      "quantity": "field_rmse",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 4,
+      "declared": 0.00022929,
+      "kind": "value",
+      "measured": 0.00022928512290010822,
+      "panels": 1280,
+      "quantity": "field_rmse",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 5,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 20,
+      "quantity": "field_rmse_order",
+      "status": "N/A",
+      "table": "interior"
+    },
+    {
+      "column": 5,
+      "declared": 2.547,
+      "kind": "order",
+      "measured": 2.5473221656497027,
+      "panels": 80,
+      "quantity": "field_rmse_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 5,
+      "declared": 2.163,
+      "kind": "order",
+      "measured": 2.1632506268413723,
+      "panels": 320,
+      "quantity": "field_rmse_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 5,
+      "declared": 2.045,
+      "kind": "order",
+      "measured": 2.044802146310479,
+      "panels": 1280,
+      "quantity": "field_rmse_order",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 6,
+      "declared": 9.13,
+      "kind": "value",
+      "measured": 9.13481975758336,
+      "panels": 20,
+      "quantity": "single_layer_condition_number",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 6,
+      "declared": 18.62,
+      "kind": "value",
+      "measured": 18.62149308405364,
+      "panels": 80,
+      "quantity": "single_layer_condition_number",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 6,
+      "declared": 37.57,
+      "kind": "value",
+      "measured": 37.56559992086565,
+      "panels": 320,
+      "quantity": "single_layer_condition_number",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 6,
+      "declared": 76.13,
+      "kind": "value",
+      "measured": 76.12545458214439,
+      "panels": 1280,
+      "quantity": "single_layer_condition_number",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 7,
+      "declared": 1.1000000000000001e-16,
+      "kind": "roundoff",
+      "measured": 1.6653345369377348e-16,
+      "panels": 20,
+      "quantity": "double_layer_row_sum_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 7,
+      "declared": 2.2000000000000002e-16,
+      "kind": "roundoff",
+      "measured": 2.220446049250313e-16,
+      "panels": 80,
+      "quantity": "double_layer_row_sum_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 7,
+      "declared": 5.599999999999999e-16,
+      "kind": "roundoff",
+      "measured": 5.551115123125783e-16,
+      "panels": 320,
+      "quantity": "double_layer_row_sum_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 7,
+      "declared": 1.6000000000000002e-15,
+      "kind": "roundoff",
+      "measured": 1.6653345369377348e-15,
+      "panels": 1280,
+      "quantity": "double_layer_row_sum_error",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 8,
+      "declared": 1.4599999999999998e-16,
+      "kind": "roundoff",
+      "measured": 2.7873961923598233e-16,
+      "panels": 20,
+      "quantity": "relative_residual_l2",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 8,
+      "declared": 2.69e-16,
+      "kind": "roundoff",
+      "measured": 3.0429382064913467e-16,
+      "panels": 80,
+      "quantity": "relative_residual_l2",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 8,
+      "declared": 3.69e-16,
+      "kind": "roundoff",
+      "measured": 7.482563695516839e-16,
+      "panels": 320,
+      "quantity": "relative_residual_l2",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 8,
+      "declared": 6.17e-16,
+      "kind": "roundoff",
+      "measured": 1.2250549388382264e-15,
+      "panels": 1280,
+      "quantity": "relative_residual_l2",
+      "status": "PASS",
+      "table": "interior"
+    },
+    {
+      "column": 1,
+      "declared": 1.05146,
+      "kind": "value",
+      "measured": 1.0514622242382672,
+      "panels": 20,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 1,
+      "declared": 0.61803,
+      "kind": "value",
+      "measured": 0.6180339887498949,
+      "panels": 80,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 1,
+      "declared": 0.32492,
+      "kind": "value",
+      "measured": 0.3249196962329064,
+      "panels": 320,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 1,
+      "declared": 0.16465,
+      "kind": "value",
+      "measured": 0.1646471600639204,
+      "panels": 1280,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 2,
+      "declared": 1690.18039,
+      "kind": "value",
+      "measured": 1690.1803881212086,
+      "panels": 20,
+      "quantity": "added_mass",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 2,
+      "declared": 2007.73279,
+      "kind": "value",
+      "measured": 2007.732789258856,
+      "panels": 80,
+      "quantity": "added_mass",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 2,
+      "declared": 2109.4429,
+      "kind": "value",
+      "measured": 2109.4428999421184,
+      "panels": 320,
+      "quantity": "added_mass",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 2,
+      "declared": 2137.16456,
+      "kind": "value",
+      "measured": 2137.1645590574453,
+      "panels": 1280,
+      "quantity": "added_mass",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 3,
+      "declared": 0.21267999999999998,
+      "kind": "value",
+      "measured": 0.21268127760057987,
+      "panels": 20,
+      "quantity": "added_mass_relative_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 3,
+      "declared": 0.064759,
+      "kind": "value",
+      "measured": 0.06475922589787647,
+      "panels": 80,
+      "quantity": "added_mass_relative_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 3,
+      "declared": 0.017381,
+      "kind": "value",
+      "measured": 0.017380688694954495,
+      "panels": 320,
+      "quantity": "added_mass_relative_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 3,
+      "declared": 0.0044674,
+      "kind": "value",
+      "measured": 0.004467403585941484,
+      "panels": 1280,
+      "quantity": "added_mass_relative_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 4,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 20,
+      "quantity": "added_mass_relative_error_order",
+      "status": "N/A",
+      "table": "added_mass"
+    },
+    {
+      "column": 4,
+      "declared": 2.238,
+      "kind": "order",
+      "measured": 2.237735808080426,
+      "panels": 80,
+      "quantity": "added_mass_relative_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 4,
+      "declared": 2.046,
+      "kind": "order",
+      "measured": 2.0457033142395606,
+      "panels": 320,
+      "quantity": "added_mass_relative_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 4,
+      "declared": 1.999,
+      "kind": "order",
+      "measured": 1.998537383421238,
+      "panels": 1280,
+      "quantity": "added_mass_relative_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 5,
+      "declared": 0.033338,
+      "kind": "value",
+      "measured": 0.03333814761927449,
+      "panels": 20,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 5,
+      "declared": 0.027884000000000003,
+      "kind": "value",
+      "measured": 0.027884179766218663,
+      "panels": 80,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 5,
+      "declared": 0.014542,
+      "kind": "value",
+      "measured": 0.014541554464665653,
+      "panels": 320,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 5,
+      "declared": 0.0068458,
+      "kind": "value",
+      "measured": 0.006845781173787856,
+      "panels": 1280,
+      "quantity": "normal_derivative_relative_l2_error",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 6,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 20,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "N/A",
+      "table": "added_mass"
+    },
+    {
+      "column": 6,
+      "declared": 0.336,
+      "kind": "order",
+      "measured": 0.3361779590474508,
+      "panels": 80,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 6,
+      "declared": 1.013,
+      "kind": "order",
+      "measured": 1.012572570912458,
+      "panels": 320,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 6,
+      "declared": 1.108,
+      "kind": "order",
+      "measured": 1.1082780055925494,
+      "panels": 1280,
+      "quantity": "normal_derivative_relative_l2_error_order",
+      "status": "PASS",
+      "table": "added_mass"
+    },
+    {
+      "column": 1,
+      "declared": 10.490397,
+      "kind": "value",
+      "measured": 10.490396508659854,
+      "panels": 20,
+      "quantity": "total_flux",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 1,
+      "declared": 11.948642,
+      "kind": "value",
+      "measured": 11.948641558170985,
+      "panels": 80,
+      "quantity": "total_flux",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 1,
+      "declared": 12.402917,
+      "kind": "value",
+      "measured": 12.402917073521552,
+      "panels": 320,
+      "quantity": "total_flux",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 1,
+      "declared": 12.524676,
+      "kind": "value",
+      "measured": 12.524676109083437,
+      "panels": 1280,
+      "quantity": "total_flux",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 2,
+      "declared": 0.1652,
+      "kind": "value",
+      "measured": 0.16520077032641164,
+      "panels": 20,
+      "quantity": "total_flux_relative_error",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 2,
+      "declared": 0.049157000000000006,
+      "kind": "value",
+      "measured": 0.04915731639192058,
+      "panels": 80,
+      "quantity": "total_flux_relative_error",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 2,
+      "declared": 0.013007,
+      "kind": "value",
+      "measured": 0.013007219495090145,
+      "panels": 320,
+      "quantity": "total_flux_relative_error",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 2,
+      "declared": 0.0033179,
+      "kind": "value",
+      "measured": 0.0033179433072022145,
+      "panels": 1280,
+      "quantity": "total_flux_relative_error",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 3,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 20,
+      "quantity": "total_flux_relative_error_order",
+      "status": "N/A",
+      "table": "flux"
+    },
+    {
+      "column": 3,
+      "declared": 2.281,
+      "kind": "order",
+      "measured": 2.2810507991614397,
+      "panels": 80,
+      "quantity": "total_flux_relative_error_order",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 3,
+      "declared": 2.068,
+      "kind": "order",
+      "measured": 2.067795816406816,
+      "panels": 320,
+      "quantity": "total_flux_relative_error_order",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 3,
+      "declared": 2.01,
+      "kind": "order",
+      "measured": 2.009728004928921,
+      "panels": 1280,
+      "quantity": "total_flux_relative_error_order",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 4,
+      "declared": 1.095655,
+      "kind": "value",
+      "measured": 1.0956552474655183,
+      "panels": 20,
+      "quantity": "normal_derivative_mean",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 4,
+      "declared": 1.02603,
+      "kind": "value",
+      "measured": 1.0260295018708683,
+      "panels": 80,
+      "quantity": "normal_derivative_mean",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 4,
+      "declared": 1.006737,
+      "kind": "value",
+      "measured": 1.0067371546686268,
+      "panels": 320,
+      "quantity": "normal_derivative_mean",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 4,
+      "declared": 1.001742,
+      "kind": "value",
+      "measured": 1.001742438468439,
+      "panels": 1280,
+      "quantity": "normal_derivative_mean",
+      "status": "PASS",
+      "table": "flux"
+    },
+    {
+      "column": 1,
+      "declared": 0.61803,
+      "kind": "value",
+      "measured": 0.6180339887498949,
+      "panels": 80,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 1,
+      "declared": 0.32492,
+      "kind": "value",
+      "measured": 0.3249196962329064,
+      "panels": 320,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 1,
+      "declared": 0.16465,
+      "kind": "value",
+      "measured": 0.1646471600639204,
+      "panels": 1280,
+      "quantity": "h_max",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 2,
+      "declared": 0.10171,
+      "kind": "value",
+      "measured": 0.10170974675317143,
+      "panels": 80,
+      "quantity": "velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 2,
+      "declared": 0.027635,
+      "kind": "value",
+      "measured": 0.027634550468215165,
+      "panels": 320,
+      "quantity": "velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 2,
+      "declared": 0.0070697,
+      "kind": "value",
+      "measured": 0.007069651051969887,
+      "panels": 1280,
+      "quantity": "velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 3,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 80,
+      "quantity": "velocity_relative_l2_error_order",
+      "status": "N/A",
+      "table": "velocity"
+    },
+    {
+      "column": 3,
+      "declared": 2.027,
+      "kind": "order",
+      "measured": 2.0266352393432223,
+      "panels": 320,
+      "quantity": "velocity_relative_l2_error_order",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 3,
+      "declared": 2.005,
+      "kind": "order",
+      "measured": 2.005456363150239,
+      "panels": 1280,
+      "quantity": "velocity_relative_l2_error_order",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 4,
+      "declared": 0.029189,
+      "kind": "value",
+      "measured": 0.029189473929828402,
+      "panels": 80,
+      "quantity": "velocity_max_abs_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 4,
+      "declared": 0.0078167,
+      "kind": "value",
+      "measured": 0.007816746605918024,
+      "panels": 320,
+      "quantity": "velocity_max_abs_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 4,
+      "declared": 0.0020004,
+      "kind": "value",
+      "measured": 0.0020003719269816034,
+      "panels": 1280,
+      "quantity": "velocity_max_abs_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 5,
+      "declared": 0.15027,
+      "kind": "value",
+      "measured": 0.15026695393753853,
+      "panels": 80,
+      "quantity": "surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 5,
+      "declared": 0.043731,
+      "kind": "value",
+      "measured": 0.04373095156802237,
+      "panels": 320,
+      "quantity": "surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 5,
+      "declared": 0.013756,
+      "kind": "value",
+      "measured": 0.013755967520046257,
+      "panels": 1280,
+      "quantity": "surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 6,
+      "declared": null,
+      "kind": "order",
+      "measured": null,
+      "panels": 80,
+      "quantity": "surface_velocity_relative_l2_error_order",
+      "status": "N/A",
+      "table": "velocity"
+    },
+    {
+      "column": 6,
+      "declared": 1.78,
+      "kind": "order",
+      "measured": 1.7808011265042711,
+      "panels": 320,
+      "quantity": "surface_velocity_relative_l2_error_order",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 6,
+      "declared": 1.669,
+      "kind": "order",
+      "measured": 1.668597126671351,
+      "panels": 1280,
+      "quantity": "surface_velocity_relative_l2_error_order",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 7,
+      "declared": 0.65314,
+      "kind": "value",
+      "measured": 0.6531385430176716,
+      "panels": 80,
+      "quantity": "representation_surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 7,
+      "declared": 0.56878,
+      "kind": "value",
+      "measured": 0.5687846829990338,
+      "panels": 320,
+      "quantity": "representation_surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    },
+    {
+      "column": 7,
+      "declared": 0.53162,
+      "kind": "value",
+      "measured": 0.53161811683764,
+      "panels": 1280,
+      "quantity": "representation_surface_velocity_relative_l2_error",
+      "status": "PASS",
+      "table": "velocity"
+    }
+  ],
+  "coverage": {
+    "numeric_tokens_total": 247,
+    "protected_fraction": 0.3481781376518219,
+    "protected_in_tables": 86,
+    "unguarded": 161,
+    "unguarded_by_section": {
+      "1. \u80cc\u666f\u4e0e\u8303\u56f4": 1,
+      "10. \u8fd1\u4f53\u6d4b\u70b9\u7684 clearance \u8bca\u65ad\u5951\u7ea6": 2,
+      "11. \u58f0\u660e\u6570\u5b57\u590d\u7b97\uff1a\u4ece\u6563\u6587\u6570\u5b57\u5230\u53ef\u6267\u884c\u5224\u636e": 12,
+      "3.1 \u4e8c\u5341\u9762\u4f53\u7403\u9762\u7f51\u683c": 30,
+      "3.2 \u95ed\u5408\u6027\u4e0e\u65b9\u5411\u6821\u9a8c": 1,
+      "3.3 \u914d\u70b9\u4e0e\u5e38\u6570\u9762\u5143": 1,
+      "4.1 \u53cc\u5c42\u79ef\u5206\uff1a\u89e3\u6790\u7acb\u4f53\u89d2": 2,
+      "4.2 \u5355\u5c42\u79ef\u5206\uff1aDuffy \u6c42\u79ef\u4e0e\u81ea\u9762\u5143\u6781\u5750\u6807\u79ef\u5206": 1,
+      "4.3 \u72ec\u7acb\u7684\u6838\u4e0e\u6c42\u79ef\u68c0\u67e5": 1,
+      "5.1 \u5185\u57df\u7ebf\u6027\u8c03\u548c\u573a \\(u=x\\)": 3,
+      "5.2 \u5916\u57df\u7403\u4f53\u6a2a\u5411\u5e73\u79fb\u9644\u52a0\u8d28\u91cf": 1,
+      "5.3 \u5916\u57df\u5e38\u503c Dirichlet \u4e0e\u603b\u901a\u91cf": 1,
+      "5.4 \u5916\u57df\u7403\u4f53\u5e73\u79fb\u901f\u5ea6\u573a": 5,
+      "5.5 \u8868\u9762\u901f\u5ea6\uff1a\u8868\u793a\u516c\u5f0f\u7684\u7f3a\u9677\u4e0e\u6062\u590d\u8def\u5f84": 17,
+      "6. \u8ba1\u7b97\u7ed3\u679c": 2,
+      "6.1 \u5185\u57df\u7ebf\u6027\u8c03\u548c\u573a": 3,
+      "6.2 \u5916\u57df\u7403\u4f53\u9644\u52a0\u8d28\u91cf": 6,
+      "6.3 \u5916\u57df\u5e38\u503c Dirichlet \u603b\u901a\u91cf": 3,
+      "6.4 \u5916\u57df\u7403\u4f53\u5e73\u79fb\u901f\u5ea6\u573a": 25,
+      "6.5 \u8bca\u65ad\u91cf": 11,
+      "7. \u8ba8\u8bba\u4e0e\u9002\u7528\u9650\u5236": 7,
+      "8. \u590d\u73b0\u5b9e\u9a8c": 1,
+      "9. \u7ed3\u8bba": 6,
+      "\u53c2\u8003\u8d44\u6599": 4,
+      "\u6458\u8981": 15
+    }
+  },
+  "document": "docs/three_dimensional_bem.md",
+  "generated_by": "python -m tensorbem.benchmarks.three_dimensional_doc_pins --check --write-pins",
+  "note": "Declared numbers are parsed out of docs/three_dimensional_bem.md at test time; this file records the measured values so the test can also run without the 3-D artifacts. Regenerate with --recompute --write-pins after an intentional change.",
+  "roundoff_ceiling": 1e-13,
+  "verdict": "PASS"
+}
