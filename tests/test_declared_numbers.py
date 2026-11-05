@@ -92,6 +92,9 @@ def test_registry_covers_every_documented_benchmark_family():
         "hulme_chief",
         "hulme_hemisphere",
         "interior_harmonics",
+        # main's name; m3245 registered the same benchmark as
+        # ``submerged_sphere_wave``, which the dispatcher still accepts as an
+        # alias (test_submerged_sphere_group_alias_still_resolves below).
         "submerged_sphere",
         "ursell",
         "ursell_reference",
@@ -370,3 +373,124 @@ def test_cli_writes_strict_json_and_passes(tmp_path):
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["summary"]["verdict"] == "PASS"
     assert payload["benchmark"] == "declared_numbers_recomputation"
+
+
+# --------------------------------------------------------------------------
+# The 3-D free-surface tables (docs/marine_bem_benchmarks.md sections 4.10-4.11)
+# --------------------------------------------------------------------------
+
+#: main named the third group ``submerged_sphere``; m3245 called it
+#: ``submerged_sphere_wave``.  The merge keeps one registration under main's
+#: names (a second registration of the same cells would double-count them and
+#: demote half of them to a tier CI does not run) and keeps the m3245 string as
+#: a dispatch alias, which the last test of this block pins.
+FREE_SURFACE_3D_GROUPS = ("hulme_hemisphere", "hulme_chief", "submerged_sphere")
+
+
+def _free_surface_entries() -> tuple:
+    return tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group in FREE_SURFACE_3D_GROUPS
+    )
+
+
+def test_standard_tier_reproduces_the_3d_free_surface_coarse_rows():
+    """One coarse level per family keeps the 3-D free-surface path in CI.
+
+    A 256-panel free-surface solve costs seconds, so a registry that kept the
+    published tables out of the default tiers would leave ``pytest`` without any
+    coverage of ``free_surface_solver3d``.  The coarsest level of each family
+    (16-panel hemisphere, 20-panel sphere) is therefore registered in the default
+    tiers and recomputed here.
+    """
+    entries = _free_surface_entries()
+    guards = {
+        "hulme_hemisphere_16_heave_added_mass_error",
+        "submerged_sphere_20_heave_added_mass_error",
+    }
+    registry = {entry.key: entry for entry in entries}
+    assert guards <= set(registry), guards - set(registry)
+    coarse = tuple(registry[key] for key in sorted(guards))
+    assert all(entry.tier in {"fast", "standard"} for entry in coarse)
+    report = check(tiers=("fast", "standard"), entries=coarse)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+
+
+@HEAVY
+def test_documented_3d_free_surface_tables_are_reproduced():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md, recomputed end to end.
+
+    These numbers carry the solver's three-dimensional free-surface claims
+    (Hulme hemisphere radiation/diffraction, the interior-waterline CHIEF
+    comparison, and the Wang/Linton submerged sphere) but had never been
+    executable: nothing in the test suite recomputed them.  The run is shared
+    between all rows by the registry cache, and the captured values are reused
+    for the passivity and convergence assertions below so that the expensive
+    studies run once each.
+    """
+    entries = _free_surface_entries()
+    assert {entry.group for entry in entries} == set(FREE_SURFACE_3D_GROUPS)
+    assert len(entries) >= 60
+    captured: dict[str, list] = {}
+
+    def recording_runner(group: str, parameters: dict) -> dict:
+        values = _run_group(group, parameters)
+        captured.setdefault(group, []).append(values)
+        return values
+
+    report = check(tiers=("fast", "standard"), entries=entries, runner=recording_runner)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+
+    # Passivity is the physics behind table 11: the unregularized boundary
+    # integral equation returns a negative heave damping at the first interior
+    # waterplane resonance (Ka=2.58), and the CHIEF augmented system must return
+    # a positive one.  The registry stores the sign-bearing value, so the claim
+    # is pinned directly here.
+    chief = captured["hulme_chief"][0]
+    assert chief["ka2.58_unregularized_b33_dimless"] < 0.0
+    assert chief["ka2.58_chief_regularized_b33_dimless"] > 0.0
+    assert (
+        chief["ka2.58_chief_regularized_condition_number"]
+        < 0.05 * chief["ka2.58_unregularized_condition_number"]
+    )
+
+    # The documented convergence orders are only meaningful if the error of the
+    # finest level is genuinely smaller than the coarsest one: an order can be
+    # quoted from a family that is not converging at all.
+    hulme = captured["hulme_hemisphere"][0]
+    for quantity in (
+        "heave_added_mass_rel_error",
+        "heave_damping_rel_error",
+        "surge_added_mass_rel_error",
+    ):
+        assert hulme[f"sub1_{quantity}"] > hulme[f"sub3_{quantity}"]
+    sphere = captured["submerged_sphere"][0]
+    for quantity in ("heave_added_mass_rel_error", "surge_added_mass_rel_error"):
+        assert sphere[f"sub0_{quantity}"] > sphere[f"sub2_{quantity}"]
+
+    # The two rows folded in from m3245 are upper bounds taken from the same
+    # run: the multipole reference satisfies the Haskind identity to machine
+    # precision, so "within 4e-3" is the only meaningful sentence about them.
+    for quantity in ("haskind_reciprocity_rel_diff_x", "haskind_reciprocity_rel_diff_z"):
+        assert sphere[f"sub2_{quantity}"] <= 4.0e-3
+
+
+def test_submerged_sphere_group_alias_still_resolves():
+    """The m3245 group name is an alias, not a second benchmark.
+
+    m3245's evidence page (docs/free_surface3d_registry.md) and its artifact name
+    the group ``submerged_sphere_wave``; the merge keeps that string dispatching
+    to the same study instead of dropping it.
+    """
+    parameters = {"subdivisions": [0], "ka": 0.8, "submergence": 1.5}
+    canonical = _run_group("submerged_sphere", parameters)
+    alias = _run_group("submerged_sphere_wave", parameters)
+    assert canonical == alias
+    assert "sub0_heave_added_mass_rel_error" in canonical

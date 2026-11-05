@@ -46,8 +46,14 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    # m3245 imported these two benchmarks as ``..._benchmark``; main imported the
+    # same modules as ``hemisphere_benchmark`` / ``sphere_benchmark``.  Both
+    # names are kept so that neither side's call sites has to be rewritten by
+    # the merge (see docs/m3245/merge_reconciliation_m3861.md).
+    floating_hemisphere as floating_hemisphere_benchmark,
     floating_hemisphere as hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
+    submerged_sphere_wave as submerged_sphere_wave_benchmark,
     submerged_sphere_wave as sphere_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
@@ -80,8 +86,10 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics``, ``hulme_hemisphere``,
+    ``hulme_chief`` or ``submerged_sphere`` (the m3245 registry wrote the last
+    one as ``submerged_sphere_wave``; the dispatcher accepts both)."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -91,6 +99,7 @@ class DeclaredNumber:
     kind: str = "value"
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
+
 
 
 #: The registry. ``source`` cites the current wording; every value below is the
@@ -917,6 +926,43 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
+    # --- folded from the m3245 registry -----------------------------------
+    # m3245 registered tables 10-12 under its own key/tier scheme while main
+    # registered the same documented cells here (``sub<level>_<quantity>``
+    # names, default tiers).  The two tables quote identical numbers, so the
+    # merge keeps this registration and folds in only the two rows main did not
+    # carry: the Newman Haskind reciprocity residuals of the submerged sphere.
+    # Both are registered as upper bounds because the multipole reference
+    # satisfies the identity to machine precision, so only "within X" is a
+    # meaningful sentence.  Source keeps the m3245 evidence page.
+    DeclaredNumber(
+        key="submerged_sphere_320_haskind_reciprocity_z",
+        description="Haskind reciprocity residual of the vertical force at 320 panels",
+        source=(
+            "docs/free_surface3d_registry.md section 3 (m3245); "
+            "docs/marine_bem_benchmarks.md section 4.11 table 12"
+        ),
+        group="submerged_sphere",
+        quantity="sub2_haskind_reciprocity_rel_diff_z",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=4.0e-3,
+        tier="standard",
+        kind="upper",
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_320_haskind_reciprocity_x",
+        description="Haskind reciprocity residual of the horizontal force at 320 panels",
+        source=(
+            "docs/free_surface3d_registry.md section 3 (m3245); "
+            "docs/marine_bem_benchmarks.md section 4.11 table 12"
+        ),
+        group="submerged_sphere",
+        quantity="sub2_haskind_reciprocity_rel_diff_x",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=4.0e-3,
+        tier="standard",
+        kind="upper",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -1030,7 +1076,10 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             ka=float(parameters.get("ka", 1.0)),
         )
         return _study_rows(study)
-    if group == "submerged_sphere":
+    if group in ("submerged_sphere", "submerged_sphere_wave"):
+        # ``submerged_sphere_wave`` is the m3245 name of this same benchmark
+        # group; kept as an alias so that the m3245 evidence page and its
+        # artifact still name a resolvable group.
         study = sphere_benchmark.run_refinement_study(
             subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (0, 1, 2))),
             ka=float(parameters.get("ka", 0.8)),
