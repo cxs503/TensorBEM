@@ -28,6 +28,7 @@ from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
     DeclaredNumber,
+    _free_surface_3d_rows,
     _run_group,
     check,
     richardson_limit,
@@ -93,6 +94,7 @@ def test_registry_covers_every_documented_benchmark_family():
         "hulme_hemisphere",
         "interior_harmonics",
         "submerged_sphere",
+        "submerged_sphere_wave",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -143,9 +145,18 @@ def test_3d_free_surface_rows_are_guarded_by_the_default_tiers():
     The 3-D free-surface solves cost seconds, not the minutes that put a row in
     the heavy tier, so no quoted 3-D free-surface number may hide behind
     ``TENSORBEM_HEAVY_TESTS``.
+
+    The assertion is scoped to the per-cell ``sub<k>_`` rows: the table-driven
+    ``panels<k>.`` rows of ``agent/m3245`` register the published cells in the
+    heavy tier and pin one coarse level in ``standard``, and
+    ``test_documented_3d_free_surface_tables_are_reproduced`` guards those.
     """
     groups = {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
-    rows = [entry for entry in DECLARED_NUMBERS if entry.group in groups]
+    rows = [
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group in groups and entry not in _TABLE_DRIVEN_ROWS
+    ]
     assert len(rows) >= 60
     assert {entry.group for entry in rows} == groups
     assert all(entry.tier in {"fast", "standard"} for entry in rows)
@@ -370,3 +381,158 @@ def test_cli_writes_strict_json_and_passes(tmp_path):
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["summary"]["verdict"] == "PASS"
     assert payload["benchmark"] == "declared_numbers_recomputation"
+
+
+# --------------------------------------------------------------------------
+# The 3-D free-surface tables (docs/marine_bem_benchmarks.md sections 4.10-4.11)
+# --------------------------------------------------------------------------
+
+FREE_SURFACE_3D_GROUPS = ("hulme_hemisphere", "hulme_chief", "submerged_sphere_wave")
+
+#: The rows the table-driven generator of ``agent/m3245`` contributes. The merged
+#: registry carries two registration vocabularies for tables 10-12, so each suite
+#: selects its own rows by object identity instead of by group or tier.
+_TABLE_DRIVEN_ROWS = _free_surface_3d_rows()
+
+
+def _free_surface_entries(tier: str) -> tuple:
+    """The table-driven rows of the 3-D families, by tier.
+
+    Scoped to the ``panels<k>.`` vocabulary: the merged registry also carries the
+    per-cell ``sub<k>_`` rows of ``main``, which live in the cheap tiers and are
+    guarded by ``test_3d_free_surface_rows_are_guarded_by_the_default_tiers``.
+    """
+    return tuple(
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group in FREE_SURFACE_3D_GROUPS
+        and entry.tier == tier
+        and entry in _TABLE_DRIVEN_ROWS
+    )
+
+
+def test_standard_tier_reproduces_the_3d_free_surface_coarse_rows():
+    """One coarse level per family keeps the 3-D free-surface path in CI.
+
+    The published tables are registered in the heavy tier (a 256-panel
+    free-surface solve costs seconds), which would leave the default test run
+    without any coverage of ``free_surface_solver3d`` through the registry. The
+    documented 64-panel hemisphere and 80-panel sphere cells are therefore
+    recomputed here as well.
+    """
+    entries = _free_surface_entries("standard")
+    assert len(entries) == 9
+    report = check(tiers=("standard",), entries=entries)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    assert all(
+        row["parameters"]["subdivisions"] in ([2], [1]) for row in report["checks"]
+    )
+
+
+@HEAVY
+def test_documented_3d_free_surface_tables_are_reproduced():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md, recomputed end to end.
+
+    These numbers carried the solver's three-dimensional free-surface claims
+    (Hulme hemisphere radiation/diffraction, the interior-waterline CHIEF
+    comparison, and the Wang/Linton submerged sphere) but had never been
+    executable: nothing in the test suite recomputed them. The run is shared
+    between all rows by the registry cache, and the captured values are reused
+    for the passivity assertions below so that the expensive study runs once.
+    """
+    entries = _free_surface_entries("heavy")
+    assert len(entries) == 47
+    captured: dict[str, list] = {}
+
+    def recording_runner(group: str, parameters: dict) -> dict:
+        values = _run_group(group, parameters)
+        captured.setdefault(group, []).append(values)
+        return values
+
+    report = check(tiers=("heavy",), entries=entries, runner=recording_runner)
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+
+    # Passivity is the physics behind table 11: the unregularized boundary
+    # integral equation returns a negative heave damping at Ka=2.58, the CHIEF
+    # augmented system must return a positive one. The registry only stores the
+    # magnitude (a `declared` value has to be positive), so the sign is pinned
+    # here from the same run.
+    chief = captured["hulme_chief"][0]
+    assert chief["ka2.58.unregularized.b33_dimless"] < 0.0
+    assert chief["ka2.58.chief_regularized.b33_dimless"] > 0.0
+    assert chief["ka2.58.unregularized.b33_magnitude"] == pytest.approx(
+        -chief["ka2.58.unregularized.b33_dimless"], rel=0.0, abs=0.0
+    )
+
+    # The documented convergence orders are only meaningful if the error of the
+    # finest level is genuinely smaller than the coarsest one: an order can be
+    # quoted from a family that is not converging at all.
+    hulme = captured["hulme_hemisphere"][0]
+    for quantity in (
+        "heave_added_mass_rel_error",
+        "heave_damping_rel_error",
+        "surge_added_mass_rel_error",
+    ):
+        assert hulme[f"panels16.{quantity}"] > hulme[f"panels256.{quantity}"]
+    sphere = captured["submerged_sphere_wave"][0]
+    for quantity in ("heave_added_mass_rel_error", "surge_added_mass_rel_error"):
+        assert sphere[f"panels20.{quantity}"] > sphere[f"panels320.{quantity}"]
+
+
+# --------------------------------------------------------------------------
+# The merge of origin/main and agent/m3245 (PR #133)
+# --------------------------------------------------------------------------
+
+
+def test_the_merge_kept_both_table_10_12_registration_vocabularies():
+    """Neither side's registration of tables 10-12 may be dropped again.
+
+    ``origin/main`` registers one literal row per documented cell
+    (``sub<k>_<quantity>`` / ``ka<x>_<scheme>_<quantity>``), ``agent/m3245``
+    registers the same tables through a generator over the study dict
+    (``panels<k>.<quantity>``). The two sets overlap almost completely, but the
+    per-cell set also quotes the condition numbers and the intermediate
+    observed orders, and the generated set quotes the semi-analytical reference
+    and registers the closure residuals as upper bounds. A merge that keeps
+    only one of them loses coverage, so both are pinned here.
+    """
+    per_cell_groups = set(FREE_SURFACE_3D_GROUPS) | {"submerged_sphere"}
+    per_cell = [
+        entry
+        for entry in DECLARED_NUMBERS
+        if entry.group in per_cell_groups and entry not in _TABLE_DRIVEN_ROWS
+    ]
+    generated = [entry for entry in DECLARED_NUMBERS if entry in _TABLE_DRIVEN_ROWS]
+    assert len(per_cell) == 62
+    assert len(generated) == 56
+    assert all(entry.tier in {"fast", "standard"} for entry in per_cell)
+    assert {entry.group for entry in generated} == set(FREE_SURFACE_3D_GROUPS)
+    # both names of the submerged-sphere family resolve to the one study
+    assert {"submerged_sphere", "submerged_sphere_wave"} <= {
+        entry.group for entry in DECLARED_NUMBERS
+    }
+    assert len({entry.key for entry in DECLARED_NUMBERS}) == len(DECLARED_NUMBERS)
+
+
+def test_the_two_sphere_family_names_share_one_dispatch():
+    """``submerged_sphere`` (main) and ``submerged_sphere_wave`` (branch) agree.
+
+    One measurement serves both vocabularies: this pins that, so a future
+    resolution cannot leave one of the two group names dispatching to a
+    different study (or to nothing at all).
+    """
+    parameters = {"subdivisions": [0], "ka": 0.8, "submergence": 1.5}
+    aliased = _run_group("submerged_sphere", parameters)
+    canonical = _run_group("submerged_sphere_wave", parameters)
+    assert "sub0_heave_added_mass_rel_error" in aliased  # per-cell vocabulary
+    assert "panels20.heave_added_mass_rel_error" in canonical  # generated vocabulary
+    for quantity in ("sub0_heave_added_mass_rel_error", "panels20.heave_added_mass_rel_error"):
+        assert aliased[quantity] == canonical[quantity]
