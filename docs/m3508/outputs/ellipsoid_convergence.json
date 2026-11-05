@@ -1,0 +1,107 @@
+{
+  "benchmark": "three_dimensional_translating_ellipsoid",
+  "density": 1025.0,
+  "rows": {
+    "1280": {
+      "axes": [
+        {
+          "added_mass": 1206.0044075005273,
+          "added_mass_relative_error": 0.004167936438948101,
+          "normal_derivative_relative_l2_error": 0.012911645206959553
+        },
+        {
+          "added_mass": 2426.2786264941674,
+          "added_mass_relative_error": 0.004462121490841226,
+          "normal_derivative_relative_l2_error": 0.0140287689246097
+        },
+        {
+          "added_mass": 4163.735328065621,
+          "added_mass_relative_error": 0.004935932283260787,
+          "normal_derivative_relative_l2_error": 0.016628501053842868
+        }
+      ],
+      "h_max": 0.24697074009588044,
+      "source": "docs/benchmark_pins.json::ellipsoid_added_mass_1280",
+      "volume_ratio": 0.9913938426297547
+    },
+    "20": {
+      "axes": [
+        {
+          "added_mass": 958.4859947592242,
+          "added_mass_relative_error": 0.20855091397746117,
+          "exact_added_mass": 1211.051995240953,
+          "normal_derivative_relative_l2_error": 0.09832697311732125
+        },
+        {
+          "added_mass": 1922.280060363366,
+          "added_mass_relative_error": 0.21126016101465114,
+          "exact_added_mass": 2437.153501509733,
+          "normal_derivative_relative_l2_error": 0.0728191427324797
+        },
+        {
+          "added_mass": 3241.20487660794,
+          "added_mass_relative_error": 0.2254054941769826,
+          "exact_added_mass": 4184.38918975305,
+          "normal_derivative_relative_l2_error": 0.07986771862141744
+        }
+      ],
+      "h_max": 1.5771933363574009,
+      "source": "fresh run",
+      "subdivisions": 0,
+      "volume_ratio": 0.6054613829125256
+    },
+    "320": {
+      "axes": [
+        {
+          "added_mass": 1191.2955950090695,
+          "added_mass_relative_error": 0.016313420323421063,
+          "normal_derivative_relative_l2_error": 0.0272899477480737
+        },
+        {
+          "added_mass": 2394.8177826981614,
+          "added_mass_relative_error": 0.01737096936460751,
+          "normal_derivative_relative_l2_error": 0.028423109571790933
+        },
+        {
+          "added_mass": 4104.549811866565,
+          "added_mass_relative_error": 0.019080294462570657,
+          "normal_derivative_relative_l2_error": 0.03348262491625473
+        }
+      ],
+      "h_max": 0.48737954434935943,
+      "source": "docs/benchmark_pins.json::ellipsoid_added_mass_320",
+      "volume_ratio": 0.9661607485985874
+    },
+    "80": {
+      "axes": [
+        {
+          "added_mass": 1136.423797972352,
+          "added_mass_relative_error": 0.06162262030190759,
+          "exact_added_mass": 1211.051995240953,
+          "normal_derivative_relative_l2_error": 0.06164803931432126
+        },
+        {
+          "added_mass": 2279.4002968400105,
+          "added_mass_relative_error": 0.06472846481438274,
+          "exact_added_mass": 2437.153501509733,
+          "normal_derivative_relative_l2_error": 0.053261228321893846
+        },
+        {
+          "added_mass": 3890.642146050627,
+          "added_mass_relative_error": 0.070200698448836,
+          "exact_added_mass": 4184.38918975305,
+          "normal_derivative_relative_l2_error": 0.06057678117366789
+        }
+      ],
+      "h_max": 0.9270509831248421,
+      "source": "fresh run",
+      "subdivisions": 1,
+      "volume_ratio": 0.8734532000030633
+    }
+  },
+  "semi_axes": [
+    1.5,
+    1.0,
+    0.75
+  ]
+}

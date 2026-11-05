@@ -38,7 +38,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Mapping
 
-from . import cylinder_added_mass, ursell_cylinder
+from . import (
+    cylinder_added_mass,
+    ellipse_added_mass,
+    ellipsoid_added_mass,
+    ursell_cylinder,
+)
 
 PIN_SCHEMA = "tensorbem-doc-pins/1"
 DEFAULT_PIN_PATH = Path(__file__).resolve().parents[3] / "docs" / "benchmark_pins.json"
@@ -88,6 +93,44 @@ _URSELL_METRICS = (
     "panel_damping_relative_error",
     "near_over_far_field_damping",
     "reference_solution_added_mass_relative_error",
+)
+
+
+def _ellipse(panels: int, axis: str) -> dict[str, object]:
+    return {"panel_count": panels, "axis": axis}
+
+
+def _ellipsoid(subdivisions: int) -> dict[str, object]:
+    return {"subdivisions": subdivisions}
+
+
+#: The classical 2-D *exterior* operator on an ellipse.  Table 3 of the
+#: benchmark report quotes both motion axes at 128 panels, and the README quotes
+#: the same pair as the classical-layer headline.
+_ELLIPSE_METRICS = (
+    "added_mass_per_unit_span",
+    "added_mass_relative_error",
+    "normal_derivative_relative_l2_error",
+    "h_max",
+)
+
+#: The classical 3-D exterior operator on an ellipsoid.  Table 4 quotes the
+#: three principal axes, so the rows are addressed by dotted paths: the
+#: benchmark returns one row per axis and a flat metric name would silently pin
+#: only the first one.
+_ELLIPSOID_METRICS = (
+    "panels",
+    "h_max",
+    "volume_ratio",
+    "axes.0.added_mass",
+    "axes.0.added_mass_relative_error",
+    "axes.0.normal_derivative_relative_l2_error",
+    "axes.1.added_mass",
+    "axes.1.added_mass_relative_error",
+    "axes.1.normal_derivative_relative_l2_error",
+    "axes.2.added_mass",
+    "axes.2.added_mass_relative_error",
+    "axes.2.normal_derivative_relative_l2_error",
 )
 
 CASES: tuple[PinCase, ...] = (
@@ -157,6 +200,64 @@ CASES: tuple[PinCase, ...] = (
         metrics=_URSELL_METRICS,
         slow=True,
         caption="refinement row; takes about 90 s, excluded from the default check",
+    ),
+    # -- classical layer: the exterior operator on an ellipse and an ellipsoid.
+    # These are the README's ``h^2 convergence for both added-mass families''
+    # numbers.  Until they were pinned here no test read them: the 1280-panel
+    # ellipsoid row was quoted in the README, in the benchmark report and in
+    # ``expand_audit_tensorbem.md``, and that audit could only reproduce the
+    # 320- and 5120-panel rows and had to extrapolate for the middle one.
+    PinCase(
+        name="ellipse_added_mass_2d_128_x",
+        doc=(
+            "README.md classical-layer paragraph + docs/marine_bem_benchmarks.md "
+            "table 3 (ellipse, 128 panels, x)"
+        ),
+        runner="ellipse_added_mass.run",
+        run=ellipse_added_mass.run,
+        settings=_ellipse(128, "x"),
+        metrics=_ELLIPSE_METRICS,
+        caption="7.5356e-4 at 128 panels, x axis (README: 7.54e-4, observed order 2.00)",
+    ),
+    PinCase(
+        name="ellipse_added_mass_2d_128_y",
+        doc=(
+            "README.md classical-layer paragraph + docs/marine_bem_benchmarks.md "
+            "table 3 (ellipse, 128 panels, y)"
+        ),
+        runner="ellipse_added_mass.run",
+        run=ellipse_added_mass.run,
+        settings=_ellipse(128, "y"),
+        metrics=_ELLIPSE_METRICS,
+        caption="8.9977e-4 at 128 panels, y axis (README: 9.00e-4)",
+    ),
+    PinCase(
+        name="ellipsoid_added_mass_320",
+        doc=(
+            "docs/marine_bem_benchmarks.md table 4 (ellipsoid, 320 panels); the "
+            "coarser row the printed observed order is measured from"
+        ),
+        runner="ellipsoid_added_mass.run",
+        run=ellipsoid_added_mass.run,
+        settings=_ellipsoid(2),
+        metrics=_ELLIPSOID_METRICS,
+        caption="1.6313e-2/1.7371e-2/1.9080e-2 at 320 panels; about 11 s",
+    ),
+    PinCase(
+        name="ellipsoid_added_mass_1280",
+        doc=(
+            "README.md classical-layer paragraph + docs/marine_bem_benchmarks.md "
+            "table 4 (ellipsoid, 1280 panels)"
+        ),
+        runner="ellipsoid_added_mass.run",
+        run=ellipsoid_added_mass.run,
+        settings=_ellipsoid(3),
+        metrics=_ELLIPSOID_METRICS,
+        slow=True,
+        caption=(
+            "headline 4.1679e-3/4.4621e-3/4.9359e-3 at 1280 panels; takes about "
+            "60 s, excluded from the default check"
+        ),
     ),
 )
 
