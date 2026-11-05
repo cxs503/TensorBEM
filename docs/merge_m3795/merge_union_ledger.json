@@ -1,0 +1,74 @@
+{
+  "counts": {
+    "m3245": 78,
+    "main": 84,
+    "merged": 140
+  },
+  "duplicate_keys_in_merged": 0,
+  "groups": {
+    "cylinder": [
+      2,
+      2,
+      2
+    ],
+    "ellipsoid": [
+      3,
+      3,
+      3
+    ],
+    "hulme_chief": [
+      6,
+      6,
+      12
+    ],
+    "hulme_hemisphere": [
+      31,
+      27,
+      58
+    ],
+    "interior_harmonics": [
+      6,
+      6,
+      6
+    ],
+    "submerged_sphere": [
+      25,
+      0,
+      25
+    ],
+    "submerged_sphere_wave": [
+      0,
+      23,
+      23
+    ],
+    "ursell": [
+      9,
+      9,
+      9
+    ],
+    "ursell_reference": [
+      2,
+      2,
+      2
+    ]
+  },
+  "lost_keys": [],
+  "shared_keys": 22,
+  "tiers": {
+    "fast": [
+      40,
+      8,
+      40
+    ],
+    "heavy": [
+      10,
+      57,
+      57
+    ],
+    "standard": [
+      34,
+      13,
+      43
+    ]
+  }
+}
