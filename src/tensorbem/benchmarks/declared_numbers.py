@@ -917,6 +917,50 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
+    # --- Table 11 cells that quote the reference, not a numerical scheme ----
+    # (m3181 registered these three cells; merging PR #128 keeps them so that
+    # the "exact" columns of the A33'/B33' headers stay executable.)
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33",
+        description="Hulme semi-analytical reference A33', Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.4007,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33",
+        description="Hulme semi-analytical reference B33', Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.0631,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_chief_point_count",
+        description="interior CHIEF points used at Ka=2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_chief_regularized_chief_point_count",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=5.0,
+        tier="standard",
+    ),
+    # --- Table 12 machine-zero cell (an upper bound, not a value) -----------
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description="sphere-centre rotational coupling ratio at 20 panels (machine zero)",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-20,
+        kind="upper",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -964,6 +1008,12 @@ def _chief_rows(rows) -> dict[str, float]:
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
+        # Table 11 quotes the semi-analytical Hulme reference itself as its own
+        # pair of cells (the "exact" columns of the A33'/B33' headers), outside
+        # the two numerical schemes; register it so a reference drift is caught
+        # separately from a solver drift.
+        values[prefix + "exact_a33_dimless"] = float(row["exact_a33"])
+        values[prefix + "exact_b33_dimless"] = float(row["exact_b33"])
         for scheme in ("unregularized", "chief_regularized"):
             for key, value in row[scheme].items():
                 if isinstance(value, bool) or not isinstance(value, (int, float)):

@@ -370,3 +370,87 @@ def test_cli_writes_strict_json_and_passes(tmp_path):
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["summary"]["verdict"] == "PASS"
     assert payload["benchmark"] == "declared_numbers_recomputation"
+
+
+# --------------------------------------------------------------------------
+# The 3-D free-surface tables, end to end (PR #128 / m3181, re-homed on the
+# m3150 registry when the two were merged)
+# --------------------------------------------------------------------------
+
+
+def test_three_dimensional_free_surface_tables_are_fully_registered():
+    """Every cell of tables 10-12 of ``docs/marine_bem_benchmarks.md`` has a row.
+
+    Table 10 (Hulme hemisphere refinement) contributes six columns x three mesh
+    levels, five observed orders x two refined levels, and the three
+    closure/reciprocity numbers the running text quotes. Table 11 contributes
+    the two reference cells of the ``A33'``/``B33'`` headers, the three
+    unregularized cells and the four CHIEF cells. Table 12 (submerged sphere)
+    contributes six columns x three levels plus four observed orders x two
+    refined levels. Rows of one table must share a single solve, otherwise the
+    registry would silently pay for the same benchmark several times.
+    """
+    hulme = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme_hemisphere"]
+    chief = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme_chief"]
+    sphere = [entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"]
+    assert (len(hulme), len(chief), len(sphere)) == (31, 9, 26)
+    for table in (hulme, chief, sphere):
+        assert len({json.dumps(entry.parameters, sort_keys=True) for entry in table}) == 1
+        assert all("marine_bem_benchmarks.md" in entry.source for entry in table)
+        assert len({entry.key for entry in table}) == len(table)
+    # The passivity claim of table 11 needs the sign of both dampings.
+    signed = {entry.key: entry.declared for entry in chief}
+    assert signed["hulme_chief_2_58_unregularized_b33"] < 0.0
+    assert signed["hulme_chief_2_58_chief_b33"] > 0.0
+    # The 20-panel rotational coupling is quoted as machine zero (2.5e-32), i.e.
+    # an upper bound rather than a value.
+    machine_zero = [
+        entry for entry in sphere if entry.key == "submerged_sphere_20_rotational_coupling"
+    ]
+    assert len(machine_zero) == 1
+    assert machine_zero[0].kind == "upper"
+
+
+def test_table_10_b11_order_uses_the_measured_mesh_ratio():
+    """Table 10's observed-order column has one definition; the registry keeps it.
+
+    ``B11'`` is the slowest-converging column of table 10, and its observed order
+    depends on which mesh ratio divides the error ratio. Dividing by the ideal
+    ``sqrt(N)`` halving gives 1.62 / 1.88 (the values the pre-merge m3181 branch
+    registered); dividing by the measured mean edge length ratio gives the
+    1.80 / 1.94 that table 10 quotes for every other column. The registry must
+    declare the latter, so that a reader of the table finds the registered value.
+    """
+    values = _run_group("hulme_hemisphere", {"subdivisions": [1, 2, 3], "ka": 1.0})
+    e0, e1 = values["sub1_surge_damping_rel_error"], values["sub2_surge_damping_rel_error"]
+    h0, h1 = values["sub1_h_mean"], values["sub2_h_mean"]
+    measured_ratio = math.log(e0 / e1) / math.log(h0 / h1)
+    halving_ratio = math.log(e0 / e1) / math.log(2.0)
+    declared = {entry.key: entry.declared for entry in DECLARED_NUMBERS}
+    assert abs(declared["hulme_hemisphere_256_order_b11"] - measured_ratio) < 5.0e-3
+    # The alternative convention stays within 2 % of the rounded figures table 10
+    # used before the m3150 correction (1.62 / 1.89) -- both readings are right,
+    # the table just has to pick one.
+    assert abs(halving_ratio - 1.62) < 0.05
+    # Second order is the physical content of the table, not a rounding
+    # coincidence: every column of the finest level must land near two.
+    for mode in ("a33", "b33", "a11", "b11", "fz"):
+        assert 1.7 <= values[f"sub2_observed_order_{mode}"] <= 2.3
+
+
+def test_table_12_converges_at_second_order_and_machine_zero_coupling_holds():
+    """Table 12: one solve, four columns near second order, one machine zero.
+
+    The reference is the multipole system of ``submerged_sphere_wave_multipole``
+    (closed-form factorials and ``Ei(2*nu*f)``, no numerical quadrature), so this
+    test separates a panel-assembly drift from a reference drift. The rotational
+    coupling about the sphere centre is symmetric to machine precision at the
+    coarsest level, which is why that cell is registered as an upper bound.
+    """
+    values = _run_group(
+        "submerged_sphere", {"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5}
+    )
+    for mode in ("a33", "b33", "a11", "fz"):
+        assert 1.7 <= values[f"sub2_observed_order_{mode}"] <= 2.3
+    assert values["sub0_rotational_added_mass_max_ratio"] < 1.0e-20
+    assert values["sub2_rotational_added_mass_max_ratio"] < values["sub1_rotational_added_mass_max_ratio"]
