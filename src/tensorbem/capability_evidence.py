@@ -565,6 +565,10 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
+    "tensorbem.benchmarks.finite_depth3d_verification":
+        "report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary"
+        " conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports"
+        " on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.",
 }
 
 
