@@ -28,6 +28,8 @@ from tensorbem.benchmarks.declared_numbers import (
     DECLARED_NUMBERS,
     TIERS,
     DeclaredNumber,
+    _HEMISPHERE_TABLE,
+    _SPHERE_TABLE,
     _run_group,
     check,
     richardson_limit,
@@ -89,10 +91,13 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hemisphere3d",
+        "hemisphere3d_chief",
         "hulme_chief",
         "hulme_hemisphere",
         "interior_harmonics",
         "submerged_sphere",
+        "submerged_sphere3d",
         "ursell",
         "ursell_reference",
     } <= groups
@@ -114,7 +119,16 @@ def test_fast_tier_reproduces_the_documented_numbers():
 
 
 def test_standard_tier_reproduces_the_documented_ursell_numbers():
-    """The 128-panel Ursell row is the one a verification audit disputed."""
+    """The 128-panel Ursell row is the one a verification audit disputed.
+
+    Merge note (m3840): the m3250 side narrowed this call to the ``ursell``
+    groups to keep the sweep cheap; main widened the asserted key set to the
+    3-D free-surface rows of tables 10-12.  Both intentions are kept by running
+    the full standard sweep -- the narrow Ursell subset below is implied by it,
+    and the 3-D keys main asserts are only reachable when nothing is filtered
+    out (the auto-merge silently produced the filtered call *and* the 3-D keys,
+    which can never both hold).
+    """
     report = check(tiers=("standard",))
     keys = {row["key"] for row in report["checks"]}
     assert {
@@ -176,6 +190,160 @@ def test_chief_regularisation_restores_passive_heave_damping():
         values["ka2.58_unregularized_a33_dimless"] - exact
     )
 
+
+
+def test_free_surface_3d_tables_are_reproduced():
+    """Tables 10-12 of docs/marine_bem_benchmarks.md were documentation-only.
+
+    The 3-D free-surface studies print those tables, but nothing read them back:
+    the long-standing tests guard the physics at a 2.5-5 % threshold, so a whole
+    convergence column could move by an order of magnitude and stay green. Every
+    cell (errors, observed orders, condition numbers, and the near/far-field and
+    Haskind closures quoted in the surrounding prose) is now a registered number.
+    """
+    groups = ("hemisphere3d", "hemisphere3d_chief", "submerged_sphere3d")
+    report = check(
+        tiers=("standard",),
+        entries=tuple(
+            entry for entry in DECLARED_NUMBERS if entry.group in groups
+        ),
+    )
+    assert report["summary"]["checked"] == 63
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+
+    # Refinement must stay refinement: the wave-exciting columns shrink with the
+    # mesh in both families and land inside the 3 % acceptance band.
+    for prefix, levels in (("hemisphere3d", (16, 64, 256)), ("sphere3d", (20, 80, 320))):
+        a33 = [measured[f"{prefix}_heave_added_mass_rel_error_{n}"] for n in levels]
+        assert a33[0] > a33[1] > a33[2]
+        assert a33[-1] < 3.0e-2
+        fz = [measured[f"{prefix}_excitation_force_z_rel_error_{n}"] for n in levels]
+        assert fz[-1] < 3.0e-2
+        kappa = [measured[f"{prefix}_condition_number_{n}"] for n in levels]
+        assert kappa[-1] < 3.0  # well conditioned throughout
+
+    # The surge wave damping is the one column the documentation itself flags as
+    # discretisation-limited (3.53 % at 256 panels); it must not creep past 5 %.
+    assert measured["hemisphere3d_surge_damping_rel_error_256"] < 5.0e-2
+    assert measured["hemisphere3d_surge_added_mass_rel_error_256"] < 3.0e-2
+
+    # Table 11's message: interior CHIEF cuts the condition number by >20x at the
+    # waterline resonance and brings the heave damping back inside a factor of
+    # three of the exact value (unregularised: |B33'| off by 265 %).
+    assert (
+        measured["chief3d_chief_regularized_condition_number"]
+        / measured["chief3d_unregularized_condition_number"]
+        < 5.0e-2
+    )
+    assert measured["chief3d_unregularized_b33_dimless_abs"] > 1.0e-1
+    assert measured["chief3d_chief_regularized_b33_dimless_abs"] < 1.0e-1
+
+
+_LEVEL_PANELS = {
+    "hemisphere3d": tuple(sorted(_HEMISPHERE_TABLE)),
+    "submerged_sphere3d": tuple(sorted(_SPHERE_TABLE)),
+}
+
+#: The two merge sides name the same table cells differently.  The m3150
+#: (main) rows key them ``sub<level>_<quantity>``, the m3250 rows
+#: ``<panels>.<quantity>``; these aliases are the only renames between them.
+_QUANTITY_ALIASES = {
+    "rotational_coupling": "rotational_added_mass_max_ratio",
+}
+
+
+def _canonical_quantity(quantity: str) -> str:
+    quantity = _QUANTITY_ALIASES.get(quantity, quantity)
+    if quantity.startswith("order_"):
+        return "observed_" + quantity
+    if quantity.endswith("b33_dimless_abs"):
+        return quantity[: -len("_abs")]
+    return quantity
+
+
+def _m3150_cells() -> dict[tuple[str, int, str], float]:
+    """``(group, panels, quantity) -> declared`` for the main-side 3-D rows."""
+    cells: dict[tuple[str, int, str], float] = {}
+    for entry in DECLARED_NUMBERS:
+        quantity = entry.quantity
+        if entry.group in {"hulme_hemisphere", "submerged_sphere"}:
+            prefix, _, rest = quantity.partition("_")
+            level = int(prefix[3:])
+            group = (
+                "hemisphere3d"
+                if entry.group == "hulme_hemisphere"
+                else "submerged_sphere3d"
+            )
+            offset = 1 if group == "hemisphere3d" else 0
+            panels = _LEVEL_PANELS[group][level - offset]
+            cells[(group, panels, _canonical_quantity(rest))] = entry.declared
+        elif entry.group == "hulme_chief":
+            _, _, rest = quantity.partition("_")
+            cells[("hemisphere3d_chief", 0, _canonical_quantity(rest))] = abs(
+                entry.declared
+            )
+    return cells
+
+
+def _m3250_cells() -> dict[tuple[str, int, str], float]:
+    """``(group, panels, quantity) -> declared`` for the m3250-side 3-D rows."""
+    cells: dict[tuple[str, int, str], float] = {}
+    for entry in DECLARED_NUMBERS:
+        if entry.group not in {
+            "hemisphere3d",
+            "hemisphere3d_chief",
+            "submerged_sphere3d",
+        }:
+            continue
+        prefix, _, rest = entry.quantity.partition(".")
+        panels = 0 if entry.group == "hemisphere3d_chief" else int(prefix)
+        cells[(entry.group, panels, _canonical_quantity(rest))] = entry.declared
+    return cells
+
+
+def test_the_two_three_dimensional_registry_conventions_agree():
+    """The merge of m3250 into main left two namings for the same table cells.
+
+    main pinned tables 10-12 as literal rows grouped ``hulme_hemisphere`` /
+    ``hulme_chief`` / ``submerged_sphere``; m3250 pinned the same tables through
+    a generator grouped ``hemisphere3d`` / ``hemisphere3d_chief`` /
+    ``submerged_sphere3d``.  Neither side may be dropped (both sets of tests and
+    both halves of the documentation quote them), so the registry carries both
+    and this test is the seam: every cell the two conventions share must carry
+    the same declared number, or the duplication becomes a silent divergence.
+    """
+    m3150 = _m3150_cells()
+    m3250 = _m3250_cells()
+    # Row counts come from the registry itself: the cell maps below drop cells
+    # the two namings spell identically (a handful of chief columns), so they
+    # cannot be used to count.
+    main_groups = {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
+    m3250_groups = {"hemisphere3d", "hemisphere3d_chief", "submerged_sphere3d"}
+    assert sum(1 for e in DECLARED_NUMBERS if e.group in main_groups) == 62
+    assert sum(1 for e in DECLARED_NUMBERS if e.group in m3250_groups) == 63
+    shared = set(m3150) & set(m3250)
+    assert len(shared) >= 55, "the two conventions stopped describing the same cells"
+
+    disagreements = [
+        (key, m3150[key], m3250[key])
+        for key in sorted(shared)
+        # observed orders are printed with two decimals in the docs, so the
+        # coarser convention may round them; everything else must agree exactly.
+        if not math.isclose(m3150[key], m3250[key], rel_tol=3.0e-3, abs_tol=1.0e-12)
+    ]
+    assert not disagreements, disagreements
+
+    # The cells only m3250 registers are the roundoff-artefact upper bound and
+    # a few CHIEF columns whose key spells the branch into the key rather than
+    # into the quantity; they are covered by m3250's own reproduction test.
+    m3250_only = set(m3250) - shared
+    assert ("submerged_sphere3d", 20, "rotational_added_mass_max_ratio") in m3250_only
+    assert all(group == "hemisphere3d_chief" or group == "submerged_sphere3d" for group, _, _ in m3250_only)
 
 @HEAVY
 def test_documented_1280_panel_harmonic_rows_are_reproduced():
