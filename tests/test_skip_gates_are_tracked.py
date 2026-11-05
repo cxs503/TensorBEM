@@ -62,6 +62,11 @@ ARTIFACT_GATES: dict[tuple[str, str], str] = {
     ("test_mixed_boundary.py", "ARTIFACT"): "docs/mixed_boundary/outputs/study.json",
     ("test_near_surface_band.py", "STUDY"): "docs/m3383/near_surface_band_study.json",
     ("test_three_dimensional_doc_pins.py", "pins.PINS_FILE"): "docs/three_dimensional_pins.json",
+    # m4576: both gates were live but unregistered, so CI could not tell them
+    # apart from the dead-gate class this file exists to catch. The artifacts
+    # are committed, so the gates can fire.
+    ("test_lifting_camber.py", "ARTIFACT"): "docs/lifting_camber_artifact/benchmark.json",
+    ("test_near_surface_three_way.py", "ARTIFACT"): "docs/m3530/near_surface_three_way.json",
     ("test_ursell_quadrature_convergence.py", "summary_path"): "docs/ursell_quadrature_study/summary.json",
     ("test_ursell_quadrature_convergence.py", "raw_path"): "docs/ursell_quadrature_study/raw",
 }
