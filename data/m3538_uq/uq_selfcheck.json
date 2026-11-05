@@ -1,0 +1,239 @@
+{
+  "bootstrap": {
+    "bootstrap_mape": {
+      "covers_10pct": true,
+      "hi": 16.47450419821358,
+      "level": 0.95,
+      "lo": 5.901363251586275,
+      "n": 8,
+      "n_boot": 4000,
+      "point": 10.90666224042766,
+      "reference_case": "10% bias, 5% multiplicative scatter, n=8",
+      "seed": 20261103
+    },
+    "perturbation_band_5pct": {
+      "distribution": "uniform",
+      "hi": 13.400776404252204,
+      "level": 0.95,
+      "lo": 9.170095356832817,
+      "median": 11.278265078735444,
+      "n_points": 8,
+      "n_samples": 20000,
+      "nominal": 10.90666224042766,
+      "rel_sigma": 0.05,
+      "seed": 20261103
+    }
+  },
+  "hydrostatic_gci": [
+    {
+      "asymptotic_ratio": 1.0177443946523579,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 2.095196754889991,
+      "fine": 2.0821017981243184,
+      "gci_band95": [
+        2.065733102167228,
+        2.098470494081409
+      ],
+      "gci_fine": 0.00786162135388214,
+      "observed_order": 1.9153959156377458,
+      "quantity": "displaced_volume",
+      "reference": 2.0943951023931953,
+      "triple_panels": [
+        64,
+        256,
+        1024
+      ],
+      "true_error_over_gci": 0.7466170348022276,
+      "true_rel_error": 0.005869620423973357
+    },
+    {
+      "asymptotic_ratio": 1.0048385723763114,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 3.14163181324076,
+      "fine": 3.1365484905459384,
+      "gci_band95": [
+        3.1301943371774117,
+        3.1429026439144656
+      ],
+      "gci_fine": 0.002025842542425014,
+      "observed_order": 1.989558575735566,
+      "quantity": "waterplane_area",
+      "reference": 3.141592653589793,
+      "triple_panels": [
+        64,
+        256,
+        1024
+      ],
+      "true_error_over_gci": 0.7925625663186506,
+      "true_rel_error": 0.001605606964381869
+    },
+    {
+      "asymptotic_ratio": 1.0096927023020872,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 0.7854574270496151,
+      "fine": 0.7828785111124942,
+      "gci_band95": [
+        0.779654866191093,
+        0.7861021560338953
+      ],
+      "gci_fine": 0.0041176822146008745,
+      "observed_order": 1.9687013716532509,
+      "quantity": "i_transverse",
+      "reference": 0.7853981633974483,
+      "triple_panels": [
+        64,
+        256,
+        1024
+      ],
+      "true_error_over_gci": 0.7791084306628144,
+      "true_rel_error": 0.00320812092818587
+    },
+    {
+      "asymptotic_ratio": 0.9962866820973493,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 0.6249781448717765,
+      "fine": 0.6257826951907741,
+      "gci_band95": [
+        0.624777007292027,
+        0.6267883830895212
+      ],
+      "gci_fine": 0.0016070880618398896,
+      "observed_order": 1.9631039798255667,
+      "quantity": "kb",
+      "reference": 0.625,
+      "triple_panels": [
+        64,
+        256,
+        1024
+      ],
+      "true_error_over_gci": 0.7792431136628994,
+      "true_rel_error": 0.0012523123052385898
+    },
+    {
+      "asymptotic_ratio": 1.0044238170716357,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 2.094444325880186,
+      "fine": 2.091312635603745,
+      "gci_band95": [
+        2.0873980227581934,
+        2.0952272484492966
+      ],
+      "gci_fine": 0.0018718448781433667,
+      "observed_order": 1.9786244468762904,
+      "quantity": "displaced_volume",
+      "reference": 2.0943951023931953,
+      "triple_panels": [
+        256,
+        1024,
+        4096
+      ],
+      "true_error_over_gci": 0.7862667983645295,
+      "true_rel_error": 0.0014717694793728278
+    },
+    {
+      "asymptotic_ratio": 1.0012059964703925,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 3.1415950894592206,
+      "fine": 3.140331156954753,
+      "gci_band95": [
+        3.1387512413241683,
+        3.1419110725853376
+      ],
+      "gci_fine": 0.000503104784693106,
+      "observed_order": 1.997392006737166,
+      "quantity": "waterplane_area",
+      "reference": 3.141592653589793,
+      "triple_panels": [
+        256,
+        1024,
+        4096
+      ],
+      "true_error_over_gci": 0.7981376097740989,
+      "true_rel_error": 0.0004015468503208683
+    },
+    {
+      "asymptotic_ratio": 1.0024129617796957,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 0.7854018252657503,
+      "fine": 0.7847675670379536,
+      "gci_band95": [
+        0.7839747442532077,
+        0.7855603898226994
+      ],
+      "gci_fine": 0.00101026446306681,
+      "observed_order": 1.9921775987812127,
+      "quantity": "i_transverse",
+      "reference": 0.7853981633974483,
+      "triple_panels": [
+        256,
+        1024,
+        4096
+      ],
+      "true_error_over_gci": 0.7947426154507622,
+      "true_rel_error": 0.0008029002216746765
+    },
+    {
+      "asymptotic_ratio": 0.9990623320992302,
+      "conservative": true,
+      "converged": true,
+      "extrapolated": 0.6249986780156148,
+      "fine": 0.6251959188446364,
+      "gci_band95": [
+        0.6249493678083594,
+        0.6254424698809135
+      ],
+      "gci_fine": 0.0003943580385691629,
+      "observed_order": 1.9909270374994423,
+      "quantity": "kb",
+      "reference": 0.625,
+      "triple_panels": [
+        256,
+        1024,
+        4096
+      ],
+      "true_error_over_gci": 0.7948871856540509,
+      "true_rel_error": 0.0003134701514182936
+    }
+  ],
+  "manufactured": {
+    "asymptotic_ratio": 0.9976076555023922,
+    "band95": [
+      4.998999999999999,
+      5.009
+    ],
+    "coarse": 5.064,
+    "converged": true,
+    "exact": 5.0,
+    "exact_order": 2.0,
+    "extrapolated": 4.999999999999999,
+    "extrapolated_uncertainty": 0.004000000000000448,
+    "fine": 5.004,
+    "gci_fine": 0.000999200639488496,
+    "gci_medium": 0.003987240829346292,
+    "label": "",
+    "limit_error": 8.881784197001252e-16,
+    "medium": 5.016,
+    "monotone": true,
+    "observed_order": 1.999999999999947,
+    "order_error": 5.306866057708248e-14,
+    "oscillatory": false,
+    "quantity": "manufactured",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25,
+    "within_gci": true
+  },
+  "provenance": {
+    "hydrostatic_study": "tensorbem.benchmarks.hydrostatic_convergence.hemisphere_study",
+    "module": "tensorbem.uq",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25,
+    "tool": "tools/uq_selfcheck.py"
+  }
+}
