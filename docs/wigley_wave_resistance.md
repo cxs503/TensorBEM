@@ -186,17 +186,33 @@ Michell's thin-ship theory is expected to agree with experiment within:
 
 ## Two-Path Comparison
 
+**Status: the second path is not a verification path.** Until 2026-11-04 this
+section attributed the two-path gap to the thin-ship approximation. The m3100
+audit (`docs/m3100/wigley_pressure_path_audit.md`) measured the integrand
+instead and the attribution is false: the quantity the pressure path sums is
+**identically zero** for a fore-aft symmetric hull, so it carries no resistance
+at first order and there is nothing for the Kochin path to agree with.
+
 ### Expected Agreement
 
 For the two paths to agree within 5%, we would need:
-1. Exact wave potential on the hull surface
+1. A near-field integrand that actually carries resistance (first-order pressure does not)
 2. No numerical integration errors
 3. Thin-ship approximation valid
 
-In practice, the two paths **do not agree within 5%** because:
-1. **Thin-ship approximation**: Michell theory assumes `B/L << 1`. For the standard Wigley hull (`B/L = 0.1`), this is marginally valid.
-2. **Pressure on hull**: The Michell wave potential is evaluated on the actual hull surface, but Michell theory assumes the potential is evaluated on the centerplane (`y = 0`).
-3. **Numerical integration**: Both paths use numerical quadrature, introducing errors.
+The measured facts (all re-runnable, `tests/test_wigley_pressure_path_audit.py`):
+1. **Parity**: `dphi_dx(x, z)` on the centreplane is *even* in `x` (source
+   density odd -> potential odd -> `phi_x` even), while the area element is
+   `n_x dS = -b_x dx dz`, *odd* in `x`. The product is odd, so its integral over
+   `x in [-L/2, L/2]` vanishes **identically**; evaluated on an x-symmetric
+   grid it comes out at `1e-14` relative to `Rw_Kochin` (roundoff).
+2. **Centroid aliasing**: the triangulation's panel abscissae are
+   `-L/2 + h(3i+2)/3`, which admit no mirror partner (`3(i+j)+4 = 3L/h` has no
+   integer solution), so the odd integrand cannot cancel pairwise either. The
+   non-zero number the routine returns is that aliasing, and it decays like `h`.
+3. **Not a finite-B/L effect**: in the thin-ship limit `B/L = 0.1 -> 0.0125`
+   (L, Fr fixed) the ratio `Rw_pressure/Rw_Kochin` does not move towards 1; it
+   changes sign and stays order one in magnitude.
 
 ### Observed Discrepancy
 
@@ -228,15 +244,28 @@ surface, which the thin-ship theory does not provide. A valid second path needs
 a Rankine panel method with free-surface panels (Dawson), which this module
 does not implement.
 
-### Root Cause Analysis
+### Root Cause Analysis (measured, m3100)
 
-The discrepancy arises because:
-1. **Michell theory** computes the wave resistance from the far-field wave pattern, which is correct within the thin-ship approximation.
-2. **Pressure integration** uses the Michell wave potential on the hull surface, but this potential is not accurate for finite-thickness hulls.
+`wave_resistance_pressure` integrates the steady linearised Bernoulli pressure
+`p = -rho U phi_x` with the *wave part only* of the Michell potential, evaluated
+on the centreplane `y = 0`, over both sides of the hull. Two consequences:
 
-To achieve better agreement, one would need:
-- A Rankine panel method with free-surface panels (Dawson method)
-- Or a higher-order panel method with the exact free-surface condition
+1. **First-order pressure gives zero resistance** for a fore-aft symmetric hull
+   (the parity argument above). The resistance of a wave-making body is a
+   second-order quantity in the disturbance: the near-field route needs the
+   quadratic term `(rho/2)|grad phi|^2` plus the waterline term, not `p = -rho U phi_x`.
+2. **The potential used is y-independent**, while the area element it is
+   multiplied by is not symmetric; the mismatch is what the routine reports.
+   Measured ladder at Fr = 0.30 (`|Rw_pressure|/Rw_Kochin`): 0.472 (128 panels),
+   0.206 (512), 0.0729 (2048), 0.0276 (8192), 0.0059 (32768) -- sign always
+   negative, residual `prop h`, i.e. converging to the exact value zero.
+
+So the two-path criterion cannot be used as an acceptance test at all. A valid
+second path needs either (a) the quadratic near-field pressure term with the
+total (local + wave) potential and its gradient on the hull, or (b) a Rankine
+panel method with free-surface panels (Dawson). Neither is implemented; the
+Kochin far-field route remains the only verified route, and it is verified
+against its own quadrature reference and the analytic `lambda`-integral yardstick.
 
 ## Mesh Convergence
 
@@ -306,12 +335,17 @@ This implementation provides:
 - ✅ Kochin far-field wave resistance (Michell theory)
 - ✅ Pressure integration wave resistance
 - ✅ Mesh convergence study
-- ✅ Benchmark comparison with published data
-- ❌ Two-path agreement within 5% (honest FAIL: 103-284% discrepancy over the
-  mesh ladder; the previously quoted "50-200%" band is mesh-specific)
+- ❌ Benchmark comparison with published data (the carried table has no stated
+  `Cw` normalisation and no source; it is registered WITHHELD, not inherited)
+- ❌ Pressure path as an independent verification (NOT_SUPPORTED): its integrand
+  vanishes identically at first order, and the numbers it returns are centroid
+  aliasing that decays like `h`. The earlier "103-284% discrepancy, thin-ship
+  approximation" reading is superseded -- see `docs/m3100/wigley_pressure_path_audit.md`.
 
-The two-path discrepancy is a known limitation of the thin-ship approximation
-and is documented transparently.
+The Kochin route is unaffected: it is first-order accurate in the panel size and
+quadrature-converged to ~1e-7 against its own reference. The `pressure` field of
+`WigleyWaveResistanceResult` is kept for the mesh-convergence study that uses it
+as a *discretisation artefact* reference, not as physics.
 
 ## Verification of the declared numbers (2026-11-03)
 
