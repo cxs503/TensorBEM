@@ -1,0 +1,477 @@
+{
+  "public_defs": 248,
+  "untested_defs": 32,
+  "coverage_fraction": 0.8709677419354839,
+  "by_module": {
+    "tensorbem.free_surface_solver3d": {
+      "public": 11,
+      "untested": 5,
+      "names": [
+        "FreeSurface3DOperators",
+        "Radiation3DResult",
+        "Diffraction3DResult",
+        "rigid_body_normals_3d",
+        "incident_airy_wave_3d"
+      ]
+    },
+    "tensorbem.helmholtz": {
+      "public": 7,
+      "untested": 5,
+      "names": [
+        "HelmholtzDiffractionResult",
+        "VerticalCylinderDiffractionResult",
+        "points_inside_polygon",
+        "default_chief_points",
+        "assemble_helmholtz_double_layer"
+      ]
+    },
+    "tensorbem.free_surface_solver": {
+      "public": 11,
+      "untested": 4,
+      "names": [
+        "RadiationResult",
+        "DiffractionResult",
+        "assemble_indirect_matrix",
+        "incident_airy_wave"
+      ]
+    },
+    "tensorbem.analytic": {
+      "public": 27,
+      "untested": 2,
+      "names": [
+        "HulmeHemisphereResult",
+        "SubmergedSphereWaveResult"
+      ]
+    },
+    "tensorbem.causality": {
+      "public": 7,
+      "untested": 2,
+      "names": [
+        "AsymptoteFit",
+        "KKRCheck"
+      ]
+    },
+    "tensorbem.finite_depth3d": {
+      "public": 11,
+      "untested": 2,
+      "names": [
+        "polish_evanescent_roots",
+        "deep_water_limit_error"
+      ]
+    },
+    "tensorbem.rao": {
+      "public": 5,
+      "untested": 2,
+      "names": [
+        "RAOResult",
+        "RAOSpectrum"
+      ]
+    },
+    "tensorbem.solver": {
+      "public": 8,
+      "untested": 2,
+      "names": [
+        "LaplaceDirichletResult",
+        "RigidBodyAddedMass2DResult"
+      ]
+    },
+    "tensorbem.symmetry3d": {
+      "public": 11,
+      "untested": 2,
+      "names": [
+        "SymmetricOperatorBlocks",
+        "assemble_symmetric_operators_3d"
+      ]
+    },
+    "tensorbem.clearance": {
+      "public": 2,
+      "untested": 1,
+      "names": [
+        "SurfaceClearanceReport"
+      ]
+    },
+    "tensorbem.conditioning": {
+      "public": 4,
+      "untested": 1,
+      "names": [
+        "condition_number_trend"
+      ]
+    },
+    "tensorbem.doc_claims": {
+      "public": 12,
+      "untested": 1,
+      "names": [
+        "write_artifact"
+      ]
+    },
+    "tensorbem.finite_depth_solver": {
+      "public": 6,
+      "untested": 1,
+      "names": [
+        "assemble_indirect_matrix"
+      ]
+    },
+    "tensorbem.lifting": {
+      "public": 10,
+      "untested": 1,
+      "names": [
+        "NonLiftingFieldComparison"
+      ]
+    },
+    "tensorbem.solver3d": {
+      "public": 12,
+      "untested": 1,
+      "names": [
+        "RigidBodyAddedMass3DResult"
+      ]
+    },
+    "tensorbem.diagnostics_report": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.finite_depth": {
+      "public": 9,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.free_surface": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.free_surface3d": {
+      "public": 8,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.geometry": {
+      "public": 3,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.geometry3d": {
+      "public": 11,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.hydrostatic": {
+      "public": 5,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.kernels": {
+      "public": 5,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.kernels3d": {
+      "public": 15,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.mesh_quality": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.mixed": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.near_singular": {
+      "public": 3,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.pressure": {
+      "public": 6,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.quadrature_diagnostics": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.quadrature_diagnostics_2d": {
+      "public": 1,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.recovery": {
+      "public": 4,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.wigley": {
+      "public": 11,
+      "untested": 0,
+      "names": []
+    },
+    "tensorbem.wigley_hydrostatics": {
+      "public": 3,
+      "untested": 0,
+      "names": []
+    }
+  },
+  "untested": [
+    {
+      "module": "tensorbem.analytic",
+      "name": "HulmeHemisphereResult",
+      "kind": "ClassDef",
+      "lineno": 1112,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.analytic",
+      "name": "SubmergedSphereWaveResult",
+      "kind": "ClassDef",
+      "lineno": 1277,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.causality",
+      "name": "AsymptoteFit",
+      "kind": "ClassDef",
+      "lineno": 145,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.causality",
+      "name": "KKRCheck",
+      "kind": "ClassDef",
+      "lineno": 342,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.clearance",
+      "name": "SurfaceClearanceReport",
+      "kind": "ClassDef",
+      "lineno": 24,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.conditioning",
+      "name": "condition_number_trend",
+      "kind": "FunctionDef",
+      "lineno": 234,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.doc_claims",
+      "name": "write_artifact",
+      "kind": "FunctionDef",
+      "lineno": 214,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.finite_depth3d",
+      "name": "polish_evanescent_roots",
+      "kind": "FunctionDef",
+      "lineno": 216,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.finite_depth3d",
+      "name": "deep_water_limit_error",
+      "kind": "FunctionDef",
+      "lineno": 405,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.finite_depth_solver",
+      "name": "assemble_indirect_matrix",
+      "kind": "FunctionDef",
+      "lineno": 155,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver",
+      "name": "RadiationResult",
+      "kind": "ClassDef",
+      "lineno": 80,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver",
+      "name": "DiffractionResult",
+      "kind": "ClassDef",
+      "lineno": 92,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver",
+      "name": "assemble_indirect_matrix",
+      "kind": "FunctionDef",
+      "lineno": 213,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver",
+      "name": "incident_airy_wave",
+      "kind": "FunctionDef",
+      "lineno": 489,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver3d",
+      "name": "FreeSurface3DOperators",
+      "kind": "ClassDef",
+      "lineno": 82,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver3d",
+      "name": "Radiation3DResult",
+      "kind": "ClassDef",
+      "lineno": 96,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver3d",
+      "name": "Diffraction3DResult",
+      "kind": "ClassDef",
+      "lineno": 112,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver3d",
+      "name": "rigid_body_normals_3d",
+      "kind": "FunctionDef",
+      "lineno": 158,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.free_surface_solver3d",
+      "name": "incident_airy_wave_3d",
+      "kind": "FunctionDef",
+      "lineno": 480,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.helmholtz",
+      "name": "HelmholtzDiffractionResult",
+      "kind": "ClassDef",
+      "lineno": 59,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.helmholtz",
+      "name": "VerticalCylinderDiffractionResult",
+      "kind": "ClassDef",
+      "lineno": 75,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.helmholtz",
+      "name": "points_inside_polygon",
+      "kind": "FunctionDef",
+      "lineno": 108,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.helmholtz",
+      "name": "default_chief_points",
+      "kind": "FunctionDef",
+      "lineno": 144,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.helmholtz",
+      "name": "assemble_helmholtz_double_layer",
+      "kind": "FunctionDef",
+      "lineno": 195,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.lifting",
+      "name": "NonLiftingFieldComparison",
+      "kind": "ClassDef",
+      "lineno": 313,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.rao",
+      "name": "RAOResult",
+      "kind": "ClassDef",
+      "lineno": 56,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.rao",
+      "name": "RAOSpectrum",
+      "kind": "ClassDef",
+      "lineno": 91,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.solver",
+      "name": "LaplaceDirichletResult",
+      "kind": "ClassDef",
+      "lineno": 37,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.solver",
+      "name": "RigidBodyAddedMass2DResult",
+      "kind": "ClassDef",
+      "lineno": 174,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.solver3d",
+      "name": "RigidBodyAddedMass3DResult",
+      "kind": "ClassDef",
+      "lineno": 62,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.symmetry3d",
+      "name": "SymmetricOperatorBlocks",
+      "kind": "ClassDef",
+      "lineno": 297,
+      "has_doc": true,
+      "referenced_in_tests": false
+    },
+    {
+      "module": "tensorbem.symmetry3d",
+      "name": "assemble_symmetric_operators_3d",
+      "kind": "FunctionDef",
+      "lineno": 417,
+      "has_doc": true,
+      "referenced_in_tests": false
+    }
+  ]
+}
