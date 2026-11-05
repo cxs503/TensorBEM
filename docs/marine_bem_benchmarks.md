@@ -485,6 +485,41 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
 
+<!-- m3365-pins:begin -->
+
+**复算与回归钉桩（m3365，程序化注入，勿手改）**：本节表 10、表 11、表 12 与 Kochin/Haskind 闭合句中的 **67 个数字**已全部纳入 `tensorbem.benchmarks.declared_numbers` 注册表（`floating_hemisphere` 与 `submerged_sphere` 两组），由 `python -m tensorbem.benchmarks.declared_numbers --tiers standard` 一条命令重算并判 PASS/DRIFT，回归门在 `tests/test_declared_numbers.py`。下列实测列由 `outputs/m3365/gen_3d_free_surface_pins.py` 从上表实测值渲染，零手抄。本次判决 **67/67 PASS**，最坏相对偏差 2.23e-02（表格印刷位数内的舍入；两位有效数字的量按 5% 容差判定）。
+
+**表 10 实测复算（$Ka=1.0$，$\rho=1025$，`floating_hemisphere.run_refinement_study`）**
+
+| 面元数 $N$ | 条件数 声明/实测 | $A_{33}'$ 声明/实测 | $B_{33}'$ 声明/实测 | $A_{11}'$ 声明/实测 | $B_{11}'$ 声明/实测 | $F_z$ 声明/实测 |
+|---:|---|---|---|---|---|---|
+| 16 | 3.893 / 3.893 | 1.20\times10^{-1} / 1.20\times10^{-1} | 1.22\times10^{-1} / 1.22\times10^{-1} | 1.80\times10^{-1} / 1.80\times10^{-1} | 4.02\times10^{-1} / 4.02\times10^{-1} | 6.67\times10^{-2} / 6.67\times10^{-2} |
+| 64 | 3.052 / 3.052 | 2.97\times10^{-2} / 2.97\times10^{-2} | 4.50\times10^{-2} / 4.50\times10^{-2} | 5.05\times10^{-2} / 5.05\times10^{-2} | 1.30\times10^{-1} / 1.30\times10^{-1} | 2.21\times10^{-2} / 2.21\times10^{-2} |
+| 256 | 2.783 / 2.783 | 7.41\times10^{-3} / 7.41\times10^{-3} | 1.18\times10^{-2} / 1.18\times10^{-2} | 1.30\times10^{-2} / 1.30\times10^{-2} | 3.53\times10^{-2} / 3.53\times10^{-2} | 5.67\times10^{-3} / 5.67\times10^{-3} |
+
+**表 10 观测阶的两种长度度量（本次审计的实质发现）**：表 10 的观测阶列在**同一列里混用了两种长度度量** —— $A_{33}'/B_{33}'/A_{11}'/F_z$ 四项用的是基准程序输出的平均面元边长 $h_{\text{mean}}$，而 $B_{11}'$ 项（1.62 / 1.88）用的是 m2609 Kochin 专项的 $h\propto N^{-1/2}$ 度量。两种度量都复现（$h_{\text{mean}}$ 度量下该量实为 1.802 / 1.938），故表格并非错数，但读者无法从单元格判断度量来源。注册表把两者分别钉为 `observed_order_b11@N`（$h_{\text{mean}}$）与 `surge_damping_rel_error_panel_law_order@N`（$N^{-1/2}$，即表内所印），关系由 `tests/test_declared_numbers.py::test_h_mean_and_panel_count_orders_are_related_by_the_edge_length_ratio` 钉桩。
+
+**表 11 实测复算（$Ka=2.58$，$N=256$，`floating_hemisphere.run_irregular_frequency_study`）**
+
+| 方案 | 条件数 声明/实测 | $A_{33}'$ 声明/实测 | $B_{33}'$ 声明/实测 | 物理耗散性 |
+|---|---|---|---|---|
+| 未增广外域 BIE | 145.66 / 145.66 | 0.3481 / 0.3481 | -0.1042 / -0.1042 | 违背（负阻尼） |
+| 5 点三维内部 CHIEF | 4.24 / 4.24 | 0.3919 / 0.3919 | 0.0687 / 0.0687 | 满足 |
+
+**精确参考（同次 Hulme 半解析求解）：$A_{33}'=$0.400737、$B_33'=$0.063122；所需内部 CHIEF 约束数 5。近/远场 Kochin 阻尼闭合 $5.448\times10^{-4}$、Haskind 互易 $2.089\times10^{-4}$（纵荡）/ $8.085\times10^{-4}$（垂荡）同为注册项。
+
+**表 12 实测复算（$f/a=1.5$，$Ka=0.8$，`submerged_sphere_wave.run_refinement_study`）**
+
+| 面元数 $N$ | 条件数 声明/实测 | $A_{33}'$ 声明/实测 | $A_{11}'$ 声明/实测 | $F_x$ 声明/实测 | $F_z$ 声明/实测 | 转动耦合比 声明/实测 |
+|---:|---|---|---|---|---|---|
+| 20 | 2.407 / 2.407 | 2.55\times10^{-1} / 2.55\times10^{-1} | 2.68\times10^{-1} / 2.68\times10^{-1} | 3.60\times10^{-1} / 3.60\times10^{-1} | 3.70\times10^{-1} / 3.70\times10^{-1} | $2.5\times10^{-32}$ / 双精度下恰为 0（球心对称精确成立） |
+| 80 | 2.259 / 2.259 | 7.30\times10^{-2} / 7.30\times10^{-2} | 8.02\times10^{-2} / 8.02\times10^{-2} | 1.16\times10^{-1} / 1.16\times10^{-1} | 1.19\times10^{-1} / 1.19\times10^{-1} | 2.20\times10^{-4} / 2.15\times10^{-4} |
+| 320 | 2.188 / 2.188 | 1.85\times10^{-2} / 1.85\times10^{-2} | 2.08\times10^{-2} / 2.08\times10^{-2} | 3.10\times10^{-2} / 3.10\times10^{-2} | 3.20\times10^{-2} / 3.20\times10^{-2} | 2.60\times10^{-5} / 2.65\times10^{-5} |
+
+表 12 的 $N=20$ 转动耦合比在文档中印为 $2.5\times10^{-32}$，实测在双精度下恰为 $0$（球心对称使转动–平动耦合精确消失），该格无法用相对判据登记，故只钉 $N=80$、$N=320$ 两行，并以该量的单调下降作为对称性回归判据。
+
+<!-- m3365-pins:end -->
+
 ## 5. 讨论与适用限制
 
 1. **无界流层已同时覆盖 Dirichlet 迹与真实刚体 Neumann 6-DOF 张量。** 二维椭圆柱（\(3\times3\)）与三维三轴椭球（\(6\times6\)）均由真实无穿透条件第二类积分方程给出二阶收敛的平动与转动附加惯量，但三维逐面元局部通量仍受多面体棱边奇异性限制为约一阶精度，多连通升力体（Kutta 尾涡条件）尚未引入。
