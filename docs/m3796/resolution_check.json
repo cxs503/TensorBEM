@@ -1,0 +1,31 @@
+{
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "parents": {
+    "base": "6025970",
+    "ours": "origin/main",
+    "theirs": "agent/m3236"
+  },
+  "merge_file_conflict_hunks": 2,
+  "hunks": [
+    {
+      "hunk": 0,
+      "ours_lines": 593,
+      "theirs_lines": 129,
+      "separator": "    ),\n",
+      "ours_sha": "653ea69727a4",
+      "theirs_sha": "24b3a3230146"
+    },
+    {
+      "hunk": 1,
+      "ours_lines": 19,
+      "theirs_lines": 39,
+      "separator": "",
+      "ours_sha": "bb9cf24a63b1",
+      "theirs_sha": "d0d8d6ac1742"
+    }
+  ],
+  "sha256_resolved_from_parents": "05b888cfb3b8ad4c55116e14e999a12c08204665a535a9baae043bae9be6c3dd",
+  "sha256_committed_blob": "05b888cfb3b8ad4c55116e14e999a12c08204665a535a9baae043bae9be6c3dd",
+  "identical": true,
+  "markers_remaining": 0
+}

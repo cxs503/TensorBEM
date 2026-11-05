@@ -1,0 +1,1279 @@
+{
+  "merge_base": "60259703942a9df85a6f5bc2b82a0509ba92ddaa",
+  "sides": {
+    "main": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+    "m3236": "4b1b21f350e6b0983f321b3e77691329593efdec"
+  },
+  "paths": {
+    ".github/workflows/tests.yml": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 33,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "dev_report_m3280_orders_convention.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 75,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "dev_report_m3336.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 59,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/audit_baseline.md": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 51,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/ci_red_triage_m3314.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 116,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/figures/fig_restoring_couplings.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/figures/irregular_frequency_band.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/finite_depth3d_regime.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 111,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/finite_depth_diffraction.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 113,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/finite_depth_diffraction/figures/finite_depth_diffraction.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/finite_depth_diffraction/make_figure.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 60,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/finite_depth_diffraction/results.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 217,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/hydrostatic_restoring_couplings.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 105,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/irregular_frequency_study.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 153,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/long_capsule_2d_limit.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 104,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m2904/outputs/m2904/publish_report.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 124,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m2904/outputs/recovery_robustness/recovery_robustness.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 653,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m2904/outputs/recovery_robustness/recovery_robustness.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 32,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m2904/outputs/recovery_robustness/recovery_robustness.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3051/figures/kkr_floor.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3051/kkr_floor.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 322,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3051/kkr_floor.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 115,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3051/kkr_floor_report.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 289,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/figures/fig_dimensional_response.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/figures/fig_pressure_mesh.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/make_figure_and_tables.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 142,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/outputs/tables.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 36,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/outputs/wigley_normalization_audit.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 221,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3125/wigley_normalization_audit.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 134,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/figures/added_mass_vs_ka.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/figures/envelope_map.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/figures/mesh_budget.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/make_figures.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 94,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/outputs/envelope_s2.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 1112,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/outputs/points.jsonl": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 33,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/outputs/summary.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 685,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/run_envelope.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 53,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3134/submerged_sphere_envelope.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 131,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/figures/fig_chief_passivity.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/figures/fig_convergence_3d.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/figures/fig_registry_deviation_3d.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/outputs/figure_data.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 77,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/outputs/registry_3d_free_surface.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 1338,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/report.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 83,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/tools/make_figures.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 167,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/tools/patch_registry.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 703,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/tools/publish_report.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 181,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3150/tools/reconcile_doc_cells.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 96,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/fig_entry_comparison.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/fig_restoring_couplings.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/make_artifacts.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 292,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/patch_hydrostatic.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 166,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/publish_report.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 66,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3196/outputs/restoring_couplings/results.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 132,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3224/figures/fig_haskind_vs_multipole.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3224/figures/fig_kochin_overlap.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3224/figures/fig_relative_errors.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3224/outputs/symmetry_far_field.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 1456,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3224/symmetry_far_field.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 94,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3280/outputs/m3280/kochin_hulme_convergence.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3280/outputs/m3280/study_s23.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 74,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3336/outputs/capability_matrix.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 855,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3336/outputs/capability_matrix.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3370/outputs/inject_study.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 152,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3383/near_surface_band.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3383/near_surface_band_audit.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 50,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3383/near_surface_band_study.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 845,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3383/near_surface_band_study.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 154,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3409/figures/fig_finite_depth3d_regime.png": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3409/make_figures.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 57,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/m3409/outputs/finite_depth3d_regime.json": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 390,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/marine_bem_benchmarks.md": {
+      "side_status": {
+        "main": "M",
+        "m3236": "M"
+      },
+      "exists_in_merged": true,
+      "main_added": 13,
+      "main_missing": 0,
+      "m3236_added": 7,
+      "m3236_missing": 0
+    },
+    "docs/recovery_robustness.md": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 114,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/symmetry3d.md": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 14,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "docs/three_dimensional_bem.md": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 1,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "outputs/m3236/dean_128.json": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 78,
+      "m3236_missing": 0
+    },
+    "outputs/m3236/dean_32.json": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 78,
+      "m3236_missing": 0
+    },
+    "outputs/m3236/dean_64.json": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 78,
+      "m3236_missing": 0
+    },
+    "outputs/m3236/fig_dean_convergence.png": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 0,
+      "m3236_missing": 0
+    },
+    "outputs/m3236/fig_dean_registry_deviation.png": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 0,
+      "m3236_missing": 0
+    },
+    "outputs/m3236/registry_fast.json": {
+      "side_status": {
+        "main": "-",
+        "m3236": "A"
+      },
+      "exists_in_merged": true,
+      "main_added": 0,
+      "m3236_added": 322,
+      "m3236_missing": 0
+    },
+    "src/tensorbem/__init__.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 16,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/cylinder_3d_limit.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 307,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/declared_numbers.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "M"
+      },
+      "exists_in_merged": true,
+      "main_added": 656,
+      "main_missing": 0,
+      "m3236_added": 170,
+      "m3236_missing": 0
+    },
+    "src/tensorbem/benchmarks/finite_depth3d_regime.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 247,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/finite_depth_diffraction.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 172,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/hydrostatic_energy_reference.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 175,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/irregular_frequency_study.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 543,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/kkr_floor.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 359,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/kochin_hulme_convergence.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 26,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/milestone_claims.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 503,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/recovery_robustness.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 435,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/submerged_sphere_envelope.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 377,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/symmetry_far_field.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 440,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/ursell_convergence_table.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 6,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/benchmarks/wigley_normalization_audit.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 257,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/capability_evidence.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 936,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/doc_claims.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 5,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/finite_depth3d.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 47,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/finite_depth_diffraction.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 432,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/free_surface_solver3d.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 51,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/geometry3d.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 99,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/hydrostatic.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 110,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/panel_smoothing.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 90,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/recovery.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 84,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/recovery_uncertainty.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 110,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "src/tensorbem/symmetry3d.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 203,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_benchmark_cli_contract.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 78,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_capability_evidence.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 196,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_capsule_3d_limit.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 98,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_ci_workflow_contract.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 80,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_declared_numbers.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "M"
+      },
+      "exists_in_merged": true,
+      "main_added": 49,
+      "main_missing": 0,
+      "m3236_added": 29,
+      "m3236_missing": 0
+    },
+    "tests/test_documented_benchmarks.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 20,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_finite_depth3d_regime.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 100,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_finite_depth_diffraction.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 140,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_hydrostatic_restoring_couplings.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 232,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_irregular_frequency_study.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 145,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_kkr_floor.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 96,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_kochin_hulme_convergence.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 37,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_milestone_claims.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 80,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_near_surface_band.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 116,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_recovery_robustness.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 243,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_submerged_sphere_wave_envelope.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 68,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_symmetry3d_far_field.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 167,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_ursell_reproducibility.py": {
+      "side_status": {
+        "main": "M",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 57,
+      "main_missing": 0,
+      "m3236_added": 0
+    },
+    "tests/test_wigley_normalization_audit.py": {
+      "side_status": {
+        "main": "A",
+        "m3236": "-"
+      },
+      "exists_in_merged": true,
+      "main_added": 86,
+      "main_missing": 0,
+      "m3236_added": 0
+    }
+  },
+  "totals": {
+    "paths": 126,
+    "conflicted_paths": [
+      "src/tensorbem/benchmarks/declared_numbers.py"
+    ],
+    "delay_no_silent_loss_failures": 0
+  }
+}
