@@ -1,0 +1,17 @@
+{
+ "main": {
+  "hulme_hemisphere": 31,
+  "hulme_chief": 6,
+  "submerged_sphere": 25
+ },
+ "branch": {
+  "hulme_hemisphere": 28,
+  "hulme_chief": 9,
+  "submerged_sphere": 26
+ },
+ "merged": {
+  "hulme_hemisphere": 31,
+  "hulme_chief": 9,
+  "submerged_sphere": 26
+ }
+}

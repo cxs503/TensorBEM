@@ -38,7 +38,7 @@ import math
 import platform
 import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
 
@@ -917,6 +917,45 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
+    # --- table 11 reference column and the CHIEF point count (m3181) --------
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33",
+        description="Hulme reference A33' at Ka = 2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33_dimless",
+        parameters={"ka_values": [2.58], "subdivision": 3},
+        declared=4.0074e-01,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33",
+        description="Hulme reference B33' at Ka = 2.58, 256 panels",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33_dimless",
+        parameters={"ka_values": [2.58], "subdivision": 3},
+        declared=6.3122e-02,
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_chief_point_count",
+        description="interior CHIEF points the regularized Ka = 2.58 solve used",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_chief_regularized_chief_point_count",
+        parameters={"ka_values": [2.58], "subdivision": 3},
+        declared=5.0,
+    ),
+    # --- table 12 machine-zero rotational coupling at the coarsest mesh -----
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description="sphere-centre rotational coupling ratio at 20 panels (machine zero)",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-20,
+        kind="upper",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -960,7 +999,15 @@ def _study_rows(study: dict) -> dict[str, float]:
 
 
 def _chief_rows(rows) -> dict[str, float]:
-    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``."""
+    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``.
+
+    Both schemes are kept (the unregularized surface-piercing BIE and the CHIEF
+    regularized one) and so is the semi-analytical reference they are judged
+    against: the study row carries it at the top level as ``exact_<quantity>``,
+    which is flattened as ``ka<value>_exact_<quantity>_dimless`` so that table 11
+    can quote the reference column next to the two schemes instead of reusing the
+    unregularized value as its own baseline.
+    """
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
@@ -969,6 +1016,12 @@ def _chief_rows(rows) -> dict[str, float]:
                 if isinstance(value, bool) or not isinstance(value, (int, float)):
                     continue
                 values[prefix + scheme + "_" + key] = float(value)
+        for key, value in row.items():
+            if not key.startswith("exact_"):
+                continue
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                continue
+            values[prefix + key + "_dimless"] = float(value)
     return values
 
 
