@@ -28,6 +28,34 @@ reference itself is right: the panel family extrapolated to zero mesh size
 agrees with Ursell's multipole solution to about ``1e-5``. The source strings
 keep the citation; the original values are recorded in
 ``dev_report_tensorbem_declared_numbers.md`` rather than silently overwritten.
+
+Provenance note (2026-11-04). The three-dimensional free-surface tables of
+``docs/marine_bem_benchmarks.md`` (sections 4.10-4.11: the Hulme floating
+hemisphere refinement, the interior-CHIEF irregular-frequency comparison and
+the Wang/Linton submerged-sphere refinement) were documentation-only: the
+numbers came from the ``floating_hemisphere`` and ``submerged_sphere_wave``
+command-line studies, and the tests that did exist guard the *physics* at a
+few-percent threshold, not the quoted convergence columns. Every column of
+those three tables is now registered (``hulme_hemisphere``, ``hulme_chief``,
+``submerged_sphere`` groups) and recomputed on the ``standard`` tier, which
+costs about a minute of three-dimensional solves.
+
+Provenance note (2026-11-05, merge of ``agent/m3250`` into ``main``). The same
+three tables were registered twice, independently: on the branch by a compact
+generator that expanded the printed tables, on ``main`` by explicit
+``DeclaredNumber`` entries. The merge keeps the explicit entries, because they
+are the strict superset -- they carry the closure rows (near/far-field damping
+and the two Haskind residuals quoted in the section 4.10 prose) and the
+rotational-decoupling rows at every mesh level -- and because their numbers are
+the *corrected* ones this branch established: the table-10 surge-damping orders
+are pinned at the ``h_mean``-based 1.8021 / 1.9377 rather than the printed
+1.62 / 1.88, which is what the table-10 mesh family actually converges at (its
+``h_mean`` ratio between levels is 1.87, not 2). The branch's dynamic register
+was removed with it; the coverage audit
+``docs/m3250/merge_coverage_audit.md`` lists every branch claim and the entry
+that now carries it. One claim existed only on the branch and was restored
+below: the 20-panel rotational decoupling is a roundoff artefact
+(``2.5e-32``), which is reproducible only as an upper bound.
 """
 
 from __future__ import annotations
@@ -38,7 +66,7 @@ import math
 import platform
 import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
 
@@ -80,8 +108,9 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``,
+    ``interior_harmonics``, ``ursell``, ``ursell_reference``,
+    ``hulme_hemisphere``, ``hulme_chief`` or ``submerged_sphere``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -726,6 +755,17 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_condition_number",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.407,
+    ),
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description="rotational A coupling bound at 20 panels (exactly symmetric "
+        "mesh: the printed 2.5e-32 is roundoff, so the claim is an upper bound)",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-6,
+        kind="upper",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_heave_added_mass_error",

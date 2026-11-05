@@ -1,0 +1,54 @@
+{
+  "base": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+  "main": "origin/main",
+  "branch": "origin/agent/m3250",
+  "rtol": 0.05,
+  "registry": {
+    "main_entries": 84,
+    "branch_claims": 85,
+    "merged_entries": 85,
+    "main_lost": [],
+    "main_value_moved": [],
+    "branch_lost": [],
+    "worst_branch_deviation": {
+      "rel": 0.02227272727272732,
+      "claim": "sphere3d_rotational_coupling_80",
+      "mapped": [
+        "submerged_sphere",
+        "sub1_rotational_added_mass_max_ratio"
+      ],
+      "branch": 0.00022,
+      "merged": 0.0002151
+    },
+    "ok": true
+  },
+  "tests": {
+    "main_tests": 17,
+    "branch_tests": 16,
+    "merged_tests": 18,
+    "main_missing": [],
+    "branch_missing": [],
+    "renamed": {
+      "test_free_surface_3d_tables_are_reproduced": "test_3d_refinement_columns_are_monotone_and_inside_the_acceptance_band"
+    },
+    "merged_only": [
+      "test_3d_refinement_columns_are_monotone_and_inside_the_acceptance_band"
+    ],
+    "ok": true
+  },
+  "doc": {
+    "main_added_lines": 8,
+    "branch_added_lines": 7,
+    "main_missing": [],
+    "branch_missing": [],
+    "main_superseded": [],
+    "branch_superseded": [],
+    "corrected_cells_present": {
+      "1.80 / 1.94": true,
+      "2.15\\times10^{-4}": true,
+      "2.65\\times10^{-5}": true
+    },
+    "ok": true
+  },
+  "ok": true
+}

@@ -175,6 +175,51 @@ def test_chief_regularisation_restores_passive_heave_damping():
     assert abs(values["ka2.58_chief_regularized_a33_dimless"] - exact) < abs(
         values["ka2.58_unregularized_a33_dimless"] - exact
     )
+    # ... and it brings the damping *magnitude* inside 10 %, from 26 % outside
+    assert abs(plain) > 1.0e-1
+    assert abs(chief) < 1.0e-1
+
+
+def test_3d_refinement_columns_are_monotone_and_inside_the_acceptance_band():
+    """The convergence claim behind tables 10 and 12, not just the quoted cells.
+
+    A per-cell registry pin catches a moved number; it does not catch a mesh
+    family whose refinement stopped refining. These assertions walk the levels
+    and require the wave-exciting columns to fall monotonically and to land
+    inside a per-family acceptance band at the finest mesh, and the system to
+    stay well conditioned throughout.
+    """
+    # The vertical-excitation band is per family: the sphere at Ka = 0.8 still
+    # carries a 3.2 % vertical-force error at 320 panels, which is exactly what
+    # table 12 prints (3.10e-2 horizontal, 3.20e-2 vertical), while the
+    # hemisphere family is inside 1 %. Asserting a single 3 % band for both would
+    # be a claim the documented numbers themselves contradict.
+    families = (
+        ("hulme_hemisphere", {"subdivisions": [1, 2, 3], "ka": 1.0}, (1, 2, 3), 1.0e-2),
+        ("submerged_sphere", {"subdivisions": [0, 1, 2], "ka": 0.8}, (0, 1, 2), 3.5e-2),
+    )
+    measured = {}
+    for group, parameters, levels, fz_band in families:
+        values = measured[group] = _run_group(group, parameters)
+        a33 = [values[f"sub{lvl}_heave_added_mass_rel_error"] for lvl in levels]
+        assert a33[0] > a33[1] > a33[2], (group, a33)
+        assert a33[-1] < 3.0e-2, (group, a33[-1])
+        fz = [values[f"sub{lvl}_excitation_force_z_rel_error"] for lvl in levels]
+        assert fz[0] > fz[1] > fz[2], (group, fz)
+        assert fz[-1] < fz_band, (group, fz[-1], fz_band)
+        kappa = [values[f"sub{lvl}_condition_number"] for lvl in levels]
+        assert kappa[-1] < 3.0, (group, kappa)  # well conditioned throughout
+
+    # The surge wave damping is the one column the documentation itself flags as
+    # discretisation-limited (3.53 % at 256 panels); it must not creep past 5 %,
+    # and the surge added mass, which also converges slowly, must stay under 3 %.
+    hemisphere = measured["hulme_hemisphere"]
+    assert hemisphere["sub3_surge_damping_rel_error"] < 5.0e-2
+    assert hemisphere["sub3_surge_added_mass_rel_error"] < 3.0e-2
+    # The observed order of that column must stay near the documented ~1.9
+    # (h_mean-based), which is what separates a slow-but-converging column from
+    # a stalled one.
+    assert 1.7 < hemisphere["sub3_observed_order_b11"] < 2.1
 
 
 @HEAVY
