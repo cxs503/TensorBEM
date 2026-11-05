@@ -59,6 +59,15 @@ Limitations
 * ``modes`` must be large enough for the requested minimum ``R``; the automatic
   choice targets ``exp(-mu_n*R_min) <= 1e-12`` and is capped at
   :data:`MODES_CAP` (the cap binds only for ``h/(pi*R) > ~1e4``).
+
+Alternative representation
+--------------------------
+An integral-representation formulation (Fourier-Bessel integral with pole
+handling via Gauss-Legendre quadrature) was developed and diagnosed in
+``docs/finite_depth3d_offaxis_diagnosis.md``.  The integral form is
+mathematically equivalent to the eigenseries but suffered from insufficient
+panel resolution for off-axis field points (``R > 0``); the eigenseries
+approach used here avoids that numerical pathology entirely.
 """
 
 from __future__ import annotations
