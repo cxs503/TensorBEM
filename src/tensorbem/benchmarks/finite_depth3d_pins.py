@@ -242,11 +242,22 @@ def truncation_ladder(modes=(40, 80, 160, 320, 640)):
 # ---------------------------------------------------------------------------
 # the pinned tables
 # ---------------------------------------------------------------------------
+# Free-surface residuals in table 3.2 are evaluated on a converged solution, so
+# they sit at double-precision round-off (~1e-15) and are not a property of the
+# method: the value changes with the order of summation and with the BLAS build.
+# A relative comparison of two round-off numbers is meaningless (1.26e-15 vs
+# 1.48e-15 is a 17% "deviation" of numerical dust), so anything quoted below this
+# floor is judged by the absolute statement "both are at noise level" instead.
+ROUNDOFF_FLOOR = 1.0e-12
+
+
 def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]:
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
     dev = abs(recomputed - declared) / abs(declared)
+    if max(abs(declared), abs(recomputed)) < ROUNDOFF_FLOOR:
+        return "PASS", dev
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 
 
@@ -400,7 +411,11 @@ def collect(doc_path: Path = DOC_PATH) -> list[Row]:
 
 def summary(rows: list[Row]) -> dict:
     drift = [r for r in rows if r.verdict == "DRIFT"]
-    worst = max((r for r in rows if abs(r.declared) > 1e-290), key=lambda r: r.rel_deviation, default=None)
+    worst = max(
+        (r for r in rows if abs(r.declared) >= ROUNDOFF_FLOOR),
+        key=lambda r: r.rel_deviation,
+        default=None,
+    )
     return {
         "schema": SCHEMA,
         "document": str(DOC_PATH.relative_to(REPO_ROOT)),

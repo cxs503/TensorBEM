@@ -150,6 +150,7 @@ Counts: **28** REAL — 28 capabilities. The level is derived from code/test/doc
 
 Not referenced by any test file, with an accepted reason:
 
+- `tensorbem.benchmarks.finite_depth3d_verification` — evidence generator for docs/finite_depth3d_green_function.md; every number it quotes is re-derived live by tests/test_finite_depth3d_pins.py, so its output is pinned indirectly rather than by a unit test.
 - `tensorbem.benchmarks.hydrostatic_figures` — matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 

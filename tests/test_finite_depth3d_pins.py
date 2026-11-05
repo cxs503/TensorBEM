@@ -21,7 +21,6 @@ The gates below are, in order:
 
 from __future__ import annotations
 
-import shutil
 from pathlib import Path
 
 import pytest
@@ -65,7 +64,13 @@ def test_every_number_reproduces(rows):
 
 def test_worst_deviation_is_small(rows):
     """The largest deviation over the whole document, reported as evidence."""
-    worst = max(rows, key=lambda r: r.rel_deviation)
+    # Round-off rows (free-surface residuals at ~1e-15) are excluded: their
+    # relative deviation measures summation order, not accuracy.  See
+    # ``pins.ROUNDOFF_FLOOR``.
+    worst = max(
+        (r for r in rows if abs(r.declared) >= pins.ROUNDOFF_FLOOR),
+        key=lambda r: r.rel_deviation,
+    )
     # 1e-2 is the '3 significant digits printed' floor; the measured worst case
     # is the truncation ladder, whose entries are differences of order 1e-11.
     assert worst.rel_deviation < 1.0e-2, (

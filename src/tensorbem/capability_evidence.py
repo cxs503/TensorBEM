@@ -565,6 +565,10 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
+    "tensorbem.benchmarks.finite_depth3d_verification":
+        "evidence generator for docs/finite_depth3d_green_function.md; every number it "
+        "quotes is re-derived live by tests/test_finite_depth3d_pins.py, so its output "
+        "is pinned indirectly rather than by a unit test.",
 }
 
 
