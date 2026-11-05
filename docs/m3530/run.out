@@ -1,0 +1,9 @@
+f/a=1.05  ka=0.6  ref A=-1675.6115 B=9618.0740 | panel256 errA=2.302e-02 errB=7.230e-03 | mfs48 errA=1.821e-03 errB=5.449e-04 (62s elapsed)
+f/a=1.05  ka=1.0  ref A= -431.3598 B=1789.2357 | panel256 errA=2.298e-02 errB=2.833e-02 | mfs48 errA=1.408e-03 errB=3.028e-03 (120s elapsed)
+f/a=1.25  ka=0.6  ref A= 1511.7671 B=8323.4157 | panel256 errA=5.949e-03 errB=5.387e-03 | mfs48 errA=4.341e-04 errB=1.979e-04 (179s elapsed)
+f/a=1.25  ka=1.0  ref A=  718.3639 B=4783.9531 | panel256 errA=2.550e-03 errB=1.428e-03 | mfs48 errA=5.596e-04 errB=1.409e-05 (237s elapsed)
+f/a=1.5   ka=0.6  ref A= 2225.5845 B=5424.3245 | panel256 errA=2.073e-03 errB=6.493e-03 | mfs48 errA=4.634e-05 errB=2.192e-04 (299s elapsed)
+f/a=1.5   ka=1.0  ref A= 1576.3426 B=3551.7143 | panel256 errA=2.835e-03 errB=4.346e-03 | mfs48 errA=7.308e-05 errB=1.226e-04 (363s elapsed)
+crux extra rung: 512 panels at f/a=1.05, ka=1.0
+crux panel512 errA=1.198e-02 errB=1.533e-02
+wrote /root/tp-agent/work/m3530/docs/m3530/near_surface_three_way.json
