@@ -89,6 +89,7 @@ def test_registry_covers_every_documented_benchmark_family():
     groups = {entry.group for entry in DECLARED_NUMBERS}
     assert {
         "cylinder",
+        "dean",
         "ellipsoid",
         # tables 10-12 as registered by m3150 (mainline naming)
         "hulme_chief",
@@ -119,6 +120,37 @@ def test_fast_tier_reproduces_the_documented_numbers():
         if row["verdict"] != "PASS"
     ]
     assert report["summary"]["checked"] >= 6
+
+
+def test_fast_tier_reproduces_the_documented_dean_numbers():
+    """Table 7 of docs/marine_bem_benchmarks.md (section 4.8) was
+    documentation-only until now.
+
+    The Dean-Ursell-Ogilvie diffraction study (zero reflection, unit
+    transmission, circular polarisation, Haskind-Newman reciprocity, MFS
+    cross-check, and the elliptic-cylinder energy balance) printed eleven
+    numbers that no test or ledger recomputed: a change in the free-surface
+    kernel, the Kochin integrals or the Haskind formula could have invalidated
+    the table silently. The truth is the independent Ursell/Ogilvie multipole
+    solution, so the quoted quantities are pure discretisation errors and can
+    be pinned tightly; the three roundoff-level conservation rows are guarded
+    as upper bounds.
+    """
+    report = check(
+        tiers=("fast",),
+        entries=tuple(entry for entry in DECLARED_NUMBERS if entry.group == "dean"),
+    )
+    assert report["summary"]["checked"] == 11
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    # The elliptic cylinder must keep reflecting (symmetry breaking) while the
+    # circle keeps Dean's zero reflection: the two regimes must not collapse
+    # into each other.
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    assert measured["dean_ellipse_reflection_64"] > 100.0 * 1.0e-12
 
 
 def test_standard_tier_reproduces_the_documented_ursell_numbers():

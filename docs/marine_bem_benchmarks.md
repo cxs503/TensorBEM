@@ -369,6 +369,14 @@ R=\frac{\omega}{gA}\int_\Gamma e^{\nu z_0+\mathrm i\nu x_0}\sigma_S\,\mathrm ds,
 python -m tensorbem.benchmarks.dean_diffraction --panels 128 --ka 0.6
 ```
 
+**复算与回归钉桩（2026-11-04，m3236）**：表 7 的 11 个数字此前无任何测试或账本守护。
+现已全部纳入 `tensorbem.benchmarks.declared_numbers` 注册表（`dean` 组，fast 层，
+`ka=0.6, N=64`），由 `tests/test_declared_numbers.py::test_fast_tier_reproduces_the_documented_dean_numbers`
+回归守护。2026-11-04 复算：8 个离散误差量与文档值偏差 ≤2.8×10⁻³（最大为 MFS 水平力
+−2.75×10⁻³）；3 个机器精度守恒量（零反射、能量平衡、圆偏振）实测 0–6.3×10⁻¹⁵，
+按 `three_dimensional_pins` 先例以上限（10⁻¹²/10⁻¹²/10⁻¹⁰）守护其物理声明
+（R≡0、|R|²+|T|²=1、F_z=−iF_x）。全部 PASS，文档数字无需修改。
+
 ### 4.9 MacCamy–Fuchs 贯底直立圆柱波浪绕射与 CHIEF 不规则频率消除
 
 对于水深 \(h\) 中自海底 \(z=-h\) 贯通至自由液面 \(z=0\) 的任意等截面直立柱体，三维线性绕射势可精确分离变量为
