@@ -1,0 +1,307 @@
+{
+  "base": "d22b6adadf2729d2788211cbdd9a0f6f89940629",
+  "main": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+  "branch": "ca4ba73e52d8a940b52e03a368b27855bf748836",
+  "merge": "9a87109375cc74909c0bbb12a6756dbb0f739ced",
+  "checks": [
+    {
+      "name": "inventory/no-main-file-lost",
+      "ok": true,
+      "missing": []
+    },
+    {
+      "name": "inventory/no-branch-file-lost",
+      "ok": true,
+      "missing": []
+    },
+    {
+      "name": "inventory/merge-adds-only-declared-evidence",
+      "ok": true,
+      "unexpected": [],
+      "declared_evidence": [
+        "docs/m2966/figures/mfs_rows_vs_reference.png",
+        "docs/m2966/figures/panel_referee_resolution.png",
+        "docs/m2966/merge_resolution.md",
+        "docs/m2966/merge_resolution_checks.py",
+        "docs/m2966/outputs/merge_checks/merge_checks.json",
+        "docs/m2966/post_report.py"
+      ]
+    },
+    {
+      "name": "content/one-side-owned-files-intact",
+      "ok": true,
+      "byte_identical": 212,
+      "declared_seams": [
+        {
+          "file": "src/tensorbem/doc_claims.py",
+          "owner": "main",
+          "owner_lines_superseded": [],
+          "owner_lines_lost": [],
+          "justification": "publishing the branch's third MFS row (256 panels) turned main's row-by-position parser into a silent mis-read: the last published MFS row would win the 'MFS_PANELS' claim.  The seam selects the row by the panel count in its own label.",
+          "covered_by": "tests/test_ursell_doc_reproducibility.py"
+        },
+        {
+          "file": "tests/test_ursell_doc_reproducibility.py",
+          "owner": "branch",
+          "owner_lines_superseded": [
+            {
+              "line": "MFS_DOCUMENTED = {64: (2543.24, 2708.57), 128: (2544.69, 2715.76)}",
+              "reason": "the documented-row table grows from two rows to three: the 64- and 128-panel tuples keep their published values verbatim, the 256-panel row is the row only the branch has"
+            },
+            {
+              "line": "    mfs_counts = {",
+              "reason": "main's generated labels carry the source count too, so the guard parses both numbers; the panel-count set is still what the assertion uses"
+            },
+            {
+              "line": "        int(m.group(1))",
+              "reason": "the single captured number becomes a (panels, sources) pair, which is strictly more information than the branch checked"
+            },
+            {
+              "line": "            r\"(?m)^\\| 基本解方法（MFS，配点网格 (\\d+) 面元）\", block",
+              "reason": "the branch documented this regex as provisional ('label it with the panel count'); main's m3229 made the label generated, so the regex follows the generator instead of the hand-written string, and the column-count intent is kept"
+            },
+            {
+              "line": "    assert {64, 128} <= mfs_counts, sorted(mfs_counts)",
+              "reason": "the required panel set is a superset of the branch's: it adds the 256-panel row the branch publishes in the document"
+            }
+          ],
+          "owner_lines_lost": [],
+          "justification": "main renamed every MFS row to the generated '<N> 面元、<S> 源' label (m3229); the branch's guard parsed '<N> 面元' by column counting.  The seam re-points the regex at the generated label and adds the 256-panel row to MFS_DOCUMENTED, keeping the 'count columns, do not trust the label' intent.",
+          "covered_by": "tests/test_ursell_doc_reproducibility.py"
+        }
+      ],
+      "violations": []
+    },
+    {
+      "name": "content/both-side-additions-survive",
+      "ok": true,
+      "files": [
+        "docs/marine_bem_benchmarks.md",
+        "tests/test_documented_benchmarks.py"
+      ],
+      "silently_lost_lines": [],
+      "documented_rewrites": [
+        {
+          "side": "branch",
+          "file": "docs/marine_bem_benchmarks.md",
+          "line": "| 基本解方法（MFS，配点网格 64 面元） | 2543.24 | \\(7.57\\times10^{-4}\\) | 2708.57 | \\(3.53\\times10^{-3}\\) | — |",
+          "reason": "m3229 (main) renamed every MFS row to the generated 'N panels / S sources' label; the branch's rows keep their numbers under main's label"
+        },
+        {
+          "side": "branch",
+          "file": "docs/marine_bem_benchmarks.md",
+          "line": "| 基本解方法（MFS，配点网格 128 面元） | 2544.69 | \\(1.89\\times10^{-4}\\) | 2715.76 | \\(8.82\\times10^{-4}\\) | — |",
+          "reason": "same label renaming, 128-panel row"
+        },
+        {
+          "side": "branch",
+          "file": "docs/marine_bem_benchmarks.md",
+          "line": "| 基本解方法（MFS，配点网格 256 面元） | 2545.05 | \\(4.72\\times10^{-5}\\) | 2717.55 | \\(2.21\\times10^{-4}\\) | — |",
+          "reason": "same label renaming, 256-panel row (the row main does not have)"
+        },
+        {
+          "side": "main",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "            fine = elementary_log_integral(xi, length)",
+          "reason": "the guard loop that main added is kept, with its loop variables renamed from the branch's outer-scope names; the closed form does not touch the panel primitive, which is the property main's assertion pins"
+        },
+        {
+          "side": "main",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "            coarse = composite_gauss(xi, h, length, pieces=1, order=24)",
+          "reason": "same loop rewrite: positional vs keyword call, same rule and order"
+        },
+        {
+          "side": "main",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "            fine = composite_gauss(xi, h, length, pieces=400, order=20)",
+          "reason": "same loop rewrite: 400 pieces, order 20, unchanged"
+        },
+        {
+          "side": "branch",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "    nodes, weights = np.polynomial.legendre.leggauss(20)",
+          "reason": "main's referee takes (pieces, order) as parameters, so the branch's fixed 20-point rule becomes the default argument of the shared helper"
+        },
+        {
+          "side": "branch",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "    def composite_gauss(pieces: int) -> float:",
+          "reason": "same helper, generalised so main's three smooth-panel configurations can reuse it instead of duplicating it"
+        },
+        {
+          "side": "branch",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "    errors = [abs(composite_gauss(n) - exact) for n in pieces]",
+          "reason": "same convergence sweep (100/200/400/800 pieces, order 20)"
+        },
+        {
+          "side": "branch",
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "    assert abs(composite_gauss(1) - exact) > 1.0e-4",
+          "reason": "same single-straddling-panel defect assertion"
+        }
+      ]
+    },
+    {
+      "name": "content/guard-inventory-both-sides",
+      "ok": true,
+      "files": [
+        "tests/test_documented_benchmarks.py",
+        "tests/test_ursell_doc_reproducibility.py"
+      ],
+      "missing_guards": [],
+      "note": "whitespace-insensitive; a moved line still counts, a lost property does not"
+    },
+    {
+      "name": "content/composition-is-declared",
+      "ok": true,
+      "undeclared": [],
+      "declared_compositions": [
+        {
+          "file": "docs/marine_bem_benchmarks.md",
+          "line": "| 基本解方法（MFS，256 面元、24 源） | 2545.05 | \\(4.72\\times10^{-5}\\) | 2717.55 | \\(2.21\\times10^{-4}\\) | — |",
+          "reason": "main's generated '<N> 面元、<S> 源' label × the branch's 256-panel row: the composition the union demands, numbers re-derived by docs/m2966/merge_resolution_checks.py (mfs_row(256))"
+        },
+        {
+          "file": "docs/marine_bem_benchmarks.md",
+          "line": "> **复核补记（2026-11-05，m2966）**：以上两条注释并存且互不覆盖：m3229 的生成式标签（面元数 + 源数）与本分支的三行 64/128/256 结构同时保留；256 面元 MFS 行由 `mfs_",
+          "reason": "the resolution's own note recording that both provenance notes survive; it restates mfs_row(256) numbers rather than introducing any"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "def composite_gauss(",
+          "reason": "the branch's helper gains main's (pieces, order, xi, h, length) parameters so main's three-configuration loop can reuse it instead of duplicating it"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "xi: float, h: float, length: float, pieces: int, order: int",
+          "reason": "signature of the shared helper"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": ") -> float:",
+          "reason": "signature of the shared helper"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "errors = [abs(composite_gauss(xi, h, length, n, 20) - exact) for n in pieces]",
+          "reason": "the branch's 100/200/400/800 sweep, re-expressed against the shared helper (order 20 unchanged)"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "assert abs(composite_gauss(xi, h, length, 1, 20) - exact) > 1.0e-4",
+          "reason": "the branch's single-straddling-panel defect assertion, same rule and order"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "# Second, fully independent referee for the same self-panel value: the",
+          "reason": "comment introducing main's closed-form referee inside the branch's test"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "# elementary closed form never touches ``_log_panel_primitive``.",
+          "reason": "comment stating the independence property the assertion pins"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "assert abs(elementary_log_integral(xi, length) - exact) < 1.0e-13 * abs(exact)",
+          "reason": "merge-authored joining of main's closed form with the branch's 1e-13 tolerance (branch line 124): the two referees must agree to machine precision"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "# Smooth-panel configurations: the closed form must reach 1e-8 against the",
+          "reason": "comment introducing main's smooth-panel loop"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "# composite rule, which is admissible only when it is converged (h > 0).",
+          "reason": "comment introducing main's smooth-panel loop"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "for case_xi, case_h, case_length in (",
+          "reason": "main's three-configuration loop, renamed away from the branch's outer-scope xi/h/length"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "(0.5, 0.0, 1.0),",
+          "reason": "main's coplanar configuration, one tuple per line after the loop rewrite"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "(0.0, 1.0e-3, 1.0),",
+          "reason": "main's near-surface configuration (h = 1e-3), one tuple per line"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "(0.9, 0.3, 1.0),",
+          "reason": "main's smooth off-centre configuration, one tuple per line"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "):",
+          "reason": "loop header of main's three-configuration loop"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "closed = _rankine_panel_integral(case_xi, case_h, case_length)",
+          "reason": "main's closed-form call bound to the renamed loop variables"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "if case_h == 0.0:",
+          "reason": "main's self-panel / smooth-panel branch on the renamed variables"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "fine = elementary_log_integral(case_xi, case_length)",
+          "reason": "main's self-panel reference bound to the renamed variables"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "coarse = composite_gauss(case_xi, case_h, case_length, 1, 24)",
+          "reason": "main's single-straddling-panel call, positional form of the same rule"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "fine = composite_gauss(case_xi, case_h, case_length, 400, 20)",
+          "reason": "main's converged-reference call (400 pieces, order 20)"
+        },
+        {
+          "file": "tests/test_documented_benchmarks.py",
+          "line": "assert abs(closed - fine) < 1.0e-8, (case_xi, case_h, closed, fine)",
+          "reason": "main's 1e-8 agreement gate, re-bound to the renamed variables"
+        }
+      ],
+      "note": "a conflicted file may only gain lines the resolution declares"
+    },
+    {
+      "name": "content/no-side-deletion-undone",
+      "ok": true,
+      "deletions_undone": []
+    },
+    {
+      "name": "integration/doc_claims-selects-claimed-row",
+      "ok": true,
+      "MFS_PANELS": 128,
+      "parsed_mfs_added_mass": {
+        "merge": 2545.05,
+        "branch": 2545.05,
+        "main": 2544.69
+      },
+      "parsed_mfs_damping": {
+        "merge": 2717.55,
+        "branch": 2717.55,
+        "main": 2715.76
+      },
+      "three_rows_published": {
+        "64": true,
+        "128": true,
+        "256": true
+      }
+    }
+  ],
+  "failures": [],
+  "ok": true
+}
