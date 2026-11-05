@@ -1,0 +1,75 @@
+{
+  "pr": 128,
+  "branch": "agent/m3181",
+  "main_tip_at_merge": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+  "merge_base": "4f5b73e73c4e731582f2b050328ec5fcf62b4a86",
+  "command": "git merge --no-commit --no-ff origin/agent/m3181",
+  "files_changed_on_both_sides_since_base": [
+    "docs/marine_bem_benchmarks.md",
+    "src/tensorbem/benchmarks/declared_numbers.py",
+    "tests/test_declared_numbers.py"
+  ],
+  "auto_merged_without_conflict": [
+    {
+      "path": "docs/marine_bem_benchmarks.md",
+      "git_action": "Auto-merging",
+      "why": "main inserted section 4.11 (Wang/Linton table 12) and the branch appended section 4.12 (registry re-computation); different anchors, so git kept both hunks",
+      "resolution": "none needed; line-level check confirms all 9 added main lines and all 109 added branch lines survive",
+      "dropped": "nothing"
+    }
+  ],
+  "conflicts": [
+    {
+      "path": "src/tensorbem/benchmarks/declared_numbers.py",
+      "hunks": 3,
+      "semantics": "the two sides independently wired the same 3-D free-surface tables into one registry module",
+      "per_hunk": [
+        {
+          "what": "import aliases of the benchmark modules",
+          "main": "floating_hemisphere as hemisphere_benchmark, submerged_sphere_wave as sphere_benchmark",
+          "branch": "floating_hemisphere as hulme_benchmark, submerged_sphere_wave as wang_linton_benchmark",
+          "resolution": "keep both alias sets (the same module imported twice under two names); neither side's call sites had to be edited, so no body was retyped"
+        },
+        {
+          "what": "tail of the DECLARED_NUMBERS tuple",
+          "main": "closes the literal with ')' after the submerged_sphere table-12 rows",
+          "branch": "closes the literal with ') + _free_surface_3d_rows()' to append the tables registered on the branch",
+          "resolution": "union: keep main's 61 new rows inside the literal and append '+ _free_surface_3d_rows()' -- a mechanical overlay of either side would have dropped one table family"
+        },
+        {
+          "what": "group dispatch in the measurement function",
+          "main": "if group in {hulme_hemisphere, submerged_sphere, hulme_chief} -> main's flatteners (_study_rows / _chief_rows)",
+          "branch": "if group in {hulme3d, hulme3d_chief, wang_linton3d} -> branch's inline flatteners",
+          "resolution": "keep both if-blocks (six dispatch branches); group names are disjoint so the order is irrelevant"
+        },
+        {
+          "what": "name collision not detected by git",
+          "detail": "branch defined a no-argument builder _chief_rows() while main defined a flattener _chief_rows(rows); keeping both bodies under one name would have made the second definition silently shadow the first (the module imports fine and only the registry shrinks)",
+          "resolution": "renamed the branch-side builder to _hulme3d_chief_rows() and its single call site; main's flattener untouched",
+          "detector": "union verifier, symbol level (duplicate top-level names)"
+        }
+      ],
+      "dropped": "nothing; verified by line-level (661 main lines, 263 branch lines, 0 unexplained losses) and registry-level (147 = 62 main-only + 63 branch-only + 22 identical) checks"
+    },
+    {
+      "path": "tests/test_declared_numbers.py",
+      "hunks": 2,
+      "semantics": "both sides rewrote the same two assertions",
+      "per_hunk": [
+        {
+          "what": "comment above 'assert entry.declared != 0.0'",
+          "main": "explains the negative B33' quoted by table 11 as the defect CHIEF removes",
+          "branch": "explains that the unregularized 3-D BIE legitimately produces a non-positive damping",
+          "resolution": "merged the two explanations into one comment (both physical statements kept, assertion untouched)"
+        },
+        {
+          "what": "required benchmark-group set",
+          "main": "requires hulme_chief, hulme_hemisphere",
+          "branch": "requires hulme3d, hulme3d_chief",
+          "resolution": "union of the two sets; the merged registry really does contain all four groups, so asserting only one side would have left the other family unguarded"
+        }
+      ],
+      "dropped": "nothing; test-function set is 20 = |main(17) ∪ branch(18)|"
+    }
+  ]
+}

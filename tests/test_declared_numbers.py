@@ -79,7 +79,10 @@ def test_registry_is_well_formed():
         assert entry.description.strip()
         assert math.isfinite(entry.declared)
         # sign-bearing quantities exist (e.g. the unphysical negative B33' that
-        # table 11 quotes as the defect CHIEF removes), so only zero is illegal
+        # table 11 quotes as the defect CHIEF removes), so only zero is illegal.
+        # A quote may legitimately be non-positive: the unregularized 3-D BIE
+        # produces an unphysical negative heave damping, and that sign is
+        # exactly the claim the Wang-Linton / CHIEF tables make.
         assert entry.declared != 0.0
         assert isinstance(entry.parameters, dict)
 
@@ -89,13 +92,44 @@ def test_registry_covers_every_documented_benchmark_family():
     assert {
         "cylinder",
         "ellipsoid",
+        "hulme3d",
+        "hulme3d_chief",
         "hulme_chief",
         "hulme_hemisphere",
         "interior_harmonics",
         "submerged_sphere",
         "ursell",
         "ursell_reference",
+        "wang_linton3d",
     } <= groups
+
+
+def test_three_dimensional_free_surface_tables_are_fully_registered():
+    """Every cell of tables 10-12 has a registry row, and the rows of one table
+    share a single solve (identical parameters)."""
+    hulme = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme3d"]
+    chief = [entry for entry in DECLARED_NUMBERS if entry.group == "hulme3d_chief"]
+    sphere = [entry for entry in DECLARED_NUMBERS if entry.group == "wang_linton3d"]
+    # Table 10: 6 columns x 3 mesh levels + 5 observed orders x 2 refined levels.
+    assert len(hulme) == 28
+    # Table 11: 2 exact + 3 unregularized + 4 CHIEF cells.
+    assert len(chief) == 9
+    # Table 12: 6 columns x 3 mesh levels + 4 observed orders x 2 refined levels.
+    assert len(sphere) == 26
+    for table in (hulme, chief, sphere):
+        assert len({json.dumps(entry.parameters, sort_keys=True) for entry in table}) == 1
+        assert {entry.tier for entry in table} == {"heavy"}
+    # The passivity claim of table 11 needs the sign of both dampings.
+    signed = {entry.key: entry.declared for entry in chief}
+    assert signed["hulme_chief_unregularized_b33_dimless"] < 0.0
+    assert signed["hulme_chief_chief_regularized_b33_dimless"] > 0.0
+    # The 20-panel rotational coupling is quoted as machine zero: upper bound.
+    machine_zero = [
+        entry
+        for entry in sphere
+        if entry.key == "wang_linton_rotational_added_mass_max_ratio_20"
+    ]
+    assert machine_zero[0].kind == "upper"
 
 
 # --------------------------------------------------------------------------
@@ -310,6 +344,72 @@ def test_repeated_quantities_share_one_solve():
     report = check(tiers=("standard",), entries=entries, runner=runner)
     assert len(calls) == 1
     assert report["summary"]["verdict"] == "PASS"
+
+
+@HEAVY
+def test_documented_hulme_tables_are_reproduced():
+    """Tables 10 and 11 of docs/marine_bem_benchmarks.md.
+
+    Table 10 (mesh refinement at Ka = 1.0) and table 11 (the lid-free, five-point
+    3-D CHIEF suppression of the waterplane resonance at Ka = 2.58) quote
+    thirty-seven numbers that no test recomputed. The reference is Hulme's
+    semi-analytical wave-free multipole solution, which shares no code with the
+    panel assembly, so a drift here separates an assembly regression from a
+    reference regression.
+    """
+    report = check(
+        tiers=("heavy",),
+        entries=tuple(
+            entry
+            for entry in DECLARED_NUMBERS
+            if entry.group in {"hulme3d", "hulme3d_chief"}
+        ),
+    )
+    assert report["summary"]["checked"] == 37
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    # Second-order convergence is the physical content of the table, not a
+    # coincidence of three decimals: the finest level must land near 2.
+    for mode in ("a33", "b33", "a11", "b11", "fz"):
+        assert 1.7 <= measured[f"hulme_observed_order_{mode}_256"] <= 2.3
+    # Lid-free CHIEF must restore conditioning and passivity at the same time.
+    assert (
+        measured["hulme_chief_chief_regularized_condition_number"]
+        < 0.1 * measured["hulme_chief_unregularized_condition_number"]
+    )
+    assert measured["hulme_chief_unregularized_b33_dimless"] < 0.0
+    assert measured["hulme_chief_chief_regularized_b33_dimless"] > 0.0
+
+
+@HEAVY
+def test_documented_wang_linton_table_is_reproduced():
+    """Table 12: submerged sphere, f/a = 1.5, Ka = 0.8, 20/80/320 panels.
+
+    The reference is the closed-form Thorne/Wang/Linton multipole system (exact
+    factorials and Ei(2*nu*f), no numerical quadrature), an anchor independent of
+    the Kelvin kernel used by the panel solver.
+    """
+    report = check(
+        tiers=("heavy",),
+        entries=tuple(
+            entry for entry in DECLARED_NUMBERS if entry.group == "wang_linton3d"
+        ),
+    )
+    assert report["summary"]["checked"] == 26
+    assert report["summary"]["verdict"] == "PASS", [
+        (row["key"], row["declared"], row["measured"])
+        for row in report["checks"]
+        if row["verdict"] != "PASS"
+    ]
+    measured = {row["key"]: row["measured"] for row in report["checks"]}
+    for mode in ("a33", "b33", "a11", "fz"):
+        assert 1.7 <= measured[f"wang_linton_observed_order_{mode}_320"] <= 2.3
+    # Rotational coupling about the sphere centre must stay negligible.
+    assert measured["wang_linton_rotational_added_mass_max_ratio_20"] < 1.0e-20
 
 
 # --------------------------------------------------------------------------
