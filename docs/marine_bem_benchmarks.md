@@ -313,12 +313,12 @@ $(ka,a/f)$ 包络审计（[`ursell_band_audit.md`](ursell_band_audit.md)，$N=32
 
 **表 5. 二维椭圆（\(a=1.5,\ b=0.75,\ \rho=1025\)）刚体 Neumann \(3\times3\) 张量收敛**
 
-| 面元数 \(N\) | 条件数 | \(A_{11}'\) 相对误差 | \(A_{22}'\) 相对误差 | 转动 \(A_{66}'\) 相对误差 | \(A_{66}'\) 观测阶 | 张量对称误差 \(\|\mathbf A-\mathbf A^\top\|_{\max}\) |
+| 面元数 \(N\) | 条件数 | \(A_{11}'\) 相对误差 | \(A_{22}'\) 相对误差 | 转动 \(A_{66}'\) 相对误差 | \(A_{66}'\) 观测阶 | 张量对称误差 \(\|\mathbf A-\mathbf A^\top\|_{\max}\)（上界，见 §4.7.1） |
 |---:|---:|---:|---:|---:|---:|---:|
-| 16 | 3.078 | \(2.64\times10^{-3}\) | \(5.15\times10^{-3}\) | \(3.23\times10^{-2}\) | — | \(6.4\times10^{-13}\) |
-| 32 | 3.019 | \(7.42\times10^{-4}\) | \(1.41\times10^{-3}\) | \(8.71\times10^{-3}\) | 1.936 | \(9.3\times10^{-13}\) |
-| 64 | 3.005 | \(1.94\times10^{-4}\) | \(3.75\times10^{-4}\) | \(2.25\times10^{-3}\) | 1.966 | \(4.5\times10^{-13}\) |
-| 128 | 3.001 | \(4.94\times10^{-5}\) | \(9.70\times10^{-5}\) | \(5.70\times10^{-4}\) | 1.982 | \(8.0\times10^{-13}\) |
+| 16 | 3.078 | \(2.64\times10^{-3}\) | \(5.15\times10^{-3}\) | \(3.23\times10^{-2}\) | — | \(<10^{-11}\) |
+| 32 | 3.019 | \(7.42\times10^{-4}\) | \(1.41\times10^{-3}\) | \(8.71\times10^{-3}\) | 1.936 | \(<10^{-11}\) |
+| 64 | 3.005 | \(1.94\times10^{-4}\) | \(3.75\times10^{-4}\) | \(2.25\times10^{-3}\) | 1.966 | \(<10^{-11}\) |
+| 128 | 3.001 | \(4.94\times10^{-5}\) | \(9.70\times10^{-5}\) | \(5.70\times10^{-4}\) | 1.982 | \(<10^{-11}\) |
 
 **表 6. 三维三轴椭球（\(a_1=1.5,\ a_2=1.0,\ a_3=0.75,\ \rho=1025\)）刚体 Neumann \(6\times6\) 张量收敛**
 
@@ -333,6 +333,76 @@ $(ka,a/f)$ 包络审计（[`ursell_band_audit.md`](ursell_band_audit.md)，$N=32
 ```bash
 python -m tensorbem.benchmarks.rigid_body_added_mass --panels 16 32 64 128 --subdivisions 0 1 2
 ```
+
+#### 4.7.1 表 5、表 6 的可执行复算与回归钉桩（m3566）
+
+表 5 与表 6 的 44 个数字在 2026-11-04 之前只活在本文里：没有任何测试重算过它们，一次内核、求积或网格改动就能让整张表悄悄过期而 CI 全绿。本次把它们逐条登记进集中式声明数字注册表 `tensorbem.benchmarks.declared_numbers` 的新增 `rigid_body` 组（面元数、条件数、三个/六个对角相对误差、观测阶、对称性残差），注册表自带的 `(group, parameters)` 缓存保证 44 条判据只花两次求解（一次二维、一次三维）：
+
+```bash
+python -m tensorbem.benchmarks.declared_numbers --tiers standard --strict
+```
+
+本次复算结果见 `outputs/m3566/standard_tier.json`；本小节的表格由 `outputs/m3566/inject_docs.py` 从该 JSON 程序化生成（零手抄）：44 条全部 **PASS**，逐项相对偏差最大 2.6e-03，来源是本文只保留 3 位有效数字的舍入而非求解器误差；同一轮 `standard` 层共 48 条判据（含 Ursell 与内部谐波），注册表整体判定 **PASS**。
+
+**表 5 复算（二维椭圆 \(a=1.5,\ b=0.75,\ \rho=1025\)）**
+
+| 注册项 | 声明值 | 实测值 | 相对偏差 / 上界余量 | 判定 |
+|---|---:|---:|---:|---:|
+| `rigid_body_2d_conditioning_16` | 3.078 | 3.078 | -1.4e-04 | PASS |
+| `rigid_body_2d_surge_x_16` | \(2.640\times10^{-3}\) | \(2.637\times10^{-3}\) | -1.3e-03 | PASS |
+| `rigid_body_2d_heave_y_16` | \(5.150\times10^{-3}\) | \(5.150\times10^{-3}\) | -9.4e-05 | PASS |
+| `rigid_body_2d_roll_xy_16` | \(3.230\times10^{-2}\) | \(3.232\times10^{-2}\) | +5.0e-04 | PASS |
+| `rigid_body_2d_symmetry_16` | \(1.000\times10^{-11}\) | \(5.975\times10^{-13}\) | 余量 $\times$16.7 | PASS |
+| `rigid_body_2d_conditioning_32` | 3.019 | 3.019 | +3.1e-06 | PASS |
+| `rigid_body_2d_surge_x_32` | \(7.420\times10^{-4}\) | \(7.418\times10^{-4}\) | -2.7e-04 | PASS |
+| `rigid_body_2d_heave_y_32` | \(1.410\times10^{-3}\) | \(1.414\times10^{-3}\) | +2.6e-03 | PASS |
+| `rigid_body_2d_roll_xy_32` | \(8.710\times10^{-3}\) | \(8.708\times10^{-3}\) | -2.6e-04 | PASS |
+| `rigid_body_2d_symmetry_32` | \(1.000\times10^{-11}\) | \(6.339\times10^{-13}\) | 余量 $\times$15.8 | PASS |
+| `rigid_body_2d_roll_order_32` | 1.936 | 1.936 | -1.5e-04 | PASS |
+| `rigid_body_2d_conditioning_64` | 3.005 | 3.005 | -7.7e-05 | PASS |
+| `rigid_body_2d_surge_x_64` | \(1.940\times10^{-4}\) | \(1.939\times10^{-4}\) | -5.8e-04 | PASS |
+| `rigid_body_2d_heave_y_64` | \(3.750\times10^{-4}\) | \(3.753\times10^{-4}\) | +8.1e-04 | PASS |
+| `rigid_body_2d_roll_xy_64` | \(2.250\times10^{-3}\) | \(2.246\times10^{-3}\) | -1.8e-03 | PASS |
+| `rigid_body_2d_symmetry_64` | \(1.000\times10^{-11}\) | \(6.414\times10^{-13}\) | 余量 $\times$15.6 | PASS |
+| `rigid_body_2d_roll_order_64` | 1.966 | 1.966 | +3.1e-05 | PASS |
+| `rigid_body_2d_conditioning_128` | 3.001 | 3.001 | +6.6e-05 | PASS |
+| `rigid_body_2d_surge_x_128` | \(4.940\times10^{-5}\) | \(4.938\times10^{-5}\) | -3.4e-04 | PASS |
+| `rigid_body_2d_heave_y_128` | \(9.700\times10^{-5}\) | \(9.697\times10^{-5}\) | -3.5e-04 | PASS |
+| `rigid_body_2d_roll_xy_128` | \(5.700\times10^{-4}\) | \(5.696\times10^{-4}\) | -7.3e-04 | PASS |
+| `rigid_body_2d_symmetry_128` | \(1.000\times10^{-11}\) | \(1.139\times10^{-12}\) | 余量 $\times$8.8 | PASS |
+| `rigid_body_2d_roll_order_128` | 1.982 | 1.982 | +7.9e-05 | PASS |
+
+**表 6 复算（三维椭球 \(1.5/1.0/0.75\)，\(\rho=1025\)）**
+
+| 注册项 | 声明值 | 实测值 | 相对偏差 / 上界余量 | 判定 |
+|---|---:|---:|---:|---:|
+| `rigid_body_3d_conditioning_20` | 2.447 | 2.447 | +2.0e-04 | PASS |
+| `rigid_body_3d_max_translation_20` | 0.263 | 0.2629 | -3.2e-04 | PASS |
+| `rigid_body_3d_roll_x_20` | 0.49 | 0.4903 | +6.8e-04 | PASS |
+| `rigid_body_3d_pitch_y_20` | 0.519 | 0.5195 | +8.8e-04 | PASS |
+| `rigid_body_3d_yaw_z_20` | 0.511 | 0.5106 | -7.2e-04 | PASS |
+| `rigid_body_3d_conditioning_80` | 2.246 | 2.246 | +1.3e-04 | PASS |
+| `rigid_body_3d_max_translation_80` | \(8.110\times10^{-2}\) | \(8.106\times10^{-2}\) | -5.2e-04 | PASS |
+| `rigid_body_3d_roll_x_80` | 0.163 | 0.1634 | +2.6e-03 | PASS |
+| `rigid_body_3d_roll_x_order_80` | 2.068 | 2.068 | -1.5e-04 | PASS |
+| `rigid_body_3d_pitch_y_80` | 0.178 | 0.1783 | +1.8e-03 | PASS |
+| `rigid_body_3d_pitch_y_order_80` | 2.012 | 2.012 | +1.0e-05 | PASS |
+| `rigid_body_3d_yaw_z_80` | 0.174 | 0.1744 | +2.0e-03 | PASS |
+| `rigid_body_3d_yaw_z_order_80` | 2.022 | 2.022 | +6.8e-05 | PASS |
+| `rigid_body_3d_conditioning_320` | 2.13 | 2.13 | +2.3e-04 | PASS |
+| `rigid_body_3d_max_translation_320` | \(2.140\times10^{-2}\) | \(2.137\times10^{-2}\) | -1.2e-03 | PASS |
+| `rigid_body_3d_roll_x_320` | \(4.600\times10^{-2}\) | \(4.600\times10^{-2}\) | -9.4e-05 | PASS |
+| `rigid_body_3d_roll_x_order_320` | 1.972 | 1.972 | -1.1e-04 | PASS |
+| `rigid_body_3d_pitch_y_320` | \(4.840\times10^{-2}\) | \(4.842\times10^{-2}\) | +3.3e-04 | PASS |
+| `rigid_body_3d_pitch_y_order_320` | 2.028 | 2.028 | -1.2e-04 | PASS |
+| `rigid_body_3d_yaw_z_320` | \(4.850\times10^{-2}\) | \(4.845\times10^{-2}\) | -9.9e-04 | PASS |
+| `rigid_body_3d_yaw_z_order_320` | 1.992 | 1.992 | -2.1e-04 | PASS |
+
+**三条附带判据（正文散文里的事实，不只是表格数字）**
+
+1. **良态性**：第二类算子 \(\tfrac12\mathbf I-\mathbf H\) 的条件数在加密下保持 \(O(1)\) —— 二维 3.078 → 3.001、三维 2.447 → 2.130。`tests/test_declared_numbers.py` 另加硬上界（二维 \(\kappa<3.1\)、三维 \(\kappa<2.5\)）：一旦退化为第一类算子那种 \(O(h^{-1})\) 增长，测试立即变红。
+2. **二阶收敛**：登记了 9 个观测阶（二维横摇 3 个 + 三维转动 3 × 2），测试断言全部落在 \([1.85,\,2.15]\) 内。这比「误差在下降」强得多：离散格式被降阶而误差仍单调下降的情形会被抓住。
+3. **对称性列的舍入噪声（本次修正）**：表 5 原先逐行给出 \(6.4\times10^{-13}\)、\(9.3\times10^{-13}\)、\(4.5\times10^{-13}\)、\(8.0\times10^{-13}\) 这类两位有效数字的残差。它们是机器 epsilon 量级的舍入噪声，随平台与 BLAS 路径变化：同一份代码在 loongarch64 上实测 \(5.98\times10^{-13}\)、\(6.34\times10^{-13}\)、\(6.41\times10^{-13}\)、\(1.14\times10^{-12}\)，与原文记录相差可达 40%。把噪声钉成等式只会制造假漂移，因此该列改写为可复现的上界 \(<10^{-11}\)（实测最坏 \(1.14\times10^{-12}\)，余量 8.8 倍；真正的对称性缺陷会把它推高好几个量级），注册表中对应 4 条 `kind="upper"` 判据。
 
 ### 4.8 Dean–Ursell–Ogilvie 潜没柱体规则波绕射与 Haskind 互易关系
 
