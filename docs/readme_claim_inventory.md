@@ -1,15 +1,15 @@
 # README capability-claim inventory: an executable gate for "what this package can do"
 
 **Task** m3203 (verifier seat, self-started) · **branch** `agent/m3203` · **repository** TensorBEM
-**Date** 2026-11-04 · **Artifacts** `outputs/verif_m3203/readme_claim_inventory.json`,
-`outputs/verif_m3203/fig_claim_inventory.png`, `outputs/verif_m3203/build_report.py`
+**Date** 2026-11-04 · **Artifacts** `docs/m3203/outputs/verif_m3203/readme_claim_inventory.json`,
+`docs/m3203/outputs/verif_m3203/fig_claim_inventory.png`, `docs/m3203/outputs/verif_m3203/build_report.py`
 **Code** `src/tensorbem/benchmarks/doc_inventory.py` (gate), `tests/test_doc_inventory.py` (19 tests)
 
 ## 1. What was wrong
 
 `README.md` is the entry point that humans *and agents* read before choosing work. Its three
 capability sections (milestones, roadmap, numerical conventions) make 19 decidable statements:
-16 "this is shipped" and 3 "this is still a gap". On 2026-11-04 three of them contradicted the
+17 "this is shipped" and 2 "this is still a gap". On 2026-11-04 three of them contradicted the
 tree, and two of the contradictions were *inside the same file*:
 
 | id | claim row | location | sentence found 2026-11-04 | resolution |
@@ -57,7 +57,8 @@ After the README correction: **19/19 PASS**, drifted
 | `near_singular_field` | `near_singular_clearance_1e3` | 1.886e-14 | < 1e-10 | PASS |
 | `finite_depth3d_kernel` | `deep_water_limit_k0h77` | 2.908e-07 | < 1e-05 | PASS |
 | `finite_depth3d_kernel` | `free_surface_residual` | 2.430e-12 | < 1e-10 | PASS |
-| `declared_number_registry` | `registry_size` | 2.200e+01 | > 2e+01 | PASS |
+| `declared_number_registry` | `registry_size` | 8.400e+01 | > 2e+01 | PASS |
+| `lifting_3d` | `lifting3d_lift_slope_ar40` | 4.031e-03 | < 3e-02 | PASS |
 
 The two finite-depth probes reproduce the numbers quoted in `docs/finite_depth3d.md`
 (2.908e-7 at `k0*h = 76.8`, 2.430e-12 at `h = 40 m`) to better than 1e-4 relative from an
@@ -83,10 +84,16 @@ independent re-run; the near-singular probe reproduces the clearance-independent
 | 13 | `rao_6dof` | shipped | PASS | module:tensorbem.rao; tests:tests/test_rao_verification.py(24); tests:tests/test_hydrostatic_rao.py(14) |
 | 14 | `lifting_kutta_2d` | shipped | PASS | module:tensorbem.lifting; tests:tests/test_lifting_flow.py(12); tests:tests/test_lifting_foil.py(12); doc:docs/lifting_kutta_closure.md |
 | 15 | `causality_kkr` | shipped | PASS | module:tensorbem.causality; tests:tests/test_causality.py(7) |
-| 16 | `declared_number_registry` | shipped | PASS | module:tensorbem.benchmarks.declared_numbers; tests:tests/test_declared_numbers.py(15); probe:registry_size=2.200e+01 > 2.0e+01 |
+| 16 | `declared_number_registry` | shipped | PASS | module:tensorbem.benchmarks.declared_numbers; tests:tests/test_declared_numbers.py(17); probe:registry_size=8.400e+01 > 2.0e+01 |
 | 17 | `finite_depth3d_bem_solver` | absent | PASS | stated-gap:3-D finite-depth *boundary element solver*; absent-module:tensorbem.finite_depth3d_solver |
 | 18 | `forward_speed_rankine` | absent | PASS | stated-gap:Forward-speed Rankine-source wave resistance; absent-module:tensorbem.rankine; absent-module:tensorbem.wave_resistance |
-| 19 | `lifting_3d` | absent | PASS | stated-gap:three-dimensional lifting wakes; absent-module:tensorbem.lifting3d |
+| 19 | `lifting_3d` | shipped | PASS | module:tensorbem.lifting3d; tests:tests/test_lifting3d.py(15); doc:docs/lifting3d.md; probe:lifting3d_lift_slope_ar40=4.031e-03 < 3.0e-02 |
+
+**Update 2026-11-05 (m4062).** Row `lifting_3d` flipped from *absent* to *shipped* because
+`tensorbem.lifting3d` landed with its report, its test file and the README rewrite in the same
+change; the inventory is now 17 shipped / 2 absent, all 19 rows PASS. The
+new row carries its own executable probe (`lifting3d_lift_slope_ar40`), so it is guarded the same
+way as the older shipped claims. Nothing else in this report moved.
 
 ## 4. Figures
 
@@ -106,8 +113,7 @@ and by evidence type, with the before/after pass count in the title.
 * "Test file exists and contains tests" is a *presence* gate, not a coverage gate. The numerical
   content of those tests is guarded by the repo's own suites (e.g. `test_declared_numbers.py`,
   `test_finite_depth3d.py`), which this module deliberately does not duplicate.
-* The absence claims are only as good as the module names they name(`tensorbem.finite_depth3d_solver`,
-  `tensorbem.rankine`, `tensorbem.lifting3d`). A future implementation under a different name would
+* The absence claims are only as good as the module names they name (`tensorbem.finite_depth3d_solver`, `tensorbem.rankine`, `tensorbem.wave_resistance`). A future implementation under a different name would
   close the gap without tripping the row — the reviewer must still edit the README, which is the
   point: the gate forces the sentence and the tree to move together.
 * The probe comparison for the deep-water limit is only meaningful at *fixed physical geometry*.
@@ -123,7 +129,7 @@ and by evidence type, with the before/after pass count in the title.
 | deep-water limit of the finite-depth kernel | Kelvin kernel `free_surface3d` (independent) | 2.908e-7 | vs documented 2.908e-7: < 1e-4 | ✅ |
 | free-surface residual of the finite-depth kernel | `∂G/∂z = νG` on `z=0` | 2.430e-12 | vs documented 2.430e-12: < 1e-4 | ✅ |
 | near-singular quadrature at 1e-3 panel sizes | converged instance of the same rule | 1.886e-14 | machine level | ✅ |
-| README claims vs tree | 19 curated statements | 19 PASS / 0 DRIFT | 0 misstated claims after the fix (3 before) | ✅ |
+| README claims vs tree | 19 curated statements | 19 PASS / 0 DRIFT | 0 misstated claims after the fix (2 before) | ✅ |
 
 No claim labelled "verified" here is a self-comparison: the deep-water probe uses a different
 kernel module, the free-surface probe uses the boundary condition itself, and the near-singular
@@ -136,5 +142,5 @@ quadrature error only).
 PYTHONPATH=src python -m tensorbem.benchmarks.doc_inventory --strict
 PYTHONPATH=src python -m tensorbem.benchmarks.doc_inventory --markdown
 PYTHONPATH=src python -m pytest tests/test_doc_inventory.py -q
-PYTHONPATH=src python outputs/verif_m3203/build_report.py    # regenerates §3-§4 and the figure
+PYTHONPATH=src python docs/m3203/outputs/verif_m3203/build_report.py    # regenerates §3-§4 and the figure
 ```

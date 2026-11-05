@@ -82,7 +82,7 @@ import json
 import math
 import re
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
 
@@ -266,6 +266,32 @@ def _probe_near_singular_clearance() -> float:
     return float(
         abs(np.squeeze(measured) - np.squeeze(reference)) / abs(np.squeeze(reference))
     )
+
+
+def _lifting3d_lift_slope_error() -> float:
+    """Relative error of the vortex-lattice lift slope at ``AR = 40``, 128 span panels.
+
+    The reference is Prandtl's elliptic lifting-line slope ``2*pi*AR/(AR+2)``; this
+    is the headline gate of ``docs/lifting3d.md`` (0.33% there, recomputed here so
+    the claim carries a number and not only a filename).
+    """
+    import math
+
+    from tensorbem.lifting3d import LiftingWing, build_lattice, lifting_line_lift_slope, loads, solve_circulation
+
+    span = 8.0
+    aspect_ratio = 40.0
+    alpha = math.radians(4.0)
+    wing = LiftingWing(
+        span=span,
+        planform="elliptic",
+        chord_root=4.0 * span / (math.pi * aspect_ratio),
+        alpha=alpha,
+    )
+    lattice = build_lattice(wing, 128)
+    result = loads(lattice, solve_circulation(lattice, 1.0))
+    measured = result["CL"] / alpha
+    return float(abs(measured / lifting_line_lift_slope(aspect_ratio) - 1.0))
 
 
 def _registered_number_count() -> float:
@@ -526,11 +552,30 @@ CLAIMS: tuple[Claim, ...] = (
     ),
     Claim(
         key="lifting_3d",
-        statement="Three-dimensional lifting wakes are outside the current scope",
-        source="README.md (Milestone 6 closing paragraph; roadmap item 6)",
-        status=ABSENT,
+        statement="Three-dimensional steady lifting surfaces: horseshoe vortex "
+        "lattice verified against Prandtl/Munk lifting-line theory",
+        source="README.md (Milestone 6 closing paragraph; roadmap item 6); "
+        "docs/lifting3d.md",
+        status=SHIPPED,
         modules=("tensorbem.lifting3d",),
-        phrase=("three-dimensional lifting wakes",),
+        test_files=("tests/test_lifting3d.py",),
+        docs=("docs/lifting3d.md",),
+        probes=(
+            Probe(
+                name="lifting3d_lift_slope_ar40",
+                description="vortex-lattice elliptic lift slope at AR=40, 128 span "
+                "panels, relative error against Prandtl's 2*pi*AR/(AR+2)",
+                measure=_lifting3d_lift_slope_error,
+                limit=0.03,
+                mode="<",
+            ),
+        ),
+        stale_phrases=(
+            "three-dimensional lifting wakes remain outside current scope",
+            "three-dimensional lifting flows (the steady 2-D Kutta closure is shipped",
+        ),
+        note="Was an absence claim until 2026-11-05 (m4062); the module, the report "
+        "and the tests arrived together with the README rewrite.",
     ),
 )
 
