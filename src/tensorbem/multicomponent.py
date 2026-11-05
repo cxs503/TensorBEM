@@ -41,7 +41,12 @@ from typing import Callable, Sequence
 import numpy as np
 from numpy.typing import NDArray
 
-from .geometry import PanelMesh, _validate_length, _validate_panel_count
+from .geometry import (
+    PanelMesh,
+    _as_point_array,
+    _validate_length,
+    _validate_panel_count,
+)
 from .kernels import REFERENCE_LENGTH
 from .solver import (
     LaplaceDirichletResult,
@@ -194,6 +199,41 @@ class MultiComponentMesh:
     @property
     def panel_count(self) -> int:
         return int(len(self._arrays["vertices"]))
+
+    # -- the two predicates :func:`tensorbem.solver` domain guard needs ----
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """``True`` for points inside the fluid: inside the outer loop, no hole.
+
+        The single-polygon even-odd test is reused per loop, so a point inside a
+        hole is *outside* the fluid even though it is inside the outer loop --
+        the property the interior representation depends on.
+        """
+        targets = _as_point_array(points)
+        inside = _point_in_polygon(targets, self.loop_vertices[0])
+        for hole in self.loop_vertices[1:]:
+            inside &= ~_point_in_polygon(targets, hole)
+        return inside
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to *any* loop's boundary.
+
+        Panels of different loops share one array, and the distance is a minimum
+        over every panel, so a hole wall is never overlooked: the guard in
+        :func:`tensorbem.solver.evaluate_interior_field` must see the nearest
+        boundary, whichever loop owns it.
+        """
+        targets = _as_point_array(points)
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        for start, segment in zip(self.vertices, self.vectors):
+            length_squared = float(segment @ segment)
+            projection = np.clip(
+                (targets - start) @ segment / length_squared, 0.0, 1.0
+            )
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
 
     # -- multi-component specific ----------------------------------------
     @property
