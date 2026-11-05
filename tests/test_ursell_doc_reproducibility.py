@@ -17,6 +17,7 @@ loose enough to absorb three-significant-figure rounding in the document.
 from __future__ import annotations
 
 import math
+import re
 from pathlib import Path
 
 import numpy as np
@@ -45,7 +46,11 @@ DOCUMENTED = {
 }
 
 REFERENCE = {"added_mass": 2545.17, "damping": 2718.15}
-MFS_DOCUMENTED = {64: (2543.24, 2708.57), 128: (2544.69, 2715.76)}
+MFS_DOCUMENTED = {
+    64: (2543.24, 2708.57),
+    128: (2544.69, 2715.76),
+    256: (2545.05, 2717.55),
+}
 RELATIVE_TOLERANCE = 1.0e-2
 
 
@@ -99,6 +104,40 @@ def test_radiation_condition_identity_is_satisfied(rows):
         assert row["relative_residual"] < 1.0e-12
         assert np.isfinite(row["condition_number"])
         assert row["condition_number"] < 10.0
+
+
+def test_every_tabulated_panel_count_has_an_mfs_row():
+    """The MFS cross-check must cover as many meshes as the panel rows do.
+
+    A missing cross-check is invisible in the verbatim test above: it only
+    constrains the rows the generator emits, so a table with a 256-panel BEM row
+    and no 256-panel MFS row still passed. The audit that found the mislabelled
+    MFS row (m3229) is the reason the coverage is asserted, not assumed.
+    """
+    document = DOC_PATH.read_text()
+    start = document.index("| 面元数 |")
+    block = document[start : start + document[start:].index("\n\n")]
+    panel_counts = {int(m.group(1)) for m in re.finditer(r"(?m)^\| (\d+) \|", block)}
+    mfs_counts = {
+        int(m.group(1)) for m in re.finditer(r"(?m)^\| 基本解方法（MFS，(\d+) 面元", block)
+    }
+    assert panel_counts <= mfs_counts, (sorted(panel_counts), sorted(mfs_counts))
+    assert doc_claims_panels() <= mfs_counts, sorted(mfs_counts)
+
+
+def doc_claims_panels() -> set[int]:
+    """Panel counts the claim registry guards; imported lazily to keep the module light."""
+    from tensorbem.doc_claims import TABLE_PANELS  # noqa: PLC0415
+
+    return set(TABLE_PANELS)
+
+
+def test_finest_mfs_row_is_the_generated_line():
+    """The 256-panel MFS row must be the generator's line, not a hand edit."""
+    generated = table.format_markdown(
+        {"reference": table.reference_coefficients(), "rows": [], "mfs": [table.mfs_row(256)]}
+    ).splitlines()[-1]
+    assert generated in DOC_PATH.read_text()
 
 
 def test_document_contains_the_generated_rows(full_table):
