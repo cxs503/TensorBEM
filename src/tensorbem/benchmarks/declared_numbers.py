@@ -38,7 +38,7 @@ import math
 import platform
 import subprocess
 import sys
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
 
@@ -680,6 +680,38 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=0.0687,
         tier="standard",
     ),
+    # Table 11 prints the reference solution next to the two discretizations,
+    # and the CHIEF point count ("5 点三维内部 CHIEF") in the scheme column.
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33_dimless",
+        description="Hulme (1982) reference A33' at Ka=2.58 (table 11 'exact')",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.4007,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33_dimless",
+        description="Hulme (1982) reference B33' at Ka=2.58 (table 11 'exact')",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33_dimless",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=0.0631,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_chief_point_count",
+        description="interior null-field (CHIEF) points used at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_chief_regularized_chief_point_count",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=5.0,
+        tier="standard",
+    ),
     # --- 3-D submerged sphere, Wang (1986) / Linton (1991) reference -------
     # Source: docs/marine_bem_benchmarks.md table 12 (f/a=1.5, Ka=0.8).
     DeclaredNumber(
@@ -726,6 +758,23 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="sub0_condition_number",
         parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
         declared=2.407,
+    ),
+    # Table 12's 20-panel rotational cell quotes 2.5e-32, i.e. a machine-zero
+    # claim rather than a converged value; it is registered as an upper bound so
+    # the two-digit sentence is checkable without pretending 32 digits of
+    # significance.
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling",
+        description=(
+            "sphere-centre rotational coupling ratio at 20 panels "
+            "(quoted 2.5e-32; machine zero, judged as an upper bound)"
+        ),
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-20,
+        kind="upper",
     ),
     DeclaredNumber(
         key="submerged_sphere_80_heave_added_mass_error",
@@ -960,10 +1009,23 @@ def _study_rows(study: dict) -> dict[str, float]:
 
 
 def _chief_rows(rows) -> dict[str, float]:
-    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``."""
+    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``.
+
+    The row-level ``exact_*`` scalars are the Hulme (1982) semi-analytical
+    reference solution that the same run constructs; they are flattened as
+    ``ka<value>_exact_<quantity>_dimless`` so the two numbers table 11 prints as
+    "(exact ...)" are pinned by the same recomputation instead of being taken
+    on trust.
+    """
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
+        for key, value in row.items():
+            if not key.startswith("exact_"):
+                continue
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                continue
+            values[prefix + key + "_dimless"] = float(value)
         for scheme in ("unregularized", "chief_regularized"):
             for key, value in row[scheme].items():
                 if isinstance(value, bool) or not isinstance(value, (int, float)):

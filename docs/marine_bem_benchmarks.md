@@ -465,7 +465,7 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 **表 10 的 \(B_{11}'\) 观测阶列与表 12 转动耦合比列（m3150 复算订正）**：这两列在 2026-11-04 的声明数字复算中未能复现，原因分别是**度量口径**与**舍入**，均非求解器漂移。
 （i）\(B_{11}'\) 的误差序列实测为 40.24% → 13.05% → 3.53%；若按理想网格减半（\(\sqrt{N}\) 比，即 \(h\) 恰减半）折算，观测阶为 1.62 / 1.89，与旧表一致；若按本模块与其他列统一采用的**实测平均棱长比** \(h_0/h_1=1.87\) 折算，则为 1.80 / 1.94。表 10 该列已统一为后者，与同列其余量的定义一致。
 （ii）球心转动耦合比旧值为两位有效数字的 2.2×10⁻⁴ / 2.6×10⁻⁵，实测 2.151e-04 / 2.648e-05，其中前者的正确舍入应为 2.1×10⁻⁴；表 12 已改用可复现的 2.15\times10^{-4} / 2.65\times10^{-5}。
-两处订正后，表 10–12 的全部数字（74 条注册项，含本表外另 22 条）由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。
+两处订正后，表 10–12 的全部数字（三张表共 **66 格**注册项）由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。m3181 复算进一步把此前未入册的 4 格补齐：表 11 的两列参考真值（精确 \(A_{33}'=0.4007\)、\(B_{33}'=0.0631\)，由同一次运行构造的 Hulme 半解析解复现，偏差 \(9.3\times10^{-5}\) / \(3.5\times10^{-4}\)）、表 11 的 CHIEF 点数（5），以及表 12 的 20 面元转动耦合格（下界声明 \(2.5\times10^{-32}\) 按上界 \(10^{-20}\) 判，实测占用 \(2.5\times10^{-12}\times\) 上界）。66 格单机复算 108 s，账本与图见 `docs/m3181/`，回归门在 `tests/test_m3181_registry_deliverables.py`。
 
 ### 4.11 Wang / Linton 三维深水潜没球体辐射与绕射基准
 
