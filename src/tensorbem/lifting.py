@@ -43,11 +43,20 @@ The map ``z = zeta + b**2/zeta`` sends the circle ``|zeta + m| = a`` with
     F(zeta) = U [ (zeta - zeta0) e^{-i alpha} + a**2 e^{i alpha} / (zeta - zeta0) ]
               + (i Gamma / 2 pi) ln(zeta - zeta0)
 
-is the complex potential. Requiring ``dF/dzeta = 0`` at the trailing edge
-(stagnation point on the cusp: the Kutta condition for a cusp trailing edge)
-gives
+is the complex potential. With a cambered section the circle centre is
+``zeta0 = -thickness + i camber`` and the radius follows from the requirement
+that the circle still passes through ``zeta = b`` (the cusp):
 
-    Gamma = 4 pi a U sin(alpha),      C_L = 2 Gamma / (U c),
+    a = |zeta0 - b| = hypot(b + thickness, camber),
+    phi = arg(b - zeta0) = atan2(-camber, b + thickness).
+
+Requiring ``dF/dzeta = 0`` at the trailing edge (stagnation point on the cusp:
+the Kutta condition for a cusp trailing edge) gives
+
+    Gamma = 4 pi a U sin(alpha - phi),      C_L = 2 Gamma / (U c),
+
+which reduces to ``4 pi a U sin(alpha)`` for ``camber = 0`` (``phi = 0``); the
+zero-lift incidence of a cambered section is therefore ``alpha = phi < 0``.
 
 and the surface velocity follows from ``W = (dF/dzeta) / (dz/dzeta)`` with
 ``C_p = 1 - |W|**2/U**2``. Because ``F`` carries the constant
@@ -67,7 +76,11 @@ Limitations
 -----------
 * The lifting solve is 2-D, steady, inviscid and unbounded; see
   :func:`solve_lifting_flow` for the closure it uses.
-* Symmetric (zero-camber) Joukowski sections only.
+* The family is parameterised by a circle centre ``(-thickness, camber)``, so
+  cambered sections are supported (``camber != 0``); see
+  ``docs/lifting_camber.md``. Camber is a *geometric* offset in units of the
+  transform radius, not a target camber ratio -- the camber ratio of the
+  resulting mean line is measured numerically by the benchmark.
 * Steady, inviscid, incompressible, infinite domain; no free surface, no
   forward speed, no boundary layer.
 """
@@ -115,6 +128,7 @@ class JoukowskiAirfoil:
     thickness: float = 0.1
     transform_radius: float = 1.0
     alpha_deg: float = 4.0
+    camber: float = 0.0
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "thickness", _positive("thickness", self.thickness))
@@ -122,17 +136,36 @@ class JoukowskiAirfoil:
             self, "transform_radius", _positive("transform_radius", self.transform_radius)
         )
         object.__setattr__(self, "alpha_deg", _finite("alpha_deg", self.alpha_deg))
+        object.__setattr__(self, "camber", _finite("camber", self.camber))
         if abs(self.alpha_deg) >= 90.0:
             raise ValueError("alpha_deg must satisfy |alpha_deg| < 90")
 
     # -- geometry -----------------------------------------------------------
     @property
     def circle_centre(self) -> tuple[float, float]:
-        return (-self.thickness, 0.0)
+        return (-self.thickness, self.camber)
 
     @property
     def circle_radius(self) -> float:
-        return self.thickness + self.transform_radius
+        """Circle radius: ``hypot(b + thickness, camber)`` so the cusp stays on it."""
+        axial = self.thickness + self.transform_radius
+        if self.camber == 0.0:
+            return axial
+        return math.hypot(axial, self.camber)
+
+    @property
+    def cusp_angle(self) -> float:
+        """Circle-plane angle of the trailing-edge cusp, ``arg(b - zeta0)``.
+
+        It vanishes for a symmetric section, where the circle parameterisation
+        already starts at the cusp.
+        """
+        return math.atan2(-self.camber, self.transform_radius + self.thickness)
+
+    def circle_point(self, theta: FloatArray) -> "np.ndarray":
+        """Circle-plane point at angle ``theta`` measured from the TE cusp."""
+        centre = complex(*self.circle_centre)
+        return centre + self.circle_radius * np.exp(1j * (self.cusp_angle + theta))
 
     @property
     def alpha_rad(self) -> float:
@@ -144,12 +177,36 @@ class JoukowskiAirfoil:
 
     @property
     def leading_edge(self) -> tuple[float, float]:
-        zeta = -(self.circle_radius + self.thickness)
-        return (zeta + self.transform_radius**2 / zeta, 0.0)
+        """Leading edge: the circle point diametrically opposite the TE cusp."""
+        radius = self.transform_radius
+        if self.camber == 0.0:
+            zeta = -(self.circle_radius + self.thickness)
+            return (zeta + radius**2 / zeta, 0.0)
+        zeta_le = 2.0 * complex(*self.circle_centre) - radius
+        mapped = self.map_point(zeta_le)
+        return (mapped.real, mapped.imag)
 
     @property
     def chord(self) -> float:
-        return self.trailing_edge[0] - self.leading_edge[0]
+        """Chord length, ``|z_LE - z_TE|`` (the chord line tilts when cambered)."""
+        if self.camber == 0.0:
+            return self.trailing_edge[0] - self.leading_edge[0]
+        return math.hypot(
+            self.trailing_edge[0] - self.leading_edge[0],
+            self.trailing_edge[1] - self.leading_edge[1],
+        )
+
+    @property
+    def chord_line_angle_deg(self) -> float:
+        """Inclination of the LE->TE chord line to the x axis (0 for symmetric)."""
+        if self.camber == 0.0:
+            return 0.0
+        return math.degrees(
+            math.atan2(
+                self.trailing_edge[1] - self.leading_edge[1],
+                self.trailing_edge[0] - self.leading_edge[0],
+            )
+        )
 
     def map_point(self, zeta: complex) -> complex:
         """Apply the Joukowski map to a complex circle-plane point."""
@@ -168,8 +225,7 @@ class JoukowskiAirfoil:
         if count < 8:
             raise ValueError("lifting meshes need at least 8 panels")
         fine = np.linspace(0.0, _TWO_PI, _ARC_SAMPLES)
-        zeta = self.circle_centre[0] + self.circle_radius * np.exp(1j * fine)
-        z = self.map_point(zeta)
+        z = self.map_point(self.circle_point(fine))
         segment = np.abs(np.diff(np.concatenate((z, z[:1]))))
         cumulative = np.concatenate(([0.0], np.cumsum(segment)))
         targets = cumulative[-1] * np.arange(count) / count
@@ -178,9 +234,7 @@ class JoukowskiAirfoil:
 
     def vertices(self, panel_count: int) -> FloatArray:
         """Counter-clockwise equal-arc polygon with a vertex at the TE."""
-        theta = self.circle_angles(panel_count)
-        zeta = self.circle_centre[0] + self.circle_radius * np.exp(1j * theta)
-        z = self.map_point(zeta)
+        z = self.map_point(self.circle_point(self.circle_angles(panel_count)))
         vertices = np.column_stack((z.real, z.imag))
         vertices[0] = np.array(self.trailing_edge)
         return vertices
@@ -190,10 +244,15 @@ class JoukowskiAirfoil:
         return PanelMesh(self.vertices(panel_count))
 
     def thickness_ratio(self) -> float:
-        """Maximum thickness over chord, from a dense sampling of the surface."""
+        """Vertical extent of the section over chord, from a dense surface sample.
+
+        For a symmetric section this is the true ``t/c``; for a cambered one it
+        is the vertical extent, which is larger than the thickness measured
+        perpendicular to the camber line. The benchmark measures the camber
+        ratio of the mean line separately rather than claiming this is ``t/c``.
+        """
         theta = np.linspace(0.0, _TWO_PI, 4001)
-        zeta = self.circle_centre[0] + self.circle_radius * np.exp(1j * theta)
-        z = self.map_point(zeta)
+        z = self.map_point(self.circle_point(theta))
         return float(2.0 * np.max(np.abs(z.imag)) / self.chord)
 
     def _inverse_map(self, points: FloatArray) -> "np.ndarray":
@@ -213,9 +272,21 @@ class JoukowskiAirfoil:
 
     # -- closed-form solution ----------------------------------------------
     def exact_circulation(self, speed: float = 1.0) -> float:
-        """Kutta circulation ``4 pi a U sin(alpha)`` (counter clockwise, lift up)."""
+        """Kutta circulation ``4 pi a U sin(alpha - phi)`` (clockwise, lift up).
+
+        ``phi = atan2(-camber, b + thickness)`` is the circle-plane angle of the
+        cusp and vanishes for a symmetric section, where this is
+        ``4 pi a U sin(alpha)``. The Kutta condition ``dF/dzeta = 0`` at the cusp
+        is asserted for every camber by ``tests/test_lifting_camber.py``.
+        """
         speed = _positive("speed", speed)
-        return 4.0 * math.pi * self.circle_radius * speed * math.sin(self.alpha_rad)
+        return (
+            4.0
+            * math.pi
+            * self.circle_radius
+            * speed
+            * math.sin(self.alpha_rad - self.cusp_angle)
+        )
 
     def exact_lift_coefficient(self, speed: float = 1.0) -> float:
         """``C_L = 2 Gamma / (U c)`` from the Kutta circulation."""
@@ -223,7 +294,17 @@ class JoukowskiAirfoil:
         return 2.0 * self.exact_circulation(speed) / (speed * self.chord)
 
     def exact_thin_aerofoil_lift_coefficient(self) -> float:
-        """Thin-aerofoil limit ``2 pi (a/b) sin(alpha)`` of the same section."""
+        """Symmetric-family thin-aerofoil limit ``2 pi (a/b) sin(alpha)``.
+
+        Only a statement about zero-camber sections; for cambered ones use
+        :func:`glauert_thin_aerofoil_lift`, which integrates the actual mean
+        line instead of assuming it is straight.
+        """
+        if self.camber != 0.0:
+            raise ValueError(
+                "the (a/b) sin(alpha) limit assumes zero camber; "
+                "use glauert_thin_aerofoil_lift"
+            )
         return 2.0 * math.pi * (self.circle_radius / self.transform_radius) * math.sin(
             self.alpha_rad
         )
@@ -253,9 +334,17 @@ class JoukowskiAirfoil:
         return 1.0 - (self.exact_surface_speed(points, speed) / speed) ** 2
 
     def decay_offset(self, speed: float = 1.0) -> float:
-        """Constant ``U m cos(alpha)`` removed to make the disturbance decay."""
+        """Constant ``-U Re[zeta0 e^{-i alpha}]`` removed to make the disturbance decay.
+
+        Expanding ``F`` at infinity and comparing with ``Re[U z e^{-i alpha}]``
+        leaves ``-U Re[zeta0 e^{-i alpha}] = U (thickness cos(alpha)
+        - camber sin(alpha))``, i.e. ``U m cos(alpha)`` when ``camber = 0``.
+        """
         speed = _positive("speed", speed)
-        return speed * self.thickness * math.cos(self.alpha_rad)
+        return speed * (
+            self.thickness * math.cos(self.alpha_rad)
+            - self.camber * math.sin(self.alpha_rad)
+        )
 
     def disturbance_potential(self, points: FloatArray, speed: float = 1.0) -> FloatArray:
         """Decaying disturbance potential of the exact field at ``points``.
@@ -278,6 +367,113 @@ class JoukowskiAirfoil:
         return potential - np.real(speed * z * np.exp(-1j * alpha)) - self.decay_offset(
             speed
         )
+
+
+def camber_line(foil: JoukowskiAirfoil, stations: int = 401) -> dict:
+    """Mean camber line of the section, in chord-frame coordinates.
+
+    The section is sampled on a dense circle grid, split into an upper and a
+    lower branch, both branches are re-sampled at common chordwise stations
+    ``xi`` and the camber line is their midpoint. Nothing in here uses the
+    closed-form flow solution: it is a pure geometry measurement, so it can be
+    used as an independent route to the lift (see
+    :func:`glauert_thin_aerofoil_lift`).
+
+    Parameters
+    ----------
+    stations
+        Number of chordwise stations; the returned quadrature is documented as
+        converged to the ``stations -> 2 * stations`` difference (asserted in
+        ``tests/test_lifting_camber.py``).
+
+    Returns
+    -------
+    dict with ``xi`` (chordwise stations in metres, LE = 0), ``eta`` (camber
+    line height above the chord line), ``chord``, ``chord_angle_deg`` and
+    ``camber_ratio`` = ``max|eta| / chord``.
+    """
+    if not isinstance(foil, JoukowskiAirfoil):
+        raise TypeError("foil must be a JoukowskiAirfoil")
+    count = int(stations)
+    if count < 21:
+        raise ValueError("stations must be at least 21")
+
+    tau = np.linspace(0.0, _TWO_PI, 200001)
+    mapped = foil.map_point(foil.circle_point(tau))
+    le = np.asarray(foil.leading_edge, dtype=float)
+    te = np.asarray(foil.trailing_edge, dtype=float)
+    chord_vector = te - le
+    chord = float(math.hypot(chord_vector[0], chord_vector[1]))
+    along = chord_vector / chord
+    across = np.array([-along[1], along[0]])
+
+    rel = np.column_stack((mapped.real - le[0], mapped.imag - le[1]))
+    xi = rel @ along
+    eta = rel @ across
+
+    # Split the contour by *parameter*, never by the sign of eta: near the cusp
+    # the two sides are a few floating-point ulps apart and a sign test mixes
+    # them, which silently corrupts the camber line.
+    margin = 5.0e-3 * chord
+    branches = []
+    for mask in (tau < math.pi, tau > math.pi):
+        keep = mask & (xi > margin) & (xi < chord - margin)
+        order = np.argsort(xi[keep])
+        branches.append((xi[keep][order], eta[keep][order]))
+
+    stations_xi = np.linspace(margin, chord - margin, count)
+    upper = np.interp(stations_xi, *branches[0])
+    lower = np.interp(stations_xi, *branches[1])
+    camber = 0.5 * (upper + lower)
+
+    return {
+        "xi": stations_xi,
+        "eta": camber,
+        "chord": chord,
+        "chord_angle_deg": foil.chord_line_angle_deg,
+        "camber_ratio": float(np.max(np.abs(camber)) / chord),
+    }
+
+
+def glauert_thin_aerofoil_lift(
+    foil: JoukowskiAirfoil, alpha_deg: float | None = None, stations: int = 401
+) -> dict:
+    """Thin-aerofoil (Glauert) lift of the section, from its measured mean line.
+
+    This is the classical first-order theory: with the camber line ``z_c(x)``
+    in chord coordinates,
+
+        ``alpha_L0 = (1/pi) * integral_0^pi z_c'(theta) (1 - cos(theta)) dtheta``
+        ``C_L = 2 pi (alpha_chord - alpha_L0)``
+
+    (Glauert 1926; Abbott & von Doenhoff, *Theory of Wing Sections*, ch. 4).
+    ``alpha_chord`` is the incidence measured from the chord line, i.e. the
+    section incidence minus :attr:`JoukowskiAirfoil.chord_line_angle_deg`.
+
+    It shares no code with :meth:`JoukowskiAirfoil.exact_circulation`: it
+    differentiates the measured camber line only, so the agreement of the two
+    routes at vanishing thickness is a genuine check of the closed-form
+    circulation (and of the sign of the camber term).
+    """
+    if not isinstance(foil, JoukowskiAirfoil):
+        raise TypeError("foil must be a JoukowskiAirfoil")
+    incidence = foil.alpha_deg if alpha_deg is None else _finite("alpha_deg", alpha_deg)
+
+    line = camber_line(foil, stations=stations)
+    chord = line["chord"]
+    x = line["xi"] / chord
+    slope = np.gradient(line["eta"], line["xi"])  # d eta / d xi (non-dimensional)
+    theta0 = np.arccos(np.clip(1.0 - 2.0 * x, -1.0, 1.0))
+    weight = 1.0 - np.cos(theta0)
+    alpha_l0 = float(np.trapezoid(slope * weight, theta0) / math.pi)
+    alpha_chord = math.radians(incidence - line["chord_angle_deg"])
+    return {
+        "alpha_l0_deg": math.degrees(alpha_l0),
+        "alpha_chord_deg": math.degrees(alpha_chord),
+        "camber_ratio": line["camber_ratio"],
+        "lift_coefficient": 2.0 * math.pi * (alpha_chord - alpha_l0),
+        "camber_line": line,
+    }
 
 
 def panel_tangents(mesh: PanelMesh) -> FloatArray:
