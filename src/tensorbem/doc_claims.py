@@ -240,6 +240,9 @@ def write_artifact(
 # document parsing
 # --------------------------------------------------------------------------
 _NUM = r"[-+]?\d+(?:\.\d+)?"
+
+#: Panel count quoted in an MFS row label, e.g. "基本解方法（MFS，128 面元、24 源）".
+_MFS_LABEL_PANELS = re.compile(r"(\d+)\s*面元")
 #: A number printed in LaTeX: ``\(7.72\times10^{-3}\)`` or plain ``2566.83``.
 _PRINTED = re.compile(
     r"\\?\s*\(?\s*(" + _NUM + r")\s*\\times\s*10\^\{?\s*([-+]?\d+)\s*\}?\s*\)?"
@@ -310,6 +313,16 @@ def parse_ursell_table(text: str) -> dict[str, float]:
             pending = "mfs"
         else:
             continue
+        if pending == "mfs":
+            # The table publishes one MFS row per panel count (each labelled
+            # with its panel and source count), while the claim refers to
+            # ``MFS_PANELS``.  A row for another discretisation must not
+            # overwrite the claimed one, otherwise the last published row wins
+            # and the claim silently tracks the wrong mesh.
+            label_panels = _MFS_LABEL_PANELS.search(head)
+            if label_panels and int(label_panels.group(1)) != MFS_PANELS:
+                pending = ""
+                continue
         try:
             if pending == "reference":
                 found["reference_added_mass"] = _to_float(cells[1])
