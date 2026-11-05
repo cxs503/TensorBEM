@@ -49,7 +49,7 @@ import numpy as np
 
 from tensorbem.geometry3d import TriangleMesh, icosphere
 from tensorbem.panel_smoothing import smooth_panel_field
-from tensorbem.recovery import recover_tangent_gradient, tangent_basis
+from tensorbem.recovery import recover_tangent_gradient
 from tensorbem.recovery_uncertainty import estimate_recovery_uncertainty
 
 LEVELS = (1, 2, 3, 4)

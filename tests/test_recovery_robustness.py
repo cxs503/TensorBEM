@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import json
-import math
 
 import numpy as np
 import pytest
 
 from tensorbem.benchmarks.recovery_robustness import (
-    FIXED_SIGMA,
     correlated_error,
     correlated_error_gradient,
     main,

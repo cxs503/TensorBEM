@@ -465,7 +465,7 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 **表 10 的 \(B_{11}'\) 观测阶列与表 12 转动耦合比列（m3150 复算订正）**：这两列在 2026-11-04 的声明数字复算中未能复现，原因分别是**度量口径**与**舍入**，均非求解器漂移。
 （i）\(B_{11}'\) 的误差序列实测为 40.24% → 13.05% → 3.53%；若按理想网格减半（\(\sqrt{N}\) 比，即 \(h\) 恰减半）折算，观测阶为 1.62 / 1.89，与旧表一致；若按本模块与其他列统一采用的**实测平均棱长比** \(h_0/h_1=1.87\) 折算，则为 1.80 / 1.94。表 10 该列已统一为后者，与同列其余量的定义一致。
 （ii）球心转动耦合比旧值为两位有效数字的 2.2×10⁻⁴ / 2.6×10⁻⁵，实测 2.151e-04 / 2.648e-05，其中前者的正确舍入应为 2.1×10⁻⁴；表 12 已改用可复现的 2.15\times10^{-4} / 2.65\times10^{-5}。
-两处订正后，表 10–12 的全部数字（74 条注册项，含本表外另 22 条）由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。
+两处订正后，表 10–12 的全部数字由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere_wave` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。三张表合计 65 个单元，注册为 74 条（65 条 heavy 层 + 9 条默认层粗网格护栏，护栏重算 64 面元半球/80 面元球体的同值单元以保证默认 `pytest` 仍走三维自由液面路径）。
 
 ### 4.11 Wang / Linton 三维深水潜没球体辐射与绕射基准
 
@@ -484,6 +484,21 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 ```bash
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
+
+**表 10–12 的可执行化（m3245）。** 上述三张表的每一个数字现已登记进
+`tensorbem.benchmarks.declared_numbers` 的三维自由液面组
+（`hulme_hemisphere`、`hulme_chief`、`submerged_sphere_wave`）：注册表按本文档的原算例参数重算
+并判 `PASS/DRIFT`，因此本文数字不再可能静默腐化。复算明细、观测阶与"哪些量仍未 <3%"的逐项判定见
+[free_surface3d_registry.md](free_surface3d_registry.md)；回归门为
+`tests/test_declared_numbers.py::test_documented_3d_free_surface_tables_are_reproduced`
+（`TENSORBEM_HEAVY_TESTS=1` 时执行）与默认层
+`test_standard_tier_reproduces_the_3d_free_surface_coarse_rows`。
+
+与 m3150 那条线的合并（PR #133 治愈）另补齐了原先只由 main 一侧登记、重构后generator 未发射的
+17 个单元：表 10 的三个条件数（3.893/3.052/2.783）、64 面元五个观测阶与 256 面元的 \(B_{11}'\) 观测阶（1.94）、
+表 12 的三个条件数（2.407/2.259/2.188）、80 面元四个观测阶与 80 面元转动耦合比 2.15e-4（20 面元的
+2.5e-32 是参考解自身的机器零，按上界门 \(\le 10^{-6}\) 登记）。\(B_{11}'\) 的观测阶基准模块本身不发射，
+由实测平均棱长比 \(h_0/h_1\) 与 \(B_{11}'\) 误差序列在 `_flatten_levels` 内推出，口径与表内其余观测阶一致。
 
 ## 5. 讨论与适用限制
 

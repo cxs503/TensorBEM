@@ -36,7 +36,6 @@ pitch. See :func:`compute_hydrostatic_restoring_matrix`.
 from __future__ import annotations
 
 from dataclasses import dataclass
-import math
 
 import numpy as np
 from numpy.typing import NDArray
