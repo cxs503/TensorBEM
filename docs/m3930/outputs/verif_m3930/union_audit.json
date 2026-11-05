@@ -1,0 +1,72 @@
+{
+  "failures": [],
+  "registry": {
+    "keys_base": 22,
+    "keys_main": 84,
+    "keys_m3306": 55,
+    "keys_merged": 117,
+    "keys_expected": 117,
+    "shared_keys_different_value": {},
+    "groups_merged": [
+      "cylinder",
+      "ellipsoid",
+      "hulme_chief",
+      "hulme_hemisphere",
+      "hulme_irregular",
+      "interior_harmonics",
+      "submerged_sphere",
+      "ursell",
+      "ursell_reference"
+    ],
+    "tiers_merged": [
+      "fast",
+      "heavy",
+      "standard"
+    ]
+  },
+  "tests": {
+    "defs_base": 15,
+    "defs_main": 17,
+    "defs_m3306": 19,
+    "defs_merged": 21,
+    "tests_merged": [
+      "test_3d_free_surface_rows_are_guarded_by_the_default_tiers",
+      "test_a_perturbed_measurement_is_reported_as_drift",
+      "test_chief_regularisation_restores_passive_heave_damping",
+      "test_chief_regularization_restores_passivity_at_the_irregular_frequency",
+      "test_cli_writes_strict_json_and_passes",
+      "test_documented_1280_panel_harmonic_rows_are_reproduced",
+      "test_fast_tier_reproduces_the_documented_numbers",
+      "test_heavy_tier_reproduces_the_documented_1280_panel_ellipsoid_row",
+      "test_hulme_orders_are_second_order_in_the_asymptotic_range",
+      "test_refinement_extrapolates_onto_the_ursell_reference",
+      "test_registry_covers_every_documented_benchmark_family",
+      "test_registry_is_well_formed",
+      "test_repeated_quantities_share_one_solve",
+      "test_report_is_strict_json",
+      "test_richardson_limit_recovers_a_first_order_family",
+      "test_richardson_limit_rejects_a_non_converging_family",
+      "test_standard_tier_reproduces_the_documented_ursell_numbers",
+      "test_three_dimensional_free_surface_rows_are_pinned",
+      "test_unknown_tier_is_rejected",
+      "test_upper_bound_claims_only_fail_when_exceeded"
+    ],
+    "adjudicated": {
+      "test_registry_covers_every_documented_benchmark_family": "known-group tuple widened to the union of both sides' group sets"
+    }
+  },
+  "docs": {
+    "added_lines_ours": 47,
+    "added_lines_theirs": 8,
+    "not_found_ours": [],
+    "not_found_theirs": [],
+    "adjudicated": {
+      "| 2.23 / 1.59 / 2.04 / 1.62 / 1.77 |": "table 10 row 2: replaced by main's 1.80 (h_mean convention)"
+    }
+  },
+  "import": {
+    "module": "/root/tp-agent/work/m3930/src/tensorbem/benchmarks/declared_numbers.py",
+    "registry_len": 117,
+    "unique_keys": true
+  }
+}

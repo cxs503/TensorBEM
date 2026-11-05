@@ -1,0 +1,82 @@
+{
+  "registry_len": 117,
+  "unique_keys": 117,
+  "entries_checked_against_synthetic_handlers": 95,
+  "tier_counts": {
+    "fast": 40,
+    "heavy": 10,
+    "standard": 67
+  },
+  "group_tier_counts": {
+    "cylinder": {
+      "fast": 2
+    },
+    "ellipsoid": {
+      "heavy": 3
+    },
+    "ursell_reference": {
+      "fast": 2
+    },
+    "ursell": {
+      "fast": 4,
+      "standard": 3,
+      "heavy": 2
+    },
+    "interior_harmonics": {
+      "heavy": 5,
+      "standard": 1
+    },
+    "hulme_hemisphere": {
+      "fast": 17,
+      "standard": 28
+    },
+    "hulme_chief": {
+      "standard": 6
+    },
+    "submerged_sphere": {
+      "fast": 15,
+      "standard": 20
+    },
+    "hulme_irregular": {
+      "standard": 9
+    }
+  },
+  "union_probe": {
+    "main_convention_keys": [
+      "sub1_condition_number",
+      "sub1_excitation_force_x_rel_error",
+      "sub1_excitation_force_z_rel_error",
+      "sub1_far_field_damping_rel_diff_heave",
+      "sub1_h_mean",
+      "sub1_haskind_reciprocity_rel_diff_x"
+    ],
+    "m3306_convention_keys": [
+      "condition_number",
+      "excitation_force_x_rel_error",
+      "excitation_force_z_rel_error",
+      "far_field_damping_rel_diff_heave",
+      "h_mean",
+      "haskind_reciprocity_rel_diff_x",
+      "haskind_reciprocity_rel_diff_z",
+      "heave_added_mass_rel_error",
+      "heave_damping_rel_error",
+      "ka",
+      "observed_order_a11",
+      "observed_order_a33",
+      "observed_order_b11",
+      "observed_order_b33",
+      "observed_order_fz",
+      "panel_count",
+      "rotational_added_mass_max_ratio",
+      "rotational_coupling_ratio",
+      "subdivisions",
+      "surge_added_mass_rel_error",
+      "surge_damping_rel_error",
+      "vertical_force_rel_error"
+    ],
+    "overlap": [],
+    "union_size": 87
+  },
+  "problems": [],
+  "note": "synthetic payloads only exercise the dispatch/quantity contract; the numbers themselves are recomputed by tests/test_declared_numbers.py and adjudicate_table10_cell.py"
+}

@@ -1,0 +1,36 @@
+{
+  "merge": "36ea849 (agent/m3306) <- origin/main (main), base 4f5b73e",
+  "conflict_files": [
+    "src/tensorbem/benchmarks/declared_numbers.py",
+    "tests/test_declared_numbers.py",
+    "docs/marine_bem_benchmarks.md"
+  ],
+  "files": [
+    {
+      "file": "src/tensorbem/benchmarks/declared_numbers.py",
+      "strategy": "main's file kept as the skeleton (canonical sub<level>_ pin convention, _study_rows/_chief_rows, hulme_chief handler); m3306's 37 added registry entries re-inserted unchanged; m3306's _finest_level + hulme_irregular handler re-added; the two 3-D handlers return the union of both flattenings so both conventions are recomputed from one solve",
+      "entries_main": 84,
+      "entries_m3306_added": 33,
+      "entries_base": 22
+    },
+    {
+      "file": "tests/test_declared_numbers.py",
+      "strategy": "main's tests kept; m3306's standard-tier fixture and its three 3-D pinning tests re-appended; the known-group tuple of the registry-shape test widened to the union {hulme_chief, hulme_hemisphere, hulme_irregular, submerged_sphere}",
+      "tests_readded": [
+        "standard_report",
+        "test_three_dimensional_free_surface_rows_are_pinned",
+        "test_hulme_orders_are_second_order_in_the_asymptotic_range",
+        "test_chief_regularization_restores_passivity_at_the_irregular_frequency"
+      ]
+    },
+    {
+      "file": "docs/marine_bem_benchmarks.md",
+      "strategy": "m3306's tree kept as the skeleton (it carries the 1.94 correction and the whole 'declared-number pins' section); main's three reproducible cell corrections re-applied; main's m3150 convention paragraph re-inserted after m3306's block so both narratives survive",
+      "adjudications": [
+        "table 10, row 2 (16->64 panels), B11' observed order: m3306 left 1.62 (implied h ratio 2), main recomputed it with the measured h_mean ratio 1.87 -> 1.80, which is the convention m3306 itself argues for in the paragraph it added; the merged registry pins main's value",
+        "table 12, row 1, rotational coupling: main's reproducible 3-s.f. value",
+        "table 12, row 2, rotational coupling: main's reproducible 3-s.f. value"
+      ]
+    }
+  ]
+}

@@ -444,6 +444,8 @@ G(\mathbf x,\boldsymbol\xi;\nu)=\frac{1}{4\pi r}+\frac{1}{4\pi r_1}+\frac{\nu}{2
 
 **纵荡兴波阻尼 \(B_{11}'\) 收敛专项（m2609）**：\(B_{11}'\) 是本基准收敛最慢的量（m=1 模兴波分量最强，兴波核仅按 3 点二阶规则积分）。256 面元 3.53% 的偏差曾使 `test_surge_damping_vs_hulme`（2.5% 门）转红；m2609 面板研究（`tensorbem.benchmarks.kochin_hulme_convergence`，16/64/256/1024 面元）证明该偏差是**离散误差**而非系统偏差：误差 40.2% → 13.0% → 3.53% → **0.90%**，对 \(h\) 观测阶 1.62/1.88/1.96，Hulme 参考解自身近/远场自洽达 \(5\times10^{-7}\)，近/远场能量恒等式比值 0.9993（1024 面元）。门限测试已移至 1024 面元（0.90%，2.8× 裕度），收敛行为由 `tests/test_kochin_hulme_convergence.py` 钉桩。（m3280 起 `run_study` 的 `orders` 字段即对 \(h\) 的观测阶，与本表同口径；按面元数 \(N\) 计的阶保留在 `orders_vs_panels`，两者相差恰为因子 2，由回归测试钉死。）
 
+**收敛阶的两种口径（m3306 澄清）**：表 10 最后一列与 `floating_hemisphere._observed_orders` 用相邻层级网格实际的 \(h_{\text{mean}}\) 之比（1.9642），而本节 1.62/1.88/1.96 与 `kochin_hulme_convergence` 用名义面元比 \(\sqrt{N_{i+1}/N_i}=2\)。同一对网格（64→256）上 \(B_{11}'\) 的阶按前者为 **1.94**、按后者为 **1.88**；表 10 原先在该格填的是后者，与同列其余四格口径不一致，已按实际 \(h_{\text{mean}}\) 口径更正为 1.94——两口径下的**误差值本身**（13.0% 与 3.53%）从未改变，故这是一次口径澄清而非数字翻案。
+
 256 面元（单频组装求解耗时约 1.1 s）下，近场压力积分阻尼与远场三维 Kochin 方位角积分阻尼相对差仅 \(5.45\times10^{-4}\)，三维直接绕射解与边界 Haskind 互易积分相对差为 \(2.09\times10^{-4}\)（纵荡）与 \(8.09\times10^{-4}\)（垂荡）。
 
 **三维穿水浮体不规则频率与免盖板三维 CHIEF 消除：**
@@ -462,11 +464,6 @@ G(\mathbf x,\boldsymbol\xi;\nu)=\frac{1}{4\pi r}+\frac{1}{4\pi r_1}+\frac{\nu}{2
 python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 ```
 
-**表 10 的 \(B_{11}'\) 观测阶列与表 12 转动耦合比列（m3150 复算订正）**：这两列在 2026-11-04 的声明数字复算中未能复现，原因分别是**度量口径**与**舍入**，均非求解器漂移。
-（i）\(B_{11}'\) 的误差序列实测为 40.24% → 13.05% → 3.53%；若按理想网格减半（\(\sqrt{N}\) 比，即 \(h\) 恰减半）折算，观测阶为 1.62 / 1.89，与旧表一致；若按本模块与其他列统一采用的**实测平均棱长比** \(h_0/h_1=1.87\) 折算，则为 1.80 / 1.94。表 10 该列已统一为后者，与同列其余量的定义一致。
-（ii）球心转动耦合比旧值为两位有效数字的 2.2×10⁻⁴ / 2.6×10⁻⁵，实测 2.151e-04 / 2.648e-05，其中前者的正确舍入应为 2.1×10⁻⁴；表 12 已改用可复现的 2.15\times10^{-4} / 2.65\times10^{-5}。
-两处订正后，表 10–12 的全部数字（74 条注册项，含本表外另 22 条）由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。
-
 ### 4.11 Wang / Linton 三维深水潜没球体辐射与绕射基准
 
 为提供完全不依赖 `tensorbem.free_surface3d` 兴波核求值器的**绝对独立三维真值锚点**，`submerged_sphere_wave_multipole` 基于 Thorne 多极子展开与球谐加法定理（Wang 1986; Linton 1991 [13]）推导了球心位于 \((0,0,-f)\) 的潜没球体在 \(m=0\)（垂荡/轴对称绕射）与 \(m=1\)（纵荡/反对称绕射）下的线性代数耦合系统——全部耦合矩阵元均化简为精确阶乘与指数积分 \(\operatorname{Ei}(2\nu f)\) 的闭式代数表达式（**零数值求积**），在任意频率与潜深下满足 Newman 三维轴对称 Haskind 恒等式 \(|F_z/A|^2=\frac{2\rho g\omega}{\nu^2}B_{33}\)、\(|F_x/A|^2=\frac{4\rho g\omega}{\nu^2}B_{11}\) 至机器精度（\(3.1\text{–}6.5\times10^{-16}\)），并在深潜极限 \(f/a\to\infty\) 下精确退化至无界流 Lamb 附加质量 \(A'=0.5\) 与 Morison 惯性力系数 \(C_M=1.5\)。
@@ -484,6 +481,65 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 ```bash
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
+
+<!-- BEGIN m3306 declared-number pins -->
+
+**注册表钉桩（m3306）**：上述三张表的 33 个数字过去只由各基准测试模块独立断言，未纳入 `tensorbem.benchmarks.declared_numbers` 注册表——一次核函数或网格改动可以让文档格子悄悄漂移而无人发现。现按表逐格登记，复算命令 `python -m tensorbem.benchmarks.declared_numbers --tiers standard`（本次运行 37 条全部 PASS，最坏相对偏差 1.10e-01），回归门为 `tests/test_declared_numbers.py`。
+
+**表 10 · Hulme 漂浮半球（Ka=1, 64→256 面元）**
+
+| 注册键 | 文档值 | 复算值 | 相对偏差 | 容差 | 判定 |
+|---|---:|---:|---:|---:|---|
+| `hulme_heave_added_mass_error_256` | 0.00741 | 0.0074054 | -6.15e-04 | 1.5e-02 | PASS |
+| `hulme_heave_damping_error_256` | 0.0118 | 0.011812 | +1.01e-03 | 1.5e-02 | PASS |
+| `hulme_surge_added_mass_error_256` | 0.013 | 0.013038 | +2.95e-03 | 1.5e-02 | PASS |
+| `hulme_surge_damping_error_256` | 0.0353 | 0.035275 | -7.22e-04 | 1.5e-02 | PASS |
+| `hulme_vertical_force_error_256` | 0.00567 | 0.0056679 | -3.69e-04 | 1.5e-02 | PASS |
+| `hulme_condition_number_256` | 2.783 | 2.7829 | -4.37e-05 | 1.5e-02 | PASS |
+| `hulme_order_a33_256` | 2.06 | 2.0592 | -4.02e-04 | 1.5e-02 | PASS |
+| `hulme_order_b33_256` | 1.98 | 1.982 | +1.02e-03 | 1.5e-02 | PASS |
+| `hulme_order_a11_256` | 2.01 | 2.006 | -2.00e-03 | 1.5e-02 | PASS |
+| `hulme_order_b11_256` | 1.94 | 1.9377 | -1.17e-03 | 1.5e-02 | PASS |
+| `hulme_order_fz_256` | 2.02 | 2.0152 | -2.35e-03 | 1.5e-02 | PASS |
+| `hulme_near_far_damping_256` | 5.4500e-04 | 5.4478e-04 | -3.99e-04 | 1.5e-02 | PASS |
+| `hulme_haskind_surge_256` | 2.0900e-04 | 2.0892e-04 | -3.92e-04 | 1.5e-02 | PASS |
+| `hulme_haskind_heave_256` | 8.0900e-04 | 8.0854e-04 | -5.73e-04 | 1.5e-02 | PASS |
+
+**表 11 · Ka=2.58 不规则频率与免盖板 CHIEF（256 面元）**
+
+| 注册键 | 文档值 | 复算值 | 相对偏差 | 容差 | 判定 |
+|---|---:|---:|---:|---:|---|
+| `hulme_irregular_unregularized_condition` | 145.66 | 145.66 | -9.43e-06 | 1.5e-02 | PASS |
+| `hulme_irregular_unregularized_added_mass` | 0.3481 | 0.34806 | -1.09e-04 | 1.5e-02 | PASS |
+| `hulme_irregular_unregularized_damping_magnitude` | 0.1042 | 0.10415 | -4.35e-04 | 1.5e-02 | PASS |
+| `hulme_irregular_passivity_violated` | 1 | 1 | +0.00e+00 | 1.5e-02 | PASS |
+| `hulme_irregular_chief_condition` | 4.24 | 4.245 | +1.17e-03 | 1.5e-02 | PASS |
+| `hulme_irregular_chief_added_mass` | 0.3919 | 0.39191 | +2.15e-05 | 1.5e-02 | PASS |
+| `hulme_irregular_chief_damping` | 0.0687 | 0.068708 | +1.15e-04 | 1.5e-02 | PASS |
+| `hulme_irregular_exact_added_mass` | 0.4007 | 0.40074 | +9.33e-05 | 1.5e-02 | PASS |
+| `hulme_irregular_exact_damping` | 0.0631 | 0.063122 | +3.48e-04 | 1.5e-02 | PASS |
+
+**表 12 · Wang/Linton 潜没球体（f/a=1.5, Ka=0.8, 80→320 面元）**
+
+| 注册键 | 文档值 | 复算值 | 相对偏差 | 容差 | 判定 |
+|---|---:|---:|---:|---:|---|
+| `submerged_sphere_heave_added_mass_error_320` | 0.0185 | 0.018509 | +4.81e-04 | 1.5e-02 | PASS |
+| `submerged_sphere_surge_added_mass_error_320` | 0.0208 | 0.020766 | -1.65e-03 | 1.5e-02 | PASS |
+| `submerged_sphere_horizontal_force_error_320` | 0.031 | 0.031 | +1.52e-05 | 1.5e-02 | PASS |
+| `submerged_sphere_vertical_force_error_320` | 0.032 | 0.031972 | -8.66e-04 | 1.5e-02 | PASS |
+| `submerged_sphere_condition_number_320` | 2.188 | 2.188 | -2.80e-06 | 1.5e-02 | PASS |
+| `submerged_sphere_rotational_coupling_320` | 2.6000e-05 | 2.6481e-05 | +1.85e-02 | 5.0e-02 | PASS |
+| `submerged_sphere_order_a33_320` | 2.06 | 2.062 | +9.58e-04 | 1.5e-02 | PASS |
+| `submerged_sphere_order_b33_320` | 1.93 | 1.929 | -5.30e-04 | 1.5e-02 | PASS |
+| `submerged_sphere_order_a11_320` | 2.03 | 2.03 | +3.45e-06 | 1.5e-02 | PASS |
+| `submerged_sphere_order_fz_320` | 1.98 | 1.9795 | -2.59e-04 | 1.5e-02 | PASS |
+
+<!-- END m3306 declared-number pins -->
+
+**表 10 的 \(B_{11}'\) 观测阶列与表 12 转动耦合比列（m3150 复算订正）**：这两列在 2026-11-04 的声明数字复算中未能复现，原因分别是**度量口径**与**舍入**，均非求解器漂移。
+（i）\(B_{11}'\) 的误差序列实测为 40.24% → 13.05% → 3.53%；若按理想网格减半（\(\sqrt{N}\) 比，即 \(h\) 恰减半）折算，观测阶为 1.62 / 1.89，与旧表一致；若按本模块与其他列统一采用的**实测平均棱长比** \(h_0/h_1=1.87\) 折算，则为 1.80 / 1.94。表 10 该列已统一为后者，与同列其余量的定义一致。
+（ii）球心转动耦合比旧值为两位有效数字的 2.2×10⁻⁴ / 2.6×10⁻⁵，实测 2.151e-04 / 2.648e-05，其中前者的正确舍入应为 2.1×10⁻⁴；表 12 已改用可复现的 2.15\times10^{-4} / 2.65\times10^{-5}。
+两处订正后，表 10–12 的全部数字（74 条注册项，含本表外另 22 条）由 `python -m tensorbem.benchmarks.declared_numbers` 端到端复算并判 PASS；registry group `hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 即对应表 10 / 表 11 / 表 12，回归门在 `tests/test_declared_numbers.py`。
 
 ## 5. 讨论与适用限制
 

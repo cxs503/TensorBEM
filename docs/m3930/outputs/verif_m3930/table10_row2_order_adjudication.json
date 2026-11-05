@@ -1,0 +1,40 @@
+{
+  "benchmark": "floating_hemisphere.run_refinement_study (Hulme 1982, Ka=1.0, a=1)",
+  "levels": [
+    {
+      "subdivisions": 1,
+      "panel_count": 16,
+      "h_mean": 0.8826834323650896,
+      "surge_damping_rel_error": 0.4024097060515509
+    },
+    {
+      "subdivisions": 2,
+      "panel_count": 64,
+      "h_mean": 0.47250002419904896,
+      "surge_damping_rel_error": 0.13049228123102583
+    },
+    {
+      "subdivisions": 3,
+      "panel_count": 256,
+      "h_mean": 0.2405530308975098,
+      "surge_damping_rel_error": 0.03527451400663637
+    }
+  ],
+  "table10_row2_cell": {
+    "documented_by_m3306": 1.62,
+    "documented_by_main": 1.8,
+    "recomputed_h_mean_convention": 1.8020558782321292,
+    "recomputed_nominal_refinement_convention": 1.6247006308715708,
+    "h_mean_ratio_16_to_64": 1.8681129886953056,
+    "verdict": "1.80 (measured h_mean ratio, the column's convention)",
+    "abs_diff_vs_h_mean": 0.00205587823212916,
+    "abs_diff_vs_nominal": 0.1820558782321291
+  },
+  "table10_row3_cell_m3306_correction": {
+    "old_value_in_base": 1.88,
+    "m3306_value": 1.94,
+    "recomputed_h_mean_convention": 1.9377258540482194,
+    "recomputed_nominal_refinement_convention": 1.8872663608505282,
+    "h_mean_ratio_64_to_256": 1.9642239486076676
+  }
+}
