@@ -80,8 +80,9 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics``, ``hulme_hemisphere``,
+    ``hulme_chief`` or ``submerged_sphere``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -92,6 +93,19 @@ class DeclaredNumber:
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
 
+
+#: Settings of the three-dimensional free-surface families. These are the
+#: settings the documentation quotes and the ones the benchmarks default to, so
+#: the registry reproduces a reader's copy-paste of the ``--help`` command.
+_HULME_KA = 1.0
+_HULME_RADIUS = 1.0
+_HULME_DENSITY = 1025.0
+_HULME_GRAVITY = 9.80665
+_HULME_CHIEF_KA = 2.58
+_HULME_CHIEF_SUBDIVISION = 3
+_SPHERE_KA = 0.8
+_SPHERE_RADIUS = 1.0
+_SPHERE_SUBMERGENCE = 1.5
 
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
@@ -321,7 +335,10 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         quantity="field_rmse",
         parameters={"harmonic": "x3-3xy2", "subdivisions": 3},
         declared=1.824e-4,
-        tier="standard",
+        # A 1280-panel three-dimensional dense solve belongs to the heavy class
+        # like its five sibling harmonic rows; it was left on ``standard`` by
+        # mistake, which made the default standard-tier run cost minutes.
+        tier="heavy",
     ),
     # --- 3-D floating hemisphere, Hulme (1982) reference (free surface) -----
     # Source: docs/marine_bem_benchmarks.md table 10 (Ka=1.0, a=1, rho=1025).
@@ -917,6 +934,69 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
+    # --- m3264: the round-off cell and the sign claim of tables 11-12 -------
+    # Table 12 prints ``2.5e-32`` for the 20-panel rotational coupling, i.e.
+    # round-off. Guarding a round-off digit is not a claim about the method
+    # (cf. the 2026-11-03 audit of the 1.6e-15 row-sum bounds), so the guarded
+    # statement is the one that survives a BLAS change: the sphere-centre
+    # rotational coupling is zero to 1e-30 (measured 2.49e-32). The two finer
+    # levels are quoted as values (``submerged_sphere_80/320_rotational_coupling``).
+    DeclaredNumber(
+        key="submerged_sphere_20_rotational_coupling_bound",
+        description="sphere-centre rotational coupling ratio at 20 panels: bound",
+        source="docs/marine_bem_benchmarks.md section 4.11 table 12",
+        group="submerged_sphere",
+        quantity="sub0_rotational_added_mass_max_ratio",
+        parameters={"subdivisions": [0, 1, 2], "ka": 0.8, "submergence": 1.5},
+        declared=1.0e-30,
+        kind="upper",
+        tier="fast",
+    ),
+    # Table 11 quotes Hulme's exact ``A33'``/``B33'`` next to the two numerical
+    # schemes, and its physical claim is the *sign* of the heave damping. The
+    # signed table cell stays registered as ``hulme_chief_2_58_unregularized_b33``
+    # (-0.1042); the magnitude and the passivity flag register the same claim in
+    # the form a quoted quantity has to have.
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_a33",
+        description="Hulme's exact non-dimensional heave added mass at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_a33",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=4.007e-1,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_exact_b33",
+        description="Hulme's exact non-dimensional heave damping at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_exact_b33",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=6.31e-2,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_unregularized_b33_magnitude",
+        description="magnitude of the unregularized heave damping at Ka=2.58",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_unregularized_b33_magnitude",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=1.042e-1,
+        tier="standard",
+    ),
+    DeclaredNumber(
+        key="hulme_chief_2_58_unregularized_passivity_violated",
+        description="1.0 if the unregularized scheme radiates energy into the fluid",
+        source="docs/marine_bem_benchmarks.md section 4.10 table 11",
+        group="hulme_chief",
+        quantity="ka2.58_unregularized_passivity_violated",
+        parameters={"subdivision": 3, "ka_values": [2.58]},
+        declared=1.0,
+        tier="standard",
+    ),
 )
 
 _URSELL_RADIUS = 1.0
@@ -960,15 +1040,33 @@ def _study_rows(study: dict) -> dict[str, float]:
 
 
 def _chief_rows(rows) -> dict[str, float]:
-    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``."""
+    """Flatten the irregular-frequency study into ``ka<value>_<scheme>_<quantity>``.
+
+    The study reports Hulme's exact ``A33'``/``B33'`` once per frequency and one
+    block per numerical scheme. Table 11 additionally quotes the *sign* of the
+    heave damping: the unregularized surface-piercing BIE radiates energy into
+    the fluid at the first interior waterplane resonance. The registry compares
+    magnitudes, so the sign is exposed twice -- as a magnitude plus an explicit
+    ``passivity_violated`` flag (1.0 = violation) -- instead of as a negative
+    number a consumer could compare by accident.
+    """
     values: dict[str, float] = {}
     for row in rows:
         prefix = f"ka{float(row['ka']):.2f}_"
+        for key in ("exact_a33", "exact_b33"):
+            if key in row:
+                values[prefix + key] = float(row[key])
         for scheme in ("unregularized", "chief_regularized"):
             for key, value in row[scheme].items():
                 if isinstance(value, bool) or not isinstance(value, (int, float)):
                     continue
                 values[prefix + scheme + "_" + key] = float(value)
+            values[prefix + scheme + "_b33_magnitude"] = abs(
+                float(row[scheme]["b33_dimless"])
+            )
+            values[prefix + scheme + "_passivity_violated"] = float(
+                bool(row[scheme]["passivity_violated"])
+            )
     return values
 
 
@@ -1027,20 +1125,31 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
     if group == "hulme_hemisphere":
         study = hemisphere_benchmark.run_refinement_study(
             subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (1, 2, 3))),
-            ka=float(parameters.get("ka", 1.0)),
+            ka=float(parameters.get("ka", _HULME_KA)),
+            radius=_HULME_RADIUS,
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _study_rows(study)
     if group == "submerged_sphere":
         study = sphere_benchmark.run_refinement_study(
             subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (0, 1, 2))),
-            ka=float(parameters.get("ka", 0.8)),
-            submergence=float(parameters.get("submergence", 1.5)),
+            ka=float(parameters.get("ka", _SPHERE_KA)),
+            submergence=float(parameters.get("submergence", _SPHERE_SUBMERGENCE)),
+            radius=_SPHERE_RADIUS,
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _study_rows(study)
     if group == "hulme_chief":
         rows = hemisphere_benchmark.run_irregular_frequency_study(
-            subdivision=int(parameters.get("subdivision", 3)),
-            ka_values=tuple(float(v) for v in parameters.get("ka_values", (2.58,))),
+            subdivision=int(parameters.get("subdivision", _HULME_CHIEF_SUBDIVISION)),
+            ka_values=tuple(
+                float(v) for v in parameters.get("ka_values", (_HULME_CHIEF_KA,))
+            ),
+            radius=_HULME_RADIUS,
+            density=_HULME_DENSITY,
+            gravity=_HULME_GRAVITY,
         )
         return _chief_rows(rows)
     raise ValueError(f"unknown benchmark group: {group!r}")
@@ -1112,6 +1221,17 @@ def check(
 
     drifted = [row for row in rows if row["verdict"] != "PASS"]
     worst = max((abs(row["relative_deviation"]) for row in rows), default=0.0)
+    # Upper-bound rows are judged on one side only, so their relative deviation
+    # is a distance from the bound, not an error; the headline accuracy figure
+    # is therefore reported over the equality rows.
+    worst_value = max(
+        (
+            abs(row["relative_deviation"])
+            for row in rows
+            if row["comparison"] == "value"
+        ),
+        default=0.0,
+    )
     return {
         "benchmark": "declared_numbers_recomputation",
         "tiers": sorted(selected_tiers),
@@ -1122,6 +1242,7 @@ def check(
             "drifted": len(drifted),
             "drifted_keys": [row["key"] for row in drifted],
             "worst_relative_deviation": worst,
+            "worst_value_relative_deviation": worst_value,
             "verdict": "PASS" if not drifted else "DRIFT",
         },
         "environment": _environment(),

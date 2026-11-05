@@ -11,6 +11,11 @@ away from the number the code produces. These tests check three layers:
   extrapolation used as evidence for the reference solution recovers a
   synthetic first-order family exactly.
 
+The 3-D free-surface tables (``docs/marine_bem_benchmarks.md`` sections 4.10
+and 4.11) are recomputed once per session and shared by the tests that read
+them: a 320-panel Kelvin-Green-function solve is seconds rather than minutes, so
+they stay on the ``standard`` tier and a plain ``pytest`` run guards them.
+
 The 256-panel extrapolation study is skipped unless ``TENSORBEM_HEAVY_TESTS``
 is set; it is minutes of dense solves and its purpose is a published evidence
 table, not a regression gate.
@@ -38,6 +43,19 @@ HEAVY = pytest.mark.skipif(
     not os.environ.get("TENSORBEM_HEAVY_TESTS"),
     reason="set TENSORBEM_HEAVY_TESTS=1 to run the multi-minute refinement study",
 )
+
+#: The groups whose numbers are the 3-D free-surface tables 10-12.
+FREE_SURFACE_3D = ("hulme_chief", "hulme_hemisphere", "submerged_sphere")
+
+
+@pytest.fixture(scope="session")
+def standard_tier_report():
+    """Every ``standard`` row, recomputed once for the whole session.
+
+    The 3-D free-surface rows cost about a minute together; the 2-D rows are
+    milliseconds. Recomputing per test would pay the minute three times.
+    """
+    return check(tiers=("standard",))
 
 
 @HEAVY
@@ -113,9 +131,9 @@ def test_fast_tier_reproduces_the_documented_numbers():
     assert report["summary"]["checked"] >= 6
 
 
-def test_standard_tier_reproduces_the_documented_ursell_numbers():
+def test_standard_tier_reproduces_the_documented_ursell_numbers(standard_tier_report):
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = standard_tier_report
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -146,11 +164,17 @@ def test_3d_free_surface_rows_are_guarded_by_the_default_tiers():
     """
     groups = {"hulme_hemisphere", "hulme_chief", "submerged_sphere"}
     rows = [entry for entry in DECLARED_NUMBERS if entry.group in groups]
-    assert len(rows) >= 60
+    assert len(rows) == 67
     assert {entry.group for entry in rows} == groups
     assert all(entry.tier in {"fast", "standard"} for entry in rows)
     assert all("marine_bem_benchmarks.md" in entry.source for entry in rows)
     assert len({entry.key for entry in rows}) == len(rows)
+    # One refinement study feeds every cell of its table, including the observed
+    # orders, which need two meshes; quoting one level at a time would both cost
+    # more and lose those rows.
+    parameters = {entry.group: entry.parameters for entry in rows}
+    assert tuple(parameters["hulme_hemisphere"]["subdivisions"]) == (1, 2, 3)
+    assert tuple(parameters["submerged_sphere"]["subdivisions"]) == (0, 1, 2)
 
 
 def test_chief_regularisation_restores_passive_heave_damping():
@@ -175,6 +199,71 @@ def test_chief_regularisation_restores_passive_heave_damping():
     assert abs(values["ka2.58_chief_regularized_a33_dimless"] - exact) < abs(
         values["ka2.58_unregularized_a33_dimless"] - exact
     )
+    # The same claim as registered numbers: the table prints the sign of the
+    # damping, and the registry carries it as a magnitude plus an explicit
+    # passivity flag, because a quoted quantity has to be positive.
+    assert values["ka2.58_unregularized_b33_magnitude"] == abs(plain)
+    assert values["ka2.58_unregularized_passivity_violated"] == 1.0
+    assert values["ka2.58_exact_a33"] == pytest.approx(exact, rel=1.0e-12)
+
+
+def test_standard_tier_reproduces_the_documented_free_surface_3d_numbers(
+    standard_tier_report,
+):
+    """Tables 10-12 of ``docs/marine_bem_benchmarks.md``, cell by cell.
+
+    These rows were the last set of quoted results that no test read: the 3-D
+    Kelvin-Green-function solver, its two convergence tables (Hulme's floating
+    hemisphere at ``Ka = 1``, the Wang/Linton submerged sphere at ``f/a = 1.5``)
+    and the CHIEF regularisation comparison of table 11 were pinned only by spot
+    assertions inside the benchmark tests, so retuning the wave kernel, the mesh
+    generator or the CHIEF point heuristic would have left the documents intact
+    while the solver moved.
+    """
+    rows = [r for r in standard_tier_report["checks"] if r["group"] in FREE_SURFACE_3D]
+    assert len(rows) == 67
+    assert {r["group"] for r in rows} == set(FREE_SURFACE_3D)
+    drifted = [
+        (r["key"], r["declared"], r["measured"])
+        for r in rows
+        if r["verdict"] != "PASS"
+    ]
+    assert not drifted, drifted
+
+    values = [abs(r["relative_deviation"]) for r in rows if r["comparison"] == "value"]
+    # The two-significant-figure cells are the loosest thing in the tables; a
+    # four-figure cell that moves by more than a percent is a solver change.
+    assert max(values) < 5.0e-2
+    # Cells the tables print with two significant figures (the observed-order
+    # column, the rotational-coupling column) carry a +/-2.5 % printing band of
+    # their own; the four-significant-figure cells do not, so they are held to
+    # a percent.
+    loose = ("observed_order", "rotational")
+    tight = [
+        abs(r["relative_deviation"])
+        for r in rows
+        if r["comparison"] == "value"
+        and not any(marker in r["key"] for marker in loose)
+    ]
+    assert tight, "the tight band must not be vacuous"
+    assert max(tight) < 5.0e-3
+
+
+def test_a_perturbed_free_surface_3d_cell_is_reported_as_drift():
+    """Negative control: the 3-D rows are judged, not merely recomputed."""
+    entries = tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere"
+    )[:2]
+    perturbed = entries[1]
+
+    def runner(group, parameters):
+        values = {entry.quantity: entry.declared for entry in entries}
+        values[perturbed.quantity] = perturbed.declared * 1.2
+        return values
+
+    report = check(tiers=("standard", "fast"), entries=entries, runner=runner)
+    assert report["summary"]["drifted_keys"] == [perturbed.key]
+    assert report["summary"]["verdict"] == "DRIFT"
 
 
 @HEAVY
