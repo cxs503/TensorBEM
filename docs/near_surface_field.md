@@ -1,7 +1,10 @@
 # Near-singular field quadrature for 3-D BEM: closing the near-wall gap
 
-**Scope.** `README.md` roadmap item 5 lists *near-singular field quadrature* as the
-only remaining field-evaluation gap, and the code enforced it: both
+**Scope.** `README.md` roadmap item 5 used to describe *near-singular field quadrature* as
+the last open field-evaluation item -- that wording was corrected on 2026-11-04,
+when the claim-inventory gate of
+[readme_claim_inventory.md](readme_claim_inventory.md) flagged it -- and the code
+enforced the restriction: both
 `evaluate_surface_field` and `evaluate_surface_velocity` raised `ValueError` for any
 target closer than `minimum_clearance_factor * h_max` (default 0.05), i.e. every
 near-wall quantity a ship-hydrodynamics user wants — off-body pressure, wave
