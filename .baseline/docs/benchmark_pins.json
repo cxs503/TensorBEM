@@ -1,0 +1,113 @@
+{
+  "commit": "f0bfb41",
+  "generated_by": "python -m tensorbem.benchmarks.doc_pins --write",
+  "note": "Numbers quoted in README.md and docs/marine_bem_benchmarks.md. Regenerate with --write after any intentional change; --check is what CI and tests/test_documented_benchmarks.py enforce.",
+  "pins": {
+    "cylinder_added_mass_2d_128": {
+      "caption": "4.02e-4 at 128 panels",
+      "doc": "README.md line 66 + docs/marine_bem_benchmarks.md (2-D circle, 128 panels)",
+      "metrics": {
+        "added_mass_per_unit_span": 3221.428000763002,
+        "added_mass_relative_error": 0.00040232221672928506,
+        "single_layer_condition_number": 76.11357941479734
+      },
+      "rtol": 1e-06,
+      "runner": "cylinder_added_mass.run",
+      "settings": {
+        "panel_count": 128
+      },
+      "slow": false
+    },
+    "cylinder_added_mass_2d_16": {
+      "caption": "2.62e-2 at 16 panels",
+      "doc": "docs/marine_bem_benchmarks.md (2-D circle, 16 panels)",
+      "metrics": {
+        "added_mass_per_unit_span": 3304.605509034233,
+        "added_mass_relative_error": 0.026232783866355507,
+        "single_layer_condition_number": 9.808948675692799
+      },
+      "rtol": 1e-06,
+      "runner": "cylinder_added_mass.run",
+      "settings": {
+        "panel_count": 16
+      },
+      "slow": false
+    },
+    "cylinder_added_mass_2d_64": {
+      "caption": "1.61e-3 at 64 panels",
+      "doc": "docs/marine_bem_benchmarks.md (2-D circle, 64 panels)",
+      "metrics": {
+        "added_mass_per_unit_span": 3225.3250921803083,
+        "added_mass_relative_error": 0.0016125492659884513,
+        "single_layer_condition_number": 38.11334353855527
+      },
+      "rtol": 1e-06,
+      "runner": "cylinder_added_mass.run",
+      "settings": {
+        "panel_count": 64
+      },
+      "slow": false
+    },
+    "ursell_cylinder_128": {
+      "caption": "headline Ursell number",
+      "doc": "README.md line 13 + docs/marine_bem_benchmarks.md section 4.6 (Ursell, 128 panels)",
+      "metrics": {
+        "near_over_far_field_damping": 1.0053413740188557,
+        "panel_added_mass": 2566.8343342915696,
+        "panel_added_mass_relative_error": 0.008513030527356396,
+        "panel_damping": 2754.470100002123,
+        "panel_damping_relative_error": 0.013360592915767345,
+        "reference_added_mass": 2545.167247813704,
+        "reference_damping": 2718.153951572775,
+        "reference_solution_added_mass_relative_error": 0.0001889150774061737
+      },
+      "rtol": 1e-06,
+      "runner": "ursell_cylinder.run",
+      "settings": {
+        "panel_count": 128
+      },
+      "slow": false
+    },
+    "ursell_cylinder_256": {
+      "caption": "refinement row; takes about 90 s, excluded from the default check",
+      "doc": "docs/marine_bem_benchmarks.md section 4.6 (Ursell, 256 panels)",
+      "metrics": {
+        "near_over_far_field_damping": 1.0026891252854961,
+        "panel_added_mass": 2556.093606354438,
+        "panel_added_mass_relative_error": 0.0042929825339061934,
+        "panel_damping": 2736.749288695788,
+        "panel_damping_relative_error": 0.006841164059987619,
+        "reference_added_mass": 2545.167247813704,
+        "reference_damping": 2718.153951572775,
+        "reference_solution_added_mass_relative_error": 4.720811059173263e-05
+      },
+      "rtol": 1e-06,
+      "runner": "ursell_cylinder.run",
+      "settings": {
+        "panel_count": 256
+      },
+      "slow": true
+    },
+    "ursell_cylinder_64": {
+      "caption": "first row of the Ursell table",
+      "doc": "docs/marine_bem_benchmarks.md section 4.6 (Ursell, 64 panels)",
+      "metrics": {
+        "near_over_far_field_damping": 1.0105357109796724,
+        "panel_added_mass": 2587.762743068625,
+        "panel_added_mass_relative_error": 0.016735833486585378,
+        "panel_damping": 2787.2367800364336,
+        "panel_damping_relative_error": 0.025415347951018748,
+        "reference_added_mass": 2545.167247813704,
+        "reference_damping": 2718.153951572775,
+        "reference_solution_added_mass_relative_error": 0.0007569804876068797
+      },
+      "rtol": 1e-06,
+      "runner": "ursell_cylinder.run",
+      "settings": {
+        "panel_count": 64
+      },
+      "slow": false
+    }
+  },
+  "schema": "tensorbem-doc-pins/1"
+}

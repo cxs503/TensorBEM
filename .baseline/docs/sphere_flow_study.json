@@ -1,0 +1,280 @@
+{
+  "benchmark": "uniform_stream_past_sphere_study",
+  "fluid_density": 1025.0,
+  "levels": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "note": "Errors are against closed-form references only. The observed order uses h_mean as the mesh-size measure and is reported, not asserted, for the finest pair where round-off and faceting may dominate.",
+  "orders": [
+    {
+      "cp_error_observed_order": 2.2066887081458084,
+      "force_error_observed_order": 0.9370494372047705,
+      "h_mean_ratio": 1.8057564437022497,
+      "levels": [
+        0,
+        1
+      ],
+      "panels": [
+        20,
+        80
+      ]
+    },
+    {
+      "cp_error_observed_order": 1.657066680131831,
+      "force_error_observed_order": 3.161808598841823,
+      "h_mean_ratio": 1.9452760706246872,
+      "levels": [
+        1,
+        2
+      ],
+      "panels": [
+        80,
+        320
+      ]
+    },
+    {
+      "cp_error_observed_order": 1.3080643239730945,
+      "force_error_observed_order": 4.738205014430594,
+      "h_mean_ratio": 1.9858864245209338,
+      "levels": [
+        2,
+        3
+      ],
+      "panels": [
+        320,
+        1280
+      ]
+    }
+  ],
+  "radius": 1.0,
+  "rows": [
+    {
+      "archimedes_buoyancy": 25492.920920437376,
+      "archimedes_expected": 25492.920920437376,
+      "archimedes_relative_error": 0.0,
+      "benchmark": "uniform_stream_past_sphere",
+      "boundary_potential_relative_l2_error": 0.03226257319153091,
+      "cp_computed_at_equator": -1.5885738216873664,
+      "cp_computed_at_stagnation": 0.6704175834012704,
+      "cp_error_at_stagnation_points": 0.32958241659872956,
+      "cp_exact_at_equator": -1.25,
+      "cp_max_abs_error": 0.3385738216873664,
+      "cp_relative_l2_error": 0.29553144888339067,
+      "exact_surface_area": 12.566370614359172,
+      "exact_volume": 4.1887902047863905,
+      "fluid_density": 1025.0,
+      "force_coefficient": {
+        "cmx": -0.0,
+        "cmy": -0.0,
+        "cmz": 8.826254725795776e-18,
+        "cx": 1.0591505670954931e-16,
+        "cy": 3.4422393430603525e-16,
+        "cz": 5.140447681353233e-09,
+        "magnitude": 5.140447681353245e-09
+      },
+      "force_coefficient_from_exact_cp": {
+        "cmx": -0.0,
+        "cmy": -0.0,
+        "cmz": -0.0,
+        "cx": -3.5305018903183104e-17,
+        "cy": -6.178378308057043e-17,
+        "cz": 1.7652509451591552e-17,
+        "magnitude": 7.331637812548863e-17
+      },
+      "force_on_body": [
+        1.7053025658242404e-13,
+        5.542233338928781e-13,
+        8.276461244349775e-06
+      ],
+      "gravity": 9.80665,
+      "h_max": 1.0514622242382672,
+      "h_mean": 1.051462224238267,
+      "normal_velocity_residual": 1.1102230246251565e-16,
+      "note": "Flat-panel icosphere; boundary data and the Cp reference are closed forms. The force coefficient is normalised by 0.5*rho*U**2*pi*a**2 and its exact potential-flow value is zero (d'Alembert). Archimedes and the uniform-pressure resultant are exact identities of the integrator on the same mesh; they do not involve the BEM solve.",
+      "panels": 20,
+      "radius": 1.0,
+      "relative_residual_l2": 1.802230581582685e-16,
+      "second_kind_system_condition_number": 2.342692553093357,
+      "single_layer_condition_number": 9.13481975758336,
+      "speed": 1.0,
+      "subdivisions": 0,
+      "surface_area": 9.574541383273937,
+      "uniform_pressure_force_norm_over_pressure_area": 7.722840783778802e-18,
+      "uniform_pressure_moment_norm_over_pressure_area_length": 0.0,
+      "vertices": 12,
+      "volume": 2.53615071012041
+    },
+    {
+      "archimedes_buoyancy": 36776.70283159591,
+      "archimedes_expected": 36776.70283159591,
+      "archimedes_relative_error": 0.0,
+      "benchmark": "uniform_stream_past_sphere",
+      "boundary_potential_relative_l2_error": 0.011517338198302848,
+      "cp_computed_at_equator": -1.339404446283095,
+      "cp_computed_at_stagnation": 0.7416619521809459,
+      "cp_error_at_stagnation_points": 0.2583380478190541,
+      "cp_exact_at_equator": -1.25,
+      "cp_max_abs_error": 0.10981413433949028,
+      "cp_relative_l2_error": 0.08021153056586734,
+      "exact_surface_area": 12.566370614359172,
+      "exact_volume": 4.1887902047863905,
+      "fluid_density": 1025.0,
+      "force_coefficient": {
+        "cmx": 8.826254725795776e-18,
+        "cmy": -6.89551150452795e-18,
+        "cmz": 3.3068636906171035e-10,
+        "cx": 1.2356756616114086e-16,
+        "cy": 1.3901351193128347e-16,
+        "cz": 2.9545994282659993e-09,
+        "magnitude": 2.954599428266005e-09
+      },
+      "force_coefficient_from_exact_cp": {
+        "cmx": -0.0,
+        "cmy": -0.0,
+        "cmz": 1.37910230090559e-19,
+        "cx": -3.5305018903183104e-17,
+        "cy": -4.4131273628978877e-17,
+        "cz": -2.6478764177387328e-17,
+        "magnitude": 6.241104569090004e-17
+      },
+      "force_on_body": [
+        1.9895196601282805e-13,
+        2.2382096176443156e-13,
+        4.757100777297296e-06
+      ],
+      "gravity": 9.80665,
+      "h_max": 0.6180339887498949,
+      "h_mean": 0.582283523287619,
+      "normal_velocity_residual": 0.029431417613479893,
+      "note": "Flat-panel icosphere; boundary data and the Cp reference are closed forms. The force coefficient is normalised by 0.5*rho*U**2*pi*a**2 and its exact potential-flow value is zero (d'Alembert). Archimedes and the uniform-pressure resultant are exact identities of the integrator on the same mesh; they do not involve the BEM solve.",
+      "panels": 80,
+      "radius": 1.0,
+      "relative_residual_l2": 4.310742065300476e-16,
+      "second_kind_system_condition_number": 2.1654320331292203,
+      "single_layer_condition_number": 18.62149308405364,
+      "speed": 1.0,
+      "subdivisions": 1,
+      "surface_area": 11.665931391718317,
+      "uniform_pressure_force_norm_over_pressure_area": 1.488582845048735e-17,
+      "uniform_pressure_moment_norm_over_pressure_area_length": 0.0,
+      "vertices": 42,
+      "volume": 3.6587122085121595
+    },
+    {
+      "archimedes_buoyancy": 40680.14947868745,
+      "archimedes_expected": 40680.14947868744,
+      "archimedes_relative_error": 1.788576912185473e-16,
+      "benchmark": "uniform_stream_past_sphere",
+      "boundary_potential_relative_l2_error": 0.0028631188719911737,
+      "cp_computed_at_equator": -1.271962508260538,
+      "cp_computed_at_stagnation": 0.9350801800884118,
+      "cp_error_at_stagnation_points": 0.06491981991158824,
+      "cp_exact_at_equator": -1.25,
+      "cp_max_abs_error": 0.05664161193265915,
+      "cp_relative_l2_error": 0.026630272599850496,
+      "exact_surface_area": 12.566370614359172,
+      "exact_volume": 4.1887902047863905,
+      "fluid_density": 1025.0,
+      "force_coefficient": {
+        "cmx": 3.740814991206413e-18,
+        "cmy": -5.171633628395963e-19,
+        "cmz": -1.3566744721776915e-11,
+        "cx": -3.420173706245863e-17,
+        "cy": -3.254681430137192e-17,
+        "cz": 3.6040866669578555e-10,
+        "magnitude": 3.604086666957886e-10
+      },
+      "force_coefficient_from_exact_cp": {
+        "cmx": 6.89551150452795e-20,
+        "cmy": -6.89551150452795e-20,
+        "cmz": -3.4477557522639747e-19,
+        "cx": 1.1253474775389615e-16,
+        "cy": -1.96384167648956e-16,
+        "cz": -1.608033282855918e-16,
+        "magnitude": 2.77648196721913e-16
+      },
+      "force_on_body": [
+        -5.5067062021407764e-14,
+        -5.240252676230739e-14,
+        5.802818250355557e-07
+      ],
+      "gravity": 9.80665,
+      "h_max": 0.3249196962329064,
+      "h_mean": 0.2993320753185588,
+      "normal_velocity_residual": 0.01916019740916189,
+      "note": "Flat-panel icosphere; boundary data and the Cp reference are closed forms. The force coefficient is normalised by 0.5*rho*U**2*pi*a**2 and its exact potential-flow value is zero (d'Alembert). Archimedes and the uniform-pressure resultant are exact identities of the integrator on the same mesh; they do not involve the BEM solve.",
+      "panels": 320,
+      "radius": 1.0,
+      "relative_residual_l2": 8.942029921347823e-16,
+      "second_kind_system_condition_number": 2.083248405825604,
+      "single_layer_condition_number": 37.56559992086565,
+      "speed": 1.0,
+      "subdivisions": 2,
+      "surface_area": 12.329848595234669,
+      "uniform_pressure_force_norm_over_pressure_area": 1.2950520257231797e-16,
+      "uniform_pressure_moment_norm_over_pressure_area_length": 0.0,
+      "vertices": 162,
+      "volume": 4.047044679978849
+    },
+    {
+      "archimedes_buoyancy": 41742.58762729427,
+      "archimedes_expected": 41742.58762729428,
+      "archimedes_relative_error": 1.7430538037430835e-16,
+      "benchmark": "uniform_stream_past_sphere",
+      "boundary_potential_relative_l2_error": 0.0007038616903098982,
+      "cp_computed_at_equator": -1.2555321493742833,
+      "cp_computed_at_stagnation": 0.9836140411730168,
+      "cp_error_at_stagnation_points": 0.016385958826983238,
+      "cp_exact_at_equator": -1.25,
+      "cp_max_abs_error": 0.026158505056540937,
+      "cp_relative_l2_error": 0.010855056346750791,
+      "exact_surface_area": 12.566370614359172,
+      "exact_volume": 4.1887902047863905,
+      "fluid_density": 1025.0,
+      "force_coefficient": {
+        "cmx": -2.1268343296778395e-18,
+        "cmy": -6.8955115045279495e-19,
+        "cmz": 1.1155825713096118e-13,
+        "cx": 1.2025772063896744e-16,
+        "cy": 9.5723490705857e-16,
+        "cz": 1.3964524732075097e-11,
+        "magnitude": 1.3964524765400994e-11
+      },
+      "force_coefficient_from_exact_cp": {
+        "cmx": -4.309694690329969e-21,
+        "cmy": 1.7238778761319875e-20,
+        "cmz": -2.8228500221661295e-19,
+        "cx": 7.66780879303508e-17,
+        "cy": -1.0550132601927763e-16,
+        "cz": -5.226797720432186e-17,
+        "magnitude": 1.4050622904879352e-16
+      },
+      "force_on_body": [
+        1.936228954946273e-13,
+        1.5412116027846423e-12,
+        2.248380975844455e-08
+      ],
+      "gravity": 9.80665,
+      "h_max": 0.1646471600639204,
+      "h_mean": 0.1507297051948821,
+      "normal_velocity_residual": 0.010161111936971043,
+      "note": "Flat-panel icosphere; boundary data and the Cp reference are closed forms. The force coefficient is normalised by 0.5*rho*U**2*pi*a**2 and its exact potential-flow value is zero (d'Alembert). Archimedes and the uniform-pressure resultant are exact identities of the integrator on the same mesh; they do not involve the BEM solve.",
+      "panels": 1280,
+      "radius": 1.0,
+      "relative_residual_l2": 1.8680187598845105e-15,
+      "second_kind_system_condition_number": 2.0430895902588992,
+      "single_layer_condition_number": 76.12545458214439,
+      "speed": 1.0,
+      "subdivisions": 3,
+      "surface_area": 12.506492733969928,
+      "uniform_pressure_force_norm_over_pressure_area": 2.0652619830857683e-16,
+      "uniform_pressure_moment_norm_over_pressure_area_length": 9.239161548223177e-20,
+      "vertices": 642,
+      "volume": 4.152740817093058
+    }
+  ],
+  "speed": 1.0
+}
