@@ -101,6 +101,25 @@ TARGETS: tuple[Target, ...] = (
         SRC_ROOT / "tensorbem" / "finite_depth.py",
         ("tests/test_finite_depth.py",),
     ),
+    # Three-dimensional kernels (2026-11-05): the 3-D verification suite was
+    # never mutation-checked, so "the 3-D tests pass" was not evidence that they
+    # would notice a wrong kernel.  The mapped files are cheap (a few seconds for
+    # all of them), so the sweep costs no more than the 2-D targets.
+    Target(
+        "tensorbem.kernels3d",
+        SRC_ROOT / "tensorbem" / "kernels3d.py",
+        ("tests/test_kernels3d.py", "tests/test_kernels3d_gradients.py"),
+    ),
+    Target(
+        "tensorbem.free_surface3d",
+        SRC_ROOT / "tensorbem" / "free_surface3d.py",
+        ("tests/test_free_surface3d.py",),
+    ),
+    Target(
+        "tensorbem.finite_depth3d",
+        SRC_ROOT / "tensorbem" / "finite_depth3d.py",
+        ("tests/test_finite_depth3d.py",),
+    ),
 )
 
 
