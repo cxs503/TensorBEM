@@ -101,3 +101,60 @@ with $\phi_0=\cosh k_0(z+h)$, $\phi_n=\cos\mu_n(z+h)$, $N_n=\int_{-h}^0\phi_n^2d
 * Constant depth, linearised potential flow; no sloping bottom, current or nonlinearity.
 * Cost grows like $h/(\pi R)$ modes; for $R\lesssim10^{-3}$ m with $h=5$ m the 40000-mode cap binds (truncation error still $<10^{-10}$).
 
+## 7. 机器判据（m3173 起：本文件的每个数字都被测试读取）
+
+本文档此前是**无人守**的：数字由 `docs/m3015/finite_depth3d_report.py` 一次写出，
+此后没有任何测试再读它（覆盖审计 `python -m tensorbem.benchmarks.doc_claim_audit`
+把本文归类为 `UNGUARDED`，112 个数字 token，全仓论文级未守文档之首）。
+
+现由 `src/tensorbem/benchmarks/finite_depth3d_pins.py` 从**本文件的表格里解析数值**，
+用 `tensorbem.finite_depth3d` / `tensorbem.free_surface3d` 重新计算并逐项判定：
+
+```bash
+PYTHONPATH=src python3 -m tensorbem.benchmarks.finite_depth3d_pins \
+    --json docs/finite_depth3d_pins/check.json --strict
+PYTHONPATH=src python3 -m pytest tests/test_finite_depth3d_pins.py -q
+```
+
+判据取「打印精度」而非物理容差（三位有效数字 → rtol 5e-3，六位 → 1e-6），
+打印为 `0.000e+00` 的两行（海床残差）改用绝对地板 5e-16。首次运行结果：
+**64 个被钉数值全部复现，最大相对偏差 9.63e-3（截断梯级 `modes=40` 行），
+其余 63 项 < 1e-3**。测试还含两条负控：改一个打印数字必须触发 `DRIFT`；
+把结果表整段删掉必须让解析行数归零（防空表绿灯）。
+
+
+## 8. m3409 内核重写的数值等价性核对（m3808）
+
+`agent/m3173` 的 pin 判据在合并 main 后第一次变红：§3.2 的三行自由面残差从
+1.260e-15 / 7.192e-15 / 7.847e-15 变成
+1.476e-15 / 7.239e-15 / 8.098e-15（相对偏差最大
+15%），超过打印精度容差 5e-3。归因是 **main 漂移，不是实现缺陷**：
+m3409 把传播模态由 `cosh(k0(z+h))` 改写为对数缩放指数因子（数学上同一个量，只为避免
+`k0*h >> 1` 时 `cosh` 溢出），而这一行数值本身是 O(1) 核的相消噪声——量级 1e-15 ≈ 数 eps，
+「相对」判据在它身上天然无意义。
+
+程序化核对（`docs/m3808/roundoff_crosscheck.py`，逐行对比合并前后
+`docs/finite_depth3d_pins/check.json` 的 `recomputed`，共 64 行）：
+
+| 类别 | 行数 | 判读 |
+|---|---:|---|
+| 逐位不变 | 49 | 合并前后 `recomputed` 完全相同的 double |
+| 末位漂移 | 7 | 只动最后 1–4 bit，相对漂移 ≤ 4.9e-16 |
+| 放大舍入 | 5 | 深水极限 `max_rel_error`（两个 O(1) 核相减）把 eps 级扰动放大到相对 ≤ 2.8e-09 |
+| 相消噪声 | 3 | 自由面残差，绝对值 ≤ 1.13 eps，相对漂移大但仍是机器零 |
+| 物理改变 | 0 | 真回归（本核对为 0） |
+| 合计 | 64 | 合并后 64/64 PASS，DRIFT 0 行 |
+
+自由面残差逐行明细：
+
+| `h` (m) | 文档打印值 | 合并前 recomputed | 合并后 recomputed | 绝对漂移（eps） |
+|---:|---:|---:|---:|---:|
+| 2 | 1.260e-15 | 1.260e-15 | 1.476e-15 | 0.98 |
+| 4 | 7.192e-15 | 7.192e-15 | 7.239e-15 | 0.21 |
+| 10 | 7.847e-15 | 7.847e-15 | 8.098e-15 | 1.13 |
+
+判据修正（`finite_depth3d_pins.NOISE_FLOOR = 1e-12`）：**residual 类**行若打印值
+`|declared| <= 1e-12`，改按绝对地板判定（比任何物理残差仍小 6 个量级）；打印为
+`0.000e+00` 的海床残差保留更严的 5e-16；小物理量（如 `evanescent_share = 4.6e-20`）
+不受豁免，仍按相对判据。负控见 `tests/test_finite_depth3d_pins.py::test_roundoff_floor_absorbs_ulp_noise_only`：
+把残差写成 4e-10 依旧 `DRIFT`，把 evanescent_share 翻倍依旧 `DRIFT`。

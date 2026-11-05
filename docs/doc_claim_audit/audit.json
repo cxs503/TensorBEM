@@ -1,0 +1,987 @@
+{
+  "counts": {
+    "artifact": 20,
+    "documents": 52,
+    "number_tokens": 6257,
+    "number_tokens_covered": 5306,
+    "pinned": 18,
+    "unguarded": 14,
+    "unguarded_paper_level": 8
+  },
+  "coverage": {
+    "documents_guarded_fraction": 0.7307692307692307,
+    "guarded_number_fraction": 0.8480102285440306
+  },
+  "records": [
+    {
+      "artifact": null,
+      "doc": "README.md",
+      "generators": [
+        "tensorbem.benchmarks.unit_disk",
+        "tensorbem.benchmarks.cylinder_added_mass",
+        "tensorbem.benchmarks.refinement_study",
+        "tensorbem.benchmarks.analytical_suite",
+        "tensorbem.benchmarks.sphere_added_mass",
+        "tensorbem.benchmarks.sphere_velocity",
+        "tensorbem.benchmarks.three_dimensional_study",
+        "tensorbem.benchmarks.ellipse_added_mass",
+        "tensorbem.benchmarks.ellipsoid_added_mass",
+        "tensorbem.benchmarks.interior_harmonics",
+        "tensorbem.benchmarks.classical_study",
+        "tensorbem.benchmarks.ursell_cylinder",
+        "tensorbem.benchmarks.rigid_body_added_mass",
+        "tensorbem.benchmarks.dean_diffraction",
+        "tensorbem.benchmarks.maccamy_fuchs",
+        "tensorbem.benchmarks.floating_hemisphere",
+        "tensorbem.benchmarks.submerged_sphere_wave",
+        "tensorbem.benchmarks.hydrostatic_benchmarks"
+      ],
+      "lines": 145,
+      "modules_exercised": [
+        "test_unit_disk_benchmark.py",
+        "test_cylinder_benchmark.py",
+        "test_refinement_study.py",
+        "test_analytical_suite.py",
+        "test_sphere_benchmark.py",
+        "test_sphere_velocity.py",
+        "test_surface_velocity_recovery.py",
+        "test_ellipse_benchmark.py",
+        "test_ellipsoid_1280_verification.py",
+        "test_ellipsoid_benchmark.py",
+        "test_interior_harmonics.py",
+        "test_dean_diffraction.py",
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_finite_depth_diffraction.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_convergence.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reference_pinning.py",
+        "test_ursell_reproducibility.py",
+        "test_exterior_neumann_added_mass.py",
+        "test_doc_numbers_maccamy_fuchs.py",
+        "test_helmholtz_maccamy_fuchs.py",
+        "test_floating_hemisphere_3d.py",
+        "test_submerged_sphere_wave_3d.py",
+        "test_hydrostatic_verification.py"
+      ],
+      "note": "read by 4 test file(s)",
+      "number_tokens": 58,
+      "paper_level": true,
+      "reading_tests": [
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "PROJECT_CHARTER.md",
+      "generators": [],
+      "lines": 28,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 0,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "audit_baseline.md",
+      "generators": [
+        "tensorbem.capability_evidence"
+      ],
+      "lines": 180,
+      "modules_exercised": [
+        "test_benchmark_cli_contract.py",
+        "test_capability_evidence.py"
+      ],
+      "note": "read by 2 test file(s)",
+      "number_tokens": 63,
+      "paper_level": false,
+      "reading_tests": [
+        "test_benchmark_cli_contract.py",
+        "test_capability_evidence.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "audit_m56_final.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_cylinder",
+        "tensorbem.benchmarks.floating_hemisphere"
+      ],
+      "lines": 214,
+      "modules_exercised": [
+        "test_dean_diffraction.py",
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_finite_depth_diffraction.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_convergence.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reference_pinning.py",
+        "test_ursell_reproducibility.py",
+        "test_floating_hemisphere_3d.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 91,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/benchmark_pins.json",
+      "doc": "ci_red_triage_m3314.md",
+      "generators": [
+        "tensorbem.doc_claims"
+      ],
+      "lines": 155,
+      "modules_exercised": [
+        "test_ci_workflow_contract.py",
+        "test_doc_claims.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 32,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "classical_benchmarks.md",
+      "generators": [
+        "tensorbem.benchmarks.declared_numbers",
+        "tensorbem.benchmarks.interior_harmonics",
+        "tensorbem.benchmarks.ellipse_added_mass",
+        "tensorbem.benchmarks.ellipsoid_added_mass",
+        "tensorbem.benchmarks.classical_study"
+      ],
+      "lines": 376,
+      "modules_exercised": [
+        "test_declared_numbers.py",
+        "test_interior_harmonics.py",
+        "test_ellipse_benchmark.py",
+        "test_ellipsoid_1280_verification.py",
+        "test_ellipsoid_benchmark.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 209,
+      "paper_level": true,
+      "reading_tests": [
+        "test_declared_numbers.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "dev_report_tensorbem-ursell-band-audit.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_band_audit"
+      ],
+      "lines": 80,
+      "modules_exercised": [
+        "test_ursell_band_audit.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 65,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "doc_claim_audit.md",
+      "generators": [
+        "tensorbem.benchmarks.doc_claim_audit"
+      ],
+      "lines": 87,
+      "modules_exercised": [
+        "test_doc_claim_audit.py",
+        "test_finite_depth3d_pins.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 2,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/benchmark_pins.json",
+      "doc": "doc_claim_gate_portability.md",
+      "generators": [
+        "tensorbem.doc_claims"
+      ],
+      "lines": 122,
+      "modules_exercised": [
+        "test_ci_workflow_contract.py",
+        "test_doc_claims.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 36,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/finite_depth3d_pins/check.json",
+      "doc": "finite_depth3d.md",
+      "generators": [
+        "tensorbem.benchmarks.doc_claim_audit",
+        "tensorbem.benchmarks.finite_depth3d_pins"
+      ],
+      "lines": 123,
+      "modules_exercised": [
+        "test_doc_claim_audit.py",
+        "test_finite_depth3d_pins.py"
+      ],
+      "note": "read by 2 test file(s)",
+      "number_tokens": 114,
+      "paper_level": true,
+      "reading_tests": [
+        "test_doc_claim_audit.py",
+        "test_finite_depth3d_pins.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/m3409/outputs/finite_depth3d_regime.json",
+      "doc": "finite_depth3d_regime.md",
+      "generators": [],
+      "lines": 140,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 76,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "finite_depth_2d.md",
+      "generators": [
+        "tensorbem.benchmarks.finite_depth_kernel"
+      ],
+      "lines": 167,
+      "modules_exercised": [
+        "test_benchmark_cli_contract.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 40,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/finite_depth_diffraction/results.json",
+      "doc": "finite_depth_diffraction.md",
+      "generators": [
+        "tensorbem.benchmarks.finite_depth_diffraction"
+      ],
+      "lines": 145,
+      "modules_exercised": [
+        "test_finite_depth_diffraction.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 102,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/finite_depth_envelope/benchmark.json",
+      "doc": "finite_depth_envelope.md",
+      "generators": [
+        "tensorbem.benchmarks.finite_depth_envelope"
+      ],
+      "lines": 172,
+      "modules_exercised": [
+        "test_finite_depth_envelope.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 362,
+      "paper_level": true,
+      "reading_tests": [
+        "test_finite_depth_envelope.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "finite_depth_radiation.md",
+      "generators": [
+        "tensorbem.benchmarks.finite_depth_radiation"
+      ],
+      "lines": 142,
+      "modules_exercised": [
+        "test_finite_depth_energy_convergence.py",
+        "test_finite_depth_refinement.py"
+      ],
+      "note": "read by 3 test file(s)",
+      "number_tokens": 104,
+      "paper_level": false,
+      "reading_tests": [
+        "test_finite_depth_energy_convergence.py",
+        "test_finite_depth_envelope.py",
+        "test_finite_depth_refinement.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "hydrostatic_benchmarks_report.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_benchmarks"
+      ],
+      "lines": 74,
+      "modules_exercised": [
+        "test_hydrostatic_verification.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 141,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "hydrostatic_restoring_couplings.md",
+      "generators": [],
+      "lines": 129,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 80,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "hydrostatic_verification.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_convergence",
+        "tensorbem.benchmarks.hydrostatic_figures"
+      ],
+      "lines": 174,
+      "modules_exercised": [
+        "test_hydrostatic_convergence.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 117,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "hydrostatic_verification_m2127_zh.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_analytic"
+      ],
+      "lines": 170,
+      "modules_exercised": [
+        "test_hydrostatic_analytic_benchmark.py",
+        "test_hydrostatic_restoring_couplings.py",
+        "test_mutation_gaps_hydrostatic.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 258,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "irregular_frequency_study.md",
+      "generators": [
+        "tensorbem.benchmarks.irregular_frequency_study"
+      ],
+      "lines": 180,
+      "modules_exercised": [
+        "test_irregular_frequency_study.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 233,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "lifting_foil.md",
+      "generators": [],
+      "lines": 153,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 48,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": "docs/m2587/outputs/lifting_kutta/benchmark.json",
+      "doc": "lifting_kutta_closure.md",
+      "generators": [
+        "tensorbem.benchmarks.lifting_solver"
+      ],
+      "lines": 112,
+      "modules_exercised": [
+        "test_benchmark_cli_contract.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 174,
+      "paper_level": true,
+      "reading_tests": [
+        "test_lifting_flow.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "long_capsule_2d_limit.md",
+      "generators": [
+        "tensorbem.benchmarks.cylinder_3d_limit"
+      ],
+      "lines": 125,
+      "modules_exercised": [
+        "test_capsule_3d_limit.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 62,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "marine_bem_benchmarks.md",
+      "generators": [
+        "tensorbem.benchmarks.cylinder_added_mass",
+        "tensorbem.benchmarks.sphere_added_mass",
+        "tensorbem.benchmarks.three_dimensional_study",
+        "tensorbem.benchmarks.ursell_cylinder",
+        "tensorbem.benchmarks.ursell_convergence_table",
+        "tensorbem.benchmarks.rigid_body_added_mass",
+        "tensorbem.benchmarks.dean_diffraction",
+        "tensorbem.benchmarks.maccamy_fuchs",
+        "tensorbem.benchmarks.floating_hemisphere",
+        "tensorbem.benchmarks.declared_numbers",
+        "tensorbem.benchmarks.submerged_sphere_wave"
+      ],
+      "lines": 536,
+      "modules_exercised": [
+        "test_cylinder_benchmark.py",
+        "test_sphere_benchmark.py",
+        "test_dean_diffraction.py",
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_finite_depth_diffraction.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_convergence.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reference_pinning.py",
+        "test_ursell_reproducibility.py",
+        "test_ursell_doc_reproducibility.py",
+        "test_exterior_neumann_added_mass.py",
+        "test_doc_numbers_maccamy_fuchs.py",
+        "test_helmholtz_maccamy_fuchs.py",
+        "test_floating_hemisphere_3d.py",
+        "test_declared_numbers.py",
+        "test_submerged_sphere_wave_3d.py"
+      ],
+      "note": "read by 13 test file(s)",
+      "number_tokens": 476,
+      "paper_level": true,
+      "reading_tests": [
+        "test_declared_numbers.py",
+        "test_doc_claim_audit.py",
+        "test_doc_claims.py",
+        "test_doc_numbers_maccamy_fuchs.py",
+        "test_documented_benchmarks.py",
+        "test_ellipsoid_1280_verification.py",
+        "test_kochin_hulme_convergence.py",
+        "test_milestone_claims.py",
+        "test_published_reference_columns.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_doc_reproducibility.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/mixed_boundary/outputs/study.json",
+      "doc": "mixed_boundary_conditions.md",
+      "generators": [
+        "tensorbem.benchmarks.mixed_boundary"
+      ],
+      "lines": 186,
+      "modules_exercised": [
+        "test_mixed_boundary.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 107,
+      "paper_level": true,
+      "reading_tests": [
+        "test_mixed_boundary.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "mutation_audit_tensorbem.md",
+      "generators": [
+        "tensorbem.benchmarks.mutation_audit"
+      ],
+      "lines": 112,
+      "modules_exercised": [
+        "test_mutation_gaps.py"
+      ],
+      "note": "read by 2 test file(s)",
+      "number_tokens": 56,
+      "paper_level": false,
+      "reading_tests": [
+        "test_mutation_gaps.py",
+        "test_mutation_gaps_hydrostatic.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "near_surface_error_budget.md",
+      "generators": [
+        "tensorbem.benchmarks.near_surface_error_budget"
+      ],
+      "lines": 202,
+      "modules_exercised": [
+        "test_near_surface_error_budget.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 219,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/near_surface_field/results.json",
+      "doc": "near_surface_field.md",
+      "generators": [
+        "tensorbem.benchmarks.near_surface_field"
+      ],
+      "lines": 240,
+      "modules_exercised": [
+        "test_near_singular.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 120,
+      "paper_level": true,
+      "reading_tests": [
+        "test_near_surface_error_budget.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/sphere_flow_study.json",
+      "doc": "pressure_forces.md",
+      "generators": [
+        "tensorbem.benchmarks.sphere_flow"
+      ],
+      "lines": 185,
+      "modules_exercised": [
+        "test_sphere_flow_benchmark.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 54,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "project_review_2026-10-22.md",
+      "generators": [
+        "tensorbem.benchmarks.unit_disk",
+        "tensorbem.benchmarks.cylinder_added_mass",
+        "tensorbem.benchmarks.refinement_study",
+        "tensorbem.benchmarks.analytical_suite",
+        "tensorbem.benchmarks.sphere_added_mass",
+        "tensorbem.benchmarks.sphere_velocity",
+        "tensorbem.benchmarks.surface_velocity_study",
+        "tensorbem.benchmarks.three_dimensional_study"
+      ],
+      "lines": 522,
+      "modules_exercised": [
+        "test_unit_disk_benchmark.py",
+        "test_cylinder_benchmark.py",
+        "test_refinement_study.py",
+        "test_analytical_suite.py",
+        "test_sphere_benchmark.py",
+        "test_sphere_velocity.py",
+        "test_surface_velocity_recovery.py",
+        "test_surface_velocity_study.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 227,
+      "paper_level": false,
+      "reading_tests": [
+        "test_doc_claim_audit.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "recovery_robustness.md",
+      "generators": [
+        "tensorbem.benchmarks.recovery_robustness"
+      ],
+      "lines": 149,
+      "modules_exercised": [
+        "test_recovery_robustness.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 115,
+      "paper_level": true,
+      "reading_tests": [
+        "test_recovery_robustness.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "report_m57.md",
+      "generators": [],
+      "lines": 214,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 96,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "report_m96.md",
+      "generators": [],
+      "lines": 254,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 124,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "report_publish_incident_m2141.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_figures"
+      ],
+      "lines": 25,
+      "modules_exercised": [],
+      "note": "generator never exercised by a test",
+      "number_tokens": 0,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "sphere_flow_study.md",
+      "generators": [],
+      "lines": 6,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 27,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": "docs/symmetry3d/results.json",
+      "doc": "symmetry3d.md",
+      "generators": [
+        "tensorbem.benchmarks.symmetry_reduction"
+      ],
+      "lines": 151,
+      "modules_exercised": [
+        "test_benchmark_cli_contract.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 44,
+      "paper_level": true,
+      "reading_tests": [
+        "test_symmetry3d.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "tensorbem_health_audit_m1621.md",
+      "generators": [],
+      "lines": 285,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 82,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "three_dimensional_bem.md",
+      "generators": [
+        "tensorbem.benchmarks.sphere_added_mass",
+        "tensorbem.benchmarks.three_dimensional_study",
+        "tensorbem.benchmarks.sphere_velocity",
+        "tensorbem.benchmarks.surface_velocity_study",
+        "tensorbem.benchmarks.three_dimensional_doc_pins"
+      ],
+      "lines": 516,
+      "modules_exercised": [
+        "test_sphere_benchmark.py",
+        "test_sphere_velocity.py",
+        "test_surface_velocity_recovery.py",
+        "test_surface_velocity_study.py",
+        "test_three_dimensional_doc_pins.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 254,
+      "paper_level": true,
+      "reading_tests": [
+        "test_three_dimensional_doc_pins.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_band_audit.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_band_audit"
+      ],
+      "lines": 78,
+      "modules_exercised": [
+        "test_ursell_band_audit.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 451,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_benchmark_discrepancy.md",
+      "generators": [],
+      "lines": 103,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 38,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_convergence_study.md",
+      "generators": [],
+      "lines": 201,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 93,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_doc_reproducibility_report.md",
+      "generators": [],
+      "lines": 58,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 95,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_error_budget.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_error_budget"
+      ],
+      "lines": 89,
+      "modules_exercised": [
+        "test_ursell_error_budget.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 65,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_provenance_audit.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_cylinder"
+      ],
+      "lines": 203,
+      "modules_exercised": [
+        "test_dean_diffraction.py",
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_finite_depth_diffraction.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_convergence.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reference_pinning.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 220,
+      "paper_level": false,
+      "reading_tests": [
+        "test_ursell_reproducibility.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/benchmark_pins.json",
+      "doc": "ursell_quadrature_provenance.md",
+      "generators": [],
+      "lines": 93,
+      "modules_exercised": [],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 67,
+      "paper_level": false,
+      "reading_tests": [
+        "test_documented_benchmarks.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_validation_note.md",
+      "generators": [
+        "tensorbem.benchmarks.ursell_cylinder"
+      ],
+      "lines": 99,
+      "modules_exercised": [
+        "test_dean_diffraction.py",
+        "test_doc_claims.py",
+        "test_documented_benchmarks.py",
+        "test_finite_depth_diffraction.py",
+        "test_ursell_benchmark.py",
+        "test_ursell_convergence.py",
+        "test_ursell_quadrature_convergence.py",
+        "test_ursell_reference_pinning.py",
+        "test_ursell_reproducibility.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 105,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "ursell_verification_debt_2026-11-02.md",
+      "generators": [],
+      "lines": 156,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 104,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "validation_report_ursell_kochin.md",
+      "generators": [],
+      "lines": 173,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 88,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "verification.md",
+      "generators": [
+        "tensorbem.benchmarks.analytical_suite"
+      ],
+      "lines": 254,
+      "modules_exercised": [
+        "test_analytical_suite.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 132,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "verification_doc_numbers_maccamy_fuchs.md",
+      "generators": [
+        "tensorbem.benchmarks.maccamy_fuchs"
+      ],
+      "lines": 101,
+      "modules_exercised": [
+        "test_doc_numbers_maccamy_fuchs.py",
+        "test_helmholtz_maccamy_fuchs.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 107,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/rao_verification_metrics.json",
+      "doc": "verification_hydrostatic_rao.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_rao_verification"
+      ],
+      "lines": 185,
+      "modules_exercised": [
+        "test_rao_verification.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 126,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "wigley_wave_resistance.md",
+      "generators": [
+        "tensorbem.benchmarks.wigley_verification"
+      ],
+      "lines": 350,
+      "modules_exercised": [
+        "test_wigley_verification.py",
+        "test_wigley_wave_resistance.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 98,
+      "paper_level": true,
+      "reading_tests": [
+        "test_wigley_verification.py"
+      ],
+      "tier": "PINNED"
+    }
+  ],
+  "schema": "tensorbem.doc_claim_audit/1"
+}

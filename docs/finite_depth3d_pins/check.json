@@ -1,0 +1,605 @@
+{
+  "rows": [
+    {
+      "declared": 3.481518,
+      "key": "h=0.05",
+      "quantity": "k0",
+      "recomputed": 3.4815177001536783,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.6967,
+      "key": "h=0.05",
+      "quantity": "c",
+      "recomputed": 0.6967345635212515,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.6898,
+      "key": "h=0.05",
+      "quantity": "cg",
+      "recomputed": 0.6897952468348274,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.474256,
+      "key": "h=0.1",
+      "quantity": "k0",
+      "recomputed": 2.4742558532505825,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.9804,
+      "key": "h=0.1",
+      "quantity": "c",
+      "recomputed": 0.9803730329752686,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.9609,
+      "key": "h=0.1",
+      "quantity": "cg",
+      "recomputed": 0.9609242315856062,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.153324,
+      "key": "h=0.5",
+      "quantity": "k0",
+      "recomputed": 1.1533244330901504,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.1032,
+      "key": "h=0.5",
+      "quantity": "c",
+      "recomputed": 2.1032188737290705,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.9018,
+      "key": "h=0.5",
+      "quantity": "cg",
+      "recomputed": 1.9017982011979742,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.861069,
+      "key": "h=1",
+      "quantity": "k0",
+      "recomputed": 0.8610691745756825,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.8171,
+      "key": "h=1",
+      "quantity": "c",
+      "recomputed": 2.81707182980208,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.304,
+      "key": "h=1",
+      "quantity": "cg",
+      "recomputed": 2.303989436900109,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.683401,
+      "key": "h=2",
+      "quantity": "k0",
+      "recomputed": 0.6834013000971069,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 3.5494,
+      "key": "h=2",
+      "quantity": "c",
+      "recomputed": 3.549442640602834,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.4079,
+      "key": "h=2",
+      "quantity": "cg",
+      "recomputed": 2.407926133624031,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.609242,
+      "key": "h=4",
+      "quantity": "k0",
+      "recomputed": 0.6092424739762368,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 3.9815,
+      "key": "h=4",
+      "quantity": "c",
+      "recomputed": 3.9814914731350424,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.1391,
+      "key": "h=4",
+      "quantity": "cg",
+      "recomputed": 2.1390747693453975,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.600081,
+      "key": "h=8",
+      "quantity": "k0",
+      "recomputed": 0.6000811744843884,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 4.0423,
+      "key": "h=8",
+      "quantity": "c",
+      "recomputed": 4.042275975899976,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.0238,
+      "key": "h=8",
+      "quantity": "cg",
+      "recomputed": 2.0237632028665122,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.6,
+      "key": "h=20",
+      "quantity": "k0",
+      "recomputed": 0.6000000000453056,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 4.0428,
+      "key": "h=20",
+      "quantity": "c",
+      "recomputed": 4.04282285837487,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.0214,
+      "key": "h=20",
+      "quantity": "cg",
+      "recomputed": 2.0214114328503627,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.6,
+      "key": "h=100",
+      "quantity": "k0",
+      "recomputed": 0.5999999999999956,
+      "rtol": 1e-06,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 4.0428,
+      "key": "h=100",
+      "quantity": "c",
+      "recomputed": 4.042822858680171,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.0214,
+      "key": "h=100",
+      "quantity": "cg",
+      "recomputed": 2.0214114293400853,
+      "rtol": 0.0005,
+      "table": "3.1",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.26e-15,
+      "key": "h=2",
+      "quantity": "free_surface_residual",
+      "recomputed": 1.4764913026357125e-15,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "h=2",
+      "quantity": "bottom_residual",
+      "recomputed": 0.0,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 7.192e-15,
+      "key": "h=4",
+      "quantity": "free_surface_residual",
+      "recomputed": 7.238614753695698e-15,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "h=4",
+      "quantity": "bottom_residual",
+      "recomputed": 0.0,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 7.847e-15,
+      "key": "h=10",
+      "quantity": "free_surface_residual",
+      "recomputed": 8.097901529578274e-15,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "h=10",
+      "quantity": "bottom_residual",
+      "recomputed": 0.0,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.43e-12,
+      "key": "h=40",
+      "quantity": "free_surface_residual",
+      "recomputed": 2.4304249660143904e-12,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "h=40",
+      "quantity": "bottom_residual",
+      "recomputed": 0.0,
+      "rtol": 0.005,
+      "table": "3.2",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.37,
+      "key": "h=2",
+      "quantity": "k0_h",
+      "recomputed": 1.3668026001942137,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.5745,
+      "key": "h=2",
+      "quantity": "max_rel_error",
+      "recomputed": 0.5744510609782442,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.44,
+      "key": "h=4",
+      "quantity": "k0_h",
+      "recomputed": 2.436969895904947,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.04685,
+      "key": "h=4",
+      "quantity": "max_rel_error",
+      "recomputed": 0.04685445603314758,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 4.8,
+      "key": "h=8",
+      "quantity": "k0_h",
+      "recomputed": 4.800649395875107,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.001804,
+      "key": "h=8",
+      "quantity": "max_rel_error",
+      "recomputed": 0.0018043290827273338,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 9.6,
+      "key": "h=16",
+      "quantity": "k0_h",
+      "recomputed": 9.600000088073902,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0001861,
+      "key": "h=16",
+      "quantity": "max_rel_error",
+      "recomputed": 0.00018613490206336258,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 19.2,
+      "key": "h=32",
+      "quantity": "k0_h",
+      "recomputed": 19.19999999999986,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.073e-05,
+      "key": "h=32",
+      "quantity": "max_rel_error",
+      "recomputed": 2.0726276595907353e-05,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 38.4,
+      "key": "h=64",
+      "quantity": "k0_h",
+      "recomputed": 38.39999999999972,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.415e-06,
+      "key": "h=64",
+      "quantity": "max_rel_error",
+      "recomputed": 2.414631995106778e-06,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 76.8,
+      "key": "h=128",
+      "quantity": "k0_h",
+      "recomputed": 76.79999999999944,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.908e-07,
+      "key": "h=128",
+      "quantity": "max_rel_error",
+      "recomputed": 2.9079154248499445e-07,
+      "rtol": 0.005,
+      "table": "3.3",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0043,
+      "key": "k0R=4.9",
+      "quantity": "evanescent_share",
+      "recomputed": 0.004323823259751376,
+      "rtol": 0.05,
+      "table": "3.4",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 2.5e-07,
+      "key": "k0R=15",
+      "quantity": "evanescent_share",
+      "recomputed": 2.479222110363632e-07,
+      "rtol": 0.05,
+      "table": "3.4",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.4e-11,
+      "key": "k0R=25.2",
+      "quantity": "evanescent_share",
+      "recomputed": 1.4134854946539897e-11,
+      "rtol": 0.05,
+      "table": "3.4",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 8e-16,
+      "key": "k0R=35.4",
+      "quantity": "evanescent_share",
+      "recomputed": 8.044670106752886e-16,
+      "rtol": 0.05,
+      "table": "3.4",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 4.6e-20,
+      "key": "k0R=45.5",
+      "quantity": "evanescent_share",
+      "recomputed": 4.575754927054328e-20,
+      "rtol": 0.05,
+      "table": "3.4",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.981186,
+      "key": "r=0.04",
+      "quantity": "four_pi_r_ReG",
+      "recomputed": 0.9811855536734826,
+      "rtol": 0.0005,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.990593,
+      "key": "r=0.02",
+      "quantity": "four_pi_r_ReG",
+      "recomputed": 0.9905929489392113,
+      "rtol": 0.0005,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.995296,
+      "key": "r=0.01",
+      "quantity": "four_pi_r_ReG",
+      "recomputed": 0.9952964959875771,
+      "rtol": 0.0005,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.997648,
+      "key": "r=0.005",
+      "quantity": "four_pi_r_ReG",
+      "recomputed": 0.9976482506836458,
+      "rtol": 0.0005,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.998824,
+      "key": "r=0.0025",
+      "quantity": "four_pi_r_ReG",
+      "recomputed": 0.9988241256779912,
+      "rtol": 0.0005,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 1.065e-11,
+      "key": "modes=40",
+      "quantity": "max_rel_change",
+      "recomputed": 1.0649555832622065e-11,
+      "rtol": 0.05,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "modes=80",
+      "quantity": "max_rel_change",
+      "recomputed": 0.0,
+      "rtol": 0.05,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "modes=160",
+      "quantity": "max_rel_change",
+      "recomputed": 0.0,
+      "rtol": 0.05,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "modes=320",
+      "quantity": "max_rel_change",
+      "recomputed": 0.0,
+      "rtol": 0.05,
+      "table": "3.5",
+      "verdict": "PASS"
+    },
+    {
+      "declared": 0.0,
+      "key": "modes=640",
+      "quantity": "max_rel_change",
+      "recomputed": 0.0,
+      "rtol": 0.05,
+      "table": "3.5",
+      "verdict": "PASS"
+    }
+  ],
+  "summary": {
+    "document": "docs/finite_depth3d.md",
+    "drift": 0,
+    "max_rel_deviation": 0.009632496181421217,
+    "noise_floor": 1e-12,
+    "pass": 64,
+    "roundoff_zero_rows": 3,
+    "rows": 64,
+    "schema": "tensorbem.finite_depth3d_pins/1",
+    "tables_covered": [
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.4",
+      "3.5"
+    ],
+    "worst": {
+      "declared": 1.4e-11,
+      "key": "k0R=25.2",
+      "quantity": "evanescent_share",
+      "recomputed": 1.4134854946539897e-11,
+      "rel_deviation": 0.009632496181421217,
+      "table": "3.4"
+    }
+  }
+}

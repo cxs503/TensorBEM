@@ -1,0 +1,30 @@
+{
+  "note": "Re-baselined 2026-11-05 (m3808) after merging main (54 commits). Main landed two new paper-level documents that arrived UNGUARDED: finite_depth3d_regime.md (76 number tokens) and hydrostatic_restoring_couplings.md (80). Two old entries left the set in the same merge (audit_baseline.md, finite_depth_2d.md now read by tests), so the unguarded count is unchanged at 14 (paper-level 7 -> 8). Pinning the two new documents is follow-up work in their own missions; this floor still forbids any further growth. Ratchet floor: the UNGUARDED set recorded here may shrink, never grow (tests/test_doc_claim_audit.py::test_ratchet_against_baseline).",
+  "schema": "tensorbem.doc_claim_audit/1",
+  "unguarded": [
+    "PROJECT_CHARTER.md",
+    "finite_depth3d_regime.md",
+    "hydrostatic_restoring_couplings.md",
+    "lifting_foil.md",
+    "report_m57.md",
+    "report_m96.md",
+    "report_publish_incident_m2141.md",
+    "sphere_flow_study.md",
+    "tensorbem_health_audit_m1621.md",
+    "ursell_benchmark_discrepancy.md",
+    "ursell_convergence_study.md",
+    "ursell_doc_reproducibility_report.md",
+    "ursell_verification_debt_2026-11-02.md",
+    "validation_report_ursell_kochin.md"
+  ],
+  "unguarded_paper_level": [
+    "finite_depth3d_regime.md",
+    "hydrostatic_restoring_couplings.md",
+    "lifting_foil.md",
+    "sphere_flow_study.md",
+    "ursell_convergence_study.md",
+    "ursell_doc_reproducibility_report.md",
+    "ursell_verification_debt_2026-11-02.md",
+    "validation_report_ursell_kochin.md"
+  ]
+}
