@@ -150,6 +150,7 @@ Counts: **28** REAL — 28 capabilities. The level is derived from code/test/doc
 
 Not referenced by any test file, with an accepted reason:
 
+- `tensorbem.benchmarks.finite_depth3d_verification` — report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.
 - `tensorbem.benchmarks.hydrostatic_figures` — matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 
