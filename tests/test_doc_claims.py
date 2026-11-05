@@ -71,6 +71,44 @@ def test_parses_panel_reference_and_mfs_rows_of_the_ursell_table() -> None:
     assert found["mfs_damping_relative_error"] == pytest.approx(8.8e-4)
 
 
+_MULTI_MFS_SNIPPET = """### 4.6 Ursell 潜没圆柱辐射（自由液面，深水）
+
+| 面元数 | \\(A\\) | 相对误差 | \\(B\\) | 相对误差 | 近场/远场阻尼比 |
+|---|---|---|---|---|---|
+| 64 | 2587.76 | \\(1.67\\times10^{-2}\\) | 2787.24 | \\(2.54\\times10^{-2}\\) | 1.0105 |
+| 参考解（Ursell） | 2545.17 | — | 2718.15 | — | — |
+| 基本解方法（MFS，64 面元、24 源） | 2543.24 | \\(7.57\\times10^{-4}\\) | 2708.57 | \\(3.53\\times10^{-3}\\) | — |
+| 基本解方法（MFS，128 面元、24 源） | 2544.69 | \\(1.89\\times10^{-4}\\) | 2715.76 | \\(8.82\\times10^{-4}\\) | — |
+| 基本解方法（MFS，256 面元、24 源） | 2545.05 | \\(4.72\\times10^{-5}\\) | 2717.55 | \\(2.21\\times10^{-4}\\) | — |
+
+### 4.7 外域刚体 Neumann 附加质量张量
+"""
+
+
+def test_mfs_rows_are_claimed_per_mesh_not_by_row_order() -> None:
+    """A second MFS row must not hijack the unqualified claim keys.
+
+    The table carries one MFS row per panel count. Keying those rows by row
+    order (the previous behaviour) makes the unqualified ``mfs_added_mass``
+    whatever row was printed last -- i.e. the finest mesh -- while the
+    measurement artifact describes :data:`doc_claims.MFS_PANELS`. The unqualified
+    keys are now pinned to that mesh, and every row also gets its own keys.
+    """
+    found = doc_claims.parse_ursell_table(_MULTI_MFS_SNIPPET)
+
+    assert found["mfs_added_mass"] == pytest.approx(2544.69)
+    assert found["mfs_damping"] == pytest.approx(2715.76)
+    for panels, (added_mass, damping, added_error, damping_error) in {
+        64: (2543.24, 2708.57, 7.57e-4, 3.53e-3),
+        128: (2544.69, 2715.76, 1.89e-4, 8.82e-4),
+        256: (2545.05, 2717.55, 4.72e-5, 2.21e-4),
+    }.items():
+        assert found[f"mfs_added_mass_{panels}"] == pytest.approx(added_mass)
+        assert found[f"mfs_damping_{panels}"] == pytest.approx(damping)
+        assert found[f"mfs_added_mass_relative_error_{panels}"] == pytest.approx(added_error)
+        assert found[f"mfs_damping_relative_error_{panels}"] == pytest.approx(damping_error)
+
+
 def test_only_the_ursell_section_is_read() -> None:
     """Other convergence tables also start with a panel count; they must not leak."""
     found = doc_claims.parse_ursell_table(_SNIPPET)
