@@ -1,0 +1,132 @@
+{
+  "registry": {
+    "counts": {
+      "main": [
+        31,
+        6,
+        25,
+        0
+      ],
+      "PR #133 transcript": [
+        27,
+        6,
+        0,
+        23
+      ]
+    },
+    "tiers": {
+      "main": {
+        "fast": 32,
+        "standard": 30
+      },
+      "PR #133 transcript": {
+        "heavy": 47,
+        "standard": 9
+      }
+    },
+    "figure": "fig_registry_union.png"
+  },
+  "recompute": {
+    "rows": [
+      {
+        "key": "hulme_chief_2_58_unregularized_condition_number",
+        "rel_deviation": 9.426923413238433e-06,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_chief_2_58_unregularized_a33",
+        "rel_deviation": 0.00010899496803383447,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_chief_2_58_unregularized_b33",
+        "rel_deviation": 0.00043542681778468246,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_chief_2_58_chief_condition_number",
+        "rel_deviation": 0.001172477276615731,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_chief_2_58_chief_a33",
+        "rel_deviation": 2.154585569327236e-05,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_chief_2_58_chief_b33",
+        "rel_deviation": 0.00011474955778135268,
+        "verdict": "PASS",
+        "family": "main"
+      },
+      {
+        "key": "hulme_hemisphere_64_heave_added_mass_rel_error_standard_guard",
+        "rel_deviation": 0.0012093605518592068,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "hulme_hemisphere_64_heave_damping_rel_error_standard_guard",
+        "rel_deviation": 0.0005002525267978126,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "hulme_hemisphere_64_surge_added_mass_rel_error_standard_guard",
+        "rel_deviation": 0.00015810605713993304,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "hulme_hemisphere_64_surge_damping_rel_error_standard_guard",
+        "rel_deviation": 0.00378677870019862,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "hulme_hemisphere_64_excitation_force_z_rel_error_standard_guard",
+        "rel_deviation": 0.00026841173432022434,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "submerged_sphere_wave_80_heave_added_mass_rel_error_standard_guard",
+        "rel_deviation": 0.00016294868972465933,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "submerged_sphere_wave_80_surge_added_mass_rel_error_standard_guard",
+        "rel_deviation": 0.0004451650136390771,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "submerged_sphere_wave_80_excitation_force_x_rel_error_standard_guard",
+        "rel_deviation": 0.000503278277259112,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      },
+      {
+        "key": "submerged_sphere_wave_80_excitation_force_z_rel_error_standard_guard",
+        "rel_deviation": 0.0029092217041674488,
+        "verdict": "PASS",
+        "family": "PR #133 transcript"
+      }
+    ],
+    "summary": {
+      "checked": 15,
+      "passed": 15,
+      "drifted": 0,
+      "drifted_keys": [],
+      "worst_relative_deviation": 0.00378677870019862,
+      "verdict": "PASS"
+    },
+    "figure": "fig_recompute_deviations.png"
+  }
+}
