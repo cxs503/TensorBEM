@@ -52,14 +52,13 @@ def plot_field_comparison(
         raise ValueError("grid_size must be at least 3")
 
     import matplotlib.pyplot as plt
-    from matplotlib.path import Path as PolygonPath
 
     mesh = regular_polygon(panel_count)
     result = solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
     coordinates = np.linspace(-1.05, 1.05, grid_size)
     grid_x, grid_y = np.meshgrid(coordinates, coordinates)
     grid_points = np.column_stack((grid_x.ravel(), grid_y.ravel()))
-    inside = PolygonPath(mesh.vertices).contains_points(grid_points) & (
+    inside = mesh.contains_point(grid_points) & (
         np.sum(grid_points**2, axis=1) <= 0.9**2
     )
 

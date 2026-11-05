@@ -21,6 +21,7 @@ from numpy.typing import NDArray
 from .geometry import PanelMesh
 from .kernels import (
     REFERENCE_LENGTH,
+    validate_clearance_factor,
     integrate_double_layer_panel,
     integrate_single_layer_panel,
     validate_reference_length,
@@ -294,13 +295,25 @@ def compute_added_mass_matrix_2d(
 
 
 def evaluate_interior_field(
-    mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
 ) -> FloatArray:
     """Evaluate the harmonic potential at interior points using exact panel integrals.
 
     Points must be strictly inside the domain and not on the boundary. The
     representation integrates each constant-panel kernel analytically rather
     than sampling the kernel at the panel midpoint.
+
+    Only the interior Green representation is valid, so targets are screened
+    before the representation is evaluated: a target outside the polygon, or
+    closer to the boundary than ``minimum_clearance_factor * h_max`` (``h_max``
+    the longest panel), is refused with ``ValueError``. Outside the domain the
+    Green representation converges to a finite but meaningless number, so an
+    unscreened call returns a plausible-looking wrong value -- the failure the
+    guard exists to convert into an exception. The factor is validated like the
+    3-D field evaluators (finite and non-negative).
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
@@ -320,6 +333,31 @@ def evaluate_interior_field(
         or result.boundary_values.shape != (mesh.panel_count,)
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
+
+    factor = validate_clearance_factor(minimum_clearance_factor)
+    h_max = float(np.max(mesh.lengths))
+    clearance = factor * h_max
+    distance = mesh.boundary_clearance(targets)
+    too_close = (distance <= 1.0e-14 * h_max) | (distance < clearance)
+    if np.any(too_close):
+        index = int(np.flatnonzero(too_close)[0])
+        raise ValueError(
+            "evaluation point is on or too close to the boundary; choose a "
+            "point strictly inside the polygon "
+            f"(first: index {index} at distance {distance[index]:.3e}, "
+            f"threshold {max(clearance, 1.0e-14 * h_max):.3e} = "
+            "minimum_clearance_factor * h_max)"
+        )
+    outside = ~mesh.contains_point(targets)
+    if np.any(outside):
+        index = int(np.flatnonzero(outside)[0])
+        raise ValueError(
+            "evaluation points must lie strictly inside the domain; "
+            f"{int(np.sum(outside))} of {len(targets)} point(s) are outside the "
+            f"polygon (first: index {index} at {targets[index, :].tolist()}). "
+            "The interior Green representation is not valid outside the domain, "
+            "and it returns a finite but meaningless value there."
+        )
 
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
