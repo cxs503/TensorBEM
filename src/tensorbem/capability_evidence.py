@@ -565,6 +565,10 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
+    "tensorbem.benchmarks.finite_depth3d_verification":
+        "report/figure harness (writes artifacts/finite_depth3d/verification.json plus a figure) "
+        "feeding docs/finite_depth3d_green_function.md; no test runs it because its purpose is to "
+        "regenerate those artifacts, the same class as hydrostatic_figures.",
 }
 
 

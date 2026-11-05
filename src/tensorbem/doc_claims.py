@@ -152,11 +152,39 @@ def _panel_claims(panels: int) -> list[Claim]:
     ]
 
 
+def _mfs_claims(panels: int) -> list[Claim]:
+    """Claims for one method-of-fundamental-solutions row.
+
+    The table carries one MFS row per panel count, so the rows are claimed
+    per mesh rather than through a single unqualified pair: an unqualified
+    ``mfs_added_mass`` cannot say *which* mesh it belongs to, which is how the
+    published row once ended up labelled 64 panels while holding the 128-panel
+    numbers (m3229).
+    """
+    return [
+        Claim(f"mfs_added_mass_{panels}", f"table: MFS A at {panels} panels", 1.0e-5),
+        Claim(
+            f"mfs_added_mass_relative_error_{panels}",
+            f"table: MFS A relative error at {panels} panels",
+            5.0e-3,
+        ),
+        Claim(f"mfs_damping_{panels}", f"table: MFS B at {panels} panels", 1.0e-5),
+        Claim(
+            f"mfs_damping_relative_error_{panels}",
+            f"table: MFS B relative error at {panels} panels",
+            5.0e-3,
+        ),
+    ]
+
+
 #: Every number the documents publish for the Ursell benchmark.
 CLAIMS: tuple[Claim, ...] = (
     *_panel_claims(64),
     *_panel_claims(128),
     *_panel_claims(256),
+    *_mfs_claims(64),
+    *_mfs_claims(128),
+    *_mfs_claims(256),
     Claim("reference_added_mass", "table: Ursell reference A", 1.0e-5),
     Claim("reference_damping", "table: Ursell reference B", 1.0e-5),
     Claim("mfs_added_mass", "table: MFS A", 1.0e-5),
@@ -197,6 +225,17 @@ def measure(panel_counts: tuple[int, ...] = TABLE_PANELS) -> dict[str, object]:
     data["reference_damping"] = finest["reference_damping"]
     # The reference values are mesh independent, but read them off the finest
     # run so that a mismatch between runs would surface here.
+    from tensorbem.benchmarks import ursell_convergence_table
+
+    for panels in panel_counts:
+        row = ursell_convergence_table.mfs_row(panels)
+        data[f"mfs_added_mass_{panels}"] = row["added_mass"]
+        data[f"mfs_added_mass_relative_error_{panels}"] = row[
+            "added_mass_relative_error"
+        ]
+        data[f"mfs_damping_{panels}"] = row["damping"]
+        data[f"mfs_damping_relative_error_{panels}"] = row["damping_relative_error"]
+
     mfs = runs[MFS_PANELS]
     data["mfs_added_mass"] = mfs["reference_solution_added_mass"]
     data["mfs_added_mass_relative_error"] = mfs[
@@ -284,6 +323,13 @@ def parse_ursell_table(text: str) -> dict[str, float]:
     """
     found: dict[str, float] = {}
     pending = ""
+    #: MFS rows keyed by the panel count printed in their label.  The table
+    #: may carry one MFS row per panel count (64, 128, ...), so a plain
+    #: "last row wins" rule would publish the finest row's numbers under the
+    #: unqualified claim keys.  Those keys are taken from the
+    #: :data:`MFS_PANELS` row instead, the discretisation the measurement
+    #: artifact records.
+    mfs_rows: dict[int | None, dict[str, float]] = {}
     for line in ursell_section(text).splitlines():
         if not line.lstrip().startswith("|"):
             continue
@@ -315,13 +361,27 @@ def parse_ursell_table(text: str) -> dict[str, float]:
                 found["reference_added_mass"] = _to_float(cells[1])
                 found["reference_damping"] = _to_float(cells[3])
             else:
-                found["mfs_added_mass"] = _to_float(cells[1])
-                found["mfs_added_mass_relative_error"] = _to_float(cells[2])
-                found["mfs_damping"] = _to_float(cells[3])
-                found["mfs_damping_relative_error"] = _to_float(cells[4])
+                row = {
+                    "mfs_added_mass": _to_float(cells[1]),
+                    "mfs_added_mass_relative_error": _to_float(cells[2]),
+                    "mfs_damping": _to_float(cells[3]),
+                    "mfs_damping_relative_error": _to_float(cells[4]),
+                }
+                label = re.search(r"(\d+)\s*面元", head)
+                row_panels = int(label.group(1)) if label else None
+                suffix = "" if row_panels is None else f"_{row_panels}"
+                for key, value in row.items():
+                    found[f"{key}{suffix}"] = value
+                mfs_rows[row_panels] = row
         except ValueError:
             pass
         pending = ""
+
+    selected = mfs_rows.get(MFS_PANELS)
+    if selected is None and mfs_rows:
+        selected = list(mfs_rows.values())[-1]
+    if selected is not None:
+        found.update(selected)
     return found
 
 
