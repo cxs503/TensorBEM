@@ -1,0 +1,36 @@
+{
+  "registry": {
+    "checked": 19,
+    "worst_value_row_deviation": 0.0027546589241272293
+  },
+  "dean_series": {
+    "32": {
+      "panel_transmission_error": 0.01461719820971615,
+      "panel_force_x_relative_error": 0.014190229283002617,
+      "mfs_force_x_relative_error": 0.006016459219712433,
+      "haskind_diffraction_force_x_relative_difference": 9.65287528535098e-05
+    },
+    "64": {
+      "panel_transmission_error": 0.00839365553213987,
+      "panel_force_x_relative_error": 0.008452850488416697,
+      "mfs_force_x_relative_error": 0.001505840465024568,
+      "haskind_diffraction_force_x_relative_difference": 2.1640428243880098e-05
+    },
+    "128": {
+      "panel_transmission_error": 0.004462724290512043,
+      "panel_force_x_relative_error": 0.0045639538710858804,
+      "mfs_force_x_relative_error": 0.0003765678518677625,
+      "haskind_diffraction_force_x_relative_difference": 5.091560664816869e-06
+    }
+  },
+  "merge": {
+    "merge_base": 22,
+    "m3236_side": 33,
+    "main_side": 84,
+    "merged": 95,
+    "added_by_m3236": 11,
+    "added_by_main": 62,
+    "lost_from_m3236": [],
+    "lost_from_main": []
+  }
+}
