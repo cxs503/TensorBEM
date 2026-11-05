@@ -304,3 +304,37 @@ def test_invalid_inputs_are_rejected():
         green_function_3d(_target([1.0, 0.0, -1.0]), _target([0.0, 0.0, -1.0]), -1.0, 5.0)
     with pytest.raises(ValueError):
         green_function_3d(_target([1.0, 0.0, -1.0]), _target([0.0, 0.0, -1.0]), NU, 0.0)
+
+# ---------------------------------------------------------------------------
+# 17. on-axis regime (R = 0) -- known limitation, found while merging PR #104
+# ---------------------------------------------------------------------------
+def test_near_axis_agrees_with_deep_water_kernel():
+    """``R >= 1e-3``: the evanescent sum is still resolved (measured 1.0e-4)."""
+    nu, depth = 0.6, 20.0
+    source = _target([0.0, 0.0, -1.0])
+    radii = (1.0e-3, 1.0e-2, 0.05, 0.1, 0.5)
+    targets = np.array([[radius, 0.0, -0.2] for radius in radii])
+    finite = np.ravel(green_function_3d(targets, source, nu, depth))
+    deep = np.ravel(deep_green_3d(targets, source, nu))
+    assert np.max(np.abs(finite - deep) / np.abs(deep)) < 1e-3
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "R = 0 exactly: the evanescent sum sum_n K_0(mu_n*R) is logarithmically "
+        "divergent on the source axis and is truncated, so G_fd gets a spurious "
+        "real part (measured at nu*h = 12: -4.434e1 vs 1.136e-1, 2.4e2 relative). "
+        "Measured 1.0e-4 at R = 1e-3 and 3.2e-2 at R = 1e-4: the defect is confined "
+        "to R <~ 1e-4 and is cured by a closed-form log subtraction, not by more "
+        "modes.  Found during the m3878 merge of PR #104; registered so the regime "
+        "is covered instead of silently unclaimed."
+    ),
+)
+def test_on_axis_point_matches_deep_water_kernel():
+    nu, depth = 0.6, 20.0
+    source = _target([0.0, 0.0, -1.0])
+    targets = np.array([[0.0, 0.0, -0.2]])
+    finite = np.ravel(green_function_3d(targets, source, nu, depth))[0]
+    deep = np.ravel(deep_green_3d(targets, source, nu))[0]
+    assert abs(finite - deep) / abs(deep) < 1e-6
