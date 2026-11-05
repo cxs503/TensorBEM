@@ -89,6 +89,9 @@ class Row:
         scale = abs(self.declared)
         if scale < 1e-300:
             return abs(self.recomputed) if abs(self.recomputed) <= ZERO_FLOOR else math.inf
+        if max(scale, abs(self.recomputed)) <= ROUNDOFF_FLOOR:
+            # round-off quantities: report the absolute deviation (see _judge)
+            return abs(self.recomputed - self.declared)
         return abs(self.recomputed - self.declared) / scale
 
 
@@ -242,10 +245,22 @@ def truncation_ladder(modes=(40, 80, 160, 320, 640)):
 # ---------------------------------------------------------------------------
 # the pinned tables
 # ---------------------------------------------------------------------------
+#: Quantities at or below this magnitude are machine round-off, not physics.
+#: The free-surface and bottom residuals of table 3.2 are ~1e-15, i.e. a few
+#: ulp of the panel sums; a relative tolerance on them measures the BLAS
+#: reduction order, not the kernel (measured cross-platform drift 1.26e-15 ->
+#: 1.48e-15 = 17 % relative on a quantity that is noise). Below the floor the
+#: comparison switches to an absolute one.
+ROUNDOFF_FLOOR = 1.0e-12
+
+
 def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]:
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
+    if max(abs(declared), abs(recomputed)) <= ROUNDOFF_FLOOR:
+        deviation = abs(recomputed - declared)
+        return ("PASS" if deviation <= ROUNDOFF_FLOOR else "DRIFT"), deviation
     dev = abs(recomputed - declared) / abs(declared)
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 

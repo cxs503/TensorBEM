@@ -54,7 +54,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -73,7 +73,7 @@ MODULE_RE = re.compile(r"-m\s+(tensorbem(?:\.\w+)+)")
 #: Historical files: dated reports, audits, reviews, milestone notes, incident logs.
 HISTORICAL_RE = re.compile(
     r"(dev_report|report_m\d|report_publish|audit|review|incident|provenance|"
-    r"health_audit|_m\d{3,}|_m\d{3,}_zh|discrepancy|charter)",
+    r"health_audit|_m\d{3,}|_m\d{3,}_zh|discrepancy|charter|^m\d{3,}_)",
     re.IGNORECASE,
 )
 

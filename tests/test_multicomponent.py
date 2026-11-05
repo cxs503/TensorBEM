@@ -241,3 +241,49 @@ def test_verification_ledger_cell_is_closed() -> None:
     row = next(line for line in document.splitlines() if "圆环径向导热" in line)
     assert "tensorbem.multicomponent" in row
     assert "后续：需多边界组件" not in row
+
+def test_boundary_clearance_is_the_minimum_over_every_loop() -> None:
+    """A target beside a hole is as close to the boundary as one beside the outer loop."""
+    from tensorbem.geometry import regular_polygon
+
+    outer = regular_polygon(16, radius=1.0)
+    hole = regular_polygon(8, radius=0.5)
+    mesh = build_multicomponent_mesh(outer, holes=[hole])
+
+    probes = np.array([[0.75, 0.0], [0.0, 0.75], [0.52, 0.0], [0.98, 0.0]])
+    reference = np.minimum(
+        outer.boundary_clearance(probes),
+        PanelMesh(hole.vertices).boundary_clearance(probes),
+    )
+    assert np.allclose(mesh.boundary_clearance(probes), reference, atol=1.0e-12)
+    # the hole loop, not the outer loop, sets the clearance of the inner probes
+    assert float(mesh.boundary_clearance(probes[:1])[0]) < 0.30
+
+
+def test_interior_field_evaluator_accepts_a_multicomponent_mesh() -> None:
+    """``evaluate_interior_field`` needs ``contains_point``/``boundary_clearance``.
+
+    Regression: the interior-field domain guard was added for isotropic
+    ``PanelMesh`` grids and ``MultiComponentMesh`` never grew the two methods, so
+    every field evaluation raised ``AttributeError``.
+    """
+    from tensorbem.geometry import regular_polygon
+    from tensorbem.solver import evaluate_interior_field, solve_laplace_dirichlet
+
+    outer = regular_polygon(64, radius=1.0)
+    hole = regular_polygon(32, radius=0.5)
+    mesh = build_multicomponent_mesh(outer, holes=[hole])
+    radii = np.linalg.norm(mesh.centers, axis=1)
+    result = solve_laplace_dirichlet(mesh, np.log(radii))
+
+    probes = np.array([[0.75, 0.0], [0.0, -0.75], [0.72, 0.35]])
+    values = evaluate_interior_field(mesh, result, probes)
+    exact = np.log(np.linalg.norm(probes, axis=1))
+    assert np.allclose(values, exact, atol=2.0e-2), (values, exact)
+
+    with pytest.raises(ValueError, match="outside the domain"):
+        evaluate_interior_field(mesh, result, np.array([[0.0, 0.0]]))
+    with pytest.raises(ValueError, match="too close to the boundary"):
+        evaluate_interior_field(
+            mesh, result, np.array([[0.52, 0.0]]), minimum_clearance_factor=0.5
+        )

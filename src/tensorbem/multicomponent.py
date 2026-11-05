@@ -229,6 +229,45 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """:meth:`fluid_contains` under the name the field evaluator expects.
+
+        :func:`tensorbem.solver.evaluate_interior_field` screens targets with
+        ``mesh.contains_point``; for a mesh with holes the fluid region is the
+        outer polygon *minus* the holes, so delegating here keeps "inside the
+        domain" meaning the same thing to the solver and to
+        :func:`evaluate_fluid_field`.
+        """
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to any wetted panel.
+
+        Same segment-projection definition as
+        :meth:`tensorbem.geometry.PanelMesh.boundary_clearance`, applied to all
+        loops at once: a target next to a hole is exactly as close to the
+        boundary as one next to the outer loop, which is what the clearance
+        guard in :func:`tensorbem.solver.evaluate_interior_field` assumes.
+        """
+        targets = np.asarray(points, dtype=float)
+        if targets.ndim != 2 or targets.shape[1] != 2:
+            raise ValueError("points must have shape (M, 2)")
+        if not np.isfinite(targets).all():
+            raise ValueError("points must all be finite")
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        lengths_squared = np.sum(self.vectors**2, axis=1)
+        for start, segment, length_squared in zip(
+            self.vertices, self.vectors, lengths_squared
+        ):
+            projection = np.clip(
+                (targets - start) @ segment / length_squared, 0.0, 1.0
+            )
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,
