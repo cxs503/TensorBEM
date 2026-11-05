@@ -11,6 +11,11 @@ away from the number the code produces. These tests check three layers:
   extrapolation used as evidence for the reference solution recovers a
   synthetic first-order family exactly.
 
+The 3-D free-surface tables (``docs/marine_bem_benchmarks.md`` sections 4.10
+and 4.11) are recomputed once per session and shared by the tests that read
+them: a 320-panel Kelvin-Green-function solve is seconds rather than minutes, so
+they stay on the ``standard`` tier and a plain ``pytest`` run guards them.
+
 The 256-panel extrapolation study is skipped unless ``TENSORBEM_HEAVY_TESTS``
 is set; it is minutes of dense solves and its purpose is a published evidence
 table, not a regression gate.
@@ -38,6 +43,20 @@ HEAVY = pytest.mark.skipif(
     not os.environ.get("TENSORBEM_HEAVY_TESTS"),
     reason="set TENSORBEM_HEAVY_TESTS=1 to run the multi-minute refinement study",
 )
+
+#: The groups whose numbers are the 3-D free-surface tables 10-12, as the m3150
+#: block registered them (one row per panel count) ...
+FREE_SURFACE_3D = ("hulme_chief", "hulme_hemisphere", "submerged_sphere")
+
+
+@pytest.fixture(scope="session")
+def standard_tier_report():
+    """Every ``standard`` row, recomputed once for the whole session.
+
+    The 3-D free-surface rows cost about a minute together; the 2-D rows are
+    milliseconds. Recomputing per test would pay the minute three times.
+    """
+    return check(tiers=("standard",))
 
 
 @HEAVY
@@ -113,9 +132,9 @@ def test_fast_tier_reproduces_the_documented_numbers():
     assert report["summary"]["checked"] >= 6
 
 
-def test_standard_tier_reproduces_the_documented_ursell_numbers():
+def test_standard_tier_reproduces_the_documented_ursell_numbers(standard_tier_report):
     """The 128-panel Ursell row is the one a verification audit disputed."""
-    report = check(tiers=("standard",))
+    report = standard_tier_report
     keys = {row["key"] for row in report["checks"]}
     assert {
         "ursell_added_mass_128",
@@ -175,6 +194,123 @@ def test_chief_regularisation_restores_passive_heave_damping():
     assert abs(values["ka2.58_chief_regularized_a33_dimless"] - exact) < abs(
         values["ka2.58_unregularized_a33_dimless"] - exact
     )
+def test_standard_tier_reproduces_the_documented_free_surface_3d_numbers(
+    standard_tier_report,
+):
+    """Tables 10-12 of ``docs/marine_bem_benchmarks.md``, cell by cell.
+
+    This block was the last set of quoted results that no test read. The 3-D
+    Kelvin-Green-function solver, its two convergence tables (Hulme's floating
+    hemisphere at ``Ka = 1``, the Wang/Linton submerged sphere at ``f/a = 1.5``)
+    and the CHIEF regularisation comparison of table 11 were pinned only by spot
+    assertions inside the benchmark tests: retune the wave kernel, the mesh
+    generator or the CHIEF point heuristic and the documents would have kept
+    their numbers while the solver moved.
+    """
+    rows = [r for r in standard_tier_report["checks"] if r["group"] in FREE_SURFACE_3D_CELLS]
+    assert len(rows) == 67
+    assert {r["group"] for r in rows} == set(FREE_SURFACE_3D_CELLS)
+    drifted = [
+        (r["key"], r["declared"], r["measured"])
+        for r in rows
+        if r["verdict"] != "PASS"
+    ]
+    assert not drifted, drifted
+
+    values = [abs(r["relative_deviation"]) for r in rows if r["comparison"] == "value"]
+    # The two-significant-figure cells are the loosest thing in the tables; a
+    # four-figure cell that moves by more than a percent is a solver change.
+    assert max(values) < 5.0e-2
+    four_figure = [
+        abs(r["relative_deviation"])
+        for r in rows
+        if r["comparison"] == "value"
+        and not r["key"].startswith("sphere_rot_coupling")
+        and "kappa" not in r["key"]
+    ]
+    assert max(four_figure) < 5.0e-3
+
+
+def test_free_surface_3d_rows_live_on_the_standard_tier():
+    """Guards the guard: a re-tiering must not silently stop pytest reading them."""
+    rows = [entry for entry in DECLARED_NUMBERS if entry.group in FREE_SURFACE_3D_CELLS]
+    assert len(rows) == 67
+    assert {entry.tier for entry in rows} == {"standard"}
+    # One refinement study feeds every cell of its table, including the observed
+    # orders, which need two meshes; quoting one level at a time would both cost
+    # more and lose those rows.
+    parameters = {entry.group: entry.parameters for entry in rows}
+    assert parameters["hulme_hemisphere_cells"]["subdivisions"] == (1, 2, 3)
+    assert parameters["submerged_sphere_cells"]["subdivisions"] == (0, 1, 2)
+
+
+def test_a_perturbed_free_surface_3d_cell_is_reported_as_drift():
+    """Negative control: the 3-D rows are judged, not merely recomputed."""
+    entries = tuple(
+        entry for entry in DECLARED_NUMBERS if entry.group == "submerged_sphere_cells"
+    )[:2]
+    perturbed = entries[1]
+
+    def runner(group, parameters):
+        values = {entry.quantity: entry.declared for entry in entries}
+        values[perturbed.quantity] = perturbed.declared * 1.2
+        return values
+
+    report = check(tiers=("standard",), entries=entries, runner=runner)
+    assert report["summary"]["drifted_keys"] == [perturbed.key]
+    assert report["summary"]["verdict"] == "DRIFT"
+
+#: The same three tables read a second time by the m3264 registry: one row per
+#: printed cell, keyed by cell index, in its own group namespace so that a merge
+#: of the two readings could drop neither of them.
+FREE_SURFACE_3D_CELLS = (
+    "hulme_chief_cells",
+    "hulme_hemisphere_cells",
+    "submerged_sphere_cells",
+)
+
+
+def test_the_cells_registry_restates_cells_the_main_registry_already_guards():
+    """The two readings of tables 10-12 overlap, and the overlap must stay exact.
+
+    m3264 registered the three tables cell by cell under the ``*_cells`` group
+    names while the m3150 block registered them keyed by panel count. Keeping
+    both costs one extra refinement study and keeps both judgements in force
+    (m3264's two-significant-figure printing band for the rotational coupling,
+    m3150's ``fast``/``standard`` tiering); this test pins the overlap so the
+    duplication cannot drift into two different declarations of one number.
+    """
+    # ... and as the m3264 block registered them (one row per printed cell).
+    main_of = dict(zip(FREE_SURFACE_3D_CELLS, FREE_SURFACE_3D))
+    guarded = {
+        (entry.group, round(abs(entry.declared), 12))
+        for entry in DECLARED_NUMBERS
+        if entry.group in main_of.values()
+    }
+    cells = [entry for entry in DECLARED_NUMBERS if entry.group in main_of]
+    assert len(cells) == 67
+    restated = [
+        entry
+        for entry in cells
+        if (main_of[entry.group], round(abs(entry.declared), 12)) in guarded
+    ]
+    assert len(restated) >= 58, len(restated)
+    # The nine cells that are not exact restatements are the two CHIEF reference
+    # values, the passivity-violation flag, the three submerged-sphere prose
+    # bounds and the rotational coupling at the three mesh levels -- the last
+    # group because m3150 quotes it to four figures where m3264 quotes the two
+    # the document prints, so these cells are a printing band, not a value.
+    assert sorted(entry.key for entry in cells if entry not in restated) == [
+        "hulme_chief_exact_a33",
+        "hulme_chief_exact_b33",
+        "hulme_chief_unregularized_passivity_violated",
+        "sphere_haskind_x_2_bound",
+        "sphere_haskind_z_2_bound",
+        "sphere_kochin_heave_2_bound",
+        "sphere_rot_coupling_0",
+        "sphere_rot_coupling_1",
+        "sphere_rot_coupling_2",
+    ]
 
 
 @HEAVY

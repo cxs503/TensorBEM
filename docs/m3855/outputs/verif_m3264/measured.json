@@ -1,0 +1,225 @@
+{
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6"
+ },
+ "hulme_refinement": {
+  "ka": 1.0,
+  "exact_reference": {
+   "surge_added_mass_dimless": 0.5739518973968019,
+   "surge_damping_dimless": 0.3534885214867116,
+   "heave_added_mass_dimless": 0.42846216570813833,
+   "heave_damping_dimless": 0.2484428180017216,
+   "excitation_force_x": [
+    2480.148891019153,
+    -17119.10505813842
+   ],
+   "excitation_force_z": [
+    8472.638812620367,
+    -5778.043283253845
+   ]
+  },
+  "levels": [
+   {
+    "subdivisions": 1,
+    "panel_count": 16,
+    "h_mean": 0.8826834323650896,
+    "displaced_volume": 1.4714045207910313,
+    "waterplane_area": 2.82842712474619,
+    "surge_added_mass_dimless": 0.47050438911628045,
+    "surge_damping_dimless": 0.21124130946264666,
+    "heave_added_mass_dimless": 0.37699181975673474,
+    "heave_damping_dimless": 0.27872794205103635,
+    "surge_added_mass_rel_error": 0.18023724418320536,
+    "surge_damping_rel_error": 0.4024097060515509,
+    "heave_added_mass_rel_error": 0.12012810014703698,
+    "heave_damping_rel_error": 0.12189977674905007,
+    "excitation_force_x_rel_error": 0.25370446289615084,
+    "excitation_force_z_rel_error": 0.06671639860233952,
+    "far_field_damping_rel_diff_heave": 0.012293548133237832,
+    "haskind_reciprocity_rel_diff_x": 0.00034172697407444723,
+    "haskind_reciprocity_rel_diff_z": 0.0037271720724557362,
+    "condition_number": 3.8925506264896836,
+    "relative_residual": 0.005482056302882241,
+    "observed_order_a33": null,
+    "observed_order_b33": null,
+    "observed_order_a11": null,
+    "observed_order_fz": null
+   },
+   {
+    "subdivisions": 2,
+    "panel_count": 64,
+    "h_mean": 0.47250002419904896,
+    "displaced_volume": 1.9088648099141803,
+    "waterplane_area": 3.061467458920718,
+    "surge_added_mass_dimless": 0.5449627439420534,
+    "surge_damping_dimless": 0.3073609979289281,
+    "heave_added_mass_dimless": 0.4157214498789438,
+    "heave_damping_dimless": 0.25962833759843523,
+    "surge_added_mass_rel_error": 0.05050798435588557,
+    "surge_damping_rel_error": 0.13049228123102583,
+    "heave_added_mass_rel_error": 0.02973591800839022,
+    "heave_damping_rel_error": 0.0450225113637059,
+    "excitation_force_x_rel_error": 0.07668748094877156,
+    "excitation_force_z_rel_error": 0.022094068100671525,
+    "far_field_damping_rel_diff_heave": 0.002450663133200718,
+    "haskind_reciprocity_rel_diff_x": 0.0005178625448338808,
+    "haskind_reciprocity_rel_diff_z": 0.002518930603504378,
+    "condition_number": 3.0515487523933436,
+    "relative_residual": 0.0013400392702082834,
+    "observed_order_a33": 2.234179228700528,
+    "observed_order_b33": 1.5938400485093713,
+    "observed_order_a11": 2.035659945142291,
+    "observed_order_fz": 1.7684279790689237
+   },
+   {
+    "subdivisions": 3,
+    "panel_count": 256,
+    "h_mean": 0.2405530308975098,
+    "displaced_volume": 2.0458003100429996,
+    "waterplane_area": 3.121445152258052,
+    "surge_added_mass_dimless": 0.5664684950535596,
+    "surge_damping_dimless": 0.3410193856843434,
+    "heave_added_mass_dimless": 0.4252892146157165,
+    "heave_damping_dimless": 0.2513774066399853,
+    "surge_added_mass_rel_error": 0.013038378960299251,
+    "surge_damping_rel_error": 0.03527451400663637,
+    "heave_added_mass_rel_error": 0.007405440541471733,
+    "heave_damping_rel_error": 0.01181192783863598,
+    "excitation_force_x_rel_error": 0.0202718338720392,
+    "excitation_force_z_rel_error": 0.005667905840101258,
+    "far_field_damping_rel_diff_heave": 0.0005447827675709889,
+    "haskind_reciprocity_rel_diff_x": 0.00020891813552235155,
+    "haskind_reciprocity_rel_diff_z": 0.0008085367576005749,
+    "condition_number": 2.78287825558641,
+    "relative_residual": 0.0002184725636565566,
+    "observed_order_a33": 2.05917114611911,
+    "observed_order_b33": 1.982014890025804,
+    "observed_order_a11": 2.0059839284095102,
+    "observed_order_fz": 2.0152496421519017
+   }
+  ]
+ },
+ "timing_hulme_refinement_s": 12.153667688369751,
+ "hulme_chief": [
+  {
+   "ka": 2.58,
+   "exact_a33": 0.4007373824061046,
+   "exact_b33": 0.06312197075596611,
+   "unregularized": {
+    "condition_number": 145.65862687433562,
+    "a33_dimless": 0.34806205885162744,
+    "b33_dimless": -0.10415462852558684,
+    "b33_rel_error": 2.6500534960838884,
+    "passivity_violated": true
+   },
+   "chief_regularized": {
+    "chief_point_count": 5,
+    "condition_number": 4.244971303652851,
+    "a33_dimless": 0.3919084438208462,
+    "b33_dimless": 0.06870788329461958,
+    "b33_rel_error": 0.08849395023246329,
+    "passivity_violated": false
+   }
+  }
+ ],
+ "timing_hulme_chief_s": 25.00072741508484,
+ "submerged_sphere_refinement": {
+  "ka": 0.8,
+  "submergence_ratio": 1.5,
+  "exact_reference": {
+   "surge_added_mass_dimless": 0.5153572942817551,
+   "surge_damping_dimless": 0.1170379226467172,
+   "heave_added_mass_dimless": 0.5099838333265633,
+   "heave_damping_dimless": 0.24171036936139997,
+   "excitation_force_x": [
+    1584.5660690034292,
+    -15657.575209084705
+   ],
+   "excitation_force_z": [
+    -15689.618906464084,
+    -3095.850750524139
+   ],
+   "haskind_error_x": 3.230916744387484e-16,
+   "haskind_error_z": 3.128866874901999e-16
+  },
+  "levels": [
+   {
+    "subdivisions": 0,
+    "panel_count": 20,
+    "h_mean": 1.051462224238267,
+    "displaced_volume": 2.53615071012041,
+    "surge_added_mass_dimless": 0.37724449807369026,
+    "surge_damping_dimless": 0.05071047795643261,
+    "heave_added_mass_dimless": 0.3799549141163581,
+    "heave_damping_dimless": 0.10366312465411358,
+    "surge_added_mass_rel_error": 0.2679942590131578,
+    "heave_added_mass_rel_error": 0.2549667474006816,
+    "heave_damping_rel_error": 0.5711266962687945,
+    "excitation_force_x_rel_error": 0.36029014823478045,
+    "excitation_force_z_rel_error": 0.36977052909136576,
+    "rotational_added_mass_max_ratio": 2.4916296163167963e-32,
+    "far_field_damping_rel_diff_heave": 0.052632980490450586,
+    "haskind_reciprocity_rel_diff_x": 0.0014300583950839648,
+    "haskind_reciprocity_rel_diff_z": 0.0018163436211920733,
+    "condition_number": 2.407465553503791,
+    "relative_residual": 2.0932362470918217e-16,
+    "observed_order_a33": null,
+    "observed_order_b33": null,
+    "observed_order_a11": null,
+    "observed_order_fz": null
+   },
+   {
+    "subdivisions": 1,
+    "panel_count": 80,
+    "h_mean": 0.5822835232876192,
+    "displaced_volume": 3.6587122085121586,
+    "surge_added_mass_dimless": 0.4740440386871208,
+    "surge_damping_dimless": 0.09306586716748232,
+    "heave_added_mass_dimless": 0.4727610798811359,
+    "heave_damping_dimless": 0.19163368322411234,
+    "surge_added_mass_rel_error": 0.08016429776590614,
+    "heave_added_mass_rel_error": 0.0729881047456501,
+    "heave_damping_rel_error": 0.20717640815158445,
+    "excitation_force_x_rel_error": 0.11594161971983795,
+    "excitation_force_z_rel_error": 0.11934619738279592,
+    "rotational_added_mass_max_ratio": 0.00021509883822866093,
+    "far_field_damping_rel_diff_heave": 0.014563097434238195,
+    "haskind_reciprocity_rel_diff_x": 0.000896619422578777,
+    "haskind_reciprocity_rel_diff_z": 0.0012997719815944482,
+    "condition_number": 2.258714554852114,
+    "relative_residual": 3.6443480028741916e-16,
+    "observed_order_a33": 2.1165479890606136,
+    "observed_order_b33": 1.7158637111509416,
+    "observed_order_a11": 2.042181042736688,
+    "observed_order_fz": 1.9135248601497852
+   },
+   {
+    "subdivisions": 2,
+    "panel_count": 320,
+    "h_mean": 0.29933207531855877,
+    "displaced_volume": 4.047044679978849,
+    "surge_added_mass_dimless": 0.5046555278240882,
+    "surge_damping_dimless": 0.11039911482146282,
+    "heave_added_mass_dimless": 0.5005445975382768,
+    "heave_damping_dimless": 0.22783651600674357,
+    "surge_added_mass_rel_error": 0.020765722298705085,
+    "heave_added_mass_rel_error": 0.018508892187259006,
+    "heave_damping_rel_error": 0.05739866846139534,
+    "excitation_force_x_rel_error": 0.03100047197268868,
+    "excitation_force_z_rel_error": 0.03197229226250085,
+    "rotational_added_mass_max_ratio": 2.648089431086153e-05,
+    "far_field_damping_rel_diff_heave": 0.003760615098969307,
+    "haskind_reciprocity_rel_diff_x": 0.00030780378460677603,
+    "haskind_reciprocity_rel_diff_z": 0.0004500947044312592,
+    "condition_number": 2.1879938690916583,
+    "relative_residual": 3.9485625543035484e-16,
+    "observed_order_a33": 2.061973475376134,
+    "observed_order_b33": 1.9289780646984946,
+    "observed_order_a11": 2.030007005400829,
+    "observed_order_fz": 1.9794876753296529
+   }
+  ]
+ },
+ "timing_sphere_refinement_s": 14.015820026397705
+}
