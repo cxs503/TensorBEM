@@ -56,10 +56,17 @@ Dropping the last term leaves a reference field that tends to
 `U m cos(alpha) = 0.0998` at infinity instead of zero. It does not change any
 velocity, but it biases every boundary-potential comparison by exactly that
 constant, which is easy to misread as solver error. Measured against the solver:
-the difference of the boundary values from `phi_d` is `-0.0998 +/- 0.0017`
-without the term and `+/-0.002` with it.
+the difference of the boundary values from `phi_d` is `-0.0998` at the
+boundary with a residual spread of `+/-0.0014` (one standard deviation, 128
+panels) without the term, and the same spread with it -- the spread is a
+property of the field, not of the constant.
 
 ## 3. Verification numbers (all computed by `benchmarks/lifting_foil.py`)
+
+Every number in this section is re-checked against the code by
+`python -m tensorbem.benchmarks.lifting_doc_pins --check`
+(`tests/test_lifting_doc_pins.py`), which parses the tables below back out of
+this file and recomputes them; a digit that stops reproducing is a red build.
 
 ### 3.1 Analytic reference is self-consistent
 
@@ -94,8 +101,9 @@ Non-lifting field, `alpha = 4 deg`, equal-arc panels, against `phi_d`:
 | 128 | 2.39% | 1.39e-3 | 8.0% | 138 |
 | 256 | 1.68% | 7.36e-4 | 8.2% | 205 |
 
-The rms potential error halves with each refinement (second order in the panel
-size); the max error is dominated by the single panel nearest the leading-edge
+The rms potential error halves with each refinement (first order in the panel
+size); the observed orders over the three refinements are 0.88, 0.91 and 0.92
+(mean 0.90). The max error is dominated by the single panel nearest the leading-edge
 stagnation point, where the surface speed passes through zero and a sign change
 of order `O(h)` in the position of the stagnation point swamps the local value.
 That is a property of constant panels at a stagnation point, not of the lifting

@@ -1,0 +1,469 @@
+{
+  "schema": "tensorbem-lifting-doc-pins/1",
+  "document": "docs/lifting_foil.md",
+  "claims": 48,
+  "passed": 48,
+  "drifted": 0,
+  "verdict": "PASS",
+  "rows": [
+    {
+      "claim": "analytic.0.circulation",
+      "declared": "0.0000",
+      "measured": 0.0,
+      "abs_deviation": 0.0,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.0.cl_gamma",
+      "declared": "0.00000",
+      "measured": 0.0,
+      "abs_deviation": 0.0,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.0.cl_pressure",
+      "declared": "0.00000",
+      "measured": 5.50523813863714e-17,
+      "abs_deviation": 5.50523813863714e-17,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.0.gap_percent",
+      "declared": "0",
+      "measured": 0.0,
+      "abs_deviation": 0.0,
+      "tolerance": 0.5,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.2.circulation",
+      "declared": "0.4824",
+      "measured": 0.48241601080005636,
+      "abs_deviation": 1.6010800056365238e-05,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.2.cl_gamma",
+      "declared": "0.23921",
+      "measured": 0.2392145508099453,
+      "abs_deviation": 4.550809945297329e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.2.cl_pressure",
+      "declared": "0.23919",
+      "measured": 0.23919224353145768,
+      "abs_deviation": 2.243531457668535e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.2.gap_percent",
+      "declared": "0.009%",
+      "measured": 0.009325218057217621,
+      "abs_deviation": 0.00032521805721762165,
+      "tolerance": 0.0005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.4.circulation",
+      "declared": "0.9642",
+      "measured": 0.9642442720014428,
+      "abs_deviation": 4.42720014428577e-05,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.4.cl_gamma",
+      "declared": "0.47814",
+      "measured": 0.47813765553790555,
+      "abs_deviation": 2.3444620944612637e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.4.cl_pressure",
+      "declared": "0.47722",
+      "measured": 0.47721916649595036,
+      "abs_deviation": 8.335040496132429e-07,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.4.gap_percent",
+      "declared": "0.19%",
+      "measured": 0.1920971986449974,
+      "abs_deviation": 0.002097198644997411,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.6.circulation",
+      "declared": "1.4449",
+      "measured": 1.4448977500878393,
+      "abs_deviation": 2.2499121608010597e-06,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.6.cl_gamma",
+      "declared": "0.71648",
+      "measured": 0.7164782231840525,
+      "abs_deviation": 1.776815947485133e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.6.cl_pressure",
+      "declared": "0.71292",
+      "measured": 0.7129211256511777,
+      "abs_deviation": 1.1256511777135714e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "analytic.6.gap_percent",
+      "declared": "0.50%",
+      "measured": 0.4964697345673608,
+      "abs_deviation": 0.003530265432639179,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.boundary_offset",
+      "declared": "-0.0998",
+      "measured": -0.09979113076342434,
+      "abs_deviation": 8.869236575656525e-06,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.boundary_spread",
+      "declared": "0.0014",
+      "measured": 0.001392556835919681,
+      "abs_deviation": 7.443164080318983e-06,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.closure_gap_percent",
+      "declared": "0.12%",
+      "measured": 0.11695549655491157,
+      "abs_deviation": 0.0030445034450884284,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.decay_offset",
+      "declared": "0.0998",
+      "measured": 0.09975640502598243,
+      "abs_deviation": 4.3594974017568955e-05,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.layer_route_error_percent",
+      "declared": "29%",
+      "measured": 29.124032567345175,
+      "abs_deviation": 0.12403256734517498,
+      "tolerance": 0.5,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.lift_below_exact_percent",
+      "declared": "2.3%",
+      "measured": 2.2577608895254677,
+      "abs_deviation": 0.042239110474532104,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.rms_order_128_256",
+      "declared": "0.92",
+      "measured": 0.9201479360904772,
+      "abs_deviation": 0.00014793609047714096,
+      "tolerance": 0.005,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.rms_order_32_64",
+      "declared": "0.88",
+      "measured": 0.8782552926036321,
+      "abs_deviation": 0.001744707396367895,
+      "tolerance": 0.005,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.rms_order_64_128",
+      "declared": "0.91",
+      "measured": 0.9065851288315128,
+      "abs_deviation": 0.0034148711684872657,
+      "tolerance": 0.005,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.rms_order_mean",
+      "declared": "0.90",
+      "measured": 0.9016627858418741,
+      "abs_deviation": 0.0016627858418740704,
+      "tolerance": 0.005,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.rms_order_word",
+      "declared": "first order",
+      "measured": 0.9016627858418741,
+      "abs_deviation": 0.09833721415812591,
+      "tolerance": 0.15,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.singular_variation_percent",
+      "declared": "<1%",
+      "measured": 0.6821623722244895,
+      "abs_deviation": 0.6821623722244895,
+      "tolerance": 1.0,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.thin_aerofoil_cl",
+      "declared": "0.4821",
+      "measured": 0.4821221360007214,
+      "abs_deviation": 2.213600072142885e-05,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.thin_aerofoil_gap_percent",
+      "declared": "0.8%",
+      "measured": 0.8264462809917302,
+      "abs_deviation": 0.026446280991730187,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.thin_aerofoil_section_cl",
+      "declared": "0.4781",
+      "measured": 0.47813765553790555,
+      "abs_deviation": 3.765553790552323e-05,
+      "tolerance": 5e-05,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "prose.three_point_error_percent",
+      "declared": "4.7%",
+      "measured": 4.737545243169442,
+      "abs_deviation": 0.03754524316944163,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.128.condition_number",
+      "declared": "138",
+      "measured": 137.61158154336113,
+      "abs_deviation": 0.388418456638874,
+      "tolerance": 0.5,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.128.potential_rms_error",
+      "declared": "1.39e-3",
+      "measured": 0.0013929897408479065,
+      "abs_deviation": 2.989740847906576e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.128.relative_potential_error_percent",
+      "declared": "2.39%",
+      "measured": 2.389098828047127,
+      "abs_deviation": 0.0009011719528730922,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.128.relative_speed_error_percent",
+      "declared": "8.0%",
+      "measured": 7.982216786994156,
+      "abs_deviation": 0.017783213005843734,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.256.condition_number",
+      "declared": "205",
+      "measured": 205.12014344957606,
+      "abs_deviation": 0.12014344957606227,
+      "tolerance": 0.5,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.256.potential_rms_error",
+      "declared": "7.36e-4",
+      "measured": 0.0007361321552426909,
+      "abs_deviation": 1.3215524269089961e-07,
+      "tolerance": 5e-07,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.256.relative_potential_error_percent",
+      "declared": "1.68%",
+      "measured": 1.681620218777133,
+      "abs_deviation": 0.0016202187771330312,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.256.relative_speed_error_percent",
+      "declared": "8.2%",
+      "measured": 8.243664720539408,
+      "abs_deviation": 0.043664720539409174,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.32.condition_number",
+      "declared": "61",
+      "measured": 61.24365727819981,
+      "abs_deviation": 0.2436572781998123,
+      "tolerance": 0.5,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.32.potential_rms_error",
+      "declared": "4.80e-3",
+      "measured": 0.004799968886184851,
+      "abs_deviation": 3.111381514844108e-08,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.32.relative_potential_error_percent",
+      "declared": "4.67%",
+      "measured": 4.6687482929128805,
+      "abs_deviation": 0.0012517070871194136,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.32.relative_speed_error_percent",
+      "declared": "7.5%",
+      "measured": 7.5341574600052015,
+      "abs_deviation": 0.03415746000520148,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.64.condition_number",
+      "declared": "92",
+      "measured": 91.92721668118475,
+      "abs_deviation": 0.07278331881525446,
+      "tolerance": 0.5,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.64.potential_rms_error",
+      "declared": "2.61e-3",
+      "measured": 0.0026113028054385356,
+      "abs_deviation": 1.302805438535646e-06,
+      "tolerance": 5e-06,
+      "unit": "",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.64.relative_potential_error_percent",
+      "declared": "3.31%",
+      "measured": 3.3101153338464506,
+      "abs_deviation": 0.00011533384645057154,
+      "tolerance": 0.005,
+      "unit": "%",
+      "status": "PASS"
+    },
+    {
+      "claim": "refinement.64.relative_speed_error_percent",
+      "declared": "7.6%",
+      "measured": 7.626322433025232,
+      "abs_deviation": 0.026322433025232073,
+      "tolerance": 0.05,
+      "unit": "%",
+      "status": "PASS"
+    }
+  ],
+  "drift": [],
+  "declared_ladder": {
+    "32": {
+      "relative_potential_error_percent": 4.67,
+      "potential_rms_error": 0.0048,
+      "relative_speed_error_percent": 7.5,
+      "condition_number": 61.0
+    },
+    "64": {
+      "relative_potential_error_percent": 3.31,
+      "potential_rms_error": 0.00261,
+      "relative_speed_error_percent": 7.6,
+      "condition_number": 92.0
+    },
+    "128": {
+      "relative_potential_error_percent": 2.39,
+      "potential_rms_error": 0.00139,
+      "relative_speed_error_percent": 8.0,
+      "condition_number": 138.0
+    },
+    "256": {
+      "relative_potential_error_percent": 1.68,
+      "potential_rms_error": 0.000736,
+      "relative_speed_error_percent": 8.2,
+      "condition_number": 205.0
+    }
+  }
+}
