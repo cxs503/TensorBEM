@@ -229,6 +229,35 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    # ``solver.evaluate_interior_field`` screens targets through the generic
+    # mesh protocol; these two methods keep a multi-loop mesh usable there.
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """True where a point is inside the fluid region (outer loop, no hole).
+
+        Same predicate as :meth:`fluid_contains`; named for the generic mesh
+        protocol the interior field evaluator expects.
+        """
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to any loop boundary."""
+        targets = np.asarray(points, dtype=float)
+        if targets.ndim != 2 or targets.shape[1] != 2:
+            raise ValueError("points must have shape (M, 2)")
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        lengths_squared = np.sum(self.vectors**2, axis=1)
+        for start, segment, length_squared in zip(
+            self.vertices, self.vectors, lengths_squared
+        ):
+            projection = np.clip(
+                (targets - start) @ segment / length_squared, 0.0, 1.0
+            )
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,

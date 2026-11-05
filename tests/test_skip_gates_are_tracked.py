@@ -52,6 +52,11 @@ TESTS_DIR = REPO_ROOT / "tests"
 #: Every entry was audited by hand: the artifact is committed, so the gate is
 #: live and a missing file is a defect.
 ARTIFACT_GATES: dict[tuple[str, str], str] = {
+    # m4320: audited 2026-11-05 -- both artifacts are committed JSON, so the
+    # gates can fire; they were unregistered only because the registry predates
+    # the two test modules.
+    ("test_lifting_camber.py", "ARTIFACT"): "docs/lifting_camber_artifact/benchmark.json",
+    ("test_near_surface_three_way.py", "ARTIFACT"): "docs/m3530/near_surface_three_way.json",
     ("test_finite_depth_energy_convergence.py", "ARTIFACT"): (
         "docs/m2498/outputs/finite_depth_energy_identity/convergence.json"
     ),
