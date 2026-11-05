@@ -9,7 +9,7 @@ description = "A verifiable boundary-element method prototype for the Tensor sci
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
-dependencies = ["numpy>=1.24"]
+dependencies = ["numpy>=1.24", "scipy>=1.10"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.4"]
