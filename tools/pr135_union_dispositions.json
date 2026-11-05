@@ -1,0 +1,522 @@
+[
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    ``hulme_chief`` or ``submerged_sphere``.\"\"\"",
+  "action": "rewrite",
+  "witness": [
+   "hulme_hemisphere_cells",
+   "submerged_sphere_cells"
+  ],
+  "reason": "m3264 enumerated the runner's groups in the DeclaredNumber docstring; the union rewrote the same sentence so that it also names the *_cells groups."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    emit(\"",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_hemisphere\"",
+    "\"hulme_hemisphere_cells\""
+   ],
+   [
+    "\"submerged_sphere\"",
+    "\"submerged_sphere_cells\""
+   ]
+  ],
+  "reason": "m3264's cell-by-cell reading of tables 10-12 lives in the *_cells namespace so that both readings of the same table can coexist; the emitted rows are the same rows under the new group name."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "                group=\"hulme_chief\",",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_chief\"",
+    "\"hulme_chief_cells\""
+   ]
+  ],
+  "reason": "same *_cells namespace rename for the table-11 rows."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        (\"hulme_hemisphere\", 3,",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_hemisphere\"",
+    "\"hulme_hemisphere_cells\""
+   ]
+  ],
+  "reason": "prose closure bounds of section 4.10, moved with their group into the *_cells namespace."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        (\"submerged_sphere\", 2,",
+  "action": "rename",
+  "rename": [
+   [
+    "\"submerged_sphere\"",
+    "\"submerged_sphere_cells\""
+   ]
+  ],
+  "reason": "prose closure bounds of section 4.11, moved with their group into the *_cells namespace."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        prefix = \"hulme\" if group == \"hulme_hemisphere\"",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_hemisphere\"",
+    "\"hulme_hemisphere_cells\""
+   ]
+  ],
+  "reason": "key prefix selection of the closure rows, follows the group rename."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "                source=(_HULME_SOURCE if group == \"hulme_hemisphere\"",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_hemisphere\"",
+    "\"hulme_hemisphere_cells\""
+   ]
+  ],
+  "reason": "source citation of the closure rows, follows the group rename; both readings cite the same table."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        study = floating_hemisphere_benchmark.run_refinement_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "floating_hemisphere_benchmark.run_refinement_study("
+  ],
+  "reason": "the union wraps the m3264 solve in _shared_study so that the m3150 reading of the same table reuses it; the benchmark call and its study object are unchanged, only the call site is shared."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        rows = floating_hemisphere_benchmark.run_irregular_frequency_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "run_irregular_frequency_study("
+  ],
+  "reason": "same shared-study wrapper for the table-11 study."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        study = submerged_sphere_benchmark.run_refinement_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "submerged_sphere_benchmark.run_refinement_study("
+  ],
+  "reason": "same shared-study wrapper for the submerged-sphere study."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            subdivisions=tuple(int(s) for s in parameters[\"subdivisions\"]),",
+  "action": "rewrite",
+  "witness": [
+   "subdivisions=subdivisions,"
+  ],
+  "reason": "the shared-study wrapper hoists the parameter read into a named local, so the argument is the same value spelled once."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            subdivision=int(parameters[\"subdivisions\"][0]),",
+  "action": "rewrite",
+  "witness": [
+   "subdivision=subdivision,"
+  ],
+  "reason": "same hoisting for the table-11 subdivision."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            ka_values=(float(parameters.get(\"ka\", _HULME_CHIEF_KA)),),",
+  "action": "rewrite",
+  "witness": [
+   "ka_values=ka_values,"
+  ],
+  "reason": "same hoisting for the table-11 Ka set."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            ka=_HULME_KA,",
+  "action": "rewrite",
+  "witness": [
+   "_HULME_KA"
+  ],
+  "reason": "the module constant is passed through the shared-study key instead of at each call, so the same Ka reaches the same solve."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            ka=_SPHERE_KA,",
+  "action": "rewrite",
+  "witness": [
+   "_SPHERE_KA"
+  ],
+  "reason": "same constant-through-the-key argument for the submerged sphere."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            radius=_HULME_RADIUS,",
+  "action": "rewrite",
+  "witness": [
+   "_HULME_RADIUS"
+  ],
+  "reason": "constants unchanged; they now travel through the shared-study key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            density=_HULME_DENSITY,",
+  "action": "rewrite",
+  "witness": [
+   "_HULME_DENSITY"
+  ],
+  "reason": "constants unchanged; they now travel through the shared-study key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            gravity=_HULME_GRAVITY,",
+  "action": "rewrite",
+  "witness": [
+   "_HULME_GRAVITY"
+  ],
+  "reason": "constants unchanged; they now travel through the shared-study key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            submergence=_SPHERE_SUBMERGENCE,",
+  "action": "rewrite",
+  "witness": [
+   "_SPHERE_SUBMERGENCE"
+  ],
+  "reason": "constant unchanged; it now travels through the shared-study key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        # A 1280-panel three-dimensional dense solve belongs to the heavy class",
+  "action": "rewrite",
+  "witness": [
+   "tier=\"heavy\""
+  ],
+  "reason": "the comment explaining why the 1280-panel harmonic rows are on the heavy tier was re-worded by the union; the tiering it explains is still in the registry and is pinned by the HEAVY-marked test."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        # like its five sibling harmonic rows; it was left on ``standard`` by",
+  "action": "rewrite",
+  "witness": [
+   "tier=\"heavy\""
+  ],
+  "reason": "second half of the same re-worded comment about the heavy tier of the 1280-panel rows."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "#: The groups whose numbers are the 3-D free-surface tables 10-12.",
+  "action": "rewrite",
+  "witness": [
+   "FREE_SURFACE_3D_CELLS",
+   "FREE_SURFACE_3D = ("
+  ],
+  "reason": "the union defines both group constants; the comment above them was rewritten to explain the two readings instead of only the m3264 one."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    rows = [r for r in standard_tier_report[\"checks\"] if r[\"group\"] in FREE_SURFACE_3D]",
+  "action": "rename",
+  "rename": [
+   [
+    "FREE_SURFACE_3D",
+    "FREE_SURFACE_3D_CELLS"
+   ]
+  ],
+  "reason": "m3264's cell-by-cell standard-tier test now reads its own group namespace, which is what lets m3150's row-count assertion and m3264's 67-row assertion both stay true."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    assert {r[\"group\"] for r in rows} == set(FREE_SURFACE_3D)",
+  "action": "rename",
+  "rename": [
+   [
+    "FREE_SURFACE_3D",
+    "FREE_SURFACE_3D_CELLS"
+   ]
+  ],
+  "reason": "same namespace rename inside m3264's own assertions."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    rows = [entry for entry in DECLARED_NUMBERS if entry.group in FREE_SURFACE_3D]",
+  "action": "rename",
+  "rename": [
+   [
+    "FREE_SURFACE_3D",
+    "FREE_SURFACE_3D_CELLS"
+   ]
+  ],
+  "reason": "m3264's tier test counts the 67 cell rows, so it must read the *_cells namespace."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    assert parameters[\"hulme_hemisphere\"][\"subdivisions\"] == (1, 2, 3)",
+  "action": "rename",
+  "rename": [
+   [
+    "\"hulme_hemisphere\"",
+    "\"hulme_hemisphere_cells\""
+   ]
+  ],
+  "reason": "the parameter assertion follows the group rename; the refinement study (1, 2, 3) it pins is unchanged."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "    assert parameters[\"submerged_sphere\"][\"subdivisions\"] == (0, 1, 2)",
+  "action": "rename",
+  "rename": [
+   [
+    "\"submerged_sphere\"",
+    "\"submerged_sphere_cells\""
+   ]
+  ],
+  "reason": "same for the submerged-sphere refinement study (0, 1, 2)."
+ },
+ {
+  "path": "tests/test_declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        entry for entry in DECLARED_NUMBERS if entry.group == \"submerged_sphere\"",
+  "action": "rename",
+  "rename": [
+   [
+    "\"submerged_sphere\"",
+    "\"submerged_sphere_cells\""
+   ]
+  ],
+  "reason": "m3264's drift negative control picks two cell rows of the submerged sphere; the group rename carries it."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "        study = hemisphere_benchmark.run_refinement_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "hemisphere_benchmark.run_refinement_study("
+  ],
+  "reason": "m3150's solve is wrapped in _shared_study so the m3264 reading of table 10 reuses it; the same benchmark call and study object remain."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            subdivisions=tuple(int(n) for n in parameters.get(\"subdivisions\", (1, 2, 3))),",
+  "action": "rewrite",
+  "witness": [
+   "subdivisions=subdivisions,"
+  ],
+  "reason": "the wrapper hoists the parameter read into a named local; default (1, 2, 3) is unchanged."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            ka=float(parameters.get(\"ka\", 1.0)),",
+  "action": "rewrite",
+  "witness": [
+   "_HULME_KA"
+  ],
+  "reason": "default Ka 1.0 is the module constant _HULME_KA, read once and shared through the cache key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "        study = sphere_benchmark.run_refinement_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "sphere_benchmark.run_refinement_study("
+  ],
+  "reason": "same shared-study wrapper for m3150's table-12 solve."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            subdivisions=tuple(int(n) for n in parameters.get(\"subdivisions\", (0, 1, 2))),",
+  "action": "rewrite",
+  "witness": [
+   "subdivisions=subdivisions,"
+  ],
+  "reason": "hoisted subdivision read; default (0, 1, 2) unchanged."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            ka=float(parameters.get(\"ka\", 0.8)),",
+  "action": "rewrite",
+  "witness": [
+   "_SPHERE_KA"
+  ],
+  "reason": "default Ka 0.8 is the module constant _SPHERE_KA."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            submergence=float(parameters.get(\"submergence\", 1.5)),",
+  "action": "rewrite",
+  "witness": [
+   "_SPHERE_SUBMERGENCE"
+  ],
+  "reason": "default submergence 1.5 is the module constant _SPHERE_SUBMERGENCE."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "        rows = hemisphere_benchmark.run_irregular_frequency_study(",
+  "action": "rewrite",
+  "witness": [
+   "_shared_study(",
+   "run_irregular_frequency_study("
+  ],
+  "reason": "m3150's table-11 study is shared with the m3264 reading through the cache key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            subdivision=int(parameters.get(\"subdivision\", 3)),",
+  "action": "rewrite",
+  "witness": [
+   "subdivision=subdivision,"
+  ],
+  "reason": "hoisted subdivision read; default 3 is _HULME_CHIEF_SUBDIVISION."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "ours",
+  "match": "prefix",
+  "text": "            ka_values=tuple(float(v) for v in parameters.get(\"ka_values\", (2.58,))),",
+  "action": "rewrite",
+  "witness": [
+   "ka_values=ka_values,"
+  ],
+  "reason": "hoisted Ka set; default (2.58,) is _HULME_CHIEF_KA."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "            radius=_SPHERE_RADIUS,",
+  "action": "rewrite",
+  "witness": [
+   "_SPHERE_RADIUS"
+  ],
+  "reason": "constant unchanged; it now travels through the shared-study key."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "match": "prefix",
+  "text": "        # mistake, which made the default standard-tier run cost minutes.",
+  "action": "rewrite",
+  "witness": [
+   "tier=\"heavy\""
+  ],
+  "reason": "tail of the re-worded tier comment; the heavy tiering it explains is still in the registry."
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "action": "revalue",
+  "key": "sphere_rot_coupling_1",
+  "to": 0.000215,
+  "reason": "intentional correction: the two-figure print 0.00022 was replaced in the document by 0.000215 in the 2026-11-04 (m3150) audit; the cell now quotes the current print, and tests/test_declared_numbers.py pins it to within 1% of the four-figure row.",
+  "rename": [
+   [
+    "2.2e-4",
+    "2.15e-4"
+   ]
+  ],
+  "match": "prefix",
+  "text": "        \"rotational_added_mass_max_ratio\": 2.2e-4,"
+ },
+ {
+  "path": "src/tensorbem/benchmarks/declared_numbers.py",
+  "side": "theirs",
+  "action": "revalue",
+  "key": "sphere_rot_coupling_2",
+  "to": 2.65e-05,
+  "reason": "intentional correction: the two-figure print 2.6e-05 was replaced in the document by 2.65e-05 in the 2026-11-04 (m3150) audit; the cell now quotes the current print, and tests/test_declared_numbers.py pins it to within 1% of the four-figure row.",
+  "rename": [
+   [
+    "2.6e-5",
+    "2.65e-5"
+   ]
+  ],
+  "match": "prefix",
+  "text": "        \"rotational_added_mass_max_ratio\": 2.6e-5,"
+ }
+]

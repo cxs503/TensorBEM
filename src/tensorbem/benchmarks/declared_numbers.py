@@ -46,9 +46,11 @@ from tensorbem.analytic import ursell_cylinder_added_mass
 from tensorbem.benchmarks import (
     cylinder_added_mass as cylinder_benchmark,
     ellipsoid_added_mass as ellipsoid_benchmark,
+    floating_hemisphere as floating_hemisphere_benchmark,
     floating_hemisphere as hemisphere_benchmark,
     interior_harmonics as interior_harmonics_benchmark,
     submerged_sphere_wave as sphere_benchmark,
+    submerged_sphere_wave as submerged_sphere_benchmark,
     ursell_cylinder as ursell_benchmark,
 )
 
@@ -80,8 +82,11 @@ class DeclaredNumber:
     description: str
     source: str
     group: str
-    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell`` or
-    ``ursell_reference``."""
+    """Which benchmark to run: ``cylinder``, ``ellipsoid``, ``ursell``,
+    ``ursell_reference``, ``interior_harmonics``, ``hulme_hemisphere``,
+    ``hulme_chief`` and ``submerged_sphere`` -- plus, for the cell-by-cell
+    reading of tables 10-12, ``hulme_hemisphere_cells``, ``hulme_chief_cells``
+    and ``submerged_sphere_cells``."""
     quantity: str
     """Key into the dictionary returned by the group's runner."""
     declared: float
@@ -92,6 +97,318 @@ class DeclaredNumber:
     """``value`` compares for equality, ``upper`` only checks ``measured <=
     declared`` (for sentences of the form "within 6e-3")."""
 
+
+#: Settings of the three-dimensional free-surface families. These are the
+#: settings the documentation quotes and the ones the benchmarks default to, so
+#: the registry reproduces a reader's copy-paste of the ``--help`` command.
+_HULME_KA = 1.0
+_HULME_RADIUS = 1.0
+_HULME_DENSITY = 1025.0
+_HULME_GRAVITY = 9.80665
+_HULME_CHIEF_KA = 2.58
+_HULME_CHIEF_SUBDIVISION = 3
+_SPHERE_KA = 0.8
+_SPHERE_RADIUS = 1.0
+_SPHERE_SUBMERGENCE = 1.5
+
+#: Short aliases: a registry key then reads like the column header of the table
+#: it guards (``hulme_b11_sub3`` is the \(B_{11}'\) error of table 10, 256
+#: panels).
+_ALIASES = {
+    "condition_number": "kappa",
+    "heave_added_mass_rel_error": "a33",
+    "heave_damping_rel_error": "b33",
+    "surge_added_mass_rel_error": "a11",
+    "surge_damping_rel_error": "b11",
+    "excitation_force_x_rel_error": "fx",
+    "excitation_force_z_rel_error": "fz",
+    "observed_order_a33": "order_a33",
+    "observed_order_b33": "order_b33",
+    "observed_order_a11": "order_a11",
+    "observed_order_fz": "order_fz",
+    "rotational_added_mass_max_ratio": "rot_coupling",
+    "far_field_damping_rel_diff_heave": "kochin_heave",
+    "haskind_reciprocity_rel_diff_x": "haskind_x",
+    "haskind_reciprocity_rel_diff_z": "haskind_z",
+}
+
+_HULME_SOURCE = "docs/marine_bem_benchmarks.md section 4.10 table 10"
+_SPHERE_SOURCE = "docs/marine_bem_benchmarks.md section 4.11 table 12"
+_CHIEF_SOURCE = "docs/marine_bem_benchmarks.md section 4.10 table 11"
+
+#: Table 10 (Hulme floating hemisphere, ``Ka = 1``, ``a = 1``, ``rho = 1025``):
+#: relative error of the radiation/diffraction quantities per icosphere
+#: subdivision. Panel counts are 16 / 64 / 256.
+_HULME_TABLE = {
+    1: {
+        "condition_number": 3.893e0,
+        "heave_added_mass_rel_error": 1.20e-1,
+        "heave_damping_rel_error": 1.22e-1,
+        "surge_added_mass_rel_error": 1.80e-1,
+        "surge_damping_rel_error": 4.02e-1,
+        "excitation_force_z_rel_error": 6.67e-2,
+    },
+    2: {
+        "condition_number": 3.052e0,
+        "heave_added_mass_rel_error": 2.97e-2,
+        "heave_damping_rel_error": 4.50e-2,
+        "surge_added_mass_rel_error": 5.05e-2,
+        "surge_damping_rel_error": 1.30e-1,
+        "excitation_force_z_rel_error": 2.21e-2,
+    },
+    3: {
+        "condition_number": 2.783e0,
+        "heave_added_mass_rel_error": 7.41e-3,
+        "heave_damping_rel_error": 1.18e-2,
+        "surge_added_mass_rel_error": 1.30e-2,
+        "surge_damping_rel_error": 3.53e-2,
+        "excitation_force_z_rel_error": 5.67e-3,
+    },
+}
+
+#: Observed orders of table 10. The \(B_{11}'\) order is quoted in the prose
+#: ("1.62 / 1.88", measured against \(h\) with \(h \propto N^{-1/2}\)); the
+#: benchmark module does not emit it, so it is guarded by
+#: ``tests/test_kochin_hulme_convergence.py`` instead of by a registry row.
+_HULME_ORDERS = {
+    2: {
+        "observed_order_a33": 2.23,
+        "observed_order_b33": 1.59,
+        "observed_order_a11": 2.04,
+        "observed_order_fz": 1.77,
+    },
+    3: {
+        "observed_order_a33": 2.06,
+        "observed_order_b33": 1.98,
+        "observed_order_a11": 2.01,
+        "observed_order_fz": 2.02,
+    },
+}
+
+#: Table 12 (submerged sphere, ``f/a = 1.5``, ``Ka = 0.8``, ``rho = 1025``).
+#: Panel counts are 20 / 80 / 320. ``("upper", x)`` marks a cell printed as a
+#: bound rather than as a value.
+_SPHERE_TABLE = {
+    0: {
+        "condition_number": 2.407e0,
+        "heave_added_mass_rel_error": 2.55e-1,
+        "surge_added_mass_rel_error": 2.68e-1,
+        "excitation_force_x_rel_error": 3.60e-1,
+        "excitation_force_z_rel_error": 3.70e-1,
+        # The table prints 2.5e-32, i.e. round-off. Guarding a round-off digit
+        # is not a claim about the method (see the 2026-11-03 audit of the
+        # 1.6e-15 row-sum bounds), so the guarded statement is the one that
+        # survives a BLAS change: the rotational coupling of a sphere is zero
+        # to 1e-30. Measured 2.49e-32.
+        "rotational_added_mass_max_ratio": ("upper", 1.0e-30),
+    },
+    1: {
+        "condition_number": 2.259e0,
+        "heave_added_mass_rel_error": 7.30e-2,
+        "surge_added_mass_rel_error": 8.02e-2,
+        "excitation_force_x_rel_error": 1.16e-1,
+        "excitation_force_z_rel_error": 1.19e-1,
+        # The document prints 2.15e-4 (three figures) since the m3150 audit;
+        # the two-figure 2.2e-4 it replaced is a +2.3 % rounding of 2.151e-4.
+        "rotational_added_mass_max_ratio": 2.15e-4,
+    },
+    2: {
+        "condition_number": 2.188e0,
+        "heave_added_mass_rel_error": 1.85e-2,
+        "surge_added_mass_rel_error": 2.08e-2,
+        "excitation_force_x_rel_error": 3.10e-2,
+        "excitation_force_z_rel_error": 3.20e-2,
+        # 2.65e-5 as printed after the m3150 audit (measured 2.6481e-5).
+        "rotational_added_mass_max_ratio": 2.65e-5,
+    },
+}
+
+_SPHERE_ORDERS = {
+    1: {
+        "observed_order_a33": 2.12,
+        "observed_order_b33": 1.72,
+        "observed_order_a11": 2.04,
+        "observed_order_fz": 1.91,
+    },
+    2: {
+        "observed_order_a33": 2.06,
+        "observed_order_b33": 1.93,
+        "observed_order_a11": 2.03,
+        "observed_order_fz": 1.98,
+    },
+}
+
+#: Condition numbers are a property of the assembled dense system: they move in
+#: the third digit when the BLAS/LAPACK build changes, so they are guarded with
+#: a looser band than the discretisation errors.
+_KAPPA_TOLERANCE = 2.0e-2
+
+#: Cells the tables print with two significant figures. Rounding to two figures
+#: is a \(\pm2.5\,\%\) band on its own, which is wider than
+#: :data:`DEFAULT_TOLERANCE`; these are the printed values, so the band has to
+#: accommodate the printing rather than the solver.
+_TWO_FIGURE_CELLS = frozenset({"rotational_added_mass_max_ratio"})
+_TWO_FIGURE_TOLERANCE = 5.0e-2
+
+
+def _family_levels(prefix: str) -> tuple[int, ...]:
+    """Every mesh level a table reports, so one solve feeds all its rows.
+
+    ``check`` caches a group run by its parameters; quoting one level at a time
+    would re-run the same refinement study once per cell and leave the observed
+    orders (which need two meshes) undefined.
+    """
+    if prefix == "hulme":
+        return tuple(sorted(set(_HULME_TABLE) | set(_HULME_ORDERS)))
+    if prefix == "sphere":
+        return tuple(sorted(set(_SPHERE_TABLE) | set(_SPHERE_ORDERS)))
+    raise ValueError(f"unknown free-surface family: {prefix!r}")
+
+
+def _free_surface_3d_rows() -> tuple[DeclaredNumber, ...]:
+    """The 3-D free-surface declarations (tables 10-12), one row per cell.
+
+    These were the last block of quoted results with no test reading them. The
+    2-D families have been registered since m2136 and the Laplace 3-D tables
+    since m3085, but the Kelvin-Green-function solver, its two convergence
+    tables and the CHIEF regularisation comparison of table 11 were pinned only
+    by spot assertions inside ``tests/test_floating_hemisphere_3d.py``: change
+    the free-surface kernel, the mesh generator or the CHIEF point heuristic and
+    the documents would have kept their numbers while the solver moved.
+
+    The cost is seconds, not minutes -- a 256-panel 3-D assembly is about a
+    second -- so the rows live on the ``standard`` tier and a plain ``pytest``
+    run guards them.
+    """
+    rows: list[DeclaredNumber] = []
+
+    def emit(
+        group: str,
+        source: str,
+        cells_by_level: dict[int, dict[str, float]],
+        prefix: str,
+    ) -> None:
+        for level, cells in cells_by_level.items():
+            for quantity, spec in cells.items():
+                if isinstance(spec, tuple):
+                    kind, declared = spec[0], float(spec[1])
+                else:
+                    kind, declared = "value", float(spec)
+                alias = _ALIASES[quantity]
+                rows.append(
+                    DeclaredNumber(
+                        key=f"{prefix}_{alias}_{level}",
+                        description=(
+                            f"{prefix} {alias} ({quantity}) at subdivision {level}"
+                        ),
+                        source=source,
+                        group=group,
+                        quantity=f"sub{level}.{quantity}",
+                        declared=declared,
+                        tier="standard",
+                        parameters={"subdivisions": _family_levels(prefix)},
+                        tolerance=(
+                            _KAPPA_TOLERANCE
+                            if quantity == "condition_number"
+                            else _TWO_FIGURE_TOLERANCE
+                            if quantity in _TWO_FIGURE_CELLS
+                            else DEFAULT_TOLERANCE
+                        ),
+                        kind=kind,
+                    )
+                )
+
+    def merged(table, orders):
+        """Cells and observed orders of one table, level by level."""
+        levels = sorted(set(table) | set(orders))
+        combined = {}
+        for level in levels:
+            cells = dict(table.get(level, {}))
+            cells.update(orders.get(level, {}))
+            combined[level] = cells
+        return combined
+
+    emit("hulme_hemisphere_cells", _HULME_SOURCE, merged(_HULME_TABLE, _HULME_ORDERS), "hulme")
+    emit("submerged_sphere_cells", _SPHERE_SOURCE, merged(_SPHERE_TABLE, _SPHERE_ORDERS), "sphere")
+
+    # --- table 11: CHIEF regularisation at the interior waterline resonance --
+    chief_parameters = {
+        "subdivisions": (int(_HULME_CHIEF_SUBDIVISION),),
+        "ka": _HULME_CHIEF_KA,
+    }
+    chief_cells = {
+        "exact_a33": 4.007e-1,
+        "exact_b33": 6.31e-2,
+        "unregularized.condition_number": 1.4566e2,
+        "unregularized.a33_dimless": 3.481e-1,
+        # The table prints a negative damping here: without the interior CHIEF
+        # constraints the unregularised BIE radiates energy at the waterline
+        # resonance. The number is stored as a magnitude plus a one-sided sign
+        # row, because a signed value cannot be guarded against zero.
+        "unregularized.b33_magnitude": 1.042e-1,
+        "unregularized.passivity_violated": 1.0,
+        "chief_regularized.condition_number": 4.24e0,
+        "chief_regularized.a33_dimless": 3.919e-1,
+        "chief_regularized.b33_dimless": 6.87e-2,
+        # (No sign row for the regularised scheme: its damping is a positive
+        # value row already, and the registry cannot carry a declared zero.)
+    }
+    for quantity, declared in chief_cells.items():
+        rows.append(
+            DeclaredNumber(
+                key="hulme_chief_" + quantity.replace(".", "_"),
+                description=(
+                    f"Hulme hemisphere, Ka={_HULME_CHIEF_KA}, 256 panels: {quantity}"
+                ),
+                source=_CHIEF_SOURCE,
+                group="hulme_chief_cells",
+                quantity=quantity,
+                declared=declared,
+                tier="standard",
+                parameters=chief_parameters,
+                tolerance=(
+                    _KAPPA_TOLERANCE
+                    if quantity.endswith("condition_number")
+                    else 1.0e-12
+                    if quantity.endswith("passivity_violated")
+                    else DEFAULT_TOLERANCE
+                ),
+            )
+        )
+
+    # --- closure statements quoted in the prose of sections 4.10 and 4.11 ---
+    closure = (
+        # (group, level, quantity, bound, where the sentence lives)
+        ("hulme_hemisphere_cells", 3, "far_field_damping_rel_diff_heave", 5.45e-4,
+         "section 4.10 prose: near-field vs Kochin damping difference at 256 panels"),
+        ("hulme_hemisphere_cells", 3, "haskind_reciprocity_rel_diff_x", 2.09e-4,
+         "section 4.10 prose: direct diffraction vs boundary Haskind, surge"),
+        ("hulme_hemisphere_cells", 3, "haskind_reciprocity_rel_diff_z", 8.09e-4,
+         "section 4.10 prose: direct diffraction vs boundary Haskind, heave"),
+        ("submerged_sphere_cells", 2, "far_field_damping_rel_diff_heave", 4.0e-3,
+         "section 4.11 prose: Kochin far-field damping conservation"),
+        ("submerged_sphere_cells", 2, "haskind_reciprocity_rel_diff_x", 4.0e-3,
+         "section 4.11 prose: Haskind reciprocity, surge"),
+        ("submerged_sphere_cells", 2, "haskind_reciprocity_rel_diff_z", 4.0e-3,
+         "section 4.11 prose: Haskind reciprocity, heave"),
+    )
+    for group, level, quantity, bound, sentence in closure:
+        prefix = "hulme" if group == "hulme_hemisphere_cells" else "sphere"
+        rows.append(
+            DeclaredNumber(
+                key=f"{prefix}_{_ALIASES[quantity]}_{level}_bound",
+                description=sentence,
+                source=(_HULME_SOURCE if group == "hulme_hemisphere_cells" else _SPHERE_SOURCE)
+                + " (prose)",
+                group=group,
+                quantity=f"sub{level}.{quantity}",
+                declared=bound,
+                tier="standard",
+                parameters={"subdivisions": _family_levels(prefix)},
+                kind="upper",
+            )
+        )
+    return tuple(rows)
 
 #: The registry. ``source`` cites the current wording; every value below is the
 #: number a reader of the docs will find there after the 2026-11-03 audit.
@@ -917,7 +1234,7 @@ DECLARED_NUMBERS: tuple[DeclaredNumber, ...] = (
         declared=1.98,
         tier="standard",
     ),
-)
+) + _free_surface_3d_rows()
 
 _URSELL_RADIUS = 1.0
 _URSELL_SUBMERGENCE = 2.0
@@ -970,6 +1287,39 @@ def _chief_rows(rows) -> dict[str, float]:
                     continue
                 values[prefix + scheme + "_" + key] = float(value)
     return values
+
+
+def _level_quantities(levels: Sequence[dict]) -> dict[str, float]:
+    """Flatten a refinement study into ``sub<N>.<quantity>`` keys.
+
+    The 3-D free-surface benchmarks return one row per mesh level; the registry
+    quotes individual cells, so every numeric field of every level is exposed
+    under a prefix. Fields the benchmark leaves undefined at the coarsest level
+    (observed orders need two meshes) are simply absent.
+    """
+    values: dict[str, float] = {}
+    for row in levels:
+        level = int(row["subdivisions"])
+        for key, value in row.items():
+            if key in ("subdivisions",) or isinstance(value, bool):
+                continue
+            if isinstance(value, (int, float)):
+                values[f"sub{level}.{key}"] = float(value)
+    return values
+
+#: One refinement study per parametric setting. The registry reads the three
+#: 3-D free-surface tables twice -- keyed by panel count (m3150) and keyed by the
+#: printed cell (m3264) -- so the second reading must not pay for a second
+#: solve. The studies are plain dictionaries and every reader treats them as
+#: read-only, which is what makes sharing them safe.
+_STUDY_CACHE: dict[tuple, object] = {}
+
+
+def _shared_study(key: tuple, run: Callable[[], object]) -> object:
+    """Return the study for ``key``, running it on first use."""
+    if key not in _STUDY_CACHE:
+        _STUDY_CACHE[key] = run()
+    return _STUDY_CACHE[key]
 
 
 def _run_group(group: str, parameters: dict) -> dict[str, float]:
@@ -1025,24 +1375,99 @@ def _run_group(group: str, parameters: dict) -> dict[str, float]:
             "reference_damping": float(damping),
         }
     if group == "hulme_hemisphere":
-        study = hemisphere_benchmark.run_refinement_study(
-            subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (1, 2, 3))),
-            ka=float(parameters.get("ka", 1.0)),
+        subdivisions = tuple(
+            int(n) for n in parameters.get("subdivisions", (1, 2, 3))
+        )
+        ka = float(parameters.get("ka", _HULME_KA))
+        study = _shared_study(
+            ("hulme", subdivisions, ka),
+            lambda: hemisphere_benchmark.run_refinement_study(
+                subdivisions=subdivisions, ka=ka
+            ),
         )
         return _study_rows(study)
     if group == "submerged_sphere":
-        study = sphere_benchmark.run_refinement_study(
-            subdivisions=tuple(int(n) for n in parameters.get("subdivisions", (0, 1, 2))),
-            ka=float(parameters.get("ka", 0.8)),
-            submergence=float(parameters.get("submergence", 1.5)),
+        subdivisions = tuple(
+            int(n) for n in parameters.get("subdivisions", (0, 1, 2))
+        )
+        ka = float(parameters.get("ka", _SPHERE_KA))
+        submergence = float(parameters.get("submergence", _SPHERE_SUBMERGENCE))
+        study = _shared_study(
+            ("sphere", subdivisions, ka, submergence),
+            lambda: sphere_benchmark.run_refinement_study(
+                subdivisions=subdivisions, ka=ka, submergence=submergence
+            ),
         )
         return _study_rows(study)
     if group == "hulme_chief":
-        rows = hemisphere_benchmark.run_irregular_frequency_study(
-            subdivision=int(parameters.get("subdivision", 3)),
-            ka_values=tuple(float(v) for v in parameters.get("ka_values", (2.58,))),
+        subdivision = int(parameters.get("subdivision", _HULME_CHIEF_SUBDIVISION))
+        ka_values = tuple(
+            float(v)
+            for v in parameters.get("ka_values", (_HULME_CHIEF_KA,))
+        )
+        rows = _shared_study(
+            ("hulme_chief", subdivision, ka_values),
+            lambda: hemisphere_benchmark.run_irregular_frequency_study(
+                subdivision=subdivision, ka_values=ka_values
+            ),
         )
         return _chief_rows(rows)
+    if group == "hulme_hemisphere_cells":
+        subdivisions = tuple(int(n) for n in parameters["subdivisions"])
+        study = _shared_study(
+            ("hulme", subdivisions, _HULME_KA),
+            lambda: floating_hemisphere_benchmark.run_refinement_study(
+                subdivisions=subdivisions,
+                ka=_HULME_KA,
+                radius=_HULME_RADIUS,
+                density=_HULME_DENSITY,
+                gravity=_HULME_GRAVITY,
+            ),
+        )
+        return _level_quantities(study["levels"])
+    if group == "hulme_chief_cells":
+        subdivision = int(parameters["subdivisions"][0])
+        ka_values = (float(parameters.get("ka", _HULME_CHIEF_KA)),)
+        rows = _shared_study(
+            ("hulme_chief", subdivision, ka_values),
+            lambda: floating_hemisphere_benchmark.run_irregular_frequency_study(
+                subdivision=subdivision,
+                ka_values=ka_values,
+                radius=_HULME_RADIUS,
+                density=_HULME_DENSITY,
+                gravity=_HULME_GRAVITY,
+            ),
+        )
+        row = rows[0]
+        values = {
+            "exact_a33": float(row["exact_a33"]),
+            "exact_b33": float(row["exact_b33"]),
+        }
+        for scheme in ("unregularized", "chief_regularized"):
+            for key in ("condition_number", "a33_dimless", "b33_dimless"):
+                values[f"{scheme}.{key}"] = float(row[scheme][key])
+            # The sign of the damping is the physical claim of table 11, and the
+            # registry stores magnitudes, so it is carried as its own quantity:
+            # 1.0 means "this scheme radiates energy into the fluid".
+            values[f"{scheme}.passivity_violated"] = float(
+                bool(row[scheme]["passivity_violated"])
+            )
+            values[f"{scheme}.b33_magnitude"] = abs(float(row[scheme]["b33_dimless"]))
+        return values
+    if group == "submerged_sphere_cells":
+        subdivisions = tuple(int(n) for n in parameters["subdivisions"])
+        study = _shared_study(
+            ("sphere", subdivisions, _SPHERE_KA, _SPHERE_SUBMERGENCE),
+            lambda: submerged_sphere_benchmark.run_refinement_study(
+                subdivisions=subdivisions,
+                ka=_SPHERE_KA,
+                radius=_SPHERE_RADIUS,
+                submergence=_SPHERE_SUBMERGENCE,
+                density=_HULME_DENSITY,
+                gravity=_HULME_GRAVITY,
+            ),
+        )
+        return _level_quantities(study["levels"])
     raise ValueError(f"unknown benchmark group: {group!r}")
 
 
@@ -1112,6 +1537,17 @@ def check(
 
     drifted = [row for row in rows if row["verdict"] != "PASS"]
     worst = max((abs(row["relative_deviation"]) for row in rows), default=0.0)
+    # Upper-bound rows are judged on one side only, so their relative deviation
+    # is a distance from the bound, not an error; the headline accuracy figure
+    # is therefore reported over the equality rows.
+    worst_value = max(
+        (
+            abs(row["relative_deviation"])
+            for row in rows
+            if row["comparison"] == "value"
+        ),
+        default=0.0,
+    )
     return {
         "benchmark": "declared_numbers_recomputation",
         "tiers": sorted(selected_tiers),
@@ -1122,6 +1558,7 @@ def check(
             "drifted": len(drifted),
             "drifted_keys": [row["key"] for row in drifted],
             "worst_relative_deviation": worst,
+            "worst_value_relative_deviation": worst_value,
             "verdict": "PASS" if not drifted else "DRIFT",
         },
         "environment": _environment(),
