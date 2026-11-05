@@ -602,9 +602,12 @@ def coverage(text: str | None = None) -> dict[str, object]:
     """Report how many printed numbers the registry protects.
 
     Every numeric token in the document is counted; those inside the four result
-    tables are matched to registry entries, the rest are grouped by section so a
-    later shift knows what is still unguarded prose (analytic statements,
-    comparisons quoted from the introduction, and so on).
+    tables (and inside Table 1, guarded by :mod:`tensorbem.benchmarks.mesh_doc_pins`)
+    are matched to registry entries, the rest are grouped by section so a later
+    shift knows what is still unguarded prose (analytic statements, comparisons
+    quoted from the introduction, and so on).  Sections that are *generated* from
+    a check report are excluded: their text is pinned byte-for-byte to a fresh
+    render, so they are the one kind of prose that cannot drift.
     """
     text = DOC.read_text() if text is None else text
     tables = parse_tables(text)
@@ -613,10 +616,27 @@ def coverage(text: str | None = None) -> dict[str, object]:
     per_section: dict[str, int] = {}
     section = "preamble"
     table_lines = {line for table in tables.values() for line in table.line_numbers.values()}
+    # Table 1 (mesh quality, section 3.1) is guarded by :mod:`tensorbem.benchmarks.
+    # mesh_doc_pins`; it is counted as protected here as well so the coverage
+    # number reflects every executable claim, not just the four result tables.
+    # The import is local because the mesh module imports this one for the cell
+    # parsers, and a top-level import would close the cycle.
+    from .mesh_doc_pins import generated_line_range as _generated_range
+    from .mesh_doc_pins import table_lines as _mesh_table_lines
+
+    table_lines |= _mesh_table_lines(text)
+    # The section *injected* by mesh_doc_pins is rendered from its check report and
+    # its text is asserted byte-identical to a fresh render, so its numbers cannot
+    # drift by transcription -- the failure mode this proxy measures.  Excluding
+    # them keeps the denominator honest instead of rewarding a self-referential
+    # paragraph with a lower coverage score.
+    generated = _generated_range(text)
     number = re.compile(r"\b\d+\.\d+(?:\\times10\^\{[-+]?\d+\})?(?:e[-+]?\d+)?\b")
     for index, line in enumerate(text.splitlines(), start=1):
         if line.startswith("#"):
             section = line.strip("# ").strip()
+        if generated is not None and generated[0] <= index <= generated[1]:
+            continue
         for _ in number.finditer(line):
             total += 1
             if index in table_lines:
