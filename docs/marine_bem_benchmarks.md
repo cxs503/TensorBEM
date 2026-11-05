@@ -485,6 +485,126 @@ python -m tensorbem.benchmarks.floating_hemisphere --subdivisions 1 2 3
 python -m tensorbem.benchmarks.submerged_sphere_wave --subdivisions 0 1 2
 ```
 
+### 4.12 三维自由液面声明数字的注册表复算（m3181）
+
+§4.10–§4.11 的三张收敛表与 CHIEF 对比表共 63 个数字，
+此前只要 `tensorbem.free_surface3d`、`free_surface_solver3d` 或两个多极子参考解任一环节变动，
+文档数字就会静默腐化。本小节把这些格子**逐条登记**进
+`tensorbem.benchmarks.declared_numbers`（组 `hulme3d`、`hulme3d_chief`、`wang_linton3d`，
+`heavy` 层，同表共用一次求解），默认 `pytest` 不跑，
+`TENSORBEM_HEAVY_TESTS=1` 时由
+`tests/test_declared_numbers.py::test_documented_hulme_tables_are_reproduced` 与
+`::test_documented_wang_linton_table_is_reproduced` 守护。
+
+**与 m3150 手抄登记的关系（双枚举交叉校验）**：同一批格子在 mainline 上还以
+`hulme_hemisphere` / `hulme_chief` / `submerged_sphere` 三组手抄登记。两套枚举**并行保留**：
+本小节的表格由文档表格元组生成，mainline 的由逐格手抄，二者互为独立转录。
+`test_three_dimensional_tables_agree_across_registries` 把生成项映射到手抄项逐格比对，
+59 个共享格全部落在 5×10⁻³ 内（最坏 1.19×10⁻³）；生成侧另有 4 格是手抄侧没有的
+（表 11 的精确参考值 A₃₃′/B₃₃′、CHIEF 点数，表 12 的 20 面元机器零上界）。
+
+**合并时的口径订正**：m3181 建表时表 10 的 B₁₁′ 观测阶按固定因子 2 折算（1.62 / 1.88），
+表 12 的转动耦合比取两位有效数字（2.2×10⁻⁴ / 2.6×10⁻⁵）。m3150 的复算证明八面体细分的
+实测棱长比是 1.87 而非 2，转动耦合比的四位值是 2.15×10⁻⁴ / 2.65×10⁻⁵；
+合并后生成侧改用**实测棱长比**推导 B₁₁′ 观测阶（1.80 / 1.94），转动耦合比改用四位值，
+与 §4.10–§4.11 订正后的文档完全一致——注册表不得声明文档已不再引用的数字。
+
+复算命令（63 格一次跑完，本机 44.6 s）：
+
+```bash
+PYTHONPATH=src python3 docs/m3181/run_three_d_free_surface.py \
+    --output docs/m3181/outputs/three_d_free_surface_registry.json
+```
+
+**判决**：63 / 63 格 PASS，漂移 0 格。
+等值判据行（62 格）最坏相对偏差 **3.79e-03**
+（`hulme_surge_damping_rel_error_64`，声明 0.13 / 复算 0.130492，容差 5×10⁻³）；
+上界判据行（1 格）按 `≤` 判，20 面元转动耦合比复算值 2.49×10⁻³² 远低于 1×10⁻²⁰ 上界。
+
+**表 10（Hulme 漂浮半球，Ka = 1.0，16/64/256 面元）**
+
+| 注册项 | 文档声明 | 本次复算 | 相对偏差 | 判定 |
+|---|---:|---:|---:|---|
+| `hulme_condition_number_16` | 3.893 | 3.89255 | -1.15e-04 | PASS |
+| `hulme_heave_added_mass_rel_error_16` | 0.12 | 0.120128 | +1.07e-03 | PASS |
+| `hulme_heave_damping_rel_error_16` | 0.122 | 0.1219 | -8.22e-04 | PASS |
+| `hulme_surge_added_mass_rel_error_16` | 0.18 | 0.180237 | +1.32e-03 | PASS |
+| `hulme_surge_damping_rel_error_16` | 0.402 | 0.40241 | +1.02e-03 | PASS |
+| `hulme_excitation_force_z_rel_error_16` | 0.0667 | 0.0667164 | +2.46e-04 | PASS |
+| `hulme_condition_number_64` | 3.052 | 3.05155 | -1.48e-04 | PASS |
+| `hulme_heave_added_mass_rel_error_64` | 0.0297 | 0.0297359 | +1.21e-03 | PASS |
+| `hulme_heave_damping_rel_error_64` | 0.045 | 0.0450225 | +5.00e-04 | PASS |
+| `hulme_surge_added_mass_rel_error_64` | 0.0505 | 0.050508 | +1.58e-04 | PASS |
+| `hulme_surge_damping_rel_error_64` | 0.13 | 0.130492 | +3.79e-03 | PASS |
+| `hulme_excitation_force_z_rel_error_64` | 0.0221 | 0.0220941 | -2.68e-04 | PASS |
+| `hulme_observed_order_a33_64` | 2.23 | 2.23418 | +1.87e-03 | PASS |
+| `hulme_observed_order_b33_64` | 1.59 | 1.59384 | +2.42e-03 | PASS |
+| `hulme_observed_order_a11_64` | 2.04 | 2.03566 | -2.13e-03 | PASS |
+| `hulme_observed_order_b11_64` | 1.8 | 1.80206 | +1.14e-03 | PASS |
+| `hulme_observed_order_fz_64` | 1.77 | 1.76843 | -8.88e-04 | PASS |
+| `hulme_condition_number_256` | 2.783 | 2.78288 | -4.37e-05 | PASS |
+| `hulme_heave_added_mass_rel_error_256` | 0.00741 | 0.00740544 | -6.15e-04 | PASS |
+| `hulme_heave_damping_rel_error_256` | 0.0118 | 0.0118119 | +1.01e-03 | PASS |
+| `hulme_surge_added_mass_rel_error_256` | 0.013 | 0.0130384 | +2.95e-03 | PASS |
+| `hulme_surge_damping_rel_error_256` | 0.0353 | 0.0352745 | -7.22e-04 | PASS |
+| `hulme_excitation_force_z_rel_error_256` | 0.00567 | 0.00566791 | -3.69e-04 | PASS |
+| `hulme_observed_order_a33_256` | 2.06 | 2.05917 | -4.02e-04 | PASS |
+| `hulme_observed_order_b33_256` | 1.98 | 1.98201 | +1.02e-03 | PASS |
+| `hulme_observed_order_a11_256` | 2.01 | 2.00598 | -2.00e-03 | PASS |
+| `hulme_observed_order_b11_256` | 1.94 | 1.93773 | -1.17e-03 | PASS |
+| `hulme_observed_order_fz_256` | 2.02 | 2.01525 | -2.35e-03 | PASS |
+
+<sub>来源：docs/marine_bem_benchmarks.md §4.10 表 10；数据由 `docs/m3181/outputs/three_d_free_surface_registry.json` 程序化注入。</sub>
+
+**表 11（Ka = 2.58 免盖板 CHIEF 对比，256 面元）**
+
+| 注册项 | 文档声明 | 本次复算 | 相对偏差 | 判定 |
+|---|---:|---:|---:|---|
+| `hulme_chief_exact_a33_dimless` | 0.4007 | 0.400737 | +9.33e-05 | PASS |
+| `hulme_chief_exact_b33_dimless` | 0.0631 | 0.063122 | +3.48e-04 | PASS |
+| `hulme_chief_unregularized_condition_number` | 145.66 | 145.659 | -9.43e-06 | PASS |
+| `hulme_chief_unregularized_a33_dimless` | 0.3481 | 0.348062 | -1.09e-04 | PASS |
+| `hulme_chief_unregularized_b33_dimless` | -0.1042 | -0.104155 | +4.35e-04 | PASS |
+| `hulme_chief_chief_regularized_chief_point_count` | 5 | 5 | +0.00e+00 | PASS |
+| `hulme_chief_chief_regularized_condition_number` | 4.24 | 4.24497 | +1.17e-03 | PASS |
+| `hulme_chief_chief_regularized_a33_dimless` | 0.3919 | 0.391908 | +2.15e-05 | PASS |
+| `hulme_chief_chief_regularized_b33_dimless` | 0.0687 | 0.0687079 | +1.15e-04 | PASS |
+
+<sub>来源：docs/marine_bem_benchmarks.md §4.10 表 11；数据由 `docs/m3181/outputs/three_d_free_surface_registry.json` 程序化注入。</sub>
+
+**表 12（Wang/Linton 潜没球，f/a = 1.5，Ka = 0.8，20/80/320 面元）**
+
+| 注册项 | 文档声明 | 本次复算 | 相对偏差 | 判定 |
+|---|---:|---:|---:|---|
+| `wang_linton_condition_number_20` | 2.407 | 2.40747 | +1.93e-04 | PASS |
+| `wang_linton_heave_added_mass_rel_error_20` | 0.255 | 0.254967 | -1.30e-04 | PASS |
+| `wang_linton_surge_added_mass_rel_error_20` | 0.268 | 0.267994 | -2.14e-05 | PASS |
+| `wang_linton_excitation_force_x_rel_error_20` | 0.36 | 0.36029 | +8.06e-04 | PASS |
+| `wang_linton_excitation_force_z_rel_error_20` | 0.37 | 0.369771 | -6.20e-04 | PASS |
+| `wang_linton_rotational_added_mass_max_ratio_20` | ≤ 1e-20 | 2.49163e-32 | -1.00e+00 | PASS |
+| `wang_linton_condition_number_80` | 2.259 | 2.25871 | -1.26e-04 | PASS |
+| `wang_linton_heave_added_mass_rel_error_80` | 0.073 | 0.0729881 | -1.63e-04 | PASS |
+| `wang_linton_surge_added_mass_rel_error_80` | 0.0802 | 0.0801643 | -4.45e-04 | PASS |
+| `wang_linton_excitation_force_x_rel_error_80` | 0.116 | 0.115942 | -5.03e-04 | PASS |
+| `wang_linton_excitation_force_z_rel_error_80` | 0.119 | 0.119346 | +2.91e-03 | PASS |
+| `wang_linton_rotational_added_mass_max_ratio_80` | 0.000215 | 0.000215099 | +4.60e-04 | PASS |
+| `wang_linton_observed_order_a33_80` | 2.12 | 2.11655 | -1.63e-03 | PASS |
+| `wang_linton_observed_order_b33_80` | 1.72 | 1.71586 | -2.40e-03 | PASS |
+| `wang_linton_observed_order_a11_80` | 2.04 | 2.04218 | +1.07e-03 | PASS |
+| `wang_linton_observed_order_fz_80` | 1.91 | 1.91352 | +1.85e-03 | PASS |
+| `wang_linton_condition_number_320` | 2.188 | 2.18799 | -2.80e-06 | PASS |
+| `wang_linton_heave_added_mass_rel_error_320` | 0.0185 | 0.0185089 | +4.81e-04 | PASS |
+| `wang_linton_surge_added_mass_rel_error_320` | 0.0208 | 0.0207657 | -1.65e-03 | PASS |
+| `wang_linton_excitation_force_x_rel_error_320` | 0.031 | 0.0310005 | +1.52e-05 | PASS |
+| `wang_linton_excitation_force_z_rel_error_320` | 0.032 | 0.0319723 | -8.66e-04 | PASS |
+| `wang_linton_rotational_added_mass_max_ratio_320` | 2.65e-05 | 2.64809e-05 | -7.21e-04 | PASS |
+| `wang_linton_observed_order_a33_320` | 2.06 | 2.06197 | +9.58e-04 | PASS |
+| `wang_linton_observed_order_b33_320` | 1.93 | 1.92898 | -5.30e-04 | PASS |
+| `wang_linton_observed_order_a11_320` | 2.03 | 2.03001 | +3.45e-06 | PASS |
+| `wang_linton_observed_order_fz_320` | 1.98 | 1.97949 | -2.59e-04 | PASS |
+
+<sub>来源：docs/marine_bem_benchmarks.md §4.11 表 12；数据由 `docs/m3181/outputs/three_d_free_surface_registry.json` 程序化注入。</sub>
+
 ## 5. 讨论与适用限制
 
 1. **无界流层已同时覆盖 Dirichlet 迹与真实刚体 Neumann 6-DOF 张量。** 二维椭圆柱（\(3\times3\)）与三维三轴椭球（\(6\times6\)）均由真实无穿透条件第二类积分方程给出二阶收敛的平动与转动附加惯量，但三维逐面元局部通量仍受多面体棱边奇异性限制为约一阶精度，多连通升力体（Kutta 尾涡条件）尚未引入。
