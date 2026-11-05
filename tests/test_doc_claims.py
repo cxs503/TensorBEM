@@ -32,7 +32,11 @@ import pytest
 from tensorbem import doc_claims
 from tensorbem.benchmarks import ursell_cylinder
 
-ARTIFACT: Path = doc_claims.ARTIFACT
+#: The artifact the document checks compare against.  On a working tree that
+#: has run ``python -m tensorbem.doc_claims --write`` this is
+#: ``artifacts/ursell_doc_claims.json``; on a fresh clone (``artifacts/`` is
+#: gitignored) it is the tracked copy under ``tests/data/``.
+ARTIFACT: Path = doc_claims.resolve_artifact()
 
 _SNIPPET = """### 4.6 Ursell 潜没圆柱辐射（自由液面，深水）
 
@@ -150,3 +154,131 @@ def test_live_benchmark_reproduces_the_artifact() -> None:
     ):
         stored = payload[f"{key}_{panels}"]
         assert live == pytest.approx(stored, rel=1.0e-9), key
+
+# --------------------------------------------------------------------------
+# artifact / checkout discovery (added 2026-11-03, m2918)
+#
+# Regression guard: ``REPO_ROOT`` used to be ``Path(__file__).parents[2]``, which
+# is only the repository when the package is imported from ``src/``.  With a
+# non-editable install the same expression resolved to ``/usr/lib/python3.11``
+# and every document path became a FileNotFoundError, so the document-vs-code
+# gate could not run at all outside an editable checkout.
+# --------------------------------------------------------------------------
+def test_repo_root_is_discovered_and_holds_the_documents() -> None:
+    root = doc_claims.repo_root()
+
+    assert root == Path(__file__).resolve().parents[1]
+    assert doc_claims.REPO_ROOT == root
+    for marker in doc_claims.ROOT_MARKERS:
+        assert (root / marker).exists(), marker
+    assert doc_claims.MARINE_DOC.exists()
+    assert doc_claims.README.exists()
+
+
+def test_repo_root_honours_the_environment_override(monkeypatch, tmp_path) -> None:
+    for marker in doc_claims.ROOT_MARKERS:
+        target = tmp_path / marker
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.touch()
+    monkeypatch.setenv(doc_claims.ROOT_ENV_VAR, str(tmp_path))
+
+    assert doc_claims.repo_root() == tmp_path
+
+
+def test_a_directory_without_the_markers_is_not_a_checkout(tmp_path) -> None:
+    assert not doc_claims._looks_like_checkout(tmp_path)
+    (tmp_path / "pyproject.toml").touch()
+    # One marker is not enough: a bare pyproject.toml is any Python project.
+    assert not doc_claims._looks_like_checkout(tmp_path)
+
+
+def test_a_fresh_clone_falls_back_to_the_tracked_artifact(monkeypatch, tmp_path) -> None:
+    pinned = tmp_path / "pinned.json"
+    pinned.write_text(ARTIFACT.read_text())
+    monkeypatch.setattr(doc_claims, "ARTIFACT", tmp_path / "generated" / "ursell.json")
+    monkeypatch.setattr(doc_claims, "PINNED_ARTIFACT", pinned)
+
+    # No generated artifact yet -> the tracked copy is used.
+    assert doc_claims.resolve_artifact() == pinned
+
+    # Once the benchmark has been re-measured, the fresh copy wins.
+    generated = doc_claims.ARTIFACT
+    generated.parent.mkdir(parents=True)
+    generated.write_text(ARTIFACT.read_text())
+    assert doc_claims.resolve_artifact() == generated
+
+    # Only when neither exists is the caller told to measure.
+    generated.unlink()
+    pinned.unlink()
+    with pytest.raises(FileNotFoundError):
+        doc_claims.resolve_artifact()
+
+
+def test_the_tracked_artifact_is_current_and_self_describing() -> None:
+    payload = json.loads(doc_claims.PINNED_ARTIFACT.read_text())
+
+    assert payload["benchmark"] == "ursell_submerged_circular_cylinder_deep_water"
+    assert set(payload["values"]) == {
+        claim.key for claim in doc_claims.CLAIMS
+    }, "tracked artifact and claim registry disagree on the value set"
+
+
+def test_near_far_ratio_tolerance_follows_the_two_printed_digits() -> None:
+    """A correctly rounded 1.0053 must pass; a 5% error must not.
+
+    The ratio is tabulated as ``1.0053``, so the deviation carries two
+    significant digits.  The tolerance therefore has to be ~1% of the
+    deviation, not the 0.5% used for the three-digit error columns.
+    """
+    key = "near_far_field_relative_difference_128"
+    measured = {key: 5.34137e-3}
+
+    def failures(stated: float) -> list[str]:
+        report = doc_claims.compare({key: stated}, measured)
+        return [f for f in report.failures if "near/far-field" in f]
+
+    assert failures(5.3e-3) == []
+    assert failures(5.6e-3), "a 5.6e-3 claim must be rejected"
+
+
+def test_installed_copy_outside_a_checkout_names_the_override(tmp_path) -> None:
+    """A wheel install has no documents next to ``__file__``.
+
+    Before the discovery rewrite this case produced
+    ``FileNotFoundError: /usr/lib/python3.11/docs/marine_bem_benchmarks.md``;
+    now it must say what to set.
+    """
+    import os
+    import shutil
+    import subprocess
+    import sys
+
+    site = tmp_path / "site"
+    shutil.copytree(doc_claims.REPO_ROOT / "src" / "tensorbem", site / "tensorbem")
+    env = {k: v for k, v in os.environ.items() if k != doc_claims.ROOT_ENV_VAR}
+    env["PYTHONPATH"] = str(site)
+
+    failed = subprocess.run(
+        [sys.executable, "-c", "import tensorbem.doc_claims"],
+        cwd=str(tmp_path),
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    assert failed.returncode != 0
+    assert doc_claims.ROOT_ENV_VAR in failed.stderr
+
+    env[doc_claims.ROOT_ENV_VAR] = str(doc_claims.REPO_ROOT)
+    ok = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import tensorbem.doc_claims as d; print(d.REPO_ROOT); print(d.MARINE_DOC.exists())",
+        ],
+        cwd=str(tmp_path),
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    assert ok.returncode == 0, ok.stderr
+    assert ok.stdout.split() == [str(doc_claims.REPO_ROOT), "True"]

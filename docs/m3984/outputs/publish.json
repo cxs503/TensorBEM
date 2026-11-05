@@ -1,0 +1,33 @@
+{
+  "repo": "cxs503/TensorBEM",
+  "branch": "agent/m2966",
+  "old_head": "ca4ba73e52d8a940b52e03a368b27855bf748836",
+  "main": "ecba798833d6c2429fbc897d2ce515efb70dd682",
+  "source": "9a87109375cc74909c0bbb12a6756dbb0f739ced",
+  "source_tree": "bfa675f12941a907f05e42ed8624d04cf74c758b",
+  "files_changed_vs_main": 16,
+  "paths": [
+    "docs/m2966/figures/mfs_rows_vs_reference.png",
+    "docs/m2966/figures/panel_referee_resolution.png",
+    "docs/m2966/merge_resolution.md",
+    "docs/m2966/merge_resolution_checks.py",
+    "docs/m2966/outputs/m2966/fig_rankine_referee.png",
+    "docs/m2966/outputs/m2966/post_report.py",
+    "docs/m2966/outputs/m2966/rankine_primitive_check.json",
+    "docs/m2966/outputs/m2966/rankine_study.py",
+    "docs/m2966/outputs/m2966/ursell_table_64_128_256.json",
+    "docs/m2966/outputs/merge_checks/merge_checks.json",
+    "docs/m2966/post_report.py",
+    "docs/marine_bem_benchmarks.md",
+    "docs/rankine_primitive_referee_study.md",
+    "src/tensorbem/doc_claims.py",
+    "tests/test_documented_benchmarks.py",
+    "tests/test_ursell_doc_reproducibility.py"
+  ],
+  "deleted_vs_main": [],
+  "pr_before": {
+    "head": "ca4ba73e52d8a940b52e03a368b27855bf748836",
+    "mergeable": false,
+    "mergeable_state": "dirty"
+  }
+}

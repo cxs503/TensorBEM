@@ -46,7 +46,11 @@ DOCUMENTED = {
 }
 
 REFERENCE = {"added_mass": 2545.17, "damping": 2718.15}
-MFS_DOCUMENTED = {64: (2543.24, 2708.57), 128: (2544.69, 2715.76)}
+MFS_DOCUMENTED = {
+    64: (2543.24, 2708.57),
+    128: (2544.69, 2715.76),
+    256: (2545.05, 2717.55),
+}
 RELATIVE_TOLERANCE = 1.0e-2
 
 
@@ -127,11 +131,16 @@ def test_every_panel_column_has_a_generated_mfs_row():
     start = document.index("| 面元数 |")
     block = document[start : start + document[start:].index("\n\n")]
     panel_counts = {int(m.group(1)) for m in re.finditer(r"(?m)^\| (\d+) \|", block)}
-    mfs_counts = {
-        int(m.group(1))
+    # ``format_markdown`` labels every generated MFS row with both the panel
+    # count and the fundamental-solution count (m3229); the column count, not
+    # the label, is what this test trusts.
+    mfs_rows = {
+        (int(m.group(1)), int(m.group(2)))
         for m in re.finditer(
-            r"(?m)^\| 基本解方法（MFS，配点网格 (\d+) 面元）", block
+            r"(?m)^\| 基本解方法（MFS，(\d+) 面元、(\d+) 源）", block
         )
     }
+    mfs_counts = {panels for panels, _sources in mfs_rows}
     assert panel_counts <= mfs_counts, (sorted(panel_counts), sorted(mfs_counts))
-    assert {64, 128} <= mfs_counts, sorted(mfs_counts)
+    assert {64, 128, 256} <= mfs_counts, sorted(mfs_counts)
+    assert all(sources == 24 for _panels, sources in mfs_rows), sorted(mfs_rows)

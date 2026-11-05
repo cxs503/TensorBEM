@@ -1011,3 +1011,113 @@ def spheroid_hull_mesh(
     verts = base.vertices * axes
     verts[np.abs(verts[:, 2]) <= 1.0e-12, 2] = 0.0
     return WettedHullMesh(verts, base.faces)
+
+
+def capsule_mesh(
+    length: float,
+    radius: float = 1.0,
+    *,
+    panel_size: float | None = None,
+    axial_rings: int | None = None,
+    circumferential: int | None = None,
+    submergence: float = 0.5,
+) -> TriangleMesh:
+    """Return a closed submerged capsule: cylinder of ``length`` plus two caps.
+
+    The body is the surface of revolution about the ``x`` axis swept by a
+    stadium profile: a cylinder of radius ``radius`` and axial length ``length``
+    closed by two hemispheres. Its volume ``pi a^2 L + 4/3 pi a^3`` and area
+    ``2 pi a L + 4 pi a^2`` are closed form, which makes the mesh directly
+    auditable, and the rounded ends keep every panel well shaped, so the
+    discretisation error stays a property of the *size* of the panels rather
+    than of a sharp edge. The axis sits at ``z = -submergence`` (fully
+    submerged, ``submergence > radius``).
+
+    It exists to probe the 2-D limit of the 3-D solver: as ``length/radius``
+    grows the end contribution is a fixed number of ``O(radius^3)`` while the
+    wetted area grows like ``radius * length``, so any per-unit-span quantity
+    must approach the value of the infinite cylinder.
+
+    ``panel_size`` sets the target edge length on the meridian;
+    ``axial_rings`` / ``circumferential`` override the ring counts directly
+    (needed when the caller wants a specific refinement family).
+    """
+    a = float(radius)
+    if not math.isfinite(a) or a <= 0.0:
+        raise ValueError("radius must be positive and finite")
+    cyl = float(length)
+    if not math.isfinite(cyl) or cyl < 0.0:
+        raise ValueError("length must be finite and non-negative")
+    if not math.isfinite(submergence) or submergence <= a:
+        raise ValueError("submergence must be finite and strictly greater than radius")
+
+    meridian = cyl + math.pi * a
+    if axial_rings is None:
+        if panel_size is None:
+            raise ValueError("either panel_size or axial_rings must be given")
+        n_rings = max(3, int(round(meridian / float(panel_size))))
+    else:
+        n_rings = int(axial_rings)
+    if circumferential is None:
+        if panel_size is None:
+            raise ValueError("either panel_size or circumferential must be given")
+        n_phi = max(6, int(round(2.0 * math.pi * a / float(panel_size))))
+    else:
+        n_phi = int(circumferential)
+    if n_rings < 3:
+        raise ValueError("need at least 3 axial rings")
+    if n_phi < 6:
+        raise ValueError("need at least 6 circumferential panels")
+
+    def meridian_point(s: float) -> tuple[float, float]:
+        half = 0.5 * cyl
+        cap = 0.5 * math.pi * a
+        if s <= 0.0:
+            return -half - a, 0.0
+        if s >= meridian:
+            return half + a, 0.0
+        if s < cap:
+            theta = -0.5 * math.pi + s / a
+            return -half + a * math.sin(theta), a * math.cos(theta)
+        if s < cap + cyl:
+            return -half + (s - cap), a
+        tail = s - cap - cyl
+        theta = tail / a
+        return half + a * math.sin(theta), a * math.cos(theta)
+
+    phis = 2.0 * math.pi * np.arange(n_phi, dtype=float) / n_phi
+    cos_phi = np.cos(phis)
+    sin_phi = np.sin(phis)
+
+    rings = np.empty((n_rings, n_phi, 3), dtype=float)
+    for i in range(n_rings):
+        s = meridian * (i + 0.5) / n_rings
+        x, r = meridian_point(s)
+        rings[i, :, 0] = x
+        rings[i, :, 1] = r * cos_phi
+        rings[i, :, 2] = r * sin_phi
+
+    vertices = [ring for ring in rings]
+    faces: list[list[int]] = []
+    for i in range(n_rings - 1):
+        base0, base1 = i * n_phi, (i + 1) * n_phi
+        for j in range(n_phi):
+            j2 = (j + 1) % n_phi
+            faces.append([base0 + j, base1 + j, base1 + j2])
+            faces.append([base0 + j, base1 + j2, base0 + j2])
+    verts = np.vstack(vertices)
+    starboard = len(verts)
+    verts = np.vstack([verts, [[-0.5 * cyl - a, 0.0, 0.0], [0.5 * cyl + a, 0.0, 0.0]]])
+    last = (n_rings - 1) * n_phi
+    for j in range(n_phi):
+        j2 = (j + 1) % n_phi
+        faces.append([starboard, j, j2])
+        faces.append([starboard + 1, last + j2, last + j])
+    face_arr = np.asarray(faces, dtype=np.int64)
+    verts[:, 2] -= float(submergence)
+
+    tri = verts[face_arr]
+    six_volume = float(np.einsum("ij,ij->i", tri[:, 0], np.cross(tri[:, 1], tri[:, 2])).sum())
+    if six_volume < 0.0:
+        face_arr = face_arr[:, ::-1]
+    return TriangleMesh(verts, face_arr)

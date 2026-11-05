@@ -1,0 +1,116 @@
+{
+  "panel_referee": {
+    "case": "coplanar log panel primitive: uniform-Gauss referee resolution limit",
+    "xi": 0.5,
+    "h": 0.0,
+    "length": 1.0,
+    "closed_form": -1.6931471805599454,
+    "pieces": [
+      25,
+      50,
+      100,
+      200,
+      400,
+      800,
+      1600
+    ],
+    "abs_errors": [
+      0.0021254877015368656,
+      6.012189999138329e-05,
+      3.0060949995247555e-05,
+      1.5030474997068666e-05,
+      7.515237499422511e-06,
+      3.7576187488230772e-06,
+      1.8788093769650516e-06
+    ],
+    "observed_orders": [
+      5.143759498595152,
+      1.0000000000213127,
+      1.0000000000532823,
+      0.9999999998294969,
+      1.0000000003410061,
+      0.9999999980392155
+    ],
+    "headline_observed_order": 1.0000000000745952,
+    "single_panel_error": 0.05313719253839966,
+    "elementary_closed_form_agreement": 0.0,
+    "configurations": [
+      {
+        "xi": 0.5,
+        "h": 0.0,
+        "length": 1.0,
+        "reference": "elementary closed form",
+        "reference_value": -1.6931471805599454,
+        "closed_form": -1.6931471805599454,
+        "abs_error": 0.0,
+        "referee_self_gap": 7.515237499422511e-06
+      },
+      {
+        "xi": 0.0,
+        "h": 0.001,
+        "length": 1.0,
+        "reference": "converged composite Gauss (400x20)",
+        "reference_value": -0.9984297036731204,
+        "closed_form": -0.9984297036731218,
+        "abs_error": 1.3322676295501878e-15,
+        "referee_self_gap": 0.0
+      },
+      {
+        "xi": 0.9,
+        "h": 0.3,
+        "length": 1.0,
+        "reference": "converged composite Gauss (400x20)",
+        "reference_value": -0.691302588657255,
+        "closed_form": -0.6913025886572551,
+        "abs_error": 1.1102230246251565e-16,
+        "referee_self_gap": 0.0
+      }
+    ]
+  },
+  "mfs_rows": {
+    "case": "Ursell submerged cylinder (ka=0.6, a/f=0.5), MFS rows of Sec. 4.6",
+    "reference": {
+      "added_mass": 2545.167247813704,
+      "damping": 2718.1539515727764
+    },
+    "rows": [
+      {
+        "panels": 64,
+        "sources": 24,
+        "added_mass": 2543.240605869413,
+        "added_mass_documented": 2543.24,
+        "added_mass_rel_error": 0.0007569804876068797,
+        "added_mass_doc_gap": 2.3822738435749001e-07,
+        "damping": 2708.5686809947247,
+        "damping_documented": 2708.57,
+        "damping_rel_error": 0.003526389876668117,
+        "damping_doc_gap": 4.869747783851925e-07
+      },
+      {
+        "panels": 128,
+        "sources": 24,
+        "added_mass": 2544.6864273460715,
+        "added_mass_documented": 2544.69,
+        "added_mass_rel_error": 0.0001889150774061737,
+        "added_mass_doc_gap": 1.4039643055091496e-06,
+        "damping": 2715.7555545010223,
+        "damping_documented": 2715.76,
+        "damping_rel_error": 0.0008823624836872476,
+        "damping_doc_gap": 1.6369263034766229e-06
+      },
+      {
+        "panels": 256,
+        "sources": 24,
+        "added_mass": 2545.0470952767964,
+        "added_mass_documented": 2545.05,
+        "added_mass_rel_error": 4.7208110591017944e-05,
+        "added_mass_doc_gap": 1.1413226473961476e-06,
+        "damping": 2717.5542223063094,
+        "damping_documented": 2717.55,
+        "damping_rel_error": 0.0002206384469577048,
+        "damping_doc_gap": 1.5537179846561772e-06
+      }
+    ],
+    "label_contract": "基本解方法（MFS，<panels> 面元、<sources> 源）"
+  }
+}

@@ -1,0 +1,845 @@
+{
+  "meta": {
+    "problem": "2-D deep-water radiation of a submerged circular cylinder",
+    "radius_m": 1.0,
+    "density": 1025.0,
+    "panels": [
+      32,
+      64,
+      128
+    ],
+    "mfs_sources": [
+      48
+    ],
+    "ka_values": [
+      0.2,
+      0.6,
+      1.0
+    ],
+    "depth_ratios": [
+      1.05,
+      1.5,
+      3.0
+    ],
+    "note": "panel method = tensorbem.free_surface_solver.solve_radiation_indirect (piecewise-constant indirect BIE); reference = radiation_reference (method of fundamental solutions, point sources inside the body, no shared matrix entries); 'panel_vs_mfs' compares 256 panels against 96 sources"
+  },
+  "rows": [
+    {
+      "ka": 0.2,
+      "depth_ratio": 1.05,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 9459.923304875581,
+          "damping": 7898.674152743103,
+          "condition_number": 11.250094466523466,
+          "relative_residual": 8.937307707917683e-16
+        },
+        "64": {
+          "added_mass": 9269.726207376376,
+          "damping": 7521.166329246001,
+          "condition_number": 11.086035589252482,
+          "relative_residual": 1.2385856696157489e-15
+        },
+        "128": {
+          "added_mass": 9128.414152144214,
+          "damping": 7256.0354182638675,
+          "condition_number": 10.871682317847773,
+          "relative_residual": 1.6197557056883254e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 8939.655903887055,
+          "damping": 6917.573266506759,
+          "condition_number": 3021898.8466404206,
+          "relative_residual": 0.0022501589717604416
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.021114710709959843,
+        "damping": 0.04892787379583844
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.8062336568198987,
+        "damping": 0.8345817099985962
+      }
+    },
+    {
+      "ka": 0.2,
+      "depth_ratio": 1.05,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 9452.288819650266,
+          "damping": 7891.906260542934,
+          "condition_number": 11.250094466523466,
+          "relative_residual": 8.065035260286649e-16
+        },
+        "64": {
+          "added_mass": 9265.60949959021,
+          "damping": 7514.254386057726,
+          "condition_number": 11.086035589252482,
+          "relative_residual": 1.2954062417632465e-15
+        },
+        "128": {
+          "added_mass": 9124.176033308693,
+          "damping": 7249.054954337423,
+          "condition_number": 10.871682317847773,
+          "relative_residual": 1.5955058108974182e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 8939.707478380247,
+          "damping": 6917.621620950747,
+          "condition_number": 3021898.8466404206,
+          "relative_residual": 0.0008829488627852257
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.02063474172667997,
+        "damping": 0.04791145736894533
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.821063388492225,
+        "damping": 0.8481245012671718
+      }
+    },
+    {
+      "ka": 0.2,
+      "depth_ratio": 1.5,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 5002.070624477611,
+          "damping": 2202.128794909589,
+          "condition_number": 3.672934966003118,
+          "relative_residual": 7.398437440616283e-16
+        },
+        "64": {
+          "added_mass": 4905.121864061537,
+          "damping": 2133.9230171788554,
+          "condition_number": 3.605436618410514,
+          "relative_residual": 8.362743260788657e-16
+        },
+        "128": {
+          "added_mass": 4849.691512623273,
+          "damping": 2093.8298945133733,
+          "condition_number": 3.569123175122568,
+          "relative_residual": 1.1775387386497153e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 4786.807248366398,
+          "damping": 2047.2699534162296,
+          "condition_number": 2741383.119865212,
+          "relative_residual": 3.0997292574547245e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.01313699528601989,
+        "damping": 0.02274245319697598
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9118573474534458,
+        "damping": 0.8961615260627375
+      }
+    },
+    {
+      "ka": 0.2,
+      "depth_ratio": 1.5,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 5002.070624018865,
+          "damping": 2202.128794613798,
+          "condition_number": 3.672934966003118,
+          "relative_residual": 6.073331301719676e-16
+        },
+        "64": {
+          "added_mass": 4905.121863589113,
+          "damping": 2133.9230168820577,
+          "condition_number": 3.605436618410514,
+          "relative_residual": 7.300664053342137e-16
+        },
+        "128": {
+          "added_mass": 4849.691512150089,
+          "damping": 2093.829894219994,
+          "condition_number": 3.569123175122568,
+          "relative_residual": 1.2558788639588192e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 4786.807248350644,
+          "damping": 2047.269953406682,
+          "condition_number": 2741383.119865212,
+          "relative_residual": 1.635619976132584e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.013136995190502487,
+        "damping": 0.022742453058442923
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9118573523793385,
+        "damping": 0.8961615300750249
+      }
+    },
+    {
+      "ka": 0.2,
+      "depth_ratio": 3.0,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 3551.0052204318345,
+          "damping": 774.1969577951526,
+          "condition_number": 2.3574547270647117,
+          "relative_residual": 6.074455254645596e-16
+        },
+        "64": {
+          "added_mass": 3488.678568720809,
+          "damping": 755.82212263905,
+          "condition_number": 2.327317767343515,
+          "relative_residual": 5.967316311572306e-16
+        },
+        "128": {
+          "added_mass": 3454.181339793495,
+          "damping": 744.9590384297129,
+          "condition_number": 2.312286093974968,
+          "relative_residual": 1.0285435001435296e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 3416.069835818779,
+          "damping": 732.2716963723459,
+          "condition_number": 2513646.1457806565,
+          "relative_residual": 1.2395729754983925e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.011156535377322365,
+        "damping": 0.017326003613439864
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9299165349438787,
+        "damping": 0.892363310562473
+      }
+    },
+    {
+      "ka": 0.2,
+      "depth_ratio": 3.0,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 3551.005220431699,
+          "damping": 774.1969577951224,
+          "condition_number": 2.3574547270647117,
+          "relative_residual": 4.483919578770869e-16
+        },
+        "64": {
+          "added_mass": 3488.6785687206743,
+          "damping": 755.8221226390211,
+          "condition_number": 2.327317767343515,
+          "relative_residual": 6.542952781631649e-16
+        },
+        "128": {
+          "added_mass": 3454.1813397933606,
+          "damping": 744.959038429685,
+          "condition_number": 2.312286093974968,
+          "relative_residual": 1.107678584472502e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 3416.069835818657,
+          "damping": 732.2716963723218,
+          "condition_number": 2513646.1457806565,
+          "relative_residual": 1.2384080050563392e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.011156535377319171,
+        "damping": 0.017326003613435313
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9299165349440994,
+        "damping": 0.892363310562607
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 1.05,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": -1772.0573532691,
+          "damping": 9442.504435049135,
+          "condition_number": 10.563955095100159,
+          "relative_residual": 6.615345125263972e-16
+        },
+        "64": {
+          "added_mass": -1780.0967104208917,
+          "damping": 9422.211172615363,
+          "condition_number": 10.845046945470344,
+          "relative_residual": 8.960056017119636e-16
+        },
+        "128": {
+          "added_mass": -1744.3143461585514,
+          "damping": 9491.900891038547,
+          "condition_number": 10.84195528506101,
+          "relative_residual": 1.3447790860340398e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -1663.3915055820846,
+          "damping": 9638.952484753408,
+          "condition_number": 3433668.821799105,
+          "relative_residual": 0.0028423243028211846
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.048649304932063354,
+        "damping": 0.015255972466661988
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.5282500362541767,
+        "damping": 0.5596517456555966
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 1.05,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": -1768.9106095626817,
+          "damping": 9434.932949806858,
+          "condition_number": 10.563955095100159,
+          "relative_residual": 6.768910048070096e-16
+        },
+        "64": {
+          "added_mass": -1780.0968447438067,
+          "damping": 9421.939539065646,
+          "condition_number": 10.845046945470344,
+          "relative_residual": 6.533657106336234e-16
+        },
+        "128": {
+          "added_mass": -1744.3020658990902,
+          "damping": 9491.920771537796,
+          "condition_number": 10.84195528506101,
+          "relative_residual": 1.2063421785519496e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -1663.4518201729984,
+          "damping": 9638.999568992356,
+          "condition_number": 3433668.821799105,
+          "relative_residual": 0.0011236455720694811
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.048603899881923464,
+        "damping": 0.015258720202426098
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.5288007077086784,
+        "damping": 0.5615048023544044
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 1.5,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 2267.0632331726542,
+          "damping": 5652.3667637828585,
+          "condition_number": 3.2951854319793163,
+          "relative_residual": 4.434226336475102e-16
+        },
+        "64": {
+          "added_mass": 2244.9071637661777,
+          "damping": 5553.822052256255,
+          "condition_number": 3.2549860013481773,
+          "relative_residual": 6.303644165118239e-16
+        },
+        "128": {
+          "added_mass": 2234.945203113514,
+          "damping": 5492.880668584259,
+          "condition_number": 3.231422491868975,
+          "relative_residual": 9.251902994888863e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2225.9961635139757,
+          "damping": 5419.569422991256,
+          "condition_number": 2878357.4629627783,
+          "relative_residual": 4.0817224739851397e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.004020240351812222,
+        "damping": 0.013527134698560615
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 1.0794209057623787,
+        "damping": 0.872843919950327
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 1.5,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 2267.0632331748166,
+          "damping": 5652.36676376559,
+          "condition_number": 3.2951854319793163,
+          "relative_residual": 5.477370842105203e-16
+        },
+        "64": {
+          "added_mass": 2244.907163766044,
+          "damping": 5553.822052255795,
+          "condition_number": 3.2549860013481773,
+          "relative_residual": 7.342010164011563e-16
+        },
+        "128": {
+          "added_mass": 2234.9452031133796,
+          "damping": 5492.880668583803,
+          "condition_number": 3.231422491868975,
+          "relative_residual": 8.617073506278318e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2225.9961635138684,
+          "damping": 5419.56942299093,
+          "condition_number": 2878357.4629627783,
+          "relative_residual": 2.0946273777226496e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.004020240351800363,
+        "damping": 0.013527134698537262
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 1.079420905764692,
+        "damping": 0.8728439199514578
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 3.0,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 2902.9211109791995,
+          "damping": 880.5574752433963,
+          "condition_number": 2.1376386096204225,
+          "relative_residual": 4.4395799783836116e-16
+        },
+        "64": {
+          "added_mass": 2854.535146871771,
+          "damping": 862.5013988614935,
+          "condition_number": 2.115880283780128,
+          "relative_residual": 5.040302342011608e-16
+        },
+        "128": {
+          "added_mass": 2828.3435021478417,
+          "damping": 851.758767790826,
+          "condition_number": 2.104426699425199,
+          "relative_residual": 7.630394103304627e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2799.9842725310564,
+          "damping": 839.1512327812882,
+          "condition_number": 2487753.553052744,
+          "relative_residual": 1.1388602237596956e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.01012835318219481,
+        "damping": 0.015024151210207202
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9437839781741052,
+        "damping": 0.8891465797893491
+      }
+    },
+    {
+      "ka": 0.6,
+      "depth_ratio": 3.0,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 2902.921110979199,
+          "damping": 880.5574752433957,
+          "condition_number": 2.1376386096204225,
+          "relative_residual": 5.023991748781707e-16
+        },
+        "64": {
+          "added_mass": 2854.5351468717686,
+          "damping": 862.5013988614934,
+          "condition_number": 2.115880283780128,
+          "relative_residual": 6.765141157275266e-16
+        },
+        "128": {
+          "added_mass": 2828.343502147841,
+          "damping": 851.7587677908258,
+          "condition_number": 2.104426699425199,
+          "relative_residual": 1.0326461098338454e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2799.9842725310614,
+          "damping": 839.1512327812851,
+          "condition_number": 2487753.553052744,
+          "relative_residual": 1.1377637222337939e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.010128353182192679,
+        "damping": 0.015024151210210644
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9437839781742137,
+        "damping": 0.8891465797892064
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 1.05,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": -405.55888292204577,
+          "damping": 1807.1387623116232,
+          "condition_number": 9.986364465044854,
+          "relative_residual": 6.060992697339937e-16
+        },
+        "64": {
+          "added_mass": -403.72218133959876,
+          "damping": 1686.0819365048128,
+          "condition_number": 10.40672692566356,
+          "relative_residual": 7.456953738761517e-16
+        },
+        "128": {
+          "added_mass": -413.39736468087966,
+          "damping": 1704.6007896049339,
+          "condition_number": 10.447102890663725,
+          "relative_residual": 1.1124350135614128e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -433.75574753294774,
+          "damping": 1810.9605801963928,
+          "condition_number": 3568976.4114264,
+          "relative_residual": 0.002867295585724813
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.046935131045201126,
+        "damping": 0.05873114619641503
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.5609528241288193,
+        "damping": 0.23157393155287748
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 1.05,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": -403.8755543038353,
+          "damping": 1809.711892254627,
+          "condition_number": 9.986364465044854,
+          "relative_residual": 5.497401138494688e-16
+        },
+        "64": {
+          "added_mass": -403.66042114663827,
+          "damping": 1685.9024783386487,
+          "condition_number": 10.40672692566356,
+          "relative_residual": 6.901924765470339e-16
+        },
+        "128": {
+          "added_mass": -413.3973692554836,
+          "damping": 1704.6011451313072,
+          "condition_number": 10.447102890663725,
+          "relative_residual": 1.2152304436193729e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": -433.78012590071165,
+          "damping": 1810.8372869554812,
+          "condition_number": 3568976.4114264,
+          "relative_residual": 0.0011418371223182475
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.04698868257946298,
+        "damping": 0.05866686233459789
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.5633584476546816,
+        "damping": 0.23390082991274538
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 1.5,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 1618.3851340979427,
+          "damping": 3658.6746250502706,
+          "condition_number": 2.8816274860703994,
+          "relative_residual": 3.0173898685272033e-16
+        },
+        "64": {
+          "added_mass": 1595.5286438338824,
+          "damping": 3609.834049926938,
+          "condition_number": 2.853548806709318,
+          "relative_residual": 4.869493088241123e-16
+        },
+        "128": {
+          "added_mass": 1585.494939208493,
+          "damping": 3581.974773362489,
+          "condition_number": 2.835581705235294,
+          "relative_residual": 7.933658667478723e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 1576.8029229930592,
+          "damping": 3549.9723619340934,
+          "condition_number": 2831852.7865540343,
+          "relative_residual": 4.4266282961348134e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.005512430303550406,
+        "damping": 0.009014833966470674
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 1.1072584847904747,
+        "damping": 0.9034523424519614
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 1.5,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 1618.3851341042275,
+          "damping": 3658.6746250393066,
+          "condition_number": 2.8816274860703994,
+          "relative_residual": 4.123940083061858e-16
+        },
+        "64": {
+          "added_mass": 1595.5286438338721,
+          "damping": 3609.834049926893,
+          "condition_number": 2.853548806709318,
+          "relative_residual": 5.230992552657959e-16
+        },
+        "128": {
+          "added_mass": 1585.4949392084818,
+          "damping": 3581.9747733624486,
+          "condition_number": 2.835581705235294,
+          "relative_residual": 9.911340172679162e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 1576.8029229930635,
+          "damping": 3549.9723619340393,
+          "condition_number": 2831852.7865540343,
+          "relative_residual": 2.2055077557948483e-10
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.005512430303540585,
+        "damping": 0.009014833966474654
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 1.10725848479192,
+        "damping": 0.9034523424515655
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 3.0,
+      "direction": "sway",
+      "panels": {
+        "32": {
+          "added_mass": 2930.4417156538184,
+          "damping": 281.5128404442179,
+          "condition_number": 2.0938492287979886,
+          "relative_residual": 4.1061065168702116e-16
+        },
+        "64": {
+          "added_mass": 2881.1625656995884,
+          "damping": 275.72409556363334,
+          "condition_number": 2.072651776296081,
+          "relative_residual": 5.689606884252751e-16
+        },
+        "128": {
+          "added_mass": 2854.432916362545,
+          "damping": 272.3054569323588,
+          "condition_number": 2.0619105359830003,
+          "relative_residual": 7.689871097354008e-16
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2825.439304678863,
+          "damping": 268.31123343981295,
+          "condition_number": 2455771.0598305888,
+          "relative_residual": 1.1407965995039382e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.010261629628946136,
+        "damping": 0.01488653099364864
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9425446307951021,
+        "damping": 0.8921156185906984
+      }
+    },
+    {
+      "ka": 1.0,
+      "depth_ratio": 3.0,
+      "direction": "heave",
+      "panels": {
+        "32": {
+          "added_mass": 2930.4417156538198,
+          "damping": 281.5128404442178,
+          "condition_number": 2.0938492287979886,
+          "relative_residual": 4.072250686706054e-16
+        },
+        "64": {
+          "added_mass": 2881.162565699589,
+          "damping": 275.7240955636332,
+          "condition_number": 2.072651776296081,
+          "relative_residual": 6.060033613714175e-16
+        },
+        "128": {
+          "added_mass": 2854.4329163625434,
+          "damping": 272.30545693235877,
+          "condition_number": 2.0619105359830003,
+          "relative_residual": 1.0076891774392111e-15
+        }
+      },
+      "mfs": {
+        "48": {
+          "added_mass": 2825.4393046788587,
+          "damping": 268.3112334398107,
+          "condition_number": 2455771.0598305888,
+          "relative_residual": 1.1404534987298796e-12
+        }
+      },
+      "panel_vs_mfs": {
+        "added_mass": 0.01026162962894728,
+        "damping": 0.014886530993657027
+      },
+      "mfs_self": {
+        "added_mass": 0.0,
+        "damping": 0.0
+      },
+      "orders": {
+        "added_mass": 0.9425446307950731,
+        "damping": 0.892115618590318
+      }
+    }
+  ],
+  "worst": {
+    "ka": 1.0,
+    "depth_ratio": 1.05,
+    "direction": "sway",
+    "added_mass": 0.046935131045201126,
+    "damping": 0.05873114619641503
+  }
+}

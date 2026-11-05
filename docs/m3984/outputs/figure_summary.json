@@ -1,0 +1,48 @@
+{
+  "mfs_rows": {
+    "figure": "docs/m3984/figures/mfs_rows_vs_reference.png",
+    "panels": [
+      64.0,
+      128.0,
+      256.0
+    ],
+    "added_mass_rel_error": [
+      0.0007569804876068797,
+      0.0001889150774061737,
+      4.7208110591017944e-05
+    ],
+    "damping_rel_error": [
+      0.003526389876668117,
+      0.0008823624836872476,
+      0.0002206384469577048
+    ],
+    "worst_relative_error": 0.003526389876668117,
+    "all_under_3pct": true
+  },
+  "referee": {
+    "figure": "docs/m3984/figures/panel_referee_resolution.png",
+    "observed_order": 1.0000000000745952,
+    "error_at_400_pieces": 7.515237499422511e-06,
+    "single_panel_error": 0.05313719253839966,
+    "closed_form": -1.6931471805599454
+  },
+  "tests": {
+    "figure": "docs/m3984/figures/test_parity.png",
+    "main": {
+      "log": "/tmp/m3984/base_main.log",
+      "finished": false
+    },
+    "merged": {
+      "log": "/tmp/m3984/merged_full.log",
+      "finished": false
+    },
+    "subsets": {
+      "main": {
+        "affected surface (4 modules)": 40
+      },
+      "merged": {
+        "affected surface (4 modules)": 42
+      }
+    }
+  }
+}
