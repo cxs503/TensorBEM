@@ -23,6 +23,12 @@ Two tables are produced:
   (``min(panel_nodes, 6)``), so ``panel_nodes`` saturates above 6 rather than
   refining the answer.
 
+The JSON and Markdown artifacts are written to ``docs/ursell_reproducibility/``
+and committed: ``tests/test_ursell_reference_pinning.py`` compares their rows
+against a fresh run, so the table cannot drift away from the code.  (They used
+to go to an untracked ``outputs/`` directory, which made that regression test
+skip forever -- see ``docs/m3487/dead_skip_gate_audit.md``.)
+
 Run::
 
     PYTHONPATH=src python3 examples/ursell_reproducibility_study.py
@@ -42,7 +48,7 @@ PANEL_COUNTS = (64, 128, 256)
 NODE_COUNTS = (6, 12, 24)
 BASE = dict(radius=1.0, submergence=2.0, ka=0.6, density=1025.0, gravity=9.80665)
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUTS = ROOT / "outputs"
+OUTPUTS = ROOT / "docs" / "ursell_reproducibility"
 FIGURES = ROOT / "docs" / "figures"
 
 
@@ -71,7 +77,7 @@ def _row(result: dict, panel_nodes: int) -> dict:
 
 
 def main() -> None:
-    OUTPUTS.mkdir(exist_ok=True)
+    OUTPUTS.mkdir(parents=True, exist_ok=True)
     FIGURES.mkdir(parents=True, exist_ok=True)
 
     panel_rows = []
