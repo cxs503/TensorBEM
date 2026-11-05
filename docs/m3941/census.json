@@ -1,0 +1,101 @@
+{
+  "target": "src/tensorbem/benchmarks/declared_numbers.py",
+  "parents": [
+    "origin/main",
+    "origin/agent/m3236"
+  ],
+  "groups": {
+    "cylinder": {
+      "origin/main": 2,
+      "origin/agent/m3236": 2,
+      "merged": 2,
+      "union_of_parents": 2,
+      "missing": []
+    },
+    "dean": {
+      "origin/main": 0,
+      "origin/agent/m3236": 11,
+      "merged": 11,
+      "union_of_parents": 11,
+      "missing": []
+    },
+    "ellipsoid": {
+      "origin/main": 3,
+      "origin/agent/m3236": 3,
+      "merged": 3,
+      "union_of_parents": 3,
+      "missing": []
+    },
+    "hulme_chief": {
+      "origin/main": 6,
+      "origin/agent/m3236": 0,
+      "merged": 6,
+      "union_of_parents": 6,
+      "missing": []
+    },
+    "hulme_hemisphere": {
+      "origin/main": 31,
+      "origin/agent/m3236": 0,
+      "merged": 31,
+      "union_of_parents": 31,
+      "missing": []
+    },
+    "interior_harmonics": {
+      "origin/main": 6,
+      "origin/agent/m3236": 6,
+      "merged": 6,
+      "union_of_parents": 6,
+      "missing": []
+    },
+    "submerged_sphere": {
+      "origin/main": 25,
+      "origin/agent/m3236": 0,
+      "merged": 25,
+      "union_of_parents": 25,
+      "missing": []
+    },
+    "ursell": {
+      "origin/main": 9,
+      "origin/agent/m3236": 9,
+      "merged": 9,
+      "union_of_parents": 9,
+      "missing": []
+    },
+    "ursell_reference": {
+      "origin/main": 2,
+      "origin/agent/m3236": 2,
+      "merged": 2,
+      "union_of_parents": 2,
+      "missing": []
+    }
+  },
+  "totals": {
+    "main": 84,
+    "branch": 33,
+    "merged": 95,
+    "union_of_parents": 95
+  },
+  "no_row_lost": true,
+  "duplicate_keys": [
+    "cylinder",
+    "dean",
+    "ellipsoid",
+    "hulme_chief",
+    "hulme_hemisphere",
+    "interior_harmonics",
+    "submerged_sphere",
+    "ursell",
+    "ursell_reference"
+  ],
+  "group_counter_merged": {
+    "cylinder": 2,
+    "ellipsoid": 3,
+    "ursell_reference": 2,
+    "ursell": 9,
+    "interior_harmonics": 6,
+    "hulme_hemisphere": 31,
+    "hulme_chief": 6,
+    "submerged_sphere": 25,
+    "dean": 11
+  }
+}

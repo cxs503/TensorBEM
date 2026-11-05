@@ -1,0 +1,200 @@
+{
+  "benchmark": "declared_numbers_recomputation",
+  "tiers": [
+    "fast"
+  ],
+  "checks": [
+    {
+      "key": "dean_cylinder_reflection_64",
+      "description": "reflected-wave modulus, submerged circle a=1 f=2 ka=0.6, 64 panels (docs quote 2.20e-15, a roundoff-level quantity; the physical claim is Dean's R=0, guarded here as an upper bound)",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "upper",
+      "declared": 1e-12,
+      "measured": 1.3214955357959034e-15,
+      "relative_deviation": -0.998678504464204,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_cylinder_transmission_error_64",
+      "description": "transmission coefficient error vs multipole, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.00839,
+      "measured": 0.00839365553213987,
+      "relative_deviation": 0.00043570108937667943,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_cylinder_energy_balance_64",
+      "description": "wave-energy balance |R|^2+|T|^2-1, 64 panels (docs quote 0.0, machine precision; guarded as an upper bound)",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "upper",
+      "declared": 1e-12,
+      "measured": 0.0,
+      "relative_deviation": -1.0,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_circular_polarisation_64",
+      "description": "circular polarisation error |Fz+iFx|/|Fx|, 64 panels (docs quote 1.10e-14, roundoff-level; the physical claim is Fz=-iFx exactly)",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "upper",
+      "declared": 1e-10,
+      "measured": 6.33908105839913e-15,
+      "relative_deviation": -0.9999366091894161,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_haskind_x_64",
+      "description": "Haskind-Newman vs diffraction force, horizontal, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 2.16e-05,
+      "measured": 2.1640428243880098e-05,
+      "relative_deviation": 0.0018716779574119576,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_haskind_z_64",
+      "description": "Haskind-Newman vs diffraction force, vertical, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 2.16e-05,
+      "measured": 2.1640428243995196e-05,
+      "relative_deviation": 0.0018716779627405793,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_mfs_force_x_64",
+      "description": "method-of-fundamental-solutions independent reference, horizontal force relative error, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.00151,
+      "measured": 0.001505840465024568,
+      "relative_deviation": -0.0027546589241272293,
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_ellipse_reflection_64",
+      "description": "reflected-wave modulus, submerged ellipse a=1.4 b=0.7 f=2, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.09751,
+      "measured": 0.09751386944800083,
+      "relative_deviation": 3.96825761545938e-05,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_ellipse_transmission_64",
+      "description": "transmission modulus, submerged ellipse, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.995234,
+      "measured": 0.9952341660460005,
+      "relative_deviation": 1.668411654996204e-07,
+      "tolerance": 0.015,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_ellipse_haskind_x_64",
+      "description": "Haskind-Newman vs diffraction force, horizontal, ellipse, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.000797,
+      "measured": 0.0007968538145395204,
+      "relative_deviation": -0.00018341964928427789,
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "key": "dean_ellipse_haskind_z_64",
+      "description": "Haskind-Newman vs diffraction force, vertical, ellipse, 64 panels",
+      "source": "docs/marine_bem_benchmarks.md section 4.8 table 7",
+      "group": "dean",
+      "parameters": {
+        "panels": 64
+      },
+      "tier": "fast",
+      "comparison": "value",
+      "declared": 0.00199,
+      "measured": 0.001994909173404533,
+      "relative_deviation": 0.0024669213088105075,
+      "tolerance": 0.05,
+      "verdict": "PASS"
+    }
+  ],
+  "summary": {
+    "checked": 11,
+    "passed": 11,
+    "drifted": 0,
+    "drifted_keys": [],
+    "worst_relative_deviation": 1.0,
+    "verdict": "PASS"
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "commit": "ecba798"
+  },
+  "module_file": "/root/tp-agent/work/m3941/src/tensorbem/benchmarks/declared_numbers.py",
+  "registry_size": 95
+}
