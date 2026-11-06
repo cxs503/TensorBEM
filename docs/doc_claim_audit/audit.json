@@ -1,16 +1,16 @@
 {
   "counts": {
-    "artifact": 24,
-    "documents": 76,
-    "number_tokens": 8216,
-    "number_tokens_covered": 6731,
-    "pinned": 30,
+    "artifact": 25,
+    "documents": 78,
+    "number_tokens": 8665,
+    "number_tokens_covered": 7180,
+    "pinned": 31,
     "unguarded": 22,
     "unguarded_paper_level": 8
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7105263157894737,
-    "guarded_number_fraction": 0.8192551119766309
+    "documents_guarded_fraction": 0.717948717948718,
+    "guarded_number_fraction": 0.8286208886324293
   },
   "records": [
     {
@@ -258,10 +258,27 @@
       "lines": 251,
       "modules_exercised": [
         "test_doc_claim_audit.py",
-        "test_finite_depth3d_pins.py"
+        "test_finite_depth3d_pins.py",
+        "test_hydrostatic_restoring_doc_pins.py"
       ],
       "note": "generator exercised; document text not parsed",
       "number_tokens": 8,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": "docs/doc_claim_audit/audit.json",
+      "doc": "dev_report_m4741_hydrostatic_restoring_pins.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_restoring_pins"
+      ],
+      "lines": 110,
+      "modules_exercised": [
+        "test_hydrostatic_restoring_doc_pins.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 34,
       "paper_level": false,
       "reading_tests": [],
       "tier": "ARTIFACT"
@@ -300,10 +317,11 @@
       "generators": [
         "tensorbem.benchmarks.doc_claim_audit"
       ],
-      "lines": 111,
+      "lines": 113,
       "modules_exercised": [
         "test_doc_claim_audit.py",
-        "test_finite_depth3d_pins.py"
+        "test_finite_depth3d_pins.py",
+        "test_hydrostatic_restoring_doc_pins.py"
       ],
       "note": "read by 1 test file(s)",
       "number_tokens": 2,
@@ -341,7 +359,8 @@
       "lines": 128,
       "modules_exercised": [
         "test_doc_claim_audit.py",
-        "test_finite_depth3d_pins.py"
+        "test_finite_depth3d_pins.py",
+        "test_hydrostatic_restoring_doc_pins.py"
       ],
       "note": "read by 3 test file(s)",
       "number_tokens": 114,
@@ -506,11 +525,30 @@
       "generators": [],
       "lines": 137,
       "modules_exercised": [],
-      "note": "read by 1 test file(s)",
+      "note": "read by 2 test file(s)",
       "number_tokens": 80,
       "paper_level": true,
       "reading_tests": [
-        "test_hydrostatic_curved_waterplane.py"
+        "test_hydrostatic_curved_waterplane.py",
+        "test_hydrostatic_restoring_doc_pins.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/hydrostatic_restoring_doc_pins.json",
+      "doc": "hydrostatic_restoring_waterplane_curvature.md",
+      "generators": [
+        "tensorbem.benchmarks.hydrostatic_restoring_pins"
+      ],
+      "lines": 199,
+      "modules_exercised": [
+        "test_hydrostatic_restoring_doc_pins.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 415,
+      "paper_level": true,
+      "reading_tests": [
+        "test_hydrostatic_restoring_doc_pins.py"
       ],
       "tier": "PINNED"
     },
