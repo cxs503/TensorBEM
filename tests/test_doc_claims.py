@@ -29,6 +29,7 @@ from pathlib import Path
 
 import pytest
 
+import tensorbem
 from tensorbem import doc_claims
 from tensorbem.benchmarks import ursell_cylinder
 
@@ -164,11 +165,38 @@ def test_live_benchmark_reproduces_the_artifact() -> None:
 # and every document path became a FileNotFoundError, so the document-vs-code
 # gate could not run at all outside an editable checkout.
 # --------------------------------------------------------------------------
+def _imported_from(checkout: Path) -> bool:
+    """Was the imported ``tensorbem`` loaded out of ``checkout``?
+
+    Deliberately a containment test rather than a fixed parent count: under
+    ``src/`` layout the package sits two levels below the checkout, and under a
+    non-editable install it sits in ``site-packages`` — neither is this tree.
+    """
+
+    return checkout in Path(tensorbem.__file__).resolve().parents
+
+
 def test_repo_root_is_discovered_and_holds_the_documents() -> None:
     root = doc_claims.repo_root()
+    checkout = Path(__file__).resolve().parents[1]
 
-    assert root == Path(__file__).resolve().parents[1]
+    # ``repo_root()`` walks up from the *imported* package, so it can only name
+    # this checkout when the interpreter imported this tree.  A worktree that
+    # inherits another tree's editable install (``pip install -e`` somewhere
+    # else, no ``PYTHONPATH=src``) resolves to that other checkout: the
+    # discovery is correct, the identity claim is simply not testable there.
+    # main@fa868b64 was reported red by exactly this false positive (m4796).
+    if not _imported_from(checkout):
+        pytest.skip(
+            "tensorbem was imported from %s, not from this checkout (%s)"
+            % (Path(tensorbem.__file__).resolve(), checkout)
+        )
+
+    assert root == checkout
     assert doc_claims.REPO_ROOT == root
+    # Checkout-independent half of the gate: whatever root discovery returns
+    # must be a real checkout holding the documents, or the gate is blind.
+    assert doc_claims._looks_like_checkout(root)
     for marker in doc_claims.ROOT_MARKERS:
         assert (root / marker).exists(), marker
     assert doc_claims.MARINE_DOC.exists()
