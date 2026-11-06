@@ -1,0 +1,351 @@
+{
+  "generated_at": "2026-11-06T12:20:00Z",
+  "collection": "GitHub Actions REST API queries recorded through tools/ci_dispatch_triage.py; stored while the shared unauthenticated quota was exhausted, so re-running the script refreshes the same fields (run ids are left as 'unknown' where the stored snapshot did not capture them rather than being guessed)",
+  "owner": "cxs503",
+  "target": {
+    "repo": "cxs503/TensorBEM",
+    "run_id": 42152088640,
+    "head_sha": "fa868b6443a3c6eb90f75d5c2e774d3af699e42b",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "created_at": "2026-11-06T02:43:07Z",
+    "updated_at": "2026-11-06T03:12:46Z",
+    "lifetime_seconds": 1779.0,
+    "jobs": [
+      {
+        "name": "pytest",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "runner_name": "",
+        "started_at": "2026-11-06T02:43:07Z",
+        "completed_at": "2026-11-06T03:12:46Z",
+        "steps_recorded": 0,
+        "steps": []
+      }
+    ]
+  },
+  "control": {
+    "repo": "cxs503/TensorBEM",
+    "run_id": 42150435454,
+    "head_sha": "daec9eef",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-06T02:27:25Z",
+    "updated_at": "2026-11-06T03:18:43Z",
+    "lifetime_seconds": 3078.0,
+    "jobs": [
+      {
+        "name": "pytest",
+        "status": "completed",
+        "conclusion": "success",
+        "runner_name": "GitHub Actions 1000020445",
+        "started_at": "2026-11-06T02:46:22Z",
+        "completed_at": "2026-11-06T03:18:43Z",
+        "steps_recorded": 27,
+        "steps": [
+          {
+            "number": 1,
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "number": 2,
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 3,
+            "name": "Run actions/setup-python@v5",
+            "conclusion": "success"
+          },
+          {
+            "number": 4,
+            "name": "Install package and test dependencies",
+            "conclusion": "success"
+          },
+          {
+            "number": 5,
+            "name": "Run unit-disk benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 6,
+            "name": "Run cylinder added-mass benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 7,
+            "name": "Generate reproducible refinement report",
+            "conclusion": "success"
+          },
+          {
+            "number": 8,
+            "name": "Generate analytical verification report",
+            "conclusion": "success"
+          },
+          {
+            "number": 9,
+            "name": "Run sphere added-mass benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 10,
+            "name": "Run sphere velocity benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 11,
+            "name": "Generate the surface-velocity accuracy study",
+            "conclusion": "success"
+          },
+          {
+            "number": 12,
+            "name": "Generate three-dimensional verification report",
+            "conclusion": "success"
+          },
+          {
+            "number": 13,
+            "name": "Run elliptic-cylinder added-mass benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 14,
+            "name": "Run ellipsoid added-mass benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 15,
+            "name": "Run Ursell submerged-cylinder radiation benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 16,
+            "name": "Re-measure the Ursell document-claim artifact",
+            "conclusion": "success"
+          },
+          {
+            "number": 17,
+            "name": "Run rigid-body Neumann added-mass and rotational-inertia benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 18,
+            "name": "Run Dean submerged-cylinder wave-diffraction benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 19,
+            "name": "Run MacCamy-Fuchs vertical-cylinder diffraction and CHIEF benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 20,
+            "name": "Run Hulme 3-D floating-hemisphere radiation, diffraction and CHIEF benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 21,
+            "name": "Run Wang/Linton 3-D submerged-sphere wave benchmark",
+            "conclusion": "success"
+          },
+          {
+            "number": 22,
+            "name": "Generate classical benchmark study",
+            "conclusion": "success"
+          },
+          {
+            "number": 23,
+            "name": "Run test suite",
+            "conclusion": "success"
+          },
+          {
+            "number": 24,
+            "name": "Upload benchmark evidence",
+            "conclusion": "success"
+          },
+          {
+            "number": 47,
+            "name": "Post Run actions/setup-python@v5",
+            "conclusion": "success"
+          },
+          {
+            "number": 48,
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "number": 49,
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
+      }
+    ]
+  },
+  "fleet": [
+    {
+      "repo": "cxs503/TensorBEM",
+      "runs": [
+        {
+          "run_id": 42194229416,
+          "head_sha": "8341a4df",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:19:57Z"
+        },
+        {
+          "run_id": 42194206960,
+          "head_sha": "040457f3",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:19:46Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorLBM",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "c96aee72",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T10:47:48Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "51ba36ea",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:57:39Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorFEM",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "7870fbe3",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T10:03:04Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "1a7ec35c",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:51:50Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorFVM",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "a736dc7b",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:52:02Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "4b4ffb0e",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:45:45Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorDEM",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "15ba7a4d",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:19:12Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "fb4ef3da",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:18:29Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorSPH",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "6f322c3d",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T12:01:39Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "e5074ac5",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:19:30Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorDG",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "7c4906de",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T12:02:30Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "c6bd68dc",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T12:02:23Z"
+        }
+      ]
+    },
+    {
+      "repo": "cxs503/TensorCAD",
+      "runs": [
+        {
+          "run_id": "unknown",
+          "head_sha": "d88ef0c2",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T10:02:52Z"
+        },
+        {
+          "run_id": "unknown",
+          "head_sha": "2f50a3ab",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-06T09:40:04Z"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "target_runner_assigned": false,
+    "target_steps_recorded": 0,
+    "target_was_cancelled": true,
+    "control_runner_assigned": true,
+    "control_all_steps_green": true,
+    "fleet_runs_seen": 16,
+    "fleet_runs_queued": 16,
+    "fleet_repositories_with_a_queued_run": 8
+  }
+}

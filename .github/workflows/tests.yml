@@ -30,9 +30,37 @@ env:
 
 jobs:
   pytest:
-    runs-on: ci-loong64
+    # Runner pool (m4803, 2026-11-06)
+    # -------------------------------
+    # A red gate has two very different causes and this job has now produced
+    # both: failing tests, and a job that no runner ever picked up.  The second
+    # one is silent -- the run is ``cancelled`` with ``runner_name == ""`` and
+    # zero recorded steps, so it paints main red exactly like a broken test and
+    # the suite is never executed.  That is what happened to main@fa868b64 (run
+    # 42152088640): queued 02:43Z, cancelled 03:12Z, no runner, no step.  The
+    # same state covered every repository of the ``ci-loong64`` pool from
+    # 09:19Z (evidence, collected from the Actions API:
+    # ``docs/m4803/ci_dispatch_triage.json``).
+    #
+    # The default below is therefore the pool that *did* dispatch on 2026-11-06
+    # (main@daec9ee finished all 23 steps green on a GitHub-hosted runner), and
+    # the self-hosted pool stays one repository variable away -- no code change
+    # needed when it starts dispatching again:
+    #     TENSORBEM_CI_RUNNER=ci-loong64     (Settings -> Variables)
+    runs-on: ${{ vars.TENSORBEM_CI_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python (GitHub-hosted pool only)
+        # The self-hosted loong64 runner ships python 3.11 and cannot unpack
+        # actions/setup-python (its archives carry modes that runner's tar
+        # cannot apply -- "Cannot change mode to rwxr-xr-x"), which is why
+        # fa868b6 dropped this step.  Keep it where it is needed, skip it on a
+        # self-hosted label (``ci-*``).
+        if: ${{ !startsWith(vars.TENSORBEM_CI_RUNNER || '', 'ci-') }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
       - name: Install package and test dependencies
         # ``visualization`` supplies matplotlib, which the plotting tests
         # exercise (see the ordering contract above).
