@@ -1,0 +1,400 @@
+{
+  "tables": {
+    "sphere": [
+      {
+        "radius": 1.0,
+        "centre_z": -0.5,
+        "subdivisions": 2,
+        "faces": 270,
+        "volume": 3.427854057200138,
+        "volume_ref": 3.5342917352885173,
+        "volume_rel_error": -0.030115702398203492,
+        "area": 9.282503183754073,
+        "area_ref": 9.42477796076938,
+        "area_rel_error": -0.015095822692855365,
+        "waterline_radius": 0.8660254037844386,
+        "waterline_radius_ref": 0.8660254037844386,
+        "waterline_sagitta": 0.015273567428492951
+      },
+      {
+        "radius": 1.0,
+        "centre_z": -0.5,
+        "subdivisions": 3,
+        "faces": 1026,
+        "volume": 3.50724024237867,
+        "volume_ref": 3.5342917352885173,
+        "volume_rel_error": -0.007654006781542377,
+        "area": 9.388992031546309,
+        "area_ref": 9.42477796076938,
+        "area_rel_error": -0.003797005019325561,
+        "waterline_radius": 0.8660254037844386,
+        "waterline_radius_ref": 0.8660254037844386,
+        "waterline_sagitta": 0.003821862573024415
+      },
+      {
+        "radius": 1.0,
+        "centre_z": -0.5,
+        "subdivisions": 4,
+        "faces": 3986,
+        "volume": 3.5275028529303896,
+        "volume_ref": 3.5342917352885173,
+        "volume_rel_error": -0.001920860773982902,
+        "area": 9.415924733759226,
+        "area_ref": 9.42477796076938,
+        "area_rel_error": -0.0009393565606536924,
+        "waterline_radius": 0.8660254037844386,
+        "waterline_radius_ref": 0.8660254037844386,
+        "waterline_sagitta": 0.0009727871164689761
+      },
+      {
+        "radius": 1.0,
+        "centre_z": -0.5,
+        "subdivisions": 5,
+        "faces": 15682,
+        "volume": 3.5325933226714454,
+        "volume_ref": 3.5342917352885173,
+        "volume_rel_error": -0.0004805524682962581,
+        "area": 9.42256542363165,
+        "area_ref": 9.42477796076938,
+        "area_rel_error": -0.0002347574814960396,
+        "waterline_radius": 0.8660254037844386,
+        "waterline_radius_ref": 0.8660254037844386,
+        "waterline_sagitta": 0.000244526172978099
+      },
+      {
+        "radius": 2.0,
+        "centre_z": -0.75,
+        "subdivisions": 2,
+        "faces": 262,
+        "volume": 24.958995497972904,
+        "volume_ref": 25.73815231300388,
+        "volume_rel_error": -0.030272445572455342,
+        "area": 34.02043386165096,
+        "area_ref": 34.55751918948772,
+        "area_rel_error": -0.015541779052245852,
+        "waterline_radius": 1.8404639445693878,
+        "waterline_radius_ref": 1.8540496217739157,
+        "waterline_sagitta": 0.02806954128635364
+      },
+      {
+        "radius": 2.0,
+        "centre_z": -0.75,
+        "subdivisions": 3,
+        "faces": 962,
+        "volume": 25.540093975145457,
+        "volume_ref": 25.73815231300388,
+        "volume_rel_error": -0.00769512649741988,
+        "area": 34.41864529300989,
+        "area_ref": 34.55751918948772,
+        "area_rel_error": -0.0040186303801598156,
+        "waterline_radius": 1.8540432717295234,
+        "waterline_radius_ref": 1.8540496217739157,
+        "waterline_sagitta": 0.006598700815682479
+      },
+      {
+        "radius": 2.0,
+        "centre_z": -0.75,
+        "subdivisions": 4,
+        "faces": 3686,
+        "volume": 25.688448003778344,
+        "volume_ref": 25.73815231300388,
+        "volume_rel_error": -0.00193115296782298,
+        "area": 34.52310595363739,
+        "area_ref": 34.55751918948772,
+        "area_rel_error": -0.0009958248351576993,
+        "waterline_radius": 1.8540464057177026,
+        "waterline_radius_ref": 1.8540496217739157,
+        "waterline_sagitta": 0.0017776123987320869
+      },
+      {
+        "radius": 2.0,
+        "centre_z": -0.75,
+        "subdivisions": 5,
+        "faces": 14442,
+        "volume": 25.7257189083696,
+        "volume_ref": 25.73815231300388,
+        "volume_rel_error": -0.00048307292936478063,
+        "area": 34.54895049792185,
+        "area_ref": 34.55751918948772,
+        "area_rel_error": -0.0002479544760978225,
+        "waterline_radius": 1.8540480034636986,
+        "waterline_radius_ref": 1.8540496217739157,
+        "waterline_sagitta": 0.00044696927484944027
+      }
+    ],
+    "modes": [
+      {
+        "mode": 0,
+        "mu": 0.2542231795520339,
+        "norm_closed_form": 3.101230715003841,
+        "norm_quadrature": 3.101230715003837,
+        "norm_abs_diff": 3.9968028886505635e-15,
+        "max_cross_orthogonality": 3.953781746446339e-14,
+        "dispersion_residual": 4.311366078961025e-14
+      },
+      {
+        "mode": 1,
+        "mu": 0.753278660564821,
+        "norm_closed_form": 3.2011101874222385,
+        "norm_quadrature": 3.201110187422229,
+        "norm_abs_diff": 9.325873406851315e-15,
+        "max_cross_orthogonality": 2.3266111259800937e-14,
+        "dispersion_residual": 7.771561172376096e-15
+      },
+      {
+        "mode": 2,
+        "mu": 1.236327038291166,
+        "norm_closed_form": 3.297878025523877,
+        "norm_quadrature": 3.2978780255238602,
+        "norm_abs_diff": 1.687538997430238e-14,
+        "max_cross_orthogonality": 6.061817714453355e-14,
+        "dispersion_residual": 3.312165356798384e-14
+      },
+      {
+        "mode": 3,
+        "mu": 1.7076903601814806,
+        "norm_closed_form": 3.3622654783649377,
+        "norm_quadrature": 3.362265478364918,
+        "norm_abs_diff": 1.9539925233402755e-14,
+        "max_cross_orthogonality": 6.061817714453355e-14,
+        "dispersion_residual": 6.198745220823791e-14
+      }
+    ],
+    "dispersion": [
+      {
+        "mode": 0,
+        "mu_bracketed": 0.32635539586367207,
+        "mu_polished": 0.32635539586366913,
+        "residual_before": 4.163336342344337e-14,
+        "residual_after": 0.0
+      },
+      {
+        "mode": 1,
+        "mu_bracketed": 0.9286815381307962,
+        "mu_polished": 0.9286815381307929,
+        "residual_before": 3.70536934468646e-14,
+        "residual_after": 6.938893903907228e-16
+      },
+      {
+        "mode": 2,
+        "mu_bracketed": 1.48860806878605,
+        "mu_polished": 1.4886080687860517,
+        "residual_before": 2.3314683517128287e-14,
+        "residual_after": 8.326672684688674e-16
+      },
+      {
+        "mode": 3,
+        "mu_bracketed": 2.031881068108214,
+        "mu_polished": 2.0318810681082122,
+        "residual_before": 2.7200464103316335e-14,
+        "residual_after": 3.191891195797325e-15
+      },
+      {
+        "mode": 4,
+        "mu_bracketed": 2.5676545583253056,
+        "mu_polished": 2.5676545583253105,
+        "residual_before": 1.021405182655144e-13,
+        "residual_after": 3.885780586188048e-15
+      },
+      {
+        "mode": 5,
+        "mu_bracketed": 3.099493687100696,
+        "mu_polished": 3.099493687100709,
+        "residual_before": 3.164135620181696e-13,
+        "residual_after": 2.3592239273284576e-15
+      }
+    ],
+    "deep": [
+      {
+        "depth": 1.0,
+        "error": 0.7885058916666724
+      },
+      {
+        "depth": 5.0,
+        "error": 0.03380510661227713
+      },
+      {
+        "depth": 10.0,
+        "error": 0.002859951958898287
+      },
+      {
+        "depth": 20.0,
+        "error": 0.0001875614508761208
+      },
+      {
+        "depth": 40.0,
+        "error": 1.901881932870485e-05
+      },
+      {
+        "depth": 80.0,
+        "error": 2.1806378333068367e-06
+      }
+    ],
+    "jump": [
+      {
+        "wavenumber": 0.2,
+        "offset": 0.01,
+        "jump_real": 1.0004135160880907,
+        "jump_imag": 1.243254427901741e-05,
+        "jump_rel_error": 0.00041351616534268665
+      },
+      {
+        "wavenumber": 0.2,
+        "offset": 0.02,
+        "jump_real": 1.0008230699448455,
+        "jump_imag": 2.4865051281176137e-05,
+        "jump_rel_error": 0.0008230702537266321
+      },
+      {
+        "wavenumber": 0.2,
+        "offset": 0.05,
+        "jump_real": 1.0020283229401379,
+        "jump_imag": 6.216197586048425e-05,
+        "jump_rel_error": 0.0020283248682826382
+      },
+      {
+        "wavenumber": 0.5,
+        "offset": 0.01,
+        "jump_real": 1.002786782966456,
+        "jump_imag": 0.000460670921502343,
+        "jump_rel_error": 0.0027868887804187725
+      },
+      {
+        "wavenumber": 0.5,
+        "offset": 0.02,
+        "jump_real": 1.0055487577752578,
+        "jump_imag": 0.0009213332358924131,
+        "jump_rel_error": 0.005549179860585118
+      },
+      {
+        "wavenumber": 0.5,
+        "offset": 0.05,
+        "jump_real": 1.013687678468517,
+        "jump_imag": 0.002303182469024556,
+        "jump_rel_error": 0.013690294975924555
+      },
+      {
+        "wavenumber": 1.0,
+        "offset": 0.01,
+        "jump_real": 1.010748821031913,
+        "jump_imag": 0.006079969489171111,
+        "jump_rel_error": 0.010767107323141678
+      },
+      {
+        "wavenumber": 1.0,
+        "offset": 0.02,
+        "jump_real": 1.0213978250563798,
+        "jump_imag": 0.012159489737482487,
+        "jump_rel_error": 0.021470200358570946
+      },
+      {
+        "wavenumber": 1.0,
+        "offset": 0.05,
+        "jump_real": 1.0527475766905996,
+        "jump_imag": 0.030390863408945812,
+        "jump_rel_error": 0.05318614917148956
+      },
+      {
+        "wavenumber": 2.0,
+        "offset": 0.01,
+        "jump_real": 1.0075766643142412,
+        "jump_imag": 0.041791549481343615,
+        "jump_rel_error": 0.008442991982523962
+      },
+      {
+        "wavenumber": 2.0,
+        "offset": 0.02,
+        "jump_real": 1.0147551622094793,
+        "jump_imag": 0.08357149550077775,
+        "jump_rel_error": 0.01819066686501447
+      },
+      {
+        "wavenumber": 2.0,
+        "offset": 0.05,
+        "jump_real": 1.0339208996656544,
+        "jump_imag": 0.20872575621940453,
+        "jump_rel_error": 0.05477906126107679
+      }
+    ],
+    "conditioning": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "single_layer_condition": 18.62149308405364,
+        "double_layer_condition": 2.1654320331292203,
+        "method": "direct"
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "single_layer_condition": 37.56559992086565,
+        "double_layer_condition": 2.0832484058256044,
+        "method": "direct"
+      }
+    ]
+  },
+  "airy": {
+    "nu": 0.7,
+    "amplitude": 1.7,
+    "free_surface_residual": 8.881784197001252e-16,
+    "magnitude_rel_error": 1.6166549887897643e-16,
+    "depth_decay_table": [
+      {
+        "z": 0.0,
+        "abs_phi": 6.362975326056199,
+        "analytic": 6.362975326056199,
+        "rel_error": 0.0
+      },
+      {
+        "z": -0.4,
+        "abs_phi": 4.809033298717219,
+        "analytic": 4.809033298717219,
+        "rel_error": 0.0
+      },
+      {
+        "z": -1.2,
+        "abs_phi": 2.7469634085780408,
+        "analytic": 2.746963408578041,
+        "rel_error": 1.6166549887897643e-16
+      },
+      {
+        "z": -2.5,
+        "abs_phi": 1.1057193144866677,
+        "analytic": 1.1057193144866677,
+        "rel_error": 0.0
+      }
+    ]
+  },
+  "api_scan": {
+    "public_functions": 735,
+    "modules": 114,
+    "unreferenced_total": 133,
+    "unreferenced_maxline": [
+      "tensorbem.capability_evidence.module_reference_index",
+      "tensorbem.capability_evidence.render_document_block",
+      "tensorbem.capability_evidence.write_document",
+      "tensorbem.doc_claims.ursell_section",
+      "tensorbem.doc_claims.write_artifact",
+      "tensorbem.finite_depth3d_quadrature.deep_water_amplitude_coefficient",
+      "tensorbem.finite_depth_diffraction.excitation_reference_limit",
+      "tensorbem.finite_depth_solver.assemble_indirect_matrix",
+      "tensorbem.free_surface_solver.assemble_indirect_matrix",
+      "tensorbem.symmetry3d.assemble_symmetric_operators_3d"
+    ],
+    "unreferenced_benchmarks": 123,
+    "pinned_in_this_mission": [
+      "tensorbem.geometry3d.floating_sphere_hull_mesh",
+      "tensorbem.free_surface_solver3d.incident_airy_wave_3d",
+      "tensorbem.free_surface_solver3d.rigid_body_normals_3d",
+      "tensorbem.finite_depth.mode_norms",
+      "tensorbem.finite_depth3d.vertical_mode",
+      "tensorbem.finite_depth3d.polish_evanescent_roots",
+      "tensorbem.finite_depth3d.deep_water_limit_error",
+      "tensorbem.helmholtz.assemble_helmholtz_double_layer",
+      "tensorbem.helmholtz.default_chief_points",
+      "tensorbem.conditioning.condition_number_trend"
+    ],
+    "mainline_unreferenced_after": 10
+  },
+  "figure": "/root/tp-agent/work/m4757/outputs/m4757/analytic_pins.png"
+}
