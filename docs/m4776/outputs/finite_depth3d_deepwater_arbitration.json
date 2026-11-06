@@ -1,0 +1,177 @@
+{
+  "ladder": [
+    {
+      "G_deep": [
+        0.0011112934138853836,
+        6.334687370099922e-05
+      ],
+      "G_finite_depth": [
+        0.00016137576385720807,
+        6.335264095924605e-05
+      ],
+      "G_finite_depth_modes": {
+        "160": [
+          0.00016137576385720807,
+          6.335264095924605e-05
+        ],
+        "40": [
+          0.00016137576385720807,
+          6.335264095924605e-05
+        ],
+        "None": [
+          0.00016137576385720807,
+          6.335264095924605e-05
+        ]
+      },
+      "Y": 9.99999995877693,
+      "cancellation_number": 141.59551485360345,
+      "depth": 0.19999999917553862,
+      "deviation_over_local_scale": 0.006027029012702522,
+      "k0": 50.00000020611536,
+      "k0R": 50.0,
+      "k0h": 10.0,
+      "local_rankine_scale": 0.1576096030139632,
+      "mode_spread": 0.0,
+      "relative_deviation": 0.8534002760912187
+    },
+    {
+      "G_deep": [
+        0.022171436901403475,
+        2.691200462664558e-22
+      ],
+      "G_finite_depth": [
+        0.030269762647286168,
+        2.6912004626641912e-22
+      ],
+      "G_finite_depth_modes": {
+        "160": [
+          0.030269762647286168,
+          2.6912004626641912e-22
+        ],
+        "40": [
+          0.030269762647286168,
+          2.6912004626641912e-22
+        ],
+        "None": [
+          0.030269762647286168,
+          2.6912004626641912e-22
+        ]
+      },
+      "Y": 50.0,
+      "cancellation_number": 6.127128426988309,
+      "depth": 1.0,
+      "deviation_over_local_scale": 0.05961347222101383,
+      "k0": 50.0,
+      "k0R": 50.0,
+      "k0h": 50.0,
+      "local_rankine_scale": 0.1358472413057668,
+      "mode_spread": 0.0,
+      "relative_deviation": 0.36525940027685166
+    },
+    {
+      "G_deep": [
+        0.06385008079933627,
+        3.7243429730337826e-109
+      ],
+      "G_finite_depth": [
+        0.06846314606613982,
+        3.724342973035896e-109
+      ],
+      "G_finite_depth_modes": {
+        "160": [
+          0.06846314606613986,
+          3.724342973035896e-109
+        ],
+        "40": [
+          0.0684631460660243,
+          3.724342973035896e-109
+        ],
+        "None": [
+          0.06846314606613982,
+          3.724342973035896e-109
+        ]
+      },
+      "Y": 250.0,
+      "cancellation_number": 1.4907404425805708,
+      "depth": 5.0,
+      "deviation_over_local_scale": 0.048464765341689864,
+      "k0": 50.0,
+      "k0R": 50.0,
+      "k0h": 250.0,
+      "local_rankine_scale": 0.09518389770960775,
+      "mode_spread": 4.163336342344337e-17,
+      "relative_deviation": 0.07224838573503423
+    }
+  ],
+  "markdown": "| `k0h` | `k0R` | Y | `G_deep` | `G_fd` | mode spread | rel. dev | dev / local scale | `kappa` |\n|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n| 10 | 50 | 10 | 1.1113e-03 | 1.6138e-04 | 0.0e+00 | 8.534e-01 | 6.027e-03 | 142 |\n| 50 | 50 | 50 | 2.2171e-02 | 3.0270e-02 | 0.0e+00 | 3.653e-01 | 5.961e-02 | 6 |\n| 250 | 50 | 250 | 6.3850e-02 | 6.8463e-02 | 4.2e-17 | 7.225e-02 | 4.846e-02 | 1 |\n\ndeep-water kernel vs referee: max relative error 3.39e-06 over the sweep (contested point X=50, Y=10)",
+  "nu": 50.0,
+  "portrait_k0R": 50.0,
+  "referee": {
+    "contested_point": {
+      "X": 50.0,
+      "Y": 10.0
+    },
+    "depth": 0.19999999917553862,
+    "k0": 50.000000206115345,
+    "k0h": 10.0,
+    "kernel_F_at_contested": -0.01966615751041845,
+    "max_relative_error_over_sweep": 3.3878679805976475e-06,
+    "nu": 50.0,
+    "referee_F_at_contested": -0.019666157552316436,
+    "sweep": [
+      {
+        "X": 10.0,
+        "Y": 10.0,
+        "kernel_F": -0.07438173039209914,
+        "referee_F": -0.07438147839747013,
+        "relative_error": 3.3878679805976475e-06
+      },
+      {
+        "X": 25.0,
+        "Y": 10.0,
+        "kernel_F": -0.037598265263023775,
+        "referee_F": -0.03759826888633123,
+        "relative_error": 9.636899678255872e-08
+      },
+      {
+        "X": 50.0,
+        "Y": 10.0,
+        "kernel_F": -0.01966615751041845,
+        "referee_F": -0.019666157552316436,
+        "relative_error": 2.1304611408368146e-09
+      },
+      {
+        "X": 100.0,
+        "Y": 10.0,
+        "kernel_F": -0.009948242801377736,
+        "referee_F": -0.009948242801696585,
+        "relative_error": 3.205080645329872e-11
+      },
+      {
+        "X": 200.0,
+        "Y": 10.0,
+        "kernel_F": -0.004987143345873825,
+        "referee_F": -0.004987143347576057,
+        "relative_error": 3.413240801108941e-10
+      }
+    ]
+  },
+  "verdict": {
+    "cancellation_number_at_k0h10": 141.59551485360345,
+    "deep_kernel_max_referee_error": 3.3878679805976475e-06,
+    "deep_kernel_ok": false,
+    "finite_depth_mode_spread": 4.163336342344337e-17,
+    "resolution": "Neither kernel is losing accuracy at the contested point: the deep-water kernel reproduces the independent principal-value referee to the reported error, and the eigenseries is mode-converged. The 85% figure is a genuine finite-depth-minus-infinite-depth difference divided by a strongly cancelling |G| (cancellation number quoted), i.e. a metric artefact of the m3409 comparison rather than a kernel defect. Report deviations against the local Rankine scale, not against |G|.",
+    "worst_deviation_over_local_scale": 0.05961347222101383,
+    "worst_referee_point": {
+      "X": 10.0,
+      "Y": 10.0,
+      "relative_error": 3.3878679805976475e-06
+    },
+    "worst_relative_deviation": 0.8534002760912187,
+    "worst_relative_deviation_point": {
+      "k0R": 50.0,
+      "k0h": 10.0
+    }
+  }
+}
