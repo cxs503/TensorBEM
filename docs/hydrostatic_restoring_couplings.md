@@ -102,10 +102,18 @@ LCF 扫描（barge 2×1×1，TCF=0）：耦合强度随 LCF 线性增长，pitch
 2. **`mass` 形参仍未被消费**：恢复矩阵在平衡态取值（$m=\rho\nabla$），这与旧的
    $GM=KB+BM-KG$ 约定一致；真实非平衡态的「回复力」不是伪静力问题。已在 docstring 显式声明，
    未改动调用方（有调用方传 `mass=0.0`，改成消费 `mass` 会静默改变其数值）。
-3. **未验证/未做**：三维自由液面算例（浮球、Hulme、Wang–Linton）与弧度曲壁船体的耦合项
-   未用能量 Hessian 复核（只扫了平面壁、矩形水线面的驳船族；弧形水线面下能量 Hessian 需要
-   曲面裁剪，超出本单范围）。yaw 耦合按铅垂力无矩的物理判据置零，并用能量 Hessian 在本算例上
-   验证（残差 ~1e-9 量级），但**没有**在非平衡（$x_G\ne x_B$）构型上单独钉桩。
+3. **弧壁欠账已结清（m4750），另两条仍在**：本单原先只扫了平面壁、矩形水线面的驳船族，并
+   推测「弧形水线面下能量 Hessian 需要曲面裁剪」。这个推测是错的——既有参考实现逐**三角形**
+   裁剪 `z <= 0` 再积 `∮ (z²/2) n_z dA`，与面元曲率无关。m4750 用它加上精确几何闭式，
+   在同一次求解里复核了三种光滑弧壁船体（偏心浮球给出非零的 heave–roll/heave–pitch 耦合、
+   偏航半椭球给出非零的 roll–pitch 耦合、两者叠加时六个元全非零），
+   实现与能量 Hessian 在公式级一致、与精确几何的偏差随加密按 O(h²) 下降，
+   见 `dev_report_m4750_curved_waterplane_restoring.md` 与
+   `src/tensorbem/benchmarks/hydrostatic_curved_waterplane.py`（护栏
+   `tests/test_hydrostatic_curved_waterplane.py`）。yaw 耦合按铅垂力无矩的物理判据置零，
+   并用能量 Hessian 在本算例上验证，但**没有**在非平衡（$x_G\ne x_B$）构型上单独钉桩；
+   水线面与船体相切（折角、方尾）的构型、以及三维自由液面绕射算例（浮球、Hulme、Wang–Linton）
+   的耦合项仍未复核——这两条才是本单真正的未做部分。
 4. **适用范围**：wall-sided 假设未强加，但所有数值判据都在 $z=0$ 处有竖直侧壁的驳船上取得；
    外飘（flare）船体的水线面仍按 $z=0$ 截面处理，与既有 `compute_waterplane_properties` 一致。
 

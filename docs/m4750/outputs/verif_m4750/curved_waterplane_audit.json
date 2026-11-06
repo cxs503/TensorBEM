@@ -1,0 +1,412 @@
+{
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "criterion": {
+    "code_vs_energy_rel": 1e-06,
+    "code_vs_closed_form_rel": 0.03
+  },
+  "cases": [
+    {
+      "key": "eccentric_sphere",
+      "description": "sphere R=1, centre (0.35, -0.20, -0.50): curved wall, circular curved waterplane displaced from the origin",
+      "panels": 3986,
+      "displaced_volume": 3.527502852930389,
+      "waterplane_area": 2.3513728931403417,
+      "waterplane_center": [
+        0.3500000000000001,
+        -0.2
+      ],
+      "center_of_buoyancy": [
+        0.3500000000000003,
+        -0.19999999999999996,
+        -0.6247601815896797
+      ],
+      "closed_form_waterplane_area": 2.356194490192345,
+      "closed_form_displaced_volume": 3.534291735288517,
+      "rows": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "symbol": "C[2,2]",
+          "code": 23635.5682570776,
+          "energy": 23635.56859563687,
+          "closed_form": 23684.034064675878,
+          "relerr_code_vs_energy": 1.4324143155678294e-08,
+          "relerr_code_vs_closed_form": 0.002046349345129617
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "symbol": "C[2,3]",
+          "code": -4727.1136514155205,
+          "energy": -4727.113901026314,
+          "closed_form": -4736.806812935175,
+          "relerr_code_vs_energy": 5.280405736839672e-08,
+          "relerr_code_vs_closed_form": 0.0020463493451294253
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "symbol": "C[2,4]",
+          "code": -8272.448889977162,
+          "energy": -8272.449213109212,
+          "closed_form": -8289.411922636556,
+          "relerr_code_vs_energy": 3.9061231011412365e-08,
+          "relerr_code_vs_closed_form": 0.0020463493451292883
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "symbol": "C[3,3]",
+          "code": 943.314358172679,
+          "energy": 943.3128070668317,
+          "closed_form": 947.3613625870348,
+          "relerr_code_vs_energy": 1.6443175960972766e-06,
+          "relerr_code_vs_closed_form": 0.004271869820935404
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "symbol": "C[3,4]",
+          "code": 1654.4897779954317,
+          "energy": 1654.489938118786,
+          "closed_form": 1657.8823845273116,
+          "relerr_code_vs_energy": 9.67810989195294e-08,
+          "relerr_code_vs_closed_form": 0.0020463493451299184
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "symbol": "C[4,4]",
+          "code": 2895.22283543516,
+          "energy": 2895.223587984219,
+          "closed_form": 2901.294172922795,
+          "relerr_code_vs_energy": 2.5992778667132426e-07,
+          "relerr_code_vs_closed_form": 0.0020926307798421768
+        }
+      ],
+      "null_block_max_norm": 0.0,
+      "null_block_relative": 0.0,
+      "symmetry_residual": 0.0
+    },
+    {
+      "key": "yawed_spheroid",
+      "description": "half-ellipsoid (1.4, 0.8, 0.6) yawed 30\u00b0: elliptical curved waterplane with non-zero product moment, CG on the waterplane",
+      "panels": 1024,
+      "displaced_volume": 1.3991724083395418,
+      "waterplane_area": 3.512934309411452,
+      "waterplane_center": [
+        6.584138588755025e-19,
+        1.316827717751005e-18
+      ],
+      "center_of_buoyancy": [
+        -6.493563017162994e-17,
+        2.4309876993781914e-16,
+        -0.22453038288553523
+      ],
+      "closed_form_waterplane_area": 3.5185837720205684,
+      "closed_form_displaced_volume": 1.4074335088082275,
+      "rows": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "symbol": "C[2,2]",
+          "code": 35311.370176524564,
+          "energy": 35311.37010668317,
+          "closed_form": 35368.15753658264,
+          "relerr_code_vs_energy": 1.9778726528761913e-09,
+          "relerr_code_vs_closed_form": 0.0016056069643814901
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "symbol": "C[2,3]",
+          "code": 4.649899100021374e-14,
+          "energy": 0.0,
+          "closed_form": 0.0,
+          "relerr_code_vs_energy": 1.3147134099964932e-09,
+          "relerr_code_vs_closed_form": 1.3147134099964932e-09
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "symbol": "C[2,4]",
+          "code": -2.324949550010687e-14,
+          "energy": 0.0,
+          "closed_form": -0.0,
+          "relerr_code_vs_energy": 6.573567049982466e-10,
+          "relerr_code_vs_closed_form": 6.573567049982466e-10
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "symbol": "C[3,3]",
+          "code": 5391.417272334684,
+          "energy": 5391.417289501987,
+          "closed_form": 5393.644024328853,
+          "relerr_code_vs_energy": 3.1841912331564193e-09,
+          "relerr_code_vs_closed_form": 0.0004128474152401629
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "symbol": "C[3,4]",
+          "code": -5037.69074434444,
+          "energy": -5037.690863218813,
+          "closed_form": -5053.90428043555,
+          "relerr_code_vs_energy": 2.35969964833982e-08,
+          "relerr_code_vs_closed_form": 0.003208120928185319
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "symbol": "C[4,4]",
+          "code": 11208.44148701738,
+          "energy": 11208.441628696164,
+          "closed_form": 11229.39001786499,
+          "relerr_code_vs_energy": 1.264036413928064e-08,
+          "relerr_code_vs_closed_form": 0.0018655092408653904
+        }
+      ],
+      "null_block_max_norm": 0.0,
+      "null_block_relative": 0.0,
+      "symmetry_residual": 0.0
+    },
+    {
+      "key": "eccentric_yawed_spheroid",
+      "description": "half-ellipsoid (1.4, 0.8, 0.6) yawed 30\u00b0 and shifted (0.25, -0.15): all six heave/roll/pitch entries non-zero",
+      "panels": 1024,
+      "displaced_volume": 1.3991724083395418,
+      "waterplane_area": 3.512934309411452,
+      "waterplane_center": [
+        0.25,
+        -0.14999999999999997
+      ],
+      "center_of_buoyancy": [
+        0.2500000000000002,
+        -0.1500000000000001,
+        -0.2245303828855352
+      ],
+      "closed_form_waterplane_area": 3.5185837720205684,
+      "closed_form_displaced_volume": 1.4074335088082275,
+      "rows": [
+        {
+          "row": "heave",
+          "column": "heave",
+          "symbol": "C[2,2]",
+          "code": 35311.370176524564,
+          "energy": 35311.37010668317,
+          "closed_form": 35368.15753658264,
+          "relerr_code_vs_energy": 1.9778726528761913e-09,
+          "relerr_code_vs_closed_form": 0.0016056069643814901
+        },
+        {
+          "row": "heave",
+          "column": "roll",
+          "symbol": "C[2,3]",
+          "code": -5296.705526478683,
+          "energy": -5296.705535329238,
+          "closed_form": -5305.223630487397,
+          "relerr_code_vs_energy": 1.6709546752019571e-09,
+          "relerr_code_vs_closed_form": 0.0016056069643818327
+        },
+        {
+          "row": "heave",
+          "column": "pitch",
+          "symbol": "C[2,4]",
+          "code": -8827.842544131141,
+          "energy": -8827.84258067204,
+          "closed_form": -8842.03938414566,
+          "relerr_code_vs_energy": 4.1392785685113824e-09,
+          "relerr_code_vs_closed_form": 0.0016056069643814901
+        },
+        {
+          "row": "roll",
+          "column": "roll",
+          "symbol": "C[3,3]",
+          "code": 6185.923101306484,
+          "energy": 6185.923200519028,
+          "closed_form": 6189.427568901964,
+          "relerr_code_vs_energy": 1.603843775812514e-08,
+          "relerr_code_vs_closed_form": 0.0005662022144161228
+        },
+        {
+          "row": "roll",
+          "column": "pitch",
+          "symbol": "C[3,4]",
+          "code": -3713.5143627247667,
+          "energy": -3713.514425385256,
+          "closed_form": -3727.5983728137016,
+          "relerr_code_vs_energy": 1.687363560299983e-08,
+          "relerr_code_vs_closed_form": 0.0037783067488314052
+        },
+        {
+          "row": "pitch",
+          "column": "pitch",
+          "symbol": "C[4,4]",
+          "code": 13415.402123050164,
+          "energy": 13415.402338523563,
+          "closed_form": 13439.899863901403,
+          "relerr_code_vs_energy": 1.6061642719062558e-08,
+          "relerr_code_vs_closed_form": 0.0018227621559173807
+        }
+      ],
+      "null_block_max_norm": 0.0,
+      "null_block_relative": 0.0,
+      "symmetry_residual": 0.0
+    }
+  ],
+  "convergence": {
+    "levels": {
+      "eccentric_sphere": [
+        {
+          "subdivisions": 2,
+          "panels": 270,
+          "worst_relerr_vs_closed_form": 0.029685396363779495,
+          "worst_relerr_vs_energy": 1.2943207074704833e-06,
+          "volume_relerr_vs_closed_form": 0.030115702398203416
+        },
+        {
+          "subdivisions": 3,
+          "panels": 1026,
+          "worst_relerr_vs_closed_form": 0.01054709364373411,
+          "worst_relerr_vs_energy": 1.2936554433155078e-07,
+          "volume_relerr_vs_closed_form": 0.0076540067815423305
+        },
+        {
+          "subdivisions": 4,
+          "panels": 3986,
+          "worst_relerr_vs_closed_form": 0.004271869820935404,
+          "worst_relerr_vs_energy": 1.6443175960972766e-06,
+          "volume_relerr_vs_closed_form": 0.0019208607739829066
+        }
+      ],
+      "yawed_spheroid": [
+        {
+          "subdivisions": 2,
+          "panels": 64,
+          "worst_relerr_vs_closed_form": 0.05023098901134319,
+          "worst_relerr_vs_energy": 0.08035959860506259,
+          "volume_relerr_vs_closed_form": 0.08858418942396103
+        },
+        {
+          "subdivisions": 3,
+          "panels": 256,
+          "worst_relerr_vs_closed_form": 0.012776979769051906,
+          "worst_relerr_vs_energy": 3.352845126338578e-08,
+          "volume_relerr_vs_closed_form": 0.02320230423317377
+        },
+        {
+          "subdivisions": 4,
+          "panels": 1024,
+          "worst_relerr_vs_closed_form": 0.003208120928185319,
+          "worst_relerr_vs_energy": 2.35969964833982e-08,
+          "volume_relerr_vs_closed_form": 0.005869620423973648
+        }
+      ],
+      "eccentric_yawed_spheroid": [
+        {
+          "subdivisions": 2,
+          "panels": 64,
+          "worst_relerr_vs_closed_form": 0.059028798585098,
+          "worst_relerr_vs_energy": 2.074917827846859e-08,
+          "volume_relerr_vs_closed_form": 0.0885841894239612
+        },
+        {
+          "subdivisions": 3,
+          "panels": 256,
+          "worst_relerr_vs_closed_form": 0.015041275889824538,
+          "worst_relerr_vs_energy": 1.966836841242704e-08,
+          "volume_relerr_vs_closed_form": 0.023202304233173928
+        },
+        {
+          "subdivisions": 4,
+          "panels": 1024,
+          "worst_relerr_vs_closed_form": 0.0037783067488314052,
+          "worst_relerr_vs_energy": 1.687363560299983e-08,
+          "volume_relerr_vs_closed_form": 0.005869620423973648
+        }
+      ]
+    },
+    "observed_orders": {
+      "eccentric_sphere": 1.3984068937759517,
+      "yawed_spheroid": 1.984388625723115,
+      "eccentric_yawed_spheroid": 1.9828036197031076
+    }
+  },
+  "fd_steps": {
+    "series": {
+      "eccentric_sphere": [
+        {
+          "step": 0.0004,
+          "worst_relative": 0.0007550992712425987
+        },
+        {
+          "step": 0.0002,
+          "worst_relative": 0.0003780870141205851
+        },
+        {
+          "step": 0.0001,
+          "worst_relative": 0.00018825740401977905
+        },
+        {
+          "step": 5e-05,
+          "worst_relative": 9.765339744645259e-05
+        },
+        {
+          "step": 2.5e-05,
+          "worst_relative": 5.4466135069206636e-05
+        }
+      ],
+      "yawed_spheroid": [
+        {
+          "step": 0.0004,
+          "worst_relative": 4.2989741261925774e-05
+        },
+        {
+          "step": 0.0002,
+          "worst_relative": 2.1463144514869812e-05
+        },
+        {
+          "step": 0.0001,
+          "worst_relative": 1.0719658340415276e-05
+        },
+        {
+          "step": 5e-05,
+          "worst_relative": 5.353079503826154e-06
+        },
+        {
+          "step": 2.5e-05,
+          "worst_relative": 2.590825887023493e-06
+        }
+      ],
+      "eccentric_yawed_spheroid": [
+        {
+          "step": 0.0004,
+          "worst_relative": 4.991341704622586e-05
+        },
+        {
+          "step": 0.0002,
+          "worst_relative": 2.4923729806674493e-05
+        },
+        {
+          "step": 0.0001,
+          "worst_relative": 1.245327257904732e-05
+        },
+        {
+          "step": 5e-05,
+          "worst_relative": 6.213951070025415e-06
+        },
+        {
+          "step": 2.5e-05,
+          "worst_relative": 3.0422747932802417e-06
+        }
+      ]
+    },
+    "fitted_orders": {
+      "eccentric_sphere": 0.9483087307346006,
+      "yawed_spheroid": 1.0131271144594944,
+      "eccentric_yawed_spheroid": 1.0090513244906612
+    }
+  }
+}
