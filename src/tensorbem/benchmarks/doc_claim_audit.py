@@ -50,6 +50,13 @@ Usage::
 
 ``--check`` exits non-zero when the ``UNGUARDED`` set grew beyond the recorded
 baseline, which is what ``tests/test_doc_claim_audit.py`` gates on.
+
+``--check-artifacts`` answers the *other* half of the same question: the audit's
+own published artifacts (``docs/doc_claim_audit/audit.json`` and
+``docs/doc_claim_audit.md``) quote numbers to a reader, so they must have been
+generated from the documents *as they are now*.  They are written by
+:func:`write_artifacts`, which iterates to a fixed point because the audit
+measures its own markdown (that file is itself one of the audited documents).
 """
 
 from __future__ import annotations
@@ -248,6 +255,115 @@ def check(report: dict, baseline: dict) -> list[str]:
     return failures
 
 
+#: Published artifacts of the audit itself; both quote numbers to a reader.
+JSON_PATH = DOCS / "doc_claim_audit" / "audit.json"
+MARKDOWN_PATH = DOCS / "doc_claim_audit.md"
+
+#: Record fields whose drift changes a published number or a published tier.
+DRIFT_FIELDS = ("tier", "paper_level", "number_tokens", "lines")
+
+
+def artifact_drift(
+    report: dict,
+    json_path: Path | None = None,
+    markdown_path: Path | None = None,
+) -> list[str]:
+    """Compare the live audit with the artifacts committed in the tree.
+
+    Returns a list of human-readable failures; an empty list means the
+    committed ``audit.json`` and ``doc_claim_audit.md`` describe the current
+    documents.  A document edited without regenerating the audit then shows up
+    here as a per-record or per-total mismatch, instead of silently rotating
+    the published coverage number.
+    """
+    json_path = JSON_PATH if json_path is None else json_path
+    markdown_path = MARKDOWN_PATH if markdown_path is None else markdown_path
+    failures: list[str] = []
+
+    if not json_path.exists():
+        failures.append(f"missing audit json: {json_path}")
+    else:
+        committed = json.loads(json_path.read_text(encoding="utf-8"))
+        if committed.get("schema") != SCHEMA:
+            failures.append(
+                f"stale audit json: schema {committed.get('schema')!r} != {SCHEMA!r}"
+            )
+        current = {r["doc"]: r for r in report["records"]}
+        previous = {r["doc"]: r for r in committed.get("records", [])}
+        for doc in sorted(set(previous) - set(current)):
+            failures.append(f"stale audit json: {doc} is no longer audited")
+        for doc in sorted(set(current) - set(previous)):
+            failures.append(f"stale audit json: {doc} is missing from the artifact")
+        for doc in sorted(set(current) & set(previous)):
+            for field in DRIFT_FIELDS:
+                if current[doc].get(field) != previous[doc].get(field):
+                    failures.append(
+                        f"stale audit json: {doc} {field} "
+                        f"{previous[doc].get(field)!r} -> {current[doc].get(field)!r}"
+                    )
+        if committed.get("counts") != report["counts"]:
+            failures.append(
+                f"stale audit json: counts {committed.get('counts')} -> {report['counts']}"
+            )
+        if committed.get("coverage") != report["coverage"]:
+            failures.append(
+                "stale audit json: coverage "
+                f"{committed.get('coverage')} -> {report['coverage']}"
+            )
+
+    if not markdown_path.exists():
+        failures.append(f"missing audit markdown: {markdown_path}")
+    elif markdown_path.read_text(encoding="utf-8") != render_markdown(report):
+        failures.append(
+            f"stale audit markdown: {markdown_path} does not match the live audit"
+        )
+
+    return failures
+
+
+def write_artifacts(
+    json_path: Path | None = None,
+    markdown_path: Path | None = None,
+    report: dict | None = None,
+    max_pass: int = 4,
+) -> dict:
+    """Write the JSON/markdown pair at a fixed point and return that report.
+
+    The audit reads every document below ``docs/``, including its own
+    markdown, so rendering the report changes one of its inputs.  A single
+    write pass would publish a JSON whose record of that markdown is one edit
+    behind the markdown it ships with.  Iterating until the rendered markdown
+    stops changing keeps the pair self-consistent, which is what
+    :func:`artifact_drift` requires.
+    """
+    json_path = JSON_PATH if json_path is None else json_path
+    markdown_path = MARKDOWN_PATH if markdown_path is None else markdown_path
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    markdown_path.parent.mkdir(parents=True, exist_ok=True)
+
+    for _ in range(max_pass):
+        report = audit() if report is None else report
+        rendered = render_markdown(report)
+        current = (
+            markdown_path.read_text(encoding="utf-8") if markdown_path.exists() else ""
+        )
+        if rendered == current:
+            json_path.write_text(
+                json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+            return report
+        markdown_path.write_text(rendered, encoding="utf-8")
+        report = None
+
+    # Did not converge (a document is being edited concurrently): publish what
+    # was just measured so --check-artifacts reports it instead of hiding it.
+    report = audit()
+    json_path.write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return report
+
+
 def render_table(report: dict, limit: int = 20) -> str:
     rows = [
         "| document | tier | numbers | lines | generator |",
@@ -350,14 +466,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--figures", type=Path, default=None)
     parser.add_argument("--baseline", type=Path, default=DOCS / "doc_claim_audit" / "baseline.json")
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--check-artifacts",
+        action="store_true",
+        help="fail if the committed audit.json / doc_claim_audit.md are stale",
+    )
     parser.add_argument("--write-baseline", action="store_true")
     args = parser.parse_args(argv)
 
     report = audit()
-    args.json.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    if args.markdown:
-        args.markdown.write_text(render_markdown(report), encoding="utf-8")
+    if args.check_artifacts:
+        failures = artifact_drift(report, args.json, args.markdown)
+        for failure in failures:
+            print(f"FAIL: {failure}")
+        if failures:
+            print(
+                "regenerate with: python -m tensorbem.benchmarks.doc_claim_audit "
+                "--figures docs/doc_claim_audit"
+            )
+            return 1
+    report = write_artifacts(args.json, args.markdown, report=report)
     if args.figures:
         make_figure(report, args.figures)
 

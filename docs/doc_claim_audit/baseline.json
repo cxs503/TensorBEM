@@ -3,14 +3,14 @@
   "unguarded": [
     "PROJECT_CHARTER.md",
     "dev_report_m4291_pr215_ci_red.md",
-    "finite_depth3d_regime.md",
-    "hydrostatic_restoring_couplings.md",
+    "dev_report_m4757_function_level_api_pins.md",
     "interior_field_domain_guard.md",
     "kkr_causality_band_study.md",
     "m3538_propeller_openwater_uncertainty.md",
     "m3977_pr109_merge_healing_report.md",
     "m4283_pr186_ci_triage.md",
     "m4290_ci_fix_report.md",
+    "m4789_gauss_rule_fallback.md",
     "merge_m3878_pr104_resolution.md",
     "merge_report_m3929_pr134.md",
     "report_m57.md",
@@ -25,8 +25,6 @@
     "validation_report_ursell_kochin.md"
   ],
   "unguarded_paper_level": [
-    "finite_depth3d_regime.md",
-    "hydrostatic_restoring_couplings.md",
     "interior_field_domain_guard.md",
     "kkr_causality_band_study.md",
     "m3538_propeller_openwater_uncertainty.md",
