@@ -78,9 +78,59 @@ _FOUR_PI = 4.0 * math.pi
 _TWO_PI = 2.0 * math.pi
 _BLOCK_SIZE = 8192
 
-_LEG20_X, _LEG20_W = leggauss(20)
-_LEG40_X, _LEG40_W = leggauss(40)
-_LAG40_U, _LAG40_W = laggauss(40)
+def _legendre_gauss_golub_welsch(n: int) -> tuple[FloatArray, FloatArray]:
+    """Legendre-Gauss rule built from an explicit Jacobi matrix.
+
+    ``numpy.polynomial.legendre.leggauss`` uses Golub-Welsch too, but it asks
+    LAPACK for the spectrum of the Jacobi matrix through ``eigvalsh``.  Some
+    LAPACK builds raise ``LinAlgError: Eigenvalues did not converge`` for
+    ``n = 40`` even though the matrix is symmetric, tridiagonal and perfectly
+    conditioned (observed with numpy 2.0.1 on loongarch64).  Assembling the
+    matrix here and calling ``eigh`` selects a different LAPACK driver, so a
+    build that trips on one path still produces the rule on the other.  Both
+    paths return nodes in ascending order, so callers cannot tell them apart.
+    """
+    k = np.arange(1, n, dtype=np.float64)
+    off_diagonal = k / np.sqrt(4.0 * k * k - 1.0)
+    jacobi = np.diag(off_diagonal, 1) + np.diag(off_diagonal, -1)
+    nodes, vectors = np.linalg.eigh(jacobi)
+    weights = 2.0 * vectors[0, :] ** 2  # mu0 = int_{-1}^{1} dx = 2
+    return np.ascontiguousarray(nodes), np.ascontiguousarray(weights)
+
+
+def _laguerre_gauss_golub_welsch(n: int) -> tuple[FloatArray, FloatArray]:
+    """Laguerre-Gauss rule built from an explicit Jacobi matrix (see above)."""
+    k = np.arange(n, dtype=np.float64)
+    off_diagonal = np.arange(1, n, dtype=np.float64)
+    jacobi = (
+        np.diag(2.0 * k + 1.0)
+        + np.diag(off_diagonal, 1)
+        + np.diag(off_diagonal, -1)
+    )
+    nodes, vectors = np.linalg.eigh(jacobi)
+    weights = vectors[0, :] ** 2  # mu0 = int_0^inf exp(-x) dx = 1
+    return np.ascontiguousarray(nodes), np.ascontiguousarray(weights)
+
+
+def _legendre_gauss(n: int) -> tuple[FloatArray, FloatArray]:
+    """Legendre-Gauss nodes/weights, LAPACK-driver agnostic."""
+    try:
+        return leggauss(n)
+    except np.linalg.LinAlgError:  # pragma: no cover - depends on the LAPACK build
+        return _legendre_gauss_golub_welsch(n)
+
+
+def _laguerre_gauss(n: int) -> tuple[FloatArray, FloatArray]:
+    """Laguerre-Gauss nodes/weights, LAPACK-driver agnostic."""
+    try:
+        return laggauss(n)
+    except np.linalg.LinAlgError:  # pragma: no cover - depends on the LAPACK build
+        return _laguerre_gauss_golub_welsch(n)
+
+
+_LEG20_X, _LEG20_W = _legendre_gauss(20)
+_LEG40_X, _LEG40_W = _legendre_gauss(40)
+_LAG40_U, _LAG40_W = _laguerre_gauss(40)
 
 
 def _validate_nu(nu: float) -> float:
