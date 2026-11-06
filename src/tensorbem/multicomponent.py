@@ -229,6 +229,43 @@ class MultiComponentMesh:
             inside &= ~_point_in_polygon(targets, hole)
         return inside
 
+    def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
+        """Alias of :meth:`fluid_contains` for the solver's domain guard.
+
+        :func:`tensorbem.solver.evaluate_interior_field` duck-types on
+        ``contains_point`` and then on ``boundary_clearance``; for a
+        multi-connected domain "inside the domain" means inside the outer loop
+        and outside every hole, so the multi-loop predicate is the right one.
+        """
+        return self.fluid_contains(points)
+
+    def boundary_clearance(self, points: FloatArray) -> FloatArray:
+        """Minimum Euclidean distance from each point to the panel boundary.
+
+        Same contract as :meth:`tensorbem.geometry.PanelMesh.boundary_clearance`
+        --- the quantity :func:`tensorbem.solver.evaluate_interior_field` uses to
+        screen targets that are too close to the boundary --- extended to several
+        loops: every loop closes on itself, so one pass over the concatenated
+        panels measures the distance to the whole fluid boundary (outer loop
+        *and* holes) and no spurious inter-loop segment is ever built.
+        """
+        targets = np.asarray(points, dtype=float)
+        if targets.ndim != 2 or targets.shape[1] != 2:
+            raise ValueError("points must have shape (M, 2)")
+        clearance = np.full(len(targets), np.inf, dtype=float)
+        lengths_squared = np.sum(self.vectors**2, axis=1)
+        for start, segment, length_squared in zip(
+            self.vertices, self.vectors, lengths_squared
+        ):
+            projection = np.clip(
+                (targets - start) @ segment / length_squared, 0.0, 1.0
+            )
+            closest = start + projection[:, None] * segment
+            clearance = np.minimum(
+                clearance, np.linalg.norm(targets - closest, axis=1)
+            )
+        return clearance
+
 
 def build_multicomponent_mesh(
     outer: PanelMesh,
