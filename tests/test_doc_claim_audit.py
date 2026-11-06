@@ -169,3 +169,75 @@ def test_ratchet_detects_regression(report):
 def test_renderers_are_non_empty(report):
     assert "coverage" in audit.render_markdown(report).lower()
     assert "UNGUARDED" in audit.render_table(report, limit=5)
+
+# --------------------------------------------------------------- artifact gate
+#
+# The audit publishes two artifacts that quote numbers to a reader: the JSON
+# record set and the summary markdown.  Neither is re-derived by any other
+# gate, so a document edit used to rotate the published coverage number in
+# silence (m4862: 5 documents and 471 number tokens were missing from the
+# committed JSON while the gate was green).  These tests make the artifacts
+# themselves part of the contract.
+
+
+def test_committed_artifacts_are_current(report):
+    """The published artifacts must describe the documents as they are now."""
+    assert audit.artifact_drift(report) == [], (
+        "docs/doc_claim_audit/audit.json and docs/doc_claim_audit.md are stale; "
+        "run python -m tensorbem.benchmarks.doc_claim_audit "
+        "--figures docs/doc_claim_audit"
+    )
+
+
+def test_artifact_drift_detects_stale_json(report, tmp_path):
+    """Negative control: a wrong token count in the JSON must be caught."""
+    committed = json.loads(audit.JSON_PATH.read_text(encoding="utf-8"))
+    victim = next(r for r in committed["records"] if r["number_tokens"] > 0)
+    victim["number_tokens"] += 1
+    stale_json = tmp_path / audit.JSON_PATH.name
+    stale_json.write_text(json.dumps(committed), encoding="utf-8")
+    fresh_md = tmp_path / audit.MARKDOWN_PATH.name
+    fresh_md.write_text(audit.render_markdown(report), encoding="utf-8")
+    failures = audit.artifact_drift(report, stale_json, fresh_md)
+    assert any(victim["doc"] in f and "number_tokens" in f for f in failures), failures
+
+
+def test_artifact_drift_detects_unregistered_document(report, tmp_path):
+    """Negative control: a document missing from the JSON is a failure."""
+    committed = json.loads(audit.JSON_PATH.read_text(encoding="utf-8"))
+    dropped = committed["records"].pop(0)["doc"]
+    stale_json = tmp_path / audit.JSON_PATH.name
+    stale_json.write_text(json.dumps(committed), encoding="utf-8")
+    fresh_md = tmp_path / audit.MARKDOWN_PATH.name
+    fresh_md.write_text(audit.render_markdown(report), encoding="utf-8")
+    failures = audit.artifact_drift(report, stale_json, fresh_md)
+    assert any(dropped in f and "missing" in f for f in failures), failures
+
+
+def test_artifact_drift_detects_stale_markdown(report, tmp_path):
+    """Negative control: one edited digit in the summary table is a failure."""
+    fresh_json = tmp_path / audit.JSON_PATH.name
+    fresh_json.write_text(json.dumps(report), encoding="utf-8")
+    stale_md = tmp_path / audit.MARKDOWN_PATH.name
+    stale_md.write_text(audit.render_markdown(report) + "\n", encoding="utf-8")
+    failures = audit.artifact_drift(report, fresh_json, stale_md)
+    assert failures and all("markdown" in f for f in failures), failures
+
+
+def test_artifact_drift_detects_missing_artifacts(report, tmp_path):
+    failures = audit.artifact_drift(
+        report, tmp_path / "absent.json", tmp_path / "absent.md"
+    )
+    assert any("missing audit json" in f for f in failures), failures
+    assert any("missing audit markdown" in f for f in failures), failures
+
+
+def test_write_artifacts_reaches_a_fixed_point(report, tmp_path):
+    """Writing the pair twice must be a no-op: the audit reads its own markdown."""
+    json_path = tmp_path / audit.JSON_PATH.name
+    md_path = tmp_path / audit.MARKDOWN_PATH.name
+    written = audit.write_artifacts(json_path, md_path, report=report)
+    assert audit.artifact_drift(written, json_path, md_path) == []
+    first = json_path.read_text(encoding="utf-8")
+    audit.write_artifacts(json_path, md_path)
+    assert json_path.read_text(encoding="utf-8") == first
