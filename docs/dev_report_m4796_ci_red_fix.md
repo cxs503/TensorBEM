@@ -1,8 +1,10 @@
 # m4796 — TensorBEM main CI 红定位与修复（pytest 作业时长 / 环境脆弱断言）
 
-> 本报告由 m4891 从当前 main 重提（原 PR #325 已由 owner 裁定关闭，成果按 merge_master 流程补开）。
-> 相对原单的唯一实质更新：当前 main 已合入 m4803（`runs-on` 改为 `vars.TENSORBEM_CI_RUNNER || 'ubuntu-latest'`），
-> 因此"作业跑在 `ci-loong64`"一句改为"作业跑在 `ci-*` 自托管池或 GitHub 托管池，由仓库变量决定"。
+> 本报告由 m4891 从当前 main 重提（原 PR #325 已由 owner 裁定关闭，成果按 merge_master 流程补开），
+> m4897 第 3 轮补齐取证制品并加门禁（见 §7）：正文引用的 JSON 与 PNG 上一轮没进树，§3/§4 的数字因此无法从
+> checkout 复算；本轮把两个制品补回，并让 `tools/m4796_ci_evidence.py` 把 JSON 变成正文里的每一个数。
+> 当前 main 已合入 m4803（`runs-on` 改为 `vars.TENSORBEM_CI_RUNNER || 'ubuntu-latest'`），
+> 因此"作业跑在 `ci-loong64`"一句改为"作业跑在 `ci-*` 自托管池或 GitHub 托管池，由仓库变量决定"；
 > 扇出与限界这两条修复与池无关，两种池上都成立，故全部保留。
 
 ## 0. 结论先行
@@ -75,8 +77,17 @@
 
 ## 4. 图
 
-`docs/m4796/ci_wallclock.png`：最近 25 次作业墙钟柱图，按结论着色（绿 = success、红 = failure、橙 = cancelled），
-蓝虚线为本次新加的 90 min 上界；`fa868b64` 标注为"owner 取消"。图直接由同目录 JSON 重绘（数据与图同源，无手抄）。
+`docs/m4796/ci_wallclock.png`：最近 25 次作业墙钟柱图，按结论着色（绿 = success、红 = failure、橙 = cancelled、
+灰 = queued），蓝虚线为本次新加的 90 min 上界；`fa868b64` 标注为"owner 取消"。
+
+图由同目录 JSON 生成，不是截图：
+
+```
+python3 tools/m4796_ci_evidence.py --plot      # 11.7 x 5.46 in @ 100 dpi -> 1170 x 546 px
+```
+
+两次重绘字节级一致（mean |Δpixel| = 0.00/255，66086 B 相同），尺寸被
+`tests/test_m4796_ci_evidence.py` 钉住，所以"数据→图"这条链每次都能重放。
 
 ## 5. 注意点
 
@@ -100,5 +111,50 @@
 | CI 墙钟缩短比例 | 无基准（修复后尚未有 CI 计时） | — | — | 无基准，原因：需合并后由 CI 实测，本单不预测 |
 | 全量套件残留 5 个 F | 未取到用例名（预算） | 见 §3 诚实声明 | 不可判定 | ❌ 未验证，如实记录 |
 
+| 正文 7 行表格 vs 证据 JSON | `tools/m4796_ci_evidence.py --check-report` | 0 mismatch（n/最短/中位/最长/超界/目标/分布 全一致） | 0.0% | ✅ 是 |
+| 目标 run 的两种计时口径 | run `created_at→updated_at` 29.8 min vs check-run `started_at→completed_at` 29.6 min | 0.2 min | 0.7% | ✅ 是 |
+| 全量套件是否全绿 | — | 未跑完（97% 处 2 F，其一为本单引入且已修，另一个未取到用例名） | — | ❌ 未验证，如实记录 |
+
 负控（诚实记录）：把 workflow 里的 `-n auto` 删掉后，`test_the_suite_is_fanned_out_and_the_job_is_bounded` 变红；
 恢复后转绿。即该判据不是恒真断言。
+
+## 7. 第 3 轮（m4897）：把引用做实，并给"引用悬空"加门禁
+
+### 7.1 本轮查到的唯一实质缺陷
+
+上一轮的正文写进了 main，但正文引用的两份取证文件**没进树**：`docs/m4796/ci_duration_evidence.json` 与
+`docs/m4796/ci_wallclock.png` 在 main 上都不存在。于是 §3 的 n=25 / 中位 49.7 / 最长 194.4 / 超界 6 次、
+§4 的图，都无法从 checkout 复核——数字只能靠信任，等于没有证据。
+
+### 7.2 本轮改动（6 个文件 + 1 个审计基线重生成）
+
+| 文件 | 作用 |
+|---|---|
+| `docs/m4796/ci_duration_evidence.json` | 取证 JSON 补回树：25 次 run 的 `sha/event/conclusion/wall_min/run_id/created_at`，加目标 check-run 的 `conclusion/started_at/completed_at/annotations` |
+| `tools/m4796_ci_evidence.py` | JSON→数字/图的唯一入口：`summarise()` 复算全部指标，`check_report()` 逐行比对正文表格，`--plot` 从同一 JSON 重绘 |
+| `docs/m4796/ci_wallclock.png` | 由 `--plot` 重绘（1170×546 px，两次重绘字节级一致） |
+| `tests/test_m4796_ci_evidence.py` | 13 条门禁：制品存在且尺寸正确 / 目标 run=cancelled 29.8(29.6) min / 样本与结论分布 / 正文 7 行数字逐项复算（参数化）/ 计数的上界与 workflow `timeout-minutes` 一致 / 正文引用的每个 `docs/` 路径存在 / 图可由同 JSON 重绘 |
+| `docs/doc_claim_audit/{audit.json,audit.md,doc_claim_audit.png}` | 审计基线重生成：本单把本报告从证据档 `UNGUARDED` 提升为 `PINNED`（数字现在有 artifact 背书），旧基线因此 stale |
+
+`test_doc_claim_audit.py::test_committed_artifacts_are_current` 抓到的正是这件事（`dev_report_m4796_ci_red_fix.md
+tier 'UNGUARDED' -> 'PINNED'`）——门禁生效的证据，重新生成基线后 18 passed。
+
+### 7.3 验证与负控
+
+- `pytest tests/test_m4796_ci_evidence.py -q` → **13 passed**；
+- 本轮相关的 4 个门禁模块（m4796 证据 / `doc_claim_audit` / `ci_workflow_contract` / `ci_runner_pool_contract`）→ **59 passed**；
+- 负控（4 组，全部实际执行）：
+  - 移走 `ci_wallclock.png` → 3 条红（制品存在、引用路径存在、图重绘），恢复后 13 passed；
+  - 正文"中位 49.7"改成 42.0 → `'中位': report says '42.0', evidence says 49.7`；
+  - 正文"超过新上界 6"改成 3 → 对应行 mismatch；
+  - 正文"`cancelled` 10 / `failure` 11"改成 9/12 → `结论分布` 行 mismatch。
+
+### 7.4 全量套件（诚实记录，未完成）
+
+`pytest -q -n auto --maxprocesses 8 --dist loadfile` 在 128 核共享机（load average 170+，多工作树并发）跑到
+**97%**，见 **2 个 F**：其一是本单引入的 `test_doc_claim_audit::test_committed_artifacts_are_current`（stale 基线，已修转绿）；
+另一个在收尾段，**用例名未取到**（进程被回收、预算耗尽），只有 `runs/m4897/full_suite.log` 的点序列可佐证。
+`-n 4` 复跑（`runs/m4897/full_suite_n4.log`）已过 71%，同一位置之外未再出现新 F，但同样未收尾。
+
+因此本单**不宣称"全量套件全绿"**。集群交叉验证仍不可用：本轮实测 n315/n330 的系统 python
+`ModuleNotFoundError: No module named 'numpy'`（scipy/matplotlib 同），离线环境无法补装。
