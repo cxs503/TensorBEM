@@ -49,6 +49,11 @@ that do not involve a free surface:
   radiation and regular-wave excitation of a floating hemisphere, alongside
   the closed-form Thorne/Wang/Linton multipole solution for radiation and
   diffraction of a submerged sphere in deep water.
+* **Two circular cylinders (hydrodynamic interaction).** Truncated multipole
+  series for the full ``4x4`` rigid-body added-mass matrix of two equal
+  circular cylinders in an unbounded fluid, per unit span: the first reference
+  here that carries *mutual* (body-to-body) hydrodynamic coefficients. See
+  :func:`two_cylinder_added_mass`.
 
 Every reference here is independent of the boundary-element discretisation:
 the numbers come from one-dimensional quadrature of a classical integral or
@@ -1440,3 +1445,349 @@ def submerged_sphere_wave_multipole(
     )
 
 
+
+
+# ---------------------------------------------------------------------------
+# Two circular cylinders: mutual added mass in an unbounded fluid
+# ---------------------------------------------------------------------------
+#
+# Bodies: two equal circular cylinders of radius ``a`` centred at
+# ``c0 = -d/2`` and ``c1 = +d/2`` on the real axis (``d = separation``).
+# Modes: ``(body 0 surge, body 0 heave, body 1 surge, body 1 heave)``.
+#
+# Potential: with ``z = x + i*y`` and ``m_{k,n}`` complex, the decaying
+# harmonic field outside both bodies is
+#
+#     Psi(z) = sum_k sum_{n=1..N} m_{k,n} (z - c_k)**(-n),
+#     phi    = Re[Psi].
+#
+# The basis is complete for decaying harmonic fields exterior to the two
+# circles (each body carries its own singularities), and it excludes the
+# constant and the logarithm, so ``phi`` decays at infinity and the Neumann
+# data of a rigid-body mode (zero net flux per body) is admissible.
+#
+# The body condition on circle ``j`` is ``dphi/dr = U_j . e_r`` with
+# ``e_r = exp(i*theta)``. Since every term is analytic, that derivative is
+# available in closed form:
+#
+#     dphi/dr = Re[ Psi'(z) exp(i*theta) ],   Psi'(z) = -sum n m (z - c)**(-n-1),
+#
+# so the only numerical step is a linear least-squares fit of the (real)
+# Fourier content of the boundary data on a collocation set of ``2N+8``
+# equally spaced points per circle. No boundary-integral operator, no
+# quadrature of the potential's influence, and no BEM code path is used.
+#
+# Structural checks that hold exactly for the exact solution (and therefore
+# measure the truncation error here): reflection about the y axis maps body 0
+# onto body 1 and flips the x component, so
+#   A[0,0] = A[1,1] = A[2,2] = A[3,3]      (equal self coefficients),
+#   A[0,1] = A[1,0] = A[2,3] = A[3,2] = 0  (no surge-heave coupling),
+#   A[0,3] = A[3,0] = A[1,2] = A[2,1] = 0.
+# The remaining cross coefficients are the mutual (interaction) terms
+# ``A[0,2] < 0`` (in line with the centres) and ``A[1,3] > 0`` (transverse).
+
+_TWO_CYLINDER_DEFAULT_TERMS = 24
+_TWO_CYLINDER_MODES = ("body0_surge", "body0_heave", "body1_surge", "body1_heave")
+
+
+@dataclass(frozen=True)
+class TwoCylinderAddedMassResult:
+    """Multipole reference for two equal circular cylinders, unbounded fluid.
+
+    ``added_mass_matrix`` is the ``4x4`` added-mass matrix per unit span in the
+    mode order ``(body 0 surge, body 0 heave, body 1 surge, body 1 heave)``,
+    with body 0 at ``(-separation/2, 0)`` and body 1 at ``(+separation/2, 0)``.
+    """
+
+    radius: float
+    separation: float
+    density: float
+    terms: int
+    added_mass_matrix: FloatArray
+    displaced_mass_per_span: float
+    self_added_mass: float
+    mutual_added_mass_along: float
+    mutual_added_mass_transverse: float
+    in_phase_surge_added_mass: float
+    in_phase_heave_added_mass: float
+    boundary_residual: float
+    reflection_symmetry_error: float
+
+
+def _two_cylinder_basis(
+    theta: FloatArray, centers: ComplexArray, radius: float, which: int, terms: int
+) -> FloatArray:
+    """``dphi/dr`` basis on circle ``which``, shape ``(len(theta), 4*terms)``.
+
+    Column layout: ``[k0 Re(1..N), k0 Im(1..N), k1 Re(1..N), k1 Im(1..N)]``
+    for the multipole coefficients ``m_{k,n} = alpha + i*beta``; a real
+    coefficient multiplies ``Re[(z-c)^{-n}]`` and an imaginary one multiplies
+    ``-Im[(z-c)^{-n}]``.
+    """
+    phase = np.exp(1j * theta)
+    points = centers[which] + radius * phase
+    columns: list[FloatArray] = []
+    for k in range(2):
+        offset = points - centers[k]
+        inverse = 1.0 / offset
+        power = inverse * inverse  # (z - c_k)^(-2) for n = 1
+        real_columns: list[FloatArray] = []
+        imaginary_columns: list[FloatArray] = []
+        for n in range(1, terms + 1):
+            contribution = -n * power * phase
+            real_columns.append(np.real(contribution))
+            imaginary_columns.append(-np.imag(contribution))
+            power = power * inverse
+        columns.extend(real_columns)
+        columns.extend(imaginary_columns)
+    return np.column_stack(columns)
+
+
+def _two_cylinder_potential_columns(
+    points: ComplexArray, centers: ComplexArray, terms: int
+) -> FloatArray:
+    """``phi`` basis at arbitrary points, same column layout as the derivative."""
+    columns: list[FloatArray] = []
+    for k in range(2):
+        offset = points - centers[k]
+        inverse = 1.0 / offset
+        power = inverse.copy()  # (z - c_k)^(-1) for n = 1
+        real_columns: list[FloatArray] = []
+        imaginary_columns: list[FloatArray] = []
+        for _ in range(terms):
+            real_columns.append(np.real(power))
+            imaginary_columns.append(-np.imag(power))
+            power = power * inverse
+        columns.extend(real_columns)
+        columns.extend(imaginary_columns)
+    return np.column_stack(columns)
+
+
+def _two_cylinder_potential_basis(
+    theta: FloatArray, centers: ComplexArray, radius: float, which: int, terms: int
+) -> FloatArray:
+    """``phi`` basis on circle ``which`` (radius about ``centers[which]``)."""
+    points = centers[which] + radius * np.exp(1j * theta)
+    return _two_cylinder_potential_columns(points, centers, terms)
+
+
+def _two_cylinder_coefficients(
+    radius: float, separation: float, terms: int, collocation: int
+) -> tuple[FloatArray, float, FloatArray]:
+    """Solve the four rigid-body modes for the multipole coefficients."""
+    half = 0.5 * separation
+    centers = np.array([complex(-half, 0.0), complex(half, 0.0)], dtype=np.complex128)
+    theta = 2.0 * np.pi * np.arange(collocation) / collocation
+    blocks = []
+    right_hand_blocks = []
+    for which in range(2):
+        blocks.append(_two_cylinder_basis(theta, centers, radius, which, terms))
+        columns = []
+        for mode in range(4):
+            body, axis = divmod(mode, 2)
+            if body != which:
+                columns.append(np.zeros_like(theta))
+            else:
+                columns.append(np.cos(theta) if axis == 0 else np.sin(theta))
+        right_hand_blocks.append(np.column_stack(columns))
+    system = np.vstack(blocks)
+    data = np.vstack(right_hand_blocks)
+    coefficients, *_ = np.linalg.lstsq(system, data, rcond=None)
+    return coefficients, centers, theta
+
+
+def _two_cylinder_boundary_residual(
+    coefficients: FloatArray,
+    centers: ComplexArray,
+    radius: float,
+    terms: int,
+) -> float:
+    """Worst body-condition residual on an independent, finer angle set."""
+    samples = 8 * terms + 16
+    # Offset by half a step so the probe set never coincides with the
+    # collocation set used for the fit.
+    theta = 2.0 * np.pi * (np.arange(samples) + 0.5) / samples
+    residual = 0.0
+    for which in range(2):
+        basis = _two_cylinder_basis(theta, centers, radius, which, terms)
+        for mode in range(4):
+            body, axis = divmod(mode, 2)
+            exact = (
+                np.zeros_like(theta)
+                if body != which
+                else (np.cos(theta) if axis == 0 else np.sin(theta))
+            )
+            residual = max(residual, float(np.max(np.abs(basis @ coefficients[:, mode] - exact))))
+    return residual
+
+
+def two_cylinder_mode_potential(
+    radius: float,
+    separation: float,
+    mode: str,
+    points: FloatArray,
+    *,
+    terms: int = _TWO_CYLINDER_DEFAULT_TERMS,
+    collocation: int | None = None,
+) -> FloatArray:
+    """Radiation potential of unit velocity in ``mode`` at ``points``.
+
+    ``points`` has shape ``(n, 2)``; ``mode`` is one of
+    :data:`_TWO_CYLINDER_MODES`. The returned potential is dimensionless
+    (unit body velocity, unit length) and decays as ``O(1/r)`` at infinity, so
+    it can be used for field plots and for probes in the fluid; the same
+    coefficients produce the added-mass matrix in
+    :func:`two_cylinder_added_mass`.
+    """
+    a = _positive("radius", radius)
+    d = _positive("separation", separation)
+    if d <= 2.0 * a:
+        raise ValueError("separation must exceed 2*radius (the cylinders must not touch)")
+    if mode not in _TWO_CYLINDER_MODES:
+        raise ValueError(f"mode must be one of {_TWO_CYLINDER_MODES}")
+    if isinstance(terms, (bool, np.bool_)) or not isinstance(terms, (int, np.integer)):
+        raise ValueError("terms must be an integer")
+    if int(terms) < 4:
+        raise ValueError("terms must be at least 4")
+    term_count = int(terms)
+    if collocation is None:
+        collocation_count = 2 * term_count + 8
+    elif isinstance(collocation, (bool, np.bool_)) or not isinstance(
+        collocation, (int, np.integer)
+    ):
+        raise ValueError("collocation must be an integer")
+    elif int(collocation) < 4 * term_count:
+        raise ValueError("collocation must be at least 4*terms")
+    else:
+        collocation_count = int(collocation)
+    sample = np.asarray(points, dtype=float)
+    if sample.ndim != 2 or sample.shape[1] != 2:
+        raise ValueError("points must have shape (M, 2)")
+    if not np.isfinite(sample).all():
+        raise ValueError("points must all be finite")
+    coefficients, centers, _ = _two_cylinder_coefficients(
+        a, d, term_count, collocation_count
+    )
+    index = _TWO_CYLINDER_MODES.index(mode)
+    columns = _two_cylinder_potential_columns(
+        sample[:, 0] + 1j * sample[:, 1], centers, term_count
+    )
+    return columns @ coefficients[:, index]
+
+
+def two_cylinder_added_mass(
+    radius: float,
+    separation: float,
+    density: float = 1025.0,
+    *,
+    terms: int = _TWO_CYLINDER_DEFAULT_TERMS,
+    collocation: int | None = None,
+    quadrature: int = 512,
+) -> TwoCylinderAddedMassResult:
+    """Mutual added mass of two equal circular cylinders in an unbounded fluid.
+
+    Both cylinders have radius ``radius`` and their axes are ``separation``
+    apart; the per-unit-span added-mass matrix is returned for surge and heave
+    of each body. The reference is a truncated multipole series (see the
+    block comment above the dataclass): the potential is expanded in decaying
+    harmonics about each cylinder centre and the rigid-body Neumann data on
+    each circle fixes the coefficients. Nothing here calls
+    :mod:`tensorbem.solver`; the only numerics are a real least-squares fit and
+    trapezoidal integration of the (smooth) potential around each circle.
+
+    The diagonal entry is *not* the single-body ``rho*pi*a**2``: with the other
+    body held fixed, blockage raises it, so ``self_added_mass`` grows as
+    ``separation -> 2*radius``. The in-phase combinations
+    ``self + mutual`` are the ones a two-body motion in phase feels, and
+    ``in_phase_heave_added_mass > rho*pi*a**2`` is the classical catamaran
+    blockage effect.
+    """
+    a = _positive("radius", radius)
+    d = _positive("separation", separation)
+    rho = _positive("density", density)
+    if d <= 2.0 * a:
+        raise ValueError("separation must exceed 2*radius (the cylinders must not touch)")
+    if isinstance(terms, (bool, np.bool_)) or not isinstance(terms, (int, np.integer)):
+        raise ValueError("terms must be an integer")
+    if int(terms) < 4:
+        raise ValueError("terms must be at least 4")
+    term_count = int(terms)
+    if collocation is None:
+        collocation_count = 2 * term_count + 8
+    else:
+        if isinstance(collocation, (bool, np.bool_)) or not isinstance(
+            collocation, (int, np.integer)
+        ):
+            raise ValueError("collocation must be an integer")
+        if int(collocation) < 4 * term_count:
+            raise ValueError("collocation must be at least 4*terms")
+        collocation_count = int(collocation)
+    if isinstance(quadrature, (bool, np.bool_)) or not isinstance(
+        quadrature, (int, np.integer)
+    ):
+        raise ValueError("quadrature must be an integer")
+    if int(quadrature) < 64:
+        raise ValueError("quadrature must be at least 64")
+    sample_count = int(quadrature)
+
+    coefficients, centers, _ = _two_cylinder_coefficients(
+        a, d, term_count, collocation_count
+    )
+    theta = 2.0 * np.pi * np.arange(sample_count) / sample_count
+    weights = a * 2.0 * np.pi / sample_count
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    matrix = np.zeros((4, 4), dtype=float)
+    for which in range(2):
+        potential_basis = _two_cylinder_potential_basis(
+            theta, centers, a, which, term_count
+        )
+        potential = potential_basis @ coefficients
+        for axis, trig in enumerate((cos_theta, sin_theta)):
+            # A_ij = -rho * closed_integral(phi_j * n_i ds); the body-outward
+            # normal of a circle is the radial unit vector.
+            matrix[2 * which + axis, :] = -rho * (potential * (trig * weights)[:, None]).sum(
+                axis=0
+            )
+
+    displaced = rho * math.pi * a * a
+    self_added = float(matrix[0, 0])
+    mutual_along = float(matrix[0, 2])
+    mutual_transverse = float(matrix[1, 3])
+    reflection_error = float(
+        np.max(
+            np.abs(
+                np.array(
+                    [
+                        matrix[0, 0] - matrix[1, 1],
+                        matrix[0, 0] - matrix[2, 2],
+                        matrix[0, 0] - matrix[3, 3],
+                        matrix[0, 1],
+                        matrix[0, 3],
+                        matrix[1, 2],
+                        matrix[2, 3],
+                        matrix[0, 2] - matrix[2, 0],
+                        matrix[1, 3] - matrix[3, 1],
+                    ]
+                )
+            )
+        )
+        / displaced
+    )
+    return TwoCylinderAddedMassResult(
+        radius=a,
+        separation=d,
+        density=rho,
+        terms=term_count,
+        added_mass_matrix=matrix,
+        displaced_mass_per_span=displaced,
+        self_added_mass=self_added,
+        mutual_added_mass_along=mutual_along,
+        mutual_added_mass_transverse=mutual_transverse,
+        in_phase_surge_added_mass=self_added + mutual_along,
+        in_phase_heave_added_mass=self_added + mutual_transverse,
+        boundary_residual=_two_cylinder_boundary_residual(
+            coefficients, centers, a, term_count
+        ),
+        reflection_symmetry_error=reflection_error,
+    )
