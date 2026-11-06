@@ -1,0 +1,31 @@
+{
+  "public_functions": 735,
+  "modules": 114,
+  "unreferenced_total": 133,
+  "unreferenced_maxline": [
+    "tensorbem.capability_evidence.module_reference_index",
+    "tensorbem.capability_evidence.render_document_block",
+    "tensorbem.capability_evidence.write_document",
+    "tensorbem.doc_claims.ursell_section",
+    "tensorbem.doc_claims.write_artifact",
+    "tensorbem.finite_depth3d_quadrature.deep_water_amplitude_coefficient",
+    "tensorbem.finite_depth_diffraction.excitation_reference_limit",
+    "tensorbem.finite_depth_solver.assemble_indirect_matrix",
+    "tensorbem.free_surface_solver.assemble_indirect_matrix",
+    "tensorbem.symmetry3d.assemble_symmetric_operators_3d"
+  ],
+  "unreferenced_benchmarks": 123,
+  "pinned_in_this_mission": [
+    "tensorbem.geometry3d.floating_sphere_hull_mesh",
+    "tensorbem.free_surface_solver3d.incident_airy_wave_3d",
+    "tensorbem.free_surface_solver3d.rigid_body_normals_3d",
+    "tensorbem.finite_depth.mode_norms",
+    "tensorbem.finite_depth3d.vertical_mode",
+    "tensorbem.finite_depth3d.polish_evanescent_roots",
+    "tensorbem.finite_depth3d.deep_water_limit_error",
+    "tensorbem.helmholtz.assemble_helmholtz_double_layer",
+    "tensorbem.helmholtz.default_chief_points",
+    "tensorbem.conditioning.condition_number_trend"
+  ],
+  "mainline_unreferenced_after": 10
+}
