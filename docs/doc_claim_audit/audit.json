@@ -1,16 +1,16 @@
 {
   "counts": {
     "artifact": 25,
-    "documents": 78,
-    "number_tokens": 8665,
+    "documents": 79,
+    "number_tokens": 8683,
     "number_tokens_covered": 7180,
     "pinned": 31,
-    "unguarded": 22,
+    "unguarded": 23,
     "unguarded_paper_level": 8
   },
   "coverage": {
-    "documents_guarded_fraction": 0.717948717948718,
-    "guarded_number_fraction": 0.8286208886324293
+    "documents_guarded_fraction": 0.7088607594936709,
+    "guarded_number_fraction": 0.8269031440746286
   },
   "records": [
     {
@@ -296,6 +296,18 @@
       "tier": "UNGUARDED"
     },
     {
+      "artifact": "docs/m4796/ci_duration_evidence.json",
+      "doc": "dev_report_m4796_ci_red_fix.md",
+      "generators": [],
+      "lines": 104,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 18,
+      "paper_level": false,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
       "artifact": null,
       "doc": "dev_report_tensorbem-ursell-band-audit.md",
       "generators": [
@@ -317,7 +329,7 @@
       "generators": [
         "tensorbem.benchmarks.doc_claim_audit"
       ],
-      "lines": 113,
+      "lines": 114,
       "modules_exercised": [
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
