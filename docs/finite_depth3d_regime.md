@@ -118,9 +118,12 @@ shaded band is the `k0 h > 700` range where the pre-fix kernel returned `nan`.
   kernel's oscillatory quadrature departs from the converged finite-depth series by `O(1)`
   (observed `|G/G_deep-1| = 8.5e-1` at `k0 h = 10`, `k0 R = 50`), while the *correct* deep-water
   collapse is confirmed by the fixed-`nu` ladder (1.5e-09 at `k0 h = 4e4`). Which of the two
-  kernels is losing accuracy at large `k0 R` is **not resolved here** — logged as an open item for
-  the next verification pass (recommend a `k0 R` sweep of `free_surface3d.green_function_3d`
-  against a high-order adaptive quadrature).
+  kernels is losing accuracy at large `k0 R` is **now resolved** by m4776
+  (`docs/finite_depth3d_deepwater_arbitration.md`): the deep-water kernel reproduces an independent
+  principal-value evaluation of its own Havelock integral to `3.4e-6`, and the eigenseries is
+  mode-converged to `4e-17`, so the 85 % is a genuine finite-depth effect amplified by the
+  cancellation number `kappa = 142`; the same difference is 0.60 % of the local Rankine scale.
+  The `k0 R` sweep is implemented in `benchmarks/finite_depth3d_deepwater_arbitration.py`.
 * Constant depth, linearised potential flow: no sloping bottom, current, or nonlinearity
   (unchanged from the module contract).
 
@@ -134,7 +137,7 @@ shaded band is the `k0 h > 700` range where the pre-fix kernel returned `nan`.
 | deep-water kernel at `k0 h = 250` | `free_surface3d` | 0.59 % | **yes** |
 | deep-water kernel at `k0 h >= 1000` | `free_surface3d` | 9.3e-05 … 1.5e-09 | **yes** |
 | kernel vs analytic `dG/dz` at `k0 h = 1e4` | central difference | 1e-6 gate, passed | **yes** |
-| deep-water kernel at `k0 h = 10`, `k0 R = 50` | finite-depth series | 85 % | **no — open item (§5)** |
+| deep-water kernel at `k0 h = 10`, `k0 R = 50` | finite-depth series | 85 % of `|G|` = 0.60 % of `1/(4 pi r)`; kernel itself certified to 3.4e-6 | **resolved (m4776)** |
 
 Regression status: `tests/test_finite_depth3d_regime.py` 11 passed;
 `tests/test_finite_depth3d.py` + `tests/test_finite_depth.py` 40 passed (pre-existing gates unchanged).
