@@ -91,6 +91,7 @@ __all__ = [
     "radiation_reference",
     "wave_amplitude",
     "far_field_damping",
+    "solve_radiation",
 ]
 
 
