@@ -48,6 +48,16 @@ jobs:
     # needed when it starts dispatching again:
     #     TENSORBEM_CI_RUNNER=ci-loong64     (Settings -> Variables)
     runs-on: ${{ vars.TENSORBEM_CI_RUNNER || 'ubuntu-latest' }}
+    # Bounded, fanned out (m4796, 2026-11-06)
+    # ---------------------------------------
+    # A third way to paint this gate red, independent of both above: the job
+    # holds a runner for the whole serial suite.  On the shared ``ci-loong64``
+    # pool the next commit then cancels it -- main@fa868b64 was cancelled after
+    # 29.8 min with no failing step, and a cancelled job counts as red.  The
+    # suite is independent per module, so fan it out over the runner's cores
+    # and give the job an explicit upper bound instead of letting it run
+    # unbounded (evidence: ``docs/m4796/ci_duration_evidence.json``).
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python (GitHub-hosted pool only)
@@ -114,7 +124,12 @@ jobs:
       # Test suite: runs on a tree that already holds the evidence above.
       # ------------------------------------------------------------------
       - name: Run test suite
-        run: pytest
+        # ``pytest-xdist`` ships in the ``dev`` extra.  ``--dist loadfile``
+        # keeps every module on a single worker, so module-level fixtures and
+        # the ``artifacts/`` readers see the same tree the serial run saw.
+        # ``--maxprocesses`` bounds memory: an unbounded fan-out on a
+        # many-core self-hosted box is a different way to lose the job.
+        run: python -m pytest -q -n auto --maxprocesses 8 --dist loadfile
 
       - name: Upload benchmark evidence
         uses: actions/upload-artifact@v4
