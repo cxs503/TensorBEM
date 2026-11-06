@@ -95,6 +95,50 @@ def test_historical_documents_are_separated():
     assert not audit.is_historical("finite_depth3d.md")
     assert not audit.is_historical("marine_bem_benchmarks.md")
 
+def test_mission_prefixed_reports_are_historical():
+    """A report whose mission id leads the name is a dated work product.
+
+    Mission ids used to appear as a suffix (``_m####``) or behind a prefix
+    (``dev_report_``, ``report_m``); newer reports put the id first
+    (``m####_ci_fix_report.md``).  The spelling must not decide the tier: a
+    snapshot of one run is historical, so it cannot be counted as a paper-level
+    contract that lost its guard.  The synthetic names below keep this test from
+    mentioning a real document, because a bare file name in ``tests/`` pins that
+    document: ``classify`` treats a bare file name in ``tests/`` as a reading
+    test (see :func:`test_classifier_pinned_fixture`).
+    """
+    assert audit.is_historical("m9999_ci_fix_report.md")
+    assert audit.is_historical("m9999_pr1_merge_triage.md")
+    assert audit.MISSION_RE.search("m9999_ci_fix_report.md")
+    # A name that only looks like a mission id (no separator after the digits) is not one.
+    assert not audit.is_historical("mid3_report.md")
+
+
+def test_paper_level_exemptions_survive_the_mission_prefix_rule():
+    """Every exempted work-product name keeps the paper-level gate."""
+    for name in audit.PAPER_LEVEL_EXTRA:
+        assert audit.MISSION_RE.search(name), name
+        assert not audit.is_historical(name), name
+
+
+def test_historical_documents_are_still_registered_in_the_baseline(report):
+    """Negative control: freezing a report does not exempt it from registration.
+
+    The mission-prefix rule only moves documents out of the paper-level half of
+    the ratchet.  The ``UNGUARDED`` half must still see them, so every frozen
+    unguarded document has to be registered in the baseline before the gate is
+    green.
+    """
+    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+    registered = set(baseline["unguarded"])
+    frozen = {
+        r["doc"]
+        for r in report["records"]
+        if r["tier"] == "UNGUARDED" and audit.is_historical(r["doc"])
+    }
+    assert frozen, "expected at least one unguarded historical document"
+    assert frozen - registered == set()
+
 
 def test_ratchet_against_baseline(report):
     """No document may lose its guard; the recorded baseline is the floor."""
