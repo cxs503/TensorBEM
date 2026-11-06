@@ -234,6 +234,42 @@ def test_pointwise_field_error_map() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Interior-field guard protocol (m4658)
+# ---------------------------------------------------------------------------
+def test_guard_protocol_matches_the_analytic_annulus() -> None:
+    """The interior-field evaluator duck-types on two mesh methods.
+
+    ``tensorbem.solver.evaluate_interior_field`` screens targets with
+    ``mesh.boundary_clearance`` and classifies them with ``mesh.contains_point``.
+    ``PanelMesh`` has both; ``MultiComponentMesh`` had neither, so *every*
+    ``evaluate_fluid_field`` call raised ``AttributeError`` -- the annulus study
+    and this whole module were red.  The closed forms below pin the two
+    definitions rather than just their existence.
+    """
+    panels = 64
+    mesh = annulus_mesh(INNER, OUTER, panels_per_loop=panels)
+    step = 2.0 * math.pi / panels
+    # Probe along an edge-midpoint direction, halfway between the loops: the
+    # nearest boundary point of each inscribed polygon is that edge's midpoint,
+    # so the clearance is the smaller of the two radial gaps.
+    radius = 0.5 * (INNER + OUTER)
+    probe = np.array([[radius * math.cos(0.5 * step), radius * math.sin(0.5 * step)]])
+    expected = min(
+        OUTER * math.cos(0.5 * step) - radius,
+        radius - INNER * math.cos(0.5 * step),
+    )
+    assert float(mesh.boundary_clearance(probe)[0]) == pytest.approx(expected, rel=1.0e-12)
+    # A vertex of either loop lies on the boundary, so its clearance is zero.
+    for loop in mesh.loop_vertices:
+        assert float(mesh.boundary_clearance(loop[:1])[0]) == pytest.approx(0.0, abs=1.0e-12)
+    # ``contains_point`` is the fluid predicate, not the outer-polygon interior:
+    # the hole centre is inside the outer loop and outside the fluid.
+    points = np.array([[radius, 0.0], [0.0, 0.0], [0.25 * INNER, 0.0]])
+    assert mesh.contains_point(points).tolist() == [True, False, False]
+    assert mesh.contains_point(points).tolist() == mesh.fluid_contains(points).tolist()
+
+
+# ---------------------------------------------------------------------------
 # Documentation ledger
 # ---------------------------------------------------------------------------
 def test_verification_ledger_cell_is_closed() -> None:

@@ -88,6 +88,32 @@ def test_mutated_document_is_caught(tmp_path, rows):
     assert drift[0].quantity == "max_rel_error"
 
 
+def test_roundoff_floor_still_catches_a_real_drift(tmp_path):
+    """Negative control for the round-off floor (m4658).
+
+    Rows whose printed value is itself round-off (1e-15) are compared
+    absolutely, so a genuine drift on such a row has to be an absolute drift.
+    Perturbing one of them to 1e-11 -- four orders above the floor, far above
+    double-precision noise -- must still turn the gate red; a floor that swallowed
+    that would be a rubber stamp.
+    """
+    text = DOC.read_text(encoding="utf-8")
+    target = next(
+        r for r in pins.collect()
+        if r.table == "3.2" and r.quantity == "free_surface_residual" and r.declared > 0.0
+    )
+    printed = f"{target.declared:.3e}"
+    assert printed in text, f"{printed} not found in the document"
+    mutated = tmp_path / "finite_depth3d.md"
+    mutated.write_text(
+        text.replace(printed, f"{1.0e-11:.3e}", 1), encoding="utf-8"
+    )
+    rows = pins.collect(mutated)
+    drift = [r for r in rows if r.verdict == "DRIFT"]
+    assert len(drift) == 1, [f"{r.table}/{r.key}/{r.quantity}" for r in drift]
+    assert drift[0].quantity == "free_surface_residual"
+
+
 def test_missing_table_is_not_silently_green(tmp_path):
     """A document whose tables were dropped yields few rows -> the parser is honest."""
     trimmed = tmp_path / "finite_depth3d.md"

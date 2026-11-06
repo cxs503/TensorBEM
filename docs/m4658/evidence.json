@@ -1,0 +1,45 @@
+{
+  "pinned_rows": 64,
+  "drift_rows": [],
+  "worst_deviation": {
+    "row": "3.4/k0R=25.2/evanescent_share",
+    "declared": 1.4e-11,
+    "recomputed": 1.4134854946539897e-11,
+    "normalised_deviation": 0.009632496181421217
+  },
+  "roundoff_rows": [
+    {
+      "row": "3.2/h=2/free_surface_residual",
+      "declared": 1.26e-15,
+      "recomputed": 1.4764913026357125e-15,
+      "normalised_deviation": 0.00021649130263571252
+    },
+    {
+      "row": "3.2/h=4/free_surface_residual",
+      "declared": 7.192e-15,
+      "recomputed": 7.238614753695698e-15,
+      "normalised_deviation": 4.661475369569749e-05
+    },
+    {
+      "row": "3.2/h=10/free_surface_residual",
+      "declared": 7.847e-15,
+      "recomputed": 8.097901529578274e-15,
+      "normalised_deviation": 0.00025090152957827407
+    },
+    {
+      "row": "3.2/h=40/free_surface_residual",
+      "declared": 2.43e-12,
+      "recomputed": 2.4304249660143904e-12,
+      "normalised_deviation": 0.00017488313349402394
+    }
+  ],
+  "mfs_256": {
+    "panels": 256,
+    "method": "mfs",
+    "sources": 24,
+    "added_mass": 2545.0470952767964,
+    "added_mass_relative_error": 4.7208110591017944e-05,
+    "damping": 2717.5542223063094,
+    "damping_relative_error": 0.0002206384469577048
+  }
+}

@@ -72,6 +72,17 @@ NU = 0.6
 G = 9.80665
 #: Absolute floor for rows whose printed value is ``0.000e+00``.
 ZERO_FLOOR = 5.0e-16
+#: Pinned values at or below this are round-off, not measurements (m4658).
+#:
+#: The 3.2 table prints boundary-condition residuals that are themselves at the
+#: double-precision floor (1.3e-15 ... 8.1e-15).  Judging those with a *relative*
+#: tolerance of 5e-3 is meaningless: 17 % of 1.5e-15 is 2e-16, i.e. one ulp of a
+#: quantity whose true value is zero.  It also makes the gate non-portable -- the
+#: same solver build prints 1.26e-15 on one BLAS and 1.48e-15 on another, so the
+#: table went red for a reason no one can fix in the code.  Rows at this scale
+#: are therefore compared *absolutely*, against this floor, and their reported
+#: deviation is normalised by it (so it stays a fraction, not a fake 17 %).
+ROUNDOFF_FLOOR = 1.0e-12
 
 
 @dataclass(frozen=True)
@@ -89,6 +100,10 @@ class Row:
         scale = abs(self.declared)
         if scale < 1e-300:
             return abs(self.recomputed) if abs(self.recomputed) <= ZERO_FLOOR else math.inf
+        if scale <= ROUNDOFF_FLOOR:
+            # Round-off row: the deviation is absolute, normalised by the floor
+            # so the number stays comparable with the other rows.
+            return abs(self.recomputed - self.declared) / ROUNDOFF_FLOOR
         return abs(self.recomputed - self.declared) / scale
 
 
@@ -246,6 +261,12 @@ def _judge(declared: float, recomputed: float, rtol: float) -> tuple[str, float]
     if abs(declared) < 1e-300:
         ok = abs(recomputed) <= ZERO_FLOOR
         return ("PASS" if ok else "DRIFT"), abs(recomputed)
+    if abs(declared) <= ROUNDOFF_FLOOR:
+        # A printed residual at the round-off floor means "zero to working
+        # precision"; compare it against that floor, not against a percentage
+        # of itself (see ROUNDOFF_FLOOR).
+        dev = abs(recomputed - declared) / ROUNDOFF_FLOOR
+        return ("PASS" if dev <= 1.0 else "DRIFT"), dev
     dev = abs(recomputed - declared) / abs(declared)
     return ("PASS" if dev <= rtol else "DRIFT"), dev
 
