@@ -1,0 +1,3946 @@
+{
+  "curved_verification": [
+    {
+      "case": "elliptic-16-centred",
+      "coupling_is_live": false,
+      "max_rel_dev_energy": 1.2227318958190486e-09,
+      "max_rel_dev_ring": 2.955466118095307e-17,
+      "volume": 1.2245869835682872
+    },
+    {
+      "case": "elliptic-16-offset",
+      "coupling_is_live": true,
+      "max_rel_dev_energy": 5.873836348553407e-09,
+      "max_rel_dev_ring": 1.4777330590476535e-17,
+      "volume": 1.2245869835682872
+    },
+    {
+      "case": "elliptic-32-centred",
+      "coupling_is_live": false,
+      "max_rel_dev_energy": 4.225141203961669e-09,
+      "max_rel_dev_ring": 1.1594710661433412e-16,
+      "volume": 1.2485780609032209
+    },
+    {
+      "case": "elliptic-32-offset",
+      "coupling_is_live": true,
+      "max_rel_dev_energy": 3.1529411480512514e-09,
+      "max_rel_dev_ring": 5.797355330716706e-17,
+      "volume": 1.2485780609032209
+    },
+    {
+      "case": "elliptic-64-centred",
+      "coupling_is_live": false,
+      "max_rel_dev_energy": 9.09648847892013e-09,
+      "max_rel_dev_ring": 8.849082263286756e-18,
+      "volume": 1.2546193962183758
+    },
+    {
+      "case": "elliptic-64-offset",
+      "coupling_is_live": true,
+      "max_rel_dev_energy": 1.57076966146704e-08,
+      "max_rel_dev_ring": 5.769439480220908e-17,
+      "volume": 1.2546193962183758
+    },
+    {
+      "case": "hemisphere-2-centred",
+      "coupling_is_live": false,
+      "max_rel_dev_energy": 1.287869861064531e-05,
+      "max_rel_dev_ring": 0.0,
+      "volume": 1.9088648099141803
+    },
+    {
+      "case": "hemisphere-2-offset",
+      "coupling_is_live": true,
+      "max_rel_dev_energy": 1.287869861064531e-05,
+      "max_rel_dev_ring": 2.955466118095307e-17,
+      "volume": 1.9088648099141803
+    },
+    {
+      "case": "hemisphere-3-centred",
+      "coupling_is_live": false,
+      "max_rel_dev_energy": 6.319964855191625e-06,
+      "max_rel_dev_ring": 4.445949594140801e-18,
+      "volume": 2.045800310042999
+    },
+    {
+      "case": "hemisphere-3-offset",
+      "coupling_is_live": true,
+      "max_rel_dev_energy": 6.319964855191625e-06,
+      "max_rel_dev_ring": 5.797355330716706e-17,
+      "volume": 2.045800310042999
+    }
+  ],
+  "documents": {
+    "hydrostatic_restoring_couplings.md": {
+      "checked": 78,
+      "failures": [],
+      "path": "docs/hydrostatic_restoring_couplings.md",
+      "records": [
+        {
+          "atol": 7.5e-07,
+          "computed": 1.9999999999999998,
+          "declared": 2.0,
+          "deviation": 2.220446049250313e-16,
+          "key": "volume.printed",
+          "status": "PASS",
+          "text": "2.000000"
+        },
+        {
+          "atol": 0.07500000000000001,
+          "computed": 2.0,
+          "declared": 2.0,
+          "deviation": 0.0,
+          "key": "volume.analytic",
+          "status": "PASS",
+          "text": "2.0"
+        },
+        {
+          "atol": 1e-09,
+          "computed": 1.2999999999999998,
+          "declared": 1.2999999999999998,
+          "deviation": 0.0,
+          "key": "center_of_buoyancy[0]",
+          "status": "PASS",
+          "text": "1.2999999999999998"
+        },
+        {
+          "atol": 1e-09,
+          "computed": 0.4499999999999999,
+          "declared": 0.4499999999999999,
+          "deviation": 0.0,
+          "key": "center_of_buoyancy[1]",
+          "status": "PASS",
+          "text": "0.4499999999999999"
+        },
+        {
+          "atol": 1e-09,
+          "computed": -0.49999999999999994,
+          "declared": -0.49999999999999994,
+          "deviation": 0.0,
+          "key": "center_of_buoyancy[2]",
+          "status": "PASS",
+          "text": "-0.49999999999999994"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 20103.632499999992,
+          "declared": 20103.63,
+          "deviation": 0.00249999999141437,
+          "key": "main.C33_heave.code",
+          "status": "PASS",
+          "text": "2.010363e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 20103.6325,
+          "declared": 20103.63,
+          "deviation": 0.0024999999986903276,
+          "key": "main.C33_heave.closed_form",
+          "status": "PASS",
+          "text": "2.010363e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 20103.632459722576,
+          "declared": 20103.63,
+          "deviation": 0.0024597225747129414,
+          "key": "main.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "2.010363e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 20103.6325,
+          "declared": 20103.63,
+          "deviation": 0.0024999999986903276,
+          "key": "main.C33_heave.pre_fix",
+          "status": "PASS",
+          "text": "2.010363e+04"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 2.0034898697079553e-09,
+          "declared": 0.0,
+          "deviation": 2.0034898697079553e-09,
+          "key": "main.C33_heave.pre_fix_pct",
+          "status": "PASS",
+          "text": "0.00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9046.634624999997,
+          "declared": 9046.635,
+          "deviation": 0.000375000003259629,
+          "key": "main.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "9.046635e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9046.634625,
+          "declared": 9046.635,
+          "deviation": 0.0003749999996216502,
+          "key": "main.C34_heave-roll.closed_form",
+          "status": "PASS",
+          "text": "9.046635e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9046.634568221634,
+          "declared": 9046.635,
+          "deviation": 0.0004317783659644192,
+          "key": "main.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "9.046635e+03"
+        },
+        {
+          "atol": 1e-09,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "main.C34_heave-roll.pre_fix",
+          "status": "PASS",
+          "text": "0 (exactly)"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 1.0,
+          "declared": 1.0,
+          "deviation": 0.0,
+          "key": "main.C34_heave-roll.pre_fix_pct",
+          "status": "PASS",
+          "text": "100"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -26134.72224999999,
+          "declared": -26134.72,
+          "deviation": 0.0022499999904539436,
+          "key": "main.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-2.613472e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -26134.72225,
+          "declared": -26134.72,
+          "deviation": 0.0022499999977299012,
+          "key": "main.C35_heave-pitch.closed_form",
+          "status": "PASS",
+          "text": "-2.613472e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -26134.722088499984,
+          "declared": -26134.72,
+          "deviation": 0.0020884999830741435,
+          "key": "main.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-2.613472e+04"
+        },
+        {
+          "atol": 1e-09,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "main.C35_heave-pitch.pre_fix",
+          "status": "PASS",
+          "text": "0 (exactly)"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 1.0,
+          "declared": 1.0,
+          "deviation": 0.0,
+          "key": "main.C35_heave-pitch.pre_fix_pct",
+          "status": "PASS",
+          "text": "100"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5746.288289583332,
+          "declared": 5746.288,
+          "deviation": 0.0002895833322327235,
+          "key": "main.C44_roll.code",
+          "status": "PASS",
+          "text": "5.746288e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5746.288289583333,
+          "declared": 5746.288,
+          "deviation": 0.0002895833331422182,
+          "key": "main.C44_roll.closed_form",
+          "status": "PASS",
+          "text": "5.746288e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5746.288297814317,
+          "declared": 5746.288,
+          "deviation": 0.0002978143174914294,
+          "key": "main.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "5.746288e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1675.3027083333332,
+          "declared": 1675.303,
+          "deviation": 0.00029166666695346066,
+          "key": "main.C44_roll.pre_fix",
+          "status": "PASS",
+          "text": "1.675303e+03"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.7084548109132363,
+          "declared": 0.7084999999999999,
+          "deviation": 4.518908676365285e-05,
+          "key": "main.C44_roll.pre_fix_pct",
+          "status": "PASS",
+          "text": "70.85"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -11760.625012499997,
+          "declared": -11760.63,
+          "deviation": 0.004987500002243905,
+          "key": "main.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-1.176063e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -11760.6250125,
+          "declared": -11760.63,
+          "deviation": 0.0049874999986059265,
+          "key": "main.C45_roll-pitch.closed_form",
+          "status": "PASS",
+          "text": "-1.176063e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": -11760.62473859929,
+          "declared": -11760.62,
+          "deviation": 0.004738599289339618,
+          "key": "main.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-1.176062e+04"
+        },
+        {
+          "atol": 1e-09,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "main.C45_roll-pitch.pre_fix",
+          "status": "PASS",
+          "text": "0 (exactly)"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 1.0,
+          "declared": 1.0,
+          "deviation": 0.0,
+          "key": "main.C45_roll-pitch.pre_fix_pct",
+          "status": "PASS",
+          "text": "100"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 40676.349758333316,
+          "declared": 40676.35,
+          "deviation": 0.0002416666829958558,
+          "key": "main.C55_pitch.code",
+          "status": "PASS",
+          "text": "4.067635e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 40676.34975833334,
+          "declared": 40676.35,
+          "deviation": 0.00024166666116798297,
+          "key": "main.C55_pitch.closed_form",
+          "status": "PASS",
+          "text": "4.067635e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 40676.34922648722,
+          "declared": 40676.35,
+          "deviation": 0.0007735127801424824,
+          "key": "main.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "4.067635e+04"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 6701.210833333333,
+          "declared": 6701.211,
+          "deviation": 0.00016666666761011584,
+          "key": "main.C55_pitch.pre_fix",
+          "status": "PASS",
+          "text": "6.701211e+03"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.8352553520469408,
+          "declared": 0.8353,
+          "deviation": 4.46479530592514e-05,
+          "key": "main.C55_pitch.pre_fix_pct",
+          "status": "PASS",
+          "text": "83.53"
+        },
+        {
+          "atol": 0.07500000000000001,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "scalar.symmetric_residual",
+          "status": "PASS",
+          "text": "0.0e+00"
+        },
+        {
+          "atol": 0.07500000000000001,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "scalar.yaw_row_max",
+          "status": "PASS",
+          "text": "0.0e+00"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 1.3075069427478995e-08,
+          "declared": 1.31e-08,
+          "deviation": 2.4930572521005065e-11,
+          "key": "scalar.max_rel_err_energy",
+          "status": "PASS",
+          "text": "1.31e-08"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "sweep.0.00.lcf_over_length",
+          "status": "PASS",
+          "text": "0.00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "sweep.0.00.c_heave_pitch",
+          "status": "PASS",
+          "text": "-0.0000e+00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "sweep.0.00.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "0.0000"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 1.0,
+          "declared": 1.0,
+          "deviation": 0.0,
+          "key": "sweep.0.00.pitch_amplification",
+          "status": "PASS",
+          "text": "1.0000"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "sweep.0.00.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "0.0000e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.125,
+          "declared": 0.12,
+          "deviation": 0.0050000000000000044,
+          "key": "sweep.0.12.lcf_over_length",
+          "status": "PASS",
+          "text": "0.12"
+        },
+        {
+          "atol": 0.07500000000000001,
+          "computed": -5025.908125,
+          "declared": -5025.9,
+          "deviation": 0.008125000000291038,
+          "key": "sweep.0.12.c_heave_pitch",
+          "status": "PASS",
+          "text": "-5.0259e+03"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.25,
+          "declared": 0.25,
+          "deviation": 0.0,
+          "key": "sweep.0.12.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "0.2500"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 1.1875,
+          "declared": 1.1875,
+          "deviation": 0.0,
+          "key": "sweep.0.12.pitch_amplification",
+          "status": "PASS",
+          "text": "1.1875"
+        },
+        {
+          "atol": 7.500000000000001e-10,
+          "computed": 3.73066907187047e-05,
+          "declared": 3.7307e-05,
+          "deviation": 3.0928129530355137e-10,
+          "key": "sweep.0.12.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "3.7307e-05"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.25,
+          "declared": 0.25,
+          "deviation": 0.0,
+          "key": "sweep.0.25.lcf_over_length",
+          "status": "PASS",
+          "text": "0.25"
+        },
+        {
+          "atol": 0.75,
+          "computed": -10051.81625,
+          "declared": -10052.0,
+          "deviation": 0.18375000000014552,
+          "key": "sweep.0.25.c_heave_pitch",
+          "status": "PASS",
+          "text": "-1.0052e+04"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.5,
+          "declared": 0.5,
+          "deviation": 0.0,
+          "key": "sweep.0.25.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "0.5000"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 1.75,
+          "declared": 1.75,
+          "deviation": 0.0,
+          "key": "sweep.0.25.pitch_amplification",
+          "status": "PASS",
+          "text": "1.7500"
+        },
+        {
+          "atol": 7.500000000000001e-10,
+          "computed": 7.46133814374094e-05,
+          "declared": 7.4613e-05,
+          "deviation": 3.8143740939508997e-10,
+          "key": "sweep.0.25.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "7.4613e-05"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.375,
+          "declared": 0.38,
+          "deviation": 0.0050000000000000044,
+          "key": "sweep.0.38.lcf_over_length",
+          "status": "PASS",
+          "text": "0.38"
+        },
+        {
+          "atol": 0.75,
+          "computed": -15077.724375,
+          "declared": -15078.0,
+          "deviation": 0.2756250000002183,
+          "key": "sweep.0.38.c_heave_pitch",
+          "status": "PASS",
+          "text": "-1.5078e+04"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 0.75,
+          "declared": 0.75,
+          "deviation": 0.0,
+          "key": "sweep.0.38.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "0.7500"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 2.6874999999999996,
+          "declared": 2.6875,
+          "deviation": 4.440892098500626e-16,
+          "key": "sweep.0.38.pitch_amplification",
+          "status": "PASS",
+          "text": "2.6875"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 0.00011192007215611405,
+          "declared": 0.00011192,
+          "deviation": 7.215611405088102e-11,
+          "key": "sweep.0.38.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "1.1192e-04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.5,
+          "declared": 0.5,
+          "deviation": 0.0,
+          "key": "sweep.0.50.lcf_over_length",
+          "status": "PASS",
+          "text": "0.50"
+        },
+        {
+          "atol": 0.75,
+          "computed": -20103.6325,
+          "declared": -20104.0,
+          "deviation": 0.36750000000029104,
+          "key": "sweep.0.50.c_heave_pitch",
+          "status": "PASS",
+          "text": "-2.0104e+04"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 1.0,
+          "declared": 1.0,
+          "deviation": 0.0,
+          "key": "sweep.0.50.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "1.0000"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 4.000000000000001,
+          "declared": 4.0,
+          "deviation": 8.881784197001252e-16,
+          "key": "sweep.0.50.pitch_amplification",
+          "status": "PASS",
+          "text": "4.0000"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 0.00014922676287481881,
+          "declared": 0.00014923,
+          "deviation": 3.237125181191486e-09,
+          "key": "sweep.0.50.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "1.4923e-04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.65,
+          "declared": 0.65,
+          "deviation": 0.0,
+          "key": "sweep.0.65.lcf_over_length",
+          "status": "PASS",
+          "text": "0.65"
+        },
+        {
+          "atol": 0.75,
+          "computed": -26134.72224999999,
+          "declared": -26135.0,
+          "deviation": 0.2777500000083819,
+          "key": "sweep.0.65.c_heave_pitch",
+          "status": "PASS",
+          "text": "-2.6135e+04"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 1.2999999999999998,
+          "declared": 1.3,
+          "deviation": 2.220446049250313e-16,
+          "key": "sweep.0.65.abs_ratio_to_c33",
+          "status": "PASS",
+          "text": "1.3000"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 6.0699999999999985,
+          "declared": 6.07,
+          "deviation": 1.7763568394002505e-15,
+          "key": "sweep.0.65.pitch_amplification",
+          "status": "PASS",
+          "text": "6.0700"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 0.0001939947917372644,
+          "declared": 0.00019399,
+          "deviation": 4.791737264408461e-09,
+          "key": "sweep.0.65.heave_per_pitch_moment",
+          "status": "PASS",
+          "text": "1.9399e-04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 2.003489507785421e-09,
+          "declared": 2e-09,
+          "deviation": 3.4895077854208247e-12,
+          "key": "error.C3_3",
+          "status": "PASS",
+          "text": "2.00e-09"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 6.276186163663241e-09,
+          "declared": 6.28e-09,
+          "deviation": 3.813836336758645e-12,
+          "key": "error.C3_4",
+          "status": "PASS",
+          "text": "6.28e-09"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 6.1795188344805335e-09,
+          "declared": 6.18e-09,
+          "deviation": 4.81165519466221e-13,
+          "key": "error.C3_5",
+          "status": "PASS",
+          "text": "6.18e-09"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.4324003308077472e-09,
+          "declared": 1.43e-09,
+          "deviation": 2.4003308077471763e-12,
+          "key": "error.C4_4",
+          "status": "PASS",
+          "text": "1.43e-09"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 2.3289639190408195e-08,
+          "declared": 2.33e-08,
+          "deviation": 1.0360809591805024e-11,
+          "key": "error.C4_5",
+          "status": "PASS",
+          "text": "2.33e-08"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 1.3075069598436439e-08,
+          "declared": 1.31e-08,
+          "deviation": 2.4930401563561153e-11,
+          "key": "error.C5_5",
+          "status": "PASS",
+          "text": "1.31e-08"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 1.3075069427478995e-08,
+          "declared": 1.31e-08,
+          "deviation": 2.4930572521005065e-11,
+          "key": "error.full_matrix",
+          "status": "PASS",
+          "text": "1.31e-08"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 2.3289639190408195e-08,
+          "declared": 2.33e-08,
+          "deviation": 1.0360809591805024e-11,
+          "key": "prose.worst_rel_err",
+          "status": "PASS",
+          "text": "2.33e-08"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 0.7084548109132363,
+          "declared": 0.708,
+          "deviation": 0.0004548109132362921,
+          "key": "prose.pre_fix_pct_c44",
+          "status": "PASS",
+          "text": "70.8"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 0.8352553520469408,
+          "declared": 0.835,
+          "deviation": 0.0002553520469408266,
+          "key": "prose.pre_fix_pct_c55",
+          "status": "PASS",
+          "text": "83.5"
+        }
+      ],
+      "status": "PASS"
+    },
+    "hydrostatic_restoring_waterplane_curvature.md": {
+      "checked": 350,
+      "failures": [],
+      "path": "docs/hydrostatic_restoring_waterplane_curvature.md",
+      "records": [
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2245869835682872,
+          "declared": 1.224587,
+          "deviation": 1.6431712879239058e-08,
+          "key": "summary.elliptic-16-centred.volume",
+          "status": "PASS",
+          "text": "1.224587"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.2227318958190486e-09,
+          "declared": 1.22e-09,
+          "deviation": 2.731895819048718e-12,
+          "key": "summary.elliptic-16-centred.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "1.22e-09"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.955466118095307e-17,
+          "declared": 2.96e-17,
+          "deviation": 4.5338819046933535e-20,
+          "key": "summary.elliptic-16-centred.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "2.96e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-16-centred.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-16-centred.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2245869835682872,
+          "declared": 1.224587,
+          "deviation": 1.6431712879239058e-08,
+          "key": "summary.elliptic-16-offset.volume",
+          "status": "PASS",
+          "text": "1.224587"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 5.873836348553407e-09,
+          "declared": 5.87e-09,
+          "deviation": 3.836348553407038e-12,
+          "key": "summary.elliptic-16-offset.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "5.87e-09"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 1.4777330590476535e-17,
+          "declared": 1.48e-17,
+          "deviation": 2.2669409523466767e-20,
+          "key": "summary.elliptic-16-offset.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "1.48e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-16-offset.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-16-offset.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2485780609032209,
+          "declared": 1.248578,
+          "deviation": 6.090322091090172e-08,
+          "key": "summary.elliptic-32-centred.volume",
+          "status": "PASS",
+          "text": "1.248578"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 4.225141203961669e-09,
+          "declared": 4.23e-09,
+          "deviation": 4.858796038330489e-12,
+          "key": "summary.elliptic-32-centred.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "4.23e-09"
+        },
+        {
+          "atol": 7.500000000000001e-19,
+          "computed": 1.1594710661433412e-16,
+          "declared": 1.16e-16,
+          "deviation": 5.289338566589005e-20,
+          "key": "summary.elliptic-32-centred.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "1.16e-16"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-32-centred.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-32-centred.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2485780609032209,
+          "declared": 1.248578,
+          "deviation": 6.090322091090172e-08,
+          "key": "summary.elliptic-32-offset.volume",
+          "status": "PASS",
+          "text": "1.248578"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 3.1529411480512514e-09,
+          "declared": 3.15e-09,
+          "deviation": 2.9411480512513437e-12,
+          "key": "summary.elliptic-32-offset.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "3.15e-09"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.797355330716706e-17,
+          "declared": 5.8e-17,
+          "deviation": 2.6446692832945026e-20,
+          "key": "summary.elliptic-32-offset.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "5.80e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-32-offset.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-32-offset.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2546193962183758,
+          "declared": 1.254619,
+          "deviation": 3.9621837588654785e-07,
+          "key": "summary.elliptic-64-centred.volume",
+          "status": "PASS",
+          "text": "1.254619"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 9.09648847892013e-09,
+          "declared": 9.1e-09,
+          "deviation": 3.511521079870093e-12,
+          "key": "summary.elliptic-64-centred.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "9.10e-09"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 8.849082263286756e-18,
+          "declared": 8.85e-18,
+          "deviation": 9.177367132434416e-22,
+          "key": "summary.elliptic-64-centred.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "8.85e-18"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-64-centred.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-64-centred.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.2546193962183758,
+          "declared": 1.254619,
+          "deviation": 3.9621837588654785e-07,
+          "key": "summary.elliptic-64-offset.volume",
+          "status": "PASS",
+          "text": "1.254619"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 1.57076966146704e-08,
+          "declared": 1.57e-08,
+          "deviation": 7.696614670397271e-12,
+          "key": "summary.elliptic-64-offset.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "1.57e-08"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.769439480220908e-17,
+          "declared": 5.77e-17,
+          "deviation": 5.6051977909237996e-21,
+          "key": "summary.elliptic-64-offset.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "5.77e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-64-offset.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.elliptic-64-offset.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.9088648099141803,
+          "declared": 1.908865,
+          "deviation": 1.9008581975121785e-07,
+          "key": "summary.hemisphere-2-centred.volume",
+          "status": "PASS",
+          "text": "1.908865"
+        },
+        {
+          "atol": 7.5e-08,
+          "computed": 1.287869861064531e-05,
+          "declared": 1.29e-05,
+          "deviation": 2.1301389354689933e-08,
+          "key": "summary.hemisphere-2-centred.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "1.29e-05"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-2-centred.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-2-centred.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-2-centred.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 1.9088648099141803,
+          "declared": 1.908865,
+          "deviation": 1.9008581975121785e-07,
+          "key": "summary.hemisphere-2-offset.volume",
+          "status": "PASS",
+          "text": "1.908865"
+        },
+        {
+          "atol": 7.5e-08,
+          "computed": 1.287869861064531e-05,
+          "declared": 1.29e-05,
+          "deviation": 2.1301389354689933e-08,
+          "key": "summary.hemisphere-2-offset.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "1.29e-05"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.955466118095307e-17,
+          "declared": 2.96e-17,
+          "deviation": 4.5338819046933535e-20,
+          "key": "summary.hemisphere-2-offset.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "2.96e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-2-offset.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-2-offset.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 2.045800310042999,
+          "declared": 2.0458,
+          "deviation": 3.100429992741738e-07,
+          "key": "summary.hemisphere-3-centred.volume",
+          "status": "PASS",
+          "text": "2.045800"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 6.319964855191625e-06,
+          "declared": 6.32e-06,
+          "deviation": 3.514480837479324e-11,
+          "key": "summary.hemisphere-3-centred.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "6.32e-06"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 4.445949594140801e-18,
+          "declared": 4.45e-18,
+          "deviation": 4.05040585919938e-21,
+          "key": "summary.hemisphere-3-centred.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "4.45e-18"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-3-centred.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-3-centred.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 2.045800310042999,
+          "declared": 2.0458,
+          "deviation": 3.100429992741738e-07,
+          "key": "summary.hemisphere-3-offset.volume",
+          "status": "PASS",
+          "text": "2.045800"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 6.319964855191625e-06,
+          "declared": 6.32e-06,
+          "deviation": 3.514480837479324e-11,
+          "key": "summary.hemisphere-3-offset.max_rel_dev_energy",
+          "status": "PASS",
+          "text": "6.32e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.797355330716706e-17,
+          "declared": 5.8e-17,
+          "deviation": 2.6446692832945026e-20,
+          "key": "summary.hemisphere-3-offset.max_rel_dev_ring",
+          "status": "PASS",
+          "text": "5.80e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-3-offset.symmetry_residual_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "summary.hemisphere-3-offset.yaw_rows_rel",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.654176212742,
+          "declared": 15386.65,
+          "deviation": 0.004176212742095231,
+          "key": "curv.elliptic-16-centred.C33_heave.code",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.654195026495,
+          "declared": 15386.65,
+          "deviation": 0.004195026494926424,
+          "key": "curv.elliptic-16-centred.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.654176212742,
+          "declared": 15386.65,
+          "deviation": 0.004176212742095231,
+          "key": "curv.elliptic-16-centred.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.2227318958190486e-09,
+          "declared": 1.22e-09,
+          "deviation": 2.731895819048718e-12,
+          "key": "curv.elliptic-16-centred.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.22e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-centred.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -8.137323425037406e-14,
+          "declared": -8.137323e-14,
+          "deviation": 4.250374062876584e-21,
+          "key": "curv.elliptic-16-centred.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "-8.137323e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 5.6843418860808015e-06,
+          "declared": 5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.elliptic-16-centred.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "5.684342e-06"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -8.137323425037406e-14,
+          "declared": -8.137323e-14,
+          "deviation": 4.250374062876584e-21,
+          "key": "curv.elliptic-16-centred.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "-8.137323e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.694332700504728e-10,
+          "declared": 3.69e-10,
+          "deviation": 4.332700504727574e-13,
+          "key": "curv.elliptic-16-centred.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.69e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-centred.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": -1.3949697300064123e-13,
+          "declared": -1.39497e-13,
+          "deviation": 2.6999358764818912e-20,
+          "key": "curv.elliptic-16-centred.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-1.394970e-13"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-centred.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "0.000000e+00"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": -1.3949697300064123e-13,
+          "declared": -1.39497e-13,
+          "deviation": 2.6999358764818912e-20,
+          "key": "curv.elliptic-16-centred.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-1.394970e-13"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 9.066101792051642e-18,
+          "declared": 9.07e-18,
+          "deviation": 3.898207948358243e-21,
+          "key": "curv.elliptic-16-centred.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "9.07e-18"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-centred.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 937.265067076203,
+          "declared": 937.2651,
+          "deviation": 3.292379699360026e-05,
+          "key": "curv.elliptic-16-centred.C44_roll.code",
+          "status": "PASS",
+          "text": "9.372651e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 937.2650765726576,
+          "declared": 937.2651,
+          "deviation": 2.3427342398463225e-05,
+          "key": "curv.elliptic-16-centred.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "9.372651e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 937.2650670762031,
+          "declared": 937.2651,
+          "deviation": 3.2923796879913425e-05,
+          "key": "curv.elliptic-16-centred.C44_roll.ring",
+          "status": "PASS",
+          "text": "9.372651e+02"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 6.171877580649237e-10,
+          "declared": 6.17e-10,
+          "deviation": 1.8775806492368695e-13,
+          "key": "curv.elliptic-16-centred.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.17e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 7.388665295238267e-18,
+          "declared": 7.39e-18,
+          "deviation": 1.3347047617326665e-21,
+          "key": "curv.elliptic-16-centred.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "7.39e-18"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-centred.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": -5.6843418860808015e-06,
+          "declared": -5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.elliptic-16-centred.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-5.684342e-06"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 9.299798200042748e-14,
+          "declared": 9.299798e-14,
+          "deviation": 2.000427473898126e-21,
+          "key": "curv.elliptic-16-centred.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "9.299798e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.6943326476191333e-10,
+          "declared": 3.69e-10,
+          "deviation": 4.332647619133117e-13,
+          "key": "curv.elliptic-16-centred.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.69e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 6.044067861367761e-18,
+          "declared": 6.04e-18,
+          "deviation": 4.067861367760879e-21,
+          "key": "curv.elliptic-16-centred.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "6.04e-18"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3749.060268304812,
+          "declared": 3749.06,
+          "deviation": 0.00026830481192519073,
+          "key": "curv.elliptic-16-centred.C55_pitch.code",
+          "status": "PASS",
+          "text": "3.749060e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3749.060260815895,
+          "declared": 3749.06,
+          "deviation": 0.0002608158952170925,
+          "key": "curv.elliptic-16-centred.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "3.749060e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3749.0602683048123,
+          "declared": 3749.06,
+          "deviation": 0.0002683048123799381,
+          "key": "curv.elliptic-16-centred.C55_pitch.ring",
+          "status": "PASS",
+          "text": "3.749060e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 4.867150858356117e-10,
+          "declared": 4.87e-10,
+          "deviation": 2.8491416438824394e-13,
+          "key": "curv.elliptic-16-centred.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "4.87e-10"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.955466118095307e-17,
+          "declared": 2.96e-17,
+          "deviation": 4.5338819046933535e-20,
+          "key": "curv.elliptic-16-centred.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "2.96e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.65417621274,
+          "declared": 15386.65,
+          "deviation": 0.004176212740276242,
+          "key": "curv.elliptic-16-offset.C33_heave.code",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.65414955176,
+          "declared": 15386.65,
+          "deviation": 0.004149551759837777,
+          "key": "curv.elliptic-16-offset.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15386.65417621274,
+          "declared": 15386.65,
+          "deviation": 0.004176212740276242,
+          "key": "curv.elliptic-16-offset.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.538665e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.7327341040576137e-09,
+          "declared": 1.73e-09,
+          "deviation": 2.7341040576136375e-12,
+          "key": "curv.elliptic-16-offset.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.73e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-offset.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1538.6654176212737,
+          "declared": 1538.665,
+          "deviation": 0.00041762127375477576,
+          "key": "curv.elliptic-16-offset.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "1.538665e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1538.6654069970973,
+          "declared": 1538.665,
+          "deviation": 0.0004069970973432646,
+          "key": "curv.elliptic-16-offset.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.538665e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1538.6654176212737,
+          "declared": 1538.665,
+          "deviation": 0.00041762127375477576,
+          "key": "curv.elliptic-16-offset.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "1.538665e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 6.904799633396434e-10,
+          "declared": 6.9e-10,
+          "deviation": 4.799633396434025e-13,
+          "key": "curv.elliptic-16-offset.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.90e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-offset.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4615.9962528638225,
+          "declared": -4615.996,
+          "deviation": 0.0002528638224248425,
+          "key": "curv.elliptic-16-offset.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-4.615996e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4615.996226675634,
+          "declared": -4615.996,
+          "deviation": 0.00022667563371214783,
+          "key": "curv.elliptic-16-offset.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.615996e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4615.9962528638225,
+          "declared": -4615.996,
+          "deviation": 0.0002528638224248425,
+          "key": "curv.elliptic-16-offset.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-4.615996e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.7020067139210003e-09,
+          "declared": 1.7e-09,
+          "deviation": 2.0067139210004043e-12,
+          "key": "curv.elliptic-16-offset.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.70e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-offset.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1091.1316088383319,
+          "declared": 1091.132,
+          "deviation": 0.0003911616681762098,
+          "key": "curv.elliptic-16-offset.C44_roll.code",
+          "status": "PASS",
+          "text": "1.091132e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1091.1315939665656,
+          "declared": 1091.132,
+          "deviation": 0.00040603343450129614,
+          "key": "curv.elliptic-16-offset.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.091132e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1091.1316088383319,
+          "declared": 1091.132,
+          "deviation": 0.0003911616681762098,
+          "key": "curv.elliptic-16-offset.C44_roll.ring",
+          "status": "PASS",
+          "text": "1.091132e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 9.665367242787335e-10,
+          "declared": 9.67e-10,
+          "deviation": 4.632757212665728e-13,
+          "key": "curv.elliptic-16-offset.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "9.67e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-offset.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -461.5996252863823,
+          "declared": -461.5996,
+          "deviation": 2.5286382310696354e-05,
+          "key": "curv.elliptic-16-offset.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-4.615996e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -461.5996260781685,
+          "declared": -461.5996,
+          "deviation": 2.6078168502863264e-05,
+          "key": "curv.elliptic-16-offset.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.615996e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -461.5996252863821,
+          "declared": -461.5996,
+          "deviation": 2.5286382083322678e-05,
+          "key": "curv.elliptic-16-offset.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-4.615996e+02"
+        },
+        {
+          "atol": 7.500000000000001e-14,
+          "computed": 5.145928303184882e-11,
+          "declared": 5.15e-11,
+          "deviation": 4.0716968151182143e-14,
+          "key": "curv.elliptic-16-offset.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "5.15e-11"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 1.4777330590476535e-17,
+          "declared": 1.48e-17,
+          "deviation": 2.2669409523466767e-20,
+          "key": "curv.elliptic-16-offset.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.48e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5133.859144163961,
+          "declared": 5133.859,
+          "deviation": 0.00014416396061278647,
+          "key": "curv.elliptic-16-offset.C55_pitch.code",
+          "status": "PASS",
+          "text": "5.133859e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5133.859053785272,
+          "declared": 5133.859,
+          "deviation": 5.3785272029927e-05,
+          "key": "curv.elliptic-16-offset.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "5.133859e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5133.859144163961,
+          "declared": 5133.859,
+          "deviation": 0.00014416396061278647,
+          "key": "curv.elliptic-16-offset.C55_pitch.ring",
+          "status": "PASS",
+          "text": "5.133859e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 5.873836348553407e-09,
+          "declared": 5.87e-09,
+          "deviation": 3.836348553407038e-12,
+          "key": "curv.elliptic-16-offset.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "5.87e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-16-offset.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096552475605,
+          "declared": 15688.1,
+          "deviation": 0.0034475243955967017,
+          "key": "curv.elliptic-32-centred.C33_heave.code",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096618760028,
+          "declared": 15688.1,
+          "deviation": 0.003381239972441108,
+          "key": "curv.elliptic-32-centred.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096552475607,
+          "declared": 15688.1,
+          "deviation": 0.0034475243937777122,
+          "key": "curv.elliptic-32-centred.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 4.225141203961669e-09,
+          "declared": 4.23e-09,
+          "deviation": 4.858796038330489e-12,
+          "key": "curv.elliptic-32-centred.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "4.23e-09"
+        },
+        {
+          "atol": 7.500000000000001e-19,
+          "computed": 1.1594710661433412e-16,
+          "declared": 1.16e-16,
+          "deviation": 5.289338566589005e-20,
+          "key": "curv.elliptic-32-centred.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.16e-16"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": -1.3949697300064123e-13,
+          "declared": -1.39497e-13,
+          "deviation": 2.6999358764818912e-20,
+          "key": "curv.elliptic-32-centred.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "-1.394970e-13"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": -5.6843418860808015e-06,
+          "declared": -5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.elliptic-32-centred.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "-5.684342e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": -1.0462272975048092e-13,
+          "declared": -1.046227e-13,
+          "deviation": 2.9750480917383753e-20,
+          "key": "curv.elliptic-32-centred.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "-1.046227e-13"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.62334699277895e-10,
+          "declared": 3.62e-10,
+          "deviation": 3.3469927789498973e-13,
+          "key": "curv.elliptic-32-centred.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.62e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 2.2229747970704004e-18,
+          "declared": 2.22e-18,
+          "deviation": 2.9747970704002834e-21,
+          "key": "curv.elliptic-32-centred.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "2.22e-18"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.0924545950096185e-13,
+          "declared": 2.092455e-13,
+          "deviation": 4.049903814722837e-20,
+          "key": "curv.elliptic-32-centred.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "2.092455e-13"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": -5.6843418860808015e-06,
+          "declared": -5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.elliptic-32-centred.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-5.684342e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 1.5112172075069466e-13,
+          "declared": 1.511217e-13,
+          "deviation": 2.075069467506589e-20,
+          "key": "curv.elliptic-32-centred.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "1.511217e-13"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.6233472150764287e-10,
+          "declared": 3.62e-10,
+          "deviation": 3.3472150764287953e-13,
+          "key": "curv.elliptic-32-centred.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.62e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 3.704957995117334e-18,
+          "declared": 3.7e-18,
+          "deviation": 4.957995117333934e-21,
+          "key": "curv.elliptic-32-centred.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "3.70e-18"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 974.2259850242497,
+          "declared": 974.226,
+          "deviation": 1.4975750332268944e-05,
+          "key": "curv.elliptic-32-centred.C44_roll.code",
+          "status": "PASS",
+          "text": "9.742260e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 974.2260317580076,
+          "declared": 974.226,
+          "deviation": 3.1758007594362425e-05,
+          "key": "curv.elliptic-32-centred.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "9.742260e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 974.2259850242497,
+          "declared": 974.226,
+          "deviation": 1.4975750332268944e-05,
+          "key": "curv.elliptic-32-centred.C44_roll.ring",
+          "status": "PASS",
+          "text": "9.742260e+02"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 2.9789310494303857e-09,
+          "declared": 2.98e-09,
+          "deviation": 1.0689505696143063e-12,
+          "key": "curv.elliptic-32-centred.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.98e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-centred.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -1.5984028156323475e-14,
+          "declared": -1.598403e-14,
+          "deviation": 1.84367652378283e-21,
+          "key": "curv.elliptic-32-centred.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-1.598403e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": -1.1368683772161603e-05,
+          "declared": -1.136868e-05,
+          "deviation": 3.7721616025817705e-12,
+          "key": "curv.elliptic-32-centred.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-1.136868e-05"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -1.8890215093836833e-14,
+          "declared": -1.889022e-14,
+          "deviation": 4.906163167421898e-21,
+          "key": "curv.elliptic-32-centred.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-1.889022e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 7.246694153207248e-10,
+          "declared": 7.25e-10,
+          "deviation": 3.3058467927515e-13,
+          "key": "curv.elliptic-32-centred.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "7.25e-10"
+        },
+        {
+          "atol": 7.499999999999999e-22,
+          "computed": 1.8524789975586664e-19,
+          "declared": 1.85e-19,
+          "deviation": 2.478997558666341e-22,
+          "key": "curv.elliptic-32-centred.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.85e-19"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3896.903940096997,
+          "declared": 3896.904,
+          "deviation": 5.990300314806518e-05,
+          "key": "curv.elliptic-32-centred.C55_pitch.code",
+          "status": "PASS",
+          "text": "3.896904e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3896.9039678704576,
+          "declared": 3896.904,
+          "deviation": 3.212954243281274e-05,
+          "key": "curv.elliptic-32-centred.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "3.896904e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3896.903940096997,
+          "declared": 3896.904,
+          "deviation": 5.990300314806518e-05,
+          "key": "curv.elliptic-32-centred.C55_pitch.ring",
+          "status": "PASS",
+          "text": "3.896904e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.770352484914414e-09,
+          "declared": 1.77e-09,
+          "deviation": 3.5248491441401045e-13,
+          "key": "curv.elliptic-32-centred.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.77e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-centred.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096552475605,
+          "declared": 15688.1,
+          "deviation": 0.0034475243955967017,
+          "key": "curv.elliptic-32-offset.C33_heave.code",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096573285293,
+          "declared": 15688.1,
+          "deviation": 0.0034267147075297544,
+          "key": "curv.elliptic-32-offset.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15688.096552475605,
+          "declared": 15688.1,
+          "deviation": 0.0034475243955967017,
+          "key": "curv.elliptic-32-offset.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.568810e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.3264635386033161e-09,
+          "declared": 1.33e-09,
+          "deviation": 3.5364613966838338e-12,
+          "key": "curv.elliptic-32-offset.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.33e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-offset.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1568.8096552475604,
+          "declared": 1568.81,
+          "deviation": 0.00034475243955967017,
+          "key": "curv.elliptic-32-offset.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "1.568810e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1568.8096254962147,
+          "declared": 1568.81,
+          "deviation": 0.00037450378522407846,
+          "key": "curv.elliptic-32-offset.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.568810e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1568.8096552475604,
+          "declared": 1568.81,
+          "deviation": 0.00034475243955967017,
+          "key": "curv.elliptic-32-offset.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "1.568810e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.89642800609316e-09,
+          "declared": 1.9e-09,
+          "deviation": 3.571993906839993e-12,
+          "key": "curv.elliptic-32-offset.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.90e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-offset.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4706.4289657426825,
+          "declared": -4706.429,
+          "deviation": 3.425731756578898e-05,
+          "key": "curv.elliptic-32-offset.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-4.706429e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4706.428916279037,
+          "declared": -4706.429,
+          "deviation": 8.37209627206903e-05,
+          "key": "curv.elliptic-32-offset.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.706429e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4706.428965742682,
+          "declared": -4706.429,
+          "deviation": 3.425731847528368e-05,
+          "key": "curv.elliptic-32-offset.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-4.706429e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 3.1529411480512514e-09,
+          "declared": 3.15e-09,
+          "deviation": 2.9411480512513437e-12,
+          "key": "curv.elliptic-32-offset.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.15e-09"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.797355330716706e-17,
+          "declared": 5.8e-17,
+          "deviation": 2.6446692832945026e-20,
+          "key": "curv.elliptic-32-offset.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "5.80e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1131.1069505490036,
+          "declared": 1131.107,
+          "deviation": 4.945099635733641e-05,
+          "key": "curv.elliptic-32-offset.C44_roll.code",
+          "status": "PASS",
+          "text": "1.131107e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1131.1069556541042,
+          "declared": 1131.107,
+          "deviation": 4.43458957306575e-05,
+          "key": "curv.elliptic-32-offset.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.131107e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1131.1069505490036,
+          "declared": 1131.107,
+          "deviation": 4.945099635733641e-05,
+          "key": "curv.elliptic-32-offset.C44_roll.ring",
+          "status": "PASS",
+          "text": "1.131107e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.254123666056423e-10,
+          "declared": 3.25e-10,
+          "deviation": 4.123666056422937e-13,
+          "key": "curv.elliptic-32-offset.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.25e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-offset.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -470.6428965742682,
+          "declared": -470.6429,
+          "deviation": 3.4257317906849494e-06,
+          "key": "curv.elliptic-32-offset.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-4.706429e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -470.642868322102,
+          "declared": -470.6429,
+          "deviation": 3.167789799363163e-05,
+          "key": "curv.elliptic-32-offset.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.706429e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -470.6428965742682,
+          "declared": -470.6429,
+          "deviation": 3.4257317906849494e-06,
+          "key": "curv.elliptic-32-offset.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-4.706429e+02"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.8008664154026033e-09,
+          "declared": 1.8e-09,
+          "deviation": 8.664154026033551e-13,
+          "key": "curv.elliptic-32-offset.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.80e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-offset.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5308.832629819799,
+          "declared": 5308.833,
+          "deviation": 0.0003701802006617072,
+          "key": "curv.elliptic-32-offset.C55_pitch.code",
+          "status": "PASS",
+          "text": "5.308833e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5308.832601258473,
+          "declared": 5308.833,
+          "deviation": 0.0003987415266237804,
+          "key": "curv.elliptic-32-offset.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "5.308833e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5308.832629819799,
+          "declared": 5308.833,
+          "deviation": 0.0003701802006617072,
+          "key": "curv.elliptic-32-offset.C55_pitch.ring",
+          "status": "PASS",
+          "text": "5.308833e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.8205730610171538e-09,
+          "declared": 1.82e-09,
+          "deviation": 5.730610171539235e-13,
+          "key": "curv.elliptic-32-offset.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.82e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-32-offset.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.00454309132,
+          "declared": 15764.0,
+          "deviation": 0.004543091319646919,
+          "key": "curv.elliptic-64-centred.C33_heave.code",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.004569973622,
+          "declared": 15764.0,
+          "deviation": 0.004569973621983081,
+          "key": "curv.elliptic-64-centred.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.00454309132,
+          "declared": 15764.0,
+          "deviation": 0.004543091319646919,
+          "key": "curv.elliptic-64-centred.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.705296535704394e-09,
+          "declared": 1.71e-09,
+          "deviation": 4.703464295606101e-12,
+          "key": "curv.elliptic-64-centred.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.71e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-centred.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -7.265467343783398e-14,
+          "declared": -7.265467e-14,
+          "deviation": 3.4378339766615384e-21,
+          "key": "curv.elliptic-64-centred.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "-7.265467e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.1368683772161603e-05,
+          "declared": 1.136868e-05,
+          "deviation": 3.7721616025817705e-12,
+          "key": "curv.elliptic-64-centred.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.136868e-05"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -9.51776222035625e-14,
+          "declared": -9.517762e-14,
+          "deviation": 2.2035625017627746e-21,
+          "key": "curv.elliptic-64-centred.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "-9.517762e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 7.211799396365105e-10,
+          "declared": 7.21e-10,
+          "deviation": 1.7993963651050855e-13,
+          "key": "curv.elliptic-64-centred.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "7.21e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 1.4287580737598402e-18,
+          "declared": 1.43e-18,
+          "deviation": 1.2419262401598579e-21,
+          "key": "curv.elliptic-64-centred.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.43e-18"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": -2.3249495500106874e-13,
+          "declared": -2.32495e-13,
+          "deviation": 4.4998931274698186e-20,
+          "key": "curv.elliptic-64-centred.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-2.324950e-13"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 5.6843418860808015e-06,
+          "declared": 5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.elliptic-64-centred.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "5.684342e-06"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -9.299798200042748e-14,
+          "declared": -9.299798e-14,
+          "deviation": 2.000427473898126e-21,
+          "key": "curv.elliptic-64-centred.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-9.299798e-14"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 3.6058998226227725e-10,
+          "declared": 3.61e-10,
+          "deviation": 4.100177377227404e-13,
+          "key": "curv.elliptic-64-centred.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.61e-10"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 8.849082263286756e-18,
+          "declared": 8.85e-18,
+          "deviation": 9.177367132434416e-22,
+          "key": "curv.elliptic-64-centred.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "8.85e-18"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 983.6688674720455,
+          "declared": 983.6689,
+          "deviation": 3.252795454500301e-05,
+          "key": "curv.elliptic-64-centred.C44_roll.code",
+          "status": "PASS",
+          "text": "9.836689e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 983.6687240749598,
+          "declared": 983.6687,
+          "deviation": 2.4074959810604923e-05,
+          "key": "curv.elliptic-64-centred.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "9.836687e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": 983.6688674720455,
+          "declared": 983.6689,
+          "deviation": 3.252795454500301e-05,
+          "key": "curv.elliptic-64-centred.C44_roll.ring",
+          "status": "PASS",
+          "text": "9.836689e+02"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 9.09648847892013e-09,
+          "declared": 9.1e-09,
+          "deviation": 3.511521079870093e-12,
+          "key": "curv.elliptic-64-centred.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "9.10e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-centred.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 5.521755181275382e-14,
+          "declared": 5.521755e-14,
+          "deviation": 1.8127538168532214e-21,
+          "key": "curv.elliptic-64-centred.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "5.521755e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 3.410605131648481e-05,
+          "declared": 3.410605e-05,
+          "deviation": 1.3164848104338898e-12,
+          "key": "curv.elliptic-64-centred.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "3.410605e-05"
+        },
+        {
+          "atol": 7.499999999999999e-22,
+          "computed": -9.445107546918416e-15,
+          "declared": -9.445108e-15,
+          "deviation": 4.5308158407103145e-22,
+          "key": "curv.elliptic-64-centred.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-9.445108e-15"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 2.1635398015800793e-09,
+          "declared": 2.16e-09,
+          "deviation": 3.5398015800792775e-12,
+          "key": "curv.elliptic-64-centred.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.16e-09"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 4.1019183407943816e-18,
+          "declared": 4.1e-18,
+          "deviation": 1.9183407943818335e-21,
+          "key": "curv.elliptic-64-centred.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "4.10e-18"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3934.675469888186,
+          "declared": 3934.675,
+          "deviation": 0.0004698881857621018,
+          "key": "curv.elliptic-64-centred.C55_pitch.code",
+          "status": "PASS",
+          "text": "3.934675e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3934.675396521925,
+          "declared": 3934.675,
+          "deviation": 0.000396521924812987,
+          "key": "curv.elliptic-64-centred.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "3.934675e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 3934.675469888186,
+          "declared": 3934.675,
+          "deviation": 0.0004698881857621018,
+          "key": "curv.elliptic-64-centred.C55_pitch.ring",
+          "status": "PASS",
+          "text": "3.934675e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 4.654037034090304e-09,
+          "declared": 4.65e-09,
+          "deviation": 4.037034090304031e-12,
+          "key": "curv.elliptic-64-centred.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "4.65e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-centred.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.004543091321,
+          "declared": 15764.0,
+          "deviation": 0.0045430913214659085,
+          "key": "curv.elliptic-64-offset.C33_heave.code",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.004479024152,
+          "declared": 15764.0,
+          "deviation": 0.004479024151805788,
+          "key": "curv.elliptic-64-offset.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 15764.004543091321,
+          "declared": 15764.0,
+          "deviation": 0.0045430913214659085,
+          "key": "curv.elliptic-64-offset.C33_heave.ring",
+          "status": "PASS",
+          "text": "1.576400e+04"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 4.0641430599053035e-09,
+          "declared": 4.06e-09,
+          "deviation": 4.143059905303879e-12,
+          "key": "curv.elliptic-64-offset.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "4.06e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-offset.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1576.4004543091323,
+          "declared": 1576.4,
+          "deviation": 0.0004543091322375403,
+          "key": "curv.elliptic-64-offset.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "1.576400e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1576.400450176152,
+          "declared": 1576.4,
+          "deviation": 0.0004501761518440617,
+          "key": "curv.elliptic-64-offset.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.576400e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1576.4004543091323,
+          "declared": 1576.4,
+          "deviation": 0.0004543091322375403,
+          "key": "curv.elliptic-64-offset.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "1.576400e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 2.6217833052388665e-10,
+          "declared": 2.62e-10,
+          "deviation": 1.7833052388661935e-13,
+          "key": "curv.elliptic-64-offset.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.62e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-offset.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4729.201362927396,
+          "declared": -4729.201,
+          "deviation": 0.0003629273960541468,
+          "key": "curv.elliptic-64-offset.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-4.729201e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4729.201350528456,
+          "declared": -4729.201,
+          "deviation": 0.00035052845578320557,
+          "key": "curv.elliptic-64-offset.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.729201e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -4729.201362927397,
+          "declared": -4729.201,
+          "deviation": 0.0003629273969636415,
+          "key": "curv.elliptic-64-offset.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-4.729201e+03"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 7.865349338772651e-10,
+          "declared": 7.87e-10,
+          "deviation": 4.650661227348696e-13,
+          "key": "curv.elliptic-64-offset.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "7.87e-10"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.769439480220908e-17,
+          "declared": 5.77e-17,
+          "deviation": 5.6051977909237996e-21,
+          "key": "curv.elliptic-64-offset.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "5.77e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1141.3089129029609,
+          "declared": 1141.309,
+          "deviation": 8.709703911335964e-05,
+          "key": "curv.elliptic-64-offset.C44_roll.code",
+          "status": "PASS",
+          "text": "1.141309e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1141.3088941480964,
+          "declared": 1141.309,
+          "deviation": 0.00010585190352685458,
+          "key": "curv.elliptic-64-offset.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "1.141309e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 1141.3089129029609,
+          "declared": 1141.309,
+          "deviation": 8.709703911335964e-05,
+          "key": "curv.elliptic-64-offset.C44_roll.ring",
+          "status": "PASS",
+          "text": "1.141309e+03"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.1897271636929581e-09,
+          "declared": 1.19e-09,
+          "deviation": 2.7283630704189373e-13,
+          "key": "curv.elliptic-64-offset.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.19e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.elliptic-64-offset.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -472.9201362927397,
+          "declared": -472.9201,
+          "deviation": 3.6292739707732835e-05,
+          "key": "curv.elliptic-64-offset.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-4.729201e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -472.92010094679426,
+          "declared": -472.9201,
+          "deviation": 9.467942732044321e-07,
+          "key": "curv.elliptic-64-offset.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-4.729201e+02"
+        },
+        {
+          "atol": 7.500000000000001e-05,
+          "computed": -472.92013629273987,
+          "declared": -472.9201,
+          "deviation": 3.629273987826309e-05,
+          "key": "curv.elliptic-64-offset.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-4.729201e+02"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 2.2421933042400065e-09,
+          "declared": 2.24e-09,
+          "deviation": 2.193304240006418e-12,
+          "key": "curv.elliptic-64-offset.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.24e-09"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 1.0817699025414203e-17,
+          "declared": 1.08e-17,
+          "deviation": 1.7699025414203325e-20,
+          "key": "curv.elliptic-64-offset.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.08e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5353.435878766406,
+          "declared": 5353.436,
+          "deviation": 0.00012123359374527354,
+          "key": "curv.elliptic-64-offset.C55_pitch.code",
+          "status": "PASS",
+          "text": "5.353436e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5353.435631150205,
+          "declared": 5353.436,
+          "deviation": 0.00036884979454043787,
+          "key": "curv.elliptic-64-offset.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "5.353436e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 5353.435878766407,
+          "declared": 5353.436,
+          "deviation": 0.00012123359283577884,
+          "key": "curv.elliptic-64-offset.C55_pitch.ring",
+          "status": "PASS",
+          "text": "5.353436e+03"
+        },
+        {
+          "atol": 7.5e-11,
+          "computed": 1.57076966146704e-08,
+          "declared": 1.57e-08,
+          "deviation": 7.696614670397271e-12,
+          "key": "curv.elliptic-64-offset.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.57e-08"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.769439480220908e-17,
+          "declared": 5.77e-17,
+          "deviation": 5.6051977909237996e-21,
+          "key": "curv.elliptic-64-offset.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "5.77e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30773.30835242548,
+          "declared": 30773.31,
+          "deviation": 0.0016475745214847848,
+          "key": "curv.hemisphere-2-centred.C33_heave.code",
+          "status": "PASS",
+          "text": "3.077331e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30772.912032261956,
+          "declared": 30772.91,
+          "deviation": 0.002032261956628645,
+          "key": "curv.hemisphere-2-centred.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "3.077291e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30773.30835242548,
+          "declared": 30773.31,
+          "deviation": 0.0016475745214847848,
+          "key": "curv.hemisphere-2-centred.C33_heave.ring",
+          "status": "PASS",
+          "text": "3.077331e+04"
+        },
+        {
+          "atol": 7.5e-08,
+          "computed": 1.287869861064531e-05,
+          "declared": 1.29e-05,
+          "deviation": 2.1301389354689933e-08,
+          "key": "curv.hemisphere-2-centred.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.29e-05"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "0.000000e+00"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 5.6843418860808015e-06,
+          "declared": 5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.hemisphere-2-centred.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "5.684342e-06"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "0.000000e+00"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 1.847166323809567e-10,
+          "declared": 1.85e-10,
+          "deviation": 2.833676190433166e-13,
+          "key": "curv.hemisphere-2-centred.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.85e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": -5.6843418860808015e-06,
+          "declared": -5.684342e-06,
+          "deviation": 1.1391919834080567e-13,
+          "key": "curv.hemisphere-2-centred.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-5.684342e-06"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-13,
+          "computed": 1.847166323809567e-10,
+          "declared": 1.85e-10,
+          "deviation": 2.833676190433166e-13,
+          "key": "curv.hemisphere-2-centred.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.85e-10"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8212.071882345788,
+          "declared": 8212.072,
+          "deviation": 0.00011765421186282765,
+          "key": "curv.hemisphere-2-centred.C44_roll.code",
+          "status": "PASS",
+          "text": "8.212072e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8211.90940314409,
+          "declared": 8211.909,
+          "deviation": 0.00040314409125130624,
+          "key": "curv.hemisphere-2-centred.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "8.211909e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8212.071882345788,
+          "declared": 8212.072,
+          "deviation": 0.00011765421186282765,
+          "key": "curv.hemisphere-2-centred.C44_roll.ring",
+          "status": "PASS",
+          "text": "8.212072e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 5.279874358537902e-06,
+          "declared": 5.28e-06,
+          "deviation": 1.256414620983532e-10,
+          "key": "curv.hemisphere-2-centred.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "5.28e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "0.000000e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8212.071882345788,
+          "declared": 8212.072,
+          "deviation": 0.00011765421186282765,
+          "key": "curv.hemisphere-2-centred.C55_pitch.code",
+          "status": "PASS",
+          "text": "8.212072e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8211.909334931988,
+          "declared": 8211.909,
+          "deviation": 0.0003349319886183366,
+          "key": "curv.hemisphere-2-centred.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "8.211909e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8212.071882345788,
+          "declared": 8212.072,
+          "deviation": 0.00011765421186282765,
+          "key": "curv.hemisphere-2-centred.C55_pitch.ring",
+          "status": "PASS",
+          "text": "8.212072e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 5.282090958126473e-06,
+          "declared": 5.28e-06,
+          "deviation": 2.090958126472999e-09,
+          "key": "curv.hemisphere-2-centred.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "5.28e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-centred.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30773.30835242548,
+          "declared": 30773.31,
+          "deviation": 0.0016475745214847848,
+          "key": "curv.hemisphere-2-offset.C33_heave.code",
+          "status": "PASS",
+          "text": "3.077331e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30772.912032261956,
+          "declared": 30772.91,
+          "deviation": 0.002032261956628645,
+          "key": "curv.hemisphere-2-offset.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "3.077291e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 30773.30835242548,
+          "declared": 30773.31,
+          "deviation": 0.0016475745214847848,
+          "key": "curv.hemisphere-2-offset.C33_heave.ring",
+          "status": "PASS",
+          "text": "3.077331e+04"
+        },
+        {
+          "atol": 7.5e-08,
+          "computed": 1.287869861064531e-05,
+          "declared": 1.29e-05,
+          "deviation": 2.1301389354689933e-08,
+          "key": "curv.hemisphere-2-offset.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.29e-05"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-offset.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4615.9962528638225,
+          "declared": 4615.996,
+          "deviation": 0.0002528638224248425,
+          "key": "curv.hemisphere-2-offset.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "4.615996e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4615.862934542747,
+          "declared": 4615.863,
+          "deviation": 6.545725318574114e-05,
+          "key": "curv.hemisphere-2-offset.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "4.615863e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4615.9962528638225,
+          "declared": 4615.996,
+          "deviation": 0.0002528638224248425,
+          "key": "curv.hemisphere-2-offset.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "4.615996e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 4.332271316058014e-06,
+          "declared": 4.33e-06,
+          "deviation": 2.271316058013805e-09,
+          "key": "curv.hemisphere-2-offset.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "4.33e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-offset.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7693.327088106372,
+          "declared": -7693.327,
+          "deviation": 8.810637154965661e-05,
+          "key": "curv.hemisphere-2-offset.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-7.693327e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7693.103128758594,
+          "declared": -7693.103,
+          "deviation": 0.00012875859374616994,
+          "key": "curv.hemisphere-2-offset.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-7.693103e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7693.327088106371,
+          "declared": -7693.327,
+          "deviation": 8.810637064016191e-05,
+          "key": "curv.hemisphere-2-offset.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-7.693327e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 7.277714349497674e-06,
+          "declared": 7.28e-06,
+          "deviation": 2.285650502325477e-09,
+          "key": "curv.hemisphere-2-offset.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "7.28e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.955466118095307e-17,
+          "declared": 2.96e-17,
+          "deviation": 4.5338819046933535e-20,
+          "key": "curv.hemisphere-2-offset.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "2.96e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8904.47132027536,
+          "declared": 8904.471,
+          "deviation": 0.00032027535962697584,
+          "key": "curv.hemisphere-2-offset.C44_roll.code",
+          "status": "PASS",
+          "text": "8.904471e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8904.29207629495,
+          "declared": 8904.292,
+          "deviation": 7.629495121364016e-05,
+          "key": "curv.hemisphere-2-offset.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "8.904292e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8904.47132027536,
+          "declared": 8904.471,
+          "deviation": 0.00032027535962697584,
+          "key": "curv.hemisphere-2-offset.C44_roll.ring",
+          "status": "PASS",
+          "text": "8.904471e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 5.824657471200137e-06,
+          "declared": 5.82e-06,
+          "deviation": 4.657471200136655e-09,
+          "key": "curv.hemisphere-2-offset.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "5.82e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-offset.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1153.9990632159552,
+          "declared": -1153.999,
+          "deviation": 6.321595515146328e-05,
+          "key": "curv.hemisphere-2-offset.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-1.153999e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1153.9590275333467,
+          "declared": -1153.959,
+          "deviation": 2.7533346610653098e-05,
+          "key": "curv.hemisphere-2-offset.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-1.153959e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1153.9990632159556,
+          "declared": -1153.999,
+          "deviation": 6.321595560621063e-05,
+          "key": "curv.hemisphere-2-offset.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-1.153999e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 1.3009872760511599e-06,
+          "declared": 1.3e-06,
+          "deviation": 9.872760511598134e-10,
+          "key": "curv.hemisphere-2-offset.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.30e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 1.4777330590476535e-17,
+          "declared": 1.48e-17,
+          "deviation": 2.2669409523466767e-20,
+          "key": "curv.hemisphere-2-offset.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.48e-17"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10135.403654372381,
+          "declared": 10135.4,
+          "deviation": 0.003654372381788562,
+          "key": "curv.hemisphere-2-offset.C55_pitch.code",
+          "status": "PASS",
+          "text": "1.013540e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10135.194315807894,
+          "declared": 10135.19,
+          "deviation": 0.004315807893362944,
+          "key": "curv.hemisphere-2-offset.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "1.013519e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10135.403654372381,
+          "declared": 10135.4,
+          "deviation": 0.003654372381788562,
+          "key": "curv.hemisphere-2-offset.C55_pitch.ring",
+          "status": "PASS",
+          "text": "1.013540e+04"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 6.8026018551577975e-06,
+          "declared": 6.8e-06,
+          "deviation": 2.60185515779741e-09,
+          "key": "curv.hemisphere-2-offset.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.80e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-2-offset.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31376.19310495121,
+          "declared": 31376.19,
+          "deviation": 0.003104951210843865,
+          "key": "curv.hemisphere-3-centred.C33_heave.code",
+          "status": "PASS",
+          "text": "3.137619e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31375.994808513497,
+          "declared": 31375.99,
+          "deviation": 0.004808513494936051,
+          "key": "curv.hemisphere-3-centred.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "3.137599e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31376.19310495121,
+          "declared": 31376.19,
+          "deviation": 0.003104951210843865,
+          "key": "curv.hemisphere-3-centred.C33_heave.ring",
+          "status": "PASS",
+          "text": "3.137619e+04"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 6.319964855191625e-06,
+          "declared": 6.32e-06,
+          "deviation": 3.514480837479324e-11,
+          "key": "curv.hemisphere-3-centred.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.32e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 4.649899100021374e-14,
+          "declared": 4.649899e-14,
+          "deviation": 1.000213736949063e-21,
+          "key": "curv.hemisphere-3-centred.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "4.649899e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 5.6843418860808015e-05,
+          "declared": 5.684342e-05,
+          "deviation": 1.1391919851021226e-12,
+          "key": "curv.hemisphere-3-centred.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "5.684342e-05"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": -9.299798200042748e-14,
+          "declared": -9.299798e-14,
+          "deviation": 2.000427473898126e-21,
+          "key": "curv.hemisphere-3-centred.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "-9.299798e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.8116735393669873e-09,
+          "declared": 1.81e-09,
+          "deviation": 1.6735393669873254e-12,
+          "key": "curv.hemisphere-3-centred.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.81e-09"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 4.445949594140801e-18,
+          "declared": 4.45e-18,
+          "deviation": 4.05040585919938e-21,
+          "key": "curv.hemisphere-3-centred.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "4.45e-18"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": -5.115907697472721e-05,
+          "declared": -5.115908e-05,
+          "deviation": 3.0252727880870738e-12,
+          "key": "curv.hemisphere-3-centred.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-5.115908e-05"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 4.649899100021374e-14,
+          "declared": 4.649899e-14,
+          "deviation": 1.000213736949063e-21,
+          "key": "curv.hemisphere-3-centred.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "4.649899e-14"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.6305061867640736e-09,
+          "declared": 1.63e-09,
+          "deviation": 5.061867640735968e-13,
+          "key": "curv.hemisphere-3-centred.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.63e-09"
+        },
+        {
+          "atol": 7.499999999999999e-21,
+          "computed": 1.4819831980469335e-18,
+          "declared": 1.48e-18,
+          "deviation": 1.983198046933458e-21,
+          "key": "curv.hemisphere-3-centred.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "1.48e-18"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.966759940788,
+          "declared": 8371.967,
+          "deviation": 0.00024005921295611188,
+          "key": "curv.hemisphere-3-centred.C44_roll.code",
+          "status": "PASS",
+          "text": "8.371967e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.882881874626,
+          "declared": 8371.883,
+          "deviation": 0.00011812537377409171,
+          "key": "curv.hemisphere-3-centred.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "8.371883e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.966759940788,
+          "declared": 8371.967,
+          "deviation": 0.00024005921295611188,
+          "key": "curv.hemisphere-3-centred.C44_roll.ring",
+          "status": "PASS",
+          "text": "8.371967e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 2.6733028408192723e-06,
+          "declared": 2.67e-06,
+          "deviation": 3.3028408192724633e-09,
+          "key": "curv.hemisphere-3-centred.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.67e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 5.115907697472721e-05,
+          "declared": 5.115908e-05,
+          "deviation": 3.0252727880870738e-12,
+          "key": "curv.hemisphere-3-centred.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "5.115908e-05"
+        },
+        {
+          "atol": 7.5e-07,
+          "computed": -0.0,
+          "declared": -0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-0.000000e+00"
+        },
+        {
+          "atol": 7.5e-12,
+          "computed": 1.6305061867640736e-09,
+          "declared": 1.63e-09,
+          "deviation": 5.061867640735968e-13,
+          "key": "curv.hemisphere-3-centred.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "1.63e-09"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.966759940788,
+          "declared": 8371.967,
+          "deviation": 0.00024005921295611188,
+          "key": "curv.hemisphere-3-centred.C55_pitch.code",
+          "status": "PASS",
+          "text": "8.371967e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.882881874626,
+          "declared": 8371.883,
+          "deviation": 0.00011812537377409171,
+          "key": "curv.hemisphere-3-centred.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "8.371883e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 8371.966759940788,
+          "declared": 8371.967,
+          "deviation": 0.00024005921295611188,
+          "key": "curv.hemisphere-3-centred.C55_pitch.ring",
+          "status": "PASS",
+          "text": "8.371967e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 2.6733028408192723e-06,
+          "declared": 2.67e-06,
+          "deviation": 3.3028408192724633e-09,
+          "key": "curv.hemisphere-3-centred.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.67e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-centred.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31376.19310495121,
+          "declared": 31376.19,
+          "deviation": 0.003104951210843865,
+          "key": "curv.hemisphere-3-offset.C33_heave.code",
+          "status": "PASS",
+          "text": "3.137619e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31375.994808513497,
+          "declared": 31375.99,
+          "deviation": 0.004808513494936051,
+          "key": "curv.hemisphere-3-offset.C33_heave.energy_hessian",
+          "status": "PASS",
+          "text": "3.137599e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 31376.19310495121,
+          "declared": 31376.19,
+          "deviation": 0.003104951210843865,
+          "key": "curv.hemisphere-3-offset.C33_heave.ring",
+          "status": "PASS",
+          "text": "3.137619e+04"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 6.319964855191625e-06,
+          "declared": 6.32e-06,
+          "deviation": 3.514480837479324e-11,
+          "key": "curv.hemisphere-3-offset.C33_heave.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.32e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-offset.C33_heave.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4706.4289657426825,
+          "declared": 4706.429,
+          "deviation": 3.425731756578898e-05,
+          "key": "curv.hemisphere-3-offset.C34_heave-roll.code",
+          "status": "PASS",
+          "text": "4.706429e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4706.361880835175,
+          "declared": 4706.362,
+          "deviation": 0.00011916482526430627,
+          "key": "curv.hemisphere-3-offset.C34_heave-roll.energy_hessian",
+          "status": "PASS",
+          "text": "4.706362e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 4706.428965742682,
+          "declared": 4706.429,
+          "deviation": 3.425731847528368e-05,
+          "key": "curv.hemisphere-3-offset.C34_heave-roll.ring",
+          "status": "PASS",
+          "text": "4.706429e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 2.1380830772972165e-06,
+          "declared": 2.14e-06,
+          "deviation": 1.9169227027833536e-09,
+          "key": "curv.hemisphere-3-offset.C34_heave-roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.14e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 2.898677665358353e-17,
+          "declared": 2.9e-17,
+          "deviation": 1.3223346416472513e-20,
+          "key": "curv.hemisphere-3-offset.C34_heave-roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "2.90e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7844.048276237805,
+          "declared": -7844.048,
+          "deviation": 0.0002762378053375869,
+          "key": "curv.hemisphere-3-offset.C35_heave-pitch.code",
+          "status": "PASS",
+          "text": "-7.844048e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7843.935492246601,
+          "declared": -7843.935,
+          "deviation": 0.0004922466005155002,
+          "key": "curv.hemisphere-3-offset.C35_heave-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-7.843935e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -7844.048276237803,
+          "declared": -7844.048,
+          "deviation": 0.0002762378035185975,
+          "key": "curv.hemisphere-3-offset.C35_heave-pitch.ring",
+          "status": "PASS",
+          "text": "-7.844048e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 3.5945721913089217e-06,
+          "declared": 3.59e-06,
+          "deviation": 4.572191308921758e-09,
+          "key": "curv.hemisphere-3-offset.C35_heave-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.59e-06"
+        },
+        {
+          "atol": 7.5e-20,
+          "computed": 5.797355330716706e-17,
+          "declared": 5.8e-17,
+          "deviation": 2.6446692832945026e-20,
+          "key": "curv.hemisphere-3-offset.C35_heave-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "5.80e-17"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9077.931104802186,
+          "declared": 9077.931,
+          "deviation": 0.00010480218588782009,
+          "key": "curv.hemisphere-3-offset.C44_roll.code",
+          "status": "PASS",
+          "text": "9.077931e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9077.838740267907,
+          "declared": 9077.839,
+          "deviation": 0.0002597320926724933,
+          "key": "curv.hemisphere-3-offset.C44_roll.energy_hessian",
+          "status": "PASS",
+          "text": "9.077839e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": 9077.931104802186,
+          "declared": 9077.931,
+          "deviation": 0.00010480218588782009,
+          "key": "curv.hemisphere-3-offset.C44_roll.ring",
+          "status": "PASS",
+          "text": "9.077931e+03"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 2.9437775950116148e-06,
+          "declared": 2.94e-06,
+          "deviation": 3.777595011614948e-09,
+          "key": "curv.hemisphere-3-offset.C44_roll.rel_dev_energy",
+          "status": "PASS",
+          "text": "2.94e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-offset.C44_roll.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1176.6072414356704,
+          "declared": -1176.607,
+          "deviation": 0.00024143567043211078,
+          "key": "curv.hemisphere-3-offset.C45_roll-pitch.code",
+          "status": "PASS",
+          "text": "-1.176607e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1176.5869771807047,
+          "declared": -1176.587,
+          "deviation": 2.2819295281806262e-05,
+          "key": "curv.hemisphere-3-offset.C45_roll-pitch.energy_hessian",
+          "status": "PASS",
+          "text": "-1.176587e+03"
+        },
+        {
+          "atol": 0.00075,
+          "computed": -1176.6072414356704,
+          "declared": -1176.607,
+          "deviation": 0.00024143567043211078,
+          "key": "curv.hemisphere-3-offset.C45_roll-pitch.ring",
+          "status": "PASS",
+          "text": "-1.176607e+03"
+        },
+        {
+          "atol": 7.500000000000001e-10,
+          "computed": 6.458481084022267e-07,
+          "declared": 6.46e-07,
+          "deviation": 1.518915977733742e-10,
+          "key": "curv.hemisphere-3-offset.C45_roll-pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "6.46e-07"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-offset.C45_roll-pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10332.978829000236,
+          "declared": 10332.98,
+          "deviation": 0.0011709997634170577,
+          "key": "curv.hemisphere-3-offset.C55_pitch.code",
+          "status": "PASS",
+          "text": "1.033298e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10332.871124774101,
+          "declared": 10332.87,
+          "deviation": 0.0011247741003899137,
+          "key": "curv.hemisphere-3-offset.C55_pitch.energy_hessian",
+          "status": "PASS",
+          "text": "1.033287e+04"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 10332.978829000236,
+          "declared": 10332.98,
+          "deviation": 0.0011709997634170577,
+          "key": "curv.hemisphere-3-offset.C55_pitch.ring",
+          "status": "PASS",
+          "text": "1.033298e+04"
+        },
+        {
+          "atol": 7.500000000000001e-09,
+          "computed": 3.432673485106778e-06,
+          "declared": 3.43e-06,
+          "deviation": 2.673485106777661e-09,
+          "key": "curv.hemisphere-3-offset.C55_pitch.rel_dev_energy",
+          "status": "PASS",
+          "text": "3.43e-06"
+        },
+        {
+          "atol": 0.0075,
+          "computed": 0.0,
+          "declared": 0.0,
+          "deviation": 0.0,
+          "key": "curv.hemisphere-3-offset.C55_pitch.rel_dev_ring",
+          "status": "PASS",
+          "text": "0.00e+00"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "schema": "tensorbem.hydrostatic_restoring_pins/1",
+  "status": "PASS"
+}

@@ -6,15 +6,15 @@
 
 | 指标 | 值 |
 |---|---:|
-| 被审计文档数 | 76 |
-| PINNED（测试直接解析文档） | 30 |
-| ARTIFACT（生成模块被测、文档文本未解析） | 24 |
+| 被审计文档数 | 78 |
+| PINNED（测试直接解析文档） | 31 |
+| ARTIFACT（生成模块被测、文档文本未解析） | 25 |
 | UNGUARDED（无人守） | 22 |
 | 其中论文级 UNGUARDED | 8 |
-| 数字 token 总数 | 8216 |
-| 已守数字 token | 6731 |
-| 数字覆盖率 | 81.9% |
-| 文档覆盖率 | 71.1% |
+| 数字 token 总数 | 8665 |
+| 已守数字 token | 7180 |
+| 数字覆盖率 | 82.9% |
+| 文档覆盖率 | 71.8% |
 
 ## 2. 论文级未守文档（按数字量降序，前 15）
 
@@ -60,6 +60,7 @@
 | `doc_claim_gate_portability.md` | ARTIFACT | 36 | 122 | `tensorbem.doc_claims` |
 | `readme_claim_inventory.md` | ARTIFACT | 20 | 140 | `tensorbem.benchmarks.doc_inventory` |
 | `marine_bem_benchmarks.md` | PINNED | 701 | 667 | `tensorbem.benchmarks.cylinder_added_mass`, `tensorbem.benchmarks.sphere_added_mass`, `tensorbem.benchmarks.three_dimensional_study`, `tensorbem.benchmarks.ursell_cylinder`, `tensorbem.benchmarks.ursell_convergence_table`, `tensorbem.benchmarks.rigid_body_added_mass`, `tensorbem.benchmarks.dean_diffraction`, `tensorbem.benchmarks.maccamy_fuchs`, `tensorbem.benchmarks.floating_hemisphere`, `tensorbem.benchmarks.declared_numbers`, `tensorbem.benchmarks.submerged_sphere_wave` |
+| `hydrostatic_restoring_waterplane_curvature.md` | PINNED | 415 | 199 | `tensorbem.benchmarks.hydrostatic_restoring_pins` |
 | `finite_depth_envelope.md` | PINNED | 362 | 172 | `tensorbem.benchmarks.finite_depth_envelope` |
 | `three_dimensional_bem.md` | PINNED | 271 | 570 | `tensorbem.benchmarks.mesh_doc_pins`, `tensorbem.benchmarks.sphere_added_mass`, `tensorbem.benchmarks.three_dimensional_study`, `tensorbem.benchmarks.sphere_velocity`, `tensorbem.benchmarks.surface_velocity_study`, `tensorbem.benchmarks.three_dimensional_doc_pins`, `tensorbem.benchmarks.prose_claims` |
 | `lifting_camber.md` | PINNED | 244 | 152 | `tensorbem.benchmarks.lifting_camber` |
@@ -99,6 +100,7 @@
 | `hydrostatic_verification_m2127_zh.md` | ARTIFACT | 258 | 170 | `tensorbem.benchmarks.hydrostatic_analytic` |
 | `audit_m56_final.md` | ARTIFACT | 91 | 214 | `tensorbem.benchmarks.ursell_cylinder`, `tensorbem.benchmarks.floating_hemisphere` |
 | `dev_report_tensorbem-ursell-band-audit.md` | ARTIFACT | 65 | 80 | `tensorbem.benchmarks.ursell_band_audit` |
+| `dev_report_m4741_hydrostatic_restoring_pins.md` | ARTIFACT | 34 | 110 | `tensorbem.benchmarks.hydrostatic_restoring_pins` |
 | `dev_report_m4614_doc_claim_audit_ratchet.md` | ARTIFACT | 8 | 251 | `tensorbem.benchmarks.doc_claim_audit` |
 | `dev_report_m4317_pr209_capability_baseline.md` | ARTIFACT | 0 | 94 | `tensorbem.capability_evidence` |
 | `project_review_2026-10-22.md` | PINNED | 227 | 522 | `tensorbem.benchmarks.unit_disk`, `tensorbem.benchmarks.cylinder_added_mass`, `tensorbem.benchmarks.refinement_study`, `tensorbem.benchmarks.analytical_suite`, `tensorbem.benchmarks.sphere_added_mass`, `tensorbem.benchmarks.sphere_velocity`, `tensorbem.benchmarks.surface_velocity_study`, `tensorbem.benchmarks.three_dimensional_study` |
@@ -108,4 +110,4 @@
 | `audit_baseline.md` | PINNED | 63 | 181 | `tensorbem.capability_evidence` |
 | `mutation_audit_tensorbem.md` | PINNED | 56 | 112 | `tensorbem.benchmarks.mutation_audit` |
 | `ci_red_triage_m3314.md` | PINNED | 32 | 155 | `tensorbem.doc_claims` |
-| `doc_claim_audit.md` | PINNED | 2 | 111 | `tensorbem.benchmarks.doc_claim_audit` |
+| `doc_claim_audit.md` | PINNED | 2 | 113 | `tensorbem.benchmarks.doc_claim_audit` |
