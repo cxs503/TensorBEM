@@ -2,15 +2,15 @@
   "counts": {
     "artifact": 25,
     "documents": 79,
-    "number_tokens": 8683,
-    "number_tokens_covered": 7180,
-    "pinned": 31,
-    "unguarded": 23,
+    "number_tokens": 8703,
+    "number_tokens_covered": 7218,
+    "pinned": 32,
+    "unguarded": 22,
     "unguarded_paper_level": 8
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7088607594936709,
-    "guarded_number_fraction": 0.8269031440746286
+    "documents_guarded_fraction": 0.7215189873417721,
+    "guarded_number_fraction": 0.8293691830403309
   },
   "records": [
     {
@@ -299,13 +299,15 @@
       "artifact": "docs/m4796/ci_duration_evidence.json",
       "doc": "dev_report_m4796_ci_red_fix.md",
       "generators": [],
-      "lines": 104,
+      "lines": 160,
       "modules_exercised": [],
-      "note": "no declared generator and no reading test",
-      "number_tokens": 18,
+      "note": "read by 1 test file(s)",
+      "number_tokens": 38,
       "paper_level": false,
-      "reading_tests": [],
-      "tier": "UNGUARDED"
+      "reading_tests": [
+        "test_m4796_ci_evidence.py"
+      ],
+      "tier": "PINNED"
     },
     {
       "artifact": null,
