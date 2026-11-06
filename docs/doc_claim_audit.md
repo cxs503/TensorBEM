@@ -7,14 +7,14 @@
 | 指标 | 值 |
 |---|---:|
 | 被审计文档数 | 79 |
-| PINNED（测试直接解析文档） | 31 |
+| PINNED（测试直接解析文档） | 32 |
 | ARTIFACT（生成模块被测、文档文本未解析） | 25 |
-| UNGUARDED（无人守） | 23 |
+| UNGUARDED（无人守） | 22 |
 | 其中论文级 UNGUARDED | 8 |
-| 数字 token 总数 | 8683 |
-| 已守数字 token | 7180 |
-| 数字覆盖率 | 82.7% |
-| 文档覆盖率 | 70.9% |
+| 数字 token 总数 | 8703 |
+| 已守数字 token | 7218 |
+| 数字覆盖率 | 82.9% |
+| 文档覆盖率 | 72.2% |
 
 ## 2. 论文级未守文档（按数字量降序，前 15）
 
@@ -90,7 +90,6 @@
 | `merge_m3878_pr104_resolution.md` | UNGUARDED | 47 | 118 | — |
 | `m3977_pr109_merge_healing_report.md` | UNGUARDED | 39 | 179 | — |
 | `ursell_benchmark_discrepancy.md` | UNGUARDED | 38 | 103 | — |
-| `dev_report_m4796_ci_red_fix.md` | UNGUARDED | 18 | 104 | — |
 | `m4789_gauss_rule_fallback.md` | UNGUARDED | 16 | 86 | — |
 | `m4283_pr186_ci_triage.md` | UNGUARDED | 2 | 75 | — |
 | `m4290_ci_fix_report.md` | UNGUARDED | 1 | 44 | — |
@@ -110,5 +109,6 @@
 | `ursell_quadrature_provenance.md` | PINNED | 67 | 93 | — |
 | `audit_baseline.md` | PINNED | 63 | 181 | `tensorbem.capability_evidence` |
 | `mutation_audit_tensorbem.md` | PINNED | 56 | 112 | `tensorbem.benchmarks.mutation_audit` |
+| `dev_report_m4796_ci_red_fix.md` | PINNED | 38 | 160 | — |
 | `ci_red_triage_m3314.md` | PINNED | 32 | 155 | `tensorbem.doc_claims` |
 | `doc_claim_audit.md` | PINNED | 2 | 114 | `tensorbem.benchmarks.doc_claim_audit` |
