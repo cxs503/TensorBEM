@@ -56,8 +56,13 @@ regions evaluated in memory-bounded blocks of ``4096`` points:
 4. **Far field** (``Y > 4.5``, ``hypot(X, Y) >= 26``, and ``X > 0.25``):
    17-term Newman asymptotic Legendre expansion around ``-pi * exp(-Y) * Y_0(X)``.
 
-Adjacent regions agree to ``1e-11 .. 1e-13`` across every seam without lookup
-tables or external special-function libraries.
+Adjacent regions agree to ``1e-13`` across the ``X = 0.35 * Y`` and ``Y = 4.5``
+seams; the far-field seam ``hypot(X, Y) = 26`` is the weakest one, where the
+17-term asymptotic expansion leaves ``F`` to ``1e-9`` and ``dF/dX`` to ``1e-6``
+relative (measured against an independent principal-value reference by
+``tensorbem.benchmarks.kelvin_kernel_reference``, see
+``docs/kelvin_kernel_reference.md``). No lookup tables or external
+special-function libraries are used.
 """
 
 from __future__ import annotations
@@ -132,6 +137,35 @@ _LEG20_X, _LEG20_W = _legendre_gauss(20)
 _LEG40_X, _LEG40_W = _legendre_gauss(40)
 _LAG40_U, _LAG40_W = _laguerre_gauss(40)
 
+#: Region boundaries of the quarter-plane partition, shared with
+#: :func:`region_label` so that the reference/verification drivers in
+#: ``tensorbem.benchmarks`` classify points with the same rule the evaluator
+#: branches on.
+REGION_CONE_MAX_Y = 4.5
+REGION_CONE_SLOPE = 0.35
+REGION_FAR_DISTANCE = 26.0
+REGION_FAR_MIN_X = 0.25
+
+
+def region_label(x: float, y: float) -> str:
+    """Return the partition region that :func:`wave_function_3d` uses at ``(X, Y)``.
+
+    ``"cone"`` is the near-axis Bessho series (``Y <= 4.5``, ``X <= 0.35 * Y``),
+    ``"near"`` the Struve/Bessel plus Gauss-Legendre region (``Y <= 4.5``),
+    ``"middle"`` the Laguerre-tail region (``Y > 4.5`` with ``hypot < 26`` or
+    ``X <= 0.25``) and ``"far"`` the 17-term Legendre asymptotic region.
+    """
+    x_val = float(x)
+    y_val = float(y)
+    d_val = math.hypot(x_val, y_val)
+    if y_val > 0.0 and y_val <= REGION_CONE_MAX_Y and x_val <= REGION_CONE_SLOPE * y_val:
+        return "cone"
+    if y_val <= REGION_CONE_MAX_Y:
+        return "near"
+    if d_val < REGION_FAR_DISTANCE or x_val <= REGION_FAR_MIN_X:
+        return "middle"
+    return "far"
+
 
 def _validate_nu(nu: float) -> float:
     if isinstance(nu, (bool, np.bool_)):
@@ -150,7 +184,11 @@ def _eval_wave_block(
     fx_out = np.empty(count, dtype=float)
     d_flat = np.hypot(x_flat, y_flat)
 
-    cone = (y_flat > 0.0) & (y_flat <= 4.5) & (x_flat <= 0.35 * y_flat)
+    cone = (
+        (y_flat > 0.0)
+        & (y_flat <= REGION_CONE_MAX_Y)
+        & (x_flat <= REGION_CONE_SLOPE * y_flat)
+    )
     if np.any(cone):
         xc = x_flat[cone]
         yc = y_flat[cone]
@@ -180,7 +218,7 @@ def _eval_wave_block(
         f_out[cone] = sum_f
         fx_out[cone] = sum_fx
 
-    reg_a = (~cone) & (y_flat <= 4.5)
+    reg_a = (~cone) & (y_flat <= REGION_CONE_MAX_Y)
     if np.any(reg_a):
         xa = x_flat[reg_a]
         ya = y_flat[reg_a]
@@ -202,7 +240,9 @@ def _eval_wave_block(
             - int1
         )
 
-    reg_b = (y_flat > 4.5) & ((d_flat < 26.0) | (x_flat <= 0.25))
+    reg_b = (y_flat > REGION_CONE_MAX_Y) & (
+        (d_flat < REGION_FAR_DISTANCE) | (x_flat <= REGION_FAR_MIN_X)
+    )
     if np.any(reg_b):
         xb = x_flat[reg_b]
         yb = y_flat[reg_b]
@@ -242,7 +282,11 @@ def _eval_wave_block(
         f_out[reg_b] = head0 + tail0
         fx_out[reg_b] = -xb / (db * (db + yb)) - (head1 + tail1)
 
-    reg_c = (y_flat > 4.5) & (d_flat >= 26.0) & (x_flat > 0.25)
+    reg_c = (
+        (y_flat > REGION_CONE_MAX_Y)
+        & (d_flat >= REGION_FAR_DISTANCE)
+        & (x_flat > REGION_FAR_MIN_X)
+    )
     if np.any(reg_c):
         xc = x_flat[reg_c]
         yc = y_flat[reg_c]
