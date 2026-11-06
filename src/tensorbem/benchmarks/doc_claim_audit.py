@@ -25,7 +25,10 @@ is classified into one of three tiers:
 ``PINNED``
     A test reads the document itself (the file name appears in ``tests/``), so
     the printed numbers are parsed and compared.  This is the only tier that
-    catches a *document* edit.
+    catches a *document* edit.  The tier is decided by a plain file-name match,
+    so naming a document anywhere in ``tests/`` -- including inside a test
+    docstring -- claims that it is parsed; do not quote a report's file name in
+    a test unless the test really reads its numbers, or the tier is laundered.
 ``ARTIFACT``
     The document declares its generator (``python -m tensorbem...``), that
     module is imported by a test, and the rendered numbers come from a JSON
@@ -85,6 +88,22 @@ HISTORICAL_EXTRA = frozenset(
     }
 )
 
+#: Mission reports whose id moved to the *front* of the name: ``m4290_ci_fix_report.md``,
+#: ``m4283_pr186_ci_triage.md``.  These are the same kind of dated work product the
+#: ``_m\d{3,}`` / ``dev_report`` spellings already cover (a snapshot of one run, not a
+#: contract with a reader); only the spelling differs, so they must not be counted as
+#: paper-level just because the id has no leading underscore.  Their numbers still reach
+#: the ratchet through the ``UNGUARDED`` set, which is where a frozen report belongs.
+MISSION_RE = re.compile(r"^m\d{3,}[_-]")
+
+#: Names that look like mission work products but are contracts with a reader, so they
+#: keep the paper-level half of the ratchet.
+PAPER_LEVEL_EXTRA = frozenset(
+    {
+        "m3538_propeller_openwater_uncertainty.md",
+    }
+)
+
 
 @dataclass(frozen=True)
 class DocRecord:
@@ -127,7 +146,11 @@ def _declared_artifact(doc_text: str) -> str | None:
 
 
 def is_historical(name: str) -> bool:
-    return bool(HISTORICAL_RE.search(name)) or name in HISTORICAL_EXTRA
+    if name in PAPER_LEVEL_EXTRA:
+        return False
+    if name in HISTORICAL_EXTRA:
+        return True
+    return bool(HISTORICAL_RE.search(name) or MISSION_RE.search(name))
 
 
 def classify(doc_path: Path, test_sources: dict[str, str]) -> DocRecord:
