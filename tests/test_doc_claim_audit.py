@@ -96,6 +96,23 @@ def test_historical_documents_are_separated():
     assert not audit.is_historical("marine_bem_benchmarks.md")
 
 
+def test_mission_prefixed_reports_are_historical():
+    """Mission deliverable reports (``m<mission>_...``) are snapshots, not contracts.
+
+    Regression guard for m4655 / PR #306: the ``_m\d{3,}`` branch only matched the
+    mission tag mid-name, so mission-prefixed deliverable reports were graded
+    paper-level and the ratchet in ``test_ratchet_against_baseline`` went red on main.
+    """
+    # synthetic mission ids: naming a real document here would register it as
+    # ``PINNED`` in ``audit.classify`` (it counts test source mentions), which
+    # would fake coverage instead of testing the classifier.
+    assert audit.is_historical("m9001_pr999_ci_triage.md")
+    assert audit.is_historical("m9002_merge_healing_report.md")
+    assert audit.is_historical("m9003_ci_fix_report.md")
+    # a contract document that merely starts with "m" must not be demoted
+    assert not audit.is_historical("marine_bem_benchmarks.md")
+
+
 def test_ratchet_against_baseline(report):
     """No document may lose its guard; the recorded baseline is the floor."""
     assert BASELINE.exists(), (

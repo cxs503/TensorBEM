@@ -71,9 +71,11 @@ NUM_RE = re.compile(r"(?<![\w.])[-\u2212]?\d+\.\d+(?:[eE][-\u2212]?\d+)?")
 MODULE_RE = re.compile(r"-m\s+(tensorbem(?:\.\w+)+)")
 
 #: Historical files: dated reports, audits, reviews, milestone notes, incident logs.
+#: ``^m\d{3,}`` covers the mission-prefixed deliverable form (``m4283_pr186_ci_triage.md``)
+#: whose snapshot nature the ``_m\d{3,}`` branch only caught mid-name (m4655, 2026-11-06).
 HISTORICAL_RE = re.compile(
     r"(dev_report|report_m\d|report_publish|audit|review|incident|provenance|"
-    r"health_audit|_m\d{3,}|_m\d{3,}_zh|discrepancy|charter)",
+    r"health_audit|_m\d{3,}|_m\d{3,}_zh|discrepancy|charter|^m\d{3,})",
     re.IGNORECASE,
 )
 
