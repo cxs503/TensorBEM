@@ -31,6 +31,12 @@ env:
 jobs:
   pytest:
     runs-on: ci-loong64
+    # The self-hosted pool is shared: a job that holds a runner for the whole
+    # serial suite gets cancelled when the next commit needs the slot (main
+    # fa868b64 was cancelled after 29.8 min, 2026-11-06), and a cancelled job
+    # counts as red.  The suite is independent per module, so fan it out and
+    # bound the job instead of letting it run unbounded.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Install package and test dependencies
@@ -86,7 +92,11 @@ jobs:
       # Test suite: runs on a tree that already holds the evidence above.
       # ------------------------------------------------------------------
       - name: Run test suite
-        run: pytest
+        # ``pytest-xdist`` ships in the ``dev`` extra.  ``--dist loadfile``
+        # keeps every module on a single worker, so module-level fixtures and
+        # the ``artifacts/`` readers see the same tree the serial run saw.
+        # ``--maxprocesses`` bounds memory on a big self-hosted box.
+        run: python -m pytest -q -n auto --maxprocesses 8 --dist loadfile
 
       - name: Upload benchmark evidence
         uses: actions/upload-artifact@v4

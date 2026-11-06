@@ -100,3 +100,24 @@ def test_upload_happens_after_the_suite(workflow_text: str) -> None:
     upload = workflow_text.index("actions/upload-artifact")
     assert _index_of_step(workflow_text, "Run test suite") < upload
     assert "artifacts/ursell_doc_claims.json" in workflow_text
+
+
+def test_the_suite_is_fanned_out_and_the_job_is_bounded(workflow_text: str) -> None:
+    """The suite must not hold a shared self-hosted runner for an hour.
+
+    ``ci-loong64`` is a shared pool: a serial run holds the slot for tens of
+    minutes and gets cancelled as soon as the next commit needs it, and a
+    cancelled job is red (main fa868b64, 2026-11-06, cancelled after 29.8 min).
+    """
+    block = workflow_text[_index_of_step(workflow_text, "Run test suite"):]
+    block = block.split("\n      - ", 1)[0]
+    assert "-n auto" in block, "the suite must fan out over the runner's cores"
+    assert "--maxprocesses" in block, (
+        "an unbounded fan-out on a many-core runner can exhaust memory"
+    )
+    assert "loadfile" in block, (
+        "grouping by file keeps per-module state on one worker, so the split "
+        "cannot change what a test observes"
+    )
+    assert re.search(r"^\s+timeout-minutes:\s*\d+\s*$", workflow_text,
+                     flags=re.MULTILINE), "the job needs an explicit bound"

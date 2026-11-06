@@ -1,0 +1,215 @@
+{
+ "commit": "fa868b6443a3c6eb90f75d5c2e774d3af699e42b",
+ "check_run": {
+  "name": "pytest",
+  "conclusion": "cancelled",
+  "labels": null,
+  "started_at": "2026-11-06T02:43:07Z",
+  "completed_at": "2026-11-06T03:12:46Z",
+  "annotations": [
+   "The run was canceled by @cxs503."
+  ]
+ },
+ "recent_runs": [
+  {
+   "sha": "8341a4df",
+   "event": "pull_request",
+   "conclusion": "queued",
+   "wall_min": 0.0,
+   "run_id": 42194229416,
+   "created_at": "2026-11-06T09:19:57Z"
+  },
+  {
+   "sha": "040457f3",
+   "event": "pull_request",
+   "conclusion": "queued",
+   "wall_min": 0.0,
+   "run_id": 42194206960,
+   "created_at": "2026-11-06T09:19:46Z"
+  },
+  {
+   "sha": "08e44d99",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 7.7,
+   "run_id": 42164582865,
+   "created_at": "2026-11-06T04:47:36Z"
+  },
+  {
+   "sha": "fa868b64",
+   "event": "push",
+   "conclusion": "cancelled",
+   "wall_min": 29.8,
+   "run_id": 42152088640,
+   "created_at": "2026-11-06T02:43:07Z"
+  },
+  {
+   "sha": "0f798fe0",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 31.5,
+   "run_id": 42151902609,
+   "created_at": "2026-11-06T02:41:17Z"
+  },
+  {
+   "sha": "b91acba2",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 40.3,
+   "run_id": 42150974387,
+   "created_at": "2026-11-06T02:32:32Z"
+  },
+  {
+   "sha": "daec9eef",
+   "event": "push",
+   "conclusion": "success",
+   "wall_min": 51.3,
+   "run_id": 42150435454,
+   "created_at": "2026-11-06T02:27:25Z"
+  },
+  {
+   "sha": "9718660b",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 49.7,
+   "run_id": 42149982689,
+   "created_at": "2026-11-06T02:23:11Z"
+  },
+  {
+   "sha": "99f97962",
+   "event": "pull_request",
+   "conclusion": "success",
+   "wall_min": 18.9,
+   "run_id": 42148319824,
+   "created_at": "2026-11-06T02:07:47Z"
+  },
+  {
+   "sha": "304f8206",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 62.0,
+   "run_id": 42147632830,
+   "created_at": "2026-11-06T02:01:31Z"
+  },
+  {
+   "sha": "89acad78",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 46.2,
+   "run_id": 42147628179,
+   "created_at": "2026-11-06T02:01:29Z"
+  },
+  {
+   "sha": "6075a02a",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 41.9,
+   "run_id": 42144936381,
+   "created_at": "2026-11-06T01:36:15Z"
+  },
+  {
+   "sha": "0b5ddd61",
+   "event": "push",
+   "conclusion": "failure",
+   "wall_min": 67.7,
+   "run_id": 42144225105,
+   "created_at": "2026-11-06T01:29:57Z"
+  },
+  {
+   "sha": "da4c7606",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 39.5,
+   "run_id": 42139376806,
+   "created_at": "2026-11-06T00:47:35Z"
+  },
+  {
+   "sha": "2d59d541",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 44.4,
+   "run_id": 42139373528,
+   "created_at": "2026-11-06T00:47:33Z"
+  },
+  {
+   "sha": "cd59fb4c",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 43.7,
+   "run_id": 42127429593,
+   "created_at": "2026-11-05T23:09:37Z"
+  },
+  {
+   "sha": "8cdf6291",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 60.7,
+   "run_id": 42125142991,
+   "created_at": "2026-11-05T22:52:39Z"
+  },
+  {
+   "sha": "9c9b3a0a",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 66.4,
+   "run_id": 42124367884,
+   "created_at": "2026-11-05T22:46:55Z"
+  },
+  {
+   "sha": "7f1ca41e",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 77.7,
+   "run_id": 42122810124,
+   "created_at": "2026-11-05T22:35:42Z"
+  },
+  {
+   "sha": "edd25f49",
+   "event": "pull_request",
+   "conclusion": "cancelled",
+   "wall_min": 94.2,
+   "run_id": 42120495162,
+   "created_at": "2026-11-05T22:19:24Z"
+  },
+  {
+   "sha": "9171d84d",
+   "event": "pull_request",
+   "conclusion": "failure",
+   "wall_min": 149.7,
+   "run_id": 42117692582,
+   "created_at": "2026-11-05T22:00:24Z"
+  },
+  {
+   "sha": "a261e234",
+   "event": "push",
+   "conclusion": "failure",
+   "wall_min": 188.4,
+   "run_id": 42111907198,
+   "created_at": "2026-11-05T21:21:31Z"
+  },
+  {
+   "sha": "ce9de0c2",
+   "event": "push",
+   "conclusion": "failure",
+   "wall_min": 194.4,
+   "run_id": 42111887526,
+   "created_at": "2026-11-05T21:21:23Z"
+  },
+  {
+   "sha": "2345a48e",
+   "event": "push",
+   "conclusion": "failure",
+   "wall_min": 176.9,
+   "run_id": 42111872728,
+   "created_at": "2026-11-05T21:21:18Z"
+  },
+  {
+   "sha": "5b4631d1",
+   "event": "push",
+   "conclusion": "failure",
+   "wall_min": 188.8,
+   "run_id": 42111862661,
+   "created_at": "2026-11-05T21:21:14Z"
+  }
+ ]
+}
