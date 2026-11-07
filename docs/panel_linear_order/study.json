@@ -1,0 +1,491 @@
+{
+  "provenance": {
+    "mission": "5690",
+    "branch": "agent/m5690",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "compute_command": "PYTHONPATH=src python3 -m tensorbem.benchmarks.panel_linear_order --subdivisions 1 2 3 4 --energy-subdivisions 2 3 --quadrature-order 4 --refinement-depth 3 --ka 1.2"
+  },
+  "criteria_definitions": {
+    "C1a_constant_panel_slope": {
+      "log_N_target": -0.5,
+      "log_N_tolerance": 0.075,
+      "log_h_equivalent": 1.0,
+      "quantity": "least-squares slope of the constant-panel surface errors"
+    },
+    "C1b_linear_panel_slope": {
+      "log_N_target": -1.0,
+      "log_N_tolerance": 0.15,
+      "log_h_equivalent": 2.0,
+      "quantity": "least-squares slope of the order-1 surface errors"
+    },
+    "C2": {
+      "quantity": "all four error sequences decrease monotonically"
+    },
+    "C3": {
+      "tolerance": 1e-06,
+      "quantity": "closed-form vs graded Duffy self integral"
+    },
+    "C4": {
+      "tolerance": 0.03,
+      "quantity": "near-field vs Kochin far-field damping"
+    },
+    "C5": {
+      "quantity": "negative controls must fail their gates"
+    }
+  },
+  "operator": {
+    "scheme": "piecewise-linear (order 1), vertex collocation, flat facets",
+    "geometry": "inscribed icosphere, radius 1",
+    "source": [
+      0.0,
+      0.0,
+      0.5
+    ],
+    "panels_per_level": [
+      80,
+      320,
+      1280,
+      5120
+    ],
+    "rows": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "vertices": 42,
+        "h": 0.3963327297606011,
+        "quadrature_order": 4,
+        "refinement_depth": 3,
+        "free_term": "half",
+        "err_flux": 0.6241730595221869,
+        "err_potential": 0.4320823628445607,
+        "condition_single": 21.741703680046385,
+        "condition_second_kind": 2.049330491848758,
+        "relative_residual_dirichlet": 4.083719434127063e-16,
+        "relative_residual_neumann": 3.739800320064628e-16,
+        "representation_residual": 0.2901840120571862,
+        "representation_residual_cone_free_term": 0.43802753981398684,
+        "implied_free_term_median": 0.7884527429990189,
+        "row_sum_minus_half_median": 0.1734944030936807,
+        "row_sum_minus_half_max": 0.18863403306355275,
+        "free_term_min": 0.31136596693644725,
+        "free_term_max": 0.35825809148596377,
+        "cone_defect_median": 0.1734944030936807,
+        "angle_defect_median": 0.30934133337933456,
+        "triangle_area_ratio": 0.928345323381442,
+        "assembly_seconds": 0.6443464756011963,
+        "solve_seconds": 0.02869248390197754
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "vertices": 162,
+        "h": 0.19816636488030054,
+        "quadrature_order": 4,
+        "refinement_depth": 3,
+        "free_term": "half",
+        "err_flux": 0.6175019977799877,
+        "err_potential": 0.2017688830317635,
+        "condition_single": 40.55155455135511,
+        "condition_second_kind": 2.3273999781391703,
+        "relative_residual_dirichlet": 6.428412193371984e-15,
+        "relative_residual_neumann": 5.458837380875513e-16,
+        "representation_residual": 0.15954290789434386,
+        "representation_residual_cone_free_term": 0.23121888119490963,
+        "implied_free_term_median": 0.6435700524826303,
+        "row_sum_minus_half_median": 0.08235817466570255,
+        "row_sum_minus_half_max": 0.08540784012309316,
+        "free_term_min": 0.41459215987690684,
+        "free_term_max": 0.44840825693385916,
+        "cone_defect_median": 0.08235817466570255,
+        "angle_defect_median": 0.07823941046361838,
+        "triangle_area_ratio": 0.9811781757531297,
+        "assembly_seconds": 2.953707695007324,
+        "solve_seconds": 2.923340082168579
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "vertices": 642,
+        "h": 0.09908318244015027,
+        "quadrature_order": 4,
+        "refinement_depth": 3,
+        "free_term": "half",
+        "err_flux": 0.6842482769998255,
+        "err_potential": 0.09643458929235607,
+        "condition_single": 80.58859446262966,
+        "condition_second_kind": 2.428449995846492,
+        "relative_residual_dirichlet": 1.1563767435142329e-14,
+        "relative_residual_neumann": 1.173571788637386e-15,
+        "representation_residual": 0.08356333994053891,
+        "representation_residual_cone_free_term": 0.11720512914442908,
+        "implied_free_term_median": 0.571926718487731,
+        "row_sum_minus_half_median": 0.036075500267980176,
+        "row_sum_minus_half_max": 0.04168718177273473,
+        "free_term_min": 0.4583128182272653,
+        "free_term_max": 0.4809002406485483,
+        "cone_defect_median": 0.036075500267980176,
+        "angle_defect_median": 0.018897490807677775,
+        "triangle_area_ratio": 0.9952350696770933,
+        "assembly_seconds": 15.022807359695435,
+        "solve_seconds": 48.636624336242676
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "vertices": 2562,
+        "h": 0.049541591220075135,
+        "quadrature_order": 4,
+        "refinement_depth": 3,
+        "free_term": "half",
+        "err_flux": 0.7499072604149739,
+        "err_potential": 0.0473732359489738,
+        "condition_single": 162.76141432311243,
+        "condition_second_kind": 2.4660598329473125,
+        "relative_residual_dirichlet": 1.509707556225474e-14,
+        "relative_residual_neumann": 2.223645764053432e-15,
+        "representation_residual": 0.043010834382791505,
+        "representation_residual_cone_free_term": 0.05920657696618338,
+        "implied_free_term_median": 0.5360728305440452,
+        "row_sum_minus_half_median": 0.0170738980506272,
+        "row_sum_minus_half_max": 0.021038348308467625,
+        "free_term_min": 0.4789616516915324,
+        "free_term_max": 0.4914385892876001,
+        "cone_defect_median": 0.0170738980506272,
+        "angle_defect_median": 0.004715465239955696,
+        "triangle_area_ratio": 0.998805006256468,
+        "assembly_seconds": 77.97364139556885,
+        "solve_seconds": 848.4388618469238
+      }
+    ],
+    "slopes": {
+      "err_flux": {
+        "log_N": 0.04711871994936735,
+        "log_h": 0.09423743989873484,
+        "step_orders_log_N": [
+          0.007751142491217979,
+          -0.07403804627815085,
+          -0.06609614728490826
+        ]
+      },
+      "err_potential": {
+        "log_N": -0.5316283866050608,
+        "log_h": -1.0632567732101221,
+        "step_orders_log_N": [
+          0.5493013224313228,
+          0.5325405428467016,
+          0.5127392424566115
+        ]
+      }
+    }
+  },
+  "constant_panel": {
+    "scheme": "constant panels (order 0), centroid collocation",
+    "rows": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "h": 0.3963327297606011,
+        "err_flux": 0.04090538257247305,
+        "err_potential": 0.037452496404549736,
+        "condition_single": 18.62149308405364,
+        "condition_second_kind": 2.1654320331292203,
+        "assembly_seconds": 3.5193839073181152
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "h": 0.19816636488030054,
+        "err_flux": 0.011561147411185514,
+        "err_potential": 0.009902572789241703,
+        "condition_single": 37.56559992086565,
+        "condition_second_kind": 2.0832484058256044,
+        "assembly_seconds": 36.9752254486084
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "h": 0.09908318244015027,
+        "err_flux": 0.0032546800796850973,
+        "err_potential": 0.002499955038414767,
+        "condition_single": 76.12545458214439,
+        "condition_second_kind": 2.0430895902588992,
+        "assembly_seconds": 183.2370364665985
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "h": 0.049541591220075135,
+        "err_flux": 0.0011001723409669324,
+        "err_potential": 0.0006289627263539178,
+        "condition_single": 153.96635238350856,
+        "condition_second_kind": 2.02319662835031,
+        "assembly_seconds": 1266.3535532951355
+      }
+    ],
+    "slopes": {
+      "err_flux": {
+        "log_N": -0.8739082347565832,
+        "log_h": -1.7478164695131668,
+        "step_orders_log_N": [
+          0.9115030528339076,
+          0.9143484716322737,
+          0.7823931008450054
+        ]
+      },
+      "err_potential": {
+        "log_N": -0.9836865954688961,
+        "log_h": -1.9673731909377927,
+        "step_orders_log_N": [
+          0.959593289591913,
+          0.9929506262212833,
+          0.9954278603426967
+        ]
+      }
+    }
+  },
+  "self_term": {
+    "rule": "closed form vs graded Duffy (order 24), 3 apex positions per panel",
+    "panels_checked": 1600,
+    "worst_analytic_vs_numerical": 1.1292443002452083e-15,
+    "worst_row_sum_error": 1.1856800928377425e-15,
+    "coarse_control_worst": 0.006284408535715731,
+    "per_level": [
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "max_rel_diff_analytic_vs_numerical": 1.0217669119603495e-15,
+        "coarse_order2_max_rel_diff": 0.006058417828265975,
+        "row_sum_rel_error": 8.758002102517285e-16
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "max_rel_diff_analytic_vs_numerical": 1.1292443002452083e-15,
+        "coarse_order2_max_rel_diff": 0.006284408535715731,
+        "row_sum_rel_error": 1.1856800928377425e-15
+      }
+    ]
+  },
+  "negative_controls": {
+    "mesh_subdivisions": 2,
+    "baseline": {
+      "subdivisions": 2,
+      "panels": 320,
+      "vertices": 162,
+      "h": 0.19816636488030054,
+      "quadrature_order": 8,
+      "refinement_depth": 3,
+      "free_term": "half",
+      "err_flux": 0.6147511786574217,
+      "err_potential": 0.201193484904406,
+      "condition_single": 40.55676738941435,
+      "condition_second_kind": 2.327401591680692,
+      "relative_residual_dirichlet": 2.1587697311489075e-15,
+      "relative_residual_neumann": 5.700791186983972e-16,
+      "representation_residual": 0.1591952624419133,
+      "representation_residual_cone_free_term": 0.23090577351236313,
+      "implied_free_term_median": 0.6433857316146523,
+      "row_sum_minus_half_median": 0.08235782283123366,
+      "row_sum_minus_half_max": 0.08540753375821275,
+      "free_term_min": 0.41459246624178725,
+      "free_term_max": 0.44841384445488264,
+      "cone_defect_median": 0.08235782283123366,
+      "angle_defect_median": 0.07823941046361838,
+      "triangle_area_ratio": 0.9811781757531297,
+      "assembly_seconds": 3.2149858474731445,
+      "solve_seconds": 6.960700511932373
+    },
+    "controls": [
+      {
+        "name": "coarse_self_integral",
+        "description": "2-point rule replaces the closed-form self integral: the 1e-6 self-integral gate must go red",
+        "err_flux": 0.6185563800486602,
+        "err_potential": 0.20065882907390675,
+        "fails_gate": true
+      },
+      {
+        "name": "cone_free_term",
+        "description": "row-sum (cone solid angle) free term instead of the continuous 1/2",
+        "err_flux": 0.7652410225992748,
+        "err_potential": 0.31283110885842,
+        "representation_residual": 0.23090577351236313,
+        "representation_residual_baseline": 0.1591952624419133,
+        "fails_gate": false
+      },
+      {
+        "name": "no_near_singular_refinement",
+        "description": "refinement_depth=0: near-singular double-layer entries lose their resolution (Frobenius-norm control)",
+        "double_layer_relative_change": 0.6454587755929678,
+        "err_flux": 0.9222003864551535,
+        "fails_gate": true
+      }
+    ]
+  },
+  "energy": {
+    "formulation": "first-order energy identity: damping from the surface-pressure integral equals damping from the Kochin far-field integral",
+    "geometry": "floating hemisphere, radius 1.0, ka = 1.2",
+    "ka": 1.2,
+    "rows": [
+      {
+        "subdivisions": 2,
+        "panels": 64,
+        "b_near": [
+          2577.618711136512,
+          2577.6164630712947,
+          1650.7538627522429
+        ],
+        "b_far": [
+          2545.5202915031796,
+          2545.5203417721855,
+          1640.7644339039016
+        ],
+        "relative_difference": [
+          -0.012452741553532477,
+          -0.012451860763205192,
+          -0.006051434483204092
+        ],
+        "max_abs_relative_difference": 0.012452741553532477
+      },
+      {
+        "subdivisions": 3,
+        "panels": 256,
+        "b_near": [
+          2835.0152564630534,
+          2835.015086565571,
+          1571.501044203373
+        ],
+        "b_far": [
+          2826.43476131501,
+          2826.4347642176717,
+          1569.0080546328902
+        ],
+        "relative_difference": [
+          -0.003026613394225109,
+          -0.00302655262349723,
+          -0.0015863747464111
+        ],
+        "max_abs_relative_difference": 0.003026613394225109
+      }
+    ],
+    "worst_residual": 0.012452741553532477,
+    "monotone_decrease": true,
+    "r_aw_status": {
+      "status": "NOT_SUPPORTED",
+      "reason": "Mean added resistance R_AW in waves requires a second-order drift-force (Maruo/Marushenko) operator, which this repository does not implement; tensorbem.ice_rao.ADDED_RESISTANCE_STATUS declares it withheld.",
+      "substituted_identity": "first-order radiation-damping energy identity"
+    }
+  },
+  "criteria": {
+    "C1a_constant_panel_slope": {
+      "log_N_measured_flux": -0.8739082347565832,
+      "log_N_measured_potential": -0.9836865954688961,
+      "target": -0.5,
+      "tolerance": 0.075,
+      "pass_flux": false,
+      "pass_potential": false,
+      "verdict": "FAIL"
+    },
+    "C1b_linear_panel_slope": {
+      "log_N_measured_flux": 0.04711871994936735,
+      "log_N_measured_potential": -0.5316283866050608,
+      "log_h_measured_flux": 0.09423743989873484,
+      "log_h_measured_potential": -1.0632567732101221,
+      "target": -1.0,
+      "tolerance": 0.15,
+      "pass_flux": false,
+      "pass_potential": false,
+      "verdict": "FAIL"
+    },
+    "C2_monotone_decrease": {
+      "sequences": {
+        "linear_err_flux": [
+          0.6241730595221869,
+          0.6175019977799877,
+          0.6842482769998255,
+          0.7499072604149739
+        ],
+        "linear_err_potential": [
+          0.4320823628445607,
+          0.2017688830317635,
+          0.09643458929235607,
+          0.0473732359489738
+        ],
+        "constant_err_flux": [
+          0.04090538257247305,
+          0.011561147411185514,
+          0.0032546800796850973,
+          0.0011001723409669324
+        ],
+        "constant_err_potential": [
+          0.037452496404549736,
+          0.009902572789241703,
+          0.002499955038414767,
+          0.0006289627263539178
+        ]
+      },
+      "monotone": {
+        "linear_err_flux": false,
+        "linear_err_potential": true,
+        "constant_err_flux": true,
+        "constant_err_potential": true
+      },
+      "verdict": "FAIL"
+    },
+    "C3_self_integral_gate": {
+      "worst_analytic_vs_numerical": 1.1292443002452083e-15,
+      "tolerance": 1e-06,
+      "verdict": "PASS"
+    },
+    "C4_energy_identity": {
+      "worst_residual": 0.012452741553532477,
+      "tolerance": 0.03,
+      "monotone_decrease": true,
+      "verdict": "PASS"
+    },
+    "C5_negative_controls": {
+      "controls": [
+        {
+          "name": "coarse_self_integral",
+          "description": "2-point rule replaces the closed-form self integral: the 1e-6 self-integral gate must go red",
+          "err_flux": 0.6185563800486602,
+          "err_potential": 0.20065882907390675,
+          "fails_gate": true
+        },
+        {
+          "name": "cone_free_term",
+          "description": "row-sum (cone solid angle) free term instead of the continuous 1/2",
+          "err_flux": 0.7652410225992748,
+          "err_potential": 0.31283110885842,
+          "representation_residual": 0.23090577351236313,
+          "representation_residual_baseline": 0.1591952624419133,
+          "fails_gate": false
+        },
+        {
+          "name": "no_near_singular_refinement",
+          "description": "refinement_depth=0: near-singular double-layer entries lose their resolution (Frobenius-norm control)",
+          "double_layer_relative_change": 0.6454587755929678,
+          "err_flux": 0.9222003864551535,
+          "fails_gate": true
+        }
+      ],
+      "verdict": "FAIL"
+    },
+    "C6_honest_scope": {
+      "linear_panel_implemented": true,
+      "order_1_status": "REAL (tensorbem.panel_linear)",
+      "r_aw_status": {
+        "status": "NOT_SUPPORTED",
+        "reason": "Mean added resistance R_AW in waves requires a second-order drift-force (Maruo/Marushenko) operator, which this repository does not implement; tensorbem.ice_rao.ADDED_RESISTANCE_STATUS declares it withheld.",
+        "substituted_identity": "first-order radiation-damping energy identity"
+      },
+      "verdict": "PASS"
+    }
+  },
+  "figures": [
+    "panel_linear_order_convergence.png",
+    "panel_linear_order_free_term.png",
+    "panel_linear_order_energy.png"
+  ]
+}
