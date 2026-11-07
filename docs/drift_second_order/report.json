@@ -1,0 +1,370 @@
+{
+  "criteria": {
+    "long_wave_slope_far": {
+      "passed": true,
+      "target": "3 +- 0.2 fitted on ka in [0.05, 0.25]",
+      "value": 3.00738963708157
+    },
+    "long_wave_slope_near": {
+      "passed": true,
+      "target": "3 +- 0.2 fitted on ka in [0.05, 0.25]",
+      "value": 2.8618531893900254
+    },
+    "mesh_convergence": {
+      "passed": true,
+      "target": "near-field moves towards the far-field under refinement",
+      "value": {
+        "far_values": [
+          2749.5004342270004,
+          2793.513403688339,
+          2807.3430003281655
+        ],
+        "gaps_per_mesh": [
+          0.07681242207110937,
+          0.026783996973531333,
+          0.007454927772409658
+        ],
+        "near_values": [
+          2538.3046463884575,
+          2718.6919491384315,
+          2786.4144610283392
+        ],
+        "observed_order_estimate": 1.5199683718384396
+      }
+    },
+    "near_far_mutual_verification": {
+      "passed": true,
+      "target": "|near-far|/max < 15% for ka in [0.45, 1.6]",
+      "value": 0.07681242207110937
+    },
+    "near_far_mutual_verification_long_wave": {
+      "passed": false,
+      "target": "|near-far|/max < 15% for ka in [0.05, 0.3] (honest FAIL)",
+      "value": 0.3353555498680931
+    },
+    "wall_anchor_closed_form": {
+      "passed": true,
+      "target": "relative error < 1e-3 against rho g a^2 / 2",
+      "value": 5.205727753461616e-07
+    }
+  },
+  "cylinder_sweep": {
+    "agreement_windows": {
+      "all": {
+        "all_positive": true,
+        "count": 12,
+        "ka_range": [
+          0.05,
+          1.6
+        ],
+        "mean_relative_difference": 0.1454852986510092,
+        "worst_relative_difference": 0.3353555498680931
+      },
+      "long_wave": {
+        "all_positive": true,
+        "count": 6,
+        "ka_range": [
+          0.05,
+          0.3
+        ],
+        "mean_relative_difference": 0.2241645299743175,
+        "worst_relative_difference": 0.3353555498680931
+      },
+      "well_conditioned": {
+        "all_positive": true,
+        "count": 6,
+        "ka_range": [
+          0.45,
+          1.6
+        ],
+        "mean_relative_difference": 0.06680606732770097,
+        "worst_relative_difference": 0.07681242207110937
+      }
+    },
+    "table": [
+      {
+        "coefficient_far": 0.00034321305564382834,
+        "coefficient_near": 0.0005163859497746704,
+        "coefficient_over_ka_cubed_far": 2.745704445150626,
+        "coefficient_over_ka_cubed_near": 4.131087598197363,
+        "far_force_N": 3.451093077762605,
+        "ka": 0.05,
+        "near_force_N": 5.192389821471755,
+        "pressure_term_N": -0.01621572832428368,
+        "relative_difference": 0.3353555498680931,
+        "sway_near_N": -0.0014751012862093654,
+        "waterline_term_N": 5.208605549796038
+      },
+      {
+        "coefficient_far": 0.001447096217761189,
+        "coefficient_near": 0.0021127856655761743,
+        "coefficient_over_ka_cubed_far": 2.8263598003148216,
+        "coefficient_over_ka_cubed_near": 4.126534503078465,
+        "far_force_N": 14.550914243643195,
+        "ka": 0.08,
+        "near_force_N": 21.24458806378483,
+        "pressure_term_N": -0.34760990175728607,
+        "relative_difference": 0.3150766585845074,
+        "sway_near_N": -0.003645095783306717,
+        "waterline_term_N": 21.592197965542116
+      },
+      {
+        "coefficient_far": 0.00493433027423427,
+        "coefficient_near": 0.007005160573028783,
+        "coefficient_over_ka_cubed_far": 2.855515204996684,
+        "coefficient_over_ka_cubed_near": 4.053912368650916,
+        "far_force_N": 49.61592448999414,
+        "ka": 0.12,
+        "near_force_N": 70.43864085194767,
+        "pressure_term_N": -2.363733284767676,
+        "relative_difference": 0.29561496516833724,
+        "sway_near_N": -0.007227040985840866,
+        "waterline_term_N": 72.80237413671534
+      },
+      {
+        "coefficient_far": 0.01655971366086112,
+        "coefficient_near": 0.022119709195161378,
+        "coefficient_over_ka_cubed_far": 2.8394570749075996,
+        "coefficient_over_ka_cubed_near": 3.792817077359633,
+        "far_force_N": 166.5120607883738,
+        "ka": 0.18,
+        "near_force_N": 222.41920588464646,
+        "pressure_term_N": -19.392934627497368,
+        "relative_difference": 0.2513593413568245,
+        "sway_near_N": -0.013624201769781848,
+        "waterline_term_N": 241.81214051214383
+      },
+      {
+        "coefficient_far": 0.043313944698709785,
+        "coefficient_near": 0.05043993742781726,
+        "coefficient_over_ka_cubed_far": 2.772092460717426,
+        "coefficient_over_ka_cubed_near": 3.2281559953803045,
+        "far_force_N": 435.53254243170153,
+        "ka": 0.25,
+        "near_force_N": 507.18618082105945,
+        "pressure_term_N": -119.26607870560802,
+        "relative_difference": 0.14127679558098621,
+        "sway_near_N": -0.020218623146368582,
+        "waterline_term_N": 626.4522595266675
+      },
+      {
+        "coefficient_far": 0.07282459813384046,
+        "coefficient_near": 0.07328658720005139,
+        "coefficient_over_ka_cubed_far": 2.697207338290388,
+        "coefficient_over_ka_cubed_near": 2.7143180444463484,
+        "far_force_N": 732.2695403852993,
+        "ka": 0.3,
+        "near_force_N": 736.9149559433167,
+        "pressure_term_N": -309.6954579473335,
+        "relative_difference": 0.006303869287156657,
+        "sway_near_N": -0.024517267976096012,
+        "waterline_term_N": 1046.6104138906503
+      },
+      {
+        "coefficient_far": 0.2135498808065614,
+        "coefficient_near": 0.1976089238410658,
+        "coefficient_over_ka_cubed_far": 2.3434829169444322,
+        "coefficient_over_ka_cubed_near": 2.1685478610816546,
+        "far_force_N": 2147.2974389801766,
+        "ka": 0.45,
+        "near_force_N": 1987.0071314528768,
+        "pressure_term_N": -1029.574716155882,
+        "relative_difference": 0.07464746365246307,
+        "sway_near_N": -0.02840326044810312,
+        "waterline_term_N": 3016.581847608759
+      },
+      {
+        "coefficient_far": 0.2734392913380573,
+        "coefficient_near": 0.2524357570809734,
+        "coefficient_over_ka_cubed_far": 2.187514330704458,
+        "coefficient_over_ka_cubed_near": 2.019486056647787,
+        "far_force_N": 2749.5004342270004,
+        "ka": 0.5,
+        "near_force_N": 2538.3046463884575,
+        "pressure_term_N": -1305.2806355915484,
+        "relative_difference": 0.07681242207110937,
+        "sway_near_N": -0.027947761171723685,
+        "waterline_term_N": 3843.5852819800057
+      },
+      {
+        "coefficient_far": 0.4559037802964522,
+        "coefficient_near": 0.42279201306564956,
+        "coefficient_over_ka_cubed_far": 1.6600956952078367,
+        "coefficient_over_ka_cubed_near": 1.539524854130722,
+        "far_force_N": 4584.226486825901,
+        "ka": 0.65,
+        "near_force_N": 4251.279389378373,
+        "pressure_term_N": -2089.8178483955276,
+        "relative_difference": 0.07262884990616142,
+        "sway_near_N": -0.02999298172146531,
+        "waterline_term_N": 6341.0972377739
+      },
+      {
+        "coefficient_far": 0.6351678586093978,
+        "coefficient_near": 0.5978015681441724,
+        "coefficient_over_ka_cubed_far": 0.8712865001500655,
+        "coefficient_over_ka_cubed_near": 0.8200295859316493,
+        "far_force_N": 6386.771610282148,
+        "ka": 0.9,
+        "near_force_N": 6011.044218081689,
+        "pressure_term_N": -2894.96510163706,
+        "relative_difference": 0.05882900080465854,
+        "sway_near_N": -0.014458022331298323,
+        "waterline_term_N": 8906.009319718749
+      },
+      {
+        "coefficient_far": 0.6262068074745172,
+        "coefficient_near": 0.5906607125046912,
+        "coefficient_over_ka_cubed_far": 0.36238819876997524,
+        "coefficient_over_ka_cubed_near": 0.3418175419587334,
+        "far_force_N": 6296.666000858139,
+        "ka": 1.2,
+        "near_force_N": 5939.241129412796,
+        "pressure_term_N": -3617.938332589776,
+        "relative_difference": 0.05676414651763835,
+        "sway_near_N": -0.039168616732390665,
+        "waterline_term_N": 9557.179462002572
+      },
+      {
+        "coefficient_far": 0.5882411888193917,
+        "coefficient_near": 0.5522675806763329,
+        "coefficient_over_ka_cubed_far": 0.14361357148910928,
+        "coefficient_over_ka_cubed_near": 0.1348309523135578,
+        "far_force_N": 5914.912213876189,
+        "ka": 1.6,
+        "near_force_N": 5553.188590595696,
+        "pressure_term_N": -4975.408545393669,
+        "relative_difference": 0.06115452101417514,
+        "sway_near_N": -0.06447393232434556,
+        "waterline_term_N": 10528.597135989365
+      }
+    ]
+  },
+  "driver": "src/tensorbem/benchmarks/drift_second_order.py",
+  "figures": [
+    "figures/drift_wall_anchor.png",
+    "figures/drift_cylinder_coefficient.png",
+    "figures/drift_small_ka_slope.png",
+    "figures/drift_kochin_pattern.png"
+  ],
+  "interface_contract": {
+    "amplitudes": "complex amplitudes, exp(-i omega t) convention, <f^2> = |f_hat|^2/2",
+    "drift_module": "tensorbem.drift",
+    "far_field": "far_field_mean_drift_3d(mesh, Diffraction3DResult) -> dict with force=(Fx,Fy)",
+    "geometry": "TriangleMesh (closed) or WettedHullMesh (waterline-truncated)",
+    "near_field": "near_field_mean_drift_3d(mesh, Diffraction3DResult) -> DriftForce3DResult",
+    "units": "SI; force in newtons; coefficient normalised by rho g A^2 a",
+    "upstream_dependency": "tensorbem.free_surface_solver3d.solve_diffraction_3d / kochin_function_3d / incident_airy_wave_3d"
+  },
+  "limits": [
+    "Deep water only: the upstream solver is a deep-water free-surface kernel (nu = omega^2/g).",
+    "Fixed body: the mission target is a body fixed in regular waves, so the mean drift force equals the added resistance; body motion (Pinkster's X.grad(dphi/dt) term) is not implemented.",
+    "The near field needs the surface gradient of a piecewise-constant potential; the linear moving-least-squares recovery is first order in the panel size, so the near field converges to the far field only under mesh refinement.",
+    "For ka < 0.3 the two estimators disagree by up to 34% because the drift force is a (ka)^3-small residual of much larger pressure and waterline terms.",
+    "Chief-point choice of the upstream solver changes the result by ~50% at the coarse mesh; the default 'auto' chief points were used everywhere and the mesh ladder was run with them."
+  ],
+  "mesh_convergence": {
+    "ka": 0.5,
+    "rows": [
+      {
+        "far_x": 2749.5004342270004,
+        "ka": 0.5,
+        "n_theta": 20,
+        "n_z": 8,
+        "near_x": 2538.3046463884575,
+        "panel_count": 340,
+        "pressure_x": -1305.2806355915484,
+        "relative_difference": 0.07681242207110937,
+        "wall_seconds": 37.0,
+        "waterline_x": 3843.5852819800057
+      },
+      {
+        "far_x": 2793.513403688339,
+        "ka": 0.5,
+        "n_theta": 32,
+        "n_z": 10,
+        "near_x": 2718.6919491384315,
+        "panel_count": 672,
+        "pressure_x": -1401.3188608511398,
+        "relative_difference": 0.026783996973531333,
+        "wall_seconds": 85.0,
+        "waterline_x": 4120.0108099895715
+      },
+      {
+        "far_x": 2807.3430003281655,
+        "ka": 0.5,
+        "n_theta": 44,
+        "n_z": 12,
+        "near_x": 2786.4144610283392,
+        "panel_count": 1100,
+        "pressure_x": -1446.91304221604,
+        "relative_difference": 0.007454927772409658,
+        "wall_seconds": 163.2,
+        "waterline_x": 4233.327503244379
+      }
+    ]
+  },
+  "mission": "IN21-B2",
+  "module": "src/tensorbem/drift.py",
+  "repository": "TensorBEM",
+  "tests": "tests/test_drift_forces.py",
+  "title": "Second-order mean wave drift force: analytic wall anchor and near/far-field cross-verification",
+  "total_wall_seconds": 186.6,
+  "units": "SI (m, s, kg, N); coefficients normalised by rho g A^2 a",
+  "wall_anchor": {
+    "amplitude": 1.0,
+    "anchor": "2-D vertical wall at x = 0, fluid at x > 0, incident wave travelling in -x: closed form F_x = -rho g a^2 / 2 per unit length (signed check)",
+    "density": 1025.0,
+    "gravity": 9.81,
+    "max_relative_error": 5.205727753461616e-07,
+    "passed": true,
+    "rows": [
+      {
+        "closed_form": -5027.625,
+        "near_field_total": -5027.627617244698,
+        "pressure_fraction_of_waterline": 0.4999997397136125,
+        "pressure_term": 5027.622382755302,
+        "relative_error": 5.205727749843627e-07,
+        "waterline_term": -10055.25,
+        "wavenumber": 0.2
+      },
+      {
+        "closed_form": -5027.625,
+        "near_field_total": -5027.627617244697,
+        "pressure_fraction_of_waterline": 0.4999997397136126,
+        "pressure_term": 5027.622382755303,
+        "relative_error": 5.205727748034631e-07,
+        "waterline_term": -10055.25,
+        "wavenumber": 0.4
+      },
+      {
+        "closed_form": -5027.625,
+        "near_field_total": -5027.627617244693,
+        "pressure_fraction_of_waterline": 0.49999973971361295,
+        "pressure_term": 5027.622382755307,
+        "relative_error": 5.205727740798653e-07,
+        "waterline_term": -10055.25,
+        "wavenumber": 0.7
+      },
+      {
+        "closed_form": -5027.625,
+        "near_field_total": -5027.6276172447,
+        "pressure_fraction_of_waterline": 0.49999973971361233,
+        "pressure_term": 5027.6223827553,
+        "relative_error": 5.205727753461616e-07,
+        "waterline_term": -10055.25,
+        "wavenumber": 1.0
+      },
+      {
+        "closed_form": -5027.625,
+        "near_field_total": -5027.627617244697,
+        "pressure_fraction_of_waterline": 0.4999997397136126,
+        "pressure_term": 5027.622382755303,
+        "relative_error": 5.205727748034631e-07,
+        "waterline_term": -10055.25,
+        "wavenumber": 1.6
+      }
+    ],
+    "tolerance": 0.001
+  }
+}

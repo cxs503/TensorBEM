@@ -1,16 +1,16 @@
 {
   "counts": {
-    "artifact": 25,
-    "documents": 79,
-    "number_tokens": 8703,
-    "number_tokens_covered": 7218,
+    "artifact": 28,
+    "documents": 82,
+    "number_tokens": 9235,
+    "number_tokens_covered": 7750,
     "pinned": 32,
     "unguarded": 22,
     "unguarded_paper_level": 8
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7215189873417721,
-    "guarded_number_fraction": 0.8293691830403309
+    "documents_guarded_fraction": 0.7317073170731707,
+    "guarded_number_fraction": 0.8391987005955603
   },
   "records": [
     {
@@ -331,7 +331,7 @@
       "generators": [
         "tensorbem.benchmarks.doc_claim_audit"
       ],
-      "lines": 114,
+      "lines": 115,
       "modules_exercised": [
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
@@ -598,6 +598,38 @@
       "note": "generator exercised; document text not parsed",
       "number_tokens": 258,
       "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "ice_water_ship.md",
+      "generators": [
+        "tensorbem.benchmarks.ice_ship_verification"
+      ],
+      "lines": 344,
+      "modules_exercised": [
+        "test_ice_mass_loading.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 150,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "ice_water_ship_numbers.md",
+      "generators": [
+        "tensorbem.benchmarks.ice_ship_verification"
+      ],
+      "lines": 101,
+      "modules_exercised": [
+        "test_ice_mass_loading.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 278,
+      "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
     },
@@ -1173,6 +1205,22 @@
         "test_three_dimensional_doc_pins.py"
       ],
       "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "time_domain_pulse.md",
+      "generators": [
+        "tensorbem.benchmarks.time_domain_pulse"
+      ],
+      "lines": 343,
+      "modules_exercised": [
+        "test_time_domain.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 104,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
     },
     {
       "artifact": "docs/m4721/figures_digest.json",
