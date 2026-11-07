@@ -1,16 +1,16 @@
 {
   "counts": {
-    "artifact": 28,
-    "documents": 82,
-    "number_tokens": 9235,
-    "number_tokens_covered": 7750,
-    "pinned": 32,
-    "unguarded": 22,
-    "unguarded_paper_level": 8
+    "artifact": 31,
+    "documents": 91,
+    "number_tokens": 10555,
+    "number_tokens_covered": 8914,
+    "pinned": 36,
+    "unguarded": 24,
+    "unguarded_paper_level": 10
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7317073170731707,
-    "guarded_number_fraction": 0.8391987005955603
+    "documents_guarded_fraction": 0.7362637362637363,
+    "guarded_number_fraction": 0.8445286594031265
   },
   "records": [
     {
@@ -126,14 +126,15 @@
       "tier": "ARTIFACT"
     },
     {
-      "artifact": null,
+      "artifact": "docs/panel_linear_order/study.json",
       "doc": "audit_baseline.md",
       "generators": [
         "tensorbem.capability_evidence"
       ],
-      "lines": 181,
+      "lines": 203,
       "modules_exercised": [
         "test_benchmark_cli_contract.py",
+        "test_capability_coverage.py",
         "test_capability_evidence.py",
         "test_core_api_analytic_pins.py"
       ],
@@ -169,6 +170,62 @@
       "note": "generator exercised; document text not parsed",
       "number_tokens": 91,
       "paper_level": false,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "bem_hydroelastic.md",
+      "generators": [
+        "tensorbem.benchmarks.hydroelastic_verification"
+      ],
+      "lines": 197,
+      "modules_exercised": [
+        "test_hydroelastic.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 176,
+      "paper_level": true,
+      "reading_tests": [
+        "test_hydroelastic.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "bem_verified_anchors.md",
+      "generators": [
+        "tensorbem.benchmarks.bem_verified_anchors"
+      ],
+      "lines": 238,
+      "modules_exercised": [
+        "test_bem_verified_anchors.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 228,
+      "paper_level": true,
+      "reading_tests": [
+        "test_bem_verified_anchors.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/m6280/capability_coverage.json",
+      "doc": "capability_registry_coverage.md",
+      "generators": [
+        "tensorbem.benchmarks.capability_coverage_study",
+        "tensorbem.capability_evidence"
+      ],
+      "lines": 118,
+      "modules_exercised": [
+        "test_capability_coverage.py",
+        "test_benchmark_cli_contract.py",
+        "test_capability_evidence.py",
+        "test_core_api_analytic_pins.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 0,
+      "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
     },
@@ -240,6 +297,7 @@
       "lines": 94,
       "modules_exercised": [
         "test_benchmark_cli_contract.py",
+        "test_capability_coverage.py",
         "test_capability_evidence.py",
         "test_core_api_analytic_pins.py"
       ],
@@ -331,7 +389,7 @@
       "generators": [
         "tensorbem.benchmarks.doc_claim_audit"
       ],
-      "lines": 115,
+      "lines": 117,
       "modules_exercised": [
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
@@ -359,6 +417,23 @@
       ],
       "note": "generator exercised; document text not parsed",
       "number_tokens": 36,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "drift_force_report.md",
+      "generators": [
+        "tensorbem.benchmarks.drift_force_study"
+      ],
+      "lines": 167,
+      "modules_exercised": [
+        "test_drift_force.py",
+        "test_drift_second_order.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 87,
       "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
@@ -424,13 +499,26 @@
       "generators": [],
       "lines": 268,
       "modules_exercised": [],
-      "note": "read by 1 test file(s)",
+      "note": "read by 2 test file(s)",
       "number_tokens": 98,
       "paper_level": true,
       "reading_tests": [
+        "test_finite_depth3d_offaxis_split.py",
         "test_finite_depth3d_quadrature.py"
       ],
       "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "finite_depth3d_offaxis_split.md",
+      "generators": [],
+      "lines": 70,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 44,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
     },
     {
       "artifact": "docs/m3409/outputs/finite_depth3d_regime.json",
@@ -884,6 +972,24 @@
       "tier": "PINNED"
     },
     {
+      "artifact": "docs/maruo_drift/verification.json",
+      "doc": "maruo_drift.md",
+      "generators": [
+        "tensorbem.benchmarks.maruo_drift_verification"
+      ],
+      "lines": 206,
+      "modules_exercised": [
+        "test_maruo_drift.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 95,
+      "paper_level": true,
+      "reading_tests": [
+        "test_maruo_drift.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
       "artifact": "docs/m3878/kernel_merge_ledger.json",
       "doc": "merge_m3878_pr104_resolution.md",
       "generators": [],
@@ -906,6 +1012,22 @@
       "paper_level": false,
       "reading_tests": [],
       "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "michell_validation.md",
+      "generators": [
+        "tensorbem.benchmarks.michell_validation"
+      ],
+      "lines": 351,
+      "modules_exercised": [
+        "test_michell_thin_ship.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 255,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
     },
     {
       "artifact": "docs/mixed_boundary/outputs/study.json",
@@ -976,6 +1098,38 @@
       "reading_tests": [
         "test_doc_inventory.py",
         "test_near_surface_error_budget.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "panel_linear_order.md",
+      "generators": [
+        "tensorbem.benchmarks.panel_linear_order"
+      ],
+      "lines": 124,
+      "modules_exercised": [],
+      "note": "generator never exercised by a test",
+      "number_tokens": 112,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": "docs/panel_operator_order/study.json",
+      "doc": "panel_operator_order.md",
+      "generators": [
+        "tensorbem.benchmarks.panel_operator_order"
+      ],
+      "lines": 240,
+      "modules_exercised": [
+        "test_panel_operator_order.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 323,
+      "paper_level": true,
+      "reading_tests": [
+        "test_panel_operator_order.py"
       ],
       "tier": "PINNED"
     },

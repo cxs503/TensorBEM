@@ -251,3 +251,60 @@ def test_seeded_randomness_is_not_treated_as_a_mock(tmp_path: pathlib.Path, monk
                    tmp_path, ce._test_nodes(tmp_path))
     assert row.level == ce.WITHHELD  # only the doc anchor is missing, not MOCK
     assert row.mock_markers == []
+
+
+# ---------------------------------------------------------------------------
+# the refresh path must reproduce the block the drift check compares (m6287)
+# ---------------------------------------------------------------------------
+def test_write_document_refreshes_the_block_it_compares(
+    tmp_path: pathlib.Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """``--write`` used to drop the capability-coverage section.
+
+    ``write_document`` rendered the block without ``capability_coverage``, so a
+    document refreshed through the tool could never satisfy ``document_drift``:
+    every hand-edit was reported as drift but the repair path produced a
+    *different* incomplete block.  The published baseline is copied to a
+    scratch path, hand-damaged, refreshed, and must come back drift-free.
+    """
+    root = ce.repo_root()
+    copy = tmp_path / "audit_baseline.md"
+    damaged = (root / ce.BASELINE_DOC).read_text(encoding="utf-8").replace(
+        "### Capability coverage", "### Coverage (edited by hand)"
+    )
+    assert "edited by hand" in damaged
+    copy.write_text(damaged, encoding="utf-8")
+    monkeypatch.setattr(ce, "BASELINE_DOC", str(copy))
+
+    assert ce.document_drift(root) is not None
+    ce.write_document(root)
+    assert ce.document_drift(root) is None
+    refreshed = copy.read_text(encoding="utf-8")
+    assert "### Capability coverage" in refreshed
+    assert "unowned" in refreshed
+
+
+def test_maruo_drift_is_graded_by_an_anchor_of_its_own() -> None:
+    """The Maruo far-field row owns its numeric anchor; the debt entry is gone."""
+    rows = {row.capability.key: row for row in ce.audit()}
+    row = rows["maruo-far-field-drift"]
+    assert row.level == ce.REAL, (row.level, row.reasons)
+    assert row.test_nodes >= 4
+    assert not row.missing_tests and not row.missing_docs and not row.missing_symbols
+    assert row.capability.modules == ("tensorbem.maruo_drift",)
+    # the module has a suite, so a "no dedicated anchor" reason would be a lie
+    assert "tensorbem.maruo_drift" not in ce.UNTESTED_MODULES
+    assert ce.untested_modules(ce.repo_root())["stale_reasons"] == []
+
+
+def test_every_untested_reason_is_still_true() -> None:
+    """A reason that names a superseding suite must name a suite that exists."""
+    root = ce.repo_root()
+    inventory = ce.untested_modules(root)
+    assert inventory["stale_reasons"] == []
+    for module in inventory["explained"]:
+        reason = ce.UNTESTED_MODULES[module]
+        for token in reason.replace(",", " ").split():
+            token = token.rstrip(".,;:)")
+            if token.startswith("tests/") and token.endswith(".py"):
+                assert (root / token).is_file(), (module, token)

@@ -138,6 +138,7 @@ correction log inside the generated block records what changed.
 | Benchmark drivers expose a runnable entry point | **REAL** | `tensorbem.benchmarks.finite_depth_kernel`, `tensorbem.benchmarks.hulme_diffraction_verification` (+5) | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 | Machine-derived capability evidence registry | **REAL** | `tensorbem.capability_evidence` | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 | Second-order mean wave drift force (near field / far field) | **REAL** | `tensorbem.drift`, `tensorbem.drift_force` (+1) | 4 node(s) in 2 file(s) | `docs/drift_second_order/drift_second_order.md` |
+| Maruo far-field mean drift force at arbitrary heading | **REAL** | `tensorbem.maruo_drift` | 4 node(s) in 1 file(s) | `docs/maruo_drift.md` |
 | Time-domain radiation memory kernel (Cummins equation) | **REAL** | `tensorbem.time_domain` | 3 node(s) in 1 file(s) | `docs/time_domain_pulse.md` |
 | Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
 | Hydroelastic panel modes and the wet/dry frequency ratio | **REAL** | `tensorbem.hydroelastic` | 3 node(s) in 1 file(s) | `docs/bem_hydroelastic.md` |
@@ -148,7 +149,7 @@ correction log inside the generated block records what changed.
 | Near-singular quadrature and conditioning diagnostics | **REAL** | `tensorbem.quadrature_diagnostics`, `tensorbem.quadrature_diagnostics_2d` (+1) | 3 node(s) in 3 file(s) | `docs/capability_registry_coverage.md` |
 | Panel and triangle mesh geometry with closure checks | **REAL** | `tensorbem.geometry`, `tensorbem.geometry3d` | 3 node(s) in 2 file(s) | `docs/three_dimensional_bem.md` |
 
-Counts: **39** REAL — 39 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **40** REAL — 40 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -156,6 +157,12 @@ Counts: **39** REAL — 39 capabilities. The level is derived from code/test/doc
 - **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
 - **Forward-speed wave resistance (Wigley, Michell/Kochin)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification`; 2 test node(s) in `tests/test_wigley_verification.py`, `tests/test_wigley_wave_resistance.py`.
 - **Kutta condition / lifting foil** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil`; 2 test node(s) in `tests/test_lifting_foil.py`, `tests/test_lifting_flow.py`.
+
+### Capability coverage
+
+53 of 54 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **0 are unowned**.
+
+- `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 
 ### Untested modules
 
@@ -168,7 +175,6 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 - `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
 - `tensorbem.benchmarks.wave_loads_verification` — wave-load verification driver assembling the same pressure path as wave_loads_minimal; no physics of its own to pin.
-- `tensorbem.maruo_drift` — azimuthal-quadrature wrapper around the Maruo far-field integral; graded through the second-order-drift row, but it has no dedicated numeric anchor of its own yet -- that anchor is owed, and this entry records the debt instead of hiding it.
 
 <!-- capability-matrix:end -->
 
