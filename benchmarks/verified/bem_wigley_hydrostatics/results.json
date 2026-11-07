@@ -1,0 +1,175 @@
+{
+  "study": "bem_wigley_hydrostatics",
+  "hull": "Wigley III (parabolic)",
+  "geometry": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.625,
+    "L_over_B": 10.0,
+    "B_over_T": 1.6
+  },
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "reference": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.625,
+    "volume": 2.7777777777777777,
+    "Cb": 0.4444444444444444,
+    "Cm": 0.6666666666666666,
+    "Cp": 0.6666666666666666,
+    "center_of_buoyancy": [
+      0.0,
+      0.0,
+      -0.234375
+    ],
+    "KB": 0.390625,
+    "KG": 0.3125,
+    "waterplane_area": 6.666666666666667,
+    "I_xx": 0.38095238095238093,
+    "I_yy": 33.333333333333336,
+    "BM_T": 0.13714285714285715,
+    "BM_L": 12.000000000000002,
+    "GM_T": 0.21526785714285712,
+    "GM_L": 12.078125000000002,
+    "C33": 67012.10833333334,
+    "C44": 337241.92540147575,
+    "C55": 6010.647068142361,
+    "density": 1025.0,
+    "gravity": 9.80665
+  },
+  "wetted_area_reference": 14.879063104957787,
+  "levels": [
+    {
+      "n_sections": 16,
+      "n_levels": 8,
+      "panel_count": 512,
+      "displaced_volume": 2.764256795247396,
+      "Cb": 0.44228108723958337,
+      "LCB_x": 0.0,
+      "KB": 0.3903985923915543,
+      "waterplane_area": 6.640625,
+      "I_xx": 0.3774936993916829,
+      "I_yy": 33.116658528645836,
+      "wetted_area": 14.872257308611179,
+      "rel_error_volume": 0.0048675537109374115,
+      "rel_error_Cb": 0.004867553710937361,
+      "rel_error_KB": 0.000579603477621049,
+      "rel_error_waterplane_area": 0.003906250000000044,
+      "rel_error_wetted_area": 0.000457407586660509
+    },
+    {
+      "n_sections": 32,
+      "n_levels": 16,
+      "panel_count": 2048,
+      "displaced_volume": 2.7743895848592124,
+      "Cb": 0.443902333577474,
+      "LCB_x": 1.9856011817743311e-16,
+      "KB": 0.3905679334515425,
+      "waterplane_area": 6.66015625,
+      "I_xx": 0.38008517275253934,
+      "I_yy": 33.279101053873696,
+      "wetted_area": 14.877370383661054,
+      "rel_error_volume": 0.001219749450683505,
+      "rel_error_Cb": 0.001219749450683455,
+      "rel_error_KB": 0.00014609036405119013,
+      "rel_error_waterplane_area": 0.0009765625000000445,
+      "rel_error_wetted_area": 0.00011376531471049336
+    },
+    {
+      "n_sections": 64,
+      "n_levels": 32,
+      "panel_count": 8192,
+      "displaced_volume": 2.7769302328427634,
+      "Cb": 0.44430883725484216,
+      "LCB_x": -1.9990113750330222e-17,
+      "KB": 0.390610704493302,
+      "waterplane_area": 6.6650390625,
+      "I_xx": 0.38073542003985494,
+      "I_yy": 33.31977128982544,
+      "wetted_area": 14.878640460060549,
+      "rel_error_volume": 0.0003051161766051358,
+      "rel_error_Cb": 0.00030511617660508583,
+      "rel_error_KB": 3.659649714691682e-05,
+      "rel_error_waterplane_area": 0.0002441406250000444,
+      "rel_error_wetted_area": 2.8405343418254107e-05
+    },
+    {
+      "n_sections": 128,
+      "n_levels": 64,
+      "panel_count": 32768,
+      "displaced_volume": 2.777565860499938,
+      "Cb": 0.44441053767999006,
+      "LCB_x": -3.201266436289501e-16,
+      "KB": 0.39062142432163993,
+      "waterplane_area": 6.666259765625,
+      "I_xx": 0.38089813079144125,
+      "I_yy": 33.329942574103676,
+      "wetted_area": 14.878957477056229,
+      "rel_error_volume": 7.62902200222726e-05,
+      "rel_error_Cb": 7.629022002231256e-05,
+      "rel_error_KB": 9.153736601774654e-06,
+      "rel_error_waterplane_area": 6.103515625004441e-05,
+      "rel_error_wetted_area": 7.0990962813166056e-06
+    }
+  ],
+  "production_mesh": {
+    "n_sections": 64,
+    "n_levels": 32
+  },
+  "gci": {
+    "volume": {
+      "order": 1.9989426932179657,
+      "gci_fine": 9.544465338780063e-05,
+      "rel_change": 0.00022884341509735162,
+      "refinement": 2.0
+    },
+    "wetted_area": {
+      "order": 2.002283190463073,
+      "gci_fine": 8.85895776842389e-06,
+      "rel_change": 2.1306398393111102e-05,
+      "refinement": 2.0
+    }
+  },
+  "criteria": {
+    "Cb_error": {
+      "measured": 0.00030511617660508583,
+      "limit": 0.005,
+      "passed": true
+    },
+    "volume_error": {
+      "measured": 0.0003051161766051358,
+      "limit": 0.01,
+      "passed": true
+    },
+    "wetted_area_error": {
+      "measured": 2.8405343418254107e-05,
+      "limit": 0.02,
+      "passed": true
+    },
+    "gci_volume": {
+      "measured": 9.544465338780063e-05,
+      "limit": 0.03,
+      "passed": true
+    },
+    "gci_wetted_area": {
+      "measured": 8.85895776842389e-06,
+      "limit": 0.03,
+      "passed": true
+    },
+    "LCB_zero_by_symmetry": {
+      "measured": 1.9990113750330222e-17,
+      "limit": 1e-09,
+      "passed": true
+    }
+  },
+  "all_criteria_passed": true,
+  "evidence_level": "REAL (closed-form references; mesh-integrated values)",
+  "artifacts": {
+    "results_json": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+    "report_md": "benchmarks/verified/bem_wigley_hydrostatics/report.md",
+    "figure_png": "benchmarks/verified/bem_wigley_hydrostatics/figures/bem_wigley_hydrostatics.png"
+  }
+}
