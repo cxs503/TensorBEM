@@ -1,0 +1,108 @@
+{
+ "mission": "m6280",
+ "case": "capability_registry_coverage",
+ "coverage": {
+  "rows_before": 29,
+  "rows_after": 39,
+  "core_modules": 54,
+  "graded_before": 31,
+  "graded_after": 53,
+  "auxiliary_after": 1,
+  "unowned_before": 22,
+  "unowned_after": 0,
+  "unowned_before_names": [
+   "tensorbem.diagnostics_report",
+   "tensorbem.drift",
+   "tensorbem.drift_force",
+   "tensorbem.ellipsoid_kochin",
+   "tensorbem.geometry",
+   "tensorbem.geometry3d",
+   "tensorbem.hydroelastic",
+   "tensorbem.ice",
+   "tensorbem.ice_rao",
+   "tensorbem.maruo_drift",
+   "tensorbem.multicomponent",
+   "tensorbem.multihull",
+   "tensorbem.multiloop",
+   "tensorbem.panel_linear",
+   "tensorbem.panel_smoothing",
+   "tensorbem.pc6_hull",
+   "tensorbem.quadrature_diagnostics",
+   "tensorbem.quadrature_diagnostics_2d",
+   "tensorbem.recovery_uncertainty",
+   "tensorbem.thin_ship_michell",
+   "tensorbem.time_domain",
+   "tensorbem.uq"
+  ],
+  "unowned_after_names": [],
+  "stale_reasons": []
+ },
+ "anchors": [
+  {
+   "case": "hull-mesh-geometry",
+   "reference": "exact sphere area 4 pi R^2 and volume 4/3 pi R^3, R = 1 m",
+   "levels": [
+    {
+     "subdivisions": 0,
+     "panels": 20,
+     "area": 9.574541383273937,
+     "area_error": 0.23808220550701986,
+     "volume": 2.53615071012041,
+     "volume_error": 0.3945386170874742
+    },
+    {
+     "subdivisions": 1,
+     "panels": 80,
+     "area": 11.665931391718317,
+     "area_error": 0.07165467661855796,
+     "volume": 3.6587122085121595,
+     "volume_error": 0.12654679999693674
+    },
+    {
+     "subdivisions": 2,
+     "panels": 320,
+     "area": 12.329848595234669,
+     "area_error": 0.01882182424687029,
+     "volume": 4.047044679978849,
+     "volume_error": 0.03383925140141275
+    },
+    {
+     "subdivisions": 3,
+     "panels": 1280,
+     "area": 12.506492733969928,
+     "area_error": 0.004764930322906702,
+     "volume": 4.152740817093058,
+     "volume_error": 0.00860615737024506
+    }
+   ],
+   "finest_error": 0.00860615737024506,
+   "worst_error": 0.3945386170874742,
+   "pass_1pct_at_finest": true
+  },
+  {
+   "case": "linear-panel-operators",
+   "reference": "closed-form triangular self integral vs graded Duffy quadrature",
+   "analytic_matrix": [
+    [
+     0.049594688814,
+     0.024797344407,
+     0.024797344407
+    ]
+   ],
+   "numerical_matrix": [
+    [
+     0.049594688814,
+     0.024797344407,
+     0.024797344407
+    ]
+   ],
+   "relative_residual": 4.1973610903786186e-16,
+   "pass_1pct": true
+  }
+ ],
+ "honest_limits": [
+  "Coverage counts are static: a module owned by a row is *graded*, not proven correct here; the numerics of the other seven rows live in the tests the row names.",
+  "The icosphere anchor is a discretisation statement (geometric convergence), not an experimental validation of a ship hull.",
+  "The Maruo anchor is an internal-consistency and scaling statement; the absolute magnitude of a drift force for a real hull has no experimental anchor in this tree."
+ ]
+}
