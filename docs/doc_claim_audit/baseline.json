@@ -4,7 +4,7 @@
     "PROJECT_CHARTER.md",
     "dev_report_m4291_pr215_ci_red.md",
     "dev_report_m4757_function_level_api_pins.md",
-    "dev_report_m4796_ci_red_fix.md",
+    "finite_depth3d_offaxis_split.md",
     "interior_field_domain_guard.md",
     "kkr_causality_band_study.md",
     "m3538_propeller_openwater_uncertainty.md",
@@ -14,6 +14,7 @@
     "m4789_gauss_rule_fallback.md",
     "merge_m3878_pr104_resolution.md",
     "merge_report_m3929_pr134.md",
+    "panel_linear_order.md",
     "report_m57.md",
     "report_m96.md",
     "report_publish_incident_m2141.md",
@@ -26,9 +27,11 @@
     "validation_report_ursell_kochin.md"
   ],
   "unguarded_paper_level": [
+    "finite_depth3d_offaxis_split.md",
     "interior_field_domain_guard.md",
     "kkr_causality_band_study.md",
     "m3538_propeller_openwater_uncertainty.md",
+    "panel_linear_order.md",
     "sphere_flow_study.md",
     "ursell_convergence_study.md",
     "ursell_doc_reproducibility_report.md",
