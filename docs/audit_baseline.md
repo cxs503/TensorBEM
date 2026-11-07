@@ -111,8 +111,8 @@ correction log inside the generated block records what changed.
 | 2-D Laplace BEM (interior / exterior) | **REAL** | `tensorbem.solver`, `tensorbem.kernels` | 2 node(s) in 1 file(s) | `docs/classical_benchmarks.md` |
 | 3-D Laplace BEM (interior / exterior) | **REAL** | `tensorbem.solver3d`, `tensorbem.kernels3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
 | 2-D deep-water free-surface Green function | **REAL** | `tensorbem.free_surface` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
-| 3-D Delhommeau / Kelvin free-surface Green function | **REAL** | `tensorbem.free_surface3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
-| Ursell submerged-cylinder radiation benchmark | **REAL** | `tensorbem.benchmarks.ursell_cylinder` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
+| 3-D Delhommeau / Kelvin free-surface Green function | **REAL** | `tensorbem.free_surface3d`, `tensorbem.free_surface_solver3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
+| Ursell submerged-cylinder radiation benchmark | **REAL** | `tensorbem.benchmarks.ursell_cylinder`, `tensorbem.free_surface_solver` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Hulme floating hemisphere (3-D radiation) | **REAL** | `tensorbem.benchmarks.floating_hemisphere`, `tensorbem.benchmarks.hulme_diffraction_verification` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | MacCamy-Fuchs vertical pile (Helmholtz + CHIEF) | **REAL** | `tensorbem.helmholtz`, `tensorbem.benchmarks.maccamy_fuchs` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Dean diffraction (zero-reflection theorem) | **REAL** | `tensorbem.benchmarks.dean_diffraction` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
@@ -120,8 +120,8 @@ correction log inside the generated block records what changed.
 | Surface velocity recovery | **REAL** | `tensorbem.recovery`, `tensorbem.solver3d` | 2 node(s) in 1 file(s) | `docs/pressure_forces.md` |
 | Hydrostatics (volume, Cb, waterplane, restoration) | **REAL** | `tensorbem.hydrostatic`, `tensorbem.wigley_hydrostatics` | 2 node(s) in 1 file(s) | `docs/hydrostatic_benchmarks_report.md` |
 | 6-DOF heave RAO coupling | **REAL** | `tensorbem.rao` | 2 node(s) in 1 file(s) | `dev_report_tensorbem-hydrostatic-rao.md` |
-| Finite-depth kernels + solver (2-D) | **REAL** | `tensorbem.finite_depth`, `tensorbem.finite_depth_solver` | 2 node(s) in 2 file(s) | `docs/finite_depth_2d.md` |
-| Finite-depth kernels + solver (3-D) | **REAL** | `tensorbem.finite_depth3d`, `tensorbem.benchmarks.finite_depth_radiation` | 2 node(s) in 1 file(s) | `docs/finite_depth3d.md` |
+| Finite-depth kernels + solver (2-D) | **REAL** | `tensorbem.finite_depth`, `tensorbem.finite_depth_solver` (+1) | 2 node(s) in 2 file(s) | `docs/finite_depth_2d.md` |
+| Finite-depth kernels + solver (3-D) | **REAL** | `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature` (+1) | 2 node(s) in 1 file(s) | `docs/finite_depth3d.md` |
 | Forward-speed wave resistance (Wigley, Michell/Kochin) | **REAL** | `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification` | 2 node(s) in 2 file(s) | `docs/wigley_wave_resistance.md` |
 | Michell thin-ship wave resistance for general hulls + tandem interference | **REAL** | `tensorbem.michell`, `tensorbem.benchmarks.michell_validation` | 2 node(s) in 1 file(s) | `docs/michell_validation.md` |
 | Kutta condition / lifting foil | **REAL** | `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil` | 2 node(s) in 2 file(s) | `docs/lifting_foil.md` |
@@ -137,13 +137,23 @@ correction log inside the generated block records what changed.
 | Body / free-surface clearance diagnostics | **REAL** | `tensorbem.clearance` | 2 node(s) in 1 file(s) | `docs/near_surface_error_budget.md` |
 | Benchmark drivers expose a runnable entry point | **REAL** | `tensorbem.benchmarks.finite_depth_kernel`, `tensorbem.benchmarks.hulme_diffraction_verification` (+5) | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 | Machine-derived capability evidence registry | **REAL** | `tensorbem.capability_evidence` | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
+| Second-order mean wave drift force (near field / far field) | **REAL** | `tensorbem.drift`, `tensorbem.drift_force` (+1) | 4 node(s) in 2 file(s) | `docs/drift_second_order/drift_second_order.md` |
+| Time-domain radiation memory kernel (Cummins equation) | **REAL** | `tensorbem.time_domain` | 3 node(s) in 1 file(s) | `docs/time_domain_pulse.md` |
+| Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
+| Hydroelastic panel modes and the wet/dry frequency ratio | **REAL** | `tensorbem.hydroelastic` | 3 node(s) in 1 file(s) | `docs/bem_hydroelastic.md` |
+| Ice-cover mass loading, ice-region RAO and ice-class hull geometry | **REAL** | `tensorbem.ice`, `tensorbem.ice_rao` (+1) | 3 node(s) in 3 file(s) | `docs/ice_water_ship.md` |
+| Piecewise-linear panel operators and tangential recovery smoothing | **REAL** | `tensorbem.panel_linear`, `tensorbem.panel_smoothing` | 3 node(s) in 2 file(s) | `docs/panel_linear_order.md` |
+| Multiply connected 2-D domains (nested loops, multi-component meshes) | **REAL** | `tensorbem.multiloop`, `tensorbem.multicomponent` | 3 node(s) in 2 file(s) | `docs/annulus_multicomponent.md` |
+| Thin-ship Michell resistance for general hullforms and tandem pairs | **REAL** | `tensorbem.thin_ship_michell`, `tensorbem.ellipsoid_kochin` (+1) | 3 node(s) in 2 file(s) | `docs/michell_validation.md` |
+| Near-singular quadrature and conditioning diagnostics | **REAL** | `tensorbem.quadrature_diagnostics`, `tensorbem.quadrature_diagnostics_2d` (+1) | 3 node(s) in 3 file(s) | `docs/capability_registry_coverage.md` |
+| Panel and triangle mesh geometry with closure checks | **REAL** | `tensorbem.geometry`, `tensorbem.geometry3d` | 3 node(s) in 2 file(s) | `docs/three_dimensional_bem.md` |
 
-Counts: **29** REAL — 29 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **39** REAL — 39 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
-- **Finite-depth kernels + solver (2-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth`, `tensorbem.finite_depth_solver`; 2 test node(s) in `tests/test_finite_depth.py`, `tests/test_finite_depth_solver.py`.
-- **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
+- **Finite-depth kernels + solver (2-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth`, `tensorbem.finite_depth_solver`, `tensorbem.finite_depth_diffraction`; 2 test node(s) in `tests/test_finite_depth.py`, `tests/test_finite_depth_solver.py`.
+- **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
 - **Forward-speed wave resistance (Wigley, Michell/Kochin)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification`; 2 test node(s) in `tests/test_wigley_verification.py`, `tests/test_wigley_wave_resistance.py`.
 - **Kutta condition / lifting foil** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil`; 2 test node(s) in `tests/test_lifting_foil.py`, `tests/test_lifting_flow.py`.
 
@@ -151,9 +161,14 @@ Counts: **29** REAL — 29 capabilities. The level is derived from code/test/doc
 
 Not referenced by any test file, with an accepted reason:
 
+- `tensorbem.benchmarks.bem_wigley_wave_resistance_figures` — matplotlib helper rendering the Wigley report figures from the JSON artifact; exercised when figures are rebuilt, and its inputs are gated by tests/test_bem_wigley_wave_resistance.py.
 - `tensorbem.benchmarks.finite_depth3d_verification` — report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.
 - `tensorbem.benchmarks.hydrostatic_figures` — matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.
+- `tensorbem.benchmarks.panel_linear_order` — study driver that writes docs/panel_linear_order/study.json and its figures; the operator it drives is pinned by tests/test_panel_linear_order.py and graded by the linear-panel-operators row.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
+- `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
+- `tensorbem.benchmarks.wave_loads_verification` — wave-load verification driver assembling the same pressure path as wave_loads_minimal; no physics of its own to pin.
+- `tensorbem.maruo_drift` — azimuthal-quadrature wrapper around the Maruo far-field integral; graded through the second-order-drift row, but it has no dedicated numeric anchor of its own yet -- that anchor is owed, and this entry records the debt instead of hiding it.
 
 <!-- capability-matrix:end -->
 

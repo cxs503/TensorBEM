@@ -204,7 +204,7 @@ CAPABILITIES: tuple[Capability, ...] = (
         title='3-D Delhommeau / Kelvin free-surface Green function',
         claim='Region-split evaluator with continuous seams and free-surface residual below 1e-14.',
         level=REAL,
-        modules=('tensorbem.free_surface3d',),
+        modules=('tensorbem.free_surface3d', 'tensorbem.free_surface_solver3d'),
         symbols=('green_function_3d', 'wave_function_3d'),
         tests=(
             'tests/test_free_surface3d.py::test_green_function_3d_gradients_bc_laplace_and_sommerfeld',
@@ -218,7 +218,7 @@ CAPABILITIES: tuple[Capability, ...] = (
         title='Ursell submerged-cylinder radiation benchmark',
         claim='Multipole reference independent of the panel code; first-order convergence pinned.',
         level=REAL,
-        modules=('tensorbem.benchmarks.ursell_cylinder',),
+        modules=('tensorbem.benchmarks.ursell_cylinder', 'tensorbem.free_surface_solver'),
         symbols=('run', 'submerged_circle_mesh'),
         tests=(
             'tests/test_ursell_benchmark.py::test_deep_submergence_recovers_the_displaced_mass',
@@ -330,7 +330,7 @@ CAPABILITIES: tuple[Capability, ...] = (
         title='Finite-depth kernels + solver (2-D)',
         claim='Dispersion relation, evanescent modes and bottom condition at arbitrary depth h.',
         level=REAL,
-        modules=('tensorbem.finite_depth', 'tensorbem.finite_depth_solver'),
+        modules=('tensorbem.finite_depth', 'tensorbem.finite_depth_solver', 'tensorbem.finite_depth_diffraction'),
         symbols=('finite_depth_wavenumber', 'evanescent_wavenumbers'),
         tests=(
             'tests/test_finite_depth.py::test_dispersion_relation_is_solved',
@@ -345,7 +345,7 @@ CAPABILITIES: tuple[Capability, ...] = (
         title='Finite-depth kernels + solver (3-D)',
         claim='Vertical mode expansion, bessel_k0 evaluator and analytic gradients in the 3-D kernel.',
         level=REAL,
-        modules=('tensorbem.finite_depth3d', 'tensorbem.benchmarks.finite_depth_radiation'),
+        modules=('tensorbem.finite_depth3d', 'tensorbem.finite_depth3d_quadrature', 'tensorbem.benchmarks.finite_depth_radiation'),
         symbols=('depth_modes', 'bessel_k0'),
         tests=(
             'tests/test_finite_depth3d.py::test_vertical_modes_are_orthogonal_with_analytic_norms',
@@ -577,6 +577,164 @@ CAPABILITIES: tuple[Capability, ...] = (
         published_2026_10_29='REAL',
         note='This capability: the table below is its own output.',
     ),
+    # ------------------------------------------------------------------
+    # Added 2026-11-08 (m6280).  These capabilities were shipped, tested and
+    # documented before this mission but appeared in no row, so the published
+    # table said 29 REAL capabilities and was silent about them.  A published
+    # baseline that is silent about half of the core modules is an over-claim
+    # of the same kind the m308 baseline made when it said NOT_SUPPORTED.
+    # ------------------------------------------------------------------
+    Capability(
+        key='second-order-drift',
+        title='Second-order mean wave drift force (near field / far field)',
+        claim='Near-field pressure-plus-waterline drift and the Maruo far field agree on a wall-anchored body and on a cylinder, with a Richardson-converged panel gate.',
+        level=REAL,
+        modules=('tensorbem.drift', 'tensorbem.drift_force', 'tensorbem.maruo_drift'),
+        symbols=('near_field_mean_drift_3d', 'maruo_far_field_drift_3d', 'maruo_mean_drift_force'),
+        tests=(
+            'tests/test_drift_force.py::test_analytic_anchor_value',
+            'tests/test_drift_force.py::test_far_field_matches_anchor',
+            'tests/test_drift_second_order.py::test_wall_anchor_3d_matches_closed_form',
+            'tests/test_drift_second_order.py::test_near_far_agree_on_cylinder',
+        ),
+        docs=(('docs/drift_second_order/drift_second_order.md', 'Maruo'),),
+        note='Absent from the 2026-10-29 table; the capability existed there as prose only.',
+    ),
+    Capability(
+        key='time-domain-memory-kernel',
+        title='Time-domain radiation memory kernel (Cummins equation)',
+        claim='The Fourier round trip returns A and B for an exact exponential pair and the Cummins free decay reproduces the auxiliary-ODE characteristic decay.',
+        level=REAL,
+        modules=('tensorbem.time_domain',),
+        symbols=('damping_from_memory_kernel', 'added_mass_from_memory_kernel', 'cummins_free_decay'),
+        tests=(
+            'tests/test_time_domain.py::test_kernel_reproduces_exponential_closed_form',
+            'tests/test_time_domain.py::test_round_trip_returns_both_coefficients_for_exact_pair',
+            'tests/test_time_domain.py::test_cummins_decay_matches_exact_auxiliary_ode',
+        ),
+        docs=(('docs/time_domain_pulse.md', 'Cummins'),),
+        note='Absent from the 2026-10-29 table.',
+    ),
+    Capability(
+        key='uncertainty-quantification',
+        title='Discretisation and recovery uncertainty quantification',
+        claim='Richardson/GCI recovers a manufactured order and limit, and the bootstrap intervals have measured empirical coverage on known samples.',
+        level=REAL,
+        modules=('tensorbem.uq', 'tensorbem.recovery_uncertainty'),
+        symbols=('grid_convergence_index', 'bootstrap_ci', 'estimate_recovery_uncertainty'),
+        tests=(
+            'tests/test_uq.py::test_richardson_recovers_manufactured_order_and_limit',
+            'tests/test_uq.py::test_bootstrap_ci_of_the_mean_has_empirical_coverage',
+            'tests/test_recovery_robustness.py::test_exact_affine_data_is_recovered_to_machine_precision',
+        ),
+        docs=(('docs/recovery_robustness.md', 'smoothing'),),
+        note='Absent from the 2026-10-29 table; the GCI numbers quoted in the drift and Wigley reports come from here.',
+    ),
+    Capability(
+        key='hydroelastic-dry-modes',
+        title='Hydroelastic panel modes and the wet/dry frequency ratio',
+        claim='The dry natural frequency is the Kirchhoff closed form and the modal added-mass ratio has an exact uniform limit; the plate is simply supported and excitation is Froude-Krylov only.',
+        level=REAL,
+        modules=('tensorbem.hydroelastic',),
+        symbols=('flexural_gravity_omega', 'exact_uniform_added_mass', 'added_mass_ratios'),
+        tests=(
+            'tests/test_hydroelastic.py::test_dry_frequency_is_the_kirchhoff_closed_form',
+            'tests/test_hydroelastic.py::test_panel_derived_quantities_match_closed_forms',
+            'tests/test_hydroelastic.py::test_rectangle_self_integral_matches_panel_quadrature',
+        ),
+        docs=(('docs/bem_hydroelastic.md', 'Kirchhoff'),),
+        note='Model-internal evidence only: the document registers absolute validation against an independent hydroelastic code or experiment as WITHHELD.',
+    ),
+    Capability(
+        key='ice-region-hydrodynamics',
+        title='Ice-cover mass loading, ice-region RAO and ice-class hull geometry',
+        claim='Mass-loading dispersion is pinned to Weitz-Keller and to independent RK4 shooting, the vanishing-ice limit recovers open water, and the ice-class mesh reproduces its parametric block coefficient.',
+        level=REAL,
+        modules=('tensorbem.ice', 'tensorbem.ice_rao', 'tensorbem.pc6_hull'),
+        symbols=('mass_loading_wavenumber', 'compute_ice_rao_spectrum', 'ice_class_hull_mesh'),
+        tests=(
+            'tests/test_ice_mass_loading.py::test_deep_water_limit_matches_weitz_keller',
+            'tests/test_ice_rao.py::test_no_ice_limit_reproduces_open_water',
+            'tests/test_pc6_hull.py::test_mesh_reproduces_parametric_block_coefficient',
+        ),
+        docs=(('docs/ice_water_ship.md', 'Weitz'),),
+        note='The PC6 hull is parametric: the offset table is not public property, so absolute RAO magnitudes in ice remain WITHHELD in the document.',
+    ),
+    Capability(
+        key='linear-panel-operators',
+        title='Piecewise-linear panel operators and tangential recovery smoothing',
+        claim='The linear-panel self integral matches the graded Duffy rule and smoothing preserves the area-weighted mean exactly.',
+        level=REAL,
+        modules=('tensorbem.panel_linear', 'tensorbem.panel_smoothing'),
+        symbols=('integrate_linear_single_layer_self_analytic', 'assemble_linear_panel_matrices', 'smooth_panel_field'),
+        tests=(
+            'tests/test_panel_linear_order.py::test_closed_form_matches_graded_duffy',
+            'tests/test_panel_linear_order.py::test_operator_maps_recover_the_analytic_field',
+            'tests/test_recovery_robustness.py::test_smoothing_preserves_the_area_weighted_mean_exactly',
+        ),
+        docs=(('docs/panel_linear_order.md', 'Duffy'),),
+        note='Absent from the 2026-10-29 table; the order study it belongs to is published as docs/panel_linear_order.md.',
+    ),
+    Capability(
+        key='multiply-connected-domains',
+        title='Multiply connected 2-D domains (nested loops, multi-component meshes)',
+        claim='The annulus Dirichlet solve converges to the closed form and the recovered boundary flux is divergence free on both loops.',
+        level=REAL,
+        modules=('tensorbem.multiloop', 'tensorbem.multicomponent'),
+        symbols=('solve_laplace_multiloop', 'build_multicomponent_mesh', 'evaluate_multiloop_field'),
+        tests=(
+            'tests/test_multiloop_annulus.py::test_convergence_to_closed_form',
+            'tests/test_multiloop_annulus.py::test_boundary_flux_is_divergence_free',
+            'tests/test_multicomponent.py::test_builder_reverses_the_hole_and_rejects_stray_holes',
+        ),
+        docs=(('docs/annulus_multicomponent.md', 'annulus'),),
+        note='Absent from the 2026-10-29 table.',
+    ),
+    Capability(
+        key='thin-ship-general-hullforms',
+        title='Thin-ship Michell resistance for general hullforms and tandem pairs',
+        claim='The panel Kochin function matches the closed form, the panel resistance route matches the repository quadrature, and the tandem interference reduces to the analytic double-hull limits.',
+        level=REAL,
+        modules=('tensorbem.thin_ship_michell', 'tensorbem.ellipsoid_kochin', 'tensorbem.multihull'),
+        symbols=('ellipsoid_amplitude_reference', 'kochin_analytic', 'tandem_wave_resistance'),
+        tests=(
+            'tests/test_michell_thin_ship.py::test_panel_kochin_matches_closed_form',
+            'tests/test_michell_thin_ship.py::test_panel_route_matches_repository_reference',
+            'tests/test_thin_ship_anchor_artifacts.py::test_multihull_limits_are_analytic',
+        ),
+        docs=(('docs/michell_validation.md', 'tandem'),),
+        note='Thin-ship asymptotics: the agreement is with Michell theory, not with experiment.',
+    ),
+    Capability(
+        key='quadrature-diagnostics',
+        title='Near-singular quadrature and conditioning diagnostics',
+        claim='Source/target pairs are classified by distance over panel size in 2-D and 3-D, and the combined report round-trips through JSON and Markdown.',
+        level=REAL,
+        modules=('tensorbem.quadrature_diagnostics', 'tensorbem.quadrature_diagnostics_2d', 'tensorbem.diagnostics_report'),
+        symbols=('diagnose_near_singular_quadrature', 'diagnose_near_singular_quadrature_2d', 'run_diagnostics'),
+        tests=(
+            'tests/test_quadrature_diagnostics.py::test_diagnose_near_singular_with_targets',
+            'tests/test_quadrature_diagnostics_2d.py::test_ursell_submerged_cylinder_near_singular',
+            'tests/test_diagnostics_report.py::test_run_diagnostics_sphere',
+        ),
+        docs=(('docs/capability_registry_coverage.md', 'Quadrature diagnostics'),),
+        note='Diagnostics only: the report classifies conditioning, it does not certify accuracy.',
+    ),
+    Capability(
+        key='hull-mesh-geometry',
+        title='Panel and triangle mesh geometry with closure checks',
+        claim='Refining the icosphere converges the discrete area and volume to the sphere values, and open or misoriented meshes are rejected before any solve.',
+        level=REAL,
+        modules=('tensorbem.geometry', 'tensorbem.geometry3d'),
+        symbols=('regular_polygon', 'icosphere', 'WettedHullMesh'),
+        tests=(
+            'tests/test_geometry.py::test_regular_polygon_geometry_is_consistent',
+            'tests/test_geometry3d.py::test_icosphere_refinement_improves_area_and_volume',
+            'tests/test_geometry3d.py::test_mesh_rejects_open_or_misoriented_surfaces',
+        ),
+        docs=(('docs/three_dimensional_bem.md', 'icosphere'),),
+        note='Absent from the 2026-10-29 table although every row above depends on it.',
+    ),
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
@@ -587,10 +745,38 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
+    "tensorbem.maruo_drift":
+        "azimuthal-quadrature wrapper around the Maruo far-field integral; graded through the"
+        " second-order-drift row, but it has no dedicated numeric anchor of its own yet -- that"
+        " anchor is owed, and this entry records the debt instead of hiding it.",
+    "tensorbem.benchmarks.panel_linear_order":
+        "study driver that writes docs/panel_linear_order/study.json and its figures; the operator it"
+        " drives is pinned by tests/test_panel_linear_order.py and graded by the linear-panel-operators row.",
+    "tensorbem.benchmarks.bem_wigley_wave_resistance_figures":
+        "matplotlib helper rendering the Wigley report figures from the JSON artifact; exercised when"
+        " figures are rebuilt, and its inputs are gated by tests/test_bem_wigley_wave_resistance.py.",
+    "tensorbem.benchmarks.wave_loads_minimal":
+        "minimal wave-load report driver; the pressure and force path it reports on is pinned by"
+        " tests/test_pressure.py and graded by the pressure-forces row.",
+    "tensorbem.benchmarks.wave_loads_verification":
+        "wave-load verification driver assembling the same pressure path as wave_loads_minimal; no"
+        " physics of its own to pin.",
     "tensorbem.benchmarks.finite_depth3d_verification":
         "report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary"
         " conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports"
         " on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.",
+}
+
+#: Core package modules that legitimately own no capability row, with the reason.
+#: Every *other* core module must appear in the ``modules`` tuple of a row:
+#: ``capability_coverage`` fails otherwise.  Before m6280 the registry graded
+#: 29 capabilities while 27 of the 54 core modules appeared in no row, so a
+#: reader of the published table could not tell that half the package was
+#: outside its scope.
+AUXILIARY_MODULES: dict[str, str] = {
+    "tensorbem.analytic":
+        "closed-form reference library shared by the benchmark drivers; each reference it exports is"
+        " graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).",
 }
 
 
@@ -889,6 +1075,51 @@ def untested_modules(root: pathlib.Path | None = None) -> dict[str, list[str]]:
     }
 
 
+def core_modules(root: pathlib.Path | None = None) -> list[str]:
+    """Package modules outside ``tensorbem.benchmarks`` (the library proper)."""
+
+    root = root or repo_root()
+    return sorted(
+        name
+        for name in _package_modules(root)
+        if name.count(".") == 1 and not name.endswith(".benchmarks")
+    )
+
+
+def capability_coverage(
+    root: pathlib.Path | None = None,
+    capabilities: Sequence[Capability] = CAPABILITIES,
+    auxiliary: dict[str, str] = AUXILIARY_MODULES,
+) -> dict[str, list[str]]:
+    """Which core modules the registry actually grades, and which it does not.
+
+    A capability row is the only place the published baseline says "this part of
+    the package is in scope and here is its evidence level".  A shipped module
+    that no row names is therefore *invisible*: the table is not wrong about it,
+    it is silent, which reads as "nothing to see".  This inventory makes that
+    silence a failing gate, in the same spirit as ``untested_modules``.
+    """
+
+    core = core_modules(root)
+    graded: dict[str, list[str]] = {}
+    for capability in capabilities:
+        for module in capability.modules:
+            graded.setdefault(module, []).append(capability.key)
+    owned = [name for name in core if name in graded]
+    explained = [name for name in core if name not in graded and name in auxiliary]
+    unowned = [name for name in core if name not in graded and name not in auxiliary]
+    stale = sorted(
+        name for name in auxiliary if name in graded or name not in core
+    )
+    return {
+        "core_modules": core,
+        "graded": owned,
+        "auxiliary": explained,
+        "unowned": unowned,
+        "stale_reasons": stale,
+    }
+
+
 # --------------------------------------------------------------------------
 # rendering
 # --------------------------------------------------------------------------
@@ -904,7 +1135,11 @@ def summary(rows: Sequence[RowEvidence]) -> dict[str, int]:
     return counts
 
 
-def render_markdown(rows: Sequence[RowEvidence], untested: dict[str, list[str]] | None = None) -> str:
+def render_markdown(
+    rows: Sequence[RowEvidence],
+    untested: dict[str, list[str]] | None = None,
+    coverage: dict[str, list[str]] | None = None,
+) -> str:
     counts = summary(rows)
     flips = [
         row for row in rows
@@ -948,6 +1183,32 @@ def render_markdown(rows: Sequence[RowEvidence], untested: dict[str, list[str]] 
                 f"{', '.join(f'`{name}`' for name in cap.modules)}; "
                 f"{row.test_nodes} test node(s) in {', '.join(f'`{f}`' for f in row.test_files)}."
             )
+    if coverage is not None:
+        total = len(coverage["core_modules"])
+        lines.append("")
+        lines.append("### Capability coverage")
+        lines.append("")
+        lines.append(
+            f"{len(coverage['graded'])} of {total} core modules (outside `tensorbem.benchmarks`) are "
+            f"named by a row above; {len(coverage['auxiliary'])} more carry an accepted reason, so "
+            f"**{len(coverage['unowned'])} are unowned**."
+        )
+        if coverage["auxiliary"]:
+            lines.append("")
+            for name in coverage["auxiliary"]:
+                lines.append(f"- `{name}` — {AUXILIARY_MODULES[name]}")
+        if coverage["unowned"]:
+            lines.append("")
+            lines.append("**Core modules no row grades and no reason explains** (fails the gate):")
+            lines.append("")
+            for name in coverage["unowned"]:
+                lines.append(f"- `{name}`")
+        if coverage["stale_reasons"]:
+            lines.append("")
+            lines.append("Reasons that are now obsolete because a row grades the module:")
+            lines.append("")
+            for name in coverage["stale_reasons"]:
+                lines.append(f"- `{name}`")
     if untested is not None:
         lines.append("")
         lines.append("### Untested modules")
@@ -972,10 +1233,16 @@ def render_markdown(rows: Sequence[RowEvidence], untested: dict[str, list[str]] 
     return "\n".join(lines)
 
 
-def render_document_block(rows: Sequence[RowEvidence], untested: dict[str, list[str]] | None = None) -> str:
+def render_document_block(
+    rows: Sequence[RowEvidence],
+    untested: dict[str, list[str]] | None = None,
+    coverage: dict[str, list[str]] | None = None,
+) -> str:
     """The exact text that belongs between the begin/end markers in the doc."""
 
-    return "\n".join([BEGIN_MARKER, "", render_markdown(rows, untested), "", END_MARKER])
+    return "\n".join(
+        [BEGIN_MARKER, "", render_markdown(rows, untested, coverage), "", END_MARKER]
+    )
 
 
 def extract_document_block(text: str) -> str:
@@ -992,7 +1259,8 @@ def document_drift(root: pathlib.Path | None = None) -> str | None:
     root = root or repo_root()
     rows = audit(root)
     untested = untested_modules(root)
-    expected = render_document_block(rows, untested)
+    coverage = capability_coverage(root)
+    expected = render_document_block(rows, untested, coverage)
     doc_text = (root / BASELINE_DOC).read_text(encoding="utf-8")
     try:
         published = extract_document_block(doc_text)
