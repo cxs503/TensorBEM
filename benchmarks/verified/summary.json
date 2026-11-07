@@ -1,12 +1,4 @@
 {
-  "multihull_interference": {
-    "all_criteria_passed": true,
-    "artifacts": {
-      "results_json": "benchmarks/verified/bem_multihull_interference/results.json",
-      "report_md": "benchmarks/verified/bem_multihull_interference/report.md",
-      "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png"
-    }
-  },
   "wigley_hydrostatics": {
     "all_criteria_passed": true,
     "artifacts": {
@@ -15,12 +7,28 @@
       "figure_png": "benchmarks/verified/bem_wigley_hydrostatics/figures/bem_wigley_hydrostatics.png"
     }
   },
+  "wigley_wave_resistance": {
+    "all_criteria_passed": true,
+    "artifacts": {
+      "results_json": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+      "report_md": "benchmarks/verified/bem_wigley_wave_resistance/report.md",
+      "figure_png": "benchmarks/verified/bem_wigley_wave_resistance/figures/wave_resistance_comparison.png"
+    }
+  },
   "ellipsoid_wave": {
     "all_criteria_passed": true,
     "artifacts": {
       "results_json": "benchmarks/verified/bem_ellipsoid_wave/results.json",
       "report_md": "benchmarks/verified/bem_ellipsoid_wave/report.md",
       "figure_png": "benchmarks/verified/bem_ellipsoid_wave/figures/bem_ellipsoid_wave.png"
+    }
+  },
+  "multihull_interference": {
+    "all_criteria_passed": true,
+    "artifacts": {
+      "results_json": "benchmarks/verified/bem_multihull_interference/results.json",
+      "report_md": "benchmarks/verified/bem_multihull_interference/report.md",
+      "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png"
     }
   }
 }
