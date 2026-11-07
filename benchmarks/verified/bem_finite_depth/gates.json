@@ -1,0 +1,88 @@
+{
+  "all_gates_passed": true,
+  "case": "bem_finite_depth",
+  "failed_gates": [],
+  "gates": [
+    {
+      "description": "hull Cb / L / B / T / waterplane area vs quadrature of the parametric definition",
+      "id": "G1_geometry",
+      "measured": 0.004077818032090694,
+      "note": "checked before any hydrodynamics",
+      "passed": true,
+      "threshold": 0.01,
+      "unit": "relative"
+    },
+    {
+      "description": "KK relation (2): added mass predicted from the damping sweep",
+      "id": "G2_kkr_added_mass",
+      "measured": 0.0009999376858291363,
+      "note": "64 panels, band 0.01-30.0 in nu*a",
+      "passed": true,
+      "threshold": 0.02,
+      "unit": "relative"
+    },
+    {
+      "description": "KK relation (1): frequency-dependent part of the damping residual",
+      "id": "G3_kkr_damping_shape",
+      "measured": 0.006408217782166875,
+      "note": "raw band-limited residual 5.329e-02; constant truncation part +5.108e-02",
+      "passed": true,
+      "threshold": 0.02,
+      "unit": "relative"
+    },
+    {
+      "description": "|R|^2 + |T|^2 = 1 over the section x depth x frequency matrix",
+      "id": "G4_diffraction_energy",
+      "measured": 0.0016744916531350462,
+      "note": "45 cases at 80 panels",
+      "passed": true,
+      "threshold": 0.01,
+      "unit": "relative"
+    },
+    {
+      "description": "damping from the radiated wave amplitude vs damping from the body pressure",
+      "id": "G5_radiation_energy",
+      "measured": 0.011967285332295935,
+      "note": "45 cases x 2 motions",
+      "passed": true,
+      "threshold": 0.02,
+      "unit": "relative"
+    },
+    {
+      "description": "finite-depth coefficients converge to the deep-water solution",
+      "id": "G6_deep_water_limit",
+      "measured": 0.0014564364019294723,
+      "note": "h/T = 20.0, added-mass convergence slope -2.58 in h/T",
+      "passed": true,
+      "threshold": 0.01,
+      "unit": "relative"
+    },
+    {
+      "description": "3 sections x 3 depths x 5 frequencies present",
+      "id": "G7_matrix_completeness",
+      "measured": 45.0,
+      "note": "machine-checked against the declared axis lengths",
+      "passed": true,
+      "threshold": 45.0,
+      "unit": "cases"
+    },
+    {
+      "description": "diffraction energy residual decreases with panel count",
+      "id": "G8_panel_refinement",
+      "measured": 0.006602653269591308,
+      "note": "panels [40, 80, 120]",
+      "passed": true,
+      "threshold": 0.01,
+      "unit": "relative"
+    }
+  ],
+  "missing_legs": [],
+  "parameters": {
+    "asymptotic": 0.01,
+    "diffraction_energy": 0.01,
+    "geometry": 0.01,
+    "kkr": 0.02,
+    "radiation_energy": 0.02
+  },
+  "repository": "TensorBEM"
+}
