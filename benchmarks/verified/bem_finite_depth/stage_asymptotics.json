@@ -1,0 +1,136 @@
+{
+  "added_mass_convergence_slope": -2.584523053730636,
+  "deep_water": {
+    "heave": {
+      "added_mass": 2350.041362031369,
+      "damping": 904.1464796604313
+    },
+    "sway": {
+      "added_mass": 3857.9395548916104,
+      "damping": 1640.551407856713
+    }
+  },
+  "deepest_depth_ratio": 20.0,
+  "gate": 0.01,
+  "hull": "Wigley",
+  "leg": "D_deep_water_asymptotics",
+  "nu_times_draught": 0.6,
+  "panels": 80,
+  "passed": true,
+  "rows": [
+    {
+      "depth": 3.75,
+      "depth_ratio": 1.5,
+      "heave_added_mass": 2438.151074352153,
+      "heave_added_mass_relative_deviation": 0.037492834698289054,
+      "heave_damping": 451.34903078212074,
+      "heave_damping_relative_deviation": 0.5008009864157928,
+      "heave_k0_times_depth": 1.1162597065341222,
+      "sway_added_mass": 3651.7021576179836,
+      "sway_added_mass_relative_deviation": 0.05345791304898272,
+      "sway_damping": 2197.0123025567036,
+      "sway_damping_relative_deviation": 0.3391913792125387,
+      "sway_k0_times_depth": 1.1162597065341222
+    },
+    {
+      "depth": 5.0,
+      "depth_ratio": 2.0,
+      "heave_added_mass": 2429.572180517966,
+      "heave_added_mass_relative_deviation": 0.03384230582982204,
+      "heave_damping": 589.76020600873,
+      "heave_damping_relative_deviation": 0.3477160844222661,
+      "heave_k0_times_depth": 1.3668026001942224,
+      "sway_added_mass": 3681.332288657822,
+      "sway_added_mass_relative_deviation": 0.04577761359943083,
+      "sway_damping": 1776.9434190040213,
+      "sway_damping_relative_deviation": 0.08313790747069405,
+      "sway_k0_times_depth": 1.3668026001942224
+    },
+    {
+      "depth": 7.5,
+      "depth_ratio": 3.0,
+      "heave_added_mass": 2433.942927032758,
+      "heave_added_mass_relative_deviation": 0.03570216522864289,
+      "heave_damping": 764.2655098295093,
+      "heave_damping_relative_deviation": 0.15471051757394097,
+      "heave_k0_times_depth": 1.8849536583616247,
+      "sway_added_mass": 3794.4789251290413,
+      "sway_added_mass_relative_deviation": 0.016449358228566677,
+      "sway_damping": 1593.6774497225313,
+      "sway_damping_relative_deviation": 0.02857207516308185,
+      "sway_k0_times_depth": 1.8849536583616247
+    },
+    {
+      "depth": 10.0,
+      "depth_ratio": 4.0,
+      "heave_added_mass": 2414.990955534226,
+      "heave_added_mass_relative_deviation": 0.02763763844850583,
+      "heave_damping": 853.8289859266108,
+      "heave_damping_relative_deviation": 0.055651926834596674,
+      "heave_k0_times_depth": 2.4369698959049293,
+      "sway_added_mass": 3846.6681555283326,
+      "sway_added_mass_relative_deviation": 0.0029216111872428035,
+      "sway_damping": 1598.0819587021838,
+      "sway_damping_relative_deviation": 0.025887301642082125,
+      "sway_k0_times_depth": 2.4369698959049293
+    },
+    {
+      "depth": 15.0,
+      "depth_ratio": 6.0,
+      "heave_added_mass": 2377.1994273132304,
+      "heave_added_mass_relative_deviation": 0.011556420121212774,
+      "heave_damping": 904.3276781600738,
+      "heave_damping_relative_deviation": 0.0002004083450178977,
+      "heave_k0_times_depth": 3.6053224322783595,
+      "sway_added_mass": 3862.008650954931,
+      "sway_added_mass_relative_deviation": 0.0010547329747977038,
+      "sway_damping": 1632.9794399749844,
+      "sway_damping_relative_deviation": 0.004615501742564069,
+      "sway_k0_times_depth": 3.6053224322783595
+    },
+    {
+      "depth": 20.0,
+      "depth_ratio": 8.0,
+      "heave_added_mass": 2362.006816270639,
+      "heave_added_mass_relative_deviation": 0.005091593038569797,
+      "heave_damping": 907.5117120982779,
+      "heave_damping_relative_deviation": 0.0037219991600371347,
+      "heave_k0_times_depth": 4.800649395875076,
+      "sway_added_mass": 3859.5181263488166,
+      "sway_added_mass_relative_deviation": 0.00040917475111932667,
+      "sway_damping": 1639.9672884878937,
+      "sway_damping_relative_deviation": 0.000356050633964845,
+      "sway_k0_times_depth": 4.800649395875076
+    },
+    {
+      "depth": 30.0,
+      "depth_ratio": 12.0,
+      "heave_added_mass": 2354.0656664291746,
+      "heave_added_mass_relative_deviation": 0.0017124398160920618,
+      "heave_damping": 906.1689495617776,
+      "heave_damping_relative_deviation": 0.0022368830127015345,
+      "heave_k0_times_depth": 7.200008026296938,
+      "sway_added_mass": 3858.1197497632147,
+      "sway_added_mass_relative_deviation": 4.670754143252362e-05,
+      "sway_damping": 1640.6451789901073,
+      "sway_damping_relative_deviation": 5.7158302352006744e-05,
+      "sway_k0_times_depth": 7.200008026296938
+    },
+    {
+      "depth": 50.0,
+      "depth_ratio": 20.0,
+      "heave_added_mass": 2351.2462537382835,
+      "heave_added_mass_relative_deviation": 0.0005127108511286448,
+      "heave_damping": 905.4633115060851,
+      "heave_damping_relative_deviation": 0.0014564364019294723,
+      "heave_k0_times_depth": 12.000000000906025,
+      "sway_added_mass": 3857.9460933164846,
+      "sway_added_mass_relative_deviation": 1.6947971271061103e-06,
+      "sway_damping": 1640.5921949607653,
+      "sway_damping_relative_deviation": 2.4861826247510472e-05,
+      "sway_k0_times_depth": 12.000000000906025
+    }
+  ],
+  "seconds": 167.84001445770264,
+  "worst_deviation_at_deepest": 0.0014564364019294723
+}
