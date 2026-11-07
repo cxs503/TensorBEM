@@ -163,13 +163,39 @@ def maruo_mean_drift_force_general(
 
     Notes
     -----
-    For arbitrary wave direction β, the Maruo formula generalizes to:
+    For arbitrary wave direction β the far-field formula is the vector
+    statement "incident momentum flux minus scattered momentum flux":
 
-        F̄_x = (ρω²/4k) ∫₀²π |K(θ)|² (cos β - cos(θ - β)) dθ
-        F̄_y = (ρω²/4k) ∫₀²π |K(θ)|² (sin β - sin(θ - β)) dθ
+        F̄_x = (ρω²/4k) ∫₀²π |K(θ)|² (cos β - cos θ) dθ
+        F̄_y = (ρω²/4k) ∫₀²π |K(θ)|² (sin β - sin θ) dθ
 
-    The factors (cos β - cos(θ-β)) and (sin β - sin(θ-β)) represent the
-    momentum flux in the x and y directions relative to the incident wave.
+    where ``θ`` is the **absolute** azimuth of the radiation direction
+    (measured from +x, the same frame as the sampled ``azimuths``) and ``β`` is
+    the absolute direction the incident wave propagates in.  The subtracted
+    term is therefore the fixed unit vector ``e_θ = (cos θ, sin θ)``, *not* a
+    vector rotated with the heading: the scattered wave leaves along ``e_θ``
+    regardless of where it came from, and only the incident flux rotates with
+    ``β``.
+
+    Two consistency checks fix this convention (both are asserted in
+    ``tests/test_maruo_drift.py``):
+
+    * ``wave_angle = 0`` reproduces :func:`maruo_mean_drift_force` exactly,
+      ``(cos β - cos θ, sin β - sin θ) -> (1 - cos θ, - sin θ)``;
+    * **rotational invariance** -- rotating the body by ``γ``
+      (``|K|²(θ) -> |K|²(θ - γ)``) *and* the heading by ``γ`` must rotate the
+      force vector by ``γ``: ``F̄(γ, |K|²_γ) = R(γ) F̄(0, |K|²)``.  For an
+      isotropic scatterer (``|K|² = const``) this forces
+      ``F̄ = 2π|K|²(ρω²/4k) e_β``, i.e. the force is along the incident
+      direction.
+
+    .. note::
+       Before 2026-11-07 this function subtracted ``e_{θ-β}`` instead of
+       ``e_θ``.  The two agree only at ``β = 0``, so the head-seas function was
+       right and the general one was not: for a ``|K|² = 1 + 0.5 cos(θ - γ)``
+       scatterer at beam seas (``β = γ``) it reported a transverse force of
+       ``3.95e3 N`` where the exact invariant answer is zero.  See
+       ``docs/m6287/maruo_general_heading_fix.md``.
     """
     k = float(wavenumber)
     if k <= 0:
@@ -201,8 +227,9 @@ def maruo_mean_drift_force_general(
 
     # Maruo integrals
     k_sq = np.abs(koch_interp) ** 2
-    integrand_x = k_sq * (math.cos(wave_angle) - np.cos(theta - wave_angle))
-    integrand_y = k_sq * (math.sin(wave_angle) - np.sin(theta - wave_angle))
+    # Incident unit vector e_beta minus the (absolute) radiation direction e_theta.
+    integrand_x = k_sq * (math.cos(wave_angle) - np.cos(theta))
+    integrand_y = k_sq * (math.sin(wave_angle) - np.sin(theta))
 
     flux_x = float(np.sum(integrand_x * dtheta))
     flux_y = float(np.sum(integrand_y * dtheta))

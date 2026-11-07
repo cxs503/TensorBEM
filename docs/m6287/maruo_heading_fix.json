@@ -1,0 +1,186 @@
+{
+  "mission": "m6287",
+  "repo": "TensorBEM",
+  "subject": "maruo_mean_drift_force_general heading convention",
+  "parameters": {
+    "wavenumber_k": 0.7,
+    "omega": 2.620496136230695,
+    "density": 1025.0,
+    "gravity": 9.81,
+    "coefficient_rho_omega2_over_4k": 2513.8125,
+    "scatterer": "|K|^2(theta) = 1 + 0.5 cos(theta - gamma), theta the absolute radiation azimuth, gamma the body rotation = wave heading",
+    "azimuth_table": 4096,
+    "quadrature_points": 4096
+  },
+  "sweep": [
+    {
+      "heading_deg": 0.0,
+      "exact": [
+        11846.062323753287,
+        0.0
+      ],
+      "pre_fix": [
+        11846.062323753287,
+        0.0
+      ],
+      "fixed": [
+        11846.062323753287,
+        0.0
+      ],
+      "pre_fix_rel_error": 0.0,
+      "fixed_rel_error": 0.0
+    },
+    {
+      "heading_deg": 14.999999999999998,
+      "exact": [
+        11442.417538343194,
+        3065.9865388587737
+      ],
+      "pre_fix": [
+        11307.86927653983,
+        4087.982051811698
+      ],
+      "fixed": [
+        11442.417538343196,
+        3065.986538858774
+      ],
+      "pre_fix_rel_error": 0.08701746148003436,
+      "fixed_rel_error": 1.5827802601671992e-16
+    },
+    {
+      "heading_deg": 29.999999999999996,
+      "exact": [
+        10258.990907184067,
+        5923.031161876643
+      ],
+      "pre_fix": [
+        9729.967101660997,
+        7897.374882502192
+      ],
+      "fixed": [
+        10258.990907184068,
+        5923.031161876642
+      ],
+      "pre_fix_rel_error": 0.1725460300683472,
+      "fixed_rel_error": 1.7167662323220112e-16
+    },
+    {
+      "heading_deg": 45.0,
+      "exact": [
+        8376.43099948442,
+        8376.430999484419
+      ],
+      "pre_fix": [
+        7219.887224728133,
+        11168.574665979226
+      ],
+      "fixed": [
+        8376.430999484423,
+        8376.430999484419
+      ],
+      "pre_fix_rel_error": 0.25512228824339317,
+      "fixed_rel_error": 1.5355223987792855e-16
+    },
+    {
+      "heading_deg": 59.99999999999999,
+      "exact": [
+        5923.031161876645,
+        10258.990907184065
+      ],
+      "pre_fix": [
+        3948.6874412510983,
+        13678.654542912089
+      ],
+      "fixed": [
+        5923.031161876646,
+        10258.990907184067
+      ],
+      "pre_fix_rel_error": 0.33333333333333337,
+      "fixed_rel_error": 2.1715566016813338e-16
+    },
+    {
+      "heading_deg": 90.0,
+      "exact": [
+        7.25362115364226e-13,
+        11846.062323753287
+      ],
+      "pre_fix": [
+        -3948.6874412510947,
+        15794.749765004384
+      ],
+      "fixed": [
+        2.232714013672421e-12,
+        11846.062323753287
+      ],
+      "pre_fix_rel_error": 0.4714045207910318,
+      "fixed_rel_error": 1.2724497449972965e-16
+    },
+    {
+      "heading_deg": 114.59155902616465,
+      "exact": [
+        -4929.701361570221,
+        10771.59398900552
+      ],
+      "pre_fix": [
+        -10521.62259001139,
+        14362.125318674029
+      ],
+      "fixed": [
+        -4929.70136157022,
+        10771.59398900552
+      ],
+      "pre_fix_rel_error": 0.5609806565385977,
+      "fixed_rel_error": 7.677611993896427e-17
+    },
+    {
+      "heading_deg": 180.0,
+      "exact": [
+        -11846.062323753287,
+        1.450724230728452e-12
+      ],
+      "pre_fix": [
+        -19743.43720625548,
+        1.6745355102543158e-12
+      ],
+      "fixed": [
+        -11846.062323753287,
+        1.1163570068362105e-12
+      ],
+      "pre_fix_rel_error": 0.6666666666666667,
+      "fixed_rel_error": 2.8226022686186673e-17
+    }
+  ],
+  "anchors": [
+    {
+      "name": "isotropic scatterer, heading beta = 60 deg (vector)",
+      "computed": [
+        1081.1506214145504,
+        1872.6078069246653
+      ],
+      "exact": [
+        1081.1506214145504,
+        1872.607806924665
+      ],
+      "rel_error": 1.0515356090983052e-16
+    },
+    {
+      "name": "head seas, |K|^2 = 1 + 0.5 cos(theta)",
+      "computed": [
+        11846.062323753287
+      ],
+      "exact": [
+        11846.062323753287
+      ],
+      "rel_error": 0.0
+    }
+  ],
+  "verdict": {
+    "worst_pre_fix_rel_error": 0.6666666666666667,
+    "worst_fixed_rel_error": 2.1715566016813338e-16,
+    "worst_pre_fix_oblique_heading_deg": 14.999999999999998,
+    "worst_pre_fix_oblique_transverse_force": 11307.86927653983,
+    "worst_pre_fix_oblique_transverse_exact": 11442.417538343194,
+    "gate": 0.03,
+    "fixed_passes_gate": true
+  }
+}

@@ -587,6 +587,23 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
+    "tensorbem.benchmarks.wave_loads_verification":
+        "report driver for the wave-load checks (first-order RAO, second-order drift near vs far field,"
+        " cylinder asymptotics); the physics it reports on is pinned by tests/test_drift_force.py and"
+        " tests/test_drift_second_order.py, and the Maruo far-field reduction it consumes by"
+        " tests/test_maruo_drift.py.",
+    "tensorbem.benchmarks.wave_loads_minimal":
+        "stand-alone minimal runner that re-checks the same three anchors without the report machinery;"
+        " its analytic content (Maruo reduction, 2-D wall drift, cylinder asymptote) is pinned by"
+        " tests/test_maruo_drift.py, tests/test_drift_force.py and tests/test_drift_second_order.py.",
+    "tensorbem.benchmarks.panel_linear_order":
+        "report driver that assembles/prints the order-1 panel-operator study (closed-form Rankine"
+        " field, convergence slope, free-term identity, negative controls); the operator it measures is"
+        " pinned by tests/test_panel_linear_order.py and tests/test_panel_operator_order.py, which"
+        " replace the driver's verdicts with asserted gates.",
+    "tensorbem.benchmarks.bem_wigley_wave_resistance_figures":
+        "matplotlib helper rendering the Wigley wave-resistance figures from committed JSON artifacts;"
+        " exercised during figure builds, no physics of its own.",
     "tensorbem.benchmarks.finite_depth3d_verification":
         "report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary"
         " conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports"
