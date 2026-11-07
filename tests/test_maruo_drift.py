@@ -26,7 +26,9 @@ control-surface derivation in ``tensorbem.drift.far_field_drift_3d``.
 
 from __future__ import annotations
 
+import json
 import math
+import pathlib
 
 import numpy as np
 import pytest
@@ -306,3 +308,75 @@ def test_report_figures_render(tmp_path):
     driver.figure_resolution(tmp_path / "resolution.png", report)
     assert (tmp_path / "polar.png").stat().st_size > 10_000
     assert (tmp_path / "resolution.png").stat().st_size > 10_000
+
+
+# ---------------------------------------------------------------------------
+# the published m6287 evidence bundle must reproduce a fresh build (m6287)
+# ---------------------------------------------------------------------------
+def _repo_root():
+    return pathlib.Path(__file__).resolve().parents[1]
+
+
+def _build_report_module():
+    path = _repo_root() / "docs" / "m6287" / "build_report.py"
+    if not path.is_file():
+        pytest.skip("docs/m6287 evidence bundle is absent")
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("m6287_build_report", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_docs_m6287_artifact_reproduces_against_the_module(tmp_path):
+    """The JSON and Markdown in docs/m6287 are build output, not prose.
+
+    A fresh build must reproduce both byte for byte (so a hand-edited number or
+    a changed module fails here), and the verdicts it publishes must be the
+    measured ones: the shipped covariant weight inside 3 %, the pre-m6271
+    weight outside the 15 % acceptance limit.
+    """
+    bundle = _repo_root() / "docs" / "m6287"
+    builder = _build_report_module()
+    json_path = bundle / "maruo_general_heading_fix.json"
+    md_path = bundle / "maruo_general_heading_fix.md"
+    recorded = json.loads(json_path.read_text(encoding="utf-8"))
+
+    fresh = builder.main(path=tmp_path / "fresh.json", markdown=tmp_path / "fresh.md")
+    assert fresh["summary"] == recorded["summary"]
+    assert json.loads((tmp_path / "fresh.json").read_text(encoding="utf-8")) == recorded
+    assert (tmp_path / "fresh.md").read_text(encoding="utf-8") == md_path.read_text(encoding="utf-8")
+
+    summary = recorded["summary"]
+    assert summary["rel_err_covariant_max"] < 0.03
+    assert summary["closed_form_within_3pct_covariant"] is True
+    assert summary["rel_err_legacy_max"] > 0.15
+    assert summary["closed_form_within_15pct_legacy"] is False
+    assert summary["worst_legacy_heading_deg"] == pytest.approx(180.0)
+
+    beam = recorded["key_cases"]["beam_seas"]
+    # the pre-m6271 weight annihilated the beam-sea side force; the shipped one does not
+    assert abs(beam["fx_legacy"]) < 1e-6
+    assert beam["fx_covariant"] < -1e3
+    assert beam["rel_err_legacy"] > 0.3
+
+
+def test_docs_m6287_figure_renders(tmp_path):
+    pytest.importorskip("matplotlib")
+    import importlib.util
+
+    path = _repo_root() / "docs" / "m6287" / "render_report.py"
+    if not path.is_file():
+        pytest.skip("docs/m6287 evidence bundle is absent")
+    spec = importlib.util.spec_from_file_location("m6287_render_report", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    report = json.loads(
+        (_repo_root() / "docs" / "m6287" / "maruo_general_heading_fix.json").read_text(encoding="utf-8")
+    )
+    out = module.render(report, tmp_path / "fig1.png")
+    assert out.stat().st_size > 20_000
+    published = _repo_root() / "docs" / "m6287" / "figures" / "fig1_heading_error.png"
+    assert published.is_file() and published.stat().st_size > 20_000
