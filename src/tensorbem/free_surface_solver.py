@@ -379,21 +379,32 @@ def _rankine_normal_derivative_matrix(mesh: PanelMesh) -> ComplexArray:
         projection = np.einsum("pj,pj->p", delta, tangent)
         offset = delta - projection[:, None] * tangent
         height = np.sqrt(np.einsum("pj,pj->p", offset, offset))
+        # A panel that lies *on the target panel's line* has zero perpendicular
+        # distance.  Such a panel is edge-on to the target normal, so both
+        # ``d.n`` and ``u_target.n`` vanish with it and the closed form below is
+        # 0/0 whose limit is zero; the term is dropped explicitly.  Without this
+        # guard a flat bottom (several collinear panels) divides by zero and the
+        # assembled matrix is NaN.  The self panel is the row's own line too, so
+        # it is marked separately and its jump is added by the caller.
+        collinear = height <= 1.0e-9 * float(np.max(mesh.lengths))
         # The self panel's own line passes through the collocation point: its
         # closed-form contribution is exactly zero, and the formula below is
         # singular there, so the placeholder is overwritten after the row.
         height[row] = 1.0
+        collinear[row] = False
+        safe_height = np.where(collinear, 1.0, height)
         constant_term = delta @ normal                       # d.n
         slope = tangent @ normal                             # u.n
         lower = projection
         upper = lower + mesh.lengths
         def primitive(u: FloatArray) -> FloatArray:
-            return (
+            value = (
                 0.5 * slope * np.log(u * u + height * height)
                 + (constant_term - slope * lower)
-                / height
-                * np.arctan(u / height)
+                / safe_height
+                * np.arctan(u / safe_height)
             )
+            return np.where(collinear, 0.0, value)
         matrix[row] = -(primitive(upper) - primitive(lower)) / (2.0 * math.pi)
         matrix[row, row] = 0.0
     return matrix

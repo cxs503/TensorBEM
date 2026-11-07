@@ -1,0 +1,36 @@
+{
+  "depth_ratio": 1.5,
+  "gate": 0.01,
+  "hull": "KVLCC2 (idealised)",
+  "leg": "F_panel_refinement",
+  "monotone": true,
+  "nu_times_draught": 2.0,
+  "passed": true,
+  "rows": [
+    {
+      "boundary_relative_residual": 5.20817426470643e-16,
+      "condition_number": 6.53172827871318,
+      "energy_balance_error": 0.006602653269591308,
+      "panels": 40,
+      "reflection": 0.3152051386713774,
+      "transmission": 0.9524958655158294
+    },
+    {
+      "boundary_relative_residual": 6.674242038554485e-16,
+      "condition_number": 6.631207422700201,
+      "energy_balance_error": 0.0016744916531350462,
+      "panels": 80,
+      "reflection": 0.32626401617651096,
+      "transmission": 0.9461639833567479
+    },
+    {
+      "boundary_relative_residual": 8.254830863031472e-16,
+      "condition_number": 6.707148484268592,
+      "energy_balance_error": 0.0007526264998336529,
+      "panels": 120,
+      "reflection": 0.32929194248769683,
+      "transmission": 0.9446266157125328
+    }
+  ],
+  "seconds": 19.931453466415405
+}
