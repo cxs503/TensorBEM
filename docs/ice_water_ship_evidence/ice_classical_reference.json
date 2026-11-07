@@ -1,0 +1,101 @@
+{
+  "stage": "classical",
+  "reference": "Lamb infinite-fluid heave added mass (2/3) pi rho R^3",
+  "radius_m": 5.0,
+  "submergence_m": 15.0,
+  "rows": [
+    {
+      "mesh": "coarse",
+      "panels": 168,
+      "omega": 0.3,
+      "nu": 0.009177445916801355,
+      "kR": 0.045887229584006775,
+      "A33": 251759.6821500009,
+      "B33": 48.06246538563432,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.061803756829259086,
+      "displaced_mass_ratio": 0.46909812158537045
+    },
+    {
+      "mesh": "coarse",
+      "panels": 168,
+      "omega": 0.5,
+      "nu": 0.025492905324448208,
+      "kR": 0.12746452662224103,
+      "A33": 254121.30077395757,
+      "B33": 1059.4497965329115,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.053003055692855204,
+      "displaced_mass_ratio": 0.4734984721535724
+    },
+    {
+      "mesh": "coarse",
+      "panels": 168,
+      "omega": 0.8,
+      "nu": 0.06526183763058742,
+      "kR": 0.3263091881529371,
+      "A33": 252741.98650522355,
+      "B33": 8609.494382652802,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.058143145853546754,
+      "displaced_mass_ratio": 0.47092842707322663
+    },
+    {
+      "mesh": "fine",
+      "panels": 352,
+      "omega": 0.3,
+      "nu": 0.009177445916801355,
+      "kR": 0.045887229584006775,
+      "A33": 261367.50555379273,
+      "B33": 51.85537552522345,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.025999676741825718,
+      "displaced_mass_ratio": 0.48700016162908716
+    },
+    {
+      "mesh": "fine",
+      "panels": 352,
+      "omega": 0.5,
+      "nu": 0.025492905324448208,
+      "kR": 0.12746452662224103,
+      "A33": 263914.27669643884,
+      "B33": 1143.2809718244716,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.016508994604633346,
+      "displaced_mass_ratio": 0.4917455026976833
+    },
+    {
+      "mesh": "fine",
+      "panels": 352,
+      "omega": 0.8,
+      "nu": 0.06526183763058742,
+      "kR": 0.3263091881529371,
+      "A33": 262415.3116615975,
+      "B33": 9287.229094261495,
+      "A33_reference": 268344.3724941281,
+      "A33_relative_error": 0.022094969897907393,
+      "displaced_mass_ratio": 0.4889525150510463
+    }
+  ],
+  "worst_fine_mesh_A33_relative_error": 0.025999676741825718,
+  "no_ice_limit_check": {
+    "coarse": {
+      "wavenumber_ice": 0.009177445916876706,
+      "wavenumber_open": 0.009177445916801355,
+      "wavenumber_relative_difference": 8.210474276732862e-12,
+      "added_mass_relative_difference": 3.030340576131341e-14,
+      "damping_relative_difference": 2.2360147674536394e-11
+    },
+    "fine": {
+      "wavenumber_ice": 0.009177445916876706,
+      "wavenumber_open": 0.009177445916801355,
+      "wavenumber_relative_difference": 8.210474276732862e-12,
+      "added_mass_relative_difference": 3.2131790317377155e-14,
+      "damping_relative_difference": 2.241321976476212e-11
+    }
+  },
+  "verification": {
+    "gate_added_mass_lt_15_percent": true,
+    "no_ice_limit_max_relative_difference": 2.241321976476212e-11
+  }
+}

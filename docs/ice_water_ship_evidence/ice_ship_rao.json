@@ -1,0 +1,274 @@
+{
+  "stage": "hull",
+  "hull": {
+    "description": "idealised PC6-like hull (parametric), no real offset table",
+    "length_m": 120.0,
+    "breadth_m": 24.0,
+    "draft_m": 9.0,
+    "waterline_exponent": 4.0,
+    "section_exponent": 2.0,
+    "keel_ratio": 0.7,
+    "end_ratio": 0.02
+  },
+  "geometry": {
+    "coarse": {
+      "length": 120.0,
+      "breadth": 24.0,
+      "draft": 9.0,
+      "volume": 18421.692916666667,
+      "volume_reference": 18708.618447663583,
+      "block_coefficient": 0.7107134612911523,
+      "block_coefficient_reference": 0.7217831191228234,
+      "waterplane_area": 2282.2074074074076,
+      "waterplane_area_reference": 2304.2661528690023,
+      "cb_relative_error": 0.01533654298416398,
+      "length_relative_error": 0.0,
+      "breadth_relative_error": 0.0,
+      "draft_relative_error": 0.0,
+      "waterplane_area_relative_error": 0.009573002421673289,
+      "panels": 314
+    },
+    "medium": {
+      "length": 120.0,
+      "breadth": 24.0,
+      "draft": 9.0,
+      "volume": 18566.694547199997,
+      "volume_reference": 18708.618447663583,
+      "block_coefficient": 0.7163076599999999,
+      "block_coefficient_reference": 0.7217831191228234,
+      "waterplane_area": 2297.2896,
+      "waterplane_area_reference": 2304.2661528690023,
+      "cb_relative_error": 0.007586017153570759,
+      "length_relative_error": 0.0,
+      "breadth_relative_error": 0.0,
+      "draft_relative_error": 0.0,
+      "waterplane_area_relative_error": 0.0030276679889238815,
+      "panels": 590
+    },
+    "fine": {
+      "length": 120.0,
+      "breadth": 24.0,
+      "draft": 9.0,
+      "volume": 18614.636669629628,
+      "volume_reference": 18708.618447663583,
+      "block_coefficient": 0.7181572789208962,
+      "block_coefficient_reference": 0.7217831191228234,
+      "waterplane_area": 2301.65522962963,
+      "waterplane_area_reference": 2304.2661528690023,
+      "cb_relative_error": 0.005023448326602172,
+      "length_relative_error": 0.0,
+      "breadth_relative_error": 0.0,
+      "draft_relative_error": 0.0,
+      "waterplane_area_relative_error": 0.0011330823204262028,
+      "panels": 1056
+    }
+  },
+  "mass_properties": {
+    "mass_kg": 19030861.910879996,
+    "center_of_gravity": [
+      0.0,
+      0.0,
+      -4.5
+    ],
+    "assumptions": "CG height = 0.50 T; k_xx = 0.35 B; k_yy = k_zz = 0.25 L (engineering estimates)"
+  },
+  "ice": {
+    "thickness_m": 0.9,
+    "water_depth_m": 200.0,
+    "mu_m": 0.8051707317073171,
+    "cutoff_period_s": 1.8003772664854687
+  },
+  "wave_angle_deg": 180.0,
+  "frequencies": [
+    {
+      "period": 4.0,
+      "omega": 1.5707963267948966,
+      "propagating": true,
+      "k_ice": 0.31552561350766734,
+      "k_open": 0.25160489058672886,
+      "kH": 63.10512270153347,
+      "amplitude_ratio": 1.2540519891003696,
+      "heave_rao_ice": 0.0005930209281596895,
+      "heave_rao_open": 0.0011426854733174593,
+      "pitch_rao_ice": 3.539232093760737e-05,
+      "pitch_rao_open": 7.121704872267309e-05,
+      "roll_rao_ice": 1.4640364432400133e-05,
+      "surge_rao_ice": 0.004585158966056768,
+      "heave_force_ice": 40401.694322506824,
+      "heave_force_open": 75974.0006076986,
+      "a33_ice": 17924189.058626223,
+      "a33_open": 17259886.506117593,
+      "b33_ice": 706513.3801868876,
+      "b33_open": 1333718.316729668
+    },
+    {
+      "period": 6.0,
+      "omega": 1.0471975511965976,
+      "propagating": true,
+      "k_ice": 0.12288904669676284,
+      "k_open": 0.11182439581632408,
+      "kH": 24.57780933935257,
+      "amplitude_ratio": 1.0989466636476455,
+      "heave_rao_ice": 0.0330130547407777,
+      "heave_rao_open": 0.0421559449502324,
+      "pitch_rao_ice": 0.0028612251982392737,
+      "pitch_rao_open": 0.0034383036853173187,
+      "roll_rao_ice": 4.585084255211491e-05,
+      "surge_rao_ice": 0.029260504997098372,
+      "heave_force_ice": 489375.3164444518,
+      "heave_force_open": 627567.8206495072,
+      "a33_ice": 14862420.634702528,
+      "a33_open": 14656105.167196075,
+      "b33_ice": 4427056.791814779,
+      "b33_open": 5202485.465687109
+    },
+    {
+      "period": 8.0,
+      "omega": 0.7853981633974483,
+      "propagating": true,
+      "k_ice": 0.06625688357840316,
+      "k_open": 0.06290122264816994,
+      "kH": 13.251376715680632,
+      "amplitude_ratio": 1.0533481036494874,
+      "heave_rao_ice": 0.15798123391562285,
+      "heave_rao_open": 0.1595498530944237,
+      "pitch_rao_ice": 0.026605780971790415,
+      "pitch_rao_open": 0.03041443104705613,
+      "roll_rao_ice": 0.0007240465260409689,
+      "surge_rao_ice": 0.24245665371608077,
+      "heave_force_ice": 1059712.6281764486,
+      "heave_force_open": 1124365.6766426782,
+      "a33_ice": 14721966.626892956,
+      "a33_open": 14895711.312758451,
+      "b33_ice": 8039576.881413226,
+      "b33_open": 8540640.899717791
+    },
+    {
+      "period": 10.0,
+      "omega": 0.6283185307179586,
+      "propagating": true,
+      "k_ice": 0.04160536132719869,
+      "k_open": 0.04025679067001565,
+      "kH": 8.321072265439739,
+      "amplitude_ratio": 1.0335000470513782,
+      "heave_rao_ice": 0.4801447054479218,
+      "heave_rao_open": 0.52088264359355,
+      "pitch_rao_ice": 0.029797410389592646,
+      "pitch_rao_open": 0.03077147655519032,
+      "roll_rao_ice": 0.001100403463601463,
+      "surge_rao_ice": 0.49423170252942933,
+      "heave_force_ice": 5021037.123137591,
+      "heave_force_open": 5420620.035500309,
+      "a33_ice": 18228141.831862926,
+      "a33_open": 18632588.554170452,
+      "b33_ice": 9950863.026793124,
+      "b33_open": 10151531.473190146
+    },
+    {
+      "period": 14.0,
+      "omega": 0.4487989505128276,
+      "propagating": true,
+      "k_ice": 0.020884553937083956,
+      "k_open": 0.020550235587674007,
+      "kH": 4.176910787416791,
+      "amplitude_ratio": 1.017035893197351,
+      "heave_rao_ice": 0.8577107909389978,
+      "heave_rao_open": 0.8703120194353267,
+      "pitch_rao_ice": 0.01827275514702569,
+      "pitch_rao_open": 0.018183933731164777,
+      "roll_rao_ice": 0.0004129799704420087,
+      "surge_rao_ice": 0.8328321057221524,
+      "heave_force_ice": 12142962.01435817,
+      "heave_force_open": 12281422.256634066,
+      "a33_ice": 27878335.916264627,
+      "a33_open": 28110617.771477677,
+      "b33_ice": 8422904.07703308,
+      "b33_open": 8416146.909664115
+    }
+  ],
+  "mesh_convergence": [
+    {
+      "mesh": "coarse",
+      "panels": 314,
+      "a33_heave": 14625282.733064737,
+      "a33_heave_open": 14801501.741437871,
+      "heave_rao_ice": 0.1580208857397573,
+      "heave_rao_open": 0.1618044760300726
+    },
+    {
+      "mesh": "medium",
+      "panels": 590,
+      "a33_heave": 14721966.626892956,
+      "a33_heave_open": 14895711.312758451,
+      "heave_rao_ice": 0.15798123391562285,
+      "heave_rao_open": 0.1595498530944237
+    }
+  ],
+  "added_resistance": {
+    "status": "withheld",
+    "reason": "Ice-zone added resistance requires a second-order drift-force operator and/or a floe-scattering (attenuation) model; neither exists in this repository and no independent reference is available to validate a number, so R_AW is not reported. First-order drivers are reported instead."
+  },
+  "restoring_matrix": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      23091932.932236,
+      -2.285518405642506e-09,
+      -7.618394685475019e-10,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      -2.285518405642506e-09,
+      953221088.8259575,
+      2.437886299352006e-08,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      -7.618394685475019e-10,
+      2.437886299352006e-08,
+      19787827000.15455,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "notes": [
+    "Ice model: mass-loading ice sheet (no flexural rigidity, no dissipation); deep-water Green function evaluated at nu = k_i = omega^2/(g - mu omega^2).",
+    "Ice affects inertia and the incident wave field, not the hydrostatic restoring matrix: C(ice) = C(open water).",
+    "Frequencies above sqrt(g/mu) are evanescent: they are flagged propagating=False and carry zero excitation, not a fabricated response.",
+    "Added resistance R_AW in ice: withheld (see tensorbem.ice_rao.ADDED_RESISTANCE_STATUS)."
+  ],
+  "runtime_s": 1126.4496750831604,
+  "verification": {
+    "heave_rao_long_period_asymptote": 0.8703120194353267,
+    "heave_rao_asymptote_error": 0.12968798056467334,
+    "gate_heave_asymptote_lt_15_percent": true,
+    "damping_non_negative_ice": true
+  }
+}
