@@ -123,6 +123,7 @@ correction log inside the generated block records what changed.
 | Finite-depth kernels + solver (2-D) | **REAL** | `tensorbem.finite_depth`, `tensorbem.finite_depth_solver` | 2 node(s) in 2 file(s) | `docs/finite_depth_2d.md` |
 | Finite-depth kernels + solver (3-D) | **REAL** | `tensorbem.finite_depth3d`, `tensorbem.benchmarks.finite_depth_radiation` | 2 node(s) in 1 file(s) | `docs/finite_depth3d.md` |
 | Forward-speed wave resistance (Wigley, Michell/Kochin) | **REAL** | `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification` | 2 node(s) in 2 file(s) | `docs/wigley_wave_resistance.md` |
+| Michell thin-ship wave resistance for general hulls + tandem interference | **REAL** | `tensorbem.michell`, `tensorbem.benchmarks.michell_validation` | 2 node(s) in 1 file(s) | `docs/michell_validation.md` |
 | Kutta condition / lifting foil | **REAL** | `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil` | 2 node(s) in 2 file(s) | `docs/lifting_foil.md` |
 | Mixed Dirichlet / Neumann boundaries | **REAL** | `tensorbem.mixed`, `tensorbem.benchmarks.mixed_boundary` | 2 node(s) in 1 file(s) | `docs/mixed_boundary_conditions.md` |
 | Near-singular panel integration | **REAL** | `tensorbem.near_singular`, `tensorbem.benchmarks.near_surface_error_budget` | 2 node(s) in 1 file(s) | `docs/near_surface_error_budget.md` |
@@ -137,7 +138,7 @@ correction log inside the generated block records what changed.
 | Benchmark drivers expose a runnable entry point | **REAL** | `tensorbem.benchmarks.finite_depth_kernel`, `tensorbem.benchmarks.hulme_diffraction_verification` (+5) | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 | Machine-derived capability evidence registry | **REAL** | `tensorbem.capability_evidence` | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 
-Counts: **28** REAL — 28 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **29** REAL — 29 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
