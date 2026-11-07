@@ -1,0 +1,155 @@
+{
+  "study": "bem_wigley_wave_resistance",
+  "hull": "Wigley III (parabolic)",
+  "geometry": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.625,
+    "L_over_B": 10.0,
+    "B_over_T": 1.6
+  },
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "reference": {
+    "volume": 2.7777777777777777,
+    "Cb": 0.4444444444444444,
+    "Cm": 0.6666666666666666,
+    "Cp": 0.6666666666666667,
+    "waterplane_area": 6.666666666666666,
+    "midship_section_area": 0.41666666666666663
+  },
+  "method": {
+    "reference": "Converged Michell thin-ship theory (composite Gauss-Legendre, 480 subintervals, 20 nodes each)",
+    "production": "Standard Michell quadrature (256 Gauss-Legendre nodes, lambda=1+s^2 substitution)",
+    "quadrature_convergence": "Three levels: n_quad = 128, 256, 512"
+  },
+  "cases": [
+    {
+      "froude_number": 0.2,
+      "speed": 1.9805706248452741,
+      "Rw_reference": 2.57516551323227,
+      "Rw_production": 2.575145354978475,
+      "rel_error": 7.82794491907682e-06,
+      "Cw_reference": 0.00020495126048347893,
+      "Cw_production": 0.00020494965613630076,
+      "quadrature_levels": [
+        {
+          "n_quad": 128,
+          "Rw": 2.575145354978542
+        },
+        {
+          "n_quad": 256,
+          "Rw": 2.575145354978475
+        },
+        {
+          "n_quad": 512,
+          "Rw": 2.5751453549784538
+        }
+      ],
+      "gci": {
+        "order": 1.653442238603911,
+        "gci_fine": 4.821961474481116e-15,
+        "rel_change": 8.277700531192484e-15,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 7.82794491907682e-06,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 4.821961474481116e-15,
+          "limit": 0.03,
+          "passed": true
+        }
+      }
+    },
+    {
+      "froude_number": 0.3,
+      "speed": 2.970855937267911,
+      "Rw_reference": 12.292634374522402,
+      "Rw_production": 12.292632617837537,
+      "rel_error": 1.4290548401645833e-07,
+      "Cw_reference": 0.00043481837864621053,
+      "Cw_production": 0.0004348183165082797,
+      "quadrature_levels": [
+        {
+          "n_quad": 128,
+          "Rw": 12.292632617837837
+        },
+        {
+          "n_quad": 256,
+          "Rw": 12.292632617837537
+        },
+        {
+          "n_quad": 512,
+          "Rw": 12.292632617837434
+        }
+      ],
+      "gci": {
+        "order": 1.5428984411546,
+        "gci_fine": 5.474296694392472e-15,
+        "rel_change": 8.381337007966298e-15,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 1.4290548401645833e-07,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 5.474296694392472e-15,
+          "limit": 0.03,
+          "passed": true
+        }
+      }
+    },
+    {
+      "froude_number": 0.4,
+      "speed": 3.9611412496905483,
+      "Rw_reference": 26.323870141156263,
+      "Rw_production": 26.32386982888976,
+      "rel_error": 1.186248460182479e-08,
+      "Cw_reference": 0.0005237634570002464,
+      "Cw_production": 0.0005237634507871104,
+      "quadrature_levels": [
+        {
+          "n_quad": 128,
+          "Rw": 26.323869828891034
+        },
+        {
+          "n_quad": 256,
+          "Rw": 26.32386982888976
+        },
+        {
+          "n_quad": 512,
+          "Rw": 26.323869828889258
+        }
+      ],
+      "gci": {
+        "order": 1.3482886814242303,
+        "gci_fine": 1.5385167126909302e-14,
+        "rel_change": 1.9029596786758142e-14,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 1.186248460182479e-08,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 1.5385167126909302e-14,
+          "limit": 0.03,
+          "passed": true
+        }
+      }
+    }
+  ],
+  "all_criteria_passed": true,
+  "evidence_level": "REAL (converged Michell theory reference; two independent quadratures)"
+}
