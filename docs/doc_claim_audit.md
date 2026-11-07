@@ -6,15 +6,15 @@
 
 | 指标 | 值 |
 |---|---:|
-| 被审计文档数 | 79 |
+| 被审计文档数 | 82 |
 | PINNED（测试直接解析文档） | 32 |
-| ARTIFACT（生成模块被测、文档文本未解析） | 25 |
+| ARTIFACT（生成模块被测、文档文本未解析） | 28 |
 | UNGUARDED（无人守） | 22 |
 | 其中论文级 UNGUARDED | 8 |
-| 数字 token 总数 | 8703 |
-| 已守数字 token | 7218 |
-| 数字覆盖率 | 82.9% |
-| 文档覆盖率 | 72.2% |
+| 数字 token 总数 | 9235 |
+| 已守数字 token | 7750 |
+| 数字覆盖率 | 83.9% |
+| 文档覆盖率 | 73.2% |
 
 ## 2. 论文级未守文档（按数字量降序，前 15）
 
@@ -41,13 +41,16 @@
 | `validation_report_ursell_kochin.md` | UNGUARDED | 88 | 173 | — |
 | `interior_field_domain_guard.md` | UNGUARDED | 73 | 157 | — |
 | `sphere_flow_study.md` | UNGUARDED | 27 | 6 | — |
+| `ice_water_ship_numbers.md` | ARTIFACT | 278 | 101 | `tensorbem.benchmarks.ice_ship_verification` |
 | `irregular_frequency_study.md` | ARTIFACT | 233 | 180 | `tensorbem.benchmarks.irregular_frequency_study` |
 | `near_surface_error_budget.md` | ARTIFACT | 219 | 202 | `tensorbem.benchmarks.near_surface_error_budget` |
+| `ice_water_ship.md` | ARTIFACT | 150 | 344 | `tensorbem.benchmarks.ice_ship_verification` |
 | `hydrostatic_benchmarks_report.md` | ARTIFACT | 141 | 74 | `tensorbem.benchmarks.hydrostatic_benchmarks` |
 | `verification_hydrostatic_rao.md` | ARTIFACT | 126 | 185 | `tensorbem.benchmarks.hydrostatic_rao_verification` |
 | `hydrostatic_verification.md` | ARTIFACT | 117 | 174 | `tensorbem.benchmarks.hydrostatic_convergence`, `tensorbem.benchmarks.hydrostatic_figures` |
 | `verification_doc_numbers_maccamy_fuchs.md` | ARTIFACT | 107 | 101 | `tensorbem.benchmarks.maccamy_fuchs` |
 | `ursell_validation_note.md` | ARTIFACT | 105 | 100 | `tensorbem.benchmarks.ursell_cylinder` |
+| `time_domain_pulse.md` | ARTIFACT | 104 | 343 | `tensorbem.benchmarks.time_domain_pulse` |
 | `annulus_multicomponent.md` | ARTIFACT | 102 | 232 | `tensorbem.benchmarks.multicomponent_annulus` |
 | `finite_depth_diffraction.md` | ARTIFACT | 102 | 145 | `tensorbem.benchmarks.finite_depth_diffraction` |
 | `ursell_error_budget.md` | ARTIFACT | 65 | 89 | `tensorbem.benchmarks.ursell_error_budget` |
@@ -110,5 +113,3 @@
 | `audit_baseline.md` | PINNED | 63 | 181 | `tensorbem.capability_evidence` |
 | `mutation_audit_tensorbem.md` | PINNED | 56 | 112 | `tensorbem.benchmarks.mutation_audit` |
 | `dev_report_m4796_ci_red_fix.md` | PINNED | 38 | 160 | — |
-| `ci_red_triage_m3314.md` | PINNED | 32 | 155 | `tensorbem.doc_claims` |
-| `doc_claim_audit.md` | PINNED | 2 | 114 | `tensorbem.benchmarks.doc_claim_audit` |
