@@ -1,0 +1,941 @@
+{
+  "provenance": {
+    "compute_command": "PYTHONPATH=src python3 -m tensorbem.benchmarks.panel_operator_order --subdivisions 1 2 3 4 --energy-subdivisions 2 3 4 --ka 1.0 --n-azimuth 72 --frequency-scan 0.5 0.7 0.9 1.1 1.2 1.4 1.6 1.8 --json artifacts/panel_operator_order/study.json",
+    "render_command": "PYTHONPATH=src python3 -m tensorbem.benchmarks.panel_operator_order --from-json artifacts/panel_operator_order/study.json --crosscheck artifacts/panel_operator_order/study_crosscheck_numpy2.0.1.json --json artifacts/panel_operator_order/study.json --markdown docs/panel_operator_order.md --figures artifacts/panel_operator_order",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "command": "/root/tp-agent/work/m5279/src/tensorbem/benchmarks/panel_operator_order.py --from-json artifacts/panel_operator_order/study.json --crosscheck artifacts/panel_operator_order/study_crosscheck_numpy2.0.1.json --json artifacts/panel_operator_order/study.json --markdown docs/panel_operator_order.md --figures artifacts/panel_operator_order"
+  },
+  "criteria_definitions": {
+    "C1a_constant_panel_slope": {
+      "quantity": "log-log regression slope of err_flux and err_potential vs h",
+      "target_low": -0.575,
+      "target_high": -0.425,
+      "target_centre": -0.5
+    },
+    "C1b_linear_panel_slope": {
+      "quantity": "log-log regression slope of the order-1 (piecewise-linear) operator",
+      "target_low": -1.15,
+      "target_high": -0.85,
+      "target_centre": -1.0,
+      "status": "NOT_SUPPORTED",
+      "reason": "tensorbem.solver3d assembles constant-panel collocation only; no piecewise-linear (P1) boundary-element discretisation exists in src/."
+    },
+    "C2_monotone_error_decrease": {
+      "quantity": "err_flux and err_potential strictly decreasing over all meshes"
+    },
+    "C3_self_term_analytic_vs_numeric": {
+      "quantity": "max relative difference, closed-form vs numerical self panel integral",
+      "tolerance": 1e-06
+    },
+    "C4_near_far_energy_identity": {
+      "quantity": "max relative difference |B_far - B_near| / B_near over predicted modes",
+      "tolerance": 0.03,
+      "mode": "first-order energy identity (R_AW drift force is NOT_SUPPORTED)"
+    },
+    "C5_negative_control_red": {
+      "quantity": "a deliberately coarse self-panel quadrature must fail the C3 gate"
+    },
+    "C6_honest_inventory": {
+      "quantity": "per-sub-item evidence level"
+    }
+  },
+  "operator": {
+    "analytic_field": {
+      "family": "point-source Rankine potential u = 1/(4*pi*|x - x_s|)",
+      "source": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "geometry": "icosphere, radius 1, vertices on the sphere, flat panels",
+      "boundary_value_map": "exterior Dirichlet -> fluid-normal flux q_e = -du/dn_body",
+      "potential_map": "exterior Neumann -> surface potential u",
+      "panels_per_level": [
+        80,
+        320,
+        1280,
+        5120
+      ]
+    },
+    "rows": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "h_mean": 0.3963327297606011,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.928345323381442,
+        "err_flux": 0.04079890876312448,
+        "err_flux_linf": 0.04908574935044212,
+        "err_potential": 0.037436314115000265,
+        "err_potential_linf": 0.04450034273771158,
+        "condition_single": 18.62149308405364,
+        "condition_single_method": "direct",
+        "condition_double": 2.1654320331292203,
+        "condition_double_method": "direct",
+        "dominance_single": {
+          "min_ratio": 0.11776470898489882,
+          "median_ratio": 0.11776471296606648,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999991,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.2375
+        },
+        "solid_angle_row_sum_error": 2.220446049250313e-16,
+        "assemble_seconds": 0.7523772716522217,
+        "solve_seconds": 0.0582122802734375
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "h_mean": 0.19816636488030054,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.9811781757531297,
+        "err_flux": 0.011489955371604452,
+        "err_flux_linf": 0.014599818274765535,
+        "err_potential": 0.009892909878118984,
+        "err_potential_linf": 0.01201386892274359,
+        "condition_single": 37.56559992086565,
+        "condition_single_method": "direct",
+        "condition_double": 2.0832484058256044,
+        "condition_double_method": "direct",
+        "dominance_single": {
+          "min_ratio": 0.055453670390085405,
+          "median_ratio": 0.05586756555666683,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999987,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.45
+        },
+        "solid_angle_row_sum_error": 5.551115123125783e-16,
+        "assemble_seconds": 3.199549913406372,
+        "solve_seconds": 0.30362439155578613
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "h_mean": 0.09908318244015027,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.9952350696770933,
+        "err_flux": 0.0032520086801836904,
+        "err_flux_linf": 0.004467624023161613,
+        "err_potential": 0.002497697986327802,
+        "err_potential_linf": 0.002871048089262176,
+        "condition_single": 75.77520536404637,
+        "condition_single_method": "power_iteration",
+        "condition_double": 2.0311284740198277,
+        "condition_double_method": "power_iteration",
+        "dominance_single": {
+          "min_ratio": 0.02695500998614462,
+          "median_ratio": 0.02734302873709013,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999964,
+          "median_ratio": 0.9999999999999996,
+          "fraction_dominant": 0.33671875
+        },
+        "solid_angle_row_sum_error": 1.6653345369377348e-15,
+        "assemble_seconds": 18.020987510681152,
+        "solve_seconds": 1.1688385009765625
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "h_mean": 0.049541591220075135,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.998805006256468,
+        "err_flux": 0.0011107434441625192,
+        "err_flux_linf": 0.0018307469997664793,
+        "err_potential": 0.0006283894193145266,
+        "err_potential_linf": 0.0006956319877159833,
+        "condition_single": 152.35070769444377,
+        "condition_single_method": "power_iteration",
+        "condition_double": 2.014305010548811,
+        "condition_double_method": "power_iteration",
+        "dominance_single": {
+          "min_ratio": 0.01329540087252807,
+          "median_ratio": 0.013490730149944214,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999929,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.45546875
+        },
+        "solid_angle_row_sum_error": 3.552713678800501e-15,
+        "assemble_seconds": 256.03132724761963,
+        "solve_seconds": 9.817028999328613
+      }
+    ],
+    "slopes": {
+      "err_flux_in_h": 1.7417769282918514,
+      "err_potential_in_h": 1.967570298863044,
+      "err_flux_in_N": -0.8708884641459257,
+      "err_potential_in_N": -0.983785149431522
+    },
+    "steps": [
+      {
+        "from_panels": 80,
+        "to_panels": 320,
+        "err_flux_order_in_h": 1.8281573709660444,
+        "err_potential_order_in_h": 1.9199715582292143
+      },
+      {
+        "from_panels": 320,
+        "to_panels": 1280,
+        "err_flux_order_in_h": 1.8209701810526973,
+        "err_potential_order_in_h": 1.9857958930492663
+      },
+      {
+        "from_panels": 1280,
+        "to_panels": 5120,
+        "err_flux_order_in_h": 1.5498054819365317,
+        "err_potential_order_in_h": 1.990868247248578
+      }
+    ],
+    "quadrature_axis": {
+      "subdivisions": 2,
+      "rows": [
+        {
+          "subdivisions": 2,
+          "panels": 320,
+          "h_mean": 0.19816636488030054,
+          "quadrature_order": 2,
+          "mesh_area_ratio": 0.9811781757531297,
+          "err_flux": 0.010391840145675504,
+          "err_flux_linf": 0.015116308398524823,
+          "err_potential": 0.00845207971619901,
+          "err_potential_linf": 0.009659277514942463,
+          "condition_single": 36.09807788649578,
+          "condition_single_method": "direct",
+          "condition_double": 2.0832484058256044,
+          "condition_double_method": "direct",
+          "dominance_single": {
+            "min_ratio": 0.055517454190240755,
+            "median_ratio": 0.055950302152270245,
+            "fraction_dominant": 0.0
+          },
+          "dominance_double": {
+            "min_ratio": 0.9999999999999987,
+            "median_ratio": 1.0,
+            "fraction_dominant": 0.45
+          },
+          "solid_angle_row_sum_error": 5.551115123125783e-16,
+          "assemble_seconds": 6.21708869934082,
+          "solve_seconds": 0.7683131694793701
+        },
+        {
+          "subdivisions": 2,
+          "panels": 320,
+          "h_mean": 0.19816636488030054,
+          "quadrature_order": 4,
+          "mesh_area_ratio": 0.9811781757531297,
+          "err_flux": 0.011340263441981187,
+          "err_flux_linf": 0.014419597694319301,
+          "err_potential": 0.009812252741979484,
+          "err_potential_linf": 0.011859934927955075,
+          "condition_single": 37.482997974338986,
+          "condition_single_method": "direct",
+          "condition_double": 2.0832484058256044,
+          "condition_double_method": "direct",
+          "dominance_single": {
+            "min_ratio": 0.05545791072322585,
+            "median_ratio": 0.05587156474056555,
+            "fraction_dominant": 0.0
+          },
+          "dominance_double": {
+            "min_ratio": 0.9999999999999987,
+            "median_ratio": 1.0,
+            "fraction_dominant": 0.45
+          },
+          "solid_angle_row_sum_error": 5.551115123125783e-16,
+          "assemble_seconds": 6.184910297393799,
+          "solve_seconds": 0.5752933025360107
+        },
+        {
+          "subdivisions": 2,
+          "panels": 320,
+          "h_mean": 0.19816636488030054,
+          "quadrature_order": 8,
+          "mesh_area_ratio": 0.9811781757531297,
+          "err_flux": 0.011489955371604452,
+          "err_flux_linf": 0.014599818274765535,
+          "err_potential": 0.009892909878118984,
+          "err_potential_linf": 0.01201386892274359,
+          "condition_single": 37.56559992086565,
+          "condition_single_method": "direct",
+          "condition_double": 2.0832484058256044,
+          "condition_double_method": "direct",
+          "dominance_single": {
+            "min_ratio": 0.055453670390085405,
+            "median_ratio": 0.05586756555666683,
+            "fraction_dominant": 0.0
+          },
+          "dominance_double": {
+            "min_ratio": 0.9999999999999987,
+            "median_ratio": 1.0,
+            "fraction_dominant": 0.45
+          },
+          "solid_angle_row_sum_error": 5.551115123125783e-16,
+          "assemble_seconds": 5.906992197036743,
+          "solve_seconds": 0.3401060104370117
+        }
+      ]
+    },
+    "self_term": {
+      "subdivisions": 2,
+      "panels": 320,
+      "panels_sampled": 320,
+      "polar_order": 64,
+      "analytic_sum": 17.28798144386031,
+      "polar_max_rel_error": 1.0631643901112715e-15,
+      "polar_median_rel_error": 3.621342588079672e-16,
+      "coarse_max_rel_error": 0.13434942916792997,
+      "coarse_median_rel_error": 0.08504699405583237,
+      "flat_triangle_check": {
+        "vertices": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            2.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.5,
+            0.0
+          ]
+        ],
+        "analytic": 0.32980086589487406,
+        "polar_rel_error": 3.366343571029454e-16,
+        "coarse_rel_error": 0.19152839268833421
+      }
+    },
+    "frequency_scan": {
+      "subdivisions": 2,
+      "panels": 64,
+      "n_azimuth": 72,
+      "rows": [
+        {
+          "ka": 0.5,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            401.7034546930799,
+            401.70325379153206,
+            1602.01624404452
+          ],
+          "b_far": [
+            397.72752418819067,
+            397.72756107572053,
+            1603.6172106339743
+          ],
+          "relative_difference": [
+            -0.009897675657101371,
+            -0.00989708865508657,
+            0.0009993447915437683
+          ],
+          "max_abs_relative_difference": 0.009897675657101371,
+          "condition_number": 2.9048459510849756,
+          "relative_residual": 0.0008365359875567449,
+          "surge_sway_symmetry": 5.001240230344131e-07
+        },
+        {
+          "ka": 0.7,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            1010.1004202768465,
+            1010.0998342836666,
+            1765.3769779028448
+          ],
+          "b_far": [
+            999.7894262662862,
+            999.7894755762891,
+            1766.003724817167
+          ],
+          "relative_difference": [
+            -0.010207890031106302,
+            -0.01020726700216651,
+            0.0003550215745232765
+          ],
+          "max_abs_relative_difference": 0.010207890031106302,
+          "condition_number": 3.03295454891071,
+          "relative_residual": 0.0009187454740756379,
+          "surge_sway_symmetry": 5.801335868808155e-07
+        },
+        {
+          "ka": 0.9,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            1735.51185560326,
+            1735.5106903279116,
+            1774.6671203229325
+          ],
+          "b_far": [
+            1716.7368074707797,
+            1716.7368584143862,
+            1772.503867358265
+          ],
+          "relative_difference": [
+            -0.010818161841916207,
+            -0.0108174683210843,
+            -0.001218962666234439
+          ],
+          "max_abs_relative_difference": 0.010818161841916207,
+          "condition_number": 3.06804026767797,
+          "relative_residual": 0.0010684663259948664,
+          "surge_sway_symmetry": 6.714303591474163e-07
+        },
+        {
+          "ka": 1.1,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            2349.767986264306,
+            2349.7661249138773,
+            1702.8887696731654
+          ],
+          "b_far": [
+            2322.0442542389983,
+            2322.044308532444,
+            1696.005060639321
+          ],
+          "relative_difference": [
+            -0.011798497633540028,
+            -0.011797691730894814,
+            -0.004042371502141907
+          ],
+          "max_abs_relative_difference": 0.011798497633540028,
+          "condition_number": 3.0134011271096726,
+          "relative_residual": 0.001306609933041232,
+          "surge_sway_symmetry": 7.921422197336832e-07
+        },
+        {
+          "ka": 1.2,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            2577.618711136512,
+            2577.6164630712947,
+            1650.7538627522429
+          ],
+          "b_far": [
+            2545.5202915031796,
+            2545.5203417721855,
+            1640.7644339039016
+          ],
+          "relative_difference": [
+            -0.012452741553532477,
+            -0.012451860763205192,
+            -0.006051434483204092
+          ],
+          "max_abs_relative_difference": 0.012452741553532477,
+          "condition_number": 2.954698585320022,
+          "relative_residual": 0.0014674248463549696,
+          "surge_sway_symmetry": 8.721480829030118e-07
+        },
+        {
+          "ka": 1.4,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            2875.0447267328886,
+            2875.0415904199717,
+            1531.266866906614
+          ],
+          "b_far": [
+            2834.3660970959177,
+            2834.366097690149,
+            1513.5061818511756
+          ],
+          "relative_difference": [
+            -0.014148868453673384,
+            -0.014147792805974968,
+            -0.01159868696912228
+          ],
+          "max_abs_relative_difference": 0.014148868453673384,
+          "condition_number": 2.7813924646937718,
+          "relative_residual": 0.0018981023395331328,
+          "surge_sway_symmetry": 1.090874478494179e-06
+        },
+        {
+          "ka": 1.6,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            3005.964637024366,
+            3005.960374063799,
+            1405.4476287224484
+          ],
+          "b_far": [
+            2956.4957129486393,
+            2956.4955594957523,
+            1377.6851855134794
+          ],
+          "relative_difference": [
+            -0.01645692150413864,
+            -0.016455577723126974,
+            -0.019753452666325992
+          ],
+          "max_abs_relative_difference": 0.019753452666325992,
+          "condition_number": 2.5462931944045004,
+          "relative_residual": 0.002528174879735483,
+          "surge_sway_symmetry": 1.4181672380111556e-06
+        },
+        {
+          "ka": 1.8,
+          "modes": [
+            "surge",
+            "sway",
+            "heave"
+          ],
+          "b_near": [
+            3028.1444815137215,
+            3028.1387191826684,
+            1283.4442694306342
+          ],
+          "b_far": [
+            2969.0445051615816,
+            2969.0440195084916,
+            1243.259932529546
+          ],
+          "relative_difference": [
+            -0.019516894491968497,
+            -0.019515189082925235,
+            -0.031309763780327585
+          ],
+          "max_abs_relative_difference": 0.031309763780327585,
+          "condition_number": 2.3017202564747477,
+          "relative_residual": 0.003461305329196343,
+          "surge_sway_symmetry": 1.9029247409751575e-06
+        }
+      ]
+    }
+  },
+  "energy": {
+    "formulation": "first-order energy identity: damping from the surface-pressure integral equals damping from the Kochin far-field integral",
+    "geometry": "floating hemisphere, radius 1.0, ka = 1.0",
+    "n_azimuth": 72,
+    "rows": [
+      {
+        "subdivisions": 2,
+        "panels": 64,
+        "wavenumber": 1.0,
+        "density": 1025.0,
+        "gravity": 9.81,
+        "condition_number": 3.0515487523933436,
+        "relative_residual": 0.0011749405644713234,
+        "modes": [
+          "surge",
+          "sway",
+          "heave"
+        ],
+        "b_near": [
+          2066.644327248476,
+          2066.642825897945,
+          1745.6978429476226
+        ],
+        "b_far": [
+          2043.3796260391996,
+          2043.3796790098222,
+          1741.419725602203
+        ],
+        "relative_difference": [
+          -0.01125723517227135,
+          -0.01125649125073899,
+          -0.0024506631332006056
+        ],
+        "max_abs_relative_difference": 0.01125723517227135,
+        "wall_seconds": 2.5310609340667725
+      },
+      {
+        "subdivisions": 3,
+        "panels": 256,
+        "wavenumber": 1.0,
+        "density": 1025.0,
+        "gravity": 9.81,
+        "condition_number": 2.78287825558641,
+        "relative_residual": 0.00018804094756026847,
+        "modes": [
+          "surge",
+          "sway",
+          "heave"
+        ],
+        "b_near": [
+          2292.957739124967,
+          2292.957627254983,
+          1690.2199528617039
+        ],
+        "b_far": [
+          2286.650122479001,
+          2286.6501259184497,
+          1689.2991501579804
+        ],
+        "relative_difference": [
+          -0.002750864762284295,
+          -0.0027508146079804844,
+          -0.0005447827675708312
+        ],
+        "max_abs_relative_difference": 0.002750864762284295,
+        "wall_seconds": 35.2048134803772
+      },
+      {
+        "subdivisions": 4,
+        "panels": 1024,
+        "wavenumber": 1.0,
+        "density": 1025.0,
+        "gravity": 9.81,
+        "condition_number": 2.6872283641842682,
+        "relative_residual": 2.6227619619058e-05,
+        "modes": [
+          "surge",
+          "sway",
+          "heave"
+        ],
+        "b_near": [
+          2355.3534628129505,
+          2355.353455392693,
+          1675.2411361597563
+        ],
+        "b_far": [
+          2353.7682941088656,
+          2353.7682943577042,
+          1674.9995833842454
+        ],
+        "relative_difference": [
+          -0.000673006718147433,
+          -0.000673003464239894,
+          -0.00014418985440184354
+        ],
+        "max_abs_relative_difference": 0.000673006718147433,
+        "wall_seconds": 313.1354007720947
+      }
+    ],
+    "r_aw_status": {
+      "status": "NOT_SUPPORTED",
+      "reason": "Mean added resistance R_AW in waves requires a second-order drift-force (Maruo/Marushenko) operator, which this repository does not implement; tensorbem.ice_rao.ADDED_RESISTANCE_STATUS declares it withheld.",
+      "substituted_identity": "first-order radiation-damping energy identity"
+    }
+  },
+  "criteria": {
+    "C1a": {
+      "measured_slopes_in_h": {
+        "err_flux": 1.7417769282918514,
+        "err_potential": 1.967570298863044
+      },
+      "measured_slopes_vs_logN": {
+        "err_flux": -0.8708884641459257,
+        "err_potential": -0.983785149431522
+      },
+      "convention": "the seeded band -0.5 +- 0.075 is read against the panel count (error ~ N**-1/2 is the classical O(h) of a constant-panel scheme in 3-D; an O(h**2) scheme would give -1.0, the band quoted for linear panels). The order in h is twice the N slope and is reported alongside.",
+      "target": [
+        -0.575,
+        -0.425
+      ],
+      "target_centre": -0.5,
+      "inside_target_band": {
+        "err_flux": false,
+        "err_potential": false
+      },
+      "per_step_orders": [
+        {
+          "from_panels": 80,
+          "to_panels": 320,
+          "err_flux_order_in_h": 1.8281573709660444,
+          "err_potential_order_in_h": 1.9199715582292143
+        },
+        {
+          "from_panels": 320,
+          "to_panels": 1280,
+          "err_flux_order_in_h": 1.8209701810526973,
+          "err_potential_order_in_h": 1.9857958930492663
+        },
+        {
+          "from_panels": 1280,
+          "to_panels": 5120,
+          "err_flux_order_in_h": 1.5498054819365317,
+          "err_potential_order_in_h": 1.990868247248578
+        }
+      ],
+      "verdict": "FAIL",
+      "detail": "The seeded band assumes a geometry-limited h**(-1/2) rate.  The measured centroid-collocation rate of this constant-panel scheme is reported as it came out of the regression, together with the per-step orders; a slope steeper than the band means the band understates the scheme, not that the scheme is wrong."
+    },
+    "C1b": {
+      "quantity": "log-log regression slope of the order-1 (piecewise-linear) operator",
+      "target_low": -1.15,
+      "target_high": -0.85,
+      "target_centre": -1.0,
+      "status": "NOT_SUPPORTED",
+      "reason": "tensorbem.solver3d assembles constant-panel collocation only; no piecewise-linear (P1) boundary-element discretisation exists in src/."
+    },
+    "C2": {
+      "panels": [
+        80,
+        320,
+        1280,
+        5120
+      ],
+      "err_flux": [
+        0.04079890876312448,
+        0.011489955371604452,
+        0.0032520086801836904,
+        0.0011107434441625192
+      ],
+      "err_potential": [
+        0.037436314115000265,
+        0.009892909878118984,
+        0.002497697986327802,
+        0.0006283894193145266
+      ],
+      "verdict": "PASS"
+    },
+    "C3": {
+      "max_relative_difference": 1.0631643901112715e-15,
+      "median_relative_difference": 3.621342588079672e-16,
+      "panels_sampled": 320,
+      "polar_order": 64,
+      "tolerance": 1e-06,
+      "verdict": "PASS"
+    },
+    "C4": {
+      "max_abs_relative_difference": [
+        0.01125723517227135,
+        0.002750864762284295,
+        0.000673006718147433
+      ],
+      "panels": [
+        64,
+        256,
+        1024
+      ],
+      "tolerance": 0.03,
+      "per_mode": {
+        "surge": {
+          "series": [
+            0.01125723517227135,
+            0.002750864762284295,
+            0.000673006718147433
+          ],
+          "monotone": true
+        },
+        "sway": {
+          "series": [
+            0.01125649125073899,
+            0.0027508146079804844,
+            0.000673003464239894
+          ],
+          "monotone": true
+        },
+        "heave": {
+          "series": [
+            0.0024506631332006056,
+            0.0005447827675708312,
+            0.00014418985440184354
+          ],
+          "monotone": true
+        }
+      },
+      "monotone_decrease": true,
+      "verdict": "PASS",
+      "note": "first-order energy identity (R_AW drift force is NOT_SUPPORTED)"
+    },
+    "C5": {
+      "coarse_rule_max_relative_error": 0.13434942916792997,
+      "tolerance": 1e-06,
+      "gate_rejects_coarse_rule": true,
+      "verdict": "PASS",
+      "detail": "the C3 gate must be red on the coarse rule, otherwise it measures nothing"
+    },
+    "C6": {
+      "free_surface_green_function": {
+        "evidence": "REAL",
+        "path": "src/tensorbem/free_surface3d.py::green_function_3d",
+        "note": "Rankine + image + wave kernel; used by the 3-D radiation solver"
+      },
+      "constant_panel_biem": {
+        "evidence": "REAL",
+        "path": "src/tensorbem/solver3d.py::assemble_surface_matrices"
+      },
+      "linear_panel_operator": {
+        "evidence": "NOT_SUPPORTED",
+        "path": "src/tensorbem/solver3d.py",
+        "note": "constant-panel collocation only; no P1 basis or P1 assembly exists"
+      },
+      "kochin_far_field_damping": {
+        "evidence": "REAL",
+        "path": "src/tensorbem/free_surface_solver3d.py::far_field_damping_matrix_3d"
+      },
+      "added_resistance_far_field": {
+        "evidence": "NOT_SUPPORTED",
+        "path": "src/tensorbem/ice_rao.py::ADDED_RESISTANCE_STATUS",
+        "note": "second-order drift-force operator absent; repository declares it withheld"
+      }
+    },
+    "verdicts": {
+      "C1a": "FAIL",
+      "C1b": "NOT_SUPPORTED",
+      "C2": "PASS",
+      "C3": "PASS",
+      "C4": "PASS",
+      "C5": "PASS",
+      "C6": "REPORTED"
+    },
+    "summary": {
+      "passed": 4,
+      "failed": 1,
+      "not_supported": 1
+    }
+  },
+  "crosscheck": {
+    "label": "study_crosscheck_numpy2.0.1.json",
+    "rows": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "h_mean": 0.3963327297606011,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.928345323381442,
+        "err_flux": 0.040798908763124156,
+        "err_flux_linf": 0.0490857493504425,
+        "err_potential": 0.03743631411499992,
+        "err_potential_linf": 0.0445003427377107,
+        "condition_single": 18.621493084053643,
+        "condition_single_method": "direct",
+        "condition_double": 2.1654320331292207,
+        "condition_double_method": "direct",
+        "dominance_single": {
+          "min_ratio": 0.11776470898489877,
+          "median_ratio": 0.11776471296606646,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999991,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.3125
+        },
+        "solid_angle_row_sum_error": 2.220446049250313e-16,
+        "assemble_seconds": 0.37586355209350586,
+        "solve_seconds": 0.0005574226379394531
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "h_mean": 0.19816636488030054,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.9811781757531297,
+        "err_flux": 0.011489955371604113,
+        "err_flux_linf": 0.014599818274765003,
+        "err_potential": 0.009892909878118677,
+        "err_potential_linf": 0.012013868922743068,
+        "condition_single": 37.56559992086567,
+        "condition_single_method": "direct",
+        "condition_double": 2.083248405825605,
+        "condition_double_method": "direct",
+        "dominance_single": {
+          "min_ratio": 0.05545367039008539,
+          "median_ratio": 0.055867565556666846,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999987,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.43125
+        },
+        "solid_angle_row_sum_error": 5.551115123125783e-16,
+        "assemble_seconds": 1.6964497566223145,
+        "solve_seconds": 0.00914454460144043
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "h_mean": 0.09908318244015027,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.9952350696770933,
+        "err_flux": 0.003252008680182864,
+        "err_flux_linf": 0.004467624023163449,
+        "err_potential": 0.0024976979863274937,
+        "err_potential_linf": 0.0028710480892600843,
+        "condition_single": 75.37225628313425,
+        "condition_single_method": "power_iteration",
+        "condition_double": 1.9473356328309959,
+        "condition_double_method": "power_iteration",
+        "dominance_single": {
+          "min_ratio": 0.026955009986144623,
+          "median_ratio": 0.027343028737090137,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999964,
+          "median_ratio": 0.9999999999999996,
+          "fraction_dominant": 0.33203125
+        },
+        "solid_angle_row_sum_error": 1.6653345369377348e-15,
+        "assemble_seconds": 9.834932088851929,
+        "solve_seconds": 0.22956109046936035
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "h_mean": 0.049541591220075135,
+        "quadrature_order": 8,
+        "mesh_area_ratio": 0.998805006256468,
+        "err_flux": 0.0011107434441631635,
+        "err_flux_linf": 0.0018307469997295715,
+        "err_potential": 0.0006283894193143189,
+        "err_potential_linf": 0.0006956319877147627,
+        "condition_single": 152.0619040634549,
+        "condition_single_method": "power_iteration",
+        "condition_double": 1.89912557074225,
+        "condition_double_method": "power_iteration",
+        "dominance_single": {
+          "min_ratio": 0.01329540087252807,
+          "median_ratio": 0.013490730149944218,
+          "fraction_dominant": 0.0
+        },
+        "dominance_double": {
+          "min_ratio": 0.9999999999999929,
+          "median_ratio": 1.0,
+          "fraction_dominant": 0.4576171875
+        },
+        "solid_angle_row_sum_error": 3.552713678800501e-15,
+        "assemble_seconds": 93.14326882362366,
+        "solve_seconds": 9.199044942855835
+      }
+    ],
+    "energy_note": "The same cross-check file stores near/far identity rows for those machines; they are invalid there (the sway residual reaches 967.2%), so they are quoted nowhere else in this report."
+  }
+}
