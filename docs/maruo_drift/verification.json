@@ -1,0 +1,213 @@
+{
+  "schema": "tensorbem.maruo_drift_verification.v1",
+  "mission": "m6271",
+  "parameters": {
+    "density": 1025.0,
+    "gravity": 9.81,
+    "wavenumber": 0.5,
+    "prefactor_rho_g_over_4": 2513.8125,
+    "n_table": 3600,
+    "pattern": "|K|^2 = 1 + 0.5 cos(theta - gamma)",
+    "azimuth_convention": "theta and beta share one frame; 0 = +x"
+  },
+  "headings": [
+    {
+      "beta_deg": 0.0,
+      "fx_covariant": 11846.063021550019,
+      "fy_covariant": -5.581785034181054e-13,
+      "fx_legacy": 11846.062323753287,
+      "fy_legacy": 0.0,
+      "fx_reference": 11846.062323753287,
+      "fy_reference": 0.0,
+      "rel_err_covariant": 5.890537398256562e-08,
+      "rel_err_legacy": 0.0,
+      "abs_err_fx_legacy": 0.0,
+      "abs_err_fy_legacy": 0.0
+    },
+    {
+      "beta_deg": 30.0,
+      "fx_covariant": 9729.96783544089,
+      "fy_covariant": 7897.374748211185,
+      "fx_legacy": 10258.99090718407,
+      "fy_legacy": 9871.71860312774,
+      "fx_reference": 9729.967101660994,
+      "fy_reference": 7897.37488250219,
+      "rel_err_covariant": 5.85544051636625e-08,
+      "rel_err_legacy": 0.15754931793972765,
+      "abs_err_fx_legacy": 529.0238055230766,
+      "abs_err_fy_legacy": 1974.3437206255494
+    },
+    {
+      "beta_deg": 45.0,
+      "fx_covariant": 7219.888001190713,
+      "fy_covariant": 11168.574476063064,
+      "fx_legacy": 8376.43099948442,
+      "fy_legacy": 13960.718332474033,
+      "fx_reference": 7219.8872247281315,
+      "fy_reference": 11168.574665979228,
+      "rel_err_covariant": 5.8384964010629904e-08,
+      "rel_err_legacy": 0.20995114425900624,
+      "abs_err_fx_legacy": 1156.5437747562892,
+      "abs_err_fy_legacy": 2792.143666494805
+    },
+    {
+      "beta_deg": 60.0,
+      "fx_covariant": 3948.6882733388325,
+      "fy_covariant": 13678.654310313243,
+      "fx_legacy": 5923.031161876646,
+      "fy_legacy": 17098.31817864011,
+      "fx_reference": 3948.6874412510983,
+      "fy_reference": 13678.654542912089,
+      "rel_err_covariant": 5.844463967618971e-08,
+      "rel_err_legacy": 0.2401922307076307,
+      "abs_err_fx_legacy": 1974.343720625548,
+      "abs_err_fy_legacy": 3419.663635728022
+    },
+    {
+      "beta_deg": 90.0,
+      "fx_covariant": -3948.686474872353,
+      "fy_covariant": 15794.749496422372,
+      "fx_legacy": 5.581785034181053e-13,
+      "fy_legacy": 19743.43720625548,
+      "fx_reference": -3948.6874412510947,
+      "fy_reference": 15794.749765004384,
+      "rel_err_covariant": 5.935675478589879e-08,
+      "rel_err_legacy": 0.2425356250363329,
+      "abs_err_fx_legacy": 3948.687441251095,
+      "abs_err_fy_legacy": 3948.687441251095
+    },
+    {
+      "beta_deg": 120.0,
+      "fx_covariant": -11846.061223083538,
+      "fy_covariant": 13678.654310313244,
+      "fx_legacy": -5923.031161876642,
+      "fy_legacy": 17098.31817864011,
+      "fx_reference": -11846.062323753284,
+      "fy_reference": 13678.65454291209,
+      "rel_err_covariant": 6.082675151646311e-08,
+      "rel_err_legacy": 0.3273268353539885,
+      "abs_err_fx_legacy": 5923.031161876642,
+      "abs_err_fy_legacy": 3419.6636357280204
+    },
+    {
+      "beta_deg": 180.0,
+      "fx_covariant": -19743.435971294726,
+      "fy_covariant": 2.2327140136724215e-12,
+      "fx_legacy": -11846.062323753287,
+      "fy_legacy": 1.6745355102543158e-12,
+      "fx_reference": -19743.43720625548,
+      "fy_reference": 1.9342989743046026e-12,
+      "rel_err_covariant": 6.255044348698523e-08,
+      "rel_err_legacy": 0.4,
+      "abs_err_fx_legacy": 7897.374882502192,
+      "abs_err_fy_legacy": 2.597634640502868e-13
+    }
+  ],
+  "summary": {
+    "rel_err_covariant_max": 6.255044348698523e-08,
+    "rel_err_legacy_max": 0.4,
+    "rel_err_legacy_min": 0.0,
+    "covariance_residual_covariant_max": 1.38072065803878e-16,
+    "covariance_residual_legacy_max": 0.38382436129030806,
+    "closed_form_within_3pct_covariant": true,
+    "closed_form_within_3pct_legacy": false
+  },
+  "covariance": [
+    {
+      "alpha_deg": 17.189,
+      "beta_deg": 60.0,
+      "rel_residual_covariant": 8.629504112742376e-17,
+      "rel_residual_legacy": 0.05703936266287256
+    },
+    {
+      "alpha_deg": 40.107,
+      "beta_deg": 60.0,
+      "rel_residual_covariant": 1.38072065803878e-16,
+      "rel_residual_legacy": 0.14595472500261758
+    },
+    {
+      "alpha_deg": 74.485,
+      "beta_deg": 60.0,
+      "rel_residual_covariant": 0.0,
+      "rel_residual_legacy": 0.27802698412655497
+    },
+    {
+      "alpha_deg": 143.239,
+      "beta_deg": 60.0,
+      "rel_residual_covariant": 1.38072065803878e-16,
+      "rel_residual_legacy": 0.38382436129030806
+    }
+  ],
+  "resolution": {
+    "dipole_magnitude_analytic": 7897.374882502192,
+    "table": [
+      {
+        "n_table": 8,
+        "force": 7126.346434642063,
+        "rel_err": 0.09763097982957057
+      },
+      {
+        "n_table": 12,
+        "force": 7544.6924295728795,
+        "rel_err": 0.044658188091176096
+      },
+      {
+        "n_table": 24,
+        "force": 7807.676126843432,
+        "rel_err": 0.01135804707175558
+      },
+      {
+        "n_table": 48,
+        "force": 7874.853922778901,
+        "rel_err": 0.002851701996974977
+      },
+      {
+        "n_table": 96,
+        "force": 7891.738673226247,
+        "rel_err": 0.0007136813637191435
+      },
+      {
+        "n_table": 360,
+        "force": 7896.973946735755,
+        "rel_err": 5.07682327865108e-05
+      },
+      {
+        "n_table": 3600,
+        "force": 7897.37087305524,
+        "rel_err": 5.076936338908102e-07
+      }
+    ],
+    "quadrature": [
+      {
+        "n_theta": 128,
+        "force": 7897.370935687793,
+        "rel_err": 4.997628273052955e-07
+      },
+      {
+        "n_theta": 256,
+        "force": 7897.370888701907,
+        "rel_err": 5.057123848102327e-07
+      },
+      {
+        "n_theta": 512,
+        "force": 7897.370876955437,
+        "rel_err": 5.071997739561386e-07
+      },
+      {
+        "n_theta": 1024,
+        "force": 7897.370874018817,
+        "rel_err": 5.075716215881077e-07
+      },
+      {
+        "n_theta": 4096,
+        "force": 7897.370873101125,
+        "rel_err": 5.076878237427696e-07
+      },
+      {
+        "n_theta": 16384,
+        "force": 7897.370873043768,
+        "rel_err": 5.076950864566113e-07
+      }
+    ]
+  }
+}
