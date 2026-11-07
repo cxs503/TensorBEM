@@ -1,0 +1,68 @@
+{
+  "campaign_node": "IN49-W3-N03",
+  "mission_id": 5758,
+  "timestamp": "2026-11-07T15:51:20Z",
+  "criteria_verdicts": {
+    "C1a": "FAIL",
+    "C1b": "NOT_SUPPORTED",
+    "C2": "PASS",
+    "C3": "PASS",
+    "C4": "PASS",
+    "C5": "PASS",
+    "C6": "REPORTED"
+  },
+  "criteria_summary": {
+    "passed": 4,
+    "failed": 1,
+    "not_supported": 1
+  },
+  "operator_study": {
+    "subdivisions": [
+      1,
+      2
+    ],
+    "panels": [
+      80,
+      320
+    ],
+    "err_flux": [
+      0.04079890876312448,
+      0.011489955371604452
+    ],
+    "err_potential": [
+      0.037436314115000265,
+      0.009892909878118984
+    ],
+    "slopes": {
+      "err_flux_in_h": 1.828157370966046,
+      "err_potential_in_h": 1.9199715582292176,
+      "err_flux_in_N": -0.914078685483023,
+      "err_potential_in_N": -0.9599857791146088
+    }
+  },
+  "energy_study": {
+    "subdivisions": [
+      2,
+      3
+    ],
+    "panels": [
+      64,
+      256
+    ],
+    "max_rel_diff": [
+      0.01245274155353177,
+      0.0030266133942247883
+    ],
+    "monotone": true
+  },
+  "self_term": {
+    "polar_max_rel_error": 1.0631643901112715e-15,
+    "coarse_max_rel_error": 0.13434942916792997,
+    "gate": 1e-06
+  },
+  "notes": {
+    "operator_levels": "Only subdivisions 1-2 (80, 320 panels) computed due to local timeout; full 4-level sweep requires cluster",
+    "energy_levels": "Subdivisions 2-3 (64, 256 hemisphere panels)",
+    "linear_panel": "NOT_SUPPORTED - constant-panel collocation only"
+  }
+}
