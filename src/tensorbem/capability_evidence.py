@@ -371,6 +371,28 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Published as out of scope on 2026-10-29; shipped later with a dedicated suite.',
     ),
     Capability(
+        key='michell-general-and-tandem',
+        title='Michell thin-ship wave resistance for general hulls + tandem interference',
+        claim=(
+            'Centreplane panel discrete Kochin function reproduces the closed-form Wigley and the '
+            'elliptic-coordinate ellipsoid references (< 1e-4), and the tandem pair interference '
+            'factor sigma = R_pair/(2 R_single) reproduces the closed-form superposition at gaps '
+            'L/2, L, 2L with three-grid GCI < 3 %.'
+        ),
+        level=REAL,
+        modules=('tensorbem.michell', 'tensorbem.benchmarks.michell_validation'),
+        symbols=('ellipsoid_wave_resistance', 'tandem_interference_factor', 'wigley_panels'),
+        tests=(
+            'tests/test_michell_thin_ship.py::test_panel_kochin_matches_closed_form',
+            'tests/test_michell_thin_ship.py::test_campaign_criteria_pass',
+        ),
+        docs=(('docs/michell_validation.md', 'Michell'),),
+        note=(
+            'Agreement is between independent implementations of the same thin-ship theory '
+            '(panel discretisation vs closed form / quadrature); no experimental claim is made.'
+        ),
+    ),
+    Capability(
         key='kutta-lifting',
         title='Kutta condition / lifting foil',
         claim='Joukowski foil circulation enforces the Kutta condition; lift within 3% of the exact value.',
