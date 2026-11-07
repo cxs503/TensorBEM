@@ -601,6 +601,31 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Absent from the 2026-10-29 table; the capability existed there as prose only.',
     ),
     Capability(
+        key='maruo-far-field-drift',
+        title='Maruo far-field mean drift force at arbitrary heading',
+        claim=(
+            'The azimuthal Maruo integral with the frame-covariant weight e_beta - e_theta '
+            'reproduces the closed-form drift force (rho g/4)(2 pi C^2 e_beta - a pi C^2 e_gamma) '
+            'of a Kochin pattern |K|^2 = C^2 (1 + a cos(theta - gamma)) at every heading to '
+            '< 1e-5 relative, and rotating body and incident waves together by alpha rotates '
+            'the force by alpha (residual < 1e-9).'
+        ),
+        level=REAL,
+        modules=('tensorbem.maruo_drift',),
+        symbols=('maruo_mean_drift_force', 'maruo_mean_drift_force_general'),
+        tests=(
+            'tests/test_maruo_drift.py::test_isotropic_kochin_pushes_along_propagation',
+            'tests/test_maruo_drift.py::test_closed_form_for_rotated_scattering_pattern',
+            'tests/test_maruo_drift.py::test_rotational_covariance',
+            'tests/test_maruo_drift.py::test_beam_and_following_seas_for_asymmetric_scatterer',
+        ),
+        docs=(('docs/maruo_drift.md', 'Maruo'),),
+        note=(
+            'The reference is the closed-form azimuthal integral of the same far-field theory, not '
+            'experimental drift data; the sampled Kochin table, not n_theta, sets the accuracy floor.'
+        ),
+    ),
+    Capability(
         key='time-domain-memory-kernel',
         title='Time-domain radiation memory kernel (Cummins equation)',
         claim='The Fourier round trip returns A and B for an exact exponential pair and the Cummins free decay reproduces the auxiliary-ODE characteristic decay.',
@@ -745,10 +770,6 @@ UNTESTED_MODULES: dict[str, str] = {
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
         "one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.",
-    "tensorbem.maruo_drift":
-        "azimuthal-quadrature wrapper around the Maruo far-field integral; graded through the"
-        " second-order-drift row, but it has no dedicated numeric anchor of its own yet -- that"
-        " anchor is owed, and this entry records the debt instead of hiding it.",
     "tensorbem.benchmarks.panel_linear_order":
         "study driver that writes docs/panel_linear_order/study.json and its figures; the operator it"
         " drives is pinned by tests/test_panel_linear_order.py and graded by the linear-panel-operators row.",
@@ -1287,7 +1308,9 @@ def write_document(root: pathlib.Path | None = None) -> pathlib.Path:
     except ValueError:
         text = text.rstrip() + "\n\n" + BEGIN_MARKER + "\n\n" + END_MARKER + "\n"
         published = extract_document_block(text)
-    expected = render_document_block(audit(root), untested_modules(root))
+    expected = render_document_block(
+        audit(root), untested_modules(root), capability_coverage(root)
+    )
     path.write_text(text.replace(published, expected), encoding="utf-8")
     return path
 
