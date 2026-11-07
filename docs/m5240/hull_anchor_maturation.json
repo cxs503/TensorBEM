@@ -1,0 +1,917 @@
+{
+  "mission": "m5240",
+  "node": "W18-N02",
+  "repo": "TensorBEM",
+  "brief": {
+    "wigley": {
+      "L": 3.8,
+      "B": 0.5,
+      "T": 0.225,
+      "Cb_claimed": 0.667
+    },
+    "ellipsoid": {
+      "a": 1.0,
+      "b": 0.2,
+      "c": 0.15,
+      "Fr": 0.3
+    },
+    "panel_levels": [
+      100,
+      400,
+      1600
+    ]
+  },
+  "geometry_audit": {
+    "L": 3.8,
+    "B": 0.5,
+    "T": 0.225,
+    "L_over_B": 7.6,
+    "B_over_T": 2.2222222222222223,
+    "LBT": 0.4275,
+    "closed_form": {
+      "volume": 0.19,
+      "Cb": 0.4444444444444445,
+      "Cm": 0.6666666666666666,
+      "Cp": 0.6666666666666667,
+      "waterplane_area": 1.2666666666666666
+    },
+    "mesh": {
+      "panels": 6400,
+      "volume": 0.18989611230468745,
+      "Cb": 0.44420143229166653
+    },
+    "brief_claim": {
+      "Cb_claimed": 0.667,
+      "volume_claimed": 0.2851425,
+      "volume_ratio_to_closed_form": 1.50075,
+      "Cb_ratio_to_closed_form": 1.50075
+    },
+    "verdict": {
+      "claim_consistent_with_parabolic_hull": false,
+      "claimed_value_matches": "Cp = Cm = 2/3 (prismatic), not Cb",
+      "mesh_vs_closed_form_volume_rel": 0.0005467773437503043,
+      "mesh_Cb_rel_error": 0.0005467773437503043
+    }
+  },
+  "hydrostatics": {
+    "L": 3.8,
+    "B": 0.5,
+    "T": 0.225,
+    "brief_targets": {
+      "volume_rel_error": 0.01,
+      "wetted_area_rel_error": 0.02
+    },
+    "observed_order_in_panels": {
+      "volume": 0.9972833884105361,
+      "wetted_area": 1.0083084081545362,
+      "note": "q in |error| ~ N^-q; q = 1 corresponds to second order in the panel size h ~ N^-1/2, i.e. the expected faceting convergence"
+    },
+    "reference": {
+      "volume": 0.19,
+      "Cb": 0.4444444444444445,
+      "waterplane_area": 1.2666666666666666,
+      "wetted_area": 2.2717904276890026,
+      "wetted_area_note": "no elementary closed form for the wetted area of the parabolic Wigley hull; the reference is a 2-D Gauss-Legendre quadrature refined until successive levels agree (|240 vs 960 nodes| = 7.77e-16 relative)",
+      "area_refinement": [
+        {
+          "n_quad": 120,
+          "wetted_area": 2.2717904276889933
+        },
+        {
+          "n_quad": 240,
+          "wetted_area": 2.2717904276889964
+        },
+        {
+          "n_quad": 480,
+          "wetted_area": 2.271790427689001
+        },
+        {
+          "n_quad": 960,
+          "wetted_area": 2.2717904276890026
+        }
+      ],
+      "area_self_error": 7.771561172376096e-16
+    },
+    "rows": [
+      {
+        "n_sections": 10,
+        "n_levels": 5,
+        "panels": 200,
+        "volume": 0.187644,
+        "volume_rel_error": -0.012399999999999967,
+        "Cb": 0.43893333333333334,
+        "wetted_area": 2.2680589743349824,
+        "wetted_area_rel_error": -0.0016425165404962971
+      },
+      {
+        "n_sections": 20,
+        "n_levels": 10,
+        "panels": 800,
+        "volume": 0.1894074375,
+        "volume_rel_error": -0.003118750000000059,
+        "Cb": 0.44305833333333333,
+        "wetted_area": 2.2708750933594253,
+        "wetted_area_rel_error": -0.00040291319059237996
+      },
+      {
+        "n_sections": 40,
+        "n_levels": 20,
+        "panels": 3200,
+        "volume": 0.18985163671875,
+        "volume_rel_error": -0.0007808593750000536,
+        "Cb": 0.44409739583333335,
+        "wetted_area": 2.271562522762058,
+        "wetted_area_rel_error": -0.00010031952074762707
+      }
+    ]
+  },
+  "ellipsoid": {
+    "geometry": {
+      "a": 1.0,
+      "b": 0.2,
+      "c": 0.15,
+      "L": 2.0,
+      "B": 0.4,
+      "T": 0.15,
+      "thinness_b_over_a": 0.2,
+      "volume_closed_form": 0.06283185307179585,
+      "volume_quadrature": 0.06283185307179583,
+      "volume_rel_difference": 4.440892098500626e-16,
+      "Cb": 0.5235987755982988,
+      "Cb_closed_form": 0.5235987755982988,
+      "Cm": 0.7853981633974483,
+      "Cp": 0.6666666666666666,
+      "waterplane_area": 0.6283185307179586,
+      "wetted_surface_area": 0.8791246265393206
+    },
+    "froude": 0.3,
+    "speed": 1.3286071654179799,
+    "k0": 5.555555555555558,
+    "lambda_max": 11.999999999999995,
+    "kochin": {
+      "rows": [
+        {
+          "k": 0.5,
+          "abs_analytic": 0.02978928981954261,
+          "abs_quadrature": 0.02978928981954323,
+          "rel_difference": 2.0731956798539886e-14,
+          "argument_rad": -1.5707963267948966
+        },
+        {
+          "k": 1.0,
+          "abs_analytic": 0.05364764559838572,
+          "abs_quadrature": 0.05364764559838682,
+          "rel_difference": 2.0565546996593286e-14,
+          "argument_rad": -1.5707963267948966
+        },
+        {
+          "k": 2.0,
+          "abs_analytic": 0.07288413305158481,
+          "abs_quadrature": 0.07288413305158623,
+          "rel_difference": 1.9421708199166183e-14,
+          "argument_rad": -1.5707963267948966
+        },
+        {
+          "k": 5.0,
+          "abs_analytic": 0.01813866278674073,
+          "abs_quadrature": 0.01813866278674173,
+          "rel_difference": 5.508686168936953e-14,
+          "argument_rad": 1.5707963267948966
+        },
+        {
+          "k": 10.0,
+          "abs_analytic": 0.009089963668421311,
+          "abs_quadrature": 0.009089963668421408,
+          "rel_difference": 1.0693213367745483e-14,
+          "argument_rad": -1.5707963267948966
+        },
+        {
+          "k": 20.0,
+          "abs_analytic": 0.0005204990818880889,
+          "abs_quadrature": 0.0005204990818879062,
+          "rel_difference": 3.5099897279171093e-13,
+          "argument_rad": 1.5707963267948966
+        }
+      ],
+      "max_rel_difference": 3.5099897279171093e-13
+    },
+    "wave_resistance": {
+      "analytic_closed_form": 0.8857897635729131,
+      "theta_form": 0.8857910402052244,
+      "theta_vs_lambda_rel": 1.4412362434601533e-06,
+      "Cw_wetted": 0.0011137639606594357,
+      "Cw_LT": 0.0032637910865589365
+    },
+    "panels": [
+      {
+        "n_r": 10,
+        "n_phi": 20,
+        "panels": 200,
+        "scheme": "source_integrated",
+        "Rw": 0.8811133619107713,
+        "rel_error": -0.005279358437468407
+      },
+      {
+        "n_r": 10,
+        "n_phi": 20,
+        "panels": 200,
+        "scheme": "ordinate",
+        "Rw": 1.0809050782018033,
+        "rel_error": 0.2202727132924578
+      },
+      {
+        "n_r": 10,
+        "n_phi": 20,
+        "panels": 200,
+        "scheme": "source",
+        "Rw": 0.6316918499208164,
+        "rel_error": -0.28686029586430284
+      },
+      {
+        "n_r": 20,
+        "n_phi": 40,
+        "panels": 800,
+        "scheme": "source_integrated",
+        "Rw": 0.8847381865557109,
+        "rel_error": -0.0011871632078480632
+      },
+      {
+        "n_r": 20,
+        "n_phi": 40,
+        "panels": 800,
+        "scheme": "ordinate",
+        "Rw": 0.8716766793530206,
+        "rel_error": -0.01593276960321377
+      },
+      {
+        "n_r": 20,
+        "n_phi": 40,
+        "panels": 800,
+        "scheme": "source",
+        "Rw": 0.7517867630532333,
+        "rel_error": -0.1512808185761444
+      },
+      {
+        "n_r": 40,
+        "n_phi": 80,
+        "panels": 3200,
+        "scheme": "source_integrated",
+        "Rw": 0.8855350717855145,
+        "rel_error": -0.0002875307413480188
+      },
+      {
+        "n_r": 40,
+        "n_phi": 80,
+        "panels": 3200,
+        "scheme": "ordinate",
+        "Rw": 0.8819031783930742,
+        "rel_error": -0.004387706134875602
+      },
+      {
+        "n_r": 40,
+        "n_phi": 80,
+        "panels": 3200,
+        "scheme": "source",
+        "Rw": 0.8169472136091682,
+        "rel_error": -0.07771883667526502
+      }
+    ],
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "ellipsoid_froude_curve": {
+    "froudes": [
+      0.15,
+      0.175,
+      0.2,
+      0.225,
+      0.25,
+      0.275,
+      0.3,
+      0.325,
+      0.35,
+      0.375,
+      0.4,
+      0.425,
+      0.45
+    ],
+    "rows": [
+      {
+        "Fr": 0.15,
+        "speed": 0.6643035827089899,
+        "Rw_analytic": 0.0863660999532076,
+        "Rw_panels_800": 0.08767643205064617,
+        "rel_error_panels": 0.015171833603097706,
+        "Cw_wetted": 0.0004343759817796778
+      },
+      {
+        "Fr": 0.175,
+        "speed": 0.7750208464938216,
+        "Rw_analytic": 0.10241947854195385,
+        "Rw_panels_800": 0.10329505661042548,
+        "rel_error_panels": 0.008548940894216539,
+        "Cw_wetted": 0.00037845258505234683
+      },
+      {
+        "Fr": 0.2,
+        "speed": 0.8857381102786533,
+        "Rw_analytic": 0.23604262221531744,
+        "Rw_panels_800": 0.23845086065737722,
+        "rel_error_panels": 0.010202557569721549,
+        "Cw_wetted": 0.0006677831437910878
+      },
+      {
+        "Fr": 0.225,
+        "speed": 0.996455374063485,
+        "Rw_analytic": 0.20889254449293995,
+        "Rw_panels_800": 0.21192870043865372,
+        "rel_error_panels": 0.014534534744088834,
+        "Cw_wetted": 0.000466941976074907
+      },
+      {
+        "Fr": 0.25,
+        "speed": 1.1071726378483167,
+        "Rw_analytic": 0.3623723674453012,
+        "Rw_panels_800": 0.3583049783173845,
+        "rel_error_panels": -0.011224335775355865,
+        "Cw_wetted": 0.0006561151547551364
+      },
+      {
+        "Fr": 0.275,
+        "speed": 1.2178899016331484,
+        "Rw_analytic": 0.38135560149723435,
+        "Rw_panels_800": 0.38605484420717245,
+        "rel_error_panels": 0.012322469347476384,
+        "Cw_wetted": 0.0005706499128768793
+      },
+      {
+        "Fr": 0.3,
+        "speed": 1.3286071654179799,
+        "Rw_analytic": 0.8857897635729131,
+        "Rw_panels_800": 0.8847381865557109,
+        "rel_error_panels": -0.0011871632078480632,
+        "Cw_wetted": 0.0011137639606594357
+      },
+      {
+        "Fr": 0.325,
+        "speed": 1.4393244292028118,
+        "Rw_analytic": 0.5836203244117447,
+        "Rw_panels_800": 0.5772104260742467,
+        "rel_error_panels": -0.010982993685079157,
+        "Cw_wetted": 0.0006252715934511256
+      },
+      {
+        "Fr": 0.35,
+        "speed": 1.5500416929876433,
+        "Rw_analytic": 0.3029374778339372,
+        "Rw_panels_800": 0.3027663090076384,
+        "rel_error_panels": -0.0005650302086183112,
+        "Cw_wetted": 0.00027984782100928384
+      },
+      {
+        "Fr": 0.375,
+        "speed": 1.660758956772475,
+        "Rw_analytic": 0.6520365358011142,
+        "Rw_panels_800": 0.6599973605918454,
+        "rel_error_panels": 0.012209169814311638,
+        "Cw_wetted": 0.0005247040411425871
+      },
+      {
+        "Fr": 0.4,
+        "speed": 1.7714762205573067,
+        "Rw_analytic": 1.4181599605248953,
+        "Rw_panels_800": 1.4298925776723348,
+        "rel_error_panels": 0.008273126779786422,
+        "Cw_wetted": 0.001003021517840629
+      },
+      {
+        "Fr": 0.425,
+        "speed": 1.8821934843421382,
+        "Rw_analytic": 2.2117558397720676,
+        "Rw_panels_800": 2.222921607756029,
+        "rel_error_panels": 0.005048372782916255,
+        "Cw_wetted": 0.0013856844252413552
+      },
+      {
+        "Fr": 0.45,
+        "speed": 1.99291074812697,
+        "Rw_analytic": 2.802606916433245,
+        "Rw_panels_800": 2.810924732182233,
+        "rel_error_panels": 0.002967885257192382,
+        "Cw_wetted": 0.0015661818076096662
+      }
+    ],
+    "wetted_area": 0.8791246265393206
+  },
+  "wigley": {
+    "L": 3.8,
+    "B": 0.5,
+    "T": 0.225,
+    "wetted_area": 2.271790427689001,
+    "rows": [
+      {
+        "Fr": 0.2,
+        "speed": 1.2209057293665224,
+        "Rw_analytic": 0.23105956953070417,
+        "Cw_wetted": 0.00013313663049777593,
+        "Cw_LT": 0.0003537526581749881,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.2310595695307043,
+            "moment_rel_error": 6.661338147750939e-16,
+            "mean_source": 0.2337488989892213,
+            "mean_source_rel_error": 0.011639117410195743,
+            "first_order": 0.6526654654377415,
+            "first_order_rel_error": 1.8246632102853138
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.2310595695307043,
+            "moment_rel_error": 6.661338147750939e-16,
+            "mean_source": 0.2315906446676148,
+            "mean_source_rel_error": 0.0022984338540459337,
+            "first_order": 0.28013298734853903,
+            "first_order_rel_error": 0.21238426920601428
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.23105956953070436,
+            "moment_rel_error": 8.881784197001252e-16,
+            "mean_source": 0.23118547727017855,
+            "mean_source_rel_error": 0.0005449146284228767,
+            "first_order": 0.24076050695228596,
+            "first_order_rel_error": 0.04198457324786409
+          }
+        ]
+      },
+      {
+        "Fr": 0.225,
+        "speed": 1.3735189455373376,
+        "Rw_analytic": 0.2482157742958664,
+        "Cw_wetted": 0.00011300507148139474,
+        "Cw_LT": 0.0003002618007856654,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.24821577429586641,
+            "moment_rel_error": 2.220446049250313e-16,
+            "mean_source": 0.25502150896024717,
+            "mean_source_rel_error": 0.027418622703118567,
+            "first_order": 0.49632539105632234,
+            "first_order_rel_error": 0.9995723175301345
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.2482157742958665,
+            "moment_rel_error": 4.440892098500626e-16,
+            "mean_source": 0.24974275499668133,
+            "mean_source_rel_error": 0.006151827800415344,
+            "first_order": 0.2826758019425986,
+            "first_order_rel_error": 0.1388309334670117
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.24821577429586644,
+            "moment_rel_error": 2.220446049250313e-16,
+            "mean_source": 0.24858809769650342,
+            "mean_source_rel_error": 0.0014999989492741062,
+            "first_order": 0.2555202900456478,
+            "first_order_rel_error": 0.02942808840615685
+          }
+        ]
+      },
+      {
+        "Fr": 0.25,
+        "speed": 1.526132161708153,
+        "Rw_analytic": 0.3187029389926254,
+        "Cw_wetted": 0.0001175275394504269,
+        "Cw_LT": 0.00031227829136060966,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.31870293899262525,
+            "moment_rel_error": -5.551115123125783e-16,
+            "mean_source": 0.3059999381207398,
+            "mean_source_rel_error": -0.03985843654921417,
+            "first_order": 0.47554660402601906,
+            "first_order_rel_error": 0.49213121638963897
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.3187029389926254,
+            "moment_rel_error": 0.0,
+            "mean_source": 0.3155386928496376,
+            "mean_source_rel_error": -0.009928512592289107,
+            "first_order": 0.3435845564210974,
+            "first_order_rel_error": 0.07807150290838005
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.3187029389926252,
+            "moment_rel_error": -6.661338147750939e-16,
+            "mean_source": 0.31791289474750295,
+            "mean_source_rel_error": -0.0024789361768036144,
+            "first_order": 0.3242262279433144,
+            "first_order_rel_error": 0.017330524055245045
+          }
+        ]
+      },
+      {
+        "Fr": 0.275,
+        "speed": 1.6787453778789683,
+        "Rw_analytic": 0.5420774280461643,
+        "Cw_wetted": 0.000165207412350297,
+        "Cw_LT": 0.0004389668046323677,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.5420774280461637,
+            "moment_rel_error": -1.2212453270876722e-15,
+            "mean_source": 0.5511200411703296,
+            "mean_source_rel_error": 0.016681405010273265,
+            "first_order": 0.701951570734711,
+            "first_order_rel_error": 0.2949286105949638
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.5420774280461638,
+            "moment_rel_error": -9.992007221626409e-16,
+            "mean_source": 0.5442244039985764,
+            "mean_source_rel_error": 0.003960644441792338,
+            "first_order": 0.5726729695763485,
+            "first_order_rel_error": 0.05644127563189838
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.5420774280461637,
+            "moment_rel_error": -1.2212453270876722e-15,
+            "mean_source": 0.5426075803154254,
+            "mean_source_rel_error": 0.0009780010047124588,
+            "first_order": 0.5492540924403022,
+            "first_order_rel_error": 0.013239186918380108
+          }
+        ]
+      },
+      {
+        "Fr": 0.3,
+        "speed": 1.8313585940497834,
+        "Rw_analytic": 1.0765830483507755,
+        "Cw_wetted": 0.0002757011772612263,
+        "Cw_LT": 0.0007325559010580611,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 1.0765830483507752,
+            "moment_rel_error": -2.220446049250313e-16,
+            "mean_source": 1.0610105384805588,
+            "mean_source_rel_error": -0.014464754850145756,
+            "first_order": 1.2328215790219073,
+            "first_order_rel_error": 0.14512445733794022
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 1.0765830483507752,
+            "moment_rel_error": -2.220446049250313e-16,
+            "mean_source": 1.0726984029133104,
+            "mean_source_rel_error": -0.003608310054125319,
+            "first_order": 1.109758178909135,
+            "first_order_rel_error": 0.030815207994572047
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 1.0765830483507755,
+            "moment_rel_error": 0.0,
+            "mean_source": 1.0756125497550735,
+            "mean_source_rel_error": -0.0009014618957531306,
+            "first_order": 1.084574070587923,
+            "first_order_rel_error": 0.007422578545509317
+          }
+        ]
+      },
+      {
+        "Fr": 0.325,
+        "speed": 1.9839718102205988,
+        "Rw_analytic": 0.610722730918173,
+        "Cw_wetted": 0.00013326342026595499,
+        "Cw_LT": 0.00035408954680852975,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.610722730918173,
+            "moment_rel_error": 0.0,
+            "mean_source": 0.5907036292165808,
+            "mean_source_rel_error": -0.032779362365463305,
+            "first_order": 0.6814340782444073,
+            "first_order_rel_error": 0.11578306119362125
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.6107227309181731,
+            "moment_rel_error": 2.220446049250313e-16,
+            "mean_source": 0.605698384358565,
+            "mean_source_rel_error": -0.008226886449853033,
+            "first_order": 0.6251796313859119,
+            "first_order_rel_error": 0.023671790381871283
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.610722730918173,
+            "moment_rel_error": 0.0,
+            "mean_source": 0.6094655567557467,
+            "mean_source_rel_error": -0.002058502326475198,
+            "first_order": 0.614173808571638,
+            "first_order_rel_error": 0.005650809244117205
+          }
+        ]
+      },
+      {
+        "Fr": 0.35,
+        "speed": 2.136585026391414,
+        "Rw_analytic": 0.4094294176078069,
+        "Cw_wetted": 7.703295320830686e-05,
+        "Cw_LT": 0.0002046815505441477,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 0.4094294176078067,
+            "moment_rel_error": -4.440892098500626e-16,
+            "mean_source": 0.4106273709685173,
+            "mean_source_rel_error": 0.0029259093489417687,
+            "first_order": 0.46624995937512054,
+            "first_order_rel_error": 0.13877982217130813
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 0.4094294176078067,
+            "moment_rel_error": -4.440892098500626e-16,
+            "mean_source": 0.40965950763428155,
+            "mean_source_rel_error": 0.000561977270268077,
+            "first_order": 0.42140776110365746,
+            "first_order_rel_error": 0.029256186733813694
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 0.40942941760780677,
+            "moment_rel_error": -2.220446049250313e-16,
+            "mean_source": 0.40948275100587816,
+            "mean_source_rel_error": 0.00013026274072558408,
+            "first_order": 0.41230939915487125,
+            "first_order_rel_error": 0.00703413439095657
+          }
+        ]
+      },
+      {
+        "Fr": 0.375,
+        "speed": 2.2891982425622293,
+        "Rw_analytic": 1.1016222925466987,
+        "Cw_wetted": 0.00018055261095487873,
+        "Cw_LT": 0.00047973999211877165,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 1.1016222925466996,
+            "moment_rel_error": 8.881784197001252e-16,
+            "mean_source": 1.1145310669762054,
+            "mean_source_rel_error": 0.011717967688965825,
+            "first_order": 1.1898105495181042,
+            "first_order_rel_error": 0.08005307950652885
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 1.1016222925466996,
+            "moment_rel_error": 8.881784197001252e-16,
+            "mean_source": 1.1047870950519585,
+            "mean_source_rel_error": 0.00287285626541145,
+            "first_order": 1.1218990958678687,
+            "first_order_rel_error": 0.01840631172622209
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 1.1016222925466996,
+            "moment_rel_error": 8.881784197001252e-16,
+            "mean_source": 1.1024096971306336,
+            "mean_source_rel_error": 0.0007147682007364597,
+            "first_order": 1.1065973209918913,
+            "first_order_rel_error": 0.004516092746899236
+          }
+        ]
+      },
+      {
+        "Fr": 0.4,
+        "speed": 2.441811458733045,
+        "Rw_analytic": 2.2801081286062828,
+        "Cw_wetted": 0.00032844983874698476,
+        "Cw_LT": 0.0008727125142004631,
+        "panels": [
+          {
+            "n_x": 10,
+            "n_z": 10,
+            "panels": 100,
+            "moment": 2.28010812860629,
+            "moment_rel_error": 3.1086244689504383e-15,
+            "mean_source": 2.2859058951940696,
+            "mean_source_rel_error": 0.0025427594924327668,
+            "first_order": 2.3907158681958776,
+            "first_order_rel_error": 0.04850986591465012
+          },
+          {
+            "n_x": 20,
+            "n_z": 20,
+            "panels": 400,
+            "moment": 2.28010812860629,
+            "moment_rel_error": 3.1086244689504383e-15,
+            "mean_source": 2.281524913609228,
+            "mean_source_rel_error": 0.0006213674628716692,
+            "first_order": 2.3064039711475606,
+            "first_order_rel_error": 0.011532717335362097
+          },
+          {
+            "n_x": 40,
+            "n_z": 40,
+            "panels": 1600,
+            "moment": 2.2801081286062894,
+            "moment_rel_error": 2.886579864025407e-15,
+            "mean_source": 2.2804603428823853,
+            "mean_source_rel_error": 0.00015447261982171057,
+            "first_order": 2.286608498699914,
+            "first_order_rel_error": 0.0028509043111057952
+          }
+        ]
+      }
+    ],
+    "max_mean_source_rel_error_all_levels": 0.03985843654921417,
+    "max_mean_source_rel_error_finest": 0.0024789361768036144,
+    "max_first_order_rel_error_all_levels": 1.8246632102853138,
+    "max_first_order_rel_error_finest": 0.04198457324786409,
+    "max_moment_rel_error_all_levels": 3.1086244689504383e-15,
+    "experimental_comparison": {
+      "status": "WITHHELD",
+      "target": "|Cw - Cw_exp| / Cw_exp < 10 % over Fr = 0.20 ... 0.40",
+      "reason": "no sourced ITTC Wigley Cw table is available in this work tree (no network access); docs/wigley_wave_resistance.md already registers the previously carried table as WITHHELD because it states neither a reference area nor a source. Not substituted with a reconstructed table.",
+      "required_artefact": "ITTC-recommended Wigley resistance coefficients with (a) the exact model L/B/T, (b) the Cw reference area, (c) a page/table citation."
+    },
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "verdict": {
+    "criteria": [
+      {
+        "id": "G1_mesh_volume_vs_closed_form",
+        "passed": true,
+        "measured": 0.0005467773437503043,
+        "threshold": 0.001,
+        "note": "Wigley panel-mesh volume vs 4LBT/9 at 40x20 panels per side (3200 panels)"
+      },
+      {
+        "id": "G2_mesh_Cb_vs_four_ninths",
+        "passed": true,
+        "measured": 0.0005467773437503043,
+        "threshold": 0.001,
+        "note": "Cb from the meshed hull vs closed-form 4/9 (brief claims 0.667 = Cp)"
+      },
+      {
+        "id": "G3_ellipsoid_volume_quadrature",
+        "passed": true,
+        "measured": 4.440892098500626e-16,
+        "threshold": 1e-10,
+        "note": "ellipsoid wetted volume from quadrature vs 2 pi a b c / 3"
+      },
+      {
+        "id": "H1a_volume_error_all_levels",
+        "passed": false,
+        "measured": 0.012399999999999967,
+        "threshold": 0.01,
+        "note": "literal mission reading: |dV/V| < 1 % at each of N = 200 / 800 / 3200 wetted panels"
+      },
+      {
+        "id": "H1b_volume_error_finest",
+        "passed": true,
+        "measured": 0.0007808593750000536,
+        "threshold": 0.01,
+        "note": "|dV/V| < 1 % at N = 3200 wetted panels (mission accuracy band)"
+      },
+      {
+        "id": "H2_wetted_area_error_all_levels",
+        "passed": true,
+        "measured": 0.0016425165404962971,
+        "threshold": 0.02,
+        "note": "max |dS/S| over N = 200 / 800 / 3200 wetted panels (target < 2 %)"
+      },
+      {
+        "id": "E1_kochin_closed_form_vs_definition",
+        "passed": true,
+        "measured": 3.5099897279171093e-13,
+        "threshold": 1e-08,
+        "note": "max |H_closed - H_definition| / |H| over k = 0.5 ... 20 1/m"
+      },
+      {
+        "id": "E2_lambda_vs_theta_kelvin_form",
+        "passed": true,
+        "measured": 1.4412362434601533e-06,
+        "threshold": 0.001,
+        "note": "Kelvin-wake integral in lambda form vs wave-angle form"
+      },
+      {
+        "id": "E3_ellipsoid_panel_error",
+        "passed": true,
+        "measured": 0.005279358437468407,
+        "threshold": 0.05,
+        "note": "max |Rw_panel/Rw_closed_form - 1| for panel-mean source strength, N = 200 / 800 / 3200 (target < 5 %)"
+      },
+      {
+        "id": "E4_ellipsoid_panel_error_froude_band",
+        "passed": true,
+        "measured": 0.015171833603097706,
+        "threshold": 0.05,
+        "note": "max panel error over Fr = 0.15 ... 0.45 at N = 800"
+      },
+      {
+        "id": "W1_wigley_panel_error_finest",
+        "passed": true,
+        "measured": 0.0024789361768036144,
+        "threshold": 0.05,
+        "note": "max constant-strength panel error over Fr = 0.20 ... 0.40 at 40x20 cells"
+      },
+      {
+        "id": "W2_wigley_first_order_panel_error",
+        "passed": true,
+        "measured": 0.04198457324786409,
+        "threshold": 0.1,
+        "note": "max first-order (centroid-sampled) panel error over Fr = 0.20 ... 0.40 at 40x20 cells"
+      },
+      {
+        "id": "W4_panel_decomposition_identity",
+        "passed": true,
+        "measured": 3.1086244689504383e-15,
+        "threshold": 1e-10,
+        "note": "per-panel exact moments must reproduce the closed-form Kochin R_W (consistency of the panel decomposition, all Fr and all levels)"
+      }
+    ],
+    "passed": 12,
+    "total": 13,
+    "all_passed": false,
+    "withheld": [
+      {
+        "id": "W3_wigley_vs_ITTC_experiment",
+        "status": "WITHHELD",
+        "target": "< 10 % on Cw over Fr = 0.20 ... 0.40",
+        "reason": "no sourced ITTC Wigley Cw table is available in this work tree (no network access); docs/wigley_wave_resistance.md already registers the previously carried table as WITHHELD because it states neither a reference area nor a source. Not substituted with a reconstructed table."
+      }
+    ]
+  },
+  "figures": [
+    "docs/m5240/figures/fig1_wigley_panel_convergence.png",
+    "docs/m5240/figures/fig2_ellipsoid_kochin_panels.png",
+    "docs/m5240/figures/fig3_wigley_cw_vs_fr.png",
+    "docs/m5240/figures/fig4_ellipsoid_source_density.png"
+  ]
+}
