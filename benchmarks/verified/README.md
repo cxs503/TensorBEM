@@ -56,3 +56,24 @@ the Wigley III form at `Fr = 0.30`, wetted area 14.88 m^2).  Fixing it would
 change pinned numbers in `tests/test_wigley_verification.py`,
 `docs/wigley_wave_resistance.md` and the declared-number ledger, so it is
 recorded here as a finding rather than patched inside a verification mission.
+## Finite-depth frequency-domain case (registered separately)
+
+`bem_finite_depth/` is the finite-depth three-anchor verification loop
+(`tensorbem.benchmarks.bem_finite_depth_anchors`): hull geometry against a
+quadrature of its own definition, Kramers-Kronig causality of an infinite-depth
+radiation sweep (with an analytic control that measures the transform floor),
+diffraction energy conservation and a second radiation energy identity over a
+section x depth x frequency matrix, the finite-depth to infinite-depth limit,
+and a panel refinement study of the hardest section.
+
+Its record is `result.json` plus `gates.json` (schema `tensorbem.bem_finite_depth/1`),
+the paper-level summary is `report.md`, and the verification document is
+`docs/verification/bem_finite_depth.md`.  It is *not* listed in `summary.json`:
+that file is the thin-ship mission record and its case set is pinned by
+`tests/test_bem_verified_anchors.py`, so registering a new case there would
+break an existing reproducibility gate.  Reproduce with
+
+```
+PYTHONPATH=src python -m tensorbem.benchmarks.bem_finite_depth_anchors --stage all
+PYTHONPATH=src python -m pytest tests/test_bem_finite_depth_anchors.py -q
+```
