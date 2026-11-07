@@ -1,0 +1,255 @@
+{
+  "study": "bem_ellipsoid_wave",
+  "hull": "surface-piercing spheroid (half ellipsoid)",
+  "geometry": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.6,
+    "L_over_B": 10.0,
+    "T_over_L": 0.06
+  },
+  "hydrostatic_reference": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.6,
+    "volume": 3.141592653589793,
+    "Cb": 0.5235987755982988,
+    "Cm": 0.7853981633974483,
+    "Cp": 0.6666666666666666,
+    "waterplane_area": 7.853981633974483,
+    "I_xx": 0.4908738521234052,
+    "I_yy": 49.087385212340514,
+    "center_of_buoyancy_z": -0.22499999999999998,
+    "KB": 0.375
+  },
+  "wetted_area_reference": 13.67280588456253,
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "method": {
+    "reference": "Michell amplitude with the depth integral done analytically, lambda form, tail extrapolated",
+    "panel": "flat centreplane panels on a cosine-clustered (psi, phi) grid, 2x2 Gauss per panel",
+    "lam_max": 40.0,
+    "n_lam": 360,
+    "panel_n_lam": 240,
+    "coarse_lam_max": 80.0,
+    "truncation_rule": "the lambda integral is truncated at lam_max; the residual is measured, not extrapolated, by repeating the reference at the coarse_lam_max reported here"
+  },
+  "cases": [
+    {
+      "froude_number": 0.2,
+      "speed": 1.9805706248452741,
+      "Rw_reference": 75.76156525454925,
+      "Rw_reference_coarse_truncation": 75.63037483906662,
+      "truncation_sensitivity": 0.0017316222947856468,
+      "Rw_theta_form": 75.97420003648612,
+      "theta_form_rel_difference": 0.0028066313205441897,
+      "Cw_reference": 0.0027562382412499873,
+      "Cw_panel": 0.00272567853630853,
+      "levels": [
+        {
+          "n_psi": 16,
+          "n_phi": 128,
+          "panel_count": 2048,
+          "Rw_panel": 72.98872808399256,
+          "rel_error_vs_reference": 0.0365995232706758,
+          "signed_error_vs_reference": -0.0365995232706758
+        },
+        {
+          "n_psi": 32,
+          "n_phi": 256,
+          "panel_count": 8192,
+          "Rw_panel": 74.14207344162645,
+          "rel_error_vs_reference": 0.021376166232594532,
+          "signed_error_vs_reference": -0.021376166232594532
+        },
+        {
+          "n_psi": 64,
+          "n_phi": 512,
+          "panel_count": 32768,
+          "Rw_panel": 74.92156127904677,
+          "rel_error_vs_reference": 0.011087468595457032,
+          "signed_error_vs_reference": -0.011087468595457032
+        }
+      ],
+      "production": {
+        "n_psi": 64,
+        "n_phi": 512
+      },
+      "gci": {
+        "order": 0.5652261607465153,
+        "gci_fine": 0.02711538401055971,
+        "rel_change": 0.010404052239609666,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 0.011087468595457032,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 0.02711538401055971,
+          "limit": 0.03,
+          "passed": true
+        },
+        "reference_two_forms": {
+          "measured": 0.0028066313205441897,
+          "limit": 0.005,
+          "passed": true
+        },
+        "lambda_truncation": {
+          "measured": 0.0017316222947856468,
+          "limit": 0.005,
+          "passed": true
+        }
+      }
+    },
+    {
+      "froude_number": 0.3,
+      "speed": 2.970855937267911,
+      "Rw_reference": 266.0728354372621,
+      "Rw_reference_coarse_truncation": 266.0808521981064,
+      "truncation_sensitivity": 3.012994855770556e-05,
+      "Rw_theta_form": 266.16046884218383,
+      "theta_form_rel_difference": 0.0003293587065275947,
+      "Cw_reference": 0.004302152836855114,
+      "Cw_panel": 0.004264648785772841,
+      "levels": [
+        {
+          "n_psi": 16,
+          "n_phi": 128,
+          "panel_count": 2048,
+          "Rw_panel": 256.5424782688262,
+          "rel_error_vs_reference": 0.03581860264981121,
+          "signed_error_vs_reference": -0.03581860264981121
+        },
+        {
+          "n_psi": 32,
+          "n_phi": 256,
+          "panel_count": 8192,
+          "Rw_panel": 261.3945663373061,
+          "rel_error_vs_reference": 0.01758266337962587,
+          "signed_error_vs_reference": -0.01758266337962587
+        },
+        {
+          "n_psi": 64,
+          "n_phi": 512,
+          "panel_count": 32768,
+          "Rw_panel": 263.7533434084436,
+          "rel_error_vs_reference": 0.008717507839560795,
+          "signed_error_vs_reference": -0.008717507839560795
+        }
+      ],
+      "production": {
+        "n_psi": 64,
+        "n_phi": 512
+      },
+      "gci": {
+        "order": 1.040566661130125,
+        "gci_fine": 0.010575706309859876,
+        "rel_change": 0.00894311723466841,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 0.008717507839560795,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 0.010575706309859876,
+          "limit": 0.03,
+          "passed": true
+        },
+        "reference_two_forms": {
+          "measured": 0.0003293587065275947,
+          "limit": 0.005,
+          "passed": true
+        },
+        "lambda_truncation": {
+          "measured": 3.012994855770556e-05,
+          "limit": 0.005,
+          "passed": true
+        }
+      }
+    },
+    {
+      "froude_number": 0.4,
+      "speed": 3.9611412496905483,
+      "Rw_reference": 469.0760105347426,
+      "Rw_reference_coarse_truncation": 469.09937806385955,
+      "truncation_sensitivity": 4.98160822386306e-05,
+      "Rw_theta_form": 468.1771708903987,
+      "theta_form_rel_difference": 0.0019161918839532993,
+      "Cw_reference": 0.004266296617370922,
+      "Cw_panel": 0.004241872982157866,
+      "levels": [
+        {
+          "n_psi": 16,
+          "n_phi": 128,
+          "panel_count": 2048,
+          "Rw_panel": 457.83894390793085,
+          "rel_error_vs_reference": 0.023955747841381967,
+          "signed_error_vs_reference": -0.023955747841381967
+        },
+        {
+          "n_psi": 32,
+          "n_phi": 256,
+          "panel_count": 8192,
+          "Rw_panel": 463.64211662920974,
+          "rel_error_vs_reference": 0.011584250278197449,
+          "signed_error_vs_reference": -0.011584250278197449
+        },
+        {
+          "n_psi": 64,
+          "n_phi": 512,
+          "panel_count": 32768,
+          "Rw_panel": 466.3906507494316,
+          "rel_error_vs_reference": 0.005724786015489699,
+          "signed_error_vs_reference": -0.005724786015489699
+        }
+      ],
+      "production": {
+        "n_psi": 64,
+        "n_phi": 512
+      },
+      "gci": {
+        "order": 1.0781794797623538,
+        "gci_fine": 0.006628306870861744,
+        "rel_change": 0.005893201580703422,
+        "refinement": 2.0
+      },
+      "criteria": {
+        "wave_resistance_error": {
+          "measured": 0.005724786015489699,
+          "limit": 0.05,
+          "passed": true
+        },
+        "gci": {
+          "measured": 0.006628306870861744,
+          "limit": 0.03,
+          "passed": true
+        },
+        "reference_two_forms": {
+          "measured": 0.0019161918839532993,
+          "limit": 0.005,
+          "passed": true
+        },
+        "lambda_truncation": {
+          "measured": 4.98160822386306e-05,
+          "limit": 0.005,
+          "passed": true
+        }
+      }
+    }
+  ],
+  "all_criteria_passed": true,
+  "evidence_level": "REAL for the discretisation (two independent quadratures of Michell theory); WITHHELD for absolute validation against experiment",
+  "artifacts": {
+    "results_json": "benchmarks/verified/bem_ellipsoid_wave/results.json",
+    "report_md": "benchmarks/verified/bem_ellipsoid_wave/report.md",
+    "figure_png": "benchmarks/verified/bem_ellipsoid_wave/figures/bem_ellipsoid_wave.png"
+  }
+}

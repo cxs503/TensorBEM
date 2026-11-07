@@ -1,0 +1,338 @@
+{
+  "study": "bem_multihull_interference",
+  "hull": "two Wigley III hulls in tandem on the same track",
+  "geometry": {
+    "L": 10.0,
+    "B": 1.0,
+    "T": 0.625
+  },
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "definition": "sigma = R_pair / (2 R_single); gap = clear distance between the fore hull's AP and the aft hull's FP; centre distance d = L (1 + gap)",
+  "panel_grid": {
+    "n_x": 40,
+    "n_z": 40
+  },
+  "gci_panel_grids": [
+    [
+      20,
+      20
+    ],
+    [
+      40,
+      40
+    ],
+    [
+      80,
+      80
+    ]
+  ],
+  "cases": [
+    {
+      "froude_number": 0.2,
+      "gap_over_L": 0.5,
+      "centre_distance_over_L": 1.5,
+      "Rw_single_reference": 26.5492039039494,
+      "Rw_single_panel": 26.72264527496655,
+      "single_rel_error": 0.0065328275621608116,
+      "Rw_pair_reference": 73.12979160086773,
+      "Rw_pair_panel": 73.57054588945988,
+      "sigma_reference": 1.377250177923209,
+      "sigma_panel": 1.376558067744511,
+      "sigma_abs_difference": 0.0006921101786978578,
+      "sigma_by_grid": {
+        "20x20": 1.3697560157441087,
+        "40x40": 1.376558067744511,
+        "80x80": 1.3770327592143157
+      },
+      "sigma_gci": {
+        "order": 3.840908005304518,
+        "gci_fine": 3.232704552621203e-05,
+        "rel_change": 0.000344720535243804,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.2,
+      "gap_over_L": 1.0,
+      "centre_distance_over_L": 2.0,
+      "Rw_single_reference": 26.5492039039494,
+      "Rw_single_panel": 26.72264527496655,
+      "single_rel_error": 0.0065328275621608116,
+      "Rw_pair_reference": 69.82537453713773,
+      "Rw_pair_panel": 70.22417206610469,
+      "sigma_reference": 1.315018235382016,
+      "sigma_panel": 1.3139449957802238,
+      "sigma_abs_difference": 0.0010732396017920642,
+      "sigma_by_grid": {
+        "20x20": 1.3008846461874035,
+        "40x40": 1.3139449957802238,
+        "80x80": 1.315008091339004
+      },
+      "sigma_gci": {
+        "order": 3.6188503269712404,
+        "gci_fine": 8.954561854624844e-05,
+        "rel_change": 0.0008084327129103544,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.2,
+      "gap_over_L": 2.0,
+      "centre_distance_over_L": 3.0,
+      "Rw_single_reference": 26.5492039039494,
+      "Rw_single_panel": 26.72264527496655,
+      "single_rel_error": 0.0065328275621608116,
+      "Rw_pair_reference": 67.27518883213286,
+      "Rw_pair_panel": 67.6462448467339,
+      "sigma_reference": 1.2669906991472002,
+      "sigma_panel": 1.2657101149732373,
+      "sigma_abs_difference": 0.0012805841739629287,
+      "sigma_by_grid": {
+        "20x20": 1.2730348521028667,
+        "40x40": 1.2657101149732373,
+        "80x80": 1.2668966997881583
+      },
+      "sigma_gci": {
+        "order": 2.62596175955305,
+        "gci_fine": 0.0002263230148188658,
+        "rel_change": 0.0009366073927885975,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.3,
+      "gap_over_L": 0.5,
+      "centre_distance_over_L": 1.5,
+      "Rw_single_reference": 144.139937465577,
+      "Rw_single_panel": 144.1766246485441,
+      "single_rel_error": 0.0002545247598423272,
+      "Rw_pair_reference": 324.87853659072965,
+      "Rw_pair_panel": 324.95134522939253,
+      "sigma_reference": 1.1269553126742407,
+      "sigma_panel": 1.126921045701821,
+      "sigma_abs_difference": 3.426697241959431e-05,
+      "sigma_by_grid": {
+        "20x20": 1.1265225599636322,
+        "40x40": 1.126921045701821,
+        "80x80": 1.1269540692910731
+      },
+      "sigma_gci": {
+        "order": 3.5929592542270417,
+        "gci_fine": 3.3098624135581767e-06,
+        "rel_change": 2.9303402997453944e-05,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.3,
+      "gap_over_L": 1.0,
+      "centre_distance_over_L": 2.0,
+      "Rw_single_reference": 144.139937465577,
+      "Rw_single_panel": 144.1766246485441,
+      "single_rel_error": 0.0002545247598423272,
+      "Rw_pair_reference": 254.50961791929373,
+      "Rw_pair_panel": 254.57364998050824,
+      "sigma_reference": 0.882856002279295,
+      "sigma_panel": 0.8828534119212331,
+      "sigma_abs_difference": 2.5903580618269473e-06,
+      "sigma_by_grid": {
+        "20x20": 0.8838559193963074,
+        "40x40": 0.8828534119212331,
+        "80x80": 0.8828569774616006
+      },
+      "sigma_gci": {
+        "order": 8.135276540995752,
+        "gci_fine": 1.801897695686388e-08,
+        "rel_change": 4.038638713331965e-06,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.3,
+      "gap_over_L": 2.0,
+      "centre_distance_over_L": 3.0,
+      "Rw_single_reference": 144.139937465577,
+      "Rw_single_panel": 144.1766246485441,
+      "single_rel_error": 0.0002545247598423272,
+      "Rw_pair_reference": 227.08324965928816,
+      "Rw_pair_panel": 227.13558708259228,
+      "sigma_reference": 0.7877180108861896,
+      "sigma_panel": 0.787699072704314,
+      "sigma_abs_difference": 1.893818187559404e-05,
+      "sigma_by_grid": {
+        "20x20": 0.7872197436918381,
+        "40x40": 0.787699072704314,
+        "80x80": 0.7877204364952762
+      },
+      "sigma_gci": {
+        "order": 4.487776686772356,
+        "gci_fine": 1.5814739460570307e-06,
+        "rel_change": 2.7121031742216606e-05,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.4,
+      "gap_over_L": 0.5,
+      "centre_distance_over_L": 1.5,
+      "Rw_single_reference": 327.1121206424564,
+      "Rw_single_panel": 327.12069457619464,
+      "single_rel_error": 2.6210993715006844e-05,
+      "Rw_pair_reference": 329.4098245748768,
+      "Rw_pair_panel": 329.42668171185784,
+      "sigma_reference": 0.5035121045467646,
+      "sigma_panel": 0.503524673268762,
+      "sigma_abs_difference": 1.2568721997396892e-05,
+      "sigma_by_grid": {
+        "20x20": 0.5037976943358445,
+        "40x40": 0.503524673268762,
+        "80x80": 0.5035116443571688
+      },
+      "sigma_gci": {
+        "order": 4.389223803425707,
+        "gci_fine": 1.6209011270302482e-06,
+        "rel_change": 2.587608795007176e-05,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.4,
+      "gap_over_L": 1.0,
+      "centre_distance_over_L": 2.0,
+      "Rw_single_reference": 327.1121206424564,
+      "Rw_single_panel": 327.12069457619464,
+      "single_rel_error": 2.6210993715006844e-05,
+      "Rw_pair_reference": 916.920759738262,
+      "Rw_pair_panel": 916.938163045607,
+      "sigma_reference": 1.4015389554159696,
+      "sigma_panel": 1.4015288213935193,
+      "sigma_abs_difference": 1.0134022450314362e-05,
+      "sigma_by_grid": {
+        "20x20": 1.4013079504569028,
+        "40x40": 1.4015288213935193,
+        "80x80": 1.4015393407788577
+      },
+      "sigma_gci": {
+        "order": 4.392081280003545,
+        "gci_fine": 4.69180257619769e-07,
+        "rel_change": 7.505594050976232e-06,
+        "refinement": 2.0
+      }
+    },
+    {
+      "froude_number": 0.4,
+      "gap_over_L": 2.0,
+      "centre_distance_over_L": 3.0,
+      "Rw_single_reference": 327.1121206424564,
+      "Rw_single_panel": 327.12069457619464,
+      "single_rel_error": 2.6210993715006844e-05,
+      "Rw_pair_reference": 862.4268548158815,
+      "Rw_pair_panel": 862.4439830209162,
+      "sigma_reference": 1.318243501833643,
+      "sigma_panel": 1.3182351305200461,
+      "sigma_abs_difference": 8.371313596766683e-06,
+      "sigma_by_grid": {
+        "20x20": 1.3180060889860499,
+        "40x40": 1.3182351305200461,
+        "80x80": 1.3182438126553688
+      },
+      "sigma_gci": {
+        "order": 4.721415518551937,
+        "gci_fine": 3.243663501594486e-07,
+        "rel_change": 6.586137738201069e-06,
+        "refinement": 2.0
+      }
+    }
+  ],
+  "spacing_sweep": {
+    "froude_number": 0.3,
+    "points": [
+      {
+        "gap_over_L": 0.05,
+        "sigma_reference": 1.6013014021486922
+      },
+      {
+        "gap_over_L": 0.1,
+        "sigma_reference": 1.4373275245372814
+      },
+      {
+        "gap_over_L": 0.25,
+        "sigma_reference": 0.6953163398316655
+      },
+      {
+        "gap_over_L": 0.5,
+        "sigma_reference": 1.1268050026754612
+      },
+      {
+        "gap_over_L": 0.75,
+        "sigma_reference": 1.0111539955447537
+      },
+      {
+        "gap_over_L": 1.0,
+        "sigma_reference": 0.8831346244510595
+      },
+      {
+        "gap_over_L": 1.5,
+        "sigma_reference": 0.7702460345788894
+      },
+      {
+        "gap_over_L": 2.0,
+        "sigma_reference": 0.7931249894870445
+      },
+      {
+        "gap_over_L": 3.0,
+        "sigma_reference": 1.059898087906498
+      },
+      {
+        "gap_over_L": 4.0,
+        "sigma_reference": 1.1648807129083756
+      },
+      {
+        "gap_over_L": 6.0,
+        "sigma_reference": 0.8232523378721311
+      }
+    ]
+  },
+  "limits": {
+    "sigma_coincident": 2.0,
+    "sigma_far_60L": 1.0107282951612135,
+    "froude_number": 0.3
+  },
+  "criteria": {
+    "sigma_agreement": {
+      "measured": 0.0012805841739629287,
+      "limit": 0.02,
+      "passed": true
+    },
+    "sigma_coincident_limit": {
+      "measured": 0.0,
+      "limit": 1e-06,
+      "passed": true
+    },
+    "sigma_far_field_trend": {
+      "measured": 0.010728295161213541,
+      "limit": 0.1,
+      "passed": true
+    },
+    "single_hull_panel_error": {
+      "measured": 0.0065328275621608116,
+      "limit": 0.05,
+      "passed": true
+    },
+    "gci_sigma": {
+      "measured": 0.0002263230148188658,
+      "limit": 0.03,
+      "passed": true
+    }
+  },
+  "all_criteria_passed": true,
+  "evidence_level": "REAL for the interference factor (a ratio, so free of the Michell constant); WITHHELD for absolute resistance validation",
+  "artifacts": {
+    "results_json": "benchmarks/verified/bem_multihull_interference/results.json",
+    "report_md": "benchmarks/verified/bem_multihull_interference/report.md",
+    "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png"
+  }
+}
