@@ -6,15 +6,15 @@
 
 | 指标 | 值 |
 |---|---:|
-| 被审计文档数 | 94 |
-| PINNED（测试直接解析文档） | 40 |
+| 被审计文档数 | 96 |
+| PINNED（测试直接解析文档） | 42 |
 | ARTIFACT（生成模块被测、文档文本未解析） | 32 |
 | UNGUARDED（无人守） | 22 |
 | 其中论文级 UNGUARDED | 8 |
-| 数字 token 总数 | 10868 |
-| 已守数字 token | 9461 |
-| 数字覆盖率 | 87.1% |
-| 文档覆盖率 | 76.6% |
+| 数字 token 总数 | 11126 |
+| 已守数字 token | 9719 |
+| 数字覆盖率 | 87.4% |
+| 文档覆盖率 | 77.1% |
 
 ## 2. 论文级未守文档（按数字量降序，前 15）
 
@@ -44,11 +44,11 @@
 | `ice_water_ship_numbers.md` | ARTIFACT | 278 | 101 | `tensorbem.benchmarks.ice_ship_verification` |
 | `michell_validation.md` | ARTIFACT | 255 | 351 | `tensorbem.benchmarks.michell_validation` |
 | `irregular_frequency_study.md` | ARTIFACT | 233 | 180 | `tensorbem.benchmarks.irregular_frequency_study` |
-| `near_surface_error_budget.md` | ARTIFACT | 219 | 202 | `tensorbem.benchmarks.near_surface_error_budget` |
 | `ice_water_ship.md` | ARTIFACT | 150 | 344 | `tensorbem.benchmarks.ice_ship_verification` |
 | `hydrostatic_benchmarks_report.md` | ARTIFACT | 141 | 74 | `tensorbem.benchmarks.hydrostatic_benchmarks` |
 | `verification_hydrostatic_rao.md` | ARTIFACT | 126 | 185 | `tensorbem.benchmarks.hydrostatic_rao_verification` |
 | `hydrostatic_verification.md` | ARTIFACT | 117 | 174 | `tensorbem.benchmarks.hydrostatic_convergence`, `tensorbem.benchmarks.hydrostatic_figures` |
+| `near_wall_envelope.md` | ARTIFACT | 109 | 191 | `tensorbem.benchmarks.near_wall_envelope_study` |
 | `verification_doc_numbers_maccamy_fuchs.md` | ARTIFACT | 107 | 101 | `tensorbem.benchmarks.maccamy_fuchs` |
 | `ursell_validation_note.md` | ARTIFACT | 105 | 100 | `tensorbem.benchmarks.ursell_cylinder` |
 | `time_domain_pulse.md` | ARTIFACT | 104 | 343 | `tensorbem.benchmarks.time_domain_pulse` |
@@ -73,11 +73,13 @@
 | `three_dimensional_bem.md` | PINNED | 271 | 570 | `tensorbem.benchmarks.mesh_doc_pins`, `tensorbem.benchmarks.sphere_added_mass`, `tensorbem.benchmarks.three_dimensional_study`, `tensorbem.benchmarks.sphere_velocity`, `tensorbem.benchmarks.surface_velocity_study`, `tensorbem.benchmarks.three_dimensional_doc_pins`, `tensorbem.benchmarks.prose_claims` |
 | `lifting_camber.md` | PINNED | 244 | 152 | `tensorbem.benchmarks.lifting_camber` |
 | `bem_verified_anchors.md` | PINNED | 228 | 238 | `tensorbem.benchmarks.bem_verified_anchors` |
+| `near_surface_error_budget.md` | PINNED | 226 | 217 | `tensorbem.benchmarks.near_surface_error_budget` |
 | `classical_benchmarks.md` | PINNED | 209 | 376 | `tensorbem.benchmarks.declared_numbers`, `tensorbem.benchmarks.interior_harmonics`, `tensorbem.benchmarks.ellipse_added_mass`, `tensorbem.benchmarks.ellipsoid_added_mass`, `tensorbem.benchmarks.classical_study` |
 | `bem_hydroelastic.md` | PINNED | 176 | 197 | `tensorbem.benchmarks.hydroelastic_verification` |
 | `lifting_kutta_closure.md` | PINNED | 174 | 112 | `tensorbem.benchmarks.lifting_solver` |
 | `ursell_convergence_study.md` | PINNED | 171 | 271 | `tensorbem.benchmarks.ursell_convergence_doc` |
 | `annulus_laplace.md` | PINNED | 158 | 199 | `tensorbem.benchmarks.annulus_laplace` |
+| `tank_free_surface_correction.md` | PINNED | 142 | 195 | `tensorbem.benchmarks.tank_free_surface_verification` |
 | `verification.md` | PINNED | 132 | 255 | `tensorbem.benchmarks.analytical_suite` |
 | `near_surface_field.md` | PINNED | 120 | 243 | `tensorbem.benchmarks.near_surface_field` |
 | `kkr_causality_band_study.md` | PINNED | 119 | 176 | — |
@@ -111,5 +113,3 @@
 | `merge_report_m3929_pr134.md` | UNGUARDED | 1 | 69 | — |
 | `PROJECT_CHARTER.md` | UNGUARDED | 0 | 28 | — |
 | `report_publish_incident_m2141.md` | UNGUARDED | 0 | 25 | `tensorbem.benchmarks.hydrostatic_figures` |
-| `ursell_band_audit.md` | ARTIFACT | 451 | 78 | `tensorbem.benchmarks.ursell_band_audit` |
-| `hydrostatic_verification_m2127_zh.md` | ARTIFACT | 258 | 170 | `tensorbem.benchmarks.hydrostatic_analytic` |

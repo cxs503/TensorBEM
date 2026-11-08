@@ -1,16 +1,16 @@
 {
   "counts": {
     "artifact": 32,
-    "documents": 94,
-    "number_tokens": 10868,
-    "number_tokens_covered": 9461,
-    "pinned": 40,
+    "documents": 96,
+    "number_tokens": 11126,
+    "number_tokens_covered": 9719,
+    "pinned": 42,
     "unguarded": 22,
     "unguarded_paper_level": 8
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7659574468085106,
-    "guarded_number_fraction": 0.8705373573794627
+    "documents_guarded_fraction": 0.7708333333333334,
+    "guarded_number_fraction": 0.8735394571274492
   },
   "records": [
     {
@@ -319,6 +319,7 @@
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
       "note": "generator exercised; document text not parsed",
@@ -396,6 +397,7 @@
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
       "note": "read by 1 test file(s)",
@@ -453,6 +455,7 @@
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
       "note": "read by 3 test file(s)",
@@ -1114,15 +1117,17 @@
       "generators": [
         "tensorbem.benchmarks.near_surface_error_budget"
       ],
-      "lines": 202,
+      "lines": 217,
       "modules_exercised": [
         "test_near_surface_error_budget.py"
       ],
-      "note": "generator exercised; document text not parsed",
-      "number_tokens": 219,
+      "note": "read by 1 test file(s)",
+      "number_tokens": 226,
       "paper_level": true,
-      "reading_tests": [],
-      "tier": "ARTIFACT"
+      "reading_tests": [
+        "test_near_wall_envelope.py"
+      ],
+      "tier": "PINNED"
     },
     {
       "artifact": "docs/near_surface_field/results.json",
@@ -1142,6 +1147,22 @@
         "test_near_surface_error_budget.py"
       ],
       "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/near_wall_envelope/study.json",
+      "doc": "near_wall_envelope.md",
+      "generators": [
+        "tensorbem.benchmarks.near_wall_envelope_study"
+      ],
+      "lines": 191,
+      "modules_exercised": [
+        "test_near_wall_envelope.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 109,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
     },
     {
       "artifact": null,
@@ -1371,6 +1392,25 @@
       "paper_level": true,
       "reading_tests": [
         "test_symmetry3d.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": "docs/tank_free_surface_correction/study.json",
+      "doc": "tank_free_surface_correction.md",
+      "generators": [
+        "tensorbem.benchmarks.tank_free_surface_verification"
+      ],
+      "lines": 195,
+      "modules_exercised": [
+        "test_tank_free_surface.py",
+        "test_tank_free_surface_doc_pins.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 142,
+      "paper_level": true,
+      "reading_tests": [
+        "test_tank_free_surface_doc_pins.py"
       ],
       "tier": "PINNED"
     },
