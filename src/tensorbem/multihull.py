@@ -68,9 +68,14 @@ Honest scope
   as in the single-hull Michell anchor.  Viscous resistance is excluded by
   construction, so ``sigma`` is a *wave*-resistance interference factor.
 * "In line" means a pure longitudinal offset ``d`` (no lateral offset, no
-  stagger in draft).  Side-by-side (catamaran) interference needs the lateral
-  wave-number phase ``exp(i k0 lam? ...)`` of the transverse system and is a
-  different, harder integral; it is **not** implemented here.
+  stagger in draft).  *Side-by-side* (catamaran) interference is a separate
+  integral because the offset enters through the **transverse** wave number
+  ``k_y = k sin(theta) = k0 lam sqrt(lam^2 - 1)`` instead of the longitudinal
+  one; it is implemented in the ``lateral_*`` functions below
+  (:func:`lateral_interference_factor`, :func:`lateral_interference_curve`,
+  :func:`lateral_wave_resistance`), verified in
+  ``tests/test_multihull_lateral.py`` and reported in
+  ``docs/multihull_lateral.md``.  The tandem functions above are unchanged.
 * Identical hulls only.  Different hulls are a trivial extension of
   :func:`tandem_kochin` (sum two different Kochin functions) but are untested
   and therefore not offered.
@@ -98,11 +103,19 @@ __all__ = [
     "wigley_centreplane_panels",
     "wigley_panel_kochin",
     "explicit_pair_kochin",
+    "explicit_lateral_pair_kochin",
     "tandem_kochin",
     "interference_factor",
     "interference_curve",
     "wave_number_k0",
     "tandem_wave_resistance",
+    "lateral_wavenumber",
+    "lateral_kochin",
+    "lateral_wave_resistance",
+    "lateral_interference_factor",
+    "lateral_interference_curve",
+    "lateral_wave_resistance_theta",
+    "lateral_phase_moments",
 ]
 
 _DEFAULT_DENSITY = 1025.0
@@ -418,3 +431,296 @@ def analytic_wigley_kochin(L: float, B: float, T: float) -> KochinFunction:
         return michell_kochin_function(L, B, T, k)
 
     return kochin
+
+# ---------------------------------------------------------------------------
+# Side-by-side (catamaran) interference: the transverse wave-number phase
+# ---------------------------------------------------------------------------
+def lateral_wavenumber(k: float, k0: float) -> float:
+    r"""Transverse wave number of the steady wave system whose *longitudinal*
+    wave number is ``k``.
+
+    Deep-water steady waves at forward speed ``U`` satisfy the encounter
+    condition ``omega = U k cos(theta)`` together with ``omega^2 = g k``, hence
+
+        k = k0 / cos^2(theta),      k0 = g / U^2,
+
+    and the wave vector splits into
+
+        k_x = k cos(theta) = k0 sec(theta) = k0 lambda,     lambda = sec(theta)
+        k_y = k sin(theta) = k0 lambda sqrt(lambda^2 - 1)
+                           = k sqrt(k^2 - k0^2) / k0.
+
+    ``k_x`` is the argument the Kochin functions of this package take
+    (``michell_kochin_function`` integrates ``exp(i k x)``), so a hull displaced
+    by ``b`` in ``y`` multiplies its Kochin function by ``exp(i k_y b)`` while a
+    hull displaced by ``d`` in ``x`` multiplies it by ``exp(i k_x d)`` -- the
+    difference between the tandem and the lateral problem, and the reason the
+    lateral phase needs ``k0`` explicitly.
+
+    Transverse waves (``theta -> 0``, ``lambda -> 1``) have ``k_y -> 0``: the
+    purely transverse system does not interfere, only the diverging waves do.
+    """
+    kk = float(k)
+    kk0 = float(k0)
+    if not math.isfinite(kk0) or kk0 <= 0.0:
+        raise ValueError("k0 = g/U^2 must be positive and finite")
+    if kk < 0.0 or not math.isfinite(kk):
+        raise ValueError("k must be non-negative and finite")
+    if kk <= kk0:
+        return 0.0
+    return kk * math.sqrt(kk * kk - kk0 * kk0) / kk0
+
+
+def lateral_kochin(
+    kochin: KochinFunction, *, k0: float, separation: float
+) -> KochinFunction:
+    """``H_pair(k) = H(k) (1 + exp(i k_y b))`` for two identical hulls abreast.
+
+    ``separation`` is the transverse distance between the two hull *centreplanes*
+    (the catamaran hull spacing), ``k0 = g/U^2``.  ``|1 + exp(i k_y b)|^2 =
+    2 (1 + cos(k_y b))``, so ``separation = 0`` doubles the Kochin function (four
+    times the resistance, hence ``sigma = 2``) and a large separation averages the
+    cosine to zero (``sigma -> 1``).
+    """
+    b = float(separation)
+    if b < 0.0 or not math.isfinite(b):
+        raise ValueError("separation must be non-negative and finite")
+    kk0 = float(k0)
+    if not math.isfinite(kk0) or kk0 <= 0.0:
+        raise ValueError("k0 = g/U^2 must be positive and finite")
+
+    def pair(k: float) -> complex:
+        return kochin(k) * (1.0 + cmath.exp(1j * lateral_wavenumber(k, kk0) * b))
+
+    return pair
+
+
+def explicit_lateral_pair_kochin(
+    k: float,
+    L: float,
+    B: float,
+    T: float,
+    *,
+    separation: float,
+    k0: float,
+    n_x: int,
+    n_z: int,
+    scheme: str = "source_integrated",
+) -> complex:
+    """Pair Kochin function from the two hulls placed at ``y = +-b/2``.
+
+    No superposition identity is used: each demi-hull's own panel grid is
+    evaluated with *its* own transverse offset (``+-separation/2``) and the two
+    complex values are added, which gives ``2 H(k) cos(k_y b / 2)``.  Written
+    this way the pair is *centred on the origin*, so it differs from the
+    factorised :func:`lateral_kochin` by the global translation phase
+    ``exp(-i k_y b / 2)``:
+
+        explicit = exp(-i k_y b / 2) * lateral_kochin(...),
+
+    i.e. the two agree in modulus and therefore give the *same* resistance (a
+    y-translation cannot change the wave resistance).  Those two statements are
+    the identities tested in ``tests/test_multihull_lateral.py``; a
+    factor-of-two error in the phase (``b`` versus ``b/2``) shows up in the
+    modulus.
+    """
+    b = float(separation)
+    if b < 0.0 or not math.isfinite(b):
+        raise ValueError("separation must be non-negative and finite")
+    panels = wigley_centreplane_panels(L, B, T, n_x=n_x, n_z=n_z, scheme=scheme)
+    ky = lateral_wavenumber(float(k), float(k0))
+    half = 0.5 * b
+    return panels.kochin(float(k)) * (
+        cmath.exp(1j * ky * half) + cmath.exp(-1j * ky * half)
+    )
+
+
+def lateral_wave_resistance(
+    kochin: KochinFunction,
+    *,
+    k0: float,
+    separation: float,
+    rho: float = _DEFAULT_DENSITY,
+    g: float = _DEFAULT_GRAVITY,
+    n_quad: int = 256,
+    lambda_max: float | None = None,
+) -> tuple[float, float]:
+    """``(R_W,single, R_W,pair)`` for two identical hulls abreast.
+
+    Both numbers come from the *same* Kelvin-wake quadrature
+    (:func:`tensorbem.ellipsoid_kochin.kelvin_wave_resistance`), so the ratio is
+    free of the ``Cw`` normalisation ambiguity -- exactly as in
+    :func:`tandem_wave_resistance`.
+    """
+    common = dict(k0=k0, rho=rho, g=g, n_quad=n_quad, lambda_max=lambda_max)
+    single = kelvin_wave_resistance(kochin, **common)
+    pair = kelvin_wave_resistance(
+        lateral_kochin(kochin, k0=k0, separation=separation), **common
+    )
+    return single, pair
+
+
+def lateral_interference_factor(
+    kochin: KochinFunction,
+    *,
+    k0: float,
+    separation: float,
+    rho: float = _DEFAULT_DENSITY,
+    g: float = _DEFAULT_GRAVITY,
+    n_quad: int = 256,
+    lambda_max: float | None = None,
+) -> float:
+    """``sigma(b) = R_W,pair(b) / (2 R_W,single)`` for the catamaran layout.
+
+    ``sigma(0) = 2`` exactly (coincident hulls), ``sigma -> 1`` for a wide
+    spacing, ``sigma < 1`` is a beneficial (destructive) interference.
+    """
+    single, pair = lateral_wave_resistance(
+        kochin,
+        k0=k0,
+        separation=separation,
+        rho=rho,
+        g=g,
+        n_quad=n_quad,
+        lambda_max=lambda_max,
+    )
+    if single <= 0.0:
+        return float("nan")
+    return pair / (2.0 * single)
+
+
+def lateral_interference_curve(
+    kochin: KochinFunction,
+    *,
+    k0: float,
+    separations: Sequence[float],
+    rho: float = _DEFAULT_DENSITY,
+    g: float = _DEFAULT_GRAVITY,
+    n_quad: int = 256,
+    lambda_max: float | None = None,
+) -> FloatArray:
+    """``sigma`` on a transverse-separation sweep (one Kelvin integral each)."""
+    return np.asarray(
+        [
+            lateral_interference_factor(
+                kochin,
+                k0=k0,
+                separation=float(b),
+                rho=rho,
+                g=g,
+                n_quad=n_quad,
+                lambda_max=lambda_max,
+            )
+            for b in separations
+        ],
+        dtype=float,
+    )
+
+
+@lru_cache(maxsize=16)
+def _gauss(n: int) -> tuple[FloatArray, FloatArray]:
+    from numpy.polynomial.legendre import leggauss
+
+    nodes, weights = leggauss(int(n))
+    return np.asarray(nodes, dtype=float), np.asarray(weights, dtype=float)
+
+
+def lateral_wave_resistance_theta(
+    kochin: KochinFunction,
+    *,
+    k0: float,
+    separation: float,
+    rho: float = _DEFAULT_DENSITY,
+    g: float = _DEFAULT_GRAVITY,
+    n_quad: int = 256,
+) -> tuple[float, float]:
+    r"""``(R_W,single, R_W,pair)`` in **wave-angle form** -- independent route.
+
+    With ``lambda = sec(theta)`` (:func:`tensorbem.ellipsoid_kochin.
+    kelvin_wave_resistance_theta` for the single hull) the Kelvin integral becomes
+
+        R_W = (4 rho / U^2) int_0^{pi/2} |H(k0 sec theta)|^2 cos(theta) dtheta,
+
+    and the lateral phase is written directly in the angle,
+
+        k_y b = k0 b sin(theta) / cos^2(theta),
+
+    so neither the ``lambda`` substitution nor the algebraic factor
+    ``2 (1 + cos(k_y b))`` is reused.  Agreement with
+    :func:`lateral_wave_resistance` is therefore a check of both the
+    substitution ``k_y = k sqrt(k^2 - k0^2)/k0`` and the quadrature.
+    """
+    kk0 = float(k0)
+    if not math.isfinite(kk0) or kk0 <= 0.0:
+        raise ValueError("k0 = g/U^2 must be positive and finite")
+    b = float(separation)
+    if b < 0.0 or not math.isfinite(b):
+        raise ValueError("separation must be non-negative and finite")
+
+    nodes, weights = _gauss(n_quad)
+    theta = 0.25 * math.pi * (nodes + 1.0)
+    w = 0.25 * math.pi * weights
+    single = 0.0
+    pair = 0.0
+    for th, wt in zip(theta, w):
+        cos_t = math.cos(th)
+        sec = 1.0 / cos_t
+        hk = kochin(kk0 * sec)
+        ky_b = kk0 * b * math.sin(th) / (cos_t * cos_t)
+        factor = 2.0 * (1.0 + math.cos(ky_b))
+        single += wt * abs(hk) ** 2 * cos_t
+        pair += wt * abs(hk) ** 2 * factor * cos_t
+    scale = 4.0 * rho * kk0 / g
+    return max(scale * single, 0.0), max(scale * pair, 0.0)
+
+
+def lateral_phase_moments(
+    kochin: KochinFunction,
+    *,
+    k0: float,
+    n_quad: int = 256,
+    lambda_max: float | None = None,
+) -> dict[str, float]:
+    r"""Weighted moments of the interference phase per unit spacing.
+
+    Write the lateral phase as ``k_y b = k0 b psi(lambda)`` with
+    ``psi(lambda) = lambda sqrt(lambda^2 - 1)`` and let ``<.>`` be the average
+    under the Kelvin weight ``|H|^2 / (lambda^2 sqrt(lambda^2 - 1))`` that forms
+    ``R_W,single``.  Since ``sigma = 1 + <cos(k0 b psi)>``,
+
+        sigma(b) = 2 - (k0 b)^2 <psi^2> / 2 + (k0 b)^4 <psi^4> / 24 - ...
+
+    so the *initial curvature* of the interference curve is an analytic moment
+    of the hull's own wave spectrum -- an independent check of the phase factor
+    (a wrong factor such as ``k`` instead of ``k_y`` changes ``<psi^2>``).
+
+    Returns ``m1``, ``m2``, ``m4`` (normalised moments of ``psi``) and
+    ``psi_mean_wavenumber`` = ``k0 * m1`` (dimension 1/length), the average
+    transverse wave number per unit spacing.
+    """
+    kk0 = float(k0)
+    if not math.isfinite(kk0) or kk0 <= 0.0:
+        raise ValueError("k0 = g/U^2 must be positive and finite")
+    lam_max = 60.0 if lambda_max is None else float(lambda_max)
+    if lam_max <= 1.0:
+        raise ValueError("lambda_max must exceed 1")
+
+    s_max = math.sqrt(lam_max - 1.0)
+    nodes, weights = _gauss(n_quad)
+    s = 0.5 * s_max * (nodes + 1.0)
+    w = 0.5 * s_max * weights
+    lam = 1.0 + s * s
+    psi = lam * np.sqrt(lam * lam - 1.0)
+    density = np.empty(n_quad, dtype=float)
+    for idx in range(n_quad):
+        hk = kochin(lam[idx] * kk0)
+        density[idx] = abs(hk) ** 2 * 2.0 / (lam[idx] ** 2 * math.sqrt(2.0 + s[idx] ** 2))
+    total = float(np.sum(w * density))
+    if total <= 0.0:
+        raise ValueError("zero Kelvin weight: the Kochin function vanishes")
+    return {
+        "m1": float(np.sum(w * density * psi) / total),
+        "m2": float(np.sum(w * density * psi * psi) / total),
+        "m4": float(np.sum(w * density * psi ** 4) / total),
+        "psi_mean_wavenumber": float(kk0 * np.sum(w * density * psi) / total),
+    }
