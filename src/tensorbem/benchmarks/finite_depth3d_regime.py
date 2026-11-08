@@ -203,7 +203,11 @@ def run(depth: float = 1.0, nu: float = 50.0) -> dict:
             "kernel": "tensorbem.finite_depth3d.green_function_3d",
             "deep_reference": "tensorbem.free_surface3d.green_function_3d",
             "shallow_reference": "(i/(4h))*H_0^{(1)}(k0*R)",
-            "z_over_h": Z_MID,
+            # Elevation is held at this ABSOLUTE value for every depth; it equals
+            # -h/2 only at h = 1 m. Quoting it as "z/h" made m4776 re-measure the
+            # ladder at the scaled mid-depth and read the (correct) ledger as stale
+            # -- see docs/finite_depth3d_deepwater_arbitration.md section 8.
+            "z_absolute": Z_MID,
             "python": platform.python_version(),
             "numpy": np.__version__,
         },
