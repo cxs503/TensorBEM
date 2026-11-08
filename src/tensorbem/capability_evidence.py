@@ -774,6 +774,31 @@ CAPABILITIES: tuple[Capability, ...] = (
         docs=(('docs/three_dimensional_bem.md', 'icosphere'),),
         note='Absent from the 2026-10-29 table although every row above depends on it.',
     ),
+    # ------------------------------------------------------------------
+    # Added 2026-11-08 (m6656).  The KCS-class hull anchors of the
+    # Wigley/KCS radiation-diffraction node are new code that no row named.
+    # ------------------------------------------------------------------
+    Capability(
+        key='kcs-class-hull-anchors',
+        title='Parametric KCS-class hull with published-particular anchors',
+        claim=(
+            'A fully parametric container-ship hull is solved to the published KCS L/B/T/Cb/Cm, '
+            'passes the Cb/L/B/T mesh gate before any solve, and reports its waterplane-coefficient '
+            'deficit instead of hiding it; the real KCS offset table and its EFD loads stay WITHHELD.'
+        ),
+        level=REAL,
+        modules=('tensorbem.kcs_hull',),
+        symbols=('kcs_class_hull', 'kcs_class_mesh', 'kcs_geometry_report'),
+        tests=(
+            'tests/test_wigley_kcs_kochin_energy.py::test_kcs_class_hull_matches_kcs_principal_particulars',
+            'tests/test_wigley_kcs_kochin_energy.py::test_kcs_class_mesh_passes_geometry_gate_and_reports_waterplane_deficit',
+        ),
+        docs=(('docs/m6656/README.md', 'KCS-class'),),
+        note=(
+            'Geometry anchors only: the hull is an idealisation (Cwp 17 % below the KCS value, no bulb '
+            'or appendages), so KCS predictions and the EFD comparison remain WITHHELD (limitations L2/L3).'
+        ),
+    ),
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
