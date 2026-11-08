@@ -1,0 +1,270 @@
+{
+  "mesh": {
+    "family": "hemisphere",
+    "subdivisions": 1,
+    "panels": 16
+  },
+  "state": {
+    "omega": 1.0,
+    "mass": 1000.0,
+    "center_of_gravity": [
+      0.0,
+      0.0,
+      -0.1
+    ],
+    "density": 1025.0,
+    "gravity": 9.80665
+  },
+  "single_frequency": [
+    {
+      "case": "baseline (valid)",
+      "note": "positive control",
+      "public_api": {
+        "returned": true,
+        "heave_amplitude": 0.981479,
+        "max_amplitude": 1.20098,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.666317894449551e-12
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.981479,
+        "max_amplitude": 1.20098,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.666317894449551e-12
+      }
+    },
+    {
+      "case": "mass = -1000 kg",
+      "note": "negative body mass",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "mass must be positive and finite, got -1000.0"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.910908,
+        "max_amplitude": 23.962598,
+        "non_finite_entries": 0,
+        "impedance_residual": 4.889881826097874e-13
+      }
+    },
+    {
+      "case": "mass = 0 kg",
+      "note": "massless body",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "mass must be positive and finite, got 0.0"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.944878,
+        "max_amplitude": 2.534645,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.668080157743203e-12
+      }
+    },
+    {
+      "case": "mass = NaN",
+      "note": "NaN poisoning",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "mass must be positive and finite, got nan"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": null,
+        "max_amplitude": null,
+        "non_finite_entries": 6,
+        "impedance_residual": null
+      }
+    },
+    {
+      "case": "omega = -1 rad/s",
+      "note": "omega**2 hides the sign",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "omega must be positive and finite, got -1.0"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.981479,
+        "max_amplitude": 1.200982,
+        "non_finite_entries": 0,
+        "impedance_residual": 5.684342055565587e-14
+      }
+    },
+    {
+      "case": "omega = NaN",
+      "note": "NaN poisoning",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "omega must be positive and finite, got nan"
+      },
+      "raw_assembly": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "nu must be positive and finite"
+      }
+    },
+    {
+      "case": "cg = (0, 0, NaN)",
+      "note": "NaN poisoning",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "center_of_gravity must be finite, got array([ 0.,  0., nan])"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": null,
+        "max_amplitude": null,
+        "non_finite_entries": 6,
+        "impedance_residual": null
+      }
+    },
+    {
+      "case": "cg shape (2,)",
+      "note": "bare IndexError",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "center_of_gravity must have shape (3,), got (2,)"
+      },
+      "raw_assembly": {
+        "returned": false,
+        "error_type": "IndexError",
+        "error": "index 2 is out of bounds for axis 0 with size 2"
+      }
+    },
+    {
+      "case": "inertia 2x2",
+      "note": "uncontrolled broadcast error",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "inertia must have shape (3, 3), got (2, 2)"
+      },
+      "raw_assembly": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "operands could not be broadcast together with shapes (2,2) (3,3) "
+      }
+    },
+    {
+      "case": "inertia asymmetric",
+      "note": "asymmetric J accepted",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "inertia must be symmetric; max asymmetry 2.000e+00 exceeds 1e-8 * 2.000e+00"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.981479,
+        "max_amplitude": 1.200986,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.7499696481470236e-12
+      }
+    },
+    {
+      "case": "inertia NaN",
+      "note": "NaN poisoning",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "inertia must be finite, got a non-finite entry"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": null,
+        "max_amplitude": null,
+        "non_finite_entries": 6,
+        "impedance_residual": null
+      }
+    },
+    {
+      "case": "extra_damping shape (6,)",
+      "note": "vector broadcast over matrix",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "extra_damping must have shape (6, 6), got (6,)"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.981479,
+        "max_amplitude": 1.20098,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.666317894449551e-12
+      }
+    },
+    {
+      "case": "extra_damping NaN",
+      "note": "NaN poisoning",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "extra_damping must be finite, got a non-finite entry"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": null,
+        "max_amplitude": null,
+        "non_finite_entries": 6,
+        "impedance_residual": null
+      }
+    },
+    {
+      "case": "extra_damping = -1e6 I",
+      "note": "negative damping = energy source",
+      "public_api": {
+        "returned": false,
+        "error_type": "ValueError",
+        "error": "extra_damping diagonal must be non-negative: a negative damping coefficient (-1.000e+06) is an energy source, not a damper"
+      },
+      "raw_assembly": {
+        "returned": true,
+        "heave_amplitude": 0.025335,
+        "max_amplitude": 0.025335,
+        "non_finite_entries": 0,
+        "impedance_residual": 3.6380065899061915e-12
+      }
+    }
+  ],
+  "frequency_sweep": [
+    {
+      "case": "omegas = [-1, -2]",
+      "returned": false,
+      "error": "omegas must be strictly positive: omega**2 enters through the dispersion relation, so a negative frequency is indistinguishable from its magnitude (got -2.0)"
+    },
+    {
+      "case": "omegas contains 0",
+      "returned": false,
+      "error": "omegas must be strictly positive: omega**2 enters through the dispersion relation, so a negative frequency is indistinguishable from its magnitude (got 0.0)"
+    },
+    {
+      "case": "omegas contains NaN",
+      "returned": false,
+      "error": "omegas must be finite"
+    },
+    {
+      "case": "omegas shape (1, 2)",
+      "returned": false,
+      "error": "omegas must be one-dimensional, got shape (1, 2)"
+    },
+    {
+      "case": "omegas = [0.6, 1.2] (valid)",
+      "returned": true,
+      "heave_amplitudes": [
+        0.993484,
+        0.972951
+      ]
+    }
+  ]
+}

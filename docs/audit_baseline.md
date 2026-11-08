@@ -119,7 +119,7 @@ correction log inside the generated block records what changed.
 | Rigid-body added mass (2-D / 3-D Neumann) | **REAL** | `tensorbem.benchmarks.rigid_body_added_mass`, `tensorbem.benchmarks.ellipsoid_added_mass` | 2 node(s) in 1 file(s) | `docs/classical_benchmarks.md` |
 | Surface velocity recovery | **REAL** | `tensorbem.recovery`, `tensorbem.solver3d` | 2 node(s) in 1 file(s) | `docs/pressure_forces.md` |
 | Hydrostatics (volume, Cb, waterplane, restoration) | **REAL** | `tensorbem.hydrostatic`, `tensorbem.wigley_hydrostatics` | 2 node(s) in 1 file(s) | `docs/hydrostatic_benchmarks_report.md` |
-| 6-DOF heave RAO coupling | **REAL** | `tensorbem.rao` | 2 node(s) in 1 file(s) | `dev_report_tensorbem-hydrostatic-rao.md` |
+| 6-DOF heave RAO coupling | **REAL** | `tensorbem.rao` | 5 node(s) in 2 file(s) | `dev_report_tensorbem-hydrostatic-rao.md`, `docs/rao_input_validation.md` |
 | Finite-depth kernels + solver (2-D) | **REAL** | `tensorbem.finite_depth`, `tensorbem.finite_depth_solver` (+1) | 2 node(s) in 2 file(s) | `docs/finite_depth_2d.md` |
 | Finite-depth kernels + solver (3-D) | **REAL** | `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature` (+1) | 2 node(s) in 1 file(s) | `docs/finite_depth3d.md` |
 | Forward-speed wave resistance (Wigley, Michell/Kochin) | **REAL** | `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification` | 2 node(s) in 2 file(s) | `docs/wigley_wave_resistance.md` |
