@@ -1,0 +1,158 @@
+{
+  "checks": {
+    "C1_closed_form_vs_polygon": {
+      "rectangle": {
+        "area": 8.0,
+        "centroid": [
+          2.0,
+          1.0
+        ],
+        "closed_form": {
+          "area": 8.0,
+          "i_xx": 2.6666666666666665,
+          "i_xy": 0.0,
+          "i_yy": 10.666666666666666
+        },
+        "i_xx": 2.666666666666666,
+        "i_xy": 0.0,
+        "i_yy": 10.666666666666664,
+        "max_relerr": 1.6653345369377348e-16
+      },
+      "triangle": {
+        "centroid": [
+          1.0,
+          0.6666666666666666
+        ],
+        "closed_form": {
+          "i_xx": 0.6666666666666666,
+          "i_xy": -0.5,
+          "i_yy": 1.5
+        },
+        "i_xx": 0.6666666666666667,
+        "i_xy": -0.5,
+        "i_yy": 1.5,
+        "max_relerr": 1.6653345369377348e-16
+      }
+    },
+    "C2_quadrature": {
+      "Lshape": [
+        {
+          "area_relerr": 2.9605947323337506e-16,
+          "i_xx_relerr": 2.7272727272663715e-05,
+          "i_xy": -5.333333333333332,
+          "i_xy_abs_err": 3.552713678800501e-15,
+          "i_yy_relerr": 2.7272727272179267e-05,
+          "n": 200
+        },
+        {
+          "area_relerr": 2.9605947323337506e-16,
+          "i_xx_relerr": 6.8181818179236985e-06,
+          "i_xy": -5.333333333333334,
+          "i_xy_abs_err": 1.7763568394002505e-15,
+          "i_yy_relerr": 6.818181817439241e-06,
+          "n": 400
+        },
+        {
+          "area_relerr": 2.9605947323337506e-16,
+          "i_xx_relerr": 1.7045454543598093e-06,
+          "i_xy": -5.333333333333334,
+          "i_xy_abs_err": 1.7763568394002505e-15,
+          "i_yy_relerr": 1.704545453754234e-06,
+          "n": 800
+        }
+      ],
+      "Lshape_polygon": {
+        "area": 12.0,
+        "centroid": [
+          1.6666666666666667,
+          1.6666666666666667
+        ],
+        "i_xx": 14.666666666666664,
+        "i_xy": -5.333333333333336,
+        "i_yy": 14.666666666666657,
+        "max_relerr": 6.055761952500854e-16,
+        "theory": {
+          "area": 12.0,
+          "i_xx": 14.666666666666666,
+          "i_xy": -5.333333333333333,
+          "i_yy": 14.666666666666666
+        }
+      },
+      "i_xy_observed_order": [
+        2.000000000051255,
+        2.0000000001025096
+      ],
+      "rectangle": [
+        {
+          "i_xx_relerr": 2.499999999983072e-05,
+          "i_yy_relerr": 2.499999999983072e-05,
+          "n": 200
+        },
+        {
+          "i_xx_relerr": 6.249999999874413e-06,
+          "i_yy_relerr": 6.249999999874413e-06,
+          "n": 400
+        },
+        {
+          "i_xx_relerr": 1.5624999997188031e-06,
+          "i_yy_relerr": 1.5624999997188031e-06,
+          "n": 800
+        }
+      ]
+    },
+    "C3_translation": {
+      "centroid_shift_error": 5.551115123125783e-17,
+      "i_xx_relerr": 1.211152390500171e-16,
+      "i_xy_relerr": 0.0,
+      "i_yy_relerr": 1.9378438248002747e-15
+    },
+    "C4_superposition": {
+      "delta_gm_one": 0.0432,
+      "delta_gm_two": 0.0864,
+      "matrix_linearity_max_dev": 0.0,
+      "ratio": 2.0
+    },
+    "C5_metacentric": {
+      "delta_gm_from_matrix": 0.0864,
+      "delta_gm_from_moments": 0.0864,
+      "delta_gm_longitudinal": 0.3456,
+      "heave_entry": 0.0,
+      "offdiag_34": 0.0,
+      "pitch_entry": -17369538.48,
+      "relerr": 0.0,
+      "roll_entry": -4342384.62
+    },
+    "C6_roll_period": {
+      "gm_intact": 1.2,
+      "gm_removed_fraction": 0.07200000000000001,
+      "gm_slack": 1.1136,
+      "nabla": 5000.0,
+      "period_lengthening_percent": 3.806849817174962,
+      "period_ratio": 1.0380684981717496
+    },
+    "C7_admissibility": {
+      "eigenvalues": [
+        -17369538.48,
+        -4342384.62
+      ],
+      "heave_zero": true,
+      "l_shape_offdiag": -53609.68666666669,
+      "l_shape_offdiag_theory": -53609.68666666669,
+      "max_eigenvalue": -4342384.62,
+      "symmetric": true
+    }
+  },
+  "demo_restoring": {
+    "heave_after": 3015544.875,
+    "heave_before": 3015544.875,
+    "pitch_after": 42941359.019999996,
+    "pitch_before": 60310897.5,
+    "roll_after": 55968512.88,
+    "roll_before": 60310897.5
+  },
+  "gravity": 9.80665,
+  "not_run": {
+    "energy_hessian": "graded-grid differentiation of the liquid potential energy was implemented but its helper returned a curvature 4x the analytic value on the rectangle; discarded, not published (see report section 5)"
+  },
+  "water_density": 1025.0
+}
