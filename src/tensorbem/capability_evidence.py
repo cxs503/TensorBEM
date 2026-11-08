@@ -321,8 +321,14 @@ CAPABILITIES: tuple[Capability, ...] = (
         tests=(
             'tests/test_hydrostatic_rao.py::test_restoring_matrix_symmetry',
             'tests/test_hydrostatic_rao.py::test_rao_single_frequency',
+            'tests/test_rao_input_validation.py::test_valid_inputs_are_untouched',
+            'tests/test_rao_input_validation.py::test_non_positive_or_non_finite_mass_is_rejected',
+            'tests/test_rao_input_validation.py::test_negative_frequency_no_longer_masquerades_as_its_magnitude',
         ),
-        docs=(('dev_report_tensorbem-hydrostatic-rao.md', 'RAO'),),
+        docs=(
+            ('dev_report_tensorbem-hydrostatic-rao.md', 'RAO'),
+            ('docs/rao_input_validation.md', 'garbage-in'),
+        ),
         published_2026_10_29='REAL',
     ),
     Capability(

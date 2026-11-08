@@ -51,6 +51,143 @@ ComplexArray = NDArray[np.complex128]
 _DEFAULT_GRAVITY = 9.80665
 _DEFAULT_DENSITY = 1025.0
 
+# ---------------------------------------------------------------------------
+# input validation
+# ---------------------------------------------------------------------------
+#
+# The impedance algebra below is silently *garbage-in / garbage-out*: a negative
+# body mass, a negative wave frequency (``_omega_to_nu`` squares ``omega``, so
+# the sign vanishes), a NaN centre of gravity or an asymmetric inertia tensor
+# all produce a finite, plausible-looking RAO vector.  The checks here follow
+# the convention used by the rest of the package (``tensorbem.ice``,
+# ``tensorbem.time_domain``, ``tensorbem.drift_force``): a non-physical input
+# raises ``ValueError`` instead of propagating into the hydrodynamics.
+
+
+def _positive(name: str, value: object) -> float:
+    """Return ``value`` as a finite positive float or raise ``ValueError``."""
+    try:
+        number = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be a real number, got {value!r}") from None
+    if not math.isfinite(number) or number <= 0.0:
+        raise ValueError(f"{name} must be positive and finite, got {number!r}")
+    return number
+
+
+def _finite_scalar(name: str, value: object) -> float:
+    """Return ``value`` as a finite float (any sign) or raise ``ValueError``."""
+    try:
+        number = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be a real number, got {value!r}") from None
+    if not math.isfinite(number):
+        raise ValueError(f"{name} must be finite, got {number!r}")
+    return number
+
+
+def _real_vector(name: str, values: object, size: int) -> FloatArray:
+    """Return ``values`` as a finite length-``size`` float vector."""
+    try:
+        array = np.asarray(values, dtype=float)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be a sequence of {size} real numbers") from None
+    if array.shape != (size,):
+        raise ValueError(f"{name} must have shape ({size},), got {array.shape}")
+    if not np.all(np.isfinite(array)):
+        raise ValueError(f"{name} must be finite, got {array!r}")
+    return array
+
+
+def _symmetric_matrix(
+    name: str,
+    values: object,
+    size: int,
+    *,
+    non_negative_diagonal: bool = False,
+) -> FloatArray:
+    """Return ``values`` as a finite symmetric ``size x size`` float matrix.
+
+    ``non_negative_diagonal`` is used for the extra damping matrix: a negative
+    diagonal entry removes energy from the system (a radiation *source*), which
+    makes the impedance matrix non-passive and the RAO meaningless.
+    """
+    try:
+        array = np.asarray(values, dtype=float)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be a {size}x{size} real matrix") from None
+    if array.shape != (size, size):
+        raise ValueError(f"{name} must have shape ({size}, {size}), got {array.shape}")
+    if not np.all(np.isfinite(array)):
+        raise ValueError(f"{name} must be finite, got a non-finite entry")
+    scale = max(1.0, float(np.max(np.abs(array))))
+    asymmetry = float(np.max(np.abs(array - array.T)))
+    if asymmetry > 1.0e-8 * scale:
+        raise ValueError(
+            f"{name} must be symmetric; max asymmetry {asymmetry:.3e} exceeds "
+            f"1e-8 * {scale:.3e}"
+        )
+    symmetric = 0.5 * (array + array.T)
+    if non_negative_diagonal:
+        diagonal = np.diag(symmetric)
+        if np.any(diagonal < 0.0):
+            worst = float(np.min(diagonal))
+            raise ValueError(
+                f"{name} diagonal must be non-negative: a negative damping "
+                f"coefficient ({worst:.3e}) is an energy source, not a damper"
+            )
+    return symmetric
+
+
+def _omega_sweep(omegas: object) -> FloatArray:
+    """Return ``omegas`` as a finite, strictly positive 1-D array."""
+    try:
+        array = np.asarray(omegas, dtype=float)
+    except (TypeError, ValueError):
+        raise ValueError("omegas must be a sequence of real frequencies") from None
+    if array.ndim != 1:
+        raise ValueError(f"omegas must be one-dimensional, got shape {array.shape}")
+    if array.size and not np.all(np.isfinite(array)):
+        raise ValueError("omegas must be finite")
+    if array.size and np.any(array <= 0.0):
+        worst = float(np.min(array))
+        raise ValueError(
+            f"omegas must be strictly positive: omega**2 enters through the "
+            f"dispersion relation, so a negative frequency is indistinguishable "
+            f"from its magnitude (got {worst!r})"
+        )
+    return array
+
+
+def _validated_common(
+    *,
+    mass: object,
+    density: object,
+    gravity: object,
+    amplitude: object,
+    center_of_gravity: object,
+    inertia: object,
+    extra_damping: object,
+) -> tuple[float, float, float, float, FloatArray, FloatArray | None, FloatArray | None]:
+    """Validate the inputs shared by the single-frequency and sweep entry points."""
+    mass_value = _positive("mass", mass)
+    density_value = _positive("density", density)
+    gravity_value = _positive("gravity", gravity)
+    amplitude_value = _positive("amplitude", amplitude)
+    cg = _real_vector("center_of_gravity", center_of_gravity, 3)
+    inertia_value = (
+        None if inertia is None else _symmetric_matrix("inertia", inertia, 3)
+    )
+    extra = (
+        None
+        if extra_damping is None
+        else _symmetric_matrix(
+            "extra_damping", extra_damping, 6, non_negative_diagonal=True
+        )
+    )
+    return mass_value, density_value, gravity_value, amplitude_value, cg, inertia_value, extra
+
+
 
 @dataclass(frozen=True)
 class RAOResult:
@@ -141,6 +278,109 @@ def compute_rao_at_frequency(
     hull :
         Wetted hull mesh.
     omega :
+        Wave circular frequency (rad/s). Must be strictly positive and finite:
+        only ``omega**2`` enters the dispersion relation, so a negative value
+        would silently be solved as ``|omega|``.
+    wave_angle :
+        Wave direction (radians). 0 = head seas (propagating in +x direction).
+    mass :
+        Body mass (kg). Must be strictly positive and finite.
+    center_of_gravity :
+        Center of gravity coordinates (m), shape (3,), finite.
+    hydrostatic_props :
+        Pre-computed hydrostatic properties. If None, computed from hull.
+    amplitude :
+        Wave amplitude (m). Default: 1.0.
+    density :
+        Fluid density (kg/m³).
+    gravity :
+        Gravitational acceleration (m/s²).
+    inertia :
+        Inertia tensor about the origin (3×3), finite and symmetric. If None,
+        approximated.
+    extra_damping :
+        Additional damping matrix (6×6), finite, symmetric, non-negative
+        diagonal (e.g. viscous damping).
+    chief_points :
+        Number of CHIEF points for irregular frequency suppression.
+
+    Returns
+    -------
+    result :
+        RAO result at this frequency.
+
+    Raises
+    ------
+    ValueError
+        If any input is non-physical: non-positive or non-finite ``mass``,
+        ``omega``, ``density``, ``gravity`` or ``amplitude``; malformed
+        ``center_of_gravity``; a non-symmetric / non-finite ``inertia``; a
+        non-symmetric ``extra_damping`` or one with a negative diagonal entry.
+
+    Notes
+    -----
+    Froude-Krylov-only bodies are *not* checked for Archimedes equilibrium here
+    (``mass`` versus ``rho`` times the displaced volume): the historical test
+    cases and several benchmark drivers deliberately use a mass that differs
+    from the displaced mass, and the restoring matrix is built from the mesh
+    alone.  The mismatch shows up physically as a long-wave heave RAO that does
+    not tend to 1 (see ``tests/test_hydrostatic_analytic_benchmark.py``).
+    """
+    omega_value = _positive("omega", omega)
+    (
+        mass_value,
+        density_value,
+        gravity_value,
+        amplitude_value,
+        cg,
+        inertia_value,
+        extra,
+    ) = _validated_common(
+        mass=mass,
+        density=density,
+        gravity=gravity,
+        amplitude=amplitude,
+        center_of_gravity=center_of_gravity,
+        inertia=inertia,
+        extra_damping=extra_damping,
+    )
+    return _assemble_rao_at_frequency(
+        hull,
+        omega_value,
+        _finite_scalar("wave_angle", wave_angle),
+        mass_value,
+        cg,
+        hydrostatic_props,
+        amplitude_value,
+        density_value,
+        gravity_value,
+        inertia_value,
+        extra,
+        chief_points,
+    )
+
+
+def _assemble_rao_at_frequency(
+    hull: WettedHullMesh,
+    omega: float,
+    wave_angle: float,
+    mass: float,
+    center_of_gravity: FloatArray,
+    hydrostatic_props: HydrostaticProperties | None = None,
+    amplitude: float = 1.0,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+    inertia: FloatArray | None = None,
+    extra_damping: FloatArray | None = None,
+    chief_points: int | str | None = "auto",
+) -> RAOResult:
+    """Compute RAO at a single frequency.
+
+    Parameters
+    ----------
+    hull :
+        Wetted hull mesh.
+    omega :
         Wave circular frequency (rad/s).
     wave_angle :
         Wave direction (radians). 0 = head seas (propagating in +x direction).
@@ -167,6 +407,14 @@ def compute_rao_at_frequency(
     -------
     result :
         RAO result at this frequency.
+
+    Notes
+    -----
+    **No input validation.**  This is the raw impedance assembly; it is kept
+    separate so that ``benchmarks/rao_input_validation.py`` can demonstrate what
+    a non-physical input used to do (finite, plausible, wrong output) against the
+    public entry point that now rejects it.  Call
+    :func:`compute_rao_at_frequency` instead.
     """
     omega = float(omega)
     nu = _omega_to_nu(omega, gravity)
@@ -278,7 +526,32 @@ def compute_rao_spectrum(
     spectrum :
         RAO spectrum over the frequency range.
     """
-    omegas = np.asarray(omegas, dtype=float)
+    omegas = _omega_sweep(omegas)
+    (
+        mass_value,
+        density_value,
+        gravity_value,
+        amplitude_value,
+        cg,
+        inertia_value,
+        extra,
+    ) = _validated_common(
+        mass=mass,
+        density=density,
+        gravity=gravity,
+        amplitude=amplitude,
+        center_of_gravity=center_of_gravity,
+        inertia=inertia,
+        extra_damping=extra_damping,
+    )
+    mass = mass_value
+    density = density_value
+    gravity = gravity_value
+    amplitude = amplitude_value
+    center_of_gravity = cg
+    inertia = inertia_value
+    extra_damping = extra
+    wave_angle = _finite_scalar("wave_angle", wave_angle)
     n_freq = len(omegas)
     nus = np.array([_omega_to_nu(w, gravity) for w in omegas])
 
@@ -378,8 +651,21 @@ def estimate_natural_frequency(
             "is dimensionally invalid for roll/pitch/yaw natural frequencies"
         )
 
-    m_eff = inertial + added_mass_inf[dof, dof]
-    c = restoring_matrix[dof, dof]
+    added = np.asarray(added_mass_inf, dtype=float)
+    if added.shape != (6, 6):
+        raise ValueError(
+            f"added_mass_inf must have shape (6, 6), got {added.shape}"
+        )
+    restoring = np.asarray(restoring_matrix, dtype=float)
+    if restoring.shape != (6, 6):
+        raise ValueError(
+            f"restoring_matrix must have shape (6, 6), got {restoring.shape}"
+        )
+    if not np.all(np.isfinite(added)) or not np.all(np.isfinite(restoring)):
+        raise ValueError("added_mass_inf and restoring_matrix must be finite")
+
+    m_eff = inertial + added[dof, dof]
+    c = restoring[dof, dof]
 
     if m_eff <= 0 or c <= 0:
         return 0.0
