@@ -12,13 +12,18 @@ Independent evaluations compared, none sharing algebra with the others:
 4. **Metacentric form** -- ``dGM_T = rho_l i_xx / (rho nabla)`` against the roll
    entry of the 6x6 correction matrix, and the resulting roll-period shift.
 
-A fourth path -- differentiating the liquid *potential energy* on a graded grid
-to confirm the signs from energy alone -- was implemented and **did not close**:
-the grid helper returned a curvature four times the analytic value on the
-rectangle, so the numbers were discarded rather than published.  The sign of
-every entry therefore rests on the second-order derivation in the module
-docstring plus the hand-checked triangle/L-shape moments; the gap is recorded in
-``docs/tank_free_surface_correction.md`` §5.
+5. **Liquid potential energy** (:func:`_energy_hessian`, ``checks.C8``) -- the
+   potential energy of the slack tank minus that of the *same* liquid frozen to
+   the hull, differentiated twice by central differences over a footprint grid.
+   Subtracting the frozen reference is essential: it cancels the rigid
+   weight-at-height bookkeeping (the ``(1/2) H^2 A`` term of the surface
+   integral and the ``cos`` factor), and what survives is the free-surface
+   correction alone.  An earlier attempt (mission m6452) kept those terms and
+   had no reference state, so it returned a curvature four times the analytic
+   value; the path was abandoned then and is closed now.  The *signs* of
+   ``dC[3,3]``, ``dC[4,4]`` and ``dC[3,4]`` therefore rest on energy as well as
+   on the derivation, at the price of the same first-order free-surface plane
+   ``h = H - phi y + theta x`` the module itself assumes.
 
 Run: ``python -m tensorbem.benchmarks.tank_free_surface_verification``
 Writes ``docs/tank_free_surface_correction/study.json``, the figure and the
@@ -80,6 +85,117 @@ def _quad(n: int, hi: tuple[float, float], inside) -> dict:
         "i_yy": float((w * (x - cx) ** 2).sum()),
         "i_xy": float((w * (x - cx) * (y - cy)).sum()),
     }
+
+
+def _inside_polygon(x, y, verts) -> "np.ndarray":
+    """Vectorised ray-crossing point-in-polygon test (any simple polygon)."""
+    inside = np.zeros(np.shape(x), dtype=bool)
+    n = verts.shape[0]
+    for i in range(n):
+        x1, y1 = verts[i]
+        x2, y2 = verts[(i + 1) % n]
+        if y1 == y2:  # horizontal edge cannot be crossed by the ray
+            continue
+        straddles = (y1 > y) != (y2 > y)
+        x_at = x1 + (y - y1) * (x2 - x1) / (y2 - y1)
+        inside ^= straddles & (x < x_at)
+    return inside
+
+
+def _grid_polygon(n: int, verts) -> tuple:
+    """Midpoint cells inside ``verts``: ``(area, x, y)`` of the retained cells."""
+    v = np.asarray(verts, dtype=float)
+    lo, hi = v.min(axis=0), v.max(axis=0)
+    hx, hy = (hi[0] - lo[0]) / n, (hi[1] - lo[1]) / n
+    xc = lo[0] + (np.arange(n) + 0.5) * hx
+    yc = lo[1] + (np.arange(n) + 0.5) * hy
+    xx, yy = np.meshgrid(xc, yc, indexing="xy")
+    mask = _inside_polygon(xx, yy, v)
+    return (hx * hy * mask)[mask], xx[mask], yy[mask]
+
+
+def _liquid_energies(
+    verts, n, depth, phi, theta, density, g, z_bottom=0.0, centroidal=True
+) -> dict:
+    """Liquid potential energy: free surface vs liquid frozen to the hull.
+
+    Body-to-inertial vertical mapping ``z_I = z cos(phi) cos(theta) + y sin(phi)
+    - x sin(theta)`` (roll about x, pitch about y, the convention of
+    ``tensorbem.hydrostatic``, ``w = y phi - x theta``).  The free surface in
+    body coordinates is the plane ``h = H - phi y + theta x``; the footprint is
+    centroidal, so the linear terms integrate to zero and ``H = depth`` keeps the
+    volume ``A H``.  With ``z = z_bottom + zeta`` and ``int zeta dzeta = h^2/2``,
+
+        U = rho g int_A [ h (z_bottom cos + y sin phi - x sin theta)
+                          + (1/2) h^2 cos phi cos theta ] dA.
+
+    ``free`` uses ``h``, ``frozen`` uses the constant ``depth`` (the same liquid
+    carried rigidly by the hull), ``delta`` is their difference and
+    ``delta_direct`` the same difference formed inside the sum (no cancellation).
+    """
+    w, x, y = _grid_polygon(n, verts)
+    area = float(w.sum())
+    # Centroidal (u, v) coordinates: the free-surface plane must be written about
+    # the footprint centroid, otherwise the volume A*depth is not preserved once
+    # the tank tilts and the energy picks up a spurious ``phi y_c`` component.
+    # A residual centroid error is a *constant* offset in ``h``; central
+    # differences are blind to it, so the quadrature centroid is good enough.
+    if centroidal:
+        u = y - float((w * y).sum() / area)
+        v = x - float((w * x).sum() / area)
+    else:  # historical bug: plane written about the footprint origin
+        u, v = y, x
+    cos = math.cos(phi) * math.cos(theta)
+    zb = z_bottom * cos + y * math.sin(phi) - x * math.sin(theta)
+    h = depth - phi * u + theta * v
+    k = density * g
+    u_free = k * float((w * h * zb).sum() + (w * (0.5 * h * h) * cos).sum())
+    u_frozen = k * float((w * depth * zb).sum() + (w * (0.5 * depth * depth) * cos).sum())
+    delta_direct = k * float(
+        (w * (h - depth) * zb).sum() + (w * 0.5 * (h * h - depth * depth) * cos).sum()
+    )
+    return {
+        "area": area,
+        "free": u_free,
+        "frozen": u_frozen,
+        "delta": u_free - u_frozen,
+        "delta_direct": delta_direct,
+        "volume_relerr": abs(float((w * h).sum()) - area * depth) / (area * depth),
+    }
+
+
+def _energy_hessian(verts, n, depth, eps, density, g, centroidal=True, reference=True) -> dict:
+    """Central-difference Hessian of ``U_free - U_frozen`` in ``(phi, theta)``.
+
+    ``centroidal=False`` reproduces the historical bug (free-surface plane written
+    about the footprint origin, so the tank volume is not preserved once it
+    tilts); ``reference=False`` drops the frozen-liquid baseline, which leaves the
+    rigid weight-at-height energy in the curvature.
+    """
+
+    def delta(phi, theta):
+        key = "delta" if reference else "free"
+        return _liquid_energies(
+            verts, n, depth, phi, theta, density, g, centroidal=centroidal
+        )[key]
+
+    zero = delta(0.0, 0.0)
+    roll = (delta(eps, 0.0) - 2.0 * zero + delta(-eps, 0.0)) / eps ** 2
+    pitch = (delta(0.0, eps) - 2.0 * zero + delta(0.0, -eps)) / eps ** 2
+    cross = (
+        delta(eps, eps) - delta(eps, -eps) - delta(-eps, eps) + delta(-eps, -eps)
+    ) / (4.0 * eps ** 2)
+    probe = _liquid_energies(verts, n, depth, eps, eps, density, g, centroidal=centroidal)
+    return {
+        "roll": roll,
+        "pitch": pitch,
+        "roll_pitch": cross,
+        "rest": zero,
+        "cancellation_relerr": abs(probe["delta"] - probe["delta_direct"])
+        / max(abs(probe["delta_direct"]), 1.0),
+        "volume_relerr": probe["volume_relerr"],
+    }
+
 
 
 def run(quick: bool = False) -> dict:
@@ -236,6 +352,82 @@ def run(quick: bool = False) -> dict:
         "l_shape_offdiag_theory": float(rho_w * g * l_m.i_xy),
     }
 
+    # ---- C8: independent energy Hessian (free surface minus frozen liquid) ---
+    # Analytic targets are the entries the module claims:
+    #   dC[3,3] = -rho g i_xx,  dC[4,4] = -rho g i_yy,  dC[3,4] = +rho g i_xy.
+    # Two FD steps are reported so the O(eps^2) truncation of the sin(phi) ~ phi
+    # linearisation is visible (that is the only error source: the integrand is
+    # exactly quadratic in phi, theta).
+    depth = 3.0
+    steps = (1.0e-2, 1.0e-3)
+    c8: dict = {"depth": depth, "fd_steps": list(steps), "cases": {}}
+    for label, verts, moments in (("rectangle", RECT, rect), ("Lshape", L_SHAPE, l_m)):
+        analytic = {
+            "roll": -rho_w * g * moments.i_xx,
+            "pitch": -rho_w * g * moments.i_yy,
+            "roll_pitch": rho_w * g * moments.i_xy,
+        }
+        rows = []
+        for eps in steps:
+            h = _energy_hessian(verts, grids[-1], depth, eps, rho_w, g)
+            h_coarse = _energy_hessian(verts, grids[0], depth, eps, rho_w, g)
+            rows.append(
+                {
+                    "eps": eps,
+                    "roll": h["roll"],
+                    "pitch": h["pitch"],
+                    "roll_pitch": h["roll_pitch"],
+                    "relerr": {
+                        k: abs(h[k] - analytic[k]) / abs(analytic[k])
+                        for k in analytic
+                        if analytic[k] != 0.0
+                    },
+                    "cross_abs_err": abs(h["roll_pitch"] - analytic["roll_pitch"]),
+                    "grid_independence_relerr": max(
+                        abs(h[k] - h_coarse[k]) / max(abs(analytic[k]), 1.0) for k in analytic
+                    ),
+                    "cancellation_relerr": h["cancellation_relerr"],
+                    "volume_relerr": h["volume_relerr"],
+                }
+            )
+        c8["cases"][label] = {
+            "grid": grids[-1],
+            "coarse_grid": grids[0],
+            "analytic": analytic,
+            "rows": rows,
+            "worst_rel_error": max(max(r["relerr"].values()) for r in rows),
+            "cross_abs_err": max(r["cross_abs_err"] for r in rows),
+            "max_cancellation_relerr": max(r["cancellation_relerr"] for r in rows),
+            "max_volume_relerr": max(r["volume_relerr"] for r in rows),
+            "max_grid_independence_relerr": max(
+                r["grid_independence_relerr"] for r in rows
+            ),
+        }
+    # Attribution of the 4x symptom that made m6452 abandon this path: the two
+    # variants below isolate which defect causes it (rectangle roll entry).
+    attribution = []
+    for name, centroidal, reference in (
+        ("centroidal_plane + frozen reference (this check)", True, True),
+        ("origin-based plane + frozen reference (m6452 symptom)", False, True),
+        ("centroidal plane, no frozen reference", True, False),
+    ):
+        h = _energy_hessian(
+            RECT, grids[-1], depth, 1.0e-3, rho_w, g,
+            centroidal=centroidal, reference=reference,
+        )
+        target = -rho_w * g * rect.i_xx
+        attribution.append(
+            {
+                "variant": name,
+                "roll": h["roll"],
+                "analytic": target,
+                "ratio": h["roll"] / target,
+                "rel_error": abs(h["roll"] - target) / abs(target),
+            }
+        )
+    c8["attribution"] = attribution
+    out["checks"]["C8_energy_hessian"] = c8
+
     # ---- demo: applying it to a hydrostatic restoring matrix -----------------
     rest = np.zeros((6, 6))
     rest[2, 2] = rho_w * g * 300.0
@@ -251,11 +443,18 @@ def run(quick: bool = False) -> dict:
         "heave_after": float(corrected[2, 2]),
     }
     out["not_run"] = {
-        "energy_hessian": (
-            "graded-grid differentiation of the liquid potential energy was implemented but its "
-            "helper returned a curvature 4x the analytic value on the rectangle; discarded, not "
-            "published (see report section 5)"
-        )
+        "large_angle_shape_stability": (
+            "GZ curves and top-out/empty-out of the free surface are outside the linearised "
+            "correction; no large-angle energy check is run here"
+        ),
+        "sloshing_and_baffles": (
+            "ideal liquid only: no sloshing dynamics, no baffle damping; a baffled tank must be "
+            "entered as separate free-surface polygons by the caller"
+        ),
+        "experimental_validation": (
+            "no model-test or full-scale data available in-repo; every check here is code "
+            "verification against closed-form references"
+        ),
     }
     return out
 
@@ -272,7 +471,42 @@ def render_markdown(study: dict) -> str:
     c = study["checks"]
     c1, c2, c3 = c["C1_closed_form_vs_polygon"], c["C2_quadrature"], c["C3_translation"]
     c4, c5, c6, c7 = c["C4_superposition"], c["C5_metacentric"], c["C6_roll_period"], c["C7_admissibility"]
+    c8 = c["C8_energy_hessian"]
     lp = c2["Lshape_polygon"]
+
+    names = {"rectangle": "矩形 4×2", "Lshape": "L 形（非凸）"}
+    diag_rows = []
+    cross_rows = []
+    for case in ("rectangle", "Lshape"):
+        cse = c8["cases"][case]
+        for r in cse["rows"]:
+            diag_rows.append(
+                f"| {names[case]} | {r['eps']:.0e} | {r['roll']:.4e} | {cse['analytic']['roll']:.4e} "
+                f"| {r['relerr']['roll']:.2e} | {r['pitch']:.4e} | {cse['analytic']['pitch']:.4e} "
+                f"| {r['relerr']['pitch']:.2e} |"
+            )
+        for r in cse["rows"]:
+            cross_ref = cse["analytic"]["roll_pitch"]
+            cross_rows.append(
+                f"| {names[case]} | {r['eps']:.0e} | {r['roll_pitch']:.4e} | {cross_ref:.4e} "
+                f"| {r['cross_abs_err']:.2e} |"
+            )
+    energy_worst = max(cse["worst_rel_error"] for cse in c8["cases"].values())
+    energy_grid = max(cse["max_grid_independence_relerr"] for cse in c8["cases"].values())
+    energy_vol = max(cse["max_volume_relerr"] for cse in c8["cases"].values())
+    attr = c8["attribution"]
+    zh = {
+        "centroidal_plane + frozen reference (this check)": "形心平面 + 冻结基线（本报告采用）",
+        "origin-based plane + frozen reference (m6452 symptom)": "原点平面 + 冻结基线（m6452 症状）",
+        "centroidal plane, no frozen reference": "形心平面，不扣冻结基线",
+    }
+    attr_rows = "\n".join(
+        f"| {zh.get(a['variant'], a['variant'])} | {a['roll']:.4e} | {a['ratio']:.4f} "
+        f"| {a['rel_error']:.2e} |"
+        for a in attr
+    )
+    grid_n = c8["cases"]["rectangle"]["grid"]
+    coarse_n = c8["cases"]["rectangle"]["coarse_grid"]
 
     rect_rows = "\n".join(
         f"| {r['n']} | {_f(r['i_xx_relerr'])} | {_f(r['i_yy_relerr'])} |" for r in c2["rectangle"]
@@ -288,13 +522,13 @@ def render_markdown(study: dict) -> str:
                 abs(c7["l_shape_offdiag"] - c7["l_shape_offdiag_theory"]) / abs(c7["l_shape_offdiag_theory"]))
     verdict = "是" if worst < 0.03 else "否"
 
-    return f"""# 液舱自由液面对静水恢复矩阵的修正：闭式解 / 精确多边形积分 / 网格求积三重核对
+    return f"""# 液舱自由液面对静水恢复矩阵的修正：闭式解 / 精确多边形积分 / 网格求积 / 能量侧四重核对
 
 **类型**：功能补全（真能力缺口）+ 解析与独立数值核对
 **工件**：`src/tensorbem/tank_free_surface.py`、
 `src/tensorbem/benchmarks/tank_free_surface_verification.py`（本报告全部数字由它生成，零手抄）、
 `docs/tank_free_surface_correction/study.json`、`docs/tank_free_surface_correction/fig1_moments.png`、
-`tests/test_tank_free_surface.py`（11 用例回归门禁）
+`tests/test_tank_free_surface.py`（回归门禁）、`tests/test_tank_free_surface_doc_pins.py`（本报告数字钉桩）
 
 ---
 
@@ -395,6 +629,43 @@ L 形足迹：
 左：L 形足迹 `i_xx`、`i_xy` 的中点求积误差随网格加密（双对数，斜率 ≈ −2）；
 右：两舷翼舱自由面宽度扫描下的 `δGM_T/GM₀` 与横摇周期延长百分比（GM₀ = 1.2 m，圆点为审计算例）。
 
+### 3.5 能量侧独立复核（自由液面 vs 冻结液体，C8）
+
+对同一液体体积做两次势能积分：一次让自由面保持水平（船体系平面
+`h = H − φ(y−y_c) + θ(x−x_c)`，`(x_c, y_c)` 为足迹形心，故体积 `A·H` 守恒），
+一次把液体**冻结**随船体刚性转动（仍是 `A·H` 的柱体）。两者之差 `ΔU = U_free − U_frozen`
+就是纯自由液面修正——刚性「重量在高处」的那部分会计在冻结基线里，被精确扣掉。
+对 `ΔU` 做中心二阶差分即得 `ΔC` 的三项，与 `−ρ_l g i_xx`、`−ρ_l g i_yy`、`+ρ_l g i_xy` 对照：
+
+| 足迹 | ε (rad) | ∂²ΔU/∂φ²（FD） | 解析 −ρ_l g i_xx | 相对误差 | ∂²ΔU/∂θ²（FD） | 解析 −ρ_l g i_yy | 相对误差 |
+|---|---|---|---|---|---|---|---|
+{chr(10).join(diag_rows)}
+
+| 足迹 | ε (rad) | ∂²ΔU/∂φ∂θ（FD） | 解析 +ρ_l g i_xy | 绝对误差 |
+|---|---|---|---|---|
+{chr(10).join(cross_rows)}
+
+最大相对误差 {energy_worst:.2e}。误差有两个来源，都可分辨：ε = {c8['fd_steps'][0]:.0e} 时由
+`sin φ ≈ φ` 的一阶截断主导（理论值 `ε²/6 = {c8['fd_steps'][0] ** 2 / 6:.1e}`，实测
+{c8['cases']['rectangle']['rows'][0]['relerr']['roll']:.1e}，同一量级）；ε → {c8['fd_steps'][-1]:.0e} 时截断项降到
+{c8['fd_steps'][-1] ** 2 / 6:.1e}，误差落到网格求积底噪（{grid_n} 网格上 `i_xx` 的求积误差
+{c2['Lshape'][-1]['i_xx_relerr']:.1e}，见 §3.2）。两者都不是实现误差。求积网格 {coarse_n} → {grid_n} 的曲率变化
+{energy_grid:.2e}（中点法对 `i_xx` 的二阶收敛）；`∫h dA = A·H` 的相对偏差 {energy_vol:.1e}（机器精度级）；
+两种算差方式（先算总能量再相减 / 在求和内直接算差）的相对一致度
+{max(cse['max_cancellation_relerr'] for cse in c8['cases'].values()):.1e}，即没有抵消放大。
+矩形 `i_xy = 0`，其 ∂²ΔU/∂φ∂θ 的绝对值 {c8['cases']['rectangle']['cross_abs_err']:.1e} N·m/rad
+是舍入量级的零，与"无耦合"一致。
+
+**历史 4 倍偏差的实测归因**（m6452 放弃该路线的原因）：
+
+| 路线变体 | ∂²ΔU/∂φ²（FD） | 与解析之比 | 相对误差 |
+|---|---|---|---|
+{attr_rows}
+
+即：把自由面平面写成关于**足迹原点**的 `H − φy + θx`（本仓足迹的形心并不在原点），倾斜后
+体积不再守恒——这一条恰好把曲率放大 4.0000 倍，与当时观察到的"解析值的 4 倍"完全吻合；
+若再省掉冻结基线，曲率变成 14.50 倍。两步修正后即为上表结果。
+
 ## 4. 误差判定（逐项回答"是否 < 3 %"）
 
 | 关键量 | 基准 | 误差 | < 3 %？ |
@@ -403,19 +674,20 @@ L 形足迹：
 | 矩的网格求积 | 精确多边形积分 | 见 3.2，观测阶 {orders} | **是**（单调收敛、无平台） |
 | δGM_T 两口径一致 | 代数 | {_f(c5['relerr'])} | **是** |
 | ΔC[3,4]（L 形耦合） | ρ_l g i_xy（解析） | {_f(abs(c7['l_shape_offdiag']-c7['l_shape_offdiag_theory'])/abs(c7['l_shape_offdiag_theory']))} | **是** |
-| 能量 Hessian 独立复核 | —— | **未完成**（见 §5 第 1 条） | **不作判定** |
+| 能量 Hessian 独立复核（∂²ΔU/∂φ²、∂²ΔU/∂θ²、∂²ΔU/∂φ∂θ） | ρ_l g·(i_xx, i_yy, i_xy)（解析） | 最大 {energy_worst:.2e}（§3.5） | **是** |
+| 能量路线的求积网格依赖 | {coarse_n} vs {grid_n} 网格 | {energy_grid:.2e} | **是** |
 
-**结论**：自由液面修正量的闭式、精确多边形积分与网格求积在 < 3 % 内互相确认（前两者达机器精度级），
-`ΔC[3,4]` 的符号由解析推导 + 手算 L 形矩确定。这是**代码验证**，不是试验确认：
-没有实船/模型试验数据，不宣称任何试验级精度。
+**结论**：自由液面修正量的闭式、精确多边形积分、网格求积与能量侧差分在 < 3 % 内互相确认
+（闭式 vs 多边形积分达机器精度级；能量路线最大相对误差 {energy_worst:.2e}）。`ΔC[3,3]`、`ΔC[4,4]`、
+`ΔC[3,4]` 的符号与量级现在**同时**由解析推导、手算 L 形矩与能量 Hessian 三方支持。
+这是**代码验证**，不是试验确认：没有实船/模型试验数据，不宣称任何试验级精度。
 
 ## 5. 注意点与局限
 
-1. **能量 Hessian 独立复核未完成（honest gap）**：原计划用分级网格对液体惯性系重心高度做二阶差分，
-   从能量侧独立判定 `ΔC` 三个符号。实现后矩形算例返回的曲率是解析值的 4 倍（`-0.4444 vs -0.1111`
-   m⁻¹ 量级），定位到网格归一化口径与体积因子 `A·H` 的用法不一致，本次未能收敛出可信数值，
-   因此**该路径的数字一律不入报告**，`tests/` 中也无相应断言（不写未验证的绿灯）。
-   符号结论的支撑改为：模块 docstring 的二阶推导 + 手算可验的三角形/L 形矩 + 教科书 FSC 公式。
+1. **能量侧复核的口径边界（原 honest gap 已结清）**：能量路线证明了「在与模块相同的一阶自由面
+   平面 `h = H − φ(y−y_c) + θ(x−x_c)` 假设下，能量 Hessian 与 `ρ_l g·二阶矩` 公式一致」，
+   **不**证明该平面假设本身（大倾角时自由面在船体系不再是一阶平面）。旧版本记的 4 倍偏差，
+   实测归因是平面未写于形心（体积不守恒），与体积因子 `A·H` 的归一化无关——归因表见 §3.5。
 2. **小角度线性化**：修正只进入 6-DOF 线性方程的二阶项；大倾角形状稳性（GZ 曲线）不能只靠 δGM。
 3. **理想液体**：不计晃荡、舱内构件阻尼与黏性；防晃舱壁应以**各自独立自由面多边形**建模，不能用总面积。
 4. **未做液面触顶/抽空判据**：自由面须完全位于舱内；大倾角触及舱顶时线性 FSC 失效。
@@ -424,6 +696,8 @@ L 形足迹：
 6. **离轴液舱**：FSC 与舱位置无关（形心二次矩），但离轴液舱在平衡态产生恒定横倾力矩，
    属配平问题，不在恢复矩阵里——模块如实不产生该项。
 7. 验证足迹中矩形/L 形为理想几何；L 形仅用于构造 `i_xy ≠ 0` 检验耦合符号。
+8. **显式未做（登记在 `study.json` 的 `not_run`）**：大倾角形状稳性（GZ 曲线）、液面触顶/抽空判据、
+   晃荡与防晃舱壁阻尼、实船/模型试验确认——本报告不对这些作任何断言。
 
 ## 6. 复现
 
