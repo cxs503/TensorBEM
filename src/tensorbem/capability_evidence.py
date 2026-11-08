@@ -432,13 +432,21 @@ CAPABILITIES: tuple[Capability, ...] = (
         title='Near-singular panel integration',
         claim='Adaptive subdivision keeps the near-field integral converging as the clearance shrinks.',
         level=REAL,
-        modules=('tensorbem.near_singular', 'tensorbem.benchmarks.near_surface_error_budget'),
-        symbols=('single_layer_integrals', 'single_layer_gradients'),
+        modules=(
+            'tensorbem.near_singular',
+            'tensorbem.benchmarks.near_surface_error_budget',
+            'tensorbem.near_wall_envelope',
+        ),
+        symbols=('single_layer_integrals', 'single_layer_gradients', 'NearWallEnvelope'),
         tests=(
             'tests/test_near_singular.py::test_single_layer_integral_converges_to_reference',
             'tests/test_near_singular.py::test_single_layer_gradient_converges_to_reference',
+            'tests/test_near_wall_envelope.py::test_fixed_physical_clearance_converges_under_refinement',
         ),
-        docs=(('docs/near_surface_error_budget.md', 'error budget'),),
+        docs=(
+            ('docs/near_surface_error_budget.md', 'error budget'),
+            ('docs/near_wall_envelope.md', 'envelope'),
+        ),
         published_2026_10_29='REAL',
     ),
     Capability(
