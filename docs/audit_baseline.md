@@ -126,7 +126,7 @@ correction log inside the generated block records what changed.
 | Michell thin-ship wave resistance for general hulls + tandem interference | **REAL** | `tensorbem.michell`, `tensorbem.benchmarks.michell_validation` | 2 node(s) in 1 file(s) | `docs/michell_validation.md` |
 | Kutta condition / lifting foil | **REAL** | `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil` | 2 node(s) in 2 file(s) | `docs/lifting_foil.md` |
 | Mixed Dirichlet / Neumann boundaries | **REAL** | `tensorbem.mixed`, `tensorbem.benchmarks.mixed_boundary` | 2 node(s) in 1 file(s) | `docs/mixed_boundary_conditions.md` |
-| Near-singular panel integration | **REAL** | `tensorbem.near_singular`, `tensorbem.benchmarks.near_surface_error_budget` | 2 node(s) in 1 file(s) | `docs/near_surface_error_budget.md` |
+| Near-singular panel integration | **REAL** | `tensorbem.near_singular`, `tensorbem.benchmarks.near_surface_error_budget` (+1) | 3 node(s) in 2 file(s) | `docs/near_surface_error_budget.md`, `docs/near_wall_envelope.md` |
 | Symmetry reduction (3-D) | **REAL** | `tensorbem.symmetry3d`, `tensorbem.benchmarks.symmetry_reduction` | 2 node(s) in 1 file(s) | `docs/symmetry3d.md` |
 | Pressure integration and force recovery | **REAL** | `tensorbem.pressure` | 2 node(s) in 1 file(s) | `docs/pressure_forces.md` |
 | Conditioning diagnostics | **REAL** | `tensorbem.conditioning` | 2 node(s) in 1 file(s) | `dev_report_tensorbem-conditioning-diagnostics.md` |
@@ -160,7 +160,7 @@ Counts: **40** REAL — 40 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-53 of 54 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **0 are unowned**.
+54 of 55 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 

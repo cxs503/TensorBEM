@@ -200,3 +200,18 @@ change, and (ii) is already verified on the surface.
 | `docs/near_surface_error_budget/` | generated `results.json`, `summary.md`, figure |
 | `artifacts/m2620/make_ns_doc.py` | generator of this document (numbers injected from `results.json`) |
 | `docs/near_surface_field.md` | root cause and cure corrected, pointer to this report |
+
+## 8. Follow-up (m6445): the cure statement, corrected
+
+§5's row *"mesh refinement is the lever" → "not for this quantity: observed
+order −0.03 over 320 → 1280 panels"* is a statement about the experiment that was
+run here — refinement at **fixed** `d / h_max` — and must not be read as a
+statement about the operator. `docs/near_wall_envelope.md` measures the missing
+experiment: at **fixed physical clearance** `d` the near-wall velocity converges
+(equator, `d = 0.05 m`, 320 → 20480 panels: 4.160e-01 → 6.587e-04, asymptotic
+order 3.19), because refining the mesh raises `d / h_max` and walks up the
+envelope. The practical rule is therefore a *resolution* requirement, not an
+impossibility: `d ≥ 0.6 h_max` for 3 % and `d ≥ 0.8 h_max` for 1 % (worst probe),
+packaged as `tensorbem.near_wall_envelope.NearWallEnvelope` and certified by
+`tests/test_near_wall_envelope.py`. The measured residual of §3–§4 (and the
+honest FAIL itself) is unchanged.
