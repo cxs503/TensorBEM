@@ -124,6 +124,11 @@ Reading:
 
 ### 3.3 Secondary finding: the m3409 deep-water ladder does not reproduce
 
+> **Erratum (m6384, 2026-11-08): this finding is withdrawn.** The m3409
+> ledger is reproducible on current `main`; the mismatch below is an a-priori
+> change of the elevation convention (`z = -0.5 m` fixed versus `z = -h/2`
+> scaled), not a stale number. See §8 for the measurement.
+
 The m3409 ledger's `h`-ladder (`nu = 50`, `R = 1 m`, mid-depth) reproduces on
 current `main` only at its first rung:
 
@@ -182,7 +187,7 @@ number divided by different scales.
 | deep-water `F` at `(X=50, Y=10)` (contested point) | independent direct PV (this module), cross-checked to 25 digits with `mpmath` | `3.39e-6` worst over the sweep, `0.0e+00` at the point | **yes** |
 | finite-depth eigenseries truncation at all three rungs | `modes = 160` (5x automatic) | `<= 4.2e-17` | **yes** |
 | 85 % kernel-to-kernel deviation at `k0 h = 10` | local Rankine scale | 85 % of `|G|` = **0.60 %** of `1/(4 pi r)` | **no as quoted, yes after rescaling** — the 85 % is physics amplified by `kappa = 142`, *not* a kernel error |
-| m3409 deep-water ladder (`h = 2, 5, 20`) | this run | 149 %, 1125 %, 17120 % relative to the quoted values | **no** — documented above as a stale-ledger item; not a kernel error |
+| m3409 deep-water ladder (`h = 2, 5, 20`) | m3409 ledger, **same** elevation `z = -0.5 m` fixed | `<= 1.5e-4` relative at every rung (m6384) | **yes** — the §3.3 "stale ledger" reading is withdrawn in §8 (elevation convention, not drift) |
 
 **Answer to the open item**: neither kernel is losing accuracy at
 `k0 h = 10`, `k0 R = 50`. The 85 % is a genuine finite-depth-minus-infinite-depth
@@ -198,3 +203,63 @@ PYTHONPATH=src python3 -m tensorbem.benchmarks.finite_depth3d_deepwater_arbitrat
 PYTHONPATH=src python3 -m pytest tests/test_finite_depth3d_deepwater_arbitration.py -q
 # 6 passed in 53.10s
 ```
+
+---
+
+## 8. Erratum (m6384, 2026-11-08): §3.3 is withdrawn — the ledger is not stale
+
+**What §3.3 claimed.** That the m3409 `h`-ladder
+(`nu = 50 1/m`, `R = 1 m`, "mid-depth") reproduces on current `main` only at its
+first rung, that three of four quoted numbers are off by 1-2 orders of magnitude,
+and that those rows "should be recomputed before they are cited again".
+
+**What is actually true.** Both runs are correct values of the same kernel at
+*two different sets of points*. The m3409 driver
+(`tensorbem.benchmarks.finite_depth3d_regime.deep_water_regime`) holds the
+elevation at the **absolute** value `Z_MID = -0.5 m` for every depth; that equals
+`-h/2` only at `h = 1 m`. §1 of this document reads "mid-depth" as the *scaled*
+elevation `z = zeta = -h/2` and re-measures there. Hence the signature that was
+read as staleness: **one** rung reproduces "exactly" (the rung where the two
+conventions coincide) and the deep rungs "drift" (they are different points).
+
+**Measurement** (`tensorbem.benchmarks.deepwater_ladder_geometry`, current
+`main` + this branch; JSON `docs/m6384/deepwater_ladder_geometry.json`,
+figure `docs/m6384/deepwater_ladder_geometry.png`,
+gate `tests/test_deepwater_ladder_geometry.py`):
+
+| `h` (m) | `k0 h` | `|G/G_deep-1|`, `z=-0.5 m` fixed | m3409 ledger | rel. to ledger | `|G/G_deep-1|`, `z=-h/2` scaled | m4776 re-run |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 50 | 3.6526e-01 | 3.653e-01 | 1.1e-4 | 3.6526e-01 | 3.653e-01 |
+| 2 | 100 | 8.2250e-02 | 8.225e-02 | 6.2e-5 | 2.0487e-01 | 2.049e-01 |
+| 5 | 250 | 5.8997e-03 | 5.900e-03 | 5.1e-5 | 7.2248e-02 | 7.225e-02 |
+| 20 | 1000 | 9.3340e-05 | 9.334e-05 | 3.3e-5 | 1.6072e-02 | 1.607e-02 |
+| 100 | 5000 | 7.4593e-07 | 7.459e-07 | 4.9e-5 | 3.0981e-03 | — |
+| 800 | 40000 | 1.4553e-09 | 1.455e-09 | 1.4e-4 | 3.8403e-04 | — |
+
+Worst relative difference against the m3409 ledger: **1.5e-4** (five orders of
+magnitude below the 1-2 orders the §3.3 claim implied). Worst against the m4776
+re-run: **1.5e-4**. The two ladders coincide at `h = 1 m` to machine precision
+and differ by x2.5 (`h = 2`) to x172 (`h = 20`) elsewhere.
+
+**Consequences.**
+
+1. §3.3 and its row in §6 are **withdrawn**; there is no accounting item and no
+   commit to bisect.
+2. The advice "recompute the m3409 `h`-ladder rows before citing them" is
+   withdrawn — recomputing them at the scaled elevation would *replace correct
+   numbers with a different quantity*.
+3. The latent defect was in the driver's ledger metadata, not in the numbers:
+   the m3409 JSON published `"z_over_h": -0.5`, which is false for every `h > 1`
+   and is what invited the scaled reading. It now publishes `"z_absolute": -0.5`
+   with the convention spelled out, and `docs/finite_depth3d_regime.md` §3 states
+   the convention in words.
+4. Unchanged and still valid from §3.1-§3.2 and §5-§6: the `k0 h = 10`,
+   `k0 R = 50` arbitration itself (85 % of `|G|` = 0.60 % of the local Rankine
+   scale), the referee certification of the deep kernel (3.4e-6), and the
+   limitation that no independent evaluation of the finite-depth eigenseries was
+   built.
+
+**Honest limits.** This erratum settles the *provenance* question only. It does
+not add an independent evaluation of the finite-depth kernel, and it does not
+certify either ladder as a physical claim — both are statements about how the
+eigenseries meets the deep-water kernel, at two fixed geometries.
