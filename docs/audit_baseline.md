@@ -197,6 +197,10 @@ Not referenced by any test file, with an accepted reason:
 - `artifacts/pytest_summary.json` — Machine-readable pytest results
 - `artifacts/bench_vs_readme.json` — Benchmark values vs README claims with relative differences
 - `docs/audit_baseline.md` — This report
+- `docs/m6287/maruo_general_heading_fix.json` — Maruo far-field drift at arbitrary wave heading: shipped weight vs closed form vs pre-m6271 weight (builder: `docs/m6287/build_report.py`)
+- `docs/m6287/maruo_general_heading_fix.md` — The same sweep as generated tables; every number is build output, none is transcribed
+- `docs/m6287/figures/fig1_heading_error.png` — Heading error of both weights against the closed form (renderer: `docs/m6287/render_report.py`)
+- `tests/test_maruo_drift.py::test_docs_m6287_artifact_reproduces_against_the_module` — the `docs/m6287` bundle must rebuild byte for byte
 
 ## 7. Conclusion
 
