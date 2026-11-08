@@ -70,7 +70,7 @@ Test geometry: source and target at mid-depth `z = zeta = -h/2`, horizontal sepa
 Observed order: 2.000, 2.002, 2.009, 2.034, 2.106 (quadratic to within 0.5 % up to `k0 h = 0.4`).
 Max relative error of the closed form over `k0 h <= 0.2`: **8.55e-03 (0.86 %)**.
 
-**Deep-water collapse** (fixed `nu = 50 1/m`, `R = 1 m`, mid-depth):
+**Deep-water collapse** (fixed `nu = 50 1/m`, `R = 1 m`, and the elevation held at the **absolute** value `z = zeta = -0.5 m` for every depth — it equals `-h/2` only at `h = 1 m`; see the m6384 erratum note below):
 
 | `h` (m) | `k0 h` | \|G/G_deep − 1\| | finite? |
 |---|---|---|---|
@@ -82,6 +82,16 @@ Max relative error of the closed form over `k0 h <= 0.2`: **8.55e-03 (0.86 %)**.
 | 800 | 40 000 | 1.455e-09 | yes (pre-fix: **nan**) |
 
 1 %-crossover for the deep-water surrogate on this ladder: `k0 h >= 250` (0.59 %); monotic above.
+
+> **Elevation convention (m6384).** This ladder is reproduced exactly by
+> `python -m tensorbem.benchmarks.finite_depth3d_regime` on the current tree,
+> i.e. it is **not** stale. The m4776 arbitration re-measured the same ladder
+> after reading "mid-depth" as the *scaled* elevation `z = zeta = -h/2`; the two
+> conventions coincide only at `h = 1 m`. Both ladders are measured side by side
+> in `docs/m6384/deepwater_ladder_geometry.json` (study
+> `tensorbem.benchmarks.deepwater_ladder_geometry`, gate
+> `tests/test_deepwater_ladder_geometry.py`) and the false-alarm diagnosis is
+> withdrawn in `docs/finite_depth3d_deepwater_arbitration.md` §8.
 
 **`k0*h` similarity map** (identical for `h = 1, 5, 50` m):
 
