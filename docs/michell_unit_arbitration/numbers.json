@@ -1,0 +1,124 @@
+{
+  "case": {
+    "L": 3.0,
+    "B": 0.3,
+    "T": 0.1875,
+    "rho": 1025.0,
+    "g": 9.80665,
+    "Fr": 0.3
+  },
+  "unit_scales": {
+    "mass": [
+      2.0,
+      1.0,
+      1.0
+    ],
+    "length": [
+      1.0,
+      2.0,
+      1.0
+    ],
+    "time": [
+      1.0,
+      1.0,
+      2.0
+    ]
+  },
+  "force_exponents": [
+    -1.0,
+    -1.0,
+    2.0
+  ],
+  "exponents": {
+    "wigley_closed_form (legacy)": [
+      -1.0,
+      1.0,
+      -2.0
+    ],
+    "michell_panels (legacy)": [
+      -1.0,
+      1.0,
+      -2.0
+    ],
+    "thin_ship_standard_form": [
+      -1.0,
+      -1.0,
+      2.0
+    ]
+  },
+  "dimensionally_sound": {
+    "wigley_closed_form (legacy)": false,
+    "michell_panels (legacy)": false,
+    "thin_ship_standard_form": true
+  },
+  "dispersion": {
+    "lambda": [
+      1.0,
+      1.5,
+      2.0,
+      4.0
+    ],
+    "canonical_residual": [
+      0.0,
+      2.1316282072803005e-16,
+      0.0,
+      0.0
+    ],
+    "legacy_residual": [
+      0.0,
+      0.49999999999999983,
+      1.0,
+      3.0
+    ],
+    "analytic_legacy_residual": [
+      0.0,
+      0.5,
+      1.0,
+      3.0
+    ]
+  },
+  "spectrum": [
+    {
+      "Fr": 0.2,
+      "legacy": 0.069528924584419,
+      "standard": 0.7167993004740859,
+      "raw_ratio": 10.309368435632559,
+      "after_prefactor": 0.33677557183925955,
+      "corrected_recipe": 0.7168242869490696
+    },
+    {
+      "Fr": 0.25,
+      "legacy": 0.0971114170565367,
+      "standard": 1.3425872916987867,
+      "raw_ratio": 13.82522603822323,
+      "after_prefactor": 0.45162789882811755,
+      "corrected_recipe": 1.3425872916987722
+    },
+    {
+      "Fr": 0.3,
+      "legacy": 0.3319010806816133,
+      "standard": 3.891778311570678,
+      "raw_ratio": 11.72571750468023,
+      "after_prefactor": 0.3830433690016825,
+      "corrected_recipe": 3.891778311571119
+    },
+    {
+      "Fr": 0.35,
+      "legacy": 0.12655805406774906,
+      "standard": 3.086574159188037,
+      "raw_ratio": 24.388603174443027,
+      "after_prefactor": 0.7967011589231142,
+      "corrected_recipe": 3.086574159188123
+    }
+  ],
+  "theta_form_cross_check": {
+    "corrected_closed_form": 3.891778311571119,
+    "theta_form": 3.8917750318498996,
+    "relative_difference": 8.427314509843968e-07
+  },
+  "sides_factor": {
+    "legacy_kochin_carries_both_sides": true,
+    "effect_on_resistance": 4.0,
+    "note": "legacy H = 2 * int int y_x; the standard form integrates one side.  Resolving which pairs with the textbook 4 rho g^2/pi U^2 constant needs an external far-field energy-flux reference and is recorded as WITHHELD, not guessed."
+  }
+}
