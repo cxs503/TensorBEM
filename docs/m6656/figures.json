@@ -1,0 +1,22 @@
+[
+  {
+    "name": "fig1_wigley_cw_panel_vs_michell",
+    "file": "fig1_wigley_cw_panel_vs_michell.png"
+  },
+  {
+    "name": "fig2_wigley_kochin_energy_and_convergence",
+    "file": "fig2_wigley_kochin_energy_and_convergence.png"
+  },
+  {
+    "name": "fig3_kcs_6dof_excitation_reciprocity",
+    "file": "fig3_kcs_6dof_excitation_reciprocity.png"
+  },
+  {
+    "name": "fig4_kcs_long_wave_fk_limit",
+    "file": "fig4_kcs_long_wave_fk_limit.png"
+  },
+  {
+    "name": "fig5_kcs_kochin_energy_identity",
+    "file": "fig5_kcs_kochin_energy_identity.png"
+  }
+]
