@@ -140,6 +140,128 @@
       "l_shape_offdiag_theory": -53609.68666666669,
       "max_eigenvalue": -4342384.62,
       "symmetric": true
+    },
+    "C8_energy_hessian": {
+      "attribution": [
+        {
+          "analytic": -26804.843333333327,
+          "ratio": 0.9999985972658237,
+          "rel_error": 1.4027341763098447e-06,
+          "roll": -26804.805733263493,
+          "variant": "centroidal_plane + frozen reference (this check)"
+        },
+        {
+          "analytic": -26804.843333333327,
+          "ratio": 3.9999990991231504,
+          "rel_error": 2.9999990991231504,
+          "roll": -107219.34918547049,
+          "variant": "origin-based plane + frozen reference (m6452 symptom)"
+        },
+        {
+          "analytic": -26804.843333333327,
+          "ratio": 14.49999747128618,
+          "rel_error": 13.49999747128618,
+          "roll": -388670.16055155545,
+          "variant": "centroidal plane, no frozen reference"
+        }
+      ],
+      "cases": {
+        "Lshape": {
+          "analytic": {
+            "pitch": -147426.63833333325,
+            "roll": -147426.6383333333,
+            "roll_pitch": -53609.68666666669
+          },
+          "coarse_grid": 200,
+          "cross_abs_err": 3.573809601206449,
+          "grid": 800,
+          "max_cancellation_relerr": 1.925903880817259e-12,
+          "max_grid_independence_relerr": 2.5568839955729065e-05,
+          "max_volume_relerr": 3.947459643111666e-16,
+          "rows": [
+            {
+              "cancellation_relerr": 1.0752707851960915e-12,
+              "cross_abs_err": 3.573809601206449,
+              "eps": 0.01,
+              "grid_independence_relerr": 2.5568610957471277e-05,
+              "pitch": -147428.84411243722,
+              "relerr": {
+                "pitch": 1.4961876150105239e-05,
+                "roll": 1.496186825321876e-05,
+                "roll_pitch": 6.666350473987314e-05
+              },
+              "roll": -147428.84411127307,
+              "roll_pitch": -53613.2604762679,
+              "volume_relerr": 3.947459643111666e-16
+            },
+            {
+              "cancellation_relerr": 1.925903880817259e-12,
+              "cross_abs_err": 0.03574366199609358,
+              "eps": 0.001,
+              "grid_independence_relerr": 2.5568839955729065e-05,
+              "pitch": -147426.41139309853,
+              "relerr": {
+                "pitch": 1.5393434814844676e-06,
+                "roll": 1.5401331310440763e-06,
+                "roll_pitch": 6.667388716210907e-07
+              },
+              "roll": -147426.4112766832,
+              "roll_pitch": -53609.722410328686,
+              "volume_relerr": 3.947459643111666e-16
+            }
+          ],
+          "worst_rel_error": 6.666350473987314e-05
+        },
+        "rectangle": {
+          "analytic": {
+            "pitch": -107219.37333333331,
+            "roll": -26804.843333333327,
+            "roll_pitch": 0.0
+          },
+          "coarse_grid": 200,
+          "cross_abs_err": 1.4551915228366852e-05,
+          "grid": 800,
+          "max_cancellation_relerr": 9.197897998802773e-11,
+          "max_grid_independence_relerr": 2.343787890078064e-05,
+          "max_volume_relerr": 2.96059473233375e-16,
+          "rows": [
+            {
+              "cancellation_relerr": 9.20602603449832e-12,
+              "cross_abs_err": 0.0,
+              "eps": 0.01,
+              "grid_independence_relerr": 2.343787890078064e-05,
+              "pitch": -107220.99276259542,
+              "relerr": {
+                "pitch": 1.5103886655566983e-05,
+                "roll": 1.5103886655566983e-05
+              },
+              "roll": -26805.248190648854,
+              "roll_pitch": 0.0,
+              "volume_relerr": 2.96059473233375e-16
+            },
+            {
+              "cancellation_relerr": 9.197897998802773e-11,
+              "cross_abs_err": 1.4551915228366852e-05,
+              "eps": 0.001,
+              "grid_independence_relerr": 2.3437379447683916e-05,
+              "pitch": -107219.22345692292,
+              "relerr": {
+                "pitch": 1.3978482221027392e-06,
+                "roll": 1.4027341763098447e-06
+              },
+              "roll": -26804.805733263493,
+              "roll_pitch": 1.4551915228366852e-05,
+              "volume_relerr": 2.96059473233375e-16
+            }
+          ],
+          "worst_rel_error": 1.5103886655566983e-05
+        }
+      },
+      "depth": 3.0,
+      "fd_steps": [
+        0.01,
+        0.001
+      ]
     }
   },
   "demo_restoring": {
@@ -152,7 +274,9 @@
   },
   "gravity": 9.80665,
   "not_run": {
-    "energy_hessian": "graded-grid differentiation of the liquid potential energy was implemented but its helper returned a curvature 4x the analytic value on the rectangle; discarded, not published (see report section 5)"
+    "experimental_validation": "no model-test or full-scale data available in-repo; every check here is code verification against closed-form references",
+    "large_angle_shape_stability": "GZ curves and top-out/empty-out of the free surface are outside the linearised correction; no large-angle energy check is run here",
+    "sloshing_and_baffles": "ideal liquid only: no sloshing dynamics, no baffle damping; a baffled tank must be entered as separate free-surface polygons by the caller"
   },
   "water_density": 1025.0
 }
