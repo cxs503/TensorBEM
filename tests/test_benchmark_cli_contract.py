@@ -35,6 +35,7 @@ ARGPARSE_DRIVERS = (
     "tensorbem.benchmarks.kkr_causality",
     "tensorbem.benchmarks.lifting_solver",
     "tensorbem.benchmarks.symmetry_reduction",
+    "tensorbem.benchmarks.wigley_kcs_kochin_energy",
 )
 
 #: ``lifting_foil`` has no argparse: running it with an unknown flag executes the
