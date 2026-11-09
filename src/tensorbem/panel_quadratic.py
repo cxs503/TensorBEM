@@ -729,6 +729,45 @@ def icosphere_quadratic(subdivisions: int, radius: float = 1.0) -> QuadraticSurf
     )
 
 
+def ellipsoid_quadratic(
+    subdivisions: int,
+    axes: Sequence[float] = (1.0, 1.0, 1.0),
+    centre: Sequence[float] = (0.0, 0.0, 0.0),
+) -> QuadraticSurfaceMesh:
+    """Create a quadratic mesh of an axis-aligned ellipsoid.
+
+    The mesh is the *affine image* of the icosphere mesh of
+    :func:`icosphere_quadratic`: ``x = centre + diag(axes) * x_sphere``.  Every
+    node therefore lies exactly on the ellipsoid
+    ``|diag(axes)^-1 (x - centre)| = 1`` and each element is the exact image of
+    a curved sphere patch, i.e. a genuinely curved *non-spherical* isoparametric
+    panel.  (Anisotropic ``axes`` distort the elements; that distortion is a
+    property of the geometry, not of the mesh generator.)
+
+    Parameters
+    ----------
+    subdivisions : int
+        Icosphere refinement level (same meaning as :func:`icosphere_quadratic`).
+    axes : sequence of 3 floats
+        Semi-axis lengths ``(a, b, c)`` along x, y, z.
+    centre : sequence of 3 floats
+        Centre of the ellipsoid.
+
+    Returns
+    -------
+    QuadraticSurfaceMesh
+        Closed quadratic mesh of the ellipsoid.
+    """
+    axes_arr = np.asarray(axes, dtype=float).reshape(3)
+    centre_arr = np.asarray(centre, dtype=float).reshape(3)
+    if np.any(axes_arr <= 0.0):
+        raise ValueError("axes must all be positive")
+
+    sphere = icosphere_quadratic(subdivisions)
+    vertices = centre_arr + sphere.vertices * axes_arr
+    return QuadraticSurfaceMesh(vertices, sphere.faces.copy())
+
+
 # ---------------------------------------------------------------------------
 # Matrix assembly
 # ---------------------------------------------------------------------------

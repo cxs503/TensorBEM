@@ -32,6 +32,7 @@ from tensorbem.panel_quadratic import (
     QuadraticSurfaceMesh,
     QuadraticTriangle,
     assemble_quadratic_matrices,
+    ellipsoid_quadratic,
     icosphere_quadratic,
     quadratic_shape_functions_array,
     quadratic_shape_gradients_ref,
@@ -372,3 +373,164 @@ def test_equivalent_source_density_is_not_the_flux(sphere_meshes):
     q = direct.normal_derivative
     diff = np.linalg.norm(sigma - q) / np.linalg.norm(q)
     assert diff > 0.1, f"unexpected: sigma and q agree to {diff:.3e}"
+
+# ---------------------------------------------------------------------------
+# Geometry-generic verification (non-spherical surface, similarity invariance)
+# ---------------------------------------------------------------------------
+def test_ellipsoid_quadratic_nodes_lie_on_the_surface():
+    """Every node of the ellipsoid mesh satisfies |diag(axes)^-1 (x - c)| = 1."""
+    axes = np.array([1.0, 1.6, 0.7])
+    centre = np.array([0.3, -1.0, 2.0])
+    mesh = ellipsoid_quadratic(1, axes=axes, centre=centre)
+    scaled = (mesh.vertices - centre) / axes
+    radial = np.linalg.norm(scaled, axis=1)
+    assert np.max(np.abs(radial - 1.0)) < 1e-12, "nodes are not on the ellipsoid"
+    # Closed surface: every edge of every face is shared by exactly two faces,
+    # every vertex node is used, and the node count is V + E (vertices + edge
+    # midpoints) as required by the 6-node element topology.
+    edges: dict[tuple[int, int], int] = {}
+    vertex_nodes: set[int] = set()
+    for face in mesh.faces:
+        vertex_nodes.update(int(v) for v in face[:3])  # columns 0-2 are the vertices
+        for a, b in ((face[0], face[1]), (face[1], face[2]), (face[2], face[0])):
+            key = (min(int(a), int(b)), max(int(a), int(b)))
+            edges[key] = edges.get(key, 0) + 1
+    assert set(edges.values()) == {2}, "quadratic mesh is not watertight"
+    assert mesh.node_count == len(vertex_nodes) + len(edges)
+    # Euler characteristic of a sphere: V - E + F = 2.
+    assert len(vertex_nodes) - len(edges) + mesh.element_count == 2
+
+
+def test_ellipsoid_quadratic_rejects_bad_axes():
+    with pytest.raises(ValueError):
+        ellipsoid_quadratic(0, axes=(1.0, 0.0, 1.0))
+
+
+def test_flux_convergence_on_ellipsoid():
+    """The O(h**2) flux recovery survives on a surface with varying curvature.
+
+    The point-source study lives on a sphere, where every curvature direction is
+    degenerate; this test repeats the recovery on an ellipsoid whose three
+    semi-axes differ, so accuracy cannot come from spherical symmetry.
+    """
+    from tensorbem.benchmarks.quadratic_panel_verification import (
+        GEOMETRY_ORDER_FLOOR,
+        FLUX_ACCEPTANCE,
+        loglog_slope,
+        run_flux_study,
+    )
+
+    errors, hs = [], []
+    for sub in (0, 1, 2):
+        mesh = ellipsoid_quadratic(sub, axes=(1.0, 1.6, 0.7))
+        record = run_flux_study(mesh, source=np.zeros(3))
+        assert record["relative_residual_l2"] < 1e-10
+        errors.append(record["flux_rel_error"])
+        hs.append(record["h"])
+    order = loglog_slope(np.array(hs), np.array(errors))
+    assert order >= GEOMETRY_ORDER_FLOOR, f"ellipsoid flux order {order:.2f} too low"
+    assert errors[-1] <= FLUX_ACCEPTANCE, f"ellipsoid flux error {errors[-1]:.3e} > 3%"
+
+
+def test_similarity_invariance_of_flux_error():
+    """Uniform scaling + translation must not change the *relative* flux error."""
+    from tensorbem.benchmarks.quadratic_panel_verification import run_similarity_study
+
+    result = run_similarity_study(level=1)
+    assert result["relative_deviation"] < 1e-10, (
+        f"similarity deviation {result['relative_deviation']:.3e} "
+        "-> the operator has a hidden absolute length scale"
+    )
+
+
+def test_committed_study_json_matches_its_artifacts():
+    """The committed study record must be self-consistent and hash-verified.
+
+    Guards against hand-edited numbers: the acceptance flags must follow from the
+    level table, and the provenance hashes must match the committed figures.
+    """
+    import hashlib
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    doc_dir = root / "docs" / "quadratic_panel_verification"
+    study = json.loads((doc_dir / "study.json").read_text())
+
+    assert study["schema"] == "tensorbem.quadratic_panel_verification/v2"
+    levels = study["levels"]
+    acceptance = study["acceptance"]
+    assert acceptance["flux_rel_error_finest"] == levels[-1]["flux_rel_error"]
+    assert acceptance["passed_3pct"] == (
+        levels[-1]["flux_rel_error"] <= acceptance["threshold"]
+    )
+    assert acceptance["passed"] == (
+        acceptance["passed_3pct"]
+        and acceptance["geometry_passed"]
+        and acceptance["similarity_passed"]
+    )
+
+    geometry = study["geometry"]
+    assert len(geometry["geometries"]) >= 2
+    names = {g["name"] for g in geometry["geometries"]}
+    assert "sphere" in names and any(n.startswith("ellipsoid") for n in names)
+    for geom in geometry["geometries"]:
+        finest = geom["levels"][-1]["flux_rel_error"]
+        assert finest == geom["flux_rel_error_finest"]
+        assert geom["observed_order"] == pytest.approx(geom["observed_order"])
+        assert geom["acceptance"]["passed"] == (
+            finest <= geom["acceptance"]["threshold"]
+            and geom["observed_order"] >= geom["acceptance"]["order_floor"]
+        )
+    assert study["similarity"]["passed"] is True
+    assert study["similarity"]["relative_deviation"] <= study["similarity"]["tolerance"]
+
+    for entry in study["provenance"].values():
+        path = root / entry["path"]
+        assert path.exists(), f"missing artifact {entry['path']}"
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        assert digest == entry["sha256"], f"sha256 mismatch for {entry['path']}"
+
+
+def test_benchmark_gate_exits_nonzero_on_failure(tmp_path):
+    """The benchmark is a *gate*: a failing acceptance must not exit 0."""
+    from tensorbem.benchmarks.quadratic_panel_verification import main
+
+    out_json = tmp_path / "study.json"
+    argv = [
+        "--levels",
+        "0",
+        "--json",
+        str(out_json),
+        "--figure",
+        "",
+        "--geometry-figure",
+        "",
+        "--skip-geometry",
+    ]
+    with pytest.raises(SystemExit) as excinfo:
+        main(argv)
+    assert "acceptance gate failed" in str(excinfo.value.code)
+    assert out_json.exists()
+
+
+def test_benchmark_gate_can_report_without_failing(tmp_path):
+    """``--allow-fail`` records the failing flags but returns normally."""
+    from tensorbem.benchmarks.quadratic_panel_verification import main
+
+    study = main(
+        [
+            "--levels",
+            "0",
+            "--json",
+            str(tmp_path / "study.json"),
+            "--figure",
+            "",
+            "--geometry-figure",
+            "",
+            "--skip-geometry",
+            "--allow-fail",
+        ]
+    )
+    assert study["acceptance"]["passed_3pct"] is False
+    assert study["acceptance"]["passed"] is False
