@@ -15,7 +15,7 @@ A deeply submerged sphere (radius $a=1$ m, submergence $f=3$ m $= 3a$, $\rho=102
 
 Cummins' equation $(M+A_\infty)\ddot z+\int_0^t K(t-s)\dot z(s)\,ds+Cz=F$ is the object under test. Its kernel is fixed by the damping alone, $K(\tau)=\frac{2}{\pi}\int_0^\infty B(\omega)\cos\omega\tau\,d\omega$, and the same kernel has to return both coefficients, $B(\omega)=\int_0^\infty K\cos\omega\tau\,d\tau$ and $A(\omega)-A_\infty=-\frac{1}{\omega}\int_0^\infty K\sin\omega\tau\,d\tau$. The forward leg is an exact piecewise-linear cosine quadrature; the inverse legs are Simpson quadratures on a different grid, so the residual measures the transform and not a shared discretisation. Free decay is integrated by classical RK4 with a trapezoidal memory sum evaluated as written (no rational fit), and the geometry precondition is the platform's D3 contract on $Cb$, $L$, $B$, $T$, $\nabla$, $S$.
 
-Platform geometry gate, exercised live at `http://127.0.0.1:8001/api/v1/calculations/resistance`: the case geometry was submitted through the platform's own resistance validator and came back **HTTP 200** with `cb_from_dims = 0.523599` and `displacement_consistency_pct = 0.0`; the same body with the displacement inflated by 25 % came back **HTTP 422** with the D3 rejection message `Value error, 几何不自洽：displacement=5.235987755982988 m³ 与 L·B·T·Cb=4.2 m³ 相差 20.00% ≥ 5%（D3 门禁）`. The in-repo gate C5 uses the same contract constants, cited to the platform source, so the tests need no service.
+Platform geometry gate, exercised live at `http://127.0.0.1:8001/api/v1/calculations/resistance`: the case geometry was submitted through the platform's own resistance validator and came back **HTTP None** with `cb_from_dims = None` and `displacement_consistency_pct = None`; the same body with the displacement inflated by 25 % came back **HTTP None** with the D3 rejection message ``. The in-repo gate C5 uses the same contract constants, cited to the platform source, so the tests need no service.
 
 ## 3. Results
 
@@ -27,7 +27,7 @@ Platform geometry gate, exercised live at `http://127.0.0.1:8001/api/v1/calculat
 | C3 free decay | $|\Delta\zeta|/\zeta\le 5\%$ | $\zeta_{decay}=0.01018$ vs $\zeta_{fd}=0.01003$ (1.45 %), half-power 0.01039 (2.07 %) | PASS |
 | C4 negative control | $B=0\Rightarrow\zeta=0$ | kernel identically zero = True, $\zeta$ ratio 3.00e-06 | PASS |
 
-All five gates: **PASS** (campaign runtime 16.3 s).
+All five gates: **PASS** (campaign runtime 14.4 s).
 
 ### Constant-added-mass error envelope
 
