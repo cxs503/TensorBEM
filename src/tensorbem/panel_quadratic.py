@@ -57,6 +57,37 @@ from numpy.typing import NDArray
 FloatArray = NDArray[np.float64]
 IntArray = NDArray[np.int64]
 
+__all__ = [
+    # Constants
+    "NODES_PER_ELEMENT",
+    "NODE_LABELS",
+    "NODE_BARYCENTRIC",
+    "FOUR_PI",
+    # Shape functions
+    "quadratic_shape_functions",
+    "quadratic_shape_gradients_ref",
+    "quadratic_shape_functions_array",
+    "quadratic_shape_gradients_ref_array",
+    "partition_of_unity_check",
+    # Quadrature
+    "gauss_triangle_rule",
+    "duffy_self_quadrature",
+    "triangle_apex_quadrature",
+    # Geometry
+    "QuadraticTriangle",
+    "QuadraticSurfaceMesh",
+    "icosphere_quadratic",
+    "ellipsoid_quadratic",
+    # BEM operators
+    "assemble_quadratic_matrices",
+    "solve_laplace_dirichlet_quadratic",
+    "solve_neumann_from_dirichlet_quadratic",
+    "QuadraticBEMResult",
+    "QuadraticNeumannResult",
+    # Diagnostics
+    "self_influence_analytical_vs_numerical",
+]
+
 FOUR_PI = 4.0 * math.pi
 
 #: Number of nodes per quadratic triangle element.
