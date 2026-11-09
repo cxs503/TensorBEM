@@ -150,8 +150,9 @@ correction log inside the generated block records what changed.
 | Near-singular quadrature and conditioning diagnostics | **REAL** | `tensorbem.quadrature_diagnostics`, `tensorbem.quadrature_diagnostics_2d` (+1) | 3 node(s) in 3 file(s) | `docs/capability_registry_coverage.md` |
 | Panel and triangle mesh geometry with closure checks | **REAL** | `tensorbem.geometry`, `tensorbem.geometry3d` | 3 node(s) in 2 file(s) | `docs/three_dimensional_bem.md` |
 | Parametric KCS-class hull with published-particular anchors | **WITHHELD** | `tensorbem.kcs_hull` | 2 node(s) in 1 file(s) | `docs/m6656/README.md` |
+| Multihull added mass and damping with exact zero/infinite-frequency asymptotes | **REAL** | `tensorbem.multibody3d`, `tensorbem.benchmarks.multibody_frequency_dependence_3d` | 3 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 
-Counts: **41** REAL, **1** WITHHELD — 42 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **42** REAL, **1** WITHHELD — 43 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -162,14 +163,23 @@ Counts: **41** REAL, **1** WITHHELD — 42 capabilities. The level is derived fr
 
 ### Capability coverage
 
-55 of 58 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **2 are unowned**.
+56 of 68 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **11 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 
 **Core modules no row grades and no reason explains** (fails the gate):
 
+- `tensorbem.cylinder_drift`
+- `tensorbem.finite_depth_green`
+- `tensorbem.interior_panels`
+- `tensorbem.neumann_kelvin`
 - `tensorbem.panel_quadratic`
+- `tensorbem.propeller`
+- `tensorbem.rankine_fs`
+- `tensorbem.rankine_wave`
+- `tensorbem.series60`
 - `tensorbem.tank_free_surface`
+- `tensorbem.wigley3_hull`
 
 ### Untested modules
 
@@ -184,6 +194,14 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
 - `tensorbem.benchmarks.wave_loads_verification` — wave-load verification driver assembling the same pressure path as wave_loads_minimal; no physics of its own to pin.
 - `tensorbem.benchmarks.wigley_kcs_kochin_energy_figures` — matplotlib helper rendering the Wigley/KCS Kochin-energy report figures from its JSON artifact; exercised when the figures are rebuilt.
+
+**Unreferenced and unexplained** (fails the gate):
+
+- `tensorbem.benchmarks.kp505_openwater_bem`
+- `tensorbem.benchmarks.multihull_frequency_figures`
+- `tensorbem.benchmarks.neumann_kelvin_verification`
+- `tensorbem.benchmarks.quadratic_panel_verification`
+- `tensorbem.benchmarks.wigley_diffraction_radiation`
 
 <!-- capability-matrix:end -->
 

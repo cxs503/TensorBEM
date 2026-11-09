@@ -1,0 +1,122 @@
+{
+ "study": "multibody_frequency_dependence_3d",
+ "campaign_node": "P106W2-N04",
+ "criteria": {
+  "all_pass": {
+   "value": false,
+   "limit": null,
+   "pass": false
+  },
+  "distance_decay_exponent": {
+   "value": {
+    "0.6:sigma_A_heave": 0.3468868859893514,
+    "0.6:sigma_A_pitch": 0.8500700120816159,
+    "0.6:sigma_A_sway": 0.37841308799576406,
+    "1.2:sigma_A_heave": 0.40143410153981,
+    "1.2:sigma_A_pitch": 0.6416220617851299,
+    "1.2:sigma_A_sway": -0.035047116680430625
+   },
+   "limit": null,
+   "pass": true
+  },
+  "distance_decay_far_field": {
+   "value": 0.3840126547355659,
+   "limit": 0.05,
+   "pass": false
+  },
+  "energy_far_field_agreement": {
+   "value": 0.025829295752272576,
+   "limit": 0.1,
+   "pass": true
+  },
+  "energy_non_negative_damping": {
+   "value": 0.00014937162438730087,
+   "limit": 0.0,
+   "pass": true
+  },
+  "gated": {
+   "value": [
+    "geometry",
+    "zero_frequency_damping",
+    "zero_frequency_added_mass",
+    "infinite_frequency_added_mass",
+    "infinite_frequency_added_mass_catamaran",
+    "infinite_frequency_from_kramers_kronig",
+    "energy_non_negative_damping",
+    "energy_far_field_agreement",
+    "distance_decay_far_field"
+   ],
+   "limit": null,
+   "pass": [
+    "geometry",
+    "zero_frequency_damping",
+    "zero_frequency_added_mass",
+    "infinite_frequency_added_mass",
+    "infinite_frequency_added_mass_catamaran",
+    "infinite_frequency_from_kramers_kronig",
+    "energy_non_negative_damping",
+    "energy_far_field_agreement",
+    "distance_decay_far_field"
+   ]
+  },
+  "geometry": {
+   "value": 0.003924501038556716,
+   "limit": 0.02,
+   "pass": true
+  },
+  "infinite_frequency_added_mass": {
+   "value": 1.9434123152487868,
+   "limit": 0.02,
+   "pass": false
+  },
+  "infinite_frequency_added_mass_catamaran": {
+   "value": 2.346850758522922,
+   "limit": 0.02,
+   "pass": false
+  },
+  "infinite_frequency_from_kramers_kronig": {
+   "value": 0.538142968033298,
+   "limit": 0.02,
+   "pass": false
+  },
+  "negative_control_singularity": {
+   "value": {
+    "monotone_growth": true,
+    "superposed_status": "solved",
+    "superposition_singular": true
+   },
+   "limit": null,
+   "pass": true
+  },
+  "zero_frequency_added_mass": {
+   "value": 0.030188908119514683,
+   "limit": 0.02,
+   "pass": false
+  },
+  "zero_frequency_damping": {
+   "value": 0.008633725132928814,
+   "limit": 0.01,
+   "pass": true
+  }
+ },
+ "figures": [
+  "frequency_scan.png",
+  "interference_frequency.png",
+  "distance_decay.png",
+  "asymptotes.png",
+  "negative_control.png",
+  "grid_convergence.png"
+ ],
+ "timings": {
+  "asymptotic_limits": 314.69,
+  "distance_decay": 455.67,
+  "energy_check": 571.59,
+  "frequency_scan": 277.98,
+  "geometry_hydrostatics": 9.34,
+  "high_frequency_ladder": 395.38,
+  "kramers_kronig": 571.59,
+  "negative_control": 473.29,
+  "resolution_ladder": 563.93,
+  "total": 571.59
+ }
+}
