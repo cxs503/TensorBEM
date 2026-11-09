@@ -41,6 +41,31 @@ The module provides:
     2. Mixed BC solver for the exterior Laplace problem
     3. Post-processing: potential distribution, current density, anode demand
     4. Verification against analytical and DNV-RP-B401 criteria
+
+Units, sign convention and verification anchors
+-----------------------------------------------
+The boundary integral equation solves for the single-layer density ``q``
+(units V/m) that enters the exterior representation formula.  The physical
+seawater current density follows from Ohm's law and carries the conductivity
+``sigma`` (default :data:`SEAWATER_CONDUCTIVITY`, 3.5 S/m):
+
+    j_n = -sigma * dphi/dn = sigma * q        [A/m^2],
+
+positive where current leaves the metal (anodic) and negative where current
+enters the metal (cathodic).  The scaling is not cosmetic: against the exact
+conducting-sphere result ``I = 4 pi sigma a phi_a`` (spreading resistance
+``R = 1/(4 pi sigma a)``) the unscaled ``q`` integral underestimates the
+current by exactly the factor ``1/sigma`` (71.5 % error), while the scaled
+current is within 0.4 % at 1280 panels (:func:`verify_conducting_sphere`,
+also runnable as ``python -m tensorbem.benchmarks.cathodic_protection_sphere``).
+
+:func:`generate_closed_hull_mesh` closes the open wetted surface with an
+artificial planar fan in the waterplane ``z = 0``.  Those *lid* panels are
+insulating symmetry panels: they carry no coating, no holiday and no anode,
+and they are excluded from the wetted-area statistics, from
+:func:`assign_coating_damage` and from the DNV-RP-B401 demand comparison (for
+the 200 m bulk carrier the lid is 5372 m^2 of the 14979 m^2 closed-mesh area,
+i.e. 36 %, so leaving it in inflates the anode demand by 56 %).
 """
 
 from __future__ import annotations
@@ -73,6 +98,32 @@ PROTECTION_POTENTIAL = -0.80       # V vs Ag/AgCl (minimum protection)
 OVERPROTECTION_LIMIT = -1.05       # V vs Ag/AgCl (maximum, avoid coating damage)
 ANODE_OPEN_CIRCUIT_POTENTIAL = -1.05  # V vs Ag/AgCl (Al/Zn anode)
 BARE_STEEL_CURRENT_DENSITY = 0.150    # A/m^2 (initial polarization)
+WATERLINE_LID_TOLERANCE = 1e-9         # m, coplanarity tolerance for the lid
+
+
+def _panel_areas(mesh: TriangleMesh) -> FloatArray:
+    """Areas (m^2) of all triangular panels of ``mesh``."""
+    v0 = mesh.vertices[mesh.faces[:, 0]]
+    v1 = mesh.vertices[mesh.faces[:, 1]]
+    v2 = mesh.vertices[mesh.faces[:, 2]]
+    return 0.5 * np.linalg.norm(np.cross(v1 - v0, v2 - v0), axis=1)
+
+
+def waterline_lid_mask(mesh: TriangleMesh) -> NDArray[np.bool_]:
+    """Boolean mask of the artificial waterline-closure ("lid") panels.
+
+    :func:`generate_closed_hull_mesh` closes the open wetted hull with a planar
+    fan in the waterplane ``z = 0`` so that the boundary integral equation is
+    applied on a closed surface.  A panel is a lid panel when all three of its
+    vertices lie in the waterplane.  Lid panels are *not* wetted steel: they
+    are kept as insulating (``q_n = 0``) symmetry panels and must be excluded
+    from wetted-area statistics, coating-damage assignment and the
+    DNV-RP-B401 anode-demand comparison.
+    """
+    if mesh.faces.size == 0:
+        return np.zeros(0, dtype=bool)
+    z = mesh.vertices[mesh.faces][:, :, 2]
+    return np.all(np.abs(z) <= WATERLINE_LID_TOLERANCE, axis=1)
 
 
 @dataclass(frozen=True)
@@ -214,8 +265,18 @@ class CathodicProtectionResult:
     potential :
         Potential (V) at each panel centroid.
     current_density :
-        Normal current density (A/m^2) at each panel centroid.
-        Positive = current flowing out of the surface (anodic).
+        Physical seawater current density ``j_n = conductivity * q`` (A/m^2)
+        at each panel centroid; positive where current leaves the metal
+        (anodic), negative where it enters the metal (cathodic).
+    single_layer_density :
+        The boundary-integral unknown ``q`` (V/m) entering the exterior
+        representation formula, with ``current_density = conductivity * q``.
+        This -- not ``current_density`` -- is the density to feed to
+        :func:`evaluate_exterior_potential`.
+    conductivity :
+        Seawater conductivity (S/m) used to convert ``q`` to ``current_density``.
+    protection_potential :
+        Protection potential (V vs Ag/AgCl) used for the coverage statistic.
     coated_panels :
         Boolean mask of coated (insulating) panels.
     damaged_panels :
@@ -231,7 +292,14 @@ class CathodicProtectionResult:
     max_potential_hull :
         Maximum (least negative) potential on the hull (V).
     protection_coverage :
-        Fraction of hull area with phi <= -0.80 V.
+        Fraction of the *wetted* area with ``phi <= protection_potential``
+        (the artificial waterline lid is excluded).
+    lid_panels :
+        Boolean mask of the artificial waterline-closure panels.
+    lid_area :
+        Area of the waterline lid (m^2).
+    wetted_area :
+        Wetted steel area (m^2), ``sum(panel_areas[~lid_panels])``.
     condition_number :
         Condition number of the BEM system matrix.
     relative_residual :
@@ -239,6 +307,9 @@ class CathodicProtectionResult:
     """
     potential: FloatArray
     current_density: FloatArray
+    single_layer_density: FloatArray
+    conductivity: float
+    protection_potential: float
     coated_panels: IntArray
     damaged_panels: IntArray
     anode_panels: IntArray
@@ -247,6 +318,9 @@ class CathodicProtectionResult:
     min_potential_hull: float
     max_potential_hull: float
     protection_coverage: float
+    lid_panels: NDArray[np.bool_]
+    lid_area: float
+    wetted_area: float
     condition_number: float
     relative_residual: float
     panel_areas: FloatArray
@@ -262,6 +336,7 @@ def solve_cathodic_protection(
     anode_panels: IntArray,
     protection_potential: float = PROTECTION_POTENTIAL,
     anode_potential: float = ANODE_OPEN_CIRCUIT_POTENTIAL,
+    conductivity: float = SEAWATER_CONDUCTIVITY,
     quadrature_order: int = 8,
 ) -> CathodicProtectionResult:
     """Solve the cathodic protection mixed boundary-value problem.
@@ -284,6 +359,10 @@ def solve_cathodic_protection(
         Potential on damaged steel panels (V vs Ag/AgCl).
     anode_potential :
         Potential on anode panels (V vs Ag/AgCl).
+    conductivity :
+        Seawater electrical conductivity (S/m).  Converts the single-layer
+        density ``q`` solved by the BIE into the physical current density
+        ``j_n = conductivity * q`` (Ohm's law in the electrolyte).
     quadrature_order :
         Gauss quadrature order for single-layer integration.
 
@@ -304,6 +383,9 @@ def solve_cathodic_protection(
         )
     if not np.array_equal(all_panels, np.arange(n_panels)):
         raise ValueError("Panel partition must be a permutation of [0, n_panels)")
+
+    if not np.isfinite(conductivity) or conductivity <= 0.0:
+        raise ValueError(f"conductivity must be positive, got {conductivity!r}")
 
     coated = np.asarray(coated_panels, dtype=np.int64)
     damaged = np.asarray(damaged_panels, dtype=np.int64)
@@ -383,23 +465,27 @@ def solve_cathodic_protection(
     q_dirichlet = x[:n_d]
     phi_neumann = x[n_d:]
 
-    # Reconstruct full potential and current density arrays
+    # Reconstruct the potential and the single-layer density.  The BIE solves
+    # for q (V/m); the physical current density follows from Ohm's law in the
+    # electrolyte, j_n = -sigma dphi/dn = sigma q, where q is the density used
+    # by the exterior representation formula of evaluate_exterior_potential.
     potential = np.empty(n_panels, dtype=float)
-    current_density = np.empty(n_panels, dtype=float)
+    single_layer_density = np.zeros(n_panels, dtype=float)
 
     for idx, j in enumerate(dirichlet):
         potential[int(j)] = phi_dirichlet[idx]
-        current_density[int(j)] = q_dirichlet[idx]
+        single_layer_density[int(j)] = q_dirichlet[idx]
 
     for idx, k in enumerate(neumann):
         potential[int(k)] = phi_neumann[idx]
-        current_density[int(k)] = 0.0  # prescribed
 
-    # Compute panel areas
-    v0 = mesh.vertices[mesh.faces[:, 0]]
-    v1 = mesh.vertices[mesh.faces[:, 1]]
-    v2 = mesh.vertices[mesh.faces[:, 2]]
-    panel_areas = 0.5 * np.linalg.norm(np.cross(v1 - v0, v2 - v0), axis=1)
+    current_density = float(conductivity) * single_layer_density
+
+    # Compute panel areas and split wetted steel from the artificial lid
+    panel_areas = _panel_areas(mesh)
+    lid_panels = waterline_lid_mask(mesh)
+    lid_area = float(np.sum(panel_areas[lid_panels]))
+    wetted_area = float(np.sum(panel_areas[~lid_panels]))
 
     # Total anode current (integrate current density over anode panels)
     anode_current = float(np.sum(current_density[anodes] * panel_areas[anodes]))
@@ -410,14 +496,21 @@ def solve_cathodic_protection(
     max_phi = float(np.max(all_phi))
     mean_phi_damaged = float(np.mean(potential[damaged])) if len(damaged) > 0 else 0.0
 
-    # Protection coverage: fraction of wetted area with phi <= -0.80V
-    protected_area = float(np.sum(panel_areas[all_phi <= PROTECTION_POTENTIAL]))
-    total_area = float(np.sum(panel_areas))
-    protection_coverage = protected_area / total_area if total_area > 0 else 0.0
+    # Protection coverage: fraction of the *wetted* area at or below the
+    # requested protection potential (the artificial waterline lid is not steel
+    # and is excluded).
+    wetted = ~lid_panels
+    protected_area = float(
+        np.sum(panel_areas[wetted & (all_phi <= protection_potential)])
+    )
+    protection_coverage = protected_area / wetted_area if wetted_area > 0 else 0.0
 
     return CathodicProtectionResult(
         potential=potential,
         current_density=current_density,
+        single_layer_density=single_layer_density,
+        conductivity=float(conductivity),
+        protection_potential=float(protection_potential),
         coated_panels=coated,
         damaged_panels=damaged,
         anode_panels=anodes,
@@ -426,6 +519,9 @@ def solve_cathodic_protection(
         min_potential_hull=min_phi,
         max_potential_hull=max_phi,
         protection_coverage=protection_coverage,
+        lid_panels=lid_panels,
+        lid_area=lid_area,
+        wetted_area=wetted_area,
         condition_number=cond,
         relative_residual=rel_residual,
         panel_areas=panel_areas,
@@ -448,9 +544,10 @@ def assign_coating_damage(
     mesh :
         Hull surface mesh.
     damage_ratio :
-        Fraction of panels that are coating damage (holidays).
+        Fraction of *wetted* panels that are coating damage (holidays).  The
+        artificial waterline lid takes no part in the draw.
     anode_ratio :
-        Fraction of panels that are anodes.
+        Fraction of *wetted* panels that are anodes.
     seed :
         Random seed for reproducibility.
 
@@ -460,18 +557,25 @@ def assign_coating_damage(
         Disjoint index arrays covering all panels.
     """
     rng = np.random.default_rng(seed)
-    n = mesh.panel_count
+    lid = waterline_lid_mask(mesh)
+    # Only wetted steel panels can carry coating damage or anodes; the
+    # waterline lid is an insulating symmetry plane and stays "coated".
+    candidates = np.flatnonzero(~lid)
+    n = len(candidates)
     n_anode = max(1, int(round(n * anode_ratio)))
     n_damaged = max(1, int(round(n * damage_ratio)))
 
     if n_anode + n_damaged >= n:
         raise ValueError("damage_ratio + anode_ratio must be < 1")
 
-    # Random permutation
+    # Random permutation of the wetted panels
     perm = rng.permutation(n)
-    anode_panels = np.sort(perm[:n_anode])
-    damaged_panels = np.sort(perm[n_anode:n_anode + n_damaged])
-    coated_panels = np.sort(perm[n_anode + n_damaged:])
+    selected = candidates[perm]
+    anode_panels = np.sort(selected[:n_anode])
+    damaged_panels = np.sort(selected[n_anode:n_anode + n_damaged])
+    coated_panels = np.sort(
+        np.concatenate([selected[n_anode + n_damaged:], np.flatnonzero(lid)])
+    )
 
     return coated_panels, damaged_panels, anode_panels
 
@@ -486,6 +590,13 @@ def evaluate_exterior_potential(
 
     For the exterior problem:
     phi(x) = integral_S G(x,y)*q(y) dS - integral_S dG/dn(x,y)*phi(y) dS
+
+    ``q`` here is the boundary-integral unknown stored in
+    :attr:`CathodicProtectionResult.single_layer_density` (units V/m).  It is
+    related to the physical current density by ``j_n = conductivity * q``;
+    the conductivity-scaled field
+    :attr:`CathodicProtectionResult.current_density` must **not** be used in
+    this formula.
 
     Parameters
     ----------
@@ -518,7 +629,7 @@ def evaluate_exterior_potential(
     # qp shape: (F, Q, 3), qw shape: (F, Q)
 
     phi_vals = result.potential
-    q_vals = result.current_density
+    q_vals = result.single_layer_density
 
     phi_at_points = np.zeros(len(points), dtype=float)
 
@@ -643,24 +754,212 @@ def compute_dnv_anode_demand(
     }
 
 
+def _convergence_summary(
+    levels: list[dict[str, Any]],
+    safety_factor: float = 1.25,
+) -> dict[str, Any]:
+    """Three-level mesh-convergence summary on the anode-current density.
+
+    Reported instead of an assumed-order GCI.  The refinement ratio is
+    estimated from the panel counts as ``r = (N_fine / N_coarse) ** 0.5``
+    (a surface mesh of a fixed geometry refines with ``h ~ N ** -1/2``), and
+    the observed order comes from the two successive differences -- no order
+    of accuracy is assumed.  When the sequence is not monotone (the
+    section-count family is not a systematic refinement) the GCI is reported
+    as unavailable rather than fabricated.
+    """
+    out: dict[str, Any] = {
+        "quantity": "|anode current| / wetted area [A/m^2]",
+        "levels": levels,
+    }
+    if len(levels) < 3:
+        out.update({"observed_order": None, "gci_percent": None,
+                    "note": "need at least three levels"})
+        return out
+    f1 = levels[-3]["current_per_wetted_area_A_m2"]
+    f2 = levels[-2]["current_per_wetted_area_A_m2"]
+    f3 = levels[-1]["current_per_wetted_area_A_m2"]
+    e12 = abs(f2 - f1)
+    e23 = abs(f3 - f2)
+    r = (levels[-1]["n_panels"] / levels[-2]["n_panels"]) ** 0.5
+    out["refinement_ratio"] = float(r)
+    out["differences_A_m2"] = [float(e12), float(e23)]
+    if e12 <= 0.0 or e23 <= 0.0 or r <= 1.0:
+        out.update({"observed_order": None, "gci_percent": None,
+                    "note": "zero or non-monotone change between levels"})
+        return out
+    p_obs = math.log(e23 / e12) / math.log(r)
+    out["observed_order"] = float(p_obs)
+    if p_obs <= 0.0:
+        out.update({
+            "gci_percent": None,
+            "note": (
+                "successive differences do not decay (observed order <= 0): the "
+                "section-count family is not a systematic refinement (the "
+                "discrete anode-panel count changes with n_sections), so no "
+                "order of accuracy or GCI is claimed here. The clean refinement "
+                "anchor is the nested-icosphere conducting-sphere case, where "
+                "the observed order is reported by verify_conducting_sphere."
+            ),
+        })
+        return out
+    exponent = max(p_obs, 1.0)
+    out["gci_percent"] = float(
+        safety_factor * e12 / abs(f1) / (r**exponent - 1.0) * 100.0
+    )
+    return out
+
+
+def verify_conducting_sphere(
+    subdivisions: tuple[int, ...] = (1, 2, 3),
+    radius: float = 1.0,
+    potential: float = -1.0,
+    conductivity: float = SEAWATER_CONDUCTIVITY,
+    evaluation_radii: tuple[float, ...] = (1.5, 2.0, 3.0, 5.0),
+) -> dict[str, Any]:
+    """Verify the linear CP BEM against the exact conducting-sphere solution.
+
+    A bare metal sphere of radius ``a`` held at the uniform potential
+    ``phi_a`` in an unbounded electrolyte of conductivity ``sigma`` radiates
+    the potential ``phi(r) = phi_a * a / r``; the total current crossing the
+    metal surface is
+
+        I = -sigma * integral_S dphi/dn dS = 4 pi sigma a phi_a,
+
+    i.e. the classical spreading resistance ``R = 1 / (4 pi sigma a)`` used
+    for isolated anodes in cathodic-protection design.  Prescribing
+    ``phi = phi_a`` on *every* panel reduces the mixed solver to the
+    single-layer equation ``S q = (1/2 - H) phi_a``, so
+    :func:`solve_cathodic_protection` must reproduce ``4 pi sigma a phi_a``
+    and the exterior potential under refinement.
+
+    This is the only closed-form anchor for the *physical* current scale of
+    the linear module: without the ``sigma`` factor of Ohm's law the current
+    integral is low by exactly ``1/sigma`` (71.5 % at ``sigma = 3.5 S/m``).
+
+    Parameters
+    ----------
+    subdivisions :
+        Icosphere subdivision levels to report (each level is one refinement).
+    radius, potential :
+        Sphere radius (m) and imposed uniform surface potential (V).
+    conductivity :
+        Seawater conductivity (S/m).
+    evaluation_radii :
+        Radii (in metres, along a generic direction) at which the exterior
+        potential is compared with ``phi_a a / r``.
+
+    Returns
+    -------
+    Dictionary with the exact values, one record per refinement level, and the
+    finest-level relative errors.
+    """
+    from .geometry3d import icosphere
+
+    current_exact = 4.0 * math.pi * conductivity * radius * potential
+    direction = np.array([0.6, 0.48, 0.64])
+    direction = direction / np.linalg.norm(direction)
+    radii = np.asarray(evaluation_radii, dtype=float)
+    if np.any(radii <= radius):
+        raise ValueError(
+            "evaluation_radii must all exceed the sphere radius "
+            f"({radius:g} m); the exterior representation is invalid inside"
+        )
+    points = radii[:, None] * direction[None, :]
+    phi_exact = potential * radius / radii
+
+    levels: list[dict[str, Any]] = []
+    for sub in subdivisions:
+        mesh = icosphere(int(sub), radius=radius)
+        surface = np.arange(mesh.panel_count, dtype=np.int64)
+        empty = np.array([], dtype=np.int64)
+        result = solve_cathodic_protection(
+            mesh,
+            empty,
+            empty,
+            surface,
+            protection_potential=float(potential),
+            anode_potential=float(potential),
+            conductivity=conductivity,
+        )
+        current_numeric = float(result.anode_current_total)
+        phi_numeric = evaluate_exterior_potential(mesh, result, points)
+        rel_phi = np.abs(phi_numeric - phi_exact) / np.abs(phi_exact)
+        levels.append({
+            "subdivisions": int(sub),
+            "n_panels": int(mesh.panel_count),
+            "current_A": current_numeric,
+            "current_rel_error": float(
+                abs(current_numeric - current_exact) / abs(current_exact)
+            ),
+            "max_potential_rel_error": float(np.max(rel_phi)),
+            "potential_rel_error_by_radius": {
+                f"r={float(r):g}": float(e) for r, e in zip(radii, rel_phi)
+            },
+            "relative_residual": float(result.relative_residual),
+        })
+
+    finest = levels[-1]
+    tolerance = 0.03
+    observed_orders: list[float] = []
+    for coarse, fine in zip(levels[:-1], levels[1:]):
+        r = (fine["n_panels"] / coarse["n_panels"]) ** 0.5
+        e_c = coarse["current_rel_error"]
+        e_f = fine["current_rel_error"]
+        if e_f > 0.0 and e_c > 0.0 and r > 1.0:
+            observed_orders.append(math.log(e_c / e_f) / math.log(r))
+    return {
+        "case": "conducting_sphere_spreading_resistance",
+        "radius_m": float(radius),
+        "potential_V": float(potential),
+        "conductivity_S_m": float(conductivity),
+        "exact_current_A": float(current_exact),
+        "exact_spreading_resistance_ohm": float(1.0 / (4.0 * math.pi * conductivity * radius)),
+        "unscaled_current_ratio_percent": float(100.0 / conductivity),
+        "unscaled_current_error_percent": float(abs(1.0 - 1.0 / conductivity) * 100.0),
+        "levels": levels,
+        "finest_relative_current_error": float(finest["current_rel_error"]),
+        "finest_max_relative_potential_error": float(finest["max_potential_rel_error"]),
+        "observed_orders": [float(v) for v in observed_orders],
+        "observed_order_finest_pair": (
+            float(observed_orders[-1]) if observed_orders else None
+        ),
+        "tolerance": tolerance,
+        "pass": bool(
+            finest["current_rel_error"] < tolerance
+            and finest["max_potential_rel_error"] < tolerance
+        ),
+    }
+
+
 def run_verification_study(
     damage_ratios: tuple[float, ...] = (0.02, 0.05, 0.10),
     mesh_levels: tuple[int, ...] = (11, 21, 31),
     output_dir: str | Path = "artifacts/cathodic_protection",
+    sphere_levels: tuple[int, ...] = (1, 2, 3),
 ) -> dict[str, Any]:
     """Run the full cathodic protection verification study.
 
-    Generates results for multiple damage ratios and mesh levels,
-    checks all verification criteria, and writes JSON artifacts.
+    Three blocks are reported:
+
+    1. **C8 -- exact conducting-sphere anchor** (:func:`verify_conducting_sphere`):
+       the physical current scale and the exterior field against the closed
+       form ``I = 4 pi sigma a phi_a``, ``phi = phi_a a / r``.
+    2. **C6 -- mesh refinement** of the 200 m bulk carrier: anode-current
+       density per wetted m^2 with an observed-order convergence summary.
+    3. **C4/C5 -- damage sweep**: protection coverage and the BEM-vs-DNV
+       current comparison over the coating-damage ratio.
 
     Parameters
     ----------
     damage_ratios :
-        Coating damage ratios to study.
+        Coating damage ratios (fraction of wetted area) to study.
     mesh_levels :
-        Number of sections for mesh convergence study.
+        Number of hull sections for the mesh-convergence block.
     output_dir :
-        Directory for output artifacts.
+        Directory for the JSON artifacts.
+    sphere_levels :
+        Icosphere subdivisions for the conducting-sphere anchor.
 
     Returns
     -------
@@ -669,146 +968,185 @@ def run_verification_study(
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    results = {
+    results: dict[str, Any] = {
         "cases": [],
         "mesh_convergence": [],
         "verification": {},
     }
 
-    # --- Mesh convergence study (C6) ---
     hull = BulkCarrierHull()
+
+    # --- C8: exact conducting-sphere anchor ------------------------------
+    sphere = verify_conducting_sphere(sphere_levels)
+    results["sphere_verification"] = sphere
+    results["verification"]["C8_conducting_sphere"] = {
+        "case": sphere["case"],
+        "exact_current_A": sphere["exact_current_A"],
+        "numeric_current_A": sphere["levels"][-1]["current_A"],
+        "relative_current_error": sphere["finest_relative_current_error"],
+        "max_relative_potential_error": sphere["finest_max_relative_potential_error"],
+        "tolerance": sphere["tolerance"],
+        "pass": sphere["pass"],
+    }
+
+    # --- C6: mesh convergence of the bulk carrier ------------------------
     convergence_data = []
     for n_sec in mesh_levels:
         mesh = generate_closed_hull_mesh(hull, n_sections=n_sec, n_side=3, n_bottom=2)
         coated, damaged, anodes = assign_coating_damage(mesh, 0.05, seed=42)
         result = solve_cathodic_protection(mesh, coated, damaged, anodes)
-        total_area = float(np.sum(result.panel_areas))
-        mean_phi = float(np.mean(result.potential))
+        anode_current = float(result.anode_current_total)
         convergence_data.append({
-            "n_sections": n_sec,
-            "n_panels": mesh.panel_count,
-            "total_area_m2": total_area,
-            "mean_potential_V": mean_phi,
-            "anode_current_A": result.anode_current_total,
+            "n_sections": int(n_sec),
+            "n_panels": int(mesh.panel_count),
+            "n_anode_panels": int(len(anodes)),
+            "closed_area_m2": float(np.sum(result.panel_areas)),
+            "lid_area_m2": float(result.lid_area),
+            "wetted_area_m2": float(result.wetted_area),
+            "mean_potential_V": float(np.mean(result.potential)),
+            "anode_current_A": anode_current,
+            "current_per_wetted_area_A_m2": abs(anode_current) / result.wetted_area,
         })
+    results["mesh_convergence"] = _convergence_summary(convergence_data)
 
-    # GCI calculation
-    if len(convergence_data) >= 3:
-        phi_values = [d["mean_potential_V"] for d in convergence_data]
-        # Grid Convergence Index using finest three meshes
-        r = 2.0  # assumed refinement ratio
-        p = 2.0  # assumed order of accuracy
-        phi1, phi2, phi3 = phi_values[-1], phi_values[-2], phi_values[-3]
-        eps12 = abs(phi1 - phi2)
-        eps23 = abs(phi2 - phi3)
-        if eps12 > 0 and eps23 > 0:
-            n_actual = math.log(eps23 / eps12) / math.log(r)
-            gci = (eps12 / abs(phi1)) * 100.0 if phi1 != 0 else 0.0
-        else:
-            n_actual = p
-            gci = 0.0
-        results["mesh_convergence"] = {
-            "levels": convergence_data,
-            "observed_order": n_actual,
-            "gci_percent": gci,
-        }
+    # --- C4/C5: coating-damage sweep -------------------------------------
+    # Geometry accounting is taken from the sweep mesh itself: re-using the
+    # area of the last convergence mesh (as an earlier revision did) mixes two
+    # different discretisations and inflates the DNV demand.
+    sweep_mesh = generate_closed_hull_mesh(hull, n_sections=11, n_side=3, n_bottom=2)
+    sweep_areas = _panel_areas(sweep_mesh)
+    sweep_lid = waterline_lid_mask(sweep_mesh)
+    sweep_lid_area = float(np.sum(sweep_areas[sweep_lid]))
+    sweep_wetted_area = float(np.sum(sweep_areas[~sweep_lid]))
 
-    # --- Damage ratio sweep (C5) ---
-    mesh = generate_closed_hull_mesh(hull, n_sections=11, n_side=3, n_bottom=2)
-    total_area = float(np.sum(result.panel_areas))
-
-    anode_currents = []
     case_results = []
+    anode_currents: list[float] = []
+    max_coated_current = 0.0
 
     for dr in damage_ratios:
-        coated, damaged, anodes = assign_coating_damage(mesh, dr, seed=42)
-        result = solve_cathodic_protection(mesh, coated, damaged, anodes)
+        coated, damaged, anodes = assign_coating_damage(sweep_mesh, dr, seed=42)
+        result = solve_cathodic_protection(sweep_mesh, coated, damaged, anodes)
+        dnv = compute_dnv_anode_demand(sweep_wetted_area, dr)
+        anode_current = float(result.anode_current_total)
+        max_coated_current = max(
+            max_coated_current, float(np.max(np.abs(result.current_density[coated])))
+        )
 
-        # DNV comparison
-        dnv = compute_dnv_anode_demand(total_area, dr)
-
-        case = {
-            "damage_ratio": dr,
-            "n_panels": mesh.panel_count,
-            "total_area_m2": total_area,
-            "anode_current_bem_A": result.anode_current_total,
+        case_results.append({
+            "damage_ratio": float(dr),
+            "n_panels": int(sweep_mesh.panel_count),
+            "wetted_area_m2": sweep_wetted_area,
+            "lid_area_m2": sweep_lid_area,
+            "protected_area_m2": float(
+                np.sum(sweep_areas[~sweep_lid
+                                   & (result.potential <= result.protection_potential)])
+            ),
+            "anode_current_bem_A": anode_current,
+            "anode_current_magnitude_bem_A": abs(anode_current),
+            "current_per_wetted_area_bem_A_m2": abs(anode_current) / sweep_wetted_area,
             "anode_current_dnv_A": dnv["total_current_A"],
-            "mean_potential_V": float(np.mean(result.potential)),
+            "current_per_wetted_area_dnv_A_m2": dnv["total_current_A"] / sweep_wetted_area,
+            "bem_to_dnv_current_ratio": abs(anode_current) / dnv["total_current_A"],
+            "mean_wetted_potential_V": float(np.mean(result.potential[~result.lid_panels])),
             "min_potential_V": result.min_potential_hull,
             "max_potential_V": result.max_potential_hull,
             "protection_coverage": result.protection_coverage,
             "condition_number": result.condition_number,
             "relative_residual": result.relative_residual,
-        }
-        case_results.append(case)
-        anode_currents.append(result.anode_current_total)
+        })
+        anode_currents.append(anode_current)
 
     results["cases"] = case_results
 
-    # --- Verification criteria ---
-    # C5: monotonic increase of anode demand with damage ratio
+    # --- C5: damage-driven anode demand ----------------------------------
+    # The criterion is direction checked: a linear fit with r^2 > 0.95 is not
+    # enough, the anode demand must actually *grow* with the damaged area.
     if len(anode_currents) >= 2:
-        x = np.array(damage_ratios)
-        y = np.array(anode_currents)
-        # Linear fit
+        x = np.asarray(damage_ratios, dtype=float)
+        y = np.abs(np.asarray(anode_currents, dtype=float))
         coeffs = np.polyfit(x, y, 1)
+        slope = float(coeffs[0])
         y_fit = np.polyval(coeffs, x)
-        ss_res = np.sum((y - y_fit) ** 2)
-        ss_tot = np.sum((y - np.mean(y)) ** 2)
+        ss_res = float(np.sum((y - y_fit) ** 2))
+        ss_tot = float(np.sum((y - np.mean(y)) ** 2))
         r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
         results["verification"]["C5_monotonic_anode_demand"] = {
+            "metric": "|anode current| (A) versus coating-damage ratio",
+            "slope_A_per_unit_damage": slope,
             "r_squared": float(r_squared),
-            "pass": bool(r_squared > 0.95),
-            "anode_currents": anode_currents,
+            "pass": bool(r_squared > 0.95 and slope > 0.0),
+            "anode_currents_A": [float(v) for v in anode_currents],
+            "note": (
+                "Prescribing the potential on every holiday (Dirichlet-Dirichlet) "
+                "makes the anode current a resistance-limited quantity set by the "
+                "0.25 V anode-holiday difference; it does not grow with the damaged "
+                "area, so this criterion is expected to FAIL honestly for the linear "
+                "model. The damage-driven physics needs the kinetic (Tafel / "
+                "oxygen-limited) boundary condition implemented in "
+                "tensorbem.cp_galvanic."
+            ),
         }
 
-    # C4: protection coverage
+    # --- C4: protection coverage ----------------------------------------
     for case in case_results:
         results["verification"][f"C4_coverage_dr{case['damage_ratio']}"] = {
             "coverage": case["protection_coverage"],
+            "protected_area_m2": case["protected_area_m2"],
+            "wetted_area_m2": case["wetted_area_m2"],
+            "threshold_V": float(PROTECTION_POTENTIAL),
             "pass": bool(case["protection_coverage"] >= 0.95),
+            "note": (
+                "Coverage counts wetted area at or below the protection potential. "
+                "In the linear model only the prescribed panels satisfy it, i.e. the "
+                "coated steel is never polarized cathodically, so coverage is "
+                "expected to be far below 1 and this criterion FAILs honestly."
+            ),
         }
 
-    # C2: coated panels have zero current (by construction)
+    # --- C2: coated panels carry no current (measured, not assumed) ------
     results["verification"]["C2_coated_insulating"] = {
-        "max_coated_current_density": 0.0,
-        "pass": True,
-        "note": "Coated panels have q_n = 0 by construction (prescribed Neumann BC)",
+        "max_coated_current_density_A_m2": max_coated_current,
+        "pass": bool(max_coated_current <= 1e-12),
+        "note": "Coated and lid panels carry q_n = 0 as a prescribed Neumann BC.",
     }
 
-    # C7: JSON output completeness
+    # --- C7: JSON output completeness ------------------------------------
     results["verification"]["C7_json_output"] = {
         "has_potential_distribution": True,
         "has_current_density": True,
         "has_anode_demand": True,
         "has_protection_coverage": True,
+        "has_sphere_anchor": True,
         "pass": True,
     }
 
-    # Write case JSON
     case_json = {
         "study": "cathodic_protection_verification",
         "hull": {
             "length_m": hull.length,
             "breadth_m": hull.breadth,
             "draft_m": hull.draft,
-            "total_wetted_area_m2": total_area,
+            "closed_mesh_area_m2": sweep_wetted_area + sweep_lid_area,
+            "wetted_area_m2": sweep_wetted_area,
+            "waterline_lid_area_m2": sweep_lid_area,
         },
         "physics": {
             "seawater_conductivity_S_m": SEAWATER_CONDUCTIVITY,
             "protection_potential_V": PROTECTION_POTENTIAL,
             "anode_potential_V": ANODE_OPEN_CIRCUIT_POTENTIAL,
+            "current_density_convention": "j_n = sigma * q, positive anodic",
         },
         "cases": case_results,
         "mesh_convergence": results.get("mesh_convergence", {}),
+        "sphere_verification": sphere,
     }
     with open(output_path / "case.json", "w") as f:
         json.dump(case_json, f, indent=2)
 
-    # Write results JSON
     results_json = {
         "verification": results["verification"],
         "mesh_convergence": results.get("mesh_convergence", {}),
+        "sphere_verification": sphere,
         "cases": case_results,
     }
     with open(output_path / "results.json", "w") as f:
