@@ -1,0 +1,4734 @@
+{
+  "schema": "tensorbem.kp505_gci_ladder/1",
+  "mission_id": 8531,
+  "task": "paper-exp-propeller-openwater-bem-C",
+  "topic": "propeller-openwater-bem",
+  "generated_utc": "2026-11-09T08:59:10.655926+00:00",
+  "repo_commit": "2cf5d311ba9f49fafd53c77e3f15d8a7f01c92a3",
+  "outdir": "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater",
+  "research_question": "report 8822 reports dK_T(J=0.8) = -29.13 % but the same lattice carries a radial GCI of 7.1-8.1 %, so model error and discretisation error were not separable; this study builds >= 4-level ladders on five axes at three advance ratios and splits the deviation into a discretisation and a model term",
+  "solver": {
+    "module": "src/tensorbem/propeller.py",
+    "entry_point": "open_water_point",
+    "wake_model": "geometric",
+    "gci_tool": "src/tensorbem/uq.py:grid_convergence_index"
+  },
+  "driver": {
+    "module": "tensorbem.benchmarks.kp505_gci_ladder",
+    "command": "python -m tensorbem.benchmarks.kp505_gci_ladder",
+    "test_module": "tests/test_kp505_gci_ladder.py"
+  },
+  "env": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "anchor": {
+    "source": {
+      "citation": "Iftikhar, H. & Takinaci, A.C. (2023). Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS. X International Conference on Computational Methods in Marine Engineering (MARINE 2023).",
+      "doi": "10.23967/marine.2023.120",
+      "location": "Table 2, page 10",
+      "table_caption_verbatim": "Table 2. Comparison of CFD and Experimental Results",
+      "column_header_verbatim": "CFD Experimental Error / J KT 10KQ KT 10KQ KT 10KQ",
+      "provenance_depth": "secondary tabulation: the paper prints the experimental columns of the KP505 open-water test, but page 10 does not cite the primary experimental report and the paper's reference list (p. 15) contains no KRISO/NMRI experimental entry. The numbers therefore enter this study through one tabulation step, which is declared rather than hidden.",
+      "access": "offline PDF copy (kp505_paper.pdf, 15 pages); text extracted with pypdf and the table rows below copied from the extracted page-10 text"
+    },
+    "rows_verbatim": [
+      "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+      "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+      "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+      "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+      "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+      "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+      "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+      "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+      "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+      "1 0.030 0.094 0.029 0.108 2.27% 13.25%"
+    ],
+    "table": {
+      "0.1": {
+        "KT": 0.494,
+        "10KQ": 0.683,
+        "eta0": 0.1151135313139038
+      },
+      "0.2": {
+        "KT": 0.447,
+        "10KQ": 0.636,
+        "eta0": 0.2237177973650227
+      },
+      "0.3": {
+        "KT": 0.392,
+        "10KQ": 0.585,
+        "eta0": 0.31994224457447684
+      },
+      "0.4": {
+        "KT": 0.343,
+        "10KQ": 0.53,
+        "eta0": 0.41200109796618944
+      },
+      "0.5": {
+        "KT": 0.29,
+        "10KQ": 0.471,
+        "eta0": 0.4899674468858774
+      },
+      "0.6": {
+        "KT": 0.241,
+        "10KQ": 0.409,
+        "eta0": 0.5626847132295371
+      },
+      "0.7": {
+        "KT": 0.193,
+        "10KQ": 0.342,
+        "eta0": 0.6287085617460544
+      },
+      "0.8": {
+        "KT": 0.141,
+        "10KQ": 0.27,
+        "eta0": 0.6649139844728071
+      },
+      "0.9": {
+        "KT": 0.087,
+        "10KQ": 0.192,
+        "eta0": 0.6490537522966356
+      },
+      "1.0": {
+        "KT": 0.029,
+        "10KQ": 0.108,
+        "eta0": 0.4273604953393486
+      }
+    },
+    "geometry_source": {
+      "citation": "Iftikhar, H. & Takinaci, A.C. (2023). Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS. X International Conference on Computational Methods in Marine Engineering (MARINE 2023).",
+      "location": "Table 1, page 6",
+      "table_caption_verbatim": "Table 1. Propeller Characteristics",
+      "rows_verbatim": [
+        "Propeller Type FPP Ae/Ao 0.800",
+        "No. of Blades 5 Rotation Right Hand",
+        "Diameter (m) 0.25 Hub Ratio 0.18",
+        "P/D (mean) 0.950 Section NACA66"
+      ],
+      "not_published": "chord distribution, radial pitch distribution, skew, rake, section camber and thickness law are not in Table 1; they are modelled below and their effect is reported as sensitivity, not hidden"
+    },
+    "design_advance_ratio": 0.8,
+    "columns_used": "J, KT_exp, 10KQ_exp (the experimental columns of Table 2)"
+  },
+  "design": {
+    "advance_ratios": [
+      0.5,
+      0.8,
+      1.0
+    ],
+    "decomposition_J": 0.8,
+    "refinement_ratio": 2.0,
+    "gci_safety_factor": 1.25,
+    "base_configuration": {
+      "n_radial": 16,
+      "n_chord": 2,
+      "wake_length": 1.0,
+      "wake_steps": 24,
+      "core_ratio": 0.05,
+      "wake_model": "geometric",
+      "rev_per_second": 10.0,
+      "thickness_ratio": 0.06,
+      "viscous": true,
+      "radial_spacing": "cosine",
+      "root_chord_offset": 0.12
+    },
+    "ladders": {
+      "spanwise": {
+        "parameter": "n_radial",
+        "levels": [
+          4,
+          8,
+          16,
+          32
+        ],
+        "kind": "discretisation",
+        "role": "panel density across the span"
+      },
+      "azimuthal": {
+        "parameter": "wake_steps",
+        "levels": [
+          12,
+          24,
+          48,
+          96
+        ],
+        "kind": "discretisation",
+        "role": "azimuthal segments of the helical wake; the blade surface carries no circumferential segmentation in a blade-fitted lattice, so this is the model's only azimuthal discretisation knob"
+      },
+      "chordwise": {
+        "parameter": "n_chord",
+        "levels": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "kind": "discretisation",
+        "role": "panel density along the chord"
+      },
+      "wake_length": {
+        "parameter": "wake_length",
+        "levels": [
+          0.25,
+          0.5,
+          1.0,
+          2.0
+        ],
+        "kind": "model",
+        "role": "trailing-vortex extent in revolutions"
+      },
+      "kernel": {
+        "parameter": "core_ratio",
+        "levels": [
+          0.4,
+          0.2,
+          0.1,
+          0.05
+        ],
+        "kind": "model",
+        "role": "van Garrel vortex-core desingularisation radius; the direct-dense lattice solve exposes no iterative relaxation factor, so this regularisation is the axis that plays that role (declared substitution, see the artefact's limitations)"
+      }
+    },
+    "criteria_predeclared": {
+      "G3_gci_target_pct": 1.0,
+      "G4_observed_order_target": 1.0,
+      "G6_band_factor": 2.0,
+      "G7_closure_tol_pp": 1e-09
+    }
+  },
+  "reproduction": {
+    "J": 0.8,
+    "configuration": {
+      "n_radial": 16,
+      "n_chord": 2,
+      "wake_length": 1.0,
+      "wake_steps": 24,
+      "core_ratio": 0.05,
+      "wake_model": "geometric",
+      "rev_per_second": 10.0,
+      "thickness_ratio": 0.06,
+      "viscous": true,
+      "radial_spacing": "cosine",
+      "root_chord_offset": 0.12
+    },
+    "KT": 0.0999328035758505,
+    "KT_anchor": 0.141,
+    "dKT_primary_pct": -29.125671222801053,
+    "report_8822_dKT_pct": -29.13,
+    "reproduces_report_8822": true,
+    "note": "the mission quotes -29.13 %; this driver recomputes the deviation from the same base configuration instead of recalling it"
+  },
+  "cells": [
+    {
+      "axis": "spanwise",
+      "parameter": "n_radial",
+      "kind": "discretisation",
+      "J": 0.5,
+      "levels": [
+        {
+          "level": 0,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 4,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3534876636288142,
+          "10KQ": 0.5000011113299386,
+          "eta0": 0.5625918394350009,
+          "n_panels": 8,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6359502797540879
+        },
+        {
+          "level": 1,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.30271961770435474,
+          "10KQ": 0.43315714314671616,
+          "eta0": 0.5561413945356306,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6620847275513931
+        },
+        {
+          "level": 2,
+          "value": 16.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6659375047002715
+        },
+        {
+          "level": 3,
+          "value": 32.0,
+          "config_digest": {
+            "n_radial": 32,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2760134387472253,
+          "10KQ": 0.42352068234264006,
+          "eta0": 0.5186157957319458,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6774394276797923
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.2760134387472253,
+            "medium": 0.2958153170105801,
+            "coarse": 0.30271961770435474,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.5200700776762333,
+            "extrapolated": 0.306415611608085,
+            "extrapolated_uncertainty": 0.030402172860859722,
+            "gci_fine": 0.13768429627398604,
+            "gci_medium": 0.04479270505930971,
+            "asymptotic_ratio": 0.933059996813327,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.23801072267115062,
+              0.3140161548232999
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.2958153170105801,
+            "medium": 0.30271961770435474,
+            "coarse": 0.3534876636288142,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.8783535286562825,
+            "extrapolated": 0.2947285569124773,
+            "extrapolated_uncertainty": 0.0010867600981028236,
+            "gci_fine": 0.004592223744046208,
+            "gci_medium": 0.032996956277878936,
+            "asymptotic_ratio": 0.9771924239792164,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.2944568668879516,
+              0.29717376713320864
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.42352068234264006,
+            "medium": 0.4349426381841892,
+            "coarse": 0.43315714314671616,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.6774136828323427,
+            "extrapolated": 0.43705895929916705,
+            "extrapolated_uncertainty": 0.013538276956526984,
+            "gci_fine": 0.039957543754540054,
+            "gci_medium": 0.006082184549131267,
+            "asymptotic_ratio": 0.9737391673319643,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.40659783614698136,
+              0.44044352853829877
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.4349426381841892,
+            "medium": 0.43315714314671616,
+            "coarse": 0.5000011113299386,
+            "refinement_ratio": 2.0,
+            "observed_order": 5.226401352060745,
+            "extrapolated": 0.4349916401415776,
+            "extrapolated_uncertainty": 4.9001957388383754e-05,
+            "gci_fine": 0.00014082879294426002,
+            "gci_medium": 0.0052939707444696876,
+            "asymptotic_ratio": 1.004122049158654,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.4348813857374537,
+              0.4350038906309247
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.5186157957319458,
+            "medium": 0.5412261964138849,
+            "coarse": 0.5561413945356306,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.6002034170828789,
+            "extrapolated": 0.5850507225579634,
+            "extrapolated_uncertainty": 0.06643492682601759,
+            "gci_fine": 0.16012558664033494,
+            "gci_medium": 0.1012158281381605,
+            "asymptotic_ratio": 0.9582237503806107,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.4355721371994239,
+              0.6016594542644678
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.5412261964138849,
+            "medium": 0.5561413945356306,
+            "coarse": 0.5625918394350009,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.2093125669425593,
+            "extrapolated": 0.5675073093024303,
+            "extrapolated_uncertainty": 0.0262811128885454,
+            "gci_fine": 0.06069808026357938,
+            "gci_medium": 0.025546369319195537,
+            "asymptotic_ratio": 0.9731809243687037,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=0.5",
+            "band95": [
+              0.5083748053032031,
+              0.5740775875245667
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "spanwise",
+      "parameter": "n_radial",
+      "kind": "discretisation",
+      "J": 0.8,
+      "levels": [
+        {
+          "level": 0,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 4,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.11955569961249865,
+          "10KQ": 0.21595850484596082,
+          "eta0": 0.7048717282687686,
+          "n_panels": 8,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9030231262759064
+        },
+        {
+          "level": 1,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.10209165794794361,
+          "10KQ": 0.18987402763039354,
+          "eta0": 0.6845967176718295,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9149812369076904
+        },
+        {
+          "level": 2,
+          "value": 16.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.916502165640992
+        },
+        {
+          "level": 3,
+          "value": 32.0,
+          "config_digest": {
+            "n_radial": 32,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09340998479335558,
+          "10KQ": 0.17972649123039702,
+          "eta0": 0.6617459991445903,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9211573684788957
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.09340998479335558,
+            "medium": 0.0999328035758505,
+            "coarse": 0.10209165794794361,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.595229619947206,
+            "extrapolated": 0.10315964378870723,
+            "extrapolated_uncertainty": 0.009749658995351657,
+            "gci_fine": 0.13046864070420516,
+            "gci_medium": 0.04036262490133573,
+            "asymptotic_ratio": 0.9347279516926191,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.081222911049166,
+              0.10559705853754517
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.0999328035758505,
+            "medium": 0.10209165794794361,
+            "coarse": 0.11955569961249865,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.016049644164493,
+            "extrapolated": 0.09962828902723071,
+            "extrapolated_uncertainty": 0.0003045145486197942,
+            "gci_fine": 0.0038089913637400843,
+            "gci_medium": 0.030161241503798664,
+            "asymptotic_ratio": 0.9788537632213407,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.09955216039007575,
+              0.10031344676162525
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.17972649123039702,
+            "medium": 0.18764668632178882,
+            "coarse": 0.18987402763039354,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.8302133197063868,
+            "extrapolated": 0.190745479716519,
+            "extrapolated_uncertainty": 0.011018988486121983,
+            "gci_fine": 0.07663720308207365,
+            "gci_medium": 0.02064247346617247,
+            "asymptotic_ratio": 0.9577919799883398,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.16595275562274456,
+              0.1935002268380495
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.18764668632178882,
+            "medium": 0.18987402763039354,
+            "coarse": 0.21595850484596082,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.5497969663760105,
+            "extrapolated": 0.18743873808674652,
+            "extrapolated_uncertainty": 0.00020794823504230453,
+            "gci_fine": 0.0013852378579023359,
+            "gci_medium": 0.016032271330360122,
+            "asymptotic_ratio": 0.9882693734556446,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.18738675102798596,
+              0.18790662161559168
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.6617459991445903,
+            "medium": 0.6780743098805785,
+            "coarse": 0.6845967176718295,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.3238989943641584,
+            "extrapolated": 0.6889351048285374,
+            "extrapolated_uncertainty": 0.027189105683947057,
+            "gci_fine": 0.051358651429500995,
+            "gci_medium": 0.020021395129008277,
+            "asymptotic_ratio": 0.9759195850689818,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.6277596170396564,
+              0.6957323812495242
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.6780743098805785,
+            "medium": 0.6845967176718295,
+            "coarse": 0.7048717282687686,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.636226119887304,
+            "extrapolated": 0.6749809461009035,
+            "extrapolated_uncertainty": 0.0030933637796749514,
+            "gci_fine": 0.005702479312738903,
+            "gci_medium": 0.017557365019998952,
+            "asymptotic_ratio": 0.9904726277195245,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=0.8",
+            "band95": [
+              0.6742076051559848,
+              0.6819410146051722
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "spanwise",
+      "parameter": "n_radial",
+      "kind": "discretisation",
+      "J": 1.0,
+      "levels": [
+        {
+          "level": 0,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 4,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.047618481421602535,
+          "10KQ": -0.026346803435160285,
+          "eta0": 2.876522276954362,
+          "n_panels": 8,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0323051571743975
+        },
+        {
+          "level": 1,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04153994700165753,
+          "10KQ": -0.01800549173331859,
+          "eta0": 3.671817464921091,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.027943755070631
+        },
+        {
+          "level": 2,
+          "value": 16.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0274220911520646
+        },
+        {
+          "level": 3,
+          "value": 32.0,
+          "config_digest": {
+            "n_radial": 32,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.03863350317692055,
+          "10KQ": -0.013775418279284874,
+          "eta0": 4.463539962927752,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0258845859605454
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": -0.03863350317692055,
+            "medium": -0.040805870612996425,
+            "coarse": -0.04153994700165753,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.5652660382879362,
+            "extrapolated": -0.041914605625416816,
+            "extrapolated_uncertainty": 0.003281102448496269,
+            "gci_fine": 0.10616117419738631,
+            "gci_medium": 0.03396371023840097,
+            "asymptotic_ratio": 0.9467633601871003,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=1.0",
+            "band95": [
+              -0.03453212511630021,
+              -0.042734881237540885
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.040805870612996425,
+            "medium": -0.04153994700165753,
+            "coarse": -0.047618481421602535,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.049721416885114,
+            "extrapolated": -0.040705043149999155,
+            "extrapolated_uncertainty": 0.00010082746299727025,
+            "gci_fine": 0.003088632269162843,
+            "gci_medium": 0.025123523015841132,
+            "asymptotic_ratio": 0.9823284225992918,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "spanwise J=1.0",
+            "band95": [
+              -0.040679836284249836,
+              -0.04093190494174301
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": -0.013775418279284874,
+            "medium": -0.01713900181451987,
+            "coarse": -0.01800549173331859,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.9567442186993589,
+            "extrapolated": -0.018306163191704406,
+            "extrapolated_uncertainty": 0.004530744912419532,
+            "gci_fine": 0.41112589292776247,
+            "gci_medium": 0.08512466112493623,
+            "asymptotic_ratio": 0.8037468242528905,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=1.0",
+            "band95": [
+              -0.008111987138760459,
+              -0.01943884941980929
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.01713900181451987,
+            "medium": -0.01800549173331859,
+            "coarse": -0.026346803435160285,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.267019401073667,
+            "extrapolated": -0.017038557308794923,
+            "extrapolated_uncertainty": 0.00010044450572494618,
+            "gci_fine": 0.007325726055400369,
+            "gci_medium": 0.0671277434993891,
+            "asymptotic_ratio": 0.9518763535241135,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "spanwise J=1.0",
+            "band95": [
+              -0.017013446182363688,
+              -0.01726455744667605
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 4.463539962927752,
+            "medium": 3.7892848635587977,
+            "coarse": 3.671817464921091,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.521034114169831,
+            "extrapolated": 3.6470349675265044,
+            "extrapolated_uncertainty": 0.8165049954012473,
+            "gci_fine": 0.2286595959100813,
+            "gci_medium": 0.0469250469264984,
+            "asymptotic_ratio": 1.1779372952013198,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=1.0",
+            "band95": [
+              3.4429087186761924,
+              5.48417120717931
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 3.7892848635587977,
+            "medium": 3.671817464921091,
+            "coarse": 2.876522276954362,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.7592300283584126,
+            "extrapolated": 3.809641936490802,
+            "extrapolated_uncertainty": 0.020357072932004172,
+            "gci_fine": 0.006715341306144622,
+            "gci_medium": 0.04691970423585338,
+            "asymptotic_ratio": 1.0319916226119457,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "spanwise J=1.0",
+            "band95": [
+              3.763838522393793,
+              3.814731204723803
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": false
+    },
+    {
+      "axis": "azimuthal",
+      "parameter": "wake_steps",
+      "kind": "discretisation",
+      "J": 0.5,
+      "levels": [
+        {
+          "level": 0,
+          "value": 12.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 12,
+            "core_ratio": 0.05
+          },
+          "KT": 0.20632943098798204,
+          "10KQ": 1.529802578101588,
+          "eta0": 0.10732871455814336,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.7243355018825806
+        },
+        {
+          "level": 1,
+          "value": 24.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6659375047002715
+        },
+        {
+          "level": 2,
+          "value": 48.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 48,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2807034190391405,
+          "10KQ": 0.40782289104285724,
+          "eta0": 0.5477296353894467,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6746522670346196
+        },
+        {
+          "level": 3,
+          "value": 96.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 96,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2718917176639797,
+          "10KQ": 0.38450420359866555,
+          "eta0": 0.5627105041631143,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6799225863405394
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.2718917176639797,
+            "medium": 0.2807034190391405,
+            "coarse": 0.2958153170105801,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.7781923578066748,
+            "extrapolated": 0.25956732747417643,
+            "extrapolated_uncertainty": 0.012324390189803247,
+            "gci_fine": 0.056660378880290435,
+            "gci_medium": 0.09412109958133816,
+            "asymptotic_ratio": 0.9686085000128475,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.25648622992672565,
+              0.2872972054012337
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.2807034190391405,
+            "medium": 0.2958153170105801,
+            "coarse": 0.20632943098798204,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.565975287749546,
+            "extrapolated": 0.2776328635091329,
+            "extrapolated_uncertainty": 0.003070555530007568,
+            "gci_fine": 0.013673486506319586,
+            "gci_medium": 0.07683194740046578,
+            "asymptotic_ratio": 0.9489144168592895,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.276865224626631,
+              0.2845416134516499
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.38450420359866555,
+            "medium": 0.40782289104285724,
+            "coarse": 0.4349426381841892,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.21785714235420087,
+            "extrapolated": 0.24144904860359936,
+            "extrapolated_uncertainty": 0.14305515499506619,
+            "gci_fine": 0.465063689994086,
+            "gci_medium": 0.5099451443671353,
+            "asymptotic_ratio": 0.9428215336697685,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.20568525985483282,
+              0.5633231473424983
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.40782289104285724,
+            "medium": 0.4349426381841892,
+            "coarse": 1.529802578101588,
+            "refinement_ratio": 2.0,
+            "observed_order": 5.335258787317525,
+            "extrapolated": 0.4071340711501663,
+            "extrapolated_uncertainty": 0.0006888198926909284,
+            "gci_fine": 0.0021112715464840265,
+            "gci_medium": 0.07992021416352417,
+            "asymptotic_ratio": 0.9376475315123108,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.4069618661769936,
+              0.40868391590872083
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.5627105041631143,
+            "medium": 0.5477296353894467,
+            "coarse": 0.5412261964138849,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.203846578659024,
+            "extrapolated": 0.5362370995394634,
+            "extrapolated_uncertainty": 0.026473404623650887,
+            "gci_fine": 0.05880778043903577,
+            "gci_medium": 0.026227665775770605,
+            "asymptotic_ratio": 1.0273508457562568,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.5296187483835507,
+              0.5958022599426778
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.5477296353894467,
+            "medium": 0.5412261964138849,
+            "coarse": 0.10732871455814336,
+            "refinement_ratio": 2.0,
+            "observed_order": 6.060007595682892,
+            "extrapolated": 0.5478285949309131,
+            "extrapolated_uncertainty": 9.89595414663258e-05,
+            "gci_fine": 0.00022584030302640003,
+            "gci_medium": 0.015248704148041579,
+            "asymptotic_ratio": 1.012016120096649,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=0.5",
+            "band95": [
+              0.5476059359626139,
+              0.5478533348162796
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": false,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "azimuthal",
+      "parameter": "wake_steps",
+      "kind": "discretisation",
+      "J": 0.8,
+      "levels": [
+        {
+          "level": 0,
+          "value": 12.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 12,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09622734430474505,
+          "10KQ": 0.3187399728026083,
+          "eta0": 0.3843900059862362,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9191355278290932
+        },
+        {
+          "level": 1,
+          "value": 24.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.916502165640992
+        },
+        {
+          "level": 2,
+          "value": 48.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 48,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09459454263325695,
+          "10KQ": 0.17909702124187005,
+          "eta0": 0.6724931077113957,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9203052003924557
+        },
+        {
+          "level": 3,
+          "value": 96.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 96,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09132066376435688,
+          "10KQ": 0.17303521868139216,
+          "eta0": 0.6719619349303391,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.922667865261211
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.09132066376435688,
+            "medium": 0.09459454263325695,
+            "coarse": 0.0999328035758505,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.7053688842582713,
+            "extrapolated": 0.08612865837697536,
+            "extrapolated_uncertainty": 0.005192005387381515,
+            "gci_fine": 0.07106832634258617,
+            "gci_medium": 0.1118706748377629,
+            "asymptotic_ratio": 0.96539040437467,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.08483065703012999,
+              0.09781067049858377
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.09459454263325695,
+            "medium": 0.0999328035758505,
+            "coarse": 0.09622734430474505,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.5267174607523277,
+            "extrapolated": 0.1120473848178489,
+            "extrapolated_uncertainty": 0.01745284218459195,
+            "gci_fine": 0.23062696983821557,
+            "gci_medium": 0.15153409101550983,
+            "asymptotic_ratio": 0.9465814952490373,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.07277848990251701,
+              0.1164105953639969
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.17303521868139216,
+            "medium": 0.17909702124187005,
+            "coarse": 0.18764668632178882,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.4961210429928432,
+            "extrapolated": 0.1582653308780764,
+            "extrapolated_uncertainty": 0.014769887803315757,
+            "gci_fine": 0.10669712151570267,
+            "gci_medium": 0.1453938919485189,
+            "asymptotic_ratio": 0.9661535266279418,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.15457285892724748,
+              0.19149757843553683
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.17909702124187005,
+            "medium": 0.18764668632178882,
+            "coarse": 0.3187399728026083,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.9385820885311245,
+            "extrapolated": 0.1785005252990935,
+            "extrapolated_uncertainty": 0.0005964959427765537,
+            "gci_fine": 0.004163217921216715,
+            "gci_medium": 0.06092674217952141,
+            "asymptotic_ratio": 0.9544374310705531,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.17835140131339935,
+              0.17984264117034074
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.6719619349303391,
+            "medium": 0.6724931077113957,
+            "coarse": 0.6780743098805785,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.3933227808964097,
+            "extrapolated": 0.6719060650528292,
+            "extrapolated_uncertainty": 5.586987750982875e-05,
+            "gci_fine": 0.00010393051043058674,
+            "gci_medium": 0.001091168541050597,
+            "asymptotic_ratio": 0.9992101439033862,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.6718920975834518,
+              0.6720317722772263
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.6724931077113957,
+            "medium": 0.6780743098805785,
+            "coarse": 0.3843900059862362,
+            "refinement_ratio": 2.0,
+            "observed_order": 5.7175464455218075,
+            "extrapolated": 0.6723849873285648,
+            "extrapolated_uncertainty": 0.00010812038283092296,
+            "gci_fine": 0.0002009693140180273,
+            "gci_medium": 0.010488014493971302,
+            "asymptotic_ratio": 0.9917690405198133,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=0.8",
+            "band95": [
+              0.6723579572328571,
+              0.6726282581899342
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": false,
+        "10KQ": true,
+        "eta0": false
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "azimuthal",
+      "parameter": "wake_steps",
+      "kind": "discretisation",
+      "J": 1.0,
+      "levels": [
+        {
+          "level": 0,
+          "value": 12.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 12,
+            "core_ratio": 0.05
+          },
+          "KT": -0.045376293918639385,
+          "10KQ": -0.008854284439468698,
+          "eta0": 8.15634682363504,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0306876242594878
+        },
+        {
+          "level": 1,
+          "value": 24.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0274220911520646
+        },
+        {
+          "level": 2,
+          "value": 48.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 48,
+            "core_ratio": 0.05
+          },
+          "KT": -0.03895956942666409,
+          "10KQ": -0.01439806748884652,
+          "eta0": 4.306555765062761,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0261147664581807
+        },
+        {
+          "level": 3,
+          "value": 96.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 96,
+            "core_ratio": 0.05
+          },
+          "KT": -0.037793487217332916,
+          "10KQ": -0.012757743493403955,
+          "eta0": 4.7147995336548325,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0252925546210576
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": -0.037793487217332916,
+            "medium": -0.03895956942666409,
+            "coarse": -0.040805870612996425,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.6629684156274072,
+            "extrapolated": -0.03579450194215973,
+            "extrapolated_uncertainty": 0.0019989852751731846,
+            "gci_fine": 0.06611540183094042,
+            "gci_medium": 0.10154974538611597,
+            "asymptotic_ratio": 0.9700694277043755,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              -0.03529475562336644,
+              -0.04029221881129939
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.03895956942666409,
+            "medium": -0.040805870612996425,
+            "coarse": -0.045376293918639385,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.3076898732740192,
+            "extrapolated": -0.03770822021346699,
+            "extrapolated_uncertainty": 0.0012513492131971046,
+            "gci_fine": 0.04014896826415757,
+            "gci_medium": 0.09488985141707938,
+            "asymptotic_ratio": 0.9547540302756267,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              -0.03739538291016771,
+              -0.040523755943160475
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": -0.012757743493403955,
+            "medium": -0.01439806748884652,
+            "coarse": -0.01713900181451987,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.7406869578698778,
+            "extrapolated": -0.010313042824948066,
+            "extrapolated_uncertainty": 0.002444700668455889,
+            "gci_fine": 0.23953106104930066,
+            "gci_medium": 0.35465043026285664,
+            "asymptotic_ratio": 0.8860733222209686,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              -0.009701867657834094,
+              -0.015813619328973814
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.01439806748884652,
+            "medium": -0.01713900181451987,
+            "coarse": -0.008854284439468698,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.5957847213761542,
+            "extrapolated": -0.013042906056528641,
+            "extrapolated_uncertainty": 0.0013551614323178782,
+            "gci_fine": 0.11765133006284133,
+            "gci_medium": 0.2987408340870445,
+            "asymptotic_ratio": 0.8400761984078166,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              -0.012704115698449172,
+              -0.016092019279243863
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 4.7147995336548325,
+            "medium": 4.306555765062761,
+            "coarse": 3.7892848635587977,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.34148917188218453,
+            "extrapolated": 6.243437131865749,
+            "extrapolated_uncertainty": 1.5286375982109162,
+            "gci_fine": 0.40527640340254883,
+            "gci_medium": 0.562189796343773,
+            "asymptotic_ratio": 1.094795885822257,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              2.804002535891187,
+              6.625596531418478
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 4.306555765062761,
+            "medium": 3.7892848635587977,
+            "coarse": 8.15634682363504,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.0776710585461284,
+            "extrapolated": 4.376058026736659,
+            "extrapolated_uncertainty": 0.06950226167389761,
+            "gci_fine": 0.020173389555796523,
+            "gci_medium": 0.19356329238427167,
+            "asymptotic_ratio": 1.1365088453704044,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "azimuthal J=1.0",
+            "band95": [
+              4.219677937970388,
+              4.393433592155134
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": false
+      },
+      "all_levels_physical": false
+    },
+    {
+      "axis": "chordwise",
+      "parameter": "n_chord",
+      "kind": "discretisation",
+      "J": 0.5,
+      "levels": [
+        {
+          "level": 0,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 1,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.29564271284874444,
+          "10KQ": 0.4326623845514837,
+          "eta0": 0.5437611497906459,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.666034830205248
+        },
+        {
+          "level": 1,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6659375047002715
+        },
+        {
+          "level": 2,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 4,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.29627823249841784,
+          "10KQ": 0.43521388620101475,
+          "eta0": 0.5417353022011994,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6656767281940891
+        },
+        {
+          "level": 3,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 8,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2946508863963024,
+          "10KQ": 0.42528145914149496,
+          "eta0": 0.5513424586043096,
+          "n_panels": 128,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6665950532638625
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.2946508863963024,
+            "medium": 0.29627823249841784,
+            "coarse": 0.2958153170105801,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.8137003773520484,
+            "extrapolated": 0.2969251784868732,
+            "extrapolated_uncertainty": 0.0022742920905708397,
+            "gci_fine": 0.009648248976892268,
+            "gci_medium": 0.002729469791789451,
+            "asymptotic_ratio": 0.9945073720455512,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.29180802128308886,
+              0.2974937515095159
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.29627823249841784,
+            "medium": 0.2958153170105801,
+            "coarse": 0.29564271284874444,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.4232815806830845,
+            "extrapolated": 0.2955400913041658,
+            "extrapolated_uncertainty": 0.0007381411942520288,
+            "gci_fine": 0.0031142230228471067,
+            "gci_medium": 0.0011629963468239293,
+            "asymptotic_ratio": 1.0015648800492003,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.2953555560056028,
+              0.29720090899123286
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.42528145914149496,
+            "medium": 0.43521388620101475,
+            "coarse": 0.4349426381841892,
+            "refinement_ratio": 2.0,
+            "observed_order": -5.1944617989357385,
+            "extrapolated": 0.4354927497983307,
+            "extrapolated_uncertainty": 0.010211290656835736,
+            "gci_fine": 0.03001333128138544,
+            "gci_medium": 0.0008009383608774057,
+            "asymptotic_ratio": 0.9771780557228538,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.4125173458204503,
+              0.43804557246253967
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.43521388620101475,
+            "medium": 0.4349426381841892,
+            "coarse": 0.4326623845514837,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.071509809605839,
+            "extrapolated": 0.4352505090387262,
+            "extrapolated_uncertainty": 3.6622837711441925e-05,
+            "gci_fine": 0.00010518632008488997,
+            "gci_medium": 0.0008848030392648835,
+            "asymptotic_ratio": 1.0006236408965514,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.4351681076538754,
+              0.4352596647481541
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.5513424586043096,
+            "medium": 0.5417353022011994,
+            "coarse": 0.5412261964138849,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.238072103884331,
+            "extrapolated": 0.5411977080361409,
+            "extrapolated_uncertainty": 0.01014475056816877,
+            "gci_fine": 0.02300011184031058,
+            "gci_medium": 0.0012404447404343476,
+            "asymptotic_ratio": 1.0177340416326468,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.5386615203940988,
+              0.5640233968145205
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.5417353022011994,
+            "medium": 0.5412261964138849,
+            "coarse": 0.5437611497906459,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.3159218424135273,
+            "extrapolated": 0.5418632430709999,
+            "extrapolated_uncertainty": 0.00012794086980050245,
+            "gci_fine": 0.000295210754405002,
+            "gci_medium": 0.0014713040992286785,
+            "asymptotic_ratio": 1.0009406525232662,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=0.5",
+            "band95": [
+              0.5415753761139488,
+              0.5418952282884499
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": false,
+        "10KQ": false,
+        "eta0": false
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "chordwise",
+      "parameter": "n_chord",
+      "kind": "discretisation",
+      "J": 0.8,
+      "levels": [
+        {
+          "level": 0,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 1,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.10037616069521751,
+          "10KQ": 0.18470150533206886,
+          "eta0": 0.6919429103518653,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9161890239532572
+        },
+        {
+          "level": 1,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.916502165640992
+        },
+        {
+          "level": 2,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 4,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0998141384488832,
+          "10KQ": 0.19082278849411133,
+          "eta0": 0.6659964944423312,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9165860482880247
+        },
+        {
+          "level": 3,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 8,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09862929091786601,
+          "10KQ": 0.19134142459149658,
+          "eta0": 0.6563069849297887,
+          "n_panels": 128,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9174252225884151
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.09862929091786601,
+            "medium": 0.0998141384488832,
+            "coarse": 0.0999328035758505,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.319733495155868,
+            "extrapolated": 0.09994601089600949,
+            "extrapolated_uncertainty": 0.0013167199781434769,
+            "gci_fine": 0.0166877400958908,
+            "gci_medium": 0.001651475046215818,
+            "asymptotic_ratio": 0.9881294619236333,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.09698339094518667,
+              0.10027519089054536
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.0998141384488832,
+            "medium": 0.0999328035758505,
+            "coarse": 0.10037616069521751,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.9015732209227163,
+            "extrapolated": 0.09977076992521222,
+            "extrapolated_uncertainty": 4.336852367098354e-05,
+            "gci_fine": 0.00054311598969011,
+            "gci_medium": 0.002026782558383099,
+            "asymptotic_ratio": 0.9988125508069307,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.09975992779429448,
+              0.09986834910347193
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.19134142459149658,
+            "medium": 0.19082278849411133,
+            "coarse": 0.18764668632178882,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.6144627961730835,
+            "extrapolated": 0.19144264259162377,
+            "extrapolated_uncertainty": 0.00010121800012719007,
+            "gci_fine": 0.0006612394594067083,
+            "gci_medium": 0.004060404042960887,
+            "asymptotic_ratio": 1.002717893923876,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.1912149020913376,
+              0.1914679470916556
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.19082278849411133,
+            "medium": 0.18764668632178882,
+            "coarse": 0.18470150533206886,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.10890102893707634,
+            "extrapolated": 0.14713851104783426,
+            "extrapolated_uncertainty": 0.043684277446277064,
+            "gci_fine": 0.2861573674652146,
+            "gci_medium": 0.269843396038503,
+            "asymptotic_ratio": 1.0169259699415951,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.13621744168626498,
+              0.24542813530195765
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.6563069849297887,
+            "medium": 0.6659964944423312,
+            "coarse": 0.6780743098805785,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.3178639896498799,
+            "extrapolated": 0.6169960266546466,
+            "extrapolated_uncertainty": 0.03931095827514208,
+            "gci_fine": 0.07487151435571632,
+            "gci_medium": 0.09196832903136168,
+            "asymptotic_ratio": 0.9854511103385672,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.6071682870858611,
+              0.7054456827737162
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.6659964944423312,
+            "medium": 0.6780743098805785,
+            "coarse": 0.6919429103518653,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.19946267527180753,
+            "extrapolated": 0.5845385734361622,
+            "extrapolated_uncertainty": 0.081457921006169,
+            "gci_fine": 0.1528872931125136,
+            "gci_medium": 0.17242899318234317,
+            "asymptotic_ratio": 0.9821880651393882,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=0.8",
+            "band95": [
+              0.56417409318462,
+              0.7678188957000425
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "chordwise",
+      "parameter": "n_chord",
+      "kind": "discretisation",
+      "J": 1.0,
+      "levels": [
+        {
+          "level": 0,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 1,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040413436193788774,
+          "10KQ": -0.02071042731717209,
+          "eta0": 3.1056810364493503,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.027143651702314
+        },
+        {
+          "level": 1,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0274220911520646
+        },
+        {
+          "level": 2,
+          "value": 4.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 4,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04134873737929241,
+          "10KQ": -0.013852430942090557,
+          "eta0": 4.750686700431117,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0278077703960466
+        },
+        {
+          "level": 3,
+          "value": 8.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 8,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04139270356584224,
+          "10KQ": -0.010222086779113418,
+          "eta0": 6.444724568277136,
+          "n_panels": 128,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.027839031856404
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": -0.04139270356584224,
+            "medium": -0.04134873737929241,
+            "coarse": -0.040805870612996425,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.6261318568483323,
+            "extrapolated": -0.04139657813652467,
+            "extrapolated_uncertainty": 3.8745706824327986e-06,
+            "gci_fine": 0.00011700645127803097,
+            "gci_medium": 0.001446258104371302,
+            "asymptotic_ratio": 1.0010633017919388,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=1.0",
+            "band95": [
+              -0.041387860352489196,
+              -0.041397546779195285
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.04134873737929241,
+            "medium": -0.040805870612996425,
+            "coarse": -0.040413436193788774,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.4681465849522397,
+            "extrapolated": -0.03938968846692247,
+            "extrapolated_uncertainty": 0.0019590489123699414,
+            "gci_fine": 0.059223359542988165,
+            "gci_medium": 0.043381691310579146,
+            "asymptotic_ratio": 1.0133036437684309,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "chordwise J=1.0",
+            "band95": [
+              -0.038899926238829985,
+              -0.043797548519754835
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": -0.010222086779113418,
+            "medium": -0.013852430942090557,
+            "coarse": -0.01713900181451987,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.14352322869964532,
+            "extrapolated": -0.04855955831641598,
+            "extrapolated_uncertainty": 0.03833747153730256,
+            "gci_fine": 4.68806814666707,
+            "gci_medium": 3.1318625156314583,
+            "asymptotic_ratio": 0.737927286686819,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=1.0",
+            "band95": [
+              0.03769975264251478,
+              -0.058143926200741616
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.013852430942090557,
+            "medium": -0.01713900181451987,
+            "coarse": -0.02071042731717209,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.11991693205186713,
+            "extrapolated": 0.02406707940972691,
+            "extrapolated_uncertainty": 0.03791951035181747,
+            "gci_fine": 3.4217378984181748,
+            "gci_medium": 3.0052859605086284,
+            "asymptotic_ratio": 0.8082402401261789,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "chordwise J=1.0",
+            "band95": [
+              0.03354695699768128,
+              -0.061251818881862395
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 6.444724568277136,
+            "medium": 4.750686700431117,
+            "coarse": 3.7892848635587977,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8172546594282069,
+            "extrapolated": 2.5276850338138037,
+            "extrapolated_uncertainty": 3.9170395344633326,
+            "gci_fine": 0.7597375754706752,
+            "gci_medium": 0.5849158781654606,
+            "asymptotic_ratio": 1.3565879997290264,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=1.0",
+            "band95": [
+              1.5484251501979707,
+              11.341023986356301
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 4.750686700431117,
+            "medium": 3.7892848635587977,
+            "coarse": 3.1056810364493503,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.4919790860520055,
+            "extrapolated": 1.4234724675773753,
+            "extrapolated_uncertainty": 3.3272142328537413,
+            "gci_fine": 0.8754561294664523,
+            "gci_medium": 0.7804283925488228,
+            "asymptotic_ratio": 1.2537159045808433,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "chordwise J=1.0",
+            "band95": [
+              0.5916689093639397,
+              8.909704491498294
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": false
+    },
+    {
+      "axis": "wake_length",
+      "parameter": "wake_length",
+      "kind": "model",
+      "J": 0.5,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.25,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.25,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3563604565982288,
+          "10KQ": 0.48777545753635065,
+          "eta0": 0.5813794781368868,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6345760627621938
+        },
+        {
+          "level": 1,
+          "value": 0.5,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.5,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.30620555510945735,
+          "10KQ": 0.43936086038492406,
+          "eta0": 0.5546025157449385,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6601688302951906
+        },
+        {
+          "level": 2,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6659375047002715
+        },
+        {
+          "level": 3,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 2.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.20196727412268184,
+          "10KQ": 1.4557498904518806,
+          "eta0": 0.11040388953573192,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.7276719462461381
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.20196727412268184,
+            "medium": 0.2958153170105801,
+            "coarse": 0.30620555510945735,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.175097944440163,
+            "extrapolated": 0.30749910755819804,
+            "extrapolated_uncertainty": 0.1055318334355162,
+            "gci_fine": 0.6531493399978537,
+            "gci_medium": 0.049371135788753115,
+            "asymptotic_ratio": 0.682747858237031,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=0.5",
+            "band95": [
+              0.07005248232828659,
+              0.3338820659170771
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.2958153170105801,
+            "medium": 0.30620555510945735,
+            "coarse": 0.3563604565982288,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.2711619831157646,
+            "extrapolated": 0.2931004179381842,
+            "extrapolated_uncertainty": 0.0027148990723959154,
+            "gci_fine": 0.011472103185155662,
+            "gci_medium": 0.05349811977851182,
+            "asymptotic_ratio": 0.9660677674669778,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=0.5",
+            "band95": [
+              0.2924216931700852,
+              0.299208940851075
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 1.4557498904518806,
+            "medium": 0.4349426381841892,
+            "coarse": 0.43936086038492406,
+            "refinement_ratio": 2.0,
+            "observed_order": -7.852028792084919,
+            "extrapolated": 0.430505210062456,
+            "extrapolated_uncertainty": 1.0252446803894246,
+            "gci_fine": 0.8803406813851601,
+            "gci_medium": 0.012752911913449972,
+            "asymptotic_ratio": 3.3469928276735215,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=0.5",
+            "band95": [
+              0.17419403996509988,
+              2.7373057409386616
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.4349426381841892,
+            "medium": 0.43936086038492406,
+            "coarse": 0.48777545753635065,
+            "refinement_ratio": 2.0,
+            "observed_order": 3.4539042086352616,
+            "extrapolated": 0.4344989496431005,
+            "extrapolated_uncertainty": 0.000443688541088727,
+            "gci_fine": 0.0012751352193851298,
+            "gci_medium": 0.013832339143625805,
+            "asymptotic_ratio": 0.9899439786309954,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=0.5",
+            "band95": [
+              0.43438802750782823,
+              0.4354972488605502
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.11040388953573192,
+            "medium": 0.5412261964138849,
+            "coarse": 0.5546025157449385,
+            "refinement_ratio": 2.0,
+            "observed_order": -5.009339851560861,
+            "extrapolated": 0.5550311362711475,
+            "extrapolated_uncertainty": 0.4446272467354156,
+            "gci_fine": 5.03409853363356,
+            "gci_medium": 0.031883480393070665,
+            "asymptotic_ratio": 0.20398844377315428,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=0.5",
+            "band95": [
+              -0.44538016888353765,
+              0.6661879479550015
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.5412261964138849,
+            "medium": 0.5546025157449385,
+            "coarse": 0.5813794781368868,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.0013111148277654,
+            "extrapolated": 0.5278741566622666,
+            "extrapolated_uncertainty": 0.013352039751618361,
+            "gci_fine": 0.030837475717379728,
+            "gci_medium": 0.06024215163983381,
+            "asymptotic_ratio": 0.9758812501723212,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=0.5",
+            "band95": [
+              0.524536146724362,
+              0.5579162461034078
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "wake_length",
+      "parameter": "wake_length",
+      "kind": "model",
+      "J": 0.8,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.25,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.25,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.12132318365955772,
+          "10KQ": 0.2156518805828831,
+          "eta0": 0.7163094275412352,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9018458680123116
+        },
+        {
+          "level": 1,
+          "value": 0.5,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.5,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.10379011654977588,
+          "10KQ": 0.1921760074589357,
+          "eta0": 0.6876492153792089,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9137914519067938
+        },
+        {
+          "level": 2,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.916502165640992
+        },
+        {
+          "level": 3,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 2.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09296427683103368,
+          "10KQ": 0.30634600847543186,
+          "eta0": 0.3863794214197231,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9214787980967234
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.09296427683103368,
+            "medium": 0.0999328035758505,
+            "coarse": 0.10379011654977588,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8532574722784668,
+            "extrapolated": 0.10857245054367234,
+            "extrapolated_uncertainty": 0.01560817371263866,
+            "gci_fine": 0.20986789556012939,
+            "gci_medium": 0.10806820506722074,
+            "asymptotic_ratio": 0.9302678750573867,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.07345405969023534,
+              0.11247449397183203
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.0999328035758505,
+            "medium": 0.10379011654977588,
+            "coarse": 0.12132318365955772,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.1844102800171696,
+            "extrapolated": 0.09884482968929151,
+            "extrapolated_uncertainty": 0.0010879738865589988,
+            "gci_fine": 0.013608818221201085,
+            "gci_medium": 0.05955874009102659,
+            "asymptotic_ratio": 0.962835450020181,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.09857283621765177,
+              0.10129277093404924
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.30634600847543186,
+            "medium": 0.18764668632178882,
+            "coarse": 0.1921760074589357,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.711873053369686,
+            "extrapolated": 0.18293767919199277,
+            "extrapolated_uncertainty": 0.12340832928343909,
+            "gci_fine": 0.5035496051409142,
+            "gci_medium": 0.03136884017312683,
+            "asymptotic_ratio": 1.632568176291105,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.152085596871133,
+              0.46060642007973074
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.18764668632178882,
+            "medium": 0.1921760074589357,
+            "coarse": 0.2156518805828831,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.3738120783184793,
+            "extrapolated": 0.1865639167509615,
+            "extrapolated_uncertainty": 0.0010827695708273133,
+            "gci_fine": 0.007212821020527618,
+            "gci_medium": 0.036503585841571526,
+            "asymptotic_ratio": 0.976431391217685,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.18629322435825466,
+              0.18900014828532297
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.3863794214197231,
+            "medium": 0.6780743098805785,
+            "coarse": 0.6876492153792089,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.92905804689628,
+            "extrapolated": 0.6879741792982659,
+            "extrapolated_uncertainty": 0.3015947578785428,
+            "gci_fine": 0.9757078831034621,
+            "gci_medium": 0.01824997141432579,
+            "asymptotic_ratio": 0.5698186994988377,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.009385974071544583,
+              0.7633728687679017
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.6780743098805785,
+            "medium": 0.6876492153792089,
+            "coarse": 0.7163094275412352,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.5817191361669591,
+            "extrapolated": 0.673270676545017,
+            "extrapolated_uncertainty": 0.004803633335561441,
+            "gci_fine": 0.008855285596219335,
+            "gci_medium": 0.026137125064308257,
+            "asymptotic_ratio": 0.9860758868264681,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=0.8",
+            "band95": [
+              0.6720697682111266,
+              0.6840788515500303
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": true
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "wake_length",
+      "parameter": "wake_length",
+      "kind": "model",
+      "J": 1.0,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.25,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.25,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04820460049655132,
+          "10KQ": -0.028783999194031563,
+          "eta0": 2.665369880355953,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0327296935813195
+        },
+        {
+          "level": 1,
+          "value": 0.5,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 0.5,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04217916193127663,
+          "10KQ": -0.019328043308548724,
+          "eta0": 3.4732031637506857,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0283988832345385
+        },
+        {
+          "level": 2,
+          "value": 1.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0274220911520646
+        },
+        {
+          "level": 3,
+          "value": 2.0,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 2.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.04388654501545666,
+          "10KQ": -0.007455527577033254,
+          "eta0": 9.368566479388337,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0296185817281038
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": -0.04388654501545666,
+            "medium": -0.040805870612996425,
+            "coarse": -0.04217916193127663,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.165608512555519,
+            "extrapolated": -0.03832800641805011,
+            "extrapolated_uncertainty": 0.00555853859740655,
+            "gci_fine": 0.1583212632553114,
+            "gci_medium": 0.0759040353055575,
+            "asymptotic_ratio": 1.0754958626340168,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=1.0",
+            "band95": [
+              -0.03693837176869848,
+              -0.050834718262214855
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.040805870612996425,
+            "medium": -0.04217916193127663,
+            "coarse": -0.04820460049655132,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.1334285536729696,
+            "extrapolated": -0.040400481672205224,
+            "extrapolated_uncertainty": 0.00040538894079120147,
+            "gci_fine": 0.012418217486275286,
+            "gci_medium": 0.05271205548042436,
+            "asymptotic_ratio": 0.9674414745243697,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "wake_length J=1.0",
+            "band95": [
+              -0.04029913443700743,
+              -0.04131260678898542
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": -0.007455527577033254,
+            "medium": -0.01713900181451987,
+            "coarse": -0.019328043308548724,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.1452254490372327,
+            "extrapolated": -0.019967438287009656,
+            "extrapolated_uncertainty": 0.012511910709976402,
+            "gci_fine": 2.097757432438338,
+            "gci_medium": 0.20628655209178992,
+            "asymptotic_ratio": 0.4350036050942628,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=1.0",
+            "band95": [
+              0.008184360810437248,
+              -0.023095415964503756
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.01713900181451987,
+            "medium": -0.019328043308548724,
+            "coarse": -0.028783999194031563,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.110924003424875,
+            "extrapolated": -0.01647958814807907,
+            "extrapolated_uncertainty": 0.0006594136664407994,
+            "gci_fine": 0.04809306235983325,
+            "gci_medium": 0.18421776554133862,
+            "asymptotic_ratio": 0.8867427261475218,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "wake_length J=1.0",
+            "band95": [
+              -0.01631473473146887,
+              -0.01796326889757087
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 9.368566479388337,
+            "medium": 3.7892848635587977,
+            "coarse": 3.4732031637506857,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.141709958653355,
+            "extrapolated": 3.454220863525026,
+            "extrapolated_uncertainty": 5.9143456158633105,
+            "gci_fine": 0.7891209435396795,
+            "gci_medium": 0.1105300908015821,
+            "asymptotic_ratio": 2.4723837918560765,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=1.0",
+            "band95": [
+              1.9756344595591986,
+              16.761498499217474
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 3.7892848635587977,
+            "medium": 3.4732031637506857,
+            "coarse": 2.665369880355953,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.3537600775848648,
+            "extrapolated": 3.9924517557219157,
+            "extrapolated_uncertainty": 0.203166892163118,
+            "gci_fine": 0.06702019625027242,
+            "gci_medium": 0.1868766983567761,
+            "asymptotic_ratio": 1.0910058193851169,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "wake_length J=1.0",
+            "band95": [
+              3.5353262483549,
+              4.043243478762695
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": false,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": false
+    },
+    {
+      "axis": "kernel",
+      "parameter": "core_ratio",
+      "kind": "model",
+      "J": 0.5,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.4,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.4
+          },
+          "KT": 0.3407257573128555,
+          "10KQ": 0.48644958354550016,
+          "eta0": 0.5573875520647682,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6421823302013976
+        },
+        {
+          "level": 1,
+          "value": 0.2,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.2
+          },
+          "KT": 0.33492798767365045,
+          "10KQ": 0.5211679657857049,
+          "eta0": 0.5114036962893563,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6450845771592609
+        },
+        {
+          "level": 2,
+          "value": 0.1,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.1
+          },
+          "KT": 0.30673344391284724,
+          "10KQ": 0.4461733041777499,
+          "eta0": 0.5470760280054959,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6598803832654871
+        },
+        {
+          "level": 3,
+          "value": 0.05,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.6659375047002715
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.2958153170105801,
+            "medium": 0.30673344391284724,
+            "coarse": 0.33492798767365045,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.3686906268453605,
+            "extrapolated": 0.28891542011470783,
+            "extrapolated_uncertainty": 0.006899896895872282,
+            "gci_fine": 0.029156269550206892,
+            "gci_medium": 0.07261200299372186,
+            "asymptotic_ratio": 0.9644051631182112,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.2871904458907397,
+              0.3044401881304205
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.30673344391284724,
+            "medium": 0.33492798767365045,
+            "coarse": 0.3407257573128555,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.281846080157423,
+            "extrapolated": 0.3422266043815801,
+            "extrapolated_uncertainty": 0.035493160468732854,
+            "gci_fine": 0.14464171242612195,
+            "gci_medium": 0.02723949989453147,
+            "asymptotic_ratio": 0.9158190870920121,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.2623669933269312,
+              0.3510998944987633
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.4349426381841892,
+            "medium": 0.4461733041777499,
+            "coarse": 0.5211679657857049,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.7393444189705094,
+            "extrapolated": 0.43296459622738237,
+            "extrapolated_uncertainty": 0.001978041956806842,
+            "gci_fine": 0.005684778241864408,
+            "gci_medium": 0.03700554197967374,
+            "asymptotic_ratio": 0.9748289153824261,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.43247008573818063,
+              0.43741519063019774
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.4461733041777499,
+            "medium": 0.5211679657857049,
+            "coarse": 0.48644958354550016,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.1110881783834181,
+            "extrapolated": 0.5858137912827989,
+            "extrapolated_uncertainty": 0.13964048710504895,
+            "gci_fine": 0.3912170612784408,
+            "gci_medium": 0.15505036221776147,
+            "asymptotic_ratio": 0.8561027029071248,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.27162269529643873,
+              0.620723913059061
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.5412261964138849,
+            "medium": 0.5470760280054959,
+            "coarse": 0.5114036962893563,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.6083385231587073,
+            "extrapolated": 0.540078722878557,
+            "extrapolated_uncertainty": 0.0011474735353279586,
+            "gci_fine": 0.002650170905739079,
+            "gci_medium": 0.015987963209723746,
+            "asymptotic_ratio": 0.9893070957377939,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.539791854494725,
+              0.5426605383330448
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.5470760280054959,
+            "medium": 0.5114036962893563,
+            "coarse": 0.5573875520647682,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.3663219216077314,
+            "extrapolated": 0.6704831250312779,
+            "extrapolated_uncertainty": 0.12340709702578201,
+            "gci_fine": 0.28196971423627776,
+            "gci_medium": 0.38883036507208096,
+            "asymptotic_ratio": 1.0697537619985362,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=0.5",
+            "band95": [
+              0.39281715672326833,
+              0.7013348992877235
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": false
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "kernel",
+      "parameter": "core_ratio",
+      "kind": "model",
+      "J": 0.8,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.4,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.4
+          },
+          "KT": 0.11507545589101437,
+          "10KQ": 0.20871232649861546,
+          "eta0": 0.702012303378921,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9060338021792722
+        },
+        {
+          "level": 1,
+          "value": 0.2,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.2
+          },
+          "KT": 0.11389631657308191,
+          "10KQ": 0.21176557599248622,
+          "eta0": 0.6848010758163463,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.9068325820505236
+        },
+        {
+          "level": 2,
+          "value": 0.1,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.1
+          },
+          "KT": 0.10363403923018018,
+          "10KQ": 0.19265692067878915,
+          "eta0": 0.6849012039826916,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.913900537543985
+        },
+        {
+          "level": 3,
+          "value": 0.05,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": true,
+          "momentum_bound": 0.916502165640992
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": 0.0999328035758505,
+            "medium": 0.10363403923018018,
+            "coarse": 0.11389631657308191,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.471272021920362,
+            "extrapolated": 0.09784485077519353,
+            "extrapolated_uncertainty": 0.0020879528006569753,
+            "gci_fine": 0.026116959671207765,
+            "gci_medium": 0.0698273040642606,
+            "asymptotic_ratio": 0.9642855216121712,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.0973228625750293,
+              0.10254274457667173
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.10363403923018018,
+            "medium": 0.11389631657308191,
+            "coarse": 0.11507545589101437,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.121544829556788,
+            "extrapolated": 0.11522852738759101,
+            "extrapolated_uncertainty": 0.011594488157410834,
+            "gci_fine": 0.13984893674339066,
+            "gci_medium": 0.014620872458749297,
+            "asymptotic_ratio": 0.9098980752699153,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.08914092903341665,
+              0.1181271494269437
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": 0.18764668632178882,
+            "medium": 0.19265692067878915,
+            "coarse": 0.21176557599248622,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.9312762655462032,
+            "extrapolated": 0.18586617144078418,
+            "extrapolated_uncertainty": 0.0017805148810046412,
+            "gci_fine": 0.011860820166251888,
+            "gci_medium": 0.04405985789453533,
+            "asymptotic_ratio": 0.9739940079009476,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.185421042720533,
+              0.18987232992304462
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.19265692067878915,
+            "medium": 0.21176557599248622,
+            "coarse": 0.20871232649861546,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.6458088705051237,
+            "extrapolated": 0.21539946060554593,
+            "extrapolated_uncertainty": 0.02274253992675679,
+            "gci_fine": 0.14755854504621402,
+            "gci_medium": 0.02144992520637926,
+            "asymptotic_ratio": 0.9097650540030404,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.16422874577034316,
+              0.22108509558723513
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 0.6780743098805785,
+            "medium": 0.6849012039826916,
+            "coarse": 0.6848010758163463,
+            "refinement_ratio": 2.0,
+            "observed_order": -6.091309602452939,
+            "extrapolated": 0.6850028225605945,
+            "extrapolated_uncertainty": 0.006928512680016041,
+            "gci_fine": 0.012772406687322048,
+            "gci_medium": 0.00018546210992175465,
+            "asymptotic_ratio": 0.9900322936178028,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.6694136690305585,
+              0.6867349507305984
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 0.6849012039826916,
+            "medium": 0.6848010758163463,
+            "coarse": 0.702012303378921,
+            "refinement_ratio": 2.0,
+            "observed_order": 7.425358323090216,
+            "extrapolated": 0.6849017898976854,
+            "extrapolated_uncertainty": 5.859149937448294e-07,
+            "gci_fine": 1.069342173615026e-06,
+            "gci_medium": 0.00018383820662625595,
+            "asymptotic_ratio": 1.0001462149664795,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=0.8",
+            "band95": [
+              0.6849004715889494,
+              0.6849019363764338
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": false,
+        "eta0": false
+      },
+      "all_levels_physical": true
+    },
+    {
+      "axis": "kernel",
+      "parameter": "core_ratio",
+      "kind": "model",
+      "J": 1.0,
+      "levels": [
+        {
+          "level": 0,
+          "value": 0.4,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.4
+          },
+          "KT": -0.04589188602626225,
+          "10KQ": -0.02502699090311255,
+          "eta0": 2.9184173747316717,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0310586648221614
+        },
+        {
+          "level": 1,
+          "value": 0.2,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.2
+          },
+          "KT": -0.04566621432670354,
+          "10KQ": -0.02415140232626132,
+          "eta0": 3.0093506141818716,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0308961957142297
+        },
+        {
+          "level": 2,
+          "value": 0.1,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.1
+          },
+          "KT": -0.04205336201162598,
+          "10KQ": -0.01909056443689755,
+          "eta0": 3.5059206656285227,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0283092476501519
+        },
+        {
+          "level": 3,
+          "value": 0.05,
+          "config_digest": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "n_panels": 32,
+          "wake_model": "geometric",
+          "physical": false,
+          "momentum_bound": 1.0274220911520646
+        }
+      ],
+      "gci": {
+        "KT": {
+          "fine_triplet": {
+            "fine": -0.040805870612996425,
+            "medium": -0.04205336201162598,
+            "coarse": -0.04566621432670354,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.5341084136785306,
+            "extrapolated": -0.040147943622306274,
+            "extrapolated_uncertainty": 0.0006579269906901511,
+            "gci_fine": 0.020154176985032957,
+            "gci_medium": 0.056636922060860934,
+            "asymptotic_ratio": 0.9703355132870308,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=1.0",
+            "band95": [
+              -0.03998346187463374,
+              -0.041628279351359106
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.04205336201162598,
+            "medium": -0.04566621432670354,
+            "coarse": -0.04589188602626225,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.0008408686976455,
+            "extrapolated": -0.045906921455949226,
+            "extrapolated_uncertainty": 0.0038535594443232443,
+            "gci_fine": 0.11454373859746024,
+            "gci_medium": 0.006588764056607097,
+            "asymptotic_ratio": 0.9208856620075704,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "kernel J=1.0",
+            "band95": [
+              -0.03723641270622193,
+              -0.04687031131703003
+            ],
+            "usable": true
+          }
+        },
+        "10KQ": {
+          "fine_triplet": {
+            "fine": -0.01713900181451987,
+            "medium": -0.01909056443689755,
+            "coarse": -0.02415140232626132,
+            "refinement_ratio": 2.0,
+            "observed_order": 1.3747465049557115,
+            "extrapolated": -0.01591408721480563,
+            "extrapolated_uncertainty": 0.0012249145997142406,
+            "gci_fine": 0.08933678088216562,
+            "gci_medium": 0.20798738249669965,
+            "asymptotic_ratio": 0.8977734456815866,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=1.0",
+            "band95": [
+              -0.015607858564877067,
+              -0.01867014506416267
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": -0.01909056443689755,
+            "medium": -0.02415140232626132,
+            "coarse": -0.02502699090311255,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.5310512241522045,
+            "extrapolated": -0.02521017123447783,
+            "extrapolated_uncertainty": 0.006119606797580279,
+            "gci_fine": 0.4006957742009271,
+            "gci_medium": 0.0547985213194663,
+            "asymptotic_ratio": 0.7904536630628355,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "kernel J=1.0",
+            "band95": [
+              -0.0114410559399222,
+              -0.026740072933872903
+            ],
+            "usable": true
+          }
+        },
+        "eta0": {
+          "fine_triplet": {
+            "fine": 3.7892848635587977,
+            "medium": 3.5059206656285227,
+            "coarse": 3.0093506141818716,
+            "refinement_ratio": 2.0,
+            "observed_order": 0.8093397636729219,
+            "extrapolated": 4.165893982606745,
+            "extrapolated_uncertainty": 0.37660911904794725,
+            "gci_fine": 0.12423489279921991,
+            "gci_medium": 0.23530670682614607,
+            "asymptotic_ratio": 1.0808244752108431,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=1.0",
+            "band95": [
+              3.3185234647488637,
+              4.260046262368731
+            ],
+            "usable": true
+          },
+          "coarse_triplet": {
+            "fine": 3.5059206656285227,
+            "medium": 3.0093506141818716,
+            "coarse": 2.9184173747316717,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.449117599853759,
+            "extrapolated": 2.898032503851216,
+            "extrapolated_uncertainty": 0.6078881617773066,
+            "gci_fine": 0.21673627976559187,
+            "gci_medium": 0.04623842674149436,
+            "asymptotic_ratio": 1.1650090385302774,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "kernel J=1.0",
+            "band95": [
+              2.7460604634068893,
+              4.2657808678501565
+            ],
+            "usable": true
+          }
+        }
+      },
+      "monotone": {
+        "KT": true,
+        "10KQ": true,
+        "eta0": true
+      },
+      "all_levels_physical": false
+    }
+  ],
+  "decomposition": [
+    {
+      "J": 0.5,
+      "primary_axis": "spanwise",
+      "quantities": {
+        "KT": {
+          "fine": 0.2760134387472253,
+          "extrapolated": 0.306415611608085,
+          "anchor": 0.29,
+          "total_pct": -4.822952156129206,
+          "discrete_pct": -10.483507883055076,
+          "model_pct": 5.66055572692587,
+          "closure_error_pp": 8.881784197001252e-16,
+          "gci_fine_pct": 13.768429627398604,
+          "observed_order": -1.5200700776762333,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.520 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "10KQ": {
+          "fine": 0.42352068234264006,
+          "extrapolated": 0.43705895929916705,
+          "anchor": 0.471,
+          "total_pct": -10.08053453447132,
+          "discrete_pct": -2.874368780578978,
+          "model_pct": -7.206165753892341,
+          "closure_error_pp": 1.7763568394002505e-15,
+          "gci_fine_pct": 3.9957543754540055,
+          "observed_order": -2.6774136828323427,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -2.677 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "eta0": {
+          "fine": 0.5186157957319458,
+          "extrapolated": 0.5850507225579634,
+          "anchor": 0.4899674468858774,
+          "total_pct": 5.846990249689214,
+          "discrete_pct": -13.559049126276246,
+          "model_pct": 19.40603937596546,
+          "closure_error_pp": 8.881784197001252e-16,
+          "gci_fine_pct": 16.012558664033495,
+          "observed_order": -0.6002034170828789,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -0.600 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        }
+      },
+      "discretisation_band": {
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.768429627398604,
+            "observed_order": -1.5200700776762333,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 5.666037888029043,
+            "observed_order": 0.7781923578066748,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 0.9648248976892269,
+            "observed_order": -1.8137003773520484,
+            "monotone": false
+          },
+          {
+            "axis": "wake_length",
+            "gci_pct": 65.31493399978537,
+            "observed_order": -3.175097944440163,
+            "monotone": true
+          },
+          {
+            "axis": "kernel",
+            "gci_pct": 2.9156269550206892,
+            "observed_order": 1.3686906268453605,
+            "monotone": true
+          }
+        ],
+        "rss_gci_pct": 67.06076357135797,
+        "band_pct": 134.12152714271593,
+        "band_factor": 2.0,
+        "axes": [
+          "spanwise",
+          "azimuthal",
+          "chordwise",
+          "wake_length",
+          "kernel"
+        ],
+        "abs_total_KT_pct": 4.822952156129206,
+        "abs_model_KT_pct": 5.66055572692587,
+        "total_outside_band": false,
+        "model_outside_band": false
+      },
+      "discretisation_band_core": {
+        "note": "post-hoc diagnostic: only the axes flagged kind='discretisation' (spanwise, azimuthal, chordwise) enter the RSS; the two model axes are excluded because a divergent model parameter is not a discretisation of the same solution",
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.768429627398604,
+            "observed_order": -1.5200700776762333,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 5.666037888029043,
+            "observed_order": 0.7781923578066748,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 0.9648248976892269,
+            "observed_order": -1.8137003773520484,
+            "monotone": false
+          }
+        ],
+        "rss_gci_pct": 14.919937226289166,
+        "band_pct": 29.839874452578332,
+        "band_factor": 2.0,
+        "total_outside_band": false,
+        "model_outside_band": false
+      },
+      "model_term_bounds_pct": {
+        "note": "envelope: with the discretisation error bounded by the core band, the model term cannot be outside d_total -/+ band",
+        "low": -34.66282660870754,
+        "high": 25.016922296449124,
+        "excludes_zero": false,
+        "richardson_valid": false,
+        "richardson_pct": 5.66055572692587
+      }
+    },
+    {
+      "J": 0.8,
+      "primary_axis": "spanwise",
+      "quantities": {
+        "KT": {
+          "fine": 0.09340998479335558,
+          "extrapolated": 0.10315964378870723,
+          "anchor": 0.141,
+          "total_pct": -33.751783834499584,
+          "discrete_pct": -6.914651769752949,
+          "model_pct": -26.837132064746637,
+          "closure_error_pp": 0.0,
+          "gci_fine_pct": 13.046864070420517,
+          "observed_order": -1.595229619947206,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.595 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "10KQ": {
+          "fine": 0.17972649123039702,
+          "extrapolated": 0.190745479716519,
+          "anchor": 0.27,
+          "total_pct": -33.43463287763074,
+          "discrete_pct": -4.081106846711846,
+          "model_pct": -29.35352603091889,
+          "closure_error_pp": 7.105427357601002e-15,
+          "gci_fine_pct": 7.663720308207365,
+          "observed_order": -1.8302133197063868,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.830 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "eta0": {
+          "fine": 0.6617459991445903,
+          "extrapolated": 0.6889351048285374,
+          "anchor": 0.6649139844728071,
+          "total_pct": -0.4764503984268942,
+          "discrete_pct": -4.08911623441107,
+          "model_pct": 3.6126658359841755,
+          "closure_error_pp": 2.220446049250313e-16,
+          "gci_fine_pct": 5.1358651429501,
+          "observed_order": -1.3238989943641584,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.324 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        }
+      },
+      "discretisation_band": {
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.046864070420517,
+            "observed_order": -1.595229619947206,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 7.106832634258617,
+            "observed_order": 0.7053688842582713,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 1.6687740095890797,
+            "observed_order": -3.319733495155868,
+            "monotone": true
+          },
+          {
+            "axis": "wake_length",
+            "gci_pct": 20.986789556012937,
+            "observed_order": -0.8532574722784668,
+            "monotone": true
+          },
+          {
+            "axis": "kernel",
+            "gci_pct": 2.6116959671207765,
+            "observed_order": 1.471272021920362,
+            "monotone": true
+          }
+        ],
+        "rss_gci_pct": 25.899398266205367,
+        "band_pct": 51.798796532410734,
+        "band_factor": 2.0,
+        "axes": [
+          "spanwise",
+          "azimuthal",
+          "chordwise",
+          "wake_length",
+          "kernel"
+        ],
+        "abs_total_KT_pct": 33.751783834499584,
+        "abs_model_KT_pct": 26.837132064746637,
+        "total_outside_band": false,
+        "model_outside_band": false
+      },
+      "discretisation_band_core": {
+        "note": "post-hoc diagnostic: only the axes flagged kind='discretisation' (spanwise, azimuthal, chordwise) enter the RSS; the two model axes are excluded because a divergent model parameter is not a discretisation of the same solution",
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.046864070420517,
+            "observed_order": -1.595229619947206,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 7.106832634258617,
+            "observed_order": 0.7053688842582713,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 1.6687740095890797,
+            "observed_order": -3.319733495155868,
+            "monotone": true
+          }
+        ],
+        "rss_gci_pct": 14.950335744004986,
+        "band_pct": 29.900671488009973,
+        "band_factor": 2.0,
+        "total_outside_band": true,
+        "model_outside_band": false
+      },
+      "model_term_bounds_pct": {
+        "note": "envelope: with the discretisation error bounded by the core band, the model term cannot be outside d_total -/+ band",
+        "low": -63.65245532250955,
+        "high": -3.851112346489611,
+        "excludes_zero": true,
+        "richardson_valid": false,
+        "richardson_pct": -26.837132064746637
+      }
+    },
+    {
+      "J": 1.0,
+      "primary_axis": "spanwise",
+      "quantities": {
+        "KT": {
+          "fine": -0.03863350317692055,
+          "extrapolated": -0.041914605625416816,
+          "anchor": 0.029,
+          "total_pct": -233.21897647213981,
+          "discrete_pct": 11.314146374125066,
+          "model_pct": -244.5331228462649,
+          "closure_error_pp": 0.0,
+          "gci_fine_pct": 10.61611741973863,
+          "observed_order": -1.5652660382879362,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.565 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "10KQ": {
+          "fine": -0.013775418279284874,
+          "extrapolated": -0.018306163191704406,
+          "anchor": 0.108,
+          "total_pct": -112.75501692526376,
+          "discrete_pct": 4.195134178166233,
+          "model_pct": -116.95015110342999,
+          "closure_error_pp": 0.0,
+          "gci_fine_pct": 41.11258929277625,
+          "observed_order": -1.9567442186993589,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -1.957 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        },
+        "eta0": {
+          "fine": 4.463539962927752,
+          "extrapolated": 3.6470349675265044,
+          "anchor": 0.4273604953393486,
+          "total_pct": 944.4437451766445,
+          "discrete_pct": 191.05766777832278,
+          "model_pct": 753.3860773983216,
+          "closure_error_pp": 1.1368683772161603e-13,
+          "gci_fine_pct": 22.86595959100813,
+          "observed_order": -2.521034114169831,
+          "richardson_valid": false,
+          "richardson_invalid_reason": "observed order -2.521 is < 1.0 (or the ladder is not monotone / not asymptotic), so the Richardson limit is not a defensible estimate and the model term is bracketed by the GCI band instead"
+        }
+      },
+      "discretisation_band": {
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 10.61611741973863,
+            "observed_order": -1.5652660382879362,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 6.611540183094042,
+            "observed_order": 0.6629684156274072,
+            "monotone": true
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 0.011700645127803097,
+            "observed_order": 3.6261318568483323,
+            "monotone": true
+          },
+          {
+            "axis": "wake_length",
+            "gci_pct": 15.83212632553114,
+            "observed_order": -1.165608512555519,
+            "monotone": false
+          },
+          {
+            "axis": "kernel",
+            "gci_pct": 2.015417698503296,
+            "observed_order": 1.5341084136785306,
+            "monotone": true
+          }
+        ],
+        "rss_gci_pct": 20.276407030202815,
+        "band_pct": 40.55281406040563,
+        "band_factor": 2.0,
+        "axes": [
+          "spanwise",
+          "azimuthal",
+          "chordwise",
+          "wake_length",
+          "kernel"
+        ],
+        "abs_total_KT_pct": 233.21897647213981,
+        "abs_model_KT_pct": 244.5331228462649,
+        "total_outside_band": true,
+        "model_outside_band": true
+      },
+      "discretisation_band_core": {
+        "note": "post-hoc diagnostic: only the axes flagged kind='discretisation' (spanwise, azimuthal, chordwise) enter the RSS; the two model axes are excluded because a divergent model parameter is not a discretisation of the same solution",
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 10.61611741973863,
+            "observed_order": -1.5652660382879362,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 6.611540183094042,
+            "observed_order": 0.6629684156274072,
+            "monotone": true
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 0.011700645127803097,
+            "observed_order": 3.6261318568483323,
+            "monotone": true
+          }
+        ],
+        "rss_gci_pct": 12.506580250709689,
+        "band_pct": 25.013160501419378,
+        "band_factor": 2.0,
+        "total_outside_band": true,
+        "model_outside_band": true
+      },
+      "model_term_bounds_pct": {
+        "note": "envelope: with the discretisation error bounded by the core band, the model term cannot be outside d_total -/+ band",
+        "low": -258.2321369735592,
+        "high": -208.20581597072044,
+        "excludes_zero": true,
+        "richardson_valid": false,
+        "richardson_pct": -244.5331228462649
+      }
+    }
+  ],
+  "criteria": [
+    {
+      "id": "G1",
+      "statement": "coverage: >= 4 levels on each axis, >= 12 (axis, J) cells, and K_T / 10 K_Q / eta_0 tabulated at every level",
+      "threshold": {
+        "min_cells": 12,
+        "min_levels": 4
+      },
+      "measured": {
+        "n_cells": 15,
+        "levels_per_axis": {
+          "spanwise": [
+            4
+          ],
+          "azimuthal": [
+            4
+          ],
+          "chordwise": [
+            4
+          ],
+          "wake_length": [
+            4
+          ],
+          "kernel": [
+            4
+          ]
+        },
+        "advance_ratios": [
+          0.5,
+          0.8,
+          1.0
+        ],
+        "n_lattice_runs": 60,
+        "all_quantities_finite": true
+      },
+      "passed": true,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G2",
+      "statement": "every level of every cell is physically admissible (K_T > 0, K_Q > 0, eta_0 <= momentum bound)",
+      "threshold": {
+        "KT_min": 0.0,
+        "KQ_min": 0.0
+      },
+      "measured": {
+        "cells": {
+          "spanwise@J=0.5": true,
+          "spanwise@J=0.8": true,
+          "spanwise@J=1.0": false,
+          "azimuthal@J=0.5": true,
+          "azimuthal@J=0.8": true,
+          "azimuthal@J=1.0": false,
+          "chordwise@J=0.5": true,
+          "chordwise@J=0.8": true,
+          "chordwise@J=1.0": false,
+          "wake_length@J=0.5": true,
+          "wake_length@J=0.8": true,
+          "wake_length@J=1.0": false,
+          "kernel@J=0.5": true,
+          "kernel@J=0.8": true,
+          "kernel@J=1.0": false
+        },
+        "non_physical_cells": [
+          "azimuthal@J=1.0",
+          "chordwise@J=1.0",
+          "kernel@J=1.0",
+          "spanwise@J=1.0",
+          "wake_length@J=1.0"
+        ],
+        "n_non_physical": 5,
+        "J_1_0_KT_levels": [
+          -0.047618481421602535,
+          -0.04153994700165753,
+          -0.040805870612996425,
+          -0.03863350317692055
+        ]
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G3",
+      "statement": "finest-level spanwise and azimuthal GCI of K_T <= 1 % (evidence-surface threshold of the mission)",
+      "threshold": {
+        "gci_pct_max": 1.0
+      },
+      "measured": {
+        "per_cell": {
+          "spanwise@J=0.5": {
+            "gci_fine_pct": 13.768429627398604,
+            "observed_order": -1.5200700776762333,
+            "converged": true,
+            "monotone": true
+          },
+          "spanwise@J=0.8": {
+            "gci_fine_pct": 13.046864070420517,
+            "observed_order": -1.595229619947206,
+            "converged": true,
+            "monotone": true
+          },
+          "spanwise@J=1.0": {
+            "gci_fine_pct": 10.61611741973863,
+            "observed_order": -1.5652660382879362,
+            "converged": true,
+            "monotone": true
+          },
+          "azimuthal@J=0.5": {
+            "gci_fine_pct": 5.666037888029043,
+            "observed_order": 0.7781923578066748,
+            "converged": true,
+            "monotone": false
+          },
+          "azimuthal@J=0.8": {
+            "gci_fine_pct": 7.106832634258617,
+            "observed_order": 0.7053688842582713,
+            "converged": true,
+            "monotone": false
+          },
+          "azimuthal@J=1.0": {
+            "gci_fine_pct": 6.611540183094042,
+            "observed_order": 0.6629684156274072,
+            "converged": true,
+            "monotone": true
+          }
+        },
+        "worst_pct": 13.768429627398604,
+        "best_pct": 5.666037888029043,
+        "n_within_target": 0,
+        "n_cells": 6
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G4",
+      "statement": "finest-triplet observed order p >= 1.0 on the spanwise and azimuthal axes",
+      "threshold": {
+        "observed_order_min": 1.0
+      },
+      "measured": {
+        "per_cell": {
+          "spanwise@J=0.5": -1.5200700776762333,
+          "spanwise@J=0.8": -1.595229619947206,
+          "spanwise@J=1.0": -1.5652660382879362,
+          "azimuthal@J=0.5": 0.7781923578066748,
+          "azimuthal@J=0.8": 0.7053688842582713,
+          "azimuthal@J=1.0": 0.6629684156274072
+        },
+        "min_finite_order": -1.595229619947206,
+        "n_non_finite": 0
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G5",
+      "statement": "the spanwise and azimuthal K_T ladders are monotone (no odd-even oscillation)",
+      "threshold": null,
+      "measured": {
+        "non_monotone": [
+          "azimuthal@J=0.5",
+          "azimuthal@J=0.8"
+        ],
+        "series": {
+          "spanwise@J=0.5": [
+            0.3534876636288142,
+            0.30271961770435474,
+            0.2958153170105801,
+            0.2760134387472253
+          ],
+          "spanwise@J=0.8": [
+            0.11955569961249865,
+            0.10209165794794361,
+            0.0999328035758505,
+            0.09340998479335558
+          ],
+          "spanwise@J=1.0": [
+            -0.047618481421602535,
+            -0.04153994700165753,
+            -0.040805870612996425,
+            -0.03863350317692055
+          ],
+          "azimuthal@J=0.5": [
+            0.20632943098798204,
+            0.2958153170105801,
+            0.2807034190391405,
+            0.2718917176639797
+          ],
+          "azimuthal@J=0.8": [
+            0.09622734430474505,
+            0.0999328035758505,
+            0.09459454263325695,
+            0.09132066376435688
+          ],
+          "azimuthal@J=1.0": [
+            -0.045376293918639385,
+            -0.040805870612996425,
+            -0.03895956942666409,
+            -0.037793487217332916
+          ]
+        }
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G6",
+      "statement": "dK_T(J=0.8) is attributable to model error only when it lies outside the +/- 2 GCI band (GCI = RSS over the five axes)",
+      "threshold": {
+        "band_factor": 2.0
+      },
+      "measured": {
+        "dKT_total_pct": -33.751783834499584,
+        "dKT_discrete_pct": -6.914651769752949,
+        "dKT_model_pct": -26.837132064746637,
+        "dKT_report_8822_pct": -29.125671222801053,
+        "rss_gci_pct": 25.899398266205367,
+        "band_pct": 51.798796532410734,
+        "band_factor": 2.0,
+        "total_outside_band": false,
+        "model_outside_band": false,
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.046864070420517,
+            "observed_order": -1.595229619947206,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 7.106832634258617,
+            "observed_order": 0.7053688842582713,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 1.6687740095890797,
+            "observed_order": -3.319733495155868,
+            "monotone": true
+          },
+          {
+            "axis": "wake_length",
+            "gci_pct": 20.986789556012937,
+            "observed_order": -0.8532574722784668,
+            "monotone": true
+          },
+          {
+            "axis": "kernel",
+            "gci_pct": 2.6116959671207765,
+            "observed_order": 1.471272021920362,
+            "monotone": true
+          }
+        ]
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G6b",
+      "statement": "POST-HOC sensitivity of G6: with the band restricted to the three discretisation axes (spanwise, azimuthal, chordwise), is dK_T(J=0.8) outside +/- 2 GCI?",
+      "threshold": {
+        "band_factor": 2.0
+      },
+      "measured": {
+        "rss_gci_pct": 14.950335744004986,
+        "band_pct": 29.900671488009973,
+        "dKT_total_pct": -33.751783834499584,
+        "dKT_model_pct": -26.837132064746637,
+        "model_term_bounds_pct": [
+          -63.65245532250955,
+          -3.851112346489611
+        ],
+        "model_bounds_exclude_zero": true,
+        "richardson_valid": false,
+        "contributions": [
+          {
+            "axis": "spanwise",
+            "gci_pct": 13.046864070420517,
+            "observed_order": -1.595229619947206,
+            "monotone": true
+          },
+          {
+            "axis": "azimuthal",
+            "gci_pct": 7.106832634258617,
+            "observed_order": 0.7053688842582713,
+            "monotone": false
+          },
+          {
+            "axis": "chordwise",
+            "gci_pct": 1.6687740095890797,
+            "observed_order": -3.319733495155868,
+            "monotone": true
+          }
+        ]
+      },
+      "passed": true,
+      "post_hoc": true,
+      "evidence": {
+        "why_post_hoc": "G6 named the RSS over all five axes before the run; that band is dominated by the divergent wake-extent axis (see G8), so it mixes model-form error into the discretisation band. G6b narrows the band to the discretisation axes only. It was added after the first run and is labelled post-hoc so the predeclared verdict (G6) stays the one on the record."
+      }
+    },
+    {
+      "id": "G7",
+      "statement": "the discrete/model split closes: abs(d_disc + d_model - d_total) <= 1e-9 pp",
+      "threshold": {
+        "closure_error_pp_max": 1e-09
+      },
+      "measured": {
+        "max_closure_error_pp": 1.1368683772161603e-13,
+        "per_quantity": {
+          "J=0.5@KT": 8.881784197001252e-16,
+          "J=0.5@10KQ": 1.7763568394002505e-15,
+          "J=0.5@eta0": 8.881784197001252e-16,
+          "J=0.8@KT": 0.0,
+          "J=0.8@10KQ": 7.105427357601002e-15,
+          "J=0.8@eta0": 2.220446049250313e-16,
+          "J=1.0@KT": 0.0,
+          "J=1.0@10KQ": 0.0,
+          "J=1.0@eta0": 1.1368683772161603e-13
+        }
+      },
+      "passed": true,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G8",
+      "statement": "the wake-extent axis converges: usable GCI, p >= 1.0 and GCI <= 1 % at every J",
+      "threshold": {
+        "gci_pct_max": 1.0,
+        "observed_order_min": 1.0
+      },
+      "measured": {
+        "per_J": {
+          "J=0.5": {
+            "usable": true,
+            "gci_fine_pct": 65.31493399978537,
+            "observed_order": -3.175097944440163,
+            "converged": false,
+            "monotone": true,
+            "KT_levels": [
+              0.3563604565982288,
+              0.30620555510945735,
+              0.2958153170105801,
+              0.20196727412268184
+            ]
+          },
+          "J=0.8": {
+            "usable": true,
+            "gci_fine_pct": 20.986789556012937,
+            "observed_order": -0.8532574722784668,
+            "converged": true,
+            "monotone": true,
+            "KT_levels": [
+              0.12132318365955772,
+              0.10379011654977588,
+              0.0999328035758505,
+              0.09296427683103368
+            ]
+          },
+          "J=1.0": {
+            "usable": true,
+            "gci_fine_pct": 15.83212632553114,
+            "observed_order": -1.165608512555519,
+            "converged": false,
+            "monotone": false,
+            "KT_levels": [
+              -0.04820460049655132,
+              -0.04217916193127663,
+              -0.040805870612996425,
+              -0.04388654501545666
+            ]
+          }
+        }
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    },
+    {
+      "id": "G9",
+      "statement": "the kernel-regularisation axis converges: usable GCI, p >= 1.0 and GCI <= 1 % at every J",
+      "threshold": {
+        "gci_pct_max": 1.0,
+        "observed_order_min": 1.0
+      },
+      "measured": {
+        "per_J": {
+          "J=0.5": {
+            "usable": true,
+            "gci_fine_pct": 2.9156269550206892,
+            "observed_order": 1.3686906268453605,
+            "converged": true,
+            "monotone": true,
+            "KT_levels": [
+              0.3407257573128555,
+              0.33492798767365045,
+              0.30673344391284724,
+              0.2958153170105801
+            ]
+          },
+          "J=0.8": {
+            "usable": true,
+            "gci_fine_pct": 2.6116959671207765,
+            "observed_order": 1.471272021920362,
+            "converged": true,
+            "monotone": true,
+            "KT_levels": [
+              0.11507545589101437,
+              0.11389631657308191,
+              0.10363403923018018,
+              0.0999328035758505
+            ]
+          },
+          "J=1.0": {
+            "usable": true,
+            "gci_fine_pct": 2.015417698503296,
+            "observed_order": 1.5341084136785306,
+            "converged": true,
+            "monotone": true,
+            "KT_levels": [
+              -0.04589188602626225,
+              -0.04566621432670354,
+              -0.04205336201162598,
+              -0.040805870612996425
+            ]
+          }
+        }
+      },
+      "passed": false,
+      "post_hoc": false,
+      "evidence": {}
+    }
+  ],
+  "verdict": {
+    "status": "FAIL",
+    "passed_criteria": [
+      "G1",
+      "G6b",
+      "G7"
+    ],
+    "failed_criteria": [
+      "G2",
+      "G3",
+      "G4",
+      "G5",
+      "G6",
+      "G8",
+      "G9"
+    ],
+    "n_passed": 3,
+    "n_criteria": 10
+  },
+  "data_files": {
+    "ladder_values": "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/kp505_gci_ladder_values.csv",
+    "gci": "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/kp505_gci_ladder_gci.csv",
+    "decomposition": "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/kp505_gci_ladder_decomposition.csv"
+  },
+  "figures": [
+    "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/figures/kp505_gci_ladders.png",
+    "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/figures/kp505_gci_by_axis.png",
+    "/root/tp-agent/work/m8531/benchmarks/verified/propeller_openwater/figures/kp505_decomposition.png"
+  ],
+  "headline": {
+    "spanwise_four_level_vs_three_level": [
+      {
+        "J": 0.5,
+        "levels": [
+          4.0,
+          8.0,
+          16.0,
+          32.0
+        ],
+        "KT_levels": [
+          0.3534876636288142,
+          0.30271961770435474,
+          0.2958153170105801,
+          0.2760134387472253
+        ],
+        "p_three_coarsest_levels": 2.8783535286562825,
+        "gci_three_coarsest_levels_pct": 0.45922237440462077,
+        "p_three_finest_levels": -1.5200700776762333,
+        "gci_three_finest_levels_pct": 13.768429627398604,
+        "triplet_disagreement_ratio": 29.982053128942802
+      },
+      {
+        "J": 0.8,
+        "levels": [
+          4.0,
+          8.0,
+          16.0,
+          32.0
+        ],
+        "KT_levels": [
+          0.11955569961249865,
+          0.10209165794794361,
+          0.0999328035758505,
+          0.09340998479335558
+        ],
+        "p_three_coarsest_levels": 3.016049644164493,
+        "gci_three_coarsest_levels_pct": 0.3808991363740084,
+        "p_three_finest_levels": -1.595229619947206,
+        "gci_three_finest_levels_pct": 13.046864070420517,
+        "triplet_disagreement_ratio": 34.25280559735814
+      },
+      {
+        "J": 1.0,
+        "levels": [
+          4.0,
+          8.0,
+          16.0,
+          32.0
+        ],
+        "KT_levels": [
+          -0.047618481421602535,
+          -0.04153994700165753,
+          -0.040805870612996425,
+          -0.03863350317692055
+        ],
+        "p_three_coarsest_levels": 3.049721416885114,
+        "gci_three_coarsest_levels_pct": 0.3088632269162843,
+        "p_three_finest_levels": -1.5652660382879362,
+        "gci_three_finest_levels_pct": 10.61611741973863,
+        "triplet_disagreement_ratio": 34.37158099308491
+      }
+    ],
+    "richardson_valid": false,
+    "dKT_J0_8_finest_lattice_pct": -33.751783834499584,
+    "dKT_J0_8_base_configuration_pct": -29.125671222801053,
+    "dKT_J0_8_model_term_richardson_pct": -26.837132064746637,
+    "dKT_J0_8_discretisation_term_richardson_pct": -6.914651769752949,
+    "discretisation_band_all_axes_pct": 51.798796532410734,
+    "discretisation_band_core_axes_pct": 29.900671488009973,
+    "model_term_bounds_pct": [
+      -63.65245532250955,
+      -3.851112346489611
+    ],
+    "per_J_attribution": [
+      {
+        "J": 0.5,
+        "dKT_total_pct": -4.822952156129206,
+        "core_band_pct": 29.839874452578332,
+        "total_outside_core_band": false,
+        "model_bounds_pct": [
+          -34.66282660870754,
+          25.016922296449124
+        ]
+      },
+      {
+        "J": 0.8,
+        "dKT_total_pct": -33.751783834499584,
+        "core_band_pct": 29.900671488009973,
+        "total_outside_core_band": true,
+        "model_bounds_pct": [
+          -63.65245532250955,
+          -3.851112346489611
+        ]
+      },
+      {
+        "J": 1.0,
+        "dKT_total_pct": -233.21897647213981,
+        "core_band_pct": 25.013160501419378,
+        "total_outside_core_band": true,
+        "model_bounds_pct": [
+          -258.2321369735592,
+          -208.20581597072044
+        ]
+      }
+    ]
+  },
+  "limitations": [
+    "No blade-surface circumferential segmentation exists in a blade-fitted lifting-surface lattice, so the mission's \"circumferential segments\" axis is realised as the azimuthal segmentation of the helical wake (`wake_steps`), the only azimuthal discretisation the model has. Recorded as a declared substitution, not silently renamed.",
+    "The solver is direct-dense with no fixed-point relaxation coefficient; the mission's \"relaxation factor\" axis is therefore realised as the van Garrel vortex-core desingularisation ratio, the only regularisation parameter. Its fine end (0.05) sits on the code's floor `core = max(core_ratio * segment, 0.5 * span)`, so the axis saturates there and the reported `p` describes the approach to that floor, not to an unregularised kernel.",
+    "The reported GCI is a discretisation band around the *lattice* solution, not an uncertainty on the anchor: the transcribed Table 2 values themselves carry measurement/reading uncertainty that this artefact does not quantify (see the provenance depth field of the anchor block).",
+    "The observed order of the spanwise ladder is negative at every J once the triplet is taken on the fine side (p = -1.520, -1.595, -1.565), while the coarse-side triplet of the same four-level ladder reports p = 2.878, 3.016, 3.050. The lattice is therefore not in the asymptotic range and no GCI from it is a bound; the numbers are reported as measured instead of being fitted to a p >= 1 expectation.",
+    "Only J = 0.5 / 0.8 / 1.0 are ladders; the remaining anchor points keep the single-density evidence of the sweep study (docs/m7485_kp505_openwater_bem.md)."
+  ],
+  "acceptance": [
+    {
+      "quantity": "dK_T(J=0.8), finest spanwise lattice vs the Table 2 anchor",
+      "basis": "transcribed experimental column (Table 2, p. 10)",
+      "value": "-33.752 %",
+      "within_3pct": "no"
+    },
+    {
+      "quantity": "dK_T(J=0.8), Richardson model term",
+      "basis": "Richardson limit vs anchor (order p = -1.595, INVALID: order below 1)",
+      "value": "-26.837 %",
+      "within_3pct": "n/a (estimate invalid)"
+    },
+    {
+      "quantity": "dK_T(J=0.8), model term bracket",
+      "basis": "d_total +/- 2 GCI over the discretisation axes (29.901 %)",
+      "value": "[-63.652, -3.851] %",
+      "within_3pct": "no (bracket excludes 0)"
+    },
+    {
+      "quantity": "finest spanwise GCI of K_T at J=0.8",
+      "basis": "mission criterion 1 % (and the 3 % acceptance level)",
+      "value": "13.047 %",
+      "within_3pct": "no"
+    },
+    {
+      "quantity": "finest azimuthal GCI of K_T at J=0.8",
+      "basis": "mission criterion 1 % (and the 3 % acceptance level)",
+      "value": "7.107 %",
+      "within_3pct": "no"
+    },
+    {
+      "quantity": "spread of the two overlapping spanwise triplets at J=0.8 (coarse {4,8,16} vs fine {8,16,32})",
+      "basis": "the 7.1-8.1 % three-level figure quoted by report 8822 (different J grid, so not reproduced here); a single three-level number has no way to measure this spread",
+      "value": "0.381 % vs 13.047 %",
+      "within_3pct": "not comparable: neither number is a bound, they differ by 34x"
+    },
+    {
+      "quantity": "observed order p on the finest spanwise triplet at J=0.8",
+      "basis": "criterion p >= 1.0",
+      "value": "-1.595",
+      "within_3pct": "no (p < 0: differences grow with refinement)"
+    },
+    {
+      "quantity": "decomposition closure abs(d_disc + d_model - d_total)",
+      "basis": "algebraic identity, tolerance 1e-9 pp",
+      "value": "1.14e-13 pp",
+      "within_3pct": "yes (machine precision)"
+    },
+    {
+      "quantity": "combined 2 GCI band at J=0.8 (all five axes)",
+      "basis": "predeclared G6 band",
+      "value": "51.799 %",
+      "within_3pct": "no (band wider than the 3 % acceptance level)"
+    }
+  ]
+}
