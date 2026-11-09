@@ -1,0 +1,1132 @@
+{
+  "task_key": "paper-exp-acoustic-array-beamforming-1",
+  "case_id": "acoustic-array-beamforming",
+  "generated_utc": "2026-11-08T15:50:22Z",
+  "generator": "benchmarks/anchors/acoustic_array_beamforming/run_anchor.py",
+  "module": "benchmarks/anchors/acoustic_array_beamforming/pekeris_anchor.py",
+  "statement": "External-anchor check for the Pekeris two-layer waveguide dispersion relation: verbatim transcription of the source roots -> same-frame conversion -> dimensional and internal-consistency machine checks.",
+  "case_definition": {
+    "environment": "ideal two-layer (Pekeris) waveguide, pressure-release surface",
+    "waveguide": {
+      "water_depth_m": 100.0,
+      "c_water_m_s": 1500.0,
+      "c_bottom_m_s": 1600.0,
+      "rho_water_kg_m3": 1000.0,
+      "rho_bottom_kg_m3": 1800.0,
+      "density_ratio_rho2_over_rho1": 1.8,
+      "trapped_window_s_in": [
+        0.9375,
+        1.0
+      ],
+      "array_n_elements": 32
+    },
+    "array": {
+      "type": "horizontal uniform linear array",
+      "n_elements": 32,
+      "spacing_rule": "d = lambda1/2 at the case reference frequency (grating-lobe free)"
+    },
+    "frequency_band_hz": [
+      20.0,
+      400.0
+    ],
+    "case_frame": {
+      "primary_quantity": "s = k_r / k1 (dimensionless modal wavenumber)",
+      "secondary": [
+        "grazing angle theta = arccos(s)",
+        "phase velocity c_ph = c1/s",
+        "mode count N(f)",
+        "alias-free spacing d <= lambda1/2"
+      ],
+      "why": "beamforming performance is controlled by k_r d and by the trapped-mode content; both follow from s(f) once the frame is fixed"
+    }
+  },
+  "derivation": {
+    "ansatz": {
+      "layer": "p1(z) = A sin(k_z z), 0 <= z <= H",
+      "halfspace": "p2(z) = B exp(-alpha (z-H)), z > H",
+      "branch_definitions": "k_z^2 = k1^2 - k_r^2 ; alpha^2 = k_r^2 - k2^2"
+    },
+    "helmholtz_residual_layer": "0",
+    "helmholtz_residual_halfspace": "0",
+    "interface_conditions": [
+      "Eq(A*sin(H*k_z), B)",
+      "Eq(A*k_z*cos(H*k_z)/rho_1, -B*alpha/rho_2)"
+    ],
+    "flux_after_pressure_elimination": "alpha*sin(H*k_z)/rho_2 + k_z*cos(H*k_z)/rho_1",
+    "flux_condition_over_cos": "alpha*tan(H*k_z)/rho_2 + k_z/rho_1",
+    "branch_equation_candidate": "-k_z*rho_2/(alpha*rho_1)",
+    "interface_elimination_residual": "0",
+    "branch_equation_tex": "\\tan(k_z H) = -\\frac{\\rho_2}{\\rho_1}\\,\\frac{k_z}{\\alpha}",
+    "branch_equation_text": "tan(k_z H) + (rho2/rho1) k_z / alpha = 0",
+    "residual_form_used": "F(k_z) = alpha sin(k_z H) + m k_z cos(k_z H), m = rho2/rho1",
+    "sympy_residual_is_zero": true,
+    "dimensional_checks": [
+      {
+        "quantity": "k_z",
+        "expected_dimension": "inv_length",
+        "expected_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "k_r",
+        "expected_dimension": "inv_length",
+        "expected_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "alpha",
+        "expected_dimension": "inv_length",
+        "expected_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "k_z*H",
+        "expected_dimension": "dimensionless",
+        "expected_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "rho2/rho1",
+        "expected_dimension": "dimensionless",
+        "expected_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "k_z/alpha",
+        "expected_dimension": "dimensionless",
+        "expected_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "k1=omega/c1",
+        "expected_dimension": "inv_length",
+        "expected_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          -1,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "s=k_r/k1",
+        "expected_dimension": "dimensionless",
+        "expected_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "c_ph=omega/k_r",
+        "expected_dimension": "speed",
+        "expected_vector_M_L_T": [
+          0,
+          1,
+          -1
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          1,
+          -1
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "k_r*H",
+        "expected_dimension": "dimensionless",
+        "expected_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          0,
+          0
+        ],
+        "homogeneous": true
+      },
+      {
+        "quantity": "lambda1=c1/f",
+        "expected_dimension": "length",
+        "expected_vector_M_L_T": [
+          0,
+          1,
+          0
+        ],
+        "actual_vector_M_L_T": [
+          0,
+          1,
+          0
+        ],
+        "homogeneous": true
+      }
+    ],
+    "dimensional_checks_all_homogeneous": true,
+    "note": "The branch equation is derived here, not transcribed; the derivation fixes the functional form used by the solver and the conversion chain and uses no literature number."
+  },
+  "root_solutions": {
+    "freq_grid_hz": [
+      20.0,
+      30.0,
+      40.0,
+      50.0,
+      60.0,
+      70.0,
+      80.0,
+      90.0,
+      100.0,
+      110.0,
+      120.0,
+      130.0,
+      140.0,
+      150.0,
+      160.0,
+      170.0,
+      180.0,
+      190.0,
+      200.0,
+      210.0,
+      220.0,
+      230.0,
+      240.0,
+      250.0,
+      260.0,
+      270.0,
+      280.0,
+      290.0,
+      300.0,
+      310.0,
+      320.0,
+      330.0,
+      340.0,
+      350.0,
+      360.0,
+      370.0,
+      380.0,
+      390.0,
+      400.0
+    ],
+    "n_roots_total": 380,
+    "samples": [
+      {
+        "freq_hz": 100.0,
+        "branch_index": 0,
+        "k_z_rad_m": 0.028025504122720892,
+        "k_r_rad_m": 0.41794043225776983,
+        "s_kr_over_k1": 0.9977592856768124,
+        "grazing_angle_deg": 3.8362950627030488,
+        "phase_velocity_m_s": 1503.3686195989662,
+        "residual_F_abs": 4.163336342344337e-17,
+        "residual_F_rel": 1.5867902338247986e-16,
+        "residual_G_rel": 2.642266052878026e-16
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 1,
+        "k_z_rad_m": 0.05636638155481677,
+        "k_r_rad_m": 0.41506922895772574,
+        "s_kr_over_k1": 0.9909047927094558,
+        "grazing_angle_deg": 7.73345651449359,
+        "phase_velocity_m_s": 1513.7680340595714,
+        "residual_F_abs": 5.551115123125783e-17,
+        "residual_F_rel": 2.1157203117663981e-16,
+        "residual_G_rel": 4.0318251844267356e-16
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 2,
+        "k_z_rad_m": 0.08511633652060817,
+        "k_r_rad_m": 0.41014002859322907,
+        "s_kr_over_k1": 0.9791371936569554,
+        "grazing_angle_deg": 11.724165717858506,
+        "phase_velocity_m_s": 1531.961005788869,
+        "residual_F_abs": 3.191891195797325e-16,
+        "residual_F_rel": 1.216539179265679e-15,
+        "residual_G_rel": 3.850898263929914e-15
+      },
+      {
+        "freq_hz": 200.0,
+        "branch_index": 0,
+        "k_z_rad_m": 0.029599128781786544,
+        "k_r_rad_m": 0.8372349889749806,
+        "s_kr_over_k1": 0.9993756526864249,
+        "grazing_angle_deg": 2.0247590668295623,
+        "phase_velocity_m_s": 1500.9371060500075,
+        "residual_F_abs": 1.3877787807814457e-17,
+        "residual_F_rel": 2.6446503897079977e-17,
+        "residual_G_rel": 7.905481051578892e-17
+      },
+      {
+        "freq_hz": 200.0,
+        "branch_index": 1,
+        "k_z_rad_m": 0.05925582825340456,
+        "k_r_rad_m": 0.8356597884346115,
+        "s_kr_over_k1": 0.9974953955437191,
+        "grazing_angle_deg": 4.0559994835723145,
+        "phase_velocity_m_s": 1503.7663398760587,
+        "residual_F_abs": 1.3877787807814457e-16,
+        "residual_F_rel": 2.6446503897079974e-16,
+        "residual_G_rel": 4.514486287432405e-16
+      },
+      {
+        "freq_hz": 200.0,
+        "branch_index": 2,
+        "k_z_rad_m": 0.08901319573349316,
+        "k_r_rad_m": 0.8330157178432395,
+        "s_kr_over_k1": 0.9943392687599634,
+        "grazing_angle_deg": 6.099285742127418,
+        "phase_velocity_m_s": 1508.5394363139696,
+        "residual_F_abs": 2.7755575615628914e-17,
+        "residual_F_rel": 5.2893007794159954e-17,
+        "residual_G_rel": 9.569042371394858e-17
+      },
+      {
+        "freq_hz": 400.0,
+        "branch_index": 0,
+        "k_z_rad_m": 0.03047654341994805,
+        "k_r_rad_m": 1.6752388847729982,
+        "s_kr_over_k1": 0.9998345601426627,
+        "grazing_angle_deg": 1.042230291375624,
+        "phase_velocity_m_s": 1500.248200848319,
+        "residual_F_abs": 2.7755575615628914e-17,
+        "residual_F_rel": 2.6446503897079977e-17,
+        "residual_G_rel": 3.946822432899577e-17
+      },
+      {
+        "freq_hz": 400.0,
+        "branch_index": 1,
+        "k_z_rad_m": 0.06096159786639253,
+        "k_r_rad_m": 1.6744067081625906,
+        "s_kr_over_k1": 0.9993378913136434,
+        "grazing_angle_deg": 2.085096879970845,
+        "phase_velocity_m_s": 1500.9938210470827,
+        "residual_F_abs": 2.914335439641036e-16,
+        "residual_F_rel": 2.7768829091933978e-16,
+        "residual_G_rel": 4.501995680342868e-16
+      },
+      {
+        "freq_hz": 400.0,
+        "branch_index": 2,
+        "k_z_rad_m": 0.09146303657219568,
+        "k_r_rad_m": 1.6730178282658257,
+        "s_kr_over_k1": 0.9985089646851517,
+        "grazing_angle_deg": 3.129216216640137,
+        "phase_velocity_m_s": 1502.2398927314364,
+        "residual_F_abs": 2.7755575615628914e-17,
+        "residual_F_rel": 2.6446503897079977e-17,
+        "residual_G_rel": 4.7664052991727267e-17
+      }
+    ],
+    "max_branch_residual_F_rel": 9.197506355317813e-15,
+    "max_branch_residual_G_rel": 2.5931197895995916e-12,
+    "all_roots_inside_trapped_window": true,
+    "mode_count_table": [
+      {
+        "freq_hz": 20.0,
+        "n_solver": 1,
+        "n_analytic": 1
+      },
+      {
+        "freq_hz": 30.0,
+        "n_solver": 1,
+        "n_analytic": 1
+      },
+      {
+        "freq_hz": 40.0,
+        "n_solver": 2,
+        "n_analytic": 2
+      },
+      {
+        "freq_hz": 50.0,
+        "n_solver": 2,
+        "n_analytic": 2
+      },
+      {
+        "freq_hz": 60.0,
+        "n_solver": 3,
+        "n_analytic": 3
+      },
+      {
+        "freq_hz": 70.0,
+        "n_solver": 3,
+        "n_analytic": 3
+      },
+      {
+        "freq_hz": 80.0,
+        "n_solver": 4,
+        "n_analytic": 4
+      },
+      {
+        "freq_hz": 90.0,
+        "n_solver": 4,
+        "n_analytic": 4
+      },
+      {
+        "freq_hz": 100.0,
+        "n_solver": 5,
+        "n_analytic": 5
+      },
+      {
+        "freq_hz": 110.0,
+        "n_solver": 5,
+        "n_analytic": 5
+      },
+      {
+        "freq_hz": 120.0,
+        "n_solver": 6,
+        "n_analytic": 6
+      },
+      {
+        "freq_hz": 130.0,
+        "n_solver": 6,
+        "n_analytic": 6
+      },
+      {
+        "freq_hz": 140.0,
+        "n_solver": 6,
+        "n_analytic": 6
+      },
+      {
+        "freq_hz": 150.0,
+        "n_solver": 7,
+        "n_analytic": 7
+      },
+      {
+        "freq_hz": 160.0,
+        "n_solver": 7,
+        "n_analytic": 7
+      },
+      {
+        "freq_hz": 170.0,
+        "n_solver": 8,
+        "n_analytic": 8
+      },
+      {
+        "freq_hz": 180.0,
+        "n_solver": 8,
+        "n_analytic": 8
+      },
+      {
+        "freq_hz": 190.0,
+        "n_solver": 9,
+        "n_analytic": 9
+      },
+      {
+        "freq_hz": 200.0,
+        "n_solver": 9,
+        "n_analytic": 9
+      },
+      {
+        "freq_hz": 210.0,
+        "n_solver": 10,
+        "n_analytic": 10
+      },
+      {
+        "freq_hz": 220.0,
+        "n_solver": 10,
+        "n_analytic": 10
+      },
+      {
+        "freq_hz": 230.0,
+        "n_solver": 11,
+        "n_analytic": 11
+      },
+      {
+        "freq_hz": 240.0,
+        "n_solver": 11,
+        "n_analytic": 11
+      },
+      {
+        "freq_hz": 250.0,
+        "n_solver": 12,
+        "n_analytic": 12
+      },
+      {
+        "freq_hz": 260.0,
+        "n_solver": 12,
+        "n_analytic": 12
+      },
+      {
+        "freq_hz": 270.0,
+        "n_solver": 13,
+        "n_analytic": 13
+      },
+      {
+        "freq_hz": 280.0,
+        "n_solver": 13,
+        "n_analytic": 13
+      },
+      {
+        "freq_hz": 290.0,
+        "n_solver": 13,
+        "n_analytic": 13
+      },
+      {
+        "freq_hz": 300.0,
+        "n_solver": 14,
+        "n_analytic": 14
+      },
+      {
+        "freq_hz": 310.0,
+        "n_solver": 14,
+        "n_analytic": 14
+      },
+      {
+        "freq_hz": 320.0,
+        "n_solver": 15,
+        "n_analytic": 15
+      },
+      {
+        "freq_hz": 330.0,
+        "n_solver": 15,
+        "n_analytic": 15
+      },
+      {
+        "freq_hz": 340.0,
+        "n_solver": 16,
+        "n_analytic": 16
+      },
+      {
+        "freq_hz": 350.0,
+        "n_solver": 16,
+        "n_analytic": 16
+      },
+      {
+        "freq_hz": 360.0,
+        "n_solver": 17,
+        "n_analytic": 17
+      },
+      {
+        "freq_hz": 370.0,
+        "n_solver": 17,
+        "n_analytic": 17
+      },
+      {
+        "freq_hz": 380.0,
+        "n_solver": 18,
+        "n_analytic": 18
+      },
+      {
+        "freq_hz": 390.0,
+        "n_solver": 18,
+        "n_analytic": 18
+      },
+      {
+        "freq_hz": 400.0,
+        "n_solver": 19,
+        "n_analytic": 19
+      }
+    ],
+    "mode_count_mismatches": []
+  },
+  "independent_fem_check": {
+    "method": "1-D P1 FEM of the pressure modal problem, Dirichlet truncation, generalised symmetric eigenproblem (shares no algebra with the branch equation)",
+    "rows": [
+      {
+        "freq_hz": 100.0,
+        "levels": [
+          {
+            "n_layer_elements": 100,
+            "k_r_fem": [
+              0.4179401529594532,
+              0.4150676122810868,
+              0.41013406574759464,
+              0.40301839247012,
+              0.39383923230740636
+            ],
+            "rel_err_vs_analytic": [
+              6.682734708865888e-07,
+              3.894971785595089e-06,
+              1.453877190999176e-05,
+              4.2749497247845716e-05,
+              9.412366209060896e-05
+            ],
+            "max_rel_err": 9.412366209060896e-05
+          },
+          {
+            "n_layer_elements": 200,
+            "k_r_fem": [
+              0.417940346666811,
+              0.4150687773492653,
+              0.410138470477344,
+              0.4030312556203212,
+              0.39386701405891134
+            ],
+            "rel_err_vs_analytic": [
+              2.047922855571318e-07,
+              1.0880328396300786e-06,
+              3.7989995995218044e-06,
+              1.0832121324681835e-05,
+              2.3581155525159317e-05
+            ],
+            "max_rel_err": 2.3581155525159317e-05
+          },
+          {
+            "n_layer_elements": 400,
+            "k_r_fem": [
+              0.41794040071708466,
+              0.4150690851804015,
+              0.4101395940937347,
+              0.4030344885154216,
+              0.3938739686630856
+            ],
+            "rel_err_vs_analytic": [
+              7.546694485776118e-08,
+              3.4639371950821777e-07,
+              1.0593941688170632e-06,
+              2.810648692345012e-06,
+              5.9238114882364485e-06
+            ],
+            "max_rel_err": 5.9238114882364485e-06
+          }
+        ]
+      },
+      {
+        "freq_hz": 200.0,
+        "levels": [
+          {
+            "n_layer_elements": 100,
+            "k_r_fem": [
+              0.8372347050124044,
+              0.8356582888608876,
+              0.8330109089379029,
+              0.8292663958965597,
+              0.8243937022276423,
+              0.8183596352129172,
+              0.8111316174131016,
+              0.8026841724144674
+            ],
+            "rel_err_vs_analytic": [
+              3.3916723056356e-07,
+              1.794481959865739e-06,
+              5.772920000216653e-06,
+              1.4874035110874705e-05,
+              3.3136385472301176e-05,
+              6.624192412720284e-05,
+              0.00012163553122936064,
+              0.00020831354839185784
+            ],
+            "max_rel_err": 0.00020831354839185784
+          },
+          {
+            "n_layer_elements": 200,
+            "k_r_fem": [
+              0.837234909260924,
+              0.8356593817510618,
+              0.8330144541174375,
+              0.8292755579173573,
+              0.824414084192862,
+              0.8184001856560033,
+              0.811205528899185,
+              0.8028095437448032
+            ],
+            "rel_err_vs_analytic": [
+              9.521109989091919e-08,
+              4.866618608086444e-07,
+              1.5170514698236206e-06,
+              3.825648375804705e-06,
+              8.412595576950928e-06,
+              1.6690213440690064e-05,
+              3.0511304738248758e-05,
+              5.21152970637768e-05
+            ],
+            "max_rel_err": 5.21152970637768e-05
+          },
+          {
+            "n_layer_elements": 400,
+            "k_r_fem": [
+              0.8372349640386744,
+              0.8356596683997871,
+              0.8330153659822732,
+              0.8292778843794057,
+              0.8244192204059339,
+              0.8184103595009262,
+              0.8112240251943694,
+              0.8028408696988424
+            ],
+            "rel_err_vs_analytic": [
+              2.9784119528202475e-08,
+              1.436408013364207e-07,
+              4.2239432862967105e-07,
+              1.0202305629098429e-06,
+              2.1824445159300857e-06,
+              4.258779003796312e-06,
+              7.710131503600058e-06,
+              1.309438048742031e-05
+            ],
+            "max_rel_err": 1.309438048742031e-05
+          }
+        ]
+      },
+      {
+        "freq_hz": 400.0,
+        "levels": [
+          {
+            "n_layer_elements": 100,
+            "k_r_fem": [
+              1.6752386087538773,
+              1.6744053744572585,
+              1.6730139593357305,
+              1.6710604076879643,
+              1.6685393264660928,
+              1.6654439953199884,
+              1.6617664709663962,
+              1.6574976743846939
+            ],
+            "rel_err_vs_analytic": [
+              1.647640637282878e-07,
+              7.965247559039363e-07,
+              2.312550994327433e-06,
+              5.4236843269239295e-06,
+              1.1154919550688763e-05,
+              2.087025867647179e-05,
+              3.629973588839594e-05,
+              5.956742902090657e-05
+            ],
+            "max_rel_err": 5.956742902090657e-05
+          },
+          {
+            "n_layer_elements": 200,
+            "k_r_fem": [
+              1.6752388105519136,
+              1.6744063545775054,
+              1.6730168182246437,
+              1.6710671350774116,
+              1.668553187635791,
+              1.6654699414741807,
+              1.6618115740790127,
+              1.6575715850638753
+            ],
+            "rel_err_vs_analytic": [
+              4.430477860477937e-08,
+              2.111704152605255e-07,
+              6.037244641076417e-07,
+              1.3978580789455922e-06,
+              2.847528200382084e-06,
+              5.291054843917434e-06,
+              9.1578200712606e-06,
+              1.497503704425729e-05
+            ],
+            "max_rel_err": 1.497503704425729e-05
+          },
+          {
+            "n_layer_elements": 400,
+            "k_r_fem": [
+              1.6752388637776476,
+              1.6744066102548325,
+              1.6730175552478768,
+              1.6710688526422597,
+              1.668556701240655,
+              1.6654764849897588,
+              1.661822907796954,
+              1.6575901091558778
+            ],
+            "rel_err_vs_analytic": [
+              1.2532750417372787e-08,
+              5.847310774067428e-08,
+              1.6318893251228316e-07,
+              3.7003253703508053e-07,
+              7.417472782092636e-07,
+              1.3621190353819858e-06,
+              2.3377060385091055e-06,
+              3.7995544571092e-06
+            ],
+            "max_rel_err": 3.7995544571092e-06
+          }
+        ]
+      }
+    ],
+    "max_rel_err_finest_level": 1.309438048742031e-05,
+    "refinement_ratio_note": "errors fall with mesh refinement -> discrepancy is discretisation, not a solver defect"
+  },
+  "conversion_chain": {
+    "definition": "the four literature-side representations of one modal wavenumber and their exact maps to the case frame s = k_r/k1",
+    "per_route": {
+      "k_r_rad_m": {
+        "n_cases": 380,
+        "max_abs_residual_vs_solver_s": 0.0,
+        "max_round_trip_abs_residual": 2.220446049250313e-16,
+        "route_formula": "s = k_r / (2 pi f / c1)"
+      },
+      "c_ph_m_s": {
+        "n_cases": 380,
+        "max_abs_residual_vs_solver_s": 2.220446049250313e-16,
+        "max_round_trip_abs_residual": 2.220446049250313e-16,
+        "route_formula": "s = c1 / c_ph"
+      },
+      "k_r_times_H": {
+        "n_cases": 380,
+        "max_abs_residual_vs_solver_s": 2.220446049250313e-16,
+        "max_round_trip_abs_residual": 2.220446049250313e-16,
+        "route_formula": "s = (k_r H) c1 / (2 pi f H)"
+      },
+      "grazing_deg": {
+        "n_cases": 380,
+        "max_abs_residual_vs_solver_s": 0.0,
+        "max_round_trip_abs_residual": 2.220446049250313e-16,
+        "route_formula": "s = cos(theta_grazing)"
+      }
+    },
+    "max_round_trip_abs_residual": 2.220446049250313e-16,
+    "threshold": 1e-09,
+    "passed": true,
+    "caveat": "the chain is exercised on internally derived roots because no external value passed the transcription gate; it converts external values unchanged once they exist"
+  },
+  "array_frame_reference": {
+    "freq_hz": 100.0,
+    "modes": [
+      {
+        "freq_hz": 100.0,
+        "branch_index": 0,
+        "k_z_rad_m": 0.028025504122720892,
+        "k_r_rad_m": 0.41794043225776983,
+        "s_kr_over_k1": 0.9977592856768124,
+        "grazing_angle_deg": 3.8362950627030488,
+        "phase_velocity_m_s": 1503.3686195989662,
+        "residual_F_abs": 4.163336342344337e-17,
+        "residual_F_rel": 1.5867902338247986e-16,
+        "residual_G_rel": 2.642266052878026e-16,
+        "wavelength_water_m": 15.0,
+        "horizontal_wavelength_m": 15.033686195989661,
+        "d_half_wavelength_m": 7.5,
+        "d_modal_nyquist_m": 7.516843097994831,
+        "aperture_m": 240.0,
+        "vertical_wavenumber_rad_m": 0.028025504122720892,
+        "halfspace_decay_rad_m": 0.14304417551508436
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 1,
+        "k_z_rad_m": 0.05636638155481677,
+        "k_r_rad_m": 0.41506922895772574,
+        "s_kr_over_k1": 0.9909047927094558,
+        "grazing_angle_deg": 7.73345651449359,
+        "phase_velocity_m_s": 1513.7680340595714,
+        "residual_F_abs": 5.551115123125783e-17,
+        "residual_F_rel": 2.1157203117663981e-16,
+        "residual_G_rel": 4.0318251844267356e-16,
+        "wavelength_water_m": 15.0,
+        "horizontal_wavelength_m": 15.137680340595715,
+        "d_half_wavelength_m": 7.5,
+        "d_modal_nyquist_m": 7.568840170297857,
+        "aperture_m": 240.0,
+        "vertical_wavenumber_rad_m": 0.05636638155481677,
+        "halfspace_decay_rad_m": 0.1344243135022074
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 2,
+        "k_z_rad_m": 0.08511633652060817,
+        "k_r_rad_m": 0.41014002859322907,
+        "s_kr_over_k1": 0.9791371936569554,
+        "grazing_angle_deg": 11.724165717858506,
+        "phase_velocity_m_s": 1531.961005788869,
+        "residual_F_abs": 3.191891195797325e-16,
+        "residual_F_rel": 1.216539179265679e-15,
+        "residual_G_rel": 3.850898263929914e-15,
+        "wavelength_water_m": 15.0,
+        "horizontal_wavelength_m": 15.319610057888688,
+        "d_half_wavelength_m": 7.5,
+        "d_modal_nyquist_m": 7.659805028944344,
+        "aperture_m": 240.0,
+        "vertical_wavenumber_rad_m": 0.08511633652060817,
+        "halfspace_decay_rad_m": 0.11833120589021955
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 3,
+        "k_z_rad_m": 0.1141136352826444,
+        "k_r_rad_m": 0.40303562130377973,
+        "s_kr_over_k1": 0.9621766705891461,
+        "grazing_angle_deg": 15.808693232528457,
+        "phase_velocity_m_s": 1558.9652564341866,
+        "residual_F_abs": 4.163336342344337e-17,
+        "residual_F_rel": 1.5867902338247986e-16,
+        "residual_G_rel": 1.1052452363188775e-15,
+        "wavelength_water_m": 15.0,
+        "horizontal_wavelength_m": 15.589652564341865,
+        "d_half_wavelength_m": 7.5,
+        "d_modal_nyquist_m": 7.794826282170932,
+        "aperture_m": 240.0,
+        "vertical_wavenumber_rad_m": 0.1141136352826444,
+        "halfspace_decay_rad_m": 0.09069257562062354
+      },
+      {
+        "freq_hz": 100.0,
+        "branch_index": 4,
+        "k_z_rad_m": 0.14255206978547047,
+        "k_r_rad_m": 0.3938763018982261,
+        "s_kr_over_k1": 0.9403104062078753,
+        "grazing_angle_deg": 19.896249423881446,
+        "phase_velocity_m_s": 1595.2179089980139,
+        "residual_F_abs": 2.498001805406602e-16,
+        "residual_F_rel": 9.520741402948791e-16,
+        "residual_G_rel": 5.513151571942432e-14,
+        "wavelength_water_m": 15.0,
+        "horizontal_wavelength_m": 15.952179089980138,
+        "d_half_wavelength_m": 7.5,
+        "d_modal_nyquist_m": 7.976089544990069,
+        "aperture_m": 240.0,
+        "vertical_wavenumber_rad_m": 0.14255206978547047,
+        "halfspace_decay_rad_m": 0.030429795102847955
+      }
+    ]
+  },
+  "sources": {
+    "bibliographic_metadata_crossref": {
+      "pekeris_1948_memoir_chapter": {
+        "doi": "10.1130/mem27-2-p1",
+        "resolved": true,
+        "title": "THEORY OF PROPAGATION OF EXPLOSIVE SOUND IN SHALLOW WATER",
+        "container": "Geological Society of America Memoirs",
+        "page": "1-116",
+        "publisher": "Geological Society of America",
+        "year": 1948,
+        "type": "book-chapter"
+      },
+      "pekeris_1948_memoir": {
+        "doi": "10.1130/mem27",
+        "resolved": true,
+        "title": "Propagation of Sound in the Ocean",
+        "container": "Geological Society of America Memoirs",
+        "page": null,
+        "publisher": "Geological Society of America",
+        "year": 1948,
+        "type": "edited-book"
+      },
+      "jensen_2011_book": {
+        "doi": "10.1007/978-1-4419-8678-8",
+        "resolved": true,
+        "title": "Computational Ocean Acoustics",
+        "container": "Modern Acoustics and Signal Processing",
+        "page": null,
+        "publisher": "Springer New York",
+        "year": 2011,
+        "type": "book"
+      },
+      "jensen_2011_normal_modes_ch5": {
+        "doi": "10.1007/978-1-4419-8678-8_5",
+        "resolved": true,
+        "title": "Normal Modes",
+        "container": "Modern Acoustics and Signal Processing",
+        "page": "337-455",
+        "publisher": "Springer New York",
+        "year": 2011,
+        "type": "book-chapter"
+      }
+    },
+    "reachability_probes": [
+      {
+        "url": "https://api.crossref.org/works/10.1130/mem27-2-p1",
+        "utc": "2026-11-08T15:50:40Z",
+        "http_code": 200,
+        "reachable": true,
+        "body_head": "{\"status\":\"ok\",\"message-type\":\"work\",\"message-version\":\"1.0.0\",\"message\":{\"indexed\":{\"date-parts\":[[2026,11,2]],\"date-time\":\"2026-11-02T18:27:03Z\",\"timestamp\":1793644023092,\"version\":\"4.5.1\"},\"reference-count\":0,\"publisher\":\"Geological Society of America\",\"content-domain\":{\"domain\":[],\"crossmark-restriction\":false},\"short-container-title\":[],\"published-print\":{\"date-parts\":[[1948]]},\"DOI\":\"10.1130"
+      },
+      {
+        "url": "https://api.crossref.org/works/10.1007/978-1-4419-8678-8_5",
+        "utc": "2026-11-08T15:50:41Z",
+        "http_code": 200,
+        "reachable": true,
+        "body_head": "{\"status\":\"ok\",\"message-type\":\"work\",\"message-version\":\"1.0.0\",\"message\":{\"indexed\":{\"date-parts\":[[2026,9,30]],\"date-time\":\"2026-09-30T12:44:38Z\",\"timestamp\":1790772278627,\"version\":\"4.1.0\"},\"publisher-location\":\"New York, NY\",\"reference-count\":69,\"publisher\":\"Springer New York\",\"isbn-type\":[{\"value\":\"9781441986771\",\"type\":\"print\"},{\"value\":\"9781441986788\",\"type\":\"electronic\"}],\"license\":[{\"start"
+      },
+      {
+        "url": "https://archive.org/advancedsearch.php?q=pekeris&rows=1&output=json",
+        "utc": "2026-11-08T15:50:42Z",
+        "http_code": null,
+        "reachable": false,
+        "error": "URLError(OSError(99, 'Cannot assign requested address'))"
+      },
+      {
+        "url": "https://pubs.geoscienceworld.org/gsa/books/book/300",
+        "utc": "2026-11-08T15:50:57Z",
+        "http_code": 403,
+        "reachable": true,
+        "error": "HTTPError: 403"
+      },
+      {
+        "url": "https://link.springer.com/chapter/10.1007/978-1-4419-8678-8_5",
+        "utc": "2026-11-08T15:51:00Z",
+        "http_code": 200,
+        "reachable": true,
+        "body_head": "<!DOCTYPE html>\n<html lang=\"en\" class=\"no-js\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <meta name=\"applicable-device\" content=\"pc,mobile\">\n    <meta name=\"access\" content=\"No\">\n\n    \n    \n    <meta name=\"twitter:site\" content=\"SpringerLink\"/>\n    <meta name=\"twitter:card"
+      }
+    ],
+    "full_text_access": {
+      "obtained": false,
+      "detail": "No machine-readable full text of either source was retrievable from this sandbox: archive.org unreachable, GSA book page HTTP 403, Springer chapter page blocked by egress policy. Verbatim transcription (quote + table/page) therefore could not be performed, and no value was reconstructed from memory."
+    }
+  },
+  "external_anchor": {
+    "n_records": 0,
+    "n_eligible": 0,
+    "status": "WITHHELD",
+    "verdicts": [],
+    "rule": "status is VERIFIED only if at least one record passes validate_quote_record; otherwise WITHHELD and no external number may support a compliance claim",
+    "structural_rejection_demo": [
+      {
+        "record": {
+          "source_id": "Pekeris 1948 Memoir 27",
+          "quantity": "k_r",
+          "value": null
+        },
+        "verdict": "REJECTED",
+        "reasons": [
+          "missing_field:verbatim_quote",
+          "missing_field:locator",
+          "missing_field:table_or_page",
+          "missing_field:value",
+          "missing_field:units"
+        ]
+      },
+      {
+        "record": {
+          "source_id": "Jensen et al. 2011 ch.5",
+          "verbatim_quote": "",
+          "locator": "Table 5.1",
+          "table_or_page": "T5.1",
+          "quantity": "k_r",
+          "value": 0.4,
+          "units": "rad/m"
+        },
+        "verdict": "REJECTED",
+        "reasons": [
+          "missing_field:verbatim_quote",
+          "verbatim_quote_too_short"
+        ]
+      }
+    ],
+    "registry_note": "no candidate value is registered: no verbatim quote with a table/page locator could be obtained, and values are never reconstructed from memory"
+  },
+  "criteria": [
+    {
+      "id": "C1",
+      "requirement": "verbatim quote + table/page locator + source value recorded in the artifact (no paraphrase, no rounding-to-distortion)",
+      "status": "NOT_MET",
+      "measured": {
+        "n_eligible_quotes": 0,
+        "full_text_obtained": false,
+        "crossref_metadata_resolved": 4,
+        "n_sources_named": 4
+      },
+      "evidence": "sources.reachability_probes / sources.full_text_access",
+      "why": "No machine-readable full text of either source was retrievable from this sandbox: archive.org unreachable, GSA book page HTTP 403, Springer chapter page blocked by egress policy. Verbatim transcription (quote + table/page) therefore could not be performed, and no value was reconstructed from memory."
+    },
+    {
+      "id": "C2",
+      "requirement": "same-frame conversion script on disk and recomputable, round-trip residual < 1e-9",
+      "status": "MET",
+      "measured": {
+        "max_round_trip_abs_residual": 2.220446049250313e-16,
+        "threshold": 1e-09
+      },
+      "evidence": "conversion_chain.per_route + pekeris_anchor.to_case_frame",
+      "why": "the algebraic chain is exact and machine-verified; its external input is missing because C1 failed"
+    },
+    {
+      "id": "C3",
+      "requirement": "dimensional homogeneity AND internal consistency machine checks",
+      "status": "MET",
+      "measured": {
+        "dimensional_checks_all_homogeneous": true,
+        "sympy_interface_residual_zero": true,
+        "max_branch_residual_F_rel": 9.197506355317813e-15,
+        "max_branch_residual_G_rel": 2.5931197895995916e-12,
+        "mode_count_mismatches": 0,
+        "all_roots_inside_trapped_window": true,
+        "max_rel_err_independent_fem": 1.309438048742031e-05
+      },
+      "evidence": "derivation / root_solutions / independent_fem_check"
+    },
+    {
+      "id": "C4",
+      "requirement": "unverified candidate values must not be cited (cross-check material only)",
+      "status": "MET",
+      "measured": {
+        "registry_entries": 0,
+        "structural_rejections_demonstrated": 2
+      },
+      "evidence": "external_anchor + pekeris_anchor.validate_quote_record"
+    }
+  ],
+  "conclusion": {
+    "external_anchor_status": "WITHHELD",
+    "c_to_b_channel": "NOT CLOSED",
+    "honest_verdict": "HONEST_FAIL",
+    "what_is_proven": [
+      "the branch equation used for the case is derived symbolically and is dimensionally homogeneous",
+      "the solver is accurate (residuals reported), consistent with an independent FEM discretisation, and matches an independently derived mode-count formula",
+      "the literature->case frame conversion chain is exact (residual reported) and guarded by a structural quote gate"
+    ],
+    "what_is_not_proven": [
+      "that any literature value matches this case: no verbatim transcription was possible, so the external anchor remains WITHHELD"
+    ],
+    "downstream_impact": "research_plan item 2 (case result vs domain/literature comparison) cannot be run on a verified anchor; it stays blocked until a verbatim source value passes the C1 gate"
+  }
+}
