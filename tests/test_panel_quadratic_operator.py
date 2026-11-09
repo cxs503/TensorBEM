@@ -320,6 +320,39 @@ def test_operators_are_rotation_invariant():
     assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
 
 
+
+def test_operators_are_scale_invariant():
+    """Uniform scaling: S scales as 1/s, D is invariant (kernel is scale-covariant).
+
+    The Laplace kernel G(x, y) = 1/(4 pi |x - y|) satisfies
+    G(s x, s y) = G(x, y) / s for every uniform scale s (the
+    single-layer potential of a unit density on a surface of radius R is
+    R, so S must scale as 1/s), while the double-layer operator
+    D is *scale-invariant* because it depends only on the solid angle
+    (D 1 = -1/2 on any closed smooth surface, independent of size).
+    A slip that hard-codes the 1/|x-y| denominator or that fails to
+    rescale the quadrature Jacobian under a uniform dilation breaks this
+    entry-wise check even though the rigid-body pins (translation + rotation)
+    pass.
+    """
+    scale = 2.7
+    base = ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7))
+    scaled = ellipsoid_quadratic(1, axes=(1.0 * scale, 1.6 * scale, 0.7 * scale))
+    S0, D0 = assemble_quadratic_matrices(base)
+    S1, D1 = assemble_quadratic_matrices(scaled)
+    # S scales as 1/scale (kernel G(x, y) = 1/(4 pi |x - y|))
+    assert np.max(np.abs(S1 / scale - S0)) <= 1e-10 * np.max(np.abs(S0)), (
+        "single-layer matrix does not scale as 1/scale"
+    )
+    # D is scale-invariant (solid angle is size-independent)
+    assert np.max(np.abs(D1 - D0)) <= 1e-10 * np.max(np.abs(D0)), (
+        "double-layer matrix changed under uniform scaling"
+    )
+    # the solid-angle identity must hold on the scaled surface as well
+    ones = np.ones(D1.shape[0])
+    assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
+
+
 def test_single_layer_constant_density_identity(sphere_operators):
     """S 1 == 1 on the unit sphere (single-layer potential of unit density)."""
     for sub, (S, D) in sphere_operators.items():
