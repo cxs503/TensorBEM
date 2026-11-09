@@ -277,6 +277,49 @@ def test_operators_are_translation_invariant():
     assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
 
 
+def _rotation_matrix(axis: np.ndarray, angle: float) -> np.ndarray:
+    """Proper rotation (Rodrigues) about a unit axis."""
+    a = np.asarray(axis, dtype=float)
+    a = a / np.linalg.norm(a)
+    K = np.array(
+        [
+            [0.0, -a[2], a[1]],
+            [a[2], 0.0, -a[0]],
+            [-a[1], a[0], 0.0],
+        ]
+    )
+    return np.eye(3) + np.sin(angle) * K + (1.0 - np.cos(angle)) * (K @ K)
+
+
+def test_operators_are_rotation_invariant():
+    """Rigid rotation leaves S and D unchanged (kernel is SE(3)-invariant).
+
+    The Laplace kernel ``G(x, y) = 1/(4 pi |x - y|)`` satisfies
+    ``G(R x, R y) = G(x, y)`` for every proper rotation ``R``, and the
+    isoparametric normals rotate covariantly (``n -> R n``), so rotating the
+    whole mesh must leave every entry of ``S`` and ``D`` unchanged up to
+    round-off.  This completes the rigid group: the translation pin
+    (``test_operators_are_translation_invariant``) cannot catch a slip that
+    references a fixed global axis (e.g. a normal or a Duffy sub-coordinate
+    built from absolute coordinates), while this entry-wise check does.
+    """
+    R = _rotation_matrix(np.array([1.0, 2.0, 3.0]), 0.7)
+    assert abs(float(np.linalg.det(R)) - 1.0) < 1e-14
+    base = ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7))
+    rotated = QuadraticSurfaceMesh((R @ base.vertices.T).T, base.faces.copy())
+    S0, D0 = assemble_quadratic_matrices(base)
+    S1, D1 = assemble_quadratic_matrices(rotated)
+    assert np.max(np.abs(S1 - S0)) <= 1e-10 * np.max(np.abs(S0)), (
+        "single-layer matrix changed under rotation"
+    )
+    assert np.max(np.abs(D1 - D0)) <= 1e-10 * np.max(np.abs(D0)), (
+        "double-layer matrix changed under rotation"
+    )
+    # the solid-angle identity must hold on the rotated surface as well
+    ones = np.ones(D1.shape[0])
+    assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
+
+
 def test_single_layer_constant_density_identity(sphere_operators):
     """S 1 == 1 on the unit sphere (single-layer potential of unit density)."""
     for sub, (S, D) in sphere_operators.items():
