@@ -1,0 +1,63 @@
+{
+  "case": "conducting_sphere_spreading_resistance",
+  "radius_m": 1.0,
+  "potential_V": -1.0,
+  "conductivity_S_m": 3.5,
+  "exact_current_A": -43.982297150257104,
+  "exact_spreading_resistance_ohm": 0.022736420441699334,
+  "unscaled_current_ratio_percent": 28.571428571428573,
+  "unscaled_current_error_percent": 71.42857142857143,
+  "levels": [
+    {
+      "subdivisions": 1,
+      "n_panels": 80,
+      "current_A": -41.820245453598446,
+      "current_rel_error": 0.049157316391920634,
+      "max_potential_rel_error": 0.04947435872325634,
+      "potential_rel_error_by_radius": {
+        "r=1.5": 0.04947435872325634,
+        "r=2": 0.049204974334242424,
+        "r=3": 0.049161214670317976,
+        "r=5": 0.04915749549570872
+      },
+      "relative_residual": 2.3616716789057353e-16
+    },
+    {
+      "subdivisions": 2,
+      "n_panels": 320,
+      "current_A": -43.41020975732543,
+      "current_rel_error": 0.013007219495090124,
+      "max_potential_rel_error": 0.013088055937050036,
+      "potential_rel_error_by_radius": {
+        "r=1.5": 0.013088055937050036,
+        "r=2": 0.013019523494768315,
+        "r=3": 0.013008233001525926,
+        "r=5": 0.013007266115261373
+      },
+      "relative_residual": 4.4034375980693417e-16
+    },
+    {
+      "subdivisions": 3,
+      "n_panels": 1280,
+      "current_A": -43.83636638179202,
+      "current_rel_error": 0.0033179433072024565,
+      "max_potential_rel_error": 0.0033391362633265476,
+      "potential_rel_error_by_radius": {
+        "r=1.5": 0.0033391362633265476,
+        "r=2": 0.003321176333196618,
+        "r=3": 0.0033182098604793153,
+        "r=5": 0.003317955570816128
+      },
+      "relative_residual": 7.512678615862663e-16
+    }
+  ],
+  "finest_relative_current_error": 0.0033179433072024565,
+  "finest_max_relative_potential_error": 0.0033391362633265476,
+  "observed_orders": [
+    1.9180935624412143,
+    1.9709514547852185
+  ],
+  "observed_order_finest_pair": 1.9709514547852185,
+  "tolerance": 0.03,
+  "pass": true
+}

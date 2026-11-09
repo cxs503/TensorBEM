@@ -1,0 +1,237 @@
+{
+  "hull": {
+    "length_m": 200.0,
+    "breadth_m": 32.0,
+    "draft_m": 12.0,
+    "wetted_area_m2": 9606.332150357284,
+    "lid_area_m2": 5372.211200000001
+  },
+  "sphere_verification": {
+    "case": "conducting_sphere_spreading_resistance",
+    "radius_m": 1.0,
+    "potential_V": -1.0,
+    "conductivity_S_m": 3.5,
+    "exact_current_A": -43.982297150257104,
+    "exact_spreading_resistance_ohm": 0.022736420441699334,
+    "unscaled_current_ratio_percent": 28.571428571428573,
+    "unscaled_current_error_percent": 71.42857142857143,
+    "levels": [
+      {
+        "subdivisions": 1,
+        "n_panels": 80,
+        "current_A": -41.820245453598446,
+        "current_rel_error": 0.049157316391920634,
+        "max_potential_rel_error": 0.04947435872325634,
+        "potential_rel_error_by_radius": {
+          "r=1.5": 0.04947435872325634,
+          "r=2": 0.049204974334242424,
+          "r=3": 0.049161214670317976,
+          "r=5": 0.04915749549570872
+        },
+        "relative_residual": 2.3616716789057353e-16
+      },
+      {
+        "subdivisions": 2,
+        "n_panels": 320,
+        "current_A": -43.41020975732543,
+        "current_rel_error": 0.013007219495090124,
+        "max_potential_rel_error": 0.013088055937050036,
+        "potential_rel_error_by_radius": {
+          "r=1.5": 0.013088055937050036,
+          "r=2": 0.013019523494768315,
+          "r=3": 0.013008233001525926,
+          "r=5": 0.013007266115261373
+        },
+        "relative_residual": 4.4034375980693417e-16
+      },
+      {
+        "subdivisions": 3,
+        "n_panels": 1280,
+        "current_A": -43.83636638179202,
+        "current_rel_error": 0.0033179433072024565,
+        "max_potential_rel_error": 0.0033391362633265476,
+        "potential_rel_error_by_radius": {
+          "r=1.5": 0.0033391362633265476,
+          "r=2": 0.003321176333196618,
+          "r=3": 0.0033182098604793153,
+          "r=5": 0.003317955570816128
+        },
+        "relative_residual": 7.512678615862663e-16
+      }
+    ],
+    "finest_relative_current_error": 0.0033179433072024565,
+    "finest_max_relative_potential_error": 0.0033391362633265476,
+    "observed_orders": [
+      1.9180935624412143,
+      1.9709514547852185
+    ],
+    "observed_order_finest_pair": 1.9709514547852185,
+    "tolerance": 0.03,
+    "pass": true
+  },
+  "mesh_convergence": {
+    "quantity": "|anode current| / wetted area [A/m^2]",
+    "levels": [
+      {
+        "n_sections": 9,
+        "n_panels": 182,
+        "n_anode_panels": 2,
+        "closed_area_m2": 14849.557544730327,
+        "lid_area_m2": 5305.84375,
+        "wetted_area_m2": 9543.713794730327,
+        "mean_potential_V": -0.24455426303619798,
+        "anode_current_A": -118.1455919108162,
+        "current_per_wetted_area_A_m2": 0.012379414811878754
+      },
+      {
+        "n_sections": 11,
+        "n_panels": 222,
+        "n_anode_panels": 2,
+        "closed_area_m2": 14978.543350357282,
+        "lid_area_m2": 5372.211200000001,
+        "wetted_area_m2": 9606.332150357284,
+        "mean_potential_V": -0.28600331504117327,
+        "anode_current_A": -105.49826652896357,
+        "current_per_wetted_area_A_m2": 0.010982158942426306
+      },
+      {
+        "n_sections": 13,
+        "n_panels": 262,
+        "n_anode_panels": 2,
+        "closed_area_m2": 15048.625105706884,
+        "lid_area_m2": 5408.311842706904,
+        "wetted_area_m2": 9640.31326299998,
+        "mean_potential_V": -0.27773348238099543,
+        "anode_current_A": -92.53049103705376,
+        "current_per_wetted_area_A_m2": 0.009598286747816646
+      }
+    ],
+    "refinement_ratio": 1.0863609806045964,
+    "differences_A_m2": [
+      0.0013972558694524476,
+      0.0013838721946096595
+    ],
+    "observed_order": -0.11619338551128362,
+    "gci_percent": null,
+    "note": "successive differences do not decay (observed order <= 0): the section-count family is not a systematic refinement (the discrete anode-panel count changes with n_sections), so no order of accuracy or GCI is claimed here. The clean refinement anchor is the nested-icosphere conducting-sphere case, where the observed order is reported by verify_conducting_sphere."
+  },
+  "cases": [
+    {
+      "damage_ratio": 0.02,
+      "n_panels": 222,
+      "wetted_area_m2": 9606.332150357284,
+      "lid_area_m2": 5372.211200000001,
+      "protected_area_m2": 437.787607781057,
+      "anode_current_bem_A": -116.65991532374726,
+      "anode_current_magnitude_bem_A": 116.65991532374726,
+      "current_per_wetted_area_bem_A_m2": 0.012144064300275977,
+      "anode_current_dnv_A": 75.89002398782254,
+      "current_per_wetted_area_dnv_A_m2": 0.0079,
+      "bem_to_dnv_current_ratio": 1.537223329148858,
+      "mean_wetted_potential_V": -0.18919614915859717,
+      "min_potential_V": -1.05,
+      "max_potential_V": -0.06826012181599493,
+      "protection_coverage": 0.04557281602685105,
+      "condition_number": 29.77006826963818,
+      "relative_residual": 1.8487966892227667e-15
+    },
+    {
+      "damage_ratio": 0.05,
+      "n_panels": 222,
+      "wetted_area_m2": 9606.332150357284,
+      "lid_area_m2": 5372.211200000001,
+      "protected_area_m2": 700.1196308829952,
+      "anode_current_bem_A": -105.49826652896357,
+      "anode_current_magnitude_bem_A": 105.49826652896357,
+      "current_per_wetted_area_bem_A_m2": 0.010982158942426306,
+      "anode_current_dnv_A": 117.67756884187673,
+      "current_per_wetted_area_dnv_A_m2": 0.01225,
+      "bem_to_dnv_current_ratio": 0.8965027708103106,
+      "mean_wetted_potential_V": -0.2997654912711915,
+      "min_potential_V": -1.05,
+      "max_potential_V": -0.13912312464448598,
+      "protection_coverage": 0.07288105594568224,
+      "condition_number": 70.19496298408293,
+      "relative_residual": 1.5805648271841838e-15
+    },
+    {
+      "damage_ratio": 0.1,
+      "n_panels": 222,
+      "wetted_area_m2": 9606.332150357284,
+      "lid_area_m2": 5372.211200000001,
+      "protected_area_m2": 1014.521415536986,
+      "anode_current_bem_A": -94.40322964419786,
+      "anode_current_magnitude_bem_A": 94.40322964419786,
+      "current_per_wetted_area_bem_A_m2": 0.009827187751434013,
+      "anode_current_dnv_A": 187.32347693196704,
+      "current_per_wetted_area_dnv_A_m2": 0.0195,
+      "bem_to_dnv_current_ratio": 0.5039583462273853,
+      "mean_wetted_potential_V": -0.4064348272804845,
+      "min_potential_V": -1.05,
+      "max_potential_V": -0.19864762279512746,
+      "protection_coverage": 0.10560965409667344,
+      "condition_number": 79.21332384283482,
+      "relative_residual": 1.391106008488572e-15
+    }
+  ],
+  "verification": {
+    "C8_conducting_sphere": {
+      "case": "conducting_sphere_spreading_resistance",
+      "exact_current_A": -43.982297150257104,
+      "numeric_current_A": -43.41020975732543,
+      "relative_current_error": 0.013007219495090124,
+      "max_relative_potential_error": 0.013088055937050036,
+      "tolerance": 0.03,
+      "pass": true
+    },
+    "C5_monotonic_anode_demand": {
+      "metric": "|anode current| (A) versus coating-damage ratio",
+      "slope_A_per_unit_damage": -272.46287371895374,
+      "r_squared": 0.9791003384451601,
+      "pass": false,
+      "anode_currents_A": [
+        -116.65991532374726,
+        -105.49826652896357,
+        -94.40322964419786
+      ],
+      "note": "Prescribing the potential on every holiday (Dirichlet-Dirichlet) makes the anode current a resistance-limited quantity set by the 0.25 V anode-holiday difference; it does not grow with the damaged area, so this criterion is expected to FAIL honestly for the linear model. The damage-driven physics needs the kinetic (Tafel / oxygen-limited) boundary condition implemented in tensorbem.cp_galvanic."
+    },
+    "C4_coverage_dr0.02": {
+      "coverage": 0.04557281602685105,
+      "protected_area_m2": 437.787607781057,
+      "wetted_area_m2": 9606.332150357284,
+      "threshold_V": -0.8,
+      "pass": false,
+      "note": "Coverage counts wetted area at or below the protection potential. In the linear model only the prescribed panels satisfy it, i.e. the coated steel is never polarized cathodically, so coverage is expected to be far below 1 and this criterion FAILs honestly."
+    },
+    "C4_coverage_dr0.05": {
+      "coverage": 0.07288105594568224,
+      "protected_area_m2": 700.1196308829952,
+      "wetted_area_m2": 9606.332150357284,
+      "threshold_V": -0.8,
+      "pass": false,
+      "note": "Coverage counts wetted area at or below the protection potential. In the linear model only the prescribed panels satisfy it, i.e. the coated steel is never polarized cathodically, so coverage is expected to be far below 1 and this criterion FAILs honestly."
+    },
+    "C4_coverage_dr0.1": {
+      "coverage": 0.10560965409667344,
+      "protected_area_m2": 1014.521415536986,
+      "wetted_area_m2": 9606.332150357284,
+      "threshold_V": -0.8,
+      "pass": false,
+      "note": "Coverage counts wetted area at or below the protection potential. In the linear model only the prescribed panels satisfy it, i.e. the coated steel is never polarized cathodically, so coverage is expected to be far below 1 and this criterion FAILs honestly."
+    },
+    "C2_coated_insulating": {
+      "max_coated_current_density_A_m2": 0.0,
+      "pass": true,
+      "note": "Coated and lid panels carry q_n = 0 as a prescribed Neumann BC."
+    },
+    "C7_json_output": {
+      "has_potential_distribution": true,
+      "has_current_density": true,
+      "has_anode_demand": true,
+      "has_protection_coverage": true,
+      "has_sphere_anchor": true,
+      "pass": true
+    }
+  }
+}
