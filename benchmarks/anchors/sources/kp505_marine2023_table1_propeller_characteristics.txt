@@ -1,0 +1,25 @@
+Hammad Iftikhar, Dr. Ali Can Takinaci 
+ 6 
+ 
+Figure 3. Lifting Line Representation 
+Jadmiko et. al, used OpenProp and CFD to design the propeller for their vessel named Jalapith 
+3 for Solar Sport One. They found good correlation between CFD and Openprop results at 
+higher advance ratios but the results varied on lower advance ratios. CFD predicted higher 
+thrust and torque values as compared to lifting line theory. (Edi Jadmiko, 2020) 
+ 
+The basis of almost all of finite wing theory is based on Prandtl’s lifting line theory. The theory 
+approximates the flow around a wing by using horseshow shaped vortices, he accomplished 
+this by using the Kutta-Juokowski theorem along with spanwise lift (Anderson, 2011): 
+ 𝜌𝑉∞𝛤 = 1
+2 𝜌𝑉∞2𝐶𝐿(𝛼)𝑐 (4) 
+3. PROPELLER CHARACTERISTICS 
+The KP505 was designed by Korea Research Institute of Ships and Ocean Engineering 
+(KRISO) to be used for the KRISO Container Ship (KCS). The propeller has been extensively 
+tested and sufficient data is available related to its performance and characteristics to easily 
+compared calculated results with accurate data points. 
+Table 1. Propeller Characteristics 
+Propeller 
+Type FPP Ae/Ao 0.800 
+No. of Blades 5 Rotation Right Hand 
+Diameter (m) 0.25 Hub Ratio 0.18 
+P/D (mean) 0.950 Section NACA66 
