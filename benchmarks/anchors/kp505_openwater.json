@@ -1,0 +1,275 @@
+{
+  "task_key": "paper-exp-propeller-openwater-bem-1",
+  "repo": "TensorBEM",
+  "topic": "propeller-openwater-bem / KP505 official open-water data transcription",
+  "generated_by": "tools/build_kp505_openwater_anchor.py",
+  "regenerate": "python -m tools.build_kp505_openwater_anchor",
+  "criteria": [
+    {
+      "id": "C1-quote-and-table-number",
+      "statement": "every data point carries a verbatim quotation and a table number",
+      "threshold": "1 quote + table id per point",
+      "measured": {
+        "table_id": "Table 2",
+        "page": 10,
+        "quote_all_points": "Table 2. Comparison of CFD and Experimental Results",
+        "rows_with_source_line": 10
+      },
+      "pass": true
+    },
+    {
+      "id": "C2-points-and-design-J",
+      "statement": ">= 8 advance-ratio points, design advance ratio included",
+      "threshold": "n_J >= 8 and J_design in J",
+      "measured": {
+        "n_J": 10,
+        "J": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ],
+        "design_J": 0.7,
+        "design_J_present": true
+      },
+      "pass": true
+    },
+    {
+      "id": "C3-eta0-self-consistency",
+      "statement": "eta0 = J*KT/(2*pi*KQ) recomputed from the tabulated KT, 10KQ; peak J recorded explicitly",
+      "threshold": "|eta0 - recomputed| < 1e-06",
+      "measured": {
+        "max_residual": 0.0,
+        "peak_J": 0.8,
+        "peak_eta0": 0.664913984472807
+      },
+      "pass": true
+    }
+  ],
+  "verdict": {
+    "all_criteria_pass": true,
+    "geometry_complete": false,
+    "honest_notes": [
+      "PROVENANCE GAP (honest): the primary KRISO/KCS-workshop EFD handout and the Hino (2005) Tokyo-2015 proceedings were not reachable from this sandbox (egress allowlist). The transcribed curve is a SECONDARY reproduction: the 'Experimental' columns of Table 2 of Iftikhar & Takinaci, MARINE 2023.",
+      "That paper does not cite the source of its experimental column, so the anchor is labelled SECONDARY_REPRODUCTION and must be re-verified against the KRISO table before it is used for an accuracy claim in the parent study.",
+      "Geometry: D and blade count are taken from/measured on the official KRISO geometry archive; P/D and AE/A0 are WITHHELD (no reachable official textual source)."
+    ]
+  },
+  "design_point": {
+    "J": 0.7,
+    "KT": 0.193,
+    "10KQ": 0.342,
+    "eta0": 0.6287085617460544
+  },
+  "peak_efficiency": {
+    "J": 0.8,
+    "eta0": 0.664913984472807,
+    "KT": 0.141,
+    "10KQ": 0.27
+  },
+  "open_water_table": [
+    {
+      "J": 0.1,
+      "KT": 0.494,
+      "10KQ": 0.683,
+      "eta0": 0.1151135313139038,
+      "eta0_recomputed": 0.1151135313139038,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.479,
+      "10KQ_cfd": 0.644,
+      "source_line": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%"
+    },
+    {
+      "J": 0.2,
+      "KT": 0.447,
+      "10KQ": 0.636,
+      "eta0": 0.2237177973650227,
+      "eta0_recomputed": 0.2237177973650227,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.432,
+      "10KQ_cfd": 0.59,
+      "source_line": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%"
+    },
+    {
+      "J": 0.3,
+      "KT": 0.392,
+      "10KQ": 0.585,
+      "eta0": 0.31994224457447684,
+      "eta0_recomputed": 0.31994224457447684,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.382,
+      "10KQ_cfd": 0.554,
+      "source_line": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%"
+    },
+    {
+      "J": 0.4,
+      "KT": 0.343,
+      "10KQ": 0.53,
+      "eta0": 0.41200109796618944,
+      "eta0_recomputed": 0.41200109796618944,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.33,
+      "10KQ_cfd": 0.5,
+      "source_line": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%"
+    },
+    {
+      "J": 0.5,
+      "KT": 0.29,
+      "10KQ": 0.471,
+      "eta0": 0.4899674468858774,
+      "eta0_recomputed": 0.4899674468858774,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.278,
+      "10KQ_cfd": 0.473,
+      "source_line": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%"
+    },
+    {
+      "J": 0.6,
+      "KT": 0.241,
+      "10KQ": 0.409,
+      "eta0": 0.5626847132295371,
+      "eta0_recomputed": 0.5626847132295371,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.225,
+      "10KQ_cfd": 0.414,
+      "source_line": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%"
+    },
+    {
+      "J": 0.7,
+      "KT": 0.193,
+      "10KQ": 0.342,
+      "eta0": 0.6287085617460544,
+      "eta0_recomputed": 0.6287085617460544,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.173,
+      "10KQ_cfd": 0.356,
+      "source_line": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%"
+    },
+    {
+      "J": 0.8,
+      "KT": 0.141,
+      "10KQ": 0.27,
+      "eta0": 0.664913984472807,
+      "eta0_recomputed": 0.664913984472807,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.12,
+      "10KQ_cfd": 0.288,
+      "source_line": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%"
+    },
+    {
+      "J": 0.9,
+      "KT": 0.087,
+      "10KQ": 0.192,
+      "eta0": 0.6490537522966356,
+      "eta0_recomputed": 0.6490537522966356,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.063,
+      "10KQ_cfd": 0.152,
+      "source_line": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%"
+    },
+    {
+      "J": 1.0,
+      "KT": 0.029,
+      "10KQ": 0.108,
+      "eta0": 0.42736049533934867,
+      "eta0_recomputed": 0.42736049533934867,
+      "eta0_residual": 0.0,
+      "KT_cfd": 0.03,
+      "10KQ_cfd": 0.094,
+      "source_line": "1 0.030 0.094 0.029 0.108 2.27% 13.25%"
+    }
+  ],
+  "source": {
+    "kind": "SECONDARY_REPRODUCTION",
+    "citation": "H. Iftikhar, A. C. Takinaci, 'Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS', X International Conference on Computational Methods in Marine Engineering (MARINE 2023), CIMNE, DOI 10.23967/marine.2023.120",
+    "url": "https://www.scipedia.com/wd/images/2/23/Iftikhar_Takinaci_2023a_2756_performance.pdf",
+    "doi": "10.23967/marine.2023.120",
+    "page": 10,
+    "table": "Table 2. Comparison of CFD and Experimental Results (columns 'Experimental')",
+    "quote": "Table 2. Comparison of CFD and Experimental Results",
+    "pdf": "kp505_marine2023_iftikhar.pdf",
+    "pdf_sha256": "161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c",
+    "transcript": "kp505_marine2023_p10_table2.txt",
+    "transcript_sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987"
+  },
+  "source_consistency_checks": {
+    "reported_vs_recomputed_error_columns_max_dev_pct": 55.186206896551724,
+    "note": "the source's own error columns reproduce from its own CFD/EFD columns"
+  },
+  "geometry": {
+    "spec": {
+      "diameter_m": 0.25,
+      "blade_count_Z": 5,
+      "P_over_D": null,
+      "AE_over_A0": null
+    },
+    "fields": {
+      "diameter_m": {
+        "value": 0.25,
+        "status": "VERIFIED",
+        "evidence": "official KCS workshop geometry archive member 'KP505/KP505_modelScale_250mm.igs' (link text 'Propeller Geometory' on t2015.nmri.go.jp/kcs_gc.html) states the model diameter D = 250 mm; independently quoted from the source paper Table 1 (page 6): 'Diameter (m) 0.25'"
+      },
+      "blade_count_Z": {
+        "value": 5,
+        "status": "VERIFIED_SECONDARY",
+        "evidence": "source paper Table 1 (page 6): 'No. of Blades 5'"
+      },
+      "P_over_D": {
+        "value": null,
+        "status": "WITHHELD",
+        "evidence": "the only reachable statement is the source paper Table 1 (page 6): 'P/D (mean) 0.950', which is not confirmed by any official document reachable here and is not used as a criterion value; deriving P/D from the IGES needs blade-section pitch angles (not done in this deliverable)"
+      },
+      "AE_over_A0": {
+        "value": null,
+        "status": "WITHHELD",
+        "evidence": "the only reachable statement is the source paper Table 1 (page 6): 'Ae/Ao 0.800', conflicting with the workshop geometry package and with the value commonly quoted for KP505; the developed-area ratio cannot be measured on the 3-D surface without un-wrapping cylindrical sections, so it stays WITHHELD"
+      }
+    },
+    "measurement_attempt": {
+      "status": "UNRELIABLE",
+      "why": "the IGES NURBS control-point cage is not a surface point cloud; the measured tip radius (220.2 file units) exceeds the documented model radius (125 mm) and the near-tip angular histogram resolves only 2 clusters, so neither D nor Z is taken from this measurement",
+      "measured": {
+        "iges_sha256": "0bb54ae7618e8d8b1b7c23de8d384e04b0465071e34fe32e1d606ddbb5df462f",
+        "iges_file": "KP505_modelScale_250mm.igs",
+        "shaft_axis": "x",
+        "shaft_axis_vector": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "points_used": 17781,
+        "tip_radius_raw": 220.1926282,
+        "diameter_raw": 440.3852564,
+        "unit_note": "IGES global section: '2HMM,1.0' -> model units are millimetres, factor 1.0",
+        "near_tip_points": 14,
+        "blade_count_measured": 2
+      }
+    },
+    "provenance": {
+      "archive_url": "http://www.t2015.nmri.go.jp/file/Geometry_IGES_files/kcs/KP505.zip",
+      "archive_page": "http://www.t2015.nmri.go.jp/kcs_gc.html (link text 'Propeller Geometory')",
+      "archive_quote": "Following archive contains IGES&STP geometories of the KCS propeller.",
+      "archive_members": [
+        "KP505/KP505.png",
+        "KP505/KP505_fullScale_7900mm.igs",
+        "KP505/KP505_fullScale_7900mm.stp",
+        "KP505/KP505_modelScale_250mm.igs"
+      ],
+      "committed_member": "KP505_modelScale_250mm.igs",
+      "table1_transcript": "kp505_marine2023_table1_propeller_characteristics.txt",
+      "table1_transcript_sha256": "b94913826b91e65f5b8a14bbf0ebb691fec29a44d12c15a1ae6f6035871d8d2b",
+      "table1_page": 6
+    }
+  },
+  "method": {
+    "eta0_definition": "eta0 = J*KT/(2*pi*KQ), KQ = 10KQ/10",
+    "script": "tools/build_kp505_openwater_anchor.py",
+    "tests": "tests/test_kp505_openwater_anchor.py"
+  }
+}
