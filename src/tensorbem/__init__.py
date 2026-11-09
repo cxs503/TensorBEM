@@ -336,3 +336,28 @@ __all__ = [
     "finite_depth_wave_amplitude_coefficient",
 ]
 __version__ = "0.5.0"
+
+# Finite-depth Green function with Newton-Raphson and Havelock resistance
+from .finite_depth_green import (
+    dispersion_newton_raphson,
+    dispersion_residual,
+    deep_water_degeneration_error,
+    shallow_water_phase_speed,
+    shallow_water_limit_error,
+    havelock_finite_depth_resistance,
+    havelock_deep_water_resistance,
+    HavelockFiniteDepthResult,
+    parameter_study,
+)
+
+__all__.extend([
+    "dispersion_newton_raphson",
+    "dispersion_residual",
+    "deep_water_degeneration_error",
+    "shallow_water_phase_speed",
+    "shallow_water_limit_error",
+    "havelock_finite_depth_resistance",
+    "havelock_deep_water_resistance",
+    "HavelockFiniteDepthResult",
+    "parameter_study",
+])
