@@ -1,0 +1,114 @@
+{
+  "schema": "tensorbem.quadratic_panel_verification/v2",
+  "case": {
+    "geometry": "unit sphere (icosphere, quadratic 6-node panels)",
+    "problem": "exterior 3-D Laplace Dirichlet",
+    "source": [
+      0.0,
+      0.0,
+      0.5
+    ],
+    "exact_potential": "1/(4*pi*|x-x0|)",
+    "exact_flux": "-(x-x0).n/(4*pi*|x-x0|^3)",
+    "quadrature_order": 8,
+    "self_order": 16,
+    "levels": [
+      0,
+      1,
+      2
+    ],
+    "h_definition": "sqrt(mean flat vertex area)"
+  },
+  "levels": [
+    {
+      "subdivisions": 0,
+      "nodes": 42,
+      "elements": 20,
+      "h": 0.6919010544606049,
+      "flux_rel_error": 0.14037744715645978,
+      "flux_max_abs_error": 0.0357043290864012,
+      "flux_reference_max": 0.2542936865869591,
+      "condition_number": 20.84612122689167,
+      "relative_residual_l2": 2.9878202470563076e-16,
+      "solid_angle_identity_error": 0.03866831493399159,
+      "single_layer_residual_l2": 2.3283751579302058e-16,
+      "equivalent_density_vs_exact_flux_rel_error": 2.1744359744770017,
+      "single_layer_identity_error": 0.01311404018989315,
+      "second_kind_identity_error": 0.03866831493399159,
+      "operator_condition_number": 20.84612122689167
+    },
+    {
+      "subdivisions": 1,
+      "nodes": 162,
+      "elements": 80,
+      "h": 0.38186927396227993,
+      "flux_rel_error": 0.02854353229114548,
+      "flux_max_abs_error": 0.008642046774285567,
+      "flux_reference_max": 0.24460470801279133,
+      "condition_number": 39.350926008522016,
+      "relative_residual_l2": 4.647202055215259e-16,
+      "solid_angle_identity_error": 0.006321395136928087,
+      "single_layer_residual_l2": 4.640299088635664e-16,
+      "equivalent_density_vs_exact_flux_rel_error": 2.1955156020715987,
+      "single_layer_identity_error": 0.0010613237432292033,
+      "second_kind_identity_error": 0.0063213951369286425,
+      "operator_condition_number": 39.350926008522016
+    },
+    {
+      "subdivisions": 2,
+      "nodes": 642,
+      "elements": 320,
+      "h": 0.196292579737769,
+      "flux_rel_error": 0.00606544181630366,
+      "flux_max_abs_error": 0.0019892546993916516,
+      "flux_reference_max": 0.2962471283379758,
+      "condition_number": 80.75785831142969,
+      "relative_residual_l2": 8.6197641937921095e-16,
+      "solid_angle_identity_error": 0.0009609938362293846,
+      "single_layer_residual_l2": 8.476270036988961e-16,
+      "equivalent_density_vs_exact_flux_rel_error": 2.2032929529848504,
+      "single_layer_identity_error": 7.217092760281041e-05,
+      "second_kind_identity_error": 0.0009609938362293846,
+      "operator_condition_number": 80.75785831142969
+    }
+  ],
+  "observed_orders": {
+    "flux_rel_error": 2.490454880300882,
+    "single_layer_identity_error": 4.127641686281427,
+    "solid_angle_identity_error": 2.9307400912501387,
+    "second_kind_identity_error": 2.9307400912501405
+  },
+  "flat_panel": {
+    "flat_double_layer_self_max_abs": 0.0,
+    "single_layer_quadrature_convergence": [
+      {
+        "order": 8,
+        "single_layer_rel_error_vs_order64": 3.13557586331598e-05
+      },
+      {
+        "order": 12,
+        "single_layer_rel_error_vs_order64": 2.3767995354106454e-07
+      },
+      {
+        "order": 16,
+        "single_layer_rel_error_vs_order64": 5.3972121412506965e-09
+      },
+      {
+        "order": 24,
+        "single_layer_rel_error_vs_order64": 1.221427134728956e-12
+      },
+      {
+        "order": 32,
+        "single_layer_rel_error_vs_order64": 1.4803981109352247e-15
+      }
+    ],
+    "single_layer_production_rel_error": 1.4803981109352247e-15
+  },
+  "acceptance": {
+    "threshold": 0.03,
+    "hard_limit": 0.15,
+    "flux_rel_error_finest": 0.00606544181630366,
+    "passed_3pct": true,
+    "passed_hard_limit": true
+  }
+}

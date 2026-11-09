@@ -100,13 +100,14 @@ def quadratic_shape_gradients_ref(L1: float, L2: float) -> FloatArray:
     (6, 2) array: dN_i/dL1, dN_i/dL2.
     """
     L3 = 1.0 - L1 - L2
+    # dL3/dL1 = dL3/dL2 = -1, so d(4*L2*L3)/dL1 = -4*L2 etc.
     return np.array([
         [4.0 * L1 - 1.0, 0.0],                    # dN1/dL1, dN1/dL2
         [0.0, 4.0 * L2 - 1.0],                    # dN2
-        [-4.0 * L3 + 1.0, -4.0 * L3 + 1.0],      # dN3 (chain rule: dL3/dL1=-1, dL3/dL2=-1)
-        [4.0 * L2, 4.0 * L1],                     # dN4
-        [-4.0 * L3, 4.0 * (L2 - L3)],             # dN5
-        [4.0 * (L1 - L3), -4.0 * L3],             # dN6
+        [-4.0 * L3 + 1.0, -4.0 * L3 + 1.0],       # dN3 (chain rule: dL3/dL1=-1, dL3/dL2=-1)
+        [4.0 * L2, 4.0 * L1],                     # dN4 = 4*L1*L2
+        [-4.0 * L2, 4.0 * (L3 - L2)],             # dN5 = 4*L2*L3
+        [4.0 * (L3 - L1), -4.0 * L1],             # dN6 = 4*L3*L1
     ])
 
 
@@ -200,6 +201,163 @@ def duffy_self_quadrature(
 
 
 # ---------------------------------------------------------------------------
+# Node bookkeeping and vectorised shape functions
+# ---------------------------------------------------------------------------
+#: Barycentric coordinates (L1, L2) of the six element nodes (see NODE_LABELS).
+NODE_BARYCENTRIC: FloatArray = np.array(
+    [
+        [1.0, 0.0],  # v0
+        [0.0, 1.0],  # v1
+        [0.0, 0.0],  # v2
+        [0.5, 0.5],  # mid01
+        [0.0, 0.5],  # mid12
+        [0.5, 0.0],  # mid20
+    ]
+)
+
+#: Reference-triangle vertices in (L1, L2) coordinates.
+_REF_VERTICES: FloatArray = NODE_BARYCENTRIC[:3]
+
+
+def quadratic_shape_functions_array(L: FloatArray) -> FloatArray:
+    """Vectorised quadratic shape functions.
+
+    Parameters
+    ----------
+    L : (Q, 2) barycentric coordinates (L1, L2).
+
+    Returns
+    -------
+    (Q, 6) shape-function values.
+    """
+    L = np.atleast_2d(np.asarray(L, dtype=float))
+    L1, L2 = L[:, 0], L[:, 1]
+    L3 = 1.0 - L1 - L2
+    return np.column_stack(
+        [
+            L1 * (2.0 * L1 - 1.0),
+            L2 * (2.0 * L2 - 1.0),
+            L3 * (2.0 * L3 - 1.0),
+            4.0 * L1 * L2,
+            4.0 * L2 * L3,
+            4.0 * L3 * L1,
+        ]
+    )
+
+
+def quadratic_shape_gradients_ref_array(L: FloatArray) -> FloatArray:
+    """Vectorised reference-coordinate gradients of the shape functions.
+
+    Returns
+    -------
+    (Q, 6, 2) array of dN/d(L1, L2).
+    """
+    L = np.atleast_2d(np.asarray(L, dtype=float))
+    L1, L2 = L[:, 0], L[:, 1]
+    L3 = 1.0 - L1 - L2
+    zero = np.zeros_like(L1)
+    return np.stack(
+        [
+            np.column_stack([4.0 * L1 - 1.0, zero]),
+            np.column_stack([zero, 4.0 * L2 - 1.0]),
+            np.column_stack([1.0 - 4.0 * L3, 1.0 - 4.0 * L3]),
+            np.column_stack([4.0 * L2, 4.0 * L1]),
+            np.column_stack([-4.0 * L2, 4.0 * (L3 - L2)]),
+            np.column_stack([4.0 * (L3 - L1), -4.0 * L1]),
+        ],
+        axis=1,
+    )
+
+
+def triangle_apex_quadrature(
+    apex_L: Sequence[float], order: int = 16
+) -> tuple[FloatArray, FloatArray]:
+    """Singularity-cancelling quadrature on the reference triangle.
+
+    The reference triangle is split into sub-triangles that all carry the
+    apex (the singular point) as a vertex; on each sub-triangle the standard
+    Duffy map ``x = apex + u*((1-v)*a + v*b)`` is applied.  Its Jacobian
+    contains a factor ``u`` and the distance to the apex behaves like
+    ``r = u*|...|``, so the ``1/r`` factor of the single-layer kernel (and
+    the ``1/r`` behaviour of the curved double-layer kernel) is cancelled
+    exactly and the transformed integrand is smooth.
+
+    Parameters
+    ----------
+    apex_L : sequence of 2 floats
+        Barycentric (L1, L2) of the singular point (element node, or an
+        arbitrary interior point).
+    order : int
+        Gauss order per direction on each sub-triangle.
+
+    Returns
+    -------
+    nodes : (Q, 2) reference coordinates.
+    weights : (Q,) weights with respect to the reference-triangle measure
+        (``sum(weights) == 0.5``, the area of the reference triangle).
+    """
+    if order < 1:
+        raise ValueError("order must be >= 1")
+    apex = np.asarray(apex_L, dtype=float).reshape(2)
+
+    # Locate the apex: reference vertex, edge point, or interior point.
+    sub_triangles: list[tuple[FloatArray, FloatArray, FloatArray]] = []
+    on_vertex = [k for k in range(3) if np.allclose(apex, _REF_VERTICES[k], atol=1e-12)]
+    if on_vertex:
+        k = on_vertex[0]
+        others = [m for m in range(3) if m != k]
+        sub_triangles.append((apex, _REF_VERTICES[others[0]], _REF_VERTICES[others[1]]))
+    else:
+        on_edge: tuple[int, int, int] | None = None
+        for k in range(3):
+            p, q = _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3]
+            edge = q - p
+            s = float((apex - p) @ edge) / float(edge @ edge)
+            if -1e-12 <= s <= 1.0 + 1e-12:
+                closest = p + s * edge
+                if np.linalg.norm(apex - closest) < 1e-10:
+                    on_edge = (k, (k + 1) % 3, (k + 2) % 3)
+                    break
+        if on_edge is not None:
+            i, j, o = on_edge
+            sub_triangles.append((apex, _REF_VERTICES[i], _REF_VERTICES[o]))
+            sub_triangles.append((apex, _REF_VERTICES[o], _REF_VERTICES[j]))
+        else:
+            for k in range(3):
+                sub_triangles.append(
+                    (apex, _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3])
+                )
+
+    nodes_1d, weights_1d = leggauss(order)
+    u = 0.5 * (nodes_1d + 1.0)
+    w_u = 0.5 * weights_1d
+    v = 0.5 * (nodes_1d + 1.0)
+    w_v = 0.5 * weights_1d
+    U, V = np.meshgrid(u, v, indexing="ij")
+    U = U.ravel()
+    V = V.ravel()
+    w_uv = np.outer(w_u, w_v).ravel()
+
+    nodes_out: list[FloatArray] = []
+    weights_out: list[FloatArray] = []
+    for apex_pt, a_pt, b_pt in sub_triangles:
+        e1 = a_pt - apex_pt
+        e2 = b_pt - apex_pt
+        area = 0.5 * abs(e1[0] * e2[1] - e1[1] * e2[0])
+        if area <= 0.0:
+            raise ValueError("degenerate sub-triangle in apex quadrature")
+        pts = (
+            apex_pt[None, :]
+            + (U * (1.0 - V))[:, None] * e1[None, :]
+            + (U * V)[:, None] * e2[None, :]
+        )
+        nodes_out.append(pts)
+        weights_out.append(w_uv * U * (2.0 * area))
+
+    return np.vstack(nodes_out), np.concatenate(weights_out)
+
+
+# ---------------------------------------------------------------------------
 # Quadratic triangle geometry
 # ---------------------------------------------------------------------------
 @dataclass(frozen=True)
@@ -253,54 +411,152 @@ class QuadraticTriangle:
         det = float(np.linalg.norm(cross))
         return cross, det
 
-    def integrate_single_layer_self(
-        self, apex_node: int, order: int = 16
-    ) -> FloatArray:
-        """Analytical self-influence integral int_T N_k G dS at a vertex node.
-
-        Uses Duffy-transformed quadrature that cancels the 1/r singularity.
-
-        Parameters
-        ----------
-        apex_node : int
-            Vertex index (0, 1, or 2) where the collocation point sits.
-        order : int
-            Gauss quadrature order.
+    def _geometry_at(self, L: FloatArray) -> tuple[FloatArray, FloatArray, FloatArray, FloatArray]:
+        """Physical points, shape functions, metric determinant and unit normals.
 
         Returns
         -------
-        (6,) array of int_T N_k / (4*pi*r) dS for each shape function.
+        X : (Q, 3) physical quadrature points.
+        N : (Q, 6) shape-function values.
+        det : (Q,) surface metric (``dS = det * dL1 * dL2``).
+        normals : (Q, 3) outward unit normals of the isoparametric surface.
+        """
+        N = quadratic_shape_functions_array(L)
+        X = N @ self.nodes
+        dN = quadratic_shape_gradients_ref_array(L)  # (Q, 6, 2)
+        dx_dL1 = dN[:, :, 0] @ self.nodes
+        dx_dL2 = dN[:, :, 1] @ self.nodes
+        cross = np.cross(dx_dL1, dx_dL2)
+        det = np.linalg.norm(cross, axis=1)
+        if np.any(det <= 0.0):
+            raise ValueError("degenerate isoparametric mapping (zero metric)")
+        return X, N, det, cross / det[:, None]
+
+    def integrate_single_layer_at_node(
+        self, local_node: int, order: int = 16
+    ) -> FloatArray:
+        """Single-layer self integral ``int_T N_k G(x_node, y) dS`` at a node.
+
+        Works for all six nodes because the singular quadrature
+        (:func:`triangle_apex_quadrature`) handles a singular point that is a
+        vertex *or* an edge midpoint.
+
+        Parameters
+        ----------
+        local_node : int
+            Local node index 0..5 (0-2 vertices, 3-5 edge midpoints).
+        order : int
+            Gauss order per direction on each Duffy sub-triangle.
+
+        Returns
+        -------
+        (6,) array of ``int_T N_k / (4*pi*r) dS`` for each shape function.
+        """
+        if not 0 <= local_node < NODES_PER_ELEMENT:
+            raise ValueError("local_node must be in 0..5")
+        target = self.nodes[local_node]
+        L, w = triangle_apex_quadrature(NODE_BARYCENTRIC[local_node], order=order)
+        X, N, det, _ = self._geometry_at(L)
+        r = np.linalg.norm(X - target, axis=1)
+        scale = max(1.0, float(np.max(np.abs(self.nodes))))
+        ok = r > 1e-14 * scale
+        if not np.any(ok):
+            raise ValueError("no quadrature point away from the singular node")
+        kern = w[ok] * det[ok] / (FOUR_PI * r[ok])
+        return kern @ N[ok]
+
+    def integrate_double_layer_at_node(
+        self, local_node: int, order: int = 16
+    ) -> FloatArray:
+        """Double-layer self integral ``int_T N_k dG/dn dS`` at a node.
+
+        The kernel ``K(x, y) = dG/dn_y = +n(y).(x-y) / (4*pi*|x-y|**3)`` is
+        evaluated with the *exact* isoparametric normal ``n(y)``.  For a flat
+        panel ``(x-y).n == 0`` for every target in the panel plane, so the
+        self contribution vanishes identically; for a curved panel the kernel
+        behaves like ``1/r`` and the Duffy map of
+        :func:`triangle_apex_quadrature` cancels it.
+
+        Returns
+        -------
+        (6,) array of principal-value ``int_T N_k dG/dn dS`` (the free term
+        ``-/+ 1/2 delta_ik`` is *not* included).
+        """
+        if not 0 <= local_node < NODES_PER_ELEMENT:
+            raise ValueError("local_node must be in 0..5")
+        target = self.nodes[local_node]
+        L, w = triangle_apex_quadrature(NODE_BARYCENTRIC[local_node], order=order)
+        X, N, det, normals = self._geometry_at(L)
+        delta = target - X  # (x - y): the sign convention of dG/dn_y
+        r = np.linalg.norm(delta, axis=1)
+        scale = max(1.0, float(np.max(np.abs(self.nodes))))
+        ok = r > 1e-14 * scale
+        if not np.any(ok):
+            raise ValueError("no quadrature point away from the singular node")
+        r3 = r[ok] ** 3
+        K = np.einsum("qj,qj->q", normals[ok], delta[ok]) / (FOUR_PI * r3)
+        kern = w[ok] * det[ok] * K
+        return kern @ N[ok]
+
+    def node_self_matrices(self, order: int = 16) -> tuple[FloatArray, FloatArray]:
+        """Self-panel blocks ``S[i, k]``, ``D[i, k]`` for the six node targets."""
+        S = np.empty((NODES_PER_ELEMENT, NODES_PER_ELEMENT))
+        D = np.empty((NODES_PER_ELEMENT, NODES_PER_ELEMENT))
+        for i in range(NODES_PER_ELEMENT):
+            S[i] = self.integrate_single_layer_at_node(i, order=order)
+            D[i] = self.integrate_double_layer_at_node(i, order=order)
+        return S, D
+
+    def integrate_single_layer_self(
+        self, apex_node: int, order: int = 16
+    ) -> FloatArray:
+        """Single-layer self integral at a *vertex* node (legacy entry point).
+
+        Kept for backwards compatibility; equivalent to
+        :meth:`integrate_single_layer_at_node` for ``apex_node`` in 0..2.
         """
         if apex_node not in (0, 1, 2):
             raise ValueError("apex_node must be 0, 1, or 2")
+        return self.integrate_single_layer_at_node(apex_node, order=order)
 
-        target = self.nodes[apex_node]
-        nodes_ref, weights_ref = duffy_self_quadrature(apex_node, order=order)
+    def target_blocks(
+        self, targets: FloatArray, order: int = 8
+    ) -> tuple[FloatArray, FloatArray]:
+        """Kernel blocks of this element against *many* collocation targets.
 
-        result = np.zeros(6)
-        for q in range(len(weights_ref)):
-            L1, L2 = nodes_ref[q]
-            x_q = self.map_to_physical(L1, L2)
-            r_vec = x_q - target
-            r = float(np.linalg.norm(r_vec))
-            if r < 1e-15:
-                continue  # skip the apex itself (measure zero)
-            N_q = quadratic_shape_functions(L1, L2)
-            cross, det = self.jacobian(L1, L2)
-            # The Duffy transform gives dS = det * du * dv, and the 1/r
-            # singularity is cancelled by the u factor in the Jacobian.
-            # For the isoparametric case, we use the actual metric.
-            if det > 0.0:
-                # With Duffy: r ~ u * w(v), dS ~ u * du * dv * 2*A
-                # So 1/r * dS ~ w(v)/w(v) * du * dv * 2*A = smooth
-                # We compute it directly:
-                integrand = N_q * det / (FOUR_PI * r)
-                # The Duffy weight already has the (1-u) factor;
-                # we need to account for the r ~ u behavior.
-                # Actually, for the isoparametric case, we just do:
-                result += weights_ref[q] * integrand
+        Vectorised over the quadrature points and the targets (used by the
+        assembler to avoid a Python loop over node/element pairs).
 
-        return result
+        Parameters
+        ----------
+        targets : (T, 3) collocation points, generally *not* on this element.
+        order : int Gauss order.
+
+        Returns
+        -------
+        S_blk, D_blk : (T, 6) arrays with
+            ``S_blk[t, k] = int_T N_k G(x_t, y) dS`` and
+            ``D_blk[t, k] = int_T N_k dG/dn_y(x_t, y) dS``.
+            Entries whose target lies on the element (the singular self rows)
+            are returned as zero; those must be filled with
+            :meth:`node_self_matrices`.
+        """
+        targets = np.atleast_2d(np.asarray(targets, dtype=float))
+        L, w = gauss_triangle_rule(order)
+        X, N, det, normals = self._geometry_at(L)
+        diff = targets[:, None, :] - X[None, :, :]  # (T, Q, 3)
+        r = np.linalg.norm(diff, axis=2)            # (T, Q)
+        scale = max(1.0, float(np.max(np.abs(self.nodes))))
+        singular = r <= 1e-12 * scale
+        r_safe = np.where(singular, 1.0, r)
+        wgt = w * det / FOUR_PI                     # (Q,)
+        S_blk = (1.0 / r_safe) @ (wgt[:, None] * N)
+        radial = np.einsum("tqj,qj->tq", diff, normals) / r_safe ** 3
+        D_blk = (radial * wgt[None, :]) @ N
+        if np.any(singular):
+            S_blk[singular] = 0.0
+            D_blk[singular] = 0.0
+        return S_blk, D_blk
 
     def integrate_single_layer(
         self, target: FloatArray, order: int = 8
@@ -317,18 +573,33 @@ class QuadraticTriangle:
         (6,) array of int_T N_k / (4*pi*|x-y|) dS.
         """
         target = np.asarray(target, dtype=float)
-        nodes_ref, weights = gauss_triangle_rule(order)
-        result = np.zeros(6)
-        for q in range(len(weights)):
-            L1, L2 = nodes_ref[q]
-            x_q = self.map_to_physical(L1, L2)
-            r = float(np.linalg.norm(x_q - target))
-            if r < 1e-15:
-                raise ValueError("target lies on the element; use self-integral")
-            N_q = quadratic_shape_functions(L1, L2)
-            cross, det = self.jacobian(L1, L2)
-            result += weights[q] * N_q * det / (FOUR_PI * r)
-        return result
+        L, w = gauss_triangle_rule(order)
+        X, N, det, _ = self._geometry_at(L)
+        r = np.linalg.norm(X - target, axis=1)
+        if np.any(r < 1e-15):
+            raise ValueError("target lies on the element; use self-integral")
+        kern = w * det / (FOUR_PI * r)
+        return kern @ N
+
+    def integrate_double_layer(
+        self, target: FloatArray, order: int = 8
+    ) -> FloatArray:
+        """Integrate N_k * dG/dn over this triangle for a non-singular target.
+
+        Returns
+        -------
+        (6,) array of int_T N_k dG/dn dS.
+        """
+        target = np.asarray(target, dtype=float)
+        L, w = gauss_triangle_rule(order)
+        X, N, det, normals = self._geometry_at(L)
+        delta = target - X  # (x - y)
+        r = np.linalg.norm(delta, axis=1)
+        if np.any(r < 1e-15):
+            raise ValueError("target lies on the element; use self-integral")
+        K = np.einsum("qj,qj->q", normals, delta) / (FOUR_PI * r ** 3)
+        kern = w * det * K
+        return kern @ N
 
 
 # ---------------------------------------------------------------------------
@@ -468,59 +739,61 @@ def assemble_quadratic_matrices(
 ) -> tuple[FloatArray, FloatArray]:
     """Assemble single-layer (S) and double-layer (D) matrices for quadratic BEM.
 
-    The system has ``mesh.node_count`` unknowns (one per node).
+    The system has ``mesh.node_count`` unknowns (one per node, shared by the
+    incident elements)::
 
-    For the single-layer matrix:
         S_ik = sum_elements int_{T_e} N_k G(x_i, y) dS_y
+        D_ik = sum_elements int_{T_e} N_k dG/dn_y(x_i, y) dS_y
 
-    For the double-layer matrix, we use the flat-panel approximation for
-    non-singular integrals (the curvature correction is higher order):
-        D_ik = sum_elements int_{T_e} N_k dG/dn dS_y
+    ``D`` is the **principal-value** double-layer operator: the free term
+    (``-1/2`` jump for a smooth boundary, in the convention of the module
+    docstring) is *not* included.  Consequently, for a closed surface the row
+    sums of ``D`` satisfy the solid-angle identity
+
+        sum_k D_ik = PV int_S dG/dn dS = -1/2        (exact identity)
+
+    which is asserted by the operator tests.
+
+    Both matrices use the exact isoparametric normal of the curved element in
+    the double-layer kernel.  The singular (self-panel) blocks — the target is
+    one of the six nodes of the source panel, including the edge midpoints —
+    are integrated with the Duffy-type :func:`triangle_apex_quadrature`;
+    non-singular blocks use a Gauss rule on the reference triangle.
 
     Parameters
     ----------
     mesh : QuadraticSurfaceMesh
-    quadrature_order : int for non-singular integrals
-    self_order : int for singular (self) integrals
+    quadrature_order : int
+        Gauss order for non-singular panels.
+    self_order : int
+        Gauss order per direction for the singular self-panel quadrature.
 
     Returns
     -------
-    S : (node_count, node_count) single-layer matrix
-    D : (node_count, node_count) double-layer matrix
+    S : (node_count, node_count) single-layer matrix.
+    D : (node_count, node_count) principal-value double-layer matrix.
     """
     n_nodes = mesh.node_count
     n_elems = mesh.element_count
     S = np.zeros((n_nodes, n_nodes))
     D = np.zeros((n_nodes, n_nodes))
 
+    all_targets = mesh.vertices
     for e in range(n_elems):
         elem = mesh.element(e)
         node_ids = mesh.faces[e]
 
-        for local_i in range(6):
-            global_i = node_ids[local_i]
-            target = mesh.vertices[global_i]
+        # Non-singular part: element e against every collocation node.
+        S_blk, D_blk = elem.target_blocks(all_targets, order=quadrature_order)
+        # Singular part: the six nodes of e are collocated on e itself, so
+        # their rows are replaced by the accurate Duffy self quadrature
+        # (including the edge midpoints, whose integrals are also singular).
+        S_self, D_self = elem.node_self_matrices(order=self_order)
+        S_blk[node_ids] = S_self
+        D_blk[node_ids] = D_self
 
-            # Check if target is a vertex of this element
-            is_self = local_i < 3  # vertices are nodes 0,1,2
-
-            if is_self:
-                # Self-influence: analytical (Duffy) quadrature
-                s_self = elem.integrate_single_layer_self(
-                    apex_node=local_i, order=self_order
-                )
-                for local_k in range(6):
-                    global_k = node_ids[local_k]
-                    S[global_i, global_k] += s_self[local_k]
-                # Double-layer self-term: for flat panels this is 0 at vertices
-                # For curved panels, we use a high-order quadrature with exclusion
-                # (the solid angle contribution is handled by the free term)
-            else:
-                # Non-singular: standard quadrature
-                s_reg = elem.integrate_single_layer(target, order=quadrature_order)
-                for local_k in range(6):
-                    global_k = node_ids[local_k]
-                    S[global_i, global_k] += s_reg[local_k]
+        S[:, node_ids] += S_blk
+        D[:, node_ids] += D_blk
 
     return S, D
 
@@ -582,6 +855,82 @@ def solve_laplace_dirichlet_quadratic(
         condition_number=condition,
         residual_l2=residual,
         relative_residual_l2=residual / rhs_norm if rhs_norm > 0 else residual,
+    )
+
+
+@dataclass(frozen=True)
+class QuadraticNeumannResult:
+    """Normal-derivative recovery from Dirichlet data via the second-kind BIE.
+
+    Attributes
+    ----------
+    normal_derivative : (node_count,) recovered outward ``q = du/dn``.
+    single_layer_matrix, double_layer_matrix : assembled operators.
+    condition_number : cond(S).
+    relative_residual_l2 : ``||(1/2 I - D)u + S q|| / ||(1/2 I - D)u||``.
+    operator_row_sum_error : ``max_i |sum_k D_ik + 1/2|`` (solid-angle
+        identity residual; a pure operator diagnostic, no solution involved).
+    """
+
+    normal_derivative: FloatArray
+    single_layer_matrix: FloatArray
+    double_layer_matrix: FloatArray
+    condition_number: float
+    relative_residual_l2: float
+    operator_row_sum_error: float
+
+
+def solve_neumann_from_dirichlet_quadratic(
+    mesh: QuadraticSurfaceMesh,
+    boundary_values: FloatArray,
+    quadrature_order: int = 8,
+    self_order: int = 16,
+) -> QuadraticNeumannResult:
+    """Recover the outward normal derivative from Dirichlet data (direct BIE).
+
+    The exterior second-kind boundary integral equation (module docstring) is::
+
+        (1/2 I - D) u = -S q        =>        q = -S^{-1} (1/2 I - D) u
+
+    This is an *independent* route to the boundary flux compared with the
+    indirect single-layer solve of :func:`solve_laplace_dirichlet_quadratic`
+    (``S q = u``): it exercises the double-layer operator ``D`` and therefore
+    fails if ``D`` (or its singular self-panel quadrature) is wrong.
+
+    Parameters
+    ----------
+    mesh : QuadraticSurfaceMesh
+    boundary_values : (node_count,) prescribed Dirichlet data at the nodes.
+    quadrature_order, self_order : int
+        Quadrature orders, see :func:`assemble_quadratic_matrices`.
+
+    Returns
+    -------
+    QuadraticNeumannResult
+    """
+    values = np.asarray(boundary_values, dtype=float)
+    if values.shape != (mesh.node_count,):
+        raise ValueError(f"boundary_values must have shape ({mesh.node_count},)")
+    if not np.isfinite(values).all():
+        raise ValueError("boundary_values must all be finite")
+
+    S, D = assemble_quadratic_matrices(
+        mesh, quadrature_order=quadrature_order, self_order=self_order
+    )
+    n = mesh.node_count
+    second_kind = 0.5 * np.eye(n) - D
+    rhs = second_kind @ values
+    q = -np.linalg.solve(S, rhs)
+    residual = float(np.linalg.norm(second_kind @ values + S @ q))
+    rhs_norm = float(np.linalg.norm(rhs))
+    row_sum_error = float(np.max(np.abs(D.sum(axis=1) + 0.5)))
+    return QuadraticNeumannResult(
+        normal_derivative=q,
+        single_layer_matrix=S,
+        double_layer_matrix=D,
+        condition_number=float(np.linalg.cond(S)),
+        relative_residual_l2=residual / rhs_norm if rhs_norm > 0.0 else residual,
+        operator_row_sum_error=row_sum_error,
     )
 
 
