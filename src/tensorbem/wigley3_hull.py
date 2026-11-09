@@ -74,81 +74,87 @@ def wigley3_wetted_hull_mesh(
 ) -> WettedHullMesh:
     """Generate a triangular panel mesh of the Wigley III wetted hull.
 
-    Uses a cosine distribution for x-stations to cluster panels near the ends
-    while avoiding the singular points at x=±L/2 where y=0.
+    The wetted surface is swept as a single closed strip: the ring index
+    ``k = 0 .. 2*nz`` runs from the port waterline (``z = 0``) down the port
+    side to the keel (``k = nz``, ``z = -T``) and back up the starboard side,
+    with ``z_k = -T sin(pi k / (2 nz))`` so that ``z = 0`` and ``z = -T`` are
+    hit exactly.  Longitudinal stations are cosine spaced,
+    ``x_i = -(L/2) cos(pi i / (nx - 1))``, so the stations land exactly on the
+    ends ``x = +-L/2``, where the half breadth vanishes and the port and
+    starboard sheets meet.
+
+    Vertices are welded on shared coordinates, so the collapse at the keel
+    (``y = 0``) and at both ends (``y = 0`` for every ``z``) produces a closed
+    lower hull; the only open edges are the two waterline strips at ``z = 0``,
+    which is exactly the :class:`~tensorbem.geometry3d.WettedHullMesh`
+    contract.  Panel normals point out of the body into the fluid.
 
     Parameters
     ----------
     nx : int
-        Number of panels in the longitudinal direction.
+        Number of longitudinal stations (``nx - 1`` panels per ring strip).
     nz : int
-        Number of panels in the vertical direction (each side).
+        Number of panels in the vertical direction, per side.
     L, B, T : float
-        Hull dimensions (m).
+        Length, beam and draft (m).
     alpha : float
-        Modification parameter.
+        Modification parameter (``1.109`` reproduces Journee's Wigley III,
+        ``Cb = 0.543``; ``alpha = 0`` is the parabolic Wigley hull with
+        ``Cb = 4/9``).
 
     Returns
     -------
     mesh : WettedHullMesh
-        Triangulated wetted hull surface with outward normals.
+        Triangulated wetted hull surface with outward normals and a closed
+        waterline loop at ``z = 0``.
     """
     if nx < 4:
         raise ValueError("nx must be >= 4")
     if nz < 2:
         raise ValueError("nz must be >= 2")
+    for name, value in (("L", L), ("B", B), ("T", T)):
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"{name} must be a positive finite number")
 
-    # Use cosine distribution for x-stations to avoid singular ends
-    # xi goes from -1+eps to 1-eps where eps is small
-    eps = 1e-6
-    xi_vals = -np.cos(np.linspace(0, np.pi, nx + 1)) * (1 - eps)
-    x_vals = xi_vals * L / 2.0
+    stations = -0.5 * float(L) * np.cos(np.linspace(0.0, np.pi, int(nx)))
+    rings = -float(T) * np.sin(
+        np.pi * np.arange(2 * int(nz) + 1, dtype=float) / (2.0 * int(nz))
+    )
 
-    n_theta = 2 * nz
-    theta_vals = np.linspace(0.0, np.pi, n_theta + 1)
+    vertices: list[tuple[float, float, float]] = []
+    index: dict[tuple[float, float, float], int] = {}
 
-    # Build vertex grid
-    vertices = []
-    grid = {}
+    def _vertex(point: tuple[float, float, float]) -> int:
+        key = (round(point[0], 12) + 0.0, round(point[1], 12) + 0.0, round(point[2], 12) + 0.0)
+        if key not in index:
+            index[key] = len(vertices)
+            vertices.append(key)
+        return index[key]
 
-    for i, x in enumerate(x_vals):
-        for j, theta in enumerate(theta_vals):
-            if theta <= np.pi / 2:
-                # Port side
-                zeta = -np.sin(theta)
-                z = zeta * T
-                y_abs = float(wigley3_half_breadth(x, z, L, B, T, alpha))
-                y = -max(y_abs, 0.0)
-            else:
-                # Starboard side
-                zeta = -np.cos(theta - np.pi / 2)
-                z = zeta * T
-                y_abs = float(wigley3_half_breadth(x, z, L, B, T, alpha))
-                y = max(y_abs, 0.0)
+    grid: list[list[int]] = []
+    for x in stations:
+        row = []
+        for k, z in enumerate(rings):
+            half = float(wigley3_half_breadth(x, z, L, B, T, alpha))
+            y = half if k <= int(nz) else -half
+            row.append(_vertex((float(x), float(y), float(z))))
+        grid.append(row)
 
-            idx = len(vertices)
-            vertices.append((x, y, z))
-            grid[(i, j)] = idx
+    faces: list[tuple[int, int, int]] = []
+    for i in range(int(nx) - 1):
+        for k in range(2 * int(nz)):
+            a, b = grid[i][k], grid[i + 1][k]
+            c, d = grid[i + 1][k + 1], grid[i][k + 1]
+            for triangle in ((a, b, c), (a, c, d)):
+                if len(set(triangle)) == 3:
+                    faces.append(triangle)
 
-    # Build triangles
-    faces = []
-    for i in range(nx):
-        for j in range(n_theta):
-            v00 = grid[(i, j)]
-            v10 = grid[(i + 1, j)]
-            v11 = grid[(i + 1, j + 1)]
-            v01 = grid[(i, j + 1)]
+    if len(faces) < 3:
+        raise ValueError("failed to generate sufficient panels")
 
-            faces.append((v00, v10, v11))
-            faces.append((v00, v11, v01))
-
-    verts_array = np.array(vertices, dtype=float)
-    faces_array = np.array(faces, dtype=np.int64)
-
-    if len(faces_array) < 3:
-        raise ValueError("Failed to generate sufficient panels")
-
-    return WettedHullMesh(verts_array, faces_array)
+    return WettedHullMesh(
+        np.asarray(vertices, dtype=float), np.asarray(faces, dtype=np.int64)
+    )
 
 
 @dataclass
