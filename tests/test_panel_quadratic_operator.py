@@ -250,6 +250,32 @@ def test_ellipsoid_solid_angle_identity():
         err = float(np.max(np.abs(D @ ones + 0.5)))
         assert err < tol, f"sub {sub}: |D 1 + 1/2|_inf = {err} >= {tol}"
 
+def test_operators_are_translation_invariant():
+    """Rigid translation leaves S and D unchanged (kernel sees x - y only).
+
+    The Laplace kernel ``G(x, y) = 1/(4 pi |x - y|)`` and the isoparametric
+    normals depend only on *relative* positions, so translating the whole
+    mesh must leave every entry of ``S`` and ``D`` unchanged up to round-off.
+    A position-dependent slip in the kernel (e.g. an absolute coordinate
+    sneaking into the displacement or the normal) can survive the row-sum
+    identities yet break this entry-wise check.
+    """
+    axes = (1.0, 1.6, 0.7)
+    shift = np.array([3.0, -2.0, 1.5])
+    base = ellipsoid_quadratic(1, axes=axes)
+    moved = QuadraticSurfaceMesh(base.vertices + shift, base.faces.copy())
+    S0, D0 = assemble_quadratic_matrices(base)
+    S1, D1 = assemble_quadratic_matrices(moved)
+    assert np.max(np.abs(S1 - S0)) <= 1e-10 * np.max(np.abs(S0)), (
+        "single-layer matrix changed under translation"
+    )
+    assert np.max(np.abs(D1 - D0)) <= 1e-10 * np.max(np.abs(D0)), (
+        "double-layer matrix changed under translation"
+    )
+    # the solid-angle identity must hold at the new location as well
+    ones = np.ones(D1.shape[0])
+    assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
+
 
 def test_single_layer_constant_density_identity(sphere_operators):
     """S 1 == 1 on the unit sphere (single-layer potential of unit density)."""
