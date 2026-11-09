@@ -1,16 +1,16 @@
 {
   "counts": {
-    "artifact": 32,
-    "documents": 96,
-    "number_tokens": 11126,
-    "number_tokens_covered": 9719,
-    "pinned": 42,
-    "unguarded": 22,
-    "unguarded_paper_level": 8
+    "artifact": 34,
+    "documents": 107,
+    "number_tokens": 12494,
+    "number_tokens_covered": 10772,
+    "pinned": 46,
+    "unguarded": 27,
+    "unguarded_paper_level": 13
   },
   "coverage": {
-    "documents_guarded_fraction": 0.7708333333333334,
-    "guarded_number_fraction": 0.8735394571274492
+    "documents_guarded_fraction": 0.7476635514018691,
+    "guarded_number_fraction": 0.8621738434448535
   },
   "records": [
     {
@@ -82,6 +82,18 @@
     },
     {
       "artifact": null,
+      "doc": "BEM_FINITE_DEPTH_GREEN.md",
+      "generators": [],
+      "lines": 156,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 76,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
       "doc": "PROJECT_CHARTER.md",
       "generators": [],
       "lines": 28,
@@ -127,12 +139,12 @@
       "tier": "ARTIFACT"
     },
     {
-      "artifact": "docs/panel_linear_order/study.json",
+      "artifact": "docs/cummins_memory_closure/campaign.json",
       "doc": "audit_baseline.md",
       "generators": [
         "tensorbem.capability_evidence"
       ],
-      "lines": 207,
+      "lines": 234,
       "modules_exercised": [
         "test_benchmark_cli_contract.py",
         "test_capability_coverage.py",
@@ -279,6 +291,34 @@
     },
     {
       "artifact": null,
+      "doc": "cummins_wigley_closure_report.md",
+      "generators": [],
+      "lines": 246,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 55,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "cylinder_drift_asymptotic.md",
+      "generators": [
+        "tensorbem.benchmarks.cylinder_drift_asymptotic"
+      ],
+      "lines": 218,
+      "modules_exercised": [
+        "test_cylinder_drift_asymptotic.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 144,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
       "doc": "dev_report_m4291_pr215_ci_red.md",
       "generators": [],
       "lines": 88,
@@ -319,6 +359,7 @@
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_multibody_frequency_dependence_3d.py",
         "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
@@ -392,11 +433,12 @@
       "generators": [
         "tensorbem.benchmarks.doc_claim_audit"
       ],
-      "lines": 115,
+      "lines": 120,
       "modules_exercised": [
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_multibody_frequency_dependence_3d.py",
         "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
@@ -435,6 +477,7 @@
       "lines": 167,
       "modules_exercised": [
         "test_drift_force.py",
+        "test_drift_mesh_convergence.py",
         "test_drift_second_order.py"
       ],
       "note": "generator exercised; document text not parsed",
@@ -442,6 +485,24 @@
       "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "drift_mesh_convergence.md",
+      "generators": [
+        "tensorbem.benchmarks.drift_mesh_convergence"
+      ],
+      "lines": 138,
+      "modules_exercised": [
+        "test_drift_mesh_convergence.py"
+      ],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 53,
+      "paper_level": true,
+      "reading_tests": [
+        "test_drift_mesh_convergence.py"
+      ],
+      "tier": "PINNED"
     },
     {
       "artifact": "docs/finite_depth3d_pins/check.json",
@@ -455,6 +516,7 @@
         "test_doc_claim_audit.py",
         "test_finite_depth3d_pins.py",
         "test_hydrostatic_restoring_doc_pins.py",
+        "test_multibody_frequency_dependence_3d.py",
         "test_tank_free_surface_doc_pins.py",
         "test_ursell_convergence_doc_pins.py"
       ],
@@ -808,6 +870,18 @@
       "tier": "PINNED"
     },
     {
+      "artifact": null,
+      "doc": "kp505_openwater_anchor.md",
+      "generators": [],
+      "lines": 111,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 56,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
       "artifact": "docs/lifting_camber_artifact/benchmark.json",
       "doc": "lifting_camber.md",
       "generators": [
@@ -883,11 +957,13 @@
       "generators": [],
       "lines": 156,
       "modules_exercised": [],
-      "note": "no declared generator and no reading test",
+      "note": "read by 1 test file(s)",
       "number_tokens": 101,
       "paper_level": true,
-      "reading_tests": [],
-      "tier": "UNGUARDED"
+      "reading_tests": [
+        "test_propeller_open_water.py"
+      ],
+      "tier": "PINNED"
     },
     {
       "artifact": "docs/m2966/outputs/merge_checks/merge_checks.json",
@@ -936,6 +1012,22 @@
       "paper_level": false,
       "reading_tests": [],
       "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "m7485_kp505_openwater_bem.md",
+      "generators": [
+        "tensorbem.benchmarks.kp505_openwater_bem"
+      ],
+      "lines": 251,
+      "modules_exercised": [],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 698,
+      "paper_level": false,
+      "reading_tests": [
+        "test_propeller_open_water.py"
+      ],
+      "tier": "PINNED"
     },
     {
       "artifact": "docs/m3181/outputs/three_d_free_surface_registry.json",
@@ -1044,6 +1136,22 @@
     },
     {
       "artifact": null,
+      "doc": "michell_unit_arbitration.md",
+      "generators": [
+        "tensorbem.benchmarks.michell_unit_arbitration"
+      ],
+      "lines": 71,
+      "modules_exercised": [
+        "test_michell_unit_arbitration.py"
+      ],
+      "note": "generator exercised; document text not parsed",
+      "number_tokens": 57,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
       "doc": "michell_validation.md",
       "generators": [
         "tensorbem.benchmarks.michell_validation"
@@ -1073,6 +1181,20 @@
       "paper_level": true,
       "reading_tests": [
         "test_mixed_boundary.py"
+      ],
+      "tier": "PINNED"
+    },
+    {
+      "artifact": null,
+      "doc": "multibody_frequency_dependence_3d.md",
+      "generators": [],
+      "lines": 147,
+      "modules_exercised": [],
+      "note": "read by 1 test file(s)",
+      "number_tokens": 0,
+      "paper_level": true,
+      "reading_tests": [
+        "test_multibody_frequency_dependence_3d.py"
       ],
       "tier": "PINNED"
     },
@@ -1163,6 +1285,32 @@
       "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "neumann_kelvin_verification.md",
+      "generators": [],
+      "lines": 143,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 62,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
+    },
+    {
+      "artifact": null,
+      "doc": "p22_n01_quadratic_panel_report.md",
+      "generators": [
+        "tensorbem.benchmarks.quadratic_panel_convergence"
+      ],
+      "lines": 161,
+      "modules_exercised": [],
+      "note": "generator never exercised by a test",
+      "number_tokens": 34,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
     },
     {
       "artifact": null,
@@ -1704,6 +1852,18 @@
       "paper_level": true,
       "reading_tests": [],
       "tier": "ARTIFACT"
+    },
+    {
+      "artifact": null,
+      "doc": "wigley_diffraction_radiation_verification.md",
+      "generators": [],
+      "lines": 183,
+      "modules_exercised": [],
+      "note": "no declared generator and no reading test",
+      "number_tokens": 133,
+      "paper_level": true,
+      "reading_tests": [],
+      "tier": "UNGUARDED"
     },
     {
       "artifact": null,

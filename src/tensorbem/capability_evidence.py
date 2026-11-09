@@ -837,6 +837,43 @@ CAPABILITIES: tuple[Capability, ...] = (
             'or appendages), so KCS predictions and the EFD comparison remain WITHHELD (limitations L2/L3).'
         ),
     ),
+    # ------------------------------------------------------------------
+    # Added 2026-11-09 (m8321 / P106W2-N04).  The multihull seakeeping
+    # node: multi-body radiation plus the two frequency asymptotes.
+    # ------------------------------------------------------------------
+    Capability(
+        key='multibody-frequency-asymptotes',
+        title='Multihull added mass and damping with exact zero/infinite-frequency asymptotes',
+        claim=(
+            'Two and three Wigley hulls abreast are solved in the 3-D free-surface BEM for sway, '
+            'heave and pitch, and the two frequency limits A(0) (rigid-wall free surface) and '
+            'A(inf) (pressure-release free surface) are obtained from an independent Laplace '
+            'collocation on the mirror-closed double body, so the frequency sweep is checked '
+            'against a potential solve rather than against itself.'
+        ),
+        level=REAL,
+        modules=('tensorbem.multibody3d', 'tensorbem.benchmarks.multibody_frequency_dependence_3d'),
+        symbols=(
+            'static_added_mass',
+            'mirror_closure',
+            'side_by_side_multihull',
+            'wigley_hull_mesh',
+            'fit_asymptote',
+            'fit_scale_law',
+        ),
+        tests=(
+            'tests/test_multibody_frequency_dependence_3d.py::test_pressure_release_hemisphere_matches_half_the_sphere_added_mass',
+            'tests/test_multibody_frequency_dependence_3d.py::test_low_frequency_radiation_approaches_the_rigid_wall_limit',
+            'tests/test_multibody_frequency_dependence_3d.py::test_wigley_geometry_converges_to_analytic_values',
+        ),
+        docs=(('docs/multibody_frequency_dependence_3d.md', 'rigid-wall'),),
+        note=(
+            'Linear potential flow, zero speed, deep water; the infinite-frequency value from the '
+            'sweep is a Kramers-Kronig 1/omega^2 extrapolation anchored to the pressure-release '
+            'solve.  No experimental multihull added-mass table exists in the repository, so the '
+            'error judgement is against analytic hydrostatics and the independent potential solve.'
+        ),
+    ),
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
