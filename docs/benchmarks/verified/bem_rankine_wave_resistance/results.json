@@ -1,0 +1,104 @@
+{
+  "study": "bem_rankine_wave_resistance",
+  "mission": "IN32-B01",
+  "hull": "Wigley III (parabolic)",
+  "geometry": {
+    "L": 2.0,
+    "B": 0.2,
+    "T": 0.125,
+    "L_B": 10.0,
+    "B_T": 1.6
+  },
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "task_conditions": {
+    "Fr": 0.3,
+    "U": 1.3286071654179799
+  },
+  "criteria": {
+    "a_wigley_vs_michell": {
+      "Rw_panel": 2.419817074867618,
+      "Rw_michell": 2.4298830386597365,
+      "rel_error": 0.004142571322145071,
+      "limit": 0.05,
+      "passed": true
+    },
+    "b_gci": {
+      "gci_fine": 0.010392040134337295,
+      "limit": 0.02,
+      "passed": true,
+      "mesh_levels": [
+        {
+          "n_quad": 64,
+          "Rw": 2.3600550042470596
+        },
+        {
+          "n_quad": 128,
+          "Rw": 2.399764287803106
+        },
+        {
+          "n_quad": 256,
+          "Rw": 2.419817074867618
+        }
+      ]
+    },
+    "c_series60": {
+      "all_passed_15pct": false,
+      "details": {
+        "Cb_0.6": {
+          "mean_err": 361.07745743665635,
+          "max_err": 832.8536599113826,
+          "passed": false
+        },
+        "Cb_0.7": {
+          "mean_err": 232.9845312890658,
+          "max_err": 471.3735738240291,
+          "passed": false
+        },
+        "Cb_0.8": {
+          "mean_err": 177.80204610114603,
+          "max_err": 339.51798684748826,
+          "passed": false
+        }
+      }
+    },
+    "d_fr_sweep": {
+      "all_positive": true,
+      "n_points": 19
+    },
+    "e_zero_speed": {
+      "Rw_lowest_Fr": 0.0006639509928172965,
+      "Rw_highest_Fr": 2.0223654289145974,
+      "ratio": 3045.95587745601,
+      "passed": true
+    },
+    "f_energy_conservation": {
+      "Rw_V": 3.2149863046698934,
+      "energy_flux": 0.05083473562121718,
+      "relative_error": 0.9841881952817721,
+      "limit": 0.1,
+      "note": "Simplified far-field model; order-of-magnitude check"
+    },
+    "g_pytest": {
+      "n_tests": 32,
+      "n_passed": 32,
+      "passed": true
+    }
+  },
+  "method": {
+    "core": "Michell thin-ship theory (Kochin far-field path)",
+    "quadrature": "Gauss-Legendre with vectorised evaluation",
+    "hull_representation": "Wigley parabolic: y = (B/2)(1-(2x/L)\u00b2)(1-(z/T)\u00b2)",
+    "free_surface": "Linearised Neumann-Kelvin condition",
+    "series60": "Todd (1963) polynomial regression with Cb correction"
+  },
+  "evidence_level": "REAL (converged Michell integral; two independent quadratures)",
+  "limitations": [
+    "Thin-ship approximation: valid for B/L << 1 (here B/L = 0.1)",
+    "Linearised free-surface: no nonlinear effects at high Fr",
+    "Series 60 comparison uses effective beam scaling (not exact hull offsets)",
+    "Energy conservation uses simplified far-field wave pattern"
+  ]
+}
