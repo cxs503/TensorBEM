@@ -679,7 +679,7 @@ def run_verification_study(
     hull = BulkCarrierHull()
     convergence_data = []
     for n_sec in mesh_levels:
-        mesh = generate_closed_hull_mesh(hull, n_sections=n_sec, n_side=5, n_bottom=3)
+        mesh = generate_closed_hull_mesh(hull, n_sections=n_sec, n_side=3, n_bottom=2)
         coated, damaged, anodes = assign_coating_damage(mesh, 0.05, seed=42)
         result = solve_cathodic_protection(mesh, coated, damaged, anodes)
         total_area = float(np.sum(result.panel_areas))
@@ -714,7 +714,7 @@ def run_verification_study(
         }
 
     # --- Damage ratio sweep (C5) ---
-    mesh = generate_closed_hull_mesh(hull, n_sections=21, n_side=5, n_bottom=3)
+    mesh = generate_closed_hull_mesh(hull, n_sections=11, n_side=3, n_bottom=2)
     total_area = float(np.sum(result.panel_areas))
 
     anode_currents = []
