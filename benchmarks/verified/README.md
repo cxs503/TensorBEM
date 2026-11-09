@@ -77,3 +77,31 @@ break an existing reproducibility gate.  Reproduce with
 PYTHONPATH=src python -m tensorbem.benchmarks.bem_finite_depth_anchors --stage all
 PYTHONPATH=src python -m pytest tests/test_bem_finite_depth_anchors.py -q
 ```
+
+## KP505 propeller open water: four-level GCI ladders (registered separately)
+
+`propeller_openwater/` answers research-plan item C of the topic
+`propeller-openwater-bem`: the reported `dK_T(J=0.8) = -29.13 %` could not be
+separated into a discretisation and a model term because the radial GCI
+(7.1-8.1 %) was already above the 3 % acceptance level.  The study runs five
+four-level ladders (spanwise panels, azimuthal wake segments, chordwise panels,
+wake extent, kernel regularisation) at `J = 0.5 / 0.8 / 1.0` and splits the
+deviation with `d_total = d_disc + d_model`.
+
+Headline: the two overlapping three-level triplets of the same four-level
+ladder disagree by more than a factor of thirty (`p = +3.0` on the coarse side,
+`p = -1.6` on the fine side), so the ladder is not in the asymptotic range and
+no GCI from it is a bound.  At `J = 0.5` the deviation is inside the
+discretisation band; at `J = 0.8` it is outside, and the model term is bracketed
+at `[-63.7, -3.9] %`.  The verdict is an honest **FAIL** of the journal-grade
+criteria (GCI <= 1 %, `p >= 1.0`), recorded rather than tuned.
+
+Its record is `kp505_gci_ladder.json` (schema `tensorbem.kp505_gci_ladder/1`,
+criteria and every measured value injected by the driver), the rendered summary
+is `report.md`, and the raw ladders are the three CSV files next to them.
+Reproduce with
+
+```
+PYTHONPATH=src python -m tensorbem.benchmarks.kp505_gci_ladder
+PYTHONPATH=src python -m pytest tests/test_kp505_gci_ladder.py -q
+```
