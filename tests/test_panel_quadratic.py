@@ -186,10 +186,18 @@ class TestQuadraticTriangle:
         assert all(d >= 0 for d in diffs)
 
     def test_non_singular_integration(self, sphere_patch):
-        """Non-singular integration gives positive result for external target."""
+        """Non-singular integration of G over the patch is positive and converged.
+
+        Individual shape functions N_k change sign on the reference triangle, so
+        only the *sum* (which equals the exact integral of G, since
+        ``sum_k N_k == 1``) is guaranteed positive.
+        """
         target = np.array([2.0, 2.0, 2.0])
         s = sphere_patch.integrate_single_layer(target, order=8)
-        assert np.all(s > 0)
+        assert float(np.sum(s)) > 0.0
+        assert np.all(np.isfinite(s))
+        s_ref = sphere_patch.integrate_single_layer(target, order=24)
+        assert np.allclose(s, s_ref, rtol=1e-6, atol=1e-9)
 
 
 # ---------------------------------------------------------------------------
