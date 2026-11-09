@@ -270,6 +270,7 @@ def compute_rao_at_frequency(
     inertia: FloatArray | None = None,
     extra_damping: FloatArray | None = None,
     chief_points: int | str | None = "auto",
+    interior_panels: object | None = None,
 ) -> RAOResult:
     """Compute RAO at a single frequency.
 
@@ -373,6 +374,7 @@ def _assemble_rao_at_frequency(
     inertia: FloatArray | None = None,
     extra_damping: FloatArray | None = None,
     chief_points: int | str | None = "auto",
+    interior_panels: object | None = None,
 ) -> RAOResult:
     """Compute RAO at a single frequency.
 
@@ -433,13 +435,19 @@ def _assemble_rao_at_frequency(
 
     # Solve radiation problem to get added mass and damping
     rad_result: Radiation3DResult = solve_radiation_3d(
-        hull, nu, density=density, gravity=gravity, chief_points=chief_points
+        hull,
+        nu,
+        density=density,
+        gravity=gravity,
+        chief_points=chief_points,
+        interior_panels=interior_panels,
     )
 
     # Solve diffraction problem to get excitation force
     diff_result: Diffraction3DResult = solve_diffraction_3d(
         hull, nu, amplitude=amplitude, wave_angle=wave_angle,
-        density=density, gravity=gravity, chief_points=chief_points
+        density=density, gravity=gravity, chief_points=chief_points,
+        interior_panels=interior_panels,
     )
 
     # Extract added mass and damping matrices
@@ -491,6 +499,7 @@ def compute_rao_spectrum(
     inertia: FloatArray | None = None,
     extra_damping: FloatArray | None = None,
     chief_points: int | str | None = "auto",
+    interior_panels: object | None = None,
 ) -> RAOSpectrum:
     """Compute RAO spectrum over a range of frequencies.
 
@@ -580,6 +589,7 @@ def compute_rao_spectrum(
             inertia=inertia,
             extra_damping=extra_damping,
             chief_points=chief_points,
+            interior_panels=interior_panels,
         )
 
         rao_amplitudes[i] = rao_result.rao_amplitude

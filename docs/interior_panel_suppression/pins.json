@@ -1,0 +1,129 @@
+{
+  "box_c33_rel_error": 0.0,
+  "box_low_frequency_rao": 1.008294805855846,
+  "case_count": 396,
+  "curvature_reduction_chief": {
+    "256": 0.999703996451369,
+    "64": 0.999070443636958
+  },
+  "curvature_reduction_lid": {
+    "256": 0.9997124150801386,
+    "64": 0.9990526611098718
+  },
+  "generated_by": "tools/make_interior_panel_report.py",
+  "hemisphere_accuracy_256": [
+    {
+      "added_mass_rel_error_lid": 0.019052147223755884,
+      "damping_rel_error_lid": 0.02244969234958147,
+      "ka": 0.5
+    },
+    {
+      "added_mass_rel_error_lid": 0.0160904236540914,
+      "damping_rel_error_lid": 0.03596470170753379,
+      "ka": 1.0
+    },
+    {
+      "added_mass_rel_error_lid": 0.00959947176925949,
+      "damping_rel_error_lid": 0.05248513057019018,
+      "ka": 1.5
+    },
+    {
+      "added_mass_rel_error_lid": 0.0028624551862160437,
+      "damping_rel_error_lid": 0.07300470928701236,
+      "ka": 2.0
+    },
+    {
+      "added_mass_rel_error_lid": 0.0014948950128854306,
+      "damping_rel_error_lid": 0.11708081693621855,
+      "ka": 2.6
+    }
+  ],
+  "hemisphere_accuracy_256_unregularised": [
+    {
+      "added_mass_rel_error_none": 0.019152368999258877,
+      "damping_rel_error_none": 0.022397098016384752,
+      "ka": 0.5
+    },
+    {
+      "added_mass_rel_error_none": 0.016225851287234184,
+      "damping_rel_error_none": 0.03575319574227443,
+      "ka": 1.0
+    },
+    {
+      "added_mass_rel_error_none": 0.009722217136701398,
+      "damping_rel_error_none": 0.05173205105441347,
+      "ka": 1.5
+    },
+    {
+      "added_mass_rel_error_none": 0.002484902219668068,
+      "damping_rel_error_none": 0.06972376159476838,
+      "ka": 2.0
+    },
+    {
+      "added_mass_rel_error_none": 0.17072389272483215,
+      "damping_rel_error_none": 0.3054806806176047,
+      "ka": 2.6
+    }
+  ],
+  "hemisphere_convergence_slope": {
+    "chief:max_abs_error_added_mass_33_dimless": 0.9949669571424603,
+    "chief:max_abs_error_damping_33_dimless": 1.016588968323903,
+    "lid:max_abs_error_added_mass_33_dimless": 0.9887275740134285,
+    "lid:max_abs_error_damping_33_dimless": 1.0213878907968914,
+    "none:max_abs_error_added_mass_33_dimless": 0.142539589712917,
+    "none:max_abs_error_damping_33_dimless": 0.13247531430141518
+  },
+  "ka_fine_points": 41,
+  "ka_main_points": 30,
+  "levels": [
+    64,
+    256
+  ],
+  "max_condition_number_lid": {
+    "256": 4.229482814372937,
+    "64": 2.9911556529995686
+  },
+  "max_condition_number_none": {
+    "256": 145.65862687433562,
+    "64": 43.714947690815386
+  },
+  "min_damping_33_dimless_lid": {
+    "256": 0.05919115366987271,
+    "64": 0.08047545740278735
+  },
+  "min_damping_33_dimless_none": {
+    "256": -0.10662865911433297,
+    "64": -0.14482509732644744
+  },
+  "peak_ka_lid": {
+    "256": 2.41,
+    "64": 2.41
+  },
+  "peak_ka_none": {
+    "256": 2.57,
+    "64": 2.63
+  },
+  "sphere_added_mass_rel_error": {
+    "1280": 0.00524065880066431,
+    "320": 0.0209444067535067
+  },
+  "sphere_convergence_slope_added_mass": 0.9993724659717421,
+  "sphere_damping_rel_error": {
+    "1280": 0.014150231293324923,
+    "320": 0.05530165652863927
+  },
+  "sphere_interior_rows_delta_relative": [
+    3.6568483133825325e-06,
+    5.026668635554898e-06
+  ],
+  "spurious_band": [
+    2.4,
+    2.8
+  ],
+  "ursell_added_mass_rel_error": 0.008513030527356396,
+  "ursell_damping_rel_error": 0.013360592915766837,
+  "ursell_reference_pair": [
+    2545.167247813704,
+    2718.1539515727764
+  ]
+}

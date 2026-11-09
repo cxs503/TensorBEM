@@ -59,6 +59,7 @@ from numpy.typing import ArrayLike, NDArray
 
 from .free_surface3d import pure_wave_value_and_source_gradient_3d
 from .geometry3d import SurfaceMesh3D, TriangleMesh, WettedHullMesh
+from .interior_panels import InteriorPanelSet, interior_panel_points
 from .kernels3d import integrate_single_layer_triangle_self
 
 FloatArray = NDArray[np.float64]
@@ -90,6 +91,7 @@ class FreeSurface3DOperators:
     chief_double_layer: ComplexArray
     system_matrix: ComplexArray
     condition_number: float
+    interior_lid_points: FloatArray | None = None
 
 
 @dataclass(frozen=True)
@@ -342,14 +344,45 @@ def _resolve_chief_points_3d(
     return pts
 
 
+def _resolve_interior_panels_3d(
+    mesh: SurfaceMesh3D,
+    interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None,
+) -> tuple[FloatArray, FloatArray | None]:
+    """Return ``(lid points, lid points or None)`` for the null-field rows."""
+    if interior_panels is None:
+        return np.zeros((0, 3), dtype=float), None
+    if isinstance(interior_panels, InteriorPanelSet):
+        return interior_panels.points, interior_panels.points
+    if isinstance(interior_panels, str):
+        if interior_panels != "auto":
+            raise ValueError('interior_panels must be None, "auto", an InteriorPanelSet or (K, 3) points')
+        lid = interior_panel_points(mesh)
+        return lid.points, lid.points
+    pts = np.asarray(interior_panels, dtype=float)
+    if pts.ndim != 2 or pts.shape[1] != 3 or pts.shape[0] == 0:
+        raise ValueError("interior_panels points must have shape (K, 3) with K >= 1")
+    if not np.isfinite(pts).all():
+        raise ValueError("interior_panels points must be finite")
+    if np.any(pts[:, 2] >= 0.0):
+        raise ValueError("interior_panels points must satisfy z < 0 (strictly inside the hull)")
+    return pts, pts
+
+
 def assemble_free_surface_operators_3d(
     mesh: SurfaceMesh3D,
     nu: float,
     *,
     chief_points: ArrayLike | Literal["auto"] | None = None,
+    interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
 ) -> FreeSurface3DOperators:
-    """Assemble 3-D Kelvin BEM single/double-layer matrices and CHIEF rows."""
+    """Assemble 3-D Kelvin BEM single/double-layer matrices and interior rows.
+
+    ``chief_points`` adds scattered interior null-field rows (classical CHIEF);
+    ``interior_panels`` adds the null-field rows of a *distributed interior
+    waterplane lid* (:mod:`tensorbem.interior_panels`), which suppresses the
+    irregular-frequency resonances of several interior modes at once.
+    """
     _validate_mesh_3d(mesh)
     freq = _validate_positive("nu", nu)
     if isinstance(rankine_order, (bool, np.bool_)) or not isinstance(
@@ -359,6 +392,11 @@ def assemble_free_surface_operators_3d(
     r_order = int(rankine_order)
 
     chief_pts = _resolve_chief_points_3d(mesh, chief_points)
+    lid_pts, lid_points_used = _resolve_interior_panels_3d(mesh, interior_panels)
+    if lid_pts.shape[0] > 0:
+        chief_pts = (
+            lid_pts if chief_pts.shape[0] == 0 else np.vstack((chief_pts, lid_pts))
+        )
     s_body, h_body = _build_target_operators_3d(
         mesh.centroids,
         mesh,
@@ -392,6 +430,7 @@ def assemble_free_surface_operators_3d(
         chief_double_layer=h_chief,
         system_matrix=system_matrix,
         condition_number=cond,
+        interior_lid_points=lid_points_used,
     )
 
 
@@ -419,6 +458,7 @@ def solve_radiation_3d(
     density: float = _DEFAULT_DENSITY,
     gravity: float = _DEFAULT_GRAVITY,
     chief_points: ArrayLike | Literal["auto"] | None = None,
+    interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
     operators: FreeSurface3DOperators | None = None,
 ) -> Radiation3DResult:
@@ -447,7 +487,11 @@ def solve_radiation_3d(
         operators
         if operators is not None
         else assemble_free_surface_operators_3d(
-            mesh, freq, chief_points=chief_points, rankine_order=rankine_order
+            mesh,
+            freq,
+            chief_points=chief_points,
+            interior_panels=interior_panels,
+            rankine_order=rankine_order,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
@@ -528,6 +572,7 @@ def solve_diffraction_3d(
     density: float = _DEFAULT_DENSITY,
     gravity: float = _DEFAULT_GRAVITY,
     chief_points: ArrayLike | Literal["auto"] | None = None,
+    interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
     operators: FreeSurface3DOperators | None = None,
 ) -> Diffraction3DResult:
@@ -544,7 +589,11 @@ def solve_diffraction_3d(
         operators
         if operators is not None
         else assemble_free_surface_operators_3d(
-            mesh, freq, chief_points=chief_points, rankine_order=rankine_order
+            mesh,
+            freq,
+            chief_points=chief_points,
+            interior_panels=interior_panels,
+            rankine_order=rankine_order,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
