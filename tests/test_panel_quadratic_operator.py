@@ -233,6 +233,24 @@ def test_sphere_solid_angle_identity_and_convergence(sphere_operators):
     assert errors[0] / errors[1] > 4.0  # ~O(h^3): h ratio is 1.81, so >= ~3
 
 
+def test_ellipsoid_solid_angle_identity():
+    """|D 1 + 1/2| must stay small on a non-spherical closed surface.
+
+    The solid-angle identity ``D 1 = -1/2`` holds for *any* closed smooth
+    surface, not only the sphere.  The ellipsoid here is the affine image of
+    the icosphere (a genuinely curved, non-spherical isoparametric panel set),
+    so this pins the isoparametric Jacobian and the singular self-panel
+    quadrature off-sphere, where a sign or chain-rule slip would not be masked
+    by spherical symmetry.
+    """
+    for sub, tol in ((0, 1e-1), (1, 2e-2)):
+        mesh = ellipsoid_quadratic(sub, axes=(1.0, 1.6, 0.7))
+        _S, D = assemble_quadratic_matrices(mesh)
+        ones = np.ones(D.shape[0])
+        err = float(np.max(np.abs(D @ ones + 0.5)))
+        assert err < tol, f"sub {sub}: |D 1 + 1/2|_inf = {err} >= {tol}"
+
+
 def test_single_layer_constant_density_identity(sphere_operators):
     """S 1 == 1 on the unit sphere (single-layer potential of unit density)."""
     for sub, (S, D) in sphere_operators.items():
