@@ -186,10 +186,30 @@ class TestQuadraticTriangle:
         assert all(d >= 0 for d in diffs)
 
     def test_non_singular_integration(self, sphere_patch):
-        """Non-singular integration gives positive result for external target."""
+        """Non-singular integration reproduces the element mass matrix.
+
+        ``sum_k N_k = 1``, so the six integrals must sum to ``int_T G dS > 0``;
+        the individual entries are *not* sign-definite because the quadratic
+        vertex functions ``L_i (2 L_i - 1)`` are negative on half the element
+        (the pre-2026-11-09 "all entries positive" assertion only held because
+        the gradient table was wrong and the Jacobian was therefore corrupt).
+        The exact mass matrix ``int_T N_k dS = (0, 0, 0, A/3, A/3, A/3)`` is the
+        analytic reference.
+        """
         target = np.array([2.0, 2.0, 2.0])
         s = sphere_patch.integrate_single_layer(target, order=8)
-        assert np.all(s > 0)
+        assert np.all(np.isfinite(s))
+        assert s.sum() > 0.0
+        # mass matrix with G replaced by 1 (order-8 rule is exact here):
+        L, w = gauss_triangle_rule(8)
+        mass = np.zeros(6)
+        for q in range(len(w)):
+            _, det = sphere_patch.jacobian(L[q, 0], L[q, 1])
+            mass += w[q] * quadratic_shape_functions(L[q, 0], L[q, 1]) * det
+        # on a curved element the vertex entries are only O(curvature) small
+        ref = sphere_patch_mean_area(sphere_patch)
+        assert np.all(np.abs(mass[:3]) < 1e-2 * ref)
+        assert np.allclose(mass[3:], ref, rtol=1e-2)
 
 
 # ---------------------------------------------------------------------------
@@ -296,3 +316,13 @@ class TestZeroSpeedWaveResistance:
         from tensorbem.wigley import michell_wave_resistance
         Rw = michell_wave_resistance(10.0, 1.0, 0.625, 0.0)
         assert Rw == 0.0
+
+
+def sphere_patch_mean_area(patch) -> float:
+    """Analytic ``int_T dS / 3`` for a quadratic element (edge functions each carry A/3)."""
+    L, w = gauss_triangle_rule(8)
+    area = 0.0
+    for q in range(len(w)):
+        _, det = patch.jacobian(L[q, 0], L[q, 1])
+        area += w[q] * det
+    return area / 3.0
