@@ -99,20 +99,25 @@ from typing import Sequence
 import numpy as np
 from numpy.typing import NDArray
 
+from tensorbem.causality import fit_added_mass_asymptote
+
 FloatArray = NDArray[np.float64]
 
 __all__ = [
+    "ConstantAddedMassEnvelope",
     "FourierRoundTrip",
     "FreeDecayResult",
     "MemoryKernel",
     "added_mass_from_memory_kernel",
     "check_frequency_sampling",
     "check_time_sampling",
+    "constant_added_mass_error_envelope",
     "cummins_free_decay",
     "damping_from_memory_kernel",
     "decay_metrics",
     "frequency_domain_impedance",
     "fourier_round_trip",
+    "half_power_damping",
     "harmonic_response",
     "implied_added_mass_inf",
     "kernel_diagnostics",
@@ -1114,3 +1119,300 @@ def decay_metrics(
         "amplitude_fraction_floor": amplitude_fraction,
         "signal_peak": peak,
     }
+
+
+# ---------------------------------------------------------------------------
+# resolved half-power damping and the constant-added-mass error envelope
+# ---------------------------------------------------------------------------
+def _local_response_scan(
+    omega: Sequence[float],
+    added_mass: Sequence[float],
+    damping: Sequence[float],
+    *,
+    mass: float,
+    restoring: float,
+    centre: float,
+    half_width: float,
+    samples: int,
+) -> tuple[FloatArray, FloatArray]:
+    """``|1/kappa|`` on a uniform grid of ``samples`` points around ``centre``."""
+    grid, a, b = validate_radiation_sweep(omega, added_mass, damping)
+    low, high = float(grid[0]), float(grid[-1])
+    width = float(half_width)
+    if not (width > 0.0 and math.isfinite(width)):
+        raise ValueError(f"half_width must be positive and finite, got {half_width!r}")
+    count = max(int(samples), 9)
+    scan = np.linspace(centre - width, centre + width, count)
+    if scan[0] <= 0.0 or scan[-1] > high:
+        raise ValueError(
+            "the local scan leaves the tabulated band "
+            f"[{low:.6g}, {high:.6g}] rad/s; narrow half_width={width:.6g} "
+            f"around omega={centre:.6g}"
+        )
+    kappa = frequency_domain_impedance(
+        scan, grid, a, b, mass=mass, restoring=restoring
+    )
+    return scan, np.abs(1.0 / kappa)
+
+
+def _half_power_crossing(
+    scan: FloatArray, amplitude: FloatArray, level: float, *, rising: bool
+) -> float:
+    """Frequency where ``amplitude`` crosses ``level``, linearly interpolated."""
+    excess = amplitude - level
+    if rising:
+        index = int(np.nonzero(excess >= 0.0)[0][0])
+        if index == 0:
+            return float(scan[0])
+        left, right = index - 1, index
+    else:
+        index = int(np.nonzero(excess < 0.0)[0][0])
+        if index == 0:
+            return float(scan[0])
+        left, right = index - 1, index
+    weight = excess[left] / (excess[left] - excess[right])
+    return float(scan[left] + weight * (scan[right] - scan[left]))
+
+
+def half_power_damping(
+    omega: Sequence[float],
+    added_mass: Sequence[float],
+    damping: Sequence[float],
+    *,
+    mass: float,
+    restoring: float,
+    omega_n: float | None = None,
+    width_scale: float = 40.0,
+    samples: int = 4001,
+) -> dict:
+    """Half-power damping ratio of ``1/kappa`` from a *locally refined* scan.
+
+    :func:`resonance_properties` scans the whole tabulated band on a geometric
+    grid, which is enough when ``zeta`` is of order 0.1 but *under-resolves* the
+    half-power width when the resonance is lightly damped: the width
+    ``2 zeta omega_n`` can span only a handful of scan points, and the reported
+    ``zeta_bandwidth`` then comes out systematically low (the two crossings are
+    quantised to the scan spacing). The estimator here builds a uniform grid of
+    ``samples`` points over ``omega_n (1 +- width_scale*zeta_0)``, with ``zeta_0``
+    the energy-identity estimate, and interpolates both crossings, so the answer
+    no longer depends on the global scan.
+
+    Returns the crossing frequencies, the local peak, ``zeta`` from the
+    half-power width, and ``zeta_energy`` from ``B/(2 (M + A) omega)`` at the
+    same frequency. Both are reported: a decay test measures the former and a
+    linear seakeeping code prints the latter.
+    """
+    grid, a, b = validate_radiation_sweep(omega, added_mass, damping)
+    high = float(grid[-1])
+    if omega_n is None:
+        omega_n = float(
+            resonance_properties(grid, a, b, mass=mass, restoring=restoring)["omega_n"]
+        )
+    centre = float(omega_n)
+    if not (0.0 < centre <= high):
+        raise ValueError("omega_n must lie inside the tabulated band")
+    added = float(np.interp(centre, grid, a))
+    damp = float(np.interp(centre, grid, b))
+    inertia = float(mass) + added
+    if not (inertia > 0.0 and centre > 0.0):
+        raise ValueError("mass + added_mass must be positive")
+    zeta_guess = damp / (2.0 * inertia * centre)
+
+    width = float(width_scale) * zeta_guess * centre
+    if not (width > 0.0):
+        raise ValueError("the energy-identity damping is zero; no half-power width")
+    width = min(width, 0.9 * centre, 0.9 * (high - centre))
+    scan, amplitude = _local_response_scan(
+        grid, a, b, mass=mass, restoring=restoring,
+        centre=centre, half_width=width, samples=samples,
+    )
+    peak_index = int(np.argmax(amplitude))
+    peak_amplitude = float(amplitude[peak_index])
+    peak_omega = float(scan[peak_index])
+    level = peak_amplitude / math.sqrt(2.0)
+    lower = _half_power_crossing(scan[: peak_index + 1], amplitude[: peak_index + 1], level, rising=True)
+    upper = _half_power_crossing(scan[peak_index:], amplitude[peak_index:], level, rising=False)
+    zeta = (upper - lower) / (2.0 * peak_omega)
+    added_peak = float(np.interp(peak_omega, grid, a))
+    damp_peak = float(np.interp(peak_omega, grid, b))
+    return {
+        "omega_n": centre,
+        "peak_omega": peak_omega,
+        "peak_amplitude": peak_amplitude,
+        "half_power_omega_low": lower,
+        "half_power_omega_high": upper,
+        "zeta": zeta,
+        "zeta_energy": damp_peak / (2.0 * (float(mass) + added_peak) * peak_omega),
+        "half_power_ratio": level / peak_amplitude,
+        "scan_half_width": width,
+        "scan_width_over_half_power_width": width / max(upper - lower, 1e-30),
+        "samples": int(max(int(samples), 9)),
+        "added_mass_at_peak": added_peak,
+        "damping_at_peak": damp_peak,
+    }
+
+
+@dataclass(frozen=True)
+class ConstantAddedMassEnvelope:
+    """Error of the constant-added-mass model against the full memory kernel.
+
+    ``ratios`` is ``omega_p / omega_n``: the damping-peak frequency of the
+    radiation sweep over the oscillator's natural frequency. ``omega_n`` is
+    built from ``A_inf`` only, so the sweep isolates what the memory does to an
+    oscillator whose resonance is placed at a prescribed distance from the
+    radiation band.
+    """
+
+    ratios: FloatArray
+    natural_frequencies: FloatArray
+    peak_amplitude_error: FloatArray
+    peak_frequency_error: FloatArray
+    phase_error_degrees: FloatArray
+    damping_ratio_error: FloatArray
+    added_mass_relative_change: FloatArray
+    zeta_exact: FloatArray
+    zeta_model: FloatArray
+    exact_peak_amplitude: FloatArray
+    exact_peak_omega: FloatArray
+    approximate_peak_amplitude: FloatArray
+    omega_p: float
+    added_mass_inf: float
+    mass: float
+
+    def worst(self) -> dict:
+        """Worst-case error and the ratio at which it occurs."""
+        def _worst(values: FloatArray) -> tuple[float, float]:
+            index = int(np.argmax(np.abs(values)))
+            return float(np.abs(values[index])), float(self.ratios[index])
+
+        amplitude, ratio_amplitude = _worst(self.peak_amplitude_error)
+        phase, ratio_phase = _worst(self.phase_error_degrees)
+        frequency, ratio_frequency = _worst(self.peak_frequency_error)
+        return {
+            "peak_amplitude_error": amplitude,
+            "peak_amplitude_error_ratio": ratio_amplitude,
+            "phase_error_degrees": phase,
+            "phase_error_ratio": ratio_phase,
+            "peak_frequency_error": frequency,
+            "peak_frequency_error_ratio": ratio_frequency,
+        }
+
+
+def constant_added_mass_error_envelope(
+    omega: Sequence[float],
+    added_mass: Sequence[float],
+    damping: Sequence[float],
+    *,
+    mass: float,
+    ratios: Sequence[float],
+    added_mass_inf: float | None = None,
+    samples: int = 4001,
+) -> ConstantAddedMassEnvelope:
+    """Peak and phase error of the ``A = A_inf``, ``B = B(omega_n)`` model.
+
+    The cheapest time-domain radiation model replaces the convolution by
+    ``A_inf x'' + B(omega_n) x'``: it keeps one added mass and one damping
+    coefficient for the whole record. That model is exact only if ``A`` is
+    constant and ``B`` is flat across the response band, so its error is a
+    function of where the oscillator sits relative to the radiation sweep --
+    which is what this envelope measures.
+
+    For each ratio ``omega_p/omega_n`` (``omega_p`` = frequency of the peak of
+    ``B``) the restoring stiffness is chosen as ``(M + A_inf) omega_n^2``, so
+    ``omega_n`` is the model's *own* natural frequency and the approximation
+    error is not contaminated by a stiffness mistuning. Then, on a locally
+    refined scan:
+
+    * ``peak_amplitude_error = |A_approx - A_exact| / A_exact`` at the response
+      peak,
+    * ``peak_frequency_error`` = distance between the exact resonance and
+      ``omega_n`` (the model pins its peak at ``omega_n``),
+    * ``phase_error_degrees`` = phase difference at ``omega_n``,
+    * ``damping_ratio_error`` = ``|zeta_exact - zeta_model| / zeta_exact``.
+
+    The envelope is a property of the sweep, not of one body: a sweep whose
+    damping peak sits far from the oscillator frequency is safe to collapse to
+    constants, one that straddles it is not.
+    """
+    grid, a, b = validate_radiation_sweep(omega, added_mass, damping)
+    high = float(grid[-1])
+    target = np.asarray(ratios, dtype=float).reshape(-1)
+    if target.size == 0:
+        raise ValueError("at least one frequency ratio is required")
+    if np.any(target <= 0.0) or not np.all(np.isfinite(target)):
+        raise ValueError("ratios must be positive and finite")
+    if added_mass_inf is None:
+        added_mass_inf = fit_added_mass_asymptote(grid, a).added_mass_inf
+    added_mass_inf = float(added_mass_inf)
+    if not math.isfinite(added_mass_inf):
+        raise ValueError("added_mass_inf must be finite")
+    mass = float(mass)
+    if not (mass + added_mass_inf > 0.0):
+        raise ValueError("mass + added_mass_inf must be positive")
+
+    peak_damping_index = int(np.argmax(b))
+    omega_p = float(grid[peak_damping_index])
+    if omega_p <= 0.0:
+        raise ValueError("the damping sweep has no positive peak")
+
+    natural = np.sort(omega_p / target)
+    ratios_sorted = omega_p / natural
+    amplitudes = np.zeros(natural.size)
+    phases = np.zeros(natural.size)
+    frequencies = np.zeros(natural.size)
+    zeta_errors = np.zeros(natural.size)
+    change = np.zeros(natural.size)
+    approximate = np.zeros(natural.size)
+    zeta_exact_values = np.zeros(natural.size)
+    zeta_model_values = np.zeros(natural.size)
+
+    for index, omega_n in enumerate(natural):
+        restoring = (mass + added_mass_inf) * omega_n ** 2
+        added = float(np.interp(omega_n, grid, a))
+        damp = float(np.interp(omega_n, grid, b))
+        change[index] = abs(added - added_mass_inf) / abs(added_mass_inf)
+        zeta_exact = damp / (2.0 * (mass + added) * omega_n)
+        zeta_model = damp / (2.0 * (mass + added_mass_inf) * omega_n)
+        zeta_errors[index] = (
+            abs(zeta_model - zeta_exact) / zeta_exact if zeta_exact else math.inf
+        )
+        zeta_exact_values[index] = zeta_exact
+        zeta_model_values[index] = zeta_model
+        width = max(25.0 * zeta_exact, 1.0e-4) * omega_n
+        width = min(width, 0.5 * omega_n, 0.9 * (high - omega_n))
+        if width <= 0.0:
+            raise ValueError(
+                f"omega_n={omega_n:.6g} leaves no room for a local scan inside the band"
+            )
+        scan, response = _local_response_scan(
+            grid, a, b, mass=mass, restoring=restoring,
+            centre=omega_n, half_width=width, samples=samples,
+        )
+        peak = int(np.argmax(response))
+        amplitudes[index] = float(response[peak])
+        frequencies[index] = float(scan[peak])
+        approximate[index] = 1.0 / (omega_n * damp) if damp > 0.0 else math.inf
+        kappa = frequency_domain_impedance(
+            [omega_n], grid, a, b, mass=mass, restoring=restoring
+        )[0]
+        phases[index] = math.degrees(math.atan2(-kappa.imag, kappa.real))
+
+    if np.any(approximate == math.inf):
+        raise ValueError("the damping vanishes at a requested natural frequency")
+    return ConstantAddedMassEnvelope(
+        ratios=ratios_sorted,
+        natural_frequencies=natural,
+        peak_amplitude_error=(approximate - amplitudes) / amplitudes,
+        peak_frequency_error=(frequencies - natural) / frequencies,
+        phase_error_degrees=phases + 90.0,
+        damping_ratio_error=zeta_errors,
+        added_mass_relative_change=change,
+        zeta_exact=zeta_exact_values,
+        zeta_model=zeta_model_values,
+        exact_peak_amplitude=amplitudes,
+        exact_peak_omega=frequencies,
+        approximate_peak_amplitude=approximate,
+        omega_p=omega_p,
+        added_mass_inf=added_mass_inf,
+        mass=mass,
+    )

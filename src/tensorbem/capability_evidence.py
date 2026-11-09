@@ -655,6 +655,44 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Absent from the 2026-10-29 table.',
     ),
     Capability(
+        key='cummins-memory-kernel-closure',
+        title='Two-way Cummins memory-kernel closure with causality and decay gates',
+        claim=(
+            'On a deeply submerged sphere the memory kernel closes the frequency-to-time-to-'
+            'frequency loop (B to 0.03 %, A to 1.9 % of its peak inside the resolvable band), '
+            'is exactly zero for negative time with an upward K(0+) jump equal to '
+            '(2/pi) int B dw to 1e-5 relative, and the Cummins free decay reproduces the '
+            'frequency-domain damping ratio to 1.5 % (energy identity) while the zero-damping '
+            'control decays at 3e-6 of the physical rate.'
+        ),
+        level=REAL,
+        modules=('tensorbem.benchmarks.cummins_memory_closure', 'tensorbem.time_domain'),
+        symbols=(
+            'run_campaign',
+            'criterion_round_trip',
+            'criterion_causality',
+            'criterion_free_decay',
+            'criterion_negative_control',
+            'half_power_damping',
+            'constant_added_mass_error_envelope',
+        ),
+        tests=(
+            'tests/test_cummins_memory_closure.py::test_round_trip_closes_within_two_percent',
+            'tests/test_cummins_memory_closure.py::test_kernel_is_causal_and_jumps_upward',
+            'tests/test_cummins_memory_closure.py::test_free_decay_matches_the_frequency_domain_damping',
+            'tests/test_cummins_memory_closure.py::test_zero_damping_gives_zero_decay',
+            'tests/test_cummins_memory_closure.py::test_geometry_gate_rejects_corrupt_input',
+        ),
+        docs=(
+            ('docs/cummins_memory_closure/cummins_memory_closure.md', 'Cummins'),
+            ('docs/cummins_memory_closure/campaign.json', 'C1'),
+        ),
+        note=(
+            'The A-side round trip and the Kramers-Kronig leg are reported relative to the '
+            'added-mass peak; the conditioning floor of the principal-value leg is in the report.'
+        ),
+    ),
+    Capability(
         key='uncertainty-quantification',
         title='Discretisation and recovery uncertainty quantification',
         claim='Richardson/GCI recovers a manufactured order and limit, and the bootstrap intervals have measured empirical coverage on known samples.',
@@ -815,6 +853,12 @@ UNTESTED_MODULES: dict[str, str] = {
     "tensorbem.benchmarks.bem_wigley_wave_resistance_figures":
         "matplotlib helper rendering the Wigley report figures from the JSON artifact; exercised when"
         " figures are rebuilt, and its inputs are gated by tests/test_bem_wigley_wave_resistance.py.",
+    "tensorbem.benchmarks.quadratic_panel_convergence":
+        "convergence study driver for the quadratic-panel operator; the operator itself is graded"
+        " by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.",
+    "tensorbem.benchmarks.wigley_kcs_kochin_energy_figures":
+        "matplotlib helper rendering the Wigley/KCS Kochin-energy report figures from its JSON"
+        " artifact; exercised when the figures are rebuilt.",
     "tensorbem.benchmarks.wave_loads_minimal":
         "minimal wave-load report driver; the pressure and force path it reports on is pinned by"
         " tests/test_pressure.py and graded by the pressure-forces row.",
