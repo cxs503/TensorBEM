@@ -1,0 +1,169 @@
+{
+  "study": "quadratic_panel_verification",
+  "generated_by": "python -m tensorbem.benchmarks.quadratic_panel_verification --write",
+  "radius": 1.0,
+  "quadrature_order": 8,
+  "self_order": 16,
+  "levels": [
+    {
+      "subdivisions": 1,
+      "elements": 80,
+      "nodes": 162,
+      "h_mean": 0.3963327297606011,
+      "assemble_seconds": 0.9518465995788574,
+      "area": 12.548388707839973,
+      "area_rel_err": 0.001430954654373525,
+      "double_layer_all_zero": true,
+      "spectral": {
+        "n=0 (1)": {
+          "analytic_lambda": 1.0,
+          "measured_lambda": 0.9989527134455586,
+          "lambda_rel_err": 0.0010472865544414178,
+          "image_residual": 0.0010473564554517843
+        },
+        "n=1 (z)": {
+          "analytic_lambda": 0.3333333333333333,
+          "measured_lambda": 0.3327614341467652,
+          "lambda_rel_err": 0.00171569755970441,
+          "image_residual": 0.0005722699150456039
+        },
+        "n=2 (x*y)": {
+          "analytic_lambda": 0.2,
+          "measured_lambda": 0.19908225868978707,
+          "lambda_rel_err": 0.004588706551064692,
+          "image_residual": 0.0009202878965195797
+        },
+        "n=3 (x*y*z)": {
+          "analytic_lambda": 0.14285714285714285,
+          "measured_lambda": 0.1411532129152136,
+          "lambda_rel_err": 0.011927509593504748,
+          "image_residual": 0.0017461680892291184
+        }
+      },
+      "solves": {
+        "n=1 (g=z)": {
+          "density_rel_err": 0.001559273750940692,
+          "volume_ratio": 1.0014852511410732
+        },
+        "n=2 (g=x*y)": {
+          "density_rel_err": 0.005326942627366876,
+          "volume_ratio": 6357627.43872549
+        }
+      },
+      "condition_number": 39.35092600852204,
+      "relative_residual_l2": 4.65239981198929e-16
+    },
+    {
+      "subdivisions": 2,
+      "elements": 320,
+      "nodes": 642,
+      "h_mean": 0.19816636488030054,
+      "assemble_seconds": 4.782754898071289,
+      "area": 12.565174681967354,
+      "area_rel_err": 9.516927588077668e-05,
+      "double_layer_all_zero": true,
+      "spectral": {
+        "n=0 (1)": {
+          "analytic_lambda": 1.0,
+          "measured_lambda": 0.9999293875566144,
+          "lambda_rel_err": 7.061244338557593e-05,
+          "image_residual": 7.06157234066756e-05
+        },
+        "n=1 (z)": {
+          "analytic_lambda": 0.3333333333333333,
+          "measured_lambda": 0.33329460497179436,
+          "lambda_rel_err": 0.00011618508461685995,
+          "image_residual": 3.874582289865703e-05
+        },
+        "n=2 (x*y)": {
+          "analytic_lambda": 0.2,
+          "measured_lambda": 0.1999360317608355,
+          "lambda_rel_err": 0.0003198411958225955,
+          "image_residual": 6.412379785164992e-05
+        },
+        "n=3 (x*y*z)": {
+          "analytic_lambda": 0.14285714285714285,
+          "measured_lambda": 0.14273013928892297,
+          "lambda_rel_err": 0.0008890249775391212,
+          "image_residual": 0.00012795490727878807
+        }
+      },
+      "solves": {
+        "n=1 (g=z)": {
+          "density_rel_err": 0.00010467692782995292,
+          "volume_ratio": 1.000099751847873
+        },
+        "n=2 (g=x*y)": {
+          "density_rel_err": 0.0003967166582664154,
+          "volume_ratio": -57283656.2704918
+        }
+      },
+      "condition_number": 80.75785831142956,
+      "relative_residual_l2": 9.178697072981858e-16
+    },
+    {
+      "subdivisions": 3,
+      "elements": 1280,
+      "nodes": 2562,
+      "h_mean": 0.09908318244015027,
+      "assemble_seconds": 40.45236611366272,
+      "area": 12.566294672351665,
+      "area_rel_err": 6.0432729415606064e-06,
+      "double_layer_all_zero": true,
+      "spectral": {
+        "n=0 (1)": {
+          "analytic_lambda": 1.0,
+          "measured_lambda": 0.9999954892654558,
+          "lambda_rel_err": 4.510734544216355e-06,
+          "image_residual": 4.510929328420181e-06
+        },
+        "n=1 (z)": {
+          "analytic_lambda": 0.3333333333333333,
+          "measured_lambda": 0.333330846906404,
+          "lambda_rel_err": 7.459280787880385e-06,
+          "image_residual": 2.4874615007199784e-06
+        },
+        "n=2 (x*y)": {
+          "analytic_lambda": 0.2,
+          "measured_lambda": 0.19999585297574113,
+          "lambda_rel_err": 2.0735121294412906e-05,
+          "image_residual": 4.157533032393566e-06
+        },
+        "n=3 (x*y*z)": {
+          "analytic_lambda": 0.14285714285714285,
+          "measured_lambda": 0.14284877896172676,
+          "lambda_rel_err": 5.85472679126009e-05,
+          "image_residual": 8.400305357717177e-06
+        }
+      },
+      "solves": {
+        "n=1 (g=z)": {
+          "density_rel_err": 6.671320621135886e-06,
+          "volume_ratio": 1.0000063216710746
+        },
+        "n=2 (g=x*y)": {
+          "density_rel_err": 2.757218622904583e-05,
+          "volume_ratio": 74480.02834008097
+        }
+      },
+      "condition_number": 164.2419500992812,
+      "relative_residual_l2": 1.9082046473171185e-15
+    }
+  ],
+  "observed_orders": {
+    "area": 3.9437160688176003,
+    "density_n1": 3.9343430703034925,
+    "spectral_n3": 3.8497674773724753
+  },
+  "acceptance": {
+    "density_rel_err_lt_1pct_at_finest": true,
+    "area_rel_err_lt_0.1pct_at_finest": true,
+    "spectral_residual_decreasing": true
+  },
+  "not_run": [
+    "double-layer assembly (D is returned as zeros; no free term, no solid-angle self term)",
+    "normal-derivative / pressure / added-mass output from the quadratic path",
+    "near-singular (target within ~h/2 of a non-incident element) adaptive quadrature",
+    "convergence on non-spherical or non-smooth geometry"
+  ]
+}
