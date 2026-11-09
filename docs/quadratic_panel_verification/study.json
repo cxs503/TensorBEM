@@ -109,6 +109,206 @@
     "hard_limit": 0.15,
     "flux_rel_error_finest": 0.00606544181630366,
     "passed_3pct": true,
-    "passed_hard_limit": true
+    "passed_hard_limit": true,
+    "geometry_passed": true,
+    "similarity_passed": true,
+    "passed": true
+  },
+  "geometry": {
+    "purpose": "flux recovery on curved non-spherical surfaces",
+    "levels": [
+      0,
+      1,
+      2
+    ],
+    "geometries": [
+      {
+        "name": "sphere",
+        "semi_axes": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "source": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "levels": [
+          {
+            "subdivisions": 0,
+            "nodes": 42,
+            "elements": 20,
+            "h": 0.6919010544606049,
+            "flux_rel_error": 0.14671409398172983,
+            "flux_max_abs_error": 0.01213972493856233,
+            "solid_angle_identity_error": 0.03866831493399159,
+            "condition_number": 20.84612122689167,
+            "relative_residual_l2": 2.6999064040660096e-16
+          },
+          {
+            "subdivisions": 1,
+            "nodes": 162,
+            "elements": 80,
+            "h": 0.38186927396227993,
+            "flux_rel_error": 0.03004047589353157,
+            "flux_max_abs_error": 0.0030526205388891475,
+            "solid_angle_identity_error": 0.006321395136928087,
+            "condition_number": 39.350926008522016,
+            "relative_residual_l2": 4.530767224050904e-16
+          },
+          {
+            "subdivisions": 2,
+            "nodes": 642,
+            "elements": 320,
+            "h": 0.196292579737769,
+            "flux_rel_error": 0.006765966279855928,
+            "flux_max_abs_error": 0.0008659150044277447,
+            "solid_angle_identity_error": 0.0009609938362293846,
+            "condition_number": 80.75785831142969,
+            "relative_residual_l2": 8.661654866852688e-16
+          }
+        ],
+        "observed_order": 2.4380351674455967,
+        "flux_rel_error_finest": 0.006765966279855928,
+        "acceptance": {
+          "threshold": 0.03,
+          "hard_limit": 0.15,
+          "order_floor": 1.5,
+          "passed_3pct": true,
+          "passed_hard_limit": true,
+          "passed_order": true,
+          "passed": true
+        }
+      },
+      {
+        "name": "ellipsoid_1p00_1p60_0p70",
+        "semi_axes": [
+          1.0,
+          1.6,
+          0.7
+        ],
+        "source": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "levels": [
+          {
+            "subdivisions": 0,
+            "nodes": 42,
+            "elements": 20,
+            "h": 0.7507425591392048,
+            "flux_rel_error": 0.1764355362022369,
+            "flux_max_abs_error": 0.02251813756623787,
+            "solid_angle_identity_error": 0.08661875626267929,
+            "condition_number": 23.958728353988274,
+            "relative_residual_l2": 3.146091705947368e-16
+          },
+          {
+            "subdivisions": 1,
+            "nodes": 162,
+            "elements": 80,
+            "h": 0.41409016095337364,
+            "flux_rel_error": 0.03660165339141496,
+            "flux_max_abs_error": 0.0075460927809931355,
+            "solid_angle_identity_error": 0.011732769285464906,
+            "condition_number": 48.90053159016065,
+            "relative_residual_l2": 4.4128572464172866e-16
+          },
+          {
+            "subdivisions": 2,
+            "nodes": 642,
+            "elements": 320,
+            "h": 0.21283197694507439,
+            "flux_rel_error": 0.0064256575466606364,
+            "flux_max_abs_error": 0.001236263708763119,
+            "solid_angle_identity_error": 0.0016895895007281725,
+            "condition_number": 104.45973646965673,
+            "relative_residual_l2": 8.746506418832158e-16
+          }
+        ],
+        "observed_order": 2.627649796294819,
+        "flux_rel_error_finest": 0.0064256575466606364,
+        "acceptance": {
+          "threshold": 0.03,
+          "hard_limit": 0.15,
+          "order_floor": 1.5,
+          "passed_3pct": true,
+          "passed_hard_limit": true,
+          "passed_order": true,
+          "passed": true
+        }
+      }
+    ],
+    "passed": true
+  },
+  "similarity": {
+    "level": 1,
+    "scale": 2.7,
+    "shift": [
+      3.0,
+      -2.0,
+      1.5
+    ],
+    "base_flux_rel_error": 0.03004047589353157,
+    "transformed_flux_rel_error": 0.030040475893524283,
+    "error_ratio": 0.9999999999997574,
+    "relative_deviation": 2.425837308805967e-13,
+    "tolerance": 1e-10,
+    "solid_angle_identity_error_base": 0.006321395136928087,
+    "solid_angle_identity_error_transformed": 0.006321395136949293,
+    "passed": true
+  },
+  "scope_limit": {
+    "purpose": "measured scope limit (thin bodies); informational, not gated",
+    "cases": [
+      {
+        "name": "ellipsoid_1p00_2p50_0p50",
+        "semi_axes": [
+          1.0,
+          2.5,
+          0.5
+        ],
+        "levels": [
+          {
+            "subdivisions": 0,
+            "nodes": 42,
+            "elements": 20,
+            "h": 0.8666495687228185,
+            "flux_rel_error": 0.3318549096787057,
+            "solid_angle_identity_error": 0.1744452537185308
+          },
+          {
+            "subdivisions": 1,
+            "nodes": 162,
+            "elements": 80,
+            "h": 0.4769231004141592,
+            "flux_rel_error": 0.21228987272075112,
+            "solid_angle_identity_error": 0.0229642707653141
+          },
+          {
+            "subdivisions": 2,
+            "nodes": 642,
+            "elements": 320,
+            "h": 0.2449738019241818,
+            "flux_rel_error": 0.03545566996569081,
+            "solid_angle_identity_error": 0.0033641114112722414
+          }
+        ],
+        "observed_order": 1.7875926132139275,
+        "gated": false
+      }
+    ]
+  },
+  "provenance": {
+    "figure_quadratic_operator": {
+      "path": "docs/quadratic_panel_verification/fig_quadratic_operator.png",
+      "sha256": "c356f9544b59c8f8dcbb06f13bb657cf981dca6be214fef478b8a3c2d72b87ef"
+    },
+    "figure_geometry_generic": {
+      "path": "docs/quadratic_panel_verification/fig_geometry_generic.png",
+      "sha256": "8c9b40b386590920a62262c2610be865962aead8ccd6366c4c3f4ac0c62e3916"
+    }
   }
 }
