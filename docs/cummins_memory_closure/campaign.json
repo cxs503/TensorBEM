@@ -1,0 +1,441 @@
+{
+  "case": {
+    "title": "Cummins radiation memory kernel closure on a deeply submerged sphere",
+    "body": "deeply submerged sphere, heave, deep water",
+    "reference": "Hulme (1982) / Thorne-Wang-Linton spherical multipoles",
+    "sweep": {
+      "radius": 1.0,
+      "submergence": 3.0,
+      "submergence_ratio": 3.0,
+      "density": 1025.0,
+      "gravity": 9.80665,
+      "points": 150,
+      "ka_range": [
+        0.03,
+        6.0
+      ],
+      "omega_range": [
+        0.29419949999999995,
+        58.8399
+      ],
+      "damping_peak": 286.8847651996414,
+      "damping_peak_omega": 5.628902678716887,
+      "added_mass_range": [
+        2056.9112354960575,
+        2217.8349661995435
+      ],
+      "added_mass_relative_change": 0.07255892938654629,
+      "added_mass_inf": 2113.5026356289695,
+      "added_mass_inf_anchor": 2146.754979953025,
+      "added_mass_inf_anchor_error_pct": 1.5489585273855195,
+      "asymptote_relative_residual": 0.0001653049661216345,
+      "far_field_damping_error_max": 1.2205279135927667e-15,
+      "displaced_mass": 4293.50995990605
+    }
+  },
+  "gates": [
+    {
+      "id": "C5",
+      "title": "geometry precondition gate (Cb, L, B, T, nabla, S)",
+      "threshold": "Cb in (0.3, 1.0], |nabla - L*B*T*Cb|/nabla <= 5%, S > 0, and both corrupt inputs rejected",
+      "passed": true,
+      "values": {
+        "geometry": {
+          "shape": "sphere",
+          "length": 2.0,
+          "beam": 2.0,
+          "draft": 2.0,
+          "displacement": 4.1887902047863905,
+          "wetted_surface": 12.566370614359172,
+          "block_coefficient": 0.5235987755982988,
+          "displaced_mass": 4293.50995990605,
+          "density": 1025.0
+        },
+        "gate": {
+          "passed": true,
+          "cb_from_dims": 0.5235987755982988,
+          "displacement_consistency_pct": 0.0,
+          "block_coefficient": 0.5235987755982988,
+          "tolerance": 0.05,
+          "cb_window": [
+            0.3,
+            1.0
+          ],
+          "checks": {
+            "length": {
+              "value": 2.0,
+              "passed": true,
+              "detail": "must be positive and finite"
+            },
+            "beam": {
+              "value": 2.0,
+              "passed": true,
+              "detail": "must be positive and finite"
+            },
+            "draft": {
+              "value": 2.0,
+              "passed": true,
+              "detail": "must be positive and finite"
+            },
+            "displacement": {
+              "value": 4.1887902047863905,
+              "passed": true,
+              "detail": "must be positive and finite"
+            },
+            "block_coefficient": {
+              "value": 0.5235987755982988,
+              "declared": 0.5235987755982988,
+              "passed": true,
+              "detail": "required 0.3 < nabla/(L*B*T) <= 1.0 and a declared Cb consistent with it inside 5%"
+            },
+            "displacement_consistency": {
+              "value_pct": 0.0,
+              "passed": true,
+              "detail": "|nabla - L*B*T*Cb_declared| / nabla must be <= 5%"
+            },
+            "wetted_surface": {
+              "value": 12.566370614359172,
+              "passed": true,
+              "detail": "must be positive and finite (no contract value here)"
+            }
+          },
+          "contract_source": "ship-performance-platform backend/api/calculations.py D3 geometry gate: CB_MIN=0.30, CB_MAX=1.00, GEOM_TOL=0.05 on |nabla - L*B*T*Cb|/nabla. Replicated (not imported) so this repository's tests do not depend on the platform service; the campaign records the platform HTTP probe separately.",
+          "geometry": {
+            "length": 2.0,
+            "beam": 2.0,
+            "draft": 2.0,
+            "displacement": 4.1887902047863905
+          },
+          "wetted_surface": 12.566370614359172
+        },
+        "negative_control_inflated_displacement": {
+          "passed": false,
+          "displacement_consistency_pct": 19.999999999999996
+        },
+        "negative_control_impossible_cb": {
+          "passed": false,
+          "block_coefficient": 0.5235987755982988,
+          "cb_from_dims": 0.5235987755982988
+        },
+        "cb_window": [
+          0.3,
+          1.0
+        ],
+        "tolerance": 0.05
+      }
+    },
+    {
+      "id": "C1",
+      "title": "frequency -> time -> frequency round-trip closure",
+      "threshold": "per-point relative error <= 2% for both A(omega) and B(omega)",
+      "passed": true,
+      "values": {
+        "damping_relative_error_max": 0.00029462765767466505,
+        "added_mass_relative_error_max": 0.019300909122645125,
+        "band": [
+          0.29419949999999995,
+          35.30394
+        ],
+        "tau_max": 294.9930499122593,
+        "dt": 0.02,
+        "samples": 300,
+        "kernel_decay_time_to_one_percent": 1.04,
+        "implied_added_mass_inf_mean": 2118.3227739719046,
+        "implied_added_mass_inf_relative_spread": 0.03831139220028997,
+        "added_mass_inf_used": 2113.5026356289695
+      }
+    },
+    {
+      "id": "C2",
+      "title": "causality of K(tau) and the Kramers-Kronig pairing of A and B",
+      "threshold": "K(tau<0) == 0 exactly, even parity, K(0+) > 0 with a positive jump of (2/pi) int B dw, and A reconstructed from B through the principal value to <= 2% of the added-mass peak",
+      "passed": true,
+      "values": {
+        "kernel_at_negative_times_max_abs": 0.0,
+        "even_parity_residual_relative": 0.0,
+        "kernel_at_zero": 1428.3162101332364,
+        "kernel_at_zero_from_damping_integral": 1428.2964527717907,
+        "kernel_at_zero_relative_error": 1.3832815594679423e-05,
+        "kernel_relative_slope_at_zero": -0.00013087752445225132,
+        "kernel_slope_grid": 0.002,
+        "kernel_slope_grid_bound": 0.00692426766402,
+        "kernel_at_zero_is_global_maximum": true,
+        "kkr_added_mass_error_max_relative_to_peak": 0.018746720699057487,
+        "kkr_sample_frequencies": [
+          0.8825984999999998,
+          1.2139665139178728,
+          1.6697452997188564,
+          2.2966443752515486,
+          3.158910156694368,
+          4.344910115643777,
+          5.976188931178307,
+          8.219924737348986,
+          11.306062018082784,
+          15.550876977732491,
+          21.38939043406897,
+          29.41995
+        ],
+        "kkr_conditioning_floor_absolute": 286.7819234582428,
+        "kkr_conditioning_floor_relative": 0.1293071521681656,
+        "dt": 0.02,
+        "tau_max": 200.0
+      }
+    },
+    {
+      "id": "C3",
+      "title": "Cummins free decay against the frequency-domain damping",
+      "threshold": "|zeta_decay - zeta_frequency| / zeta_frequency <= 5%, zeta_frequency from the energy identity at the resonance",
+      "passed": true,
+      "values": {
+        "mass": 429.35099599060504,
+        "mass_fraction_of_displaced": 0.1,
+        "restoring": 80569.16125133361,
+        "omega_n": 5.628902678716887,
+        "omega_p": 5.628902678716887,
+        "zeta_decay": 0.010175798596210246,
+        "zeta_energy_identity": 0.010030816374409406,
+        "zeta_half_power": 0.010390508035608342,
+        "zeta_decay_vs_energy_pct": 1.4453681175015647,
+        "zeta_decay_vs_half_power_pct": 2.066399820512007,
+        "decay_rate_extrapolated": 0.0572785799762914,
+        "decay_rate_series": [
+          {
+            "dt": 0.02,
+            "decay_rate": 0.06012826815800546,
+            "frequency": 5.632040475823878,
+            "extrema_used": 107,
+            "fit_r_squared": 0.999999512225796
+          },
+          {
+            "dt": 0.01,
+            "decay_rate": 0.05870663217961937,
+            "frequency": 5.632023791913105,
+            "extrema_used": 107,
+            "fit_r_squared": 0.9999998446656602
+          },
+          {
+            "dt": 0.005,
+            "decay_rate": 0.05799403743194053,
+            "frequency": 5.63202158845926,
+            "extrema_used": 107,
+            "fit_r_squared": 0.9999998831011538
+          },
+          {
+            "dt": 0.0025,
+            "decay_rate": 0.057636308704115964,
+            "frequency": 5.632023535089653,
+            "extrema_used": 107,
+            "fit_r_squared": 0.9999998899403593
+          }
+        ],
+        "convergence_ratio": 1.9950132708904156,
+        "measured_frequency": 5.632023535089653,
+        "duration": 60.0,
+        "tau_max": 300.0
+      }
+    },
+    {
+      "id": "C4",
+      "title": "negative control: zero damping gives zero decay",
+      "threshold": "K == 0 identically and |sigma_measured| / |sigma_reference| <= 0.5%",
+      "passed": true,
+      "values": {
+        "kernel_max_abs": 0.0,
+        "kernel_is_identically_zero": true,
+        "decay_rate_measured": -1.716729646074015e-07,
+        "decay_rate_reference": 0.0572785799762914,
+        "decay_rate_ratio": 2.997158181617979e-06,
+        "amplitude_ratio_first_last": 0.9999742819758146,
+        "extrema_used": 107,
+        "dt": 0.01,
+        "duration": 60.0
+      }
+    }
+  ],
+  "all_passed": true,
+  "envelope": {
+    "mass": 429.35099599060504,
+    "mass_fraction_of_displaced": 0.1,
+    "added_mass_inf": 2113.5026356289695,
+    "omega_p": 5.628902678716887,
+    "ratios": [
+      2.5,
+      2.0,
+      1.6,
+      1.25,
+      1.0,
+      0.8,
+      0.6499999999999999,
+      0.5,
+      0.4
+    ],
+    "rows": [
+      {
+        "omega_p_over_omega_n": 2.5,
+        "omega_n": 2.251561071486755,
+        "added_mass_relative_change": 0.04877343045042721,
+        "peak_amplitude_error": -0.060760773190995584,
+        "peak_frequency_error": -0.020292507309301395,
+        "phase_error_degrees": -67.78449966495944,
+        "zeta_exact": 0.007955564571503686,
+        "zeta_model": 0.00827806904168752,
+        "damping_ratio_relative_error": 0.04053822545027465,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 2.0,
+        "omega_n": 2.8144513393584436,
+        "added_mass_relative_change": 0.04431238126462824,
+        "peak_amplitude_error": -0.04984258750265158,
+        "peak_frequency_error": -0.018703412535249063,
+        "phase_error_degrees": -60.96888404881216,
+        "zeta_exact": 0.009857727545129978,
+        "zeta_model": 0.010220791664262147,
+        "damping_ratio_relative_error": 0.03683040715722906,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 1.6,
+        "omega_n": 3.5180641741980545,
+        "added_mass_relative_change": 0.034236826501328435,
+        "peak_amplitude_error": -0.033278834439617926,
+        "peak_frequency_error": -0.014798253342485407,
+        "phase_error_degrees": -50.96392736861128,
+        "zeta_exact": 0.011217275714082424,
+        "zeta_model": 0.011536475306297466,
+        "damping_ratio_relative_error": 0.02845607082781351,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 1.25,
+        "omega_n": 4.50312214297351,
+        "added_mass_relative_change": 0.016608160219014165,
+        "peak_amplitude_error": -0.012275494288178278,
+        "peak_frequency_error": -0.00732815727851449,
+        "phase_error_degrees": -30.819844796773253,
+        "zeta_exact": 0.011411523235125204,
+        "zeta_model": 0.011569047178739742,
+        "damping_ratio_relative_error": 0.013803936632199332,
+        "amplitude_error_informative": true
+      },
+      {
+        "omega_p_over_omega_n": 1.0,
+        "omega_n": 5.628902678716887,
+        "added_mass_relative_change": 0.0020812891795902273,
+        "peak_amplitude_error": 0.0007991087054887387,
+        "peak_frequency_error": 0.0007523478978559904,
+        "phase_error_degrees": 4.932864727114563,
+        "zeta_exact": 0.010038858018473191,
+        "zeta_model": 0.010021492083539574,
+        "damping_ratio_relative_error": 0.0017298715552765541,
+        "amplitude_error_informative": true
+      },
+      {
+        "omega_p_over_omega_n": 0.8,
+        "omega_n": 7.036128348396109,
+        "added_mass_relative_change": 0.017902960952964342,
+        "peak_amplitude_error": 0.0009190261039373786,
+        "peak_frequency_error": 0.007637244533310178,
+        "phase_error_degrees": 45.515091984170304,
+        "zeta_exact": 0.007417851495964973,
+        "zeta_model": 0.007307473010630557,
+        "damping_ratio_relative_error": 0.014880115272522924,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 0.6499999999999999,
+        "omega_n": 8.659850274949058,
+        "added_mass_relative_change": 0.025802461214786104,
+        "peak_amplitude_error": -0.009234680210332715,
+        "peak_frequency_error": 0.010891944107383198,
+        "phase_error_degrees": 67.17322404741847,
+        "zeta_exact": 0.00461230782940141,
+        "zeta_model": 0.004513393126742767,
+        "damping_ratio_relative_error": 0.02144581548267557,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 0.5,
+        "omega_n": 11.257805357433774,
+        "added_mass_relative_change": 0.024975824404967963,
+        "peak_amplitude_error": -0.025200023883347033,
+        "peak_frequency_error": 0.010341095367929015,
+        "phase_error_degrees": 80.31267391826803,
+        "zeta_exact": 0.00180937680264917,
+        "zeta_model": 0.0017718163963390497,
+        "damping_ratio_relative_error": 0.02075875309947972,
+        "amplitude_error_informative": false
+      },
+      {
+        "omega_p_over_omega_n": 0.4,
+        "omega_n": 14.072256696792218,
+        "added_mass_relative_change": 0.018726479038072518,
+        "peak_amplitude_error": -0.03370089108155642,
+        "peak_frequency_error": 0.007709838465419398,
+        "phase_error_degrees": 85.91885590061254,
+        "zeta_exact": 0.0005640466004025249,
+        "zeta_model": 0.0005552674488557719,
+        "damping_ratio_relative_error": 0.015564585515607876,
+        "amplitude_error_informative": false
+      }
+    ],
+    "worst_informative_peak_amplitude_error": 0.012275494288178278,
+    "worst_informative_peak_amplitude_ratio": 1.25,
+    "worst_phase_error_degrees": 85.91885590061254,
+    "worst_phase_error_ratio": 0.4,
+    "informative_points": 2,
+    "note": "peak-amplitude errors are only reported as worst-case where the resonance shift is inside the half-power width (|dw|/w <= zeta); elsewhere the amplitude itself is 1/(2 zeta) sensitive and the error is a conditioning artefact, not physics"
+  },
+  "runtime_seconds": 16.306102514266968,
+  "tolerances": {
+    "round_trip": 0.02,
+    "kramers_kronig": 0.02,
+    "free_decay": 0.05,
+    "negative_control": 0.005,
+    "geometry": 0.05
+  },
+  "figures": [
+    {
+      "name": "fig1_radiation_sweep.png",
+      "path": "figures/fig1_radiation_sweep.png"
+    },
+    {
+      "name": "fig2_memory_kernel.png",
+      "path": "figures/fig2_memory_kernel.png"
+    },
+    {
+      "name": "fig3_round_trip.png",
+      "path": "figures/fig3_round_trip.png"
+    },
+    {
+      "name": "fig4_free_decay.png",
+      "path": "figures/fig4_free_decay.png"
+    },
+    {
+      "name": "fig5_constant_added_mass_envelope.png",
+      "path": "figures/fig5_constant_added_mass_envelope.png"
+    }
+  ],
+  "platform_probe": {
+    "health": {
+      "reachable": true,
+      "status": 404,
+      "note": "non-2xx health route"
+    },
+    "url": "http://127.0.0.1:8001/api/v1/calculations/resistance",
+    "accepted": {
+      "status": 200,
+      "cb_from_dims": 0.523599,
+      "displacement_consistency_pct": 0.0,
+      "method": "ITTC-57\u6469\u64e6\u963b\u529b + ITTC-1978\u7c97\u7cd9\u5ea6\u8865\u8d34 + Holtrop\u5269\u4f59\u963b\u529b",
+      "error": null
+    },
+    "rejected": {
+      "status": 422,
+      "message": "Value error, \u51e0\u4f55\u4e0d\u81ea\u6d3d\uff1adisplacement=5.235987755982988 m\u00b3 \u4e0e L\u00b7B\u00b7T\u00b7Cb=4.2 m\u00b3 \u76f8\u5dee 20.00% \u2265 5%\uff08D3 \u95e8\u7981\uff09",
+      "error": null
+    },
+    "gate_exercised": true,
+    "note": "the live platform gate was exercised on the case geometry and on a corrupted copy; the campaign's replicated contract is used for the in-repo gate so the tests need no service"
+  }
+}
