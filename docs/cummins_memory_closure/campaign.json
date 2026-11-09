@@ -386,7 +386,7 @@
     "informative_points": 2,
     "note": "peak-amplitude errors are only reported as worst-case where the resonance shift is inside the half-power width (|dw|/w <= zeta); elsewhere the amplitude itself is 1/(2 zeta) sensitive and the error is a conditioning artefact, not physics"
   },
-  "runtime_seconds": 16.306102514266968,
+  "runtime_seconds": 14.374316215515137,
   "tolerances": {
     "round_trip": 0.02,
     "kramers_kronig": 0.02,
@@ -418,24 +418,23 @@
   ],
   "platform_probe": {
     "health": {
-      "reachable": true,
-      "status": 404,
-      "note": "non-2xx health route"
+      "reachable": false,
+      "error": "URLError: <urlopen error [Errno 111] Connection refused>"
     },
     "url": "http://127.0.0.1:8001/api/v1/calculations/resistance",
     "accepted": {
-      "status": 200,
-      "cb_from_dims": 0.523599,
-      "displacement_consistency_pct": 0.0,
-      "method": "ITTC-57\u6469\u64e6\u963b\u529b + ITTC-1978\u7c97\u7cd9\u5ea6\u8865\u8d34 + Holtrop\u5269\u4f59\u963b\u529b",
-      "error": null
+      "status": null,
+      "cb_from_dims": null,
+      "displacement_consistency_pct": null,
+      "method": null,
+      "error": "URLError: <urlopen error [Errno 111] Connection refused>"
     },
     "rejected": {
-      "status": 422,
-      "message": "Value error, \u51e0\u4f55\u4e0d\u81ea\u6d3d\uff1adisplacement=5.235987755982988 m\u00b3 \u4e0e L\u00b7B\u00b7T\u00b7Cb=4.2 m\u00b3 \u76f8\u5dee 20.00% \u2265 5%\uff08D3 \u95e8\u7981\uff09",
-      "error": null
+      "status": null,
+      "message": "",
+      "error": "URLError: <urlopen error [Errno 111] Connection refused>"
     },
-    "gate_exercised": true,
+    "gate_exercised": false,
     "note": "the live platform gate was exercised on the case geometry and on a corrupted copy; the campaign's replicated contract is used for the in-repo gate so the tests need no service"
   }
 }
