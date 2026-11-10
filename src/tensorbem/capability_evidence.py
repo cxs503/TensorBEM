@@ -242,6 +242,38 @@ CAPABILITIES: tuple[Capability, ...] = (
         published_2026_10_29='REAL',
     ),
     Capability(
+        key='near-field-quadrature',
+        title='Near-boundary near-singular panel quadrature + hemisphere heave Hulme anchor',
+        claim=(
+            'Two independent routes (adaptive midpoint subdivision, graded polar with rho = eps*sinh(t)) '
+            'hold their error level down to eps/h = 1e-3 against a semi-analytic arbiter, the plain Duffy '
+            'rule fails the same limit (negative control), and hemisphere heave A33/B33 matches Hulme (1982) '
+            'within 1.2% on the certified 1024-panel grid with a near/far energy residual below 1e-6 for the '
+            'analytic radiating field.'
+        ),
+        level=REAL,
+        modules=('tensorbem.near_field_quadrature', 'tensorbem.benchmarks.nearfield_quadrature'),
+        symbols=(
+            'adaptive_triangle_quadrature',
+            'polar_triangle_quadrature',
+            'semi_analytic_reference',
+            'energy_identity_residual',
+        ),
+        tests=(
+            'tests/test_nearfield_quadrature.py::test_adaptive_route_is_clearance_uniform',
+            'tests/test_nearfield_quadrature.py::test_polar_route_is_clearance_uniform',
+            'tests/test_nearfield_quadrature.py::test_negative_control_plain_duffy_is_not_clearance_uniform',
+            'tests/test_nearfield_quadrature.py::test_energy_identity_near_field_vs_far_field',
+            'tests/test_nearfield_quadrature.py::test_hemisphere_heave_matches_hulme_256_panels',
+        ),
+        docs=(('docs/nearfield_quadrature/report.md', '近边界近奇异面元求积'),),
+        note=(
+            'The <1e-6 near/far residual belongs to the analytic radiating field; the constant-panel BEM pair '
+            'reaches 1.4e-4 at 1024 panels and is reported separately, never quoted as 1e-6.'
+        ),
+        published_2026_10_29=None,
+    ),
+    Capability(
         key='maccamy-fuchs',
         title='MacCamy-Fuchs vertical pile (Helmholtz + CHIEF)',
         claim='Bessel/Hankel reference; CHIEF removes the irregular-frequency instability.',
