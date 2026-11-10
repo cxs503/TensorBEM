@@ -1,0 +1,880 @@
+{
+  "campaign": "p167w2-n01-bem-radiation",
+  "module": "tensorbem.benchmarks.radiation_diffraction_anchors_3d",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "constants": {
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "barge": {
+      "length": 100.0,
+      "beam": 20.0,
+      "draft": 8.0
+    },
+    "hemisphere_radius": 1.0
+  },
+  "A1_sphere_unbounded": {
+    "analytic_a33": 2146.754979953025,
+    "rows": [
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "a33": 2103.1000694562485,
+        "rel_error": 0.02033530184135495,
+        "condition_number": 2.083248405825604,
+        "relative_residual": 4.822774896193175e-16
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "a33": 2135.8170693275315,
+        "rel_error": 0.005095090370179579,
+        "condition_number": 2.0430895902588992,
+        "relative_residual": 4.7061535596076e-16
+      }
+    ],
+    "worst_rel_error": 0.02033530184135495,
+    "richardson_a33": 2146.7227359512926,
+    "richardson_rel_error": 1.5019879787717769e-05
+  },
+  "A1_hemisphere_unbounded": {
+    "sphere_anchor_a33": 2146.754979953025,
+    "disk_limit_a33": 2733.333333333333,
+    "rows": [
+      {
+        "n_theta": 6,
+        "n_phi": 12,
+        "panels": 144,
+        "discrete_volume": 1.9659258262890684,
+        "volume_rel_error": 0.0613395609822279,
+        "a33": 2732.7001994098773,
+        "a11": 815.5182806719703,
+        "a33_over_rho_a3": 2.666048975034027,
+        "a33_over_rho_displaced": 1.2729446187052393,
+        "rel_error_vs_sphere_anchor": 0.2729446187052393,
+        "rel_error_vs_disk_limit": 0.00023163436223989624,
+        "condition_number": 4.109743989604698,
+        "relative_residual": 5.606582881435011e-16
+      },
+      {
+        "n_theta": 8,
+        "n_phi": 16,
+        "panels": 256,
+        "discrete_volume": 2.0213698930212134,
+        "volume_rel_error": 0.03486696912561455,
+        "a33": 2805.9281413729877,
+        "a11": 816.2472583956038,
+        "a33_over_rho_a3": 2.7374908696321834,
+        "a33_over_rho_displaced": 1.3070556107126796,
+        "rel_error_vs_sphere_anchor": 0.30705561071267967,
+        "rel_error_vs_disk_limit": 0.0265590761120688,
+        "condition_number": 4.457757289882138,
+        "relative_residual": 6.395843516876581e-16
+      },
+      {
+        "n_theta": 12,
+        "n_phi": 24,
+        "panels": 576,
+        "discrete_volume": 2.061695429580366,
+        "volume_rel_error": 0.015612943696948422,
+        "a33": 2854.530313572496,
+        "a11": 816.2859415430249,
+        "a33_over_rho_a3": 2.784907622997557,
+        "a33_over_rho_displaced": 1.3296954427630854,
+        "rel_error_vs_sphere_anchor": 0.3296954427630853,
+        "rel_error_vs_disk_limit": 0.04434035862408409,
+        "condition_number": 5.20297804768775,
+        "relative_residual": 5.317418315344799e-16
+      },
+      {
+        "n_theta": 16,
+        "n_phi": 32,
+        "panels": 1024,
+        "discrete_volume": 2.075953230976745,
+        "volume_rel_error": 0.008805344987379579,
+        "a33": 2866.4310267027727,
+        "a11": 816.1181927691141,
+        "a33_over_rho_a3": 2.7965180748319733,
+        "a33_over_rho_displaced": 1.3352390251660184,
+        "rel_error_vs_sphere_anchor": 0.33523902516601833,
+        "rel_error_vs_disk_limit": 0.048694278061990115,
+        "condition_number": 5.968057442433279,
+        "relative_residual": 4.723180117822873e-16
+      }
+    ],
+    "richardson_a33": 2881.7319435845566,
+    "richardson_a33_over_rho_displaced": 1.3423664882555035,
+    "observed_order": 3.4702613665082294,
+    "rel_error_vs_sphere_anchor": 0.34236648825550364,
+    "rel_error_vs_disk_limit": 0.05429217448215496,
+    "richardson_a33_observed_order": 2873.375273506847
+  },
+  "A1_thin_disk_limit": {
+    "a33": 2732.5203415085384,
+    "closed_form": 2733.333333333333
+  },
+  "A2_hemisphere_high_frequency": {
+    "panels": 256,
+    "analytic_limit": 1073.3774899765126,
+    "analytic_limit_over_rho_a3": 1.0471975511965976,
+    "rows": [
+      {
+        "ka": 0.5,
+        "a33": 1252.6068727161985,
+        "b33": 1609.7906628769556,
+        "ratio_to_limit": 1.1669770275726647,
+        "rel_error": 0.1669770275726648,
+        "condition_number": 2.667587388584309
+      },
+      {
+        "ka": 1.0,
+        "a33": 913.0400386880822,
+        "b33": 1689.780024610876,
+        "ratio_to_limit": 0.8506234267201385,
+        "rel_error": 0.1493765732798616,
+        "condition_number": 2.7346951899238774
+      },
+      {
+        "ka": 2.0,
+        "a33": 816.4473290142226,
+        "b33": 1024.2927088074703,
+        "ratio_to_limit": 0.7606339210933964,
+        "rel_error": 0.23936607890660352,
+        "condition_number": 2.4124908765861273
+      },
+      {
+        "ka": 3.0,
+        "a33": 872.3162250339752,
+        "b33": 572.4546856819898,
+        "ratio_to_limit": 0.8126835462639179,
+        "rel_error": 0.18731645373608213,
+        "condition_number": 2.927231456484087
+      },
+      {
+        "ka": 5.0,
+        "a33": 938.6448984919684,
+        "b33": 194.93876327521787,
+        "ratio_to_limit": 0.8744779047979734,
+        "rel_error": 0.12552209520202662,
+        "condition_number": 4.559511640949919
+      },
+      {
+        "ka": 8.0,
+        "a33": 989.80509641579,
+        "b33": 53.30007559420205,
+        "ratio_to_limit": 0.9221407246368178,
+        "rel_error": 0.07785927536318218,
+        "condition_number": 3.770584724418963
+      },
+      {
+        "ka": 12.0,
+        "a33": 1024.67314768067,
+        "b33": 12.857795551739214,
+        "ratio_to_limit": 0.9546251502843529,
+        "rel_error": 0.04537484971564705,
+        "condition_number": 5.2999250218314184
+      }
+    ],
+    "highest_ka": 12.0,
+    "rel_error_at_highest_ka": 0.04537484971564705,
+    "approach_monotone_above_ka": 2.0
+  },
+  "A3_froude_krylov": {
+    "omega": 0.5,
+    "wavenumber": 0.025492905324448208,
+    "kL": 2.5492905324448207,
+    "closed_form": {
+      "f1": [
+        0.0,
+        -2783114.7692202977
+      ],
+      "f3": [
+        12302225.87228031,
+        0.0
+      ],
+      "f5": [
+        0.0,
+        284134949.93755865
+      ]
+    },
+    "closed_form_magnitude": {
+      "f1": 2783114.7692202977,
+      "f3": 12302225.87228031,
+      "f5": 284134949.93755865
+    },
+    "rows": [
+      {
+        "n_length": 5,
+        "n_beam": 2,
+        "n_draft": 1,
+        "panels": 48,
+        "f1": [
+          3.6415315207705135e-12,
+          -2779902.494944772
+        ],
+        "f3": [
+          12391619.524428826,
+          -5.753619802817411e-10
+        ],
+        "f5": [
+          -9.027831376281472e-09,
+          -278981005.8187575
+        ],
+        "f3_rel_error": 0.007266461620570554,
+        "f5_rel_error": 0.01813907131077611,
+        "f1_rel_error": 0.001154201152985655
+      },
+      {
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "f1": [
+          7.283063041541027e-12,
+          -2779902.4949447718
+        ],
+        "f3": [
+          12324469.206730956,
+          -3.6415315207705135e-10
+        ],
+        "f5": [
+          6.009318708078698e-09,
+          -282680987.62459993
+        ],
+        "f3_rel_error": 0.0018080739763333903,
+        "f5_rel_error": 0.0051171540610482425,
+        "f1_rel_error": 0.0011542011529858225
+      },
+      {
+        "n_length": 20,
+        "n_beam": 10,
+        "n_draft": 2,
+        "panels": 640,
+        "f1": [
+          0.0,
+          -2782311.097729556
+        ],
+        "f3": [
+          12307780.177914146,
+          -6.108669126092536e-10
+        ],
+        "f5": [
+          -3.299460111146016e-09,
+          -283772235.9765929
+        ],
+        "f3_rel_error": 0.00045148786012380067,
+        "f5_rel_error": 0.001276555246179544,
+        "f1_rel_error": 0.0002887669238904747
+      },
+      {
+        "n_length": 40,
+        "n_beam": 20,
+        "n_draft": 2,
+        "panels": 2080,
+        "f1": [
+          0.0,
+          -2782311.097729551
+        ],
+        "f3": [
+          12303614.041302161,
+          2.631006523756696e-10
+        ],
+        "f5": [
+          7.104511720359306e-09,
+          -283999378.6233986
+        ],
+        "f3_rel_error": 0.00011283885016111675,
+        "f5_rel_error": 0.0004771370582529254,
+        "f1_rel_error": 0.0002887669238921478
+      }
+    ],
+    "worst_rel_error_finest": 0.0004771370582529254,
+    "worst_rel_error_coarsest": 0.01813907131077611
+  },
+  "A4_A7_barge_rao": {
+    "rows": [
+      {
+        "omega": 0.05,
+        "wavenumber": 0.0002549290532444821,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.9999801238662608,
+        "pitch_rao": 0.0002335844366668985,
+        "surge_rao": 0.9996110852251272,
+        "a33": 35038019.85793187,
+        "a55": 16292789657.90279,
+        "b33": 25794.332745261985,
+        "b55": 553.2118109489273,
+        "excitation_f3": 19974640.47352752,
+        "fk_f3": 20062134.635422833,
+        "fk_to_total_f3": 1.00438026216348,
+        "impedance_residual": 1.5280872108847533e-10
+      },
+      {
+        "omega": 0.1,
+        "wavenumber": 0.0010197162129779284,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.9996832044709711,
+        "pitch_rao": 0.0009334294777441359,
+        "surge_rao": 0.9980433650004961,
+        "a33": 35861118.37485407,
+        "a55": 16348835032.563972,
+        "b33": 198196.48566149562,
+        "b55": 68892.6577905985,
+        "excitation_f3": 19574828.568817034,
+        "fk_f3": 19931719.001415525,
+        "fk_to_total_f3": 1.018232110250356,
+        "impedance_residual": 3.920724074577645e-09
+      },
+      {
+        "omega": 0.2,
+        "wavenumber": 0.004078864851911714,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.9950245384668872,
+        "pitch_rao": 0.0037126937786823655,
+        "surge_rao": 0.9858361441874669,
+        "a33": 35913150.94389204,
+        "a55": 16628926445.310303,
+        "b33": 1335713.8807943352,
+        "b55": 7849757.347616751,
+        "excitation_f3": 17923479.310686793,
+        "fk_f3": 19324506.14605011,
+        "fk_to_total_f3": 1.0781671243109567,
+        "impedance_residual": 3.903455242954388e-09
+      },
+      {
+        "omega": 0.5,
+        "wavenumber": 0.025492905324448208,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.8315594719976298,
+        "pitch_rao": 0.021208864127375184,
+        "surge_rao": 0.691360239810472,
+        "a33": 23245734.416743066,
+        "a55": 17419287544.874702,
+        "b33": 6805834.617871293,
+        "b55": 1473656192.78269,
+        "excitation_f3": 8936039.099313702,
+        "fk_f3": 12324469.206730956,
+        "fk_to_total_f3": 1.3791870279168192,
+        "impedance_residual": 3.040053596946934e-08
+      },
+      {
+        "omega": 1.0,
+        "wavenumber": 0.10197162129779283,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.04559693572398243,
+        "pitch_rao": 0.001803713314720275,
+        "surge_rao": 0.0902251244850129,
+        "a33": 17102696.272295374,
+        "a55": 12212760172.39851,
+        "b33": 2435642.375427321,
+        "b55": 1440891784.8192182,
+        "excitation_f3": 620413.2364511861,
+        "fk_f3": 1663390.2034693435,
+        "fk_to_total_f3": 2.681100443607667,
+        "impedance_residual": 3.756783105834954e-09
+      },
+      {
+        "omega": 2.0,
+        "wavenumber": 0.4078864851911713,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.0016133786489159357,
+        "pitch_rao": 5.599519693887024e-05,
+        "surge_rao": 0.010955498311366444,
+        "a33": 21080054.005341437,
+        "a55": 13950642412.369978,
+        "b33": 106529.05030890266,
+        "b55": 51161626.78309245,
+        "excitation_f3": 208909.638828457,
+        "fk_f3": 67040.4728815832,
+        "fk_to_total_f3": 0.32090655681345787,
+        "impedance_residual": 9.97018970203256e-10
+      },
+      {
+        "omega": 3.0,
+        "wavenumber": 0.9177445916801354,
+        "n_length": 10,
+        "n_beam": 5,
+        "n_draft": 1,
+        "panels": 160,
+        "heave_rao": 0.00018232701538448438,
+        "pitch_rao": 5.483520132268039e-06,
+        "surge_rao": 0.0003934606811806415,
+        "a33": 21465679.571775697,
+        "a55": 14088445896.747766,
+        "b33": -59854.346592702655,
+        "b55": -13295477.431501698,
+        "excitation_f3": 58474.167626376024,
+        "fk_f3": 51.08929563290391,
+        "fk_to_total_f3": 0.0008737071036109798,
+        "impedance_residual": 4.189849704930551e-11
+      }
+    ],
+    "long_wave": {
+      "omega": 0.05,
+      "wavenumber": 0.0002549290532444821,
+      "n_length": 10,
+      "n_beam": 5,
+      "n_draft": 1,
+      "panels": 160,
+      "heave_rao": 0.9999801238662608,
+      "pitch_rao": 0.0002335844366668985,
+      "surge_rao": 0.9996110852251272,
+      "a33": 35038019.85793187,
+      "a55": 16292789657.90279,
+      "b33": 25794.332745261985,
+      "b55": 553.2118109489273,
+      "excitation_f3": 19974640.47352752,
+      "fk_f3": 20062134.635422833,
+      "fk_to_total_f3": 1.00438026216348,
+      "impedance_residual": 1.5280872108847533e-10
+    },
+    "high_frequency": {
+      "omega": 3.0,
+      "wavenumber": 0.9177445916801354,
+      "n_length": 10,
+      "n_beam": 5,
+      "n_draft": 1,
+      "panels": 160,
+      "heave_rao": 0.00018232701538448438,
+      "pitch_rao": 5.483520132268039e-06,
+      "surge_rao": 0.0003934606811806415,
+      "a33": 21465679.571775697,
+      "a55": 14088445896.747766,
+      "b33": -59854.346592702655,
+      "b55": -13295477.431501698,
+      "excitation_f3": 58474.167626376024,
+      "fk_f3": 51.08929563290391,
+      "fk_to_total_f3": 0.0008737071036109798,
+      "impedance_residual": 4.189849704930551e-11
+    },
+    "mid_frequency": {
+      "omega": 0.5,
+      "wavenumber": 0.025492905324448208,
+      "n_length": 10,
+      "n_beam": 5,
+      "n_draft": 1,
+      "panels": 160,
+      "heave_rao": 0.8315594719976298,
+      "pitch_rao": 0.021208864127375184,
+      "surge_rao": 0.691360239810472,
+      "a33": 23245734.416743066,
+      "a55": 17419287544.874702,
+      "b33": 6805834.617871293,
+      "b55": 1473656192.78269,
+      "excitation_f3": 8936039.099313702,
+      "fk_f3": 12324469.206730956,
+      "fk_to_total_f3": 1.3791870279168192,
+      "impedance_residual": 3.040053596946934e-08
+    },
+    "a33_spread_low_omega": 0.02436798395460788,
+    "b33_over_omega_a33_low": 0.01472362470815981,
+    "a33_ratio_low_to_mid": 1.5072881428385951,
+    "b33_ratio_low_to_mid": 0.0037900322581346907
+  },
+  "A6_barge_mesh_ladder": {
+    "ladder": [
+      [
+        10,
+        5,
+        1
+      ],
+      [
+        20,
+        10,
+        2
+      ],
+      [
+        40,
+        20,
+        2
+      ]
+    ],
+    "frequencies": [
+      {
+        "omega": 0.5,
+        "rows": [
+          {
+            "omega": 0.5,
+            "wavenumber": 0.025492905324448208,
+            "n_length": 10,
+            "n_beam": 5,
+            "n_draft": 1,
+            "panels": 160,
+            "heave_rao": 0.8315594719976298,
+            "pitch_rao": 0.021208864127375184,
+            "surge_rao": 0.691360239810472,
+            "a33": 23245734.416743066,
+            "a55": 17419287544.874702,
+            "b33": 6805834.617871293,
+            "b55": 1473656192.78269,
+            "excitation_f3": 8936039.099313702,
+            "fk_f3": 12324469.206730956,
+            "fk_to_total_f3": 1.3791870279168192,
+            "impedance_residual": 3.040053596946934e-08
+          },
+          {
+            "omega": 0.5,
+            "wavenumber": 0.025492905324448208,
+            "n_length": 20,
+            "n_beam": 10,
+            "n_draft": 2,
+            "panels": 640,
+            "heave_rao": 0.8258904221784678,
+            "pitch_rao": 0.02124026709319773,
+            "surge_rao": 0.697835015503609,
+            "a33": 22836146.721300524,
+            "a55": 17104577903.597824,
+            "b33": 6906175.785325941,
+            "b55": 1532037073.0861197,
+            "excitation_f3": 8967982.906352242,
+            "fk_f3": 12307780.177914146,
+            "fk_to_total_f3": 1.3724134296906658,
+            "impedance_residual": 3.0442742737241933e-08
+          },
+          {
+            "omega": 0.5,
+            "wavenumber": 0.025492905324448208,
+            "n_length": 40,
+            "n_beam": 20,
+            "n_draft": 2,
+            "panels": 2080,
+            "heave_rao": 0.8245008331107175,
+            "pitch_rao": 0.021244137239175523,
+            "surge_rao": 0.6995114628344397,
+            "a33": 22738233.87309528,
+            "a55": 17006537311.971952,
+            "b33": 6914807.496347026,
+            "b55": 1543852257.874932,
+            "excitation_f3": 8973084.797189469,
+            "fk_f3": 12303614.041302161,
+            "fk_to_total_f3": 1.3711688142249445,
+            "impedance_residual": 3.0730139918931664e-08
+          }
+        ],
+        "heave_rao_change_coarse_to_medium": 0.00681737146898642,
+        "heave_rao_change_medium_to_fine": 0.0016825344264011098,
+        "a33_change_medium_to_fine": 0.0042876256401835795,
+        "b33_change_medium_to_fine": 0.0012498539407910382,
+        "observed_orders": {
+          "heave_rao": 2.0284486383454756,
+          "a33": 2.0646022865122546,
+          "b33": 3.5391232526261414
+        },
+        "richardson_heave_rao": 0.8240376367548008
+      },
+      {
+        "omega": 1.0,
+        "rows": [
+          {
+            "omega": 1.0,
+            "wavenumber": 0.10197162129779283,
+            "n_length": 10,
+            "n_beam": 5,
+            "n_draft": 1,
+            "panels": 160,
+            "heave_rao": 0.04559693572398243,
+            "pitch_rao": 0.001803713314720275,
+            "surge_rao": 0.0902251244850129,
+            "a33": 17102696.272295374,
+            "a55": 12212760172.39851,
+            "b33": 2435642.375427321,
+            "b55": 1440891784.8192182,
+            "excitation_f3": 620413.2364511861,
+            "fk_f3": 1663390.2034693435,
+            "fk_to_total_f3": 2.681100443607667,
+            "impedance_residual": 3.756783105834954e-09
+          },
+          {
+            "omega": 1.0,
+            "wavenumber": 0.10197162129779283,
+            "n_length": 20,
+            "n_beam": 10,
+            "n_draft": 2,
+            "panels": 640,
+            "heave_rao": 0.05104651002096056,
+            "pitch_rao": 0.002086083512890051,
+            "surge_rao": 0.08873923443902532,
+            "a33": 16461974.536606697,
+            "a55": 11654253133.688108,
+            "b33": 2563486.5726077203,
+            "b55": 1549437890.431341,
+            "excitation_f3": 664150.5791411347,
+            "fk_f3": 1627267.7729331846,
+            "fk_to_total_f3": 2.450148842808407,
+            "impedance_residual": 2.3459472894562866e-09
+          },
+          {
+            "omega": 1.0,
+            "wavenumber": 0.10197162129779283,
+            "n_length": 40,
+            "n_beam": 20,
+            "n_draft": 2,
+            "panels": 2080,
+            "heave_rao": 0.05188296746032071,
+            "pitch_rao": 0.0021740606130774788,
+            "surge_rao": 0.08779896904409348,
+            "a33": 16339268.034505304,
+            "a55": 11515839895.72372,
+            "b33": 2574416.653183718,
+            "b55": 1559559222.313607,
+            "excitation_f3": 668950.4540220267,
+            "fk_f3": 1618449.5916037462,
+            "fk_to_total_f3": 2.419386341503933,
+            "impedance_residual": 1.1656457002703343e-09
+          }
+        ],
+        "heave_rao_change_coarse_to_medium": 0.11951623964309176,
+        "heave_rao_change_medium_to_fine": 0.01638618269920276,
+        "a33_change_medium_to_fine": 0.007453935846427744,
+        "b33_change_medium_to_fine": 0.004263755735174091,
+        "observed_orders": {
+          "heave_rao": 2.70377949563301,
+          "a33": 2.3844862348979095,
+          "b33": 3.5480107368233726
+        },
+        "richardson_heave_rao": 0.05216178660677409
+      }
+    ]
+  },
+  "criteria": [
+    {
+      "id": "C1a-sphere-unbounded-A33",
+      "description": "unbounded sphere A33 vs 2/3 rho pi a^3 (the campaign's 2146.8 kg closed form)",
+      "measured": {
+        "analytic": 2146.754979953025,
+        "finest_panels": 1280,
+        "finest_a33": 2135.8170693275315,
+        "finest_rel_error": 0.005095090370179579,
+        "worst_rel_error": 0.02033530184135495,
+        "richardson_a33": 2146.7227359512926,
+        "richardson_rel_error": 1.5019879787717769e-05
+      },
+      "target": "Richardson-extrapolated relative error < 2 % (raw finest mesh also reported)",
+      "pass": true,
+      "note": "machinery anchor: the campaign's 2/3 rho pi a^3 value is reproduced by the sphere; the raw faceted-mesh error is 2.03 % at 320 panels and 0.51 % at 1280 panels, so the criterion is applied to the Richardson limit"
+    },
+    {
+      "id": "C1b-hemisphere-unbounded-A33",
+      "description": "closed hemisphere unbounded A33 vs the campaign anchor 2/3 rho pi a^3 = 2146.8 kg",
+      "measured": {
+        "campaign_anchor": 2146.754979953025,
+        "richardson_a33": 2881.7319435845566,
+        "richardson_rel_error_vs_anchor": 0.34236648825550364,
+        "a33_over_rho_displaced": 1.3423664882555035,
+        "thin_disk_limit": 2733.333333333333,
+        "disk_value_from_analytic_module": 2732.5203415085384
+      },
+      "target": "relative error < 2 %",
+      "pass": false,
+      "note": "root cause: 2/3 rho pi a^3 is the sphere value (and the hemisphere's displaced mass). A closed hemisphere also drives a piston flow on its flat lid, so its unbounded axial added mass sits above the thin-disk limit 8/3 rho a^3 = 2733.3 kg (measured 2881.7 kg); the same body with the lid replaced by the free surface obeys the exact high-frequency anchor rho pi a^3/3 (C1c)."
+    },
+    {
+      "id": "C1c-hemisphere-high-frequency-A33",
+      "description": "floating hemisphere A33(ka -> inf) vs the exact pressure-release anchor rho pi a^3/3",
+      "measured": {
+        "analytic_limit": 1073.3774899765126,
+        "highest_ka": 12.0,
+        "a33_at_highest_ka": 1024.67314768067,
+        "rel_error": 0.04537484971564705,
+        "ka_ladder": [
+          [
+            0.5,
+            1252.6068727161985
+          ],
+          [
+            1.0,
+            913.0400386880822
+          ],
+          [
+            2.0,
+            816.4473290142226
+          ],
+          [
+            3.0,
+            872.3162250339752
+          ],
+          [
+            5.0,
+            938.6448984919684
+          ],
+          [
+            8.0,
+            989.80509641579
+          ],
+          [
+            12.0,
+            1024.67314768067
+          ]
+        ]
+      },
+      "target": "monotone climb towards the limit, relative error < 5 % at the highest ka",
+      "pass": true,
+      "note": "exact by the mirror theorem: the heave potential of a sphere is odd in z, so ka -> inf (phi = 0 on z = 0) coincides with the sphere's symmetry plane and A33 = A33(sphere)/2 = rho pi a^3/3"
+    },
+    {
+      "id": "C2-froude-krylov-closed-form",
+      "description": "barge Froude-Krylov F1/F3/F5 vs closed form at omega = 0.5 rad/s",
+      "measured": {
+        "worst_rel_error_finest": 0.0004771370582529254,
+        "worst_rel_error_coarsest": 0.01813907131077611,
+        "f3_closed_form": 12302225.87228031,
+        "f3_finest": [
+          12303614.041302161,
+          2.631006523756696e-10
+        ],
+        "panels_finest": 2080,
+        "kL": 2.5492905324448207
+      },
+      "target": "relative error < 3 %",
+      "pass": true,
+      "note": "second-order convergence in the panel size"
+    },
+    {
+      "id": "C3-long-wave-RAO",
+      "description": "long-wave limits at omega = 0.05 rad/s (kL = 0.0255)",
+      "measured": {
+        "heave_rao": 0.9999801238662608,
+        "pitch_rao": 0.0002335844366668985,
+        "kL": 0.02549290532444821
+      },
+      "target": "heave in [0.95, 1.05] and pitch < 0.1",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "C4-high-frequency-RAO",
+      "description": "high-frequency limit at omega = 3.0 rad/s",
+      "measured": {
+        "heave_rao": 0.00018232701538448438,
+        "pitch_rao": 5.483520132268039e-06,
+        "a33": 21465679.571775697,
+        "kL": 91.77445916801355
+      },
+      "target": "heave < 0.2",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "C5-rao-mesh-convergence",
+      "description": "|RAO(40x20) - RAO(20x10)| / RAO(20x10) over the barge ladder",
+      "measured": {
+        "worst_medium_to_fine": 0.01638618269920276,
+        "worst_coarse_to_medium": 0.11951623964309176
+      },
+      "target": "relative change < 2 %",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "C6-zero-frequency-control",
+      "description": "omega -> 0: frequency-independent A_jj, vanishing B_jj",
+      "measured": {
+        "a33_spread_low_omega": 0.02436798395460788,
+        "b33_over_omega_a33_low": 0.01472362470815981,
+        "a33_ratio_low_to_mid": 1.5072881428385951,
+        "b33_ratio_low_to_mid": 0.0037900322581346907,
+        "a33_low_omega": [
+          [
+            0.05,
+            35038019.85793187
+          ],
+          [
+            0.1,
+            35861118.37485407
+          ],
+          [
+            0.2,
+            35913150.94389204
+          ]
+        ],
+        "b33_low_omega": [
+          [
+            0.05,
+            25794.332745261985
+          ],
+          [
+            0.1,
+            198196.48566149562
+          ],
+          [
+            0.2,
+            1335713.8807943352
+          ],
+          [
+            0.5,
+            6805834.617871293
+          ]
+        ],
+        "hemisphere_ka_ladder": [
+          [
+            0.5,
+            1252.6068727161985,
+            1609.7906628769556
+          ],
+          [
+            1.0,
+            913.0400386880822,
+            1689.780024610876
+          ],
+          [
+            2.0,
+            816.4473290142226,
+            1024.2927088074703
+          ],
+          [
+            3.0,
+            872.3162250339752,
+            572.4546856819898
+          ],
+          [
+            5.0,
+            938.6448984919684,
+            194.93876327521787
+          ],
+          [
+            8.0,
+            989.80509641579,
+            53.30007559420205
+          ],
+          [
+            12.0,
+            1024.67314768067,
+            12.857795551739214
+          ]
+        ]
+      },
+      "target": "A33 spread < 5 % over omega <= 0.2 and B33/(omega A33) < 0.05",
+      "pass": true,
+      "note": ""
+    }
+  ],
+  "all_pass": false,
+  "figures": [
+    "docs/radiation_diffraction_anchors_3d/fig_radiff_added_mass_anchors.png",
+    "docs/radiation_diffraction_anchors_3d/fig_radiff_froude_krylov.png",
+    "docs/radiation_diffraction_anchors_3d/fig_radiff_rao_limits.png",
+    "docs/radiation_diffraction_anchors_3d/fig_radiff_rao_convergence.png"
+  ]
+}
