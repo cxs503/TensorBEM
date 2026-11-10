@@ -655,6 +655,42 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Absent from the 2026-10-29 table.',
     ),
     Capability(
+        key='coupled-memory-kernel-matrix',
+        title='Coupled multi-DOF radiation memory kernel matrix',
+        claim=(
+            'The kernel matrix built from a two-mode sweep closes three independent round trips: the '
+            'transform (B to 0.6 % of peak, A to 0.3 %), the time-domain convolution under a '
+            'prescribed two-mode motion (0.2 % pointwise against [omega^2 A - i omega B] X), and the '
+            'coupled free decay against the frequency-domain damping ratio (3.4 % against the '
+            'quadratic form, 0.2 % against the exact complex resonance of the same kernel). K(t<0) is '
+            'zero, the K_ij(0+) jump matches (2/pi) int B_ij including the sign of the cross entry, '
+            'and a zero-damping control decays at 1e-9 of the physical rate.'
+        ),
+        level=REAL,
+        modules=('tensorbem.memory_kernel_matrix', 'tensorbem.benchmarks.cummins_matrix_closure'),
+        symbols=(
+            'coupled_memory_kernels',
+            'harmonic_radiation_force',
+            'matrix_round_trip',
+            'complex_resonances',
+            'kernel_resonances',
+            'coupled_free_decay',
+            'constant_matrix_envelope',
+        ),
+        tests=(
+            'tests/test_memory_kernel_matrix.py::test_kernel_matches_closed_form',
+            'tests/test_memory_kernel_matrix.py::test_harmonic_force_closes_the_loop',
+            'tests/test_memory_kernel_matrix.py::test_decay_matches_the_kernel_root',
+            'tests/test_memory_kernel_matrix.py::test_negative_control_zero_kernel_gives_zero_decay',
+        ),
+        docs=(('docs/cummins_matrix_closure/cummins_matrix_kernel_matrix.md', 'K_ij'),),
+        note=(
+            'Cross entries may be negative, so the scalar passivity rule (B >= 0) is replaced by '
+            'positive semidefiniteness of the damping matrix; the trapezoid memory sum is first order '
+            'and every decay rate is Richardson-extrapolated in dt.'
+        ),
+    ),
+    Capability(
         key='cummins-memory-kernel-closure',
         title='Two-way Cummins memory-kernel closure with causality and decay gates',
         claim=(
