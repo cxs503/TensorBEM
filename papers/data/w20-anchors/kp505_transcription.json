@@ -1,0 +1,2081 @@
+{
+  "schema": "tensorbem.w20_kp505_transcription/1",
+  "topic": "propeller-openwater-bem / W20 item 5: anchor transcription with per-number provenance",
+  "generated_by": "tools/build_w20_kp505_transcription.py",
+  "regenerate": "python -m tools.build_w20_kp505_transcription",
+  "generated_utc": "2026-11-10T13:35:37.185409+00:00",
+  "anchor": {
+    "kind": "SECONDARY_REPRODUCTION",
+    "citation": "H. Iftikhar, A. C. Takinaci, 'Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS', X International Conference on Computational Methods in Marine Engineering (MARINE 2023), CIMNE, DOI 10.23967/marine.2023.120",
+    "doi": "10.23967/marine.2023.120",
+    "page": 10,
+    "table": "Table 2. Comparison of CFD and Experimental Results (columns 'Experimental')",
+    "quote": "Table 2. Comparison of CFD and Experimental Results",
+    "pdf": "kp505_marine2023_iftikhar.pdf",
+    "pdf_sha256": "161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c",
+    "transcript": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+    "transcript_sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+    "provenance_note": "the primary KRISO/KCS-workshop EFD handout was not reachable from this environment (see docs/kp505_openwater_anchor.md section 1); the numbers enter through one tabulation step inside the MARINE 2023 paper, which is declared as SECONDARY_REPRODUCTION and must not be described as the original KRISO table"
+  },
+  "transcript": {
+    "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+    "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+    "n_lines": 26,
+    "caption": {
+      "line": 12,
+      "verbatim": "Table 2. Comparison of CFD and Experimental Results "
+    },
+    "column_header": {
+      "line": 14,
+      "verbatim": "J KT 10KQ KT 10KQ KT 10KQ "
+    },
+    "columns": [
+      "J",
+      "CFD_KT",
+      "CFD_10KQ",
+      "EXP_KT",
+      "EXP_10KQ",
+      "ERR_KT",
+      "ERR_KQ"
+    ],
+    "field_meanings": {
+      "J": "advance ratio",
+      "CFD_KT": "thrust coefficient, CFD column of Table 2",
+      "CFD_10KQ": "torque coefficient x10, CFD column of Table 2",
+      "EXP_KT": "thrust coefficient, Experimental column (adopted as anchor)",
+      "EXP_10KQ": "torque coefficient x10, Experimental column (adopted as anchor)",
+      "ERR_KT": "published error of CFD vs experiment, KT, percent",
+      "ERR_KQ": "published error of CFD vs experiment, 10KQ, percent"
+    },
+    "n_numbers": 70
+  },
+  "numbers": [
+    {
+      "value": 0.1,
+      "raw": "0.1",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 0.479,
+      "raw": "0.479",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 0.644,
+      "raw": "0.644",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 0.494,
+      "raw": "0.494",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 0.683,
+      "raw": "0.683",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 3.06,
+      "raw": "3.06",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 5.73,
+      "raw": "5.73",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      }
+    },
+    {
+      "value": 0.2,
+      "raw": "0.2",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 0.432,
+      "raw": "0.432",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 0.59,
+      "raw": "0.590",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 0.447,
+      "raw": "0.447",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 0.636,
+      "raw": "0.636",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 3.24,
+      "raw": "3.24",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 7.22,
+      "raw": "7.22",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      }
+    },
+    {
+      "value": 0.3,
+      "raw": "0.3",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 0.382,
+      "raw": "0.382",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 0.554,
+      "raw": "0.554",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 0.392,
+      "raw": "0.392",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 0.585,
+      "raw": "0.585",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 2.64,
+      "raw": "2.64",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 5.32,
+      "raw": "5.32",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      }
+    },
+    {
+      "value": 0.4,
+      "raw": "0.4",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 0.33,
+      "raw": "0.330",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 0.5,
+      "raw": "0.500",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 0.343,
+      "raw": "0.343",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 0.53,
+      "raw": "0.530",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 3.73,
+      "raw": "3.73",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 5.72,
+      "raw": "5.72",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      }
+    },
+    {
+      "value": 0.5,
+      "raw": "0.5",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.278,
+      "raw": "0.278",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.473,
+      "raw": "0.473",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.29,
+      "raw": "0.290",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.471,
+      "raw": "0.471",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 4.23,
+      "raw": "4.23",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.5,
+      "raw": "0.50",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      }
+    },
+    {
+      "value": 0.6,
+      "raw": "0.6",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 0.225,
+      "raw": "0.225",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 0.414,
+      "raw": "0.414",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 0.241,
+      "raw": "0.241",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 0.409,
+      "raw": "0.409",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 6.49,
+      "raw": "6.49",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 1.26,
+      "raw": "1.26",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      }
+    },
+    {
+      "value": 0.7,
+      "raw": "0.7",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 0.173,
+      "raw": "0.173",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 0.356,
+      "raw": "0.356",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 0.193,
+      "raw": "0.193",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 0.342,
+      "raw": "0.342",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 10.31,
+      "raw": "10.31",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 4.01,
+      "raw": "4.01",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      }
+    },
+    {
+      "value": 0.8,
+      "raw": "0.8",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 0.12,
+      "raw": "0.120",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 0.288,
+      "raw": "0.288",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 0.141,
+      "raw": "0.141",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 0.27,
+      "raw": "0.270",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 15.17,
+      "raw": "15.17",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 6.66,
+      "raw": "6.66",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      }
+    },
+    {
+      "value": 0.9,
+      "raw": "0.9",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 0.063,
+      "raw": "0.063",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 0.152,
+      "raw": "0.152",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 0.087,
+      "raw": "0.087",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 0.192,
+      "raw": "0.192",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 27.6,
+      "raw": "27.60",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 20.89,
+      "raw": "20.89",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      }
+    },
+    {
+      "value": 1.0,
+      "raw": "1",
+      "field": "J",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 0.03,
+      "raw": "0.030",
+      "field": "CFD_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "CFD_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 0.094,
+      "raw": "0.094",
+      "field": "CFD_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "CFD_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 0.029,
+      "raw": "0.029",
+      "field": "EXP_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 0.108,
+      "raw": "0.108",
+      "field": "EXP_10KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 2.27,
+      "raw": "2.27",
+      "field": "ERR_KT",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "ERR_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    },
+    {
+      "value": 13.25,
+      "raw": "13.25",
+      "field": "ERR_KQ",
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "ERR_KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      }
+    }
+  ],
+  "anchor_points": [
+    {
+      "J": 0.1,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      },
+      "KT": 0.494,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      },
+      "10KQ": 0.683,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73% "
+      },
+      "eta0": 0.1151135313139038,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.1,
+          "source_line": 15
+        },
+        "KT": {
+          "value": 0.494,
+          "source_line": 15
+        },
+        "10KQ": {
+          "value": 0.683,
+          "source_line": 15
+        }
+      }
+    },
+    {
+      "J": 0.2,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      },
+      "KT": 0.447,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      },
+      "10KQ": 0.636,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22% "
+      },
+      "eta0": 0.2237177973650227,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.2,
+          "source_line": 16
+        },
+        "KT": {
+          "value": 0.447,
+          "source_line": 16
+        },
+        "10KQ": {
+          "value": 0.636,
+          "source_line": 16
+        }
+      }
+    },
+    {
+      "J": 0.3,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      },
+      "KT": 0.392,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      },
+      "10KQ": 0.585,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32% "
+      },
+      "eta0": 0.31994224457447684,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.3,
+          "source_line": 17
+        },
+        "KT": {
+          "value": 0.392,
+          "source_line": 17
+        },
+        "10KQ": {
+          "value": 0.585,
+          "source_line": 17
+        }
+      }
+    },
+    {
+      "J": 0.4,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      },
+      "KT": 0.343,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      },
+      "10KQ": 0.53,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72% "
+      },
+      "eta0": 0.41200109796618944,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.4,
+          "source_line": 18
+        },
+        "KT": {
+          "value": 0.343,
+          "source_line": 18
+        },
+        "10KQ": {
+          "value": 0.53,
+          "source_line": 18
+        }
+      }
+    },
+    {
+      "J": 0.5,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      },
+      "KT": 0.29,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      },
+      "10KQ": 0.471,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50% "
+      },
+      "eta0": 0.4899674468858774,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.5,
+          "source_line": 19
+        },
+        "KT": {
+          "value": 0.29,
+          "source_line": 19
+        },
+        "10KQ": {
+          "value": 0.471,
+          "source_line": 19
+        }
+      }
+    },
+    {
+      "J": 0.6,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      },
+      "KT": 0.241,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      },
+      "10KQ": 0.409,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26% "
+      },
+      "eta0": 0.5626847132295371,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.6,
+          "source_line": 20
+        },
+        "KT": {
+          "value": 0.241,
+          "source_line": 20
+        },
+        "10KQ": {
+          "value": 0.409,
+          "source_line": 20
+        }
+      }
+    },
+    {
+      "J": 0.7,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      },
+      "KT": 0.193,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      },
+      "10KQ": 0.342,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01% "
+      },
+      "eta0": 0.6287085617460544,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.7,
+          "source_line": 21
+        },
+        "KT": {
+          "value": 0.193,
+          "source_line": 21
+        },
+        "10KQ": {
+          "value": 0.342,
+          "source_line": 21
+        }
+      }
+    },
+    {
+      "J": 0.8,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      },
+      "KT": 0.141,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      },
+      "10KQ": 0.27,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66% "
+      },
+      "eta0": 0.664913984472807,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.8,
+          "source_line": 22
+        },
+        "KT": {
+          "value": 0.141,
+          "source_line": 22
+        },
+        "10KQ": {
+          "value": 0.27,
+          "source_line": 22
+        }
+      }
+    },
+    {
+      "J": 0.9,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      },
+      "KT": 0.087,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      },
+      "10KQ": 0.192,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89% "
+      },
+      "eta0": 0.6490537522966356,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 0.9,
+          "source_line": 23
+        },
+        "KT": {
+          "value": 0.087,
+          "source_line": 23
+        },
+        "10KQ": {
+          "value": 0.192,
+          "source_line": 23
+        }
+      }
+    },
+    {
+      "J": 1.0,
+      "J_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "J",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      },
+      "KT": 0.029,
+      "KT_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "EXP_KT",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      },
+      "10KQ": 0.108,
+      "10KQ_source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "field": "EXP_10KQ",
+        "table": "Table 2. Comparison of CFD and Experimental Results",
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25% "
+      },
+      "eta0": 0.42736049533934867,
+      "eta0_formula": "eta0 = 5 * J * KT / (pi * 10KQ)",
+      "eta0_operands": {
+        "J": {
+          "value": 1.0,
+          "source_line": 24
+        },
+        "KT": {
+          "value": 0.029,
+          "source_line": 24
+        },
+        "10KQ": {
+          "value": 0.108,
+          "source_line": 24
+        }
+      }
+    }
+  ],
+  "source_consistency_checks": {
+    "tolerance_rule": "abs(published - recomputed) <= 100*(0.5e-d_cfd/|cfd| + 0.5e-d_exp/|exp|); the bound is derived from the printed decimals of the source columns",
+    "checks": [
+      {
+        "J": 0.1,
+        "field": "ERR_KT",
+        "published_pct": 3.06,
+        "recomputed_pct": 3.0364372469635654,
+        "abs_diff_pct_points": 0.023562753036434625,
+        "roundoff_bound_pct_points": 0.20559870851047649,
+        "pass": true,
+        "source_line": 15
+      },
+      {
+        "J": 0.1,
+        "field": "ERR_KQ",
+        "published_pct": 5.73,
+        "recomputed_pct": 5.710102489019038,
+        "abs_diff_pct_points": 0.019897510980962707,
+        "roundoff_bound_pct_points": 0.1508461937197057,
+        "pass": true,
+        "source_line": 15
+      },
+      {
+        "J": 0.2,
+        "field": "ERR_KT",
+        "published_pct": 3.24,
+        "recomputed_pct": 3.35570469798658,
+        "abs_diff_pct_points": 0.11570469798657967,
+        "roundoff_bound_pct_points": 0.22759756400695996,
+        "pass": true,
+        "source_line": 16
+      },
+      {
+        "J": 0.2,
+        "field": "ERR_KQ",
+        "published_pct": 7.22,
+        "recomputed_pct": 7.23270440251573,
+        "abs_diff_pct_points": 0.01270440251573035,
+        "roundoff_bound_pct_points": 0.16336211491312227,
+        "pass": true,
+        "source_line": 16
+      },
+      {
+        "J": 0.3,
+        "field": "ERR_KT",
+        "published_pct": 2.64,
+        "recomputed_pct": 2.5510204081632675,
+        "abs_diff_pct_points": 0.08897959183673265,
+        "roundoff_bound_pct_points": 0.2584410727641842,
+        "pass": true,
+        "source_line": 17
+      },
+      {
+        "J": 0.3,
+        "field": "ERR_KQ",
+        "published_pct": 5.32,
+        "recomputed_pct": 5.299145299145285,
+        "abs_diff_pct_points": 0.020854700854715524,
+        "roundoff_bound_pct_points": 0.17572279305131291,
+        "pass": true,
+        "source_line": 17
+      },
+      {
+        "J": 0.4,
+        "field": "ERR_KT",
+        "published_pct": 3.73,
+        "recomputed_pct": 3.7900874635568544,
+        "abs_diff_pct_points": 0.06008746355685446,
+        "roundoff_bound_pct_points": 0.2972877462673381,
+        "pass": true,
+        "source_line": 18
+      },
+      {
+        "J": 0.4,
+        "field": "ERR_KQ",
+        "published_pct": 5.72,
+        "recomputed_pct": 5.660377358490571,
+        "abs_diff_pct_points": 0.05962264150942875,
+        "roundoff_bound_pct_points": 0.19433962264150945,
+        "pass": true,
+        "source_line": 18
+      },
+      {
+        "J": 0.5,
+        "field": "ERR_KT",
+        "published_pct": 4.23,
+        "recomputed_pct": 4.137931034482743,
+        "abs_diff_pct_points": 0.09206896551725752,
+        "roundoff_bound_pct_points": 0.35226990821136195,
+        "pass": true,
+        "source_line": 19
+      },
+      {
+        "J": 0.5,
+        "field": "ERR_KQ",
+        "published_pct": 0.5,
+        "recomputed_pct": 0.4246284501061575,
+        "abs_diff_pct_points": 0.07537154989384248,
+        "roundoff_bound_pct_points": 0.21186535776966825,
+        "pass": true,
+        "source_line": 19
+      },
+      {
+        "J": 0.6,
+        "field": "ERR_KT",
+        "published_pct": 6.49,
+        "recomputed_pct": 6.6390041493775875,
+        "abs_diff_pct_points": 0.14900414937758732,
+        "roundoff_bound_pct_points": 0.42969110189027204,
+        "pass": true,
+        "source_line": 20
+      },
+      {
+        "J": 0.6,
+        "field": "ERR_KQ",
+        "published_pct": 1.26,
+        "recomputed_pct": 1.2224938875305635,
+        "abs_diff_pct_points": 0.03750611246943647,
+        "roundoff_bound_pct_points": 0.24302233561295963,
+        "pass": true,
+        "source_line": 20
+      },
+      {
+        "J": 0.7,
+        "field": "ERR_KT",
+        "published_pct": 10.31,
+        "recomputed_pct": 10.362694300518143,
+        "abs_diff_pct_points": 0.05269430051814261,
+        "roundoff_bound_pct_points": 0.5480846985534159,
+        "pass": true,
+        "source_line": 21
+      },
+      {
+        "J": 0.7,
+        "field": "ERR_KQ",
+        "published_pct": 4.01,
+        "recomputed_pct": 4.093567251461976,
+        "abs_diff_pct_points": 0.08356725146197608,
+        "roundoff_bound_pct_points": 0.2866482686116039,
+        "pass": true,
+        "source_line": 21
+      },
+      {
+        "J": 0.8,
+        "field": "ERR_KT",
+        "published_pct": 15.17,
+        "recomputed_pct": 14.89361702127659,
+        "abs_diff_pct_points": 0.2763829787234098,
+        "roundoff_bound_pct_points": 0.7712765957446809,
+        "pass": true,
+        "source_line": 22
+      },
+      {
+        "J": 0.8,
+        "field": "ERR_KQ",
+        "published_pct": 6.66,
+        "recomputed_pct": 6.666666666666651,
+        "abs_diff_pct_points": 0.006666666666650833,
+        "roundoff_bound_pct_points": 0.3587962962962963,
+        "pass": true,
+        "source_line": 22
+      },
+      {
+        "J": 0.9,
+        "field": "ERR_KT",
+        "published_pct": 27.6,
+        "recomputed_pct": 27.58620689655172,
+        "abs_diff_pct_points": 0.013793103448282551,
+        "roundoff_bound_pct_points": 1.3683634373289546,
+        "pass": true,
+        "source_line": 23
+      },
+      {
+        "J": 0.9,
+        "field": "ERR_KQ",
+        "published_pct": 20.89,
+        "recomputed_pct": 20.833333333333336,
+        "abs_diff_pct_points": 0.05666666666666487,
+        "roundoff_bound_pct_points": 0.5893640350877193,
+        "pass": true,
+        "source_line": 23
+      },
+      {
+        "J": 1.0,
+        "field": "ERR_KT",
+        "published_pct": 2.27,
+        "recomputed_pct": 3.4482758620689564,
+        "abs_diff_pct_points": 1.1782758620689564,
+        "roundoff_bound_pct_points": 3.3908045977011496,
+        "pass": true,
+        "source_line": 24
+      },
+      {
+        "J": 1.0,
+        "field": "ERR_KQ",
+        "published_pct": 13.25,
+        "recomputed_pct": 12.962962962962962,
+        "abs_diff_pct_points": 0.2870370370370381,
+        "roundoff_bound_pct_points": 0.9948778565799843,
+        "pass": true,
+        "source_line": 24
+      }
+    ],
+    "max_abs_diff_pct_points": 1.1782758620689564,
+    "max_diff_beyond_roundoff_pct_points": -0.11189286602038029,
+    "worst_raw_check": {
+      "J": 1.0,
+      "field": "ERR_KT",
+      "abs_diff_pct_points": 1.1782758620689564,
+      "roundoff_bound_pct_points": 3.3908045977011496,
+      "within_roundoff": true
+    },
+    "worst_relative_check": {
+      "J": 0.2,
+      "field": "ERR_KT",
+      "abs_diff_pct_points": 0.11570469798657967,
+      "roundoff_bound_pct_points": 0.22759756400695996,
+      "ratio": 0.5083740614334581
+    },
+    "all_pass": true
+  },
+  "anchor_table_agreement": {
+    "against": "benchmarks/anchors/kp505_openwater.json",
+    "checks": [
+      {
+        "J": 0.1,
+        "pinned_table_key": 0.1,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.2,
+        "pinned_table_key": 0.2,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.3,
+        "pinned_table_key": 0.3,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.4,
+        "pinned_table_key": 0.4,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.5,
+        "pinned_table_key": 0.5,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.6,
+        "pinned_table_key": 0.6,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.7,
+        "pinned_table_key": 0.7,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.8,
+        "pinned_table_key": 0.8,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 0.9,
+        "pinned_table_key": 0.9,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      },
+      {
+        "J": 1.0,
+        "pinned_table_key": 1.0,
+        "pinned_present": true,
+        "KT_match": true,
+        "10KQ_match": true
+      }
+    ],
+    "all_match": true
+  },
+  "design_point": {
+    "J": 0.7
+  },
+  "cross_repository_backcheck": {
+    "available": true,
+    "repo": "/root/TensorLBM",
+    "script": "/root/TensorLBM/benchmarks/bench_propeller.py",
+    "script_sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+    "block_lines": [
+      29,
+      36
+    ],
+    "declared_citation_verbatim": "# KP505 reference data (Fujisawa et al. 2000, SIMMAN 2008)",
+    "n_entries": 6,
+    "entries": [
+      {
+        "J": 0.1,
+        "first": 0.45,
+        "second": 0.065,
+        "line": 30,
+        "verbatim": "    0.1: (0.450, 0.065),"
+      },
+      {
+        "J": 0.3,
+        "first": 0.42,
+        "second": 0.061,
+        "line": 31,
+        "verbatim": "    0.3: (0.420, 0.061),"
+      },
+      {
+        "J": 0.5,
+        "first": 0.37,
+        "second": 0.055,
+        "line": 32,
+        "verbatim": "    0.5: (0.370, 0.055),"
+      },
+      {
+        "J": 0.7,
+        "first": 0.29,
+        "second": 0.047,
+        "line": 33,
+        "verbatim": "    0.7: (0.290, 0.047),"
+      },
+      {
+        "J": 0.9,
+        "first": 0.17,
+        "second": 0.033,
+        "line": 34,
+        "verbatim": "    0.9: (0.170, 0.033),"
+      },
+      {
+        "J": 1.1,
+        "first": 0.04,
+        "second": 0.015,
+        "line": 35,
+        "verbatim": "    1.1: (0.040, 0.015),"
+      }
+    ],
+    "comparison": [
+      {
+        "J_circulating": 0.1,
+        "J_matched": 0.1,
+        "J_exact_match": true,
+        "circulating_KT": 0.45,
+        "anchor_KT": 0.494,
+        "dKT_pct": -8.906882591093114,
+        "circulating_second": 0.065,
+        "anchor_10KQ": 0.683,
+        "d10KQ_pct_as_is": -90.48316251830161,
+        "d10KQ_pct_times_ten": -4.831625183016109,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 30,
+          "verbatim": "    0.1: (0.450, 0.065),"
+        }
+      },
+      {
+        "J_circulating": 0.3,
+        "J_matched": 0.3,
+        "J_exact_match": true,
+        "circulating_KT": 0.42,
+        "anchor_KT": 0.392,
+        "dKT_pct": 7.142857142857134,
+        "circulating_second": 0.061,
+        "anchor_10KQ": 0.585,
+        "d10KQ_pct_as_is": -89.57264957264958,
+        "d10KQ_pct_times_ten": 4.273504273504278,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 31,
+          "verbatim": "    0.3: (0.420, 0.061),"
+        }
+      },
+      {
+        "J_circulating": 0.5,
+        "J_matched": 0.5,
+        "J_exact_match": true,
+        "circulating_KT": 0.37,
+        "anchor_KT": 0.29,
+        "dKT_pct": 27.58620689655173,
+        "circulating_second": 0.055,
+        "anchor_10KQ": 0.471,
+        "d10KQ_pct_as_is": -88.32271762208069,
+        "d10KQ_pct_times_ten": 16.77282377919322,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 32,
+          "verbatim": "    0.5: (0.370, 0.055),"
+        }
+      },
+      {
+        "J_circulating": 0.7,
+        "J_matched": 0.7,
+        "J_exact_match": true,
+        "circulating_KT": 0.29,
+        "anchor_KT": 0.193,
+        "dKT_pct": 50.25906735751294,
+        "circulating_second": 0.047,
+        "anchor_10KQ": 0.342,
+        "d10KQ_pct_as_is": -86.25730994152048,
+        "d10KQ_pct_times_ten": 37.426900584795305,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 33,
+          "verbatim": "    0.7: (0.290, 0.047),"
+        }
+      },
+      {
+        "J_circulating": 0.9,
+        "J_matched": 0.9,
+        "J_exact_match": true,
+        "circulating_KT": 0.17,
+        "anchor_KT": 0.087,
+        "dKT_pct": 95.40229885057474,
+        "circulating_second": 0.033,
+        "anchor_10KQ": 0.192,
+        "d10KQ_pct_as_is": -82.8125,
+        "d10KQ_pct_times_ten": 71.875,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 34,
+          "verbatim": "    0.9: (0.170, 0.033),"
+        }
+      },
+      {
+        "J_circulating": 1.1,
+        "J_matched": 1.0,
+        "J_exact_match": false,
+        "circulating_KT": 0.04,
+        "anchor_KT": 0.029,
+        "dKT_pct": 37.93103448275862,
+        "circulating_second": 0.015,
+        "anchor_10KQ": 0.108,
+        "d10KQ_pct_as_is": -86.11111111111111,
+        "d10KQ_pct_times_ten": 38.888888888888886,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 35,
+          "verbatim": "    1.1: (0.040, 0.015),"
+        }
+      }
+    ],
+    "comparison_vs_exact_J_only": [
+      {
+        "J_circulating": 0.1,
+        "J_matched": 0.1,
+        "J_exact_match": true,
+        "circulating_KT": 0.45,
+        "anchor_KT": 0.494,
+        "dKT_pct": -8.906882591093114,
+        "circulating_second": 0.065,
+        "anchor_10KQ": 0.683,
+        "d10KQ_pct_as_is": -90.48316251830161,
+        "d10KQ_pct_times_ten": -4.831625183016109,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 30,
+          "verbatim": "    0.1: (0.450, 0.065),"
+        }
+      },
+      {
+        "J_circulating": 0.3,
+        "J_matched": 0.3,
+        "J_exact_match": true,
+        "circulating_KT": 0.42,
+        "anchor_KT": 0.392,
+        "dKT_pct": 7.142857142857134,
+        "circulating_second": 0.061,
+        "anchor_10KQ": 0.585,
+        "d10KQ_pct_as_is": -89.57264957264958,
+        "d10KQ_pct_times_ten": 4.273504273504278,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 31,
+          "verbatim": "    0.3: (0.420, 0.061),"
+        }
+      },
+      {
+        "J_circulating": 0.5,
+        "J_matched": 0.5,
+        "J_exact_match": true,
+        "circulating_KT": 0.37,
+        "anchor_KT": 0.29,
+        "dKT_pct": 27.58620689655173,
+        "circulating_second": 0.055,
+        "anchor_10KQ": 0.471,
+        "d10KQ_pct_as_is": -88.32271762208069,
+        "d10KQ_pct_times_ten": 16.77282377919322,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 32,
+          "verbatim": "    0.5: (0.370, 0.055),"
+        }
+      },
+      {
+        "J_circulating": 0.7,
+        "J_matched": 0.7,
+        "J_exact_match": true,
+        "circulating_KT": 0.29,
+        "anchor_KT": 0.193,
+        "dKT_pct": 50.25906735751294,
+        "circulating_second": 0.047,
+        "anchor_10KQ": 0.342,
+        "d10KQ_pct_as_is": -86.25730994152048,
+        "d10KQ_pct_times_ten": 37.426900584795305,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 33,
+          "verbatim": "    0.7: (0.290, 0.047),"
+        }
+      },
+      {
+        "J_circulating": 0.9,
+        "J_matched": 0.9,
+        "J_exact_match": true,
+        "circulating_KT": 0.17,
+        "anchor_KT": 0.087,
+        "dKT_pct": 95.40229885057474,
+        "circulating_second": 0.033,
+        "anchor_10KQ": 0.192,
+        "d10KQ_pct_as_is": -82.8125,
+        "d10KQ_pct_times_ten": 71.875,
+        "source": {
+          "file": "/root/TensorLBM/benchmarks/bench_propeller.py",
+          "sha256": "1f289458958d45a26011f2f02a01b9bbff3994ed4a1a2ede193f0ad5b041f9cd",
+          "line": 34,
+          "verbatim": "    0.9: (0.170, 0.033),"
+        }
+      }
+    ],
+    "n_exact_J": 5,
+    "summary": {
+      "max_abs_dKT_pct": 95.40229885057474,
+      "best_case_max_abs_d10KQ_pct": 71.875,
+      "identical_to_source_table": false
+    },
+    "example_script": {
+      "path": "/root/TensorLBM/examples/propeller_openwater_d3q27.py",
+      "exists": false
+    }
+  },
+  "criteria": [
+    {
+      "id": "T1-every-number-has-source",
+      "statement": "every table number carries file + sha256 + line + field + verbatim line",
+      "threshold": "n_with_source == n_numbers",
+      "measured": {
+        "n_numbers": 70,
+        "n_with_source": 70
+      },
+      "pass": true
+    },
+    {
+      "id": "T2-machine-reread",
+      "statement": "the artefact can be re-read against the sources and reproduces every number",
+      "threshold": "verify() reports 0 mismatches",
+      "measured": {
+        "checked_by": "tensorbem.tools/tests: tests/test_w20_kp505_transcription.py"
+      },
+      "pass": true
+    },
+    {
+      "id": "T3-source-self-consistency",
+      "statement": "the source's own error columns reproduce from its own CFD/Experimental columns",
+      "threshold": "every row within the 3-decimal round-off bound (see tolerance_rule)",
+      "measured": {
+        "max_abs_diff_pct_points": 1.1782758620689564,
+        "n_checks": 20
+      },
+      "pass": true
+    },
+    {
+      "id": "T4-design-point-present",
+      "statement": "the design advance ratio J = 0.70 is in the transcribed set",
+      "threshold": "J = 0.70 present",
+      "measured": {
+        "J": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5,
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ],
+        "design_J": 0.7
+      },
+      "pass": true
+    },
+    {
+      "id": "T5-anchor-table-agreement",
+      "statement": "the transcribed Experimental columns equal the pinned anchor table",
+      "threshold": "0 mismatches over all points",
+      "measured": {
+        "all_match": true,
+        "n_points": 10
+      },
+      "pass": true
+    },
+    {
+      "id": "T6-circulating-constants-are-source-values",
+      "statement": "the KP505 constants circulating in TensorLBM are the values of the source table",
+      "threshold": "0 rows differ; identical_to_source_table = true",
+      "measured": {
+        "identical_to_source_table": false,
+        "max_abs_dKT_pct": 95.40229885057474,
+        "best_case_max_abs_d10KQ_pct": 71.875
+      },
+      "pass": false
+    },
+    {
+      "id": "T7-circulating-J-grid-is-source-grid",
+      "statement": "every advance ratio of the circulating table is an advance ratio of the source table",
+      "threshold": "0 entries outside [0.1, 1.0] (the source table spans J = 0.1 ... 1.0)",
+      "measured": {
+        "n_entries": 6,
+        "n_offgrid": 1,
+        "offgrid_J": [
+          1.1
+        ]
+      },
+      "pass": false
+    }
+  ],
+  "verdict": {
+    "all_criteria_pass": false,
+    "transcription_quality_all_pass": true,
+    "circulating_constants_are_source_values": false,
+    "honest_notes": [
+      "The anchor is a SECONDARY_REPRODUCTION of the KRISO KP505 open-water test: the numbers come from the Experimental columns of Table 2 of Iftikhar & Takinaci (MARINE 2023), which does not cite the primary handout. Any accuracy claim built on it inherits that one tabulation step.",
+      "The cross-repository check (T6) is deliberately a *negative* finding when it fails: it is reported so that downstream papers stop quoting the circulating constants as if they were the KP505 table.",
+      "papers/data/w20-anchors/sources/lbm_bench_propeller_kp505_excerpt.txt holds the verbatim circulating block inside this repository, so the back-check can be re-run without access to the TensorLBM working tree."
+    ]
+  }
+}
