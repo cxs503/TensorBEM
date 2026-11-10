@@ -104,17 +104,34 @@ A = [[1.00, 0.55, 0.00],
 
 | 范围 | 命令 | 结果 |
 |---|---|---|
-| 领域全套（本单改动覆盖域） | `PYTHONPATH=src pytest tests/test_panel_quadratic.py tests/test_panel_quadratic_operator.py -q` | **59 passed**（4m10s，含本单新增 3 钉：sheared 硬限、非真空性守卫、入库工件检查） |
-| 新钉单跑 | `pytest tests/test_panel_quadratic_operator.py -k "shear or non_conformal" -q` | **3 passed**（8.7s） |
-| 全仓全套（子集定位） | `pytest tests -q --tb=line -rf`（xdist -n 6 并行于共享 99 控制面） | 见下方「main 既有失败」——与二次面板无关，已逐条在 clean main 复现 |
+| 领域全套（本单改动覆盖的全部测试面） | `PYTHONPATH=src pytest tests/test_panel_quadratic.py tests/test_panel_quadratic_operator.py -q` | **59 passed**（4m10s） |
+| 本单新增钉单跑 | `pytest tests/test_panel_quadratic_operator.py -k "shear or non_conformal" -q` | **3 passed**（8.7s） |
+| 全仓全套（2399 tests） | `pytest tests -q` / `pytest -q -n 6 --dist loadfile` | **未跑完（honest FAIL）**，见下 |
 
-**main 既有失败（在本 PR 之前的 clean main `723ebe8` 上逐条复现，与本 PR 无关）**：
+### 7.1 全仓全套：未完成，如实申报
 
-| 测试 | 复现命令（clean main） | 原因 |
+- 宿主为共享 99 控制面：本次执行期间 `load average` = **824 / 803 / 656**（1/5/15 min），全机 **509 个 python 进程**（同期多单并行）。
+- 串行 `pytest tests -q` 跑到 12%（约 290 例）用时 ~1h50m 未继续；并行 `pytest -q -n 6 --dist loadfile` 跑到 **96%** 用 90 min 后 worker 被饿死（主进程 CPU 0.1%），仍无终态汇总。
+- 因此**本单不宣称「全仓全套绿」**：这一项按 honest FAIL 记录。已把全量套跑递交集群（`run_cluster` job **cj121**，8 核，`python -m pytest tests -q`，5 小时超时），递交后 2 小时仍 `queued`（46 单在前），截至本报告未取回结果。
+
+### 7.2 观测到的失败：全部为 main 既有失败（逐条在 clean main `723ebe8` 复现）
+
+| 测试 | clean main 复现 | 原因（与二次面板无关） |
 |---|---|---|
-| `tests/test_bem_finite_depth_anchors.py::test_case_artifacts_and_documentation_exist` | 1 failed | `benchmarks/verified/bem_finite_depth/figures/` 从未入库（需先跑证据生成步骤） |
-| `tests/test_bem_verified_anchors.py::test_committed_artifacts_reproduce_from_the_current_code` | 3 failed, 28 deselected | 同上，`benchmarks/verified/*` 工件缺失 |
-| `tests/test_bem_verified_anchors.py::test_case_directories_contain_report_and_figure` | 同上 | 同上 |
-| `tests/test_bem_verified_anchors.py::test_summary_lists_a_verdict_per_case` | 同上 | 同上 |
+| `test_bem_finite_depth_anchors.py::test_case_artifacts_and_documentation_exist` | 1 failed | `benchmarks/verified/bem_finite_depth/figures/` 从未入库 |
+| `test_bem_verified_anchors.py::test_committed_artifacts_reproduce_from_the_current_code` | 3 failed | `benchmarks/verified/*` 工件缺失 |
+| `test_bem_verified_anchors.py::test_case_directories_contain_report_and_figure` | 同上 | 同上 |
+| `test_bem_verified_anchors.py::test_summary_lists_a_verdict_per_case` | 同上 | 同上 |
+| `test_capability_coverage.py::test_every_core_module_is_graded_or_explained` | 5 failed | 能力登记表与树漂移（仓级台账，非本单） |
+| `test_capability_coverage.py::test_coverage_gate_discriminates_against_the_pre_m6280_registry` | 同上 | 同上 |
+| `test_capability_coverage.py::test_study_driver_reports_zero_unowned_after_and_some_before` | 同上 | 同上 |
+| `test_capability_evidence.py::test_uncapability_baseline_has_no_untested_module_without_a_reason` | 同上 | 同上 |
+| `test_capability_evidence.py::test_published_block_matches_the_tree` | 同上 | 同上 |
 
-CI（`.github/workflows/tests.yml`）先跑证据生成步骤再跑 `pytest -q -n auto --dist loadfile`，因此这些工件在 CI 内存在、本地检出缺失——这是检出状态差异，不是代码缺陷；本 PR 未触及这些路径（diff 见 `git show --stat`）。
+复现命令（clean main）：`git checkout 723ebe8` 后
+`pytest tests/test_bem_finite_depth_anchors.py::test_case_artifacts_and_documentation_exist tests/test_bem_verified_anchors.py tests/test_capability_coverage.py tests/test_capability_evidence.py -q --tb=no -rf`
+→ 与在本分支上完全一致的 9 条失败。
+
+**未完成部分（明确声明）**：全量 2399 例中排在 84%–96% 区间的其它失败点位（≥12 处 `F`/`E`）因套跑未跑完而**未逐条命名与归属判定**；已命名的 9 条全部为 main 既有、且与本 PR 的 diff（8 文件，`git show --stat`）无交集。这一缺口由集群 job cj121 补证，属本单未完成项，未粉饰。
+
+CI（`.github/workflows/tests.yml`）在跑测试前先执行证据生成步骤，故上述工件在 CI 内存在、在本地检出缺失——这是检出状态差异，不是代码缺陷。
