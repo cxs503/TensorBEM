@@ -1,0 +1,129 @@
+{
+ "campaign": "cummins_matrix_closure",
+ "all_passed": true,
+ "verdicts": [
+  {
+   "id": "G0",
+   "passed": true,
+   "threshold": "0.3 < Cb <= 1 and |nabla - L B T Cb| / nabla <= 5%"
+  },
+  {
+   "id": "C0",
+   "passed": true,
+   "threshold": "eps_tau <= 1%, |K(tau_max)|/max|K| <= 0.5%"
+  },
+  {
+   "id": "C1",
+   "passed": true,
+   "threshold": "max relative error <= 2%"
+  },
+  {
+   "id": "C2",
+   "passed": true,
+   "threshold": "pointwise relative error <= 2%"
+  },
+  {
+   "id": "C3",
+   "passed": true,
+   "threshold": "K(t<0)=0; K_ij(0+) within 2% of (2/pi)int B_ij; signs as predicted"
+  },
+  {
+   "id": "C4",
+   "passed": true,
+   "threshold": "|zeta_decay - zeta_fd| / zeta_fd <= 5% (quadratic form); exact complex root reported alongside"
+  },
+  {
+   "id": "C5",
+   "passed": true,
+   "threshold": "|zeta_decay| / zeta_nominal <= 0.5%"
+  },
+  {
+   "id": "C6",
+   "passed": true,
+   "threshold": "curve of peak/phase error vs omega_p/omega_n, with the band where the substitute is admissible"
+  }
+ ],
+ "report": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/campaign.json",
+ "figures": [
+  {
+   "name": "fig1_radiation_sweep",
+   "caption": "Coupled radiation coefficients of the tilted submerged section from the in-house BEM sweep (48 panels, adaptively refined). The cross coefficient is large and negative, which is what makes the case a genuine matrix problem.",
+   "path": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/figures/fig1_radiation_sweep.png"
+  },
+  {
+   "name": "fig2_kernel_matrix",
+   "caption": "Normalised memory kernel matrix K_ij(tau). Each entry opens with its K_ij(0+) jump and falls inside the 0.5% band (dashed) before the truncation time (dotted).",
+   "path": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/figures/fig2_kernel_matrix.png"
+  },
+  {
+   "name": "fig3_harmonic_closure",
+   "caption": "Time-domain convolution (solid) against the frequency-domain radiation force (dashed) for both degrees of freedom under a two-mode prescribed motion.",
+   "path": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/figures/fig3_harmonic_closure.png"
+  },
+  {
+   "name": "fig4_free_decay",
+   "caption": "Free decay of the coupled Cummins equation (left) and its envelope against the frequency-domain damping ratios (right).",
+   "path": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/figures/fig4_free_decay.png"
+  },
+  {
+   "name": "fig5_error_envelope",
+   "caption": "Error envelope of the constant-coefficient substitute against omega_p/omega_n; dashed lines are the 5% and 10 deg acceptance bands.",
+   "path": "/root/tp-agent/work/m9162/docs/cummins_matrix_closure/figures/fig5_error_envelope.png"
+  }
+ ],
+ "kernel_grid": {
+  "budget_dt": 0.23620997395411977,
+  "dt": 0.0393683289923533,
+  "refinement": 6.0,
+  "span": 36.3369676599421,
+  "alias_report": {
+   "dt": 0.23620997395411977,
+   "nyquist": 13.3,
+   "omega_min": 0.44,
+   "omega_max": 13.3,
+   "images": 4,
+   "epsilon_tau": 0.0,
+   "worst_entry": [
+    0,
+    0
+   ],
+   "worst_omega": 0.44,
+   "per_entry": {
+    "(0, 0)": {
+     "epsilon_tau": 0.0,
+     "worst_omega": 0.44,
+     "tail_share": 1.970863430420037e-13
+    },
+    "(0, 1)": {
+     "epsilon_tau": 0.0,
+     "worst_omega": 0.44,
+     "tail_share": 2.0410956288898905e-13
+    },
+    "(1, 0)": {
+     "epsilon_tau": 0.0,
+     "worst_omega": 0.44,
+     "tail_share": 1.948281714112429e-13
+    },
+    "(1, 1)": {
+     "epsilon_tau": 0.0,
+     "worst_omega": 0.44,
+     "tail_share": 1.935495330256036e-13
+    }
+   },
+   "sweep_covers_nyquist": true
+  }
+ },
+ "case": {
+  "solver": "tensorbem.free_surface_solver.solve_radiation_indirect",
+  "panels": 48,
+  "panel_nodes": 24,
+  "semi_major": 1.2,
+  "semi_minor": 0.6,
+  "tilt_degrees": 20.0,
+  "submergence": 3.0,
+  "density": 1025.0,
+  "max_linear_residual": 8.559190621458047e-16,
+  "max_condition_number": 3.657679390829503
+ },
+ "sweep_points": 23
+}
