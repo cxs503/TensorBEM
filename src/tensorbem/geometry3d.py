@@ -1232,3 +1232,93 @@ def capsule_mesh(
     if six_volume < 0.0:
         face_arr = face_arr[:, ::-1]
     return TriangleMesh(verts, face_arr)
+
+
+def hemisphere_solid_mesh(
+    radius: float = 1.0,
+    n_theta: int = 8,
+    n_phi: int = 16,
+    center: tuple[float, float, float] = (0.0, 0.0, 0.0),
+) -> TriangleMesh:
+    """Return a closed *solid* hemisphere mesh: dome ``z <= 0`` plus its flat lid.
+
+    Unlike :func:`hemisphere_hull_mesh` (an open wetted hull that stops on the
+    calm waterline for free-surface solves), this is a closed body, so it can be
+    fed to the unbounded Laplace solver
+    (:func:`tensorbem.solver3d.compute_added_mass_matrix_3d`). The body is
+    ``(x - cx)^2 + (y - cy)^2 + (z - cz)^2 <= radius^2`` with ``z - cz <= 0``.
+
+    The mesh is a structured lat-lon cap (``n_theta`` latitude bands, the first
+    being a pole fan; ``n_phi`` azimuthal sectors) closed by a triangle fan on
+    the flat lid at ``z = cz``. The lid is exact (planar, uncut), so the only
+    discretisation error is the faceting of the spherical cap: the discrete
+    volume converges to ``2/3 pi radius^3`` from below at second order in
+    ``1/n_theta``.
+
+    Vertices lie exactly on the analytic surface, so the mesh is a *inscribed*
+    polyhedron: ``panel_count = 2*n_phi*(n_theta-1) + 2*n_phi``.
+    """
+    if isinstance(n_theta, (bool, np.bool_)) or isinstance(n_phi, (bool, np.bool_)):
+        raise ValueError("n_theta and n_phi must be integers")
+    n_t = int(n_theta)
+    n_p = int(n_phi)
+    if n_t != n_theta or n_p != n_phi:
+        raise ValueError("n_theta and n_phi must be integers")
+    if n_t < 1:
+        raise ValueError("n_theta must be at least 1")
+    if n_p < 3:
+        raise ValueError("n_phi must be at least 3")
+    a = float(radius)
+    if not math.isfinite(a) or a <= 0.0:
+        raise ValueError("radius must be a positive finite number")
+    origin = np.asarray(center, dtype=float)
+    if origin.shape != (3,) or not np.isfinite(origin).all():
+        raise ValueError("center must be a finite 3-vector")
+
+    vertices: list[tuple[float, float, float]] = [(0.0, 0.0, -a)]
+    pole = 0
+    rings: list[list[int]] = []
+    for j in range(1, n_t):
+        theta = 0.5 * math.pi * j / n_t
+        r = a * math.sin(theta)
+        z = -a * math.cos(theta)
+        ring: list[int] = []
+        for i in range(n_p):
+            phi = 2.0 * math.pi * i / n_p
+            ring.append(len(vertices))
+            vertices.append((r * math.cos(phi), r * math.sin(phi), z))
+        rings.append(ring)
+    rim: list[int] = []
+    for i in range(n_p):
+        phi = 2.0 * math.pi * i / n_p
+        rim.append(len(vertices))
+        vertices.append((a * math.cos(phi), a * math.sin(phi), 0.0))
+    lid_center = len(vertices)
+    vertices.append((0.0, 0.0, 0.0))
+
+    faces: list[tuple[int, int, int]] = []
+    for i in range(n_p):
+        faces.append((pole, rings[0][(i + 1) % n_p], rings[0][i]))
+    for j in range(len(rings) - 1):
+        lower, upper = rings[j], rings[j + 1]
+        for i in range(n_p):
+            k = (i + 1) % n_p
+            faces.append((lower[i], lower[k], upper[k]))
+            faces.append((lower[i], upper[k], upper[i]))
+    for i in range(n_p):
+        k = (i + 1) % n_p
+        faces.append((rings[-1][i], rings[-1][k], rim[k]))
+        faces.append((rings[-1][i], rim[k], rim[i]))
+    for i in range(n_p):
+        k = (i + 1) % n_p
+        faces.append((lid_center, rim[i], rim[k]))
+
+    coords = np.asarray(vertices, dtype=float) + origin
+    face_arr = np.asarray(faces, dtype=np.int64)
+    tri = coords[face_arr]
+    six_volume = float(
+        np.einsum("ij,ij->i", tri[:, 0], np.cross(tri[:, 1], tri[:, 2])).sum()
+    )
+    if six_volume < 0.0:
+        face_arr = face_arr[:, ::-1]
+    return TriangleMesh(coords, face_arr)
