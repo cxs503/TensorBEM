@@ -646,13 +646,22 @@ class QuadraticSurfaceMesh:
     faces : (F, 6) array of node indices per element.
         Columns 0-2 are vertex indices, columns 3-5 are edge midpoint indices.
         Edge midpoints are stored as separate nodes to allow curved geometry.
+
+    Notes
+    -----
+    The outward-normal convention is enforced on construction: the
+    isoparametric normal follows the face winding, so faces whose winding
+    makes the normal point toward the vertex centroid are re-wound
+    (``v1 <-> v2`` with the edge midpoints carried along).  The assembled
+    operators therefore always use outward normals for closed star-shaped
+    surfaces, including mirrored copies of valid meshes.
     """
     vertices: FloatArray
     faces: IntArray
 
     def __post_init__(self) -> None:
         vertices = np.asarray(self.vertices, dtype=float)
-        faces = np.asarray(self.faces, dtype=np.int64)
+        faces = np.array(self.faces, dtype=np.int64)  # private copy (may be re-wound)
         if vertices.ndim != 2 or vertices.shape[1] != 3:
             raise ValueError("vertices must have shape (V, 3)")
         if not np.isfinite(vertices).all():
@@ -664,8 +673,27 @@ class QuadraticSurfaceMesh:
         node_count = vertices.shape[0]
         if np.any(faces < 0) or np.any(faces >= node_count):
             raise ValueError("face indices out of range")
+        # Enforce the outward-normal convention.  The isoparametric normal is
+        # the cross product dx/dL1 x dx/dL2, so its direction follows the face
+        # winding: a mesh whose faces are wound inward (e.g. a mirrored copy
+        # of a valid mesh) would silently flip D and the recovered flux even
+        # though every identity on the original mesh still holds.  For a
+        # closed star-shaped surface the outward direction at an element is
+        # approximated by (element_centre - vertex_centroid); re-wind any face
+        # whose flat normal points the other way.  Re-winding swaps v1 <-> v2
+        # and carries each edge midpoint with its edge:
+        # (a, b, c, m_ab, m_bc, m_ca) -> (a, c, b, m_ca, m_bc, m_ab).
+        # Limitation: the heuristic assumes the surface is star-shaped with
+        # respect to the vertex centroid (all built-in generators are).
+        centre = vertices.mean(axis=0)
+        for f in range(faces.shape[0]):
+            row = faces[f]
+            v0, v1, v2 = vertices[row[0]], vertices[row[1]], vertices[row[2]]
+            if float(np.dot(np.cross(v1 - v0, v2 - v0),
+                            vertices[row].mean(axis=0) - centre)) < 0.0:
+                faces[f] = row[[0, 2, 1, 5, 4, 3]]
         object.__setattr__(self, "vertices", vertices.copy())
-        object.__setattr__(self, "faces", faces.copy())
+        object.__setattr__(self, "faces", faces)
 
     @property
     def element_count(self) -> int:
