@@ -431,6 +431,258 @@
     "n_hulls": 2,
     "parity_error": 0.02602907694754387,
     "relative_residual": 6.076798764503258e-16
+   },
+   {
+    "added_mass": [
+     [
+      343.0117218614574,
+      0.017654612738864657,
+      -0.4341468297879086
+     ],
+     [
+      -0.11486818147873276,
+      801.9999611070737,
+      -0.0018201017163269853
+     ],
+     [
+      -0.28601593790974633,
+      -0.0528033403853264,
+      128.4699052760177
+     ]
+    ],
+    "closure_panels": 2880,
+    "closure_volume": 0.5423076664880505,
+    "condition_number": 28.826706028037552,
+    "continuation": "rigid_wall",
+    "gap_over_beam": 0.5,
+    "label": "trimaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 16,
+     "nz": 8
+    },
+    "mesh_displacement": 0.27115383324402526,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 3,
+    "parity_error": 0.008732971532803058,
+    "relative_residual": 6.535769733200094e-16
+   },
+   {
+    "added_mass": [
+     [
+      171.62874789005684,
+      0.018313635512957352,
+      -0.30139278263542135
+     ],
+     [
+      -0.11790051565694773,
+      249.55592701776703,
+      -0.0016991473168675845
+     ],
+     [
+      -0.26395533400046073,
+      -0.05275253848270467,
+      64.48052187599144
+     ]
+    ],
+    "closure_panels": 2880,
+    "closure_volume": 0.5423076664880505,
+    "condition_number": 28.826706028037552,
+    "continuation": "pressure_release",
+    "gap_over_beam": 0.5,
+    "label": "trimaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 16,
+     "nz": 8
+    },
+    "mesh_displacement": 0.27115383324402526,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 3,
+    "parity_error": 0.022509885847414746,
+    "relative_residual": 6.650198363402637e-16
+   },
+   {
+    "added_mass": [
+     [
+      150.4682929514844,
+      0.0008642145685284531,
+      -0.07607790952837336
+     ],
+     [
+      -0.024464406987387884,
+      132.73742273457884,
+      -0.0006256188532504715
+     ],
+     [
+      -0.07396550206805168,
+      -0.010636204004793873,
+      27.451364495477943
+     ]
+    ],
+    "closure_panels": 1520,
+    "closure_volume": 0.1816834277463495,
+    "condition_number": 40.55889665916108,
+    "continuation": "rigid_wall",
+    "gap_over_beam": 0.5,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 20,
+     "nz": 10
+    },
+    "mesh_displacement": 0.09084171387317475,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "parity_error": 0.018056481689071712,
+    "relative_residual": 6.578899170610545e-16
+   },
+   {
+    "added_mass": [
+     [
+      61.24257769648695,
+      0.000906053597433271,
+      -0.056144550093223125
+     ],
+     [
+      -0.02401122625553194,
+      62.29828891423428,
+      -0.000611147417745717
+     ],
+     [
+      -0.057741689177203175,
+      -0.01063205151062212,
+      18.22044240805472
+     ]
+    ],
+    "closure_panels": 1520,
+    "closure_volume": 0.1816834277463495,
+    "condition_number": 40.55889665916108,
+    "continuation": "pressure_release",
+    "gap_over_beam": 0.5,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 20,
+     "nz": 10
+    },
+    "mesh_displacement": 0.09084171387317475,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "parity_error": 0.032389525540532316,
+    "relative_residual": 5.936805043660174e-16
+   },
+   {
+    "added_mass": [
+     [
+      249.4508686969081,
+      0.0006719083764025312,
+      -0.1681575636255827
+     ],
+     [
+      -0.04767750512015094,
+      419.8460409160103,
+      -0.0010556623963056027
+     ],
+     [
+      -0.13358137633216077,
+      -0.021460908182976687,
+      74.62479511375199
+     ]
+    ],
+    "closure_panels": 3040,
+    "closure_volume": 0.363366855492699,
+    "condition_number": 42.267008087587996,
+    "continuation": "rigid_wall",
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 20,
+     "nz": 10
+    },
+    "mesh_displacement": 0.1816834277463495,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "parity_error": 0.01111575585600807,
+    "relative_residual": 6.796366426598785e-16
+   },
+   {
+    "added_mass": [
+     [
+      116.0562943624027,
+      0.0010028731672625866,
+      -0.13136306606467443
+     ],
+     [
+      -0.048236265546808876,
+      152.40043393129292,
+      -0.0010126741332905007
+     ],
+     [
+      -0.11462044543253733,
+      -0.021446059864147212,
+      41.24218268235063
+     ]
+    ],
+    "closure_panels": 3040,
+    "closure_volume": 0.363366855492699,
+    "condition_number": 42.267008087587996,
+    "continuation": "pressure_release",
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 20,
+     "nz": 10
+    },
+    "mesh_displacement": 0.1816834277463495,
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "parity_error": 0.02572603552795223,
+    "relative_residual": 6.027662116931361e-16
    }
   ],
   "results": [
@@ -440,22 +692,22 @@
     "pressure_release": {
      "added_mass_finest": [
       [
-       61.61545443707202,
-       0.0073978835387832655,
-       -0.07818057021209532
+       61.24257769648695,
+       0.000906053597433271,
+       -0.056144550093223125
       ],
       [
-       -0.038833973477440574,
-       61.86017104818462,
-       -0.0008444841547939708
+       -0.02401122625553194,
+       62.29828891423428,
+       -0.000611147417745717
       ],
       [
-       -0.08885511933051111,
-       -0.01734539123161043,
-       18.01328572502007
+       -0.057741689177203175,
+       -0.01063205151062212,
+       18.22044240805472
       ]
      ],
-     "condition_number": 26.63769909348166,
+     "condition_number": 40.55889665916108,
      "mesh_study": [
       {
        "added_mass": [
@@ -510,6 +762,33 @@
        "nz": 8,
        "parity_error": 0.03272228398133658,
        "relative_residual": 5.584878814273989e-16
+      },
+      {
+       "added_mass": [
+        [
+         61.24257769648695,
+         0.000906053597433271,
+         -0.056144550093223125
+        ],
+        [
+         -0.02401122625553194,
+         62.29828891423428,
+         -0.000611147417745717
+        ],
+        [
+         -0.057741689177203175,
+         -0.01063205151062212,
+         18.22044240805472
+        ]
+       ],
+       "closure_panels": 1520,
+       "closure_volume": 0.1816834277463495,
+       "condition_number": 40.55889665916108,
+       "mesh_displacement": 0.09084171387317475,
+       "nx": 20,
+       "nz": 10,
+       "parity_error": 0.032389525540532316,
+       "relative_residual": 5.936805043660174e-16
       }
      ],
      "mode_names": [
@@ -517,28 +796,28 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.03272228398133658,
-     "relative_residual": 5.584878814273989e-16
+     "parity_error": 0.032389525540532316,
+     "relative_residual": 5.936805043660174e-16
     },
     "rigid_wall": {
      "added_mass_finest": [
       [
-       151.0292358520599,
-       0.007552811997291425,
-       -0.11289795113916253
+       150.4682929514844,
+       0.0008642145685284531,
+       -0.07607790952837336
       ],
       [
-       -0.03957191032836908,
-       132.05817731578384,
-       -0.0008685068981229368
+       -0.024464406987387884,
+       132.73742273457884,
+       -0.0006256188532504715
       ],
       [
-       -0.1119910971803192,
-       -0.017353284479283845,
-       27.181384182604187
+       -0.07396550206805168,
+       -0.010636204004793873,
+       27.451364495477943
       ]
      ],
-     "condition_number": 26.63769909348166,
+     "condition_number": 40.55889665916108,
      "mesh_study": [
       {
        "added_mass": [
@@ -593,6 +872,33 @@
        "nz": 8,
        "parity_error": 0.01816733120425237,
        "relative_residual": 5.846219331274596e-16
+      },
+      {
+       "added_mass": [
+        [
+         150.4682929514844,
+         0.0008642145685284531,
+         -0.07607790952837336
+        ],
+        [
+         -0.024464406987387884,
+         132.73742273457884,
+         -0.0006256188532504715
+        ],
+        [
+         -0.07396550206805168,
+         -0.010636204004793873,
+         27.451364495477943
+        ]
+       ],
+       "closure_panels": 1520,
+       "closure_volume": 0.1816834277463495,
+       "condition_number": 40.55889665916108,
+       "mesh_displacement": 0.09084171387317475,
+       "nx": 20,
+       "nz": 10,
+       "parity_error": 0.018056481689071712,
+       "relative_residual": 6.578899170610545e-16
       }
      ],
      "mode_names": [
@@ -600,8 +906,8 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.01816733120425237,
-     "relative_residual": 5.846219331274596e-16
+     "parity_error": 0.018056481689071712,
+     "relative_residual": 6.578899170610545e-16
     }
    },
    {
@@ -610,22 +916,22 @@
     "pressure_release": {
      "added_mass_finest": [
       [
-       116.84674564302622,
-       0.012899177173920208,
-       -0.18602079569611576
+       116.0562943624027,
+       0.0010028731672625866,
+       -0.13136306606467443
       ],
       [
-       -0.0779941886408316,
-       151.22782710792183,
-       -0.0013409167392597267
+       -0.048236265546808876,
+       152.40043393129292,
+       -0.0010126741332905007
       ],
       [
-       -0.17623986502722547,
-       -0.0349893193467058,
-       40.752628206051476
+       -0.11462044543253733,
+       -0.021446059864147212,
+       41.24218268235063
       ]
      ],
-     "condition_number": 27.75927834437141,
+     "condition_number": 42.267008087587996,
      "mesh_study": [
       {
        "added_mass": [
@@ -680,6 +986,33 @@
        "nz": 8,
        "parity_error": 0.02602907694754387,
        "relative_residual": 6.076798764503258e-16
+      },
+      {
+       "added_mass": [
+        [
+         116.0562943624027,
+         0.0010028731672625866,
+         -0.13136306606467443
+        ],
+        [
+         -0.048236265546808876,
+         152.40043393129292,
+         -0.0010126741332905007
+        ],
+        [
+         -0.11462044543253733,
+         -0.021446059864147212,
+         41.24218268235063
+        ]
+       ],
+       "closure_panels": 3040,
+       "closure_volume": 0.363366855492699,
+       "condition_number": 42.267008087587996,
+       "mesh_displacement": 0.1816834277463495,
+       "nx": 20,
+       "nz": 10,
+       "parity_error": 0.02572603552795223,
+       "relative_residual": 6.027662116931361e-16
       }
      ],
      "mode_names": [
@@ -687,28 +1020,28 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.02602907694754387,
-     "relative_residual": 6.076798764503258e-16
+     "parity_error": 0.02572603552795223,
+     "relative_residual": 6.027662116931361e-16
     },
     "rigid_wall": {
      "added_mass_finest": [
       [
-       250.58545600577136,
-       0.01268762790611513,
-       -0.26125810914549713
+       249.4508686969081,
+       0.0006719083764025312,
+       -0.1681575636255827
       ],
       [
-       -0.0771175510990385,
-       417.74191224389733,
-       -0.0014102970369615656
+       -0.04767750512015094,
+       419.8460409160103,
+       -0.0010556623963056027
       ],
       [
-       -0.20235577384716247,
-       -0.03501757302453434,
-       73.89194268394445
+       -0.13358137633216077,
+       -0.021460908182976687,
+       74.62479511375199
       ]
      ],
-     "condition_number": 27.75927834437141,
+     "condition_number": 42.267008087587996,
      "mesh_study": [
       {
        "added_mass": [
@@ -763,6 +1096,33 @@
        "nz": 8,
        "parity_error": 0.011182817971108499,
        "relative_residual": 6.239586007012711e-16
+      },
+      {
+       "added_mass": [
+        [
+         249.4508686969081,
+         0.0006719083764025312,
+         -0.1681575636255827
+        ],
+        [
+         -0.04767750512015094,
+         419.8460409160103,
+         -0.0010556623963056027
+        ],
+        [
+         -0.13358137633216077,
+         -0.021460908182976687,
+         74.62479511375199
+        ]
+       ],
+       "closure_panels": 3040,
+       "closure_volume": 0.363366855492699,
+       "condition_number": 42.267008087587996,
+       "mesh_displacement": 0.1816834277463495,
+       "nx": 20,
+       "nz": 10,
+       "parity_error": 0.01111575585600807,
+       "relative_residual": 6.796366426598785e-16
       }
      ],
      "mode_names": [
@@ -770,8 +1130,8 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.011182817971108499,
-     "relative_residual": 6.239586007012711e-16
+     "parity_error": 0.01111575585600807,
+     "relative_residual": 6.796366426598785e-16
     }
    },
    {
@@ -780,22 +1140,22 @@
     "pressure_release": {
      "added_mass_finest": [
       [
-       174.0501644070539,
-       0.0765649283672268,
-       -0.45423484093131833
+       171.62874789005684,
+       0.018313635512957352,
+       -0.30139278263542135
       ],
       [
-       -0.22166192013550517,
-       245.18145653195123,
-       -0.001600117388046848
+       -0.11790051565694773,
+       249.55592701776703,
+       -0.0016991473168675845
       ],
       [
-       -0.4599402017676411,
-       -0.10065105321198893,
-       62.816329967824295
+       -0.26395533400046073,
+       -0.05275253848270467,
+       64.48052187599144
       ]
      ],
-     "condition_number": 17.462209555409824,
+     "condition_number": 28.826706028037552,
      "mesh_study": [
       {
        "added_mass": [
@@ -823,6 +1183,33 @@
        "nz": 6,
        "parity_error": 0.022956430967964535,
        "relative_residual": 6.727363711557017e-16
+      },
+      {
+       "added_mass": [
+        [
+         171.62874789005684,
+         0.018313635512957352,
+         -0.30139278263542135
+        ],
+        [
+         -0.11790051565694773,
+         249.55592701776703,
+         -0.0016991473168675845
+        ],
+        [
+         -0.26395533400046073,
+         -0.05275253848270467,
+         64.48052187599144
+        ]
+       ],
+       "closure_panels": 2880,
+       "closure_volume": 0.5423076664880505,
+       "condition_number": 28.826706028037552,
+       "mesh_displacement": 0.27115383324402526,
+       "nx": 16,
+       "nz": 8,
+       "parity_error": 0.022509885847414746,
+       "relative_residual": 6.650198363402637e-16
       }
      ],
      "mode_names": [
@@ -830,28 +1217,28 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.022956430967964535,
-     "relative_residual": 6.727363711557017e-16
+     "parity_error": 0.022509885847414746,
+     "relative_residual": 6.650198363402637e-16
     },
     "rigid_wall": {
      "added_mass_finest": [
       [
-       346.20241667596423,
-       0.07654893105083042,
-       -0.7880986863398165
+       343.0117218614574,
+       0.017654612738864657,
+       -0.4341468297879086
       ],
       [
-       -0.21599873651030493,
-       793.010707843768,
-       -0.001817517494375441
+       -0.11486818147873276,
+       801.9999611070737,
+       -0.0018201017163269853
       ],
       [
-       -0.48400933881396857,
-       -0.10076547872675222,
-       125.66550734607377
+       -0.28601593790974633,
+       -0.0528033403853264,
+       128.4699052760177
       ]
      ],
-     "condition_number": 17.462209555409824,
+     "condition_number": 28.826706028037552,
      "mesh_study": [
       {
        "added_mass": [
@@ -879,6 +1266,33 @@
        "nz": 6,
        "parity_error": 0.008791054416120983,
        "relative_residual": 6.345862501647663e-16
+      },
+      {
+       "added_mass": [
+        [
+         343.0117218614574,
+         0.017654612738864657,
+         -0.4341468297879086
+        ],
+        [
+         -0.11486818147873276,
+         801.9999611070737,
+         -0.0018201017163269853
+        ],
+        [
+         -0.28601593790974633,
+         -0.0528033403853264,
+         128.4699052760177
+        ]
+       ],
+       "closure_panels": 2880,
+       "closure_volume": 0.5423076664880505,
+       "condition_number": 28.826706028037552,
+       "mesh_displacement": 0.27115383324402526,
+       "nx": 16,
+       "nz": 8,
+       "parity_error": 0.008732971532803058,
+       "relative_residual": 6.535769733200094e-16
       }
      ],
      "mode_names": [
@@ -886,8 +1300,8 @@
       "heave",
       "pitch"
      ],
-     "parity_error": 0.008791054416120983,
-     "relative_residual": 6.345862501647663e-16
+     "parity_error": 0.008732971532803058,
+     "relative_residual": 6.535769733200094e-16
     }
    }
   ]
@@ -912,6 +1326,7 @@
  },
  "criteria": {
   "all_pass": false,
+  "all_pass_original": false,
   "distance_decay_exponent": {
    "definition": "fitted n in |sigma_A - 1| = C (d/L)^(-n) (informative, not gated)",
    "limit": null,
@@ -932,6 +1347,183 @@
    "pass": false,
    "value": 0.3840126547355659
   },
+  "distance_decay_far_field_kd_gated": {
+   "definition": "max |sigma_A_heave - 1| over the points with k d >= 4.0 (k d is the physically relevant far-field parameter: the radiated wave decays like (k r)^-1/2, so d/L alone cannot gate it)",
+   "kd_points": [
+    {
+     "abs_sigma_minus_one": 0.6806727412293039,
+     "centre_distance_over_L": 0.09999999999999999,
+     "kd": 0.29344181844510536,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6806727412293039
+    },
+    {
+     "abs_sigma_minus_one": 0.6651046955781605,
+     "centre_distance_over_L": 0.105,
+     "kd": 0.3081139093673606,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6651046955781605
+    },
+    {
+     "abs_sigma_minus_one": 0.6501983372750206,
+     "centre_distance_over_L": 0.11,
+     "kd": 0.3227860002896159,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6501983372750206
+    },
+    {
+     "abs_sigma_minus_one": 0.6085043832157364,
+     "centre_distance_over_L": 0.125,
+     "kd": 0.3668022730563817,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6085043832157364
+    },
+    {
+     "abs_sigma_minus_one": 0.5451542810246359,
+     "centre_distance_over_L": 0.15,
+     "kd": 0.44016272766765796,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.545154281024636
+    },
+    {
+     "abs_sigma_minus_one": 0.42895575687833865,
+     "centre_distance_over_L": 0.19999999999999998,
+     "kd": 0.5868836368902107,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.4289557568783386
+    },
+    {
+     "abs_sigma_minus_one": 0.20910211861509342,
+     "centre_distance_over_L": 0.3,
+     "kd": 0.8803254553353159,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.2091021186150934
+    },
+    {
+     "abs_sigma_minus_one": 0.37112963784849684,
+     "centre_distance_over_L": 0.6,
+     "kd": 1.7606509106706318,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.6288703621515032
+    },
+    {
+     "abs_sigma_minus_one": 0.3224917978143135,
+     "centre_distance_over_L": 1.0999999999999999,
+     "kd": 3.2278600028961586,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.6775082021856865
+    },
+    {
+     "abs_sigma_minus_one": 0.05131238645064751,
+     "centre_distance_over_L": 2.6,
+     "kd": 7.62948727957274,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.9486876135493525
+    },
+    {
+     "abs_sigma_minus_one": 0.20210370047023452,
+     "centre_distance_over_L": 5.1,
+     "kd": 14.965532740700372,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.7978962995297655
+    },
+    {
+     "abs_sigma_minus_one": 0.0389222370437583,
+     "centre_distance_over_L": 10.1,
+     "kd": 29.637623662955637,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.0389222370437583
+    },
+    {
+     "abs_sigma_minus_one": 1.8207735361502628,
+     "centre_distance_over_L": 0.09999999999999999,
+     "kd": 1.1737672737804214,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.820773536150263
+    },
+    {
+     "abs_sigma_minus_one": 1.9710195524047998,
+     "centre_distance_over_L": 0.105,
+     "kd": 1.2324556374694424,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.9710195524047998
+    },
+    {
+     "abs_sigma_minus_one": 2.107030768250582,
+     "centre_distance_over_L": 0.11,
+     "kd": 1.2911440011584636,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 3.107030768250582
+    },
+    {
+     "abs_sigma_minus_one": 1.6154599892862938,
+     "centre_distance_over_L": 0.125,
+     "kd": 1.4672090922255268,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.6154599892862938
+    },
+    {
+     "abs_sigma_minus_one": 3.393103582980749,
+     "centre_distance_over_L": 0.15,
+     "kd": 1.7606509106706318,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": -2.393103582980749
+    },
+    {
+     "abs_sigma_minus_one": 1.209651789821169,
+     "centre_distance_over_L": 0.19999999999999998,
+     "kd": 2.347534547560843,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": -0.20965178982116903
+    },
+    {
+     "abs_sigma_minus_one": 0.18010105060156734,
+     "centre_distance_over_L": 0.3,
+     "kd": 3.5213018213412637,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 0.8198989493984327
+    },
+    {
+     "abs_sigma_minus_one": 0.8908553436468079,
+     "centre_distance_over_L": 0.6,
+     "kd": 7.042603642682527,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.8908553436468079
+    },
+    {
+     "abs_sigma_minus_one": 0.5822395927934809,
+     "centre_distance_over_L": 1.0999999999999999,
+     "kd": 12.911440011584634,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.582239592793481
+    },
+    {
+     "abs_sigma_minus_one": 0.1323572006666025,
+     "centre_distance_over_L": 2.6,
+     "kd": 30.51794911829096,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.1323572006666025
+    },
+    {
+     "abs_sigma_minus_one": 0.3840126547355659,
+     "centre_distance_over_L": 5.1,
+     "kd": 59.86213096280149,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 0.6159873452644341
+    },
+    {
+     "abs_sigma_minus_one": 0.08232382089987311,
+     "centre_distance_over_L": 10.1,
+     "kd": 118.55049465182255,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.0823238208998731
+    }
+   ],
+   "limit": 0.05,
+   "pass": false,
+   "points": 8,
+   "value": 0.8908553436468079
+  },
   "energy_far_field_agreement": {
    "definition": "max |B_near - B_far| / B_near (Haskind energy relation)",
    "limit": 0.1,
@@ -951,6 +1543,31 @@
    "infinite_frequency_added_mass",
    "infinite_frequency_added_mass_catamaran",
    "infinite_frequency_from_kramers_kronig",
+   "infinite_frequency_added_mass_catamaran_smooth",
+   "zero_frequency_added_mass_fine",
+   "zero_frequency_added_mass_limit",
+   "zero_frequency_added_mass_extrapolated",
+   "infinite_frequency_from_kramers_kronig_dense",
+   "distance_decay_far_field_kd_gated",
+   "energy_non_negative_damping",
+   "energy_far_field_agreement",
+   "distance_decay_far_field"
+  ],
+  "gated_added": [
+   "infinite_frequency_added_mass_catamaran_smooth",
+   "zero_frequency_added_mass_fine",
+   "zero_frequency_added_mass_limit",
+   "zero_frequency_added_mass_extrapolated",
+   "infinite_frequency_from_kramers_kronig_dense",
+   "distance_decay_far_field_kd_gated"
+  ],
+  "gated_original": [
+   "geometry",
+   "zero_frequency_damping",
+   "zero_frequency_added_mass",
+   "infinite_frequency_added_mass",
+   "infinite_frequency_added_mass_catamaran",
+   "infinite_frequency_from_kramers_kronig",
    "energy_non_negative_damping",
    "energy_far_field_agreement",
    "distance_decay_far_field"
@@ -964,28 +1581,28 @@
   "infinite_frequency_added_mass": {
    "definition": "|A_inf(1/omega^2 fit) - A_pressure_release| / A_pressure_release",
    "extrapolated": [
-    -58.12877852558424,
-    36.85759942525357,
-    7.098709265641861
+    -43.159965022927786,
+    46.58369164799894,
+    11.651736793964352
    ],
    "fit_r_squared": [
-    0.9950946671561095,
-    0.3802777599833548,
-    0.8951975415193157
+    0.9904420797830918,
+    0.29239415672089497,
+    0.30243651056720233
    ],
    "limit": 0.02,
    "pass": false,
    "per_mode": [
-    1.9434123152487868,
-    0.4041788310519841,
-    0.6059181332042102
+    1.7047378906359056,
+    0.25224765463252996,
+    0.36051295939919314
    ],
    "reference": [
-    61.61545443707202,
-    61.86017104818462,
-    18.01328572502007
+    61.24257769648695,
+    62.29828891423428,
+    18.22044240805472
    ],
-   "value": 1.9434123152487868
+   "value": 1.7047378906359056
   },
   "infinite_frequency_added_mass_catamaran": {
    "definition": "same comparison for the two-hull configuration",
@@ -1002,16 +1619,47 @@
    "limit": 0.02,
    "pass": false,
    "per_mode": [
-    0.220433885449897,
-    2.346850758522922,
-    2.1981838890396426
+    0.21512431532307014,
+    2.3364877539778135,
+    2.183961162497094
    ],
    "reference": [
-    116.84674564302622,
-    151.22782710792183,
-    40.752628206051476
+    116.0562943624027,
+    152.40043393129292,
+    41.24218268235063
    ],
-   "value": 2.346850758522922
+   "value": 2.3364877539778135
+  },
+  "infinite_frequency_added_mass_catamaran_smooth": {
+   "definition": "same 1/omega^2 fit for the pair, restricted to resolved ladder rows outside the detected resonance bands",
+   "extrapolated": [
+    91.08976349875813,
+    -203.6813136500778,
+    -48.829142552513375
+   ],
+   "fit_r_squared": [
+    0.979381725401134,
+    0.3423563529707959,
+    0.4070431210211889
+   ],
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    0.21512431532307014,
+    2.3364877539778135,
+    2.183961162497094
+   ],
+   "ratios_used": [
+    1.0,
+    1.25,
+    1.5
+   ],
+   "reference": [
+    116.0562943624027,
+    152.40043393129292,
+    41.24218268235063
+   ],
+   "value": 2.3364877539778135
   },
   "infinite_frequency_from_kramers_kronig": {
    "definition": "|A(inf) from the Kramers-Kronig moment of the measured B - A_pressure_release| / A_pressure_release, worst mode",
@@ -1026,8 +1674,8 @@
       0.5161898524601601,
       7.742847786902402
      ],
-     "reference": 61.61545443707202,
-     "relative_error": 0.538142968033298,
+     "reference": 61.24257769648695,
+     "relative_error": 0.5475079843021511,
      "resolved_rows": 9,
      "tail_exponent": -0.09784837681711966,
      "tail_moment": 0.0
@@ -1040,8 +1688,8 @@
       0.5161898524601601,
       7.742847786902402
      ],
-     "reference": 61.86017104818462,
-     "relative_error": 0.01176115777005415,
+     "reference": 62.29828891423428,
+     "relative_error": 0.01871102911084218,
      "resolved_rows": 9,
      "tail_exponent": 2.1237415381421236,
      "tail_moment": 3.329594296998026
@@ -1054,14 +1702,74 @@
       0.5161898524601601,
       7.742847786902402
      ],
-     "reference": 18.01328572502007,
-     "relative_error": 0.04667508046764218,
+     "reference": 18.22044240805472,
+     "relative_error": 0.057513874815319214,
      "resolved_rows": 9,
      "tail_exponent": 2.286262600056563,
      "tail_moment": 1.036279668338339
     }
    ],
-   "value": 0.538142968033298
+   "value": 0.5475079843021511
+  },
+  "infinite_frequency_from_kramers_kronig_dense": {
+   "band_ratio_max": 2.0,
+   "definition": "A(inf) = A(0) - (2/pi) int B/w^2 dw over the resolved ladder (A(0) Richardson-extrapolated; tail carried by a B ~ w^-p fit)",
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    {
+     "a_inf": 75.95405501890887,
+     "a_zero": 150.2879110395508,
+     "band_moment": 55.393043125988726,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 61.24257769648695,
+     "relative_error": 0.2402164944024853,
+     "resolved_rows": 4,
+     "tail_exponent": 1.252145928793471,
+     "tail_moment": 18.940812894653206
+    },
+    {
+     "a_inf": 121.51486119958689,
+     "a_zero": 132.60414179359788,
+     "band_moment": 10.565133953677377,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 62.29828891423428,
+     "relative_error": 0.9505328848899165,
+     "resolved_rows": 4,
+     "tail_exponent": 3.868023676430908,
+     "tail_moment": 0.5241466403336138
+    },
+    {
+     "a_inf": 23.680453351075325,
+     "a_zero": 27.402989361954038,
+     "band_moment": 3.564360549744511,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 18.22044240805472,
+     "relative_error": 0.2996640158752071,
+     "resolved_rows": 4,
+     "tail_exponent": 4.041102189114444,
+     "tail_moment": 0.158175461134204
+    }
+   ],
+   "ratios_used": [
+    1.0,
+    1.25,
+    1.5,
+    2.0
+   ],
+   "value": 0.9505328848899165
   },
   "negative_control_singularity": {
    "definition": "gap -> 0 raises the interference and superposed hulls break the system",
@@ -1072,6 +1780,39 @@
     "superposed_status": "solved",
     "superposition_singular": true
    }
+  },
+  "resonance_bands": {
+   "definition": "narrow-band resonances: B_mm local maximum >= 2.0 x the mean of its two neighbours in the fine scan delta(omega/omega_n)=0.025 (informative: recorded, not gated)",
+   "limit": null,
+   "pass": true,
+   "rows": 44,
+   "scan_mesh_nx": 12,
+   "value": [
+    {
+     "added_mass_sign_change": true,
+     "b_peak_over_median": 4.022148648592249,
+     "b_peak_over_neighbours": 1.1485727738854266,
+     "label": "catamaran",
+     "mode": "heave",
+     "omega_over_omega_n": 1.15,
+     "omega_over_omega_n_range": [
+      1.125,
+      1.175
+     ]
+    },
+    {
+     "added_mass_sign_change": true,
+     "b_peak_over_median": 4.031043554293204,
+     "b_peak_over_neighbours": 1.0947517076308986,
+     "label": "catamaran",
+     "mode": "pitch",
+     "omega_over_omega_n": 1.15,
+     "omega_over_omega_n_range": [
+      1.125,
+      1.175
+     ]
+    }
+   ]
   },
   "zero_frequency_added_mass": {
    "definition": "|A(omega_min) - A_rigid_wall| / A_rigid_wall, worst mode",
@@ -1095,6 +1836,94 @@
    ],
    "rigid_wall_mesh_nx": 12,
    "value": 0.030188908119514683
+  },
+  "zero_frequency_added_mass_extrapolated": {
+   "a_sweep_extrapolated": [
+    148.59087422455255,
+    136.82660966598002,
+    27.325673922368637
+   ],
+   "a_zero_extrapolated": [
+    150.2879110395508,
+    132.60414179359788,
+    27.402989361954038
+   ],
+   "definition": "Richardson-extrapolated (p=2) A(0) vs the same extrapolation of the omega_min radiation row",
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    0.011291905005929933,
+    0.0318426544998461,
+    0.002821423552159795
+   ],
+   "refinement_ratio": 0.7419354838709677,
+   "value": 0.0318426544998461
+  },
+  "zero_frequency_added_mass_fine": {
+   "definition": "|A(omega_min) - A_rigid_wall| / A_rigid_wall on a matched refinement mesh at omega/omega_n = 0.1 (the scan's lowest frequency); worst mode",
+   "limit": 0.02,
+   "mesh_ladder": [
+    {
+     "nx": 24,
+     "residual": [
+      0.005394591902513693,
+      0.03356269703135944,
+      9.286821527038644e-05
+     ]
+    },
+    {
+     "nx": 32,
+     "residual": [
+      0.0005689287627396464,
+      0.03495775796775316,
+      0.002442224802813738
+     ]
+    }
+   ],
+   "nx": 32,
+   "omega_over_omega_n": 0.1,
+   "pass": false,
+   "per_mode": [
+    0.0005689287627396464,
+    0.03495775796775316,
+    0.002442224802813738
+   ],
+   "value": 0.03495775796775316
+  },
+  "zero_frequency_added_mass_limit": {
+   "definition": "the same comparison at omega/omega_n = 0.02, where the O(omega^2) correction is small enough for the omega -> 0 limit to be measured (the trend is recorded separately)",
+   "limit": 0.02,
+   "nx": 24,
+   "omega_over_omega_n": 0.02,
+   "origin_trend": [
+    {
+     "nx": 24,
+     "omega_over_omega_n": 0.02,
+     "per_mode": [
+      0.009761758462236822,
+      0.00023837028514761034,
+      0.005224184812017552
+     ],
+     "worst_residual": 0.009761758462236822
+    },
+    {
+     "nx": 24,
+     "omega_over_omega_n": 0.1,
+     "per_mode": [
+      0.005394591902513693,
+      0.03356269703135944,
+      9.286821527038644e-05
+     ],
+     "worst_residual": 0.03356269703135944
+    }
+   ],
+   "pass": true,
+   "per_mode": [
+    0.009761758462236822,
+    0.00023837028514761034,
+    0.005224184812017552
+   ],
+   "value": 0.009761758462236822
   },
   "zero_frequency_damping": {
    "definition": "max_m [ B_m(omega_min) / max_omega B_m ] over the resolved sweep (each mode normalised by its own peak)",
@@ -1709,22 +2538,22 @@
   },
   {
    "far_field_diagonal": [
-    107.82604059428556,
-    764.7890068036786,
-    81.52400796983262
+    107.82530157268735,
+    764.6258072412803,
+    81.52391666906199
    ],
    "label": "catamaran",
    "near_field_diagonal": [
-    110.32932715344104,
-    764.3232788837339,
-    81.68730649485211
+    110.32841575938708,
+    764.2907778355764,
+    81.68737365365462
    ],
    "omega": 3.0971391147609606,
    "omega_over_omega_n": 0.6,
    "relative_difference": [
-    0.022689221657937114,
-    0.0006093336848576378,
-    0.001999068545977531
+    0.022687846729882555,
+    0.0004383533275813316,
+    0.002001006731905317
    ]
   },
   {
@@ -1749,30 +2578,26 @@
   },
   {
    "far_field_diagonal": [
-    754.7750521201511,
-    1309.878532908281,
-    343.5723032413845
+    754.7555556891419,
+    1308.194070088658,
+    343.5677152190734
    ],
    "label": "catamaran",
    "near_field_diagonal": [
-    773.7130497856372,
-    1303.325537645494,
-    346.0161680398252
+    773.6913601691613,
+    1302.5996332963107,
+    346.01315444498283
    ],
    "omega": 5.161898524601601,
    "omega_over_omega_n": 1.0,
    "relative_difference": [
-    0.02447677168006011,
-    0.005027903676793702,
-    0.007062863022514659
+    0.02447462315706766,
+    0.004294824479713884,
+    0.007067474731797352
    ]
   }
  ],
- "environment": {
-  "blas_threads": "1",
-  "pool_start_method": "spawn",
-  "workers": 12
- },
+ "environment": null,
  "frequency_scan": {
   "centre_distance_over_L": 0.15,
   "gap_over_L": 0.049999999999999996,
@@ -3546,7 +4371,8 @@
    1.0,
    1.25,
    1.5,
-   2.0
+   2.0,
+   2.5
   ],
   "rows": [
    {
@@ -3800,6 +4626,68 @@
    {
     "added_mass": [
      [
+      -56.01766121120397,
+      0.07204867239071872,
+      -0.7769086928331511
+     ],
+     [
+      -0.11230468734519658,
+      123.57871776003041,
+      0.02217335139188243
+     ],
+     [
+      -0.6915450717853684,
+      -0.05750634033073274,
+      34.58340133446426
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 116.26853713452873,
+    "damping": [
+     [
+      1372.6652324951397,
+      -0.11041096958482143,
+      9.515077246158764
+     ],
+     [
+      0.04105056552420186,
+      14.03714812471215,
+      0.03252744589039973
+     ],
+     [
+      -13.235420334179835,
+      0.024213570311380172,
+      5.317876657585835
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 20,
+     "nz": 10
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 16.981586715573226,
+    "nx": 20,
+    "omega": 12.904746311504002,
+    "omega_over_omega_n": 2.5,
+    "panel_count": 1520,
+    "ppw": 2.3433326703786443,
+    "relative_residual": 0.03044974451184999,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
       185.76583550974607,
       0.17173445372406573,
       -0.17224694791717132
@@ -3924,38 +4812,38 @@
    {
     "added_mass": [
      [
-      47.5473792207786,
-      0.02588597078659814,
-      -0.09244397064529868
+      47.72977365019663,
+      0.015432679003488275,
+      -0.06907062904743222
      ],
      [
-      -0.08075226714756246,
-      39.67467728677694,
-      0.0037527420492055722
+      -0.052362977931911976,
+      40.08027252868814,
+      0.0026163075482751852
      ],
      [
-      -0.05643727525320965,
-      -0.021776024559684713,
-      12.017165619444988
+      -0.03854011893250141,
+      -0.013245996229616596,
+      12.17876516361139
      ]
     ],
     "chief_rows": 5,
-    "condition_number": 60.89204008510165,
+    "condition_number": 93.71471386820916,
     "damping": [
      [
-      992.3509312522958,
-      0.1123253818235508,
-      -0.42691683086417637
+      991.7358372478066,
+      0.06588818802873272,
+      -0.30081782959033665
      ],
      [
-      0.03816306368718933,
-      126.4989761510807,
-      -0.020851992786745956
+      0.024778844975221394,
+      125.90147407475035,
+      -0.013184133295533295
      ],
      [
-      -0.230806256049759,
-      0.03461005884068595,
-      41.41902205005812
+      -0.16598267671313113,
+      0.020983420298988635,
+      41.35367857528794
      ]
     ],
     "gap_over_beam": 0.5,
@@ -3965,8 +4853,8 @@
      "L": 3.0,
      "T": 0.1875,
      "alpha": 1.1087500000000008,
-     "nx": 20,
-     "nz": 10
+     "nx": 25,
+     "nz": 12
     },
     "modes": [
      1,
@@ -3975,49 +4863,49 @@
     ],
     "n_hulls": 1,
     "nu": 6.113371217606362,
-    "nx": 20,
+    "nx": 25,
     "omega": 7.742847786902402,
     "omega_over_omega_n": 1.5,
-    "panel_count": 760,
-    "ppw": 6.509257417718455,
-    "relative_residual": 0.0010991014578793264,
+    "panel_count": 1152,
+    "ppw": 8.222219896065416,
+    "relative_residual": 0.0007158744040793365,
     "resolved": true
    },
    {
     "added_mass": [
      [
-      19.243370082040315,
-      0.02512710364542027,
-      -0.04727182911143933
+      20.163975138654447,
+      0.005557897260350784,
+      -0.03138256714658236
      ],
      [
-      -0.10327754909334202,
-      47.64360401830184,
-      0.001230038013819886
+      -0.027419565240719233,
+      48.619392152617046,
+      7.650705409446155e-05
      ],
      [
-      -0.03903908694792119,
-      -0.020735356493487362,
-      14.140288992298947
+      -0.01704563839026793,
+      -0.0033504544759723723,
+      14.54166436693985
      ]
     ],
     "chief_rows": 5,
-    "condition_number": 51.3370167851287,
+    "condition_number": 178.06587577864073,
     "damping": [
      [
-      693.5408581755626,
-      0.010737519496415313,
-      -0.45080463625655404
+      691.758456177455,
+      0.0027371817851792866,
+      -0.2356554289385256
      ],
      [
-      -0.1443680125391473,
-      42.91675987304108,
-      -0.026003724077635137
+      -0.028040976973913962,
+      41.37755490463819,
+      -0.006649071709542454
      ],
      [
-      -0.22776341802378158,
-      0.04993316625545304,
-      13.409670516950094
+      -0.10710078854265657,
+      0.008058932903358658,
+      12.930756865383202
      ]
     ],
     "gap_over_beam": 0.5,
@@ -4027,8 +4915,8 @@
      "L": 3.0,
      "T": 0.1875,
      "alpha": 1.1087500000000008,
-     "nx": 20,
-     "nz": 10
+     "nx": 40,
+     "nz": 12
     },
     "modes": [
      1,
@@ -4037,12 +4925,74 @@
     ],
     "n_hulls": 1,
     "nu": 10.868215497966865,
-    "nx": 20,
+    "nx": 40,
     "omega": 10.323797049203202,
     "omega_over_omega_n": 2.0,
-    "panel_count": 760,
-    "ppw": 3.6614572974666313,
-    "relative_residual": 0.0024689383618450777,
+    "panel_count": 1872,
+    "ppw": 7.515622873747295,
+    "relative_residual": 0.000378625364590197,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      23.15591972391433,
+      0.006368885945913059,
+      -0.024013085870725204
+     ],
+     [
+      -0.01707772396225337,
+      54.49806683639955,
+      0.0015716192535833525
+     ],
+     [
+      -0.02036314167581018,
+      -0.004329855053504734,
+      16.22028990051873
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 147.362184226544,
+    "damping": [
+     [
+      453.59522053473336,
+      -0.02368293474078946,
+      -0.167299144645231
+     ],
+     [
+      0.021545590468523095,
+      9.784122814508478,
+      0.00203519327945542
+     ],
+     [
+      -0.035082094915927564,
+      -0.00026053490223504745,
+      2.869985474220177
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 40,
+     "nz": 12
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 16.981586715573226,
+    "nx": 40,
+    "omega": 12.904746311504002,
+    "omega_over_omega_n": 2.5,
+    "panel_count": 1872,
+    "ppw": 4.80999863919827,
+    "relative_residual": 0.00045879419598983157,
     "resolved": false
    }
   ]
@@ -4063,6 +5013,197 @@
    7.742847786902402
   ],
   "resolved_rows": 9
+ },
+ "low_frequency_limit": {
+  "extrapolated": {
+   "a_sweep": [
+    148.59087422455255,
+    136.82660966598002,
+    27.325673922368637
+   ],
+   "a_zero": [
+    150.2879110395508,
+    132.60414179359788,
+    27.402989361954038
+   ]
+  },
+  "mesh_ladder_nx": [
+   24,
+   32
+  ],
+  "mode_names": [
+   "sway",
+   "heave",
+   "pitch"
+  ],
+  "pairs": [
+   {
+    "a_sweep": [
+     [
+      148.656,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      133.074,
+      0.0
+     ],
+     [
+      0.0,
+      0.0,
+      27.455
+     ]
+    ],
+    "a_zero": [
+     [
+      150.12144932834423,
+      -0.001399591724664117,
+      -0.054678544642873146
+     ],
+     [
+      -0.01660846868019576,
+      133.10572845044553,
+      -0.0004557628700466538
+     ],
+     [
+      -0.052438218684093776,
+      -0.007173093615560719,
+      27.599183233874495
+     ]
+    ],
+    "nx": 24,
+    "nz": 12,
+    "omega_over_omega_n": 0.02,
+    "parity_error": 0.01786322412205584,
+    "ppw": null,
+    "residual": [
+     0.009761758462236822,
+     0.00023837028514761034,
+     0.005224184812017552
+    ],
+    "source": "runs/m9161/tiny_omega.log (radiation_row, omega/omega_n = 0.02)"
+   },
+   {
+    "a_sweep": [
+     [
+      149.31160537340392,
+      0.030245609786818176,
+      -0.051704252677420987
+     ],
+     [
+      -0.039768040929097984,
+      137.57311568756623,
+      0.002570077565634934
+     ],
+     [
+      -0.0515707496691133,
+      -0.013199826958580024,
+      27.601746320764345
+     ]
+    ],
+    "a_zero": [
+     [
+      150.12144932834423,
+      -0.001399591724664117,
+      -0.054678544642873146
+     ],
+     [
+      -0.01660846868019576,
+      133.10572845044553,
+      -0.0004557628700466538
+     ],
+     [
+      -0.052438218684093776,
+      -0.007173093615560719,
+      27.599183233874495
+     ]
+    ],
+    "nx": 24,
+    "nz": 12,
+    "omega_over_omega_n": 0.1,
+    "parity_error": 0.01786322412205584,
+    "ppw": 1772.9161650891053,
+    "residual": [
+     0.005394591902513693,
+     0.03356269703135944,
+     9.286821527038644e-05
+    ]
+   },
+   {
+    "a_sweep": [
+     [
+      149.90017977095363,
+      0.018410503357041686,
+      -0.04446740593390252
+     ],
+     [
+      -0.025340670306849035,
+      138.18273875245328,
+      0.0015543062833154125
+     ],
+     [
+      -0.039171624720151746,
+      -0.0059674405602481925,
+      27.827196748187685
+     ]
+    ],
+    "a_zero": [
+     [
+      149.98551084206588,
+      -0.003005237669457266,
+      -0.04616121006481624
+     ],
+     [
+      -0.007761056764733425,
+      133.5153417505555,
+      -0.0004972148832407745
+     ],
+     [
+      -0.03973396743213373,
+      -0.0024843849454503682,
+      27.759402047994794
+     ]
+    ],
+    "nx": 32,
+    "nz": 12,
+    "omega_over_omega_n": 0.1,
+    "parity_error": 0.013533861730200323,
+    "ppw": 2389.5826572940114,
+    "residual": [
+     0.0005689287627396464,
+     0.03495775796775316,
+     0.002442224802813738
+    ]
+   }
+  ],
+  "ratios": [
+   0.02,
+   0.1
+  ],
+  "refinement_ratio": 0.7419354838709677,
+  "trend": [
+   {
+    "nx": 24,
+    "omega_over_omega_n": 0.02,
+    "per_mode": [
+     0.009761758462236822,
+     0.00023837028514761034,
+     0.005224184812017552
+    ],
+    "worst_residual": 0.009761758462236822
+   },
+   {
+    "nx": 24,
+    "omega_over_omega_n": 0.1,
+    "per_mode": [
+     0.005394591902513693,
+     0.03356269703135944,
+     9.286821527038644e-05
+    ],
+    "worst_residual": 0.03356269703135944
+   }
+  ]
  },
  "negative_control": {
   "growth": [
@@ -4375,88 +5516,88 @@
    {
     "added_mass": [
      [
-      -46.806793674350494,
-      0.025124662000720607,
-      -0.5287895232371452
+      -46.80679367435058,
+      0.025124662000781423,
+      -0.5287895232371524
      ],
      [
-      -0.823262905555692,
-      137.50794636292946,
-      -0.1381870812090855
+      -0.8232629055557108,
+      137.50794636292937,
+      -0.13818708120909307
      ],
      [
-      -0.6735099464033176,
-      -0.3599184679431359,
-      39.65418675982898
+      -0.6735099464033127,
+      -0.3599184679431355,
+      39.654186759828995
      ]
     ],
-    "condition_number": 101.9833858637039,
+    "condition_number": 101.98338586370328,
     "damping": [
      [
-      2180.3378423310396,
-      0.16905620282546582,
-      1.6732039560630392
+      2180.337842331039,
+      0.1690562028255284,
+      1.673203956063246
      ],
      [
-      0.15798212252054994,
-      124.38182447451119,
-      0.07498928134616377
+      0.1579821225203402,
+      124.38182447451145,
+      0.07498928134607945
      ],
      [
-      -1.5052129979492601,
-      0.42877288693448706,
-      65.01380119331333
+      -1.5052129979489193,
+      0.42877288693452925,
+      65.0138011933133
      ]
     ],
     "gap_over_beam": 0.0,
     "label": "superposed",
-    "relative_residual": 0.036941766526274095,
-    "sigma_A_heave": 1.8062839093485723,
-    "sigma_A_sway": -0.4945582942395103,
+    "relative_residual": 0.03694176652627408,
+    "sigma_A_heave": 1.8062839093485712,
+    "sigma_A_sway": -0.4945582942395112,
     "status": "solved"
    }
   ],
   "superposed": {
    "added_mass": [
     [
-     -46.806793674350494,
-     0.025124662000720607,
-     -0.5287895232371452
+     -46.80679367435058,
+     0.025124662000781423,
+     -0.5287895232371524
     ],
     [
-     -0.823262905555692,
-     137.50794636292946,
-     -0.1381870812090855
+     -0.8232629055557108,
+     137.50794636292937,
+     -0.13818708120909307
     ],
     [
-     -0.6735099464033176,
-     -0.3599184679431359,
-     39.65418675982898
+     -0.6735099464033127,
+     -0.3599184679431355,
+     39.654186759828995
     ]
    ],
-   "condition_number": 101.9833858637039,
+   "condition_number": 101.98338586370328,
    "damping": [
     [
-     2180.3378423310396,
-     0.16905620282546582,
-     1.6732039560630392
+     2180.337842331039,
+     0.1690562028255284,
+     1.673203956063246
     ],
     [
-     0.15798212252054994,
-     124.38182447451119,
-     0.07498928134616377
+     0.1579821225203402,
+     124.38182447451145,
+     0.07498928134607945
     ],
     [
-     -1.5052129979492601,
-     0.42877288693448706,
-     65.01380119331333
+     -1.5052129979489193,
+     0.42877288693452925,
+     65.0138011933133
     ]
    ],
    "gap_over_beam": 0.0,
    "label": "superposed",
-   "relative_residual": 0.036941766526274095,
-   "sigma_A_heave": 1.8062839093485723,
-   "sigma_A_sway": -0.4945582942395103,
+   "relative_residual": 0.03694176652627408,
+   "sigma_A_heave": 1.8062839093485712,
+   "sigma_A_sway": -0.4945582942395112,
    "status": "solved"
   },
   "superposed_contradicts_touching_limit": true,
@@ -5122,18 +6263,2822 @@
    }
   }
  },
+ "resonance": {
+  "bands": [
+   {
+    "added_mass_in_band": [
+     74.71511926201659,
+     -82.50415944954756,
+     -183.3123492754074
+    ],
+    "added_mass_sign_change": true,
+    "b_peak": 2731.4611649157346,
+    "b_peak_over_median": 4.022148648592249,
+    "b_peak_over_neighbours": 1.1485727738854266,
+    "label": "catamaran",
+    "mode": "heave",
+    "mode_index": 1,
+    "omega_over_omega_n": 1.15,
+    "omega_over_omega_n_range": [
+     1.125,
+     1.175
+    ]
+   },
+   {
+    "added_mass_in_band": [
+     34.03992040042466,
+     9.908174703654858,
+     -22.51329323628232
+    ],
+    "added_mass_sign_change": true,
+    "b_peak": 647.6519096536197,
+    "b_peak_over_median": 4.031043554293204,
+    "b_peak_over_neighbours": 1.0947517076308986,
+    "label": "catamaran",
+    "mode": "pitch",
+    "mode_index": 2,
+    "omega_over_omega_n": 1.15,
+    "omega_over_omega_n_range": [
+     1.125,
+     1.175
+    ]
+   }
+  ],
+  "gap_over_beam": 0.5,
+  "mesh": {
+   "B": 0.3,
+   "L": 3.0,
+   "T": 0.1875,
+   "alpha": 1.1087500000000008,
+   "nx": 12,
+   "nz": 6
+  },
+  "ratios": [
+   1.0,
+   1.025,
+   1.05,
+   1.075,
+   1.1,
+   1.125,
+   1.15,
+   1.175,
+   1.2,
+   1.225,
+   1.25,
+   1.275,
+   1.3,
+   1.325,
+   1.35,
+   1.375,
+   1.4,
+   1.425,
+   1.45,
+   1.475,
+   1.5,
+   1.525
+  ],
+  "rows": [
+   {
+    "added_mass": [
+     [
+      240.79342929757547,
+      0.2653304961577251,
+      -0.36279668582541297
+     ],
+     [
+      -0.2680896870993622,
+      194.86658916889184,
+      -0.011312288369889976
+     ],
+     [
+      -0.30324989930663404,
+      -0.08580294514838872,
+      57.90515839250269
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 30.007681993133016,
+    "damping": [
+     [
+      773.6913601691613,
+      0.4751985488859862,
+      2.2127384878111096
+     ],
+     [
+      0.9468476839360114,
+      1302.5996332963107,
+      -0.12556513708778735
+     ],
+     [
+      -0.8948109861976449,
+      0.26733310542951955,
+      346.01315444498283
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 2.7170538744917163,
+    "nx": 12,
+    "omega": 5.161898524601601,
+    "omega_over_omega_n": 1.0,
+    "panel_count": 528,
+    "ppw": 8.479164267817463,
+    "relative_residual": 0.0019162430221933977,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      233.75227993091872,
+      0.2600643910320758,
+      -0.4513299620516652
+     ],
+     [
+      -0.2621926986302356,
+      197.96094537795858,
+      -0.014610218182949412
+     ],
+     [
+      -0.2661034520100835,
+      -0.08527006538100769,
+      56.07049336240138
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 30.69144410541899,
+    "damping": [
+     [
+      800.6600252127373,
+      0.48618283116720723,
+      2.5067703189878006
+     ],
+     [
+      1.0906417580493712,
+      1423.0030811705246,
+      -0.14346901844487925
+     ],
+     [
+      -1.0304539829336705,
+      0.30586272384453356,
+      369.4438522021488
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 2.8546047268878585,
+    "nx": 12,
+    "omega": 5.290945987716641,
+    "omega_over_omega_n": 1.025,
+    "panel_count": 528,
+    "ppw": 8.070590617791757,
+    "relative_residual": 0.0021756212545052857,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      226.81633701669332,
+      0.2550133935932237,
+      -0.5625663137636646
+     ],
+     [
+      -0.2565433163404691,
+      199.4017660319245,
+      -0.019005041751925147
+     ],
+     [
+      -0.21231641189646347,
+      -0.0848229559617956,
+      54.12317252354056
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 31.670997957537413,
+    "damping": [
+     [
+      825.7028098140611,
+      0.4956975238691247,
+      2.8039033847346366
+     ],
+     [
+      1.2969016398448052,
+      1602.5556040104202,
+      -0.17019849865057762
+     ],
+     [
+      -1.1509938129068784,
+      0.35553066797868343,
+      400.7704854158678
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 2.9955518966271173,
+    "nx": 12,
+    "omega": 5.419993450831681,
+    "omega_over_omega_n": 1.05,
+    "panel_count": 528,
+    "ppw": 7.690851943598604,
+    "relative_residual": 0.002516284311305304,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      219.94549922377226,
+      0.25011342287647387,
+      -0.711557693678797
+     ],
+     [
+      -0.2560553816202418,
+      193.38144090288495,
+      -0.024459264908596193
+     ],
+     [
+      -0.13549407374429284,
+      -0.08512062996587856,
+      51.334081433976486
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 33.59096293452526,
+    "damping": [
+     [
+      848.4757421238646,
+      0.5039879600282736,
+      3.0791559271878164
+     ],
+     [
+      1.60677263830777,
+      1875.274183176203,
+      -0.2142239717570654
+     ],
+     [
+      -1.2093668806887812,
+      0.42303913674950466,
+      444.6376233892005
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.139895383709489,
+    "nx": 12,
+    "omega": 5.549040913946721,
+    "omega_over_omega_n": 1.075,
+    "panel_count": 528,
+    "ppw": 7.337297365336907,
+    "relative_residual": 0.0029732823213513187,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      213.14789124403362,
+      0.24525166035629029,
+      -0.9228385895303566
+     ],
+     [
+      -0.27645427694149943,
+      163.64728287358454,
+      -0.029563408638570075
+     ],
+     [
+      -0.02958244846757502,
+      -0.08808408615253352,
+      45.93912791316171
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 37.50526054779902,
+    "damping": [
+     [
+      868.4431931895188,
+      0.5111529356026492,
+      3.2190820568816196
+     ],
+     [
+      2.073172525827783,
+      2275.3018814681022,
+      -0.291740926004913
+     ],
+     [
+      -1.0982160184922871,
+      0.5180581233839,
+      506.39959856351527
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.2876351881349772,
+    "nx": 12,
+    "omega": 5.678088377061762,
+    "omega_over_omega_n": 1.1,
+    "panel_count": 528,
+    "ppw": 7.007573775055753,
+    "relative_residual": 0.0035791008526139395,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      206.48532226445462,
+      0.24022698602239473,
+      -1.2213432142188303
+     ],
+     [
+      -0.3569580829226026,
+      74.71511926201659,
+      -0.028125157898201567
+     ],
+     [
+      0.09944909506093584,
+      -0.098661659010449,
+      34.03992040042466
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 42.79001432512437,
+    "damping": [
+     [
+      885.0503350552005,
+      0.5166040905169806,
+      2.8622334929288447
+     ],
+     [
+      2.653192090403381,
+      2721.528850948615,
+      -0.41979977197414886
+     ],
+     [
+      -0.5869273042597694,
+      0.6472744001860913,
+      585.4273035171714
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.438771309903579,
+    "nx": 12,
+    "omega": 5.807135840176802,
+    "omega_over_omega_n": 1.125,
+    "panel_count": 528,
+    "ppw": 6.699586581979228,
+    "relative_residual": 0.004272001789738389,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      200.06062452046515,
+      0.23495886488539797,
+      -1.562321213127755
+     ],
+     [
+      -0.5221295206637223,
+      -82.50415944954756,
+      -0.010036630492753001
+     ],
+     [
+      0.19053990464618464,
+      -0.1258612082879842,
+      9.908174703654858
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 44.9648900080387,
+    "damping": [
+     [
+      897.8852483759774,
+      0.5174494775605563,
+      1.189261568002996
+     ],
+     [
+      2.8669962774217868,
+      2731.4611649157346,
+      -0.5524931294561198
+     ],
+     [
+      0.6593543073236635,
+      0.7800408836647394,
+      647.6519096536197
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.5933037490152944,
+    "nx": 12,
+    "omega": 5.936183303291841,
+    "omega_over_omega_n": 1.15,
+    "panel_count": 528,
+    "ppw": 6.411466365079367,
+    "relative_residual": 0.004675604587434263,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      193.99704726159175,
+      0.2302097983916871,
+      -1.6807997423000525
+     ],
+     [
+      -0.651998895070261,
+      -183.3123492754074,
+      0.012669764368478262
+     ],
+     [
+      0.09500930709623481,
+      -0.16939085763448916,
+      -22.51329323628232
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 44.6814319234064,
+    "damping": [
+     [
+      906.7797850259664,
+      0.5109915973334859,
+      -2.272846304725235
+     ],
+     [
+      2.303297368693829,
+      2034.7412383652127,
+      -0.5884515472241305
+     ],
+     [
+      2.409269755921918,
+      0.7924390108579613,
+      597.7668493472678
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.7512325054701257,
+    "nx": 12,
+    "omega": 6.065230766406882,
+    "omega_over_omega_n": 1.175,
+    "panel_count": 528,
+    "ppw": 6.141540438437275,
+    "relative_residual": 0.004473416109181813,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      188.41870550154925,
+      0.22665095781401867,
+      -1.3691692483222928
+     ],
+     [
+      -0.6737499626066747,
+      -178.79606670371993,
+      0.02391485268223388
+     ],
+     [
+      -0.18647427880083114,
+      -0.19948218507025378,
+      -39.28227441740708
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 39.87085414650839,
+    "damping": [
+     [
+      911.8683709706688,
+      0.5019749665241877,
+      -5.473145221812961
+     ],
+     [
+      1.6598233850987016,
+      1370.3987748390032,
+      -0.60354122857942
+     ],
+     [
+      3.26449160572567,
+      0.6235325683334494,
+      422.5127335139176
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 3.9125575792680714,
+    "nx": 12,
+    "omega": 6.194278229521921,
+    "omega_over_omega_n": 1.2,
+    "panel_count": 528,
+    "ppw": 5.888308519317682,
+    "relative_residual": 0.004227533351066401,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      183.4268313622409,
+      0.22368788782587273,
+      -0.9333069865851241
+     ],
+     [
+      -0.663004996038353,
+      -149.7406056448807,
+      0.036825901379796896
+     ],
+     [
+      -0.423732689166232,
+      -0.20220468019885138,
+      -34.96535555219506
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 42.4662959059033,
+    "damping": [
+     [
+      913.605298598152,
+      0.49472861516180006,
+      -6.67974694994987
+     ],
+     [
+      1.3188575999301293,
+      1031.0582491756275,
+      -0.6754272650714255
+     ],
+     [
+      2.8981107959641035,
+      0.43782699621379734,
+      265.30739104555965
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.0772789704091315,
+    "nx": 12,
+    "omega": 6.323325692636962,
+    "omega_over_omega_n": 1.225,
+    "panel_count": 528,
+    "ppw": 5.650421836113261,
+    "relative_residual": 0.004488279214352832,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      179.08216349378455,
+      0.22069478264458398,
+      -0.600322608671213
+     ],
+     [
+      -0.669627841678681,
+      -137.59510701188685,
+      0.06867700494648175
+     ],
+     [
+      -0.5479615536299914,
+      -0.19397089347266216,
+      -24.52835205694759
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 50.022422348627394,
+    "damping": [
+     [
+      912.6836828422784,
+      0.4876424244968268,
+      -6.762464902925335
+     ],
+     [
+      1.110248859544952,
+      828.2495396832079,
+      -0.7531193144399887
+     ],
+     [
+      2.1560201596063338,
+      0.3294761207121981,
+      180.14434796262233
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.245396678893306,
+    "nx": 12,
+    "omega": 6.452373155752001,
+    "omega_over_omega_n": 1.25,
+    "panel_count": 528,
+    "ppw": 5.426665131403176,
+    "relative_residual": 0.005202907771066427,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      175.3984576784862,
+      0.21778916142756038,
+      -0.3441201391298913
+     ],
+     [
+      -0.6829531012292296,
+      -131.24477463061382,
+      0.11471766799100355
+     ],
+     [
+      -0.6078595755768442,
+      -0.18611457901333195,
+      -15.719157758082615
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 52.69675001904002,
+    "damping": [
+     [
+      909.9402101212794,
+      0.4763491704861474,
+      -6.559258439309476
+     ],
+     [
+      0.7383641413467532,
+      529.9604140298381,
+      -0.6285262115928657
+     ],
+     [
+      1.4388779704354635,
+      0.2816942912461774,
+      141.18778399305822
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.416910704720595,
+    "nx": 12,
+    "omega": 6.581420618867041,
+    "omega_over_omega_n": 1.275,
+    "panel_count": 528,
+    "ppw": 5.215941110537464,
+    "relative_residual": 0.005530660345435224,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      172.3383528891638,
+      0.21589683679435234,
+      -0.09276884723125817
+     ],
+     [
+      -0.6552351923630148,
+      -97.3283853735053,
+      0.12487063833078241
+     ],
+     [
+      -0.638896916626284,
+      -0.18213881163903758,
+      -9.952468167749814
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 44.87381380910143,
+    "damping": [
+     [
+      906.2332570244813,
+      0.4615810035977341,
+      -6.149751670335387
+     ],
+     [
+      0.31433489337015996,
+      229.23658407990123,
+      -0.3099482332365416
+     ],
+     [
+      0.7400453520375871,
+      0.26533230720939,
+      122.69022111158503
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.591821047891002,
+    "nx": 12,
+    "omega": 6.710468081982083,
+    "omega_over_omega_n": 1.3,
+    "panel_count": 528,
+    "ppw": 5.017256963205598,
+    "relative_residual": 0.004747797177693988,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      169.81822954605107,
+      0.21497134099630266,
+      0.17797824990658603
+     ],
+     [
+      -0.611383240452579,
+      -56.51397120813052,
+      0.10491884647492404
+     ],
+     [
+      -0.6403696917521917,
+      -0.18321798712127396,
+      -6.869365835541876
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 43.760472432122825,
+    "damping": [
+     [
+      902.2691148166225,
+      0.4500927239836271,
+      -5.000364539999322
+     ],
+     [
+      0.12001853000769352,
+      105.93430913602016,
+      -0.10445523353050812
+     ],
+     [
+      -0.0555803169754378,
+      0.25297371681798014,
+      107.2924520390215
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.7701277084045195,
+    "nx": 12,
+    "omega": 6.839515545097122,
+    "omega_over_omega_n": 1.325,
+    "panel_count": 528,
+    "ppw": 4.8297126480982335,
+    "relative_residual": 0.0037082824463075008,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      167.7287591401747,
+      0.2142174306869746,
+      0.33145219972179546
+     ],
+     [
+      -0.5785873332531545,
+      -26.484771502360967,
+      0.08384877502105177
+     ],
+     [
+      -0.5781764289000207,
+      -0.1869309734638095,
+      -4.743744088615568
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 47.81156475218914,
+    "damping": [
+     [
+      898.41450935044,
+      0.44483061691384645,
+      -2.4430237374857264
+     ],
+     [
+      0.06661075047721052,
+      79.35127838476251,
+      -0.02761015009408076
+     ],
+     [
+      -0.8491201795459303,
+      0.2072967939401871,
+      81.36671513113572
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 4.951830686261154,
+    "nx": 12,
+    "omega": 6.968563008212162,
+    "omega_over_omega_n": 1.35,
+    "panel_count": 528,
+    "ppw": 4.652490681930019,
+    "relative_residual": 0.0030138440928983165,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      165.974343874876,
+      0.21268706575738858,
+      0.1566971694040715
+     ],
+     [
+      -0.5567536506136689,
+      -5.626103552723077,
+      0.06896237397312534
+     ],
+     [
+      -0.4694166666613226,
+      -0.18454138075385923,
+      -0.7053520558791773
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 44.795198648876166,
+    "damping": [
+     [
+      894.6127281380177,
+      0.44247689405003093,
+      0.15797201791049612
+     ],
+     [
+      0.05869466764329368,
+      80.66721547507699,
+      -0.014909575709768462
+     ],
+     [
+      -1.0929878700132813,
+      0.1280294181260135,
+      50.70916460891843
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 5.1369299814609,
+    "nx": 12,
+    "omega": 7.097610471327201,
+    "omega_over_omega_n": 1.375,
+    "panel_count": 528,
+    "ppw": 4.484847216035683,
+    "relative_residual": 0.002568239794375873,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      164.49975987948312,
+      0.21064235081782795,
+      -0.13075530690483764
+     ],
+     [
+      -0.5419665182424199,
+      9.522611553198884,
+      0.06000498361248944
+     ],
+     [
+      -0.41014555558422394,
+      -0.1756486005883521,
+      4.429588352288815
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 37.17492679346548,
+    "damping": [
+     [
+      890.5460403261484,
+      0.43552727448962736,
+      0.7857967256237514
+     ],
+     [
+      0.06292388530033467,
+      87.72953613201337,
+      -0.02153290607134618
+     ],
+     [
+      -0.8281978341908806,
+      0.0773040941842801,
+      35.71739365280693
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 5.325425594003763,
+    "nx": 12,
+    "omega": 7.226657934442241,
+    "omega_over_omega_n": 1.4,
+    "panel_count": 528,
+    "ppw": 4.3261042182742155,
+    "relative_residual": 0.00222866306618944,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      163.28951079894148,
+      0.20888853450251554,
+      -0.29491800668149126
+     ],
+     [
+      -0.5316253214403717,
+      21.10877779313867,
+      0.05427915063279255
+     ],
+     [
+      -0.405003519977234,
+      -0.16739506301053278,
+      8.471918914863046
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 41.33228069306056,
+    "damping": [
+     [
+      885.7332146568125,
+      0.424440177204667,
+      0.3036888075309992
+     ],
+     [
+      0.06902943116516196,
+      94.60113264146396,
+      -0.028732083135268708
+     ],
+     [
+      -0.6016938370513234,
+      0.06418413660519375,
+      33.18741138743342
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 5.517317523889742,
+    "nx": 12,
+    "omega": 7.355705397557283,
+    "omega_over_omega_n": 1.425,
+    "panel_count": 528,
+    "ppw": 4.175642606496749,
+    "relative_residual": 0.0020318364224114678,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      162.38036166916555,
+      0.20753407968510135,
+      -0.3554398408676601
+     ],
+     [
+      -0.524197884199224,
+      30.351995516709323,
+      0.05022350163385399
+     ],
+     [
+      -0.41633985400387663,
+      -0.1616536157167902,
+      11.318125372264623
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 43.8584579345838,
+    "damping": [
+     [
+      879.6250618685682,
+      0.4119456138268828,
+      -0.2782860066637396
+     ],
+     [
+      0.07390434574966838,
+      99.90524224522372,
+      -0.03495455263606753
+     ],
+     [
+      -0.5596373783686805,
+      0.06649604529595907,
+      34.10319834007333
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 5.712605771118833,
+    "nx": 12,
+    "omega": 7.484752860672321,
+    "omega_over_omega_n": 1.45,
+    "panel_count": 528,
+    "ppw": 4.032896203480362,
+    "relative_residual": 0.002000281810844632,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      161.859414840987,
+      0.20646992001168293,
+      -0.36550722643670364
+     ],
+     [
+      -0.5187921165517327,
+      37.964825297474505,
+      0.04725638237564823
+     ],
+     [
+      -0.4250388799552727,
+      -0.15773651678781392,
+      13.408395700434392
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 40.33827515691075,
+    "damping": [
+     [
+      871.8138578864125,
+      0.39889135513725804,
+      -0.7045395859115927
+     ],
+     [
+      0.07688402243209896,
+      103.5247212827298,
+      -0.03948761559808403
+     ],
+     [
+      -0.6553394634031311,
+      0.07270217259551642,
+      35.15270538736929
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 5.9112903356910405,
+    "nx": 12,
+    "omega": 7.613800323787362,
+    "omega_over_omega_n": 1.475,
+    "panel_count": 528,
+    "ppw": 3.8973464029037457,
+    "relative_residual": 0.0020891575141445944,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      161.8481546715334,
+      0.2056471831804433,
+      -0.3492944564032852
+     ],
+     [
+      -0.5148889603347058,
+      44.38857664477707,
+      0.04486470568832961
+     ],
+     [
+      -0.42324086308795966,
+      -0.15492393787190553,
+      15.033902786446678
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 34.65748651692652,
+    "damping": [
+     [
+      862.1980378568425,
+      0.38523348645793287,
+      -0.9473660847560084
+     ],
+     [
+      0.07792374796057754,
+      105.58700875342035,
+      -0.04176182050534638
+     ],
+     [
+      -0.8272572490878869,
+      0.07925120247258292,
+      35.62100631341973
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 6.113371217606362,
+    "nx": 12,
+    "omega": 7.742847786902402,
+    "omega_over_omega_n": 1.5,
+    "panel_count": 528,
+    "ppw": 3.7685174523633163,
+    "relative_residual": 0.002218025618436104,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      162.4819081995462,
+      0.20507979150113015,
+      -0.31890491193031556
+     ],
+     [
+      -0.512153206913358,
+      49.923237435878015,
+      0.04281438506592504
+     ],
+     [
+      -0.406498468676959,
+      -0.15280301829241846,
+      16.35745351521729
+     ]
+    ],
+    "chief_rows": 10,
+    "condition_number": 37.35563037262706,
+    "damping": [
+     [
+      851.0825517082762,
+      0.3709431599135041,
+      -0.917966501113349
+     ],
+     [
+      0.07696590833519379,
+      106.27436096277417,
+      -0.042782728179867564
+     ],
+     [
+      -0.9978010766857025,
+      0.08525118365890397,
+      35.30078930759297
+     ]
+    ],
+    "gap_over_beam": 0.5,
+    "label": "catamaran",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 2,
+    "nu": 6.318848416864797,
+    "nx": 12,
+    "omega": 7.871895250017442,
+    "omega_over_omega_n": 1.525,
+    "panel_count": 528,
+    "ppw": 3.645972273181387,
+    "relative_residual": 0.0023473077116173916,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      185.76583550974607,
+      0.17173445372406573,
+      -0.17224694791717132
+     ],
+     [
+      -0.1902749086476809,
+      41.398614335793916,
+      0.006624529971502752
+     ],
+     [
+      -0.21485917306609678,
+      -0.05422661669136924,
+      17.007265803425568
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 23.473229333593398,
+    "damping": [
+     [
+      641.6253743449291,
+      0.39623724738438676,
+      0.4476432041477293
+     ],
+     [
+      0.1906697132670794,
+      253.6412072051122,
+      -0.03435301827635608
+     ],
+     [
+      -0.30823385888748,
+      0.06955246992390625,
+      87.7723397964901
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 2.7170538744917163,
+    "nx": 12,
+    "omega": 5.161898524601601,
+    "omega_over_omega_n": 1.0,
+    "panel_count": 264,
+    "ppw": 8.479164267817463,
+    "relative_residual": 0.0017943082949654226,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      179.49179386909867,
+      0.16676982524496095,
+      -0.19364925982365633
+     ],
+     [
+      -0.19237941211955187,
+      40.39910126742151,
+      0.006941523607545294
+     ],
+     [
+      -0.20954124151709433,
+      -0.05500871685001659,
+      15.899080339844376
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 23.67799338365194,
+    "damping": [
+     [
+      691.4210022941957,
+      0.421553801426631,
+      0.4304658539906608
+     ],
+     [
+      0.19337226933210738,
+      247.36290119260352,
+      -0.035054045542787744
+     ],
+     [
+      -0.34906179708465457,
+      0.07372500234260103,
+      86.79966981089777
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 2.8546047268878585,
+    "nx": 12,
+    "omega": 5.290945987716641,
+    "omega_over_omega_n": 1.025,
+    "panel_count": 264,
+    "ppw": 8.070590617791757,
+    "relative_residual": 0.0018592123667776107,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      172.7082999196057,
+      0.1616145125282202,
+      -0.21285250871844236
+     ],
+     [
+      -0.19441846755863587,
+      39.575612969932635,
+      0.007208751850647823
+     ],
+     [
+      -0.20286898376352835,
+      -0.0558063840700046,
+      14.925491094020733
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 23.8511150243318,
+    "damping": [
+     [
+      740.2920124994589,
+      0.444952165523948,
+      0.38802047558363323
+     ],
+     [
+      0.1955807102929736,
+      241.0808220199491,
+      -0.03546963969524971
+     ],
+     [
+      -0.3850443544314497,
+      0.07737776728402967,
+      85.1047171701042
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 2.9955518966271173,
+    "nx": 12,
+    "omega": 5.419993450831681,
+    "omega_over_omega_n": 1.05,
+    "panel_count": 264,
+    "ppw": 7.690851943598604,
+    "relative_residual": 0.0019230526061376142,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      165.38671602824678,
+      0.15630612686049777,
+      -0.2288004110977337
+     ],
+     [
+      -0.19640451846060308,
+      38.89545217988828,
+      0.007416976764589191
+     ],
+     [
+      -0.1952547662447082,
+      -0.05659202419360986,
+      14.098915292781118
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 23.988931104134736,
+    "damping": [
+     [
+      787.9049909702557,
+      0.4663331080422305,
+      0.32472889464261645
+     ],
+     [
+      0.19734258003314223,
+      234.84058319528393,
+      -0.03565990289040768
+     ],
+     [
+      -0.4130671393223188,
+      0.08048821737134525,
+      82.83321878930123
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.139895383709489,
+    "nx": 12,
+    "omega": 5.549040913946721,
+    "omega_over_omega_n": 1.075,
+    "panel_count": 264,
+    "ppw": 7.337297365336907,
+    "relative_residual": 0.0019850670601885057,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      157.49241138985874,
+      0.15086560786556974,
+      -0.24103093112253574
+     ],
+     [
+      -0.19835157050259908,
+      38.33105112579545,
+      0.00756085510571821
+     ],
+     [
+      -0.18733436049371108,
+      -0.057341156304365905,
+      13.421467425103287
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.100638996665747,
+    "damping": [
+     [
+      833.5382256868074,
+      0.4855043157331508,
+      0.24726269774456547
+     ],
+     [
+      0.19867734424453506,
+      228.65380835188193,
+      -0.03570179843105287
+     ],
+     [
+      -0.4308468824140506,
+      0.0830831304641119,
+      80.15668309529849
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.2876351881349772,
+    "nx": 12,
+    "omega": 5.678088377061762,
+    "omega_over_omega_n": 1.1,
+    "panel_count": 264,
+    "ppw": 7.007573775055753,
+    "relative_residual": 0.002044961129557829,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      149.03719145112788,
+      0.14531709391673986,
+      -0.24974678335468592
+     ],
+     [
+      -0.20027315633576226,
+      37.86072195821594,
+      0.007639312974634443
+     ],
+     [
+      -0.17985148551716795,
+      -0.05803534634176887,
+      12.885177198285296
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.19558295076047,
+    "damping": [
+     [
+      876.0396078687434,
+      0.5021298233055898,
+      0.162674751550815
+     ],
+     [
+      0.19957346279750657,
+      222.50580688320326,
+      -0.03568535063158345
+     ],
+     [
+      -0.43775159479568543,
+      0.08523272723374564,
+      77.25053121788729
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.438771309903579,
+    "nx": 12,
+    "omega": 5.807135840176802,
+    "omega_over_omega_n": 1.125,
+    "panel_count": 264,
+    "ppw": 6.699586581979228,
+    "relative_residual": 0.002103123312028893,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      140.1249095202523,
+      0.13970855874736057,
+      -0.25565997699746634
+     ],
+     [
+      -0.2021804197063895,
+      37.468905886845505,
+      0.007655920195492692
+     ],
+     [
+      -0.17347621725210213,
+      -0.05866388777375038,
+      12.473920235044316
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.270374789328304,
+    "damping": [
+     [
+      914.0114076979482,
+      0.5157676121664738,
+      0.07642336793658615
+     ],
+     [
+      0.19998912894077814,
+      216.36472475931305,
+      -0.035707993478992346
+     ],
+     [
+      -0.4351891834610452,
+      0.08703714474403064,
+      74.27262972378264
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.5933037490152944,
+    "nx": 12,
+    "omega": 5.936183303291841,
+    "omega_over_omega_n": 1.15,
+    "panel_count": 264,
+    "ppw": 6.411466365079367,
+    "relative_residual": 0.0021607156178417965,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      130.9627619771159,
+      0.134121371172185,
+      -0.2596973931561666
+     ],
+     [
+      -0.20408049977717332,
+      37.14591206147073,
+      0.007619065498504202
+     ],
+     [
+      -0.16863450463157184,
+      -0.059223985618005376,
+      12.166443198341138
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.331138490253128,
+    "damping": [
+     [
+      946.181144861269,
+      0.5259916273090038,
+      -0.008847430403382843
+     ],
+     [
+      0.19985748848380586,
+      210.192002468282,
+      -0.03586579420468865
+     ],
+     [
+      -0.42630252328156004,
+      0.08860931957182663,
+      71.34716241926994
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.7512325054701257,
+    "nx": 12,
+    "omega": 6.065230766406882,
+    "omega_over_omega_n": 1.175,
+    "panel_count": 264,
+    "ppw": 6.141540438437275,
+    "relative_residual": 0.0022195712550216263,
+    "resolved": true
+   },
+   {
+    "added_mass": [
+     [
+      121.82823636678468,
+      0.1286626805230635,
+      -0.26271545261701984
+     ],
+     [
+      -0.2059755060797946,
+      36.88706656564637,
+      0.007541555191770415
+     ],
+     [
+      -0.16542596056859368,
+      -0.059719702794470295,
+      11.93964921206351
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.38325570199519,
+    "damping": [
+     [
+      971.7915864804908,
+      0.5325388665342382,
+      -0.0935277517651213
+     ],
+     [
+      0.199096637280528,
+      203.95338062846392,
+      -0.03624139926278179
+     ],
+     [
+      -0.41510824223866394,
+      0.09005847440474368,
+      68.55626543599313
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 3.9125575792680714,
+    "nx": 12,
+    "omega": 6.194278229521921,
+    "omega_over_omega_n": 1.2,
+    "panel_count": 264,
+    "ppw": 5.888308519317682,
+    "relative_residual": 0.0022818924033767927,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      113.0075212304057,
+      0.12344505733722988,
+      -0.2652989051718646
+     ],
+     [
+      -0.20786240507365342,
+      36.69125300678204,
+      0.007439299952705379
+     ],
+     [
+      -0.1636496065608321,
+      -0.06016017717223469,
+      11.771471479800464
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.430449198047643,
+    "damping": [
+     [
+      990.83105965939,
+      0.5354074831238039,
+      -0.18068085451647076
+     ],
+     [
+      0.19762338572286048,
+      197.62865265993904,
+      -0.036890777533488656
+     ],
+     [
+      -0.40551853314188047,
+      0.09147685147450581,
+      65.93910994579186
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.0772789704091315,
+    "nx": 12,
+    "omega": 6.323325692636962,
+    "omega_over_omega_n": 1.225,
+    "panel_count": 264,
+    "ppw": 5.650421836113261,
+    "relative_residual": 0.0023498184431586105,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      104.73301161374246,
+      0.11856401976357492,
+      -0.26760050532149543
+     ],
+     [
+      -0.2097340022960586,
+      36.5590348572052,
+      0.007329099993241274
+     ],
+     [
+      -0.16289450639981948,
+      -0.060557566790954157,
+      11.643011228138898
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.47452442146297,
+    "damping": [
+     [
+      1004.0333517862115,
+      0.5348694975701419,
+      -0.2754816812083399
+     ],
+     [
+      0.19536801772322276,
+      191.21771599436056,
+      -0.03783282784102285
+     ],
+     [
+      -0.40062576035754593,
+      0.09293047948272301,
+      63.49657196911579
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.245396678893306,
+    "nx": 12,
+    "omega": 6.452373155752001,
+    "omega_over_omega_n": 1.25,
+    "panel_count": 264,
+    "ppw": 5.426665131403176,
+    "relative_residual": 0.002424992292988469,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      97.13892227836901,
+      0.11408190627578028,
+      -0.2691566777803633
+     ],
+     [
+      -0.21158087836439998,
+      36.490782334150985,
+      0.007226016268726062
+     ],
+     [
+      -0.16263754512648124,
+      -0.06092497474314078,
+      11.539909669688324
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.545264150511915,
+    "damping": [
+     [
+      1012.6901429934697,
+      0.53141113250928,
+      -0.38411441702237636
+     ],
+     [
+      0.19228600730687576,
+      184.74110149417734,
+      -0.03904587532643063
+     ],
+     [
+      -0.4023179752376228,
+      0.09445378621751067,
+      61.199595623298976
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.416910704720595,
+    "nx": 12,
+    "omega": 6.581420618867041,
+    "omega_over_omega_n": 1.275,
+    "panel_count": 264,
+    "ppw": 5.215941110537464,
+    "relative_residual": 0.0025082540497380354,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      90.23945452782212,
+      0.11002053737256766,
+      -0.2687426840576039
+     ],
+     [
+      -0.2133937499101296,
+      36.48529013089303,
+      0.007141070254292411
+     ],
+     [
+      -0.16232458429016483,
+      -0.061274441502393584,
+      11.453025941841457
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.616860974350264,
+    "damping": [
+     [
+      1018.3441774400022,
+      0.525633315523353,
+      -0.5111773071924347
+     ],
+     [
+      0.18836311281761045,
+      178.235067760485,
+      -0.04047255969383829
+     ],
+     [
+      -0.41105124382982533,
+      0.09604809580494032,
+      59.000138853849194
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.591821047891002,
+    "nx": 12,
+    "omega": 6.710468081982083,
+    "omega_over_omega_n": 1.3,
+    "panel_count": 264,
+    "ppw": 5.017256963205598,
+    "relative_residual": 0.0025995267080118115,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      83.93001910567124,
+      0.10636171683067358,
+      -0.26453113735670947
+     ],
+     [
+      -0.2151655445283701,
+      36.53918304494487,
+      0.007079850046743693
+     ],
+     [
+      -0.161454795747126,
+      -0.06161510325004718,
+      11.378423672381285
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.660494216540194,
+    "damping": [
+     [
+      1022.3905437368875,
+      0.5181334232369176,
+      -0.6551952302901268
+     ],
+     [
+      0.1836128011968968,
+      171.74338376937,
+      -0.04203139478594124
+     ],
+     [
+      -0.4256422141460764,
+      0.09768487286322435,
+      56.844071572592384
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.7701277084045195,
+    "nx": 12,
+    "omega": 6.839515545097122,
+    "omega_over_omega_n": 1.325,
+    "panel_count": 264,
+    "ppw": 4.8297126480982335,
+    "relative_residual": 0.0026978638318998762,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      78.02047294212733,
+      0.10305580454545565,
+      -0.25486399796344916
+     ],
+     [
+      -0.2168926842705915,
+      36.64708680341456,
+      0.0070421970588230975
+     ],
+     [
+      -0.15969784442315746,
+      -0.06195179231557554,
+      11.316578765240788
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.658184135225167,
+    "damping": [
+     [
+      1025.6157744501104,
+      0.509378086477199,
+      -0.804254607838401
+     ],
+     [
+      0.17806801168064343,
+      165.30875547530658,
+      -0.04363161197405885
+     ],
+     [
+      -0.4432483211654843,
+      0.09931475446583891,
+      54.68476501141889
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 4.951830686261154,
+    "nx": 12,
+    "omega": 6.968563008212162,
+    "omega_over_omega_n": 1.35,
+    "panel_count": 264,
+    "ppw": 4.652490681930019,
+    "relative_residual": 0.0028015762891388544,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      72.31176973887754,
+      0.10004029281102719,
+      -0.2395190407295527
+     ],
+     [
+      -0.21857549564223744,
+      36.80230351434392,
+      0.007022836482965003
+     ],
+     [
+      -0.1570222506573268,
+      -0.06228451608397659,
+      11.270798901156903
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.601320602209793,
+    "damping": [
+     [
+      1027.8406281386663,
+      0.49959704570526525,
+      -0.9367303355640814
+     ],
+     [
+      0.17177048553815888,
+      158.96618632243346,
+      -0.045188174942716104
+     ],
+     [
+      -0.45999488175090264,
+      0.10088185733018078,
+      52.49460499270946
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 5.1369299814609,
+    "nx": 12,
+    "omega": 7.097610471327201,
+    "omega_over_omega_n": 1.375,
+    "panel_count": 264,
+    "ppw": 4.484847216035683,
+    "relative_residual": 0.0029083893229278754,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      66.69760464922683,
+      0.09726543678088795,
+      -0.2205309481060759
+     ],
+     [
+      -0.22021791651238096,
+      36.99768274189435,
+      0.007012717459380416
+     ],
+     [
+      -0.15373189631611564,
+      -0.0626091314641245,
+      11.245148043885212
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.497561316148225,
+    "damping": [
+     [
+      1027.9920320591375,
+      0.48876671734470084,
+      -1.0306745897225817
+     ],
+     [
+      0.16475994972482513,
+      152.73923919913645,
+      -0.0466347490396088
+     ],
+     [
+      -0.472445211741834,
+      0.10233994614791497,
+      50.27079489185689
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 5.325425594003763,
+    "nx": 12,
+    "omega": 7.226657934442241,
+    "omega_over_omega_n": 1.4,
+    "panel_count": 264,
+    "ppw": 4.3261042182742155,
+    "relative_residual": 0.0030156519487199544,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      61.225196889493645,
+      0.09471325429708163,
+      -0.20150183404203217
+     ],
+     [
+      -0.22182664255482884,
+      37.22646355582845,
+      0.00700083044744812
+     ],
+     [
+      -0.15031996852589455,
+      -0.06291907190346448,
+      11.242493484752494
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.426392583820885,
+    "damping": [
+     [
+      1024.7556427121658,
+      0.4767306655756332,
+      -1.0767931851951247
+     ],
+     [
+      0.15706457639323054,
+      146.63919536756683,
+      -0.047932830455626664
+     ],
+     [
+      -0.4791541524504656,
+      0.10366508945879828,
+      48.03322056071526
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 5.517317523889742,
+    "nx": 12,
+    "omega": 7.355705397557283,
+    "omega_over_omega_n": 1.425,
+    "panel_count": 264,
+    "ppw": 4.175642606496749,
+    "relative_residual": 0.0031206321877528366,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      56.060141693955345,
+      0.09239573585066299,
+      -0.18573427626473524
+     ],
+     [
+      -0.22340984611560435,
+      37.482955090663225,
+      0.0069762289720673686
+     ],
+     [
+      -0.14721476372273848,
+      -0.06320749023622528,
+      11.263313526285481
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.34658720002484,
+    "damping": [
+     [
+      1017.4106009620746,
+      0.46338880443213093,
+      -1.083615911683357
+     ],
+     [
+      0.14869463260697546,
+      140.666806768437,
+      -0.04907525218849437
+     ],
+     [
+      -0.4810582173807384,
+      0.10486057149479511,
+      45.81555591130873
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 5.712605771118833,
+    "nx": 12,
+    "omega": 7.484752860672321,
+    "omega_over_omega_n": 1.45,
+    "panel_count": 264,
+    "ppw": 4.032896203480362,
+    "relative_residual": 0.0032208861021755827,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      51.386340599796085,
+      0.09033573267526133,
+      -0.17480843040567587
+     ],
+     [
+      -0.224975777857847,
+      37.76295085635277,
+      0.006929863616875003
+     ],
+     [
+      -0.14460966127017497,
+      -0.06346905019836899,
+      11.305535233120153
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.272456220218007,
+    "damping": [
+     [
+      1006.2253382833634,
+      0.4488153689423635,
+      -1.071101704281609
+     ],
+     [
+      0.13964138522261654,
+      134.81628359934845,
+      -0.05008268112243317
+     ],
+     [
+      -0.48048117400865314,
+      0.10595348763594706,
+      43.65370802944743
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 5.9112903356910405,
+    "nx": 12,
+    "omega": 7.613800323787362,
+    "omega_over_omega_n": 1.475,
+    "panel_count": 264,
+    "ppw": 3.8973464029037457,
+    "relative_residual": 0.0033146792921539387,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      47.32181647698984,
+      0.08854776952037952,
+      -0.16847463558041426
+     ],
+     [
+      -0.2265316955771074,
+      38.063768838122755,
+      0.006855724389748311
+     ],
+     [
+      -0.14246283072517546,
+      -0.06370089374347522,
+      11.365199788560123
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.220917063617524,
+    "damping": [
+     [
+      992.2736117210018,
+      0.43324959040716027,
+      -1.0607344689613674
+     ],
+     [
+      0.12988181276172442,
+      129.0807261923422,
+      -0.050993413847951016
+     ],
+     [
+      -0.4797791623700989,
+      0.1069858325894734,
+      41.57596919833012
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 6.113371217606362,
+    "nx": 12,
+    "omega": 7.742847786902402,
+    "omega_over_omega_n": 1.5,
+    "panel_count": 264,
+    "ppw": 3.7685174523633163,
+    "relative_residual": 0.003401440730702408,
+    "resolved": false
+   },
+   {
+    "added_mass": [
+     [
+      43.88739872510195,
+      0.08702941915664968,
+      -0.1652282887588171
+     ],
+     [
+      -0.22808350846072684,
+      38.38387367327428,
+      0.006750887897709676
+     ],
+     [
+      -0.1405910688825685,
+      -0.0639027417513317,
+      11.437518422921364
+     ]
+    ],
+    "chief_rows": 5,
+    "condition_number": 24.208929295650965,
+    "damping": [
+     [
+      977.0114534265875,
+      0.4170177037895379,
+      -1.0698120590510576
+     ],
+     [
+      0.11938762354336338,
+      123.45735326990105,
+      -0.051849873266699015
+     ],
+     [
+      -0.4805097929645125,
+      0.10800393467893091,
+      39.59728498732781
+     ]
+    ],
+    "gap_over_beam": 0.0,
+    "label": "single",
+    "mesh": {
+     "B": 0.3,
+     "L": 3.0,
+     "T": 0.1875,
+     "alpha": 1.1087500000000008,
+     "nx": 12,
+     "nz": 6
+    },
+    "modes": [
+     1,
+     2,
+     4
+    ],
+    "n_hulls": 1,
+    "nu": 6.318848416864797,
+    "nx": 12,
+    "omega": 7.871895250017442,
+    "omega_over_omega_n": 1.525,
+    "panel_count": 264,
+    "ppw": 3.645972273181387,
+    "relative_residual": 0.003482102864759655,
+    "resolved": false
+   }
+  ]
+ },
  "study": "multibody_frequency_dependence_3d",
  "timings": {
-  "asymptotic_limits": 314.69,
-  "distance_decay": 455.67,
-  "energy_check": 571.59,
-  "frequency_scan": 277.98,
-  "geometry_hydrostatics": 9.34,
-  "high_frequency_ladder": 395.38,
-  "kramers_kronig": 571.59,
-  "negative_control": 473.29,
-  "resolution_ladder": 563.93,
-  "total": 571.59
+  "asymptotes": 262.3,
+  "decay": 100.1,
+  "energy": 77.2,
+  "ladder": 427.3,
+  "lowfreq": 222.6,
+  "negative": 185.2,
+  "resolution": 140.8,
+  "resonance": 112.0,
+  "sweep": 450.1
  },
- "wall_clock_seconds": 571.6
+ "wall_clock_seconds": 1977.6
 }

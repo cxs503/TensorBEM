@@ -1,13 +1,12 @@
 {
- "study": "multibody_frequency_dependence_3d",
  "campaign_node": "P106W2-N04",
  "criteria": {
-  "all_pass": {
-   "value": false,
-   "limit": null,
-   "pass": false
-  },
+  "all_pass": false,
+  "all_pass_original": false,
   "distance_decay_exponent": {
+   "definition": "fitted n in |sigma_A - 1| = C (d/L)^(-n) (informative, not gated)",
+   "limit": null,
+   "pass": true,
    "value": {
     "0.6:sigma_A_heave": 0.3468868859893514,
     "0.6:sigma_A_pitch": 0.8500700120816159,
@@ -15,108 +14,626 @@
     "1.2:sigma_A_heave": 0.40143410153981,
     "1.2:sigma_A_pitch": 0.6416220617851299,
     "1.2:sigma_A_sway": -0.035047116680430625
-   },
-   "limit": null,
-   "pass": true
+   }
   },
   "distance_decay_far_field": {
-   "value": 0.3840126547355659,
+   "definition": "max_{gap/L > 2} |sigma_A_heave - 1|",
+   "far_field_points": 6,
    "limit": 0.05,
-   "pass": false
+   "pass": false,
+   "value": 0.3840126547355659
+  },
+  "distance_decay_far_field_kd_gated": {
+   "definition": "max |sigma_A_heave - 1| over the points with k d >= 4.0 (k d is the physically relevant far-field parameter: the radiated wave decays like (k r)^-1/2, so d/L alone cannot gate it)",
+   "kd_points": [
+    {
+     "abs_sigma_minus_one": 0.6806727412293039,
+     "centre_distance_over_L": 0.09999999999999999,
+     "kd": 0.29344181844510536,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6806727412293039
+    },
+    {
+     "abs_sigma_minus_one": 0.6651046955781605,
+     "centre_distance_over_L": 0.105,
+     "kd": 0.3081139093673606,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6651046955781605
+    },
+    {
+     "abs_sigma_minus_one": 0.6501983372750206,
+     "centre_distance_over_L": 0.11,
+     "kd": 0.3227860002896159,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6501983372750206
+    },
+    {
+     "abs_sigma_minus_one": 0.6085043832157364,
+     "centre_distance_over_L": 0.125,
+     "kd": 0.3668022730563817,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.6085043832157364
+    },
+    {
+     "abs_sigma_minus_one": 0.5451542810246359,
+     "centre_distance_over_L": 0.15,
+     "kd": 0.44016272766765796,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.545154281024636
+    },
+    {
+     "abs_sigma_minus_one": 0.42895575687833865,
+     "centre_distance_over_L": 0.19999999999999998,
+     "kd": 0.5868836368902107,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.4289557568783386
+    },
+    {
+     "abs_sigma_minus_one": 0.20910211861509342,
+     "centre_distance_over_L": 0.3,
+     "kd": 0.8803254553353159,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.2091021186150934
+    },
+    {
+     "abs_sigma_minus_one": 0.37112963784849684,
+     "centre_distance_over_L": 0.6,
+     "kd": 1.7606509106706318,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.6288703621515032
+    },
+    {
+     "abs_sigma_minus_one": 0.3224917978143135,
+     "centre_distance_over_L": 1.0999999999999999,
+     "kd": 3.2278600028961586,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.6775082021856865
+    },
+    {
+     "abs_sigma_minus_one": 0.05131238645064751,
+     "centre_distance_over_L": 2.6,
+     "kd": 7.62948727957274,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.9486876135493525
+    },
+    {
+     "abs_sigma_minus_one": 0.20210370047023452,
+     "centre_distance_over_L": 5.1,
+     "kd": 14.965532740700372,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 0.7978962995297655
+    },
+    {
+     "abs_sigma_minus_one": 0.0389222370437583,
+     "centre_distance_over_L": 10.1,
+     "kd": 29.637623662955637,
+     "omega_over_omega_n": 0.6,
+     "sigma_A_heave": 1.0389222370437583
+    },
+    {
+     "abs_sigma_minus_one": 1.8207735361502628,
+     "centre_distance_over_L": 0.09999999999999999,
+     "kd": 1.1737672737804214,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.820773536150263
+    },
+    {
+     "abs_sigma_minus_one": 1.9710195524047998,
+     "centre_distance_over_L": 0.105,
+     "kd": 1.2324556374694424,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.9710195524047998
+    },
+    {
+     "abs_sigma_minus_one": 2.107030768250582,
+     "centre_distance_over_L": 0.11,
+     "kd": 1.2911440011584636,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 3.107030768250582
+    },
+    {
+     "abs_sigma_minus_one": 1.6154599892862938,
+     "centre_distance_over_L": 0.125,
+     "kd": 1.4672090922255268,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 2.6154599892862938
+    },
+    {
+     "abs_sigma_minus_one": 3.393103582980749,
+     "centre_distance_over_L": 0.15,
+     "kd": 1.7606509106706318,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": -2.393103582980749
+    },
+    {
+     "abs_sigma_minus_one": 1.209651789821169,
+     "centre_distance_over_L": 0.19999999999999998,
+     "kd": 2.347534547560843,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": -0.20965178982116903
+    },
+    {
+     "abs_sigma_minus_one": 0.18010105060156734,
+     "centre_distance_over_L": 0.3,
+     "kd": 3.5213018213412637,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 0.8198989493984327
+    },
+    {
+     "abs_sigma_minus_one": 0.8908553436468079,
+     "centre_distance_over_L": 0.6,
+     "kd": 7.042603642682527,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.8908553436468079
+    },
+    {
+     "abs_sigma_minus_one": 0.5822395927934809,
+     "centre_distance_over_L": 1.0999999999999999,
+     "kd": 12.911440011584634,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.582239592793481
+    },
+    {
+     "abs_sigma_minus_one": 0.1323572006666025,
+     "centre_distance_over_L": 2.6,
+     "kd": 30.51794911829096,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.1323572006666025
+    },
+    {
+     "abs_sigma_minus_one": 0.3840126547355659,
+     "centre_distance_over_L": 5.1,
+     "kd": 59.86213096280149,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 0.6159873452644341
+    },
+    {
+     "abs_sigma_minus_one": 0.08232382089987311,
+     "centre_distance_over_L": 10.1,
+     "kd": 118.55049465182255,
+     "omega_over_omega_n": 1.2,
+     "sigma_A_heave": 1.0823238208998731
+    }
+   ],
+   "limit": 0.05,
+   "pass": false,
+   "points": 8,
+   "value": 0.8908553436468079
   },
   "energy_far_field_agreement": {
-   "value": 0.025829295752272576,
+   "definition": "max |B_near - B_far| / B_near (Haskind energy relation)",
    "limit": 0.1,
-   "pass": true
+   "pass": true,
+   "value": 0.025829295752272576
   },
   "energy_non_negative_damping": {
-   "value": 0.00014937162438730087,
+   "definition": "min over configurations, modes and resolved frequencies of B_mm",
    "limit": 0.0,
-   "pass": true
+   "pass": true,
+   "value": 0.00014937162438730087
   },
-  "gated": {
-   "value": [
-    "geometry",
-    "zero_frequency_damping",
-    "zero_frequency_added_mass",
-    "infinite_frequency_added_mass",
-    "infinite_frequency_added_mass_catamaran",
-    "infinite_frequency_from_kramers_kronig",
-    "energy_non_negative_damping",
-    "energy_far_field_agreement",
-    "distance_decay_far_field"
-   ],
-   "limit": null,
-   "pass": [
-    "geometry",
-    "zero_frequency_damping",
-    "zero_frequency_added_mass",
-    "infinite_frequency_added_mass",
-    "infinite_frequency_added_mass_catamaran",
-    "infinite_frequency_from_kramers_kronig",
-    "energy_non_negative_damping",
-    "energy_far_field_agreement",
-    "distance_decay_far_field"
-   ]
-  },
+  "gated": [
+   "geometry",
+   "zero_frequency_damping",
+   "zero_frequency_added_mass",
+   "infinite_frequency_added_mass",
+   "infinite_frequency_added_mass_catamaran",
+   "infinite_frequency_from_kramers_kronig",
+   "infinite_frequency_added_mass_catamaran_smooth",
+   "zero_frequency_added_mass_fine",
+   "zero_frequency_added_mass_limit",
+   "zero_frequency_added_mass_extrapolated",
+   "infinite_frequency_from_kramers_kronig_dense",
+   "distance_decay_far_field_kd_gated",
+   "energy_non_negative_damping",
+   "energy_far_field_agreement",
+   "distance_decay_far_field"
+  ],
+  "gated_added": [
+   "infinite_frequency_added_mass_catamaran_smooth",
+   "zero_frequency_added_mass_fine",
+   "zero_frequency_added_mass_limit",
+   "zero_frequency_added_mass_extrapolated",
+   "infinite_frequency_from_kramers_kronig_dense",
+   "distance_decay_far_field_kd_gated"
+  ],
+  "gated_original": [
+   "geometry",
+   "zero_frequency_damping",
+   "zero_frequency_added_mass",
+   "infinite_frequency_added_mass",
+   "infinite_frequency_added_mass_catamaran",
+   "infinite_frequency_from_kramers_kronig",
+   "energy_non_negative_damping",
+   "energy_far_field_agreement",
+   "distance_decay_far_field"
+  ],
   "geometry": {
-   "value": 0.003924501038556716,
+   "definition": "finest-mesh displaced volume vs analytic Cb*L*B*T",
    "limit": 0.02,
-   "pass": true
+   "pass": true,
+   "value": 0.003924501038556716
   },
   "infinite_frequency_added_mass": {
-   "value": 1.9434123152487868,
+   "definition": "|A_inf(1/omega^2 fit) - A_pressure_release| / A_pressure_release",
+   "extrapolated": [
+    -43.159965022927786,
+    46.58369164799894,
+    11.651736793964352
+   ],
+   "fit_r_squared": [
+    0.9904420797830918,
+    0.29239415672089497,
+    0.30243651056720233
+   ],
    "limit": 0.02,
-   "pass": false
+   "pass": false,
+   "per_mode": [
+    1.7047378906359056,
+    0.25224765463252996,
+    0.36051295939919314
+   ],
+   "reference": [
+    61.24257769648695,
+    62.29828891423428,
+    18.22044240805472
+   ],
+   "value": 1.7047378906359056
   },
   "infinite_frequency_added_mass_catamaran": {
-   "value": 2.346850758522922,
+   "definition": "same comparison for the two-hull configuration",
+   "extrapolated": [
+    91.08976349875813,
+    -203.6813136500778,
+    -48.829142552513375
+   ],
+   "fit_r_squared": [
+    0.979381725401134,
+    0.3423563529707959,
+    0.4070431210211889
+   ],
    "limit": 0.02,
-   "pass": false
+   "pass": false,
+   "per_mode": [
+    0.21512431532307014,
+    2.3364877539778135,
+    2.183961162497094
+   ],
+   "reference": [
+    116.0562943624027,
+    152.40043393129292,
+    41.24218268235063
+   ],
+   "value": 2.3364877539778135
+  },
+  "infinite_frequency_added_mass_catamaran_smooth": {
+   "definition": "same 1/omega^2 fit for the pair, restricted to resolved ladder rows outside the detected resonance bands",
+   "extrapolated": [
+    91.08976349875813,
+    -203.6813136500778,
+    -48.829142552513375
+   ],
+   "fit_r_squared": [
+    0.979381725401134,
+    0.3423563529707959,
+    0.4070431210211889
+   ],
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    0.21512431532307014,
+    2.3364877539778135,
+    2.183961162497094
+   ],
+   "ratios_used": [
+    1.0,
+    1.25,
+    1.5
+   ],
+   "reference": [
+    116.0562943624027,
+    152.40043393129292,
+    41.24218268235063
+   ],
+   "value": 2.3364877539778135
   },
   "infinite_frequency_from_kramers_kronig": {
-   "value": 0.538142968033298,
+   "definition": "|A(inf) from the Kramers-Kronig moment of the measured B - A_pressure_release| / A_pressure_release, worst mode",
    "limit": 0.02,
-   "pass": false
+   "pass": false,
+   "per_mode": [
+    {
+     "a_inf": 94.77337796455839,
+     "a_zero": 152.04447206242202,
+     "band_moment": 57.271094097863624,
+     "omega_range": [
+      0.5161898524601601,
+      7.742847786902402
+     ],
+     "reference": 61.24257769648695,
+     "relative_error": 0.5475079843021511,
+     "resolved_rows": 9,
+     "tail_exponent": -0.09784837681711966,
+     "tail_moment": 0.0
+    },
+    {
+     "a_inf": 61.13262381680438,
+     "a_zero": 130.57026424149527,
+     "band_moment": 66.10804612769286,
+     "omega_range": [
+      0.5161898524601601,
+      7.742847786902402
+     ],
+     "reference": 62.29828891423428,
+     "relative_error": 0.01871102911084218,
+     "resolved_rows": 9,
+     "tail_exponent": 2.1237415381421236,
+     "tail_moment": 3.329594296998026
+    },
+    {
+     "a_inf": 17.172514164318127,
+     "a_zero": 26.600420807119296,
+     "band_moment": 8.391626974462831,
+     "omega_range": [
+      0.5161898524601601,
+      7.742847786902402
+     ],
+     "reference": 18.22044240805472,
+     "relative_error": 0.057513874815319214,
+     "resolved_rows": 9,
+     "tail_exponent": 2.286262600056563,
+     "tail_moment": 1.036279668338339
+    }
+   ],
+   "value": 0.5475079843021511
+  },
+  "infinite_frequency_from_kramers_kronig_dense": {
+   "band_ratio_max": 2.0,
+   "definition": "A(inf) = A(0) - (2/pi) int B/w^2 dw over the resolved ladder (A(0) Richardson-extrapolated; tail carried by a B ~ w^-p fit)",
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    {
+     "a_inf": 75.95405501890887,
+     "a_zero": 150.2879110395508,
+     "band_moment": 55.393043125988726,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 61.24257769648695,
+     "relative_error": 0.2402164944024853,
+     "resolved_rows": 4,
+     "tail_exponent": 1.252145928793471,
+     "tail_moment": 18.940812894653206
+    },
+    {
+     "a_inf": 121.51486119958689,
+     "a_zero": 132.60414179359788,
+     "band_moment": 10.565133953677377,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 62.29828891423428,
+     "relative_error": 0.9505328848899165,
+     "resolved_rows": 4,
+     "tail_exponent": 3.868023676430908,
+     "tail_moment": 0.5241466403336138
+    },
+    {
+     "a_inf": 23.680453351075325,
+     "a_zero": 27.402989361954038,
+     "band_moment": 3.564360549744511,
+     "omega_first": 5.161898524601601,
+     "omega_range": [
+      5.161898524601601,
+      10.323797049203202
+     ],
+     "reference": 18.22044240805472,
+     "relative_error": 0.2996640158752071,
+     "resolved_rows": 4,
+     "tail_exponent": 4.041102189114444,
+     "tail_moment": 0.158175461134204
+    }
+   ],
+   "ratios_used": [
+    1.0,
+    1.25,
+    1.5,
+    2.0
+   ],
+   "value": 0.9505328848899165
   },
   "negative_control_singularity": {
+   "definition": "gap -> 0 raises the interference and superposed hulls break the system",
+   "limit": null,
+   "pass": true,
    "value": {
     "monotone_growth": true,
     "superposed_status": "solved",
     "superposition_singular": true
-   },
+   }
+  },
+  "resonance_bands": {
+   "definition": "narrow-band resonances: B_mm local maximum >= 2.0 x the mean of its two neighbours in the fine scan delta(omega/omega_n)=0.025 (informative: recorded, not gated)",
    "limit": null,
-   "pass": true
+   "pass": true,
+   "rows": 44,
+   "scan_mesh_nx": 12,
+   "value": [
+    {
+     "added_mass_sign_change": true,
+     "b_peak_over_median": 4.022148648592249,
+     "b_peak_over_neighbours": 1.1485727738854266,
+     "label": "catamaran",
+     "mode": "heave",
+     "omega_over_omega_n": 1.15,
+     "omega_over_omega_n_range": [
+      1.125,
+      1.175
+     ]
+    },
+    {
+     "added_mass_sign_change": true,
+     "b_peak_over_median": 4.031043554293204,
+     "b_peak_over_neighbours": 1.0947517076308986,
+     "label": "catamaran",
+     "mode": "pitch",
+     "omega_over_omega_n": 1.15,
+     "omega_over_omega_n_range": [
+      1.125,
+      1.175
+     ]
+    }
+   ]
   },
   "zero_frequency_added_mass": {
-   "value": 0.030188908119514683,
+   "definition": "|A(omega_min) - A_rigid_wall| / A_rigid_wall, worst mode",
    "limit": 0.02,
-   "pass": false
+   "measured": [
+    149.53892906119037,
+    134.51203795182252,
+    26.4444186795921
+   ],
+   "omega_over_omega_n": 0.1,
+   "pass": false,
+   "per_mode": [
+    0.0164790141150478,
+    0.030188908119514683,
+    0.005864648858691846
+   ],
+   "rigid_wall": [
+    152.04447206242202,
+    130.57026424149527,
+    26.600420807119296
+   ],
+   "rigid_wall_mesh_nx": 12,
+   "value": 0.030188908119514683
+  },
+  "zero_frequency_added_mass_extrapolated": {
+   "a_sweep_extrapolated": [
+    148.59087422455255,
+    136.82660966598002,
+    27.325673922368637
+   ],
+   "a_zero_extrapolated": [
+    150.2879110395508,
+    132.60414179359788,
+    27.402989361954038
+   ],
+   "definition": "Richardson-extrapolated (p=2) A(0) vs the same extrapolation of the omega_min radiation row",
+   "limit": 0.02,
+   "pass": false,
+   "per_mode": [
+    0.011291905005929933,
+    0.0318426544998461,
+    0.002821423552159795
+   ],
+   "refinement_ratio": 0.7419354838709677,
+   "value": 0.0318426544998461
+  },
+  "zero_frequency_added_mass_fine": {
+   "definition": "|A(omega_min) - A_rigid_wall| / A_rigid_wall on a matched refinement mesh at omega/omega_n = 0.1 (the scan's lowest frequency); worst mode",
+   "limit": 0.02,
+   "mesh_ladder": [
+    {
+     "nx": 24,
+     "residual": [
+      0.005394591902513693,
+      0.03356269703135944,
+      9.286821527038644e-05
+     ]
+    },
+    {
+     "nx": 32,
+     "residual": [
+      0.0005689287627396464,
+      0.03495775796775316,
+      0.002442224802813738
+     ]
+    }
+   ],
+   "nx": 32,
+   "omega_over_omega_n": 0.1,
+   "pass": false,
+   "per_mode": [
+    0.0005689287627396464,
+    0.03495775796775316,
+    0.002442224802813738
+   ],
+   "value": 0.03495775796775316
+  },
+  "zero_frequency_added_mass_limit": {
+   "definition": "the same comparison at omega/omega_n = 0.02, where the O(omega^2) correction is small enough for the omega -> 0 limit to be measured (the trend is recorded separately)",
+   "limit": 0.02,
+   "nx": 24,
+   "omega_over_omega_n": 0.02,
+   "origin_trend": [
+    {
+     "nx": 24,
+     "omega_over_omega_n": 0.02,
+     "per_mode": [
+      0.009761758462236822,
+      0.00023837028514761034,
+      0.005224184812017552
+     ],
+     "worst_residual": 0.009761758462236822
+    },
+    {
+     "nx": 24,
+     "omega_over_omega_n": 0.1,
+     "per_mode": [
+      0.005394591902513693,
+      0.03356269703135944,
+      9.286821527038644e-05
+     ],
+     "worst_residual": 0.03356269703135944
+    }
+   ],
+   "pass": true,
+   "per_mode": [
+    0.009761758462236822,
+    0.00023837028514761034,
+    0.005224184812017552
+   ],
+   "value": 0.009761758462236822
   },
   "zero_frequency_damping": {
-   "value": 0.008633725132928814,
+   "definition": "max_m [ B_m(omega_min) / max_omega B_m ] over the resolved sweep (each mode normalised by its own peak)",
+   "global_normalisation": 0.0005766397144315727,
    "limit": 0.01,
-   "pass": true
+   "omega_over_omega_n": 0.1,
+   "pass": true,
+   "per_mode": [
+    1.50522985048043e-07,
+    0.008633725132928814,
+    2.0182083141894888e-06
+   ],
+   "value": 0.008633725132928814
   }
  },
+ "environment": null,
  "figures": [
-  "frequency_scan.png",
-  "interference_frequency.png",
-  "distance_decay.png",
   "asymptotes.png",
-  "negative_control.png",
-  "grid_convergence.png"
+  "resonance_band.png",
+  "distance_decay.png",
+  "kramers_kronig.png",
+  "interference_frequency.png"
  ],
+ "study": "multibody_frequency_dependence_3d",
  "timings": {
-  "asymptotic_limits": 314.69,
-  "distance_decay": 455.67,
-  "energy_check": 571.59,
-  "frequency_scan": 277.98,
-  "geometry_hydrostatics": 9.34,
-  "high_frequency_ladder": 395.38,
-  "kramers_kronig": 571.59,
-  "negative_control": 473.29,
-  "resolution_ladder": 563.93,
-  "total": 571.59
- }
+  "asymptotes": 262.3,
+  "decay": 100.1,
+  "energy": 77.2,
+  "ladder": 427.3,
+  "lowfreq": 222.6,
+  "negative": 185.2,
+  "resolution": 140.8,
+  "resonance": 112.0,
+  "sweep": 450.1
+ },
+ "wall_clock_seconds": 1977.6
 }

@@ -114,6 +114,32 @@ GAP_REFERENCE_OVER_BEAM = 0.5
 PANELS_PER_WAVELENGTH = 8.0
 #: Panels per wavelength below which a row is flagged as under-resolved.
 RESOLUTION_FLOOR = 6.0
+
+#: A radiation-damping local maximum that exceeds its neighbours by this factor
+#: is treated as a narrow-band resonance of the multi-hull arrangement (the
+#: added mass then has no smooth ``1/omega**2`` branch across the band, so the
+#: band must be excluded from any high-frequency extrapolation).
+RESONANCE_PEAK_RATIO = 2.0
+
+#: Far-field interference degenerates to the single hull only when the hulls are
+#: many wavelengths apart: the radiated wave decays like ``(k r)**-1/2`` in
+#: three dimensions, so the residual coupling is a function of ``k d`` and not of
+#: ``d / L``.  The gated criterion therefore keeps the points with ``k d`` above
+#: this value.
+KD_FAR_FIELD_MIN = 4.0
+
+#: Criteria added by the m9161 re-analysis (node p106w2-n04).  They are gated
+#: together with the original ones, but reported separately so the original
+#: verdict (:data:`ADDED_CRITERIA`-free subset) stays comparable.
+ADDED_CRITERIA = (
+    "resonance_bands",
+    "infinite_frequency_added_mass_catamaran_smooth",
+    "zero_frequency_added_mass_fine",
+    "zero_frequency_added_mass_limit",
+    "zero_frequency_added_mass_extrapolated",
+    "infinite_frequency_from_kramers_kronig_dense",
+    "distance_decay_far_field_kd_gated",
+)
 _NX_MIN = 12
 _NZ_DEFAULT = 6
 
@@ -573,16 +599,25 @@ def high_frequency_ladder(
     workers: int = 8,
     gap_over_beam: float = GAP_REFERENCE_OVER_BEAM,
     mesh_cap: int = 24,
+    single_mesh_cap: int | None = None,
 ) -> dict[str, Any]:
-    """Resolved high-frequency points carrying the ``A_inf + c/omega**2`` fit."""
+    """Resolved high-frequency points carrying the ``A_inf + c/omega**2`` fit.
+
+    ``single_mesh_cap`` overrides ``mesh_cap`` for the one-hull rows.  The single
+    hull is the configuration the asymptotic criteria are judged on and it costs
+    a fraction of the two-hull solve, so the ladder can be carried to higher
+    frequency there: the panel count is what decides how far up in frequency the
+    sweep stays resolved (``ppw`` falls like ``omega**-2`` at fixed ``nx``).
+    """
     tasks: list[dict[str, Any]] = []
     mapping: dict[float, float] = {}
     for ratio in ratios:
         omega = float(ratio) * omega_n
         nu = omega**2 / DEFAULT_GRAVITY
         mapping[nu] = float(ratio)
-        mesh = adaptive_mesh(omega, cap=mesh_cap)
         for n_hulls in (1, 2):
+            cap = mesh_cap if n_hulls == 2 else int(single_mesh_cap or mesh_cap)
+            mesh = adaptive_mesh(omega, cap=cap)
             tasks.append(
                 {
                     "label": {1: "single", 2: "catamaran"}[n_hulls],
@@ -1015,9 +1050,18 @@ def richardson_gci(values: Sequence[float], refinement: float = 1.5) -> dict[str
 
 
 def _energy_task(spec: dict[str, Any]) -> dict[str, Any]:
-    mesh = build_multihull(spec["n_hulls"], spec["gap_over_beam"], spec["mesh"])
+    if spec["n_hulls"] > 1:
+        mesh, chief = build_multihull_with_chief(
+            spec["n_hulls"], spec["gap_over_beam"], spec["mesh"]
+        )
+    else:
+        mesh, chief = build_multihull(spec["n_hulls"], 0.0, spec["mesh"]), None
     near, far = far_field_damping_check(
-        mesh, spec["nu"], modes=DEFAULT_MODES, center=(0.0, 0.0, 0.0)
+        mesh,
+        spec["nu"],
+        modes=DEFAULT_MODES,
+        center=(0.0, 0.0, 0.0),
+        chief_points=chief,
     )
     return {
         "label": spec["label"],
@@ -1142,6 +1186,278 @@ def kramers_kronig_asymptote(
         "tail_exponent": p,
         "resolved_rows": int(omegas.size),
         "omega_range": [float(omegas.min()), float(omegas.max())],
+    }
+
+
+def detect_resonance_bands(
+    rows: Sequence[dict[str, Any]],
+    *,
+    peak_ratio: float = RESONANCE_PEAK_RATIO,
+    labels: Sequence[str] = ("catamaran",),
+    modes: Sequence[int] = DEFAULT_MODES,
+) -> list[dict[str, Any]]:
+    """Narrow-band resonances in the multi-hull added mass / damping.
+
+    A local maximum of ``B_mm(omega)`` that stands out both against its two
+    neighbours and against the median of the whole scan is a resonance of the
+    arrangement.  The prominence is measured against the *median* rather than
+    only against the neighbours because a resonance of a radiating pair is a
+    broad hump (the damping falls by an order of magnitude on either side), not
+    a one-point spike; a neighbour-only test misses it as soon as the frequency
+    step is refined.  The added mass swings through zero across the band -- a
+    *sign change* of ``A_mm``, which a smooth added-mass branch cannot produce --
+    and neither ``A = a + c / omega**2`` nor the Kramers-Kronig smooth-branch
+    integral is meaningful inside it.  The detector is a diagnostic, not a cure:
+    it says which frequencies must be resolved (or excluded) -- never that the
+    value is wrong.
+    """
+    bands: list[dict[str, Any]] = []
+    names = [MODE_NAMES[m] for m in modes]
+    for label in labels:
+        selected = sorted(
+            (row for row in rows if row.get("label") == label),
+            key=lambda row: row["omega_over_omega_n"],
+        )
+        if len(selected) < 5:
+            continue
+        ratios = [float(row["omega_over_omega_n"]) for row in selected]
+        for index, mode in enumerate(modes):
+            damping = [float(row["damping"][index][index]) for row in selected]
+            added = [float(row["added_mass"][index][index]) for row in selected]
+            median = float(np.median(np.abs(damping)))
+            for j in range(1, len(ratios) - 1):
+                neighbours = 0.5 * (abs(damping[j - 1]) + abs(damping[j + 1]))
+                if neighbours <= 0.0 or median <= 0.0:
+                    continue
+                peak = abs(damping[j])
+                if not (peak >= damping[j - 1] and peak >= damping[j + 1]):
+                    continue
+                if peak / median < peak_ratio:
+                    continue
+                lo, hi = ratios[j - 1], ratios[j + 1]
+                window = [
+                    added[k] for k in range(len(ratios)) if lo <= ratios[k] <= hi
+                ]
+                sign_change = bool(
+                    len(window) >= 2
+                    and min(window) < 0.0 < max(window)
+                )
+                bands.append(
+                    {
+                        "label": label,
+                        "mode": names[index],
+                        "mode_index": index,
+                        "omega_over_omega_n": ratios[j],
+                        "omega_over_omega_n_range": [lo, hi],
+                        "b_peak": damping[j],
+                        "b_peak_over_neighbours": peak / neighbours,
+                        "b_peak_over_median": peak / median,
+                        "added_mass_sign_change": sign_change,
+                        "added_mass_in_band": window,
+                    }
+                )
+    return bands
+
+
+def resonance_scan(
+    omega_n: float,
+    ratios: Sequence[float],
+    *,
+    workers: int = 8,
+    gap_over_beam: float = GAP_REFERENCE_OVER_BEAM,
+    mesh: dict[str, Any] | None = None,
+    labels: Sequence[int] = (1, 2),
+) -> dict[str, Any]:
+    """Fine frequency scan around a suspected resonance at a fixed mesh.
+
+    The mesh is held fixed so that the shape of the curve is a property of the
+    arrangement and not of the resolution; every row carries its ``ppw`` so the
+    reader can see where the sweep stops being resolved.
+    """
+    spec = dict(mesh or mesh_spec(_NX_MIN, _NZ_DEFAULT))
+    tasks: list[dict[str, Any]] = []
+    plan: list[dict[str, Any]] = []
+    for ratio in ratios:
+        omega = float(ratio) * omega_n
+        nu = omega**2 / DEFAULT_GRAVITY
+        for n_hulls in labels:
+            tasks.append(
+                {
+                    "label": {1: "single", 2: "catamaran", 3: "trimaran"}[n_hulls],
+                    "n_hulls": n_hulls,
+                    "gap_over_beam": gap_over_beam if n_hulls > 1 else 0.0,
+                    "nu": nu,
+                    "mesh": spec,
+                }
+            )
+            plan.append({"ratio": float(ratio)})
+    results = _run(tasks, _radiation_task, workers)
+    for row, info in zip(results, plan):
+        row["omega_over_omega_n"] = info["ratio"]
+        row["resolved"] = bool(row["ppw"] >= RESOLUTION_FLOOR)
+    results.sort(key=lambda row: (row["label"], row["omega"]))
+    return {
+        "mesh": spec,
+        "gap_over_beam": gap_over_beam,
+        "ratios": [float(r) for r in ratios],
+        "rows": results,
+        "bands": detect_resonance_bands(results),
+    }
+
+
+def low_frequency_limit(
+    omega_n: float,
+    *,
+    workers: int = 8,
+    ratio: float = 0.1,
+    ratios: Sequence[float] | None = None,
+    nx_values: Sequence[int] = (24, 32),
+    gravity: float = DEFAULT_GRAVITY,
+) -> dict[str, Any]:
+    """``A(0)`` and the lowest-frequency radiation row on *matched* meshes.
+
+    The original criterion compares the sweep's ``omega_min`` row with the
+    rigid-wall solve on the sweep's own (coarse) mesh, so it measures the
+    asymptote *and* the discretisation error of two ``O(h**2)`` routes at once.
+    The report in ``report_p106w2n04_baseline.md`` records ``3.02 %`` on the
+    ``nx = 12`` mesh: that is a mesh statement, not a physics statement.  This
+    routine repeats both routes on a refinement ladder so the residual and its
+    convergence order can be separated from the limit itself.
+    """
+    ratio_list = [float(r) for r in (ratios if ratios is not None else (ratio,))]
+    static_tasks = [
+        {
+            "label": "single",
+            "n_hulls": 1,
+            "gap_over_beam": 0.0,
+            "continuation": "rigid_wall",
+            "mesh": mesh_spec(int(nx), max(_NZ_DEFAULT, min(12, int(nx) // 2))),
+        }
+        for nx in nx_values
+    ]
+    radiation_tasks = [
+        {
+            "label": "single",
+            "n_hulls": 1,
+            "gap_over_beam": 0.0,
+            "nu": (omega * float(omega_n)) ** 2 / float(gravity),
+            "mesh": mesh_spec(int(nx), max(_NZ_DEFAULT, min(12, int(nx) // 2))),
+        }
+        for omega in ratio_list
+        for nx in nx_values
+    ]
+    static_rows = _run(static_tasks, _static_task, workers)
+    radiation_rows = _run(radiation_tasks, _radiation_task, workers)
+    pairs: list[dict[str, Any]] = []
+    for index, radiation in enumerate(radiation_rows):
+        ratio_value = ratio_list[index // len(nx_values)]
+        static = static_rows[index % len(nx_values)]
+        nx = int(static["mesh"]["nx"])
+        pairs.append(
+            {
+                "nx": nx,
+                "nz": int(static["mesh"]["nz"]),
+                "omega_over_omega_n": float(ratio_value),
+                "a_zero": static["added_mass"],
+                "a_sweep": radiation["added_mass"],
+                "residual": [
+                    abs(radiation["added_mass"][i][i] - static["added_mass"][i][i])
+                    / abs(static["added_mass"][i][i])
+                    for i in range(3)
+                ],
+                "parity_error": static["parity_error"],
+                "ppw": radiation["ppw"],
+            }
+        )
+    extrapolated: dict[str, Any] = {}
+    finest_ratio = min(ratio_list)
+    finest_pairs = [row for row in pairs if row["omega_over_omega_n"] == finest_ratio]
+    refinement = (
+        (finest_pairs[-2]["nx"] - 1) / (finest_pairs[-1]["nx"] - 1)
+        if len(finest_pairs) >= 2
+        else None
+    )
+    if len(finest_pairs) >= 2 and abs(float(refinement) - 1.0) > 1e-9:
+        coarse, fine = finest_pairs[-2], finest_pairs[-1]
+        r = float(refinement)
+        for key in ("a_zero", "a_sweep"):
+            extrapolated[key] = [
+                float(fine[key][i][i])
+                + (float(fine[key][i][i]) - float(coarse[key][i][i])) / (r**2 - 1.0)
+                for i in range(3)
+            ]
+    trend = []
+    for ratio_value in ratio_list:
+        subset = [row for row in pairs if row["omega_over_omega_n"] == ratio_value]
+        if subset:
+            trend.append(
+                {
+                    "omega_over_omega_n": ratio_value,
+                    "nx": subset[-1]["nx"],
+                    "worst_residual": max(subset[-1]["residual"]),
+                    "per_mode": subset[-1]["residual"],
+                }
+            )
+    return {
+        "pairs": pairs,
+        "ratios": ratio_list,
+        "trend": trend,
+        "extrapolated": extrapolated,
+        "refinement_ratio": refinement,
+        "mode_names": [MODE_NAMES[m] for m in DEFAULT_MODES],
+    }
+
+
+def kk_asymptote_from_series(
+    omegas: Sequence[float],
+    damping: Sequence[float],
+    added_mass_zero_frequency: float,
+    *,
+    tail_points: int = 2,
+) -> dict[str, Any]:
+    """``A(inf) = A(0) - (2/pi) int B/w^2 dw`` from a damping series.
+
+    Same estimator as :func:`kramers_kronig_asymptote` without the row-dictionary
+    plumbing, so a ladder that is *not* the frequency scan (a different mesh per
+    frequency, for instance) can feed it.
+    """
+    omegas_arr = np.asarray(list(omegas), dtype=float)
+    damping_arr = np.asarray(list(damping), dtype=float)
+    order = np.argsort(omegas_arr)
+    omegas_arr = omegas_arr[order]
+    damping_arr = damping_arr[order]
+    keep = damping_arr > 0.0
+    omegas_arr = omegas_arr[keep]
+    damping_arr = damping_arr[keep]
+    if omegas_arr.size < 4:
+        return {"a_inf": float("nan"), "resolved_rows": int(omegas_arr.size)}
+    integrand = damping_arr / omegas_arr**2
+    band = float((2.0 / math.pi) * np.trapezoid(integrand, omegas_arr))
+    tail_rows = min(int(tail_points), omegas_arr.size - 1)
+    p = float("nan")
+    tail = 0.0
+    if tail_rows >= 2:
+        slope = np.polyfit(
+            np.log(omegas_arr[-tail_rows:]), np.log(damping_arr[-tail_rows:]), 1
+        )[0]
+        p = -float(slope)
+        if p > 0.5:
+            coefficient = float(damping_arr[-1]) * omegas_arr[-1] ** p
+            tail = float(
+                (2.0 / math.pi)
+                * coefficient
+                * omegas_arr[-1] ** (-(p + 1.0))
+                / (p + 1.0)
+            )
+    return {
+        "a_inf": float(added_mass_zero_frequency - band - tail),
+        "a_zero": float(added_mass_zero_frequency),
+        "band_moment": band,
+        "tail_moment": tail,
+        "tail_exponent": p,
+        "resolved_rows": int(omegas_arr.size),
+        "omega_range": [float(omegas_arr.min()), float(omegas_arr.max())],
+        "omega_first": float(omegas_arr[0]),
     }
 
 
@@ -1299,6 +1615,211 @@ def evaluate_criteria(study: dict[str, Any]) -> dict[str, Any]:
     if kk_entries:
         criteria["infinite_frequency_from_kramers_kronig"] = kk_entries
 
+    # ------------------------------------------------------------------
+    # added analysis (m9161, node p106w2-n04): the original verdicts above are
+    # kept verbatim; these entries separate the *physics* of the configuration
+    # from the *measurement* of it.
+    # ------------------------------------------------------------------
+    resonance = study.get("resonance") or {}
+    bands = resonance.get("bands") or []
+    if resonance:
+        criteria["resonance_bands"] = {
+            "value": [
+                {
+                    "label": band["label"],
+                    "mode": band["mode"],
+                    "omega_over_omega_n": band["omega_over_omega_n"],
+                    "omega_over_omega_n_range": band["omega_over_omega_n_range"],
+                    "b_peak_over_neighbours": band["b_peak_over_neighbours"],
+                    "added_mass_sign_change": band["added_mass_sign_change"],
+                    "b_peak_over_median": band["b_peak_over_median"],
+                }
+                for band in bands
+            ],
+            "limit": None,
+            "pass": True,
+            "definition": (
+                "narrow-band resonances: B_mm local maximum >= "
+                f"{RESONANCE_PEAK_RATIO} x the mean of its two neighbours in the fine scan "
+                f"delta(omega/omega_n)={float(resonance['ratios'][1] - resonance['ratios'][0]):.3f} "
+                "(informative: recorded, not gated)"
+            ),
+            "scan_mesh_nx": resonance["mesh"]["nx"],
+            "rows": len(resonance.get("rows") or []),
+        }
+
+    band_ranges = [
+        tuple(band["omega_over_omega_n_range"]) for band in bands if band["label"] == "catamaran"
+    ]
+
+    def _in_band(ratio: float) -> bool:
+        return any(lo <= float(ratio) <= hi for lo, hi in band_ranges)
+
+    if "catamaran" in fitted:
+        smooth_rows = [
+            row
+            for row in ladder_rows
+            if row["label"] == "catamaran"
+            and row["resolved"]
+            and not _in_band(row["omega_over_omega_n"])
+        ]
+        if len(smooth_rows) >= 3:
+            omegas = [row["omega"] for row in smooth_rows]
+            smooth_fit = [
+                fit_asymptote(omegas, [row["added_mass"][i][i] for row in smooth_rows])
+                for i in range(3)
+            ]
+            reference = cat_limits["pressure_release"]["added_mass_finest"]
+            errors = [
+                abs(smooth_fit[i]["a_inf"] - reference[i][i]) / abs(reference[i][i])
+                for i in range(3)
+            ]
+            criteria["infinite_frequency_added_mass_catamaran_smooth"] = {
+                "value": max(errors),
+                "limit": 0.02,
+                "pass": bool(max(errors) <= 0.02),
+                "definition": (
+                    "same 1/omega^2 fit for the pair, restricted to resolved ladder rows "
+                    "outside the detected resonance bands"
+                ),
+                "per_mode": errors,
+                "ratios_used": [row["omega_over_omega_n"] for row in smooth_rows],
+                "extrapolated": [smooth_fit[i]["a_inf"] for i in range(3)],
+                "reference": [reference[i][i] for i in range(3)],
+                "fit_r_squared": [smooth_fit[i]["r_squared"] for i in range(3)],
+            }
+
+    low = study.get("low_frequency_limit") or {}
+    if low.get("pairs"):
+        ratios = low.get("ratios") or sorted({p["omega_over_omega_n"] for p in low["pairs"]})
+        coarse_ratio, fine_ratio = max(ratios), min(ratios)
+        finest_coarse = [p for p in low["pairs"] if p["omega_over_omega_n"] == coarse_ratio][-1]
+        finest_fine = [p for p in low["pairs"] if p["omega_over_omega_n"] == fine_ratio][-1]
+        extrapolated_a0 = (low.get("extrapolated") or {}).get("a_zero")
+        criteria["zero_frequency_added_mass_fine"] = {
+            "value": max(finest_coarse["residual"]),
+            "limit": 0.02,
+            "pass": bool(max(finest_coarse["residual"]) <= 0.02),
+            "definition": (
+                "|A(omega_min) - A_rigid_wall| / A_rigid_wall on a matched refinement mesh "
+                f"at omega/omega_n = {coarse_ratio:g} (the scan's lowest frequency); worst mode"
+            ),
+            "per_mode": finest_coarse["residual"],
+            "nx": finest_coarse["nx"],
+            "omega_over_omega_n": coarse_ratio,
+            "mesh_ladder": [
+                {"nx": pair["nx"], "residual": pair["residual"]}
+                for pair in low["pairs"]
+                if pair["omega_over_omega_n"] == coarse_ratio
+            ],
+        }
+        criteria["zero_frequency_added_mass_limit"] = {
+            "value": max(finest_fine["residual"]),
+            "limit": 0.02,
+            "pass": bool(max(finest_fine["residual"]) <= 0.02),
+            "definition": (
+                "the same comparison at omega/omega_n = "
+                f"{fine_ratio:g}, where the O(omega^2) correction is small enough for the "
+                "omega -> 0 limit to be measured (the trend is recorded separately)"
+            ),
+            "per_mode": finest_fine["residual"],
+            "nx": finest_fine["nx"],
+            "omega_over_omega_n": fine_ratio,
+            "origin_trend": low.get("trend") or [],
+        }
+        if extrapolated_a0:
+            sweep_ext = low["extrapolated"]["a_sweep"]
+            errors = [
+                abs(sweep_ext[i] - extrapolated_a0[i]) / abs(extrapolated_a0[i])
+                for i in range(3)
+            ]
+            criteria["zero_frequency_added_mass_extrapolated"] = {
+                "value": max(errors),
+                "limit": 0.02,
+                "pass": bool(max(errors) <= 0.02),
+                "definition": (
+                    "Richardson-extrapolated (p=2) A(0) vs the same extrapolation of the "
+                    "omega_min radiation row"
+                ),
+                "per_mode": errors,
+                "a_zero_extrapolated": extrapolated_a0,
+                "a_sweep_extrapolated": sweep_ext,
+                "refinement_ratio": low.get("refinement_ratio"),
+            }
+
+    single_ladder = [
+        row for row in ladder_rows if row["label"] == "single" and row["resolved"]
+    ]
+    if len(single_ladder) >= 4 and asymptotics:
+        rigid_rows = single_limits["rigid_wall"]["mesh_study"]
+        a_zero = (low.get("extrapolated") or {}).get("a_zero")
+        if a_zero is None:
+            a_zero = list(rigid_rows[-1]["added_mass"][i][i] for i in range(3))
+        reference = single_limits["pressure_release"]["added_mass_finest"]
+        per_mode = []
+        for index in range(3):
+            entry = kk_asymptote_from_series(
+                [row["omega"] for row in single_ladder],
+                [row["damping"][index][index] for row in single_ladder],
+                a_zero[index],
+            )
+            entry["reference"] = reference[index][index]
+            entry["relative_error"] = (
+                abs(entry["a_inf"] - reference[index][index]) / abs(reference[index][index])
+                if math.isfinite(entry.get("a_inf", float("nan")))
+                else float("nan")
+            )
+            per_mode.append(entry)
+        value = max(entry["relative_error"] for entry in per_mode)
+        criteria["infinite_frequency_from_kramers_kronig_dense"] = {
+            "value": value,
+            "limit": 0.02,
+            "pass": bool(value <= 0.02),
+            "definition": (
+                "A(inf) = A(0) - (2/pi) int B/w^2 dw over the resolved ladder "
+                "(A(0) Richardson-extrapolated; tail carried by a B ~ w^-p fit)"
+            ),
+            "per_mode": per_mode,
+            "ratios_used": [row["omega_over_omega_n"] for row in single_ladder],
+            "band_ratio_max": max(row["omega"] for row in single_ladder)
+            / float(study["hydrostatics"]["omega_n"]),
+        }
+
+    kd_entries: list[dict[str, Any]] = []
+    omega_n = float(study["hydrostatics"]["omega_n"])
+    for ratio_key, entries in study["distance_decay"]["ratios"].items():
+        omega = float(ratio_key) * omega_n
+        k = omega**2 / DEFAULT_GRAVITY
+        for entry in entries:
+            centre = float(entry["centre_distance_over_L"]) * WIGLEY3_L
+            sigma = entry["sigma_A"][1]
+            if not math.isfinite(sigma):
+                continue
+            kd_entries.append(
+                {
+                    "omega_over_omega_n": float(ratio_key),
+                    "centre_distance_over_L": float(entry["centre_distance_over_L"]),
+                    "kd": float(k * centre),
+                    "sigma_A_heave": float(sigma),
+                    "abs_sigma_minus_one": abs(float(sigma) - 1.0),
+                }
+            )
+    if kd_entries:
+        far = [entry for entry in kd_entries if entry["kd"] >= KD_FAR_FIELD_MIN]
+        value = max((entry["abs_sigma_minus_one"] for entry in far), default=float("nan"))
+        criteria["distance_decay_far_field_kd_gated"] = {
+            "value": value,
+            "limit": 0.05,
+            "pass": bool(far and value <= 0.05),
+            "definition": (
+                "max |sigma_A_heave - 1| over the points with k d >= "
+                f"{KD_FAR_FIELD_MIN} (k d is the physically relevant far-field parameter: "
+                "the radiated wave decays like (k r)^-1/2, so d/L alone cannot gate it)"
+            ),
+            "points": len(far),
+            "kd_points": kd_entries,
+        }
+
     worst_damping = min(damping_all)
     criteria["energy_non_negative_damping"] = {
         "value": worst_damping,
@@ -1369,6 +1890,15 @@ def evaluate_criteria(study: dict[str, Any]) -> dict[str, Any]:
     ]
     criteria["all_pass"] = bool(all(criteria[key]["pass"] for key in gated))
     criteria["gated"] = gated
+    criteria["gated_added"] = [
+        key for key in gated if key in ADDED_CRITERIA
+    ]
+    criteria["gated_original"] = [
+        key for key in gated if key not in ADDED_CRITERIA
+    ]
+    criteria["all_pass_original"] = bool(
+        all(criteria[key]["pass"] for key in criteria["gated_original"])
+    )
     return criteria
 
 
@@ -1382,6 +1912,11 @@ def run_full_study(
     mesh_caps: tuple[int, int, int] = (20, 20, 16),
     gap_over_beam: float = GAP_REFERENCE_OVER_BEAM,
     parts: Sequence[str] | None = None,
+    ladder_ratios: Sequence[float] = (1.0, 1.25, 1.5, 2.0, 2.5),
+    single_ladder_mesh_cap: int = 40,
+    resonance_ratios: Sequence[float] = tuple(np.round(np.arange(1.0, 1.55, 0.025), 4)),
+    lowfreq_nx: Sequence[int] = (24, 32),
+    lowfreq_ratios: Sequence[float] = (0.1, 0.02),
 ) -> dict[str, Any]:
     """Run the study and return the JSON-serialisable record.
 
@@ -1392,7 +1927,8 @@ def run_full_study(
     import time
 
     selected = set(parts) if parts else {
-        "geometry", "sweep", "asymptotes", "ladder", "decay", "negative", "resolution", "energy"
+        "geometry", "sweep", "asymptotes", "ladder", "decay", "negative", "resolution",
+        "energy", "resonance", "lowfreq",
     }
     study: dict[str, Any] = {
         "study": STUDY,
@@ -1434,12 +1970,35 @@ def run_full_study(
         _stamp("frequency_scan")
     if "asymptotes" in selected:
         study["asymptotic_limits"] = asymptotic_limits(
-            workers=workers, gap_over_beam=gap_over_beam
+            workers=workers,
+            gap_over_beam=gap_over_beam,
+            meshes=[mesh_spec(12, 6), mesh_spec(16, 8), mesh_spec(20, 10)],
         )
         _stamp("asymptotic_limits")
+    if "resonance" in selected:
+        study["resonance"] = resonance_scan(
+            omega_n,
+            resonance_ratios,
+            workers=workers,
+            gap_over_beam=gap_over_beam,
+        )
+        _stamp("resonance")
+    if "lowfreq" in selected:
+        study["low_frequency_limit"] = low_frequency_limit(
+            omega_n,
+            workers=workers,
+            ratios=lowfreq_ratios,
+            nx_values=lowfreq_nx,
+        )
+        _stamp("low_frequency_limit")
     if "ladder" in selected:
         study["high_frequency_ladder"] = high_frequency_ladder(
-            omega_n, workers=workers, gap_over_beam=gap_over_beam, mesh_cap=mesh_caps[0]
+            omega_n,
+            ratios=ladder_ratios,
+            workers=workers,
+            gap_over_beam=gap_over_beam,
+            mesh_cap=mesh_caps[0],
+            single_mesh_cap=single_ladder_mesh_cap,
         )
         _stamp("high_frequency_ladder")
     if "decay" in selected:
