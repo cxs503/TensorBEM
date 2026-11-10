@@ -140,6 +140,7 @@ correction log inside the generated block records what changed.
 | Second-order mean wave drift force (near field / far field) | **REAL** | `tensorbem.drift`, `tensorbem.drift_force` (+1) | 4 node(s) in 2 file(s) | `docs/drift_second_order/drift_second_order.md` |
 | Maruo far-field mean drift force at arbitrary heading | **REAL** | `tensorbem.maruo_drift` | 4 node(s) in 1 file(s) | `docs/maruo_drift.md` |
 | Time-domain radiation memory kernel (Cummins equation) | **REAL** | `tensorbem.time_domain` | 3 node(s) in 1 file(s) | `docs/time_domain_pulse.md` |
+| Coupled multi-DOF radiation memory kernel matrix | **REAL** | `tensorbem.memory_kernel_matrix`, `tensorbem.benchmarks.cummins_matrix_closure` | 4 node(s) in 1 file(s) | `docs/cummins_matrix_closure/cummins_matrix_kernel_matrix.md` |
 | Two-way Cummins memory-kernel closure with causality and decay gates | **REAL** | `tensorbem.benchmarks.cummins_memory_closure`, `tensorbem.time_domain` | 5 node(s) in 1 file(s) | `docs/cummins_memory_closure/cummins_memory_closure.md`, `docs/cummins_memory_closure/campaign.json` |
 | Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
 | Hydroelastic panel modes and the wet/dry frequency ratio | **REAL** | `tensorbem.hydroelastic` | 3 node(s) in 1 file(s) | `docs/bem_hydroelastic.md` |
@@ -152,7 +153,7 @@ correction log inside the generated block records what changed.
 | Parametric KCS-class hull with published-particular anchors | **WITHHELD** | `tensorbem.kcs_hull` | 2 node(s) in 1 file(s) | `docs/m6656/README.md` |
 | Multihull added mass and damping with exact zero/infinite-frequency asymptotes | **REAL** | `tensorbem.multibody3d`, `tensorbem.benchmarks.multibody_frequency_dependence_3d` | 3 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 
-Counts: **42** REAL, **1** WITHHELD — 43 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **43** REAL, **1** WITHHELD — 44 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -163,22 +164,29 @@ Counts: **42** REAL, **1** WITHHELD — 43 capabilities. The level is derived fr
 
 ### Capability coverage
 
-56 of 68 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **11 are unowned**.
+57 of 76 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **18 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 
 **Core modules no row grades and no reason explains** (fails the gate):
 
+- `tensorbem.cathodic_protection`
+- `tensorbem.cp_galvanic`
 - `tensorbem.cylinder_drift`
 - `tensorbem.finite_depth_green`
+- `tensorbem.haskind2d`
 - `tensorbem.interior_panels`
+- `tensorbem.net_source_reg`
 - `tensorbem.neumann_kelvin`
 - `tensorbem.panel_quadratic`
 - `tensorbem.propeller`
 - `tensorbem.rankine_fs`
 - `tensorbem.rankine_wave`
 - `tensorbem.series60`
+- `tensorbem.stf_fullspeed`
 - `tensorbem.tank_free_surface`
+- `tensorbem.verification`
+- `tensorbem.wigley3_freq`
 - `tensorbem.wigley3_hull`
 
 ### Untested modules
@@ -197,11 +205,15 @@ Not referenced by any test file, with an accepted reason:
 
 **Unreferenced and unexplained** (fails the gate):
 
-- `tensorbem.benchmarks.kp505_openwater_bem`
+- `tensorbem.benchmarks.cathodic_protection_sphere`
 - `tensorbem.benchmarks.multihull_frequency_figures`
 - `tensorbem.benchmarks.neumann_kelvin_verification`
-- `tensorbem.benchmarks.quadratic_panel_verification`
+- `tensorbem.benchmarks.wigley3_complete_verification`
+- `tensorbem.benchmarks.wigley3_freq_verification`
+- `tensorbem.benchmarks.wigley3_report_generator`
 - `tensorbem.benchmarks.wigley_diffraction_radiation`
+- `tensorbem.verification`
+- `tensorbem.verification.corrosion`
 
 <!-- capability-matrix:end -->
 
