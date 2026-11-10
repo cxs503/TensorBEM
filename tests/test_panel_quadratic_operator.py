@@ -353,6 +353,54 @@ def test_operators_are_scale_invariant():
     assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
 
 
+def test_operators_are_reflection_invariant():
+    """Mirror reflection leaves S and D unchanged (kernel is O(3)-invariant).
+
+    The Laplace kernel G(x, y) = 1/(4 pi |x - y|) satisfies
+    G(M x, M y) = G(x, y) for every orthogonal M (det M = +/- 1), and the
+    outward normal of a reflected closed surface is M n, so reflecting the
+    whole mesh must leave every entry of S and D unchanged up to round-off.
+    This completes the full orthogonal group: the rigid-body pins
+    (translation + rotation) and the scale pin all use *proper* transforms
+    (det = +1) and cannot catch a handedness slip -- e.g. a normal built
+    from a cross product with an assumed right-handed parameterisation --
+    which a reflection (det = -1) exposes as D -> -D while S stays put.
+    """
+    M = np.diag([1.0, -1.0, 1.0])
+    assert abs(float(np.linalg.det(M)) + 1.0) < 1e-14
+    base = ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7))
+    reflected = QuadraticSurfaceMesh((M @ base.vertices.T).T, base.faces.copy())
+    S0, D0 = assemble_quadratic_matrices(base)
+    S1, D1 = assemble_quadratic_matrices(reflected)
+    assert np.max(np.abs(S1 - S0)) <= 1e-10 * np.max(np.abs(S0)), (
+        "single-layer matrix changed under reflection"
+    )
+    assert np.max(np.abs(D1 - D0)) <= 1e-10 * np.max(np.abs(D0)), (
+        "double-layer matrix changed under reflection"
+    )
+    # the solid-angle identity must hold on the reflected surface as well
+    ones = np.ones(D1.shape[0])
+    assert float(np.max(np.abs(D1 @ ones + 0.5))) < 2e-2
+
+
+def test_inward_wound_mesh_is_rewound_outward():
+    """A mesh wound entirely inward is re-wound to the outward convention.
+
+    White-box companion of the reflection pin: reversing every face of a
+    valid mesh must be undone by the constructor, so the stored faces equal
+    the original outward winding exactly.  Without the re-wind, the
+    reflected mesh would assemble D with the opposite sign (D 1 = +1/2)
+    and the recovered flux would be silently wrong.
+    """
+    base = ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7))
+    inward = QuadraticSurfaceMesh(
+        base.vertices.copy(), base.faces[:, [0, 2, 1, 5, 4, 3]]
+    )
+    assert np.array_equal(inward.faces, base.faces), (
+        "inward-wound faces were not re-wound to the outward convention"
+    )
+
+
 def test_single_layer_constant_density_identity(sphere_operators):
     """S 1 == 1 on the unit sphere (single-layer potential of unit density)."""
     for sub, (S, D) in sphere_operators.items():
