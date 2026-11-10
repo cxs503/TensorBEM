@@ -45,14 +45,14 @@
       "flux_rel_error": 0.02854353229114548,
       "flux_max_abs_error": 0.008642046774285567,
       "flux_reference_max": 0.24460470801279133,
-      "condition_number": 39.350926008522016,
+      "condition_number": 39.35092600852202,
       "relative_residual_l2": 4.647202055215259e-16,
       "solid_angle_identity_error": 0.006321395136928087,
       "single_layer_residual_l2": 4.640299088635664e-16,
       "equivalent_density_vs_exact_flux_rel_error": 2.1955156020715987,
       "single_layer_identity_error": 0.0010613237432292033,
       "second_kind_identity_error": 0.0063213951369286425,
-      "operator_condition_number": 39.350926008522016
+      "operator_condition_number": 39.35092600852202
     },
     {
       "subdivisions": 2,
@@ -83,26 +83,26 @@
     "single_layer_quadrature_convergence": [
       {
         "order": 8,
-        "single_layer_rel_error_vs_order64": 3.13557586331598e-05
+        "single_layer_rel_error_vs_order64": 3.1355758633159805e-05
       },
       {
         "order": 12,
-        "single_layer_rel_error_vs_order64": 2.3767995354106454e-07
+        "single_layer_rel_error_vs_order64": 2.376799536150845e-07
       },
       {
         "order": 16,
-        "single_layer_rel_error_vs_order64": 5.3972121412506965e-09
+        "single_layer_rel_error_vs_order64": 5.397212536023527e-09
       },
       {
         "order": 24,
-        "single_layer_rel_error_vs_order64": 1.221427134728956e-12
+        "single_layer_rel_error_vs_order64": 1.2216245211437476e-12
       },
       {
         "order": 32,
-        "single_layer_rel_error_vs_order64": 1.4803981109352247e-15
+        "single_layer_rel_error_vs_order64": 1.8751709405179518e-15
       }
     ],
-    "single_layer_production_rel_error": 1.4803981109352247e-15
+    "single_layer_production_rel_error": 1.8751709405179518e-15
   },
   "acceptance": {
     "threshold": 0.03,
@@ -130,6 +130,7 @@
           1.0
         ],
         "affine_transform": null,
+        "radial_modulation": null,
         "source": [
           0.0,
           0.0,
@@ -146,7 +147,9 @@
             "solid_angle_identity_error": 0.03866831493399159,
             "condition_number": 20.84612122689167,
             "relative_residual_l2": 2.6999064040660096e-16,
-            "jacobian_anisotropy_max": 1.1229078967512083
+            "jacobian_anisotropy_max": 1.1229078967512083,
+            "affine_image_residual": 4.175788131275718e-17,
+            "min_normal_radial_cos": 0.9999999999999999
           },
           {
             "subdivisions": 1,
@@ -156,9 +159,11 @@
             "flux_rel_error": 0.03004047589353157,
             "flux_max_abs_error": 0.0030526205388891475,
             "solid_angle_identity_error": 0.006321395136928087,
-            "condition_number": 39.350926008522016,
+            "condition_number": 39.35092600852202,
             "relative_residual_l2": 4.530767224050904e-16,
-            "jacobian_anisotropy_max": 1.0473940525631311
+            "jacobian_anisotropy_max": 1.0473940525631311,
+            "affine_image_residual": 5.375946259635775e-16,
+            "min_normal_radial_cos": 0.9999999292589907
           },
           {
             "subdivisions": 2,
@@ -170,7 +175,9 @@
             "solid_angle_identity_error": 0.0009609938362293846,
             "condition_number": 80.75785831142969,
             "relative_residual_l2": 8.661654866852688e-16,
-            "jacobian_anisotropy_max": 1.0133935704304136
+            "jacobian_anisotropy_max": 1.0133935704304136,
+            "affine_image_residual": 4.886052983444128e-16,
+            "min_normal_radial_cos": 0.999999998170538
           }
         ],
         "observed_order": 2.4380351674455967,
@@ -193,6 +200,7 @@
           0.7
         ],
         "affine_transform": null,
+        "radial_modulation": null,
         "source": [
           0.0,
           0.0,
@@ -209,7 +217,9 @@
             "solid_angle_identity_error": 0.08661875626267929,
             "condition_number": 23.958728353988274,
             "relative_residual_l2": 3.146091705947368e-16,
-            "jacobian_anisotropy_max": 1.8548453127280162
+            "jacobian_anisotropy_max": 1.8548453127280162,
+            "affine_image_residual": 1.3058687695762752e-16,
+            "min_normal_radial_cos": 0.8047397512095067
           },
           {
             "subdivisions": 1,
@@ -219,9 +229,11 @@
             "flux_rel_error": 0.03660165339141496,
             "flux_max_abs_error": 0.0075460927809931355,
             "solid_angle_identity_error": 0.011732769285464906,
-            "condition_number": 48.90053159016065,
+            "condition_number": 48.90053159016062,
             "relative_residual_l2": 4.4128572464172866e-16,
-            "jacobian_anisotropy_max": 1.4634314939081874
+            "jacobian_anisotropy_max": 1.4634314939081874,
+            "affine_image_residual": 5.821360966830087e-16,
+            "min_normal_radial_cos": 0.7379294544817673
           },
           {
             "subdivisions": 2,
@@ -233,7 +245,9 @@
             "solid_angle_identity_error": 0.0016895895007281725,
             "condition_number": 104.45973646965673,
             "relative_residual_l2": 8.746506418832158e-16,
-            "jacobian_anisotropy_max": 1.2558581454893887
+            "jacobian_anisotropy_max": 1.2558581454893887,
+            "affine_image_residual": 1.1832608612071373e-15,
+            "min_normal_radial_cos": 0.738135266884565
           }
         ],
         "observed_order": 2.627649796294819,
@@ -272,6 +286,7 @@
             1.0
           ]
         ],
+        "radial_modulation": null,
         "source": [
           0.0,
           0.0,
@@ -288,7 +303,9 @@
             "solid_angle_identity_error": 0.08715766825340598,
             "condition_number": 26.37137343588381,
             "relative_residual_l2": 2.2648715952496515e-16,
-            "jacobian_anisotropy_max": 2.2549227246994934
+            "jacobian_anisotropy_max": 2.2549227246994934,
+            "affine_image_residual": 2.367419269709775e-16,
+            "min_normal_radial_cos": 0.6162109433894987
           },
           {
             "subdivisions": 1,
@@ -300,7 +317,9 @@
             "solid_angle_identity_error": 0.01487005257001911,
             "condition_number": 53.42931408921351,
             "relative_residual_l2": 4.340329401744561e-16,
-            "jacobian_anisotropy_max": 1.752029861600233
+            "jacobian_anisotropy_max": 1.752029861600233,
+            "affine_image_residual": 5.503117215182472e-16,
+            "min_normal_radial_cos": 0.6010562980394518
           },
           {
             "subdivisions": 2,
@@ -312,11 +331,86 @@
             "solid_angle_identity_error": 0.0022386057438884555,
             "condition_number": 115.00412161172463,
             "relative_residual_l2": 8.483909711836129e-16,
-            "jacobian_anisotropy_max": 1.3695690890584185
+            "jacobian_anisotropy_max": 1.3695690890584185,
+            "affine_image_residual": 1.1626939322118716e-15,
+            "min_normal_radial_cos": 0.6011372598700571
           }
         ],
         "observed_order": 2.71728767619111,
         "flux_rel_error_finest": 0.007667913518001579,
+        "acceptance": {
+          "threshold": 0.03,
+          "hard_limit": 0.15,
+          "order_floor": 1.5,
+          "passed_3pct": true,
+          "passed_hard_limit": true,
+          "passed_order": true,
+          "passed": true
+        }
+      },
+      {
+        "name": "wavy_r3_e0p15",
+        "semi_axes": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "affine_transform": null,
+        "radial_modulation": {
+          "degree": 3,
+          "amplitude": 0.15
+        },
+        "source": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "levels": [
+          {
+            "subdivisions": 0,
+            "nodes": 42,
+            "elements": 20,
+            "h": 0.6926832300937521,
+            "flux_rel_error": 0.16729855256124898,
+            "flux_max_abs_error": 0.023418020267650427,
+            "solid_angle_identity_error": 0.09021133279876675,
+            "condition_number": 20.911099716031497,
+            "relative_residual_l2": 2.351313935389854e-16,
+            "jacobian_anisotropy_max": 1.298443566969708,
+            "affine_image_residual": 0.05901390433641434,
+            "min_normal_radial_cos": 0.9709035740645767
+          },
+          {
+            "subdivisions": 1,
+            "nodes": 162,
+            "elements": 80,
+            "h": 0.38455240331349166,
+            "flux_rel_error": 0.04161552185160463,
+            "flux_max_abs_error": 0.005934051704005183,
+            "solid_angle_identity_error": 0.03408441725468303,
+            "condition_number": 40.51480287641955,
+            "relative_residual_l2": 4.325374369896472e-16,
+            "jacobian_anisotropy_max": 1.1961852739585548,
+            "affine_image_residual": 0.05694248197651055,
+            "min_normal_radial_cos": 0.9642098622043128
+          },
+          {
+            "subdivisions": 2,
+            "nodes": 642,
+            "elements": 320,
+            "h": 0.19822900017639322,
+            "flux_rel_error": 0.010473749075079166,
+            "flux_max_abs_error": 0.002635764903532345,
+            "solid_angle_identity_error": 0.006276932703803251,
+            "condition_number": 85.93294473046004,
+            "relative_residual_l2": 8.71232376085036e-16,
+            "jacobian_anisotropy_max": 1.1141499876297083,
+            "affine_image_residual": 0.05635706638538311,
+            "min_normal_radial_cos": 0.9523364532719173
+          }
+        ],
+        "observed_order": 2.2119134816360613,
+        "flux_rel_error_finest": 0.010473749075079166,
         "acceptance": {
           "threshold": 0.03,
           "hard_limit": 0.15,
@@ -395,7 +489,7 @@
     },
     "figure_geometry_generic": {
       "path": "docs/quadratic_panel_verification/fig_geometry_generic.png",
-      "sha256": "84da12186ad742a1b90c21bd5f7e53dcde0d4549997641614079f45fbb35b26a"
+      "sha256": "c5beb8f560c98c76b41f66251b1d8f6d46996393e5fb058729aa4925180d57d3"
     }
   }
 }

@@ -18,7 +18,8 @@ committed `study.json` bit-for-bit. The run writes:
 |---|---|
 | `study.json` | every number of every study + acceptance flags + sha256 of each figure |
 | `fig_quadratic_operator.png` | convergence, operator identities, nodal flux deviation map |
-| `fig_geometry_generic.png` | geometry-generic convergence (sphere, ellipsoid, sheared ellipsoid) and the measured thin-body scope limit |
+| `fig_geometry_generic.png` | geometry-generic convergence (sphere, ellipsoid, sheared ellipsoid, non-affine wavy sphere) and the measured thin-body scope limit |
+| `fig_non_affine_geometry_m9712.png` | non-affine geometry axis: flux convergence over the four cases and the quadrature-order invariance of the solid-angle residual (evidence figure of m9712) |
 
 `study["provenance"]` holds the sha256 of each generated figure, so a figure and
 the numbers that produced it cannot drift apart silently (the pytest suite
@@ -54,6 +55,16 @@ All references are closed-form; nothing is compared against the solver itself.
    `jacobian_anisotropy_max = max(det J)/min(det J)` per element, so accuracy can
    be read against element quality and the case cannot silently degenerate into a
    rescaled conformal mesh.
+   A fourth case is **not an affine image of the unit sphere** at all: the radius
+   of the icosphere is modulated by `0.15 P_3(cos theta)` (`wavy_r3_e0p15`).
+   Sphere, ellipsoid and sheared ellipsoid are all affine, and the quadratic
+   Bezier parametrisation commutes with affine maps, so a Jacobian/normal slip
+   that is linear-consistent is invisible to them; the nonlinear map is not
+   compatible with the six control nodes to machine precision. Each level
+   therefore records `affine_image_residual` (least-squares affine fit between
+   corresponding node sets, normalised): round-off (`< 1e-12`) for the affine
+   cases, `5.7e-2` at level 1 for the modulated one, which classifies the
+   geometry axis instead of asserting it in prose.
 5. **Similarity invariance**: translating and uniformly scaling the mesh
    (`x -> 2.7 x + shift`) must leave the *relative* flux error unchanged, since
    the exterior Laplace problem has no length scale.
@@ -83,6 +94,9 @@ reports without failing):
 * same `<= 3 %` on the non-spherical ellipsoid and observed order `>= 1.5`;
 * same `<= 3 %` on the sheared (non-similarity affine) ellipsoid and observed
   order `>= 1.5`;
+* same `<= 3 %` (and order `>= 1.5`) on the non-affine radially modulated
+  sphere, with `affine_image_residual > 1e-2` so the case cannot be a disguised
+  affine rescaling;
 * similarity deviation `<= 1e-10`.
 
 ## Scope limits (honest, measured)
