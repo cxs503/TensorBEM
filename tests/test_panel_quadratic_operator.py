@@ -611,6 +611,120 @@ def test_similarity_invariance_of_flux_error():
     )
 
 
+# ---------------------------------------------------------------------------
+# Non-conformal (sheared) geometry: affine group member outside the similarity
+# group.  The invariance pins above all live in the similarity group
+# (translation + rotation + uniform scale + reflection), and the geometry study
+# above uses diagonal axis scalings, which keep every element close to
+# equilateral; a shear is the cheapest transform that makes the parametric
+# mapping non-orthogonal while leaving the body smooth.
+# ---------------------------------------------------------------------------
+def _sheared_ellipsoid(subdivisions: int) -> QuadraticSurfaceMesh:
+    from tensorbem.benchmarks.quadratic_panel_verification import GEOMETRY_TRANSFORMS
+
+    transform = GEOMETRY_TRANSFORMS["sheared_ellipsoid_1p00_1p60_0p70"]
+    base = ellipsoid_quadratic(subdivisions, axes=(1.0, 1.6, 0.7))
+    return QuadraticSurfaceMesh((transform @ base.vertices.T).T, base.faces.copy())
+
+
+def test_sheared_ellipsoid_flux_within_hard_limit():
+    """Affine sheared (skewed-element) body: the engineering limit must hold.
+
+    The 3% acceptance of the study is asserted at the finest level by
+    :func:`test_committed_study_records_non_conformal_geometry_case`; here the
+    intermediate level (162 nodes, ~8x cheaper) is checked against the 15% hard
+    limit plus a valid solid-angle identity, i.e. the sheared body stays a usable
+    discretisation rather than degrading into garbage.
+
+    The source must be the geometric centre of the study (the origin): the
+    default ``SOURCE = (0, 0, 0.5)`` sits only 0.2 below the sheared surface in
+    ``z`` and makes the exact field sharp, which measures the singularity of the
+    data and not the operator.
+    """
+    from tensorbem.benchmarks.quadratic_panel_verification import (
+        FLUX_HARD_LIMIT,
+        run_flux_study,
+    )
+
+    mesh = _sheared_ellipsoid(1)
+    flux = run_flux_study(
+        mesh, quadrature_order=8, self_order=16, source=np.zeros(3)
+    )
+    assert flux["flux_rel_error"] <= FLUX_HARD_LIMIT, (
+        f"sheared ellipsoid flux error {flux['flux_rel_error']:.3e} > 15%"
+    )
+    # the operator is still a valid second-kind discretisation on the sheared body
+    assert flux["solid_angle_identity_error"] < 5e-2
+
+
+def test_shear_case_is_not_a_similarity_copy():
+    """Guard against a vacuous case: the shear must really change the operators.
+
+    If the non-conformal case were (numerically) a similarity image of the
+    ellipsoid, ``S`` and ``D`` would agree entry-wise and the new study case
+    would prove nothing about skewed elements.
+    """
+    from tensorbem.benchmarks.quadratic_panel_verification import (
+        element_metric_anisotropy,
+    )
+
+    base = ellipsoid_quadratic(0, axes=(1.0, 1.6, 0.7))
+    sheared = _sheared_ellipsoid(0)
+    S_base, D_base = assemble_quadratic_matrices(base, quadrature_order=8, self_order=16)
+    S_shear, D_shear = assemble_quadratic_matrices(
+        sheared, quadrature_order=8, self_order=16
+    )
+
+    rel_S = np.linalg.norm(S_shear - S_base) / np.linalg.norm(S_base)
+    rel_D = np.linalg.norm(D_shear - D_base) / np.linalg.norm(D_base)
+    assert rel_S > 0.05 and rel_D > 0.05, (
+        f"sheared operators too close to the ellipsoid (rel S {rel_S:.3e},"
+        f" rel D {rel_D:.3e}) -> the case is a similarity image"
+    )
+
+    aniso_base = element_metric_anisotropy(base)
+    aniso_shear = element_metric_anisotropy(sheared)
+    assert aniso_shear > 1.15 * aniso_base, (
+        f"sheared elements not more skewed than the ellipsoid"
+        f" ({aniso_shear:.3f} vs {aniso_base:.3f})"
+    )
+
+
+def test_committed_study_records_non_conformal_geometry_case():
+    """The committed artifact must carry the sheared case with its transform."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    study = json.loads(
+        (root / "docs" / "quadratic_panel_verification" / "study.json").read_text()
+    )
+    geometries = {g["name"]: g for g in study["geometry"]["geometries"]}
+    assert "sheared_ellipsoid_1p00_1p60_0p70" in geometries
+
+    sheared = geometries["sheared_ellipsoid_1p00_1p60_0p70"]
+    transform = np.asarray(sheared["affine_transform"], dtype=float)
+    assert transform.shape == (3, 3)
+    assert np.linalg.det(transform) == pytest.approx(1.0, rel=1e-12)
+    assert sheared["acceptance"]["passed"] is True
+    assert sheared["flux_rel_error_finest"] <= sheared["acceptance"]["threshold"]
+    assert sheared["observed_order"] >= sheared["acceptance"]["order_floor"]
+
+    # every geometry record now states the element quality it was measured on
+    for geom in study["geometry"]["geometries"]:
+        assert all("jacobian_anisotropy_max" in rec for rec in geom["levels"])
+        assert geom["levels"][-1]["jacobian_anisotropy_max"] >= 1.0
+    for geom in study["geometry"]["geometries"]:
+        if geom["name"] == "sheared_ellipsoid_1p00_1p60_0p70":
+            continue
+        assert geom["affine_transform"] is None
+
+    # the sheared elements must be measurably more skewed than the ellipsoid ones
+    ellipsoid = geometries["ellipsoid_1p00_1p60_0p70"]
+    for rec_shear, rec_ell in zip(sheared["levels"], ellipsoid["levels"]):
+        assert rec_shear["jacobian_anisotropy_max"] > rec_ell["jacobian_anisotropy_max"]
+
+
 def test_committed_study_json_matches_its_artifacts():
     """The committed study record must be self-consistent and hash-verified.
 
