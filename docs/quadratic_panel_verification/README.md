@@ -18,7 +18,7 @@ committed `study.json` bit-for-bit. The run writes:
 |---|---|
 | `study.json` | every number of every study + acceptance flags + sha256 of each figure |
 | `fig_quadratic_operator.png` | convergence, operator identities, nodal flux deviation map |
-| `fig_geometry_generic.png` | geometry-generic convergence (sphere vs ellipsoid) and the measured thin-body scope limit |
+| `fig_geometry_generic.png` | geometry-generic convergence (sphere, ellipsoid, sheared ellipsoid) and the measured thin-body scope limit |
 
 `study["provenance"]` holds the sha256 of each generated figure, so a figure and
 the numbers that produced it cannot drift apart silently (the pytest suite
@@ -44,9 +44,16 @@ All references are closed-form; nothing is compared against the solver itself.
    unit density equals the radius).
 3. **Flat-panel self block**: a flat element has `(x - y) . n == 0`, so the
    double-layer self block must vanish identically.
-4. **Geometry-generic study** (ellipsoid with three different semi-axes, source
-   at the geometric centre): a sphere-specific cancellation cannot masquerade as
-   accuracy; the observed order and the 3% acceptance must survive.
+4. **Geometry-generic study** (ellipsoid with three different semi-axes and a
+   non-conformal *sheared* ellipsoid, source at the geometric centre): a
+   sphere-specific cancellation cannot masquerade as accuracy; the observed order
+   and the 3% acceptance must survive. The shear leaves the similarity group
+   (`det A = 1`, so scale and source depth are unchanged) and makes the
+   parametric mapping non-orthogonal, i.e. the elements genuinely skewed — the
+   diagonal axis scalings of the ellipsoid do not. Each level records
+   `jacobian_anisotropy_max = max(det J)/min(det J)` per element, so accuracy can
+   be read against element quality and the case cannot silently degenerate into a
+   rescaled conformal mesh.
 5. **Similarity invariance**: translating and uniformly scaling the mesh
    (`x -> 2.7 x + shift`) must leave the *relative* flux error unchanged, since
    the exterior Laplace problem has no length scale.
@@ -74,6 +81,8 @@ reports without failing):
 
 * finest-mesh flux error on the unit sphere `<= 3 %` (hard limit 15 %);
 * same `<= 3 %` on the non-spherical ellipsoid and observed order `>= 1.5`;
+* same `<= 3 %` on the sheared (non-similarity affine) ellipsoid and observed
+  order `>= 1.5`;
 * similarity deviation `<= 1e-10`.
 
 ## Scope limits (honest, measured)
