@@ -94,6 +94,7 @@ GEOMETRY_CASES: tuple[tuple[str, tuple[float, float, float]], ...] = (
     ("sphere", (1.0, 1.0, 1.0)),
     ("ellipsoid_1p00_1p60_0p70", (1.0, 1.6, 0.7)),
     ("sheared_ellipsoid_1p00_1p60_0p70", (1.0, 1.6, 0.7)),
+    ("wavy_r3_e0p15", (1.0, 1.0, 1.0)),
 )
 
 #: Non-similarity (non-conformal) affine transform of the ellipsoid case.
@@ -117,6 +118,22 @@ GEOMETRY_TRANSFORMS: dict[str, FloatArray] = {
             [0.0, 0.30, 1.0],
         ]
     ),
+}
+
+#: Radially modulated (non-affine) geometry cases: ``name -> (degree, amplitude)``.
+#: The radius is ``r(cos t) = 1 + amplitude * P_degree(cos t)`` with ``P`` the
+#: Legendre polynomial of the polar angle ``t`` to the z axis, applied to the
+#: *icosphere* (not the ellipsoid).  This is the only geometry of the suite that
+#: is **not an affine image of the unit sphere**: the sphere, the ellipsoid and
+#: the sheared ellipsoid are all dense in the affine group, so a slip in the
+#: isoparametric Jacobian/normal that is *linear-consistent* (i.e. that still
+#: reproduces affine maps exactly) is invisible to them.  A nonlinear map does
+#: not commute with the quadratic Bezier parametrisation, so the six control
+#: nodes of a modulated panel no longer describe the true patch to machine
+#: precision: ``affine_image_residual`` > 0 is what separates this case from
+#: every affine case (which sits at round-off, recorded per level).
+RADIAL_MODULATION: dict[str, tuple[int, float]] = {
+    "wavy_r3_e0p15": (3, 0.15),
 }
 
 #: Source of the geometry-generic study: the geometric centre of the body, i.e.
@@ -195,6 +212,88 @@ def element_metric_anisotropy(mesh: QuadraticSurfaceMesh, order: int = 4) -> flo
         )
         worst = max(worst, float(dets.max() / dets.min()))
     return worst
+
+
+def legendre_polynomial(degree: int, x: FloatArray) -> FloatArray:
+    """Legendre polynomial ``P_degree(x)`` by the three-term recurrence."""
+    xs = np.asarray(x, dtype=float)
+    if degree <= 0:
+        return np.ones_like(xs)
+    p_prev = np.ones_like(xs)
+    p_curr = xs
+    for n in range(1, degree):
+        p_prev, p_curr = p_curr, ((2 * n + 1) * xs * p_curr - n * p_prev) / (n + 1)
+    return p_curr
+
+
+def radially_modulated_mesh(
+    subdivisions: int, degree: int, amplitude: float
+) -> QuadraticSurfaceMesh:
+    """Icosphere whose radius is modulated by ``amplitude * P_degree(cos t)``.
+
+    Both the vertices and the edge midpoints are placed on the modulated surface,
+    so every node is exactly on the true surface and the quadratic patch is a
+    second-order approximation of it (the same construction as
+    :func:`tensorbem.panel_quadratic.icosphere_quadratic`, which is the
+    ``amplitude = 0`` member of this family).
+    """
+    from ..geometry3d import icosphere
+
+    flat = icosphere(subdivisions)
+
+    def project(point: FloatArray) -> FloatArray:
+        p = np.asarray(point, dtype=float).reshape(3)
+        direction = p / np.linalg.norm(p)
+        radius = 1.0 + amplitude * float(
+            legendre_polynomial(degree, np.array([direction[2]]))[0]
+        )
+        return direction * radius
+
+    vertices = np.array([project(v) for v in flat.vertices])
+    return QuadraticSurfaceMesh.from_flat_with_projection(
+        vertices, flat.faces, project_fn=project
+    )
+
+
+def affine_image_residual(
+    mesh: QuadraticSurfaceMesh, reference_vertices: FloatArray
+) -> float:
+    """How far the mesh is from an affine image of the reference node set.
+
+    Least-squares fit of ``y = A x + t`` between corresponding node sets
+    (``reference_vertices`` of the unit-sphere quadratic mesh and the nodes of
+    ``mesh``) and the RMS residual, normalised by the RMS node radius.  It is
+    ``~1e-16`` for a sphere/ellipsoid/sheared ellipsoid (an affine map of the
+    icosphere is fitted to round-off) and a few percent for a non-affine
+    geometry, so it classifies the geometry axis of a case instead of asserting
+    it in prose.
+    """
+    ref = np.asarray(reference_vertices, dtype=float)
+    nodes = np.asarray(mesh.vertices, dtype=float)
+    if ref.shape != nodes.shape:
+        raise ValueError(
+            f"node sets must match, got {ref.shape} and {nodes.shape}"
+        )
+    ref_c = ref - ref.mean(axis=0)
+    nodes_c = nodes - nodes.mean(axis=0)
+    operator = np.linalg.lstsq(ref_c, nodes_c, rcond=None)[0]
+    residual = nodes_c - ref_c @ operator
+    scale = float(np.sqrt(np.mean(np.sum(nodes_c ** 2, axis=1))))
+    if scale <= 0.0:  # pragma: no cover - degenerate mesh
+        return float("nan")
+    return float(np.sqrt(np.mean(np.sum(residual ** 2, axis=1))) / scale)
+
+
+def min_normal_radial_cos(mesh: QuadraticSurfaceMesh) -> float:
+    """Smallest ``n . x/|x|`` over the element centroids (normal tilt).
+
+    ``1`` means the normal is radial everywhere (perfect sphere); the value
+    drops as the surface tilts away from the radial direction, so it records how
+    far a geometry is from the sphere beyond what the semi-axes say.
+    """
+    centres, normals = element_centroid_data(mesh)
+    radii = np.linalg.norm(centres, axis=1)
+    return float(np.min(np.einsum("ij,ij->i", normals, centres / radii[:, None])))
 
 
 def element_centroid_data(mesh: QuadraticSurfaceMesh) -> tuple[FloatArray, FloatArray]:
@@ -395,9 +494,14 @@ def run_geometry_study(
     geometries = []
     for name, axes in GEOMETRY_CASES:
         transform = GEOMETRY_TRANSFORMS.get(name)
+        modulation = RADIAL_MODULATION.get(name)
         per_level = []
         for sub in levels:
-            mesh = ellipsoid_quadratic(sub, axes=axes)
+            reference = icosphere_quadratic(sub)
+            if modulation is not None:
+                mesh = radially_modulated_mesh(sub, *modulation)
+            else:
+                mesh = ellipsoid_quadratic(sub, axes=axes)
             if transform is not None:
                 # Quadratic Bezier triangles are affine-covariant, so the sheared
                 # vertex/midpoint control net is the exact image of the surface.
@@ -423,6 +527,10 @@ def run_geometry_study(
                     "condition_number": flux["condition_number"],
                     "relative_residual_l2": flux["relative_residual_l2"],
                     "jacobian_anisotropy_max": element_metric_anisotropy(mesh),
+                    "affine_image_residual": affine_image_residual(
+                        mesh, reference.vertices
+                    ),
+                    "min_normal_radial_cos": min_normal_radial_cos(mesh),
                 }
             )
             per_level.append(record)
@@ -437,6 +545,11 @@ def run_geometry_study(
                 "affine_transform": (
                     np.asarray(transform, dtype=float).tolist()
                     if transform is not None
+                    else None
+                ),
+                "radial_modulation": (
+                    {"degree": modulation[0], "amplitude": modulation[1]}
+                    if modulation is not None
                     else None
                 ),
                 "source": GEOMETRY_SOURCE.tolist(),
