@@ -41,7 +41,13 @@ Quadrature
 ----------
 Non-singular panels use a high-order Gauss rule on the reference triangle.
 Self-panels (target at a node of the source panel) use a Duffy transform
-that cancels the ``1/r`` singularity.
+that cancels the ``1/r`` singularity.  Nearly-singular pairs (collocation
+point a distance ``d`` off a panel of size ``H``, ``d << H``) use a *graded*
+Duffy rule: the radial direction is split into geometrically growing
+intervals whose first width is ``d/H``, so the near-singular peak is resolved
+with ``O(log(H/d))`` intervals instead of the ``O(H/d)`` points a uniform rule
+needs (see :func:`graded_apex_quadrature` and
+:meth:`QuadraticTriangle.near_singular_layer_integrals`).
 """
 
 from __future__ import annotations
@@ -300,6 +306,138 @@ def quadratic_shape_gradients_ref_array(L: FloatArray) -> FloatArray:
     )
 
 
+def apex_subtriangles(
+    apex_L: Sequence[float],
+) -> list[tuple[FloatArray, FloatArray, FloatArray]]:
+    """Split the reference triangle into sub-triangles that share *apex_L*.
+
+    A vertex apex leaves one sub-triangle, an apex on an edge is shared by the
+    two halves of that edge, and an interior apex produces three sub-triangles
+    (one per edge of the reference triangle).  Every sub-triangle is returned
+    as ``(apex, a, b)`` in ``(L1, L2)`` coordinates.
+    """
+    apex = np.asarray(apex_L, dtype=float).reshape(2)
+    sub_triangles: list[tuple[FloatArray, FloatArray, FloatArray]] = []
+    on_vertex = [k for k in range(3) if np.allclose(apex, _REF_VERTICES[k], atol=1e-12)]
+    if on_vertex:
+        k = on_vertex[0]
+        others = [m for m in range(3) if m != k]
+        sub_triangles.append((apex, _REF_VERTICES[others[0]], _REF_VERTICES[others[1]]))
+        return sub_triangles
+    on_edge: tuple[int, int, int] | None = None
+    for k in range(3):
+        p, q = _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3]
+        edge = q - p
+        s = float((apex - p) @ edge) / float(edge @ edge)
+        if -1e-12 <= s <= 1.0 + 1e-12:
+            closest = p + s * edge
+            if np.linalg.norm(apex - closest) < 1e-10:
+                on_edge = (k, (k + 1) % 3, (k + 2) % 3)
+                break
+    if on_edge is not None:
+        i, j, o = on_edge
+        sub_triangles.append((apex, _REF_VERTICES[i], _REF_VERTICES[o]))
+        sub_triangles.append((apex, _REF_VERTICES[o], _REF_VERTICES[j]))
+        return sub_triangles
+    for k in range(3):
+        sub_triangles.append((apex, _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3]))
+    return sub_triangles
+
+
+def graded_apex_quadrature(
+    apex_L: Sequence[float],
+    layer_width: float | Sequence[float],
+    order: int = 12,
+    growth: float = 8.0,
+    min_width: float = 1e-15,
+) -> tuple[FloatArray, FloatArray]:
+    """Duffy quadrature graded towards an apex with a boundary layer.
+
+    :func:`triangle_apex_quadrature` cancels a *true* ``1/r`` singularity.  A
+    target that sits a small distance ``d`` off the panel is not singular, but
+    after the Duffy map the ``1/r`` peak becomes a boundary layer of width
+    ``u ~ d/H`` in the radial Duffy variable (``H`` = physical extent of the
+    sub-triangle), which a uniform Gauss rule in ``u`` resolves only for
+    ``d ~ H``.  This rule keeps the Duffy map and splits ``[0, 1]`` into
+    geometrically growing radial intervals ``[0, w], [w, G w], [w G, w G^2],
+    ...`` with ``w = layer_width``, so every interval is resolved by the same
+    order-``order`` Gauss rule and the cost grows only logarithmically in
+    ``1/w``.
+
+    Parameters
+    ----------
+    apex_L : sequence of 2 floats
+        Reference (L1, L2) about which the layer is centred (the projection of
+        the target onto the element).
+    layer_width : float or sequence of float
+        Relative layer width ``w`` in ``(0, 1]``; ``w >= 1`` degenerates to the
+        plain Duffy rule of :func:`triangle_apex_quadrature`.  A sequence must
+        provide one width per sub-triangle of :func:`apex_subtriangles`; using
+        the per-sub-triangle width ``d / extent`` aligns every radial breakpoint
+        with that sub-triangle's own peak edge, which is markedly more accurate
+        than one global width (see
+        :mod:`tensorbem.benchmarks.quadratic_near_singular`).
+    order : int
+        Gauss order per direction and per radial interval.
+    growth : float
+        Geometric growth factor of the radial intervals (``> 1``).
+    min_width : float
+        Floor on ``layer_width`` (keeps the rule finite for ``w -> 0``).
+
+    Returns
+    -------
+    nodes : (Q, 2) reference coordinates.
+    weights : (Q,) weights with respect to the reference measure
+        (``sum(weights) == 0.5``, independent of ``layer_width``).
+    """
+    if order < 1:
+        raise ValueError("order must be >= 1")
+    if growth <= 1.0:
+        raise ValueError("growth must be > 1")
+
+    sub_triangles = apex_subtriangles(apex_L)
+    if np.ndim(layer_width) == 0:
+        widths = [float(layer_width)] * len(sub_triangles)
+    else:
+        widths = [float(w) for w in np.asarray(layer_width, dtype=float).ravel()]
+        if len(widths) != len(sub_triangles):
+            raise ValueError("layer_width must have one entry per sub-triangle")
+
+    nodes_1d, weights_1d = leggauss(order)
+    u01 = 0.5 * (nodes_1d + 1.0)
+    w01 = 0.5 * weights_1d
+
+    nodes_out: list[FloatArray] = []
+    weights_out: list[FloatArray] = []
+    for (apex_pt, a_pt, b_pt), raw_width in zip(sub_triangles, widths):
+        width = min(1.0, max(float(raw_width), min_width))
+        breakpoints = [0.0]
+        if width < 1.0:
+            s = width
+            while s < 1.0:
+                breakpoints.append(s)
+                s *= growth
+        breakpoints.append(1.0)
+        breakpoints = np.unique(np.asarray(breakpoints, dtype=float))
+        e1 = a_pt - apex_pt
+        e2 = b_pt - apex_pt
+        area = 0.5 * abs(e1[0] * e2[1] - e1[1] * e2[0])
+        if area <= 0.0:
+            raise ValueError("degenerate sub-triangle in graded quadrature")
+        for lo, hi in zip(breakpoints[:-1], breakpoints[1:]):
+            u = lo + (hi - lo) * u01
+            w_u = (hi - lo) * w01
+            pts = (
+                apex_pt[None, None, :]
+                + (u[:, None] * (1.0 - u01)[None, :])[:, :, None] * e1[None, None, :]
+                + (u[:, None] * u01[None, :])[:, :, None] * e2[None, None, :]
+            )
+            wgt = np.outer(w_u, w01) * u[:, None] * (2.0 * area)
+            nodes_out.append(pts.reshape(-1, 2))
+            weights_out.append(wgt.ravel())
+    return np.vstack(nodes_out), np.concatenate(weights_out)
+
+
 def triangle_apex_quadrature(
     apex_L: Sequence[float], order: int = 16
 ) -> tuple[FloatArray, FloatArray]:
@@ -330,34 +468,7 @@ def triangle_apex_quadrature(
     if order < 1:
         raise ValueError("order must be >= 1")
     apex = np.asarray(apex_L, dtype=float).reshape(2)
-
-    # Locate the apex: reference vertex, edge point, or interior point.
-    sub_triangles: list[tuple[FloatArray, FloatArray, FloatArray]] = []
-    on_vertex = [k for k in range(3) if np.allclose(apex, _REF_VERTICES[k], atol=1e-12)]
-    if on_vertex:
-        k = on_vertex[0]
-        others = [m for m in range(3) if m != k]
-        sub_triangles.append((apex, _REF_VERTICES[others[0]], _REF_VERTICES[others[1]]))
-    else:
-        on_edge: tuple[int, int, int] | None = None
-        for k in range(3):
-            p, q = _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3]
-            edge = q - p
-            s = float((apex - p) @ edge) / float(edge @ edge)
-            if -1e-12 <= s <= 1.0 + 1e-12:
-                closest = p + s * edge
-                if np.linalg.norm(apex - closest) < 1e-10:
-                    on_edge = (k, (k + 1) % 3, (k + 2) % 3)
-                    break
-        if on_edge is not None:
-            i, j, o = on_edge
-            sub_triangles.append((apex, _REF_VERTICES[i], _REF_VERTICES[o]))
-            sub_triangles.append((apex, _REF_VERTICES[o], _REF_VERTICES[j]))
-        else:
-            for k in range(3):
-                sub_triangles.append(
-                    (apex, _REF_VERTICES[k], _REF_VERTICES[(k + 1) % 3])
-                )
+    sub_triangles = apex_subtriangles(apex)
 
     nodes_1d, weights_1d = leggauss(order)
     u = 0.5 * (nodes_1d + 1.0)
@@ -631,6 +742,156 @@ class QuadraticTriangle:
         K = np.einsum("qj,qj->q", normals, delta) / (FOUR_PI * r ** 3)
         kern = w * det * K
         return kern @ N
+
+
+    # ------------------------------------------------------------------
+    # Near-singular evaluation (target close to, but not on, the element)
+    # ------------------------------------------------------------------
+    @property
+    def characteristic_size(self) -> float:
+        """Longest distance between any two of the six nodes (panel size ``H``)."""
+        diff = self.nodes[:, None, :] - self.nodes[None, :, :]
+        return float(np.max(np.linalg.norm(diff, axis=2)))
+
+    def project_to_reference(
+        self, target: FloatArray, iterations: int = 100, tol: float = 1e-15
+    ) -> tuple[FloatArray, float]:
+        """Reference coordinates of the point of the element closest to *target*.
+
+        Gauss-Newton on ``|x - y(L)|**2`` with the isoparametric Jacobian,
+        starting from the exact projection onto the flat vertex triangle and
+        clamped to the reference triangle at every step (so the result is never
+        outside the element).
+
+        Returns
+        -------
+        L : (2,) reference coordinates ``(L1, L2)``.
+        distance : float
+            ``|x - y(L)|``; the true point-to-element distance when the
+            projection is interior, and an upper bound otherwise.
+        """
+        target = np.asarray(target, dtype=float).reshape(3)
+        v0, v1, v2 = self.nodes[0], self.nodes[1], self.nodes[2]
+        e1, e2 = v1 - v0, v2 - v0
+        m = np.array(
+            [[float(e1 @ e1), float(e1 @ e2)], [float(e1 @ e2), float(e2 @ e2)]]
+        )
+        rhs = np.array([float((target - v0) @ e1), float((target - v0) @ e2)])
+        try:
+            L = np.linalg.solve(m, rhs)
+        except np.linalg.LinAlgError:  # pragma: no cover - guarded by __post_init__
+            L = np.array([1.0 / 3.0, 1.0 / 3.0])
+        L = self._clamp_reference(L)
+        for _ in range(iterations):
+            dN = quadratic_shape_gradients_ref(L[0], L[1])  # (6, 2)
+            dx_dL1 = dN[:, 0] @ self.nodes
+            dx_dL2 = dN[:, 1] @ self.nodes
+            y = quadratic_shape_functions(L[0], L[1]) @ self.nodes
+            residual = target - y
+            jac = np.column_stack([dx_dL1, dx_dL2])  # (3, 2)
+            grad = jac.T @ residual
+            hess = jac.T @ jac
+            try:
+                step = np.linalg.solve(hess, grad)
+            except np.linalg.LinAlgError:  # pragma: no cover
+                break
+            L = self._clamp_reference(L + step)
+            if float(np.linalg.norm(step)) < tol:
+                break
+        y = quadratic_shape_functions(L[0], L[1]) @ self.nodes
+        return L, float(np.linalg.norm(target - y))
+
+    @staticmethod
+    def _clamp_reference(L: FloatArray) -> FloatArray:
+        """Clamp ``(L1, L2)`` into the closed reference triangle."""
+        L = np.clip(np.asarray(L, dtype=float).reshape(2), 0.0, 1.0)
+        total = float(L.sum())
+        if total > 1.0:
+            L = L / total
+        return L
+
+    def near_singular_layer_integrals(
+        self, target: FloatArray, order: int = 12, growth: float = 8.0
+    ) -> tuple[FloatArray, FloatArray]:
+        """Single- and double-layer integrals for a target *close to* the panel.
+
+        The quadrature is the graded Duffy rule of
+        :func:`graded_apex_quadrature`, centred on the projection of the target
+        onto the element and covering the *whole* element once.  The relative
+        layer width is ``d / H`` with ``d`` the distance from the target to the
+        element and ``H`` the largest sub-triangle extent about the projection,
+        so the rule resolves the near-singular peak in ``O(log(H/d))`` radial
+        intervals instead of the ``O(H/d)`` points a uniform rule would need.
+
+        Parameters
+        ----------
+        target : (3,) point close to, but not necessarily on, the element.
+        order : int
+            Gauss order per direction and per radial interval.
+        growth : float
+            Geometric growth factor of the radial Duffy intervals (> 1).
+
+        Returns
+        -------
+        single : (6,) ``int_T N_k G dS``
+        double : (6,) ``int_T N_k dG/dn_y dS`` (principal value if ``d == 0``)
+        """
+        target = np.asarray(target, dtype=float).reshape(3)
+        apex, distance = self.project_to_reference(target)
+        apex_phys = self.map_to_physical(float(apex[0]), float(apex[1]))
+
+        # Physical extent of each sub-triangle about the projection, so that the
+        # radial breakpoints of the graded rule land on that sub-triangle's own
+        # near-singular peak edge (one global width leaves a kink inside the
+        # radial interval of the narrower sub-triangles and costs several orders
+        # of accuracy; see the order ladder of the benchmark).
+        widths: list[float] = []
+        for _, a_pt, b_pt in apex_subtriangles(apex):
+            a_phys = self.map_to_physical(float(a_pt[0]), float(a_pt[1]))
+            b_phys = self.map_to_physical(float(b_pt[0]), float(b_pt[1]))
+            extent = max(
+                float(np.linalg.norm(a_phys - apex_phys)),
+                float(np.linalg.norm(b_phys - apex_phys)),
+            )
+            if extent <= 0.0:  # pragma: no cover - degenerate element
+                extent = self.characteristic_size
+            widths.append(min(1.0, distance / extent))
+        L, w_all = graded_apex_quadrature(
+            apex,
+            widths,
+            order=order,
+            growth=growth,
+        )
+
+        X, N, det, normals = self._geometry_at(L)
+        r = np.linalg.norm(target - X, axis=1)
+        scale = max(1.0, float(np.max(np.abs(self.nodes))))
+        ok = r > 1e-14 * scale
+        if not np.any(ok):
+            raise ValueError("no quadrature point away from the target")
+        wgt = w_all[ok] * det[ok]
+        single = (wgt / (FOUR_PI * r[ok])) @ N[ok]
+        radial = np.einsum("qj,qj->q", normals[ok], (target - X)[ok])
+        double = (wgt * radial / (FOUR_PI * r[ok] ** 3)) @ N[ok]
+        return single, double
+
+    def integrate_single_layer_near_singular(
+        self, target: FloatArray, order: int = 12, growth: float = 8.0
+    ) -> FloatArray:
+        """``int_T N_k G dS`` for a target close to (not on) the element."""
+        single, _ = self.near_singular_layer_integrals(
+            target, order=order, growth=growth
+        )
+        return single
+
+    def integrate_double_layer_near_singular(
+        self, target: FloatArray, order: int = 12, growth: float = 8.0
+    ) -> FloatArray:
+        """``int_T N_k dG/dn_y dS`` for a target close to (not on) the element."""
+        _, double = self.near_singular_layer_integrals(
+            target, order=order, growth=growth
+        )
+        return double
 
 
 # ---------------------------------------------------------------------------
