@@ -57,6 +57,7 @@ from ..panel_quadratic import (
     QuadraticTriangle,
     assemble_quadratic_matrices,
     ellipsoid_quadratic,
+    gauss_triangle_rule,
     icosphere_quadratic,
     quadratic_shape_functions_array,
     solve_laplace_dirichlet_quadratic,
@@ -92,7 +93,31 @@ DEFAULT_GEOMETRY_FIGURE = (
 GEOMETRY_CASES: tuple[tuple[str, tuple[float, float, float]], ...] = (
     ("sphere", (1.0, 1.0, 1.0)),
     ("ellipsoid_1p00_1p60_0p70", (1.0, 1.6, 0.7)),
+    ("sheared_ellipsoid_1p00_1p60_0p70", (1.0, 1.6, 0.7)),
 )
+
+#: Non-similarity (non-conformal) affine transform of the ellipsoid case.
+#: The sphere -> ellipsoid step removes spherical symmetry but keeps every
+#: element (nearly) equilateral and the parametric axes mutually orthogonal,
+#: because the axes scaling is diagonal.  A shear is the cheapest transform that
+#: leaves the similarity group: it keeps the body smooth and of unit volume
+#: (``det = 1``) but makes the parametric mapping non-orthogonal, so the surface
+#: metric ``|dx/dL1 x dx/dL2|`` varies strongly *inside* an element.  The
+#: quadratic isoparametric map is exact under any affine transform (an affine
+#: image of a quadratic Bezier triangle is the quadratic Bezier triangle of the
+#: image control points), so this case probes the Jacobian/normal evaluation on
+#: skewed elements, not the geometry representation.  The exact solution
+#: ``1/(4 pi |x - x0|)`` stays harmonic and ``x0 = 0`` is a fixed point of the
+#: shear, so the relative depth of the source (field sharpness) is unchanged.
+GEOMETRY_TRANSFORMS: dict[str, FloatArray] = {
+    "sheared_ellipsoid_1p00_1p60_0p70": np.array(
+        [
+            [1.0, 0.55, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.30, 1.0],
+        ]
+    ),
+}
 
 #: Source of the geometry-generic study: the geometric centre of the body, i.e.
 #: the admissible interior point that is *farthest* from the boundary on
@@ -150,6 +175,26 @@ def mesh_characteristic_size(mesh: QuadraticSurfaceMesh) -> float:
     """``h = sqrt(mean flat vertex area)`` — a monotone mesh-size measure."""
     areas = [mesh.element(e).vertex_area for e in range(mesh.element_count)]
     return float(math.sqrt(sum(areas) / len(areas)))
+
+
+def element_metric_anisotropy(mesh: QuadraticSurfaceMesh, order: int = 4) -> float:
+    """Largest ratio ``max(det J) / min(det J)`` of an element's surface metric.
+
+    ``det J = |dx/dL1 x dx/dL2|`` is evaluated at the Gauss points of the
+    reference triangle; ``1.0`` means a conformal (equilateral) parametric
+    mapping, larger values mean skewed elements.  Recorded next to the flux error
+    so a non-conformal geometry case cannot silently degenerate into a rescaled
+    copy of a conformal one, and so accuracy can be read against element quality.
+    """
+    L, _ = gauss_triangle_rule(order)
+    worst = 1.0
+    for index in range(mesh.element_count):
+        element = mesh.element(index)
+        dets = np.array(
+            [element.jacobian(float(a), float(b))[1] for a, b in L], dtype=float
+        )
+        worst = max(worst, float(dets.max() / dets.min()))
+    return worst
 
 
 def element_centroid_data(mesh: QuadraticSurfaceMesh) -> tuple[FloatArray, FloatArray]:
@@ -330,6 +375,15 @@ def run_geometry_study(
     ellipsoid with three different semi-axes, where the principal curvatures
     vary over the surface and no spherical symmetry survives.
 
+    A third case applies the non-conformal shear of
+    :data:`GEOMETRY_TRANSFORMS` to the ellipsoid: the ellipsoid alone only
+    removes *spherical* symmetry (its parametric axes stay orthogonal), while a
+    shear is the cheapest member of the affine group outside the similarity
+    group and therefore probes the isoparametric Jacobian/normal evaluation on
+    genuinely skewed elements.  ``det = 1`` keeps the scale and ``x0 = 0`` stays
+    fixed, so the sharpness of the exact field relative to the body is unchanged
+    and the flux error is comparable across cases.
+
     Each geometry must (a) reach the 3% flux acceptance at the finest level and
     (b) show an observed convergence order of at least
     :data:`GEOMETRY_ORDER_FLOOR`.
@@ -340,9 +394,17 @@ def run_geometry_study(
     """
     geometries = []
     for name, axes in GEOMETRY_CASES:
+        transform = GEOMETRY_TRANSFORMS.get(name)
         per_level = []
         for sub in levels:
             mesh = ellipsoid_quadratic(sub, axes=axes)
+            if transform is not None:
+                # Quadratic Bezier triangles are affine-covariant, so the sheared
+                # vertex/midpoint control net is the exact image of the surface.
+                mesh = QuadraticSurfaceMesh(
+                    (np.asarray(transform, dtype=float) @ mesh.vertices.T).T,
+                    mesh.faces.copy(),
+                )
             flux = run_flux_study(
                 mesh,
                 quadrature_order=quadrature_order,
@@ -360,6 +422,7 @@ def run_geometry_study(
                     "solid_angle_identity_error": flux["solid_angle_identity_error"],
                     "condition_number": flux["condition_number"],
                     "relative_residual_l2": flux["relative_residual_l2"],
+                    "jacobian_anisotropy_max": element_metric_anisotropy(mesh),
                 }
             )
             per_level.append(record)
@@ -371,6 +434,11 @@ def run_geometry_study(
             {
                 "name": name,
                 "semi_axes": list(axes),
+                "affine_transform": (
+                    np.asarray(transform, dtype=float).tolist()
+                    if transform is not None
+                    else None
+                ),
                 "source": GEOMETRY_SOURCE.tolist(),
                 "levels": per_level,
                 "observed_order": order,
