@@ -145,3 +145,63 @@ in that report are injected from `results.json`; none is typed by hand.
 * The `omega/omega_n = 2 .. 3` rows are reported with their
   panels-per-wavelength count and excluded from the criteria when the affordable
   mesh stops resolving the radiated wave.
+## 6. Second pass (2026-11-10): what the first pass's FAILs actually were
+
+The first pass (`report_p106w2n04_baseline.md`) recorded four honest FAILs. The
+second pass re-measures them and adds the discriminating evidence; the original
+verdicts are kept verbatim in `results.json` (`gated_original`,
+`all_pass_original`).
+
+**A resonance, not an irregular frequency.** A fine scan
+(`resonance_scan`, `detect_resonance_bands`, step `0.025 omega_n`, fixed mesh)
+finds a narrow band of the side-by-side pair in which `B_heave` peaks by more
+than the detection factor and `A_heave` changes sign. Three independent probes
+show it is a property of the linear problem and not of the discretisation:
+
+* removing the CHIEF rows entirely changes `A` by `~0.3 %` and leaves the
+  residual at `1e-15`, so it is not an interior-Dirichlet irregular frequency;
+* refining `nx = 12 -> 24` at fixed gap converges it monotonically (`-137.6,
+  -136.7, -136.0, -135.5 kg`), i.e. it is not a near-singular quadrature error in
+  the (sub-panel) gap;
+* the same frequency satisfies the near-field/far-field (Haskind) energy
+  identity to `1-5 %`, the same level as the smooth frequencies away from it;
+* it vanishes when the gap is opened (`1.0 B` and wider), which an interior
+  eigenvalue of a single hull could not do.
+
+Consequently no `1/omega^2` fit and no Kramers-Kronig smooth-branch integral may
+be carried across the band. `infinite_frequency_added_mass_catamaran_smooth`
+is the pair extrapolation restricted to the resolved rows outside it.
+
+**The low-frequency residual is the `O(omega^2)` correction, not a mesh
+defect.** `low_frequency_limit` repeats the `rigid_wall` solve *and* the
+radiation row on matched meshes. On the matched ladder the heave residual does
+*not* fall (`3.02 %` at `nx = 12`, `3.36 %` at `24`, `3.50 %` at `32`), while the
+sway residual does (`1.65 % -> 0.54 % -> 0.06 %`): refining the *static* solve
+cannot close the heave gap, so the gap is not a mesh difference between two
+discretisations. Pushing the frequency down on a fixed mesh settles it -- the
+radiation value walks onto the rigid-wall value (`nx = 12`, heave:
+`134.51` at `0.10 omega_n`, `131.46` at `0.05`, `130.09` at `0.02` versus
+`130.57` static). The `3 %` is the physical `A(omega) = A(0)(1 + O(omega^2))`
+correction at `omega = 0.1 omega_n`, i.e. that frequency is not yet inside the
+limit the criterion is about. `zero_frequency_added_mass_fine` therefore keeps
+the original frequency and `zero_frequency_added_mass_limit` judges the limit at
+`0.02 omega_n`, with the whole trend recorded in `origin_trend`.
+
+**The far field is governed by `kd`, not `d/L`.** In three dimensions the
+radiated wave decays like `(k r)^-1/2`, so the pair coupling is a function of
+`kd`; at `omega = 0.6 omega_n` the wavelength is `~77 L` and *every* spacing in
+the sweep sits inside a fraction of a wavelength (`kd < 1`), where no decay to
+`1 %` can occur physically. `distance_decay_far_field_kd_gated` therefore gates
+the same data at `kd >= 4`, and `distance_decay_far_field` (the `d/L` gate) is
+retained unchanged.
+
+**Damping band.** `high_frequency_ladder` accepts a separate
+`single_mesh_cap`, so the one-hull ladder -- the configuration the asymptotic
+criteria are judged on -- reaches `omega/omega_n = 2.5` resolved. The
+Kramers-Kronig moment is then integrated over that wider band
+(`infinite_frequency_from_kramers_kronig_dense`).
+
+**Library defect fixed here.** `multibody3d.far_field_damping_check` had no way
+to pass null-field rows, so a multi-body energy check silently ran without CHIEF
+augmentation. It now forwards `chief_points` / `interior_panels`, and the study's
+energy check passes per-hull rows (`multihull_chief_points`) for pairs.
