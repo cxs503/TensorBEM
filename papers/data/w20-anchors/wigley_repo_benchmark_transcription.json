@@ -1,0 +1,1795 @@
+{
+ "schema": "w20-wigley-anchor-transcription/v1",
+ "task": "W20 seakeeping-truncation item 4 (anchor repair), mission 9647",
+ "generated_at_utc": "2026-11-10T13:14:37+00:00",
+ "repo": "TensorBEM",
+ "git": {
+  "base_commit": "7f5e068f5c23bc34b0de3f57b094475d9fb93187",
+  "branch": "agent/m9647",
+  "describe": "7f5e068"
+ },
+ "builder_sha256": "d712f2e37f47e76d5478b12bb7d5a9465a5db9f9172fd25b9cdcd04fa3f869cd",
+ "python": "3.11.6",
+ "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+ "sources": [
+  {
+   "study": "wave_resistance",
+   "path": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+   "report_path": "benchmarks/verified/bem_wigley_wave_resistance/report.md",
+   "sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+   "report_sha256": "dd7e1974c532f7701892e6876dddb79c1d6d67885e0e35b4dcf7bf9ebf02e74b"
+  },
+  {
+   "study": "hydrostatics",
+   "path": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+   "report_path": "benchmarks/verified/bem_wigley_hydrostatics/report.md",
+   "sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+   "report_sha256": "f665b687bb4c185dd6ef0b6d79efe320df73e80f6c1fa3be24f42c25e6bb39e0"
+  }
+ ],
+ "field_inventory": {
+  "wave_resistance": {
+   "source_path": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+   "source_sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+   "source_bytes": 4039,
+   "n_leaves": 89,
+   "leaves": [
+    {
+     "pointer": "/study",
+     "value": "bem_wigley_wave_resistance",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/hull",
+     "value": "Wigley III (parabolic)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/geometry/L",
+     "value": 10.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/geometry/B",
+     "value": 1.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/geometry/T",
+     "value": 0.625,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/geometry/L_over_B",
+     "value": 10.0,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/geometry/B_over_T",
+     "value": 1.6,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/fluid/rho",
+     "value": 1025.0,
+     "dtype": "float",
+     "unit": "kg/m^3",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/fluid/g",
+     "value": 9.80665,
+     "dtype": "float",
+     "unit": "m/s^2",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/volume",
+     "value": 2.7777777777777777,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/Cb",
+     "value": 0.4444444444444444,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/Cm",
+     "value": 0.6666666666666666,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/Cp",
+     "value": 0.6666666666666667,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/waterplane_area",
+     "value": 6.666666666666666,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/reference/midship_section_area",
+     "value": 0.41666666666666663,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/method/reference",
+     "value": "Converged Michell thin-ship theory (composite Gauss-Legendre, 480 subintervals, 20 nodes each)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/method/production",
+     "value": "Standard Michell quadrature (256 Gauss-Legendre nodes, lambda=1+s^2 substitution)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/method/quadrature_convergence",
+     "value": "Three levels: n_quad = 128, 256, 512",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/froude_number",
+     "value": 0.2,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/speed",
+     "value": 1.9805706248452741,
+     "dtype": "float",
+     "unit": "m/s",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/Rw_reference",
+     "value": 2.57516551323227,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/Rw_production",
+     "value": 2.575145354978475,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/rel_error",
+     "value": 7.82794491907682e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/Cw_reference",
+     "value": 0.00020495126048347893,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/Cw_production",
+     "value": 0.00020494965613630076,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/0/n_quad",
+     "value": 128,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/0/Rw",
+     "value": 2.575145354978542,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/1/n_quad",
+     "value": 256,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/1/Rw",
+     "value": 2.575145354978475,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/2/n_quad",
+     "value": 512,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/quadrature_levels/2/Rw",
+     "value": 2.5751453549784538,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/gci/order",
+     "value": 1.653442238603911,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/gci/gci_fine",
+     "value": 4.821961474481116e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/gci/rel_change",
+     "value": 8.277700531192484e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/gci/refinement",
+     "value": 2.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/wave_resistance_error/measured",
+     "value": 7.82794491907682e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/wave_resistance_error/limit",
+     "value": 0.05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/wave_resistance_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/gci/measured",
+     "value": 4.821961474481116e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/gci/limit",
+     "value": 0.03,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/0/criteria/gci/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/froude_number",
+     "value": 0.3,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/speed",
+     "value": 2.970855937267911,
+     "dtype": "float",
+     "unit": "m/s",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/Rw_reference",
+     "value": 12.292634374522402,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/Rw_production",
+     "value": 12.292632617837537,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/rel_error",
+     "value": 1.4290548401645833e-07,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/Cw_reference",
+     "value": 0.00043481837864621053,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/Cw_production",
+     "value": 0.0004348183165082797,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/0/n_quad",
+     "value": 128,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/0/Rw",
+     "value": 12.292632617837837,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/1/n_quad",
+     "value": 256,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/1/Rw",
+     "value": 12.292632617837537,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/2/n_quad",
+     "value": 512,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/quadrature_levels/2/Rw",
+     "value": 12.292632617837434,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/gci/order",
+     "value": 1.5428984411546,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/gci/gci_fine",
+     "value": 5.474296694392472e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/gci/rel_change",
+     "value": 8.381337007966298e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/gci/refinement",
+     "value": 2.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/wave_resistance_error/measured",
+     "value": 1.4290548401645833e-07,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/wave_resistance_error/limit",
+     "value": 0.05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/wave_resistance_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/gci/measured",
+     "value": 5.474296694392472e-15,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/gci/limit",
+     "value": 0.03,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/1/criteria/gci/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/froude_number",
+     "value": 0.4,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/speed",
+     "value": 3.9611412496905483,
+     "dtype": "float",
+     "unit": "m/s",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/Rw_reference",
+     "value": 26.323870141156263,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/Rw_production",
+     "value": 26.32386982888976,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/rel_error",
+     "value": 1.186248460182479e-08,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/Cw_reference",
+     "value": 0.0005237634570002464,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/Cw_production",
+     "value": 0.0005237634507871104,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/0/n_quad",
+     "value": 128,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/0/Rw",
+     "value": 26.323869828891034,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/1/n_quad",
+     "value": 256,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/1/Rw",
+     "value": 26.32386982888976,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/2/n_quad",
+     "value": 512,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/quadrature_levels/2/Rw",
+     "value": 26.323869828889258,
+     "dtype": "float",
+     "unit": "N",
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/gci/order",
+     "value": 1.3482886814242303,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/gci/gci_fine",
+     "value": 1.5385167126909302e-14,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/gci/rel_change",
+     "value": 1.9029596786758142e-14,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/gci/refinement",
+     "value": 2.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/wave_resistance_error/measured",
+     "value": 1.186248460182479e-08,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/wave_resistance_error/limit",
+     "value": 0.05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/wave_resistance_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/gci/measured",
+     "value": 1.5385167126909302e-14,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/gci/limit",
+     "value": 0.03,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/cases/2/criteria/gci/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/all_criteria_passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    },
+    {
+     "pointer": "/evidence_level",
+     "value": "REAL (converged Michell theory reference; two independent quadratures)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
+    }
+   ]
+  },
+  "hydrostatics": {
+   "source_path": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+   "source_sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+   "source_bytes": 5001,
+   "n_leaves": 131,
+   "leaves": [
+    {
+     "pointer": "/study",
+     "value": "bem_wigley_hydrostatics",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/hull",
+     "value": "Wigley III (parabolic)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/geometry/L",
+     "value": 10.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/geometry/B",
+     "value": 1.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/geometry/T",
+     "value": 0.625,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/geometry/L_over_B",
+     "value": 10.0,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/geometry/B_over_T",
+     "value": 1.6,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/fluid/rho",
+     "value": 1025.0,
+     "dtype": "float",
+     "unit": "kg/m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/fluid/g",
+     "value": 9.80665,
+     "dtype": "float",
+     "unit": "m/s^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/L",
+     "value": 10.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/B",
+     "value": 1.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/T",
+     "value": 0.625,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/volume",
+     "value": 2.7777777777777777,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/Cb",
+     "value": 0.4444444444444444,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/Cm",
+     "value": 0.6666666666666666,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/Cp",
+     "value": 0.6666666666666666,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/center_of_buoyancy/0",
+     "value": 0.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/center_of_buoyancy/1",
+     "value": 0.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/center_of_buoyancy/2",
+     "value": -0.234375,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/KB",
+     "value": 0.390625,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/KG",
+     "value": 0.3125,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/waterplane_area",
+     "value": 6.666666666666667,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/I_xx",
+     "value": 0.38095238095238093,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/I_yy",
+     "value": 33.333333333333336,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/BM_T",
+     "value": 0.13714285714285715,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/BM_L",
+     "value": 12.000000000000002,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/GM_T",
+     "value": 0.21526785714285712,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/GM_L",
+     "value": 12.078125000000002,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/C33",
+     "value": 67012.10833333334,
+     "dtype": "float",
+     "unit": "N/m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/C44",
+     "value": 337241.92540147575,
+     "dtype": "float",
+     "unit": "N*m/rad",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/C55",
+     "value": 6010.647068142361,
+     "dtype": "float",
+     "unit": "N*m/rad",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/density",
+     "value": 1025.0,
+     "dtype": "float",
+     "unit": "kg/m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/reference/gravity",
+     "value": 9.80665,
+     "dtype": "float",
+     "unit": "m/s^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/wetted_area_reference",
+     "value": 14.879063104957787,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/n_sections",
+     "value": 16,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/n_levels",
+     "value": 8,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/panel_count",
+     "value": 512,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/displaced_volume",
+     "value": 2.764256795247396,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/Cb",
+     "value": 0.44228108723958337,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/LCB_x",
+     "value": 0.0,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/KB",
+     "value": 0.3903985923915543,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/waterplane_area",
+     "value": 6.640625,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/I_xx",
+     "value": 0.3774936993916829,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/I_yy",
+     "value": 33.116658528645836,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/wetted_area",
+     "value": 14.872257308611179,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/rel_error_volume",
+     "value": 0.0048675537109374115,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/rel_error_Cb",
+     "value": 0.004867553710937361,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/rel_error_KB",
+     "value": 0.000579603477621049,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/rel_error_waterplane_area",
+     "value": 0.003906250000000044,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/0/rel_error_wetted_area",
+     "value": 0.000457407586660509,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/n_sections",
+     "value": 32,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/n_levels",
+     "value": 16,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/panel_count",
+     "value": 2048,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/displaced_volume",
+     "value": 2.7743895848592124,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/Cb",
+     "value": 0.443902333577474,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/LCB_x",
+     "value": 1.9856011817743311e-16,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/KB",
+     "value": 0.3905679334515425,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/waterplane_area",
+     "value": 6.66015625,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/I_xx",
+     "value": 0.38008517275253934,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/I_yy",
+     "value": 33.279101053873696,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/wetted_area",
+     "value": 14.877370383661054,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/rel_error_volume",
+     "value": 0.001219749450683505,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/rel_error_Cb",
+     "value": 0.001219749450683455,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/rel_error_KB",
+     "value": 0.00014609036405119013,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/rel_error_waterplane_area",
+     "value": 0.0009765625000000445,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/1/rel_error_wetted_area",
+     "value": 0.00011376531471049336,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/n_sections",
+     "value": 64,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/n_levels",
+     "value": 32,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/panel_count",
+     "value": 8192,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/displaced_volume",
+     "value": 2.7769302328427634,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/Cb",
+     "value": 0.44430883725484216,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/LCB_x",
+     "value": -1.9990113750330222e-17,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/KB",
+     "value": 0.390610704493302,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/waterplane_area",
+     "value": 6.6650390625,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/I_xx",
+     "value": 0.38073542003985494,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/I_yy",
+     "value": 33.31977128982544,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/wetted_area",
+     "value": 14.878640460060549,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/rel_error_volume",
+     "value": 0.0003051161766051358,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/rel_error_Cb",
+     "value": 0.00030511617660508583,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/rel_error_KB",
+     "value": 3.659649714691682e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/rel_error_waterplane_area",
+     "value": 0.0002441406250000444,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/2/rel_error_wetted_area",
+     "value": 2.8405343418254107e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/n_sections",
+     "value": 128,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/n_levels",
+     "value": 64,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/panel_count",
+     "value": 32768,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/displaced_volume",
+     "value": 2.777565860499938,
+     "dtype": "float",
+     "unit": "m^3",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/Cb",
+     "value": 0.44441053767999006,
+     "dtype": "float",
+     "unit": "1",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/LCB_x",
+     "value": -3.201266436289501e-16,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/KB",
+     "value": 0.39062142432163993,
+     "dtype": "float",
+     "unit": "m",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/waterplane_area",
+     "value": 6.666259765625,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/I_xx",
+     "value": 0.38089813079144125,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/I_yy",
+     "value": 33.329942574103676,
+     "dtype": "float",
+     "unit": "m^4",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/wetted_area",
+     "value": 14.878957477056229,
+     "dtype": "float",
+     "unit": "m^2",
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/rel_error_volume",
+     "value": 7.62902200222726e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/rel_error_Cb",
+     "value": 7.629022002231256e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/rel_error_KB",
+     "value": 9.153736601774654e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/rel_error_waterplane_area",
+     "value": 6.103515625004441e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/levels/3/rel_error_wetted_area",
+     "value": 7.0990962813166056e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/production_mesh/n_sections",
+     "value": 64,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/production_mesh/n_levels",
+     "value": 32,
+     "dtype": "int",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/volume/order",
+     "value": 1.9989426932179657,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/volume/gci_fine",
+     "value": 9.544465338780063e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/volume/rel_change",
+     "value": 0.00022884341509735162,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/volume/refinement",
+     "value": 2.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/wetted_area/order",
+     "value": 2.002283190463073,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/wetted_area/gci_fine",
+     "value": 8.85895776842389e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/wetted_area/rel_change",
+     "value": 2.1306398393111102e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/gci/wetted_area/refinement",
+     "value": 2.0,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/Cb_error/measured",
+     "value": 0.00030511617660508583,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/Cb_error/limit",
+     "value": 0.005,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/Cb_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/volume_error/measured",
+     "value": 0.0003051161766051358,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/volume_error/limit",
+     "value": 0.01,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/volume_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/wetted_area_error/measured",
+     "value": 2.8405343418254107e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/wetted_area_error/limit",
+     "value": 0.02,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/wetted_area_error/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_volume/measured",
+     "value": 9.544465338780063e-05,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_volume/limit",
+     "value": 0.03,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_volume/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_wetted_area/measured",
+     "value": 8.85895776842389e-06,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_wetted_area/limit",
+     "value": 0.03,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/gci_wetted_area/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/LCB_zero_by_symmetry/measured",
+     "value": 1.9990113750330222e-17,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/LCB_zero_by_symmetry/limit",
+     "value": 1e-09,
+     "dtype": "float",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/criteria/LCB_zero_by_symmetry/passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/all_criteria_passed",
+     "value": true,
+     "dtype": "bool",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/evidence_level",
+     "value": "REAL (closed-form references; mesh-integrated values)",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/artifacts/results_json",
+     "value": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/artifacts/report_md",
+     "value": "benchmarks/verified/bem_wigley_hydrostatics/report.md",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    },
+    {
+     "pointer": "/artifacts/figure_png",
+     "value": "benchmarks/verified/bem_wigley_hydrostatics/figures/bem_wigley_hydrostatics.png",
+     "dtype": "str",
+     "unit": null,
+     "source": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    }
+   ]
+  }
+ },
+ "completeness": {
+  "leaves_total": 220,
+  "leaves_transcribed": 220,
+  "rate": 1.0,
+  "roundtrip_method": "RFC-6901 resolve(pointer) == source leaf, type-checked",
+  "roundtrip_failures": [],
+  "required_classes": {
+   "geometry (L, B, T)": {
+    "expected_pointers": [
+     "/geometry/L",
+     "/geometry/B",
+     "/geometry/T"
+    ],
+    "found_pointers": [
+     "/geometry/L",
+     "/geometry/B",
+     "/geometry/T"
+    ],
+    "present": true
+   },
+   "hydrostatic reference (Cb, volume)": {
+    "expected_pointers": [
+     "/reference/Cb",
+     "/reference/volume"
+    ],
+    "found_pointers": [
+     "/reference/Cb",
+     "/reference/volume"
+    ],
+    "present": true
+   },
+   "fluid (rho, g)": {
+    "expected_pointers": [
+     "/fluid/rho",
+     "/fluid/g"
+    ],
+    "found_pointers": [
+     "/fluid/rho",
+     "/fluid/g"
+    ],
+    "present": true
+   },
+   "case definition (Froude numbers)": {
+    "expected_pointers": [
+     "/cases/0/froude_number",
+     "/cases/1/froude_number",
+     "/cases/2/froude_number"
+    ],
+    "found_pointers": [
+     "/cases/0/froude_number",
+     "/cases/1/froude_number",
+     "/cases/2/froude_number"
+    ],
+    "present": true
+   },
+   "quantities (Rw / Cw)": {
+    "expected_pointers": [
+     "/cases/0/Rw_production",
+     "/cases/0/Cw_production"
+    ],
+    "found_pointers": [
+     "/cases/0/Rw_production",
+     "/cases/0/Cw_production"
+    ],
+    "present": true
+   },
+   "mesh / discretisation record": {
+    "expected_pointers": [
+     "/levels/0/n_sections",
+     "/levels/0/panel_count",
+     "/production_mesh/n_sections"
+    ],
+    "found_pointers": [
+     "/levels/0/n_sections",
+     "/levels/0/panel_count",
+     "/production_mesh/n_sections"
+    ],
+    "present": true
+   },
+   "convergence record (GCI)": {
+    "expected_pointers": [
+     "/gci/volume/gci_fine",
+     "/cases/0/gci/gci_fine"
+    ],
+    "found_pointers": [
+     "/gci/volume/gci_fine",
+     "/cases/0/gci/gci_fine"
+    ],
+    "present": true
+   },
+   "acceptance criteria": {
+    "expected_pointers": [
+     "/criteria/Cb_error/measured",
+     "/cases/0/criteria/wave_resistance_error/measured"
+    ],
+    "found_pointers": [
+     "/criteria/Cb_error/measured",
+     "/cases/0/criteria/wave_resistance_error/measured"
+    ],
+    "present": true
+   },
+   "evidence level string": {
+    "expected_pointers": [
+     "/evidence_level"
+    ],
+    "found_pointers": [
+     "/evidence_level"
+    ],
+    "present": true
+   }
+  },
+  "required_classes_all_present": true
+ },
+ "reference_type_ledger": {
+  "purpose": "classify every reference number of the two files so that a repository-computed value can never be quoted as a model test",
+  "entries": [
+   {
+    "quantity": "wave_resistance.reference (Rw_reference, Cw_reference)",
+    "pointer": "/cases/*/Rw_reference",
+    "type": "numerical",
+    "theory": "Michell thin-ship integral, composite Gauss-Legendre (480 subintervals x 20 nodes) -- converged quadrature",
+    "pointer_evidence": [
+     "/method/reference"
+    ],
+    "is_experiment": false,
+    "may_be_called_test_data": false
+   },
+   {
+    "quantity": "wave_resistance.production (Rw_production, Cw_production)",
+    "pointer": "/cases/*/Rw_production",
+    "type": "numerical",
+    "theory": "Michell thin-ship integral, 256-node Gauss-Legendre, lambda = 1 + s^2 substitution (repo production path)",
+    "pointer_evidence": [
+     "/method/production"
+    ],
+    "is_experiment": false,
+    "may_be_called_test_data": false
+   },
+   {
+    "quantity": "hydrostatics.reference (V, Cb, KB, A_wp, I_xx, I_yy, BM, GM, C33/C44/C55)",
+    "pointer": "/reference/*",
+    "type": "analytic",
+    "theory": "closed form of the Wigley III parabolic hull (V = 4LBT/9, Cb = 4/9, KB = 5T/8, A_wp = 2LB/3, I_xx = 4B^3L/105, I_yy = B L^3/30)",
+    "pointer_evidence": [
+     "/reference"
+    ],
+    "is_experiment": false,
+    "may_be_called_test_data": false
+   },
+   {
+    "quantity": "hydrostatics.levels[*] (mesh-integrated values)",
+    "pointer": "/levels/*",
+    "type": "numerical",
+    "theory": "divergence-theorem volume/buoyancy integrals and waterline polygon moments over the panelised wetted surface",
+    "pointer_evidence": [
+     "/levels/0/panel_count"
+    ],
+    "is_experiment": false,
+    "may_be_called_test_data": false
+   },
+   {
+    "quantity": "hydrostatics.wetted_area_reference",
+    "pointer": "/wetted_area_reference",
+    "type": "numerical",
+    "theory": "2-D Gauss quadrature of sqrt(1 + y_x^2 + y_z^2) over the analytic Wigley surface (semi-analytic: quadrature of a closed form)",
+    "pointer_evidence": [
+     "/wetted_area_reference",
+     "/levels/0/wetted_area"
+    ],
+    "is_experiment": false,
+    "may_be_called_test_data": false
+   }
+  ],
+  "experiment_anchor": {
+   "status": "WITHHELD",
+   "what_is_missing": [
+    "Wigley (1942) model-test resistance and RAO tables",
+    "ITTC seakeeping benchmark RAO table for the Wigley hull",
+    "any measured heave/pitch RAO ordinate at any Froude number"
+   ],
+   "in_file_negative_evidence": [
+    {
+     "pointer": "/evidence_level",
+     "value": "REAL (converged Michell theory reference; two independent quadratures)",
+     "reading": "the file itself declares the evidence as a converged theory reference, not a test comparison"
+    },
+    {
+     "report_path": "benchmarks/verified/bem_wigley_wave_resistance/report.md",
+     "quote": "This verification does **not** compare with experimental data.",
+     "sha256": "dd7e1974c532f7701892e6876dddb79c1d6d67885e0e35b4dcf7bf9ebf02e74b"
+    }
+   ],
+   "consequence": "criterion-2 comparisons may carry the labels analytic / numerical only; any table row labelled 'experiment' for this hull would be fabricated"
+  },
+  "upstream_w18_experiments": {
+   "status": "not_retrievable_in_this_worktree",
+   "what_was_looked_for": "W18 exp#2 / exp#3 domain-truncation result files",
+   "searched": [
+    "papers/ (absent before this task)",
+    "docs/",
+    "benchmarks/",
+    "tools/",
+    "git log --all -- '*truncat*'"
+   ],
+   "consequence": "the truncation comparison is re-executed from the in-repo machinery at the same hull/fluid caliber instead of being rescaled from exp#2/#3; no exp#2/#3 number is quoted"
+  }
+ }
+}
