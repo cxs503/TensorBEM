@@ -1,0 +1,946 @@
+{
+ "schema": "w20-wigley-truncation-comparison/v1",
+ "task": "W20 seakeeping-truncation item 4 (anchor repair), mission 9647",
+ "generated_at_utc": "2026-11-10T13:48:48+00:00",
+ "repo": "TensorBEM",
+ "git": {
+  "base_commit": "7f5e068f5c23bc34b0de3f57b094475d9fb93187",
+  "branch": "agent/m9647",
+  "describe": "7f5e068"
+ },
+ "python": "3.11.6",
+ "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+ "numpy": "2.4.6",
+ "builder_sha256": "105049cbe2cc1e54672e048d3038aab29a34a2b2528758a1f3d2bbb854af1120",
+ "inputs": [
+  {
+   "path": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+   "sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+   "role": "wave-resistance anchor (geometry, fluid, cases, reference)"
+  },
+  {
+   "path": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+   "sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+   "role": "hydrostatics anchor (closed-form references, mesh levels)"
+  },
+  {
+   "path": "papers/data/w20-anchors/wigley_repo_benchmark_transcription.json",
+   "sha256": "e53d1415b064ded9b7681c5c5c968d595d3f0a009dc1932e85ac679bd762055d",
+   "role": "field-level transcription; every anchor value is reached through its JSON pointers"
+  },
+  {
+   "path": "src/tensorbem/rankine_fs.py",
+   "sha256": "d5c7aba083fb32891b6e2379e6950a66cc664f6dc009e8b00d9f7b3f5435deb0",
+   "role": "truncated-domain Rankine free-surface solver"
+  },
+  {
+   "path": "src/tensorbem/free_surface3d.py",
+   "sha256": "abb7f9dd34b2d9e1b3bcbf3ec8e48974ec17675aee83c43c0abe25f626a01e8d",
+   "role": "Sommerfeld radiation-condition residual"
+  },
+  {
+   "path": "src/tensorbem/rankine_wave.py",
+   "sha256": "48fca885b0014be137204480a6f57af1340a5343bf25cff170cd6fa493d45661",
+   "role": "Michell integration-range truncation study"
+  },
+  {
+   "path": "src/tensorbem/free_surface.py",
+   "sha256": "4832e5da7ceabdcae76c41f04d59d57477052aad9e01eb96d245fea611642eba",
+   "role": "negative evidence: no sponge layer / damping zone in the repo"
+  }
+ ],
+ "caliber": {
+  "hull": "Wigley III (parabolic), identical to both anchors",
+  "L_m": 10.0,
+  "B_m": 1.0,
+  "T_m": 0.625,
+  "L_over_B": 10.0,
+  "B_over_T": 1.6,
+  "rho_kg_m3": 1025.0,
+  "g_m_s2": 9.80665,
+  "Cw_normalisation": "Rw / (0.5 rho U^2 L T)  [as implemented in rankine_fs]",
+  "note": "all sweeps run at L = 10 m so Cw is directly comparable with /cases/*/Cw_reference; the older bem_rankine_fs_panel study used L = 2 m and is re-run only as a scale probe"
+ },
+ "predeclared_gates": {
+  "G1_lateral_truncation_pct": 2.0,
+  "G2_downstream_truncation_pct": 2.0,
+  "G3_radiation_energy_gap_pct": 5.0,
+  "G4_accuracy_vs_michell_pct": 5.0,
+  "G4_platform_band_pct": 15.0,
+  "G5_sommerfeld_slope_target": -1.5,
+  "G5_sommerfeld_slope_tol": 0.1,
+  "G7_michell_kmax_pct": 0.5
+ },
+ "domains_by_froude": {
+  "Fn_0.20": {
+   "froude": 0.2,
+   "U_m_s": 1.9805706248452741,
+   "wavelength_m": 2.513274122871834,
+   "wavelength_over_L": 0.2513274122871834,
+   "fs_panels_per_wavelength": 4.0,
+   "reference_domain_factors": {
+    "x_min_factor": 1.0,
+    "x_max_factor": 3.5,
+    "y_max_factor": 2.5
+   },
+   "lateral": [
+    {
+     "y_max_factor": 1.0,
+     "y_max_m": 10.0,
+     "n_unknowns": 1334,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30931.364354466747,
+     "rw_farfield_N": 8.013723333741404e-05,
+     "cw_pressure": -2.461753266089936,
+     "energy_gap_pct": 100.00000025908082,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.002565683471500872
+    },
+    {
+     "y_max_factor": 1.5,
+     "y_max_m": 15.0,
+     "n_unknowns": 1910,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30930.680314705827,
+     "rw_farfield_N": 9.845284278137392e-05,
+     "cw_pressure": -2.461698825002363,
+     "energy_gap_pct": 100.00000031830156,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0003541505323930467
+    },
+    {
+     "y_max_factor": 2.0,
+     "y_max_m": 20.0,
+     "n_unknowns": 2486,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30930.58209893575,
+     "rw_farfield_N": 0.00010793862469751469,
+     "cw_pressure": -2.4616910082442662,
+     "energy_gap_pct": 100.00000034897056,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 3.6614296815269295e-05
+    },
+    {
+     "y_max_factor": 2.5,
+     "y_max_m": 25.0,
+     "n_unknowns": 3062,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30930.57077392476,
+     "rw_farfield_N": 0.00011211608063269501,
+     "cw_pressure": -2.4616901069137436,
+     "energy_gap_pct": 100.0000003624766,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "downstream": [
+    {
+     "x_max_factor": 1.5,
+     "x_max_m": 15.0,
+     "n_unknowns": 1782,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30935.16743474182,
+     "rw_farfield_N": 0.03327269517110309,
+     "cw_pressure": -2.462055944147751,
+     "energy_gap_pct": 100.00010755621491,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.014861222092077533
+    },
+    {
+     "x_max_factor": 2.5,
+     "x_max_m": 25.0,
+     "n_unknowns": 2422,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30931.011645491883,
+     "rw_farfield_N": 0.0008616821551755328,
+     "cw_pressure": -2.4617251948267067,
+     "energy_gap_pct": 100.0000027858195,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.001425358653565684
+    },
+    {
+     "x_max_factor": 3.5,
+     "x_max_m": 35.0,
+     "n_unknowns": 3062,
+     "fs_panels_per_wavelength": 4.0,
+     "rw_pressure_N": -30930.57077392476,
+     "rw_farfield_N": 0.00011211608063269501,
+     "cw_pressure": -2.4616901069137436,
+     "energy_gap_pct": 100.0000003624766,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "radiation_condition_surrogate": [
+    {
+     "upwind_order": 1,
+     "n_unknowns": 3062,
+     "rw_pressure_N": -30930.57077392476,
+     "rw_farfield_N": 0.00011211608063269501,
+     "cw_pressure": -2.4616901069137436,
+     "energy_gap_pct": 100.0000003624766,
+     "wall_seconds": 0.0,
+     "rel_change_vs_order2_pct": 112.02092325258468
+    },
+    {
+     "upwind_order": 2,
+     "n_unknowns": 3062,
+     "rw_pressure_N": 257306.11637732774,
+     "rw_farfield_N": 0.07331487285866822,
+     "cw_pressure": 20.47837803460267,
+     "energy_gap_pct": 99.99997150675082,
+     "wall_seconds": 0.0
+    }
+   ],
+   "gates": {
+    "G1_lateral_max_rel_change_pct": 0.002565683471500872,
+    "G2_downstream_max_rel_change_pct": 0.014861222092077533,
+    "G3_energy_gap_pct": 100.0000003624766
+   }
+  },
+  "Fn_0.30": {
+   "froude": 0.3,
+   "U_m_s": 2.970855937267911,
+   "wavelength_m": 5.654866776461627,
+   "wavelength_over_L": 0.5654866776461627,
+   "fs_panels_per_wavelength": 12.0,
+   "reference_domain_factors": {
+    "x_min_factor": 1.0,
+    "x_max_factor": 3.5,
+    "y_max_factor": 2.5
+   },
+   "lateral": [
+    {
+     "y_max_factor": 1.0,
+     "y_max_m": 10.0,
+     "n_unknowns": 2172,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9454.380359726983,
+     "rw_farfield_N": 5.06188649033497e-07,
+     "cw_pressure": 0.3344228921053209,
+     "energy_gap_pct": 99.99999999464599,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.04851682361103798
+    },
+    {
+     "y_max_factor": 1.5,
+     "y_max_m": 15.0,
+     "n_unknowns": 3217,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9451.247248410647,
+     "rw_farfield_N": 9.936623647397664e-07,
+     "cw_pressure": 0.33431206684678144,
+     "energy_gap_pct": 99.99999998948643,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.015361489436208962
+    },
+    {
+     "y_max_factor": 2.0,
+     "y_max_m": 20.0,
+     "n_unknowns": 4167,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9450.274117066108,
+     "rw_farfield_N": 1.1592498938128974e-06,
+     "cw_pressure": 0.3342776449823909,
+     "energy_gap_pct": 99.99999998773316,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0050635805314193675
+    },
+    {
+     "y_max_factor": 2.5,
+     "y_max_m": 25.0,
+     "n_unknowns": 5212,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9449.795619054883,
+     "rw_farfield_N": 1.248920478404398e-06,
+     "cw_pressure": 0.33426071942167807,
+     "energy_gap_pct": 99.99999998678362,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "downstream": [
+    {
+     "x_max_factor": 1.5,
+     "x_max_m": 15.0,
+     "n_unknowns": 2986,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9450.943739476208,
+     "rw_farfield_N": 0.7649524639043348,
+     "cw_pressure": 0.33430133104689047,
+     "energy_gap_pct": 99.99190607324527,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.01214968521657724
+    },
+    {
+     "x_max_factor": 2.5,
+     "x_max_m": 25.0,
+     "n_unknowns": 4099,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9450.00928249251,
+     "rw_farfield_N": 0.00038386117443490363,
+     "cw_pressure": 0.3342682771824228,
+     "energy_gap_pct": 99.99999593798098,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0022610376588106957
+    },
+    {
+     "x_max_factor": 3.5,
+     "x_max_m": 35.0,
+     "n_unknowns": 5212,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 9449.795619054883,
+     "rw_farfield_N": 1.248920478404398e-06,
+     "cw_pressure": 0.33426071942167807,
+     "energy_gap_pct": 99.99999998678362,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "radiation_condition_surrogate": [
+    {
+     "upwind_order": 1,
+     "n_unknowns": 5212,
+     "rw_pressure_N": 9449.795619054883,
+     "rw_farfield_N": 1.248920478404398e-06,
+     "cw_pressure": 0.33426071942167807,
+     "energy_gap_pct": 99.99999998678362,
+     "wall_seconds": 0.0,
+     "rel_change_vs_order2_pct": 88.35192741826876
+    },
+    {
+     "upwind_order": 2,
+     "n_unknowns": 5212,
+     "rw_pressure_N": 81127.54752126016,
+     "rw_farfield_N": 71.5468652354347,
+     "cw_pressure": 2.869665492520458,
+     "energy_gap_pct": 99.91180940701223,
+     "wall_seconds": 0.0
+    }
+   ],
+   "gates": {
+    "G1_lateral_max_rel_change_pct": 0.04851682361103798,
+    "G2_downstream_max_rel_change_pct": 0.01214968521657724,
+    "G3_energy_gap_pct": 99.99999998678362
+   }
+  },
+  "Fn_0.40": {
+   "froude": 0.4,
+   "U_m_s": 3.9611412496905483,
+   "wavelength_m": 10.053096491487336,
+   "wavelength_over_L": 1.0053096491487337,
+   "fs_panels_per_wavelength": 12.0,
+   "reference_domain_factors": {
+    "x_min_factor": 1.0,
+    "x_max_factor": 3.5,
+    "y_max_factor": 2.5
+   },
+   "lateral": [
+    {
+     "y_max_factor": 1.0,
+     "y_max_m": 10.0,
+     "n_unknowns": 836,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17538.297356997562,
+     "rw_farfield_N": 0.0004417714501486687,
+     "cw_pressure": 0.3489577787894314,
+     "energy_gap_pct": 99.9999974811041,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0963209241208321
+    },
+    {
+     "y_max_factor": 1.5,
+     "y_max_m": 15.0,
+     "n_unknowns": 1160,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17552.31396865084,
+     "rw_farfield_N": 0.0005033652119229913,
+     "cw_pressure": 0.3492366659338971,
+     "energy_gap_pct": 99.99999713220026,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.016477878707895816
+    },
+    {
+     "y_max_factor": 2.0,
+     "y_max_m": 20.0,
+     "n_unknowns": 1484,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17554.536424711172,
+     "rw_farfield_N": 0.0005339829430020729,
+     "cw_pressure": 0.34928088592369905,
+     "energy_gap_pct": 99.99999695814842,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.003818067296781943
+    },
+    {
+     "y_max_factor": 2.5,
+     "y_max_m": 25.0,
+     "n_unknowns": 1808,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17555.20669431685,
+     "rw_farfield_N": 0.0005551011019460151,
+     "cw_pressure": 0.3492942222121669,
+     "energy_gap_pct": 99.99999683796887,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "downstream": [
+    {
+     "x_max_factor": 1.5,
+     "x_max_m": 15.0,
+     "n_unknowns": 1088,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17545.650138559962,
+     "rw_farfield_N": 0.7422316658061597,
+     "cw_pressure": 0.34910407636152246,
+     "energy_gap_pct": 99.99576971123929,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.05443715886285588
+    },
+    {
+     "x_max_factor": 2.5,
+     "x_max_m": 25.0,
+     "n_unknowns": 1448,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17553.300876588408,
+     "rw_farfield_N": 0.005943724805018483,
+     "cw_pressure": 0.34925630234413424,
+     "energy_gap_pct": 99.99996613899091,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.010856139501104901
+    },
+    {
+     "x_max_factor": 3.5,
+     "x_max_m": 35.0,
+     "n_unknowns": 1808,
+     "fs_panels_per_wavelength": 12.0,
+     "rw_pressure_N": 17555.20669431685,
+     "rw_farfield_N": 0.0005551011019460151,
+     "cw_pressure": 0.3492942222121669,
+     "energy_gap_pct": 99.99999683796887,
+     "wall_seconds": 0.0,
+     "rel_change_vs_reference_domain_pct": 0.0
+    }
+   ],
+   "radiation_condition_surrogate": [
+    {
+     "upwind_order": 1,
+     "n_unknowns": 1808,
+     "rw_pressure_N": 17555.20669431685,
+     "rw_farfield_N": 0.0005551011019460151,
+     "cw_pressure": 0.3492942222121669,
+     "energy_gap_pct": 99.99999683796887,
+     "wall_seconds": 0.0,
+     "rel_change_vs_order2_pct": 97.5253127190374
+    },
+    {
+     "upwind_order": 2,
+     "n_unknowns": 1808,
+     "rw_pressure_N": 709390.9129192379,
+     "rw_farfield_N": 48705.619389277635,
+     "cw_pressure": 14.114681273033375,
+     "energy_gap_pct": 93.13416361807518,
+     "wall_seconds": 0.0
+    }
+   ],
+   "gates": {
+    "G1_lateral_max_rel_change_pct": 0.0963209241208321,
+    "G2_downstream_max_rel_change_pct": 0.05443715886285588,
+    "G3_energy_gap_pct": 99.99999683796887
+   }
+  }
+ },
+ "comparison_table": {
+  "wave_resistance": [
+   {
+    "quantity": "Cw (wave-resistance coefficient)",
+    "froude": 0.2,
+    "repo_value": -2.4616901069137436,
+    "repo_source": "tensorbem.rankine_fs.solve_rankine_free_surface, truncated domain 3.5L downstream / 2.5L lateral, ppw=4.0, same hull and fluid as the anchors",
+    "repo_provenance": "papers/data/w20-anchors/wigley_truncation_comparison.json",
+    "reference_value": 0.00020495126048347893,
+    "reference_type": "numerical",
+    "reference_note": "Michell thin-ship integral, converged composite Gauss-Legendre quadrature (480 x 20) -- repository code-to-code reference, NOT a model test",
+    "reference_pointer": "/cases/0/Cw_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+    "reference_sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+    "rel_deviation_pct": 1201210.010793117,
+    "verdict_vs_5pct": "FAIL",
+    "verdict_vs_platform_15pct": "FAIL"
+   },
+   {
+    "quantity": "Cw (wave-resistance coefficient)",
+    "froude": 0.3,
+    "repo_value": 0.33426071942167807,
+    "repo_source": "tensorbem.rankine_fs.solve_rankine_free_surface, truncated domain 3.5L downstream / 2.5L lateral, ppw=12.0, same hull and fluid as the anchors",
+    "repo_provenance": "papers/data/w20-anchors/wigley_truncation_comparison.json",
+    "reference_value": 0.00043481837864621053,
+    "reference_type": "numerical",
+    "reference_note": "Michell thin-ship integral, converged composite Gauss-Legendre quadrature (480 x 20) -- repository code-to-code reference, NOT a model test",
+    "reference_pointer": "/cases/1/Cw_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+    "reference_sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+    "rel_deviation_pct": 76773.64100440862,
+    "verdict_vs_5pct": "FAIL",
+    "verdict_vs_platform_15pct": "FAIL"
+   },
+   {
+    "quantity": "Cw (wave-resistance coefficient)",
+    "froude": 0.4,
+    "repo_value": 0.3492942222121669,
+    "repo_source": "tensorbem.rankine_fs.solve_rankine_free_surface, truncated domain 3.5L downstream / 2.5L lateral, ppw=12.0, same hull and fluid as the anchors",
+    "repo_provenance": "papers/data/w20-anchors/wigley_truncation_comparison.json",
+    "reference_value": 0.0005237634570002464,
+    "reference_type": "numerical",
+    "reference_note": "Michell thin-ship integral, converged composite Gauss-Legendre quadrature (480 x 20) -- repository code-to-code reference, NOT a model test",
+    "reference_pointer": "/cases/2/Cw_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
+    "reference_sha256": "244cc29b1a50f5cec9b3869f586e611db855406f3616c5039db2133577a8792b",
+    "rel_deviation_pct": 66589.30746193745,
+    "verdict_vs_5pct": "FAIL",
+    "verdict_vs_platform_15pct": "FAIL"
+   }
+  ],
+  "hydrostatics": [
+   {
+    "quantity": "Wigley hydrostatics, mesh 16x8 (512 panels)",
+    "repo_value": {
+     "Cb": 0.44228108723958337,
+     "volume_m3": 2.764256795247396,
+     "KB_m": 0.3903985923915543,
+     "waterplane_area_m2": 6.640625,
+     "wetted_area_m2": 14.872257308611179
+    },
+    "reference_value": {
+     "Cb": 0.4444444444444444,
+     "volume_m3": 2.7777777777777777,
+     "KB_m": 0.390625,
+     "waterplane_area_m2": 6.666666666666667,
+     "wetted_area_m2": 14.879063104957787
+    },
+    "reference_type": "analytic",
+    "reference_note": "closed form of the Wigley III hull: V = 4LBT/9, Cb = 4/9, KB = 5T/8, A_wp = 2LB/3; wetted area by 2-D Gauss quadrature of the analytic surface",
+    "reference_pointer": "/reference/* + /wetted_area_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+    "reference_sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+    "rel_deviation_pct": {
+     "Cb": 0.4867553710937361,
+     "volume": 0.4867553710937411,
+     "KB": 0.0579603477621049,
+     "waterplane_area": 0.39062500000000444,
+     "wetted_area": 0.0457407586660509
+    },
+    "max_rel_deviation_pct": 0.4867553710937411,
+    "verdict_vs_15pct": "PASS"
+   },
+   {
+    "quantity": "Wigley hydrostatics, mesh 32x16 (2048 panels)",
+    "repo_value": {
+     "Cb": 0.443902333577474,
+     "volume_m3": 2.7743895848592124,
+     "KB_m": 0.3905679334515425,
+     "waterplane_area_m2": 6.66015625,
+     "wetted_area_m2": 14.877370383661054
+    },
+    "reference_value": {
+     "Cb": 0.4444444444444444,
+     "volume_m3": 2.7777777777777777,
+     "KB_m": 0.390625,
+     "waterplane_area_m2": 6.666666666666667,
+     "wetted_area_m2": 14.879063104957787
+    },
+    "reference_type": "analytic",
+    "reference_note": "closed form of the Wigley III hull: V = 4LBT/9, Cb = 4/9, KB = 5T/8, A_wp = 2LB/3; wetted area by 2-D Gauss quadrature of the analytic surface",
+    "reference_pointer": "/reference/* + /wetted_area_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+    "reference_sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+    "rel_deviation_pct": {
+     "Cb": 0.1219749450683455,
+     "volume": 0.1219749450683505,
+     "KB": 0.014609036405119014,
+     "waterplane_area": 0.09765625000000444,
+     "wetted_area": 0.011376531471049335
+    },
+    "max_rel_deviation_pct": 0.1219749450683505,
+    "verdict_vs_15pct": "PASS"
+   },
+   {
+    "quantity": "Wigley hydrostatics, mesh 64x32 (8192 panels)",
+    "repo_value": {
+     "Cb": 0.44430883725484216,
+     "volume_m3": 2.7769302328427634,
+     "KB_m": 0.390610704493302,
+     "waterplane_area_m2": 6.6650390625,
+     "wetted_area_m2": 14.878640460060549
+    },
+    "reference_value": {
+     "Cb": 0.4444444444444444,
+     "volume_m3": 2.7777777777777777,
+     "KB_m": 0.390625,
+     "waterplane_area_m2": 6.666666666666667,
+     "wetted_area_m2": 14.879063104957787
+    },
+    "reference_type": "analytic",
+    "reference_note": "closed form of the Wigley III hull: V = 4LBT/9, Cb = 4/9, KB = 5T/8, A_wp = 2LB/3; wetted area by 2-D Gauss quadrature of the analytic surface",
+    "reference_pointer": "/reference/* + /wetted_area_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+    "reference_sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+    "rel_deviation_pct": {
+     "Cb": 0.030511617660508583,
+     "volume": 0.03051161766051358,
+     "KB": 0.0036596497146916818,
+     "waterplane_area": 0.02441406250000444,
+     "wetted_area": 0.002840534341825411
+    },
+    "max_rel_deviation_pct": 0.03051161766051358,
+    "verdict_vs_15pct": "PASS"
+   },
+   {
+    "quantity": "Wigley hydrostatics, mesh 128x64 (32768 panels)",
+    "repo_value": {
+     "Cb": 0.44441053767999006,
+     "volume_m3": 2.777565860499938,
+     "KB_m": 0.39062142432163993,
+     "waterplane_area_m2": 6.666259765625,
+     "wetted_area_m2": 14.878957477056229
+    },
+    "reference_value": {
+     "Cb": 0.4444444444444444,
+     "volume_m3": 2.7777777777777777,
+     "KB_m": 0.390625,
+     "waterplane_area_m2": 6.666666666666667,
+     "wetted_area_m2": 14.879063104957787
+    },
+    "reference_type": "analytic",
+    "reference_note": "closed form of the Wigley III hull: V = 4LBT/9, Cb = 4/9, KB = 5T/8, A_wp = 2LB/3; wetted area by 2-D Gauss quadrature of the analytic surface",
+    "reference_pointer": "/reference/* + /wetted_area_reference",
+    "reference_file": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
+    "reference_sha256": "a4f0d43dd8937d84afb5ff523944bbe4d39e1947592771d690845b8c80c199c1",
+    "rel_deviation_pct": {
+     "Cb": 0.007629022002231256,
+     "volume": 0.007629022002227259,
+     "KB": 0.0009153736601774654,
+     "waterplane_area": 0.006103515625004441,
+     "wetted_area": 0.0007099096281316606
+    },
+    "max_rel_deviation_pct": 0.007629022002231256,
+    "verdict_vs_15pct": "PASS"
+   }
+  ]
+ },
+ "radiation_energy_gate": {
+  "definition": "|Rw_pressure - Rw_farfield| / |Rw_pressure| at the reference domain",
+  "tiers": [
+   {
+    "froude": 0.2,
+    "gap_pct": 100.0000003624766
+   },
+   {
+    "froude": 0.3,
+    "gap_pct": 99.99999998678362
+   },
+   {
+    "froude": 0.4,
+    "gap_pct": 99.99999683796887
+   }
+  ],
+  "limit_pct": 5.0,
+  "verdict": "FAIL"
+ },
+ "damping_zone": {
+  "status": "NOT_SUPPORTED",
+  "evidence": {
+   "path": "src/tensorbem/free_surface.py",
+   "sha256": "4832e5da7ceabdcae76c41f04d59d57477052aad9e01eb96d245fea611642eba",
+   "statement_quote": "truncated fluid domain, no sponge layer and no free-surface mesh",
+   "grep": "no sponge / absorbing-boundary / damping-zone parameter exists in src/; the only 'absorb' hits are the non-absorbing-body energy identities of drift/diffraction"
+  },
+  "surrogate_reported": "upwind_order 1 -> 2 of the free-surface radiation condition on the truncated patch: a radiation-condition discretisation, NOT a damping-zone length, and never to be quoted as one"
+ },
+ "sommerfeld_radiation_condition": {
+  "kernel": "3-D deep-water Green function G = exp(i nu R)/R",
+  "nu_1_per_m": 1.1111111111111112,
+  "source_m": [
+   0.0,
+   0.0,
+   -0.625
+  ],
+  "depth_z_m": 0.0,
+  "azimuth_rad": 0.37,
+  "radii_m": [
+   0.2,
+   0.5,
+   1.0,
+   2.0,
+   5.0,
+   10.0,
+   20.0,
+   50.0,
+   100.0
+  ],
+  "scaled_residual": [
+   0.10451282304495113,
+   0.11588041582116368,
+   0.09485352494196812,
+   0.050181874072350606,
+   0.021070592791874166,
+   0.010420103321272767,
+   0.005225036169644997,
+   0.0020992999646727555,
+   0.0010495144928050026
+  ],
+  "loglog_slope": -0.8158122477597889,
+  "monotone_decreasing": false,
+  "expected_slope": -1.5,
+  "slope_tolerance": 0.1,
+  "verdict": "FAIL",
+  "note": "validates the analytic radiation boundary condition of the Green-function routes; it does not validate the truncated-panel radiation treatment -- that is G3",
+  "diagnosis_of_failure": "the pre-declared fit spans nu*R from ~0.22 to ~111, i.e. it mixes the near field (nu*R < 1) with the far field, and the horizontal radius passed to the kernel is not the 3-D range when the source sits at z = -T; the residual is therefore not expected to follow R^-1.5 over the whole sweep",
+  "posthoc_far_field_slope": {
+   "label": "post-hoc exploratory; NOT a pre-declared gate and NOT a re-judgement",
+   "criterion": "nu*R >= 5 (far field only)",
+   "radii_m": [
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0
+   ],
+   "loglog_slope": -0.9999186809867588,
+   "monotone_decreasing": true,
+   "target_slope": -1.5
+  }
+ },
+ "michell_integration_range_truncation": {
+  "what": "cut of the synthetic wavenumber range of the Michell integral at k_max/k0 in {10,20,30,50} (extents [1,2,3,5])",
+  "tiers": [
+   {
+    "froude": 0.2,
+    "k_max_over_k0": [
+     10.0,
+     20.0,
+     30.0,
+     50.0
+    ],
+    "rw_N": [
+     239.68394003659165,
+     239.5978766881227,
+     238.9155754152573,
+     238.08670122092872
+    ],
+    "rel_change_vs_largest_pct": [
+     0.6708643563341246,
+     0.6347164538987512,
+     0.34813964412042103,
+     0.0
+    ],
+    "max_rel_change_pct": 0.6708643563341246,
+    "anchor_rw_reference_N": 2.57516551323227,
+    "rel_deviation_vs_anchor_pct": 9145.491212022698
+   },
+   {
+    "froude": 0.3,
+    "k_max_over_k0": [
+     10.0,
+     20.0,
+     30.0,
+     50.0
+    ],
+    "rw_N": [
+     300.7975502807294,
+     302.4771343584468,
+     302.3245013601049,
+     301.61925119104467
+    ],
+    "rel_change_vs_largest_pct": [
+     0.27242986217573856,
+     0.28442586605943837,
+     0.2338213380861104,
+     0.0
+    ],
+    "max_rel_change_pct": 0.28442586605943837,
+    "anchor_rw_reference_N": 12.292634374522402,
+    "rel_deviation_vs_anchor_pct": 2353.6583615972336
+   },
+   {
+    "froude": 0.4,
+    "k_max_over_k0": [
+     10.0,
+     20.0,
+     30.0,
+     50.0
+    ],
+    "rw_N": [
+     239.19368219530824,
+     242.6623316999877,
+     242.86890801702654,
+     242.3455527456987
+    ],
+    "rel_change_vs_largest_pct": [
+     1.3005687600538858,
+     0.13071374766319677,
+     0.21595414704267515,
+     0.0
+    ],
+    "max_rel_change_pct": 1.3005687600538858,
+    "anchor_rw_reference_N": 26.323870141156263,
+    "rel_deviation_vs_anchor_pct": 820.6304067227624
+   }
+  ],
+  "max_rel_change_pct": 1.3005687600538858,
+  "limit_pct": 0.5,
+  "verdict": "FAIL",
+  "caveat": "the study runs inside rankine_wave._michell_with_kmax, a separate and much cruder Michell implementation: its Rw already differs from the anchor reference by the factors listed in rel_deviation_vs_anchor_pct, so G7 quantifies ONLY the integration-range sensitivity of that kernel and must not be read as the truncation error of the anchor reference"
+ },
+ "scale_invariance_probe": {
+  "purpose": "test (a) whether the historical L = 2 m record reproduces with its own documented settings, and (b) whether the truncation conclusion is scale invariant, i.e. whether L = 2 m and L = 10 m give the same non-dimensional answer at identical relative settings",
+  "exact_settings_reproduction": {
+   "case": {
+    "L_m": 2.0,
+    "B_m": 0.2,
+    "T_m": 0.125,
+    "froude": 0.3,
+    "U_m_s": 1.3286071654179799,
+    "x_max_factor": 2.0,
+    "y_max_factor": 1.0,
+    "hull_nx": 10,
+    "hull_nz": 4,
+    "fs_panels_per_wavelength": 12.0,
+    "n_unknowns": 1369,
+    "rw_pressure_N": 2.854475587747501,
+    "cw_pressure": 0.01262116004932609,
+    "cw_over_michell_reference": 29.026280095661,
+    "energy_gap_pct": 99.99931344436752,
+    "wall_seconds": 0.0
+   },
+   "in_repo_record": {
+    "path": "docs/benchmarks/verified/bem_rankine_fs_panel/results.json",
+    "sha256": "6050d67c02ab4a41dd07961cad04541031a2dbd547f60349950e8518b9dea2ba",
+    "pointer": "/free_surface_study/levels/2/rw_pressure_N",
+    "reported_rw_pressure_N": 2.854475587747501,
+    "reported_ratio_to_michell": 29.026284243676418,
+    "documented_settings": {
+     "hull_nx": 10,
+     "hull_nz": 4,
+     "panels_per_wavelength": 12.0,
+     "x_max_factor": 2.0,
+     "y_max_factor": 1.0
+    },
+    "also_recorded": {
+     "convergent": false,
+     "max_abs_ratio_to_michell": 32.6198
+    }
+   },
+   "reproduces_in_repo_record": true
+  },
+  "scale_invariance_pair": {
+   "settings": {
+    "ppw": 12.0,
+    "x_max_factor": 2.5,
+    "y_max_factor": 1.5,
+    "hull_nx": 24,
+    "hull_nz": 8
+   },
+   "L2": {
+    "L_m": 2.0,
+    "n_unknowns": 2545,
+    "rw_pressure_N": 75.61125389694877,
+    "cw_pressure": 0.3343177083243762,
+    "cw_over_michell_reference": 768.8674737375658,
+    "wall_seconds": 0.0
+   },
+   "L10": {
+    "L_m": 10.0,
+    "n_unknowns": 2545,
+    "rw_pressure_N": 9451.406737104297,
+    "cw_pressure": 0.33431770832387026,
+    "cw_over_michell_reference": 768.8674737364022,
+    "wall_seconds": 0.0
+   },
+   "cw_ratio_L10_over_L2": 0.9999999999984867,
+   "scale_invariant_within_1pct": true
+  },
+  "discretisation_probe": {
+   "purpose": "attribute the Cw swing between the historical and the anchor-caliber configuration: domain held identical at x_max = 2.0L, y_max = 1.0L, only the hull panel counts differ",
+   "hull_10x4": {
+    "hull_nx": 10,
+    "hull_nz": 4,
+    "n_unknowns": 1369,
+    "rw_pressure_N": 356.80944846834564,
+    "cw_pressure": 0.01262116004932283,
+    "cw_over_michell_reference": 29.026280095653505,
+    "wall_seconds": 6.29
+   },
+   "hull_24x8": {
+    "hull_nx": 24,
+    "hull_nz": 8,
+    "n_unknowns": 1521,
+    "rw_pressure_N": 9454.632136299822,
+    "cw_pressure": 0.3344317980141641,
+    "cw_over_michell_reference": 769.1298584374562,
+    "wall_seconds": 10.93
+   },
+   "cw_ratio_24x8_over_10x4": 26.497706764451305,
+   "same_config_at_L2_hull_10x4_cw": 0.01262116004932609,
+   "scale_invariance_of_10x4_config": 0.9999999999997418
+  }
+ },
+ "criterion_verdicts": {
+  "criterion_1_transcription_completeness": {
+   "verdict": "PASS",
+   "rate": 1.0,
+   "leaves": [
+    220,
+    220
+   ],
+   "required_classes_all_present": true,
+   "artifact": "papers/data/w20-anchors/wigley_repo_benchmark_transcription.json",
+   "artifact_sha256": "e53d1415b064ded9b7681c5c5c968d595d3f0a009dc1932e85ac679bd762055d"
+  },
+  "criterion_2_comparison_table": {
+   "verdict": "PASS",
+   "n_rows": 7,
+   "experiment_rows": 0,
+   "experiment_anchor_status": "WITHHELD",
+   "why": "every row carries a relative deviation and a reference type; no row is labelled experiment because neither anchor file contains model-test data, so no repository number is promoted to a test anchor"
+  },
+  "criterion_3_truncation_conclusion": {
+   "verdict": "PASS",
+   "reporting_verdict": "PASS",
+   "reporting_meaning": "every tier of the lateral, downstream and radiation-condition sweep is in the table with a gate verdict",
+   "physics_verdict": "FAIL",
+   "physics_meaning": "the domain-truncation gates alone (G1/G2/G7); G3/G4 are reported separately and FAIL, so 'truncation converged' must not be read as 'solution converged'",
+   "G1_lateral_max_pct": 0.0963209241208321,
+   "G1_limit_pct": 2.0,
+   "G1_verdict": "PASS",
+   "G2_downstream_max_pct": 0.05443715886285588,
+   "G2_limit_pct": 2.0,
+   "G2_verdict": "PASS",
+   "G3_radiation_energy_gap_pct": 100.0000003624766,
+   "G3_limit_pct": 5.0,
+   "G3_verdict": "FAIL",
+   "G7_michell_kmax_verdict": "FAIL",
+   "G7_michell_kmax_pct": 1.3005687600538858,
+   "damping_zone_verdict": "NOT_SUPPORTED",
+   "accuracy_verdict": "FAIL",
+   "accuracy_best_rel_deviation_pct": 66589.30746193745,
+   "reading": "lateral and downstream truncation are converged (0.10 % / 0.05 %) but the solution is neither energy-consistent (G3 = 100 %) nor accurate (G4 >= 6.7e4 %) and the reference-integral cut G7 fails its own 0.5 % gate (1.30 %): domain truncation is NOT the error source here -- the free-surface / radiation discretisation is"
+  },
+  "sommerfeld_radiation_condition": "FAIL"
+ },
+ "figures": [
+  {
+   "name": "w20_wigley_truncation_domain.png",
+   "caption": "Fig. 1  Wigley III at L = 10 m: relative change of the truncated-domain wave resistance against the largest domain, lateral (left) and downstream (right); dashed line = pre-declared 2 % gate."
+  },
+  {
+   "name": "w20_wigley_energy_and_accuracy.png",
+   "caption": "Fig. 2  Left: radiation-energy gate |Rw_p - Rw_f|/|Rw_p| at the reference domain (5 % gate, grossly failed at all three Froude numbers). Right: Cw of the truncated-domain Rankine solve against the Michell reference at identical hull/fluid caliber; annotations are relative deviations."
+  },
+  {
+   "name": "w20_wigley_gates_and_mesh.png",
+   "caption": "Fig. 3  Left: scaled Sommerfeld residual of the deep-water Green function (analytic radiation condition, G5). Centre: truncation of the Michell integration range (G7). Right: mesh convergence of the Wigley hydrostatics against closed-form references (analytic)."
+  }
+ ]
+}

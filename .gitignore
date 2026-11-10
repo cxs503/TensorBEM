@@ -8,3 +8,5 @@ build/
 
 # Generated verification reports (see README / CI workflow)
 artifacts/
+papers/data/w20-anchors/.solve_cache.json
+__pycache__/
