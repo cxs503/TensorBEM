@@ -535,6 +535,8 @@ def far_field_damping_check(
     density: float = _DEFAULT_DENSITY,
     gravity: float = _DEFAULT_GRAVITY,
     n_azimuth: int = 72,
+    chief_points: ArrayLike | str | None = None,
+    interior_panels: ArrayLike | str | None = None,
 ) -> tuple[FloatArray, FloatArray]:
     """Near-field and far-field radiation damping at one frequency.
 
@@ -543,6 +545,13 @@ def far_field_damping_check(
     relation (:func:`tensorbem.free_surface_solver3d.far_field_damping_matrix_3d`).
     Equality of the two is an independent statement of energy conservation: the
     damping equals the energy flux carried away by the radiated waves.
+
+    ``chief_points`` / ``interior_panels`` are forwarded to the radiation solve
+    and default to ``None`` (no null-field augmentation).  A multi-body surface
+    must pass :func:`multihull_chief_points` explicitly: the library's
+    ``"auto"`` heuristic puts the rows at the area-weighted centre of the union,
+    which for two hulls abreast lies *between* them, i.e. outside every body,
+    where the null-field identity does not hold.
     """
     from .free_surface_solver3d import far_field_damping_matrix_3d
 
@@ -553,6 +562,8 @@ def far_field_damping_check(
         center=center,
         density=density,
         gravity=gravity,
+        chief_points=chief_points,
+        interior_panels=interior_panels,
     )
     near = np.asarray(radiation.damping, dtype=float)
     far = far_field_damping_matrix_3d(
