@@ -1,0 +1,2482 @@
+{
+  "schema": "tensorbem.w20_kp505_bem_gci/1",
+  "topic": "propeller-openwater-bem / W20 item 5: three-density GCI and error decomposition",
+  "generated_by": "tensorbem.benchmarks.kp505_w20_gci",
+  "regenerate": "python -m tensorbem.benchmarks.kp505_w20_gci",
+  "generated_utc": "2026-11-10T13:33:48.530373+00:00",
+  "repo_commit": "7f5e068f5c23bc34b0de3f57b094475d9fb93187",
+  "env": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "solver": {
+    "module": "src/tensorbem/propeller.py",
+    "entry_point": "open_water_point",
+    "wake_model": "geometric",
+    "gci_tool": "src/tensorbem/uq.py:grid_convergence_index",
+    "safety_factor": 1.25
+  },
+  "anchor": {
+    "source": "benchmarks/anchors/kp505_openwater.json",
+    "kind": "SECONDARY_REPRODUCTION",
+    "values": {
+      "0.5": {
+        "KT": 0.29,
+        "10KQ": 0.471
+      },
+      "0.7": {
+        "KT": 0.193,
+        "10KQ": 0.342
+      },
+      "0.9": {
+        "KT": 0.087,
+        "10KQ": 0.192
+      },
+      "0.8": {
+        "KT": 0.141,
+        "10KQ": 0.27
+      }
+    },
+    "eta0": {
+      "0.5": 0.4899674468858774,
+      "0.7": 0.6287085617460544,
+      "0.9": 0.6490537522966356,
+      "0.8": 0.6649139844728071
+    },
+    "transcription": "papers/data/w20-anchors/kp505_transcription.json"
+  },
+  "design": {
+    "mission_J": [
+      0.5,
+      0.7,
+      0.9
+    ],
+    "history_tie_J": 0.8,
+    "design_J": 0.7,
+    "panel_levels": [
+      {
+        "level": 1,
+        "label": "L1-coarse",
+        "n_radial": 8,
+        "n_chord": 2,
+        "wake_steps": 24
+      },
+      {
+        "level": 2,
+        "label": "L2-medium",
+        "n_radial": 16,
+        "n_chord": 4,
+        "wake_steps": 48
+      },
+      {
+        "level": 3,
+        "label": "L3-fine",
+        "n_radial": 32,
+        "n_chord": 8,
+        "wake_steps": 96
+      }
+    ],
+    "refinement_ratio": 2.0,
+    "core_policies": {
+      "fixed": "core_ratio = 0.05 at every level (regularisation held constant)",
+      "similarity": "core_ratio = 0.05 * 16 / n_radial (radius halves with the panel size)"
+    },
+    "primary_core_policy": "fixed",
+    "held_fixed": {
+      "wake_model": "geometric",
+      "wake_length": 1.0,
+      "rev_per_second": 10.0,
+      "thickness_ratio": 0.06,
+      "viscous": true,
+      "radial_spacing": "cosine",
+      "root_chord_offset": 0.12
+    },
+    "theory_order": 2.0,
+    "theory_order_secondary": 1.5,
+    "order_tolerance": 0.3,
+    "gci_accept_pct": 3.0,
+    "design_tolerance_pct": 3.0
+  },
+  "cells": [
+    {
+      "J": 0.5,
+      "core_policy": "fixed",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.29,
+        "10KQ": 0.471
+      },
+      "levels": [
+        {
+          "J": 0.5,
+          "core_policy": "fixed",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.05,
+          "KT": 0.30271961770435474,
+          "10KQ": 0.43315714314671616,
+          "eta0": 0.5561413945356306,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.001945125153041434,
+          "momentum_bound": 0.6620847275513931,
+          "physical": true
+        },
+        {
+          "J": 0.5,
+          "core_policy": "fixed",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.30149661655365284,
+          "10KQ": 0.4424439422477882,
+          "eta0": 0.5422684352532288,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0020962289797162195,
+          "momentum_bound": 0.6627615182727898,
+          "physical": true
+        },
+        {
+          "J": 0.5,
+          "core_policy": "fixed",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.05,
+          "KT": 0.2805575539228038,
+          "10KQ": 0.42919653194238716,
+          "eta0": 0.5201826926059486,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0022572442805441854,
+          "momentum_bound": 0.6747383463658211,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.30271961770435474,
+            0.30149661655365284,
+            0.2805575539228038
+          ],
+          "anchor": 0.29,
+          "gci": {
+            "fine": 0.2805575539228038,
+            "medium": 0.30149661655365284,
+            "coarse": 0.30271961770435474,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.097699192878266,
+            "extrapolated": 0.3027954813252977,
+            "extrapolated_uncertainty": 0.022237927402493918,
+            "gci_fine": 0.09907916883523275,
+            "gci_medium": 0.005385071922580459,
+            "asymptotic_ratio": 0.9305495933247968,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.5 fixed KT",
+            "band95": [
+              0.25276014466968644,
+              0.3083549631759212
+            ],
+            "usable": true
+          },
+          "observed_order": -4.097699192878266,
+          "order_deviation_from_theory_pct": 304.8849596439133,
+          "order_deviation_from_secondary_pct": 373.17994619188437,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 9.907916883523276,
+          "gci_band_in_anchor_pct": 9.585313535557724,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -3.256015888688341,
+            "d_discretisation_pct": -7.66825082844618,
+            "d_model_pct": 4.412234939757838,
+            "closure_residual_pct_points": 4.440892098500626e-16,
+            "f_fine": 0.2805575539228038,
+            "f_extrapolated": 0.3027954813252977,
+            "f_anchor": 0.29
+          },
+          "delta_vs_anchor_pct": -3.256015888688341,
+          "abs_delta_vs_anchor_pct": 3.256015888688341,
+          "last_increment_pct_of_anchor": 7.220366424430706,
+          "model_bounds_anchor_pct": [
+            -17.696748737549754,
+            11.184716960173072
+          ],
+          "model_term_outside_band": false
+        },
+        "10KQ": {
+          "levels": [
+            0.43315714314671616,
+            0.4424439422477882,
+            0.42919653194238716
+          ],
+          "anchor": 0.471,
+          "gci": {
+            "fine": 0.42919653194238716,
+            "medium": 0.4424439422477882,
+            "coarse": 0.43315714314671616,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.5124570284016237,
+            "extrapolated": 0.47350632928069414,
+            "extrapolated_uncertainty": 0.04430979733830698,
+            "gci_fine": 0.12904868178272838,
+            "gci_medium": 0.08775797357258658,
+            "asymptotic_ratio": 0.9700585564849209,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.5 fixed 10KQ",
+            "band95": [
+              0.37380928526950347,
+              0.48458377861527085
+            ],
+            "usable": true
+          },
+          "observed_order": -0.5124570284016237,
+          "order_deviation_from_theory_pct": 125.62285142008119,
+          "order_deviation_from_secondary_pct": 134.16380189344156,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 12.904868178272839,
+          "gci_band_in_anchor_pct": 11.759500355177016,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -8.875470925183189,
+            "d_discretisation_pct": -9.40760028414161,
+            "d_model_pct": 0.5321293589584213,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.42919653194238716,
+            "f_extrapolated": 0.47350632928069414,
+            "f_anchor": 0.471
+          },
+          "delta_vs_anchor_pct": -8.875470925183189,
+          "abs_delta_vs_anchor_pct": 8.875470925183189,
+          "last_increment_pct_of_anchor": 2.8126136529513914,
+          "model_bounds_anchor_pct": [
+            -14.500698231085972,
+            -3.250243619280406
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.5561413945356306,
+            0.5422684352532288,
+            0.5201826926059486
+          ],
+          "anchor": 0.4899674468858774,
+          "gci": {
+            "fine": 0.5201826926059486,
+            "medium": 0.5422684352532288,
+            "coarse": 0.5561413945356306,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.670839778661254,
+            "extrapolated": 0.579575471717579,
+            "extrapolated_uncertainty": 0.05939277911163032,
+            "gci_fine": 0.14272096120233146,
+            "gci_medium": 0.08599762137853491,
+            "asymptotic_ratio": 0.9592715688181879,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.5 fixed eta0",
+            "band95": [
+              0.4459417187164107,
+              0.5944236664954865
+            ],
+            "usable": true
+          },
+          "observed_order": -0.670839778661254,
+          "order_deviation_from_theory_pct": 133.5419889330627,
+          "order_deviation_from_secondary_pct": 144.72265191075027,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 14.272096120233147,
+          "gci_band_in_anchor_pct": 15.152225798141652,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": 6.166786367566359,
+            "d_discretisation_pct": -12.12178063851332,
+            "d_model_pct": 18.28856700607968,
+            "closure_residual_pct_points": 2.6645352591003757e-15,
+            "f_fine": 0.5201826926059486,
+            "f_extrapolated": 0.579575471717579,
+            "f_anchor": 0.4899674468858774
+          },
+          "delta_vs_anchor_pct": 6.166786367566359,
+          "abs_delta_vs_anchor_pct": 6.166786367566359,
+          "last_increment_pct_of_anchor": 4.507593879481614,
+          "model_bounds_anchor_pct": [
+            -2.8484013913968687,
+            15.181974126529585
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.5,
+      "core_policy": "similarity",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.29,
+        "10KQ": 0.471
+      },
+      "levels": [
+        {
+          "J": 0.5,
+          "core_policy": "similarity",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.1,
+          "KT": 0.30271961770435474,
+          "10KQ": 0.43315714314671616,
+          "eta0": 0.5561413945356306,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.001945125153041434,
+          "momentum_bound": 0.6620847275513931,
+          "physical": true
+        },
+        {
+          "J": 0.5,
+          "core_policy": "similarity",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.30149661655365284,
+          "10KQ": 0.4424439422477882,
+          "eta0": 0.5422684352532288,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0020962289797162195,
+          "momentum_bound": 0.6627615182727898,
+          "physical": true
+        },
+        {
+          "J": 0.5,
+          "core_policy": "similarity",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.025,
+          "KT": 0.2805575539228038,
+          "10KQ": 0.42919653194238716,
+          "eta0": 0.5201826926059486,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0022572442805441854,
+          "momentum_bound": 0.6747383463658211,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.30271961770435474,
+            0.30149661655365284,
+            0.2805575539228038
+          ],
+          "anchor": 0.29,
+          "gci": {
+            "fine": 0.2805575539228038,
+            "medium": 0.30149661655365284,
+            "coarse": 0.30271961770435474,
+            "refinement_ratio": 2.0,
+            "observed_order": -4.097699192878266,
+            "extrapolated": 0.3027954813252977,
+            "extrapolated_uncertainty": 0.022237927402493918,
+            "gci_fine": 0.09907916883523275,
+            "gci_medium": 0.005385071922580459,
+            "asymptotic_ratio": 0.9305495933247968,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.5 similarity KT",
+            "band95": [
+              0.25276014466968644,
+              0.3083549631759212
+            ],
+            "usable": true
+          },
+          "observed_order": -4.097699192878266,
+          "order_deviation_from_theory_pct": 304.8849596439133,
+          "order_deviation_from_secondary_pct": 373.17994619188437,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 9.907916883523276,
+          "gci_band_in_anchor_pct": 9.585313535557724,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -3.256015888688341,
+            "d_discretisation_pct": -7.66825082844618,
+            "d_model_pct": 4.412234939757838,
+            "closure_residual_pct_points": 4.440892098500626e-16,
+            "f_fine": 0.2805575539228038,
+            "f_extrapolated": 0.3027954813252977,
+            "f_anchor": 0.29
+          },
+          "delta_vs_anchor_pct": -3.256015888688341,
+          "abs_delta_vs_anchor_pct": 3.256015888688341,
+          "last_increment_pct_of_anchor": 7.220366424430706,
+          "model_bounds_anchor_pct": [
+            -17.696748737549754,
+            11.184716960173072
+          ],
+          "model_term_outside_band": false
+        },
+        "10KQ": {
+          "levels": [
+            0.43315714314671616,
+            0.4424439422477882,
+            0.42919653194238716
+          ],
+          "anchor": 0.471,
+          "gci": {
+            "fine": 0.42919653194238716,
+            "medium": 0.4424439422477882,
+            "coarse": 0.43315714314671616,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.5124570284016237,
+            "extrapolated": 0.47350632928069414,
+            "extrapolated_uncertainty": 0.04430979733830698,
+            "gci_fine": 0.12904868178272838,
+            "gci_medium": 0.08775797357258658,
+            "asymptotic_ratio": 0.9700585564849209,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.5 similarity 10KQ",
+            "band95": [
+              0.37380928526950347,
+              0.48458377861527085
+            ],
+            "usable": true
+          },
+          "observed_order": -0.5124570284016237,
+          "order_deviation_from_theory_pct": 125.62285142008119,
+          "order_deviation_from_secondary_pct": 134.16380189344156,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 12.904868178272839,
+          "gci_band_in_anchor_pct": 11.759500355177016,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -8.875470925183189,
+            "d_discretisation_pct": -9.40760028414161,
+            "d_model_pct": 0.5321293589584213,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.42919653194238716,
+            "f_extrapolated": 0.47350632928069414,
+            "f_anchor": 0.471
+          },
+          "delta_vs_anchor_pct": -8.875470925183189,
+          "abs_delta_vs_anchor_pct": 8.875470925183189,
+          "last_increment_pct_of_anchor": 2.8126136529513914,
+          "model_bounds_anchor_pct": [
+            -14.500698231085972,
+            -3.250243619280406
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.5561413945356306,
+            0.5422684352532288,
+            0.5201826926059486
+          ],
+          "anchor": 0.4899674468858774,
+          "gci": {
+            "fine": 0.5201826926059486,
+            "medium": 0.5422684352532288,
+            "coarse": 0.5561413945356306,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.670839778661254,
+            "extrapolated": 0.579575471717579,
+            "extrapolated_uncertainty": 0.05939277911163032,
+            "gci_fine": 0.14272096120233146,
+            "gci_medium": 0.08599762137853491,
+            "asymptotic_ratio": 0.9592715688181879,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.5 similarity eta0",
+            "band95": [
+              0.4459417187164107,
+              0.5944236664954865
+            ],
+            "usable": true
+          },
+          "observed_order": -0.670839778661254,
+          "order_deviation_from_theory_pct": 133.5419889330627,
+          "order_deviation_from_secondary_pct": 144.72265191075027,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 14.272096120233147,
+          "gci_band_in_anchor_pct": 15.152225798141652,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": 6.166786367566359,
+            "d_discretisation_pct": -12.12178063851332,
+            "d_model_pct": 18.28856700607968,
+            "closure_residual_pct_points": 2.6645352591003757e-15,
+            "f_fine": 0.5201826926059486,
+            "f_extrapolated": 0.579575471717579,
+            "f_anchor": 0.4899674468858774
+          },
+          "delta_vs_anchor_pct": 6.166786367566359,
+          "abs_delta_vs_anchor_pct": 6.166786367566359,
+          "last_increment_pct_of_anchor": 4.507593879481614,
+          "model_bounds_anchor_pct": [
+            -2.8484013913968687,
+            15.181974126529585
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.7,
+      "core_policy": "fixed",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.193,
+        "10KQ": 0.342
+      },
+      "levels": [
+        {
+          "J": 0.7,
+          "core_policy": "fixed",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.05,
+          "KT": 0.17094360525458455,
+          "10KQ": 0.2801063467773972,
+          "eta0": 0.679904759583568,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.0021106226229395454,
+          "momentum_bound": 0.842395403610817,
+          "physical": true
+        },
+        {
+          "J": 0.7,
+          "core_policy": "fixed",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.1701800788810841,
+          "10KQ": 0.284728727450945,
+          "eta0": 0.6658794393007537,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0022781883132143082,
+          "momentum_bound": 0.8429082513518444,
+          "physical": true
+        },
+        {
+          "J": 0.7,
+          "core_policy": "fixed",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.05,
+          "KT": 0.15824276404220283,
+          "10KQ": 0.27464608167094007,
+          "eta0": 0.6419018457074195,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0024447484985728966,
+          "momentum_bound": 0.8510811061058824,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.17094360525458455,
+            0.1701800788810841,
+            0.15824276404220283
+          ],
+          "anchor": 0.193,
+          "gci": {
+            "fine": 0.15824276404220283,
+            "medium": 0.1701800788810841,
+            "coarse": 0.17094360525458455,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.966656554256326,
+            "extrapolated": 0.1709957784745123,
+            "extrapolated_uncertainty": 0.012753014432309473,
+            "gci_fine": 0.1007393174460437,
+            "gci_medium": 0.005991444465704733,
+            "asymptotic_ratio": 0.929854804878645,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.7 fixed KT",
+            "band95": [
+              0.14230149600181596,
+              0.17418403208258967
+            ],
+            "usable": true
+          },
+          "observed_order": -3.966656554256326,
+          "order_deviation_from_theory_pct": 298.3328277128163,
+          "order_deviation_from_secondary_pct": 364.4437702837551,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 10.07393174460437,
+          "gci_band_in_anchor_pct": 8.25972437325744,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -18.008930548081437,
+            "d_discretisation_pct": -6.607779498605944,
+            "d_model_pct": -11.40115104947549,
+            "closure_residual_pct_points": 3.552713678800501e-15,
+            "f_fine": 0.15824276404220283,
+            "f_extrapolated": 0.1709957784745123,
+            "f_anchor": 0.193
+          },
+          "delta_vs_anchor_pct": -18.008930548081437,
+          "abs_delta_vs_anchor_pct": 18.008930548081437,
+          "last_increment_pct_of_anchor": 6.185137222218277,
+          "model_bounds_anchor_pct": [
+            -30.37920499251799,
+            -5.638656103644884
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.2801063467773972,
+            0.284728727450945,
+            0.27464608167094007
+          ],
+          "anchor": 0.342,
+          "gci": {
+            "fine": 0.27464608167094007,
+            "medium": 0.284728727450945,
+            "coarse": 0.2801063467773972,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.1251662829654907,
+            "extrapolated": 0.29326417876751365,
+            "extrapolated_uncertainty": 0.018618097096573583,
+            "gci_fine": 0.08473676824051848,
+            "gci_medium": 0.037471856953910455,
+            "asymptotic_ratio": 0.9645885897419952,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.7 fixed 10KQ",
+            "band95": [
+              0.2513734603002231,
+              0.297918703041657
+            ],
+            "usable": true
+          },
+          "observed_order": -1.1251662829654907,
+          "order_deviation_from_theory_pct": 156.25831414827454,
+          "order_deviation_from_secondary_pct": 175.0110855310327,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 8.473676824051848,
+          "gci_band_in_anchor_pct": 6.804860049917239,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -19.6941281663918,
+            "d_discretisation_pct": -5.443888039933795,
+            "d_model_pct": -14.250240126458005,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.27464608167094007,
+            "f_extrapolated": 0.29326417876751365,
+            "f_anchor": 0.342
+          },
+          "delta_vs_anchor_pct": -19.6941281663918,
+          "abs_delta_vs_anchor_pct": 19.6941281663918,
+          "last_increment_pct_of_anchor": 2.9481420409371197,
+          "model_bounds_anchor_pct": [
+            -25.590412248266038,
+            -13.79784408451756
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.679904759583568,
+            0.6658794393007537,
+            0.6419018457074195
+          ],
+          "anchor": 0.6287085617460544,
+          "gci": {
+            "fine": 0.6419018457074195,
+            "medium": 0.6658794393007537,
+            "coarse": 0.679904759583568,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.7736531595620338,
+            "extrapolated": 0.6996700536925627,
+            "extrapolated_uncertainty": 0.05776820798514326,
+            "gci_fine": 0.11249423952325362,
+            "gci_medium": 0.06343230545474736,
+            "asymptotic_ratio": 0.9639910888095401,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.7 fixed eta0",
+            "band95": [
+              0.5696915857259904,
+              0.7141121056888484
+            ],
+            "usable": true
+          },
+          "observed_order": -0.7736531595620338,
+          "order_deviation_from_theory_pct": 138.68265797810167,
+          "order_deviation_from_secondary_pct": 151.5768773041356,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 11.249423952325362,
+          "gci_band_in_anchor_pct": 11.485490157933611,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": 2.0984737228207306,
+            "d_discretisation_pct": -9.188392126346892,
+            "d_model_pct": 11.286865849167626,
+            "closure_residual_pct_points": 2.6645352591003757e-15,
+            "f_fine": 0.6419018457074195,
+            "f_extrapolated": 0.6996700536925627,
+            "f_anchor": 0.6287085617460544
+          },
+          "delta_vs_anchor_pct": 2.0984737228207306,
+          "abs_delta_vs_anchor_pct": 2.0984737228207306,
+          "last_increment_pct_of_anchor": 3.8137851227512183,
+          "model_bounds_anchor_pct": [
+            -5.529096522681706,
+            9.726043968323168
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.7,
+      "core_policy": "similarity",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.193,
+        "10KQ": 0.342
+      },
+      "levels": [
+        {
+          "J": 0.7,
+          "core_policy": "similarity",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.1,
+          "KT": 0.17094360525458455,
+          "10KQ": 0.2801063467773972,
+          "eta0": 0.679904759583568,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.0021106226229395454,
+          "momentum_bound": 0.842395403610817,
+          "physical": true
+        },
+        {
+          "J": 0.7,
+          "core_policy": "similarity",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.1701800788810841,
+          "10KQ": 0.284728727450945,
+          "eta0": 0.6658794393007537,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0022781883132143082,
+          "momentum_bound": 0.8429082513518444,
+          "physical": true
+        },
+        {
+          "J": 0.7,
+          "core_policy": "similarity",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.025,
+          "KT": 0.15824276404220283,
+          "10KQ": 0.27464608167094007,
+          "eta0": 0.6419018457074195,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0024447484985728966,
+          "momentum_bound": 0.8510811061058824,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.17094360525458455,
+            0.1701800788810841,
+            0.15824276404220283
+          ],
+          "anchor": 0.193,
+          "gci": {
+            "fine": 0.15824276404220283,
+            "medium": 0.1701800788810841,
+            "coarse": 0.17094360525458455,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.966656554256326,
+            "extrapolated": 0.1709957784745123,
+            "extrapolated_uncertainty": 0.012753014432309473,
+            "gci_fine": 0.1007393174460437,
+            "gci_medium": 0.005991444465704733,
+            "asymptotic_ratio": 0.929854804878645,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.7 similarity KT",
+            "band95": [
+              0.14230149600181596,
+              0.17418403208258967
+            ],
+            "usable": true
+          },
+          "observed_order": -3.966656554256326,
+          "order_deviation_from_theory_pct": 298.3328277128163,
+          "order_deviation_from_secondary_pct": 364.4437702837551,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 10.07393174460437,
+          "gci_band_in_anchor_pct": 8.25972437325744,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -18.008930548081437,
+            "d_discretisation_pct": -6.607779498605944,
+            "d_model_pct": -11.40115104947549,
+            "closure_residual_pct_points": 3.552713678800501e-15,
+            "f_fine": 0.15824276404220283,
+            "f_extrapolated": 0.1709957784745123,
+            "f_anchor": 0.193
+          },
+          "delta_vs_anchor_pct": -18.008930548081437,
+          "abs_delta_vs_anchor_pct": 18.008930548081437,
+          "last_increment_pct_of_anchor": 6.185137222218277,
+          "model_bounds_anchor_pct": [
+            -30.37920499251799,
+            -5.638656103644884
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.2801063467773972,
+            0.284728727450945,
+            0.27464608167094007
+          ],
+          "anchor": 0.342,
+          "gci": {
+            "fine": 0.27464608167094007,
+            "medium": 0.284728727450945,
+            "coarse": 0.2801063467773972,
+            "refinement_ratio": 2.0,
+            "observed_order": -1.1251662829654907,
+            "extrapolated": 0.29326417876751365,
+            "extrapolated_uncertainty": 0.018618097096573583,
+            "gci_fine": 0.08473676824051848,
+            "gci_medium": 0.037471856953910455,
+            "asymptotic_ratio": 0.9645885897419952,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.7 similarity 10KQ",
+            "band95": [
+              0.2513734603002231,
+              0.297918703041657
+            ],
+            "usable": true
+          },
+          "observed_order": -1.1251662829654907,
+          "order_deviation_from_theory_pct": 156.25831414827454,
+          "order_deviation_from_secondary_pct": 175.0110855310327,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 8.473676824051848,
+          "gci_band_in_anchor_pct": 6.804860049917239,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -19.6941281663918,
+            "d_discretisation_pct": -5.443888039933795,
+            "d_model_pct": -14.250240126458005,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.27464608167094007,
+            "f_extrapolated": 0.29326417876751365,
+            "f_anchor": 0.342
+          },
+          "delta_vs_anchor_pct": -19.6941281663918,
+          "abs_delta_vs_anchor_pct": 19.6941281663918,
+          "last_increment_pct_of_anchor": 2.9481420409371197,
+          "model_bounds_anchor_pct": [
+            -25.590412248266038,
+            -13.79784408451756
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.679904759583568,
+            0.6658794393007537,
+            0.6419018457074195
+          ],
+          "anchor": 0.6287085617460544,
+          "gci": {
+            "fine": 0.6419018457074195,
+            "medium": 0.6658794393007537,
+            "coarse": 0.679904759583568,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.7736531595620338,
+            "extrapolated": 0.6996700536925627,
+            "extrapolated_uncertainty": 0.05776820798514326,
+            "gci_fine": 0.11249423952325362,
+            "gci_medium": 0.06343230545474736,
+            "asymptotic_ratio": 0.9639910888095401,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.7 similarity eta0",
+            "band95": [
+              0.5696915857259904,
+              0.7141121056888484
+            ],
+            "usable": true
+          },
+          "observed_order": -0.7736531595620338,
+          "order_deviation_from_theory_pct": 138.68265797810167,
+          "order_deviation_from_secondary_pct": 151.5768773041356,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 11.249423952325362,
+          "gci_band_in_anchor_pct": 11.485490157933611,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": 2.0984737228207306,
+            "d_discretisation_pct": -9.188392126346892,
+            "d_model_pct": 11.286865849167626,
+            "closure_residual_pct_points": 2.6645352591003757e-15,
+            "f_fine": 0.6419018457074195,
+            "f_extrapolated": 0.6996700536925627,
+            "f_anchor": 0.6287085617460544
+          },
+          "delta_vs_anchor_pct": 2.0984737228207306,
+          "abs_delta_vs_anchor_pct": 2.0984737228207306,
+          "last_increment_pct_of_anchor": 3.8137851227512183,
+          "model_bounds_anchor_pct": [
+            -5.529096522681706,
+            9.726043968323168
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.9,
+      "core_policy": "fixed",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.087,
+        "10KQ": 0.192
+      },
+      "levels": [
+        {
+          "J": 0.9,
+          "core_policy": "fixed",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.05,
+          "KT": 0.03126379584757362,
+          "10KQ": 0.0905034808443424,
+          "eta0": 0.49481067935537154,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.0022887415697804194,
+          "momentum_bound": 0.9765663303251418,
+          "physical": true
+        },
+        {
+          "J": 0.9,
+          "core_policy": "fixed",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.03080771603307558,
+          "10KQ": 0.09349389902397265,
+          "eta0": 0.4719966017996932,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0024758266041464963,
+          "momentum_bound": 0.9768927440756657,
+          "physical": true
+        },
+        {
+          "J": 0.9,
+          "core_policy": "fixed",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.05,
+          "KT": 0.02808876481939206,
+          "10KQ": 0.09305539295173892,
+          "eta0": 0.43236819082623545,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.002655933005104966,
+          "momentum_bound": 0.978847681419469,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.03126379584757362,
+            0.03080771603307558,
+            0.02808876481939206
+          ],
+          "anchor": 0.087,
+          "gci": {
+            "fine": 0.02808876481939206,
+            "medium": 0.03080771603307558,
+            "coarse": 0.03126379584757362,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.5756920403179504,
+            "extrapolated": 0.031355718348015954,
+            "extrapolated_uncertainty": 0.003266953528623894,
+            "gci_fine": 0.14538524342517703,
+            "gci_medium": 0.022234783420492326,
+            "asymptotic_ratio": 0.9117444730156431,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.9 fixed KT",
+            "band95": [
+              0.024005072908612198,
+              0.032172456730171925
+            ],
+            "usable": true
+          },
+          "observed_order": -2.5756920403179504,
+          "order_deviation_from_theory_pct": 228.7846020158975,
+          "order_deviation_from_secondary_pct": 271.71280268786336,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 14.538524342517704,
+          "gci_band_in_anchor_pct": 4.693898748022832,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -67.71406342598614,
+            "d_discretisation_pct": -3.75511899841827,
+            "d_model_pct": -63.958944427567864,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.02808876481939206,
+            "f_extrapolated": 0.031355718348015954,
+            "f_anchor": 0.087
+          },
+          "delta_vs_anchor_pct": -67.71406342598614,
+          "abs_delta_vs_anchor_pct": 67.71406342598614,
+          "last_increment_pct_of_anchor": 3.125231280095999,
+          "model_bounds_anchor_pct": [
+            -73.96452598617813,
+            -61.46360086579414
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.0905034808443424,
+            0.09349389902397265,
+            0.09305539295173892
+          ],
+          "anchor": 0.192,
+          "gci": {
+            "fine": 0.09305539295173892,
+            "medium": 0.09349389902397265,
+            "coarse": 0.0905034808443424,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.7696785190798963,
+            "extrapolated": 0.09298004256062298,
+            "extrapolated_uncertainty": 7.535039111594699e-05,
+            "gci_fine": 0.0010121712015528418,
+            "gci_medium": 0.0068701871019668575,
+            "asymptotic_ratio": 0.9953097894428247,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.9 fixed 10KQ",
+            "band95": [
+              0.09296120496284399,
+              0.09314958094063387
+            ],
+            "usable": true
+          },
+          "observed_order": 2.7696785190798963,
+          "order_deviation_from_theory_pct": 38.48392595399481,
+          "order_deviation_from_secondary_pct": 84.64523460532641,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 0.10121712015528418,
+          "gci_band_in_anchor_pct": 0.04905624421611117,
+          "gci_within_3pct": true,
+          "gci_within_1pct": true,
+          "decomposition": {
+            "d_total_pct": -51.533649504302645,
+            "d_discretisation_pct": 0.03924499537288906,
+            "d_model_pct": -51.57289449967553,
+            "closure_residual_pct_points": 7.105427357601002e-15,
+            "f_fine": 0.09305539295173892,
+            "f_extrapolated": 0.09298004256062298,
+            "f_anchor": 0.192
+          },
+          "delta_vs_anchor_pct": -51.533649504302645,
+          "abs_delta_vs_anchor_pct": 51.533649504302645,
+          "last_increment_pct_of_anchor": 0.228388579288398,
+          "model_bounds_anchor_pct": [
+            -51.99042666287944,
+            -51.076872345725846
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.49481067935537154,
+            0.4719966017996932,
+            0.43236819082623545
+          ],
+          "anchor": 0.6490537522966356,
+          "gci": {
+            "fine": 0.43236819082623545,
+            "medium": 0.4719966017996932,
+            "coarse": 0.49481067935537154,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.796610796740633,
+            "extrapolated": 0.5257653489092742,
+            "extrapolated_uncertainty": 0.09339715808303872,
+            "gci_fine": 0.27001627335420175,
+            "gci_medium": 0.14239707156938253,
+            "asymptotic_ratio": 0.9160408977048624,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.9 fixed eta0",
+            "band95": [
+              0.31562174322243697,
+              0.5491146384300339
+            ],
+            "usable": true
+          },
+          "observed_order": -0.796610796740633,
+          "order_deviation_from_theory_pct": 139.83053983703164,
+          "order_deviation_from_secondary_pct": 153.10738644937553,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 27.001627335420174,
+          "gci_band_in_anchor_pct": 17.98717705439627,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -33.38484073216926,
+            "d_discretisation_pct": -14.38974164351701,
+            "d_model_pct": -18.99509908865225,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.43236819082623545,
+            "f_extrapolated": 0.5257653489092742,
+            "f_anchor": 0.6490537522966356
+          },
+          "delta_vs_anchor_pct": -33.38484073216926,
+          "abs_delta_vs_anchor_pct": 33.38484073216926,
+          "last_increment_pct_of_anchor": 6.105566886137725,
+          "model_bounds_anchor_pct": [
+            -45.59597450444471,
+            -21.17370695989381
+          ],
+          "model_term_outside_band": true
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.9,
+      "core_policy": "similarity",
+      "advance_role": "mission",
+      "anchor": {
+        "KT": 0.087,
+        "10KQ": 0.192
+      },
+      "levels": [
+        {
+          "J": 0.9,
+          "core_policy": "similarity",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.1,
+          "KT": 0.03126379584757362,
+          "10KQ": 0.0905034808443424,
+          "eta0": 0.49481067935537154,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.0022887415697804194,
+          "momentum_bound": 0.9765663303251418,
+          "physical": true
+        },
+        {
+          "J": 0.9,
+          "core_policy": "similarity",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.03080771603307558,
+          "10KQ": 0.09349389902397265,
+          "eta0": 0.4719966017996932,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0024758266041464963,
+          "momentum_bound": 0.9768927440756657,
+          "physical": true
+        },
+        {
+          "J": 0.9,
+          "core_policy": "similarity",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.025,
+          "KT": 0.02808876481939206,
+          "10KQ": 0.09305539295173892,
+          "eta0": 0.43236819082623545,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.002655933005104966,
+          "momentum_bound": 0.978847681419469,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.03126379584757362,
+            0.03080771603307558,
+            0.02808876481939206
+          ],
+          "anchor": 0.087,
+          "gci": {
+            "fine": 0.02808876481939206,
+            "medium": 0.03080771603307558,
+            "coarse": 0.03126379584757362,
+            "refinement_ratio": 2.0,
+            "observed_order": -2.5756920403179504,
+            "extrapolated": 0.031355718348015954,
+            "extrapolated_uncertainty": 0.003266953528623894,
+            "gci_fine": 0.14538524342517703,
+            "gci_medium": 0.022234783420492326,
+            "asymptotic_ratio": 0.9117444730156431,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.9 similarity KT",
+            "band95": [
+              0.024005072908612198,
+              0.032172456730171925
+            ],
+            "usable": true
+          },
+          "observed_order": -2.5756920403179504,
+          "order_deviation_from_theory_pct": 228.7846020158975,
+          "order_deviation_from_secondary_pct": 271.71280268786336,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 14.538524342517704,
+          "gci_band_in_anchor_pct": 4.693898748022832,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -67.71406342598614,
+            "d_discretisation_pct": -3.75511899841827,
+            "d_model_pct": -63.958944427567864,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.02808876481939206,
+            "f_extrapolated": 0.031355718348015954,
+            "f_anchor": 0.087
+          },
+          "delta_vs_anchor_pct": -67.71406342598614,
+          "abs_delta_vs_anchor_pct": 67.71406342598614,
+          "last_increment_pct_of_anchor": 3.125231280095999,
+          "model_bounds_anchor_pct": [
+            -73.96452598617813,
+            -61.46360086579414
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.0905034808443424,
+            0.09349389902397265,
+            0.09305539295173892
+          ],
+          "anchor": 0.192,
+          "gci": {
+            "fine": 0.09305539295173892,
+            "medium": 0.09349389902397265,
+            "coarse": 0.0905034808443424,
+            "refinement_ratio": 2.0,
+            "observed_order": 2.7696785190798963,
+            "extrapolated": 0.09298004256062298,
+            "extrapolated_uncertainty": 7.535039111594699e-05,
+            "gci_fine": 0.0010121712015528418,
+            "gci_medium": 0.0068701871019668575,
+            "asymptotic_ratio": 0.9953097894428247,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.9 similarity 10KQ",
+            "band95": [
+              0.09296120496284399,
+              0.09314958094063387
+            ],
+            "usable": true
+          },
+          "observed_order": 2.7696785190798963,
+          "order_deviation_from_theory_pct": 38.48392595399481,
+          "order_deviation_from_secondary_pct": 84.64523460532641,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 0.10121712015528418,
+          "gci_band_in_anchor_pct": 0.04905624421611117,
+          "gci_within_3pct": true,
+          "gci_within_1pct": true,
+          "decomposition": {
+            "d_total_pct": -51.533649504302645,
+            "d_discretisation_pct": 0.03924499537288906,
+            "d_model_pct": -51.57289449967553,
+            "closure_residual_pct_points": 7.105427357601002e-15,
+            "f_fine": 0.09305539295173892,
+            "f_extrapolated": 0.09298004256062298,
+            "f_anchor": 0.192
+          },
+          "delta_vs_anchor_pct": -51.533649504302645,
+          "abs_delta_vs_anchor_pct": 51.533649504302645,
+          "last_increment_pct_of_anchor": 0.228388579288398,
+          "model_bounds_anchor_pct": [
+            -51.99042666287944,
+            -51.076872345725846
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.49481067935537154,
+            0.4719966017996932,
+            0.43236819082623545
+          ],
+          "anchor": 0.6490537522966356,
+          "gci": {
+            "fine": 0.43236819082623545,
+            "medium": 0.4719966017996932,
+            "coarse": 0.49481067935537154,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.796610796740633,
+            "extrapolated": 0.5257653489092742,
+            "extrapolated_uncertainty": 0.09339715808303872,
+            "gci_fine": 0.27001627335420175,
+            "gci_medium": 0.14239707156938253,
+            "asymptotic_ratio": 0.9160408977048624,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.9 similarity eta0",
+            "band95": [
+              0.31562174322243697,
+              0.5491146384300339
+            ],
+            "usable": true
+          },
+          "observed_order": -0.796610796740633,
+          "order_deviation_from_theory_pct": 139.83053983703164,
+          "order_deviation_from_secondary_pct": 153.10738644937553,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 27.001627335420174,
+          "gci_band_in_anchor_pct": 17.98717705439627,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -33.38484073216926,
+            "d_discretisation_pct": -14.38974164351701,
+            "d_model_pct": -18.99509908865225,
+            "closure_residual_pct_points": 0.0,
+            "f_fine": 0.43236819082623545,
+            "f_extrapolated": 0.5257653489092742,
+            "f_anchor": 0.6490537522966356
+          },
+          "delta_vs_anchor_pct": -33.38484073216926,
+          "abs_delta_vs_anchor_pct": 33.38484073216926,
+          "last_increment_pct_of_anchor": 6.105566886137725,
+          "model_bounds_anchor_pct": [
+            -45.59597450444471,
+            -21.17370695989381
+          ],
+          "model_term_outside_band": true
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.8,
+      "core_policy": "fixed",
+      "advance_role": "history-tie",
+      "anchor": {
+        "KT": 0.141,
+        "10KQ": 0.27
+      },
+      "levels": [
+        {
+          "J": 0.8,
+          "core_policy": "fixed",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.05,
+          "KT": 0.10209165794794361,
+          "10KQ": 0.18987402763039354,
+          "eta0": 0.6845967176718295,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.002198116617204329,
+          "momentum_bound": 0.9149812369076904,
+          "physical": true
+        },
+        {
+          "J": 0.8,
+          "core_policy": "fixed",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.10150084021959449,
+          "10KQ": 0.19330135123752568,
+          "eta0": 0.6685668918714965,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0023750616757988877,
+          "momentum_bound": 0.915396507966819,
+          "physical": true
+        },
+        {
+          "J": 0.8,
+          "core_policy": "fixed",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.05,
+          "KT": 0.09414543302257192,
+          "10KQ": 0.18723025161176682,
+          "eta0": 0.64022607056637,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0025473951654739818,
+          "momentum_bound": 0.9206279311942368,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.10209165794794361,
+            0.10150084021959449,
+            0.09414543302257192
+          ],
+          "anchor": 0.141,
+          "gci": {
+            "fine": 0.09414543302257192,
+            "medium": 0.10150084021959449,
+            "coarse": 0.10209165794794361,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.638020189580623,
+            "extrapolated": 0.10214325983594408,
+            "extrapolated_uncertainty": 0.00799782681337216,
+            "gci_fine": 0.10618978739328011,
+            "gci_medium": 0.007911506138271025,
+            "asymptotic_ratio": 0.9275335338987408,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.8 fixed KT",
+            "band95": [
+              0.08414814950585671,
+              0.10414271653928711
+            ],
+            "usable": true
+          },
+          "observed_order": -3.638020189580623,
+          "order_deviation_from_theory_pct": 281.90100947903113,
+          "order_deviation_from_secondary_pct": 342.5346793053748,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 10.61897873932801,
+          "gci_band_in_anchor_pct": 7.090271997670358,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -33.23018934569367,
+            "d_discretisation_pct": -5.672217598136285,
+            "d_model_pct": -27.557971747557385,
+            "closure_residual_pct_points": 7.105427357601002e-15,
+            "f_fine": 0.09414543302257192,
+            "f_extrapolated": 0.10214325983594408,
+            "f_anchor": 0.141
+          },
+          "delta_vs_anchor_pct": -33.23018934569367,
+          "abs_delta_vs_anchor_pct": 33.23018934569367,
+          "last_increment_pct_of_anchor": 5.21660084895218,
+          "model_bounds_anchor_pct": [
+            -43.663391043598025,
+            -22.796987647789308
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.18987402763039354,
+            0.19330135123752568,
+            0.18723025161176682
+          ],
+          "anchor": 0.27,
+          "gci": {
+            "fine": 0.18723025161176682,
+            "medium": 0.19330135123752568,
+            "coarse": 0.18987402763039354,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8248754305412108,
+            "extrapolated": 0.20117176950367768,
+            "extrapolated_uncertainty": 0.013941517891910865,
+            "gci_fine": 0.09307735910660574,
+            "gci_medium": 0.050894744241084935,
+            "asymptotic_ratio": 0.968592564992995,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.8 fixed 10KQ",
+            "band95": [
+              0.16980335424687826,
+              0.20465714897665538
+            ],
+            "usable": true
+          },
+          "observed_order": -0.8248754305412108,
+          "order_deviation_from_theory_pct": 141.24377152706055,
+          "order_deviation_from_secondary_pct": 154.99169536941403,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 9.307735910660574,
+          "gci_band_in_anchor_pct": 6.454406431440209,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -30.65546236601229,
+            "d_discretisation_pct": -5.163525145152172,
+            "d_model_pct": -25.491937220860123,
+            "closure_residual_pct_points": 3.552713678800501e-15,
+            "f_fine": 0.18723025161176682,
+            "f_extrapolated": 0.20117176950367768,
+            "f_anchor": 0.27
+          },
+          "delta_vs_anchor_pct": -30.65546236601229,
+          "abs_delta_vs_anchor_pct": 30.65546236601229,
+          "last_increment_pct_of_anchor": 2.248555416947725,
+          "model_bounds_anchor_pct": [
+            -35.15257319990774,
+            -26.15835153211684
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.6845967176718295,
+            0.6685668918714965,
+            0.64022607056637
+          ],
+          "anchor": 0.6649139844728071,
+          "gci": {
+            "fine": 0.64022607056637,
+            "medium": 0.6685668918714965,
+            "coarse": 0.6845967176718295,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8221228200684003,
+            "extrapolated": 0.7054687352994023,
+            "extrapolated_uncertainty": 0.06524266473303231,
+            "gci_fine": 0.12738208371324986,
+            "gci_medium": 0.06899429936735221,
+            "asymptotic_ratio": 0.9576095950162996,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.8 fixed eta0",
+            "band95": [
+              0.5586727396500797,
+              0.7217794014826604
+            ],
+            "usable": true
+          },
+          "observed_order": -0.8221228200684003,
+          "order_deviation_from_theory_pct": 141.10614100342,
+          "order_deviation_from_secondary_pct": 154.80818800456,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 12.738208371324985,
+          "gci_band_in_anchor_pct": 12.26524525288062,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -3.7129485140866,
+            "d_discretisation_pct": -9.812196202304499,
+            "d_model_pct": 6.0992476882179,
+            "closure_residual_pct_points": 8.881784197001252e-16,
+            "f_fine": 0.64022607056637,
+            "f_extrapolated": 0.7054687352994023,
+            "f_anchor": 0.6649139844728071
+          },
+          "delta_vs_anchor_pct": -3.7129485140866,
+          "abs_delta_vs_anchor_pct": 3.7129485140866,
+          "last_increment_pct_of_anchor": 4.262328957872226,
+          "model_bounds_anchor_pct": [
+            -12.237606429831052,
+            4.811709401657852
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    },
+    {
+      "J": 0.8,
+      "core_policy": "similarity",
+      "advance_role": "history-tie",
+      "anchor": {
+        "KT": 0.141,
+        "10KQ": 0.27
+      },
+      "levels": [
+        {
+          "J": 0.8,
+          "core_policy": "similarity",
+          "level": 1,
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "core_ratio": 0.1,
+          "KT": 0.10209165794794361,
+          "10KQ": 0.18987402763039354,
+          "eta0": 0.6845967176718295,
+          "n_panels_per_blade": 16,
+          "n_panels_reported": 16,
+          "viscous_drag_nd": 0.002198116617204329,
+          "momentum_bound": 0.9149812369076904,
+          "physical": true
+        },
+        {
+          "J": 0.8,
+          "core_policy": "similarity",
+          "level": 2,
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "core_ratio": 0.05,
+          "KT": 0.10150084021959449,
+          "10KQ": 0.19330135123752568,
+          "eta0": 0.6685668918714965,
+          "n_panels_per_blade": 64,
+          "n_panels_reported": 64,
+          "viscous_drag_nd": 0.0023750616757988877,
+          "momentum_bound": 0.915396507966819,
+          "physical": true
+        },
+        {
+          "J": 0.8,
+          "core_policy": "similarity",
+          "level": 3,
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "core_ratio": 0.025,
+          "KT": 0.09414543302257192,
+          "10KQ": 0.18723025161176682,
+          "eta0": 0.64022607056637,
+          "n_panels_per_blade": 256,
+          "n_panels_reported": 256,
+          "viscous_drag_nd": 0.0025473951654739818,
+          "momentum_bound": 0.9206279311942368,
+          "physical": true
+        }
+      ],
+      "quantities": {
+        "KT": {
+          "levels": [
+            0.10209165794794361,
+            0.10150084021959449,
+            0.09414543302257192
+          ],
+          "anchor": 0.141,
+          "gci": {
+            "fine": 0.09414543302257192,
+            "medium": 0.10150084021959449,
+            "coarse": 0.10209165794794361,
+            "refinement_ratio": 2.0,
+            "observed_order": -3.638020189580623,
+            "extrapolated": 0.10214325983594408,
+            "extrapolated_uncertainty": 0.00799782681337216,
+            "gci_fine": 0.10618978739328011,
+            "gci_medium": 0.007911506138271025,
+            "asymptotic_ratio": 0.9275335338987408,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "KT",
+            "label": "J=0.8 similarity KT",
+            "band95": [
+              0.08414814950585671,
+              0.10414271653928711
+            ],
+            "usable": true
+          },
+          "observed_order": -3.638020189580623,
+          "order_deviation_from_theory_pct": 281.90100947903113,
+          "order_deviation_from_secondary_pct": 342.5346793053748,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 10.61897873932801,
+          "gci_band_in_anchor_pct": 7.090271997670358,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -33.23018934569367,
+            "d_discretisation_pct": -5.672217598136285,
+            "d_model_pct": -27.557971747557385,
+            "closure_residual_pct_points": 7.105427357601002e-15,
+            "f_fine": 0.09414543302257192,
+            "f_extrapolated": 0.10214325983594408,
+            "f_anchor": 0.141
+          },
+          "delta_vs_anchor_pct": -33.23018934569367,
+          "abs_delta_vs_anchor_pct": 33.23018934569367,
+          "last_increment_pct_of_anchor": 5.21660084895218,
+          "model_bounds_anchor_pct": [
+            -43.663391043598025,
+            -22.796987647789308
+          ],
+          "model_term_outside_band": true
+        },
+        "10KQ": {
+          "levels": [
+            0.18987402763039354,
+            0.19330135123752568,
+            0.18723025161176682
+          ],
+          "anchor": 0.27,
+          "gci": {
+            "fine": 0.18723025161176682,
+            "medium": 0.19330135123752568,
+            "coarse": 0.18987402763039354,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8248754305412108,
+            "extrapolated": 0.20117176950367768,
+            "extrapolated_uncertainty": 0.013941517891910865,
+            "gci_fine": 0.09307735910660574,
+            "gci_medium": 0.050894744241084935,
+            "asymptotic_ratio": 0.968592564992995,
+            "oscillatory": true,
+            "monotone": false,
+            "converged": false,
+            "safety_factor": 1.25,
+            "quantity": "10KQ",
+            "label": "J=0.8 similarity 10KQ",
+            "band95": [
+              0.16980335424687826,
+              0.20465714897665538
+            ],
+            "usable": true
+          },
+          "observed_order": -0.8248754305412108,
+          "order_deviation_from_theory_pct": 141.24377152706055,
+          "order_deviation_from_secondary_pct": 154.99169536941403,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 9.307735910660574,
+          "gci_band_in_anchor_pct": 6.454406431440209,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -30.65546236601229,
+            "d_discretisation_pct": -5.163525145152172,
+            "d_model_pct": -25.491937220860123,
+            "closure_residual_pct_points": 3.552713678800501e-15,
+            "f_fine": 0.18723025161176682,
+            "f_extrapolated": 0.20117176950367768,
+            "f_anchor": 0.27
+          },
+          "delta_vs_anchor_pct": -30.65546236601229,
+          "abs_delta_vs_anchor_pct": 30.65546236601229,
+          "last_increment_pct_of_anchor": 2.248555416947725,
+          "model_bounds_anchor_pct": [
+            -35.15257319990774,
+            -26.15835153211684
+          ],
+          "model_term_outside_band": true
+        },
+        "eta0": {
+          "levels": [
+            0.6845967176718295,
+            0.6685668918714965,
+            0.64022607056637
+          ],
+          "anchor": 0.6649139844728071,
+          "gci": {
+            "fine": 0.64022607056637,
+            "medium": 0.6685668918714965,
+            "coarse": 0.6845967176718295,
+            "refinement_ratio": 2.0,
+            "observed_order": -0.8221228200684003,
+            "extrapolated": 0.7054687352994023,
+            "extrapolated_uncertainty": 0.06524266473303231,
+            "gci_fine": 0.12738208371324986,
+            "gci_medium": 0.06899429936735221,
+            "asymptotic_ratio": 0.9576095950162996,
+            "oscillatory": false,
+            "monotone": true,
+            "converged": true,
+            "safety_factor": 1.25,
+            "quantity": "eta0",
+            "label": "J=0.8 similarity eta0",
+            "band95": [
+              0.5586727396500797,
+              0.7217794014826604
+            ],
+            "usable": true
+          },
+          "observed_order": -0.8221228200684003,
+          "order_deviation_from_theory_pct": 141.10614100342,
+          "order_deviation_from_secondary_pct": 154.80818800456,
+          "order_within_tolerance": false,
+          "gci_fine_pct": 12.738208371324985,
+          "gci_band_in_anchor_pct": 12.26524525288062,
+          "gci_within_3pct": false,
+          "gci_within_1pct": false,
+          "decomposition": {
+            "d_total_pct": -3.7129485140866,
+            "d_discretisation_pct": -9.812196202304499,
+            "d_model_pct": 6.0992476882179,
+            "closure_residual_pct_points": 8.881784197001252e-16,
+            "f_fine": 0.64022607056637,
+            "f_extrapolated": 0.7054687352994023,
+            "f_anchor": 0.6649139844728071
+          },
+          "delta_vs_anchor_pct": -3.7129485140866,
+          "abs_delta_vs_anchor_pct": 3.7129485140866,
+          "last_increment_pct_of_anchor": 4.262328957872226,
+          "model_bounds_anchor_pct": [
+            -12.237606429831052,
+            4.811709401657852
+          ],
+          "model_term_outside_band": false
+        }
+      },
+      "physical_all_levels": true
+    }
+  ],
+  "decomposition": {
+    "KT@J=0.5": {
+      "d_total_pct": -3.256015888688341,
+      "d_discretisation_pct": -7.66825082844618,
+      "d_model_pct": 4.412234939757838,
+      "closure_residual_pct_points": 4.440892098500626e-16,
+      "f_fine": 0.2805575539228038,
+      "f_extrapolated": 0.3027954813252977,
+      "f_anchor": 0.29
+    },
+    "10KQ@J=0.5": {
+      "d_total_pct": -8.875470925183189,
+      "d_discretisation_pct": -9.40760028414161,
+      "d_model_pct": 0.5321293589584213,
+      "closure_residual_pct_points": 0.0,
+      "f_fine": 0.42919653194238716,
+      "f_extrapolated": 0.47350632928069414,
+      "f_anchor": 0.471
+    },
+    "KT@J=0.7": {
+      "d_total_pct": -18.008930548081437,
+      "d_discretisation_pct": -6.607779498605944,
+      "d_model_pct": -11.40115104947549,
+      "closure_residual_pct_points": 3.552713678800501e-15,
+      "f_fine": 0.15824276404220283,
+      "f_extrapolated": 0.1709957784745123,
+      "f_anchor": 0.193
+    },
+    "10KQ@J=0.7": {
+      "d_total_pct": -19.6941281663918,
+      "d_discretisation_pct": -5.443888039933795,
+      "d_model_pct": -14.250240126458005,
+      "closure_residual_pct_points": 0.0,
+      "f_fine": 0.27464608167094007,
+      "f_extrapolated": 0.29326417876751365,
+      "f_anchor": 0.342
+    },
+    "KT@J=0.9": {
+      "d_total_pct": -67.71406342598614,
+      "d_discretisation_pct": -3.75511899841827,
+      "d_model_pct": -63.958944427567864,
+      "closure_residual_pct_points": 0.0,
+      "f_fine": 0.02808876481939206,
+      "f_extrapolated": 0.031355718348015954,
+      "f_anchor": 0.087
+    },
+    "10KQ@J=0.9": {
+      "d_total_pct": -51.533649504302645,
+      "d_discretisation_pct": 0.03924499537288906,
+      "d_model_pct": -51.57289449967553,
+      "closure_residual_pct_points": 7.105427357601002e-15,
+      "f_fine": 0.09305539295173892,
+      "f_extrapolated": 0.09298004256062298,
+      "f_anchor": 0.192
+    },
+    "KT@J=0.8": {
+      "d_total_pct": -33.23018934569367,
+      "d_discretisation_pct": -5.672217598136285,
+      "d_model_pct": -27.557971747557385,
+      "closure_residual_pct_points": 7.105427357601002e-15,
+      "f_fine": 0.09414543302257192,
+      "f_extrapolated": 0.10214325983594408,
+      "f_anchor": 0.141
+    },
+    "10KQ@J=0.8": {
+      "d_total_pct": -30.65546236601229,
+      "d_discretisation_pct": -5.163525145152172,
+      "d_model_pct": -25.491937220860123,
+      "closure_residual_pct_points": 3.552713678800501e-15,
+      "f_fine": 0.18723025161176682,
+      "f_extrapolated": 0.20117176950367768,
+      "f_anchor": 0.27
+    }
+  },
+  "history_tie": {
+    "J": 0.8,
+    "configuration": {
+      "n_radial": 16,
+      "n_chord": 2,
+      "wake_steps": 24,
+      "core_ratio": 0.05
+    },
+    "KT": 0.0999328035758505,
+    "10KQ": 0.18764668632178882,
+    "anchor_KT": 0.141,
+    "anchor_10KQ": 0.27,
+    "dKT_pct": -29.125671222801053,
+    "dKQ_pct": -30.501227288226367,
+    "stated_report_8822_dKT_pct": -29.13,
+    "reproduction_residual_pct_points": 0.004328777198946199,
+    "reproduced_within_0p1_pct_point": true
+  },
+  "core_inertness_probe": {
+    "J": 0.7,
+    "purpose": "test whether the predeclared core policies (0.025/0.05/0.10) can change K_T at the densities of this study",
+    "sweeps": {
+      "L1-coarse": {
+        "n_radial": 8,
+        "n_chord": 2,
+        "wake_steps": 24,
+        "rows": [
+          {
+            "J": 0.7,
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_steps": 24,
+            "core_ratio": 0.025,
+            "KT": 0.17094360525458455,
+            "10KQ": 0.2801063467773972
+          },
+          {
+            "J": 0.7,
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_steps": 24,
+            "core_ratio": 0.05,
+            "KT": 0.17094360525458455,
+            "10KQ": 0.2801063467773972
+          },
+          {
+            "J": 0.7,
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_steps": 24,
+            "core_ratio": 0.1,
+            "KT": 0.17094360525458455,
+            "10KQ": 0.2801063467773972
+          },
+          {
+            "J": 0.7,
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_steps": 24,
+            "core_ratio": 0.4,
+            "KT": 0.20251842330250514,
+            "10KQ": 0.31951856269932516
+          },
+          {
+            "J": 0.7,
+            "n_radial": 8,
+            "n_chord": 2,
+            "wake_steps": 24,
+            "core_ratio": 0.8,
+            "KT": 0.24695185608006676,
+            "10KQ": 0.3745207695044605
+          }
+        ],
+        "KT_values": [
+          0.17094360525458455,
+          0.17094360525458455,
+          0.17094360525458455,
+          0.20251842330250514,
+          0.24695185608006676
+        ],
+        "bit_identical_over_policy_range": true,
+        "max_rel_change_pct": 44.463933419611635,
+        "first_ratio_that_moves_KT": 0.4
+      },
+      "L3-fine": {
+        "n_radial": 32,
+        "n_chord": 8,
+        "wake_steps": 96,
+        "rows": [
+          {
+            "J": 0.7,
+            "n_radial": 32,
+            "n_chord": 8,
+            "wake_steps": 96,
+            "core_ratio": 0.025,
+            "KT": 0.15824276404220283,
+            "10KQ": 0.27464608167094007
+          },
+          {
+            "J": 0.7,
+            "n_radial": 32,
+            "n_chord": 8,
+            "wake_steps": 96,
+            "core_ratio": 0.05,
+            "KT": 0.15824276404220283,
+            "10KQ": 0.27464608167094007
+          },
+          {
+            "J": 0.7,
+            "n_radial": 32,
+            "n_chord": 8,
+            "wake_steps": 96,
+            "core_ratio": 0.1,
+            "KT": 0.15824276404220283,
+            "10KQ": 0.27464608167094007
+          },
+          {
+            "J": 0.7,
+            "n_radial": 32,
+            "n_chord": 8,
+            "wake_steps": 96,
+            "core_ratio": 0.4,
+            "KT": 0.16003855655181654,
+            "10KQ": 0.26944402446974847
+          }
+        ],
+        "KT_values": [
+          0.15824276404220283,
+          0.15824276404220283,
+          0.15824276404220283,
+          0.16003855655181654
+        ],
+        "bit_identical_over_policy_range": true,
+        "max_rel_change_pct": 1.1348338867076226,
+        "first_ratio_that_moves_KT": 0.4
+      }
+    },
+    "policy_range_is_inert": true,
+    "mechanism": "src/tensorbem/propeller.py solve_lifting_surface clamps the segment core to max(core_ratio*|segment|, 0.5*strip_width); at these panel densities the 0.5*strip_width floor dominates for core_ratio <= 0.10, so the desingularisation radius does not follow core_ratio there"
+  },
+  "criteria": [
+    {
+      "id": "W1-coverage",
+      "statement": "three mission advance ratios x three panel densities x K_T/10K_Q, all finite",
+      "threshold": "9 level values per quantity, all finite",
+      "measured": {
+        "n_levels": 9,
+        "J": [
+          0.5,
+          0.7,
+          0.9
+        ],
+        "densities": [
+          "L1-coarse",
+          "L2-medium",
+          "L3-fine"
+        ],
+        "all_finite": true
+      },
+      "pass": true
+    },
+    {
+      "id": "W2-physical-admissibility",
+      "statement": "every level yields K_T > 0 and resisting K_Q > 0 at the mission advance ratios",
+      "threshold": "all levels physical",
+      "measured": {
+        "0.5": true,
+        "0.7": true,
+        "0.9": true
+      },
+      "pass": true
+    },
+    {
+      "id": "W3-observed-order-vs-theory",
+      "statement": "observed order within 30 % of p_th = 2 at every mission J",
+      "threshold": "|p_obs - 2| / 2 < 0.30",
+      "measured": {
+        "KT@J=0.5": {
+          "observed_order": -4.097699192878266,
+          "deviation_pct": 304.8849596439133,
+          "pass": false
+        },
+        "KT@J=0.7": {
+          "observed_order": -3.966656554256326,
+          "deviation_pct": 298.3328277128163,
+          "pass": false
+        },
+        "KT@J=0.9": {
+          "observed_order": -2.5756920403179504,
+          "deviation_pct": 228.7846020158975,
+          "pass": false
+        },
+        "10KQ@J=0.5": {
+          "observed_order": -0.5124570284016237,
+          "deviation_pct": 125.62285142008119,
+          "pass": false
+        },
+        "10KQ@J=0.7": {
+          "observed_order": -1.1251662829654907,
+          "deviation_pct": 156.25831414827454,
+          "pass": false
+        },
+        "10KQ@J=0.9": {
+          "observed_order": 2.7696785190798963,
+          "deviation_pct": 38.48392595399481,
+          "pass": false
+        }
+      },
+      "pass": false
+    },
+    {
+      "id": "W4-gci-tabulated-and-tested",
+      "statement": "fine-grid GCI is tabulated for both quantities at every mission J and the 3 % acceptance is answered",
+      "threshold": "tabulated (no threshold on GCI itself; the answer is reported)",
+      "measured": {
+        "KT@J=0.5": {
+          "gci_fine_pct": 9.907916883523276,
+          "within_3pct": false,
+          "within_1pct": false
+        },
+        "KT@J=0.7": {
+          "gci_fine_pct": 10.07393174460437,
+          "within_3pct": false,
+          "within_1pct": false
+        },
+        "KT@J=0.9": {
+          "gci_fine_pct": 14.538524342517704,
+          "within_3pct": false,
+          "within_1pct": false
+        },
+        "10KQ@J=0.5": {
+          "gci_fine_pct": 12.904868178272839,
+          "within_3pct": false,
+          "within_1pct": false
+        },
+        "10KQ@J=0.7": {
+          "gci_fine_pct": 8.473676824051848,
+          "within_3pct": false,
+          "within_1pct": false
+        },
+        "10KQ@J=0.9": {
+          "gci_fine_pct": 0.10121712015528418,
+          "within_3pct": true,
+          "within_1pct": true
+        }
+      },
+      "pass": true
+    },
+    {
+      "id": "W5-decomposition-closure",
+      "statement": "discretisation + model term equals the total anchor deviation",
+      "threshold": "residual <= 1e-09 pct points",
+      "measured": {
+        "max_residual_pct_points": 7.105427357601002e-15
+      },
+      "pass": true
+    },
+    {
+      "id": "W6-design-point-3pct-question",
+      "statement": "|dK_T| and |dK_Q| at J = 0.70 are reported and the 3 % question is answered explicitly",
+      "threshold": "|dK_T| < 3 % and |dK_Q| < 3 % (threshold never relaxed)",
+      "measured": {
+        "J": 0.7,
+        "abs_dKT_pct": 18.008930548081437,
+        "abs_dKQ_pct": 19.6941281663918,
+        "KT_pass": false,
+        "KQ_pass": false,
+        "both_pass": false
+      },
+      "pass": false
+    },
+    {
+      "id": "W7-core-policy-agreement",
+      "statement": "the observed-order verdict does not depend on the vortex-core policy",
+      "threshold": "identical W3 verdict under both policies AND the policies are distinguishable",
+      "measured": {
+        "verdicts": {
+          "KT@J=0.5": {
+            "fixed_within": false,
+            "similarity_within": false
+          },
+          "KT@J=0.7": {
+            "fixed_within": false,
+            "similarity_within": false
+          },
+          "KT@J=0.9": {
+            "fixed_within": false,
+            "similarity_within": false
+          },
+          "10KQ@J=0.5": {
+            "fixed_within": false,
+            "similarity_within": false
+          },
+          "10KQ@J=0.7": {
+            "fixed_within": false,
+            "similarity_within": false
+          },
+          "10KQ@J=0.9": {
+            "fixed_within": false,
+            "similarity_within": false
+          }
+        },
+        "verdicts_agree": true,
+        "core_policy_inert_at_these_densities": true,
+        "interpretation": "NOT TESTABLE: the two policies return bit-identical K_T/10K_Q at the L1 and L3 densities (see core_inertness_probe), so agreement cannot be evidence of robustness and the criterion is failed closed"
+      },
+      "pass": false
+    },
+    {
+      "id": "W8-band-attribution",
+      "statement": "a decomposition that does not require a valid observed order is reported for every cell",
+      "threshold": "last-increment band and model bounds present for KT and 10KQ at every J",
+      "measured": {
+        "KT@J=0.5": {
+          "d_total_pct": -3.256015888688341,
+          "last_increment_pct_of_anchor": 7.220366424430706,
+          "model_bounds_anchor_pct": [
+            -17.696748737549754,
+            11.184716960173072
+          ],
+          "model_outside_band": false
+        },
+        "KT@J=0.7": {
+          "d_total_pct": -18.008930548081437,
+          "last_increment_pct_of_anchor": 6.185137222218277,
+          "model_bounds_anchor_pct": [
+            -30.37920499251799,
+            -5.638656103644884
+          ],
+          "model_outside_band": true
+        },
+        "KT@J=0.9": {
+          "d_total_pct": -67.71406342598614,
+          "last_increment_pct_of_anchor": 3.125231280095999,
+          "model_bounds_anchor_pct": [
+            -73.96452598617813,
+            -61.46360086579414
+          ],
+          "model_outside_band": true
+        },
+        "KT@J=0.8": {
+          "d_total_pct": -33.23018934569367,
+          "last_increment_pct_of_anchor": 5.21660084895218,
+          "model_bounds_anchor_pct": [
+            -43.663391043598025,
+            -22.796987647789308
+          ],
+          "model_outside_band": true
+        },
+        "10KQ@J=0.5": {
+          "d_total_pct": -8.875470925183189,
+          "last_increment_pct_of_anchor": 2.8126136529513914,
+          "model_bounds_anchor_pct": [
+            -14.500698231085972,
+            -3.250243619280406
+          ],
+          "model_outside_band": true
+        },
+        "10KQ@J=0.7": {
+          "d_total_pct": -19.6941281663918,
+          "last_increment_pct_of_anchor": 2.9481420409371197,
+          "model_bounds_anchor_pct": [
+            -25.590412248266038,
+            -13.79784408451756
+          ],
+          "model_outside_band": true
+        },
+        "10KQ@J=0.9": {
+          "d_total_pct": -51.533649504302645,
+          "last_increment_pct_of_anchor": 0.228388579288398,
+          "model_bounds_anchor_pct": [
+            -51.99042666287944,
+            -51.076872345725846
+          ],
+          "model_outside_band": true
+        },
+        "10KQ@J=0.8": {
+          "d_total_pct": -30.65546236601229,
+          "last_increment_pct_of_anchor": 2.248555416947725,
+          "model_bounds_anchor_pct": [
+            -35.15257319990774,
+            -26.15835153211684
+          ],
+          "model_outside_band": true
+        }
+      },
+      "pass": true
+    }
+  ],
+  "verdict": {
+    "all_criteria_pass": false,
+    "pass_by_id": {
+      "W1-coverage": true,
+      "W2-physical-admissibility": true,
+      "W3-observed-order-vs-theory": false,
+      "W4-gci-tabulated-and-tested": true,
+      "W5-decomposition-closure": true,
+      "W6-design-point-3pct-question": false,
+      "W7-core-policy-agreement": false,
+      "W8-band-attribution": true
+    },
+    "history_29_13pct_reproduction": {
+      "J": 0.8,
+      "configuration": {
+        "n_radial": 16,
+        "n_chord": 2,
+        "wake_steps": 24,
+        "core_ratio": 0.05
+      },
+      "KT": 0.0999328035758505,
+      "10KQ": 0.18764668632178882,
+      "anchor_KT": 0.141,
+      "anchor_10KQ": 0.27,
+      "dKT_pct": -29.125671222801053,
+      "dKQ_pct": -30.501227288226367,
+      "stated_report_8822_dKT_pct": -29.13,
+      "reproduction_residual_pct_points": 0.004328777198946199,
+      "reproduced_within_0p1_pct_point": true
+    },
+    "history_dKT_at_L3_lattice_pct": -33.23018934569367,
+    "design_point": {
+      "dKT_pct": -18.008930548081437,
+      "dKQ_pct": -19.6941281663918,
+      "gci_KT_pct": 10.07393174460437,
+      "gci_10KQ_pct": 8.473676824051848,
+      "answer_under_3pct": false
+    }
+  },
+  "data_files": [
+    "benchmarks/verified/bem_kp505_openwater_w20/levels.csv",
+    "benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv"
+  ],
+  "figures": [
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_kt_kq_eta_vs_anchor.png",
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_order_and_gci.png",
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_deviation_split.png"
+  ],
+  "limitations": [
+    "The anchor is a SECONDARY_REPRODUCTION of the KRISO KP505 open-water test (see papers/data/w20-anchors/kp505_transcription.json); the model term computed here therefore contains both the lattice's formulation error and the anchor's own transcription uncertainty.",
+    "Three levels give one observed order with no way to check that the asymptotic range has been reached; the four-level single-axis ladders of benchmarks/verified/propeller_openwater/kp505_gci_ladder.json already showed that the two overlapping triplets of the same ladder can disagree, so the fine-grid GCI here is a lower-bound-flavoured estimate, not a proof.",
+    "eta0 is a derived ratio of K_T and 10 K_Q and is reported for completeness only; no criterion is attached to it."
+  ]
+}
