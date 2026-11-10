@@ -816,3 +816,146 @@ def test_benchmark_gate_can_report_without_failing(tmp_path):
     )
     assert study["acceptance"]["passed_3pct"] is False
     assert study["acceptance"]["passed"] is False
+
+
+# ---------------------------------------------------------------------------
+# Non-affine geometry axis (the first case outside the affine group)
+# ---------------------------------------------------------------------------
+def _non_affine_mesh(subdivisions: int = 1) -> QuadraticSurfaceMesh:
+    """Radially modulated icosphere: ``r = 1 + 0.15 * P_3(cos theta)``."""
+    from tensorbem.benchmarks.quadratic_panel_verification import (
+        radially_modulated_mesh,
+    )
+
+    return radially_modulated_mesh(subdivisions, degree=3, amplitude=0.15)
+
+
+def _flux_row(mesh: QuadraticSurfaceMesh):
+    """Solved flux at the element centroids, its exact value and the row sums."""
+    u = _boundary_values(mesh)
+    result = solve_neumann_from_dirichlet_quadratic(mesh, u)
+    shape = quadratic_shape_functions_array(np.array([[1.0 / 3.0, 1.0 / 3.0]]))[0]
+    q = np.array(
+        [shape @ result.normal_derivative[mesh.faces[e]] for e in range(mesh.element_count)]
+    )
+    ones = np.ones(mesh.node_count)
+    solid_angle = float(np.max(np.abs(result.double_layer_matrix @ ones + 0.5)))
+    return q, _exact_flux_at_centroids(mesh), solid_angle
+
+
+def test_non_affine_geometry_flux_within_hard_limit():
+    """The direct BIE stays within the 15% hard limit on a non-affine surface.
+
+    Every other geometry in the suite (sphere, ellipsoid, translated / rotated /
+    scaled / mirrored ellipsoid, sheared ellipsoid) is an *affine* image of the
+    icosphere, and the quadratic Bezier parametrisation commutes with affine
+    maps.  A radially modulated sphere does not: the six control nodes of a panel
+    no longer represent the true patch exactly, so the Jacobian, the normal and
+    the singular self quadrature are exercised on geometry the affine cases
+    cannot produce.  The exact solution is unchanged (the point source is inside
+    the closed surface, so ``1/(4 pi |x - x0|)`` is harmonic on the exterior).
+    """
+    mesh = _non_affine_mesh(1)
+    assert mesh.node_count == 162
+    q, q_exact, solid_angle = _flux_row(mesh)
+    rel = float(np.linalg.norm(q - q_exact) / np.linalg.norm(q_exact))
+    assert rel < 0.15, f"non-affine flux relative error {rel:.4e} exceeds 15%"
+    assert solid_angle < 5e-2, f"solid-angle residual {solid_angle:.4e} too large"
+
+
+def test_affine_image_residual_classifies_the_geometry_axis():
+    """``affine_image_residual`` separates affine cases (0) from non-affine (>1%).
+
+    This is the guard that keeps the suite honest: a new "non-spherical" case
+    that is in fact an affine rescaling buys no new coverage.  The residual is a
+    least-squares affine fit between corresponding nodes, so it is exactly zero
+    for sphere / ellipsoid / sheared ellipsoid and a few percent once the map is
+    nonlinear.
+    """
+    from tensorbem.benchmarks.quadratic_panel_verification import (
+        affine_image_residual,
+        radially_modulated_mesh,
+    )
+
+    reference = icosphere_quadratic(1).vertices
+    affine_cases = {
+        "sphere": icosphere_quadratic(1),
+        "ellipsoid": ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7)),
+    }
+    shear = np.array([[1.0, 0.55, 0.0], [0.0, 1.0, 0.0], [0.0, 0.30, 1.0]])
+    base = ellipsoid_quadratic(1, axes=(1.0, 1.6, 0.7))
+    affine_cases["sheared_ellipsoid"] = QuadraticSurfaceMesh(
+        (shear @ base.vertices.T).T, base.faces.copy()
+    )
+    for name, mesh in affine_cases.items():
+        residual = affine_image_residual(mesh, reference)
+        assert residual < 1e-12, f"{name} is not the affine image it claims ({residual:.3e})"
+
+    wavy = radially_modulated_mesh(1, degree=3, amplitude=0.15)
+    residual = affine_image_residual(wavy, reference)
+    assert residual > 1e-2, f"modulated mesh is closer to affine than expected ({residual:.3e})"
+
+    # ... and it is not a relabelled sphere either: the operators must move.
+    S0, D0 = assemble_quadratic_matrices(icosphere_quadratic(1))
+    S1, D1 = assemble_quadratic_matrices(wavy)
+    assert np.linalg.norm(S1 - S0) / np.linalg.norm(S0) > 0.05
+    assert np.linalg.norm(D1 - D0) / np.linalg.norm(D0) > 0.05
+
+
+def test_solid_angle_residual_is_not_a_quadrature_error():
+    """The ``D 1 = -1/2`` residual is geometric (C0 creases), not quadrature.
+
+    On a curved quadratic mesh the collocation nodes are where several patches
+    meet with *different* tangent planes; the jump term is still exactly ``1/2``
+    for the closed union, but each patch sees a locally creased neighbourhood, so
+    the row sums converge to ``-1/2`` only as the crease angle goes to zero
+    (``O(h**2)``).  Consequence: raising the quadrature order must not change the
+    residual.  If it did, the residual would be a quadrature defect (and the
+    near-singular graded rule of :meth:`QuadraticTriangle.near_singular_layer_integrals`
+    would be the fix); it is not -- orders ``(8, 16)`` and ``(16, 32)`` agree to
+    more than 10 digits, on the modulated surface as well as on the sphere.
+    """
+    mesh = _non_affine_mesh(1)
+    ones = np.ones(mesh.node_count)
+    residuals = []
+    for quadrature_order, self_order in ((8, 16), (16, 32)):
+        _S, D = assemble_quadratic_matrices(
+            mesh, quadrature_order=quadrature_order, self_order=self_order
+        )
+        residuals.append(float(np.max(np.abs(D @ ones + 0.5))))
+    low, high = residuals
+    assert low > 1e-5, "residual collapsed; the diagnostic would be vacuous"
+    assert abs(high - low) <= 1e-6 * low, (
+        f"solid-angle residual moved with the quadrature order ({low:.6e} -> {high:.6e})"
+    )
+
+
+def test_committed_study_records_the_non_affine_geometry_case():
+    """The committed study must carry the modulated case with its classification."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    study = json.loads(
+        (root / "docs" / "quadratic_panel_verification" / "study.json").read_text()
+    )
+    geometries = {g["name"]: g for g in study["geometry"]["geometries"]}
+    assert "wavy_r3_e0p15" in geometries
+    wavy = geometries["wavy_r3_e0p15"]
+    assert wavy["radial_modulation"] == {"degree": 3, "amplitude": 0.15}
+    assert wavy["affine_transform"] is None
+    assert wavy["acceptance"]["passed"] is True
+    assert wavy["flux_rel_error_finest"] <= wavy["acceptance"]["threshold"]
+    assert wavy["observed_order"] >= wavy["acceptance"]["order_floor"]
+
+    for record in wavy["levels"]:
+        assert record["affine_image_residual"] > 1e-2
+        assert 0.0 < record["min_normal_radial_cos"] <= 1.0
+
+    # every affine geometry stays at round-off, i.e. the axis really is new
+    for name, geom in geometries.items():
+        if name == "wavy_r3_e0p15":
+            continue
+        for record in geom["levels"]:
+            assert record["affine_image_residual"] < 1e-12
+            assert geom["radial_modulation"] is None

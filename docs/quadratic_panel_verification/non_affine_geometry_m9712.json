@@ -1,0 +1,54 @@
+{
+  "figure": "fig_non_affine_geometry_m9712.png",
+  "quadrature_order_ladder": {
+    "orders": [
+      [
+        8,
+        16
+      ],
+      [
+        12,
+        24
+      ],
+      [
+        16,
+        32
+      ]
+    ],
+    "rows": [
+      {
+        "geometry": "unit sphere (affine)",
+        "residuals": [
+          0.006321395136928143,
+          0.006321393225163452,
+          0.006321393225674488
+        ],
+        "relative_spread": 3.0242774383788855e-07
+      },
+      {
+        "geometry": "ellipsoid 1.0/1.6/0.7 (affine)",
+        "residuals": [
+          0.011732769285464906,
+          0.011732673614231581,
+          0.011732673768113544
+        ],
+        "relative_spread": 8.154256776425345e-06
+      },
+      {
+        "geometry": "wavy r=P3, eps=0.15 (non-affine)",
+        "residuals": [
+          0.03408441725468325,
+          0.03408441726352052,
+          0.03408441726350275
+        ],
+        "relative_spread": 2.5927579127084914e-10
+      }
+    ]
+  },
+  "affine_image_residual_sub1": {
+    "sphere": 5.375946259635775e-16,
+    "ellipsoid": 5.821360966830087e-16,
+    "sheared_ellipsoid": 5.503117215182472e-16,
+    "wavy_r3_e0p15": 0.05694248197651055
+  }
+}
