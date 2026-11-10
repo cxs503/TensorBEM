@@ -804,3 +804,49 @@ def haskind_excitation_force_3d(
         "boundary_haskind": boundary_forces,
         "kochin_haskind": kochin_forces,
     }
+
+
+def froude_krylov_force_3d(
+    mesh: SurfaceMesh3D,
+    nu: float,
+    *,
+    amplitude: float = 1.0,
+    wave_angle: float = 0.0,
+    center: ArrayLike | None = None,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+) -> ComplexArray:
+    """Undiffracted (Froude-Krylov) incident-wave excitation on a wetted hull.
+
+    Integrates the incident-wave pressure over the *undisturbed* body surface,
+
+        F_j = -i omega rho int_{Gamma_B} phi_I n_j dS,     j = 1..6,
+
+    with ``phi_I`` from :func:`incident_airy_wave_3d` and
+    ``(n_1, n_2, n_3, n_4, n_5, n_6) = (n, (x - center) x n)``. This is the
+    Froude-Krylov part of the total excitation returned by
+    :func:`solve_diffraction_3d`; the difference between the two is the
+    diffraction (scattered-pressure) contribution. The panel rule is the
+    centroid (one-point) rule, so on smooth geometry the error is second order
+    in the panel size.
+
+    Returns
+    -------
+    ComplexArray
+        Excitation force ``(6,)`` under the ``exp(-i*omega*t)`` convention.
+    """
+    _validate_mesh_3d(mesh)
+    freq = _validate_positive("nu", nu)
+    amp = _validate_positive("amplitude", amplitude)
+    rho = _validate_positive("density", density)
+    g = _validate_positive("gravity", gravity)
+    omega = math.sqrt(g * freq)
+
+    phi_inc, _ = incident_airy_wave_3d(
+        mesh.centroids, freq, amplitude=amp, wave_angle=float(wave_angle), gravity=g
+    )
+    n6 = rigid_body_normals_3d(mesh, center=center)
+    return np.asarray(
+        -1.0j * omega * rho * ((mesh.areas[:, None] * n6).T @ phi_inc),
+        dtype=np.complex128,
+    )
