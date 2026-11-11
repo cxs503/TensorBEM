@@ -26,6 +26,7 @@ V10 sign of (lambda_ice - lambda_open) flips exactly at the crossover
 from __future__ import annotations
 
 import math
+import pathlib
 
 import numpy as np
 import pytest
@@ -47,6 +48,7 @@ from tensorbem.flexural_gravity import (
     phase_speed_ratio_mass_loading,
     wavelength_ratio_mass_loading,
 )
+from tensorbem.flexural_gravity_numeric import fd_omega2
 from tensorbem.ice import IceCover, mass_loading_omega
 
 TWO_PI = 2.0 * math.pi
@@ -300,3 +302,124 @@ def test_mass_loading_parameter_is_positive_and_monotone_in_thickness():
     values = [mass_loading_parameter(IcePlate(thickness=h)) for h in (0.1, 0.5, 1.0, 2.0)]
     assert all(v > 0.0 for v in values)
     assert values == sorted(values)
+
+# ---------------------------------------------------------------------------
+# V11  independent route: finite-difference depth factor with plate inertia
+#
+# ``tensorbem.flexural_gravity_numeric`` obtains psi'(0)/psi(0) from a
+# discretised BVP instead of evaluating k tanh(kH); fed into the mass-loaded
+# free-surface condition it must reproduce eq. (3), with second-order grid
+# convergence.  Until now the numeric module's ``mass_per_area`` branch had no
+# test at all, i.e. the only *numerical* (as opposed to algebraic) route to
+# eq. (3) was unguarded.
+# ---------------------------------------------------------------------------
+FD_CASES = (
+    # (h_ice, water depth, wavenumber)
+    (1.0, 200.0, 0.10),
+    (2.0, 20.0, 0.05),
+    (0.5, 20.0, 0.60),
+)
+
+
+@pytest.mark.parametrize("h_ice,depth,k", FD_CASES)
+def test_v11_fd_depth_factor_reproduces_eq3(h_ice, depth, k):
+    plate = IcePlate(thickness=h_ice, water_depth=depth)
+    reference = flexural_gravity_omega2_mass_loading(k, plate)
+    measured = fd_omega2(
+        k,
+        depth=depth,
+        rigidity=plate.flexural_rigidity,
+        mass_per_area=plate.ice_density * plate.thickness,
+        fluid_density=plate.water_density,
+        gravity=plate.gravity,
+        dz=min(0.05, 0.02 / k),
+    )
+    # truncation is O((k dz)^2) with k dz <= 0.02 -> ~1e-4 on the coarsest grid
+    assert abs(measured - reference) / reference < 1.0e-3
+
+
+def test_v11_fd_route_is_second_order_in_dz():
+    plate = IcePlate(thickness=1.0, water_depth=200.0)
+    k = 0.1
+    reference = flexural_gravity_omega2_mass_loading(k, plate)
+    dz_max = min(0.05, 0.02 / k)
+    errors = [
+        abs(
+            fd_omega2(
+                k,
+                depth=plate.water_depth,
+                rigidity=plate.flexural_rigidity,
+                mass_per_area=plate.ice_density * plate.thickness,
+                fluid_density=plate.water_density,
+                gravity=plate.gravity,
+                dz=dz_max / 2.0 ** level,
+            )
+            - reference
+        )
+        / reference
+        for level in range(4)
+    ]
+    assert errors[-1] < 1.0e-6
+    for coarse, fine in zip(errors, errors[1:]):
+        assert math.log2(coarse / fine) == pytest.approx(2.0, abs=0.2)
+
+
+# ---------------------------------------------------------------------------
+# V12  variational (energy) balance: placement of the plate-inertia term
+#
+# PE = (rho_w g + D k^4) a^2/4 versus KE = rho_w omega^2 a^2 I/(4 psi'(0)^2)
+# + m'' omega^2 a^2/4, with I evaluated by quadrature.  This fixes *where* the
+# inertia term belongs and therefore rejects the plausible denominator-only
+# variant ``(g k + D k^5/rho_w) tanh(kH) / (tanh(kH) + mu k)``, which is the
+# mistake that matters for shallow-water ice zones.
+# ---------------------------------------------------------------------------
+def _verifier():
+    """Load the verification script (single source of the energy helpers)."""
+    import importlib.util
+
+    path = pathlib.Path(__file__).resolve().parents[1] / "scripts" / (
+        "verify_flexural_gravity_mass_loading.py"
+    )
+    spec = importlib.util.spec_from_file_location("_verify_fgml", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize("h_ice,depth,k", [
+    (1.0, 200.0, 0.01),
+    (2.0, 200.0, 0.10),
+    (2.0, 20.0, 0.05),
+    (0.5, 20.0, 0.30),
+])
+def test_v12_energy_balance_closes_for_eq3(h_ice, depth, k):
+    verifier = _verifier()
+    plate = IcePlate(thickness=h_ice, water_depth=depth)
+    omega2 = flexural_gravity_omega2_mass_loading(k, plate)
+    residual, completion = verifier.energy_balance_residual(k, plate, omega2)
+    assert residual < 1.0e-12
+    # int(k^2 psi^2 + psi'^2) dz == psi'(0) (completion of squares), by quadrature
+    assert completion == pytest.approx(1.0, abs=1.0e-10)
+
+
+def test_v12_energy_balance_rejects_denominator_only_variant():
+    verifier = _verifier()
+    plate = IcePlate(thickness=2.0, water_depth=20.0)
+    k = 0.01  # long wave, kH = 0.2: the inertial depth coupling is O(1)
+    omega2_eq3 = flexural_gravity_omega2_mass_loading(k, plate)
+    omega2_variant = verifier.denominator_only_omega2(k, plate)
+    residual_eq3, _ = verifier.energy_balance_residual(k, plate, omega2_eq3)
+    residual_variant, _ = verifier.energy_balance_residual(k, plate, omega2_variant)
+    assert residual_eq3 < 1.0e-12
+    assert residual_variant > 1.0e-2
+    # and the shallow long-wave limit of eq. (3) is gHk^2/(1 + mu H k^2), which
+    # the denominator-only variant misses (checked at kH = 0.04, where the
+    # asymptotic is good to ~1e-4)
+    k_lim = 0.002
+    shallow = plate.gravity * plate.water_depth * k_lim ** 2 / (
+        1.0 + mass_loading_parameter(plate) * plate.water_depth * k_lim ** 2
+    )
+    assert flexural_gravity_omega2_mass_loading(k_lim, plate) == pytest.approx(
+        shallow, rel=1.0e-3
+    )
+    assert omega2_variant / omega2_eq3 > 2.0
