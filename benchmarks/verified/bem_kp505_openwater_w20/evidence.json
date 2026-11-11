@@ -1,0 +1,176 @@
+{
+  "schema": "tensorbem.maturity_evidence/1",
+  "generated_utc": "2026-11-11T12:36:46.042079+00:00",
+  "repo_commit": "0f1635db79456906d084e9dfdc50d7e7a3d3ff42",
+  "mission": 14569,
+  "original_mission": 9641,
+  "claimed_level": 4,
+  "impl_files": [
+    "src/tensorbem/benchmarks/kp505_w20_gci.py",
+    "src/tensorbem/propeller.py",
+    "src/tensorbem/uq.py",
+    "TensorBEM/src/tensorbem/benchmarks/kp505_w20_gci.py",
+    "TensorBEM/src/tensorbem/propeller.py",
+    "TensorBEM/src/tensorbem/uq.py"
+  ],
+  "entry": "src/tensorbem/benchmarks/kp505_w20_gci.py",
+  "entry_eco": "TensorBEM/src/tensorbem/benchmarks/kp505_w20_gci.py",
+  "entry_command": "python -m tensorbem.benchmarks.kp505_w20_gci",
+  "run_artifacts": [
+    "benchmarks/verified/bem_kp505_openwater_w20/gci.json",
+    "benchmarks/verified/bem_kp505_openwater_w20/levels.csv",
+    "benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv",
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_kt_kq_eta_vs_anchor.png",
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_order_and_gci.png",
+    "benchmarks/verified/bem_kp505_openwater_w20/figures/w20_deviation_split.png",
+    "papers/data/w20-anchors/kp505_transcription.json",
+    "runs/w20_kp505_gci_cache",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/gci.json",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/levels.csv",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/figures/w20_kt_kq_eta_vs_anchor.png",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/figures/w20_order_and_gci.png",
+    "TensorBEM/benchmarks/verified/bem_kp505_openwater_w20/figures/w20_deviation_split.png",
+    "TensorBEM/papers/data/w20-anchors/kp505_transcription.json",
+    "TensorBEM/runs/w20_kp505_gci_cache"
+  ],
+  "integration_callers": [
+    "tests/test_w20_kp505_integration.py::test_live_l1_evaluation_matches_the_artefact",
+    "tests/test_w20_kp505_integration.py::test_driver_is_exported_and_wired_to_the_main_solver",
+    "src/tensorbem/benchmarks/kp505_w20_gci.py:151 (evaluate -> propeller.open_water_point)"
+  ],
+  "benchmark": {
+    "reference": {
+      "source": "benchmarks/anchors/kp505_openwater.json",
+      "kind": "SECONDARY_REPRODUCTION",
+      "citation": "H. Iftikhar, A. C. Takinaci, 'Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS', X International Conference on Computational Methods in Marine Engineering (MARINE 2023), CIMNE, DOI 10.23967/marine.2023.120",
+      "doi": "10.23967/marine.2023.120",
+      "values": {
+        "0.5": {
+          "KT": 0.29,
+          "10KQ": 0.471
+        },
+        "0.7": {
+          "KT": 0.193,
+          "10KQ": 0.342
+        },
+        "0.9": {
+          "KT": 0.087,
+          "10KQ": 0.192
+        },
+        "0.8": {
+          "KT": 0.141,
+          "10KQ": 0.27
+        }
+      }
+    },
+    "got": {
+      "0.5": {
+        "KT_fine": 0.2805575539228038,
+        "10KQ_fine": 0.42919653194238716,
+        "delta_vs_anchor_pct": {
+          "KT": -3.256015888688341,
+          "10KQ": -8.875470925183189
+        },
+        "gci_fine_pct": {
+          "KT": 9.907916883523276,
+          "10KQ": 12.904868178272839
+        }
+      },
+      "0.7": {
+        "KT_fine": 0.15824276404220283,
+        "10KQ_fine": 0.27464608167094007,
+        "delta_vs_anchor_pct": {
+          "KT": -18.008930548081437,
+          "10KQ": -19.6941281663918
+        },
+        "gci_fine_pct": {
+          "KT": 10.07393174460437,
+          "10KQ": 8.473676824051848
+        }
+      },
+      "0.9": {
+        "KT_fine": 0.02808876481939206,
+        "10KQ_fine": 0.09305539295173892,
+        "delta_vs_anchor_pct": {
+          "KT": -67.71406342598614,
+          "10KQ": -51.533649504302645
+        },
+        "gci_fine_pct": {
+          "KT": 14.538524342517704,
+          "10KQ": 0.10121712015528418
+        }
+      }
+    },
+    "design_point_J0.70": {
+      "dKT_pct": -18.008930548081437,
+      "dKQ_pct": -19.6941281663918,
+      "gci_KT_pct": 10.07393174460437,
+      "gci_10KQ_pct": 8.473676824051848,
+      "answer_under_3pct": false,
+      "threshold_pct": 3.0
+    },
+    "history_29pct_reproduction": {
+      "J": 0.8,
+      "dKT_pct": -29.125671222801053,
+      "stated_report_8822_dKT_pct": -29.13
+    }
+  },
+  "repro_cmd": "python -m tools.build_w20_kp505_transcription && python -m tensorbem.benchmarks.kp505_w20_gci && python -m tools.emit_w20_report && python -m tools.emit_w20_evidence && pytest tests/test_w20_kp505_transcription.py tests/test_w20_kp505_gci.py tests/test_w20_kp505_integration.py -q",
+  "external_anchor": {
+    "file": "papers/data/w20-anchors/kp505_transcription.json",
+    "file_eco": "TensorBEM/papers/data/w20-anchors/kp505_transcription.json",
+    "sha256": "c97281bfa8e48147ea866c8e9e2f7a965259ca98d180962d77f88b94c77e2e00",
+    "citation": "H. Iftikhar, A. C. Takinaci, 'Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS', X International Conference on Computational Methods in Marine Engineering (MARINE 2023), CIMNE, DOI 10.23967/marine.2023.120",
+    "doi": "10.23967/marine.2023.120",
+    "kind": "SECONDARY_REPRODUCTION"
+  },
+  "tests": [
+    "tests/test_w20_kp505_transcription.py",
+    "tests/test_w20_kp505_gci.py",
+    "tests/test_w20_kp505_integration.py"
+  ],
+  "artefact_sha256": {
+    "gci.json": "8686bd182db5aec2c02706a05f92001d10282cfe50b7689e521e1d327a1eb8d2",
+    "kp505_transcription.json": "c97281bfa8e48147ea866c8e9e2f7a965259ca98d180962d77f88b94c77e2e00"
+  },
+  "verdict": {
+    "all_criteria_pass": false,
+    "pass_by_id": {
+      "W1-coverage": true,
+      "W2-physical-admissibility": true,
+      "W3-observed-order-vs-theory": false,
+      "W4-gci-tabulated-and-tested": true,
+      "W5-decomposition-closure": true,
+      "W6-design-point-3pct-question": false,
+      "W7-core-policy-agreement": false,
+      "W8-band-attribution": true
+    },
+    "history_29_13pct_reproduction": {
+      "J": 0.8,
+      "configuration": {
+        "n_radial": 16,
+        "n_chord": 2,
+        "wake_steps": 24,
+        "core_ratio": 0.05
+      },
+      "KT": 0.0999328035758505,
+      "10KQ": 0.18764668632178882,
+      "anchor_KT": 0.141,
+      "anchor_10KQ": 0.27,
+      "dKT_pct": -29.125671222801053,
+      "dKQ_pct": -30.501227288226367,
+      "stated_report_8822_dKT_pct": -29.13,
+      "reproduction_residual_pct_points": 0.004328777198946199,
+      "reproduced_within_0p1_pct_point": true
+    },
+    "history_dKT_at_L3_lattice_pct": -33.23018934569367,
+    "design_point": {
+      "dKT_pct": -18.008930548081437,
+      "dKQ_pct": -19.6941281663918,
+      "gci_KT_pct": 10.07393174460437,
+      "gci_10KQ_pct": 8.473676824051848,
+      "answer_under_3pct": false
+    }
+  }
+}

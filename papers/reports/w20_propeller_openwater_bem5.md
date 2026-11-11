@@ -1,14 +1,14 @@
 # W20 / 计划项 5：KP505 敞水锚回核 + 三工况 GCI 与偏差分解
 
-*仓库*: TensorBEM  ·  *分支*: `agent/m9641`  ·  *mission*: 9641  ·  *生成 UTC*: 2026-11-10T13:37:06+00:00
-*git commit（工件生成时）*: `7f5e068f5c23bc34b0de3f57b094475d9fb93187`
+*仓库*: TensorBEM  ·  *分支*: `agent/m14569`  ·  *mission*: 14569（返修轮 1，原单 m9641 经 maturity_gate 复核 L0 后重开）  ·  *生成 UTC*: 2026-11-11T10:29:52+00:00
+*git commit（工件生成时）*: `f586616401e51bf252d550017cde78db5f430ca0`
 
 ## 0. 工件与溯源（先落工件，后写报告）
 
 | 工件 | sha256 |
 |---|---|
-| `papers/data/w20-anchors/kp505_transcription.json` | `17bfd3dc3c4e2756d0e9c68962d6bd39952ca352f09a25bea6253e3823096969` |
-| `benchmarks/verified/bem_kp505_openwater_w20/gci.json` | `7f9967068dfb0de5fbc6a4a4606df4a78855fa0cee4906d6bb22a4d28563ae39` |
+| `papers/data/w20-anchors/kp505_transcription.json` | `c97281bfa8e48147ea866c8e9e2f7a965259ca98d180962d77f88b94c77e2e00` |
+| `benchmarks/verified/bem_kp505_openwater_w20/gci.json` | `8686bd182db5aec2c02706a05f92001d10282cfe50b7689e521e1d327a1eb8d2` |
 | `benchmarks/verified/bem_kp505_openwater_w20/levels.csv` | `a505506bc3f81ad50797707cccd8c118c8ed3bfc47722da2239ab739451e4702` |
 | `benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv` | `298c495f83288c4b94661b5c20a624f1a93762977f663b9edc32e72a3575e8ef` |
 | `benchmarks/verified/bem_kp505_openwater_w20/figures/w20_kt_kq_eta_vs_anchor.png` | `686ecbfadd132dee1fe716c2d06206e316e1f0f38472ee14cc86881dbc3e9084` |
@@ -22,7 +22,8 @@
 python -m tools.build_w20_kp505_transcription
 python -m tensorbem.benchmarks.kp505_w20_gci
 python -m tools.emit_w20_report
-pytest tests/test_w20_kp505_transcription.py tests/test_w20_kp505_gci.py -q
+python -m tools.emit_w20_evidence
+pytest tests/test_w20_kp505_transcription.py tests/test_w20_kp505_gci.py tests/test_w20_kp505_integration.py -q
 ```
 
 ## 1. 案例介绍（物理背景 / 几何 / 参数）
@@ -178,8 +179,8 @@ policy 区间 0.025/0.05/0.10 下 K_T 逐位相同（`policy_range_is_inert = Tr
 | 判据 | 要求 | 实测 | 裁定 |
 |---|---|---|---|
 | 1) 锚转录件每数带源且可机检回读 | 100% 数字带 file+字段/原表，verify() 0 mismatch | 70 个数字全部带源；verify 通过；跨仓回核 T6/T7 = FAIL（负结论） | PASS |
-| 2) 三工况 GCI：p 与 GCI 落表，p 与理论阶偏差 < 30% | 六格全部 < 30% | 仅 10K_Q@J=0.9 为 38.5% 合格，其余 KT@J=0.5=305%, KT@J=0.7=298%, KT@J=0.9=229%, 10KQ@J=0.5=126%, 10KQ@J=0.7=156% 均 >100% | FAIL |
-| 3) 设计点 |ΔK_T|、|ΔK_Q| 逐项给出并回答 < 3% | 两项都 < 3% | |ΔK_T| = 18.01%，|ΔK_Q| = 19.69% | FAIL |
+| 2) 三工况 GCI：p 与 GCI 落表，p 与理论阶偏差 < 30% | 六格全部 < 30% | 0/6 格合格；最接近理论阶的是 10KQ@J=0.9，偏差 38.5%（仍在 30% 带外） | FAIL |
+| 3) 设计点 |ΔK_T|、|ΔK_Q| 逐项给出并回答 < 3% | 两项都 < 3% | |ΔK_T| = 18.01%，|ΔK_Q| = 19.69%，两项都 > 3% | FAIL |
 
 **对“是否 < 3%”的显式回答：否。** J = 0.70 设计点的 K_T 偏 -18.01%，10K_Q 偏 -19.69%，均超出 3% 门槛一个量级；阈值未下调，历史 29.1% 的欠账在本单得到的是**分解与归因**，不是“过关”。
 
@@ -205,12 +206,16 @@ benchmarks/verified/bem_kp505_openwater_w20/gci.json    # 判据 2、3
 benchmarks/verified/bem_kp505_openwater_w20/levels.csv
 benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv
 benchmarks/verified/bem_kp505_openwater_w20/figures/*.png
+benchmarks/verified/bem_kp505_openwater_w20/evidence.json  # 达标判断方案 evidence 束
+runs/w20_kp505_gci_cache/*.json                        # 原始逐格求解输出（运行工件）
 papers/reports/w20_propeller_openwater_bem5.md          # 本报告
 src/tensorbem/benchmarks/kp505_w20_gci.py               # 驱动（含预热声明判据）
 tools/build_w20_kp505_transcription.py                  # 转录构建 + verify()
 tools/emit_w20_report.py                                # 本文件生成器
 tests/test_w20_kp505_transcription.py                   # 10 tests
 tests/test_w20_kp505_gci.py                             # 9 tests
+tests/test_w20_kp505_integration.py                     # 5 tests（集成调用方）
+tools/emit_w20_evidence.py                              # evidence 束生成器
 ```
 
 复跑求解时间为：L3 单元（32×8 面板/叶、96 尾涡段）单次约 66 s/工况；全量（4 J × 2 核策略 × 3 密度 + 9 次探针）在本机 loongarch64 上约 12 min，缓存位于 `runs/w20_kp505_gci_cache/`，中断可续。
