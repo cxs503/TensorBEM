@@ -132,6 +132,7 @@ class FiniteDepth3DOperators:
     double_layer: ComplexArray
     system_matrix: ComplexArray
     condition_number: float
+    kernel: str = "eigenseries"
 
 
 @dataclass
@@ -230,6 +231,50 @@ def _rankine_operators(
     return single, double
 
 
+#: Free-surface kernels the solver can be assembled on.
+KERNELS: tuple[str, ...] = ("eigenseries", "quadrature")
+
+
+def kernel_functions(
+    kernel: str, nu: float, depth: float, mode_count: int, *, nodes: int = 16
+):
+    """``(value, gradient)`` callables of the chosen free-surface kernel.
+
+    ``"eigenseries"`` is the John (1950) modal kernel of
+    :mod:`tensorbem.finite_depth3d` -- the package default.  ``"quadrature"``
+    is the independent wavenumber-integral kernel of
+    :mod:`tensorbem.finite_depth3d_quadrature`, which is a different
+    representation of the same boundary-value problem; running the solver on it
+    is an end-to-end check that a kernel defect shows up in added mass and
+    damping, not only in a pointwise kernel test.
+    """
+    if kernel == "eigenseries":
+
+        def value(tgt, src):
+            return green_function_3d(tgt, src, nu, depth, modes=mode_count)
+
+        def gradient(tgt, src):
+            return green_gradient_source_3d(tgt, src, nu, depth, modes=mode_count)
+
+        return value, gradient
+    if kernel == "quadrature":
+        from .finite_depth3d_quadrature import (
+            green_function_finite_depth_3d,
+            green_gradient_source_finite_depth_3d,
+        )
+
+        def value(tgt, src):
+            return green_function_finite_depth_3d(tgt, src, nu, depth, nodes=nodes)
+
+        def gradient(tgt, src):
+            return green_gradient_source_finite_depth_3d(
+                tgt, src, nu, depth, nodes=nodes
+            )
+
+        return value, gradient
+    raise ValueError(f"kernel must be one of {KERNELS}")
+
+
 def _smooth_remainder(
     targets: FloatArray,
     mesh: SurfaceMesh3D,
@@ -238,6 +283,8 @@ def _smooth_remainder(
     mode_count: int,
     *,
     order: int,
+    kernel: str = "eigenseries",
+    kernel_nodes: int = 16,
     group_rows: int = 8,
 ) -> tuple[ComplexArray, ComplexArray]:
     """Quadratured single- and double-layer operators of ``G_fd - 1/(4*pi*r)``.
@@ -262,21 +309,32 @@ def _smooth_remainder(
         targets, mesh, self_interaction=True, order=order
     )
 
-    horiz = np.hypot(
-        targets[:, None, 0] - qpts[None, :, 0],
-        targets[:, None, 1] - qpts[None, :, 1],
+    value_fn, grad_fn = kernel_functions(
+        kernel, nu, depth, mode_count, nodes=kernel_nodes
     )
-    with np.errstate(invalid="ignore"):
-        row_min = np.where(horiz > 0.0, horiz, np.inf).min(axis=1)
-    row_modes = np.array(
-        [min(mode_count, _modes_for(depth, r)) for r in row_min], dtype=np.int64
-    )
+    if kernel == "eigenseries":
+        # The eigenseries cost is set by the per-row evanescent mode count, so
+        # rows are grouped by how many modes they need.  The quadrature kernel
+        # costs one wave integral per (target, unique source depth) pair, which
+        # grouping cannot change, so all rows go in one block.
+        horiz = np.hypot(
+            targets[:, None, 0] - qpts[None, :, 0],
+            targets[:, None, 1] - qpts[None, :, 1],
+        )
+        with np.errstate(invalid="ignore"):
+            row_min = np.where(horiz > 0.0, horiz, np.inf).min(axis=1)
+        row_modes = np.array(
+            [min(mode_count, _modes_for(depth, r)) for r in row_min], dtype=np.int64
+        )
+        order_rows = np.argsort(-row_modes, kind="stable")
+        step = max(1, int(group_rows))
+        blocks = [
+            order_rows[start : start + step] for start in range(0, m_cnt, step)
+        ]
+    else:
+        blocks = [np.arange(m_cnt)]
 
-    order_rows = np.argsort(-row_modes, kind="stable")
-    step = max(1, int(group_rows))
-    for start in range(0, m_cnt, step):
-        rows = order_rows[start : start + step]
-        modes = int(row_modes[rows].max())
+    for rows in blocks:
         tgt = targets[rows][:, None, :]
         src = qpts[None, :, :]
 
@@ -284,12 +342,12 @@ def _smooth_remainder(
         r = np.maximum(np.linalg.norm(diff, axis=2), 1.0e-300)
         inv = 1.0 / (_FOUR_PI * r)
 
-        value = green_function_3d(tgt, src, nu, depth, modes=modes)
+        value = value_fn(tgt, src)
         single[rows] += ((value - inv) * qweights[None, :]).reshape(
             rows.size, p_cnt, per_panel
         ).sum(axis=2)
 
-        grad = green_gradient_source_3d(tgt, src, nu, depth, modes=modes)
+        grad = grad_fn(tgt, src)
         dn_wave = np.einsum("mqk,qk->mq", grad, qnormals)
         dn_rankine = np.einsum("mqk,qk->mq", diff, qnormals) / (_FOUR_PI * r**3)
         double[rows] += ((dn_wave - dn_rankine) * qweights[None, :]).reshape(
@@ -305,8 +363,18 @@ def assemble_finite_depth_operators_3d(
     *,
     mode_count: int | None = None,
     rankine_order: int = 5,
+    kernel: str = "eigenseries",
+    kernel_nodes: int = 16,
 ) -> FiniteDepth3DOperators:
-    """Assemble the finite-depth 3-D single/double-layer operators and system."""
+    """Assemble the finite-depth 3-D single/double-layer operators and system.
+
+    ``kernel`` selects the free-surface Green function: ``"eigenseries"``
+    (default, the John modal kernel) or ``"quadrature"`` (the independent
+    wavenumber-integral kernel).  The quadrature kernel needs strictly submerged
+    panels, because its wave integral requires ``z + zeta < 0``;
+    ``kernel_nodes`` is its Gauss-Legendre node count per wavenumber panel
+    (ignored by the eigenseries kernel).
+    """
     h = _validate_depth_mesh(mesh, depth)
     freq = _positive("nu", nu)
     if (
@@ -315,12 +383,30 @@ def assemble_finite_depth_operators_3d(
         or int(rankine_order) < 2
     ):
         raise ValueError("rankine_order must be an integer >= 2")
+    if kernel not in KERNELS:
+        raise ValueError(f"kernel must be one of {KERNELS}")
+    if (
+        isinstance(kernel_nodes, (bool, np.bool_))
+        or not isinstance(kernel_nodes, (int, np.integer))
+        or int(kernel_nodes) < 4
+    ):
+        raise ValueError("kernel_nodes must be an integer >= 4")
+    if kernel == "quadrature":
+        qpts, _, _ = quadrature_points(mesh)
+        highest = max(float(mesh.vertices[..., 2].max()), float(qpts[:, 2].max()))
+        if highest >= 0.0:
+            raise ValueError(
+                "kernel='quadrature' requires strictly submerged panels "
+                f"(found z = {highest:.3g} on the waterline); "
+                "use kernel='eigenseries' for surface-piercing bodies"
+            )
     count = mode_count_for(mesh, h) if mode_count is None else int(mode_count)
     if count < 1:
         raise ValueError("mode_count must be >= 1")
 
     single, double = _smooth_remainder(
-        mesh.centroids, mesh, freq, h, count, order=int(rankine_order)
+        mesh.centroids, mesh, freq, h, count,
+        order=int(rankine_order), kernel=kernel, kernel_nodes=int(kernel_nodes),
     )
     system = 0.5 * np.eye(mesh.panel_count, dtype=np.complex128) - double
     return FiniteDepth3DOperators(
@@ -331,6 +417,7 @@ def assemble_finite_depth_operators_3d(
         double_layer=double,
         system_matrix=system,
         condition_number=float(np.linalg.cond(system)),
+        kernel=kernel,
     )
 
 
@@ -345,6 +432,8 @@ def solve_radiation_finite_depth_3d(
     density: float = _DEFAULT_DENSITY,
     gravity: float = _DEFAULT_GRAVITY,
     rankine_order: int = 5,
+    kernel: str = "eigenseries",
+    kernel_nodes: int = 16,
     operators: FiniteDepth3DOperators | None = None,
 ) -> FiniteDepth3DResult:
     """Solve 3-D wave radiation in water of finite depth for up to 6 DOF.
@@ -372,7 +461,8 @@ def solve_radiation_finite_depth_3d(
         operators
         if operators is not None
         else assemble_finite_depth_operators_3d(
-            mesh, freq, h, mode_count=mode_count, rankine_order=rankine_order
+            mesh, freq, h, mode_count=mode_count, rankine_order=rankine_order,
+            kernel=kernel, kernel_nodes=kernel_nodes,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
@@ -414,10 +504,12 @@ def gravity_wave_wavenumber(nu: float, depth: float) -> float:
 
 
 __all__ = [
+    "KERNELS",
     "FiniteDepth3DOperators",
     "FiniteDepth3DResult",
     "assemble_finite_depth_operators_3d",
     "gravity_wave_wavenumber",
+    "kernel_functions",
     "mode_count_for",
     "quadrature_points",
     "solve_radiation_finite_depth_3d",
