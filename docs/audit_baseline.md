@@ -171,38 +171,36 @@ Counts: **49** REAL, **1** WITHHELD — 50 capabilities. The level is derived fr
 
 ### Capability coverage
 
-63 of 90 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **26 are unowned**.
+63 of 91 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
-
-**Core modules no row grades and no reason explains** (fails the gate):
-
-- `tensorbem.cathodic_protection`
-- `tensorbem.cp_galvanic`
-- `tensorbem.cylinder_drift`
-- `tensorbem.drift_far_field3d`
-- `tensorbem.finite_depth_green`
-- `tensorbem.finite_depth_solver3d`
-- `tensorbem.flexural_gravity`
-- `tensorbem.haskind2d`
-- `tensorbem.interior_panels`
-- `tensorbem.irregular_frequency`
-- `tensorbem.net_source_reg`
-- `tensorbem.neumann_kelvin`
-- `tensorbem.nk_panel3d`
-- `tensorbem.panel_quadratic`
-- `tensorbem.pekeris_acoustics`
-- `tensorbem.propeller`
-- `tensorbem.rankine_fs`
-- `tensorbem.rankine_wave`
-- `tensorbem.reference_provenance`
-- `tensorbem.series60`
-- `tensorbem.state_space`
-- `tensorbem.stf_fullspeed`
-- `tensorbem.tank_free_surface`
-- `tensorbem.verification`
-- `tensorbem.wigley3_freq`
-- `tensorbem.wigley3_hull`
+- `tensorbem.cathodic_protection` — physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.cp_galvanic` — physics/geometry module cp_galvanic is pinned by tests/test_cp_galvanic.py, tests/test_cp_verification_m9204.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.cylinder_drift` — physics/geometry module cylinder_drift is pinned by tests/test_cylinder_drift_asymptotic.py, tests/test_diffraction_drift_maturity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.drift_far_field3d` — physics/geometry module drift_far_field3d is pinned by tests/test_diffraction_drift_maturity.py, tests/test_drift_far_field3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.figure_integrity` — physics/geometry module figure_integrity is pinned by tests/test_figure_integrity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.finite_depth_green` — physics/geometry module finite_depth_green is pinned by tests/test_finite_depth_green.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.finite_depth_solver3d` — physics/geometry module finite_depth_solver3d is pinned by tests/test_finite_depth3d_quadrature_solver.py, tests/test_finite_depth_solver3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.flexural_gravity` — physics/geometry module flexural_gravity is pinned by tests/test_flexural_gravity.py, tests/test_flexural_gravity_evidence.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.haskind2d` — physics/geometry module haskind2d is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.interior_panels` — physics/geometry module interior_panels is pinned by tests/test_interior_panel_suppression.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.irregular_frequency` — physics/geometry module irregular_frequency is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_irregular_frequency_study.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.net_source_reg` — physics/geometry module net_source_reg is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.neumann_kelvin` — physics/geometry module neumann_kelvin is pinned by tests/test_neumann_kelvin.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.nk_panel3d` — physics/geometry module nk_panel3d is pinned by tests/test_nk_panel3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.panel_quadratic` — physics/geometry module panel_quadratic is pinned by tests/test_panel_quadratic.py, tests/test_panel_quadratic_near_singular.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.pekeris_acoustics` — physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.propeller` — physics/geometry module propeller is pinned by tests/test_propeller_open_water.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.rankine_fs` — physics/geometry module rankine_fs is pinned by tests/test_rankine_fs_panel.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.rankine_wave` — physics/geometry module rankine_wave is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.reference_provenance` — physics/geometry module reference_provenance is pinned by tests/test_reference_provenance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.series60` — physics/geometry module series60 is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.state_space` — physics/geometry module state_space is pinned by tests/test_state_space.py, tests/test_state_space_fit_invariants.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.stf_fullspeed` — physics/geometry module stf_fullspeed is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.tank_free_surface` — physics/geometry module tank_free_surface is pinned by tests/test_tank_free_surface.py, tests/test_tank_free_surface_doc_pins.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
+- `tensorbem.wigley3_freq` — physics/geometry module wigley3_freq is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_m7602_freq_domain_verification.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.wigley3_hull` — physics/geometry module wigley3_hull is pinned by tests/test_multibody_frequency_dependence_3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 
 ### Untested modules
 
@@ -217,7 +215,6 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.kp505_w20_gci` — three-density GCI study of the KP505 open-water lattice; the propeller physics it drives is pinned by tests/test_propeller_open_water.py and graded by the propeller row.
 - `tensorbem.benchmarks.multihull_frequency_figures` — matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact; the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.
 - `tensorbem.benchmarks.neumann_kelvin_verification` — Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the kernel and the steady wave-resistance physics it reports on are pinned by tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.
-- `tensorbem.benchmarks.panel_linear_order` — study driver that writes docs/panel_linear_order/study.json and its figures; the operator it drives is pinned by tests/test_panel_linear_order.py and graded by the linear-panel-operators row.
 - `tensorbem.benchmarks.quadratic_panel_convergence` — convergence study driver for the quadratic-panel operator; the operator itself is graded by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 - `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
