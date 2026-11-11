@@ -365,6 +365,195 @@
       "max_abs_inertia_correction_percent": 2.9182400799378727,
       "threshold": 1.0,
       "pass": true
+    },
+    "V11_fd_depth_factor": {
+      "description": "independent FD route (discretised psi''=k^2 psi, no analytic tanh) reproduces eq.(3): finest-grid |d omega^2|/omega^2 < 1e-6 while the truncation-dominated coarse pair shows second-order convergence (observed order in [1.7, 2.3])",
+      "rows": [
+        {
+          "ice_thickness": 1.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.01,
+          "k_dz_coarsest": 0.0005,
+          "dz": [
+            0.05,
+            0.025,
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "relative_errors": [
+            9.485286321516939e-08,
+            2.5037079016355693e-08,
+            7.331822076162867e-09,
+            2.867371628107703e-09,
+            6.636076310697883e-08
+          ],
+          "observed_orders": [
+            1.9216250651034639,
+            1.7718225771392688,
+            1.3544428775292776,
+            -4.53252967296212
+          ],
+          "finest_error": 6.636076310697883e-08,
+          "coarse_order": 1.9216250651034639
+        },
+        {
+          "ice_thickness": 1.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.1,
+          "k_dz_coarsest": 0.005000000000000001,
+          "dz": [
+            0.05,
+            0.025,
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "relative_errors": [
+            8.5765207491139e-06,
+            2.147702726146493e-06,
+            5.374076114685171e-07,
+            1.3471043646352649e-07,
+            3.3460238737094886e-08
+          ],
+          "observed_orders": [
+            1.9975981892106907,
+            1.9987056568497639,
+            1.9961551293358009,
+            2.0093419814104188
+          ],
+          "finest_error": 3.3460238737094886e-08,
+          "coarse_order": 1.9975981892106907
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.5,
+          "k_dz_coarsest": 0.02,
+          "dz": [
+            0.04,
+            0.02,
+            0.01,
+            0.005,
+            0.0025
+          ],
+          "relative_errors": [
+            7.812674307179578e-05,
+            1.9661504667460992e-05,
+            4.931738222715896e-06,
+            1.2349854909462973e-06,
+            3.0902328369692923e-07
+          ],
+          "observed_orders": [
+            1.9904427393946265,
+            1.9952056048858442,
+            1.997602130729839,
+            1.998706643837659
+          ],
+          "finest_error": 3.0902328369692923e-07,
+          "coarse_order": 1.9904427393946265
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "wavenumber": 0.05,
+          "k_dz_coarsest": 0.0025000000000000005,
+          "dz": [
+            0.05,
+            0.025,
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "relative_errors": [
+            2.3238663301028268e-06,
+            5.815480292332765e-07,
+            1.456441258193637e-07,
+            3.489352531883775e-08,
+            1.4234786349211613e-08
+          ],
+          "observed_orders": [
+            1.998556834739079,
+            1.9974508315084454,
+            2.0614162487012577,
+            1.293538521706043
+          ],
+          "finest_error": 1.4234786349211613e-08,
+          "coarse_order": 1.998556834739079
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "wavenumber": 0.3,
+          "k_dz_coarsest": 0.015,
+          "dz": [
+            0.05,
+            0.025,
+            0.0125,
+            0.00625,
+            0.003125
+          ],
+          "relative_errors": [
+            5.435973350626591e-05,
+            1.3657833060277236e-05,
+            3.4229909459324246e-06,
+            8.568161802318807e-07,
+            2.1433756052824168e-07
+          ],
+          "observed_orders": [
+            1.9928097783749683,
+            1.996399223635268,
+            1.9981998468112354,
+            1.9991010342493505
+          ],
+          "finest_error": 2.1433756052824168e-07,
+          "coarse_order": 1.9928097783749683
+        },
+        {
+          "ice_thickness": 0.5,
+          "water_depth": 20.0,
+          "wavenumber": 0.6,
+          "k_dz_coarsest": 0.02,
+          "dz": [
+            0.03333333333333333,
+            0.016666666666666666,
+            0.008333333333333333,
+            0.004166666666666667,
+            0.0020833333333333333
+          ],
+          "relative_errors": [
+            0.00011669585616754667,
+            2.9368718324717116e-05,
+            7.366670702110326e-06,
+            1.844725191133747e-06,
+            4.6155441964675666e-07
+          ],
+          "observed_orders": [
+            1.9904011205780332,
+            1.9951956474251242,
+            1.9976068401966456,
+            1.9988332496921277
+          ],
+          "finest_error": 4.6155441964675666e-07,
+          "coarse_order": 1.9904011205780332
+        }
+      ],
+      "max_relative_error": 4.6155441964675666e-07,
+      "min_coarse_order": 1.9216250651034639,
+      "max_coarse_order": 1.998556834739079,
+      "threshold": 1e-06,
+      "min_order_threshold": 1.7,
+      "max_order_threshold": 2.3,
+      "pass": true
+    },
+    "V12_energy_balance": {
+      "description": "variational energy balance (quadrature depth integral) is satisfied by eq.(3) and rejects the denominator-only variant by >1% in shallow water",
+      "max_abs_residual": 4.901655497818007e-16,
+      "max_completion_defect": 4.440892098500626e-16,
+      "max_denominator_only_deviation_percent": 881.5289127028734,
+      "threshold": 1e-09,
+      "threshold_percent": 1.0,
+      "pass": true
     }
   },
   "inertia_effect_table": [
@@ -1246,11 +1435,568 @@
       "inertia_correction_percent": -2.0582271879684644
     }
   ],
+  "fd_route_table": [
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.01,
+      "k_dz_coarsest": 0.0005,
+      "dz": [
+        0.05,
+        0.025,
+        0.0125,
+        0.00625,
+        0.003125
+      ],
+      "relative_errors": [
+        9.485286321516939e-08,
+        2.5037079016355693e-08,
+        7.331822076162867e-09,
+        2.867371628107703e-09,
+        6.636076310697883e-08
+      ],
+      "observed_orders": [
+        1.9216250651034639,
+        1.7718225771392688,
+        1.3544428775292776,
+        -4.53252967296212
+      ],
+      "finest_error": 6.636076310697883e-08,
+      "coarse_order": 1.9216250651034639
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.1,
+      "k_dz_coarsest": 0.005000000000000001,
+      "dz": [
+        0.05,
+        0.025,
+        0.0125,
+        0.00625,
+        0.003125
+      ],
+      "relative_errors": [
+        8.5765207491139e-06,
+        2.147702726146493e-06,
+        5.374076114685171e-07,
+        1.3471043646352649e-07,
+        3.3460238737094886e-08
+      ],
+      "observed_orders": [
+        1.9975981892106907,
+        1.9987056568497639,
+        1.9961551293358009,
+        2.0093419814104188
+      ],
+      "finest_error": 3.3460238737094886e-08,
+      "coarse_order": 1.9975981892106907
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.5,
+      "k_dz_coarsest": 0.02,
+      "dz": [
+        0.04,
+        0.02,
+        0.01,
+        0.005,
+        0.0025
+      ],
+      "relative_errors": [
+        7.812674307179578e-05,
+        1.9661504667460992e-05,
+        4.931738222715896e-06,
+        1.2349854909462973e-06,
+        3.0902328369692923e-07
+      ],
+      "observed_orders": [
+        1.9904427393946265,
+        1.9952056048858442,
+        1.997602130729839,
+        1.998706643837659
+      ],
+      "finest_error": 3.0902328369692923e-07,
+      "coarse_order": 1.9904427393946265
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.05,
+      "k_dz_coarsest": 0.0025000000000000005,
+      "dz": [
+        0.05,
+        0.025,
+        0.0125,
+        0.00625,
+        0.003125
+      ],
+      "relative_errors": [
+        2.3238663301028268e-06,
+        5.815480292332765e-07,
+        1.456441258193637e-07,
+        3.489352531883775e-08,
+        1.4234786349211613e-08
+      ],
+      "observed_orders": [
+        1.998556834739079,
+        1.9974508315084454,
+        2.0614162487012577,
+        1.293538521706043
+      ],
+      "finest_error": 1.4234786349211613e-08,
+      "coarse_order": 1.998556834739079
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.3,
+      "k_dz_coarsest": 0.015,
+      "dz": [
+        0.05,
+        0.025,
+        0.0125,
+        0.00625,
+        0.003125
+      ],
+      "relative_errors": [
+        5.435973350626591e-05,
+        1.3657833060277236e-05,
+        3.4229909459324246e-06,
+        8.568161802318807e-07,
+        2.1433756052824168e-07
+      ],
+      "observed_orders": [
+        1.9928097783749683,
+        1.996399223635268,
+        1.9981998468112354,
+        1.9991010342493505
+      ],
+      "finest_error": 2.1433756052824168e-07,
+      "coarse_order": 1.9928097783749683
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.6,
+      "k_dz_coarsest": 0.02,
+      "dz": [
+        0.03333333333333333,
+        0.016666666666666666,
+        0.008333333333333333,
+        0.004166666666666667,
+        0.0020833333333333333
+      ],
+      "relative_errors": [
+        0.00011669585616754667,
+        2.9368718324717116e-05,
+        7.366670702110326e-06,
+        1.844725191133747e-06,
+        4.6155441964675666e-07
+      ],
+      "observed_orders": [
+        1.9904011205780332,
+        1.9951956474251242,
+        1.9976068401966456,
+        1.9988332496921277
+      ],
+      "finest_error": 4.6155441964675666e-07,
+      "coarse_order": 1.9904011205780332
+    }
+  ],
+  "energy_balance_table": [
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.005,
+      "kH": 1.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 0.7615941559557649,
+      "energy_residual_eq3": 1.8095599017228268e-16,
+      "completion_ratio": 0.9999999999999999,
+      "energy_residual_denominator_only": 0.30981534616110074,
+      "denominator_only_deviation_percent": 30.981534616110107
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.01,
+      "kH": 2.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 0.9640275800758169,
+      "energy_residual_eq3": 1.8087687572127176e-16,
+      "completion_ratio": 0.9999999999999998,
+      "energy_residual_denominator_only": 0.036640857049772886,
+      "denominator_only_deviation_percent": 3.6640857049772935
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.02,
+      "kH": 4.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 0.999329299739067,
+      "energy_residual_eq3": 3.5924077474383996e-16,
+      "completion_ratio": 1.0000000000000004,
+      "energy_residual_denominator_only": 0.0006475475806167682,
+      "denominator_only_deviation_percent": 0.06475475806162478
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.05,
+      "kH": 10.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 0.9999999958776927,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 3.769301985323491e-09,
+      "denominator_only_deviation_percent": 3.7693019816487094e-07
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.1,
+      "kH": 20.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 2.5551960315473807e-16,
+      "denominator_only_deviation_percent": 2.220446049250313e-14
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.2,
+      "kH": 40.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 1.5309196513473631e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 0.0,
+      "denominator_only_deviation_percent": 1.1102230246251565e-14
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.3,
+      "kH": 60.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 1.2225841508714165e-16,
+      "completion_ratio": 1.0000000000000004,
+      "energy_residual_denominator_only": 0.0,
+      "denominator_only_deviation_percent": 2.220446049250313e-14
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.5,
+      "kH": 100.0,
+      "mu": 0.8946341463414634,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 1.2704936458161673e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 1.2704936458161673e-16,
+      "denominator_only_deviation_percent": 0.0
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.005,
+      "kH": 1.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.7615941559557649,
+      "energy_residual_eq3": 1.8091906148430543e-16,
+      "completion_ratio": 0.9999999999999999,
+      "energy_residual_denominator_only": 0.30663279184923536,
+      "denominator_only_deviation_percent": 30.663279184923553
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.01,
+      "kH": 2.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.9640275800758169,
+      "energy_residual_eq3": 1.802883340151771e-16,
+      "completion_ratio": 0.9999999999999998,
+      "energy_residual_denominator_only": 0.03597927260644948,
+      "denominator_only_deviation_percent": 3.597927260644984
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.02,
+      "kH": 4.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.999329299739067,
+      "energy_residual_eq3": 3.415263754070118e-16,
+      "completion_ratio": 1.0000000000000004,
+      "energy_residual_denominator_only": 0.0006247607421808148,
+      "denominator_only_deviation_percent": 0.06247607421803192
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.05,
+      "kH": 10.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.9999999958776927,
+      "energy_residual_eq3": 2.1718594047249223e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 3.445284860753524e-09,
+      "denominator_only_deviation_percent": 3.445284724179487e-07
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.1,
+      "kH": 20.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 3.021893972257906e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 0.0,
+      "denominator_only_deviation_percent": 2.220446049250313e-14
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.2,
+      "kH": 40.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 1.548833945754293e-16,
+      "denominator_only_deviation_percent": 1.1102230246251565e-14
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.3,
+      "kH": 60.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 2.4508277489090036e-16,
+      "completion_ratio": 1.0000000000000004,
+      "energy_residual_denominator_only": 0.0,
+      "denominator_only_deviation_percent": 2.220446049250313e-14
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.5,
+      "kH": 100.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 1.0,
+      "energy_residual_eq3": 2.5417497177304085e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 2.5417497177304085e-16,
+      "denominator_only_deviation_percent": 0.0
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.005,
+      "kH": 0.1,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.09966799462495582,
+      "energy_residual_eq3": 1.8091906148430543e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 8.215097195811671,
+      "denominator_only_deviation_percent": 821.5097195811668
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.01,
+      "kH": 0.2,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.197375320224904,
+      "energy_residual_eq3": 1.802883340151771e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 3.6617776879503023,
+      "denominator_only_deviation_percent": 366.1777687950302
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.02,
+      "kH": 0.4,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.3799489622552249,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 1.4380873651466994,
+      "denominator_only_deviation_percent": 143.80873651466993
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.05,
+      "kH": 1.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.7615941559557649,
+      "energy_residual_eq3": 2.1718594047249223e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 0.2550676366310154,
+      "denominator_only_deviation_percent": 25.506763663101516
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.1,
+      "kH": 2.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.9640275800758169,
+      "energy_residual_eq3": 1.510946986128953e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 0.025841790927593426,
+      "denominator_only_deviation_percent": 2.58417909275932
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.2,
+      "kH": 4.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.999329299739067,
+      "energy_residual_eq3": 4.646501837262879e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 0.00031733946860327725,
+      "denominator_only_deviation_percent": 0.03173394686029063
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.3,
+      "kH": 6.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.9999877116507956,
+      "energy_residual_eq3": 4.901655497818007e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 3.7040089232407546e-06,
+      "denominator_only_deviation_percent": 0.00037040089237994067
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.5,
+      "kH": 10.0,
+      "mu": 1.7892682926829269,
+      "tanh_kH": 0.9999999958776927,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 2.2925298870320832e-10,
+      "denominator_only_deviation_percent": 2.2925306097931752e-08
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.005,
+      "kH": 0.1,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.09966799462495582,
+      "energy_residual_eq3": 1.8096060731830714e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 8.815289127028736,
+      "denominator_only_deviation_percent": 881.5289127028734
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.01,
+      "kH": 0.2,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.197375320224904,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 3.958584970153371,
+      "denominator_only_deviation_percent": 395.8584970153371
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.02,
+      "kH": 0.4,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.3799489622552249,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 1.580126691066835,
+      "denominator_only_deviation_percent": 158.01266910668352
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.05,
+      "kH": 1.0,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.7615941559557649,
+      "energy_residual_eq3": 0.0,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 0.2973030396533508,
+      "denominator_only_deviation_percent": 29.730303965335068
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.1,
+      "kH": 2.0,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.9640275800758169,
+      "energy_residual_eq3": 3.4290091949928917e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 0.03406492767314059,
+      "denominator_only_deviation_percent": 3.40649276731404
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.2,
+      "kH": 4.0,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.999329299739067,
+      "energy_residual_eq3": 1.401260352189123e-16,
+      "completion_ratio": 1.0000000000000002,
+      "energy_residual_denominator_only": 0.0005608938389574688,
+      "denominator_only_deviation_percent": 0.05608938389574103
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.3,
+      "kH": 6.0,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.9999877116507956,
+      "energy_residual_eq3": 2.4008166095011073e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 9.380597527316292e-06,
+      "denominator_only_deviation_percent": 0.0009380597527641754
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.5,
+      "kH": 10.0,
+      "mu": 0.4473170731707317,
+      "tanh_kH": 0.9999999958776927,
+      "energy_residual_eq3": 2.534904309697954e-16,
+      "completion_ratio": 1.0,
+      "energy_residual_denominator_only": 2.6153682562581103e-09,
+      "denominator_only_deviation_percent": 2.615368588365641e-07
+    }
+  ],
   "figures": [
     "fig_dispersion_models.png",
     "fig_phase_speed_ratio.png",
     "fig_wavelength_ratio.png",
-    "fig_edge_coefficients.png"
+    "fig_edge_coefficients.png",
+    "fig_verification_routes.png"
   ],
   "all_criteria_pass": true
 }
