@@ -10,3 +10,6 @@ build/
 artifacts/
 papers/data/w20-anchors/.solve_cache.json
 __pycache__/
+
+# W22 KP505 lattice cache / driver logs (regenerable, not a deliverable)
+runs/
