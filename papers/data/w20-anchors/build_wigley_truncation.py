@@ -650,11 +650,21 @@ def main() -> int:
     return 0
 
 
-def make_figures(doc: dict) -> list[dict]:
+def make_figures(doc: dict, out_dir: Path | None = None) -> list[dict]:
+    """Render the three report figures from the committed record.
+
+    ``doc`` is the parsed ``wigley_truncation_comparison.json``; nothing numeric
+    is passed in by hand.  ``out_dir`` defaults to the report's ``figures/``
+    directory so the report build stays unchanged, but a caller (e.g. a test)
+    can render into a temporary directory and check the figures are reproducible
+    from the committed numbers alone.
+    """
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    figdir = FIGDIR if out_dir is None else Path(out_dir)
+    figdir.mkdir(parents=True, exist_ok=True)
     figs: list[dict] = []
     doms = doc["domains_by_froude"]
 
@@ -682,7 +692,7 @@ def make_figures(doc: dict) -> list[dict]:
         ax.grid(alpha=0.3, which="both")
         ax.legend(fontsize=8)
     fig.tight_layout()
-    p = FIGDIR / "w20_wigley_truncation_domain.png"
+    p = figdir / "w20_wigley_truncation_domain.png"
     fig.savefig(p)
     plt.close(fig)
     figs.append({"name": p.name, "caption":
@@ -721,7 +731,7 @@ def make_figures(doc: dict) -> list[dict]:
     axes[1].grid(alpha=0.3, which="both")
     axes[1].legend(fontsize=8)
     fig.tight_layout()
-    p = FIGDIR / "w20_wigley_energy_and_accuracy.png"
+    p = figdir / "w20_wigley_energy_and_accuracy.png"
     fig.savefig(p)
     plt.close(fig)
     figs.append({"name": p.name, "caption":
@@ -773,7 +783,7 @@ def make_figures(doc: dict) -> list[dict]:
     axes[2].legend(fontsize=8)
     axes[2].grid(alpha=0.3, which="both")
     fig.tight_layout()
-    p = FIGDIR / "w20_wigley_gates_and_mesh.png"
+    p = figdir / "w20_wigley_gates_and_mesh.png"
     fig.savefig(p)
     plt.close(fig)
     figs.append({"name": p.name, "caption":

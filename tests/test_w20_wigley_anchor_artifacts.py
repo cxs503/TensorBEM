@@ -132,11 +132,54 @@ def test_damping_zone_is_declared_not_supported(comp):
     assert "no sponge layer" in text
 
 
-def test_report_artifact_and_figures_exist():
+FIGURE_NAMES = (
+    "w20_wigley_truncation_domain.png",
+    "w20_wigley_energy_and_accuracy.png",
+    "w20_wigley_gates_and_mesh.png",
+)
+
+
+def _figure_builder():
+    """Load ``papers/data/w20-anchors/build_wigley_truncation.py`` by path.
+
+    The directory name is not importable (hyphen), and the module only defines
+    functions at import time, so a ``spec_from_file_location`` load is safe.
+    """
+    import importlib.util
+
+    path = REPO / "papers/data/w20-anchors/build_wigley_truncation.py"
+    spec = importlib.util.spec_from_file_location("w20_build_wigley_truncation", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_report_artifact_and_figures_are_reproducible(tmp_path):
+    """The report's three figures must be re-renderable from the committed record.
+
+    A committed ``*.png`` under ``papers/`` is not a durable invariant: the
+    platform push gate drops ``*.png`` outside ``docs/`` (see
+    ``docs/dev_report_m13806_push_gate_figure_integrity.md``), so the images the
+    report links never reach ``main``.  The invariant kept here is the
+    reproducible one -- the figures are rendered from
+    ``papers/data/w20-anchors/wigley_truncation_comparison.json`` into a
+    temporary directory, must be non-trivial, and the report must still link
+    exactly those names.
+    """
     report = REPO / "papers/reports/w20_seakeeping_truncation4.md"
     assert report.exists() and report.stat().st_size > 5000
-    for fig in ("w20_wigley_truncation_domain.png",
-                "w20_wigley_energy_and_accuracy.png",
-                "w20_wigley_gates_and_mesh.png"):
-        path = REPO / "papers/reports/figures" / fig
-        assert path.exists() and path.stat().st_size > 1000
+
+    doc = json.loads(COMP.read_text())
+    figs = _figure_builder().make_figures(doc, out_dir=tmp_path)
+    assert [f["name"] for f in figs] == list(FIGURE_NAMES)
+    assert all(f["caption"].strip() for f in figs)
+
+    from _figure_integrity import assert_reproducible_figures
+
+    assert_reproducible_figures(
+        [tmp_path / name for name in FIGURE_NAMES],
+        minimum=3,
+        minimum_bytes=10_000,
+        embedded_in=report.read_text(encoding="utf-8"),
+    )

@@ -40,8 +40,29 @@ class TestArtifactsExist:
     def test_report_md_exists(self):
         assert (VERIFIED_DIR / "report.md").is_file()
 
-    def test_figure_png_exists(self):
-        assert (VERIFIED_DIR / "figures" / "maccamy_fuchs_convergence.png").is_file()
+    def test_figure_is_reproducible_from_the_record(self, tmp_path, results):
+        """The report's figure must be re-renderable from ``results.json``.
+
+        A committed ``*.png`` under ``benchmarks/`` is not a durable invariant:
+        the platform push gate drops ``*.png`` outside ``docs/`` (see
+        ``docs/dev_report_m13806_push_gate_figure_integrity.md``), so the image
+        the report links never reaches ``main``.  The invariant kept here is the
+        reproducible one: render the three-panel figure from the committed
+        numbers into a temporary directory, require a non-trivial image, and
+        require the report to still link exactly that file name.
+        """
+        from _figure_integrity import assert_reproducible_figures
+        from tensorbem.benchmarks.maccamy_fuchs_figure import (
+            FIGURE_NAME,
+            render_convergence_figure,
+        )
+
+        report = (VERIFIED_DIR / "report.md").read_text(encoding="utf-8")
+        figure = render_convergence_figure(results, tmp_path)
+        assert figure.name == FIGURE_NAME
+        assert_reproducible_figures(
+            [figure], minimum=1, minimum_bytes=10_000, embedded_in=report
+        )
 
 
 class TestGatesPass:
