@@ -1,0 +1,518 @@
+{
+  "benchmark": "m13787_revalidation",
+  "convergence": {
+    "panels": [
+      {
+        "n_phi": 8,
+        "n_r": 8,
+        "rel_err": 0.6323974021004654
+      },
+      {
+        "n_phi": 16,
+        "n_r": 16,
+        "rel_err": 0.32134343513440194
+      },
+      {
+        "n_phi": 32,
+        "n_r": 32,
+        "rel_err": 0.16143561259717368
+      },
+      {
+        "n_phi": 64,
+        "n_r": 64,
+        "rel_err": 0.08085046869580527
+      }
+    ],
+    "panels_k": 1.0,
+    "panels_monotone": true,
+    "quadrature": [
+      {
+        "n_phi": 48,
+        "n_psi": 24,
+        "rel_err": 1.1793370129305397e-15
+      },
+      {
+        "n_phi": 96,
+        "n_psi": 48,
+        "rel_err": 2.508776026333748e-15
+      },
+      {
+        "n_phi": 192,
+        "n_psi": 96,
+        "rel_err": 1.1647406798679064e-15
+      }
+    ],
+    "quadrature_k": 2.0,
+    "quadrature_monotone": false
+  },
+  "geometry_gate": {
+    "B": 2.0,
+    "Cb": 0.5235987755982989,
+    "Cb_reference": 0.5235987755982988,
+    "Cb_rel_err": 2.1203697876423447e-16,
+    "L": 10.0,
+    "T": 0.5,
+    "a": 5.0,
+    "b": 1.0,
+    "c": 0.5,
+    "pass": true,
+    "thinness_b_over_a": 0.2,
+    "volume": 5.235987755982989
+  },
+  "kochin": [
+    {
+      "in_envelope": true,
+      "k": 0.3,
+      "ka": 1.5,
+      "phase_diff_deg": 0.0,
+      "rel_err": 1.9659876150314222e-14,
+      "route": "quadrature"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.3,
+      "ka": 1.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.07283255660873021,
+      "route": "panels_source"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.3,
+      "ka": 1.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.0012386347773147613,
+      "route": "panels_source_integrated"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.3,
+      "ka": 1.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.001301256253165594,
+      "route": "panels_ordinate"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.5,
+      "ka": 2.5,
+      "phase_diff_deg": 0.0,
+      "rel_err": 1.6599972263209142e-14,
+      "route": "quadrature"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.5,
+      "ka": 2.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.06065754016661131,
+      "route": "panels_source"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.5,
+      "ka": 2.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.0005181695085553726,
+      "route": "panels_source_integrated"
+    },
+    {
+      "in_envelope": true,
+      "k": 0.5,
+      "ka": 2.5,
+      "phase_diff_deg": null,
+      "rel_err": 0.0017112453503328503,
+      "route": "panels_ordinate"
+    },
+    {
+      "in_envelope": true,
+      "k": 1.0,
+      "ka": 5.0,
+      "phase_diff_deg": 0.0,
+      "rel_err": 5.487622459957713e-14,
+      "route": "quadrature"
+    },
+    {
+      "in_envelope": true,
+      "k": 1.0,
+      "ka": 5.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.16143561259717368,
+      "route": "panels_source"
+    },
+    {
+      "in_envelope": true,
+      "k": 1.0,
+      "ka": 5.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.011305167996149699,
+      "route": "panels_source_integrated"
+    },
+    {
+      "in_envelope": true,
+      "k": 1.0,
+      "ka": 5.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.005240053049751684,
+      "route": "panels_ordinate"
+    },
+    {
+      "in_envelope": true,
+      "k": 2.0,
+      "ka": 10.0,
+      "phase_diff_deg": 2.5444437451708134e-14,
+      "rel_err": 8.584220593409443e-15,
+      "route": "quadrature"
+    },
+    {
+      "in_envelope": true,
+      "k": 2.0,
+      "ka": 10.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.004541961297386242,
+      "route": "panels_source"
+    },
+    {
+      "in_envelope": true,
+      "k": 2.0,
+      "ka": 10.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.017277811300084024,
+      "route": "panels_source_integrated"
+    },
+    {
+      "in_envelope": true,
+      "k": 2.0,
+      "ka": 10.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.02098326045728262,
+      "route": "panels_ordinate"
+    },
+    {
+      "in_envelope": false,
+      "k": 4.0,
+      "ka": 20.0,
+      "phase_diff_deg": 5.088887490341627e-14,
+      "rel_err": 1.523719632313127e-13,
+      "route": "quadrature"
+    },
+    {
+      "in_envelope": false,
+      "k": 4.0,
+      "ka": 20.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.6522189210011927,
+      "route": "panels_source"
+    },
+    {
+      "in_envelope": false,
+      "k": 4.0,
+      "ka": 20.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.19279323916841526,
+      "route": "panels_source_integrated"
+    },
+    {
+      "in_envelope": false,
+      "k": 4.0,
+      "ka": 20.0,
+      "phase_diff_deg": null,
+      "rel_err": 0.3021898987616721,
+      "route": "panels_ordinate"
+    }
+  ],
+  "metrics": {
+    "convergence_panels_first": 0.6323974021004654,
+    "convergence_panels_last": 0.08085046869580527,
+    "convergence_quadrature_first": 1.1793370129305397e-15,
+    "convergence_quadrature_last": 1.1647406798679064e-15,
+    "panels_integrated_in_envelope_argmax_k": 2.0,
+    "panels_integrated_in_envelope_max": 0.017277811300084024,
+    "panels_ordinate_all_argmax_k": 4.0,
+    "panels_ordinate_all_max": 0.3021898987616721,
+    "panels_ordinate_in_envelope_max": 0.02098326045728262,
+    "panels_source_in_envelope_argmax_k": 1.0,
+    "panels_source_in_envelope_max": 0.16143561259717368,
+    "quadrature_magnitude_max": 1.523719632313127e-13,
+    "quadrature_phase_max_deg": 5.088887490341627e-14,
+    "resistance_panels_argmax_froude": 0.2,
+    "resistance_panels_max": 0.009554812251033232,
+    "resistance_quadrature_argmax_froude": 0.2,
+    "resistance_quadrature_max": 7.840167794823718e-14
+  },
+  "mission": 15140,
+  "report": "dev_report_m13787_ellipsoid_kochin_verification.md",
+  "resistance": [
+    {
+      "froude": 0.2,
+      "k0": 2.5,
+      "r_analytic": 16.856903105904788,
+      "r_panels": 17.017967650215567,
+      "r_quadrature": 16.85690310590611,
+      "rel_err_panels": 0.009554812251033232,
+      "rel_err_quadrature": 7.840167794823718e-14
+    },
+    {
+      "froude": 0.3,
+      "k0": 1.1111111111111112,
+      "r_analytic": 56.707227964866,
+      "r_panels": 56.660861506197215,
+      "r_quadrature": 56.70722796486959,
+      "rel_err_panels": 0.0008176463624268975,
+      "rel_err_quadrature": 6.327660413610177e-14
+    },
+    {
+      "froude": 0.5,
+      "k0": 0.4000000000000001,
+      "r_analytic": 196.7072427315226,
+      "r_panels": 196.76536908473977,
+      "r_quadrature": 196.70724273152928,
+      "rel_err_panels": 0.00029549676163429466,
+      "rel_err_quadrature": 3.395452868637361e-14
+    },
+    {
+      "froude": 0.7,
+      "k0": 0.2040816326530613,
+      "r_analytic": 90.02244100157323,
+      "r_panels": 89.81017737735222,
+      "r_quadrature": 90.02244100157681,
+      "rel_err_panels": 0.0023578967850616237,
+      "rel_err_quadrature": 3.9780474161640665e-14
+    }
+  ],
+  "rows": [
+    {
+      "abs_diff": 9.999999984762805e-05,
+      "criterion": 0.001,
+      "declared": 0.0001,
+      "declared_text": "< 0.01 %",
+      "declared_traced_to": null,
+      "key": "quadrature_magnitude_max",
+      "kind": "kochin",
+      "quantity": "max |H_analytic - H_quadrature| / |H_analytic| (5 wavenumbers)",
+      "recomputed": 1.523719632313127e-13,
+      "section": "\u00a74.1",
+      "tolerance": 0.002,
+      "verdict": "reproduced"
+    },
+    {
+      "abs_diff": 0.000999999999949111,
+      "criterion": 0.001,
+      "declared": 0.001,
+      "declared_text": "< 0.001 deg",
+      "declared_traced_to": null,
+      "key": "quadrature_phase_max_deg",
+      "kind": "kochin",
+      "quantity": "max phase difference analytic vs quadrature [deg]",
+      "recomputed": 5.088887490341627e-14,
+      "section": "\u00a74.1",
+      "tolerance": 0.002,
+      "verdict": "reproduced"
+    },
+    {
+      "abs_diff": 0.08843561259717368,
+      "criterion": 0.1,
+      "declared": 0.073,
+      "declared_text": "7.3 % @ k = 0.3, criterion < 10 % (green tick)",
+      "declared_traced_to": {
+        "k": 0.3,
+        "n_r": 32,
+        "rel_diff": 0.002293745085887448,
+        "route": "panels_source",
+        "value": 0.07283255660873021
+      },
+      "key": "panels_source_in_envelope_max",
+      "kind": "kochin",
+      "quantity": "max relative error, panels(source), k a <= 10",
+      "recomputed": 0.16143561259717368,
+      "section": "\u00a74.1",
+      "tolerance": 0.0073,
+      "traceable": true,
+      "verdict": "withdrawn"
+    },
+    {
+      "abs_diff": 0.06372218869991597,
+      "criterion": 0.1,
+      "declared": 0.081,
+      "declared_text": "8.1 % @ k = 0.3, criterion < 10 % (green tick)",
+      "declared_traced_to": {
+        "k": 1.0,
+        "n_r": 64,
+        "rel_diff": 0.0018460654838855957,
+        "route": "panels_source",
+        "value": 0.08085046869580527
+      },
+      "key": "panels_integrated_in_envelope_max",
+      "kind": "kochin",
+      "quantity": "max relative error, panels(source_integrated), k a <= 10",
+      "recomputed": 0.017277811300084024,
+      "section": "\u00a74.1",
+      "tolerance": 0.008100000000000001,
+      "traceable": true,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 0.00018989876167213593,
+      "criterion": 0.35,
+      "declared": 0.302,
+      "declared_text": "30.2 % @ k = 4.0, criterion < 35 % (warning)",
+      "declared_traced_to": {
+        "k": 4.0,
+        "n_r": 32,
+        "rel_diff": 0.0006288038465964766,
+        "route": "panels_ordinate",
+        "value": 0.3021898987616721
+      },
+      "key": "panels_ordinate_all_max",
+      "kind": "kochin",
+      "quantity": "max relative error, panels(ordinate), all 5 wavenumbers",
+      "recomputed": 0.3021898987616721,
+      "section": "\u00a74.1",
+      "tolerance": 0.0302,
+      "traceable": true,
+      "verdict": "reproduced"
+    },
+    {
+      "abs_diff": 0.037999999999921596,
+      "criterion": 0.05,
+      "declared": 0.038,
+      "declared_text": "3.8 % @ Fn = 0.3, criterion < 5 % (green tick)",
+      "declared_traced_to": null,
+      "key": "resistance_quadrature_max",
+      "kind": "resistance",
+      "quantity": "max |R_a - R_q| / R_a, R_q = kelvin(kochin_quadrature)",
+      "recomputed": 7.840167794823718e-14,
+      "section": "\u00a74.2",
+      "tolerance": 0.0038,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 0.07544518774896677,
+      "criterion": 0.1,
+      "declared": 0.085,
+      "declared_text": "8.5 % @ Fn = 0.5, criterion < 10 % (green tick)",
+      "declared_traced_to": null,
+      "key": "resistance_panels_max",
+      "kind": "resistance",
+      "quantity": "max |R_a - R_panels| / R_a over 4 Froude numbers",
+      "recomputed": 0.009554812251033232,
+      "section": "\u00a74.2",
+      "tolerance": 0.0085,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 0.48239740210046533,
+      "criterion": null,
+      "declared": 0.15,
+      "declared_text": "15 % at n = 8",
+      "declared_traced_to": null,
+      "key": "convergence_panels_first",
+      "kind": "convergence",
+      "quantity": "panels(source) relative error at n = 8, k = 1",
+      "recomputed": 0.6323974021004654,
+      "section": "\u00a74.3",
+      "tolerance": 0.015,
+      "traceable": true,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 0.010850468695805263,
+      "criterion": 0.1,
+      "declared": 0.07,
+      "declared_text": "7 % at n = 64",
+      "declared_traced_to": null,
+      "key": "convergence_panels_last",
+      "kind": "convergence",
+      "quantity": "panels(source) relative error at n = 64, k = 1",
+      "recomputed": 0.08085046869580527,
+      "section": "\u00a74.3",
+      "tolerance": 0.007000000000000001,
+      "traceable": true,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 0.0049999999999988205,
+      "criterion": null,
+      "declared": 0.005,
+      "declared_text": "0.5 % at n_psi = 24",
+      "declared_traced_to": null,
+      "key": "convergence_quadrature_first",
+      "kind": "convergence",
+      "quantity": "quadrature relative error at n_psi = 24, k = 2",
+      "recomputed": 1.1793370129305397e-15,
+      "section": "\u00a74.3",
+      "tolerance": 0.002,
+      "verdict": "stale"
+    },
+    {
+      "abs_diff": 9.999999999883526e-05,
+      "criterion": 0.0001,
+      "declared": 0.0001,
+      "declared_text": "< 0.01 % at n_psi = 96",
+      "declared_traced_to": null,
+      "key": "convergence_quadrature_last",
+      "kind": "convergence",
+      "quantity": "quadrature relative error at n_psi = 96, k = 2",
+      "recomputed": 1.1647406798679064e-15,
+      "section": "\u00a74.3",
+      "tolerance": 0.002,
+      "verdict": "reproduced"
+    }
+  ],
+  "settings": {
+    "convergence_npsi": [
+      24,
+      48,
+      96
+    ],
+    "convergence_panels": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "current_panel_budget": 0.2,
+    "envelope_ka": 10.0,
+    "froudes": [
+      0.2,
+      0.3,
+      0.5,
+      0.7
+    ],
+    "panel_grid": {
+      "n_phi": 32,
+      "n_r": 32
+    },
+    "provenance_rtol": 0.005,
+    "reported_panel_budget": 0.1,
+    "wavenumbers": [
+      0.3,
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ]
+  },
+  "source_pr": 658,
+  "summary": {
+    "counts": {
+      "reproduced": 4,
+      "stale": 6,
+      "withdrawn": 1
+    },
+    "in_envelope_panels_meet_current_budget": true,
+    "panels_convergence_monotone": true,
+    "quadrature_at_roundoff": true,
+    "stale": [
+      "panels_integrated_in_envelope_max",
+      "resistance_quadrature_max",
+      "resistance_panels_max",
+      "convergence_panels_first",
+      "convergence_panels_last",
+      "convergence_quadrature_first"
+    ],
+    "withdrawn": [
+      "panels_source_in_envelope_max"
+    ]
+  }
+}
