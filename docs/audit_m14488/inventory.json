@@ -1,0 +1,3329 @@
+{
+ "base_ref": "b17b169",
+ "head": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+ "merges": [
+  {
+   "pr": 625,
+   "mission": "m13836",
+   "sha": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+   "files": [
+    {
+     "path": "docs/flexural_gravity_mass_loading/fig_dispersion_models.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 725
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/fig_edge_coefficients.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1161
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/fig_phase_speed_ratio.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 438
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/fig_wavelength_ratio.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 740
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 194,
+     "lines_now": 193
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/results.md",
+     "status": "A",
+     "category": "doc",
+     "added": 65,
+     "lines_now": 65
+    },
+    {
+     "path": "docs/flexural_gravity_mass_loading/verification_report.json",
+     "status": "A",
+     "category": "doc",
+     "added": 1256,
+     "lines_now": 1256
+    },
+    {
+     "path": "docs/flexural_gravity_verification/report.md",
+     "status": "M",
+     "category": "doc",
+     "added": 5,
+     "lines_now": 346
+    },
+    {
+     "path": "post_report_m13836.py",
+     "status": "A",
+     "category": "other",
+     "added": 156,
+     "lines_now": 155
+    },
+    {
+     "path": "scripts/verify_flexural_gravity_mass_loading.py",
+     "status": "A",
+     "category": "tool",
+     "added": 699,
+     "lines_now": 698
+    },
+    {
+     "path": "src/tensorbem/flexural_gravity.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 234,
+     "lines_now": 794
+    },
+    {
+     "path": "tests/test_flexural_gravity_mass_loading.py",
+     "status": "A",
+     "category": "test",
+     "added": 302,
+     "lines_now": 301
+    }
+   ]
+  },
+  {
+   "pr": 624,
+   "mission": "m13811",
+   "sha": "56bca7a3814971fea2cbf74489c1ae61c2a5eaac",
+   "files": [
+    {
+     "path": "docs/figures/fig_m13811_fd3d_offaxis_fix.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1040
+    },
+    {
+     "path": "docs/finite_depth3d_offaxis_split.md",
+     "status": "M",
+     "category": "doc",
+     "added": 16,
+     "lines_now": 86
+    },
+    {
+     "path": "docs/finite_depth3d_quadrature_offaxis_fix.md",
+     "status": "A",
+     "category": "doc",
+     "added": 125,
+     "lines_now": 125
+    },
+    {
+     "path": "docs/m13811/outputs/m13811/fix_verification.json",
+     "status": "A",
+     "category": "doc",
+     "added": 599,
+     "lines_now": 598
+    },
+    {
+     "path": "docs/m13811/outputs/m13811/table.md",
+     "status": "A",
+     "category": "doc",
+     "added": 22,
+     "lines_now": 22
+    },
+    {
+     "path": "scripts/m13811_finite_depth3d_quadrature_offaxis_fix.py",
+     "status": "A",
+     "category": "tool",
+     "added": 126,
+     "lines_now": 126
+    },
+    {
+     "path": "src/tensorbem/finite_depth3d_quadrature.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 22,
+     "lines_now": 515
+    },
+    {
+     "path": "tests/test_finite_depth3d_offaxis_split.py",
+     "status": "M",
+     "category": "test",
+     "added": 29,
+     "lines_now": 83
+    },
+    {
+     "path": "tests/test_finite_depth3d_quadrature.py",
+     "status": "M",
+     "category": "test",
+     "added": 14,
+     "lines_now": 134
+    },
+    {
+     "path": "tests/test_finite_depth3d_quadrature_offaxis_fix.py",
+     "status": "A",
+     "category": "test",
+     "added": 63,
+     "lines_now": 63
+    }
+   ]
+  },
+  {
+   "pr": 623,
+   "mission": "m13806",
+   "sha": "a94d6c9653b71df29579be86b7f477a2fa604d76",
+   "files": [
+    {
+     "path": "docs/dev_report_m13806_push_gate_figure_integrity.md",
+     "status": "A",
+     "category": "doc",
+     "added": 106,
+     "lines_now": 105
+    },
+    {
+     "path": "docs/dev_report_m13806_push_gate_figure_integrity.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 441
+    },
+    {
+     "path": "scripts/post_report_m13806.py",
+     "status": "A",
+     "category": "tool",
+     "added": 139,
+     "lines_now": 138
+    },
+    {
+     "path": "tests/_figure_integrity.py",
+     "status": "A",
+     "category": "test",
+     "added": 54,
+     "lines_now": 53
+    },
+    {
+     "path": "tests/test_bem_finite_depth_anchors.py",
+     "status": "M",
+     "category": "test",
+     "added": 10,
+     "lines_now": 301
+    },
+    {
+     "path": "tests/test_thin_ship_anchor_artifacts.py",
+     "status": "M",
+     "category": "test",
+     "added": 19,
+     "lines_now": 192
+    }
+   ]
+  },
+  {
+   "pr": 622,
+   "mission": "m13787",
+   "sha": "ae7e0e7def666d8ef3eb0cbb4018938f8ed8713e",
+   "files": [
+    {
+     "path": "dev_report_m13787_ellipsoid_kochin_verification.md",
+     "status": "A",
+     "category": "doc",
+     "added": 111,
+     "lines_now": 111
+    },
+    {
+     "path": "tests/test_ellipsoid_kochin_three_route.py",
+     "status": "A",
+     "category": "test",
+     "added": 147,
+     "lines_now": 147
+    }
+   ]
+  },
+  {
+   "pr": 621,
+   "mission": "m13779",
+   "sha": "640255e1a635fcef0f2051303324ba8dea42a5ef",
+   "files": [
+    {
+     "path": "docs/finite_depth_solver3d/fig_depth_ladder.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 435
+    },
+    {
+     "path": "docs/finite_depth_solver3d/fig_mode_truncation.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 331
+    },
+    {
+     "path": "docs/finite_depth_solver3d/fig_sixdof_matrices.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 305
+    },
+    {
+     "path": "docs/finite_depth_solver3d/fig_surface_potential.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 556
+    },
+    {
+     "path": "docs/finite_depth_solver3d/report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 114,
+     "lines_now": 114
+    },
+    {
+     "path": "docs/finite_depth_solver3d/results.json",
+     "status": "A",
+     "category": "doc",
+     "added": 331,
+     "lines_now": 330
+    },
+    {
+     "path": "scripts/report_finite_depth_solver3d.py",
+     "status": "A",
+     "category": "tool",
+     "added": 408,
+     "lines_now": 407
+    },
+    {
+     "path": "scripts/verify_finite_depth_solver3d.py",
+     "status": "A",
+     "category": "tool",
+     "added": 311,
+     "lines_now": 310
+    },
+    {
+     "path": "src/tensorbem/finite_depth_solver3d.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 424,
+     "lines_now": 423
+    },
+    {
+     "path": "tests/test_finite_depth_solver3d.py",
+     "status": "A",
+     "category": "test",
+     "added": 218,
+     "lines_now": 217
+    }
+   ]
+  },
+  {
+   "pr": 620,
+   "mission": "m13784",
+   "sha": "2ab2fcdc87331b3014ced5a6232d4eb5edeab3dc",
+   "files": [
+    {
+     "path": "dev_report_m13784_bem_finite_depth_figures.md",
+     "status": "A",
+     "category": "doc",
+     "added": 52,
+     "lines_now": 52
+    }
+   ]
+  },
+  {
+   "pr": 619,
+   "mission": "m8718",
+   "sha": "6600bcc64a1083ed9b69e9a3e120d0b5fbd98606",
+   "files": []
+  },
+  {
+   "pr": 618,
+   "mission": "m12052",
+   "sha": "3e3baeee976ff5e46cf4df7720361c70a384bdee",
+   "files": [
+    {
+     "path": "docs/flexural_gravity_verification/fig_dispersion_curves.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1685
+    },
+    {
+     "path": "docs/flexural_gravity_verification/fig_ice_edge.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 614
+    },
+    {
+     "path": "docs/flexural_gravity_verification/fig_parameter_sensitivity.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 383
+    },
+    {
+     "path": "docs/flexural_gravity_verification/fig_wedge_comparison.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 313
+    },
+    {
+     "path": "docs/flexural_gravity_verification/ice_edge_results.json",
+     "status": "A",
+     "category": "doc",
+     "added": 302,
+     "lines_now": 301
+    },
+    {
+     "path": "docs/flexural_gravity_verification/parameter_sensitivity.json",
+     "status": "A",
+     "category": "doc",
+     "added": 21,
+     "lines_now": 20
+    },
+    {
+     "path": "docs/flexural_gravity_verification/report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 341,
+     "lines_now": 346
+    },
+    {
+     "path": "docs/flexural_gravity_verification/verification_report.json",
+     "status": "A",
+     "category": "doc",
+     "added": 77,
+     "lines_now": 76
+    },
+    {
+     "path": "docs/flexural_gravity_verification/wedge_results.json",
+     "status": "A",
+     "category": "doc",
+     "added": 20,
+     "lines_now": 19
+    },
+    {
+     "path": "scripts/verify_flexural_gravity.py",
+     "status": "A",
+     "category": "tool",
+     "added": 427,
+     "lines_now": 427
+    },
+    {
+     "path": "src/tensorbem/flexural_gravity.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 562,
+     "lines_now": 794
+    },
+    {
+     "path": "tests/test_flexural_gravity.py",
+     "status": "A",
+     "category": "test",
+     "added": 472,
+     "lines_now": 472
+    }
+   ]
+  },
+  {
+   "pr": 617,
+   "mission": "m11546",
+   "sha": "596ff0ac5033520411c65f16e54e3b05d96fed97",
+   "files": [
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig1_radiation_coefficients.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 712
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig2_memory_kernel.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 421
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig3_round_trip.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 548
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig4_kk_causality.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 605
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig5_free_decay.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 928
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig6_error_envelope.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 668
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/fig7_causality.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 318
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 195,
+     "lines_now": 195
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/summary_m11546.json",
+     "status": "A",
+     "category": "doc",
+     "added": 20,
+     "lines_now": 19
+    },
+    {
+     "path": "docs/cummins_memory_closure/m11546/verification_report_m11546.json",
+     "status": "A",
+     "category": "doc",
+     "added": 184,
+     "lines_now": 183
+    },
+    {
+     "path": "scripts/generate_verification_report.py",
+     "status": "A",
+     "category": "tool",
+     "added": 195,
+     "lines_now": 195
+    },
+    {
+     "path": "scripts/make_cummins_report_figures.py",
+     "status": "A",
+     "category": "tool",
+     "added": 269,
+     "lines_now": 269
+    },
+    {
+     "path": "scripts/post_report_m11546.py",
+     "status": "A",
+     "category": "tool",
+     "added": 260,
+     "lines_now": 260
+    }
+   ]
+  },
+  {
+   "pr": 616,
+   "mission": "m11067",
+   "sha": "d40af6d365be5f674f7989773d3442a47ff6b76c",
+   "files": [
+    {
+     "path": "docs/p190_n03/fig_convergence.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 637
+    },
+    {
+     "path": "docs/p190_n03/fig_errors.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 416
+    },
+    {
+     "path": "docs/p190_n03/report.json",
+     "status": "A",
+     "category": "doc",
+     "added": 1,
+     "lines_now": 0
+    },
+    {
+     "path": "src/tensorbem/benchmarks/submerged_sphere_havelock.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 146,
+     "lines_now": 146
+    },
+    {
+     "path": "tests/test_submerged_sphere_havelock.py",
+     "status": "A",
+     "category": "test",
+     "added": 59,
+     "lines_now": 59
+    }
+   ]
+  },
+  {
+   "pr": 615,
+   "mission": "m10370",
+   "sha": "25203d3453dbd84affdca71cc837ba97c8d304e7",
+   "files": [
+    {
+     "path": "docs/audit_baseline.md",
+     "status": "M",
+     "category": "doc",
+     "added": 11,
+     "lines_now": 254
+    },
+    {
+     "path": "docs/nearfield_quadrature/build_tables.py",
+     "status": "A",
+     "category": "doc",
+     "added": 329,
+     "lines_now": 328
+    },
+    {
+     "path": "docs/nearfield_quadrature/report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 467,
+     "lines_now": 466
+    },
+    {
+     "path": "post_report_m10370.py",
+     "status": "A",
+     "category": "other",
+     "added": 271,
+     "lines_now": 270
+    },
+    {
+     "path": "src/tensorbem/benchmarks/nearfield_quadrature.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 836,
+     "lines_now": 835
+    },
+    {
+     "path": "src/tensorbem/capability_evidence.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 32,
+     "lines_now": 1539
+    },
+    {
+     "path": "src/tensorbem/near_field_quadrature.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 607,
+     "lines_now": 606
+    },
+    {
+     "path": "tests/test_nearfield_quadrature.py",
+     "status": "A",
+     "category": "test",
+     "added": 300,
+     "lines_now": 300
+    }
+   ]
+  },
+  {
+   "pr": 614,
+   "mission": "m10003",
+   "sha": "eeb7d4cd6b0dfa862340f095241f9a369a50b980",
+   "files": [
+    {
+     "path": "docs/m10003/REPORT.md",
+     "status": "A",
+     "category": "doc",
+     "added": 124,
+     "lines_now": 123
+    },
+    {
+     "path": "docs/m10003/fig_kelvin_wake.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 878
+    },
+    {
+     "path": "docs/m10003/fig_nk_kernel_checks.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 501
+    },
+    {
+     "path": "docs/m10003/fig_wigley_resistance.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 646
+    },
+    {
+     "path": "docs/m10003/fig_wigley_wave_cuts.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1388
+    },
+    {
+     "path": "scripts/nk_panel3d_figures.py",
+     "status": "A",
+     "category": "tool",
+     "added": 151,
+     "lines_now": 150
+    },
+    {
+     "path": "scripts/nk_panel3d_study.py",
+     "status": "A",
+     "category": "tool",
+     "added": 293,
+     "lines_now": 292
+    },
+    {
+     "path": "src/tensorbem/nk_panel3d.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 901,
+     "lines_now": 900
+    },
+    {
+     "path": "tests/test_nk_panel3d.py",
+     "status": "A",
+     "category": "test",
+     "added": 402,
+     "lines_now": 401
+    }
+   ]
+  },
+  {
+   "pr": 613,
+   "mission": "m9712",
+   "sha": "ec76195d6b2109b1b2ad462600154e819ca259af",
+   "files": [
+    {
+     "path": "dev_report_m9712_non_affine_geometry.md",
+     "status": "A",
+     "category": "doc",
+     "added": 187,
+     "lines_now": 186
+    },
+    {
+     "path": "docs/quadratic_panel_verification/README.md",
+     "status": "M",
+     "category": "doc",
+     "added": 15,
+     "lines_now": 126
+    },
+    {
+     "path": "docs/quadratic_panel_verification/fig_geometry_generic.png",
+     "status": "M",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1046
+    },
+    {
+     "path": "docs/quadratic_panel_verification/fig_non_affine_geometry_m9712.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1102
+    },
+    {
+     "path": "docs/quadratic_panel_verification/non_affine_geometry_m9712.json",
+     "status": "A",
+     "category": "doc",
+     "added": 54,
+     "lines_now": 53
+    },
+    {
+     "path": "docs/quadratic_panel_verification/study.json",
+     "status": "M",
+     "category": "doc",
+     "added": 114,
+     "lines_now": 495
+    },
+    {
+     "path": "make_report_figure_m9712.py",
+     "status": "A",
+     "category": "other",
+     "added": 101,
+     "lines_now": 100
+    },
+    {
+     "path": "post_report_m9712.py",
+     "status": "A",
+     "category": "other",
+     "added": 160,
+     "lines_now": 159
+    },
+    {
+     "path": "src/tensorbem/benchmarks/quadratic_panel_verification.py",
+     "status": "M",
+     "category": "benchmark_module",
+     "added": 114,
+     "lines_now": 1115
+    },
+    {
+     "path": "tests/test_panel_quadratic_operator.py",
+     "status": "M",
+     "category": "test",
+     "added": 143,
+     "lines_now": 961
+    }
+   ]
+  },
+  {
+   "pr": 612,
+   "mission": "m9696",
+   "sha": "e9cd918210a8acd68b81198a151bb2c541811632",
+   "files": [
+    {
+     "path": "docs/radiation_diffraction_anchors_3d.md",
+     "status": "A",
+     "category": "doc",
+     "added": 187,
+     "lines_now": 187
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/build_report.py",
+     "status": "A",
+     "category": "doc",
+     "added": 665,
+     "lines_now": 665
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/fig_radiff_added_mass_anchors.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 620
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/fig_radiff_froude_krylov.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 434
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/fig_radiff_rao_convergence.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 256
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/fig_radiff_rao_limits.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 452
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/post_report.py",
+     "status": "A",
+     "category": "doc",
+     "added": 110,
+     "lines_now": 110
+    },
+    {
+     "path": "docs/radiation_diffraction_anchors_3d/results.json",
+     "status": "A",
+     "category": "doc",
+     "added": 880,
+     "lines_now": 880
+    },
+    {
+     "path": "src/tensorbem/__init__.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 4,
+     "lines_now": 367
+    },
+    {
+     "path": "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 1068,
+     "lines_now": 1068
+    },
+    {
+     "path": "src/tensorbem/free_surface_solver3d.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 46,
+     "lines_now": 852
+    },
+    {
+     "path": "src/tensorbem/geometry3d.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 90,
+     "lines_now": 1324
+    },
+    {
+     "path": "tests/test_radiation_diffraction_anchors_3d.py",
+     "status": "A",
+     "category": "test",
+     "added": 180,
+     "lines_now": 180
+    }
+   ]
+  },
+  {
+   "pr": 611,
+   "mission": "m9647",
+   "sha": "c8ecb77c32aa7571c13104db2e5595ae1d3f3591",
+   "files": [
+    {
+     "path": ".gitignore",
+     "status": "M",
+     "category": "other",
+     "added": 2,
+     "lines_now": 12
+    },
+    {
+     "path": "papers/data/w20-anchors/build_wigley_transcription.py",
+     "status": "A",
+     "category": "doc",
+     "added": 329,
+     "lines_now": 328
+    },
+    {
+     "path": "papers/data/w20-anchors/build_wigley_truncation.py",
+     "status": "A",
+     "category": "doc",
+     "added": 788,
+     "lines_now": 787
+    },
+    {
+     "path": "papers/data/w20-anchors/wigley_repo_benchmark_transcription.json",
+     "status": "A",
+     "category": "doc",
+     "added": 1795,
+     "lines_now": 1795
+    },
+    {
+     "path": "papers/data/w20-anchors/wigley_truncation_comparison.json",
+     "status": "A",
+     "category": "doc",
+     "added": 946,
+     "lines_now": 946
+    },
+    {
+     "path": "papers/reports/build_w20_report4.py",
+     "status": "A",
+     "category": "doc",
+     "added": 414,
+     "lines_now": 413
+    },
+    {
+     "path": "papers/reports/w20_seakeeping_truncation4.md",
+     "status": "A",
+     "category": "doc",
+     "added": 299,
+     "lines_now": 299
+    },
+    {
+     "path": "tests/test_w20_wigley_anchor_artifacts.py",
+     "status": "A",
+     "category": "test",
+     "added": 142,
+     "lines_now": 141
+    }
+   ]
+  },
+  {
+   "pr": 610,
+   "mission": "m9641",
+   "sha": "5c4e42b97f98f36c375158f95cc8487e9300fde8",
+   "files": [
+    {
+     "path": "benchmarks/verified/bem_kp505_openwater_w20/gci.json",
+     "status": "A",
+     "category": "artifact",
+     "added": 2482,
+     "lines_now": 2482
+    },
+    {
+     "path": "benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv",
+     "status": "A",
+     "category": "artifact",
+     "added": 25,
+     "lines_now": 25
+    },
+    {
+     "path": "benchmarks/verified/bem_kp505_openwater_w20/levels.csv",
+     "status": "A",
+     "category": "artifact",
+     "added": 25,
+     "lines_now": 25
+    },
+    {
+     "path": "papers/data/w20-anchors/kp505_transcription.json",
+     "status": "A",
+     "category": "doc",
+     "added": 2081,
+     "lines_now": 2081
+    },
+    {
+     "path": "papers/data/w20-anchors/sources/lbm_bench_propeller_kp505_excerpt.txt",
+     "status": "A",
+     "category": "doc",
+     "added": 8,
+     "lines_now": 8
+    },
+    {
+     "path": "papers/reports/w20_propeller_openwater_bem5.md",
+     "status": "A",
+     "category": "doc",
+     "added": 217,
+     "lines_now": 217
+    },
+    {
+     "path": "post_report_m9641.py",
+     "status": "A",
+     "category": "other",
+     "added": 95,
+     "lines_now": 94
+    },
+    {
+     "path": "src/tensorbem/benchmarks/kp505_w20_gci.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 1056,
+     "lines_now": 1056
+    },
+    {
+     "path": "tests/test_w20_kp505_gci.py",
+     "status": "A",
+     "category": "test",
+     "added": 178,
+     "lines_now": 178
+    },
+    {
+     "path": "tests/test_w20_kp505_transcription.py",
+     "status": "A",
+     "category": "test",
+     "added": 173,
+     "lines_now": 173
+    },
+    {
+     "path": "tools/build_w20_kp505_transcription.py",
+     "status": "A",
+     "category": "tool",
+     "added": 775,
+     "lines_now": 775
+    },
+    {
+     "path": "tools/emit_w20_report.py",
+     "status": "A",
+     "category": "tool",
+     "added": 530,
+     "lines_now": 530
+    }
+   ]
+  },
+  {
+   "pr": 609,
+   "mission": "m9388",
+   "sha": "b8480c7444794849dcf614e9ed72a2ccfa8e2d6c",
+   "files": [
+    {
+     "path": "src/tensorbem/verification/seakeeping/__init__.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 56,
+     "lines_now": 56
+    },
+    {
+     "path": "src/tensorbem/verification/seakeeping/benchmark_runner.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 279,
+     "lines_now": 279
+    },
+    {
+     "path": "src/tensorbem/verification/seakeeping/fk_excitation.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 207,
+     "lines_now": 207
+    },
+    {
+     "path": "src/tensorbem/verification/seakeeping/hemisphere_anchor.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 202,
+     "lines_now": 202
+    },
+    {
+     "path": "src/tensorbem/verification/seakeeping/mesh_convergence.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 206,
+     "lines_now": 206
+    },
+    {
+     "path": "src/tensorbem/verification/seakeeping/wigley_rao.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 294,
+     "lines_now": 294
+    },
+    {
+     "path": "tests/test_seakeeping_verification.py",
+     "status": "A",
+     "category": "test",
+     "added": 222,
+     "lines_now": 222
+    }
+   ]
+  },
+  {
+   "pr": 608,
+   "mission": "m9286",
+   "sha": "7f5e068f5c23bc34b0de3f57b094475d9fb93187",
+   "files": [
+    {
+     "path": "docs/drift_far_field_3d.md",
+     "status": "A",
+     "category": "doc",
+     "added": 253,
+     "lines_now": 252
+    },
+    {
+     "path": "post_report_m9286.py",
+     "status": "A",
+     "category": "other",
+     "added": 137,
+     "lines_now": 136
+    },
+    {
+     "path": "src/tensorbem/benchmarks/drift_far_field_3d_study.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 642,
+     "lines_now": 641
+    },
+    {
+     "path": "src/tensorbem/drift_far_field3d.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 536,
+     "lines_now": 536
+    },
+    {
+     "path": "tests/test_drift_far_field3d.py",
+     "status": "A",
+     "category": "test",
+     "added": 346,
+     "lines_now": 346
+    }
+   ]
+  },
+  {
+   "pr": 607,
+   "mission": "m9285",
+   "sha": "21442be5733535a80236ccd823045491d7d2c536",
+   "files": [
+    {
+     "path": "docs/wigley3_freq_verification_report.md",
+     "status": "A",
+     "category": "doc",
+     "added": 149,
+     "lines_now": 149
+    },
+    {
+     "path": "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 453,
+     "lines_now": 453
+    },
+    {
+     "path": "tests/test_wigley3_freq_diffraction_radiation.py",
+     "status": "A",
+     "category": "test",
+     "added": 425,
+     "lines_now": 425
+    }
+   ]
+  },
+  {
+   "pr": 606,
+   "mission": "m9269",
+   "sha": "831526cfc3d8afc0bedc3d0c934c481a578fa509",
+   "files": [
+    {
+     "path": "src/tensorbem/irregular_frequency.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 736,
+     "lines_now": 736
+    },
+    {
+     "path": "tests/test_irregular_frequency_sanitisation.py",
+     "status": "A",
+     "category": "test",
+     "added": 476,
+     "lines_now": 476
+    },
+    {
+     "path": "tools/gen_irregular_frequency_figures.py",
+     "status": "A",
+     "category": "tool",
+     "added": 147,
+     "lines_now": 147
+    }
+   ]
+  },
+  {
+   "pr": 605,
+   "mission": "m9161",
+   "sha": "90451c7442ed977dd7bf2d32a63a0224bd0f3be0",
+   "files": [
+    {
+     "path": "benchmarks/multibody_frequency_dependence_3d/report.md",
+     "status": "M",
+     "category": "doc",
+     "added": 1072,
+     "lines_now": 1101
+    },
+    {
+     "path": "benchmarks/multibody_frequency_dependence_3d/report_p106w2n04_baseline.md",
+     "status": "A",
+     "category": "doc",
+     "added": 217,
+     "lines_now": 217
+    },
+    {
+     "path": "benchmarks/multibody_frequency_dependence_3d/results.json",
+     "status": "M",
+     "category": "artifact",
+     "added": 4220,
+     "lines_now": 9083
+    },
+    {
+     "path": "benchmarks/multibody_frequency_dependence_3d/summary.json",
+     "status": "M",
+     "category": "artifact",
+     "added": 587,
+     "lines_now": 638
+    },
+    {
+     "path": "docs/multibody_frequency_dependence_3d.md",
+     "status": "M",
+     "category": "doc",
+     "added": 61,
+     "lines_now": 207
+    },
+    {
+     "path": "post_report_m9161.py",
+     "status": "A",
+     "category": "other",
+     "added": 117,
+     "lines_now": 116
+    },
+    {
+     "path": "src/tensorbem/benchmarks/multibody_frequency_dependence_3d.py",
+     "status": "M",
+     "category": "benchmark_module",
+     "added": 566,
+     "lines_now": 2043
+    },
+    {
+     "path": "src/tensorbem/multibody3d.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 11,
+     "lines_now": 623
+    },
+    {
+     "path": "tests/test_multibody_resonance_analysis.py",
+     "status": "A",
+     "category": "test",
+     "added": 168,
+     "lines_now": 167
+    },
+    {
+     "path": "tools/m9161_multibody_report.py",
+     "status": "A",
+     "category": "tool",
+     "added": 646,
+     "lines_now": 645
+    }
+   ]
+  },
+  {
+   "pr": 604,
+   "mission": "m9204",
+   "sha": "3f6fc69d0f45eef451ae5c0ef5279572104cedd9",
+   "files": [
+    {
+     "path": "run_cp_quick.py",
+     "status": "A",
+     "category": "other",
+     "added": 156,
+     "lines_now": 156
+    },
+    {
+     "path": "run_cp_verification.py",
+     "status": "A",
+     "category": "other",
+     "added": 34,
+     "lines_now": 34
+    },
+    {
+     "path": "src/tensorbem/benchmarks/cp_verification_m9204.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 431,
+     "lines_now": 431
+    },
+    {
+     "path": "tests/test_cp_verification_m9204.py",
+     "status": "A",
+     "category": "test",
+     "added": 249,
+     "lines_now": 249
+    }
+   ]
+  },
+  {
+   "pr": 603,
+   "mission": "m9162",
+   "sha": "35c4da73c0aba41bee84dd5ab2b6abb279e0682f",
+   "files": [
+    {
+     "path": "docs/audit_baseline.md",
+     "status": "M",
+     "category": "doc",
+     "added": 16,
+     "lines_now": 254
+    },
+    {
+     "path": "docs/cummins_matrix_closure/campaign.json",
+     "status": "A",
+     "category": "doc",
+     "added": 1375,
+     "lines_now": 1374
+    },
+    {
+     "path": "docs/cummins_matrix_closure/cummins_matrix_kernel_matrix.md",
+     "status": "A",
+     "category": "doc",
+     "added": 199,
+     "lines_now": 199
+    },
+    {
+     "path": "docs/cummins_matrix_closure/figures/fig1_radiation_sweep.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 544
+    },
+    {
+     "path": "docs/cummins_matrix_closure/figures/fig2_kernel_matrix.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 671
+    },
+    {
+     "path": "docs/cummins_matrix_closure/figures/fig3_harmonic_closure.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 937
+    },
+    {
+     "path": "docs/cummins_matrix_closure/figures/fig4_free_decay.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1668
+    },
+    {
+     "path": "docs/cummins_matrix_closure/figures/fig5_error_envelope.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 589
+    },
+    {
+     "path": "docs/cummins_matrix_closure/make_docs.py",
+     "status": "A",
+     "category": "doc",
+     "added": 269,
+     "lines_now": 268
+    },
+    {
+     "path": "docs/cummins_matrix_closure/manifest.json",
+     "status": "A",
+     "category": "doc",
+     "added": 129,
+     "lines_now": 128
+    },
+    {
+     "path": "docs/cummins_matrix_closure/radiation_sweep.json",
+     "status": "A",
+     "category": "doc",
+     "added": 535,
+     "lines_now": 534
+    },
+    {
+     "path": "docs/cummins_matrix_closure/run_campaign.py",
+     "status": "A",
+     "category": "doc",
+     "added": 54,
+     "lines_now": 53
+    },
+    {
+     "path": "post_report_m9162.py",
+     "status": "A",
+     "category": "other",
+     "added": 226,
+     "lines_now": 225
+    },
+    {
+     "path": "src/tensorbem/benchmarks/cummins_matrix_closure.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 1343,
+     "lines_now": 1343
+    },
+    {
+     "path": "src/tensorbem/capability_evidence.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 36,
+     "lines_now": 1539
+    },
+    {
+     "path": "src/tensorbem/memory_kernel_matrix.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 1745,
+     "lines_now": 1745
+    },
+    {
+     "path": "tests/test_memory_kernel_matrix.py",
+     "status": "A",
+     "category": "test",
+     "added": 318,
+     "lines_now": 317
+    }
+   ]
+  },
+  {
+   "pr": 602,
+   "mission": "m9147",
+   "sha": "50d2ca3c71c5915ed6c1b38b6ff75f8d42c93d12",
+   "files": [
+    {
+     "path": "src/tensorbem/benchmarks/freq_time_bridge.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 315,
+     "lines_now": 315
+    },
+    {
+     "path": "src/tensorbem/state_space.py",
+     "status": "A",
+     "category": "core_module",
+     "added": 761,
+     "lines_now": 761
+    },
+    {
+     "path": "tests/test_state_space.py",
+     "status": "A",
+     "category": "test",
+     "added": 353,
+     "lines_now": 353
+    }
+   ]
+  },
+  {
+   "pr": 601,
+   "mission": "m8718",
+   "sha": "38c8067ae20d74700c7b00d3e10d16b67e87a18c",
+   "files": [
+    {
+     "path": "dev_report_m8718_near_singular.md",
+     "status": "A",
+     "category": "doc",
+     "added": 250,
+     "lines_now": 250
+    },
+    {
+     "path": "docs/quadratic_near_singular/README.md",
+     "status": "A",
+     "category": "doc",
+     "added": 74,
+     "lines_now": 73
+    },
+    {
+     "path": "docs/quadratic_near_singular/fig_near_singular.png",
+     "status": "A",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1992
+    },
+    {
+     "path": "docs/quadratic_near_singular/study.json",
+     "status": "A",
+     "category": "doc",
+     "added": 669,
+     "lines_now": 669
+    },
+    {
+     "path": "make_report_m8718.py",
+     "status": "A",
+     "category": "other",
+     "added": 286,
+     "lines_now": 285
+    },
+    {
+     "path": "post_report_m8718.py",
+     "status": "A",
+     "category": "other",
+     "added": 184,
+     "lines_now": 183
+    },
+    {
+     "path": "src/tensorbem/benchmarks/quadratic_near_singular.py",
+     "status": "A",
+     "category": "benchmark_module",
+     "added": 720,
+     "lines_now": 719
+    },
+    {
+     "path": "src/tensorbem/panel_quadratic.py",
+     "status": "M",
+     "category": "core_module",
+     "added": 290,
+     "lines_now": 1348
+    },
+    {
+     "path": "tests/test_panel_quadratic_near_singular.py",
+     "status": "A",
+     "category": "test",
+     "added": 229,
+     "lines_now": 228
+    }
+   ]
+  },
+  {
+   "pr": 600,
+   "mission": "m8799",
+   "sha": "8c086c90bfb33acbdea2fa01b05cb229de05c926",
+   "files": [
+    {
+     "path": ".m8799_openpr.py",
+     "status": "A",
+     "category": "other",
+     "added": 122,
+     "lines_now": 122
+    },
+    {
+     "path": "dev_report_m8799_quadratic_panel_pr574_reopen_round2.md",
+     "status": "A",
+     "category": "doc",
+     "added": 137,
+     "lines_now": 137
+    },
+    {
+     "path": "docs/quadratic_panel_verification/README.md",
+     "status": "M",
+     "category": "doc",
+     "added": 13,
+     "lines_now": 126
+    },
+    {
+     "path": "docs/quadratic_panel_verification/fig_geometry_generic.png",
+     "status": "M",
+     "category": "doc",
+     "added": 0,
+     "lines_now": 1046
+    },
+    {
+     "path": "docs/quadratic_panel_verification/study.json",
+     "status": "M",
+     "category": "doc",
+     "added": 94,
+     "lines_now": 495
+    },
+    {
+     "path": "post_report_m8799.py",
+     "status": "A",
+     "category": "other",
+     "added": 62,
+     "lines_now": 62
+    },
+    {
+     "path": "src/tensorbem/benchmarks/quadratic_panel_verification.py",
+     "status": "M",
+     "category": "benchmark_module",
+     "added": 68,
+     "lines_now": 1115
+    },
+    {
+     "path": "tests/test_panel_quadratic_operator.py",
+     "status": "M",
+     "category": "test",
+     "added": 114,
+     "lines_now": 961
+    }
+   ]
+  }
+ ],
+ "wiring": {
+  "solver3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/cathodic_protection.py",
+    "src/tensorbem/clearance.py",
+    "src/tensorbem/conditioning.py",
+    "src/tensorbem/cp_galvanic.py",
+    "src/tensorbem/multibody3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py",
+    "src/tensorbem/benchmarks/interior_harmonics.py",
+    "src/tensorbem/benchmarks/near_surface_field.py",
+    "src/tensorbem/benchmarks/panel_linear_order.py",
+    "src/tensorbem/benchmarks/panel_operator_order.py",
+    "src/tensorbem/benchmarks/prose_claims.py",
+    "src/tensorbem/benchmarks/quadratic_panel_convergence.py",
+    "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+    "src/tensorbem/benchmarks/rigid_body_added_mass.py",
+    "src/tensorbem/benchmarks/sphere_added_mass.py",
+    "src/tensorbem/benchmarks/sphere_flow.py",
+    "src/tensorbem/benchmarks/sphere_velocity.py",
+    "src/tensorbem/benchmarks/surface_velocity_study.py",
+    "src/tensorbem/benchmarks/three_dimensional_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_near_singular.py",
+    "tests/test_panel_operator_order.py",
+    "tests/test_radiation_diffraction_anchors_3d.py",
+    "tests/test_solver3d.py",
+    "tests/test_sphere_velocity.py",
+    "tests/test_surface_velocity_recovery.py"
+   ],
+   "orphan": []
+  },
+  "neumann_kelvin": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/neumann_kelvin_verification.py"
+   ],
+   "tool": [
+    "tools/generate_nk_figures.py"
+   ],
+   "tests": [
+    "tests/test_neumann_kelvin.py"
+   ],
+   "orphan": []
+  },
+  "free_surface_solver": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/finite_depth_diffraction.py",
+    "src/tensorbem/finite_depth_solver.py",
+    "src/tensorbem/haskind2d.py",
+    "src/tensorbem/net_source_reg.py",
+    "src/tensorbem/stf_fullspeed.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/cummins_matrix_closure.py",
+    "src/tensorbem/benchmarks/dean_diffraction.py",
+    "src/tensorbem/benchmarks/finite_depth_diffraction.py",
+    "src/tensorbem/benchmarks/finite_depth_energy_convergence.py",
+    "src/tensorbem/benchmarks/finite_depth_radiation.py",
+    "src/tensorbem/benchmarks/kkr_band_doc_pins.py",
+    "src/tensorbem/benchmarks/kkr_causality.py",
+    "src/tensorbem/benchmarks/kkr_floor.py",
+    "src/tensorbem/benchmarks/ursell_band_audit.py",
+    "src/tensorbem/benchmarks/ursell_convergence_doc.py",
+    "src/tensorbem/benchmarks/ursell_convergence_table.py",
+    "src/tensorbem/benchmarks/ursell_cylinder.py",
+    "src/tensorbem/benchmarks/ursell_error_budget.py"
+   ],
+   "tool": [
+    "tools/generate_stf_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_documented_benchmarks.py",
+    "tests/test_finite_depth_diffraction.py",
+    "tests/test_finite_depth_solver.py",
+    "tests/test_near_surface_band.py",
+    "tests/test_near_surface_three_way.py",
+    "tests/test_stf_haskind_reg.py",
+    "tests/test_ursell_benchmark.py",
+    "tests/test_ursell_reproducibility.py"
+   ],
+   "orphan": []
+  },
+  "quadrature_diagnostics_2d": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/ursell_cylinder.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_quadrature_diagnostics_2d.py"
+   ],
+   "orphan": []
+  },
+  "wigley_hydrostatics": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/cummins_wigley_hull.py",
+    "src/tensorbem/benchmarks/hull_anchor_maturation.py",
+    "src/tensorbem/benchmarks/michell_validation.py",
+    "src/tensorbem/benchmarks/thin_ship_verification.py",
+    "src/tensorbem/benchmarks/wigley_diffraction_radiation.py",
+    "src/tensorbem/benchmarks/wigley_kcs_kochin_energy.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_m5455_verification.py",
+    "tests/test_thin_ship_anchor_artifacts.py",
+    "tests/test_wigley_diffraction_radiation.py",
+    "tests/test_wigley_hydrostatics.py",
+    "tests/test_wigley_kcs_kochin_energy.py"
+   ],
+   "orphan": []
+  },
+  "ice": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/ice_rao.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/hydroelastic_verification.py",
+    "src/tensorbem/benchmarks/ice_ship_verification.py"
+   ],
+   "tool": [
+    "scripts/verify_flexural_gravity_mass_loading.py"
+   ],
+   "tests": [
+    "tests/test_flexural_gravity.py",
+    "tests/test_flexural_gravity_mass_loading.py",
+    "tests/test_hydroelastic.py",
+    "tests/test_ice_mass_loading.py",
+    "tests/test_ice_rao.py"
+   ],
+   "orphan": []
+  },
+  "drift_force": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/drift_far_field3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/drift_force_study.py",
+    "src/tensorbem/benchmarks/wave_loads_minimal.py",
+    "src/tensorbem/benchmarks/wave_loads_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_drift_force.py",
+    "tests/test_drift_second_order.py"
+   ],
+   "orphan": []
+  },
+  "free_surface": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/finite_depth_green.py",
+    "src/tensorbem/free_surface_solver.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/finite_depth_kernel.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_documented_benchmarks.py",
+    "tests/test_finite_depth.py",
+    "tests/test_finite_depth_green.py",
+    "tests/test_free_surface_kernel.py",
+    "tests/test_mutation_gaps.py",
+    "tests/test_mutation_gaps_hydrostatic.py"
+   ],
+   "orphan": []
+  },
+  "near_wall_envelope": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/near_wall_envelope_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_near_wall_envelope.py"
+   ],
+   "orphan": []
+  },
+  "tank_free_surface": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/tank_free_surface_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_tank_free_surface.py"
+   ],
+   "orphan": []
+  },
+  "mixed": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/mixed_boundary.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_mixed_boundary.py"
+   ],
+   "orphan": []
+  },
+  "recovery_uncertainty": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/recovery_robustness.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_recovery_robustness.py"
+   ],
+   "orphan": []
+  },
+  "conditioning": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/diagnostics_report.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py",
+    "src/tensorbem/benchmarks/panel_operator_order.py",
+    "src/tensorbem/benchmarks/sphere_added_mass.py"
+   ],
+   "tool": [
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_conditioning.py",
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_diagnostics_report.py"
+   ],
+   "orphan": []
+  },
+  "diagnostics_report": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_diagnostics_report.py"
+   ],
+   "orphan": []
+  },
+  "uq": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/kp505_gci_ladder.py",
+    "src/tensorbem/benchmarks/kp505_openwater_bem.py",
+    "src/tensorbem/benchmarks/kp505_w20_gci.py",
+    "src/tensorbem/benchmarks/michell_validation.py",
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py"
+   ],
+   "tool": [
+    "tools/uq_selfcheck.py"
+   ],
+   "tests": [
+    "tests/test_kp505_gci_ladder.py",
+    "tests/test_uq.py",
+    "tests/test_w20_kp505_gci.py",
+    "tests/test_wigley3_freq_diffraction_radiation.py",
+    "tests/test_wigley3_freq_verification.py"
+   ],
+   "orphan": []
+  },
+  "wigley": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/michell.py",
+    "src/tensorbem/multihull.py",
+    "src/tensorbem/neumann_kelvin.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/bem_wigley_wave_resistance.py",
+    "src/tensorbem/benchmarks/bem_wigley_wave_resistance_figures.py",
+    "src/tensorbem/benchmarks/hull_anchor_maturation.py",
+    "src/tensorbem/benchmarks/michell_unit_arbitration.py",
+    "src/tensorbem/benchmarks/michell_validation.py",
+    "src/tensorbem/benchmarks/multihull_interference.py",
+    "src/tensorbem/benchmarks/neumann_kelvin_verification.py",
+    "src/tensorbem/benchmarks/quadratic_panel_convergence.py",
+    "src/tensorbem/benchmarks/wigley_kcs_kochin_energy.py",
+    "src/tensorbem/benchmarks/wigley_normalization_audit.py",
+    "src/tensorbem/benchmarks/wigley_verification.py"
+   ],
+   "tool": [
+    "scripts/nk_panel3d_study.py",
+    "tools/generate_nk_figures.py"
+   ],
+   "tests": [
+    "tests/test_bem_verified_anchors.py",
+    "tests/test_hull_anchor_maturation.py",
+    "tests/test_m5455_verification.py",
+    "tests/test_michell_thin_ship.py",
+    "tests/test_neumann_kelvin.py",
+    "tests/test_panel_quadratic.py",
+    "tests/test_thin_ship_michell.py",
+    "tests/test_wigley_kcs_kochin_energy.py",
+    "tests/test_wigley_normalization_audit.py",
+    "tests/test_wigley_pressure_path_audit.py",
+    "tests/test_wigley_verification.py",
+    "tests/test_wigley_wave_resistance.py"
+   ],
+   "orphan": []
+  },
+  "helmholtz": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/irregular_frequency_study.py",
+    "src/tensorbem/benchmarks/maccamy_fuchs.py"
+   ],
+   "tool": [
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_mutation_gaps_wave_loads.py"
+   ],
+   "orphan": []
+  },
+  "near_field_quadrature": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/nearfield_quadrature.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_nearfield_quadrature.py"
+   ],
+   "orphan": []
+  },
+  "cp_galvanic": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/cp_verification_m9204.py"
+   ],
+   "tool": [
+    "tools/make_cp_galvanic_report.py"
+   ],
+   "tests": [
+    "tests/test_cp_galvanic.py",
+    "tests/test_cp_verification_m9204.py"
+   ],
+   "orphan": []
+  },
+  "clearance": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/sphere_velocity.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_clearance.py"
+   ],
+   "orphan": []
+  },
+  "geometry": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/finite_depth_diffraction.py",
+    "src/tensorbem/finite_depth_solver.py",
+    "src/tensorbem/free_surface_solver.py",
+    "src/tensorbem/haskind2d.py",
+    "src/tensorbem/helmholtz.py",
+    "src/tensorbem/lifting.py",
+    "src/tensorbem/mixed.py",
+    "src/tensorbem/multicomponent.py",
+    "src/tensorbem/multiloop.py",
+    "src/tensorbem/net_source_reg.py",
+    "src/tensorbem/quadrature_diagnostics_2d.py",
+    "src/tensorbem/solver.py",
+    "src/tensorbem/stf_fullspeed.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/analytical_suite.py",
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/cummins_matrix_closure.py",
+    "src/tensorbem/benchmarks/dean_diffraction.py",
+    "src/tensorbem/benchmarks/ellipse_added_mass.py",
+    "src/tensorbem/benchmarks/finite_depth_envelope.py",
+    "src/tensorbem/benchmarks/finite_depth_radiation.py",
+    "src/tensorbem/benchmarks/irregular_frequency_study.py",
+    "src/tensorbem/benchmarks/maccamy_fuchs.py",
+    "src/tensorbem/benchmarks/mixed_boundary.py",
+    "src/tensorbem/benchmarks/multicomponent_annulus.py",
+    "src/tensorbem/benchmarks/rigid_body_added_mass.py",
+    "src/tensorbem/benchmarks/two_cylinder_added_mass.py",
+    "src/tensorbem/benchmarks/ursell_cylinder.py"
+   ],
+   "tool": [
+    "tools/generate_stf_artifacts.py",
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_dean_diffraction.py",
+    "tests/test_exterior_neumann_added_mass.py",
+    "tests/test_exterior_solver.py",
+    "tests/test_finite_depth_solver.py",
+    "tests/test_geometry.py",
+    "tests/test_interior_field_domain_guard.py",
+    "tests/test_irregular_frequency_study.py",
+    "tests/test_lifting_flow.py",
+    "tests/test_mixed_boundary.py",
+    "tests/test_multicomponent.py",
+    "tests/test_mutation_gaps.py",
+    "tests/test_mutation_gaps_wave_loads.py",
+    "tests/test_near_surface_band.py",
+    "tests/test_near_surface_three_way.py",
+    "tests/test_quadrature_diagnostics_2d.py",
+    "tests/test_stf_haskind_reg.py"
+   ],
+   "orphan": []
+  },
+  "rankine_wave": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/series60.py"
+   ],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_rankine_wave_resistance.py"
+   ],
+   "orphan": []
+  },
+  "hydrostatic": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/ice_rao.py",
+    "src/tensorbem/rao.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/hull_anchor_maturation.py",
+    "src/tensorbem/benchmarks/hydrostatic_analytic.py",
+    "src/tensorbem/benchmarks/hydrostatic_benchmarks.py",
+    "src/tensorbem/benchmarks/hydrostatic_convergence.py",
+    "src/tensorbem/benchmarks/hydrostatic_curved_waterplane.py",
+    "src/tensorbem/benchmarks/hydrostatic_rao_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_restoring_pins.py",
+    "src/tensorbem/benchmarks/hydrostatic_verification.py",
+    "src/tensorbem/benchmarks/interior_panel_suppression.py",
+    "src/tensorbem/benchmarks/thin_ship_verification.py",
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+    "src/tensorbem/benchmarks/wigley3_freq_domain_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py",
+    "src/tensorbem/benchmarks/wigley3_report_generator.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_hydrostatic_analytic_benchmark.py",
+    "tests/test_hydrostatic_convergence.py",
+    "tests/test_hydrostatic_curved_waterplane.py",
+    "tests/test_hydrostatic_rao.py",
+    "tests/test_hydrostatic_restoring_couplings.py",
+    "tests/test_hydrostatic_verification.py",
+    "tests/test_ice_rao.py",
+    "tests/test_m7602_freq_domain_verification.py",
+    "tests/test_mutation_gaps.py",
+    "tests/test_mutation_gaps_hydrostatic.py",
+    "tests/test_pc6_hull.py",
+    "tests/test_rao_verification.py",
+    "tests/test_thin_ship_anchor_artifacts.py",
+    "tests/test_waterplane_multi_loop.py",
+    "tests/test_wigley3_complete_verification.py",
+    "tests/test_wigley3_freq_diffraction_radiation.py",
+    "tests/test_wigley3_freq_verification.py",
+    "tests/test_wigley_hydrostatics.py"
+   ],
+   "orphan": []
+  },
+  "maruo_drift": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/added_resistance_cloud.py",
+    "src/tensorbem/benchmarks/capability_coverage_study.py",
+    "src/tensorbem/benchmarks/cylinder_drift_asymptotic.py",
+    "src/tensorbem/benchmarks/drift_mesh_convergence.py",
+    "src/tensorbem/benchmarks/maruo_drift_verification.py",
+    "src/tensorbem/benchmarks/wave_loads_minimal.py",
+    "src/tensorbem/benchmarks/wave_loads_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_added_resistance_cloud.py",
+    "tests/test_drift_mesh_convergence.py",
+    "tests/test_maruo_drift.py"
+   ],
+   "orphan": []
+  },
+  "series60": {
+   "wiring": "tests_only",
+   "core": [],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_rankine_wave_resistance.py"
+   ],
+   "orphan": []
+  },
+  "recovery": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/panel_smoothing.py",
+    "src/tensorbem/recovery_uncertainty.py",
+    "src/tensorbem/solver3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/recovery_robustness.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_recovery_robustness.py",
+    "tests/test_surface_velocity_recovery.py"
+   ],
+   "orphan": []
+  },
+  "multibody3d": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/multibody_frequency_dependence_3d.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_multibody_frequency_dependence_3d.py"
+   ],
+   "orphan": []
+  },
+  "panel_quadratic": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/quadratic_near_singular.py",
+    "src/tensorbem/benchmarks/quadratic_panel_convergence.py",
+    "src/tensorbem/benchmarks/quadratic_panel_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_panel_quadratic.py",
+    "tests/test_panel_quadratic_near_singular.py",
+    "tests/test_panel_quadratic_operator.py"
+   ],
+   "orphan": []
+  },
+  "free_surface3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/analytic.py",
+    "src/tensorbem/finite_depth3d.py",
+    "src/tensorbem/free_surface_solver3d.py",
+    "src/tensorbem/near_field_quadrature.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/deepwater_ladder_geometry.py",
+    "src/tensorbem/benchmarks/doc_inventory.py",
+    "src/tensorbem/benchmarks/finite_depth3d_deepwater_arbitration.py",
+    "src/tensorbem/benchmarks/finite_depth3d_gradients.py",
+    "src/tensorbem/benchmarks/finite_depth3d_pins.py",
+    "src/tensorbem/benchmarks/finite_depth3d_regime.py",
+    "src/tensorbem/benchmarks/finite_depth3d_verification.py",
+    "src/tensorbem/benchmarks/kelvin_kernel_reference.py"
+   ],
+   "tool": [
+    "scripts/m13811_finite_depth3d_quadrature_offaxis_fix.py"
+   ],
+   "tests": [
+    "tests/test_finite_depth3d.py",
+    "tests/test_finite_depth3d_deepwater_arbitration.py",
+    "tests/test_finite_depth3d_gradients.py",
+    "tests/test_finite_depth3d_offaxis_split.py",
+    "tests/test_finite_depth3d_quadrature.py",
+    "tests/test_finite_depth3d_quadrature_offaxis_fix.py",
+    "tests/test_free_surface3d.py",
+    "tests/test_gauss_rule_robustness.py",
+    "tests/test_kelvin_kernel_reference.py"
+   ],
+   "orphan": []
+  },
+  "panel_smoothing": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/recovery_robustness.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_recovery_robustness.py"
+   ],
+   "orphan": []
+  },
+  "geometry3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/cathodic_protection.py",
+    "src/tensorbem/clearance.py",
+    "src/tensorbem/conditioning.py",
+    "src/tensorbem/cp_galvanic.py",
+    "src/tensorbem/diagnostics_report.py",
+    "src/tensorbem/drift.py",
+    "src/tensorbem/finite_depth_solver3d.py",
+    "src/tensorbem/free_surface_solver3d.py",
+    "src/tensorbem/hydrostatic.py",
+    "src/tensorbem/ice_rao.py",
+    "src/tensorbem/interior_panels.py",
+    "src/tensorbem/irregular_frequency.py",
+    "src/tensorbem/kcs_hull.py",
+    "src/tensorbem/mesh_quality.py",
+    "src/tensorbem/multibody3d.py",
+    "src/tensorbem/panel_linear.py",
+    "src/tensorbem/panel_quadratic.py",
+    "src/tensorbem/panel_smoothing.py",
+    "src/tensorbem/pc6_hull.py",
+    "src/tensorbem/pressure.py",
+    "src/tensorbem/quadrature_diagnostics.py",
+    "src/tensorbem/rao.py",
+    "src/tensorbem/recovery.py",
+    "src/tensorbem/recovery_uncertainty.py",
+    "src/tensorbem/solver3d.py",
+    "src/tensorbem/symmetry3d.py",
+    "src/tensorbem/wigley3_freq.py",
+    "src/tensorbem/wigley3_hull.py",
+    "src/tensorbem/wigley_hydrostatics.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/capability_coverage_study.py",
+    "src/tensorbem/benchmarks/cylinder_3d_limit.py",
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py",
+    "src/tensorbem/benchmarks/floating_hemisphere.py",
+    "src/tensorbem/benchmarks/hulme_diffraction_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_analytic.py",
+    "src/tensorbem/benchmarks/hydrostatic_benchmarks.py",
+    "src/tensorbem/benchmarks/hydrostatic_convergence.py",
+    "src/tensorbem/benchmarks/hydrostatic_curved_waterplane.py",
+    "src/tensorbem/benchmarks/hydrostatic_rao_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_restoring_pins.py",
+    "src/tensorbem/benchmarks/hydrostatic_verification.py",
+    "src/tensorbem/benchmarks/ice_ship_verification.py",
+    "src/tensorbem/benchmarks/interior_harmonics.py",
+    "src/tensorbem/benchmarks/interior_panel_suppression.py",
+    "src/tensorbem/benchmarks/kochin_hulme_convergence.py",
+    "src/tensorbem/benchmarks/mesh_doc_pins.py",
+    "src/tensorbem/benchmarks/multibody_frequency_dependence_3d.py",
+    "src/tensorbem/benchmarks/near_surface_error_budget.py",
+    "src/tensorbem/benchmarks/near_surface_field.py",
+    "src/tensorbem/benchmarks/near_wall_envelope_study.py",
+    "src/tensorbem/benchmarks/nearfield_quadrature.py",
+    "src/tensorbem/benchmarks/panel_linear_order.py",
+    "src/tensorbem/benchmarks/panel_operator_order.py",
+    "src/tensorbem/benchmarks/prose_claims.py",
+    "src/tensorbem/benchmarks/quadratic_panel_convergence.py",
+    "src/tensorbem/benchmarks/quadratic_panel_verification.py",
+    "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+    "src/tensorbem/benchmarks/rao_input_validation.py",
+    "src/tensorbem/benchmarks/recovery_robustness.py",
+    "src/tensorbem/benchmarks/rigid_body_added_mass.py",
+    "src/tensorbem/benchmarks/six_dof_matrix_algebra.py",
+    "src/tensorbem/benchmarks/sphere_added_mass.py",
+    "src/tensorbem/benchmarks/sphere_flow.py",
+    "src/tensorbem/benchmarks/sphere_velocity.py",
+    "src/tensorbem/benchmarks/submerged_sphere_envelope.py",
+    "src/tensorbem/benchmarks/submerged_sphere_havelock.py",
+    "src/tensorbem/benchmarks/submerged_sphere_wave.py",
+    "src/tensorbem/benchmarks/surface_velocity_study.py",
+    "src/tensorbem/benchmarks/symmetry_far_field.py",
+    "src/tensorbem/benchmarks/symmetry_reduction.py",
+    "src/tensorbem/benchmarks/three_dimensional_study.py",
+    "src/tensorbem/benchmarks/wave_loads_verification.py",
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_domain_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py",
+    "src/tensorbem/benchmarks/wigley_diffraction_radiation.py"
+   ],
+   "tool": [
+    "scripts/report_finite_depth_solver3d.py",
+    "scripts/verify_finite_depth_solver3d.py",
+    "tools/aggregate_sweep.py",
+    "tools/m4757_analytic_pins_artifacts.py",
+    "tools/m8580_panel_geometry_validation.py"
+   ],
+   "tests": [
+    "tests/test_capsule_3d_limit.py",
+    "tests/test_clearance.py",
+    "tests/test_conditioning.py",
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_diagnostics_report.py",
+    "tests/test_ellipsoid_1280_verification.py",
+    "tests/test_ellipsoid_benchmark.py",
+    "tests/test_exterior_neumann_added_mass.py",
+    "tests/test_finite_depth_solver3d.py",
+    "tests/test_floating_hemisphere_3d.py",
+    "tests/test_free_surface3d.py",
+    "tests/test_geometry3d.py",
+    "tests/test_hulme_diffraction_verification.py",
+    "tests/test_hydrostatic_analytic_benchmark.py",
+    "tests/test_hydrostatic_convergence.py",
+    "tests/test_hydrostatic_curved_waterplane.py",
+    "tests/test_hydrostatic_rao.py",
+    "tests/test_hydrostatic_restoring_couplings.py",
+    "tests/test_hydrostatic_verification.py",
+    "tests/test_interior_panel_suppression.py",
+    "tests/test_irregular_frequency_sanitisation.py",
+    "tests/test_kernels3d_gradients.py",
+    "tests/test_kochin_validation.py",
+    "tests/test_mesh_quality.py",
+    "tests/test_multibody_frequency_dependence_3d.py",
+    "tests/test_mutation_gaps_hydrostatic.py",
+    "tests/test_mutation_gaps_wave_loads.py",
+    "tests/test_near_singular.py",
+    "tests/test_near_surface_error_budget.py",
+    "tests/test_near_wall_envelope.py",
+    "tests/test_nearfield_quadrature.py",
+    "tests/test_panel_geometry_validation.py",
+    "tests/test_panel_linear_order.py",
+    "tests/test_panel_operator_order.py",
+    "tests/test_panel_quadratic.py",
+    "tests/test_pressure.py",
+    "tests/test_quadrature_diagnostics.py",
+    "tests/test_radiation_diffraction_anchors_3d.py",
+    "tests/test_rao_input_validation.py",
+    "tests/test_recovery_robustness.py",
+    "tests/test_six_dof_matrix_algebra.py",
+    "tests/test_solver3d.py",
+    "tests/test_sphere_velocity.py",
+    "tests/test_submerged_sphere_havelock.py",
+    "tests/test_submerged_sphere_wave_3d.py",
+    "tests/test_surface_velocity_recovery.py",
+    "tests/test_symmetry3d.py",
+    "tests/test_symmetry3d_far_field.py",
+    "tests/test_waterplane_multi_loop.py",
+    "tests/test_wigley_hydrostatics.py"
+   ],
+   "orphan": []
+  },
+  "stf_fullspeed": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "tools/generate_stf_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_stf_haskind_reg.py"
+   ],
+   "orphan": []
+  },
+  "rao": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/hydrostatic_analytic.py",
+    "src/tensorbem/benchmarks/hydrostatic_rao_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_verification.py",
+    "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+    "src/tensorbem/benchmarks/rao_input_validation.py",
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+    "src/tensorbem/benchmarks/wigley3_freq_domain_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py",
+    "src/tensorbem/benchmarks/wigley3_report_generator.py",
+    "src/tensorbem/benchmarks/wigley_diffraction_radiation.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_hydrostatic_rao.py",
+    "tests/test_m7602_freq_domain_verification.py",
+    "tests/test_rao_input_validation.py",
+    "tests/test_wigley3_complete_verification.py",
+    "tests/test_wigley3_freq_diffraction_radiation.py",
+    "tests/test_wigley3_freq_verification.py",
+    "tests/test_wigley_diffraction_radiation.py"
+   ],
+   "orphan": []
+  },
+  "ellipsoid_kochin": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/multihull.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/hull_anchor_maturation.py",
+    "src/tensorbem/benchmarks/multihull_lateral_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_ellipsoid_kochin_three_route.py",
+    "tests/test_hull_anchor_maturation.py",
+    "tests/test_m5455_verification.py",
+    "tests/test_multihull_lateral.py"
+   ],
+   "orphan": []
+  },
+  "near_singular": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/solver3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/doc_inventory.py",
+    "src/tensorbem/benchmarks/near_surface_error_budget.py",
+    "src/tensorbem/benchmarks/near_surface_field.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_near_singular.py"
+   ],
+   "orphan": []
+  },
+  "time_domain": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/memory_kernel_matrix.py",
+    "src/tensorbem/state_space.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/cummins_memory_closure.py",
+    "src/tensorbem/benchmarks/cummins_wigley_hull.py",
+    "src/tensorbem/benchmarks/freq_time_bridge.py",
+    "src/tensorbem/benchmarks/time_domain_pulse.py"
+   ],
+   "tool": [
+    "scripts/generate_verification_report.py",
+    "scripts/make_cummins_report_figures.py"
+   ],
+   "tests": [
+    "tests/test_cummins_memory_closure.py",
+    "tests/test_cummins_wigley_hull.py",
+    "tests/test_memory_kernel_matrix.py",
+    "tests/test_state_space.py",
+    "tests/test_time_domain.py"
+   ],
+   "orphan": []
+  },
+  "doc_claims": {
+   "wiring": "tests_only",
+   "core": [],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_doc_claims.py"
+   ],
+   "orphan": []
+  },
+  "drift": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/added_resistance_cloud.py",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py",
+    "src/tensorbem/benchmarks/drift_mesh_convergence.py",
+    "src/tensorbem/benchmarks/drift_second_order.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_drift_far_field3d.py",
+    "tests/test_drift_forces.py",
+    "tests/test_drift_second_order.py"
+   ],
+   "orphan": []
+  },
+  "haskind2d": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "tools/generate_stf_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_stf_haskind_reg.py"
+   ],
+   "orphan": []
+  },
+  "free_surface_solver3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/drift.py",
+    "src/tensorbem/drift_far_field3d.py",
+    "src/tensorbem/finite_depth_solver3d.py",
+    "src/tensorbem/ice_rao.py",
+    "src/tensorbem/irregular_frequency.py",
+    "src/tensorbem/multibody3d.py",
+    "src/tensorbem/rao.py",
+    "src/tensorbem/symmetry3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/added_resistance_cloud.py",
+    "src/tensorbem/benchmarks/cummins_wigley_hull.py",
+    "src/tensorbem/benchmarks/cylinder_3d_limit.py",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py",
+    "src/tensorbem/benchmarks/drift_mesh_convergence.py",
+    "src/tensorbem/benchmarks/floating_hemisphere.py",
+    "src/tensorbem/benchmarks/hulme_diffraction_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_rao_verification.py",
+    "src/tensorbem/benchmarks/interior_panel_suppression.py",
+    "src/tensorbem/benchmarks/kochin_hulme_convergence.py",
+    "src/tensorbem/benchmarks/nearfield_quadrature.py",
+    "src/tensorbem/benchmarks/panel_operator_order.py",
+    "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+    "src/tensorbem/benchmarks/six_dof_matrix_algebra.py",
+    "src/tensorbem/benchmarks/submerged_sphere_envelope.py",
+    "src/tensorbem/benchmarks/submerged_sphere_havelock.py",
+    "src/tensorbem/benchmarks/submerged_sphere_wave.py",
+    "src/tensorbem/benchmarks/symmetry_far_field.py",
+    "src/tensorbem/benchmarks/symmetry_reduction.py",
+    "src/tensorbem/benchmarks/wave_loads_verification.py",
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+    "src/tensorbem/benchmarks/wigley3_freq_domain_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py",
+    "src/tensorbem/benchmarks/wigley3_report_generator.py",
+    "src/tensorbem/benchmarks/wigley_diffraction_radiation.py",
+    "src/tensorbem/benchmarks/wigley_kcs_kochin_energy.py"
+   ],
+   "tool": [
+    "scripts/verify_finite_depth_solver3d.py",
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_drift_far_field3d.py",
+    "tests/test_drift_forces.py",
+    "tests/test_drift_second_order.py",
+    "tests/test_finite_depth_solver3d.py",
+    "tests/test_floating_hemisphere_3d.py",
+    "tests/test_hulme_diffraction_verification.py",
+    "tests/test_ice_rao.py",
+    "tests/test_interior_panel_suppression.py",
+    "tests/test_kochin_validation.py",
+    "tests/test_m7602_freq_domain_verification.py",
+    "tests/test_nearfield_quadrature.py",
+    "tests/test_submerged_sphere_wave_3d.py",
+    "tests/test_symmetry3d.py",
+    "tests/test_symmetry3d_far_field.py",
+    "tests/test_wigley3_complete_verification.py",
+    "tests/test_wigley3_freq_diffraction_radiation.py",
+    "tests/test_wigley3_freq_verification.py",
+    "tests/test_wigley_diffraction_radiation.py",
+    "tests/test_wigley_kcs_kochin_energy.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth_diffraction": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/finite_depth_diffraction.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_finite_depth_diffraction.py"
+   ],
+   "orphan": []
+  },
+  "kernels": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/lifting.py",
+    "src/tensorbem/mixed.py",
+    "src/tensorbem/multicomponent.py",
+    "src/tensorbem/multiloop.py",
+    "src/tensorbem/solver.py",
+    "src/tensorbem/solver3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/lifting_solver.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_exterior_solver.py",
+    "tests/test_interior_field_domain_guard.py",
+    "tests/test_kernels.py",
+    "tests/test_mutation_gaps.py"
+   ],
+   "orphan": []
+  },
+  "symmetry3d": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/symmetry_far_field.py",
+    "src/tensorbem/benchmarks/symmetry_reduction.py",
+    "src/tensorbem/benchmarks/wigley_kcs_kochin_energy.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_symmetry3d.py",
+    "tests/test_symmetry3d_far_field.py",
+    "tests/test_wigley_kcs_kochin_energy.py"
+   ],
+   "orphan": []
+  },
+  "wigley3_freq": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/wigley3_complete_verification.py",
+    "src/tensorbem/benchmarks/wigley3_freq_diffraction_radiation_benchmark.py",
+    "src/tensorbem/benchmarks/wigley3_freq_verification.py",
+    "src/tensorbem/benchmarks/wigley3_report_generator.py"
+   ],
+   "tool": [
+    "tools/gen_irregular_frequency_figures.py"
+   ],
+   "tests": [
+    "tests/test_irregular_frequency_sanitisation.py",
+    "tests/test_wigley3_complete_verification.py",
+    "tests/test_wigley3_freq_diffraction_radiation.py",
+    "tests/test_wigley3_freq_verification.py"
+   ],
+   "orphan": []
+  },
+  "flexural_gravity": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "scripts/verify_flexural_gravity.py",
+    "scripts/verify_flexural_gravity_mass_loading.py"
+   ],
+   "tests": [
+    "tests/test_flexural_gravity.py",
+    "tests/test_flexural_gravity_mass_loading.py"
+   ],
+   "orphan": []
+  },
+  "pc6_hull": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/cathodic_protection.py",
+    "src/tensorbem/kcs_hull.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/ice_ship_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_ice_rao.py",
+    "tests/test_pc6_hull.py"
+   ],
+   "orphan": []
+  },
+  "thin_ship_michell": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/michell_unit_arbitration.py",
+    "src/tensorbem/benchmarks/thin_ship_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_thin_ship_anchor_artifacts.py",
+    "tests/test_thin_ship_michell.py"
+   ],
+   "orphan": []
+  },
+  "multiloop": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/annulus_figures.py",
+    "src/tensorbem/benchmarks/annulus_laplace.py",
+    "src/tensorbem/benchmarks/two_cylinder_added_mass.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_multiloop_annulus.py"
+   ],
+   "orphan": []
+  },
+  "solver": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/lifting.py",
+    "src/tensorbem/mixed.py",
+    "src/tensorbem/multicomponent.py",
+    "src/tensorbem/multiloop.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/analytical_suite.py",
+    "src/tensorbem/benchmarks/ellipse_added_mass.py",
+    "src/tensorbem/benchmarks/lifting_solver.py",
+    "src/tensorbem/benchmarks/mixed_boundary.py",
+    "src/tensorbem/benchmarks/multicomponent_annulus.py",
+    "src/tensorbem/benchmarks/rigid_body_added_mass.py",
+    "src/tensorbem/benchmarks/two_cylinder_added_mass.py",
+    "src/tensorbem/benchmarks/unit_disk.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_exterior_solver.py",
+    "tests/test_interior_field_domain_guard.py",
+    "tests/test_mixed_boundary.py",
+    "tests/test_mutation_gaps.py",
+    "tests/test_solver.py"
+   ],
+   "orphan": []
+  },
+  "pressure": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/sphere_flow.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_mutation_gaps_wave_loads.py",
+    "tests/test_pressure.py"
+   ],
+   "orphan": []
+  },
+  "kernels3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/cathodic_protection.py",
+    "src/tensorbem/cp_galvanic.py",
+    "src/tensorbem/finite_depth_solver3d.py",
+    "src/tensorbem/free_surface_solver3d.py",
+    "src/tensorbem/near_field_quadrature.py",
+    "src/tensorbem/near_singular.py",
+    "src/tensorbem/solver3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/near_surface_error_budget.py",
+    "src/tensorbem/benchmarks/near_surface_field.py",
+    "src/tensorbem/benchmarks/panel_operator_order.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_kernels3d.py",
+    "tests/test_kernels3d_gradients.py",
+    "tests/test_mutation_gaps_wave_loads.py",
+    "tests/test_near_singular.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth3d_quadrature": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/finite_depth3d_verification.py"
+   ],
+   "tool": [
+    "scripts/m13811_finite_depth3d_quadrature_offaxis_fix.py"
+   ],
+   "tests": [
+    "tests/test_finite_depth3d_offaxis_split.py",
+    "tests/test_finite_depth3d_quadrature.py",
+    "tests/test_finite_depth3d_quadrature_offaxis_fix.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth_solver": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/finite_depth_diffraction.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/finite_depth_diffraction.py",
+    "src/tensorbem/benchmarks/finite_depth_energy_convergence.py",
+    "src/tensorbem/benchmarks/finite_depth_envelope.py",
+    "src/tensorbem/benchmarks/finite_depth_radiation.py",
+    "src/tensorbem/benchmarks/finite_depth_refinement.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_finite_depth_diffraction.py",
+    "tests/test_finite_depth_energy_convergence.py",
+    "tests/test_finite_depth_refinement.py",
+    "tests/test_finite_depth_solver.py"
+   ],
+   "orphan": []
+  },
+  "lifting": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/lifting_camber.py",
+    "src/tensorbem/benchmarks/lifting_doc_pins.py",
+    "src/tensorbem/benchmarks/lifting_foil.py",
+    "src/tensorbem/benchmarks/lifting_solver.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_lifting_camber.py",
+    "tests/test_lifting_flow.py",
+    "tests/test_lifting_foil.py"
+   ],
+   "orphan": []
+  },
+  "nk_panel3d": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "scripts/nk_panel3d_study.py"
+   ],
+   "tests": [
+    "tests/test_nk_panel3d.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/finite_depth3d.py",
+    "src/tensorbem/finite_depth3d_quadrature.py",
+    "src/tensorbem/finite_depth_diffraction.py",
+    "src/tensorbem/finite_depth_green.py",
+    "src/tensorbem/finite_depth_solver.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/finite_depth3d_pins.py",
+    "src/tensorbem/benchmarks/finite_depth3d_verification.py",
+    "src/tensorbem/benchmarks/finite_depth_diffraction.py",
+    "src/tensorbem/benchmarks/finite_depth_energy_convergence.py",
+    "src/tensorbem/benchmarks/finite_depth_kernel.py",
+    "src/tensorbem/benchmarks/finite_depth_radiation.py"
+   ],
+   "tool": [
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_finite_depth.py",
+    "tests/test_finite_depth3d.py",
+    "tests/test_finite_depth3d_quadrature.py",
+    "tests/test_finite_depth3d_regime.py",
+    "tests/test_finite_depth_diffraction.py",
+    "tests/test_finite_depth_green.py",
+    "tests/test_mutation_gaps.py"
+   ],
+   "orphan": []
+  },
+  "panel_linear": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/capability_coverage_study.py",
+    "src/tensorbem/benchmarks/panel_linear_order.py",
+    "src/tensorbem/benchmarks/quadratic_panel_convergence.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_panel_linear_order.py",
+    "tests/test_panel_quadratic.py"
+   ],
+   "orphan": []
+  },
+  "ice_rao": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/ice_ship_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_ice_rao.py"
+   ],
+   "orphan": []
+  },
+  "mesh_quality": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/diagnostics_report.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_diagnostics_report.py",
+    "tests/test_mesh_quality.py"
+   ],
+   "orphan": []
+  },
+  "propeller": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/kp505_gci_ladder.py",
+    "src/tensorbem/benchmarks/kp505_openwater_bem.py",
+    "src/tensorbem/benchmarks/kp505_w20_gci.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_propeller_open_water.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth_green": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py"
+   ],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_finite_depth_green.py"
+   ],
+   "orphan": []
+  },
+  "quadrature_diagnostics": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/diagnostics_report.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_diagnostics_report.py",
+    "tests/test_quadrature_diagnostics.py"
+   ],
+   "orphan": []
+  },
+  "cylinder_drift": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/cylinder_drift_asymptotic.py",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_cylinder_drift_asymptotic.py",
+    "tests/test_drift_far_field3d.py"
+   ],
+   "orphan": []
+  },
+  "state_space": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/freq_time_bridge.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_state_space.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth3d": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/finite_depth_solver3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/deepwater_ladder_geometry.py",
+    "src/tensorbem/benchmarks/doc_inventory.py",
+    "src/tensorbem/benchmarks/finite_depth3d_deepwater_arbitration.py",
+    "src/tensorbem/benchmarks/finite_depth3d_gradients.py",
+    "src/tensorbem/benchmarks/finite_depth3d_pins.py",
+    "src/tensorbem/benchmarks/finite_depth3d_regime.py"
+   ],
+   "tool": [
+    "scripts/m13811_finite_depth3d_quadrature_offaxis_fix.py",
+    "scripts/verify_finite_depth_solver3d.py",
+    "tools/m4757_analytic_pins_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_core_api_analytic_pins.py",
+    "tests/test_finite_depth3d.py",
+    "tests/test_finite_depth3d_gradients.py",
+    "tests/test_finite_depth3d_offaxis_split.py",
+    "tests/test_finite_depth3d_quadrature_offaxis_fix.py",
+    "tests/test_finite_depth3d_regime.py",
+    "tests/test_finite_depth_solver3d.py"
+   ],
+   "orphan": []
+  },
+  "drift_far_field3d": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_drift_far_field3d.py"
+   ],
+   "orphan": []
+  },
+  "multihull": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_verified_anchors.py",
+    "src/tensorbem/benchmarks/multihull_lateral_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_bem_verified_anchors.py",
+    "tests/test_multihull_lateral.py"
+   ],
+   "orphan": []
+  },
+  "multicomponent": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/multicomponent_annulus.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_multicomponent.py"
+   ],
+   "orphan": []
+  },
+  "rankine_fs": {
+   "wiring": "tests_only",
+   "core": [],
+   "bench": [],
+   "tool": [],
+   "tests": [
+    "tests/test_rankine_fs_panel.py"
+   ],
+   "orphan": []
+  },
+  "interior_panels": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/free_surface_solver3d.py",
+    "src/tensorbem/irregular_frequency.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/interior_panel_suppression.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_interior_panel_suppression.py"
+   ],
+   "orphan": []
+  },
+  "causality": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/time_domain.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/cummins_matrix_closure.py",
+    "src/tensorbem/benchmarks/cummins_memory_closure.py",
+    "src/tensorbem/benchmarks/cummins_wigley_hull.py",
+    "src/tensorbem/benchmarks/kkr_band_doc_pins.py",
+    "src/tensorbem/benchmarks/kkr_causality.py",
+    "src/tensorbem/benchmarks/kkr_floor.py"
+   ],
+   "tool": [
+    "scripts/generate_verification_report.py",
+    "scripts/make_cummins_report_figures.py"
+   ],
+   "tests": [
+    "tests/test_causality.py",
+    "tests/test_kkr_causality.py"
+   ],
+   "orphan": []
+  },
+  "michell": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/finite_depth_green.py",
+    "src/tensorbem/rankine_fs.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/michell_unit_arbitration.py",
+    "src/tensorbem/benchmarks/michell_validation.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_finite_depth_green.py",
+    "tests/test_michell_thin_ship.py"
+   ],
+   "orphan": []
+  },
+  "kcs_hull": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/added_resistance_cloud.py",
+    "src/tensorbem/benchmarks/wigley_kcs_kochin_energy.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_added_resistance_cloud.py",
+    "tests/test_wigley_kcs_kochin_energy.py"
+   ],
+   "orphan": []
+  },
+  "finite_depth_solver3d": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "scripts/report_finite_depth_solver3d.py",
+    "scripts/verify_finite_depth_solver3d.py"
+   ],
+   "tests": [
+    "tests/test_finite_depth_solver3d.py"
+   ],
+   "orphan": []
+  },
+  "irregular_frequency": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "tools/gen_irregular_frequency_figures.py"
+   ],
+   "tests": [
+    "tests/test_irregular_frequency_sanitisation.py"
+   ],
+   "orphan": []
+  },
+  "analytic": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/__init__.py",
+    "src/tensorbem/finite_depth3d.py",
+    "src/tensorbem/finite_depth3d_quadrature.py",
+    "src/tensorbem/free_surface3d.py",
+    "src/tensorbem/helmholtz.py",
+    "src/tensorbem/near_field_quadrature.py",
+    "src/tensorbem/neumann_kelvin.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/bem_finite_depth_anchors.py",
+    "src/tensorbem/benchmarks/cummins_memory_closure.py",
+    "src/tensorbem/benchmarks/cylinder_3d_limit.py",
+    "src/tensorbem/benchmarks/dean_diffraction.py",
+    "src/tensorbem/benchmarks/declared_numbers.py",
+    "src/tensorbem/benchmarks/ellipse_added_mass.py",
+    "src/tensorbem/benchmarks/ellipsoid_added_mass.py",
+    "src/tensorbem/benchmarks/finite_depth3d_deepwater_arbitration.py",
+    "src/tensorbem/benchmarks/finite_depth_envelope.py",
+    "src/tensorbem/benchmarks/finite_depth_radiation.py",
+    "src/tensorbem/benchmarks/floating_hemisphere.py",
+    "src/tensorbem/benchmarks/hulme_diffraction_verification.py",
+    "src/tensorbem/benchmarks/hydrostatic_rao_verification.py",
+    "src/tensorbem/benchmarks/interior_harmonics.py",
+    "src/tensorbem/benchmarks/interior_panel_suppression.py",
+    "src/tensorbem/benchmarks/irregular_frequency_study.py",
+    "src/tensorbem/benchmarks/kkr_causality.py",
+    "src/tensorbem/benchmarks/kkr_floor.py",
+    "src/tensorbem/benchmarks/kochin_hulme_convergence.py",
+    "src/tensorbem/benchmarks/maccamy_fuchs.py",
+    "src/tensorbem/benchmarks/nearfield_quadrature.py",
+    "src/tensorbem/benchmarks/radiation_diffraction_anchors_3d.py",
+    "src/tensorbem/benchmarks/rigid_body_added_mass.py",
+    "src/tensorbem/benchmarks/submerged_sphere_envelope.py",
+    "src/tensorbem/benchmarks/submerged_sphere_havelock.py",
+    "src/tensorbem/benchmarks/submerged_sphere_wave.py",
+    "src/tensorbem/benchmarks/symmetry_far_field.py",
+    "src/tensorbem/benchmarks/time_domain_pulse.py",
+    "src/tensorbem/benchmarks/two_cylinder_added_mass.py",
+    "src/tensorbem/benchmarks/ursell_band_audit.py",
+    "src/tensorbem/benchmarks/ursell_convergence_table.py",
+    "src/tensorbem/benchmarks/ursell_cylinder.py",
+    "src/tensorbem/benchmarks/ursell_error_budget.py",
+    "src/tensorbem/benchmarks/ursell_quadrature_study.py",
+    "src/tensorbem/benchmarks/wave_loads_minimal.py",
+    "src/tensorbem/benchmarks/wave_loads_verification.py"
+   ],
+   "tool": [
+    "scripts/verify_finite_depth_solver3d.py",
+    "tools/generate_stf_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_analytic_references.py",
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_causality.py",
+    "tests/test_ellipsoid_1280_verification.py",
+    "tests/test_finite_depth_solver.py",
+    "tests/test_floating_hemisphere_3d.py",
+    "tests/test_free_surface3d.py",
+    "tests/test_hulme_diffraction_verification.py",
+    "tests/test_interior_panel_pins.py",
+    "tests/test_interior_panel_suppression.py",
+    "tests/test_irregular_frequency_study.py",
+    "tests/test_kkr_causality.py",
+    "tests/test_kochin_validation.py",
+    "tests/test_near_surface_three_way.py",
+    "tests/test_nearfield_quadrature.py",
+    "tests/test_published_reference_columns.py",
+    "tests/test_stf_haskind_reg.py",
+    "tests/test_submerged_sphere_wave_3d.py",
+    "tests/test_time_domain.py",
+    "tests/test_two_cylinder_added_mass.py",
+    "tests/test_ursell_benchmark.py",
+    "tests/test_ursell_error_budget.py",
+    "tests/test_ursell_quadrature_convergence.py",
+    "tests/test_ursell_reproducibility.py"
+   ],
+   "orphan": []
+  },
+  "hydroelastic": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/hydroelastic_verification.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_hydroelastic.py"
+   ],
+   "orphan": []
+  },
+  "capability_evidence": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/capability_coverage_study.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_capability_coverage.py",
+    "tests/test_capability_evidence.py"
+   ],
+   "orphan": []
+  },
+  "net_source_reg": {
+   "wiring": "tool",
+   "core": [],
+   "bench": [],
+   "tool": [
+    "tools/generate_stf_artifacts.py"
+   ],
+   "tests": [
+    "tests/test_stf_haskind_reg.py"
+   ],
+   "orphan": []
+  },
+  "wigley3_hull": {
+   "wiring": "core",
+   "core": [
+    "src/tensorbem/multibody3d.py"
+   ],
+   "bench": [
+    "src/tensorbem/benchmarks/multibody_frequency_dependence_3d.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_multibody_frequency_dependence_3d.py"
+   ],
+   "orphan": []
+  },
+  "memory_kernel_matrix": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/cummins_matrix_closure.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_memory_kernel_matrix.py"
+   ],
+   "orphan": []
+  },
+  "cathodic_protection": {
+   "wiring": "bench",
+   "core": [],
+   "bench": [
+    "src/tensorbem/benchmarks/cathodic_protection_sphere.py"
+   ],
+   "tool": [],
+   "tests": [
+    "tests/test_cathodic_protection.py"
+   ],
+   "orphan": []
+  }
+ },
+ "stub_symbols": {}
+}

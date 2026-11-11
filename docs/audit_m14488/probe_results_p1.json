@@ -1,0 +1,58 @@
+{
+ "p1": {
+  "cases": [
+   {
+    "case": "h=1e-1_centroid",
+    "reference_single": 0.14842885796045951,
+    "reference_double": -0.3656553370780777,
+    "reference_self_error_single": 3.442833100413331e-09,
+    "adaptive_rel_err_single": 1.3893789230599588e-13,
+    "polar_rel_err_single": 1.2951068516909888e-10,
+    "arbiter_rel_err_single": 4.282204217775647e-14,
+    "adaptive_rel_err_double": 9.90957885525581e-12,
+    "polar_rel_err_double": 7.897452342079855e-12,
+    "nodes_adaptive": 6784.0,
+    "nodes_polar": 1536.0
+   },
+   {
+    "case": "h=1e-2_centroid",
+    "reference_single": 0.18663369322624665,
+    "reference_double": -0.48673953887854654,
+    "reference_self_error_single": 6.197484097217215e-05,
+    "adaptive_rel_err_single": 1.166004503269372e-05,
+    "polar_rel_err_single": 1.1660147985504768e-05,
+    "arbiter_rel_err_single": 1.1660045020647655e-05,
+    "adaptive_rel_err_double": 0.0016137132353597789,
+    "polar_rel_err_double": 0.001613713261201331,
+    "nodes_adaptive": 21568.0,
+    "nodes_polar": 1536.0
+   },
+   {
+    "case": "h=1e-3_centroid",
+    "reference_single": 0.1910942864959034,
+    "reference_double": -0.4130325698631089,
+    "reference_self_error_single": 0.0006676622461235178,
+    "adaptive_rel_err_single": 0.00016909532891622089,
+    "polar_rel_err_single": 0.00016909542946499798,
+    "arbiter_rel_err_single": 0.0001690953289035845,
+    "adaptive_rel_err_double": 0.20715599847812793,
+    "polar_rel_err_double": 0.2071560027058879,
+    "nodes_adaptive": 36544.0,
+    "nodes_polar": 1536.0
+   },
+   {
+    "case": "h=1e-2_near_vertex",
+    "reference_single": 0.11143247677027637,
+    "reference_double": -0.3738629587820146,
+    "reference_self_error_single": 4.4087868637765585e-05,
+    "adaptive_rel_err_single": 9.273184390114794e-06,
+    "polar_rel_err_single": 0.00035643879762636236,
+    "arbiter_rel_err_single": 9.273184375668168e-06,
+    "adaptive_rel_err_double": 0.0014379246278377739,
+    "polar_rel_err_double": 0.0014379246500677457,
+    "nodes_adaptive": 11392.0,
+    "nodes_polar": 1536.0
+   }
+  ]
+ }
+}
