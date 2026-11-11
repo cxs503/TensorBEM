@@ -3,8 +3,8 @@
   "topic": "propeller-openwater-bem / W20 item 5: three-density GCI and error decomposition",
   "generated_by": "tensorbem.benchmarks.kp505_w20_gci",
   "regenerate": "python -m tensorbem.benchmarks.kp505_w20_gci",
-  "generated_utc": "2026-11-10T13:33:48.530373+00:00",
-  "repo_commit": "7f5e068f5c23bc34b0de3f57b094475d9fb93187",
+  "generated_utc": "2026-11-11T09:22:38.142844+00:00",
+  "repo_commit": "f586616401e51bf252d550017cde78db5f430ca0",
   "env": {
     "python": "3.11.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"

@@ -3,7 +3,7 @@
   "topic": "propeller-openwater-bem / W20 item 5: anchor transcription with per-number provenance",
   "generated_by": "tools/build_w20_kp505_transcription.py",
   "regenerate": "python -m tools.build_w20_kp505_transcription",
-  "generated_utc": "2026-11-10T13:35:37.185409+00:00",
+  "generated_utc": "2026-11-11T10:06:31.302522+00:00",
   "anchor": {
     "kind": "SECONDARY_REPRODUCTION",
     "citation": "H. Iftikhar, A. C. Takinaci, 'Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS', X International Conference on Computational Methods in Marine Engineering (MARINE 2023), CIMNE, DOI 10.23967/marine.2023.120",
