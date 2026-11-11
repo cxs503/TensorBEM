@@ -1,0 +1,128 @@
+{
+  "mission": "m14931",
+  "subject": "tensorbem.fmm",
+  "cost": [
+    {
+      "level": 2,
+      "panels": 320,
+      "p": 2,
+      "max_leaf": 32,
+      "leaves": 36,
+      "avg_leaf": 8.88888888888889,
+      "t_fmm_s": 1.6800225116312504,
+      "t_dense_s": 0.005121959373354912,
+      "time_ratio": 328.0038729652841,
+      "c_fmm_s_per_interaction": 0.0001458352874679905,
+      "c_dense_s_per_pair": 5.001913450541906e-08,
+      "per_unit_cost_ratio": 328.0038729652841,
+      "near_pairs": 7442,
+      "far_pairs": 4078,
+      "total_pairs": 11520
+    },
+    {
+      "level": 3,
+      "panels": 1280,
+      "p": 2,
+      "max_leaf": 32,
+      "leaves": 60,
+      "avg_leaf": 21.333333333333332,
+      "t_fmm_s": 8.138039341196418,
+      "t_dense_s": 0.08322596177458763,
+      "time_ratio": 97.7824607571108,
+      "c_fmm_s_per_interaction": 0.00010596405392182835,
+      "c_dense_s_per_pair": 5.079709580968483e-08,
+      "per_unit_cost_ratio": 97.7824607571108,
+      "near_pairs": 61738,
+      "far_pairs": 15062,
+      "total_pairs": 76800
+    },
+    {
+      "level": 2,
+      "panels": 320,
+      "p": 4,
+      "max_leaf": 32,
+      "leaves": 36,
+      "avg_leaf": 8.88888888888889,
+      "t_fmm_s": 4.8490765411406755,
+      "t_dense_s": 0.004228120669722557,
+      "time_ratio": 1146.8633276871128,
+      "c_fmm_s_per_interaction": 0.00042092678308512806,
+      "c_dense_s_per_pair": 4.1290240915259345e-08,
+      "per_unit_cost_ratio": 1146.8633276871126,
+      "near_pairs": 7442,
+      "far_pairs": 4078,
+      "total_pairs": 11520
+    }
+  ],
+  "accuracy_separated": [
+    {
+      "p": 1,
+      "max_rel_error": 0.024528854322406694,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    },
+    {
+      "p": 2,
+      "max_rel_error": 0.0028933939066621644,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    },
+    {
+      "p": 3,
+      "max_rel_error": 0.0007274327796062576,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    },
+    {
+      "p": 4,
+      "max_rel_error": 0.00019320132046294567,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    },
+    {
+      "p": 6,
+      "max_rel_error": 1.6650577305708197e-05,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    },
+    {
+      "p": 8,
+      "max_rel_error": 1.0359469593149841e-06,
+      "near_pairs": 256,
+      "far_pairs": 256,
+      "total_pairs": 512
+    }
+  ],
+  "accuracy_surface": [
+    {
+      "p": 2,
+      "panels": 320,
+      "targets": 162,
+      "max_rel_error": 0.0011287775676349153,
+      "near_pairs": 3778,
+      "far_pairs": 2054,
+      "total_pairs": 5832
+    },
+    {
+      "p": 4,
+      "panels": 320,
+      "targets": 162,
+      "max_rel_error": 0.000159670255349438,
+      "near_pairs": 3778,
+      "far_pairs": 2054,
+      "total_pairs": 5832
+    }
+  ],
+  "shipped_physics_test_routing": {
+    "leaves": 1,
+    "rel_error": 0.0,
+    "near_pairs": 320,
+    "far_pairs": 0,
+    "total_pairs": 320
+  }
+}
