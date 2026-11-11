@@ -14,6 +14,7 @@ Run with ``python -m tools.emit_w20_report``.
 from __future__ import annotations
 
 import hashlib
+import os
 import json
 import subprocess
 from datetime import datetime, timezone
@@ -82,8 +83,10 @@ def main() -> int:
 
     add("# W20 / 计划项 5：KP505 敞水锚回核 + 三工况 GCI 与偏差分解")
     add("")
+    mission = os.environ.get("W20_REPORT_MISSION", "14569")
     add(
-        f"*仓库*: TensorBEM  ·  *分支*: `agent/m9641`  ·  *mission*: 9641  ·  *生成 UTC*: "
+        f"*仓库*: TensorBEM  ·  *分支*: `agent/m{mission}`  ·  *mission*: {mission}"
+        f"（返修轮 1，原单 m9641 经 maturity_gate 复核 L0 后重开）  ·  *生成 UTC*: "
         f"{datetime.now(timezone.utc).isoformat(timespec='seconds')}"
     )
     add(f"*git commit（工件生成时）*: `{commit}`")
@@ -108,7 +111,9 @@ def main() -> int:
     add("python -m tools.build_w20_kp505_transcription")
     add("python -m tensorbem.benchmarks.kp505_w20_gci")
     add("python -m tools.emit_w20_report")
-    add("pytest tests/test_w20_kp505_transcription.py tests/test_w20_kp505_gci.py -q")
+    add("python -m tools.emit_w20_evidence")
+    add("pytest tests/test_w20_kp505_transcription.py tests/test_w20_kp505_gci.py "
+        "tests/test_w20_kp505_integration.py -q")
     add("```")
     add("")
 
@@ -459,14 +464,27 @@ def main() -> int:
         f"{len(transcription['numbers'])} 个数字全部带源；verify 通过；跨仓回核 T6/T7 = FAIL（负结论） | "
         f"{'PASS' if tcrit['T1-every-number-has-source']['pass'] and tcrit['T2-machine-reread']['pass'] else 'FAIL'} |"
     )
+    w3m = criteria["W3-observed-order-vs-theory"]["measured"]
+    n_pass = sum(1 for v in w3m.values() if v["pass"])
+    best_key, best = min(w3m.items(), key=lambda kv: kv[1]["deviation_pct"])
     add(
         f"| 2) 三工况 GCI：p 与 GCI 落表，p 与理论阶偏差 < 30% | 六格全部 < 30% | "
-        f"仅 10K_Q@J=0.9 为 {criteria['W3-observed-order-vs-theory']['measured']['10KQ@J=0.9']['deviation_pct']:.1f}% 合格，其余 "
-        f"{_bad_orders(criteria)} 均 >100% | FAIL |"
+        f"{n_pass}/6 格合格；最接近理论阶的是 {best_key}，偏差 {best['deviation_pct']:.1f}%"
+        f"{'（仍在 30% 带外）' if not best['pass'] else ''} | "
+        f"{'PASS' if n_pass == len(w3m) else 'FAIL'} |"
     )
+    dp = verdict["design_point"]
+    kt_ok, kq_ok = abs(dp["dKT_pct"]) < 3.0, abs(dp["dKQ_pct"]) < 3.0
+    if kt_ok and kq_ok:
+        meas3 = "两项都 < 3%"
+    elif kt_ok or kq_ok:
+        meas3 = "一项 < 3%、一项 > 3%"
+    else:
+        meas3 = "两项都 > 3%"
     add(
         f"| 3) 设计点 |ΔK_T|、|ΔK_Q| 逐项给出并回答 < 3% | 两项都 < 3% | "
-        f"|ΔK_T| = {abs(verdict['design_point']['dKT_pct']):.2f}%，|ΔK_Q| = {abs(verdict['design_point']['dKQ_pct']):.2f}% | FAIL |"
+        f"|ΔK_T| = {abs(dp['dKT_pct']):.2f}%，|ΔK_Q| = {abs(dp['dKQ_pct']):.2f}%，{meas3} | "
+        f"{'PASS' if dp['answer_under_3pct'] else 'FAIL'} |"
     )
     add("")
     add(
@@ -492,6 +510,8 @@ def main() -> int:
     add("benchmarks/verified/bem_kp505_openwater_w20/levels.csv")
     add("benchmarks/verified/bem_kp505_openwater_w20/gci_table.csv")
     add("benchmarks/verified/bem_kp505_openwater_w20/figures/*.png")
+    add("benchmarks/verified/bem_kp505_openwater_w20/evidence.json  # 达标判断方案 evidence 束")
+    add("runs/w20_kp505_gci_cache/*.json                        # 原始逐格求解输出（运行工件）")
     add("papers/reports/w20_propeller_openwater_bem5.md          # 本报告")
     add(
         "src/tensorbem/benchmarks/kp505_w20_gci.py               # 驱动（含预热声明判据）"
@@ -500,6 +520,8 @@ def main() -> int:
     add("tools/emit_w20_report.py                                # 本文件生成器")
     add("tests/test_w20_kp505_transcription.py                   # 10 tests")
     add("tests/test_w20_kp505_gci.py                             # 9 tests")
+    add("tests/test_w20_kp505_integration.py                     # 5 tests（集成调用方）")
+    add("tools/emit_w20_evidence.py                              # evidence 束生成器")
     add("```")
     add("")
     add(
