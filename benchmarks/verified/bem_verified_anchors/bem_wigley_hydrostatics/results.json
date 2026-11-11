@@ -1,0 +1,162 @@
+{
+  "brief_audit": {
+    "brief_block_coefficient": 0.667,
+    "closed_form_block_coefficient": 0.4444444444444445,
+    "closed_form_prismatic_coefficient": 0.6666666666666666,
+    "note": "The mission brief quotes Cb = 0.667 for this hullform. 0.667 is its prismatic coefficient Cp = Cb/Cm (Cm = 2/3); the displaced-volume coefficient of the parabolic Wigley hull is Cb = 4/9 = 0.4444. Using 0.667 in V = Cb L B T over-predicts displacement by 50 %."
+  },
+  "case": "bem_wigley_hydrostatics",
+  "closed_form": {
+    "BM_L": 4.813333333333333,
+    "BM_T": 0.09523809523809523,
+    "KB": 0.140625,
+    "block_coefficient": 0.4444444444444445,
+    "midship_coefficient": 0.6666666666666666,
+    "prismatic_coefficient": 0.6666666666666666,
+    "volume": 0.19,
+    "waterplane_area": 1.2666666666666666,
+    "wetted_area_quadrature": 2.2717904276889964,
+    "wetted_area_quadrature_refined": 2.271790427688981,
+    "wetted_area_reference_converged": true
+  },
+  "coarse_level_misses": [
+    {
+      "block_coefficient_error": -0.012400000000000078,
+      "triangles": 200,
+      "volume_error": -0.012399999999999967
+    }
+  ],
+  "criteria": {
+    "all_levels_volume_within_1pct": false,
+    "finest_block_coefficient_within_0p5pct": true,
+    "finest_volume_within_1pct": true,
+    "finest_wetted_area_within_2pct": true,
+    "geometry_beam_matches_spec": true,
+    "geometry_draft_matches_spec": true,
+    "geometry_length_matches_spec": true,
+    "volume_gci_below_3pct": true,
+    "volume_gci_converged": true,
+    "wetted_area_gci_below_3pct": true
+  },
+  "figure": "bem_wigley_hydrostatics/figures/wigley_hydrostatics.png",
+  "gci": {
+    "volume": {
+      "asymptotic_ratio": 1.0023452047322587,
+      "coarse": 0.187644,
+      "converged": true,
+      "extrapolated": 0.19000120253164557,
+      "extrapolated_uncertainty": 0.00014956581289557458,
+      "fine": 0.18985163671875,
+      "gci_fine": 0.0009847545659899784,
+      "gci_medium": 0.0039185699323816435,
+      "medium": 0.1894074375,
+      "observed_order": 1.9891116838572689,
+      "refinement_ratio": 2.0
+    },
+    "wetted_area": {
+      "asymptotic_ratio": 1.0003027156379678,
+      "coarse": 2.2680589743349824,
+      "converged": true,
+      "extrapolated": 2.2717845181054663,
+      "extrapolated_uncertainty": 0.00022199534340838767,
+      "fine": 2.271562522762058,
+      "gci_fine": 0.0001221600446741087,
+      "gci_medium": 0.0005005915718903662,
+      "medium": 2.2708750933594253,
+      "observed_order": 2.0344248464806243,
+      "refinement_ratio": 2.0
+    }
+  },
+  "hull": "Wigley III parabolic hull",
+  "levels": [
+    {
+      "beam": 0.5,
+      "block_coefficient": 0.43893333333333334,
+      "block_coefficient_error": -0.012400000000000078,
+      "draft": 0.225,
+      "length": 3.8,
+      "n_levels": 5,
+      "n_sections": 10,
+      "triangles": 200,
+      "vertices": 111,
+      "volume": 0.187644,
+      "volume_error": -0.012399999999999967,
+      "waterplane_area": 1.2539999999999998,
+      "waterplane_area_error": -0.01000000000000012,
+      "wetted_area": 2.2680589743349824,
+      "wetted_area_error": -0.0016425165404935216
+    },
+    {
+      "beam": 0.5,
+      "block_coefficient": 0.44305833333333333,
+      "block_coefficient_error": -0.003118750000000059,
+      "draft": 0.225,
+      "length": 3.8,
+      "n_levels": 10,
+      "n_sections": 20,
+      "triangles": 800,
+      "vertices": 421,
+      "volume": 0.1894074375,
+      "volume_error": -0.003118750000000059,
+      "waterplane_area": 1.2634999999999998,
+      "waterplane_area_error": -0.0025000000000000577,
+      "wetted_area": 2.2708750933594253,
+      "wetted_area_error": -0.0004029131905896044
+    },
+    {
+      "beam": 0.5,
+      "block_coefficient": 0.44409739583333335,
+      "block_coefficient_error": -0.0007808593750000536,
+      "draft": 0.225,
+      "length": 3.8,
+      "n_levels": 20,
+      "n_sections": 40,
+      "triangles": 3200,
+      "vertices": 1641,
+      "volume": 0.18985163671875,
+      "volume_error": -0.0007808593750000536,
+      "waterplane_area": 1.2658749999999999,
+      "waterplane_area_error": -0.0006250000000000977,
+      "wetted_area": 2.271562522762058,
+      "wetted_area_error": -0.00010031952074485151
+    }
+  ],
+  "parameters": {
+    "B": 0.5,
+    "L": 3.8,
+    "T": 0.225
+  },
+  "per_level_acceptance": [
+    {
+      "block_coefficient_within_0p5pct": false,
+      "triangles": 200,
+      "volume_within_1pct": false,
+      "wetted_area_within_2pct": true
+    },
+    {
+      "block_coefficient_within_0p5pct": true,
+      "triangles": 800,
+      "volume_within_1pct": true,
+      "wetted_area_within_2pct": true
+    },
+    {
+      "block_coefficient_within_0p5pct": true,
+      "triangles": 3200,
+      "volume_within_1pct": true,
+      "wetted_area_within_2pct": true
+    }
+  ],
+  "strict_all_levels_verdict": "FAIL",
+  "tolerances": {
+    "asymptotic_sigma_band": 0.2,
+    "block_coefficient_error": 0.005,
+    "gci_fine": 0.03,
+    "sigma_absolute": 0.02,
+    "sigma_pair_resistance": 0.05,
+    "volume_error": 0.01,
+    "wave_resistance_error": 0.05,
+    "wetted_area_error": 0.02
+  },
+  "verdict": "PASS",
+  "verdict_note": "verdict scores the campaign criteria on the finest grid plus the three-level GCI; strict_all_levels_verdict additionally requires every mesh level to sit inside the 1 % volume band and is FAIL whenever a coarse level is outside it (see coarse_level_misses)"
+}

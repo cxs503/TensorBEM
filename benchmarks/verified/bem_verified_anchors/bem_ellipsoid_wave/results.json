@@ -1,0 +1,227 @@
+{
+  "case": "bem_ellipsoid_wave",
+  "criteria": {
+    "all_froudes_error_below_5pct": true,
+    "all_froudes_gci_below_3pct": true,
+    "all_froudes_gci_converged": true,
+    "geometry_block_coefficient_is_pi_over_6": true,
+    "geometry_volume_matches_2piaBC_over_3": true
+  },
+  "figure": "bem_ellipsoid_wave/figures/ellipsoid_wave.png",
+  "froude_cases": [
+    {
+      "criteria": {
+        "finest_error_below_5pct": true,
+        "gci_below_3pct": true,
+        "gci_converged": true
+      },
+      "finest_relative_error": 0.0040040732367752074,
+      "froude": 0.2,
+      "gci": {
+        "asymptotic_ratio": 0.9882663187572759,
+        "coarse": 0.2523053064677176,
+        "converged": true,
+        "extrapolated": 0.23617070785208302,
+        "extrapolated_uncertainty": 0.0008170463095850122,
+        "fine": 0.23698775416166803,
+        "gci_fine": 0.004309538653564925,
+        "gci_medium": 0.018926073454105626,
+        "medium": 0.2398015086254028,
+        "observed_order": 2.151798013091792,
+        "refinement_ratio": 2.0
+      },
+      "k0": 12.500000000000002,
+      "levels": [
+        {
+          "n_phi": 16,
+          "n_r": 8,
+          "panels": 128,
+          "relative_error": 0.06889723601513542,
+          "wave_resistance": 0.2523053064677176
+        },
+        {
+          "n_phi": 32,
+          "n_r": 16,
+          "panels": 512,
+          "relative_error": 0.015924608762635017,
+          "wave_resistance": 0.2398015086254028
+        },
+        {
+          "n_phi": 64,
+          "n_r": 32,
+          "panels": 2048,
+          "relative_error": 0.0040040732367752074,
+          "wave_resistance": 0.23698775416166803
+        }
+      ],
+      "speed": 0.8857381102786533,
+      "wave_resistance_analytic": 0.23604262221531744,
+      "wave_resistance_coefficient": 0.003913764045963955
+    },
+    {
+      "criteria": {
+        "finest_error_below_5pct": true,
+        "gci_below_3pct": true,
+        "gci_converged": true
+      },
+      "finest_relative_error": -0.0004519846279258388,
+      "froude": 0.3,
+      "gci": {
+        "asymptotic_ratio": 1.0014476797958165,
+        "coarse": 0.8779694671862917,
+        "converged": true,
+        "extrapolated": 0.8857264626160616,
+        "extrapolated_uncertainty": 0.00033706239985753506,
+        "fine": 0.885389400216204,
+        "gci_fine": 0.0004758674541608974,
+        "gci_medium": 0.002286156102630319,
+        "medium": 0.8841094927662368,
+        "observed_order": 2.2622051732133226,
+        "refinement_ratio": 2.0
+      },
+      "k0": 5.555555555555558,
+      "levels": [
+        {
+          "n_phi": 16,
+          "n_r": 8,
+          "panels": 128,
+          "relative_error": -0.008828614540630442,
+          "wave_resistance": 0.8779694671862917
+        },
+        {
+          "n_phi": 32,
+          "n_r": 16,
+          "panels": 512,
+          "relative_error": -0.0018969182934545081,
+          "wave_resistance": 0.8841094927662368
+        },
+        {
+          "n_phi": 64,
+          "n_r": 32,
+          "panels": 2048,
+          "relative_error": -0.0004519846279258388,
+          "wave_resistance": 0.885389400216204
+        }
+      ],
+      "speed": 1.3286071654179799,
+      "wave_resistance_analytic": 0.8857897635729131,
+      "wave_resistance_coefficient": 0.014687059889515205
+    },
+    {
+      "criteria": {
+        "finest_error_below_5pct": true,
+        "gci_below_3pct": true,
+        "gci_converged": true
+      },
+      "finest_relative_error": 0.0032292571473215848,
+      "froude": 0.4,
+      "gci": {
+        "asymptotic_ratio": 0.9904174421956455,
+        "coarse": 1.4919631386143972,
+        "converged": true,
+        "extrapolated": 1.418194749023052,
+        "extrapolated_uncertainty": 0.004544814690413679,
+        "fine": 1.4227395637134657,
+        "gci_fine": 0.003993013554911785,
+        "gci_medium": 0.01593294752715123,
+        "medium": 1.4365049554856484,
+        "observed_order": 2.010354682294891,
+        "refinement_ratio": 2.0
+      },
+      "k0": 3.1250000000000004,
+      "levels": [
+        {
+          "n_phi": 16,
+          "n_r": 8,
+          "panels": 128,
+          "relative_error": 0.05204150458611556,
+          "wave_resistance": 1.4919631386143972
+        },
+        {
+          "n_phi": 32,
+          "n_r": 16,
+          "panels": 512,
+          "relative_error": 0.012935772741717422,
+          "wave_resistance": 1.4365049554856484
+        },
+        {
+          "n_phi": 64,
+          "n_r": 32,
+          "panels": 2048,
+          "relative_error": 0.0032292571473215848,
+          "wave_resistance": 1.4227395637134657
+        }
+      ],
+      "speed": 1.7714762205573067,
+      "wave_resistance_analytic": 1.4181599605248953,
+      "wave_resistance_coefficient": 0.02351415779420121
+    }
+  ],
+  "geometry": {
+    "block_coefficient": 0.5235987755982988,
+    "volume_closed_form": 0.06283185307179585,
+    "volume_quadrature": 0.06283185307179583,
+    "volume_relative_error": -4.440892098500626e-16,
+    "wetted_area": 0.8791246265393206
+  },
+  "hull": "half-submerged ellipsoid (Havelock/Michell thin-ship anchor)",
+  "kochin_convergence": [
+    {
+      "k": 0.5,
+      "kochin_analytic_abs": 0.02978928981954261,
+      "rel_error_16x32": 0.0030462731649912866,
+      "rel_error_32x64": 0.0007621091466829544,
+      "rel_error_8x16": 0.012150525144361435
+    },
+    {
+      "k": 1.0,
+      "kochin_analytic_abs": 0.05364764559838572,
+      "rel_error_16x32": 0.0026155699369030394,
+      "rel_error_32x64": 0.0006540185866971138,
+      "rel_error_8x16": 0.01045405834585078
+    },
+    {
+      "k": 2.0,
+      "kochin_analytic_abs": 0.07288413305158481,
+      "rel_error_16x32": 0.0006929214639036507,
+      "rel_error_32x64": 0.0001717513187836639,
+      "rel_error_8x16": 0.0028657417522036654
+    },
+    {
+      "k": 4.0,
+      "kochin_analytic_abs": 0.013609309099339734,
+      "rel_error_16x32": 0.030398856542394936,
+      "rel_error_32x64": 0.007607527028038463,
+      "rel_error_8x16": 0.12107361542352968
+    },
+    {
+      "k": 8.0,
+      "kochin_analytic_abs": 0.008074868395496681,
+      "rel_error_16x32": 0.03904254726199374,
+      "rel_error_32x64": 0.009719950606006278,
+      "rel_error_8x16": 0.15876203869581773
+    }
+  ],
+  "parameters": {
+    "a": 1.0,
+    "b": 0.2,
+    "c": 0.15,
+    "froude_numbers": [
+      0.2,
+      0.3,
+      0.4
+    ],
+    "waterline_length": 2.0
+  },
+  "tolerances": {
+    "asymptotic_sigma_band": 0.2,
+    "block_coefficient_error": 0.005,
+    "gci_fine": 0.03,
+    "sigma_absolute": 0.02,
+    "sigma_pair_resistance": 0.05,
+    "volume_error": 0.01,
+    "wave_resistance_error": 0.05,
+    "wetted_area_error": 0.02
+  },
+  "verdict": "PASS"
+}

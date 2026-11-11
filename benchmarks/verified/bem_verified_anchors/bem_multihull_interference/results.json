@@ -1,0 +1,261 @@
+{
+  "asymptotic": {
+    "max_deviation_from_one": 0.14252445816986148,
+    "sigma": {
+      "16": 0.8750648818638749,
+      "32": 1.0446573457240178,
+      "64": 0.8574755418301385,
+      "8": 0.9653074778442138
+    }
+  },
+  "case": "bem_multihull_interference",
+  "criteria": {
+    "asymptotic_sigma_approaches_one": true,
+    "pair_resistance_within_5pct": true,
+    "sigma_curve_matches_theory": true,
+    "sigma_curve_trend_agrees": true,
+    "sigma_matches_theory_at_mission_spacings": true,
+    "sigma_zero_limit_is_two": true,
+    "superposition_identity_holds": true
+  },
+  "definition": "sigma(d) = R_W,pair(d) / (2 R_W,single); H_pair(k) = H(k)(1 + exp(i k d)); linear-superposition (Michell) thin-ship interference, waves only",
+  "figure": "bem_multihull_interference/figures/multihull_interference.png",
+  "hull": "two identical Wigley III hulls in line (tandem)",
+  "panel_kochin_convergence": [
+    {
+      "n_x": 20,
+      "n_z": 10,
+      "panels": 200,
+      "rel_error_k1": 0.002088283481721853,
+      "rel_error_k2": 0.002588093136248526,
+      "rel_error_k5": 0.0004051721402574815
+    },
+    {
+      "n_x": 40,
+      "n_z": 20,
+      "panels": 800,
+      "rel_error_k1": 0.0005219400644712602,
+      "rel_error_k2": 0.0006459717409845744,
+      "rel_error_k5": 0.00010261019460700016
+    },
+    {
+      "n_x": 80,
+      "n_z": 40,
+      "panels": 3200,
+      "rel_error_k1": 0.00013047684631206646,
+      "rel_error_k2": 0.00016142744440750256,
+      "rel_error_k5": 2.5732776958609094e-05
+    }
+  ],
+  "parameters": {
+    "B": 0.5,
+    "L": 3.8,
+    "T": 0.225,
+    "finest_panel_level": "80x40",
+    "froude": 0.3,
+    "k0": 2.923976608187135,
+    "panel_levels": [
+      "20x10",
+      "40x20",
+      "80x40"
+    ],
+    "spacings_over_L": [
+      0.5,
+      1.0,
+      2.0
+    ]
+  },
+  "sigma_at_zero_spacing": 2.0,
+  "single_resistance_panel_finest": 1.076266672069019,
+  "spacings": [
+    {
+      "pair_resistance_panel_finest": 3.848979289012034,
+      "pair_resistance_relative_error": -0.0002842266542771865,
+      "pair_resistance_theory": 3.8500735825451216,
+      "sigma_panel": {
+        "20x10": 1.7883766398771728,
+        "40x20": 1.7881683119069802,
+        "80x40": 1.7881159887691875
+      },
+      "sigma_panel_finest": 1.7881159887691875,
+      "sigma_relative_difference": 9.762734148655028e-06,
+      "sigma_theory": 1.7880985320385876,
+      "sigma_theory_beneficial": false,
+      "single_resistance_theory": 1.0765831730077267,
+      "spacing": 1.9,
+      "spacing_over_L": 0.5
+    },
+    {
+      "pair_resistance_panel_finest": 3.2730009064956693,
+      "pair_resistance_relative_error": -0.0002670248053291413,
+      "pair_resistance_theory": 3.273875112360219,
+      "sigma_panel": {
+        "20x10": 1.521146724447078,
+        "40x20": 1.520657272861594,
+        "80x40": 1.5205343579968151
+      },
+      "sigma_panel_finest": 1.5205343579968151,
+      "sigma_relative_difference": 2.6969641695462343e-05,
+      "sigma_theory": 1.5204933508359426,
+      "sigma_theory_beneficial": false,
+      "single_resistance_theory": 1.0765831730077267,
+      "spacing": 3.8,
+      "spacing_over_L": 1.0
+    },
+    {
+      "pair_resistance_panel_finest": 1.678681716608705,
+      "pair_resistance_relative_error": -0.00018648923151842745,
+      "pair_resistance_theory": 1.6789948310644736,
+      "sigma_panel": {
+        "20x10": 0.7811299167392128,
+        "40x20": 0.7801152716095477,
+        "80x40": 0.7798632811799333
+      },
+      "sigma_panel_finest": 0.7798632811799333,
+      "sigma_relative_difference": 0.00010752889884191319,
+      "sigma_theory": 0.7797794323562325,
+      "sigma_theory_beneficial": true,
+      "single_resistance_theory": 1.0765831730077267,
+      "spacing": 7.6,
+      "spacing_over_L": 2.0
+    }
+  ],
+  "superposition_identity": {
+    "absolute": {
+      "k=0.5": 1.1295700899707568e-16,
+      "k=2": 3.6594031814720145e-17,
+      "k=5": 1.3877787807814457e-17
+    },
+    "panels": "40x20",
+    "relative": {
+      "k=0.5": 2.0626209289428197e-15,
+      "k=2": 1.9174849642903893e-15,
+      "k=5": 3.345115344693814e-16
+    },
+    "spacing_over_L": 1.3
+  },
+  "sweep": {
+    "absolute_difference": [
+      2.044392812083906e-05,
+      6.173523117380952e-05,
+      7.770852736332934e-05,
+      3.581255678783424e-05,
+      4.100716087251932e-05,
+      0.00011148473179267704,
+      0.00013851930341146623,
+      8.993508390786609e-05,
+      4.817284279146072e-06,
+      8.384882370149338e-05,
+      9.750687888088194e-05,
+      4.224927203944073e-05,
+      3.766578757102845e-05,
+      8.369564400467766e-05,
+      6.549729869731458e-05,
+      8.625384191329744e-07,
+      5.991295009666331e-05,
+      7.255725212407249e-05,
+      3.0427605247407286e-05,
+      3.316175661405296e-05
+    ],
+    "max_absolute_difference": 0.00013851930341146623,
+    "sigma_panel_finest": [
+      0.2935722952037947,
+      1.043046030730615,
+      1.5770838463241708,
+      0.2067271083435113,
+      1.5205343579968151,
+      1.0274282844534284,
+      0.5467602064230518,
+      1.4952407692658536,
+      0.8183121807132009,
+      0.779863281179933,
+      1.4116754704293129,
+      0.7234794878480597,
+      0.9465446779057757,
+      1.3150250863439719,
+      0.6823775762434545,
+      1.0785154047511756,
+      1.2045113359974378,
+      0.6860693910742518,
+      1.1764350110804163,
+      1.0887749331130736
+    ],
+    "sigma_theory": [
+      0.2935927391319155,
+      1.0429842954994413,
+      1.577161554851534,
+      0.20669129578672346,
+      1.5204933508359426,
+      1.027539769185221,
+      0.5466216871196403,
+      1.4953307043497615,
+      0.81831699799748,
+      0.7797794323562315,
+      1.4117729773081937,
+      0.7234372385760203,
+      0.9465070121182046,
+      1.3151087819879765,
+      0.6823120789447572,
+      1.0785162672895947,
+      1.2045712489475344,
+      0.6859968338221277,
+      1.1764654386856637,
+      1.0888080948696877
+    ],
+    "sign_matches": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "spacing_over_L": [
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0,
+      1.2,
+      1.4,
+      1.5999999999999999,
+      1.7999999999999998,
+      1.9999999999999998,
+      2.1999999999999997,
+      2.4,
+      2.6,
+      2.8,
+      3.0,
+      3.1999999999999997,
+      3.4,
+      3.6,
+      3.8,
+      4.0
+    ]
+  },
+  "tolerances": {
+    "asymptotic_sigma_band": 0.2,
+    "block_coefficient_error": 0.005,
+    "gci_fine": 0.03,
+    "sigma_absolute": 0.02,
+    "sigma_pair_resistance": 0.05,
+    "volume_error": 0.01,
+    "wave_resistance_error": 0.05,
+    "wetted_area_error": 0.02
+  },
+  "verdict": "PASS"
+}
