@@ -91,11 +91,34 @@ TOLERANCES: dict[str, float] = {
     "coupling_residual": 1.0e-6,
     "monolithic_residual": 1.0e-10,
 }
+#: Residuals that sit on the floating-point floor carry no reproducible digits.
+#: Reordering the same summation -- a different BLAS thread count is enough, and
+#: the mutation audit pins ``OMP_NUM_THREADS=1`` -- multiplies them by a factor
+#: of two or more, so ``1.79e-17`` in the committed document and ``3.47e-16`` in
+#: a fresh run are the *same* statement.  The published document is pinned
+#: character-for-character by ``tests/test_hydroelastic.py``, so emitting those
+#: digits made the reproducibility gate depend on the thread count: green with
+#: the default BLAS pool, red with one thread.  Values at or below this floor
+#: are reported as ``< 1e-14`` instead of as bare digits; anything above it is
+#: still printed exactly, so a genuine regression cannot hide behind the clamp.
+ROUNDOFF_FLOOR = 1.0e-14
 RAO_DAMPING_RATIOS = (0.005, 0.02, 0.05)
 RAO_SWEEP_POINTS = 1200
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT_ROOT = ROOT / "benchmarks" / "verified" / "bem_hydroelastic"
 DOC_PATH = ROOT / "docs" / "bem_hydroelastic.md"
+
+
+def format_residual(value: float) -> str:
+    """Format a residual without pinning digits that are pure round-off.
+
+    Below :data:`ROUNDOFF_FLOOR` the stored digits are an artefact of the
+    summation order, not of the model, so they are reported as ``< 1e-14``.
+    """
+    value = float(value)
+    if abs(value) <= ROUNDOFF_FLOOR:
+        return f"< {ROUNDOFF_FLOOR:.0e}"
+    return f"{value:.2e}"
 
 
 def _rel(value: float, reference: float) -> float:
@@ -778,7 +801,7 @@ def render_document(report: dict[str, Any]) -> str:
     add(f"| final pressure/operator residual | {coupling['final_pressure_residual']:.3e} |")
     add(
         "| monolithic residual (per mode) | "
-        + ", ".join(f"{r:.2e}" for r in coupling["monolithic_residual"])
+        + ", ".join(format_residual(r) for r in coupling["monolithic_residual"])
         + " |"
     )
     add("")
