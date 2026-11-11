@@ -229,9 +229,13 @@ def test_kramers_kronig_consistency(exponential_kernel_data):
         fit.poles, fit.residues
     )
 
-    # Check consistency
+    # Check consistency: A(omega) - A_inf = -sum_k c_k / (alpha_k^2 + omega^2).
+    # (Before m14767 the residues were negated twice here, so the assertion
+    # compared the data against A_inf + sum c_k/(...), which no correct fit can
+    # satisfy: the double-flipped residual is 2.28 on this exact fixture, the
+    # correct one 8.7e-8.)
     A_recon = data["A_inf"] + np.sum(
-        [-c / (a**2 + data["omega"]**2) for c, a in zip(-fit.residues, fit.poles)],
+        [-c / (a**2 + data["omega"]**2) for c, a in zip(fit.residues, fit.poles)],
         axis=0
     )
 
@@ -327,8 +331,28 @@ def test_full_workflow(exponential_kernel_data):
     # 4. Check decay
     assert decay.displacement[0] == pytest.approx(0.05, rel=1e-10)
     assert np.max(np.abs(decay.displacement)) <= 0.05 + 1e-10
-    # Should decay
-    assert np.abs(decay.displacement[-1]) < 0.01 * 0.05
+    assert np.all(np.isfinite(decay.displacement))
+
+    # Decay rate is set by the radiation damping, not by a chosen number of
+    # seconds: for the 3-pole fixture *both* independent paths (this auxiliary
+    # ODE system, and the K(t) convolution of time_domain.cummins_free_decay
+    # built from the tabulated B) leave 6.3 % of the initial amplitude after
+    # 20 s, so the pre-m14767 assertion "< 1 % of the initial amplitude" was
+    # unsatisfiable.  The invariant that actually constrains the state-space
+    # path is two-path agreement.
+    kernel = radiation_memory_kernel(
+        data["omega"], data["B"], np.arange(0.0, 20.0 + 1e-9, 0.005)
+    )
+    decay_irf = cummins_free_decay(
+        kernel, mass=mass, restoring=restoring, added_mass_inf=data["A_inf"],
+        initial_displacement=0.05, dt=0.005, duration=20.0,
+    )
+    metrics_ss = decay_metrics(decay.time, decay.displacement, amplitude_fraction=1e-4)
+    metrics_irf = decay_metrics(decay_irf.time, decay_irf.displacement, amplitude_fraction=1e-4)
+    assert abs(metrics_ss["period"] - metrics_irf["period"]) / metrics_irf["period"] < 0.02
+    assert abs(metrics_ss["decay_rate"] - metrics_irf["decay_rate"]) / metrics_irf["decay_rate"] < 0.05
+    # and it does decay, by a physically meaningful amount
+    assert np.abs(decay.displacement[-1]) < 0.10 * 0.05
 
 
 def test_full_workflow_hemisphere(hemisphere_data):
