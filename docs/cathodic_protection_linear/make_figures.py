@@ -177,7 +177,10 @@ def main() -> None:
     study = run_verification_study(
         damage_ratios=(0.02, 0.05, 0.10),
         mesh_levels=(9, 11, 13),
-        sphere_levels=(1, 2),
+        # The C8 verdict quoted in REPORT.md section 3.3 is the same three-level
+        # icosphere ladder as the standalone benchmark, so the study artefact
+        # cannot disagree with the anchor it cites.
+        sphere_levels=(1, 2, 3),
         output_dir=OUT / "artifacts",
     )
     (OUT / "results.json").write_text(
