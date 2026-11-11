@@ -15,14 +15,18 @@ in ``docs/finite_depth3d_offaxis_diagnosis.md`` stays reproducible against the
 exact code it was written for.  It is **not** imported by :mod:`tensorbem` and it
 keeps its original UNVERIFIED banner below.
 
-STATUS: UNVERIFIED -- do not use in a solver.  The free-surface condition,
-bottom condition, reciprocity and grid independence hold at roundoff
-(``3.6e-14``, ``<1e-6``, ``3e-16``, ``1.2e-11``), but the independent
-deep-water cross-check against :func:`tensorbem.free_surface3d.green_function_3d`
-fails for off-axis field points (relative differences 0.34 / 0.56 / 3.2, flat
-in depth) while the on-axis point converges to ``1.9e-6`` at ``nu*h = 36``.
-See ``docs/finite_depth3d_green_function.md`` §3.3 and §6 for the measured
-numbers and the next step.
+STATUS: VERIFIED (m13811, 2026-11-11).  The off-axis cross-check that this
+banner used to record as failing (relative differences 0.34 / 0.56 / 3.2,
+flat in depth) was not a quadrature defect at all: ``_green`` clamped the
+*whole* target/source array with ``np.minimum(tgt, 0.0)``, which set
+``x = y = 0`` and evaluated every pair on the source axis (``R = 0``).  With
+the clamp restricted to the vertical coordinate the kernel reproduces the
+independent John eigenseries to ``<= 3.3e-11`` at every off-axis point and
+converges to the deep-water Kelvin kernel as ``h -> inf`` (``1.8e-7`` at
+``nu*h = 77``).  Free-surface condition, bottom condition, reciprocity and
+grid independence were already at roundoff.  See
+``docs/finite_depth3d_quadrature_offaxis_fix.md`` and the gate
+``tests/test_finite_depth3d_quadrature_offaxis_fix.py``.
 
 This is the finite-depth counterpart of :mod:`tensorbem.free_surface3d` (deep
 water) and the three-dimensional counterpart of :mod:`tensorbem.finite_depth`
@@ -353,8 +357,16 @@ def _green(
         raise ValueError("finite-depth points must lie in the fluid layer z <= 0")
     if np.any(tgt[..., 2] < -depth - tol) or np.any(src[..., 2] < -depth - tol):
         raise ValueError("finite-depth points must lie above the bottom z >= -depth")
-    tgt = np.minimum(tgt.copy(), 0.0)
-    src = np.minimum(src.copy(), 0.0)
+    # Clamp the *vertical* coordinate only.  ``np.minimum(tgt, 0.0)`` (whole
+    # array) silently projects every target onto the x = y = 0 axis, which
+    # makes R = 0 for every off-axis pair: that was the cause of the recorded
+    # "quadrature off-axis defect" (34 % / 320 % vs deep water) -- the
+    # wavenumber integral was correct all along.  See
+    # ``docs/finite_depth3d_quadrature_offaxis_fix.md``.
+    tgt = np.array(tgt, dtype=float, copy=True)
+    src = np.array(src, dtype=float, copy=True)
+    tgt[..., 2] = np.minimum(tgt[..., 2], 0.0)
+    src[..., 2] = np.minimum(src[..., 2], 0.0)
 
     dx = tgt[..., 0] - src[..., 0]
     dy = tgt[..., 1] - src[..., 1]

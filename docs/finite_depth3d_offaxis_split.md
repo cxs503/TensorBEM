@@ -68,3 +68,19 @@ The eigenseries error decays with h and is at roundoff by h=64.
   limit (log singularity of `K_0`), out of scope here.
 * Compute: 12 kernel evaluations × 2 implementations, seconds of single-core
   work; run under load15 ≈ 124 (lightweight-only discipline respected).
+
+
+---
+
+## Corrigendum (m13811, 2026-11-11): the quadrature "defect" was an input-projection bug
+
+The verdict above localises the error to "the quadrature's off-axis PV handling". That
+attribution is **wrong**. Root cause: `_green` clamped the whole point array
+(`np.minimum(tgt, 0.0)` / `np.minimum(src, 0.0)`), which sets `x = y = 0`, so every pair was
+evaluated at `R = 0` and the off-axis value collapsed onto the on-axis value (which is why the
+error was flat in `h` and grew with `R`). Restricting the clamp to the vertical component fixes
+it: quadrature now agrees with the eigenseries to `<= 1.94e-10` at every off-axis point and
+reaches the deep-water kernel with error `1.8e-7` at `h = 128`. The strict xfail in
+`tests/test_finite_depth3d_quadrature.py` is therefore replaced by a real gate; the "defect
+present" pin in `tests/test_finite_depth3d_offaxis_split.py` became a "defect closed" pin.
+Details and numbers: `docs/finite_depth3d_quadrature_offaxis_fix.md`.
