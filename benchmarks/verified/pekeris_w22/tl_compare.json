@@ -1,0 +1,1154 @@
+{
+  "benchmark": "pekeris_w22",
+  "title": "Pekeris two-layer shallow-water normal-mode propagation, pressure-release top boundary",
+  "generated_utc": "2026-11-11T07:50:51Z",
+  "git_commit": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "inputs": {
+    "case": {
+      "water_depth_m": 100.0,
+      "c_water_m_s": 1500.0,
+      "c_bottom_m_s": 1600.0,
+      "rho_water_kg_m3": 1000.0,
+      "rho_bottom_kg_m3": 1800.0,
+      "density_ratio_rho_w_over_rho_b": 0.5555555555555556
+    },
+    "frequencies_hz": [
+      50.0,
+      100.0,
+      200.0
+    ],
+    "ranges_m": [
+      1000.0,
+      2000.0,
+      5000.0
+    ],
+    "source_depth_m": 50.0,
+    "receiver_depth_m": 50.0,
+    "ice_levels": {
+      "L1_thin": {
+        "young_modulus_Pa": 5000000000.0,
+        "thickness_m": 0.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 57234432.234432235,
+        "mass_per_area_kg_m2": 455.0,
+        "plate_wave_speed_m_s": 18.83265261713678
+      },
+      "L2_medium": {
+        "young_modulus_Pa": 7000000000.0,
+        "thickness_m": 1.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 2163461538.4615383,
+        "mass_per_area_kg_m2": 1365.0,
+        "plate_wave_speed_m_s": 35.4816764928901
+      },
+      "L3_thick": {
+        "young_modulus_Pa": 9000000000.0,
+        "thickness_m": 3.0,
+        "rho_ice_kg_m3": 920.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 22252747252.747253,
+        "mass_per_area_kg_m2": 2760.0,
+        "plate_wave_speed_m_s": 53.286677019467064
+      }
+    },
+    "fd_nodes": 800,
+    "fd_scan": 1500,
+    "analytic_scan": 4000
+  },
+  "input_sha256": "8d54cb7f3cafe5817053946e3c895c0317c7895aa5e1325419507342750b35fa",
+  "module_sha256": "29d322987455ee96bbdb2613601ce56f8ebf32d56f3857689daa44c2b255d523",
+  "reference_solution": "Pekeris analytic normal-mode solution computed here: closed-form two-layer dispersion relation (tan(k_z H) = -(rho_w/rho_b) k_z/gamma), modal excitation from the numerical residue of the spectral depth Green function, exact Hankel functions.  No literature number is transcribed; the external literature anchor for this case remains WITHHELD (see report).",
+  "numerical_solution": "independent 2nd-order finite-difference discretisation of the vertical problem with the exact half-space impedance closure at z = H; roots from the tridiagonal determinant, amplitudes from the near-pole behaviour of the discretised Green function",
+  "transmission_loss_definition": "TL = -20 log10(4 pi |p|), |p| = 1 at 1 m reference",
+  "criteria": {
+    "C1": {
+      "id": "C1",
+      "requirement": "analytic solution self-convergence: doubling the mode count changes TL by < 0.5 dB",
+      "operational_definition": "the trapped Pekeris spectrum is finite (M modes), so the mode-count-doubling limit is reached at M. Doubling is applied to the mode-candidate set by doubling the wavenumber scan density (N -> 2N brackets) and to the retained set below; the retained-set increment from M/2 to M is reported as context.",
+      "measured_max_change_db": 0.0,
+      "threshold_db": 0.5,
+      "status": "PASS",
+      "rows": [
+        {
+          "freq_hz": 50.0,
+          "n_modes_scan_n": 2,
+          "n_modes_scan_2n": 2,
+          "mode_set_identical": true,
+          "k_r_scan_n": [
+            0.2078816461767797,
+            0.202855447106056
+          ],
+          "k_r_scan_2n": [
+            0.2078816461767797,
+            0.202855447106056
+          ],
+          "per_point": [
+            {
+              "range_m": 1000.0,
+              "tl_scan_n": 50.52724630107316,
+              "tl_scan_2n": 50.52724630107316,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 2000.0,
+              "tl_scan_n": 56.77531466543463,
+              "tl_scan_2n": 56.77531466543463,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 5000.0,
+              "tl_scan_n": 56.295072115964416,
+              "tl_scan_2n": 56.295072115964416,
+              "abs_change_db": 0.0
+            }
+          ],
+          "max_abs_change_db": 0.0,
+          "informational_half_set": [
+            {
+              "range_m": 1000.0,
+              "n_modes_retained": 1,
+              "n_modes_full": 2,
+              "abs_change_db": 1.0539647306007538
+            },
+            {
+              "range_m": 2000.0,
+              "n_modes_retained": 1,
+              "n_modes_full": 2,
+              "abs_change_db": 2.1838130982484145
+            },
+            {
+              "range_m": 5000.0,
+              "n_modes_retained": 1,
+              "n_modes_full": 2,
+              "abs_change_db": 2.2758268999312534
+            }
+          ]
+        },
+        {
+          "freq_hz": 100.0,
+          "n_modes_scan_n": 5,
+          "n_modes_scan_2n": 5,
+          "mode_set_identical": true,
+          "k_r_scan_n": [
+            0.4179404322577699,
+            0.41506922895772574,
+            0.41014002859322907,
+            0.4030356213037798,
+            0.3938763018982261
+          ],
+          "k_r_scan_2n": [
+            0.4179404322577699,
+            0.41506922895772574,
+            0.41014002859322907,
+            0.4030356213037798,
+            0.3938763018982261
+          ],
+          "per_point": [
+            {
+              "range_m": 1000.0,
+              "tl_scan_n": 52.030397788901155,
+              "tl_scan_2n": 52.030397788901155,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 2000.0,
+              "tl_scan_n": 58.83790279961923,
+              "tl_scan_2n": 58.83790279961923,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 5000.0,
+              "tl_scan_n": 54.05444128846665,
+              "tl_scan_2n": 54.05444128846665,
+              "abs_change_db": 0.0
+            }
+          ],
+          "max_abs_change_db": 0.0,
+          "informational_half_set": [
+            {
+              "range_m": 1000.0,
+              "n_modes_retained": 2,
+              "n_modes_full": 5,
+              "abs_change_db": 2.313275238697024
+            },
+            {
+              "range_m": 2000.0,
+              "n_modes_retained": 2,
+              "n_modes_full": 5,
+              "abs_change_db": 3.177616923863141
+            },
+            {
+              "range_m": 5000.0,
+              "n_modes_retained": 2,
+              "n_modes_full": 5,
+              "abs_change_db": 6.5032775021495866
+            }
+          ]
+        },
+        {
+          "freq_hz": 200.0,
+          "n_modes_scan_n": 9,
+          "n_modes_scan_2n": 9,
+          "mode_set_identical": true,
+          "k_r_scan_n": [
+            0.8372349889749806,
+            0.8356597884346115,
+            0.8330157178432394,
+            0.8292787304340484,
+            0.8244210196551403,
+            0.8184138449297816,
+            0.8112302798382826,
+            0.8028513824026611,
+            0.793294684422693
+          ],
+          "k_r_scan_2n": [
+            0.8372349889749806,
+            0.8356597884346115,
+            0.8330157178432394,
+            0.8292787304340484,
+            0.8244210196551403,
+            0.8184138449297816,
+            0.8112302798382826,
+            0.8028513824026611,
+            0.793294684422693
+          ],
+          "per_point": [
+            {
+              "range_m": 1000.0,
+              "tl_scan_n": 48.1939607519222,
+              "tl_scan_2n": 48.1939607519222,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 2000.0,
+              "tl_scan_n": 49.99158138725711,
+              "tl_scan_2n": 49.99158138725711,
+              "abs_change_db": 0.0
+            },
+            {
+              "range_m": 5000.0,
+              "tl_scan_n": 59.56316984388283,
+              "tl_scan_2n": 59.56316984388283,
+              "abs_change_db": 0.0
+            }
+          ],
+          "max_abs_change_db": 0.0,
+          "informational_half_set": [
+            {
+              "range_m": 1000.0,
+              "n_modes_retained": 4,
+              "n_modes_full": 9,
+              "abs_change_db": 8.755282453398884
+            },
+            {
+              "range_m": 2000.0,
+              "n_modes_retained": 4,
+              "n_modes_full": 9,
+              "abs_change_db": 10.365559097701379
+            },
+            {
+              "range_m": 5000.0,
+              "n_modes_retained": 4,
+              "n_modes_full": 9,
+              "abs_change_db": 3.784059201449878
+            }
+          ]
+        }
+      ]
+    },
+    "C2": {
+      "id": "C2",
+      "requirement": "pressure-release TL agrees with the Pekeris analytic solution to < 1 dB at every point (>=3 frequencies x 3 ranges)",
+      "n_points": 9,
+      "all_points_pass": true,
+      "measured_max_abs_deviation_db": 0.050808518616932474,
+      "threshold_db": 1.0,
+      "status": "PASS",
+      "points": [
+        {
+          "freq_hz": 50.0,
+          "range_m": 1000.0,
+          "tl_analytic_db": 50.52724630107316,
+          "tl_finite_difference_db": 50.526971243055996,
+          "deviation_db": -0.00027505801716642964,
+          "abs_deviation_db": 0.00027505801716642964,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 2,
+          "n_modes_fd": 2,
+          "k_r_analytic": [
+            0.2078816461767797,
+            0.202855447106056
+          ],
+          "k_r_fd": [
+            0.20285546250668016,
+            0.20788164667609518
+          ]
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "tl_analytic_db": 56.77531466543463,
+          "tl_finite_difference_db": 56.774871317903084,
+          "deviation_db": -0.0004433475315437363,
+          "abs_deviation_db": 0.0004433475315437363,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 2,
+          "n_modes_fd": 2,
+          "k_r_analytic": [
+            0.2078816461767797,
+            0.202855447106056
+          ],
+          "k_r_fd": [
+            0.20285546250668016,
+            0.20788164667609518
+          ]
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 5000.0,
+          "tl_analytic_db": 56.295072115964416,
+          "tl_finite_difference_db": 56.29481585896361,
+          "deviation_db": -0.00025625700080667,
+          "abs_deviation_db": 0.00025625700080667,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 2,
+          "n_modes_fd": 2,
+          "k_r_analytic": [
+            0.2078816461767797,
+            0.202855447106056
+          ],
+          "k_r_fd": [
+            0.20285546250668016,
+            0.20788164667609518
+          ]
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 1000.0,
+          "tl_analytic_db": 52.030397788901155,
+          "tl_finite_difference_db": 52.03093417726349,
+          "deviation_db": 0.0005363883623346055,
+          "abs_deviation_db": 0.0005363883623346055,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 5,
+          "n_modes_fd": 5,
+          "k_r_analytic": [
+            0.4179404322577699,
+            0.41506922895772574,
+            0.41014002859322907,
+            0.4030356213037798,
+            0.3938763018982261
+          ],
+          "k_r_fd": [
+            0.3938768621966859,
+            0.4030358495206067,
+            0.41014009221594305,
+            0.4150692396649024,
+            0.4179404328296298
+          ]
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "tl_analytic_db": 58.83790279961923,
+          "tl_finite_difference_db": 58.8419649107264,
+          "deviation_db": 0.004062111107167254,
+          "abs_deviation_db": 0.004062111107167254,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 5,
+          "n_modes_fd": 5,
+          "k_r_analytic": [
+            0.4179404322577699,
+            0.41506922895772574,
+            0.41014002859322907,
+            0.4030356213037798,
+            0.3938763018982261
+          ],
+          "k_r_fd": [
+            0.3938768621966859,
+            0.4030358495206067,
+            0.41014009221594305,
+            0.4150692396649024,
+            0.4179404328296298
+          ]
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 5000.0,
+          "tl_analytic_db": 54.05444128846665,
+          "tl_finite_difference_db": 54.05217621451614,
+          "deviation_db": -0.0022650739505110096,
+          "abs_deviation_db": 0.0022650739505110096,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 5,
+          "n_modes_fd": 5,
+          "k_r_analytic": [
+            0.4179404322577699,
+            0.41506922895772574,
+            0.41014002859322907,
+            0.4030356213037798,
+            0.3938763018982261
+          ],
+          "k_r_fd": [
+            0.3938768621966859,
+            0.4030358495206067,
+            0.41014009221594305,
+            0.4150692396649024,
+            0.4179404328296298
+          ]
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 1000.0,
+          "tl_analytic_db": 48.1939607519222,
+          "tl_finite_difference_db": 48.18938919449312,
+          "deviation_db": -0.004571557429080997,
+          "abs_deviation_db": 0.004571557429080997,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 9,
+          "n_modes_fd": 9,
+          "k_r_analytic": [
+            0.8372349889749806,
+            0.8356597884346115,
+            0.8330157178432394,
+            0.8292787304340484,
+            0.8244210196551403,
+            0.8184138449297816,
+            0.8112302798382826,
+            0.8028513824026611,
+            0.793294684422693
+          ],
+          "k_r_fd": [
+            0.7932986745001235,
+            0.8028538245083059,
+            0.8112316663686603,
+            0.8184145660952749,
+            0.8244213535949942,
+            0.8292788615098368,
+            0.8330157576157233,
+            0.8356597960081483,
+            0.8372349894363558
+          ]
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "tl_analytic_db": 49.99158138725711,
+          "tl_finite_difference_db": 50.0008413795129,
+          "deviation_db": 0.009259992255785221,
+          "abs_deviation_db": 0.009259992255785221,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 9,
+          "n_modes_fd": 9,
+          "k_r_analytic": [
+            0.8372349889749806,
+            0.8356597884346115,
+            0.8330157178432394,
+            0.8292787304340484,
+            0.8244210196551403,
+            0.8184138449297816,
+            0.8112302798382826,
+            0.8028513824026611,
+            0.793294684422693
+          ],
+          "k_r_fd": [
+            0.7932986745001235,
+            0.8028538245083059,
+            0.8112316663686603,
+            0.8184145660952749,
+            0.8244213535949942,
+            0.8292788615098368,
+            0.8330157576157233,
+            0.8356597960081483,
+            0.8372349894363558
+          ]
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 5000.0,
+          "tl_analytic_db": 59.56316984388283,
+          "tl_finite_difference_db": 59.613978362499765,
+          "deviation_db": 0.050808518616932474,
+          "abs_deviation_db": 0.050808518616932474,
+          "threshold_db": 1.0,
+          "verdict": "PASS",
+          "n_modes_analytic": 9,
+          "n_modes_fd": 9,
+          "k_r_analytic": [
+            0.8372349889749806,
+            0.8356597884346115,
+            0.8330157178432394,
+            0.8292787304340484,
+            0.8244210196551403,
+            0.8184138449297816,
+            0.8112302798382826,
+            0.8028513824026611,
+            0.793294684422693
+          ],
+          "k_r_fd": [
+            0.7932986745001235,
+            0.8028538245083059,
+            0.8112316663686603,
+            0.8184145660952749,
+            0.8244213535949942,
+            0.8292788615098368,
+            0.8330157576157233,
+            0.8356597960081483,
+            0.8372349894363558
+          ]
+        }
+      ]
+    },
+    "C4": {
+      "id": "C4",
+      "requirement": "grid/truncation convergence: doubling the modelled domain length changes TL by < 1 dB",
+      "operational_definition": "the solution is range independent, so the only numerical domain is the depth one. Two doublings are tested: (a) the finite-difference node count N -> 2N, and (b) the modelled bottom domain, i.e. the truncation thickness of the bottom layer closed by a pressure release, doubled repeatedly until it approaches the exact half-space model.",
+      "freq_hz": 100.0,
+      "grid_doubling": {
+        "rows": [
+          {
+            "n_nodes": 200,
+            "tl_db": [
+              52.05215678205256,
+              58.903092444059446,
+              54.02794494479829
+            ],
+            "abs_change_vs_finest_db": [
+              0.022279872771349574,
+              0.06416910851707769,
+              0.02551329739652175
+            ]
+          },
+          {
+            "n_nodes": 400,
+            "tl_db": [
+              52.035170269974024,
+              58.85414667053114,
+              54.04711764811449
+            ],
+            "abs_change_vs_finest_db": [
+              0.005293360692810722,
+              0.015223334988768045,
+              0.006340594080327833
+            ]
+          },
+          {
+            "n_nodes": 800,
+            "tl_db": [
+              52.03093417726349,
+              58.8419649107264,
+              54.05217621451614
+            ],
+            "abs_change_vs_finest_db": [
+              0.0010572679822757891,
+              0.0030415751840280336,
+              0.0012820276786769114
+            ]
+          },
+          {
+            "n_nodes": 1600,
+            "tl_db": [
+              52.029876909281214,
+              58.83892333554237,
+              54.053458242194814
+            ],
+            "abs_change_vs_finest_db": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        ],
+        "observed_orders": [
+          {
+            "from_n": 200,
+            "to_n": 400,
+            "observed_order": 2.0755944945386693
+          },
+          {
+            "from_n": 400,
+            "to_n": 800,
+            "observed_order": 2.323393874453708
+          }
+        ],
+        "max_abs_change_db": 0.06416910851707769
+      },
+      "domain_doubling": {
+        "rows": [
+          {
+            "bottom_layer_thickness_m": 25.0,
+            "doubling_ratio_vs_previous": null,
+            "tl_db": [
+              51.15414754631756,
+              57.056943578725054,
+              55.66743576441774
+            ],
+            "abs_change_vs_half_space_db": [
+              0.8762502425835947,
+              1.7809592208941751,
+              1.6129944759510906
+            ]
+          },
+          {
+            "bottom_layer_thickness_m": 50.0,
+            "doubling_ratio_vs_previous": 2.0,
+            "tl_db": [
+              51.88365383297777,
+              58.39574754885207,
+              54.145356643999506
+            ],
+            "abs_change_vs_half_space_db": [
+              0.14674395592338385,
+              0.4421552507671578,
+              0.09091535553285723
+            ]
+          },
+          {
+            "bottom_layer_thickness_m": 100.0,
+            "doubling_ratio_vs_previous": 2.0,
+            "tl_db": [
+              52.02469336377274,
+              58.806702347519995,
+              54.05287279975762
+            ],
+            "abs_change_vs_half_space_db": [
+              0.005704425128413959,
+              0.03120045209923461,
+              0.001568488709025928
+            ]
+          },
+          {
+            "bottom_layer_thickness_m": 200.0,
+            "doubling_ratio_vs_previous": 2.0,
+            "tl_db": [
+              52.030387544221384,
+              58.837778073178235,
+              54.05441692554255
+            ],
+            "abs_change_vs_half_space_db": [
+              1.024467977117638e-05,
+              0.0001247264409940385,
+              2.436292410123997e-05
+            ]
+          },
+          {
+            "bottom_layer_thickness_m": 400.0,
+            "doubling_ratio_vs_previous": 2.0,
+            "tl_db": [
+              52.03039778887473,
+              58.837902798411804,
+              54.05444128812604
+            ],
+            "abs_change_vs_half_space_db": [
+              2.6425084342918126e-11,
+              1.2074252708771382e-09,
+              3.406057658139616e-10
+            ]
+          }
+        ],
+        "half_space_reference_db": [
+          52.030397788901155,
+          58.83790279961923,
+          54.05444128846665
+        ],
+        "doubling_changes": [
+          {
+            "from_m": 25.0,
+            "to_m": 50.0,
+            "max_abs_pairwise_change_db": 1.5220791204182333,
+            "deviation_from_half_space_at_upper_level_db": 0.4421552507671578
+          },
+          {
+            "from_m": 50.0,
+            "to_m": 100.0,
+            "max_abs_pairwise_change_db": 0.41095479866792317,
+            "deviation_from_half_space_at_upper_level_db": 0.03120045209923461
+          },
+          {
+            "from_m": 100.0,
+            "to_m": 200.0,
+            "max_abs_pairwise_change_db": 0.03107572565824057,
+            "deviation_from_half_space_at_upper_level_db": 0.0001247264409940385
+          },
+          {
+            "from_m": 200.0,
+            "to_m": 400.0,
+            "max_abs_pairwise_change_db": 0.00012472523356876764,
+            "deviation_from_half_space_at_upper_level_db": 1.2074252708771382e-09
+          }
+        ],
+        "acceptance_rule": "the production model uses the exact half-space (no truncation); a truncated surrogate is accepted only once it reproduces the half-space to < 1 dB on all points. The doubling test is evaluated from that level upwards; every under-truncated doubling is listed separately as a control.",
+        "accepted_baseline_thickness_m": 50.0,
+        "accepted_doublings": [
+          {
+            "from_m": 50.0,
+            "to_m": 100.0,
+            "max_abs_pairwise_change_db": 0.41095479866792317,
+            "deviation_from_half_space_at_upper_level_db": 0.03120045209923461
+          },
+          {
+            "from_m": 100.0,
+            "to_m": 200.0,
+            "max_abs_pairwise_change_db": 0.03107572565824057,
+            "deviation_from_half_space_at_upper_level_db": 0.0001247264409940385
+          },
+          {
+            "from_m": 200.0,
+            "to_m": 400.0,
+            "max_abs_pairwise_change_db": 0.00012472523356876764,
+            "deviation_from_half_space_at_upper_level_db": 1.2074252708771382e-09
+          }
+        ],
+        "under_truncated_control_doublings": [
+          {
+            "from_m": 25.0,
+            "to_m": 50.0,
+            "max_abs_pairwise_change_db": 1.5220791204182333,
+            "deviation_from_half_space_at_upper_level_db": 0.4421552507671578
+          }
+        ],
+        "max_abs_change_accepted_db": 0.41095479866792317
+      },
+      "measured_max_change_db": 0.41095479866792317,
+      "threshold_db": 1.0,
+      "status": "PASS"
+    }
+  },
+  "validation": {
+    "reciprocity": {
+      "rows": [
+        {
+          "freq_hz": 50.0,
+          "range_m": 1000.0,
+          "zs_30_z_60_db": 53.94341933266824,
+          "zs_60_z_30_db": 53.94341933266824,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "zs_30_z_60_db": 57.1845207592507,
+          "zs_60_z_30_db": 57.1845207592507,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 5000.0,
+          "zs_30_z_60_db": 60.79630736224721,
+          "zs_60_z_30_db": 60.79630736224721,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 1000.0,
+          "zs_30_z_60_db": 55.79543111247561,
+          "zs_60_z_30_db": 55.79543111247561,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "zs_30_z_60_db": 51.91989526316873,
+          "zs_60_z_30_db": 51.91989526316873,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 5000.0,
+          "zs_30_z_60_db": 58.7136165731237,
+          "zs_60_z_30_db": 58.7136165731237,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 1000.0,
+          "zs_30_z_60_db": 64.2908252763088,
+          "zs_60_z_30_db": 64.2908252763088,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "zs_30_z_60_db": 50.914877889548826,
+          "zs_60_z_30_db": 50.914877889548826,
+          "abs_residual_db": 0.0
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 5000.0,
+          "zs_30_z_60_db": 61.33551391121193,
+          "zs_60_z_30_db": 61.33551391121193,
+          "abs_residual_db": 0.0
+        }
+      ],
+      "max_abs_residual_db": 0.0
+    },
+    "textbook_normalisation_shape": {
+      "note": "independent amplitude derivation (density-normalised mode sum). The source-strength convention differs, so only the *shape* is compared: the offset must be constant over range/depth.",
+      "rows": [
+        {
+          "freq_hz": 50.0,
+          "n_points": 9,
+          "mean_offset_db": 38.015793959929056,
+          "spread_db": 0.0001621803445459591
+        },
+        {
+          "freq_hz": 100.0,
+          "n_points": 9,
+          "mean_offset_db": 38.01579598235473,
+          "spread_db": 0.00011022679015582071
+        },
+        {
+          "freq_hz": 200.0,
+          "n_points": 9,
+          "mean_offset_db": 38.01580626176365,
+          "spread_db": 2.4616417583445127e-05
+        }
+      ],
+      "max_spread_db": 0.0001621803445459591
+    },
+    "independent_root_solve": [
+      {
+        "freq_hz": 50.0,
+        "n_modes_analytic": 2,
+        "n_modes_fd": 2,
+        "max_rel_diff_k_r": 7.591920446079022e-08
+      },
+      {
+        "freq_hz": 100.0,
+        "n_modes_analytic": 5,
+        "n_modes_fd": 5,
+        "max_rel_diff_k_r": 1.4225239170139064e-06
+      },
+      {
+        "freq_hz": 200.0,
+        "n_modes_analytic": 9,
+        "n_modes_fd": 9,
+        "max_rel_diff_k_r": 5.029754401246135e-06
+      }
+    ],
+    "hankel_exactness": {
+      "rows": [
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.2078816461767797,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 1.256162142375477e-05
+        },
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.2078816461767797,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 3.1404939088276433e-06
+        },
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.2078816461767797,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 5.024829915687753e-07
+        },
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.202855447106056,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 1.3191793009115894e-05
+        },
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.202855447106056,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 3.2980459140695168e-06
+        },
+        {
+          "freq_hz": 50.0,
+          "k_r": 0.202855447106056,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 5.276917232703674e-07
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.4179404322577699,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 3.1078604442381272e-06
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.4179404322577699,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 7.769705309589824e-07
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.4179404322577699,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 1.243155269578994e-07
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.41506922895772574,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 3.1510054243562567e-06
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.41506922895772574,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 7.87756930018205e-07
+        },
+        {
+          "freq_hz": 100.0,
+          "k_r": 0.41506922895772574,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 1.2604135877714787e-07
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8372349889749806,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 7.744592609691156e-07
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8372349889749806,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 1.9361515110481408e-07
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8372349889749806,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 3.097843939313216e-08
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8356597884346115,
+          "range_m": 1000.0,
+          "asymptotic_error_db": 7.773816816544101e-07
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8356597884346115,
+          "range_m": 2000.0,
+          "asymptotic_error_db": 1.943457603255802e-07
+        },
+        {
+          "freq_hz": 200.0,
+          "k_r": 0.8356597884346115,
+          "range_m": 5000.0,
+          "asymptotic_error_db": 3.109533709770039e-08
+        }
+      ],
+      "max_error_db": 1.3191793009115894e-05
+    }
+  },
+  "pressure_release_points": [
+    {
+      "freq_hz": 50.0,
+      "range_m": 1000.0,
+      "tl_db": 50.52724630107316,
+      "n_modes": 2,
+      "k_r": [
+        0.2078816461767797,
+        0.202855447106056
+      ],
+      "residue_abs": [
+        0.015162060175706392,
+        0.004486484378408085
+      ]
+    },
+    {
+      "freq_hz": 50.0,
+      "range_m": 2000.0,
+      "tl_db": 56.77531466543463,
+      "n_modes": 2,
+      "k_r": [
+        0.2078816461767797,
+        0.202855447106056
+      ],
+      "residue_abs": [
+        0.015162060175706392,
+        0.004486484378408085
+      ]
+    },
+    {
+      "freq_hz": 50.0,
+      "range_m": 5000.0,
+      "tl_db": 56.295072115964416,
+      "n_modes": 2,
+      "k_r": [
+        0.2078816461767797,
+        0.202855447106056
+      ],
+      "residue_abs": [
+        0.015162060175706392,
+        0.004486484378408085
+      ]
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 1000.0,
+      "tl_db": 52.030397788901155,
+      "n_modes": 5,
+      "k_r": [
+        0.4179404322577699,
+        0.41506922895772574,
+        0.41014002859322907,
+        0.4030356213037798,
+        0.3938763018982261
+      ],
+      "residue_abs": [
+        0.017407742430978437,
+        0.0018343198801838974,
+        0.014833326112557855,
+        0.005500777653950114,
+        0.009406894557466274
+      ]
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 2000.0,
+      "tl_db": 58.83790279961923,
+      "n_modes": 5,
+      "k_r": [
+        0.4179404322577699,
+        0.41506922895772574,
+        0.41014002859322907,
+        0.4030356213037798,
+        0.3938763018982261
+      ],
+      "residue_abs": [
+        0.017407742430978437,
+        0.0018343198801838974,
+        0.014833326112557855,
+        0.005500777653950114,
+        0.009406894557466274
+      ]
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 5000.0,
+      "tl_db": 54.05444128846665,
+      "n_modes": 5,
+      "k_r": [
+        0.4179404322577699,
+        0.41506922895772574,
+        0.41014002859322907,
+        0.4030356213037798,
+        0.3938763018982261
+      ],
+      "residue_abs": [
+        0.017407742430978437,
+        0.0018343198801838974,
+        0.014833326112557855,
+        0.005500777653950114,
+        0.009406894557466274
+      ]
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 1000.0,
+      "tl_db": 48.1939607519222,
+      "n_modes": 9,
+      "k_r": [
+        0.8372349889749806,
+        0.8356597884346115,
+        0.8330157178432394,
+        0.8292787304340484,
+        0.8244210196551403,
+        0.8184138449297816,
+        0.8112302798382826,
+        0.8028513824026611,
+        0.793294684422693
+      ],
+      "residue_abs": [
+        0.01870094740603397,
+        0.000598091809094646,
+        0.01771096322002599,
+        0.002102870381825276,
+        0.016100638175879145,
+        0.004017544589799972,
+        0.014164606990863292,
+        0.0061306408716688835,
+        0.011602127434010073
+      ]
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 2000.0,
+      "tl_db": 49.99158138725711,
+      "n_modes": 9,
+      "k_r": [
+        0.8372349889749806,
+        0.8356597884346115,
+        0.8330157178432394,
+        0.8292787304340484,
+        0.8244210196551403,
+        0.8184138449297816,
+        0.8112302798382826,
+        0.8028513824026611,
+        0.793294684422693
+      ],
+      "residue_abs": [
+        0.01870094740603397,
+        0.000598091809094646,
+        0.01771096322002599,
+        0.002102870381825276,
+        0.016100638175879145,
+        0.004017544589799972,
+        0.014164606990863292,
+        0.0061306408716688835,
+        0.011602127434010073
+      ]
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 5000.0,
+      "tl_db": 59.56316984388283,
+      "n_modes": 9,
+      "k_r": [
+        0.8372349889749806,
+        0.8356597884346115,
+        0.8330157178432394,
+        0.8292787304340484,
+        0.8244210196551403,
+        0.8184138449297816,
+        0.8112302798382826,
+        0.8028513824026611,
+        0.793294684422693
+      ],
+      "residue_abs": [
+        0.01870094740603397,
+        0.000598091809094646,
+        0.01771096322002599,
+        0.002102870381825276,
+        0.016100638175879145,
+        0.004017544589799972,
+        0.014164606990863292,
+        0.0061306408716688835,
+        0.011602127434010073
+      ]
+    }
+  ],
+  "runtime_s": 94.01157402992249,
+  "verdict": {
+    "C1": "PASS",
+    "C2": "PASS",
+    "C4": "PASS",
+    "all_pass": true
+  }
+}
