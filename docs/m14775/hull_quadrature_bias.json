@@ -1,0 +1,459 @@
+{
+  "mission": "m14775",
+  "repo": "TensorBEM",
+  "defect": "reference_volume / reference_waterplane_area summed grid nodes with unit weight",
+  "quadrature": [
+    {
+      "hull": "kcs-class",
+      "parameters": {
+        "length": 230.0,
+        "breadth": 32.2,
+        "draft": 10.8,
+        "waterline_exponent": 2.0,
+        "section_exponent": 2.0,
+        "keel_ratio": 0.9295000000000001,
+        "end_ratio": 0.02
+      },
+      "closed_form": {
+        "volume": 52077.94154801101,
+        "waterplane_area": 4938.0764207023385,
+        "block_coefficient": 0.651097977965951,
+        "waterplane_coefficient": 0.6667670025252954
+      },
+      "grid": [
+        {
+          "panels": 8,
+          "volume_new": 51442.098753199236,
+          "volume_old": 58015.52222164455,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 0.01220944561001105,
+          "volume_rel_error_old": 0.11401335185569192,
+          "cb_bias_new": -0.007949545348763465,
+          "cb_bias_old": 0.07423386285436151,
+          "waterplane_rel_error_new": 0.012023694176424567
+        },
+        {
+          "panels": 16,
+          "volume_new": 51961.894919448496,
+          "volume_old": 55274.24172348854,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 0.002228325949779161,
+          "volume_rel_error_old": 0.061375317081817475,
+          "cb_bias_new": -0.0014508585201502555,
+          "cb_bias_old": 0.0399613448489905,
+          "waterplane_rel_error_new": 0.002181425475146191
+        },
+        {
+          "panels": 32,
+          "volume_new": 52067.45897254153,
+          "volume_old": 53725.329622823876,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 0.0002012862866290332,
+          "volume_rel_error_old": 0.03163312576965291,
+          "cb_bias_new": -0.00013105709421645795,
+          "cb_bias_old": 0.020596264225363647,
+          "waterplane_rel_error_new": 0.00018953776179199473
+        },
+        {
+          "panels": 64,
+          "volume_new": 52081.647233615135,
+          "volume_old": 52910.417930922886,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 7.115652988525432e-05,
+          "volume_rel_error_old": 0.01598520137637178,
+          "cb_bias_new": 4.6329872727346455e-05,
+          "cb_bias_old": 0.010407932293534206,
+          "waterplane_rel_error_new": 7.409443556351e-05
+        },
+        {
+          "panels": 128,
+          "volume_new": 52079.09237577066,
+          "volume_old": 52493.36294997881,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 2.209818063930842e-05,
+          "volume_rel_error_old": 0.007976916706372059,
+          "cb_bias_new": 1.4388080730953767e-05,
+          "cb_bias_old": 0.0051937543379216855,
+          "waterplane_rel_error_new": 2.2832619411209347e-05
+        },
+        {
+          "panels": 256,
+          "volume_new": 52078.109530137954,
+          "volume_old": 52285.217367860154,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 3.2255907578028453e-06,
+          "volume_rel_error_old": 0.003980107770927425,
+          "cb_bias_new": 2.100175620189937e-06,
+          "cb_bias_old": 0.0025914401217373983,
+          "waterplane_rel_error_new": 3.409196884399146e-06
+        },
+        {
+          "panels": 400,
+          "volume_new": 52077.634776798106,
+          "volume_old": 52210.177181130595,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 5.890617097878007e-06,
+          "volume_rel_error_old": 0.002539187018320901,
+          "cb_bias_new": -3.835368881377477e-06,
+          "cb_bias_old": 0.001653259533306084,
+          "waterplane_rel_error_new": 5.815412700792148e-06
+        },
+        {
+          "panels": 800,
+          "volume_new": 52077.86958884484,
+          "volume_old": 52144.13866606022,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 1.3817590332899144e-06,
+          "volume_rel_error_old": 0.001271116255395452,
+          "cb_bias_new": -8.9966051264323e-07,
+          "cb_bias_old": 0.0008276212236476566,
+          "waterplane_rel_error_new": 1.3629578343258096e-06
+        },
+        {
+          "panels": 1600,
+          "volume_new": 52077.92585107476,
+          "volume_old": 52111.059821129355,
+          "volume_exact": 52077.94154801101,
+          "volume_rel_error_new": 3.0141237890777563e-07,
+          "volume_rel_error_old": 0.0006359366774858321,
+          "cb_bias_new": -1.9624899050274536e-07,
+          "cb_bias_old": 0.0004140570848254477,
+          "waterplane_rel_error_new": 2.9671205808507505e-07
+        }
+      ]
+    },
+    {
+      "hull": "pc6-default",
+      "parameters": {
+        "length": 120.0,
+        "breadth": 24.0,
+        "draft": 9.0,
+        "waterline_exponent": 4.0,
+        "section_exponent": 2.0,
+        "keel_ratio": 0.7,
+        "end_ratio": 0.02
+      },
+      "closed_form": {
+        "volume": 18663.572283598445,
+        "waterplane_area": 2304.144726370178,
+        "block_coefficient": 0.7200452269906807,
+        "waterplane_coefficient": 0.8000502522118673
+      },
+      "grid": [
+        {
+          "panels": 8,
+          "volume_new": 18221.926113281253,
+          "volume_old": 20440.149082031247,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 0.02366353898419064,
+          "volume_rel_error_old": 0.09518953667803766,
+          "cb_bias_new": -0.01703881829927434,
+          "cb_bias_old": 0.06854077154447535,
+          "waterplane_rel_error_new": 0.022815288366453065
+        },
+        {
+          "panels": 16,
+          "volume_new": 18566.21984161377,
+          "volume_old": 19693.25534454346,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 0.005216174079933755,
+          "volume_rel_error_old": 0.05517073823267485,
+          "cb_bias_new": -0.0037558812494088434,
+          "cb_bias_old": 0.03972542673398982,
+          "waterplane_rel_error_new": 0.005000245313725416
+        },
+        {
+          "panels": 32,
+          "volume_new": 18645.605221524238,
+          "volume_old": 19210.948921322823,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 0.0009626807666395498,
+          "volume_rel_error_old": 0.02932861026853965,
+          "cb_bias_new": -0.0006931736911345299,
+          "cb_bias_old": 0.02111792583813188,
+          "waterplane_rel_error_new": 0.0009084765824260544
+        },
+        {
+          "panels": 64,
+          "volume_new": 18661.843870686964,
+          "volume_old": 18944.636878456546,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 9.260890065512044e-05,
+          "volume_rel_error_old": 0.015059528293257135,
+          "cb_bias_new": -6.66825968935747e-05,
+          "cb_bias_old": 0.010843541468290918,
+          "waterplane_rel_error_new": 7.904660473755773e-05
+        },
+        {
+          "panels": 128,
+          "volume_new": 18664.083321676102,
+          "volume_old": 18805.4680911526,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 2.7381578933093614e-05,
+          "volume_rel_error_old": 0.007602821442648147,
+          "cb_bias_new": 1.971597521821522e-05,
+          "cb_bias_old": 0.005474375291441236,
+          "waterplane_rel_error_new": 3.0772525291602584e-05
+        },
+        {
+          "panels": 256,
+          "volume_new": 18663.73207206666,
+          "volume_old": 18734.416266851975,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 8.561515758503268e-06,
+          "volume_rel_error_old": 0.0037958426273938623,
+          "cb_bias_new": 6.1646785577407215e-06,
+          "cb_bias_old": 0.002733178366262745,
+          "waterplane_rel_error_new": 9.409234238490753e-06
+        },
+        {
+          "panels": 400,
+          "volume_new": 18663.382957894963,
+          "volume_old": 18708.618447663583,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 1.0144129998574214e-05,
+          "volume_rel_error_old": 0.0024135874622846993,
+          "cb_bias_new": -7.3042323874839e-06,
+          "cb_bias_old": 0.0017378921321427043,
+          "waterplane_rel_error_new": 9.796911156464268e-06
+        },
+        {
+          "panels": 800,
+          "volume_new": 18663.52708216533,
+          "volume_old": 18686.14430311043,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 2.4219068262975454e-06,
+          "volume_rel_error_old": 0.0012094158164899053,
+          "cb_bias_new": -1.743882450444545e-06,
+          "cb_bias_old": 0.0008708340861106612,
+          "waterplane_rel_error_new": 2.335101451938594e-06
+        },
+        {
+          "panels": 1600,
+          "volume_new": 18663.562023469825,
+          "volume_old": 18674.87048174421,
+          "volume_exact": 18663.572283598445,
+          "volume_rel_error_new": 5.497408783239436e-07,
+          "volume_rel_error_old": 0.0006053609659546351,
+          "cb_bias_new": -3.958382954749595e-07,
+          "cb_bias_old": 0.0004358872741421216,
+          "waterplane_rel_error_new": 5.280394791881656e-07
+        }
+      ]
+    }
+  ],
+  "mesh": [
+    {
+      "hull": "kcs-class",
+      "closed_form_block_coefficient": 0.651097977965951,
+      "grid": [
+        {
+          "n_sections": 9,
+          "n_side": 2,
+          "n_bottom": 2,
+          "panels": 128,
+          "cb_mesh": 0.6413342968750001,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.014995717113809754,
+          "cb_error_old": 0.017490492500628948,
+          "gate_verdict_new": "reject",
+          "gate_verdict_old": "reject"
+        },
+        {
+          "n_sections": 11,
+          "n_side": 3,
+          "n_bottom": 2,
+          "panels": 200,
+          "cb_mesh": 0.6455787222222222,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.008476843624935093,
+          "cb_error_old": 0.010988129726897758,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "reject"
+        },
+        {
+          "n_sections": 15,
+          "n_side": 3,
+          "n_bottom": 2,
+          "panels": 272,
+          "cb_mesh": 0.6482057766439909,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.004442037020289065,
+          "cb_error_old": 0.006963542302394127,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 21,
+          "n_side": 5,
+          "n_bottom": 3,
+          "panels": 590,
+          "cb_mesh": 0.6500359799999998,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.0016310877961392255,
+          "cb_error_old": 0.00415971252641304,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 31,
+          "n_side": 5,
+          "n_bottom": 3,
+          "panels": 870,
+          "cb_mesh": 0.650614368148148,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.0007427604357087002,
+          "cb_error_old": 0.0032736350823257677,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 41,
+          "n_side": 9,
+          "n_bottom": 5,
+          "panels": 1970,
+          "cb_mesh": 0.6509846550925925,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 0.00017404887926782904,
+          "cb_error_old": 0.002706363933422061,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 61,
+          "n_side": 9,
+          "n_bottom": 5,
+          "panels": 2930,
+          "cb_mesh": 0.6510479373571102,
+          "cb_reference_new": 0.651097977965951,
+          "cb_reference_old": 0.6527512374992571,
+          "cb_error_new": 7.685572760826007e-05,
+          "cb_error_old": 0.002609416948288608,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        }
+      ]
+    },
+    {
+      "hull": "pc6-default",
+      "closed_form_block_coefficient": 0.7200452269906807,
+      "grid": [
+        {
+          "n_sections": 9,
+          "n_side": 2,
+          "n_bottom": 2,
+          "panels": 128,
+          "cb_mesh": 0.6938447265625001,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.03638729825025252,
+          "cb_error_old": 0.038707461867876124,
+          "gate_verdict_new": "reject",
+          "gate_verdict_old": "reject"
+        },
+        {
+          "n_sections": 11,
+          "n_side": 3,
+          "n_bottom": 2,
+          "panels": 200,
+          "cb_mesh": 0.7054662222222222,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.020247345891575803,
+          "cb_error_old": 0.022606370900487404,
+          "gate_verdict_new": "reject",
+          "gate_verdict_old": "reject"
+        },
+        {
+          "n_sections": 15,
+          "n_side": 3,
+          "n_bottom": 2,
+          "panels": 272,
+          "cb_mesh": 0.7107610949141562,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.012893817955472297,
+          "cb_error_old": 0.01527054861308233,
+          "gate_verdict_new": "reject",
+          "gate_verdict_old": "reject"
+        },
+        {
+          "n_sections": 21,
+          "n_side": 5,
+          "n_bottom": 3,
+          "panels": 590,
+          "cb_mesh": 0.7163076599999999,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.005190739207176516,
+          "cb_error_old": 0.007586017153570759,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 31,
+          "n_side": 5,
+          "n_bottom": 3,
+          "panels": 870,
+          "cb_mesh": 0.7176688875720164,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.003300264107847612,
+          "cb_error_old": 0.005700093894973637,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 41,
+          "n_side": 9,
+          "n_bottom": 5,
+          "panels": 1970,
+          "cb_mesh": 0.7192065659722221,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.0011647338070188975,
+          "cb_error_old": 0.0035697054729301623,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        },
+        {
+          "n_sections": 61,
+          "n_side": 9,
+          "n_bottom": 5,
+          "panels": 2930,
+          "cb_mesh": 0.7194728993801758,
+          "cb_reference_new": 0.7200452269906807,
+          "cb_reference_old": 0.7217831191228234,
+          "cb_error_new": 0.000794849530350919,
+          "cb_error_old": 0.0032007117947774355,
+          "gate_verdict_new": "pass",
+          "gate_verdict_old": "pass"
+        }
+      ]
+    }
+  ],
+  "anchor_shift": [
+    {
+      "hull": "series60-like",
+      "target_cb": 0.6,
+      "waterline_exponent_new": 1.550873235456018,
+      "waterline_exponent_old": 1.540781780492615,
+      "delta_exponent": 0.010091454963403024,
+      "relative_delta": 0.006549567947367997
+    },
+    {
+      "hull": "kvlcc2-like",
+      "target_cb": 0.8098,
+      "waterline_exponent_new": 4.271457036663787,
+      "waterline_exponent_old": 4.214549581113079,
+      "delta_exponent": 0.056907455550708086,
+      "relative_delta": 0.013502618596713388
+    }
+  ]
+}
