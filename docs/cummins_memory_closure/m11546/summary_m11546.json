@@ -1,0 +1,20 @@
+{
+  "mission_id": "m11546",
+  "status": "PASS",
+  "gates": {
+    "C5_geometry": "PASS",
+    "C1_round_trip": "PASS",
+    "C2_causality": "PASS",
+    "C3_free_decay": "PASS",
+    "C4_negative_control": "PASS"
+  },
+  "key_numbers": {
+    "round_trip_damping_error_pct": 0.0295,
+    "round_trip_added_mass_error_pct": 1.9301,
+    "kk_causality_error_pct": 1.8747,
+    "free_decay_vs_energy_pct": 1.3915,
+    "free_decay_vs_half_power_pct": 2.1184,
+    "negative_control_decay_ratio": 4.97e-06
+  },
+  "total_tests_pass": 59
+}
