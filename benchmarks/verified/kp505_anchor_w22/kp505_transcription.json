@@ -1,0 +1,1611 @@
+{
+  "meta": {
+    "generated_utc": "2026-11-11T07:59:27.637801+00:00",
+    "git_commit": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "cwd_relative": ".",
+    "inputs": {
+      "anchor_table": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "present": true
+      },
+      "ittc57_anchor": "AN-ITTC57",
+      "ladder": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96
+        }
+      ],
+      "mission_J": [
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9
+      ],
+      "design_J": 0.7,
+      "thresholds": {
+        "design_dKT_pct": 5.0,
+        "order_tolerance": 0.3,
+        "theory_order": 2.0
+      },
+      "bem_geometry": {
+        "n_radial": 16,
+        "n_chord": 2,
+        "wake_model": "geometric",
+        "wake_length": 1.0,
+        "wake_steps": 24,
+        "rev_per_second": 10.0,
+        "thickness_ratio": 0.06,
+        "viscous": true,
+        "radial_spacing": "cosine",
+        "root_chord_offset": 0.12
+      }
+    },
+    "driver": "src/tensorbem/benchmarks/kp505_w22.py",
+    "producing_command": "python -m tensorbem.benchmarks.kp505_w22 benchmarks/verified/kp505_anchor_w22"
+  },
+  "mission": "W22 propeller-openwater-bem (successor of paper-exp-propeller-openwater-bem-1)",
+  "reachability": {
+    "patterns": [
+      "*kp505*",
+      "*KP505*",
+      "*kp_505*",
+      "*kp-505*",
+      "*Kp505*"
+    ],
+    "self_reference_excluded": {
+      "dir": "benchmarks/verified/kp505_anchor_w22",
+      "glob_hits_excluded": 6,
+      "note": "the artefact directory is this study's own output, so it is excluded from the 'is the anchor in the repo' count; the driver/tests/report files added by this task are still counted as text-layer hits"
+    },
+    "glob_hits": {
+      "*kp505*": [
+        "benchmarks/anchors/kp505_openwater.json",
+        "benchmarks/anchors/sources/kp505_marine2023_iftikhar.pdf",
+        "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "benchmarks/anchors/sources/kp505_marine2023_table1_propeller_characteristics.txt",
+        "benchmarks/verified/propeller_openwater/kp505_gci_ladder.json",
+        "benchmarks/verified/propeller_openwater/kp505_gci_ladder_decomposition.csv",
+        "benchmarks/verified/propeller_openwater/kp505_gci_ladder_gci.csv",
+        "benchmarks/verified/propeller_openwater/kp505_gci_ladder_values.csv",
+        "docs/kp505_openwater_anchor.md",
+        "docs/m7485_kp505_openwater_bem.md",
+        "papers/data/w20-anchors/kp505_transcription.json",
+        "papers/data/w20-anchors/sources/lbm_bench_propeller_kp505_excerpt.txt",
+        "src/tensorbem/benchmarks/__pycache__/kp505_openwater_bem.cpython-311.pyc",
+        "src/tensorbem/benchmarks/__pycache__/kp505_w22.cpython-311.pyc",
+        "src/tensorbem/benchmarks/kp505_gci_ladder.py",
+        "src/tensorbem/benchmarks/kp505_openwater_bem.py",
+        "src/tensorbem/benchmarks/kp505_w20_gci.py",
+        "src/tensorbem/benchmarks/kp505_w22.py",
+        "tests/__pycache__/test_w22_kp505_anchor.cpython-311-pytest-9.2.0.pyc",
+        "tests/test_kp505_gci_ladder.py",
+        "tests/test_kp505_openwater_anchor.py",
+        "tests/test_w20_kp505_gci.py",
+        "tests/test_w20_kp505_transcription.py",
+        "tests/test_w22_kp505_anchor.py",
+        "tools/build_kp505_openwater_anchor.py",
+        "tools/build_w20_kp505_transcription.py"
+      ],
+      "*KP505*": [
+        "benchmarks/anchors/sources/KP505_modelScale_250mm.igs"
+      ],
+      "*kp_505*": [],
+      "*kp-505*": [],
+      "*Kp505*": []
+    },
+    "glob_hit_files": 27,
+    "grep_command": "grep -ril --include=* --exclude-dir=.git --exclude-dir=__pycache__ --exclude-dir=.venv --exclude-dir=node_modules --exclude-dir=runs --exclude-dir=kp505_anchor_w22 --exclude-dir=w22_kp505_cache kp505 /root/tp-agent/work/m14506",
+    "grep_hit_files": 36,
+    "n_hit_files": 39,
+    "n_hit_files_raw": 44,
+    "own_outputs_excluded": [
+      "papers/reports/w22_propeller_openwater6.md",
+      "src/tensorbem/benchmarks/kp505_w22.py",
+      "tests/test_w22_kp505_anchor.py",
+      "tools/emit_w22_report.py",
+      "tools/post_report_w22.py"
+    ],
+    "hit_files": [
+      {
+        "file": ".pytest_cache/v/cache/nodeids",
+        "sha256": "c6c55bd67d40db1ac736e6b2626b6e8bfa234c18370c2309657414b09dec208d",
+        "bytes": 973,
+        "layer": "text"
+      },
+      {
+        "file": "benchmarks/anchors/kp505_openwater.json",
+        "sha256": "9771a40b9a24e3f23812b85fc196ef0156f9be99491fba8ecbc5c5e1276ac404",
+        "bytes": 9917,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/anchors/sources/KP505_modelScale_250mm.igs",
+        "sha256": "0bb54ae7618e8d8b1b7c23de8d384e04b0465071e34fe32e1d606ddbb5df462f",
+        "bytes": 1042550,
+        "layer": "geometry"
+      },
+      {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_iftikhar.pdf",
+        "sha256": "161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c",
+        "bytes": 496011,
+        "layer": "figure"
+      },
+      {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "bytes": 1106,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_table1_propeller_characteristics.txt",
+        "sha256": "b94913826b91e65f5b8a14bbf0ebb691fec29a44d12c15a1ae6f6035871d8d2b",
+        "bytes": 1311,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/kp505_openwater_bem/verdict.json",
+        "sha256": "c0eaf703c597975010b91d787c1e05b7b9e31081ed46cd64b74b6cf36da21b0f",
+        "bytes": 53124,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/README.md",
+        "sha256": "bef1ba2e9150e538985cf82c71f3317f0c033244c69f3c8c157ae3c896cef7f0",
+        "bytes": 6368,
+        "layer": "text"
+      },
+      {
+        "file": "benchmarks/verified/bem_kp505_openwater_w20/gci.json",
+        "sha256": "7f9967068dfb0de5fbc6a4a4606df4a78855fa0cee4906d6bb22a4d28563ae39",
+        "bytes": 85086,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/propeller_openwater/kp505_gci_ladder.json",
+        "sha256": "0ca5f86e6e97ef42388658ab8f22806720a53e847be6fcd6ce0e5ecde35d44d4",
+        "bytes": 155774,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/propeller_openwater/kp505_gci_ladder_decomposition.csv",
+        "sha256": "bcdedae9596edc3a2ce3e8adfaf7848de3acafd851bcc9d576c01c2d2d7d6f6e",
+        "bytes": 1821,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/propeller_openwater/kp505_gci_ladder_gci.csv",
+        "sha256": "40b9895a9c6da6b408aa19cd62d30540b3a3bfb700616b65d35c8209ac3fd61d",
+        "bytes": 5797,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/propeller_openwater/kp505_gci_ladder_values.csv",
+        "sha256": "523e58d4354beb9ea494acf8fa4e13ce8fd12a992cf90efe4bacd8cbf8c86e97",
+        "bytes": 5989,
+        "layer": "table"
+      },
+      {
+        "file": "benchmarks/verified/propeller_openwater/report.md",
+        "sha256": "7f4627c3dafb48104a03ba14856661d5df92012fdfc8f492794c48e6b69a0700",
+        "bytes": 11782,
+        "layer": "text"
+      },
+      {
+        "file": "docs/audit_baseline.md",
+        "sha256": "1444af35cbfc0b50649e168b64c09af297137d43ef034dce2d4ea48579c85569",
+        "bytes": 20663,
+        "layer": "text"
+      },
+      {
+        "file": "docs/doc_claim_audit.md",
+        "sha256": "0fa8571fa0c67033b5f16ba6dd246a66412261b462c4d2dc4f20729d11232c73",
+        "bytes": 11032,
+        "layer": "text"
+      },
+      {
+        "file": "docs/doc_claim_audit/audit.json",
+        "sha256": "c11b932a3dd62bf90f22b69fedf19c3df42cd976790bd8be3bfdb430acf459f4",
+        "bytes": 53845,
+        "layer": "table"
+      },
+      {
+        "file": "docs/kp505_openwater_anchor.md",
+        "sha256": "627af45c93ce96ebd9eb0585e20400cd3364e5436c883d130ad673c37c7258e4",
+        "bytes": 6968,
+        "layer": "text"
+      },
+      {
+        "file": "docs/m7485_kp505_openwater_bem.md",
+        "sha256": "cb3b9391e3764db2cc1dec90c7dca86ae7c83e34fd5bbc79a13f8c53618a25ee",
+        "bytes": 18607,
+        "layer": "text"
+      },
+      {
+        "file": "papers/data/w20-anchors/kp505_transcription.json",
+        "sha256": "17bfd3dc3c4e2756d0e9c68962d6bd39952ca352f09a25bea6253e3823096969",
+        "bytes": 70267,
+        "layer": "table"
+      },
+      {
+        "file": "papers/data/w20-anchors/sources/lbm_bench_propeller_kp505_excerpt.txt",
+        "sha256": "da2de70df401dfbf18ac1f0cf8378d3c2e76c6d69339244cb9567405ba226ec8",
+        "bytes": 264,
+        "layer": "table"
+      },
+      {
+        "file": "papers/reports/w20_propeller_openwater_bem5.md",
+        "sha256": "23031f68bc49710eac72fb6eb7fab65a3337e0b75c8f71658fb6c70a467b0d98",
+        "bytes": 18654,
+        "layer": "text"
+      },
+      {
+        "file": "post_report_m8531.py",
+        "sha256": "7a24118e8a31bc4ab1f7fadc0cbf27a1942941e2c1fa9e603a6fa347d313fb0f",
+        "bytes": 14045,
+        "layer": "text"
+      },
+      {
+        "file": "post_report_m9641.py",
+        "sha256": "4290d0ef6700f1fbf1473db63fd9ade9b70c8e6af631651adf5bfb7ffac2562d",
+        "bytes": 3593,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/benchmarks/__pycache__/kp505_openwater_bem.cpython-311.pyc",
+        "sha256": "fdddcad999b75b9bca651985cc82298470b674fae7f391d58f8ec6965a845ad7",
+        "bytes": 39559,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/benchmarks/__pycache__/kp505_w22.cpython-311.pyc",
+        "sha256": "4a9a10e417dfeae0d22e23aa286e0a48ce00c847cf69b403e0afa73a3298088e",
+        "bytes": 75070,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/benchmarks/kp505_gci_ladder.py",
+        "sha256": "744053c2e18b009ccc2738b46e071e64c2d482bfb194aa7a7631d7c68e500ee3",
+        "bytes": 63342,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/benchmarks/kp505_openwater_bem.py",
+        "sha256": "b1b159103a39395022aea6c87eae77218c779e6ae2bc2e4b5b8044fb92c51991",
+        "bytes": 29325,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/benchmarks/kp505_w20_gci.py",
+        "sha256": "cab95cab07b1ffd73f94b5651290ab65294b51f8fc78cd023423ef6e8a3299e9",
+        "bytes": 40790,
+        "layer": "text"
+      },
+      {
+        "file": "src/tensorbem/propeller.py",
+        "sha256": "881d338f83ee31d4b790acb597349a464c964f1cf90e162109c90a7c0ade6992",
+        "bytes": 31315,
+        "layer": "text"
+      },
+      {
+        "file": "tests/__pycache__/test_w22_kp505_anchor.cpython-311-pytest-9.2.0.pyc",
+        "sha256": "8d3ec3cef0189a1dbf2ff9c8dab36213da9d81d1fa63d97a1a9405c2104efaa9",
+        "bytes": 55910,
+        "layer": "text"
+      },
+      {
+        "file": "tests/test_kp505_gci_ladder.py",
+        "sha256": "25a34a7fd70f957152a449dd2b5a68192add3f08d78ef82c2cd407e8fe8e500c",
+        "bytes": 9090,
+        "layer": "text"
+      },
+      {
+        "file": "tests/test_kp505_openwater_anchor.py",
+        "sha256": "8c17e2ff56fcaa3e131f0d1ab8e1f0f8258c4060dda6efe6e204ff812f553fc0",
+        "bytes": 4920,
+        "layer": "text"
+      },
+      {
+        "file": "tests/test_propeller_open_water.py",
+        "sha256": "aeb1cb84d207e66794bd98247b13c737f135a73c7a33ebf36601624383dddf5d",
+        "bytes": 11098,
+        "layer": "text"
+      },
+      {
+        "file": "tests/test_w20_kp505_gci.py",
+        "sha256": "4d65dd92eac1f2fbd20071eb636f271347bbbac061f08ea772f50d28742b15da",
+        "bytes": 6901,
+        "layer": "text"
+      },
+      {
+        "file": "tests/test_w20_kp505_transcription.py",
+        "sha256": "13a27e85f966fd5f4a033fa319b7901ab1786ff98c3006ce85ce3ea05731ef97",
+        "bytes": 6749,
+        "layer": "text"
+      },
+      {
+        "file": "tools/build_kp505_openwater_anchor.py",
+        "sha256": "6a173ae75bf10bc2b9611a9180efcc8301121fa51d1dbc4e281ece606e72a369",
+        "bytes": 19653,
+        "layer": "text"
+      },
+      {
+        "file": "tools/build_w20_kp505_transcription.py",
+        "sha256": "01d968cc163a297ffc488744ea30e562265a53980a012bc351b9ede17eafe849",
+        "bytes": 31552,
+        "layer": "text"
+      },
+      {
+        "file": "tools/emit_w20_report.py",
+        "sha256": "bd32ac5913ce349073c672591c15772bd5afc7acb405e038ee93de2b974da612",
+        "bytes": 25835,
+        "layer": "text"
+      }
+    ],
+    "layer_summary": {
+      "figure": 1,
+      "geometry": 1,
+      "table": 12,
+      "text": 25
+    },
+    "anchor_table_source": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+    "anchor_table_source_present": true
+  },
+  "anchor": {
+    "available": true,
+    "honest_fail": false,
+    "anchor_id": "AN-KP505",
+    "citation": {
+      "paper": "Iftikhar, H. & Takinaci, A.C. (2023). Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS. X International Conference on Computational Methods in Marine Engineering (MARINE 2023).",
+      "doi": "10.23967/marine.2023.120",
+      "location": "Table 2, page 10",
+      "table_caption_verbatim": "Table 2. Comparison of CFD and Experimental Results",
+      "use": "Experimental columns (K_T, 10 K_Q) at J = 0.1 ... 1.0",
+      "provenance_depth": "SECONDARY_REPRODUCTION: the paper prints the experimental columns of the KRISO KP505 open-water test (KRISO Container Ship propeller) but page 10 does not cite the primary experimental handout.  One tabulation step is inherited by every number taken from it."
+    },
+    "reference_type": "experiment",
+    "provenance_class": "SECONDARY_REPRODUCTION",
+    "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+    "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+    "n_rows": 10,
+    "n_fields": 70,
+    "n_fields_with_source": 70,
+    "fields": [
+      {
+        "field": "J",
+        "value": 0.1,
+        "raw": "0.1",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.479,
+        "raw": "0.479",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.644,
+        "raw": "0.644",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.494,
+        "raw": "0.494",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.683,
+        "raw": "0.683",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 3.06,
+        "raw": "3.06",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 5.73,
+        "raw": "5.73",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 15,
+        "verbatim": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.2,
+        "raw": "0.2",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.432,
+        "raw": "0.432",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.59,
+        "raw": "0.590",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.447,
+        "raw": "0.447",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.636,
+        "raw": "0.636",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 3.24,
+        "raw": "3.24",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 7.22,
+        "raw": "7.22",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 16,
+        "verbatim": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.3,
+        "raw": "0.3",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.382,
+        "raw": "0.382",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.554,
+        "raw": "0.554",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.392,
+        "raw": "0.392",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.585,
+        "raw": "0.585",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 2.64,
+        "raw": "2.64",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 5.32,
+        "raw": "5.32",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 17,
+        "verbatim": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.4,
+        "raw": "0.4",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.33,
+        "raw": "0.330",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.5,
+        "raw": "0.500",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.343,
+        "raw": "0.343",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.53,
+        "raw": "0.530",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 3.73,
+        "raw": "3.73",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 5.72,
+        "raw": "5.72",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 18,
+        "verbatim": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.5,
+        "raw": "0.5",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.278,
+        "raw": "0.278",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.473,
+        "raw": "0.473",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.29,
+        "raw": "0.290",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.471,
+        "raw": "0.471",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 4.23,
+        "raw": "4.23",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 0.5,
+        "raw": "0.50",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 19,
+        "verbatim": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.6,
+        "raw": "0.6",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.225,
+        "raw": "0.225",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.414,
+        "raw": "0.414",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.241,
+        "raw": "0.241",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.409,
+        "raw": "0.409",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 6.49,
+        "raw": "6.49",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 1.26,
+        "raw": "1.26",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 20,
+        "verbatim": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.7,
+        "raw": "0.7",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.173,
+        "raw": "0.173",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.356,
+        "raw": "0.356",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.193,
+        "raw": "0.193",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.342,
+        "raw": "0.342",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 10.31,
+        "raw": "10.31",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 4.01,
+        "raw": "4.01",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21,
+        "verbatim": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.8,
+        "raw": "0.8",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.12,
+        "raw": "0.120",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.288,
+        "raw": "0.288",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.141,
+        "raw": "0.141",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.27,
+        "raw": "0.270",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 15.17,
+        "raw": "15.17",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 6.66,
+        "raw": "6.66",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 22,
+        "verbatim": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 0.9,
+        "raw": "0.9",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.063,
+        "raw": "0.063",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.152,
+        "raw": "0.152",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.087,
+        "raw": "0.087",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.192,
+        "raw": "0.192",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 27.6,
+        "raw": "27.60",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 20.89,
+        "raw": "20.89",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 23,
+        "verbatim": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "J",
+        "value": 1.0,
+        "raw": "1",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KT_cfd",
+        "value": 0.03,
+        "raw": "0.030",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KQ10_cfd",
+        "value": 0.094,
+        "raw": "0.094",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "KT_exp",
+        "value": 0.029,
+        "raw": "0.029",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "KQ10_exp",
+        "value": 0.108,
+        "raw": "0.108",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "experiment"
+      },
+      {
+        "field": "err_KT",
+        "value": 2.27,
+        "raw": "2.27",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "numerical"
+      },
+      {
+        "field": "err_KQ10",
+        "value": 13.25,
+        "raw": "13.25",
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 24,
+        "verbatim": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+        "reference_type": "numerical"
+      }
+    ],
+    "experimental_curve": [
+      {
+        "J": 0.1,
+        "KT": 0.494,
+        "10KQ": 0.683,
+        "KQ": 0.0683,
+        "eta0": 0.11511353131390381,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 15,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.2,
+        "KT": 0.447,
+        "10KQ": 0.636,
+        "KQ": 0.0636,
+        "eta0": 0.2237177973650227,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 16,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.3,
+        "KT": 0.392,
+        "10KQ": 0.585,
+        "KQ": 0.058499999999999996,
+        "eta0": 0.31994224457447684,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 17,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.4,
+        "KT": 0.343,
+        "10KQ": 0.53,
+        "KQ": 0.053000000000000005,
+        "eta0": 0.41200109796618944,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 18,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.5,
+        "KT": 0.29,
+        "10KQ": 0.471,
+        "KQ": 0.047099999999999996,
+        "eta0": 0.4899674468858774,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 19,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.6,
+        "KT": 0.241,
+        "10KQ": 0.409,
+        "KQ": 0.0409,
+        "eta0": 0.5626847132295371,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 20,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.7,
+        "KT": 0.193,
+        "10KQ": 0.342,
+        "KQ": 0.0342,
+        "eta0": 0.6287085617460544,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 21,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.8,
+        "KT": 0.141,
+        "10KQ": 0.27,
+        "KQ": 0.027000000000000003,
+        "eta0": 0.6649139844728071,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 22,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 0.9,
+        "KT": 0.087,
+        "10KQ": 0.192,
+        "KQ": 0.019200000000000002,
+        "eta0": 0.6490537522966355,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 23,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      },
+      {
+        "J": 1.0,
+        "KT": 0.029,
+        "10KQ": 0.108,
+        "KQ": 0.0108,
+        "eta0": 0.4273604953393486,
+        "reference_type": "experiment",
+        "source": {
+          "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+          "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "line": 24,
+          "fields": [
+            "KT_exp",
+            "KQ10_exp"
+          ]
+        }
+      }
+    ],
+    "design_J": 0.7,
+    "design_point": {
+      "J": 0.7,
+      "KT": 0.193,
+      "10KQ": 0.342,
+      "KQ": 0.0342,
+      "eta0": 0.6287085617460544,
+      "present": true,
+      "source": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "line": 21
+      }
+    },
+    "cross_check_pinned_table_mismatches": [],
+    "source_self_consistency": {
+      "convention": "the source prints unsigned error magnitudes; the check compares |100 (exp - cfd)/exp| against them and keeps the signed value",
+      "n_checks": 20,
+      "max_abs_diff_pct_points": 1.1782758620689564,
+      "max_ratio_to_roundoff_bound": 0.4974458717165131,
+      "worst": {
+        "J": 1.0,
+        "quantity": "KT",
+        "printed_err_pct": 2.27,
+        "recomputed_err_pct": 3.4482758620689564,
+        "recomputed_err_signed_pct": -3.4482758620689564,
+        "abs_diff_pct_points": 1.1782758620689564,
+        "roundoff_bound_pct_points": 3.39580459770115,
+        "ratio_to_bound": 0.3469798771303305
+      },
+      "worst_by_roundoff_bound": {
+        "J": 0.2,
+        "quantity": "KT",
+        "printed_err_pct": 3.24,
+        "recomputed_err_pct": 3.35570469798658,
+        "recomputed_err_signed_pct": 3.35570469798658,
+        "abs_diff_pct_points": 0.11570469798657967,
+        "roundoff_bound_pct_points": 0.23259756400696,
+        "ratio_to_bound": 0.4974458717165131
+      },
+      "rows": [
+        {
+          "J": 0.1,
+          "quantity": "KT",
+          "printed_err_pct": 3.06,
+          "recomputed_err_pct": 3.0364372469635654,
+          "recomputed_err_signed_pct": 3.0364372469635654,
+          "abs_diff_pct_points": 0.023562753036434625,
+          "roundoff_bound_pct_points": 0.21059870851047646,
+          "ratio_to_bound": 0.11188460367629685
+        },
+        {
+          "J": 0.1,
+          "quantity": "10KQ",
+          "printed_err_pct": 5.73,
+          "recomputed_err_pct": 5.710102489019039,
+          "recomputed_err_signed_pct": 5.710102489019039,
+          "abs_diff_pct_points": 0.01989751098096182,
+          "roundoff_bound_pct_points": 0.15584619371970573,
+          "ratio_to_bound": 0.12767402594861005
+        },
+        {
+          "J": 0.2,
+          "quantity": "KT",
+          "printed_err_pct": 3.24,
+          "recomputed_err_pct": 3.35570469798658,
+          "recomputed_err_signed_pct": 3.35570469798658,
+          "abs_diff_pct_points": 0.11570469798657967,
+          "roundoff_bound_pct_points": 0.23259756400696,
+          "ratio_to_bound": 0.4974458717165131
+        },
+        {
+          "J": 0.2,
+          "quantity": "10KQ",
+          "printed_err_pct": 7.22,
+          "recomputed_err_pct": 7.232704402515729,
+          "recomputed_err_signed_pct": 7.232704402515729,
+          "abs_diff_pct_points": 0.012704402515729463,
+          "roundoff_bound_pct_points": 0.16836211491312228,
+          "ratio_to_bound": 0.07545879619227372
+        },
+        {
+          "J": 0.3,
+          "quantity": "KT",
+          "printed_err_pct": 2.64,
+          "recomputed_err_pct": 2.5510204081632675,
+          "recomputed_err_signed_pct": 2.5510204081632675,
+          "abs_diff_pct_points": 0.08897959183673265,
+          "roundoff_bound_pct_points": 0.2634410727641842,
+          "ratio_to_bound": 0.33775899446166296
+        },
+        {
+          "J": 0.3,
+          "quantity": "10KQ",
+          "printed_err_pct": 5.32,
+          "recomputed_err_pct": 5.299145299145285,
+          "recomputed_err_signed_pct": 5.299145299145285,
+          "abs_diff_pct_points": 0.020854700854715524,
+          "roundoff_bound_pct_points": 0.18072279305131292,
+          "ratio_to_bound": 0.11539607430034692
+        },
+        {
+          "J": 0.4,
+          "quantity": "KT",
+          "printed_err_pct": 3.73,
+          "recomputed_err_pct": 3.7900874635568544,
+          "recomputed_err_signed_pct": 3.7900874635568544,
+          "abs_diff_pct_points": 0.06008746355685446,
+          "roundoff_bound_pct_points": 0.3022877462673381,
+          "ratio_to_bound": 0.1987757171728494
+        },
+        {
+          "J": 0.4,
+          "quantity": "10KQ",
+          "printed_err_pct": 5.72,
+          "recomputed_err_pct": 5.660377358490571,
+          "recomputed_err_signed_pct": 5.660377358490571,
+          "abs_diff_pct_points": 0.05962264150942875,
+          "roundoff_bound_pct_points": 0.19933962264150942,
+          "ratio_to_bound": 0.29910080454327725
+        },
+        {
+          "J": 0.5,
+          "quantity": "KT",
+          "printed_err_pct": 4.23,
+          "recomputed_err_pct": 4.137931034482744,
+          "recomputed_err_signed_pct": 4.137931034482744,
+          "abs_diff_pct_points": 0.09206896551725663,
+          "roundoff_bound_pct_points": 0.35726990821136195,
+          "ratio_to_bound": 0.25770142797133744
+        },
+        {
+          "J": 0.5,
+          "quantity": "10KQ",
+          "printed_err_pct": 0.5,
+          "recomputed_err_pct": 0.4246284501061575,
+          "recomputed_err_signed_pct": -0.4246284501061575,
+          "abs_diff_pct_points": 0.07537154989384248,
+          "roundoff_bound_pct_points": 0.21686535776966828,
+          "ratio_to_bound": 0.34754997602657345
+        },
+        {
+          "J": 0.6,
+          "quantity": "KT",
+          "printed_err_pct": 6.49,
+          "recomputed_err_pct": 6.639004149377588,
+          "recomputed_err_signed_pct": 6.639004149377588,
+          "abs_diff_pct_points": 0.1490041493775882,
+          "roundoff_bound_pct_points": 0.4346911018902721,
+          "ratio_to_bound": 0.3427816873399008
+        },
+        {
+          "J": 0.6,
+          "quantity": "10KQ",
+          "printed_err_pct": 1.26,
+          "recomputed_err_pct": 1.2224938875305635,
+          "recomputed_err_signed_pct": -1.2224938875305635,
+          "abs_diff_pct_points": 0.03750611246943647,
+          "roundoff_bound_pct_points": 0.24802233561295964,
+          "ratio_to_bound": 0.15122070508990362
+        },
+        {
+          "J": 0.7,
+          "quantity": "KT",
+          "printed_err_pct": 10.31,
+          "recomputed_err_pct": 10.362694300518143,
+          "recomputed_err_signed_pct": 10.362694300518143,
+          "abs_diff_pct_points": 0.05269430051814261,
+          "roundoff_bound_pct_points": 0.5530846985534158,
+          "ratio_to_bound": 0.09527347376624903
+        },
+        {
+          "J": 0.7,
+          "quantity": "10KQ",
+          "printed_err_pct": 4.01,
+          "recomputed_err_pct": 4.093567251461975,
+          "recomputed_err_signed_pct": -4.093567251461975,
+          "abs_diff_pct_points": 0.08356725146197519,
+          "roundoff_bound_pct_points": 0.2916482686116039,
+          "ratio_to_bound": 0.2865343650411449
+        },
+        {
+          "J": 0.8,
+          "quantity": "KT",
+          "printed_err_pct": 15.17,
+          "recomputed_err_pct": 14.893617021276592,
+          "recomputed_err_signed_pct": 14.893617021276592,
+          "abs_diff_pct_points": 0.276382978723408,
+          "roundoff_bound_pct_points": 0.776276595744681,
+          "ratio_to_bound": 0.3560367274222331
+        },
+        {
+          "J": 0.8,
+          "quantity": "10KQ",
+          "printed_err_pct": 6.66,
+          "recomputed_err_pct": 6.666666666666652,
+          "recomputed_err_signed_pct": -6.666666666666652,
+          "abs_diff_pct_points": 0.006666666666651722,
+          "roundoff_bound_pct_points": 0.3637962962962963,
+          "ratio_to_bound": 0.01832527360647457
+        },
+        {
+          "J": 0.9,
+          "quantity": "KT",
+          "printed_err_pct": 27.6,
+          "recomputed_err_pct": 27.58620689655172,
+          "recomputed_err_signed_pct": 27.58620689655172,
+          "abs_diff_pct_points": 0.013793103448282551,
+          "roundoff_bound_pct_points": 1.3733634373289547,
+          "ratio_to_bound": 0.010043301775317875
+        },
+        {
+          "J": 0.9,
+          "quantity": "10KQ",
+          "printed_err_pct": 20.89,
+          "recomputed_err_pct": 20.83333333333334,
+          "recomputed_err_signed_pct": 20.83333333333334,
+          "abs_diff_pct_points": 0.056666666666661314,
+          "roundoff_bound_pct_points": 0.5943640350877194,
+          "ratio_to_bound": 0.09533999926206528
+        },
+        {
+          "J": 1.0,
+          "quantity": "KT",
+          "printed_err_pct": 2.27,
+          "recomputed_err_pct": 3.4482758620689564,
+          "recomputed_err_signed_pct": -3.4482758620689564,
+          "abs_diff_pct_points": 1.1782758620689564,
+          "roundoff_bound_pct_points": 3.39580459770115,
+          "ratio_to_bound": 0.3469798771303305
+        },
+        {
+          "J": 1.0,
+          "quantity": "10KQ",
+          "printed_err_pct": 13.25,
+          "recomputed_err_pct": 12.962962962962962,
+          "recomputed_err_signed_pct": 12.962962962962962,
+          "abs_diff_pct_points": 0.2870370370370381,
+          "roundoff_bound_pct_points": 0.9998778565799842,
+          "ratio_to_bound": 0.287072101005246
+        }
+      ]
+    },
+    "experimental_kt_slope": [
+      {
+        "J_from": 0.1,
+        "J_to": 0.2,
+        "dKT_dJ": -0.46999999999999986,
+        "d10KQ_dJ": -0.4700000000000004
+      },
+      {
+        "J_from": 0.2,
+        "J_to": 0.3,
+        "dKT_dJ": -0.55,
+        "d10KQ_dJ": -0.5100000000000006
+      },
+      {
+        "J_from": 0.3,
+        "J_to": 0.4,
+        "dKT_dJ": -0.4899999999999997,
+        "d10KQ_dJ": -0.5499999999999992
+      },
+      {
+        "J_from": 0.4,
+        "J_to": 0.5,
+        "dKT_dJ": -0.5300000000000006,
+        "d10KQ_dJ": -0.5900000000000006
+      },
+      {
+        "J_from": 0.5,
+        "J_to": 0.6,
+        "dKT_dJ": -0.49,
+        "d10KQ_dJ": -0.6200000000000001
+      },
+      {
+        "J_from": 0.6,
+        "J_to": 0.7,
+        "dKT_dJ": -0.48,
+        "d10KQ_dJ": -0.6699999999999996
+      },
+      {
+        "J_from": 0.7,
+        "J_to": 0.8,
+        "dKT_dJ": -0.5199999999999997,
+        "d10KQ_dJ": -0.7199999999999994
+      },
+      {
+        "J_from": 0.8,
+        "J_to": 0.9,
+        "dKT_dJ": -0.54,
+        "d10KQ_dJ": -0.7800000000000004
+      },
+      {
+        "J_from": 0.9,
+        "J_to": 1.0,
+        "dKT_dJ": -0.5800000000000001,
+        "d10KQ_dJ": -0.8400000000000002
+      }
+    ],
+    "ittc57_anchor": {
+      "id": "AN-ITTC57",
+      "quantity": "skin-friction coefficient C_F (flat plate, both sides)",
+      "formula_verbatim": "C_F = 0.075 / (log10(Re) - 2)^2",
+      "numerator": 0.075,
+      "log10_shift": 2.0,
+      "reference": "ITTC Recommended Procedure 7.5-02-03-01.4, 1957 friction line (AN-ITTC57 anchor register, mission W22)",
+      "type": "analytic",
+      "sample_values": [
+        {
+          "Re": 50000.0,
+          "C_F": 0.01029591971763325
+        },
+        {
+          "Re": 100000.0,
+          "C_F": 0.008333333333333333
+        },
+        {
+          "Re": 500000.0,
+          "C_F": 0.005481502850516199
+        },
+        {
+          "Re": 1000000.0,
+          "C_F": 0.0046875
+        },
+        {
+          "Re": 5000000.0,
+          "C_F": 0.0033966900412411463
+        },
+        {
+          "Re": 10000000.0,
+          "C_F": 0.003
+        }
+      ]
+    }
+  },
+  "verdict": {
+    "anchor_reachable": true,
+    "honest_fail": false,
+    "hit_files": 39,
+    "transcribed_fields": 70,
+    "sha256_of_hit_files_recorded": 39,
+    "provenance_class": "SECONDARY_REPRODUCTION",
+    "primary_handout_in_repo": false,
+    "note": "REAL for the secondary tabulation (the table, its sha256 and every field with line provenance are in-repo); WITHHELD for the primary KRISO test handout, which is not in the checkout."
+  }
+}
