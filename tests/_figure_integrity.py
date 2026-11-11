@@ -9,14 +9,25 @@ figures are dangling.  A committed binary is therefore not a durable invariant
 in this repository; the durable invariant is that each case's figures are
 **reproducible from the committed numbers**, with no hand-typed value.
 
-This module holds the shared probe the fixed tests use, so the intent is
-written down once instead of being restated (and re-weakened) per test file.
+This module re-exports the shared probe from :mod:`tensorbem.figure_integrity`
+for backward compatibility with tests that import from ``_figure_integrity``.
+The canonical implementation lives in ``src/tensorbem/figure_integrity.py``.
 """
 
 from __future__ import annotations
 
 import pathlib
 from typing import Callable, Iterable
+
+# Re-export from the canonical implementation
+from tensorbem.figure_integrity import (
+    MINIMUM_FIGURE_BYTES,
+    CaseIntegrityReport,
+    FigureResult,
+    check_all_cases,
+    check_case_integrity,
+    check_report_linkage,
+)
 
 
 def assert_reproducible_figures(
