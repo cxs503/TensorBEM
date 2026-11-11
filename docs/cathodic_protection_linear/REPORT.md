@@ -41,7 +41,7 @@ closed surface.
 | wetted steel area | 9606.3 m² |
 | waterline lid area | 5372.2 m² |
 | closed-mesh area | 14978.5 m² (lid = 35.9 %) |
-| panels (n_sections = 11) | 222 (2 anode, 12 holiday at 5 % damage) |
+| panels (n_sections = 11) | 222 (2 anode, 10 holiday at 5 % damage) |
 
 **Parameters.** σ = 3.5 S/m; φ_prot = −0.80 V; φ_anode = −1.05 V; bare-steel
 current density 0.150 A/m²; coating-breakdown current density 0.005 A/m²;
@@ -97,7 +97,7 @@ representation.
 
 | damage ratio | I_BEM [A] | I_DNV [A] | I_BEM/I_DNV | J_BEM [A/m²] | J_DNV [A/m²] | wetted mean φ [V] | max φ [V] | coverage | cond | residual |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 2 % | −116.66 | 75.89 | 1.537 | 0.01214 | 0.00790 | −0.1892 | −0.0683 | 4.56 % | 29.8 | 1.9e−15 |
+| 2 % | −116.66 | 75.89 | 1.537 | 0.01214 | 0.00790 | −0.1892 | −0.0683 | 4.56 % | 29.8 | 1.8e−15 |
 | 5 % | −105.50 | 117.68 | 0.897 | 0.01098 | 0.01225 | −0.2998 | −0.1391 | 7.29 % | 70.2 | 1.6e−15 |
 | 10 % | −94.40 | 187.32 | 0.504 | 0.00983 | 0.01950 | −0.4064 | −0.1986 | 10.56 % | 79.2 | 1.4e−15 |
 
@@ -116,6 +116,15 @@ enters the anode panels in this prescribed-potential model (see §5).
 | C8 sphere current/field | **PASS** | 0.332 % / 0.334 % at 1280 panels, tolerance 3 % |
 | C4 coverage ≥ 95 % | **FAIL** (honest) | 4.6 / 7.3 / 10.6 % |
 | C5 anode demand grows with damage | **FAIL** (honest) | slope −272.5 A per unit damage, r² = 0.979 |
+
+The evidence column is the study's *own* verification block, and `make_figures.py`
+runs the C8 anchor on the same three-level icosphere ladder as §3.1
+(`sphere_levels = (1, 2, 3)`), so `results.json → verification → C8` and
+`sphere-spreading-resistance.json → levels[-1]` are the same 1280-panel solve.
+Earlier the C8 block was evaluated on a truncated two-level ladder (1.301 % at
+320 panels) while this table quoted the 1280-panel value; both are now pinned
+to each other by `tests/test_cathodic_protection.py::
+TestReportIsPinnedToArtifacts::test_c8_evidence_row_matches_verification_block`.
 
 ## 4. Points to watch
 

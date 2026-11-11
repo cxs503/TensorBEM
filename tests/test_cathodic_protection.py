@@ -43,6 +43,11 @@ weaken the anchors that *are* available, and those are pinned by tests:
   and is excluded from the wetted-area statistics used for the DNV comparison.
 * **Honest criteria** -- C4/C5 are reported with their real verdicts for the
   linear model instead of being asserted true by construction.
+* **Report-to-artefact pin** -- every table row of
+  ``docs/cathodic_protection_linear/REPORT.md`` is re-derived from the committed
+  JSON (sphere ladder, sweep rows, geometry block) and the C8 evidence row is
+  required to be the study's own verdict at the *same* icosphere ladder, so a
+  recomputation drift or a hand-edited number fails the suite.
 """
 
 from __future__ import annotations
@@ -456,6 +461,108 @@ class TestReportIsPinnedToArtifacts:
         for case in results["cases"]:
             assert f"{case['anode_current_dnv_A']:.2f}" in text
             assert f"{case['bem_to_dnv_current_ratio']:.3f}" in text
+
+    def test_c8_evidence_row_matches_verification_block(self):
+        """The C8 row must quote the study's own verdict, on the same ladder.
+
+        The study used to evaluate C8 on a truncated two-level icosphere ladder
+        (1.301 % at 320 panels) while REPORT.md quoted the 1280-panel value of
+        the standalone anchor, so the row cited an artefact that did not contain
+        the number.  The ladder and the quoted numbers are now tied together.
+        """
+        text = REPORT_PATH.read_text(encoding="utf-8")
+        sphere = json.loads(SPHERE_PATH.read_text(encoding="utf-8"))
+        c8 = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))["verification"][
+            "C8_conducting_sphere"
+        ]
+        finest = sphere["levels"][-1]
+        # verification block == the finest level of the documented ladder
+        assert c8["numeric_current_A"] == pytest.approx(finest["current_A"])
+        assert c8["relative_current_error"] == pytest.approx(
+            sphere["finest_relative_current_error"]
+        )
+        assert c8["max_relative_potential_error"] == pytest.approx(
+            sphere["finest_max_relative_potential_error"]
+        )
+        assert c8["tolerance"] == sphere["tolerance"]
+        assert bool(c8["pass"]) == (c8["relative_current_error"] <= c8["tolerance"])
+        # ... and the report's evidence cell is that block, character for value
+        row = _table_row(text, "| C8 sphere current/field |")
+        assert ("**PASS**" if c8["pass"] else "**FAIL**") in row
+        assert f"{100 * c8['relative_current_error']:.3f} %" in row
+        assert f"{100 * c8['max_relative_potential_error']:.3f} %" in row
+        assert f"tolerance {100 * c8['tolerance']:g} %" in row
+        assert f"{finest['n_panels']} panels" in row
+
+    def test_sphere_ladder_rows_match_artifact(self):
+        """Every row of the section-3.1 ladder is the committed sphere artefact."""
+        text = REPORT_PATH.read_text(encoding="utf-8")
+        sphere = json.loads(SPHERE_PATH.read_text(encoding="utf-8"))
+        for level in sphere["levels"]:
+            row = _table_row(text, f"| {level['subdivisions']} | {level['n_panels']} |")
+            assert _fmt(level["current_A"], 4) in row
+            assert _percent(level["current_rel_error"], 3) in row
+            assert _percent(level["max_potential_rel_error"], 3) in row
+            assert _sci(level["relative_residual"], 1) in row
+
+    def test_sweep_table_rows_match_cases(self):
+        """Each damage-sweep row is re-derived from ``results.json -> cases``."""
+        text = REPORT_PATH.read_text(encoding="utf-8")
+        cases = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))["cases"]
+        assert len(cases) == 3
+        residuals = []
+        for case in cases:
+            row = _table_row(text, f"| {100 * case['damage_ratio']:.0f} % |")
+            assert _fmt(case["anode_current_bem_A"], 2) in row
+            assert _fmt(case["anode_current_dnv_A"], 2) in row
+            assert _fmt(case["bem_to_dnv_current_ratio"], 3) in row
+            assert _fmt(case["current_per_wetted_area_bem_A_m2"], 5) in row
+            assert _fmt(case["current_per_wetted_area_dnv_A_m2"], 5) in row
+            assert _fmt(case["mean_wetted_potential_V"], 4) in row
+            assert _fmt(case["max_potential_V"], 4) in row
+            assert _percent(case["protection_coverage"], 2) in row
+            assert _fmt(case["condition_number"], 1) in row
+            assert _sci(case["relative_residual"], 1) in row
+            residuals.append(case["relative_residual"])
+        # the summary bound of section 5 must really be an upper bound
+        assert max(residuals) <= float("1.9e-15")
+
+    def test_geometry_table_matches_artifacts(self):
+        """Geometry block, and the panel/holiday counts, come from the JSON."""
+        text = REPORT_PATH.read_text(encoding="utf-8")
+        results = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
+        hull, case = results["hull"], results["cases"][0]
+        wetted, lid = hull["wetted_area_m2"], hull["lid_area_m2"]
+        assert wetted == pytest.approx(case["wetted_area_m2"])
+        assert lid == pytest.approx(case["lid_area_m2"])
+        assert f"| wetted steel area | {wetted:.1f} m² |" in text
+        assert f"| waterline lid area | {lid:.1f} m² |" in text
+        closed = wetted + lid
+        assert f"| closed-mesh area | {closed:.1f} m²" in text
+        assert f"lid = {100 * lid / closed:.1f} %" in text
+        panels_row = _table_row(text, "| panels (n_sections = 11) |")
+        assert f"| {case['n_panels']} (" in panels_row
+
+
+def _fmt(value: float, digits: int) -> str:
+    """Format ``value`` with ``digits`` decimals, using the report's minus sign."""
+    return f"{value:.{digits}f}".replace("-", "−")
+
+
+def _percent(ratio: float, digits: int) -> str:
+    return _fmt(100.0 * ratio, digits) + " %"
+
+
+def _sci(value: float, digits: int) -> str:
+    """Scientific notation as printed in the report, e.g. ``1.8e−15``."""
+    return f"{value:.{digits}e}".replace("e-", "e−").replace("e+", "e")
+
+
+def _table_row(text: str, prefix: str) -> str:
+    """Return the single markdown table line starting with ``prefix``."""
+    rows = [line for line in text.splitlines() if line.startswith(prefix)]
+    assert len(rows) == 1, f"expected one table row starting {prefix!r}, got {rows!r}"
+    return rows[0]
 
 
 if __name__ == "__main__":

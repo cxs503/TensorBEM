@@ -178,9 +178,9 @@
     "C8_conducting_sphere": {
       "case": "conducting_sphere_spreading_resistance",
       "exact_current_A": -43.982297150257104,
-      "numeric_current_A": -43.41020975732543,
-      "relative_current_error": 0.013007219495090124,
-      "max_relative_potential_error": 0.013088055937050036,
+      "numeric_current_A": -43.83636638179202,
+      "relative_current_error": 0.0033179433072024565,
+      "max_relative_potential_error": 0.0033391362633265476,
       "tolerance": 0.03,
       "pass": true
     },
