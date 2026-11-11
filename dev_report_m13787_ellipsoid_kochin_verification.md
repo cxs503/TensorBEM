@@ -195,3 +195,21 @@ PYTHONPATH=src python3 -m tensorbem.benchmarks.m13787_revalidation --check
 
 误差判定回答：**精确路径（analytic/quadrature）Kochin 函数 1.52e-13 < 3 %（是）；薄船 panel 路径包络内 16.14% < 3 %（否，建模误差主导，符合预期）；波阻 analytic vs quadrature 7.84e-14 < 3 %（是）；波阻 analytic vs panels 0.96% < 3 %（是）。**
 <!-- END m15140 revalidation -->
+
+## 10. 管到底第3轮复核（m15178 · 2026-11-12）
+
+原 PR#658 重开的第3轮。本轮**不改动** round 2（m15140）已建立的机器复核面
+（§9 自动生成块、`tensorbem.benchmarks.m13787_revalidation` 驱动、
+`tests/test_m15140_m13787_report_revalidation.py`），仅做独立复核并留痕：
+
+- **交付物在 main**：`dev_report_m13787_*.md` 与 `tests/test_ellipsoid_kochin_three_route.py`
+  经 #622 合入，round 2（#662/m15140）补齐机器复核面。
+- **验证面全绿**：`tests/test_ellipsoid_kochin_three_route.py` +
+  `tests/test_m15140_m13787_report_revalidation.py` 共 **44 passed**
+  （loong64 节点，`PYTHONPATH=src`）。
+- **独立复算留痕**：本轮另存一份三路径 Kochin 幅值/相对误差表与对比图于
+  `docs/m15178/`（`kochin_three_route_table.json` / `fig1_kochin_three_routes.png`），
+  与 §9 的 `docs/m15140/m13787_revalidation.json` 互为独立复算，数字一致
+  （精确路径 ~1e-13；panels 包络内 ≤1.73%，k=4.0 超包络 19.3%）。
+- **热文件声明**：本轮零改动 `src/tensorbem/ellipsoid_kochin.py` 等核心模块，
+  仅新增 `docs/m15178/` 与本节，无与其他开 PR 的热文件重叠。
