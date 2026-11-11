@@ -7,6 +7,18 @@ Generates (all numbers machine-written, no hand transcription):
     docs/flexural_gravity_mass_loading/results.md                 numeric tables
     docs/flexural_gravity_mass_loading/fig_*.png                  figures
 
+Two of the criteria (V11, V12) are *independent routes* to the same dispersion
+rather than algebraic identities of eq. (3):
+
+V11  finite-difference depth factor (``tensorbem.flexural_gravity_numeric``):
+     ``psi'(0)/psi(0)`` from a discretised BVP, then the mass-loaded
+     free-surface condition -- second-order grid convergence is required.
+V12  variational (energy) balance: PE = rho_w g <eta^2> + bending energy versus
+     KE = water + plate inertia, with the depth integral evaluated by adaptive
+     quadrature.  It fixes the *placement* of the inertia term and therefore
+     discriminates eq. (3) from the denominator-only variant
+     ``(g k + D k^5/rho_w) tanh(kH) / (tanh(kH) + mu k)``.
+
 Acceptance criteria (V1..V10) are listed in ``CRITERIA`` below; every entry
 records the measured quantity, the reference it is compared to, and pass/fail.
 
@@ -25,6 +37,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.integrate import quad
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -45,6 +58,7 @@ from tensorbem.flexural_gravity import (  # noqa: E402
     open_water_wavenumber,
     wavelength_ratio_mass_loading,
 )
+from tensorbem.flexural_gravity_numeric import fd_omega2  # noqa: E402
 from tensorbem.ice import IceCover, mass_loading_omega  # noqa: E402
 
 OUT = ROOT / "docs" / "flexural_gravity_mass_loading"
@@ -52,12 +66,94 @@ TWO_PI = 2.0 * math.pi
 ICE_THICKNESSES = (0.1, 0.5, 1.0, 2.0)
 FREQUENCIES = (0.02, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30)
 
+# V11: (h_ice [m], water depth [m], wavenumber [1/m]) -- the last three cases sit
+# in shallow water, where tanh(kH) < 0.95 and the depth factor is not trivial.
+FD_CASES = (
+    (1.0, 200.0, 0.01),
+    (1.0, 200.0, 0.10),
+    (2.0, 200.0, 0.50),
+    (2.0, 20.0, 0.05),
+    (2.0, 20.0, 0.30),
+    (0.5, 20.0, 0.60),
+)
+FD_LEVELS = 5
+
+# V12: (h_ice [m], water depth [m]) x ENERGY_WAVENUMBERS
+ENERGY_CASES = ((1.0, 200.0), (2.0, 200.0), (2.0, 20.0), (0.5, 20.0))
+ENERGY_WAVENUMBERS = (0.005, 0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.50)
+
 
 # ---------------------------------------------------------------------------
 # helpers
 # ---------------------------------------------------------------------------
 def rel_err(value: float, reference: float) -> float:
     return abs(value - reference) / abs(reference)
+
+
+def surface_mass_per_area(plate: IcePlate) -> float:
+    """rho_i h_ice [kg/m^2]."""
+    return plate.ice_density * plate.thickness
+
+
+def mode_shape(k: float, depth: float, z):
+    """``psi(z) = cosh(k(z+H))/cosh(kH)`` and ``psi'(z)``, overflow-safe.
+
+    ``psi`` is the depth eigenfunction of Laplace's equation with a rigid bottom
+    (``psi'(-H) = 0``, ``psi(0) = 1``); written as ``exp(k z) (1 + exp(-2k(z+H)))
+    / (1 + exp(-2kH))`` so that deep-water cases (``kH`` large) do not overflow.
+    """
+    z = np.asarray(z, dtype=float)
+    tail = math.exp(-2.0 * k * depth) if 2.0 * k * depth < 700.0 else 0.0
+    num = 1.0 + np.exp(np.clip(-2.0 * k * (z + depth), -700.0, 700.0))
+    psi = np.exp(k * z) * num / (1.0 + tail)
+    dpsi = k * psi * np.tanh(k * (z + depth))
+    return psi, dpsi
+
+
+def energy_balance_residual(k: float, plate: IcePlate, omega2: float):
+    """Relative energy imbalance of a unit-amplitude wave with ``omega2``.
+
+    For ``eta = a cos(kx - omega t)`` (a = 1) and ``phi = A psi(z) cos(kx-omega t)``
+    with ``A = omega a / psi'(0)``:
+
+        PE/area = (rho_w g + D k^4) a^2 / 4
+        KE/area = rho_w omega^2 a^2 I / (4 psi'(0)^2) + m'' omega^2 a^2 / 4,
+        I = int_{-H}^{0} (k^2 psi^2 + psi'^2) dz   (adaptive quadrature)
+
+    Returns ``(residual, completion_ratio)`` where ``completion_ratio = I/psi'(0)``
+    (exactly 1 by the identity ``int(k^2 psi^2 + psi'^2) = [psi psi']_{-H}^{0}``;
+    the quadrature value is used, not the identity).
+    """
+    H = plate.water_depth
+    g0 = k * math.tanh(k * H)
+
+    def integrand(z: float) -> float:
+        psi, dpsi = mode_shape(k, H, (z,))
+        return float(k * k * psi[0] ** 2 + dpsi[0] ** 2)
+
+    integral, _ = quad(integrand, -H, 0.0, limit=500)
+    pe = 0.25 * (plate.water_density * plate.gravity + plate.flexural_rigidity * k ** 4)
+    ke = 0.25 * omega2 * (
+        plate.water_density * integral / g0 ** 2 + surface_mass_per_area(plate)
+    )
+    return abs(pe - ke) / pe, integral / g0
+
+
+def denominator_only_omega2(k: float, plate: IcePlate) -> float:
+    """Plausible-but-unphysical variant: inertia added inside the denominator.
+
+    ``omega^2 = (g k + D k^5/rho_w) tanh(kH) / (tanh(kH) + mu k)`` -- this is what
+    one obtains by putting the plate inertia next to the depth factor instead of
+    where the pressure condition puts it.  Kept only to show that V12 has
+    discriminating power.
+    """
+    tanh = math.tanh(k * plate.water_depth)
+    mu = mass_loading_parameter(plate)
+    return (
+        (plate.gravity * k + plate.flexural_rigidity * k ** 5 / plate.water_density)
+        * tanh
+        / (tanh + mu * k)
+    )
 
 
 def numeric_crossover_by_bisection(plate: IcePlate) -> float:
@@ -434,6 +530,123 @@ def criterion_v10(table: list) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# V11  independent route: finite-difference depth factor, mass-loaded condition
+# ---------------------------------------------------------------------------
+def fd_route_table() -> list:
+    rows = []
+    for h_ice, depth, k in FD_CASES:
+        plate = IcePlate(thickness=h_ice, water_depth=depth)
+        reference = flexural_gravity_omega2_mass_loading(k, plate)
+        dz_max = min(0.05, 0.02 / k)
+        dzs, errors = [], []
+        for level in range(FD_LEVELS):
+            dz = dz_max / 2.0 ** level
+            omega2_fd = fd_omega2(
+                k,
+                depth=depth,
+                rigidity=plate.flexural_rigidity,
+                mass_per_area=surface_mass_per_area(plate),
+                fluid_density=plate.water_density,
+                gravity=plate.gravity,
+                dz=dz,
+            )
+            dzs.append(dz)
+            errors.append(rel_err(omega2_fd, reference))
+        orders = [
+            math.log2(errors[i] / errors[i + 1])
+            for i in range(FD_LEVELS - 1)
+            if errors[i + 1] > 0.0 and errors[i] > 0.0
+        ]
+        rows.append({
+            "ice_thickness": h_ice,
+            "water_depth": depth,
+            "wavenumber": k,
+            "k_dz_coarsest": k * dzs[0],
+            "dz": dzs,
+            "relative_errors": errors,
+            "observed_orders": orders,
+            "finest_error": errors[-1],
+            # the two coarsest grids are truncation-dominated; on the finest grids
+            # the relative error approaches roundoff (~1e-9) and the order is
+            # meaningless, so the convergence order is read off the coarse pair.
+            "coarse_order": math.log2(errors[0] / errors[1]),
+        })
+    return rows
+
+
+def criterion_v11() -> dict:
+    rows = fd_route_table()
+    worst_error = max(r["finest_error"] for r in rows)
+    orders = [r["coarse_order"] for r in rows]
+    return {
+        "description": (
+            "independent FD route (discretised psi''=k^2 psi, no analytic tanh) "
+            "reproduces eq.(3): finest-grid |d omega^2|/omega^2 < 1e-6 while the "
+            "truncation-dominated coarse pair shows second-order convergence "
+            "(observed order in [1.7, 2.3])"
+        ),
+        "rows": rows,
+        "max_relative_error": worst_error,
+        "min_coarse_order": min(orders),
+        "max_coarse_order": max(orders),
+        "threshold": 1.0e-6,
+        "min_order_threshold": 1.7,
+        "max_order_threshold": 2.3,
+        "pass": (
+            worst_error < 1.0e-6
+            and min(orders) > 1.7
+            and max(orders) < 2.3
+        ),
+    }
+
+
+# ---------------------------------------------------------------------------
+# V12  variational (energy) balance and the placement of the inertia term
+# ---------------------------------------------------------------------------
+def energy_balance_table() -> list:
+    rows = []
+    for h_ice, depth in ENERGY_CASES:
+        plate = IcePlate(thickness=h_ice, water_depth=depth)
+        mu = mass_loading_parameter(plate)
+        for k in ENERGY_WAVENUMBERS:
+            omega2_eq3 = flexural_gravity_omega2_mass_loading(k, plate)
+            omega2_var = denominator_only_omega2(k, plate)
+            residual_eq3, completion = energy_balance_residual(k, plate, omega2_eq3)
+            residual_var, _ = energy_balance_residual(k, plate, omega2_var)
+            rows.append({
+                "ice_thickness": h_ice,
+                "water_depth": depth,
+                "wavenumber": k,
+                "kH": k * depth,
+                "mu": mu,
+                "tanh_kH": math.tanh(k * depth),
+                "energy_residual_eq3": residual_eq3,
+                "completion_ratio": completion,
+                "energy_residual_denominator_only": residual_var,
+                "denominator_only_deviation_percent": 100.0 * abs(1.0 - omega2_var / omega2_eq3),
+            })
+    return rows
+
+
+def criterion_v12(table: list) -> dict:
+    worst_eq3 = max(abs(r["energy_residual_eq3"]) for r in table)
+    worst_completion = max(abs(r["completion_ratio"] - 1.0) for r in table)
+    max_variant = max(r["denominator_only_deviation_percent"] for r in table)
+    return {
+        "description": (
+            "variational energy balance (quadrature depth integral) is satisfied by "
+            "eq.(3) and rejects the denominator-only variant by >1% in shallow water"
+        ),
+        "max_abs_residual": worst_eq3,
+        "max_completion_defect": worst_completion,
+        "max_denominator_only_deviation_percent": max_variant,
+        "threshold": 1.0e-9,
+        "threshold_percent": 1.0,
+        "pass": worst_eq3 < 1.0e-9 and worst_completion < 1.0e-9 and max_variant > 1.0,
+    }
+
+
+# ---------------------------------------------------------------------------
 # figures
 # ---------------------------------------------------------------------------
 def figure_dispersion_models(plate: IcePlate, path: Path) -> None:
@@ -571,6 +784,46 @@ def figure_edge_coefficients(path: Path) -> None:
 # ---------------------------------------------------------------------------
 # markdown tables + main
 # ---------------------------------------------------------------------------
+def figure_verification_routes(fd_rows: list, energy_rows: list, path: Path) -> None:
+    """Left: FD grid convergence.  Right: energy-balance discrimination."""
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.0))
+
+    ax = axes[0]
+    for row in fd_rows:
+        label = f"h={row['ice_thickness']:g} m, H={row['water_depth']:g} m, k={row['wavenumber']:g}"
+        ax.loglog(row["dz"], row["relative_errors"], "o-", markersize=4, label=label)
+    first = fd_rows[0]
+    ref = first["relative_errors"][0] * (np.asarray(first["dz"]) / first["dz"][0]) ** 2
+    ax.loglog(first["dz"], ref, "k--", linewidth=1.0, label="slope 2 (reference)")
+    ax.set_xlabel("dz [m]")
+    ax.set_ylabel(r"$|\omega^2_{FD}/\omega^2_{eq.3} - 1|$")
+    ax.set_title("V11 finite-difference depth factor: grid convergence")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=6.5, loc="lower right")
+
+    ax = axes[1]
+    for h_ice, depth in ENERGY_CASES:
+        sub = [r for r in energy_rows
+               if r["ice_thickness"] == h_ice and r["water_depth"] == depth]
+        ax.semilogy([r["wavenumber"] for r in sub],
+                    [max(r["energy_residual_eq3"], 1e-18) for r in sub],
+                    "o-", markersize=4, label=f"eq.3  h={h_ice:g} m, H={depth:g} m")
+        ax.semilogy([r["wavenumber"] for r in sub],
+                    [r["energy_residual_denominator_only"] for r in sub],
+                    "s--", markersize=3.5,
+                    label=f"denominator-only  h={h_ice:g} m, H={depth:g} m")
+    ax.axhline(1.0e-9, color="grey", linestyle=":", linewidth=1.0)
+    ax.set_xlabel("k [1/m]")
+    ax.set_ylabel("energy-balance residual")
+    ax.set_title("V12 energy balance: eq.3 vs unphysical variant")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=6.5, loc="upper left")
+
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
 def fmt(value) -> str:
     if isinstance(value, float):
         if value == 0.0:
@@ -616,6 +869,37 @@ def write_results_markdown(report: dict, table: list, sensitivity: list, path: P
             f"{fmt(row['lambda_ice_over_lambda_open_eq2'])} | "
             f"{row['inertia_correction_percent']:.3f} |"
         )
+    lines += ["", "## V11 独立有限差分路线（离散 BVP 的深度因子，不用解析 tanh）", "",
+              "| h_ice [m] | H [m] | k [1/m] | k dz (最粗) | dz 序列 [m] | rel err 序列 | 观测阶 | 最细 rel err |",
+              "|---|---|---|---|---|---|---|---|"]
+    for row in report["fd_route_table"]:
+        dzs = ", ".join(f"{dz:.4g}" for dz in row["dz"])
+        errs = ", ".join(f"{e:.3e}" for e in row["relative_errors"])
+        orders = ", ".join(f"{o:.2f}" for o in row["observed_orders"])
+        lines.append(
+            f"| {row['ice_thickness']} | {row['water_depth']} | {row['wavenumber']} | "
+            f"{row['k_dz_coarsest']:.3g} | {dzs} | {errs} | {orders} | "
+            f"{row['finest_error']:.3e} |"
+        )
+    lines += [
+        "",
+        "注：最细网格上相对误差已接近舍入（~1e-8）时观测阶无意义（可为负），"
+        "收敛阶按**最粗两档**读取；`verification_report.json` 中 `coarse_order` 即此值。",
+        "",
+        "## V12 能量（变分）平衡：eq.3 vs 分母单边变体", "",
+    ]
+    lines += [
+              "| h_ice [m] | H [m] | k [1/m] | kH | tanh(kH) | mu [m] | "
+              "eq.3 能量残差 | I/psi'(0) | 分母变体能量残差 | 变体偏差 [%] |",
+              "|---|---|---|---|---|---|---|---|---|---|"]
+    for row in report["energy_balance_table"]:
+        lines.append(
+            f"| {row['ice_thickness']} | {row['water_depth']} | {row['wavenumber']} | "
+            f"{row['kH']:.4g} | {row['tanh_kH']:.4f} | {row['mu']:.4f} | "
+            f"{row['energy_residual_eq3']:.3e} | {row['completion_ratio']:.12f} | "
+            f"{row['energy_residual_denominator_only']:.3e} | "
+            f"{row['denominator_only_deviation_percent']:.3f} |"
+        )
     lines += ["", "## 杨氏模量敏感性（惯性修正 [%]）", "",
               "| E [GPa] | h_ice [m] | " +
               " | ".join(f"f={f}" for f in FREQUENCIES) + " |",
@@ -650,6 +934,10 @@ def main() -> int:
     sensitivity = material_sensitivity_table()
     criteria["V9_inertia_correction_bound"] = criterion_v9(sensitivity)
     criteria["V10_e5_arbitration"] = criterion_v10(table)
+    fd_rows = fd_route_table()
+    energy_rows = energy_balance_table()
+    criteria["V11_fd_depth_factor"] = criterion_v11()
+    criteria["V12_energy_balance"] = criterion_v12(energy_rows)
 
     figures = []
     figure_dispersion_models(plate, OUT / "fig_dispersion_models.png")
@@ -660,6 +948,8 @@ def main() -> int:
     figures.append("fig_wavelength_ratio.png")
     figure_edge_coefficients(OUT / "fig_edge_coefficients.png")
     figures.append("fig_edge_coefficients.png")
+    figure_verification_routes(fd_rows, energy_rows, OUT / "fig_verification_routes.png")
+    figures.append("fig_verification_routes.png")
 
     all_pass = all(c["pass"] for c in criteria.values())
     report = {
@@ -679,6 +969,8 @@ def main() -> int:
         "criteria": criteria,
         "inertia_effect_table": table,
         "material_sensitivity_table": sensitivity,
+        "fd_route_table": fd_rows,
+        "energy_balance_table": energy_rows,
         "figures": figures,
         "all_criteria_pass": all_pass,
     }
