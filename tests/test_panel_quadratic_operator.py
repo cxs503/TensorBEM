@@ -959,3 +959,123 @@ def test_committed_study_records_the_non_affine_geometry_case():
         for record in geom["levels"]:
             assert record["affine_image_residual"] < 1e-12
             assert geom["radial_modulation"] is None
+
+
+# ---------------------------------------------------------------------------
+# Value proposition on *one* ruler: the quadratic element against the order-1
+# (flat facet, vertex collocation) operator of :mod:`tensorbem.panel_linear`.
+#
+# Until now the two operators were only ever compared across two separate
+# studies, i.e. by prose that transcribed numbers from one JSON into a sentence
+# about the other -- the hand-copying this repository forbids.  These two tests
+# recompute both operators in one process, on the same icosphere family and with
+# the same physical reading (Dirichlet-to-flux through the direct second-kind
+# BIE), so the claim "quadratic panels buy orders of magnitude" is a measured
+# statement with a live gate.
+# ---------------------------------------------------------------------------
+def _head_to_head_record() -> dict:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    return json.loads(
+        (
+            root / "docs" / "quadratic_panel_verification"
+            / "linear_vs_quadratic_m14572.json"
+        ).read_text()
+    )
+
+
+def test_quadratic_operator_beats_flat_panels_on_the_same_partition():
+    """Same 80-element partition, same reading: quadratic must win by >= 10x.
+
+    The live part runs subdivision 1 on both sides (cheap flat side, ~15 s
+    quadratic side).  Both solves must be converged to round-off, otherwise the
+    gap could be linear algebra rather than discretisation.
+    """
+    from tensorbem.benchmarks.panel_linear_order import operator_row
+    from tensorbem.benchmarks.quadratic_panel_verification import run_flux_study
+
+    flat = operator_row(1, source=SOURCE)
+    quad = run_flux_study(icosphere_quadratic(subdivisions=1), source=SOURCE)
+
+    # the same geometric partition: 80 flat panels vs 80 quadratic elements
+    assert flat["panels"] == quad["elements"] == 80
+    # ..., and both linear systems are solved, so the gap is discretisation
+    assert flat["relative_residual_dirichlet"] < 1e-10
+    assert quad["relative_residual_l2"] < 1e-10
+
+    assert quad["flux_rel_error"] <= 0.03, (
+        f"quadratic flux error {quad['flux_rel_error']:.3e} above the 3% acceptance"
+    )
+    ratio = flat["err_flux"] / quad["flux_rel_error"]
+    assert ratio >= 10.0, (
+        f"quadratic only {ratio:.1f}x better than flat panels on the same "
+        f"partition (flat {flat['err_flux']:.3e}, quadratic "
+        f"{quad['flux_rel_error']:.3e}); the value proposition has regressed"
+    )
+
+
+def test_head_to_head_record_matches_its_own_gates():
+    """The committed record must satisfy every gate it publishes, recomputed here.
+
+    The matched-node-budget pairing (162 unknowns: quadratic s=1 against flat
+    s=2) needs the 320-panel flat assembly, which is too slow for a unit test,
+    so it is pinned through the record written by
+    ``tools/m14572_linear_vs_quadratic.py``.  Rather than trusting the stored
+    ``passed`` flag, this test recomputes the ratios from the stored rows and
+    re-applies the stored thresholds, so the record cannot drift from the gate;
+    the two rows that are cheap enough are also cross-checked against a live
+    recomputation.
+    """
+    from tensorbem.benchmarks.panel_linear_order import operator_row
+    from tensorbem.benchmarks.quadratic_panel_verification import run_flux_study
+
+    record = _head_to_head_record()
+    assert record["provenance"]["mission"] == "14572"
+    assert record["provenance"]["compute_command"].endswith(
+        "tools/m14572_linear_vs_quadratic.py"
+    )
+
+    linear = {row["subdivisions"]: row for row in record["linear"]["rows"]}
+    quadratic = {row["subdivisions"]: row for row in record["quadratic"]["rows"]}
+    assert set(linear) == {1, 2}
+    assert set(quadratic) == {0, 1, 2}
+
+    # cross-check the two cheap rows against a live recomputation
+    flat_live = operator_row(1, source=SOURCE)
+    quad_live = run_flux_study(icosphere_quadratic(subdivisions=1), source=SOURCE)
+    assert abs(linear[1]["err_flux"] - flat_live["err_flux"]) <= 1e-12
+    assert abs(quadratic[1]["err_flux"] - quad_live["flux_rel_error"]) <= 1e-12
+
+    # the two matching axes are exact, not approximate
+    assert quadratic[0]["nodes"] == linear[1]["nodes"] == 42
+    assert quadratic[1]["nodes"] == linear[2]["nodes"] == 162
+    assert quadratic[1]["elements"] == linear[1]["panels"] == 80
+    assert quadratic[2]["elements"] == linear[2]["panels"] == 320
+
+    # the quadratic operator converges monotonically and lands inside 3%
+    quad_errors = [quadratic[sub]["err_flux"] for sub in (0, 1, 2)]
+    assert quad_errors[0] > quad_errors[1] > quad_errors[2]
+    assert quadratic[2]["err_flux"] <= 0.03
+    order = math.log(quad_errors[0] / quad_errors[1]) / math.log(
+        quadratic[0]["h"] / quadratic[1]["h"]
+    )
+    assert order >= 1.5, f"quadratic flux order {order:.2f} collapsed"
+
+    # every published pairing satisfies its threshold, recomputed from the rows
+    matchups = {entry["name"]: entry for entry in record["matchups"]}
+    assert set(matchups) == {"matched_nodes_42", "matched_panels_80", "matched_nodes_162"}
+    for name, entry in matchups.items():
+        ratio = entry["linear"]["err_flux"] / entry["quadratic"]["err_flux"]
+        assert abs(ratio - entry["ratio"]) <= 1e-9 * max(1.0, abs(ratio)), name
+        assert ratio >= entry["ratio_threshold"], (name, ratio)
+        assert entry["passed"] is True, name
+        if entry["require_within_3pct"]:
+            assert entry["quadratic"]["err_flux"] <= 0.03, name
+            assert entry["quadratic_within_3pct"] is True, name
+    # the flat-facet reading does not shrink with refinement in this window --
+    # that stall is *why* the quadratic element exists, and it is what makes the
+    # big ratio a method effect rather than an implementation accident
+    assert linear[2]["err_flux"] > 0.5
+    assert linear[2]["err_flux"] > 0.9 * linear[1]["err_flux"]
