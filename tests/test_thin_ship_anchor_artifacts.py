@@ -16,6 +16,7 @@ import pathlib
 import numpy as np
 import pytest
 
+from _figure_integrity import assert_reproducible_figures
 from tensorbem.benchmarks.thin_ship_verification import (
     ELLIPSOID_B,
     ELLIPSOID_L,
@@ -26,6 +27,9 @@ from tensorbem.benchmarks.thin_ship_verification import (
     WIGLEY_L,
     WIGLEY_T,
     run_wigley_hydrostatics,
+    _figure_ellipsoid,
+    _figure_hydrostatics,
+    _figure_multihull,
 )
 from tensorbem.hydrostatic import compute_displaced_volume_and_buoyancy
 from tensorbem.thin_ship_michell import (
@@ -43,6 +47,11 @@ from tensorbem.wigley_hydrostatics import wigley_wetted_hull_mesh
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 VERIFIED = ROOT / "benchmarks" / "verified"
 STUDIES = ("bem_wigley_hydrostatics", "bem_ellipsoid_wave", "bem_multihull_interference")
+STUDIES_FIGURES = {
+    "bem_wigley_hydrostatics": _figure_hydrostatics,
+    "bem_ellipsoid_wave": _figure_ellipsoid,
+    "bem_multihull_interference": _figure_multihull,
+}
 G = 9.80665
 
 
@@ -54,11 +63,19 @@ def _load(study: str) -> dict:
 
 
 @pytest.mark.parametrize("study", STUDIES)
-def test_artifact_set_is_complete(study: str) -> None:
+def test_artifact_set_is_complete(study: str, tmp_path) -> None:
     payload = _load(study)
     directory = VERIFIED / study
     assert (directory / "report.md").is_file()
-    assert (directory / "figures" / f"{study}.png").is_file()
+    # The committed ``figures/<study>.png`` cannot survive the push gate
+    # (``*.png`` outside ``docs/`` is dropped -- see
+    # ``tests/_figure_integrity.py``).  Keep the real invariant instead: the
+    # study's own builder must reproduce the figure from the committed record.
+    builder = STUDIES_FIGURES[study]
+    figure = tmp_path / f"{study}.png"
+    builder(payload, figure)
+    assert_reproducible_figures([figure], minimum=1)
+    assert payload["artifacts"]["figure_png"].endswith(f"figures/{study}.png")
     assert payload["study"] == study
     assert payload["artifacts"]["report_md"].endswith("report.md")
     # the report is the paper-level summary: it must carry the verdict
