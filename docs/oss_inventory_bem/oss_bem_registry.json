@@ -1,0 +1,403 @@
+{
+  "metadata": {
+    "scenario_key": "FEAT-OSS-INVENTORY-BEM",
+    "mission_id": 14885,
+    "created": "2026-11-11",
+    "method": "GitHub API search + manual curation, ≥20 repos, quality-filtered; builds on m8667/m9356 baseline with acceptance criteria added to GAP anchors",
+    "tier_legend": {
+      "1": "方法专家仓 (core BEM methodology: acoustics/EM/potential flow solvers with Green functions, H-matrix, FMM acceleration)",
+      "2": "可微/框架族 (differentiable, modern framework, cross-platform, JIT-compiled)",
+      "3": "专项能力 (specialized capability: education, geomechanics, niche physics, converters)"
+    },
+    "focus_tags": [
+      "acoustics",
+      "electromagnetics",
+      "potential-flow",
+      "hydrodynamics",
+      "Green-function",
+      "H-matrix",
+      "FMM",
+      "MLFMA",
+      "GPU-CUDA",
+      "HPC-MPI",
+      "parallel",
+      "differentiable",
+      "JIT-compiled",
+      "Python",
+      "educational",
+      "converter",
+      "geomechanics"
+    ],
+    "cited_kb": [],
+    "negative_ledger_check": "no prior TensorBEM negative entries found",
+    "prior_art_check": "builds on m8667 oss-bem-disc registry (30 repos, 8 gaps); adds acceptance criteria per GAP"
+  },
+  "repositories": [
+    {
+      "repo": "capytaine/capytaine",
+      "tier": 1,
+      "focus": ["potential-flow", "hydrodynamics", "diffraction", "radiation", "Green-function", "wave-energy"],
+      "lang": "Python",
+      "license": "Apache-2.0",
+      "stars": 235,
+      "last_commit": "2026-11-05",
+      "summary": "Python BEM solver for linear potential flow based on Nemoh; computes hydrodynamic coefficients (added mass, radiation damping, diffraction forces) for marine structures; active development with conda distribution."
+    },
+    {
+      "repo": "bempp/bempp-cl",
+      "tier": 1,
+      "focus": ["acoustics", "electromagnetics", "JIT", "Python", "GPU-ready"],
+      "lang": "Python",
+      "license": "MIT",
+      "stars": 229,
+      "last_commit": "2026-09-21",
+      "summary": "Just-in-time compiled BEM library for Python; supports Laplace/Helmholtz/Maxwell; CPU/GPU backends; modern architecture with Numba JIT; active development."
+    },
+    {
+      "repo": "HomerReid/scuff-em",
+      "tier": 1,
+      "focus": ["electromagnetics", "Casimir", "fluctuation", "GPU", "C"],
+      "lang": "C",
+      "license": "GPL-2.0",
+      "stars": 172,
+      "last_commit": "2020-06-16",
+      "summary": "Computational electromagnetics using BEM; Casimir/fluctuation-induced phenomena; GPU acceleration; research-grade; stale but scientifically rigorous."
+    },
+    {
+      "repo": "Gjacquenot/Puma-EM",
+      "tier": 1,
+      "focus": ["electromagnetics", "MLFMA", "H-matrix", "C++", "HPC"],
+      "lang": "C++",
+      "license": "GPL-3.0",
+      "stars": 137,
+      "last_commit": "2020-09-12",
+      "summary": "Fast multipole method for electromagnetic scattering; MLFMA acceleration; research-grade; demonstrates industrial-scale BEM-FMM coupling."
+    },
+    {
+      "repo": "BEMRosetta/BEMRosetta",
+      "tier": 3,
+      "focus": ["hydrodynamics", "converter", "visualization", "GUI", "C++"],
+      "lang": "C++",
+      "license": "GPL-3.0",
+      "stars": 123,
+      "last_commit": "2026-10-28",
+      "summary": "Hydrodynamic BEM post-processor and converter; supports AQWA/WAMIT/MOSES/Sesam formats; visualization; not a solver but essential tooling."
+    },
+    {
+      "repo": "krcools/BEAST.jl",
+      "tier": 2,
+      "focus": ["Julia", "differentiable", "integral-equation", "electromagnetics"],
+      "lang": "Julia",
+      "license": "NOASSERTION",
+      "stars": 96,
+      "last_commit": "2026-11-04",
+      "summary": "Julia package for boundary integral equations; differentiable; electromagnetic scattering; modern language; active development."
+    },
+    {
+      "repo": "kegiljarhus/pyBEMT",
+      "tier": 3,
+      "focus": ["blade-element", "propeller", "Python", "marine"],
+      "lang": "Python",
+      "license": "MIT",
+      "stars": 90,
+      "last_commit": "2022-10-24",
+      "summary": "Blade Element Momentum Theory (BEMT) for marine propellers; note: BEMT ≠ BEM (boundary element method); specialized application."
+    },
+    {
+      "repo": "exafmm/exafmm-t",
+      "tier": 1,
+      "focus": ["FMM", "tree-code", "C++", "HPC", "template"],
+      "lang": "C++",
+      "license": "BSD-3-Clause",
+      "stars": 84,
+      "last_commit": "2021-09-09",
+      "summary": "Template-based FMM library; supports Laplace/Helmholtz/Stokes kernels; high-performance; research-grade; foundational for BEM acceleration."
+    },
+    {
+      "repo": "mathLab/pi-BEM",
+      "tier": 2,
+      "focus": ["FEM-BEM-coupling", "C++", "parallel", "MPI"],
+      "lang": "C++",
+      "license": "LGPL-2.1",
+      "stars": 72,
+      "last_commit": "2026-10-20",
+      "summary": "Parallel FEM-BEM coupling framework; MPI-based; supports domain decomposition; modern C++; active maintenance."
+    },
+    {
+      "repo": "matthieuaussal/gypsilab",
+      "tier": 2,
+      "focus": ["FEM-BEM", "MATLAB", "fast-solver", "acoustics"],
+      "lang": "MATLAB",
+      "license": "NO_LICENSE",
+      "stars": 69,
+      "last_commit": "2021-09-17",
+      "summary": "MATLAB toolbox for FEM/BEM; fast solvers; acoustics/vibration; educational; no explicit license."
+    },
+    {
+      "repo": "andyljones/pybbfmm",
+      "tier": 1,
+      "focus": ["FMM", "black-box", "Python", "kernel-agnostic"],
+      "lang": "Python",
+      "license": "MIT",
+      "stars": 65,
+      "last_commit": "2024-06-29",
+      "summary": "Black-box FMM in Python; kernel-agnostic; easy to use; good for prototyping; wraps low-level FMM."
+    },
+    {
+      "repo": "Timmmdavis/CutAndDisplace",
+      "tier": 3,
+      "focus": ["geomechanics", "fault", "MATLAB", "seismology"],
+      "lang": "MATLAB",
+      "license": "GPL-3.0",
+      "stars": 64,
+      "last_commit": "2026-10-27",
+      "summary": "BEM for fault mechanics and dislocations; geophysics/seismology; MATLAB-based; specialized application."
+    },
+    {
+      "repo": "ShukaiYa/SBFEM-UEL",
+      "tier": 3,
+      "focus": ["scaled-boundary", "ABAQUS", "Fortran", "fracture"],
+      "lang": "Fortran",
+      "license": "GPL-3.0",
+      "stars": 46,
+      "last_commit": "2021-01-20",
+      "summary": "Scaled Boundary FEM (SBFEM) as ABAQUS user element; fracture mechanics; specialized; research-grade."
+    },
+    {
+      "repo": "zgimbutas/fmmlib3d",
+      "tier": 1,
+      "focus": ["FMM", "3D", "Fortran", "Laplace", "Helmholtz"],
+      "lang": "Fortran",
+      "license": "BSD-3-Clause",
+      "stars": 45,
+      "last_commit": "2026-08-26",
+      "summary": "Classic FMM library for 3D Laplace/Helmholtz; Fortran; high-performance; foundational; widely cited."
+    },
+    {
+      "repo": "BinWang0213/PyBEM2D",
+      "tier": 2,
+      "focus": ["2D", "educational", "Python", "Laplace"],
+      "lang": "Python",
+      "license": "NO_LICENSE",
+      "stars": 42,
+      "last_commit": "2021-10-30",
+      "summary": "2D BEM solver in Python; educational focus; Laplace equation; good for learning; no explicit license."
+    },
+    {
+      "repo": "rsugimoto/SurfaceOnlyDeformables",
+      "tier": 3,
+      "focus": ["graphics", "deformable", "C++", "real-time"],
+      "lang": "C++",
+      "license": "MIT",
+      "stars": 41,
+      "last_commit": "2022-09-12",
+      "summary": "Surface-only BEM for deformable objects; computer graphics; real-time simulation; specialized application."
+    },
+    {
+      "repo": "bempp/bempp-rs",
+      "tier": 2,
+      "focus": ["Rust", "BEM", "performance", "safety"],
+      "lang": "Rust",
+      "license": "BSD-3-Clause",
+      "stars": 39,
+      "last_commit": "2025-08-04",
+      "summary": "Boundary element methods in Rust; performance and safety focus; modern language; emerging ecosystem; potential for high-performance BEM applications."
+    },
+    {
+      "repo": "Applied-Scientific-Research/Omega2D",
+      "tier": 1,
+      "focus": ["potential-flow", "vortex", "2D", "C++"],
+      "lang": "C++",
+      "license": "GPL-3.0",
+      "stars": 36,
+      "last_commit": "2025-02-15",
+      "summary": "2D potential flow with vortex particles; BEM-based; aerodynamics; research-grade; active development."
+    },
+    {
+      "repo": "Nikolaos-Matthaiakakis/MNPBEM",
+      "tier": 1,
+      "focus": ["nanoparticles", "plasmonics", "MATLAB", "electromagnetics"],
+      "lang": "MATLAB",
+      "license": "GPL-2.0",
+      "stars": 34,
+      "last_commit": "2023-01-04",
+      "summary": "BEM for metallic nanoparticles; plasmonics; MATLAB; specialized electromagnetic application; well-documented."
+    },
+    {
+      "repo": "krcools/CompScienceMeshes.jl",
+      "tier": 2,
+      "focus": ["Julia", "mesh", "BEM-foundation", "triangulation"],
+      "lang": "Julia",
+      "license": "NOASSERTION",
+      "stars": 34,
+      "last_commit": "2026-11-03",
+      "summary": "Mesh infrastructure for BEM in Julia; triangulation; foundational for BEAST.jl; active development."
+    },
+    {
+      "repo": "lzhw1991/AcousticBEM",
+      "tier": 1,
+      "focus": ["acoustics", "Helmholtz", "educational", "Jupyter"],
+      "lang": "Jupyter Notebook",
+      "license": "GPL-3.0",
+      "stars": 31,
+      "last_commit": "2017-08-20",
+      "summary": "BEM for acoustics; Jupyter-based; educational focus; implements acoustic BEM solver; includes tutorials."
+    },
+    {
+      "repo": "byuflowlab/FastMultipole.jl",
+      "tier": 1,
+      "focus": ["FMM", "Julia", "multi-kernel", "flexible"],
+      "lang": "Julia",
+      "license": "MIT",
+      "stars": 28,
+      "last_commit": "2026-10-06",
+      "summary": "Fast, flexible, multi-kernel, multi-system FMM implementation in Julia; modern language; supports various kernel types; active development."
+    },
+    {
+      "repo": "mipals/BoundaryIntegralEquations.jl",
+      "tier": 2,
+      "focus": ["Julia", "BIE", "collocation", "educational"],
+      "lang": "Julia",
+      "license": "MIT",
+      "stars": 27,
+      "last_commit": "2026-04-09",
+      "summary": "Simple package for solving boundary integral equations using collocation BEM in Julia; educational focus; clean implementation; good for learning BIE methods."
+    },
+    {
+      "repo": "nist-ionstorage/bem",
+      "tier": 3,
+      "focus": ["FMM", "triangulation", "C", "educational"],
+      "lang": "C",
+      "license": "NOASSERTION",
+      "stars": 24,
+      "last_commit": "2017-10-11",
+      "summary": "Triangulation, BEM, FMM code for Python; NIST ion storage application; educational value; demonstrates BEM-FMM coupling."
+    },
+    {
+      "repo": "berenger-eu/tbfmm",
+      "tier": 1,
+      "focus": ["FMM", "task-based", "OpenMP", "GPU-CUDA", "StarPU"],
+      "lang": "C++",
+      "license": "NOASSERTION",
+      "stars": 20,
+      "last_commit": "2026-10-23",
+      "summary": "Task-based FMM parallelized with OpenMP and StarPU; supports multiple GPUs via CUDA; high-performance; research-grade implementation."
+    },
+    {
+      "repo": "fjargsto/abem",
+      "tier": 1,
+      "focus": ["acoustics", "Jupyter", "educational", "Helmholtz"],
+      "lang": "Jupyter Notebook",
+      "license": "GPL-3.0",
+      "stars": 19,
+      "last_commit": "2020-07-04",
+      "summary": "BEM for acoustics; Jupyter-based; educational focus; implements acoustic BEM solver; includes tutorials and examples."
+    },
+    {
+      "repo": "david-hahn/FractureRB",
+      "tier": 3,
+      "focus": ["fracture", "reduced-basis", "fast-approximation", "C++"],
+      "lang": "C++",
+      "license": "GPL-2.0",
+      "stars": 53,
+      "last_commit": "2025-03-24",
+      "summary": "Fast approximations for boundary element based brittle fracture simulation; reduced basis methods; research-grade; focuses on computational efficiency."
+    },
+    {
+      "repo": "ZeppSav/BEMUse",
+      "tier": 2,
+      "focus": ["hydrodynamics", "aerodynamics", "lightweight", "C++"],
+      "lang": "C++",
+      "license": "GPL-3.0",
+      "stars": 17,
+      "last_commit": "2025-07-15",
+      "summary": "Lightweight BEM library for hydrodynamics and aerodynamics; C++ implementation; focuses on simplicity and ease of use; suitable for engineering applications."
+    },
+    {
+      "repo": "YingyiLiu/FinGreen3D",
+      "tier": 1,
+      "focus": ["Green-function", "free-surface", "3D", "Fortran", "hydrodynamics"],
+      "lang": "Fortran",
+      "license": "LGPL-3.0",
+      "stars": 15,
+      "last_commit": "2018-10-23",
+      "summary": "3D free-surface Green function for marine hydrodynamics; Fortran; finite/infinite depth; foundational for wave BEM."
+    },
+    {
+      "repo": "davecats/sfoglie",
+      "tier": 3,
+      "focus": ["aerodynamics", "boundary-layer", "potential-flow", "MATLAB", "airfoil"],
+      "lang": "MATLAB",
+      "license": "GPL-3.0",
+      "stars": 16,
+      "last_commit": "2023-12-01",
+      "summary": "Coupled boundary layer theory / potential theory BEM solver for incompressible flow around airfoils; MATLAB-based; educational and research tool."
+    }
+  ],
+  "gap_analysis": {
+    "GAP-BEM-1": {
+      "title": "可微分BEM求解器",
+      "problem": "现有开源BEM库（除BEAST.jl外）缺乏原生自动微分支持，无法直接嵌入梯度优化/反问题/UQ流程",
+      "opportunity": "基于JAX/PyTorch构建可微BEM内核，支持Green函数/积分算子的自动微分，服务于形状优化/参数反演",
+      "priority": "HIGH",
+      "reference_repos": ["bempp/bempp-cl", "krcools/BEAST.jl"],
+      "acceptance_criteria": "实现Laplace/Helmholtz核的JAX可微BEM算子；对单位圆/球解析解梯度误差<1e-6；支持至少2个下游优化案例（形状优化+参数反演）"
+    },
+    "GAP-BEM-2": {
+      "title": "H-matrix/FMM加速的工业级BEM",
+      "problem": "开源BEM多为教学/研究级，缺乏生产级H-matrix/FMM加速（Puma-EM仅限电磁学）",
+      "opportunity": "构建通用H-matrix库（支持Laplace/Helmholtz/Stokes核），与现有BEM求解器解耦，提供Python/C++接口",
+      "priority": "HIGH",
+      "reference_repos": ["Gjacquenot/Puma-EM", "exafmm/exafmm-t", "zgimbutas/fmmlib3d"],
+      "acceptance_criteria": "实现O(N log N)复杂度的FMM加速；对10^5自由度问题，相比密集BEM加速>50倍；精度损失<1%；支持至少3种核函数"
+    },
+    "GAP-BEM-3": {
+      "title": "船舶水动力BEM基准验证面",
+      "problem": "Capytaine基于Nemoh但缺乏系统性验证面（解析解/实验数据对标），精度声明不充分",
+      "opportunity": "建立船舶水动力BEM基准库：Wigley船型/ Series 60等解析解+实验数据，自动化回归测试，精度<3%判据",
+      "priority": "CRITICAL",
+      "reference_repos": ["capytaine/capytaine", "BEMRosetta/BEMRosetta"],
+      "acceptance_criteria": "建立≥5个解析解基准（圆柱/球/Wigley等）+≥3个实验数据对标；自动化pytest验证面；关键量（附加质量/阻尼/波激励力）误差<3%"
+    },
+    "GAP-BEM-4": {
+      "title": "GPU加速BEM内核",
+      "problem": "现有开源BEM几乎无GPU实现（bempp-rs有潜力但未成熟），大规模问题性能受限",
+      "opportunity": "基于CUDA/HIP实现BEM核心积分/Green函数计算，支持Helmholtz/Laplace/Stokes核，与FMM耦合",
+      "priority": "MEDIUM",
+      "reference_repos": ["bempp/bempp-rs", "berenger-eu/tbfmm"],
+      "acceptance_criteria": "实现CUDA版BEM积分核；对10^5面板问题，相比CPU加速>10倍；数值精度与CPU版一致（相对误差<1e-10）；支持至少2种Green函数"
+    },
+    "GAP-BEM-5": {
+      "title": "多物理场BEM耦合框架",
+      "problem": "声学/电磁/势流BEM各自独立，缺乏统一框架支持FEM-BEM耦合/多物理场",
+      "opportunity": "构建模块化BEM框架：统一网格/算子/求解器接口，支持声学-结构/电磁-热/势流-弹性耦合",
+      "priority": "MEDIUM",
+      "reference_repos": ["bempp/bempp-cl", "HomerReid/scuff-em"],
+      "acceptance_criteria": "实现统一BEM框架，支持≥3种物理场（声学/电磁/势流）；提供FEM-BEM耦合接口；至少1个多物理场耦合验证案例（如声学-结构FSI）"
+    },
+    "GAP-BEM-6": {
+      "title": "自由面Green函数高效计算",
+      "problem": "FinGreen3D等实现老旧，缺乏现代优化（向量化/GPU），计算效率低",
+      "opportunity": "重写自由面Green函数库：现代Fortran/C++/Python接口，支持有限/无限水深，向量化+GPU加速",
+      "priority": "HIGH",
+      "reference_repos": ["YingyiLiu/FinGreen3D", "capytaine/capytaine"],
+      "acceptance_criteria": "实现现代自由面Green函数库；支持有限/无限水深；向量化版本相比FinGreen3D加速>5倍；数值精度与解析解误差<1e-8；提供Python/C++接口"
+    },
+    "GAP-BEM-7": {
+      "title": "BEM网格质量与自适应",
+      "problem": "开源BEM缺乏自适应网格细化/误差估计，用户需手动调网格",
+      "opportunity": "实现基于后验误差估计的自适应BEM：支持h/p自适应，与求解器解耦，提供Python接口",
+      "priority": "LOW",
+      "reference_repos": ["bempp/bempp-cl", "krcools/CompScienceMeshes.jl"],
+      "acceptance_criteria": "实现后验误差估计器；支持h-自适应细化；对奇异问题（裂纹/角点），自适应网格相比均匀网格效率提升>3倍（达到相同精度所需自由度更少）"
+    },
+    "GAP-BEM-8": {
+      "title": "BEM与机器学习集成",
+      "problem": "BEM求解器与ML框架（PyTorch/JAX）集成困难，无法利用神经网络加速/代理模型",
+      "opportunity": "构建BEM-ML桥接层：BEM算子导出为PyTorch模块，支持神经网络代理模型/物理信息神经网络(PINN)混合求解",
+      "priority": "MEDIUM",
+      "reference_repos": ["lgc16/GreenNet", "bempp/bempp-cl"],
+      "acceptance_criteria": "实现BEM算子的PyTorch模块封装；训练神经网络代理模型，对参数化问题预测误差<5%；推理速度相比直接BEM求解加速>100倍"
+    }
+  }
+}
