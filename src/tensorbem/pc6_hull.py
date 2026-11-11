@@ -114,7 +114,23 @@ class IceClassHull:
 
     # ----- reference integrals (independent of the mesh) -------------------
     def reference_volume(self, *, panels: int = 400) -> float:
-        """Displaced volume by double quadrature of the parametric definition."""
+        """Displaced volume by double quadrature of the parametric definition.
+
+        The double integral is evaluated with the composite **trapezoid** rule:
+        the ``panels``-interval grid carries half weights on the two boundary
+        stations (``u = +-1``) and on the two boundary rings (``v = 0, -1``).
+
+        Mission m14775: this method previously summed every node with unit
+        weight, i.e. it dropped the half weights of the boundary rows/columns.
+        That is not a trapezoid rule: it overstates the volume by
+        ``h_u * h_v * (boundary node sum) / 2``, which at the default grid is
+        ``+2.54e-3`` in ``Cb`` for the KCS-class hull and converges only at
+        *first* order (halving ``panels`` halves the error), so the reference
+        the ``Cb`` gate compares against was itself wrong at the 1e-3 level --
+        a quarter of the gate's 1 % band.  :meth:`closed_form_volume` is the
+        analytic value this quadrature must converge to; the test suite pins
+        that agreement to 1e-9 instead of pinning a self-consistent number.
+        """
         if not isinstance(panels, (int, np.integer)) or int(panels) < 8:
             raise ValueError("panels must be an integer >= 8")
         n = int(panels)
@@ -128,15 +144,64 @@ class IceClassHull:
         integrand = 2.0 * 0.5 * self.breadth * np.outer(wl, f)
         dx = 0.5 * self.length * (u[1] - u[0])
         dz = self.draft * (v[1] - v[0])
-        return float(np.sum(integrand) * dx * dz)
+        w_u = np.full(n + 1, 1.0)
+        w_u[0] = w_u[-1] = 0.5
+        w_v = np.full(n + 1, 1.0)
+        w_v[0] = w_v[-1] = 0.5
+        return float(np.sum(np.outer(w_u, w_v) * integrand) * dx * dz)
 
     def reference_waterplane_area(self, *, panels: int = 400) -> float:
-        """Waterplane area by quadrature of the waterline profile."""
+        """Waterplane area by quadrature of the waterline profile (trapezoid rule)."""
+        if not isinstance(panels, (int, np.integer)) or int(panels) < 8:
+            raise ValueError("panels must be an integer >= 8")
         n = int(panels)
         u = np.linspace(-1.0, 1.0, n + 1)
         wl = np.maximum(1.0 - np.abs(u) ** self.waterline_exponent, self.end_ratio)
         dx = 0.5 * self.length * (u[1] - u[0])
-        return float(np.sum(2.0 * 0.5 * self.breadth * wl) * dx)
+        w_u = np.full(n + 1, 1.0)
+        w_u[0] = w_u[-1] = 0.5
+        return float(np.sum(w_u * 2.0 * 0.5 * self.breadth * wl) * dx)
+
+    # ----- analytic reference (exact, independent of any quadrature) -------
+    def closed_form_waterline_integral(self) -> float:
+        r"""``I_u = \int_{-1}^{1} max(1 - |u|^n, f_end) du`` in closed form.
+
+        The clamp binds for ``|u| > u*`` with ``u* = (1 - f_end)**(1/n)``:
+
+        .. math:: I_u = 2\left[u^* - \frac{u^{*n+1}}{n+1} + f_{end}(1 - u^*)\right]
+        """
+        n = self.waterline_exponent
+        e = self.end_ratio
+        u_star = min(max((1.0 - e) ** (1.0 / n), 0.0), 1.0)
+        return 2.0 * (u_star - u_star ** (n + 1.0) / (n + 1.0) + e * (1.0 - u_star))
+
+    def closed_form_section_integral(self) -> float:
+        r"""``I_v = \int_{0}^{1} max(1 - (1 - c_k) v^q, c_k) dv`` in closed form.
+
+        For ``0 < c_k <= 1`` the clamp never binds strictly inside ``[0, 1]``
+        (``1 - (1 - c_k) v^q = c_k`` only at ``v = 1``), so
+        ``I_v = 1 - (1 - c_k) / (q + 1)``.
+        """
+        return 1.0 - (1.0 - self.keel_ratio) / (self.section_exponent + 1.0)
+
+    def closed_form_volume(self) -> float:
+        """Exact displaced volume ``B (L/2) T I_u I_v`` of the parametric hull."""
+        return (
+            self.breadth
+            * 0.5
+            * self.length
+            * self.draft
+            * self.closed_form_waterline_integral()
+            * self.closed_form_section_integral()
+        )
+
+    def closed_form_waterplane_area(self) -> float:
+        """Exact waterplane area ``B (L/2) I_u`` of the parametric hull."""
+        return self.breadth * 0.5 * self.length * self.closed_form_waterline_integral()
+
+    def closed_form_block_coefficient(self) -> float:
+        """Exact ``Cb = I_u I_v / 2`` implied by the parametric definition."""
+        return 0.5 * self.closed_form_waterline_integral() * self.closed_form_section_integral()
 
     def reference_block_coefficient(self) -> float:
         """``Cb = V_ref / (L B T)`` from the parametric quadrature."""
