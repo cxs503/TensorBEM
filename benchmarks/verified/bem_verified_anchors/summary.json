@@ -1,0 +1,18 @@
+{
+  "cases": {
+    "bem_ellipsoid_wave": "PASS",
+    "bem_multihull_interference": "PASS",
+    "bem_wigley_hydrostatics": "PASS"
+  },
+  "mission": "P19-N02",
+  "tolerances": {
+    "asymptotic_sigma_band": 0.2,
+    "block_coefficient_error": 0.005,
+    "gci_fine": 0.03,
+    "sigma_absolute": 0.02,
+    "sigma_pair_resistance": 0.05,
+    "volume_error": 0.01,
+    "wave_resistance_error": 0.05,
+    "wetted_area_error": 0.02
+  }
+}
