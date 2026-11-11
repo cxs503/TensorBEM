@@ -1,0 +1,34 @@
+{
+  "files": [
+    "tests/test_bem_verified_anchors.py",
+    "tests/test_thin_ship_anchor_artifacts.py",
+    "tests/test_figure_integrity.py",
+    "tests/test_bem_finite_depth_anchors.py",
+    "tests/test_w20_wigley_anchor_artifacts.py"
+  ],
+  "before": {
+    "passed": 91,
+    "failed": 3,
+    "per_file_failed": {
+      "tests/test_bem_verified_anchors.py": 3,
+      "tests/test_thin_ship_anchor_artifacts.py": 0,
+      "tests/test_figure_integrity.py": 0,
+      "tests/test_bem_finite_depth_anchors.py": 0,
+      "tests/test_w20_wigley_anchor_artifacts.py": 0
+    },
+    "tail": "3 failed, 91 passed in 95.66s"
+  },
+  "after": {
+    "passed": 95,
+    "failed": 0,
+    "per_file_failed": {
+      "tests/test_bem_verified_anchors.py": 0,
+      "tests/test_thin_ship_anchor_artifacts.py": 0,
+      "tests/test_figure_integrity.py": 0,
+      "tests/test_bem_finite_depth_anchors.py": 0,
+      "tests/test_w20_wigley_anchor_artifacts.py": 0
+    },
+    "tail": "95 passed in 82.58s"
+  },
+  "command": "PYTHONPATH=src python3 -m pytest <5 files> -q -rf"
+}

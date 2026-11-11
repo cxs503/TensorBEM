@@ -36,7 +36,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from _figure_integrity import assert_reproducible_figures
+
 from tensorbem.benchmarks.bem_verified_anchors import (
+    ARTIFACT_ROOT,
     ELLIPSOID_LEVELS,
     FROUDES,
     HYDROSTATIC_LEVELS,
@@ -62,7 +65,13 @@ from tensorbem.multihull import (
 from tensorbem.wigley import michell_kochin_function
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-ARTIFACTS = REPO_ROOT / "benchmarks" / "verified"
+# The three P19-N02 anchors live in their own namespace: the top level of
+# ``benchmarks/verified`` is owned by the thin-ship producer
+# (``bem_wigley_hydrostatics`` / ``bem_ellipsoid_wave`` /
+# ``bem_multihull_interference`` with a ``study`` schema), see
+# ``tensorbem.benchmarks.bem_verified_anchors.ARTIFACT_ROOT``.
+ARTIFACTS = REPO_ROOT / ARTIFACT_ROOT
+THIN_SHIP_ARTIFACTS = REPO_ROOT / "benchmarks" / "verified"
 DOCUMENT = REPO_ROOT / "docs" / "bem_verified_anchors.md"
 
 WIGLEY = {"L": 3.8, "B": 0.5, "T": 0.225}
@@ -74,9 +83,14 @@ WIGLEY = {"L": 3.8, "B": 0.5, "T": 0.225}
 
 
 @pytest.fixture(scope="module")
-def results(tmp_path_factory: pytest.TempPathFactory) -> dict:
-    out = tmp_path_factory.mktemp("bem_verified")
-    return run_all(out)
+def run_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Scratch root the studies are re-run into (never the repository tree)."""
+    return tmp_path_factory.mktemp("bem_verified")
+
+
+@pytest.fixture(scope="module")
+def results(run_root: Path) -> dict:
+    return run_all(run_root)
 
 
 @pytest.fixture(scope="module")
@@ -367,18 +381,25 @@ def test_committed_artifacts_reproduce_from_the_current_code(results: dict) -> N
         _assert_close(recorded, fresh, case)
 
 
-def test_case_directories_contain_report_and_figure(results: dict) -> None:
+def test_case_directories_contain_report_and_figure(results: dict, run_root: Path) -> None:
+    # A committed PNG is not a durable invariant: the platform push gate drops
+    # ``*.png`` outside ``docs/`` (see ``tests/_figure_integrity.py``).  The
+    # invariant kept here is that the case record names its figure, that the
+    # figure is regenerable from the computed numbers, and that it is not a
+    # blank render.
     for case, result in results.items():
         case_dir = ARTIFACTS / case
         report = case_dir / "report.md"
         assert report.is_file()
-        assert case in report.read_text(encoding="utf-8")
+        text = report.read_text(encoding="utf-8")
+        assert case in text
         figure = result["figure"]
         assert figure is not None, case
         assert Path(figure).parent.name == "figures"
-        image = case_dir / "figures" / Path(figure).name
-        assert image.is_file(), (case, figure)
-        assert image.stat().st_size < 60_000, (case, image.stat().st_size)
+        assert f"figures/{Path(figure).name}" in text, (case, figure)
+        fresh = run_root / figure
+        assert_reproducible_figures([fresh], minimum=1, embedded_in=text)
+        assert fresh.stat().st_size < 60_000, (case, fresh.stat().st_size)
 
 
 def test_document_is_the_rendered_result(results: dict) -> None:
@@ -400,6 +421,26 @@ def test_summary_lists_a_verdict_per_case(results: dict) -> None:
     assert set(summary["cases"]) == set(results)
     for case in summary["cases"]:
         assert summary["cases"][case] in {"PASS", "FAIL"}
+
+
+def test_artifact_namespace_is_not_shared_with_the_thin_ship_producer() -> None:
+    """Regression: two writers must not own ``benchmarks/verified/<case>``.
+
+    ``bem_verified_anchors`` (this node, schema ``case``/``froude_cases``) and
+    ``thin_ship_verification`` (W20, schema ``study``/``reference``) used the same
+    three directory names.  Whichever driver ran last overwrote the other's
+    record, so ``test_committed_artifacts_reproduce_from_the_current_code``
+    failed on ``main`` with a key-set mismatch.  Pin the split.
+    """
+    assert Path(ARTIFACT_ROOT).parts[:2] == ("benchmarks", "verified")
+    assert Path(ARTIFACT_ROOT) != Path("benchmarks/verified")
+    for case in ("bem_wigley_hydrostatics", "bem_ellipsoid_wave", "bem_multihull_interference"):
+        own = _read_json(ARTIFACTS / case / "results.json")
+        assert "case" in own and "study" not in own, case
+        foreign = THIN_SHIP_ARTIFACTS / case / "results.json"
+        if foreign.is_file():
+            other = _read_json(foreign)
+            assert "study" in other and "case" not in other, case
 
 
 # ---------------------------------------------------------------------------
