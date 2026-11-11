@@ -35,6 +35,8 @@ from tensorbem.finite_depth_diffraction import solve_diffraction_indirect
 from tensorbem.free_surface_solver import _rankine_normal_derivative_matrix
 from tensorbem.geometry import PanelMesh
 
+from _figure_integrity import assert_reproducible_figures
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CASE_DIR = REPO_ROOT / "benchmarks" / "verified" / "bem_finite_depth"
 
@@ -282,13 +284,16 @@ def test_collinear_guard_is_inactive_on_a_convex_mesh() -> None:
         assert height.min() > tolerance
 
 
-def test_case_artifacts_and_documentation_exist() -> None:
+def test_case_artifacts_and_documentation_exist(result: dict, tmp_path) -> None:
     for name in ("result.json", "gates.json", "report.md"):
         assert (CASE_DIR / name).is_file(), name
-    figures = sorted((CASE_DIR / "figures").glob("*.png"))
-    assert len(figures) >= 4
-    for figure in figures:
-        assert figure.stat().st_size > 10_000, figure
+    # The push gate strips ``*.png`` outside ``docs/`` (see
+    # ``tests/_figure_integrity.py``), so a committed image is not an invariant
+    # here: the four figures must be *reproducible* from the committed numbers
+    # and every one of them must still be linked from the report.
+    report = (CASE_DIR / "report.md").read_text(encoding="utf-8")
+    figures = anchors.make_figures(result, tmp_path)
+    assert_reproducible_figures(figures, minimum=4, embedded_in=report)
     doc = REPO_ROOT / "docs" / "verification" / "bem_finite_depth.md"
     assert doc.is_file()
     text = doc.read_text(encoding="utf-8")
