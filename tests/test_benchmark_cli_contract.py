@@ -29,6 +29,7 @@ import pytest
 #: Drivers whose ``main`` is argparse-based, so ``--help`` is a safe, fast probe.
 ARGPARSE_DRIVERS = (
     "tensorbem.benchmarks.drift_second_order",
+    "tensorbem.benchmarks.ellipsoid_kochin_three_route",
     "tensorbem.benchmarks.finite_depth_kernel",
     "tensorbem.benchmarks.hulme_diffraction_verification",
     "tensorbem.benchmarks.hydrostatic_verification",
