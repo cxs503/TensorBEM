@@ -34,6 +34,18 @@ water) and the three-dimensional counterpart of :mod:`tensorbem.finite_depth`
 as missing ("finite-depth 3-D John eigenseries Green function") without
 assembling a hull solver around it.
 
+INTEGRATION (m14568, 2026-11-11).  The kernel is no longer verification-only:
+:func:`green_gradient_source_finite_depth_3d` adds the source gradient
+(``dG/dR`` via ``J_1`` plus the transposed ``d/dz``), and
+:func:`tensorbem.finite_depth_solver3d.assemble_finite_depth_operators_3d`
+accepts ``kernel="quadrature"`` to run the *main* 3-D finite-depth radiation
+solver on this kernel instead of the John eigenseries.  The two kernels are
+independent representations of the same boundary-value problem, so the
+solver-level cross-check (``docs/m14568_quadrature_kernel_solver.md``) is an
+end-to-end gate on added mass and damping rather than a pointwise kernel test.
+Cost: one wave integral per (target, source-depth) pair, ~30-60 ms per pair on
+one core -- verification-kernel speed, not production speed.
+
 Conventions
 -----------
 Identical to :mod:`tensorbem.free_surface3d`: ``(x, y)`` horizontal, ``z``
@@ -197,6 +209,16 @@ def _bessel_j0(values: FloatArray) -> FloatArray:
     return out
 
 
+def _bessel_j1(values: FloatArray) -> FloatArray:
+    """``J_1`` on non-negative arguments (``J_1(0) = 0``)."""
+    out = np.zeros_like(values)
+    positive = values > 0.0
+    if np.any(positive):
+        _, j1, _, _ = bessel_j01_y01(values[positive])
+        out[positive] = j1
+    return out
+
+
 def _q_values(
     k: FloatArray,
     *,
@@ -208,13 +230,22 @@ def _q_values(
     k0: float,
     slope_scaled: float,
     order: int,
+    component: int | None = None,
 ) -> FloatArray:
     """Scaled ``q(k) = integrand * (k - k0)`` on ``k`` for every target.
 
     Shape ``(k.size, z.size)``.  The scaling is by ``exp(-k*h)`` in both the
     numerator's vertical factor and the denominator, which is an identity but
     keeps ``nu*h`` of a few hundred free of overflow.
+
+    ``component`` selects which derivative of the kernel the integrand belongs
+    to: ``0`` the value, ``1`` ``d/dz`` (``order`` is the historical alias of
+    this switch) and ``2`` the horizontal radial derivative ``d/dR``.  The
+    radial derivative only replaces ``J_0(k*R)`` by ``-k*J_1(k*R)``, so all
+    components share one quadrature grid and one pole subtraction -- which is
+    what makes the source gradient as cheap as two evaluations of ``G``.
     """
+    comp = int(order) if component is None else int(component)
     kk = k[:, None]
     kh = kk * depth
     exp_m2kh = np.exp(-2.0 * kh)
@@ -226,18 +257,21 @@ def _q_values(
         np.exp(kk * zeta) + np.exp(-kk * (2.0 * depth + zeta))
     )
     z_plus_h = z[None, :] + depth
-    if order == 0:
+    if comp in (0, 2):
         vertical = 0.5 * (np.exp(kk * z) + np.exp(-kk * (z[None, :] + 2.0 * depth)))
-    elif order == 1:
+    elif comp == 1:
         vertical = 0.5 * kk * (
             np.exp(kk * z) - np.exp(-kk * (z[None, :] + 2.0 * depth))
         )
     else:  # pragma: no cover - guarded by the wrappers
-        raise ValueError("order must be 0 (value) or 1 (d/dz)")
+        raise ValueError("component must be 0 (value), 1 (d/dz) or 2 (d/dR)")
     del z_plus_h
     x = kk * radius[None, :]
-    j0 = _bessel_j0(x.ravel()).reshape(x.shape)
-    return numerator * vertical * j0 / smooth
+    if comp == 2:
+        bessel = (-kk * _bessel_j1(x.ravel()).reshape(x.shape))
+    else:
+        bessel = _bessel_j0(x.ravel()).reshape(x.shape)
+    return numerator * vertical * bessel / smooth
 
 
 def _wave_integral(
@@ -251,8 +285,9 @@ def _wave_integral(
     outgoing: bool,
     nodes: int,
     k_max: float | None,
+    component: int | None = None,
 ) -> ComplexArray:
-    """Outgoing radial-wave part of ``G`` and its ``z`` derivative.
+    """Outgoing radial-wave part of ``G`` and its ``z`` / ``R`` derivatives.
 
     The principal value is computed by *kernel subtraction*: with a Gaussian
     bump ``chi(k) = exp(-((k-k0)/w)**2)``,
@@ -292,6 +327,7 @@ def _wave_integral(
             k0=k0,
             slope_scaled=slope_scaled,
             order=order,
+            component=component,
         )
 
     oscillation = 2.0 * math.pi / max(float(np.max(radius)), 1.0e-12) / 6.0
@@ -345,6 +381,7 @@ def _green(
     outgoing: bool,
     nodes: int,
     k_max: float | None,
+    component: int | None = None,
 ) -> ComplexArray:
     nu = _validate_nu(nu)
     depth = _validate_depth(depth)
@@ -377,10 +414,14 @@ def _green(
     r_image = np.hypot(radius, np.abs(dz_image))
     if np.any(r <= 1.0e-14):
         raise ValueError("finite-depth Green function is singular at the source")
-    if order == 0:
-        rankine = 1.0 / r + 1.0 / r_image
-    else:
+    comp = int(order) if component is None else int(component)
+    if comp == 2:
+        # d/dR of the two Rankine terms; dr/dR = R/r, so d(1/r)/dR = -R/r**3.
+        rankine = -radius / r**3 - radius / r_image**3
+    elif comp == 1:
         rankine = -dz / r**3 - dz_image / r_image**3
+    else:
+        rankine = 1.0 / r + 1.0 / r_image
 
     z_flat = tgt[..., 2].ravel()
     src_flat = src.reshape(-1, 3)
@@ -401,6 +442,7 @@ def _green(
             outgoing=outgoing,
             nodes=nodes,
             k_max=k_max,
+            component=component,
         )
     return ((rankine.ravel() + out) / _FOUR_PI).reshape(shape)
 
@@ -474,6 +516,61 @@ def green_function_finite_depth_z_derivative_3d(
         nodes=nodes,
         k_max=k_max,
     )
+
+
+def green_gradient_source_finite_depth_3d(
+    targets: ArrayLike,
+    sources: ArrayLike,
+    nu: float,
+    depth: float,
+    *,
+    outgoing: bool = True,
+    nodes: int = _DEFAULT_NODES,
+    k_max: float | None = None,
+) -> ComplexArray:
+    """Gradient ``nabla_xi G(x, xi)`` with respect to the *source* (broadcasting).
+
+    Same convention as
+    :func:`tensorbem.finite_depth3d.green_gradient_source_3d` (the kernel is
+    symmetric, so the source gradient is the target gradient of the transposed
+    call and there is no sign flip).  The result has broadcast shape
+    ``(..., 3)``.
+
+    The horizontal entries use the radial derivative ``dG/dR`` (component 2,
+    ``J_1`` in place of ``J_0``) and ``dx/dxi = -dx/dR * dx/R``; the vertical
+    entry is the ``d/dz`` component of the transposed call.  At ``R = 0`` the
+    horizontal entries vanish by symmetry, which is the branch handled below.
+    """
+    tgt, src, _ = _broadcast_points(targets, sources)
+    dx = tgt[..., 0] - src[..., 0]
+    dy = tgt[..., 1] - src[..., 1]
+    radius = np.hypot(dx, dy)
+    radial = _green(
+        tgt,
+        src,
+        nu,
+        depth,
+        order=0,
+        outgoing=outgoing,
+        nodes=nodes,
+        k_max=k_max,
+        component=2,
+    )
+    with np.errstate(invalid="ignore", divide="ignore"):
+        inv_radius = np.where(radius > 0.0, 1.0 / np.where(radius > 0.0, radius, 1.0), 0.0)
+    grad_x = -dx * inv_radius * radial
+    grad_y = -dy * inv_radius * radial
+    grad_z = _green(
+        src,
+        tgt,
+        nu,
+        depth,
+        order=1,
+        outgoing=outgoing,
+        nodes=nodes,
+        k_max=k_max,
+    )
+    return np.stack((grad_x, grad_y, grad_z), axis=-1)
 
 
 def wave_amplitude_coefficient(
