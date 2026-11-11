@@ -175,8 +175,15 @@ class TestConvergenceStudy:
             err = abs(H_ref - H_q) / abs(H_ref)
             errors.append(err)
         
-        # Should converge
-        assert errors[-1] < errors[0], f"Quadrature not converging: errors={errors}"
+        # m15140: the definition quadrature is already at the double-precision
+        # floor at n_psi = 24 (errors ~1e-15), so a monotonicity assertion here
+        # would only be sampling round-off noise -- 1.18e-15 -> 1.16e-15 passes
+        # by luck, 1.18e-15 -> 1.42e-15 would fail.  The honest claim is that
+        # *every* resolution tested is converged; the study cannot resolve an
+        # order.  See dev_report_m13787_ellipsoid_kochin_verification.md §9.4.
+        assert all(err < 1.0e-12 for err in errors), (
+            f"Quadrature not converged at every n_psi: errors={errors}"
+        )
         # High-order quadrature should be very accurate
         assert errors[-1] < 0.001, f"Quadrature error {errors[-1]:.4e} exceeds 0.1%"
 
