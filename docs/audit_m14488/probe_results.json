@@ -1,0 +1,107 @@
+{
+ "p2": {
+  "plate": {
+   "h": 1.0,
+   "E": 5000000000.0,
+   "nu": 0.334,
+   "H": 200.0
+  },
+  "rows": [
+   {
+    "k": 0.005,
+    "omega_flexural_gravity": 0.193247317184018,
+    "omega_hydroelastic": 0.1929189841063664,
+    "hydroelastic_rel_diff": 0.0016990304571159525,
+    "cg_impl": 29.983437610850537,
+    "cg_numeric": 29.983437607739027,
+    "cg_rel_err": 1.0377426741937397e-10
+   },
+   {
+    "k": 0.02,
+    "omega_flexural_gravity": 0.44436991232709766,
+    "omega_hydroelastic": 0.4404495896030945,
+    "hydroelastic_rel_diff": 0.008822205588747072,
+    "cg_impl": 11.498143054627317,
+    "cg_numeric": 11.498143054344823,
+    "cg_rel_err": 2.4568665290964122e-11
+   },
+   {
+    "k": 0.05,
+    "omega_flexural_gravity": 0.7958113129510802,
+    "omega_hydroelastic": 0.7785880268618931,
+    "hydroelastic_rel_diff": 0.021642424289394148,
+    "cg_impl": 15.144900176586674,
+    "cg_numeric": 15.144900177288534,
+    "cg_rel_err": 4.6342986438539156e-11
+   },
+   {
+    "k": 0.1,
+    "omega_flexural_gravity": 2.3571435573194517,
+    "omega_hydroelastic": 2.2582899813340975,
+    "hydroelastic_rel_diff": 0.04193786826364137,
+    "cg_impl": 50.60779746523865,
+    "cg_numeric": 50.607797466017956,
+    "cg_rel_err": 1.5398991869785518e-11
+   },
+   {
+    "k": 0.2,
+    "omega_flexural_gravity": 12.180971800066002,
+    "omega_hydroelastic": 11.218596090812913,
+    "hydroelastic_rel_diff": 0.07900648035716454,
+    "cg_impl": 150.65198861351078,
+    "cg_numeric": 150.6519886218527,
+    "cg_rel_err": 5.537207907231501e-11
+   },
+   {
+    "k": 0.4,
+    "omega_flexural_gravity": 68.47769321325084,
+    "omega_hydroelastic": 58.76552745984858,
+    "hydroelastic_rel_diff": 0.14182962798055973,
+    "cg_impl": 427.69916376408037,
+    "cg_numeric": 427.6991637830463,
+    "cg_rel_err": 4.434406703532141e-11
+   }
+  ],
+  "ice_module_omega_symbols": [
+   "mass_loading_omega",
+   "shooting_omega"
+  ]
+ },
+ "p3": {
+  "free_surface_condition": {
+   "max_relative_residual": 4.5321705906514404e-07,
+   "mean_relative_residual": 2.1647451834643887e-07,
+   "kappa": 1.0,
+   "radiation": "downstream",
+   "sign": -1.0,
+   "n_theta": 64
+  },
+  "free_surface_condition_keys": [
+   "kappa",
+   "max_relative_residual",
+   "mean_relative_residual",
+   "n_theta",
+   "radiation",
+   "sign"
+  ],
+  "radiation_direction": {
+   "upstream_mean_abs": 0.11561073328081639,
+   "downstream_mean_abs": 0.11396366290836357,
+   "ratio_down_over_up": 0.9857533091806268,
+   "radiation": "downstream",
+   "sign": -1.0
+  },
+  "radiation_direction_keys": [
+   "downstream_mean_abs",
+   "radiation",
+   "ratio_down_over_up",
+   "sign",
+   "upstream_mean_abs"
+  ],
+  "laplace": {
+   "laplacian": 4.163336342413726e-07,
+   "value": 0.057651303100531306,
+   "h": 1e-05
+  }
+ }
+}
