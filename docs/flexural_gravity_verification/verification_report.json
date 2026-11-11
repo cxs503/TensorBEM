@@ -1,0 +1,77 @@
+{
+  "mission_id": "m12052",
+  "node": "p407w3-n06-bem-ice-covered-wave",
+  "title": "TensorBEM Flexural-Gravity Wave Propagation Verification",
+  "criteria": {
+    "E1_dispersion_curve": {
+      "description": "omega(k) vs analytical, relative error <= 1%",
+      "n_points": 25,
+      "max_relative_error": 0.0,
+      "pass": true
+    },
+    "E2_long_wave_limit": {
+      "description": "k->0 degenerates to open water, error <= 0.5%",
+      "k_test": 0.001,
+      "relative_error": 4.6656715128830876e-08,
+      "pass": true
+    },
+    "E3_short_wave_limit": {
+      "description": "k->inf degenerates to flexural wave, error <= 0.5%",
+      "k_test": 10.0,
+      "relative_error": 2.1433141527167728e-09,
+      "pass": true
+    },
+    "E4_energy_conservation": {
+      "description": "|R|^2 + |T|^2 = 1, residual <= 1e-4",
+      "omega_test": 1.5,
+      "R_energy": 0.8245460657546116,
+      "T_energy": 0.5657948262829834,
+      "energy_residual": 3.3306690738754696e-16,
+      "pass": true
+    },
+    "E5_wavelength_behavior": {
+      "description": "lambda_trans > lambda_inc (flexural model)",
+      "omega_test": 1.5,
+      "lambda_open": 27.385332974511915,
+      "lambda_ice": 78.86430074033149,
+      "ratio": 2.8798006879716267,
+      "pass": true
+    },
+    "E6_wedge_ice": {
+      "description": "Gradual transition has lower reflection than abrupt",
+      "omega_test": 1.5,
+      "R_abrupt": 0.8245460657546116,
+      "R_wedge_100m": 0.05486932854736229,
+      "reduction_fraction": 0.9334551084212054,
+      "pass": true
+    },
+    "E7_zero_rigidity": {
+      "description": "D=0 gives open-water dispersion, error <= 1e-6",
+      "k_test": 0.1,
+      "relative_error": 0.0,
+      "pass": true
+    },
+    "E8_parameter_sensitivity": {
+      "description": "Wavelength increases monotonically with ice thickness",
+      "thicknesses": [
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "wavelengths": [
+        54.8622333417565,
+        78.86430074033149,
+        98.57252696782153,
+        115.84435537325479
+      ],
+      "monotonic": true,
+      "pass": true
+    }
+  },
+  "summary": {
+    "total_criteria": 8,
+    "passed": 8,
+    "all_pass": true
+  }
+}
