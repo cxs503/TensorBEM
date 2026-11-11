@@ -1,0 +1,37 @@
+m14564返修轮1 - TensorBEM三维远场漂移力L2成熟度交付
+
+【已完成工作】
+1. 生成真实运行工件（L2关键缺失项）：
+   - artifacts/drift_far_field_3d/study.json (5.2KB)
+     包含3个ka案例(0.5,1.0,2.0)的真实BEM计算结果
+     每案例208面板，含far_field_x, exact_far_x, energy_residual等
+   - artifacts/drift_far_field_3d/fig_far_vs_exact.png (70KB)
+   - artifacts/drift_far_field_3d/fig_error.png (41KB)  
+   - artifacts/drift_far_field_3d/fig_energy.png (35KB)
+
+2. 验证测试通过：
+   命令: pytest tests/test_drift_far_field3d.py::test_maruo_route_reproduces_the_verified_anchor -v
+   结果: 4/4 PASSED (ka=0.2,0.5,1.0,2.0)
+
+3. 发布报告：
+   命令: POST /tensor/reports
+   结果: 200 OK, report_id=13669
+
+【关键数字】（来自study.json，程序化生成，零手抄）
+- ka=0.5: far_field=2662.0N, exact=2875.7N, error=7.43%, energy_res=0.012
+- ka=1.0: far_field=6419.0N, exact=6686.0N, error=3.99%, energy_res=0.012
+- ka=2.0: far_field=5969.5N, exact=6306.4N, error=5.34%, energy_res=0.021
+
+【m5242缺口清偿】
+三维远场通道已改为消费free_surface_solver3d.kochin_function_3d的真实BEM散射势输出
+（实现已存在于src/tensorbem/drift_far_field3d.py，536行）
+
+【Honest FAIL】
+1. 基级网格误差4-7%（目标3%需细网格800面板）
+2. 能量残差1-2e-2（目标1e-3需细网格）
+3. 完整研究已递交集群（cj885/cj886/cj907），排队33分钟+
+
+【L2成熟度达成】
+✅ impl_files: src/tensorbem/drift_far_field3d.py (536行，已存在)
+✅ entry: src/tensorbem/benchmarks/drift_far_field_3d_study.py (641行，已存在)
+✅ run_artifacts: artifacts/drift_far_field_3d/ (新生成)
