@@ -1,0 +1,184 @@
+{
+  "mission_id": "m11546",
+  "campaign": "P106W3A2-N05",
+  "title": "Cummins\u65f6\u57df\u8bb0\u5fc6\u6838\u4ece\u96f6\u5230\u4e00\uff1a\u8f90\u5c04impulse response function K(t) + Kramers-Kronig\u56e0\u679c\u6027 + \u65f6\u57df\u5377\u79ef\u4e0e\u9891\u57dfRAO\u5f80\u8fd4\u95ed\u5408",
+  "status": "PASS",
+  "date": "2026-11-10",
+  "case": {
+    "body": "Deeply submerged sphere (f/a = 3), heave mode, deep water",
+    "reference": "Hulme (1982) / Thorne-Wang-Linton spherical multipoles",
+    "radius_m": 1.0,
+    "submergence_ratio": 3.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "displaced_mass_kg": 4293.50995990605,
+    "omega_range_rad_s": [
+      0.29419949999999995,
+      58.8399
+    ],
+    "ka_range": [
+      0.03,
+      6.0
+    ],
+    "sweep_points": 150
+  },
+  "gates": {
+    "C5_geometry_precondition": {
+      "passed": true,
+      "description": "\u6d6e\u4f53\u51e0\u4f55\u524d\u7f6e\u95e8\uff1aCb/L/B/\u2207/S \u8fc7\u5e73\u53f0\u51e0\u4f55\u95e8",
+      "block_coefficient": 0.5235987755982988,
+      "cb_from_dims": 0.5235987755982988,
+      "displacement_consistency_pct": 0.0,
+      "cb_window": [
+        0.3,
+        1.0
+      ],
+      "tolerance": 0.05,
+      "negative_controls": {
+        "inflated_displacement_rejected": true,
+        "impossible_cb_rejected": true
+      }
+    },
+    "C1_round_trip": {
+      "passed": true,
+      "description": "\u9891\u57df\u2192\u65f6\u57df\u2192\u9891\u57df\u5f80\u8fd4\u95ed\u5408\uff1aB(\u03c9)\u2192K(\u03c4)\u2192(B,A)(\u03c9)",
+      "damping_relative_error_max": 0.00029462765767466505,
+      "damping_relative_error_max_pct": 0.029462765767466505,
+      "threshold_pct": 2.0,
+      "added_mass_relative_error_max": 0.019300909122645125,
+      "added_mass_relative_error_max_pct": 1.9300909122645125,
+      "threshold_added_mass_pct": 2.0,
+      "kernel_decay_time_to_one_percent": 1.04,
+      "dt": 0.02,
+      "tau_max": 294.9930499122593,
+      "samples": 300
+    },
+    "C2_causality": {
+      "passed": true,
+      "description": "Kramers-Kronig\u56e0\u679c\u6027\u6821\u9a8c\uff1aK(\u03c4<0)=0, \u5076\u5bf9\u79f0, KK\u5173\u7cfb",
+      "kernel_at_negative_times_max_abs": 0.0,
+      "even_parity_residual_relative": 0.0,
+      "kernel_at_zero": 1428.3162101332364,
+      "kernel_at_zero_from_damping_integral": 1428.2964527717907,
+      "kernel_at_zero_relative_error": 1.3832815594679423e-05,
+      "kernel_at_zero_is_global_maximum": true,
+      "kkr_added_mass_error_max_relative_to_peak": 0.018746720699057487,
+      "kkr_added_mass_error_max_pct": 1.8746720699057486,
+      "threshold_kkr_pct": 2.0
+    },
+    "C3_free_decay": {
+      "passed": true,
+      "description": "\u65f6\u57df\u5377\u79ef\u81ea\u7531\u8870\u51cf\uff1a\u03b6_decay vs B(\u03c9_n)/(2\u03c9_n(A(\u221e)+A(\u03c9_n)))",
+      "zeta_decay": 0.010170392009671705,
+      "zeta_energy_identity": 0.010030816374409406,
+      "zeta_half_power": 0.010390508035608342,
+      "zeta_decay_vs_energy_pct": 1.3914683516526511,
+      "threshold_pct": 5.0,
+      "zeta_decay_vs_half_power_pct": 2.118433720298358,
+      "threshold_half_power_pct": 5.0,
+      "decay_rate_extrapolated": 0.057248146826841886,
+      "convergence_ratio": 1.9823097403367025,
+      "measured_frequency": 5.632020619539147,
+      "mass_kg": 429.35099599060504,
+      "mass_fraction_of_displaced": 0.1,
+      "restoring_N_m": 80569.16125133361,
+      "omega_n_rad_s": 5.628902678716887,
+      "duration_s": 40.0,
+      "dt_series": [
+        {
+          "dt": 0.02,
+          "decay_rate": 0.060100076119191985,
+          "frequency": 5.632035511881409,
+          "extrema_used": 71,
+          "fit_r_squared": 0.9999991517374374
+        },
+        {
+          "dt": 0.01,
+          "decay_rate": 0.058680445908685264,
+          "frequency": 5.632019374524974,
+          "extrema_used": 71,
+          "fit_r_squared": 0.9999998298053918
+        },
+        {
+          "dt": 0.005,
+          "decay_rate": 0.057964296367763575,
+          "frequency": 5.632020619539147,
+          "extrema_used": 71,
+          "fit_r_squared": 0.9999999260019575
+        }
+      ]
+    },
+    "C4_negative_control": {
+      "passed": true,
+      "description": "\u96f6\u963b\u5c3c\u8d1f\u63a7\u5236\uff1aB(\u03c9)=0 \u2192 K=0, \u03b6_decay\u21920",
+      "kernel_is_identically_zero": true,
+      "decay_rate_ratio": 4.9709940179702976e-06,
+      "threshold_ratio": 0.005,
+      "amplitude_ratio_first_last": 1.0001511580433131
+    }
+  },
+  "error_envelope": {
+    "description": "\u5e38\u6570A(\u221e)\u8fd1\u4f3c\u8bef\u5dee\u5305\u7edc vs \u03c9_p/\u03c9_n",
+    "rows": [
+      {
+        "omega_p_over_omega_n": 2.0,
+        "peak_amplitude_error": -0.04983177770862303,
+        "phase_error_degrees": -60.96888404881216,
+        "damping_ratio_relative_error": 0.03683040715722906
+      },
+      {
+        "omega_p_over_omega_n": 1.5,
+        "peak_amplitude_error": -0.02754787515259153,
+        "phase_error_degrees": -46.98462971484341,
+        "damping_ratio_relative_error": 0.0251071666238342
+      },
+      {
+        "omega_p_over_omega_n": 1.0,
+        "peak_amplitude_error": 0.0007991087054887387,
+        "phase_error_degrees": 4.932864727114563,
+        "damping_ratio_relative_error": 0.0017298715552765541
+      },
+      {
+        "omega_p_over_omega_n": 0.75,
+        "peak_amplitude_error": -0.0015373042534131602,
+        "phase_error_degrees": 53.90019511100962,
+        "damping_ratio_relative_error": 0.01762795436234901
+      },
+      {
+        "omega_p_over_omega_n": 0.5,
+        "peak_amplitude_error": -0.025200023883347033,
+        "phase_error_degrees": 80.31267391826803,
+        "damping_ratio_relative_error": 0.02075875309947972
+      }
+    ]
+  },
+  "verification_summary": {
+    "all_gates_pass": true,
+    "round_trip_damping_error_pct": 0.029462765767466505,
+    "round_trip_added_mass_error_pct": 1.9300909122645125,
+    "kk_causality_error_pct": 1.8746720699057486,
+    "free_decay_vs_energy_pct": 1.3914683516526511,
+    "free_decay_vs_half_power_pct": 2.118433720298358,
+    "negative_control_decay_ratio": 4.9709940179702976e-06,
+    "criteria_check": {
+      "C1_damping_le_2pct": true,
+      "C1_added_mass_le_2pct": true,
+      "C2_kk_le_2pct": true,
+      "C3_zeta_le_5pct": true,
+      "C4_zero_decay": true
+    }
+  },
+  "implementation_modules": {
+    "time_domain": "src/tensorbem/time_domain.py \u2014 K(t) via exact piecewise-linear cosine transform, Cummins convolution, free decay, harmonic response, constant-A envelope",
+    "causality": "src/tensorbem/causality.py \u2014 Kramers-Kronig principal-value integrals, exact for piecewise-linear interpolant",
+    "memory_kernel_matrix": "src/tensorbem/memory_kernel_matrix.py \u2014 Multi-DOF coupled kernel matrix K_ij(t)",
+    "benchmark_campaign": "src/tensorbem/benchmarks/cummins_memory_closure.py \u2014 End-to-end closure campaign with 5 gates"
+  },
+  "test_files": {
+    "test_cummins_memory_closure": "tests/test_cummins_memory_closure.py \u2014 13 tests, all pass",
+    "test_time_domain": "tests/test_time_domain.py \u2014 12 tests, all pass",
+    "test_causality": "tests/test_causality.py \u2014 17 tests, all pass",
+    "test_kkr_causality": "tests/test_kkr_causality.py \u2014 4 tests, all pass",
+    "test_memory_kernel_matrix": "tests/test_memory_kernel_matrix.py \u2014 13 tests, all pass"
+  }
+}
