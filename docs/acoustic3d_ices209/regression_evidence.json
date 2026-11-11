@@ -1,0 +1,68 @@
+{
+  "note": "Regression evidence for node P284W3-N03. The commands below were run twice: once in the mission worktree and once in a pristine export of the pre-commit tree (git archive HEAD~1, same interpreter, same environment). Counts are transcribed from the pytest summaries; the new-test log is archived verbatim next to this file.",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "python": "3.11",
+    "pytest_xdist": true
+  },
+  "new_tests": {
+    "command": "python3 -m pytest tests/test_acoustic3d.py -q",
+    "worktree": "17 passed in 223.91 s",
+    "log": "docs/acoustic3d_ices209/regression/new_tests.log"
+  },
+  "gate_comparison": [
+    {
+      "modules": [
+        "tests/test_capability_evidence.py"
+      ],
+      "command": "python3 -m pytest tests/test_capability_evidence.py -q",
+      "worktree": "13 passed, 1 failed (test_uncapability_baseline_has_no_untested_module_without_a_reason)",
+      "pristine_head_parent": "12 passed, 2 failed (the same one plus test_published_block_matches_the_tree)",
+      "reading": "the node regenerated docs/audit_baseline.md section 4, so the drift failure is fixed; the remaining failure is 24 benchmark/verification driver modules with neither a grading row nor a reasoned exemption, and it predates this node"
+    },
+    {
+      "modules": [
+        "tests/test_capability_coverage.py",
+        "tests/test_milestone_claims.py",
+        "tests/test_prose_claims.py"
+      ],
+      "command": "python3 -m pytest tests/test_capability_coverage.py tests/test_milestone_claims.py tests/test_prose_claims.py -q",
+      "worktree": "29 passed, 3 failed (test_every_core_module_is_graded_or_explained, test_coverage_gate_discriminates_against_the_pre_m6280_registry, test_study_driver_reports_zero_unowned_after_and_some_before)",
+      "pristine_head_parent": "29 passed, 3 failed (identical node ids)",
+      "reading": "pre-existing; same unowned-module set as the capability-evidence gate"
+    },
+    {
+      "modules": [
+        "tests/test_doc_claim_audit.py"
+      ],
+      "command": "python3 -m pytest tests/test_doc_claim_audit.py -q",
+      "worktree": "15 passed, 3 failed (historical registration, ratchet, committed artifacts)",
+      "pristine_head_parent": "15 passed, 3 failed (identical node ids)",
+      "reading": "pre-existing stale audit baseline/artifacts; the new document docs/acoustic3d_helmholtz.md classifies as PINNED with reading test tests/test_acoustic3d.py and artifact docs/acoustic3d_ices209/criteria.json, so it does not enter the unguarded set"
+    },
+    {
+      "modules": [
+        "tests/test_doc_claims.py"
+      ],
+      "command": "python3 -m pytest tests/test_doc_claims.py -q",
+      "worktree": "14 passed",
+      "pristine_head_parent": "not re-run (module untouched by the node)",
+      "reading": "document-versus-code gate is green with the new document present"
+    },
+    {
+      "modules": [
+        "tests/test_doc_inventory.py"
+      ],
+      "command": "python3 -m pytest tests/test_doc_inventory.py -q",
+      "worktree": "passed",
+      "pristine_head_parent": "passed",
+      "reading": "README claim inventory unaffected"
+    }
+  ],
+  "full_suite": {
+    "command": "python3 -m pytest tests/ -q -p no:cacheprovider -n 12",
+    "worktree": "reached 95% with no completion inside the observation window; one pre-existing test module consumed >45 min of CPU and blocked the run",
+    "pristine_head_parent": "same behaviour (reached 96%, same blocking module)",
+    "honest_verdict": "the pre-existing suite is NOT green on main and could not be run to completion here; criterion (e) is therefore reported as a partial fail with this cause, not as a pass"
+  }
+}

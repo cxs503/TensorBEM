@@ -112,6 +112,7 @@ correction log inside the generated block records what changed.
 | 3-D Laplace BEM (interior / exterior) | **REAL** | `tensorbem.solver3d`, `tensorbem.kernels3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
 | 2-D deep-water free-surface Green function | **REAL** | `tensorbem.free_surface` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | 3-D Delhommeau / Kelvin free-surface Green function | **REAL** | `tensorbem.free_surface3d`, `tensorbem.free_surface_solver3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
+| 3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209) | **REAL** | `tensorbem.acoustic3d` | 3 node(s) in 1 file(s) | `docs/acoustic3d_helmholtz.md` |
 | Ursell submerged-cylinder radiation benchmark | **REAL** | `tensorbem.benchmarks.ursell_cylinder`, `tensorbem.free_surface_solver` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Hulme floating hemisphere (3-D radiation) | **REAL** | `tensorbem.benchmarks.floating_hemisphere`, `tensorbem.benchmarks.hulme_diffraction_verification` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Near-boundary near-singular panel quadrature + hemisphere heave Hulme anchor | **REAL** | `tensorbem.near_field_quadrature`, `tensorbem.benchmarks.nearfield_quadrature` | 5 node(s) in 1 file(s) | `docs/nearfield_quadrature/report.md` |
@@ -154,10 +155,11 @@ correction log inside the generated block records what changed.
 | Parametric KCS-class hull with published-particular anchors | **WITHHELD** | `tensorbem.kcs_hull` | 2 node(s) in 1 file(s) | `docs/m6656/README.md` |
 | Multihull added mass and damping with exact zero/infinite-frequency asymptotes | **REAL** | `tensorbem.multibody3d`, `tensorbem.benchmarks.multibody_frequency_dependence_3d` | 3 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 
-Counts: **44** REAL, **1** WITHHELD — 45 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **45** REAL, **1** WITHHELD — 46 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
+- **3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.acoustic3d`; 3 test node(s) in `tests/test_acoustic3d.py`.
 - **Finite-depth kernels + solver (2-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth`, `tensorbem.finite_depth_solver`, `tensorbem.finite_depth_diffraction`; 2 test node(s) in `tests/test_finite_depth.py`, `tests/test_finite_depth_solver.py`.
 - **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
 - **Forward-speed wave resistance (Wigley, Michell/Kochin)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification`; 2 test node(s) in `tests/test_wigley_verification.py`, `tests/test_wigley_wave_resistance.py`.
@@ -165,7 +167,7 @@ Counts: **44** REAL, **1** WITHHELD — 45 capabilities. The level is derived fr
 
 ### Capability coverage
 
-58 of 80 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **21 are unowned**.
+59 of 84 core modules (outside `tensorbem.benchmarks`) are named by a row above; 1 more carry an accepted reason, so **24 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 
@@ -176,11 +178,14 @@ Counts: **44** REAL, **1** WITHHELD — 45 capabilities. The level is derived fr
 - `tensorbem.cylinder_drift`
 - `tensorbem.drift_far_field3d`
 - `tensorbem.finite_depth_green`
+- `tensorbem.finite_depth_solver3d`
+- `tensorbem.flexural_gravity`
 - `tensorbem.haskind2d`
 - `tensorbem.interior_panels`
 - `tensorbem.irregular_frequency`
 - `tensorbem.net_source_reg`
 - `tensorbem.neumann_kelvin`
+- `tensorbem.nk_panel3d`
 - `tensorbem.panel_quadratic`
 - `tensorbem.propeller`
 - `tensorbem.rankine_fs`
