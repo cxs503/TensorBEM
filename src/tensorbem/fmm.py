@@ -98,6 +98,24 @@ def all_real_spherical_harmonics(l_max: int, theta: FloatArray, phi: FloatArray)
     return result
 
 
+#: A multipole expansion about a leaf centre is only evaluated when the
+#: target lies at least this many source-radii away (see FMMOperator.matvec).
+_ADMISSIBILITY = 2.0
+
+
+def _leaf_radii(points: FloatArray, leaves: list) -> list:
+    """Largest distance from each leaf centre to one of its own sources."""
+
+    radii = []
+    for leaf in leaves:
+        if len(leaf.indices) == 0:
+            radii.append(0.0)
+            continue
+        d = points[leaf.indices] - leaf.center[None, :]
+        radii.append(float(np.max(np.linalg.norm(d, axis=1))))
+    return radii
+
+
 def _sph_index(l: int, m: int) -> int:
     """Return the sequential index for spherical harmonic (l, m)."""
     return l * l + (m + l)
@@ -380,12 +398,16 @@ class FMMOperator:
     tree: OctreeNode | None = field(default=None, repr=False)
     leaves: list[OctreeNode] = field(default_factory=list, repr=False)
     _multipoles: list[FloatArray] = field(default_factory=list, repr=False)
+    #: largest source distance from its own leaf centre; the multipole expansion
+    #: about that centre only converges for ``r_t > _ADMISSIBILITY * radius``.
+    _radii: list[float] = field(default_factory=list, repr=False)
 
     def setup(self, points: FloatArray, charges: FloatArray | None = None) -> None:
         """Build the octree and precompute multipole coefficients."""
         self.tree = build_octree(points, max_leaf=self.max_leaf)
         self.leaves = collect_leaves(self.tree)
         self._multipoles = []
+        self._radii = _leaf_radii(points, self.leaves)
         if charges is not None:
             for leaf in self.leaves:
                 spts = points[leaf.indices]
@@ -399,7 +421,16 @@ class FMMOperator:
         sources: FloatArray,
         charges: FloatArray,
     ) -> FloatArray:
-        """Compute FMM-accelerated matvec: phi = S @ charges."""
+        """Compute FMM-accelerated matvec: phi = S @ charges.
+
+        A source leaf is expanded about its own centre, so the expansion is only
+        used when the target is outside the sphere that contains every source of
+        that leaf, ``r_t > _ADMISSIBILITY * radius(leaf)``.  The leaf-centre
+        admissibility test alone is *not* sufficient: on a surface distribution
+        the leaves are thin slabs whose ``size`` exceeds the centre-to-centre
+        spacing, and evaluating a divergent series there produced order-unity
+        errors (see ``docs/fmm_cost_audit/README.md``, m14931).
+        """
         if self.tree is None:
             self.setup(sources, charges)
 
@@ -410,6 +441,7 @@ class FMMOperator:
                 scharges = charges[leaf.indices]
                 M = _multipole_coefficients(spts, scharges, leaf.center, self.p)
                 self._multipoles.append(M)
+            self._radii = _leaf_radii(sources, self.leaves)
 
         n = len(targets)
         result = np.zeros(n, dtype=float)
@@ -427,7 +459,11 @@ class FMMOperator:
                 if len(smask) == 0:
                     continue
 
-                if self._is_near(target_leaf, sleaf):
+                rel = t - sleaf.center
+                r_t = float(np.linalg.norm(rel))
+                admissible = r_t > _ADMISSIBILITY * max(self._radii[sleaf_idx], 1e-15)
+
+                if (not admissible) or self._is_near(target_leaf, sleaf):
                     # Near-field: direct
                     spts = sources[smask]
                     scharges = charges[smask]
@@ -438,22 +474,35 @@ class FMMOperator:
                 else:
                     # Far-field: use precomputed multipole
                     M = self._multipoles[sleaf_idx]
-                    rel = t - sleaf.center
-                    r_t = float(np.linalg.norm(rel))
-                    if r_t > 1e-15:
-                        theta = math.acos(np.clip(rel[2] / r_t, -1.0, 1.0))
-                        phi = math.atan2(rel[1], rel[0])
-                        Y = all_real_spherical_harmonics(
-                            self.p, np.array([theta]), np.array([phi])
-                        )[0]
-                        idx = 0
-                        for l in range(self.p + 1):
-                            for m in range(-l, l + 1):
-                                col = _sph_index(l, m)
-                                result[i] += M[col] * Y[col] / (r_t ** (l + 1))
-                                idx += 1
+                    theta = math.acos(np.clip(rel[2] / r_t, -1.0, 1.0))
+                    phi = math.atan2(rel[1], rel[0])
+                    Y = all_real_spherical_harmonics(
+                        self.p, np.array([theta]), np.array([phi])
+                    )[0]
+                    for l in range(self.p + 1):
+                        for m in range(-l, l + 1):
+                            col = _sph_index(l, m)
+                            result[i] += M[col] * Y[col] / (r_t ** (l + 1))
 
         return result
+
+    def far_fraction(self, targets: FloatArray) -> float:
+        """Fraction of target-leaf pairs evaluated with the multipole expansion."""
+
+        centers = np.array([leaf.center for leaf in self.leaves])
+        far = 0
+        total = 0
+        for t in targets:
+            tleaf = self.leaves[int(np.argmin(np.linalg.norm(centers - t[None, :], axis=1)))]
+            for idx, sleaf in enumerate(self.leaves):
+                if len(sleaf.indices) == 0:
+                    continue
+                total += 1
+                r_t = float(np.linalg.norm(t - sleaf.center))
+                if (r_t > _ADMISSIBILITY * max(self._radii[idx], 1e-15)
+                        and not self._is_near(tleaf, sleaf)):
+                    far += 1
+        return far / total if total else 0.0
 
     def _is_near(self, tleaf: OctreeNode, sleaf: OctreeNode) -> bool:
         """Determine if two leaves are in the near-field."""

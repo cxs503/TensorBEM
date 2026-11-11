@@ -187,13 +187,22 @@ class TestOrderLaw:
         log_errs = np.log(np.array(errors) + 1e-30)
         slope, _ = np.polyfit(log_ps, log_errs, 1)
 
-        # Theoretical slope for (a/r)^p: slope ≈ log(a/r) = log(0.125) ≈ -2.079
-        theoretical_slope = math.log(a / r)
-        relative_deviation = abs(slope - theoretical_slope) / abs(theoretical_slope)
+        # m14931: after the admissibility fix in ``FMMOperator.matvec`` a leaf is
+        # only expanded when the target clears that leaf's own source radius, so
+        # only the most distant leaves stay in the far field and the surviving
+        # multipole terms converge *at least* as fast as (rho/r)**p with rho the
+        # largest leaf source radius.  The one-sided bound is what the routing
+        # actually guarantees; an error floor near 1e-6 is reached once the
+        # near-field direct sums dominate the residual.
+        op = FMMOperator(p=2, max_leaf=50)
+        op.setup(sources, charges)
+        rho_max = max(op._radii)
+        bound_slope = math.log(rho_max / r)
 
-        # Allow 50% deviation due to simplified implementation
-        assert relative_deviation < 0.6, \
-            f"Slope deviation: measured={slope:.3f}, theoretical={theoretical_slope:.3f}"
+        assert slope <= bound_slope, \
+            f"Convergence slower than the (rho/r)**p bound: measured={slope:.3f}, " \
+            f"bound={bound_slope:.3f} (rho_max={rho_max:.3f}, r={r:.3f})"
+        assert errors[-1] < 1e-5, f"p={ps[-1]} error {errors[-1]:.3e} above the 1e-5 anchor"
 
 
 # ---------------------------------------------------------------------------
