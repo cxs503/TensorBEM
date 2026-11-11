@@ -50,16 +50,34 @@ def test_eigenseries_offaxis_converges_to_deep_water():
     assert np.all(prev < 1e-3), f"final off-axis error {prev} not < 1e-3"
 
 
-def test_quadrature_offaxis_defect_is_documented():
-    """The quadrature form does NOT converge off-axis (measured, not guessed).
+def test_quadrature_offaxis_defect_is_closed():
+    """The quadrature form now matches both references off-axis (m13811).
 
-    This is the open item from ``docs/finite_depth3d_offaxis_diagnosis.md``;
-    we pin the *magnitude* of the defect so a future fix is detected as the
-    error collapsing, and so a regression that makes it worse is caught.
+    History: this test used to pin the *presence* of a 34 % / 320 % off-axis
+    error in the quadrature form.  Root cause was a whole-array coordinate
+    clamp in ``_green`` (``np.minimum(tgt, 0.0)`` put every target on
+    ``x = y = 0``, i.e. on the source axis), not the wavenumber integral.
+    ``docs/finite_depth3d_quadrature_offaxis_fix.md``.
     """
-    ref = deep_water(OFFAXIS, SOURCE, NU)
-    err = _rel_err(quadrature(OFFAXIS, SOURCE, NU, 64.0), ref)
-    # Measured at h=64: ~0.34 and ~3.2 (real-part dominated).  Assert the
-    # defect is still present (order of magnitude) rather than a specific
-    # value, so the test stays valid across BLAS/architecture.
-    assert np.all(err > 0.1), f"defect unexpectedly resolved: {err}"
+    ref_eig = eigenseries(OFFAXIS, SOURCE, NU, 64.0)
+    ref_dw = deep_water(OFFAXIS, SOURCE, NU)
+    quad = quadrature(OFFAXIS, SOURCE, NU, 64.0)
+    # Independent implementation agreement is roundoff-level.
+    assert np.all(_rel_err(quad, ref_eig) < 1e-8), _rel_err(quad, ref_eig)
+    # Deep-water limit is reached at h = 64.
+    assert np.all(_rel_err(quad, ref_dw) < 1e-4), _rel_err(quad, ref_dw)
+
+
+def test_offaxis_targets_are_not_projected_onto_the_source_axis():
+    """Regression gate for the m13811 clamp bug itself.
+
+    The pre-fix kernel silently evaluated every pair at ``R = 0``, so the
+    off-axis value collapsed onto the on-axis value.  That is a cheap,
+    implementation-independent signature: assert the two differ, and differ by
+    more than the (small) roundoff-level agreement above.
+    """
+    offaxis = np.array([[0.5, 0.0, -0.5]])
+    on_axis = np.array([[0.0, 0.0, -0.5]])
+    value_off = np.ravel(quadrature(offaxis, SOURCE, NU, 20.0))[0]
+    value_axis = np.ravel(quadrature(on_axis, SOURCE, NU, 20.0))[0]
+    assert abs(value_off - value_axis) > 1e-3 * abs(value_axis)

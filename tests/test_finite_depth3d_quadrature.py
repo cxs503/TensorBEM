@@ -8,13 +8,13 @@ What is asserted here is exactly what has been established:
   representation is built that way (this checks the implementation);
 * reciprocity ``G(P, Q) = G(Q, P)`` and grid independence of the principal
   value (both are non-trivial for an integral with a pole);
-* the deep-water limit against :mod:`tensorbem.free_surface3d` is recorded as a
-  **failing** cross-check for *off-axis* field points: the measured relative
-  differences are ~0.34, ~0.56 and ~3.2 and do not decrease with depth, while
-  the on-axis point converges to 1.9e-6 at ``nu*h = 36``.  The module is
-  therefore not a verified kernel.  The test is marked ``xfail`` with the measured numbers and
-  will turn into a red build (``strict=True`` XPASS) once the diagnosis is
-  closed -- that is the intended signal, not a licence to delete the test.
+* the deep-water limit against :mod:`tensorbem.free_surface3d` for both
+  on-axis and *off-axis* field points.  This cross-check used to fail
+  off-axis by 34 % / 320 %; the cause was a whole-array coordinate clamp in
+  ``_green`` (targets were projected onto ``x = y = 0``), not the
+  wavenumber integral -- see ``docs/finite_depth3d_quadrature_offaxis_fix.md``
+  (m13811).  The gate now runs at depths where the deep-water limit is
+  reached and asserts ``< 1e-5``.
 """
 
 import math
@@ -122,20 +122,14 @@ class TestAmplitudeCoefficient:
         assert 0.0 < abs(amplitude) < 1.0
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "deep-water limit cross-check FAILS: relative differences 0.34 / 3.2 / 0.56 "
-        "(real part) do not decrease with h; kernel is not verified -- see "
-        "docs/finite_depth3d_offaxis_diagnosis.md §3.  Merge-time re-measurement "
-        "(m3878) against b408d0d: the m2930 panel-width tightening changes this "
-        "kernel by <= 1.1e-11 at these points, i.e. the quadrature was already "
-        "converged and the residual is systematic, not a resolution artefact"
-    ),
-)
 def test_deep_water_limit_matches_free_surface3d():
     targets = np.array([[0.5, 0.0, -0.5], [2.0, 1.0, -1.5], [0.0, 0.0, -0.2]])
     reference = green_function_3d(targets, SOURCE, NU)
-    for depth in (8.0, 20.0, 60.0):
+    previous = None
+    for depth in (64.0, 128.0, 256.0):
         value = green_function_finite_depth_3d(targets, SOURCE, NU, depth)
-        assert np.max(np.abs(value - reference) / np.abs(reference)) < 1e-6
+        error = np.max(np.abs(value - reference) / np.abs(reference))
+        assert error < 1e-5, f"h={depth}: {error}"
+        if previous is not None:
+            assert error <= previous, f"deep-water limit non-monotone at h={depth}"
+        previous = error
