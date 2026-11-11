@@ -349,6 +349,39 @@ def test_documents_match_the_generator(report: dict) -> None:
     assert DOC_PATH.read_text(encoding="utf-8") == document
 
 
+def test_document_does_not_pin_the_roundoff_floor(report: dict) -> None:
+    """The published document must not depend on the BLAS summation order.
+
+    ``monolithic_residual`` converges to the floating-point floor, so its stored
+    digits are set by the order in which the operator is summed, not by the
+    model: with the default BLAS pool the same run yields ``1.79e-17, 3.63e-16,
+    3.71e-16`` and with ``OMP_NUM_THREADS=1`` it yields ``3.47e-16, 3.16e-16,
+    2.85e-16`` (both measured on this commit).  Printing those digits made the
+    byte-exact reproducibility gate depend on the thread count -- green by
+    default, red with one thread -- and the mutation audit
+    (``tensorbem.benchmarks.mutation_audit``) pins one thread, so a red baseline
+    would have scored every mutant of this module as a spurious "kill".
+
+    The document therefore reports sub-floor residuals as ``< 1e-14``.  The test
+    asserts that convention from both sides: any floor-level value renders the
+    same text, while a residual that is *not* round-off still moves the
+    document.
+    """
+    baseline = bench.render_document(report)
+    modes = len(report["coupling"]["monolithic_residual"])
+    for floor_value in (0.0, 1.79e-17, 3.47e-16, -2.2e-16, 1.0e-14):
+        perturbed = json.loads(json.dumps(report))
+        perturbed["coupling"]["monolithic_residual"] = [floor_value] * modes
+        assert bench.render_document(perturbed) == baseline, floor_value
+    # A residual one decade above the floor is a statement about the model, not
+    # about the summation order, and must still show up.
+    regression = json.loads(json.dumps(report))
+    regression["coupling"]["monolithic_residual"] = [1.0e-12] * modes
+    assert bench.render_document(regression) != baseline
+    assert "| monolithic residual (per mode) | < 1e-14" in baseline
+    assert "< 1e-14" in (ARTIFACTS / "report.md").read_text(encoding="utf-8")
+
+
 def test_acceptance_numbers_meet_the_campaign_criteria(report: dict) -> None:
     assert report["all_criteria_passed"]
     wet = report["wet_modes"]
