@@ -1,0 +1,54 @@
+{
+  "all_gates_passed": true,
+  "gates": [
+    {
+      "description": "Horizontal force relative error at 128 panels (ka=1.0, h/a=3.0)",
+      "id": "G1_force_convergence_128",
+      "measured": 0.00013207074898697037,
+      "passed": true,
+      "threshold": 0.0005,
+      "unit": "relative"
+    },
+    {
+      "description": "Observed convergence order for force (last refinement step)",
+      "id": "G2_observed_order_force",
+      "measured": 2.006930874004945,
+      "passed": true,
+      "threshold": 1.9,
+      "unit": "order"
+    },
+    {
+      "description": "Surface potential relative L2 error at 128 panels",
+      "id": "G3_surface_potential_128",
+      "measured": 0.00018170722685468068,
+      "passed": true,
+      "threshold": 0.0002,
+      "unit": "relative"
+    },
+    {
+      "description": "Max force error across ka=0.1..3.0 sweep (64 panels)",
+      "id": "G4_frequency_sweep_max_error",
+      "measured": 0.0025779496039377344,
+      "passed": true,
+      "threshold": 0.005,
+      "unit": "relative"
+    },
+    {
+      "description": "CHIEF kappa reduction factor at J1 irregular frequency",
+      "id": "G5_chief_condition_number_reduction",
+      "measured": 198.94855189145485,
+      "passed": true,
+      "threshold": 100.0,
+      "unit": "factor"
+    },
+    {
+      "description": "Effective inertia coefficient CM at ka=0.1 approaches Morison 2.0",
+      "id": "G6_morison_long_wave_limit",
+      "measured": 0.018386592028113213,
+      "passed": true,
+      "threshold": 0.02,
+      "unit": "absolute deviation from 2.0"
+    }
+  ],
+  "schema": "tensorbem.bem_maccamy_fuchs/1"
+}

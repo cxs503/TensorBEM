@@ -1,0 +1,158 @@
+{
+  "benchmark": "maccamy_fuchs_vertical_cylinder_wave_diffraction",
+  "environment": {
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "frequency_sweep": [
+    {
+      "computed_effective_cm": 2.018386592028113,
+      "computed_force_magnitude": 18567.69758667509,
+      "condition_number": 2.1549550852689032,
+      "exact_effective_cm": 2.0191805862568715,
+      "exact_force_magnitude": 18575.001759613704,
+      "exact_phase_lag_degrees": -0.452617838630459,
+      "force_relative_error": 0.000393239116931711,
+      "ka": 0.1
+    },
+    {
+      "computed_effective_cm": 2.0052701328304954,
+      "computed_force_magnitude": 57317.470594000006,
+      "condition_number": 2.3644262950228545,
+      "exact_effective_cm": 2.0056320957818383,
+      "exact_force_magnitude": 57327.81673165002,
+      "exact_phase_lag_degrees": -10.297600796869004,
+      "force_relative_error": 0.00018054754461138033,
+      "ka": 0.5
+    },
+    {
+      "computed_effective_cm": 1.3719116816959822,
+      "computed_force_magnitude": 43108.96008913931,
+      "condition_number": 2.5090526757498224,
+      "exact_effective_cm": 1.371615831496945,
+      "exact_force_magnitude": 43099.663722184494,
+      "exact_phase_lag_degrees": -20.503796568767577,
+      "force_relative_error": 0.0005305062248795069,
+      "ka": 1.0
+    },
+    {
+      "computed_effective_cm": 0.8422998785790999,
+      "computed_force_magnitude": 26592.181074109758,
+      "condition_number": 2.0401339562584835,
+      "exact_effective_cm": 0.8420421332853952,
+      "exact_force_magnitude": 26584.043818370435,
+      "exact_phase_lag_degrees": -12.012678801037175,
+      "force_relative_error": 0.0011257474250017823,
+      "ka": 1.5
+    },
+    {
+      "computed_effective_cm": 0.5610094501104879,
+      "computed_force_magnitude": 17715.738202843215,
+      "condition_number": 2.3833553154572944,
+      "exact_effective_cm": 0.5608336990117753,
+      "exact_force_magnitude": 17710.188277698384,
+      "exact_phase_lag_degrees": 6.522493476374183,
+      "force_relative_error": 0.001631840268520127,
+      "ka": 2.0
+    },
+    {
+      "computed_effective_cm": 0.3078363477297716,
+      "computed_force_magnitude": 9721.075098532867,
+      "condition_number": 2.3111635977677505,
+      "exact_effective_cm": 0.30773350353039136,
+      "exact_force_magnitude": 9717.827411269822,
+      "exact_phase_lag_degrees": 54.244732730165914,
+      "force_relative_error": 0.0025779496039377344,
+      "ka": 3.0
+    }
+  ],
+  "irregular_frequency_study": [
+    {
+      "chief_condition_number": 2.313496571088343,
+      "chief_force_relative_error": 0.0020204498637242775,
+      "ka": 2.4067584879839923,
+      "resonance": "j01_axisymmetric_resonance",
+      "unaugmented_condition_number": 1002.5221006298091,
+      "unaugmented_force_relative_error": 0.002030743980425593
+    },
+    {
+      "chief_condition_number": 3.342347066000406,
+      "chief_force_relative_error": 0.0028068475467946867,
+      "ka": 3.8347857863304173,
+      "resonance": "j11_dipole_resonance",
+      "unaugmented_condition_number": 664.9551086994337,
+      "unaugmented_force_relative_error": 0.10345376948243575
+    }
+  ],
+  "note": "Depth-uniform bottom-mounted vertical cylinder solved via exact vertical eigenmode separation + 2-D exterior Helmholtz BEM with Schenck CHIEF interior null-field regularisation. For general 3-D submerged and surface-piercing bodies using the 3-D Kelvin free-surface Green function, see tensorbem.benchmarks.floating_hemisphere and tensorbem.benchmarks.submerged_sphere_wave.",
+  "refinement": {
+    "depth": 3.0,
+    "ka": 1.0,
+    "levels": [
+      {
+        "boundary_relative_residual": 0.00018240692262019297,
+        "chief_relative_residual": 0.0012218204858078128,
+        "condition_number": 3.0150568005685643,
+        "exact_force_x_magnitude": 43099.663722184494,
+        "force_x_magnitude": 43267.49226073626,
+        "force_x_relative_error": 0.008713799390524208,
+        "h_max": 0.39018064403225716,
+        "moment_y_relative_error": 0.008713799390524128,
+        "panels": 16,
+        "surface_potential_relative_l2_error": 0.011945568979175165
+      },
+      {
+        "boundary_relative_residual": 2.6960464091012452e-05,
+        "chief_relative_residual": 0.00033303632303326804,
+        "condition_number": 2.6653664374439305,
+        "exact_force_x_magnitude": 43099.663722184494,
+        "force_x_magnitude": 43138.422486559924,
+        "force_x_relative_error": 0.0021400813425757445,
+        "h_max": 0.19603428065912168,
+        "moment_y_relative_error": 0.0021400813425756426,
+        "panels": 32,
+        "surface_potential_relative_l2_error": 0.0029387893667727704
+      },
+      {
+        "boundary_relative_residual": 3.7239503637442555e-06,
+        "chief_relative_residual": 8.698845542507863e-05,
+        "condition_number": 2.5090526757498224,
+        "exact_force_x_magnitude": 43099.663722184494,
+        "force_x_magnitude": 43108.96008913931,
+        "force_x_relative_error": 0.0005305062248795069,
+        "h_max": 0.0981353486548366,
+        "moment_y_relative_error": 0.0005305062248794445,
+        "panels": 64,
+        "surface_potential_relative_l2_error": 0.0007293526607618206
+      },
+      {
+        "boundary_relative_residual": 4.922810836577078e-07,
+        "chief_relative_residual": 2.2247820868544557e-05,
+        "condition_number": 2.434227297102135,
+        "exact_force_x_magnitude": 43099.663722184494,
+        "force_x_magnitude": 43101.93895697914,
+        "force_x_relative_error": 0.00013207074898697037,
+        "h_max": 0.04908245704582536,
+        "moment_y_relative_error": 0.00013207074898693118,
+        "panels": 128,
+        "surface_potential_relative_l2_error": 0.00018170722685468068
+      }
+    ],
+    "observed_orders": {
+      "force_x_relative_error": [
+        null,
+        2.039841212136512,
+        2.015729072433639,
+        2.006930874004945
+      ],
+      "surface_potential_relative_l2_error": [
+        null,
+        2.0373694402647082,
+        2.0140355704387236,
+        2.0058724723463217
+      ]
+    },
+    "radius": 1.0
+  }
+}
