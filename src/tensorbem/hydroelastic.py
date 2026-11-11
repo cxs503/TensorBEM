@@ -71,6 +71,8 @@ from numpy.polynomial.legendre import leggauss
 from numpy.typing import NDArray
 from scipy.linalg import eigh
 
+from .flexural_gravity import plate_fluid_omega
+
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
 
@@ -795,12 +797,23 @@ def flexural_gravity_omega(
     rigidity = plate.flexural_rigidity if flexural_rigidity is None else float(flexural_rigidity)
     rho = plate.fluid_density
     depth_val = plate.water_depth if depth is None else depth
+    if with_hydrostatic:
+        # Single source of truth for the coupled dispersion: eq. (3) of
+        # :mod:`tensorbem.flexural_gravity` (bending + plate inertia + gravity).
+        return plate_fluid_omega(
+            k,
+            rigidity=rigidity,
+            mass_per_area=m_pp,
+            fluid_density=rho,
+            water_depth=depth_val,
+            gravity=plate.gravity,
+        )
+    # Pressure-loaded panel: no free surface, buoyancy dropped.
     if depth_val is None:
         impedance = rho / k
     else:
         impedance = rho / (k * math.tanh(k * _positive("depth", depth_val)))
-    stiffness = rigidity * k ** 4 + (rho * plate.gravity if with_hydrostatic else 0.0)
-    return math.sqrt(stiffness / (m_pp + impedance))
+    return math.sqrt(rigidity * k ** 4 / (m_pp + impedance))
 
 
 def panel_wet_omegas_analytic(

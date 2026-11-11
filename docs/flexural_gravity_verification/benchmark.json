@@ -1,0 +1,816 @@
+{
+  "edge_energy": {
+    "max_abs_residual": 4.440892098500626e-16,
+    "threshold": 0.0001
+  },
+  "external_anchor_in_vacuo_plate": {
+    "limit": "eq.(3) with k -> infinity; error is O(rho_w / (rho_i h k))",
+    "reference": "Euler-Bernoulli in-vacuo plate: omega^2 = D k^4 / (rho_i h) (Timoshenko & Woinowsky-Krieger, Theory of Plates and Shells, 2nd ed., 1959)",
+    "rel_error_at_k1000": 0.002230564169522773,
+    "rows": [
+      {
+        "got_eq3_omega2": 1044974899.5036635,
+        "h_ice": 0.5,
+        "k": 10.0,
+        "ref_in_vacuo_plate_omega2": 1278584315.3102272,
+        "rel_error": 0.18270943340164641
+      },
+      {
+        "got_eq3_omega2": 12506259382842.543,
+        "h_ice": 0.5,
+        "k": 100.0,
+        "ref_in_vacuo_plate_omega2": 12785843153102.27,
+        "rel_error": 0.021866666664989574
+      },
+      {
+        "got_eq3_omega2": 1.2757323509487822e+17,
+        "h_ice": 0.5,
+        "k": 1000.0,
+        "ref_in_vacuo_plate_omega2": 1.278584315310227e+17,
+        "rel_error": 0.002230564169522773
+      },
+      {
+        "got_eq3_omega2": 4600144461.608365,
+        "h_ice": 1.0,
+        "k": 10.0,
+        "ref_in_vacuo_plate_omega2": 5114337261.240909,
+        "rel_error": 0.10053947820949596
+      },
+      {
+        "got_eq3_omega2": 50578023926221.82,
+        "h_ice": 1.0,
+        "k": 100.0,
+        "ref_in_vacuo_plate_omega2": 51143372612409.08,
+        "rel_error": 0.011054192504506155
+      },
+      {
+        "got_eq3_omega2": 5.1086269639257235e+17,
+        "h_ice": 1.0,
+        "k": 1000.0,
+        "ref_in_vacuo_plate_omega2": 5.114337261240908e+17,
+        "rel_error": 0.00111652732768725
+      },
+      {
+        "got_eq3_omega2": 19374530420.095592,
+        "h_ice": 2.0,
+        "k": 10.0,
+        "ref_in_vacuo_plate_omega2": 20457349044.963634,
+        "rel_error": 0.052930544543581495
+      },
+      {
+        "got_eq3_omega2": 203436508870621.2,
+        "h_ice": 2.0,
+        "k": 100.0,
+        "ref_in_vacuo_plate_omega2": 204573490449636.3,
+        "rel_error": 0.0055578148298497995
+      },
+      {
+        "got_eq3_omega2": 2.0445922071068948e+18,
+        "h_ice": 2.0,
+        "k": 1000.0,
+        "ref_in_vacuo_plate_omega2": 2.0457349044963633e+18,
+        "rel_error": 0.0005585754962467804
+      }
+    ]
+  },
+  "fd_depth_factor_convergence": {
+    "k": 1.0,
+    "min_order": 1.9758653226127023,
+    "observed_order_per_refinement": [
+      1.9758653226127023,
+      1.9879545559034937,
+      1.9939827386573858
+    ],
+    "rows": [
+      {
+        "dz": 0.05,
+        "g0_exact": 1.0,
+        "g0_fd": 0.9990933106231004,
+        "k": 1.0,
+        "nodes": 4000,
+        "rel_error": 0.0009066893768996387
+      },
+      {
+        "dz": 0.025,
+        "g0_exact": 1.0,
+        "g0_fd": 0.9997695037851506,
+        "k": 1.0,
+        "nodes": 8000,
+        "rel_error": 0.00023049621484938498
+      },
+      {
+        "dz": 0.0125,
+        "g0_exact": 1.0,
+        "g0_fd": 0.9999418928136627,
+        "k": 1.0,
+        "nodes": 16000,
+        "rel_error": 5.810718633725287e-05
+      },
+      {
+        "dz": 0.00625,
+        "g0_exact": 1.0,
+        "g0_fd": 0.9999854124878294,
+        "k": 1.0,
+        "nodes": 32000,
+        "rel_error": 1.4587512170649575e-05
+      }
+    ]
+  },
+  "fd_independent": {
+    "got": "tensorbem.flexural_gravity.flexural_gravity_omega2_mass_loading",
+    "max_relative_error": 0.00010227062460255519,
+    "n_points": 18,
+    "reference": "tensorbem.flexural_gravity_numeric.fd_omega2",
+    "rows": [
+      {
+        "got_fd_omega2": 0.09413836615646619,
+        "h_ice": 0.5,
+        "k": 0.01,
+        "ref_closed_form_omega2": 0.09413837512410068,
+        "rel_error": 9.52601368386837e-08
+      },
+      {
+        "got_fd_omega2": 0.49708646526634315,
+        "h_ice": 0.5,
+        "k": 0.05,
+        "ref_closed_form_omega2": 0.49708760292237314,
+        "rel_error": 2.2886429339702434e-06
+      },
+      {
+        "got_fd_omega2": 18.598587057469675,
+        "h_ice": 0.5,
+        "k": 0.2,
+        "ref_closed_form_omega2": 18.599223000117895,
+        "rel_error": 3.4191893296609005e-05
+      },
+      {
+        "got_fd_omega2": 39519.47841260553,
+        "h_ice": 0.5,
+        "k": 1.0,
+        "ref_closed_form_omega2": 39523.52050773435,
+        "rel_error": 0.00010227062460255519
+      },
+      {
+        "got_fd_omega2": 55218939.1400728,
+        "h_ice": 0.5,
+        "k": 5.0,
+        "ref_closed_form_omega2": 55221464.713526666,
+        "rel_error": 4.5735357925906275e-05
+      },
+      {
+        "got_fd_omega2": 18400303971.733467,
+        "h_ice": 0.5,
+        "k": 20.0,
+        "ref_closed_form_omega2": 18400577826.71435,
+        "rel_error": 1.4882955495395557e-05
+      },
+      {
+        "got_fd_omega2": 0.09377415336074363,
+        "h_ice": 1.0,
+        "k": 0.01,
+        "ref_closed_form_omega2": 0.09377416225549141,
+        "rel_error": 9.485286321516939e-08
+      },
+      {
+        "got_fd_omega2": 0.6061979579000623,
+        "h_ice": 1.0,
+        "k": 0.05,
+        "ref_closed_form_omega2": 0.6061993155726959,
+        "rel_error": 2.239647255899607e-06
+      },
+      {
+        "got_fd_omega2": 125.85292150969491,
+        "h_ice": 1.0,
+        "k": 0.2,
+        "ref_closed_form_omega2": 125.85689824880276,
+        "rel_error": 3.159730744352262e-05
+      },
+      {
+        "got_fd_omega2": 241482.04821702678,
+        "h_ice": 1.0,
+        "k": 1.0,
+        "ref_closed_form_omega2": 241500.91589703463,
+        "rel_error": 7.812674307164171e-05
+      },
+      {
+        "got_fd_omega2": 261236663.67241335,
+        "h_ice": 1.0,
+        "k": 5.0,
+        "ref_closed_form_omega2": 261243729.35533494,
+        "rel_error": 2.7046325433434295e-05
+      },
+      {
+        "got_fd_omega2": 77497514440.09935,
+        "h_ice": 1.0,
+        "k": 20.0,
+        "ref_closed_form_omega2": 77498121670.00095,
+        "rel_error": 7.835414439871829e-06
+      },
+      {
+        "got_fd_omega2": 0.09328263549103759,
+        "h_ice": 2.0,
+        "k": 0.01,
+        "ref_closed_form_omega2": 0.09328264426414659,
+        "rel_error": 9.404867403109492e-08
+      },
+      {
+        "got_fd_omega2": 1.4999991276135571,
+        "h_ice": 2.0,
+        "k": 0.05,
+        "ref_closed_form_omega2": 1.5000023491550292,
+        "rel_error": 2.147690951181717e-06
+      },
+      {
+        "got_fd_omega2": 864.0453167258905,
+        "h_ice": 2.0,
+        "k": 0.2,
+        "ref_closed_form_omega2": 864.0690214117158,
+        "rel_error": 2.7433787391785304e-05
+      },
+      {
+        "got_fd_omega2": 1312238.1096673626,
+        "h_ice": 2.0,
+        "k": 1.0,
+        "ref_closed_form_omega2": 1312307.7532922633,
+        "rel_error": 5.306958274527324e-05
+      },
+      {
+        "got_fd_omega2": 1150019001.9306197,
+        "h_ice": 2.0,
+        "k": 5.0,
+        "ref_closed_form_omega2": 1150036117.86698,
+        "rel_error": 1.4882955495436815e-05
+      },
+      {
+        "got_fd_omega2": 318418265292.0186,
+        "h_ice": 2.0,
+        "k": 20.0,
+        "ref_closed_form_omega2": 318419546683.71014,
+        "rel_error": 4.02422434449711e-06
+      }
+    ],
+    "threshold": 0.001
+  },
+  "shared_core_regression": {
+    "got": "tensorbem.flexural_gravity.flexural_gravity_omega_mass_loading",
+    "max_relative_error": 1.821432824803921e-16,
+    "n_points": 63,
+    "note": "hydroelastic now delegates to flexural_gravity; this is a regression pin on the shared core, not an independent check",
+    "reference": "tensorbem.hydroelastic.flexural_gravity_omega",
+    "rows": [
+      {
+        "got_flexural_gravity": 0.30681977629237117,
+        "h_ice": 0.5,
+        "k": 0.01,
+        "ref_hydroelastic": 0.30681977629237117,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.3922338106438935,
+        "h_ice": 0.5,
+        "k": 0.015848931924611134,
+        "ref_hydroelastic": 0.3922338106438935,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.4941047748301208,
+        "h_ice": 0.5,
+        "k": 0.025118864315095794,
+        "ref_hydroelastic": 0.4941047748301208,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.6238574788427761,
+        "h_ice": 0.5,
+        "k": 0.039810717055349734,
+        "ref_hydroelastic": 0.6238574788427761,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.8108001036241115,
+        "h_ice": 0.5,
+        "k": 0.06309573444801933,
+        "ref_hydroelastic": 0.8108001036241115,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1.219065572450824,
+        "h_ice": 0.5,
+        "k": 0.1,
+        "ref_hydroelastic": 1.2190655724508237,
+        "rel_error": 1.821432824803921e-16
+      },
+      {
+        "got_flexural_gravity": 2.606156707552254,
+        "h_ice": 0.5,
+        "k": 0.15848931924611143,
+        "ref_hydroelastic": 2.606156707552254,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 7.323291137880772,
+        "h_ice": 0.5,
+        "k": 0.25118864315095807,
+        "ref_hydroelastic": 7.323291137880772,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 22.108651333669712,
+        "h_ice": 0.5,
+        "k": 0.3981071705534973,
+        "ref_hydroelastic": 22.108651333669716,
+        "rel_error": 1.6069336954036634e-16
+      },
+      {
+        "got_flexural_gravity": 66.82252800076012,
+        "h_ice": 0.5,
+        "k": 0.6309573444801934,
+        "ref_hydroelastic": 66.82252800076012,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 198.8052325964645,
+        "h_ice": 0.5,
+        "k": 1.0,
+        "ref_hydroelastic": 198.8052325964645,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 578.5137341926736,
+        "h_ice": 0.5,
+        "k": 1.584893192461114,
+        "ref_hydroelastic": 578.5137341926736,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1641.1036446785236,
+        "h_ice": 0.5,
+        "k": 2.5118864315095824,
+        "ref_hydroelastic": 1641.1036446785233,
+        "rel_error": 1.3854924774588044e-16
+      },
+      {
+        "got_flexural_gravity": 4535.107536552584,
+        "h_ice": 0.5,
+        "k": 3.981071705534973,
+        "ref_hydroelastic": 4535.107536552584,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 12232.22669933664,
+        "h_ice": 0.5,
+        "k": 6.309573444801936,
+        "ref_hydroelastic": 12232.226699336641,
+        "rel_error": 1.4870468380417616e-16
+      },
+      {
+        "got_flexural_gravity": 32326.07151361983,
+        "h_ice": 0.5,
+        "k": 10.0,
+        "ref_hydroelastic": 32326.07151361983,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 84083.66677702268,
+        "h_ice": 0.5,
+        "k": 15.848931924611142,
+        "ref_hydroelastic": 84083.66677702268,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 216197.65072997092,
+        "h_ice": 0.5,
+        "k": 25.11886431509582,
+        "ref_hydroelastic": 216197.65072997092,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 551443.4218834616,
+        "h_ice": 0.5,
+        "k": 39.810717055349734,
+        "ref_hydroelastic": 551443.4218834616,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1398956.0975475132,
+        "h_ice": 0.5,
+        "k": 63.095734448019364,
+        "ref_hydroelastic": 1398956.0975475132,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 3536419.005553859,
+        "h_ice": 0.5,
+        "k": 100.0,
+        "ref_hydroelastic": 3536419.005553859,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.30622567210391,
+        "h_ice": 1.0,
+        "k": 0.01,
+        "ref_hydroelastic": 0.30622567210391,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.39136815321894775,
+        "h_ice": 1.0,
+        "k": 0.015848931924611134,
+        "ref_hydroelastic": 0.39136815321894775,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.49535045825590424,
+        "h_ice": 1.0,
+        "k": 0.025118864315095794,
+        "ref_hydroelastic": 0.49535045825590424,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.648971557456552,
+        "h_ice": 1.0,
+        "k": 0.039810717055349734,
+        "ref_hydroelastic": 0.648971557456552,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1.0093539074654532,
+        "h_ice": 1.0,
+        "k": 0.06309573444801933,
+        "ref_hydroelastic": 1.0093539074654532,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 2.2582899813340975,
+        "h_ice": 1.0,
+        "k": 0.1,
+        "ref_hydroelastic": 2.2582899813340975,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 6.436920085721341,
+        "h_ice": 1.0,
+        "k": 0.15848931924611143,
+        "ref_hydroelastic": 6.436920085721341,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 19.380483246134407,
+        "h_ice": 1.0,
+        "k": 0.25118864315095807,
+        "ref_hydroelastic": 19.380483246134407,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 58.109496797328845,
+        "h_ice": 1.0,
+        "k": 0.3981071705534973,
+        "ref_hydroelastic": 58.109496797328845,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 171.02607551969362,
+        "h_ice": 1.0,
+        "k": 0.6309573444801934,
+        "ref_hydroelastic": 171.02607551969362,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 491.4274268872614,
+        "h_ice": 1.0,
+        "k": 1.0,
+        "ref_hydroelastic": 491.4274268872614,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1375.6217246590134,
+        "h_ice": 1.0,
+        "k": 1.584893192461114,
+        "ref_hydroelastic": 1375.6217246590134,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 3753.718660144528,
+        "h_ice": 1.0,
+        "k": 2.5118864315095824,
+        "ref_hydroelastic": 3753.7186601445273,
+        "rel_error": 1.211458268609175e-16
+      },
+      {
+        "got_flexural_gravity": 10015.178813894749,
+        "h_ice": 1.0,
+        "k": 3.981071705534973,
+        "ref_hydroelastic": 10015.178813894749,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 26240.842532797913,
+        "h_ice": 1.0,
+        "k": 6.309573444801936,
+        "ref_hydroelastic": 26240.842532797913,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 67824.36480799776,
+        "h_ice": 1.0,
+        "k": 10.0,
+        "ref_hydroelastic": 67824.36480799776,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 173618.45949006232,
+        "h_ice": 1.0,
+        "k": 15.848931924611142,
+        "ref_hydroelastic": 173618.45949006232,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 441510.03248276305,
+        "h_ice": 1.0,
+        "k": 25.11886431509582,
+        "ref_hydroelastic": 441510.03248276305,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1117845.5647836921,
+        "h_ice": 1.0,
+        "k": 39.810717055349734,
+        "ref_hydroelastic": 1117845.5647836921,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 2822158.997122452,
+        "h_ice": 1.0,
+        "k": 63.095734448019364,
+        "ref_hydroelastic": 2822158.997122452,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 7111822.827251943,
+        "h_ice": 1.0,
+        "k": 100.0,
+        "ref_hydroelastic": 7111822.827251943,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.30542207560054757,
+        "h_ice": 2.0,
+        "k": 0.01,
+        "ref_hydroelastic": 0.30542207560054757,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.39264258928615753,
+        "h_ice": 2.0,
+        "k": 0.015848931924611134,
+        "ref_hydroelastic": 0.39264258928615753,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.5203304162417608,
+        "h_ice": 2.0,
+        "k": 0.025118864315095794,
+        "ref_hydroelastic": 0.5203304162417608,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 0.8403250633183882,
+        "h_ice": 2.0,
+        "k": 0.039810717055349734,
+        "ref_hydroelastic": 0.8403250633183882,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1.9608773169694835,
+        "h_ice": 2.0,
+        "k": 0.06309573444801933,
+        "ref_hydroelastic": 1.9608773169694835,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 5.646249980238568,
+        "h_ice": 2.0,
+        "k": 0.1,
+        "ref_hydroelastic": 5.646249980238567,
+        "rel_error": 1.5730412624461904e-16
+      },
+      {
+        "got_flexural_gravity": 16.92275407474645,
+        "h_ice": 2.0,
+        "k": 0.15848931924611143,
+        "ref_hydroelastic": 16.92275407474645,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 50.26987362115843,
+        "h_ice": 2.0,
+        "k": 0.25118864315095807,
+        "ref_hydroelastic": 50.26987362115843,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 146.21537322459506,
+        "h_ice": 2.0,
+        "k": 0.3981071705534973,
+        "ref_hydroelastic": 146.21537322459506,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 414.651412705382,
+        "h_ice": 2.0,
+        "k": 0.6309573444801934,
+        "ref_hydroelastic": 414.651412705382,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 1145.560017324393,
+        "h_ice": 2.0,
+        "k": 1.0,
+        "ref_hydroelastic": 1145.560017324393,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 3089.1185418808514,
+        "h_ice": 2.0,
+        "k": 1.584893192461114,
+        "ref_hydroelastic": 3089.1185418808514,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 8162.078307693577,
+        "h_ice": 2.0,
+        "k": 2.5118864315095824,
+        "ref_hydroelastic": 8162.078307693576,
+        "rel_error": 1.1142930360220123e-16
+      },
+      {
+        "got_flexural_gravity": 21227.49250482897,
+        "h_ice": 2.0,
+        "k": 3.981071705534973,
+        "ref_hydroelastic": 21227.49250482897,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 54575.152231700624,
+        "h_ice": 2.0,
+        "k": 6.309573444801936,
+        "ref_hydroelastic": 54575.15223170063,
+        "rel_error": 1.333199691920804e-16
+      },
+      {
+        "got_flexural_gravity": 139192.4222797189,
+        "h_ice": 2.0,
+        "k": 10.0,
+        "ref_hydroelastic": 139192.4222797189,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 353101.2389231321,
+        "h_ice": 2.0,
+        "k": 15.848931924611142,
+        "ref_hydroelastic": 353101.2389231321,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 892577.9986921177,
+        "h_ice": 2.0,
+        "k": 25.11886431509582,
+        "ref_hydroelastic": 892577.9986921177,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 2251113.689492249,
+        "h_ice": 2.0,
+        "k": 39.810717055349734,
+        "ref_hydroelastic": 2251113.689492249,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 5669042.402962288,
+        "h_ice": 2.0,
+        "k": 63.095734448019364,
+        "ref_hydroelastic": 5669042.402962288,
+        "rel_error": 0.0
+      },
+      {
+        "got_flexural_gravity": 14263117.081150992,
+        "h_ice": 2.0,
+        "k": 100.0,
+        "ref_hydroelastic": 14263117.081150992,
+        "rel_error": 0.0
+      }
+    ],
+    "threshold": 1e-06
+  },
+  "wavenumber_solver_roundtrip": {
+    "max_relative_error": 4.07035516403198e-13,
+    "n_points": 15,
+    "rows": [
+      {
+        "h_ice": 0.5,
+        "k_solved": 0.005234719593132894,
+        "omega": 0.2,
+        "omega_back": 0.19999999999992002,
+        "rel_error": 3.9995784462121264e-13
+      },
+      {
+        "h_ice": 0.5,
+        "k_solved": 0.025722290368751767,
+        "omega": 0.5,
+        "omega_back": 0.4999999999999602,
+        "rel_error": 7.960299086562372e-14
+      },
+      {
+        "h_ice": 0.5,
+        "k_solved": 0.082907810405935,
+        "omega": 1.0,
+        "omega_back": 0.999999999999986,
+        "rel_error": 1.3988810110276972e-14
+      },
+      {
+        "h_ice": 0.5,
+        "k_solved": 0.13827763038400961,
+        "omega": 2.0,
+        "omega_back": 1.999999999999976,
+        "rel_error": 1.199040866595169e-14
+      },
+      {
+        "h_ice": 0.5,
+        "k_solved": 0.16957540468798732,
+        "omega": 3.0,
+        "omega_back": 3.0000000000000795,
+        "rel_error": 2.6497322854387068e-14
+      },
+      {
+        "h_ice": 1.0,
+        "k_solved": 0.005240903006031777,
+        "omega": 0.2,
+        "omega_back": 0.1999999999999186,
+        "rel_error": 4.07035516403198e-13
+      },
+      {
+        "h_ice": 1.0,
+        "k_solved": 0.025568071243681503,
+        "omega": 0.5,
+        "omega_back": 0.4999999999999923,
+        "rel_error": 1.5432100042289676e-14
+      },
+      {
+        "h_ice": 1.0,
+        "k_solved": 0.06265115207895366,
+        "omega": 1.0,
+        "omega_back": 1.0000000000000118,
+        "rel_error": 1.176836406102666e-14
+      },
+      {
+        "h_ice": 1.0,
+        "k_solved": 0.0943043411244705,
+        "omega": 2.0,
+        "omega_back": 1.99999999999999,
+        "rel_error": 4.9960036108132044e-15
+      },
+      {
+        "h_ice": 1.0,
+        "k_solved": 0.11397494078633338,
+        "omega": 3.0,
+        "omega_back": 2.999999999999962,
+        "rel_error": 1.2730557349035129e-14
+      },
+      {
+        "h_ice": 2.0,
+        "k_solved": 0.005252682974217439,
+        "omega": 0.2,
+        "omega_back": 0.2000000000000777,
+        "rel_error": 3.8843928074072664e-13
+      },
+      {
+        "h_ice": 2.0,
+        "k_solved": 0.023756175058399553,
+        "omega": 0.5,
+        "omega_back": 0.49999999999999545,
+        "rel_error": 9.103828801926284e-15
+      },
+      {
+        "h_ice": 2.0,
+        "k_solved": 0.04455609086716465,
+        "omega": 1.0,
+        "omega_back": 1.0000000000001292,
+        "rel_error": 1.2922996006636822e-13
+      },
+      {
+        "h_ice": 2.0,
+        "k_solved": 0.06367428006801158,
+        "omega": 2.0,
+        "omega_back": 1.999999999999974,
+        "rel_error": 1.2989609388114332e-14
+      },
+      {
+        "h_ice": 2.0,
+        "k_solved": 0.0763241819897024,
+        "omega": 3.0,
+        "omega_back": 2.999999999999854,
+        "rel_error": 4.87017833468902e-14
+      }
+    ]
+  }
+}

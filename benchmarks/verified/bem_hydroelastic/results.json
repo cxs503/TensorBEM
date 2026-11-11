@@ -165,9 +165,9 @@
     "fundamental_modal_peak_error_vs_wet": 0.012419920084640372,
     "fundamental_modal_peak_rad_s": 262.0837185761464,
     "local_operator": {
-      "dispersion_root_omega": 61.08390501974205,
-      "relative_error": 4.6889653595849446e-08,
-      "response_peak_omega": 61.0839021555389,
+      "dispersion_root_omega": 61.083905019742055,
+      "relative_error": 4.6889654177461516e-08,
+      "response_peak_omega": 61.08390215553887,
       "wavenumber": 3.0
     },
     "passed": true,
@@ -307,8 +307,8 @@
     "dispersion_crosscheck": [
       {
         "omega_ice_mass_loading": 0.6989005979124587,
-        "omega_local_impedance": 0.6989005979124588,
-        "relative_error": 1.5885277934248074e-16,
+        "omega_local_impedance": 0.6989005979124587,
+        "relative_error": 0.0,
         "wavenumber": 0.05
       },
       {
@@ -336,7 +336,7 @@
         "wavenumber": 20.0
       }
     ],
-    "dispersion_crosscheck_max_error": 1.5885277934248074e-16,
+    "dispersion_crosscheck_max_error": 0.0,
     "dry_frequency_hz": [
       92.87948196110871,
       166.63671763610677,
