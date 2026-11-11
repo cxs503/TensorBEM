@@ -1,0 +1,155 @@
+{
+  "provenance": {
+    "mission": "14572",
+    "branch": "agent/m14572",
+    "date": "2026-11-11",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "compute_command": "PYTHONPATH=src python3 tools/m14572_linear_vs_quadratic.py",
+    "case": "unit icosphere, interior point source, Laplace Dirichlet->flux",
+    "source": [
+      0.0,
+      0.0,
+      0.5
+    ],
+    "linear_settings": "panel_linear_order defaults (quadrature_order=4, refinement_depth=3, self_rule=analytic, free_term=half)",
+    "quadratic_settings": "quadratic_panel_verification defaults (quadrature_order=8, self_order=16)",
+    "elapsed_seconds": 74.5
+  },
+  "acceptance": {
+    "quadratic_flux_limit": 0.03,
+    "solve_residual_limit": 1e-10,
+    "min_ratio_matched_nodes_low": 2.0,
+    "min_ratio_matched_panels": 10.0,
+    "min_ratio_matched_nodes_high": 10.0
+  },
+  "linear": {
+    "rows": [
+      {
+        "scheme": "order-1 flat facets, vertex collocation",
+        "subdivisions": 1,
+        "panels": 80,
+        "nodes": 42,
+        "err_flux": 0.6249985536691182,
+        "relative_residual": 3.3888022719781135e-16,
+        "condition_single": 21.767022336421157,
+        "support": "vertices"
+      },
+      {
+        "scheme": "order-1 flat facets, vertex collocation",
+        "subdivisions": 2,
+        "panels": 320,
+        "nodes": 162,
+        "err_flux": 0.6147511786574217,
+        "relative_residual": 2.1587697311489075e-15,
+        "condition_single": 40.55676738941435,
+        "support": "vertices"
+      }
+    ]
+  },
+  "quadratic": {
+    "rows": [
+      {
+        "scheme": "quadratic 6-node isoparametric, collocation at all 6 nodes",
+        "subdivisions": 0,
+        "elements": 20,
+        "nodes": 42,
+        "err_flux": 0.14037744715645978,
+        "relative_residual": 2.9878202470563076e-16,
+        "condition_single": 20.84612122689167,
+        "h": 0.6919010544606049,
+        "solid_angle_identity_error": 0.03866831493399159,
+        "support": "element centroids"
+      },
+      {
+        "scheme": "quadratic 6-node isoparametric, collocation at all 6 nodes",
+        "subdivisions": 1,
+        "elements": 80,
+        "nodes": 162,
+        "err_flux": 0.02854353229114548,
+        "relative_residual": 4.647202055215259e-16,
+        "condition_single": 39.350926008522016,
+        "h": 0.38186927396227993,
+        "solid_angle_identity_error": 0.006321395136928087,
+        "support": "element centroids"
+      },
+      {
+        "scheme": "quadratic 6-node isoparametric, collocation at all 6 nodes",
+        "subdivisions": 2,
+        "elements": 320,
+        "nodes": 642,
+        "err_flux": 0.00606544181630366,
+        "h": 0.196292579737769,
+        "source": "committed docs/quadratic_panel_verification/study.json"
+      }
+    ]
+  },
+  "matchups": [
+    {
+      "name": "matched_nodes_42",
+      "axis": "nodes",
+      "linear": {
+        "panels": 80,
+        "nodes": 42,
+        "err_flux": 0.6249985536691182
+      },
+      "quadratic": {
+        "elements": 20,
+        "nodes": 42,
+        "err_flux": 0.14037744715645978
+      },
+      "ratio": 4.452271830905406,
+      "ratio_threshold": 2.0,
+      "ratio_passed": true,
+      "quadratic_within_3pct": false,
+      "require_within_3pct": false,
+      "passed": true
+    },
+    {
+      "name": "matched_panels_80",
+      "axis": "panels",
+      "linear": {
+        "panels": 80,
+        "nodes": 42,
+        "err_flux": 0.6249985536691182
+      },
+      "quadratic": {
+        "elements": 80,
+        "nodes": 162,
+        "err_flux": 0.02854353229114548
+      },
+      "ratio": 21.896328292311587,
+      "ratio_threshold": 10.0,
+      "ratio_passed": true,
+      "quadratic_within_3pct": true,
+      "require_within_3pct": true,
+      "passed": true
+    },
+    {
+      "name": "matched_nodes_162",
+      "axis": "nodes",
+      "linear": {
+        "panels": 320,
+        "nodes": 162,
+        "err_flux": 0.6147511786574217
+      },
+      "quadratic": {
+        "elements": 80,
+        "nodes": 162,
+        "err_flux": 0.02854353229114548
+      },
+      "ratio": 21.537319641694253,
+      "ratio_threshold": 10.0,
+      "ratio_passed": true,
+      "quadratic_within_3pct": true,
+      "require_within_3pct": true,
+      "passed": true
+    }
+  ],
+  "verdicts": {
+    "matched_nodes_42": true,
+    "matched_panels_80": true,
+    "matched_nodes_162": true
+  }
+}
