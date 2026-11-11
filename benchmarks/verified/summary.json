@@ -1,50 +1,59 @@
 {
-  "wigley_hydrostatics": {
-    "all_criteria_passed": true,
-    "artifacts": {
-      "results_json": "benchmarks/verified/bem_wigley_hydrostatics/results.json",
-      "report_md": "benchmarks/verified/bem_wigley_hydrostatics/report.md",
-      "figure_png": "benchmarks/verified/bem_wigley_hydrostatics/figures/bem_wigley_hydrostatics.png"
-    }
-  },
-  "wigley_wave_resistance": {
-    "all_criteria_passed": true,
-    "artifacts": {
-      "results_json": "benchmarks/verified/bem_wigley_wave_resistance/results.json",
-      "report_md": "benchmarks/verified/bem_wigley_wave_resistance/report.md",
-      "figure_png": "benchmarks/verified/bem_wigley_wave_resistance/figures/wave_resistance_comparison.png"
-    }
-  },
   "ellipsoid_wave": {
     "all_criteria_passed": true,
     "artifacts": {
-      "results_json": "benchmarks/verified/bem_ellipsoid_wave/results.json",
+      "figure_png": "benchmarks/verified/bem_ellipsoid_wave/figures/bem_ellipsoid_wave.png",
       "report_md": "benchmarks/verified/bem_ellipsoid_wave/report.md",
-      "figure_png": "benchmarks/verified/bem_ellipsoid_wave/figures/bem_ellipsoid_wave.png"
+      "results_json": "benchmarks/verified/bem_ellipsoid_wave/results.json"
+    }
+  },
+  "maccamy_fuchs": {
+    "all_criteria_passed": true,
+    "artifacts": {
+      "figure_png": "benchmarks/verified/bem_maccamy_fuchs/figures/maccamy_fuchs_convergence.png",
+      "gates_json": "benchmarks/verified/bem_maccamy_fuchs/gates.json",
+      "report_md": "benchmarks/verified/bem_maccamy_fuchs/report.md",
+      "results_json": "benchmarks/verified/bem_maccamy_fuchs/results.json"
     }
   },
   "multihull_interference": {
     "all_criteria_passed": true,
     "artifacts": {
-      "results_json": "benchmarks/verified/bem_multihull_interference/results.json",
+      "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png",
       "report_md": "benchmarks/verified/bem_multihull_interference/report.md",
-      "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png"
+      "results_json": "benchmarks/verified/bem_multihull_interference/results.json"
     }
   },
   "pekeris_w22": {
     "all_criteria_passed": true,
+    "artifacts": {
+      "figure_png": "benchmarks/verified/pekeris_w22/figures/tl_vs_range.png",
+      "ice_cover_sensitivity_json": "benchmarks/verified/pekeris_w22/ice_cover_sensitivity.json",
+      "report_md": "papers/reports/w22_underice_acoustics1.md",
+      "tl_compare_json": "benchmarks/verified/pekeris_w22/tl_compare.json"
+    },
     "criteria": {
       "C1": "PASS",
       "C2": "PASS",
       "C3": "DELIVERED",
       "C4": "PASS"
     },
-    "note": "C1/C2/C4 measured in tl_compare.json; C3 has no numeric threshold (table + attribution)",
+    "note": "C1/C2/C4 measured in tl_compare.json; C3 has no numeric threshold (table + attribution)"
+  },
+  "wigley_hydrostatics": {
+    "all_criteria_passed": true,
     "artifacts": {
-      "tl_compare_json": "benchmarks/verified/pekeris_w22/tl_compare.json",
-      "ice_cover_sensitivity_json": "benchmarks/verified/pekeris_w22/ice_cover_sensitivity.json",
-      "report_md": "papers/reports/w22_underice_acoustics1.md",
-      "figure_png": "benchmarks/verified/pekeris_w22/figures/tl_vs_range.png"
+      "figure_png": "benchmarks/verified/bem_wigley_hydrostatics/figures/bem_wigley_hydrostatics.png",
+      "report_md": "benchmarks/verified/bem_wigley_hydrostatics/report.md",
+      "results_json": "benchmarks/verified/bem_wigley_hydrostatics/results.json"
+    }
+  },
+  "wigley_wave_resistance": {
+    "all_criteria_passed": true,
+    "artifacts": {
+      "figure_png": "benchmarks/verified/bem_wigley_wave_resistance/figures/wave_resistance_comparison.png",
+      "report_md": "benchmarks/verified/bem_wigley_wave_resistance/report.md",
+      "results_json": "benchmarks/verified/bem_wigley_wave_resistance/results.json"
     }
   }
 }
