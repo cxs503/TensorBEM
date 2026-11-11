@@ -1,0 +1,194 @@
+# TensorBEM 统一 flexural-gravity + mass-loading 色散关系：实现与验证
+
+**仓库**：TensorBEM 　**分支**：agent/m13836 　**日期**：2026-11-11
+**模块**：`src/tensorbem/flexural_gravity.py`（新增 §"Unified flexural-gravity + mass-loading"）
+**验证脚本**：`scripts/verify_flexural_gravity_mass_loading.py`
+**测试**：`tests/test_flexural_gravity_mass_loading.py`（54 passed）
+**数值工件**：本目录 `verification_report.json`、`results.md`（均由脚本生成，零手抄）
+
+---
+
+## 0. 为什么做这一件（缺口来源）
+
+m12052（2026-11-10）交付的 flexural-gravity 验证面在其 §5.1 明确记下一个**未闭合的矛盾**并留给后续：
+
+- 任务规格 E1 指定的色散关系（本仓 eq. 2）只有**弯曲刚度**：
+  ω² = (g k + D k⁵/ρ_w)·tanh(kH)
+- 任务规格 E5 期望「冰下波长更短（λ_trans < λ_inc）」，对应**冰质量惯性（mass loading）**物理图像。
+- 该验证面实现的是 eq. 2，故得到相反的 λ_ice > λ_open，报告自认「与 E5 描述不一致」。
+
+仓内当时只有两个**互相缺一半**的实现：
+
+| 模块 | 弯曲刚度 D | 冰质量惯性 μ | 色散关系 |
+|---|---|---|---|
+| `flexural_gravity.py`（m12052） | ✅ | ❌ | eq. 2 |
+| `ice.py`（早先） | ❌ | ✅ | eq. 3 的 D→0 退化 |
+
+两者是同一物理的两半。eq. 3 在模块 docstring 中被点名「available in ice.py」，但**没有任何模块真正实现它**（`ice.py` 无 D 项）。本单补齐这一格：实现、验证、量化，并顺带把 E5 从「规格矛盾」变成**可判定的定量结论**。
+
+**锚点**：总账无对应条目，按纪律以 `【锚点=NEW: …】` 立项（建议条目见 finish summary）。
+
+## 1. 案例介绍（物理背景 / 参数）
+
+薄 Kirchhoff 浮冰板（厚度 h、杨氏模量 E、泊松比 ν）浮于水深 H 的水面。线性化势流下，冰面条件为
+
+ρ_w(φ_t + g η) + ρ_i h η_tt + D η_xxxx = 0,  φ_z = η_t (z=0),
+
+其中 D = E h³/[12(1−ν²)]。代入 φ ∝ cosh(k(z+H))/cosh(kH)·e^{i(kx−ωt)} 得
+
+k·tanh(kH)·(ρ_w g + D k⁴ − ρ_i h ω²) = ρ_w ω²,
+
+整理即得本单实现的**统一色散关系（eq. 3）**：
+
+$$\omega^2=\frac{(g k + D k^5/\rho_w)\tanh(kH)}{1+\mu k\tanh(kH)},\qquad \mu=\frac{\rho_i h}{\rho_w}.$$
+
+| 参数 | 符号 | 取值 | 单位 |
+|---|---|---|---|
+| 冰厚（工况） | h | 0.1 / 0.5 / 1.0 / 2.0 | m |
+| 杨氏模量（敏感性） | E | 1.0 / 5.0 / 10.0 ×10⁹ | Pa |
+| 泊松比 | ν | 0.334 | — |
+| 水密度 | ρ_w | 1025 | kg/m³ |
+| 冰密度 | ρ_i | 917 | kg/m³ |
+| 水深 | H | 200 | m |
+| 重力加速度 | g | 9.80665 | m/s² |
+| 频率带 | f | 0.02–0.30 | Hz |
+
+参考值全部为**闭式解析解**（下表每项都有独立推导，不依赖本实现）：
+
+1. μ→0 极限 → eq. 2（弯曲刚度单极）；
+2. kH≫1 且 D k⁴ ≫ g k → 经典浮板色散 ω² = D k⁵/(ρ_w + ρ_i h k)；
+3. kH→0 → 浅水 mass-loading 色散 ω² = g H k²/(1 + μ H k²)；
+4. D→0 → `tensorbem.ice` 的 mass-loading 色散 ω² = g k tanh(kH)/(1 + μ k tanh(kH))；
+5. 相速交叉波数解析解 k_c = (g μ/a)^{1/3}，a = D/ρ_w（本单推导，见 §2.3）。
+
+## 2. 怎么做的（方法 / 流程 / 关键设置）
+
+### 2.1 模块增量（`flexural_gravity.py`，向后兼容，零改动既有函数语义）
+
+| 新增符号 | 作用 |
+|---|---|
+| `mass_loading_parameter(plate)` | μ = ρ_i h/ρ_w（与 `ice.IceCover.mu` 同定义） |
+| `flexural_gravity_omega2_mass_loading(k, plate)` / `..._omega(...)` | eq. 3 的频率 |
+| `flexural_gravity_wavenumber_mass_loading(omega, plate)` | eq. 3 反解 k（最小正根） |
+| `flexural_gravity_group_velocity_mass_loading(omega, plate, k)` | 解析 c_g = (N′D−ND′)/D² /(2ω) |
+| `deep_water_crossover_wavenumber(plate)` / `crossover_wavenumber(plate, deep_water=False)` | 相速交叉波数（闭式 / 有限水深二分） |
+| `phase_speed_ratio_mass_loading` / `wavelength_ratio_mass_loading` | c_ice/c_open 与 λ_ice/λ_open（同一数值：λ=2π/k 且 c=ω/k） |
+| `ice_edge_coefficients(..., include_plate_inertia=True)` | 冰缘匹配改用 eq. 3 的 k 与 c_g（默认 `False`＝旧行为，逐位相同） |
+
+根求解器 `_smallest_positive_root`：eq. 3 的残差在 (ω, plate) 全域**不保证单调**（分子升、分母也升），故先几何扩展定上界，再在 [k_lo, k_hi] 上扫描**首个变号区间**后二分，返回最小正根——这与 `ice.py` 只取传播支的口径一致（D>0 时高 freq 无截止，见 §5.2）。
+
+### 2.2 判据（V1–V10，机器可判）
+
+| 判据 | 内容 | 阈值 |
+|---|---|---|
+| V1 | μ→0 复现 eq. 2 | 1e-9 |
+| V2 | 短波深水 → D k⁵/(ρ_w+ρ_i h k) | 1e-6 |
+| V3 | 长波浅水 → gHk²/(1+μHk²) | 1e-5 |
+| V4 | D→0 与 `ice.py` 一致（含 μ 定义） | 1e-9 / 1e-15 |
+| V5 | k_c 闭式 vs 独立二分（脚本内自建，不复用模块求解器） | 1e-10 |
+| V6 | 解析 c_g vs ω(k) 中心差分 | 1e-6 |
+| V7 | ω→k→ω 往返（ω∈[1e-2,31.6] rad/s） | 1e-9 |
+| V8 | 冰缘 |R|²+|T|²=1（含惯性） | 1e-12 |
+| V9 | E∈{1,5,10} GPa × h∈{0.5,1,2} m × 7 频率的惯性修正上界 | 10% |
+| V10 | sign(λ_ice/λ_open − 1) == sign(f − f_c)，f_c 由 k_c 导出 | 全数一致 |
+
+### 2.3 交叉波数闭式（本单推导）
+
+深水相速 c² = (g/k + D k³/ρ_w)/(1 + μ k)，开阔水 c₀² = g/k。令 c=c₀：
+
+g + D k⁴/ρ_w = g + μ g k ⇒ **k_c = (μ ρ_w g / D)^{1/3} = (g μ/a)^{1/3}**。
+
+k < k_c（长波）惯性占优 → 波变慢（波长缩短）；k > k_c（短波）弯曲占优 → 波变快（波长拉长）。有限水深时改为解 a k³ = g μ tanh(kH)（`crossover_wavenumber(deep_water=False)`）。
+
+## 3. 计算结果（全部取自 `results.md` / `verification_report.json`，脚本生成）
+
+### 3.1 判据实测值
+
+| 判据 | 实测 | 阈值 | 判定 |
+|---|---|---|---|
+| V1 | 4.878e-11 | 1e-9 | PASS |
+| V2 | 3.429e-08 | 1e-6 | PASS |
+| V3 | 3.333e-07 | 1e-5 | PASS |
+| V4 | 3.774e-15 | 1e-9 | PASS |
+| V5 | 2.018e-14 | 1e-10 | PASS |
+| V6 | 1.108e-10 | 1e-6 | PASS |
+| V7 | 1.790e-11 | 1e-9 | PASS |
+| V8 | 4.441e-16 | 1e-12 | PASS |
+| V9 | max 4.30% | 10% | PASS |
+| V10 | 28/28 符号一致 | 全数 | PASS |
+
+### 3.2 交叉波数与交叉频率（深水闭式；括号内为有限水深解，差 ≤1.5e-5）
+
+| h [m] | μ [m] | λ_c [m] | f_c [Hz] |
+|---|---|---|---|
+| 0.1 | 0.0895 | 50.58 | 0.1757 |
+| 0.5 | 0.4473 | 147.88 | 0.1027 |
+| 1.0 | 0.8946 | 234.75 | 0.0815 |
+| 2.0 | 1.7893 | 372.64 | 0.0646 |
+
+### 3.3 海洋波频段内 eq.3 相对 eq.2 的波长修正（E = 5 GPa）
+
+| h [m] | f=0.02 | 0.05 | 0.08 | 0.10 | 0.15 | 0.20 | 0.30 |
+|---|---|---|---|---|---|---|---|
+| 0.1 | −0.01% | −0.08% | −0.23% | −0.36% | −0.80% | −1.26% | −1.30% |
+| 0.5 | −0.04% | −0.40% | −1.14% | −1.68% | −2.02% | −1.75% | −1.61% |
+| 1.0 | −0.08% | −0.80% | −2.09% | −2.47% | −2.10% | −1.93% | −1.93% |
+| 2.0 | −0.16% | −1.57% | −2.92% | −2.67% | −2.29% | −2.25% | −2.38% |
+
+材料敏感性（完整表见 `results.md`）：E = 1 GPa 时修正上界 **4.30%**，E = 5 GPa **2.92%**，E = 10 GPa **2.41%**（全 63 个工况同号，均为「冰下波长更短」方向）。
+
+### 3.4 图
+
+| 图 | 内容 |
+|---|---|
+| `fig_dispersion_models.png` | 左：开阔水 / eq.2 / eq.3 / 纯弯曲波 ω(k) 四线对数图；右：ω₃/ω₂−1 [%] 随 k，标出 k_c |
+| `fig_phase_speed_ratio.png` | c_ice/c_open vs k（4 个冰厚），标出各自 k_c——左侧慢（惯性）、右侧快（弯曲） |
+| `fig_wavelength_ratio.png` | λ_ice/λ_open vs f（eq.3 实线 / eq.2 虚线），log 纵轴 |
+| `fig_edge_coefficients.png` | 左：冰缘 R、T 随 f（两种模型）；右：含惯性时 |R²+T²−1| 的机器零 |
+
+## 4. 误差判定（逐项 vs 基准，显式回答「是否 <3%」）
+
+| 关键量 | 基准 | 实测相对误差 | < 3% ? |
+|---|---|---|---|
+| μ→0 极限 ω | eq. 2 解析 | 4.88e-11 | **是** |
+| 短波深水 ω² | D k⁵/(ρ_w+ρ_i h k) | 3.43e-08 | **是** |
+| 长波浅水 ω² | gHk²/(1+μHk²) | 3.33e-07 | **是** |
+| D→0 ω（vs `ice.py`） | mass-loading 解析 | 3.77e-15 | **是** |
+| k_c | 独立二分（c=c₀） | 2.02e-14 | **是** |
+| c_g | 中心差分 | 1.11e-10 | **是** |
+| ω→k→ω | 输入 ω | 1.79e-11 | **是** |
+| 冰缘能量残差 | 1 | 4.44e-16 | **是** |
+| E=5 GPa / h=2 m / f=0.08 时 eq.3 与 eq.2 的差 | eq. 2 | 2.92% | **是**（边界内） |
+| E=1 GPa / h=2 m / f=0.10 时 eq.3 与 eq.2 的差 | eq. 2 | 4.30% | **否**（>3%，如实登记） |
+
+**结论**：eq. 3 的数值实现相对全部 8 个解析基准均在机器精度级（≤1e-7），远超 3% 要求。**唯一超 3% 的一项不是误差而是物理差异**：Re=1 GPa 软冰 + 2 m 厚冰 + 0.1 Hz 时，忽略冰质量会使波长高估 4.30%。
+
+## 5. 注意点（踩过的坑 / 局限 / 适用范围）
+
+### 5.1 E5 的处理结论（把「规格矛盾」变成定量事实）
+
+28 个工况（h∈{0.1,0.5,1,2} m × 7 频率）中，eq. 3 下 λ_ice < λ_open 的有 14 个（全部落在各自 f_c 以下，符号判定 28/28 一致）；eq. 2 下**一个都没有**（弯曲刚度只让波变快）。而海洋波频段内惯性带来的位移量级 ≤ 4.30%（E=1 GPa），E=5 GPa 时 ≤ 2.92%。
+
+因此 E5「λ_trans < λ_inc」**不是**建模错误，而是：①它只成立于 λ > λ_c 的惯性占优段；②在该段内偏差 <1%（h=1 m、f=0.05 时 λ_ice/λ_open = 0.9925）；③在实际海洋波频段，主导物理是弯曲刚度（波长拉长 1.3–5.8 倍），惯性只是百分之几的修正。m12052 §5.1 的「不一致」至此闭合：以 eq. 2 作工程模型在该频段的代价被量化为 ≤3%（E≥5 GPa）。
+
+### 5.2 与 `ice.py` 的口径差异（有意为之，非缺陷）
+
+`ice.py` 的 D=0 mass-loading 模型在 ω ≥ √(g/μ) 处**无传播解**（转入 evanescent 支）。eq. 3 因 D>0 恒有传播根（高频由弯曲项主导），V4 的一致性检查只在传播支内（k ≤ 0.1，对应 ω 远低于 cutoff）成立。跨模块复用时须注意这一点。
+
+### 5.3 仍未闭合的部分（honest）
+
+1. **冰缘仍用群速度导纳匹配（1D）**，未做位移/斜率/弯矩/剪力四条件 + evanescent 模态的 Wiener–Hopf 严格解；`include_plate_inertia` 只把 k 与 c_g 换成 eq. 3，能量守恒保持（1e-16），但 R 的**绝对量级**仍属近似，不可作定量预报。
+2. **薄板（Kirchhoff）假设**：h/λ ≪ 1；f=0.3 Hz、h=2 m 时 λ_ice≈102 m，h/λ≈0.02，仍在适用域内。
+3. **仅线性、单层、均匀冰**：无冰厚渐变耦合（`wedge_ice_reflection` 仍用 eq. 2）、无粘性/破碎耗散、冰密度取常数。
+4. 材料敏感性只扫到 E∈[1,10] GPa；高模量/低温冰（E>10 GPa）的修正会继续下降（k_c ∝ E^{−1/3}），未扫。
+
+## 6. 复现命令
+
+```bash
+PYTHONPATH=src python scripts/verify_flexural_gravity_mass_loading.py
+PYTHONPATH=src python -m pytest tests/test_flexural_gravity_mass_loading.py -q
+```
+
+- 新测试：**54 passed**（0.8 s）
+- 既有 `tests/test_flexural_gravity.py` 不受影响（全绿）
+- 既有 `tests/test_doc_claim_audit.py` 的 2 条红为**基线上已存在**（在干净检出 `6600bcc` 上同样 2 failed），非本单引入
