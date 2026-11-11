@@ -382,6 +382,8 @@ class IceEdgeResult:
 def ice_edge_coefficients(
     omega: float,
     plate: IcePlate,
+    *,
+    include_plate_inertia: bool = False,
 ) -> IceEdgeResult:
     """Compute reflection and transmission at an ice edge.
 
@@ -400,6 +402,10 @@ def ice_edge_coefficients(
         T_E = |T_amp| sqrt(cg_1 / cg_0)
 
     satisfying |R_E|^2 + |T_E|^2 = 1 exactly.
+
+    With ``include_plate_inertia=True`` the ice-side wavenumber and group
+    velocity are taken from the unified dispersion relation (3) instead of
+    (2), so the ice-sheet mass is accounted for in the matching.
     """
     omega = _positive("omega", omega)
     g = plate.gravity
@@ -407,11 +413,15 @@ def ice_edge_coefficients(
 
     # Wavenumbers
     k0 = open_water_wavenumber(omega, H, g)
-    k1 = flexural_gravity_wavenumber(omega, plate)
+    if include_plate_inertia:
+        k1 = flexural_gravity_wavenumber_mass_loading(omega, plate)
+        cg1 = flexural_gravity_group_velocity_mass_loading(omega, plate, k1)
+    else:
+        k1 = flexural_gravity_wavenumber(omega, plate)
+        cg1 = flexural_gravity_group_velocity(omega, plate, k1)
 
     # Group velocities
     cg0 = open_water_group_velocity(omega, H, k0, g)
-    cg1 = flexural_gravity_group_velocity(omega, plate, k1)
 
     # Amplitude coefficients using group velocity admittance
     R_amp = (cg0 - cg1) / (cg0 + cg1)
@@ -560,3 +570,225 @@ def zero_rigidity_dispersion_check(
     omega2_fg = gravity * k * math.tanh(k * depth)
     omega2_open = gravity * k * math.tanh(k * depth)
     return math.sqrt(omega2_fg), math.sqrt(omega2_open)
+
+
+# ---------------------------------------------------------------------------
+# Unified flexural-gravity + mass-loading (plate inertia) dispersion, eq. (3)
+# ---------------------------------------------------------------------------
+# Equations (2) above and the mass-loading model in ``ice.py`` are the two
+# halves of the same physics: (2) keeps the bending restoring force but drops
+# the inertia of the ice sheet, while ``ice.py`` keeps the inertia but drops
+# the bending stiffness.  Equation (3) keeps both:
+#
+#     omega^2 = (g k + D k^5 / rho_w) tanh(k H) / (1 + mu k tanh(k H))
+#
+# with mu = rho_i h_ice / rho_w.  Derivation (linearised potential flow, the
+# plate condition  rho_w (phi_t + g eta) + rho_i h eta_tt + D eta_xxxx = 0
+# on z = 0, with phi_z = eta_t and phi ~ cosh(k(z+H))/cosh(kH)):
+#
+#     k tanh(kH) (rho_w g + D k^4 - rho_i h omega^2) = rho_w omega^2
+#
+# which rearranges to (3) exactly.  Equation (2) is recovered for mu -> 0 and
+# the ``ice.py`` mass-loading relation for D -> 0.
+def mass_loading_parameter(plate: IcePlate) -> float:
+    """Mass-loading parameter ``mu = rho_i h_ice / rho_w`` (m)."""
+    return plate.ice_density * plate.thickness / plate.water_density
+
+
+def flexural_gravity_omega2_mass_loading(k: float, plate: IcePlate) -> float:
+    """``omega^2`` of eq. (3): bending stiffness **and** plate inertia."""
+    k = _positive("wavenumber", k)
+    g = plate.gravity
+    H = plate.water_depth
+    mu = mass_loading_parameter(plate)
+    tanh = math.tanh(k * H)
+    numerator = (g * k + plate.D_over_rho * k ** 5) * tanh
+    denominator = 1.0 + mu * k * tanh
+    return numerator / denominator
+
+
+def flexural_gravity_omega_mass_loading(k: float, plate: IcePlate) -> float:
+    """Frequency ``omega`` of eq. (3)."""
+    return math.sqrt(flexural_gravity_omega2_mass_loading(k, plate))
+
+
+def _smallest_positive_root(
+    residual,
+    *,
+    tol: float = 1.0e-14,
+    max_iter: int = 400,
+    scan_points: int = 2000,
+) -> float:
+    """Smallest k > 0 with ``residual(k) = 0`` for a residual that is
+    negative at k -> 0+ and eventually positive.
+
+    The eq. (3) residual is not guaranteed to be monotone for every
+    (omega, plate) pair, so the bracket is located by a geometric scan and
+    bisection is run on the **first** sign change only (the smallest positive
+    root is returned).
+    """
+    k_lo = 1.0e-12
+    if residual(k_lo) >= 0.0:              # pragma: no cover - defensive
+        return k_lo
+    # Upper bound: geometric expansion until the residual turns positive.
+    k_hi = 1.0e-9
+    for _ in range(4000):
+        if residual(k_hi) > 0.0:
+            break
+        k_hi *= 1.5
+    else:                                  # pragma: no cover - defensive
+        raise RuntimeError("failed to bracket the dispersed wavenumber")
+    # Scan for the first sign change, then bisect inside that bracket.
+    lo = k_lo
+    ratio = (k_hi / k_lo) ** (1.0 / scan_points)
+    hi = lo
+    for _ in range(scan_points):
+        hi = lo * ratio
+        if residual(hi) > 0.0:
+            break
+        lo = hi
+    else:                                  # pragma: no cover - defensive
+        hi = k_hi
+        lo = hi / ratio
+    for _ in range(max_iter):
+        mid = 0.5 * (lo + hi)
+        if mid <= 0.0:                     # pragma: no cover - defensive
+            lo = mid
+            continue
+        if residual(mid) > 0.0:
+            hi = mid
+        else:
+            lo = mid
+        if hi - lo <= tol * max(1.0, hi):
+            break
+    return 0.5 * (lo + hi)
+
+
+def flexural_gravity_wavenumber_mass_loading(
+    omega: float,
+    plate: IcePlate,
+    *,
+    tol: float = 1.0e-14,
+    max_iter: int = 400,
+) -> float:
+    """Solve eq. (3) for the (smallest positive) wavenumber ``k``."""
+    omega = _positive("omega", omega)
+    target = omega * omega
+    g = plate.gravity
+    H = plate.water_depth
+    mu = mass_loading_parameter(plate)
+    a = plate.D_over_rho
+
+    def residual(k: float) -> float:
+        tanh = math.tanh(k * H)
+        return (g * k + a * k ** 5) * tanh - target * (1.0 + mu * k * tanh)
+
+    return _smallest_positive_root(residual, tol=tol, max_iter=max_iter)
+
+
+def flexural_gravity_group_velocity_mass_loading(
+    omega: float,
+    plate: IcePlate,
+    k: float,
+) -> float:
+    """Group velocity ``domega/dk`` of eq. (3).
+
+    With ``N(k) = (g k + a k^5) tanh(kH)``, ``Dm(k) = 1 + mu k tanh(kH)`` and
+    ``a = D/rho_w``:
+
+        d(omega^2)/dk = (N' Dm - N Dm') / Dm^2,   cg = d(omega^2)/dk / (2 omega)
+    """
+    omega = _positive("omega", omega)
+    k = _positive("wavenumber", k)
+    g = plate.gravity
+    H = plate.water_depth
+    mu = mass_loading_parameter(plate)
+    a = plate.D_over_rho
+
+    tanh = math.tanh(k * H)
+    sech2 = 1.0 - tanh * tanh
+
+    N = (g * k + a * k ** 5) * tanh
+    dN = (g + 5.0 * a * k ** 4) * tanh + (g * k + a * k ** 5) * H * sech2
+    Dm = 1.0 + mu * k * tanh
+    dDm = mu * (tanh + k * H * sech2)
+
+    d_omega2_dk = (dN * Dm - N * dDm) / (Dm * Dm)
+    return d_omega2_dk / (2.0 * omega)
+
+
+def deep_water_crossover_wavenumber(plate: IcePlate) -> float:
+    """Wavenumber where the ice-covered phase speed equals the open-water one.
+
+    Deep water (``k H >> 1``).  Phase speed of eq. (3) is
+
+        c^2 = (g/k + D k^3/rho_w) / (1 + mu k)
+
+    and the open-water value is ``c_0^2 = g/k``.  Setting ``c = c_0`` gives the
+    closed form
+
+        k_c = (mu rho_w g / D)^(1/3) = (g mu / a)^(1/3),   a = D/rho_w
+
+    Waves longer than ``2 pi / k_c`` travel **slower** under the ice (inertia
+    dominated), waves shorter travel **faster** (bending dominated).
+    """
+    mu = mass_loading_parameter(plate)
+    a = plate.D_over_rho
+    return (plate.gravity * mu / a) ** (1.0 / 3.0)
+
+
+def crossover_wavenumber(
+    plate: IcePlate,
+    *,
+    deep_water: bool = True,
+    tol: float = 1.0e-15,
+) -> float:
+    """Crossover wavenumber of eq. (3), ``c(k) = c_open(k)``.
+
+    With ``deep_water=True`` the closed form of
+    :func:`deep_water_crossover_wavenumber` is returned.  With
+    ``deep_water=False`` the finite-depth condition ``a k^3 = g mu tanh(kH)``
+    is solved by bisection (the left side is odd-monotone in ``k`` and the
+    right side saturates, so the root is unique).
+    """
+    if deep_water:
+        return deep_water_crossover_wavenumber(plate)
+    g = plate.gravity
+    mu = mass_loading_parameter(plate)
+    a = plate.D_over_rho
+    H = plate.water_depth
+    k_c = deep_water_crossover_wavenumber(plate)
+    lo = 0.0
+    hi = 2.0 * k_c
+    for _ in range(300):
+        mid = 0.5 * (lo + hi)
+        if a * mid ** 3 - g * mu * math.tanh(mid * H) > 0.0:
+            hi = mid
+        else:
+            lo = mid
+        if hi - lo <= tol * max(1.0, hi):
+            break
+    return 0.5 * (lo + hi)
+
+
+def phase_speed_ratio_mass_loading(omega: float, plate: IcePlate) -> float:
+    """``c_ice / c_open`` at frequency ``omega`` for eq. (3).
+
+    Values < 1 mean the wave is slowed by the ice (inertia dominated), > 1
+    means it is sped up (bending dominated).
+    """
+    omega = _positive("omega", omega)
+    k1 = flexural_gravity_wavenumber_mass_loading(omega, plate)
+    k0 = open_water_wavenumber(omega, plate.water_depth, plate.gravity)
+    return k0 / k1
+
+
+def wavelength_ratio_mass_loading(omega: float, plate: IcePlate) -> float:
+    """``lambda_ice / lambda_open`` at ``omega`` for eq. (3).
+
+    ``lambda = 2 pi / k``, so this equals ``k_open/k_ice`` -- the same number as
+    :func:`phase_speed_ratio_mass_loading` (``c = omega/k``): a wave that is
+    slowed by the ice is also shortened.  Values < 1 therefore mean inertia
+    dominated (shortened wave), > 1 bending dominated (lengthened wave).
+    """
+    return phase_speed_ratio_mass_loading(omega, plate)
