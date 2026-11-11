@@ -133,7 +133,7 @@ dispersion root 61.083905 rad/s (rel. error 4.69e-08).
 | converged | True |
 | final `omega` residual | 3.670e-07 |
 | final pressure/operator residual | 5.314e-07 |
-| monolithic residual (per mode) | 1.79e-17, 3.63e-16, 3.71e-16 |
+| monolithic residual (per mode) | < 1e-14, < 1e-14, < 1e-14 |
 
 Residual history (relative change of the eigenfrequencies and of the
 added-mass operator):
