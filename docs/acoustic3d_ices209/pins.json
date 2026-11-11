@@ -1,0 +1,14 @@
+{
+  "a_max_relative_error_pct": 1.108,
+  "b_max_relative_error_pct": 1.572,
+  "c_bare_max_pct": 56.35,
+  "c_chief_max_pct": 8.32,
+  "d_max_abs_delta_db": 0.165,
+  "energy_balance_max_pct": 0.863,
+  "hull_panels": 1970,
+  "hull_block_coefficient": 0.651,
+  "hull_max_resolved_frequency_hz": 80.0,
+  "hull_max_self_scattering_delta_db": 10.92,
+  "hull_bands_computed": 10,
+  "hull_bands_withheld": 21
+}
