@@ -957,6 +957,76 @@ CAPABILITIES: tuple[Capability, ...] = (
             'error judgement is against analytic hydrostatics and the independent potential solve.'
         ),
     ),
+    # ---- 2026-11-11 (m14725): five modules shipped by the m14571/m14560/m14514
+    # wave were outside the registry, so they could not be seen in the published
+    # table at all.  Four carry code + tests + a document and are graded below;
+    # ``tensorbem.pekeris_acoustics`` still has no document anchor in the
+    # repository and stays in the unowned list rather than being graded on a
+    # citation that does not exist.
+    Capability(
+        key='diffraction-drift-maturity',
+        title='Wigley III diffraction/RAO and cylinder drift maturity surface',
+        claim='Three-route exciting-force agreement, geometry gate (Cb/volume/waterplane), heave-pitch RAO solve.',
+        level=REAL,
+        modules=('tensorbem.diffraction_drift_maturity',),
+        symbols=('wigley_reference', 'geometry_gate'),
+        tests=(
+            'tests/test_diffraction_drift_maturity.py::test_wigley_reference_block_coefficient_is_four_ninths',
+            'tests/test_diffraction_drift_maturity.py::test_geometry_gate_reports_measured_errors',
+        ),
+        docs=(('docs/diffraction_drift_maturity.md', 'Wigley'),),
+        note=(
+            'Verification surface, not a new solver: it pins the closed-form Wigley III hydrostatics'
+            ' and gates a panel mesh against them before any hydrodynamic number is quoted.'
+        ),
+    ),
+    Capability(
+        key='qtf-slow-drift',
+        title='Second-order difference-frequency QTF and slow-drift spectra',
+        claim='Off-diagonal QTF by quadratic pressure and by Newman approximation, arbitrated on the diagonal.',
+        level=REAL,
+        modules=('tensorbem.qtf_drift',),
+        symbols=('newman_qtf', 'qtf_from_diagonal'),
+        tests=(
+            'tests/test_qtf_drift.py::test_newman_is_exact_on_the_diagonal_and_symmetric',
+            'tests/test_qtf_drift.py::test_mesh_volume_matches_facetted_closed_form',
+        ),
+        docs=(('docs/qtf_drift_oc4.md', '13473'),),
+        note=(
+            'Newman approximation is exact on the diagonal by construction, which is the invariant'
+            ' the tests assert; the off-diagonal direct route is compared against it, not against a'
+            ' recalled table.'
+        ),
+    ),
+    Capability(
+        key='fmm-acceleration',
+        title='Fast multipole acceleration of the 3-D single-layer operator',
+        claim='Octree + real spherical harmonics; far-field slope and per-leaf exactness at low level.',
+        level=REAL,
+        modules=('tensorbem.fmm',),
+        symbols=('build_octree', 'all_real_spherical_harmonics'),
+        tests=(
+            'tests/test_fmm.py::test_single_leaf_exact',
+            'tests/test_fmm.py::test_convergence_slope_far_field',
+        ),
+        docs=(('docs/fmm_acceleration/report.md', 'FMM'),),
+        note='Degenerates exactly to direct summation at a single leaf; order law checked against the theoretical slope.',
+    ),
+    Capability(
+        key='flexural-gravity-numeric',
+        title='Independent finite-difference check of the flexural-gravity dispersion',
+        claim='Depth factor k tanh(kH) recovered by a finite-difference solve, so the closed form has a second route.',
+        level=REAL,
+        modules=('tensorbem.flexural_gravity_numeric',),
+        symbols=('fd_omega', 'fd_depth_gradient_ratio'),
+        tests=(
+            'tests/test_flexural_gravity_evidence.py::test_plate_fluid_omega_deep_water_limit_matches_finite_depth',
+            'tests/test_flexural_gravity_evidence.py::test_eq3_matches_independent_hydroelastic_implementation',
+        ),
+        docs=(('docs/flexural_gravity_verification/report.md', 'flexural_gravity'),),
+        note='Cross-implementation anchor for the ice-plate dispersion shipped in m14560.',
+    ),
+
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
@@ -989,6 +1059,53 @@ UNTESTED_MODULES: dict[str, str] = {
         "report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary"
         " conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports"
         " on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.",
+    "tensorbem.benchmarks.cathodic_protection_sphere":
+        "closed-form CP sphere driver: it prints the analytic phi(r) = phi_a * a / r comparison; the"
+        " model it exercises is pinned by tests/test_cathodic_protection.py and graded by the"
+        " cathodic-protection row.",
+    "tensorbem.benchmarks.cp_verification_m9204":
+        "CP verification study driver (plate / cylinder analytic cases, GCI ladder, DNV-RP-B401 check);"
+        " it only assembles results from tensorbem.cp_galvanic, which is pinned by"
+        " tests/test_cathodic_protection.py.",
+    "tensorbem.benchmarks.freq_time_bridge":
+        "state-space vs IRF-convolution bridge driver; both paths it compares are pinned by"
+        " tests/test_state_space.py and graded by the state-space row.",
+    "tensorbem.benchmarks.kp505_w20_gci":
+        "three-density GCI study of the KP505 open-water lattice; the propeller physics it drives is"
+        " pinned by tests/test_propeller_open_water.py and graded by the propeller row.",
+    "tensorbem.benchmarks.multihull_frequency_figures":
+        "matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact;"
+        " the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.",
+    "tensorbem.benchmarks.neumann_kelvin_verification":
+        "Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the"
+        " kernel and the steady wave-resistance physics it reports on are pinned by"
+        " tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.",
+    "tensorbem.benchmarks.wigley3_complete_verification":
+        "legacy Wigley III frequency-domain driver; it imports the graded core modules"
+        " (free_surface_solver3d, rao, uq, wigley3_freq) that tests/test_wigley3_freq_domain.py and"
+        " tests/test_wigley3_complete_verification.py exercise directly.  Its own recalled WAMIT/Journee"
+        " table is registered as UNSOURCED debt in tensorbem.reference_provenance and is not evidence.",
+    "tensorbem.benchmarks.wigley3_freq_diffraction_radiation_benchmark":
+        "same legacy driver family as wigley3_complete_verification: it re-runs the graded core modules"
+        " and writes a report; its recalled reference table is UNSOURCED in tensorbem.reference_provenance.",
+    "tensorbem.benchmarks.wigley3_freq_verification":
+        "legacy Wigley III driver; the radiation/diffraction/RAO physics it calls is pinned by"
+        " tests/test_wigley3_freq_verification.py, and its recalled WAMIT/Journee table is UNSOURCED"
+        " debt in tensorbem.reference_provenance.",
+    "tensorbem.benchmarks.wigley3_report_generator":
+        "matplotlib/report helper for the legacy Wigley III drivers; renders JSON artifacts it does not"
+        " produce, so it carries no physics of its own.",
+    "tensorbem.benchmarks.wigley_diffraction_radiation":
+        "legacy Wigley III diffraction/radiation driver over free_surface_solver3d + rao (both graded);"
+        " its recalled WAMIT/Journee table is registered UNSOURCED in tensorbem.reference_provenance.",
+    "tensorbem.verification.corrosion":
+        "namespace package for the corrosion verification campaign; it holds no code of its own, the"
+        " models live in tensorbem.cathodic_protection / cp_galvanic (pinned by"
+        " tests/test_cathodic_protection.py) and its subpackages are inventoried separately.",
+    "tensorbem.verification.seakeeping.benchmark_runner":
+        "seakeeping study driver that assembles the hemisphere anchor, FK excitation, mesh-convergence"
+        " and Wigley RAO runs it reports on; those modules are pinned by"
+        " tests/test_seakeeping_verification.py.",
 }
 
 #: Core package modules that legitimately own no capability row, with the reason.
