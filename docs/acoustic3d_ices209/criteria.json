@@ -1,0 +1,1058 @@
+{
+  "mission": 13961,
+  "node": "P284W3-N03",
+  "repository": "TensorBEM",
+  "module": "src/tensorbem/acoustic3d.py",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "OMP_NUM_THREADS": "1",
+    "sound_speed_m_s": 1500.0,
+    "density_kg_m3": 1025.0,
+    "reference_pressure_pa": 1e-06
+  },
+  "criteria": {
+    "a_pulsating_sphere": {
+      "criterion": "radiated pressure within 3% of the closed-form monopole",
+      "threshold": 0.03,
+      "measured_max_relative_error": 0.011080049025154113,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 0.1,
+          "frequency_hz": 23.8732414637843,
+          "max_relative_pressure_error": 0.01871861159267038,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.16412873165504038,
+          "boundary_relative_residual": 2.700483944279571e-05,
+          "chief_relative_residual": 0.0016216641109402113,
+          "wall_seconds": 0.82
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 0.25,
+          "frequency_hz": 59.683103659460755,
+          "max_relative_pressure_error": 0.018201727277312577,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.1595480419129558,
+          "boundary_relative_residual": 2.7670826996573708e-05,
+          "chief_relative_residual": 0.0016386036068423608,
+          "wall_seconds": 0.81
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 0.5,
+          "frequency_hz": 119.36620731892151,
+          "max_relative_pressure_error": 0.016761371025709113,
+          "worst_field_point": 1,
+          "max_band_level_error_db": 0.14648854831682456,
+          "boundary_relative_residual": 3.0162843918623186e-05,
+          "chief_relative_residual": 0.0016984430447870786,
+          "wall_seconds": 1.12
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 1.0,
+          "frequency_hz": 238.73241463784302,
+          "max_relative_pressure_error": 0.014888114184305362,
+          "worst_field_point": 1,
+          "max_band_level_error_db": 0.12056095156361835,
+          "boundary_relative_residual": 4.25801005958589e-05,
+          "chief_relative_residual": 0.0019449062053582596,
+          "wall_seconds": 0.95
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 2.0,
+          "frequency_hz": 477.46482927568604,
+          "max_relative_pressure_error": 0.02199238926295342,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.11144637965566062,
+          "boundary_relative_residual": 0.00020620838325180734,
+          "chief_relative_residual": 0.0034389514452925493,
+          "wall_seconds": 0.86
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 3.0,
+          "frequency_hz": 716.1972439135291,
+          "max_relative_pressure_error": 0.03408909579053089,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.14796309907967498,
+          "boundary_relative_residual": 0.019805334326246152,
+          "chief_relative_residual": 0.007928824524333149,
+          "wall_seconds": 0.84
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 4.0,
+          "frequency_hz": 954.9296585513721,
+          "max_relative_pressure_error": 0.04433870762672511,
+          "worst_field_point": 3,
+          "max_band_level_error_db": 0.05410784652565326,
+          "boundary_relative_residual": 0.0016909751866022193,
+          "chief_relative_residual": 0.007537068548892683,
+          "wall_seconds": 0.85
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 0.1,
+          "frequency_hz": 23.8732414637843,
+          "max_relative_pressure_error": 0.004738226118540297,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.04125351314982595,
+          "boundary_relative_residual": 1.8544371729778736e-06,
+          "chief_relative_residual": 0.0004442794635617069,
+          "wall_seconds": 16.51
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 0.25,
+          "frequency_hz": 59.683103659460755,
+          "max_relative_pressure_error": 0.004606234686893489,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.040099989241241474,
+          "boundary_relative_residual": 1.89936092584372e-06,
+          "chief_relative_residual": 0.0004486013142734415,
+          "wall_seconds": 16.06
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 0.5,
+          "frequency_hz": 119.36620731892151,
+          "max_relative_pressure_error": 0.004239844588490588,
+          "worst_field_point": 1,
+          "max_band_level_error_db": 0.03682055684731722,
+          "boundary_relative_residual": 2.0689046535413253e-06,
+          "chief_relative_residual": 0.0004641628253218814,
+          "wall_seconds": 17.42
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 1.0,
+          "frequency_hz": 238.73241463784302,
+          "max_relative_pressure_error": 0.0037739705081292264,
+          "worst_field_point": 1,
+          "max_band_level_error_db": 0.030379752783062486,
+          "boundary_relative_residual": 2.9317966130171434e-06,
+          "chief_relative_residual": 0.0005311577535496042,
+          "wall_seconds": 17.41
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 2.0,
+          "frequency_hz": 477.46482927568604,
+          "max_relative_pressure_error": 0.005642666859680222,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.028840239678913804,
+          "boundary_relative_residual": 1.513177104004292e-05,
+          "chief_relative_residual": 0.0009738798746031815,
+          "wall_seconds": 19.72
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 3.0,
+          "frequency_hz": 716.1972439135291,
+          "max_relative_pressure_error": 0.010236236908377336,
+          "worst_field_point": 0,
+          "max_band_level_error_db": 0.06097925318442776,
+          "boundary_relative_residual": 0.004279711361313695,
+          "chief_relative_residual": 0.004641152644237882,
+          "wall_seconds": 16.94
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 4.0,
+          "frequency_hz": 954.9296585513721,
+          "max_relative_pressure_error": 0.011080049025154113,
+          "worst_field_point": 3,
+          "max_band_level_error_db": 0.010264569685546121,
+          "boundary_relative_residual": 0.00012448122347894497,
+          "chief_relative_residual": 0.002273901509045078,
+          "wall_seconds": 17.2
+        }
+      ]
+    },
+    "b_rigid_sphere_scattering": {
+      "criterion": "scattering cross-section within 5% of the Mie series",
+      "threshold": 0.05,
+      "measured_max_relative_error": 0.01571504032456978,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 0.25,
+          "sigma_bem": 0.008454095415484213,
+          "sigma_mie": 0.009005074206331032,
+          "sigma_over_pi_a2": 0.0026910221494896866,
+          "relative_error": 0.0611853692953971,
+          "far_field_pattern_abs": [
+            0.010621975493176112,
+            0.019557890111182447,
+            0.04892728211458217,
+            0.01955789043575966
+          ],
+          "wall_seconds": 0.92
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 0.5,
+          "sigma_bem": 0.11483166877352481,
+          "sigma_mie": 0.12171649303178854,
+          "sigma_over_pi_a2": 0.03655205541759543,
+          "relative_error": 0.05656443171153171,
+          "far_field_pattern_abs": [
+            0.04586080631186435,
+            0.07253596442031404,
+            0.1781309977334349,
+            0.07253596591605074
+          ],
+          "wall_seconds": 0.89
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 1.0,
+          "sigma_bem": 0.9710371928667485,
+          "sigma_mie": 1.0104268609001705,
+          "sigma_over_pi_a2": 0.3090907383416423,
+          "relative_error": 0.038983195674678034,
+          "far_field_pattern_abs": [
+            0.18883923325167487,
+            0.23605212702445388,
+            0.4630398474608675,
+            0.23605277923888732
+          ],
+          "wall_seconds": 0.99
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 2.0,
+          "sigma_bem": 2.4089080098114177,
+          "sigma_mie": 2.4551547946676444,
+          "sigma_over_pi_a2": 0.766779234430294,
+          "relative_error": 0.018836606537669304,
+          "far_field_pattern_abs": [
+            0.5390608612337645,
+            0.5283260801671784,
+            0.3677492549455006,
+            0.5283454887000515
+          ],
+          "wall_seconds": 0.96
+        },
+        {
+          "subdivisions": 2,
+          "panel_count": 320,
+          "ka": 3.0,
+          "sigma_bem": 3.1905821670740884,
+          "sigma_mie": 3.24683719182056,
+          "sigma_over_pi_a2": 1.0155938464613854,
+          "relative_error": 0.017326099654207946,
+          "far_field_pattern_abs": [
+            0.9346301968696357,
+            0.3131200412592179,
+            0.3800747768202111,
+            0.3130578801436573
+          ],
+          "wall_seconds": 1.05
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 0.25,
+          "sigma_bem": 0.008863559102052797,
+          "sigma_mie": 0.009005074206331032,
+          "sigma_over_pi_a2": 0.0028213584889577275,
+          "relative_error": 0.01571504032456978,
+          "far_field_pattern_abs": [
+            0.01079595609024992,
+            0.020057757447283907,
+            0.05006464811131062,
+            0.020057757578086876
+          ],
+          "wall_seconds": 17.91
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 0.5,
+          "sigma_bem": 0.11995243495814112,
+          "sigma_mie": 0.12171649303178854,
+          "sigma_over_pi_a2": 0.038182045918994455,
+          "relative_error": 0.014493172040264943,
+          "far_field_pattern_abs": [
+            0.04665143876565815,
+            0.07429293535165941,
+            0.18186599177883853,
+            0.07429293766638366
+          ],
+          "wall_seconds": 16.94
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 1.0,
+          "sigma_bem": 1.0004269458666055,
+          "sigma_mie": 1.0104268609001705,
+          "sigma_over_pi_a2": 0.31844578727399653,
+          "relative_error": 0.0098967232765925,
+          "far_field_pattern_abs": [
+            0.1915463932787931,
+            0.24104482084672643,
+            0.4675658207125208,
+            0.24104498740202485
+          ],
+          "wall_seconds": 17.48
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 2.0,
+          "sigma_bem": 2.4430799894888064,
+          "sigma_mie": 2.4551547946676444,
+          "sigma_over_pi_a2": 0.7776565133920785,
+          "relative_error": 0.004918144145152583,
+          "far_field_pattern_abs": [
+            0.545744553889573,
+            0.5304993529640115,
+            0.3774715078207945,
+            0.5305055804350831
+          ],
+          "wall_seconds": 18.32
+        },
+        {
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "ka": 3.0,
+          "sigma_bem": 3.224896473809361,
+          "sigma_mie": 3.24683719182056,
+          "sigma_over_pi_a2": 1.0265164295327656,
+          "relative_error": 0.006757566430023761,
+          "far_field_pattern_abs": [
+            0.9466861362480715,
+            0.30952894256154595,
+            0.3790156108103238,
+            0.3095158361371577
+          ],
+          "wall_seconds": 18.75
+        }
+      ]
+    },
+    "c_chief_irregular_frequency": {
+      "criterion": "no spurious pressure peak near the interior Dirichlet eigenvalues",
+      "sphere_mode_wavenumbers_ka": [
+        3.141592653589793,
+        4.493409457909063,
+        6.283185307179586,
+        7.725251836937707
+      ],
+      "threshold": {
+        "chief_max_relative_error": 0.1,
+        "bare_max_relative_error": 0.2
+      },
+      "measured_bare_max": 0.56347205310646,
+      "measured_chief_max": 0.08319484295660583,
+      "verdict": "PASS",
+      "windows": {
+        "first_irregular": {
+          "ka": [
+            2.85,
+            2.9,
+            2.95,
+            3.0,
+            3.0500000000000003,
+            3.1,
+            3.1500000000000004,
+            3.2,
+            3.25,
+            3.3000000000000003,
+            3.35,
+            3.4000000000000004,
+            3.45
+          ],
+          "bare_relative_error": [
+            0.03617767270020916,
+            0.03824636646270091,
+            0.04114114322470364,
+            0.04564429871867415,
+            0.05377587083792433,
+            0.07235918200307671,
+            0.14314277467792372,
+            0.56347205310646,
+            0.09442528787086178,
+            0.05809184292269937,
+            0.04719137105393773,
+            0.042916859379234056,
+            0.04109237445373321
+          ],
+          "chief_relative_error": [
+            0.032876462137169264,
+            0.033419436537784585,
+            0.03383946103159386,
+            0.03408909579053089,
+            0.03414836824831991,
+            0.03407276150072966,
+            0.03403262511810166,
+            0.03421089820473064,
+            0.03469333866097017,
+            0.0353857797829655,
+            0.03614639032055668,
+            0.0368821050084491,
+            0.037563445666970514
+          ],
+          "bare_max": 0.56347205310646,
+          "chief_max": 0.037563445666970514,
+          "suppression_ratio": 15.000542231990186
+        },
+        "second_irregular": {
+          "ka": [
+            4.25,
+            4.3,
+            4.35,
+            4.4,
+            4.45,
+            4.5,
+            4.55,
+            4.6,
+            4.65,
+            4.7,
+            4.75
+          ],
+          "bare_relative_error": [
+            0.04685700659842599,
+            0.04743993999773923,
+            0.04802309863446361,
+            0.04860590559148013,
+            0.04918783969957366,
+            0.04976841482374735,
+            0.05034716487875744,
+            0.05092363315737884,
+            0.05149736506776843,
+            0.05206790373307582,
+            0.05263478816404459
+          ],
+          "chief_relative_error": [
+            0.04761879558569319,
+            0.048477550159598655,
+            0.04945642336826328,
+            0.05059183937940571,
+            0.05188217972596188,
+            0.05321047483136932,
+            0.05420834617674268,
+            0.05439698874682258,
+            0.05415035805898644,
+            0.05396360569631283,
+            0.053953378501083456
+          ],
+          "bare_max": 0.05263478816404459,
+          "chief_max": 0.05439698874682258,
+          "suppression_ratio": 0.9676048137337212
+        },
+        "third_irregular": {
+          "ka": [
+            5.45,
+            5.5,
+            5.55,
+            5.6000000000000005,
+            5.65,
+            5.7,
+            5.75,
+            5.8,
+            5.8500000000000005,
+            5.9,
+            5.95
+          ],
+          "bare_relative_error": [
+            0.05998436310298074,
+            0.06047041275284016,
+            0.060958075170385616,
+            0.06145154706045997,
+            0.06195670216471943,
+            0.06248182115105619,
+            0.06303873024945608,
+            0.06364454160192631,
+            0.06438523822366438,
+            0.06513049733007,
+            0.0661103427293894
+          ],
+          "chief_relative_error": [
+            0.06159867334152001,
+            0.06279983799576769,
+            0.06429687914409805,
+            0.06621134803304574,
+            0.06867845880405005,
+            0.07177137198862621,
+            0.07532632503876327,
+            0.07879244888855086,
+            0.08153464496735358,
+            0.0830936716704077,
+            0.08319484295660583
+          ],
+          "bare_max": 0.0661103427293894,
+          "chief_max": 0.08319484295660583,
+          "suppression_ratio": 0.7946447205131735
+        }
+      },
+      "panels": 320
+    },
+    "d_ices209_third_octave": {
+      "criterion": "third-octave band SPL within 2 dB of the analytic reference spectrum",
+      "threshold_db": 2.0,
+      "measured_max_abs_delta_db": 0.1650432043704484,
+      "verdict": "PASS",
+      "reference": "closed-form pulsating sphere, radius 0.2 m, v_n = 1 m/s, field point 1 m",
+      "rows": [
+        {
+          "centre_hz": 10.0,
+          "ka": 0.008377580409572781,
+          "panel_count": 320,
+          "spl_db_bem": 185.04362654663942,
+          "spl_db_analytic": 185.20866975100986,
+          "delta_db": -0.1650432043704484,
+          "panels_per_wavelength": 0.00026172343965035844,
+          "wall_seconds": 1.09
+        },
+        {
+          "centre_hz": 12.5,
+          "ka": 0.010471975511965978,
+          "panel_count": 320,
+          "spl_db_bem": 186.9816590770763,
+          "spl_db_analytic": 187.14669857399792,
+          "delta_db": -0.16503949692162223,
+          "panels_per_wavelength": 0.0003271542995629481,
+          "wall_seconds": 0.81
+        },
+        {
+          "centre_hz": 16.0,
+          "ka": 0.01340412865531645,
+          "panel_count": 320,
+          "spl_db_bem": 189.1255610452129,
+          "spl_db_analytic": 189.29059396834205,
+          "delta_db": -0.16503292312916074,
+          "panels_per_wavelength": 0.0004187575034405734,
+          "wall_seconds": 0.77
+        },
+        {
+          "centre_hz": 20.0,
+          "ka": 0.016755160819145562,
+          "panel_count": 320,
+          "spl_db_bem": 191.06333197605696,
+          "spl_db_analytic": 191.22835541089162,
+          "delta_db": -0.16502343483466575,
+          "panels_per_wavelength": 0.0005234468793007169,
+          "wall_seconds": 0.86
+        },
+        {
+          "centre_hz": 25.0,
+          "ka": 0.020943951023931956,
+          "panel_count": 320,
+          "spl_db_bem": 193.000861493912,
+          "spl_db_analytic": 193.1658701072865,
+          "delta_db": -0.16500861337451056,
+          "panels_per_wavelength": 0.0006543085991258962,
+          "wall_seconds": 0.82
+        },
+        {
+          "centre_hz": 31.5,
+          "ka": 0.026389378290154267,
+          "panel_count": 320,
+          "spl_db_bem": 195.00717781771866,
+          "spl_db_analytic": 195.17216224965034,
+          "delta_db": -0.16498443193168555,
+          "panels_per_wavelength": 0.0008244288348986292,
+          "wall_seconds": 0.81
+        },
+        {
+          "centre_hz": 40.0,
+          "ka": 0.033510321638291124,
+          "panel_count": 320,
+          "spl_db_bem": 197.08035579063807,
+          "spl_db_analytic": 197.24530023400223,
+          "delta_db": -0.16494444336416336,
+          "panels_per_wavelength": 0.0010468937586014338,
+          "wall_seconds": 0.82
+        },
+        {
+          "centre_hz": 50.0,
+          "ka": 0.04188790204786391,
+          "panel_count": 320,
+          "spl_db_bem": 199.01587590324877,
+          "spl_db_analytic": 199.18076119386558,
+          "delta_db": -0.1648852906168088,
+          "panels_per_wavelength": 0.0013086171982517924,
+          "wall_seconds": 1.32
+        },
+        {
+          "centre_hz": 63.0,
+          "ka": 0.05277875658030853,
+          "panel_count": 320,
+          "spl_db_bem": 201.0189157506524,
+          "spl_db_analytic": 201.18370465772125,
+          "delta_db": -0.1647889070688393,
+          "panels_per_wavelength": 0.0016488576697972583,
+          "wall_seconds": 0.97
+        },
+        {
+          "centre_hz": 80.0,
+          "ka": 0.06702064327658225,
+          "panel_count": 320,
+          "spl_db_bem": 203.08668061273602,
+          "spl_db_analytic": 203.2513104709656,
+          "delta_db": -0.1646298582295742,
+          "panels_per_wavelength": 0.0020937875172028675,
+          "wall_seconds": 0.78
+        },
+        {
+          "centre_hz": 100.0,
+          "ka": 0.08377580409572782,
+          "panel_count": 320,
+          "spl_db_bem": 205.0142051889732,
+          "spl_db_analytic": 205.1786005485768,
+          "delta_db": -0.16439535960361695,
+          "panels_per_wavelength": 0.0026172343965035847,
+          "wall_seconds": 0.8
+        },
+        {
+          "centre_hz": 125.0,
+          "ka": 0.10471975511965977,
+          "panel_count": 320,
+          "spl_db_bem": 206.93577692636825,
+          "spl_db_analytic": 207.09980832952192,
+          "delta_db": -0.16403140315367182,
+          "panels_per_wavelength": 0.0032715429956294804,
+          "wall_seconds": 0.79
+        },
+        {
+          "centre_hz": 160.0,
+          "ka": 0.1340412865531645,
+          "panel_count": 320,
+          "spl_db_bem": 209.05064368835644,
+          "spl_db_analytic": 209.21403691968177,
+          "delta_db": -0.16339323132532968,
+          "panels_per_wavelength": 0.004187575034405735,
+          "wall_seconds": 0.84
+        },
+        {
+          "centre_hz": 200.0,
+          "ka": 0.16755160819145565,
+          "panel_count": 320,
+          "spl_db_bem": 210.94684466434688,
+          "spl_db_analytic": 211.10933263567892,
+          "delta_db": -0.16248797133204107,
+          "panels_per_wavelength": 0.005234468793007169,
+          "wall_seconds": 0.78
+        },
+        {
+          "centre_hz": 250.0,
+          "ka": 0.20943951023931953,
+          "panel_count": 320,
+          "spl_db_bem": 212.8202215392777,
+          "spl_db_analytic": 212.9813317365922,
+          "delta_db": -0.16111019731451393,
+          "panels_per_wavelength": 0.006543085991258961,
+          "wall_seconds": 0.82
+        },
+        {
+          "centre_hz": 315.0,
+          "ka": 0.26389378290154264,
+          "panel_count": 320,
+          "spl_db_bem": 214.72385664090336,
+          "spl_db_analytic": 214.88280955709217,
+          "delta_db": -0.15895291618880947,
+          "panels_per_wavelength": 0.00824428834898629,
+          "wall_seconds": 0.9
+        },
+        {
+          "centre_hz": 400.0,
+          "ka": 0.3351032163829113,
+          "panel_count": 320,
+          "spl_db_bem": 216.63236407945047,
+          "spl_db_analytic": 216.7879777794567,
+          "delta_db": -0.15561370000622787,
+          "panels_per_wavelength": 0.010468937586014339,
+          "wall_seconds": 0.84
+        },
+        {
+          "centre_hz": 500.0,
+          "ka": 0.41887902047863906,
+          "panel_count": 320,
+          "spl_db_bem": 218.33515850913258,
+          "spl_db_analytic": 218.48629743458787,
+          "delta_db": -0.1511389254552853,
+          "panels_per_wavelength": 0.013086171982517922,
+          "wall_seconds": 0.74
+        },
+        {
+          "centre_hz": 630.0,
+          "ka": 0.5277875658030853,
+          "panel_count": 320,
+          "spl_db_bem": 219.98372882721185,
+          "spl_db_analytic": 220.12857537014045,
+          "delta_db": -0.14484654292860455,
+          "panels_per_wavelength": 0.01648857669797258,
+          "wall_seconds": 0.8
+        },
+        {
+          "centre_hz": 800.0,
+          "ka": 0.6702064327658226,
+          "panel_count": 320,
+          "spl_db_bem": 221.52300382362046,
+          "spl_db_analytic": 221.65956096916653,
+          "delta_db": -0.13655714554607812,
+          "panels_per_wavelength": 0.020937875172028678,
+          "wall_seconds": 0.89
+        },
+        {
+          "centre_hz": 1000.0,
+          "ka": 0.8377580409572781,
+          "panel_count": 320,
+          "spl_db_bem": 222.77212860933818,
+          "spl_db_analytic": 222.89979101212626,
+          "delta_db": -0.12766240278807572,
+          "panels_per_wavelength": 0.026172343965035844,
+          "wall_seconds": 0.82
+        },
+        {
+          "centre_hz": 1250.0,
+          "ka": 1.0471975511965979,
+          "panel_count": 320,
+          "spl_db_bem": 223.81322521821562,
+          "spl_db_analytic": 223.93197194616613,
+          "delta_db": -0.11874672795050856,
+          "panels_per_wavelength": 0.032715429956294804,
+          "wall_seconds": 0.81
+        },
+        {
+          "centre_hz": 1600.0,
+          "ka": 1.3404128655316452,
+          "panel_count": 320,
+          "spl_db_bem": 224.71403682356495,
+          "spl_db_analytic": 224.82490504712584,
+          "delta_db": -0.11086822356088533,
+          "panels_per_wavelength": 0.041875750344057355,
+          "wall_seconds": 0.85
+        },
+        {
+          "centre_hz": 2000.0,
+          "ka": 1.6755160819145563,
+          "panel_count": 320,
+          "spl_db_bem": 225.31529466049304,
+          "spl_db_analytic": 225.4233417125846,
+          "delta_db": -0.10804705209156396,
+          "panels_per_wavelength": 0.05234468793007169,
+          "wall_seconds": 0.83
+        },
+        {
+          "centre_hz": 2500.0,
+          "ka": 2.0943951023931957,
+          "panel_count": 320,
+          "spl_db_bem": 225.741193378696,
+          "spl_db_analytic": 225.85471545795758,
+          "delta_db": -0.11352207926157121,
+          "panels_per_wavelength": 0.06543085991258961,
+          "wall_seconds": 0.89
+        },
+        {
+          "centre_hz": 3150.0,
+          "ka": 2.6389378290154264,
+          "panel_count": 320,
+          "spl_db_bem": 226.02357869552665,
+          "spl_db_analytic": 226.16387699780722,
+          "delta_db": -0.14029830228056994,
+          "panels_per_wavelength": 0.08244288348986291,
+          "wall_seconds": 0.93
+        },
+        {
+          "centre_hz": 4000.0,
+          "ka": 3.3510321638291125,
+          "panel_count": 320,
+          "spl_db_bem": 226.3622506660295,
+          "spl_db_analytic": 226.37611698795433,
+          "delta_db": -0.013866321924837166,
+          "panels_per_wavelength": 0.10468937586014337,
+          "wall_seconds": 0.82
+        },
+        {
+          "centre_hz": 5000.0,
+          "ka": 4.188790204786391,
+          "panel_count": 320,
+          "spl_db_bem": 226.43953176514557,
+          "spl_db_analytic": 226.5058806526041,
+          "delta_db": -0.06634888745853118,
+          "panels_per_wavelength": 0.13086171982517922,
+          "wall_seconds": 0.8
+        },
+        {
+          "centre_hz": 6300.0,
+          "ka": 5.277875658030853,
+          "panel_count": 320,
+          "spl_db_bem": 226.4306073989,
+          "spl_db_analytic": 226.5934285360274,
+          "delta_db": -0.16282113712739488,
+          "panels_per_wavelength": 0.16488576697972582,
+          "wall_seconds": 0.78
+        },
+        {
+          "centre_hz": 8000.0,
+          "ka": 6.702064327658225,
+          "panel_count": 1280,
+          "spl_db_bem": 226.69347260722185,
+          "spl_db_analytic": 226.65097621376728,
+          "delta_db": 0.042496393454570125,
+          "panels_per_wavelength": 0.1054366275551124,
+          "wall_seconds": 18.44
+        },
+        {
+          "centre_hz": 10000.0,
+          "ka": 8.377580409572783,
+          "panel_count": 1280,
+          "spl_db_bem": 226.64761109061493,
+          "spl_db_analytic": 226.68515959771966,
+          "delta_db": -0.03754850710473079,
+          "panels_per_wavelength": 0.1317957844438905,
+          "wall_seconds": 18.96
+        }
+      ]
+    },
+    "energy_balance": {
+      "criterion": "surface intensity integral equals the far-field power integral (2%)",
+      "threshold": 0.02,
+      "measured_max_relative_difference": 0.008628114472505579,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "ka": 0.25,
+          "power_surface_w": 21911.358305996804,
+          "power_far_field_w": 21914.01014626925,
+          "relative_difference": 0.0001210258275828155
+        },
+        {
+          "ka": 0.5,
+          "power_surface_w": 74731.62563137451,
+          "power_far_field_w": 74769.27143620003,
+          "relative_difference": 0.0005037466334695998
+        },
+        {
+          "ka": 1.0,
+          "power_surface_w": 188040.50192592468,
+          "power_far_field_w": 188462.07532913188,
+          "relative_difference": 0.0022419287275316805
+        },
+        {
+          "ka": 2.0,
+          "power_surface_w": 302261.5032968708,
+          "power_far_field_w": 304869.4501479478,
+          "relative_difference": 0.008628114472505579
+        },
+        {
+          "ka": 3.0,
+          "power_surface_w": 338902.6794668796,
+          "power_far_field_w": 341574.0234913337,
+          "relative_difference": 0.007882333738571676
+        }
+      ]
+    }
+  },
+  "hull": {
+    "geometry": {
+      "panel_count": 1970,
+      "volume_m3": 52066.822533124236,
+      "surface_area_m2": 14586.629652988735,
+      "block_coefficient": 0.6509589638671875,
+      "kcs_anchor_block_coefficient": 0.651,
+      "kcs_anchor_relative_error": 4.103613281247753e-05,
+      "length_m": 230.0,
+      "breadth_m": 32.2,
+      "draft_m": 10.8,
+      "excitation": {
+        "model": "Gaussian machinery patch on the wetted hull (Neumann q=0 on the lid)",
+        "amplitude_m_s": 0.001,
+        "sigma_m": 13.8,
+        "centre_m": [
+          -34.5,
+          0.0,
+          -5.4
+        ]
+      }
+    },
+    "mesh_convergence_25hz": [
+      {
+        "panel_count": 548,
+        "spl_db": 155.28310468195227,
+        "volume_m3": 51978.914629425
+      },
+      {
+        "panel_count": 1970,
+        "spl_db": 155.3457210684093,
+        "volume_m3": 52066.822533124236
+      }
+    ],
+    "mesh_convergence": {
+      "25": [
+        {
+          "aperture": [
+            21,
+            4,
+            3
+          ],
+          "panel_count": 548,
+          "panels_per_wavelength": 0.08595457857237326,
+          "spl_db": 155.28310468195227,
+          "volume_m3": 51978.914629425
+        },
+        {
+          "aperture": [
+            41,
+            8,
+            6
+          ],
+          "panel_count": 1970,
+          "panels_per_wavelength": 0.04535165234804341,
+          "spl_db": 155.3457210684093,
+          "volume_m3": 52066.822533124236
+        }
+      ],
+      "40": [
+        {
+          "aperture": [
+            21,
+            4,
+            3
+          ],
+          "panel_count": 548,
+          "panels_per_wavelength": 0.1375273257157972,
+          "spl_db": 149.76351419951482,
+          "volume_m3": 51978.914629425
+        },
+        {
+          "aperture": [
+            41,
+            8,
+            6
+          ],
+          "panel_count": 1970,
+          "panels_per_wavelength": 0.07256264375686945,
+          "spl_db": 150.03917955810874,
+          "volume_m3": 52066.822533124236
+        }
+      ]
+    },
+    "energy_balance": {
+      "25": {
+        "548": {
+          "power_surface_w": 486.13723381613966,
+          "power_far_field_w": 487.44089659605294,
+          "relative_difference": 0.0026816764675267305
+        },
+        "1970": {
+          "power_surface_w": 484.9469742620423,
+          "power_far_field_w": 482.8615913214896,
+          "relative_difference": 0.004300228790428315
+        }
+      },
+      "40": {
+        "548": {
+          "power_surface_w": 494.57553762742714,
+          "power_far_field_w": 502.27414491612643,
+          "relative_difference": 0.015566089915467667
+        },
+        "1970": {
+          "power_surface_w": 495.17015752489624,
+          "power_far_field_w": 497.2634648834476,
+          "relative_difference": 0.004227450557632076
+        }
+      }
+    },
+    "bands_computed": 10,
+    "bands_withheld": 21,
+    "directivity": {
+      "10.0": {
+        "spl_range_db": 6.756201046853391,
+        "fore_aft_ratio_db": -6.7493574904213745
+      },
+      "80.0": {
+        "spl_range_db": 36.14043678221529,
+        "fore_aft_ratio_db": -1.4467985380043444
+      }
+    }
+  },
+  "artifacts": {
+    "fig_pulsating_sphere.png": "87b050a2e554efd8bfc7fd318cf50b183012cb4ccdf00dd1fa194b53d61c4c02",
+    "fig_rigid_sphere_scattering.png": "4baeb607de89264d5741e1737fcb113a15064b1beef6887142fa3cf874588765",
+    "fig_chief_suppression.png": "4dc4fd587738d736e8587151e0549ed32ea2409e5845a60b93c96cef106a49b3",
+    "fig_ices209_bands.png": "672d829d7e63d87e77f3dbd02e921dbeaf1e199eb6989420982099e53412b1f5",
+    "fig_hull_field_map.png": "bc68a04aa0877cd92100975e61f68b0533baf33a6677b59fe38dae4172457780",
+    "fig_hull_directivity.png": "70a06bc74734cf4a509deafc50ff4da8fd752b34a2630b63d3c8a4b26ee717e7",
+    "fig_hull_band_table.png": "4d54e0a71ed9d3196ba039a0dab8ba89b84396c1ae0087b996dc596d35c44b2c",
+    "hull_band_table.json": "662096ed139cf15b7ad3584a481dd61c91c88ee8544c4e957c33e9c295ec738b",
+    "core_results.json": "0118a136c707cb6133fae36b06cce862ed75db88c830b970839bb1d2c36f0772",
+    "hull_results.json": "fdda34bd3660719522c94c2f11bba1588768ab9ec3fd4b6c9047f4c4feab50fd",
+    "module_sha256": "ece3ee873d0105f8688c817f9e967b5267c339269edb3f812136456d4c3b3c2b",
+    "tests_sha256": "9e9425ae4f34bf7f39aa69a36a50d4c1b1e6cadd0aac273073e73ccc046829a7"
+  },
+  "wall_seconds": 8.1,
+  "figures": [
+    {
+      "name": "fig_pulsating_sphere.png",
+      "caption": "Criterion (a): relative error of the BEM monopole radiation pressure against the closed-form solution for ka = 0.1 ... 4 at five field points.",
+      "path": "docs/acoustic3d_ices209/fig_pulsating_sphere.png"
+    },
+    {
+      "name": "fig_rigid_sphere_scattering.png",
+      "caption": "Criterion (b): scattering cross-section of a rigid sphere, BEM (1280 panels) versus the Mie series; the dashed line is the 5% acceptance threshold.",
+      "path": "docs/acoustic3d_ices209/fig_rigid_sphere_scattering.png"
+    },
+    {
+      "name": "fig_chief_suppression.png",
+      "caption": "Criterion (c): bare boundary-integral equation versus CHIEF-augmented solve across the first three interior Dirichlet eigenvalues; the spurious peaks collapse.",
+      "path": "docs/acoustic3d_ices209/fig_chief_suppression.png"
+    },
+    {
+      "name": "fig_ices209_bands.png",
+      "caption": "Criterion (d): the 31 ICES 209 one-third-octave band levels computed by the BEM against the closed-form reference spectrum; lower panel is the difference (threshold +-2 dB).",
+      "path": "docs/acoustic3d_ices209/fig_ices209_bands.png"
+    },
+    {
+      "name": "fig_hull_field_map.png",
+      "caption": "Pressure field radiated by the closed KCS hull with a machinery patch excitation, vertical centreplane through the ship; the hull outline is overlaid (81x61 field points).",
+      "path": "docs/acoustic3d_ices209/fig_hull_field_map.png"
+    },
+    {
+      "name": "fig_hull_directivity.png",
+      "caption": "Horizontal-plane directivity of the closed KCS hull at the lowest and highest resolved band; dashed curve is the no-self-scattering monopole superposition of the same surface velocity.",
+      "path": "docs/acoustic3d_ices209/fig_hull_directivity.png"
+    },
+    {
+      "name": "fig_hull_band_table.png",
+      "caption": "ICES 209 band table of the KCS hull: computed bands (resolved) against the no-scattering surrogate, and the bands withheld because a dense collocation BEM cannot resolve them here.",
+      "path": "docs/acoustic3d_ices209/fig_hull_band_table.png"
+    }
+  ],
+  "verdicts": {
+    "a_pulsating_sphere": "PASS",
+    "b_rigid_sphere_scattering": "PASS",
+    "c_chief_irregular_frequency": "PASS",
+    "d_ices209_third_octave": "PASS",
+    "energy_balance": "PASS"
+  },
+  "all_pass": true
+}

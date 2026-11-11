@@ -214,6 +214,21 @@ CAPABILITIES: tuple[Capability, ...] = (
         published_2026_10_29='REAL',
     ),
     Capability(
+        key='acoustic-3d-helmholtz',
+        title='3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209)',
+        claim='Complex-wavenumber layer potentials with exact solid-angle double layer, CHIEF-point irregular-frequency suppression, radiation/scattering split, and ICES 209 one-third-octave band output; validated against the pulsating-sphere closed form (1.1 %) and the rigid-sphere Mie series (1.6 %).',
+        level=REAL,
+        modules=('tensorbem.acoustic3d',),
+        symbols=('solve_exterior_neumann', 'assemble_helmholtz_layer_matrices', 'third_octave_band_levels'),
+        tests=(
+            'tests/test_acoustic3d.py::test_pulsating_sphere_radiation_matches_analytic',
+            'tests/test_acoustic3d.py::test_rigid_sphere_scattering_matches_mie',
+            'tests/test_acoustic3d.py::test_chief_suppresses_the_irregular_frequency_peak',
+        ),
+        docs=(('docs/acoustic3d_helmholtz.md', '3-D unbaffled exterior Helmholtz'),),
+        published_2026_10_29='NOT_SUPPORTED',
+    ),
+    Capability(
         key='ursell-radiation',
         title='Ursell submerged-cylinder radiation benchmark',
         claim='Multipole reference independent of the panel code; first-order convergence pinned.',
