@@ -612,6 +612,64 @@ def flexural_gravity_omega_mass_loading(k: float, plate: IcePlate) -> float:
     return math.sqrt(flexural_gravity_omega2_mass_loading(k, plate))
 
 
+def plate_fluid_omega2(
+    k: float,
+    *,
+    rigidity: float,
+    mass_per_area: float,
+    fluid_density: float,
+    water_depth: float | None = None,
+    gravity: float = DEFAULT_GRAVITY,
+) -> float:
+    """``omega^2`` of a Kirchhoff plate coupled to a fluid column.
+
+    This is equation (3) written for arbitrary plate/fluid parameters so that
+    other solvers can reuse one implementation instead of duplicating the
+    algebra:
+
+        omega^2 = (g k + D k^5 / rho) tanh(kH)
+                  / (1 + (m'' / rho) k tanh(kH))
+
+    ``water_depth=None`` means infinite depth (``tanh(kH) -> 1``).  With
+    ``rigidity=0`` this is the mass-loading relation of :mod:`tensorbem.ice`;
+    with ``mass_per_area=0`` it is the rigid-plate relation (2); at large ``k``
+    it tends to the in-vacuo Euler-Bernoulli plate wave ``D k^4 / m''``.
+    """
+    k = _positive("wavenumber", k)
+    rho = _positive("fluid_density", fluid_density)
+    m_pp = _non_negative("mass_per_area", mass_per_area)
+    rigidity = _non_negative("rigidity", rigidity)
+    g = _positive("gravity", gravity)
+    stiffness = g * k + rigidity * k ** 5 / rho
+    if water_depth is None:
+        return stiffness / (1.0 + m_pp * k / rho)
+    H = _positive("water_depth", water_depth)
+    tanh = math.tanh(k * H)
+    return stiffness * tanh / (1.0 + m_pp * k * tanh / rho)
+
+
+def plate_fluid_omega(
+    k: float,
+    *,
+    rigidity: float,
+    mass_per_area: float,
+    fluid_density: float,
+    water_depth: float | None = None,
+    gravity: float = DEFAULT_GRAVITY,
+) -> float:
+    """``omega`` of the coupled plate/fluid dispersion (:func:`plate_fluid_omega2`)."""
+    return math.sqrt(
+        plate_fluid_omega2(
+            k,
+            rigidity=rigidity,
+            mass_per_area=mass_per_area,
+            fluid_density=fluid_density,
+            water_depth=water_depth,
+            gravity=gravity,
+        )
+    )
+
+
 def _smallest_positive_root(
     residual,
     *,

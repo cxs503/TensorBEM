@@ -1,0 +1,70 @@
+{
+  "limit": "eq.(3) with k -> infinity; error is O(rho_w / (rho_i h k))",
+  "reference": "Euler-Bernoulli in-vacuo plate: omega^2 = D k^4 / (rho_i h) (Timoshenko & Woinowsky-Krieger, Theory of Plates and Shells, 2nd ed., 1959)",
+  "rel_error_at_k1000": 0.002230564169522773,
+  "rows": [
+    {
+      "got_eq3_omega2": 1044974899.5036635,
+      "h_ice": 0.5,
+      "k": 10.0,
+      "ref_in_vacuo_plate_omega2": 1278584315.3102272,
+      "rel_error": 0.18270943340164641
+    },
+    {
+      "got_eq3_omega2": 12506259382842.543,
+      "h_ice": 0.5,
+      "k": 100.0,
+      "ref_in_vacuo_plate_omega2": 12785843153102.27,
+      "rel_error": 0.021866666664989574
+    },
+    {
+      "got_eq3_omega2": 1.2757323509487822e+17,
+      "h_ice": 0.5,
+      "k": 1000.0,
+      "ref_in_vacuo_plate_omega2": 1.278584315310227e+17,
+      "rel_error": 0.002230564169522773
+    },
+    {
+      "got_eq3_omega2": 4600144461.608365,
+      "h_ice": 1.0,
+      "k": 10.0,
+      "ref_in_vacuo_plate_omega2": 5114337261.240909,
+      "rel_error": 0.10053947820949596
+    },
+    {
+      "got_eq3_omega2": 50578023926221.82,
+      "h_ice": 1.0,
+      "k": 100.0,
+      "ref_in_vacuo_plate_omega2": 51143372612409.08,
+      "rel_error": 0.011054192504506155
+    },
+    {
+      "got_eq3_omega2": 5.1086269639257235e+17,
+      "h_ice": 1.0,
+      "k": 1000.0,
+      "ref_in_vacuo_plate_omega2": 5.114337261240908e+17,
+      "rel_error": 0.00111652732768725
+    },
+    {
+      "got_eq3_omega2": 19374530420.095592,
+      "h_ice": 2.0,
+      "k": 10.0,
+      "ref_in_vacuo_plate_omega2": 20457349044.963634,
+      "rel_error": 0.052930544543581495
+    },
+    {
+      "got_eq3_omega2": 203436508870621.2,
+      "h_ice": 2.0,
+      "k": 100.0,
+      "ref_in_vacuo_plate_omega2": 204573490449636.3,
+      "rel_error": 0.0055578148298497995
+    },
+    {
+      "got_eq3_omega2": 2.0445922071068948e+18,
+      "h_ice": 2.0,
+      "k": 1000.0,
+      "ref_in_vacuo_plate_omega2": 2.0457349044963633e+18,
+      "rel_error": 0.0005585754962467804
+    }
+  ]
+}
