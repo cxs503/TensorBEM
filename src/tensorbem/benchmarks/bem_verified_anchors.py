@@ -150,6 +150,16 @@ TOLERANCES = {
 # ---------------------------------------------------------------------------
 
 
+#: Directory the three P19-N02 anchors are written to.  It is deliberately a
+#: *sub*-directory of ``benchmarks/verified``: the top level of that tree is
+#: owned by :mod:`tensorbem.benchmarks.thin_ship_verification`, which writes
+#: ``bem_wigley_hydrostatics`` / ``bem_ellipsoid_wave`` /
+#: ``bem_multihull_interference`` with a different schema (``study``/``reference``
+#: instead of ``case``/``froude_cases``).  Sharing one directory made the two
+#: producers overwrite each other's records, so whichever driver ran last turned
+#: the other node's artifact gate red.
+ARTIFACT_ROOT = "benchmarks/verified/bem_verified_anchors"
+
 def _memoised(kochin: Callable[[float], complex]) -> Callable[[float], complex]:
     """Cache a Kochin function: the Kelvin quadrature reuses the same nodes."""
 
@@ -902,7 +912,7 @@ def _case_markdown(result: dict[str, Any], figure: str | None) -> str:
     return "\n".join(lines)
 
 
-def run_all(out_root: str | Path = "benchmarks/verified") -> dict[str, Any]:
+def run_all(out_root: str | Path = ARTIFACT_ROOT) -> dict[str, Any]:
     """Run the three studies and write ``results.json`` / ``report.md`` / figures."""
     root = Path(out_root)
     results = {
@@ -1065,9 +1075,9 @@ def _render_document_body(results: dict[str, Any]) -> str:
     figure_paths = {
         case: result.get("figure") for case, result in results.items()
     }
-    # ``figure`` is stored relative to the artifact root (benchmarks/verified).
+    # ``figure`` is stored relative to the artifact root (:data:`ARTIFACT_ROOT`).
     figure_lines = "\n".join(
-        f"![{case}](../benchmarks/verified/{path})  _({case})_"
+        f"![{case}](../{ARTIFACT_ROOT}/{path})  _({case})_"
         for case, path in figure_paths.items()
         if path
     )
@@ -1075,7 +1085,7 @@ def _render_document_body(results: dict[str, Any]) -> str:
     return f"""# BEM verification anchors: Wigley III hydrostatics, ellipsoid wave resistance, tandem interference
 
 *Campaign node **P19-N02**, TensorBEM.  Every number below is rendered from the
-committed artifacts `benchmarks/verified/*/results.json` by
+committed artifacts `benchmarks/verified/bem_verified_anchors/*/results.json` by
 `tensorbem.benchmarks.bem_verified_anchors.render_document`; the test
 `tests/test_bem_verified_anchors.py` re-runs the three studies and fails if the
 code, the artifacts and this document disagree.*
@@ -1145,7 +1155,7 @@ with H(1 + e^{{ikd}}) to round-off (measured worst relative deviation below
 {identity_rel_max:.2e}).
 
 **Tool chain.** NumPy/SciPy + matplotlib only (`python -m
-tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified --write-doc
+tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified/bem_verified_anchors --write-doc
 docs/bem_verified_anchors.md`).
 
 ## 3. Results
@@ -1352,7 +1362,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument(
         "--out-root",
-        default="benchmarks/verified",
+        default=ARTIFACT_ROOT,
         help="directory for results.json / report.md / figures",
     )
     parser.add_argument(

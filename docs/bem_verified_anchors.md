@@ -1,7 +1,7 @@
 # BEM verification anchors: Wigley III hydrostatics, ellipsoid wave resistance, tandem interference
 
 *Campaign node **P19-N02**, TensorBEM.  Every number below is rendered from the
-committed artifacts `benchmarks/verified/*/results.json` by
+committed artifacts `benchmarks/verified/bem_verified_anchors/*/results.json` by
 `tensorbem.benchmarks.bem_verified_anchors.render_document`; the test
 `tests/test_bem_verified_anchors.py` re-runs the three studies and fails if the
 code, the artifacts and this document disagree.*
@@ -71,7 +71,7 @@ with H(1 + e^{ikd}) to round-off (measured worst relative deviation below
 2.06e-15).
 
 **Tool chain.** NumPy/SciPy + matplotlib only (`python -m
-tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified --write-doc
+tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified/bem_verified_anchors --write-doc
 docs/bem_verified_anchors.md`).
 
 ## 3. Results
@@ -155,9 +155,9 @@ the closed-form Michell value):
 
 ## 4. Figures
 
-![bem_wigley_hydrostatics](../benchmarks/verified/bem_wigley_hydrostatics/figures/wigley_hydrostatics.png)  _(bem_wigley_hydrostatics)_
-![bem_ellipsoid_wave](../benchmarks/verified/bem_ellipsoid_wave/figures/ellipsoid_wave.png)  _(bem_ellipsoid_wave)_
-![bem_multihull_interference](../benchmarks/verified/bem_multihull_interference/figures/multihull_interference.png)  _(bem_multihull_interference)_
+![bem_wigley_hydrostatics](../benchmarks/verified/bem_verified_anchors/bem_wigley_hydrostatics/figures/wigley_hydrostatics.png)  _(bem_wigley_hydrostatics)_
+![bem_ellipsoid_wave](../benchmarks/verified/bem_verified_anchors/bem_ellipsoid_wave/figures/ellipsoid_wave.png)  _(bem_ellipsoid_wave)_
+![bem_multihull_interference](../benchmarks/verified/bem_verified_anchors/bem_multihull_interference/figures/multihull_interference.png)  _(bem_multihull_interference)_
 
 ## 5. Points to watch (what bit, and what is limited)
 
