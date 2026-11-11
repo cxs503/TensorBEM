@@ -1,0 +1,1119 @@
+{
+  "meta": {
+    "generated_utc": "2026-11-11T07:59:36.214520+00:00",
+    "git_commit": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "cwd_relative": ".",
+    "inputs": {
+      "anchor_table": {
+        "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "present": true
+      },
+      "ittc57_anchor": "AN-ITTC57",
+      "ladder": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96
+        }
+      ],
+      "mission_J": [
+        0.1,
+        0.3,
+        0.5,
+        0.7,
+        0.9
+      ],
+      "design_J": 0.7,
+      "thresholds": {
+        "design_dKT_pct": 5.0,
+        "order_tolerance": 0.3,
+        "theory_order": 2.0
+      },
+      "bem_geometry": {
+        "n_radial": 16,
+        "n_chord": 2,
+        "wake_model": "geometric",
+        "wake_length": 1.0,
+        "wake_steps": 24,
+        "rev_per_second": 10.0,
+        "thickness_ratio": 0.06,
+        "viscous": true,
+        "radial_spacing": "cosine",
+        "root_chord_offset": 0.12
+      }
+    },
+    "driver": "src/tensorbem/benchmarks/kp505_w22.py",
+    "producing_command": "python -m tensorbem.benchmarks.kp505_w22 benchmarks/verified/kp505_anchor_w22",
+    "cache": {
+      "dir": "runs/w22_kp505_cache",
+      "solver_fingerprint": "86298590176ff1da",
+      "n_cached_cells": 18,
+      "n_cells": 19,
+      "note": "lattice solutions are cached under runs/w22_kp505_cache keyed on (J, ladder level, model overrides, sha256 of propeller.py+uq.py).  A cache hit reproduces the previous run of the same solver fingerprint bit-for-bit; cells are flagged cache_hit in place."
+    }
+  },
+  "mission": "W22 propeller-openwater-bem",
+  "blocked": false,
+  "honest_fail": true,
+  "reference_hierarchy": {
+    "experiment": {
+      "anchor_id": "AN-KP505",
+      "file": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+      "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+      "provenance_class": "SECONDARY_REPRODUCTION",
+      "caveat": "SECONDARY_REPRODUCTION: the paper prints the experimental columns of the KRISO KP505 open-water test (KRISO Container Ship propeller) but page 10 does not cite the primary experimental handout.  One tabulation step is inherited by every number taken from it."
+    },
+    "analytic": {
+      "anchor_id": "AN-ITTC57",
+      "formula": "C_F = 0.075 / (log10(Re) - 2)^2",
+      "use": "viscous-path cross-check and momentum-theory efficiency bound"
+    }
+  },
+  "ladder": [
+    {
+      "level": "L1",
+      "n_radial": 8,
+      "n_chord": 2,
+      "wake_steps": 24
+    },
+    {
+      "level": "L2",
+      "n_radial": 16,
+      "n_chord": 4,
+      "wake_steps": 48
+    },
+    {
+      "level": "L3",
+      "n_radial": 32,
+      "n_chord": 8,
+      "wake_steps": 96
+    }
+  ],
+  "refinement_ratio": 2.0,
+  "points": [
+    {
+      "J": 0.1,
+      "levels": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "KT": 0.5425591595535185,
+          "10KQ": 0.6296099714725755,
+          "KQ": 0.06296099714725754,
+          "eta0": 0.13714994373542586,
+          "KT_inviscid": 0.5451979404273576,
+          "KQ_inviscid": 0.060065942500869954,
+          "eta0_momentum_bound": 0.15629059146832966,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "KT": 0.5399599884843804,
+          "10KQ": 0.6573207686957239,
+          "KQ": 0.06573207686957239,
+          "eta0": 0.13073875850545766,
+          "KT_inviscid": 0.5431415868564733,
+          "KQ_inviscid": 0.06266661193140032,
+          "eta0_momentum_bound": 0.1566343809584919,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "KT": 0.5016575845315275,
+          "10KQ": 0.6571330659837946,
+          "KQ": 0.06571330659837946,
+          "eta0": 0.1214994168619448,
+          "KT_inviscid": 0.5053288302177983,
+          "KQ_inviscid": 0.06242313116434178,
+          "eta0_momentum_bound": 0.1619874975002874,
+          "n_panels": 256,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        }
+      ],
+      "KT_bem": 0.5016575845315275,
+      "KQ_bem": 0.06571330659837946,
+      "10KQ_bem": 0.6571330659837946,
+      "eta0_bem": 0.1214994168619448,
+      "KT_ref": 0.494,
+      "KQ_ref": 0.0683,
+      "10KQ_ref": 0.683,
+      "eta0_ref": 0.11511353131390381,
+      "reference_type": "experiment",
+      "reference_note": "KP505 open-water test curve, Table 2 Experimental columns (secondary reproduction)",
+      "dKT_pct": 1.5501183262201497,
+      "dKQ_pct": -3.787252418185276,
+      "d10KQ_pct": -3.7872524181852754,
+      "deta0_pct": 5.547467335206044,
+      "eta0_momentum_bound": 0.1619874975002874,
+      "eta0_above_momentum_bound": false,
+      "n_workers": null
+    },
+    {
+      "J": 0.3,
+      "levels": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "KT": 0.42659155679309957,
+          "10KQ": 0.5496576696582665,
+          "KQ": 0.05496576696582664,
+          "eta0": 0.3705623992498822,
+          "KT_inviscid": 0.4296897306818588,
+          "KQ_inviscid": 0.051888535397734706,
+          "eta0_momentum_bound": 0.4333454605886602,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "KT": 0.424756764040373,
+          "10KQ": 0.5666408653928408,
+          "KQ": 0.05666408653928408,
+          "eta0": 0.3579099712224742,
+          "KT_inviscid": 0.4283614114850246,
+          "KQ_inviscid": 0.05339031923521373,
+          "eta0_momentum_bound": 0.4340213301073588,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "KT": 0.39502990450550235,
+          "10KQ": 0.5566963360658616,
+          "KQ": 0.05566963360658616,
+          "eta0": 0.33880748568676733,
+          "KT_inviscid": 0.3990758313402579,
+          "KQ_inviscid": 0.052163306201408195,
+          "eta0_momentum_bound": 0.44547751380144346,
+          "n_panels": 256,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        }
+      ],
+      "KT_bem": 0.39502990450550235,
+      "KQ_bem": 0.05566963360658616,
+      "10KQ_bem": 0.5566963360658616,
+      "eta0_bem": 0.33880748568676733,
+      "KT_ref": 0.392,
+      "KQ_ref": 0.058499999999999996,
+      "10KQ_ref": 0.585,
+      "eta0_ref": 0.31994224457447684,
+      "reference_type": "experiment",
+      "reference_note": "KP505 open-water test curve, Table 2 Experimental columns (secondary reproduction)",
+      "dKT_pct": 0.7729348228322281,
+      "dKQ_pct": -4.838233151134764,
+      "d10KQ_pct": -4.838233151134772,
+      "deta0_pct": 5.896452072898737,
+      "eta0_momentum_bound": 0.44547751380144346,
+      "eta0_above_momentum_bound": false,
+      "n_workers": null
+    },
+    {
+      "J": 0.5,
+      "levels": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "KT": 0.30271961770435474,
+          "10KQ": 0.43315714314671616,
+          "KQ": 0.04331571431467161,
+          "eta0": 0.5561413945356306,
+          "KT_inviscid": 0.3063208081104189,
+          "KQ_inviscid": 0.04004604780184899,
+          "eta0_momentum_bound": 0.6620847275513931,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "KT": 0.30149661655365284,
+          "10KQ": 0.4424439422477882,
+          "KQ": 0.04424439422477882,
+          "eta0": 0.5422684352532288,
+          "KT_inviscid": 0.30557025468307736,
+          "KQ_inviscid": 0.040748615814268196,
+          "eta0_momentum_bound": 0.6627615182727898,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "KT": 0.2805575539228038,
+          "10KQ": 0.42919653194238716,
+          "KQ": 0.04291965319423872,
+          "eta0": 0.5201826926059486,
+          "KT_inviscid": 0.2850395080816176,
+          "KQ_inviscid": 0.039178576272174914,
+          "eta0_momentum_bound": 0.6747383463658211,
+          "n_panels": 256,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        }
+      ],
+      "KT_bem": 0.2805575539228038,
+      "KQ_bem": 0.04291965319423872,
+      "10KQ_bem": 0.42919653194238716,
+      "eta0_bem": 0.5201826926059486,
+      "KT_ref": 0.29,
+      "KQ_ref": 0.047099999999999996,
+      "10KQ_ref": 0.471,
+      "eta0_ref": 0.4899674468858774,
+      "reference_type": "experiment",
+      "reference_note": "KP505 open-water test curve, Table 2 Experimental columns (secondary reproduction)",
+      "dKT_pct": -3.256015888688341,
+      "dKQ_pct": -8.875470925183182,
+      "d10KQ_pct": -8.875470925183189,
+      "deta0_pct": 6.166786367566359,
+      "eta0_momentum_bound": 0.6747383463658211,
+      "eta0_above_momentum_bound": false,
+      "n_workers": null
+    },
+    {
+      "J": 0.7,
+      "levels": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "KT": 0.17094360525458455,
+          "10KQ": 0.2801063467773972,
+          "KQ": 0.028010634677739718,
+          "eta0": 0.679904759583568,
+          "KT_inviscid": 0.1750911727130378,
+          "KQ_inviscid": 0.024538479713212928,
+          "eta0_momentum_bound": 0.842395403610817,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "KT": 0.1701800788810841,
+          "10KQ": 0.284728727450945,
+          "KQ": 0.028472872745094503,
+          "eta0": 0.6658794393007537,
+          "KT_inviscid": 0.17476811645063164,
+          "KQ_inviscid": 0.02474150166856365,
+          "eta0_momentum_bound": 0.8429082513518444,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "KT": 0.15824276404220283,
+          "10KQ": 0.27464608167094007,
+          "KQ": 0.027464608167094007,
+          "eta0": 0.6419018457074195,
+          "KT_inviscid": 0.16321986044187733,
+          "KQ_inviscid": 0.023468941376641947,
+          "eta0_momentum_bound": 0.8510811061058824,
+          "n_panels": 256,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        }
+      ],
+      "KT_bem": 0.15824276404220283,
+      "KQ_bem": 0.027464608167094007,
+      "10KQ_bem": 0.27464608167094007,
+      "eta0_bem": 0.6419018457074195,
+      "KT_ref": 0.193,
+      "KQ_ref": 0.0342,
+      "10KQ_ref": 0.342,
+      "eta0_ref": 0.6287085617460544,
+      "reference_type": "experiment",
+      "reference_note": "KP505 open-water test curve, Table 2 Experimental columns (secondary reproduction)",
+      "dKT_pct": -18.008930548081437,
+      "dKQ_pct": -19.694128166391796,
+      "d10KQ_pct": -19.6941281663918,
+      "deta0_pct": 2.0984737228207306,
+      "eta0_momentum_bound": 0.8510811061058824,
+      "eta0_above_momentum_bound": false,
+      "n_workers": null
+    },
+    {
+      "J": 0.9,
+      "levels": [
+        {
+          "level": "L1",
+          "n_radial": 8,
+          "n_chord": 2,
+          "wake_steps": 24,
+          "KT": 0.03126379584757362,
+          "10KQ": 0.0905034808443424,
+          "KQ": 0.00905034808443424,
+          "eta0": 0.49481067935537154,
+          "KT_inviscid": 0.036000824489715665,
+          "KQ_inviscid": 0.005365831131826475,
+          "eta0_momentum_bound": 0.9765663303251418,
+          "n_panels": 16,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L2",
+          "n_radial": 16,
+          "n_chord": 4,
+          "wake_steps": 48,
+          "KT": 0.03080771603307558,
+          "10KQ": 0.09349389902397265,
+          "KQ": 0.009349389902397264,
+          "eta0": 0.4719966017996932,
+          "KT_inviscid": 0.03595499678768737,
+          "KQ_inviscid": 0.0053689767981001165,
+          "eta0_momentum_bound": 0.9768927440756657,
+          "n_panels": 64,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        },
+        {
+          "level": "L3",
+          "n_radial": 32,
+          "n_chord": 8,
+          "wake_steps": 96,
+          "KT": 0.02808876481939206,
+          "10KQ": 0.09305539295173892,
+          "KQ": 0.009305539295173892,
+          "eta0": 0.43236819082623545,
+          "KT_inviscid": 0.033616888421036877,
+          "KQ_inviscid": 0.005034401514809259,
+          "eta0_momentum_bound": 0.978847681419469,
+          "n_panels": 256,
+          "wake_model": "geometric",
+          "viscous": true,
+          "cache_hit": true
+        }
+      ],
+      "KT_bem": 0.02808876481939206,
+      "KQ_bem": 0.009305539295173892,
+      "10KQ_bem": 0.09305539295173892,
+      "eta0_bem": 0.43236819082623545,
+      "KT_ref": 0.087,
+      "KQ_ref": 0.019200000000000002,
+      "10KQ_ref": 0.192,
+      "eta0_ref": 0.6490537522966355,
+      "reference_type": "experiment",
+      "reference_note": "KP505 open-water test curve, Table 2 Experimental columns (secondary reproduction)",
+      "dKT_pct": -67.71406342598614,
+      "dKQ_pct": -51.53364950430265,
+      "d10KQ_pct": -51.533649504302645,
+      "deta0_pct": -33.384840732169245,
+      "eta0_momentum_bound": 0.978847681419469,
+      "eta0_above_momentum_bound": false,
+      "n_workers": null
+    }
+  ],
+  "gci": [
+    {
+      "J": 0.1,
+      "quantity": "KT",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.5425591595535185,
+      "L2": 0.5399599884843804,
+      "L3": 0.5016575845315275,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -3.881311446445144,
+      "theory_order": 2.0,
+      "order_deviation_pct": -294.0655723222572,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.5427483774394352,
+      "gci_fine_pct": 10.23875502308018,
+      "gci_medium_pct": 0.6455082354531149,
+      "last_increment_pct": 7.635168914793057,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.1,
+      "quantity": "KQ",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.06296099714725754,
+      "L2": 0.06573207686957239,
+      "L3": 0.06571330659837946,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": 7.205854912287708,
+      "theory_order": 2.0,
+      "order_deviation_pct": 260.2927456143854,
+      "asymptotic_range": false,
+      "oscillatory": true,
+      "monotone": false,
+      "converged_flag": false,
+      "extrapolated": 0.06571317858839841,
+      "gci_fine_pct": 0.00024350087460790821,
+      "gci_medium_pct": 0.035938087753315855,
+      "last_increment_pct": 0.028563881753278567,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.1,
+      "quantity": "eta0",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.13714994373542586,
+      "L2": 0.13073875850545766,
+      "L3": 0.1214994168619448,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.5271989637274737,
+      "theory_order": 2.0,
+      "order_deviation_pct": -126.35994818637369,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.15168354444297857,
+      "gci_fine_pct": 31.05377824089771,
+      "gci_medium_pct": 20.025417650580053,
+      "last_increment_pct": 7.60443291181485,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.3,
+      "quantity": "KT",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.42659155679309957,
+      "L2": 0.424756764040373,
+      "L3": 0.39502990450550235,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -4.0180780400477305,
+      "theory_order": 2.0,
+      "order_deviation_pct": -300.90390200238653,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.42671225292048776,
+      "gci_fine_pct": 10.02530063345626,
+      "gci_medium_pct": 0.5754731430035901,
+      "last_increment_pct": 7.525217507794167,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.3,
+      "quantity": "KQ",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.05496576696582664,
+      "L2": 0.05666408653928408,
+      "L3": 0.05566963360658616,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": 0.772132961668595,
+      "theory_order": 2.0,
+      "order_deviation_pct": -61.393351916570246,
+      "asymptotic_range": false,
+      "oscillatory": true,
+      "monotone": false,
+      "converged_flag": false,
+      "extrapolated": 0.05426462791646798,
+      "gci_fine_pct": 3.154784752238681,
+      "gci_medium_pct": 5.293164439244507,
+      "last_increment_pct": 1.7863471847608263,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.3,
+      "quantity": "eta0",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.3705623992498822,
+      "L2": 0.3579099712224742,
+      "L3": 0.33880748568676733,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.5943461002490508,
+      "theory_order": 2.0,
+      "order_deviation_pct": -129.71730501245253,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.3953813926902927,
+      "gci_fine_pct": 20.87243840290649,
+      "gci_medium_pct": 13.086887932959598,
+      "last_increment_pct": 5.638153329754765,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.5,
+      "quantity": "KT",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.30271961770435474,
+      "L2": 0.30149661655365284,
+      "L3": 0.2805575539228038,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -4.097699192878266,
+      "theory_order": 2.0,
+      "order_deviation_pct": -304.8849596439133,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.3027954813252977,
+      "gci_fine_pct": 9.907916883523276,
+      "gci_medium_pct": 0.5385071922580459,
+      "last_increment_pct": 7.463375103637555,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.5,
+      "quantity": "KQ",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.04331571431467161,
+      "L2": 0.04424439422477882,
+      "L3": 0.04291965319423872,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.5124570284016184,
+      "theory_order": 2.0,
+      "order_deviation_pct": -125.62285142008092,
+      "asymptotic_range": false,
+      "oscillatory": true,
+      "monotone": false,
+      "converged_flag": false,
+      "extrapolated": 0.047350632928069444,
+      "gci_fine_pct": 12.90486817827292,
+      "gci_medium_pct": 8.775797357258748,
+      "last_increment_pct": 3.0865604261637603,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.5,
+      "quantity": "eta0",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.5561413945356306,
+      "L2": 0.5422684352532288,
+      "L3": 0.5201826926059486,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.670839778661254,
+      "theory_order": 2.0,
+      "order_deviation_pct": -133.5419889330627,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.579575471717579,
+      "gci_fine_pct": 14.272096120233147,
+      "gci_medium_pct": 8.59976213785349,
+      "last_increment_pct": 4.245766528032227,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.7,
+      "quantity": "KT",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.17094360525458455,
+      "L2": 0.1701800788810841,
+      "L3": 0.15824276404220283,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -3.966656554256326,
+      "theory_order": 2.0,
+      "order_deviation_pct": -298.3328277128163,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.1709957784745123,
+      "gci_fine_pct": 10.07393174460437,
+      "gci_medium_pct": 0.5991444465704733,
+      "last_increment_pct": 7.5436718456823915,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.7,
+      "quantity": "KQ",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.028010634677739718,
+      "L2": 0.028472872745094503,
+      "L3": 0.027464608167094007,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -1.1251662829654798,
+      "theory_order": 2.0,
+      "order_deviation_pct": -156.25831414827397,
+      "asymptotic_range": false,
+      "oscillatory": true,
+      "monotone": false,
+      "converged_flag": false,
+      "extrapolated": 0.029326417876751377,
+      "gci_fine_pct": 8.473676824051914,
+      "gci_medium_pct": 3.7471856953911025,
+      "last_increment_pct": 3.6711413170952207,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.7,
+      "quantity": "eta0",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.679904759583568,
+      "L2": 0.6658794393007537,
+      "L3": 0.6419018457074195,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.7736531595620338,
+      "theory_order": 2.0,
+      "order_deviation_pct": -138.68265797810167,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.6996700536925627,
+      "gci_fine_pct": 11.249423952325362,
+      "gci_medium_pct": 6.343230545474736,
+      "last_increment_pct": 3.7353987613027098,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.9,
+      "quantity": "KT",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.03126379584757362,
+      "L2": 0.03080771603307558,
+      "L3": 0.02808876481939206,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -2.5756920403179504,
+      "theory_order": 2.0,
+      "order_deviation_pct": -228.7846020158975,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.031355718348015954,
+      "gci_fine_pct": 14.538524342517704,
+      "gci_medium_pct": 2.2234783420492326,
+      "last_increment_pct": 9.679853247966234,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.9,
+      "quantity": "KQ",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.00905034808443424,
+      "L2": 0.009349389902397264,
+      "L3": 0.009305539295173892,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": 2.7696785190799007,
+      "theory_order": 2.0,
+      "order_deviation_pct": 38.48392595399503,
+      "asymptotic_range": false,
+      "oscillatory": true,
+      "monotone": false,
+      "converged_flag": false,
+      "extrapolated": 0.009298004256062297,
+      "gci_fine_pct": 0.10121712015528303,
+      "gci_medium_pct": 0.6870187101966801,
+      "last_increment_pct": 0.4712312294045569,
+      "reference_type": "numerical"
+    },
+    {
+      "J": 0.9,
+      "quantity": "eta0",
+      "levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "L1": 0.49481067935537154,
+      "L2": 0.4719966017996932,
+      "L3": 0.43236819082623545,
+      "n_levels": 3,
+      "refinement_ratio": 2.0,
+      "observed_order": -0.796610796740633,
+      "theory_order": 2.0,
+      "order_deviation_pct": -139.83053983703164,
+      "asymptotic_range": false,
+      "oscillatory": false,
+      "monotone": true,
+      "converged_flag": true,
+      "extrapolated": 0.5257653489092742,
+      "gci_fine_pct": 27.001627335420174,
+      "gci_medium_pct": 14.239707156938252,
+      "last_increment_pct": 9.165431642353179,
+      "reference_type": "numerical"
+    }
+  ],
+  "attribution": {
+    "design_J": 0.7,
+    "reference": {
+      "type": "experiment",
+      "KT": 0.193,
+      "10KQ": 0.342,
+      "eta0": 0.6287085617460544
+    },
+    "channel_panel_density": {
+      "KT": {
+        "L1": 0.17094360525458455,
+        "L2": 0.1701800788810841,
+        "L3": 0.15824276404220283,
+        "reference": 0.193,
+        "observed_order": -3.966656554256326,
+        "oscillatory": false,
+        "richardson_applicable": false,
+        "extrapolated": 0.1709957784745123,
+        "total_pct": -18.008930548081437,
+        "discretisation_pct": -7.458087296705028,
+        "last_increment_pct": 7.5436718456823915,
+        "model_pct_richardson": -10.55084325137641,
+        "model_band_pct": [
+          -33.09627423944622,
+          -2.9215868567166545
+        ]
+      },
+      "KQ": {
+        "L1": 0.028010634677739718,
+        "L2": 0.028472872745094503,
+        "L3": 0.027464608167094007,
+        "reference": 0.0342,
+        "observed_order": -1.1251662829654798,
+        "oscillatory": true,
+        "richardson_applicable": false,
+        "extrapolated": 0.029326417876751377,
+        "total_pct": -19.694128166391796,
+        "discretisation_pct": -6.34857525894196,
+        "last_increment_pct": 3.6711413170952207,
+        "model_pct_richardson": -13.345552907449836,
+        "model_band_pct": [
+          -27.03641080058224,
+          -12.351845532201354
+        ]
+      },
+      "eta0": {
+        "L1": 0.679904759583568,
+        "L2": 0.6658794393007537,
+        "L3": 0.6419018457074195,
+        "reference": 0.6287085617460544,
+        "observed_order": -0.7736531595620338,
+        "oscillatory": false,
+        "richardson_applicable": false,
+        "extrapolated": 0.6996700536925627,
+        "total_pct": 2.0984737228207306,
+        "discretisation_pct": -8.256492854062722,
+        "last_increment_pct": 3.7353987613027098,
+        "model_pct_richardson": 10.354966576883452,
+        "model_band_pct": [
+          -5.372323799784689,
+          9.569271245426151
+        ]
+      }
+    },
+    "channel_wake_model": [
+      {
+        "wake_model": "geometric",
+        "KT": 0.15824276404220283,
+        "10KQ": 0.27464608167094007,
+        "KQ": 0.027464608167094007,
+        "eta0": 0.6419018457074195,
+        "KT_inviscid": 0.16321986044187733,
+        "KQ_inviscid": 0.023468941376641947,
+        "eta0_momentum_bound": 0.8510811061058824,
+        "n_panels": 256,
+        "viscous": true,
+        "cache_hit": true,
+        "dKT_pct": -18.008930548081437,
+        "d10KQ_pct": -19.6941281663918,
+        "deta0_pct": 2.0984737228207306
+      },
+      {
+        "wake_model": "kinematic",
+        "KT": 0.13804282572663074,
+        "10KQ": 0.24396797821335103,
+        "KQ": 0.024396797821335102,
+        "eta0": 0.6303752961172354,
+        "KT_inviscid": 0.14306807288137027,
+        "KQ_inviscid": 0.020339198923737086,
+        "eta0_momentum_bound": 0.8656157944977892,
+        "n_panels": 256,
+        "viscous": true,
+        "cache_hit": true,
+        "dKT_pct": -28.475219830761276,
+        "d10KQ_pct": -28.664333855745316,
+        "deta0_pct": 0.2651044494371391
+      },
+      {
+        "wake_model": "induced",
+        "KT": 0.18927017835982243,
+        "10KQ": 0.3097992676548107,
+        "KQ": 0.03097992676548107,
+        "eta0": 0.6806439306883835,
+        "KT_inviscid": 0.1939345790282605,
+        "KQ_inviscid": 0.027032242516328162,
+        "eta0_momentum_bound": 0.8304235475776762,
+        "n_panels": 256,
+        "viscous": true,
+        "cache_hit": true,
+        "dKT_pct": -1.9325500726308662,
+        "d10KQ_pct": -9.415418814382845,
+        "deta0_pct": 8.260642864174422
+      }
+    ],
+    "channel_viscous_correction": {
+      "viscous_on": {
+        "KT": 0.15824276404220283,
+        "10KQ": 0.27464608167094007,
+        "dKT_pct": -18.008930548081437,
+        "d10KQ_pct": -19.6941281663918
+      },
+      "viscous_off": {
+        "KT": 0.16321986044187733,
+        "10KQ": 0.23468941376641947,
+        "dKT_pct": -15.43012412337962,
+        "d10KQ_pct": -31.377364395783786
+      },
+      "viscous_increment_KT": 0.004977096399674502,
+      "viscous_increment_10KQ": -0.0399566679045206,
+      "viscous_share_of_total_dKT_pct": -2.578806424701817
+    },
+    "analytic_ittc57_cross_check": {
+      "reference_type": "analytic",
+      "anchor": "AN-ITTC57",
+      "representative_radius_over_R": 0.5970976494657857,
+      "representative_chord_m": 0.3262684451013974,
+      "representative_Re": 3349512.696843154,
+      "CF_ittc57": 0.0036629215961586467,
+      "CF_ittc78_section_law": 0.00337377863319212,
+      "ratio_ittc78_over_ittc57": 0.9210622025680935,
+      "note": "the lattice's section-drag law is the ITTC-78 form 2(1+2t/c)(0.044/Re^(1/6) - 5/Re^(2/3)); AN-ITTC57 gives the skin-friction level to check it against.  This is a formula evaluation (analytic), not test data."
+    }
+  },
+  "design_point": {
+    "J": 0.7,
+    "KT_bem": 0.15824276404220283,
+    "KT_ref": 0.193,
+    "dKT_pct": -18.008930548081437,
+    "KQ_bem": 0.027464608167094007,
+    "KQ_ref": 0.0342,
+    "dKQ_pct": -19.694128166391796,
+    "eta0_bem": 0.6419018457074195,
+    "eta0_ref": 0.6287085617460544,
+    "deta0_pct": 2.0984737228207306,
+    "within_5pct": false
+  },
+  "criteria": [
+    {
+      "id": "A1-anchor-reachability-machine-decided",
+      "statement": "hit-file count, transcribed field count and the sha256 of every hit file are recorded; zero hits would be an honest FAIL",
+      "threshold": "n_hit_files > 0, n_fields > 0, every hit file sha256'd",
+      "measured": {
+        "n_hit_files": 39,
+        "n_fields": 70,
+        "n_rows": 10,
+        "n_hit_files_with_sha256": 39,
+        "anchor_table_source_present": true
+      },
+      "pass": true
+    },
+    {
+      "id": "A2-five-J-table-with-deviation-and-reference-type",
+      "statement": "K_T, K_Q, eta_0 on J = 0.1/0.3/0.5/0.7/0.9, each cell carrying a relative deviation (%) and a reference type",
+      "threshold": "15/15 cells finite with a declared reference type",
+      "measured": {
+        "cells": 15,
+        "complete_cells": 15
+      },
+      "pass": true
+    },
+    {
+      "id": "A3-design-point-KT-within-5pct",
+      "statement": "|dK_T| < 5 % at J = 0.70; otherwise honest FAIL + attribution",
+      "threshold": "|dK_T| < 5.0 %",
+      "measured": {
+        "J": 0.7,
+        "KT_bem": 0.15824276404220283,
+        "KT_ref": 0.193,
+        "dKT_pct": -18.008930548081437,
+        "within_threshold": false,
+        "honest_fail": true,
+        "attribution_available": true
+      },
+      "pass": false,
+      "disposition": "HONEST_FAIL_WITH_ATTRIBUTION",
+      "task_level_acceptable": true
+    },
+    {
+      "id": "A4-panel-density-gci",
+      "statement": "at least two grids; observed order and fine-grid GCI tabulated for K_T and K_Q at every mission J; asymptotic validity stated",
+      "threshold": ">= 2 levels, 10/10 (J, quantity) cells tabulated, asymptotic flag present",
+      "measured": {
+        "n_levels": 3,
+        "n_cells": 10,
+        "n_cells_with_finite_order": 10,
+        "n_cells_asymptotic": 0,
+        "note": "asymptotic_range = |p - 2| <= 30 % of 2; when false the GCI is reported as a magnitude indicator, not an error bound"
+      },
+      "pass": true
+    }
+  ],
+  "figures": [
+    {
+      "name": "kp505_curves",
+      "file": "benchmarks/verified/kp505_anchor_w22/figures/kp505_curves.png",
+      "caption": "K_T, 10K_Q and eta_0 vs J: BEM ladder vs the transcribed KP505 anchor."
+    },
+    {
+      "name": "kp505_deviations",
+      "file": "benchmarks/verified/kp505_anchor_w22/figures/kp505_deviations.png",
+      "caption": "Relative deviation of K_T, K_Q and eta_0 from the anchor; the predeclared +/-5 % design-point band is drawn."
+    },
+    {
+      "name": "kp505_panel_ladder",
+      "file": "benchmarks/verified/kp505_anchor_w22/figures/kp505_panel_ladder.png",
+      "caption": "K_T and K_Q against panels per blade on the three-level ladder for every mission advance ratio."
+    },
+    {
+      "name": "kp505_gci",
+      "file": "benchmarks/verified/kp505_anchor_w22/figures/kp505_gci.png",
+      "caption": "Observed order p and fine-grid GCI per (J, quantity); negative p marks a non-asymptotic triple."
+    },
+    {
+      "name": "kp505_attribution",
+      "file": "benchmarks/verified/kp505_anchor_w22/figures/kp505_attribution.png",
+      "caption": "Design-point K_T miss split into panel-density (Richardson) and model contributions."
+    }
+  ],
+  "verdict": {
+    "all_criteria_pass": false,
+    "design_point_threshold_met": false,
+    "honest_fail": true,
+    "failed_criteria": [
+      "A3-design-point-KT-within-5pct"
+    ],
+    "attribution_complete": true,
+    "task_level_disposition": "HONEST_FAIL_WITH_ATTRIBUTION",
+    "summary": "J=0.70 dKT = -18.01 % (threshold +/-5 %): HONEST FAIL; panel-density GCI ladder of 3 levels on all five J"
+  }
+}
