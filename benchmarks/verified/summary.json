@@ -30,5 +30,21 @@
       "report_md": "benchmarks/verified/bem_multihull_interference/report.md",
       "figure_png": "benchmarks/verified/bem_multihull_interference/figures/bem_multihull_interference.png"
     }
+  },
+  "pekeris_w22": {
+    "all_criteria_passed": true,
+    "criteria": {
+      "C1": "PASS",
+      "C2": "PASS",
+      "C3": "DELIVERED",
+      "C4": "PASS"
+    },
+    "note": "C1/C2/C4 measured in tl_compare.json; C3 has no numeric threshold (table + attribution)",
+    "artifacts": {
+      "tl_compare_json": "benchmarks/verified/pekeris_w22/tl_compare.json",
+      "ice_cover_sensitivity_json": "benchmarks/verified/pekeris_w22/ice_cover_sensitivity.json",
+      "report_md": "papers/reports/w22_underice_acoustics1.md",
+      "figure_png": "benchmarks/verified/pekeris_w22/figures/tl_vs_range.png"
+    }
   }
 }

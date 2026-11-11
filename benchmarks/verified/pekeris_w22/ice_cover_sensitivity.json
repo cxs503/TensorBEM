@@ -1,0 +1,1387 @@
+{
+  "id": "C3",
+  "requirement": "elastic ice cover: TL deviation and modal dispersion shift tabulated per level with a physical attribution (bending-wave coupling / impedance mismatch)",
+  "levels": [
+    {
+      "label": "L1_thin",
+      "plate": {
+        "young_modulus_Pa": 5000000000.0,
+        "thickness_m": 0.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 57234432.234432235,
+        "mass_per_area_kg_m2": 455.0,
+        "plate_wave_speed_m_s": 18.83265261713678
+      },
+      "coincidence_frequency_hz": 1009.6704793727365,
+      "dispersion": [
+        {
+          "freq_hz": 50.0,
+          "n_modes_pr": 2,
+          "n_modes_ice": 2,
+          "bending_wavenumber_k_b": 0.9411599560290678,
+          "k_b_over_k1": 4.49370777726531,
+          "top_admittance_m": [
+            2.2030470386773757,
+            2.202560639279042
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.2078816461767797,
+              "k_r_ice": 0.20789334034431928,
+              "delta_k_r": 1.1694167539572087e-05,
+              "delta_k_r_ppm": 56.25396832593641,
+              "phase_velocity_pr_m_s": 1511.2409928283066,
+              "phase_velocity_ice_m_s": 1511.15598430743,
+              "delta_phase_velocity_m_s": -0.08500852087672683,
+              "grazing_pr_deg": 6.992664150791616,
+              "grazing_ice_deg": 6.966336856076626
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.202855447106056,
+              "k_r_ice": 0.20290729226514434,
+              "delta_k_r": 5.1845159088348414e-05,
+              "delta_k_r_ppm": 255.57686435327992,
+              "phase_velocity_pr_m_s": 1548.6853808501971,
+              "phase_velocity_ice_m_s": 1548.289673830249,
+              "delta_phase_velocity_m_s": -0.3957070199480768,
+              "grazing_pr_deg": 14.404548800555636,
+              "grazing_ice_deg": 14.347424136484662
+            }
+          ],
+          "max_delta_k_r_ppm": 255.57686435327992,
+          "max_delta_phase_velocity_m_s": 0.3957070199480768
+        },
+        {
+          "freq_hz": 100.0,
+          "n_modes_pr": 5,
+          "n_modes_ice": 5,
+          "bending_wavenumber_k_b": 1.3310011741787735,
+          "k_b_over_k1": 3.1775312419750286,
+          "top_admittance_m": [
+            2.2193799796717535,
+            2.218792342571667,
+            2.2178122431560623,
+            2.2164615139772192,
+            2.2148209337863887
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.4179404322577699,
+              "k_r_ice": 0.4179479719483255,
+              "delta_k_r": 7.539690555613543e-06,
+              "delta_k_r_ppm": 18.040108048132915,
+              "phase_velocity_pr_m_s": 1503.368619598966,
+              "phase_velocity_ice_m_s": 1503.341499155888,
+              "delta_phase_velocity_m_s": -0.027120443078047174,
+              "grazing_pr_deg": 3.8362950627029537,
+              "grazing_ice_deg": 3.820849755372753
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.41506922895772574,
+              "k_r_ice": 0.415100381468173,
+              "delta_k_r": 3.1152510447274295e-05,
+              "delta_k_r_ppm": 75.05377000723689,
+              "phase_velocity_pr_m_s": 1513.7680340595714,
+              "phase_velocity_ice_m_s": 1513.6544285882178,
+              "delta_phase_velocity_m_s": -0.11360547135359411,
+              "grazing_pr_deg": 7.73345651449359,
+              "grazing_ice_deg": 7.701725642658528
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.41014002859322907,
+              "k_r_ice": 0.4102128519704451,
+              "delta_k_r": 7.282337721603582e-05,
+              "delta_k_r_ppm": 177.55735148753547,
+              "phase_velocity_pr_m_s": 1531.961005788869,
+              "phase_velocity_ice_m_s": 1531.6890431390666,
+              "delta_phase_velocity_m_s": -0.27196264980238993,
+              "grazing_pr_deg": 11.724165717858506,
+              "grazing_ice_deg": 11.675043430346616
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.4030356213037798,
+              "k_r_ice": 0.4031691758152761,
+              "delta_k_r": 0.00013355451149632547,
+              "delta_k_r_ppm": 331.3714829083594,
+              "phase_velocity_pr_m_s": 1558.9652564341864,
+              "phase_velocity_ice_m_s": 1558.448830934043,
+              "delta_phase_velocity_m_s": -0.5164255001434412,
+              "grazing_pr_deg": 15.808693232528436,
+              "grazing_ice_deg": 15.741497120280755
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.3938763018982261,
+              "k_r_ice": 0.39407202804057273,
+              "delta_k_r": 0.00019572614234664165,
+              "delta_k_r_ppm": 496.9228699552872,
+              "phase_velocity_pr_m_s": 1595.2179089980139,
+              "phase_velocity_ice_m_s": 1594.4256024517133,
+              "delta_phase_velocity_m_s": -0.7923065463005514,
+              "grazing_pr_deg": 19.896249423881446,
+              "grazing_ice_deg": 19.817431639649687
+            }
+          ],
+          "max_delta_k_r_ppm": 496.9228699552872,
+          "max_delta_phase_velocity_m_s": 0.7923065463005514
+        },
+        {
+          "freq_hz": 200.0,
+          "n_modes_pr": 9,
+          "n_modes_ice": 9,
+          "bending_wavenumber_k_b": 1.8823199120581355,
+          "k_b_over_k1": 2.246853888632655,
+          "top_admittance_m": [
+            2.287329040974594,
+            2.2866357746220127,
+            2.2854818103685033,
+            2.283871431804322,
+            2.2818136203657695,
+            2.2793234455834823,
+            2.2764231903213146,
+            2.2731443858827913,
+            2.2695367569846434
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.8372349889749806,
+              "k_r_ice": 0.8372392754338874,
+              "delta_k_r": 4.286458906821444e-06,
+              "delta_k_r_ppm": 5.1197799462123745,
+              "phase_velocity_pr_m_s": 1500.9371060500075,
+              "phase_velocity_ice_m_s": 1500.929421621654,
+              "delta_phase_velocity_m_s": -0.007684428353513795,
+              "grazing_pr_deg": 2.0247590668295623,
+              "grazing_ice_deg": 2.0164445961066413
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.8356597884346115,
+              "k_r_ice": 0.8356770496805036,
+              "delta_k_r": 1.7261245892075117e-05,
+              "delta_k_r_ppm": 20.65582923932419,
+              "phase_velocity_pr_m_s": 1503.7663398760587,
+              "phase_velocity_ice_m_s": 1503.735278976915,
+              "delta_phase_velocity_m_s": -0.03106089914376753,
+              "grazing_pr_deg": 4.0559994835723145,
+              "grazing_ice_deg": 4.039274776285206
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.8330157178432394,
+              "k_r_ice": 0.8330549506946683,
+              "delta_k_r": 3.923285142892752e-05,
+              "delta_k_r_ppm": 47.097372340710784,
+              "phase_velocity_pr_m_s": 1508.5394363139699,
+              "phase_velocity_ice_m_s": 1508.4683914164752,
+              "delta_phase_velocity_m_s": -0.07104489749463028,
+              "grazing_pr_deg": 6.099285742127478,
+              "grazing_ice_deg": 6.073980145465228
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.8292787304340484,
+              "k_r_ice": 0.8293493485723747,
+              "delta_k_r": 7.061813832631714e-05,
+              "delta_k_r_ppm": 85.15609497105426,
+              "phase_velocity_pr_m_s": 1515.3373833405658,
+              "phase_velocity_ice_m_s": 1515.2083541140619,
+              "delta_phase_velocity_m_s": -0.12902922650391702,
+              "grazing_pr_deg": 8.158786830059855,
+              "grazing_ice_deg": 8.124684150526358
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.8244210196551403,
+              "k_r_ice": 0.8245328806093931,
+              "delta_k_r": 0.00011186095425286258,
+              "delta_k_r_ppm": 135.68425790460148,
+              "phase_velocity_pr_m_s": 1524.2661594940596,
+              "phase_velocity_ice_m_s": 1524.0593686296245,
+              "delta_phase_velocity_m_s": -0.20679086443510641,
+              "grazing_pr_deg": 10.237303987682282,
+              "grazing_ice_deg": 10.194168071514406
+            },
+            {
+              "mode": 6,
+              "k_r_pressure_release": 0.8184138449297816,
+              "k_r_ice": 0.8185772143604312,
+              "delta_k_r": 0.00016336943064954035,
+              "delta_k_r_ppm": 199.61713949689738,
+              "phase_velocity_pr_m_s": 1535.4543049595336,
+              "phase_velocity_ice_m_s": 1535.1478631343898,
+              "delta_phase_velocity_m_s": -0.3064418251437928,
+              "grazing_pr_deg": 12.336526641068165,
+              "grazing_ice_deg": 12.284121423355929
+            },
+            {
+              "mode": 7,
+              "k_r_pressure_release": 0.8112302798382826,
+              "k_r_ice": 0.8114557026022479,
+              "delta_k_r": 0.00022542276396531058,
+              "delta_k_r_ppm": 277.87765024038333,
+              "phase_velocity_pr_m_s": 1549.0509817834043,
+              "phase_velocity_ice_m_s": 1548.6206547147583,
+              "delta_phase_velocity_m_s": -0.4303270686459655,
+              "grazing_pr_deg": 14.457105141238895,
+              "grazing_ice_deg": 14.395222045296478
+            },
+            {
+              "mode": 8,
+              "k_r_pressure_release": 0.8028513824026611,
+              "k_r_ice": 0.8031492129101742,
+              "delta_k_r": 0.00029783050751308604,
+              "delta_k_r_ppm": 370.9659272451903,
+              "phase_velocity_pr_m_s": 1565.217534626683,
+              "phase_velocity_ice_m_s": 1564.6371075712705,
+              "delta_phase_velocity_m_s": -0.5804270554124287,
+              "grazing_pr_deg": 16.597859736993954,
+              "grazing_ice_deg": 16.526402749843406
+            },
+            {
+              "mode": 9,
+              "k_r_pressure_release": 0.793294684422693,
+              "k_r_ice": 0.7936723300434755,
+              "delta_k_r": 0.000377645620782463,
+              "delta_k_r_ppm": 476.0470833827511,
+              "phase_velocity_pr_m_s": 1584.0734674157234,
+              "phase_velocity_ice_m_s": 1583.319732674921,
+              "delta_phase_velocity_m_s": -0.7537347408024289,
+              "grazing_pr_deg": 18.750775688599216,
+              "grazing_ice_deg": 18.670261592748208
+            }
+          ],
+          "max_delta_k_r_ppm": 476.0470833827511,
+          "max_delta_phase_velocity_m_s": 0.7537347408024289
+        }
+      ],
+      "tl": [
+        {
+          "freq_hz": 50.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 50.66299889206096,
+          "tl_pressure_release_db": 50.52724630107316,
+          "deviation_db": 0.13575259098779924,
+          "abs_deviation_db": 0.13575259098779924,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 56.848526993206704,
+          "tl_pressure_release_db": 56.77531466543463,
+          "deviation_db": 0.07321232777207598,
+          "abs_deviation_db": 0.07321232777207598,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 56.42323592539425,
+          "tl_pressure_release_db": 56.295072115964416,
+          "deviation_db": 0.12816380942983585,
+          "abs_deviation_db": 0.12816380942983585,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 56.84818876390256,
+          "tl_pressure_release_db": 56.77503903756872,
+          "deviation_db": 0.07314972633384542,
+          "n_modes": 2,
+          "abs_deviation_db": 0.07314972633384542
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 52.10235019507814,
+          "tl_pressure_release_db": 52.030397788901155,
+          "deviation_db": 0.07195240617698317,
+          "abs_deviation_db": 0.07195240617698317,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 61.05765871736263,
+          "tl_pressure_release_db": 58.83790279961923,
+          "deviation_db": 2.2197559177433988,
+          "abs_deviation_db": 2.2197559177433988,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 53.71733933092806,
+          "tl_pressure_release_db": 54.05444128846665,
+          "deviation_db": -0.33710195753858585,
+          "abs_deviation_db": 0.33710195753858585,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 61.072774507842794,
+          "tl_pressure_release_db": 58.85414667053114,
+          "deviation_db": 2.218627837311658,
+          "n_modes": 5,
+          "abs_deviation_db": 2.218627837311658
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 47.456815091207474,
+          "tl_pressure_release_db": 48.1939607519222,
+          "deviation_db": -0.7371456607147238,
+          "abs_deviation_db": 0.7371456607147238,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 50.83638880892339,
+          "tl_pressure_release_db": 49.99158138725711,
+          "deviation_db": 0.8448074216662746,
+          "abs_deviation_db": 0.8448074216662746,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 63.16474064775247,
+          "tl_pressure_release_db": 59.56316984388283,
+          "deviation_db": 3.6015708038696346,
+          "abs_deviation_db": 3.6015708038696346,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 50.903572362195234,
+          "tl_pressure_release_db": 50.03257874616068,
+          "deviation_db": 0.8709936160345535,
+          "n_modes": 9,
+          "abs_deviation_db": 0.8709936160345535
+        }
+      ],
+      "max_abs_tl_deviation_db": 3.6015708038696346,
+      "mean_tl_deviation_db": 0.7636449032560625
+    },
+    {
+      "label": "L2_medium",
+      "plate": {
+        "young_modulus_Pa": 7000000000.0,
+        "thickness_m": 1.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 2163461538.4615383,
+        "mass_per_area_kg_m2": 1365.0,
+        "plate_wave_speed_m_s": 35.4816764928901
+      },
+      "coincidence_frequency_hz": 284.4424338385498,
+      "dispersion": [
+        {
+          "freq_hz": 50.0,
+          "n_modes_pr": 2,
+          "n_modes_ice": 2,
+          "bending_wavenumber_k_b": 0.4995406153541489,
+          "k_b_over_k1": 2.3851307462633984,
+          "top_admittance_m": [
+            0.7552661232769542,
+            0.7531417373381368
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.2078816461767797,
+              "k_r_ice": 0.20791537480886996,
+              "delta_k_r": 3.37286320902519e-05,
+              "delta_k_r_ppm": 162.24920626984803,
+              "phase_velocity_pr_m_s": 1511.2409928283066,
+              "phase_velocity_ice_m_s": 1510.9958349534083,
+              "delta_phase_velocity_m_s": -0.24515787489826835,
+              "grazing_pr_deg": 6.992664150791616,
+              "grazing_ice_deg": 6.916459305280277
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.202855447106056,
+              "k_r_ice": 0.20300514561791877,
+              "delta_k_r": 0.00014969851186277805,
+              "delta_k_r_ppm": 737.9565794184138,
+              "phase_velocity_pr_m_s": 1548.6853808501971,
+              "phase_velocity_ice_m_s": 1547.5433610449786,
+              "delta_phase_velocity_m_s": -1.1420198052185242,
+              "grazing_pr_deg": 14.404548800555636,
+              "grazing_ice_deg": 14.238994860958444
+            }
+          ],
+          "max_delta_k_r_ppm": 737.9565794184138,
+          "max_delta_phase_velocity_m_s": 1.1420198052185242
+        },
+        {
+          "freq_hz": 100.0,
+          "n_modes_pr": 5,
+          "n_modes_ice": 5,
+          "bending_wavenumber_k_b": 0.706457113190039,
+          "k_b_over_k1": 1.6865421246993797,
+          "top_admittance_m": [
+            0.8348889217520435,
+            0.8317982228963803,
+            0.8266910272156199,
+            0.8197453466988376,
+            0.8114278485358113
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.4179404322577699,
+              "k_r_ice": 0.4179602692431664,
+              "delta_k_r": 1.9836985396537443e-05,
+              "delta_k_r_ppm": 47.46366674641983,
+              "phase_velocity_pr_m_s": 1503.368619598966,
+              "phase_velocity_ice_m_s": 1503.2972675984358,
+              "delta_phase_velocity_m_s": -0.07135200053016888,
+              "grazing_pr_deg": 3.8362950627029537,
+              "grazing_ice_deg": 3.7955236844999183
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.41506922895772574,
+              "k_r_ice": 0.41515137095019,
+              "delta_k_r": 8.214199246425746e-05,
+              "delta_k_r_ppm": 197.899499007727,
+              "phase_velocity_pr_m_s": 1513.7680340595714,
+              "phase_velocity_ice_m_s": 1513.4685193978187,
+              "delta_phase_velocity_m_s": -0.2995146617527098,
+              "grazing_pr_deg": 7.73345651449359,
+              "grazing_ice_deg": 7.649507213829084
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.41014002859322907,
+              "k_r_ice": 0.4103327713844405,
+              "delta_k_r": 0.0001927427912114532,
+              "delta_k_r_ppm": 469.94386739708534,
+              "phase_velocity_pr_m_s": 1531.961005788869,
+              "phase_velocity_ice_m_s": 1531.2414082795435,
+              "delta_phase_velocity_m_s": -0.7195975093254674,
+              "grazing_pr_deg": 11.724165717858506,
+              "grazing_ice_deg": 11.593705751345531
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.4030356213037798,
+              "k_r_ice": 0.4033909958819455,
+              "delta_k_r": 0.0003553745781657014,
+              "delta_k_r_ppm": 881.7448368858819,
+              "phase_velocity_pr_m_s": 1558.9652564341864,
+              "phase_velocity_ice_m_s": 1557.5918578555468,
+              "delta_phase_velocity_m_s": -1.3733985786395806,
+              "grazing_pr_deg": 15.808693232528436,
+              "grazing_ice_deg": 15.629269237507893
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.3938763018982261,
+              "k_r_ice": 0.3944048387429532,
+              "delta_k_r": 0.00052853684472709,
+              "delta_k_r_ppm": 1341.8853639578929,
+              "phase_velocity_pr_m_s": 1595.2179089980139,
+              "phase_velocity_ice_m_s": 1593.0801780235126,
+              "delta_phase_velocity_m_s": -2.13773097450121,
+              "grazing_pr_deg": 19.896249423881446,
+              "grazing_ice_deg": 19.682715330155226
+            }
+          ],
+          "max_delta_k_r_ppm": 1341.8853639578929,
+          "max_delta_phase_velocity_m_s": 2.13773097450121
+        },
+        {
+          "freq_hz": 200.0,
+          "n_modes_pr": 9,
+          "n_modes_ice": 9,
+          "bending_wavenumber_k_b": 0.9990812307082978,
+          "k_b_over_k1": 1.1925653731316992,
+          "top_admittance_m": [
+            1.445468351243574,
+            1.4351255101845635,
+            1.4182243205008946,
+            1.395273304060348,
+            1.3669717943692514,
+            1.3341740902066646,
+            1.2978399008015038,
+            1.258991529099339,
+            1.2187401093592405
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.8372349889749806,
+              "k_r_ice": 0.8372417471187613,
+              "delta_k_r": 6.758143780705161e-06,
+              "delta_k_r_ppm": 8.07197963498766,
+              "phase_velocity_pr_m_s": 1500.9371060500075,
+              "phase_velocity_ice_m_s": 1500.9249906140496,
+              "delta_phase_velocity_m_s": -0.012115435957866794,
+              "grazing_pr_deg": 2.0247590668295623,
+              "grazing_ice_deg": 2.011634639120372
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.8356597884346115,
+              "k_r_ice": 0.8356871814378645,
+              "delta_k_r": 2.739300325294014e-05,
+              "delta_k_r_ppm": 32.78009021381023,
+              "phase_velocity_pr_m_s": 1503.7663398760587,
+              "phase_velocity_ice_m_s": 1503.7170478955725,
+              "delta_phase_velocity_m_s": -0.04929198048625949,
+              "grazing_pr_deg": 4.0559994835723145,
+              "grazing_ice_deg": 4.02942567118814
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.8330157178432394,
+              "k_r_ice": 0.8330786519615286,
+              "delta_k_r": 6.293411828928175e-05,
+              "delta_k_r_ppm": 75.54973686717994,
+              "phase_velocity_pr_m_s": 1508.5394363139699,
+              "phase_velocity_ice_m_s": 1508.4254751662374,
+              "delta_phase_velocity_m_s": -0.11396114773242516,
+              "grazing_pr_deg": 6.099285742127478,
+              "grazing_ice_deg": 6.058641561510206
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.8292787304340484,
+              "k_r_ice": 0.8293936914853479,
+              "delta_k_r": 0.00011496105129948919,
+              "delta_k_r_ppm": 138.6277581716319,
+              "phase_velocity_pr_m_s": 1515.3373833405658,
+              "phase_velocity_ice_m_s": 1515.1273446334346,
+              "delta_phase_velocity_m_s": -0.21003870713116157,
+              "grazing_pr_deg": 8.158786830059855,
+              "grazing_ice_deg": 8.103197355730767
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.8244210196551403,
+              "k_r_ice": 0.8246064977181212,
+              "delta_k_r": 0.00018547806298097047,
+              "delta_k_r_ppm": 224.9797840653759,
+              "phase_velocity_pr_m_s": 1524.2661594940596,
+              "phase_velocity_ice_m_s": 1523.9233075573932,
+              "delta_phase_velocity_m_s": -0.34285193666642044,
+              "grazing_pr_deg": 10.237303987682282,
+              "grazing_ice_deg": 10.165680972609957
+            },
+            {
+              "mode": 6,
+              "k_r_pressure_release": 0.8184138449297816,
+              "k_r_ice": 0.818690636032963,
+              "delta_k_r": 0.0002767911031813508,
+              "delta_k_r_ppm": 338.2043264494126,
+              "phase_velocity_pr_m_s": 1535.4543049595336,
+              "phase_velocity_ice_m_s": 1534.9351832397424,
+              "delta_phase_velocity_m_s": -0.519121719791201,
+              "grazing_pr_deg": 12.336526641068165,
+              "grazing_ice_deg": 12.24760847408994
+            },
+            {
+              "mode": 7,
+              "k_r_pressure_release": 0.8112302798382826,
+              "k_r_ice": 0.8116215724331399,
+              "delta_k_r": 0.0003912925948573731,
+              "delta_k_r_ppm": 482.34466166052954,
+              "phase_velocity_pr_m_s": 1549.0509817834043,
+              "phase_velocity_ice_m_s": 1548.3041655345319,
+              "delta_phase_velocity_m_s": -0.746816248872392,
+              "grazing_pr_deg": 14.457105141238895,
+              "grazing_ice_deg": 14.349520616641628
+            },
+            {
+              "mode": 8,
+              "k_r_pressure_release": 0.8028513824026611,
+              "k_r_ice": 0.8033821349949299,
+              "delta_k_r": 0.0005307525922688683,
+              "delta_k_r_ppm": 661.0844845038521,
+              "phase_velocity_pr_m_s": 1565.217534626683,
+              "phase_velocity_ice_m_s": 1564.1834771989893,
+              "delta_phase_velocity_m_s": -1.0340574276935968,
+              "grazing_pr_deg": 16.597859736993954,
+              "grazing_ice_deg": 16.470308934091957
+            },
+            {
+              "mode": 9,
+              "k_r_pressure_release": 0.793294684422693,
+              "k_r_ice": 0.7939866934302673,
+              "delta_k_r": 0.000692009007574268,
+              "delta_k_r_ppm": 872.3227586957373,
+              "phase_velocity_pr_m_s": 1584.0734674157234,
+              "phase_velocity_ice_m_s": 1582.692848424018,
+              "delta_phase_velocity_m_s": -1.3806189917054326,
+              "grazing_pr_deg": 18.750775688599216,
+              "grazing_ice_deg": 18.602983022850047
+            }
+          ],
+          "max_delta_k_r_ppm": 872.3227586957373,
+          "max_delta_phase_velocity_m_s": 1.3806189917054326
+        }
+      ],
+      "tl": [
+        {
+          "freq_hz": 50.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 50.906719206850866,
+          "tl_pressure_release_db": 50.52724630107316,
+          "deviation_db": 0.3794729057777033,
+          "abs_deviation_db": 0.3794729057777033,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 56.8809655506482,
+          "tl_pressure_release_db": 56.77531466543463,
+          "deviation_db": 0.10565088521357069,
+          "abs_deviation_db": 0.10565088521357069,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 56.81619113273659,
+          "tl_pressure_release_db": 56.295072115964416,
+          "deviation_db": 0.5211190167721753,
+          "abs_deviation_db": 0.5211190167721753,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 56.88053060781832,
+          "tl_pressure_release_db": 56.77503903756872,
+          "deviation_db": 0.10549157024960465,
+          "n_modes": 2,
+          "abs_deviation_db": 0.10549157024960465
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 52.50856117342784,
+          "tl_pressure_release_db": 52.030397788901155,
+          "deviation_db": 0.47816338452668816,
+          "abs_deviation_db": 0.47816338452668816,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 61.03063243112026,
+          "tl_pressure_release_db": 58.83790279961923,
+          "deviation_db": 2.192729631501031,
+          "abs_deviation_db": 2.192729631501031,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 56.217064076207194,
+          "tl_pressure_release_db": 54.05444128846665,
+          "deviation_db": 2.1626227877405455,
+          "abs_deviation_db": 2.1626227877405455,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 61.015294769412954,
+          "tl_pressure_release_db": 58.85414667053114,
+          "deviation_db": 2.1611480988818172,
+          "n_modes": 5,
+          "abs_deviation_db": 2.1611480988818172
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 47.0859992395718,
+          "tl_pressure_release_db": 48.1939607519222,
+          "deviation_db": -1.1079615123503999,
+          "abs_deviation_db": 1.1079615123503999,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 52.1439785125405,
+          "tl_pressure_release_db": 49.99158138725711,
+          "deviation_db": 2.152397125283386,
+          "abs_deviation_db": 2.152397125283386,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 56.79934659255301,
+          "tl_pressure_release_db": 59.56316984388283,
+          "deviation_db": -2.763823251329825,
+          "abs_deviation_db": 2.763823251329825,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 52.22861391380815,
+          "tl_pressure_release_db": 50.03257874616068,
+          "deviation_db": 2.196035167647466,
+          "n_modes": 9,
+          "abs_deviation_db": 2.196035167647466
+        }
+      ],
+      "max_abs_tl_deviation_db": 2.763823251329825,
+      "mean_tl_deviation_db": 0.7152538174928136
+    },
+    {
+      "label": "L3_thick",
+      "plate": {
+        "young_modulus_Pa": 9000000000.0,
+        "thickness_m": 3.0,
+        "rho_ice_kg_m3": 920.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 22252747252.747253,
+        "mass_per_area_kg_m2": 2760.0,
+        "plate_wave_speed_m_s": 53.286677019467064
+      },
+      "coincidence_frequency_hz": 126.11460185980043,
+      "dispersion": [
+        {
+          "freq_hz": 50.0,
+          "n_modes_pr": 2,
+          "n_modes_ice": 2,
+          "bending_wavenumber_k_b": 0.3326260802973304,
+          "k_b_over_k1": 1.5881725464180547,
+          "top_admittance_m": [
+            0.4276320027363265,
+            0.4208369026535269
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.2078816461767797,
+              "k_r_ice": 0.20794042437950766,
+              "delta_k_r": 5.8778202727954865e-05,
+              "delta_k_r_ppm": 282.748399432871,
+              "phase_velocity_pr_m_s": 1511.2409928283066,
+              "phase_velocity_ice_m_s": 1510.8138126409415,
+              "delta_phase_velocity_m_s": -0.4271801873651384,
+              "grazing_pr_deg": 6.992664150791616,
+              "grazing_ice_deg": 6.859318362863422
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.202855447106056,
+              "k_r_ice": 0.20311889628661414,
+              "delta_k_r": 0.0002634491805581507,
+              "delta_k_r_ppm": 1298.7039999000635,
+              "phase_velocity_pr_m_s": 1548.6853808501971,
+              "phase_velocity_ice_m_s": 1546.6767056260483,
+              "delta_phase_velocity_m_s": -2.008675224148874,
+              "grazing_pr_deg": 14.404548800555636,
+              "grazing_ice_deg": 14.111924807189707
+            }
+          ],
+          "max_delta_k_r_ppm": 1298.7039999000635,
+          "max_delta_phase_velocity_m_s": 2.008675224148874
+        },
+        {
+          "freq_hz": 100.0,
+          "n_modes_pr": 5,
+          "n_modes_ice": 5,
+          "bending_wavenumber_k_b": 0.47040431395548676,
+          "k_b_over_k1": 1.1230075772665133,
+          "top_admittance_m": [
+            0.9616290746361036,
+            0.9210118040100153,
+            0.8604778922310098,
+            0.7891086457586505,
+            0.7167791542147276
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.4179404322577699,
+              "k_r_ice": 0.4179576926364808,
+              "delta_k_r": 1.7260378710914903e-05,
+              "delta_k_r_ppm": 41.29865736529016,
+              "phase_velocity_pr_m_s": 1503.368619598966,
+              "phase_velocity_ice_m_s": 1503.3065350574595,
+              "delta_phase_velocity_m_s": -0.06208454150646503,
+              "grazing_pr_deg": 3.8362950627029537,
+              "grazing_ice_deg": 3.800844116850642
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.41506922895772574,
+              "k_r_ice": 0.4151435523336084,
+              "delta_k_r": 7.432337588264559e-05,
+              "delta_k_r_ppm": 179.06260136237498,
+              "phase_velocity_pr_m_s": 1513.7680340595714,
+              "phase_velocity_ice_m_s": 1513.4970233454171,
+              "delta_phase_velocity_m_s": -0.27101071415427214,
+              "grazing_pr_deg": 7.73345651449359,
+              "grazing_ice_deg": 7.657537250727266
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.41014002859322907,
+              "k_r_ice": 0.41032537322166224,
+              "delta_k_r": 0.00018534462843317057,
+              "delta_k_r_ppm": 451.90572856031247,
+              "phase_velocity_pr_m_s": 1531.961005788869,
+              "phase_velocity_ice_m_s": 1531.2690165483239,
+              "delta_phase_velocity_m_s": -0.6919892405451264,
+              "grazing_pr_deg": 11.724165717858506,
+              "grazing_ice_deg": 11.598739980935486
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.4030356213037798,
+              "k_r_ice": 0.40340437569664067,
+              "delta_k_r": 0.00036875439286088163,
+              "delta_k_r_ppm": 914.9424352815222,
+              "phase_velocity_pr_m_s": 1558.9652564341864,
+              "phase_velocity_ice_m_s": 1557.540196813465,
+              "delta_phase_velocity_m_s": -1.425059620721413,
+              "grazing_pr_deg": 15.808693232528436,
+              "grazing_ice_deg": 15.622474705522217
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.3938763018982261,
+              "k_r_ice": 0.39447261458954913,
+              "delta_k_r": 0.0005963126913230421,
+              "delta_k_r_ppm": 1513.9593025759739,
+              "phase_velocity_pr_m_s": 1595.2179089980139,
+              "phase_velocity_ice_m_s": 1592.8064648333761,
+              "delta_phase_velocity_m_s": -2.4114441646377145,
+              "grazing_pr_deg": 19.896249423881446,
+              "grazing_ice_deg": 19.65517213304418
+            }
+          ],
+          "max_delta_k_r_ppm": 1513.9593025759739,
+          "max_delta_phase_velocity_m_s": 2.4114441646377145
+        },
+        {
+          "freq_hz": 200.0,
+          "n_modes_pr": 9,
+          "n_modes_ice": 9,
+          "bending_wavenumber_k_b": 0.6652521605946607,
+          "k_b_over_k1": 0.7940862732090274,
+          "top_admittance_m": [
+            -0.24023984155569175,
+            -0.24352173669183388,
+            -0.24916114609633183,
+            -0.25743095281129985,
+            -0.2687547875310743,
+            -0.2837593039438035,
+            -0.30335731988386627,
+            -0.3288693232272623,
+            -0.36209748049542706
+          ],
+          "modes": [
+            {
+              "mode": 1,
+              "k_r_pressure_release": 0.8372349889749806,
+              "k_r_ice": 0.8371916201940737,
+              "delta_k_r": -4.33687809069383e-05,
+              "delta_k_r_ppm": -51.80001012623028,
+              "phase_velocity_pr_m_s": 1500.9371060500075,
+              "phase_velocity_ice_m_s": 1501.0148586348844,
+              "delta_phase_velocity_m_s": 0.07775258487686187,
+              "grazing_pr_deg": 2.0247590668295623,
+              "grazing_ice_deg": 2.1070380705415617
+            },
+            {
+              "mode": 2,
+              "k_r_pressure_release": 0.8356597884346115,
+              "k_r_ice": 0.8354903729703117,
+              "delta_k_r": -0.0001694154642998269,
+              "delta_k_r_ppm": -202.73257926791254,
+              "phase_velocity_pr_m_s": 1503.7663398760587,
+              "phase_velocity_ice_m_s": 1504.071264122837,
+              "delta_phase_velocity_m_s": 0.3049242467782278,
+              "grazing_pr_deg": 4.0559994835723145,
+              "grazing_ice_deg": 4.216635632033482
+            },
+            {
+              "mode": 3,
+              "k_r_pressure_release": 0.8330157178432394,
+              "k_r_ice": 0.8326486372640964,
+              "delta_k_r": -0.0003670805791429199,
+              "delta_k_r_ppm": -440.6646492737593,
+              "phase_velocity_pr_m_s": 1508.5394363139699,
+              "phase_velocity_ice_m_s": 1509.2044893809652,
+              "delta_phase_velocity_m_s": 0.6650530669953696,
+              "grazing_pr_deg": 6.099285742127478,
+              "grazing_ice_deg": 6.33117634621124
+            },
+            {
+              "mode": 4,
+              "k_r_pressure_release": 0.8292787304340484,
+              "k_r_ice": 0.8286577574685798,
+              "delta_k_r": -0.0006209729654685914,
+              "delta_k_r_ppm": -748.8109156538612,
+              "phase_velocity_pr_m_s": 1515.3373833405658,
+              "phase_velocity_ice_m_s": 1516.4729348274582,
+              "delta_phase_velocity_m_s": 1.135551486892382,
+              "grazing_pr_deg": 8.158786830059855,
+              "grazing_ice_deg": 8.452782742632724
+            },
+            {
+              "mode": 5,
+              "k_r_pressure_release": 0.8244210196551403,
+              "k_r_ice": 0.8235069131670808,
+              "delta_k_r": -0.0009141064880594518,
+              "delta_k_r_ppm": -1108.786004075718,
+              "phase_velocity_pr_m_s": 1524.2661594940596,
+              "phase_velocity_ice_m_s": 1525.9581205008767,
+              "delta_phase_velocity_m_s": 1.6919610068171096,
+              "grazing_pr_deg": 10.237303987682282,
+              "grazing_ice_deg": 10.583285786242836
+            },
+            {
+              "mode": 6,
+              "k_r_pressure_release": 0.8184138449297816,
+              "k_r_ice": 0.8171843271827348,
+              "delta_k_r": -0.0012295177470468266,
+              "delta_k_r_ppm": -1502.3178733643208,
+              "phase_velocity_pr_m_s": 1535.4543049595336,
+              "phase_velocity_ice_m_s": 1537.7645160770614,
+              "delta_phase_velocity_m_s": 2.3102111175278424,
+              "grazing_pr_deg": 12.336526641068165,
+              "grazing_ice_deg": 12.724112179640247
+            },
+            {
+              "mode": 7,
+              "k_r_pressure_release": 0.8112302798382826,
+              "k_r_ice": 0.8096800246020472,
+              "delta_k_r": -0.0015502552362353095,
+              "delta_k_r_ppm": -1910.9928151897268,
+              "phase_velocity_pr_m_s": 1549.0509817834043,
+              "phase_velocity_ice_m_s": 1552.0168748803537,
+              "delta_phase_velocity_m_s": 2.9658930969494577,
+              "grazing_pr_deg": 14.457105141238895,
+              "grazing_ice_deg": 14.875858345403797
+            },
+            {
+              "mode": 8,
+              "k_r_pressure_release": 0.8028513824026611,
+              "k_r_ice": 0.8009944846348338,
+              "delta_k_r": -0.0018568977678272702,
+              "delta_k_r_ppm": -2312.8785831696605,
+              "phase_velocity_pr_m_s": 1565.217534626683,
+              "phase_velocity_ice_m_s": 1568.8460851372863,
+              "delta_phase_velocity_m_s": 3.628550510603418,
+              "grazing_pr_deg": 16.597859736993954,
+              "grazing_ice_deg": 17.036807185727117
+            },
+            {
+              "mode": 9,
+              "k_r_pressure_release": 0.793294684422693,
+              "k_r_ice": 0.7911830500799181,
+              "delta_k_r": -0.0021116343427749484,
+              "delta_k_r_ppm": -2661.853639308897,
+              "phase_velocity_pr_m_s": 1584.0734674157234,
+              "phase_velocity_ice_m_s": 1588.3012929927952,
+              "delta_phase_velocity_m_s": 4.227825577071826,
+              "grazing_pr_deg": 18.750775688599216,
+              "grazing_ice_deg": 19.19497662049552
+            }
+          ],
+          "max_delta_k_r_ppm": 2661.853639308897,
+          "max_delta_phase_velocity_m_s": 4.227825577071826
+        }
+      ],
+      "tl": [
+        {
+          "freq_hz": 50.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 51.16719099403146,
+          "tl_pressure_release_db": 50.52724630107316,
+          "deviation_db": 0.639944692958295,
+          "abs_deviation_db": 0.639944692958295,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 56.76960615164788,
+          "tl_pressure_release_db": 56.77531466543463,
+          "deviation_db": -0.005708513786750302,
+          "abs_deviation_db": 0.005708513786750302,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 57.47560399198652,
+          "tl_pressure_release_db": 56.295072115964416,
+          "deviation_db": 1.1805318760221013,
+          "abs_deviation_db": 1.1805318760221013,
+          "n_modes": 2
+        },
+        {
+          "freq_hz": 50.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 56.76909914544858,
+          "tl_pressure_release_db": 56.77503903756872,
+          "deviation_db": -0.005939892120139234,
+          "n_modes": 2,
+          "abs_deviation_db": 0.005939892120139234
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 52.897524694705275,
+          "tl_pressure_release_db": 52.030397788901155,
+          "deviation_db": 0.8671269058041204,
+          "abs_deviation_db": 0.8671269058041204,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 60.538164239410186,
+          "tl_pressure_release_db": 58.83790279961923,
+          "deviation_db": 1.7002614397909568,
+          "abs_deviation_db": 1.7002614397909568,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 57.74745538334456,
+          "tl_pressure_release_db": 54.05444128846665,
+          "deviation_db": 3.6930140948779098,
+          "abs_deviation_db": 3.6930140948779098,
+          "n_modes": 5
+        },
+        {
+          "freq_hz": 100.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 60.52266184796838,
+          "tl_pressure_release_db": 58.85414667053114,
+          "deviation_db": 1.6685151774372429,
+          "n_modes": 5,
+          "abs_deviation_db": 1.6685151774372429
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 1000.0,
+          "tl_ice_db": 57.05073289982244,
+          "tl_pressure_release_db": 48.1939607519222,
+          "deviation_db": 8.856772147900244,
+          "abs_deviation_db": 8.856772147900244,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "tl_ice_db": 55.20208156829238,
+          "tl_pressure_release_db": 49.99158138725711,
+          "deviation_db": 5.210500181035265,
+          "abs_deviation_db": 5.210500181035265,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 5000.0,
+          "tl_ice_db": 53.06341609103519,
+          "tl_pressure_release_db": 59.56316984388283,
+          "deviation_db": -6.499753752847646,
+          "abs_deviation_db": 6.499753752847646,
+          "n_modes": 9
+        },
+        {
+          "freq_hz": 200.0,
+          "range_m": 2000.0,
+          "route": "finite_difference_crosscheck",
+          "tl_ice_db": 55.127837219034,
+          "tl_pressure_release_db": 50.03257874616068,
+          "deviation_db": 5.095258472873319,
+          "n_modes": 9,
+          "abs_deviation_db": 5.095258472873319
+        }
+      ],
+      "max_abs_tl_deviation_db": 8.856772147900244,
+      "mean_tl_deviation_db": 1.8667102358287433
+    }
+  ],
+  "attribution": [
+    {
+      "label": "L1_thin",
+      "freq_hz": 50.0,
+      "k_b_over_k1": 4.49370777726531,
+      "f_over_coincidence": 0.04952110715474496,
+      "top_admittance_m": [
+        2.2030470386773757,
+        2.202560639279042
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L1_thin",
+      "freq_hz": 100.0,
+      "k_b_over_k1": 3.1775312419750286,
+      "f_over_coincidence": 0.09904221430948992,
+      "top_admittance_m": [
+        2.2193799796717535,
+        2.218792342571667,
+        2.2178122431560623,
+        2.2164615139772192,
+        2.2148209337863887
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L1_thin",
+      "freq_hz": 200.0,
+      "k_b_over_k1": 2.246853888632655,
+      "f_over_coincidence": 0.19808442861897985,
+      "top_admittance_m": [
+        2.287329040974594,
+        2.2866357746220127,
+        2.2854818103685033,
+        2.283871431804322,
+        2.2818136203657695,
+        2.2793234455834823,
+        2.2764231903213146,
+        2.2731443858827913,
+        2.2695367569846434
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L2_medium",
+      "freq_hz": 50.0,
+      "k_b_over_k1": 2.3851307462633984,
+      "f_over_coincidence": 0.17578249252493783,
+      "top_admittance_m": [
+        0.7552661232769542,
+        0.7531417373381368
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L2_medium",
+      "freq_hz": 100.0,
+      "k_b_over_k1": 1.6865421246993797,
+      "f_over_coincidence": 0.35156498504987566,
+      "top_admittance_m": [
+        0.8348889217520435,
+        0.8317982228963803,
+        0.8266910272156199,
+        0.8197453466988376,
+        0.8114278485358113
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L2_medium",
+      "freq_hz": 200.0,
+      "k_b_over_k1": 1.1925653731316992,
+      "f_over_coincidence": 0.7031299700997513,
+      "top_admittance_m": [
+        1.445468351243574,
+        1.4351255101845635,
+        1.4182243205008946,
+        1.395273304060348,
+        1.3669717943692514,
+        1.3341740902066646,
+        1.2978399008015038,
+        1.258991529099339,
+        1.2187401093592405
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L3_thick",
+      "freq_hz": 50.0,
+      "k_b_over_k1": 1.5881725464180547,
+      "f_over_coincidence": 0.39646479680112057,
+      "top_admittance_m": [
+        0.4276320027363265,
+        0.4208369026535269
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L3_thick",
+      "freq_hz": 100.0,
+      "k_b_over_k1": 1.1230075772665133,
+      "f_over_coincidence": 0.7929295936022411,
+      "top_admittance_m": [
+        0.9616290746361036,
+        0.9210118040100153,
+        0.8604778922310098,
+        0.7891086457586505,
+        0.7167791542147276
+      ],
+      "admittance_class": "mass_controlled (omega^2 rho_i h > D k^4, m > 0)",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    },
+    {
+      "label": "L3_thick",
+      "freq_hz": 200.0,
+      "k_b_over_k1": 0.7940862732090274,
+      "f_over_coincidence": 1.5858591872044823,
+      "top_admittance_m": [
+        -0.24023984155569175,
+        -0.24352173669183388,
+        -0.24916114609633183,
+        -0.25743095281129985,
+        -0.2687547875310743,
+        -0.2837593039438035,
+        -0.30335731988386627,
+        -0.3288693232272623,
+        -0.36209748049542706
+      ],
+      "admittance_class": "stiffness_controlled",
+      "pressure_release_is_m_infinity_rigid_is_m_zero": true
+    }
+  ],
+  "note": "plate parameters are declared engineering input levels for the sensitivity study, not transcribed literature results; no external numeric anchor is claimed for them",
+  "status": "PASS",
+  "benchmark": "pekeris_w22",
+  "title": "elastic ice-cover sensitivity of the Pekeris waveguide (TL deviation and modal dispersion shift)",
+  "generated_utc": "2026-11-11T07:50:51Z",
+  "git_commit": "481be532a1c50c5ecfc1bf2b3088699003de55d7",
+  "inputs": {
+    "case": {
+      "water_depth_m": 100.0,
+      "c_water_m_s": 1500.0,
+      "c_bottom_m_s": 1600.0,
+      "rho_water_kg_m3": 1000.0,
+      "rho_bottom_kg_m3": 1800.0,
+      "density_ratio_rho_w_over_rho_b": 0.5555555555555556
+    },
+    "frequencies_hz": [
+      50.0,
+      100.0,
+      200.0
+    ],
+    "ranges_m": [
+      1000.0,
+      2000.0,
+      5000.0
+    ],
+    "source_depth_m": 50.0,
+    "receiver_depth_m": 50.0,
+    "ice_levels": {
+      "L1_thin": {
+        "young_modulus_Pa": 5000000000.0,
+        "thickness_m": 0.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 57234432.234432235,
+        "mass_per_area_kg_m2": 455.0,
+        "plate_wave_speed_m_s": 18.83265261713678
+      },
+      "L2_medium": {
+        "young_modulus_Pa": 7000000000.0,
+        "thickness_m": 1.5,
+        "rho_ice_kg_m3": 910.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 2163461538.4615383,
+        "mass_per_area_kg_m2": 1365.0,
+        "plate_wave_speed_m_s": 35.4816764928901
+      },
+      "L3_thick": {
+        "young_modulus_Pa": 9000000000.0,
+        "thickness_m": 3.0,
+        "rho_ice_kg_m3": 920.0,
+        "poisson_ratio": 0.3,
+        "flexural_rigidity_Nm": 22252747252.747253,
+        "mass_per_area_kg_m2": 2760.0,
+        "plate_wave_speed_m_s": 53.286677019467064
+      }
+    },
+    "fd_nodes": 800,
+    "fd_scan": 1500,
+    "analytic_scan": 4000
+  },
+  "input_sha256": "8d54cb7f3cafe5817053946e3c895c0317c7895aa5e1325419507342750b35fa",
+  "module_sha256": "29d322987455ee96bbdb2613601ce56f8ebf32d56f3857689daa44c2b255d523",
+  "reference_solution": "Pekeris analytic normal-mode solution computed here: closed-form two-layer dispersion relation (tan(k_z H) = -(rho_w/rho_b) k_z/gamma), modal excitation from the numerical residue of the spectral depth Green function, exact Hankel functions.  No literature number is transcribed; the external literature anchor for this case remains WITHHELD (see report).",
+  "pressure_release_reference": [
+    {
+      "freq_hz": 50.0,
+      "range_m": 1000.0,
+      "tl_db": 50.52724630107316
+    },
+    {
+      "freq_hz": 50.0,
+      "range_m": 2000.0,
+      "tl_db": 56.77531466543463
+    },
+    {
+      "freq_hz": 50.0,
+      "range_m": 5000.0,
+      "tl_db": 56.295072115964416
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 1000.0,
+      "tl_db": 52.030397788901155
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 2000.0,
+      "tl_db": 58.83790279961923
+    },
+    {
+      "freq_hz": 100.0,
+      "range_m": 5000.0,
+      "tl_db": 54.05444128846665
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 1000.0,
+      "tl_db": 48.1939607519222
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 2000.0,
+      "tl_db": 49.99158138725711
+    },
+    {
+      "freq_hz": 200.0,
+      "range_m": 5000.0,
+      "tl_db": 59.56316984388283
+    }
+  ]
+}
