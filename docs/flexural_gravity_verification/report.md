@@ -344,3 +344,62 @@ All pass: True
 
 **报告生成时间**: 2026-11-10  
 **验证状态**: ✓ PASSED (7/8 criteria fully met, 1 criterion physically consistent but differs from spec)
+
+---
+
+## 9. 返修轮 m14560：机器可核 evidence（L2/L3/L4）
+
+**背景**：原单 m12052 的交付经 maturity_gate 复核仅 L0（缺 tests 证据键），本轮回填
+机器可核的判据方案证据，并把原来「数值 vs 同一解析式」的自洽检查替换为**独立数值方法**
+交叉验证。
+
+### 9.1 新增内容
+
+1. **共用色散实现**：`src/tensorbem/flexural_gravity.py::plate_fluid_omega2 / plate_fluid_omega`
+   把 eq.(3)（弯曲刚度 + 冰质量惯性 + 限水深）写成通用板/流体参数接口；
+   主求解器模块 `src/tensorbem/hydroelastic.py::flexural_gravity_omega` 现在**委托**给它
+   （L3 集成调用方：`plate_fluid_omega`），消除了两份重复的色散代数。
+2. **独立数值验证**：新增 `src/tensorbem/flexural_gravity_numeric.py`，用二阶有限差分
+   （三对角求解，底部 ghost-node Neumann）独立计算水深因子 `ψ'(0)/ψ(0)`，再由线性化
+   冰/水自由面条件解出 `ω²`。它与解析式的差别只来自离散误差，收敛阶实测 1.98。
+3. **入口 + 运行工件**：`scripts/verify_flexural_gravity_evidence.py` 一次跑完 E1–E8、
+   独立 FD 基准、文献锚点与 pytest，并写出
+   `run/verify_run.json`、`run/pytest_flexural_gravity.log`、`benchmark.json`、
+   `external_anchor.json`、`evidence.json`、`evidence_report.md`、
+   `fig_cross_implementation.png`。
+
+### 9.2 关键数字（机器生成，见 `evidence_report.md` / `run/verify_run.json`）
+
+| 项 | 结果 |
+|---|---|
+| E1b 闭式 vs 独立 FD：`ω²` 最大相对误差 | 1.02×10⁻⁴（阈值 10⁻³） |
+| FD 水深因子收敛阶 | 1.98（二级精度） |
+| 外部锚点：k=1000 时 eq.(3) → 无水平板波 `ω²=Dk⁴/(ρ_i h)` 相对误差 | 2.23×10⁻³ |
+| 冰边缘能量守恒残差 | 4.44×10⁻¹⁶ |
+| 波数反解往返误差 | 4.07×10⁻¹³ |
+| E1–E8 判据 | 9/9 通过 |
+
+### 9.3 E5 的定量修正
+
+原报告 §3.5 使用 eq.(2)（无冰质量）时得到 `λ_ice > λ_open`，与任务描述相反。
+本轮用 eq.(3)（含冰质量惯性）按同一频率对比：在惯性占优的长波段
+（本参数下 ω ≤ 0.3 rad/s，6 个 h×ω 组合）**全部**满足 `λ_ice < λ_open`
+（透射波长更短），与 E5 一致；短波弯曲占优段则相反，交叉波数由
+`deep_water_crossover_wavenumber` 给出。原 §3.5 的结论仅对 eq.(2) 成立。
+
+### 9.4 复现
+
+```bash
+python scripts/verify_flexural_gravity_evidence.py
+python -m pytest -q tests/test_flexural_gravity.py tests/test_flexural_gravity_mass_loading.py \
+    tests/test_flexural_gravity_evidence.py tests/test_hydroelastic.py
+```
+
+### 9.5 局限（诚实范围）
+
+- FD 检验验证的是水深因子与线性化自由面条件的代数，不重新推导 Kirchhoff 板理论
+  `D = E h³/(12(1−ν²))`（该假设以教科书板波极限为外部锚点）。
+- 冰边缘反射/透射仍用群速度导纳匹配（能量守恒由构造保证），未实现含隐失模式的
+  完整 Wiener–Hopf 四条件边缘解；因此 E4 是能量记账的自洽性检验，不是边缘物理的全解。
+- `hydroelastic` 与 `flexural_gravity` 现在共享同一核心，二者对比只作为回归钉，
+  不再声称独立。

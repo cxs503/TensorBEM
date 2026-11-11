@@ -93,7 +93,7 @@ Cross-module dispersion check (`D = 0`, water depth 200 m) against
 
 | `k` [1/m] | this module [rad/s] | `tensorbem.ice` [rad/s] | rel. error |
 |---|---|---|---|
-| 0.05 | 0.698900597912 | 0.698900597912 | 1.6e-16 |
+| 0.05 | 0.698900597912 | 0.698900597912 | 0.0e+00 |
 | 0.2 | 1.389870992573 | 1.389870992573 | 0.0e+00 |
 | 1 | 3.018117209571 | 3.018117209571 | 0.0e+00 |
 | 5 | 5.954506022779 | 5.954506022779 | 0.0e+00 |
@@ -173,7 +173,7 @@ added-mass operator):
 | bending RAO peak position vs coupled eigenfrequency | < 2% | 1.24% | PASS |
 | fundamental modal peak vs `omega_1` | < 2% | 1.24% | PASS |
 | quasi-static RAO vs closed form | < 1e-04 | 6.71e-08 | PASS |
-| dispersion cross-check vs `tensorbem.ice` | < 1e-12 | 1.6e-16 | PASS |
+| dispersion cross-check vs `tensorbem.ice` | < 1e-12 | 0.0e+00 | PASS |
 | partitioned coupling residual | < 1e-06 | 3.67e-07 (omega), 5.31e-07 (pressure) | PASS |
 
 ## 6. Limitations
