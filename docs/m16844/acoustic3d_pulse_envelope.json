@@ -1,0 +1,418 @@
+{
+  "case": "CASE-ACOUSTIC-PULSE validity envelope",
+  "statement": "Relative error of the frequency-domain Helmholtz BEM (rigid sphere, monopole Neumann data) against the closed-form pulsating-sphere pressure, as a function of ka and panels per wavelength.",
+  "radius_m": 0.5,
+  "receiver_range_factor": 4.0,
+  "density_kg_m3": 1025.0,
+  "sound_speed_m_s": 1500.0,
+  "ka_values": [
+    1.0,
+    2.0,
+    3.0,
+    4.0
+  ],
+  "subdivisions": [
+    1,
+    2,
+    3
+  ],
+  "thresholds": [
+    0.03,
+    0.08
+  ],
+  "rows": [
+    {
+      "ka": 1.0,
+      "subdivisions": 1,
+      "panel_count": 80,
+      "panel_size_m": 0.19816636488030054,
+      "panels_per_wavelength": 15.853309190424044,
+      "bem_amplitude": 257475.76734354728,
+      "exact_amplitude": 271794.1690185792,
+      "phase_error_rad": 0.021560923613874374,
+      "relative_error": 0.05670678240187035
+    },
+    {
+      "ka": 1.0,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "panel_size_m": 0.09908318244015027,
+      "panels_per_wavelength": 31.706618380848088,
+      "bem_amplitude": 268048.90607296163,
+      "exact_amplitude": 271794.1690185792,
+      "phase_error_rad": 0.005666109049783322,
+      "relative_error": 0.01488437284193548
+    },
+    {
+      "ka": 1.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 63.413236761696176,
+      "bem_amplitude": 270845.2853631529,
+      "exact_amplitude": 271794.1690185792,
+      "phase_error_rad": 0.001435174610377298,
+      "relative_error": 0.0037737124714936985
+    },
+    {
+      "ka": 2.0,
+      "subdivisions": 1,
+      "panel_count": 80,
+      "panel_size_m": 0.19816636488030054,
+      "panels_per_wavelength": 7.926654595212022,
+      "bem_amplitude": 327992.5859131064,
+      "exact_amplitude": 343795.45154059277,
+      "phase_error_rad": 0.06912354958974909,
+      "relative_error": 0.08166691997828784
+    },
+    {
+      "ka": 2.0,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "panel_size_m": 0.09908318244015027,
+      "panels_per_wavelength": 15.853309190424044,
+      "bem_amplitude": 339415.4255219331,
+      "exact_amplitude": 343795.45154059277,
+      "phase_error_rad": 0.018039463883357372,
+      "relative_error": 0.021990464542634452
+    },
+    {
+      "ka": 2.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 31.706618380848088,
+      "bem_amplitude": 342656.03566953033,
+      "exact_amplitude": 343795.45154059277,
+      "phase_error_rad": 0.0045742593970102335,
+      "relative_error": 0.005642566896707313
+    },
+    {
+      "ka": 3.0,
+      "subdivisions": 1,
+      "panel_count": 80,
+      "panel_size_m": 0.19816636488030054,
+      "panels_per_wavelength": 5.284436396808014,
+      "bem_amplitude": 347479.995022261,
+      "exact_amplitude": 364650.1426881662,
+      "phase_error_rad": 0.11585346257517999,
+      "relative_error": 0.12244541077335819
+    },
+    {
+      "ka": 3.0,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "panel_size_m": 0.09908318244015027,
+      "panels_per_wavelength": 10.568872793616029,
+      "bem_amplitude": 358499.68951796857,
+      "exact_amplitude": 364650.1426881662,
+      "phase_error_rad": 0.029883874358477627,
+      "relative_error": 0.03409404955088989
+    },
+    {
+      "ka": 3.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 21.137745587232057,
+      "bem_amplitude": 362100.551120569,
+      "exact_amplitude": 364650.1426881662,
+      "phase_error_rad": 0.007501961032064368,
+      "relative_error": 0.010235824469532764
+    },
+    {
+      "ka": 4.0,
+      "subdivisions": 1,
+      "panel_count": 80,
+      "panel_size_m": 0.19816636488030054,
+      "panels_per_wavelength": 3.963327297606011,
+      "bem_amplitude": 362961.7374188765,
+      "exact_amplitude": 372898.5234933619,
+      "phase_error_rad": 0.1698921330469474,
+      "relative_error": 0.16951925901555567
+    },
+    {
+      "ka": 4.0,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "panel_size_m": 0.09908318244015027,
+      "panels_per_wavelength": 7.926654595212022,
+      "bem_amplitude": 370871.0011523554,
+      "exact_amplitude": 372898.5234933619,
+      "phase_error_rad": 0.04382827734345935,
+      "relative_error": 0.044042374883373266
+    },
+    {
+      "ka": 4.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 15.853309190424044,
+      "bem_amplitude": 372483.60177283554,
+      "exact_amplitude": 372898.5234933619,
+      "phase_error_rad": 0.010972158549031722,
+      "relative_error": 0.011022304121271117
+    }
+  ],
+  "per_ka": [
+    {
+      "ka": 1.0,
+      "wavelength_over_radius": 6.283185307179586,
+      "rows": [
+        {
+          "ka": 1.0,
+          "subdivisions": 1,
+          "panel_count": 80,
+          "panel_size_m": 0.19816636488030054,
+          "panels_per_wavelength": 15.853309190424044,
+          "bem_amplitude": 257475.76734354728,
+          "exact_amplitude": 271794.1690185792,
+          "phase_error_rad": 0.021560923613874374,
+          "relative_error": 0.05670678240187035
+        },
+        {
+          "ka": 1.0,
+          "subdivisions": 2,
+          "panel_count": 320,
+          "panel_size_m": 0.09908318244015027,
+          "panels_per_wavelength": 31.706618380848088,
+          "bem_amplitude": 268048.90607296163,
+          "exact_amplitude": 271794.1690185792,
+          "phase_error_rad": 0.005666109049783322,
+          "relative_error": 0.01488437284193548
+        },
+        {
+          "ka": 1.0,
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "panel_size_m": 0.049541591220075135,
+          "panels_per_wavelength": 63.413236761696176,
+          "bem_amplitude": 270845.2853631529,
+          "exact_amplitude": 271794.1690185792,
+          "phase_error_rad": 0.001435174610377298,
+          "relative_error": 0.0037737124714936985
+        }
+      ],
+      "requirements": [
+        {
+          "threshold": 0.03,
+          "min_panel_count": 320,
+          "min_panels_per_wavelength": 31.706618380848088,
+          "unreachable_on_this_ladder": false
+        },
+        {
+          "threshold": 0.08,
+          "min_panel_count": 80,
+          "min_panels_per_wavelength": 15.853309190424044,
+          "unreachable_on_this_ladder": false
+        }
+      ]
+    },
+    {
+      "ka": 2.0,
+      "wavelength_over_radius": 3.141592653589793,
+      "rows": [
+        {
+          "ka": 2.0,
+          "subdivisions": 1,
+          "panel_count": 80,
+          "panel_size_m": 0.19816636488030054,
+          "panels_per_wavelength": 7.926654595212022,
+          "bem_amplitude": 327992.5859131064,
+          "exact_amplitude": 343795.45154059277,
+          "phase_error_rad": 0.06912354958974909,
+          "relative_error": 0.08166691997828784
+        },
+        {
+          "ka": 2.0,
+          "subdivisions": 2,
+          "panel_count": 320,
+          "panel_size_m": 0.09908318244015027,
+          "panels_per_wavelength": 15.853309190424044,
+          "bem_amplitude": 339415.4255219331,
+          "exact_amplitude": 343795.45154059277,
+          "phase_error_rad": 0.018039463883357372,
+          "relative_error": 0.021990464542634452
+        },
+        {
+          "ka": 2.0,
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "panel_size_m": 0.049541591220075135,
+          "panels_per_wavelength": 31.706618380848088,
+          "bem_amplitude": 342656.03566953033,
+          "exact_amplitude": 343795.45154059277,
+          "phase_error_rad": 0.0045742593970102335,
+          "relative_error": 0.005642566896707313
+        }
+      ],
+      "requirements": [
+        {
+          "threshold": 0.03,
+          "min_panel_count": 320,
+          "min_panels_per_wavelength": 15.853309190424044,
+          "unreachable_on_this_ladder": false
+        },
+        {
+          "threshold": 0.08,
+          "min_panel_count": 320,
+          "min_panels_per_wavelength": 15.853309190424044,
+          "unreachable_on_this_ladder": false
+        }
+      ]
+    },
+    {
+      "ka": 3.0,
+      "wavelength_over_radius": 2.0943951023931953,
+      "rows": [
+        {
+          "ka": 3.0,
+          "subdivisions": 1,
+          "panel_count": 80,
+          "panel_size_m": 0.19816636488030054,
+          "panels_per_wavelength": 5.284436396808014,
+          "bem_amplitude": 347479.995022261,
+          "exact_amplitude": 364650.1426881662,
+          "phase_error_rad": 0.11585346257517999,
+          "relative_error": 0.12244541077335819
+        },
+        {
+          "ka": 3.0,
+          "subdivisions": 2,
+          "panel_count": 320,
+          "panel_size_m": 0.09908318244015027,
+          "panels_per_wavelength": 10.568872793616029,
+          "bem_amplitude": 358499.68951796857,
+          "exact_amplitude": 364650.1426881662,
+          "phase_error_rad": 0.029883874358477627,
+          "relative_error": 0.03409404955088989
+        },
+        {
+          "ka": 3.0,
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "panel_size_m": 0.049541591220075135,
+          "panels_per_wavelength": 21.137745587232057,
+          "bem_amplitude": 362100.551120569,
+          "exact_amplitude": 364650.1426881662,
+          "phase_error_rad": 0.007501961032064368,
+          "relative_error": 0.010235824469532764
+        }
+      ],
+      "requirements": [
+        {
+          "threshold": 0.03,
+          "min_panel_count": 1280,
+          "min_panels_per_wavelength": 21.137745587232057,
+          "unreachable_on_this_ladder": false
+        },
+        {
+          "threshold": 0.08,
+          "min_panel_count": 320,
+          "min_panels_per_wavelength": 10.568872793616029,
+          "unreachable_on_this_ladder": false
+        }
+      ]
+    },
+    {
+      "ka": 4.0,
+      "wavelength_over_radius": 1.5707963267948966,
+      "rows": [
+        {
+          "ka": 4.0,
+          "subdivisions": 1,
+          "panel_count": 80,
+          "panel_size_m": 0.19816636488030054,
+          "panels_per_wavelength": 3.963327297606011,
+          "bem_amplitude": 362961.7374188765,
+          "exact_amplitude": 372898.5234933619,
+          "phase_error_rad": 0.1698921330469474,
+          "relative_error": 0.16951925901555567
+        },
+        {
+          "ka": 4.0,
+          "subdivisions": 2,
+          "panel_count": 320,
+          "panel_size_m": 0.09908318244015027,
+          "panels_per_wavelength": 7.926654595212022,
+          "bem_amplitude": 370871.0011523554,
+          "exact_amplitude": 372898.5234933619,
+          "phase_error_rad": 0.04382827734345935,
+          "relative_error": 0.044042374883373266
+        },
+        {
+          "ka": 4.0,
+          "subdivisions": 3,
+          "panel_count": 1280,
+          "panel_size_m": 0.049541591220075135,
+          "panels_per_wavelength": 15.853309190424044,
+          "bem_amplitude": 372483.60177283554,
+          "exact_amplitude": 372898.5234933619,
+          "phase_error_rad": 0.010972158549031722,
+          "relative_error": 0.011022304121271117
+        }
+      ],
+      "requirements": [
+        {
+          "threshold": 0.03,
+          "min_panel_count": 1280,
+          "min_panels_per_wavelength": 15.853309190424044,
+          "unreachable_on_this_ladder": false
+        },
+        {
+          "threshold": 0.08,
+          "min_panel_count": 320,
+          "min_panels_per_wavelength": 7.926654595212022,
+          "unreachable_on_this_ladder": false
+        }
+      ]
+    }
+  ],
+  "finest_mesh": [
+    {
+      "ka": 1.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 63.413236761696176,
+      "bem_amplitude": 270845.2853631529,
+      "exact_amplitude": 271794.1690185792,
+      "phase_error_rad": 0.001435174610377298,
+      "relative_error": 0.0037737124714936985
+    },
+    {
+      "ka": 2.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 31.706618380848088,
+      "bem_amplitude": 342656.03566953033,
+      "exact_amplitude": 343795.45154059277,
+      "phase_error_rad": 0.0045742593970102335,
+      "relative_error": 0.005642566896707313
+    },
+    {
+      "ka": 3.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 21.137745587232057,
+      "bem_amplitude": 362100.551120569,
+      "exact_amplitude": 364650.1426881662,
+      "phase_error_rad": 0.007501961032064368,
+      "relative_error": 0.010235824469532764
+    },
+    {
+      "ka": 4.0,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "panel_size_m": 0.049541591220075135,
+      "panels_per_wavelength": 15.853309190424044,
+      "bem_amplitude": 372483.60177283554,
+      "exact_amplitude": 372898.5234933619,
+      "phase_error_rad": 0.010972158549031722,
+      "relative_error": 0.011022304121271117
+    }
+  ],
+  "tolerance": 0.08
+}
