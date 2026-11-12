@@ -146,7 +146,7 @@ correction log inside the generated block records what changed.
 | Two-way Cummins memory-kernel closure with causality and decay gates | **REAL** | `tensorbem.benchmarks.cummins_memory_closure`, `tensorbem.time_domain` | 5 node(s) in 1 file(s) | `docs/cummins_memory_closure/cummins_memory_closure.md`, `docs/cummins_memory_closure/campaign.json` |
 | Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
 | Hydroelastic panel modes and the wet/dry frequency ratio | **REAL** | `tensorbem.hydroelastic` | 3 node(s) in 1 file(s) | `docs/bem_hydroelastic.md` |
-| Ice-cover mass loading, ice-region RAO and ice-class hull geometry | **REAL** | `tensorbem.ice`, `tensorbem.ice_rao` (+1) | 3 node(s) in 3 file(s) | `docs/ice_water_ship.md` |
+| Ice-cover mass loading, ice-region RAO and ice-class hull geometry | **REAL** | `tensorbem.ice`, `tensorbem.ice_rao` (+2) | 6 node(s) in 4 file(s) | `docs/ice_water_ship.md`, `docs/ice_finite_depth_radiation.md` |
 | Piecewise-linear panel operators and tangential recovery smoothing | **REAL** | `tensorbem.panel_linear`, `tensorbem.panel_smoothing` | 3 node(s) in 2 file(s) | `docs/panel_linear_order.md` |
 | Multiply connected 2-D domains (nested loops, multi-component meshes) | **REAL** | `tensorbem.multiloop`, `tensorbem.multicomponent` | 3 node(s) in 2 file(s) | `docs/annulus_multicomponent.md` |
 | Thin-ship Michell resistance for general hullforms and tandem pairs | **REAL** | `tensorbem.thin_ship_michell`, `tensorbem.ellipsoid_kochin` (+1) | 3 node(s) in 2 file(s) | `docs/michell_validation.md` |
@@ -171,7 +171,7 @@ Counts: **49** REAL, **1** WITHHELD — 50 capabilities. The level is derived fr
 
 ### Capability coverage
 
-63 of 91 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **0 are unowned**.
+64 of 93 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **1 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.cathodic_protection` — physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
@@ -202,6 +202,10 @@ Counts: **49** REAL, **1** WITHHELD — 50 capabilities. The level is derived fr
 - `tensorbem.wigley3_freq` — physics/geometry module wigley3_freq is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_m7602_freq_domain_verification.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.wigley3_hull` — physics/geometry module wigley3_hull is pinned by tests/test_multibody_frequency_dependence_3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 
+**Core modules no row grades and no reason explains** (fails the gate):
+
+- `tensorbem.sk_fit`
+
 ### Untested modules
 
 Not referenced by any test file, with an accepted reason:
@@ -212,7 +216,6 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.finite_depth3d_verification` — report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.
 - `tensorbem.benchmarks.freq_time_bridge` — state-space vs IRF-convolution bridge driver; both paths it compares are pinned by tests/test_state_space.py and graded by the state-space row.
 - `tensorbem.benchmarks.hydrostatic_figures` — matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.
-- `tensorbem.benchmarks.kp505_w20_gci` — three-density GCI study of the KP505 open-water lattice; the propeller physics it drives is pinned by tests/test_propeller_open_water.py and graded by the propeller row.
 - `tensorbem.benchmarks.multihull_frequency_figures` — matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact; the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.
 - `tensorbem.benchmarks.neumann_kelvin_verification` — Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the kernel and the steady wave-resistance physics it reports on are pinned by tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.
 - `tensorbem.benchmarks.quadratic_panel_convergence` — convergence study driver for the quadratic-panel operator; the operator itself is graded by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.
@@ -227,6 +230,14 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.wigley_kcs_kochin_energy_figures` — matplotlib helper rendering the Wigley/KCS Kochin-energy report figures from its JSON artifact; exercised when the figures are rebuilt.
 - `tensorbem.verification.corrosion` — namespace package for the corrosion verification campaign; it holds no code of its own, the models live in tensorbem.cathodic_protection / cp_galvanic (pinned by tests/test_cathodic_protection.py) and its subpackages are inventoried separately.
 - `tensorbem.verification.seakeeping.benchmark_runner` — seakeeping study driver that assembles the hemisphere anchor, FK excitation, mesh-convergence and Wigley RAO runs it reports on; those modules are pinned by tests/test_seakeeping_verification.py.
+
+**Unreferenced and unexplained** (fails the gate):
+
+- `tensorbem.sk_fit`
+
+Reasons that are now obsolete because the module is referenced:
+
+- `tensorbem.benchmarks.kp505_w20_gci`
 
 <!-- capability-matrix:end -->
 
