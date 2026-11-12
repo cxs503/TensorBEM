@@ -56,7 +56,7 @@
 
 ## 注意点
 
-1. SK 迭代模块 `sk_fit.py` 是固定极点变体，不包含完整的极点重定位步骤。对于高精度需求，建议使用 `state_space.vector_fit_damping`。
+1. ~~SK 迭代模块 `sk_fit.py` 是固定极点变体，不包含完整的极点重定位步骤。~~ **该欠账已由 m16021 清账**：`sk_fit` 现实现真正的 Sanathanan–Koerner 迭代（极点重定位 + 实衰减率投影 + 与固定网格基线无回归，可表征曲线复原到 1.2e-15），见 `docs/sk_fit_sanathanan_koerner.md`。对实测曲线（非有限实指数和）仍建议 `state_space.vector_fit_damping`，或接受已量化的模型类误差。
 2. `freq_time_bridge.py` 基准需要 matplotlib 可视化依赖，在无头环境中需设置 `matplotlib.use('Agg')`。
 3. 修复的 JSON 序列化 bug 影响所有使用 `ss.is_stable()` 返回值的报告生成代码。
 

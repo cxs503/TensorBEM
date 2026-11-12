@@ -702,6 +702,28 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Absent from the 2026-10-29 table.',
     ),
     Capability(
+        key='damping-rational-fit',
+        title='Radiation-damping rational fit (Sanathanan-Koerner iteration)',
+        claim=(
+            'The SK iteration relocates the decay rates instead of fixing them on a log grid: on a '
+            'curve that is exactly a sum of three real decay rates it recovers the rates, residues and '
+            'asymptote to 1.2e-15 where the pre-rewrite fixed-grid fit misses by 8.1e-01 at the same '
+            'order, and it is never worse than that baseline anywhere in the order scan. The measured '
+            'Hulme hemisphere curve is NOT representable by real decay rates (12-order floor 1.7e-01 '
+            'against a 1.3e-06 unconstrained rational ceiling), which is reported, not hidden.'
+        ),
+        level=REAL,
+        modules=('tensorbem.sk_fit',),
+        symbols=('sk_fit_damping', 'sk_fit_damping_report', 'fixed_grid_damping_fit'),
+        tests=(
+            'tests/test_sk_fit.py::test_recovers_an_exact_three_rate_curve',
+            'tests/test_sk_fit.py::test_the_pre_rewrite_fixed_grid_cannot_represent_the_same_curve',
+            'tests/test_sk_fit.py::test_never_worse_than_the_fixed_grid',
+            'tests/test_sk_fit.py::test_measured_curve_shows_the_real_pole_model_class_floor',
+        ),
+        docs=(('docs/sk_fit_sanathanan_koerner.md', 'Sanathanan'),),
+    ),
+    Capability(
         key='coupled-memory-kernel-matrix',
         title='Coupled multi-DOF radiation memory kernel matrix',
         claim=(
@@ -1067,9 +1089,6 @@ UNTESTED_MODULES: dict[str, str] = {
     "tensorbem.benchmarks.freq_time_bridge":
         "state-space vs IRF-convolution bridge driver; both paths it compares are pinned by"
         " tests/test_state_space.py and graded by the state-space row.",
-    "tensorbem.benchmarks.kp505_w20_gci":
-        "three-density GCI study of the KP505 open-water lattice; the propeller physics it drives is"
-        " pinned by tests/test_propeller_open_water.py and graded by the propeller row.",
     "tensorbem.benchmarks.multihull_frequency_figures":
         "matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact;"
         " the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.",
