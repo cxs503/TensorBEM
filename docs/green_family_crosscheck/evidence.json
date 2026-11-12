@@ -1,0 +1,341 @@
+{
+  "nu": 0.4,
+  "gravity": 9.80665,
+  "depth_limit": [
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 2.0,
+      "depth_h": 5.0,
+      "k0": 0.4130676277949391,
+      "n_points": 20,
+      "max_rel_dev_all": 0.23442144202673018,
+      "max_rel_dev_near": 0.09538232908487614,
+      "max_rel_dev_far": 0.23442144202673018,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 0.09365143183755759,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 5.0,
+      "depth_h": 12.5,
+      "k0": 0.40003628865471513,
+      "n_points": 20,
+      "max_rel_dev_all": 0.05078724034423855,
+      "max_rel_dev_near": 0.01016465983405682,
+      "max_rel_dev_far": 0.05078724034423855,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 0.007295637221420645,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 10.0,
+      "depth_h": 25.0,
+      "k0": 0.4000000016489224,
+      "n_points": 20,
+      "max_rel_dev_all": 0.04967804123136905,
+      "max_rel_dev_near": 0.0017250841572292786,
+      "max_rel_dev_far": 0.04967804123136905,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 0.0016208826234492845,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 20.0,
+      "depth_h": 50.0,
+      "k0": 0.3999999999999972,
+      "n_points": 20,
+      "max_rel_dev_all": 0.05049109294728231,
+      "max_rel_dev_near": 0.000379408797725834,
+      "max_rel_dev_far": 0.05049109294728231,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 0.000370275200614206,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 100.0,
+      "depth_h": 250.0,
+      "k0": 0.3999999999999972,
+      "n_points": 20,
+      "max_rel_dev_all": 0.05079883477383849,
+      "max_rel_dev_near": 1.3909619626221932e-05,
+      "max_rel_dev_far": 0.05079883477383849,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 1.3882683139028571e-05,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "2D-finite vs 2D-deep",
+      "nu_h": 400.0,
+      "depth_h": 1000.0,
+      "k0": 0.3999999999999972,
+      "n_points": 20,
+      "max_rel_dev_all": 0.05081059927003594,
+      "max_rel_dev_near": 1.1751909401922718e-06,
+      "max_rel_dev_far": 0.05081059927003594,
+      "n_near": 2,
+      "n_far": 18,
+      "median_rel_dev": 1.4059768971717797e-06,
+      "min_abs_kernel": 0.4536422740511276,
+      "meets_1e_4": false
+    },
+    {
+      "family": "3D-finite vs 3D-deep",
+      "nu_h": 2.0,
+      "depth_h": 5.0,
+      "k0": 0.4130676277949391,
+      "n_points": 20,
+      "max_rel_dev_all": 0.11018934135163086,
+      "max_rel_dev_near": 0.071664158802689,
+      "max_rel_dev_far": 0.11018934135163086,
+      "n_near": 7,
+      "n_far": 13,
+      "median_rel_dev": 0.08048900752797616,
+      "min_abs_kernel": 0.0539596987112754,
+      "meets_1e_4": false
+    },
+    {
+      "family": "3D-finite vs 3D-deep",
+      "nu_h": 5.0,
+      "depth_h": 12.5,
+      "k0": 0.40003628865471513,
+      "n_points": 20,
+      "max_rel_dev_all": 0.004556563673477642,
+      "max_rel_dev_near": 0.003642919671268436,
+      "max_rel_dev_far": 0.004556563673477642,
+      "n_near": 8,
+      "n_far": 12,
+      "median_rel_dev": 0.003955987679708735,
+      "min_abs_kernel": 0.0539596987112754,
+      "meets_1e_4": false
+    },
+    {
+      "family": "3D-finite vs 3D-deep",
+      "nu_h": 10.0,
+      "depth_h": 25.0,
+      "k0": 0.4000000016489224,
+      "n_points": 20,
+      "max_rel_dev_all": 0.00039969699184370597,
+      "max_rel_dev_near": 0.00025041464450991535,
+      "max_rel_dev_far": 0.00039969699184370597,
+      "n_near": 8,
+      "n_far": 12,
+      "median_rel_dev": 0.0002777317050283952,
+      "min_abs_kernel": 0.0539596987112754,
+      "meets_1e_4": false
+    },
+    {
+      "family": "3D-finite vs 3D-deep",
+      "nu_h": 20.0,
+      "depth_h": 50.0,
+      "k0": 0.3999999999999972,
+      "n_points": 20,
+      "max_rel_dev_all": 4.357059005377512e-05,
+      "max_rel_dev_near": 2.5642821998125284e-05,
+      "max_rel_dev_far": 4.357059005377512e-05,
+      "n_near": 8,
+      "n_far": 12,
+      "median_rel_dev": 2.856332044066433e-05,
+      "min_abs_kernel": 0.0539596987112754,
+      "meets_1e_4": true
+    },
+    {
+      "family": "3D-finite vs 3D-deep",
+      "nu_h": 50.0,
+      "depth_h": 125.0,
+      "k0": 0.3999999999999972,
+      "n_points": 20,
+      "max_rel_dev_all": 2.557704964154652e-06,
+      "max_rel_dev_near": 1.4843105867223198e-06,
+      "max_rel_dev_far": 2.557704964154652e-06,
+      "n_near": 8,
+      "n_far": 12,
+      "median_rel_dev": 1.6549495096200683e-06,
+      "min_abs_kernel": 0.0539596987112754,
+      "meets_1e_4": true
+    }
+  ],
+  "reciprocity": [
+    {
+      "family": "2D-finite",
+      "n_pairs": 12,
+      "nu_h": 5.0,
+      "max_rel_dev": 0.0
+    },
+    {
+      "family": "2D-deep",
+      "n_pairs": 12,
+      "nu_h": null,
+      "max_rel_dev": 0.0
+    },
+    {
+      "family": "3D-finite",
+      "n_pairs": 12,
+      "nu_h": 5.0,
+      "max_rel_dev": 0.0
+    },
+    {
+      "family": "3D-deep",
+      "n_pairs": 12,
+      "nu_h": null,
+      "max_rel_dev": 0.0
+    }
+  ],
+  "free_surface_bc": [
+    {
+      "family": "3D-finite",
+      "quantity": "dG/dz - nu*G at z=0",
+      "n_points": 5,
+      "max_rel_residual": 2.5811306844848944e-15,
+      "referee": "free_surface3d.verify_free_surface_bc_3d form, analytic dG/dz"
+    },
+    {
+      "family": "2D-finite",
+      "quantity": "dG/dz - nu*G at z=0",
+      "n_points": 5,
+      "max_rel_residual": 1.6723016821794256e-11,
+      "referee": "same BC form, analytic dG/dz from finite_depth.green_gradient"
+    },
+    {
+      "family": "3D-finite",
+      "quantity": "laplacian(G) away from source",
+      "n_points": 3,
+      "max_rel_residual": 0.00010802703959383144,
+      "referee": "verify_laplace_3d stencil, step=1e-4 (truncation-limited)"
+    }
+  ],
+  "bottom_bc": [
+    {
+      "family": "3D-finite",
+      "quantity": "dG/dz at z=-h",
+      "n_points": 5,
+      "max_abs": 0.0,
+      "scaled_by_G": 0.0
+    },
+    {
+      "family": "2D-finite",
+      "quantity": "dG/dz at z=-h",
+      "n_points": 5,
+      "max_abs": 0.0,
+      "scaled_by_G": 0.0
+    }
+  ],
+  "kernel_defect": {
+    "rows": [
+      {
+        "x": 1.0,
+        "pv_reference": -0.44124146710268586,
+        "pv_free_surface": -0.44138445839980406,
+        "pv_rel_dev": 0.00032406586365764926,
+        "G_reference": [
+          0.12407920455756125,
+          -0.7601579646503573
+        ],
+        "G_deep_kernel": [
+          0.12412472010107221,
+          -0.7601579646503573
+        ],
+        "G_finite_h1000": [
+          0.12412404787141601,
+          -0.7601579646503592
+        ],
+        "deep_kernel_rel_dev": 5.9094364223805244e-05,
+        "finite_kernel_rel_dev": 5.822158580391916e-05
+      },
+      {
+        "x": 3.0,
+        "pv_reference": -2.1977092385639456,
+        "pv_free_surface": -2.1982199601804955,
+        "pv_rel_dev": 0.00023238816472536674,
+        "G_reference": [
+          0.6975551794590857,
+          -0.29905634362082123
+        ],
+        "G_deep_kernel": [
+          0.6977177471987214,
+          -0.29905634362082123
+        ],
+        "G_finite_h1000": [
+          0.6977170637543164,
+          -0.2990563436208283
+        ],
+        "deep_kernel_rel_dev": 0.00021419847182481026,
+        "finite_kernel_rel_dev": 0.000213297968764071
+      },
+      {
+        "x": 5.3,
+        "pv_reference": -2.1046991405131035,
+        "pv_free_surface": -2.1068444345474076,
+        "pv_rel_dev": 0.0010192877418960125,
+        "G_reference": [
+          0.6693010278312511,
+          0.4308169323639891
+        ],
+        "G_deep_kernel": [
+          0.6699838961311412,
+          0.4308169323639891
+        ],
+        "G_finite_h1000": [
+          0.6695340594059379,
+          0.43081693236397905
+        ],
+        "deep_kernel_rel_dev": 0.0008579078575670944,
+        "finite_kernel_rel_dev": 0.0002927645330984308
+      },
+      {
+        "x": 9.4,
+        "pv_reference": 1.546352717297923,
+        "pv_free_surface": 1.598892657157697,
+        "pv_rel_dev": 0.03397668544313843,
+        "G_reference": [
+          -0.49242514585618624,
+          0.6724623570332489
+        ],
+        "G_deep_kernel": [
+          -0.509149128133054,
+          0.6724623570332489
+        ],
+        "G_finite_h1000": [
+          -0.4927454695438804,
+          0.6724623570332625
+        ],
+        "deep_kernel_rel_dev": 0.02006525828958866,
+        "finite_kernel_rel_dev": 0.00038432099624660285
+      },
+      {
+        "x": 13.3,
+        "pv_reference": 2.151349975138744,
+        "pv_free_surface": 2.2838026557836404,
+        "pv_rel_dev": 0.06156724018664334,
+        "G_reference": [
+          -0.6848988285010682,
+          -0.4711740495382471
+        ],
+        "G_deep_kernel": [
+          -0.7270598262018831,
+          -0.4711740495382471
+        ],
+        "G_finite_h1000": [
+          -0.6854821186889895,
+          -0.47117404953822245
+        ],
+        "deep_kernel_rel_dev": 0.05071578338861423,
+        "finite_kernel_rel_dev": 0.0007016441838791286
+      }
+    ],
+    "referee_spread": 0.000850774243086376
+  }
+}
