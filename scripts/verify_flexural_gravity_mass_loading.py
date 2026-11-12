@@ -423,7 +423,7 @@ def inertia_effect_table() -> list:
 def material_sensitivity_table() -> list:
     """Inertia correction [%] over Young's modulus and ice thickness."""
     rows = []
-    for young in (1.0e9, 5.0e9, 10.0e9):
+    for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
         for h_ice in (0.5, 1.0, 2.0):
             plate = IcePlate(thickness=h_ice, water_depth=200.0, young_modulus=young)
             k_c = deep_water_crossover_wavenumber(plate)
@@ -448,7 +448,7 @@ def material_sensitivity_table() -> list:
 def criterion_v9(sensitivity: list) -> dict:
     worst = max(abs(r["inertia_correction_percent"]) for r in sensitivity)
     rows = []
-    for young in (1.0e9, 5.0e9, 10.0e9):
+    for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
         sub = [r for r in sensitivity if r["young_modulus"] == young]
         rows.append({
             "young_modulus": young,
@@ -458,7 +458,7 @@ def criterion_v9(sensitivity: list) -> dict:
         })
     return {
         "description": (
-            "max |inertia correction| over E in {1,5,10} GPa, h in {0.5,1,2} m, "
+            "max |inertia correction| over E in {1,5,10,20,30} GPa, h in {0.5,1,2} m, "
             "f in 0.02..0.30 Hz stays below 10%"
         ),
         "rows": rows,
@@ -904,7 +904,7 @@ def write_results_markdown(report: dict, table: list, sensitivity: list, path: P
               "| E [GPa] | h_ice [m] | " +
               " | ".join(f"f={f}" for f in FREQUENCIES) + " |",
               "|---|---|" + "---|" * len(FREQUENCIES)]
-    for young in (1.0e9, 5.0e9, 10.0e9):
+    for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
         for h_ice in (0.5, 1.0, 2.0):
             sub = [r for r in sensitivity
                    if r["young_modulus"] == young and r["ice_thickness"] == h_ice]

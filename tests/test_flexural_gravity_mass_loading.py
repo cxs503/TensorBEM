@@ -246,6 +246,47 @@ def test_v9_inertia_correction_stays_small_in_ocean_band():
     assert worst < 0.10
 
 
+def _max_abs_inertia_correction(young: float) -> float:
+    """Worst |inertia correction| over h in {0.5,1,2} m and the ocean band."""
+    worst = 0.0
+    for h_ice in (0.5, 1.0, 2.0):
+        p = IcePlate(thickness=h_ice, water_depth=200.0, young_modulus=young)
+        for frequency in (0.02, 0.05, 0.08, 0.10, 0.15, 0.20, 0.30):
+            omega = TWO_PI * frequency
+            unified = wavelength_ratio_mass_loading(omega, p)
+            legacy = (
+                open_water_wavenumber(omega, p.water_depth, p.gravity)
+                / flexural_gravity_wavenumber(omega, p)
+            )
+            worst = max(worst, abs(unified / legacy - 1.0))
+    return worst
+
+
+def test_v9_correction_bound_holds_up_to_30_gpa():
+    """The 10% bound of V9 must survive the extended modulus scan.
+
+    Cold, dense sea ice reaches E ~ 20-30 GPa; the scan of
+    ``scripts/verify_flexural_gravity_mass_loading.py`` now covers
+    E in {1,5,10,20,30} GPa and the bound must still hold.
+    """
+    for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
+        assert _max_abs_inertia_correction(young) < 0.10
+
+
+def test_v9_correction_decreases_monotonically_with_young_modulus():
+    """Stiffer ice -> smaller plate-inertia correction (k_c ~ E^{-1/3}).
+
+    The m13836 report predicted the correction keeps decreasing beyond
+    10 GPa; this pins that prediction against the extended scan.
+    """
+    prev = None
+    for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
+        cur = _max_abs_inertia_correction(young)
+        if prev is not None:
+            assert cur < prev
+        prev = cur
+
+
 # ---------------------------------------------------------------------------
 # V10  the sign of (lambda_ice - lambda_open) flips at the crossover
 # ---------------------------------------------------------------------------
