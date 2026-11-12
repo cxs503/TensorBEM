@@ -1,0 +1,326 @@
+{
+  "mission": "m16021",
+  "sk_max_iter": 200,
+  "sk_tol": 1e-12,
+  "orders": [
+    2,
+    3,
+    4,
+    6,
+    8,
+    10,
+    12
+  ],
+  "cases": {
+    "representable": {
+      "points": 300,
+      "omega_band": [
+        0.020000000000000004,
+        49.99999999999999
+      ],
+      "damping_max": 1.0872695608808325,
+      "damping_min": 0.04910453320454705,
+      "truth": {
+        "decay_rates": [
+          0.5,
+          1.0,
+          2.5
+        ],
+        "residues": [
+          1.0,
+          -1.2,
+          0.6
+        ],
+        "asymptote": 0.05,
+        "omega_band": [
+          0.020000000000000004,
+          49.99999999999999
+        ],
+        "points": 300
+      },
+      "rows": [
+        {
+          "order": 2,
+          "pole_source": "sk",
+          "sk_iterations": 200,
+          "sk_converged": false,
+          "rational_rel_error": 8.298894113608927,
+          "sk_pole_rel_error": 0.7839185272756964,
+          "grid_pole_rel_error": 0.8894166599186424,
+          "returned_rel_error": 0.7839185272756964,
+          "returned_pointwise_error": 0.9952489238646932,
+          "baseline_rel_error": 0.8894166599186424,
+          "real_root_count": 2,
+          "complex_pair_count": 0,
+          "asymptote": 0.059703432200164205,
+          "recovered_decay_rates": [
+            0.8581376475211459,
+            5.67130205765639
+          ],
+          "decay_rate_rel_error": Infinity,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 0.009703432200164203
+        },
+        {
+          "order": 3,
+          "pole_source": "sk",
+          "sk_iterations": 3,
+          "sk_converged": true,
+          "rational_rel_error": 1.6337777707684246e-15,
+          "sk_pole_rel_error": 1.2253333280763184e-15,
+          "grid_pole_rel_error": 0.8072390967522349,
+          "returned_rel_error": 1.2253333280763184e-15,
+          "returned_pointwise_error": 5.6008481897998934e-15,
+          "baseline_rel_error": 0.8072390967522349,
+          "real_root_count": 3,
+          "complex_pair_count": 0,
+          "asymptote": 0.05000000000000009,
+          "recovered_decay_rates": [
+            0.49999999999999994,
+            1.0000000000000002,
+            2.499999999999999
+          ],
+          "decay_rate_rel_error": 3.552713678800501e-16,
+          "residue_abs_error": 1.4432899320127035e-15,
+          "asymptote_abs_error": 9.020562075079397e-17
+        },
+        {
+          "order": 4,
+          "pole_source": "sk",
+          "sk_iterations": 8,
+          "sk_converged": true,
+          "rational_rel_error": 1.1232222174032919e-15,
+          "sk_pole_rel_error": 3.4717777628829022e-15,
+          "grid_pole_rel_error": 0.2394910310967047,
+          "returned_rel_error": 3.4717777628829022e-15,
+          "returned_pointwise_error": 3.891744100994997e-15,
+          "baseline_rel_error": 0.2394910310967047,
+          "real_root_count": 4,
+          "complex_pair_count": 0,
+          "asymptote": 0.0500000000000017,
+          "recovered_decay_rates": [
+            0.5000000000000022,
+            1.0000000000000004,
+            2.499999999999995
+          ],
+          "decay_rate_rel_error": 4.440892098500626e-15,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 1.700029006457271e-15
+        },
+        {
+          "order": 6,
+          "pole_source": "sk",
+          "sk_iterations": 8,
+          "sk_converged": true,
+          "rational_rel_error": 5.105555533651327e-16,
+          "sk_pole_rel_error": 6.126666640381592e-16,
+          "grid_pole_rel_error": 0.1533631949262876,
+          "returned_rel_error": 6.126666640381592e-16,
+          "returned_pointwise_error": 2.119629324751841e-15,
+          "baseline_rel_error": 0.1533631949262876,
+          "real_root_count": 4,
+          "complex_pair_count": 1,
+          "asymptote": 0.04999999999980703,
+          "recovered_decay_rates": [
+            0.4999999999999999,
+            1.000000000000003,
+            2.4999999999999947
+          ],
+          "decay_rate_rel_error": 3.1086244689504383e-15,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 1.9297063946766002e-13
+        },
+        {
+          "order": 8,
+          "pole_source": "sk",
+          "sk_iterations": 8,
+          "sk_converged": true,
+          "rational_rel_error": 2.0422222134605307e-15,
+          "sk_pole_rel_error": 2.0422222134605307e-15,
+          "grid_pole_rel_error": 0.14468613439388806,
+          "returned_rel_error": 2.0422222134605307e-15,
+          "returned_pointwise_error": 3.4559223285186004e-15,
+          "baseline_rel_error": 0.14468613439388806,
+          "real_root_count": 4,
+          "complex_pair_count": 2,
+          "asymptote": 0.049999999922477306,
+          "recovered_decay_rates": [
+            0.5000000000000002,
+            1.0000000000000004,
+            2.4999999999999956
+          ],
+          "decay_rate_rel_error": 1.7763568394002505e-15,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 7.752269659544453e-11
+        },
+        {
+          "order": 10,
+          "pole_source": "sk",
+          "sk_iterations": 8,
+          "sk_converged": true,
+          "rational_rel_error": 1.6337777707684246e-15,
+          "sk_pole_rel_error": 1.8379999921144777e-15,
+          "grid_pole_rel_error": 0.08508614078159732,
+          "returned_rel_error": 1.8379999921144777e-15,
+          "returned_pointwise_error": 5.324688078023839e-15,
+          "baseline_rel_error": 0.08508614078159732,
+          "real_root_count": 4,
+          "complex_pair_count": 3,
+          "asymptote": 0.049999999863451064,
+          "recovered_decay_rates": [
+            0.49999999999999983,
+            1.0000000000000009,
+            2.4999999999999982
+          ],
+          "decay_rate_rel_error": 8.881784197001252e-16,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 1.3654893882275587e-10
+        },
+        {
+          "order": 12,
+          "pole_source": "sk",
+          "sk_iterations": 8,
+          "sk_converged": true,
+          "rational_rel_error": 8.168888853842123e-16,
+          "sk_pole_rel_error": 3.165444430863823e-15,
+          "grid_pole_rel_error": 0.04433800691404399,
+          "returned_rel_error": 3.165444430863823e-15,
+          "returned_pointwise_error": 1.0591904947295583e-14,
+          "baseline_rel_error": 0.04433800691404399,
+          "real_root_count": 4,
+          "complex_pair_count": 4,
+          "asymptote": 0.049999999992680635,
+          "recovered_decay_rates": [
+            0.4999999999999973,
+            1.0000000000000024,
+            2.500000000000001
+          ],
+          "decay_rate_rel_error": 5.440092820663267e-15,
+          "residue_abs_error": Infinity,
+          "asymptote_abs_error": 7.31936733444627e-12
+        }
+      ],
+      "regression_free": true,
+      "sk_wins_order_count": 7
+    },
+    "hulme_hemisphere": {
+      "points": 201,
+      "omega_band": [
+        0.14,
+        29.7
+      ],
+      "damping_max": 1745.2969989472974,
+      "damping_min": 0.02096022103630762,
+      "truth": null,
+      "rows": [
+        {
+          "order": 2,
+          "pole_source": "sk",
+          "sk_iterations": 119,
+          "sk_converged": true,
+          "rational_rel_error": 0.9973978929160446,
+          "sk_pole_rel_error": 0.9976334747460239,
+          "grid_pole_rel_error": 0.9996839004750265,
+          "returned_rel_error": 0.9976334747460239,
+          "returned_pointwise_error": 1.8907026299021417,
+          "baseline_rel_error": 0.9996839004750265,
+          "real_root_count": 0,
+          "complex_pair_count": 1,
+          "asymptote": 0.0
+        },
+        {
+          "order": 3,
+          "pole_source": "grid",
+          "sk_iterations": 200,
+          "sk_converged": false,
+          "rational_rel_error": 1.6433055870974875,
+          "sk_pole_rel_error": 0.9964133777012031,
+          "grid_pole_rel_error": 0.9902202027218737,
+          "returned_rel_error": 0.9902202027218737,
+          "returned_pointwise_error": 2.0133883025683117,
+          "baseline_rel_error": 0.9902202027218737,
+          "real_root_count": 1,
+          "complex_pair_count": 1,
+          "asymptote": 0.0
+        },
+        {
+          "order": 4,
+          "pole_source": "grid",
+          "sk_iterations": 26,
+          "sk_converged": true,
+          "rational_rel_error": 0.11682484814276964,
+          "sk_pole_rel_error": 0.9972454340258253,
+          "grid_pole_rel_error": 0.9784944918352539,
+          "returned_rel_error": 0.9784944918352539,
+          "returned_pointwise_error": 0.978850042922768,
+          "baseline_rel_error": 0.9784944918352539,
+          "real_root_count": 0,
+          "complex_pair_count": 2,
+          "asymptote": 62.68211576723691
+        },
+        {
+          "order": 6,
+          "pole_source": "sk",
+          "sk_iterations": 53,
+          "sk_converged": true,
+          "rational_rel_error": 0.0027459726415796537,
+          "sk_pole_rel_error": 0.9023413623719334,
+          "grid_pole_rel_error": 0.9230487682745234,
+          "returned_rel_error": 0.9023413623719334,
+          "returned_pointwise_error": 1.391379002628021,
+          "baseline_rel_error": 0.9230487682745234,
+          "real_root_count": 2,
+          "complex_pair_count": 2,
+          "asymptote": 4.052817448918823
+        },
+        {
+          "order": 8,
+          "pole_source": "grid",
+          "sk_iterations": 200,
+          "sk_converged": false,
+          "rational_rel_error": 9.183584625319166e-05,
+          "sk_pole_rel_error": 0.756109404437053,
+          "grid_pole_rel_error": 0.492128769010773,
+          "returned_rel_error": 0.492128769010773,
+          "returned_pointwise_error": 0.5232760003740334,
+          "baseline_rel_error": 0.492128769010773,
+          "real_root_count": 2,
+          "complex_pair_count": 3,
+          "asymptote": 612.9816628362346
+        },
+        {
+          "order": 10,
+          "pole_source": "grid",
+          "sk_iterations": 200,
+          "sk_converged": false,
+          "rational_rel_error": 2.6568625479474557e-05,
+          "sk_pole_rel_error": 0.25892575914897575,
+          "grid_pole_rel_error": 0.2241495638808641,
+          "returned_rel_error": 0.2241495638808641,
+          "returned_pointwise_error": 0.27218908521597834,
+          "baseline_rel_error": 0.2241495638808641,
+          "real_root_count": 4,
+          "complex_pair_count": 3,
+          "asymptote": 0.0
+        },
+        {
+          "order": 12,
+          "pole_source": "grid",
+          "sk_iterations": 200,
+          "sk_converged": false,
+          "rational_rel_error": 1.2482575265902427e-06,
+          "sk_pole_rel_error": 0.28217181373937744,
+          "grid_pole_rel_error": 0.16836066373303427,
+          "returned_rel_error": 0.16836066373303427,
+          "returned_pointwise_error": 0.26510968209771457,
+          "baseline_rel_error": 0.16836066373303427,
+          "real_root_count": 2,
+          "complex_pair_count": 5,
+          "asymptote": 0.0
+        }
+      ],
+      "regression_free": true,
+      "sk_wins_order_count": 2
+    }
+  }
+}
