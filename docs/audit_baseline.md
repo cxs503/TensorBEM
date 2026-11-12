@@ -159,8 +159,28 @@ correction log inside the generated block records what changed.
 | Second-order difference-frequency QTF and slow-drift spectra | **REAL** | `tensorbem.qtf_drift` | 2 node(s) in 1 file(s) | `docs/qtf_drift_oc4.md` |
 | Fast multipole acceleration of the 3-D single-layer operator | **REAL** | `tensorbem.fmm` | 2 node(s) in 1 file(s) | `docs/fmm_acceleration/report.md` |
 | Independent finite-difference check of the flexural-gravity dispersion | **REAL** | `tensorbem.flexural_gravity_numeric` | 2 node(s) in 1 file(s) | `docs/flexural_gravity_verification/report.md` |
+| 3-D Laplace BEM cathodic protection (linear polarisation + Butler-Volmer) | **REAL** | `tensorbem.cathodic_protection`, `tensorbem.cp_galvanic` | 2 node(s) in 1 file(s) | `docs/cathodic_protection_linear/REPORT.md`, `docs/cathodic_protection_galvanic/REPORT.md` |
+| Exact MacCamy-Fuchs cylinder drift + 3-D far-field drift | **REAL** | `tensorbem.cylinder_drift`, `tensorbem.drift_far_field3d` | 2 node(s) in 2 file(s) | `docs/cylinder_drift_asymptotic.md`, `docs/drift_far_field_3d.md` |
+| Verification-figure integrity gate (reproducible from committed data) | **WITHHELD** | `tensorbem.figure_integrity` | — | `docs/dev_report_m15295_push_gate_figure_integrity_round1.md` |
+| Finite-depth Green function + dispersion solver | **WITHHELD** | `tensorbem.finite_depth_green` | — | `docs/BEM_FINITE_DEPTH_GREEN.md` |
+| 3-D finite-depth wave-radiation solver (eigenseries + quadrature kernels) | **REAL** | `tensorbem.finite_depth_solver3d` | 2 node(s) in 1 file(s) | `docs/m14568_quadrature_kernel_solver.md` |
+| Flexural-gravity (ice-cover) dispersion and mass loading | **REAL** | `tensorbem.flexural_gravity` | 3 node(s) in 1 file(s) | `docs/flexural_gravity_mass_loading/report.md` |
+| 2-D Haskind excitation + net-source regularisation (strip theory) | **WITHHELD** | `tensorbem.haskind2d`, `tensorbem.net_source_reg` | — | `docs/strip_theory_fullspeed_closure.md`, `docs/strip_theory_fullspeed_closure.md` |
+| Interior waterplane-lid panels (irregular-frequency suppression) | **REAL** | `tensorbem.interior_panels` | 2 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
+| Irregular-frequency prediction and sanitisation | **REAL** | `tensorbem.irregular_frequency` | 3 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
+| Neumann-Kelvin steady forward-speed wave resistance | **WITHHELD** | `tensorbem.neumann_kelvin` | — | `docs/neumann_kelvin_verification.md` |
+| 3-D steady Neumann-Kelvin panel method (Rankine + Havelock kernel) | **REAL** | `tensorbem.nk_panel3d` | 3 node(s) in 1 file(s) | `docs/m10003/REPORT.md` |
+| Quadratic (6-node) curved-triangle panel operator | **REAL** | `tensorbem.panel_quadratic` | 2 node(s) in 1 file(s) | `docs/quadratic_near_singular/README.md` |
+| Propeller open-water performance by vortex-lattice lifting surface | **REAL** | `tensorbem.propeller` | 3 node(s) in 1 file(s) | `docs/dev_report_m4614_doc_claim_audit_ratchet.md` |
+| Rankine-source free-surface panel method (truncated domain) | **REAL** | `tensorbem.rankine_fs` | 3 node(s) in 1 file(s) | `docs/benchmarks/verified/bem_rankine_fs_panel/report.md` |
+| Rankine wave resistance + Series 60 empirical reference | **WITHHELD** | `tensorbem.rankine_wave`, `tensorbem.series60` | — | `docs/in32_b01/report.md`, `docs/in32_b01/report.md` |
+| Machine-checked provenance of reference constants | **REAL** | `tensorbem.reference_provenance` | 3 node(s) in 1 file(s) | `docs/reference_provenance.md` |
+| State-space realisation of the Cummins radiation memory | **REAL** | `tensorbem.state_space` | 2 node(s) in 1 file(s) | `docs/sk_fit_sanathanan_koerner.md` |
+| STF (1970) strip theory with forward speed | **WITHHELD** | `tensorbem.stf_fullspeed` | — | `docs/strip_theory_fullspeed_closure.md` |
+| Slack-tank free-surface correction to hydrostatics | **REAL** | `tensorbem.tank_free_surface` | 3 node(s) in 1 file(s) | `docs/tank_free_surface_correction.md` |
+| Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 
-Counts: **50** REAL, **1** WITHHELD — 51 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **64** REAL, **7** WITHHELD — 71 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -172,37 +192,12 @@ Counts: **50** REAL, **1** WITHHELD — 51 capabilities. The level is derived fr
 
 ### Capability coverage
 
-64 of 93 core modules (outside `tensorbem.benchmarks`) are named by a row above; 29 more carry an accepted reason, so **0 are unowned**.
+89 of 93 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
-- `tensorbem.cathodic_protection` — physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.cp_galvanic` — physics/geometry module cp_galvanic is pinned by tests/test_cp_galvanic.py, tests/test_cp_verification_m9204.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.cylinder_drift` — physics/geometry module cylinder_drift is pinned by tests/test_cylinder_drift_asymptotic.py, tests/test_diffraction_drift_maturity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.drift_far_field3d` — physics/geometry module drift_far_field3d is pinned by tests/test_diffraction_drift_maturity.py, tests/test_drift_far_field3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.figure_integrity` — physics/geometry module figure_integrity is pinned by tests/test_figure_integrity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.finite_depth_green` — physics/geometry module finite_depth_green is pinned by tests/test_finite_depth_green.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.finite_depth_solver3d` — physics/geometry module finite_depth_solver3d is pinned by tests/test_finite_depth3d_quadrature_solver.py, tests/test_finite_depth_solver3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.flexural_gravity` — physics/geometry module flexural_gravity is pinned by tests/test_flexural_gravity.py, tests/test_flexural_gravity_evidence.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.haskind2d` — physics/geometry module haskind2d is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.interior_panels` — physics/geometry module interior_panels is pinned by tests/test_interior_panel_suppression.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.irregular_frequency` — physics/geometry module irregular_frequency is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_irregular_frequency_study.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.net_source_reg` — physics/geometry module net_source_reg is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.neumann_kelvin` — physics/geometry module neumann_kelvin is pinned by tests/test_neumann_kelvin.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.nk_panel3d` — physics/geometry module nk_panel3d is pinned by tests/test_nk_panel3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.panel_quadratic` — physics/geometry module panel_quadratic is pinned by tests/test_panel_quadratic.py, tests/test_panel_quadratic_near_singular.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.pekeris_acoustics` — physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.propeller` — physics/geometry module propeller is pinned by tests/test_propeller_open_water.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.rankine_fs` — physics/geometry module rankine_fs is pinned by tests/test_rankine_fs_panel.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.rankine_wave` — physics/geometry module rankine_wave is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.reference_provenance` — physics/geometry module reference_provenance is pinned by tests/test_reference_provenance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
-- `tensorbem.series60` — physics/geometry module series60 is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.state_space` — physics/geometry module state_space is pinned by tests/test_state_space.py, tests/test_state_space_fit_invariants.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.stf_fullspeed` — physics/geometry module stf_fullspeed is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.tank_free_surface` — physics/geometry module tank_free_surface is pinned by tests/test_tank_free_surface.py, tests/test_tank_free_surface_doc_pins.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
-- `tensorbem.wigley3_freq` — physics/geometry module wigley3_freq is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_m7602_freq_domain_verification.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
-- `tensorbem.wigley3_hull` — physics/geometry module wigley3_hull is pinned by tests/test_multibody_frequency_dependence_3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 
 ### Untested modules
 
