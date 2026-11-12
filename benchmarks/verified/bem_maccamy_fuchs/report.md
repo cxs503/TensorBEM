@@ -129,3 +129,24 @@ the 3% limit.
 
 **Overall**: ✅ ALL GATES PASSED
 
+
+## 7. Re-verification (m16170, reopen of closed PR #683)
+
+The original PR #683 carrying these deliverables was closed by the owner on
+2026-11-05; the same content reached `main` via merge #645 (m14713). To close
+the loop, the anchor was re-verified against the current `main` on 2026-11-12:
+
+- **Base**: `main` @ `7f8a746` (post-#691).
+- **Method**: re-ran `build_maccamy_fuchs_anchor.py` end-to-end (4-level h-refinement,
+  6-point frequency sweep, 2-resonance CHIEF study) and diffed the regenerated
+  artifacts against the committed ones.
+- **Result**: `results.json` and `gates.json` are **byte-identical** to the
+  committed artifacts (sha256 below); all 6 acceptance gates PASS with the same
+  measured values as §5.
+- **Pinned hashes** (machine-checked by
+  `tests/test_bem_maccamy_fuchs_verified.py::TestReverificationRecord`):
+  - `results.json`: `2a436541be85b62f67c46ecba84c2ef3747b2ffcd860362dfdb303783ff8980b`
+  - `gates.json`: `ca65d37753c1c3c06521befd29b440d9541568f9ac6a709e7dcd4a7ac0a0d52b`
+- **Conclusion**: the anchor is stable on the current `main`; the deliverables
+  of the closed PR #683 are present and reproducible. No numeric drift since
+  merge #645.
