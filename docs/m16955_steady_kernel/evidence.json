@@ -1,0 +1,148 @@
+{
+  "kappa": 1.0,
+  "source_depth": -1.0,
+  "identity": [
+    {
+      "m": 0,
+      "mu": 1.0,
+      "pole": 2.0,
+      "closed_re": 0.26683595082634054,
+      "closed_im": -0.5019729167979783,
+      "ref_re": 0.2668359508263399,
+      "ref_im": -0.5019729167979792,
+      "relative_error": 1.952941247831617e-15
+    },
+    {
+      "m": 1,
+      "mu": 1.0,
+      "pole": 2.0,
+      "closed_re": 0.7336719016526811,
+      "closed_im": -0.6039458335959565,
+      "ref_re": 0.7336719016526804,
+      "ref_im": -0.6039458335959572,
+      "relative_error": 1.0771341587950838e-15
+    },
+    {
+      "m": 2,
+      "mu": 1.0,
+      "pole": 2.0,
+      "closed_re": 1.3473438033053622,
+      "closed_im": -1.0478916671919132,
+      "ref_re": 1.3473438033053606,
+      "ref_im": -1.0478916671919132,
+      "relative_error": 9.106202274277137e-16
+    },
+    {
+      "m": 1,
+      "mu": 0.5,
+      "pole": 0.3,
+      "closed_re": -0.2010234073022291,
+      "closed_im": 0.8657327541445119,
+      "ref_re": -0.20102340730222923,
+      "ref_im": 0.8657327541445138,
+      "relative_error": 2.1293299453425643e-15
+    },
+    {
+      "m": 2,
+      "mu": 0.05,
+      "pole": 1.0,
+      "closed_re": -2.8171730955786107,
+      "closed_im": -1.1353715237556936,
+      "ref_re": -2.817172721944509,
+      "ref_im": -1.1353713474354485,
+      "relative_error": 1.360222603915487e-07
+    }
+  ],
+  "identity_max_relative_error": 1.360222603915487e-07,
+  "residual": [
+    {
+      "x": 0.5,
+      "shipped_relative": 0.6569256783991974,
+      "candidate_relative": 0.01627528116139912,
+      "candidate_residual": 0.0011179583814247065,
+      "candidate_scale": 0.06869057255221023
+    },
+    {
+      "x": 1.0,
+      "shipped_relative": 0.21825499255269948,
+      "candidate_relative": 0.38096803730640166,
+      "candidate_residual": 0.03778732656778416,
+      "candidate_scale": 0.09918765583316613
+    },
+    {
+      "x": 2.0,
+      "shipped_relative": 0.00405216914722097,
+      "candidate_relative": 0.13920765988837272,
+      "candidate_residual": 0.012169337121337165,
+      "candidate_scale": 0.08741858839589332
+    },
+    {
+      "x": 4.0,
+      "shipped_relative": 0.7634525286369812,
+      "candidate_relative": 0.0070699450892121275,
+      "candidate_residual": -0.0011219200950207814,
+      "candidate_scale": 0.15868865753040917
+    }
+  ],
+  "refinement": [
+    {
+      "nodes": 128,
+      "relative": 0.13920766305869076
+    },
+    {
+      "nodes": 256,
+      "relative": 0.13920765988837272
+    },
+    {
+      "nodes": 512,
+      "relative": 0.13920765988837272
+    },
+    {
+      "nodes": 1024,
+      "relative": 0.13920404283822693
+    },
+    {
+      "nodes": 2048,
+      "relative": 0.13920765988837272
+    }
+  ],
+  "asymmetry": [
+    {
+      "x": -4.0,
+      "abs_w": 0.058923049053499134,
+      "re": -0.058923049053499134,
+      "im": 6.6261555863823264e-18
+    },
+    {
+      "x": -2.0,
+      "abs_w": 0.06761915642385481,
+      "re": 0.06761915642385481,
+      "im": 4.417437057588218e-18
+    },
+    {
+      "x": -1.0,
+      "abs_w": 0.09405846498735228,
+      "re": 0.09405846498735228,
+      "im": 0.0
+    },
+    {
+      "x": 1.0,
+      "abs_w": 0.09405846498735228,
+      "re": 0.09405846498735228,
+      "im": 2.208718528794109e-18
+    },
+    {
+      "x": 2.0,
+      "abs_w": 0.06761915642385481,
+      "re": 0.06761915642385481,
+      "im": -4.417437057588218e-18
+    },
+    {
+      "x": 4.0,
+      "abs_w": 0.058923049053499134,
+      "re": -0.058923049053499134,
+      "im": -8.834874115176436e-18
+    }
+  ],
+  "status": "CANDIDATE: correct steady (Kelvin-curve) formulation and exact k-integral; radiation-condition sign not yet resolved -- wave part still symmetric in x -> -x and the free-surface residual is 0.4-24 % of term scale, so neumann_kelvin.KERNEL_STATUS stays WITHHELD.  See docs/m16955_steady_kelvin_evidence.md"
+}
