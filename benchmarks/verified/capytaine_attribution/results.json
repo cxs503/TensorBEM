@@ -1,0 +1,661 @@
+{
+  "analytic": {
+    "residual": {
+      "0.500": {
+        "heave": {
+          "added_mass": {
+            "ratio": 0.3526353028098962,
+            "relative": 1.9795459525475413e-06,
+            "tail": 0.002490616746278131
+          },
+          "damping": {
+            "ratio": 0.35261152019925235,
+            "relative": 3.1266865193134233e-06,
+            "tail": 0.005039442981107112
+          }
+        },
+        "surge": {
+          "added_mass": {
+            "ratio": 0.24683148093518972,
+            "relative": 2.017128613182876e-10,
+            "tail": 2.7882551207159206e-07
+          },
+          "damping": {
+            "ratio": 0.247127580948009,
+            "relative": 3.381040831104726e-10,
+            "tail": -1.5858537342113942e-07
+          }
+        }
+      },
+      "1.000": {
+        "heave": {
+          "added_mass": {
+            "ratio": 0.352479499879232,
+            "relative": 1.8816916433536223e-06,
+            "tail": 0.0017306733076670447
+          },
+          "damping": {
+            "ratio": 0.3524237072892121,
+            "relative": 4.871064377624433e-06,
+            "tail": 0.008134292050469723
+          }
+        },
+        "surge": {
+          "added_mass": {
+            "ratio": 0.246577077763,
+            "relative": 1.9728582161399237e-09,
+            "tail": 2.4308252264340873e-06
+          },
+          "damping": {
+            "ratio": 0.24719613573621596,
+            "relative": 1.514942859226004e-09,
+            "tail": -3.6000992380410947e-06
+          }
+        }
+      },
+      "2.000": {
+        "heave": {
+          "added_mass": {
+            "ratio": 0.35240339376020857,
+            "relative": 6.230849440936216e-07,
+            "tail": 0.0005194976470401856
+          },
+          "damping": {
+            "ratio": 0.35207431427252595,
+            "relative": 1.2366343403191266e-05,
+            "tail": 0.012117191585903892
+          }
+        },
+        "surge": {
+          "added_mass": {
+            "ratio": 0.24679190441582569,
+            "relative": 2.4224369315969816e-08,
+            "tail": 1.2963449694888907e-05
+          },
+          "damping": {
+            "ratio": 0.24561940548946187,
+            "relative": 9.648364281182389e-09,
+            "tail": 3.140932182745351e-05
+          }
+        }
+      }
+    },
+    "terms": [
+      96,
+      144,
+      192
+    ],
+    "values": {
+      "0.500": {
+        "heave": {
+          "added_mass": 1258.1757665553944,
+          "damping": 1611.7519137203763
+        },
+        "surge": {
+          "added_mass": 1382.2892117504919,
+          "damping": 469.0430590550514
+        }
+      },
+      "1.000": {
+        "heave": {
+          "added_mass": 919.7433138314698,
+          "damping": 1669.920867364256
+        },
+        "surge": {
+          "added_mass": 1232.1337674180245,
+          "damping": 2376.3927570709916
+        }
+      },
+      "2.000": {
+        "heave": {
+          "added_mass": 833.7509226705508,
+          "damping": 979.8524261243565
+        },
+        "surge": {
+          "added_mass": 535.1408544759432,
+          "damping": 3255.40380857224
+        }
+      }
+    },
+    "worst_residual_relative": 1.2366343403191266e-05
+  },
+  "attribution": {
+    "band": 0.05,
+    "capytaine_faces": 1296,
+    "cells": [
+      {
+        "analytic": 1382.2892117504919,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 1414.7772028237819,
+        "dof": "surge",
+        "e_cross": -0.027493718438563568,
+        "e_ref": 0.02350303452932844,
+        "e_tb": -0.004636869723036319,
+        "nu": 0.5,
+        "quantity": "added_mass",
+        "tensorbem": 1375.8797167560463
+      },
+      {
+        "analytic": 469.0430590550514,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 483.2557611961571,
+        "dof": "surge",
+        "e_cross": -0.03899656320046541,
+        "e_ref": 0.0303014869673992,
+        "e_tb": -0.009876730084658471,
+        "nu": 0.5,
+        "quantity": "damping",
+        "tensorbem": 464.41044736268213
+      },
+      {
+        "analytic": 1258.1757665553944,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 1274.6390081377788,
+        "dof": "heave",
+        "e_cross": -0.01398983953887859,
+        "e_ref": 0.013085009280902855,
+        "e_tb": -0.0010878874381803033,
+        "nu": 0.5,
+        "quantity": "added_mass",
+        "tensorbem": 1256.807012943936
+      },
+      {
+        "analytic": 1611.7519137203763,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 1619.6099348231735,
+        "dof": "heave",
+        "e_cross": -0.005139013251840006,
+        "e_ref": 0.004875453248049024,
+        "e_tb": -0.00028861502264143293,
+        "nu": 0.5,
+        "quantity": "damping",
+        "tensorbem": 1611.2867379053055
+      },
+      {
+        "analytic": 1232.1337674180245,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 1254.885167889813,
+        "dof": "surge",
+        "e_cross": -0.021358135042967817,
+        "e_ref": 0.01846504095043569,
+        "e_tb": -0.003287472930725461,
+        "nu": 1.0,
+        "quantity": "added_mass",
+        "tensorbem": 1228.083161010605
+      },
+      {
+        "analytic": 2376.3927570709916,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 2431.082148879298,
+        "dof": "surge",
+        "e_cross": -0.0313156604224479,
+        "e_ref": 0.023013616602549133,
+        "e_tb": -0.009022730422516603,
+        "nu": 1.0,
+        "quantity": "damping",
+        "tensorbem": 2354.951205845919
+      },
+      {
+        "analytic": 919.7433138314698,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 934.8282365728253,
+        "dof": "heave",
+        "e_cross": -0.017926876804772868,
+        "e_ref": 0.016401231207123095,
+        "e_tb": -0.0018196684489464635,
+        "nu": 1.0,
+        "quantity": "added_mass",
+        "tensorbem": 918.0696859421612
+      },
+      {
+        "analytic": 1669.920867364256,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 1668.2101860660848,
+        "dof": "heave",
+        "e_cross": 0.004036758010814298,
+        "e_ref": -0.0010244086001939393,
+        "e_tb": 0.0030082141209971784,
+        "nu": 1.0,
+        "quantity": "damping",
+        "tensorbem": 1674.944346898409
+      },
+      {
+        "analytic": 535.1408544759432,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 547.0354259876593,
+        "dof": "surge",
+        "e_cross": -0.019508823985213076,
+        "e_ref": 0.02222699203813228,
+        "e_tb": 0.002284545577526546,
+        "nu": 2.0,
+        "quantity": "added_mass",
+        "tensorbem": 536.36340814839
+      },
+      {
+        "analytic": 3255.40380857224,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 3286.11372652679,
+        "dof": "surge",
+        "e_cross": -0.015070751052112356,
+        "e_ref": 0.009433520312805262,
+        "e_tb": -0.005779400975486427,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 3236.5895246253754
+      },
+      {
+        "analytic": 833.7509226705508,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 848.4002873735379,
+        "dof": "heave",
+        "e_cross": -0.022455426821869424,
+        "e_ref": 0.01757043297303272,
+        "e_tb": -0.0052795454206912016,
+        "nu": 2.0,
+        "quantity": "added_mass",
+        "tensorbem": 829.3490968047685
+      },
+      {
+        "analytic": 979.8524261243565,
+        "attribution": "BOTH_WITHIN_BAND",
+        "capytaine": 943.9980026305,
+        "dof": "heave",
+        "e_cross": 0.04973556814429947,
+        "e_ref": -0.036591656598405076,
+        "e_tb": 0.011324004715631613,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 990.9482796184118
+      }
+    ],
+    "counts": {
+      "BOTH_WITHIN_BAND": 12
+    },
+    "failures": {
+      "INCONCLUSIVE": [],
+      "REFERENCE": [],
+      "TENSORBEM": []
+    },
+    "tensorbem_faces": 1024,
+    "verdict_analytic": "PASS",
+    "verdict_reference": "PASS",
+    "worst_e_cross": 0.04973556814429947,
+    "worst_e_ref": 0.036591656598405076,
+    "worst_e_tb": 0.011324004715631613
+  },
+  "band": 0.05,
+  "capytaine": {
+    "levels": [
+      {
+        "n_faces": 36,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1293.1517195460422,
+              "damping": 1616.8623852434114
+            },
+            "surge": {
+              "added_mass": 1447.4072991034277,
+              "damping": 460.94400396730697
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 946.9623198313632,
+              "damping": 1729.596539875922
+            },
+            "surge": {
+              "added_mass": 1295.6088490277552,
+              "damping": 2321.359778328411
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 804.4988123127476,
+              "damping": 1023.0092896348216
+            },
+            "surge": {
+              "added_mass": 605.5650166992815,
+              "damping": 3225.255390647285
+            }
+          }
+        }
+      },
+      {
+        "n_faces": 144,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1295.7157942261092,
+              "damping": 1626.278117087734
+            },
+            "surge": {
+              "added_mass": 1456.768418700385,
+              "damping": 493.99334084199523
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 953.2595747706309,
+              "damping": 1677.4953140679072
+            },
+            "surge": {
+              "added_mass": 1287.6323549832714,
+              "damping": 2466.1453730169515
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 853.5131808684232,
+              "damping": 921.0699399055223
+            },
+            "surge": {
+              "added_mass": 573.0079395399523,
+              "damping": 3306.7824616682396
+            }
+          }
+        }
+      },
+      {
+        "n_faces": 400,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1285.1219571112706,
+              "damping": 1623.5859683649935
+            },
+            "surge": {
+              "added_mass": 1435.7672488423368,
+              "damping": 490.5392969538134
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 944.2622243164576,
+              "damping": 1669.5741354812783
+            },
+            "surge": {
+              "added_mass": 1270.3490726975726,
+              "damping": 2457.4144441869184
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 854.4167240864558,
+              "damping": 926.4336862535099
+            },
+            "surge": {
+              "added_mass": 557.3847458231699,
+              "damping": 3300.5212980043398
+            }
+          }
+        }
+      },
+      {
+        "n_faces": 784,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1278.6850174445035,
+              "damping": 1621.2546012186094
+            },
+            "surge": {
+              "added_mass": 1422.8455139955993,
+              "damping": 486.28173635989936
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 938.4938575460121,
+              "damping": 1668.3894103454556
+            },
+            "surge": {
+              "added_mass": 1260.7239511120733,
+              "damping": 2442.3146252019424
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 851.169900221525,
+              "damping": 936.4587166787599
+            },
+            "surge": {
+              "added_mass": 550.6861567080413,
+              "damping": 3292.260264823248
+            }
+          }
+        }
+      },
+      {
+        "n_faces": 1296,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1274.6390081377788,
+              "damping": 1619.6099348231735
+            },
+            "surge": {
+              "added_mass": 1414.7772028237819,
+              "damping": 483.2557611961571
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 934.8282365728253,
+              "damping": 1668.2101860660848
+            },
+            "surge": {
+              "added_mass": 1254.885167889813,
+              "damping": 2431.082148879298
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 848.4002873735379,
+              "damping": 943.9980026305
+            },
+            "surge": {
+              "added_mass": 547.0354259876593,
+              "damping": 3286.11372652679
+            }
+          }
+        }
+      }
+    ],
+    "provenance": {
+      "density": 1025.0,
+      "generated_utc": "2026-11-12T13:29:04+00:00",
+      "git_commit": "c0516db5b0dfd63c4af7b819a75e78782bad8d64",
+      "gravity": 9.80665,
+      "machine": "loongarch64",
+      "note": "built from source (pip --no-build-isolation --no-deps) because no loongarch64 wheel exists on the configured index; only this producer script imports capytaine",
+      "numpy": "2.4.6",
+      "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+      "python": "3.11.6",
+      "tool": "capytaine",
+      "version": "3.1.dev0",
+      "water_depth": "infinite"
+    }
+  },
+  "cross_code": {
+    "failures": [
+      "hemisphere_r1 nu=0.50 surge damping: -6.70%",
+      "hemisphere_r1 nu=1.00 surge damping: -5.70%",
+      "hemisphere_r1 nu=2.00 heave damping: +8.51%",
+      "sphere_r1_z-0.5 nu=0.50 heave damping: -8.75%"
+    ],
+    "overwritten": false,
+    "source": "benchmarks/verified/capytaine_crosscheck/results.json",
+    "tolerance": 0.05,
+    "verdict": "FAIL",
+    "worst_relative": 0.08751328049478489
+  },
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "nu_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "refinement": {
+    "capytaine": [
+      {
+        "n_faces": 36,
+        "worst_vs_analytic": 0.13159930069683015
+      },
+      {
+        "n_faces": 144,
+        "worst_vs_analytic": 0.0707609683455991
+      },
+      {
+        "n_faces": 400,
+        "worst_vs_analytic": 0.05451712772925975
+      },
+      {
+        "n_faces": 784,
+        "worst_vs_analytic": 0.04428596418057896
+      },
+      {
+        "n_faces": 1296,
+        "worst_vs_analytic": 0.036591656598405076
+      }
+    ],
+    "tensorbem": [
+      {
+        "n_faces": 64,
+        "volume_relative": -0.08858418942396096,
+        "worst_vs_analytic": 0.17630505994454496
+      },
+      {
+        "n_faces": 256,
+        "volume_relative": -0.0232023042331736,
+        "worst_vs_analytic": 0.04535405689496475
+      },
+      {
+        "n_faces": 1024,
+        "volume_relative": -0.005869620423973321,
+        "worst_vs_analytic": 0.011324004715631613
+      }
+    ],
+    "tensorbem_apparent_order": 1.0009236748267751
+  },
+  "tensorbem": {
+    "levels": [
+      {
+        "level": 2,
+        "n_faces": 64,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1234.877154035983,
+              "damping": 1601.395507700018
+            },
+            "surge": {
+              "added_mass": 1285.6257811225612,
+              "damping": 401.6333008500051
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 893.0221113763628,
+              "damping": 1743.6552768025736
+            },
+            "surge": {
+              "added_mass": 1169.9022259353906,
+              "damping": 2066.2792610148877
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 767.6639031732587,
+              "damping": 1152.605366849019
+            },
+            "surge": {
+              "added_mass": 549.1453498803477,
+              "damping": 2984.8377101856922
+            }
+          }
+        },
+        "volume": 1.9088648099141803,
+        "volume_relative": -0.08858418942396096
+      },
+      {
+        "level": 3,
+        "n_faces": 256,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1252.6068727161985,
+              "damping": 1609.7906628769545
+            },
+            "surge": {
+              "added_mass": 1356.9181770287382,
+              "damping": 450.8749132793791
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 913.0400386880826,
+              "damping": 1689.780024610876
+            },
+            "surge": {
+              "added_mass": 1216.0691105271517,
+              "damping": 2292.565293051927
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 816.4473290142215,
+              "damping": 1024.2927088074698
+            },
+            "surge": {
+              "added_mass": 539.7245092430192,
+              "damping": 3182.401803767404
+            }
+          }
+        },
+        "volume": 2.0458003100429996,
+        "volume_relative": -0.0232023042331736
+      },
+      {
+        "level": 4,
+        "n_faces": 1024,
+        "values": {
+          "0.500": {
+            "heave": {
+              "added_mass": 1256.807012943936,
+              "damping": 1611.2867379053055
+            },
+            "surge": {
+              "added_mass": 1375.8797167560463,
+              "damping": 464.41044736268213
+            }
+          },
+          "1.000": {
+            "heave": {
+              "added_mass": 918.0696859421612,
+              "damping": 1674.944346898409
+            },
+            "surge": {
+              "added_mass": 1228.083161010605,
+              "damping": 2354.951205845919
+            }
+          },
+          "2.000": {
+            "heave": {
+              "added_mass": 829.3490968047685,
+              "damping": 990.9482796184118
+            },
+            "surge": {
+              "added_mass": 536.36340814839,
+              "damping": 3236.5895246253754
+            }
+          }
+        },
+        "volume": 2.0821017981243184,
+        "volume_relative": -0.005869620423973321
+      }
+    ],
+    "reference_faces": 1024
+  }
+}
