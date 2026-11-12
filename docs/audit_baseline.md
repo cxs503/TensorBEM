@@ -172,7 +172,7 @@ Counts: **50** REAL, **1** WITHHELD — 51 capabilities. The level is derived fr
 
 ### Capability coverage
 
-64 of 92 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **0 are unowned**.
+64 of 93 core modules (outside `tensorbem.benchmarks`) are named by a row above; 29 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.cathodic_protection` — physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
@@ -195,6 +195,7 @@ Counts: **50** REAL, **1** WITHHELD — 51 capabilities. The level is derived fr
 - `tensorbem.rankine_fs` — physics/geometry module rankine_fs is pinned by tests/test_rankine_fs_panel.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.rankine_wave` — physics/geometry module rankine_wave is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.reference_provenance` — physics/geometry module reference_provenance is pinned by tests/test_reference_provenance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
+- `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
 - `tensorbem.series60` — physics/geometry module series60 is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.state_space` — physics/geometry module state_space is pinned by tests/test_state_space.py, tests/test_state_space_fit_invariants.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
 - `tensorbem.stf_fullspeed` — physics/geometry module stf_fullspeed is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
