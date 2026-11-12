@@ -108,6 +108,9 @@ correction log inside the generated block records what changed.
 
 | Capability | Evidence level | Code evidence | Test evidence | Doc anchor |
 |---|---|---|---|---|
+| Transient (pulse) acoustics through the frequency-domain Helmholtz BEM | **REAL** | `tensorbem.acoustic3d_pulse`, `tensorbem.benchmarks.acoustic3d_pulse_envelope` | 3 node(s) in 2 file(s) | `docs/acoustic3d_pulse.md`, `docs/acoustic3d_pulse_envelope.md` |
+| Hydrostatic restoring matrix by direct pressure integration (independent second route) | **REAL** | `tensorbem.hydrostatic_pressure_route` | 2 node(s) in 1 file(s) | `docs/dev_report_m16662_hydrostatic_moment_quadrature.md` |
+| Wageningen B-series open-water polynomials with a hashed external anchor | **REAL** | `tensorbem.wageningen` | 2 node(s) in 1 file(s) | `papers/reports/w25_propeller_openwater_bem7.md` |
 | 2-D Laplace BEM (interior / exterior) | **REAL** | `tensorbem.solver`, `tensorbem.kernels` | 2 node(s) in 1 file(s) | `docs/classical_benchmarks.md` |
 | 3-D Laplace BEM (interior / exterior) | **REAL** | `tensorbem.solver3d`, `tensorbem.kernels3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
 | 2-D deep-water free-surface Green function | **REAL** | `tensorbem.free_surface` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
@@ -182,10 +185,13 @@ correction log inside the generated block records what changed.
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Pekeris two-layer shallow-water normal modes with an elastic ice cover | **REAL** | `tensorbem.pekeris_acoustics` | 3 node(s) in 1 file(s) | `docs/pekeris_w22_cross_route/report.md` |
 
-Counts: **73** REAL — 73 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **76** REAL — 76 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
+- **Transient (pulse) acoustics through the frequency-domain Helmholtz BEM** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.acoustic3d_pulse`, `tensorbem.benchmarks.acoustic3d_pulse_envelope`; 3 test node(s) in `tests/test_acoustic3d_pulse.py`, `tests/test_acoustic3d_pulse_envelope.py`.
+- **Hydrostatic restoring matrix by direct pressure integration (independent second route)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.hydrostatic_pressure_route`; 2 test node(s) in `tests/test_hydrostatic_pressure_route.py`.
+- **Wageningen B-series open-water polynomials with a hashed external anchor** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wageningen`; 2 test node(s) in `tests/test_wageningen_anchor.py`.
 - **3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.acoustic3d`; 3 test node(s) in `tests/test_acoustic3d.py`.
 - **Finite-depth kernels + solver (2-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth`, `tensorbem.finite_depth_solver`, `tensorbem.finite_depth_diffraction`; 2 test node(s) in `tests/test_finite_depth.py`, `tests/test_finite_depth_solver.py`.
 - **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
@@ -194,21 +200,18 @@ Counts: **73** REAL — 73 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-90 of 95 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **1 are unowned**.
+93 of 97 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.coefficients` — hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.
 - `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
 - `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
 
-**Core modules no row grades and no reason explains** (fails the gate):
-
-- `tensorbem.hydrostatic_pressure_route`
-
 ### Untested modules
 
 Not referenced by any test file, with an accepted reason:
 
+- `tensorbem.benchmarks.acoustic3d_pulse_case` — CASE-ACOUSTIC-PULSE report driver: it assembles the route A/B/C, mesh-study and convergence-order numbers it prints from tensorbem.acoustic3d_pulse, which is pinned by tests/test_acoustic3d_pulse.py and graded by the acoustic-3d-pulse row.
 - `tensorbem.benchmarks.bem_wigley_wave_resistance_figures` — matplotlib helper rendering the Wigley report figures from the JSON artifact; exercised when figures are rebuilt, and its inputs are gated by tests/test_bem_wigley_wave_resistance.py.
 - `tensorbem.benchmarks.cathodic_protection_sphere` — closed-form CP sphere driver: it prints the analytic phi(r) = phi_a * a / r comparison; the model it exercises is pinned by tests/test_cathodic_protection.py and graded by the cathodic-protection row.
 - `tensorbem.benchmarks.cp_verification_m9204` — CP verification study driver (plate / cylinder analytic cases, GCI ladder, DNV-RP-B401 check); it only assembles results from tensorbem.cp_galvanic, which is pinned by tests/test_cathodic_protection.py.

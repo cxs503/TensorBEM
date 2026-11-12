@@ -172,6 +172,52 @@ class RowEvidence:
 #: what the m308 baseline said, so the correction log can state what changed.
 CAPABILITIES: tuple[Capability, ...] = (
     Capability(
+        key='acoustic-3d-pulse',
+        title='Transient (pulse) acoustics through the frequency-domain Helmholtz BEM',
+        claim='Gaussian radial-velocity pulse on a rigid sphere: the exact transient comes from the retarded-time ODE (no far-field or ka<<1 approximation) and the harmonic BEM bins are synthesised back to the waveform; CASE-ACOUSTIC-PULSE acceptance (L2 and peak error < 8 %) is measured on the pulse, and the (ka, panels-per-wavelength) accuracy envelope of the same solver is published as a separate injected artifact.',
+        level=REAL,
+        modules=('tensorbem.acoustic3d_pulse', 'tensorbem.benchmarks.acoustic3d_pulse_envelope'),
+        symbols=('exact_monopole_pulse_pressure', 'synthesise_bem_pulse', 'waveform_errors', 'harmonic_error'),
+        tests=(
+            'tests/test_acoustic3d_pulse.py::test_bem_pulse_matches_exact_transient_within_tolerance',
+            'tests/test_acoustic3d_pulse.py::test_exact_reference_converges_with_substeps',
+            'tests/test_acoustic3d_pulse_envelope.py::test_error_falls_with_panel_refinement',
+        ),
+        docs=(
+            ('docs/acoustic3d_pulse.md', 'CASE-ACOUSTIC-PULSE'),
+            ('docs/acoustic3d_pulse_envelope.md', 'CASE-ACOUSTIC-PULSE validity envelope'),
+        ),
+        published_2026_10_29='NOT_SUPPORTED',
+    ),
+    Capability(
+        key='hydrostatic-restoring-pressure-route',
+        title='Hydrostatic restoring matrix by direct pressure integration (independent second route)',
+        claim='Restoring matrix obtained without touching the waterplane: rigid motion, clipping of the closed body against z = 0, exact second-degree moment quadrature, central-difference differentiation; agrees with the waterplane route to round-off on a barge and is the only falsification test of the waterplane integrals.',
+        level=REAL,
+        modules=('tensorbem.hydrostatic_pressure_route',),
+        symbols=('restoring_matrix_pressure_route', 'pressure_loads', 'pressure_moment'),
+        tests=(
+            'tests/test_hydrostatic_pressure_route.py::test_heave_entries_of_the_two_routes_agree_to_round_off',
+            'tests/test_hydrostatic_pressure_route.py::test_roll_pitch_agree_with_the_waterplane_route_to_round_off',
+        ),
+        docs=(('docs/dev_report_m16662_hydrostatic_moment_quadrature.md', 'm16662 · 静水恢复矩阵双路线仲裁：4% 偏差归因并修复（压力路线矩积分求积规则）'),),
+        published_2026_10_29='NOT_SUPPORTED',
+    ),
+    Capability(
+        key='wageningen-b-series',
+        title='Wageningen B-series open-water polynomials with a hashed external anchor',
+        claim='KT/KQ/eta polynomial regression for the B-series with the transcribed published coefficient tables pinned by sha256 fingerprints and probe values taken from the source implementation; the propeller open-water route is graded against the Oosterveld anchor, not against its own curve.',
+        level=REAL,
+        modules=('tensorbem.wageningen',),
+        symbols=('b4_70', 'verify_tables', 'anchor_sha256'),
+        tests=(
+            'tests/test_wageningen_anchor.py::test_loader_reproduces_source_implementation_probes',
+            'tests/test_wageningen_anchor.py::test_b4_70_curve_in_artefact_matches_evaluator',
+        ),
+        docs=(('papers/reports/w25_propeller_openwater_bem7.md', 'W25 · B4-70 全 J 域 K_T/K_Q 误差面 vs Oosterveld & van Oossanen 回归'),),
+        published_2026_10_29='NOT_SUPPORTED',
+    ),
+    Capability(
         key='laplace-2d',
         title='2-D Laplace BEM (interior / exterior)',
         claim='Constant-panel indirect BEM, analytic panel integrals, circle solid-angle identity.',
@@ -1581,6 +1627,10 @@ CAPABILITIES: tuple[Capability, ...] = (
 #: A new unreferenced module without an entry here fails the gate, which is how
 #: untested code stops accumulating silently.
 UNTESTED_MODULES: dict[str, str] = {
+    "tensorbem.benchmarks.acoustic3d_pulse_case":
+        "CASE-ACOUSTIC-PULSE report driver: it assembles the route A/B/C, mesh-study and"
+        " convergence-order numbers it prints from tensorbem.acoustic3d_pulse, which is pinned by"
+        " tests/test_acoustic3d_pulse.py and graded by the acoustic-3d-pulse row.",
     "tensorbem.benchmarks.hydrostatic_figures":
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
