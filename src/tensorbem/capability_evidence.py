@@ -1131,6 +1131,8 @@ UNTESTED_MODULES: dict[str, str] = {
 #: reader of the published table could not tell that half the package was
 #: outside its scope.
 AUXILIARY_MODULES: dict[str, str] = {
+    "tensorbem.resistance":
+        "empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.",
     "tensorbem.cathodic_protection":
         "physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
     "tensorbem.cp_galvanic":
