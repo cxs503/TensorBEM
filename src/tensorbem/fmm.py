@@ -456,6 +456,8 @@ class FMMOperator:
     _cache_charges: FloatArray | None = field(default=None, repr=False)
     #: (n_leaves, n_leaves) "leaf boxes are near" mask used by ``_is_near``
     _leaf_near: NDArray[np.bool_] | None = field(default=None, repr=False)
+    #: the point set the octree / leaf indices / radii were built from (m16265)
+    _setup_points: FloatArray | None = field(default=None, repr=False)
     #: target block size; bounds the (block, n_leaves, 3) intermediate
     block_size: int = 2048
 
@@ -498,6 +500,10 @@ class FMMOperator:
         # same predicate as ``_is_near``: centre distance <= 2*max(size_t, size_s)
         leaf_dist = np.linalg.norm(centers[:, None, :] - centers[None, :, :], axis=2)
         self._leaf_near = leaf_dist <= 2.0 * np.maximum(sizes[:, None], sizes[None, :])
+        # ``matvec`` trusts this geometry: leaf centres, leaf indices and leaf
+        # radii are all derived here, so a source set that differs from it must
+        # be rejected instead of silently mixed with the setup partition (m16265).
+        self._setup_points = np.array(points, dtype=float, copy=True)
 
     def _require_setup(self, method: str) -> None:
         """Fail closed: public entry points need a built octree (m16109).
@@ -511,6 +517,36 @@ class FMMOperator:
             raise RuntimeError(
                 f"FMMOperator.{method}() called before setup(): "
                 "call setup(points[, charges]) first"
+            )
+
+    def _require_setup_geometry(self, sources: FloatArray) -> None:
+        """Fail closed when ``sources`` is not the point set passed to :meth:`setup`.
+
+        Leaf centres, leaf indices and leaf radii are all built from the setup
+        point set, so the far field (multipoles about a leaf centre) and the
+        near field (``sources[leaf_index]``) are only meaningful for that same
+        geometry.  Before m16265 the mismatch was fail-open: a shifted or
+        rescaled point set of the same length silently produced answers
+        3.7\%--6.8\% away from the dense sum (versus 1.1e-6 for the correct
+        geometry), and a point set of a different length raised a bare
+        ``IndexError`` from deep inside the near-field loop.
+        """
+        setup_points = self._setup_points
+        if setup_points is None:
+            raise RuntimeError(
+                "FMMOperator.matvec() called before setup(): call setup(points[, charges]) first"
+            )
+        if sources.shape != setup_points.shape:
+            raise ValueError(
+                "sources shape %r does not match the setup point set %r; call "
+                "setup() again for a different geometry"
+                % (sources.shape, setup_points.shape)
+            )
+        if not np.array_equal(sources, setup_points):
+            raise ValueError(
+                "sources differ from the point set passed to setup(); the octree, "
+                "leaf indices and leaf radii belong to the setup geometry, so the "
+                "operator is only defined for that geometry (call setup() again)"
             )
 
     def _build_multipoles(
@@ -637,6 +673,7 @@ class FMMOperator:
         if charges.shape != (sources.shape[0],):
             raise ValueError("charges must have shape (M,)")
         self._require_setup("matvec")
+        self._require_setup_geometry(sources)
         n = len(targets)
         result = np.zeros(n, dtype=float)
         if n == 0:
