@@ -808,16 +808,27 @@ CAPABILITIES: tuple[Capability, ...] = (
     Capability(
         key='ice-region-hydrodynamics',
         title='Ice-cover mass loading, ice-region RAO and ice-class hull geometry',
-        claim='Mass-loading dispersion is pinned to Weitz-Keller and to independent RK4 shooting, the vanishing-ice limit recovers open water, and the ice-class mesh reproduces its parametric block coefficient.',
+        claim='Mass-loading dispersion is pinned to Weitz-Keller and to independent RK4 shooting, the vanishing-ice limit recovers open water, the ice-class mesh reproduces its parametric block coefficient, and radiation under ice is solved in finite depth by the Robin substitution nu -> K(omega) (kernel identity and deep-water overlap gated).',
         level=REAL,
-        modules=('tensorbem.ice', 'tensorbem.ice_rao', 'tensorbem.pc6_hull'),
+        modules=(
+            'tensorbem.ice',
+            'tensorbem.ice_rao',
+            'tensorbem.ice_finite_depth',
+            'tensorbem.pc6_hull',
+        ),
         symbols=('mass_loading_wavenumber', 'compute_ice_rao_spectrum', 'ice_class_hull_mesh'),
         tests=(
             'tests/test_ice_mass_loading.py::test_deep_water_limit_matches_weitz_keller',
             'tests/test_ice_rao.py::test_no_ice_limit_reproduces_open_water',
             'tests/test_pc6_hull.py::test_mesh_reproduces_parametric_block_coefficient',
+            'tests/test_ice_finite_depth.py::test_finite_depth_kernel_satisfies_the_ice_robin_condition',
+            'tests/test_ice_finite_depth.py::test_vanishing_ice_limit_reproduces_the_open_water_finite_depth_solver',
+            'tests/test_ice_finite_depth.py::test_deep_water_limit_agrees_with_the_deep_water_ice_solver',
         ),
-        docs=(('docs/ice_water_ship.md', 'Weitz'),),
+        docs=(
+            ('docs/ice_water_ship.md', 'Weitz'),
+            ('docs/ice_finite_depth_radiation.md', 'finite depth'),
+        ),
         note='The PC6 hull is parametric: the offset table is not public property, so absolute RAO magnitudes in ice remain WITHHELD in the document.',
     ),
     Capability(

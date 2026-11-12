@@ -105,7 +105,7 @@ All verification quantities are compared against **independent references** (not
 ## 5. Limitations (honest)
 
 1. **Mass-loading only**: No flexural rigidity, no dissipation, no floe scattering. Real ice covers have all three. The amplitude ratio > 1 below cut-off is a *physical* property of this model, not a code artefact — observed ice-zone attenuation requires physics not in this module.
-2. **Deep-water RAO**: The `ice_rao.py` module requires $k_i H \geq 3$ ($\tanh \geq 0.995$); finite-depth ice Green function is not implemented.
+2. **Deep-water RAO**: The `ice_rao.py` module requires $k_i H \geq 3$ ($\tanh \geq 0.995$). Radiation below that guard is now provided by `tensorbem.ice_finite_depth` (m15990, `docs/ice_finite_depth_radiation.md`), which evaluates the finite-depth kernel at $\nu = K(\omega)$; diffraction in finite depth is still not implemented.
 3. **Added resistance in ice**: Withheld (`ADDED_RESISTANCE_STATUS` in `ice_rao.py`) — requires second-order drift force operator and/or floe-scattering model, neither exists in this repository.
 4. **No BEM verification against ice-tank experiments**: All verification is against analytic/numerical references, not physical data.
 
