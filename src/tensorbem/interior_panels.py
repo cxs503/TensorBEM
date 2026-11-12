@@ -277,6 +277,17 @@ def interior_panel_points(
     if validate:
         inside = _point_inside_hull(pts, mesh)
         if not bool(np.all(inside)):
+            # The 3-D ray cast can report a false negative when a ray grazes a
+            # triangle edge.  Re-test the rejected points a hair further inside
+            # (1e-3 of the way to the centroid); only points that fail both
+            # tests are genuinely outside the hull.
+            rejected = pts[~inside]
+            nudged = rejected.copy()
+            nudged[:, :2] += 1.0e-3 * (centre[None, :] - rejected[:, :2])
+            still_out = ~_point_inside_hull(nudged, mesh)
+            inside = inside.copy()
+            inside[~inside] = ~still_out
+        if not bool(np.all(inside)):
             bad = int(np.count_nonzero(~inside))
             raise ValueError(
                 f"{bad} of {pts.shape[0]} interior lid points fall outside the hull; "
@@ -285,6 +296,122 @@ def interior_panel_points(
     return InteriorPanelSet(
         points=pts,
         areas=np.asarray(areas, dtype=float),
+        waterline_radius=radius,
+        shrink=shrink_value,
+        depth=depth,
+    )
+
+def waterline_polygon(mesh: SurfaceMesh3D) -> FloatArray:
+    """Return the waterplane polygon of a surface-piercing hull, CCW ordered.
+
+    Only hulls whose waterplane is star-shaped with respect to its centroid are
+    supported: the vertices at ``z = 0`` are ordered by polar angle about their
+    centroid.  A rectangular barge (and any convex/ship-like waterplane) meets
+    that condition; the previous :func:`interior_panel_points` assumed a
+    *circular* waterplane and raised for every non-axisymmetric hull.
+    """
+    verts = np.asarray(mesh.vertices, dtype=float)
+    ring = verts[np.abs(verts[:, 2]) <= 1.0e-12]
+    if ring.shape[0] < 3:
+        raise ValueError("hull has fewer than three waterline vertices")
+    xy = np.unique(np.round(ring[:, :2], 12), axis=0)
+    centre = xy.mean(axis=0)
+    angles = np.arctan2(xy[:, 1] - centre[1], xy[:, 0] - centre[0])
+    return xy[np.argsort(angles)]
+
+
+def _polygon_area(poly: FloatArray) -> float:
+    x, y = poly[:, 0], poly[:, 1]
+    return 0.5 * float(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
+
+
+def waterplane_lid_points(
+    mesh: SurfaceMesh3D,
+    *,
+    rings: int = 3,
+    shrink: float = 0.6,
+    depth_fraction: float = _DEFAULT_DEPTH_FRACTION,
+    min_depth_panels: float = 1.5,
+    validate: bool = True,
+) -> InteriorPanelSet:
+    """Interior waterplane lid for a *non-axisymmetric* waterplane.
+
+    The concentric-ring construction of :func:`interior_panel_points` is
+    generalised from a disk to the actual waterplane polygon: ring ``k`` is the
+    polygon scaled by ``shrink * k / rings`` about the centroid, so the lid
+    follows a rectangular (barge) or tapered (ship) waterplane instead of
+    spilling outside a circular bound.  Every point is placed ``depth`` below
+    ``z = 0`` and the point-in-solid test rejects any point that escaped the
+    hull.
+    """
+    if isinstance(rings, (bool, np.bool_)) or int(rings) != rings or int(rings) < 1:
+        raise ValueError("rings must be an integer >= 1")
+    shrink_value = float(shrink)
+    if not (0.0 < shrink_value < 1.0):
+        raise ValueError("shrink must lie strictly between 0 and 1")
+    depth_frac = float(depth_fraction)
+    if not (0.0 < depth_frac < 1.0):
+        raise ValueError("depth_fraction must lie strictly between 0 and 1")
+
+    poly = waterline_polygon(mesh)
+    centre = poly.mean(axis=0)
+    radii = np.linalg.norm(poly - centre, axis=1)
+    radius = float(radii.max())
+    if radius <= 0.0:
+        raise ValueError("waterline polygon has zero radius")
+
+    depth = max(
+        depth_frac * shrink_value * radius,
+        float(min_depth_panels) * float(mesh.h_mean),
+    )
+    # The lid must stay inside the hull: never deeper than the local draft.
+    draft = -float(np.min(np.asarray(mesh.vertices, dtype=float)[:, 2]))
+    if draft <= 0.0:
+        raise ValueError("hull does not extend below the waterline (draft <= 0)")
+    depth = min(depth, 0.8 * draft)
+    if depth <= 0.0:
+        raise ValueError("could not place the lid below the waterplane")
+
+    n_rings = int(rings)
+    points: list[tuple[float, float, float]] = []
+    ring_scales: list[float] = []
+    for k in range(1, n_rings + 1):
+        scale = shrink_value * k / n_rings
+        ring_scales.append(scale)
+        for vertex in poly:
+            xy = centre + scale * (vertex - centre)
+            points.append((float(xy[0]), float(xy[1]), -depth))
+    pts = np.asarray(points, dtype=float)
+    if not np.isfinite(pts).all():
+        raise ValueError("interior panel points must be finite")
+
+    # Each ring contributes the annulus between consecutive scaled polygons;
+    # equal-area weights are enough (the rows are unweighted).
+    total_area = abs(_polygon_area(poly)) * shrink_value**2
+    areas = np.full(pts.shape[0], total_area / float(pts.shape[0]))
+
+    if validate:
+        inside = _point_inside_hull(pts, mesh)
+        if not bool(np.all(inside)):
+            # The 3-D ray cast can report a false negative when a ray grazes a
+            # triangle edge.  Re-test the rejected points a hair further inside
+            # (1e-3 of the way to the centroid); only points that fail both
+            # tests are genuinely outside the hull.
+            rejected = pts[~inside]
+            nudged = rejected.copy()
+            nudged[:, :2] += 1.0e-3 * (centre[None, :] - rejected[:, :2])
+            still_out = ~_point_inside_hull(nudged, mesh)
+            inside = inside.copy()
+            inside[~inside] = ~still_out
+        if not bool(np.all(inside)):
+            bad = int(np.count_nonzero(~inside))
+            raise ValueError(
+                f"{bad} of {pts.shape[0]} waterplane lid points fall outside the hull; "
+                "the waterplane is not star-shaped about its centroid"
+            )
+    return InteriorPanelSet(
+        points=pts,
+        areas=areas,
         waterline_radius=radius,
         shrink=shrink_value,
         depth=depth,
