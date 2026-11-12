@@ -71,7 +71,9 @@ def error_versus_order() -> dict:
             row[f"{label}_first_err"] = _rel_err(first, direct_a)
             row[f"{label}_second_err"] = _rel_err(second, direct_b)
         rows.append(row)
-    return {"far_fraction": float(FMMOperator(p=4, max_leaf=25).far_fraction(targets)),
+    ff_op = FMMOperator(p=4, max_leaf=25)
+    ff_op.setup(sources)  # m16109: far_fraction needs a built octree
+    return {"far_fraction": float(ff_op.far_fraction(targets)),
             "rows": rows}
 
 

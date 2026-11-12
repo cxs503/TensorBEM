@@ -1,0 +1,14 @@
+{
+  "far_fraction_unset": {
+    "raised": "RuntimeError",
+    "message": "FMMOperator.far_fraction() called before setup(): call setup(points[, charges]) first"
+  },
+  "matvec_unset": {
+    "raised": "RuntimeError",
+    "message": "FMMOperator.matvec() called before setup(): call setup(points[, charges]) first"
+  },
+  "control_set_up": {
+    "far_fraction": 0.17391304347826086,
+    "rel_err_vs_direct": 1.3333075559928613e-06
+  }
+}

@@ -499,6 +499,20 @@ class FMMOperator:
         leaf_dist = np.linalg.norm(centers[:, None, :] - centers[None, :, :], axis=2)
         self._leaf_near = leaf_dist <= 2.0 * np.maximum(sizes[:, None], sizes[None, :])
 
+    def _require_setup(self, method: str) -> None:
+        """Fail closed: public entry points need a built octree (m16109).
+
+        Before the fix, ``matvec`` on a never-set-up operator returned an
+        all-zero vector and ``far_fraction`` reported 0.0 -- both
+        indistinguishable from legitimate values, so a forgotten ``setup``
+        produced silent wrong answers (m16000 limitation #2).
+        """
+        if self.tree is None or not self.leaves:
+            raise RuntimeError(
+                f"FMMOperator.{method}() called before setup(): "
+                "call setup(points[, charges]) first"
+            )
+
     def _build_multipoles(
         self, points: FloatArray, charges: FloatArray
     ) -> FloatArray:
@@ -622,9 +636,10 @@ class FMMOperator:
             raise ValueError("sources must have shape (M, 3)")
         if charges.shape != (sources.shape[0],):
             raise ValueError("charges must have shape (M,)")
+        self._require_setup("matvec")
         n = len(targets)
         result = np.zeros(n, dtype=float)
-        if n == 0 or not self.leaves:
+        if n == 0:
             return result
         if not self._multipole_cache_valid(sources, charges):
             # ``setup`` may be called without charges (geometry only) and the
@@ -712,9 +727,14 @@ class FMMOperator:
         return np.bincount(tgt, weights=vals, minlength=nb)
 
     def far_fraction(self, targets: FloatArray) -> float:
-        """Fraction of target-leaf pairs evaluated with the multipole expansion."""
+        """Fraction of target-leaf pairs evaluated with the multipole expansion.
+
+        Requires :meth:`setup`; an unset operator raises ``RuntimeError``
+        instead of silently reporting 0.0 (m16109).
+        """
         targets = np.asarray(targets, dtype=float)
-        if len(targets) == 0 or not self.leaves:
+        self._require_setup("far_fraction")
+        if len(targets) == 0:
             return 0.0
         leaf_of_target = self._route(targets)
         near_pairs = 0
