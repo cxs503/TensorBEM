@@ -289,6 +289,29 @@ CAPABILITIES: tuple[Capability, ...] = (
         published_2026_10_29='NOT_SUPPORTED',
     ),
     Capability(
+        key='wave-flume-wavemaker',
+        title='Linear wavemaker transfer functions (piston and flap, constant depth)',
+        claim=(
+            'Biesel-Havelock H/S reproduced to 1.7e-4 (64 panels) and 1.1e-2 worst '
+            'over every mesh; near field matches the exact eigenfunction series '
+            '(evanescent modes included) to 8e-5; two independent far-field routes '
+            'agree to 1.0e-3. Scope stated: the vertical wall operator is diagonal, '
+            'so this case grades the kernel quadrature, not the integral equation.'
+        ),
+        level=REAL,
+        modules=('tensorbem.wavemaker', 'tensorbem.benchmarks.wave_flume_wavemaker'),
+        symbols=('transfer_function', 'solve_wavemaker', 'exact_elevation',
+                 'vertical_wavemaker'),
+        tests=(
+            'tests/test_wavemaker_transfer.py::test_transfer_function_matches_biesel_havelock',
+            'tests/test_wavemaker_transfer.py::test_near_field_matches_the_exact_eigenfunction_series',
+            'tests/test_wavemaker_transfer.py::test_open_wall_operator_equals_the_closed_body_assembly',
+            'tests/test_wavemaker_transfer.py::test_vertical_wall_operator_is_exactly_diagonal',
+            'tests/test_wavemaker_transfer.py::test_study_driver_reports_the_anchor_as_passed',
+        ),
+        docs=(('docs/wave_flume_wavemaker.md', 'CASE-WAVE-FLUME'),),
+    ),
+    Capability(
         key='ursell-radiation',
         title='Ursell submerged-cylinder radiation benchmark',
         claim='Multipole reference independent of the panel code; first-order convergence pinned.',
