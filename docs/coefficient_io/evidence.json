@@ -1,0 +1,139 @@
+{
+  "anchor": "GAP-BEM-COEFF-IO",
+  "generated_by": "scripts/coefficients_io_evidence.py",
+  "schema_version": 1,
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "capytaine": "3.1.dev0",
+    "xarray": "2026.9.0"
+  },
+  "acceptance": {
+    "native_roundtrip_max_rel": {
+      "added_mass": 0.0,
+      "damping": 0.0,
+      "excitation": 0.0
+    },
+    "dialect_roundtrip_max_rel": {
+      "wamit_1_added_mass": 4.380105846595294e-13,
+      "wamit_1_damping": 3.252750721929155e-13,
+      "wamit_1_omega": 6.583622536027178e-14,
+      "wamit_3_excitation": 7.825602614485396e-13,
+      "nemoh_tec_added_mass": 3.388825751710997e-10,
+      "nemoh_tec_damping": 3.012777602622295e-10,
+      "nemoh_tec_excitation": 7.522411443658621e-10
+    },
+    "tamper_detected": true,
+    "tampered_value": 13700.974727845396,
+    "fingerprint_original": "538450a7c4d56abf3313ca54041a18a0b7e87c2a356ce4c3bcb6dae3c6b2ad10"
+  },
+  "capytaine_interop": {
+    "available": true,
+    "capytaine_version": "3.1.dev0",
+    "wamit_1_dof_labels": [
+      "surge",
+      "heave",
+      "pitch"
+    ],
+    "wamit_1_omega_rel_error": 4.2857549601797257e-07,
+    "wamit_1_added_mass_rel_error": 1.6000000014173567e-07,
+    "wamit_1_damping_rel_error": 5.885754275141153e-07,
+    "wamit_3_modulus_rel_error": 8.627687511761906e-08,
+    "wamit_3_complex_rel_error": 8.163497483477229e-06,
+    "wamit_3_headings_deg": [
+      0.0,
+      90.0
+    ]
+  },
+  "solver_case": {
+    "case": "submerged sphere r=0.25, submergence=1.0, icosphere subdivisions=1",
+    "dof_labels": [
+      "surge",
+      "heave"
+    ],
+    "n_panels": 80,
+    "omega": [
+      1.9805706248452741,
+      2.800949838893942,
+      3.430448950210453,
+      3.9611412496905483
+    ],
+    "added_mass_surge": [
+      31.08309052042956,
+      31.08650446599855,
+      30.983296567963148,
+      30.854824779830086
+    ],
+    "added_mass_heave": [
+      31.252022809786876,
+      31.25800615187196,
+      31.04977799038421,
+      30.7924829486296
+    ],
+    "damping_heave": [
+      0.2276191757082634,
+      1.157464031313816,
+      2.1400655140464933,
+      2.616634739824525
+    ],
+    "a33_over_rho": [
+      0.030489778351011586,
+      0.030495615757923863,
+      0.030292466332082157,
+      0.03004144677915083
+    ],
+    "propagated_rel_error": {
+      "native": 0.0,
+      "wamit_1": 1.2661469893359593e-13,
+      "nemoh_tec": 5.988738870296323e-11
+    },
+    "condition_numbers": [],
+    "residuals": []
+  },
+  "files": {
+    "capytaine.1": {
+      "bytes": 918,
+      "sha256_16": "2f7d9fb07f313471"
+    },
+    "capytaine.3": {
+      "bytes": 1020,
+      "sha256_16": "9a4d8415fe98998b"
+    },
+    "sphere.1": {
+      "bytes": 1200,
+      "sha256_16": "1d45059d29a6c1ac"
+    },
+    "sphere.json": {
+      "bytes": 2014,
+      "sha256_16": "59d01b38f804ff51"
+    },
+    "sphere.tec": {
+      "bytes": 746,
+      "sha256_16": "c7816b6a81d7774d"
+    },
+    "synthetic-F.tec": {
+      "bytes": 1000,
+      "sha256_16": "c2b80117bc42c243"
+    },
+    "synthetic.1": {
+      "bytes": 2025,
+      "sha256_16": "e895aeed39e5ed1f"
+    },
+    "synthetic.3": {
+      "bytes": 2232,
+      "sha256_16": "98a1bbee73e849e5"
+    },
+    "synthetic.json": {
+      "bytes": 3854,
+      "sha256_16": "4616a0a3c6336ffb"
+    },
+    "synthetic.tec": {
+      "bytes": 1178,
+      "sha256_16": "c6cb1c8597fb0346"
+    },
+    "tampered.json": {
+      "bytes": 2312,
+      "sha256_16": "3beea2cbf20d4a73"
+    }
+  }
+}
