@@ -1,0 +1,180 @@
+{
+  "g": 9.80665,
+  "rho": 1025.0,
+  "hulls": {
+    "m3125 case (L=3.0)": {
+      "L": 3.0,
+      "B": 0.3,
+      "T": 0.1875,
+      "rows": [
+        {
+          "Fr": 0.2,
+          "U": 1.0848032079598586,
+          "legacy_N": 0.069528924584419,
+          "canonical_N": 0.7165602513236836,
+          "theta_form_N": 0.7169959121586263,
+          "canonical_vs_theta_rel": 0.0006076196914862549,
+          "legacy_vs_theta_rel": 0.9030274463140362,
+          "amplification": 10.305930310394306
+        },
+        {
+          "Fr": 0.25,
+          "U": 1.3560040099498232,
+          "legacy_N": 0.0971114170565367,
+          "canonical_N": 1.3424196317436663,
+          "theta_form_N": 1.3425948233981406,
+          "canonical_vs_theta_rel": 0.00013048736031240807,
+          "legacy_vs_theta_rel": 0.9276688578235799,
+          "amplification": 13.823499568152025
+        },
+        {
+          "Fr": 0.3,
+          "U": 1.6272048119397877,
+          "legacy_N": 0.3319010806816133,
+          "canonical_N": 3.891663597215892,
+          "theta_form_N": 3.8917960416405535,
+          "canonical_vs_theta_rel": 3.4031697253457465e-05,
+          "legacy_vs_theta_rel": 0.914717760866599,
+          "amplification": 11.725371876535391
+        },
+        {
+          "Fr": 0.35,
+          "U": 1.8984056139297523,
+          "legacy_N": 0.12655805406774906,
+          "canonical_N": 3.086493455463113,
+          "theta_form_N": 3.086580379033229,
+          "canonical_vs_theta_rel": 2.8161771099963043e-05,
+          "legacy_vs_theta_rel": 0.9589973243763736,
+          "amplification": 24.3879654929812
+        },
+        {
+          "Fr": 0.4,
+          "U": 2.1696064159197173,
+          "legacy_N": 0.7107444853800241,
+          "canonical_N": 8.831972913488974,
+          "theta_form_N": 8.832041308926692,
+          "canonical_vs_theta_rel": 7.744012434545634e-06,
+          "legacy_vs_theta_rel": 0.9195265895482551,
+          "amplification": 12.426368540540492
+        }
+      ]
+    },
+    "Wigley III (L=10.0)": {
+      "L": 10.0,
+      "B": 1.0,
+      "T": 0.625,
+      "rows": [
+        {
+          "Fr": 0.2,
+          "U": 1.9805706248452741,
+          "legacy_N": 2.575145354978475,
+          "canonical_N": 26.539268567543782,
+          "theta_form_N": 26.55540415402314,
+          "canonical_vs_theta_rel": 0.0006076196914861571,
+          "legacy_vs_theta_rel": 0.9030274463140362,
+          "amplification": 10.305930310394311
+        },
+        {
+          "Fr": 0.25,
+          "U": 2.4757132810565925,
+          "legacy_N": 3.59671915024211,
+          "canonical_N": 49.71924562013586,
+          "theta_form_N": 49.72573419993125,
+          "canonical_vs_theta_rel": 0.0001304873603134014,
+          "legacy_vs_theta_rel": 0.9276688578235798,
+          "amplification": 13.823499568152005
+        },
+        {
+          "Fr": 0.3,
+          "U": 2.970855937267911,
+          "legacy_N": 12.292632617837537,
+          "canonical_N": 144.13568878577385,
+          "theta_form_N": 144.14059413483537,
+          "canonical_vs_theta_rel": 3.403169725336251e-05,
+          "legacy_vs_theta_rel": 0.914717760866599,
+          "amplification": 11.72537187653539
+        },
+        {
+          "Fr": 0.35,
+          "U": 3.4659985934792292,
+          "legacy_N": 4.687335335842552,
+          "canonical_N": 114.31457242455964,
+          "theta_form_N": 114.31779181604536,
+          "canonical_vs_theta_rel": 2.81617710994198e-05,
+          "legacy_vs_theta_rel": 0.9589973243763737,
+          "amplification": 24.38796549298121
+        },
+        {
+          "Fr": 0.4,
+          "U": 3.9611412496905483,
+          "legacy_N": 26.32386982888976,
+          "canonical_N": 327.11010790699873,
+          "theta_form_N": 327.112641071358,
+          "canonical_vs_theta_rel": 7.744012432392801e-06,
+          "legacy_vs_theta_rel": 0.9195265895482548,
+          "amplification": 12.426368540540492
+        }
+      ]
+    }
+  },
+  "froudes": [
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4
+  ],
+  "unit_exponents": {
+    "legacy_default": [
+      -1.0,
+      1.0,
+      -2.0
+    ],
+    "canonical": [
+      -1.0,
+      -1.0,
+      2.0
+    ],
+    "force_target": [
+      -1.0,
+      -1.0,
+      2.0
+    ],
+    "theta_form_NOTE": "invalid probe: the theta wrapper pinned L,B,T inside the closure, so its exponent row is NOT usable; only legacy_default and canonical are quoted (m16274)"
+  },
+  "dispersion": {
+    "lambda": [
+      1.0,
+      1.5,
+      2.0,
+      4.0,
+      10.0
+    ],
+    "abs_H_canonical": [
+      0.018284963738925446,
+      0.006089896040247097,
+      0.0011962049218764666,
+      0.0008634234104663871,
+      3.2713538256644066e-05
+    ],
+    "abs_H_legacy_pair": [
+      0.018284963738925446,
+      0.00713207910083675,
+      0.0017332294128339298,
+      0.0028143526111803012,
+      0.00031380246332051527
+    ],
+    "residual_legacy_pair": [
+      0.0,
+      0.49999999999999983,
+      1.0,
+      3.0,
+      9.0
+    ]
+  },
+  "gates": {
+    "zero_speed": 0.0,
+    "negative_speed": 0.0,
+    "n_quad_128_vs_256": 1.43782315822823e-14
+  }
+}

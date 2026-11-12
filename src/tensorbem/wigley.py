@@ -335,16 +335,94 @@ def _michell_kochin_z_integral(k: float, T: float) -> float:
 
 
 def michell_kochin_function(
-    L: float, B: float, T: float, k: float
+    L: float, B: float, T: float, k: float, alpha: float | None = None
 ) -> complex:
-    """Compute the Michell Kochin function H(k) for the Wigley hull."""
+    """Michell Kochin function ``H`` of the Wigley hull (both hull sides).
+
+    ``k`` is the depth-decay wavenumber of ``exp(k z)``, ``alpha`` the
+    streamwise phase wavenumber of ``exp(i alpha x)``.  The steady free-surface
+    condition ``U^2 phi_xx + g phi_z = 0`` admits ``phi ~ exp(k z + i alpha x)``
+    only on the canonical pair ``(k, alpha) = (alpha^2/k0, alpha)``,
+    ``k0 = g/U^2``.  ``alpha`` defaults to ``k``: that single-wavenumber
+    sampling is the pre-repair convention, kept because H is a public entry
+    point that is legitimately evaluable at any ``(k, alpha)``, but it violates
+    the free-surface condition by ``lambda - 1`` when used inside the
+    resistance integral (``docs/michell_unit_arbitration.md``).
+    """
     if k <= 0:
         return 0.0j
 
-    ix = _michell_kochin_integrand_x(k, L)
+    phase = k if alpha is None else alpha
+    ix = _michell_kochin_integrand_x(phase, L)
     iz = _michell_kochin_z_integral(k, T)
 
     return 2.0 * (-4.0 * B / L**2) * ix * iz
+
+
+def michell_wave_resistance_canonical(
+    L: float,
+    B: float,
+    T: float,
+    U: float,
+    rho: float = _DEFAULT_DENSITY,
+    g: float = _DEFAULT_GRAVITY,
+    n_quad: int = 256,
+) -> float:
+    """Wave resistance of the Wigley hull, Michell theory, canonical spectrum.
+
+    Canonical form (added in m16274).  The shipped default
+    :func:`michell_wave_resistance` still carries the pre-repair formula, so new
+    work must call this routine; re-pinning that default's dependants is the
+    dispatched follow-up mission.  The integral::
+
+        Rw = (rho g^2 / (pi U^2)) * int_1^inf lam^2 |H(k0 lam^2, k0 lam)|^2
+                                            / sqrt(lam^2 - 1) dlam
+
+    with ``k0 = g/U^2``.  Three defects of the pre-repair integral are fixed:
+
+    1. **dispersion** -- the depth-decay wavenumber is ``alpha^2/k0``, not
+       ``alpha``; the legacy single-wavenumber sampling violated the steady
+       free-surface condition by ``lam - 1`` over the whole range;
+    2. **weight** -- ``lam^2`` (the Jacobian of the wave-number space), not
+       ``lam^-2``;
+    3. **prefactor** -- ``rho g^2/(pi U^2)``, not ``4 rho/U^2``.  ``H`` carries
+       both hull sides (factor 2 in the amplitude), so ``|H|^2 = 4 |A|^2`` and
+       the textbook ``4 rho g^2/(pi U^2)`` on the one-side amplitude ``A``
+       becomes ``rho g^2/(pi U^2)`` on ``H``.
+
+    The pre-repair routine returned ``kg s^2 m^-1`` -- it was *not* a force
+    (``docs/michell_unit_arbitration.md``) -- and was low by a factor 10-25.
+
+    The integrand carries an *integrable* inverse-square-root endpoint at
+    ``lam = 1`` (the transverse-wave cusp); the substitution
+    ``lam = 1 + s^2`` cancels it exactly, so ``n_quad = 256`` reproduces the
+    converged value to ~1e-7 relative.  Verified against the independent theta
+    form of :mod:`tensorbem.thin_ship_michell` (different quadrature, different
+    amplitude evaluation) to ``< 1e-5``.
+    """
+    if U <= 0:
+        return 0.0
+
+    k0 = g / U**2
+    lambda_max = max(5.0, 10.0 / (k0 * T))
+
+    nodes, weights = leggauss(n_quad)
+
+    # lam = 1 + s^2 on s in [0, sqrt(lambda_max - 1)]
+    s_max = math.sqrt(lambda_max - 1.0)
+    s = 0.5 * s_max * (nodes + 1.0)
+    w = 0.5 * s_max * weights
+    lam = 1.0 + s * s
+
+    integrand = np.zeros(n_quad, dtype=float)
+    for i in range(n_quad):
+        alpha = lam[i] * k0
+        k_depth = alpha * alpha / k0          # = k0 lam^2, canonical pair
+        Hk = michell_kochin_function(L, B, T, k_depth, alpha)
+        integrand[i] = abs(Hk) ** 2 * 2.0 * lam[i] ** 2 / math.sqrt(2.0 + s[i] * s[i])
+
+    Rw = (rho * g * g / (math.pi * U**2)) * float(np.sum(w * integrand))
+    return max(Rw, 0.0)
 
 
 def michell_wave_resistance(
@@ -356,7 +434,24 @@ def michell_wave_resistance(
     g: float = _DEFAULT_GRAVITY,
     n_quad: int = 256,
 ) -> float:
-    """Compute wave resistance using Michell's thin-ship theory.
+    """Legacy (DEFECTIVE) Wigley wave resistance -- the shipped default.
+
+    Bit-for-bit preserved so the numbers pinned across ``benchmarks/verified``,
+    ``docs/`` and ~8 test modules do not move.  Do **not** use it for new work:
+    use :func:`michell_wave_resistance_canonical`, which is the same theory on
+    the canonical dispersion pair, is dimensionally a force, and is verified
+    against the independent theta form of :mod:`tensorbem.thin_ship_michell` to
+    ``< 1e-5``.
+
+    Pre-repair formula, kept only as the record of the defect (m3125).
+
+    Single-wavenumber sampling ``(k, alpha) = (k0 lam, k0 lam)`` (violates the
+    steady free-surface condition by ``lam - 1``) with the prefactor
+    ``4 rho/U^2``: the output carries the unit exponents ``(-1, +1, -2)``, i.e.
+    ``kg s^2 m^-1``, **not** a force.  Every number it produced before the
+    repair (m16274) was low by a factor 10-25 depending on Froude number.
+
+    Compute wave resistance using Michell's thin-ship theory.
 
     The Kochin integral is
 
