@@ -104,3 +104,82 @@ Honest verdict on this module: **accuracy REAL after the m14931 fix (surface
 matvec error <= 1.6e-4 at p=4, < 3 % gate), acceleration NOT_SUPPORTED at every
 measured N**. The operator is not wired into the solver, and the audit does not
 change that.
+## 3 bis. Correction (m15669, 2026-11-12): the §3 acceptance table above is not evidence
+
+> **Status of §3.** Every PASS in the table was produced before two operator
+> defects were known. The m14931 audit (§7) already showed that criteria (c),
+> (d) and (e) were vacuous or extrapolated; the m15669 rewrite (below) shows the
+> operator itself was not doing multipole work at all. Read §3 as *the original
+> claim*, and §7/§8 as the measurements that replace it.
+
+## 8. m15669: octree geometry fix + vectorised matvec — measured operator
+
+**EDIT_WHITELIST / files**: `src/tensorbem/fmm.py`, `tests/test_fmm.py`,
+`src/tensorbem/benchmarks/fmm_cost_audit.py`, `tests/test_fmm_cost_audit.py`,
+`docs/fmm_cost_audit/` (regenerated artefacts), `docs/fmm_acceleration/report.md`,
+`docs/fmm_acceleration/fig_m15669_operator.png`, `dev_report_m15669.md`.
+Overlap note: `src/tensorbem/fmm.py` is a core module and is also touched by the
+m14931 audit; this change is additive to it (no public signature removed).
+
+### 8.1 Two octree defects (root cause of the adverse cost profile)
+
+`_build_octree_recursive` placed child centres at `center ± size/2` while the
+child edge is `size/2` (correct offset: `size/4`), and enumerated the children in
+`ix,iy,iz` order while `_child_index` encodes `bit0=x, bit1=y, bit2=z` — children
+1 and 4 were swapped. Measured on 1280 icosphere panels with `max_leaf=32`:
+**48 of 56 leaves contained points outside their own box**, leaf source radii had
+median 3.19 and maximum 3.82 in a domain of radius 1.0. Because m14931's
+admissibility criterion uses the leaf's *own* source radius, the inflated radii
+routed everything to the near field: **19.6 % multipole pairs**, i.e. the FMM was
+a bookkeeping wrapper around dense summation.
+
+After the fix: 56/56 and 145/145 leaves contain their own points, radii max
+0.383, multipole pair fraction **74.0 %** (`max_leaf=32`) and **93.6 %**
+(`max_leaf=16`).
+
+### 8.2 Vectorised matvec (same semantics, proven by a scalar reference)
+
+The scalar per-target/per-leaf loop with a per-pair spherical-harmonic call is
+replaced by blocked numpy: (block, n_leaves) near mask with the identical
+predicate, flat concatenated near pairs + `bincount`, batched far-field harmonic
+evaluation, `max_pairs=65536` pair budget with per-target recursion (peak memory
+independent of N). `tests/test_fmm.py::TestVectorisedMatvec` compares the new
+path with a scalar reference implementation of the original algorithm: relative
+difference **< 1e-12** at p=2 and p=4, and < 1e-14 between `block_size` 7 and 2048.
+
+### 8.3 Measured cost (same N, same targets, best-of-2 wall clock)
+
+| panels | p | leaves | far fraction | t_FMM (s) | t_dense (s) | FMM/dense | before m15669 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 320 | 2 | 56 | 0.741 | 0.055 | 0.006 | **9.32x** | 328x |
+| 1280 | 2 | 56 | 0.741 | 0.134 | 0.112 | **1.20x** | 98x |
+| 320 | 4 | 56 | 0.741 | 0.151 | 0.007 | **22.18x** | 1147x |
+| 5120 | 2 | 56 | 0.740 | 1.199 | 1.881 | **0.64x** | not measured |
+| 20480 | 2 | 272 | 0.936 | 9.310 | 23.343 | **0.40x** | not measured |
+
+Measured log-log slopes over N = 1280 → 20480: **FMM 1.48**, dense 1.82; the ratio
+is monotone decreasing (crossover around N ≈ 2000–5000).
+
+### 8.4 Measured accuracy (relative to the dense direct sum)
+
+| configuration | p | before | after |
+|---|---:|---:|---:|
+| surface, 320 panels, centroids → vertices | 2 | 1.130e-03 | **2.142e-04** |
+| surface, 320 panels, centroids → vertices | 4 | 1.597e-04 | **7.720e-05** |
+| separated, r/a = 8 | 1 | 2.453e-02 | **3.959e-04** |
+| separated, r/a = 8 | 2 | 2.893e-03 | **4.191e-05** |
+| separated, r/a = 8 | 8 | 1.036e-06 | **4.181e-12** |
+
+### 8.5 Honest verdict per criterion
+
+| criterion (as written in §3) | verdict |
+|---|---|
+| (a) bitwise degeneration, single leaf | PASS — relative tolerance only: the coincident self term is clamped at `r=1e-15`, so the entries are O(1e14) and an absolute 1e-12 anchor is below one ulp |
+| (b) order law, slope within 10 % of theory | PASS on configurations that actually use the multipole (leaves must be smaller than the target distance; the shipped `max_leaf=50` configuration is now near-field only and proves nothing) |
+| (c) complexity, N∈[1e3,1e5] slope ∈ [0.9,1.2] | **NOT MET as written** — measured slope 1.48; sub-quadratic and accelerated for N ≥ 5120, but not O(N): a single-level FMM still produces O(N^{1.5}) target-leaf pairs on a surface distribution |
+| (d) physics invariance < 1e-10 | **VACUOUS as shipped** (`max_leaf = panel_count` ⇒ one leaf ⇒ direct vs direct). Replaced by: surface multipole accuracy 7.72e-05 at p=4 against the dense sum |
+| (e) memory < 5 % of dense at N=1e5 | PASS in the honest form — measured peak 5.63 MB at N=2000 and 6.83 MB at N=8000 (constant in N, 1.3 % of the N=8000 dense matrix); N=1e5 is still not executed |
+| (f) monotonicity, (g) fail-closed, (h) regression | unchanged |
+
+Still not supported: hierarchical M2M/M2L/L2L, Helmholtz with `ka > 10`, and the
+operator is still not wired into `solver3d` / `free_surface_solver3d`.

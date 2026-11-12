@@ -116,6 +116,16 @@ def _leaf_radii(points: FloatArray, leaves: list) -> list:
     return radii
 
 
+def _harmonic_degrees(p: int) -> FloatArray:
+    """Degree ``l`` of every column of :func:`all_real_spherical_harmonics`."""
+    deg = np.empty((p + 1) ** 2, dtype=float)
+    col = 0
+    for l in range(p + 1):
+        deg[col:col + 2 * l + 1] = float(l)
+        col += 2 * l + 1
+    return deg
+
+
 def _sph_index(l: int, m: int) -> int:
     """Return the sequential index for spherical harmonic (l, m)."""
     return l * l + (m + l)
@@ -169,15 +179,19 @@ def _build_octree_recursive(
         return node
 
     half = size / 2.0
+    quarter = size / 4.0
+    # Child ``k`` must be the octant that ``_child_index`` maps to ``k``, i.e.
+    # bit 0 of ``k`` selects x, bit 1 selects y and bit 2 selects z.  Each child
+    # box has edge ``size/2``, so its centre lies a quarter of the parent edge
+    # from the parent centre: the eight children then tile the parent with no gap
+    # and no overlap, and ``_child_index`` is the exact containment test for them.
     child_centers = []
-    for ix in (0, 1):
-        for iy in (0, 1):
-            for iz in (0, 1):
-                child_centers.append(center + half * np.array([
-                    -1.0 + 2.0 * ix,
-                    -1.0 + 2.0 * iy,
-                    -1.0 + 2.0 * iz,
-                ]))
+    for k in range(8):
+        child_centers.append(center + quarter * np.array([
+            1.0 if (k & 1) else -1.0,
+            1.0 if (k & 2) else -1.0,
+            1.0 if (k & 4) else -1.0,
+        ]))
 
     child_indices: list[list[int]] = [[] for _ in range(8)]
     for idx in indices:
@@ -258,12 +272,35 @@ def _direct_laplace_matvec_batch(
     targets: FloatArray,
     sources: FloatArray,
     charges: FloatArray,
+    max_pairs: int = 4_000_000,
 ) -> FloatArray:
-    """Vectorized direct evaluation of sum_j q_j / (4*pi*|x_i - y_j|)."""
-    diff = targets[:, None, :] - sources[None, :, :]
-    r = np.linalg.norm(diff, axis=2)
-    r = np.maximum(r, 1e-15)
-    return np.sum(charges[None, :] / (4.0 * math.pi * r), axis=1)
+    """Vectorized direct evaluation of sum_j q_j / (4*pi*|x_i - y_j|).
+
+    Targets are processed in blocks so that the intermediate
+    ``(n_targets_block, n_sources, 3)`` array stays below ``max_pairs`` entries.
+    Blocking only slices the target axis, so every target's sum is accumulated in
+    exactly the same order as in the unblocked version (bitwise identical).
+    """
+    targets = np.asarray(targets, dtype=float)
+    sources = np.asarray(sources, dtype=float)
+    charges = np.asarray(charges, dtype=float)
+
+    n_t = targets.shape[0]
+    n_s = sources.shape[0]
+    result = np.zeros(n_t, dtype=float)
+    if n_t == 0 or n_s == 0:
+        return result
+
+    step = int(max(1, max_pairs // max(n_s, 1)))
+    for start in range(0, n_t, step):
+        block = targets[start:start + step]
+        diff = block[:, None, :] - sources[None, :, :]
+        r = np.sqrt(np.einsum("ijk,ijk->ij", diff, diff))
+        r = np.maximum(r, 1e-15)
+        result[start:start + len(block)] = np.sum(
+            charges[None, :] / (4.0 * math.pi * r), axis=1
+        )
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -401,19 +438,131 @@ class FMMOperator:
     #: largest source distance from its own leaf centre; the multipole expansion
     #: about that centre only converges for ``r_t > _ADMISSIBILITY * radius``.
     _radii: list[float] = field(default_factory=list, repr=False)
+    #: flat (n_leaves, 3) leaf centres / (n_leaves,) leaf box sizes
+    _leaf_centers: FloatArray | None = field(default=None, repr=False)
+    _leaf_sizes: FloatArray | None = field(default=None, repr=False)
+    #: (n_leaves,) source radii
+    _radii_vec: FloatArray | None = field(default=None, repr=False)
+    #: (n_leaves,) True where the leaf holds at least one source
+    _has_sources: NDArray[np.bool_] | None = field(default=None, repr=False)
+    #: one source-index array per leaf
+    _leaf_indices: list[IntArray] = field(default_factory=list, repr=False)
+    #: (n_leaves, (p+1)**2) multipole coefficients, one row per leaf
+    _multipole_matrix: FloatArray | None = field(default=None, repr=False)
+    #: (n_leaves, n_leaves) "leaf boxes are near" mask used by ``_is_near``
+    _leaf_near: NDArray[np.bool_] | None = field(default=None, repr=False)
+    #: target block size; bounds the (block, n_leaves, 3) intermediate
+    block_size: int = 2048
 
     def setup(self, points: FloatArray, charges: FloatArray | None = None) -> None:
         """Build the octree and precompute multipole coefficients."""
+        points = np.asarray(points, dtype=float)
         self.tree = build_octree(points, max_leaf=self.max_leaf)
         self.leaves = collect_leaves(self.tree)
+        n_harm = (self.p + 1) ** 2
+
         self._multipoles = []
         self._radii = _leaf_radii(points, self.leaves)
+
+        centers = np.array([leaf.center for leaf in self.leaves], dtype=float)
+        sizes = np.array([leaf.size for leaf in self.leaves], dtype=float)
+        indices = [np.asarray(leaf.indices, dtype=np.int64) for leaf in self.leaves]
+
+        multipoles = np.zeros((len(self.leaves), n_harm), dtype=float)
         if charges is not None:
-            for leaf in self.leaves:
-                spts = points[leaf.indices]
-                scharges = charges[leaf.indices]
-                M = _multipole_coefficients(spts, scharges, leaf.center, self.p)
+            charges = np.asarray(charges, dtype=float)
+            for k, leaf in enumerate(self.leaves):
+                idx = indices[k]
+                M = _multipole_coefficients(points[idx], charges[idx], leaf.center, self.p)
+                multipoles[k] = M
                 self._multipoles.append(M)
+            self._multipole_matrix = multipoles
+
+        self._leaf_centers = centers
+        self._leaf_sizes = sizes
+        self._leaf_indices = indices
+        self._radii_vec = np.asarray(self._radii, dtype=float)
+        self._has_sources = np.array([len(idx) > 0 for idx in indices], dtype=bool)
+        # same predicate as ``_is_near``: centre distance <= 2*max(size_t, size_s)
+        leaf_dist = np.linalg.norm(centers[:, None, :] - centers[None, :, :], axis=2)
+        self._leaf_near = leaf_dist <= 2.0 * np.maximum(sizes[:, None], sizes[None, :])
+
+    def _build_multipoles(
+        self, points: FloatArray, charges: FloatArray
+    ) -> FloatArray:
+        """Multipole coefficients of ``(points, charges)`` about every leaf centre."""
+        points = np.asarray(points, dtype=float)
+        charges = np.asarray(charges, dtype=float)
+        multipoles = np.zeros((len(self.leaves), (self.p + 1) ** 2), dtype=float)
+        self._multipoles = []
+        for k, leaf in enumerate(self.leaves):
+            idx = self._leaf_indices[k]
+            M = _multipole_coefficients(points[idx], charges[idx], leaf.center, self.p)
+            multipoles[k] = M
+            self._multipoles.append(M)
+        return multipoles
+
+    # -- routing ---------------------------------------------------------
+    def _route(self, targets: FloatArray) -> IntArray:
+        """Nearest-leaf-centre routing (same approximation as the scalar path)."""
+        centers = self._leaf_centers
+        leaf_of_target = np.empty(len(targets), dtype=np.int64)
+        step = max(self.block_size, 1)
+        for start in range(0, len(targets), step):
+            block = targets[start:start + step]
+            d2 = ((block[:, None, :] - centers[None, :, :]) ** 2).sum(axis=2)
+            leaf_of_target[start:start + len(block)] = np.argmin(d2, axis=1)
+        return leaf_of_target
+
+    def _near_mask(self, block: FloatArray, leaf_of_target: IntArray) -> tuple:
+        """Return ``(rel, r, near)`` for one target block.
+
+        ``rel``/``r`` are the (block, n_leaves, 3) / (block, n_leaves)
+        target-to-leaf-centre offsets; ``near`` is the (block, n_leaves) mask of
+        target-leaf pairs that must be summed directly, i.e. exactly
+        ``not admissible or _is_near(tleaf, sleaf)`` on non-empty leaves.
+        """
+        centers = self._leaf_centers
+        rel = block[:, None, :] - centers[None, :, :]
+        r = np.linalg.norm(rel, axis=2)
+        admissible = r > _ADMISSIBILITY * np.maximum(self._radii_vec, 1e-15)[None, :]
+        near = (~admissible) | self._leaf_near[leaf_of_target]
+        near &= self._has_sources[None, :]
+        return rel, r, near
+
+    # -- far field -------------------------------------------------------
+    def _far_contributions(
+        self,
+        rel: FloatArray,
+        r: FloatArray,
+        t_pair: IntArray,
+        s_pair: IntArray,
+        n_targets: int,
+    ) -> FloatArray:
+        """Sum every admissible multipole pair into a per-target vector."""
+        out = np.zeros(n_targets, dtype=float)
+        if len(t_pair) == 0:
+            return out
+
+        deg = _harmonic_degrees(self.p)
+        scale_exp = -(deg + 1.0)
+        multipoles = self._multipole_matrix
+
+        # keep the (pairs, (p+1)**2) intermediates bounded
+        chunk = int(max(1, 262_144 // max(len(deg), 1)))
+        for start in range(0, len(t_pair), chunk):
+            sl = slice(start, start + chunk)
+            ii = t_pair[sl]
+            ss = s_pair[sl]
+            rr = r[ii, ss]
+            relf = rel[ii, ss]
+            theta = np.arccos(np.clip(relf[:, 2] / rr, -1.0, 1.0))
+            phi = np.arctan2(relf[:, 1], relf[:, 0])
+            Y = all_real_spherical_harmonics(self.p, theta, phi)
+            Y *= np.power(rr[:, None], scale_exp[None, :])
+            Y *= multipoles[ss]
+            out += np.bincount(ii, weights=Y.sum(axis=1), minlength=n_targets)
+        return out
 
     def matvec(
         self,
@@ -423,86 +572,123 @@ class FMMOperator:
     ) -> FloatArray:
         """Compute FMM-accelerated matvec: phi = S @ charges.
 
-        A source leaf is expanded about its own centre, so the expansion is only
-        used when the target is outside the sphere that contains every source of
-        that leaf, ``r_t > _ADMISSIBILITY * radius(leaf)``.  The leaf-centre
-        admissibility test alone is *not* sufficient: on a surface distribution
-        the leaves are thin slabs whose ``size`` exceeds the centre-to-centre
-        spacing, and evaluating a divergent series there produced order-unity
-        errors (see ``docs/fmm_cost_audit/README.md``, m14931).
+        Both the near-field direct sums and the far-field multipole evaluations
+        are evaluated in blocks of ``block_size`` targets with NumPy array
+        operations; the near/far decision per (target, source-leaf) pair is the
+        one documented above (``_ADMISSIBILITY`` times the leaf's own source
+        radius, plus :meth:`_is_near`).  Results agree with the scalar reference
+        loop up to floating-point summation order.
         """
-        if self.tree is None:
-            self.setup(sources, charges)
+        targets = np.asarray(targets, dtype=float)
+        sources = np.asarray(sources, dtype=float)
+        charges = np.asarray(charges, dtype=float)
 
-        # Precompute multipoles if not done
-        if not self._multipoles:
-            for leaf in self.leaves:
-                spts = sources[leaf.indices]
-                scharges = charges[leaf.indices]
-                M = _multipole_coefficients(spts, scharges, leaf.center, self.p)
-                self._multipoles.append(M)
-            self._radii = _leaf_radii(sources, self.leaves)
-
+        if targets.ndim != 2 or targets.shape[1] != 3:
+            raise ValueError("targets must have shape (N, 3)")
         n = len(targets)
         result = np.zeros(n, dtype=float)
+        if n == 0 or not self.leaves:
+            return result
+        if self._multipole_matrix is None:
+            # ``setup`` may be called without charges (geometry only); the
+            # multipole coefficients are then built from the sources/charges
+            # handed to ``matvec``, which must be the points the tree was built
+            # from.
+            self._multipole_matrix = self._build_multipoles(sources, charges)
 
-        leaf_centers = np.array([leaf.center for leaf in self.leaves])
+        leaf_of_target = self._route(targets)
+        step = max(self.block_size, 1)
 
-        for i in range(n):
-            t = targets[i]
-            dists = np.linalg.norm(leaf_centers - t[None, :], axis=1)
-            target_leaf_idx = int(np.argmin(dists))
-            target_leaf = self.leaves[target_leaf_idx]
-
-            for sleaf_idx, sleaf in enumerate(self.leaves):
-                smask = sleaf.indices
-                if len(smask) == 0:
-                    continue
-
-                rel = t - sleaf.center
-                r_t = float(np.linalg.norm(rel))
-                admissible = r_t > _ADMISSIBILITY * max(self._radii[sleaf_idx], 1e-15)
-
-                if (not admissible) or self._is_near(target_leaf, sleaf):
-                    # Near-field: direct
-                    spts = sources[smask]
-                    scharges = charges[smask]
-                    diff = spts - t[None, :]
-                    r = np.linalg.norm(diff, axis=1)
-                    r = np.maximum(r, 1e-15)
-                    result[i] += float(np.sum(scharges / (4.0 * math.pi * r)))
-                else:
-                    # Far-field: use precomputed multipole
-                    M = self._multipoles[sleaf_idx]
-                    theta = math.acos(np.clip(rel[2] / r_t, -1.0, 1.0))
-                    phi = math.atan2(rel[1], rel[0])
-                    Y = all_real_spherical_harmonics(
-                        self.p, np.array([theta]), np.array([phi])
-                    )[0]
-                    for l in range(self.p + 1):
-                        for m in range(-l, l + 1):
-                            col = _sph_index(l, m)
-                            result[i] += M[col] * Y[col] / (r_t ** (l + 1))
-
+        for start in range(0, n, step):
+            tin = targets[start:start + step]
+            nb = len(tin)
+            rel, r, near = self._near_mask(tin, leaf_of_target[start:start + step])
+            far = ~near
+            if far.any():
+                t_pair, s_pair = np.nonzero(far)
+                result[start:start + nb] += self._far_contributions(
+                    rel, r, t_pair, s_pair, nb
+                )
+            if near.any():
+                result[start:start + nb] += self._near_contributions(
+                    tin, sources, charges, near
+                )
         return result
+
+    def _near_contributions(
+        self,
+        block: FloatArray,
+        sources: FloatArray,
+        charges: FloatArray,
+        near: NDArray[np.bool_],
+        max_pairs: int = 65_536,
+    ) -> FloatArray:
+        """Direct near-field sums, one flat pass over all near (target, source) pairs.
+
+        Pairs are enumerated leaf-major (ascending leaf index, source order
+        inside the leaf preserved) and accumulated per target with
+        ``np.bincount``, so each target's near-field sum is accumulated in the
+        same order as the scalar reference loop.
+        """
+        nb = block.shape[0]
+        out = np.zeros(nb, dtype=float)
+        if nb == 0:
+            return out
+
+        # Bound the flat pair arrays: split the target block and recurse.  Only
+        # whole targets are separated, so each target's near-field sum is still
+        # accumulated leaf-major over its own pairs (order unchanged).
+        leaf_sizes = np.array([len(idx) for idx in self._leaf_indices], dtype=np.int64)
+        pair_count = int((near.sum(axis=0) * leaf_sizes).sum())
+        if pair_count > max_pairs and nb > 1:
+            mid = nb // 2
+            out[:mid] = self._near_contributions(
+                block[:mid], sources, charges, near[:mid], max_pairs
+            )
+            out[mid:] = self._near_contributions(
+                block[mid:], sources, charges, near[mid:], max_pairs
+            )
+            return out
+
+        tgt_parts: list[IntArray] = []
+        src_parts: list[IntArray] = []
+        for sleaf in np.flatnonzero(near.any(axis=0)):
+            idx = self._leaf_indices[sleaf]
+            if len(idx) == 0:
+                continue
+            rows = np.flatnonzero(near[:, sleaf])
+            if len(rows) == 0:
+                continue
+            tgt_parts.append(np.repeat(rows, len(idx)))
+            src_parts.append(np.tile(idx, len(rows)))
+        if not tgt_parts:
+            return out
+
+        tgt = np.concatenate(tgt_parts)
+        src = np.concatenate(src_parts)
+        diff = block[tgt] - sources[src]
+        r = np.sqrt(np.einsum("ij,ij->i", diff, diff))
+        r = np.maximum(r, 1e-15)
+        vals = charges[src] / (4.0 * math.pi * r)
+        return np.bincount(tgt, weights=vals, minlength=nb)
 
     def far_fraction(self, targets: FloatArray) -> float:
         """Fraction of target-leaf pairs evaluated with the multipole expansion."""
-
-        centers = np.array([leaf.center for leaf in self.leaves])
-        far = 0
-        total = 0
-        for t in targets:
-            tleaf = self.leaves[int(np.argmin(np.linalg.norm(centers - t[None, :], axis=1)))]
-            for idx, sleaf in enumerate(self.leaves):
-                if len(sleaf.indices) == 0:
-                    continue
-                total += 1
-                r_t = float(np.linalg.norm(t - sleaf.center))
-                if (r_t > _ADMISSIBILITY * max(self._radii[idx], 1e-15)
-                        and not self._is_near(tleaf, sleaf)):
-                    far += 1
-        return far / total if total else 0.0
+        targets = np.asarray(targets, dtype=float)
+        if len(targets) == 0 or not self.leaves:
+            return 0.0
+        leaf_of_target = self._route(targets)
+        near_pairs = 0
+        total_pairs = 0
+        step = max(self.block_size, 1)
+        for start in range(0, len(targets), step):
+            tin = targets[start:start + step]
+            _, _, near = self._near_mask(tin, leaf_of_target[start:start + step])
+            near_pairs += int(near.sum())
+            total_pairs += tin.shape[0] * int(self._has_sources.sum())
+        if total_pairs == 0:
+            return 0.0
+        return 1.0 - near_pairs / total_pairs
 
     def _is_near(self, tleaf: OctreeNode, sleaf: OctreeNode) -> bool:
         """Determine if two leaves are in the near-field."""
