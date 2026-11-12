@@ -2,9 +2,10 @@
 
 Tests cover:
 1. Hemisphere zero-frequency added-mass anchor (A₃₃ = 2/3·ρ·π·a³ at ω→0)
-2. Froude-Krylov excitation force closed-form vs BEM
-3. Wigley III RAO frequency response with limit validation
-4. Mesh convergence for Wigley III RAO
+2. Hemisphere diffraction excitation anchor (BEM vs Hulme 1982)
+3. Froude-Krylov excitation force closed-form vs BEM
+4. Wigley III RAO frequency response with limit validation
+5. Mesh convergence for Wigley III RAO
 """
 
 from __future__ import annotations
@@ -17,6 +18,11 @@ import pytest
 from tensorbem.verification.seakeeping.hemisphere_anchor import (
     compute_hemisphere_zero_frequency_anchor,
     compute_hemisphere_radiation_study,
+)
+from tensorbem.verification.seakeeping.diffraction_anchor import (
+    compute_diffraction_anchor,
+    compute_diffraction_sweep,
+    compute_diffraction_convergence,
 )
 from tensorbem.verification.seakeeping.fk_excitation import (
     fk_heave_force_box_barge,
@@ -82,7 +88,71 @@ class TestHemisphereAnchor:
 
 
 # ============================================================================
-# 2. Froude-Krylov excitation force
+# 2. Hemisphere diffraction excitation anchor
+# ============================================================================
+
+class TestDiffractionAnchor:
+    """Test the hemisphere diffraction excitation anchor vs Hulme (1982)."""
+
+    def test_anchor_computes_at_ka1(self):
+        """Anchor should compute without errors at Ka=1.0, sub=2."""
+        result = compute_diffraction_anchor(ka=1.0, subdivisions=2)
+
+        assert result.ka == 1.0
+        assert result.subdivisions == 2
+        assert result.panel_count > 0
+        assert result.condition_number > 0
+
+    def test_heave_error_within_tolerance(self):
+        """Heave excitation error should be < 10% at Ka=1.0, sub=2."""
+        result = compute_diffraction_anchor(ka=1.0, subdivisions=2)
+
+        assert result.heave_rel_error < 0.10, (
+            f"Heave error {result.heave_rel_error:.4f} exceeds 10% "
+            f"(BEM={abs(result.bem_fz):.4f}, Hulme={abs(result.hulme_fz):.4f})"
+        )
+
+    def test_surge_error_within_tolerance(self):
+        """Surge excitation error should be < 30% at Ka=1.0, sub=2."""
+        result = compute_diffraction_anchor(ka=1.0, subdivisions=2)
+
+        assert result.surge_rel_error < 0.30, (
+            f"Surge error {result.surge_rel_error:.4f} exceeds 30%"
+        )
+
+    def test_haskind_reciprocity_heave(self):
+        """Haskind heave excitation should match Hulme within 5%."""
+        result = compute_diffraction_anchor(ka=1.0, subdivisions=2)
+
+        assert result.haskind_heave_rel_error < 0.05, (
+            f"Haskind heave error {result.haskind_heave_rel_error:.4f} exceeds 5%"
+        )
+
+    def test_sweep_computes(self):
+        """Sweep should compute across multiple Ka values."""
+        result = compute_diffraction_sweep(
+            ka_values=(0.5, 1.0, 1.5), subdivisions=1,
+        )
+
+        assert len(result.ka_values) == 3
+        assert len(result.levels) == 3
+        assert result.max_heave_error >= 0
+
+    def test_convergence_error_decreases(self):
+        """Heave error should decrease with mesh refinement."""
+        result = compute_diffraction_convergence(
+            ka=1.0, subdivisions=(1, 2, 3),
+        )
+
+        for i in range(1, len(result.heave_errors)):
+            assert result.heave_errors[i] < result.heave_errors[i - 1], (
+                f"Heave error did not decrease: "
+                f"{result.heave_errors[i-1]:.4f} -> {result.heave_errors[i]:.4f}"
+            )
+
+
+# ============================================================================
+# 3. Froude-Krylov excitation force
 # ============================================================================
 
 class TestFKExcitation:
@@ -126,7 +196,7 @@ class TestFKExcitation:
 
 
 # ============================================================================
-# 3. Wigley III RAO frequency response
+# 4. Wigley III RAO frequency response
 # ============================================================================
 
 class TestWigleyRAO:
@@ -172,7 +242,7 @@ class TestWigleyRAO:
 
 
 # ============================================================================
-# 4. Mesh convergence
+# 5. Mesh convergence
 # ============================================================================
 
 class TestMeshConvergence:
