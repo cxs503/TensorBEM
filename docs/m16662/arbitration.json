@@ -1,0 +1,312 @@
+{
+  "mission": "m16662",
+  "question": "mission m16554 left a 4.12 %/3.69 % roll/pitch disagreement and a 4.2e-2 yaw residue unexplained; which route is wrong?",
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "planar_panel": {
+    "surface": "vertical rectangle 10 m x 2 m at y=0, normal +y",
+    "rows": [
+      {
+        "panels_per_side": 1,
+        "analytic_m_x": -268048.43333333335,
+        "exact_m_x": -268048.43333333335,
+        "centroid_m_x": -223373.6944444444,
+        "exact_relative_error": -0.0,
+        "centroid_relative_error": -0.16666666666666685,
+        "exact_off_axis_moment": 1005181.625
+      },
+      {
+        "panels_per_side": 2,
+        "analytic_m_x": -268048.43333333335,
+        "exact_m_x": -268048.43333333335,
+        "centroid_m_x": -256879.7486111111,
+        "exact_relative_error": -0.0,
+        "centroid_relative_error": -0.04166666666666674,
+        "exact_off_axis_moment": 1005181.6250000001
+      },
+      {
+        "panels_per_side": 4,
+        "analytic_m_x": -268048.43333333335,
+        "exact_m_x": -268048.43333333335,
+        "centroid_m_x": -265256.2621527778,
+        "exact_relative_error": -0.0,
+        "centroid_relative_error": -0.010416666666666604,
+        "exact_off_axis_moment": 1005181.625
+      },
+      {
+        "panels_per_side": 8,
+        "analytic_m_x": -268048.43333333335,
+        "exact_m_x": -268048.4333333333,
+        "centroid_m_x": -267350.39053819445,
+        "exact_relative_error": -2.1715352031579642e-16,
+        "centroid_relative_error": -0.002604166666666705,
+        "exact_off_axis_moment": 1005181.625
+      },
+      {
+        "panels_per_side": 16,
+        "analytic_m_x": -268048.43333333335,
+        "exact_m_x": -268048.43333333323,
+        "centroid_m_x": -267873.92263454874,
+        "exact_relative_error": -4.3430704063159285e-16,
+        "centroid_relative_error": -0.000651041666666242,
+        "exact_off_axis_moment": 1005181.625
+      }
+    ]
+  },
+  "barge_arbitration": {
+    "body": "barge-L10B4T2",
+    "geometry": {
+      "length": 10.0,
+      "beam": 4.0,
+      "draft": 2.0,
+      "freeboard": 0.5,
+      "center_of_gravity": [
+        0.0,
+        0.0,
+        -1.5
+      ]
+    },
+    "rows": [
+      {
+        "mesh": "barge-n4b3h4",
+        "panels": 160,
+        "analytic_roll": 938169.5166666667,
+        "analytic_pitch": 3752678.0666666664,
+        "waterplane_roll": 938169.516666665,
+        "waterplane_pitch": 3752678.0666666646,
+        "exact_roll": 938169.5166662567,
+        "exact_pitch": 3752678.0666647083,
+        "legacy_roll": 899505.7018465211,
+        "legacy_pitch": 3614116.5718289,
+        "exact_roll_relative": -4.3703697060127715e-13,
+        "exact_pitch_relative": -5.217888873873852e-13,
+        "legacy_roll_relative": -0.041211970900012655,
+        "legacy_pitch_relative": -0.036923363095956806,
+        "waterplane_roll_relative": -1.8613158884211122e-15,
+        "exact_matrix_max_relative_waterplane": 5.212925364838064e-13,
+        "legacy_matrix_max_relative_waterplane": 0.03692336309595633
+      },
+      {
+        "mesh": "barge-n10b8h10",
+        "panels": 1040,
+        "analytic_roll": 938169.5166666667,
+        "analytic_pitch": 3752678.0666666664,
+        "waterplane_roll": 938169.5166666667,
+        "waterplane_pitch": 3752678.0666666664,
+        "exact_roll": 938169.516666217,
+        "exact_pitch": 3752678.0666658534,
+        "legacy_roll": 934670.9261789374,
+        "legacy_pitch": 3732413.884325747,
+        "exact_roll_relative": -4.793508851313837e-13,
+        "exact_pitch_relative": -2.166571694122175e-13,
+        "legacy_roll_relative": -0.00372916666506054,
+        "legacy_pitch_relative": -0.005399925594715152,
+        "waterplane_roll_relative": 0.0,
+        "exact_matrix_max_relative_waterplane": 8.345054676078689e-13,
+        "legacy_matrix_max_relative_waterplane": 0.005399925594715152
+      },
+      {
+        "mesh": "barge-n20b16h20",
+        "panels": 4160,
+        "analytic_roll": 938169.5166666667,
+        "analytic_pitch": 3752678.0666666664,
+        "waterplane_roll": 938169.5166666667,
+        "waterplane_pitch": 3752678.0666666664,
+        "exact_roll": 938169.5166666285,
+        "exact_pitch": 3752678.0666541266,
+        "legacy_roll": 937292.774916518,
+        "legacy_pitch": 3747606.785763933,
+        "exact_roll_relative": -4.0700774093474986e-14,
+        "exact_pitch_relative": -3.3415583706194757e-12,
+        "legacy_roll_relative": -0.0009345238089421051,
+        "legacy_pitch_relative": -0.001351376487042532,
+        "waterplane_roll_relative": 0.0,
+        "exact_matrix_max_relative_waterplane": 3.3415583706194757e-12,
+        "legacy_matrix_max_relative_waterplane": 0.001351376487042532
+      }
+    ]
+  },
+  "z_g_scan": {
+    "body": "barge-L10B4T2 (coarsest mesh, 160 panels)",
+    "rows": [
+      {
+        "z_G": -2.0,
+        "analytic_roll": 1340242.1666666667,
+        "exact_roll": 1340242.1666662497,
+        "legacy_roll": 1301578.3518465143,
+        "exact_absolute_error": -4.169996827840805e-07,
+        "legacy_absolute_error": -38663.814820152475,
+        "exact_relative_error": -3.1113756390847314e-13,
+        "legacy_relative_error": -0.028848379630013982,
+        "exact_waterplane_max_relative": 4.726381394434653e-13,
+        "legacy_waterplane_max_relative": 0.03335013440925266
+      },
+      {
+        "z_G": -1.75,
+        "analytic_roll": 1139205.8416666668,
+        "exact_roll": 1139205.8416662533,
+        "legacy_roll": 1100542.0268465178,
+        "exact_absolute_error": -4.1350722312927246e-07,
+        "legacy_absolute_error": -38663.81482014898,
+        "exact_relative_error": -3.629784960760983e-13,
+        "legacy_relative_error": -0.03393927015295456,
+        "exact_waterplane_max_relative": 4.956105835871848e-13,
+        "legacy_waterplane_max_relative": 0.03504590395548491
+      },
+      {
+        "z_G": -1.5,
+        "analytic_roll": 938169.5166666667,
+        "exact_roll": 938169.5166662567,
+        "legacy_roll": 899505.7018465211,
+        "exact_absolute_error": -4.100147634744644e-07,
+        "legacy_absolute_error": -38663.814820145606,
+        "exact_relative_error": -4.3703697060127715e-13,
+        "legacy_relative_error": -0.041211970900012655,
+        "exact_waterplane_max_relative": 5.212925364838064e-13,
+        "legacy_waterplane_max_relative": 0.03692336309595633
+      },
+      {
+        "z_G": -1.25,
+        "analytic_roll": 737133.1916666668,
+        "exact_roll": 737133.1916662602,
+        "legacy_roll": 698469.3768465248,
+        "exact_absolute_error": -4.0652230381965637e-07,
+        "legacy_absolute_error": -38663.814820142,
+        "exact_relative_error": -5.514909766856444e-13,
+        "legacy_relative_error": -0.05245159932728393,
+        "exact_waterplane_max_relative": 5.498818802743854e-13,
+        "legacy_waterplane_max_relative": 0.03901336478063218
+      },
+      {
+        "z_G": -1.0,
+        "analytic_roll": 536096.8666666667,
+        "exact_roll": 536096.8666662638,
+        "legacy_roll": 497433.05184652825,
+        "exact_absolute_error": -4.029134288430214e-07,
+        "legacy_absolute_error": -38663.81482013845,
+        "exact_relative_error": -7.515683338129714e-13,
+        "legacy_relative_error": -0.0721209490750088,
+        "exact_waterplane_max_relative": 5.817629670668317e-13,
+        "legacy_waterplane_max_relative": 0.041354166667469
+      }
+    ]
+  },
+  "spheroid": {
+    "body": "spheroid-a5b2c1.5",
+    "semi_axes": [
+      5.0,
+      2.0,
+      1.5
+    ],
+    "rows": [
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "displaced_volume": 30.35283509984136,
+        "analytic_volume": 31.415926535897928,
+        "roll_analytic": 138156.86537727597,
+        "roll_waterplane": 135997.97539893884,
+        "roll_pressure_exact": 135973.04844532892,
+        "roll_pressure_legacy": 135438.61719285854,
+        "waterplane_relative_to_analytic": -0.015626367697628908,
+        "exact_relative_to_analytic": -0.015806792706128097,
+        "legacy_relative_to_analytic": -0.01967508583083798,
+        "exact_vs_waterplane_max_relative": 1.4567874814933106e-05,
+        "legacy_vs_waterplane_max_relative": 0.011402160094998807
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "displaced_volume": 31.145556128197935,
+        "analytic_volume": 31.415926535897928,
+        "roll_analytic": 138156.86537727597,
+        "roll_waterplane": 137607.70607167174,
+        "roll_pressure_exact": 137595.0222762336,
+        "roll_pressure_legacy": 137446.1140585036,
+        "waterplane_relative_to_analytic": -0.003974896970227283,
+        "exact_relative_to_analytic": -0.004066704173608103,
+        "legacy_relative_to_analytic": -0.0051445240656805315,
+        "exact_vs_waterplane_max_relative": 7.148616227868852e-06,
+        "legacy_vs_waterplane_max_relative": 0.0028560415808411505
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "displaced_volume": 31.348042109959795,
+        "analytic_volume": 31.415926535897928,
+        "roll_analytic": 138156.86537727597,
+        "roll_waterplane": 138018.94576729968,
+        "roll_pressure_exact": 138012.5761703363,
+        "roll_pressure_legacy": 137974.676119975,
+        "waterplane_relative_to_analytic": -0.0009982827100170812,
+        "exact_relative_to_analytic": -0.001044386802969509,
+        "legacy_relative_to_analytic": -0.001318713020908979,
+        "exact_vs_waterplane_max_relative": 3.5572960558920625e-06,
+        "legacy_vs_waterplane_max_relative": 0.0007140857241583048
+      }
+    ]
+  },
+  "yaw_coupling": {
+    "out_of_trim": [
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "center_of_buoyancy": [
+          1.2000000000000002,
+          0.7000000000000005,
+          0.0
+        ],
+        "center_of_gravity": [
+          1.5,
+          1.0,
+          0.0
+        ],
+        "weight": 313069.40720470704,
+        "measured_roll_yaw": 93920.82216132744,
+        "measured_pitch_yaw": 93920.8221615069,
+        "transpose_roll_yaw": 1.8495723471308637e-08,
+        "transpose_pitch_yaw": -1.940521817308157e-08,
+        "predicted_roll_yaw": 93920.82216141206,
+        "predicted_pitch_yaw": 93920.82216141195,
+        "scale": 2226707.044466833,
+        "roll_roll_relative_to_analytic": 1.1102133909455365,
+        "pitch_pitch_relative_to_analytic": 0.23978751833242218
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "center_of_buoyancy": [
+          1.2000000000000008,
+          0.7000000000000005,
+          0.0
+        ],
+        "center_of_gravity": [
+          1.5,
+          1.0,
+          0.0
+        ],
+        "weight": 315104.7590865782,
+        "measured_roll_yaw": 94531.42772599435,
+        "measured_pitch_yaw": 94531.42772602102,
+        "transpose_roll_yaw": -9.029784327670616e-08,
+        "transpose_pitch_yaw": 2.8323750752197917e-08,
+        "predicted_roll_yaw": 94531.4277259732,
+        "predicted_pitch_yaw": 94531.4277259733,
+        "scale": 2244717.392797495,
+        "roll_roll_relative_to_analytic": 1.117511683825851,
+        "pitch_pitch_relative_to_analytic": 0.24981533277557447
+      }
+    ],
+    "trimmed_control": {
+      "subdivisions": 4,
+      "center_of_gravity": [
+        1.2,
+        0.7,
+        0.0
+      ],
+      "measured_roll_yaw": 2.789117085436978e-08,
+      "measured_pitch_yaw": 1.2126596023639059e-08,
+      "relative_to_scale": 1.242524824900573e-14
+    }
+  }
+}

@@ -22,10 +22,25 @@ quantity.  It never touches the waterplane:
 5. differentiate the resultant load with respect to ``xi`` by central
    differences: ``C = -d(load)/d(xi)``.
 
-Because a linear pressure field integrated with the centroid rule is exact on
-planar triangles, the only approximations left are the facet discretisation of
-the body and the ``O(step**2)`` truncation of the central difference.  For a
-body whose wetted surface is exactly representable by its facets (a rectangular
+Exactness on a planar facet is a property of the *integrand*, not of the panel
+shape, and this route integrates two integrands of different degree:
+
+* ``F = -int p n dS`` is **linear** in the coordinates (``n`` is constant on a
+  triangle) and ``Nabla = (1/3) int r.n dS`` is linear too, so the area-centroid
+  rule is exact for both;
+* ``M = -int p (r x n) dS`` is **quadratic**, because ``p = rho*g*(z_fs - z)``
+  is linear and ``r x n`` is linear.  A first-degree-exact rule loses ``O(h**2)``
+  of every panel's contribution.  Measured on the 160-facet barge of mission
+  m16554 that loss was 4.1 % of ``C[3,3]`` and 3.7 % of ``C[4,4]``, decaying as
+  ``h**2`` -- mission m16662 traced that mission's open "4 % roll/pitch
+  discrepancy" to exactly this quadrature loss, and the moment is now
+  integrated with the three-edge-midpoint rule, which is degree-2 exact (see
+  :func:`pressure_loads` and :func:`pressure_moment`).  With the exact rule the
+  same coarse barge agrees with the waterplane route to ``5e-13`` relative.
+
+With that rule the only approximations left are the facet discretisation of the
+body and the ``O(step**2)`` truncation of the central difference.  For a body
+whose wetted surface is exactly representable by its facets (a rectangular
 barge) the two routes must therefore agree to round-off apart from the
 truncation term, which is the sharpest available falsification test of the
 waterplane formulae; for a curved body (spheroid) the two routes must converge
@@ -318,6 +333,58 @@ def pressure_profile(
     return rho * g * (float(free_surface_z) - pts[:, 2])
 
 
+def pressure_moment(
+    vertices: ArrayLike,
+    faces: ArrayLike,
+    *,
+    density: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    free_surface_z: float = 0.0,
+    areas: Optional[FloatArray] = None,
+    normals: Optional[FloatArray] = None,
+) -> FloatArray:
+    """``M = -int p (r x n) dS`` about the origin, exact on planar triangles.
+
+    The integrand is the product of the linear pressure field
+    ``p = rho*g*(z_fs - z)`` and the linear vector ``r x n``, so it is a
+    *quadratic* polynomial on a triangle.  The area-centroid rule is only
+    first-degree exact: it replaces ``int z**2 dS`` by ``A * z_c**2``, short by
+    ``A * h**2 / 12`` in the panel's local direction.  That bias does not average
+    out on a wall-sided body, where the moment arm is ``z`` on vertical panels
+    and the whole roll/pitch row is carried by those panels: on mission m16554's
+    160-facet barge it was 4.12 % of ``C[3,3]`` and 3.69 % of ``C[4,4]``, falling
+    as ``h**2`` (5.4e-3 at 1040 facets, 1.35e-3 at 4160), i.e. a pure quadrature
+    error masquerading as a physical route difference.
+
+    The three edge midpoints with equal weights ``A/3`` are a degree-2 exact rule
+    (every quadratic is reproduced exactly), so this function returns the panel
+    moments to round-off.  ``areas`` and ``normals`` may be passed in when the
+    caller already has them; otherwise they are recomputed from the geometry.
+    """
+    verts = _as_vertices(vertices)
+    tris = _as_faces(faces, verts.shape[0])
+    rho = _positive_finite(density, "density")
+    g = _positive_finite(gravity, "gravity")
+    if not math.isfinite(float(free_surface_z)):
+        raise ValueError("free_surface_z must be finite")
+    plane = float(free_surface_z)
+    if areas is None or normals is None:
+        areas, normals, _ = _triangle_geometry(verts, tris)
+
+    p0 = verts[tris[:, 0]]
+    p1 = verts[tris[:, 1]]
+    p2 = verts[tris[:, 2]]
+    weight = np.asarray(areas, dtype=float) / 3.0
+    moment = np.zeros(3)
+    for midpoint in ((p0 + p1) * 0.5, (p1 + p2) * 0.5, (p2 + p0) * 0.5):
+        pressure = rho * g * (plane - midpoint[:, 2])
+        moment -= np.sum(
+            (weight * pressure)[:, None] * np.cross(midpoint, np.asarray(normals)),
+            axis=0,
+        )
+    return moment
+
+
 def pressure_loads(
     vertices: ArrayLike,
     faces: ArrayLike,
@@ -329,8 +396,12 @@ def pressure_loads(
     """Integrate the hydrostatic pressure field over an already wetted surface.
 
     ``F = -int p n dS`` and ``M = -int p (r x n) dS`` (``r`` from the coordinate
-    origin) with the centroid rule, which is exact for a linear pressure field on
-    planar triangles.  The immersed volume is obtained from the same clipped
+    origin).  The force uses the centroid rule, which is exact because its
+    integrand is linear on a triangle; the moment integrand is *quadratic*, so it
+    goes through :func:`pressure_moment` (three edge midpoints, degree-2 exact)
+    instead -- the centroid rule there costs ``O(h**2)`` per panel, which was the
+    "4 % roll/pitch discrepancy" reported by mission m16554 and resolved by
+    mission m16662.  The immersed volume is obtained from the same clipped
     surface by the divergence theorem, ``Nabla = (1/3) sum (c . n) A`` — the
     waterplane lid contributes nothing because ``z = 0`` there — so the volume
     used for the weight is *not* taken from the pressure integral.
@@ -345,7 +416,15 @@ def pressure_loads(
     panel_pressure = rho * g * (plane - centroids[:, 2])
     panel_force = -(panel_pressure * areas)[:, None] * normals
     force = np.sum(panel_force, axis=0)
-    moment = np.sum(np.cross(centroids, panel_force), axis=0)
+    moment = pressure_moment(
+        verts,
+        tris,
+        density=rho,
+        gravity=g,
+        free_surface_z=plane,
+        areas=areas,
+        normals=normals,
+    )
     volume = float(np.sum(np.sum(centroids * normals, axis=1) * areas) / 3.0)
     return PressureLoad(
         force=force,
@@ -590,6 +669,7 @@ __all__ = [
     "clip_to_fluid",
     "immersed_volume",
     "pressure_loads",
+    "pressure_moment",
     "pressure_profile",
     "restoring_matrix_pressure_route",
     "richardson_restoring_matrix",
