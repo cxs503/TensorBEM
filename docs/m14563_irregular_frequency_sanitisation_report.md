@@ -314,3 +314,24 @@ The irregular frequency sanitisation module for TensorBEM is **functionally comp
 **Report prepared by**: AI citizen agent (mission m14563)  
 **Date**: 2026-11-11  
 **Maturity level**: L2 (impl + entry + run_artifacts)
+
+---
+
+## Corrigendum (m16777, 2026-11-12)
+
+§3.1 stated "Prediction accuracy: all predicted frequencies match analytical
+Bessel-zero formula to within 2% (exact by construction)".  That is a tautology:
+the gate compared the prediction with the right-hand side of its own formula.
+Verified in `docs/irregular_frequency_cylinder_exact.md` (m16777) three ways:
+
+* the formula is, exactly, the **rigid-lid** interior eigenvalue of the waterplane
+  (`J_m(nu R) = 0`); proved by substitution on a cylinder, machine precision;
+* the **free-surface-consistent** interior eigenvalue (the problem the free-surface
+  Green function actually inherits) is 47-71 % *higher* for ship-like draft ratios
+  — a controlled exact reference that this report's prediction does not satisfy;
+* empirically, the bare BEM of this repository loses passivity/conditioning within
+  **1.4-3.4 %** of the predicted value on a surface-piercing cylinder (112 and 264
+  panels, converging toward the prediction under refinement).
+
+The §3.2-§3.5 sanitisation results are unaffected; only the accuracy claim of §3.1
+is superseded by the empirical statement above.
