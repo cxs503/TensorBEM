@@ -14,7 +14,7 @@
 | V6_group_velocity | cg = (N'D - ND')/D^2 /(2 omega) vs 4th-order-free central difference | 1.108354e-10 | 1.000000e-06 | PASS |
 | V7_wavenumber_round_trip | omega -> k -> omega round trip, omega in [1e-2, 31.6] rad/s | 1.789523e-11 | 1.000000e-09 | PASS |
 | V8_ice_edge_energy | |R|^2 + |T|^2 = 1 at the ice edge with eq.(3) wavenumbers | 4.440892e-16 | 1.000000e-12 | PASS |
-| V9_inertia_correction_bound | max |inertia correction| over E in {1,5,10} GPa, h in {0.5,1,2} m, f in 0.02..0.30 Hz stays below 10% | max |correction| = 4.30% | 10.000000 | PASS |
+| V9_inertia_correction_bound | max |inertia correction| over E in {1,5,10,20,30} GPa, h in {0.5,1,2} m, f in 0.02..0.30 Hz stays below 10% | max |correction| = 4.30% | 10.000000 | PASS |
 | V10_e5_arbitration | sign(lambda_ice/lambda_open - 1) == sign(f - f_c) for every case; f_c = omega_eq3(k_c)/2pi | 28/28 cases sign-consistent | 1.000000 | PASS |
 | V11_fd_depth_factor | independent FD route (discretised psi''=k^2 psi, no analytic tanh) reproduces eq.(3): finest-grid |d omega^2|/omega^2 < 1e-6 while the truncation-dominated coarse pair shows second-order convergence (observed order in [1.7, 2.3]) | 4.615544e-07 | 1.000000e-06 | PASS |
 | V12_energy_balance | variational energy balance (quadrature depth integral) is satisfied by eq.(3) and rejects the denominator-only variant by >1% in shallow water | 4.901655e-16 | 1.000000e-09 | PASS |
@@ -115,3 +115,9 @@
 | 10 | 0.5 | -0.04 | -0.40 | -1.12 | -1.58 | -1.63 | -1.44 | -1.36 |
 | 10 | 1.0 | -0.08 | -0.79 | -1.94 | -2.06 | -1.72 | -1.62 | -1.65 |
 | 10 | 2.0 | -0.16 | -1.53 | -2.41 | -2.16 | -1.92 | -1.92 | -2.06 |
+| 20 | 0.5 | -0.04 | -0.40 | -1.10 | -1.43 | -1.32 | -1.18 | -1.16 |
+| 20 | 1.0 | -0.08 | -0.79 | -1.73 | -1.68 | -1.41 | -1.36 | -1.42 |
+| 20 | 2.0 | -0.16 | -1.48 | -1.95 | -1.75 | -1.61 | -1.64 | -1.78 |
+| 30 | 0.5 | -0.04 | -0.40 | -1.07 | -1.32 | -1.16 | -1.06 | -1.05 |
+| 30 | 1.0 | -0.08 | -0.79 | -1.58 | -1.48 | -1.26 | -1.23 | -1.30 |
+| 30 | 2.0 | -0.16 | -1.43 | -1.72 | -1.56 | -1.46 | -1.50 | -1.64 |

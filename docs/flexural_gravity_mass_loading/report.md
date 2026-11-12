@@ -1,9 +1,10 @@
 # TensorBEM 统一 flexural-gravity + mass-loading 色散关系：实现与验证
 
-**仓库**：TensorBEM 　**分支**：agent/m13836 　**日期**：2026-11-11
+**仓库**：TensorBEM 　**分支**：agent/m13836（m15430 第 2 轮续作）　**日期**：2026-11-11
+**m15430 增量**：材料敏感性扫描由 E∈{1,5,10} GPa 扩至 E∈{1,5,10,20,30} GPa，数值确认修正随 E 单调下降（4.30%→1.72%），V9 上界仍 <10%；新增 2 个测试（本目录测试 65 passed）。
 **模块**：`src/tensorbem/flexural_gravity.py`（新增 §"Unified flexural-gravity + mass-loading"）
 **验证脚本**：`scripts/verify_flexural_gravity_mass_loading.py`
-**测试**：`tests/test_flexural_gravity_mass_loading.py`（63 passed）
+**测试**：`tests/test_flexural_gravity_mass_loading.py`（65 passed）
 **数值工件**：本目录 `verification_report.json`、`results.md`（均由脚本生成，零手抄）
 **修订**：重开 #661 第 1 轮（m15384）——在既有 V1–V10 之上补两条**独立路线** V11/V12 与
 `fig_verification_routes.png`；原 V1–V10 数值一字未变（脚本重跑 byte-identical）。
@@ -47,7 +48,7 @@ $$\omega^2=\frac{(g k + D k^5/\rho_w)\tanh(kH)}{1+\mu k\tanh(kH)},\qquad \mu=\fr
 | 参数 | 符号 | 取值 | 单位 |
 |---|---|---|---|
 | 冰厚（工况） | h | 0.1 / 0.5 / 1.0 / 2.0 | m |
-| 杨氏模量（敏感性） | E | 1.0 / 5.0 / 10.0 ×10⁹ | Pa |
+| 杨氏模量（敏感性） | E | 1.0 / 5.0 / 10.0 / 20.0 / 30.0 ×10⁹ | Pa |
 | 泊松比 | ν | 0.334 | — |
 | 水密度 | ρ_w | 1025 | kg/m³ |
 | 冰密度 | ρ_i | 917 | kg/m³ |
@@ -91,7 +92,7 @@ $$\omega^2=\frac{(g k + D k^5/\rho_w)\tanh(kH)}{1+\mu k\tanh(kH)},\qquad \mu=\fr
 | V6 | 解析 c_g vs ω(k) 中心差分 | 1e-6 |
 | V7 | ω→k→ω 往返（ω∈[1e-2,31.6] rad/s） | 1e-9 |
 | V8 | 冰缘 |R|²+|T|²=1（含惯性） | 1e-12 |
-| V9 | E∈{1,5,10} GPa × h∈{0.5,1,2} m × 7 频率的惯性修正上界 | 10% |
+| V9 | E∈{1,5,10,20,30} GPa × h∈{0.5,1,2} m × 7 频率的惯性修正上界 | 10% |
 | V10 | sign(λ_ice/λ_open − 1) == sign(f − f_c)，f_c 由 k_c 导出 | 全数一致 |
 | V11 | **独立数值路线**：离散 BVP 求 ψ′(0)/ψ(0)（不解析 tanh）→ 带惯性的自由面条件 → ω²，与 eq. 3 比；要求二阶网格收敛 | 最细 1e-6；粗档观测阶 ∈[1.7,2.3] |
 | V12 | **变分（能量）平衡**：PE=(ρ_w g+Dk⁴)a²/4 对 KE=ρ_w ω²a²I/(4ψ′(0)²)+m″ω²a²/4，I 用自适应求积；并检验分母单边变体被拒 | 能量残差 1e-9；变体偏差 >1% |
@@ -141,7 +142,7 @@ k < k_c（长波）惯性占优 → 波变慢（波长缩短）；k > k_c（短�
 | 1.0 | −0.08% | −0.80% | −2.09% | −2.47% | −2.10% | −1.93% | −1.93% |
 | 2.0 | −0.16% | −1.57% | −2.92% | −2.67% | −2.29% | −2.25% | −2.38% |
 
-材料敏感性（完整表见 `results.md`）：E = 1 GPa 时修正上界 **4.30%**，E = 5 GPa **2.92%**，E = 10 GPa **2.41%**（全 63 个工况同号，均为「冰下波长更短」方向）。
+材料敏感性（完整表见 `results.md`）：E = 1 GPa 时修正上界 **4.30%**，E = 5 GPa **2.92%**，E = 10 GPa **2.41%**，E = 20 GPa **1.95%**，E = 30 GPa **1.72%**（全 105 个工况同号，均为「冰下波长更短」方向；随 E 单调下降，与 k_c ∝ E^{−1/3} 的预测一致，低温高模量冰的惯性修正更小）。
 
 ### 3.3b V12 暴露的物理：浅水冰区的「惯性项位置」是可判定的
 
@@ -207,7 +208,7 @@ k < k_c（长波）惯性占优 → 波变慢（波长缩短）；k > k_c（短�
 1. **冰缘仍用群速度导纳匹配（1D）**，未做位移/斜率/弯矩/剪力四条件 + evanescent 模态的 Wiener–Hopf 严格解；`include_plate_inertia` 只把 k 与 c_g 换成 eq. 3，能量守恒保持（1e-16），但 R 的**绝对量级**仍属近似，不可作定量预报。
 2. **薄板（Kirchhoff）假设**：h/λ ≪ 1；f=0.3 Hz、h=2 m 时 λ_ice≈102 m，h/λ≈0.02，仍在适用域内。
 3. **仅线性、单层、均匀冰**：无冰厚渐变耦合（`wedge_ice_reflection` 仍用 eq. 2）、无粘性/破碎耗散、冰密度取常数。
-4. 材料敏感性只扫到 E∈[1,10] GPa；高模量/低温冰（E>10 GPa）的修正会继续下降（k_c ∝ E^{−1/3}），未扫。
+4. 材料敏感性已扫至 E∈[1,30] GPa（m15430 扩至 20/30 GPa，单调下降预测获数值确认）；E>30 GPa 的修正会继续下降（k_c ∝ E^{−1/3}），未扫。
 5. **V12 的「分母单边变体」是自己构造的对照物**，不是文献里的既有模型；它只用来证明能量判据有
    分辨力（浅水档偏差 O(1)），不能引作「某文献模型错」的证据。深水档该变体与 eq. 3 数值不可分，
    所以本判据的分辨力是**浅水专属**的。
@@ -222,6 +223,6 @@ PYTHONPATH=src python scripts/verify_flexural_gravity_mass_loading.py
 PYTHONPATH=src python -m pytest tests/test_flexural_gravity_mass_loading.py -q
 ```
 
-- 新测试：**63 passed**（3.9 s；重开 #661 第 1 轮新增 9 条：V11 有限差分 4 条、V12 能量平衡 5 条）
+- 新测试：**65 passed**（4.2 s；重开 #661 第 1 轮 m15384 新增 9 条：V11 有限差分 4 条、V12 能量平衡 5 条；第 2 轮 m15430 新增 2 条：30 GPa 上界 1 条、随 E 单调下降 1 条）
 - 既有 `tests/test_flexural_gravity.py` 不受影响（全绿）
 - 既有 `tests/test_doc_claim_audit.py` 的 2 条红为**基线上已存在**（在干净检出 `6600bcc` 上同样 2 failed），非本单引入
