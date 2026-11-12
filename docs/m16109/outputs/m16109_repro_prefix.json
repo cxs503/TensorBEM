@@ -1,0 +1,15 @@
+{
+  "far_fraction_unset": {
+    "raised": null,
+    "value": 0.0
+  },
+  "matvec_unset": {
+    "raised": null,
+    "max_abs": 0.0,
+    "rel_err_vs_direct": 1.0
+  },
+  "control_set_up": {
+    "far_fraction": 0.17391304347826086,
+    "rel_err_vs_direct": 1.3333075559928613e-06
+  }
+}
