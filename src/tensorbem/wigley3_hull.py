@@ -2,9 +2,10 @@
 
 The Wigley III hull (Journee 1992) is a modified parabolic hull form:
 
-    y(x, z) = (B/2) * (1 - xi^2) * (1 - zeta^2) * (1 + alpha * zeta^2)
+    y(x, z) = (B/2) * (1 - xi^2) * (1 - zeta^2) * (1 + alpha * xi^2)
 
-where xi = 2x/L in [-1, 1] and zeta = z/T in [-1, 0].
+where xi = 2x/L in [-1, 1] and zeta = z/T in [-1, 0].  The fullness term is
+longitudinal; see :func:`wigley3_half_breadth` for the adjudication.
 
 Reference:
     Journee, J.M.J. (1992). "Experiments and Calculations on 4 Wigley
@@ -41,12 +42,25 @@ def wigley3_half_breadth(
     T: float = WIGLEY3_T,
     alpha: float = WIGLEY3_ALPHA,
 ) -> float | FloatArray:
-    """Compute the half-breadth of the Wigley III hull at (x, z)."""
+    """Compute the half-breadth of the Wigley III hull at (x, z).
+
+    ``y = (B/2) (1 - xi^2) (1 - zeta^2) (1 + alpha xi^2)`` with
+    ``xi = 2x/L`` and ``zeta = z/T``: the fullness parameter acts on the
+    **longitudinal** coordinate, which is what "fuller ends than the standard
+    parabolic Wigley (Wigley I)" in
+    :mod:`tensorbem.wigley3_freq` / ``docs/wigley3_freq_verification_report.md``
+    means.  Applying it to ``zeta`` instead (the pre-m16935 code) keeps
+    ``Cwp = 2/3`` while making the sections full -- a hull that carries the
+    same ``Cb = 0.543`` but is a different ship, 36 % apart in heave added
+    mass (mission m16892 geometry gate).  Adjudicated and fixed in m16935; the
+    two builders are now guarded to agree pointwise by
+    ``tests/test_wigley3_hull_alpha_axis.py``.
+    """
     x = np.asarray(x, dtype=float)
     z = np.asarray(z, dtype=float)
     xi = 2.0 * x / L
     zeta = z / T
-    return (B / 2.0) * (1.0 - xi**2) * (1.0 - zeta**2) * (1.0 + alpha * zeta**2)
+    return (B / 2.0) * (1.0 - xi**2) * (1.0 - zeta**2) * (1.0 + alpha * xi**2)
 
 
 def wigley3_displaced_volume(
@@ -188,21 +202,30 @@ def compute_wigley3_properties(
     volume = L * B * T * (4.0 / 9.0 + 4.0 * alpha / 45.0)
     mass = rho * volume
 
-    A_wp = 2.0 * B * L / 3.0
-    I_xx = 4.0 * B**3 * L / 105.0
-    I_yy = B * L**3 / 30.0
-    # Centre of buoyancy.  With the analytic half breadth
-    # b(x, z) = (B/2)(1 - xi^2)(1 - zeta^2)(1 + alpha zeta^2) the vertical
-    # moment integrates in closed form,
-    #     int_{-1}^{0} zeta (1 - zeta^2)(1 + alpha zeta^2) d zeta
-    #         = -(1/4 + alpha/12),
-    #     int_{-1}^{0}      (1 - zeta^2)(1 + alpha zeta^2) d zeta
-    #         =  (2/3 + 2 alpha/15),
-    # hence KB = T [1 - (15 + 5 alpha)/(40 + 8 alpha)], which reduces to the
-    # classical KB = 5T/8 at alpha = 0.  (The previous formula
-    # T (65 + 11 alpha)/(16 (5 + alpha)) returned 0.8125 T instead of 0.625 T
-    # at alpha = 0, i.e. a +30 % centre-of-buoyancy error.)
-    KB = T * (1.0 - (15.0 + 5.0 * alpha) / (40.0 + 8.0 * alpha))
+    # Waterplane area.  At the waterplane zeta = 0 every vertical factor is 1,
+    # hence y(x, 0) = (B/2)(1 - xi^2)(1 + alpha xi^2) and
+    #     A_wp = 2 * int_{-L/2}^{L/2} y dx = B L (2/3 + 2 alpha/15).
+    A_wp = B * L * (2.0 / 3.0 + 2.0 * alpha / 15.0)
+    # Transverse second moment of the waterplane, I_xx = (2/3) int y(x,0)^3 dx.
+    # With u = xi the polynomial integral is exact:
+    #     int_{-1}^{1} (1-u^2)^3 (1+alpha u^2)^3 du
+    #         = 32/35 + alpha 32/105 + alpha^2 32/385 + alpha^3 32/3003,
+    # so I_xx = (B^3 L / 24) * E.
+    e_moment = (
+        32.0 / 35.0
+        + alpha * 32.0 / 105.0
+        + alpha**2 * 32.0 / 385.0
+        + alpha**3 * 32.0 / 3003.0
+    )
+    I_xx = B**3 * L / 24.0 * e_moment
+    # I_yy = int x^2 2y dx = (B L^3/8) int_{-1}^{1} u^2 (1-u^2)(1+alpha u^2) du
+    #     = (B L^3/8) (4/15 + 4 alpha/35).
+    I_yy = B * L**3 / 8.0 * (4.0 / 15.0 + 4.0 * alpha / 35.0)
+    # Centre of buoyancy.  Every section is A(x) (1 - zeta^2) with the same
+    # vertical shape, so the vertical centroid is zeta_c = -3/8 independently of
+    # alpha: KB = T - 3T/8 = 5T/8.  (For the retired zeta-placed alpha the
+    # section shape itself changed with alpha and KB drifted with it.)
+    KB = 5.0 * T / 8.0
     BM_T = I_xx / volume
     BM_L = I_yy / volume
     KG_default = T * 0.5

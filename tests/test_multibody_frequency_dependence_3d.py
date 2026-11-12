@@ -72,7 +72,11 @@ def test_wigley_mesh_is_valid_wetted_hull() -> None:
 
 def test_wigley_geometry_converges_to_analytic_values() -> None:
     analytic_volume = wigley3_displaced_volume()
-    analytic_waterplane = WIGLEY3_B * WIGLEY3_L * 2.0 / 3.0
+    from tensorbem.wigley3_hull import WIGLEY3_ALPHA
+    # longitudinal fullness: A_wp = B L (2/3 + 2 alpha/15) (m16935)
+    analytic_waterplane = WIGLEY3_B * WIGLEY3_L * (
+        2.0 / 3.0 + 2.0 * WIGLEY3_ALPHA / 15.0
+    )
     errors = []
     waterplane_errors = []
     for nx in (12, 24, 40):

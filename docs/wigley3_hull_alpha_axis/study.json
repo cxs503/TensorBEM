@@ -1,0 +1,47 @@
+{
+ "mission": "m16935",
+ "omega": 1.0,
+ "density": 1025.0,
+ "gravity": 9.80665,
+ "alpha": 1.1087500000000008,
+ "analytic_volume": 0.09163125,
+ "panel_level": 10,
+ "cells": {
+  "wigley3_hull": {
+   "panels": 180,
+   "A33": 188.6988318779193,
+   "A33_over_rhoV": 2.009100839989758,
+   "B33_over_rhoV_omega": 0.26476172065151915,
+   "mesh_volume_rel_error": -0.03577377921475777,
+   "wall_s": 2.0
+  },
+  "wigley3_freq": {
+   "panels": 200,
+   "A33": 191.40969685357905,
+   "A33_over_rhoV": 2.0379637695876496,
+   "B33_over_rhoV_omega": 0.26599073473400464,
+   "mesh_volume_rel_error": -0.020845240024555012,
+   "wall_s": 3.09
+  }
+ },
+ "cross_builder": {
+  "A33_rel_split": 0.014366093041919603,
+  "B33_rel_split": 0.004641962891996476
+ },
+ "pre_fix_reference": {
+  "source": "benchmarks/verified/wigley3_recalled_ref/results.json (m16892, level 20 meshes)",
+  "A33_over_rhoV_wigley3_hull": 1.611257137008352,
+  "A33_over_rhoV_wigley3_freq": 1.4556533984300866,
+  "A33_rel_split": -0.09657287778856793
+ },
+ "geometry": {
+  "Cwp_now": 0.8144996485417038,
+  "Cwp_retired_recipe": 0.6666665,
+  "Cwp_analytic": 0.8145,
+  "Cb": 0.543,
+  "Cm": 0.6666666666666666,
+  "KB_over_T": 0.625,
+  "A_wp": 0.73305,
+  "max_abs_y_difference_vs_wigley3_freq": 5.551115123125783e-17
+ }
+}
