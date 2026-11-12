@@ -116,6 +116,7 @@ correction log inside the generated block records what changed.
 | 2-D deep-water free-surface Green function | **REAL** | `tensorbem.free_surface` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | 3-D Delhommeau / Kelvin free-surface Green function | **REAL** | `tensorbem.free_surface3d`, `tensorbem.free_surface_solver3d` | 2 node(s) in 1 file(s) | `docs/three_dimensional_bem.md` |
 | 3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209) | **REAL** | `tensorbem.acoustic3d` | 3 node(s) in 1 file(s) | `docs/acoustic3d_helmholtz.md` |
+| Linear wavemaker transfer functions (piston and flap, constant depth) | **REAL** | `tensorbem.wavemaker`, `tensorbem.benchmarks.wave_flume_wavemaker` | 5 node(s) in 1 file(s) | `docs/wave_flume_wavemaker.md` |
 | Ursell submerged-cylinder radiation benchmark | **REAL** | `tensorbem.benchmarks.ursell_cylinder`, `tensorbem.free_surface_solver` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Hulme floating hemisphere (3-D radiation) | **REAL** | `tensorbem.benchmarks.floating_hemisphere`, `tensorbem.benchmarks.hulme_diffraction_verification` | 2 node(s) in 1 file(s) | `docs/marine_bem_benchmarks.md` |
 | Near-boundary near-singular panel quadrature + hemisphere heave Hulme anchor | **REAL** | `tensorbem.near_field_quadrature`, `tensorbem.benchmarks.nearfield_quadrature` | 5 node(s) in 1 file(s) | `docs/nearfield_quadrature/report.md` |
@@ -185,7 +186,7 @@ correction log inside the generated block records what changed.
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Pekeris two-layer shallow-water normal modes with an elastic ice cover | **REAL** | `tensorbem.pekeris_acoustics` | 3 node(s) in 1 file(s) | `docs/pekeris_w22_cross_route/report.md` |
 
-Counts: **76** REAL — 76 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **77** REAL — 77 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -200,7 +201,7 @@ Counts: **76** REAL — 76 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-93 of 97 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **0 are unowned**.
+94 of 98 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.coefficients` — hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.
