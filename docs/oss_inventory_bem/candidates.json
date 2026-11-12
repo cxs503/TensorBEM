@@ -1,0 +1,1507 @@
+{
+ "generated_at_utc": "2026-11-12T14:12:04Z",
+ "channels": {
+  "search_queries": [
+   "boundary element method hydrodynamics",
+   "boundary element",
+   "potential flow hydrodynamics",
+   "panel method",
+   "seakeeping",
+   "ship hydrodynamics",
+   "wave energy converter",
+   "boundary element method",
+   "capytaine",
+   "nemoh"
+  ],
+  "seeds_verified": [
+   "capytaine/capytaine",
+   "WEC-Sim/WEC-Sim",
+   "WEC-Sim/BEMIO",
+   "bempp/bempp-cl",
+   "exafmm/exafmm-t",
+   "OpenMDAO/OpenMDAO",
+   "LHEEA/NEMOH",
+   "Nemoh/Nemoh",
+   "mcodevmill/NEMOH",
+   "YumingLiu/HAMS",
+   "pmgbergen/BEM",
+   "pmgbergen/bempp"
+  ],
+  "seeds_missing": [
+   "Nemoh/Nemoh",
+   "mcodevmill/NEMOH",
+   "YumingLiu/HAMS",
+   "pmgbergen/BEM",
+   "pmgbergen/bempp"
+  ]
+ },
+ "n_unique": 82,
+ "candidates": [
+  {
+   "full_name": "OpenMDAO/OpenMDAO",
+   "html_url": "https://github.com/OpenMDAO/OpenMDAO",
+   "description": "OpenMDAO repository. ",
+   "stars": 823,
+   "forks": 324,
+   "language": "Python",
+   "license": "NOASSERTION",
+   "pushed_at": "2026-11-11T15:11:58Z",
+   "created_at": "2016-08-25T15:53:25Z",
+   "archived": false,
+   "topics": [
+    "framework",
+    "nasa",
+    "open-source",
+    "openmdao",
+    "optimization"
+   ],
+   "discovered_by": [
+    "seed"
+   ]
+  },
+  {
+   "full_name": "capytaine/capytaine",
+   "html_url": "https://github.com/capytaine/capytaine",
+   "description": "Python BEM solver for linear potential flow, based on Nemoh.",
+   "stars": 235,
+   "forks": 91,
+   "language": "Python",
+   "license": "Apache-2.0",
+   "pushed_at": "2026-11-10T15:11:09Z",
+   "created_at": "2017-09-16T13:11:11Z",
+   "archived": false,
+   "topics": [
+    "boundary-element-method",
+    "fortran",
+    "hydrodynamics",
+    "potential-flow",
+    "python",
+    "sea-keeping",
+    "water-wave",
+    "wave-energy"
+   ],
+   "discovered_by": [
+    "search:potential flow hydrodynamics",
+    "seed"
+   ]
+  },
+  {
+   "full_name": "bempp/bempp-cl",
+   "html_url": "https://github.com/bempp/bempp-cl",
+   "description": "A fast Python based just-in-time compiling boundary element library",
+   "stars": 229,
+   "forks": 61,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2026-09-21T14:00:12Z",
+   "created_at": "2019-04-16T18:07:34Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:ship hydrodynamics",
+    "seed"
+   ]
+  },
+  {
+   "full_name": "WEC-Sim/WEC-Sim",
+   "html_url": "https://github.com/WEC-Sim/WEC-Sim",
+   "description": "Wave Energy Converter Simulator (WEC-Sim), an open-source code for simulating wave energy converters. ",
+   "stars": 196,
+   "forks": 198,
+   "language": "MATLAB",
+   "license": "Apache-2.0",
+   "pushed_at": "2026-10-12T18:40:19Z",
+   "created_at": "2014-06-03T16:56:49Z",
+   "archived": false,
+   "topics": [
+    "hydrodynamics",
+    "marine-renewable-energy",
+    "matlab",
+    "scr-1647",
+    "simulink",
+    "snl-applications",
+    "wave-energy",
+    "wec-sim"
+   ],
+   "discovered_by": [
+    "seed"
+   ]
+  },
+  {
+   "full_name": "HomerReid/scuff-em",
+   "html_url": "https://github.com/HomerReid/scuff-em",
+   "description": "A comprehensive and full-featured computational physics suite for boundary-element analysis of electromagnetic scattering, fluctuation-induced phenomena (Casimir forces and radiative heat transfer), nanophotonics, RF device engineering, electrostatics, and more. Includes a core library with C++ and python APIs as well as many command-line applications.  ",
+   "stars": 172,
+   "forks": 60,
+   "language": "C",
+   "license": "GPL-2.0",
+   "pushed_at": "2020-06-16T03:50:46Z",
+   "created_at": "2014-10-08T00:51:44Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "BEMRosetta/BEMRosetta",
+   "html_url": "https://github.com/BEMRosetta/BEMRosetta",
+   "description": "Hydrodynamic coefficients viewer and converter for Boundary Element Method solver formats",
+   "stars": 123,
+   "forks": 35,
+   "language": "C++",
+   "license": "GPL-3.0",
+   "pushed_at": "2026-10-28T12:39:56Z",
+   "created_at": "2019-03-13T11:46:14Z",
+   "archived": false,
+   "topics": [
+    "boundary-element",
+    "hydrodynamic-coefficients-viewer",
+    "hydrodynamics",
+    "mesh-processing",
+    "meshviewer",
+    "offshore-wind-platforms",
+    "potential-flow",
+    "wave-energy"
+   ],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics",
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "jerryjappinen/scroll-scope",
+   "html_url": "https://github.com/jerryjappinen/scroll-scope",
+   "description": "Small JS plugin to keep parent elements still when scrolling an element past their boundaries",
+   "stars": 105,
+   "forks": 4,
+   "language": "PHP",
+   "license": "MIT",
+   "pushed_at": "2023-01-07T20:12:20Z",
+   "created_at": "2015-05-30T11:41:57Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "krcools/BEAST.jl",
+   "html_url": "https://github.com/krcools/BEAST.jl",
+   "description": "Boundary Element Analysis and Simulation Toolkit",
+   "stars": 96,
+   "forks": 45,
+   "language": "Julia",
+   "license": "NOASSERTION",
+   "pushed_at": "2026-11-04T15:05:34Z",
+   "created_at": "2017-04-09T15:56:05Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "exafmm/exafmm-t",
+   "html_url": "https://github.com/exafmm/exafmm-t",
+   "description": "A kernel-independent fast multipole method library with Python interface.",
+   "stars": 83,
+   "forks": 21,
+   "language": "C++",
+   "license": "BSD-3-Clause",
+   "pushed_at": "2021-09-09T15:15:23Z",
+   "created_at": "2018-04-12T23:41:54Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "seed"
+   ]
+  },
+  {
+   "full_name": "mathLab/pi-BEM",
+   "html_url": "https://github.com/mathLab/pi-BEM",
+   "description": "Parallel Boundary Element Method solver",
+   "stars": 72,
+   "forks": 42,
+   "language": "C++",
+   "license": "LGPL-2.1",
+   "pushed_at": "2026-10-20T15:12:01Z",
+   "created_at": "2016-07-15T13:47:05Z",
+   "archived": false,
+   "topics": [
+    "bem-simulation",
+    "hacktoberfest",
+    "metis",
+    "opencascade",
+    "pi-bem",
+    "trilinos"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "matthieuaussal/gypsilab",
+   "html_url": "https://github.com/matthieuaussal/gypsilab",
+   "description": "The gypsilab project is an open-source MATLAB toolbox for fast numerical computation with finite element, boundary element and ray-tracing methods. Accessible with a high-level programming language, it gives a useful framework for fast prototyping. Initially designed for numerical acoustics, many physics problems can also be addressed. ",
+   "stars": 69,
+   "forks": 20,
+   "language": "MATLAB",
+   "license": null,
+   "pushed_at": "2021-09-17T12:38:28Z",
+   "created_at": "2017-07-10T12:22:09Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "LHEEA/Nemoh",
+   "html_url": "https://github.com/LHEEA/Nemoh",
+   "description": "This project has migrated to GitLab: https://gitlab.com/lheea/Nemoh",
+   "stars": 65,
+   "forks": 36,
+   "language": "Fortran",
+   "license": "Apache-2.0",
+   "pushed_at": "2023-01-26T19:05:01Z",
+   "created_at": "2017-12-12T08:48:57Z",
+   "archived": true,
+   "topics": [],
+   "discovered_by": [
+    "seed"
+   ]
+  },
+  {
+   "full_name": "Timmmdavis/CutAndDisplace",
+   "html_url": "https://github.com/Timmmdavis/CutAndDisplace",
+   "description": "Boundary Element MATLAB code. Modelling faults and deformation",
+   "stars": 63,
+   "forks": 28,
+   "language": "MATLAB",
+   "license": "GPL-3.0",
+   "pushed_at": "2026-10-27T15:58:10Z",
+   "created_at": "2017-07-03T09:23:42Z",
+   "archived": false,
+   "topics": [
+    "2d",
+    "3d",
+    "boundary",
+    "boundary-element",
+    "dislocation",
+    "elastic",
+    "element",
+    "engineering",
+    "friction",
+    "geology",
+    "matlab",
+    "method",
+    "modelling"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "ErikHansenGit/EHL",
+   "html_url": "https://github.com/ErikHansenGit/EHL",
+   "description": "MATLAB solver for Elastohydrodynamic Lubrication (EHL) problems. The solver is based on a Finite Volume (FV) discretization of the Reynolds equation incorporating mass-conserving cavitation through the cavity fraction and elastic deformation through the application of the Boundary Element Method (BEM) to an elastic half-space. Shear thinning, Roelands and Dowson-Higginson relations are also embedded in the code. Furthermore, the load-balance equation is considered.",
+   "stars": 61,
+   "forks": 14,
+   "language": "MATLAB",
+   "license": "Unlicense",
+   "pushed_at": "2023-11-30T07:32:23Z",
+   "created_at": "2020-09-07T14:51:40Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "ShelvanLee/XFEM",
+   "html_url": "https://github.com/ShelvanLee/XFEM",
+   "description": " # XFEM_Fracture2D  ### Description  This is a Matlab program that can be used to solve fracture problems involving arbitrary multiple crack propagations in a 2D linear-elastic solid based on the principle of minimum potential energy. The extended finite element method is used to discretise the solid continuum considering cracks as discontinuities in the displacement field. To this end, a strong discontinuity enrichment and a square-root singular crack tip enrichment are used to describe each crack. Several crack growth criteria are available to determine the evolution of cracks over time; apart from the classic maximum tension (or hoop-stress) criterion, the minimum total energy criterion and the local symmetry criterion are implemented implicitly with respect to the discrete time-stepping.   ### Key features   * *Fast:* The stiffness matrix and the force vector (i.e. the equations' system) and the enrichment tracking data structures are updated at each time step only with respect to the changes in the fracture topology. This ultimately results in the major part of the computational expense in the solution to the linear system of equations rather than in the post-processing of the solution or in the assembly and updating of the equations. As Matlab offers fast and robust direct solvers, the computational times are reasonably fast.  * *Robust.* Suitable for multiple crack propagations with intersections. Furthermore, the stress intensity factors are computed robustly via the interaction integral approach (with the inclusion of the terms to account for crack surface pressure, residual stresses or strains). The minimum total energy criterion and the principle of local symmetry are implemented implicitly in time. The energy release rates are computed based on the stiffness derivative approach using algebraic differentiation (rather than finite differencing of the potential energy). On the other hand, the crack growth direction based on the local symmetry criterion is determined such that the local mode-II stress intensity factor vanishes; the change in a crack tip kink angle is approximated using the ratio of the crack tip stress intensity factors.  * *Easy to run.* Each job has its own input files which are independent form those of all other jobs. The code especially lends itself to running parametric studies. Various results can be saved relating to the fracture geometry, fracture mechanics parameters, and the elastic fields in the solid domain. Extensive visualisation library is available for plotting results.  ### Instructions  1. Get started by running the demo to showcase some of the capabilities of the program and to determine if it can be useful for you. At the Matlab's command line enter:  ```Matlab >> RUN_JOBS.m ```  This will execute a series of jobs located inside the *jobs directory* `./JOBS_LIBRARY/`. These jobs do not take very long to execute (around 5 minutes in total).  2. Subsequently, you can pick one of the jobs inside `./JOBS_LIBRARY/` by defining the job title:  ```Matlab >> job_title = 'several_cracks/edge/vertical_tension' ```  3. Then you can open all the relevant scripts for this job as follows:  ```Matlab >> open_job ```  The following input scripts for the *job* will be open in the Matlab's editor:  1. `JOB_MAIN.m`: This is the job's main script. It is called when executing `RUN_JOB` (or `RUN_JOBS`) and acts like a wrapper. Notably, it can serve as a convenient interface to run parametric studies and to save intermediate simulation results. 2. `Input_Scope.m`: This defines the scope of the simulation. From which crack growth criteria to use, to what to compute and what results to show via plots and/or movies. To put it simply, the script is a bunch of \"switches\" that tell the program what the user wants to be done. 3. `Input_Material.m`: Defines the material's elastic properties in different regions or layers (called \"phases\") of the computational domain. Moreover, it defines the fracture toughness of the material (assumed to be constant in all material phases).  4. `Input_Crack.m`: Defines the initial crack geometry. 5. `Input_BC.m`: Defines boundary conditions, such as displacements, tractions, crack surface pressure (assumed to be constant in all cracks), body loads (e.g. gravity, pre-stress or pre-strain). 6. `Mesh_make.m`: In-house structured mesh generator for rectangular domains using either linear triangle or bilinear quadrilateral elements. It is possible to mesh horizontal layers using different mesh sizes. 7. `Mesh_read.m`: Gmsh based mesh reader for version-1 mesh files. Of course you can use your own mesh reader provided the output variables are of the correct format (see later). 8. `Mesh_file.m`: Specifies the mesh input file (.msh). At the moment, only Gmsh mesh files of version-1 are allowed.  ### Mesh_file.m  A mesh file needs to be able to output the following data or variables:  * `mNdCrd`: Node coordinates, size = `[nNdStd, 2]` * `mLNodS`: Element connectivities, size = `[nElemn,nLNodS]` * `vElPhz`: Element material phase (or region) ID's, size = `[nElemn,1]` * `cBCNod`: cell of boundary nodes, cell size = `{nBound,1}`, cell element size = `[nBnNod,2]`  Example mesh files are located in `./JOBS_LIBRARY/`. Gmsh version-1 file format is described [here](http://www.manpagez.com/info/gmsh/gmsh-2.4.0/gmsh_60.php).  ### Additional notes  * global variables are defined in `.\\Routines_AuxInput\\Declare_Global.m` * External libraries are `.\\Other_Libs\\distmesh` and `.\\Other_Libs\\mesh2d`  ### References  Two external meshing libraries are used for the local mesh refinement and remeshing at the crack tip during crack propagation or prior to a crack intersection with another crack or with a boundary of the domain. Specifically, these libraries, which are located in `.\\Other_Libs\\`, are the following:  * [*mesh2d*](https://people.sc.fsu.edu/~jburkardt/m_src/mesh2d/mesh2d.html) by Darren Engwirda * [*distmesh*](http://persson.berkeley.edu/distmesh/) by Per-Olof Persson and Gilbert Strang.    ### Issues and Support  For support or questions please email [sutula.danas@gmail.com](mailto:sutula.danas@gmail.com).  ### Authors  Danas Sutula, University of Luxembourg, Luxembourg.   If  you  find  this  code  useful, we  kindly  ask  that  you  consider  citing  us.  * [Minimum energy multiple crack propagation](http://hdl.handle.net/10993/29414)",
+   "stars": 60,
+   "forks": 5,
+   "language": "MATLAB",
+   "license": "MIT",
+   "pushed_at": "2022-04-28T15:06:40Z",
+   "created_at": "2022-04-28T15:04:40Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "joconnor22/LIFE",
+   "html_url": "https://github.com/joconnor22/LIFE",
+   "description": "A parallel lattice Boltzmann-immersed boundary-finite element (LIFE) solver for fluid-structure interaction.",
+   "stars": 54,
+   "forks": 20,
+   "language": "C++",
+   "license": "GPL-3.0",
+   "pushed_at": "2022-05-06T15:24:56Z",
+   "created_at": "2019-10-18T16:03:42Z",
+   "archived": false,
+   "topics": [
+    "computational-fluid-dynamics",
+    "finite-element-method",
+    "fluid-structure-interaction",
+    "immersed-boundary",
+    "lattice-boltzmann"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "david-hahn/FractureRB",
+   "html_url": "https://github.com/david-hahn/FractureRB",
+   "description": "Sources for the paper Fast approximations for boundary element based brittle fracture simulation",
+   "stars": 53,
+   "forks": 9,
+   "language": "C++",
+   "license": "GPL-2.0",
+   "pushed_at": "2025-03-24T08:55:28Z",
+   "created_at": "2016-04-11T08:09:04Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "ShukaiYa/SBFEM-UEL",
+   "html_url": "https://github.com/ShukaiYa/SBFEM-UEL",
+   "description": "The source file of the implementation of ABAQUS polyhedral user element based on the scaled boundary finite element method (SBFEM).",
+   "stars": 46,
+   "forks": 14,
+   "language": "Fortran",
+   "license": "GPL-3.0",
+   "pushed_at": "2021-01-20T05:29:35Z",
+   "created_at": "2020-10-16T03:20:53Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "BinWang0213/PyBEM2D",
+   "html_url": "https://github.com/BinWang0213/PyBEM2D",
+   "description": "A Python-based Boundary Element Library",
+   "stars": 42,
+   "forks": 11,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2021-10-30T07:52:53Z",
+   "created_at": "2017-09-08T02:00:34Z",
+   "archived": false,
+   "topics": [
+    "bem",
+    "boundary-element-method",
+    "python-library"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "rsugimoto/SurfaceOnlyDeformables",
+   "html_url": "https://github.com/rsugimoto/SurfaceOnlyDeformables",
+   "description": "The author's Implementation of \"Surface-Only Dynamic Deformables using a Boundary Element Method.\"",
+   "stars": 41,
+   "forks": 3,
+   "language": "C++",
+   "license": "MIT",
+   "pushed_at": "2022-09-12T17:03:52Z",
+   "created_at": "2022-08-25T04:59:55Z",
+   "archived": false,
+   "topics": [
+    "boundary-element",
+    "boundary-element-method",
+    "computer-graphics",
+    "deformable-bodies-dynamics",
+    "elastodynamics",
+    "physically-based-animation",
+    "physically-based-simulation",
+    "physics-based-animation",
+    "physics-simulation"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "bempp/bempp-rs",
+   "html_url": "https://github.com/bempp/bempp-rs",
+   "description": "Boundary element methods in Rust",
+   "stars": 39,
+   "forks": 6,
+   "language": "Rust",
+   "license": "BSD-3-Clause",
+   "pushed_at": "2025-08-04T14:56:42Z",
+   "created_at": "2022-11-05T09:18:26Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:ship hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "stgl/poly3d",
+   "html_url": "https://github.com/stgl/poly3d",
+   "description": "Boundary element method for modeling faults and fractures discretized into polygonal elements, reproduced from M.S. thesis of A. Thomas, 1993",
+   "stars": 37,
+   "forks": 15,
+   "language": "C",
+   "license": null,
+   "pushed_at": "2020-03-18T14:22:36Z",
+   "created_at": "2015-09-10T20:52:35Z",
+   "archived": false,
+   "topics": [
+    "boundary-element",
+    "stress"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "bobbiesimpson/Isogeometric-BEM",
+   "html_url": "https://github.com/bobbiesimpson/Isogeometric-BEM",
+   "description": "Matlab code for isogeometric boundary element analysis",
+   "stars": 36,
+   "forks": 23,
+   "language": "Matlab",
+   "license": null,
+   "pushed_at": "2012-06-14T20:12:49Z",
+   "created_at": "2011-03-22T23:19:52Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "Applied-Scientific-Research/Omega2D",
+   "html_url": "https://github.com/Applied-Scientific-Research/Omega2D",
+   "description": "Two-dimensional flow solver with GUI using vortex particle and boundary element methods",
+   "stars": 36,
+   "forks": 7,
+   "language": "C++",
+   "license": "GPL-3.0",
+   "pushed_at": "2025-02-15T15:57:54Z",
+   "created_at": "2018-12-05T19:23:10Z",
+   "archived": false,
+   "topics": [
+    "boundary-element-method",
+    "cfd",
+    "imgui",
+    "nbody-simulation",
+    "potential-flow",
+    "simd-parallelism",
+    "simulation",
+    "vortex-methods",
+    "vortex-panel-method"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "wcs211/BEM-3D-Python",
+   "html_url": "https://github.com/wcs211/BEM-3D-Python",
+   "description": "3D Python boundary element method solver ",
+   "stars": 34,
+   "forks": 18,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2015-09-03T22:34:46Z",
+   "created_at": "2015-06-10T16:25:11Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "krcools/CompScienceMeshes.jl",
+   "html_url": "https://github.com/krcools/CompScienceMeshes.jl",
+   "description": "Computational Geometry Foundations for Finite and Boundary Element Methods",
+   "stars": 34,
+   "forks": 33,
+   "language": "Julia",
+   "license": "NOASSERTION",
+   "pushed_at": "2026-11-03T21:23:29Z",
+   "created_at": "2017-03-28T15:51:30Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "Nikolaos-Matthaiakakis/MNPBEM",
+   "html_url": "https://github.com/Nikolaos-Matthaiakakis/MNPBEM",
+   "description": "MNPBEM is a toolbox for the simulation of metallic nanoparticles (MNP), using a boundary element method (BEM) approach.",
+   "stars": 34,
+   "forks": 15,
+   "language": "MATLAB",
+   "license": "GPL-2.0",
+   "pushed_at": "2023-01-04T12:32:27Z",
+   "created_at": "2022-06-05T17:04:18Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "JuliaOceanWaves/MarineHydro.jl",
+   "html_url": "https://github.com/JuliaOceanWaves/MarineHydro.jl",
+   "description": "Differentiable boundary element simulations for design and optimization of offshore structures",
+   "stars": 33,
+   "forks": 5,
+   "language": "Julia",
+   "license": "MIT",
+   "pushed_at": "2026-10-29T04:02:00Z",
+   "created_at": "2025-01-08T01:04:14Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "lzhw1991/AcousticBEM",
+   "html_url": "https://github.com/lzhw1991/AcousticBEM",
+   "description": "Boundary Element Method code for solving acoustic equations.",
+   "stars": 31,
+   "forks": 26,
+   "language": "Jupyter Notebook",
+   "license": "GPL-3.0",
+   "pushed_at": "2017-08-20T15:13:00Z",
+   "created_at": "2017-08-24T07:39:10Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "farhadkama/FEniCSx_Kamarei_Kumar_Lopez-Pamies",
+   "html_url": "https://github.com/farhadkama/FEniCSx_Kamarei_Kumar_Lopez-Pamies",
+   "description": "FEniCSx implementation for phase-field fracture modeling in elastic brittle materials. Includes finite element method (FEM) examples for computational mechanics, simulating crack nucleation and propagation in boundary value problems (e.g., Brazilian, poker-chip, and indentation tests).",
+   "stars": 29,
+   "forks": 16,
+   "language": null,
+   "license": "GPL-3.0",
+   "pushed_at": "2026-08-04T21:53:17Z",
+   "created_at": "2024-02-27T22:14:01Z",
+   "archived": false,
+   "topics": [
+    "brittle-fracture",
+    "computational-mechanics",
+    "fenics",
+    "fenicsx",
+    "finite-element-method",
+    "fracture-mechanics",
+    "phase-field-fracture",
+    "python",
+    "solid-mechanics"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "WEC-Sim/bemio",
+   "html_url": "https://github.com/WEC-Sim/bemio",
+   "description": "Boundary Element Method I/O (bemio)",
+   "stars": 28,
+   "forks": 17,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2023-07-12T19:25:45Z",
+   "created_at": "2015-03-04T18:24:01Z",
+   "archived": true,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "seed"
+   ]
+  },
+  {
+   "full_name": "YunchaoYang/NekIBM",
+   "html_url": "https://github.com/YunchaoYang/NekIBM",
+   "description": "A Multiphase flow simulation platform using Direct-forced Immersed Boundary Method based on Spectral element solver Nek5000. ",
+   "stars": 27,
+   "forks": 14,
+   "language": "Fortran",
+   "license": "NOASSERTION",
+   "pushed_at": "2024-12-12T21:40:48Z",
+   "created_at": "2019-11-12T17:23:55Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "mipals/BoundaryIntegralEquations.jl",
+   "html_url": "https://github.com/mipals/BoundaryIntegralEquations.jl",
+   "description": "A simple package for solving Boundary Integral Equations using the (collocation) Boundary Element Method.",
+   "stars": 27,
+   "forks": 1,
+   "language": "Julia",
+   "license": "MIT",
+   "pushed_at": "2026-04-09T00:26:42Z",
+   "created_at": "2022-04-21T09:09:02Z",
+   "archived": false,
+   "topics": [
+    "acoustics",
+    "bem",
+    "boundary-element-method",
+    "boundary-integral-equations"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "kmoored/BEM-2D-Matlab",
+   "html_url": "https://github.com/kmoored/BEM-2D-Matlab",
+   "description": "This is the source code for the Matlab version of the 2D boundary element method code.  This code is an unsteady potential flow solver.  The features include time-stepping, wake rollup, lumped wake elements, one degree-of-freedom equations of motion and a boundary layer solver.  ",
+   "stars": 26,
+   "forks": 13,
+   "language": "Matlab",
+   "license": null,
+   "pushed_at": "2015-04-23T03:32:52Z",
+   "created_at": "2015-04-06T15:39:55Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "nist-ionstorage/bem",
+   "html_url": "https://github.com/nist-ionstorage/bem",
+   "description": "triangulation, boundary element method (BEM), fast multipole method (FMM) code for python",
+   "stars": 24,
+   "forks": 22,
+   "language": "C",
+   "license": "NOASSERTION",
+   "pushed_at": "2017-10-11T10:45:12Z",
+   "created_at": "2017-08-26T15:13:59Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:capytaine"
+   ]
+  },
+  {
+   "full_name": "mo-hanxuan/MagicPBC",
+   "html_url": "https://github.com/mo-hanxuan/MagicPBC",
+   "description": "make periodic boundary condition (PBC) for the grid of finite element analysis (given the .inp file from Abaqus and modify the file to contain PBC) ",
+   "stars": 22,
+   "forks": 4,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2022-05-18T05:31:10Z",
+   "created_at": "2021-10-12T16:53:15Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "xclaeys/BemTool",
+   "html_url": "https://github.com/xclaeys/BemTool",
+   "description": "BemTool is a C++ boundary element library. ",
+   "stars": 21,
+   "forks": 8,
+   "language": "C++",
+   "license": "LGPL-3.0",
+   "pushed_at": "2021-10-28T22:34:53Z",
+   "created_at": "2017-08-17T16:09:12Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "tbenthompson/tectosaur",
+   "html_url": "https://github.com/tbenthompson/tectosaur",
+   "description": "Boundary element methods for crustal deformation and earthquake science.",
+   "stars": 21,
+   "forks": 5,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2021-04-01T00:45:36Z",
+   "created_at": "2016-05-27T20:51:13Z",
+   "archived": true,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "ChongminSong/Platypus",
+   "html_url": "https://github.com/ChongminSong/Platypus",
+   "description": "MATLAB code accompanying Song, Ch. (2018), The Scaled Boundary Finite Element Method: Introduction to Theory and Implementation, John Wiley & Sons Ltd",
+   "stars": 21,
+   "forks": 7,
+   "language": "MATLAB",
+   "license": null,
+   "pushed_at": "2019-06-10T07:36:42Z",
+   "created_at": "2019-06-10T07:06:39Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "XJTU-Zhou-group/Calculating-band-gaps-of-nonlinear-mechanical-metamaterials",
+   "html_url": "https://github.com/XJTU-Zhou-group/Calculating-band-gaps-of-nonlinear-mechanical-metamaterials",
+   "description": "Band gaps of are intrinsic physical properties of periodic structures, for example, mechanical metamaterials or phononic crystals, which indicate attenuation of wave propagation within a specific frequency range. Band gap calculation of mechanical metamaterials is realized via discretizing a representative volume element (RVE) and imposing a complex-valued Bloch wave boundary conditions. It is highly desirable to implement Bloch wave analysis in real-valued commercial finite element softwares. We present and detail an ABAQUS and Python implementation of Bloch wave analysis. 2D soft as well 3D hard mechanical metamaterials are chosen as numerical examples. Material and geometric nonlinearities are tackled properly and the effects of pre-strains are explored. Our numerical results are validated either by similar results reported in literature or by our experimental measurement.",
+   "stars": 21,
+   "forks": 6,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2021-09-23T13:44:23Z",
+   "created_at": "2021-09-22T14:25:31Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "brendanjmeade/Bem2d.jl",
+   "html_url": "https://github.com/brendanjmeade/Bem2d.jl",
+   "description": "Quadratic element linear elastic boundary elements in Julia",
+   "stars": 20,
+   "forks": 5,
+   "language": "Jupyter Notebook",
+   "license": "MIT",
+   "pushed_at": "2021-11-16T01:52:02Z",
+   "created_at": "2019-07-26T03:36:19Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "shash-sharma/OpenBEM",
+   "html_url": "https://github.com/shash-sharma/OpenBEM",
+   "description": "Open-source, modular, and customizable boundary element framework for electromagnetic simulation.",
+   "stars": 20,
+   "forks": 1,
+   "language": "C++",
+   "license": "NOASSERTION",
+   "pushed_at": "2026-10-06T21:22:30Z",
+   "created_at": "2025-09-19T16:06:20Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "fjargsto/abem",
+   "html_url": "https://github.com/fjargsto/abem",
+   "description": "Boundary Element Method for Acoustics",
+   "stars": 19,
+   "forks": 2,
+   "language": "Jupyter Notebook",
+   "license": "GPL-3.0",
+   "pushed_at": "2020-07-04T17:35:57Z",
+   "created_at": "2019-09-14T17:06:14Z",
+   "archived": false,
+   "topics": [
+    "acoustics",
+    "bem-methodology",
+    "simulation"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "Thiagohgl/neural-cab-audio-plugin",
+   "html_url": "https://github.com/Thiagohgl/neural-cab-audio-plugin",
+   "description": "Neural Cab is a FIR guitar cabinet simulator which generates its transfer functions by means of a Variational Auto-Encoder (VAE) trained with an additional adversarial loss and a very simple Boundary Element Method (BEM) simulation to consider the microphone position.",
+   "stars": 19,
+   "forks": 0,
+   "language": "C++",
+   "license": "GPL-3.0",
+   "pushed_at": "2022-06-07T21:11:37Z",
+   "created_at": "2022-06-07T20:44:24Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "hosembafer/react-tiny-autoscroll",
+   "html_url": "https://github.com/hosembafer/react-tiny-autoscroll",
+   "description": "Automatically scrolls the element when the cursor approaches the boundaries.",
+   "stars": 18,
+   "forks": 1,
+   "language": "TypeScript",
+   "license": "MIT",
+   "pushed_at": "2022-06-18T02:03:13Z",
+   "created_at": "2022-05-13T22:26:37Z",
+   "archived": false,
+   "topics": [
+    "autoscroll",
+    "react",
+    "react-autoscroll",
+    "scroll",
+    "scrollable"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "ZeppSav/BEMUse",
+   "html_url": "https://github.com/ZeppSav/BEMUse",
+   "description": "A lightweight boundary element method library for hydrodynamics and aerodynamics.",
+   "stars": 17,
+   "forks": 8,
+   "language": "C++",
+   "license": "GPL-3.0",
+   "pushed_at": "2025-07-15T12:16:56Z",
+   "created_at": "2022-09-30T10:41:34Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics",
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "wcs211/BEM-2D-Python",
+   "html_url": "https://github.com/wcs211/BEM-2D-Python",
+   "description": "2D Python boundary element method solver",
+   "stars": 17,
+   "forks": 7,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2016-05-01T14:21:51Z",
+   "created_at": "2015-04-13T19:02:10Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "galuszkm/CFD_Mapper",
+   "html_url": "https://github.com/galuszkm/CFD_Mapper",
+   "description": "Convert fluid pressure from CFD analysis into a boundary condition of Finite Element model.",
+   "stars": 17,
+   "forks": 3,
+   "language": "C#",
+   "license": "BSD-3-Clause",
+   "pushed_at": "2021-01-06T18:19:26Z",
+   "created_at": "2020-12-28T06:41:44Z",
+   "archived": false,
+   "topics": [
+    "cfd",
+    "cfx",
+    "fem",
+    "fluent",
+    "ls-dyna",
+    "lsdyna",
+    "mapping",
+    "marc",
+    "openfoam",
+    "pressure"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "Savin-Viswanathan/OMHyD-PA",
+   "html_url": "https://github.com/Savin-Viswanathan/OMHyD-PA",
+   "description": "Contains the OMHyD_V0R1 code and example files for the results discussed in the paper titled \"A pythonic approach to the boundary element method of solution for the three-dimensional infinite-depth water-wave diffraction radiation problem\"",
+   "stars": 17,
+   "forks": 4,
+   "language": null,
+   "license": "BSD-3-Clause",
+   "pushed_at": "2022-09-23T10:34:02Z",
+   "created_at": "2020-04-08T18:09:57Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "michaeljpeake/XIBEM",
+   "html_url": "https://github.com/michaeljpeake/XIBEM",
+   "description": "PhD code - eXtended Isogeometric Boundary Element Method",
+   "stars": 16,
+   "forks": 8,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2014-07-17T20:23:49Z",
+   "created_at": "2014-07-17T19:05:39Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "davecats/sfoglie",
+   "html_url": "https://github.com/davecats/sfoglie",
+   "description": "Coupled Boundary Layer Theory / Potential Theory Boundary Element Method solver for the incompressible flow around an airfoil",
+   "stars": 16,
+   "forks": 5,
+   "language": "MATLAB",
+   "license": "GPL-3.0",
+   "pushed_at": "2023-12-01T18:36:56Z",
+   "created_at": "2017-09-22T12:30:51Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "AlessandroDelVitto/FMM-BEM",
+   "html_url": "https://github.com/AlessandroDelVitto/FMM-BEM",
+   "description": "Fast Multipole Method implementation for the acceleration of the Boundary Element Method numerical solution of the Laplace equation ",
+   "stars": 16,
+   "forks": 1,
+   "language": "MATLAB",
+   "license": null,
+   "pushed_at": "2022-04-02T10:04:39Z",
+   "created_at": "2022-04-02T10:01:29Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element",
+    "search:capytaine"
+   ]
+  },
+  {
+   "full_name": "Mu-cq/StokesFlowAxisymmetricBoundaryIntegralMethod",
+   "html_url": "https://github.com/Mu-cq/StokesFlowAxisymmetricBoundaryIntegralMethod",
+   "description": "Compute the motion of droplets and particles in Stokes flows in axisymmetric domains using the Boundary Element Method (BEM) or the Spectral Boundary Integral Method (SBIM). The code is written in MATLAB with some possibility to use pre-compiled c-fuctions. The code includes: direct numerical simulations (DNS) with time stepping, Newton method, Continuation Method, Linear Stability Analysis and Edge Tracking Method.",
+   "stars": 15,
+   "forks": 1,
+   "language": null,
+   "license": null,
+   "pushed_at": "2019-02-21T19:37:28Z",
+   "created_at": "2019-09-13T12:52:21Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "jcdemunck5/DMS_Projects",
+   "html_url": "https://github.com/jcdemunck5/DMS_Projects",
+   "description": "These C/C++ source files consist of 150 classes, 300,000 lines of code, excluding a Qt-based user interface. Its functionality includes: GLM-statistics, hierarchical clustering, (non)-linear optimization, L1 and L2 norm minimization, Hungarian algorithm, EEG/MEG forward and inverse modelling, Boundary Element Method, spatio/temporal covariance modelling, image fusion, triangular meshes, KD-trees, topological error correction, marching cubes & spherical triangulations, sparse matrices and matrix operations, spherical harmonics, wavelets, spectra and spectrograms, Fast Fourier transform (FFTWest), data import for many different EEG/MEG data formats, data import for many image data formats. ",
+   "stars": 15,
+   "forks": 5,
+   "language": null,
+   "license": null,
+   "pushed_at": "2019-01-04T14:02:23Z",
+   "created_at": "2019-01-02T19:59:31Z",
+   "archived": false,
+   "topics": [
+    "algorithms",
+    "cpp",
+    "eeg-analysis",
+    "eeg-data",
+    "fmri-data-analysis",
+    "meg",
+    "qt4",
+    "visualization"
+   ],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "cwrowley/pysces",
+   "html_url": "https://github.com/cwrowley/pysces",
+   "description": "Boundary element method for python",
+   "stars": 14,
+   "forks": 9,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2016-01-19T17:00:34Z",
+   "created_at": "2015-04-29T22:33:59Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element"
+   ]
+  },
+  {
+   "full_name": "coderReview/Nemoh",
+   "html_url": "https://github.com/coderReview/Nemoh",
+   "description": "A frequency-domain potential flow hydrodynamics code developed by \u00c9cole Centrale de Nantes that has recently been released under the Apache 2.0 license",
+   "stars": 9,
+   "forks": 2,
+   "language": "FORTRAN",
+   "license": "Apache-2.0",
+   "pushed_at": "2014-01-26T20:47:06Z",
+   "created_at": "2014-02-20T01:08:03Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "AbdelAlsnayyan/BEMpp",
+   "html_url": "https://github.com/AbdelAlsnayyan/BEMpp",
+   "description": "A 3D Boundary Element Method for Acoustics and Electromagnetics in C++",
+   "stars": 5,
+   "forks": 0,
+   "language": "C++",
+   "license": null,
+   "pushed_at": "2023-09-20T03:08:25Z",
+   "created_at": "2023-09-19T03:22:32Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:ship hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "Xu-Duan/Potential-Flow-With-Complex-Green-Function",
+   "html_url": "https://github.com/Xu-Duan/Potential-Flow-With-Complex-Green-Function",
+   "description": "This is a Program for hydrodynamics Analysis of Potential flow (PAP) written in Fortran.",
+   "stars": 4,
+   "forks": 1,
+   "language": "Fortran",
+   "license": null,
+   "pushed_at": "2023-11-11T16:04:48Z",
+   "created_at": "2023-10-23T02:38:33Z",
+   "archived": false,
+   "topics": [
+    "hydrodynamics",
+    "potential-flow"
+   ],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "valentindbdg/SPH-Smoothed-Particle-Hydrodynamics-Method",
+   "html_url": "https://github.com/valentindbdg/SPH-Smoothed-Particle-Hydrodynamics-Method",
+   "description": "A short report presenting research concerning a modeling method used in mechanical engineering. Problems with more than one material are often trivial for the SPH method because each material is described by its own set of particles. In addition to that, SPH can be used for many types of simulation such as huge deformation simulation, penetration simulation, machining simulation because, unlike the Finite Element method, the elements (particles) of the SPH method can be separated. This method is also used for fluid and astrophysics simulations. Unlike the Eulerian method, SPH allows having mass conservation and pressures without extra computation. The masses are contained in each particle and the pressures are given by the mathematical link between neighboring particles instead of solving linear equations. Besides, for Eulerian simulation method, we need boundary conditions which may be unknown (like stars), a problem that the SPH method does not have. However, the perfect simulation method does not exist. The SPH method still have some drawbacks, the computing time, the consistence at the boundaries (one of the issues we solved in this paper), the tensile instability and the spurious energy mode. This project is about performing researches about the SPH method, learning how it works mathematically speaking and give the mathematical parameters expressions in order to be able to run a simulation afterwards.",
+   "stars": 3,
+   "forks": 0,
+   "language": null,
+   "license": null,
+   "pushed_at": "2022-10-13T10:54:48Z",
+   "created_at": "2022-03-11T19:17:25Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "jackson-pilgrim-hardin/FOWT_CoupledModel",
+   "html_url": "https://github.com/jackson-pilgrim-hardin/FOWT_CoupledModel",
+   "description": "A coupled aero-hydrodynamic model for the performance of a 15 MW floating offshore wind turbine. The model uses blade element momentum theory for aerodynamic modeling and an ANSYS AQWA potential flow, time domain model for hydrodynamic modeling",
+   "stars": 3,
+   "forks": 2,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2025-05-02T11:19:26Z",
+   "created_at": "2025-05-02T10:11:20Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "AzadSaeed/Parallel-Nemoh",
+   "html_url": "https://github.com/AzadSaeed/Parallel-Nemoh",
+   "description": "This repository demonstrate parallel implementation of Nemoh, which is a software used for the calculation of hydrodynamic coefficients using boundary element method.",
+   "stars": 2,
+   "forks": 1,
+   "language": "MATLAB",
+   "license": null,
+   "pushed_at": "2023-08-24T22:56:29Z",
+   "created_at": "2023-08-24T21:55:26Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "alvarocafe/BlenderBEM",
+   "html_url": "https://github.com/alvarocafe/BlenderBEM",
+   "description": "This is a Blender addon to solve boundary element method equations using Python.",
+   "stars": 2,
+   "forks": 1,
+   "language": "Jupyter Notebook",
+   "license": "GPL-3.0",
+   "pushed_at": "2021-05-21T13:02:26Z",
+   "created_at": "2020-11-17T02:42:51Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "PengYunqiang/CRESTU",
+   "html_url": "https://github.com/PengYunqiang/CRESTU",
+   "description": "A 3D Rankine Source Boundary Element Method (BEM) Hydrodynamic Solver in Matlab",
+   "stars": 1,
+   "forks": 0,
+   "language": "MATLAB",
+   "license": "GPL-3.0",
+   "pushed_at": "2026-09-08T15:20:08Z",
+   "created_at": "2026-08-24T17:49:51Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "JuliaOceanWaves/Hydrodynamics.jl",
+   "html_url": "https://github.com/JuliaOceanWaves/Hydrodynamics.jl",
+   "description": "Time domain solutions of linear potential flow theory-based hydrodynamic systems.",
+   "stars": 1,
+   "forks": 0,
+   "language": "Julia",
+   "license": "MIT",
+   "pushed_at": "2026-09-10T19:05:46Z",
+   "created_at": "2026-04-16T16:10:33Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "janmodderman/EmbeddedCoefficients.jl",
+   "html_url": "https://github.com/janmodderman/EmbeddedCoefficients.jl",
+   "description": "Package that applied unfitted Finite Element (FE) methods to estimate the added mass and added damping coefficients using a linear potential flow",
+   "stars": 1,
+   "forks": 0,
+   "language": "Julia",
+   "license": null,
+   "pushed_at": "2026-03-31T11:02:05Z",
+   "created_at": "2024-12-19T16:51:11Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:seakeeping"
+   ]
+  },
+  {
+   "full_name": "Shivani-Gusain/FEM_BEM_EXAMPLES",
+   "html_url": "https://github.com/Shivani-Gusain/FEM_BEM_EXAMPLES",
+   "description": "Problems related to Finite Element Method (FEM) and Boundary Element Method (BEM) specifically related to modelling transducers (CMUT) for underwater acoustics application using bempp_cl,fenicsx and gmsh",
+   "stars": 1,
+   "forks": 0,
+   "language": "Jupyter Notebook",
+   "license": null,
+   "pushed_at": "2025-07-10T06:14:18Z",
+   "created_at": "2025-07-10T05:34:30Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:ship hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "sfanghaenel/PY2D_BEM",
+   "html_url": "https://github.com/sfanghaenel/PY2D_BEM",
+   "description": "Python Library for solve Laplace Poisson Equation via Boundary Element Method",
+   "stars": 1,
+   "forks": 0,
+   "language": null,
+   "license": null,
+   "pushed_at": "2018-01-18T20:15:36Z",
+   "created_at": "2018-01-18T20:15:35Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "Ki3mONo/FEM_Heating_Transfer",
+   "html_url": "https://github.com/Ki3mONo/FEM_Heating_Transfer",
+   "description": "This project implements the Finite Element Method (FEM) in Python to solve heat conduction equations with Robin and Dirichlet boundary conditions, using Gaussian quadrature for numerical integration.",
+   "stars": 1,
+   "forks": 1,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2025-01-24T08:08:51Z",
+   "created_at": "2025-01-07T00:59:30Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "sivaramvineeth/BEM-boundary-element-method-",
+   "html_url": "https://github.com/sivaramvineeth/BEM-boundary-element-method-",
+   "description": "I will be putting up my code for finding the hydrodynamic force on submerged bodies using the BEM. The final objective is to find the Heave and pitch motion characteristics of a Catamaran and optimizing the distance between the hulls.",
+   "stars": 0,
+   "forks": 0,
+   "language": null,
+   "license": null,
+   "pushed_at": "2017-11-30T02:28:36Z",
+   "created_at": "2017-11-30T02:28:36Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:boundary element method hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "MOINPW/Modeling-Accretion-Flows-around-Black-Holes-Using-Pseudo-Newtonian-Potentials",
+   "html_url": "https://github.com/MOINPW/Modeling-Accretion-Flows-around-Black-Holes-Using-Pseudo-Newtonian-Potentials",
+   "description": "We study the accretion onto an isolated black hole using hydrodynamical simulations.Instead of employing full general relativity, we use the Paczy\\'nski--Wiita pseudo-Newtonian potential, which effectively reproduces the strong gravitational effects near the black hole while significantly reducing computational complexity.",
+   "stars": 0,
+   "forks": 0,
+   "language": "C",
+   "license": "MIT",
+   "pushed_at": "2026-04-24T04:34:44Z",
+   "created_at": "2026-04-24T03:50:33Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "lucasloliveira13/PNV5030---Computational-examples",
+   "html_url": "https://github.com/lucasloliveira13/PNV5030---Computational-examples",
+   "description": "Example notebooks for the PNV-5030 course (Naval Architecture and Ocean Engineering, Poli-USP): a surrogate model exercise on the Yacht Hydrodynamics dataset, and a physics-informed neural network (PINN) for potential flow around a cylinder.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Jupyter Notebook",
+   "license": "MIT",
+   "pushed_at": "2026-10-19T23:05:36Z",
+   "created_at": "2026-09-23T14:15:30Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:potential flow hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "im-va-3/bempp-cl-main",
+   "html_url": "https://github.com/im-va-3/bempp-cl-main",
+   "description": "Public consolidated snapshot of bempp-cl-main (boundary-element-methods) from 01-computational-pde-and-scientific-computing.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2026-09-28T04:25:52Z",
+   "created_at": "2026-08-24T19:14:49Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:ship hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "kodai-bot/round-tower-acoustics",
+   "html_url": "https://github.com/kodai-bot/round-tower-acoustics",
+   "description": "Boundary element model of how a chanting voice in an Irish round tower's top chamber reaches people outside. Clondalkin, from an RIA archive cross-section.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2026-11-04T01:47:32Z",
+   "created_at": "2026-11-04T01:29:51Z",
+   "archived": false,
+   "topics": [
+    "acoustics",
+    "archaeoacoustics",
+    "archaeology",
+    "bempp",
+    "boundary-element-method",
+    "ireland",
+    "python"
+   ],
+   "discovered_by": [
+    "search:ship hydrodynamics"
+   ]
+  },
+  {
+   "full_name": "LukeMcCulloch/adjoint-3D-linear-wave-resistance-python",
+   "html_url": "https://github.com/LukeMcCulloch/adjoint-3D-linear-wave-resistance-python",
+   "description": "a 3D BEM solver, optimization, and panel modification scheme for wave resistance using the generalized, linearized free surface conditions and Rankine sources",
+   "stars": 0,
+   "forks": 0,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2026-07-18T17:24:56Z",
+   "created_at": "2026-01-30T13:44:15Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:wave energy converter"
+   ]
+  },
+  {
+   "full_name": "Ph0n1x0/FMM-BEM-",
+   "html_url": "https://github.com/Ph0n1x0/FMM-BEM-",
+   "description": "Fast Multipole Boundary Element Method",
+   "stars": 0,
+   "forks": 1,
+   "language": "Jupyter Notebook",
+   "license": "MIT",
+   "pushed_at": "2024-11-13T16:59:22Z",
+   "created_at": "2024-09-26T20:08:27Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:capytaine"
+   ]
+  },
+  {
+   "full_name": "JoshuaTetzner/CorrectionFactorMatrixMethod.jl",
+   "html_url": "https://github.com/JoshuaTetzner/CorrectionFactorMatrixMethod.jl",
+   "description": "This package builds matrix-free boundary-element operators that combine a fast multipole approximation of the far interactions with directly assembled near-field corrections.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Julia",
+   "license": "MIT",
+   "pushed_at": "2026-11-03T10:35:07Z",
+   "created_at": "2026-01-03T09:58:16Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:capytaine"
+   ]
+  },
+  {
+   "full_name": "SimPr/BEMvita",
+   "html_url": "https://github.com/SimPr/BEMvita",
+   "description": "Python-based fast multipole boundary element method for 3D acoustics considering viscous and thermal bulk and boundary losses. Uses collocation method for discretization and discontinuous triangular and quadrilateral elements.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Assembly",
+   "license": null,
+   "pushed_at": "2026-02-16T22:33:38Z",
+   "created_at": "2026-02-16T22:30:27Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:capytaine"
+   ]
+  },
+  {
+   "full_name": "gaschenb/Finite-Element-Method-Toolbox",
+   "html_url": "https://github.com/gaschenb/Finite-Element-Method-Toolbox",
+   "description": "A Python finite-element toolbox with a Tkinter GUI, CG/DG methods, P1/P2 bases, custom PDEs and domains, dynamic mixed boundary conditions, transient theta-method solvers, hp refinement diagnostics, convergence analysis, visualization, and CSV export.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Python",
+   "license": "MIT",
+   "pushed_at": "2026-07-18T19:58:04Z",
+   "created_at": "2026-07-18T19:57:05Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "TNGerken/FEM_Applied_1_D_PDE_Solver_Using_Python-",
+   "html_url": "https://github.com/TNGerken/FEM_Applied_1_D_PDE_Solver_Using_Python-",
+   "description": "This project implements the Finite Element Method (FEM) in Python to solve a 1-D PDE with mixed Dirichlet and Neumann boundary conditions.   We derive the weak form of the PDE, define Lagrange basis functions, assemble the global stiffness matrix and force vector, apply boundary conditions, and compare results to the analytical solution.",
+   "stars": 0,
+   "forks": 0,
+   "language": null,
+   "license": "MIT",
+   "pushed_at": "2025-08-12T00:06:33Z",
+   "created_at": "2025-08-11T23:47:42Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "WorrisomePi/1D-elliptic-finite-element-method-code-for-DRP-project",
+   "html_url": "https://github.com/WorrisomePi/1D-elliptic-finite-element-method-code-for-DRP-project",
+   "description": "Python code for finite element solvers for the 2-point boundary value problem u(a)=u(b) = 0 of the 1D elliptic equation -u'' = f.  The \"loop\" files iterate over multiple values for n and calculate the convergence rate for L2 and H1 norms at the end. \"fconst\" files simplify for when f is a constant function.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Python",
+   "license": null,
+   "pushed_at": "2026-04-20T01:49:26Z",
+   "created_at": "2026-04-20T01:32:57Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "e-albuquerque/BEM2D-Elastostatics-ELQUABE",
+   "html_url": "https://github.com/e-albuquerque/BEM2D-Elastostatics-ELQUABE",
+   "description": "Modernized Fortran 90 implementation of Brebbia & Dominguez's ELQUABE code for 2D elastostatic Boundary Element Method (BEM) with quadratic elements, featuring OpenMP parallelization, LAPACK (DGESV) solver, boundary/von Mises stress recovery, and Python/Gmsh pre- and post-processing.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Jupyter Notebook",
+   "license": null,
+   "pushed_at": "2026-10-27T18:39:34Z",
+   "created_at": "2026-10-20T20:43:12Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  },
+  {
+   "full_name": "e-albuquerque/BEM3D-Elastoplastic",
+   "html_url": "https://github.com/e-albuquerque/BEM3D-Elastoplastic",
+   "description": "Parallel Fortran 90 / OpenMP / LAPACK 3D Linear-Elastic and Elastoplastic Boundary Element Method (BEM) solver using 6-node quadratic triangles (triangle6) and 10-node tetrahedral cells (tetra10), with Gmsh/Python pre- and post-processing.",
+   "stars": 0,
+   "forks": 0,
+   "language": "Fortran",
+   "license": null,
+   "pushed_at": "2026-11-03T21:12:06Z",
+   "created_at": "2026-11-03T20:52:27Z",
+   "archived": false,
+   "topics": [],
+   "discovered_by": [
+    "search:nemoh"
+   ]
+  }
+ ]
+}
