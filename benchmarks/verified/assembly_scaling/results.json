@@ -1,0 +1,108 @@
+{
+  "assembly": [
+    {
+      "assembly_seconds_batch": 0.03522474877536297,
+      "assembly_seconds_legacy": 0.3281487710773945,
+      "assembly_speedup": 9.315858380426821,
+      "diagonal_relative_deviation": 2.7008031164228755e-16,
+      "max_abs_operator_deviation": 2.7755575615628914e-17,
+      "panels": 80,
+      "peak_bytes_batch": 499857,
+      "peak_bytes_legacy": 258305,
+      "peak_growth": 0.935142564023151,
+      "self_integral_seconds_batch": 0.013305621221661568,
+      "self_integral_seconds_legacy": 0.3113425299525261,
+      "self_integral_share_legacy": 0.9487846897317662,
+      "self_integral_speedup": 23.399323095539504,
+      "subdivisions": 1
+    },
+    {
+      "assembly_seconds_batch": 0.19356591068208218,
+      "assembly_seconds_legacy": 1.4477559588849545,
+      "assembly_speedup": 7.47939528082911,
+      "diagonal_relative_deviation": 6.598432052000516e-16,
+      "max_abs_operator_deviation": 3.469446951953614e-17,
+      "panels": 320,
+      "peak_bytes_batch": 2209325,
+      "peak_bytes_legacy": 2211742,
+      "peak_growth": -0.001092803771868489,
+      "self_integral_seconds_batch": 0.045733099803328514,
+      "self_integral_seconds_legacy": 1.311134148389101,
+      "self_integral_share_legacy": 0.9056320164614774,
+      "self_integral_speedup": 28.669260426857726,
+      "subdivisions": 2
+    },
+    {
+      "assembly_seconds_batch": 1.7170712407678366,
+      "assembly_seconds_legacy": 6.721956269815564,
+      "assembly_speedup": 3.91478006865321,
+      "diagonal_relative_deviation": 5.256065119574875e-16,
+      "max_abs_operator_deviation": 1.3877787807814457e-17,
+      "panels": 1280,
+      "peak_bytes_batch": 28490285,
+      "peak_bytes_legacy": 28492645,
+      "peak_growth": -8.28283930818241e-05,
+      "self_integral_seconds_batch": 0.1875438094139099,
+      "self_integral_seconds_legacy": 5.195147110149264,
+      "self_integral_share_legacy": 0.7728623783938731,
+      "self_integral_speedup": 27.700978914657505,
+      "subdivisions": 3
+    }
+  ],
+  "free_surface": [
+    {
+      "added_mass_deviation": 0.0,
+      "damping_deviation": 0.0,
+      "nu": 1.0,
+      "panels": 64,
+      "solve_seconds_batch": 0.09407489001750946,
+      "solve_seconds_legacy": 0.39975063875317574,
+      "solve_speedup": 4.2492809577430615,
+      "subdivisions": 2
+    },
+    {
+      "added_mass_deviation": 0.0,
+      "damping_deviation": 4.547473508864641e-13,
+      "nu": 1.0,
+      "panels": 256,
+      "solve_seconds_batch": 1.7838897798210382,
+      "solve_seconds_legacy": 2.8727838285267353,
+      "solve_speedup": 1.6104043316033438,
+      "subdivisions": 3
+    }
+  ],
+  "meta": {
+    "anchor": "GAP-BEM-ASSEMBLY-SCALING",
+    "batched_path": "integrate_single_layer_triangle_self_batch",
+    "legacy_path": "per-panel python loop over integrate_single_layer_triangle_self, monkey-patched into solver3d / free_surface_solver3d / finite_depth_solver3d",
+    "machine": "loongarch64",
+    "numpy": "2.4.6",
+    "panel_chunk": 32,
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "quadrature_order": 4,
+    "repeats": 3,
+    "self_integral_order": 64,
+    "subdivisions": [
+      1,
+      2,
+      3
+    ],
+    "timing_statistic": "min of repeats (shared box; minimum is the least contaminated)"
+  },
+  "verdict": {
+    "deviation_target": 1e-10,
+    "deviation_worst": 3.469446951953614e-17,
+    "memory_evaluated_from_panels": 320,
+    "memory_target": 0.1,
+    "pass": true,
+    "peak_growth_by_panels": {
+      "1280": -8.28283930818241e-05,
+      "320": -0.001092803771868489,
+      "80": 0.935142564023151
+    },
+    "peak_growth_worst": -8.28283930818241e-05,
+    "speedup_at_finest": 3.91478006865321,
+    "speedup_target": 3.0
+  }
+}

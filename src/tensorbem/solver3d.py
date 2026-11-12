@@ -30,9 +30,11 @@ from .kernels import validate_clearance_factor
 from .kernels3d import (
     duffy_quadrature_batch,
     gradient_single_layer_triangle_self,
+    gradient_single_layer_triangle_self_batch,
     gradient_single_layer_triangles_batch,
     gradient_solid_angle_triangles_batch,
     integrate_single_layer_triangle_self,
+    integrate_single_layer_triangle_self_batch,
     solid_angle_triangles_batch,
 )
 from .near_singular import single_layer_gradients, single_layer_integrals
@@ -109,12 +111,9 @@ def assemble_surface_matrices(
     panel_count = mesh.panel_count
     single = np.empty((panel_count, panel_count), dtype=float)
     double = np.empty((panel_count, panel_count), dtype=float)
-    self_integrals = np.array(
-        [
-            integrate_single_layer_triangle_self(mesh.vertices[mesh.faces[index]])
-            for index in range(panel_count)
-        ]
-    )
+    # Batched polar-sector rule: same quadrature as the per-panel loop, without
+    # the ``F`` python iterations (see GAP-BEM-ASSEMBLY-SCALING, docs/assembly_scaling.md).
+    self_integrals = integrate_single_layer_triangle_self_batch(mesh.vertices[mesh.faces])
     for index, target in enumerate(centroids):
         delta = target[None, None, :] - normal_points
         distances = np.linalg.norm(delta, axis=2)
@@ -668,14 +667,13 @@ def evaluate_representation_surface_velocity_at_panels(
     sign = 1.0 if result.domain == "interior" else -1.0
     panel_count = mesh.panel_count
     values = np.empty((panel_count, 3), dtype=float)
+    self_gradients = gradient_single_layer_triangle_self_batch(mesh.vertices[mesh.faces])
     for index in range(panel_count):
         target = mesh.centroids[index]
         single_gradients = gradient_single_layer_triangles_batch(
             target, mesh.v0, mesh.v1, mesh.v2, order=order
         )
-        single_gradients[index] = gradient_single_layer_triangle_self(
-            mesh.vertices[mesh.faces[index]]
-        )
+        single_gradients[index] = self_gradients[index]
         solid_angle_gradients = gradient_solid_angle_triangles_batch(
             target, mesh.v0, mesh.v1, mesh.v2
         )
