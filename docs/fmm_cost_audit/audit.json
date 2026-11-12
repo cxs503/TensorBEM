@@ -1,5 +1,5 @@
 {
-  "mission": "m14931",
+  "mission": "m14931 (re-measured after the m15669 operator fixes)",
   "subject": "tensorbem.fmm",
   "cost": [
     {
@@ -7,95 +7,95 @@
       "panels": 320,
       "p": 2,
       "max_leaf": 32,
-      "leaves": 36,
-      "avg_leaf": 8.88888888888889,
-      "t_fmm_s": 1.6800225116312504,
-      "t_dense_s": 0.005121959373354912,
-      "time_ratio": 328.0038729652841,
-      "c_fmm_s_per_interaction": 0.0001458352874679905,
-      "c_dense_s_per_pair": 5.001913450541906e-08,
-      "per_unit_cost_ratio": 328.0038729652841,
-      "near_pairs": 7442,
-      "far_pairs": 4078,
-      "total_pairs": 11520
+      "leaves": 56,
+      "avg_leaf": 5.714285714285714,
+      "t_fmm_s": 0.05536019057035446,
+      "t_dense_s": 0.0059389397501945496,
+      "time_ratio": 9.321561238020802,
+      "c_fmm_s_per_interaction": 3.0892963487921017e-06,
+      "c_dense_s_per_pair": 5.7997458497993646e-08,
+      "per_unit_cost_ratio": 9.321561238020804,
+      "near_pairs": 4640,
+      "far_pairs": 13280,
+      "total_pairs": 17920
     },
     {
       "level": 3,
       "panels": 1280,
       "p": 2,
       "max_leaf": 32,
-      "leaves": 60,
-      "avg_leaf": 21.333333333333332,
-      "t_fmm_s": 8.138039341196418,
-      "t_dense_s": 0.08322596177458763,
-      "time_ratio": 97.7824607571108,
-      "c_fmm_s_per_interaction": 0.00010596405392182835,
-      "c_dense_s_per_pair": 5.079709580968483e-08,
-      "per_unit_cost_ratio": 97.7824607571108,
-      "near_pairs": 61738,
-      "far_pairs": 15062,
-      "total_pairs": 76800
+      "leaves": 56,
+      "avg_leaf": 22.857142857142858,
+      "t_fmm_s": 0.13424288854002953,
+      "t_dense_s": 0.11210905015468597,
+      "time_ratio": 1.1974313256137992,
+      "c_fmm_s_per_interaction": 1.8728081548553227e-06,
+      "c_dense_s_per_pair": 6.842593393230345e-08,
+      "per_unit_cost_ratio": 1.1974313256137992,
+      "near_pairs": 18632,
+      "far_pairs": 53048,
+      "total_pairs": 71680
     },
     {
       "level": 2,
       "panels": 320,
       "p": 4,
       "max_leaf": 32,
-      "leaves": 36,
-      "avg_leaf": 8.88888888888889,
-      "t_fmm_s": 4.8490765411406755,
-      "t_dense_s": 0.004228120669722557,
-      "time_ratio": 1146.8633276871128,
-      "c_fmm_s_per_interaction": 0.00042092678308512806,
-      "c_dense_s_per_pair": 4.1290240915259345e-08,
-      "per_unit_cost_ratio": 1146.8633276871126,
-      "near_pairs": 7442,
-      "far_pairs": 4078,
-      "total_pairs": 11520
+      "leaves": 56,
+      "avg_leaf": 5.714285714285714,
+      "t_fmm_s": 0.15057512931525707,
+      "t_dense_s": 0.00678744912147522,
+      "time_ratio": 22.184347406574783,
+      "c_fmm_s_per_interaction": 8.402629984110328e-06,
+      "c_dense_s_per_pair": 6.628368282690644e-08,
+      "per_unit_cost_ratio": 22.184347406574783,
+      "near_pairs": 4640,
+      "far_pairs": 13280,
+      "total_pairs": 17920
     }
   ],
   "accuracy_separated": [
     {
       "p": 1,
-      "max_rel_error": 0.024528854322406694,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 0.00039590911212196883,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     },
     {
       "p": 2,
-      "max_rel_error": 0.0028933939066621644,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 4.19133899922658e-05,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     },
     {
       "p": 3,
-      "max_rel_error": 0.0007274327796062576,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 1.0273534028582983e-06,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     },
     {
       "p": 4,
-      "max_rel_error": 0.00019320132046294567,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 1.0481301390666659e-07,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     },
     {
       "p": 6,
-      "max_rel_error": 1.6650577305708197e-05,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 7.065409800834749e-10,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     },
     {
       "p": 8,
-      "max_rel_error": 1.0359469593149841e-06,
-      "near_pairs": 256,
-      "far_pairs": 256,
-      "total_pairs": 512
+      "max_rel_error": 4.181305912086562e-12,
+      "near_pairs": 1054,
+      "far_pairs": 546,
+      "total_pairs": 1600
     }
   ],
   "accuracy_surface": [
@@ -103,26 +103,72 @@
       "p": 2,
       "panels": 320,
       "targets": 162,
-      "max_rel_error": 0.0011287775676349153,
-      "near_pairs": 3778,
-      "far_pairs": 2054,
-      "total_pairs": 5832
+      "max_rel_error": 0.00021415980081465535,
+      "near_pairs": 2304,
+      "far_pairs": 6768,
+      "total_pairs": 9072
     },
     {
       "p": 4,
       "panels": 320,
       "targets": 162,
-      "max_rel_error": 0.000159670255349438,
-      "near_pairs": 3778,
-      "far_pairs": 2054,
-      "total_pairs": 5832
+      "max_rel_error": 7.71984065762987e-05,
+      "near_pairs": 2304,
+      "far_pairs": 6768,
+      "total_pairs": 9072
     }
   ],
   "shipped_physics_test_routing": {
     "leaves": 1,
-    "rel_error": 0.0,
+    "rel_error": 1.342230794774523e-15,
     "near_pairs": 320,
     "far_pairs": 0,
     "total_pairs": 320
+  },
+  "scaling": {
+    "rows": [
+      {
+        "level": 3,
+        "panels": 1280,
+        "p": 2,
+        "leaves": 56,
+        "far_fraction": 0.7400669642857143,
+        "t_fmm_s": 0.15308680944144726,
+        "near_pairs": 18632,
+        "far_pairs": 53048,
+        "total_pairs": 71680,
+        "t_dense_s": 0.14863238856196404,
+        "time_ratio": 1.029969382330327
+      },
+      {
+        "level": 4,
+        "panels": 5120,
+        "p": 2,
+        "leaves": 56,
+        "far_fraction": 0.7403180803571429,
+        "t_fmm_s": 1.1991720404475927,
+        "near_pairs": 74456,
+        "far_pairs": 212264,
+        "total_pairs": 286720,
+        "t_dense_s": 1.8812744598835707,
+        "time_ratio": 0.6374253550020594
+      },
+      {
+        "level": 5,
+        "panels": 20480,
+        "p": 2,
+        "leaves": 272,
+        "far_fraction": 0.93599853515625,
+        "t_fmm_s": 9.309598080813885,
+        "near_pairs": 356524,
+        "far_pairs": 5214036,
+        "total_pairs": 5570560,
+        "t_dense_s": 23.342847319319844,
+        "time_ratio": 0.39882015906040486
+      }
+    ],
+    "fmm_slope": 1.481574249808591,
+    "dense_slope": 1.823772052594683,
+    "ratio_slope": -0.3421978027860925
   }
 }
