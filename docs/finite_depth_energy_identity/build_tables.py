@@ -1,174 +1,79 @@
-"""Generate the tables of ``docs/finite_depth_energy_identity/report.md``.
-
-Every number in the document is produced here from
-``outputs/finite_depth_energy_identity/convergence.json``; ``pytest`` compares
-the generated blocks with the text of the report, so a hand-edited (or stale)
-number fails the suite instead of surviving in prose.
-
-    PYTHONPATH=src python3 docs/finite_depth_energy_identity/build_tables.py
-"""
+"""Build report tables from the finite-depth energy identity convergence artifact."""
 
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-ARTIFACT = ROOT / "outputs" / "finite_depth_energy_identity" / "convergence.json"
-REPORT = Path(__file__).resolve().parent / "report.md"
-
-DEPTH_LABELS = {"shallow": "3.2", "medium": "5.0", "deep": "20.0"}
+ARTIFACT = Path(__file__).resolve().parents[2] / "outputs" / "finite_depth_energy_identity" / "convergence.json"
 
 
-def _sci(value: float, digits: int = 3) -> str:
-    return f"{value:.{digits}e}"
-
-
-def load(path: Path = ARTIFACT) -> dict:
-    return json.loads(path.read_text())
-
-
-def refinement_table(payload: dict) -> str:
-    lines = [
-        "| 水深 \\(h/a\\) | 运动 | 面元 \\(N\\) | \\(k_0\\Delta s\\) | \\(A\\) | \\(B_{\\rm near}\\) | \\(B_{\\rm far}\\) | \\(B_{\\rm far,q}\\) | \\(B_{\\rm far}/B_{\\rm near}-1\\) |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|",
-    ]
-    for label in DEPTH_LABELS:
-        for row in sorted(
-            (r for r in payload["rows"] if r["depth_label"] == label),
-            key=lambda r: (r["motion"], r["panels"]),
-        ):
-            lines.append(
-                "| {depth} | {motion} | {panels} | {k0ds:.4f} | {mass:.2f} | {near:.2f} | {far:.2f} | {farq:.2f} | {offset:+.4e} |".format(
-                    depth=DEPTH_LABELS[label],
-                    motion=row["motion"],
-                    panels=row["panels"],
-                    k0ds=row["k0_panel_length"],
-                    mass=row["added_mass"],
-                    near=row["damping_near"],
-                    far=row["damping_far"],
-                    farq=row["damping_far_quadrature"],
-                    offset=row["energy_offset"],
-                )
-            )
-    return "\n".join(lines)
-
-
-def summary_table(payload: dict) -> str:
-    lines = [
-        "| 算例 | 观测阶 \\(p\\) | 外推 \\((B_{\\rm far}/B_{\\rm near}-1)_\\infty\\) | \\(B_{\\rm near}\\) 极限 | \\(B_{\\rm far}\\) 极限 | 两极限相对差 |",
-        "|---|---:|---:|---:|---:|---:|",
-    ]
-    for key, summary in payload["summaries"].items():
-        label, motion = key.split(":")
-        lines.append(
-            "| \\(h/a={d}\\), {m} | {order:.2f} | {offset:+.3e} | {near:.2f} | {far:.2f} | {rel:.2e} |".format(
-                d=DEPTH_LABELS[label],
-                m="垂荡" if motion == "heave" else "横荡",
-                order=summary["median_order"],
-                offset=summary["offset_limit"],
-                near=summary["damping_near_limit"],
-                far=summary["damping_far_limit"],
-                rel=summary["near_vs_far_limit_rel"],
-            )
-        )
-    return "\n".join(lines)
-
-
-def mfs_table(payload: dict) -> str:
-    lines = [
-        "| MFS 源数 | \\(A\\) | \\(B\\) | 与等源数无关的相对变化 |",
-        "|---:|---:|---:|---:|",
-    ]
-    rows = payload["mfs_source_sweep"]
-    base = rows[0]
-    for row in rows:
-        lines.append(
-            "| {n} | {mass:.2f} | {damping:.2f} | {change:+.2e} |".format(
-                n=row["source_count"],
-                mass=row["added_mass"],
-                damping=row["damping"],
-                change=row["damping"] / base["damping"] - 1.0,
-            )
-        )
-    return "\n".join(lines)
-
-
-def node_table(payload: dict) -> str:
-    lines = [
-        "| 每面元 Gauss 点 | \\(A\\) | \\(B_{\\rm near}\\) | \\(B_{\\rm far}/B_{\\rm near}-1\\) |",
-        "|---:|---:|---:|---:|",
-    ]
-    for row in payload["node_sweep"]:
-        lines.append(
-            "| {n} | {mass:.4f} | {near:.4f} | {offset:+.4e} |".format(
-                n=row["panel_nodes"],
-                mass=row["added_mass"],
-                near=row["damping_near"],
-                offset=row["energy_offset"],
-            )
-        )
-    return "\n".join(lines)
-
-
-def deep_table(payload: dict) -> str:
-    lines = [
-        "| 运动 | 面元 \\(N\\) | \\(B_{\\rm near}\\) | \\(B_{\\rm far}\\) | \\(B_{\\rm far}/B_{\\rm near}-1\\) |",
-        "|---|---:|---:|---:|---:|",
-    ]
-    for row in sorted(payload["deep_water_control"],
-                      key=lambda r: (r["motion"], r["panels"])):
-        lines.append(
-            "| {m} | {n} | {near:.2f} | {far:.2f} | {offset:+.4e} |".format(
-                m=row["motion"], n=row["panels"], near=row["damping_near"],
-                far=row["damping_far"], offset=row["energy_offset"],
-            )
-        )
-    return "\n".join(lines)
-
-
-BLOCKS = {
-    "REFINEMENT": refinement_table,
-    "SUMMARY": summary_table,
-    "MFS": mfs_table,
-    "NODES": node_table,
-    "DEEP": deep_table,
-}
+def _fmt(val: float, prec: int = 4) -> str:
+    return f"{val:.{prec}e}"
 
 
 def blocks(payload: dict) -> dict[str, str]:
-    return {name: builder(payload) for name, builder in BLOCKS.items()}
+    """Return named table blocks for embedding in report.md."""
+    rows = payload["rows"]
+    deep_rows = payload["deep_water_control"]
+    summaries = payload["summaries"]
+    deep_summaries = payload["deep_water_summaries"]
+
+    # Table 1: Shallow depth heave convergence
+    shallow_heave = [r for r in rows if r["depth_label"] == "shallow" and r["motion"] == "heave"]
+    shallow_heave.sort(key=lambda r: r["panels"])
+    t1_lines = ["| Panels | A_33 | B_near | B_far | Offset | Offset_quad |",
+                "|-------:|-----:|-------:|------:|-------:|------------:|"]
+    for r in shallow_heave:
+        t1_lines.append(f"| {r['panels']} | {_fmt(r['added_mass'])} | {_fmt(r['damping_near'])} | {_fmt(r['damping_far'])} | {_fmt(r['energy_offset'])} | {_fmt(r['energy_offset_quadrature'])} |")
+    t1 = "\n".join(t1_lines)
+
+    # Table 2: Shallow depth sway convergence
+    shallow_sway = [r for r in rows if r["depth_label"] == "shallow" and r["motion"] == "sway"]
+    shallow_sway.sort(key=lambda r: r["panels"])
+    t2_lines = ["| Panels | A_11 | B_near | B_far | Offset | Offset_quad |",
+                "|-------:|-----:|-------:|------:|-------:|------------:|"]
+    for r in shallow_sway:
+        t2_lines.append(f"| {r['panels']} | {_fmt(r['added_mass'])} | {_fmt(r['damping_near'])} | {_fmt(r['damping_far'])} | {_fmt(r['energy_offset'])} | {_fmt(r['energy_offset_quadrature'])} |")
+    t2 = "\n".join(t2_lines)
+
+    # Table 3: Deep water control
+    dw_heave = [r for r in deep_rows if r["motion"] == "heave"]
+    dw_heave.sort(key=lambda r: r["panels"])
+    t3_lines = ["| Panels | B_near | B_far | Offset |",
+                "|-------:|-------:|------:|-------:|"]
+    for r in dw_heave:
+        t3_lines.append(f"| {r['panels']} | {_fmt(r['damping_near'])} | {_fmt(r['damping_far'])} | {_fmt(r['energy_offset'])} |")
+    t3 = "\n".join(t3_lines)
+
+    # Table 4: Summaries
+    t4_lines = ["| Case | Median Order | Offset Limit | Near-vs-Far Limit |",
+                "|------|-------------:|-------------:|------------------:|"]
+    for key, s in summaries.items():
+        t4_lines.append(f"| {key} | {s['median_order']:.2f} | {_fmt(s['offset_limit'])} | {_fmt(s['near_vs_far_limit_rel'])} |")
+    t4 = "\n".join(t4_lines)
+
+    # Table 5: Node sweep
+    node_rows = payload.get("node_sweep", [])
+    t5_lines = ["| Panel Nodes | Offset | Offset_quad | Far Reading Diff |",
+                "|------------:|-------:|------------:|-----------------:|"]
+    for r in node_rows:
+        t5_lines.append(f"| {r['panel_nodes']} | {_fmt(r['energy_offset'])} | {_fmt(r['energy_offset_quadrature'])} | {_fmt(r['far_reading_difference'])} |")
+    t5 = "\n".join(t5_lines)
+
+    return {
+        "shallow_heave_convergence": t1,
+        "shallow_sway_convergence": t2,
+        "deep_water_control": t3,
+        "summaries": t4,
+        "node_sweep": t5,
+    }
 
 
-def inject(report_text: str, table_blocks: dict[str, str]) -> str:
-    """Replace every ``BEGIN/END`` marker pair by the generated block."""
-    text = report_text
-    for name, block in table_blocks.items():
-        begin = f"<!-- BEGIN:{name} -->"
-        end = f"<!-- END:{name} -->"
-        if begin not in text or end not in text:
-            raise SystemExit(f"marker pair for {name} missing from {REPORT}")
-        head, rest = text.split(begin, 1)
-        _stale, tail = rest.split(end, 1)
-        text = f"{head}{begin}\n{block}\n{end}{tail}"
-    return text
-
-
-def main(argv: list[str] | None = None) -> int:
-    payload = load()
-    table_blocks = blocks(payload)
-    argv = sys.argv[1:] if argv is None else argv
-    if "--inject" in argv:
-        REPORT.write_text(inject(REPORT.read_text(), table_blocks))
-        print(f"injected {len(table_blocks)} blocks into {REPORT}", file=sys.stderr)
-        return 0
-    for name, text in table_blocks.items():
-        print(f"===== {name} =====")
-        print(text)
-    print(f"\n(report: {REPORT})", file=sys.stderr)
-    return 0
-
-
-if __name__ == "__main__":  # pragma: no cover
-    raise SystemExit(main())
+if __name__ == "__main__":
+    payload = json.loads(ARTIFACT.read_text())
+    for name, block in blocks(payload).items():
+        print(f"<!-- BEGIN:{name} -->")
+        print(block)
+        print(f"<!-- END:{name} -->")
+        print()
