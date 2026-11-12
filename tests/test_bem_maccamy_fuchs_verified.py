@@ -149,3 +149,37 @@ class TestReproducibility:
                 f"Force error mismatch at {stored_lv['panels']} panels: "
                 f"stored={stored_lv['force_x_relative_error']}, fresh={fresh_lv['force_x_relative_error']}"
             )
+
+
+class TestReverificationRecord:
+    """Pin the m16170 re-verification record (reopen of closed PR #683).
+
+    The deliverables of the closed PR #683 reached ``main`` via merge #645.
+    On 2026-11-12 the anchor was re-verified against ``main`` @ ``7f8a746``:
+    re-running ``build_maccamy_fuchs_anchor.py`` reproduced the committed
+    numeric artifacts byte-for-byte.  These tests keep that claim machine-
+    checkable: the report must carry the re-verification section, and the
+    committed ``results.json`` / ``gates.json`` must still hash to the pinned
+    values quoted in it.
+    """
+
+    PINNED_HASHES = {
+        "results.json": "2a436541be85b62f67c46ecba84c2ef3747b2ffcd860362dfdb303783ff8980b",
+        "gates.json": "ca65d37753c1c3c06521befd29b440d9541568f9ac6a709e7dcd4a7ac0a0d52b",
+    }
+
+    def test_report_carries_reverification_section(self):
+        import hashlib
+
+        report = (VERIFIED_DIR / "report.md").read_text(encoding="utf-8")
+        assert "Re-verification (m16170" in report
+        assert "7f8a746" in report, "re-verification base commit missing from report"
+        for name, digest in self.PINNED_HASHES.items():
+            assert digest in report, f"pinned sha256 for {name} missing from report"
+            actual = hashlib.sha256(
+                (VERIFIED_DIR / name).read_bytes()
+            ).hexdigest()
+            assert actual == digest, (
+                f"{name} drifted from the re-verified artifact: "
+                f"actual={actual}, pinned={digest}"
+            )
