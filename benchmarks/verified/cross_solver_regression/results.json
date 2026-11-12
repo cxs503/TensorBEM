@@ -1,0 +1,1494 @@
+{
+ "comparison": {
+  "entries": [
+   {
+    "capytaine": 1136.7463383106062,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.004709845522120721,
+    "tensorbem": 1142.1002379618856
+   },
+   {
+    "capytaine": 462.2800426091083,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.030238534620070694,
+    "tensorbem": 448.30137153650503
+   },
+   {
+    "capytaine": 969.6835042333213,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.00936257128136821,
+    "tensorbem": 978.7622351620727
+   },
+   {
+    "capytaine": 752.8007498364002,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.03741966134536225,
+    "tensorbem": 724.6312007169873
+   },
+   {
+    "capytaine": 859.2916890073147,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.014934757652178627,
+    "tensorbem": 872.1250021351702
+   },
+   {
+    "capytaine": 828.8406627286233,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.04782916959351674,
+    "tensorbem": 789.1979021049732
+   },
+   {
+    "capytaine": 796.2078016425573,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.020705382632572104,
+    "tensorbem": 812.6935888306056
+   },
+   {
+    "capytaine": 789.024769341378,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.06067911585620472,
+    "tensorbem": 741.1474439490974
+   },
+   {
+    "capytaine": 763.5985536197982,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.026039245087787523,
+    "tensorbem": 783.4820835061842
+   },
+   {
+    "capytaine": 697.1091401806424,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.07547706623855034,
+    "tensorbem": 644.4933874317292
+   },
+   {
+    "capytaine": 749.5308407525224,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.030571681181072636,
+    "tensorbem": 772.4452586513898
+   },
+   {
+    "capytaine": 586.0812063160187,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.0924221074510945,
+    "tensorbem": 531.9143460908125
+   },
+   {
+    "capytaine": 747.112486892787,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.03432582892902814,
+    "tensorbem": 772.7577423086096
+   },
+   {
+    "capytaine": 471.72542759936744,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.10993847589746644,
+    "tensorbem": 419.8646530470123
+   },
+   {
+    "capytaine": 752.3236779560841,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 160,
+    "quantity": "added_mass",
+    "relative": 0.036919864096729385,
+    "tensorbem": 780.0993659029743
+   },
+   {
+    "capytaine": 367.1541732910677,
+    "case": "barge",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 160,
+    "quantity": "damping",
+    "relative": -0.1253979401587737,
+    "tensorbem": 321.11379623967036
+   },
+   {
+    "capytaine": 1117.3123875531558,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.003556255899487825,
+    "tensorbem": 1121.2858363229625
+   },
+   {
+    "capytaine": 457.62363003398536,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.013453928242262617,
+    "tensorbem": 451.4667945535444
+   },
+   {
+    "capytaine": 952.0678478300084,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.005838879031721204,
+    "tensorbem": 957.626856823479
+   },
+   {
+    "capytaine": 747.6992783130853,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.01677042105642006,
+    "tensorbem": 735.1600465921935
+   },
+   {
+    "capytaine": 842.2102539290241,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.008596224734613316,
+    "tensorbem": 849.4500825455938
+   },
+   {
+    "capytaine": 825.0270323297625,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.02156579228968823,
+    "tensorbem": 807.234670717161
+   },
+   {
+    "capytaine": 779.2207680161805,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.011357708956460872,
+    "tensorbem": 788.0709307121382
+   },
+   {
+    "capytaine": 786.3132814679964,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.027382228335907425,
+    "tensorbem": 764.782271651283
+   },
+   {
+    "capytaine": 746.6726770803266,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.0138126028768537,
+    "tensorbem": 756.9861702478344
+   },
+   {
+    "capytaine": 694.7630149147658,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.03402756510163254,
+    "tensorbem": 671.1219211945471
+   },
+   {
+    "capytaine": 732.7445581050107,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.015893051741217957,
+    "tensorbem": 744.3901052800695
+   },
+   {
+    "capytaine": 583.1521752787015,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.04140723117136374,
+    "tensorbem": 559.0054583488527
+   },
+   {
+    "capytaine": 730.8109864476191,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.017450111931246716,
+    "tensorbem": 743.5637199617149
+   },
+   {
+    "capytaine": 468.2472200122018,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.04931605878452293,
+    "tensorbem": 445.1551125843906
+   },
+   {
+    "capytaine": 736.7443124649985,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 640,
+    "quantity": "added_mass",
+    "relative": 0.018392179864533426,
+    "tensorbem": 750.2946463740268
+   },
+   {
+    "capytaine": 363.5505732885632,
+    "case": "barge",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 640,
+    "quantity": "damping",
+    "relative": -0.0570234487179812,
+    "tensorbem": 342.81966581625016
+   },
+   {
+    "capytaine": 1258.1305692656015,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07723250874546517,
+    "tensorbem": 1160.9619890718589
+   },
+   {
+    "capytaine": 308.8030087162702,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.09909723858269526,
+    "tensorbem": 278.20148328645985
+   },
+   {
+    "capytaine": 1162.2336953945985,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07473769959320198,
+    "tensorbem": 1075.3710226111
+   },
+   {
+    "capytaine": 220.00409536270791,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.11453147116073635,
+    "tensorbem": 194.80670265943004
+   },
+   {
+    "capytaine": 1188.143396174607,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07336220638292013,
+    "tensorbem": 1100.9785751319419
+   },
+   {
+    "capytaine": 50.95415723387326,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.1675759525675025,
+    "tensorbem": 42.41546579813265
+   },
+   {
+    "capytaine": 1244.921850910944,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07366814105279204,
+    "tensorbem": 1153.2107723983336
+   },
+   {
+    "capytaine": -0.03188874531260654,
+    "case": "sphere",
+    "excluded": true,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -93.0875356034823,
+    "tensorbem": 2.936555969325034
+   },
+   {
+    "capytaine": 1287.3619496994309,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07534462472404087,
+    "tensorbem": 1190.3661467153177
+   },
+   {
+    "capytaine": 79.18256153756185,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": 0.03999275148429122,
+    "tensorbem": 82.34929004302316
+   },
+   {
+    "capytaine": 1304.626772048006,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07754864126455799,
+    "tensorbem": 1203.4547385183168
+   },
+   {
+    "capytaine": 235.97359553965316,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.03862482667281332,
+    "tensorbem": 226.8591563125735
+   },
+   {
+    "capytaine": 1300.239546144133,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.07961589634604424,
+    "tensorbem": 1196.7198092132942
+   },
+   {
+    "capytaine": 419.276788583382,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.07791656819810028,
+    "tensorbem": 386.6081800918444
+   },
+   {
+    "capytaine": 1280.1610406228685,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 70,
+    "quantity": "added_mass",
+    "relative": -0.08099398672608969,
+    "tensorbem": 1176.4756942914028
+   },
+   {
+    "capytaine": 600.2687315754002,
+    "case": "sphere",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 70,
+    "quantity": "damping",
+    "relative": -0.11515497601394621,
+    "tensorbem": 531.1448001889131
+   },
+   {
+    "capytaine": 1287.9702396287023,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04873031646378581,
+    "tensorbem": 1225.2070422556576
+   },
+   {
+    "capytaine": 356.010828233921,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.05465627502214019,
+    "tensorbem": 336.5526024951079
+   },
+   {
+    "capytaine": 1173.2451938511952,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04789749438842701,
+    "tensorbem": 1117.0496887624586
+   },
+   {
+    "capytaine": 267.18623508290335,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.05991253938292874,
+    "tensorbem": 251.17842925092245
+   },
+   {
+    "capytaine": 1192.4169804460514,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04703476144993488,
+    "tensorbem": 1136.3319322219197
+   },
+   {
+    "capytaine": 77.42459613387393,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.08134687039071015,
+    "tensorbem": 71.12634754711861
+   },
+   {
+    "capytaine": 1247.1881717008007,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.0466366348795498,
+    "tensorbem": 1189.0235123110972
+   },
+   {
+    "capytaine": -0.46870856564778496,
+    "case": "sphere",
+    "excluded": true,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -1.1465731722764185,
+    "tensorbem": 0.06870010134012582
+   },
+   {
+    "capytaine": 1289.9215818476616,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04691657382358853,
+    "tensorbem": 1229.4028807262657
+   },
+   {
+    "capytaine": 47.22693340161482,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": 0.03835125578421417,
+    "tensorbem": 49.0381456044042
+   },
+   {
+    "capytaine": 1309.5765289295662,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04758888335471745,
+    "tensorbem": 1247.2552442502613
+   },
+   {
+    "capytaine": 167.7348532245563,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.015758779958592286,
+    "tensorbem": 165.09155658120375
+   },
+   {
+    "capytaine": 1309.8603209430464,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.04825735514686354,
+    "tensorbem": 1246.6499262425132
+   },
+   {
+    "capytaine": 311.94954420072213,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.04057019371714302,
+    "tensorbem": 299.29369076252436
+   },
+   {
+    "capytaine": 1297.0181110860165,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 270,
+    "quantity": "added_mass",
+    "relative": -0.0485258276582859,
+    "tensorbem": 1234.079233757781
+   },
+   {
+    "capytaine": 453.16914186395445,
+    "case": "sphere",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 270,
+    "quantity": "damping",
+    "relative": -0.06548286457621699,
+    "tensorbem": 423.49432831715666
+   },
+   {
+    "capytaine": 685.9206855307069,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.04870464425883152,
+    "tensorbem": 652.51316255216
+   },
+   {
+    "capytaine": 328.85284643829397,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.25,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": -0.040524753164636836,
+    "tensorbem": 315.5261660088939
+   },
+   {
+    "capytaine": 585.7400198928754,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.0473584736794451,
+    "tensorbem": 558.000266577781
+   },
+   {
+    "capytaine": 626.7854448997718,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.5,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": -0.030216523262859157,
+    "tensorbem": 607.8461679231364
+   },
+   {
+    "capytaine": 500.66036449449945,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.048706835852777824,
+    "tensorbem": 476.27478230307395
+   },
+   {
+    "capytaine": 806.6004502537461,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 0.75,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": -0.021550480591387304,
+    "tensorbem": 789.2178229055485
+   },
+   {
+    "capytaine": 436.896052054915,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.05167452772938074,
+    "tensorbem": 414.3196548981463
+   },
+   {
+    "capytaine": 900.6387485210398,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.0,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": -0.013910168873136454,
+    "tensorbem": 888.1107114354219
+   },
+   {
+    "capytaine": 390.1653764104402,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.05544546115959615,
+    "tensorbem": 368.53247718685594
+   },
+   {
+    "capytaine": 938.4570993565476,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.25,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": -0.006721894971579332,
+    "tensorbem": 932.1488892993399
+   },
+   {
+    "capytaine": 355.9500146475962,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.05938919751079065,
+    "tensorbem": 334.8104289237213
+   },
+   {
+    "capytaine": 939.1483076449724,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.5,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": 0.0006756683058683599,
+    "tensorbem": 939.782860390958
+   },
+   {
+    "capytaine": 330.9212739306265,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.06296990951066196,
+    "tensorbem": 310.083191256062
+   },
+   {
+    "capytaine": 914.7092433580342,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 1.75,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": 0.008721378107383371,
+    "tensorbem": 922.6867685276782
+   },
+   {
+    "capytaine": 312.8817318961362,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 64,
+    "quantity": "added_mass",
+    "relative": -0.06587466905428464,
+    "tensorbem": 292.2707513543468
+   },
+   {
+    "capytaine": 872.9106550432721,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 1,
+    "nu": 2.0,
+    "panels": 64,
+    "quantity": "damping",
+    "relative": 0.018130021987936056,
+    "tensorbem": 888.7365444127103
+   },
+   {
+    "capytaine": 685.3092128887761,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.02753257306340614,
+    "tensorbem": 666.4408869138905
+   },
+   {
+    "capytaine": 332.52027883642984,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.25,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": -0.022429198788049685,
+    "tensorbem": 325.06211540134984
+   },
+   {
+    "capytaine": 583.162955921721,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.026828221131357747,
+    "tensorbem": 567.5177311846369
+   },
+   {
+    "capytaine": 631.4282829121055,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.5,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": -0.016500703445789577,
+    "tensorbem": 621.0092720684887
+   },
+   {
+    "capytaine": 496.88716514441154,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.027716581484938687,
+    "tensorbem": 483.1151515428663
+   },
+   {
+    "capytaine": 809.1780090552805,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 0.75,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": -0.0114556040815169,
+    "tensorbem": 799.9083861520731
+   },
+   {
+    "capytaine": 432.62751987862003,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.029530634717737713,
+    "tensorbem": 419.8517546202437
+   },
+   {
+    "capytaine": 899.1973602275601,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.0,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": -0.006920356497697271,
+    "tensorbem": 892.9745939329971
+   },
+   {
+    "capytaine": 385.9578346220361,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.0318238646847275,
+    "tensorbem": 373.675164719014
+   },
+   {
+    "capytaine": 931.887484578328,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.25,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": -0.002524285461924141,
+    "tensorbem": 929.5351345488579
+   },
+   {
+    "capytaine": 352.2427418474568,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.034240446967256505,
+    "tensorbem": 340.1817929256279
+   },
+   {
+    "capytaine": 927.0890993315714,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.5,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": 0.002070442433362372,
+    "tensorbem": 929.0085839423352
+   },
+   {
+    "capytaine": 328.0966638292715,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.036505933031085125,
+    "tensorbem": 316.11918899179767
+   },
+   {
+    "capytaine": 897.2034202789204,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 1.75,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": 0.007195569886977112,
+    "tensorbem": 903.6593101923722
+   },
+   {
+    "capytaine": 311.2513030711657,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 256,
+    "quantity": "added_mass",
+    "relative": -0.03841581857303962,
+    "tensorbem": 299.2943294817616
+   },
+   {
+    "capytaine": 850.5419660404694,
+    "case": "spheroid",
+    "excluded": false,
+    "level": 2,
+    "nu": 2.0,
+    "panels": 256,
+    "quantity": "damping",
+    "relative": 0.01325064281833262,
+    "tensorbem": 861.8121938344741
+   }
+  ],
+  "failures": [
+   "barge damping nu=2.00: -5.70% (TensorBEM 342.8 vs capytaine 363.6)",
+   "sphere added_mass nu=0.25: -4.87% (TensorBEM 1225 vs capytaine 1288)",
+   "sphere damping nu=0.75: -8.13% (TensorBEM 71.13 vs capytaine 77.42)",
+   "spheroid added_mass nu=2.00: -3.84% (TensorBEM 299.3 vs capytaine 311.3)"
+  ],
+  "per_case": {
+   "barge": {
+    "finest_level": 2,
+    "finest_panels": 640,
+    "pass": false,
+    "quantities": {
+     "added_mass": {
+      "excluded_points": 0,
+      "included_points": 8,
+      "pass": true,
+      "worst_nu": 2.0,
+      "worst_relative": 0.018392179864533426
+     },
+     "damping": {
+      "excluded_points": 0,
+      "included_points": 8,
+      "pass": false,
+      "worst_nu": 2.0,
+      "worst_relative": -0.0570234487179812
+     }
+    }
+   },
+   "sphere": {
+    "finest_level": 2,
+    "finest_panels": 270,
+    "pass": false,
+    "quantities": {
+     "added_mass": {
+      "excluded_points": 0,
+      "included_points": 8,
+      "pass": false,
+      "worst_nu": 0.25,
+      "worst_relative": -0.04873031646378581
+     },
+     "damping": {
+      "excluded_points": 1,
+      "included_points": 7,
+      "pass": false,
+      "worst_nu": 0.75,
+      "worst_relative": -0.08134687039071015
+     }
+    }
+   },
+   "spheroid": {
+    "finest_level": 2,
+    "finest_panels": 256,
+    "pass": false,
+    "quantities": {
+     "added_mass": {
+      "excluded_points": 0,
+      "included_points": 8,
+      "pass": false,
+      "worst_nu": 2.0,
+      "worst_relative": -0.03841581857303962
+     },
+     "damping": {
+      "excluded_points": 0,
+      "included_points": 8,
+      "pass": true,
+      "worst_nu": 0.25,
+      "worst_relative": -0.022429198788049685
+     }
+    }
+   }
+  },
+  "tolerance": 0.03,
+  "verdict": "FAIL",
+  "worst_overall_at": {
+   "case": "sphere",
+   "level": 1,
+   "nu": 0.75,
+   "panels": 70,
+   "quantity": "damping"
+  },
+  "worst_overall_relative": -0.1675759525675025
+ },
+ "convergence": [
+  {
+   "case": "barge",
+   "level": 1,
+   "panels": 160,
+   "worst": {
+    "added_mass": 0.036919864096729385,
+    "damping": 0.1253979401587737
+   }
+  },
+  {
+   "case": "barge",
+   "level": 2,
+   "panels": 640,
+   "worst": {
+    "added_mass": 0.018392179864533426,
+    "damping": 0.0570234487179812
+   }
+  },
+  {
+   "case": "sphere",
+   "level": 1,
+   "panels": 70,
+   "worst": {
+    "added_mass": 0.08099398672608969,
+    "damping": 0.1675759525675025
+   }
+  },
+  {
+   "case": "sphere",
+   "level": 2,
+   "panels": 270,
+   "worst": {
+    "added_mass": 0.04873031646378581,
+    "damping": 0.08134687039071015
+   }
+  },
+  {
+   "case": "spheroid",
+   "level": 1,
+   "panels": 64,
+   "worst": {
+    "added_mass": 0.06587466905428464,
+    "damping": 0.040524753164636836
+   }
+  },
+  {
+   "case": "spheroid",
+   "level": 2,
+   "panels": 256,
+   "worst": {
+    "added_mass": 0.03841581857303962,
+    "damping": 0.022429198788049685
+   }
+  }
+ ],
+ "levels": [
+  {
+   "case": "barge",
+   "level": 1,
+   "mesh_signature": "77629f76338018c85253dc678fc3f394",
+   "panels": 160,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 1142.1002379618856,
+     "damping": 448.30137153650503
+    },
+    "0.500": {
+     "added_mass": 978.7622351620727,
+     "damping": 724.6312007169873
+    },
+    "0.750": {
+     "added_mass": 872.1250021351702,
+     "damping": 789.1979021049732
+    },
+    "1.000": {
+     "added_mass": 812.6935888306056,
+     "damping": 741.1474439490974
+    },
+    "1.250": {
+     "added_mass": 783.4820835061842,
+     "damping": 644.4933874317292
+    },
+    "1.500": {
+     "added_mass": 772.4452586513898,
+     "damping": 531.9143460908125
+    },
+    "1.750": {
+     "added_mass": 772.7577423086096,
+     "damping": 419.8646530470123
+    },
+    "2.000": {
+     "added_mass": 780.0993659029743,
+     "damping": 321.11379623967036
+    }
+   }
+  },
+  {
+   "case": "barge",
+   "level": 2,
+   "mesh_signature": "c4573e698637a843802760f5c9d99145",
+   "panels": 640,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 1121.2858363229625,
+     "damping": 451.4667945535444
+    },
+    "0.500": {
+     "added_mass": 957.626856823479,
+     "damping": 735.1600465921935
+    },
+    "0.750": {
+     "added_mass": 849.4500825455938,
+     "damping": 807.234670717161
+    },
+    "1.000": {
+     "added_mass": 788.0709307121382,
+     "damping": 764.782271651283
+    },
+    "1.250": {
+     "added_mass": 756.9861702478344,
+     "damping": 671.1219211945471
+    },
+    "1.500": {
+     "added_mass": 744.3901052800695,
+     "damping": 559.0054583488527
+    },
+    "1.750": {
+     "added_mass": 743.5637199617149,
+     "damping": 445.1551125843906
+    },
+    "2.000": {
+     "added_mass": 750.2946463740268,
+     "damping": 342.81966581625016
+    }
+   }
+  },
+  {
+   "case": "sphere",
+   "level": 1,
+   "mesh_signature": "d5078cbb1498483106caad7e6cba7e95",
+   "panels": 70,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 1160.9619890718589,
+     "damping": 278.20148328645985
+    },
+    "0.500": {
+     "added_mass": 1075.3710226111,
+     "damping": 194.80670265943004
+    },
+    "0.750": {
+     "added_mass": 1100.9785751319419,
+     "damping": 42.41546579813265
+    },
+    "1.000": {
+     "added_mass": 1153.2107723983336,
+     "damping": 2.936555969325034
+    },
+    "1.250": {
+     "added_mass": 1190.3661467153177,
+     "damping": 82.34929004302316
+    },
+    "1.500": {
+     "added_mass": 1203.4547385183168,
+     "damping": 226.8591563125735
+    },
+    "1.750": {
+     "added_mass": 1196.7198092132942,
+     "damping": 386.6081800918444
+    },
+    "2.000": {
+     "added_mass": 1176.4756942914028,
+     "damping": 531.1448001889131
+    }
+   }
+  },
+  {
+   "case": "sphere",
+   "level": 2,
+   "mesh_signature": "11ed6f91b50689db2b1ff326b256cdac",
+   "panels": 270,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 1225.2070422556576,
+     "damping": 336.5526024951079
+    },
+    "0.500": {
+     "added_mass": 1117.0496887624586,
+     "damping": 251.17842925092245
+    },
+    "0.750": {
+     "added_mass": 1136.3319322219197,
+     "damping": 71.12634754711861
+    },
+    "1.000": {
+     "added_mass": 1189.0235123110972,
+     "damping": 0.06870010134012582
+    },
+    "1.250": {
+     "added_mass": 1229.4028807262657,
+     "damping": 49.0381456044042
+    },
+    "1.500": {
+     "added_mass": 1247.2552442502613,
+     "damping": 165.09155658120375
+    },
+    "1.750": {
+     "added_mass": 1246.6499262425132,
+     "damping": 299.29369076252436
+    },
+    "2.000": {
+     "added_mass": 1234.079233757781,
+     "damping": 423.49432831715666
+    }
+   }
+  },
+  {
+   "case": "spheroid",
+   "level": 1,
+   "mesh_signature": "7dc80da0de9879c57228e71937b84783",
+   "panels": 64,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 652.51316255216,
+     "damping": 315.5261660088939
+    },
+    "0.500": {
+     "added_mass": 558.000266577781,
+     "damping": 607.8461679231364
+    },
+    "0.750": {
+     "added_mass": 476.27478230307395,
+     "damping": 789.2178229055485
+    },
+    "1.000": {
+     "added_mass": 414.3196548981463,
+     "damping": 888.1107114354219
+    },
+    "1.250": {
+     "added_mass": 368.53247718685594,
+     "damping": 932.1488892993399
+    },
+    "1.500": {
+     "added_mass": 334.8104289237213,
+     "damping": 939.782860390958
+    },
+    "1.750": {
+     "added_mass": 310.083191256062,
+     "damping": 922.6867685276782
+    },
+    "2.000": {
+     "added_mass": 292.2707513543468,
+     "damping": 888.7365444127103
+    }
+   }
+  },
+  {
+   "case": "spheroid",
+   "level": 2,
+   "mesh_signature": "7e9493374037cde4b9ad6097fd4119d8",
+   "panels": 256,
+   "tensorbem": {
+    "0.250": {
+     "added_mass": 666.4408869138905,
+     "damping": 325.06211540134984
+    },
+    "0.500": {
+     "added_mass": 567.5177311846369,
+     "damping": 621.0092720684887
+    },
+    "0.750": {
+     "added_mass": 483.1151515428663,
+     "damping": 799.9083861520731
+    },
+    "1.000": {
+     "added_mass": 419.8517546202437,
+     "damping": 892.9745939329971
+    },
+    "1.250": {
+     "added_mass": 373.675164719014,
+     "damping": 929.5351345488579
+    },
+    "1.500": {
+     "added_mass": 340.1817929256279,
+     "damping": 929.0085839423352
+    },
+    "1.750": {
+     "added_mass": 316.11918899179767,
+     "damping": 903.6593101923722
+    },
+    "2.000": {
+     "added_mass": 299.2943294817616,
+     "damping": 861.8121938344741
+    }
+   }
+  }
+ ],
+ "meta": {
+  "cancellation_fraction": 0.05,
+  "capytaine_formulation": "low-order constant-strength panels with the free-surface Green function",
+  "cases": [
+   {
+    "name": "barge",
+    "note": "flat panels, sharp bilge corners, rectangular waterplane",
+    "title": "wall-sided barge 2.0 x 1.0 x 0.5 m"
+   },
+   {
+    "name": "sphere",
+    "note": "curved panels, circular waterline, no corners",
+    "title": "floating sphere r = 1 m, centre 0.5 m below the waterline"
+   },
+   {
+    "name": "spheroid",
+    "note": "anisotropic curvature, elliptical waterline (ship-like)",
+    "title": "floating spheroid semi-axes (1.0, 0.5, 0.5) m"
+   }
+  ],
+  "density": 1025.0,
+  "dof": "heave",
+  "gravity": 9.80665,
+  "nu_grid": [
+   0.25,
+   0.5,
+   0.75,
+   1.0,
+   1.25,
+   1.5,
+   1.75,
+   2.0
+  ],
+  "reference_metadata": {
+   "density": 1025.0,
+   "dof": "heave",
+   "generated_utc": "2026-11-12T18:47:07+00:00",
+   "gravity": 9.80665,
+   "lid": "none (frequency band kept below the first irregular frequency)",
+   "machine": "loongarch64",
+   "meshes": "identical vertex/face arrays as the TensorBEM builders; arrays stored below",
+   "module_path": "/usr/lib64/python3.11/site-packages/capytaine/__init__.py",
+   "numpy": "2.4.6",
+   "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+   "python": "3.11.6",
+   "solver": "BEMSolver",
+   "tool": "capytaine",
+   "version": "3.1.dev0",
+   "water_depth": "infinite"
+  },
+  "tensorbem_formulation": "low-order Rankine panel method with free-surface panels as interior unknowns (free_surface_solver3d)",
+  "tolerance": 0.03
+ }
+}
