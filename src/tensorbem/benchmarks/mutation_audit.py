@@ -42,6 +42,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+from tensorbem.benchmarks import mutation_isolation as ISOLATION  # noqa: E402
 SRC_ROOT = REPO_ROOT / "src"
 DEFAULT_OUTPUT = REPO_ROOT / "docs" / "m2582" / "outputs" / "mutation_audit"
 
@@ -342,7 +344,20 @@ def _failing_test(output: str) -> str | None:
     return None
 
 
-def run_tests(shadow_src: Path, tests: tuple[str, ...], timeout: float) -> tuple[int, str]:
+def run_tests(
+    shadow_src: Path, tests: tuple[str, ...], timeout: float
+) -> tuple[int, str]:
+    """Run ``tests`` against the shadow tree and report what got imported.
+
+    Isolation is enforced by the ``mutation_isolation`` pytest plugin rather
+    than by ``PYTHONPATH`` order: ``tests/conftest.py`` prepends the repository
+    ``src`` to ``sys.path``, so a plain ``PYTHONPATH`` shadow is silently
+    ignored and every mutant "survives".  The plugin installs a ``sys.meta_path``
+    finder, which wins over any later ``sys.path`` insertion, and writes the
+    resolved package path to ``TENSORBEM_MUTATION_ISOLATION_FILE`` so the caller
+    can audit the claim instead of trusting it.
+    """
+    report = Path(tempfile.mkdtemp(prefix="iso-", dir=str(shadow_src.parent))) / "imported.txt"
     env = {
         "PYTHONPATH": str(shadow_src),
         "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
@@ -354,6 +369,9 @@ def run_tests(shadow_src: Path, tests: tuple[str, ...], timeout: float) -> tuple
         "OPENBLAS_NUM_THREADS": "1",
         "MKL_NUM_THREADS": "1",
         "NUMEXPR_NUM_THREADS": "1",
+        ISOLATION.SHADOW_ENV: str(shadow_src),
+        ISOLATION.REPO_SRC_ENV: str(SRC_ROOT),
+        ISOLATION.REPORT_ENV: str(report),
     }
     cmd = [
         sys.executable,
@@ -367,6 +385,8 @@ def run_tests(shadow_src: Path, tests: tuple[str, ...], timeout: float) -> tuple
         "-rf",
         "-p",
         "no:cacheprovider",
+        "-p",
+        ISOLATION.PLUGIN_NAME,
     ]
     try:
         proc = subprocess.run(
@@ -377,13 +397,24 @@ def run_tests(shadow_src: Path, tests: tuple[str, ...], timeout: float) -> tuple
             text=True,
             timeout=timeout,
         )
+        returncode, output = proc.returncode, proc.stdout + proc.stderr
     except subprocess.TimeoutExpired:
-        return 124, "TIMEOUT"
-    return proc.returncode, proc.stdout + proc.stderr
+        returncode, output = 124, "TIMEOUT"
+    resolved = None
+    if report.is_file():
+        resolved = report.read_text(encoding="utf-8").strip()
+        shutil.rmtree(report.parent, ignore_errors=True)
+    if resolved is None or str(shadow_src.resolve()) not in resolved:
+        # No verified shadow import: the verdict cannot be trusted either way.
+        returncode = 5
+        output = f"ISOLATION-FAILURE imported={resolved}\n" + output
+    return returncode, output
 
 
 def _classify(returncode: int, output: str) -> tuple[str, str | None]:
     """Map a pytest exit code onto a mutation verdict."""
+    if "ISOLATION-FAILURE" in output:
+        return "isolation_error", None
     if returncode == 0:
         return "survived", None
     if returncode in {1, 124}:
@@ -407,20 +438,33 @@ def _shadow_package(staging: Path) -> Path:
 
 
 def _check_isolation(shadow_src: Path) -> str:
-    """Fail fast if ``tensorbem`` would still be imported from another worktree."""
-    env = dict(os.environ, PYTHONPATH=str(shadow_src), PYTHONDONTWRITEBYTECODE="1")
-    proc = subprocess.run(
-        [sys.executable, "-c", "import tensorbem, pathlib; print(tensorbem.__file__)"],
-        env=env,
-        capture_output=True,
-        text=True,
+    """Fail fast if a *test session* would not import the shadow tree.
+
+    The previous version ran ``python -c "import tensorbem"``.  That check
+    passes even when the real suite is not isolated, because ``conftest.py``
+    (which prepends the repository ``src``) never runs in a bare interpreter.
+    The check therefore has to go through pytest itself.
+    """
+    probe = shadow_src.parent / "iso_probe.py"
+    probe.write_text(
+        "def test_probe():\n"
+        "    import tensorbem\n"
+        "    print('SHADOW', tensorbem.__file__)\n",
+        encoding="utf-8",
     )
-    resolved = Path(proc.stdout.strip()).resolve()
-    if shadow_src.resolve() not in resolved.parents:
+    rc, out = run_tests(shadow_src, (str(probe),), timeout=120.0)
+    probe.unlink(missing_ok=True)
+    if rc != 0 or "SHADOW" not in out:
+        raise RuntimeError(
+            "mutation audit cannot isolate the test session from the repository "
+            f"src tree (rc={rc}).\n{out[-2000:]}"
+        )
+    resolved = out.split("SHADOW", 1)[1].split()[0]
+    if str(shadow_src.resolve()) not in resolved:
         raise RuntimeError(
             f"mutation audit would run against {resolved}, not the shadow tree {shadow_src}"
         )
-    return str(resolved)
+    return resolved
 
 
 def _run_one(
@@ -551,6 +595,7 @@ def _score(rows: list[dict], tests: tuple[str, ...]) -> dict:
         "killed": killed,
         "survived": counts.get("survived", 0),
         "invalid": counts.get("invalid", 0),
+        "isolation_error": counts.get("isolation_error", 0),
         "timeout": counts.get("timeout", 0),
         "mutation_score": (killed / scored) if scored else None,
         "tests": list(tests),
