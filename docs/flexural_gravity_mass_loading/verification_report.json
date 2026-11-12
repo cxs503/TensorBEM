@@ -294,7 +294,7 @@
       "pass": true
     },
     "V9_inertia_correction_bound": {
-      "description": "max |inertia correction| over E in {1,5,10} GPa, h in {0.5,1,2} m, f in 0.02..0.30 Hz stays below 10%",
+      "description": "max |inertia correction| over E in {1,5,10,20,30} GPa, h in {0.5,1,2} m, f in 0.02..0.30 Hz stays below 10%",
       "rows": [
         {
           "young_modulus": 1000000000.0,
@@ -307,6 +307,14 @@
         {
           "young_modulus": 10000000000.0,
           "max_abs_inertia_correction_percent": 2.4075870547785483
+        },
+        {
+          "young_modulus": 20000000000.0,
+          "max_abs_inertia_correction_percent": 1.9511562930855986
+        },
+        {
+          "young_modulus": 30000000000.0,
+          "max_abs_inertia_correction_percent": 1.719562806006869
         }
       ],
       "max_abs_inertia_correction_percent": 4.303111001943638,
@@ -1433,6 +1441,384 @@
       "lambda_ratio_eq3": 6.707345448921973,
       "lambda_ratio_eq2": 6.848299000871278,
       "inertia_correction_percent": -2.0582271879684644
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.9995997118761134,
+      "lambda_ratio_eq2": 1.0000010513648259,
+      "inertia_correction_percent": -0.04013390667586547
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 0.9962579009339276,
+      "lambda_ratio_eq2": 1.0002398007899531,
+      "inertia_correction_percent": -0.3980945222216481
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 0.9988071643675436,
+      "lambda_ratio_eq2": 1.0098783742577466,
+      "inertia_correction_percent": -1.0962914121554812
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.0353189301425207,
+      "lambda_ratio_eq2": 1.0503405629412417,
+      "inertia_correction_percent": -1.4301678263911155
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 1.3855516684581175,
+      "lambda_ratio_eq2": 1.404052194271625,
+      "inertia_correction_percent": -1.3176522845081973
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 1.969796076595459,
+      "lambda_ratio_eq2": 1.9933834955450105,
+      "inertia_correction_percent": -1.1832855545491738
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 234.74846679545257,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 3.5041257820083502,
+      "lambda_ratio_eq2": 3.545087335858642,
+      "inertia_correction_percent": -1.1554455495627614
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.999205601686777,
+      "lambda_ratio_eq2": 1.0000084106386773,
+      "inertia_correction_percent": -0.08028021998210955
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 0.993993674242488,
+      "lambda_ratio_eq2": 1.0019048996732967,
+      "inertia_correction_percent": -0.7896183992501138
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 1.0457020402813713,
+      "lambda_ratio_eq2": 1.064095736502734,
+      "inertia_correction_percent": -1.7285753142678217
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.200200757038446,
+      "lambda_ratio_eq2": 1.220724818629214,
+      "inertia_correction_percent": -1.6813012464033328
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 1.8943822703891349,
+      "lambda_ratio_eq2": 1.9215025887103407,
+      "inertia_correction_percent": -1.4114120106082373
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 2.825284304034538,
+      "lambda_ratio_eq2": 2.864276827668594,
+      "inertia_correction_percent": -1.3613392133537072
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 372.63996313902334,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 5.171599863471675,
+      "lambda_ratio_eq2": 5.246016836471785,
+      "inertia_correction_percent": -1.418542397400302
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.9984614845421272,
+      "lambda_ratio_eq2": 1.0000672673122033,
+      "inertia_correction_percent": -0.1605674760650655
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 0.9994663988220633,
+      "lambda_ratio_eq2": 1.0144538395857439,
+      "inertia_correction_percent": -1.4773901166169057
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 1.2356604052818558,
+      "lambda_ratio_eq2": 1.2602498495295535,
+      "inertia_correction_percent": -1.9511562930855986
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.571230057601677,
+      "lambda_ratio_eq2": 1.5992771965318697,
+      "inertia_correction_percent": -1.7537384382778964
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 2.707652656149961,
+      "lambda_ratio_eq2": 2.7520227723464763,
+      "inertia_correction_percent": -1.612272857709085
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 4.137443031760911,
+      "lambda_ratio_eq2": 4.206400213076931,
+      "inertia_correction_percent": -1.6393395260309251
+    },
+    {
+      "young_modulus": 20000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 591.5290694922768,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 7.693828860739175,
+      "lambda_ratio_eq2": 7.833233003630912,
+      "inertia_correction_percent": -1.7796501499077078
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.9996002386076832,
+      "lambda_ratio_eq2": 1.0000015770431847,
+      "inertia_correction_percent": -0.040133780257445295
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 0.9963797795544962,
+      "lambda_ratio_eq2": 1.000359518377758,
+      "inertia_correction_percent": -0.3978308548226339
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 1.0036711354617616,
+      "lambda_ratio_eq2": 1.014546470083399,
+      "inertia_correction_percent": -1.071940511580849
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.0559199958893433,
+      "lambda_ratio_eq2": 1.0700890047169869,
+      "inertia_correction_percent": -1.3240962915408105
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 1.4674367604855614,
+      "lambda_ratio_eq2": 1.484716400977838,
+      "inertia_correction_percent": -1.1638344185392002
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 2.111523494255265,
+      "lambda_ratio_eq2": 2.1341511458481186,
+      "inertia_correction_percent": -1.060264716342807
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 0.5,
+      "crossover_wavelength": 268.71991335831245,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 3.7827709291619755,
+      "lambda_ratio_eq2": 3.8229566525605914,
+      "inertia_correction_percent": -1.0511686909057572
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.9992098236521456,
+      "lambda_ratio_eq2": 1.0000126157190437,
+      "inertia_correction_percent": -0.08027819392266711
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 0.9949683790135274,
+      "lambda_ratio_eq2": 1.0028459755094272,
+      "inertia_correction_percent": -0.7855240673322883
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 1.0707469355490695,
+      "lambda_ratio_eq2": 1.08796825181784,
+      "inertia_correction_percent": -1.5828877579833867
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.2577621185117798,
+      "lambda_ratio_eq2": 1.2767151788627622,
+      "inertia_correction_percent": -1.4845175074886252
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 2.029551027981909,
+      "lambda_ratio_eq2": 2.055518722460277,
+      "inertia_correction_percent": -1.2633158820021473
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 3.0450711311037697,
+      "lambda_ratio_eq2": 3.083101365171872,
+      "inertia_correction_percent": -1.2335057970428442
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 1.0,
+      "crossover_wavelength": 426.5662731497886,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 5.595758660227073,
+      "lambda_ratio_eq2": 5.669355472774998,
+      "inertia_correction_percent": -1.2981513136960054
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.02,
+      "lambda_ratio_eq3": 0.9984953734557562,
+      "lambda_ratio_eq2": 1.000100885723811,
+      "inertia_correction_percent": -0.16053503111266298
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.05,
+      "lambda_ratio_eq3": 1.0065137800496324,
+      "lambda_ratio_eq2": 1.0210877435694026,
+      "inertia_correction_percent": -1.427297860693555
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.08,
+      "lambda_ratio_eq3": 1.2993483538253958,
+      "lambda_ratio_eq2": 1.3220823908838,
+      "inertia_correction_percent": -1.719562806006869
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.1,
+      "lambda_ratio_eq3": 1.674990536403347,
+      "lambda_ratio_eq2": 1.7014958757212586,
+      "inertia_correction_percent": -1.5577668859571014
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.15,
+      "lambda_ratio_eq3": 2.9177738190088705,
+      "lambda_ratio_eq2": 2.96100510549363,
+      "inertia_correction_percent": -1.4600206667847782
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.2,
+      "lambda_ratio_eq3": 4.473075743036846,
+      "lambda_ratio_eq2": 4.541037413007837,
+      "inertia_correction_percent": -1.496611099840628
+    },
+    {
+      "young_modulus": 30000000000.0,
+      "ice_thickness": 2.0,
+      "crossover_wavelength": 677.1317507321288,
+      "frequency": 0.3,
+      "lambda_ratio_eq3": 8.337581361299303,
+      "lambda_ratio_eq2": 8.476184596109318,
+      "inertia_correction_percent": -1.6352078371869805
     }
   ],
   "fd_route_table": [
