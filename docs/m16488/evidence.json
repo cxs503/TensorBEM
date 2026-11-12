@@ -1,0 +1,81 @@
+{
+  "before": {
+    "REAL": 64,
+    "WITHHELD": 7,
+    "STUB": 0,
+    "MOCK": 0,
+    "MISSING": 0,
+    "STALE_CLAIM": 0,
+    "NOT_SUPPORTED": 0,
+    "total": 71
+  },
+  "after": {
+    "REAL": 71,
+    "WITHHELD": 0,
+    "STUB": 0,
+    "MOCK": 0,
+    "MISSING": 0,
+    "STALE_CLAIM": 0,
+    "STALE_PIN": 0,
+    "NOT_SUPPORTED": 0,
+    "total": 71
+  },
+  "promoted": [
+    "kcs-class-hull-anchors",
+    "figure-integrity",
+    "finite-depth-green-kernel",
+    "haskind-2d-excitation",
+    "neumann-kelvin-steady",
+    "rankine-wave-series60",
+    "stf-fullspeed-strip"
+  ],
+  "stale_before": {
+    "kcs-class-hull-anchors": [],
+    "figure-integrity": [
+      "tests/test_figure_integrity.py::TestCLI::test_all_cases",
+      "tests/test_figure_integrity.py::TestCLI::test_json_output"
+    ],
+    "finite-depth-green-kernel": [
+      "tests/test_finite_depth_green.py::TestDispersionNewtonRaphson::test_dispersion_residual_zero",
+      "tests/test_finite_depth_green.py::TestDeepWaterDegeneration::test_green_function_degeneration_moderate",
+      "tests/test_finite_depth_green.py::TestDeepWaterResistanceLimit::test_resistance_degeneration"
+    ],
+    "haskind-2d-excitation": [
+      "tests/test_stf_haskind_reg.py::TestHaskindCrossValidation::test_haskind_vs_direct_heave",
+      "tests/test_stf_haskind_reg.py::TestHaskindCrossValidation::test_haskind_vs_direct_sway",
+      "tests/test_stf_haskind_reg.py::TestNetSourceRegularization::test_regularized_radiation_matches_unregularized"
+    ],
+    "neumann-kelvin-steady": [
+      "tests/test_neumann_kelvin.py::TestGreenFunction::test_green_function_decays_with_distance",
+      "tests/test_neumann_kelvin.py::TestConstants::test_froude_number"
+    ],
+    "rankine-wave-series60": [
+      "tests/test_rankine_wave_resistance.py::TestEnergyConservation::test_energy_flux_computation",
+      "tests/test_rankine_wave_resistance.py::TestFreeSurfaceTruncation::test_truncation_study",
+      "tests/test_rankine_wave_resistance.py::TestSeries60::test_series60_hull_properties"
+    ],
+    "stf-fullspeed-strip": [
+      "tests/test_stf_haskind_reg.py::TestEncounterFrequency::test_encounter_frequency_head_seas",
+      "tests/test_stf_haskind_reg.py::TestDeepSubmergedCircleA33::test_a33_vs_ursell",
+      "tests/test_stf_haskind_reg.py::TestConvergence::test_a33_gci"
+    ]
+  },
+  "stale_docs_before": {
+    "kcs-class-hull-anchors": [
+      "docs/m6656/README.md::KCS-class"
+    ]
+  },
+  "asserting_nodes": {
+    "figure_integrity": 17,
+    "finite_depth_green": 15,
+    "haskind2d": 2,
+    "kcs_hull": 6,
+    "net_source_reg": 3,
+    "neumann_kelvin": 18,
+    "rankine_wave": 33,
+    "series60": 5,
+    "stf_fullspeed": 12
+  },
+  "tests_run": "pytest tests/test_stf_haskind_reg.py tests/test_finite_depth_green.py tests/test_neumann_kelvin.py tests/test_rankine_wave_resistance.py tests/test_figure_integrity.py tests/test_wigley_kcs_kochin_energy.py -> 170 passed",
+  "capability_evidence_tests": "tests/test_capability_evidence.py -> 18 passed"
+}
