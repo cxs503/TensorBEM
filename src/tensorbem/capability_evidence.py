@@ -1592,6 +1592,8 @@ AUXILIARY_MODULES: dict[str, str] = {
         'physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.',
     'tensorbem.verification':
         'namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.',
+    'tensorbem.coefficients':
+        'hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.',
     'tensorbem.analytic':
         'closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).',
 }
