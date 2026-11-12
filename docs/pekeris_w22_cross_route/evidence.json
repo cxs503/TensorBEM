@@ -1,0 +1,2103 @@
+{
+  "study": "pekeris_w22_cross_route_level",
+  "mission": "m16708",
+  "generated_at": "2026-11-12T18:42:22Z",
+  "inputs": {
+    "case": {
+      "water_depth_m": 100.0,
+      "c_water_m_s": 1500.0,
+      "c_bottom_m_s": 1600.0,
+      "rho_water_kg_m3": 1000.0,
+      "rho_bottom_kg_m3": 1800.0,
+      "density_ratio_rho_w_over_rho_b": 0.5555555555555556
+    },
+    "physical_plate": {
+      "young_modulus_Pa": 7000000000.0,
+      "thickness_m": 1.5,
+      "rho_ice_kg_m3": 910.0,
+      "poisson_ratio": 0.3,
+      "flexural_rigidity_Nm": 2163461538.4615383,
+      "mass_per_area_kg_m2": 1365.0,
+      "plate_wave_speed_m_s": 35.4816764928901
+    },
+    "frequencies_hz": [
+      25.0,
+      50.0,
+      100.0,
+      200.0,
+      400.0
+    ],
+    "ranges_m": [
+      200.0,
+      500.0,
+      1000.0,
+      2000.0,
+      5000.0,
+      10000.0
+    ],
+    "depths_m": [
+      10.0,
+      25.0,
+      50.0,
+      75.0,
+      90.0
+    ],
+    "source_depth_m": 50.0,
+    "rho_bottom_kg_m3": [
+      1025.0,
+      1200.0,
+      1800.0,
+      2400.0,
+      10000.0,
+      1000000.0,
+      1000000000.0
+    ],
+    "rho_water_kg_m3": [
+      300.0,
+      400.0,
+      500.0,
+      700.0,
+      1000.0,
+      1025.0
+    ],
+    "rigid_scan_rho_bottom_kg_m3": [
+      1000.0,
+      10000.0,
+      1000000.0,
+      100000000.0,
+      10000000000.0,
+      1000000000000.0
+    ]
+  },
+  "provenance": {
+    "git_commit": "9a7470c4d4e7899ae668be29231ca9087264db00",
+    "module_sha256": "80e074e1a645eb868e9a1728ae2eb8f2b21f30dd9d8192fb7fc38523b96dbcfa",
+    "driver_sha256": "09ff803965258b6cb59cbf79dbcba12fb5fef4dd10f1994ccc4c6c79f94a9158",
+    "python": "3.11.6",
+    "numpy": "2.4.6"
+  },
+  "grid_identity": {
+    "n_points": 150,
+    "frequencies_hz": [
+      25.0,
+      50.0,
+      100.0,
+      200.0,
+      400.0
+    ],
+    "ranges_m": [
+      200.0,
+      500.0,
+      1000.0,
+      2000.0,
+      5000.0,
+      10000.0
+    ],
+    "depths_m": [
+      10.0,
+      25.0,
+      50.0,
+      75.0,
+      90.0
+    ],
+    "source_depth_m": 50.0,
+    "predicted_offset_db": 38.015802719558074,
+    "max_abs_deviation_db": 0.0012899281377016791,
+    "median_abs_deviation_db": 1.3589793727675215e-05,
+    "max_excess_over_hankel_bound_db": 0.0006136194450262096,
+    "worst_point": {
+      "f_hz": 25.0,
+      "r_m": 200.0,
+      "z_m": 10.0,
+      "n_modes": 1,
+      "tl_residue_db": 55.86487633795035,
+      "tl_normalised_db": 17.84778369025457,
+      "offset_db": 38.017092647695776,
+      "residue_minus_prediction_db": 0.0012899281377016791,
+      "hankel_bound_db": 0.001289928143598985
+    },
+    "rows": [
+      {
+        "f_hz": 25.0,
+        "r_m": 200.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 55.86487633795035,
+        "tl_normalised_db": 17.84778369025457,
+        "offset_db": 38.017092647695776,
+        "residue_minus_prediction_db": 0.0012899281377016791,
+        "hankel_bound_db": 0.001289928143598985
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 200.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 48.279263329702545,
+        "tl_normalised_db": 10.262170682006772,
+        "offset_db": 38.017092647695776,
+        "residue_minus_prediction_db": 0.0012899281377016791,
+        "hankel_bound_db": 0.001289928143598985
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 200.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 43.64822216901526,
+        "tl_normalised_db": 5.631129521319491,
+        "offset_db": 38.01709264769577,
+        "residue_minus_prediction_db": 0.0012899281376945737,
+        "hankel_bound_db": 0.001289928143598985
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 200.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 42.68264533693015,
+        "tl_normalised_db": 4.665552689234384,
+        "offset_db": 38.01709264769577,
+        "residue_minus_prediction_db": 0.0012899281376945737,
+        "hankel_bound_db": 0.001289928143598985
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 200.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 43.41182272124122,
+        "tl_normalised_db": 5.39473007354545,
+        "offset_db": 38.017092647695776,
+        "residue_minus_prediction_db": 0.0012899281377016791,
+        "hankel_bound_db": 0.001289928143598985
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 500.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 59.84319354998174,
+        "tl_normalised_db": 21.827183776974945,
+        "offset_db": 38.0160097730068,
+        "residue_minus_prediction_db": 0.00020705344872595788,
+        "hankel_bound_db": 0.00020705345461093842
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 500.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 52.25758054173394,
+        "tl_normalised_db": 14.24157076872715,
+        "offset_db": 38.016009773006786,
+        "residue_minus_prediction_db": 0.00020705344871174702,
+        "hankel_bound_db": 0.00020705345461093842
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 500.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 47.626539381046655,
+        "tl_normalised_db": 9.610529608039865,
+        "offset_db": 38.016009773006786,
+        "residue_minus_prediction_db": 0.00020705344871174702,
+        "hankel_bound_db": 0.00020705345461093842
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 500.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 46.66096254896154,
+        "tl_normalised_db": 8.64495277595476,
+        "offset_db": 38.016009773006786,
+        "residue_minus_prediction_db": 0.00020705344871174702,
+        "hankel_bound_db": 0.00020705345461093842
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 500.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 47.390139933272614,
+        "tl_normalised_db": 9.374130160265825,
+        "offset_db": 38.016009773006786,
+        "residue_minus_prediction_db": 0.00020705344871174702,
+        "hankel_bound_db": 0.00020705345461093842
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 1000.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 62.8533382405616,
+        "tl_normalised_db": 24.837483733614757,
+        "offset_db": 38.01585450694684,
+        "residue_minus_prediction_db": 5.1787388763102626e-05,
+        "hankel_bound_db": 5.178739465970483e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 1000.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 55.26772523231379,
+        "tl_normalised_db": 17.25187072536696,
+        "offset_db": 38.01585450694684,
+        "residue_minus_prediction_db": 5.1787388763102626e-05,
+        "hankel_bound_db": 5.178739465970483e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 1000.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 50.63668407162651,
+        "tl_normalised_db": 12.620829564679676,
+        "offset_db": 38.01585450694684,
+        "residue_minus_prediction_db": 5.1787388763102626e-05,
+        "hankel_bound_db": 5.178739465970483e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 1000.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 49.67110723954141,
+        "tl_normalised_db": 11.655252732594569,
+        "offset_db": 38.015854506946845,
+        "residue_minus_prediction_db": 5.1787388770208054e-05,
+        "hankel_bound_db": 5.178739465970483e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 1000.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 50.40028462385247,
+        "tl_normalised_db": 12.384430116905637,
+        "offset_db": 38.01585450694684,
+        "residue_minus_prediction_db": 5.1787388763102626e-05,
+        "hankel_bound_db": 5.178739465970483e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 2000.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 65.86359935816019,
+        "tl_normalised_db": 27.84778369025457,
+        "offset_db": 38.01581566790561,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_bound_db": 1.2948353434275961e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 2000.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 58.27798634991239,
+        "tl_normalised_db": 20.262170682006776,
+        "offset_db": 38.01581566790561,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_bound_db": 1.2948353434275961e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 2000.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 53.64694518922511,
+        "tl_normalised_db": 15.63112952131949,
+        "offset_db": 38.01581566790561,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_bound_db": 1.2948353434275961e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 2000.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 52.681368357139995,
+        "tl_normalised_db": 14.665552689234381,
+        "offset_db": 38.01581566790561,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_bound_db": 1.2948353434275961e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 2000.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 53.41054574145106,
+        "tl_normalised_db": 15.39473007354545,
+        "offset_db": 38.01581566790561,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_bound_db": 1.2948353434275961e-05
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 5000.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 69.84298856833112,
+        "tl_normalised_db": 31.827183776974948,
+        "offset_db": 38.015804791356175,
+        "residue_minus_prediction_db": 2.071798100189426e-06,
+        "hankel_bound_db": 2.0718039966128846e-06
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 5000.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 62.257375560083325,
+        "tl_normalised_db": 24.24157076872715,
+        "offset_db": 38.015804791356175,
+        "residue_minus_prediction_db": 2.071798100189426e-06,
+        "hankel_bound_db": 2.0718039966128846e-06
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 5000.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 57.62633439939604,
+        "tl_normalised_db": 19.610529608039865,
+        "offset_db": 38.015804791356175,
+        "residue_minus_prediction_db": 2.071798100189426e-06,
+        "hankel_bound_db": 2.0718039966128846e-06
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 5000.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 56.66075756731093,
+        "tl_normalised_db": 18.644952775954756,
+        "offset_db": 38.015804791356175,
+        "residue_minus_prediction_db": 2.071798100189426e-06,
+        "hankel_bound_db": 2.0718039966128846e-06
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 5000.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 57.38993495162199,
+        "tl_normalised_db": 19.374130160265825,
+        "offset_db": 38.01580479135616,
+        "residue_minus_prediction_db": 2.071798085978571e-06,
+        "hankel_bound_db": 2.0718039966128846e-06
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 10000.0,
+        "z_m": 10.0,
+        "n_modes": 1,
+        "tl_residue_db": 72.85328697112034,
+        "tl_normalised_db": 34.83748373361476,
+        "offset_db": 38.01580323750558,
+        "residue_minus_prediction_db": 5.179475053296301e-07,
+        "hankel_bound_db": 5.179534087251981e-07
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 10000.0,
+        "z_m": 25.0,
+        "n_modes": 1,
+        "tl_residue_db": 65.26767396287254,
+        "tl_normalised_db": 27.251870725366963,
+        "offset_db": 38.01580323750557,
+        "residue_minus_prediction_db": 5.179474982242027e-07,
+        "hankel_bound_db": 5.179534087251981e-07
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 10000.0,
+        "z_m": 50.0,
+        "n_modes": 1,
+        "tl_residue_db": 60.63663280218527,
+        "tl_normalised_db": 22.620829564679678,
+        "offset_db": 38.015803237505594,
+        "residue_minus_prediction_db": 5.179475195404848e-07,
+        "hankel_bound_db": 5.179534087251981e-07
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 10000.0,
+        "z_m": 75.0,
+        "n_modes": 1,
+        "tl_residue_db": 59.671055970100156,
+        "tl_normalised_db": 21.655252732594576,
+        "offset_db": 38.01580323750558,
+        "residue_minus_prediction_db": 5.179475053296301e-07,
+        "hankel_bound_db": 5.179534087251981e-07
+      },
+      {
+        "f_hz": 25.0,
+        "r_m": 10000.0,
+        "z_m": 90.0,
+        "n_modes": 1,
+        "tl_residue_db": 60.40023335441121,
+        "tl_normalised_db": 22.38443011690564,
+        "offset_db": 38.01580323750557,
+        "residue_minus_prediction_db": 5.179474982242027e-07,
+        "hankel_bound_db": 5.179534087251981e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 200.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 50.843449634848795,
+        "tl_normalised_db": 12.827147681468553,
+        "offset_db": 38.01630195338024,
+        "residue_minus_prediction_db": 0.0004992338221683212,
+        "hankel_bound_db": 0.00032948328807516576
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 200.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 44.24478797756157,
+        "tl_normalised_db": 6.22848697907843,
+        "offset_db": 38.01630099848314,
+        "residue_minus_prediction_db": 0.0004982789250647102,
+        "hankel_bound_db": 0.00032948328807516576
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 200.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 43.09736346070988,
+        "tl_normalised_db": 5.081128304437047,
+        "offset_db": 38.016235156272835,
+        "residue_minus_prediction_db": 0.0004324367147603425,
+        "hankel_bound_db": 0.00032948328807516576
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 200.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 46.10055936388637,
+        "tl_normalised_db": 8.084753166326001,
+        "offset_db": 38.015806197560366,
+        "residue_minus_prediction_db": 3.478002291501525e-06,
+        "hankel_bound_db": 0.00032948328807516576
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 200.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 47.91796242691899,
+        "tl_normalised_db": 9.902381366115872,
+        "offset_db": 38.015581060803115,
+        "residue_minus_prediction_db": -0.00022165875495971932,
+        "hankel_bound_db": 0.00032948328807516576
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 500.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 63.77402906348714,
+        "tl_normalised_db": 25.757786440881226,
+        "offset_db": 38.016242622605915,
+        "residue_minus_prediction_db": 0.0004399030478410282,
+        "hankel_bound_db": 5.276092457858242e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 500.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 57.184366902297356,
+        "tl_normalised_db": 19.168124628687085,
+        "offset_db": 38.016242273610274,
+        "residue_minus_prediction_db": 0.0004395540521997532,
+        "hankel_bound_db": 5.276092457858242e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 500.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 50.75264944052397,
+        "tl_normalised_db": 12.736721802616932,
+        "offset_db": 38.01592763790703,
+        "residue_minus_prediction_db": 0.00012491834895911325,
+        "hankel_bound_db": 5.276092457858242e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 500.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 46.05968941036602,
+        "tl_normalised_db": 8.043869910352857,
+        "offset_db": 38.015819500013166,
+        "residue_minus_prediction_db": 1.678045509123649e-05,
+        "hankel_bound_db": 5.276092457858242e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 500.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 46.26891347672167,
+        "tl_normalised_db": 8.253100545232176,
+        "offset_db": 38.01581293148949,
+        "residue_minus_prediction_db": 1.0211931417813958e-05,
+        "hankel_bound_db": 5.276092457858242e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 1000.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 58.52535821805749,
+        "tl_normalised_db": 20.509589440213702,
+        "offset_db": 38.01576877784379,
+        "residue_minus_prediction_db": -3.394171428539039e-05,
+        "hankel_bound_db": 1.3191793009115894e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 1000.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 51.926924256861675,
+        "tl_normalised_db": 13.911155543006878,
+        "offset_db": 38.0157687138548,
+        "residue_minus_prediction_db": -3.400570327727337e-05,
+        "hankel_bound_db": 1.3191793009115894e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 1000.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 50.52724630107316,
+        "tl_normalised_db": 12.511459854417073,
+        "offset_db": 38.015786446656094,
+        "residue_minus_prediction_db": -1.6272901980585175e-05,
+        "hankel_bound_db": 1.3191793009115894e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 1000.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 52.095532887515304,
+        "tl_normalised_db": 14.07966212460153,
+        "offset_db": 38.01587076291378,
+        "residue_minus_prediction_db": 6.804335570365083e-05,
+        "hankel_bound_db": 1.3191793009115894e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 1000.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 53.29870978150173,
+        "tl_normalised_db": 15.2828104377414,
+        "offset_db": 38.015899343760324,
+        "residue_minus_prediction_db": 9.662420224998414e-05,
+        "hankel_bound_db": 1.3191793009115894e-05
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 2000.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 69.8054642418388,
+        "tl_normalised_db": 31.789755348270678,
+        "offset_db": 38.01570889356813,
+        "residue_minus_prediction_db": -9.382598994278624e-05,
+        "hankel_bound_db": 3.2980459140695168e-06
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 2000.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 63.21582917620503,
+        "tl_normalised_db": 25.200120593635795,
+        "offset_db": 38.01570858256923,
+        "residue_minus_prediction_db": -9.413698884230826e-05,
+        "hankel_bound_db": 3.2980459140695168e-06
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 2000.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 56.77531466543463,
+        "tl_normalised_db": 18.759527663252868,
+        "offset_db": 38.01578700218176,
+        "residue_minus_prediction_db": -1.5717376314228204e-05,
+        "hankel_bound_db": 3.2980459140695168e-06
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 2000.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 52.0792843059388,
+        "tl_normalised_db": 14.063469875642715,
+        "offset_db": 38.01581443029608,
+        "residue_minus_prediction_db": 1.1710738007764121e-05,
+        "hankel_bound_db": 3.2980459140695168e-06
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 2000.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 52.28831359938634,
+        "tl_normalised_db": 14.27249741437805,
+        "offset_db": 38.01581618500829,
+        "residue_minus_prediction_db": 1.3465450216187946e-05,
+        "hankel_bound_db": 3.2980459140695168e-06
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 5000.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 63.67898271894006,
+        "tl_normalised_db": 25.663179494921643,
+        "offset_db": 38.01580322401842,
+        "residue_minus_prediction_db": 5.044603454962271e-07,
+        "hankel_bound_db": 5.276917232703674e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 5000.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 57.08001846620839,
+        "tl_normalised_db": 19.064215243434887,
+        "offset_db": 38.0158032227735,
+        "residue_minus_prediction_db": 5.032154248851839e-07,
+        "hankel_bound_db": 5.276917232703674e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 5000.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 56.295072115964416,
+        "tl_normalised_db": 18.27926889612574,
+        "offset_db": 38.01580321983867,
+        "residue_minus_prediction_db": 5.002805991694004e-07,
+        "hankel_bound_db": 5.276917232703674e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 5000.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 63.32066324169261,
+        "tl_normalised_db": 25.304859983415003,
+        "offset_db": 38.0158032582776,
+        "residue_minus_prediction_db": 5.387195258776956e-07,
+        "hankel_bound_db": 5.276917232703674e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 5000.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 72.6666116361221,
+        "tl_normalised_db": 34.65080795696162,
+        "offset_db": 38.01580367916048,
+        "residue_minus_prediction_db": 9.59602402872406e-07,
+        "hankel_bound_db": 5.276917232703674e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 10000.0,
+        "z_m": 10.0,
+        "n_modes": 2,
+        "tl_residue_db": 66.68929219174667,
+        "tl_normalised_db": 28.6734893545278,
+        "offset_db": 38.01580283721887,
+        "residue_minus_prediction_db": 1.176607966613119e-07,
+        "hankel_bound_db": 1.319230871672026e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 10000.0,
+        "z_m": 25.0,
+        "n_modes": 2,
+        "tl_residue_db": 60.090327942244784,
+        "tl_normalised_db": 22.074525105339156,
+        "offset_db": 38.01580283690563,
+        "residue_minus_prediction_db": 1.1734755389625207e-07,
+        "hankel_bound_db": 1.319230871672026e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 10000.0,
+        "z_m": 50.0,
+        "n_modes": 2,
+        "tl_residue_db": 59.30537873525498,
+        "tl_normalised_db": 21.28957589664151,
+        "offset_db": 38.015802838613475,
+        "residue_minus_prediction_db": 1.1905540020507033e-07,
+        "hankel_bound_db": 1.319230871672026e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 10000.0,
+        "z_m": 75.0,
+        "n_modes": 2,
+        "tl_residue_db": 66.3309153891882,
+        "tl_normalised_db": 28.315112494467,
+        "offset_db": 38.015802894721205,
+        "residue_minus_prediction_db": 1.751631302226997e-07,
+        "hankel_bound_db": 1.319230871672026e-07
+      },
+      {
+        "f_hz": 50.0,
+        "r_m": 10000.0,
+        "z_m": 90.0,
+        "n_modes": 2,
+        "tl_residue_db": 75.6764433639109,
+        "tl_normalised_db": 37.66064000519752,
+        "offset_db": 38.015803358713384,
+        "residue_minus_prediction_db": 6.391553100115743e-07,
+        "hankel_bound_db": 1.319230871672026e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 200.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 41.465962366417244,
+        "tl_normalised_db": 3.4501860820290906,
+        "offset_db": 38.01577628438815,
+        "residue_minus_prediction_db": -2.6435169921512625e-05,
+        "hankel_bound_db": 8.745829083520272e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 200.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 45.47667212422408,
+        "tl_normalised_db": 7.4607320580697305,
+        "offset_db": 38.01594006615435,
+        "residue_minus_prediction_db": 0.00013734659627573365,
+        "hankel_bound_db": 8.745829083520272e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 200.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 47.0217933362721,
+        "tl_normalised_db": 9.006057682466542,
+        "offset_db": 38.01573565380556,
+        "residue_minus_prediction_db": -6.706575251769209e-05,
+        "hankel_bound_db": 8.745829083520272e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 200.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 45.85356103841146,
+        "tl_normalised_db": 7.837294318920661,
+        "offset_db": 38.0162667194908,
+        "residue_minus_prediction_db": 0.0004639999327267219,
+        "hankel_bound_db": 8.745829083520272e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 200.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 44.58574404078387,
+        "tl_normalised_db": 6.570013369884306,
+        "offset_db": 38.015730670899565,
+        "residue_minus_prediction_db": -7.204865850951592e-05,
+        "hankel_bound_db": 8.745829083520272e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 500.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 48.34439503701131,
+        "tl_normalised_db": 10.328676420627577,
+        "offset_db": 38.01571861638374,
+        "residue_minus_prediction_db": -8.410317433771297e-05,
+        "hankel_bound_db": 1.3996402337717453e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 500.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 48.080455619795316,
+        "tl_normalised_db": 10.064572930362692,
+        "offset_db": 38.01588268943262,
+        "residue_minus_prediction_db": 7.996987454816917e-05,
+        "hankel_bound_db": 1.3996402337717453e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 500.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 49.56023679447031,
+        "tl_normalised_db": 11.544447974963298,
+        "offset_db": 38.015788819507016,
+        "residue_minus_prediction_db": -1.3900051058612917e-05,
+        "hankel_bound_db": 1.3996402337717453e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 500.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 60.82458178358442,
+        "tl_normalised_db": 22.80940667987371,
+        "offset_db": 38.01517510371071,
+        "residue_minus_prediction_db": -0.0006276158473639271,
+        "hankel_bound_db": 1.3996402337717453e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 500.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 45.81393956972002,
+        "tl_normalised_db": 7.798103764863413,
+        "offset_db": 38.01583580485661,
+        "residue_minus_prediction_db": 3.308529853285336e-05,
+        "hankel_bound_db": 1.3996402337717453e-05
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 1000.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 47.92706870791556,
+        "tl_normalised_db": 9.911259983992935,
+        "offset_db": 38.015808723922625,
+        "residue_minus_prediction_db": 6.0043645504492815e-06,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 1000.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 57.35716355829118,
+        "tl_normalised_db": 19.341391359402902,
+        "offset_db": 38.01577219888827,
+        "residue_minus_prediction_db": -3.05206698030247e-05,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 1000.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 52.030397788901155,
+        "tl_normalised_db": 14.01461060634478,
+        "offset_db": 38.01578718255637,
+        "residue_minus_prediction_db": -1.5537001701204645e-05,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 1000.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 52.351151698353945,
+        "tl_normalised_db": 14.3352898031974,
+        "offset_db": 38.01586189515655,
+        "residue_minus_prediction_db": 5.917559847290477e-05,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 1000.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 52.781991279636784,
+        "tl_normalised_db": 14.766218241511497,
+        "offset_db": 38.01577303812529,
+        "residue_minus_prediction_db": -2.9681432785366724e-05,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 2000.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 58.209771772522146,
+        "tl_normalised_db": 20.194003381032644,
+        "offset_db": 38.0157683914895,
+        "residue_minus_prediction_db": -3.432806857261994e-05,
+        "hankel_bound_db": 8.748095020161032e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 2000.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 50.751454182431665,
+        "tl_normalised_db": 12.73563943437949,
+        "offset_db": 38.01581474805218,
+        "residue_minus_prediction_db": 1.2028494104754373e-05,
+        "hankel_bound_db": 8.748095020161032e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 2000.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 58.83790279961923,
+        "tl_normalised_db": 20.822151131252838,
+        "offset_db": 38.01575166836639,
+        "residue_minus_prediction_db": -5.105119168291594e-05,
+        "hankel_bound_db": 8.748095020161032e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 2000.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 52.17826855260185,
+        "tl_normalised_db": 14.162449461779074,
+        "offset_db": 38.015819090822774,
+        "residue_minus_prediction_db": 1.6371264699444055e-05,
+        "hankel_bound_db": 8.748095020161032e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 2000.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 54.410824718386486,
+        "tl_normalised_db": 16.395042365958492,
+        "offset_db": 38.01578235242799,
+        "residue_minus_prediction_db": -2.03671300837982e-05,
+        "hankel_bound_db": 8.748095020161032e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 5000.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 66.3391472687316,
+        "tl_normalised_db": 28.323342783299314,
+        "offset_db": 38.015804485432284,
+        "residue_minus_prediction_db": 1.765874209525009e-06,
+        "hankel_bound_db": 1.3996982911967248e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 5000.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 65.03323442587453,
+        "tl_normalised_db": 27.017451501107853,
+        "offset_db": 38.01578292476667,
+        "residue_minus_prediction_db": -1.97947914060137e-05,
+        "hankel_bound_db": 1.3996982911967248e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 5000.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 54.05444128846665,
+        "tl_normalised_db": 16.038635500247228,
+        "offset_db": 38.015805788219424,
+        "residue_minus_prediction_db": 3.0686613499142368e-06,
+        "hankel_bound_db": 1.3996982911967248e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 5000.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 64.23392313318342,
+        "tl_normalised_db": 26.218154788819472,
+        "offset_db": 38.01576834436395,
+        "residue_minus_prediction_db": -3.4375194125857433e-05,
+        "hankel_bound_db": 1.3996982911967248e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 5000.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 56.275591514143805,
+        "tl_normalised_db": 18.25978858399681,
+        "offset_db": 38.015802930147,
+        "residue_minus_prediction_db": 2.1058892230030324e-07,
+        "hankel_bound_db": 1.3996982911967248e-07
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 10000.0,
+        "z_m": 10.0,
+        "n_modes": 5,
+        "tl_residue_db": 63.46202740677667,
+        "tl_normalised_db": 25.446215966594565,
+        "offset_db": 38.015811440182105,
+        "residue_minus_prediction_db": 8.720624030900126e-06,
+        "hankel_bound_db": 3.499246984579827e-08
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 10000.0,
+        "z_m": 25.0,
+        "n_modes": 5,
+        "tl_residue_db": 60.73981056208134,
+        "tl_normalised_db": 22.724009482682117,
+        "offset_db": 38.015801079399225,
+        "residue_minus_prediction_db": -1.6401588496250952e-06,
+        "hankel_bound_db": 3.499246984579827e-08
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 10000.0,
+        "z_m": 50.0,
+        "n_modes": 5,
+        "tl_residue_db": 67.6948096452138,
+        "tl_normalised_db": 29.678996623930782,
+        "offset_db": 38.01581302128301,
+        "residue_minus_prediction_db": 1.0301724934436152e-05,
+        "hankel_bound_db": 3.499246984579827e-08
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 10000.0,
+        "z_m": 75.0,
+        "n_modes": 5,
+        "tl_residue_db": 59.73107450550509,
+        "tl_normalised_db": 21.715275645857538,
+        "offset_db": 38.01579885964755,
+        "residue_minus_prediction_db": -3.859910520986887e-06,
+        "hankel_bound_db": 3.499246984579827e-08
+      },
+      {
+        "f_hz": 100.0,
+        "r_m": 10000.0,
+        "z_m": 90.0,
+        "n_modes": 5,
+        "tl_residue_db": 59.04143636933981,
+        "tl_normalised_db": 21.025634905617054,
+        "offset_db": 38.01580146372276,
+        "residue_minus_prediction_db": -1.2558353148506285e-06,
+        "hankel_bound_db": 3.499246984579827e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 200.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 41.729581715047665,
+        "tl_normalised_db": 3.713810543121596,
+        "offset_db": 38.01577117192607,
+        "residue_minus_prediction_db": -3.1547632005413107e-05,
+        "hankel_bound_db": 2.1564391805024536e-05
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 200.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 44.310052680040144,
+        "tl_normalised_db": 6.2942204489339275,
+        "offset_db": 38.01583223110622,
+        "residue_minus_prediction_db": 2.9511548142124866e-05,
+        "hankel_bound_db": 2.1564391805024536e-05
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 200.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 45.993196972896335,
+        "tl_normalised_db": 7.977264450936101,
+        "offset_db": 38.01593252196024,
+        "residue_minus_prediction_db": 0.0001298024021636479,
+        "hankel_bound_db": 2.1564391805024536e-05
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 200.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 51.0539154108324,
+        "tl_normalised_db": 13.038026545369611,
+        "offset_db": 38.01588886546279,
+        "residue_minus_prediction_db": 8.61459047172275e-05,
+        "hankel_bound_db": 2.1564391805024536e-05
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 200.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 52.21558187326808,
+        "tl_normalised_db": 14.19955737735404,
+        "offset_db": 38.01602449591404,
+        "residue_minus_prediction_db": 0.00022177635596420942,
+        "hankel_bound_db": 2.1564391805024536e-05
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 500.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 59.900519593522844,
+        "tl_normalised_db": 21.884732991786645,
+        "offset_db": 38.015786601736195,
+        "residue_minus_prediction_db": -1.6117821878935956e-05,
+        "hankel_bound_db": 3.450489748328253e-06
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 500.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 48.827170980731786,
+        "tl_normalised_db": 10.811362534017713,
+        "offset_db": 38.015808446714075,
+        "residue_minus_prediction_db": 5.7271560010008216e-06,
+        "hankel_bound_db": 3.450489748328253e-06
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 500.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 49.69836874966879,
+        "tl_normalised_db": 11.682550239703245,
+        "offset_db": 38.01581850996554,
+        "residue_minus_prediction_db": 1.5790407466909073e-05,
+        "hankel_bound_db": 3.450489748328253e-06
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 500.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 49.53450163127137,
+        "tl_normalised_db": 11.518737962466954,
+        "offset_db": 38.01576366880441,
+        "residue_minus_prediction_db": -3.905075366361643e-05,
+        "hankel_bound_db": 3.450489748328253e-06
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 500.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 45.36589102189005,
+        "tl_normalised_db": 7.350059215485835,
+        "offset_db": 38.015831806404215,
+        "residue_minus_prediction_db": 2.908684614055801e-05,
+        "hankel_bound_db": 3.450489748328253e-06
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 1000.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 48.52509979679522,
+        "tl_normalised_db": 10.5093069003812,
+        "offset_db": 38.01579289641402,
+        "residue_minus_prediction_db": -9.82314405462148e-06,
+        "hankel_bound_db": 8.626291191409463e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 1000.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 52.19180236285733,
+        "tl_normalised_db": 14.17599831525732,
+        "offset_db": 38.015804047600014,
+        "residue_minus_prediction_db": 1.3280419395300669e-06,
+        "hankel_bound_db": 8.626291191409463e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 1000.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 48.1939607519222,
+        "tl_normalised_db": 10.178148069686506,
+        "offset_db": 38.01581268223569,
+        "residue_minus_prediction_db": 9.962677616215387e-06,
+        "hankel_bound_db": 8.626291191409463e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 1000.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 57.70566987258434,
+        "tl_normalised_db": 19.689862604492582,
+        "offset_db": 38.015807268091756,
+        "residue_minus_prediction_db": 4.548533681258959e-06,
+        "hankel_bound_db": 8.626291191409463e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 1000.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 51.835767918244606,
+        "tl_normalised_db": 13.819949385472848,
+        "offset_db": 38.01581853277176,
+        "residue_minus_prediction_db": 1.581321368604449e-05,
+        "hankel_bound_db": 8.626291191409463e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 2000.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 51.00255373558467,
+        "tl_normalised_db": 12.986751810970212,
+        "offset_db": 38.01580192461446,
+        "residue_minus_prediction_db": -7.949436167109525e-07,
+        "hankel_bound_db": 2.1565769388793787e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 2000.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 65.09488600927115,
+        "tl_normalised_db": 27.079062286907547,
+        "offset_db": 38.015823722363606,
+        "residue_minus_prediction_db": 2.1002805532077673e-05,
+        "hankel_bound_db": 2.1565769388793787e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 2000.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 49.99158138725711,
+        "tl_normalised_db": 11.97578228131109,
+        "offset_db": 38.01579910594602,
+        "residue_minus_prediction_db": -3.613612051367454e-06,
+        "hankel_bound_db": 2.1565769388793787e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 2000.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 51.46584037066093,
+        "tl_normalised_db": 13.450035228836285,
+        "offset_db": 38.01580514182464,
+        "residue_minus_prediction_db": 2.4222665686579603e-06,
+        "hankel_bound_db": 2.1565769388793787e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 2000.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 64.43204424363084,
+        "tl_normalised_db": 26.41626910098025,
+        "offset_db": 38.01577514265059,
+        "residue_minus_prediction_db": -2.757690748467212e-05,
+        "hankel_bound_db": 2.1565769388793787e-07
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 5000.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 54.515778151245925,
+        "tl_normalised_db": 16.499975017733185,
+        "offset_db": 38.01580313351274,
+        "residue_minus_prediction_db": 4.139546661008353e-07,
+        "hankel_bound_db": 3.4505251105992774e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 5000.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 58.39198600906389,
+        "tl_normalised_db": 20.376185496330002,
+        "offset_db": 38.01580051273389,
+        "residue_minus_prediction_db": -2.2068241847250647e-06,
+        "hankel_bound_db": 3.4505251105992774e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 5000.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 59.56316984388283,
+        "tl_normalised_db": 21.547370378087273,
+        "offset_db": 38.01579946579556,
+        "residue_minus_prediction_db": -3.2537625145323545e-06,
+        "hankel_bound_db": 3.4505251105992774e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 5000.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 56.2440661227201,
+        "tl_normalised_db": 18.228261713438442,
+        "offset_db": 38.01580440928166,
+        "residue_minus_prediction_db": 1.6897235823876144e-06,
+        "hankel_bound_db": 3.4505251105992774e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 5000.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 68.890468291155,
+        "tl_normalised_db": 30.874662082077368,
+        "offset_db": 38.01580620907764,
+        "residue_minus_prediction_db": 3.489519563970589e-06,
+        "hankel_bound_db": 3.4505251105992774e-08
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 10000.0,
+        "z_m": 10.0,
+        "n_modes": 9,
+        "tl_residue_db": 61.14140492485517,
+        "tl_normalised_db": 23.125604096425498,
+        "offset_db": 38.015800828429676,
+        "residue_minus_prediction_db": -1.8911283987677052e-06,
+        "hankel_bound_db": 8.626312281483745e-09
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 10000.0,
+        "z_m": 25.0,
+        "n_modes": 9,
+        "tl_residue_db": 66.94387973664068,
+        "tl_normalised_db": 28.928076089675923,
+        "offset_db": 38.015803646964756,
+        "residue_minus_prediction_db": 9.27406681228149e-07,
+        "hankel_bound_db": 8.626312281483745e-09
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 10000.0,
+        "z_m": 50.0,
+        "n_modes": 9,
+        "tl_residue_db": 69.38021036263979,
+        "tl_normalised_db": 31.364407520573508,
+        "offset_db": 38.01580284206628,
+        "residue_minus_prediction_db": 1.225082044697956e-07,
+        "hankel_bound_db": 8.626312281483745e-09
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 10000.0,
+        "z_m": 75.0,
+        "n_modes": 9,
+        "tl_residue_db": 56.16547569406639,
+        "tl_normalised_db": 18.14967404924711,
+        "offset_db": 38.01580164481928,
+        "residue_minus_prediction_db": -1.074738797512964e-06,
+        "hankel_bound_db": 8.626312281483745e-09
+      },
+      {
+        "f_hz": 200.0,
+        "r_m": 10000.0,
+        "z_m": 90.0,
+        "n_modes": 9,
+        "tl_residue_db": 60.6746861150538,
+        "tl_normalised_db": 22.658881347223506,
+        "offset_db": 38.015804767830296,
+        "residue_minus_prediction_db": 2.0482722220549476e-06,
+        "hankel_bound_db": 8.626312281483745e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 200.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 41.5435012077516,
+        "tl_normalised_db": 3.527664319627476,
+        "offset_db": 38.01583688812413,
+        "residue_minus_prediction_db": 3.416856605298335e-05,
+        "hankel_bound_db": 5.4965104602476894e-06
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 200.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 44.538885054524215,
+        "tl_normalised_db": 6.523011229335982,
+        "offset_db": 38.01587382518824,
+        "residue_minus_prediction_db": 7.1105630162549e-05,
+        "hankel_bound_db": 5.4965104602476894e-06
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 200.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 45.501347682574256,
+        "tl_normalised_db": 7.485519506293521,
+        "offset_db": 38.015828176280735,
+        "residue_minus_prediction_db": 2.545672266052179e-05,
+        "hankel_bound_db": 5.4965104602476894e-06
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 200.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 43.703012245300926,
+        "tl_normalised_db": 5.687243793430574,
+        "offset_db": 38.01576845187035,
+        "residue_minus_prediction_db": -3.426768772385458e-05,
+        "hankel_bound_db": 5.4965104602476894e-06
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 200.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 43.61332171406072,
+        "tl_normalised_db": 5.59756217236787,
+        "offset_db": 38.015759541692844,
+        "residue_minus_prediction_db": -4.3177865229893087e-05,
+        "hankel_bound_db": 5.4965104602476894e-06
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 500.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 52.11064890860948,
+        "tl_normalised_db": 14.094766967811216,
+        "offset_db": 38.01588194079826,
+        "residue_minus_prediction_db": 7.922124018477916e-05,
+        "hankel_bound_db": 8.794538269979398e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 500.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 47.76364313340723,
+        "tl_normalised_db": 9.747842598497092,
+        "offset_db": 38.015800534910134,
+        "residue_minus_prediction_db": -2.1846479398845986e-06,
+        "hankel_bound_db": 8.794538269979398e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 500.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 55.17691403511094,
+        "tl_normalised_db": 17.161125029690105,
+        "offset_db": 38.015789005420835,
+        "residue_minus_prediction_db": -1.3714137239162483e-05,
+        "hankel_bound_db": 8.794538269979398e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 500.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 50.26315322761194,
+        "tl_normalised_db": 12.247376278094084,
+        "offset_db": 38.01577694951786,
+        "residue_minus_prediction_db": -2.5770040217309997e-05,
+        "hankel_bound_db": 8.794538269979398e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 500.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 48.988232728760444,
+        "tl_normalised_db": 10.972414256002061,
+        "offset_db": 38.01581847275838,
+        "residue_minus_prediction_db": 1.5753200308665782e-05,
+        "hankel_bound_db": 8.794538269979398e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 1000.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 64.7130580253069,
+        "tl_normalised_db": 26.697221721247544,
+        "offset_db": 38.01583630405936,
+        "residue_minus_prediction_db": 3.35845012884306e-05,
+        "hankel_bound_db": 2.1986388982238226e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 1000.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 50.00874905080288,
+        "tl_normalised_db": 11.99294218175468,
+        "offset_db": 38.0158068690482,
+        "residue_minus_prediction_db": 4.149490123950272e-06,
+        "hankel_bound_db": 2.1986388982238226e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 1000.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 53.10041234345873,
+        "tl_normalised_db": 15.084595618540725,
+        "offset_db": 38.015816724918004,
+        "residue_minus_prediction_db": 1.400535992956975e-05,
+        "hankel_bound_db": 2.1986388982238226e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 1000.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 58.080563630718444,
+        "tl_normalised_db": 20.064748202063143,
+        "offset_db": 38.0158154286553,
+        "residue_minus_prediction_db": 1.2709097227059374e-05,
+        "hankel_bound_db": 2.1986388982238226e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 1000.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 48.28049175082747,
+        "tl_normalised_db": 10.264680736649066,
+        "offset_db": 38.01581101417841,
+        "residue_minus_prediction_db": 8.294620336357639e-06,
+        "hankel_bound_db": 2.1986388982238226e-07
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 2000.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 51.86468219200315,
+        "tl_normalised_db": 13.848878379928847,
+        "offset_db": 38.0158038120743,
+        "residue_minus_prediction_db": 1.0925162285957413e-06,
+        "hankel_bound_db": 5.496600134583068e-08
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 2000.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 53.579605590510326,
+        "tl_normalised_db": 15.563793998269187,
+        "offset_db": 38.015811592241135,
+        "residue_minus_prediction_db": 8.872683061156295e-06,
+        "hankel_bound_db": 5.496600134583068e-08
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 2000.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 53.33600267198224,
+        "tl_normalised_db": 15.320194086339022,
+        "offset_db": 38.01580858564322,
+        "residue_minus_prediction_db": 5.866085146521982e-06,
+        "hankel_bound_db": 5.496600134583068e-08
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 2000.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 57.01480570343566,
+        "tl_normalised_db": 18.999000158681003,
+        "offset_db": 38.015805544754656,
+        "residue_minus_prediction_db": 2.8251965815684343e-06,
+        "hankel_bound_db": 5.496600134583068e-08
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 2000.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 64.80233391002696,
+        "tl_normalised_db": 26.786545197255734,
+        "offset_db": 38.015788712771226,
+        "residue_minus_prediction_db": -1.400678684859713e-05,
+        "hankel_bound_db": 5.496600134583068e-08
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 5000.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 61.81247806485595,
+        "tl_normalised_db": 23.79667273527023,
+        "offset_db": 38.01580532958572,
+        "residue_minus_prediction_db": 2.6100276429019686e-06,
+        "hankel_bound_db": 8.794556566087082e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 5000.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 62.393669019718075,
+        "tl_normalised_db": 24.377863679258198,
+        "offset_db": 38.01580534045988,
+        "residue_minus_prediction_db": 2.620901803140896e-06,
+        "hankel_bound_db": 8.794556566087082e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 5000.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 52.1442504931653,
+        "tl_normalised_db": 14.128447409354216,
+        "offset_db": 38.015803083811086,
+        "residue_minus_prediction_db": 3.6425301175313507e-07,
+        "hankel_bound_db": 8.794556566087082e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 5000.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 58.555171040661165,
+        "tl_normalised_db": 20.539369394199383,
+        "offset_db": 38.01580164646178,
+        "residue_minus_prediction_db": -1.0730962927141263e-06,
+        "hankel_bound_db": 8.794556566087082e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 5000.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 56.51177523911485,
+        "tl_normalised_db": 18.49597301371848,
+        "offset_db": 38.01580222539637,
+        "residue_minus_prediction_db": -4.941617035569834e-07,
+        "hankel_bound_db": 8.794556566087082e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 10000.0,
+        "z_m": 10.0,
+        "n_modes": 19,
+        "tl_residue_db": 66.98091067442944,
+        "tl_normalised_db": 28.965109253348373,
+        "offset_db": 38.015801421081065,
+        "residue_minus_prediction_db": -1.298477009470389e-06,
+        "hankel_bound_db": 2.198640587178166e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 10000.0,
+        "z_m": 25.0,
+        "n_modes": 19,
+        "tl_residue_db": 62.41096741400312,
+        "tl_normalised_db": 24.395165804530514,
+        "offset_db": 38.015801609472604,
+        "residue_minus_prediction_db": -1.1100854706569407e-06,
+        "hankel_bound_db": 2.198640587178166e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 10000.0,
+        "z_m": 50.0,
+        "n_modes": 19,
+        "tl_residue_db": 64.46425755472954,
+        "tl_normalised_db": 26.448454292238388,
+        "offset_db": 38.015803262491154,
+        "residue_minus_prediction_db": 5.429330798278897e-07,
+        "hankel_bound_db": 2.198640587178166e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 10000.0,
+        "z_m": 75.0,
+        "n_modes": 19,
+        "tl_residue_db": 70.33059666972808,
+        "tl_normalised_db": 32.31479538096301,
+        "offset_db": 38.01580128876507,
+        "residue_minus_prediction_db": -1.4307930058521379e-06,
+        "hankel_bound_db": 2.198640587178166e-09
+      },
+      {
+        "f_hz": 400.0,
+        "r_m": 10000.0,
+        "z_m": 90.0,
+        "n_modes": 19,
+        "tl_residue_db": 60.947612356339754,
+        "tl_normalised_db": 22.931810278803614,
+        "offset_db": 38.01580207753614,
+        "residue_minus_prediction_db": -6.420219378355796e-07,
+        "hankel_bound_db": 2.198640587178166e-09
+      }
+    ]
+  },
+  "single_mode_identification": {
+    "f_hz": 25.0,
+    "n_modes": 1,
+    "k_r": [
+      0.10237678287465811
+    ],
+    "max_abs_difference_db": 5.9061847202403794e-12,
+    "rows": [
+      {
+        "r_m": 100.0,
+        "k_r_times_r": 10.23767828746581,
+        "residue_minus_prediction_db": 0.00510292484336361,
+        "hankel_error_db": 0.005102924849255987,
+        "difference_db": -5.892376864213844e-12
+      },
+      {
+        "r_m": 200.0,
+        "k_r_times_r": 20.47535657493162,
+        "residue_minus_prediction_db": 0.0012899281377016791,
+        "hankel_error_db": 0.001289928143598985,
+        "difference_db": -5.897305864130398e-12
+      },
+      {
+        "r_m": 500.0,
+        "k_r_times_r": 51.18839143732905,
+        "residue_minus_prediction_db": 0.00020705344872595788,
+        "hankel_error_db": 0.00020705345461093842,
+        "difference_db": -5.884980545413365e-12
+      },
+      {
+        "r_m": 1000.0,
+        "k_r_times_r": 102.3767828746581,
+        "residue_minus_prediction_db": 5.1787388763102626e-05,
+        "hankel_error_db": 5.178739465970483e-05,
+        "difference_db": -5.8966022033679275e-12
+      },
+      {
+        "r_m": 2000.0,
+        "k_r_times_r": 204.7535657493162,
+        "residue_minus_prediction_db": 1.2948347539065708e-05,
+        "hankel_error_db": 1.2948353434275961e-05,
+        "difference_db": -5.895210253796914e-12
+      },
+      {
+        "r_m": 5000.0,
+        "k_r_times_r": 511.88391437329057,
+        "residue_minus_prediction_db": 2.071798100189426e-06,
+        "hankel_error_db": 2.0718039966128846e-06,
+        "difference_db": -5.8964234586637496e-12
+      },
+      {
+        "r_m": 10000.0,
+        "k_r_times_r": 1023.7678287465811,
+        "residue_minus_prediction_db": 5.179475053296301e-07,
+        "hankel_error_db": 5.179534087251981e-07,
+        "difference_db": -5.903395568011771e-12
+      },
+      {
+        "r_m": 20000.0,
+        "k_r_times_r": 2047.5356574931623,
+        "residue_minus_prediction_db": 1.2948259353606772e-07,
+        "hankel_error_db": 1.2948849972078797e-07,
+        "difference_db": -5.9061847202403794e-12
+      }
+    ],
+    "note": "single trapped mode: the deviation from the predicted constant is exactly the far-field Hankel error of the normalised route, i.e. eps is identified, not just bounded"
+  },
+  "bottom_independence": {
+    "f_hz": 100.0,
+    "r_m": 1000.0,
+    "rows": [
+      {
+        "rho_bottom_kg_m3": 1025.0,
+        "density_ratio_b": 0.975609756097561,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -1.4666361373372183e-05,
+        "hankel_bound_db": 3.503416267275535e-06
+      },
+      {
+        "rho_bottom_kg_m3": 1200.0,
+        "density_ratio_b": 0.8333333333333334,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -1.4728919886408676e-05,
+        "hankel_bound_db": 3.502114334023875e-06
+      },
+      {
+        "rho_bottom_kg_m3": 1800.0,
+        "density_ratio_b": 0.5555555555555556,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -1.5537001701204645e-05,
+        "hankel_bound_db": 3.499210522985102e-06
+      },
+      {
+        "rho_bottom_kg_m3": 2400.0,
+        "density_ratio_b": 0.4166666666666667,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -1.6758945719175244e-05,
+        "hankel_bound_db": 3.497557675649321e-06
+      },
+      {
+        "rho_bottom_kg_m3": 10000.0,
+        "density_ratio_b": 0.1,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -2.448161868784382e-05,
+        "hankel_bound_db": 3.4932174770576428e-06
+      },
+      {
+        "rho_bottom_kg_m3": 1000000.0,
+        "density_ratio_b": 0.001,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -3.051791365749068e-05,
+        "hankel_bound_db": 3.491683544848015e-06
+      },
+      {
+        "rho_bottom_kg_m3": 1000000000.0,
+        "density_ratio_b": 1e-06,
+        "n_modes": 5,
+        "residue_minus_prediction_db": -3.0594687601137593e-05,
+        "hankel_bound_db": 3.4916676170448467e-06
+      }
+    ],
+    "max_abs_deviation_db": 3.0594687601137593e-05
+  },
+  "rigid_limit": {
+    "f_hz": 100.0,
+    "k1_per_m": 0.4188790204786391,
+    "kz_max_per_m": 0.14576373015988217,
+    "closed_form_roots": [
+      0.41858439255079366,
+      0.4162198611393972,
+      0.41145003469007424,
+      0.4041897678143395,
+      0.3943015151948293
+    ],
+    "closed_form_count_formula": 5,
+    "rows": [
+      {
+        "rho_bottom_kg_m3": 1000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 0.0018728462926239642,
+        "deviation_times_rho_bottom": 1.8728462926239642
+      },
+      {
+        "rho_bottom_kg_m3": 10000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 0.0003126507035512427,
+        "deviation_times_rho_bottom": 3.126507035512427
+      },
+      {
+        "rho_bottom_kg_m3": 1000000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 3.4516552874230833e-06,
+        "deviation_times_rho_bottom": 3.4516552874230833
+      },
+      {
+        "rho_bottom_kg_m3": 100000000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 3.461919306779748e-08,
+        "deviation_times_rho_bottom": 3.4619193067797482
+      },
+      {
+        "rho_bottom_kg_m3": 10000000000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 3.4620223354764335e-10,
+        "deviation_times_rho_bottom": 3.4620223354764335
+      },
+      {
+        "rho_bottom_kg_m3": 1000000000000.0,
+        "n_modes_solver": 5,
+        "n_modes_closed_form": 5,
+        "max_absolute_deviation": 3.4620084576886256e-12,
+        "deviation_times_rho_bottom": 3.4620084576886256
+      }
+    ],
+    "first_order_spread_over_1e6_to_1e12": 1.0030035004048998,
+    "note": "deviation * rho_bottom is constant to a few parts in 1e3 over six decades of rho_bottom, so the solver reproduces the closed-form rigid-wall roots at first order in rho_w/rho_b"
+  },
+  "density_scaling": {
+    "f_hz": 100.0,
+    "r_m": 1000.0,
+    "rows": [
+      {
+        "rho_water_kg_m3": 300.0,
+        "offset_db": 27.55820597023215,
+        "predicted_offset_db": 27.558227813951323,
+        "residue_minus_prediction_db": -2.1843719171243947e-05,
+        "offset_minus_base_db": 0.0,
+        "twenty_log_rho_ratio_db": 0.0,
+        "slope_error_db": 0.0
+      },
+      {
+        "rho_water_kg_m3": 400.0,
+        "offset_db": 30.056982334273684,
+        "predicted_offset_db": 30.05700254611732,
+        "residue_minus_prediction_db": -2.0211843636985805e-05,
+        "offset_minus_base_db": 2.4987763640415324,
+        "twenty_log_rho_ratio_db": 2.4987747321659985,
+        "slope_error_db": 1.6318755338140534e-06
+      },
+      {
+        "rho_water_kg_m3": 500.0,
+        "offset_db": 31.995183871460863,
+        "predicted_offset_db": 31.99520280627845,
+        "residue_minus_prediction_db": -1.8934817585858355e-05,
+        "offset_minus_base_db": 4.436977901228712,
+        "twenty_log_rho_ratio_db": 4.436974992327127,
+        "slope_error_db": 2.908901584497414e-06
+      },
+      {
+        "rho_water_kg_m3": 700.0,
+        "offset_db": 34.91774641637689,
+        "predicted_offset_db": 34.91776351984321,
+        "residue_minus_prediction_db": -1.710346631966786e-05,
+        "offset_minus_base_db": 7.359540446144742,
+        "twenty_log_rho_ratio_db": 7.359535705891888,
+        "slope_error_db": 4.740252853352445e-06
+      },
+      {
+        "rho_water_kg_m3": 1000.0,
+        "offset_db": 38.01578718255637,
+        "predicted_offset_db": 38.015802719558074,
+        "residue_minus_prediction_db": -1.5537001701204645e-05,
+        "offset_minus_base_db": 10.457581212324222,
+        "twenty_log_rho_ratio_db": 10.457574905606752,
+        "slope_error_db": 6.3067174700393025e-06
+      },
+      {
+        "rho_water_kg_m3": 1025.0,
+        "offset_db": 38.230264573972406,
+        "predicted_offset_db": 38.23028002739354,
+        "residue_minus_prediction_db": -1.54534211347368e-05,
+        "offset_minus_base_db": 10.672058603740254,
+        "twenty_log_rho_ratio_db": 10.67205221344221,
+        "slope_error_db": 6.3902980436125745e-06
+      }
+    ],
+    "max_abs_slope_error_db": 6.3902980436125745e-06
+  },
+  "ice_degeneracy": {
+    "f_hz": 100.0,
+    "r_m": 1000.0,
+    "pressure_release": {
+      "residue_minus_prediction_db": -1.5537001701204645e-05,
+      "tl_residue_db": 52.030397788901155,
+      "k_r": [
+        0.4179404322577699,
+        0.41506922895772574,
+        0.41014002859322907,
+        0.4030356213037798,
+        0.3938763018982261
+      ]
+    },
+    "vanishing_plate": {
+      "young_Pa": 0.001,
+      "thickness_m": 1e-06,
+      "flexural_rigidity_Nm": 9.157509157509156e-23,
+      "residue_minus_prediction_db": -1.5522279795732175e-05,
+      "tl_residue_db": 52.03039780362306,
+      "tl_change_vs_pressure_release_db": 1.4721905472470098e-08,
+      "k_r": [
+        0.4179404322577699,
+        0.41506922895772574,
+        0.41014002859322907,
+        0.4030356213037798,
+        0.3938763018982261
+      ]
+    },
+    "physical_plate": {
+      "young_Pa": 7000000000.0,
+      "thickness_m": 1.5,
+      "flexural_rigidity_Nm": 2163461538.4615383,
+      "coincidence_frequency_hz": 284.4424338385498,
+      "tl_residue_db": 52.50856117342784,
+      "tl_change_vs_pressure_release_db": 0.47816338452668816,
+      "k_r": [
+        0.4179602692431664,
+        0.41515137095019,
+        0.4103327713844405,
+        0.4033909958819455,
+        0.3944048387429532
+      ],
+      "residue_minus_prediction_db_not_applicable": 0.47814784752498696,
+      "why_not_applicable": "the normalised route assumes the pressure-release top; with a plate the operator is not self-adjoint and the density-normalised sum is the wrong reference, so only the vanishing-plate limit is graded against it"
+    }
+  },
+  "criteria": {
+    "C1_identity_grid": {
+      "threshold_db": 0.01,
+      "measured_max_abs_deviation_db": 0.0012899281377016791,
+      "measured_max_excess_over_hankel_bound_db": 0.0006136194450262096,
+      "n_points": 150,
+      "hankel_bound_is_a_strict_bound": false,
+      "bound_note": "max_m hankel_asymptotic_error_db is a per-mode scale, not a strict bound on the multi-mode sum: the modal errors carry independent phases and can add. The residual exceeds that scale by at most 6.14e-04 dB here, and coincides with it exactly in the single-mode regime (criterion C2).",
+      "verdict": "PASS"
+    },
+    "C2_single_mode_identification": {
+      "threshold_db": 1e-09,
+      "measured_max_abs_difference_db": 5.9061847202403794e-12,
+      "verdict": "PASS"
+    },
+    "C3_bottom_independence": {
+      "threshold_db": 0.01,
+      "measured_max_abs_deviation_db": 3.0594687601137593e-05,
+      "rigid_limit_first_order_spread_factor": 1.0030035004048998,
+      "rigid_roots_count_solver": 5,
+      "rigid_roots_count_closed_form": 5,
+      "verdict": "PASS"
+    },
+    "C4_density_scaling": {
+      "threshold_db": 0.001,
+      "measured_max_abs_slope_error_db": 6.3902980436125745e-06,
+      "verdict": "PASS"
+    },
+    "C5_ice_degeneracy": {
+      "vanishing_plate_deviation_db": -1.5522279795732175e-05,
+      "threshold_db": 0.01,
+      "physical_plate_tl_change_db": 0.47816338452668816,
+      "physical_plate_resolved_threshold_db": 0.1,
+      "verdict": "PASS"
+    }
+  },
+  "figure": {
+    "name": "fig_route_identity.png",
+    "sha256": "038b8c4dcc72862d16cda2b77c627defbc190220406da6b8cd87e0186c0ae32a"
+  },
+  "runtime_seconds": 21.285766124725342
+}
