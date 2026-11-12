@@ -22,6 +22,11 @@ from tensorbem.verification.seakeeping.hemisphere_anchor import (
     compute_hemisphere_zero_frequency_anchor,
     compute_hemisphere_radiation_study,
 )
+from tensorbem.verification.seakeeping.diffraction_anchor import (
+    compute_diffraction_anchor,
+    compute_diffraction_sweep,
+    compute_diffraction_convergence,
+)
 from tensorbem.verification.seakeeping.fk_excitation import (
     compute_fk_vs_bem_comparison,
 )
@@ -77,8 +82,41 @@ def generate_figures(output_dir: Path) -> list[dict]:
         "png_base64": base64.b64encode(buf.getvalue()).decode(),
     })
 
-    # Figure 2: FK vs BEM excitation force
-    print("Generating Figure 2: FK vs BEM excitation force...")
+    # Figure 2: Diffraction excitation - surge and heave vs Hulme
+    print("Generating Figure 2: Diffraction excitation vs Hulme (1982)...")
+    diff_sweep = compute_diffraction_sweep(
+        ka_values=(0.3, 0.5, 0.8, 1.0, 1.2, 1.5, 2.0),
+        subdivisions=2,
+    )
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    kas = list(diff_sweep.ka_values)
+    ax1.plot(kas, [abs(l.bem_fx) for l in diff_sweep.levels], "r-s", label="BEM surge")
+    ax1.plot(kas, [abs(l.hulme_fx) for l in diff_sweep.levels], "b-o", label="Hulme surge")
+    ax1.set_xlabel("Ka")
+    ax1.set_ylabel("|F_x| (N)")
+    ax1.set_title("Surge Excitation: BEM vs Hulme (1982)")
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    ax2.plot(kas, [abs(l.bem_fz) for l in diff_sweep.levels], "r-s", label="BEM heave")
+    ax2.plot(kas, [abs(l.hulme_fz) for l in diff_sweep.levels], "b-o", label="Hulme heave")
+    ax2.set_xlabel("Ka")
+    ax2.set_ylabel("|F_z| (N)")
+    ax2.set_title("Heave Excitation: BEM vs Hulme (1982)")
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    figures.append({
+        "name": "diffraction_excitation_comparison",
+        "caption": "Hemisphere surge and heave diffraction excitation vs Hulme (1982) reference",
+        "png_base64": base64.b64encode(buf.getvalue()).decode(),
+    })
+
+    # Figure 3: FK vs BEM excitation force
+    print("Generating Figure 3: FK vs BEM excitation force...")
     fk_results = compute_fk_vs_bem_comparison(
         length=100.0, beam=20.0, draft=8.0,
         omega_values=(0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0),
@@ -105,8 +143,8 @@ def generate_figures(output_dir: Path) -> list[dict]:
         "png_base64": base64.b64encode(buf.getvalue()).decode(),
     })
 
-    # Figure 3: Wigley III RAO spectrum
-    print("Generating Figure 3: Wigley III RAO spectrum...")
+    # Figure 4: Wigley III RAO spectrum
+    print("Generating Figure 4: Wigley III RAO spectrum...")
     rao_result = compute_wigley_rao_with_limits(nx=12, nz=6)
     fig, ax = plt.subplots(figsize=(8, 5))
     omegas = rao_result["spectrum"]["omegas"]
@@ -130,8 +168,8 @@ def generate_figures(output_dir: Path) -> list[dict]:
         "png_base64": base64.b64encode(buf.getvalue()).decode(),
     })
 
-    # Figure 4: Mesh convergence
-    print("Generating Figure 4: Mesh convergence...")
+    # Figure 5: Mesh convergence
+    print("Generating Figure 5: Mesh convergence...")
     conv = run_wigley_mesh_convergence(
         omega=1.0,
         nx_values=[10, 15, 20, 30],
@@ -168,8 +206,8 @@ def run_full_verification(output_dir: Path) -> dict:
     print("TensorBEM Seakeeping Verification Suite")
     print("=" * 60)
 
-    # 1. Hemisphere anchor
-    print("\n[1/4] Hemisphere zero-frequency added-mass anchor...")
+    # 1. Hemisphere radiation anchor
+    print("\n[1/5] Hemisphere zero-frequency added-mass anchor...")
     hemi_anchor = compute_hemisphere_zero_frequency_anchor(
         radius=1.0, density=1025.0, subdivisions=3, ka_low=0.01,
     )
@@ -181,8 +219,23 @@ def run_full_verification(output_dir: Path) -> dict:
     print(f"  A33 BEM at Ka=0.01: {hemi_anchor.a33_bem_dim:.2f} kg")
     print(f"  A33 vs Hulme error: {hemi_anchor.a33_vs_hulme_rel_error*100:.2f}%")
 
-    # 2. FK excitation
-    print("\n[2/4] Froude-Krylov excitation force...")
+    # 2. Diffraction excitation anchor
+    print("\n[2/5] Hemisphere diffraction excitation anchor...")
+    diff_anchor = compute_diffraction_anchor(ka=1.0, subdivisions=2)
+    diff_sweep = compute_diffraction_sweep(
+        ka_values=(0.3, 0.5, 0.8, 1.0, 1.5, 2.0),
+        subdivisions=2,
+    )
+    diff_conv = compute_diffraction_convergence(
+        ka=1.0, subdivisions=(1, 2, 3),
+    )
+    print(f"  Surge error at Ka=1.0: {diff_anchor.surge_rel_error*100:.2f}%")
+    print(f"  Heave error at Ka=1.0: {diff_anchor.heave_rel_error*100:.2f}%")
+    print(f"  Haskind heave error: {diff_anchor.haskind_heave_rel_error*100:.2f}%")
+    print(f"  Finest heave error (sub=3): {diff_conv.finest_heave_error*100:.2f}%")
+
+    # 3. FK excitation
+    print("\n[3/5] Froude-Krylov excitation force...")
     fk_results = compute_fk_vs_bem_comparison(
         length=100.0, beam=20.0, draft=8.0,
         omega_values=(0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0),
@@ -193,15 +246,15 @@ def run_full_verification(output_dir: Path) -> dict:
     if long_wave_fk:
         print(f"  FK vs BEM max error (kL<0.3): {max_fk_error*100:.2f}%")
 
-    # 3. Wigley RAO
-    print("\n[3/4] Wigley III RAO with limit validation...")
+    # 4. Wigley RAO
+    print("\n[4/5] Wigley III RAO with limit validation...")
     rao_result = compute_wigley_rao_with_limits(nx=12, nz=6)
     lw = rao_result["limit_validation"]
     print(f"  Long-wave RAO mean: {lw['long_wave_rao_mean']:.4f} (pass: {lw['long_wave_pass']})")
     print(f"  High-freq RAO: {lw['high_freq_rao']:.4f} (pass: {lw['high_freq_pass']})")
 
-    # 4. Mesh convergence
-    print("\n[4/4] Mesh convergence study...")
+    # 5. Mesh convergence
+    print("\n[5/5] Mesh convergence study...")
     conv = run_wigley_mesh_convergence(
         omega=1.0,
         nx_values=[10, 15, 20, 30],
@@ -227,8 +280,8 @@ def run_full_verification(output_dir: Path) -> dict:
     # Build report
     report = {
         "title": "TensorBEM 3D Potential Flow Seakeeping Verification Surface",
-        "mission_id": 9388,
-        "scenario_key": "P167W2-N02",
+        "mission_id": 16442,
+        "scenario_key": "seakeeping-verification-surface",
         "tags": ["seakeeping", "radiation", "diffraction", "RAO", "verification"],
         "verification_results": {
             "hemisphere_anchor": {
@@ -237,6 +290,22 @@ def run_full_verification(output_dir: Path) -> dict:
                 "vs_hulme_rel_error": hemi_anchor.a33_vs_hulme_rel_error,
                 "panel_count": hemi_anchor.panel_count,
                 "pass": hemi_anchor.a33_vs_hulme_rel_error < 0.05,
+            },
+            "diffraction_anchor": {
+                "ka": diff_anchor.ka,
+                "surge_rel_error": diff_anchor.surge_rel_error,
+                "heave_rel_error": diff_anchor.heave_rel_error,
+                "haskind_heave_rel_error": diff_anchor.haskind_heave_rel_error,
+                "haskind_surge_rel_error": diff_anchor.haskind_surge_rel_error,
+                "finest_heave_error": diff_conv.finest_heave_error,
+                "finest_surge_error": diff_conv.finest_surge_error,
+                "observed_order_heave": diff_conv.observed_order_heave,
+                "observed_order_surge": diff_conv.observed_order_surge,
+                "pass": (
+                    diff_anchor.heave_rel_error < 0.10
+                    and diff_anchor.surge_rel_error < 0.30
+                    and diff_anchor.haskind_heave_rel_error < 0.05
+                ),
             },
             "fk_excitation": {
                 "long_wave_max_error": max_fk_error,
@@ -271,9 +340,11 @@ if __name__ == "__main__":
     report = run_full_verification(output_dir)
     print("\n" + "=" * 60)
     print("Verification Summary:")
-    print(f"  Hemisphere anchor: {'PASS' if report['verification_results']['hemisphere_anchor']['pass'] else 'FAIL'}")
-    print(f"  FK excitation: {'PASS' if report['verification_results']['fk_excitation']['pass'] else 'FAIL'}")
-    print(f"  Wigley RAO long-wave: {'PASS' if report['verification_results']['wigley_rao']['long_wave_pass'] else 'FAIL'}")
-    print(f"  Wigley RAO high-freq: {'PASS' if report['verification_results']['wigley_rao']['high_freq_pass'] else 'FAIL'}")
-    print(f"  Mesh convergence: {'PASS' if report['verification_results']['mesh_convergence']['pass'] else 'FAIL'}")
+    vr = report["verification_results"]
+    print(f"  Hemisphere anchor: {'PASS' if vr['hemisphere_anchor']['pass'] else 'FAIL'}")
+    print(f"  Diffraction anchor: {'PASS' if vr['diffraction_anchor']['pass'] else 'FAIL'}")
+    print(f"  FK excitation: {'PASS' if vr['fk_excitation']['pass'] else 'FAIL'}")
+    print(f"  Wigley RAO long-wave: {'PASS' if vr['wigley_rao']['long_wave_pass'] else 'FAIL'}")
+    print(f"  Wigley RAO high-freq: {'PASS' if vr['wigley_rao']['high_freq_pass'] else 'FAIL'}")
+    print(f"  Mesh convergence: {'PASS' if vr['mesh_convergence']['pass'] else 'FAIL'}")
     print("=" * 60)
