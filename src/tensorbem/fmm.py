@@ -449,6 +449,11 @@ class FMMOperator:
     _leaf_indices: list[IntArray] = field(default_factory=list, repr=False)
     #: (n_leaves, (p+1)**2) multipole coefficients, one row per leaf
     _multipole_matrix: FloatArray | None = field(default=None, repr=False)
+    #: sources/charges the cached ``_multipole_matrix`` was built from.  The
+    #: multipole coefficients are a linear functional of the charges, so the
+    #: cache is only valid for the very same charge vector (m16000).
+    _cache_points: FloatArray | None = field(default=None, repr=False)
+    _cache_charges: FloatArray | None = field(default=None, repr=False)
     #: (n_leaves, n_leaves) "leaf boxes are near" mask used by ``_is_near``
     _leaf_near: NDArray[np.bool_] | None = field(default=None, repr=False)
     #: target block size; bounds the (block, n_leaves, 3) intermediate
@@ -469,6 +474,8 @@ class FMMOperator:
         indices = [np.asarray(leaf.indices, dtype=np.int64) for leaf in self.leaves]
 
         multipoles = np.zeros((len(self.leaves), n_harm), dtype=float)
+        self._cache_points = None
+        self._cache_charges = None
         if charges is not None:
             charges = np.asarray(charges, dtype=float)
             for k, leaf in enumerate(self.leaves):
@@ -477,6 +484,11 @@ class FMMOperator:
                 multipoles[k] = M
                 self._multipoles.append(M)
             self._multipole_matrix = multipoles
+            self._cache_points = np.array(points, dtype=float, copy=True)
+            self._cache_charges = np.array(charges, dtype=float, copy=True)
+        else:
+            # a re-``setup`` must not inherit the previous point set's multipoles
+            self._multipole_matrix = None
 
         self._leaf_centers = centers
         self._leaf_sizes = sizes
@@ -500,7 +512,28 @@ class FMMOperator:
             M = _multipole_coefficients(points[idx], charges[idx], leaf.center, self.p)
             multipoles[k] = M
             self._multipoles.append(M)
+        self._cache_points = np.array(points, dtype=float, copy=True)
+        self._cache_charges = np.array(charges, dtype=float, copy=True)
         return multipoles
+
+    def _multipole_cache_valid(
+        self, sources: FloatArray, charges: FloatArray
+    ) -> bool:
+        """Whether the cached multipole coefficients belong to *(sources, charges)*."""
+        if self._multipole_matrix is None:
+            return False
+        cached_points = self._cache_points
+        cached_charges = self._cache_charges
+        if cached_points is None or cached_charges is None:
+            return False
+        if cached_points.shape != sources.shape:
+            return False
+        if cached_charges.shape != charges.shape:
+            return False
+        return bool(
+            np.array_equal(cached_points, sources)
+            and np.array_equal(cached_charges, charges)
+        )
 
     # -- routing ---------------------------------------------------------
     def _route(self, targets: FloatArray) -> IntArray:
@@ -585,15 +618,21 @@ class FMMOperator:
 
         if targets.ndim != 2 or targets.shape[1] != 3:
             raise ValueError("targets must have shape (N, 3)")
+        if sources.ndim != 2 or sources.shape[1] != 3:
+            raise ValueError("sources must have shape (M, 3)")
+        if charges.shape != (sources.shape[0],):
+            raise ValueError("charges must have shape (M,)")
         n = len(targets)
         result = np.zeros(n, dtype=float)
         if n == 0 or not self.leaves:
             return result
-        if self._multipole_matrix is None:
-            # ``setup`` may be called without charges (geometry only); the
-            # multipole coefficients are then built from the sources/charges
-            # handed to ``matvec``, which must be the points the tree was built
-            # from.
+        if not self._multipole_cache_valid(sources, charges):
+            # ``setup`` may be called without charges (geometry only) and the
+            # caller may hand a *different* charge vector to every ``matvec``
+            # (multiple right-hand sides, iterative solvers).  The multipole
+            # coefficients are linear in the charges, so reusing them for another
+            # charge vector silently evaluates the far field of the previous
+            # right-hand side -- the operator is then no longer linear (m16000).
             self._multipole_matrix = self._build_multipoles(sources, charges)
 
         leaf_of_target = self._route(targets)
