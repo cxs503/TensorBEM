@@ -142,6 +142,7 @@ correction log inside the generated block records what changed.
 | Second-order mean wave drift force (near field / far field) | **REAL** | `tensorbem.drift`, `tensorbem.drift_force` (+1) | 4 node(s) in 2 file(s) | `docs/drift_second_order/drift_second_order.md` |
 | Maruo far-field mean drift force at arbitrary heading | **REAL** | `tensorbem.maruo_drift` | 4 node(s) in 1 file(s) | `docs/maruo_drift.md` |
 | Time-domain radiation memory kernel (Cummins equation) | **REAL** | `tensorbem.time_domain` | 3 node(s) in 1 file(s) | `docs/time_domain_pulse.md` |
+| Radiation-damping rational fit (Sanathanan-Koerner iteration) | **REAL** | `tensorbem.sk_fit` | 4 node(s) in 1 file(s) | `docs/sk_fit_sanathanan_koerner.md` |
 | Coupled multi-DOF radiation memory kernel matrix | **REAL** | `tensorbem.memory_kernel_matrix`, `tensorbem.benchmarks.cummins_matrix_closure` | 4 node(s) in 1 file(s) | `docs/cummins_matrix_closure/cummins_matrix_kernel_matrix.md` |
 | Two-way Cummins memory-kernel closure with causality and decay gates | **REAL** | `tensorbem.benchmarks.cummins_memory_closure`, `tensorbem.time_domain` | 5 node(s) in 1 file(s) | `docs/cummins_memory_closure/cummins_memory_closure.md`, `docs/cummins_memory_closure/campaign.json` |
 | Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
@@ -159,7 +160,7 @@ correction log inside the generated block records what changed.
 | Fast multipole acceleration of the 3-D single-layer operator | **REAL** | `tensorbem.fmm` | 2 node(s) in 1 file(s) | `docs/fmm_acceleration/report.md` |
 | Independent finite-difference check of the flexural-gravity dispersion | **REAL** | `tensorbem.flexural_gravity_numeric` | 2 node(s) in 1 file(s) | `docs/flexural_gravity_verification/report.md` |
 
-Counts: **49** REAL, **1** WITHHELD — 50 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **50** REAL, **1** WITHHELD — 51 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -171,7 +172,7 @@ Counts: **49** REAL, **1** WITHHELD — 50 capabilities. The level is derived fr
 
 ### Capability coverage
 
-63 of 91 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **0 are unowned**.
+64 of 92 core modules (outside `tensorbem.benchmarks`) are named by a row above; 28 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.cathodic_protection` — physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.
@@ -212,7 +213,6 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.finite_depth3d_verification` — report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.
 - `tensorbem.benchmarks.freq_time_bridge` — state-space vs IRF-convolution bridge driver; both paths it compares are pinned by tests/test_state_space.py and graded by the state-space row.
 - `tensorbem.benchmarks.hydrostatic_figures` — matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.
-- `tensorbem.benchmarks.kp505_w20_gci` — three-density GCI study of the KP505 open-water lattice; the propeller physics it drives is pinned by tests/test_propeller_open_water.py and graded by the propeller row.
 - `tensorbem.benchmarks.multihull_frequency_figures` — matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact; the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.
 - `tensorbem.benchmarks.neumann_kelvin_verification` — Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the kernel and the steady wave-resistance physics it reports on are pinned by tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.
 - `tensorbem.benchmarks.quadratic_panel_convergence` — convergence study driver for the quadratic-panel operator; the operator itself is graded by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.
