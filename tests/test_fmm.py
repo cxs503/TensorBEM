@@ -409,7 +409,12 @@ class TestFailClosed:
         assert helmholtz_supported(ka=100.0, ka_max=10.0) is False
 
     def test_helmholtz_fallback(self):
-        """High ka should fall back to direct method."""
+        """High ka closes the accelerated band but still returns the exact sum.
+
+        m16451: the mode tag reports *cost* support only; the returned value is
+        the exact complex kernel sum, so it is compared against the analytic
+        reference instead of just being shape-checked.
+        """
         np.random.seed(42)
         sources = np.random.randn(100, 3)
         charges = np.random.randn(100)
@@ -421,9 +426,19 @@ class TestFailClosed:
         assert method == "not_supported", \
             f"Expected not_supported for high ka, got {method}"
         assert pot.shape == (50,), "Output shape mismatch"
+        diff = targets[:, None, :] - sources[None, :, :]
+        r = np.maximum(np.linalg.norm(diff, axis=2), 1e-15)
+        exact = np.sum(charges[None, :] * np.exp(50.0j * r) / (4.0 * np.pi * r), axis=1)
+        assert np.max(np.abs(pot - exact)) <= 1e-12 * np.max(np.abs(exact))
 
-    def test_helmholtz_low_ka_uses_fmm(self):
-        """Low ka should use FMM approximation."""
+    def test_helmholtz_low_ka_is_exact_not_laplace(self):
+        """Low ka returns the exact Helmholtz kernel, not the Laplace one.
+
+        m16451: the previous assertion accepted the tag ``"fmm"`` while the code
+        actually summed the *Laplace* kernel (k ignored, imaginary quadrature
+        dropped), which is 36 % away from the true Helmholtz sum at ka ~ 0.1.
+        The mode contract is now truthful and the value is pinned analytically.
+        """
         np.random.seed(42)
         sources = np.random.randn(100, 3) * 0.01  # very compact
         charges = np.random.randn(100)
@@ -432,8 +447,11 @@ class TestFailClosed:
         pot, method = fmm_helmholtz_matvec(
             targets, sources, charges, k=0.01, ka_max=10.0
         )
-        assert method in ("fmm", "direct"), \
-            f"Expected fmm or direct for low ka, got {method}"
+        assert method == "complex_direct", f"unexpected mode {method}"
+        diff = targets[:, None, :] - sources[None, :, :]
+        r = np.maximum(np.linalg.norm(diff, axis=2), 1e-15)
+        exact = np.sum(charges[None, :] * np.exp(0.01j * r) / (4.0 * np.pi * r), axis=1)
+        assert np.max(np.abs(pot - exact)) <= 1e-12 * np.max(np.abs(exact))
 
 
 # ---------------------------------------------------------------------------
