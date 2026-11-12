@@ -1,0 +1,85 @@
+{
+  "quadrature_order": 8,
+  "metric_derivatives": {
+    "max_relative_area_error": 1.202784226195441e-10,
+    "max_abs_normal_error": 1.1203432626061272e-10
+  },
+  "operator_fidelity": {
+    "panels": 80,
+    "single_max_rel": 7.073255287545142e-05,
+    "double_max_rel": 0.00043360196706362036,
+    "row_sum_error": 1.1648041473966142e-05,
+    "row_sum_error_production": 2.220446049250313e-16,
+    "self_term_max_rel": 7.721417479221024e-05
+  },
+  "operator_derivatives": {
+    "vertices_checked": 3,
+    "single_max_rel_error": 5.15972185084573e-10,
+    "double_max_rel_error": 2.8125218432534255e-10
+  },
+  "potential_sensitivity": {
+    "panels": 80,
+    "cosine": -0.9999999999999997,
+    "relative_error": 1.9999999999517502,
+    "step": 1e-06
+  },
+  "added_mass_levels": [
+    {
+      "subdivisions": 0,
+      "panels": 20,
+      "vertices": 12,
+      "added_mass": 1.544253677199039,
+      "analytic_half_volume": 2.0943951023931953,
+      "relative_error": 0.26267318165781045,
+      "condition_number": 2.3425664228887007,
+      "forward_seconds": 0.06926199048757553,
+      "gradient_seconds": 0.28893283009529114,
+      "cost_ratio": 4.1715929337479976,
+      "homogeneity_measured": 1.5442536771990394,
+      "homogeneity_exact": 4.632761031597116,
+      "translation_invariance": 3.885780586188048e-16
+    },
+    {
+      "subdivisions": 1,
+      "panels": 80,
+      "vertices": 42,
+      "added_mass": 1.9300765626798233,
+      "analytic_half_volume": 2.0943951023931953,
+      "relative_error": 0.07845632351107518,
+      "condition_number": 2.165362501290426,
+      "forward_seconds": 0.3232022803276777,
+      "gradient_seconds": 1.9900468196719885,
+      "cost_ratio": 6.157279638170823,
+      "homogeneity_measured": 1.930076562679824,
+      "homogeneity_exact": 5.79022968803947,
+      "translation_invariance": 1.0216318486718293e-16
+    },
+    {
+      "subdivisions": 2,
+      "panels": 320,
+      "vertices": 162,
+      "added_mass": 2.051795277679628,
+      "analytic_half_volume": 2.0943951023931953,
+      "relative_error": 0.02033991803403755,
+      "condition_number": 2.083220496787288,
+      "forward_seconds": 2.9353809393942356,
+      "gradient_seconds": 19.387734280899167,
+      "cost_ratio": 6.604844373248587,
+      "homogeneity_measured": 2.0517952776796284,
+      "homogeneity_exact": 6.155385833038884,
+      "translation_invariance": 3.3999606041256077e-16
+    }
+  ],
+  "functional_gradient_check": {
+    "panels": 80,
+    "value": 1.9300765626798233,
+    "value_from_fd_path": 1.9300765626798233,
+    "direction_cosine": -0.216462771888021,
+    "relative_error": 1.2631015881104055,
+    "analytic_norm": 0.8205743203302687,
+    "finite_difference_norm": 1.4027821343483964,
+    "step": 1e-05,
+    "fd_translation_invariance": 2.1094218732864434e-10
+  },
+  "figure": "figure.png"
+}
