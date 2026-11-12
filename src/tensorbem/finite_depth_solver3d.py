@@ -78,7 +78,10 @@ from .free_surface_solver3d import (
     rigid_body_normals_3d,
 )
 from .geometry3d import SurfaceMesh3D
-from .kernels3d import integrate_single_layer_triangle_self
+from .kernels3d import (
+    integrate_single_layer_triangle_self,
+    integrate_single_layer_triangle_self_batch,
+)
 
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
@@ -224,10 +227,12 @@ def _rankine_operators(
         # Only a row/column pair whose target *is* the panel centroid needs the
         # exact self integral; _vectorized_solid_angle_dl already returns zero
         # for a coplanar (hence self) triangle.
+        diagonal = integrate_single_layer_triangle_self_batch(
+            np.stack((v0, v1, v2), axis=1)
+        )
         for idx in range(min(mesh.panel_count, targets.shape[0])):
             if np.array_equal(targets[idx], mesh.centroids[idx]):
-                tri = np.stack((v0[idx], v1[idx], v2[idx]), axis=0)
-                single[idx, idx] = integrate_single_layer_triangle_self(tri)
+                single[idx, idx] = diagonal[idx]
     return single, double
 
 
