@@ -1,0 +1,208 @@
+{
+  "geometry": {
+    "beam": 1.0,
+    "draft": 0.5,
+    "length": 2.0
+  },
+  "irregular_frequency_estimate": {
+    "formula": "capytaine FloatingBody.first_irregular_frequency_estimate (parallelepiped bound)",
+    "note": "first irregular frequency lies above the tested band, so the case is usable without a lid",
+    "nu_irr": 3.728363562634268,
+    "omega_irr": 6.046714523731655
+  },
+  "levels": [
+    {
+      "bare": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1010.8935465376319,
+            "damping": 759.5157258488624
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 836.5146761144397,
+            "damping": 789.0106865572064
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 785.6315900179085,
+            "damping": 373.23750578064784
+          }
+        }
+      },
+      "lid": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1019.6040575246446,
+            "damping": 678.6204586753339
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 881.8365199780299,
+            "damping": 709.2283530691105
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 848.7937233856426,
+            "damping": 509.5302804095066
+          }
+        }
+      },
+      "panels": 40,
+      "resolution": [
+        4,
+        2,
+        1
+      ],
+      "volume": 1.0
+    },
+    {
+      "bare": {
+        "0.500": {
+          "heave": {
+            "added_mass": 969.6835042333213,
+            "damping": 752.8007498364002
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 796.2078016425573,
+            "damping": 789.024769341378
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 752.3236779560841,
+            "damping": 367.1541732910677
+          }
+        }
+      },
+      "lid": {
+        "0.500": {
+          "heave": {
+            "added_mass": 977.1978234219141,
+            "damping": 668.9541280601386
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 839.1972316882694,
+            "damping": 695.7202792327854
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 806.0798736468728,
+            "damping": 432.67030541204457
+          }
+        }
+      },
+      "panels": 160,
+      "resolution": [
+        8,
+        4,
+        2
+      ],
+      "volume": 1.0
+    },
+    {
+      "bare": {
+        "0.500": {
+          "heave": {
+            "added_mass": 952.0678478300084,
+            "damping": 747.6992783130854
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 779.2207680161806,
+            "damping": 786.3132814679965
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 736.7443124649984,
+            "damping": 363.55057328856316
+          }
+        }
+      },
+      "lid": {
+        "0.500": {
+          "heave": {
+            "added_mass": 959.2693685353873,
+            "damping": 663.0254010172687
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 821.5856781210484,
+            "damping": 690.0767981879575
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 787.1387714498801,
+            "damping": 417.98702218172843
+          }
+        }
+      },
+      "panels": 640,
+      "resolution": [
+        16,
+        8,
+        4
+      ],
+      "volume": 1.0
+    }
+  ],
+  "metadata": {
+    "density": 1025.0,
+    "generated_utc": "2026-11-12T16:38:08+00:00",
+    "gravity": 9.80665,
+    "machine": "loongarch64",
+    "meshes": "identical triangulated panels as tensorbem.geometry3d.box_hull_mesh",
+    "module_path": "/usr/lib64/python3.11/site-packages/capytaine/__init__.py",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "tool": "capytaine",
+    "version": "3.1.dev0",
+    "water_depth": "infinite"
+  },
+  "nu_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "sealed_box_reproduction": {
+    "construction": "mesh_parallelepiped(size=(2,1,1), center=(0,0,-0.5), resolution=(4,4,2)).immersed_part()",
+    "faces_lying_on_waterline": 16,
+    "note": "the waterplane face survives clipping and lies exactly on the free surface; the resulting negative heave damping is the artefact the old reference file recorded as an irregular-frequency phenomenon",
+    "panels": 64,
+    "values": {
+      "0.500": {
+        "heave": {
+          "added_mass": 1653.8901877057394,
+          "damping": -957.7971057042029
+        }
+      },
+      "1.000": {
+        "heave": {
+          "added_mass": 2626.843719654664,
+          "damping": -3003.764875847151
+        }
+      },
+      "2.000": {
+        "heave": {
+          "added_mass": -2134.6552629937933,
+          "damping": -885.4346930758279
+        }
+      }
+    },
+    "volume": 2.0
+  }
+}
