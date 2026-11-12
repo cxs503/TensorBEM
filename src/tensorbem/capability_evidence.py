@@ -1049,6 +1049,443 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Cross-implementation anchor for the ice-plate dispersion shipped in m14560.',
     ),
 
+    Capability(
+        key='cathodic-protection-bem',
+        title='3-D Laplace BEM cathodic protection (linear polarisation + Butler-Volmer)',
+        claim='Ship-hull cathodic-protection current and potential distribution by the 3-D Laplace BEM with coating-damage masks, a waterline lid and (separately) Butler-Volmer steel/anode kinetics; graded against the analytic cylinder log-potential anchor and closed box/annulus mesh geometry.',
+        level=REAL,
+        modules=(
+            'tensorbem.cathodic_protection',
+            'tensorbem.cp_galvanic',
+        ),
+        symbols=(
+            'solve_cathodic_protection',
+            'assign_coating_damage',
+        ),
+        tests=(
+            'tests/test_cp_galvanic.py::test_cylinder_anchor_matches_log_profile',
+            'tests/test_cp_galvanic.py::test_anode_kinetics_tafel_slope',
+        ),
+        docs=(
+            ('docs/cathodic_protection_linear/REPORT.md', 'tensorbem.cathodic_protection'),
+            ('docs/cathodic_protection_galvanic/REPORT.md', 'cp_galvanic.py'),
+        ),
+    ),
+    Capability(
+        key='cylinder-and-farfield-drift',
+        title='Exact MacCamy-Fuchs cylinder drift + 3-D far-field drift',
+        claim='Mean second-order drift on a surface-piercing cylinder from the exact MacCamy-Fuchs field (near-field momentum integral) and the 3-D far-field route: BEM Kochin coupling, Maruo reduced kernel, control-circle radius scan and the optical-theorem residual identity.',
+        level=REAL,
+        modules=(
+            'tensorbem.cylinder_drift',
+            'tensorbem.drift_far_field3d',
+        ),
+        symbols=(
+            'near_field_cylinder_drift',
+            'kochin_2d',
+            'maruo_far_field_drift',
+        ),
+        tests=(
+            'tests/test_cylinder_drift_asymptotic.py::test_bessel_j_matches_reference_values',
+            'tests/test_diffraction_drift_maturity.py::test_radius_scan_reports_non_convergence_for_finite_radius_route',
+        ),
+        docs=(
+            ('docs/cylinder_drift_asymptotic.md', 'cylinder_drift'),
+            ('docs/drift_far_field_3d.md', 'tensorbem.drift_far_field3d'),
+        ),
+    ),
+    Capability(
+        key='figure-integrity',
+        title='Verification-figure integrity gate (reproducible from committed data)',
+        claim='Every verification figure is re-rendered from its committed JSON and compared to the shipped PNG, with report-linkage checks; the gate fails on a figure that cannot be regenerated from committed data.',
+        level=REAL,
+        modules=(
+            'tensorbem.figure_integrity',
+        ),
+        symbols=(
+            'check_case_integrity',
+            'check_all_cases',
+            'check_report_linkage',
+        ),
+        tests=(
+            'tests/test_figure_integrity.py::TestCLI::test_all_cases',
+            'tests/test_figure_integrity.py::TestCLI::test_json_output',
+        ),
+        docs=(
+            ('docs/dev_report_m15295_push_gate_figure_integrity_round1.md', 'pytest_figure_integrity.log'),
+        ),
+    ),
+    Capability(
+        key='finite-depth-green-kernel',
+        title='Finite-depth Green function + dispersion solver',
+        claim='Finite-depth free-surface Green function with a Newton-Raphson dispersion solver, steady-flow wavenumber and explicit deep-water / shallow-water degeneration checks on the kernels and on the resistance integral.',
+        level=REAL,
+        modules=(
+            'tensorbem.finite_depth_green',
+        ),
+        symbols=(
+            'dispersion_newton_raphson',
+            'dispersion_residual',
+            'shallow_water_limit_error',
+        ),
+        tests=(
+            'tests/test_finite_depth_green.py::TestDispersionNewtonRaphson::test_dispersion_residual_zero',
+            'tests/test_finite_depth_green.py::TestDeepWaterDegeneration::test_green_function_degeneration_moderate',
+            'tests/test_finite_depth_green.py::TestDeepWaterResistanceLimit::test_resistance_degeneration',
+        ),
+        docs=(
+            ('docs/BEM_FINITE_DEPTH_GREEN.md', 'src/tensorbem/finite_depth_green.py'),
+        ),
+    ),
+    Capability(
+        key='finite-depth-3d-quadrature-solver',
+        title='3-D finite-depth wave-radiation solver (eigenseries + quadrature kernels)',
+        claim='Three-dimensional finite-depth radiation/diffraction BEM for closed bodies with the John eigenseries kernel and the quadrature kernel, strict submersion checks on the quadrature path, and a deep-water limit comparison.',
+        level=REAL,
+        modules=(
+            'tensorbem.finite_depth_solver3d',
+        ),
+        symbols=(
+            'assemble_finite_depth_operators_3d',
+            'kernel_functions',
+            'mode_count_for',
+        ),
+        tests=(
+            'tests/test_finite_depth3d_quadrature_solver.py::test_quadrature_kernel_needs_strictly_submerged_panels',
+            'tests/test_finite_depth3d_quadrature_solver.py::test_operators_carry_the_kernel_label',
+        ),
+        docs=(
+            ('docs/m14568_quadrature_kernel_solver.md', 'finite_depth_solver3d.kernel_functions'),
+        ),
+    ),
+    Capability(
+        key='flexural-gravity-dispersion',
+        title='Flexural-gravity (ice-cover) dispersion and mass loading',
+        claim='Elastic ice-plate flexural-gravity dispersion (omega^2 = g k tanh(kH) + D k^5/rho_w), its open-water and in-vacuo short-wave limits, group velocity, and the unified flexural-gravity + mass-loading branch; cross-checked against an independent hydroelastic implementation.',
+        level=REAL,
+        modules=(
+            'tensorbem.flexural_gravity',
+        ),
+        symbols=(
+            'flexural_gravity_omega2',
+            'open_water_omega2',
+            'flexural_gravity_wavenumber',
+        ),
+        tests=(
+            'tests/test_flexural_gravity_evidence.py::test_eq3_matches_independent_hydroelastic_implementation',
+            'tests/test_flexural_gravity_evidence.py::test_eq3_short_wave_limit_is_in_vacuo_plate_wave',
+            'tests/test_flexural_gravity_evidence.py::test_dispersion_root_round_trip',
+        ),
+        docs=(
+            ('docs/flexural_gravity_mass_loading/report.md', 'src/tensorbem/flexural_gravity.py'),
+        ),
+    ),
+    Capability(
+        key='haskind-2d-excitation',
+        title='2-D Haskind excitation + net-source regularisation (strip theory)',
+        claim='Haskind-Newman excitation from the radiation potential alone, cross-validated against a direct diffraction solve at the same strip station, together with the low-frequency net-source (gauge-band) regularisation of the 2-D radiation/diffraction problems.',
+        level=REAL,
+        modules=(
+            'tensorbem.haskind2d',
+            'tensorbem.net_source_reg',
+        ),
+        symbols=(
+            'haskind_strip_excitation',
+            'haskind_cross_validation',
+            'gauge_band_regularization',
+        ),
+        tests=(
+            'tests/test_stf_haskind_reg.py::TestHaskindCrossValidation::test_haskind_vs_direct_heave',
+            'tests/test_stf_haskind_reg.py::TestHaskindCrossValidation::test_haskind_vs_direct_sway',
+            'tests/test_stf_haskind_reg.py::TestNetSourceRegularization::test_regularized_radiation_matches_unregularized',
+        ),
+        docs=(
+            ('docs/strip_theory_fullspeed_closure.md', 'tensorbem.haskind2d'),
+            ('docs/strip_theory_fullspeed_closure.md', 'tensorbem.net_source_reg'),
+        ),
+    ),
+    Capability(
+        key='interior-panel-lid',
+        title='Interior waterplane-lid panels (irregular-frequency suppression)',
+        claim='Interior waterplane-lid panel sets used to suppress 3-D irregular-frequency spikes: ring structure at a requested resolution, rejection of closed submerged meshes and of invalid resolutions.',
+        level=REAL,
+        modules=(
+            'tensorbem.interior_panels',
+        ),
+        symbols=(
+            'interior_panel_points',
+            'InteriorPanelSet',
+        ),
+        tests=(
+            'tests/test_interior_panel_suppression.py::test_lid_ring_structure_follows_the_requested_resolution',
+            'tests/test_interior_panel_suppression.py::test_lid_rejects_a_closed_submerged_mesh',
+        ),
+        docs=(
+            ('docs/m14563_irregular_frequency_sanitisation_report.md', 'src/tensorbem/interior_panels.py'),
+        ),
+    ),
+    Capability(
+        key='irregular-frequency-sanitisation',
+        title='Irregular-frequency prediction and sanitisation',
+        claim='Irregular-frequency prediction from the interior Dirichlet eigenproblem plus two sanitisation routes (CHIEF points, interior surface); the condition number and the spike suppression are asserted on a frequency sweep.',
+        level=REAL,
+        modules=(
+            'tensorbem.irregular_frequency',
+        ),
+        symbols=(
+            'predict_irregular_frequencies',
+            'sanitise_with_chief',
+            'sanitise_with_interior_surface',
+        ),
+        tests=(
+            'tests/test_irregular_frequency_sanitisation.py::test_chief_suppression_at_irregular_frequency',
+            'tests/test_irregular_frequency_sanitisation.py::test_chief_condition_number_reasonable',
+            'tests/test_irregular_frequency_sanitisation.py::test_bare_radiation_at_low_frequency',
+        ),
+        docs=(
+            ('docs/m14563_irregular_frequency_sanitisation_report.md', 'irregular_frequency'),
+        ),
+    ),
+    Capability(
+        key='neumann-kelvin-steady',
+        title='Neumann-Kelvin steady forward-speed wave resistance',
+        claim='Steady Neumann-Kelvin Green function with the Kelvin wave pattern, Froude scaling helpers and the wave-resistance integral, checked for far-field decay and against the Michell limit.',
+        level=REAL,
+        modules=(
+            'tensorbem.neumann_kelvin',
+        ),
+        symbols=(
+            'green_function_nk',
+            'froude_number',
+            'speed_for_froude',
+        ),
+        tests=(
+            'tests/test_neumann_kelvin.py::TestGreenFunction::test_green_function_decays_with_distance',
+            'tests/test_neumann_kelvin.py::TestConstants::test_froude_number',
+        ),
+        docs=(
+            ('docs/neumann_kelvin_verification.md', 'tensorbem.neumann_kelvin'),
+        ),
+    ),
+    Capability(
+        key='nk-panel-3d',
+        title='3-D steady Neumann-Kelvin panel method (Rankine + Havelock kernel)',
+        claim='Three-dimensional steady Neumann-Kelvin panel method: Rankine source panels plus the Havelock free-surface kernel, centreplane panel areas, far-field prefactor scaling and the free-surface condition residual on the collocation points.',
+        level=REAL,
+        modules=(
+            'tensorbem.nk_panel3d',
+        ),
+        symbols=(
+            'nk_wave_kernel',
+            'rankine_kernel',
+            'green_kernel',
+        ),
+        tests=(
+            'tests/test_nk_panel3d.py::test_free_surface_condition_is_satisfied',
+            'tests/test_nk_panel3d.py::test_centreplane_panel_area',
+            'tests/test_nk_panel3d.py::test_far_field_scales_with_prefactor',
+        ),
+        docs=(
+            ('docs/m10003/REPORT.md', 'src/tensorbem/nk_panel3d.py'),
+        ),
+    ),
+    Capability(
+        key='quadratic-panel-operator',
+        title='Quadratic (6-node) curved-triangle panel operator',
+        claim='Quadratic curved-triangle layer operators: shape functions and gradients with a partition-of-unity check, Duffy self-quadrature, graded near-singular subtriangles and the resulting BEM solve; graded by an order-of-convergence study on a curved element.',
+        level=REAL,
+        modules=(
+            'tensorbem.panel_quadratic',
+        ),
+        symbols=(
+            'quadratic_shape_functions',
+            'duffy_self_quadrature',
+            'gauss_triangle_rule',
+        ),
+        tests=(
+            'tests/test_panel_quadratic_near_singular.py::test_curved_element_order_self_convergence',
+            'tests/test_panel_quadratic_near_singular.py::test_graded_per_subtriangle_widths_must_match',
+        ),
+        docs=(
+            ('docs/quadratic_near_singular/README.md', 'tensorbem.panel_quadratic'),
+        ),
+    ),
+    Capability(
+        key='propeller-open-water',
+        title='Propeller open-water performance by vortex-lattice lifting surface',
+        claim='Vortex-lattice (lifting-surface) propeller model: helical wake geometry, blade chord/expanded-area consistency, Kutta-Joukowski force on each segment and Froude-scaled open-water coefficients.',
+        level=REAL,
+        modules=(
+            'tensorbem.propeller',
+        ),
+        symbols=(
+            'solve_lifting_surface',
+            'kutta_joukowski_force',
+            'helical_wake',
+        ),
+        tests=(
+            'tests/test_propeller_open_water.py::test_helical_wake_advances_one_diameter_of_pitch_per_revolution',
+            'tests/test_propeller_open_water.py::test_chord_distribution_matches_expanded_area_ratio',
+            'tests/test_propeller_open_water.py::test_froude_scaling_invariance',
+        ),
+        docs=(
+            ('docs/dev_report_m4614_doc_claim_audit_ratchet.md', 'm3538_propeller_openwater_uncertainty.md'),
+        ),
+    ),
+    Capability(
+        key='rankine-fs-panel',
+        title='Rankine-source free-surface panel method (truncated domain)',
+        claim='Dense 3-D Rankine-source BEM on a truncated free-surface domain with Neumann condition on the body and radiation on the outer boundary: the double-body case carries no wave resistance and a small Neumann residual, and the Wigley case reports a grid-convergence index.',
+        level=REAL,
+        modules=(
+            'tensorbem.rankine_fs',
+        ),
+        symbols=(
+            'free_surface_grid',
+            'wigley_hull_panels',
+            'single_layer',
+        ),
+        tests=(
+            'tests/test_rankine_fs_panel.py::test_double_body_has_no_wave_resistance',
+            'tests/test_rankine_fs_panel.py::test_double_body_neumann_residual_small',
+            'tests/test_rankine_fs_panel.py::test_double_body_cb_grid_convergence_index',
+        ),
+        docs=(
+            ('docs/benchmarks/verified/bem_rankine_fs_panel/report.md', 'Rankine-source boundary-element'),
+        ),
+    ),
+    Capability(
+        key='rankine-wave-series60',
+        title='Rankine wave resistance + Series 60 empirical reference',
+        claim='Rankine-source wave-making resistance for the Wigley hull with an energy-flux and free-surface-truncation study, plus the Series 60 empirical wave-resistance data used as the validation reference.',
+        level=REAL,
+        modules=(
+            'tensorbem.rankine_wave',
+            'tensorbem.series60',
+        ),
+        symbols=(
+            'generate_wigley_hull_panels',
+            'wigley_Cb',
+            'series60_Cw',
+        ),
+        tests=(
+            'tests/test_rankine_wave_resistance.py::TestEnergyConservation::test_energy_flux_computation',
+            'tests/test_rankine_wave_resistance.py::TestFreeSurfaceTruncation::test_truncation_study',
+            'tests/test_rankine_wave_resistance.py::TestSeries60::test_series60_hull_properties',
+        ),
+        docs=(
+            ('docs/in32_b01/report.md', 'src/tensorbem/rankine_wave.py'),
+            ('docs/in32_b01/report.md', 'series60_comparison.png'),
+        ),
+    ),
+    Capability(
+        key='reference-provenance',
+        title='Machine-checked provenance of reference constants',
+        claim='Every literature/experimental constant registered with a source note and a citation that must still resolve in the repository; a negative control proves the scanner catches a recalled (unsourced) mapping.',
+        level=REAL,
+        modules=(
+            'tensorbem.reference_provenance',
+        ),
+        symbols=(
+            'scan',
+            'Audit',
+            'Entry',
+        ),
+        tests=(
+            'tests/test_reference_provenance.py::test_every_citation_still_resolves',
+            'tests/test_reference_provenance.py::test_negative_control_catches_a_recalled_mapping',
+            'tests/test_reference_provenance.py::test_an_entry_must_carry_a_note_and_cited_entries_evidence',
+        ),
+        docs=(
+            ('docs/reference_provenance.md', 'tensorbem.reference_provenance'),
+        ),
+    ),
+    Capability(
+        key='state-space-realization',
+        title='State-space realisation of the Cummins radiation memory',
+        claim='Vector fitting of the added-mass/damping data (Sanathanan-Koerner) into a stable state-space realisation, bridged to the time-domain impulse-response convolution; stability, JSON serialisability and the frequency/time agreement are asserted.',
+        level=REAL,
+        modules=(
+            'tensorbem.state_space',
+        ),
+        symbols=(
+            'vector_fit_damping',
+            'state_space_from_fit',
+            'StateSpaceRealization',
+        ),
+        tests=(
+            'tests/test_freq_time_bridge.py::test_state_space_stability',
+            'tests/test_freq_time_bridge.py::test_freq_time_bridge_workflow',
+        ),
+        docs=(
+            ('docs/sk_fit_sanathanan_koerner.md', '`state_space` / `time_domain`'),
+        ),
+    ),
+    Capability(
+        key='stf-fullspeed-strip',
+        title='STF (1970) strip theory with forward speed',
+        claim='Salvesen-Tuck-Faltinsen strip theory with forward speed: encounter frequency, speed-correction terms that vanish at zero speed, section coefficients converging to the Ursell values for a deep submerged circle, and a grid-convergence index on a33.',
+        level=REAL,
+        modules=(
+            'tensorbem.stf_fullspeed',
+        ),
+        symbols=(
+            'encounter_frequency',
+            'stf_speed_correction_terms',
+            'compute_section_coefficients_circle',
+        ),
+        tests=(
+            'tests/test_stf_haskind_reg.py::TestEncounterFrequency::test_encounter_frequency_head_seas',
+            'tests/test_stf_haskind_reg.py::TestDeepSubmergedCircleA33::test_a33_vs_ursell',
+            'tests/test_stf_haskind_reg.py::TestConvergence::test_a33_gci',
+        ),
+        docs=(
+            ('docs/strip_theory_fullspeed_closure.md', 'tensorbem.stf_fullspeed'),
+        ),
+    ),
+    Capability(
+        key='tank-free-surface',
+        title='Slack-tank free-surface correction to hydrostatics',
+        claim='Liquid free-surface correction to the hydrostatic restoring matrix from polygon moments: translation invariance, the metacentric form of the diagonal entries and the cross-coupling produced by an L-shaped tank.',
+        level=REAL,
+        modules=(
+            'tensorbem.tank_free_surface',
+        ),
+        symbols=(
+            'free_surface_correction',
+            'polygon_moments',
+            'rectangular_free_surface',
+        ),
+        tests=(
+            'tests/test_tank_free_surface.py::test_correction_matrix_entries_and_metacentric_form',
+            'tests/test_tank_free_surface.py::test_cross_coupling_enters_matrix_for_l_shaped_tank',
+            'tests/test_tank_free_surface.py::test_correction_is_translation_invariant',
+        ),
+        docs=(
+            ('docs/tank_free_surface_correction.md', 'src/tensorbem/tank_free_surface.py'),
+        ),
+    ),
+    Capability(
+        key='wigley3-hullform',
+        title='Wigley III hullform geometry (frequency-domain verification hull)',
+        claim='Wigley III hull form generators for the frequency-domain radiation/diffraction/RAO verification cases: closed-form volume, block coefficient, wetted area, and mesh panel counts / on-surface convergence against the analytic values.',
+        level=REAL,
+        modules=(
+            'tensorbem.wigley3_freq',
+            'tensorbem.wigley3_hull',
+        ),
+        symbols=(
+            'wigley3_hydrostatic_reference',
+            'wigley3_wetted_area_reference',
+            'wigley3_displaced_volume',
+        ),
+        tests=(
+            'tests/test_multibody_frequency_dependence_3d.py::test_wigley_geometry_converges_to_analytic_values',
+        ),
+        docs=(
+            ('docs/multibody_frequency_dependence_3d.md', 'tensorbem.wigley3_hull'),
+        ),
+    ),
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
@@ -1131,65 +1568,14 @@ UNTESTED_MODULES: dict[str, str] = {
 #: reader of the published table could not tell that half the package was
 #: outside its scope.
 AUXILIARY_MODULES: dict[str, str] = {
-    "tensorbem.resistance":
-        "empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.",
-    "tensorbem.cathodic_protection":
-        "physics/geometry module cathodic_protection is pinned by tests/test_cathodic_protection.py, tests/test_cathodic_protection_artifacts.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.cp_galvanic":
-        "physics/geometry module cp_galvanic is pinned by tests/test_cp_galvanic.py, tests/test_cp_verification_m9204.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.cylinder_drift":
-        "physics/geometry module cylinder_drift is pinned by tests/test_cylinder_drift_asymptotic.py, tests/test_diffraction_drift_maturity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.drift_far_field3d":
-        "physics/geometry module drift_far_field3d is pinned by tests/test_diffraction_drift_maturity.py, tests/test_drift_far_field3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.figure_integrity":
-        "physics/geometry module figure_integrity is pinned by tests/test_figure_integrity.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.finite_depth_green":
-        "physics/geometry module finite_depth_green is pinned by tests/test_finite_depth_green.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.finite_depth_solver3d":
-        "physics/geometry module finite_depth_solver3d is pinned by tests/test_finite_depth3d_quadrature_solver.py, tests/test_finite_depth_solver3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.flexural_gravity":
-        "physics/geometry module flexural_gravity is pinned by tests/test_flexural_gravity.py, tests/test_flexural_gravity_evidence.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.haskind2d":
-        "physics/geometry module haskind2d is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.interior_panels":
-        "physics/geometry module interior_panels is pinned by tests/test_interior_panel_suppression.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.irregular_frequency":
-        "physics/geometry module irregular_frequency is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_irregular_frequency_study.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.net_source_reg":
-        "physics/geometry module net_source_reg is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.neumann_kelvin":
-        "physics/geometry module neumann_kelvin is pinned by tests/test_neumann_kelvin.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.nk_panel3d":
-        "physics/geometry module nk_panel3d is pinned by tests/test_nk_panel3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.panel_quadratic":
-        "physics/geometry module panel_quadratic is pinned by tests/test_panel_quadratic.py, tests/test_panel_quadratic_near_singular.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.pekeris_acoustics":
-        "physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.propeller":
-        "physics/geometry module propeller is pinned by tests/test_propeller_open_water.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.rankine_fs":
-        "physics/geometry module rankine_fs is pinned by tests/test_rankine_fs_panel.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.rankine_wave":
-        "physics/geometry module rankine_wave is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.reference_provenance":
-        "physics/geometry module reference_provenance is pinned by tests/test_reference_provenance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.series60":
-        "physics/geometry module series60 is pinned by tests/test_rankine_wave_resistance.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.state_space":
-        "physics/geometry module state_space is pinned by tests/test_state_space.py, tests/test_state_space_fit_invariants.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.stf_fullspeed":
-        "physics/geometry module stf_fullspeed is pinned by tests/test_stf_haskind_reg.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.tank_free_surface":
-        "physics/geometry module tank_free_surface is pinned by tests/test_tank_free_surface.py, tests/test_tank_free_surface_doc_pins.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.verification":
-        "namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.",
-    "tensorbem.wigley3_freq":
-        "physics/geometry module wigley3_freq is pinned by tests/test_irregular_frequency_sanitisation.py, tests/test_m7602_freq_domain_verification.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.wigley3_hull":
-        "physics/geometry module wigley3_hull is pinned by tests/test_multibody_frequency_dependence_3d.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.",
-    "tensorbem.analytic":
-        "closed-form reference library shared by the benchmark drivers; each reference it exports is"
-        " graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).",
+    'tensorbem.resistance':
+        'empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.',
+    'tensorbem.pekeris_acoustics':
+        'physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.',
+    'tensorbem.verification':
+        'namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.',
+    'tensorbem.analytic':
+        'closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).',
 }
 
 
