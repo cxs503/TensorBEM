@@ -105,3 +105,20 @@ GMRES 端到端（icosphere(1)，N=80，p=10，`max_leaf=16`，rtol=1e-12）：
 - 判别性 GMRES 实验：两个远分离面元簇（各 icosphere(0)）+ 小 `max_leaf`，把残差曲线分离开。
 - `far_fraction()` 的矛盾（⑤-2）单独立项核对 `_near_mask`/`far_fraction` 的配对定义。
 - FMM 入 BEM 真正求解路径（`solve_laplace_surface*`）的端到端加速比与精度包线，仍未做。
+
+## ⑥-2 结案（m16156）：`far_fraction() == 0` 的矛盾是调用缺 `setup`，不是 routing 缺陷
+
+本文件"局限（如实）"第 2 条记录的矛盾，已由 m16156 定位并修复，结论如下：
+
+- 证据脚本里写的是 `FMMOperator(p=4, max_leaf=25).far_fraction(targets)`，**没有先 `setup`**；
+  未 setup 时 `self.leaves == []`，旧代码对空树直接 `return 0.0`（`matvec` 同路径返回全零）。
+  即 `far_fraction = 0.0` 是 fail-silent API 的产物，与近/远场判据无关。
+- 同一几何 `setup` 之后：`far_fraction = 0.173913`（= 4/23 对），
+  `far_work_fraction = 0.093333`，`matvec` 相对稠密误差 1.3e-06。
+  远场路径确实参与 ⇒ 本文件记录的修复前 2.46 误差与本诊断量**不再矛盾**。
+- 修复：`matvec` / `far_fraction` / 新增的 `far_work_fraction` 在未 `setup` 时抛 `RuntimeError`；
+  `setup` 对空点集抛 `ValueError`；`far_fraction` 文档写明是**配对**口径（代价口径用
+  `far_work_fraction`）。证据脚本已改为先 `setup`。
+
+细节、机读证据与图见 `docs/fmm_far_fraction_diagnostic/README.md`，
+回归测试 `tests/test_fmm_operator_setup_guard.py`。

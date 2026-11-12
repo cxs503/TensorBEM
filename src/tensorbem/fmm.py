@@ -460,8 +460,17 @@ class FMMOperator:
     block_size: int = 2048
 
     def setup(self, points: FloatArray, charges: FloatArray | None = None) -> None:
-        """Build the octree and precompute multipole coefficients."""
+        """Build the octree and precompute multipole coefficients.
+
+        Must be called before :meth:`matvec` / :meth:`far_fraction`; both refuse
+        to answer otherwise (m16156: an un-set-up operator used to return zeros
+        and a far fraction of ``0.0``, which reads as a legitimate result).
+        """
         points = np.asarray(points, dtype=float)
+        if points.ndim != 2 or points.shape[1] != 3:
+            raise ValueError("points must have shape (N, 3)")
+        if len(points) == 0:
+            raise ValueError("setup(points) needs at least one source point")
         self.tree = build_octree(points, max_leaf=self.max_leaf)
         self.leaves = collect_leaves(self.tree)
         n_harm = (self.p + 1) ** 2
@@ -498,6 +507,15 @@ class FMMOperator:
         # same predicate as ``_is_near``: centre distance <= 2*max(size_t, size_s)
         leaf_dist = np.linalg.norm(centers[:, None, :] - centers[None, :, :], axis=2)
         self._leaf_near = leaf_dist <= 2.0 * np.maximum(sizes[:, None], sizes[None, :])
+
+    def _require_setup(self, caller: str) -> None:
+        """Fail loudly instead of answering from an un-built octree (m16156)."""
+        if self.tree is None or not self.leaves or self._leaf_centers is None:
+            raise RuntimeError(
+                f"FMMOperator.{caller}() called before setup(); call "
+                "setup(points[, charges]) first -- an un-set-up operator has no "
+                "octree and would return a silently wrong (all-zero) answer"
+            )
 
     def _build_multipoles(
         self, points: FloatArray, charges: FloatArray
@@ -622,9 +640,10 @@ class FMMOperator:
             raise ValueError("sources must have shape (M, 3)")
         if charges.shape != (sources.shape[0],):
             raise ValueError("charges must have shape (M,)")
+        self._require_setup("matvec")
         n = len(targets)
         result = np.zeros(n, dtype=float)
-        if n == 0 or not self.leaves:
+        if n == 0:
             return result
         if not self._multipole_cache_valid(sources, charges):
             # ``setup`` may be called without charges (geometry only) and the
@@ -712,9 +731,18 @@ class FMMOperator:
         return np.bincount(tgt, weights=vals, minlength=nb)
 
     def far_fraction(self, targets: FloatArray) -> float:
-        """Fraction of target-leaf pairs evaluated with the multipole expansion."""
+        """Fraction of *(target, source-leaf) pairs* evaluated with the multipoles.
+
+        This is a **pair** count, exactly one vote per (target, non-empty source
+        leaf) pair -- not a work count: a far pair against a leaf holding 30
+        sources costs 30x a near pair against a leaf holding one source.  Use
+        :meth:`far_work_fraction` for the cost-relevant number.  ``0.0`` means
+        every pair is summed directly, and then :meth:`matvec` *is* the dense
+        direct sum (pinned by ``tests/test_fmm_operator_setup_guard.py``).
+        """
+        self._require_setup("far_fraction")
         targets = np.asarray(targets, dtype=float)
-        if len(targets) == 0 or not self.leaves:
+        if len(targets) == 0:
             return 0.0
         leaf_of_target = self._route(targets)
         near_pairs = 0
@@ -728,6 +756,33 @@ class FMMOperator:
         if total_pairs == 0:
             return 0.0
         return 1.0 - near_pairs / total_pairs
+
+    def far_work_fraction(self, targets: FloatArray) -> float:
+        """Source-count-weighted far-field fraction: the cost-relevant version.
+
+        Each far ``(target, source-leaf)`` pair is weighted by the number of
+        sources in that leaf, i.e. the number of direct kernel evaluations the
+        multipole evaluation replaces.  Falls back to :meth:`far_fraction` when
+        every leaf holds the same number of sources.
+        """
+        self._require_setup("far_work_fraction")
+        targets = np.asarray(targets, dtype=float)
+        if len(targets) == 0:
+            return 0.0
+        leaf_of_target = self._route(targets)
+        leaf_sizes = np.array([len(idx) for idx in self._leaf_indices], dtype=float)
+        far_work = 0.0
+        total_work = 0.0
+        step = max(self.block_size, 1)
+        for start in range(0, len(targets), step):
+            tin = targets[start:start + step]
+            _, _, near = self._near_mask(tin, leaf_of_target[start:start + step])
+            weights = np.broadcast_to(leaf_sizes[None, :], near.shape)
+            far_work += float((weights * ~near).sum())
+            total_work += float(weights.sum())
+        if total_work == 0.0:
+            return 0.0
+        return far_work / total_work
 
     def _is_near(self, tleaf: OctreeNode, sleaf: OctreeNode) -> bool:
         """Determine if two leaves are in the near-field."""
