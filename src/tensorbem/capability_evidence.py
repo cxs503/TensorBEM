@@ -1265,6 +1265,37 @@ CAPABILITIES: tuple[Capability, ...] = (
         ),
     ),
     Capability(
+        key='irregular-frequency-predictor-verified',
+        title='Irregular-frequency predictor graded against an exact reference and the solver itself',
+        claim=(
+            'The waterplane predictor j_{m,1}/R_wp is shown to be exactly the rigid-lid '
+            'interior eigenvalue (residuals by substitution), the free-surface-consistent '
+            'interior eigenvalue of a surface-piercing cylinder is solved exactly '
+            '(tan(k_z T) = k_z/nu) and compared with it, and the bare BEM irregular band is '
+            'located empirically and found within a few per cent of the predictor -- '
+            'replacing the previous self-comparison.'
+        ),
+        level=REAL,
+        modules=(
+            'tensorbem.benchmarks.irregular_frequency_cylinder_exact',
+        ),
+        symbols=(
+            'rigid_lid_wavenumbers',
+            'exact_cylinder_modes',
+            'observed_spurious_band',
+        ),
+        tests=(
+            'tests/test_irregular_frequency_cylinder_exact.py::test_rigid_lid_mode_satisfies_the_interior_problem',
+            'tests/test_irregular_frequency_cylinder_exact.py::test_library_predictor_is_the_rigid_lid_eigenvalue_on_a_cylinder_mesh',
+            'tests/test_irregular_frequency_cylinder_exact.py::test_route_b_residuals_vanish',
+            'tests/test_irregular_frequency_cylinder_exact.py::test_empirical_band_tracks_route_a_within_ten_percent',
+        ),
+        docs=(
+            ('docs/irregular_frequency_cylinder_exact.md', 'Route B'),
+        ),
+        published_2026_10_29='REAL',
+    ),
+    Capability(
         key='neumann-kelvin-steady',
         title='Neumann-Kelvin steady forward-speed wave resistance',
         claim='Steady Neumann-Kelvin Green function with the Kelvin wave pattern, Froude scaling helpers and the wave-resistance integral, checked for far-field decay and against the Michell limit.',

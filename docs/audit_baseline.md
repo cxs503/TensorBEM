@@ -168,6 +168,7 @@ correction log inside the generated block records what changed.
 | 2-D Haskind excitation + net-source regularisation (strip theory) | **REAL** | `tensorbem.haskind2d`, `tensorbem.net_source_reg` | 3 node(s) in 1 file(s) | `docs/strip_theory_fullspeed_closure.md`, `docs/strip_theory_fullspeed_closure.md` |
 | Interior waterplane-lid panels (irregular-frequency suppression) | **REAL** | `tensorbem.interior_panels` | 2 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
 | Irregular-frequency prediction and sanitisation | **REAL** | `tensorbem.irregular_frequency` | 3 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
+| Irregular-frequency predictor graded against an exact reference and the solver itself | **REAL** | `tensorbem.benchmarks.irregular_frequency_cylinder_exact` | 4 node(s) in 1 file(s) | `docs/irregular_frequency_cylinder_exact.md` |
 | Neumann-Kelvin steady forward-speed wave resistance | **REAL** | `tensorbem.neumann_kelvin` | 2 node(s) in 1 file(s) | `docs/neumann_kelvin_verification.md` |
 | 3-D steady Neumann-Kelvin panel method (Rankine + Havelock kernel) | **REAL** | `tensorbem.nk_panel3d` | 3 node(s) in 1 file(s) | `docs/m10003/REPORT.md` |
 | Quadratic (6-node) curved-triangle panel operator | **REAL** | `tensorbem.panel_quadratic` | 2 node(s) in 1 file(s) | `docs/quadratic_near_singular/README.md` |
@@ -181,7 +182,7 @@ correction log inside the generated block records what changed.
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Pekeris two-layer shallow-water normal modes with an elastic ice cover | **REAL** | `tensorbem.pekeris_acoustics` | 3 node(s) in 1 file(s) | `docs/pekeris_w22_cross_route/report.md` |
 
-Counts: **72** REAL — 72 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **73** REAL — 73 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
