@@ -33,6 +33,7 @@ import numpy as np
 import pytest
 
 from tensorbem.neumann_kelvin import (
+    steady_free_surface_residual,
     KELVIN_ANGLE_DEG,
     NeumannKelvinResult,
     KelvinWavePattern,
@@ -310,35 +311,33 @@ class TestKelvinAngleEdgeCases:
 # ============================================================================
 
 class TestKnownNumericalIssues:
-    """Document known numerical issues in the Neumann-Kelvin solver."""
+    """The kernel defect, carried as declared withdrawal of evidence (m16913).
 
-    def test_rw_values_are_unphysically_large(self):
-        """Document: Rw values are orders of magnitude too large.
+    Mission m16830 recorded here that the solver returned ``C_w ~ 1e8`` and
+    that ``R_w`` oscillated between huge values and zero with speed.  m16913
+    traced both symptoms to their causes -- an invalid principal-value
+    quadrature and a vectorized route that replaced the wave integral by an
+    ad-hoc ``K_0`` heuristic -- and fixed them, while establishing that the
+    *kernel form itself* is the frequency-domain Havelock kernel and violates
+    the steady free-surface condition.  The numbers therefore moved, but they
+    are still not evidence, and the result now says so.
+    """
 
-        For a Wigley hull at Fn=0.23, Cw should be O(1e-3).
-        The solver produces Cw values of O(1e8), indicating a
-        fundamental numerical issue.
-        """
-        L, B, T = 2.0, 0.2, 0.125
-        U = 0.5
-        mesh = wigley_hull_mesh(L, B, T, 8, 4)
-        result = solve_nk_wave_resistance(mesh.vertices, mesh.faces, U)
-        assert result.cw > 1.0, \
-            "Expected unphysically large Cw (known issue)"
-
-    def test_rw_oscillates_with_speed(self):
-        """Document: Rw oscillates between huge values and zero with speed."""
+    def test_solver_declares_withheld_evidence(self):
+        """The solver result carries its evidence level instead of implying one."""
         L, B, T = 2.0, 0.2, 0.125
         mesh = wigley_hull_mesh(L, B, T, 8, 4)
-        Rw_values = []
-        for U in [0.3, 0.5, 0.8, 1.0, 1.2, 1.5]:
-            result = solve_nk_wave_resistance(mesh.vertices, mesh.faces, U)
-            Rw_values.append(result.wave_resistance)
+        result = solve_nk_wave_resistance(mesh.vertices, mesh.faces, 0.5)
+        assert result.kernel_status.startswith("WITHHELD"), result.kernel_status
+        assert math.isfinite(result.cw) and math.isfinite(result.wave_resistance)
 
-        has_zero = any(r == 0.0 for r in Rw_values)
-        has_nonzero = any(r > 0.0 for r in Rw_values)
-        assert has_zero and has_nonzero, \
-            "Expected oscillation between zero and non-zero (known issue)"
+    def test_free_surface_condition_violated(self):
+        """Referee for any future kernel: the residual is O(0.01-1), not O(h)."""
+        residual = steady_free_surface_residual(
+            np.array([1.0, 0.0, 0.0]), np.array([0.0, 0.0, -0.6]), 5.0
+        )
+        assert residual["relative"] > 1.0e-2
+        assert abs(residual["residual"]) > 0.0
 
 
 if __name__ == "__main__":
