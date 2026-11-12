@@ -1,0 +1,262 @@
+{
+  "case": {
+    "geometry": "wall-sided surface-piercing circular cylinder",
+    "radius_m": 1.0,
+    "gravity": 9.80665,
+    "route_A": "rigid-lid interior eigenproblem: J_m(nu R) = 0 (this is the library formula)",
+    "route_B": "free-surface-consistent interior eigenproblem: tan(k_z T) = k_z/nu",
+    "route_C": "bare BEM sweep: condition-number peak + passivity loss"
+  },
+  "draft_ratio_sweep": [
+    {
+      "draft_ratio": 0.25,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 2.496714832764524,
+      "nu_route_B_free_surface": 3.4665214436222906,
+      "relative_gap_A_to_B": -0.3062712587224368,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 5.830519918077507
+    },
+    {
+      "draft_ratio": 0.5,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 7.8086911010827915,
+      "nu_route_B_free_surface": 8.170608464188966,
+      "relative_gap_A_to_B": -0.7056736266049335,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 8.951329370285663
+    },
+    {
+      "draft_ratio": 1.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 3.844818881872061,
+      "nu_route_B_free_surface": 4.534955148328009,
+      "relative_gap_A_to_B": -0.46971348579215666,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 6.668786839099812
+    },
+    {
+      "draft_ratio": 2.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 1.844126775572458,
+      "nu_route_B_free_surface": 3.0305097801079697,
+      "relative_gap_A_to_B": -0.20646170704319758,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 5.4515271929153775
+    },
+    {
+      "draft_ratio": 4.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 0.8671558700642961,
+      "nu_route_B_free_surface": 2.556393018675679,
+      "relative_gap_A_to_B": -0.05928957710048226,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 5.00696031506101
+    },
+    {
+      "draft_ratio": 8.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 0.4136913921124712,
+      "nu_route_B_free_surface": 2.4401488747317734,
+      "relative_gap_A_to_B": -0.014475886041946261,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 4.891797825175152
+    },
+    {
+      "draft_ratio": 16.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 0.201557511783316,
+      "nu_route_B_free_surface": 2.413257423795287,
+      "relative_gap_A_to_B": -0.003493977068659977,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 4.8647683310782694
+    },
+    {
+      "draft_ratio": 64.0,
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "vertical_wavenumber_route_B": 0.049408295474920344,
+      "nu_route_B_free_surface": 2.4053330627188663,
+      "relative_gap_A_to_B": -0.0002109915799019209,
+      "omega_route_A": 4.856262200023517,
+      "omega_route_B": 4.8567745963254225
+    }
+  ],
+  "angular_mode_table_at_T_over_R_0p5": [
+    {
+      "angular_order": 0,
+      "nu_route_A": 2.404825557695773,
+      "nu_route_B": 8.170608464188966,
+      "vertical_wavenumber": 7.8086911010827915,
+      "relative_gap": -0.7056736266049335
+    },
+    {
+      "angular_order": 1,
+      "nu_route_A": 3.831705970207512,
+      "nu_route_B": 8.640756547158519,
+      "vertical_wavenumber": 7.744720980457522,
+      "relative_gap": -0.5565543422852766
+    },
+    {
+      "angular_order": 2,
+      "nu_route_A": 5.135622301840683,
+      "nu_route_B": 9.23042512365438,
+      "vertical_wavenumber": 7.669819524358221,
+      "relative_gap": -0.4436201764228753
+    }
+  ],
+  "empirical": [
+    {
+      "mesh": {
+        "n_theta": 16,
+        "n_levels": 3,
+        "panels": 112
+      },
+      "mode_index": 2,
+      "samples": [
+        {
+          "nu": 2.1,
+          "added_mass": 1914.138068142758,
+          "damping": 53.24699500058724,
+          "condition_number": 5.25362043617726,
+          "relative_residual": 7.121208710547527e-16
+        },
+        {
+          "nu": 2.2,
+          "added_mass": 1922.3713136429728,
+          "damping": 52.23372878345691,
+          "condition_number": 6.751262779238703,
+          "relative_residual": 6.398572070827491e-16
+        },
+        {
+          "nu": 2.3,
+          "added_mass": 1933.0231437906455,
+          "damping": 62.928512657735546,
+          "condition_number": 10.190468963760718,
+          "relative_residual": 6.904841659760314e-16
+        },
+        {
+          "nu": 2.4,
+          "added_mass": 1954.9292264782857,
+          "damping": 146.6058043096008,
+          "condition_number": 23.154450385277855,
+          "relative_residual": 7.595241578362194e-16
+        },
+        {
+          "nu": 2.5,
+          "added_mass": 1856.5390243164436,
+          "damping": 138.3332347663446,
+          "condition_number": 38.52148952893562,
+          "relative_residual": 6.982575597630007e-16
+        },
+        {
+          "nu": 2.6,
+          "added_mass": 1906.6525017733259,
+          "damping": 1.6468943407482781,
+          "condition_number": 11.49991496006492,
+          "relative_residual": 7.166213641076157e-16
+        },
+        {
+          "nu": 2.6999999999999997,
+          "added_mass": 1919.370313467725,
+          "damping": -0.4939942544078658,
+          "condition_number": 6.550455616067444,
+          "relative_residual": 6.203797078893774e-16
+        },
+        {
+          "nu": 2.8,
+          "added_mass": 1926.106243283561,
+          "damping": -0.1979252173790175,
+          "condition_number": 4.599664003388439,
+          "relative_residual": 8.614475823296211e-16
+        }
+      ],
+      "nu_observed": 2.4862527523260707,
+      "max_condition_number": 38.52148952893562,
+      "passivity_violation": true,
+      "min_damping": -0.4939942544078658,
+      "draft_ratio": 1.0,
+      "label": "coarse",
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "nu_route_B_free_surface": 4.534955148328009,
+      "error_vs_route_A": 0.03385991735230839,
+      "error_vs_route_B": -0.45175802824803535
+    },
+    {
+      "mesh": {
+        "n_theta": 24,
+        "n_levels": 5,
+        "panels": 264
+      },
+      "mode_index": 2,
+      "samples": [
+        {
+          "nu": 2.1,
+          "added_mass": 1903.0123535600817,
+          "damping": 68.69253549120133,
+          "condition_number": 6.522034179900425,
+          "relative_residual": 9.516059555016032e-16
+        },
+        {
+          "nu": 2.2,
+          "added_mass": 1916.4187756991982,
+          "damping": 68.87294204425187,
+          "condition_number": 8.409111474442739,
+          "relative_residual": 1.0332670405677728e-15
+        },
+        {
+          "nu": 2.3,
+          "added_mass": 1939.3562146391087,
+          "damping": 85.838254081332,
+          "condition_number": 13.120195553438366,
+          "relative_residual": 9.894677186924168e-16
+        },
+        {
+          "nu": 2.4,
+          "added_mass": 2028.7668064756604,
+          "damping": 261.1133874630812,
+          "condition_number": 37.33933390883319,
+          "relative_residual": 1.1178585388433615e-15
+        },
+        {
+          "nu": 2.5,
+          "added_mass": 1771.389308508091,
+          "damping": 17.083408933696088,
+          "condition_number": 34.31358899333946,
+          "relative_residual": 9.6920182111465e-16
+        },
+        {
+          "nu": 2.6,
+          "added_mass": 1862.4004996810725,
+          "damping": -7.290758511838258,
+          "condition_number": 11.415440513102313,
+          "relative_residual": 9.353296465319918e-16
+        },
+        {
+          "nu": 2.6999999999999997,
+          "added_mass": 1883.7739826016468,
+          "damping": -2.7951266036124074,
+          "condition_number": 6.775576675655456,
+          "relative_residual": 9.009830541439772e-16
+        },
+        {
+          "nu": 2.8,
+          "added_mass": 1894.590393719515,
+          "damping": -0.7666976372114832,
+          "condition_number": 4.878407170764459,
+          "relative_residual": 9.81372908562867e-16
+        }
+      ],
+      "nu_observed": 2.4388942636112274,
+      "max_condition_number": 37.33933390883319,
+      "passivity_violation": true,
+      "min_damping": -7.290758511838258,
+      "draft_ratio": 1.0,
+      "label": "refined",
+      "nu_route_A_rigid_lid": 2.404825557695773,
+      "nu_route_B_free_surface": 4.534955148328009,
+      "error_vs_route_A": 0.014166809649219658,
+      "error_vs_route_B": -0.46220101768582594
+    }
+  ],
+  "max_abs_gap_A_to_B": 0.7056736266049335
+}
