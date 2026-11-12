@@ -80,7 +80,9 @@ def test_summary_counts_are_consistent() -> None:
     rows = ce.audit()
     counts = ce.summary(rows)
     assert counts["total"] == len(rows)
-    assert counts[ce.REAL] + counts[ce.WITHHELD] + counts[ce.STALE_CLAIM] + counts[ce.MISSING] == len(rows)
+    assert counts[ce.REAL] + counts[ce.WITHHELD] + counts[ce.STALE_CLAIM] + counts[ce.MISSING] + counts[
+        ce.STALE_PIN
+    ] == len(rows)
 
 
 def test_registry_keys_are_unique() -> None:
@@ -308,3 +310,91 @@ def test_every_untested_reason_is_still_true() -> None:
             token = token.rstrip(".,;:)")
             if token.startswith("tests/") and token.endswith(".py"):
                 assert (root / token).is_file(), (module, token)
+
+# --------------------------------------------------------------------------
+# m16488: a resolved-looking citation must be resolved, not silently dropped
+# --------------------------------------------------------------------------
+
+
+def test_class_qualified_node_ids_resolve(synthetic_repo: pathlib.Path) -> None:
+    """``Klass::test_x`` -- the form pytest prints -- must resolve like a bare name.
+
+    Before m16488 only bare function names were registered, so six published
+    rows whose citations were written correctly (``TestCLI::test_all_cases``)
+    graded as WITHHELD while their tests ran green.
+    """
+
+    root = synthetic_repo
+    (root / "tests" / "test_classy.py").write_text(
+        "from toypkg.good import compute\n\n\nclass TestCompute:\n"
+        "    def test_doubles(self):\n        assert compute(2.0) == 4.0\n",
+        encoding="utf-8",
+    )
+    nodes = ce._test_nodes(root)
+    assert "TestCompute::test_doubles" in nodes["tests/test_classy.py"]
+    assert "test_doubles" in nodes["tests/test_classy.py"]
+
+    row = ce.grade(
+        _row("good", ["toypkg.good"], ["compute"],
+             ["tests/test_classy.py::TestCompute::test_doubles"], [("docs/good.md", "documented")]),
+        root, nodes,
+    )
+    assert row.level == ce.REAL, row.reasons
+
+
+def test_unresolvable_node_on_a_supported_row_fails_instead_of_degrading(
+    synthetic_repo: pathlib.Path,
+) -> None:
+    """A citation that no longer resolves must not be published as WITHHELD."""
+
+    root = synthetic_repo
+    nodes = ce._test_nodes(root)
+    row = ce.grade(
+        _row("good", ["toypkg.good"], ["compute"],
+             ["tests/test_good.py::TestRenamed::test_compute_doubles"], [("docs/good.md", "documented")]),
+        root, nodes,
+    )
+    assert row.level == ce.STALE_PIN, (row.level, row.reasons)
+    assert not row.ok
+    assert row.stale_tests == ["tests/test_good.py::TestRenamed::test_compute_doubles"]
+
+    # ... while a node in a file that does not exist yet stays an honest WITHHELD.
+    unwritten = ce.grade(
+        _row("good", ["toypkg.good"], ["compute"],
+             ["tests/test_not_written_yet.py::test_compute_doubles"], [("docs/good.md", "documented")]),
+        root, nodes,
+    )
+    assert unwritten.level == ce.WITHHELD, unwritten.reasons
+    assert unwritten.missing_tests and not unwritten.stale_tests
+
+
+def test_documentation_anchor_must_exist_to_count(synthetic_repo: pathlib.Path) -> None:
+    """A declared doc anchor that does not resolve is a broken claim, not a gap."""
+
+    root = synthetic_repo
+    nodes = ce._test_nodes(root)
+    tests = ["tests/test_good.py::test_compute_doubles"]
+
+    missing_file = ce.grade(
+        _row("good", ["toypkg.good"], ["compute"], tests, [("docs/good.md", "never written")]),
+        root, nodes,
+    )
+    assert missing_file.level == ce.STALE_PIN, missing_file.reasons
+
+    absent_doc = ce.grade(
+        _row("good", ["toypkg.good"], ["compute"], tests, [("docs/renamed_away.md", "documented")]),
+        root, nodes,
+    )
+    assert absent_doc.level == ce.STALE_PIN, absent_doc.reasons
+    assert "file missing" in absent_doc.stale_docs[0]
+
+
+def test_no_published_row_carries_an_unresolvable_citation() -> None:
+    """The shipped registry must not name a test node or doc anchor that is gone."""
+
+    broken = [
+        (row.capability.key, row.stale_tests, row.stale_docs)
+        for row in ce.audit()
+        if row.stale_tests or row.stale_docs
+    ]
+    assert broken == [], broken

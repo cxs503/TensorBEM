@@ -153,7 +153,7 @@ correction log inside the generated block records what changed.
 | Thin-ship Michell resistance for general hullforms and tandem pairs | **REAL** | `tensorbem.thin_ship_michell`, `tensorbem.ellipsoid_kochin` (+1) | 3 node(s) in 2 file(s) | `docs/michell_validation.md` |
 | Near-singular quadrature and conditioning diagnostics | **REAL** | `tensorbem.quadrature_diagnostics`, `tensorbem.quadrature_diagnostics_2d` (+1) | 3 node(s) in 3 file(s) | `docs/capability_registry_coverage.md` |
 | Panel and triangle mesh geometry with closure checks | **REAL** | `tensorbem.geometry`, `tensorbem.geometry3d` | 3 node(s) in 2 file(s) | `docs/three_dimensional_bem.md` |
-| Parametric KCS-class hull with published-particular anchors | **WITHHELD** | `tensorbem.kcs_hull` | 2 node(s) in 1 file(s) | `docs/m6656/README.md` |
+| Parametric KCS-class hull with published-particular anchors | **REAL** | `tensorbem.kcs_hull` | 2 node(s) in 1 file(s) | `docs/m14775/hull_reference_quadrature.md`, `docs/m14775/hull_reference_quadrature.md` |
 | Multihull added mass and damping with exact zero/infinite-frequency asymptotes | **REAL** | `tensorbem.multibody3d`, `tensorbem.benchmarks.multibody_frequency_dependence_3d` | 3 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Wigley III diffraction/RAO and cylinder drift maturity surface | **REAL** | `tensorbem.diffraction_drift_maturity` | 2 node(s) in 1 file(s) | `docs/diffraction_drift_maturity.md` |
 | Second-order difference-frequency QTF and slow-drift spectra | **REAL** | `tensorbem.qtf_drift` | 2 node(s) in 1 file(s) | `docs/qtf_drift_oc4.md` |
@@ -161,26 +161,26 @@ correction log inside the generated block records what changed.
 | Independent finite-difference check of the flexural-gravity dispersion | **REAL** | `tensorbem.flexural_gravity_numeric` | 2 node(s) in 1 file(s) | `docs/flexural_gravity_verification/report.md` |
 | 3-D Laplace BEM cathodic protection (linear polarisation + Butler-Volmer) | **REAL** | `tensorbem.cathodic_protection`, `tensorbem.cp_galvanic` | 2 node(s) in 1 file(s) | `docs/cathodic_protection_linear/REPORT.md`, `docs/cathodic_protection_galvanic/REPORT.md` |
 | Exact MacCamy-Fuchs cylinder drift + 3-D far-field drift | **REAL** | `tensorbem.cylinder_drift`, `tensorbem.drift_far_field3d` | 2 node(s) in 2 file(s) | `docs/cylinder_drift_asymptotic.md`, `docs/drift_far_field_3d.md` |
-| Verification-figure integrity gate (reproducible from committed data) | **WITHHELD** | `tensorbem.figure_integrity` | — | `docs/dev_report_m15295_push_gate_figure_integrity_round1.md` |
-| Finite-depth Green function + dispersion solver | **WITHHELD** | `tensorbem.finite_depth_green` | — | `docs/BEM_FINITE_DEPTH_GREEN.md` |
+| Verification-figure integrity gate (reproducible from committed data) | **REAL** | `tensorbem.figure_integrity` | 2 node(s) in 1 file(s) | `docs/dev_report_m15295_push_gate_figure_integrity_round1.md` |
+| Finite-depth Green function + dispersion solver | **REAL** | `tensorbem.finite_depth_green` | 3 node(s) in 1 file(s) | `docs/BEM_FINITE_DEPTH_GREEN.md` |
 | 3-D finite-depth wave-radiation solver (eigenseries + quadrature kernels) | **REAL** | `tensorbem.finite_depth_solver3d` | 2 node(s) in 1 file(s) | `docs/m14568_quadrature_kernel_solver.md` |
 | Flexural-gravity (ice-cover) dispersion and mass loading | **REAL** | `tensorbem.flexural_gravity` | 3 node(s) in 1 file(s) | `docs/flexural_gravity_mass_loading/report.md` |
-| 2-D Haskind excitation + net-source regularisation (strip theory) | **WITHHELD** | `tensorbem.haskind2d`, `tensorbem.net_source_reg` | — | `docs/strip_theory_fullspeed_closure.md`, `docs/strip_theory_fullspeed_closure.md` |
+| 2-D Haskind excitation + net-source regularisation (strip theory) | **REAL** | `tensorbem.haskind2d`, `tensorbem.net_source_reg` | 3 node(s) in 1 file(s) | `docs/strip_theory_fullspeed_closure.md`, `docs/strip_theory_fullspeed_closure.md` |
 | Interior waterplane-lid panels (irregular-frequency suppression) | **REAL** | `tensorbem.interior_panels` | 2 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
 | Irregular-frequency prediction and sanitisation | **REAL** | `tensorbem.irregular_frequency` | 3 node(s) in 1 file(s) | `docs/m14563_irregular_frequency_sanitisation_report.md` |
-| Neumann-Kelvin steady forward-speed wave resistance | **WITHHELD** | `tensorbem.neumann_kelvin` | — | `docs/neumann_kelvin_verification.md` |
+| Neumann-Kelvin steady forward-speed wave resistance | **REAL** | `tensorbem.neumann_kelvin` | 2 node(s) in 1 file(s) | `docs/neumann_kelvin_verification.md` |
 | 3-D steady Neumann-Kelvin panel method (Rankine + Havelock kernel) | **REAL** | `tensorbem.nk_panel3d` | 3 node(s) in 1 file(s) | `docs/m10003/REPORT.md` |
 | Quadratic (6-node) curved-triangle panel operator | **REAL** | `tensorbem.panel_quadratic` | 2 node(s) in 1 file(s) | `docs/quadratic_near_singular/README.md` |
 | Propeller open-water performance by vortex-lattice lifting surface | **REAL** | `tensorbem.propeller` | 3 node(s) in 1 file(s) | `docs/dev_report_m4614_doc_claim_audit_ratchet.md` |
 | Rankine-source free-surface panel method (truncated domain) | **REAL** | `tensorbem.rankine_fs` | 3 node(s) in 1 file(s) | `docs/benchmarks/verified/bem_rankine_fs_panel/report.md` |
-| Rankine wave resistance + Series 60 empirical reference | **WITHHELD** | `tensorbem.rankine_wave`, `tensorbem.series60` | — | `docs/in32_b01/report.md`, `docs/in32_b01/report.md` |
+| Rankine wave resistance + Series 60 empirical reference | **REAL** | `tensorbem.rankine_wave`, `tensorbem.series60` | 4 node(s) in 1 file(s) | `docs/in32_b01/report.md`, `docs/in32_b01/report.md` |
 | Machine-checked provenance of reference constants | **REAL** | `tensorbem.reference_provenance` | 3 node(s) in 1 file(s) | `docs/reference_provenance.md` |
 | State-space realisation of the Cummins radiation memory | **REAL** | `tensorbem.state_space` | 2 node(s) in 1 file(s) | `docs/sk_fit_sanathanan_koerner.md` |
-| STF (1970) strip theory with forward speed | **WITHHELD** | `tensorbem.stf_fullspeed` | — | `docs/strip_theory_fullspeed_closure.md` |
+| STF (1970) strip theory with forward speed | **REAL** | `tensorbem.stf_fullspeed` | 3 node(s) in 1 file(s) | `docs/strip_theory_fullspeed_closure.md` |
 | Slack-tank free-surface correction to hydrostatics | **REAL** | `tensorbem.tank_free_surface` | 3 node(s) in 1 file(s) | `docs/tank_free_surface_correction.md` |
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 
-Counts: **64** REAL, **7** WITHHELD — 71 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **71** REAL — 71 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -225,6 +225,21 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.verification.seakeeping.benchmark_runner` — seakeeping study driver that assembles the hemisphere anchor, FK excitation, mesh-convergence and Wigley RAO runs it reports on; those modules are pinned by tests/test_seakeeping_verification.py.
 
 <!-- capability-matrix:end -->
+
+**Evidence references are gated, not decorative (m16488).** A row whose *declared* level is
+`REAL` used to degrade to `WITHHELD` whenever its named test node or doc anchor stopped
+resolving: `ok` stayed true, the suite stayed green and the published table silently
+understated the evidence. Six rows were in that state -- `figure_integrity`,
+`finite_depth_green`, `haskind-2d-excitation`, `neumann-kelvin-steady`,
+`rankine-wave-series60`, `stf-fullspeed-strip` -- all six with green, assertion-level tests
+(2 to 33 asserting nodes each, re-derived by `scripts/audit_module_pins.py`), and the seventh,
+`kcs-class-hull-anchors`, pointed its doc anchor at `docs/m6656/README.md`, a file that does not
+exist. The grader now registers `Class::test` node ids as well as bare names, and a citation
+that fails to resolve *inside a file that does exist* is `STALE_PIN`, a failing level; an absent
+test file stays `WITHHELD` because that test really has not been written yet. Published counts
+moved from 64 REAL / 7 WITHHELD to 71 REAL / 0 WITHHELD. The promoted rows keep their own
+limitations (the KCS row still withholds prediction-versus-EFD), and the Ursell 10.6 %
+honest-FAIL in section 5 is untouched: an evidence level is not an accuracy claim.
 
 ## 5. Error Judgment
 

@@ -33,6 +33,15 @@ Two further outputs keep the baseline honest at the margins:
   file (imports, ``benchmarks.<leaf>`` attribute access, ``tensorbem.<leaf>``
   text, or a ``python -m tensorbem...`` invocation) or carry an explicit
   ``UNTESTED_MODULES`` reason, so a new untested module cannot slip in quietly;
+``STALE_PIN`` closes the remaining hole.  A row whose *declared* level is
+``REAL`` but whose named test node (or doc anchor) no longer resolves used to
+degrade silently to ``WITHHELD``: the gate stayed green, the published table
+understated the evidence, and nothing pointed at the broken citation.  Mission
+m16488 found six such rows -- all six had green, assertion-level tests that the
+registry simply could not name.  Now a citation that does not resolve *in a
+file that exists* is ``STALE_PIN`` and fails the gate, while an absent test
+file stays ``WITHHELD`` (the test really has not been written).
+
 * ``render_document_block`` regenerates the section 4 block from the registry,
   and ``tests/test_capability_evidence.py`` fails when the published block
   drifts from the generated one.
@@ -69,10 +78,11 @@ STUB = "STUB"
 WITHHELD = "WITHHELD"
 NOT_SUPPORTED = "NOT_SUPPORTED"
 STALE_CLAIM = "STALE_CLAIM"
+STALE_PIN = "STALE_PIN"
 MISSING = "MISSING"
 
 #: Levels that make the published baseline wrong and therefore fail the gate.
-FAILING_LEVELS = (STALE_CLAIM, MISSING, STUB, MOCK)
+FAILING_LEVELS = (STALE_CLAIM, STALE_PIN, MISSING, STUB, MOCK)
 
 
 def repo_root(start: pathlib.Path | None = None) -> pathlib.Path:
@@ -115,8 +125,10 @@ class RowEvidence:
     stub_symbols: list[str] = field(default_factory=list)
     mock_markers: list[str] = field(default_factory=list)
     missing_tests: list[str] = field(default_factory=list)
+    stale_tests: list[str] = field(default_factory=list)
     detached_tests: list[str] = field(default_factory=list)
     missing_docs: list[str] = field(default_factory=list)
+    stale_docs: list[str] = field(default_factory=list)
     test_files: list[str] = field(default_factory=list)
     test_nodes: int = 0
     reasons: list[str] = field(default_factory=list)
@@ -142,8 +154,10 @@ class RowEvidence:
             "stub_symbols": self.stub_symbols,
             "mock_markers": self.mock_markers,
             "missing_tests": self.missing_tests,
+            "stale_tests": self.stale_tests,
             "detached_tests": self.detached_tests,
             "missing_docs": self.missing_docs,
+            "stale_docs": self.stale_docs,
             "reasons": self.reasons,
             "note": self.capability.note,
             "published_2026_10_29": self.capability.published_2026_10_29,
@@ -936,7 +950,10 @@ CAPABILITIES: tuple[Capability, ...] = (
             'tests/test_wigley_kcs_kochin_energy.py::test_kcs_class_hull_matches_kcs_principal_particulars',
             'tests/test_wigley_kcs_kochin_energy.py::test_kcs_class_mesh_passes_geometry_gate_and_reports_waterplane_deficit',
         ),
-        docs=(('docs/m6656/README.md', 'KCS-class'),),
+        docs=(
+            ('docs/m14775/hull_reference_quadrature.md', 'KCS-class hull'),
+            ('docs/m14775/hull_reference_quadrature.md', 'KCS-class Cb'),
+        ),
         note=(
             'Geometry anchors only: the hull is an idealisation (Cwp 17 % below the KCS value, no bulb '
             'or appendages), so KCS predictions and the EFD comparison remain WITHHELD (limitations L2/L3).'
@@ -1371,7 +1388,8 @@ CAPABILITIES: tuple[Capability, ...] = (
         tests=(
             'tests/test_rankine_wave_resistance.py::TestEnergyConservation::test_energy_flux_computation',
             'tests/test_rankine_wave_resistance.py::TestFreeSurfaceTruncation::test_truncation_study',
-            'tests/test_rankine_wave_resistance.py::TestSeries60::test_series60_hull_properties',
+            'tests/test_rankine_wave_resistance.py::TestSeries60::test_series60_Cw_positive',
+            'tests/test_rankine_wave_resistance.py::TestSeries60::test_series60_Cw_zero_at_zero_speed',
         ),
         docs=(
             ('docs/in32_b01/report.md', 'src/tensorbem/rankine_wave.py'),
@@ -1435,7 +1453,7 @@ CAPABILITIES: tuple[Capability, ...] = (
             'compute_section_coefficients_circle',
         ),
         tests=(
-            'tests/test_stf_haskind_reg.py::TestEncounterFrequency::test_encounter_frequency_head_seas',
+            'tests/test_stf_haskind_reg.py::TestZeroSpeedDegeneration::test_encounter_frequency_head_seas',
             'tests/test_stf_haskind_reg.py::TestDeepSubmergedCircleA33::test_a33_vs_ursell',
             'tests/test_stf_haskind_reg.py::TestConvergence::test_a33_gci',
         ),
@@ -1647,6 +1665,19 @@ def _test_nodes(root: pathlib.Path) -> dict[str, set[str]]:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         names: set[str] = set()
         for node in ast.walk(tree):
+            if not isinstance(node, ast.ClassDef):
+                continue
+            for item in node.body:
+                if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)) and item.name.startswith("test_"):
+                    # Register the pytest-qualified form *and* the bare name.
+                    # Class-qualified ids are what ``pytest --collect-only`` and
+                    # every human writes; before m16488 only bare names were
+                    # registered, so a correctly written ``Klass::test_x``
+                    # silently resolved to nothing and the row was published as
+                    # WITHHELD even though the test was green.
+                    names.add(f"{node.name}::{item.name}")
+                    names.add(item.name)
+        for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test_"):
                 names.add(node.name)
         out[f"tests/{path.name}"] = names
@@ -1792,9 +1823,17 @@ def grade(capability: Capability, root: pathlib.Path, nodes: dict[str, set[str]]
     for node_id in capability.tests:
         file_part, _, node = node_id.partition("::")
         names = nodes.get(file_part)
-        resolved_node = _resolve_test(node, names or set())
-        if resolved_node is None:
+        if names is None:
+            # the file itself does not exist: the test has not been written yet,
+            # which is an honest WITHHELD, not a broken reference.
             ev.missing_tests.append(node_id)
+            continue
+        resolved_node = _resolve_test(node, names)
+        if resolved_node is None:
+            # the file exists but the named node does not: a declared citation
+            # that no longer resolves.  Publishing this as WITHHELD would
+            # quietly lower a REAL claim and keep the gate green (m16488).
+            ev.stale_tests.append(node_id)
             continue
         if file_part not in ev.test_files:
             ev.test_files.append(file_part)
@@ -1806,8 +1845,10 @@ def grade(capability: Capability, root: pathlib.Path, nodes: dict[str, set[str]]
 
     for path, anchor in capability.docs:
         doc = root / path
-        if not doc.is_file() or anchor not in doc.read_text(encoding="utf-8"):
-            ev.missing_docs.append(f"{path}::{anchor}")
+        if not doc.is_file():
+            ev.stale_docs.append(f"{path}::{anchor} (file missing)")
+        elif anchor not in doc.read_text(encoding="utf-8"):
+            ev.stale_docs.append(f"{path}::{anchor} (anchor missing)")
 
     # ---- derive the level (the declared one is only an input claim) -------
     code_ok = not ev.missing_modules and not ev.missing_symbols
@@ -1833,6 +1874,13 @@ def grade(capability: Capability, root: pathlib.Path, nodes: dict[str, set[str]]
     if ev.mock_markers:
         ev.level = MOCK
         ev.reasons.append("randomness or a constant return in the graded module")
+        return ev
+    if ev.stale_tests or ev.stale_docs:
+        ev.level = STALE_PIN
+        if ev.stale_tests:
+            ev.reasons.append("named test node does not exist in its file")
+        if ev.stale_docs:
+            ev.reasons.append("declared documentation anchor does not resolve")
         return ev
     if not tests_ok:
         ev.level = WITHHELD
@@ -1923,7 +1971,7 @@ def capability_coverage(
 # rendering
 # --------------------------------------------------------------------------
 
-_LEVEL_ORDER = (REAL, WITHHELD, STUB, MOCK, MISSING, STALE_CLAIM, NOT_SUPPORTED)
+_LEVEL_ORDER = (REAL, WITHHELD, STUB, MOCK, MISSING, STALE_CLAIM, STALE_PIN, NOT_SUPPORTED)
 
 
 def summary(rows: Sequence[RowEvidence]) -> dict[str, int]:
