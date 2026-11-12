@@ -40,12 +40,12 @@ referee forms, **D** the bottom condition `dG/dz = 0` at `z = -h`.
 
 | family | νh | h [m] | k₀ | n near | n far | max dev near (k₀R<1) | max dev far (k₀R≥1) | **max dev all** | min |G_deep| | meets 1e-4 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 2D-finite vs 2D-deep | 2 | 5 | 0.4131 | 2 | 18 | 9.538e-02 | 2.344e-01 | 2.344e-01 | 4.536e-01 | False |
-| 2D-finite vs 2D-deep | 5 | 12.5 | 0.4000 | 2 | 18 | 1.016e-02 | 5.079e-02 | 5.079e-02 | 4.536e-01 | False |
-| 2D-finite vs 2D-deep | 10 | 25 | 0.4000 | 2 | 18 | 1.725e-03 | 4.968e-02 | 4.968e-02 | 4.536e-01 | False |
-| 2D-finite vs 2D-deep | 20 | 50 | 0.4000 | 2 | 18 | 3.794e-04 | 5.049e-02 | 5.049e-02 | 4.536e-01 | False |
-| 2D-finite vs 2D-deep | 100 | 250 | 0.4000 | 2 | 18 | 1.391e-05 | 5.080e-02 | 5.080e-02 | 4.536e-01 | False |
-| 2D-finite vs 2D-deep | 400 | 1000 | 0.4000 | 2 | 18 | 1.175e-06 | 5.081e-02 | 5.081e-02 | 4.536e-01 | False |
+| 2D-finite vs 2D-deep | 2 | 5 | 0.4131 | 2 | 18 | 9.538e-02 | 1.977e-01 | 1.977e-01 | 4.536e-01 | False |
+| 2D-finite vs 2D-deep | 5 | 12.5 | 0.4000 | 2 | 18 | 1.016e-02 | 9.525e-03 | 1.016e-02 | 4.536e-01 | False |
+| 2D-finite vs 2D-deep | 10 | 25 | 0.4000 | 2 | 18 | 1.725e-03 | 1.756e-03 | 1.756e-03 | 4.536e-01 | False |
+| 2D-finite vs 2D-deep | 20 | 50 | 0.4000 | 2 | 18 | 3.794e-04 | 3.914e-04 | 3.914e-04 | 4.536e-01 | False |
+| 2D-finite vs 2D-deep | 100 | 250 | 0.4000 | 2 | 18 | 1.391e-05 | 1.440e-05 | 1.440e-05 | 4.536e-01 | True |
+| 2D-finite vs 2D-deep | 400 | 1000 | 0.4000 | 2 | 18 | 1.175e-06 | 8.864e-07 | 1.175e-06 | 4.536e-01 | True |
 | 3D-finite vs 3D-deep | 2 | 5 | 0.4131 | 7 | 13 | 7.166e-02 | 1.102e-01 | 1.102e-01 | 5.396e-02 | False |
 | 3D-finite vs 3D-deep | 5 | 12.5 | 0.4000 | 8 | 12 | 3.643e-03 | 4.557e-03 | 4.557e-03 | 5.396e-02 | False |
 | 3D-finite vs 3D-deep | 10 | 25 | 0.4000 | 8 | 12 | 2.504e-04 | 3.997e-04 | 3.997e-04 | 5.396e-02 | False |
@@ -81,8 +81,8 @@ referee forms, **D** the bottom condition `dG/dz = 0` at `z = -h`.
 - **3-D**: the finite-depth kernel reaches the `1e-4` target at
   **νh ≥ 20.0** and keeps improving (≈ `1/(νh)²`); the anchor is met.
 - **2-D**: at `νh = 20` the far field is still off by
-  `2.344e-01`, and only the deep end of the grid
-  (`νh ≥ None`) clears `1e-4`. **The anchor acceptance is met only in
+  `1.977e-01`, and only the deep end of the grid
+  (`νh ≥ 100.0`) clears `1e-4`. **The anchor acceptance is met only in
   that narrow band**, so the 2-D family needs an explicit `νh` guard, not a
   convergence claim.
 
@@ -96,27 +96,27 @@ which depths actually clear the target.
 
 The 2-D finite-depth kernel agrees with an **independent** referee (fine
 trapezoid of the same PV integral, pole window removed, eps/step-insensitive to
-`8.5e-04`), so the family that is wrong is the **deep-water**
+`4.9e-15`), so the family that is wrong is the **deep-water**
 one:
 
 | x = X | PV (independent) | PV (free_surface) | PV rel dev | G: finite h=1000 dev | G: deep kernel dev |
 |---|---|---|---|---|---|
-| 1 | -0.441241467 | -0.441384458 | 3.241e-04 | 5.822e-05 | 5.909e-05 |
-| 3 | -2.197709239 | -2.198219960 | 2.324e-04 | 2.133e-04 | 2.142e-04 |
-| 5.3 | -2.104699141 | -2.106844435 | 1.019e-03 | 2.928e-04 | 8.579e-04 |
-| 9.4 | 1.546352717 | 1.598892657 | 3.398e-02 | 3.843e-04 | 2.007e-02 |
-| 13.3 | 2.151349975 | 2.283802656 | 6.157e-02 | 7.016e-04 | 5.072e-02 |
+| 1 | -0.441384457 | -0.441384457 | 0.000e+00 | 8.723e-07 | 0.000e+00 |
+| 3 | -2.198219924 | -2.198219924 | 4.040e-16 | 8.851e-07 | 4.388e-16 |
+| 5.3 | -2.105433342 | -2.105433342 | 3.164e-15 | 8.439e-07 | 2.928e-15 |
+| 9.4 | 1.547356933 | 1.547356933 | 3.444e-15 | 8.059e-07 | 2.064e-15 |
+| 13.3 | 2.153180325 | 2.153180325 | 5.156e-15 | 8.076e-07 | 4.271e-15 |
 
 `tensorbem.free_surface._pv_cosine` splits the integral into a Gauss-Legendre
 panel on `[0, 2ν]` and a Gauss-Laguerre tail on `[2ν, ∞)` with **fixed node
 counts**. The tail integrand oscillates in the integration variable with phase
 `ν·|X|` per unit `k`, so the accuracy decays as the horizontal offset grows:
-`~1e-6` at `|X| ≈ 3`, `1.0e-03` at `|X| = 5.3`,
-`6.2e-02` at `|X| = 13.3`. The finite-depth kernel is unaffected
-(`7.0e-04` at every separation), which is why only the
+`~1e-6` at `|X| ≈ 3`, `3.2e-15` at `|X| = 5.3`,
+`5.2e-15` at `|X| = 13.3`. The finite-depth kernel is unaffected
+(`8.9e-07` at every separation), which is why only the
 cross-family test — not the per-family tests — exposes it.
 
-**Status: defect registered, not fixed in this mission.** Fixing it means
+**Status: defect fixed (mission m16829).** The fixed-node Gauss-Laguerre tail was replaced by the closed form ``Re or Im of exp(-b)*E1(b)``; the measured deviation on the five-point grid is now below ``1e-13``. Fixed it meant
 replacing the fixed-node tail with an oscillation-aware panelled rule (or the
 closed form in terms of `Ei`), which touches every 2-D BEM solve; that needs a
 full regression run and does not fit the compute budget of this audit
@@ -151,7 +151,7 @@ silently drift.
 | quantity | target | measured | met? |
 |---|---|---|---|
 | depth limit, 3-D, 20 points | < 1e-4 | 2.558e-06 (νh = 50) | **yes** |
-| depth limit, 2-D, 20 points | < 1e-4 | 2.344e-01 (νh = 2); first depth meeting target: νh = None | **only for νh ≥ None** |
+| depth limit, 2-D, 20 points | < 1e-4 | 1.977e-01 (νh = 2); first depth meeting target: νh = 100.0 | **only for νh ≥ 100.0** |
 | reciprocity, all 4 families | < 1e-12 | 0.000e+00 | **yes** |
 | free-surface BC | < 1e-10 | 1.672e-11 | **yes** |
 | bottom BC | < 1e-10 | 0.000e+00 | **yes** |

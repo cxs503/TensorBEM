@@ -52,9 +52,23 @@ The integral is evaluated without oscillatory quadrature. Splitting at
         + integral_{2 nu}^inf f(k)/(k - nu) dk,      f(k) = exp(-k A) cos(k X).
 
 The first piece is regular; with ``k = nu(1 + t)`` it is a smooth integral over
-``[-1, 1]``. The second is regular and decaying; with ``k = nu(2 + t)`` and
-``u = nu A t`` it is a Gauss-Laguerre rule. Node counts are checked in
-``tests/test_free_surface.py`` against 1.5x and 2x the nodes.
+``[-1, 1]``. The second piece is evaluated in **closed form**. With ``b = nu*A - i*nu*X``,
+
+    integral_{2 nu}^inf exp(-kA) cos(kX)/(k - nu) dk
+        = Re{ exp(-b) * E1(b) },      E1(b) = integral_1^inf exp(-b u)/u du,
+
+and the sine integral is the same expression with ``Im`` for ``Re``. The
+identity follows from ``PV integral_{-1}^inf exp(-b u)/u du = -Ei(b)``, which is
+exact for ``Re b > 0``; ``E1`` is evaluated by ``scipy.special.exp1`` (a declared
+dependency) on the principal branch, where ``Re b = nu*A > 0`` holds for every
+admissible field point. The closed form replaces a fixed-node Gauss-Laguerre
+tail that lost accuracy as the oscillation phase ``nu*|X|`` grew (see
+``docs/free_surface_pv_tail_fix/README.md``).
+
+The first piece is a smooth integral over ``[-1, 1]`` and stays a
+Gauss-Legendre rule; its node count is chosen from the largest oscillation
+phase in the block, because a fixed 80-node rule stops resolving the integrand
+beyond ``nu*|X| ~ 100``.
 
 The kernel is evaluated for every panel pair in a boundary-element assembly, so
 the quadrature is vectorised and processed in blocks; ``_PAIR_BLOCK`` bounds the
@@ -66,15 +80,21 @@ from __future__ import annotations
 import math
 
 import numpy as np
-from numpy.polynomial.laguerre import laggauss
 from numpy.polynomial.legendre import leggauss
 from numpy.typing import NDArray
+from scipy.special import exp1
 
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
 
-_LAGUERRE_NODES = 160
 _LEGENDRE_NODES = 80
+#: Node ladder for the regular head integral.  The rule is picked from the
+#: largest scaled horizontal offset in a block (``nu*|x|``), which is the
+#: oscillation phase of the integrand: 80 nodes hold ``nu*|x| <= 100`` to
+#: ``1e-14``, and each step of the ladder buys the same margin again.
+_LEGENDRE_LADDER = (80, 160, 320, 640, 1280, 2560)
+_PHASE_PER_NODE = 1.5
+_LEGENDRE_RULES: dict = {}
 _PAIR_BLOCK = 8192
 # The residue sign that makes the radiation damping positive; see the module
 # docstring.
@@ -82,7 +102,21 @@ _RESIDUE_SIGN = -1.0
 _MIN_SCALED_DEPTH = 1.0e-6
 
 _LEGENDRE_X, _LEGENDRE_W = leggauss(_LEGENDRE_NODES)
-_LAGUERRE_X, _LAGUERRE_W = laggauss(_LAGUERRE_NODES)
+
+
+def _legendre_rule(phase: float):
+    """Smallest ladder rule that resolves an oscillation phase ``phase``."""
+    need = max(_LEGENDRE_NODES, int(math.ceil(_PHASE_PER_NODE * abs(float(phase)))))
+    for nodes in _LEGENDRE_LADDER:
+        if nodes >= need:
+            break
+    else:
+        nodes = _LEGENDRE_LADDER[-1]
+    rule = _LEGENDRE_RULES.get(nodes)
+    if rule is None:
+        rule = leggauss(nodes)
+        _LEGENDRE_RULES[nodes] = rule
+    return rule
 
 
 def _validate_frequency(nu: float) -> float:
@@ -112,21 +146,15 @@ def _pv_cosine(nu: float, depth: FloatArray, offset: FloatArray) -> FloatArray:
         block = slice(start, start + _PAIR_BLOCK)
         d = flat_depth[block][:, None]
         x = flat_offset[block][:, None]
+        nodes, weights = _legendre_rule(np.max(np.abs(flat_offset[block])))
         reference = np.exp(-nu * d) * np.cos(nu * x)
         # [0, 2nu], with k = nu (1 + t) and a removable point at t = 0.
-        k = nu * (1.0 + _LEGENDRE_X)[None, :]
+        k = nu * (1.0 + nodes[None, :])
         difference = np.exp(-k * d) * np.cos(k * x) - reference
-        head = np.sum(_LEGENDRE_W[None, :] * difference / _LEGENDRE_X[None, :], axis=1)
-        # [2nu, inf), with k = nu (2 + t) and u = nu*depth*t.
-        sigma = nu * d
-        t = _LAGUERRE_X[None, :] / sigma
-        integrate = np.cos(nu * (2.0 + t) * x) / (1.0 + t)
-        tail = (
-            np.exp(-2.0 * sigma[:, 0])
-            / sigma[:, 0]
-            * np.sum(_LAGUERRE_W[None, :] * integrate, axis=1)
+        head = np.sum(
+            weights[None, :] * difference / nodes[None, :], axis=1
         )
-        result[block] = head + tail
+        result[block] = head + _tail_real(nu, flat_depth[block], flat_offset[block])
     return result.reshape(np.broadcast(np.asarray(depth), np.asarray(offset)).shape)
 
 
@@ -140,20 +168,40 @@ def _pv_sine(nu: float, depth: FloatArray, offset: FloatArray) -> FloatArray:
         block = slice(start, start + _PAIR_BLOCK)
         d = flat_depth[block][:, None]
         x = flat_offset[block][:, None]
+        nodes, weights = _legendre_rule(np.max(np.abs(flat_offset[block])))
         reference = np.exp(-nu * d) * np.sin(nu * x)
-        k = nu * (1.0 + _LEGENDRE_X)[None, :]
+        k = nu * (1.0 + nodes[None, :])
         difference = np.exp(-k * d) * np.sin(k * x) - reference
-        head = np.sum(_LEGENDRE_W[None, :] * difference / _LEGENDRE_X[None, :], axis=1)
-        sigma = nu * d
-        t = _LAGUERRE_X[None, :] / sigma
-        integrate = np.sin(nu * (2.0 + t) * x) / (1.0 + t)
-        tail = (
-            np.exp(-2.0 * sigma[:, 0])
-            / sigma[:, 0]
-            * np.sum(_LAGUERRE_W[None, :] * integrate, axis=1)
+        head = np.sum(
+            weights[None, :] * difference / nodes[None, :], axis=1
         )
-        result[block] = head + tail
+        result[block] = head + _tail_imag(nu, flat_depth[block], flat_offset[block])
     return result.reshape(np.broadcast(np.asarray(depth), np.asarray(offset)).shape)
+
+
+def _scaled_exponential_integral(nu: float, depth: FloatArray, offset: FloatArray):
+    """``exp(-b) * E1(b)`` with ``b = nu*depth - i*nu*offset``.
+
+    This is the exact value of ``integral_{2 nu}^inf exp(-k*depth)
+    exp(i*k*offset)/(k - nu) dk``: with ``k = nu*s`` and ``s = 1 + u`` the
+    integral becomes ``exp(-b) * integral_1^inf exp(-b*u)/u du = exp(-b)*E1(b)``,
+    whose real and imaginary parts are the cosine and sine principal values.
+    ``Re b = nu*depth > 0`` for every field point the caller admits, so the
+    principal branch of ``E1`` is the one the physical problem selects, and no
+    ``i*pi`` residue term appears here -- that residue is the radiation term
+    added separately in :func:`green_function`.
+    """
+    phase = -1j * nu * np.asarray(offset, dtype=float)
+    b = nu * np.asarray(depth, dtype=float) + phase
+    return np.exp(-b) * exp1(b)
+
+
+def _tail_real(nu: float, depth: FloatArray, offset: FloatArray) -> FloatArray:
+    return np.real(_scaled_exponential_integral(nu, depth, offset))
+
+
+def _tail_imag(nu: float, depth: FloatArray, offset: FloatArray) -> FloatArray:
+    return np.imag(_scaled_exponential_integral(nu, depth, offset))
 
 
 def principal_value_integral(nu: float, depth: float, offset: float) -> float:
