@@ -38,14 +38,9 @@ from tensorbem import capability_evidence as ce
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 #: Modules whose deferred verdict is kept, with the reason it is kept.
-DOC_ANCHOR_DEBT = {
-    "tensorbem.pekeris_acoustics": (
-        "no documentation anchor for the Pekeris mode model exists in docs/ "
-        "(registered in docs/dev_report_m14725_reference_provenance.md §3), so a "
-        "graded row would be WITHHELD on the docs leg; the code and its asserting "
-        "tests do resolve, the anchor does not."
-    ),
-}
+DOC_ANCHOR_DEBT: dict[str, str] = {}
+"""Empty since m16708: the last deferred module (pekeris_acoustics) got its
+document anchor (docs/pekeris_w22_cross_route/report.md) and a graded row."""
 
 DEFERRED_SENTENCE = "no row of its own"
 
