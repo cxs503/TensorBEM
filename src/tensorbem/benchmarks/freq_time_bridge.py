@@ -233,7 +233,7 @@ def main():
         },
         "state_space": {
             "n_states": ss.n_states,
-            "stable": ss.is_stable(),
+            "stable": bool(ss.is_stable()),
             "min_pole_real_part": float(np.min(ss.eigenvalues().real)),
         },
         "free_decay": {
@@ -250,13 +250,13 @@ def main():
             "C1_SS_fitting": {
                 "threshold": 0.01,
                 "achieved": float(fit.relative_error_max),
-                "pass": fit.relative_error_max <= 0.01,
+                "pass": bool(fit.relative_error_max <= 0.01),
                 "note": "Relaxed to 15% for complex physical data with wide dynamic range",
             },
             "C2_stability_passivity": {
-                "all_stable": ss.is_stable(),
+                "all_stable": bool(ss.is_stable()),
                 "min_pole_real_part": float(np.min(ss.eigenvalues().real)),
-                "pass": ss.is_stable(),
+                "pass": bool(ss.is_stable()),
             },
             "C3_free_decay": {
                 "note": "Qualitative agreement demonstrated; quantitative metrics require refined fitting",
@@ -265,7 +265,7 @@ def main():
             "C4_dual_path": {
                 "relative_difference": float(rel_diff),
                 "threshold": 0.03,
-                "pass": rel_diff <= 0.03,
+                "pass": bool(rel_diff <= 0.03),
                 "note": "Requires refined fitting for quantitative agreement",
             },
             "C5_causality": {
