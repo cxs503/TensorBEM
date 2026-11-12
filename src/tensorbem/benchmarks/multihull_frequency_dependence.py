@@ -31,6 +31,7 @@ import json
 import math
 from dataclasses import dataclass
 from pathlib import Path
+import functools
 from typing import Any, Sequence
 
 import numpy as np
@@ -54,93 +55,85 @@ def _circle_vertices(n_panels: int, radius: float, cx: float, cy: float) -> np.n
 def single_cylinder_heave_coefficients(
     ka: float,
     a_over_f: float,
-    terms: int = 80,
+    terms: int = 40,
 ) -> tuple[float, float]:
-    """Heave added mass and damping for a submerged 2D circular cylinder.
+    """Heave added mass and damping of a submerged 2-D circular cylinder.
 
-    Uses the Ursell (1949) / Yeung (1981) multipole solution for a circular
-    cylinder of radius *a* with centre at depth *f* below the free surface.
+    Exact Ursell multipole reference: delegates to
+    :func:`tensorbem.analytic.ursell_cylinder_coefficients`, which solves the
+    truncated multipole system of Ursell (1949) / Yeung (1981) for a circular
+    cylinder of radius ``a`` whose axis lies a distance ``f`` below the free
+    surface of deep water.  Returned in the study's dimensionless convention
+
+        A_dimless = A / (rho*pi*a**2),   B_dimless = B / (rho*pi*a**2*omega).
 
     Parameters
     ----------
     ka : float
-        Wavenumber × radius (omega^2 * a / g).
+        Wavenumber x radius (``omega**2 * a / g``), non-negative.
     a_over_f : float
-        Ratio of radius to submergence depth (a/f ∈ (0, 1]).
-        a/f = 1 → surface-piercing; a/f << 1 → deeply submerged.
+        Radius / submergence, strictly inside ``(0, 1)``: the cylinder must be
+        fully submerged (``a/f = 1`` is a body touching the free surface, which
+        the multipole system does not cover).
     terms : int
-        Number of multipole terms.
+        Multipole truncation.  ``terms=40`` is converged: doubling to 120
+        changes both coefficients by less than ``1e-12`` on the whole
+        ``(ka, a/f)`` grid of this study (measured, ``docs/m16696/evidence.json``).
 
-    Returns
-    -------
-    (A_dimless, B_dimless)
-        A / (rho*pi*a^2)  and  B / (rho*pi*a^2*omega).
-        For deeply submerged cylinder: A → 1, B → 0.
+    Notes
+    -----
+    Mission 16696 replaced the previous body of this function.  It was a
+    hand-written eight-line approximation that *labelled itself* "Ursell (1949)
+    / Yeung (1981) multipole solution" but used invented coefficients
+    (``amp = 2*ka/(1+ka**2)``, damping ``~ amp**2``) plus two hand-patched
+    asymptotic branches.  Measured against the exact series it was off by
+    4.8 %-19.6 % in added mass and 97.7 %-99.9 % in damping
+    (``docs/m16696/before_analytic_vs_exact.json``), so the "analytic
+    cross-validation" in :func:`bem_cross_validation` was comparing the BEM
+    solver against a formula with no physical content.
     """
-    if ka <= 0.0 or not math.isfinite(ka):
-        return 1.0, 0.0
-
+    if not math.isfinite(ka) or ka < 0.0:
+        raise ValueError("ka must be a non-negative finite number")
     a_f = float(a_over_f)
-    if a_f <= 0.0 or a_f > 1.0:
-        raise ValueError("a_over_f must be in (0, 1]")
+    if not math.isfinite(a_f) or not 0.0 < a_f < 1.0:
+        raise ValueError(
+            "a_over_f must lie strictly between 0 and 1: the cylinder must be "
+            "fully submerged"
+        )
+    if isinstance(terms, bool) or not isinstance(terms, int) or terms < 1:
+        raise ValueError("terms must be a positive integer")
 
-    kh = ka / a_f  # wavenumber × depth = ka × (f/a)
+    ka_eff = ka if ka > 0.0 else 1.0e-9  # the exact series is defined for ka > 0
+    return _cached_ursell(ka_eff, a_f, terms)
 
-    # --- Multipole expansion (Ursell-type) ---
-    # The radiation potential for heave of a submerged cylinder is expanded
-    # in multipoles centred on the cylinder axis. The free-surface condition
-    # couples the multipoles through exponentially decaying terms ~ exp(-2n*kh).
-    #
-    # Added mass:  A/(rho*pi*a^2) = 1 + sum_n alpha_n(ka) * exp(-2*n*kh)
-    # Damping:     B/(rho*pi*a^2*omega) = sum_n beta_n(ka) * exp(-2*n*kh)
-    #
-    # The coefficients alpha_n, beta_n come from the free-surface Green
-    # function evaluated at the cylinder depth.
 
-    A_corr = 0.0
-    B_corr = 0.0
+@functools.lru_cache(maxsize=None)
+def _cached_ursell(ka: float, a_over_f: float, terms: int) -> tuple[float, float]:
+    """Memoised exact multipole evaluation (pure function of its arguments)."""
+    from tensorbem.analytic import ursell_cylinder_coefficients
 
-    for n in range(1, min(terms, 60) + 1):
-        exp_factor = math.exp(-2.0 * n * kh)
+    mu, nu = ursell_cylinder_coefficients(float(ka), float(a_over_f), int(terms))
+    return float(mu), float(nu)
 
-        # Multipole amplitude for heave radiation
-        # From the body BC: the nth multipole has amplitude proportional to
-        # the nth derivative of the free-surface Green function
-        if n == 1:
-            # Dominant dipole term
-            amp = 2.0 * ka / (1.0 + ka * ka)
-        else:
-            # Higher multipoles decay as (ka)^n for small ka
-            amp = 2.0 * ka ** n / (1.0 + ka ** (2 * n))
 
-        # Added mass correction (real part of interaction)
-        A_corr += amp * exp_factor * ((-1.0) ** (n + 1)) / n
+@functools.lru_cache(maxsize=None)
+def _cached_mutual_unbounded(d_over_a: float, terms: int) -> float:
+    """Memoised exact unbounded-fluid mutual added mass, per unit displaced mass."""
+    from tensorbem.analytic import two_cylinder_added_mass
 
-        # Damping (imaginary part: radiated wave energy)
-        # B is proportional to the square of the multipole amplitude
-        # times the group velocity factor
-        B_corr += amp * amp * exp_factor * ka / (1.0 + (n * ka) ** 2)
-
-    # Combine
-    A_dimless = 1.0 + A_corr * 0.5
-    B_dimless = max(B_corr * 0.25, 0.0)
-
-    # Enforce known asymptotic limits
-    if ka < 0.005:
-        # Long-wave limit: A → 1 + O(ka*exp(-2kh)), B → O(ka^2*exp(-2kh))
-        A_dimless = 1.0 + 2.0 * ka * math.exp(-2.0 * kh)
-        B_dimless = 2.0 * ka ** 2 * math.exp(-2.0 * kh)
-    elif ka > 80.0:
-        # Short-wave limit: A → 1 (geometric), B → 0
-        A_dimless = 1.0 - 0.5 * math.exp(-2.0 * kh) / ka
-        B_dimless = max(0.5 * math.exp(-2.0 * kh) / ka ** 2, 0.0)
-
-    return A_dimless, max(B_dimless, 0.0)
+    reference = two_cylinder_added_mass(1.0, float(d_over_a), 1.0, terms=int(terms))
+    return float(reference.mutual_added_mass_transverse / reference.displaced_mass_per_span)
 
 
 # ============================================================================
 # Analytical: mutual interaction between two submerged cylinders
 # ============================================================================
+
+#: Whether the free-surface *wave-mediated* mutual damping of a two-hull
+#: configuration is claimed by this study.  It is not: see
+#: :func:`mutual_interaction_coefficients`.
+MUTUAL_DAMPING_SUPPORTED = False
+
 
 def mutual_interaction_coefficients(
     ka: float,
@@ -148,92 +141,59 @@ def mutual_interaction_coefficients(
     d_over_a: float,
     terms: int = 40,
 ) -> tuple[float, float]:
-    """Mutual added mass and damping between two identical submerged cylinders.
+    """Mutual added mass of two equal cylinders; mutual damping NOT_SUPPORTED.
 
-    Two circular cylinders of radius *a*, centres at depth *f*, separated by
-    distance *d*. The mutual coefficients represent the hydrodynamic
-    interaction: the wave field radiated by one cylinder acting on the other.
+    Returns ``(A_mut_dimless, B_mut_dimless)`` in the study's normalisation
+    (per hull, divided by ``rho*pi*a**2``).
 
-    Parameters
-    ----------
-    ka : float
-        Wavenumber × radius.
-    a_over_f : float
-        Radius / submergence depth.
-    d_over_a : float
-        Separation / radius (d/a ≥ 2 for non-overlapping).
-    terms : int
-        Number of multipole terms.
+    ``A_mut`` is the **exact** mutual (transverse/heave) added mass of two equal
+    circular cylinders in an *unbounded* fluid, taken from
+    :func:`tensorbem.analytic.two_cylinder_added_mass` (truncated multipole
+    series with its own boundary-residual diagnostic).  An unbounded fluid
+    carries no length scale other than the geometry, so this value does not
+    depend on ``ka``: it is the ``a/f -> 0`` limit of the free-surface mutual
+    coefficient, exact to the multipole truncation.  It is **not** the
+    free-surface wave-mediated mutual coefficient of a catamaran at finite
+    ``ka``; the study therefore labels it as a deep-submergence reference and
+    not as an interference factor at the reported frequency.
 
-    Returns
-    -------
-    (A_mutual_dimless, B_mutual_dimless)
-        Mutual A and B, dimensionless by rho*pi*a^2 (per hull pair).
+    ``B_mut`` is returned as ``0.0`` and is **not claimed**:
+    :data:`MUTUAL_DAMPING_SUPPORTED` is ``False``.  The wave-mediated mutual
+    damping requires the free-surface two-body problem, for which this
+    repository has no closed form and no solver (the 2-D panel method takes one
+    closed contour per body), so the honest value is "not supported", not a
+    fitted number.  A ``sigma_B`` computed downstream is consequently a
+    single-hull quantity.
+
+    ``d_over_a <= 2`` returns ``nan``: the cylinders touch or overlap and the
+    unbounded-fluid reference is undefined there (NaN, never a silent zero).
+
+    Notes
+    -----
+    Mission 16696 removed the previous body: an invented series
+    (``amp = 2*ka**n/(1+ka**(2*n))``, arbitrary ``0.5``/``0.1``/``0.25`` scale
+    factors, a ``sin(n*kd)`` damping term and a made-up ``exp(-kd/2)`` far-field
+    decay) documented as "Ursell-type".  No reference for that series exists, so
+    its numbers are withdrawn rather than corrected (``docs/m16696/``).
     """
-    if ka <= 0.0 or d_over_a <= 0.0:
-        return 0.0, 0.0
-
+    if not math.isfinite(ka) or ka < 0.0:
+        raise ValueError("ka must be a non-negative finite number")
     a_f = float(a_over_f)
-    kh = ka / a_f
-    kd = ka * d_over_a  # wavenumber × separation
+    if not math.isfinite(a_f) or not 0.0 < a_f < 1.0:
+        raise ValueError(
+            "a_over_f must lie strictly between 0 and 1: the cylinder must be "
+            "fully submerged"
+        )
+    d = float(d_over_a)
+    if not math.isfinite(d) or d <= 0.0:
+        raise ValueError("d_over_a must be a positive finite number")
+    if d <= 2.0:
+        undefined = float("nan")
+        return undefined, undefined
+    if isinstance(terms, bool) or not isinstance(terms, int) or terms < 4:
+        raise ValueError("terms must be an integer of at least 4")
 
-    # The mutual interaction is mediated by the free-surface Green function
-    # evaluated at the horizontal distance d between the cylinders.
-    #
-    # For two cylinders at the same depth, the interaction has two parts:
-    # 1. Direct (near-field): decays as (a/d)^n through the Rankine part
-    # 2. Wave-field (far-field): oscillatory, decays as exp(-kd)/sqrt(kd)
-    #    for the free-surface reflected wave
-    #
-    # The mutual added mass is dominated by the near-field at small kd
-    # and by the wave-field at large kd.
-    # The mutual damping comes entirely from the wave-field (radiated waves
-    # from one cylinder reaching the other).
-
-    A_mut = 0.0
-    B_mut = 0.0
-
-    for n in range(1, min(terms, 30) + 1):
-        # Near-field interaction (Rankine part)
-        near = (1.0 / d_over_a) ** n
-        exp_depth = math.exp(-2.0 * n * kh)
-
-        # Wave-field interaction (free-surface mediated)
-        if kd > 0.01:
-            # Oscillatory wave field with exponential depth decay
-            wave_cos = math.cos(n * kd) * math.exp(-kd * 0.0)  # propagating
-            wave_decay = math.exp(-n * kh)  # depth attenuation
-        else:
-            wave_cos = 1.0
-            wave_decay = math.exp(-n * kh)
-
-        # Multipole amplitude (same as single-cylinder)
-        if n == 1:
-            amp = 2.0 * ka / (1.0 + ka * ka)
-        else:
-            amp = 2.0 * ka ** n / (1.0 + ka ** (2 * n))
-
-        # Mutual added mass: near-field + wave-field (real part)
-        A_mut += amp * near * exp_depth * ((-1.0) ** n) / n
-        A_mut += amp * wave_cos * wave_decay * 0.5 / (n * max(kd, 0.1))
-
-        # Mutual damping: wave-field only (imaginary part)
-        # Proportional to sin(kd) for the propagating wave
-        if kd > 0.01:
-            sin_kd = math.sin(n * kd)
-            B_mut += amp * amp * abs(sin_kd) * wave_decay / (n * kd)
-
-    # Scale factors
-    A_mut *= math.exp(-2.0 * kh)
-    B_mut *= ka * math.exp(-2.0 * kh) * 0.1
-
-    # Enforce decay at large distance
-    if d_over_a > 10.0:
-        decay = math.exp(-kd * 0.5) / d_over_a
-        A_mut *= decay
-        B_mut *= decay
-
-    return A_mut, max(B_mut, 0.0)
+    return _cached_mutual_unbounded(d, terms), 0.0
 
 
 # ============================================================================
@@ -438,32 +398,41 @@ def verify_asymptotics(
     radius: float = 0.3,
     depth: float = 0.8,
 ) -> dict[str, Any]:
-    """Verify zero- and infinite-frequency asymptotic limits."""
+    """Verify the zero- and high-frequency limits against the exact reference.
+
+    Both limits are read off the *exact* Ursell multipole series, so the
+    criteria below cannot be satisfied by a hand-patched branch.  The
+    high-frequency criterion is a **series-stability** statement
+    (``ka = 80`` against ``ka = 100``), not the "geometric limit
+    ``A = rho*pi*a**2``" that the pre-16696 fabricated formula asserted: with
+    the free surface acting as a rigid wall at infinite frequency the image
+    system *lowers* the heave added mass, and the exact value at
+    ``a/f = 0.375`` is ``A/(rho*pi*a**2) = 0.9318``, i.e. 6.8 % below the
+    ``A = 1`` claim that mission 16696 retracts.
+    """
     a_over_f = radius / depth
 
-    # Frequency scan for B_max
     kas = np.logspace(-2, 1.5, 60)
-    B_vals = []
-    A_vals = []
+    A_vals: list[float] = []
+    B_vals: list[float] = []
     for ka in kas:
         A, B = single_cylinder_heave_coefficients(float(ka), a_over_f)
         A_vals.append(A)
         B_vals.append(B)
     B_max = max(B_vals)
-    A_max = max(A_vals)
 
-    # Zero frequency
+    # Zero frequency: exact long-wave behaviour, B/B_max must collapse.
     ka_lo = 0.001
     A_lo, B_lo = single_cylinder_heave_coefficients(ka_lo, a_over_f)
     B_zero_ratio = B_lo / B_max if B_max > 0 else 0.0
 
-    # Infinite frequency
-    ka_hi = 100.0
-    A_hi, B_hi = single_cylinder_heave_coefficients(ka_hi, a_over_f)
-    A_geom = 1.0  # geometric limit for submerged circle: A/(rho*pi*a^2) = 1
-    A_inf_error = abs(A_hi - A_geom) / A_geom
+    # High frequency: exact series at two large ka, stability only.
+    A_80, B_80 = single_cylinder_heave_coefficients(80.0, a_over_f)
+    A_hi, B_hi = single_cylinder_heave_coefficients(100.0, a_over_f)
+    stability = abs(A_hi - A_80) / abs(A_hi)
+    retracted_geometric_claim = 1.0  # the pre-16696 "A(inf) = rho*pi*a**2" claim
 
-    # Energy: B >= 0
+    # Energy: B >= 0 everywhere is a property of the exact reference.
     B_all_pos = all(b >= -1e-15 for b in B_vals)
 
     return {
@@ -475,18 +444,23 @@ def verify_asymptotics(
             "pass": B_zero_ratio <= 0.01,
         },
         "infinite_frequency": {
-            "ka": ka_hi,
+            "ka_80": 80.0,
+            "A_dimless_80": A_80,
+            "ka": 100.0,
             "A_dimless": A_hi,
-            "A_geom": A_geom,
-            "A_rel_error": A_inf_error,
+            "A_series_stability": stability,
             "B_dimless": B_hi,
-            "pass": A_inf_error <= 0.02,
+            "retracted_geometric_claim": retracted_geometric_claim,
+            "retracted_claim_error": abs(A_hi - retracted_geometric_claim)
+            / retracted_geometric_claim,
+            "pass": stability <= 0.01,
         },
         "energy_conservation": {
             "B_all_non_negative": B_all_pos,
             "B_min": min(B_vals),
             "B_max": B_max,
         },
+        "mutual_damping_supported": MUTUAL_DAMPING_SUPPORTED,
     }
 
 
@@ -499,44 +473,46 @@ def negative_control_coincident(
     depth: float = 0.8,
     ka: float = 0.5,
 ) -> dict[str, Any]:
-    """Two hulls coincident (d -> 0): should show singularity trend, not crash."""
+    """Approaching contact (d -> 2a): the exact mutual coefficient must diverge.
+
+    The admissible range of the exact unbounded-fluid reference starts at
+    ``d = 2a``; configurations at or below contact return ``nan`` (see
+    :func:`mutual_interaction_coefficients`) and are recorded as undefined
+    rather than as a fabricated finite trend.
+    """
     a_over_f = radius / depth
     A_s, B_s = single_cylinder_heave_coefficients(ka, a_over_f)
 
-    # Scan d/a from small to moderate
-    d_over_a_values = [0.01, 0.05, 0.1, 0.2, 0.5, 1.0, 2.0, 5.0]
-    singularity_data = []
+    d_over_a_values = [1.0, 1.5, 2.0, 2.05, 2.2, 2.5, 3.0, 5.0, 10.0]
+    data = []
     for d_over_a in d_over_a_values:
-        try:
-            A_m, B_m = mutual_interaction_coefficients(ka, a_over_f, d_over_a)
-            sigma_A = (2 * (A_s + A_m)) / (2 * A_s) if abs(A_s) > 1e-30 else float('nan')
-            singularity_data.append({
+        A_m, B_m = mutual_interaction_coefficients(ka, a_over_f, d_over_a)
+        defined = bool(math.isfinite(A_m))
+        data.append(
+            {
                 "d_over_a": d_over_a,
                 "A_mutual": A_m,
                 "B_mutual": B_m,
-                "sigma_A": sigma_A,
-                "finite": True,
-            })
-        except Exception as e:
-            singularity_data.append({
-                "d_over_a": d_over_a,
-                "error": str(e),
-                "finite": False,
-            })
+                "sigma_A": (2.0 * (A_s + A_m)) / (2.0 * A_s)
+                if defined and abs(A_s) > 1e-30
+                else float("nan"),
+                "finite": defined,
+            }
+        )
 
-    # Check for singularity trend: |A_mutual| should grow as d -> 0
-    finite_vals = [s for s in singularity_data if s["finite"]]
-    if len(finite_vals) >= 2:
-        A_at_small = abs(finite_vals[0]["A_mutual"])
-        A_at_large = abs(finite_vals[-1]["A_mutual"])
-        singularity_trend = A_at_small > A_at_large
-    else:
-        singularity_trend = False
+    finite = [row for row in data if row["finite"]]
+    if len(finite) >= 2:
+        # |A_mut| must grow as the gap closes: compare nearest contact with the
+        # furthest point of the admissible ladder.
+        trend = abs(finite[0]["A_mutual"]) > abs(finite[-1]["A_mutual"])
+    else:  # pragma: no cover - the ladder above always has >= 2 finite entries
+        trend = False
 
     return {
         "ka": ka,
-        "data": singularity_data,
-        "singularity_trend_detected": singularity_trend,
+        "data": data,
+        "singularity_trend_detected": trend,
+        "undefined_below_contact": [row["d_over_a"] for row in data if not row["finite"]],
         "no_crash": True,
     }
 
@@ -643,7 +619,7 @@ def run_full_study(
     # Criteria evaluation
     criteria = {
         "B_zero_ratio_le_0.01": asymptotics["zero_frequency"]["pass"],
-        "A_inf_error_le_2pct": asymptotics["infinite_frequency"]["pass"],
+        "A_high_freq_series_stable": asymptotics["infinite_frequency"]["pass"],
         "B_non_negative": asymptotics["energy_conservation"]["B_all_non_negative"],
         "sigma_far_field_le_0.05": any(
             abs(r["sigma_A"] - 1.0) <= 0.05
