@@ -8,51 +8,57 @@ number below is rendered from the JSON that the same process wrote
 
 | level | panels | p | leaves | avg leaf | t_FMM (s) | t_dense (s) | FMM/dense | per-interaction vs per-pair cost |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 320 | 2 | 36 | 8.89 | 1.680 | 0.0051 | 328.0x | 328.0x |
-| 3 | 1280 | 2 | 60 | 21.33 | 8.138 | 0.0832 | 97.8x | 97.8x |
-| 2 | 320 | 4 | 36 | 8.89 | 4.849 | 0.0042 | 1146.9x | 1146.9x |
+| 2 | 320 | 2 | 56 | 5.71 | 0.055 | 0.0059 | 9.3x | 9.3x |
+| 3 | 1280 | 2 | 56 | 22.86 | 0.134 | 0.1121 | 1.2x | 1.2x |
+| 2 | 320 | 4 | 56 | 5.71 | 0.151 | 0.0068 | 22.2x | 22.2x |
 
 The last column is `c_fmm / (avg_leaf * c_dense)`: the cost of one
 multipole target-leaf interaction divided by the cost of summing the same
-leaf directly. It is **two to three orders of magnitude above one**: the
-pure-Python evaluation of the expansion costs far more than the numpy
-sum over the same sources. The measured FMM/dense wall-time ratio falls
-with `N` because the leaf count grows sub-linearly on a surface source set
-(36 -> 60 leaves for 320 -> 1280 panels), but it stays far above one (328x at 320 panels, 98x at 1280), so no
-measured `N` is accelerated by this implementation and the report's
-N-side complexity criterion is an extrapolation, not a measurement.
+leaf directly. The **FMM/dense wall-time ratio** is 9.32x at 320 panels, 1.20x at 1280 panels, 22.18x at 320 panels. A ratio below one is an acceleration on that configuration.
 
 ## 2. Routing on the audit surface
 
 | level | panels | leaves | near pairs | far (multipole) pairs |
 |---:|---:|---:|---:|---:|
-| 2 | 320 | 36 | 7442 | 4078 |
-| 3 | 1280 | 60 | 61738 | 15062 |
-| 2 | 320 | 36 | 7442 | 4078 |
+| 2 | 320 | 56 | 4640 | 13280 |
+| 3 | 1280 | 56 | 18632 | 53048 |
+| 2 | 320 | 56 | 4640 | 13280 |
 
 ## 3. Multipole accuracy, well-separated configuration (r/a = 8)
 
 | p | max relative error | far pairs |
 |---:|---:|---:|
-| 1 | 2.453e-02 | 256 |
-| 2 | 2.893e-03 | 256 |
-| 3 | 7.274e-04 | 256 |
-| 4 | 1.932e-04 | 256 |
-| 6 | 1.665e-05 | 256 |
-| 8 | 1.036e-06 | 256 |
+| 1 | 3.959e-04 | 546 |
+| 2 | 4.191e-05 | 546 |
+| 3 | 1.027e-06 | 546 |
+| 4 | 1.048e-07 | 546 |
+| 6 | 7.065e-10 | 546 |
+| 8 | 4.181e-12 | 546 |
 
 ## 4. Multipole accuracy on the surface itself (centroids -> vertices)
 
 | p | panels | targets | max relative error | near pairs | far pairs |
 |---:|---:|---:|---:|---:|---:|
-| 2 | 320 | 162 | 1.129e-03 | 3778 | 2054 |
-| 4 | 320 | 162 | 1.597e-04 | 3778 | 2054 |
+| 2 | 320 | 162 | 2.142e-04 | 2304 | 6768 |
+| 4 | 320 | 162 | 7.720e-05 | 2304 | 6768 |
 
 ## 5. The shipped "physics invariance" configuration routes nothing to the multipole
 
 `max_leaf = panel_count` gives **1** leaf, **320** near pairs and **0** multipole pairs; the
-recorded agreement (0.0e+00) is direct summation compared with
+recorded agreement (1.3e-15) is direct summation compared with
 direct summation, and the coincident centroid pairs clamp `r` to 1e-15 on
 both sides. It is a regression pin on the degeneracy branch, not a check of
 the multipole expansion.
+
+## 6. Measured cost scaling (criterion (c), `N in [1e3, 2e4]`)
+
+| panels | p | leaves | far fraction | t_FMM (s) | t_dense (s) | FMM/dense |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1280 | 2 | 56 | 0.740 | 0.153 | 0.149 | 1.03x |
+| 5120 | 2 | 56 | 0.740 | 1.199 | 1.881 | 0.64x |
+| 20480 | 2 | 272 | 0.936 | 9.310 | 23.343 | 0.40x |
+
+Measured log-log slopes: FMM **1.48**, dense **1.82**. The campaign report asked for a FMM slope
+in `[0.9, 1.2]`; the value above is the measurement that replaces the
+extrapolation the m14931 audit flagged.
 
