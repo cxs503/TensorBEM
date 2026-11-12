@@ -1,0 +1,599 @@
+{
+  "cases": {
+    "barge_L2_B1_T0.5": {
+      "dofs": [
+        "heave",
+        "pitch"
+      ],
+      "excluded": true,
+      "exclusion_reason": "wall-sided barge with sharp bilge/waterline corners never leaves the spurious irregular-frequency regime: even at 576 panels the heave added mass and damping change sign between frequencies, so no converged reference exists to compare against",
+      "kind": "barge L=2.0 B=1.0 T=0.5 (negative control)",
+      "levels": [
+        {
+          "level": [
+            2,
+            2,
+            2
+          ],
+          "n_faces": 24,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1565.9179374462562,
+                "damping": -2182.3058150096467
+              },
+              "pitch": {
+                "added_mass": 726.5819755334874,
+                "damping": -304.60001788935637
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 801.7275699117401,
+                "damping": -7025.300478785582
+              },
+              "pitch": {
+                "added_mass": 581.4613556337753,
+                "damping": -869.9286782061122
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": -415.6755544263132,
+                "damping": -2924.1449338994116
+              },
+              "pitch": {
+                "added_mass": 127.98762133932821,
+                "damping": -203.1120065548873
+              }
+            }
+          },
+          "volume": 2.0
+        },
+        {
+          "level": [
+            4,
+            4,
+            2
+          ],
+          "n_faces": 64,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1653.8901877057394,
+                "damping": -957.7971057042029
+              },
+              "pitch": {
+                "added_mass": 766.1386848042956,
+                "damping": -16.580409781643496
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 2626.843719654664,
+                "damping": -3003.764875847151
+              },
+              "pitch": {
+                "added_mass": 946.178615887705,
+                "damping": 295.23395646568997
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": -2134.6552629937933,
+                "damping": -885.4346930758279
+              },
+              "pitch": {
+                "added_mass": 571.6840945182417,
+                "damping": -4596.119081701097
+              }
+            }
+          },
+          "volume": 2.0
+        },
+        {
+          "level": [
+            8,
+            8,
+            4
+          ],
+          "n_faces": 256,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1427.9896808899484,
+                "damping": -657.4307351256235
+              },
+              "pitch": {
+                "added_mass": 659.899346784129,
+                "damping": 61.60546973749434
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 2123.5733639363652,
+                "damping": -1551.711755109317
+              },
+              "pitch": {
+                "added_mass": 755.106842814373,
+                "damping": 566.6773285937123
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": -1793.452280510614,
+                "damping": -454.9210677032695
+              },
+              "pitch": {
+                "added_mass": 1756.2424918244376,
+                "damping": 792.347147672563
+              }
+            }
+          },
+          "volume": 2.0
+        },
+        {
+          "level": [
+            12,
+            12,
+            6
+          ],
+          "n_faces": 576,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1359.4503455930771,
+                "damping": -609.2987681740076
+              },
+              "pitch": {
+                "added_mass": 623.6934112187247,
+                "damping": 71.95117835727082
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1989.7665540723362,
+                "damping": -1398.3869198461857
+              },
+              "pitch": {
+                "added_mass": 698.8351000382576,
+                "damping": 564.3559698971513
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": -1795.2223512630105,
+                "damping": 252.36085281565485
+              },
+              "pitch": {
+                "added_mass": 1411.7537935420723,
+                "damping": 2105.899561270002
+              }
+            }
+          },
+          "volume": 1.9999999999999958
+        }
+      ],
+      "reference": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1359.4503455930771,
+            "damping": -609.2987681740076
+          },
+          "pitch": {
+            "added_mass": 623.6934112187247,
+            "damping": 71.95117835727082
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 1989.7665540723362,
+            "damping": -1398.3869198461857
+          },
+          "pitch": {
+            "added_mass": 698.8351000382576,
+            "damping": 564.3559698971513
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": -1795.2223512630105,
+            "damping": 252.36085281565485
+          },
+          "pitch": {
+            "added_mass": 1411.7537935420723,
+            "damping": 2105.899561270002
+          }
+        }
+      },
+      "reference_faces": 576,
+      "reference_level": [
+        12,
+        12,
+        6
+      ]
+    },
+    "hemisphere_r1": {
+      "dofs": [
+        "heave",
+        "surge"
+      ],
+      "kind": "surface-piercing hemisphere, radius 1.0, centre (0,0,0)",
+      "levels": [
+        {
+          "level": [
+            6,
+            12
+          ],
+          "n_faces": 36,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1293.1517195460422,
+                "damping": 1616.8623852434114
+              },
+              "surge": {
+                "added_mass": 1447.4072991034277,
+                "damping": 460.94400396730697
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 946.9623198313632,
+                "damping": 1729.596539875922
+              },
+              "surge": {
+                "added_mass": 1295.6088490277552,
+                "damping": 2321.359778328411
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 804.4988123127476,
+                "damping": 1023.0092896348216
+              },
+              "surge": {
+                "added_mass": 605.5650166992815,
+                "damping": 3225.255390647285
+              }
+            }
+          },
+          "volume": 1.8660254037844386
+        },
+        {
+          "level": [
+            12,
+            24
+          ],
+          "n_faces": 144,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1295.7157942261092,
+                "damping": 1626.278117087734
+              },
+              "surge": {
+                "added_mass": 1456.768418700385,
+                "damping": 493.99334084199523
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 953.2595747706309,
+                "damping": 1677.4953140679072
+              },
+              "surge": {
+                "added_mass": 1287.6323549832714,
+                "damping": 2466.1453730169515
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 853.5131808684232,
+                "damping": 921.0699399055223
+              },
+              "surge": {
+                "added_mass": 573.0079395399523,
+                "damping": 3306.7824616682396
+              }
+            }
+          },
+          "volume": 2.0352761804100834
+        },
+        {
+          "level": [
+            20,
+            40
+          ],
+          "n_faces": 400,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1285.1219571112706,
+                "damping": 1623.5859683649935
+              },
+              "surge": {
+                "added_mass": 1435.7672488423368,
+                "damping": 490.5392969538134
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 944.2622243164576,
+                "damping": 1669.5741354812783
+              },
+              "surge": {
+                "added_mass": 1270.3490726975726,
+                "damping": 2457.4144441869184
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 854.4167240864558,
+                "damping": 926.4336862535099
+              },
+              "surge": {
+                "added_mass": 557.3847458231699,
+                "damping": 3300.5212980043398
+              }
+            }
+          },
+          "volume": 2.072953081518031
+        },
+        {
+          "level": [
+            28,
+            56
+          ],
+          "n_faces": 784,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1278.6850174445035,
+                "damping": 1621.2546012186094
+              },
+              "surge": {
+                "added_mass": 1422.8455139955993,
+                "damping": 486.28173635989936
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 938.4938575460121,
+                "damping": 1668.3894103454556
+              },
+              "surge": {
+                "added_mass": 1260.7239511120733,
+                "damping": 2442.3146252019424
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 851.169900221525,
+                "damping": 936.4587166787599
+              },
+              "surge": {
+                "added_mass": 550.6861567080413,
+                "damping": 3292.260264823248
+              }
+            }
+          },
+          "volume": 2.0834328020936717
+        },
+        {
+          "level": [
+            36,
+            72
+          ],
+          "n_faces": 1296,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1274.6390081377788,
+                "damping": 1619.6099348231735
+              },
+              "surge": {
+                "added_mass": 1414.7772028237819,
+                "damping": 483.2557611961571
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 934.8282365728253,
+                "damping": 1668.2101860660848
+              },
+              "surge": {
+                "added_mass": 1254.885167889813,
+                "damping": 2431.082148879298
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 848.4002873735379,
+                "damping": 943.9980026305
+              },
+              "surge": {
+                "added_mass": 547.0354259876593,
+                "damping": 3286.11372652679
+              }
+            }
+          },
+          "volume": 2.0877579789734826
+        }
+      ],
+      "reference": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1274.6390081377788,
+            "damping": 1619.6099348231735
+          },
+          "surge": {
+            "added_mass": 1414.7772028237819,
+            "damping": 483.2557611961571
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 934.8282365728253,
+            "damping": 1668.2101860660848
+          },
+          "surge": {
+            "added_mass": 1254.885167889813,
+            "damping": 2431.082148879298
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 848.4002873735379,
+            "damping": 943.9980026305
+          },
+          "surge": {
+            "added_mass": 547.0354259876593,
+            "damping": 3286.11372652679
+          }
+        }
+      },
+      "reference_faces": 1296,
+      "reference_level": [
+        36,
+        72
+      ]
+    },
+    "sphere_r1_z-0.5": {
+      "dofs": [
+        "heave"
+      ],
+      "kind": "floating sphere, radius 1.0, centre (0,0,-0.5)",
+      "levels": [
+        {
+          "level": [
+            12,
+            24
+          ],
+          "n_faces": 192,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1157.3838002576656,
+                "damping": 302.0291533002817
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1216.1935664495138,
+                "damping": 4.710607334073077
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 1274.2994841866418,
+                "damping": 344.8434331621351
+              }
+            }
+          },
+          "volume": 3.4411428382689038
+        },
+        {
+          "level": [
+            20,
+            40
+          ],
+          "n_faces": 600,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1166.879234252527,
+                "damping": 269.1737130496342
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1242.0193486749517,
+                "damping": 0.05507955955762498
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 1294.4378407357358,
+                "damping": 443.47107884917517
+              }
+            }
+          },
+          "volume": 3.5006368092858686
+        },
+        {
+          "level": [
+            28,
+            56
+          ],
+          "n_faces": 1120,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1157.3830333313933,
+                "damping": 275.26803829772
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1229.710258636283,
+                "damping": 0.5693202377690116
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 1284.0291403520694,
+                "damping": 417.295730401492
+              }
+            }
+          },
+          "volume": 3.516975632063255
+        }
+      ],
+      "reference": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1157.3830333313933,
+            "damping": 275.26803829772
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 1229.710258636283,
+            "damping": 0.5693202377690116
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 1284.0291403520694,
+            "damping": 417.295730401492
+          }
+        }
+      },
+      "reference_faces": 1120,
+      "reference_level": [
+        28,
+        56
+      ]
+    }
+  },
+  "metadata": {
+    "density": 1025.0,
+    "generated_utc": "2026-11-12T13:29:04+00:00",
+    "git_commit": "c0516db5b0dfd63c4af7b819a75e78782bad8d64",
+    "gravity": 9.80665,
+    "machine": "loongarch64",
+    "note": "built from source (pip --no-build-isolation --no-deps) because no loongarch64 wheel exists on the configured index; only this producer script imports capytaine",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "tool": "capytaine",
+    "version": "3.1.dev0",
+    "water_depth": "infinite"
+  },
+  "nu_grid": [
+    0.5,
+    1.0,
+    2.0
+  ]
+}
