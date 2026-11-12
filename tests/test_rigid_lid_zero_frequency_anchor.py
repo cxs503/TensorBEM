@@ -32,13 +32,31 @@ def payload():
 
 
 def test_exact_limits_are_the_imaged_sphere():
-    """ka -> 0 is the full sphere (2/3 rho pi a^3); ka -> inf is half of it."""
-    rigid = anchor.exact_rigid_lid_limit(1025.0, 1.0)
+    """The ka -> inf end is exact; the ka -> 0 end of this module is superseded.
+
+    ``anchor.exact_rigid_lid_limit`` returns the *imaged full sphere in
+    translation*, ``2/3 rho pi a^3``.  That image is wrong for a heaving
+    hemisphere: reflecting the body across ``z = 0`` reverses the outward normal
+    of the mirrored half, so the equivalent full sphere carries the *sliding*
+    data ``-V|cos theta|`` and its added mass is ``0.8309572 rho*grad``, not
+    ``rho*grad``.  See ``docs/hemisphere_zero_frequency_envelope.md`` and
+    ``docs/rigid_lid_zero_frequency_anchor/ERRATUM.md``; the historical artifact
+    is kept as the record of the superseded premise.
+    """
+    imaged = anchor.exact_rigid_lid_limit(1025.0, 1.0)
     release = anchor.exact_pressure_release_limit(1025.0, 1.0)
-    assert rigid == pytest.approx(2.0 / 3.0 * 1025.0 * math.pi, rel=1e-15)
+    assert imaged == pytest.approx(2.0 / 3.0 * 1025.0 * math.pi, rel=1e-15)
     assert release == pytest.approx(1025.0 * math.pi / 3.0, rel=1e-15)
-    # The rigid lid doubles the pressure-release (odd-symmetry) value.
-    assert rigid == pytest.approx(2.0 * release, rel=1e-15)
+    # The superseded value is the translating full sphere, i.e. twice the
+    # pressure-release value; the corrected rigid-lid value is below it.
+    assert imaged == pytest.approx(2.0 * release, rel=1e-15)
+    from tensorbem.benchmarks.hemisphere_zero_frequency_envelope import (
+        rigid_lid_heave_added_mass,
+    )
+
+    corrected = rigid_lid_heave_added_mass(1025.0, 1.0)
+    assert corrected < imaged
+    assert corrected / imaged == pytest.approx(0.8309570, abs=2e-6)
 
 
 def test_artifact_schema(payload):
