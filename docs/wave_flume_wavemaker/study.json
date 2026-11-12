@@ -1,0 +1,910 @@
+{
+  "case": "wave_flume_wavemaker",
+  "anchor": "CASE-WAVE-FLUME",
+  "depth": 1.0,
+  "gravity": 9.80665,
+  "kh_values": [
+    0.5,
+    1.0,
+    2.0,
+    3.0
+  ],
+  "panels_values": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "kinds": [
+    "piston",
+    "flap"
+  ],
+  "transfer": [
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "panels": 8,
+      "transfer_bem": 0.49925703832932217,
+      "transfer_analytic": 0.499338301580737,
+      "relative_error": 0.00016274187491241784,
+      "route_disagreement": 0.00016274187490874985,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.24962851916466108,
+      "probe_abs": 0.24966915079036758
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "panels": 16,
+      "transfer_bem": 0.49931798403193717,
+      "transfer_analytic": 0.499338301580737,
+      "relative_error": 4.068894522113026e-05,
+      "route_disagreement": 4.068894521735066e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.24965899201596858,
+      "probe_abs": 0.24966915079036756
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "panels": 32,
+      "transfer_bem": 0.4993332220850286,
+      "transfer_analytic": 0.499338301580737,
+      "relative_error": 1.0172453609711496e-05,
+      "route_disagreement": 1.0172453605931774e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.2496666110425143,
+      "probe_abs": 0.24966915079036756
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "panels": 64,
+      "transfer_bem": 0.49933703170002663,
+      "transfer_analytic": 0.499338301580737,
+      "relative_error": 2.5431269869423603e-06,
+      "route_disagreement": 2.54312698316261e-06,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.24966851585001332,
+      "probe_abs": 0.24966915079036756
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "panels": 8,
+      "transfer_bem": 0.9811504127417433,
+      "transfer_analytic": 0.9817893073130342,
+      "relative_error": 0.000650745090145032,
+      "route_disagreement": 0.0006507450901466141,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.49057520637087165,
+      "probe_abs": 0.49089465365651785
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "panels": 16,
+      "transfer_bem": 0.9816295290803987,
+      "transfer_analytic": 0.9817893073130342,
+      "relative_error": 0.00016274187490669217,
+      "route_disagreement": 0.00016274187490827505,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.49081476454019934,
+      "probe_abs": 0.49089465365651785
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "panels": 32,
+      "transfer_bem": 0.9817493593416959,
+      "transfer_analytic": 0.9817893073130342,
+      "relative_error": 4.068894521528912e-05,
+      "route_disagreement": 4.0688945216985276e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.49087467967084797,
+      "probe_abs": 0.4908946536565179
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "panels": 64,
+      "transfer_bem": 0.9817793201068565,
+      "transfer_analytic": 0.9817893073130342,
+      "relative_error": 1.0172453604075855e-05,
+      "route_disagreement": 1.0172453605772063e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.49088966005342827,
+      "probe_abs": 0.4908946536565179
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "panels": 8,
+      "transfer_bem": 1.6772077939451275,
+      "transfer_analytic": 1.6815789361329117,
+      "relative_error": 0.0025994272964885794,
+      "route_disagreement": 0.0025994272967684072,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.8386038969725638,
+      "probe_abs": 0.8407894680664569
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "panels": 16,
+      "transfer_bem": 1.68048465689653,
+      "transfer_analytic": 1.6815789361329117,
+      "relative_error": 0.0006507450901461765,
+      "route_disagreement": 0.0006507450912623922,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.840242328448265,
+      "probe_abs": 0.8407894680664569
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "panels": 32,
+      "transfer_bem": 1.6813052728240396,
+      "transfer_analytic": 1.6815789361329117,
+      "relative_error": 0.00016274187490796942,
+      "route_disagreement": 0.00016274187936972568,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.8406526364120198,
+      "probe_abs": 0.8407894680664569
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "panels": 64,
+      "transfer_bem": 1.681510514459702,
+      "transfer_analytic": 1.6815789361329117,
+      "relative_error": 4.0688945216563915e-05,
+      "route_disagreement": 4.06889630604768e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.840755257229851,
+      "probe_abs": 0.8407894680664569
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "panels": 8,
+      "transfer_bem": 1.921345536010988,
+      "transfer_analytic": 1.9326232258330251,
+      "relative_error": 0.00583543117524948,
+      "route_disagreement": 0.005835550327647445,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.960672768005494,
+      "probe_abs": 0.9663116135884234
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "panels": 16,
+      "transfer_bem": 1.929795134963461,
+      "transfer_analytic": 1.9326232258330251,
+      "relative_error": 0.0014633431036953138,
+      "route_disagreement": 0.0014638181953199945,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.9648975674817305,
+      "probe_abs": 0.9663116135884234
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "panels": 32,
+      "transfer_bem": 1.9319156594571127,
+      "transfer_analytic": 1.9326232258330251,
+      "relative_error": 0.0003661170819301421,
+      "route_disagreement": 0.0003680113996760333,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.9659578297285564,
+      "probe_abs": 0.9663116135884233
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "panels": 64,
+      "transfer_bem": 1.9324463002308678,
+      "transfer_analytic": 1.9326232258330251,
+      "relative_error": 9.154686738335021e-05,
+      "route_disagreement": 9.885090648777212e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.9662231501154339,
+      "probe_abs": 0.9663116135884234
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "panels": 8,
+      "transfer_bem": 0.25462270380494934,
+      "transfer_analytic": 0.2547437637605492,
+      "relative_error": 0.0004752224502486677,
+      "route_disagreement": 0.0001627418749089733,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.12731135190247467,
+      "probe_abs": 0.12733207416296
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "panels": 16,
+      "transfer_bem": 0.25471349448493114,
+      "transfer_analytic": 0.2547437637605492,
+      "relative_error": 0.00011882244013049803,
+      "route_disagreement": 4.0688945217200694e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.12735674724246557,
+      "probe_abs": 0.12736192946503633
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "panels": 32,
+      "transfer_bem": 0.25473619617368787,
+      "transfer_analytic": 0.2547437637605492,
+      "relative_error": 2.970666190060967e-05,
+      "route_disagreement": 1.0172453605915254e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.12736809808684393,
+      "probe_abs": 0.12736939374609263
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "panels": 64,
+      "transfer_bem": 0.2547418718470852,
+      "transfer_analytic": 0.2547437637605492,
+      "relative_error": 7.426731222284542e-06,
+      "route_disagreement": 2.5431269831764907e-06,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.1273709359235426,
+      "probe_abs": 0.1273712598448304
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "panels": 8,
+      "transfer_bem": 0.5271537538786262,
+      "transfer_analytic": 0.5280876235892608,
+      "relative_error": 0.001768399161274292,
+      "route_disagreement": 0.0006507450901464533,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.2635768769393131,
+      "probe_abs": 0.2637485099872207
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "panels": 16,
+      "transfer_bem": 0.5278540259170871,
+      "transfer_analytic": 0.5280876235892608,
+      "relative_error": 0.0004423464246065515,
+      "route_disagreement": 0.00016274187490821501,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.26392701295854354,
+      "probe_abs": 0.26396997192669436
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "panels": 32,
+      "transfer_bem": 0.5280292160265747,
+      "transfer_analytic": 0.5280876235892608,
+      "relative_error": 0.00011060202905167033,
+      "route_disagreement": 4.068894521729513e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.26401460801328736,
+      "probe_abs": 0.2640253509263272
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "panels": 64,
+      "transfer_bem": 0.5280730211894815,
+      "transfer_analytic": 0.5280876235892608,
+      "relative_error": 2.765147132211052e-05,
+      "route_disagreement": 1.017245360582327e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.26403651059474076,
+      "probe_abs": 0.2640391965212175
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "panels": 8,
+      "transfer_bem": 1.0352089901394956,
+      "transfer_analytic": 1.0412385908643427,
+      "relative_error": 0.005790796439691893,
+      "route_disagreement": 0.0025994272965094356,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.5176044950697478,
+      "probe_abs": 0.518953476903218
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "panels": 16,
+      "transfer_bem": 1.0397279929556953,
+      "transfer_analytic": 1.0412385908643427,
+      "relative_error": 0.0014507701903301714,
+      "route_disagreement": 0.0006507450902338847,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.5198639964778476,
+      "probe_abs": 0.5202025157108283
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "panels": 32,
+      "transfer_bem": 1.040860741110728,
+      "transfer_analytic": 1.0412385908643427,
+      "relative_error": 0.0003628848920217214,
+      "route_disagreement": 0.00016274187526458015,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.520430370555364,
+      "probe_abs": 0.5205150801554266
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "panels": 64,
+      "transfer_bem": 1.041144115902109,
+      "transfer_analytic": 1.0412385908643427,
+      "relative_error": 9.073325082501699e-05,
+      "route_disagreement": 4.068894664860377e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.5205720579510545,
+      "probe_abs": 0.5205932403408912
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "panels": 8,
+      "transfer_bem": 1.3348671832958876,
+      "transfer_analytic": 1.3495197132276016,
+      "relative_error": 0.010857588657723261,
+      "route_disagreement": 0.005835434018319493,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.6674335916479438,
+      "probe_abs": 0.6713512154713197
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "panels": 16,
+      "transfer_bem": 1.345840090297956,
+      "transfer_analytic": 1.3495197132276016,
+      "relative_error": 0.002726616657451561,
+      "route_disagreement": 0.0014633534755882844,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.672920045148978,
+      "probe_abs": 0.6739062011511828
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "panels": 32,
+      "transfer_bem": 1.3485987721248638,
+      "transfer_analytic": 1.3495197132276016,
+      "relative_error": 0.0006824213782955322,
+      "route_disagreement": 0.0003661576026075952,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.6742993860624319,
+      "probe_abs": 0.6745463490133626
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "panels": 64,
+      "transfer_bem": 1.3492894131672375,
+      "transfer_analytic": 1.3495197132276016,
+      "relative_error": 0.00017065335030435583,
+      "route_disagreement": 9.17078614808087e-05,
+      "condition_number": 1.0,
+      "relative_residual": 0.0,
+      "kochin_abs": 0.6746447065836187,
+      "probe_abs": 0.674706473857655
+    }
+  ],
+  "field": [
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.24966927442847983,
+      "elevation_abs_exact": 0.24966927442848078,
+      "relative_error": 7.658978819201253e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.24966915079036756,
+      "elevation_abs_exact": 0.2496691507903685,
+      "relative_error": 1.3849472967159773e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.24966915079036756,
+      "elevation_abs_exact": 0.2496691507903685,
+      "relative_error": 2.6912105146772672e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.24966915079036756,
+      "elevation_abs_exact": 0.2496691507903685,
+      "relative_error": 5.3424580929827285e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 0.5,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.24966915079036756,
+      "elevation_abs_exact": 0.2496691507903685,
+      "relative_error": 1.0664841125827675e-13
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.49116171209259246,
+      "elevation_abs_exact": 0.4911617120925918,
+      "relative_error": 3.800979234213678e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.49089465366496493,
+      "elevation_abs_exact": 0.4908946536649642,
+      "relative_error": 7.277350469255706e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.4908946536565179,
+      "elevation_abs_exact": 0.49089465365651713,
+      "relative_error": 1.43004930689188e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.4908946536565179,
+      "elevation_abs_exact": 0.49089465365651713,
+      "relative_error": 2.846576727680628e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 1.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.4908946536565179,
+      "elevation_abs_exact": 0.49089465365651713,
+      "relative_error": 5.686546058457849e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.8678192931761002,
+      "elevation_abs_exact": 0.8678192931761,
+      "relative_error": 1.1056558996990524e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.8407981933395255,
+      "elevation_abs_exact": 0.8407981933395253,
+      "relative_error": 2.24229986278046e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.8407894716600018,
+      "elevation_abs_exact": 0.8407894716600016,
+      "relative_error": 4.452230950710037e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.8407894680664569,
+      "elevation_abs_exact": 0.8407894680664567,
+      "relative_error": 8.88827578466891e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 2.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.8407894680664563,
+      "elevation_abs_exact": 0.840789468066456,
+      "relative_error": 1.7765531400427856e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 1.085924650801411,
+      "elevation_abs_exact": 1.0859246508014122,
+      "relative_error": 1.5654745187363406e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.9670246131914825,
+      "elevation_abs_exact": 0.9670246131914835,
+      "relative_error": 2.7889847899459064e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.9663185833389676,
+      "elevation_abs_exact": 0.9663185833389686,
+      "relative_error": 5.406372977479868e-15
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.9663116135884234,
+      "elevation_abs_exact": 0.9663116135884243,
+      "relative_error": 1.0719465488056629e-14
+    },
+    {
+      "kind": "piston",
+      "kh": 3.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.9663116129165118,
+      "elevation_abs_exact": 0.9663116129165127,
+      "relative_error": 2.133815976581116e-14
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.12737031198827004,
+      "elevation_abs_exact": 0.12737093381869186,
+      "relative_error": 4.882043360897394e-06
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.1273712598448304,
+      "elevation_abs_exact": 0.12737188188027457,
+      "relative_error": 4.8836166585474435e-06
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.1273712598448304,
+      "elevation_abs_exact": 0.12737188188027457,
+      "relative_error": 4.883616658547443e-06
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.1273712598448304,
+      "elevation_abs_exact": 0.12737188188027457,
+      "relative_error": 4.883616658547443e-06
+    },
+    {
+      "kind": "flap",
+      "kh": 0.5,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.1273712598448304,
+      "elevation_abs_exact": 0.12737188188027457,
+      "relative_error": 4.8836166585474435e-06
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.26359345474440266,
+      "elevation_abs_exact": 0.2635979494275068,
+      "relative_error": 1.7051282507743696e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.2640391965650495,
+      "elevation_abs_exact": 0.2640438118384853,
+      "relative_error": 1.747919621429619e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.2640391965212175,
+      "elevation_abs_exact": 0.2640438117946304,
+      "relative_error": 1.747919552259278e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.2640391965212175,
+      "elevation_abs_exact": 0.2640438117946304,
+      "relative_error": 1.7479195522592772e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 1.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.2640391965212175,
+      "elevation_abs_exact": 0.2640438117946304,
+      "relative_error": 1.7479195522592772e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.516037091857691,
+      "elevation_abs_exact": 0.516059187778885,
+      "relative_error": 4.2816641418915355e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.5205936715865493,
+      "elevation_abs_exact": 0.5206197273820119,
+      "relative_error": 5.00580094187967e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.5205932405193934,
+      "elevation_abs_exact": 0.5206192956109646,
+      "relative_error": 5.0046346750899534e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.5205932403408912,
+      "elevation_abs_exact": 0.5206192954321716,
+      "relative_error": 5.004634194122363e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 2.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.5205932403408912,
+      "elevation_abs_exact": 0.5206192954321716,
+      "relative_error": 5.0046341941222816e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "station_wavelengths": 0.25,
+      "elevation_abs_bem": 0.6886343968338325,
+      "elevation_abs_exact": 0.6886772410213374,
+      "relative_error": 6.221228894009492e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "station_wavelengths": 0.5,
+      "elevation_abs_bem": 0.6747175096550767,
+      "elevation_abs_exact": 0.6747708726972557,
+      "relative_error": 7.926323074508424e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "station_wavelengths": 1.0,
+      "elevation_abs_bem": 0.6747065772044475,
+      "elevation_abs_exact": 0.6747599597815157,
+      "relative_error": 7.911519686393544e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "station_wavelengths": 2.0,
+      "elevation_abs_bem": 0.674706473857655,
+      "elevation_abs_exact": 0.6747598566237356,
+      "relative_error": 7.911372567774968e-05
+    },
+    {
+      "kind": "flap",
+      "kh": 3.0,
+      "station_wavelengths": 4.0,
+      "elevation_abs_bem": 0.6747064738477021,
+      "elevation_abs_exact": 0.6747598566138009,
+      "relative_error": 7.911372553589814e-05
+    }
+  ],
+  "degeneracy": {
+    "kh": 1.0,
+    "panels": 64,
+    "piston_transfer_analytic": 0.9817893073130342,
+    "rows": [
+      {
+        "angle_degrees": 0.0,
+        "condition_number": 1.0,
+        "max_off_diagonal": 0.0,
+        "max_abs_entry": 0.0,
+        "transfer": 0.9817793201068565,
+        "transfer_over_piston": 1.0
+      },
+      {
+        "angle_degrees": 0.001,
+        "condition_number": 1.0000240479403304,
+        "max_off_diagonal": 3.3184503337540328e-06,
+        "max_abs_entry": 4.964342065388571e-06,
+        "transfer": 0.9817804771438813,
+        "transfer_over_piston": 0.9999910060446909,
+        "relative_error_vs_piston": 8.99395530906677e-06
+      },
+      {
+        "angle_degrees": 5.0,
+        "condition_number": 1.1400512764783615,
+        "max_off_diagonal": 0.011489985677994172,
+        "max_abs_entry": 0.013057431150451004,
+        "transfer": 0.9872832188217395,
+        "transfer_over_piston": 1.005595815179268,
+        "relative_error_vs_piston": 0.005595815179268104
+      },
+      {
+        "angle_degrees": 10.0,
+        "condition_number": 1.2993791712959846,
+        "max_off_diagonal": 0.023036074577152902,
+        "max_abs_entry": 0.026272296371130356,
+        "transfer": 0.9997666089620567,
+        "transfer_over_piston": 1.0183107531474578,
+        "relative_error_vs_piston": 0.01831075314745778
+      },
+      {
+        "angle_degrees": 20.0,
+        "condition_number": 1.6911676001983016,
+        "max_off_diagonal": 0.046514841505709226,
+        "max_abs_entry": 0.053811363912775925,
+        "transfer": 1.0482680901631398,
+        "transfer_over_piston": 1.0677118627743514,
+        "relative_error_vs_piston": 0.06771186277435137
+      },
+      {
+        "angle_degrees": 30.0,
+        "condition_number": 2.2193948222616267,
+        "max_off_diagonal": 0.0707696291390452,
+        "max_abs_entry": 0.0841332248929523,
+        "transfer": 1.13612891004141,
+        "transfer_over_piston": 1.1572023667183473,
+        "relative_error_vs_piston": 0.1572023667183473
+      }
+    ]
+  },
+  "evanescent_decay": {
+    "piston": [
+      {
+        "offset_wavelengths": 0.25,
+        "x_over_depth": 1.5707963267948966,
+        "elevation_abs": 0.49116171209259246,
+        "deviation_from_flat": 0.0005440239246553589
+      },
+      {
+        "offset_wavelengths": 0.5,
+        "x_over_depth": 3.141592653589793,
+        "elevation_abs": 0.49089465366496493,
+        "deviation_from_flat": 1.7207400401774338e-11
+      },
+      {
+        "offset_wavelengths": 1.0,
+        "x_over_depth": 6.283185307179586,
+        "elevation_abs": 0.4908946536565179,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 2.0,
+        "x_over_depth": 12.566370614359172,
+        "elevation_abs": 0.4908946536565179,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 3.0,
+        "x_over_depth": 18.84955592153876,
+        "elevation_abs": 0.4908946536565179,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 4.0,
+        "x_over_depth": 25.132741228718345,
+        "elevation_abs": 0.4908946536565179,
+        "deviation_from_flat": 0.0
+      }
+    ],
+    "flap": [
+      {
+        "offset_wavelengths": 0.25,
+        "x_over_depth": 1.5707963267948966,
+        "elevation_abs": 0.26359345474440266,
+        "deviation_from_flat": 0.001688165176563153
+      },
+      {
+        "offset_wavelengths": 0.5,
+        "x_over_depth": 3.141592653589793,
+        "elevation_abs": 0.2640391965650495,
+        "deviation_from_flat": 1.6600563161741624e-10
+      },
+      {
+        "offset_wavelengths": 1.0,
+        "x_over_depth": 6.283185307179586,
+        "elevation_abs": 0.2640391965212175,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 2.0,
+        "x_over_depth": 12.566370614359172,
+        "elevation_abs": 0.2640391965212175,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 3.0,
+        "x_over_depth": 18.84955592153876,
+        "elevation_abs": 0.2640391965212175,
+        "deviation_from_flat": 0.0
+      },
+      {
+        "offset_wavelengths": 4.0,
+        "x_over_depth": 25.132741228718345,
+        "elevation_abs": 0.2640391965212175,
+        "deviation_from_flat": 0.0
+      }
+    ]
+  },
+  "summary": {
+    "worst_transfer_error_all_meshes": 0.010857588657723261,
+    "worst_transfer_error_finest_mesh": 0.00017065335030435583,
+    "worst_route_disagreement": 0.005835550327647445,
+    "worst_field_error": 7.926323074508424e-05,
+    "transfer_within_10pct": true,
+    "transfer_within_3pct": true,
+    "field_within_1pct": true,
+    "vertical_operator_is_diagonal": true
+  }
+}
