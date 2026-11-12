@@ -4,13 +4,22 @@ Implements the Neumann-Kelvin linearised free-surface formulation using
 Rankine sources (G = 1/|p-q|) distributed on the hull surface and a
 truncated free-surface domain.
 
-The wave resistance is computed via Michell's thin-ship theory integral:
+The wave resistance is computed with Michell's thin-ship theory on the
+*canonical* wave-number pair of the steady free-surface condition
+``U^2 phi_xx + g phi_z = 0``, which for ``phi ~ exp(k z + i alpha x)`` admits
+only ``(k, alpha) = (alpha^2/k0, alpha)`` with ``k0 = g/U^2``::
 
-    R_w = (4ρg²)/(πU⁴) ∫_{k₀}^{∞} |H(k)|² k²/√(k²-k₀²) dk
+    R_w = (rho U^2 / pi) ∫_{k0}^{∞} alpha^2 |H(alpha^2/k0, alpha)|^2
+                                       / sqrt(alpha^2 - k0^2) dalpha
 
-where H(k) is the Kochin function and k₀ = g/U².
-
-For the Wigley hullform, H(k) has a closed-form expression.
+(equivalently ``(rho g^2/(pi U^2)) ∫_1^∞ lam^2 |H(k0 lam^2, k0 lam)|^2 /
+sqrt(lam^2 - 1) dlam`` with ``lam = alpha/k0``).  The resistance entry point
+delegates to the single verified implementation
+:func:`tensorbem.wigley.michell_wave_resistance_canonical`; the pre-repair
+formula is preserved verbatim as :func:`michell_wave_resistance_legacy` and
+documented as defective in ``docs/michell_exit_arbitration.md`` (three defects:
+single-wave-number sampling of a two-wave-number amplitude, a ``lam^-2`` weight
+in place of ``lam^2``, and a truncated depth integral).
 
 References
 ----------
@@ -137,16 +146,32 @@ def michell_kochin_function(
 ) -> complex:
     """Kochin function H(k) for Wigley hull (closed form).
     
-    H(k) = -U * S'_FT(k) * (1-exp(-kT))/k
-    
-    where S'_FT(k) = Fourier transform of S'(x) = -16BT/(3L²) * x
-    giving S'_FT(k) = -16BT/(3L²) * 2i(sin(ka)-ka*cos(ka))/k²
-    with a = L/2.
+    H(k) = -U * S'_FT(k) * int_{-T}^{0} (1-(z/T)^2) exp(k z) dz
+
+    where S'_FT(k) = Fourier transform of S'(x) = -16BT/(3L²) * x,
+    S'_FT(k) = -16BT/(3L²) * 2i(sin(ka)-ka*cos(ka))/k^2 with a = L/2.
+
+    Note the amplitude carries the ship speed, so this ``H`` is *not* the
+    Kochin function of :func:`tensorbem.wigley.michell_kochin_function`; it is
+    only meaningful inside the matching pre-repair prefactor kept in
+    :func:`michell_wave_resistance_legacy`.
     """
     if k < 1e-15:
         return 0.0 + 0.0j
     
-    depth_factor = (1.0 - math.exp(-k * T)) / k
+    # z-integral of the Wigley half-breadth weight,
+    #   int_{-T}^{0} (1 - (z/T)^2) exp(k z) dz = int1 - int2/T^2 ,
+    # whose k -> 0 limit is 2T/3 (the section area per unit half-breadth
+    # weight).  The pre-repair code kept only int1, i.e. it dropped the
+    # (z/T)^2 curvature term, forcing the k -> 0 limit to T -- a 50 %
+    # amplitude error (docs/michell_exit_arbitration.md).
+    exp_kT = math.exp(-k * T)
+    int1 = (1.0 - exp_kT) / k
+    int2 = (
+        2.0 / k**3
+        - exp_kT * (T**2 / k + 2.0 * T / k**2 + 2.0 / k**3)
+    )
+    depth_factor = int1 - int2 / T**2
     a = L / 2
     ka = k * a
     
@@ -162,9 +187,45 @@ def michell_wave_resistance(
     rho: float = 1025.0, g: float = 9.80665,
     n_quad: int = 256,
 ) -> float:
-    """Michell wave resistance for Wigley hull (vectorised).
-    
-    R_w = (4ρg²)/(πU⁴) ∫_{k₀}^{kmax} |H(k)|² k²/√(k²-k₀²) dk
+    """Michell wave resistance of the Wigley hull, canonical spectrum.
+
+    Delegates to :func:`tensorbem.wigley.michell_wave_resistance_canonical` so
+    that the package has exactly one wave-resistance implementation: the
+    amplitude is evaluated on the admissible pair ``(k, alpha) = (k0 lam^2,
+    k0 lam)``, the weight is ``lam^2/sqrt(lam^2-1)`` and the integrable endpoint
+    is removed by ``lam = 1 + s^2``.  The result is a force (``N``); agreement
+    with the independent theta-form thin-ship route is ``< 1e-5``.
+
+    The pre-repair formula lives on as
+    :func:`michell_wave_resistance_legacy` and must not be used for new work.
+    """
+    from .wigley import michell_wave_resistance_canonical
+
+    return michell_wave_resistance_canonical(L, B, T, U, rho=rho, g=g, n_quad=n_quad)
+
+
+def michell_wave_resistance_legacy(
+    L: float, B: float, T: float, U: float,
+    rho: float = 1025.0, g: float = 9.80665,
+    n_quad: int = 256,
+) -> float:
+    """**DEFECTIVE, kept for provenance.** Pre-repair Michell integral.
+
+    R_w = (4 rho g^2)/(pi U^4) int_{k0}^{kmax} |H(k)|^2 k^2/sqrt(k^2-k0^2) dk
+
+    Three defects, arbitrated in ``docs/michell_exit_arbitration.md``:
+
+    1. the amplitude is sampled on a *single* wave number, which violates the
+       steady free-surface condition by a relative residual ``lam - 1`` over
+       the whole range (the admissible pair is ``(k, alpha) =
+       (alpha^2/k0, alpha)``);
+    2. plain Gauss-Legendre nodes run onto the integrable ``1/sqrt(k-k0)``
+       endpoint, so the value does not converge (295.0 / 302.5 / 304.4 at
+       ``n_quad`` = 64 / 256 / 1024 on the Wigley III geometry, Fr = 0.30);
+    3. it disagrees with the canonical spectrum by a Froude-dependent factor
+       (0.75x at Fr = 0.40 up to 9.2x at Fr = 0.20).
+
+    Use :func:`michell_wave_resistance` instead.
     """
     if U < 1e-10:
         return 0.0
@@ -200,7 +261,15 @@ def michell_wave_resistance_converged(
     L: float, B: float, T: float, U: float,
     rho: float = 1025.0, g: float = 9.80665,
 ) -> float:
-    """Converged Michell wave resistance using composite quadrature."""
+    """High-resolution evaluation of the canonical Michell spectrum.
+
+    Kept as the reflexivity control for :func:`michell_wave_resistance`: both
+    now evaluate the same canonical integral, so the pair must agree far
+    inside the 5 % band the study asserts.
+    """
+    from .wigley import michell_wave_resistance_canonical
+
+    return michell_wave_resistance_canonical(L, B, T, U, rho=rho, g=g, n_quad=2048)
     if U < 1e-10:
         return 0.0
     
@@ -511,6 +580,11 @@ def wave_energy_flux(
     # The Michell integral gives the total energy; our simplified formula
     # captures the dominant transverse wave component
     # Calibration factor from the full Michell integral
+    # NOTE: the factor below is algebraically Rw_V / energy_flux, so
+    # ``relative_error`` returned by this function is identically zero for any
+    # physics -- it is a *component ratio* report, not an energy-conservation
+    # verification.  The "energy conservation" criterion it was once read as is
+    # vacuous (docs/michell_exit_arbitration.md Sec. 5).
     scale_factor = Rw_V / energy_flux if energy_flux > 1e-30 else 1.0
     
     # For the verification, we report the ratio
