@@ -999,9 +999,10 @@ CAPABILITIES: tuple[Capability, ...] = (
     # ---- 2026-11-11 (m14725): five modules shipped by the m14571/m14560/m14514
     # wave were outside the registry, so they could not be seen in the published
     # table at all.  Four carry code + tests + a document and are graded below;
-    # ``tensorbem.pekeris_acoustics`` still has no document anchor in the
-    # repository and stays in the unowned list rather than being graded on a
-    # citation that does not exist.
+    # ``tensorbem.pekeris_acoustics`` had no document anchor in the repository
+    # and stayed in the unowned list rather than being graded on a citation that
+    # does not exist; m16708 wrote that anchor
+    # (docs/pekeris_w22_cross_route/report.md) and graded the row below.
     Capability(
         key='diffraction-drift-maturity',
         title='Wigley III diffraction/RAO and cylinder drift maturity surface',
@@ -1504,6 +1505,45 @@ CAPABILITIES: tuple[Capability, ...] = (
             ('docs/multibody_frequency_dependence_3d.md', 'tensorbem.wigley3_hull'),
         ),
     ),
+    # ---- 2026-11-12 (m16708): the last module with a deferred verdict.  It had no
+    # document anchor, so it could not be graded; docs/pekeris_w22_cross_route/report.md
+    # now carries the absolute-level cross-calibration of the two analytic routes, so the
+    # row resolves on code + asserting test + anchor and the debt entry is gone.
+    Capability(
+        key='pekeris-waveguide',
+        title='Pekeris two-layer shallow-water normal modes with an elastic ice cover',
+        claim=(
+            'Closed-form two-layer dispersion with bracketed roots, modal excitation from '
+            'numerical residues of the spectral depth Green function (exact Hankel, no '
+            'hand-derived normalisation), independent 2nd-order finite-difference vertical '
+            'route, Kirchhoff-Love plate top; absolute level cross-calibrated against the '
+            'density-normalised textbook mode sum.'
+        ),
+        level=REAL,
+        modules=('tensorbem.pekeris_acoustics',),
+        symbols=(
+            'analytic_tl',
+            'analytic_tl_normalised',
+            'cross_route_level_identity',
+            'predicted_route_offset_db',
+            'rigid_wall_roots',
+        ),
+        tests=(
+            'tests/test_pekeris_cross_route_level.py::test_identity_holds_on_a_frequency_range_depth_grid',
+            'tests/test_pekeris_cross_route_level.py::test_predicted_offset_is_the_density_over_four_pi',
+            'tests/test_pekeris_cross_route_level.py::test_rigid_wall_closed_form_roots_are_recovered_at_first_order',
+        ),
+        docs=(('docs/pekeris_w22_cross_route/report.md', 'TL_residue - TL_normalised'),),
+        note=(
+            'Range-independent, horizontally stratified, deep water beyond the truncated '
+            'bottom model; source-in-water monopole.  The pressure-release amplitude is '
+            'anchored to the textbook density-normalised mode sum (offset 20 log10(rho/4pi) '
+            'identified, residual = the Hankel asymptotic error); the ice-plate amplitude is '
+            'non-self-adjoint and has NO external reference, so it rests on the independent '
+            'finite-difference vertical route (0.1 dB) only.'
+        ),
+    ),
+
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
@@ -1588,8 +1628,6 @@ UNTESTED_MODULES: dict[str, str] = {
 AUXILIARY_MODULES: dict[str, str] = {
     'tensorbem.resistance':
         'empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.',
-    'tensorbem.pekeris_acoustics':
-        'physics/geometry module pekeris_acoustics is pinned by tests/test_pekeris_w22.py and documented; it has no row of its own yet (debt registered in docs/m14869/report.md), so its level is NOT claimed here.',
     'tensorbem.verification':
         'namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.',
     'tensorbem.coefficients':

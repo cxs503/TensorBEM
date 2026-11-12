@@ -397,8 +397,19 @@ def analytic_tl_normalised(
 
         p = (i / sqrt(8 pi r)) exp(-i pi/4) sum_m psi(zs) psi(z) exp(i k_rm r)/sqrt(k_rm)
 
-    Different source-strength convention from the residue route, so the comparison is
-    done on the TL *shape* (spread of the difference over range/depth).
+    This is the density-weighted (velocity-potential) form of the two-layer mode sum: the
+    normalisation integral carries the ``1/rho`` weight, so the quantity it returns is the
+    pressure divided by ``rho_water``.  The two analytic routes are therefore related by an
+    exact constant, not by an unknown "source-strength convention" (until m16708 this
+    docstring claimed the comparison could only be done on the TL *shape*; the constant is
+    now measured and identified, see :func:`cross_route_level_identity`):
+
+        TL_residue - TL_normalised = 20 log10(rho_water / (4 pi)) + eps(r),
+
+    with ``eps`` the error of replacing the exact Hankel function by its far-field
+    asymptotic ``sqrt(2/(pi k r)) exp(i(k r - pi/4))`` in this route -- the only
+    approximation either route makes.  ``eps`` is bounded by
+    :func:`hankel_asymptotic_error_db` and vanishes like ``1/(k r)``.
     """
     krs = analytic_roots(case, f, None, n_scan=n_scan)
     k1 = case.k1(f)
@@ -579,3 +590,94 @@ def hankel_asymptotic_error_db(kr: float, r: float) -> float:
     exact = abs(hankel1(0, kr * r))
     asym = math.sqrt(2.0 / (math.pi * kr * r))
     return abs(20.0 * math.log10(exact / asym))
+
+# ----------------------------------------------------------------------------------
+# absolute-level cross-calibration of the two analytic routes (m16708)
+# ----------------------------------------------------------------------------------
+
+
+def predicted_route_offset_db(case: PekerisCase) -> float:
+    """Constant that separates the residue route from the density-normalised route [dB].
+
+    ``20 log10(rho_water / (4 pi))``: the ``4 pi`` is the source-strength convention the
+    residue route inherits from the free-space Green function ``exp(i k R)/(4 pi R)`` and
+    the ``rho_water`` is the density weight of the textbook normalisation
+    ``int psi^2/rho dz = 1`` (a velocity-potential expansion), i.e.
+    ``p_residue = p_normalised / rho_water``.
+    """
+    return 20.0 * math.log10(case.rho_water_kg_m3 / (4.0 * math.pi))
+
+
+def cross_route_level_identity(
+    case: PekerisCase,
+    f: float,
+    r: float,
+    z: float,
+    zs: float,
+    ice: IcePlate | None = None,
+    bottom: HalfSpaceBottom | FiniteLayerBottom | None = None,
+    n_scan: int = 4000,
+) -> dict:
+    """Compare the residue route with the density-normalised mode sum at one point.
+
+    The two analytic routes are independent in everything that can go wrong in a BEM
+    amplitude: one takes the residue of the spectral depth Green function (no hand-derived
+    mode normalisation, works for the non-self-adjoint plate top), the other uses the
+    textbook ``int psi^2/rho dz = 1`` normalisation and the far-field asymptotic.  They
+    differ by exactly ``predicted_route_offset_db`` plus the asymptotic residual ``eps``.
+
+    ``residue_minus_prediction_db`` is the measured deviation from the predicted constant;
+    ``hankel_bound_db`` is the largest ``hankel_asymptotic_error_db`` over the modes and is
+    the scale ``eps`` is expected to take (equal to it in the single-mode regime).
+    """
+    res = analytic_tl(case, f, r, z, zs, ice=ice, bottom=bottom, n_scan=n_scan)
+    norm = analytic_tl_normalised(case, f, r, z, zs, n_scan=n_scan)
+    offset = res["tl_db"] - norm["tl_db"]
+    predicted = predicted_route_offset_db(case)
+    krs = norm["k_r"]
+    bound = max((hankel_asymptotic_error_db(kr, r) for kr in krs), default=0.0)
+    return {
+        "f_hz": f,
+        "r_m": r,
+        "z_m": z,
+        "source_depth_m": zs,
+        "n_modes": norm["n_modes"],
+        "k_r": krs,
+        "tl_residue_db": res["tl_db"],
+        "tl_normalised_db": norm["tl_db"],
+        "offset_db": offset,
+        "predicted_offset_db": predicted,
+        "residue_minus_prediction_db": offset - predicted,
+        "hankel_bound_db": bound,
+    }
+
+
+def rigid_wall_roots(case: PekerisCase, f: float) -> list[float]:
+    """Closed-form mode wavenumbers of the ``rho_bottom -> inf`` (rigid bottom) limit.
+
+    With a rigid bottom the interface condition ``dP/dz = 0`` replaces the half-space
+    impedance, ``tan(k_z H) -> inf``, so ``k_z,m H = (m + 1/2) pi`` and
+
+        k_r,m = sqrt(k1^2 - ((m + 1/2) pi / H)^2),   m = 0, 1, ...
+
+    The trapping cutoff is *not* ``k_z = k1``: the fluid half-space still exists in this
+    limit (only its density becomes infinite, its sound speed does not), so a mode is
+    trapped only while ``k_z,m < kz_max`` with ``kz_max = sqrt(k1^2 - k2^2)``.  Using ``k1``
+    as the cutoff would invent eight spurious modes at 100 Hz for the default case.
+
+    This needs no root finding and no transcendental equation, so it is an external
+    reference for the dispersion solver: ``analytic_roots`` at a very large ``rho_bottom``
+    must approach these values, and the deviation must vanish like ``rho_w/rho_bottom``
+    (the ``1/rho_b`` weight of the interface term in ``tan(k_z H) = -(rho_b/rho_w) k_z/gamma``).
+    """
+    k1 = case.k1(f)
+    kz_max = case.kz_max(f)
+    out: list[float] = []
+    m = 0
+    while True:
+        kz = (m + 0.5) * math.pi / case.depth_m
+        if kz >= kz_max:
+            break
+        out.append(math.sqrt(k1 * k1 - kz * kz))
+        m += 1
+    return out
