@@ -1,0 +1,340 @@
+{
+  "case": {
+    "geometry": "half-submerged hemisphere, radius a = 1.000 m",
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "displaced_mass": 2146.754979953025,
+    "ka_range": [
+      0.1,
+      6.0
+    ],
+    "exact_limits": {
+      "rigid_lid_ka0": 2146.754979953025,
+      "pressure_release_kainf": 1073.3774899765126
+    }
+  },
+  "sweeps": [
+    {
+      "subdivisions": 2,
+      "panels": 64,
+      "radius": 1.0,
+      "density": 1025.0,
+      "gravity": 9.80665,
+      "rho_displaced": 2146.754979953025,
+      "analytic_rigid_lid": 2146.754979953025,
+      "analytic_pressure_release": 1073.3774899765126,
+      "rows": [
+        {
+          "ka": 0.1,
+          "omega": 0.9902853124226371,
+          "a33": 1796.6439849654355,
+          "b33": 370.0670703113195,
+          "a33_over_rho_displaced": 0.8369115254153268,
+          "a33_over_rigid_lid": 0.8369115254153268,
+          "b33_over_omega_mass": 0.17407548952906357,
+          "condition_number": 2.306938180187733,
+          "relative_residual": 4.666377184762501e-16
+        },
+        {
+          "ka": 0.2,
+          "omega": 1.400474919446971,
+          "a33": 1660.4673799740895,
+          "b33": 812.209867599884,
+          "a33_over_rho_displaced": 0.7734778283874871,
+          "a33_over_rigid_lid": 0.7734778283874871,
+          "b33_over_omega_mass": 0.270153405669643,
+          "condition_number": 2.444764876662574,
+          "relative_residual": 3.817420925071812e-16
+        },
+        {
+          "ka": 0.3,
+          "omega": 1.7152244751052266,
+          "a33": 1502.4008783655756,
+          "b33": 1169.151124931554,
+          "a33_over_rho_displaced": 0.6998473940414247,
+          "a33_over_rigid_lid": 0.6998473940414247,
+          "b33_over_omega_mass": 0.3175171645859437,
+          "condition_number": 2.571538196132183,
+          "relative_residual": 5.325362175579137e-16
+        },
+        {
+          "ka": 0.4,
+          "omega": 1.9805706248452741,
+          "a33": 1357.7727115433681,
+          "b33": 1427.6252503323187,
+          "a33_over_rho_displaced": 0.6324767960119411,
+          "a33_over_rigid_lid": 0.6324767960119411,
+          "b33_over_omega_mass": 0.33576962698489626,
+          "condition_number": 2.6804053615186287,
+          "relative_residual": 4.679798851540071e-16
+        },
+        {
+          "ka": 0.6,
+          "omega": 2.4256937152080846,
+          "a33": 1133.7380867917059,
+          "b33": 1708.2956680762904,
+          "a33_over_rho_displaced": 0.5281171337105802,
+          "a33_over_rigid_lid": 0.5281171337105802,
+          "b33_over_omega_mass": 0.32805344106925927,
+          "condition_number": 2.833077598430187,
+          "relative_residual": 4.713945506877282e-16
+        },
+        {
+          "ka": 1.0,
+          "omega": 3.1315571206669692,
+          "a33": 893.0221113763628,
+          "b33": 1743.6552768025738,
+          "a33_over_rho_displaced": 0.41598697555875874,
+          "a33_over_rigid_lid": 0.41598697555875874,
+          "b33_over_omega_mass": 0.2593688471120326,
+          "condition_number": 2.8575328288773147,
+          "relative_residual": 3.8407275094597497e-16
+        },
+        {
+          "ka": 2.0,
+          "omega": 4.428690551393267,
+          "a33": 767.6639031732586,
+          "b33": 1152.605366849019,
+          "a33_over_rho_displaced": 0.35759269704363583,
+          "a33_over_rigid_lid": 0.35759269704363583,
+          "b33_over_omega_mass": 0.12123355008217405,
+          "condition_number": 2.3884348561150714,
+          "relative_residual": 5.358149746568671e-16
+        },
+        {
+          "ka": 3.0,
+          "omega": 5.424016039799293,
+          "a33": 848.128704941269,
+          "b33": 695.7726508347315,
+          "a33_over_rho_displaced": 0.39507475834984557,
+          "a33_over_rigid_lid": 0.39507475834984557,
+          "b33_over_omega_mass": 0.05975357715469232,
+          "condition_number": 3.514988068742944,
+          "relative_residual": 5.422402083656094e-16
+        },
+        {
+          "ka": 6.0,
+          "omega": 7.6707170460133645,
+          "a33": 951.862714879352,
+          "b33": 206.45939916220354,
+          "a33_over_rho_displaced": 0.44339606697927886,
+          "a33_over_rigid_lid": 0.44339606697927886,
+          "b33_over_omega_mass": 0.012537652170063803,
+          "condition_number": 4.17972665800848,
+          "relative_residual": 4.773725027826074e-16
+        }
+      ]
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "radius": 1.0,
+      "density": 1025.0,
+      "gravity": 9.80665,
+      "rho_displaced": 2146.754979953025,
+      "analytic_rigid_lid": 2146.754979953025,
+      "analytic_pressure_release": 1073.3774899765126,
+      "rows": [
+        {
+          "ka": 0.1,
+          "omega": 0.9902853124226371,
+          "a33": 1838.3963934844692,
+          "b33": 382.0636543122586,
+          "a33_over_rho_displaced": 0.8563606050303405,
+          "a33_over_rigid_lid": 0.8563606050303405,
+          "b33_over_omega_mass": 0.17971855101757483,
+          "condition_number": 2.2280305340454563,
+          "relative_residual": 1.006362546955343e-15
+        },
+        {
+          "ka": 0.2,
+          "omega": 1.400474919446971,
+          "a33": 1693.4906657847994,
+          "b33": 832.8888272930812,
+          "a33_over_rho_displaced": 0.7888607137745436,
+          "a33_over_rigid_lid": 0.7888607137745436,
+          "b33_over_omega_mass": 0.27703154346342634,
+          "condition_number": 2.360602910504113,
+          "relative_residual": 9.174225080404825e-16
+        },
+        {
+          "ka": 0.3,
+          "omega": 1.7152244751052266,
+          "a33": 1528.1743215866052,
+          "b33": 1191.0134677909975,
+          "a33_over_rho_displaced": 0.7118531624974007,
+          "a33_over_rigid_lid": 0.7118531624974007,
+          "b33_over_omega_mass": 0.3234545228691533,
+          "condition_number": 2.48188181382725,
+          "relative_residual": 9.629044022982844e-16
+        },
+        {
+          "ka": 0.4,
+          "omega": 1.9805706248452741,
+          "a33": 1378.5295203975252,
+          "b33": 1444.7532234174116,
+          "a33_over_rho_displaced": 0.6421457191298514,
+          "a33_over_rigid_lid": 0.6421457191298514,
+          "b33_over_omega_mass": 0.33979803229115596,
+          "condition_number": 2.585241066538914,
+          "relative_residual": 9.605255257392777e-16
+        },
+        {
+          "ka": 0.6,
+          "omega": 2.4256937152080846,
+          "a33": 1150.029114227912,
+          "b33": 1705.4978425550428,
+          "a33_over_rho_displaced": 0.5357058094506326,
+          "a33_over_rigid_lid": 0.5357058094506326,
+          "b33_over_omega_mass": 0.32751615920002036,
+          "condition_number": 2.7274245813064435,
+          "relative_residual": 9.336714952352134e-16
+        },
+        {
+          "ka": 1.0,
+          "omega": 3.1315571206669692,
+          "a33": 913.0400386880822,
+          "b33": 1689.780024610876,
+          "a33_over_rho_displaced": 0.42531171336006923,
+          "a33_over_rigid_lid": 0.42531171336006923,
+          "b33_over_omega_mass": 0.2513548994959335,
+          "condition_number": 2.734695189923878,
+          "relative_residual": 9.362584213406098e-16
+        },
+        {
+          "ka": 2.0,
+          "omega": 4.428690551393267,
+          "a33": 816.4473290142226,
+          "b33": 1024.2927088074703,
+          "a33_over_rho_displaced": 0.3803169605466982,
+          "a33_over_rigid_lid": 0.3803169605466982,
+          "b33_over_omega_mass": 0.10773734444035646,
+          "condition_number": 2.4124908765861264,
+          "relative_residual": 1.3604501681451531e-15
+        },
+        {
+          "ka": 3.0,
+          "omega": 5.424016039799293,
+          "a33": 872.3162250339752,
+          "b33": 572.4546856819898,
+          "a33_over_rho_displaced": 0.40634177313195896,
+          "a33_over_rigid_lid": 0.40634177313195896,
+          "b33_over_omega_mass": 0.04916292008233735,
+          "condition_number": 2.9272314564840873,
+          "relative_residual": 1.2343350385693851e-15
+        },
+        {
+          "ka": 6.0,
+          "omega": 7.6707170460133645,
+          "a33": 968.9283465605705,
+          "b33": 154.12571307488636,
+          "a33_over_rho_displaced": 0.45134556836186884,
+          "a33_over_rigid_lid": 0.45134556836186884,
+          "b33_over_omega_mass": 0.009359586382782321,
+          "condition_number": 2.923784717698805,
+          "relative_residual": 1.2088608281761241e-15
+        }
+      ]
+    }
+  ],
+  "drift": {
+    "consecutive_relative_change": [
+      {
+        "ka_from": 0.1,
+        "ka_to": 0.2,
+        "relative_change": -0.07882180807862532
+      },
+      {
+        "ka_from": 0.2,
+        "ka_to": 0.3,
+        "relative_change": -0.09761869228938626
+      },
+      {
+        "ka_from": 0.3,
+        "ka_to": 0.4,
+        "relative_change": -0.09792390768201982
+      },
+      {
+        "ka_from": 0.4,
+        "ka_to": 0.6,
+        "relative_change": -0.16575662892131662
+      },
+      {
+        "ka_from": 0.6,
+        "ka_to": 1.0,
+        "relative_change": -0.20607223991797438
+      },
+      {
+        "ka_from": 1.0,
+        "ka_to": 2.0,
+        "relative_change": -0.10579241389309771
+      },
+      {
+        "ka_from": 2.0,
+        "ka_to": 3.0,
+        "relative_change": 0.06842927159454194
+      },
+      {
+        "ka_from": 3.0,
+        "ka_to": 6.0,
+        "relative_change": 0.11075355330325581
+      }
+    ]
+  },
+  "criteria": [
+    {
+      "name": "R1-rigid-lid-limit",
+      "statement": "A33(ka -> 0) -> 2/3 rho pi a^3 (exact imaged sphere)",
+      "measured": 1796.6439849654355,
+      "reference": 2146.754979953025,
+      "relative_error": 0.16308847458467327,
+      "pass": false
+    },
+    {
+      "name": "R2-pressure-release-limit",
+      "statement": "A33(ka -> inf) -> rho pi a^3 / 3 (exact, anchor A2)",
+      "measured": 968.9283465605705,
+      "reference": 1073.3774899765126,
+      "relative_error": 0.09730886327626233,
+      "pass": false
+    },
+    {
+      "name": "R3-bracket",
+      "statement": "every ka in the sweep stays inside [0.9,1.1] x the exact envelope",
+      "measured": [
+        0.8563606050303405,
+        0.7888607137745436,
+        0.7118531624974007,
+        0.6421457191298514,
+        0.5357058094506326,
+        0.42531171336006923,
+        0.3803169605466982,
+        0.40634177313195896,
+        0.45134556836186884
+      ],
+      "reference": [
+        966.0397409788613,
+        2361.4304779483277
+      ],
+      "relative_error": null,
+      "pass": false
+    },
+    {
+      "name": "R4-monotone-decay",
+      "statement": "A33 decreases with ka from the rigid-lid to the pressure-release end",
+      "measured": false,
+      "reference": true,
+      "relative_error": null,
+      "pass": false
+    },
+    {
+      "name": "R5-low-ka-mesh-independence",
+      "statement": "lowest-ka A33 is mesh independent (< 2 %)",
+      "measured": 0.023239110735584562,
+      "reference": 0.02,
+      "relative_error": 0.023239110735584562,
+      "pass": false
+    }
+  ],
+  "all_pass": false
+}
