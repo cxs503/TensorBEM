@@ -1,0 +1,510 @@
+{
+ "case": {
+  "geometry": "half-submerged hemisphere, radius a = 1.000 m, flat face on z = 0",
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "displaced_mass": 2146.754979953025,
+  "quantity": "heave added mass A33 (unit heave velocity, exp(-i omega t))"
+ },
+ "spectral": {
+  "method": "Legendre projection of the even-symmetry (sliding-halves) Neumann data",
+  "rigid_lid_a33": 1783.8611628567521,
+  "rigid_lid_a33_over_rho_displaced": 0.8309570395852935,
+  "translation_a33": 1073.3774899763996,
+  "translation_a33_over_rho_displaced": 0.4999999999999474,
+  "convergence": [
+   {
+    "n_terms": 10,
+    "ratio": 0.8309307621907192
+   },
+   {
+    "n_terms": 20,
+    "ratio": 0.8309548583422535
+   },
+   {
+    "n_terms": 40,
+    "ratio": 0.8309568832393139
+   },
+   {
+    "n_terms": 60,
+    "ratio": 0.8309570079316742
+   },
+   {
+    "n_terms": 100,
+    "ratio": 0.8309570357742956
+   },
+   {
+    "n_terms": 200,
+    "ratio": 0.8309570395852935
+   }
+  ]
+ },
+ "limits": {
+  "rigid_lid_a33": 1783.8611628567521,
+  "rigid_lid_over_rho_displaced": 0.8309570395852935,
+  "pressure_release_a33": 1073.3774899765126,
+  "pressure_release_over_rho_displaced": 0.5,
+  "imaged_sphere_legacy_a33": 2146.754979953025,
+  "imaged_sphere_legacy_over_rho_displaced": 1.0
+ },
+ "exact_table": [
+  {
+   "ka": 0.002,
+   "a33": 1799.021877150591,
+   "a33_over_rho_displaced": 0.838019193597006,
+   "b33_over_omega_rho_displaced": 0.004689452696797674
+  },
+  {
+   "ka": 0.005,
+   "a33": 1814.101054869069,
+   "a33_over_rho_displaced": 0.8450433662945386,
+   "b33_over_omega_rho_displaced": 0.011636941081625897
+  },
+  {
+   "ka": 0.01,
+   "a33": 1832.4676896914896,
+   "a33_over_rho_displaced": 0.853598900109032,
+   "b33_over_omega_rho_displaced": 0.022984802003060356
+  },
+  {
+   "ka": 0.02,
+   "a33": 1856.5602108647886,
+   "a33_over_rho_displaced": 0.8648216625566711,
+   "b33_over_omega_rho_displaced": 0.04481847816615558
+  },
+  {
+   "ka": 0.05,
+   "a33": 1881.3714900432947,
+   "a33_over_rho_displaced": 0.8763792363879657,
+   "b33_over_omega_rho_displaced": 0.10365181834630202
+  },
+  {
+   "ka": 0.1,
+   "a33": 1852.1023773896964,
+   "a33_over_rho_displaced": 0.8627451174843548,
+   "b33_over_omega_rho_displaced": 0.18161892463502238
+  },
+  {
+   "ka": 0.2,
+   "a33": 1704.1848977782568,
+   "a33_over_rho_displaced": 0.7938422939238028,
+   "b33_over_omega_rho_displaced": 0.2793078954094977
+  },
+  {
+   "ka": 0.3,
+   "a33": 1536.4062790955834,
+   "a33_over_rho_displaced": 0.7156877675575266,
+   "b33_over_omega_rho_displaced": 0.32536472767811725
+  },
+  {
+   "ka": 0.4,
+   "a33": 1385.090520273558,
+   "a33_over_rho_displaced": 0.6452019597988151,
+   "b33_over_omega_rho_displaced": 0.3410189619787435
+  },
+  {
+   "ka": 0.6,
+   "a33": 1155.1924686577681,
+   "a33_over_rho_displaced": 0.5381109998324288,
+   "b33_over_omega_rho_displaced": 0.3271302508779641
+  },
+  {
+   "ka": 0.8,
+   "a33": 1008.5423718319607,
+   "a33_over_rho_displaced": 0.4697985476917489,
+   "b33_over_omega_rho_displaced": 0.2899027042407971
+  },
+  {
+   "ka": 1.0,
+   "a33": 919.7555130379395,
+   "a33_over_rho_displaced": 0.42843991122734715,
+   "b33_over_omega_rho_displaced": 0.2484093804271912
+  },
+  {
+   "ka": 1.5,
+   "a33": 835.1955127050551,
+   "a33_over_rho_displaced": 0.3890502272054031,
+   "b33_over_omega_rho_displaced": 0.16062615978318368
+  },
+  {
+   "ka": 1.8,
+   "a33": 829.5103928860548,
+   "a33_over_rho_displaced": 0.3864019884114609,
+   "b33_over_omega_rho_displaced": 0.12290742959709083
+  },
+  {
+   "ka": 2.0,
+   "a33": 833.7545863227328,
+   "a33_over_rho_displaced": 0.38837901582088186,
+   "b33_over_omega_rho_displaced": 0.1030720258753792
+  },
+  {
+   "ka": 3.0,
+   "a33": 882.5045496837538,
+   "a33_over_rho_displaced": 0.41108769185343386,
+   "b33_over_omega_rho_displaced": 0.0451650842831174
+  },
+  {
+   "ka": 4.0,
+   "a33": 927.8455919312293,
+   "a33_over_rho_displaced": 0.4322084264835534,
+   "b33_over_omega_rho_displaced": 0.021898733053498542
+  },
+  {
+   "ka": 6.0,
+   "a33": 981.8878385683042,
+   "a33_over_rho_displaced": 0.457382350448671,
+   "b33_over_omega_rho_displaced": 0.006627305610789274
+  }
+ ],
+ "exact_minimum": {
+  "ka": 1.722088310858569,
+  "a33_over_rho_displaced": 0.38628838208842686
+ },
+ "bem": [
+  {
+   "subdivisions": 2,
+   "panels": 64,
+   "rows": [
+    {
+     "ka": 0.1,
+     "a33": 1796.6439849654355,
+     "a33_over_rho_displaced": 0.8369115254153268,
+     "b33_over_omega_mass": 0.17407548952906357,
+     "condition_number": 2.306938180187733
+    },
+    {
+     "ka": 0.2,
+     "a33": 1660.4673799740895,
+     "a33_over_rho_displaced": 0.7734778283874871,
+     "b33_over_omega_mass": 0.270153405669643,
+     "condition_number": 2.444764876662574
+    },
+    {
+     "ka": 0.3,
+     "a33": 1502.4008783655756,
+     "a33_over_rho_displaced": 0.6998473940414247,
+     "b33_over_omega_mass": 0.3175171645859437,
+     "condition_number": 2.571538196132183
+    },
+    {
+     "ka": 0.4,
+     "a33": 1357.7727115433681,
+     "a33_over_rho_displaced": 0.6324767960119411,
+     "b33_over_omega_mass": 0.33576962698489626,
+     "condition_number": 2.6804053615186287
+    },
+    {
+     "ka": 0.6,
+     "a33": 1133.7380867917059,
+     "a33_over_rho_displaced": 0.5281171337105802,
+     "b33_over_omega_mass": 0.32805344106925927,
+     "condition_number": 2.833077598430187
+    },
+    {
+     "ka": 1.0,
+     "a33": 893.0221113763628,
+     "a33_over_rho_displaced": 0.41598697555875874,
+     "b33_over_omega_mass": 0.2593688471120326,
+     "condition_number": 2.8575328288773147
+    },
+    {
+     "ka": 2.0,
+     "a33": 767.6639031732586,
+     "a33_over_rho_displaced": 0.35759269704363583,
+     "b33_over_omega_mass": 0.12123355008217405,
+     "condition_number": 2.3884348561150714
+    },
+    {
+     "ka": 3.0,
+     "a33": 848.128704941269,
+     "a33_over_rho_displaced": 0.39507475834984557,
+     "b33_over_omega_mass": 0.05975357715469232,
+     "condition_number": 3.514988068742944
+    },
+    {
+     "ka": 6.0,
+     "a33": 951.862714879352,
+     "a33_over_rho_displaced": 0.44339606697927886,
+     "b33_over_omega_mass": 0.012537652170063803,
+     "condition_number": 4.17972665800848
+    }
+   ]
+  },
+  {
+   "subdivisions": 3,
+   "panels": 256,
+   "rows": [
+    {
+     "ka": 0.1,
+     "a33": 1838.3963934844692,
+     "a33_over_rho_displaced": 0.8563606050303405,
+     "b33_over_omega_mass": 0.17971855101757483,
+     "condition_number": 2.2280305340454563
+    },
+    {
+     "ka": 0.2,
+     "a33": 1693.4906657847994,
+     "a33_over_rho_displaced": 0.7888607137745436,
+     "b33_over_omega_mass": 0.27703154346342634,
+     "condition_number": 2.360602910504113
+    },
+    {
+     "ka": 0.3,
+     "a33": 1528.1743215866052,
+     "a33_over_rho_displaced": 0.7118531624974007,
+     "b33_over_omega_mass": 0.3234545228691533,
+     "condition_number": 2.48188181382725
+    },
+    {
+     "ka": 0.4,
+     "a33": 1378.5295203975252,
+     "a33_over_rho_displaced": 0.6421457191298514,
+     "b33_over_omega_mass": 0.33979803229115596,
+     "condition_number": 2.585241066538914
+    },
+    {
+     "ka": 0.6,
+     "a33": 1150.029114227912,
+     "a33_over_rho_displaced": 0.5357058094506326,
+     "b33_over_omega_mass": 0.32751615920002036,
+     "condition_number": 2.7274245813064435
+    },
+    {
+     "ka": 1.0,
+     "a33": 913.0400386880822,
+     "a33_over_rho_displaced": 0.42531171336006923,
+     "b33_over_omega_mass": 0.2513548994959335,
+     "condition_number": 2.734695189923878
+    },
+    {
+     "ka": 2.0,
+     "a33": 816.4473290142226,
+     "a33_over_rho_displaced": 0.3803169605466982,
+     "b33_over_omega_mass": 0.10773734444035646,
+     "condition_number": 2.4124908765861264
+    },
+    {
+     "ka": 3.0,
+     "a33": 872.3162250339752,
+     "a33_over_rho_displaced": 0.40634177313195896,
+     "b33_over_omega_mass": 0.04916292008233735,
+     "condition_number": 2.9272314564840873
+    },
+    {
+     "ka": 6.0,
+     "a33": 968.9283465605705,
+     "a33_over_rho_displaced": 0.45134556836186884,
+     "b33_over_omega_mass": 0.009359586382782321,
+     "condition_number": 2.923784717698805
+    }
+   ]
+  }
+ ],
+ "bem_provenance": "produced by tensorbem.benchmarks.rigid_lid_zero_frequency_anchor (m16802)",
+ "bem_vs_exact": [
+  {
+   "subdivisions": 2,
+   "panels": 64,
+   "max_abs_relative_error": 0.07926874914231846,
+   "rows": [
+    {
+     "ka": 0.1,
+     "a33_bem": 1796.6439849654355,
+     "a33_exact": 1852.1023773896964,
+     "relative_error": -0.029943481041486725
+    },
+    {
+     "ka": 0.2,
+     "a33_bem": 1660.4673799740895,
+     "a33_exact": 1704.1848977782568,
+     "relative_error": -0.02565303674569688
+    },
+    {
+     "ka": 0.3,
+     "a33_bem": 1502.4008783655756,
+     "a33_exact": 1536.4062790955834,
+     "relative_error": -0.022133078465433813
+    },
+    {
+     "ka": 0.4,
+     "a33_bem": 1357.7727115433681,
+     "a33_exact": 1385.090520273558,
+     "relative_error": -0.019722760592422915
+    },
+    {
+     "ka": 0.6,
+     "a33_bem": 1133.7380867917059,
+     "a33_exact": 1155.1924686577681,
+     "relative_error": -0.018572127544244078
+    },
+    {
+     "ka": 1.0,
+     "a33_bem": 893.0221113763628,
+     "a33_exact": 919.7555130379395,
+     "relative_error": -0.029065769416566693
+    },
+    {
+     "ka": 2.0,
+     "a33_bem": 767.6639031732586,
+     "a33_exact": 833.7545863227328,
+     "relative_error": -0.07926874914231846
+    },
+    {
+     "ka": 3.0,
+     "a33_bem": 848.128704941269,
+     "a33_exact": 882.5045496837538,
+     "relative_error": -0.03895259775692193
+    },
+    {
+     "ka": 6.0,
+     "a33_bem": 951.862714879352,
+     "a33_exact": 981.8878385683042,
+     "relative_error": -0.030578975020947443
+    }
+   ]
+  },
+  {
+   "subdivisions": 3,
+   "panels": 256,
+   "max_abs_relative_error": 0.020758215417853,
+   "rows": [
+    {
+     "ka": 0.1,
+     "a33_bem": 1838.3963934844692,
+     "a33_exact": 1852.1023773896964,
+     "relative_error": -0.00740023017763415
+    },
+    {
+     "ka": 0.2,
+     "a33_bem": 1693.4906657847994,
+     "a33_exact": 1704.1848977782568,
+     "relative_error": -0.0062752768243630325
+    },
+    {
+     "ka": 0.3,
+     "a33_bem": 1528.1743215866052,
+     "a33_exact": 1536.4062790955834,
+     "relative_error": -0.005357930139301444
+    },
+    {
+     "ka": 0.4,
+     "a33_bem": 1378.5295203975252,
+     "a33_exact": 1385.090520273558,
+     "relative_error": -0.0047368744352802505
+    },
+    {
+     "ka": 0.6,
+     "a33_bem": 1150.029114227912,
+     "a33_exact": 1155.1924686577681,
+     "relative_error": -0.004469691908444887
+    },
+    {
+     "ka": 1.0,
+     "a33_bem": 913.0400386880822,
+     "a33_exact": 919.7555130379395,
+     "relative_error": -0.007301368955839393
+    },
+    {
+     "ka": 2.0,
+     "a33_bem": 816.4473290142226,
+     "a33_exact": 833.7545863227328,
+     "relative_error": -0.020758215417853
+    },
+    {
+     "ka": 3.0,
+     "a33_bem": 872.3162250339752,
+     "a33_exact": 882.5045496837538,
+     "relative_error": -0.011544784277236372
+    },
+    {
+     "ka": 6.0,
+     "a33_bem": 968.9283465605705,
+     "a33_exact": 981.8878385683042,
+     "relative_error": -0.013198546207304117
+    }
+   ]
+  }
+ ],
+ "rigid_lid_probes": [
+  {
+   "subdivisions": 2,
+   "panels": null,
+   "ka": 0.001,
+   "a33": 1733.263899144704,
+   "a33_over_rho_displaced": 0.8073878553120352,
+   "relative_error_vs_spectral": -0.028363902284311984
+  },
+  {
+   "subdivisions": 3,
+   "panels": null,
+   "ka": 0.001,
+   "a33": 1777.83875805561,
+   "a33_over_rho_displaced": 0.8281516869216776,
+   "relative_error_vs_spectral": -0.0033760501806640395
+  }
+ ],
+ "criteria": [
+  {
+   "id": "E1-rigid-lid-two-routes",
+   "statement": "spectral limit and the exact Hulme series agree at ka -> 0 (< 1%)",
+   "measured": 0.838019193597006,
+   "reference": 0.8309570395852935,
+   "relative_error": 0.008498819644439166,
+   "pass": true
+  },
+  {
+   "id": "E2-translation-self-test",
+   "statement": "the same projector on the translating BC returns exactly (1/2)(2/3 rho pi a^3) = rho pi a^3/3 (classical full sphere, half-body force)",
+   "measured": 1073.3774899763996,
+   "reference": 1073.3774899765126,
+   "relative_error": 1.0527956636929201e-13,
+   "pass": true
+  },
+  {
+   "id": "E3-imaged-sphere-anchor-rejected",
+   "statement": "the m16802 rigid-lid anchor (= rho*grad) is 16.9% high: premise falsified",
+   "measured": 0.8309570395852935,
+   "reference": 1.0,
+   "relative_error": 0.16904296041470646,
+   "pass": true
+  },
+  {
+   "id": "E4-release-floor-rejected",
+   "statement": "A33 is NOT bounded below by the pressure-release value 0.5 rho*grad",
+   "measured": 0.38628838208842686,
+   "reference": 0.5,
+   "relative_error": -0.22742323582314627,
+   "pass": true
+  },
+  {
+   "id": "E5-bem-vs-exact-pointwise",
+   "statement": "256-panel solver sweep is within 3% of the exact reference at every ka",
+   "measured": 0.020758215417853,
+   "reference": 0.03,
+   "relative_error": 0.020758215417853,
+   "pass": true
+  },
+  {
+   "id": "E6-endpoint-premise-rejected",
+   "statement": "the exact ka=0.1 value is >1% above A33(0): an endpoint test cannot pin the limit",
+   "measured": 0.03825477898944781,
+   "reference": 0.01,
+   "relative_error": 0.03825477898944781,
+   "pass": true
+  },
+  {
+   "id": "E7-live-rigid-lid-solve",
+   "statement": "the solver at ka = 1e-3 reproduces the spectral rigid-lid limit within 1%",
+   "measured": 0.8281516869216776,
+   "reference": 0.8309570395852935,
+   "relative_error": -0.0033760501806640395,
+   "pass": true
+  }
+ ],
+ "all_pass": true,
+ "figures": [
+  "fig1_a33_band.png",
+  "fig2_error_vs_exact.png"
+ ]
+}
