@@ -1,0 +1,445 @@
+{
+  "capytaine_provenance": {
+    "density": 1025.0,
+    "generated_utc": "2026-11-12T13:29:04+00:00",
+    "git_commit": "c0516db5b0dfd63c4af7b819a75e78782bad8d64",
+    "gravity": 9.80665,
+    "machine": "loongarch64",
+    "note": "built from source (pip --no-build-isolation --no-deps) because no loongarch64 wheel exists on the configured index; only this producer script imports capytaine",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "tool": "capytaine",
+    "version": "3.1.dev0",
+    "water_depth": "infinite"
+  },
+  "comparison": {
+    "cases": {
+      "hemisphere_r1": {
+        "capytaine_faces": 1296,
+        "compared": true,
+        "entries": [
+          {
+            "capytaine": 1274.6390081377788,
+            "dof": "heave",
+            "nu": 0.5,
+            "quantity": "added_mass",
+            "relative": -0.017285000130169224,
+            "tensorbem": 1252.6068727161985
+          },
+          {
+            "capytaine": 1619.6099348231735,
+            "dof": "heave",
+            "nu": 0.5,
+            "quantity": "damping",
+            "relative": -0.006062738771290067,
+            "tensorbem": 1609.7906628769545
+          },
+          {
+            "capytaine": 1414.7772028237819,
+            "dof": "surge",
+            "nu": 0.5,
+            "quantity": "added_mass",
+            "relative": -0.04089621014500492,
+            "tensorbem": 1356.9181770287382
+          },
+          {
+            "capytaine": 483.2557611961571,
+            "dof": "surge",
+            "nu": 0.5,
+            "quantity": "damping",
+            "relative": -0.06700561176265912,
+            "tensorbem": 450.8749132793791
+          },
+          {
+            "capytaine": 934.8282365728253,
+            "dof": "heave",
+            "nu": 1.0,
+            "quantity": "added_mass",
+            "relative": -0.02330716706271132,
+            "tensorbem": 913.0400386880826
+          },
+          {
+            "capytaine": 1668.2101860660848,
+            "dof": "heave",
+            "nu": 1.0,
+            "quantity": "damping",
+            "relative": 0.012929928569526556,
+            "tensorbem": 1689.780024610876
+          },
+          {
+            "capytaine": 1254.885167889813,
+            "dof": "surge",
+            "nu": 1.0,
+            "quantity": "added_mass",
+            "relative": -0.030931959637337542,
+            "tensorbem": 1216.0691105271517
+          },
+          {
+            "capytaine": 2431.082148879298,
+            "dof": "surge",
+            "nu": 1.0,
+            "quantity": "damping",
+            "relative": -0.05697744763221021,
+            "tensorbem": 2292.565293051927
+          },
+          {
+            "capytaine": 848.4002873735379,
+            "dof": "heave",
+            "nu": 2.0,
+            "quantity": "added_mass",
+            "relative": -0.03766259728439721,
+            "tensorbem": 816.4473290142215
+          },
+          {
+            "capytaine": 943.9980026305,
+            "dof": "heave",
+            "nu": 2.0,
+            "quantity": "damping",
+            "relative": 0.08505813142954162,
+            "tensorbem": 1024.2927088074698
+          },
+          {
+            "capytaine": 547.0354259876593,
+            "dof": "surge",
+            "nu": 2.0,
+            "quantity": "added_mass",
+            "relative": -0.013364612961656884,
+            "tensorbem": 539.7245092430192
+          },
+          {
+            "capytaine": 3286.11372652679,
+            "dof": "surge",
+            "nu": 2.0,
+            "quantity": "damping",
+            "relative": -0.0315606614348684,
+            "tensorbem": 3182.401803767404
+          }
+        ],
+        "tensorbem_faces": 256,
+        "verdict": "FAIL",
+        "worst_relative": 0.08505813142954162
+      },
+      "sphere_r1_z-0.5": {
+        "capytaine_faces": 1120,
+        "compared": true,
+        "entries": [
+          {
+            "capytaine": 1157.3830333313933,
+            "dof": "heave",
+            "nu": 0.5,
+            "quantity": "added_mass",
+            "relative": -0.03484874359427915,
+            "tensorbem": 1117.0496887624586
+          },
+          {
+            "capytaine": 275.26803829772,
+            "dof": "heave",
+            "nu": 0.5,
+            "quantity": "damping",
+            "relative": -0.08751328049478489,
+            "tensorbem": 251.17842925092245
+          },
+          {
+            "capytaine": 1229.710258636283,
+            "dof": "heave",
+            "nu": 1.0,
+            "quantity": "added_mass",
+            "relative": -0.03308644946192965,
+            "tensorbem": 1189.0235123110972
+          },
+          {
+            "dof": "heave",
+            "note": "skipped: geometrically vanishing damping",
+            "nu": 1.0,
+            "quantity": "damping",
+            "relative": null
+          },
+          {
+            "capytaine": 1284.0291403520694,
+            "dof": "heave",
+            "nu": 2.0,
+            "quantity": "added_mass",
+            "relative": -0.03890091355761025,
+            "tensorbem": 1234.079233757781
+          },
+          {
+            "capytaine": 417.295730401492,
+            "dof": "heave",
+            "nu": 2.0,
+            "quantity": "damping",
+            "relative": 0.0148542088118199,
+            "tensorbem": 423.49432831715666
+          }
+        ],
+        "tensorbem_faces": 270,
+        "verdict": "FAIL",
+        "worst_relative": 0.08751328049478489
+      }
+    },
+    "failures": [
+      "hemisphere_r1 nu=0.50 surge damping: -6.70%",
+      "hemisphere_r1 nu=1.00 surge damping: -5.70%",
+      "hemisphere_r1 nu=2.00 heave damping: +8.51%",
+      "sphere_r1_z-0.5 nu=0.50 heave damping: -8.75%"
+    ],
+    "tolerance": 0.05,
+    "verdict": "FAIL",
+    "worst_relative": 0.08751328049478489
+  },
+  "convergence": {
+    "hemisphere_r1": [
+      {
+        "n_faces": 64,
+        "worst_relative": 0.22098284491834055
+      },
+      {
+        "n_faces": 256,
+        "worst_relative": 0.08505813142954162
+      }
+    ],
+    "sphere_r1_z-0.5": [
+      {
+        "n_faces": 270,
+        "worst_relative": 0.08751328049478489
+      }
+    ]
+  },
+  "density": 1025.0,
+  "excluded": {
+    "barge_L2_B1_T0.5": {
+      "capytaine_faces": 576,
+      "capytaine_values": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1359.4503455930771,
+            "damping": -609.2987681740076
+          },
+          "pitch": {
+            "added_mass": 623.6934112187247,
+            "damping": 71.95117835727082
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 1989.7665540723362,
+            "damping": -1398.3869198461857
+          },
+          "pitch": {
+            "added_mass": 698.8351000382576,
+            "damping": 564.3559698971513
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": -1795.2223512630105,
+            "damping": 252.36085281565485
+          },
+          "pitch": {
+            "added_mass": 1411.7537935420723,
+            "damping": 2105.899561270002
+          }
+        }
+      },
+      "reason": "wall-sided barge with sharp bilge/waterline corners never leaves the spurious irregular-frequency regime: even at 576 panels the heave added mass and damping change sign between frequencies, so no converged reference exists to compare against"
+    }
+  },
+  "gravity": 9.80665,
+  "hulme": {
+    "0.500": {
+      "heave": {
+        "added_mass": 1258.261897186864,
+        "damping": 1611.9262564204969
+      },
+      "surge": {
+        "added_mass": 1382.2892490165673,
+        "damping": 469.04303797794205
+      }
+    },
+    "1.000": {
+      "heave": {
+        "added_mass": 919.8032879554042,
+        "damping": 1670.203015573748
+      },
+      "surge": {
+        "added_mass": 1232.1340939900722,
+        "damping": 2376.3922793442157
+      }
+    },
+    "2.000": {
+      "heave": {
+        "added_mass": 833.768926377069,
+        "damping": 980.2747406118301
+      },
+      "surge": {
+        "added_mass": 535.1425885365876,
+        "damping": 3255.408110081765
+      }
+    }
+  },
+  "nu_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "tensorbem": {
+    "hemisphere_r1": {
+      "levels": [
+        {
+          "level": 2,
+          "n_faces": 64,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1234.877154035983,
+                "damping": 1601.395507700018
+              },
+              "surge": {
+                "added_mass": 1285.6257811225612,
+                "damping": 401.6333008500051
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 893.0221113763628,
+                "damping": 1743.6552768025736
+              },
+              "surge": {
+                "added_mass": 1169.9022259353906,
+                "damping": 2066.2792610148877
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 767.6639031732587,
+                "damping": 1152.605366849019
+              },
+              "surge": {
+                "added_mass": 549.1453498803477,
+                "damping": 2984.8377101856922
+              }
+            }
+          }
+        },
+        {
+          "level": 3,
+          "n_faces": 256,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1252.6068727161985,
+                "damping": 1609.7906628769545
+              },
+              "surge": {
+                "added_mass": 1356.9181770287382,
+                "damping": 450.8749132793791
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 913.0400386880826,
+                "damping": 1689.780024610876
+              },
+              "surge": {
+                "added_mass": 1216.0691105271517,
+                "damping": 2292.565293051927
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 816.4473290142215,
+                "damping": 1024.2927088074698
+              },
+              "surge": {
+                "added_mass": 539.7245092430192,
+                "damping": 3182.401803767404
+              }
+            }
+          }
+        }
+      ],
+      "reference": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1252.6068727161985,
+            "damping": 1609.7906628769545
+          },
+          "surge": {
+            "added_mass": 1356.9181770287382,
+            "damping": 450.8749132793791
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 913.0400386880826,
+            "damping": 1689.780024610876
+          },
+          "surge": {
+            "added_mass": 1216.0691105271517,
+            "damping": 2292.565293051927
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 816.4473290142215,
+            "damping": 1024.2927088074698
+          },
+          "surge": {
+            "added_mass": 539.7245092430192,
+            "damping": 3182.401803767404
+          }
+        }
+      },
+      "reference_faces": 256
+    },
+    "sphere_r1_z-0.5": {
+      "levels": [
+        {
+          "level": 2,
+          "n_faces": 270,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1117.0496887624586,
+                "damping": 251.17842925092245
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1189.0235123110972,
+                "damping": 0.06870010134012582
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 1234.079233757781,
+                "damping": 423.49432831715666
+              }
+            }
+          }
+        }
+      ],
+      "reference": {
+        "0.500": {
+          "heave": {
+            "added_mass": 1117.0496887624586,
+            "damping": 251.17842925092245
+          }
+        },
+        "1.000": {
+          "heave": {
+            "added_mass": 1189.0235123110972,
+            "damping": 0.06870010134012582
+          }
+        },
+        "2.000": {
+          "heave": {
+            "added_mass": 1234.079233757781,
+            "damping": 423.49432831715666
+          }
+        }
+      },
+      "reference_faces": 270
+    }
+  }
+}
