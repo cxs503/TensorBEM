@@ -190,7 +190,13 @@ def separated_ladder(p_values: tuple[int, ...] = (1, 2, 3, 4, 6, 8)) -> list[dic
     scale = float(np.max(np.abs(direct)))
     rows = []
     for p in p_values:
-        fmm = FMMOperator(p=p, max_leaf=50)
+        # m15669: with a geometrically correct octree a leaf is a real box, so
+        # ``max_leaf=50`` packs the whole 200-source ball (radius 0.1) into 8
+        # leaves whose box test (2*size) covers the 0.8 target radius -- every
+        # pair then falls back on the near-field sum and the ladder is vacuous.
+        # ``max_leaf=25`` gives leaves of radius <= 0.23, so the multipole path
+        # carries ~50 % of the target-leaf pairs here.
+        fmm = FMMOperator(p=p, max_leaf=25)
         fmm.setup(sources, charges)
         approx = fmm.matvec(targets, sources, charges)
         rows.append({
@@ -199,6 +205,67 @@ def separated_ladder(p_values: tuple[int, ...] = (1, 2, 3, 4, 6, 8)) -> list[dic
             **routing_counts(fmm, targets),
         })
     return rows
+
+
+def scaling_ladder(
+    levels: tuple[int, ...] = (3, 4, 5),
+    p: int = 2,
+    max_leaf: int = 128,
+    repeats: int = 2,
+) -> dict:
+    """Measured cost scaling on the audit surface (criterion (c), m15669).
+
+    The campaign report's criterion (c) asks for the FMM time log-log slope on
+    ``N in [1e3, 1e5]``.  This ladder *measures* it: every row is a real matvec
+    of ``N`` targets against ``N`` panels of an icosphere, timed against the
+    vectorised dense matvec at the same ``N`` (best of ``repeats``).  Dense is
+    skipped above ``DENSE_MAX`` panels because the reference would exceed the
+    memory of the machine, so the slope of the dense branch is fitted on the
+    rows where it was measured.
+    """
+
+    DENSE_MAX = 20_480
+    rows = []
+    for level in levels:
+        mesh = icosphere(subdivisions=level, radius=1.0)
+        centroids = np.asarray(mesh.centroids, dtype=float)
+        charges = np.asarray(mesh.areas, dtype=float)
+        n = len(centroids)
+
+        op = FMMOperator(p=p, max_leaf=max_leaf)
+        op.setup(centroids, charges)
+        t_fmm, _ = _best_of(lambda: op.matvec(centroids, centroids, charges), repeats)
+        row = {
+            "level": level,
+            "panels": n,
+            "p": p,
+            "leaves": len(op.leaves),
+            "far_fraction": op.far_fraction(centroids),
+            "t_fmm_s": t_fmm,
+            **routing_counts(op, centroids),
+        }
+        if n <= DENSE_MAX:
+            t_dense, _ = _best_of(lambda: dense_matvec(centroids, centroids, charges),
+                                  repeats)
+            row["t_dense_s"] = t_dense
+            row["time_ratio"] = t_fmm / t_dense if t_dense else float("inf")
+        rows.append(row)
+
+    def _slope(key: str) -> float | None:
+        pts = [(row["panels"], row[key]) for row in rows
+               if key in row and row[key] > 0]
+        if len(pts) < 2:
+            return None
+        log_n = np.log(np.array([p_[0] for p_ in pts], dtype=float))
+        log_t = np.log(np.array([p_[1] for p_ in pts], dtype=float))
+        return float(np.polyfit(log_n, log_t, 1)[0])
+
+    return {
+        "rows": rows,
+        "fmm_slope": _slope("t_fmm_s"),
+        "dense_slope": _slope("t_dense_s"),
+        "ratio_slope": _slope("time_ratio"),
+    }
 
 
 def surface_ladder(p_values: tuple[int, ...] = (2, 4)) -> list[dict]:
@@ -261,20 +328,23 @@ class Study:
     separated: list[dict]
     surface: list[dict]
     tautology: dict
+    scaling: dict | None = None
 
     def to_json(self) -> dict:
         return {
-            "mission": "m14931",
+            "mission": "m14931 (re-measured after the m15669 operator fixes)",
             "subject": "tensorbem.fmm",
             "cost": self.cost,
             "accuracy_separated": self.separated,
             "accuracy_surface": self.surface,
             "shipped_physics_test_routing": self.tautology,
+            "scaling": self.scaling,
         }
 
 
 def run_study(*, levels: tuple[int, ...] = (2, 3), p_cost: int = 4,
-              max_leaf: int = 32) -> Study:
+              max_leaf: int = 32, scaling_levels: tuple[int, ...] = (3, 4, 5)
+              ) -> Study:
     cost = [cost_point(level, 2, max_leaf) for level in levels]
     cost.append(cost_point(levels[0], p_cost, max_leaf))
     return Study(
@@ -282,6 +352,7 @@ def run_study(*, levels: tuple[int, ...] = (2, 3), p_cost: int = 4,
         separated=separated_ladder(),
         surface=surface_ladder(),
         tautology=tautology_probe(),
+        scaling=scaling_ladder(levels=scaling_levels),
     )
 
 
@@ -305,19 +376,15 @@ def render_markdown(study: Study) -> str:
             f"{row['avg_leaf']:.2f} | {row['t_fmm_s']:.3f} | {row['t_dense_s']:.4f} | "
             f"{row['time_ratio']:.1f}x | {row['per_unit_cost_ratio']:.1f}x |"
         )
+    ratios = [row["time_ratio"] for row in study.cost]
     lines += [
         "",
         "The last column is `c_fmm / (avg_leaf * c_dense)`: the cost of one",
         "multipole target-leaf interaction divided by the cost of summing the same",
-        "leaf directly. It is **two to three orders of magnitude above one**: the",
-        "pure-Python evaluation of the expansion costs far more than the numpy",
-        "sum over the same sources. The measured FMM/dense wall-time ratio falls",
-        "with `N` because the leaf count grows sub-linearly on a surface source set",
-        "(36 -> 60 leaves for 320 -> 1280 panels), but it stays far above one "
-        f"({study.cost[0]['time_ratio']:.0f}x at {study.cost[0]['panels']} panels, "
-        f"{study.cost[1]['time_ratio']:.0f}x at {study.cost[1]['panels']}), so no",
-        "measured `N` is accelerated by this implementation and the report's",
-        "N-side complexity criterion is an extrapolation, not a measurement.",
+        "leaf directly. The **FMM/dense wall-time ratio** is "
+        + ", ".join(f"{row['time_ratio']:.2f}x at {row['panels']} panels"
+                    for row in study.cost)
+        + ". A ratio below one is an acceleration on that configuration.",
         "",
         "## 2. Routing on the audit surface",
         "",
@@ -363,6 +430,29 @@ def render_markdown(study: Study) -> str:
         "the multipole expansion.",
         "",
     ]
+    sc = study.scaling
+    if sc:
+        lines += [
+            "## 6. Measured cost scaling (criterion (c), `N in [1e3, 2e4]`)",
+            "",
+            "| panels | p | leaves | far fraction | t_FMM (s) | t_dense (s) | FMM/dense |",
+            "|---:|---:|---:|---:|---:|---:|---:|",
+        ]
+        for row in sc["rows"]:
+            dense = f"{row['t_dense_s']:.3f}" if "t_dense_s" in row else "-"
+            ratio = f"{row['time_ratio']:.2f}x" if "time_ratio" in row else "-"
+            lines.append(
+                f"| {row['panels']} | {row['p']} | {row['leaves']} | "
+                f"{row['far_fraction']:.3f} | {row['t_fmm_s']:.3f} | {dense} | {ratio} |"
+            )
+        lines += [
+            "",
+            f"Measured log-log slopes: FMM **{sc['fmm_slope']:.2f}**, dense "
+            f"**{sc['dense_slope']:.2f}**. The campaign report asked for a FMM slope",
+            "in `[0.9, 1.2]`; the value above is the measurement that replaces the",
+            "extrapolation the m14931 audit flagged.",
+            "",
+        ]
     return "\n".join(lines)
 
 

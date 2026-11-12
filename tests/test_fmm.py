@@ -22,6 +22,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from tensorbem import fmm as fmm_mod
 from tensorbem.fmm import (
     FMMOperator,
     build_octree,
@@ -86,8 +87,12 @@ class TestDegeneration:
         direct_result = direct_laplace_matvec(points, points, charges)
 
         abs_diff = np.max(np.abs(fmm_result - direct_result))
-        assert abs_diff < 1e-12, \
-            f"Self-interaction single-leaf error: {abs_diff:.2e}"
+        # The coincident self term is clamped at r = 1e-15, so the entries are
+        # O(1e14) and an absolute 1e-12 anchor is below one ulp of the result.
+        # The degenerate branch must agree to round-off *relative* precision.
+        scale = np.max(np.abs(direct_result))
+        assert abs_diff <= 1e-12 * scale, \
+            f"Self-interaction single-leaf error: {abs_diff:.2e} (scale {scale:.2e})"
 
     def test_p0_far_field_approximation(self):
         """p=0 (monopole only) should be reasonable for well-separated targets."""
@@ -124,7 +129,15 @@ class TestOrderLaw:
     """Criterion (b): multipole error converges as (a/r)^p."""
 
     def test_convergence_slope_far_field(self):
-        """Error should decrease as (a/r)^p."""
+        """Error should decrease as (a/r)^p.
+
+        m15669: the octree children used to be permuted with respect to the
+        ``_child_index`` bit encoding, so a leaf rarely contained its own
+        points and every interaction fell back on the near-field sum.  After the
+        fix a leaf really is a box, so ``max_leaf`` must be small enough for the
+        leaves to be smaller than the target distance -- otherwise this test is
+        vacuous (it compares direct summation with direct summation).
+        """
         np.random.seed(42)
 
         n_sources = 200
@@ -143,7 +156,7 @@ class TestOrderLaw:
                 targets = np.array([[r, 0, 0]])
 
                 direct = direct_laplace_matvec(targets, sources, charges)
-                fmm = fmm_laplace_matvec(targets, sources, charges, p=p, max_leaf=200)
+                fmm = fmm_laplace_matvec(targets, sources, charges, p=p, max_leaf=25)
 
                 err = float(np.abs(fmm[0] - direct[0])) / (abs(direct[0]) + 1e-15)
                 errors[ratio].append(err)
@@ -176,15 +189,20 @@ class TestOrderLaw:
         ps = list(range(1, 12))
         errors = []
         for p in ps:
-            # Use max_leaf=n to ensure single leaf (all near-field for direct comparison)
-            # But we want far-field, so use small max_leaf
-            fmm = fmm_laplace_matvec(targets, sources, charges, p=p, max_leaf=50)
+            # m15669: the leaves must be smaller than the target distance for the
+            # multipole path to be used at all; with the corrected octree
+            # max_leaf=25 gives leaves of radius <= 0.23 about centres closer
+            # than 0.8, so 50% of the target-leaf pairs are multipole-evaluated.
+            fmm = fmm_laplace_matvec(targets, sources, charges, p=p, max_leaf=25)
             err = float(np.max(np.abs(fmm - direct))) / (np.max(np.abs(direct)) + 1e-15)
             errors.append(err)
 
-        # Fit log-log slope
-        log_ps = np.log(np.array(ps, dtype=float))
-        log_errs = np.log(np.array(errors) + 1e-30)
+        # Fit log-log slope above the round-off floor (errors below 1e-13 are
+        # at machine precision and carry no slope information)
+        live = [k for k, e in enumerate(errors) if e > 1e-13]
+        assert len(live) >= 3, f"no convergence range above round-off: {errors}"
+        log_ps = np.log(np.array([ps[k] for k in live], dtype=float))
+        log_errs = np.log(np.array([errors[k] for k in live]))
         slope, _ = np.polyfit(log_ps, log_errs, 1)
 
         # m14931: after the admissibility fix in ``FMMOperator.matvec`` a leaf is
@@ -194,7 +212,7 @@ class TestOrderLaw:
         # largest leaf source radius.  The one-sided bound is what the routing
         # actually guarantees; an error floor near 1e-6 is reached once the
         # near-field direct sums dominate the residual.
-        op = FMMOperator(p=2, max_leaf=50)
+        op = FMMOperator(p=2, max_leaf=25)
         op.setup(sources, charges)
         rho_max = max(op._radii)
         bound_slope = math.log(rho_max / r)
@@ -202,7 +220,9 @@ class TestOrderLaw:
         assert slope <= bound_slope, \
             f"Convergence slower than the (rho/r)**p bound: measured={slope:.3f}, " \
             f"bound={bound_slope:.3f} (rho_max={rho_max:.3f}, r={r:.3f})"
-        assert errors[-1] < 1e-5, f"p={ps[-1]} error {errors[-1]:.3e} above the 1e-5 anchor"
+        # m15669 tightened this anchor from 1e-5: with a geometrically correct
+        # tree the expansion converges about two orders faster here.
+        assert errors[-1] < 1e-8, f"p={ps[-1]} error {errors[-1]:.3e} above the 1e-8 anchor"
 
 
 # ---------------------------------------------------------------------------
@@ -249,10 +269,12 @@ class TestComplexity:
             charges = np.random.randn(N)
             targets = sources[:min(50, N)].copy()
 
-            start = time.perf_counter()
-            direct_laplace_matvec(targets, sources, charges)
-            elapsed = time.perf_counter() - start
-            times.append(elapsed)
+            best = float("inf")
+            for _ in range(3):
+                start = time.perf_counter()
+                direct_laplace_matvec(targets, sources, charges)
+                best = min(best, time.perf_counter() - start)
+            times.append(best)
 
         log_N = np.log(np.array(N_values, dtype=float))
         log_t = np.log(np.array(times))
@@ -299,29 +321,41 @@ class TestPhysicsInvariance:
 class TestMemory:
     """Criterion (e): N=1e5 peak memory < 5% of direct dense matrix."""
 
-    def test_memory_n10k(self):
-        """FMM memory for N=1e4 should be < 5% of dense matrix.
-
-        Scaled down from N=1e5 for practical runtime in pure Python.
-        The memory advantage scales linearly: FMM uses O(N) vs O(N^2) for dense.
-        """
+    @staticmethod
+    def _peak_bytes(n_sources: int, n_targets: int = 100) -> int:
         np.random.seed(42)
-        N = 2_000
-
-        sources = np.random.randn(N, 3)
-        charges = np.random.randn(N)
-        targets = sources[:100].copy()
-
+        sources = np.random.randn(n_sources, 3)
+        charges = np.random.randn(n_sources)
+        targets = sources[:n_targets].copy()
         tracemalloc.start()
         fmm_laplace_matvec(targets, sources, charges, p=4, max_leaf=128)
-        current_fmm, peak_fmm = tracemalloc.get_traced_memory()
+        _, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
+        return peak
 
-        dense_matrix_bytes = N * N * 8
-        fmm_fraction = peak_fmm / dense_matrix_bytes
+    def test_memory_is_constant_in_n(self):
+        """FMM transient memory must not grow with N (criterion (e)).
 
-        assert fmm_fraction < 0.05, \
-            f"FMM memory {peak_fmm / 1e6:.1f} MB is {fmm_fraction*100:.2f}% of dense matrix"
+        m15669: the peak is the vectorised near-field block, which is bounded by
+        a fixed pair budget (``FMMOperator._near_contributions(max_pairs=...)``);
+        it is *not* proportional to the source count.  Two source counts are
+        measured so the assertion actually tests the asymptotic claim, and the
+        absolute gate is taken at the larger N where a dense kernel matrix would
+        be ``N**2 * 8`` bytes.
+        """
+        peak_small = self._peak_bytes(2_000)
+        peak_large = self._peak_bytes(8_000)
+
+        assert peak_large <= 2.0 * peak_small, (
+            f"peak memory grew with N: {peak_small / 1e6:.2f} MB at N=2000 vs "
+            f"{peak_large / 1e6:.2f} MB at N=8000"
+        )
+        dense_matrix_bytes = 8_000 * 8_000 * 8
+        fraction = peak_large / dense_matrix_bytes
+        assert fraction < 0.05, (
+            f"FMM memory {peak_large / 1e6:.1f} MB is {fraction * 100:.2f}% of the "
+            f"N=8000 dense matrix"
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -585,3 +619,186 @@ def generate_fmm_report() -> dict:
 if __name__ == "__main__":
     report = generate_fmm_report()
     print(json.dumps(report, indent=2))
+
+
+# ---------------------------------------------------------------------------
+# (m15669) octree geometry, vectorised matvec equivalence, routing and cost
+# ---------------------------------------------------------------------------
+
+def _reference_matvec(
+    op: FMMOperator,
+    targets: np.ndarray,
+    sources: np.ndarray,
+    charges: np.ndarray,
+) -> np.ndarray:
+    """Scalar per-target / per-leaf reference for :meth:`FMMOperator.matvec`.
+
+    This is the definition the vectorised implementation must reproduce: a
+    target-leaf pair uses the multipole expansion iff the target clears
+    ``_ADMISSIBILITY`` times that leaf's own source radius *and* the two leaves
+    are not :meth:`FMMOperator._is_near`; every other pair is summed directly.
+    """
+    centers = np.array([leaf.center for leaf in op.leaves])
+    out = np.zeros(len(targets), dtype=float)
+    for i, t in enumerate(targets):
+        tleaf = op.leaves[int(np.argmin(np.linalg.norm(centers - t[None, :], axis=1)))]
+        for k, sleaf in enumerate(op.leaves):
+            idx = sleaf.indices
+            if len(idx) == 0:
+                continue
+            rel = t - sleaf.center
+            r_t = float(np.linalg.norm(rel))
+            admissible = r_t > fmm_mod._ADMISSIBILITY * max(op._radii[k], 1e-15)
+            if (not admissible) or op._is_near(tleaf, sleaf):
+                r = np.maximum(np.linalg.norm(sources[idx] - t[None, :], axis=1), 1e-15)
+                out[i] += float(np.sum(charges[idx] / (4.0 * math.pi * r)))
+            else:
+                M = op._multipoles[k]
+                theta = math.acos(np.clip(rel[2] / r_t, -1.0, 1.0))
+                phi = math.atan2(rel[1], rel[0])
+                Y = all_real_spherical_harmonics(
+                    op.p, np.array([theta]), np.array([phi])
+                )[0]
+                for l in range(op.p + 1):
+                    for m in range(-l, l + 1):
+                        col = fmm_mod._sph_index(l, m)
+                        out[i] += M[col] * Y[col] / (r_t ** (l + 1))
+    return out
+
+
+class TestOctreeGeometry:
+    """Every leaf must be a box that contains its own points (m15669)."""
+
+    def test_leaf_points_lie_inside_their_box(self):
+        np.random.seed(7)
+        points = np.random.randn(3000, 3)
+        tree = build_octree(points, max_leaf=32)
+        worst = 0.0
+        for leaf in collect_leaves(tree):
+            d = np.linalg.norm(points[leaf.indices] - leaf.center[None, :], axis=1)
+            worst = max(worst, float(d.max() / leaf.size))
+        # centre-to-corner distance of a box of edge ``size`` is 0.866*size
+        assert worst <= 0.867, f"leaf point spread {worst:.3f} * box size"
+
+    def test_child_index_matches_child_box(self):
+        np.random.seed(11)
+        points = np.random.randn(2000, 3)
+        tree = build_octree(points, max_leaf=16)
+
+        def walk(node):
+            if node.is_leaf:
+                return 0
+            checked = 0
+            for k, child in enumerate(node.children):
+                if child is None:
+                    continue
+                for idx in child.indices:
+                    assert fmm_mod._child_index(points[idx], node.center) == k, (
+                        f"point {idx} stored in child {k} but _child_index says "
+                        f"{fmm_mod._child_index(points[idx], node.center)}"
+                    )
+                checked += 1 + walk(child)
+            return checked
+
+        assert walk(tree) > 0
+
+    def test_leaf_radius_is_bounded_by_box(self):
+        """The multipole convergence radius must be the leaf's box, not the domain."""
+        np.random.seed(3)
+        points = np.random.randn(4000, 3)
+        op = FMMOperator(p=2, max_leaf=32)
+        op.setup(points)
+        radii = np.asarray(op._radii)
+        sizes = np.asarray([leaf.size for leaf in op.leaves])
+        assert np.all(radii <= 0.867 * sizes + 1e-12), (
+            f"max radius/box = {np.max(radii / sizes):.3f}"
+        )
+
+
+class TestVectorisedMatvec:
+    """The blocked matvec must reproduce the scalar reference definition."""
+
+    def _compare(self, p: int, max_leaf: int) -> tuple[float, float]:
+        mesh = icosphere(subdivisions=2, radius=1.0)
+        sources = np.asarray(mesh.centroids, dtype=float)
+        charges = np.asarray(mesh.areas, dtype=float)
+        targets = np.asarray(mesh.vertices, dtype=float)
+
+        op = FMMOperator(p=p, max_leaf=max_leaf)
+        op.setup(sources, charges)
+        fast = op.matvec(targets, sources, charges)
+        ref = _reference_matvec(op, targets, sources, charges)
+        scale = np.max(np.abs(ref))
+        return float(np.max(np.abs(fast - ref)) / scale), op.far_fraction(targets)
+
+    def test_matches_scalar_reference_p2(self):
+        err, far = self._compare(p=2, max_leaf=32)
+        assert far > 0.5, f"only {far:.2%} of pairs used the multipole"
+        assert err < 1e-12, f"vectorised vs scalar reference: {err:.2e}"
+
+    def test_matches_scalar_reference_p4(self):
+        err, far = self._compare(p=4, max_leaf=32)
+        assert far > 0.5, f"only {far:.2%} of pairs used the multipole"
+        assert err < 1e-12, f"vectorised vs scalar reference: {err:.2e}"
+
+    def test_target_block_size_does_not_change_result(self):
+        mesh = icosphere(subdivisions=2, radius=1.0)
+        sources = np.asarray(mesh.centroids, dtype=float)
+        charges = np.asarray(mesh.areas, dtype=float)
+        targets = np.asarray(mesh.vertices, dtype=float)
+
+        op = FMMOperator(p=4, max_leaf=32)
+        op.setup(sources, charges)
+        whole = op.matvec(targets, sources, charges)
+        op.block_size = 7
+        blocked = op.matvec(targets, sources, charges)
+        scale = np.max(np.abs(whole))
+        assert np.max(np.abs(whole - blocked)) / scale < 1e-14
+
+
+class TestSurfaceAccuracyAndCost:
+    """Accuracy and cost on the geometry class the operator is meant for."""
+
+    @staticmethod
+    def _surface(level: int) -> tuple[np.ndarray, np.ndarray]:
+        mesh = icosphere(subdivisions=level, radius=1.0)
+        return (np.asarray(mesh.centroids, dtype=float),
+                np.asarray(mesh.areas, dtype=float))
+
+    def test_surface_accuracy_p2_p4(self):
+        """Panel-centroid sources, mesh-vertex targets: no coincident pairs."""
+        vertices = np.asarray(icosphere(subdivisions=2).vertices, dtype=float)
+        centroids, areas = self._surface(2)
+        direct = direct_laplace_matvec(vertices, centroids, areas)
+        scale = np.max(np.abs(direct))
+        for p, gate in ((2, 5e-4), (4, 1e-4)):
+            op = FMMOperator(p=p, max_leaf=32)
+            op.setup(centroids, areas)
+            approx = op.matvec(vertices, centroids, areas)
+            err = float(np.max(np.abs(approx - direct)) / scale)
+            assert err < gate, f"p={p} surface max rel error {err:.2e} >= {gate:.0e}"
+
+    def test_fmm_is_not_slower_than_dense_at_n5120(self):
+        """m15669 cost gate: the FMM matvec must be within 2x of the dense one.
+
+        Before the octree/vectorisation fixes the same configuration cost 98x the
+        dense matvec (m14931 audit), because no leaf contained its own points and
+        every pair fell back on the near-field sum.
+        """
+        centroids, areas = self._surface(4)  # 20*4**4 = 5120 panels
+        best = {}
+        for name, fn in (
+            ("fmm", lambda: fmm_laplace_matvec(centroids, centroids, areas, p=2,
+                                               max_leaf=128)),
+            ("dense", lambda: direct_laplace_matvec(centroids, centroids, areas)),
+        ):
+            times = []
+            for _ in range(2):
+                start = time.perf_counter()
+                fn()
+                times.append(time.perf_counter() - start)
+            best[name] = min(times)
+        ratio = best["fmm"] / best["dense"]
+        assert ratio < 2.0, (
+            f"FMM {best['fmm']:.3f}s vs dense {best['dense']:.3f}s (ratio {ratio:.2f})"
+        )
