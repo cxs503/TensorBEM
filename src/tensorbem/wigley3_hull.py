@@ -191,7 +191,18 @@ def compute_wigley3_properties(
     A_wp = 2.0 * B * L / 3.0
     I_xx = 4.0 * B**3 * L / 105.0
     I_yy = B * L**3 / 30.0
-    KB = T * (65.0 + 11.0 * alpha) / (16.0 * (5.0 + alpha))
+    # Centre of buoyancy.  With the analytic half breadth
+    # b(x, z) = (B/2)(1 - xi^2)(1 - zeta^2)(1 + alpha zeta^2) the vertical
+    # moment integrates in closed form,
+    #     int_{-1}^{0} zeta (1 - zeta^2)(1 + alpha zeta^2) d zeta
+    #         = -(1/4 + alpha/12),
+    #     int_{-1}^{0}      (1 - zeta^2)(1 + alpha zeta^2) d zeta
+    #         =  (2/3 + 2 alpha/15),
+    # hence KB = T [1 - (15 + 5 alpha)/(40 + 8 alpha)], which reduces to the
+    # classical KB = 5T/8 at alpha = 0.  (The previous formula
+    # T (65 + 11 alpha)/(16 (5 + alpha)) returned 0.8125 T instead of 0.625 T
+    # at alpha = 0, i.e. a +30 % centre-of-buoyancy error.)
+    KB = T * (1.0 - (15.0 + 5.0 * alpha) / (40.0 + 8.0 * alpha))
     BM_T = I_xx / volume
     BM_L = I_yy / volume
     KG_default = T * 0.5
