@@ -71,7 +71,13 @@ def error_versus_order() -> dict:
             row[f"{label}_first_err"] = _rel_err(first, direct_a)
             row[f"{label}_second_err"] = _rel_err(second, direct_b)
         rows.append(row)
-    return {"far_fraction": float(FMMOperator(p=4, max_leaf=25).far_fraction(targets)),
+    # m16156: far_fraction must be measured on a *set-up* operator.  The m16000
+    # run of this line forgot ``setup`` and therefore published 0.0, which read
+    # as "no far pairs" although the multipole path is what carried the defect.
+    probe = FMMOperator(p=4, max_leaf=25)
+    probe.setup(sources)
+    return {"far_fraction": float(probe.far_fraction(targets)),
+            "far_work_fraction": float(probe.far_work_fraction(targets)),
             "rows": rows}
 
 
