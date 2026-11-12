@@ -60,7 +60,10 @@ from numpy.typing import ArrayLike, NDArray
 from .free_surface3d import pure_wave_value_and_source_gradient_3d
 from .geometry3d import SurfaceMesh3D, TriangleMesh, WettedHullMesh
 from .interior_panels import InteriorPanelSet, interior_panel_points
-from .kernels3d import integrate_single_layer_triangle_self
+from .kernels3d import (
+    integrate_single_layer_triangle_self,
+    integrate_single_layer_triangle_self_batch,
+)
 
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
@@ -233,9 +236,18 @@ def _vectorized_single_layer_rankine(
         out[start:stop] = (areas[None, :] / _FOUR_PI) * ((1.0 / dist) @ w_ref)
 
     if self_diagonal:
-        for idx in range(p_cnt):
-            tri = np.stack((v0[idx], v1[idx], v2[idx]), axis=0)
-            out[idx, idx] = integrate_single_layer_triangle_self(tri)
+        # Only the collocation panel (target == its own centroid) needs the exact
+        # self integral; batch it instead of looping over panels.
+        if p_cnt <= m_cnt:
+            diagonal = integrate_single_layer_triangle_self_batch(
+                np.stack((v0, v1, v2), axis=1)
+            )
+            rows = np.arange(p_cnt)
+            out[rows, rows] = diagonal
+        else:  # pragma: no cover - callers keep one target per panel
+            for idx in range(min(p_cnt, m_cnt)):
+                tri = np.stack((v0[idx], v1[idx], v2[idx]), axis=0)
+                out[idx, idx] = integrate_single_layer_triangle_self(tri)
     return out
 
 

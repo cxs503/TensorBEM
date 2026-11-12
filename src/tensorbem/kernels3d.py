@@ -264,6 +264,140 @@ def _polar_sectors(
     )
 
 
+def _validate_triangle_batch(vertices: FloatArray, name: str = "vertices") -> FloatArray:
+    """Validate a ``(F, 3, 3)`` stack of triangles (one row per panel)."""
+    points = np.asarray(vertices, dtype=float)
+    if points.ndim != 3 or points.shape[1:] != (3, 3):
+        raise ValueError(f"{name} must have shape (F, 3, 3)")
+    if points.shape[0] == 0:
+        raise ValueError(f"{name} must contain at least one triangle")
+    if not np.isfinite(points).all():
+        raise ValueError(f"{name} must all be finite")
+    doubled_area = np.linalg.norm(
+        np.cross(points[:, 1] - points[:, 0], points[:, 2] - points[:, 0]), axis=1
+    )
+    if np.any(doubled_area <= 0.0):
+        raise ValueError("triangle must be non-degenerate")
+    return points
+
+
+def _polar_sectors_batch(
+    vertices: FloatArray, order: int, *, with_direction: bool = False
+):
+    """Vectorised :func:`_polar_sectors` over a stack of triangles (m16451 lesson).
+
+    Every arithmetic step is the elementwise counterpart of the scalar routine,
+    so the batched numbers agree with the per-triangle path to round-off; what
+    disappears is the Python loop (``3 * F`` calls of ``leggauss`` and the
+    per-sector bookkeeping), not any term of the quadrature.
+
+    Returns ``(weights, radial_extent)`` of shape ``(F, 3 * order)`` and, if
+    ``with_direction``, also the in-plane unit directions ``(F, 3 * order, 3)``.
+    """
+    points = _validate_triangle_batch(vertices)
+    order = _validate_order(order)
+    count = points.shape[0]
+    centroid = points.mean(axis=1)
+    normal = np.cross(points[:, 1] - points[:, 0], points[:, 2] - points[:, 0])
+    normal = normal / np.linalg.norm(normal, axis=1)[:, None]
+    nodes, gauss_weights = leggauss(order)
+    weight_all: list[FloatArray] = []
+    extent_all: list[FloatArray] = []
+    direction_all: list[FloatArray] = []
+    for index in range(3):
+        a = points[:, index] - centroid
+        b = points[:, (index + 1) % 3] - centroid
+        norm_a = np.linalg.norm(a, axis=1)
+        if np.any(norm_a <= 0.0):
+            raise ValueError("centroid does not lie strictly inside the triangle")
+        e1 = a / norm_a[:, None]
+        e2 = np.cross(normal, e1)
+        a2 = np.stack((np.einsum("ij,ij->i", a, e1), np.einsum("ij,ij->i", a, e2)), axis=1)
+        b2 = np.stack((np.einsum("ij,ij->i", b, e1), np.einsum("ij,ij->i", b, e2)), axis=1)
+        angle_a = np.arctan2(a2[:, 1], a2[:, 0])
+        angle_b = np.arctan2(b2[:, 1], b2[:, 0])
+        dtheta = (angle_b - angle_a + math.pi) % (2.0 * math.pi) - math.pi
+        edge = b2 - a2
+        edge_normal = np.stack((edge[:, 1], -edge[:, 0]), axis=1)
+        offset = np.einsum("ij,ij->i", edge_normal, a2)
+        flip = offset < 0.0
+        edge_normal[flip] = -edge_normal[flip]
+        offset = np.abs(offset)
+        if np.any(offset <= 0.0):
+            raise ValueError("centroid does not lie strictly inside the triangle")
+        theta = angle_a[:, None] + 0.5 * dtheta[:, None] * (nodes[None, :] + 1.0)
+        cosine = (
+            np.cos(theta) * edge_normal[:, 0][:, None]
+            + np.sin(theta) * edge_normal[:, 1][:, None]
+        )
+        weight_all.append(0.5 * dtheta[:, None] * gauss_weights[None, :])
+        extent_all.append(offset[:, None] / cosine)
+        if with_direction:
+            direction_all.append(
+                np.cos(theta)[:, :, None] * e1[:, None, :]
+                + np.sin(theta)[:, :, None] * e2[:, None, :]
+            )
+    weights = np.concatenate(weight_all, axis=1)
+    extent = np.concatenate(extent_all, axis=1)
+    if count == 0:  # pragma: no cover - guarded by the validator
+        direction = np.zeros((0, 3 * order, 3), dtype=float)
+    else:
+        direction = np.concatenate(direction_all, axis=1) if with_direction else None
+    return weights, extent, direction
+
+
+def integrate_single_layer_triangle_self_batch(
+    vertices: FloatArray, order: int = 64, *, panel_chunk: int = 32
+) -> FloatArray:
+    """Vectorised :func:`integrate_single_layer_triangle_self` over ``F`` panels.
+
+    ``vertices`` has shape ``(F, 3, 3)`` (e.g. ``mesh.vertices[mesh.faces]``).
+    Returns ``F`` self single-layer integrals.  ``panel_chunk`` bounds the size
+    of the temporary ``(chunk, 3 * order)`` arrays, so the extra memory stays
+    independent of ``F`` (the dense operator matrices scale as ``F**2``).
+    """
+    points = _validate_triangle_batch(vertices)
+    order = _validate_order(order)
+    if isinstance(panel_chunk, (bool, np.bool_)) or not isinstance(
+        panel_chunk, (int, np.integer)
+    ):
+        raise ValueError("panel_chunk must be an integer >= 1")
+    if int(panel_chunk) < 1:
+        raise ValueError("panel_chunk must be an integer >= 1")
+    chunk = int(panel_chunk)
+    out = np.empty(points.shape[0], dtype=float)
+    for start in range(0, points.shape[0], chunk):
+        stop = min(start + chunk, points.shape[0])
+        weights, extent, _ = _polar_sectors_batch(points[start:stop], order)
+        out[start:stop] = np.einsum("ij,ij->i", weights, extent) / _FOUR_PI
+    return out
+
+
+def gradient_single_layer_triangle_self_batch(
+    vertices: FloatArray, order: int = 64, *, panel_chunk: int = 32
+) -> FloatArray:
+    """Vectorised :func:`gradient_single_layer_triangle_self`; returns ``(F, 3)``."""
+    points = _validate_triangle_batch(vertices)
+    order = _validate_order(order)
+    if isinstance(panel_chunk, (bool, np.bool_)) or not isinstance(
+        panel_chunk, (int, np.integer)
+    ):
+        raise ValueError("panel_chunk must be an integer >= 1")
+    if int(panel_chunk) < 1:
+        raise ValueError("panel_chunk must be an integer >= 1")
+    chunk = int(panel_chunk)
+    out = np.empty((points.shape[0], 3), dtype=float)
+    for start in range(0, points.shape[0], chunk):
+        stop = min(start + chunk, points.shape[0])
+        weights, extent, direction = _polar_sectors_batch(
+            points[start:stop], order, with_direction=True
+        )
+        out[start:stop] = (
+            np.einsum("ij,ijk->ik", weights * extent, direction) / _FOUR_PI
+        )
+    return out
+
+
 def integrate_single_layer_triangle_self(vertices: FloatArray, order: int = 64) -> float:
     r"""Integrate ``G`` over a flat triangle at its centroid.
 
