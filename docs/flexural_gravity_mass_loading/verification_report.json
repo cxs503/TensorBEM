@@ -562,6 +562,399 @@
       "threshold": 1e-09,
       "threshold_percent": 1.0,
       "pass": true
+    },
+    "V13_bem_depth_factor": {
+      "description": "independent boundary-integral route (periodic strip BEM for Lambda=(dphi/dz)/phi, no analytic tanh, no grid derivative) reproduces eq.(3): at 64 panels/wavelength |d omega^2|/omega^2 < 2e-3, the error decreases monotonically under refinement (overall slope 1.0-2.2), the exact-Lambda rewriting is an identity to roundoff, and the driven-Rayleigh-quotient / DtN routes agree",
+      "rows": [
+        {
+          "ice_thickness": 1.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.01,
+          "kH": 2.0,
+          "mu": 0.8946341463414634,
+          "depth_factor_exact": 0.00964027580075817,
+          "identity_error": 0.0,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            32,
+            48,
+            80,
+            148
+          ],
+          "depth_factor_bem": [
+            0.00986403577124528,
+            0.009724554603522787,
+            0.009690694610398868,
+            0.00965366562235452
+          ],
+          "panel_scatter": [
+            0.009719714101456013,
+            0.017132544308559226,
+            0.06984878278433464,
+            0.04297063041245755
+          ],
+          "omega2_relative_errors": [
+            0.023007913124509727,
+            0.008666962407791778,
+            0.005185064770284901,
+            0.001377052988357463
+          ],
+          "finest_error": 0.001377052988357463,
+          "order_first_last": 1.3541580511822717,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 3.3306690738754696e-16,
+          "depth_factor_rel_error_at_cross_route": 0.005230017344185711
+        },
+        {
+          "ice_thickness": 1.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.1,
+          "kH": 20.0,
+          "mu": 0.8946341463414634,
+          "depth_factor_exact": 0.1,
+          "identity_error": 1.7415694631524413e-16,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            38,
+            62,
+            100,
+            172
+          ],
+          "depth_factor_bem": [
+            0.10363339515609175,
+            0.10129412747973232,
+            0.10043010858129352,
+            0.1001446224557808
+          ],
+          "panel_scatter": [
+            0.05379042856531288,
+            0.039592923208900344,
+            0.04259249616200115,
+            0.0425471964957321
+          ],
+          "omega2_relative_errors": [
+            0.033251109096417146,
+            0.011865966819773702,
+            0.003946499884426979,
+            0.0013273073751700368
+          ],
+          "finest_error": 0.0013273073751700368,
+          "order_first_last": 1.5489426839436138,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 0.0,
+          "depth_factor_rel_error_at_cross_route": 0.00430108581293509
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 200.0,
+          "wavenumber": 0.5,
+          "kH": 100.0,
+          "mu": 1.7892682926829269,
+          "depth_factor_exact": 0.5,
+          "identity_error": 0.0,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            56,
+            80,
+            120,
+            192
+          ],
+          "depth_factor_bem": [
+            0.5182452457701509,
+            0.5065026775383262,
+            0.5021639025681935,
+            0.5007295214248344
+          ],
+          "panel_scatter": [
+            0.05337439744948825,
+            0.03980064301957445,
+            0.04271150171999898,
+            0.0426246567334025
+          ],
+          "omega2_relative_errors": [
+            0.018933676264165214,
+            0.00682241270317114,
+            0.002279584712172815,
+            0.0007695619420396663
+          ],
+          "finest_error": 0.0007695619420396663,
+          "order_first_last": 1.5402577652250782,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 8.881784197001252e-16,
+          "depth_factor_rel_error_at_cross_route": 0.004327805136387086
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "wavenumber": 0.05,
+          "kH": 1.0,
+          "mu": 1.7892682926829269,
+          "depth_factor_exact": 0.03807970779778824,
+          "identity_error": 0.0,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            32,
+            48,
+            80,
+            144
+          ],
+          "depth_factor_bem": [
+            0.03930541991190686,
+            0.03843069455897411,
+            0.03819193328120778,
+            0.038138022684691054
+          ],
+          "panel_scatter": [
+            0.006400180211650912,
+            0.004938661226541129,
+            0.017751104943372578,
+            0.07252663429343928
+          ],
+          "omega2_relative_errors": [
+            0.030073086820988883,
+            0.008624139840174978,
+            0.00275860914038162,
+            0.0014335648311312203
+          ],
+          "finest_error": 0.0014335648311312203,
+          "order_first_last": 1.4635979680858915,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 8.881784197001252e-16,
+          "depth_factor_rel_error_at_cross_route": 0.002947120393241409
+        },
+        {
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "wavenumber": 0.3,
+          "kH": 6.0,
+          "mu": 1.7892682926829269,
+          "depth_factor_exact": 0.29999631349523864,
+          "identity_error": 4.712615649418584e-16,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            32,
+            48,
+            88,
+            160
+          ],
+          "depth_factor_bem": [
+            0.3103708725017358,
+            0.30381547965555505,
+            0.3012610090822276,
+            0.30041808941483134
+          ],
+          "panel_scatter": [
+            0.05221039683061344,
+            0.038899005194448916,
+            0.04220991607644886,
+            0.04230561366180672
+          ],
+          "omega2_relative_errors": [
+            0.02223459843441584,
+            0.008247375770168453,
+            0.0027391832600014744,
+            0.0009144135877701354
+          ],
+          "finest_error": 0.0009144135877701354,
+          "order_first_last": 1.5346052325187116,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 0.0,
+          "depth_factor_rel_error_at_cross_route": 0.00421570376066982
+        },
+        {
+          "ice_thickness": 0.5,
+          "water_depth": 20.0,
+          "wavenumber": 0.6,
+          "kH": 12.0,
+          "mu": 0.4473170731707317,
+          "depth_factor_exact": 0.5999999999546983,
+          "identity_error": 2.590465191196161e-16,
+          "panels_per_wavelength": [
+            8,
+            16,
+            32,
+            64
+          ],
+          "n_panels": [
+            32,
+            56,
+            96,
+            166
+          ],
+          "depth_factor_bem": [
+            0.6216454933367621,
+            0.6077037527995316,
+            0.6025550832995615,
+            0.6008554383943362
+          ],
+          "panel_scatter": [
+            0.05532436389072638,
+            0.03912401332319072,
+            0.042345362110125497,
+            0.042396342038558396
+          ],
+          "omega2_relative_errors": [
+            0.02822673853025342,
+            0.010095315284322478,
+            0.0033543607377159185,
+            0.001123708377770789
+          ],
+          "finest_error": 0.001123708377770789,
+          "order_first_last": 1.5502409524391936,
+          "cross_route_ppw": 32,
+          "cross_route_rel_diff": 4.440892098500626e-16,
+          "depth_factor_rel_error_at_cross_route": 0.004258472241760236
+        }
+      ],
+      "max_relative_error": 0.0014335648311312203,
+      "max_cross_route_rel_diff": 8.881784197001252e-16,
+      "max_identity_error": 4.712615649418584e-16,
+      "omega_sweep": [
+        {
+          "wavenumber": 0.005,
+          "kH": 0.1,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.0004983399731247791,
+          "depth_factor_bem": 0.0005005739164224801,
+          "omega_eq3": 0.06988441191748279,
+          "omega_bem": 0.07004073477080967,
+          "relative_error": 0.0022368772811804938
+        },
+        {
+          "wavenumber": 0.01,
+          "kH": 0.2,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.00197375320224904,
+          "depth_factor_bem": 0.0019783551363483968,
+          "omega_eq3": 0.13913943717239277,
+          "omega_bem": 0.13930097757298027,
+          "relative_error": 0.0011609965073191564
+        },
+        {
+          "wavenumber": 0.02,
+          "kH": 0.4,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.007598979245104498,
+          "depth_factor_bem": 0.007608934170404766,
+          "omega_eq3": 0.279126505885513,
+          "omega_bem": 0.2793068245954035,
+          "relative_error": 0.0006460107015577865
+        },
+        {
+          "wavenumber": 0.05,
+          "kH": 1.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.03807970779778824,
+          "depth_factor_bem": 0.038138022684691054,
+          "omega_eq3": 1.0794463498240985,
+          "omega_bem": 1.0802198008874124,
+          "relative_error": 0.0007165257110184342
+        },
+        {
+          "wavenumber": 0.1,
+          "kH": 2.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.09640275800758169,
+          "depth_factor_bem": 0.09653481866258047,
+          "omega_eq3": 5.558960776015382,
+          "omega_bem": 5.562206592945916,
+          "relative_error": 0.0005838891586604777
+        },
+        {
+          "wavenumber": 0.2,
+          "kH": 4.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.19986585994781342,
+          "depth_factor_bem": 0.20014639958575198,
+          "omega_eq3": 29.38778906989906,
+          "omega_bem": 29.40297158160284,
+          "relative_error": 0.0005166265372216206
+        },
+        {
+          "wavenumber": 0.3,
+          "kH": 6.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.29999631349523864,
+          "depth_factor_bem": 0.30041808941483134,
+          "omega_eq3": 76.0903713328314,
+          "omega_bem": 76.12515241829652,
+          "relative_error": 0.00045710232261830797
+        },
+        {
+          "wavenumber": 0.5,
+          "kH": 10.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.49999999793884636,
+          "depth_factor_bem": 0.5007103302213252,
+          "omega_eq3": 245.71634631422958,
+          "omega_bem": 245.80839077745532,
+          "relative_error": 0.0003745964182131356
+        },
+        {
+          "wavenumber": 0.8,
+          "kH": 16.0,
+          "ice_thickness": 2.0,
+          "water_depth": 20.0,
+          "panels_per_wavelength": 64,
+          "depth_factor_exact": 0.7999999999999798,
+          "depth_factor_bem": 0.8011463180131466,
+          "omega_eq3": 702.3592157498422,
+          "omega_bem": 702.5659703933718,
+          "relative_error": 0.0002943716532699536
+        }
+      ],
+      "max_sweep_relative_error": 0.0022368772811804938,
+      "min_order_first_last": 1.3541580511822717,
+      "max_order_first_last": 1.5502409524391936,
+      "monotone_refinement": true,
+      "threshold": 0.002,
+      "identity_threshold": 1e-12,
+      "cross_route_threshold": 1e-12,
+      "min_order_threshold": 1.0,
+      "max_order_threshold": 2.2,
+      "sweep_threshold": 0.003,
+      "pass": true
     }
   },
   "inertia_effect_table": [
@@ -2375,6 +2768,382 @@
       "completion_ratio": 1.0,
       "energy_residual_denominator_only": 2.6153682562581103e-09,
       "denominator_only_deviation_percent": 2.615368588365641e-07
+    }
+  ],
+  "bem_route_table": [
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.01,
+      "kH": 2.0,
+      "mu": 0.8946341463414634,
+      "depth_factor_exact": 0.00964027580075817,
+      "identity_error": 0.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        32,
+        48,
+        80,
+        148
+      ],
+      "depth_factor_bem": [
+        0.00986403577124528,
+        0.009724554603522787,
+        0.009690694610398868,
+        0.00965366562235452
+      ],
+      "panel_scatter": [
+        0.009719714101456013,
+        0.017132544308559226,
+        0.06984878278433464,
+        0.04297063041245755
+      ],
+      "omega2_relative_errors": [
+        0.023007913124509727,
+        0.008666962407791778,
+        0.005185064770284901,
+        0.001377052988357463
+      ],
+      "finest_error": 0.001377052988357463,
+      "order_first_last": 1.3541580511822717,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 3.3306690738754696e-16,
+      "depth_factor_rel_error_at_cross_route": 0.005230017344185711
+    },
+    {
+      "ice_thickness": 1.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.1,
+      "kH": 20.0,
+      "mu": 0.8946341463414634,
+      "depth_factor_exact": 0.1,
+      "identity_error": 1.7415694631524413e-16,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        38,
+        62,
+        100,
+        172
+      ],
+      "depth_factor_bem": [
+        0.10363339515609175,
+        0.10129412747973232,
+        0.10043010858129352,
+        0.1001446224557808
+      ],
+      "panel_scatter": [
+        0.05379042856531288,
+        0.039592923208900344,
+        0.04259249616200115,
+        0.0425471964957321
+      ],
+      "omega2_relative_errors": [
+        0.033251109096417146,
+        0.011865966819773702,
+        0.003946499884426979,
+        0.0013273073751700368
+      ],
+      "finest_error": 0.0013273073751700368,
+      "order_first_last": 1.5489426839436138,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 0.0,
+      "depth_factor_rel_error_at_cross_route": 0.00430108581293509
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 200.0,
+      "wavenumber": 0.5,
+      "kH": 100.0,
+      "mu": 1.7892682926829269,
+      "depth_factor_exact": 0.5,
+      "identity_error": 0.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        56,
+        80,
+        120,
+        192
+      ],
+      "depth_factor_bem": [
+        0.5182452457701509,
+        0.5065026775383262,
+        0.5021639025681935,
+        0.5007295214248344
+      ],
+      "panel_scatter": [
+        0.05337439744948825,
+        0.03980064301957445,
+        0.04271150171999898,
+        0.0426246567334025
+      ],
+      "omega2_relative_errors": [
+        0.018933676264165214,
+        0.00682241270317114,
+        0.002279584712172815,
+        0.0007695619420396663
+      ],
+      "finest_error": 0.0007695619420396663,
+      "order_first_last": 1.5402577652250782,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 8.881784197001252e-16,
+      "depth_factor_rel_error_at_cross_route": 0.004327805136387086
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.05,
+      "kH": 1.0,
+      "mu": 1.7892682926829269,
+      "depth_factor_exact": 0.03807970779778824,
+      "identity_error": 0.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        32,
+        48,
+        80,
+        144
+      ],
+      "depth_factor_bem": [
+        0.03930541991190686,
+        0.03843069455897411,
+        0.03819193328120778,
+        0.038138022684691054
+      ],
+      "panel_scatter": [
+        0.006400180211650912,
+        0.004938661226541129,
+        0.017751104943372578,
+        0.07252663429343928
+      ],
+      "omega2_relative_errors": [
+        0.030073086820988883,
+        0.008624139840174978,
+        0.00275860914038162,
+        0.0014335648311312203
+      ],
+      "finest_error": 0.0014335648311312203,
+      "order_first_last": 1.4635979680858915,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 8.881784197001252e-16,
+      "depth_factor_rel_error_at_cross_route": 0.002947120393241409
+    },
+    {
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "wavenumber": 0.3,
+      "kH": 6.0,
+      "mu": 1.7892682926829269,
+      "depth_factor_exact": 0.29999631349523864,
+      "identity_error": 4.712615649418584e-16,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        32,
+        48,
+        88,
+        160
+      ],
+      "depth_factor_bem": [
+        0.3103708725017358,
+        0.30381547965555505,
+        0.3012610090822276,
+        0.30041808941483134
+      ],
+      "panel_scatter": [
+        0.05221039683061344,
+        0.038899005194448916,
+        0.04220991607644886,
+        0.04230561366180672
+      ],
+      "omega2_relative_errors": [
+        0.02223459843441584,
+        0.008247375770168453,
+        0.0027391832600014744,
+        0.0009144135877701354
+      ],
+      "finest_error": 0.0009144135877701354,
+      "order_first_last": 1.5346052325187116,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 0.0,
+      "depth_factor_rel_error_at_cross_route": 0.00421570376066982
+    },
+    {
+      "ice_thickness": 0.5,
+      "water_depth": 20.0,
+      "wavenumber": 0.6,
+      "kH": 12.0,
+      "mu": 0.4473170731707317,
+      "depth_factor_exact": 0.5999999999546983,
+      "identity_error": 2.590465191196161e-16,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "n_panels": [
+        32,
+        56,
+        96,
+        166
+      ],
+      "depth_factor_bem": [
+        0.6216454933367621,
+        0.6077037527995316,
+        0.6025550832995615,
+        0.6008554383943362
+      ],
+      "panel_scatter": [
+        0.05532436389072638,
+        0.03912401332319072,
+        0.042345362110125497,
+        0.042396342038558396
+      ],
+      "omega2_relative_errors": [
+        0.02822673853025342,
+        0.010095315284322478,
+        0.0033543607377159185,
+        0.001123708377770789
+      ],
+      "finest_error": 0.001123708377770789,
+      "order_first_last": 1.5502409524391936,
+      "cross_route_ppw": 32,
+      "cross_route_rel_diff": 4.440892098500626e-16,
+      "depth_factor_rel_error_at_cross_route": 0.004258472241760236
+    }
+  ],
+  "bem_omega_sweep": [
+    {
+      "wavenumber": 0.005,
+      "kH": 0.1,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.0004983399731247791,
+      "depth_factor_bem": 0.0005005739164224801,
+      "omega_eq3": 0.06988441191748279,
+      "omega_bem": 0.07004073477080967,
+      "relative_error": 0.0022368772811804938
+    },
+    {
+      "wavenumber": 0.01,
+      "kH": 0.2,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.00197375320224904,
+      "depth_factor_bem": 0.0019783551363483968,
+      "omega_eq3": 0.13913943717239277,
+      "omega_bem": 0.13930097757298027,
+      "relative_error": 0.0011609965073191564
+    },
+    {
+      "wavenumber": 0.02,
+      "kH": 0.4,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.007598979245104498,
+      "depth_factor_bem": 0.007608934170404766,
+      "omega_eq3": 0.279126505885513,
+      "omega_bem": 0.2793068245954035,
+      "relative_error": 0.0006460107015577865
+    },
+    {
+      "wavenumber": 0.05,
+      "kH": 1.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.03807970779778824,
+      "depth_factor_bem": 0.038138022684691054,
+      "omega_eq3": 1.0794463498240985,
+      "omega_bem": 1.0802198008874124,
+      "relative_error": 0.0007165257110184342
+    },
+    {
+      "wavenumber": 0.1,
+      "kH": 2.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.09640275800758169,
+      "depth_factor_bem": 0.09653481866258047,
+      "omega_eq3": 5.558960776015382,
+      "omega_bem": 5.562206592945916,
+      "relative_error": 0.0005838891586604777
+    },
+    {
+      "wavenumber": 0.2,
+      "kH": 4.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.19986585994781342,
+      "depth_factor_bem": 0.20014639958575198,
+      "omega_eq3": 29.38778906989906,
+      "omega_bem": 29.40297158160284,
+      "relative_error": 0.0005166265372216206
+    },
+    {
+      "wavenumber": 0.3,
+      "kH": 6.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.29999631349523864,
+      "depth_factor_bem": 0.30041808941483134,
+      "omega_eq3": 76.0903713328314,
+      "omega_bem": 76.12515241829652,
+      "relative_error": 0.00045710232261830797
+    },
+    {
+      "wavenumber": 0.5,
+      "kH": 10.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.49999999793884636,
+      "depth_factor_bem": 0.5007103302213252,
+      "omega_eq3": 245.71634631422958,
+      "omega_bem": 245.80839077745532,
+      "relative_error": 0.0003745964182131356
+    },
+    {
+      "wavenumber": 0.8,
+      "kH": 16.0,
+      "ice_thickness": 2.0,
+      "water_depth": 20.0,
+      "panels_per_wavelength": 64,
+      "depth_factor_exact": 0.7999999999999798,
+      "depth_factor_bem": 0.8011463180131466,
+      "omega_eq3": 702.3592157498422,
+      "omega_bem": 702.5659703933718,
+      "relative_error": 0.0002943716532699536
     }
   ],
   "figures": [

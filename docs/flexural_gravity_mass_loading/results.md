@@ -18,6 +18,7 @@
 | V10_e5_arbitration | sign(lambda_ice/lambda_open - 1) == sign(f - f_c) for every case; f_c = omega_eq3(k_c)/2pi | 28/28 cases sign-consistent | 1.000000 | PASS |
 | V11_fd_depth_factor | independent FD route (discretised psi''=k^2 psi, no analytic tanh) reproduces eq.(3): finest-grid |d omega^2|/omega^2 < 1e-6 while the truncation-dominated coarse pair shows second-order convergence (observed order in [1.7, 2.3]) | 4.615544e-07 | 1.000000e-06 | PASS |
 | V12_energy_balance | variational energy balance (quadrature depth integral) is satisfied by eq.(3) and rejects the denominator-only variant by >1% in shallow water | 4.901655e-16 | 1.000000e-09 | PASS |
+| V13_bem_depth_factor | independent boundary-integral route (periodic strip BEM for Lambda=(dphi/dz)/phi, no analytic tanh, no grid derivative) reproduces eq.(3): at 64 panels/wavelength |d omega^2|/omega^2 < 2e-3, the error decreases monotonically under refinement (overall slope 1.0-2.2), the exact-Lambda rewriting is an identity to roundoff, and the driven-Rayleigh-quotient / DtN routes agree | 0.001434 | 0.002000 | PASS |
 
 ## 平板惯性对波长比的影响（海洋波频段）
 
@@ -101,6 +102,29 @@
 | 0.5 | 20.0 | 0.2 | 4 | 0.9993 | 0.4473 | 1.401e-16 | 1.000000000000 | 5.609e-04 | 0.056 |
 | 0.5 | 20.0 | 0.3 | 6 | 1.0000 | 0.4473 | 2.401e-16 | 1.000000000000 | 9.381e-06 | 0.001 |
 | 0.5 | 20.0 | 0.5 | 10 | 1.0000 | 0.4473 | 2.535e-16 | 1.000000000000 | 2.615e-09 | 0.000 |
+
+## V13 独立边界积分路线（周期条带 BEM 求 Lambda=(dphi/dz)/phi，不用解析 tanh）
+
+eq.(3) 在 Lambda 表述下等价于 omega^2 = (g + D k^4/rho_w) Lambda / (1 + mu Lambda)；Lambda 由 Laplace 方程混合边界积分方程解得，两条独立路线（driven 瑞利商 / 组装 DtN 映射）须一致。
+
+| h_ice [m] | H [m] | k [1/m] | kH | Lambda 精确 | Lambda_BEM(64ppw) | rel err 序列 (8/16/32/64 ppw) | 整体斜率 | 最细 rel err | 双路线差 | 恒等式残差 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1.0 | 200.0 | 0.01 | 2 | 0.009640 | 0.009654 | 2.301e-02, 8.667e-03, 5.185e-03, 1.377e-03 | 1.35 | 1.377e-03 | 3.3e-16 | 0.0e+00 |
+| 1.0 | 200.0 | 0.1 | 20 | 0.100000 | 0.100145 | 3.325e-02, 1.187e-02, 3.946e-03, 1.327e-03 | 1.55 | 1.327e-03 | 0.0e+00 | 1.7e-16 |
+| 2.0 | 200.0 | 0.5 | 100 | 0.500000 | 0.500730 | 1.893e-02, 6.822e-03, 2.280e-03, 7.696e-04 | 1.54 | 7.696e-04 | 8.9e-16 | 0.0e+00 |
+| 2.0 | 20.0 | 0.05 | 1 | 0.038080 | 0.038138 | 3.007e-02, 8.624e-03, 2.759e-03, 1.434e-03 | 1.46 | 1.434e-03 | 8.9e-16 | 0.0e+00 |
+| 2.0 | 20.0 | 0.3 | 6 | 0.299996 | 0.300418 | 2.223e-02, 8.247e-03, 2.739e-03, 9.144e-04 | 1.53 | 9.144e-04 | 0.0e+00 | 4.7e-16 |
+| 0.5 | 20.0 | 0.6 | 12 | 0.600000 | 0.600855 | 2.823e-02, 1.010e-02, 3.354e-03, 1.124e-03 | 1.55 | 1.124e-03 | 4.4e-16 | 2.6e-16 |
+
+V13 的 ω(k) 逐点比对（h=2 m, H=20 m, 64 ppw）：
+
+| k [1/m] | 0.005 | 0.01 | 0.02 | 0.05 | 0.1 | 0.2 | 0.3 | 0.5 | 0.8 |
+|---|---|---|---|---|---|---|---|---|---|
+| ω_eq3 [rad/s] | 0.069884 | 0.139139 | 0.279127 | 1.079446 | 5.558961 | 29.387789 | 76.090371 | 245.716346 | 702.359216 |
+| ω_BEM [rad/s] | 0.070041 | 0.139301 | 0.279307 | 1.080220 | 5.562207 | 29.402972 | 76.125152 | 245.808391 | 702.565970 |
+| rel | 2.24e-03 | 1.16e-03 | 6.46e-04 | 7.17e-04 | 5.84e-04 | 5.17e-04 | 4.57e-04 | 3.75e-04 | 2.94e-04 |
+
+注：最细档（64 ppw）相对误差 ~1e-3 已接近常单元 BEM 的离散下限，故整体斜率按 8->64 ppw 一段读出（`verification_report.json` 中 `order_first_last`）。
 
 ## 杨氏模量敏感性（惯性修正 [%]）
 
