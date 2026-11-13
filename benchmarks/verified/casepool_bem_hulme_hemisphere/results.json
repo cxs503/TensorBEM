@@ -1,0 +1,1048 @@
+{
+  "case": {
+    "case_code": "BEM-HULME-HEMISPHERE",
+    "case_pool_id": 138,
+    "mission_id": 17181,
+    "repo": "TensorBEM",
+    "tol_policy": "<5%",
+    "body": "floating hemisphere, flat face on the mean free surface",
+    "radius_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "amplitude_m": 1.0,
+    "displaced_volume_m3": 2.0943951023931953,
+    "waterplane_area_m2": 3.141592653589793
+  },
+  "reference_provenance": {
+    "citation": "Hulme, A. (1982) The wave forces acting on a floating hemisphere undergoing forced periodic oscillations. J. Fluid Mech. 121:443-463.",
+    "method": "spherical wave-free multipole expansion (Hulme's semi-analytical solution)",
+    "implementation": "tensorbem.analytic.hulme_hemisphere_radiation",
+    "terms_used": 144,
+    "truncation_ladder": {
+      "0.2": {
+        "48->96": 8.437619610391519e-05,
+        "96->144": 1.5960348867553132e-05
+      },
+      "0.5": {
+        "48->96": 0.0001004530524984758,
+        "96->144": 1.898408462794936e-05
+      },
+      "0.8": {
+        "48->96": 0.00012571314114730885,
+        "96->144": 2.373569398188292e-05
+      },
+      "1": {
+        "48->96": 0.0001475537450670779,
+        "96->144": 2.7842046701204575e-05
+      },
+      "1.5": {
+        "48->96": 0.00022191626710080654,
+        "96->144": 4.180593872722616e-05
+      },
+      "2": {
+        "48->96": 0.0003435928603530954,
+        "96->144": 6.46380031894343e-05
+      }
+    },
+    "paper_digit_transcription": "NOT AVAILABLE in this sandbox (publisher paywall); the reference is the re-derived series, self-convergence and independent cross-checks are reported instead -- see docs/bem_hulme_hemisphere_case.md section 1.",
+    "independent_crosschecks": [
+      "docs/capytaine_crosscheck.md (capytaine, a third-party BEM code, same body and frequencies)",
+      "benchmarks/verified/bem_rigid_lid_hemisphere/summary.md (ka -> 0 rigid-lid even-mode series 0.830954)"
+    ]
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "host": "36cb7828dbd5",
+    "machine": "loongarch64"
+  },
+  "tasks": [
+    {
+      "kind": "band",
+      "ka": 0.2,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 0.2,
+      "subdivisions": 3
+    },
+    {
+      "kind": "band",
+      "ka": 0.5,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 0.5,
+      "subdivisions": 3
+    },
+    {
+      "kind": "band",
+      "ka": 0.8,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 0.8,
+      "subdivisions": 3
+    },
+    {
+      "kind": "band",
+      "ka": 1.0,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 1.0,
+      "subdivisions": 3
+    },
+    {
+      "kind": "band",
+      "ka": 1.5,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 1.5,
+      "subdivisions": 3
+    },
+    {
+      "kind": "band",
+      "ka": 2.0,
+      "subdivisions": 2
+    },
+    {
+      "kind": "band",
+      "ka": 2.0,
+      "subdivisions": 3
+    },
+    {
+      "kind": "ladder",
+      "ka": 0.5,
+      "subdivisions": 4
+    },
+    {
+      "kind": "ladder",
+      "ka": 1.0,
+      "subdivisions": 4
+    },
+    {
+      "kind": "ladder",
+      "ka": 2.0,
+      "subdivisions": 4
+    },
+    {
+      "kind": "chief_off",
+      "ka": 1.0,
+      "subdivisions": 3
+    },
+    {
+      "kind": "chief_off",
+      "ka": 2.0,
+      "subdivisions": 3
+    }
+  ],
+  "reference": {
+    "0.2": {
+      "A11_dimless": 0.5515331322468904,
+      "B11_dimless": 0.008152780024490543,
+      "A33_dimless": 0.7938342111726953,
+      "B33_dimless": 0.27930381181925346,
+      "Fx_dimless": 0.5843824529158171,
+      "Fz_dimless": 2.41863748886842,
+      "phase_Fx_deg": -89.71380802310051,
+      "phase_Fz_deg": -2.7932973593010453
+    },
+    "0.5": {
+      "A11_dimless": 0.6438970564919952,
+      "B11_dimless": 0.0986699468310282,
+      "A33_dimless": 0.5860847421137021,
+      "B33_dimless": 0.33905711992088367,
+      "Fx_dimless": 1.2857802431536547,
+      "Fz_dimless": 1.685386646193346,
+      "phase_Fx_deg": -87.00427381794367,
+      "phase_Fz_deg": -12.638716210611717
+    },
+    "0.8": {
+      "A11_dimless": 0.6421154494627368,
+      "B11_dimless": 0.2653080161580761,
+      "A33_dimless": 0.46979369774939467,
+      "B33_dimless": 0.2898966679727518,
+      "Fx_dimless": 1.6668230498331096,
+      "Fz_dimless": 1.232042259405591,
+      "phase_Fx_deg": -82.99932786199341,
+      "phase_Fz_deg": -25.185374875194334
+    },
+    "1": {
+      "A11_dimless": 0.5739517487330752,
+      "B11_dimless": 0.35348859091776197,
+      "A33_dimless": 0.4284357095914814,
+      "B33_dimless": 0.248403071759455,
+      "Fx_dimless": 1.7208658139525712,
+      "Fz_dimless": 1.0200656062729707,
+      "phase_Fx_deg": -81.75655304309082,
+      "phase_Fz_deg": -34.288898451775054
+    },
+    "1.5": {
+      "A11_dimless": 0.36832017629727126,
+      "B11_dimless": 0.4013517827332631,
+      "A33_dimless": 0.389047570896605,
+      "B33_dimless": 0.16061944493651015,
+      "Fx_dimless": 1.497187807628864,
+      "Fz_dimless": 0.6697378723264034,
+      "phase_Fx_deg": -87.84220679614317,
+      "phase_Fz_deg": -58.53759058072657
+    },
+    "2": {
+      "A11_dimless": 0.24927898108430596,
+      "B11_dimless": 0.34241049340106217,
+      "A33_dimless": 0.3883777539192412,
+      "B33_dimless": 0.10306536393605607,
+      "Fx_dimless": 1.1976167433130802,
+      "Fz_dimless": 0.46461680814781375,
+      "phase_Fx_deg": -103.92088437211633,
+      "phase_Fz_deg": -84.12616763617312
+    }
+  },
+  "ref_ladder": {
+    "0.2": {
+      "ka": 0.2,
+      "values": {
+        "48": {
+          "A11_dimless": 0.5515331353552564,
+          "B11_dimless": 0.008152780007814962,
+          "A33_dimless": 0.79388501716233,
+          "B33_dimless": 0.2793294839582754,
+          "Fx_dimless": 0.5843824563750208,
+          "Fz_dimless": 2.4188801665975914
+        },
+        "96": {
+          "A11_dimless": 0.5515331325416384,
+          "B11_dimless": 0.008152780022883672,
+          "A33_dimless": 0.7938422939238046,
+          "B33_dimless": 0.27930789540949774,
+          "Fx_dimless": 0.5843824532418459,
+          "Fz_dimless": 2.4186760911665264
+        },
+        "144": {
+          "A11_dimless": 0.5515331322468904,
+          "B11_dimless": 0.008152780024490543,
+          "A33_dimless": 0.7938342111726953,
+          "B33_dimless": 0.27930381181925346,
+          "Fx_dimless": 0.5843824529158171,
+          "Fz_dimless": 2.41863748886842
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 8.437619610391519e-05,
+        "96->144": 1.5960348867553132e-05
+      },
+      "tail_ratio_A33": 0.18918863335940775
+    },
+    "0.5": {
+      "ka": 0.5,
+      "values": {
+        "48": {
+          "A11_dimless": 0.6438970734549381,
+          "B11_dimless": 0.09866994249878858,
+          "A33_dimless": 0.5861227335848067,
+          "B33_dimless": 0.33909184905283174,
+          "Fx_dimless": 1.2857802774085678,
+          "Fz_dimless": 1.6855879439493184
+        },
+        "96": {
+          "A11_dimless": 0.6438970580976091,
+          "B11_dimless": 0.0986699464197703,
+          "A33_dimless": 0.5860907819040146,
+          "B33_dimless": 0.33906263976342854,
+          "Fx_dimless": 1.285780246381436,
+          "Fz_dimless": 1.6854186417160681
+        },
+        "144": {
+          "A11_dimless": 0.6438970564919952,
+          "B11_dimless": 0.0986699468310282,
+          "A33_dimless": 0.5860847421137021,
+          "B33_dimless": 0.33905711992088367,
+          "Fx_dimless": 1.2857802431536547,
+          "Fz_dimless": 1.685386646193346
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 0.0001004530524984758,
+        "96->144": 1.898408462794936e-05
+      },
+      "tail_ratio_A33": 0.1890288761914214
+    },
+    "0.8": {
+      "ka": 0.8,
+      "values": {
+        "48": {
+          "A11_dimless": 0.6421155112299057,
+          "B11_dimless": 0.2653079756654176,
+          "A33_dimless": 0.46982422474219643,
+          "B33_dimless": 0.2899346775994929,
+          "Fx_dimless": 1.6668231529433295,
+          "Fz_dimless": 1.2322263866860892
+        },
+        "96": {
+          "A11_dimless": 0.6421154552957649,
+          "B11_dimless": 0.2653080123187586,
+          "A33_dimless": 0.46979854769175067,
+          "B33_dimless": 0.28990270424079656,
+          "Fx_dimless": 1.666823059544003,
+          "Fz_dimless": 1.232071502783633
+        },
+        "144": {
+          "A11_dimless": 0.6421154494627368,
+          "B11_dimless": 0.2653080161580761,
+          "A33_dimless": 0.46979369774939467,
+          "B33_dimless": 0.2898966679727518,
+          "Fx_dimless": 1.6668230498331096,
+          "Fz_dimless": 1.232042259405591
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 0.00012571314114730885,
+        "96->144": 2.373569398188292e-05
+      },
+      "tail_ratio_A33": 0.18888237830294824
+    },
+    "1": {
+      "ka": 1.0,
+      "values": {
+        "48": {
+          "A11_dimless": 0.5739518973968019,
+          "B11_dimless": 0.3534885214867116,
+          "A33_dimless": 0.42846216570813833,
+          "B33_dimless": 0.2484428180017216,
+          "Fx_dimless": 1.7208660417766752,
+          "Fz_dimless": 1.0202445214876386
+        },
+        "96": {
+          "A11_dimless": 0.573951762764594,
+          "B11_dimless": 0.3534885843204026,
+          "A33_dimless": 0.428439911227349,
+          "B33_dimless": 0.2484093804271909,
+          "Fx_dimless": 1.7208658354026367,
+          "Fz_dimless": 1.0200940069872189
+        },
+        "144": {
+          "A11_dimless": 0.5739517487330752,
+          "B11_dimless": 0.35348859091776197,
+          "A33_dimless": 0.4284357095914814,
+          "B33_dimless": 0.248403071759455,
+          "Fx_dimless": 1.7208658139525712,
+          "Fz_dimless": 1.0200656062729707
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 0.0001475537450670779,
+        "96->144": 2.7842046701204575e-05
+      },
+      "tail_ratio_A33": 0.1887995459131358
+    },
+    "1.5": {
+      "ka": 1.5,
+      "values": {
+        "48": {
+          "A11_dimless": 0.3683206812993993,
+          "B11_dimless": 0.40135183985255507,
+          "A33_dimless": 0.38906430548202176,
+          "B33_dimless": 0.16066180385082768,
+          "Fx_dimless": 1.4971888186524414,
+          "Fz_dimless": 0.6699119133190925
+        },
+        "96": {
+          "A11_dimless": 0.3683202239918487,
+          "B11_dimless": 0.40135178792787335,
+          "A33_dimless": 0.3890502272054053,
+          "B33_dimless": 0.16062615978318356,
+          "Fx_dimless": 1.4971879027931463,
+          "Fz_dimless": 0.6697654638374312
+        },
+        "144": {
+          "A11_dimless": 0.36832017629727126,
+          "B11_dimless": 0.4013517827332631,
+          "A33_dimless": 0.389047570896605,
+          "B33_dimless": 0.16061944493651015,
+          "Fx_dimless": 1.497187807628864,
+          "Fz_dimless": 0.6697378723264034
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 0.00022191626710080654,
+        "96->144": 4.180593872722616e-05
+      },
+      "tail_ratio_A33": 0.18868138996099612
+    },
+    "2": {
+      "ka": 2.0,
+      "values": {
+        "48": {
+          "A11_dimless": 0.24927977041343463,
+          "B11_dimless": 0.3424109356964419,
+          "A33_dimless": 0.38838569569560905,
+          "B33_dimless": 0.10310743839857701,
+          "Fx_dimless": 1.1976189916447668,
+          "Fz_dimless": 0.46478895337660686
+        },
+        "96": {
+          "A11_dimless": 0.24927905576206355,
+          "B11_dimless": 0.3424105347120806,
+          "A33_dimless": 0.38837901582088374,
+          "B33_dimless": 0.10307202587537889,
+          "Fx_dimless": 1.1976169549082594,
+          "Fz_dimless": 0.46464406533646696
+        },
+        "144": {
+          "A11_dimless": 0.24927898108430596,
+          "B11_dimless": 0.34241049340106217,
+          "A33_dimless": 0.3883777539192412,
+          "B33_dimless": 0.10306536393605607,
+          "Fx_dimless": 1.1976167433130802,
+          "Fz_dimless": 0.46461680814781375
+        }
+      },
+      "max_rel_delta": {
+        "48->96": 0.0003435928603530954,
+        "96->144": 6.46380031894343e-05
+      },
+      "tail_ratio_A33": 0.18891097430148035
+    }
+  },
+  "rows": [
+    {
+      "ka": 0.2,
+      "nu": 0.2,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 2.550072639073118,
+      "A11_dimless": 0.5181404144073763,
+      "A33_dimless": 0.7732158771545646,
+      "B11_dimless": 0.007003281368512735,
+      "B33_dimless": 0.27016776142198035,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 0.538623393517624,
+      "Fz_dimless": 2.379783494307286,
+      "phase_Fx_deg": -89.73331507847415,
+      "phase_Fz_deg": -2.741351652997039,
+      "Fx_real": 0.0025070296624277637,
+      "Fx_imag": -0.5386175589847707,
+      "Fz_real": 2.377060110597436,
+      "Fz_imag": -0.1138187611244405,
+      "wall_seconds": 0.29350829124450684,
+      "reference": {
+        "A11_dimless": 0.5515331322468904,
+        "B11_dimless": 0.008152780024490543,
+        "A33_dimless": 0.7938342111726953,
+        "B33_dimless": 0.27930381181925346,
+        "Fx_dimless": 0.5843824529158171,
+        "Fz_dimless": 2.41863748886842,
+        "phase_Fx_deg": -89.71380802310051,
+        "phase_Fz_deg": -2.7932973593010453
+      },
+      "rel_error_A11_dimless": -0.060545261720679346,
+      "rel_error_B11_dimless": -0.1409946855581497,
+      "rel_error_A33_dimless": -0.02597309832196838,
+      "rel_error_B33_dimless": -0.032710081318851975,
+      "rel_error_Fx_dimless": -0.07830327411419544,
+      "rel_error_Fz_dimless": -0.01606441425800941,
+      "delta_phase_Fx_deg": -0.019507055373637172,
+      "delta_phase_Fz_deg": 0.0519457063040063,
+      "kind": "band"
+    },
+    {
+      "ka": 0.8,
+      "nu": 0.8,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 3.0620338822816375,
+      "A11_dimless": 0.6010173675550542,
+      "A33_dimless": 0.4591791289983522,
+      "B11_dimless": 0.22848178767102387,
+      "B33_dimless": 0.2966148177662107,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.5347596261751344,
+      "Fz_dimless": 1.246524766009209,
+      "phase_Fx_deg": -83.5543585537034,
+      "phase_Fz_deg": -24.832089541692266,
+      "Fx_real": 0.17229292266283106,
+      "Fx_imag": -1.5250581165770498,
+      "Fz_real": 1.131274095773157,
+      "Fz_imag": -0.5234910815925511,
+      "wall_seconds": 0.2391066551208496,
+      "reference": {
+        "A11_dimless": 0.6421154494627368,
+        "B11_dimless": 0.2653080161580761,
+        "A33_dimless": 0.46979369774939467,
+        "B33_dimless": 0.2898966679727518,
+        "Fx_dimless": 1.6668230498331096,
+        "Fz_dimless": 1.232042259405591,
+        "phase_Fx_deg": -82.99932786199341,
+        "phase_Fz_deg": -25.185374875194334
+      },
+      "rel_error_A11_dimless": -0.06400419417111004,
+      "rel_error_B11_dimless": -0.1388055627580826,
+      "rel_error_A33_dimless": -0.022594106310690965,
+      "rel_error_B33_dimless": 0.023174291172226642,
+      "rel_error_Fx_dimless": -0.07923061999364481,
+      "rel_error_Fz_dimless": 0.011754878124558027,
+      "delta_phase_Fx_deg": -0.5550306917099874,
+      "delta_phase_Fz_deg": 0.35328533350206826,
+      "kind": "band"
+    },
+    {
+      "ka": 1.5,
+      "nu": 1.5,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 2.670430069981013,
+      "A11_dimless": 0.36629188637948334,
+      "A33_dimless": 0.3681522657665872,
+      "B11_dimless": 0.3591379400116868,
+      "B33_dimless": 0.17830967373974657,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.3992337473657568,
+      "Fz_dimless": 0.6967104851635837,
+      "phase_Fx_deg": -88.36732375469636,
+      "phase_Fz_deg": -57.87422336384699,
+      "Fx_real": 0.039866575955726756,
+      "Fx_imag": -1.3986656984028687,
+      "Fz_real": 0.37049644750985805,
+      "Fz_imag": -0.5900321029566536,
+      "wall_seconds": 0.28917622566223145,
+      "reference": {
+        "A11_dimless": 0.36832017629727126,
+        "B11_dimless": 0.4013517827332631,
+        "A33_dimless": 0.389047570896605,
+        "B33_dimless": 0.16061944493651015,
+        "Fx_dimless": 1.497187807628864,
+        "Fz_dimless": 0.6697378723264034,
+        "phase_Fx_deg": -87.84220679614317,
+        "phase_Fz_deg": -58.53759058072657
+      },
+      "rel_error_A11_dimless": -0.005506866167849802,
+      "rel_error_B11_dimless": -0.1051791583784529,
+      "rel_error_A33_dimless": -0.05370886928264881,
+      "rel_error_B33_dimless": 0.11013752917792138,
+      "rel_error_Fx_dimless": -0.06542536598547359,
+      "rel_error_Fz_dimless": 0.04027338747245723,
+      "delta_phase_Fx_deg": -0.5251169585531841,
+      "delta_phase_Fz_deg": 0.6633672168795854,
+      "kind": "band"
+    },
+    {
+      "ka": 1.0,
+      "nu": 1.0,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": false,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.734695189923878,
+      "A11_dimless": 0.56646851731247,
+      "A33_dimless": 0.4253117133600694,
+      "B11_dimless": 0.3410192512813206,
+      "B33_dimless": 0.2513548994959335,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.6864555315625216,
+      "Fz_dimless": 1.0255268627250913,
+      "phase_Fx_deg": -81.9494725874515,
+      "phase_Fz_deg": -34.166090134822745,
+      "Fx_real": 0.2361819148953981,
+      "Fx_imag": -1.6698354299194187,
+      "Fz_real": 0.8485343525731509,
+      "Fz_imag": -0.5759295084244527,
+      "wall_seconds": 8.315023422241211,
+      "reference": {
+        "A11_dimless": 0.5739517487330752,
+        "B11_dimless": 0.35348859091776197,
+        "A33_dimless": 0.4284357095914814,
+        "B33_dimless": 0.248403071759455,
+        "Fx_dimless": 1.7208658139525712,
+        "Fz_dimless": 1.0200656062729707,
+        "phase_Fx_deg": -81.75655304309082,
+        "phase_Fz_deg": -34.288898451775054
+      },
+      "rel_error_A11_dimless": -0.013038084537808995,
+      "rel_error_B11_dimless": -0.035275083713641894,
+      "rel_error_A33_dimless": -0.007291633637146601,
+      "rel_error_B33_dimless": 0.011883217528553463,
+      "rel_error_Fx_dimless": -0.01999591258717282,
+      "rel_error_Fz_dimless": 0.005353828634684062,
+      "delta_phase_Fx_deg": -0.19291954436067726,
+      "delta_phase_Fz_deg": 0.12280831695230887,
+      "kind": "chief_off"
+    },
+    {
+      "ka": 0.2,
+      "nu": 0.2,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.3864638102529425,
+      "A11_dimless": 0.5428703916667098,
+      "A33_dimless": 0.7888400435912359,
+      "B11_dimless": 0.007844659282288433,
+      "B33_dimless": 0.27703282248901523,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 0.5724305746682169,
+      "Fz_dimless": 2.4090905331214207,
+      "phase_Fx_deg": -89.71891028261494,
+      "phase_Fz_deg": -2.7802953998314655,
+      "Fx_real": 0.002808299396157315,
+      "Fx_imag": -0.5724236859787395,
+      "Fz_real": 2.4062547401518937,
+      "Fz_imag": -0.11685598945622877,
+      "wall_seconds": 20.484424591064453,
+      "reference": {
+        "A11_dimless": 0.5515331322468904,
+        "B11_dimless": 0.008152780024490543,
+        "A33_dimless": 0.7938342111726953,
+        "B33_dimless": 0.27930381181925346,
+        "Fx_dimless": 0.5843824529158171,
+        "Fz_dimless": 2.41863748886842,
+        "phase_Fx_deg": -89.71380802310051,
+        "phase_Fz_deg": -2.7932973593010453
+      },
+      "rel_error_A11_dimless": -0.015706654910992275,
+      "rel_error_B11_dimless": -0.0377933344548156,
+      "rel_error_A33_dimless": -0.006291197218726139,
+      "rel_error_B33_dimless": -0.008130892720174752,
+      "rel_error_Fx_dimless": -0.020452151134869832,
+      "rel_error_Fz_dimless": -0.00394724541852106,
+      "delta_phase_Fx_deg": -0.0051022595144303295,
+      "delta_phase_Fz_deg": 0.013001959469579827,
+      "kind": "band"
+    },
+    {
+      "ka": 0.8,
+      "nu": 0.8,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.8193484898753574,
+      "A11_dimless": 0.6313531532780354,
+      "A33_dimless": 0.4672288381894167,
+      "B11_dimless": 0.25535314155728284,
+      "B33_dimless": 0.29174533699326877,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.6320279477194055,
+      "Fz_dimless": 1.2360388455091318,
+      "phase_Fx_deg": -83.14887424617062,
+      "phase_Fz_deg": -25.095824350505843,
+      "Fx_real": 0.1946845434143958,
+      "Fx_imag": -1.6203743859653987,
+      "Fz_real": 1.1193564222230759,
+      "Fz_imag": -0.5242453887594076,
+      "wall_seconds": 18.713228225708008,
+      "reference": {
+        "A11_dimless": 0.6421154494627368,
+        "B11_dimless": 0.2653080161580761,
+        "A33_dimless": 0.46979369774939467,
+        "B33_dimless": 0.2898966679727518,
+        "Fx_dimless": 1.6668230498331096,
+        "Fz_dimless": 1.232042259405591,
+        "phase_Fx_deg": -82.99932786199341,
+        "phase_Fz_deg": -25.185374875194334
+      },
+      "rel_error_A11_dimless": -0.016760687184378245,
+      "rel_error_B11_dimless": -0.037521951823958184,
+      "rel_error_A33_dimless": -0.005459544417614078,
+      "rel_error_B33_dimless": 0.0063769929935542,
+      "rel_error_Fx_dimless": -0.020875102559439602,
+      "rel_error_Fz_dimless": 0.003243870957371938,
+      "delta_phase_Fx_deg": -0.14954638417721355,
+      "delta_phase_Fz_deg": 0.0895505246884909,
+      "kind": "band"
+    },
+    {
+      "ka": 1.5,
+      "nu": 1.5,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.3293012590429805,
+      "A11_dimless": 0.3681214010476997,
+      "A33_dimless": 0.3837114035653549,
+      "B11_dimless": 0.3899444052233189,
+      "B33_dimless": 0.1651161499412619,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.471358136796148,
+      "Fz_dimless": 0.676492549246036,
+      "phase_Fx_deg": -88.0103186267064,
+      "phase_Fz_deg": -58.40745306378821,
+      "Fx_real": 0.05108483624490881,
+      "Fx_imag": -1.4704710490934743,
+      "Fz_real": 0.35439760761518974,
+      "Fz_imag": -0.5762330300338834,
+      "wall_seconds": 17.69821810722351,
+      "reference": {
+        "A11_dimless": 0.36832017629727126,
+        "B11_dimless": 0.4013517827332631,
+        "A33_dimless": 0.389047570896605,
+        "B33_dimless": 0.16061944493651015,
+        "Fx_dimless": 1.497187807628864,
+        "Fz_dimless": 0.6697378723264034,
+        "phase_Fx_deg": -87.84220679614317,
+        "phase_Fz_deg": -58.53759058072657
+      },
+      "rel_error_A11_dimless": -0.0005396805886928618,
+      "rel_error_B11_dimless": -0.028422391529591123,
+      "rel_error_A33_dimless": -0.013715976478023825,
+      "rel_error_B33_dimless": 0.02799601882903535,
+      "rel_error_Fx_dimless": -0.01725212475088431,
+      "rel_error_Fz_dimless": 0.010085553167494534,
+      "delta_phase_Fx_deg": -0.16811183056321966,
+      "delta_phase_Fz_deg": 0.13013751693836184,
+      "kind": "band"
+    },
+    {
+      "ka": 2.0,
+      "nu": 2.0,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": false,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.4124908765861264,
+      "A11_dimless": 0.2514141177186552,
+      "A33_dimless": 0.3803169605466977,
+      "B11_dimless": 0.334731972933087,
+      "B33_dimless": 0.10773734444035642,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.1789953756130753,
+      "Fz_dimless": 0.47322607863580296,
+      "phase_Fx_deg": -103.88445013368052,
+      "phase_Fz_deg": -84.04260133936548,
+      "Fx_real": -0.28291713568203364,
+      "Fx_imag": -1.1445470676448786,
+      "Fz_real": 0.04911564915238832,
+      "Fz_imag": -0.4706703458997164,
+      "wall_seconds": 7.570165395736694,
+      "reference": {
+        "A11_dimless": 0.24927898108430596,
+        "B11_dimless": 0.34241049340106217,
+        "A33_dimless": 0.3883777539192412,
+        "B33_dimless": 0.10306536393605607,
+        "Fx_dimless": 1.1976167433130802,
+        "Fz_dimless": 0.46461680814781375,
+        "phase_Fx_deg": -103.92088437211633,
+        "phase_Fz_deg": -84.12616763617312
+      },
+      "rel_error_A11_dimless": 0.00856524936463504,
+      "rel_error_B11_dimless": -0.022424898231671313,
+      "rel_error_A33_dimless": -0.020755033704169378,
+      "rel_error_B33_dimless": 0.045330267374779167,
+      "rel_error_Fx_dimless": -0.015548686843247398,
+      "rel_error_Fz_dimless": 0.018529830038456645,
+      "delta_phase_Fx_deg": 0.036434238435816724,
+      "delta_phase_Fz_deg": 0.08356629680764627,
+      "kind": "chief_off"
+    },
+    {
+      "ka": 0.5,
+      "nu": 0.5,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 2.9048459510849756,
+      "A11_dimless": 0.5988687596631683,
+      "A33_dimless": 0.5749753708972254,
+      "B11_dimless": 0.08448966377314979,
+      "B33_dimless": 0.3369495886508179,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.1820821001133524,
+      "Fz_dimless": 1.681750316067559,
+      "phase_Fx_deg": -87.22409049635354,
+      "phase_Fz_deg": -12.45777074008267,
+      "Fx_real": 0.05724801030704284,
+      "Fx_imag": -1.180695031210125,
+      "Fz_real": 1.6421539530660527,
+      "Fz_imag": -0.36278715526169214,
+      "wall_seconds": 0.257798433303833,
+      "reference": {
+        "A11_dimless": 0.6438970564919952,
+        "B11_dimless": 0.0986699468310282,
+        "A33_dimless": 0.5860847421137021,
+        "B33_dimless": 0.33905711992088367,
+        "Fx_dimless": 1.2857802431536547,
+        "Fz_dimless": 1.685386646193346,
+        "phase_Fx_deg": -87.00427381794367,
+        "phase_Fz_deg": -12.638716210611717
+      },
+      "rel_error_A11_dimless": -0.06993089403785262,
+      "rel_error_B11_dimless": -0.14371430727698756,
+      "rel_error_A33_dimless": -0.018955230222187657,
+      "rel_error_B33_dimless": -0.006215859058077056,
+      "rel_error_Fx_dimless": -0.08064997389130833,
+      "rel_error_Fz_dimless": -0.002157564339316443,
+      "delta_phase_Fx_deg": -0.2198166784098703,
+      "delta_phase_Fz_deg": 0.1809454705290463,
+      "kind": "band"
+    },
+    {
+      "ka": 1.0,
+      "nu": 1.0,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 3.0515487523933436,
+      "A11_dimless": 0.5449627439420535,
+      "A33_dimless": 0.41572144987894416,
+      "B11_dimless": 0.30736099792892807,
+      "B33_dimless": 0.25962833759843534,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.5904551788778025,
+      "Fz_dimless": 1.040977889271669,
+      "phase_Fx_deg": -82.45679963307886,
+      "phase_Fz_deg": -33.800845860947724,
+      "Fx_real": 0.20878492521741548,
+      "Fx_imag": -1.5766916410703715,
+      "Fz_real": 0.865027909587691,
+      "Fz_imag": -0.5791042061553762,
+      "wall_seconds": 0.2891123294830322,
+      "reference": {
+        "A11_dimless": 0.5739517487330752,
+        "B11_dimless": 0.35348859091776197,
+        "A33_dimless": 0.4284357095914814,
+        "B33_dimless": 0.248403071759455,
+        "Fx_dimless": 1.7208658139525712,
+        "Fz_dimless": 1.0200656062729707,
+        "phase_Fx_deg": -81.75655304309082,
+        "phase_Fz_deg": -34.288898451775054
+      },
+      "rel_error_A11_dimless": -0.05050773842054012,
+      "rel_error_B11_dimless": -0.13049245201683282,
+      "rel_error_A33_dimless": -0.029676003722146446,
+      "rel_error_B33_dimless": 0.04518972233101249,
+      "rel_error_Fx_dimless": -0.07578198951795956,
+      "rel_error_Fz_dimless": 0.020500919617421298,
+      "delta_phase_Fx_deg": -0.7002465899880406,
+      "delta_phase_Fz_deg": 0.4880525908273299,
+      "kind": "band"
+    },
+    {
+      "ka": 2.0,
+      "nu": 2.0,
+      "subdivisions": 2,
+      "panels": 64,
+      "chief": true,
+      "mesh_volume": 1.9088648099141803,
+      "mesh_waterplane_area": 3.061467458920718,
+      "condition_number": 2.389459885990851,
+      "A11_dimless": 0.2558019570374555,
+      "A33_dimless": 0.358459837459815,
+      "B11_dimless": 0.3139584117713213,
+      "B33_dimless": 0.123144254091491,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.1266940218763257,
+      "Fz_dimless": 0.4975037975060305,
+      "phase_Fx_deg": -103.59037405641719,
+      "phase_Fz_deg": -83.71752374204124,
+      "Fx_real": -0.2647492273125286,
+      "Fx_imag": -1.0951471433416011,
+      "Fz_real": 0.054441992792830324,
+      "Fz_imag": -0.4945160239604646,
+      "wall_seconds": 0.32170581817626953,
+      "reference": {
+        "A11_dimless": 0.24927898108430596,
+        "B11_dimless": 0.34241049340106217,
+        "A33_dimless": 0.3883777539192412,
+        "B33_dimless": 0.10306536393605607,
+        "Fx_dimless": 1.1976167433130802,
+        "Fz_dimless": 0.46461680814781375,
+        "phase_Fx_deg": -103.92088437211633,
+        "phase_Fz_deg": -84.12616763617312
+      },
+      "rel_error_A11_dimless": 0.026167372494769144,
+      "rel_error_B11_dimless": -0.08309348626303702,
+      "rel_error_A33_dimless": -0.07703303332262242,
+      "rel_error_B33_dimless": 0.19481704996348043,
+      "rel_error_Fx_dimless": -0.05921988134580874,
+      "rel_error_Fz_dimless": 0.07078303836944715,
+      "delta_phase_Fx_deg": 0.3305103156991436,
+      "delta_phase_Fz_deg": 0.4086438941318846,
+      "kind": "band"
+    },
+    {
+      "ka": 0.5,
+      "nu": 0.5,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.7012792118910687,
+      "A11_dimless": 0.6320786879477485,
+      "A33_dimless": 0.5834681460219876,
+      "B11_dimless": 0.09484803907048783,
+      "B33_dimless": 0.338648898218468,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.2585697390251969,
+      "Fz_dimless": 1.6848537488358541,
+      "phase_Fx_deg": -87.06230252933922,
+      "phase_Fz_deg": -12.593131061108046,
+      "Fx_real": 0.06450173873080209,
+      "Fx_imag": -1.2569157941925369,
+      "Fz_real": 1.6443210657762803,
+      "Fz_imag": -0.3673423302732597,
+      "wall_seconds": 20.11736297607422,
+      "reference": {
+        "A11_dimless": 0.6438970564919952,
+        "B11_dimless": 0.0986699468310282,
+        "A33_dimless": 0.5860847421137021,
+        "B33_dimless": 0.33905711992088367,
+        "Fx_dimless": 1.2857802431536547,
+        "Fz_dimless": 1.685386646193346,
+        "phase_Fx_deg": -87.00427381794367,
+        "phase_Fz_deg": -12.638716210611717
+      },
+      "rel_error_A11_dimless": -0.01835443791067199,
+      "rel_error_B11_dimless": -0.03873426391001674,
+      "rel_error_A33_dimless": -0.00446453542243362,
+      "rel_error_B33_dimless": -0.001203990945569652,
+      "rel_error_Fx_dimless": -0.021162639784943472,
+      "rel_error_Fz_dimless": -0.00031618700592855685,
+      "delta_phase_Fx_deg": -0.05802871139555066,
+      "delta_phase_Fz_deg": 0.04558514950367076,
+      "kind": "band"
+    },
+    {
+      "ka": 1.0,
+      "nu": 1.0,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.78287825558641,
+      "A11_dimless": 0.5664684950535598,
+      "A33_dimless": 0.42528921461571656,
+      "B11_dimless": 0.3410193856843434,
+      "B33_dimless": 0.2513774066399854,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.6864556210196244,
+      "Fz_dimless": 1.0255753048264045,
+      "phase_Fx_deg": -81.94946089252107,
+      "phase_Fz_deg": -34.167098916646886,
+      "Fx_real": 0.23618226826207883,
+      "Fx_imag": -1.6698354702865987,
+      "Fz_real": 0.848564293451579,
+      "Fz_imag": -0.5759716535983305,
+      "wall_seconds": 23.296161890029907,
+      "reference": {
+        "A11_dimless": 0.5739517487330752,
+        "B11_dimless": 0.35348859091776197,
+        "A33_dimless": 0.4284357095914814,
+        "B33_dimless": 0.248403071759455,
+        "Fx_dimless": 1.7208658139525712,
+        "Fz_dimless": 1.0200656062729707,
+        "phase_Fx_deg": -81.75655304309082,
+        "phase_Fz_deg": -34.288898451775054
+      },
+      "rel_error_A11_dimless": -0.013038123319658375,
+      "rel_error_B11_dimless": -0.035274703494799546,
+      "rel_error_A33_dimless": -0.007344147337216774,
+      "rel_error_B33_dimless": 0.011973824878504985,
+      "rel_error_Fx_dimless": -0.019995860603396913,
+      "rel_error_Fz_dimless": 0.005401317836373898,
+      "delta_phase_Fx_deg": -0.19290784943025585,
+      "delta_phase_Fz_deg": 0.12179953512816866,
+      "kind": "band"
+    },
+    {
+      "ka": 2.0,
+      "nu": 2.0,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "condition_number": 2.352259378914911,
+      "A11_dimless": 0.2514141114753521,
+      "A33_dimless": 0.38043529106287255,
+      "B11_dimless": 0.3347324911403365,
+      "B33_dimless": 0.10796623103069927,
+      "nabla_exact": 2.0943951023931953,
+      "Fx_dimless": 1.1789960667935104,
+      "Fz_dimless": 0.47349345024776057,
+      "phase_Fx_deg": -103.88445212759223,
+      "phase_Fz_deg": -84.1197074202591,
+      "Fx_real": -0.2829173413714918,
+      "Fx_imag": -1.1445477287845425,
+      "Fz_real": 0.048509590230554366,
+      "Fz_imag": -0.471001982037435,
+      "wall_seconds": 32.35394835472107,
+      "reference": {
+        "A11_dimless": 0.24927898108430596,
+        "B11_dimless": 0.34241049340106217,
+        "A33_dimless": 0.3883777539192412,
+        "B33_dimless": 0.10306536393605607,
+        "Fx_dimless": 1.1976167433130802,
+        "Fz_dimless": 0.46461680814781375,
+        "phase_Fx_deg": -103.92088437211633,
+        "phase_Fz_deg": -84.12616763617312
+      },
+      "rel_error_A11_dimless": 0.008565224319189694,
+      "rel_error_B11_dimless": -0.022423384822300142,
+      "rel_error_A33_dimless": -0.020450354780156055,
+      "rel_error_B33_dimless": 0.04755105796437881,
+      "rel_error_Fx_dimless": -0.015548109713344225,
+      "rel_error_Fz_dimless": 0.019105296976520043,
+      "delta_phase_Fx_deg": 0.036432244524107205,
+      "delta_phase_Fz_deg": 0.006460215914017908,
+      "kind": "band"
+    }
+  ],
+  "verdict": {
+    "criteria": {
+      "G1_case_mesh_band_error_below_5pct": {
+        "criterion": "|rel err| < 5% for every quantity and every ka on the case mesh",
+        "measured": 0.04755105796437881,
+        "worst_quantity": "B33_dimless",
+        "worst_ka": 2.0,
+        "pass": true
+      },
+      "G2_geometry_precondition": {
+        "criterion": "|nabla_mesh/nabla-1| < 2% and |A_wp/(pi a^2)-1| < 2% on the case mesh",
+        "measured_volume_error": 0.0232023042331736,
+        "measured_waterplane_error": 0.006413148855794248,
+        "pass": false
+      },
+      "G3_refinement_does_not_worsen": {
+        "criterion": "band-max error at 256 panels <= band-max error at 64 panels",
+        "measured_coarse": 0.19481704996348043,
+        "measured_case": 0.04755105796437881,
+        "pass": true
+      },
+      "G4_reference_self_converged": {
+        "criterion": "reference 96->144 term drift at least 20x below the 5 % gate",
+        "measured_worst_drift": 6.46380031894343e-05,
+        "margin_factor": 154.70774941319038,
+        "pass": true
+      }
+    },
+    "verdict": "FAIL"
+  }
+}
