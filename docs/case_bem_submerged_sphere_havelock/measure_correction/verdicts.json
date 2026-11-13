@@ -1,0 +1,82 @@
+{
+  "case_code": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "intervention": "panel_areas = tensorbem.geometry3d.spherical_patch_areas(...) threaded through assemble_free_surface_operators_3d / solve_radiation_3d; panels, normals, collocation points and quadrature rules unchanged",
+  "gate": 0.05,
+  "verdicts": {
+    "T1:economy_s2_band": {
+      "flat": {
+        "tier": "T1:economy_s2_band",
+        "n_items": 28,
+        "n_items_over_gate": 7,
+        "band_max_rel_error": 0.05591129869557249,
+        "band_max_at": {
+          "ka": 0.5,
+          "quantity": "b33"
+        },
+        "verdict": "FAIL"
+      },
+      "patch": {
+        "tier": "T1:economy_s2_band",
+        "n_items": 28,
+        "n_items_over_gate": 0,
+        "band_max_rel_error": 0.022528036459896397,
+        "band_max_at": {
+          "ka": 5.0,
+          "quantity": "b11"
+        },
+        "verdict": "PASS"
+      },
+      "uniform": {
+        "tier": "T1:economy_s2_band",
+        "n_items": 28,
+        "n_items_over_gate": 0,
+        "band_max_rel_error": 0.01906015208950514,
+        "band_max_at": {
+          "ka": 5.0,
+          "quantity": "b11"
+        },
+        "verdict": "PASS"
+      }
+    },
+    "T2:coarsest_s1_band": {
+      "flat": {
+        "tier": "T2:coarsest_s1_band",
+        "n_items": 20,
+        "n_items_over_gate": 20,
+        "band_max_rel_error": 0.20244581771165263,
+        "band_max_at": {
+          "ka": 0.5,
+          "quantity": "b33"
+        },
+        "verdict": "FAIL"
+      },
+      "patch": {
+        "tier": "T2:coarsest_s1_band",
+        "n_items": 20,
+        "n_items_over_gate": 9,
+        "band_max_rel_error": 0.055915740581781725,
+        "band_max_at": {
+          "ka": 0.5,
+          "quantity": "b33"
+        },
+        "verdict": "FAIL"
+      },
+      "uniform": {
+        "tier": "T2:coarsest_s1_band",
+        "n_items": 20,
+        "n_items_over_gate": 9,
+        "band_max_rel_error": 0.05589308845841253,
+        "band_max_at": {
+          "ka": 0.5,
+          "quantity": "b33"
+        },
+        "verdict": "FAIL"
+      }
+    }
+  },
+  "not_run": [
+    "T3 case mesh (1280 panels) with the new measure - wall-clock, see report",
+    "per-ka rows of the study: the run was interrupted before write_artifacts"
+  ],
+  "source": "/tmp/study.log (measure_correction_study.py, tiers T1 and T2 completed)"
+}
