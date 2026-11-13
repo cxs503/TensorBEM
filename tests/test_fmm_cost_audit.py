@@ -32,6 +32,8 @@ import pytest
 
 from tensorbem.benchmarks.fmm_cost_audit import (
     cost_point,
+    harmonic_ladder,
+    regime_map,
     routing_counts,
     separated_ladder,
     surface_ladder,
@@ -134,3 +136,77 @@ def test_cost_measurement_reproduces_within_an_order_of_magnitude(audit: dict) -
     assert 0.1 < ratio < 10.0, (fresh["time_ratio"], committed["time_ratio"])
     assert fresh["leaves"] == committed["leaves"]
     assert fresh["far_pairs"] == committed["far_pairs"]
+
+# ---------------------------------------------------------------------------
+# m17299: leaf-capacity regime map and the harmonic-ladder kernel
+# ---------------------------------------------------------------------------
+
+def test_artifact_records_the_regime_map_and_harmonic_ladder(audit: dict) -> None:
+    """Both m17299 tables must be in the committed JSON, not only in the prose."""
+
+    regime = audit["regime_map"]
+    ladder = audit["harmonic_ladder"]
+    assert regime and ladder
+    assert regime["verdict"] in {"accelerated with accuracy", "not accelerated"}
+    band = regime["parity_band"]
+    assert regime["admissible_rows"] == len([
+        row for row in regime["rows"]
+        if row["time_ratio"] <= 1.0 - band
+        and row["far_fraction"] >= regime["far_fraction_floor"]
+        and row["max_rel_error"] <= regime["accuracy_tol"]
+    ])
+    for row in regime["rows"]:
+        expected = ("accelerated" if row["time_ratio"] <= 1.0 - band
+                    else "slower" if row["time_ratio"] >= 1.0 + band
+                    else "at parity")
+        assert row["regime"] == expected, row
+    for row in regime["rows"]:
+        for key in ("panels", "p", "max_leaf", "leaves", "far_fraction",
+                    "interaction_ratio", "time_ratio", "per_unit_cost_ratio",
+                    "max_rel_error"):
+            assert key in row, (key, row)
+        assert 0.0 < row["interaction_ratio"] < 1.0, row
+        assert 0.0 <= row["far_fraction"] <= 1.0, row
+    for row in ladder:
+        # a cost rewrite may not move the numbers
+        assert row["max_rel_diff"] < 1e-13, row
+        assert row["speedup"] > 1.0, row
+
+
+def test_regime_map_treats_leaf_capacity_as_the_decision_variable() -> None:
+    """Same ``N``, same ``p``; only the leaf capacity changes the routing."""
+
+    study = regime_map(levels=(2,), p_values=(2,),
+                       max_leaf_values=(8, 40, 10_000), repeats=1,
+                       accuracy_targets=32)
+    rows = study["rows"]
+    assert len(rows) == 3
+    assert rows[0]["leaves"] >= rows[1]["leaves"] >= rows[2]["leaves"]
+    # the degenerate single-leaf configuration routes nothing to the multipole
+    assert rows[2]["leaves"] == 1 and rows[2]["far_fraction"] == 0.0
+    # and therefore cannot be reported as a multipole acceleration
+    band = study["parity_band"]
+    admissible = [row for row in rows
+                  if row["time_ratio"] <= 1.0 - band
+                  and row["far_fraction"] >= study["far_fraction_floor"]
+                  and row["max_rel_error"] <= study["accuracy_tol"]]
+    assert study["admissible_rows"] == len(admissible)
+    assert (study["best"] is None) == (not admissible)
+    assert rows[0]["interaction_ratio"] > rows[1]["interaction_ratio"]
+
+
+def test_regime_map_accuracy_column_is_the_ledger_gate() -> None:
+    study = regime_map(levels=(2,), p_values=(4,), max_leaf_values=(32,),
+                       repeats=1, accuracy_targets=64)
+    row = study["rows"][0]
+    assert row["far_fraction"] > 0.2, row          # the multipole path is used
+    assert row["max_rel_error"] < 1e-3, row        # ledger criterion (surface, p=4)
+    assert row["targets_probe"] == 64
+
+
+def test_harmonic_ladder_is_pure_cost() -> None:
+    rows = harmonic_ladder(p_values=(2, 4), n_points=2_000, repeats=1)
+    assert [row["p"] for row in rows] == [2, 4]
+    for row in rows:
+        assert row["max_rel_diff"] < 1e-13, row
+        assert row["harmonics"] == (row["p"] + 1) ** 2
