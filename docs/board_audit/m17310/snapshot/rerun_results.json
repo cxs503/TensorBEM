@@ -1,0 +1,594 @@
+{
+  "case": "CASE-BEM-ELLIPSOID-KOCHIN",
+  "anchor": "ellipsoid Kochin far field + Haskind energy identity",
+  "pool_tolerance": 0.05,
+  "geometry": {
+    "a": 5.0,
+    "b": 1.0,
+    "c": 0.5,
+    "L": 10.0,
+    "B": 2.0,
+    "T": 0.5,
+    "L_over_B": 5.0,
+    "B_over_T": 4.0,
+    "T_over_L": 0.05,
+    "b_over_a": 0.2,
+    "thinness": 0.2,
+    "immersed_volume": 5.235987755982989,
+    "Cb": 0.5235987755982989,
+    "Cm": 0.7853981633974483,
+    "Cp": 0.6666666666666667,
+    "Cb_exact_half_ellipsoid": 0.5235987755982988
+  },
+  "geometry_gate": {
+    "Cb": 0.5235987755982989,
+    "Cb_exact": 0.5235987755982988,
+    "rel_err": 2.1203697876423447e-16,
+    "immersed_volume": 5.235987755982989,
+    "volume_exact": 5.235987755982989,
+    "passed": true
+  },
+  "provenance": {
+    "reference": "closed-form Kochin function of the half-submerged ellipsoid (Bessel J1 single quadrature)",
+    "implemented_in": "tensorbem.ellipsoid_kochin.kochin_analytic",
+    "classical_sources": [
+      "Michell J.H. (1898) The wave resistance of a ship, Philosophical Magazine 45, 106-123",
+      "Havelock T.H. (1932) The wave resistance of a spheroid, Proc. R. Soc. Lond. A 131, 505-517",
+      "Newman J.N. (1977) Marine Hydrodynamics, MIT Press, ch. 6 (Kochin function, Haskind relations)"
+    ],
+    "page_verified": false,
+    "page_verified_note": "the offline working environment has no access to the original papers, so the volume/page above is bibliographic, not page-verified; no table value is transcribed (zero hand-typing) and the reference is corroborated by three machine-checkable facts instead: independent-implementation agreement, the k -> 0 analytic limit, and the far-field/near-field energy identity"
+  },
+  "method": {
+    "reference": "closed-form Kochin function (Bessel J1 single quadrature, 128 Gauss-Legendre nodes in u = sqrt(-z/c))",
+    "independent_checks": [
+      "definition quadrature (elliptical projection, r = sin(psi) edge removal)",
+      "elliptic-coordinate spectral Gauss rule (tensorbem.michell.ellipsoid_kochin_reference)",
+      "long-wave analytic limit H(k -> 0) = -i k V",
+      "far-field vs near-field (Michell pressure integral) resistance identity"
+    ],
+    "panel_route": "constant-strength centreplane panels, schemes source_integrated / ordinate / source",
+    "production_panels": {
+      "n_r": 32,
+      "n_phi": 32,
+      "panel_count": 1024
+    },
+    "envelope": {
+      "criterion": "k * a <= 10",
+      "value": 10.0,
+      "rationale": "first-order panel scheme needs of order ten panels per wavelength"
+    },
+    "fluid": {
+      "rho": 1025.0,
+      "g": 9.80665
+    }
+  },
+  "kochin_table": [
+    {
+      "k": 0.3,
+      "k_times_a": 1.5,
+      "wavelength_over_L": 2.0943951023931953,
+      "in_envelope": true,
+      "ref_abs": 1.1746088848978844,
+      "ref_phase_deg": -90.0,
+      "ref_re": 0.0,
+      "ref_im": -1.1746088848978844,
+      "routes": {
+        "definition_quadrature": {
+          "abs": 1.1746088848979075,
+          "phase_deg": -90.0,
+          "rel_err": 1.9659876150314222e-14,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "elliptic_spectral": {
+          "abs": 1.174608884897875,
+          "phase_deg": -90.0,
+          "rel_err": 7.93959027757494e-15,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source_integrated": {
+          "abs": 1.173153973483307,
+          "phase_deg": -90.0,
+          "rel_err": 0.0012386347773147613,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_ordinate": {
+          "abs": 1.1761373520543816,
+          "phase_deg": -90.0,
+          "rel_err": 0.001301256253165594,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source": {
+          "abs": 1.0890591167954418,
+          "phase_deg": -90.00000000000001,
+          "rel_err": 0.07283255660873021,
+          "phase_err_deg": 1.2722218725854067e-14,
+          "scored": false,
+          "in_envelope": true,
+          "within_tolerance": false,
+          "passed": null,
+          "unscored_reason": "sampled constant source strength -U y_x: the y_x singularity on the keel line is not integrable by point sampling, known modelling limitation documented in tensorbem.ellipsoid_kochin"
+        }
+      }
+    },
+    {
+      "k": 0.5,
+      "k_times_a": 2.5,
+      "wavelength_over_L": 1.2566370614359172,
+      "in_envelope": true,
+      "ref_abs": 1.1771083922576957,
+      "ref_phase_deg": -90.0,
+      "ref_re": 0.0,
+      "ref_im": -1.1771083922576957,
+      "routes": {
+        "definition_quadrature": {
+          "abs": 1.1771083922577152,
+          "phase_deg": -90.0,
+          "rel_err": 1.6599972263209142e-14,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "elliptic_spectral": {
+          "abs": 1.1771083922576993,
+          "phase_deg": -90.0,
+          "rel_err": 3.0184335757748864e-15,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source_integrated": {
+          "abs": 1.1777183339348283,
+          "phase_deg": -90.0,
+          "rel_err": 0.0005181695085553726,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_ordinate": {
+          "abs": 1.1791227135207845,
+          "phase_deg": -90.0,
+          "rel_err": 0.0017112453503328503,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source": {
+          "abs": 1.1057078926738693,
+          "phase_deg": -90.0,
+          "rel_err": 0.06065754016661131,
+          "phase_err_deg": 0.0,
+          "scored": false,
+          "in_envelope": true,
+          "within_tolerance": false,
+          "passed": null,
+          "unscored_reason": "sampled constant source strength -U y_x: the y_x singularity on the keel line is not integrable by point sampling, known modelling limitation documented in tensorbem.ellipsoid_kochin"
+        }
+      }
+    },
+    {
+      "k": 1.0,
+      "k_times_a": 5.0,
+      "wavelength_over_L": 0.6283185307179586,
+      "in_envelope": true,
+      "ref_abs": 0.30448295738298153,
+      "ref_phase_deg": 90.0,
+      "ref_re": 0.0,
+      "ref_im": 0.30448295738298153,
+      "routes": {
+        "definition_quadrature": {
+          "abs": 0.30448295738299824,
+          "phase_deg": 90.0,
+          "rel_err": 5.487622459957713e-14,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "elliptic_spectral": {
+          "abs": 0.3044829573829614,
+          "phase_deg": 90.0,
+          "rel_err": 6.61795707686427e-14,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source_integrated": {
+          "abs": 0.30104072639780244,
+          "phase_deg": 90.0,
+          "rel_err": 0.011305167996149699,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_ordinate": {
+          "abs": 0.30288745053354943,
+          "phase_deg": 90.0,
+          "rel_err": 0.005240053049751684,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source": {
+          "abs": 0.2553285646324608,
+          "phase_deg": 89.99999999999997,
+          "rel_err": 0.16143561259717368,
+          "phase_err_deg": 2.5444437451708134e-14,
+          "scored": false,
+          "in_envelope": true,
+          "within_tolerance": false,
+          "passed": null,
+          "unscored_reason": "sampled constant source strength -U y_x: the y_x singularity on the keel line is not integrable by point sampling, known modelling limitation documented in tensorbem.ellipsoid_kochin"
+        }
+      }
+    },
+    {
+      "k": 2.0,
+      "k_times_a": 10.0,
+      "wavelength_over_L": 0.3141592653589793,
+      "in_envelope": true,
+      "ref_abs": 0.17803311785269435,
+      "ref_phase_deg": -90.0,
+      "ref_re": 0.0,
+      "ref_im": -0.17803311785269435,
+      "routes": {
+        "definition_quadrature": {
+          "abs": 0.17803311785269588,
+          "phase_deg": -89.99999999999997,
+          "rel_err": 8.584220593409443e-15,
+          "phase_err_deg": 2.5444437451708134e-14,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "elliptic_spectral": {
+          "abs": 0.17803311785269407,
+          "phase_deg": -90.00000000000003,
+          "rel_err": 1.5981315258565638e-15,
+          "phase_err_deg": 2.5444437451708134e-14,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source_integrated": {
+          "abs": 0.18110914046811882,
+          "phase_deg": -90.0,
+          "rel_err": 0.017277811300084024,
+          "phase_err_deg": 0.0,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_ordinate": {
+          "abs": 0.18176883313461953,
+          "phase_deg": -89.99999999999994,
+          "rel_err": 0.02098326045728262,
+          "phase_err_deg": 5.088887490341627e-14,
+          "scored": true,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": true,
+          "unscored_reason": ""
+        },
+        "panels_source": {
+          "abs": 0.1772244983217544,
+          "phase_deg": -90.00000000000003,
+          "rel_err": 0.004541961297386242,
+          "phase_err_deg": 2.5444437451708134e-14,
+          "scored": false,
+          "in_envelope": true,
+          "within_tolerance": true,
+          "passed": null,
+          "unscored_reason": "sampled constant source strength -U y_x: the y_x singularity on the keel line is not integrable by point sampling, known modelling limitation documented in tensorbem.ellipsoid_kochin"
+        }
+      }
+    }
+  ],
+  "resistance_haskind_table": [
+    {
+      "froude": 0.2,
+      "speed_m_s": 1.9805706248452741,
+      "rw_far_field_kochin_N": 16.856903105904788,
+      "rw_near_field_michell_N": 16.8569031059033,
+      "rw_panels_N": 17.017967650215567,
+      "far_vs_near_rel_err": 8.830726629116743e-14,
+      "far_vs_panels_rel_err": 0.009554812251033232,
+      "Cw_far_field_on_half_rho_u2_LB": 0.0004192501804314416
+    },
+    {
+      "froude": 0.3,
+      "speed_m_s": 2.970855937267911,
+      "rw_far_field_kochin_N": 56.707227964866,
+      "rw_near_field_michell_N": 56.70722796486259,
+      "rw_panels_N": 56.660861506197215,
+      "far_vs_near_rel_err": 6.014409898085283e-14,
+      "far_vs_panels_rel_err": 0.0008176463624268975,
+      "Cw_far_field_on_half_rho_u2_LB": 0.0006268323008001001
+    },
+    {
+      "froude": 0.5,
+      "speed_m_s": 4.951426562113185,
+      "rw_far_field_kochin_N": 196.7072427315226,
+      "rw_near_field_michell_N": 196.7072427315198,
+      "rw_panels_N": 196.76536908473977,
+      "far_vs_near_rel_err": 1.4159760898998559e-14,
+      "far_vs_panels_rel_err": 0.00029549676163429466,
+      "Cw_far_field_on_half_rho_u2_LB": 0.0007827729351161693
+    }
+  ],
+  "long_wave_limit_table": [
+    {
+      "k": 0.01,
+      "k_times_a": 0.05,
+      "H_over_i_k_V_re": 0.997877909866941,
+      "H_over_i_k_V_im": -0.0,
+      "rel_err_to_limit": 0.0021220901330589684
+    },
+    {
+      "k": 0.001,
+      "k_times_a": 0.005,
+      "H_over_i_k_V_re": 0.9998100253901977,
+      "H_over_i_k_V_im": -0.0,
+      "rel_err_to_limit": 0.00018997460980229032
+    },
+    {
+      "k": 0.0001,
+      "k_times_a": 0.0005,
+      "H_over_i_k_V_re": 0.9999812252503775,
+      "H_over_i_k_V_im": -0.0,
+      "rel_err_to_limit": 1.8774749622511576e-05
+    }
+  ],
+  "long_wave_asymptotic_slope": 1.0265948360177621,
+  "diagnostics": {
+    "long_wave_limit_three_point": {
+      "value": 0.0021220901330589684,
+      "limit": 0.001,
+      "kind": "le",
+      "passed": false,
+      "description": "superseded round-1 wording: max |H/(-i k V) - 1| over k = 1e-2, 1e-3, 1e-4 <= 1e-3 (kept for the record, not part of the verdict)"
+    }
+  },
+  "convergence": [
+    {
+      "levels": [
+        {
+          "n_r": 16,
+          "n_phi": 16,
+          "panels": 256,
+          "panel_width_over_L": 0.0625,
+          "k": 1.0,
+          "k_times_a": 5.0,
+          "H_abs": 0.2906012847029267,
+          "rel_err": 0.04559096771578699
+        },
+        {
+          "n_r": 24,
+          "n_phi": 24,
+          "panels": 576,
+          "panel_width_over_L": 0.041666666666666664,
+          "k": 1.0,
+          "k_times_a": 5.0,
+          "H_abs": 0.29835034233659846,
+          "rel_err": 0.020141078170984168
+        },
+        {
+          "n_r": 32,
+          "n_phi": 32,
+          "panels": 1024,
+          "panel_width_over_L": 0.03125,
+          "k": 1.0,
+          "k_times_a": 5.0,
+          "H_abs": 0.30104072639780244,
+          "rel_err": 0.011305167996149699
+        },
+        {
+          "n_r": 48,
+          "n_phi": 48,
+          "panels": 2304,
+          "panel_width_over_L": 0.020833333333333332,
+          "k": 1.0,
+          "k_times_a": 5.0,
+          "H_abs": 0.3029554258935032,
+          "rel_err": 0.005016804561435516
+        }
+      ],
+      "observed_order": 2.00378962390265,
+      "monotone_decreasing": true
+    }
+  ],
+  "sensitivity": {
+    "spectral_reference": [
+      {
+        "n_psi": 48,
+        "n_t": 384,
+        "abs": 0.30448295738296377,
+        "rel_change": 7.839551723656539e-15
+      },
+      {
+        "n_psi": 96,
+        "n_t": 384,
+        "abs": 0.3044829573829614,
+        "rel_change": 0.0
+      },
+      {
+        "n_psi": 192,
+        "n_t": 384,
+        "abs": 0.3044829573829632,
+        "rel_change": 6.0163329568830054e-15
+      },
+      {
+        "n_psi": 96,
+        "n_t": 192,
+        "abs": 0.3044829573830006,
+        "rel_change": 1.2871288190097124e-13
+      },
+      {
+        "n_psi": 96,
+        "n_t": 768,
+        "abs": 0.3044829573829627,
+        "rel_change": 4.375555122005883e-15
+      }
+    ],
+    "kelvin_quadrature": [
+      {
+        "n_kelvin": 128,
+        "rw_N": 56.70722796486768,
+        "rel_change": 2.957084866558419e-14
+      },
+      {
+        "n_kelvin": 256,
+        "rw_N": 56.707227964866,
+        "rel_change": 0.0
+      },
+      {
+        "n_kelvin": 512,
+        "rw_N": 56.707227964865396,
+        "rel_change": 1.0650517527858713e-14
+      }
+    ],
+    "worst_rel_change": 1.2871288190097124e-13
+  },
+  "criteria": {
+    "geometry_cb_half_ellipsoid": {
+      "value": 2.1203697876423447e-16,
+      "limit": 1e-12,
+      "kind": "le",
+      "passed": true,
+      "description": "Cb equals pi/6: the geometry gate that precedes every hydrodynamic number"
+    },
+    "long_wave_asymptotic_order": {
+      "value": 1.0265948360177621,
+      "limit": 0.9,
+      "kind": "ge",
+      "passed": true,
+      "description": "k -> 0 limit H(k) = -i k V is approached at FIRST order (the leading correction is e^{kz} = 1 + kz, i.e. O(kc)): least-squares slope of log|H/(-i k V) - 1| vs log k over k = 1e-2, 1e-3, 1e-4 must be >= 0.9"
+    },
+    "long_wave_finest": {
+      "value": 1.8774749622511576e-05,
+      "limit": 0.001,
+      "kind": "le",
+      "passed": true,
+      "description": "residual |H/(-i k V) - 1| at the smallest wave number tested (k = 1e-4)"
+    },
+    "closed_form_vs_independent": {
+      "value": 6.61795707686427e-14,
+      "limit": 1e-09,
+      "kind": "le",
+      "passed": true,
+      "description": "definition quadrature and elliptic-coordinate spectral reference vs the Bessel closed form"
+    },
+    "kochin_panels_integrated": {
+      "value": 0.017277811300084024,
+      "limit": 0.05,
+      "kind": "le",
+      "passed": true,
+      "description": "panel route source_integrated vs closed form |H|: worst in-envelope point (k a <= 10) -- the 5 % case tolerance"
+    },
+    "kochin_panels_ordinate": {
+      "value": 0.02098326045728262,
+      "limit": 0.05,
+      "kind": "le",
+      "passed": true,
+      "description": "panel route ordinate vs closed form |H|: worst in-envelope point"
+    },
+    "haskind_far_near_identity": {
+      "value": 8.830726629116743e-14,
+      "limit": 1e-09,
+      "kind": "le",
+      "passed": true,
+      "description": "R_W from the far-field Kochin integral vs the near-field Michell pressure integral"
+    },
+    "haskind_far_panels": {
+      "value": 0.009554812251033232,
+      "limit": 0.05,
+      "kind": "le",
+      "passed": true,
+      "description": "R_W from the panel Kochin route vs the far-field closed-form integral"
+    },
+    "convergence_finest": {
+      "value": 0.005016804561435516,
+      "limit": 0.05,
+      "kind": "le",
+      "passed": true,
+      "description": "panel route error at the finest ladder level (k a = 5)"
+    },
+    "convergence_order": {
+      "value": 2.00378962390265,
+      "limit": 0.5,
+      "kind": "ge",
+      "passed": true,
+      "description": "observed order of the panel route between the two finest ladder levels"
+    },
+    "reference_parameter_sensitivity": {
+      "value": 1.2871288190097124e-13,
+      "limit": 1e-09,
+      "kind": "le",
+      "passed": true,
+      "description": "reference value change under n_psi / n_t / n_kelvin perturbation"
+    }
+  },
+  "all_criteria_passed": true,
+  "environment": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "numpy": "2.4.6",
+    "machine": "loongarch64"
+  },
+  "runtime_seconds": 25.77441906929016,
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.ellipsoid_kochin_case --outdir benchmarks/verified/bem_ellipsoid_kochin",
+  "artifacts": {
+    "results_json": "benchmarks/verified/bem_ellipsoid_kochin/results.json",
+    "report_md": "benchmarks/verified/bem_ellipsoid_kochin/report.md",
+    "figure_png": "benchmarks/verified/bem_ellipsoid_kochin/figures/bem_ellipsoid_kochin.png"
+  }
+}

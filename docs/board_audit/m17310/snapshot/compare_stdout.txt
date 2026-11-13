@@ -1,0 +1,33 @@
+numeric leaves compared: 264   bit-identical: 263   differing: 1
+  runtime_seconds                                              shipped=12.791265487670898       rerun=25.77441906929016        rel=1.015e+00
+worst relative difference: 1.015e+00
+
+criteria (rerun, straight from results.json.criteria):
+  geometry_cb_half_ellipsoid         value=       2.120369788e-16 limit=     1e-12 le passed=True
+  long_wave_asymptotic_order         value=           1.026594836 limit=       0.9 ge passed=True
+  long_wave_finest                   value=       1.877474962e-05 limit=     0.001 le passed=True
+  closed_form_vs_independent         value=       6.617957077e-14 limit=     1e-09 le passed=True
+  kochin_panels_integrated           value=          0.0172778113 limit=      0.05 le passed=True
+  kochin_panels_ordinate             value=         0.02098326046 limit=      0.05 le passed=True
+  haskind_far_near_identity          value=       8.830726629e-14 limit=     1e-09 le passed=True
+  haskind_far_panels                 value=        0.009554812251 limit=      0.05 le passed=True
+  convergence_finest                 value=        0.005016804561 limit=      0.05 le passed=True
+  convergence_order                  value=           2.003789624 limit=       0.5 ge passed=True
+  reference_parameter_sensitivity    value=       1.287128819e-13 limit=     1e-09 le passed=True
+
+diagnostics (not part of the verdict):
+  long_wave_limit_three_point        value=0.002122090133 limit=0.001 passed=False
+
+criteria graded: 11   FAIL: 0   -> all_criteria_passed=True
+
+pool_tolerance: 0.05
+all_criteria_passed: True
+runtime_seconds(shipped): 12.791265487670898  rerun: 25.77441906929016
+repro_cmd: PYTHONPATH=src python3 -m tensorbem.benchmarks.ellipsoid_kochin_case --outdir benchmarks/verified/bem_ellipsoid_kochin
+artifacts: {"results_json": "benchmarks/verified/bem_ellipsoid_kochin/results.json", "report_md": "benchmarks/verified/bem_ellipsoid_kochin/report.md", "figure_png": "benchmarks/verified/bem_ellipsoid_kochin/figures/bem_ellipsoid_kochin.png"}
+
+sha256 shipped results.json: 55476266d2cae561fc599a4844b522c71f029fe4b20f4a9a0865c8202de6c3c1
+sha256 rerun   results.json: 6d874ce883f5058e369f0830c46cf83fe1ff12cc69331998531fff74393565c4
+
+worst graded error vs tolerance: 0.02098326045728262 tol: 0.05
+REPRO_OK: True
