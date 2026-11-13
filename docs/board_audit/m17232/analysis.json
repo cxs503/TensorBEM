@@ -1,0 +1,239 @@
+{
+  "auditor": "board-audit m17232",
+  "findings": {
+    "F1_medium_report_order_arithmetic": {
+      "base4_misread_reproduces_report": [
+        0.949,
+        0.98,
+        0.992
+      ],
+      "claim_in_subject_report": "observed order 0.95 / 0.98 / 0.99 for the integral added mass; conclusion 'the integral inherits the first-order per-panel flux'",
+      "impact": "no effect on the reported added-mass errors or the <3% verdict; affects only the convergence interpretation and the subject's suggestion that README needed review.",
+      "recomputed_p_log2": [
+        1.897600491583338,
+        1.9599767499066434,
+        1.9830922992759135
+      ],
+      "verdict": "FALSIFIED: with h halving per subdivision the integral added-mass order is ~2 (1.72/1.90/1.96/1.98), matching README 'near 2'; the subject's 0.95/0.98/0.99 are log4-space values. Per-panel flux is the ~1st-order quantity (0.94/1.09/1.09)."
+    },
+    "F2_medium_registry_gap": {
+      "action": "registered by this audit with the audited numbers (see insert_verdict.sql)",
+      "claim": "tensor_benchmark_cases is the machine referee for this anchor",
+      "measured": "0 rows for anchor_slug=CASE-BEM-SPHERE-ADDED-MASS before this audit (35 rows total in table)"
+    },
+    "F3_low_cluster_claim": {
+      "claim_in_subject_report": "sub3/sub4 heavy recompute submitted to cluster as cj1448",
+      "measured": "cj1448 exists but terminal state=killed (submitted 11-13 01:55); no cluster artifact is cited in the report; sub3/sub4 numbers came from the local setsid route, which the report also states",
+      "verdict": "claim is half-true and self-consistent (report says the local route produced the numbers first), but no cluster row backs the numbers; auditor reran sub3/sub4 locally AND resubmitted to the cluster (cj1466)"
+    },
+    "F4_low_tracelevel_scope": {
+      "consequence": "validates the exterior DtN/single-layer solution operator, not a general radiation solve -> level capped at L4, L5 not claimed",
+      "measured": "the benchmark imposes the exact analytic Dirichlet trace u=-0.5*U*a*cos(theta) and solves for q; it does not solve the physical Neumann BVP for a moving body"
+    },
+    "F5_info_sub1_fails_threshold": {
+      "measured": "80-panel error 6.4759e-2 > 3% (already reported as FAIL by the subject); 320 panels onward pass"
+    },
+    "F6_info_no_artifacts_in_repo": {
+      "measured": "m17176 deliverables live only in its worktree (runs/m17176/*); this audit pins copies with sha256 under docs/board_audit/m17232/refs/"
+    }
+  },
+  "flux_order": [
+    {
+      "from": 80,
+      "p_log2": 0.9392653347885721,
+      "to": 320
+    },
+    {
+      "from": 320,
+      "p_log2": 1.0868944165936822,
+      "to": 1280
+    },
+    {
+      "from": 1280,
+      "p_log2": 1.088767206899769,
+      "to": 5120
+    }
+  ],
+  "integral_order": [
+    {
+      "from": 80,
+      "p_log2": 1.897600491583338,
+      "p_log4_misread": 0.9488002457916691,
+      "to": 320
+    },
+    {
+      "from": 320,
+      "p_log2": 1.9599767499066434,
+      "p_log4_misread": 0.9799883749533218,
+      "to": 1280
+    },
+    {
+      "from": 1280,
+      "p_log2": 1.9830922992759135,
+      "p_log4_misread": 0.9915461496379567,
+      "to": 5120
+    }
+  ],
+  "negative_control": {
+    "artifact_mode1": 2007.7327892588562,
+    "driver_matches_direct_solve": 0.0,
+    "mode1_relative_error": 0.06475922589787637,
+    "mode2_vs_mode1_ratio": 1.7553953523366812,
+    "panels": 80,
+    "production_run_mode1_via_driver": 2007.7327892588562,
+    "radius1_relative_error": 0.06475922589787637,
+    "radius2_added_mass": 16061.86231407085,
+    "radius2_over_radius1": 8.0,
+    "radius2_relative_error": 0.06475922589787637,
+    "ref_0p5_rho_V": 2146.754979953025,
+    "subdivisions": 1,
+    "verdict": {
+      "output_follows_input": true,
+      "radius_scaling_close_to_8": true,
+      "relative_error_scale_invariant": true
+    },
+    "wrong_mode2_cos2theta_added_mass": 3524.3648069989576,
+    "wrong_mode2_relative_error_vs_ref": 0.6417173081746278
+  },
+  "readme_consistency": [
+    {
+      "consistent_at_3digits": true,
+      "declared_err": 0.213,
+      "measured_err": 0.21268127760057998,
+      "panels_declared": 20,
+      "panels_measured": 20
+    },
+    {
+      "consistent_at_3digits": true,
+      "declared_err": 0.0648,
+      "measured_err": 0.06475922589787637,
+      "panels_declared": 80,
+      "panels_measured": 80
+    },
+    {
+      "consistent_at_3digits": true,
+      "declared_err": 0.0174,
+      "measured_err": 0.017380688694954495,
+      "panels_declared": 320,
+      "panels_measured": 320
+    },
+    {
+      "consistent_at_3digits": true,
+      "declared_err": 0.00447,
+      "measured_err": 0.004467403585941484,
+      "panels_declared": 1280,
+      "panels_measured": 1280
+    }
+  ],
+  "ref": {
+    "formula": "m_A = 0.5*rho*V = 0.5*1025*4/3*pi -> Lamb 1932 \u00a76.10 / Newman 1977 eq.4.132 sphere limit",
+    "independent_recompute": "tensorbem.analytic.ellipsoid_added_mass((1,1,1),1025) -> see analytic_anchor",
+    "value": 2146.754979953025
+  },
+  "rows": [
+    {
+      "cond_subject": 18.62149308405364,
+      "flux_l2_rerun": 0.027884179766218722,
+      "flux_l2_subject": 0.027884179766218722,
+      "h_max": 0.6180339887498949,
+      "m_A_abs_diff": 0.0,
+      "m_A_rerun": 2007.7327892588562,
+      "m_A_subject": 2007.7327892588562,
+      "panels": 80,
+      "pass_3pct": false,
+      "ref_0p5_rhoV": 2146.754979953025,
+      "rel_err_bit_identical": true,
+      "rel_err_rerun": 0.06475922589787637,
+      "rel_err_subject": 0.06475922589787637,
+      "residual_subject": 3.931134003671364e-16,
+      "sub": 1,
+      "volume_ratio": 0.8734532000030633
+    },
+    {
+      "cond_subject": 37.56559992086565,
+      "flux_l2_rerun": 0.014541554464665561,
+      "flux_l2_subject": 0.014541554464665561,
+      "h_max": 0.3249196962329064,
+      "m_A_abs_diff": 0.0,
+      "m_A_rerun": 2109.4428999421184,
+      "m_A_subject": 2109.4428999421184,
+      "panels": 320,
+      "pass_3pct": true,
+      "ref_0p5_rhoV": 2146.754979953025,
+      "rel_err_bit_identical": true,
+      "rel_err_rerun": 0.017380688694954495,
+      "rel_err_subject": 0.017380688694954495,
+      "residual_subject": 6.653864972623193e-16,
+      "sub": 2,
+      "volume_ratio": 0.9661607485985872
+    },
+    {
+      "cond_subject": 76.12545458214444,
+      "flux_l2_rerun": 0.00684578117378784,
+      "flux_l2_subject": 0.00684578117378784,
+      "h_max": 0.1646471600639204,
+      "m_A_abs_diff": 0.0,
+      "m_A_rerun": 2137.1645590574453,
+      "m_A_subject": 2137.1645590574453,
+      "panels": 1280,
+      "pass_3pct": true,
+      "ref_0p5_rhoV": 2146.754979953025,
+      "rel_err_bit_identical": true,
+      "rel_err_rerun": 0.004467403585941484,
+      "rel_err_subject": 0.004467403585941484,
+      "residual_subject": 1.2456893014793052e-15,
+      "sub": 3,
+      "volume_ratio": 0.9913938426297549
+    },
+    {
+      "cond_subject": 153.96635238350862,
+      "flux_l2_rerun": null,
+      "flux_l2_subject": 0.003218632744106277,
+      "h_max": 0.08260396653395065,
+      "m_A_abs_diff": null,
+      "m_A_rerun": null,
+      "m_A_subject": 2144.3291106371926,
+      "panels": 5120,
+      "pass_3pct": true,
+      "ref_0p5_rhoV": 2146.754979953025,
+      "rel_err_bit_identical": false,
+      "rel_err_rerun": null,
+      "rel_err_subject": 0.0011300168572967394,
+      "residual_subject": 2.402269080413792e-15,
+      "sub": 4,
+      "volume_ratio": 0.9978391716105981
+    }
+  ],
+  "scale_invariance": {
+    "base": {
+      "U": 1.0,
+      "rel_err": 0.017380688694954495,
+      "rho": 1025.0
+    },
+    "identical": true,
+    "scaled": {
+      "U": 2.0,
+      "m_A": 2057.9930731142617,
+      "ref": 2094.3951023931954,
+      "rel_err": 0.017380688694954603,
+      "rho": 1000.0
+    },
+    "subject_sensitivity_json_identical": true
+  },
+  "sha256": {
+    "refs/flux_panels_sub2.csv": "94877d6e15a63da180adf8016cf172c90723b3ff04e623ef1ed0a6834dec63c7",
+    "refs/sensitivity_sub2.json": "c5b1f616f9576b95914e251efe44c6c6b7ca8b68df29e76904c5b94471602a78",
+    "refs/sphere_added_mass_sub1.json": "b4b5cb1d2a077646d844e5f9e1d9e3ac44fbb4b7993fbfce1a2379043291e12f",
+    "refs/sphere_added_mass_sub2.json": "e63c1cfe55a1b939d61451912c00162793795bf39334c086c31baeb2cfcc71c0",
+    "refs/sphere_added_mass_sub3.json": "498bbda1a0c7b9a78c96b50f253f5b4b917216b5abf3d5a08220344af3710b3e",
+    "refs/sphere_added_mass_sub4.json": "5105f02cd80a036287ed0dd2e69ff6f8c95277becb379442af7fbaa11417c801",
+    "rerun/sub1.json": "b4b5cb1d2a077646d844e5f9e1d9e3ac44fbb4b7993fbfce1a2379043291e12f",
+    "rerun/sub2.json": "e63c1cfe55a1b939d61451912c00162793795bf39334c086c31baeb2cfcc71c0",
+    "rerun/sub3.json": "498bbda1a0c7b9a78c96b50f253f5b4b917216b5abf3d5a08220344af3710b3e"
+  },
+  "subject": "m17176 CASE-BEM-SPHERE-ADDED-MASS (repo TensorBEM)",
+  "verdict_level": {
+    "level": 4,
+    "why": "real BEM solve (input->compute->output, negative-controlled), classical closed-form anchor recomputed, 4-point refinement with per-point error table, one-command repro independently rerun bit-identically, tests green; not L5: no experimental/printed-table external anchor, trace-level scope, and the report's convergence-order analysis is wrong (F1)."
+  }
+}
