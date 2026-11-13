@@ -84,6 +84,7 @@ from numpy.typing import NDArray
 from tensorbem import time_domain as td
 from tensorbem.causality import (
     fit_added_mass_asymptote,
+    kk_added_mass_closure,
     kkr_added_mass,
 )
 from tensorbem.wigley_hydrostatics import wigley_wetted_hull_mesh
@@ -484,6 +485,35 @@ def criterion_round_trip_wigley(
     )
 
 
+#: Case-pool anchor whose closure machinery this campaign shares.
+CASE_POOL_SLUG = "CASE-BEM-CUMMINS-WIGLEY"
+
+
+def run_case_pool_closure(sweep: "WigleyRadiationSweep", *, dof: int = 2) -> dict:
+    """Delegate the case-pool KK gate (CASE-BEM-CUMMINS-WIGLEY) to its module.
+
+    The case module (:mod:`tensorbem.benchmarks.case_bem_cummins_wigley`) owns
+    the pre-declared criteria, so the campaign re-uses that code instead of
+    keeping a second copy of the tolerances.
+    """
+    from tensorbem.benchmarks import case_bem_cummins_wigley as case
+
+    return case.kk_gate(
+        case.Sweep(
+            label="campaign",
+            n_sections=0,
+            n_levels=0,
+            panel_count=0,
+            max_panel_scale=0.0,
+            omega=np.asarray(sweep.omega, dtype=float),
+            added_mass=np.asarray(sweep.added_mass, dtype=float),
+            damping=np.asarray(sweep.damping, dtype=float),
+            solver_relative_residual=np.zeros(np.asarray(sweep.omega).size),
+            elapsed=0.0,
+        )
+    )
+
+
 def criterion_causality_wigley(
     sweep: WigleyRadiationSweep,
     *,
@@ -521,6 +551,7 @@ def criterion_causality_wigley(
     )
     
     # Residual
+    closure = kk_added_mass_closure(sweep.omega, A_omega, B_omega)
     residual = np.abs(kkr.residual)
     residual = residual[np.isfinite(residual)]
     max_residual = float(np.max(residual)) if len(residual) > 0 else 0.0
@@ -550,6 +581,8 @@ def criterion_causality_wigley(
             "even_parity_relative_error": diag["even_parity_relative_error"],
             "kkr_relative_residual": relative_residual,
             "kkr_absolute_residual_max": max_residual,
+            "kk_closure_relative_residual": closure.max_relative_residual,
+            "kk_closure_added_mass_inf": closure.added_mass_inf,
             "added_mass_inf_fit": A_inf_fit.added_mass_inf,
             "kernel_diagnostics": {
                 "K0": float(kernel.values[0]),
