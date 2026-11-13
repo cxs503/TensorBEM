@@ -100,7 +100,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
-from typing import Sequence
+from typing import Literal, Sequence
 
 import numpy as np
 from numpy.typing import NDArray
@@ -115,6 +115,11 @@ __all__ = [
     "kkr_check",
     "kkr_damping",
     "principal_value_integral",
+    "PowerTailFit",
+    "fit_damping_power_tail",
+    "power_tail_principal_value",
+    "KKRClosure",
+    "kk_added_mass_closure",
 ]
 
 _MINIMUM_POINTS = 8
@@ -452,4 +457,211 @@ def kkr_check(
         asymptote_relative_residual=fit.relative_residual,
         damping_scale=damper_scale,
         added_mass_scale=mass_scale,
+    )
+
+# ---------------------------------------------------------------------------
+# Band-limited closure with an explicit high-frequency damping tail
+# ---------------------------------------------------------------------------
+#
+# The tabulated relations above close the sweep at the *lower* end (the band
+# ``s < s_min`` is held constant, which is the leading even behaviour) but at
+# the *upper* end ``kkr_added_mass`` assumes the damping has already vanished at
+# the last node.  That assumption is safe for a deeply submerged body (the wave
+# kernel decays like ``exp(-2 k f)``) and it is *not* safe for a
+# surface-piercing hull whose damping peak sits inside or just above the
+# computed band: the omitted ``s > s_max`` band then contributes a bias to every
+# reconstructed added-mass value, which shows up as a spurious causality
+# violation of the whole sweep.
+#
+# Two ingredients remove that artefact:
+#
+# ``fit_damping_power_tail``
+#     fits ``B(s) = C s^-p`` on the upper tail of the sweep.  For a
+#     surface-piercing body the high-frequency damping is algebraic
+#     (the Kochin integral is analytic in ``1/sqrt(nu)`` away from the
+#     waterline singularity), so a power law is the right model, and ``p``
+#     comes out of the fit rather than being assumed.
+#
+# ``power_tail_principal_value``
+#     evaluates the omitted ``PV integral_{s_max}^inf C s^-p/(s^2-omega^2) ds``
+#     in closed form.  With ``s = omega u`` the integrand becomes
+#     ``C omega^(-p-1) u^-p/(u^2-1)`` and, because ``u >= a = s_max/omega > 1``,
+#     the expansion ``u^-p/(u^2-1) = sum_k u^(-p-2k-2)`` converges
+#     geometrically: the interval integral is
+#     ``sum_k a^(-(p+2k+1))/(p+2k+1)``, summed here to machine precision.
+#
+# ``kk_added_mass_closure``
+#     is the band-limited counterpart of eq. (2).  ``A_inf`` cannot be read off
+#     a truncated sweep reliably (it is a constant that the KK relation itself
+#     fixes only up to the closure), so when ``added_mass_inf="closure"`` it is
+#     estimated as the least-squares offset between the measured added mass and
+#     the reconstructed one -- one free parameter, never more -- and the
+#     residual reported is the *shape* residual.  Passing a number instead keeps
+#     the value fixed and reports the full residual.
+
+
+@dataclass(frozen=True)
+class PowerTailFit:
+    """Fit of ``B(s) = C s^-p`` over the upper tail of a damping sweep."""
+
+    coefficient: float
+    exponent: float
+    points: int
+    relative_residual: float
+    valid: bool
+    reason: str
+
+
+def fit_damping_power_tail(
+    omegas: Sequence[float] | FloatArray,
+    damping: Sequence[float] | FloatArray,
+    *,
+    tail_fraction: float = 0.25,
+    min_exponent: float = 3.0,
+    max_relative_residual: float = 0.25,
+) -> PowerTailFit:
+    """Least-squares power-law fit of the damping tail, with validity guards.
+
+    The tail integral only converges for ``p > 2`` and a fit whose residual is
+    comparable to the data carries no information, so both are treated as
+    *invalid* and reported as such: the caller then falls back to the
+    zero-tail relation instead of silently adding a wrong number.
+    """
+    if not 0.0 < float(tail_fraction) <= 1.0:
+        raise ValueError("tail_fraction must lie in (0, 1]")
+    grid, data = _as_sweep(omegas, damping, "damping")
+    count = max(3, int(round(float(tail_fraction) * grid.size)))
+    count = min(count, grid.size)
+    tail_grid = grid[-count:]
+    tail_data = data[-count:]
+    if np.any(tail_data <= 0.0):
+        return PowerTailFit(0.0, 0.0, count, float("inf"), False,
+                            "non-positive damping in the tail band")
+    slope, intercept = np.polyfit(np.log(tail_grid), np.log(tail_data), 1)
+    exponent = float(-slope)
+    coefficient = float(math.exp(intercept))
+    model = coefficient * tail_grid ** (-exponent)
+    scale = float(np.max(tail_data))
+    residual = float(np.max(np.abs(model - tail_data)) / scale)
+    if exponent < float(min_exponent):
+        return PowerTailFit(coefficient, exponent, count, residual, False,
+                            f"fitted exponent {exponent:.3g} < {min_exponent:g}: "
+                            "the sweep has not reached the algebraic tail")
+    if residual > float(max_relative_residual):
+        return PowerTailFit(coefficient, exponent, count, residual, False,
+                            f"tail fit residual {residual:.3g} > "
+                            f"{max_relative_residual:g}")
+    return PowerTailFit(coefficient, exponent, count, residual, True, "ok")
+
+
+def power_tail_principal_value(
+    omega: float,
+    coefficient: float,
+    exponent: float,
+    start: float,
+) -> float:
+    """``PV integral_start^inf C s^-p/(s^2-omega^2) ds`` for ``p > 2``, ``start > omega``."""
+    sample = float(omega)
+    upper = float(start)
+    power = float(exponent)
+    if not (sample > 0.0 and math.isfinite(sample)):
+        raise ValueError("omega must be positive and finite")
+    if not upper > sample:
+        raise ValueError("the tail must start above the sample frequency")
+    if power <= 2.0:
+        raise ValueError("the power tail must decay faster than s^-2")
+    ratio = upper / sample
+    total = 0.0
+    for k in range(0, 400):
+        m = power + 2.0 * k + 1.0
+        term = ratio ** (-m) / m
+        total += term
+        if term <= 1e-17 * abs(total):
+            break
+    return float(coefficient) * sample ** (-power - 1.0) * total
+
+
+@dataclass(frozen=True)
+class KKRClosure:
+    """Band-limited Kramers-Kronig closure of an added-mass sweep."""
+
+    sample_omegas: FloatArray
+    measured_added_mass: FloatArray
+    predicted_added_mass: FloatArray
+    residual: FloatArray
+    relative_residual: FloatArray
+    added_mass_inf: float
+    added_mass_inf_source: str
+    damping_scale: float
+    added_mass_scale: float
+    tail: PowerTailFit | None
+
+    @property
+    def max_relative_residual(self) -> float:
+        finite = self.relative_residual[np.isfinite(self.relative_residual)]
+        return float(np.max(finite)) if finite.size else float("inf")
+
+
+def kk_added_mass_closure(
+    omegas: Sequence[float] | FloatArray,
+    added_mass: Sequence[float] | FloatArray,
+    damping: Sequence[float] | FloatArray,
+    *,
+    sample_omegas: Sequence[float] | FloatArray | None = None,
+    added_mass_inf: float | Literal["closure"] = "closure",
+    damping_tail: PowerTailFit | None = None,
+    tail_fit: bool = True,
+    tail_fraction: float = 0.25,
+) -> KKRClosure:
+    """Reconstruct ``A(omega)`` from a band-limited ``B(omega)`` sweep.
+
+    The reconstruction is eq. (2) closed at both ends of the computed band:
+    below ``s_min`` the damping is held at its first tabulated value and above
+    ``s_max`` an explicit power tail is integrated in closed form (see
+    :func:`power_tail_principal_value`).  ``added_mass_inf="closure"`` estimates
+    the one undetermined constant by least squares on the residual.
+    """
+    grid, mass = _as_sweep(omegas, added_mass, "added_mass")
+    _, damper = _as_sweep(omegas, damping, "damping")
+    tail = damping_tail
+    if tail is None and tail_fit:
+        tail = fit_damping_power_tail(grid, damper, tail_fraction=tail_fraction)
+    if tail is not None and not tail.valid:
+        tail = None
+    if sample_omegas is None:
+        samples = _default_samples(grid)
+    else:
+        samples = np.asarray(list(sample_omegas), dtype=float).reshape(-1)
+    raw = np.empty(samples.size, dtype=float)
+    for index, sample in enumerate(samples):
+        value = principal_value_integral(grid, damper, float(sample))
+        if tail is not None:
+            value += power_tail_principal_value(
+                float(sample), tail.coefficient, tail.exponent, float(grid[-1])
+            )
+        raw[index] = 2.0 / math.pi * value
+    measured = np.interp(samples, grid, mass)
+    shape = measured - raw
+    if isinstance(added_mass_inf, str):
+        if added_mass_inf != "closure":
+            raise ValueError("added_mass_inf must be a number or 'closure'")
+        offset = float(np.mean(shape))
+        source = "closure (least-squares offset)"
+    else:
+        offset = float(added_mass_inf)
+        source = "supplied"
+    predicted = raw + offset
+    residual = measured - predicted
+    scale = max(float(np.max(np.abs(mass))), 1e-300)
+    return KKRClosure(
+        sample_omegas=samples,
+        measured_added_mass=measured,
+        predicted_added_mass=predicted,
+        residual=residual,
+        relative_residual=np.abs(residual) / scale,
+        added_mass_inf=offset,
+        added_mass_inf_source=source,
+        damping_scale=max(float(np.max(np.abs(damper))), 1e-300),
+        added_mass_scale=scale,
+        tail=tail,
     )
