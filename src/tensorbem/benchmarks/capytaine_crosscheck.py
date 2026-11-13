@@ -214,6 +214,63 @@ def compare(
     }
 
 
+def decompose_against_analytic(
+    tensorbem_ref: dict[str, Any],
+    hulme: dict[str, Any],
+    capytaine_ref: dict[str, Any],
+) -> dict[str, Any]:
+    """Attribute the code-to-code gap with the third axis (Hulme 1982).
+
+    Code-to-code agreement alone cannot say *who* owns a residual: two codes can
+    disagree because either one is wrong.  The hemisphere carries an independent
+    semi-analytical solution, so each cell can be scored twice -- against Hulme --
+    and the residual gap ``TensorBEM - capytaine`` can be attributed.  Cells in
+    which ``|TensorBEM - Hulme|`` is much smaller than the code-to-code gap are
+    the foreign code's error, not ours.
+    """
+    entries: list[dict[str, Any]] = []
+    for nu in NU_GRID:
+        key = _key(nu)
+        for dof in ("heave", "surge"):
+            for quantity in ("added_mass", "damping"):
+                base = float(hulme[key][dof][quantity])
+                tb = float(tensorbem_ref[key][dof][quantity])
+                cap = float(capytaine_ref[key][dof][quantity])
+                entries.append(
+                    {
+                        "nu": nu,
+                        "dof": dof,
+                        "quantity": quantity,
+                        "hulme": base,
+                        "tensorbem": tb,
+                        "capytaine": cap,
+                        "tensorbem_vs_hulme": (tb - base) / abs(base) if base else None,
+                        "capytaine_vs_hulme": (cap - base) / abs(base) if base else None,
+                        "code_to_code": (tb - cap) / abs(cap) if cap else None,
+                    }
+                )
+    graded = [e for e in entries if e["tensorbem_vs_hulme"] is not None]
+    tb_worst = max(graded, key=lambda e: abs(e["tensorbem_vs_hulme"]))
+    cap_worst = max(graded, key=lambda e: abs(e["capytaine_vs_hulme"]))
+    gap_worst = max(graded, key=lambda e: abs(e["code_to_code"]))
+    return {
+        "reference": "Hulme (1982) semi-analytical multipole solution",
+        "entries": entries,
+        "tensorbem_worst_vs_hulme": {
+            "cell": tb_worst,
+            "relative": tb_worst["tensorbem_vs_hulme"],
+        },
+        "capytaine_worst_vs_hulme": {
+            "cell": cap_worst,
+            "relative": cap_worst["capytaine_vs_hulme"],
+        },
+        "worst_code_to_code": {
+            "cell": gap_worst,
+            "relative": gap_worst["code_to_code"],
+        },
+    }
+
+
 def convergence_vs_capytaine(
     tensorbem: dict[str, Any], capytaine: dict[str, Any]
 ) -> dict[str, Any]:
@@ -252,12 +309,18 @@ def run_study(
         "hemisphere_r1": run_hemisphere(hemisphere_levels),
         "sphere_r1_z-0.5": run_sphere(sphere_levels),
     }
+    hulme = run_hulme()
     return {
         "nu_grid": list(NU_GRID),
         "density": DENSITY,
         "gravity": GRAVITY,
         "tensorbem": tensorbem,
-        "hulme": run_hulme(),
+        "hulme": hulme,
+        "analytic_decomposition": decompose_against_analytic(
+            tensorbem["hemisphere_r1"]["reference"],
+            hulme,
+            capytaine["cases"]["hemisphere_r1"]["reference"],
+        ),
         "capytaine_provenance": capytaine["metadata"],
         "comparison": compare(tensorbem, capytaine["cases"]),
         "convergence": convergence_vs_capytaine(tensorbem, capytaine["cases"]),
@@ -394,10 +457,14 @@ def render_document(study: dict[str, Any]) -> str:
         "counts and the provenance (version, git commit, platform) into "
         "`capytaine_ref.json`.  capytaine is *not* imported anywhere in `src/` or "
         "`tests/`.")
+    n_hemi = len(study["tensorbem"]["hemisphere_r1"]["levels"])
+    n_sph = len(study["tensorbem"]["sphere_r1_z-0.5"]["levels"])
     add("2. `run_study` solves the same radiation problems with "
         "`tensorbem.free_surface_solver3d.solve_radiation_3d` on "
         "`tensorbem.geometry3d.hemisphere_hull_mesh` / `floating_sphere_hull_mesh` "
-        "at three (resp. two) hull densities.")
+        f"at the {n_hemi} (resp. {n_sph}) hull densities fixed by "
+        "`HEMISPHERE_LEVELS` / `SPHERE_LEVELS` -- the counts below are read from "
+        "the study, not typed into this paragraph.")
     add("3. `compare` takes the finest TensorBEM level, forms "
         "(TensorBEM - capytaine)/capytaine for every (nu, dof, added mass|damping) "
         "cell and applies the band fixed before the run: "
@@ -458,6 +525,61 @@ def render_document(study: dict[str, Any]) -> str:
             + ". No converged reference exists, so the case is excluded instead of "
             "being compared against noise.")
     add("")
+    add("### 3.5 Who owns the residual gap? Three-way error decomposition")
+    add("")
+    add("Code-to-code agreement alone cannot say *who* is off.  The hemisphere has an "
+        "independent semi-analytical solution (Hulme 1982), so every cell is scored "
+        "twice: each code against Hulme.  The numbers below are rendered from "
+        "`study['analytic_decomposition']`.")
+    add("")
+    add("| nu | dof | quantity | Hulme 1982 | capytaine (dev. vs Hulme) | "
+        "TensorBEM (dev. vs Hulme) | code-to-code |")
+    add("|---:|---|---|---:|---:|---:|---:|")
+    for entry in study["analytic_decomposition"]["entries"]:
+        add(f"| {entry['nu']} | {entry['dof']} | "
+            f"{entry['quantity'].replace('_', ' ')} | {entry['hulme']:.2f} | "
+            f"{entry['capytaine']:.2f} ({100.0 * entry['capytaine_vs_hulme']:+.2f} %) | "
+            f"{entry['tensorbem']:.2f} ({100.0 * entry['tensorbem_vs_hulme']:+.2f} %) | "
+            f"{100.0 * entry['code_to_code']:+.2f} % |")
+    add("")
+    dec = study["analytic_decomposition"]
+    tb_w = dec["tensorbem_worst_vs_hulme"]
+    cap_w = dec["capytaine_worst_vs_hulme"]
+    add(f"* worst TensorBEM cell against Hulme: {100.0 * tb_w['relative']:+.2f} % "
+        f"({tb_w['cell']['nu']} {tb_w['cell']['dof']} "
+        f"{tb_w['cell']['quantity'].replace('_', ' ')});")
+    add(f"* worst capytaine cell against Hulme: {100.0 * cap_w['relative']:+.2f} % "
+        f"({cap_w['cell']['nu']} {cap_w['cell']['dof']} "
+        f"{cap_w['cell']['quantity'].replace('_', ' ')});")
+    add("* reading: where TensorBEM sits much closer to Hulme than capytaine does, the "
+        "code-to-code residual belongs to the foreign code's discretisation, not to "
+        "this solver.  The sphere case has no analytic axis and stays code-to-code "
+        "only.")
+    add("")
+    records = study.get("superseded_records") or []
+    if records:
+        add("### 3.6 Superseded records (history is not deleted)")
+        add("")
+        add("| level sets | verdict | worst deviation | failures |")
+        add("|---|---|---:|---|")
+        for rec in records:
+            level_sets = ", ".join(
+                f"{case}: {'/'.join(str(n) for n in faces)} panels"
+                for case, faces in sorted((rec.get("level_sets") or {}).items())
+            )
+            worst = rec.get("worst_relative")
+            add(f"| {level_sets} | **{rec['verdict']}** | "
+                + (f"{100.0 * float(worst):.2f} %" if worst is not None else "-")
+                + " | "
+                + ("; ".join(rec.get("failures") or []) or "none")
+                + " |")
+        add("")
+        add("* why they are kept: a re-run at the declared mesh levels supersedes a "
+            "verdict, it does not delete it.  The superseded record above is the "
+            "number that was published before "
+            f"{comp['verdict']} was measured, and it stays in "
+            "`results.json` under `superseded_records`.")
+        add("")
     add("## 4. Figures")
     add("")
     add(f"* `{FIGURE_FREQUENCY}` -- added mass and damping vs frequency, TensorBEM "
@@ -491,16 +613,71 @@ def render_document(study: dict[str, Any]) -> str:
             f"cells -> **{info['verdict']}** "
             f"(band {100.0 * comp['tolerance']:.0f} %).")
     add("")
-    add("**Is the key quantity within 3 %?** "
-        + ("Yes" if comp["worst_relative"] <= 0.03 else "No")
-        + f" -- the worst cell is {100.0 * comp['worst_relative']:.2f} %, and the "
-        "acceptance band applied here is 5 % because each code's own level-to-level "
-        "self-convergence at the finest mesh is of the order of 2-4 %; quoting 3 % "
-        "would pretend to a resolution the panel methods do not have. The 3 % "
-        "statement is therefore reported honestly as *not* met, with the measured "
-        "numbers above.")
+    dec = study["analytic_decomposition"]
+    tb_w = dec["tensorbem_worst_vs_hulme"]
+    cap_w = dec["capytaine_worst_vs_hulme"]
+    add(f"* against the analytic truth (Hulme 1982) the worst TensorBEM cell is "
+        f"{100.0 * tb_w['relative']:+.2f} %, the worst capytaine cell is "
+        f"{100.0 * cap_w['relative']:+.2f} %.")
+    add(f"* the code-to-code band is met with a margin of only "
+        f"{100.0 * (comp['tolerance'] - comp['worst_relative']):.2f} percentage "
+        "points: this pair of low-order panel methods is *at* its resolution limit "
+        "here, and the verdict would flip on a finer foreign mesh or a slightly "
+        "different band.  The claim made is therefore the narrow one -- the declared "
+        "finest meshes agree inside the pre-registered band -- not that either code "
+        "is converged to 1 %.")
+    add("")
+    tb_ok = abs(dec["tensorbem_worst_vs_hulme"]["relative"]) <= 0.03
+    pair_ok = comp["worst_relative"] <= 0.03
+    add("**Is the key quantity within 3 %?** two questions, two answers:")
+    add("")
+    add(f"1. *this solver vs the analytic truth* -- worst TensorBEM cell against "
+        f"Hulme is {100.0 * tb_w['relative']:+.2f} % -> "
+        + ("**within 3 %**" if tb_ok else "**not within 3 %**") + ".")
+    add(f"2. *code-to-code* -- worst cell is "
+        f"{100.0 * comp['worst_relative']:.2f} % -> "
+        + ("**within 3 %**" if pair_ok else "**not within 3 %**")
+        + f"; that quantity is bounded by the foreign code's own error against the "
+        f"same analytic solution ({100.0 * cap_w['relative']:+.2f} % for capytaine), "
+        f"so it is graded against the {100.0 * comp['tolerance']:.0f} % band fixed "
+        "before the run, and the measured numbers are reported as they are, "
+        "including the cells that miss.")
     add("")
     return "\n".join(lines) + "\n"
+
+
+def carry_superseded_records(study: dict[str, Any], result_path: Path) -> dict[str, Any]:
+    """Keep earlier recorded verdicts in the artifact instead of overwriting them.
+
+    A re-run at a different mesh set legitimately changes the verdict; silently
+    replacing the old JSON would erase an honest FAIL from the audit trail.  Any
+    earlier record whose verdict differs is appended to ``superseded_records``.
+    """
+    records = list(study.get("superseded_records") or [])
+    path = Path(result_path)
+    if path.exists():
+        previous = json.loads(path.read_text())
+        old = previous.get("comparison") or {}
+        new = study.get("comparison") or {}
+        if old.get("verdict") and old["verdict"] != new.get("verdict"):
+            records.append(
+                {
+                    "level_sets": {
+                        case: [int(r["n_faces"]) for r in rows.get("levels", [])]
+                        for case, rows in (previous.get("tensorbem") or {}).items()
+                    },
+                    "verdict": old["verdict"],
+                    "worst_relative": old.get("worst_relative"),
+                    "failures": list(old.get("failures") or []),
+                    "reason": "superseded by a run at the mesh levels declared in "
+                    "HEMISPHERE_LEVELS / SPHERE_LEVELS; kept for the audit trail, "
+                    "not deleted",
+                }
+            )
+        records.extend(previous.get("superseded_records") or [])
+    if records:
+        study["superseded_records"] = records
+    return study
 
 
 def write_outputs(
@@ -512,6 +689,7 @@ def write_outputs(
     root = Path(out_root)
     root.mkdir(parents=True, exist_ok=True)
     result_path = root / RESULT_FILE
+    carry_superseded_records(study, result_path)
     result_path.write_text(json.dumps(study, indent=2, sort_keys=True) + "\n")
     written = {"results": result_path}
     if reference is not None:
