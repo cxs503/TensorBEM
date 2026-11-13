@@ -1,0 +1,581 @@
+{
+  "case": "BEM-QTF-DRIFT",
+  "density": 1025.0,
+  "depth_factor": 12.0,
+  "figures": [
+    {
+      "caption": "Closed-form difference-frequency QTF magnitude |T_xx(k_i,k_j)| of the fixed bottom-mounted cylinder over the (ka_i, ka_j) plane (MacCamy-Fuchs modes, machine precision).",
+      "name": "qtf_closed_form_map.png"
+    },
+    {
+      "caption": "Per-pair |T_xx| of the difference-frequency QTF: closed-form reference (blue) against the TensorBEM panel solution at the finest computed mesh level (orange).",
+      "name": "qtf_bem_vs_closed_form.png"
+    },
+    {
+      "caption": "Relative error of every QTF pair against the closed form versus panel count, with the predeclared 10 % case gate.",
+      "name": "qtf_mesh_convergence.png"
+    },
+    {
+      "caption": "Real and imaginary parts of the closed-form QTF along a row of the matrix (ka_i = 0.6 fixed), showing the continuity across the diagonal that the Newman approximation replaces by a straight line.",
+      "name": "qtf_closed_form_curves.png"
+    }
+  ],
+  "gates": {
+    "G1_diagonal_identity": 1e-09,
+    "G2_far_field_consistency": 0.001,
+    "G3_long_wave_law": 0.01,
+    "G4_hermitian": 1e-10,
+    "G5_bem_vs_closed_form": 0.1
+  },
+  "gates_result": {
+    "G1_diagonal_identity": {
+      "gate": 1e-09,
+      "pass": true,
+      "value": 4.2527895494136006e-15
+    },
+    "G2_far_field_consistency": {
+      "gate": 0.001,
+      "pass": true,
+      "value": 1.417596516471196e-15
+    },
+    "G3_long_wave_law": {
+      "gate": 0.01,
+      "pass": true,
+      "value": 0.001176596415473447
+    },
+    "G4_hermitian": {
+      "gate": 1e-10,
+      "pass": true,
+      "value": 2.449552155689319e-14
+    },
+    "G5_bem_vs_closed_form": {
+      "gate": 0.1,
+      "level": "medium",
+      "median": 0.20619186130376516,
+      "pass": false,
+      "value": 0.32073978117597574
+    },
+    "G6_monotone_refinement": {
+      "pass": false,
+      "series": [
+        [
+          0.06592506677530524,
+          0.04558154788119444
+        ],
+        [
+          0.20410941678446287,
+          0.20619186130376516
+        ],
+        [
+          0.26887165846581457,
+          0.32073978117597574
+        ],
+        [
+          0.20410941678446287,
+          0.20619186130376516
+        ],
+        [
+          0.015524623714997864,
+          0.040555699247787354
+        ],
+        [
+          0.009552448399000699,
+          0.08310857783654046
+        ],
+        [
+          0.2688716584658148,
+          0.32073978117597574
+        ],
+        [
+          0.009552448399000699,
+          0.08310857783654046
+        ],
+        [
+          0.0766325470087892,
+          0.045829913495968565
+        ]
+      ]
+    }
+  },
+  "gravity": 9.81,
+  "ka_grid": [
+    0.4,
+    0.6,
+    0.8
+  ],
+  "levels": [
+    {
+      "depth": 30.0,
+      "diagonal_max_error": 0.0766325470087892,
+      "diagonal_median_error": 0.06592506677530524,
+      "ka": [
+        0.4,
+        0.6,
+        0.8
+      ],
+      "level": "coarse",
+      "n_theta": 16,
+      "n_z": 10,
+      "offdiagonal_max_error": 0.2688716584658148,
+      "offdiagonal_median_error": 0.20410941678446287,
+      "pairs": [
+        {
+          "abs_error": 0.06592506677530524,
+          "bem_abs": 1787.6065153633099,
+          "bem_imag": 6.779924719608581e-14,
+          "bem_real": 1787.6065153633099,
+          "diagonal": true,
+          "i": 0,
+          "imag_error": 3.656036934366428e-17,
+          "j": 0,
+          "ka_i": 0.4,
+          "ka_j": 0.4,
+          "real_error": 0.06592506677530524,
+          "ref_abs": 1677.0470749611648,
+          "ref_imag": 6.485786728793791e-15,
+          "ref_real": 1677.0470749611648
+        },
+        {
+          "abs_error": 0.20410941678446287,
+          "bem_abs": 3484.6773329465323,
+          "bem_imag": 1836.7776786983611,
+          "bem_real": 2961.287536492668,
+          "diagonal": false,
+          "i": 0,
+          "imag_error": 0.47098763276511024,
+          "j": 1,
+          "ka_i": 0.4,
+          "ka_j": 0.6,
+          "real_error": 0.03674502020755973,
+          "ref_abs": 2893.9872775451386,
+          "ref_imag": 473.74546159503024,
+          "ref_real": 2854.947915498851
+        },
+        {
+          "abs_error": 0.26887165846581457,
+          "bem_abs": 4910.02660664802,
+          "bem_imag": 2951.706535576586,
+          "bem_real": 3923.7469089922115,
+          "diagonal": false,
+          "i": 0,
+          "imag_error": 0.6264395663990353,
+          "j": 2,
+          "ka_i": 0.4,
+          "ka_j": 0.8,
+          "real_error": 0.023332547287837957,
+          "ref_abs": 3869.600659679565,
+          "ref_imag": 527.6355761894981,
+          "ref_real": 3833.459268615189
+        },
+        {
+          "abs_error": 0.20410941678446287,
+          "bem_abs": 3484.6773329465323,
+          "bem_imag": -1836.7776786983616,
+          "bem_real": 2961.287536492668,
+          "diagonal": false,
+          "i": 1,
+          "imag_error": 0.47098763276511035,
+          "j": 0,
+          "ka_i": 0.6,
+          "ka_j": 0.4,
+          "real_error": 0.03674502020755973,
+          "ref_abs": 2893.9872775451386,
+          "ref_imag": -473.74546159503024,
+          "ref_real": 2854.947915498851
+        },
+        {
+          "abs_error": 0.015524623714997864,
+          "bem_abs": 4097.546803443251,
+          "bem_imag": -4.707555446104861e-14,
+          "bem_real": 4097.546803443251,
+          "diagonal": true,
+          "i": 1,
+          "imag_error": 1.227714390976845e-17,
+          "j": 1,
+          "ka_i": 0.6,
+          "ka_j": 0.6,
+          "real_error": 0.015524623714997864,
+          "ref_abs": 4162.162814986472,
+          "ref_imag": 4.023917394427259e-15,
+          "ref_real": 4162.162814986472
+        },
+        {
+          "abs_error": 0.009552448399000699,
+          "bem_abs": 5114.311755828654,
+          "bem_imag": 1271.1003080406244,
+          "bem_real": 4953.835760570409,
+          "diagonal": false,
+          "i": 1,
+          "imag_error": 0.2583949351966584,
+          "j": 2,
+          "ka_i": 0.6,
+          "ka_j": 0.8,
+          "real_error": 0.040555737763367995,
+          "ref_abs": 5163.637133093695,
+          "ref_imag": -63.15737434417994,
+          "ref_real": 5163.250874045346
+        },
+        {
+          "abs_error": 0.2688716584658148,
+          "bem_abs": 4910.026606648021,
+          "bem_imag": -2951.706535576587,
+          "bem_real": 3923.7469089922115,
+          "diagonal": false,
+          "i": 2,
+          "imag_error": 0.6264395663990355,
+          "j": 0,
+          "ka_i": 0.8,
+          "ka_j": 0.4,
+          "real_error": 0.023332547287837957,
+          "ref_abs": 3869.600659679565,
+          "ref_imag": -527.6355761894981,
+          "ref_real": 3833.459268615189
+        },
+        {
+          "abs_error": 0.009552448399000699,
+          "bem_abs": 5114.311755828654,
+          "bem_imag": -1271.1003080406242,
+          "bem_real": 4953.835760570409,
+          "diagonal": false,
+          "i": 2,
+          "imag_error": 0.25839493519665835,
+          "j": 1,
+          "ka_i": 0.8,
+          "ka_j": 0.6,
+          "real_error": 0.040555737763367995,
+          "ref_abs": 5163.637133093695,
+          "ref_imag": 63.15737434417994,
+          "ref_real": 5163.250874045346
+        },
+        {
+          "abs_error": 0.0766325470087892,
+          "bem_abs": 5641.8469881324745,
+          "bem_imag": -1.851691869236977e-14,
+          "bem_real": 5641.8469881324745,
+          "diagonal": true,
+          "i": 2,
+          "imag_error": 3.275795039955859e-18,
+          "j": 2,
+          "ka_i": 0.8,
+          "ka_j": 0.8,
+          "real_error": 0.0766325470087892,
+          "ref_abs": 6110.077813394812,
+          "ref_imag": 1.4984439024932955e-15,
+          "ref_real": 6110.077813394812
+        }
+      ],
+      "panels": 336,
+      "solve_seconds_total": 0.23534440994262695
+    },
+    {
+      "depth": 30.0,
+      "diagonal_max_error": 0.045829913495968565,
+      "diagonal_median_error": 0.04558154788119444,
+      "ka": [
+        0.4,
+        0.6,
+        0.8
+      ],
+      "level": "medium",
+      "n_theta": 24,
+      "n_z": 14,
+      "offdiagonal_max_error": 0.32073978117597574,
+      "offdiagonal_median_error": 0.20619186130376516,
+      "pairs": [
+        {
+          "abs_error": 0.04558154788119444,
+          "bem_abs": 1753.4894765075242,
+          "bem_imag": 5.731270805946793e-14,
+          "bem_real": 1753.4894765075242,
+          "diagonal": true,
+          "i": 0,
+          "imag_error": 3.0307390943006854e-17,
+          "j": 0,
+          "ka_i": 0.4,
+          "ka_j": 0.4,
+          "real_error": 0.04558154788119444,
+          "ref_abs": 1677.0470749611648,
+          "ref_imag": 6.485786728793791e-15,
+          "ref_real": 1677.0470749611648
+        },
+        {
+          "abs_error": 0.20619186130376516,
+          "bem_abs": 3490.7039008915867,
+          "bem_imag": 1742.9675380010262,
+          "bem_real": 3024.4136432000137,
+          "diagonal": false,
+          "i": 0,
+          "imag_error": 0.4385720995576144,
+          "j": 1,
+          "ka_i": 0.4,
+          "ka_j": 0.6,
+          "real_error": 0.05855786893607698,
+          "ref_abs": 2893.9872775451386,
+          "ref_imag": 473.74546159503024,
+          "ref_real": 2854.947915498851
+        },
+        {
+          "abs_error": 0.32073978117597574,
+          "bem_abs": 5110.7355285036,
+          "bem_imag": 2945.590747021423,
+          "bem_real": 4176.495276349628,
+          "diagonal": false,
+          "i": 0,
+          "imag_error": 0.6248590961921512,
+          "j": 2,
+          "ka_i": 0.4,
+          "ka_j": 0.8,
+          "real_error": 0.08864894285056399,
+          "ref_abs": 3869.600659679565,
+          "ref_imag": 527.6355761894981,
+          "ref_real": 3833.459268615189
+        },
+        {
+          "abs_error": 0.20619186130376516,
+          "bem_abs": 3490.7039008915867,
+          "bem_imag": -1742.9675380010262,
+          "bem_real": 3024.4136432000137,
+          "diagonal": false,
+          "i": 1,
+          "imag_error": 0.4385720995576144,
+          "j": 0,
+          "ka_i": 0.6,
+          "ka_j": 0.4,
+          "real_error": 0.05855786893607698,
+          "ref_abs": 2893.9872775451386,
+          "ref_imag": -473.74546159503024,
+          "ref_real": 2854.947915498851
+        },
+        {
+          "abs_error": 0.040555699247787354,
+          "bem_abs": 4330.962238331387,
+          "bem_imag": 1.6708388339753444e-13,
+          "bem_real": 4330.962238331387,
+          "diagonal": true,
+          "i": 1,
+          "imag_error": 3.9176738933899006e-17,
+          "j": 1,
+          "ka_i": 0.6,
+          "ka_j": 0.6,
+          "real_error": 0.040555699247787354,
+          "ref_abs": 4162.162814986472,
+          "ref_imag": 4.023917394427259e-15,
+          "ref_real": 4162.162814986472
+        },
+        {
+          "abs_error": 0.08310857783654046,
+          "bem_abs": 5592.779671689063,
+          "bem_imag": 1332.4154948192208,
+          "bem_real": 5431.744968720833,
+          "diagonal": false,
+          "i": 1,
+          "imag_error": 0.2702693534019246,
+          "j": 2,
+          "ka_i": 0.6,
+          "ka_j": 0.8,
+          "real_error": 0.051997088051503666,
+          "ref_abs": 5163.637133093695,
+          "ref_imag": -63.15737434417994,
+          "ref_real": 5163.250874045346
+        },
+        {
+          "abs_error": 0.32073978117597574,
+          "bem_abs": 5110.7355285036,
+          "bem_imag": -2945.590747021423,
+          "bem_real": 4176.495276349628,
+          "diagonal": false,
+          "i": 2,
+          "imag_error": 0.6248590961921512,
+          "j": 0,
+          "ka_i": 0.8,
+          "ka_j": 0.4,
+          "real_error": 0.08864894285056399,
+          "ref_abs": 3869.600659679565,
+          "ref_imag": -527.6355761894981,
+          "ref_real": 3833.459268615189
+        },
+        {
+          "abs_error": 0.08310857783654046,
+          "bem_abs": 5592.779671689063,
+          "bem_imag": -1332.4154948192204,
+          "bem_real": 5431.744968720833,
+          "diagonal": false,
+          "i": 2,
+          "imag_error": 0.27026935340192454,
+          "j": 1,
+          "ka_i": 0.8,
+          "ka_j": 0.6,
+          "real_error": 0.051997088051503666,
+          "ref_abs": 5163.637133093695,
+          "ref_imag": 63.15737434417994,
+          "ref_real": 5163.250874045346
+        },
+        {
+          "abs_error": 0.045829913495968565,
+          "bem_abs": 6390.102151036333,
+          "bem_imag": -2.5983482500477107e-15,
+          "bem_real": 6390.102151036333,
+          "diagonal": true,
+          "i": 2,
+          "imag_error": 6.704975415468224e-19,
+          "j": 2,
+          "ka_i": 0.8,
+          "ka_j": 0.8,
+          "real_error": 0.045829913495968565,
+          "ref_abs": 6110.077813394812,
+          "ref_imag": 1.4984439024932955e-15,
+          "ref_real": 6110.077813394812
+        }
+      ],
+      "panels": 696,
+      "solve_seconds_total": 0.5819709300994873
+    }
+  ],
+  "levels_config": {
+    "coarse": [
+      16,
+      10
+    ],
+    "fine": [
+      34,
+      20
+    ],
+    "medium": [
+      24,
+      14
+    ]
+  },
+  "markdown": "| level | panels | k*H | diagonal err (median/max) | off-diagonal err (median/max) |\n|---|---|---|---|---|\n| coarse | 336 | 12.0 | 6.59% / 7.66% | 20.41% / 26.89% |\n| medium | 696 | 12.0 | 4.56% / 4.58% | 20.62% / 32.07% |",
+  "pair_markdown": "| level | (i,j) | ka_i | ka_j | BEM \\|T\\| [N/m^2] | closed form [N/m^2] | rel. error | <10% ? |\n|---|---|---|---|---|---|---|---|\n| coarse | (0,0) | 0.40 | 0.40 | 1.7876e+03 | 1.6770e+03 | 6.59% | yes |\n| coarse | (0,1) | 0.40 | 0.60 | 3.4847e+03 | 2.8940e+03 | 20.41% | **no** |\n| coarse | (0,2) | 0.40 | 0.80 | 4.9100e+03 | 3.8696e+03 | 26.89% | **no** |\n| coarse | (1,0) | 0.60 | 0.40 | 3.4847e+03 | 2.8940e+03 | 20.41% | **no** |\n| coarse | (1,1) | 0.60 | 0.60 | 4.0975e+03 | 4.1622e+03 | 1.55% | yes |\n| coarse | (1,2) | 0.60 | 0.80 | 5.1143e+03 | 5.1636e+03 | 0.96% | yes |\n| coarse | (2,0) | 0.80 | 0.40 | 4.9100e+03 | 3.8696e+03 | 26.89% | **no** |\n| coarse | (2,1) | 0.80 | 0.60 | 5.1143e+03 | 5.1636e+03 | 0.96% | yes |\n| coarse | (2,2) | 0.80 | 0.80 | 5.6418e+03 | 6.1101e+03 | 7.66% | yes |\n| medium | (0,0) | 0.40 | 0.40 | 1.7535e+03 | 1.6770e+03 | 4.56% | yes |\n| medium | (0,1) | 0.40 | 0.60 | 3.4907e+03 | 2.8940e+03 | 20.62% | **no** |\n| medium | (0,2) | 0.40 | 0.80 | 5.1107e+03 | 3.8696e+03 | 32.07% | **no** |\n| medium | (1,0) | 0.60 | 0.40 | 3.4907e+03 | 2.8940e+03 | 20.62% | **no** |\n| medium | (1,1) | 0.60 | 0.60 | 4.3310e+03 | 4.1622e+03 | 4.06% | yes |\n| medium | (1,2) | 0.60 | 0.80 | 5.5928e+03 | 5.1636e+03 | 8.31% | yes |\n| medium | (2,0) | 0.80 | 0.40 | 5.1107e+03 | 3.8696e+03 | 32.07% | **no** |\n| medium | (2,1) | 0.80 | 0.60 | 5.5928e+03 | 5.1636e+03 | 8.31% | yes |\n| medium | (2,2) | 0.80 | 0.80 | 6.3901e+03 | 6.1101e+03 | 4.58% | yes |",
+  "radius": 1.0,
+  "validation": {
+    "diagonal_rows": [
+      {
+        "closed_form": 240.5906823288801,
+        "far_field_error": 1.417596516471196e-15,
+        "far_field_exact": 240.59068232887975,
+        "identity_error": 4.2527895494136006e-15,
+        "imag_ratio": 5.107453368346435e-18,
+        "ka": 0.2,
+        "near_field_exact": 240.59068232887907
+      },
+      {
+        "closed_form": 1179.1291157707722,
+        "far_field_error": 1.9283187261015311e-16,
+        "far_field_exact": 1179.1291157707724,
+        "identity_error": 7.71327490440612e-16,
+        "imag_ratio": 4.3969434941026935e-18,
+        "ka": 0.35,
+        "near_field_exact": 1179.129115770773
+      },
+      {
+        "closed_form": 2875.6569932775296,
+        "far_field_error": 4.74410562820463e-16,
+        "far_field_exact": 2875.6569932775283,
+        "identity_error": 7.906842713674385e-16,
+        "imag_ratio": 4.2591174145867825e-18,
+        "ka": 0.5,
+        "near_field_exact": 2875.6569932775274
+      },
+      {
+        "closed_form": 5296.273595011985,
+        "far_field_error": 1.7172351191023967e-16,
+        "far_field_exact": 5296.273595011984,
+        "identity_error": 0.0,
+        "imag_ratio": 6.107823730316011e-19,
+        "ka": 0.7,
+        "near_field_exact": 5296.273595011985
+      },
+      {
+        "closed_form": 6556.152863422588,
+        "far_field_error": 4.161715204264475e-16,
+        "far_field_exact": 6556.152863422585,
+        "identity_error": 1.3872384014214912e-16,
+        "imag_ratio": 2.042262653650445e-20,
+        "ka": 0.9,
+        "near_field_exact": 6556.152863422587
+      },
+      {
+        "closed_form": 6601.629553801873,
+        "far_field_error": 6.888410614082031e-16,
+        "far_field_exact": 6601.6295538018685,
+        "identity_error": 2.755364245632811e-16,
+        "imag_ratio": 4.2806758272626515e-19,
+        "ka": 1.1,
+        "near_field_exact": 6601.629553801871
+      },
+      {
+        "closed_form": 6087.069126039472,
+        "far_field_error": 2.9882844532921793e-16,
+        "far_field_exact": 6087.069126039471,
+        "identity_error": 5.976568906584361e-16,
+        "imag_ratio": 6.715490625909132e-19,
+        "ka": 1.4,
+        "near_field_exact": 6087.069126039469
+      }
+    ],
+    "hermitian_residual": 2.449552155689319e-14,
+    "long_wave_coefficient": 3.0842513753404246,
+    "long_wave_error_at_0.05": 0.001176596415473447,
+    "long_wave_rows": [
+      {
+        "closed_form": 0.24807436461945215,
+        "ka": 0.02,
+        "long_wave_law": 0.2481033491351345,
+        "relative_error": 0.00011682436284466616
+      },
+      {
+        "closed_form": 3.8720536191230495,
+        "ka": 0.05,
+        "long_wave_law": 3.876614830236477,
+        "relative_error": 0.001176596415473447
+      },
+      {
+        "closed_form": 30.825210627454577,
+        "ka": 0.1,
+        "long_wave_law": 31.012918641891815,
+        "relative_error": 0.0060525749480309955
+      }
+    ],
+    "max_far_field_error": 1.417596516471196e-15,
+    "max_identity_error": 4.2527895494136006e-15,
+    "max_offdiagonal_imag": 1288.6225411513103
+  },
+  "verdict": {
+    "case": "BEM-QTF-DRIFT",
+    "fail_stage": "G5 BEM-vs-closed-form on off-diagonal pairs",
+    "failing_pairs": [
+      [
+        0,
+        1,
+        0.2062
+      ],
+      [
+        0,
+        2,
+        0.3207
+      ],
+      [
+        1,
+        0,
+        0.2062
+      ],
+      [
+        2,
+        0,
+        0.3207
+      ]
+    ],
+    "failure_reason": "off-diagonal QTF error does not decrease under refinement (coarse 20.41% -> medium 20.62% median) while the diagonal does (6.59% -> 4.56%); the closed-form reference passes G1-G4 at machine precision, so the gap is on the BEM side and the panel solutions are not in the asymptotic regime at <= 696 triangles.",
+    "graded_level": "medium",
+    "monotone_refinement": false,
+    "next_round": [
+      "n_theta >= 32 (m_max = 14 needs >= 2 m_max to avoid aliasing)",
+      "split I1/I2 into panel-gradient vs waterline discretisation budgets",
+      "smaller frequency separation pairs at higher ka"
+    ],
+    "offdiagonal_max_error": 0.32073978117597574,
+    "offdiagonal_median_error": 0.20619186130376516,
+    "within_10_percent": false
+  }
+}
