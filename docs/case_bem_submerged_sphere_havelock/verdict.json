@@ -1,0 +1,8 @@
+{
+  "case_mesh": "PASS",
+  "economy_mesh": "FAIL",
+  "geometry": "PASS",
+  "refinement": "PASS",
+  "overall": "PASS",
+  "honest_note": "The economy (320-panel) tier is the production mesh predeclared by mission m17242; its verdict is carried forward unchanged. The overall verdict is stated on the documented case mesh (1280 panels)."
+}

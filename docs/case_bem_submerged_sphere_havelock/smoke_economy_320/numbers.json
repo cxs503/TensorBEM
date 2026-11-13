@@ -1,0 +1,553 @@
+{
+  "case": {
+    "case_code": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+    "case_pool_code": "BEM-SUBMERGED-SPHERE-HAVELOCK",
+    "repo": "TensorBEM",
+    "tol_policy": "<5%",
+    "body": "rigid sphere, centre depth f below the mean free surface, deep water",
+    "stage": "cheap",
+    "radius_m": 1.0,
+    "submergence_m": 2.0,
+    "submergence_ratio": 2.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "displaced_volume_m3": 4.1887902047863905,
+    "cost_declaration": {
+      "convergence_ladder": 6.712557220831513,
+      "economy_band": 22.68559155985713,
+      "economy_low_frequency": 11.573205610737205,
+      "submergence_sweep": 15.386460470035672
+    }
+  },
+  "nondimensional_parameters": {
+    "band_ka": [
+      0.1,
+      0.5,
+      1.0
+    ],
+    "low_frequency_ka": [
+      0.1,
+      0.2
+    ],
+    "submergence_ratio_f_over_a": [
+      2.0
+    ],
+    "panel_subdivisions": [
+      1,
+      2
+    ],
+    "economy_panels": 64,
+    "case_panels": null,
+    "normalisation": "A' = A/(rho*nabla), B' = B/(rho*omega*nabla), nabla exact"
+  },
+  "reference": {
+    "citation": "T. H. Havelock, Waves due to a floating sphere making periodic heaving oscillations, Proc. R. Soc. Lond. A 231 (1955) 1-13 -- frequency-domain multipole method; submerged-sphere coefficients via R. C. Thorne, Proc. Camb. Phil. Soc. 49 (1953) 707; S. Wang (1986); C. M. Linton & P. McIver, Radiation and diffraction of water waves by a submerged sphere in finite depth, Ocean Eng. 18 (1991) 61-74, doi:10.1016/0029-8018(91)90034-N.",
+    "method": "spherical multipole expansion about the sphere centre (wave-free + wave terms)",
+    "implementation": "tensorbem.analytic.submerged_sphere_wave_multipole",
+    "terms_used": 20,
+    "provenance_note": "No published table is transcribed here: Havelock (1955) tabulates the half-submerged heaving sphere, not the fully submerged case, and the Wang (1986) / Linton & McIver (1991) tables are behind a paywall in this sandbox. The target values are therefore *evaluated* from the closed-form series, and the series itself is certified by three independent invariants (truncation independence, Haskind reciprocity, Lamb's unbounded-fluid limit A'->0.5, C_M->1.5).",
+    "independent_anchor": "H. Lamb, Hydrodynamics, 6th ed. (1932), art. 92: unbounded-fluid sphere added mass A' = 0.5, inertial coefficient C_M = 1 + A' = 1.5."
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "host": "36cb7828dbd5"
+  },
+  "provenance": {
+    "git_head": "ac57fda4189b10043b57772b78a7d640a2a3754e",
+    "git_branch": "agent/m17334",
+    "git_dirty": true,
+    "git_status_lines": 5
+  },
+  "criteria": {
+    "G1_case_gate": "per-item |got-ref|/|ref| < 5% on the case mesh (subdivision 3)",
+    "G2_economy_tier": "same band on the economy mesh (subdivision 2), verdict reported",
+    "G3_geometry": "|nabla_mesh/nabla-1| < 2% and B33' -> 0 as ka -> 0",
+    "G4_refinement": "band-max error must not grow under refinement; observed order > 0",
+    "G5_reference": "truncation 20->40 machine zero; Haskind residual < 1e-10",
+    "stopping_rule": "one band, three mesh levels, no post-hoc threshold change"
+  },
+  "convergence_ladder": {
+    "ka": 0.8,
+    "submergence_ratio": 2.0,
+    "exact_reference": {
+      "a33": 0.47517122959927666,
+      "b33": 0.0964642246694365,
+      "a11": 0.4893009682744656,
+      "b11": 0.04885401368992488
+    },
+    "levels": [
+      {
+        "subdivision": 1,
+        "n_panels": 80,
+        "h_mean": 0.5822835232876192,
+        "a33_bem": 0.44155102342691843,
+        "a33_exact": 0.47517122959927666,
+        "a33_rel_error": 0.07075387582011426,
+        "b33_bem": 0.07758133877428122,
+        "b33_exact": 0.0964642246694365,
+        "b33_rel_error": 0.19575014426190773,
+        "a11_bem": 0.45242122553032404,
+        "a11_exact": 0.4893009682744656,
+        "a11_rel_error": 0.07537230689364684,
+        "b11_bem": 0.03923593867412236,
+        "b11_exact": 0.04885401368992488,
+        "b11_rel_error": 0.19687379376540456,
+        "condition_number": 2.193370995081607,
+        "relative_residual": 3.0114232453673017e-16
+      },
+      {
+        "subdivision": 2,
+        "n_panels": 320,
+        "h_mean": 0.2993320753185587,
+        "a33_bem": 0.46658113563931597,
+        "a33_exact": 0.47517122959927666,
+        "a33_rel_error": 0.018077891557544256,
+        "b33_bem": 0.09127251661560867,
+        "b33_exact": 0.0964642246694365,
+        "b33_rel_error": 0.0538200360975145,
+        "a11_bem": 0.47979625943062876,
+        "a11_exact": 0.4893009682744656,
+        "a11_rel_error": 0.019425076711692395,
+        "b11_bem": 0.0462071098008319,
+        "b11_exact": 0.04885401368992488,
+        "b11_rel_error": 0.05417986546392716,
+        "condition_number": 2.114891230623276,
+        "relative_residual": 3.743998715527286e-16
+      }
+    ],
+    "observed_order_a33": null
+  },
+  "band_sweep_economy": [
+    {
+      "ka": 0.1,
+      "n_panels": 320,
+      "a33_bem": 0.5252971228342371,
+      "a33_exact": 0.5375037875884319,
+      "a33_rel_error": 0.022709913931883614,
+      "b33_bem": 0.003137920011744757,
+      "b33_exact": 0.0033222925988104154,
+      "b33_rel_error": 0.05549558974175703,
+      "a11_bem": 0.5073446868637264,
+      "a11_exact": 0.5184990269480978,
+      "a11_rel_error": 0.02151275027462684,
+      "b11_bem": 0.0015308938135197522,
+      "b11_exact": 0.001619752645273911,
+      "b11_rel_error": 0.054859507106489236,
+      "condition_number": 2.091993053557415
+    },
+    {
+      "ka": 0.5,
+      "n_panels": 320,
+      "a33_bem": 0.5229766141384147,
+      "a33_exact": 0.5349252942959751,
+      "a33_rel_error": 0.02233710068484671,
+      "b33_bem": 0.07996954821533321,
+      "b33_exact": 0.0847055452573905,
+      "b33_rel_error": 0.05591129869557249,
+      "a11_bem": 0.5072657341671192,
+      "a11_exact": 0.5183875440987197,
+      "a11_rel_error": 0.021454624167208978,
+      "b11_bem": 0.03891849044308842,
+      "b11_exact": 0.041191792293890965,
+      "b11_rel_error": 0.055188223774853606,
+      "condition_number": 2.1129152553673607
+    },
+    {
+      "ka": 1.0,
+      "n_panels": 320,
+      "a33_bem": 0.4408899925942294,
+      "a33_exact": 0.4480732996737152,
+      "a33_rel_error": 0.01603154458147055,
+      "b33_bem": 0.07636015346929807,
+      "b33_exact": 0.08058234530115514,
+      "b33_rel_error": 0.052395990909395194,
+      "a11_bem": 0.4662684572132053,
+      "a11_exact": 0.4750090635190439,
+      "a11_rel_error": 0.01840092532358203,
+      "b11_bem": 0.03951059477466912,
+      "b11_exact": 0.04173780149600059,
+      "b11_rel_error": 0.053361860028609605,
+      "condition_number": 2.1122493765690624
+    }
+  ],
+  "band_sweep_case": [],
+  "low_frequency_economy": {
+    "bem_extrapolated_limit": 0.5208289339067049,
+    "exact_limit": 0.5239882350395347,
+    "limit_relative_error": 0.006029336007117483,
+    "data_points": [
+      {
+        "ka": 0.1,
+        "a33_bem": 0.5252971228342371,
+        "a33_exact": 0.5375037875884319,
+        "a33_rel_error": 0.022709913931883614
+      },
+      {
+        "ka": 0.2,
+        "a33_bem": 0.5387016896168331,
+        "a33_exact": 0.5516992219312565,
+        "a33_rel_error": 0.023559091254333867
+      }
+    ]
+  },
+  "low_frequency_case": null,
+  "submergence_sweep": [
+    {
+      "submergence_ratio": 2.0,
+      "ka": 1.0,
+      "n_panels": 320,
+      "h_mean": 0.2993320753185587,
+      "got": {
+        "a33": 0.4408899925942294,
+        "b33": 0.07636015346929807,
+        "a11": 0.4662684572132053,
+        "b11": 0.03951059477466912
+      },
+      "ref": {
+        "a33": 0.4480732996737152,
+        "b33": 0.08058234530115514,
+        "a11": 0.4750090635190439,
+        "b11": 0.04173780149600059
+      },
+      "rel_error": {
+        "a33": 0.01603154458147055,
+        "b33": 0.052395990909395194,
+        "a11": 0.01840092532358203,
+        "b11": 0.053361860028609605
+      },
+      "condition_number": 2.1122493765690624,
+      "relative_residual": 3.9869390567415384e-16
+    }
+  ],
+  "area_deficit_diagnostic": {
+    "status": "exploratory_post_hoc",
+    "hypothesis": "the radiation-coefficient bias of the inscibed icosphere is proportional to the polyhedral area deficit 1 - A_poly/(4 pi a^2)",
+    "rows": [
+      {
+        "subdivision": 1,
+        "n_panels": 80,
+        "polyhedral_area": 11.665931391718317,
+        "sphere_area": 12.566370614359172,
+        "area_deficit": 0.07165467661855796,
+        "a33_rel_error": 0.07075387582011426,
+        "b33_rel_error": 0.19575014426190773,
+        "a11_rel_error": 0.07537230689364684,
+        "b11_rel_error": 0.19687379376540456,
+        "ratio_a33_over_deficit": 0.9874285832976547,
+        "ratio_b33_over_deficit": 2.7318544092237254,
+        "ratio_a11_over_deficit": 1.051882590928141,
+        "ratio_b11_over_deficit": 2.7475358630592983
+      },
+      {
+        "subdivision": 2,
+        "n_panels": 320,
+        "polyhedral_area": 12.329848595234669,
+        "sphere_area": 12.566370614359172,
+        "area_deficit": 0.01882182424687029,
+        "a33_rel_error": 0.018077891557544256,
+        "b33_rel_error": 0.0538200360975145,
+        "a11_rel_error": 0.019425076711692395,
+        "b11_rel_error": 0.05417986546392716,
+        "ratio_a33_over_deficit": 0.9604749954325105,
+        "ratio_b33_over_deficit": 2.8594484462080634,
+        "ratio_a11_over_deficit": 1.0320506905658953,
+        "ratio_b11_over_deficit": 2.8785661131086293
+      }
+    ],
+    "ratio_a33_over_deficit_mean": 0.9739517893650826,
+    "ratio_b33_over_deficit_mean": 2.795651427715894,
+    "smallest_level_inside_tolerance_by_rule": null
+  },
+  "geometry_precondition": {
+    "gate": 0.02,
+    "gate_applied_to": "subdivision >= 3",
+    "exact_volume": 4.1887902047863905,
+    "levels": [
+      {
+        "subdivision": 1,
+        "n_panels": 80,
+        "h_mean": 0.5822835232876192,
+        "mesh_volume": 3.6587122085121595,
+        "volume_relative_error": 0.12654679999693674
+      },
+      {
+        "subdivision": 2,
+        "n_panels": 320,
+        "h_mean": 0.2993320753185587,
+        "mesh_volume": 4.047044679978849,
+        "volume_relative_error": 0.03383925140141275
+      },
+      {
+        "subdivision": 3,
+        "n_panels": 1280,
+        "h_mean": 0.1507297051948821,
+        "mesh_volume": 4.152740817093057,
+        "volume_relative_error": 0.008606157370245282
+      }
+    ],
+    "worst_volume_relative_error": 0.008606157370245282,
+    "verdict": "PASS"
+  },
+  "reference_integrity": {
+    "truncation": {
+      "rows": [
+        {
+          "ka": 0.1,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.5375037875884319,
+          "a33_n40": 0.5375037875884319,
+          "b33_n20": 0.0033222925988104154,
+          "b33_n40": 0.0033222925988104154,
+          "a11_n20": 0.5184990269480978,
+          "a11_n40": 0.5184990269480978,
+          "b11_n20": 0.001619752645273911,
+          "b11_n40": 0.001619752645273911,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 8.802733649327082e-16,
+          "haskind_error_x": 1.289670323507645e-16
+        },
+        {
+          "ka": 1.0,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.4480732996737152,
+          "a33_n40": 0.4480732996737152,
+          "b33_n20": 0.08058234530115514,
+          "b33_n40": 0.08058234530115514,
+          "a11_n20": 0.4750090635190439,
+          "a11_n40": 0.4750090635190439,
+          "b11_n20": 0.04173780149600059,
+          "b11_n40": 0.04173780149600059,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 6.295768078316083e-16,
+          "haskind_error_x": 2.0258524209022277e-16
+        },
+        {
+          "ka": 5.0,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.46847102632603627,
+          "a33_n40": 0.46847102632603627,
+          "b33_n20": 1.0153123047181986e-06,
+          "b33_n40": 1.0153123047181986e-06,
+          "a11_n20": 0.48403805736897987,
+          "a11_n40": 0.48403805736897987,
+          "b11_n20": 5.384990989653186e-07,
+          "b11_n40": 5.384990989653186e-07,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 0.0,
+          "haskind_error_x": 6.938893903907228e-18
+        }
+      ],
+      "worst_truncation_rel_delta": 0.0,
+      "worst_haskind_error": 8.802733649327082e-16,
+      "n_terms_low": 20,
+      "n_terms_high": 40
+    },
+    "deep_submergence_limit": {
+      "ka": 0.001,
+      "rows": [
+        {
+          "submergence_ratio": 2.0,
+          "a33": 0.5239882350395347,
+          "a33_excess_over_lamb": 0.023988235039534733,
+          "a11": 0.5118859873425542,
+          "a11_excess_over_lamb": 0.011885987342554194,
+          "inertia_coefficient_cm": 1.5239882350395346,
+          "b33": 4.844936423956377e-09
+        },
+        {
+          "submergence_ratio": 5.0,
+          "a33": 0.5015167346050169,
+          "a33_excess_over_lamb": 0.0015167346050168895,
+          "a11": 0.5007579763579411,
+          "a11_excess_over_lamb": 0.0007579763579410592,
+          "inertia_coefficient_cm": 1.501516734605017,
+          "b33": 4.674940738361986e-09
+        },
+        {
+          "submergence_ratio": 10.0,
+          "a33": 0.5001913544629628,
+          "a33_excess_over_lamb": 0.00019135446296281167,
+          "a11": 0.5000956710989077,
+          "a11_excess_over_lamb": 9.567109890773473e-05,
+          "inertia_coefficient_cm": 1.5001913544629628,
+          "b33": 4.62025606848917e-09
+        },
+        {
+          "submergence_ratio": 20.0,
+          "a33": 0.5000244166470572,
+          "a33_excess_over_lamb": 2.4416647057212693e-05,
+          "a11": 0.5000122082240464,
+          "a11_excess_over_lamb": 1.220822404635058e-05,
+          "inertia_coefficient_cm": 1.500024416647057,
+          "b33": 4.5277609692213e-09
+        }
+      ],
+      "lamb_added_mass_dimless": 0.5,
+      "morison_inertia_coefficient": 1.5,
+      "observed_excess_decay_orders": [
+        3.013239869856482,
+        2.986649213461781,
+        2.970310544123217
+      ],
+      "observed_excess_decay_order_last": 2.970310544123217
+    },
+    "low_frequency_damping": [
+      {
+        "ka": 0.001,
+        "b33": 4.844936423956377e-09,
+        "b11": 2.384140247280267e-09,
+        "a33": 0.5239882350395347,
+        "a11": 0.5118859873425542
+      },
+      {
+        "ka": 0.01,
+        "b33": 4.67959155719776e-06,
+        "b11": 2.301320998999292e-06,
+        "a33": 0.5249058384266153,
+        "a11": 0.5123367644456248
+      },
+      {
+        "ka": 0.1,
+        "b33": 0.0033222925988104154,
+        "b11": 0.001619752645273911,
+        "a33": 0.5375037875884319,
+        "a11": 0.5184990269480978
+      }
+    ],
+    "gates": {
+      "truncation_machine_zero": true,
+      "haskind_residual": true,
+      "lamb_a33": true,
+      "lamb_cm": true,
+      "damping_vanishes": true
+    }
+  },
+  "supplementary_scale_normalised": {
+    "a33": {
+      "reference_scale": 0.5375037875884319,
+      "worst_scale_normalised_error": 0.022709913931883614,
+      "note": "supplementary metric, never used to flip a verdict"
+    },
+    "b33": {
+      "reference_scale": 0.0847055452573905,
+      "worst_scale_normalised_error": 0.05591129869557249,
+      "note": "supplementary metric, never used to flip a verdict"
+    },
+    "a11": {
+      "reference_scale": 0.5184990269480978,
+      "worst_scale_normalised_error": 0.02151275027462684,
+      "note": "supplementary metric, never used to flip a verdict"
+    },
+    "b11": {
+      "reference_scale": 0.04173780149600059,
+      "worst_scale_normalised_error": 0.054466257668611934,
+      "note": "supplementary metric, never used to flip a verdict"
+    }
+  },
+  "tiers": {
+    "economy_mesh": {
+      "tier": "economy_mesh",
+      "gate": 0.05,
+      "n_items": 12,
+      "n_failures": 6,
+      "max_rel_error": 0.05591129869557249,
+      "worst_item": {
+        "item": "ka=0.5",
+        "quantity": "b33",
+        "got": 0.07996954821533321,
+        "ref": 0.0847055452573905,
+        "rel_error": 0.05591129869557249
+      },
+      "failures": [
+        {
+          "item": "ka=0.5",
+          "quantity": "b33",
+          "got": 0.07996954821533321,
+          "ref": 0.0847055452573905,
+          "rel_error": 0.05591129869557249
+        },
+        {
+          "item": "ka=0.1",
+          "quantity": "b33",
+          "got": 0.003137920011744757,
+          "ref": 0.0033222925988104154,
+          "rel_error": 0.05549558974175703
+        },
+        {
+          "item": "ka=0.5",
+          "quantity": "b11",
+          "got": 0.03891849044308842,
+          "ref": 0.041191792293890965,
+          "rel_error": 0.055188223774853606
+        },
+        {
+          "item": "ka=0.1",
+          "quantity": "b11",
+          "got": 0.0015308938135197522,
+          "ref": 0.001619752645273911,
+          "rel_error": 0.054859507106489236
+        },
+        {
+          "item": "ka=1",
+          "quantity": "b11",
+          "got": 0.03951059477466912,
+          "ref": 0.04173780149600059,
+          "rel_error": 0.053361860028609605
+        },
+        {
+          "item": "ka=1",
+          "quantity": "b33",
+          "got": 0.07636015346929807,
+          "ref": 0.08058234530115514,
+          "rel_error": 0.052395990909395194
+        }
+      ],
+      "verdict": "FAIL"
+    }
+  },
+  "refinement": {
+    "economy_max_rel_error": 0.05591129869557249,
+    "case_max_rel_error": null,
+    "observed_order_a33": null
+  },
+  "low_frequency_damping_vanishes": true,
+  "verdict": {
+    "case_mesh": "NOT_RUN",
+    "economy_mesh": "FAIL",
+    "geometry": "PASS",
+    "refinement": "NOT_RUN",
+    "overall": "FAIL",
+    "honest_note": "The economy (320-panel) tier is the production mesh predeclared by mission m17242; its verdict is carried forward unchanged. The overall verdict is stated on the documented case mesh (1280 panels)."
+  },
+  "runtime_seconds": 56.81,
+  "log": [
+    "convergence ladder: 6.71 s",
+    "economy band sweep (320 panels): 22.69 s",
+    "economy low-frequency (320 panels): 11.57 s",
+    "submergence sweep (320 panels): 15.39 s"
+  ]
+}
