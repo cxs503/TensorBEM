@@ -1,0 +1,32 @@
+{
+ "audit": "m17395 reproduction of the referee row headline (1024 panels, ka=1e-3)",
+ "command": "cd /root/tp-agent/work/m17338 && PYTHONPATH=src python -c 'from tensorbem.benchmarks import case_bem_rigid_lid_hemisphere as case; case.solver_rows(4, (1e-3,), case.rigid_lid_reference())'",
+ "commit": "26309917e79cbe746ff47f3f54b0d1e898fe0fc5",
+ "row": {
+  "subdivisions": 4,
+  "panels": 1024,
+  "ka": 0.001,
+  "omega": 0.09902853124226371,
+  "added_mass_kg": 1788.89942229668,
+  "added_mass_dimless": 0.8333039583007392,
+  "damping": 0.4980783956545788,
+  "damping_dimless": 0.0023429061244082633,
+  "reference_dimless": 0.8309512873124402,
+  "relative_error": 0.002831298325451037,
+  "absolute_error_kg": 5.050608160322099,
+  "hulme_dimless": 0.8350656196401975,
+  "relative_error_vs_hulme": -0.0021096082727215526,
+  "relative_error_vs_naive_image": -0.16669604169926078,
+  "condition_number": 2.0615944233134416,
+  "relative_residual": 2.064419726314299e-15,
+  "solve_seconds": 127.96647113002837,
+  "wall_seconds": 128.0965986251831
+ },
+ "registered_headline_dimless": 0.833304,
+ "headline_vs_row": -5.004087444415717e-08,
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "machine": "loongarch64"
+ }
+}
