@@ -1,0 +1,468 @@
+{
+  "case": "BEM-HULME-HEMISPHERE",
+  "case_pool_id": 138,
+  "gates": {
+    "I1_excitation_independent_band": {
+      "criterion": "|capytaine/reference - 1| < 5 % for every excitation-force cell (kx ka) -- the quantities no independent check covered",
+      "measured": 0.023347310660237874,
+      "pass": true,
+      "worst_ka": 2.0,
+      "worst_quantity": "Fz"
+    },
+    "I2_all_quantities_independent_band": {
+      "criterion": "|capytaine/reference - 1| < 5 % for all six quantities and every ka",
+      "measured": 0.033643347606471696,
+      "pass": true,
+      "worst_ka": 2.0,
+      "worst_quantity": "B33"
+    },
+    "I3_capytaine_mesh_converged": {
+      "criterion": "worst of the last ladder step (1024 -> 1600 panels) below 1 %, so the frozen capytaine values are not themselves discretisation noise",
+      "level": "1024->1600 panels",
+      "measured": 0.006699930671776187,
+      "pass": true
+    },
+    "I4_geometry_precondition": {
+      "criterion": "|V_mesh/nabla - 1| < 2 % for the capytaine reference mesh",
+      "measured": 0.002567515753952865,
+      "pass": true
+    }
+  },
+  "independent_code": {
+    "panels_case": 1024,
+    "panels_reference": 1600,
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "tool": "capytaine",
+    "version": "3.1.dev0",
+    "why_independent": "capytaine is a different BEM code with its own Green-function and panel machinery; it shares no line of code with the reference series or with the solver under test"
+  },
+  "limit_context": {
+    "independent": false,
+    "ka_to_zero_even_mode_A33": 0.8309541475908423,
+    "lowest_band_point": {
+      "A33_dimless": 0.7938342111726953,
+      "gap_to_limit": -0.04467146174763992,
+      "ka": 0.2,
+      "note": "the case does not extrapolate to ka -> 0; the gap is the expected O(ka) approach to the limit and carries no gate"
+    },
+    "solver_at_ka_1e-3": {
+      "ka": 0.001,
+      "panels": 256,
+      "rel_error": -0.003372581600669222
+    },
+    "source_artifact": "benchmarks/verified/bem_rigid_lid_hemisphere/results.json",
+    "why_not_independent": "the antecedent limit study runs the same package and the same kernel; it is a limit check, not a second code"
+  },
+  "post_hoc_observation": {
+    "cells_outside_band": [],
+    "criterion": "|solver/capytaine - 1| for every quantity and ka; this is the strictest reading of the anchor's own 5 % band because the denominator is now an independent code",
+    "kind": "post-hoc observation, deliberately NOT a pre-registered gate",
+    "measured": 0.04669430523871587,
+    "worst_ka": 2.0,
+    "worst_quantity": "B33"
+  },
+  "produced_by": "evidence/build_evidence.py via independent_axis.load_and_compare()",
+  "reading_note": "the gates use capytaine as the numerator against the Hulme series; the post-hoc observation instead uses capytaine as the denominator for the solver and is deliberately NOT a pre-registered gate -- it is reported because it is the strictest reading of the same 5 % band",
+  "schema": "tensorbem.case_evidence_independent/v1",
+  "source_artifacts": [
+    "capytaine_excitation.json",
+    "results.json"
+  ],
+  "study_table": [
+    {
+      "capytaine": 0.5635329890332089,
+      "dev_capytaine_vs_reference": 0.021757272745215328,
+      "dev_solver_vs_capytaine": -0.025154089106736444,
+      "ka": 0.2,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.5515331322468904,
+      "solver": 0.5493578300124821
+    },
+    {
+      "capytaine": 0.008376824915304741,
+      "dev_capytaine_vs_reference": 0.027480796751682135,
+      "dev_solver_vs_capytaine": -0.03609952088624924,
+      "ka": 0.2,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.008152780024490543,
+      "solver": 0.008074425549314245
+    },
+    {
+      "capytaine": 0.8027345630970254,
+      "dev_capytaine_vs_reference": 0.011211852297448921,
+      "dev_solver_vs_capytaine": -0.012626759012015598,
+      "ka": 0.2,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.7938342111726953,
+      "solver": 0.7925986272181836
+    },
+    {
+      "capytaine": 0.28156914510554276,
+      "dev_capytaine_vs_reference": 0.008110642212628472,
+      "dev_solver_vs_capytaine": -0.01006875139112473,
+      "ka": 0.2,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.27930381181925346,
+      "solver": 0.2787340953840635
+    },
+    {
+      "capytaine": 0.5877155150842454,
+      "dev_capytaine_vs_reference": 0.005703563054978211,
+      "dev_solver_vs_capytaine": -0.010806056974215217,
+      "ka": 0.2,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 0.5843824529158171,
+      "solver": 0.5813646277436147
+    },
+    {
+      "capytaine": 2.412744832816601,
+      "dev_capytaine_vs_reference": -0.002436353558124882,
+      "dev_solver_vs_capytaine": 0.001447342651631267,
+      "ka": 0.2,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 2.41863748886842,
+      "solver": 2.4162369013206395
+    },
+    {
+      "capytaine": 0.6576513823692625,
+      "dev_capytaine_vs_reference": 0.021361063447318696,
+      "dev_solver_vs_capytaine": -0.02545421047779539,
+      "ka": 0.5,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.6438970564919952,
+      "solver": 0.6409113856614221
+    },
+    {
+      "capytaine": 0.10141358588253363,
+      "dev_capytaine_vs_reference": 0.02780622813351563,
+      "dev_solver_vs_capytaine": -0.03666346981922264,
+      "ka": 0.5,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.0986699468310282,
+      "solver": 0.09769541193727022
+    },
+    {
+      "capytaine": 0.5930575202445244,
+      "dev_capytaine_vs_reference": 0.011897218319786296,
+      "dev_solver_vs_capytaine": -0.012838415625502142,
+      "ka": 0.5,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.5860847421137021,
+      "solver": 0.5854436013097956
+    },
+    {
+      "capytaine": 0.3405754688677238,
+      "dev_capytaine_vs_reference": 0.004478150900339095,
+      "dev_solver_vs_capytaine": -0.0047499100866059685,
+      "ka": 0.5,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.33905711992088367,
+      "solver": 0.3389577660128984
+    },
+    {
+      "capytaine": 1.2931433073327565,
+      "dev_capytaine_vs_reference": 0.005726533922346011,
+      "dev_solver_vs_capytaine": -0.011018816712582091,
+      "ka": 0.5,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 1.2857802431536547,
+      "solver": 1.2788943982461547
+    },
+    {
+      "capytaine": 1.6783481048929358,
+      "dev_capytaine_vs_reference": -0.004176217555958206,
+      "dev_solver_vs_capytaine": 0.004113683600146967,
+      "ka": 0.5,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 1.685386646193346,
+      "solver": 1.6852522979673716
+    },
+    {
+      "capytaine": 0.6542837982422539,
+      "dev_capytaine_vs_reference": 0.01895040648795865,
+      "dev_solver_vs_capytaine": -0.0227583260650015,
+      "ka": 0.8,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.6421154494627368,
+      "solver": 0.639393394222809
+    },
+    {
+      "capytaine": 0.2718421065153534,
+      "dev_capytaine_vs_reference": 0.02462831863091597,
+      "dev_solver_vs_capytaine": -0.033394317820101604,
+      "ka": 0.8,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.2653080161580761,
+      "solver": 0.26276412481349376
+    },
+    {
+      "capytaine": 0.4762325632133338,
+      "dev_capytaine_vs_reference": 0.013705729759222685,
+      "dev_solver_vs_capytaine": -0.01484994313976451,
+      "ka": 0.8,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.46979369774939467,
+      "solver": 0.4691605367283115
+    },
+    {
+      "capytaine": 0.2902737864982249,
+      "dev_capytaine_vs_reference": 0.0013008722318550436,
+      "dev_solver_vs_capytaine": 0.000307913931986592,
+      "ka": 0.8,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.2898966679727518,
+      "solver": 0.29036316584117816
+    },
+    {
+      "capytaine": 1.6737605655971703,
+      "dev_capytaine_vs_reference": 0.004162118927234282,
+      "dev_solver_vs_capytaine": -0.009416977150333405,
+      "ka": 0.8,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 1.6668230498331096,
+      "solver": 1.6579988005958126
+    },
+    {
+      "capytaine": 1.224994718629486,
+      "dev_capytaine_vs_reference": -0.00572021026251579,
+      "dev_solver_vs_capytaine": 0.006564052400587217,
+      "ka": 0.8,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 1.232042259405591,
+      "solver": 1.2330356481530125
+    },
+    {
+      "capytaine": 0.5835597928730536,
+      "dev_capytaine_vs_reference": 0.016740160059076192,
+      "dev_solver_vs_capytaine": -0.019697895855194103,
+      "ka": 1.0,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.5739517487330752,
+      "solver": 0.5720648928477615
+    },
+    {
+      "capytaine": 0.36096789987991096,
+      "dev_capytaine_vs_reference": 0.021158558308007835,
+      "dev_solver_vs_capytaine": -0.029555898774416,
+      "ka": 1.0,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.35348859091776197,
+      "solver": 0.3502991691702468
+    },
+    {
+      "capytaine": 0.43482725058732535,
+      "dev_capytaine_vs_reference": 0.014918319955025128,
+      "dev_solver_vs_capytaine": -0.01649903197535474,
+      "ka": 1.0,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.4284357095914814,
+      "solver": 0.42765302187612947
+    },
+    {
+      "capytaine": 0.24814900675475057,
+      "dev_capytaine_vs_reference": -0.0010227933290231084,
+      "dev_solver_vs_capytaine": 0.004032578289513422,
+      "ka": 1.0,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.248403071759455,
+      "solver": 0.24914968705195412
+    },
+    {
+      "capytaine": 1.7249257431944673,
+      "dev_capytaine_vs_reference": 0.002359236384951613,
+      "dev_solver_vs_capytaine": -0.007417863760499577,
+      "ka": 1.0,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 1.7208658139525712,
+      "solver": 1.7121304790344722
+    },
+    {
+      "capytaine": 1.0130777476578574,
+      "dev_capytaine_vs_reference": -0.006850401162573183,
+      "dev_solver_vs_capytaine": 0.008241594830787013,
+      "ka": 1.0,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 1.0200656062729707,
+      "solver": 1.0214271239861397
+    },
+    {
+      "capytaine": 0.37391467201512035,
+      "dev_capytaine_vs_reference": 0.01518921872293455,
+      "dev_solver_vs_capytaine": -0.015038145073843379,
+      "ka": 1.5,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.36832017629727126,
+      "solver": 0.3682916889321184
+    },
+    {
+      "capytaine": 0.40669275868957483,
+      "dev_capytaine_vs_reference": 0.013307467877528456,
+      "dev_solver_vs_capytaine": -0.02032750537860073,
+      "ka": 1.5,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.4013517827332631,
+      "solver": 0.39842570944987454
+    },
+    {
+      "capytaine": 0.39554543072398607,
+      "dev_capytaine_vs_reference": 0.016701967351719915,
+      "dev_solver_vs_capytaine": -0.01982079334810849,
+      "ka": 1.5,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.389047570896605,
+      "solver": 0.3877054064818174
+    },
+    {
+      "capytaine": 0.1590669095999503,
+      "dev_capytaine_vs_reference": -0.009665923930776588,
+      "dev_solver_vs_capytaine": 0.016775496962913694,
+      "ka": 1.5,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.16061944493651015,
+      "solver": 0.16173533605884433
+    },
+    {
+      "capytaine": 1.4945042086577196,
+      "dev_capytaine_vs_reference": -0.0017924264126853995,
+      "dev_solver_vs_capytaine": -0.002594889292760416,
+      "ka": 1.5,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 1.497187807628864,
+      "solver": 1.4906261356886883
+    },
+    {
+      "capytaine": 0.6622620967638285,
+      "dev_capytaine_vs_reference": -0.011162241037089626,
+      "dev_solver_vs_capytaine": 0.013781803412303173,
+      "ka": 1.5,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 0.6697378723264034,
+      "solver": 0.6713892627888473
+    },
+    {
+      "capytaine": 0.254237994456705,
+      "dev_capytaine_vs_reference": 0.019893427640102157,
+      "dev_solver_vs_capytaine": -0.01726548503167935,
+      "ka": 2.0,
+      "label": "surge added mass $A_{11}/(\\rho\\nabla)$",
+      "quantity": "A11",
+      "reference": 0.24927898108430596,
+      "solver": 0.24984845216892856
+    },
+    {
+      "capytaine": 0.3453840865323615,
+      "dev_capytaine_vs_reference": 0.008684293234601403,
+      "dev_solver_vs_capytaine": -0.014339096538182883,
+      "ka": 2.0,
+      "label": "surge damping $B_{11}/(\\rho\\omega\\nabla)$",
+      "quantity": "B11",
+      "reference": 0.34241049340106217,
+      "solver": 0.34043159077282187
+    },
+    {
+      "capytaine": 0.39467535358486316,
+      "dev_capytaine_vs_reference": 0.016215140033307707,
+      "dev_solver_vs_capytaine": -0.02112816244356841,
+      "ka": 2.0,
+      "label": "heave added mass $A_{33}/(\\rho\\nabla)$",
+      "quantity": "A33",
+      "reference": 0.3883777539192412,
+      "solver": 0.3863365886018494
+    },
+    {
+      "capytaine": 0.09959790007096783,
+      "dev_capytaine_vs_reference": -0.033643347606471696,
+      "dev_solver_vs_capytaine": 0.04669430523871587,
+      "ka": 2.0,
+      "label": "heave damping $B_{33}/(\\rho\\omega\\nabla)$",
+      "quantity": "B33",
+      "reference": 0.10306536393605607,
+      "solver": 0.10424855481801673
+    },
+    {
+      "capytaine": 1.1922327438115632,
+      "dev_capytaine_vs_reference": -0.004495594714735485,
+      "dev_solver_vs_capytaine": 0.0005474081872489656,
+      "ka": 2.0,
+      "label": "surge excitation $|F_x|/(\\rho g A a^2)$",
+      "quantity": "Fx",
+      "reference": 1.1976167433130802,
+      "solver": 1.1928853817766318
+    },
+    {
+      "capytaine": 0.4537692551900186,
+      "dev_capytaine_vs_reference": -0.023347310660237874,
+      "dev_solver_vs_capytaine": 0.0289039722279687,
+      "ka": 2.0,
+      "label": "heave excitation $|F_z|/(\\rho g A a^2)$",
+      "quantity": "Fz",
+      "reference": 0.46461680814781375,
+      "solver": 0.466884989139937
+    }
+  ],
+  "tolerance_relative": 0.05,
+  "verdict": "PASS",
+  "worst_deviation_vs_reference_by_quantity": {
+    "A11": {
+      "ka": 0.2,
+      "rel_dev": 0.021757272745215328
+    },
+    "A33": {
+      "ka": 1.5,
+      "rel_dev": 0.016701967351719915
+    },
+    "B11": {
+      "ka": 0.5,
+      "rel_dev": 0.02780622813351563
+    },
+    "B33": {
+      "ka": 2.0,
+      "rel_dev": -0.033643347606471696
+    },
+    "Fx": {
+      "ka": 0.5,
+      "rel_dev": 0.005726533922346011
+    },
+    "Fz": {
+      "ka": 2.0,
+      "rel_dev": -0.023347310660237874
+    }
+  },
+  "worst_overall_vs_reference": {
+    "criterion": "|capytaine/reference - 1| < 5 % for all six quantities and every ka",
+    "measured": 0.033643347606471696,
+    "pass": true,
+    "worst_ka": 2.0,
+    "worst_quantity": "B33"
+  }
+}
