@@ -1,0 +1,1173 @@
+{
+ "case_pool_id": "BEM-HULME-HEMISPHERE",
+ "mission_id": 17796,
+ "ka_grid": [
+  0.2,
+  0.5,
+  0.8,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "study": {
+  "provenance": {
+   "tool": "capytaine",
+   "version": "3.1.dev0",
+   "python": "3.11.6",
+   "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+   "machine": "loongarch64",
+   "numpy": "2.4.6",
+   "density": 1025.0,
+   "gravity": 9.80665,
+   "amplitude": 1.0,
+   "water_depth": "infinite",
+   "wave_direction_deg": 0.0,
+   "force_definition": "froude_krylov_force(problem) + DiffractionResult.forces; in capytaine 3.x DiffractionResult.forces is the scattering force only",
+   "geometry": "capytaine.mesh_sphere(radius=1, center=(0,0,0)).immersed_part()",
+   "generated_utc": "2026-11-13T09:26:02+00:00"
+  },
+  "levels": [
+   {
+    "resolution": [
+     12,
+     24
+    ],
+    "n_faces": 144,
+    "n_vertices": 145,
+    "values": {
+     "0.2": {
+      "surge": {
+       "total_magnitude": 0.5850082701857362,
+       "total_phase_deg": -89.69887521030573,
+       "total_dimless": [
+        0.0030745664489922812,
+        -0.5850001907921553
+       ],
+       "fk_magnitude": 0.3765761637185924,
+       "fk_phase_deg": -89.99999999999996,
+       "scattering_dimless": [
+        0.0030745664489920097,
+        -0.20842402707356283
+       ]
+      },
+      "heave": {
+       "total_magnitude": 2.3852572915357566,
+       "total_phase_deg": -2.87393694311938,
+       "total_dimless": [
+        2.3822572768333616,
+        -0.11959353577426521
+       ],
+       "fk_magnitude": 2.713755838521749,
+       "fk_phase_deg": -4.775815082201481e-16,
+       "scattering_dimless": [
+        -0.331498561688387,
+        -0.11959353577426518
+       ]
+      }
+     },
+     "0.5": {
+      "surge": {
+       "total_magnitude": 1.286219091253455,
+       "total_phase_deg": -86.84341944630516,
+       "total_dimless": [
+        0.07082547206394192,
+        -1.2842676135493658
+       ],
+       "fk_magnitude": 0.8283866298503954,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.07082547206394192,
+        -0.45588098369897045
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.6575412507610314,
+       "total_phase_deg": -12.982179380197978,
+       "total_dimless": [
+        1.6151744696078216,
+        -0.37236330471937806
+       ],
+       "fk_magnitude": 2.1815313608891302,
+       "fk_phase_deg": 5.940962525398766e-16,
+       "scattering_dimless": [
+        -0.5663568912813087,
+        -0.37236330471937806
+       ]
+      }
+     },
+     "0.8": {
+      "surge": {
+       "total_magnitude": 1.6596222420728934,
+       "total_phase_deg": -82.64492829844585,
+       "total_dimless": [
+        0.21246142285808894,
+        -1.6459666248682487
+       ],
+       "fk_magnitude": 1.1492644137253545,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.21246142285808903,
+        -0.49670221114289426
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.2089988544481352,
+       "total_phase_deg": -25.85095760268926,
+       "total_dimless": [
+        1.088015947582901,
+        -0.5271617663129463
+       ],
+       "fk_magnitude": 1.7152324459848651,
+       "fk_phase_deg": -3.0224232507641953e-15,
+       "scattering_dimless": [
+        -0.6272164984019643,
+        -0.5271617663129463
+       ]
+      }
+     },
+     "1": {
+      "surge": {
+       "total_magnitude": 1.7050539891471086,
+       "total_phase_deg": -81.3659811375009,
+       "total_dimless": [
+        0.2559667669893398,
+        -1.6857313309372564
+       ],
+       "fk_magnitude": 1.2946185309132334,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.2559667669893396,
+        -0.39111280002402304
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.9991277672141035,
+       "total_phase_deg": -35.19027379220941,
+       "total_dimless": [
+        0.8165299125434644,
+        -0.575790931797299
+       ],
+       "fk_magnitude": 1.4399894242086033,
+       "fk_phase_deg": -2.700102343490613e-15,
+       "scattering_dimless": [
+        -0.6234595116651389,
+        -0.5757909317972989
+       ]
+      }
+     },
+     "1.5": {
+      "surge": {
+       "total_magnitude": 1.4668141397400274,
+       "total_phase_deg": -87.67023459237497,
+       "total_dimless": [
+        0.059627275228105875,
+        -1.4656016882462126
+       ],
+       "fk_magnitude": 1.4440392608919337,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.05962727522810583,
+        -0.021562427354278806
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.6491693968579028,
+       "total_phase_deg": -60.1389911827064,
+       "total_dimless": [
+        0.3232199365442404,
+        -0.5629829290815046
+       ],
+       "fk_magnitude": 0.8702479822589662,
+       "fk_phase_deg": -1.4892761979616717e-15,
+       "scattering_dimless": [
+        -0.5470280457147257,
+        -0.5629829290815046
+       ]
+      }
+     },
+     "2": {
+      "surge": {
+       "total_magnitude": 1.1635796554299596,
+       "total_phase_deg": -104.00183112598565,
+       "total_dimless": [
+        -0.28153147821349245,
+        -1.1290073699074905
+       ],
+       "fk_magnitude": 1.3442239415542285,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        -0.2815314782134925,
+        0.21521657164673788
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.43181521572255716,
+       "total_phase_deg": -86.99610860646087,
+       "total_dimless": [
+        0.02262874985606753,
+        -0.4312218920804811
+       ],
+       "fk_magnitude": 0.4554990209019834,
+       "fk_phase_deg": -8.535954284178394e-15,
+       "scattering_dimless": [
+        -0.43287027104591586,
+        -0.431221892080481
+       ]
+      }
+     }
+    }
+   },
+   {
+    "resolution": [
+     20,
+     40
+    ],
+    "n_faces": 400,
+    "n_vertices": 401,
+    "values": {
+     "0.2": {
+      "surge": {
+       "total_magnitude": 0.5884302622103258,
+       "total_phase_deg": -89.70276204708637,
+       "total_dimless": [
+        0.0030526336062826165,
+        -0.588422343995347
+       ],
+       "fk_magnitude": 0.38353672401140376,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.0030526336062827067,
+        -0.2048856199839432
+       ]
+      },
+      "heave": {
+       "total_magnitude": 2.4033031001522853,
+       "total_phase_deg": -2.8492806491123184,
+       "total_dimless": [
+        2.4003320208735572,
+        -0.11946539570373557
+       ],
+       "fk_magnitude": 2.7295385897981674,
+       "fk_phase_deg": 2.3741001705315397e-16,
+       "scattering_dimless": [
+        -0.3292065689246104,
+        -0.11946539570373557
+       ]
+      }
+     },
+     "0.5": {
+      "surge": {
+       "total_magnitude": 1.294458366897344,
+       "total_phase_deg": -86.88553983006176,
+       "total_dimless": [
+        0.0703289839133153,
+        -1.292546439263309
+       ],
+       "fk_magnitude": 0.8435683627732106,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.0703289839133153,
+        -0.4489780764900986
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.6701538157755489,
+       "total_phase_deg": -12.873266615924585,
+       "total_dimless": [
+        1.6281749227775835,
+        -0.3721023907311479
+       ],
+       "fk_magnitude": 2.1884198500759697,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.5602449272983864,
+        -0.3721023907311479
+       ]
+      }
+     },
+     "0.8": {
+      "surge": {
+       "total_magnitude": 1.6730126946602064,
+       "total_phase_deg": -82.73734289428789,
+       "total_dimless": [
+        0.21149909960473823,
+        -1.6595901925959282
+       ],
+       "fk_magnitude": 1.1699388358773517,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.2114990996047383,
+        -0.4896513567185768
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.218011194609482,
+       "total_phase_deg": -25.639637489348658,
+       "total_dimless": [
+        1.0980777633719874,
+        -0.5270450604853357
+       ],
+       "fk_magnitude": 1.715273198855188,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.6171954354832005,
+        -0.5270450604853357
+       ]
+      }
+     },
+     "1": {
+      "surge": {
+       "total_magnitude": 1.7214748651991798,
+       "total_phase_deg": -81.46826554345405,
+       "total_dimless": [
+        0.25539314850699457,
+        -1.7024247564013566
+       ],
+       "fk_magnitude": 1.3174447627659174,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.25539314850699457,
+        -0.3849799936354394
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.006633140610731,
+       "total_phase_deg": -34.908067637242546,
+       "total_dimless": [
+        0.82551095397684,
+        -0.5760572407669845
+       ],
+       "fk_magnitude": 1.4365632289286587,
+       "fk_phase_deg": 1.8043613816692117e-15,
+       "scattering_dimless": [
+        -0.6110522749518187,
+        -0.5760572407669846
+       ]
+      }
+     },
+     "1.5": {
+      "surge": {
+       "total_magnitude": 1.4861636770860849,
+       "total_phase_deg": -87.74242322255236,
+       "total_dimless": [
+        0.05854288998044144,
+        -1.485010170040182
+       ],
+       "fk_magnitude": 1.467230606463801,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.05854288998044144,
+        -0.017779563576381056
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.6557991560133748,
+       "total_phase_deg": -59.6855124369999,
+       "total_dimless": [
+        0.33101194974627485,
+        -0.5661303932426031
+       ],
+       "fk_magnitude": 0.8616709862877249,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.5306590365414501,
+        -0.5661303932426031
+       ]
+      }
+     },
+     "2": {
+      "surge": {
+       "total_magnitude": 1.1824967445532917,
+       "total_phase_deg": -104.10842752865648,
+       "total_dimless": [
+        -0.2882426462735617,
+        -1.1468281160437022
+       ],
+       "fk_magnitude": 1.3615588493692736,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        -0.2882426462735617,
+        0.2147307333255714
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.4434697001660969,
+       "total_phase_deg": -86.33825674738999,
+       "total_dimless": [
+        0.02832262676582019,
+        -0.44256434987297827
+       ],
+       "fk_magnitude": 0.44596444977406896,
+       "fk_phase_deg": 5.812300092346101e-15,
+       "scattering_dimless": [
+        -0.4176418230082488,
+        -0.44256434987297827
+       ]
+      }
+     }
+    }
+   },
+   {
+    "resolution": [
+     28,
+     56
+    ],
+    "n_faces": 784,
+    "n_vertices": 785,
+    "values": {
+     "0.2": {
+      "surge": {
+       "total_magnitude": 0.5883544368910425,
+       "total_phase_deg": -89.70531335571314,
+       "total_dimless": [
+        0.0030260419131657103,
+        -0.5883466550255178
+       ],
+       "fk_magnitude": 0.38547277517586115,
+       "fk_phase_deg": -89.99999999999999,
+       "scattering_dimless": [
+        0.0030260419131656197,
+        -0.2028738798496566
+       ]
+      },
+      "heave": {
+       "total_magnitude": 2.4091314143323177,
+       "total_phase_deg": -2.8356738832662827,
+       "total_dimless": [
+        2.406181501746422,
+        -0.11918369089841344
+       ],
+       "fk_magnitude": 2.733885537984124,
+       "fk_phase_deg": -4.7406505806315e-16,
+       "scattering_dimless": [
+        -0.327704036237702,
+        -0.11918369089841341
+       ]
+      }
+     },
+     "0.5": {
+      "surge": {
+       "total_magnitude": 1.2944710461919597,
+       "total_phase_deg": -86.91305947287046,
+       "total_dimless": [
+        0.06970883773915781,
+        -1.2925927306659133
+       ],
+       "fk_magnitude": 0.8477898671084807,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.0697088377391579,
+        -0.4448028635574326
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.6749730806782752,
+       "total_phase_deg": -12.815158646538425,
+       "total_dimless": [
+        1.6332506828820401,
+        -0.3715198889187779
+       ],
+       "fk_magnitude": 2.1902920478616834,
+       "fk_phase_deg": -5.917199980558458e-16,
+       "scattering_dimless": [
+        -0.5570413649796434,
+        -0.3715198889187779
+       ]
+      }
+     },
+     "0.8": {
+      "surge": {
+       "total_magnitude": 1.6743975433604847,
+       "total_phase_deg": -82.7978475838664,
+       "total_dimless": [
+        0.20992006390617513,
+        -1.6611865337707423
+       ],
+       "fk_magnitude": 1.1756838928045397,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.20992006390617504,
+        -0.48550264096620244
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.2219891331894257,
+       "total_phase_deg": -25.527222445933518,
+       "total_dimless": [
+        1.1026993330078267,
+        -0.5266038573891559
+       ],
+       "fk_magnitude": 1.7152413803478257,
+       "fk_phase_deg": 7.556018768854747e-16,
+       "scattering_dimless": [
+        -0.612542047339999,
+        -0.5266038573891559
+       ]
+      }
+     },
+     "1": {
+      "surge": {
+       "total_magnitude": 1.7243796502298034,
+       "total_phase_deg": -81.53473274142351,
+       "total_dimless": [
+        0.253845655691209,
+        -1.7055930233245442
+       ],
+       "fk_magnitude": 1.323783523140458,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.253845655691209,
+        -0.3818095001840861
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.0102416462273456,
+       "total_phase_deg": -34.755676480885434,
+       "total_dimless": [
+        0.8300049013204455,
+        -0.5759167019250048
+       ],
+       "fk_magnitude": 1.4355692780198044,
+       "fk_phase_deg": -1.8056106746588792e-15,
+       "scattering_dimless": [
+        -0.6055643766993591,
+        -0.5759167019250048
+       ]
+      }
+     },
+     "1.5": {
+      "surge": {
+       "total_magnitude": 1.491608054665748,
+       "total_phase_deg": -87.77082277115508,
+       "total_dimless": [
+        0.058018582462915434,
+        -1.4904792627986245
+       ],
+       "fk_magnitude": 1.4736524774344395,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.05801858246291548,
+        -0.016826785364185057
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.6593525723245952,
+       "total_phase_deg": -59.414082051324165,
+       "total_dimless": [
+        0.3354982696720334,
+        -0.5676149449037896
+       ],
+       "fk_magnitude": 0.8592588199922339,
+       "fk_phase_deg": -1.5083227266892219e-15,
+       "scattering_dimless": [
+        -0.5237605503202005,
+        -0.5676149449037896
+       ]
+      }
+     },
+     "2": {
+      "surge": {
+       "total_magnitude": 1.1885635670880543,
+       "total_phase_deg": -104.09392065039485,
+       "total_dimless": [
+        -0.2894296131380949,
+        -1.1527852584275236
+       ],
+       "fk_magnitude": 1.3663274678313178,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        -0.2894296131380949,
+        0.213542209403794
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.4492614765522419,
+       "total_phase_deg": -85.85970208045549,
+       "total_dimless": [
+        0.03243621047254144,
+        -0.4480890163394787
+       ],
+       "fk_magnitude": 0.44331500151034153,
+       "fk_phase_deg": -8.770555486867835e-15,
+       "scattering_dimless": [
+        -0.41087879103780006,
+        -0.4480890163394786
+       ]
+      }
+     }
+    }
+   },
+   {
+    "resolution": [
+     36,
+     72
+    ],
+    "n_faces": 1296,
+    "n_vertices": 1297,
+    "values": {
+     "0.2": {
+      "surge": {
+       "total_magnitude": 0.5879282745623478,
+       "total_phase_deg": -89.706945660807,
+       "total_dimless": [
+        0.0030071007364071314,
+        -0.5879205842416307
+       ],
+       "fk_magnitude": 0.3862718184004873,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.0030071007364072216,
+        -0.2016487658411435
+       ]
+      },
+      "heave": {
+       "total_magnitude": 2.411870729757507,
+       "total_phase_deg": -2.8272927618741983,
+       "total_dimless": [
+        2.408934890980697,
+        -0.11896683603772087
+       ],
+       "fk_magnitude": 2.7356742104486798,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.3267393194679829,
+        -0.11896683603772087
+       ]
+      }
+     },
+     "0.5": {
+      "surge": {
+       "total_magnitude": 1.2935950114754913,
+       "total_phase_deg": -86.93052453105305,
+       "total_dimless": [
+        0.06926791392767713,
+        -1.2917391415507948
+       ],
+       "fk_magnitude": 0.8495320002584535,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.06926791392767705,
+        -0.44220714129234123
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.677493339752779,
+       "total_phase_deg": -12.779820775249988,
+       "total_dimless": [
+        1.6359373371601895,
+        -0.3710699850434693
+       ],
+       "fk_magnitude": 2.1910591899852663,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.5551218528250769,
+        -0.3710699850434693
+       ]
+      }
+     },
+     "0.8": {
+      "surge": {
+       "total_magnitude": 1.6740618092220763,
+       "total_phase_deg": -82.83664993851654,
+       "total_dimless": [
+        0.2087531468402704,
+        -1.66099520311775
+       ],
+       "fk_magnitude": 1.1780542832952337,
+       "fk_phase_deg": -90.00000000000001,
+       "scattering_dimless": [
+        0.2087531468402705,
+        -0.4829409198225165
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.2242142002230119,
+       "total_phase_deg": -25.45870845484875,
+       "total_dimless": [
+        1.105337257169877,
+        -0.5262413476151814
+       ],
+       "fk_magnitude": 1.71522272842159,
+       "fk_phase_deg": 0.0,
+       "scattering_dimless": [
+        -0.609885471251713,
+        -0.5262413476151814
+       ]
+      }
+     },
+     "1": {
+      "surge": {
+       "total_magnitude": 1.7249180839768263,
+       "total_phase_deg": -81.57733442459961,
+       "total_dimless": [
+        0.2526562763586854,
+        -1.7063139225965571
+       ],
+       "fk_magnitude": 1.3263983279632294,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.2526562763586854,
+        -0.37991559463332786
+       ]
+      },
+      "heave": {
+       "total_magnitude": 1.0123299389528817,
+       "total_phase_deg": -34.66278743761636,
+       "total_dimless": [
+        0.8326551467856178,
+        -0.5757580323640883
+       ],
+       "fk_magnitude": 1.4351537800889598,
+       "fk_phase_deg": 9.030667126292995e-16,
+       "scattering_dimless": [
+        -0.602498633303342,
+        -0.5757580323640883
+       ]
+      }
+     },
+     "1.5": {
+      "surge": {
+       "total_magnitude": 1.4938527141764895,
+       "total_phase_deg": -87.78664839250095,
+       "total_dimless": [
+        0.05769358641697276,
+        -1.4927382160776925
+       ],
+       "fk_magnitude": 1.476299212306874,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        0.05769358641697274,
+        -0.0164390037708183
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.6614876805435723,
+       "total_phase_deg": -59.243580855571324,
+       "total_dimless": [
+        0.33827776599458,
+        -0.5684488583369935
+       ],
+       "fk_magnitude": 0.8582597633536231,
+       "fk_phase_deg": 1.5100784886363722e-15,
+       "scattering_dimless": [
+        -0.519981997359043,
+        -0.5684488583369935
+       ]
+      }
+     },
+     "2": {
+      "surge": {
+       "total_magnitude": 1.191360309587526,
+       "total_phase_deg": -104.07170645619969,
+       "total_dimless": [
+        -0.28966263297533096,
+        -1.1556102051809185
+       ],
+       "fk_magnitude": 1.368288758762339,
+       "fk_phase_deg": -90.0,
+       "scattering_dimless": [
+        -0.28966263297533096,
+        0.21267855358142032
+       ]
+      },
+      "heave": {
+       "total_magnitude": 0.45259907477219746,
+       "total_phase_deg": -85.53760726672196,
+       "total_dimless": [
+        0.035214349543422535,
+        -0.45122707373437027
+       ],
+       "fk_magnitude": 0.44222164986226886,
+       "fk_phase_deg": -2.930746621532674e-15,
+       "scattering_dimless": [
+        -0.4070073003188463,
+        -0.45122707373437027
+       ]
+      }
+     }
+    }
+   }
+  ]
+ },
+ "comparison": {
+  "rows": [
+   {
+    "ka": 0.2,
+    "reference": {
+     "Fx": 0.5843824529158171,
+     "phase_Fx_deg": -89.71380802310051,
+     "Fz": 2.41863748886842,
+     "phase_Fz_deg": -2.7932973593010453
+    },
+    "capytaine_fine": {
+     "Fx": 0.5879282745623478,
+     "phase_Fx_deg": -89.706945660807,
+     "Fz": 2.411870729757507,
+     "phase_Fz_deg": -2.8272927618741983
+    },
+    "tensorbem_case": {
+     "Fx": 0.5813646277436147,
+     "phase_Fx_deg": -89.71509820507117,
+     "Fz": 2.4162369013206395,
+     "phase_Fz_deg": -2.790018620048841,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 0.38749797436030475,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 2.738412874094608,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 0.3862718184004873,
+     "surge_phase_deg": -90.00000000000001,
+     "heave_magnitude": 2.7356742104486798,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": 0.006067638802018244,
+     "Fz_rel": -0.0027977566468958327,
+     "Fx_phase_deg": 0.006862362293531987,
+     "Fz_phase_deg": -0.033995402573140154
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": 0.011290069098644254,
+     "Fz_rel": -0.0018070130295362464,
+     "Fx_phase_deg": 0.008152544264191874,
+     "Fz_phase_deg": -0.037274141825349716
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.003164289985880921,
+     "heave_rel": -0.0010000915756115906
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.013801240362101761,
+     "coarse_Fx_vs_reference_rel": 0.0010709035954048604,
+     "fine_vs_second_drift_Fz_rel": 0.0011370552095632848,
+     "fine_vs_second_drift_Fx_rel": -0.0007243292511681473
+    }
+   },
+   {
+    "ka": 0.5,
+    "reference": {
+     "Fx": 1.2857802431536547,
+     "phase_Fx_deg": -87.00427381794367,
+     "Fz": 1.685386646193346,
+     "phase_Fz_deg": -12.638716210611717
+    },
+    "capytaine_fine": {
+     "Fx": 1.2935950114754913,
+     "phase_Fx_deg": -86.93052453105305,
+     "Fz": 1.677493339752779,
+     "phase_Fz_deg": -12.779820775249988
+    },
+    "tensorbem_case": {
+     "Fx": 1.2788943982461547,
+     "phase_Fx_deg": -87.01901130126816,
+     "Fz": 1.6852522979673716,
+     "phase_Fz_deg": -12.627162314943911,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 0.8522051762228454,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 2.1922300510888086,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 0.8495320002584535,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 2.1910591899852663,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": 0.006077841344543584,
+     "Fz_rel": -0.004683380195514827,
+     "Fx_phase_deg": 0.07374928689063154,
+     "Fz_phase_deg": -0.14110456463828314
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": 0.011494782719743435,
+     "Fz_rel": -0.004604033606096253,
+     "Fx_phase_deg": 0.08848677021512685,
+     "Fz_phase_deg": -0.15265846030607122
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.003136775085361434,
+     "heave_rel": -0.0005340959097613118
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.016521666108608866,
+     "coarse_Fx_vs_reference_rel": 0.00034130879062502646,
+     "fine_vs_second_drift_Fz_rel": 0.0015046564649762219,
+     "fine_vs_second_drift_Fx_rel": -0.0006767511093010238
+    }
+   },
+   {
+    "ka": 0.8,
+    "reference": {
+     "Fx": 1.6668230498331096,
+     "phase_Fx_deg": -82.99932786199341,
+     "Fz": 1.232042259405591,
+     "phase_Fz_deg": -25.185374875194334
+    },
+    "capytaine_fine": {
+     "Fx": 1.6740618092220763,
+     "phase_Fx_deg": -82.83664993851654,
+     "Fz": 1.2242142002230119,
+     "phase_Fz_deg": -25.45870845484875
+    },
+    "tensorbem_case": {
+     "Fx": 1.6579988005958126,
+     "phase_Fx_deg": -83.03759370691225,
+     "Fz": 1.2330356481530125,
+     "phase_Fz_deg": -25.162697083277642,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 1.181690922874147,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 1.7151877329870333,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 1.1780542832952337,
+     "surge_phase_deg": -90.00000000000001,
+     "heave_magnitude": 1.71522272842159,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": 0.004342848144373487,
+     "Fz_rel": -0.006353726199583397,
+     "Fx_phase_deg": 0.16267792347684917,
+     "Fz_phase_deg": -0.2733335796544054
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": 0.009688190739638228,
+     "Fz_rel": -0.007154252144465108,
+     "Fx_phase_deg": 0.20094376839568895,
+     "Fz_phase_deg": -0.29601137157109747
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.0030774879526604183,
+     "heave_rel": 2.0403267749417324e-05
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.018703420910718936,
+     "coarse_Fx_vs_reference_rel": -0.004320079303521225,
+     "fine_vs_second_drift_Fz_rel": 0.0018208566452458312,
+     "fine_vs_second_drift_Fx_rel": -0.00020051041029042071
+    }
+   },
+   {
+    "ka": 1.0,
+    "reference": {
+     "Fx": 1.7208658139525712,
+     "phase_Fx_deg": -81.75655304309082,
+     "Fz": 1.0200656062729707,
+     "phase_Fz_deg": -34.288898451775054
+    },
+    "capytaine_fine": {
+     "Fx": 1.7249180839768263,
+     "phase_Fx_deg": -81.57733442459961,
+     "Fz": 1.0123299389528817,
+     "phase_Fz_deg": -34.66278743761636
+    },
+    "tensorbem_case": {
+     "Fx": 1.7121304790344722,
+     "phase_Fx_deg": -81.80626329678661,
+     "Fz": 1.0214271239861397,
+     "phase_Fz_deg": -34.2583329464705,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 1.3304093236578434,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 1.4345100511104927,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 1.3263983279632294,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 1.4351537800889598,
+     "heave_phase_deg": 9.030667126292995e-16
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": 0.0023547855918804412,
+     "Fz_rel": -0.007583499798952087,
+     "Fx_phase_deg": 0.17921861849120546,
+     "Fz_phase_deg": -0.3738889858412904
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": 0.007468826178227638,
+     "Fz_rel": -0.008906347618571175,
+     "Fx_phase_deg": 0.22892887218699798,
+     "Fz_phase_deg": -0.40445449114585585
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.0030148583772594585,
+     "heave_rel": 0.0004487448365863783
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.02052597296694294,
+     "coarse_Fx_vs_reference_rel": -0.009188296192104149,
+     "fine_vs_second_drift_Fz_rel": 0.002067121993371249,
+     "fine_vs_second_drift_Fx_rel": 0.00031224779702725976
+    }
+   },
+   {
+    "ka": 1.5,
+    "reference": {
+     "Fx": 1.497187807628864,
+     "phase_Fx_deg": -87.84220679614317,
+     "Fz": 0.6697378723264034,
+     "phase_Fz_deg": -58.53759058072657
+    },
+    "capytaine_fine": {
+     "Fx": 1.4938527141764895,
+     "phase_Fx_deg": -87.78664839250095,
+     "Fz": 0.6614876805435723,
+     "phase_Fz_deg": -59.243580855571324
+    },
+    "tensorbem_case": {
+     "Fx": 1.4906261356886883,
+     "phase_Fx_deg": -87.88712966725096,
+     "Fz": 0.6713892627888473,
+     "phase_Fz_deg": -58.508505719399295,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 1.480356497664246,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 0.8567224815623021,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 1.476299212306874,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 0.8582597633536231,
+     "heave_phase_deg": 1.5100784886363722e-15
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": -0.0022275718753390528,
+     "Fz_rel": -0.012318538526383689,
+     "Fx_phase_deg": 0.05555840364223741,
+     "Fz_phase_deg": -0.7059902748447371
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": 0.002164579307010774,
+     "Fz_rel": -0.014747900799225309,
+     "Fx_phase_deg": 0.10048127474999546,
+     "Fz_phase_deg": -0.7350751361720427
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.0027407488424400785,
+     "heave_rel": 0.0017943754534345802
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.030711232436436493,
+     "coarse_Fx_vs_reference_rel": -0.02028714616434143,
+     "fine_vs_second_drift_Fz_rel": 0.003238188957767515,
+     "fine_vs_second_drift_Fx_rel": 0.001504858802364465
+    }
+   },
+   {
+    "ka": 2.0,
+    "reference": {
+     "Fx": 1.1976167433130802,
+     "phase_Fx_deg": -103.92088437211633,
+     "Fz": 0.46461680814781375,
+     "phase_Fz_deg": -84.12616763617312
+    },
+    "capytaine_fine": {
+     "Fx": 1.191360309587526,
+     "phase_Fx_deg": -104.07170645619969,
+     "Fz": 0.45259907477219746,
+     "phase_Fz_deg": -85.53760726672196
+    },
+    "tensorbem_case": {
+     "Fx": 1.1928853817766318,
+     "phase_Fx_deg": -103.91472680234834,
+     "Fz": 0.466884989139937,
+     "phase_Fz_deg": -84.12852514931367,
+     "panels": 1024
+    },
+    "fk_closed_form": {
+     "surge_magnitude": 1.3712906534468206,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 0.440543765745156,
+     "heave_phase_deg": 0.0
+    },
+    "capytaine_fk": {
+     "surge_magnitude": 1.368288758762339,
+     "surge_phase_deg": -90.0,
+     "heave_magnitude": 0.44222164986226886,
+     "heave_phase_deg": -2.930746621532674e-15
+    },
+    "capytaine_vs_reference": {
+     "Fx_rel": -0.005224070021137493,
+     "Fz_rel": -0.025865903180568868,
+     "Fx_phase_deg": -0.15082208408335873,
+     "Fz_phase_deg": -1.4114396305488413
+    },
+    "capytaine_vs_tensorbem": {
+     "Fx_rel": -0.0012784733658437713,
+     "Fz_rel": -0.03059835869655187,
+     "Fx_phase_deg": -0.15697965385135149,
+     "Fz_phase_deg": -1.4090821174082748
+    },
+    "capytaine_fk_vs_closed_form": {
+     "surge_rel": -0.002189101688206072,
+     "heave_rel": 0.0038086661248622764
+    },
+    "capytaine_selfconvergence": {
+     "coarse_Fz_vs_reference_rel": -0.07059923758681813,
+     "coarse_Fx_vs_reference_rel": -0.028420684725032022,
+     "fine_vs_second_drift_Fz_rel": 0.007429077261574289,
+     "fine_vs_second_drift_Fx_rel": 0.002353044108800711
+    }
+   }
+  ]
+ },
+ "verdict": {
+  "criteria": {
+   "G1_Fx_amplitude_vs_reference": {
+    "criterion": "max |rel err| < 5% over the ka band",
+    "measured": 0.006077841344543584,
+    "pass": true
+   },
+   "G2_Fz_amplitude_vs_reference": {
+    "criterion": "max |rel err| < 5% over the ka band",
+    "measured": 0.025865903180568868,
+    "pass": true
+   },
+   "G3_phase_vs_reference": {
+    "criterion": "max |phase delta| < 5 deg on both components",
+    "measured": 1.4114396305488413,
+    "pass": true
+   },
+   "G4_capytaine_self_convergent": {
+    "criterion": "finest-vs-second drift at least 3x below the coarsest-level error",
+    "measured": {
+     "drift": 0.007429077261574289,
+     "coarse_error": 0.07059923758681813
+    },
+    "pass": true
+   },
+   "G5_tensorbem_vs_capytaine": {
+    "criterion": "amplitude < 5% and phase < 5 deg",
+    "measured": {
+     "amplitude": 0.03059835869655187,
+     "phase_deg": 1.4090821174082748
+    },
+    "pass": true
+   },
+   "G6_fk_normalisation_guard": {
+    "criterion": "capytaine FK vs closed-form quadrature < 2%",
+    "measured": 0.0038086661248622764,
+    "pass": true
+   }
+  },
+  "verdict": "PASS"
+ }
+}
