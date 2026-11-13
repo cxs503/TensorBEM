@@ -109,12 +109,20 @@ def test_deep_water_source_gradient_matches_a_finite_difference() -> None:
 
 
 def test_mass_matrix_obeys_the_rigid_body_block_identity() -> None:
-    """M = [[m I, -m S^T], [-m S, J + m S S^T]] with S the CG skew matrix.
+    """M = [[m I, -m S], [m S, J]] with S the CG skew matrix and J about the origin.
 
     Built from an explicitly supplied inertia tensor, so the default
     radius-of-gyration approximation cannot mask a defect.  The audit mutated the
     ``(0, 0)`` entry of ``S`` from 0 to 1, which puts a spurious ``-m`` into the
     coupling block.
+
+    Convention note (mission m17324): this test previously pinned the
+    *transposed* block form ``[[m I, -m S^T], [-m S, J + m S S^T]]`` -- including
+    the momentum sign ``h = -m S v`` -- which is what
+    ``compute_mass_matrix`` used to return.  The physical statements are
+    ``M[0:3, 3:6] = -m S``, ``M[3:6, 0:3] = +m S`` and, for a pure translation,
+    ``h = m r_g x v = +m S v``; the energy identity in
+    ``tests/test_rigid_body_mass.py`` is the independent arbiter.
     """
     mass = 1200.0
     cg = np.array([1.2, -0.4, 0.9])
@@ -124,18 +132,18 @@ def test_mass_matrix_obeys_the_rigid_body_block_identity() -> None:
     skew = np.array([[0.0, -z, y], [z, 0.0, -x], [-y, x, 0.0]])
     expected = np.zeros((6, 6))
     expected[0:3, 0:3] = mass * np.eye(3)
-    expected[0:3, 3:6] = -mass * skew.T
-    expected[3:6, 0:3] = -mass * skew
-    expected[3:6, 3:6] = inertia + mass * (skew @ skew.T)
+    expected[0:3, 3:6] = -mass * skew
+    expected[3:6, 0:3] = mass * skew
+    expected[3:6, 3:6] = inertia
 
     measured = compute_mass_matrix(mass, cg, inertia)
     assert np.allclose(measured, expected, rtol=1e-12, atol=1e-9)
     assert np.allclose(measured, measured.T, rtol=1e-12, atol=1e-9)
-    # A rigid-body translation [v; 0] must produce momentum [m v; -m S v].
+    # A rigid-body translation [v; 0] must produce momentum [m v; m r_g x v].
     velocity = np.array([0.3, -0.2, 0.1, 0.0, 0.0, 0.0])
     momentum = measured @ velocity
     assert np.allclose(momentum[0:3], mass * velocity[0:3], rtol=1e-12, atol=1e-9)
-    assert np.allclose(momentum[3:6], -mass * (skew @ velocity[0:3]), rtol=1e-12, atol=1e-9)
+    assert np.allclose(momentum[3:6], mass * (skew @ velocity[0:3]), rtol=1e-12, atol=1e-9)
 
 
 def test_added_mass_defaults_to_unit_density() -> None:
