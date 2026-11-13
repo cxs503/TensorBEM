@@ -7,6 +7,8 @@
 
 ---
 
+> 算例池条目：本验证已封装为 `CASE-BEM-ANNULUS-LAPLACE`（阈值先声明、面板预算、两组敏感性与域守卫负控），见 [case_annulus_laplace.md](case_annulus_laplace.md) 与 `benchmarks/verified/bem_annulus_laplace/`。
+
 ## 1. 案例介绍：为什么这是欠账
 
 `docs/verification.md` §1 的算例选择表里，有一行长期挂着「后续」：
