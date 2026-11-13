@@ -1,0 +1,380 @@
+{
+  "benchmark": "CASE-BEM-RIGID-BODY-MASS.wigley-ship-form",
+  "environment": {
+    "machine": "loongarch64",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6"
+  },
+  "levels": [
+    {
+      "beam_rel_error": 0.0,
+      "block_coefficient": 0.42935528120713307,
+      "block_coefficient_rel_error": 0.033950617283950546,
+      "centroid_abs_error_m": 0.019169329073483343,
+      "energy_identity_error": 3.1122128791823657e-16,
+      "inertia_rel_error": 0.02549829319184004,
+      "length_rel_error": 0.0,
+      "max_entry_rel_error": 0.07518899022749624,
+      "n_levels": 3,
+      "n_sections": 6,
+      "panels": 84,
+      "volume": 9892.345679012345,
+      "volume_rel_error": 0.033950617283950636,
+      "wetted_panels": 72,
+      "within_tolerance": false,
+      "worst_entry": {
+        "mode_i": "roll",
+        "mode_j": "roll"
+      }
+    },
+    {
+      "beam_rel_error": 0.0,
+      "block_coefficient": 0.440607853223594,
+      "block_coefficient_rel_error": 0.008632330246913386,
+      "centroid_abs_error_m": 0.005107749185188304,
+      "energy_identity_error": 2.6010687553588615e-16,
+      "inertia_rel_error": 0.00633121907794292,
+      "length_rel_error": 0.0,
+      "max_entry_rel_error": 0.019688299139596098,
+      "n_levels": 6,
+      "n_sections": 12,
+      "panels": 312,
+      "volume": 10151.604938271606,
+      "volume_rel_error": 0.008632330246913433,
+      "wetted_panels": 288,
+      "within_tolerance": true,
+      "worst_entry": {
+        "mode_i": "roll",
+        "mode_j": "roll"
+      }
+    },
+    {
+      "beam_rel_error": 0.0,
+      "block_coefficient": 0.44348127786351166,
+      "block_coefficient_rel_error": 0.0021671248070987137,
+      "centroid_abs_error_m": 0.0012958493552468475,
+      "energy_identity_error": 3.1154226392426067e-16,
+      "inertia_rel_error": 0.0015802947911977689,
+      "length_rel_error": 0.0,
+      "max_entry_rel_error": 0.004978884963462862,
+      "n_levels": 12,
+      "n_sections": 24,
+      "panels": 1200,
+      "volume": 10217.808641975309,
+      "volume_rel_error": 0.00216712480709873,
+      "wetted_panels": 1152,
+      "within_tolerance": true,
+      "worst_entry": {
+        "mode_i": "roll",
+        "mode_j": "roll"
+      }
+    },
+    {
+      "beam_rel_error": 0.0,
+      "block_coefficient": 0.44420340162572874,
+      "block_coefficient_rel_error": 0.0005423463421102698,
+      "centroid_abs_error_m": 0.0003251320271648872,
+      "energy_identity_error": 3.3058882984601827e-16,
+      "inertia_rel_error": 0.0003949199282617463,
+      "length_rel_error": 0.0,
+      "max_entry_rel_error": 0.0012482890626872095,
+      "n_levels": 24,
+      "n_sections": 48,
+      "panels": 4704,
+      "volume": 10234.44637345679,
+      "volume_rel_error": 0.0005423463421102781,
+      "wetted_panels": 4608,
+      "within_tolerance": true,
+      "worst_entry": {
+        "mode_i": "roll",
+        "mode_j": "roll"
+      }
+    },
+    {
+      "beam_rel_error": 0.0,
+      "block_coefficient": 0.44438416804142283,
+      "block_coefficient_rel_error": 0.00013562190679856923,
+      "centroid_abs_error_m": 8.135592071356612e-05,
+      "energy_identity_error": 3.772649688335034e-16,
+      "inertia_rel_error": 9.872041990718192e-05,
+      "length_rel_error": 0.0,
+      "max_entry_rel_error": 0.0003122955218051373,
+      "n_levels": 48,
+      "n_sections": 96,
+      "panels": 18624,
+      "volume": 10238.611231674382,
+      "volume_rel_error": 0.00013562190679863306,
+      "wetted_panels": 18432,
+      "within_tolerance": true,
+      "worst_entry": {
+        "mode_i": "roll",
+        "mode_j": "roll"
+      }
+    }
+  ],
+  "negative_control": {
+    "detected": true,
+    "energy_identity_error": 0.4000117827916286,
+    "max_entry_rel_error": 2.0,
+    "variant": "pre-m17324 transposed coupling block (-m S^T in the upper-right)"
+  },
+  "parameters": {
+    "accepted_level": {
+      "n_levels": 6,
+      "n_sections": 12,
+      "panels": 312
+    },
+    "hull": {
+      "beam_draft_ratio": 3.0,
+      "beam_m": 24.0,
+      "block_coefficient_analytic": 0.4444444444444444,
+      "cg_fractions_of_LBT": [
+        0.05,
+        0.0,
+        -0.45
+      ],
+      "cg_m": [
+        6.0,
+        0.0,
+        -3.6
+      ],
+      "density_kg_m3": 1025.0,
+      "draft_m": 8.0,
+      "halfbreadth": "y = 2 B s (1-s) (1-t^2), x = -L/2 + s L, z = -t T",
+      "length_beam_ratio": 5.0,
+      "length_m": 120.0,
+      "mode_order": [
+        "surge",
+        "sway",
+        "heave",
+        "roll",
+        "pitch",
+        "yaw"
+      ]
+    },
+    "mesh_ladder": [
+      [
+        6,
+        3
+      ],
+      [
+        12,
+        6
+      ],
+      [
+        24,
+        12
+      ],
+      [
+        48,
+        24
+      ],
+      [
+        96,
+        48
+      ]
+    ],
+    "quadrature_order": 24,
+    "tolerance": 0.03
+  },
+  "reference": {
+    "block_coefficient": 0.4444444444444444,
+    "centroid": [
+      0.0,
+      0.0,
+      -3.0
+    ],
+    "form": "M_RB = [[m I3, -m S(r_g)], [m S(r_g), I_g + m (|r_g|^2 I3 - r_g r_g^T)]]",
+    "inertia_about_centroid": [
+      [
+        276777377.95918363,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        7597004800.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        7794012577.959184
+      ]
+    ],
+    "inertia_about_design_cg": [
+      [
+        280555937.95918363,
+        0.0,
+        37785600.00000001
+      ],
+      [
+        0.0,
+        7978639360.0,
+        0.0
+      ],
+      [
+        37785600.00000001,
+        0.0,
+        8171868577.959184
+      ]
+    ],
+    "inertia_terms": {
+      "I_xx": [
+        236892577.9591837,
+        39884800.0
+      ],
+      "I_yy": [
+        7557120000.0,
+        39884800.0
+      ],
+      "I_zz": [
+        7557120000.0,
+        236892577.9591837
+      ]
+    },
+    "mass": 10496000.0,
+    "matrix": [
+      [
+        10496000.0,
+        0.0,
+        0.0,
+        -0.0,
+        -37785600.0,
+        -0.0
+      ],
+      [
+        0.0,
+        10496000.0,
+        0.0,
+        37785600.0,
+        -0.0,
+        62976000.0
+      ],
+      [
+        0.0,
+        0.0,
+        10496000.0,
+        0.0,
+        -62976000.0,
+        -0.0
+      ],
+      [
+        0.0,
+        37785600.0,
+        0.0,
+        416584097.95918363,
+        0.0,
+        264499200.00000003
+      ],
+      [
+        -37785600.0,
+        0.0,
+        -62976000.0,
+        0.0,
+        8492523520.0,
+        0.0
+      ],
+      [
+        -0.0,
+        62976000.0,
+        0.0,
+        264499200.00000003,
+        0.0,
+        8549724577.959184
+      ]
+    ],
+    "numbers": "evaluated by this module from the cited closed forms (zero hand-copy)",
+    "radii_of_gyration": [
+      5.13515295958819,
+      26.903531366718383,
+      27.25013386973296
+    ],
+    "second_moments": {
+      "int_x2_dV": 7372800.0,
+      "int_y2_dV": 231114.71020408164,
+      "int_z2_dV": 131072.0,
+      "int_z2_dV_about_centroid": 38912.0
+    },
+    "source": "Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control, Wiley, section 3.3.1 (rigid-body kinetics), eqs. (3.44)-(3.53); same block partition in Newman (1977) Marine Hydrodynamics section 4.5. Mass properties of the parabolic Wigley hull are elementary integrals of y = (B/2)(1-(2x/L)^2)(1-(z/T)^2) evaluated in this module (zero hand-copy); the reduction is listed in the module docstring and re-derived by an independent Gauss-Legendre route.",
+    "volume": 10240.0
+  },
+  "routes": {
+    "A_assembler": {
+      "energy_identity_error": 2.9317054412975117e-16,
+      "entry": "tensorbem.rigid_body_mass.rigid_body_mass_matrix",
+      "rel_residual_vs_hand_block": 0.0
+    },
+    "Q_quadrature": {
+      "centroid": [
+        1.4210854715201989e-15,
+        5.683184806318494e-18,
+        -3.0000000000000027
+      ],
+      "inertia_about_design_cg": [
+        [
+          280555937.9591834,
+          3.579042463627138e-10,
+          37785599.999999866
+        ],
+        [
+          3.579042463627138e-10,
+          7978639360.000006,
+          -3.5790424636271236e-11
+        ],
+        [
+          37785599.999999866,
+          -3.5790424636271236e-11,
+          8171868577.959189
+        ]
+      ],
+      "order": 24,
+      "rel_difference": {
+        "centroid_abs_rel": 2.2204460492503132e-17,
+        "inertia_rel": 7.002126678677578e-16,
+        "volume_rel": 1.0658141036401502e-15
+      },
+      "volume": 10240.000000000011
+    },
+    "R_closed_form": {
+      "centroid": [
+        0.0,
+        0.0,
+        -3.0
+      ],
+      "inertia_about_design_cg": [
+        [
+          280555937.95918363,
+          0.0,
+          37785600.00000001
+        ],
+        [
+          0.0,
+          7978639360.0,
+          0.0
+        ],
+        [
+          37785600.00000001,
+          0.0,
+          8171868577.959184
+        ]
+      ],
+      "volume": 10240.0
+    }
+  },
+  "subject": "6x6 rigid-body mass matrix of a parabolic Wigley hull (analytically known Cb, L, B)",
+  "verdict": {
+    "all_pass": true,
+    "checks": {
+      "assembler_matches_hand_block": true,
+      "closed_form_matches_quadrature": true,
+      "error_decreases_under_refinement": true,
+      "geometry_gate_at_accepted_level": true,
+      "mesh_energy_identity_roundoff": true,
+      "mesh_route_within_tolerance": true,
+      "negative_control_detected": true,
+      "reference_energy_identity_roundoff": true
+    }
+  }
+}
