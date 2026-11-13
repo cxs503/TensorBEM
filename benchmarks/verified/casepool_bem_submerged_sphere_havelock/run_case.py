@@ -255,6 +255,14 @@ def _scale_normalised(sweep: Sequence[dict[str, Any]]) -> dict[str, Any]:
     return out
 
 
+def _mesh_panels(subdivision: int, radius: float = RADIUS,
+                 submergence: float = SUBMERGENCE) -> int:
+    """Panel count of the documented sphere mesh at ``subdivision``."""
+    return int(submerged_sphere_mesh(
+        subdivision, radius=radius, submergence=submergence
+    ).panel_count)
+
+
 def _geometry_precondition(
     radius: float = RADIUS, submergence: float = SUBMERGENCE
 ) -> dict[str, Any]:
@@ -435,8 +443,12 @@ def build_result(stage: str = "all", *, with_reference_suite: bool = True) -> di
             "low_frequency_ka": list(low_band),
             "submergence_ratio_f_over_a": [float(r) for r in submergence_ratios],
             "panel_subdivisions": list(ladder),
-            "economy_panels": 4 * 4**ECONOMY_SUBDIVISION,
-            "case_panels": 4 * 4**CASE_SUBDIVISION if not cheap else None,
+            # Panel counts come from the mesh itself: the icosphere has
+            # 20 * 4**subdivision panels (80/320/1280), and the earlier
+            # hand-written 4 * 4**subdivision gave 64/256, i.e. a factor-5 wrong
+            # documented mesh in the published artefact.
+            "economy_panels": _mesh_panels(ECONOMY_SUBDIVISION),
+            "case_panels": _mesh_panels(CASE_SUBDIVISION) if not cheap else None,
             "normalisation": "A' = A/(rho*nabla), B' = B/(rho*omega*nabla), nabla exact",
         },
         "reference": REFERENCE,
