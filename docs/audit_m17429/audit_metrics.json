@@ -1,0 +1,313 @@
+{
+  "audit_mission": 17429,
+  "audited_mission": 17373,
+  "repo": "TensorBEM",
+  "anchor": "CASE-BEM-ICE-DISPERSION",
+  "audited_commit": "26cbde4516fcf6756105ec6584dcd097b51b399d",
+  "audited_branch": "agent/m17373",
+  "provenance": {
+    "impl_src_sha256": "9d48b378c52df7ca09126ad7d201eb3a785fabcebe77d49c1fcbbfd8cffc4ea9",
+    "driver_sha256": "372d7c58a76773638b8e1b6608fb1bf49b8b104be75d2fb332aae0f35ee0ff8f",
+    "tests_sha256": "0f7d3691c1f722e01051b3fc7b6e72ed395e2bbb16ae4f369e47ab35cd9bed19",
+    "numbers_json_sha256": "31ed4b1d81ab2115045031ab3a8254f08dc2fdc5d054de1212e6b93cf9ff2504",
+    "scratch_tree": "/tmp/aud17373"
+  },
+  "R1_registered_case_metric": {
+    "deep_water_k_solver_agreement": 2.2043162132136864e-13,
+    "deep_water_branch_k_rel_err": 0.00046199909253437447,
+    "shallow_k_rel_err_vs_long_wave": 0.04130246390337007,
+    "shallow_kH": 0.42647227777277574,
+    "shallow_omega_recovered_rel_err": 3.13814728571067e-14,
+    "shallow_thickness_scan": {
+      "h_i=0.3": {
+        "kH": 0.423046752525849,
+        "long_wave_rel_err": 0.032938478562009814
+      },
+      "h_i=0.6": {
+        "kH": 0.4247491651465294,
+        "long_wave_rel_err": 0.03709519999242172
+      },
+      "h_i=0.9": {
+        "kH": 0.42647227777277574,
+        "long_wave_rel_err": 0.04130246390337007
+      },
+      "h_i=1.0": {
+        "kH": 0.4270513213335716,
+        "long_wave_rel_err": 0.042716294339695184
+      }
+    },
+    "rk4_shooting_rel_err": 1.4298360268001543e-13,
+    "robin_residual_abs": 4.0245584642661925e-15,
+    "thickness_study_max_rel_diff": 1.1082137129047867e-14,
+    "thickness_study_monotone_k": true
+  },
+  "R2_independent_dispersion": {
+    "rows": [
+      {
+        "series": "deep",
+        "k": 0.02,
+        "depth": 200.0,
+        "kH": 4.0,
+        "omega_got": 0.43912097060138733,
+        "omega_ref_audit": 0.43881474263993314,
+        "omega_ref_mission": 0.43881474263993314,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0006978524914908336,
+        "depth_factor_bem": 0.020014990777424052,
+        "depth_factor_ref": 0.019986585994781342,
+        "depth_factor_rel_error": 0.0014211923261995324,
+        "n_panels": 154.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "deep",
+        "k": 0.05,
+        "depth": 200.0,
+        "kH": 10.0,
+        "omega_got": 0.6855524640978183,
+        "omega_ref_audit": 0.6850826221047618,
+        "omega_ref_mission": 0.6850826221047618,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0006858179990218826,
+        "depth_factor_bem": 0.05007167834315521,
+        "depth_factor_ref": 0.04999999979388464,
+        "depth_factor_rel_error": 0.0014335709913209232,
+        "n_panels": 164.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "deep",
+        "k": 0.1,
+        "depth": 200.0,
+        "kH": 20.0,
+        "omega_got": 0.9493842933121407,
+        "omega_ref_audit": 0.9487548574468376,
+        "omega_ref_mission": 0.9487548574468376,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0006634336155041321,
+        "depth_factor_bem": 0.1001446224557808,
+        "depth_factor_ref": 0.1,
+        "depth_factor_rel_error": 0.0014462245578079902,
+        "n_panels": 172.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "deep",
+        "k": 0.2,
+        "depth": 200.0,
+        "kH": 40.0,
+        "omega_got": 1.2906231738531735,
+        "omega_ref_audit": 1.2898283252329825,
+        "omega_ref_mission": 1.2898283252329825,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0006162437315426414,
+        "depth_factor_bem": 0.20029075618716663,
+        "depth_factor_ref": 0.2,
+        "depth_factor_rel_error": 0.0014537809358330933,
+        "n_panels": 182.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "deep",
+        "k": 0.4,
+        "depth": 200.0,
+        "kH": 80.0,
+        "omega_got": 1.7005790241021537,
+        "omega_ref_audit": 1.6996670299342442,
+        "omega_ref_mission": 1.6996670299342442,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0005365722531810942,
+        "depth_factor_bem": 0.40058324969808995,
+        "depth_factor_ref": 0.4,
+        "depth_factor_rel_error": 0.0014581242452248178,
+        "n_panels": 190.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "shallow",
+        "k": 0.02,
+        "depth": 2.0,
+        "kH": 0.04,
+        "omega_got": 0.08885899104965266,
+        "omega_ref_audit": 0.08851854916214223,
+        "omega_ref_mission": 0.08851854916214223,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.003845994887318193,
+        "depth_factor_bem": 0.0008057401871935159,
+        "depth_factor_ref": 0.0007995736062232714,
+        "depth_factor_rel_error": 0.007712336828340186,
+        "n_panels": 144.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "shallow",
+        "k": 0.05,
+        "depth": 2.0,
+        "kH": 0.1,
+        "omega_got": 0.2210626925323494,
+        "omega_ref_audit": 0.22057548351453052,
+        "omega_ref_mission": 0.22057548351453052,
+        "ref_route_rel_diff": 0.0,
+        "omega_rel_error": 0.0022088085677335876,
+        "depth_factor_bem": 0.005005537490163593,
+        "depth_factor_ref": 0.004983399731247791,
+        "depth_factor_rel_error": 0.00444230045946141,
+        "n_panels": 144.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "shallow",
+        "k": 0.1,
+        "depth": 2.0,
+        "kH": 0.2,
+        "omega_got": 0.4366131778358072,
+        "omega_ref_audit": 0.436119859805802,
+        "omega_ref_mission": 0.4361198598058019,
+        "ref_route_rel_diff": 1.2728416278950506e-16,
+        "omega_rel_error": 0.0011311524089384704,
+        "depth_factor_bem": 0.019783000318629337,
+        "depth_factor_ref": 0.0197375320224904,
+        "depth_factor_rel_error": 0.0023036464785529545,
+        "n_panels": 144.0,
+        "panels_per_wavelength": 64.0
+      },
+      {
+        "series": "shallow",
+        "k": 0.2,
+        "depth": 2.0,
+        "kH": 0.4,
+        "omega_got": 0.8358277638659966,
+        "omega_ref_audit": 0.8353255864484371,
+        "omega_ref_mission": 0.8353255864484372,
+        "ref_route_rel_diff": 1.329090168715535e-16,
+        "omega_rel_error": 0.000601175668154183,
+        "depth_factor_bem": 0.0760874075613285,
+        "depth_factor_ref": 0.07598979245104498,
+        "depth_factor_rel_error": 0.0012845818778410337,
+        "n_panels": 144.0,
+        "panels_per_wavelength": 64.0
+      }
+    ],
+    "n_rows": 9,
+    "max_omega_rel_error": 0.003845994887318193,
+    "tolerance": 0.05,
+    "all_within_tolerance": true
+  },
+  "R3_independent_convergence": {
+    "deep": {
+      "k": 0.1,
+      "depth": 200.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "n_panels": [
+        38,
+        62,
+        100,
+        172,
+        310
+      ],
+      "rel_error": [
+        0.036333951560917566,
+        0.01294127479732321,
+        0.00430108581293509,
+        0.0014462245578079624,
+        0.0005169652060772467
+      ],
+      "observed_order": [
+        1.4893385381415916,
+        1.5892069183535562,
+        1.5724093359841955,
+        1.484152489951844
+      ],
+      "monotone": true,
+      "last_error": 0.0005169652060772467
+    },
+    "intermediate": {
+      "k": 0.1,
+      "depth": 20.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "n_panels": [
+        32,
+        48,
+        80,
+        148,
+        282
+      ],
+      "rel_error": [
+        0.0231012200831624,
+        0.008687596320411162,
+        0.005177522414526958,
+        0.0013698846145915322,
+        0.0004907751180800446
+      ],
+      "observed_order": [
+        1.4109400758505628,
+        0.7466951739694491,
+        1.918207514102694,
+        1.4809203676294058
+      ],
+      "monotone": true,
+      "last_error": 0.0004907751180800446
+    },
+    "shallow": {
+      "k": 0.1,
+      "depth": 2.0,
+      "panels_per_wavelength": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "n_panels": [
+        32,
+        48,
+        80,
+        144,
+        272
+      ],
+      "rel_error": [
+        0.0590846843066517,
+        0.029660357617531385,
+        0.009091379536325439,
+        0.0023036464785528565,
+        0.0005954302050574789
+      ],
+      "observed_order": [
+        0.9942482166813988,
+        1.7059648602599604,
+        1.980579891856242,
+        1.9519150216107772
+      ],
+      "monotone": true,
+      "last_error": 0.0005954302050574789
+    }
+  },
+  "R4_reproduction": {
+    "committed_sha256": "a101fa49b9aa1cb63916a7657b919f7b9b6c9efcfd66ec5c9f532957b366c9cf",
+    "regenerated_sha256": "a101fa49b9aa1cb63916a7657b919f7b9b6c9efcfd66ec5c9f532957b366c9cf",
+    "identical": true,
+    "environment_committed": {
+      "numpy": "2.4.6",
+      "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+      "python": "3.11.6"
+    },
+    "environment_regenerated": {
+      "numpy": "2.4.6",
+      "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+      "python": "3.11.6"
+    }
+  },
+  "R5_tests": "see logs/repro_tests.log (31 passed, 16.2 s)"
+}
