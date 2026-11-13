@@ -1,0 +1,14 @@
+{
+  "J": 0.7,
+  "n_radial": 12,
+  "n_chord": 4,
+  "wake_steps": 48,
+  "n_panels_per_blade": 48,
+  "KT": 0.165844227347276,
+  "10KQ": 0.2759701316503726,
+  "eta0": 0.6695090474251183,
+  "KT_inviscid": 0.17041035164361779,
+  "viscous_drag_nd": 0.00228196625059998,
+  "wall_seconds": 0.7840623296797276,
+  "cached": false
+}
