@@ -1,0 +1,2420 @@
+{
+  "benchmark": "CASE-BEM-RIGID-BODY-MASS",
+  "subject": "6x6 rigid-body mass matrix, closed block form",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64"
+  },
+  "parameters": {
+    "semi_axes_m": [
+      60.0,
+      12.0,
+      8.0
+    ],
+    "length_overall_m": 120.0,
+    "breadth_m": 24.0,
+    "depth_m": 16.0,
+    "density_kg_m3": 1025.0,
+    "cg_offset_m": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "reference_point_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "mode_order": [
+      "surge",
+      "sway",
+      "heave",
+      "roll",
+      "pitch",
+      "yaw"
+    ],
+    "subdivisions": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "panels_per_level": [
+      20,
+      80,
+      320,
+      1280,
+      5120
+    ],
+    "tolerance": 0.03,
+    "accepted_from_subdivision": 3
+  },
+  "reference": {
+    "volume": 24127.43157956961,
+    "mass": 24730617.36905885,
+    "centroid": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "inertia_cg": [
+      [
+        1028793682.5528481,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        18122596408.046326,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        18518286285.951267
+      ]
+    ],
+    "radii_of_gyration": [
+      6.449806198638839,
+      27.07027890510181,
+      27.36421020237931
+    ],
+    "matrix": [
+      [
+        24730617.36905885,
+        0.0,
+        0.0,
+        -0.0,
+        -74191852.10717656,
+        -0.0
+      ],
+      [
+        0.0,
+        24730617.36905885,
+        0.0,
+        74191852.10717656,
+        -0.0,
+        123653086.84529425
+      ],
+      [
+        0.0,
+        0.0,
+        24730617.36905885,
+        0.0,
+        -123653086.84529425,
+        -0.0
+      ],
+      [
+        0.0,
+        74191852.10717656,
+        0.0,
+        1251369238.8743777,
+        0.0,
+        370959260.5358828
+      ],
+      [
+        -74191852.10717656,
+        0.0,
+        -123653086.84529425,
+        0.0,
+        18963437398.594326,
+        0.0
+      ],
+      [
+        -0.0,
+        123653086.84529425,
+        0.0,
+        370959260.5358828,
+        0.0,
+        19136551720.17774
+      ]
+    ],
+    "citation": "Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control, Sec. 3.3 'Rigid-Body Dynamics', eq. (3.44): M_RB = [[m I3, -m S(r_g)], [m S(r_g), I_b + m S(r_g)^T S(r_g)]]; solid-ellipsoid second moments I_cg = m(b^2+c^2, a^2+c^2, a^2+b^2)/5 (Lamb 1932 Ch. VI). All numbers machine-evaluated from these closed forms (solid_ellipsoid_mass_properties / rigid_body_mass_matrix); no table copied."
+  },
+  "levels": [
+    {
+      "subdivisions": 0,
+      "panels": 20,
+      "wall_time_s": 0.0023213308304548264,
+      "volume": 14608.228090293562,
+      "volume_rel_error": 0.39453861708747423,
+      "mass": 14973433.792550901,
+      "mass_rel_error": 0.3945386170874743,
+      "centroid": [
+        4.999999999999998,
+        1.1360883224046498e-16,
+        -2.999999999999999
+      ],
+      "centroid_abs_error": 1.7763568394002505e-15,
+      "inertia_cg": [
+        [
+          450730944.68268144,
+          3.0526478573760986e-08,
+          8.940696716308594e-08
+        ],
+        [
+          3.0526478573760986e-08,
+          7939798948.641085,
+          -9.783650048263136e-09
+        ],
+        [
+          8.940696716308594e-08,
+          -9.783650048263136e-09,
+          8113157004.28827
+        ]
+      ],
+      "inertia_cg_diagonal": [
+        450730944.68268144,
+        7939798948.641085,
+        8113157004.28827
+      ],
+      "inertia_rel_error": 0.5618840275493937,
+      "radii_of_gyration": [
+        5.486532856586125,
+        23.027354632940025,
+        23.277387528569097
+      ],
+      "matrix": [
+        [
+          14973433.792550901,
+          0.0,
+          0.0,
+          -0.0,
+          -44920301.37765269,
+          -1.7011143278016246e-09
+        ],
+        [
+          0.0,
+          14973433.792550901,
+          0.0,
+          44920301.37765269,
+          -0.0,
+          74867168.96275447
+        ],
+        [
+          0.0,
+          0.0,
+          14973433.792550901,
+          1.7011143278016246e-09,
+          -74867168.96275447,
+          -0.0
+        ],
+        [
+          0.0,
+          44920301.37765269,
+          1.7011143278016246e-09,
+          585491848.8156395,
+          2.2020906934752866e-08,
+          224601506.88826346
+        ],
+        [
+          -44920301.37765269,
+          0.0,
+          -74867168.96275447,
+          2.2020906934752866e-08,
+          8448895697.587815,
+          -4.680307064858264e-09
+        ],
+        [
+          -1.7011143278016246e-09,
+          74867168.96275447,
+          0.0,
+          224601506.88826346,
+          -4.680307064858264e-09,
+          8487492849.102042
+        ]
+      ],
+      "matrix_scale": 19136551720.17774,
+      "max_entry_rel_error": 0.5564774169761859,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 8487492849.102042,
+        "rel_error": 0.5564774169761859
+      },
+      "entries": [
+        {
+          "mode_i": "surge",
+          "mode_j": "surge",
+          "ref": 24730617.36905885,
+          "got": 14973433.792550901,
+          "rel_error": 0.3945386170874743,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "roll",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "pitch",
+          "ref": -74191852.10717656,
+          "got": -44920301.37765269,
+          "rel_error": 0.39453861708747445,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -1.7011143278016246e-09,
+          "rel_error": 1.7011143278016246e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "sway",
+          "ref": 24730617.36905885,
+          "got": 14973433.792550901,
+          "rel_error": 0.3945386170874743,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "roll",
+          "ref": 74191852.10717656,
+          "got": 44920301.37765269,
+          "rel_error": 0.39453861708747445,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "pitch",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "yaw",
+          "ref": 123653086.84529425,
+          "got": 74867168.96275447,
+          "rel_error": 0.3945386170874745,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "heave",
+          "ref": 24730617.36905885,
+          "got": 14973433.792550901,
+          "rel_error": 0.3945386170874743,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": 1.7011143278016246e-09,
+          "rel_error": 1.7011143278016246e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "pitch",
+          "ref": -123653086.84529425,
+          "got": -74867168.96275447,
+          "rel_error": 0.3945386170874745,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "sway",
+          "ref": 74191852.10717656,
+          "got": 44920301.37765269,
+          "rel_error": 0.39453861708747445,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 1.7011143278016246e-09,
+          "rel_error": 1.7011143278016246e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "roll",
+          "ref": 1251369238.8743777,
+          "got": 585491848.8156395,
+          "rel_error": 0.5321190335937164,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": 2.2020906934752866e-08,
+          "rel_error": 2.2020906934752866e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "yaw",
+          "ref": 370959260.5358828,
+          "got": 224601506.88826346,
+          "rel_error": 0.3945386170874744,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "surge",
+          "ref": -74191852.10717656,
+          "got": -44920301.37765269,
+          "rel_error": 0.39453861708747445,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "heave",
+          "ref": -123653086.84529425,
+          "got": -74867168.96275447,
+          "rel_error": 0.3945386170874745,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": 2.2020906934752866e-08,
+          "rel_error": 2.2020906934752866e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "pitch",
+          "ref": 18963437398.594326,
+          "got": 8448895697.587815,
+          "rel_error": 0.5544639128445092,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "yaw",
+          "ref": 0.0,
+          "got": -4.680307064858264e-09,
+          "rel_error": 4.680307064858264e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "surge",
+          "ref": -0.0,
+          "got": -1.7011143278016246e-09,
+          "rel_error": 1.7011143278016246e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "sway",
+          "ref": 123653086.84529425,
+          "got": 74867168.96275447,
+          "rel_error": 0.3945386170874745,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "roll",
+          "ref": 370959260.5358828,
+          "got": 224601506.88826346,
+          "rel_error": 0.3945386170874744,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": -4.680307064858264e-09,
+          "rel_error": 4.680307064858264e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "yaw",
+          "ref": 19136551720.17774,
+          "got": 8487492849.102042,
+          "rel_error": 0.5564774169761859,
+          "within_tolerance": false
+        }
+      ],
+      "selfconsistency_block_form_error": 0.0,
+      "energy_identity_error": 4.1551321849271847e-16,
+      "within_tolerance": false
+    },
+    {
+      "subdivisions": 1,
+      "panels": 80,
+      "wall_time_s": 0.0027774199843406677,
+      "volume": 21074.18232103004,
+      "volume_rel_error": 0.12654679999693672,
+      "mass": 21601036.87905579,
+      "mass_rel_error": 0.12654679999693674,
+      "centroid": [
+        5.0,
+        1.6189613908261384e-16,
+        -2.9999999999999987
+      ],
+      "centroid_abs_error": 1.3322676295501878e-15,
+      "inertia_cg": [
+        [
+          821753970.2442082,
+          3.012710078196759e-08,
+          1.7881393432617188e-07
+        ],
+        [
+          3.012710078196759e-08,
+          14475512245.07108,
+          1.52868500414581e-08
+        ],
+        [
+          1.7881393432617188e-07,
+          1.52868500414581e-08,
+          14791571464.395777
+        ]
+      ],
+      "inertia_cg_diagonal": [
+        821753970.2442082,
+        14475512245.07108,
+        14791571464.395777
+      ],
+      "inertia_rel_error": 0.20124512409027595,
+      "radii_of_gyration": [
+        6.167847202839211,
+        25.886877664656936,
+        26.167959494700536
+      ],
+      "matrix": [
+        [
+          21601036.87905579,
+          0.0,
+          0.0,
+          -0.0,
+          -64803110.63716734,
+          -3.497124470900287e-09
+        ],
+        [
+          0.0,
+          21601036.87905579,
+          0.0,
+          64803110.63716734,
+          -0.0,
+          108005184.39527896
+        ],
+        [
+          0.0,
+          0.0,
+          21601036.87905579,
+          3.497124470900287e-09,
+          -108005184.39527896,
+          -0.0
+        ],
+        [
+          0.0,
+          64803110.63716734,
+          3.497124470900287e-09,
+          1016163302.1557102,
+          1.2641478427466153e-08,
+          324015553.1858369
+        ],
+        [
+          -64803110.63716734,
+          0.0,
+          -108005184.39527896,
+          1.2641478427466153e-08,
+          15209947498.958977,
+          2.5778223454158955e-08
+        ],
+        [
+          -3.497124470900287e-09,
+          108005184.39527896,
+          0.0,
+          324015553.1858369,
+          2.5778223454158955e-08,
+          15331597386.372171
+        ]
+      ],
+      "matrix_scale": 19136551720.17774,
+      "max_entry_rel_error": 0.19883176391667218,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 15331597386.372171,
+        "rel_error": 0.19883176391667218
+      },
+      "entries": [
+        {
+          "mode_i": "surge",
+          "mode_j": "surge",
+          "ref": 24730617.36905885,
+          "got": 21601036.87905579,
+          "rel_error": 0.12654679999693674,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "roll",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "pitch",
+          "ref": -74191852.10717656,
+          "got": -64803110.63716734,
+          "rel_error": 0.1265467999969372,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -3.497124470900287e-09,
+          "rel_error": 3.497124470900287e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "sway",
+          "ref": 24730617.36905885,
+          "got": 21601036.87905579,
+          "rel_error": 0.12654679999693674,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "roll",
+          "ref": 74191852.10717656,
+          "got": 64803110.63716734,
+          "rel_error": 0.1265467999969372,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "pitch",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "yaw",
+          "ref": 123653086.84529425,
+          "got": 108005184.39527896,
+          "rel_error": 0.12654679999693666,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "heave",
+          "ref": 24730617.36905885,
+          "got": 21601036.87905579,
+          "rel_error": 0.12654679999693674,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": 3.497124470900287e-09,
+          "rel_error": 3.497124470900287e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "pitch",
+          "ref": -123653086.84529425,
+          "got": -108005184.39527896,
+          "rel_error": 0.12654679999693666,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "sway",
+          "ref": 74191852.10717656,
+          "got": 64803110.63716734,
+          "rel_error": 0.1265467999969372,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 3.497124470900287e-09,
+          "rel_error": 3.497124470900287e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "roll",
+          "ref": 1251369238.8743777,
+          "got": 1016163302.1557102,
+          "rel_error": 0.18795886091161884,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": 1.2641478427466153e-08,
+          "rel_error": 1.2641478427466153e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "yaw",
+          "ref": 370959260.5358828,
+          "got": 324015553.1858369,
+          "rel_error": 0.1265467999969366,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "surge",
+          "ref": -74191852.10717656,
+          "got": -64803110.63716734,
+          "rel_error": 0.1265467999969372,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "heave",
+          "ref": -123653086.84529425,
+          "got": -108005184.39527896,
+          "rel_error": 0.12654679999693666,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": 1.2641478427466153e-08,
+          "rel_error": 1.2641478427466153e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "pitch",
+          "ref": 18963437398.594326,
+          "got": 15209947498.958977,
+          "rel_error": 0.19793299182739826,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "yaw",
+          "ref": 0.0,
+          "got": 2.5778223454158955e-08,
+          "rel_error": 2.5778223454158955e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "surge",
+          "ref": -0.0,
+          "got": -3.497124470900287e-09,
+          "rel_error": 3.497124470900287e-09,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "sway",
+          "ref": 123653086.84529425,
+          "got": 108005184.39527896,
+          "rel_error": 0.12654679999693666,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "roll",
+          "ref": 370959260.5358828,
+          "got": 324015553.1858369,
+          "rel_error": 0.1265467999969366,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": 2.5778223454158955e-08,
+          "rel_error": 2.5778223454158955e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "yaw",
+          "ref": 19136551720.17774,
+          "got": 15331597386.372171,
+          "rel_error": 0.19883176391667218,
+          "within_tolerance": false
+        }
+      ],
+      "selfconsistency_block_form_error": 0.0,
+      "energy_identity_error": 3.243416633563466e-16,
+      "within_tolerance": false
+    },
+    {
+      "subdivisions": 2,
+      "panels": 320,
+      "wall_time_s": 0.005794880911707878,
+      "volume": 23310.977356678166,
+      "volume_rel_error": 0.03383925140141284,
+      "mass": 23893751.79059512,
+      "mass_rel_error": 0.03383925140141284,
+      "centroid": [
+        4.9999999999999964,
+        -1.1310491813504773e-15,
+        -3.0000000000000013
+      ],
+      "centroid_abs_error": 3.552713678800501e-15,
+      "inertia_cg": [
+        [
+          971477367.9577677,
+          -2.5887577852960437e-07,
+          4.76837158203125e-07
+        ],
+        [
+          -2.5887577852960437e-07,
+          17112947481.717613,
+          9.819208699664266e-08
+        ],
+        [
+          4.76837158203125e-07,
+          9.819208699664266e-08,
+          17486592623.239834
+        ]
+      ],
+      "inertia_cg_diagonal": [
+        971477367.9577677,
+        17112947481.717613,
+        17486592623.239834
+      ],
+      "inertia_rel_error": 0.05571215644798256,
+      "radii_of_gyration": [
+        6.376379689959278,
+        26.762102813019688,
+        27.052687909142296
+      ],
+      "matrix": [
+        [
+          23893751.79059512,
+          0.0,
+          0.0,
+          -0.0,
+          -71681255.3717854,
+          2.7025008402144113e-08
+        ],
+        [
+          0.0,
+          23893751.79059512,
+          0.0,
+          71681255.3717854,
+          -0.0,
+          119468758.95297553
+        ],
+        [
+          0.0,
+          0.0,
+          23893751.79059512,
+          -2.7025008402144113e-08,
+          -119468758.95297553,
+          -0.0
+        ],
+        [
+          0.0,
+          71681255.3717854,
+          -2.7025008402144113e-08,
+          1186521134.073124,
+          -1.237507365188839e-07,
+          358406276.8589272
+        ],
+        [
+          -71681255.3717854,
+          0.0,
+          -119468758.95297553,
+          -1.237507365188839e-07,
+          17925335042.597847,
+          1.7117061790210288e-08
+        ],
+        [
+          2.7025008402144113e-08,
+          119468758.95297553,
+          0.0,
+          358406276.8589272,
+          1.7117061790210288e-08,
+          18083936418.00471
+        ]
+      ],
+      "matrix_scale": 19136551720.17774,
+      "max_entry_rel_error": 0.05500548466436306,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 18083936418.00471,
+        "rel_error": 0.05500548466436306
+      },
+      "entries": [
+        {
+          "mode_i": "surge",
+          "mode_j": "surge",
+          "ref": 24730617.36905885,
+          "got": 23893751.79059512,
+          "rel_error": 0.03383925140141284,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "roll",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "pitch",
+          "ref": -74191852.10717656,
+          "got": -71681255.3717854,
+          "rel_error": 0.03383925140141239,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": 2.7025008402144113e-08,
+          "rel_error": 2.7025008402144113e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "sway",
+          "ref": 24730617.36905885,
+          "got": 23893751.79059512,
+          "rel_error": 0.03383925140141284,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "roll",
+          "ref": 74191852.10717656,
+          "got": 71681255.3717854,
+          "rel_error": 0.03383925140141239,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "pitch",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "yaw",
+          "ref": 123653086.84529425,
+          "got": 119468758.95297553,
+          "rel_error": 0.03383925140141347,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "heave",
+          "ref": 24730617.36905885,
+          "got": 23893751.79059512,
+          "rel_error": 0.03383925140141284,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": -2.7025008402144113e-08,
+          "rel_error": 2.7025008402144113e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "pitch",
+          "ref": -123653086.84529425,
+          "got": -119468758.95297553,
+          "rel_error": 0.03383925140141347,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "sway",
+          "ref": 74191852.10717656,
+          "got": 71681255.3717854,
+          "rel_error": 0.03383925140141239,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": -2.7025008402144113e-08,
+          "rel_error": 2.7025008402144113e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "roll",
+          "ref": 1251369238.8743777,
+          "got": 1186521134.073124,
+          "rel_error": 0.05182171879147795,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": -1.237507365188839e-07,
+          "rel_error": 1.237507365188839e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "yaw",
+          "ref": 370959260.5358828,
+          "got": 358406276.8589272,
+          "rel_error": 0.03383925140141187,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "surge",
+          "ref": -74191852.10717656,
+          "got": -71681255.3717854,
+          "rel_error": 0.03383925140141239,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "heave",
+          "ref": -123653086.84529425,
+          "got": -119468758.95297553,
+          "rel_error": 0.03383925140141347,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": -1.237507365188839e-07,
+          "rel_error": 1.237507365188839e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "pitch",
+          "ref": 18963437398.594326,
+          "got": 17925335042.597847,
+          "rel_error": 0.05474230932802451,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "yaw",
+          "ref": 0.0,
+          "got": 1.7117061790210288e-08,
+          "rel_error": 1.7117061790210288e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "surge",
+          "ref": -0.0,
+          "got": 2.7025008402144113e-08,
+          "rel_error": 2.7025008402144113e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "sway",
+          "ref": 123653086.84529425,
+          "got": 119468758.95297553,
+          "rel_error": 0.03383925140141347,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "roll",
+          "ref": 370959260.5358828,
+          "got": 358406276.8589272,
+          "rel_error": 0.03383925140141187,
+          "within_tolerance": false
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": 1.7117061790210288e-08,
+          "rel_error": 1.7117061790210288e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "yaw",
+          "ref": 19136551720.17774,
+          "got": 18083936418.00471,
+          "rel_error": 0.05500548466436306,
+          "within_tolerance": false
+        }
+      ],
+      "selfconsistency_block_form_error": 0.0,
+      "energy_identity_error": 2.1136068995684346e-16,
+      "within_tolerance": false
+    },
+    {
+      "subdivisions": 3,
+      "panels": 1280,
+      "wall_time_s": 0.02248470112681389,
+      "volume": 23919.787106456013,
+      "volume_rel_error": 0.008606157370245051,
+      "mass": 24517781.78411741,
+      "mass_rel_error": 0.008606157370245181,
+      "centroid": [
+        5.000000000000006,
+        -9.001777000821782e-16,
+        -3.000000000000002
+      ],
+      "centroid_abs_error": 6.217248937900877e-15,
+      "inertia_cg": [
+        [
+          1014082685.8055338,
+          4.2924155794918674e-07,
+          -1.1920928955078125e-07
+        ],
+        [
+          4.2924155794918674e-07,
+          17863456542.266766,
+          -1.3695798798533054e-07
+        ],
+        [
+          -1.1920928955078125e-07,
+          -1.3695798798533054e-07,
+          18253488344.499664
+        ]
+      ],
+      "inertia_cg_diagonal": [
+        1014082685.8055338,
+        17863456542.266766,
+        18253488344.499664
+      ],
+      "inertia_rel_error": 0.014299268159200273,
+      "radii_of_gyration": [
+        6.43126042638835,
+        26.9924410272076,
+        27.28552715445538
+      ],
+      "matrix": [
+        [
+          24517781.78411741,
+          0.0,
+          0.0,
+          -0.0,
+          -73553345.35235229,
+          2.2070360417543535e-08
+        ],
+        [
+          0.0,
+          24517781.78411741,
+          0.0,
+          73553345.35235229,
+          -0.0,
+          122588908.92058721
+        ],
+        [
+          0.0,
+          0.0,
+          24517781.78411741,
+          -2.2070360417543535e-08,
+          -122588908.92058721,
+          -0.0
+        ],
+        [
+          0.0,
+          73553345.35235229,
+          -2.2070360417543535e-08,
+          1234742721.8625908,
+          5.395933600369045e-07,
+          367766726.7617618
+        ],
+        [
+          -73553345.35235229,
+          0.0,
+          -122588908.92058721,
+          5.395933600369045e-07,
+          18697061122.926758,
+          -2.031690692379612e-07
+        ],
+        [
+          2.2070360417543535e-08,
+          122588908.92058721,
+          0.0,
+          367766726.7617618,
+          -2.031690692379612e-07,
+          18866432889.1026
+        ]
+      ],
+      "matrix_scale": 19136551720.17774,
+      "max_entry_rel_error": 0.014115334623756828,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 18866432889.1026,
+        "rel_error": 0.014115334623756828
+      },
+      "entries": [
+        {
+          "mode_i": "surge",
+          "mode_j": "surge",
+          "ref": 24730617.36905885,
+          "got": 24517781.78411741,
+          "rel_error": 0.008606157370245181,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "roll",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "pitch",
+          "ref": -74191852.10717656,
+          "got": -73553345.35235229,
+          "rel_error": 0.008606157370244479,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": 2.2070360417543535e-08,
+          "rel_error": 2.2070360417543535e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "sway",
+          "ref": 24730617.36905885,
+          "got": 24517781.78411741,
+          "rel_error": 0.008606157370245181,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "roll",
+          "ref": 74191852.10717656,
+          "got": 73553345.35235229,
+          "rel_error": 0.008606157370244479,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "pitch",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "yaw",
+          "ref": 123653086.84529425,
+          "got": 122588908.92058721,
+          "rel_error": 0.008606157370243917,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "heave",
+          "ref": 24730617.36905885,
+          "got": 24517781.78411741,
+          "rel_error": 0.008606157370245181,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": -2.2070360417543535e-08,
+          "rel_error": 2.2070360417543535e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "pitch",
+          "ref": -123653086.84529425,
+          "got": -122588908.92058721,
+          "rel_error": 0.008606157370243917,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "sway",
+          "ref": 74191852.10717656,
+          "got": 73553345.35235229,
+          "rel_error": 0.008606157370244479,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": -2.2070360417543535e-08,
+          "rel_error": 2.2070360417543535e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "roll",
+          "ref": 1251369238.8743777,
+          "got": 1234742721.8625908,
+          "rel_error": 0.013286659520848298,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": 5.395933600369045e-07,
+          "rel_error": 5.395933600369045e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "yaw",
+          "ref": 370959260.5358828,
+          "got": 367766726.7617618,
+          "rel_error": 0.008606157370243554,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "surge",
+          "ref": -74191852.10717656,
+          "got": -73553345.35235229,
+          "rel_error": 0.008606157370244479,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "heave",
+          "ref": -123653086.84529425,
+          "got": -122588908.92058721,
+          "rel_error": 0.008606157370243917,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": 5.395933600369045e-07,
+          "rel_error": 5.395933600369045e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "pitch",
+          "ref": 18963437398.594326,
+          "got": 18697061122.926758,
+          "rel_error": 0.014046834973458634,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "yaw",
+          "ref": 0.0,
+          "got": -2.031690692379612e-07,
+          "rel_error": 2.031690692379612e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "surge",
+          "ref": -0.0,
+          "got": 2.2070360417543535e-08,
+          "rel_error": 2.2070360417543535e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "sway",
+          "ref": 123653086.84529425,
+          "got": 122588908.92058721,
+          "rel_error": 0.008606157370243917,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "roll",
+          "ref": 370959260.5358828,
+          "got": 367766726.7617618,
+          "rel_error": 0.008606157370243554,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": -2.031690692379612e-07,
+          "rel_error": 2.031690692379612e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "yaw",
+          "ref": 19136551720.17774,
+          "got": 18866432889.1026,
+          "rel_error": 0.014115334623756828,
+          "within_tolerance": true
+        }
+      ],
+      "selfconsistency_block_form_error": 0.0,
+      "energy_identity_error": 4.498959607594287e-16,
+      "within_tolerance": true
+    },
+    {
+      "subdivisions": 4,
+      "panels": 5120,
+      "wall_time_s": 0.10413197986781597,
+      "volume": 24075.296340449124,
+      "volume_rel_error": 0.0021608283894018815,
+      "mass": 24677178.748960353,
+      "mass_rel_error": 0.002160828389401885,
+      "centroid": [
+        4.999999999999987,
+        -3.531790387407569e-15,
+        -3.000000000000006
+      ],
+      "centroid_abs_error": 1.3322676295501878e-14,
+      "inertia_cg": [
+        [
+          1025091478.4254172,
+          -7.702065073163898e-07,
+          -4.172325134277344e-07
+        ],
+        [
+          -7.702065073163898e-07,
+          18057380658.417038,
+          1.0411836125915417e-07
+        ],
+        [
+          -4.172325134277344e-07,
+          1.0411836125915417e-07,
+          18451646611.65758
+        ]
+      ],
+      "inertia_cg_diagonal": [
+        1025091478.4254172,
+        18057380658.417038,
+        18451646611.65758
+      ],
+      "inertia_rel_error": 0.0035985875401608886,
+      "radii_of_gyration": [
+        6.4451578490075425,
+        27.05076946294309,
+        27.34448892510567
+      ],
+      "matrix": [
+        [
+          24677178.748960353,
+          0.0,
+          0.0,
+          -0.0,
+          -74031536.24688122,
+          8.715462269391652e-08
+        ],
+        [
+          0.0,
+          24677178.748960353,
+          0.0,
+          74031536.24688122,
+          -0.0,
+          123385893.74480143
+        ],
+        [
+          0.0,
+          0.0,
+          24677178.748960353,
+          -8.715462269391652e-08,
+          -123385893.74480143,
+          -0.0
+        ],
+        [
+          0.0,
+          74031536.24688122,
+          -8.715462269391652e-08,
+          1247186087.1660614,
+          -3.3443339384680847e-07,
+          370157681.2344047
+        ],
+        [
+          -74031536.24688122,
+          0.0,
+          -123385893.74480143,
+          -3.3443339384680847e-07,
+          18896404735.881687,
+          -1.573455068225959e-07
+        ],
+        [
+          8.715462269391652e-08,
+          123385893.74480143,
+          0.0,
+          370157681.2344047,
+          -1.573455068225959e-07,
+          19068576080.381588
+        ]
+      ],
+      "matrix_scale": 19136551720.17774,
+      "max_entry_rel_error": 0.00355213628819429,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 19068576080.381588,
+        "rel_error": 0.00355213628819429
+      },
+      "entries": [
+        {
+          "mode_i": "surge",
+          "mode_j": "surge",
+          "ref": 24730617.36905885,
+          "got": 24677178.748960353,
+          "rel_error": 0.002160828389401885,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "roll",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "pitch",
+          "ref": -74191852.10717656,
+          "got": -74031536.24688122,
+          "rel_error": 0.0021608283893998262,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "surge",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": 8.715462269391652e-08,
+          "rel_error": 8.715462269391652e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "sway",
+          "ref": 24730617.36905885,
+          "got": 24677178.748960353,
+          "rel_error": 0.002160828389401885,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "roll",
+          "ref": 74191852.10717656,
+          "got": 74031536.24688122,
+          "rel_error": 0.0021608283893998262,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "pitch",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "sway",
+          "mode_j": "yaw",
+          "ref": 123653086.84529425,
+          "got": 123385893.74480143,
+          "rel_error": 0.0021608283894045664,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "heave",
+          "ref": 24730617.36905885,
+          "got": 24677178.748960353,
+          "rel_error": 0.002160828389401885,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": -8.715462269391652e-08,
+          "rel_error": 8.715462269391652e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "pitch",
+          "ref": -123653086.84529425,
+          "got": -123385893.74480143,
+          "rel_error": 0.0021608283894045664,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "heave",
+          "mode_j": "yaw",
+          "ref": -0.0,
+          "got": -0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "surge",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "sway",
+          "ref": 74191852.10717656,
+          "got": 74031536.24688122,
+          "rel_error": 0.0021608283893998262,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": -8.715462269391652e-08,
+          "rel_error": 8.715462269391652e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "roll",
+          "ref": 1251369238.8743777,
+          "got": 1247186087.1660614,
+          "rel_error": 0.0033428596279696976,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": -3.3443339384680847e-07,
+          "rel_error": 3.3443339384680847e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "roll",
+          "mode_j": "yaw",
+          "ref": 370959260.5358828,
+          "got": 370157681.2344047,
+          "rel_error": 0.002160828389403562,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "surge",
+          "ref": -74191852.10717656,
+          "got": -74031536.24688122,
+          "rel_error": 0.0021608283893998262,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "sway",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "heave",
+          "ref": -123653086.84529425,
+          "got": -123385893.74480143,
+          "rel_error": 0.0021608283894045664,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "roll",
+          "ref": 0.0,
+          "got": -3.3443339384680847e-07,
+          "rel_error": 3.3443339384680847e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "pitch",
+          "ref": 18963437398.594326,
+          "got": 18896404735.881687,
+          "rel_error": 0.0035348371344114905,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "pitch",
+          "mode_j": "yaw",
+          "ref": 0.0,
+          "got": -1.573455068225959e-07,
+          "rel_error": 1.573455068225959e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "surge",
+          "ref": -0.0,
+          "got": 8.715462269391652e-08,
+          "rel_error": 8.715462269391652e-08,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "sway",
+          "ref": 123653086.84529425,
+          "got": 123385893.74480143,
+          "rel_error": 0.0021608283894045664,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "heave",
+          "ref": 0.0,
+          "got": 0.0,
+          "rel_error": 0.0,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "roll",
+          "ref": 370959260.5358828,
+          "got": 370157681.2344047,
+          "rel_error": 0.002160828389403562,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "pitch",
+          "ref": 0.0,
+          "got": -1.573455068225959e-07,
+          "rel_error": 1.573455068225959e-07,
+          "within_tolerance": true
+        },
+        {
+          "mode_i": "yaw",
+          "mode_j": "yaw",
+          "ref": 19136551720.17774,
+          "got": 19068576080.381588,
+          "rel_error": 0.00355213628819429,
+          "within_tolerance": true
+        }
+      ],
+      "selfconsistency_block_form_error": 0.0,
+      "energy_identity_error": 3.5307236624662545e-16,
+      "within_tolerance": true
+    }
+  ],
+  "assembly": {
+    "requested_subdivisions": null,
+    "max_entry_rel_error_vs_reference": 0.0,
+    "hand_written_form_vs_assembler": 0.0,
+    "block_form_residual": 0.0,
+    "block_relative_error": {
+      "translation_translation": 0.0,
+      "translation_rotation": 0.0,
+      "rotation_translation": 0.0,
+      "rotation_rotation": 0.0
+    },
+    "symmetry_error": 0.0,
+    "energy_identity_error": 2.1434698780920608e-16,
+    "positive_definite": true,
+    "smallest_eigenvalue": 19721435.843414307,
+    "mode_order": [
+      "surge",
+      "sway",
+      "heave",
+      "roll",
+      "pitch",
+      "yaw"
+    ],
+    "diagonal": [
+      24730617.36905885,
+      24730617.36905885,
+      24730617.36905885,
+      1251369238.8743777,
+      18963437398.594326,
+      19136551720.17774
+    ]
+  },
+  "negative_control": {
+    "sign_flip": {
+      "what": "both off-diagonal blocks of the reference matrix negated",
+      "energy_identity_error": 0.17547538088661366,
+      "max_entry_rel_error_vs_reference": 0.012923235978288964,
+      "block_relative_error": {
+        "translation_translation": 0.0,
+        "translation_rotation": 2.0,
+        "rotation_translation": 2.0,
+        "rotation_rotation": 0.0
+      },
+      "still_symmetric": true,
+      "block_form_residual": 0.012923235978288964
+    },
+    "legacy_assembly": {
+      "what": "pre-m17324 hydrostatic.compute_mass_matrix formula [[m I3, -m S^T], [-m S, I_O + m S S^T]] on this body",
+      "energy_identity_error": 0.30367874698094455,
+      "max_entry_rel_error_vs_reference": 0.04393900232618245,
+      "block_relative_error": {
+        "translation_translation": 0.0,
+        "translation_rotation": 2.0,
+        "rotation_translation": 2.0,
+        "rotation_rotation": 0.04393900232618245
+      },
+      "still_symmetric": true,
+      "block_form_residual": 0.04393900232618245
+    },
+    "detects": {
+      "sign_flip": true,
+      "legacy_assembly": true
+    },
+    "note": "Both perturbations leave the matrix symmetric, so symmetry alone cannot detect them; only the kinetic-energy identity (or an entrywise comparison with the closed form) can."
+  },
+  "sensitivity_cg_offset": {
+    "scales": [
+      0.0,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "rows": [
+      {
+        "cg_scale": 0.0,
+        "cg_offset": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "cg_distance": 0.0,
+        "coupling_block_max_abs": 0.0,
+        "rotational_block": [
+          [
+            1028793682.5528481,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            18122596408.046326,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            18518286285.951267
+          ]
+        ],
+        "rotational_block_vs_parallel_axis": 0.0,
+        "coupling_over_mass_distance": null,
+        "energy_identity_error": 2.0469966024314433e-16
+      },
+      {
+        "cg_scale": 0.5,
+        "cg_offset": [
+          2.5,
+          0.0,
+          -1.5
+        ],
+        "cg_distance": 2.9154759474226504,
+        "coupling_block_max_abs": 61826543.422647126,
+        "rotational_block": [
+          [
+            1084437571.6332304,
+            0.0,
+            92739815.1339707
+          ],
+          [
+            0.0,
+            18332806655.683327,
+            0.0
+          ],
+          [
+            92739815.1339707,
+            0.0,
+            18672852644.507885
+          ]
+        ],
+        "rotational_block_vs_parallel_axis": 0.0,
+        "coupling_over_mass_distance": 0.8574929257125441,
+        "energy_identity_error": 2.1788024448343796e-16
+      },
+      {
+        "cg_scale": 1.0,
+        "cg_offset": [
+          5.0,
+          0.0,
+          -3.0
+        ],
+        "cg_distance": 5.830951894845301,
+        "coupling_block_max_abs": 123653086.84529425,
+        "rotational_block": [
+          [
+            1251369238.8743777,
+            0.0,
+            370959260.5358828
+          ],
+          [
+            0.0,
+            18963437398.594326,
+            0.0
+          ],
+          [
+            370959260.5358828,
+            0.0,
+            19136551720.17774
+          ]
+        ],
+        "rotational_block_vs_parallel_axis": 0.0,
+        "coupling_over_mass_distance": 0.8574929257125441,
+        "energy_identity_error": 2.1434698780920608e-16
+      },
+      {
+        "cg_scale": 2.0,
+        "cg_offset": [
+          10.0,
+          0.0,
+          -6.0
+        ],
+        "cg_distance": 11.661903789690601,
+        "coupling_block_max_abs": 247306173.6905885,
+        "rotational_block": [
+          [
+            1919095907.8389668,
+            0.0,
+            1483837042.143531
+          ],
+          [
+            0.0,
+            21485960370.23833,
+            0.0
+          ],
+          [
+            1483837042.143531,
+            0.0,
+            20991348022.85715
+          ]
+        ],
+        "rotational_block_vs_parallel_axis": 0.0,
+        "coupling_over_mass_distance": 0.8574929257125441,
+        "energy_identity_error": 2.58811156084473e-16
+      }
+    ],
+    "coupling_norm_exponent_vs_distance": 0.9999999999999994,
+    "expected_exponent": 1.0
+  },
+  "sensitivity_reference_point": {
+    "reference_points": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        10.0,
+        0.0,
+        -2.0
+      ]
+    ],
+    "covariance_residual_rel": 1.9934089074170826e-16,
+    "energy_identity_error_original": 2.1434698780920608e-16,
+    "energy_identity_error_shifted": 2.9799199967945877e-16,
+    "rotational_diagonal_original": [
+      1251369238.8743777,
+      18963437398.594326,
+      19136551720.17774
+    ],
+    "rotational_diagonal_shifted": [
+      1053524299.921907,
+      18765592459.641857,
+      19136551720.17774
+    ]
+  },
+  "platform_assembly": {
+    "entry": "tensorbem.hydrostatic.compute_mass_matrix",
+    "callers": [
+      "tensorbem.rao.compute_rao_at_frequency (line 434)",
+      "tensorbem.ice_rao.compute_ice_rao (line 413)",
+      "tensorbem.benchmarks.hydrostatic_rao_verification.run_mass_matrix_check"
+    ],
+    "inertia_convention": "inertia_about_origin (docstring of compute_mass_matrix)",
+    "max_entry_rel_error": 0.0,
+    "block_form_residual": 0.0,
+    "block_relative_error": {
+      "translation_translation": 0.0,
+      "translation_rotation": 0.0,
+      "rotation_translation": 0.0,
+      "rotation_rotation": 0.0
+    },
+    "energy_identity_error": 2.1434698780920608e-16,
+    "symmetry_error": 0.0
+  },
+  "verdict": {
+    "all_pass": true,
+    "checks": {
+      "accepted_levels_within_3pct": true,
+      "assembly_is_roundoff": true,
+      "hand_written_form_matches": true,
+      "energy_identity_assembly": true,
+      "energy_identity_platform_assembly": true,
+      "platform_block_form": true,
+      "negative_control_breaks_energy": true,
+      "coupling_linear_in_cg_distance": true,
+      "reference_point_covariance": true,
+      "inertia_converges_monotonically": true
+    },
+    "worst_level": {
+      "subdivisions": 0,
+      "max_entry_rel_error": 0.5564774169761859,
+      "worst_entry": {
+        "mode_i": "yaw",
+        "mode_j": "yaw",
+        "ref": 19136551720.17774,
+        "got": 8487492849.102042,
+        "rel_error": 0.5564774169761859
+      }
+    },
+    "worst_accepted_level": {
+      "subdivisions": 3,
+      "max_entry_rel_error": 0.014115334623756828
+    },
+    "accepted_errors": {
+      "3": 0.014115334623756828,
+      "4": 0.00355213628819429
+    },
+    "criterion": "|ref-got|/|ref| < 3% per matrix entry on accepted levels"
+  },
+  "expected": {
+    "mass_kg": 24730617.36905885,
+    "inertia_cg": [
+      [
+        1028793682.5528481,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        18122596408.046326,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        18518286285.951267
+      ]
+    ],
+    "diagonal": [
+      24730617.36905885,
+      24730617.36905885,
+      24730617.36905885,
+      1251369238.8743777,
+      18963437398.594326,
+      19136551720.17774
+    ]
+  }
+}
