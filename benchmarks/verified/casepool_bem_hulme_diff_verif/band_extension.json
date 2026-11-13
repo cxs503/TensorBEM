@@ -1,0 +1,730 @@
+{
+  "anchor": "CASE-BEM-HULME-DIFF-VERIF",
+  "extension": "high-ka validity envelope",
+  "citation": "Hulme A. (1982) The wave forces acting on a floating hemisphere undergoing forced periodic oscillations, J. Fluid Mech. 121:443-463",
+  "geometry": {
+    "body": "floating hemisphere, radius a = 1 m, waterplane z = 0",
+    "volume_m3": 2.0943951023931953,
+    "waterplane_m2": 3.141592653589793,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "incident_amplitude_m": 1.0,
+    "wave_direction_deg": 0.0,
+    "time_convention": "exp(-i omega t)"
+  },
+  "ka_grid": [
+    2.5,
+    3.0
+  ],
+  "gates": {
+    "relative": 0.05,
+    "absolute_normalised": 0.01,
+    "scale_N": 10051.81625,
+    "note": "relative = |F - F_ref|/|F_ref| (base-case metric); absolute_normalised = |F - F_ref|/(rho g A a^2), which is the metric that stays meaningful where the exciting force cancels"
+  },
+  "per_ka": {
+    "2.500": {
+      "reference": {
+        "ka": 2.5,
+        "terms_ladder": [
+          48,
+          96,
+          192,
+          288
+        ],
+        "per_terms": {
+          "48": {
+            "surge": {
+              "re": -5574.100859488663,
+              "im": -7917.325945021862
+            },
+            "heave": {
+              "re": -1186.5607073790452,
+              "im": -3163.7659597115867
+            }
+          },
+          "96": {
+            "surge": {
+              "re": -5574.062490799122,
+              "im": -7917.311658532186
+            },
+            "heave": {
+              "re": -1185.4892952954247,
+              "im": -3162.631998805571
+            }
+          },
+          "192": {
+            "surge": {
+              "re": -5574.057519772339,
+              "im": -7917.309811658701
+            },
+            "heave": {
+              "re": -1185.2169353182205,
+              "im": -3162.344086916018
+            }
+          },
+          "288": {
+            "surge": {
+              "re": -5574.057011431299,
+              "im": -7917.309622898789
+            },
+            "heave": {
+              "re": -1185.166103106584,
+              "im": -3162.2903678578027
+            }
+          }
+        },
+        "surge": {
+          "re": -5574.057011431299,
+          "im": -7917.309622898789
+        },
+        "heave": {
+          "re": -1185.166103106584,
+          "im": -3162.2903678578027
+        },
+        "truncation_relative": {
+          "surge": 5.600273099619207e-08,
+          "heave": 2.189968617614006e-05
+        },
+        "required_terms_1e-3": {
+          "surge": 48,
+          "heave": 48
+        }
+      },
+      "bem": {
+        "2": {
+          "ka": 2.5,
+          "subdivisions": 2,
+          "panels": 64,
+          "surge": {
+            "re": -4977.50038249294,
+            "im": -7578.154753056107
+          },
+          "heave": {
+            "re": -1359.4188966339404,
+            "im": -3577.5565039540247
+          },
+          "wall_clock_s": 0.3
+        },
+        "3": {
+          "ka": 2.5,
+          "subdivisions": 3,
+          "panels": 256,
+          "surge": {
+            "re": -5422.402163574248,
+            "im": -7823.021480250241
+          },
+          "heave": {
+            "re": -1249.0052711918563,
+            "im": -3290.3829171615757
+          },
+          "wall_clock_s": 14.7
+        },
+        "4": {
+          "ka": 2.5,
+          "subdivisions": 4,
+          "panels": 1024,
+          "surge": {
+            "re": -5535.6929371401475,
+            "im": -7892.860859120807
+          },
+          "heave": {
+            "re": -1192.0348096053858,
+            "im": -3207.375493003028
+          },
+          "wall_clock_s": 111.9
+        }
+      },
+      "metrics": {
+        "2": {
+          "surge": {
+            "relative": 0.07087161968289801,
+            "absolute_normalised": 0.06826883566976541,
+            "value": {
+              "re": -4977.50038249294,
+              "im": -7578.154753056107
+            },
+            "reference": {
+              "re": -5574.057011431299,
+              "im": -7917.309622898789
+            }
+          },
+          "heave": {
+            "relative": 0.13335299295175201,
+            "absolute_normalised": 0.04480228262664535,
+            "value": {
+              "re": -1359.4188966339404,
+              "im": -3577.5565039540247
+            },
+            "reference": {
+              "re": -1185.166103106584,
+              "im": -3162.2903678578027
+            }
+          }
+        },
+        "3": {
+          "surge": {
+            "relative": 0.018442883094276007,
+            "absolute_normalised": 0.017765562024309848,
+            "value": {
+              "re": -5422.402163574248,
+              "im": -7823.021480250241
+            },
+            "reference": {
+              "re": -5574.057011431299,
+              "im": -7917.309622898789
+            }
+          },
+          "heave": {
+            "relative": 0.04237955164033562,
+            "absolute_normalised": 0.014238155501075185,
+            "value": {
+              "re": -1249.0052711918563,
+              "im": -3290.3829171615757
+            },
+            "reference": {
+              "re": -1185.166103106584,
+              "im": -3162.2903678578027
+            }
+          }
+        },
+        "4": {
+          "surge": {
+            "relative": 0.0046983209320761886,
+            "absolute_normalised": 0.004525773519370097,
+            "value": {
+              "re": -5535.6929371401475,
+              "im": -7892.860859120807
+            },
+            "reference": {
+              "re": -5574.057011431299,
+              "im": -7917.309622898789
+            }
+          },
+          "heave": {
+            "relative": 0.013504354988077498,
+            "absolute_normalised": 0.004537025495073053,
+            "value": {
+              "re": -1192.0348096053858,
+              "im": -3207.375493003028
+            },
+            "reference": {
+              "re": -1185.166103106584,
+              "im": -3162.2903678578027
+            }
+          }
+        }
+      },
+      "orders": {
+        "surge": 1.9421438168911536,
+        "surge_fine": 1.9728470343400952,
+        "heave": 1.653809975118474,
+        "heave_fine": 1.6499435909373241
+      },
+      "capytaine": {
+        "256": {
+          "surge": {
+            "value": {
+              "re": -5491.180850077182,
+              "im": -7746.574077715946
+            },
+            "relative": 0.0196007033714958,
+            "absolute_normalised": 0.018880860963353487
+          },
+          "heave": {
+            "value": {
+              "re": -1085.007968045512,
+              "im": -1482.38801169751
+            },
+            "relative": 0.4983249723945715,
+            "absolute_normalised": 0.16742103614588214
+          }
+        },
+        "576": {
+          "surge": {
+            "value": {
+              "re": -5559.216922657038,
+              "im": -7792.363485555071
+            },
+            "relative": 0.012994811827177105,
+            "absolute_normalised": 0.012517573002542132
+          },
+          "heave": {
+            "value": {
+              "re": -1228.6916701824775,
+              "im": -1803.8440064332506
+            },
+            "relative": 0.4024606184623962,
+            "absolute_normalised": 0.13521372093216197
+          }
+        },
+        "1024": {
+          "surge": {
+            "value": {
+              "re": -5578.48684841992,
+              "im": -7820.200334408455
+            },
+            "relative": 0.010039624930182605,
+            "absolute_normalised": 0.009670916335923789
+          },
+          "heave": {
+            "value": {
+              "re": -1300.2889198033636,
+              "im": -2050.6124331328256
+            },
+            "relative": 0.3309431546432206,
+            "absolute_normalised": 0.11118617152480167
+          }
+        }
+      },
+      "capytaine_ladder_spread_absolute_normalised": 0.16742103614588214,
+      "capytaine_route_usable": false,
+      "independent_finest": {
+        "surge": {
+          "value": {
+            "re": -5578.48684841992,
+            "im": -7820.200334408455
+          },
+          "relative": 0.010039624930182605,
+          "absolute_normalised": 0.009670916335923789
+        },
+        "heave": {
+          "value": {
+            "re": -1300.2889198033636,
+            "im": -2050.6124331328256
+          },
+          "relative": 0.3309431546432206,
+          "absolute_normalised": 0.11118617152480167
+        }
+      }
+    },
+    "3.000": {
+      "reference": {
+        "ka": 3.0,
+        "terms_ladder": [
+          48,
+          96,
+          192,
+          288
+        ],
+        "per_terms": {
+          "48": {
+            "surge": {
+              "re": -6809.460439498552,
+              "im": -4091.6445921394984
+            },
+            "heave": {
+              "re": -1863.1995143154127,
+              "im": -1705.3833573831644
+            }
+          },
+          "96": {
+            "surge": {
+              "re": -6809.404670729746,
+              "im": -4091.6433766166692
+            },
+            "heave": {
+              "re": -1861.7804605882818,
+              "im": -1704.8409696380916
+            }
+          },
+          "192": {
+            "surge": {
+              "re": -6809.397447885452,
+              "im": -4091.6432255018594
+            },
+            "heave": {
+              "re": -1861.420368357133,
+              "im": -1704.7036571099325
+            }
+          },
+          "288": {
+            "surge": {
+              "re": -6809.396709348919,
+              "im": -4091.6432102096
+            },
+            "heave": {
+              "re": -1861.3532106705438,
+              "im": -1704.6780626086593
+            }
+          }
+        },
+        "surge": {
+          "re": -6809.396709348919,
+          "im": -4091.6432102096
+        },
+        "heave": {
+          "re": -1861.3532106705438,
+          "im": -1704.6780626086593
+        },
+        "truncation_relative": {
+          "surge": 9.298608071899049e-08,
+          "heave": 2.847449718616075e-05
+        },
+        "required_terms_1e-3": {
+          "surge": 48,
+          "heave": 48
+        }
+      },
+      "bem": {
+        "2": {
+          "ka": 3.0,
+          "subdivisions": 2,
+          "panels": 64,
+          "surge": {
+            "re": -5973.401203090733,
+            "im": -4156.951893831189
+          },
+          "heave": {
+            "re": -2369.4604475988544,
+            "im": -1954.1842898934665
+          },
+          "wall_clock_s": 0.3
+        },
+        "3": {
+          "ka": 3.0,
+          "subdivisions": 3,
+          "panels": 256,
+          "surge": {
+            "re": -6592.625119742178,
+            "im": -4103.839275221494
+          },
+          "heave": {
+            "re": -2044.1443759491622,
+            "im": -1723.918234810273
+          },
+          "wall_clock_s": 15.8
+        },
+        "4": {
+          "ka": 3.0,
+          "subdivisions": 4,
+          "panels": 1024,
+          "surge": {
+            "re": -6754.679358375886,
+            "im": -4094.1088242673236
+          },
+          "heave": {
+            "re": -1911.0334488370297,
+            "im": -1702.7109176368126
+          },
+          "wall_clock_s": 194.6
+        }
+      },
+      "metrics": {
+        "2": {
+          "surge": {
+            "relative": 0.1055548068840682,
+            "absolute_normalised": 0.08342199959195223,
+            "value": {
+              "re": -5973.401203090733,
+              "im": -4156.951893831189
+            },
+            "reference": {
+              "re": -6809.396709348919,
+              "im": -4091.6432102096
+            }
+          },
+          "heave": {
+            "relative": 0.22427206520366907,
+            "absolute_normalised": 0.05631441165773183,
+            "value": {
+              "re": -2369.4604475988544,
+              "im": -1954.1842898934665
+            },
+            "reference": {
+              "re": -1861.3532106705438,
+              "im": -1704.6780626086593
+            }
+          }
+        },
+        "3": {
+          "surge": {
+            "relative": 0.027330119043029105,
+            "absolute_normalised": 0.021599520163583373,
+            "value": {
+              "re": -6592.625119742178,
+              "im": -4103.839275221494
+            },
+            "reference": {
+              "re": -6809.396709348919,
+              "im": -4091.6432102096
+            }
+          },
+          "heave": {
+            "relative": 0.07282137495865991,
+            "absolute_normalised": 0.01828534857062942,
+            "value": {
+              "re": -2044.1443759491622,
+              "im": -1723.918234810273
+            },
+            "reference": {
+              "re": -1861.3532106705438,
+              "im": -1704.6780626086593
+            }
+          }
+        },
+        "4": {
+          "surge": {
+            "relative": 0.006894748202509682,
+            "absolute_normalised": 0.005449052475346713,
+            "value": {
+              "re": -6754.679358375886,
+              "im": -4094.1088242673236
+            },
+            "reference": {
+              "re": -6809.396709348919,
+              "im": -4091.6432102096
+            }
+          },
+          "heave": {
+            "relative": 0.019698581228847555,
+            "absolute_normalised": 0.0049462870526794525,
+            "value": {
+              "re": -1911.0334488370297,
+              "im": -1702.7109176368126
+            },
+            "reference": {
+              "re": -1861.3532106705438,
+              "im": -1704.6780626086593
+            }
+          }
+        }
+      },
+      "orders": {
+        "surge": 1.9494286303955515,
+        "surge_fine": 1.9869219735645292,
+        "heave": 1.6228160469039035,
+        "heave_fine": 1.886270256210394
+      },
+      "capytaine": {
+        "256": {
+          "surge": {
+            "value": {
+              "re": -6606.91508442359,
+              "im": -3837.7704485959566
+            },
+            "relative": 0.040876768667439466,
+            "absolute_normalised": 0.032305698620061135
+          },
+          "heave": {
+            "value": {
+              "re": -2057.9772194453985,
+              "im": -2054.9426076632462
+            },
+            "relative": 0.1591440958739963,
+            "absolute_normalised": 0.039960866815075595
+          }
+        },
+        "576": {
+          "surge": {
+            "value": {
+              "re": -6727.061033182795,
+              "im": -3897.7847355455633
+            },
+            "relative": 0.026512457059888882,
+            "absolute_normalised": 0.020953306129022208
+          },
+          "heave": {
+            "value": {
+              "re": -1953.4724508529819,
+              "im": -1906.710309953867
+            },
+            "relative": 0.08797265314626583,
+            "absolute_normalised": 0.022089813991781185
+          }
+        },
+        "1024": {
+          "surge": {
+            "value": {
+              "re": -6768.113411958871,
+              "im": -3937.457624636396
+            },
+            "relative": 0.020092377564228377,
+            "absolute_normalised": 0.01587939348707574
+          },
+          "heave": {
+            "value": {
+              "re": -1916.1681975038284,
+              "im": -1845.9475150570224
+            },
+            "relative": 0.06003624162885638,
+            "absolute_normalised": 0.01507501891686849
+          }
+        }
+      },
+      "capytaine_ladder_spread_absolute_normalised": 0.039960866815075595,
+      "capytaine_route_usable": false,
+      "independent_finest": {
+        "surge": {
+          "value": {
+            "re": -6768.113411958871,
+            "im": -3937.457624636396
+          },
+          "relative": 0.020092377564228377,
+          "absolute_normalised": 0.01587939348707574
+        },
+        "heave": {
+          "value": {
+            "re": -1916.1681975038284,
+            "im": -1845.9475150570224
+          },
+          "relative": 0.06003624162885638,
+          "absolute_normalised": 0.01507501891686849
+        }
+      }
+    }
+  },
+  "adjacent_evidence": {
+    "4.000": {
+      "levels": {
+        "2": {
+          "panels": 64,
+          "subdivisions": 2,
+          "wall_clock_s": 0.7,
+          "surge": {
+            "relative": 0.6601051470971053,
+            "absolute_normalised": 0.3713227569838842
+          },
+          "heave": {
+            "relative": 0.2688061690438115,
+            "absolute_normalised": 0.04070003869354461
+          }
+        },
+        "3": {
+          "panels": 256,
+          "subdivisions": 3,
+          "wall_clock_s": 12.6,
+          "surge": {
+            "relative": 0.3582678575495851,
+            "absolute_normalised": 0.20153305755764922
+          },
+          "heave": {
+            "relative": 0.07650310234325651,
+            "absolute_normalised": 0.0115833622294556
+          }
+        }
+      },
+      "note": "outside the declared band: the 1024-panel solve was not completed, so these are coarse-mesh points only and are excluded from the envelope"
+    }
+  },
+  "envelope": {
+    "case_mesh_level": 4,
+    "case_mesh_pass_ka": [
+      2.5,
+      3.0
+    ],
+    "case_mesh_upper_bound_ka": 3.0,
+    "worst_bem": {
+      "2": {
+        "surge": {
+          "max_relative": 0.1055548068840682,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.08342199959195223,
+          "max_absolute_normalised_ka": 3.0
+        },
+        "heave": {
+          "max_relative": 0.22427206520366907,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.05631441165773183,
+          "max_absolute_normalised_ka": 3.0
+        }
+      },
+      "3": {
+        "surge": {
+          "max_relative": 0.027330119043029105,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.021599520163583373,
+          "max_absolute_normalised_ka": 3.0
+        },
+        "heave": {
+          "max_relative": 0.07282137495865991,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.01828534857062942,
+          "max_absolute_normalised_ka": 3.0
+        }
+      },
+      "4": {
+        "surge": {
+          "max_relative": 0.006894748202509682,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.005449052475346713,
+          "max_absolute_normalised_ka": 3.0
+        },
+        "heave": {
+          "max_relative": 0.019698581228847555,
+          "max_relative_ka": 3.0,
+          "max_absolute_normalised": 0.0049462870526794525,
+          "max_absolute_normalised_ka": 3.0
+        }
+      }
+    },
+    "worst_independent": {
+      "surge": {
+        "max_relative": 0.020092377564228377,
+        "max_relative_ka": 3.0,
+        "max_absolute_normalised": 0.01587939348707574,
+        "max_absolute_normalised_ka": 3.0
+      },
+      "heave": {
+        "max_relative": 0.3309431546432206,
+        "max_relative_ka": 2.5,
+        "max_absolute_normalised": 0.11118617152480167,
+        "max_absolute_normalised_ka": 2.5
+      }
+    }
+  },
+  "base_case": {
+    "source": "results.json (delivered base case, unmodified)",
+    "rows": {
+      "0.200": {
+        "ka": 0.2,
+        "panels": 1024,
+        "surge_relative": 0.005164175786958323,
+        "heave_relative": 0.0009941837913505188,
+        "surge_absolute_normalised": 0.0030178537136711756,
+        "heave_absolute_normalised": 0.0024045701885857034
+      },
+      "0.500": {
+        "ka": 0.5,
+        "panels": 1024,
+        "surge_relative": 0.005361522864125143,
+        "heave_relative": 0.0002168297899928146,
+        "surge_absolute_normalised": 0.006893740171908705,
+        "heave_absolute_normalised": 0.0003654420325507973
+      },
+      "0.800": {
+        "ka": 0.8,
+        "panels": 1024,
+        "surge_relative": 0.0053357920979590035,
+        "heave_relative": 0.000898274048738623,
+        "surge_absolute_normalised": 0.008893821257995432,
+        "heave_absolute_normalised": 0.0011067115885733411
+      },
+      "1.000": {
+        "ka": 1.0,
+        "panels": 1024,
+        "surge_relative": 0.0051493685077143485,
+        "heave_relative": 0.0014375282227688056,
+        "surge_absolute_normalised": 0.008861372228369588,
+        "heave_absolute_normalised": 0.0014663730980931677
+      },
+      "1.500": {
+        "ka": 1.5,
+        "panels": 1024,
+        "surge_relative": 0.004451942492567549,
+        "heave_relative": 0.002517563826122587,
+        "surge_absolute_normalised": 0.006665394020136989,
+        "heave_absolute_normalised": 0.0016861078403532608
+      },
+      "2.000": {
+        "ka": 2.0,
+        "panels": 1024,
+        "surge_relative": 0.003952103166634364,
+        "heave_relative": 0.004882005792650953,
+        "surge_absolute_normalised": 0.004733104923661957,
+        "heave_absolute_normalised": 0.002268261948740623
+      }
+    },
+    "note": "the base case has no absolute-normalised metric; it is recomputed here from its own bem/reference pairs so both bands are comparable"
+  }
+}
