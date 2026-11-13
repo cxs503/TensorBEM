@@ -1,0 +1,137 @@
+{
+  "schema": "tensorbem.bessel_zeros.reference/1.0",
+  "quantity": "j_{m,s} : the s-th positive zero of the Bessel function J_m",
+  "units": "dimensionless argument of J_m",
+  "anchor": {
+    "citation": "Abramowitz M. & Stegun I. A. (eds.), Handbook of Mathematical Functions with Formulas, Graphs, and Mathematical Tables, NBS Applied Mathematics Series 55, 1964 (10th printing, 1972), Chapter 9 'Bessel Functions of Integer Order', section 9.5 'Zeros', Table 9.5 'Zeros of Bessel Functions J_0(x), J_1(x), Y_0(x), Y_1(x)', printed pages 370-373",
+    "section_page_pin": "section 9.5 starts on printed page 370 and runs to printed page 373 (verified 2026-11-13 against the table of contents of the electronic 10th printing: entry '9.5. Zeros 370 371 372 373', https://personal.math.ubc.ca/~cbm/aands/toc.htm)",
+    "coverage": "Table 9.5 tabulates the zeros of J_0, J_1, Y_0, Y_1 only, i.e. the families j_{0,s} and j_{1,s}; higher integer orders are NOT in that table",
+    "higher_order_anchor": "for m >= 2 the reference used here is the same constant computed to 40 digits by mpmath.besseljzero and independently by scipy.special.jn_zeros and by the numpy-only recurrence+bisection solver in tensorbem.benchmarks.irregular_frequency_study.dirichlet_zeros; those rows are marked source='computed' and are NOT claimed to be handbook readings",
+    "why_no_ocr": "the electronic edition serves the pages of section 9.5 as page images (page_370.jpg .. page_373.jpg); no OCR engine is installed in this environment, so the printed digits could not be machine-read - recorded as ecosystem friction in the case report"
+  },
+  "literals_precision_decimals": 10,
+  "rows": [
+    {
+      "order": 0,
+      "index": 1,
+      "literal": "2.4048255577",
+      "source": "handbook"
+    },
+    {
+      "order": 0,
+      "index": 2,
+      "literal": "5.5200781103",
+      "source": "handbook"
+    },
+    {
+      "order": 0,
+      "index": 3,
+      "literal": "8.6537279129",
+      "source": "handbook"
+    },
+    {
+      "order": 0,
+      "index": 4,
+      "literal": "11.7915344390",
+      "source": "handbook"
+    },
+    {
+      "order": 0,
+      "index": 5,
+      "literal": "14.9309177085",
+      "source": "handbook"
+    },
+    {
+      "order": 1,
+      "index": 1,
+      "literal": "3.8317059702",
+      "source": "handbook"
+    },
+    {
+      "order": 1,
+      "index": 2,
+      "literal": "7.0155866698",
+      "source": "handbook"
+    },
+    {
+      "order": 1,
+      "index": 3,
+      "literal": "10.1734681351",
+      "source": "handbook"
+    },
+    {
+      "order": 1,
+      "index": 4,
+      "literal": "13.3236919363",
+      "source": "handbook"
+    },
+    {
+      "order": 1,
+      "index": 5,
+      "literal": "16.4706300509",
+      "source": "handbook"
+    },
+    {
+      "order": 2,
+      "index": 1,
+      "literal": "5.1356223018",
+      "source": "computed"
+    },
+    {
+      "order": 2,
+      "index": 2,
+      "literal": "8.4172441404",
+      "source": "computed"
+    },
+    {
+      "order": 2,
+      "index": 3,
+      "literal": "11.6198411721",
+      "source": "computed"
+    },
+    {
+      "order": 2,
+      "index": 4,
+      "literal": "14.7959517824",
+      "source": "computed"
+    },
+    {
+      "order": 3,
+      "index": 1,
+      "literal": "6.3801618959",
+      "source": "computed"
+    },
+    {
+      "order": 3,
+      "index": 2,
+      "literal": "9.7610231300",
+      "source": "computed"
+    },
+    {
+      "order": 3,
+      "index": 3,
+      "literal": "13.0152007217",
+      "source": "computed"
+    },
+    {
+      "order": 4,
+      "index": 1,
+      "literal": "7.5883424345",
+      "source": "computed"
+    },
+    {
+      "order": 4,
+      "index": 2,
+      "literal": "11.0647094885",
+      "source": "computed"
+    },
+    {
+      "order": 5,
+      "index": 1,
+      "literal": "8.7714838159",
+      "source": "computed"
+    }
+  ],
+  "audit_tolerance_absolute": 6e-11,
+  "audit_note": "every literal is re-derived at run time by mpmath.besseljzero at 40 digits; a literal that misses by more than audit_tolerance_absolute aborts the case (transcription guard). 6e-11 is ~1.2 ULP of a 10-decimal literal, so correct rounding passes and a wrong digit cannot."
+}
