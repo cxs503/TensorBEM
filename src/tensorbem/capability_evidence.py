@@ -1519,13 +1519,15 @@ CAPABILITIES: tuple[Capability, ...] = (
     Capability(
         key='reference-provenance',
         title='Machine-checked provenance of reference constants',
-        claim='Every literature/experimental constant registered with a source note and a citation that must still resolve in the repository; a negative control proves the scanner catches a recalled (unsourced) mapping.',
+        claim='Every literature/experimental constant registered with a source note and a citation that must still resolve in the repository; a negative control proves the scanner catches a recalled (unsourced) mapping.  A recalled number may additionally be read by its registered adjudicator and by nothing else (cross-module reader graph over src/, tests/ and scripts/), and the adjudicator\'s verdict is read back from the adjudication artefact, so the debt table states what was measured about the value.',
         level=REAL,
         modules=(
             'tensorbem.reference_provenance',
         ),
         symbols=(
             'scan',
+            'readers',
+            'adjudication',
             'Audit',
             'Entry',
         ),
@@ -1533,6 +1535,8 @@ CAPABILITIES: tuple[Capability, ...] = (
             'tests/test_reference_provenance.py::test_every_citation_still_resolves',
             'tests/test_reference_provenance.py::test_negative_control_catches_a_recalled_mapping',
             'tests/test_reference_provenance.py::test_an_entry_must_carry_a_note_and_cited_entries_evidence',
+            'tests/test_reference_provenance.py::test_no_recalled_constant_is_read_by_anything_but_its_adjudicator',
+            'tests/test_reference_provenance.py::test_every_adjudicated_constant_carries_a_verdict',
         ),
         docs=(
             ('docs/reference_provenance.md', 'tensorbem.reference_provenance'),
