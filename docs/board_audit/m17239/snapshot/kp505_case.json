@@ -1,0 +1,5749 @@
+{
+  "case": "CASE-BEM-KP505-OPENWATER",
+  "mission": "17207",
+  "round": 1,
+  "generated_utc": "2026-11-13T02:31:25.278579+00:00",
+  "reference": {
+    "anchor": {
+      "citation": "Iftikhar, H. & Takinaci, A.C. (2023). Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS. X International Conference on Computational Methods in Marine Engineering (MARINE 2023).",
+      "doi": "10.23967/marine.2023.120",
+      "location": "Table 2, page 10",
+      "table_caption_verbatim": "Table 2. Comparison of CFD and Experimental Results",
+      "column_header_verbatim": "CFD Experimental Error / J KT 10KQ KT 10KQ KT 10KQ",
+      "provenance_depth": "secondary tabulation: the paper prints the experimental columns of the KP505 open-water test, but page 10 does not cite the primary experimental report and the paper's reference list (p. 15) contains no KRISO/NMRI experimental entry. The numbers therefore enter this study through one tabulation step, which is declared rather than hidden.",
+      "access": "offline PDF copy (kp505_paper.pdf, 15 pages); text extracted with pypdf and the table rows below copied from the extracted page-10 text"
+    },
+    "geometry": {
+      "citation": "Iftikhar, H. & Takinaci, A.C. (2023). Performance Prediction of KP505 Propeller Using Lifting Line Theory and RANS. X International Conference on Computational Methods in Marine Engineering (MARINE 2023).",
+      "location": "Table 1, page 6",
+      "table_caption_verbatim": "Table 1. Propeller Characteristics",
+      "rows_verbatim": [
+        "Propeller Type FPP Ae/Ao 0.800",
+        "No. of Blades 5 Rotation Right Hand",
+        "Diameter (m) 0.25 Hub Ratio 0.18",
+        "P/D (mean) 0.950 Section NACA66"
+      ],
+      "not_published": "chord distribution, radial pitch distribution, skew, rake, section camber and thickness law are not in Table 1; they are modelled below and their effect is reported as sensitivity, not hidden"
+    },
+    "anchor_role": "the 'Experimental' columns of Table 2 (p. 10) are the reference; the paper's own CFD columns are NOT used as reference"
+  },
+  "design_advance_derived": 0.8,
+  "canonical_config": {
+    "n_radial": 16,
+    "n_chord": 2,
+    "thickness_ratio": 0.06,
+    "radial_spacing": "cosine",
+    "root_chord_offset": 0.12,
+    "pitch_ratio": 0.95,
+    "wake_model": "geometric",
+    "wake_length": 1.0,
+    "wake_steps": 24,
+    "rev_per_second": 10.0,
+    "viscous": true,
+    "core_ratio": 0.05
+  },
+  "tolerance_pct": 5.0,
+  "admissibility_gate": {
+    "KT_max": 1.0,
+    "KQ_max": 0.2,
+    "momentum_gate": "eta0 <= 2/(1+sqrt(1+C_T))"
+  },
+  "canonical": {
+    "rows": [
+      {
+        "J": 0.1,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.5285686804764528,
+        "10KQ": 0.65289772732519,
+        "eta0": 0.12884761998794353,
+        "KT_anchor": 0.494,
+        "10KQ_anchor": 0.683,
+        "eta0_anchor": 0.1151135313139038,
+        "error_pct": {
+          "KT_pct": 6.997708598472224,
+          "10KQ_pct": -4.407360567322112,
+          "eta0_pct": 11.930907268050149
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": true,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.15816910446496646,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0016416551031594414,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.2,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.47342587798159697,
+        "10KQ": 0.6103839702500271,
+        "eta0": 0.24688744246519898,
+        "KT_anchor": 0.447,
+        "10KQ_anchor": 0.636,
+        "eta0_anchor": 0.2237177973650227,
+        "error_pct": {
+          "KT_pct": 5.91182952608433,
+          "10KQ_pct": -4.027677633643538,
+          "eta0_pct": 10.356639200399504
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": true,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.30393966510915404,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0017093891779488232,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.3,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.4162526755117284,
+        "10KQ": 0.5598870285704958,
+        "eta0": 0.3549752048305057,
+        "KT_anchor": 0.392,
+        "10KQ_anchor": 0.585,
+        "eta0_anchor": 0.31994224457447684,
+        "error_pct": {
+          "KT_pct": 6.186907018298057,
+          "10KQ_pct": -4.2928156289750765,
+          "eta0_pct": 10.949776358111977
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": true,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.4371996848421583,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0017803406470573262,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.4,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.35704913431469,
+        "10KQ": 0.5014066583015517,
+        "eta0": 0.4533337059811367,
+        "KT_anchor": 0.343,
+        "10KQ_anchor": 0.53,
+        "eta0_anchor": 0.41200109796618944,
+        "error_pct": {
+          "KT_pct": 4.095957526148676,
+          "10KQ_pct": -5.394970131782697,
+          "eta0_pct": 10.032159676025714
+        },
+        "pass_within_5pct": {
+          "KT_pct": true,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.5578683635422597,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.001854473720474088,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.5,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.2958153170105801,
+        "10KQ": 0.4349426381841892,
+        "eta0": 0.5412261964138849,
+        "KT_anchor": 0.29,
+        "10KQ_anchor": 0.471,
+        "eta0_anchor": 0.4899674468858774,
+        "error_pct": {
+          "KT_pct": 2.0052817277862536,
+          "10KQ_pct": -7.655490831382328,
+          "eta0_pct": 10.461664311332635
+        },
+        "pass_within_5pct": {
+          "KT_pct": true,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.6659375047002715,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.001931756181439198,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.6,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.23255128436468964,
+        "10KQ": 0.36049476301730304,
+        "eta0": 0.6160148256117584,
+        "KT_anchor": 0.241,
+        "10KQ_anchor": 0.409,
+        "eta0_anchor": 0.5626847132295371,
+        "error_pct": {
+          "KT_pct": -3.5056911349835502,
+          "10KQ_pct": -11.859471144913677,
+          "eta0_pct": 9.47779655788627
+        },
+        "pass_within_5pct": {
+          "KT_pct": true,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.7615176266101779,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.002012158674967606,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.7,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.16725709463059585,
+        "10KQ": 0.2780628399716476,
+        "eta0": 0.6701310885788891,
+        "KT_anchor": 0.193,
+        "10KQ_anchor": 0.342,
+        "eta0_anchor": 0.6287085617460544,
+        "error_pct": {
+          "KT_pct": -13.338292937515106,
+          "10KQ_pct": -18.695076031681996,
+          "eta0_pct": 6.5885100590639
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.8448823891903944,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.002095654182210012,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.8,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.0999328035758505,
+        "10KQ": 0.18764668632178882,
+        "eta0": 0.6780743098805785,
+        "KT_anchor": 0.141,
+        "10KQ_anchor": 0.27,
+        "eta0_anchor": 0.6649139844728071,
+        "error_pct": {
+          "KT_pct": -29.125671222801053,
+          "10KQ_pct": -30.501227288226367,
+          "eta0_pct": 1.9792523115912235
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": false,
+          "eta0_pct": true
+        },
+        "admissible": true,
+        "momentum_bound": 0.916502165640992,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0021822176310553184,
+        "kernel_warnings": []
+      },
+      {
+        "J": 0.9,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": 0.030578464684578466,
+        "10KQ": 0.08924612793246778,
+        "eta0": 0.49078234849077357,
+        "KT_anchor": 0.087,
+        "10KQ_anchor": 0.192,
+        "eta0_anchor": 0.6490537522966356,
+        "error_pct": {
+          "KT_pct": -64.85233944301325,
+          "10KQ_pct": -53.5176417018397,
+          "eta0_pct": -24.384945506566865
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": true,
+        "momentum_bound": 0.9770569810203915,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0022718256014956817,
+        "kernel_warnings": []
+      },
+      {
+        "J": 1.0,
+        "config": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "thickness_ratio": 0.06,
+          "radial_spacing": "cosine",
+          "root_chord_offset": 0.12,
+          "pitch_ratio": 0.95,
+          "wake_model": "geometric",
+          "wake_length": 1.0,
+          "wake_steps": 24,
+          "rev_per_second": 10.0,
+          "viscous": true,
+          "core_ratio": 0.05
+        },
+        "KT": -0.040805870612996425,
+        "10KQ": -0.01713900181451987,
+        "eta0": 3.7892848635587977,
+        "KT_anchor": 0.029,
+        "10KQ_anchor": 0.108,
+        "eta0_anchor": 0.4273604953393486,
+        "error_pct": {
+          "KT_pct": -240.7098986655049,
+          "10KQ_pct": -115.86944612455544,
+          "eta0_pct": 786.671768889141
+        },
+        "pass_within_5pct": {
+          "KT_pct": false,
+          "10KQ_pct": false,
+          "eta0_pct": false
+        },
+        "admissible": false,
+        "momentum_bound": 1.0274220911520646,
+        "n_panels": 32,
+        "viscous_drag_nd": 0.0023644560974315316,
+        "kernel_warnings": []
+      }
+    ],
+    "summary": {
+      "n_points": 10,
+      "n_admissible": 9,
+      "n_pass_by_quantity": {
+        "KT_pct": 3,
+        "10KQ_pct": 3,
+        "eta0_pct": 1
+      },
+      "n_pass_all_three_5pct": 0,
+      "n_pass_all_three_5pct_admissible": 0,
+      "worst": {
+        "KT_pct": {
+          "J": 1.0,
+          "error_pct": -240.7098986655049
+        },
+        "10KQ_pct": {
+          "J": 1.0,
+          "error_pct": -115.86944612455544
+        },
+        "eta0_pct": {
+          "J": 1.0,
+          "error_pct": 786.671768889141
+        }
+      }
+    },
+    "slope_diagnosis": {
+      "fit_range": "J <= 0.9 (the J=1.0 point violates the momentum bound)",
+      "measured": {
+        "slope": -0.6224881830161675,
+        "intercept": 0.6002920173470575,
+        "zero_thrust_J": 0.964342832081467
+      },
+      "reference": {
+        "slope": -0.507666666666667,
+        "intercept": 0.5458333333333335,
+        "zero_thrust_J": 1.075180564674983
+      },
+      "slope_ratio_measured_over_reference": 1.2261750157902174
+    }
+  },
+  "ladders": {
+    "n_radial": {
+      "axis": "n_radial",
+      "levels": [
+        8,
+        16,
+        32
+      ],
+      "runs": {
+        "8": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.5425591595535185,
+              "10KQ": 0.6296099714725755,
+              "eta0": 0.13714994373542586,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": 9.829789383303345,
+                "10KQ_pct": -7.816988071365239,
+                "eta0_pct": 19.143199040111828
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.15629059146832966,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.001652886826150463,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.4855634148930483,
+              "10KQ": 0.5942022079902437,
+              "eta0": 0.26011285931161787,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": 8.627162168467173,
+                "10KQ_pct": -6.571979875747847,
+                "eta0_pct": 16.26829084465382
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.3007942050791992,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0017210213141759473,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.42659155679309957,
+              "10KQ": 0.5496576696582665,
+              "eta0": 0.3705623992498822,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": 8.82437673293356,
+                "10KQ_pct": -6.041423990039916,
+                "eta0_pct": 15.82165391842211
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.4333454605886602,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0017924627340417387,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.36564361356021585,
+              "10KQ": 0.495976069271396,
+              "eta0": 0.4693290028575764,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": 6.601636606476917,
+                "10KQ_pct": -6.419609571434726,
+                "eta0_pct": 13.914502940497387
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.5538021758788888,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0018671749081053172,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.30271961770435474,
+              "10KQ": 0.43315714314671616,
+              "eta0": 0.5561413945356306,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": 4.386075070467158,
+                "10KQ_pct": -8.034576826599537,
+                "eta0_pct": 13.50578453126629
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.6620847275513931,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.001945125153041434,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.23781960338414437,
+              "10KQ": 0.3612006458632119,
+              "eta0": 0.6287391654954232,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -1.3196666455832442,
+                "10KQ_pct": -11.68688365202643,
+                "eta0_pct": 11.739158842038847
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7582215734549725,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0020262835852192535,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.17094360525458455,
+              "10KQ": 0.2801063467773972,
+              "eta0": 0.679904759583568,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -11.428183805914745,
+                "10KQ_pct": -18.09755942181369,
+                "eta0_pct": 8.143073110907082
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.842395403610817,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0021106226229395454,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.10209165794794361,
+              "10KQ": 0.18987402763039354,
+              "eta0": 0.6845967176718295,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -27.594568831245656,
+                "10KQ_pct": -29.676286062817212,
+                "eta0_pct": 2.9601923946039856
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.9149812369076904,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.002198116617204329,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.03126379584757362,
+              "10KQ": 0.0905034808443424,
+              "eta0": 0.49481067935537154,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -64.06460247405332,
+                "10KQ_pct": -52.862770393571665,
+                "eta0_pct": -23.764298780414528
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9765663303251418,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0022887415697804194,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 8,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.04153994700165753,
+              "10KQ": -0.01800549173331859,
+              "eta0": 3.671817464921091,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -243.24119655743974,
+                "10KQ_pct": -116.67175160492464,
+                "eta0_pct": 759.1850451702277
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.027943755070631,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0023824749126282216,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 2,
+              "10KQ_pct": 0,
+              "eta0_pct": 1
+            },
+            "n_pass_all_three_5pct": 0,
+            "n_pass_all_three_5pct_admissible": 0,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -243.24119655743974
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -116.67175160492464
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 759.1850451702277
+              }
+            }
+          }
+        },
+        "16": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.5285686804764528,
+              "10KQ": 0.65289772732519,
+              "eta0": 0.12884761998794353,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": 6.997708598472224,
+                "10KQ_pct": -4.407360567322112,
+                "eta0_pct": 11.930907268050149
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.15816910446496646,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0016416551031594414,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.47342587798159697,
+              "10KQ": 0.6103839702500271,
+              "eta0": 0.24688744246519898,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": 5.91182952608433,
+                "10KQ_pct": -4.027677633643538,
+                "eta0_pct": 10.356639200399504
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.30393966510915404,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0017093891779488232,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.4162526755117284,
+              "10KQ": 0.5598870285704958,
+              "eta0": 0.3549752048305057,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": 6.186907018298057,
+                "10KQ_pct": -4.2928156289750765,
+                "eta0_pct": 10.949776358111977
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.4371996848421583,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0017803406470573262,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.35704913431469,
+              "10KQ": 0.5014066583015517,
+              "eta0": 0.4533337059811367,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": 4.095957526148676,
+                "10KQ_pct": -5.394970131782697,
+                "eta0_pct": 10.032159676025714
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.5578683635422597,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.001854473720474088,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.2958153170105801,
+              "10KQ": 0.4349426381841892,
+              "eta0": 0.5412261964138849,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": 2.0052817277862536,
+                "10KQ_pct": -7.655490831382328,
+                "eta0_pct": 10.461664311332635
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.6659375047002715,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.001931756181439198,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.23255128436468964,
+              "10KQ": 0.36049476301730304,
+              "eta0": 0.6160148256117584,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -3.5056911349835502,
+                "10KQ_pct": -11.859471144913677,
+                "eta0_pct": 9.47779655788627
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7615176266101779,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.002012158674967606,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.16725709463059585,
+              "10KQ": 0.2780628399716476,
+              "eta0": 0.6701310885788891,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -13.338292937515106,
+                "10KQ_pct": -18.695076031681996,
+                "eta0_pct": 6.5885100590639
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.8448823891903944,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.002095654182210012,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.0999328035758505,
+              "10KQ": 0.18764668632178882,
+              "eta0": 0.6780743098805785,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -29.125671222801053,
+                "10KQ_pct": -30.501227288226367,
+                "eta0_pct": 1.9792523115912235
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.916502165640992,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0021822176310553184,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.030578464684578466,
+              "10KQ": 0.08924612793246778,
+              "eta0": 0.49078234849077357,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -64.85233944301325,
+                "10KQ_pct": -53.5176417018397,
+                "eta0_pct": -24.384945506566865
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9770569810203915,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0022718256014956817,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.040805870612996425,
+              "10KQ": -0.01713900181451987,
+              "eta0": 3.7892848635587977,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -240.7098986655049,
+                "10KQ_pct": -115.86944612455544,
+                "eta0_pct": 786.671768889141
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.0274220911520646,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0023644560974315316,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 3,
+              "10KQ_pct": 3,
+              "eta0_pct": 1
+            },
+            "n_pass_all_three_5pct": 0,
+            "n_pass_all_three_5pct_admissible": 0,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -240.7098986655049
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -115.86944612455544
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 786.671768889141
+              }
+            }
+          }
+        },
+        "32": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.49061852169557796,
+              "10KQ": 0.6618592937730541,
+              "eta0": 0.11797728555741033,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": -0.6845097782230843,
+                "10KQ_pct": -3.0952717755411374,
+                "eta0_pct": 2.4877650879264066
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": true,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.16363832677977086,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0016477966932565108,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.4400603598076108,
+              "10KQ": 0.6115659629875199,
+              "eta0": 0.22904407949730368,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": -1.5524922130624574,
+                "10KQ_pct": -3.841829718943419,
+                "eta0_pct": 2.380803939165602
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": true,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.31315724881248364,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.001713325996968829,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.3874400589023034,
+              "10KQ": 0.5550784480704819,
+              "eta0": 0.333266409858631,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": -1.1632502800246531,
+                "10KQ_pct": -5.11479520162702,
+                "eta0_pct": 4.164553293634381
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.44856552275474315,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0017822737072676858,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.33275771803093823,
+              "10KQ": 0.492396702015091,
+              "eta0": 0.43022250522693234,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": -2.9860880376273453,
+                "10KQ_pct": -7.094961883945098,
+                "eta0_pct": 4.422659878988531
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.5699330922457272,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0018546047521063138,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.2760134387472253,
+              "10KQ": 0.42352068234264006,
+              "eta0": 0.5186157957319458,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": -4.822952156129206,
+                "10KQ_pct": -10.08053453447132,
+                "eta0_pct": 5.846990249689214
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.6774394276797923,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0019302874318510457,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.21720732284109642,
+              "10KQ": 0.34845034409304576,
+              "eta0": 0.5952575973927569,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -9.872480148922643,
+                "10KQ_pct": -14.804316847666069,
+                "eta0_pct": 5.788834030387507
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7714214391615873,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0020092926676050847,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.15633947150229405,
+              "10KQ": 0.2671856348298227,
+              "eta0": 0.6518890805663594,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -18.99509248585801,
+                "10KQ_pct": -21.875545371396875,
+                "eta0_pct": 3.687005431567197
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.8524118119941789,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.002091593464976791,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.09340998479335558,
+              "10KQ": 0.17972649123039702,
+              "eta0": 0.6617459991445903,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -33.751783834499584,
+                "10KQ_pct": -33.43463287763074,
+                "eta0_pct": -0.4764503984268942
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.9211573684788957,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.002177164526632109,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.02841896114377655,
+              "10KQ": 0.08607283697347115,
+              "eta0": 0.4729385567326356,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -67.33452742094649,
+                "10KQ_pct": -55.17039740965044,
+                "eta0_pct": -27.13414643098936
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9786094423848571,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.002265981967707057,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 32,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.03863350317692055,
+              "10KQ": -0.013775418279284874,
+              "eta0": 4.463539962927752,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -233.21897647213981,
+                "10KQ_pct": -112.75501692526376,
+                "eta0_pct": 944.4437451766445
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.0258845859605454,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0023580231036661476,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 5,
+              "10KQ_pct": 2,
+              "eta0_pct": 6
+            },
+            "n_pass_all_three_5pct": 2,
+            "n_pass_all_three_5pct_admissible": 2,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -233.21897647213981
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -112.75501692526376
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 944.4437451766445
+              }
+            }
+          }
+        }
+      },
+      "gci": {
+        "KT": [
+          {
+            "J": 0.4,
+            "fine": 0.33275771803093823,
+            "medium": 0.35704913431469,
+            "coarse": 0.36564361356021585,
+            "p": -1.4989644750828248,
+            "gci_pct": 14.121233443141747,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.15633947150229405,
+            "medium": 0.16725709463059585,
+            "coarse": 0.17094360525458455,
+            "p": -1.56633098211233,
+            "gci_pct": 13.179303283551324,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.9,
+            "fine": 0.02841896114377655,
+            "medium": 0.030578464684578466,
+            "coarse": 0.03126379584757362,
+            "p": -1.655826487018049,
+            "gci_pct": 13.914300755640749,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          }
+        ],
+        "10KQ": [
+          {
+            "J": 0.4,
+            "fine": 0.492396702015091,
+            "medium": 0.5014066583015517,
+            "coarse": 0.495976069271396,
+            "p": -0.7304114177587026,
+            "gci_pct": 5.7575005021328804,
+            "oscillatory": true,
+            "converged": false,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.2671856348298227,
+            "medium": 0.2780628399716476,
+            "coarse": 0.2801063467773972,
+            "p": -2.4121889557082046,
+            "gci_pct": 6.265979685954109,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.9,
+            "fine": 0.08607283697347115,
+            "medium": 0.08924612793246778,
+            "coarse": 0.0905034808443424,
+            "p": -1.335590167990835,
+            "gci_pct": 7.632770816295205,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          }
+        ],
+        "eta0": [
+          {
+            "J": 0.4,
+            "fine": 0.43022250522693234,
+            "medium": 0.4533337059811367,
+            "coarse": 0.4693290028575764,
+            "p": -0.5309444482498911,
+            "gci_pct": 21.80880328975868,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.6518890805663594,
+            "medium": 0.6701310885788891,
+            "coarse": 0.679904759583568,
+            "p": -0.9002920973600875,
+            "gci_pct": 7.5350034909387995,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.9,
+            "fine": 0.4729385567326356,
+            "medium": 0.49078234849077357,
+            "coarse": 0.49481067935537154,
+            "p": -2.14716812844547,
+            "gci_pct": 6.0913591425479865,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          }
+        ]
+      }
+    },
+    "n_chord": {
+      "axis": "n_chord",
+      "levels": [
+        1,
+        2,
+        4
+      ],
+      "runs": {
+        "1": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.5262834402746313,
+              "10KQ": 0.6509905059171484,
+              "eta0": 0.12866640945724647,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": 6.535109367334263,
+                "10KQ_pct": -4.686602354736705,
+                "eta0_pct": 11.773488302070456
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.1584826162499362,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0015246500203540793,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.47180707549336265,
+              "10KQ": 0.6084386196114009,
+              "eta0": 0.24682992114622396,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": 5.549681318425647,
+                "10KQ_pct": -4.3335503755659,
+                "eta0_pct": 10.330927647875518
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.3043671344666067,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0015835963414884474,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.4152081427940388,
+              "10KQ": 0.5578667675605143,
+              "eta0": 0.35536672291834553,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": 5.920444590316011,
+                "10KQ_pct": -4.638159391365064,
+                "eta0_pct": 11.072147846866313
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.437595361023823,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0016451277241862797,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.3564866771271707,
+              "10KQ": 0.4992747508255374,
+              "eta0": 0.45455226179478325,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": 3.9319758388252666,
+                "10KQ_pct": -5.797216825370305,
+                "eta0_pct": 10.327924862007464
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.5581380103531107,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.001709216963910907,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.29564271284874444,
+              "10KQ": 0.4326623845514837,
+              "eta0": 0.5437611497906459,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": 1.9457630512911925,
+                "10KQ_pct": -8.139621114334664,
+                "eta0_pct": 10.979036106718759
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.666034830205248,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0017758393723819922,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.23267628355610165,
+              "10KQ": 0.3580294955749759,
+              "eta0": 0.620589886462863,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -3.4538242505802255,
+                "10KQ_pct": -12.46222602078829,
+                "eta0_pct": 10.290873711670308
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7614388216341602,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.0018449722867401597,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.16758742210840313,
+              "10KQ": 0.2753759206844777,
+              "eta0": 0.6780061449671501,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -13.167138803936203,
+                "10KQ_pct": -19.480724946059162,
+                "eta0_pct": 7.841086668867056
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.8446584260778753,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.00191659471812278,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.10037616069521751,
+              "10KQ": 0.18470150533206886,
+              "eta0": 0.6919429103518653,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -28.811233549491117,
+                "10KQ_pct": -31.592035062196725,
+                "eta0_pct": 4.0650259297055795
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.9161890239532572,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.00199068709090937,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.031042530908768764,
+              "10KQ": 0.08600610265093467,
+              "eta0": 0.516999942927169,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -64.31892998992096,
+                "10KQ_pct": -55.20515486930486,
+                "eta0_pct": -20.345589082907633
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9767246345199498,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.002067231043260664,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 1,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.040413436193788774,
+              "10KQ": -0.02071042731717209,
+              "eta0": 3.1056810364493503,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -239.3566765303061,
+                "10KQ_pct": -119.17632158997415,
+                "eta0_pct": 626.7122418470763
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.027143651702314,
+              "n_panels": 16,
+              "viscous_drag_nd": 0.002146209270585938,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 3,
+              "10KQ_pct": 3,
+              "eta0_pct": 1
+            },
+            "n_pass_all_three_5pct": 0,
+            "n_pass_all_three_5pct_admissible": 0,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -239.3566765303061
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -119.17632158997415
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 626.7122418470763
+              }
+            }
+          }
+        },
+        "2": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.5285686804764528,
+              "10KQ": 0.65289772732519,
+              "eta0": 0.12884761998794353,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": 6.997708598472224,
+                "10KQ_pct": -4.407360567322112,
+                "eta0_pct": 11.930907268050149
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.15816910446496646,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0016416551031594414,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.47342587798159697,
+              "10KQ": 0.6103839702500271,
+              "eta0": 0.24688744246519898,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": 5.91182952608433,
+                "10KQ_pct": -4.027677633643538,
+                "eta0_pct": 10.356639200399504
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.30393966510915404,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0017093891779488232,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.4162526755117284,
+              "10KQ": 0.5598870285704958,
+              "eta0": 0.3549752048305057,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": 6.186907018298057,
+                "10KQ_pct": -4.2928156289750765,
+                "eta0_pct": 10.949776358111977
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.4371996848421583,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0017803406470573262,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.35704913431469,
+              "10KQ": 0.5014066583015517,
+              "eta0": 0.4533337059811367,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": 4.095957526148676,
+                "10KQ_pct": -5.394970131782697,
+                "eta0_pct": 10.032159676025714
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.5578683635422597,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.001854473720474088,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.2958153170105801,
+              "10KQ": 0.4349426381841892,
+              "eta0": 0.5412261964138849,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": 2.0052817277862536,
+                "10KQ_pct": -7.655490831382328,
+                "eta0_pct": 10.461664311332635
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.6659375047002715,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.001931756181439198,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.23255128436468964,
+              "10KQ": 0.36049476301730304,
+              "eta0": 0.6160148256117584,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -3.5056911349835502,
+                "10KQ_pct": -11.859471144913677,
+                "eta0_pct": 9.47779655788627
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7615176266101779,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.002012158674967606,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.16725709463059585,
+              "10KQ": 0.2780628399716476,
+              "eta0": 0.6701310885788891,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -13.338292937515106,
+                "10KQ_pct": -18.695076031681996,
+                "eta0_pct": 6.5885100590639
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.8448823891903944,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.002095654182210012,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.0999328035758505,
+              "10KQ": 0.18764668632178882,
+              "eta0": 0.6780743098805785,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -29.125671222801053,
+                "10KQ_pct": -30.501227288226367,
+                "eta0_pct": 1.9792523115912235
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.916502165640992,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0021822176310553184,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.030578464684578466,
+              "10KQ": 0.08924612793246778,
+              "eta0": 0.49078234849077357,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -64.85233944301325,
+                "10KQ_pct": -53.5176417018397,
+                "eta0_pct": -24.384945506566865
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9770569810203915,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0022718256014956817,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 2,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.040805870612996425,
+              "10KQ": -0.01713900181451987,
+              "eta0": 3.7892848635587977,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -240.7098986655049,
+                "10KQ_pct": -115.86944612455544,
+                "eta0_pct": 786.671768889141
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.0274220911520646,
+              "n_panels": 32,
+              "viscous_drag_nd": 0.0023644560974315316,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 3,
+              "10KQ_pct": 3,
+              "eta0_pct": 1
+            },
+            "n_pass_all_three_5pct": 0,
+            "n_pass_all_three_5pct_admissible": 0,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -240.7098986655049
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -115.86944612455544
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 786.671768889141
+              }
+            }
+          }
+        },
+        "4": {
+          "rows": [
+            {
+              "J": 0.1,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.5297056319893221,
+              "10KQ": 0.6441851627233084,
+              "eta0": 0.13087117585620017,
+              "KT_anchor": 0.494,
+              "10KQ_anchor": 0.683,
+              "eta0_anchor": 0.1151135313139038,
+              "error_pct": {
+                "KT_pct": 7.227860726583418,
+                "10KQ_pct": -5.682992280628354,
+                "eta0_pct": 13.688785638351028
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.15801383748324516,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0017699769274682918,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.2,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.47440507534234816,
+              "10KQ": 0.6044647815006289,
+              "eta0": 0.24982071769731115,
+              "KT_anchor": 0.447,
+              "10KQ_anchor": 0.636,
+              "eta0_anchor": 0.2237177973650227,
+              "error_pct": {
+                "KT_pct": 6.13088933833292,
+                "10KQ_pct": -4.958367688580367,
+                "eta0_pct": 11.66778890179147
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.30368201773822373,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0018451260771907905,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.3,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.41706699010902815,
+              "10KQ": 0.5563962900835823,
+              "eta0": 0.35790105501784913,
+              "KT_anchor": 0.392,
+              "10KQ_anchor": 0.585,
+              "eta0_anchor": 0.31994224457447684,
+              "error_pct": {
+                "KT_pct": 6.394640333935747,
+                "10KQ_pct": -4.889523062635504,
+                "eta0_pct": 11.864269594613088
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": true,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.43689202947326716,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0019240826405499773,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.4,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.35769136793989553,
+              "10KQ": 0.49997941581446514,
+              "eta0": 0.45544554442266505,
+              "KT_anchor": 0.343,
+              "10KQ_anchor": 0.53,
+              "eta0_anchor": 0.41200109796618944,
+              "error_pct": {
+                "KT_pct": 4.283197650115308,
+                "10KQ_pct": -5.664261167082053,
+                "eta0_pct": 10.544740456017143
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.5575610100412656,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0020068077429815775,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.5,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.29627823249841784,
+              "10KQ": 0.43521388620101475,
+              "eta0": 0.5417353022011994,
+              "KT_anchor": 0.29,
+              "10KQ_anchor": 0.471,
+              "eta0_anchor": 0.4899674468858774,
+              "error_pct": {
+                "KT_pct": 2.1649077580751235,
+                "10KQ_pct": -7.597901018892828,
+                "eta0_pct": 10.565570354591266
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.6656767281940891,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.002093265141206598,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.6,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.23282762092364365,
+              "10KQ": 0.36209943815435564,
+              "eta0": 0.614013657914506,
+              "KT_anchor": 0.241,
+              "10KQ_anchor": 0.409,
+              "eta0_anchor": 0.5626847132295371,
+              "error_pct": {
+                "KT_pct": -3.3910286623885253,
+                "10KQ_pct": -11.467130035609864,
+                "eta0_pct": 9.122150198530495
+              },
+              "pass_within_5pct": {
+                "KT_pct": true,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.7613434513536652,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0021834211698545302,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.7,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.1673395751930688,
+              "10KQ": 0.28063581950904104,
+              "eta0": 0.6643144994615255,
+              "KT_anchor": 0.193,
+              "10KQ_anchor": 0.342,
+              "eta0_anchor": 0.6287085617460544,
+              "error_pct": {
+                "KT_pct": -13.295556894783006,
+                "10KQ_pct": -17.94274283361374,
+                "eta0_pct": 5.6633454484198635
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.8448264463423967,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0022772445180446045,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.8,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.0998141384488832,
+              "10KQ": 0.19082278849411133,
+              "eta0": 0.6659964944423312,
+              "KT_anchor": 0.141,
+              "10KQ_anchor": 0.27,
+              "eta0_anchor": 0.6649139844728071,
+              "error_pct": {
+                "KT_pct": -29.209830887316865,
+                "10KQ_pct": -29.324893150329142,
+                "eta0_pct": 0.16280451228325046
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": true
+              },
+              "admissible": true,
+              "momentum_bound": 0.9165860482880247,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.002374705965082478,
+              "kernel_warnings": []
+            },
+            {
+              "J": 0.9,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": 0.030251353558736482,
+              "10KQ": 0.09266011285639394,
+              "eta0": 0.4676432042986823,
+              "KT_anchor": 0.087,
+              "10KQ_anchor": 0.192,
+              "eta0_anchor": 0.6490537522966356,
+              "error_pct": {
+                "KT_pct": -65.22832924283162,
+                "10KQ_pct": -51.73952455396149,
+                "eta0_pct": -27.950003733287673
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": true,
+              "momentum_bound": 0.9772915144675547,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0024757781290502866,
+              "kernel_warnings": []
+            },
+            {
+              "J": 1.0,
+              "config": {
+                "n_radial": 16,
+                "n_chord": 4,
+                "thickness_ratio": 0.06,
+                "radial_spacing": "cosine",
+                "root_chord_offset": 0.12,
+                "pitch_ratio": 0.95,
+                "wake_model": "geometric",
+                "wake_length": 1.0,
+                "wake_steps": 24,
+                "rev_per_second": 10.0,
+                "viscous": true,
+                "core_ratio": 0.05
+              },
+              "KT": -0.04134873737929241,
+              "10KQ": -0.013852430942090557,
+              "eta0": 4.750686700431117,
+              "KT_anchor": 0.029,
+              "10KQ_anchor": 0.108,
+              "eta0_anchor": 0.4273604953393486,
+              "error_pct": {
+                "KT_pct": -242.5818530320428,
+                "10KQ_pct": -112.82632494638015,
+                "eta0_pct": 1011.6344987991463
+              },
+              "pass_within_5pct": {
+                "KT_pct": false,
+                "10KQ_pct": false,
+                "eta0_pct": false
+              },
+              "admissible": false,
+              "momentum_bound": 1.0278077703960466,
+              "n_panels": 64,
+              "viscous_drag_nd": 0.0025804352458278375,
+              "kernel_warnings": []
+            }
+          ],
+          "summary": {
+            "n_points": 10,
+            "n_admissible": 9,
+            "n_pass_by_quantity": {
+              "KT_pct": 3,
+              "10KQ_pct": 2,
+              "eta0_pct": 1
+            },
+            "n_pass_all_three_5pct": 0,
+            "n_pass_all_three_5pct_admissible": 0,
+            "worst": {
+              "KT_pct": {
+                "J": 1.0,
+                "error_pct": -242.5818530320428
+              },
+              "10KQ_pct": {
+                "J": 1.0,
+                "error_pct": -112.82632494638015
+              },
+              "eta0_pct": {
+                "J": 1.0,
+                "error_pct": 1011.6344987991463
+              }
+            }
+          }
+        }
+      },
+      "gci": {
+        "KT": [
+          {
+            "J": 0.4,
+            "fine": 0.35769136793989553,
+            "medium": 0.35704913431469,
+            "coarse": 0.3564866771271707,
+            "p": -0.19135491465264912,
+            "gci_pct": 1.806812115122186,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.1673395751930688,
+            "medium": 0.16725709463059585,
+            "coarse": 0.16758742210840313,
+            "p": 2.001770906834076,
+            "gci_pct": 0.020503644374609643,
+            "oscillatory": true,
+            "converged": false,
+            "asymptotic": false
+          },
+          {
+            "J": 0.9,
+            "fine": 0.030251353558736482,
+            "medium": 0.030578464684578466,
+            "coarse": 0.031042530908768764,
+            "p": 0.5045498688486684,
+            "gci_pct": 3.2283278231461843,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": true
+          }
+        ],
+        "10KQ": [
+          {
+            "J": 0.4,
+            "fine": 0.49997941581446514,
+            "medium": 0.5014066583015517,
+            "coarse": 0.4992747508255374,
+            "p": 0.5789143589330944,
+            "gci_pct": 0.7227210849295453,
+            "oscillatory": true,
+            "converged": false,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.28063581950904104,
+            "medium": 0.2780628399716476,
+            "coarse": 0.2753759206844777,
+            "p": 0.06251300110606,
+            "gci_pct": 25.88000250517794,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": true
+          },
+          {
+            "J": 0.9,
+            "fine": 0.09266011285639394,
+            "medium": 0.08924612793246778,
+            "coarse": 0.08600610265093467,
+            "p": -0.07545161714157476,
+            "gci_pct": 90.38406711212659,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": false
+          }
+        ],
+        "eta0": [
+          {
+            "J": 0.4,
+            "fine": 0.45544554442266505,
+            "medium": 0.4533337059811367,
+            "coarse": 0.45455226179478325,
+            "p": -0.7933271383183051,
+            "gci_pct": 1.3702696830521193,
+            "oscillatory": true,
+            "converged": false,
+            "asymptotic": false
+          },
+          {
+            "J": 0.7,
+            "fine": 0.6643144994615255,
+            "medium": 0.6701310885788891,
+            "coarse": 0.6780061449671501,
+            "p": 0.4371168576669956,
+            "gci_pct": 3.0926380014497687,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": true
+          },
+          {
+            "J": 0.9,
+            "fine": 0.4676432042986823,
+            "medium": 0.49078234849077357,
+            "coarse": 0.516999942927169,
+            "p": 0.18019981195632168,
+            "gci_pct": 46.48981644968175,
+            "oscillatory": false,
+            "converged": true,
+            "asymptotic": true
+          }
+        ]
+      }
+    }
+  },
+  "pitch_sensitivity": {
+    "0.9": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.5090137609030445,
+          "10KQ": 0.6150072709893604,
+          "eta0": 0.131725363212685,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": 3.039222854867311,
+            "10KQ_pct": -9.95501156817565,
+            "eta0_pct": 14.43082469035051
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.16091554973849012,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0016651174546387351,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.45192817295463517,
+          "10KQ": 0.5688594592973825,
+          "eta0": 0.25288004435070194,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": 1.1024995424239725,
+            "10KQ_pct": -10.55668878971974,
+            "eta0_pct": 13.035282543077026
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.30977744867398294,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017307916384980482,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3928107403239216,
+          "10KQ": 0.5152466312027898,
+          "eta0": 0.36400686915427916,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": 0.20682151120448677,
+            "10KQ_pct": -11.923652785847892,
+            "eta0_pct": 13.772680953216495
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.4463731685378673,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017995660128569892,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3316615449112563,
+          "10KQ": 0.4541686125128716,
+          "eta0": 0.4648984791270674,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": -3.3056720375346074,
+            "10KQ_pct": -14.30780895983555,
+            "eta0_pct": 12.839135968812133
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.5704986623952779,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0018714075948679508,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.26848066760029865,
+          "10KQ": 0.38562524411147225,
+          "eta0": 0.554035634669805,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": -7.420459448172873,
+            "10KQ_pct": -18.12627513556852,
+            "eta0_pct": 13.076009067771857
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.682001984357486,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0019462866051554292,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2032681861761569,
+          "10KQ": 0.3096163765850708,
+          "eta0": 0.6269268498018904,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": -15.656354283752316,
+            "10KQ_pct": -24.29917442907804,
+            "eta0_pct": 11.41707515095526
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7808368171124385,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0020241758258538424,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.13602417501660324,
+          "10KQ": 0.22614186726221344,
+          "eta0": 0.6701211088060565,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": -29.521152841138218,
+            "10KQ_pct": -33.8766469993528,
+            "eta0_pct": 6.586922714236756
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8671202504304613,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0021050501300569524,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.06674870522457652,
+          "10KQ": 0.13520157843734648,
+          "eta0": 0.6285954057199494,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -52.66049274852729,
+            "10KQ_pct": -49.92534131950131,
+            "eta0_pct": -5.4621469244106455
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.9411844116324389,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002188886133997243,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.004558155145107626,
+          "10KQ": 0.036795376248272636,
+          "eta0": -0.1774428466353627,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -105.23925878748003,
+            "10KQ_pct": -80.835741537358,
+            "eta0_pct": -127.33869822144814
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 1.0036083841684933,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002275661934164214,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.9,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.0778963408604466,
+          "10KQ": -0.0690768700513474,
+          "eta0": 1.7947523805719154,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -368.60807193257443,
+            "10KQ_pct": -163.9600648623587,
+            "eta0_pct": 319.96216312571886
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 1.055218126332421,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002365356903947119,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 9,
+        "n_pass_by_quantity": {
+          "KT_pct": 4,
+          "10KQ_pct": 0,
+          "eta0_pct": 0
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 1.0,
+            "error_pct": -368.60807193257443
+          },
+          "10KQ_pct": {
+            "J": 1.0,
+            "error_pct": -163.9600648623587
+          },
+          "eta0_pct": {
+            "J": 1.0,
+            "error_pct": 319.96216312571886
+          }
+        }
+      }
+    },
+    "0.95": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.5285686804764528,
+          "10KQ": 0.65289772732519,
+          "eta0": 0.12884761998794353,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": 6.997708598472224,
+            "10KQ_pct": -4.407360567322112,
+            "eta0_pct": 11.930907268050149
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.15816910446496646,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0016416551031594414,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.47342587798159697,
+          "10KQ": 0.6103839702500271,
+          "eta0": 0.24688744246519898,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": 5.91182952608433,
+            "10KQ_pct": -4.027677633643538,
+            "eta0_pct": 10.356639200399504
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.30393966510915404,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017093891779488232,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.4162526755117284,
+          "10KQ": 0.5598870285704958,
+          "eta0": 0.3549752048305057,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": 6.186907018298057,
+            "10KQ_pct": -4.2928156289750765,
+            "eta0_pct": 10.949776358111977
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.4371996848421583,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017803406470573262,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.35704913431469,
+          "10KQ": 0.5014066583015517,
+          "eta0": 0.4533337059811367,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": 4.095957526148676,
+            "10KQ_pct": -5.394970131782697,
+            "eta0_pct": 10.032159676025714
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.5578683635422597,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001854473720474088,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": 2.0052817277862536,
+            "10KQ_pct": -7.655490831382328,
+            "eta0_pct": 10.461664311332635
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.6659375047002715,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001931756181439198,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.23255128436468964,
+          "10KQ": 0.36049476301730304,
+          "eta0": 0.6160148256117584,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": -3.5056911349835502,
+            "10KQ_pct": -11.859471144913677,
+            "eta0_pct": 9.47779655788627
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7615176266101779,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002012158674967606,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.16725709463059585,
+          "10KQ": 0.2780628399716476,
+          "eta0": 0.6701310885788891,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": -13.338292937515106,
+            "10KQ_pct": -18.695076031681996,
+            "eta0_pct": 6.5885100590639
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8448823891903944,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002095654182210012,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -29.125671222801053,
+            "10KQ_pct": -30.501227288226367,
+            "eta0_pct": 1.9792523115912235
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.916502165640992,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0021822176310553184,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.030578464684578466,
+          "10KQ": 0.08924612793246778,
+          "eta0": 0.49078234849077357,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -64.85233944301325,
+            "10KQ_pct": -53.5176417018397,
+            "eta0_pct": -24.384945506566865
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.9770569810203915,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0022718256014956817,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -240.7098986655049,
+            "10KQ_pct": -115.86944612455544,
+            "eta0_pct": 786.671768889141
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 1.0274220911520646,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0023644560974315316,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 9,
+        "n_pass_by_quantity": {
+          "KT_pct": 3,
+          "10KQ_pct": 3,
+          "eta0_pct": 1
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 1.0,
+            "error_pct": -240.7098986655049
+          },
+          "10KQ_pct": {
+            "J": 1.0,
+            "error_pct": -115.86944612455544
+          },
+          "eta0_pct": {
+            "J": 1.0,
+            "error_pct": 786.671768889141
+          }
+        }
+      }
+    },
+    "1.0": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.5525364032573883,
+          "10KQ": 0.7040780922341994,
+          "eta0": 0.1248993553223338,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": 11.84947434360087,
+            "10KQ_pct": 3.0861042802634433,
+            "eta0_pct": 8.501019729596324
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.15499220211074174,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0016178465315610515,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.49879694707171784,
+          "10KQ": 0.6634406819994111,
+          "eta0": 0.23931604400973666,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": 11.587683908661708,
+            "10KQ_pct": 4.314572641416836,
+            "eta0_pct": 6.9722868848308615
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.2974797819980699,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0016874548174433232,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.4430004212209826,
+          "10KQ": 0.6144421162693908,
+          "eta0": 0.3442425492763547,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": 13.010311535964945,
+            "10KQ_pct": 5.032840387930062,
+            "eta0_pct": 7.595216047257932
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.4274503667639368,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017604121518276182,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3851468791114284,
+          "10KQ": 0.5570821089485601,
+          "eta0": 0.4401364082052086,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": 12.287719857559296,
+            "10KQ_pct": 5.109831877086814,
+            "eta0_pct": 6.828940596980658
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.5449340211903936,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0018366799459794796,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.32523637767630925,
+          "10KQ": 0.4913604020669832,
+          "eta0": 0.5267312644928065,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": 12.150475060796301,
+            "10KQ_pct": 4.322802986620648,
+            "eta0_pct": 7.503318402190111
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.6500396177355758,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001916223551711431,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2632689729269474,
+          "10KQ": 0.41727675763274175,
+          "eta0": 0.6024858701705313,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": 9.24023772902382,
+            "10KQ_pct": 2.0236571229197486,
+            "eta0_pct": 7.073438464776299
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7429923726745498,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001999011473949861,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.199244718910421,
+          "10KQ": 0.3348309531768787,
+          "eta0": 0.6629478881529205,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": 3.235605653067875,
+            "10KQ_pct": -2.0962125213804987,
+            "eta0_pct": 5.445977435359936
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8241667393718953,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002085014786033257,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.13316366759429304,
+          "10KQ": 0.24402277902097147,
+          "eta0": 0.6948091001309803,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -5.557682557238966,
+            "10KQ_pct": -9.621192955195758,
+            "eta0_pct": 4.496087667922372
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.8941074662721943,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002174206696886654,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0650258690122483,
+          "10KQ": 0.14485203644655548,
+          "eta0": 0.643019584841492,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -25.257621825001948,
+            "10KQ_pct": -24.556231017419023,
+            "eta0_pct": -0.9296868608789495
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.9535322112812653,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0022665622241555697,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 1.0,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.005168628532144103,
+          "10KQ": 0.03731853638429652,
+          "eta0": -0.22043007566681883,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -117.82285700739347,
+            "10KQ_pct": -65.4457996441699,
+            "eta0_pct": -151.57942254156757
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 1.003312285043952,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002362057941551957,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 10,
+        "n_pass_by_quantity": {
+          "KT_pct": 1,
+          "10KQ_pct": 5,
+          "eta0_pct": 2
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 1.0,
+            "error_pct": -117.82285700739347
+          },
+          "10KQ_pct": {
+            "J": 1.0,
+            "error_pct": -65.4457996441699
+          },
+          "eta0_pct": {
+            "J": 1.0,
+            "error_pct": -151.57942254156757
+          }
+        }
+      }
+    }
+  },
+  "stability_probe": {
+    "geometric": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.5285686804764528,
+          "10KQ": 0.65289772732519,
+          "eta0": 0.12884761998794353,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": 6.997708598472224,
+            "10KQ_pct": -4.407360567322112,
+            "eta0_pct": 11.930907268050149
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.15816910446496646,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0016416551031594414,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.47342587798159697,
+          "10KQ": 0.6103839702500271,
+          "eta0": 0.24688744246519898,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": 5.91182952608433,
+            "10KQ_pct": -4.027677633643538,
+            "eta0_pct": 10.356639200399504
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.30393966510915404,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017093891779488232,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.4162526755117284,
+          "10KQ": 0.5598870285704958,
+          "eta0": 0.3549752048305057,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": 6.186907018298057,
+            "10KQ_pct": -4.2928156289750765,
+            "eta0_pct": 10.949776358111977
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.4371996848421583,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0017803406470573262,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.35704913431469,
+          "10KQ": 0.5014066583015517,
+          "eta0": 0.4533337059811367,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": 4.095957526148676,
+            "10KQ_pct": -5.394970131782697,
+            "eta0_pct": 10.032159676025714
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.5578683635422597,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001854473720474088,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2958153170105801,
+          "10KQ": 0.4349426381841892,
+          "eta0": 0.5412261964138849,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": 2.0052817277862536,
+            "10KQ_pct": -7.655490831382328,
+            "eta0_pct": 10.461664311332635
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.6659375047002715,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.001931756181439198,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.23255128436468964,
+          "10KQ": 0.36049476301730304,
+          "eta0": 0.6160148256117584,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": -3.5056911349835502,
+            "10KQ_pct": -11.859471144913677,
+            "eta0_pct": 9.47779655788627
+          },
+          "pass_within_5pct": {
+            "KT_pct": true,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7615176266101779,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002012158674967606,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.16725709463059585,
+          "10KQ": 0.2780628399716476,
+          "eta0": 0.6701310885788891,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": -13.338292937515106,
+            "10KQ_pct": -18.695076031681996,
+            "eta0_pct": 6.5885100590639
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8448823891903944,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002095654182210012,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.0999328035758505,
+          "10KQ": 0.18764668632178882,
+          "eta0": 0.6780743098805785,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -29.125671222801053,
+            "10KQ_pct": -30.501227288226367,
+            "eta0_pct": 1.9792523115912235
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.916502165640992,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0021822176310553184,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.030578464684578466,
+          "10KQ": 0.08924612793246778,
+          "eta0": 0.49078234849077357,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -64.85233944301325,
+            "10KQ_pct": -53.5176417018397,
+            "eta0_pct": -24.384945506566865
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.9770569810203915,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0022718256014956817,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "geometric",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.040805870612996425,
+          "10KQ": -0.01713900181451987,
+          "eta0": 3.7892848635587977,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -240.7098986655049,
+            "10KQ_pct": -115.86944612455544,
+            "eta0_pct": 786.671768889141
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 1.0274220911520646,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0023644560974315316,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 9,
+        "n_pass_by_quantity": {
+          "KT_pct": 3,
+          "10KQ_pct": 3,
+          "eta0_pct": 1
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 1.0,
+            "error_pct": -240.7098986655049
+          },
+          "10KQ_pct": {
+            "J": 1.0,
+            "error_pct": -115.86944612455544
+          },
+          "eta0_pct": {
+            "J": 1.0,
+            "error_pct": 786.671768889141
+          }
+        }
+      },
+      "unstable_J": [
+        1.0
+      ],
+      "max_abs_KT": 0.5285686804764528,
+      "n_kernel_warnings": 0
+    },
+    "kinematic": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.4451345347784872,
+          "10KQ": 0.372241085268818,
+          "eta0": 0.19032117720091452,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": -9.891794579253604,
+            "10KQ_pct": -45.49910903824041,
+            "eta0_pct": 65.33345387687442
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 0.17103407148698754,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0022163399003164554,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -10488519.353617849,
+          "10KQ": 35001467.21119489,
+          "eta0": -0.09538455578281482,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": -2346425011.3239036,
+            "10KQ_pct": 5503375247.6721525,
+            "eta0_pct": -142.6361053551691
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 4929.564825523337,
+          "kernel_warnings": [
+            "open_water_point(J=0.2): unphysical solution -- |K_T| = 1.049e+07 and |K_Q| = 3.500e+06 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve"
+          ]
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -922431.160182775,
+          "10KQ": 3070559.0337912906,
+          "eta0": -0.1434359123431131,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": -235314171.4751977,
+            "10KQ_pct": 524881786.11816937,
+            "eta0_pct": -144.8318141087879
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 513.4395781467902,
+          "kernel_warnings": [
+            "open_water_point(J=0.3): unphysical solution -- |K_T| = 9.224e+05 and |K_Q| = 3.071e+05 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve"
+          ]
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -131.85076952830673,
+          "10KQ": 1113.2183199325082,
+          "eta0": -0.07540192734942601,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": -38540.45758842761,
+            "10KQ_pct": 209941.19244009588,
+            "eta0_pct": -118.30138990445454
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.25356754301988693,
+          "kernel_warnings": [
+            "open_water_point(J=0.4): unphysical solution -- |K_T| = 1.319e+02 and |K_Q| = 1.113e+02 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve"
+          ]
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.21899588049650034,
+          "10KQ": 0.4430549642443344,
+          "eta0": 0.39334032694145266,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": -24.484179139137808,
+            "10KQ_pct": -5.9331286105447125,
+            "eta0_pct": -19.721130568686743
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7149476792065919,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.00205862056534701,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.19146403298309272,
+          "10KQ": 0.3181128258439896,
+          "eta0": 0.5747479157947566,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": -20.554343160542437,
+            "10KQ_pct": -22.22180297212968,
+            "eta0_pct": 2.1438653444097686
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.7891467278719989,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0020805157152989856,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.14840596804315337,
+          "10KQ": 0.25626329526109715,
+          "eta0": 0.6451833206171194,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": -23.105716039816908,
+            "10KQ_pct": -25.069211911959908,
+            "eta0_pct": 2.620412679813226
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.8580438100873065,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.00212846640929618,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.09057688520410104,
+          "10KQ": 0.17492701880465836,
+          "eta0": 0.6592810697219036,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -35.761074323332586,
+            "10KQ_pct": -35.21221525753395,
+            "eta0_pct": -0.8471644276469446
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.9232078983398896,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0021929092120382306,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.030367547670295994,
+          "10KQ": 0.08899120497471588,
+          "eta0": 0.48879333529775343,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -65.09477279276322,
+            "10KQ_pct": -53.65041407566881,
+            "eta0_pct": -24.69139365296185
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.9772081796475629,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.002273049007635911,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "kinematic",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.041483292623016976,
+          "10KQ": -0.018166796553195426,
+          "eta0": 3.634251673016843,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -243.045836631093,
+            "10KQ_pct": -116.8211079196254,
+            "eta0_pct": 750.3948569535048
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 1.0279034559356186,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0023657393910104622,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 5,
+        "n_pass_by_quantity": {
+          "KT_pct": 0,
+          "10KQ_pct": 0,
+          "eta0_pct": 3
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 0.2,
+            "error_pct": -2346425011.3239036
+          },
+          "10KQ_pct": {
+            "J": 0.2,
+            "error_pct": 5503375247.6721525
+          },
+          "eta0_pct": {
+            "J": 1.0,
+            "error_pct": 750.3948569535048
+          }
+        }
+      },
+      "unstable_J": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        1.0
+      ],
+      "max_abs_KT": 10488519.353617849,
+      "n_kernel_warnings": 3
+    },
+    "induced": {
+      "rows": [
+        {
+          "J": 0.1,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -31.679097919171753,
+          "10KQ": 17.594800238524027,
+          "eta0": -0.286555400355674,
+          "KT_anchor": 0.494,
+          "10KQ_anchor": 0.683,
+          "eta0_anchor": 0.1151135313139038,
+          "error_pct": {
+            "KT_pct": -6512.772858131933,
+            "10KQ_pct": 2476.1054521997107,
+            "eta0_pct": -348.93285531677793
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.08450913800302855,
+          "kernel_warnings": [
+            "open_water_point(J=0.1): unphysical solution -- |K_T| = 3.168e+01 and |K_Q| = 1.759e+00 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve"
+          ]
+        },
+        {
+          "J": 0.2,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.6290866958975414,
+          "10KQ": 1.4919375592755109,
+          "eta0": 0.1342177581936624,
+          "KT_anchor": 0.447,
+          "10KQ_anchor": 0.636,
+          "eta0_anchor": 0.2237177973650227,
+          "error_pct": {
+            "KT_pct": 40.735278724282196,
+            "10KQ_pct": 134.58137724457717,
+            "eta0_pct": -40.00577523357703
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.2700169733513133,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0012136869510697393,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.3,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -62.39870585758155,
+          "10KQ": 9.394236616323266,
+          "eta0": -3.1714325129458407,
+          "KT_anchor": 0.392,
+          "10KQ_anchor": 0.585,
+          "eta0_anchor": 0.31994224457447684,
+          "error_pct": {
+            "KT_pct": -16018.037208566722,
+            "10KQ_pct": 1505.852413046712,
+            "eta0_pct": -1091.2515670332457
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.057269722379921006,
+          "kernel_warnings": [
+            "open_water_point(J=0.3): unphysical solution -- |K_T| = 6.240e+01 and |K_Q| = 9.394e-01 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve; eta_0 = 3.171 exceeds the actuator-disc momentum bound 2"
+          ]
+        },
+        {
+          "J": 0.4,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -65.49487598632044,
+          "10KQ": 28.340213686260803,
+          "eta0": -1.4712427190296025,
+          "KT_anchor": 0.343,
+          "10KQ_anchor": 0.53,
+          "eta0_anchor": 0.41200109796618944,
+          "error_pct": {
+            "KT_pct": -19194.716030997213,
+            "10KQ_pct": 5247.21012948317,
+            "eta0_pct": -457.0967956862918
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 2.0,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.056390859361056776,
+          "kernel_warnings": [
+            "open_water_point(J=0.4): unphysical solution -- |K_T| = 6.549e+01 and |K_Q| = 2.834e+00 outside the physical envelope (K_T <= 1, K_Q <= 0.2): near-singular induction solve"
+          ]
+        },
+        {
+          "J": 0.5,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.3154186553701356,
+          "10KQ": 0.5033017483075476,
+          "eta0": 0.4987111441035627,
+          "KT_anchor": 0.29,
+          "10KQ_anchor": 0.471,
+          "eta0_anchor": 0.4899674468858774,
+          "error_pct": {
+            "KT_pct": 8.76505357590883,
+            "10KQ_pct": 6.8581206597765645,
+            "eta0_pct": 1.784546559829286
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": true
+          },
+          "admissible": true,
+          "momentum_bound": 0.6551969013839517,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0018722881398983567,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.6,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.2709974474010112,
+          "10KQ": 0.40568758426955476,
+          "eta0": 0.6378886363527339,
+          "KT_anchor": 0.241,
+          "10KQ_anchor": 0.409,
+          "eta0_anchor": 0.5626847132295371,
+          "error_pct": {
+            "KT_pct": 12.447073610378105,
+            "10KQ_pct": -0.8098815966858722,
+            "eta0_pct": 13.36519748183006
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.7385803177384378,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0019369295145181362,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.7,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.20385986802203943,
+          "10KQ": 0.3258862428129957,
+          "eta0": 0.6969215327899255,
+          "KT_anchor": 0.193,
+          "10KQ_anchor": 0.342,
+          "eta0_anchor": 0.6287085617460544,
+          "error_pct": {
+            "KT_pct": 5.626874622818352,
+            "10KQ_pct": -4.7116249084807915,
+            "eta0_pct": 10.849696535773194
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": true,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8213301385591518,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0020358602643785616,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.8,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.12669328640972238,
+          "10KQ": 0.2250267361423976,
+          "eta0": 0.71685216199038,
+          "KT_anchor": 0.141,
+          "10KQ_anchor": 0.27,
+          "eta0_anchor": 0.6649139844728071,
+          "error_pct": {
+            "KT_pct": -10.146605383175606,
+            "10KQ_pct": -16.6567643917046,
+            "eta0_pct": 7.811262618991736
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.8983046593492668,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0021415903702113374,
+          "kernel_warnings": []
+        },
+        {
+          "J": 0.9,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": 0.040211213160571656,
+          "10KQ": 0.10330700845924988,
+          "eta0": 0.5575451359891206,
+          "KT_anchor": 0.087,
+          "10KQ_anchor": 0.192,
+          "eta0_anchor": 0.6490537522966356,
+          "error_pct": {
+            "KT_pct": -53.78021475796361,
+            "10KQ_pct": -46.19426642747402,
+            "eta0_pct": -14.09877317305656
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": true,
+          "momentum_bound": 0.9702485404575169,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0022559423179815494,
+          "kernel_warnings": []
+        },
+        {
+          "J": 1.0,
+          "config": {
+            "n_radial": 16,
+            "n_chord": 2,
+            "thickness_ratio": 0.06,
+            "radial_spacing": "cosine",
+            "root_chord_offset": 0.12,
+            "pitch_ratio": 0.95,
+            "wake_model": "induced",
+            "wake_length": 1.0,
+            "wake_steps": 24,
+            "rev_per_second": 10.0,
+            "viscous": true,
+            "core_ratio": 0.05
+          },
+          "KT": -0.05064306348973113,
+          "10KQ": -0.03209535311816249,
+          "eta0": 2.511296217254037,
+          "KT_anchor": 0.029,
+          "10KQ_anchor": 0.108,
+          "eta0_anchor": 0.4273604953393486,
+          "error_pct": {
+            "KT_pct": -274.63125341286593,
+            "10KQ_pct": -129.71791955385416,
+            "eta0_pct": 487.62947081945987
+          },
+          "pass_within_5pct": {
+            "KT_pct": false,
+            "10KQ_pct": false,
+            "eta0_pct": false
+          },
+          "admissible": false,
+          "momentum_bound": 1.034503573974416,
+          "n_panels": 32,
+          "viscous_drag_nd": 0.0023830864401391937,
+          "kernel_warnings": []
+        }
+      ],
+      "summary": {
+        "n_points": 10,
+        "n_admissible": 6,
+        "n_pass_by_quantity": {
+          "KT_pct": 0,
+          "10KQ_pct": 2,
+          "eta0_pct": 1
+        },
+        "n_pass_all_three_5pct": 0,
+        "n_pass_all_three_5pct_admissible": 0,
+        "worst": {
+          "KT_pct": {
+            "J": 0.4,
+            "error_pct": -19194.716030997213
+          },
+          "10KQ_pct": {
+            "J": 0.4,
+            "error_pct": 5247.21012948317
+          },
+          "eta0_pct": {
+            "J": 0.3,
+            "error_pct": -1091.2515670332457
+          }
+        }
+      },
+      "unstable_J": [
+        0.1,
+        0.3,
+        0.4,
+        1.0
+      ],
+      "max_abs_KT": 65.49487598632044,
+      "n_kernel_warnings": 3
+    }
+  },
+  "criteria": {
+    "C1_all_points_within_5pct": false,
+    "C2_admissible_points_within_5pct": false
+  },
+  "verdict": "FAIL",
+  "offenders": [
+    {
+      "J": 0.1,
+      "KT_pct": 6.998,
+      "10KQ_pct": -4.407,
+      "eta0_pct": 11.931
+    },
+    {
+      "J": 0.2,
+      "KT_pct": 5.912,
+      "10KQ_pct": -4.028,
+      "eta0_pct": 10.357
+    },
+    {
+      "J": 0.3,
+      "KT_pct": 6.187,
+      "10KQ_pct": -4.293,
+      "eta0_pct": 10.95
+    },
+    {
+      "J": 0.4,
+      "KT_pct": 4.096,
+      "10KQ_pct": -5.395,
+      "eta0_pct": 10.032
+    },
+    {
+      "J": 0.5,
+      "KT_pct": 2.005,
+      "10KQ_pct": -7.655,
+      "eta0_pct": 10.462
+    },
+    {
+      "J": 0.6,
+      "KT_pct": -3.506,
+      "10KQ_pct": -11.859,
+      "eta0_pct": 9.478
+    },
+    {
+      "J": 0.7,
+      "KT_pct": -13.338,
+      "10KQ_pct": -18.695,
+      "eta0_pct": 6.589
+    },
+    {
+      "J": 0.8,
+      "KT_pct": -29.126,
+      "10KQ_pct": -30.501,
+      "eta0_pct": 1.979
+    },
+    {
+      "J": 0.9,
+      "KT_pct": -64.852,
+      "10KQ_pct": -53.518,
+      "eta0_pct": -24.385
+    },
+    {
+      "J": 1.0,
+      "KT_pct": -240.71,
+      "10KQ_pct": -115.869,
+      "eta0_pct": 786.672
+    }
+  ],
+  "fail_stage": "canonical vortex-lattice open-water solve vs Table 2 (p.10)",
+  "failure_reason": "the repository's flat-section lifting-surface lattice does not reach 5% on the KP505 open-water grid: see offenders/vs anchor",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "git_commit": "96f19f7ced7ba57e3e47c634615274d5811b36fd"
+  },
+  "repro_cmd": "PYTHONPATH=src python -m tensorbem.benchmarks.kp505_openwater_case runs/m17207",
+  "figures": [
+    {
+      "name": "fig1_curves",
+      "path": "runs/m17207/kp505_case_figures/fig1_curves.png",
+      "caption": "KP505 open-water curves: reference columns of Table 2 (p.10) vs the TensorBEM lattice at the canonical configuration."
+    },
+    {
+      "name": "fig2_errors",
+      "path": "runs/m17207/kp505_case_figures/fig2_errors.png",
+      "caption": "Per-point relative deviation of K_T, 10K_Q and eta_0 against the 5 % tolerance band; points flagged inadmissible by the numerical gate are marked rather than removed."
+    },
+    {
+      "name": "fig3_ladders",
+      "path": "runs/m17207/kp505_case_figures/fig3_ladders.png",
+      "caption": "K_T versus lattice refinement on the spanwise and chordwise axes at J = 0.4/0.7/0.9, with the reference values as grey dashed lines."
+    }
+  ]
+}
