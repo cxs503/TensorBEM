@@ -1,0 +1,156 @@
+{
+  "accepted_from_subdivision": 3,
+  "artifact": "docs/cases/case_bem_rigid_body_mass/run.json",
+  "artifact_sha256": "fe1772ed8dfebb9d6d53ec7dca3f549c6428054e6165ad1f231ab7aaeacb4340",
+  "case_code": "CASE-BEM-RIGID-BODY-MASS",
+  "checks": {
+    "expected_block_matches_recorded_geometry": true,
+    "kinetic_energy_identity_all_levels": true,
+    "reference_matches_recorded_geometry": true,
+    "reported_invariants_within_tolerance": true,
+    "stored_errors_reproducible": true,
+    "stored_matrices_positive_definite": true,
+    "stored_matrices_symmetric": true,
+    "tolerance_respected_on_accepted_levels": true,
+    "within_tolerance_flags_reproducible": true
+  },
+  "criterion": "|ref-got|/|ref| < 3.0% per matrix entry on accepted levels",
+  "details": {
+    "expected_regeneration": {
+      "max_rel_diff_diagonal": 0.0,
+      "rel_diff_mass": 0.0
+    },
+    "reference_regeneration": {
+      "max_rel_diff_inertia_cg": 0.0,
+      "max_rel_diff_matrix": 0.0,
+      "rel_diff_mass": 0.0,
+      "tolerance": 1e-10
+    },
+    "reported_invariants": {
+      "note": "reported by the case without storing the underlying matrix; gated, not re-derived",
+      "tolerance": 1e-09,
+      "values": {
+        "assembly.block_form_residual": 0.0,
+        "assembly.energy_identity_error": 2.1434698780920608e-16,
+        "assembly.max_entry_rel_error_vs_reference": 0.0,
+        "assembly.symmetry_error": 0.0,
+        "platform_assembly.block_form_residual": 0.0,
+        "platform_assembly.energy_identity_error": 2.1434698780920608e-16,
+        "platform_assembly.max_entry_rel_error": 0.0,
+        "platform_assembly.symmetry_error": 0.0
+      },
+      "worst_abs": 2.1434698780920608e-16
+    }
+  },
+  "failed_checks": [],
+  "levels": [
+    {
+      "accepted": false,
+      "energy_identity_residual": 4.1551321849271847e-16,
+      "panels": 20,
+      "recomputed_max_entry_rel_error": 0.5564774169761859,
+      "smallest_eigenvalue": 11069189.09988594,
+      "stored_max_entry_rel_error": 0.5564774169761859,
+      "subdivisions": 0,
+      "symmetry_error": 0.0,
+      "within_tolerance": false,
+      "worst_entry": {
+        "got": 8487492849.102042,
+        "i": 5,
+        "j": 5,
+        "ref": 19136551720.17774
+      }
+    },
+    {
+      "accepted": false,
+      "energy_identity_residual": 3.243416633563466e-16,
+      "panels": 80,
+      "recomputed_max_entry_rel_error": 0.19883176391667218,
+      "smallest_eigenvalue": 16900934.801943593,
+      "stored_max_entry_rel_error": 0.19883176391667218,
+      "subdivisions": 1,
+      "symmetry_error": 0.0,
+      "within_tolerance": false,
+      "worst_entry": {
+        "got": 15331597386.372171,
+        "i": 5,
+        "j": 5,
+        "ref": 19136551720.17774
+      }
+    },
+    {
+      "accepted": false,
+      "energy_identity_residual": 2.1136068995684346e-16,
+      "panels": 320,
+      "recomputed_max_entry_rel_error": 0.05500548466436306,
+      "smallest_eigenvalue": 18963871.167228542,
+      "stored_max_entry_rel_error": 0.05500548466436306,
+      "subdivisions": 2,
+      "symmetry_error": 0.0,
+      "within_tolerance": false,
+      "worst_entry": {
+        "got": 18083936418.00471,
+        "i": 5,
+        "j": 5,
+        "ref": 19136551720.17774
+      }
+    },
+    {
+      "accepted": true,
+      "energy_identity_residual": 4.498959607594287e-16,
+      "panels": 1280,
+      "recomputed_max_entry_rel_error": 0.014115334623756828,
+      "smallest_eigenvalue": 19528552.125036668,
+      "stored_max_entry_rel_error": 0.014115334623756828,
+      "subdivisions": 3,
+      "symmetry_error": 0.0,
+      "within_tolerance": true,
+      "worst_entry": {
+        "got": 18866432889.1026,
+        "i": 5,
+        "j": 5,
+        "ref": 19136551720.17774
+      }
+    },
+    {
+      "accepted": true,
+      "energy_identity_residual": 3.5307236624662545e-16,
+      "panels": 5120,
+      "recomputed_max_entry_rel_error": 0.00355213628819429,
+      "smallest_eigenvalue": 19672993.1025132,
+      "stored_max_entry_rel_error": 0.00355213628819429,
+      "subdivisions": 4,
+      "symmetry_error": 0.0,
+      "within_tolerance": true,
+      "worst_entry": {
+        "got": 19068576080.381588,
+        "i": 5,
+        "j": 5,
+        "ref": 19136551720.17774
+      }
+    }
+  ],
+  "regenerated_reference_diagonal": [
+    24730617.36905885,
+    24730617.36905885,
+    24730617.36905885,
+    1251369238.8743777,
+    18963437398.594326,
+    19136551720.17774
+  ],
+  "subject": "6x6 rigid-body mass matrix, closed block form",
+  "tolerance": 0.03,
+  "verdict": "PASS",
+  "worst_accepted_level": {
+    "max_entry_rel_error": 0.014115334623756828,
+    "panels": 1280,
+    "subdivisions": 3,
+    "within_tolerance": true,
+    "worst_entry": {
+      "got": 18866432889.1026,
+      "i": 5,
+      "j": 5,
+      "ref": 19136551720.17774
+    }
+  }
+}

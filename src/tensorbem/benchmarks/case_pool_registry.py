@@ -49,6 +49,27 @@ class CaseEntry:
     repro_cmd: str = ""
     notes: str = ""
     extra: Mapping[str, Any] = field(default_factory=dict)
+    regenerable: tuple[str, ...] = ()
+    """Build products the registered entry re-creates on demand.
+
+    Figures/logs live outside ``docs/`` for several cases, and the delivery gate
+    drops non-``docs/`` ``*.png`` (and gitignored logs), so those files can be
+    legitimately absent from a pushed checkout even though the entry regenerates
+    them in one command.  They are therefore *declared* here instead of being
+    required: ``missing()`` stays the invariant that must hold, and
+    ``regenerable_missing()`` reports what a ``--run`` would rebuild.  Declaring
+    an ``entry``/``artefact``/``doc`` as regenerable is rejected in
+    ``__post_init__`` -- the point of the field is to separate "not committed by
+    policy" from "lost"."""
+
+    def __post_init__(self) -> None:
+        required = {self.entry, self.doc, *self.artifacts}
+        overlap = required.intersection(self.regenerable)
+        if overlap:
+            raise ValueError(
+                f"{self.case_code}: {sorted(overlap)} cannot be both required and "
+                "regenerable"
+            )
 
     def path(self, rel: str) -> Path:
         return REPO_ROOT / rel
@@ -58,6 +79,10 @@ class CaseEntry:
         out = [rel for rel in (self.entry, self.doc, *self.artifacts) if not self.path(rel).is_file()]
         out += [rel for rel in self.figures if not self.path(rel).is_file()]
         return out
+
+    def regenerable_missing(self) -> list[str]:
+        """Declared build products that are absent (informational, not a failure)."""
+        return [rel for rel in self.regenerable if not self.path(rel).is_file()]
 
     def artifact_payload(self, rel: str | None = None) -> dict[str, Any]:
         target = self.artifacts[0] if rel is None else rel
@@ -72,8 +97,12 @@ def _verdict_of(payload: Mapping[str, Any]) -> Any:
     verdict = payload.get("verdict")
     if isinstance(verdict, dict):
         for key in ("overall", "verdict", "status"):
-            if not isinstance(verdict.get(key), dict):
-                return verdict.get(key)
+            value = verdict.get(key)
+            if value is not None and not isinstance(value, dict):
+                return value
+        # a structured verdict block we cannot flatten to a scalar is not a
+        # missing artefact -- say so instead of returning ``None``, which the
+        # registry test (rightly) treats as "unreadable".
     acceptance = payload.get("acceptance")
     if isinstance(acceptance, dict) and "passed" in acceptance:
         return {"passed": acceptance["passed"],
@@ -85,6 +114,36 @@ def _verdict_of(payload: Mapping[str, Any]) -> Any:
 
 
 CASES: dict[str, CaseEntry] = {
+    "CASE-BEM-RIGID-BODY-MASS": CaseEntry(
+        case_code="CASE-BEM-RIGID-BODY-MASS",
+        pool_code="BEM-RIGID-BODY-MASS",
+        repo="TensorBEM",
+        tolerance="<3%",
+        entry="benchmarks/verified/casepool_bem_rigid_body_mass/run_case.py",
+        entry_args=("--out", "docs/cases/case_bem_rigid_body_mass/verdict.json"),
+        library="tensorbem.benchmarks.rigid_body_mass_gate",
+        artifacts=(
+            # verdict.json first: it carries the top-level ``verdict`` string the
+            # registry reads (run.json's own ``verdict`` block is a dict, which
+            # ``_verdict_of`` cannot flatten to a scalar).
+            "docs/cases/case_bem_rigid_body_mass/verdict.json",
+            "docs/cases/case_bem_rigid_body_mass/run.json",
+        ),
+        doc="docs/cases/case_bem_rigid_body_mass/REPORT.md",
+        figures=(
+            "docs/cases/case_bem_rigid_body_mass/fig_convergence.png",
+            "docs/cases/case_bem_rigid_body_mass/fig_block_matrix.png",
+            "docs/cases/case_bem_rigid_body_mass/fig_energy_identity.png",
+        ),
+        repro_cmd=(
+            "PYTHONPATH=src python3 "
+            "benchmarks/verified/casepool_bem_rigid_body_mass/run_case.py --refresh"
+        ),
+        notes="6x6 rigid-body mass matrix, closed block form (Fossen 2011 eq. 3.44); "
+        "ellipsoid 60/12/8 m, r_g=(5,0,-3) m, acceptance at >=1280 panels; the "
+        "driver re-derives the <3% criterion from the committed matrices "
+        "(rigid_body_mass_gate) instead of quoting run.json's own verdict",
+    ),
     "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": CaseEntry(
         case_code="CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
         pool_code="BEM-SUBMERGED-SPHERE-HAVELOCK",
@@ -102,7 +161,6 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_submerged_sphere_havelock/table_ladder.csv",
             "docs/case_bem_submerged_sphere_havelock/table_low_frequency.csv",
             "docs/case_bem_submerged_sphere_havelock/table_submergence.csv",
-            "docs/case_bem_submerged_sphere_havelock/run.log",
         ),
         doc="docs/case_bem_submerged_sphere_havelock/CASE.md",
         figures=(
@@ -111,6 +169,7 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_submerged_sphere_havelock/fig3_ladder.png",
             "docs/case_bem_submerged_sphere_havelock/fig4_submergence.png",
         ),
+        regenerable=("docs/case_bem_submerged_sphere_havelock/run.log",),
         repro_cmd=(
             "PYTHONPATH=src python3 "
             "benchmarks/verified/casepool_bem_submerged_sphere_havelock/run_case.py "
@@ -145,6 +204,9 @@ CASES: dict[str, CaseEntry] = {
         ),
         doc="benchmarks/verified/bem_annulus_laplace/report.md",
         figures=(
+        ),
+        regenerable=(
+            # non-``docs/`` PNGs are dropped by the delivery gate by policy
             "benchmarks/verified/bem_annulus_laplace_eccentric/figures/convergence.png",
             "benchmarks/verified/bem_annulus_laplace_eccentric/figures/clearance_sweep.png",
             "benchmarks/verified/bem_annulus_laplace_eccentric/figures/field.png",
@@ -181,6 +243,9 @@ CASES: dict[str, CaseEntry] = {
         artifacts=("benchmarks/verified/case_bem_ellipse_2d_added_mass/results.json",),
         doc="docs/CASE-BEM-ELLIPSE-2D-ADDED-MASS.md",
         figures=(
+        ),
+        regenerable=(
+            # non-``docs/`` PNGs are dropped by the delivery gate by policy
             "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/convergence.png",
             "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/aspect_ratio.png",
             "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/"
@@ -232,7 +297,7 @@ def missing_paths() -> dict[str, list[str]]:
 
 
 def main(argv: Iterable[str] | None = None) -> int:  # pragma: no cover - CLI
-    rows = [("case_code", "pool_code", "tolerance", "verdict", "missing")]
+    rows = [("case_code", "pool_code", "tolerance", "verdict", "missing", "regenerable")]
     for entry in list_cases():
         try:
             verdict = artifact_verdict(entry.case_code)
@@ -244,6 +309,7 @@ def main(argv: Iterable[str] | None = None) -> int:  # pragma: no cover - CLI
             entry.tolerance,
             verdict if isinstance(verdict, str) else json.dumps(verdict),
             ",".join(entry.missing()) or "-",
+            ",".join(entry.regenerable_missing()) or "-",
         ))
     widths = [max(len(str(row[i])) for row in rows) for i in range(len(rows[0]))]
     for row in rows:

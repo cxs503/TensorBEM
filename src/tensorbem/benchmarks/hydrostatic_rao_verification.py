@@ -20,7 +20,13 @@ panel operators:
        GM_T = KB + BM_T - KG,  KB = T/2,  BM_T = I_T/nabla
 
 2. **Rigid-body mass matrix** — exact block form
-   ``M = [[m I, -m S^T], [-m S, J_o + m S S^T]]`` with ``S = skew(r_G)``.
+   ``M = [[m I3, -m S], [-m S^T, I_g + m S^T S]]`` with ``S = skew(r_G)`` and
+   ``I_g`` the inertia tensor about the centre of gravity (Fossen 2011,
+   Sec. 3.3.1, eq. 3.51).  The earlier revision of this reference compared
+   against ``[[m I, -m S^T], [-m S, J_o + m S S^T]]``, which is the transposed
+   coupling with a double-counted parallel-axis term: symmetric and positive
+   definite too, so the comparison was a tautology (see
+   ``docs/cases/case_bem_rigid_body_mass/REPORT.md`` §6(a)).
 
 3. **Hulme (1982) floating hemisphere** — literature coefficients
    ``A11, B11, A33, B33`` and complex exciting forces ``F1, F3``
