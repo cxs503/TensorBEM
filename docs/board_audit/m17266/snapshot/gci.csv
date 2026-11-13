@@ -1,0 +1,10 @@
+J,quantity,observed_order,extrapolated,gci_fine_pct,gci_medium_pct,estimated_fine_error_pct,asymptotic_ratio,monotone,oscillatory,converged,under_3pct,asymptotic_admitted
+0.5,KT,-4.097699,0.3027954813,9.907917,0.538507,7.926334,0.93055,True,False,True,False,False
+0.5,10KQ,-0.512457,0.4735063293,12.904868,8.775797,10.323895,0.970059,False,True,False,False,False
+0.5,eta0,-0.670840,0.5795754717,14.272096,8.599762,11.417677,0.959272,True,False,True,False,False
+0.7,KT,-3.966657,0.1709957785,10.073932,0.599144,8.059145,0.929855,True,False,True,False,False
+0.7,10KQ,-1.125166,0.2932641788,8.473677,3.747186,6.778941,0.964589,False,True,False,False,False
+0.7,eta0,-0.773653,0.6996700537,11.249424,6.343231,8.999539,0.963991,True,False,True,False,False
+0.9,KT,-2.575692,0.03135571835,14.538524,2.223478,11.630819,0.911744,True,False,True,False,False
+0.9,10KQ,2.769679,0.09298004256,0.101217,0.687019,0.080974,0.99531,False,True,False,True,False
+0.9,eta0,-0.796611,0.5257653489,27.001627,14.239707,21.601302,0.916041,True,False,True,False,False
