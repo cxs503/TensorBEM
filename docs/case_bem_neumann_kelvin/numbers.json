@@ -1,0 +1,691 @@
+{
+ "case": "CASE-BEM-NEUMANN-KELVIN",
+ "mission": 17246,
+ "stage": "cheap",
+ "generated_at_utc": "2026-11-13T03:16:27+00:00",
+ "repo": "TensorBEM",
+ "python": "3.11.6",
+ "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+ "git_head": "05167765cb6bb1689dc8577b9a223390c62e2d54",
+ "reference": {
+  "theory": "Michell thin-ship, Phil. Mag. 45 (1898) 106-123",
+  "evaluated_by": "tensorbem.wigley.michell_wave_resistance_canonical",
+  "arbitration": "docs/michell_exit_arbitration.md (mission m16345)",
+  "cross_check": "tensorbem.thin_ship_michell lambda-form quadrature",
+  "tolerance": 0.05,
+  "s_ref": "L*T (case convention of benchmarks/verified/bem_wigley_wave_resistance)"
+ },
+ "geometry": {
+  "L": 10.0,
+  "B": 1.0,
+  "T": 0.625,
+  "B_over_L": 0.1,
+  "T_over_L": 0.0625,
+  "L_over_B": 10.0,
+  "Cb_closed_form": 0.4444444444444444,
+  "Cm_closed_form": 0.6666666666666666,
+  "Cp_closed_form": 1.0,
+  "volume_closed_form": 2.7777777777777777,
+  "waterplane_area_closed_form": 6.666666666666667,
+  "notes": "y = (B/2)(1-(2x/L)^2)(1-(z/T)^2): Cb = 4/9 (NOT 0.5625; that figure in the campaign metadata does not belong to this hull, see docs/m10003/REPORT.md), Cm = 2/3, Cp = Cb/Cm = 1 (fine form).",
+  "panel_area_ladder": [
+   {
+    "nx": 8,
+    "nz": 4,
+    "n_panels": 32,
+    "half_area": 7.3853698612653975,
+    "full_area": 14.770739722530795
+   },
+   {
+    "nx": 16,
+    "nz": 8,
+    "n_panels": 128,
+    "half_area": 7.425872011766339,
+    "full_area": 14.851744023532678
+   },
+   {
+    "nx": 32,
+    "nz": 16,
+    "n_panels": 512,
+    "half_area": 7.436109588928708,
+    "full_area": 14.872219177857415
+   },
+   {
+    "nx": 64,
+    "nz": 32,
+    "n_panels": 2048,
+    "half_area": 7.438675622931868,
+    "full_area": 14.877351245863736
+   }
+  ],
+  "area_drift_last_pair": 0.0003449584486853536
+ },
+ "kernel": {
+  "free_surface_condition": {
+   "max_relative_residual": 4.5321705906514404e-07,
+   "mean_relative_residual": 2.1647451834643887e-07,
+   "kappa": 1.0,
+   "radiation": "downstream",
+   "sign": -1.0,
+   "n_theta": 64
+  },
+  "radiation": {
+   "upstream_mean_abs": 0.11561073328081639,
+   "downstream_mean_abs": 0.11396366290836357,
+   "ratio_down_over_up": 0.9857533091806268,
+   "radiation": "downstream",
+   "sign": -1.0
+  }
+ },
+ "route_a": {
+  "froudes": [
+   0.2,
+   0.25,
+   0.3,
+   0.35,
+   0.4
+  ],
+  "s_ref": 6.25,
+  "tolerance": 0.05,
+  "rows": [
+   {
+    "Fr": 0.2,
+    "U": 1.9805706248452741,
+    "kappa": 2.5,
+    "ref_michell_canonical": 26.539268567543782,
+    "ref_Cw": 0.0021121968732799932,
+    "ref_michell_lambda_form": 26.549113356755985,
+    "ref_route_spread": 0.00037095179119752135,
+    "got_farfield_closed_form_amplitude": 26.548989061130783,
+    "got_Cw_closed_form": 0.0021129705041021446,
+    "err_closed_form": 0.0003662683303521039,
+    "got_farfield_panel_finest": 27.15196440280333,
+    "got_Cw_panel_finest": 0.002160959868545415,
+    "err_panel_finest": 0.023086387392335452,
+    "panel_mesh_ladder": [
+     {
+      "nx": 30,
+      "nz": 15,
+      "n_panels": 450,
+      "rw": 29.56958723196988,
+      "cw": 0.002353372683824767,
+      "rel_error_ref": 0.11418244842406954,
+      "seconds": 0.093597412109375
+     },
+     {
+      "nx": 60,
+      "nz": 30,
+      "n_panels": 1800,
+      "rw": 27.15196440280333,
+      "cw": 0.002160959868545415,
+      "rel_error_ref": 0.023086387392335452,
+      "seconds": 0.28283023834228516
+     }
+    ],
+    "theta_sensitivity": [
+     {
+      "n_theta": 501,
+      "rw": 26.54259311029437,
+      "rel_error_ref": 0.000125268815985854
+     },
+     {
+      "n_theta": 1001,
+      "rw": 26.54809567762378,
+      "rel_error_ref": 0.0003326056276770834
+     },
+     {
+      "n_theta": 2001,
+      "rw": 26.549104938981486,
+      "rel_error_ref": 0.0003706346093401029
+     },
+     {
+      "n_theta": 4001,
+      "rw": 26.548989061130783,
+      "rel_error_ref": 0.0003662683303521039
+     },
+     {
+      "n_theta": 8001,
+      "rw": 26.54904474382048,
+      "rel_error_ref": 0.00036836645485604526
+     }
+    ],
+    "lam_max_sensitivity": [
+     {
+      "lam_max": 20.0,
+      "rw": 26.549079823354987
+     },
+     {
+      "lam_max": 40.0,
+      "rw": 26.549113356755985
+     },
+     {
+      "lam_max": 60.0,
+      "rw": 26.549203474289794
+     }
+    ],
+    "passed_finest": true,
+    "passed_closed_form": true
+   },
+   {
+    "Fr": 0.25,
+    "U": 2.4757132810565925,
+    "kappa": 1.6000000000000003,
+    "ref_michell_canonical": 49.71924562013586,
+    "ref_Cw": 0.0025325028954353962,
+    "ref_michell_lambda_form": 49.72548592009258,
+    "ref_route_spread": 0.00012551075300698707,
+    "got_farfield_closed_form_amplitude": 49.72557654697277,
+    "got_Cw_closed_form": 0.0025328253679577626,
+    "err_closed_form": 0.00012733352563872453,
+    "got_farfield_panel_finest": 50.25401148655669,
+    "got_Cw_panel_finest": 0.002559741766182508,
+    "err_panel_finest": 0.01075571159117222,
+    "panel_mesh_ladder": [
+     {
+      "nx": 30,
+      "nz": 15,
+      "n_panels": 450,
+      "rw": 51.977866590285544,
+      "cw": 0.0026475481676484294,
+      "rel_error_ref": 0.045427498788013866,
+      "seconds": 0.19795632362365723
+     },
+     {
+      "nx": 60,
+      "nz": 30,
+      "n_panels": 1800,
+      "rw": 50.25401148655669,
+      "cw": 0.002559741766182508,
+      "rel_error_ref": 0.01075571159117222,
+      "seconds": 0.27466654777526855
+     }
+    ],
+    "theta_sensitivity": [
+     {
+      "n_theta": 501,
+      "rw": 49.71828288444784,
+      "rel_error_ref": -1.9363441178807612e-05
+     },
+     {
+      "n_theta": 1001,
+      "rw": 49.72699026857135,
+      "rel_error_ref": 0.00015576761752705105
+     },
+     {
+      "n_theta": 2001,
+      "rw": 49.725374566380395,
+      "rel_error_ref": 0.00012327110293192247
+     },
+     {
+      "n_theta": 4001,
+      "rw": 49.72557654697277,
+      "rel_error_ref": 0.00012733352563872453
+     },
+     {
+      "n_theta": 8001,
+      "rw": 49.725490928998205,
+      "rel_error_ref": 0.0001256114968047261
+     }
+    ],
+    "lam_max_sensitivity": [
+     {
+      "lam_max": 20.0,
+      "rw": 49.72557807429704
+     },
+     {
+      "lam_max": 40.0,
+      "rw": 49.72548592009258
+     },
+     {
+      "lam_max": 60.0,
+      "rw": 49.72553017002131
+     }
+    ],
+    "passed_finest": true,
+    "passed_closed_form": true
+   },
+   {
+    "Fr": 0.3,
+    "U": 2.970855937267911,
+    "kappa": 1.1111111111111112,
+    "ref_michell_canonical": 144.13568878577385,
+    "ref_Cw": 0.005098406459788646,
+    "ref_michell_lambda_form": 144.14002947613514,
+    "ref_route_spread": 3.0115305916638872e-05,
+    "got_farfield_closed_form_amplitude": 144.14012526357922,
+    "got_Cw_closed_form": 0.005098563388078178,
+    "err_closed_form": 3.077987029266804e-05,
+    "got_farfield_panel_finest": 144.81853143270416,
+    "got_Cw_panel_finest": 0.005122560154071143,
+    "err_panel_finest": 0.004737498760249498,
+    "panel_mesh_ladder": [
+     {
+      "nx": 30,
+      "nz": 15,
+      "n_panels": 450,
+      "rw": 146.93547325920358,
+      "cw": 0.005197441191336402,
+      "rel_error_ref": 0.019424644215569616,
+      "seconds": 0.06759023666381836
+     },
+     {
+      "nx": 60,
+      "nz": 30,
+      "n_panels": 1800,
+      "rw": 144.81853143270416,
+      "cw": 0.005122560154071143,
+      "rel_error_ref": 0.004737498760249498,
+      "seconds": 0.27690720558166504
+     }
+    ],
+    "theta_sensitivity": [
+     {
+      "n_theta": 501,
+      "rw": 144.13469758895522,
+      "rel_error_ref": -6.8768313176397e-06
+     },
+     {
+      "n_theta": 1001,
+      "rw": 144.13727983149036,
+      "rel_error_ref": 1.1038527167784823e-05
+     },
+     {
+      "n_theta": 2001,
+      "rw": 144.1400766852582,
+      "rel_error_ref": 3.0442838420665865e-05
+     },
+     {
+      "n_theta": 4001,
+      "rw": 144.14012526357922,
+      "rel_error_ref": 3.077987029266804e-05
+     },
+     {
+      "n_theta": 8001,
+      "rw": 144.13999629646517,
+      "rel_error_ref": 2.988510845305957e-05
+     }
+    ],
+    "lam_max_sensitivity": [
+     {
+      "lam_max": 20.0,
+      "rw": 144.14029683720977
+     },
+     {
+      "lam_max": 40.0,
+      "rw": 144.14002947613514
+     },
+     {
+      "lam_max": 60.0,
+      "rw": 144.14001461175965
+     }
+    ],
+    "passed_finest": true,
+    "passed_closed_form": true
+   },
+   {
+    "Fr": 0.35,
+    "U": 3.4659985934792292,
+    "kappa": 0.8163265306122452,
+    "ref_michell_canonical": 114.31457242455964,
+    "ref_Cw": 0.0029707831017945804,
+    "ref_michell_lambda_form": 114.3177918160435,
+    "ref_route_spread": 2.8162564190821495e-05,
+    "got_farfield_closed_form_amplitude": 114.31757597469284,
+    "got_Cw_closed_form": 0.0029708611574246883,
+    "err_closed_form": 2.627442914316994e-05,
+    "got_farfield_panel_finest": 114.79024581134657,
+    "got_Cw_panel_finest": 0.002983144801877678,
+    "err_panel_finest": 0.004161091422537903,
+    "panel_mesh_ladder": [
+     {
+      "nx": 30,
+      "nz": 15,
+      "n_panels": 450,
+      "rw": 116.27661413018481,
+      "cw": 0.003021772229606208,
+      "rel_error_ref": 0.017163530983068595,
+      "seconds": 0.10960531234741211
+     },
+     {
+      "nx": 60,
+      "nz": 30,
+      "n_panels": 1800,
+      "rw": 114.79024581134657,
+      "cw": 0.002983144801877678,
+      "rel_error_ref": 0.004161091422537903,
+      "seconds": 0.27039432525634766
+     }
+    ],
+    "theta_sensitivity": [
+     {
+      "n_theta": 501,
+      "rw": 114.34018012310335,
+      "rel_error_ref": 0.0002240107975788344
+     },
+     {
+      "n_theta": 1001,
+      "rw": 114.31891998046449,
+      "rel_error_ref": 3.803151087943979e-05
+     },
+     {
+      "n_theta": 2001,
+      "rw": 114.31702879601173,
+      "rel_error_ref": 2.148782434282227e-05
+     },
+     {
+      "n_theta": 4001,
+      "rw": 114.31757597469284,
+      "rel_error_ref": 2.627442914316994e-05
+     },
+     {
+      "n_theta": 8001,
+      "rw": 114.31776781154697,
+      "rel_error_ref": 2.7952577869613973e-05
+     }
+    ],
+    "lam_max_sensitivity": [
+     {
+      "lam_max": 20.0,
+      "rw": 114.31848366096392
+     },
+     {
+      "lam_max": 40.0,
+      "rw": 114.3177918160435
+     },
+     {
+      "lam_max": 60.0,
+      "rw": 114.31775483983559
+     }
+    ],
+    "passed_finest": true,
+    "passed_closed_form": true
+   },
+   {
+    "Fr": 0.4,
+    "U": 3.9611412496905483,
+    "kappa": 0.625,
+    "ref_michell_canonical": 327.11010790699873,
+    "ref_Cw": 0.0065084776675458774,
+    "ref_michell_lambda_form": 327.1126410713239,
+    "ref_route_spread": 7.74407229832102e-06,
+    "got_farfield_closed_form_amplitude": 327.1123894212458,
+    "got_Cw_closed_form": 0.006508523062610617,
+    "err_closed_form": 6.974759238236643e-06,
+    "got_farfield_panel_finest": 327.7550088324336,
+    "got_Cw_panel_finest": 0.006521309197876227,
+    "err_panel_finest": 0.001971510234157016,
+    "panel_mesh_ladder": [
+     {
+      "nx": 30,
+      "nz": 15,
+      "n_panels": 450,
+      "rw": 329.7578537880552,
+      "cw": 0.006561159607111903,
+      "rel_error_ref": 0.00809435666173062,
+      "seconds": 0.07706904411315918
+     },
+     {
+      "nx": 60,
+      "nz": 30,
+      "n_panels": 1800,
+      "rw": 327.7550088324336,
+      "cw": 0.006521309197876227,
+      "rel_error_ref": 0.001971510234157016,
+      "seconds": 0.2735903263092041
+     }
+    ],
+    "theta_sensitivity": [
+     {
+      "n_theta": 501,
+      "rw": 327.09538387594745,
+      "rel_error_ref": -4.5012461233613946e-05
+     },
+     {
+      "n_theta": 1001,
+      "rw": 327.11031503062696,
+      "rel_error_ref": 6.331923814715726e-07
+     },
+     {
+      "n_theta": 2001,
+      "rw": 327.11091944358725,
+      "rel_error_ref": 2.480927886047951e-06
+     },
+     {
+      "n_theta": 4001,
+      "rw": 327.1123894212458,
+      "rel_error_ref": 6.974759238236643e-06
+     },
+     {
+      "n_theta": 8001,
+      "rw": 327.1125317387948,
+      "rel_error_ref": 7.4098346015297575e-06
+     }
+    ],
+    "lam_max_sensitivity": [
+     {
+      "lam_max": 20.0,
+      "rw": 327.1142117605192
+     },
+     {
+      "lam_max": 40.0,
+      "rw": 327.1126410713239
+     },
+     {
+      "lam_max": 60.0,
+      "rw": 327.11255717436546
+     }
+    ],
+    "passed_finest": true,
+    "passed_closed_form": true
+   }
+  ],
+  "richardson_rw_extrapolated": NaN,
+  "richardson_observed_order": NaN,
+  "max_abs_error": 0.023086387392335452,
+  "all_passed": true
+ },
+ "route_b": {
+  "radiation_mode_comparison_Fr0.30": [
+   {
+    "mode": "halfplane,sign=-1 (verified)",
+    "rw_far": 2161.0241503410202,
+    "rel_error": 13.99298451719969,
+    "bc_residual": 1.7370928643828361e-15
+   },
+   {
+    "mode": "downstream,sign=-1 (module default)",
+    "rw_far": 7139.82836063717,
+    "rel_error": 48.53546495517125,
+    "bc_residual": 1.8556322554175166e-15
+   }
+  ],
+  "sweep_mesh": [
+   16,
+   8
+  ],
+  "rows": [
+   {
+    "Fr": 0.2,
+    "U": 1.9805706248452741,
+    "mesh": [
+     16,
+     8
+    ],
+    "n_panels": 128,
+    "rw_far": 1342.0166008940982,
+    "cw_far": 0.10680788964037008,
+    "ref": 26.539268567543782,
+    "ref_Cw": 0.0021121968732799932,
+    "rel_error": 49.567203744843155,
+    "bc_residual": 1.5969991682316455e-15,
+    "condition_number": 35.83941975656508,
+    "rw_near_field": -59.85601636484365,
+    "seconds": 8.463618755340576
+   },
+   {
+    "Fr": 0.25,
+    "U": 2.4757132810565925,
+    "mesh": [
+     16,
+     8
+    ],
+    "n_panels": 128,
+    "rw_far": 943.4116070968832,
+    "cw_far": 0.048053678143350896,
+    "ref": 49.71924562013586,
+    "ref_Cw": 0.0025325028954353962,
+    "rel_error": 17.97477717793067,
+    "bc_residual": 9.698269241387092e-16,
+    "condition_number": 138.05647979544958,
+    "rw_near_field": -19.35659086229036,
+    "seconds": 8.393824815750122
+   },
+   {
+    "Fr": 0.3,
+    "U": 2.970855937267911,
+    "mesh": [
+     16,
+     8
+    ],
+    "n_panels": 128,
+    "rw_far": 2161.0241503410202,
+    "cw_far": 0.07644032911400206,
+    "ref": 144.13568878577385,
+    "ref_Cw": 0.005098406459788646,
+    "rel_error": 13.99298451719969,
+    "bc_residual": 1.7370928643828361e-15,
+    "condition_number": 44.99818594503842,
+    "rw_near_field": -121.8478566654382,
+    "seconds": 8.13770842552185
+   },
+   {
+    "Fr": 0.35,
+    "U": 3.4659985934792292,
+    "mesh": [
+     16,
+     8
+    ],
+    "n_panels": 128,
+    "rw_far": 2187.914535272485,
+    "cw_far": 0.0568590634745864,
+    "ref": 114.31457242455964,
+    "ref_Cw": 0.0029707831017945804,
+    "rel_error": 18.13941931345953,
+    "bc_residual": 1.1816968997734914e-15,
+    "condition_number": 31.681150409407234,
+    "rw_near_field": 167.636996240016,
+    "seconds": 7.557478904724121
+   },
+   {
+    "Fr": 0.4,
+    "U": 3.9611412496905483,
+    "mesh": [
+     16,
+     8
+    ],
+    "n_panels": 128,
+    "rw_far": 5751.892240316571,
+    "cw_far": 0.11444483459029747,
+    "ref": 327.11010790699873,
+    "ref_Cw": 0.0065084776675458774,
+    "rel_error": 16.583963629616427,
+    "bc_residual": 1.4709910232379345e-15,
+    "condition_number": 98.2761093621993,
+    "rw_near_field": -422.247570874711,
+    "seconds": 6.935815095901489
+   }
+  ],
+  "mesh_ladder": [
+   {
+    "nx": 16,
+    "nz": 8,
+    "n_panels": 128,
+    "rw_far": 2161.0241503410202,
+    "cw_far": 0.07644032911400206,
+    "rel_error": 13.99298451719969,
+    "bc_residual": 1.7370928643828361e-15,
+    "seconds": 7.931605577468872
+   }
+  ],
+  "theta_sensitivity": [
+   {
+    "n_theta": 24,
+    "rw_far": 1015.2127427776528,
+    "rel_error": 6.0434515651883025,
+    "seconds": 4.729567050933838
+   },
+   {
+    "n_theta": 48,
+    "rw_far": 2161.0241503410202,
+    "rel_error": 13.99298451719969,
+    "seconds": 7.505028963088989
+   }
+  ],
+  "thin_hull_ladder": [
+   {
+    "B_over_L": 0.2,
+    "B": 2.0,
+    "rw_far": 47887.12081907524,
+    "ref": 576.5427551430954,
+    "rel_error": 82.05909733821885,
+    "min_mirror_distance": 0.0274658203125,
+    "condition_number": 71.61657600510645
+   },
+   {
+    "B_over_L": 0.1,
+    "B": 1.0,
+    "rw_far": 2161.0241503410202,
+    "ref": 144.13568878577385,
+    "rel_error": 13.99298451719969,
+    "min_mirror_distance": 0.01373291015625,
+    "condition_number": 44.99818594503842
+   },
+   {
+    "B_over_L": 0.05,
+    "B": 0.5,
+    "rw_far": 586.9397105377501,
+    "ref": 36.03392219644346,
+    "rel_error": 15.288532437239954,
+    "min_mirror_distance": 0.006866455078125,
+    "condition_number": 34.69552443416552
+   }
+  ],
+  "max_abs_error": 49.567203744843155,
+  "any_passed": false
+ },
+ "wave_field": {
+  "Fr": 0.3,
+  "mesh": [
+   24,
+   12
+  ],
+  "n_panels": 288,
+  "grid": [
+   41,
+   25
+  ],
+  "eta_min": -0.2968228793050607,
+  "eta_max": 0.25934741906431263,
+  "measured_half_angle_deg": 74.59657503753037,
+  "theory_half_angle_deg": 19.47122063449069,
+  "seconds": 38.117472648620605
+ },
+ "blocks_run": [
+  "route_b"
+ ],
+ "table_md": "| Fr | U [m/s] | ref Rw [N] | ref Cw | got Rw [N] | got Cw | rel err | <5% |\n|---:|---:|---:|---:|---:|---:|---:|:--:|\n| 0.20 | 1.9806 | 26.5393 | 2.112197e-03 | 27.1520 | 2.160960e-03 | +2.309% | PASS |\n| 0.25 | 2.4757 | 49.7192 | 2.532503e-03 | 50.2540 | 2.559742e-03 | +1.076% | PASS |\n| 0.30 | 2.9709 | 144.1357 | 5.098406e-03 | 144.8185 | 5.122560e-03 | +0.474% | PASS |\n| 0.35 | 3.4660 | 114.3146 | 2.970783e-03 | 114.7902 | 2.983145e-03 | +0.416% | PASS |\n| 0.40 | 3.9611 | 327.1101 | 6.508478e-03 | 327.7550 | 6.521309e-03 | +0.197% | PASS |\n",
+ "figures": [
+  {
+   "file": "fig_cw_vs_froude.png",
+   "caption": "Cw(Fr): NK steady-Kelvin far field (got) vs Michell thin-ship theory (ref); dotted = relative error, dashed line = 5% case tolerance."
+  },
+  {
+   "file": "fig_route_a_convergence.png",
+   "caption": "Route A mesh convergence of the far-field resistance against the Michell reference."
+  },
+  {
+   "file": "fig_kelvin_wake.png",
+   "caption": "NK thin-ship wave elevation with the Kelvin cusp marked; measured outermost-crest half angle is reported in the table."
+  }
+ ]
+}
