@@ -1,0 +1,111 @@
+{
+ "subject_mission": 17245,
+ "subject_head_commit": "ab3f9c1960995ca03cba2812125cfe9033c01fc4",
+ "subject_branch": "agent/m17245",
+ "declared_level": 2,
+ "impl_files": [
+  "docs/board_audit/m17266/snapshot/kp505_three_density_gci.py",
+  "docs/board_audit/m17266/snapshot/test_case_bem_kp505_gci.py",
+  "docs/board_audit/m17266/snapshot/kp505_openwater_anchor.json"
+ ],
+ "impl_origin": {
+  "note": "snapshot = byte copy (sha256 recorded below) of the audited commit; the driver is NOT in /root/tensor-ecosystem/TensorBEM main (grep -rl kp505_three_density_gci over ECO/TensorBEM/*.py = 0 hits), so no main-side path exists",
+  "branch": "agent/m17245",
+  "commit": "ab3f9c1960995ca03cba2812125cfe9033c01fc4",
+  "lines": {
+   "driver": 831,
+   "test": 125
+  },
+  "sha256": {
+   "kp505_three_density_gci.py": "106911935869748eb8ac9de0b001b796f59bf87d8300e46d3162711a086cd462",
+   "test_case_bem_kp505_gci.py": "fb0043a69850584e4c9e8d4c867a0cf7705e3a60f342d296afb2e82e694e2d36",
+   "case.json": "7f87625109d1682c6daa6d2a8f27583a9c4f657ab7282714be934515270b0079"
+  },
+  "no_placeholder": "grep TODO|NotImplementedError|np.random in driver = 0 hits (only \"random_seed\": null in the provenance block); the driver calls the main-branch solver tensorbem.propeller.open_water_point (driver:299, propeller.py:680)"
+ },
+ "entry": "docs/board_audit/m17266/snapshot/kp505_three_density_gci.py",
+ "entry_cmd": "PYTHONPATH=src python -m tensorbem.benchmarks.kp505_three_density_gci <outdir>  (argparse main at driver:798-816, phases assemble/ladder/span/sweep)",
+ "run_artifacts": [
+  "docs/board_audit/m17266/snapshot/case.json",
+  "docs/board_audit/m17266/snapshot/gci.csv",
+  "docs/board_audit/m17266/snapshot/levels.csv",
+  "docs/board_audit/m17266/snapshot/figures/kp505_gci_ladder.png",
+  "docs/board_audit/m17266/snapshot/figures/kp505_gci_indices.png"
+ ],
+ "run_artifacts_note": "runs/m17245_repro/* = the auditor's own re-run of repro_cmd in this audit worktree (03:13-03:14, 128-core loongarch64 box, no cluster); it regenerated case.json/gci.csv/levels.csv/2 PNGs from scratch (cache dir rebuilt).",
+ "tests": [
+  "tests/test_case_bem_kp505_gci.py (8 tests, audited re-run in work/m17245: 8 passed in 0.78 s)",
+  "content: reference-procedure self-verification on a manufactured sequence (G7), oscillatory/anti-convergent triplet gating (G3/G4/G6), asymptotic-ratio identity, D1 real-mesh regression, artefact self-consistency"
+ ],
+ "integration_callers": [],
+ "integration_gap": "0 references to tensorbem.benchmarks.kp505_three_density_gci anywhere in /root/tensor-ecosystem/TensorBEM (*.py grep), and tests/test_case_bem_kp505_gci.py + benchmarks/verified/bem_kp505_gci/ do not exist on ECO main (main carries only kp505_gci_ladder.py / kp505_w20_gci.py / kp505_w22.py). The delivery is a case driver on top of propeller.open_water_point: it neither landed in main nor extended the solver -> L3 refused.",
+ "benchmark": {
+  "registered_machine_referee": "ABSENT: SELECT ... FROM tensor_benchmark_cases WHERE anchor_slug='CASE-BEM-KP505-GCI' -> 0 rows (the table holds 39 rows, none for repo=TensorBEM); tensor_case_pool id=164 (case_code=BEM-KP505-GCI) is still status='dispatched' with linked_anchor NULL",
+  "platform_l4_machine_verdict": "GET /tensor/bench/l4-verdict/17245 -> status=CLAIMED_NOT_PROVEN, l4_benchmark_pass=false, rows=0, failed_checks=[execution_success, source_cluster_job, cluster_job_bound, ref_got_error_present, within_tolerance]",
+  "case_tolerance": "3% on GCI_fine (case-pool tol_policy, predeclared)",
+  "ref_vs_got_J0.70": {
+   "KT": {
+    "gci_fine_pct": 10.07393174460437,
+    "under_3pct": false
+   },
+   "10KQ": {
+    "gci_fine_pct": 8.473676824051848,
+    "under_3pct": false
+   },
+   "eta0": {
+    "gci_fine_pct": 11.249423952325362,
+    "under_3pct": false
+   }
+  },
+  "worst_gci_fine_pct_J0.70": 11.249423952325362,
+  "tolerance_met": false,
+  "fail_stage": "G3-monotone",
+  "criteria_pass": "5/8 (G1,G2,G7,G8 pass; G3,G4,G5,G6 fail)",
+  "gci_recompute_independent": "auditor re-derived p, GCI_fine, asymptotic ratio from levels.csv for all 9 (J, quantity) cells without importing tensorbem: max |Δ| vs delivered gci.csv < 1e-6 (artefact docs/board_audit/m17266/independent_recompute.json)",
+  "anchor_ref_vs_got": "EFD anchor @J=0.70 (KT 0.193, 10KQ 0.342, eta0 0.6287): D3 KT 0.15824 = -18.01%, 10KQ 0.27465 = -19.69%, eta0 0.64190 = +2.10%; extrapolated KT -11.40%, 10KQ -14.25%, eta0 +11.29% -> 2 of 6 comparisons exceed the platform 15% unacceptable line, 1 of 6 is inside 3%"
+ },
+ "repro_cmd": "cd /root/tp-agent/work/m17245 && PYTHONPATH=src python -m tensorbem.benchmarks.kp505_three_density_gci /root/tp-agent/work/m17266/runs/m17245_repro",
+ "repro_result": "AUDITOR RE-RAN IT (not just read): 165 s wall, exit 0; gci.csv byte-identical to the delivered artefact, levels.csv identical except the wall_seconds column, case.json identical for verdict/gci/criteria/anchor_comparison, both PNGs md5-identical (kp505_gci_ladder.png e1c322b7..., kp505_gci_indices.png 625299d5...) -> deterministic and reproducible.",
+ "external_anchor": [
+  "docs/board_audit/m17266/snapshot/kp505_openwater_anchor.json"
+ ],
+ "external_anchor_note": "anchor = Iftikhar & Takinaci (MARINE 2023) Table 2 p.10 'Experimental' column, SECONDARY_REPRODUCTION (the paper cites no primary KRISO/NMRI table). Auditor checks: the on-disk PDF benchmarks/anchors/sources/kp505_marine2023_iftikhar.pdf sha256 = 161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c = the pdf_sha256 declared in the anchor file; the p.10 line transcribed in anchor source_line '0.7 0.173 0.356 0.193 0.342 10.31% 4.01%' is byte-equal to the extracted transcript line 21; eta0 = J*KT/(2*pi*KQ) re-checks to residual 0.0. Anchor quality is nevertheless bounded by the secondary transcription, so no L5 and no accuracy claim may rest on it alone.",
+ "audit_report": "docs/board_audit/m17266/AUDIT_m17245.md",
+ "platform_report_id": 16258,
+ "level_rationale": "L2 独立功能实现：831 行真代码（输入 J + KP505 几何 → 调主线求解器 open_water_point → 输出 KT/10KQ/eta0 → GCI 阶梯 + 判据机），入口 python -m ..., 运行工件非空（case.json 26 KB / gci.csv / levels.csv / 2 PNG / 13 个 cell cache），8 条契约测试通过，审计者复跑逐位一致。不授 L3：全生态仓 0 处引用、未并入 main、未扩展求解器（只是在既有 open_water_point 上加算例驱动器）。不授 L4：算例 3% 判据未达（GCI_fine 8.47–11.25%，观测阶 p<0 反收敛），锚值对照 KT -18.0% / 10KQ -19.7% 越过平台 15% 不可接受线，且 tensor_benchmark_cases 无该锚行、平台机器 L4 裁定 CLAIMED_NOT_PROVEN。不授 L5：参考值只有二手转录，无一次实验/独立实现对照。",
+ "honest_fail_credibility": "成立：交付自报 honest-FAIL 且数字与工件逐项可复算（审计重算最大偏差 < 1e-6），没有把 8.47–11.25% 的 GCI 粉饰成 <3%，failure_reason 与 criteria 表一致。判低级不是罚造假，而是功能实质只到 L2 且基准未通过。",
+ "disposition": "confirmed at L2 + request changes: (1) 平台侧登记 tensor_benchmark_cases 行（anchor_slug=CASE-BEM-KP505-GCI，metric=GCI_fine / KT / 10KQ / eta0，tolerance=<3%）并把 tensor_case_pool id=164 置终态，否则机器裁判永远缺席；(2) 合并或明确废弃 agent/m17245，算例不该悬在主干外；(3) 改进方向=模型形式（展向载荷/尖部 √ 退化、拱度与径向螺距分布），不是再加密展向面元（展向扫描 8→32 极差 19.32% 且非单调）；(4) 锚值只能作报告项（二手转录），不得用于精度宣称。",
+ "checks_run": [
+  "SELECT case_name,metric,tolerance FROM tensor_benchmark_cases WHERE anchor_slug='CASE-BEM-KP505-GCI' -> 0 rows (machine referee absent)",
+  "GET /tensor/bench/l4-verdict/17245 -> CLAIMED_NOT_PROVEN",
+  "full re-run of repro_cmd (165 s) + byte-level artefact diff (gci.csv identical, PNG md5 identical)",
+  "pytest tests/test_case_bem_kp505_gci.py -q -> 8 passed",
+  "independent GCI/p/anchor-error recompute from levels.csv without importing tensorbem -> max |Δ| < 1e-6",
+  "grep integration callers in /root/tensor-ecosystem/TensorBEM -> 0 hits; ECO main has no test_case_bem_kp505_gci.py",
+  "PDF sha256 + p.10 transcript line cross-check of the EFD anchor"
+ ],
+ "checks_not_run": [
+  "KRISO/KCS-workshop primary EFD table: not_run (not reachable from this sandbox; the anchor stays SECONDARY)",
+  "fourth-density refinement level (r=2 again): not_run — 1024 bound panels x 192 wake steps, direct dense solve, >6.4 GB / >>50 s per point; the asymptotic range therefore remains admitted, not tested",
+  "blade-geometry reconstruction (camber/radial pitch) against the KP505 IGES: not_run — only the case's own declared model was read",
+  "cluster re-run: not_run — the case ran in 167 s locally, below the 10 min cluster threshold"
+ ],
+ "repro_artifacts": [
+  {
+   "path": "runs/m17245_repro/case.json",
+   "note": "auditor re-run output in this worktree (runs/ is git-ignored by repo policy; the committed snapshot copy is the durable artefact)"
+  },
+  {
+   "path": "runs/m17245_repro/gci.csv",
+   "note": "auditor re-run output in this worktree (runs/ is git-ignored by repo policy; the committed snapshot copy is the durable artefact)"
+  },
+  {
+   "path": "runs/m17245_repro/levels.csv",
+   "note": "auditor re-run output in this worktree (runs/ is git-ignored by repo policy; the committed snapshot copy is the durable artefact)"
+  },
+  {
+   "path": "runs/m17245_repro/figures/kp505_gci_ladder.png",
+   "note": "auditor re-run output in this worktree (runs/ is git-ignored by repo policy; the committed snapshot copy is the durable artefact)"
+  }
+ ]
+}
