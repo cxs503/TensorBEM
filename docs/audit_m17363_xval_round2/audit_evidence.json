@@ -1,0 +1,89 @@
+{
+  "mission": 17363,
+  "audit": 17442,
+  "mission_commit": "8bf9345",
+  "repo": "TensorBEM",
+  "artifacts": {
+    "mission_results_sha256": "1efd46debaecab4614b309d00b81b6a913936fad117cbc7f5d7ae1448cb1e241",
+    "repro_results_sha256": "1efd46debaecab4614b309d00b81b6a913936fad117cbc7f5d7ae1448cb1e241"
+  },
+  "reproduction": {
+    "max_rel_diff": 0.0,
+    "worst_key": "",
+    "n_fields_differing": 0,
+    "only_in_mission": [],
+    "only_in_repro": [],
+    "identical": true,
+    "cmd": "XVAL_MIN=1 PYTHONPATH=src python3 scripts/m17363_xval_run.py run",
+    "note": "driver default (no XVAL_MIN) uses subdivisions 1..4, Duffy 4/6/8/12, FEM R/a 2/4/8 and 96x64 -- a different configuration from the published artefact"
+  },
+  "headline_numbers": {
+    "analytic_current_A": -43.982297150257104,
+    "bem_finest_current_A": -43.836366381792025,
+    "bem_finest_current_rel_error": 0.003317943307202295,
+    "capytaine_finest_current_rel_error": 0.003906775802677526,
+    "skfem_best_current_rel_error": 0.0007190441988305329,
+    "capytaine_single_fro_at_1280": 0.00018357842406934604,
+    "capytaine_double_fro_at_1280": 0.0021499945924460186,
+    "capytaine_double_fro_at_320": 0.0009148982204393238,
+    "quadrature_orders_published": [
+      4,
+      8
+    ],
+    "observed_orders": {
+      "current": [
+        0.9590467812206162,
+        0.9854757273926354
+      ],
+      "density_linf": [
+        0.4397284216050359,
+        0.4220515918072736
+      ],
+      "probe_l2": [
+        0.9455514120278594,
+        0.9832950463953897
+      ]
+    }
+  },
+  "independent_sign_check": {
+    "panels": 1280,
+    "rel_err_fixed_plus": 0.006746658157127626,
+    "rel_err_prefix_minus": 0.26230598848430553,
+    "conclusion": "the '+' (fixed) sign reproduces the analytic exterior potential; the pre-fix '-' sign is off by >20%",
+    "bem_finest_current_rel_error": 0.003317943307202295
+  },
+  "separate_test_bugs": {
+    "test_exact_series": {
+      "max_abs_diff_vs_boundary_data": 0.0687318104813257,
+      "centroid_r_min": 0.9822469463768461,
+      "explanation": "centroids sit at r/a<1, exact_potential is evaluated there, so it cannot equal the r=a boundary data"
+    },
+    "test_dipole_sign_reference": {
+      "max_rel_err_wrong_reference": 1.0,
+      "max_rel_err_correct_reference": 0.043781387474099,
+      "explanation": "test strips the monopole with 1.0 instead of a/r; the fixed '+' representation is accurate to ~1%"
+    }
+  },
+  "richardson": {
+    "records": [
+      {
+        "fem_order": "order2",
+        "outer_ratio": 2.0,
+        "observed_order": 1.9225737092704998,
+        "reported_richardson_rel_error": 0.0,
+        "reported_richardson_current_A": -43.982297150257104,
+        "note": "p is derived from the same two errors that are extrapolated -> error 0.0 is an identity, not independent evidence"
+      },
+      {
+        "fem_order": "order2",
+        "outer_ratio": 4.0,
+        "observed_order": 1.7510729900037407,
+        "reported_richardson_rel_error": 0.0,
+        "reported_richardson_current_A": -43.982297150257104,
+        "note": "p is derived from the same two errors that are extrapolated -> error 0.0 is an identity, not independent evidence"
+      }
+    ],
+    "conclusion": "richardson_rel_error == 0.0 for every pair (observed orders 1.92 and 1.75, i.e. not even 2.0)"
+  },
+  "benchmark_registry_rows": 0
+}

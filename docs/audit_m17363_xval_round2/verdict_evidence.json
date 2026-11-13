@@ -1,0 +1,52 @@
+{
+  "impl_files": [
+    "/root/tp-agent/work/m17363/src/tensorbem/benchmarks/laplace_sphere_xval.py",
+    "/root/tp-agent/work/m17363/src/tensorbem/cathodic_protection.py",
+    "scripts/m17442_audit_m17363.py"
+  ],
+  "entry": "/root/tp-agent/work/m17363/scripts/m17363_xval_run.py",
+  "run_artifacts": [
+    "/root/tp-agent/work/m17363/artifacts/xval_laplace_sphere/results.json",
+    "artifacts/audit_m17363_xval_round2/results_repro.json",
+    "artifacts/audit_m17363_xval_round2/audit_evidence.json",
+    "artifacts/audit_m17363_xval_round2/fig_audit_m17363.png"
+  ],
+  "tests": [
+    "tests/test_laplace_sphere_xval.py::test_current_anchor_within_ledger_band PASS",
+    "::test_probe_potential_matches_exact PASS",
+    "::test_capytaine_route_end_to_end PASS",
+    "::test_skfem_axisymmetric_reference PASS",
+    "::test_sigma_scaling_is_exact PASS",
+    "::test_exact_series_reproduces_boundary_data FAIL(test-side r<a)",
+    "::test_exterior_potential_dipole_sign FAIL(test-side ref uses 1.0 not a/r)",
+    "::test_density_and_potential_converge FAIL(1.082%>1% threshold)",
+    "::test_capytaine_assembly_agreement FAIL(AttributeError xval.solver3d)",
+    "tests/test_cathodic_protection.py 30 PASSED (no regression after sign fix)"
+  ],
+  "integration_callers": [
+    "evaluate_exterior_potential:src/tensorbem/cathodic_protection.py:692",
+    "evaluate_exterior_potential:src/tensorbem/cathodic_protection.py:1250",
+    "solve_laplace_surface:src/tensorbem/benchmarks/laplace_sphere_xval.py:65"
+  ],
+  "benchmark": {
+    "ref": "analytic I=4*pi*sigma*a*phi_a = -43.982297 A",
+    "got": -43.836366,
+    "rel_error": 0.003318,
+    "capytaine_route_got": -43.8105,
+    "capytaine_rel_error": 0.003907,
+    "skfem_got": -44.018336,
+    "skfem_rel_error": 0.000719,
+    "note": "0 rows in tensor_benchmark_cases for anchor_slug=XVAL-BEM-ROUND2-METHOD-SELECTION -> self-declared reference, L4 denied"
+  },
+  "repro_cmd": "cd <git archive 8bf9345 snapshot> && XVAL_MIN=1 PYTHONPATH=src python3 scripts/m17363_xval_run.py run  # sha256(results.json)=1efd46debaecab4614b309d00b81b6a913936fad117cbc7f5d7ae1448cb1e241, verified identical",
+  "external_anchor": [
+    "analytic Legendre series (exterior harmonics)",
+    "capytaine 3.1.dev0 Delhommeau Rankine limit",
+    "scikit-fem 12.0.2 axisymmetric P2 Galerkin",
+    "/root/tp-agent/work/m17363/docs/xval_laplace_sphere/REPORT.md"
+  ],
+  "level_rationale": "L3: real 607-line BIE xval module + real double-layer sign defect fix in production cathodic_protection.evaluate_exterior_potential with 4 in-module callers, verified independently (+0.675% vs -26.23% on exact data). L4 denied: benchmark not registered (0 rows), committed tests 4/9 FAIL, documented repro_cmd omits XVAL_MIN=1, Richardson 0.000% is an algebraic identity, full config never run.",
+  "audit_report": "docs/audit_m17363_xval_round2/REPORT.md",
+  "mission_commit": "8bf9345",
+  "artifacts_sha256": "1efd46debaecab4614b309d00b81b6a913936fad117cbc7f5d7ae1448cb1e241"
+}
