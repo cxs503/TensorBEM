@@ -1,0 +1,71 @@
+{
+ "coefficient": {
+  "check": "coefficient",
+  "reference": 3.0842513753404246,
+  "rows": [
+   {
+    "ka": 0.0001,
+    "coefficient_ka3": 3.084251398942806,
+    "rel_diff_vs_5pi2_over_16": 7.65254789910048e-09
+   },
+   {
+    "ka": 0.001,
+    "coefficient_ka3": 3.084252315295781,
+    "rel_diff_vs_5pi2_over_16": 3.04759645640885e-07
+   },
+   {
+    "ka": 0.01,
+    "coefficient_ka3": 3.0842036001650537,
+    "rel_diff_vs_5pi2_over_16": 1.549003941536346e-05
+   },
+   {
+    "ka": 0.02,
+    "coefficient_ka3": 3.0838910596215943,
+    "rel_diff_vs_5pi2_over_16": 0.0001168243683738517
+   },
+   {
+    "ka": 0.05,
+    "coefficient_ka3": 3.080622456228523,
+    "rel_diff_vs_5pi2_over_16": 0.0011765964152325686
+   }
+  ],
+  "pass": true,
+  "note": "own S(theta)/integrand/quadrature; independent of tensorbem.cylinder_drift"
+ },
+ "bem_rungs": {
+  "check": "bem_rungs",
+  "ka": 0.5,
+  "rows": [
+   {
+    "mesh": [
+     16,
+     6
+    ],
+    "panels": 208,
+    "got_far_error": 0.07395553351990684,
+    "artifact_far_error": 0.07395553351990668,
+    "got_near_error": 0.3020235303885376,
+    "artifact_near_error": 0.3020235303885386,
+    "far_abs_diff": 1.6653345369377348e-16,
+    "near_abs_diff": 9.992007221626409e-16,
+    "seconds": 7.1
+   },
+   {
+    "mesh": [
+     24,
+     9
+    ],
+    "panels": 456,
+    "got_far_error": 0.03179163294647602,
+    "artifact_far_error": 0.03179163294647602,
+    "got_near_error": 0.13350243364647693,
+    "artifact_near_error": 0.13350243364647582,
+    "far_abs_diff": 0.0,
+    "near_abs_diff": 1.1102230246251565e-15,
+    "seconds": 31.1
+   }
+  ],
+  "pass": true
+ },
+ "all_pass": true
+}
