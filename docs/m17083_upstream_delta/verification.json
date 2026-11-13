@@ -1,0 +1,35 @@
+{
+  "portability_gate": {
+    "cmd": "/usr/local/bin/python -m pytest -q -p no:cacheprovider tests/test_tooling_path_portability.py",
+    "exit_code": 0,
+    "summary_line": "7 passed, 14 warnings in 40.84s",
+    "failed": 0,
+    "passed": 7,
+    "xfailed": 0,
+    "seconds": 40.84
+  },
+  "window_modules": {
+    "cmd": "/usr/local/bin/python -m pytest -q -p no:cacheprovider tests/test_numeric_evidence.py tests/test_steady_kelvin_identity.py tests/test_wavemaker_transfer.py tests/test_shape_gradient.py",
+    "exit_code": 0,
+    "summary_line": "64 passed, 1 xfailed, 1 warning in 110.22s (0:01:50)",
+    "failed": 0,
+    "passed": 64,
+    "xfailed": 1,
+    "seconds": 110.22
+  },
+  "ported_legacy_test": {
+    "cmd": "/usr/local/bin/python -m pytest -q -p no:cacheprovider tests/test_wigley3_freq_domain.py",
+    "exit_code": 0,
+    "summary_line": "12 passed, 1 warning in 3.95s",
+    "failed": 0,
+    "passed": 12,
+    "xfailed": 0,
+    "seconds": 3.95
+  },
+  "all_green": true,
+  "totals": {
+    "passed": 83,
+    "failed": 0,
+    "xfailed": 1
+  }
+}
