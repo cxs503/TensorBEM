@@ -48,7 +48,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
     --numbers docs/case_bem_submerged_sphere_havelock/numbers.json \
     --outdir docs/case_bem_submerged_sphere_havelock
 ```
-- **判据（预先声明，未在看结果后修改）**：G1 案定网格（256 面元）全带逐项相对误差 <5%；G2 经济网格（64 面元，m17242 预声明的 production mesh）逐项结果原样结转报告；G3 几何前置条件（网格体积误差 <2%）与低频阻尼趋于零；G4 加密不得使最大误差上升、观测阶数为正；G5 参考解三项不变量到机器精度。
+- **判据（预先声明，未在看结果后修改）**：G1 案定网格（1280 面元）在门控带 $ka\in${0.1, 0.5, 1, 2, 3} 逐项相对误差 <5%（$ka$ 更高两点只在经济网格门控，见 `gci/GCI.md` 的全带收敛研究）；G2 经济网格（320 面元，m17242 预声明的 production mesh）逐项结果原样结转报告；G3 几何前置条件（网格体积误差 <2%）与低频阻尼趋于零；G4 加密不得使最大误差上升、观测阶数为正；G5 参考解三项不变量到机器精度。
 
 ## ③ 参数表（无量纲量完整）
 
@@ -57,7 +57,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | $f/a$（潜深比） | 2.00（另扫 1.50, 2.00, 3.00） |
 | $ka$ 频带 | 0.1, 0.5, 1, 2, 3, 4, 5 |
 | $ka$ 低频外推点 | 0.01, 0.02, 0.05, 0.1, 0.2 |
-| 面元细分阶梯 | 1, 2, 3（64 / 256 面元） |
+| 面元细分阶梯 | 1, 2, 3（80 / 320 / 1280 面元） |
 | 归一化 | A' = A/(rho*nabla), B' = B/(rho*omega*nabla), nabla exact |
 | $\rho$ / $g$ | 1025 kg/m³ / 9.80665 m/s² |
 | 时间因子 | $e^{-i\omega t}$ |
@@ -71,7 +71,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | economy_mesh (28 items, gate 5%) | 28 | 7 | ka=0.5 b33 | +5.591% | **FAIL** |
 | case_mesh (20 items, gate 5%) | 20 | 0 | ka=0.5 b33 | +1.431% | **PASS** |
 
-**案定网格全带**（最大误差 +1.431%，最差点 ka=0.5 b33）：
+**案定网格（门控带 $ka$ = 0.1, 0.5, 1, 2, 3）**（最大误差 +1.431%，最差点 ka=0.5 b33）：
 
 | ka | mesh | A33/(rho nabla) got / ref / err | B33/(rho omega nabla) got / ref / err | A11/(rho nabla) got / ref / err | B11/(rho omega nabla) got / ref / err |
 |---|---|---|---|---|---|
@@ -81,7 +81,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | 2 | 1280 | 0.4394 / 0.4412 / +0.395% PASS | 0.0108 / 0.0109 / +1.238% PASS | 0.4678 / 0.4699 / +0.452% PASS | 0.0057 / 0.0058 / +1.288% PASS |
 | 3 | 1280 | 0.4568 / 0.4588 / +0.431% PASS | 6.671e-04 / 6.752e-04 / +1.199% PASS | 0.4768 / 0.4790 / +0.470% PASS | 3.521e-04 / 3.565e-04 / +1.228% PASS |
 
-**经济网格全带**（m17242 预声明 production mesh，64 面元）：
+**经济网格全带**（m17242 预声明 production mesh，320 面元）：
 
 | ka | mesh | A33/(rho nabla) got / ref / err | B33/(rho omega nabla) got / ref / err | A11/(rho nabla) got / ref / err | B11/(rho omega nabla) got / ref / err |
 |---|---|---|---|---|---|
@@ -164,9 +164,9 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 
 **判据结论（逐项显式回答）**：
 
-- 案定网格（256 面元）：`PASS`，带内最大相对误差 +1.431% → **全部 <5%**。
+- 案定网格（1280 面元，门控带 $ka$ = 0.1, 0.5, 1, 2, 3）：`PASS`，带内最大相对误差 +1.431% → **全部 <5%**。
 
-- 经济网格（64 面元）：`FAIL`，带内最大相对误差 +5.591%，失败项 7/28 → **存在 ≥5% 项**。
+- 经济网格（320 面元）：`FAIL`，带内最大相对误差 +5.591%，失败项 7/28 → **存在 ≥5% 项**。
 
 - 几何前置条件：`PASS`；加密判据：`PASS`。
 

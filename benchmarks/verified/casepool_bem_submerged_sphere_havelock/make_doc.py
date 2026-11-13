@@ -322,7 +322,40 @@ def _reference_gate_table(payload: dict[str, Any]) -> list[str]:
 
 
 # --------------------------------------------------------------------------- document
+def _ka_list(values: Any) -> str:
+    """Format a wavenumber band as ``0.1, 0.5, 1, 2, 3``."""
+    if not values:
+        return "n/a"
+    return ", ".join(f"{float(v):g}" for v in values)
+
+
+def _with_actual_panels(payload: dict[str, Any]) -> dict[str, Any]:
+    """Overwrite the documented panel counts with the ones the run actually used.
+
+    The protocol block carries a hand-written formula for the panel count; the
+    icosphere mesh has ``20 * 4**subdivision`` panels (80 / 320 / 1280), not
+    ``4 * 4**subdivision`` (64 / 256), so that block under-counted the meshes by a
+    factor 5 and the generated CASE.md inherited the error.  The sweep rows carry
+    the authoritative ``n_panels`` of each level, so the document is re-derived
+    from them: a document can no longer disagree with the data it describes.
+    """
+    params = dict(payload.get("nondimensional_parameters") or {})
+    economy_rows = payload.get("band_sweep_economy") or []
+    case_rows = payload.get("band_sweep_case") or []
+    if economy_rows:
+        params["economy_panels"] = int(economy_rows[0]["n_panels"])
+    if case_rows:
+        params["case_panels"] = int(case_rows[0]["n_panels"])
+    gated = params.get("case_gated_band_ka")
+    if case_rows and not gated:
+        params["case_gated_band_ka"] = sorted({float(row["ka"]) for row in case_rows})
+    out = dict(payload)
+    out["nondimensional_parameters"] = params
+    return out
+
+
 def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = None) -> str:
+    payload = _with_actual_panels(payload)
     case = payload["case"]
     ref = payload["reference"]
     verdict = payload["verdict"]
@@ -391,7 +424,9 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
         "    --outdir docs/case_bem_submerged_sphere_havelock\n"
         "```\n"
         "- **判据（预先声明，未在看结果后修改）**："
-        f"G1 案定网格（{payload['nondimensional_parameters']['case_panels'] or 'n/a'} 面元）全带逐项相对误差 <5%；"
+        f"G1 案定网格（{payload['nondimensional_parameters']['case_panels'] or 'n/a'} 面元）"
+        f"在门控带 $ka\\in${{{_ka_list(payload['nondimensional_parameters'].get('case_gated_band_ka'))}}} "
+        "逐项相对误差 <5%（$ka$ 更高两点只在经济网格门控，见 `gci/GCI.md` 的全带收敛研究）；"
         f"G2 经济网格（{payload['nondimensional_parameters']['economy_panels']} 面元，m17242 预声明的 production mesh）"
         "逐项结果原样结转报告；G3 几何前置条件（网格体积误差 <2%）与低频阻尼趋于零；"
         "G4 加密不得使最大误差上升、观测阶数为正；G5 参考解三项不变量到机器精度。\n"
@@ -405,9 +440,13 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
                + "） |")
     out.append(f"| $ka$ 频带 | " + ", ".join(f"{k:g}" for k in payload["nondimensional_parameters"]["band_ka"]) + " |")
     out.append(f"| $ka$ 低频外推点 | " + ", ".join(f"{k:g}" for k in payload["nondimensional_parameters"]["low_frequency_ka"]) + " |")
+    ladder_levels = (payload.get("geometry_precondition") or {}).get("levels") or []
+    ladder_counts = (" / ".join(str(level["n_panels"]) for level in ladder_levels)
+                     if ladder_levels else
+                     f"{payload['nondimensional_parameters']['economy_panels']} / "
+                     f"{payload['nondimensional_parameters']['case_panels'] or '-'}")
     out.append(f"| 面元细分阶梯 | " + ", ".join(str(s) for s in payload["nondimensional_parameters"]["panel_subdivisions"])
-               + f"（{payload['nondimensional_parameters']['economy_panels']} / "
-                 f"{payload['nondimensional_parameters']['case_panels'] or '-'} 面元） |")
+               + f"（{ladder_counts} 面元） |")
     out.append(f"| 归一化 | {payload['nondimensional_parameters']['normalisation']} |")
     out.append(f"| $\\rho$ / $g$ | {case['density_kg_m3']:.0f} kg/m³ / {case['gravity_m_s2']} m/s² |")
     out.append(f"| 时间因子 | $e^{{-i\\omega t}}$ |")
@@ -420,7 +459,8 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
     out.append("")
     if case_max is not None:
         out.append(
-            f"**案定网格全带**（最大误差 {_pct(case_max)}，最差点 {worst_case['item']} "
+            f"**案定网格（门控带 $ka$ = {_ka_list(payload['nondimensional_parameters'].get('case_gated_band_ka'))}）**"
+            f"（最大误差 {_pct(case_max)}，最差点 {worst_case['item']} "
             f"{worst_case['quantity']}）：\n"
         )
         out.extend(_band_table(payload["band_sweep_case"]))
@@ -479,7 +519,8 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
     # ⑥ failure modes
     out.append("## ⑥ 失败模式、局限与工件\n")
     out.append("**判据结论（逐项显式回答）**：\n")
-    out.append(f"- 案定网格（{payload['nondimensional_parameters']['case_panels'] or '-'} 面元）：`{verdict['case_mesh']}`"
+    out.append(f"- 案定网格（{payload['nondimensional_parameters']['case_panels'] or '-'} 面元，"
+               f"门控带 $ka$ = {_ka_list(payload['nondimensional_parameters'].get('case_gated_band_ka'))}）：`{verdict['case_mesh']}`"
                + (f"，带内最大相对误差 {_pct(case_max)}" if case_max is not None else "")
                + f" → **{'全部 <5%' if verdict['case_mesh'] == 'PASS' else '存在 ≥5% 项'}**。\n")
     out.append(f"- 经济网格（{payload['nondimensional_parameters']['economy_panels']} 面元）：`{verdict['economy_mesh']}`，"
