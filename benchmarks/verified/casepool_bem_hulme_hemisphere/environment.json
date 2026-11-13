@@ -1,0 +1,16 @@
+{
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "host": "36cb7828dbd5",
+  "machine": "loongarch64",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "argv": [
+    "--merge",
+    "--out",
+    "benchmarks/verified/casepool_bem_hulme_hemisphere"
+  ],
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "verdict": "PASS",
+  "rows": 17,
+  "tasks": 17
+}
