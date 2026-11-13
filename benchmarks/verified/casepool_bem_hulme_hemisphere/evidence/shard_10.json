@@ -1,0 +1,49 @@
+{
+  "rows": [
+    {
+      "ka": 2.0,
+      "nu": 2.0,
+      "subdivisions": 3,
+      "panels": 256,
+      "chief": true,
+      "mesh_volume": 2.0458003100429996,
+      "mesh_waterplane_area": 3.121445152258052,
+      "volume_error": -0.0232023042331736,
+      "waterplane_error": -0.006413148855794248,
+      "condition_number": 2.352259378914911,
+      "nabla_exact": 2.0943951023931953,
+      "A11_dimless": 0.2514141114753521,
+      "A33_dimless": 0.38043529106287255,
+      "B11_dimless": 0.3347324911403365,
+      "B33_dimless": 0.10796623103069927,
+      "Fx_dimless": 1.1789960667935104,
+      "Fz_dimless": 0.47349345024776057,
+      "phase_Fx_deg": -103.88445212759223,
+      "phase_Fz_deg": -84.1197074202591,
+      "Fx_real": -0.2829173413714918,
+      "Fx_imag": -1.1445477287845425,
+      "Fz_real": 0.048509590230554366,
+      "Fz_imag": -0.471001982037435,
+      "wall_seconds": 1.1736352443695068,
+      "reference": {
+        "A11_dimless": 0.24927898108430602,
+        "B11_dimless": 0.34241049340106217,
+        "A33_dimless": 0.38837775391924145,
+        "B33_dimless": 0.10306536393605632,
+        "Fx_dimless": 1.1976167433130802,
+        "Fz_dimless": 0.4646168081478149,
+        "phase_Fx_deg": -103.92088437211635,
+        "phase_Fz_deg": -84.12616763617314
+      },
+      "rel_error_A11_dimless": 0.00856522431918947,
+      "rel_error_B11_dimless": -0.022423384822300142,
+      "rel_error_A33_dimless": -0.020450354780156756,
+      "rel_error_B33_dimless": 0.04755105796437627,
+      "rel_error_Fx_dimless": -0.015548109713344225,
+      "rel_error_Fz_dimless": 0.019105296976517486,
+      "delta_phase_Fx_deg": 0.036432244524121415,
+      "delta_phase_Fz_deg": 0.006460215914032119,
+      "kind": "band"
+    }
+  ]
+}

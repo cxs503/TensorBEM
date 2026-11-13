@@ -1,0 +1,612 @@
+{
+  "tool": "capytaine",
+  "version": "3.1.dev0",
+  "role": "third-code independent judge; never imported by tensorbem solvers",
+  "ka_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "resolutions": [
+    [
+      20,
+      40
+    ],
+    [
+      28,
+      56
+    ],
+    [
+      36,
+      72
+    ],
+    [
+      44,
+      88
+    ]
+  ],
+  "levels": [
+    {
+      "resolution": [
+        20,
+        40
+      ],
+      "n_faces": 400,
+      "mesh_volume": 2.072953081518031,
+      "values": {
+        "0.500": {
+          "surge": {
+            "added_mass": 0.6688081603396371,
+            "damping": 0.10319198944405857
+          },
+          "heave": {
+            "added_mass": 0.5986346691225058,
+            "damping": 0.34154463699330645
+          }
+        },
+        "1.000": {
+          "surge": {
+            "added_mass": 0.5917531737717779,
+            "damping": 0.36554057430090575
+          },
+          "heave": {
+            "added_mass": 0.43985561143876767,
+            "damping": 0.24834927204299592
+          }
+        },
+        "2.000": {
+          "surge": {
+            "added_mass": 0.2596405975661771,
+            "damping": 0.34715603934135186
+          },
+          "heave": {
+            "added_mass": 0.39800383931339556,
+            "damping": 0.09744431869797138
+          }
+        }
+      }
+    },
+    {
+      "resolution": [
+        28,
+        56
+      ],
+      "n_faces": 784,
+      "mesh_volume": 2.0834328020936717,
+      "values": {
+        "0.500": {
+          "surge": {
+            "added_mass": 0.662788966268863,
+            "damping": 0.102296350398231
+          },
+          "heave": {
+            "added_mass": 0.5956362180990414,
+            "damping": 0.34105420041574
+          }
+        },
+        "1.000": {
+          "surge": {
+            "added_mass": 0.5872696059331654,
+            "damping": 0.3632944751471123
+          },
+          "heave": {
+            "added_mass": 0.4371685946043773,
+            "damping": 0.2481730440943234
+          }
+        },
+        "2.000": {
+          "surge": {
+            "added_mass": 0.25652026516789134,
+            "damping": 0.34628712582706866
+          },
+          "heave": {
+            "added_mass": 0.39649140594524224,
+            "damping": 0.09849877329543472
+          }
+        }
+      }
+    },
+    {
+      "resolution": [
+        36,
+        72
+      ],
+      "n_faces": 1296,
+      "mesh_volume": 2.0877579789734826,
+      "values": {
+        "0.500": {
+          "surge": {
+            "added_mass": 0.6590305908384291,
+            "damping": 0.1016597930437154
+          },
+          "heave": {
+            "added_mass": 0.5937515086913506,
+            "damping": 0.3407082212080175
+          }
+        },
+        "1.000": {
+          "surge": {
+            "added_mass": 0.5845497877532684,
+            "damping": 0.36162364349089193
+          },
+          "heave": {
+            "added_mass": 0.43546107744130214,
+            "damping": 0.24814638446995071
+          }
+        },
+        "2.000": {
+          "surge": {
+            "added_mass": 0.2548196841726341,
+            "damping": 0.345640619503371
+          },
+          "heave": {
+            "added_mass": 0.39520126670073097,
+            "damping": 0.09929177185964654
+          }
+        }
+      }
+    },
+    {
+      "resolution": [
+        44,
+        88
+      ],
+      "n_faces": 1936,
+      "mesh_volume": 2.089950167592836,
+      "values": {
+        "0.500": {
+          "surge": {
+            "added_mass": 0.6564980858990913,
+            "damping": 0.10120399248655101
+          },
+          "heave": {
+            "added_mass": 0.5924730869587906,
+            "damping": 0.3404606830449701
+          }
+        },
+        "1.000": {
+          "surge": {
+            "added_mass": 0.5827394337151265,
+            "damping": 0.36040280088040394
+          },
+          "heave": {
+            "added_mass": 0.4342933684520156,
+            "damping": 0.2481563250445362
+          }
+        },
+        "2.000": {
+          "surge": {
+            "added_mass": 0.25375917378936685,
+            "damping": 0.3451665900363668
+          },
+          "heave": {
+            "added_mass": 0.39421977730217944,
+            "damping": 0.09986192869785573
+          }
+        }
+      }
+    }
+  ],
+  "limits": {
+    "0.500": {
+      "A11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.6688081603396371
+          },
+          {
+            "n_faces": 784,
+            "value": 0.662788966268863
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.6590305908384291
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.6564980858990913
+          }
+        ],
+        "finest": 0.6564980858990913,
+        "limit_exact": 0.6408768103517398,
+        "order_exact": 0.7487143437329153,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.6512662271388439,
+        "order_geometric": 1.9672921810138635,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.6408768103517398,
+          0.6564980858990913
+        ],
+        "limit": 0.6408768103517398,
+        "observed_order": 0.7487143437329153,
+        "method": "3-point Richardson"
+      },
+      "B11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.10319198944405857
+          },
+          {
+            "n_faces": 784,
+            "value": 0.102296350398231
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.1016597930437154
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.10120399248655101
+          }
+        ],
+        "finest": 0.10120399248655101,
+        "limit_exact": 0.09670845358726171,
+        "order_exact": 0.4812490815961945,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.1000546351680115,
+        "order_geometric": 1.6645140098074318,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.09670845358726171,
+          0.10120399248655101
+        ],
+        "limit": 0.09670845358726171,
+        "observed_order": 0.4812490815961945,
+        "method": "3-point Richardson"
+      },
+      "A33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.5986346691225058
+          },
+          {
+            "n_faces": 784,
+            "value": 0.5956362180990414
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.5937515086913506
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.5924730869587906
+          }
+        ],
+        "finest": 0.5924730869587906,
+        "limit_exact": 0.5842431947077639,
+        "order_exact": 0.7195552361651301,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.5897773994274071,
+        "order_geometric": 1.9342503002158085,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.5842431947077639,
+          0.5924730869587906
+        ],
+        "limit": 0.5842431947077639,
+        "observed_order": 0.7195552361651301,
+        "method": "3-point Richardson"
+      },
+      "B33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.34154463699330645
+          },
+          {
+            "n_faces": 784,
+            "value": 0.34105420041574
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.3407082212080175
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.3404606830449701
+          }
+        ],
+        "finest": 0.3404606830449701,
+        "limit_exact": 0.33803773110258684,
+        "order_exact": 0.4847514367931459,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.33983822782451695,
+        "order_geometric": 1.6684743875553623,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.33803773110258684,
+          0.3404606830449701
+        ],
+        "limit": 0.33803773110258684,
+        "observed_order": 0.4847514367931459,
+        "method": "3-point Richardson"
+      }
+    },
+    "1.000": {
+      "A11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.5917531737717779
+          },
+          {
+            "n_faces": 784,
+            "value": 0.5872696059331654
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.5845497877532684
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.5827394337151265
+          }
+        ],
+        "finest": 0.5827394337151265,
+        "limit_exact": 0.5723804078785354,
+        "order_exact": 0.8026321376795857,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.579135793293315,
+        "order_geometric": 2.028410795987967,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.5723804078785354,
+          0.5827394337151265
+        ],
+        "limit": 0.5723804078785354,
+        "observed_order": 0.8026321376795857,
+        "method": "3-point Richardson"
+      },
+      "B11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.36554057430090575
+          },
+          {
+            "n_faces": 784,
+            "value": 0.3632944751471123
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.36162364349089193
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.36040280088040394
+          }
+        ],
+        "finest": 0.36040280088040394,
+        "limit_exact": 0.34548616076963173,
+        "order_exact": 0.3920219118368622,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.357090594297336,
+        "order_geometric": 1.5636573880520557,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.34548616076963173,
+          0.36040280088040394
+        ],
+        "limit": 0.34548616076963173,
+        "observed_order": 0.3920219118368622,
+        "method": "3-point Richardson"
+      },
+      "A33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.43985561143876767
+          },
+          {
+            "n_faces": 784,
+            "value": 0.4371685946043773
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.43546107744130214
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.4342933684520156
+          }
+        ],
+        "finest": 0.4342933684520156,
+        "limit_exact": 0.4263528033227517,
+        "order_exact": 0.6837012060746808,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.4317673891321943,
+        "order_geometric": 1.8936330626867877,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.4263528033227517,
+          0.4342933684520156
+        ],
+        "limit": 0.4263528033227517,
+        "observed_order": 0.6837012060746808,
+        "method": "3-point Richardson"
+      },
+      "B33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.24834927204299592
+          },
+          {
+            "n_faces": 784,
+            "value": 0.2481730440943234
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.24814638446995071
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.2481563250445362
+          }
+        ],
+        "finest": 0.2481563250445362,
+        "limit_exact": 0.2481563250445362,
+        "order_exact": null,
+        "method_exact": "finest-value fallback (residual ratio d21/d32=-2.682: not monotone decreasing)",
+        "limit_geometric": 0.2481563250445362,
+        "order_geometric": null,
+        "method_geometric": "finest-value fallback (residual ratio r=-0.373 outside (0,1))",
+        "bracket": [
+          0.2481563250445362,
+          0.2481563250445362
+        ],
+        "limit": 0.2481563250445362,
+        "observed_order": null,
+        "method": "finest-value fallback (residual ratio d21/d32=-2.682: not monotone decreasing)"
+      }
+    },
+    "2.000": {
+      "A11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.2596405975661771
+          },
+          {
+            "n_faces": 784,
+            "value": 0.25652026516789134
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.2548196841726341
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.25375917378936685
+          }
+        ],
+        "finest": 0.25375917378936685,
+        "limit_exact": 0.24941612609520575,
+        "order_exact": 1.0887554058345295,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.25200205160323635,
+        "order_geometric": 2.3532069174917325,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.24941612609520575,
+          0.25375917378936685
+        ],
+        "limit": 0.24941612609520575,
+        "observed_order": 1.0887554058345295,
+        "method": "3-point Richardson"
+      },
+      "B11_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.34715603934135186
+          },
+          {
+            "n_faces": 784,
+            "value": 0.34628712582706866
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.345640619503371
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.3451665900363668
+          }
+        ],
+        "finest": 0.3451665900363668,
+        "limit_exact": 0.33913030278698636,
+        "order_exact": 0.3767315226543134,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.3438637837358807,
+        "order_geometric": 1.5463817098255848,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.33913030278698636,
+          0.3451665900363668
+        ],
+        "limit": 0.33913030278698636,
+        "observed_order": 0.3767315226543134,
+        "method": "3-point Richardson"
+      },
+      "A33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.39800383931339556
+          },
+          {
+            "n_faces": 784,
+            "value": 0.39649140594524224
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.39520126670073097
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.39421977730217944
+          }
+        ],
+        "finest": 0.39421977730217944,
+        "limit_exact": 0.37184623950865875,
+        "order_exact": 0.21394925717801044,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.39109869542872633,
+        "order_geometric": 1.3626016494144995,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.37184623950865875,
+          0.39421977730217944
+        ],
+        "limit": 0.37184623950865875,
+        "observed_order": 0.21394925717801044,
+        "method": "3-point Richardson"
+      },
+      "B33_dimless": {
+        "ladder": [
+          {
+            "n_faces": 400,
+            "value": 0.09744431869797138
+          },
+          {
+            "n_faces": 784,
+            "value": 0.09849877329543472
+          },
+          {
+            "n_faces": 1296,
+            "value": 0.09929177185964654
+          },
+          {
+            "n_faces": 1936,
+            "value": 0.09986192869785573
+          }
+        ],
+        "finest": 0.09986192869785573,
+        "limit_exact": 0.10571605765856673,
+        "order_exact": 0.46313811370059266,
+        "method_exact": "3-point Richardson",
+        "limit_geometric": 0.10132071662769293,
+        "order_geometric": 1.6440364277513693,
+        "method_geometric": "3-point Richardson (geometric p)",
+        "bracket": [
+          0.09986192869785573,
+          0.10571605765856673
+        ],
+        "limit": 0.10571605765856673,
+        "observed_order": 0.46313811370059266,
+        "method": "3-point Richardson"
+      }
+    }
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64",
+    "host": "36cb7828dbd5"
+  }
+}
