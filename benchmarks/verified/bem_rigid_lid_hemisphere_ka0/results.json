@@ -1,0 +1,191 @@
+{
+  "study": "m17243_rigid_lid_hemisphere_added_mass_ka0",
+  "anchor": "CASE-BEM-RIGID-LID-HEMISPHERE",
+  "physical_case": {
+    "body": "hemisphere radius a, flat face on rigid lid (ka->0 limit of the floating-hemisphere free-surface problem)",
+    "radius": 1.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "displaced_volume": 2.0943951023931953,
+    "mode": "heave",
+    "convention": "exp(-i omega t), unit velocity amplitude, A33 = -rho Re(int phi n_z dS)"
+  },
+  "reference": {
+    "method": "even-parity double-body Legendre series (rigid-lid mirror)",
+    "rigid_lid_added_mass_dimless": 0.8309541475908423,
+    "pressure_release_added_mass_dimless": 0.4999999999999934,
+    "degree_max": 60,
+    "n_terms_used": 31,
+    "series_tail": 4.6347387039347154e-09,
+    "note": "A33(0)/(rho*nabla); nabla = (2/3) pi a^3"
+  },
+  "mesh_ladder": [
+    {
+      "subdivisions": 2,
+      "panels": 64,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass": 1733.263899144704,
+      "added_mass_dimless": 0.8073878553120352,
+      "damping_dimless": 0.0022322715656906745,
+      "hulme_added_mass_dimless": 0.8350656196401975,
+      "rel_error_vs_hulme": -0.0331444184471249,
+      "condition_number": 2.176601451443266,
+      "relative_residual": 4.560242599474829e-16,
+      "mesh_area_rel_error": -0.0486599514180901,
+      "solve_seconds": 0.15276336669921875,
+      "rel_error_vs_ref": -0.028360520670282607
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass": 1777.83875805561,
+      "added_mass_dimless": 0.8281516869216776,
+      "damping_dimless": 0.0023204373297989345,
+      "hulme_added_mass_dimless": 0.8350656196401975,
+      "rel_error_vs_hulme": -0.008279508287622805,
+      "condition_number": 2.1023280293100677,
+      "relative_residual": 8.95854624815055e-16,
+      "mesh_area_rel_error": -0.012588107706705376,
+      "solve_seconds": 5.466442108154297,
+      "rel_error_vs_ref": -0.003372581600669222
+    },
+    {
+      "subdivisions": 4,
+      "panels": 1024,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass": 1788.89942229668,
+      "added_mass_dimless": 0.8333039583007392,
+      "damping_dimless": 0.0023429061244082633,
+      "hulme_added_mass_dimless": 0.8350656196401975,
+      "rel_error_vs_hulme": -0.0021096082727215526,
+      "condition_number": 2.0615944233134416,
+      "relative_residual": 2.064419726314299e-15,
+      "mesh_area_rel_error": -0.0031744046777224533,
+      "solve_seconds": 63.038323163986206,
+      "rel_error_vs_ref": 0.002827846418132385
+    }
+  ],
+  "ka_ladder": [
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass": 1777.83875805561,
+      "added_mass_dimless": 0.8281516869216776,
+      "damping_dimless": 0.0023204373297989345,
+      "hulme_added_mass_dimless": 0.8350656196401975,
+      "rel_error_vs_hulme": -0.008279508287622805,
+      "condition_number": 2.1023280293100677,
+      "relative_residual": 8.95854624815055e-16,
+      "mesh_area_rel_error": -0.012588107706705376,
+      "solve_seconds": 4.306642293930054,
+      "rel_error_vs_ref": -0.003372581600669222
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.01,
+      "omega": 0.31315571206669696,
+      "added_mass": 1817.368676017055,
+      "added_mass_dimless": 0.8465654874394758,
+      "damping_dimless": 0.02269564497071517,
+      "hulme_added_mass_dimless": 0.8536439931801596,
+      "rel_error_vs_hulme": -0.008292105136608052,
+      "condition_number": 2.1124499329327513,
+      "relative_residual": 1.0629629798519739e-15,
+      "mesh_area_rel_error": -0.012588107706705376,
+      "solve_seconds": 4.355216979980469,
+      "rel_error_vs_ref": 0.018787245835278465
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.03,
+      "omega": 0.5424016039799292,
+      "added_mass": 1855.5656691668191,
+      "added_mass_dimless": 0.8643583857937165,
+      "damping_dimless": 0.06472718364871023,
+      "hulme_added_mass_dimless": 0.8714886779141787,
+      "rel_error_vs_hulme": -0.008181738100749514,
+      "condition_number": 2.136486383383963,
+      "relative_residual": 1.0748048933168427e-15,
+      "mesh_area_rel_error": -0.012588107706705376,
+      "solve_seconds": 4.7137610912323,
+      "rel_error_vs_ref": 0.04019985735641618
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.1,
+      "omega": 0.9902853124226371,
+      "added_mass": 1838.3963934844692,
+      "added_mass_dimless": 0.8563606050303405,
+      "damping_dimless": 0.17971855101757483,
+      "hulme_added_mass_dimless": 0.8627917929383417,
+      "rel_error_vs_hulme": -0.007453928005155319,
+      "condition_number": 2.2280305340454563,
+      "relative_residual": 1.0095427262900216e-15,
+      "mesh_area_rel_error": -0.012588107706705376,
+      "solve_seconds": 4.487145185470581,
+      "rel_error_vs_ref": 0.030575041370403344
+    }
+  ],
+  "headline": {
+    "ka": 0.001,
+    "panels": 1024,
+    "added_mass_dimless": 0.8333039583007392,
+    "rel_error_vs_ref": 0.002827846418132385,
+    "within_5pct": true
+  },
+  "mesh_convergence_orders": [
+    1.5359793820326202,
+    0.12707479066363705
+  ],
+  "criteria": {
+    "C1_reference_below_rho_nabla": {
+      "measured": 0.8309541475908423,
+      "criterion": "ref < 0.9 (refutes the 1.0 rho*nabla anchor)",
+      "pass": true
+    },
+    "C2_headline_within_5pct": {
+      "measured": 0.2827846418132385,
+      "criterion": "|rel err| < 5 % at ka=1e-3, finest mesh (sub=4)",
+      "pass": true,
+      "where": {
+        "ka": 0.001,
+        "panels": 1024
+      }
+    },
+    "C3_mesh_convergence_monotone": {
+      "measured": [
+        0.028360520670282607,
+        0.003372581600669222,
+        0.002827846418132385
+      ],
+      "criterion": "error strictly decreases 64 -> 256 -> 1024 panels",
+      "pass": true
+    },
+    "C2b_256panel_within_5pct": {
+      "measured": -0.3372581600669222,
+      "criterion": "|rel err| < 5 % at ka=1e-3, 256 panels",
+      "pass": true
+    },
+    "C4_ka_ladder_bounded_5pct_at_ka_le_0.01": {
+      "measured": 0.018787245835278465,
+      "criterion": "max |rel err| < 5 % for ka <= 0.01 (256 panels)",
+      "pass": true
+    },
+    "C5_series_converged": {
+      "measured": 4.6347387039347154e-09,
+      "criterion": "last two even partial sums differ < 1e-6",
+      "pass": true
+    }
+  },
+  "verdict": "ALL PASS",
+  "wall_seconds": 89.72875237464905
+}
