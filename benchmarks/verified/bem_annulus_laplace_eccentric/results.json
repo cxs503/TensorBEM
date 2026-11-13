@@ -1,0 +1,1393 @@
+{
+  "schema": "tensorbem.case_annulus_laplace.eccentric/1",
+  "case_id": "CASE-BEM-ANNULUS-LAPLACE",
+  "round": 2,
+  "branch": "agent/m17708",
+  "geometry": {
+    "half_distance": 1.0,
+    "outer_parameter": 0.8,
+    "inner_parameter": 1.8,
+    "outer_radius": 1.1259917397884818,
+    "inner_radius": 0.3398846914154937,
+    "outer_centre_x": 1.5059407020437063,
+    "inner_centre_x": 1.0561825616145182,
+    "centre_offset": 0.44975814042918816,
+    "mean_wall_thickness": 0.7861070483729881,
+    "relative_eccentricity": 0.5721334535290786,
+    "min_clearance": 0.3363489079437999,
+    "max_clearance": 1.235865188802176,
+    "focus_plus": [
+      1.0,
+      0.0
+    ],
+    "focus_minus": [
+      -1.0,
+      0.0
+    ],
+    "focus_plus_inside_inner": true,
+    "focus_minus_outside_outer": true
+  },
+  "case_forms": [
+    {
+      "name": "point_source",
+      "form": "f = log(z - z+),  u = log(rho+)"
+    },
+    {
+      "name": "bipolar_ratio",
+      "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)"
+    },
+    {
+      "name": "hole_dipole",
+      "form": "f = 1/(z - z+),  u = cos(theta+)/rho+"
+    }
+  ],
+  "acceptance": {
+    "tolerance": 0.03,
+    "min_fitted_order": 1.5,
+    "constancy_max": 1e-10,
+    "harmonicity_max": 1e-06,
+    "budget_panels": [
+      64,
+      32
+    ],
+    "ladder": [
+      [
+        16,
+        8
+      ],
+      [
+        32,
+        16
+      ],
+      [
+        64,
+        32
+      ],
+      [
+        128,
+        64
+      ]
+    ],
+    "reference_length": 2.0,
+    "probe_fractions": [
+      0.2,
+      0.5,
+      0.8
+    ],
+    "probe_angles": 16,
+    "probe_count": 48,
+    "min_probe_band_fraction": 0.02,
+    "probe_rays_usable": 16,
+    "probe_rays_skipped": 0,
+    "declared_before_run": true
+  },
+  "reference_provenance": {
+    "route": "closed form as the real part of an analytic f(z) on the bipolar (coaxal circle) family; the constants -tau are analytic",
+    "citation": "bipolar coordinates / eccentric-cylinder potential, classical (Lamb, Hydrodynamics; Milne-Thomson, Theoretical Hydrodynamics)",
+    "page_or_article_number": "WITHHELD",
+    "why_withheld": "the two books are not reachable inside this container, so no page number is invented; the formula is gated numerically by constancy_check and harmonicity_check instead"
+  },
+  "constancy": [
+    {
+      "case": "bipolar_ratio",
+      "samples": 512,
+      "loops": [
+        {
+          "loop": "outer",
+          "value": -0.8,
+          "spread_relative": 1.6653345369377342e-15,
+          "analytic_constant_minus_tau": -0.8
+        },
+        {
+          "loop": "inner",
+          "value": -1.8000000000000005,
+          "spread_relative": 6.167905692361979e-16,
+          "analytic_constant_minus_tau": -1.8
+        }
+      ],
+      "max_spread_relative": 1.6653345369377342e-15,
+      "constants_differ": true
+    }
+  ],
+  "harmonicity": [
+    {
+      "case": "point_source",
+      "samples": 64,
+      "step": 0.0001,
+      "max_abs_laplacian": 5.773159728050814e-07,
+      "max_abs_laplacian_relative": 5.428212571000302e-15
+    },
+    {
+      "case": "bipolar_ratio",
+      "samples": 64,
+      "step": 0.0001,
+      "max_abs_laplacian": 5.551115123125783e-07,
+      "max_abs_laplacian_relative": 3.3251942099674105e-15
+    },
+    {
+      "case": "hole_dipole",
+      "samples": 64,
+      "step": 0.0001,
+      "max_abs_laplacian": 6.483702463810914e-06,
+      "max_abs_laplacian_relative": 2.3424396655896222e-14
+    }
+  ],
+  "cases": [
+    {
+      "case": "point_source",
+      "form": "f = log(z - z+),  u = log(rho+)",
+      "levels": [
+        {
+          "case": "point_source",
+          "form": "f = log(z - z+),  u = log(rho+)",
+          "outer_panels": 16,
+          "inner_panels": 8,
+          "panel_count": 24,
+          "mean_panel_length_outer": 0.43934018220567084,
+          "mean_panel_length_inner": 0.260136480638461,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 0.7655773852853345,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 22.56884446844503,
+          "relative_residual": 2.255146613127956e-16,
+          "q_relative_l2_error": 0.03504662192570254,
+          "q_relative_linf_error": 0.04296417127076178,
+          "field_relative_max_error": 0.013972163968548277,
+          "field_relative_rmse": 0.008722555851897771,
+          "field_probe_count": 48,
+          "flux_outer": 6.42340798481527,
+          "flux_inner": -6.381487008122315,
+          "exact_flux_outer": 6.36517178671769,
+          "exact_flux_inner": -6.627410038429533,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.992581825147223,
+          "flux_relative_error": 0.019451433330349554,
+          "flux_identity_relative": 0.0032265316668482953
+        },
+        {
+          "case": "point_source",
+          "form": "f = log(z - z+),  u = log(rho+)",
+          "outer_panels": 32,
+          "inner_panels": 16,
+          "panel_count": 48,
+          "mean_panel_length_outer": 0.2207329807375474,
+          "mean_panel_length_inner": 0.1326164277932021,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 1.5237818418432014,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 42.62396310228229,
+          "relative_residual": 4.037835272927421e-16,
+          "q_relative_l2_error": 0.009102826711992827,
+          "q_relative_linf_error": 0.011190059986386853,
+          "field_relative_max_error": 0.003191354542314974,
+          "field_relative_rmse": 0.0019813783400768207,
+          "field_probe_count": 48,
+          "flux_outer": 6.312689316720183,
+          "flux_inner": -6.303066458807699,
+          "exact_flux_outer": 6.303449814802443,
+          "exact_flux_inner": -6.365195756146358,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.668645570948804,
+          "flux_relative_error": 0.004958111895587642,
+          "flux_identity_relative": 0.0007595806401397109
+        },
+        {
+          "case": "point_source",
+          "form": "f = log(z - z+),  u = log(rho+)",
+          "outer_panels": 64,
+          "inner_panels": 32,
+          "panel_count": 96,
+          "mean_panel_length_outer": 0.11049959196660805,
+          "mean_panel_length_inner": 0.0666290509886837,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 3.043892759761877,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 84.08640827573022,
+          "relative_residual": 5.283080618019565e-16,
+          "q_relative_l2_error": 0.0023385676677752,
+          "q_relative_linf_error": 0.0028526776426384634,
+          "field_relative_max_error": 0.0007455984715010755,
+          "field_relative_rmse": 0.0004767061866951505,
+          "field_probe_count": 48,
+          "flux_outer": 6.289895336774771,
+          "flux_inner": -6.287594461243389,
+          "exact_flux_outer": 6.2882367704918085,
+          "exact_flux_inner": -6.303449814858512,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.591686585350322,
+          "flux_relative_error": 0.0012660627741241876,
+          "flux_identity_relative": 0.00018272973328762847
+        },
+        {
+          "case": "point_source",
+          "form": "f = log(z - z+),  u = log(rho+)",
+          "outer_panels": 128,
+          "inner_panels": 64,
+          "panel_count": 192,
+          "mean_panel_length_outer": 0.055266441202121444,
+          "mean_panel_length_inner": 0.03335470269450083,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 6.0859519923437535,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 167.5977913064904,
+          "relative_residual": 6.240566836072957e-16,
+          "q_relative_l2_error": 0.0005936131958685307,
+          "q_relative_linf_error": 0.0007205917878779589,
+          "field_relative_max_error": 0.0001779453311296378,
+          "field_relative_rmse": 0.00011570105523947515,
+          "field_probe_count": 48,
+          "flux_outer": 6.284780906029748,
+          "flux_inner": -6.284218761192177,
+          "exact_flux_outer": 6.284447259884914,
+          "exact_flux_inner": -6.2882367704918085,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.572684030376722,
+          "flux_relative_error": 0.00032068236920623143,
+          "flux_identity_relative": 4.4711601453801374e-05
+        }
+      ],
+      "observed_orders_q_l2": [
+        1.9448888705609428,
+        1.9606894421973597,
+        1.9780301063888075
+      ],
+      "observed_orders_field": [
+        2.130314680220013,
+        2.0976980856354155,
+        2.0669648220356596
+      ],
+      "fitted_order_q_relative_l2": 1.9611514699638701,
+      "fitted_order_field_relative_max": 2.0982630849308705,
+      "budget_level": {
+        "case": "point_source",
+        "form": "f = log(z - z+),  u = log(rho+)",
+        "outer_panels": 64,
+        "inner_panels": 32,
+        "panel_count": 96,
+        "mean_panel_length_outer": 0.11049959196660805,
+        "mean_panel_length_inner": 0.0666290509886837,
+        "min_clearance": 0.3363489079437999,
+        "max_clearance": 1.235865188802176,
+        "min_clearance_over_max_panel": 3.043892759761877,
+        "relative_eccentricity": 0.5721334535290786,
+        "outer_radius": 1.1259917397884818,
+        "inner_radius": 0.3398846914154937,
+        "centre_offset": 0.44975814042918816,
+        "reference_length": 2.0,
+        "condition_number": 84.08640827573022,
+        "relative_residual": 5.283080618019565e-16,
+        "q_relative_l2_error": 0.0023385676677752,
+        "q_relative_linf_error": 0.0028526776426384634,
+        "field_relative_max_error": 0.0007455984715010755,
+        "field_relative_rmse": 0.0004767061866951505,
+        "field_probe_count": 48,
+        "flux_outer": 6.289895336774771,
+        "flux_inner": -6.287594461243389,
+        "exact_flux_outer": 6.2882367704918085,
+        "exact_flux_inner": -6.303449814858512,
+        "analytic_flux_outer": 6.283185307179586,
+        "analytic_flux_inner": -6.283185307179586,
+        "flux_scale": 12.591686585350322,
+        "flux_relative_error": 0.0012660627741241876,
+        "flux_identity_relative": 0.00018272973328762847
+      }
+    },
+    {
+      "case": "bipolar_ratio",
+      "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+      "levels": [
+        {
+          "case": "bipolar_ratio",
+          "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+          "outer_panels": 16,
+          "inner_panels": 8,
+          "panel_count": 24,
+          "mean_panel_length_outer": 0.43934018220567084,
+          "mean_panel_length_inner": 0.260136480638461,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 0.7655773852853345,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 22.56884446844503,
+          "relative_residual": 2.695775842868995e-16,
+          "q_relative_l2_error": 0.03417439202541976,
+          "q_relative_linf_error": 0.03408037750839064,
+          "field_relative_max_error": 0.01378969446985699,
+          "field_relative_rmse": 0.006143677114947594,
+          "field_probe_count": 48,
+          "flux_outer": 6.416112594340607,
+          "flux_inner": -6.374267724864957,
+          "exact_flux_outer": 6.365158903494024,
+          "exact_flux_inner": -6.627408077660693,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.992566981154717,
+          "flux_relative_error": 0.01987425401736645,
+          "flux_identity_relative": 0.0032206776025357035
+        },
+        {
+          "case": "bipolar_ratio",
+          "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+          "outer_panels": 32,
+          "inner_panels": 16,
+          "panel_count": 48,
+          "mean_panel_length_outer": 0.2207329807375474,
+          "mean_panel_length_inner": 0.1326164277932021,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 1.5237818418432014,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 42.62396310228229,
+          "relative_residual": 5.037214213534107e-16,
+          "q_relative_l2_error": 0.008874346842120575,
+          "q_relative_linf_error": 0.00820491314457166,
+          "field_relative_max_error": 0.0027661870770522047,
+          "field_relative_rmse": 0.0012892217268970526,
+          "field_probe_count": 48,
+          "flux_outer": 6.310932270256803,
+          "flux_inner": -6.30131212064014,
+          "exact_flux_outer": 6.303449814761276,
+          "exact_flux_inner": -6.365195756144908,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.668645570906186,
+          "flux_relative_error": 0.00507712831399855,
+          "flux_identity_relative": 0.0007593668607128689
+        },
+        {
+          "case": "bipolar_ratio",
+          "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+          "outer_panels": 64,
+          "inner_panels": 32,
+          "panel_count": 96,
+          "mean_panel_length_outer": 0.11049959196660805,
+          "mean_panel_length_inner": 0.0666290509886837,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 3.043892759761877,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 84.08640827573022,
+          "relative_residual": 6.035512230226892e-16,
+          "q_relative_l2_error": 0.0022806356065587486,
+          "q_relative_linf_error": 0.0021242861578567506,
+          "field_relative_max_error": 0.0006201444176261597,
+          "field_relative_rmse": 0.0002991732409188443,
+          "field_probe_count": 48,
+          "flux_outer": 6.2894608074500065,
+          "flux_inner": -6.287160090871738,
+          "exact_flux_outer": 6.2882367704918085,
+          "exact_flux_inner": -6.303449814858513,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.59168658535032,
+          "flux_relative_error": 0.0012973359231895718,
+          "flux_identity_relative": 0.0001827171096321154
+        },
+        {
+          "case": "bipolar_ratio",
+          "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+          "outer_panels": 128,
+          "inner_panels": 64,
+          "panel_count": 192,
+          "mean_panel_length_outer": 0.055266441202121444,
+          "mean_panel_length_inner": 0.03335470269450083,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 6.0859519923437535,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 167.5977913064904,
+          "relative_residual": 8.375188428572742e-16,
+          "q_relative_l2_error": 0.000579026758859539,
+          "q_relative_linf_error": 0.0005428085844165041,
+          "field_relative_max_error": 0.0001501055088100014,
+          "field_relative_rmse": 7.241585873609324e-05,
+          "field_probe_count": 48,
+          "flux_outer": 6.284672691805785,
+          "flux_inner": -6.284110556647482,
+          "exact_flux_outer": 6.284447259884914,
+          "exact_flux_inner": -6.2882367704918085,
+          "analytic_flux_outer": 6.283185307179586,
+          "analytic_flux_inner": -6.283185307179586,
+          "flux_scale": 12.572684030376722,
+          "flux_relative_error": 0.00032867821853351957,
+          "flux_identity_relative": 4.471083158890774e-05
+        }
+      ],
+      "observed_orders_q_l2": [
+        1.9452028267999892,
+        1.9602049847180314,
+        1.97773402850041
+      ],
+      "observed_orders_field": [
+        2.3176198579888982,
+        2.157222598336058,
+        2.0466273014703655
+      ],
+      "fitted_order_q_relative_l2": 1.9609630504773334,
+      "fitted_order_field_relative_max": 2.172163187172204,
+      "budget_level": {
+        "case": "bipolar_ratio",
+        "form": "f = log(z - z+) - log(z - z-),  u = log(rho+/rho-)",
+        "outer_panels": 64,
+        "inner_panels": 32,
+        "panel_count": 96,
+        "mean_panel_length_outer": 0.11049959196660805,
+        "mean_panel_length_inner": 0.0666290509886837,
+        "min_clearance": 0.3363489079437999,
+        "max_clearance": 1.235865188802176,
+        "min_clearance_over_max_panel": 3.043892759761877,
+        "relative_eccentricity": 0.5721334535290786,
+        "outer_radius": 1.1259917397884818,
+        "inner_radius": 0.3398846914154937,
+        "centre_offset": 0.44975814042918816,
+        "reference_length": 2.0,
+        "condition_number": 84.08640827573022,
+        "relative_residual": 6.035512230226892e-16,
+        "q_relative_l2_error": 0.0022806356065587486,
+        "q_relative_linf_error": 0.0021242861578567506,
+        "field_relative_max_error": 0.0006201444176261597,
+        "field_relative_rmse": 0.0002991732409188443,
+        "field_probe_count": 48,
+        "flux_outer": 6.2894608074500065,
+        "flux_inner": -6.287160090871738,
+        "exact_flux_outer": 6.2882367704918085,
+        "exact_flux_inner": -6.303449814858513,
+        "analytic_flux_outer": 6.283185307179586,
+        "analytic_flux_inner": -6.283185307179586,
+        "flux_scale": 12.59168658535032,
+        "flux_relative_error": 0.0012973359231895718,
+        "flux_identity_relative": 0.0001827171096321154
+      }
+    },
+    {
+      "case": "hole_dipole",
+      "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+      "levels": [
+        {
+          "case": "hole_dipole",
+          "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+          "outer_panels": 16,
+          "inner_panels": 8,
+          "panel_count": 24,
+          "mean_panel_length_outer": 0.43934018220567084,
+          "mean_panel_length_inner": 0.260136480638461,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 0.7655773852853345,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 22.56884446844503,
+          "relative_residual": 2.2640361813795253e-16,
+          "q_relative_l2_error": 0.10096104600210967,
+          "q_relative_linf_error": 0.10584159209772502,
+          "field_relative_max_error": 0.03175723539127138,
+          "field_relative_rmse": 0.007652007696401926,
+          "field_probe_count": 48,
+          "flux_outer": 0.00977572630055823,
+          "flux_inner": -0.00919016169823239,
+          "exact_flux_outer": -0.0007580126606014925,
+          "exact_flux_inner": 0.0009909883036716138,
+          "analytic_flux_outer": 0.0,
+          "analytic_flux_inner": 0.0,
+          "flux_scale": 17.932252214764624,
+          "flux_relative_error": 0.0008169503726822186,
+          "flux_identity_relative": 3.2654269821373065e-05
+        },
+        {
+          "case": "hole_dipole",
+          "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+          "outer_panels": 32,
+          "inner_panels": 16,
+          "panel_count": 48,
+          "mean_panel_length_outer": 0.2207329807375474,
+          "mean_panel_length_inner": 0.1326164277932021,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 1.5237818418432014,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 42.62396310228229,
+          "relative_residual": 3.5348403734057283e-16,
+          "q_relative_l2_error": 0.02522737249675978,
+          "q_relative_linf_error": 0.026474587332596163,
+          "field_relative_max_error": 0.0036147774976652133,
+          "field_relative_rmse": 0.0009206109019278728,
+          "field_probe_count": 48,
+          "flux_outer": 0.001248177773603032,
+          "flux_inner": -0.0012456407125698288,
+          "exact_flux_outer": -3.5462670577857125e-09,
+          "exact_flux_inner": 7.681879576892925e-10,
+          "analytic_flux_outer": 0.0,
+          "analytic_flux_inner": 0.0,
+          "flux_scale": 17.07457801209474,
+          "flux_relative_error": 0.00010327634022289836,
+          "flux_identity_relative": 1.4858704158931764e-07
+        },
+        {
+          "case": "hole_dipole",
+          "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+          "outer_panels": 64,
+          "inner_panels": 32,
+          "panel_count": 96,
+          "mean_panel_length_outer": 0.11049959196660805,
+          "mean_panel_length_inner": 0.0666290509886837,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 3.043892759761877,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 84.08640827573022,
+          "relative_residual": 5.276098672636856e-16,
+          "q_relative_l2_error": 0.006272390839310687,
+          "q_relative_linf_error": 0.006299074939769449,
+          "field_relative_max_error": 0.0004288815786601078,
+          "field_relative_rmse": 0.00011120909387655307,
+          "field_probe_count": 48,
+          "flux_outer": 0.00026706764602928146,
+          "flux_inner": -0.0002669699493097477,
+          "exact_flux_outer": 1.3183898417423734e-16,
+          "exact_flux_inner": -4.163336342344337e-16,
+          "analytic_flux_outer": 0.0,
+          "analytic_flux_inner": 0.0,
+          "flux_scale": 16.65530750233216,
+          "flux_relative_error": 2.2672749292587052e-05,
+          "flux_identity_relative": 5.865801007880904e-09
+        },
+        {
+          "case": "hole_dipole",
+          "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+          "outer_panels": 128,
+          "inner_panels": 64,
+          "panel_count": 192,
+          "mean_panel_length_outer": 0.055266441202121444,
+          "mean_panel_length_inner": 0.03335470269450083,
+          "min_clearance": 0.3363489079437999,
+          "max_clearance": 1.235865188802176,
+          "min_clearance_over_max_panel": 6.0859519923437535,
+          "relative_eccentricity": 0.5721334535290786,
+          "outer_radius": 1.1259917397884818,
+          "inner_radius": 0.3398846914154937,
+          "centre_offset": 0.44975814042918816,
+          "reference_length": 2.0,
+          "condition_number": 167.5977913064904,
+          "relative_residual": 6.319505901084476e-16,
+          "q_relative_l2_error": 0.0015639660954914441,
+          "q_relative_linf_error": 0.0015265358815733613,
+          "field_relative_max_error": 8.948418677165116e-05,
+          "field_relative_rmse": 2.5505310234509435e-05,
+          "field_probe_count": 48,
+          "flux_outer": 6.425700242861793e-05,
+          "flux_inner": -6.42512549315355e-05,
+          "exact_flux_outer": 1.214306433183765e-16,
+          "exact_flux_inner": -8.604228440844963e-16,
+          "analytic_flux_outer": 0.0,
+          "analytic_flux_inner": 0.0,
+          "flux_scale": 16.576632523855444,
+          "flux_relative_error": 5.481756332430565e-06,
+          "flux_identity_relative": 3.4672283855963723e-10
+        }
+      ],
+      "observed_orders_q_l2": [
+        2.0007369040610405,
+        2.0079025900888294,
+        2.003806220653
+      ],
+      "observed_orders_field": [
+        3.1351065728792045,
+        3.0752555912112047,
+        2.2608746869342373
+      ],
+      "fitted_order_q_relative_l2": 2.0045239734497455,
+      "fitted_order_field_relative_max": 2.848896614428516,
+      "budget_level": {
+        "case": "hole_dipole",
+        "form": "f = 1/(z - z+),  u = cos(theta+)/rho+",
+        "outer_panels": 64,
+        "inner_panels": 32,
+        "panel_count": 96,
+        "mean_panel_length_outer": 0.11049959196660805,
+        "mean_panel_length_inner": 0.0666290509886837,
+        "min_clearance": 0.3363489079437999,
+        "max_clearance": 1.235865188802176,
+        "min_clearance_over_max_panel": 3.043892759761877,
+        "relative_eccentricity": 0.5721334535290786,
+        "outer_radius": 1.1259917397884818,
+        "inner_radius": 0.3398846914154937,
+        "centre_offset": 0.44975814042918816,
+        "reference_length": 2.0,
+        "condition_number": 84.08640827573022,
+        "relative_residual": 5.276098672636856e-16,
+        "q_relative_l2_error": 0.006272390839310687,
+        "q_relative_linf_error": 0.006299074939769449,
+        "field_relative_max_error": 0.0004288815786601078,
+        "field_relative_rmse": 0.00011120909387655307,
+        "field_probe_count": 48,
+        "flux_outer": 0.00026706764602928146,
+        "flux_inner": -0.0002669699493097477,
+        "exact_flux_outer": 1.3183898417423734e-16,
+        "exact_flux_inner": -4.163336342344337e-16,
+        "analytic_flux_outer": 0.0,
+        "analytic_flux_inner": 0.0,
+        "flux_scale": 16.65530750233216,
+        "flux_relative_error": 2.2672749292587052e-05,
+        "flux_identity_relative": 5.865801007880904e-09
+      }
+    }
+  ],
+  "orientation_control": [
+    {
+      "case": "point_source",
+      "panels": [
+        64,
+        32
+      ],
+      "correct_flux_relative_error": 0.0012660627741241876,
+      "unflipped_flux_relative_error": 0.7111294675349359,
+      "error_amplification": 561.6857884687963,
+      "unflipped_relative_residual": 4.778829222866246e-16,
+      "unflipped_condition_number": 84.08640827573022,
+      "correct_condition_number": 84.08640827573022,
+      "caught": true,
+      "residual_alone_detects": false
+    },
+    {
+      "case": "bipolar_ratio",
+      "panels": [
+        64,
+        32
+      ],
+      "correct_flux_relative_error": 0.0012973359231895718,
+      "unflipped_flux_relative_error": 0.9043075619937347,
+      "error_amplification": 697.0496583263067,
+      "unflipped_relative_residual": 3.7153910698012605e-16,
+      "unflipped_condition_number": 84.08640827573022,
+      "correct_condition_number": 84.08640827573022,
+      "caught": true,
+      "residual_alone_detects": false
+    },
+    {
+      "case": "hole_dipole",
+      "panels": [
+        64,
+        32
+      ],
+      "correct_flux_relative_error": 2.2672749292587052e-05,
+      "unflipped_flux_relative_error": 0.2660372989463577,
+      "error_amplification": 11733.790883196494,
+      "unflipped_relative_residual": 3.78052677911814e-16,
+      "unflipped_condition_number": 84.08640827573022,
+      "correct_condition_number": 84.08640827573022,
+      "caught": true,
+      "residual_alone_detects": false
+    }
+  ],
+  "probe_guard": {
+    "probes": [
+      {
+        "probe": "inside_hole",
+        "refused": true,
+        "message": "points must lie in the fluid domain: 1 target(s) fall inside a hole loop, where the Green representation evaluates the analytic continuation and not the field o"
+      },
+      {
+        "probe": "outside_outer",
+        "refused": true,
+        "message": "points must lie in the fluid domain: 1 target(s) fall outside the outer loop"
+      }
+    ],
+    "passed": true
+  },
+  "gap_sweep": {
+    "panels": [
+      64,
+      32
+    ],
+    "levels": [
+      {
+        "inner_parameter": 0.805,
+        "inner_radius": 1.1175628184847166,
+        "centre_offset": 0.0062918587275440085,
+        "relative_eccentricity": 0.7464607273926577,
+        "min_clearance": 0.0021370625762211493,
+        "max_clearance": 0.014720780031309166,
+        "cases": {
+          "point_source": {
+            "refused": true,
+            "message": "only 0 of 16 probe rays have a fluid band wider than 0.02*a: the annulus is too thin for the probe protocol (minimum clearance 2.137e-03)"
+          },
+          "bipolar_ratio": {
+            "refused": true,
+            "message": "only 0 of 16 probe rays have a fluid band wider than 0.02*a: the annulus is too thin for the probe protocol (minimum clearance 2.137e-03)"
+          }
+        }
+      },
+      {
+        "inner_parameter": 0.82,
+        "inner_radius": 1.0928554567254294,
+        "centre_offset": 0.02461256510221599,
+        "relative_eccentricity": 0.7427678311228422,
+        "min_clearance": 0.008523717960836397,
+        "max_clearance": 0.057748848165268374,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.039786370497979555,
+            "q_relative_l2_error": 0.25862955886254874,
+            "field_relative_max_error": 0.008839587951229596,
+            "flux_relative_error": 0.020968212004848278,
+            "condition_number": 244.30701010159189,
+            "worst_relative_error": 0.25862955886254874,
+            "within_tolerance": false
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.039786370497979555,
+            "q_relative_l2_error": 0.042359300808789614,
+            "field_relative_max_error": 0.0008865811033869529,
+            "flux_relative_error": 0.017600683810494164,
+            "condition_number": 244.30701010159189,
+            "worst_relative_error": 0.042359300808789614,
+            "within_tolerance": false
+          }
+        }
+      },
+      {
+        "inner_parameter": 0.85,
+        "inner_radius": 1.045898240221709,
+        "centre_offset": 0.05890817687405159,
+        "relative_eccentricity": 0.7354926079230772,
+        "min_clearance": 0.02118532269272122,
+        "max_clearance": 0.1390016764408244,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.10332695422410361,
+            "q_relative_l2_error": 0.08958662428560236,
+            "field_relative_max_error": 0.018818737875812012,
+            "flux_relative_error": 0.003936013563058962,
+            "condition_number": 126.32807662897655,
+            "worst_relative_error": 0.08958662428560236,
+            "within_tolerance": false
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.10332695422410361,
+            "q_relative_l2_error": 0.02469785891556442,
+            "field_relative_max_error": 0.000632045415152564,
+            "flux_relative_error": 0.009555260785198038,
+            "condition_number": 126.32807662897655,
+            "worst_relative_error": 0.02469785891556442,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 0.9,
+        "inner_radius": 0.9741682477800039,
+        "centre_offset": 0.10987344901369456,
+        "relative_eccentricity": 0.723692016038988,
+        "min_clearance": 0.04195004299478344,
+        "max_clearance": 0.26169694102217245,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.21966780827075025,
+            "q_relative_l2_error": 0.021461079188456054,
+            "field_relative_max_error": 0.022458560301560914,
+            "flux_relative_error": 0.0033766891759791813,
+            "condition_number": 77.3075163823763,
+            "worst_relative_error": 0.022458560301560914,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.21966780827075025,
+            "q_relative_l2_error": 0.010956501170254866,
+            "field_relative_max_error": 0.00046438564815729617,
+            "flux_relative_error": 0.004764332536009713,
+            "condition_number": 77.3075163823763,
+            "worst_relative_error": 0.010956501170254866,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 0.95,
+        "inner_radius": 0.9095172925086273,
+        "centre_offset": 0.15419305348935275,
+        "relative_eccentricity": 0.712292168553338,
+        "min_clearance": 0.06228139379050179,
+        "max_clearance": 0.3706675007692072,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.3493134748743003,
+            "q_relative_l2_error": 0.009038387181701435,
+            "field_relative_max_error": 0.009652323954097156,
+            "flux_relative_error": 0.0020791332224136304,
+            "condition_number": 63.939853616164164,
+            "worst_relative_error": 0.009652323954097156,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.3493134748743003,
+            "q_relative_l2_error": 0.006173010903306426,
+            "field_relative_max_error": 0.0036790360593353623,
+            "flux_relative_error": 0.0028274071623537503,
+            "condition_number": 63.939853616164164,
+            "worst_relative_error": 0.006173010903306426,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 1.0,
+        "inner_radius": 0.8509181282393216,
+        "centre_offset": 0.19290541654437487,
+        "relative_eccentricity": 0.7012865227528359,
+        "min_clearance": 0.08216819500478523,
+        "max_clearance": 0.4679790280935351,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.49258813573067406,
+            "q_relative_l2_error": 0.0039838735807757,
+            "field_relative_max_error": 0.01090958054241591,
+            "flux_relative_error": 0.0014605863352743686,
+            "condition_number": 62.93652388206462,
+            "worst_relative_error": 0.01090958054241591,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.49258813573067406,
+            "q_relative_l2_error": 0.00411156370175954,
+            "field_relative_max_error": 0.0029769043791306746,
+            "flux_relative_error": 0.001874569257934786,
+            "condition_number": 62.93652388206462,
+            "worst_relative_error": 0.00411156370175954,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 1.05,
+        "inner_radius": 0.7975393140069331,
+        "centre_offset": 0.22685158967246521,
+        "relative_eccentricity": 0.6906680294190994,
+        "min_clearance": 0.10160083610908344,
+        "max_clearance": 0.5553040154540139,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.6498500521204521,
+            "q_relative_l2_error": 0.0021375341311711724,
+            "field_relative_max_error": 0.002428445078185327,
+            "flux_relative_error": 0.0011648221640919206,
+            "condition_number": 62.03989155290907,
+            "worst_relative_error": 0.002428445078185327,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 0.6498500521204521,
+            "q_relative_l2_error": 0.0030099230958036535,
+            "field_relative_max_error": 0.0024739450211590706,
+            "flux_relative_error": 0.0013735344282670206,
+            "condition_number": 62.03989155290907,
+            "worst_relative_error": 0.0030099230958036535,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 1.2,
+        "inner_radius": 0.6624879771943155,
+        "centre_offset": 0.3064031578513555,
+        "relative_eccentricity": 0.6610586204013956,
+        "min_clearance": 0.15710060474281073,
+        "max_clearance": 0.7699069204455218,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 1.209672568358117,
+            "q_relative_l2_error": 0.0014943756777850586,
+            "field_relative_max_error": 0.003458034038424599,
+            "flux_relative_error": 0.0009863923516300222,
+            "condition_number": 59.462559849693314,
+            "worst_relative_error": 0.003458034038424599,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 1.209672568358117,
+            "q_relative_l2_error": 0.0017652298567080204,
+            "field_relative_max_error": 0.0015733495511007628,
+            "flux_relative_error": 0.0009838169908206193,
+            "condition_number": 59.462559849693314,
+            "worst_relative_error": 0.0017652298567080204,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 1.4,
+        "inner_radius": 0.525126929342733,
+        "centre_offset": 0.37644599558381,
+        "relative_eccentricity": 0.6265069763438889,
+        "min_clearance": 0.22441881486193882,
+        "max_clearance": 0.9773108060295588,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 2.0309470005079846,
+            "q_relative_l2_error": 0.0018098001255417672,
+            "field_relative_max_error": 0.0009089309128761748,
+            "flux_relative_error": 0.001090840674484355,
+            "condition_number": 60.44493807276034,
+            "worst_relative_error": 0.0018098001255417672,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 2.0309470005079846,
+            "q_relative_l2_error": 0.0017439086926073224,
+            "field_relative_max_error": 0.001033744356048414,
+            "flux_relative_error": 0.001094964371469437,
+            "condition_number": 60.44493807276034,
+            "worst_relative_error": 0.0017439086926073224,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 1.8,
+        "inner_radius": 0.3398846914154937,
+        "centre_offset": 0.44975814042918816,
+        "relative_eccentricity": 0.5721334535290786,
+        "min_clearance": 0.3363489079437999,
+        "max_clearance": 1.235865188802176,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 3.043892759761877,
+            "q_relative_l2_error": 0.0023385676677752,
+            "field_relative_max_error": 0.0007455984715010755,
+            "flux_relative_error": 0.0012660627741241876,
+            "condition_number": 84.08640827573022,
+            "worst_relative_error": 0.0023385676677752,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 3.043892759761877,
+            "q_relative_l2_error": 0.0022806356065587486,
+            "field_relative_max_error": 0.0006201444176261597,
+            "flux_relative_error": 0.0012973359231895718,
+            "condition_number": 84.08640827573022,
+            "worst_relative_error": 0.0022806356065587486,
+            "within_tolerance": true
+          }
+        }
+      },
+      {
+        "inner_parameter": 2.2,
+        "inner_radius": 0.2243608714038413,
+        "centre_offset": 0.4810808088792353,
+        "relative_eccentricity": 0.5335673674761585,
+        "min_clearance": 0.42055005950540514,
+        "max_clearance": 1.3827116772638757,
+        "cases": {
+          "point_source": {
+            "refused": false,
+            "min_clearance_over_max_panel": 3.8058969451442994,
+            "q_relative_l2_error": 0.0026238790782319578,
+            "field_relative_max_error": 0.0005731800402899178,
+            "flux_relative_error": 0.001359325273558471,
+            "condition_number": 116.99452503125706,
+            "worst_relative_error": 0.0026238790782319578,
+            "within_tolerance": true
+          },
+          "bipolar_ratio": {
+            "refused": false,
+            "min_clearance_over_max_panel": 3.8058969451442994,
+            "q_relative_l2_error": 0.0026186006715624515,
+            "field_relative_max_error": 0.00047656418385690774,
+            "flux_relative_error": 0.001392765011349483,
+            "condition_number": 116.99452503125706,
+            "worst_relative_error": 0.0026186006715624515,
+            "within_tolerance": true
+          }
+        }
+      }
+    ]
+  },
+  "reference_length_sweep": [
+    {
+      "reference_length": 0.5,
+      "refused": false,
+      "condition_number": 93.42934622065938,
+      "q_relative_l2_error": 0.002284938784690488,
+      "field_relative_max_error": 0.0006201268229706432,
+      "flux_relative_error": 0.0013113953934691515,
+      "worst_relative_error": 0.002284938784690488,
+      "within_tolerance": true
+    },
+    {
+      "reference_length": 1.0,
+      "refused": false,
+      "condition_number": 55.90791112003447,
+      "q_relative_l2_error": 0.0023911789025948616,
+      "field_relative_max_error": 0.000620083798504209,
+      "flux_relative_error": 0.001622143935571131,
+      "worst_relative_error": 0.0023911789025948616,
+      "within_tolerance": true
+    },
+    {
+      "reference_length": 2.0,
+      "refused": false,
+      "condition_number": 84.08640827573022,
+      "q_relative_l2_error": 0.0022806356065587486,
+      "field_relative_max_error": 0.0006201444176261597,
+      "flux_relative_error": 0.0012973359231895718,
+      "worst_relative_error": 0.0022806356065587486,
+      "within_tolerance": true
+    },
+    {
+      "reference_length": 4.0,
+      "refused": false,
+      "condition_number": 163.7365846595489,
+      "q_relative_l2_error": 0.0022794725323061703,
+      "field_relative_max_error": 0.0006201387949868652,
+      "flux_relative_error": 0.0012936723722340266,
+      "worst_relative_error": 0.0022794725323061703,
+      "within_tolerance": true
+    },
+    {
+      "reference_length": 8.0,
+      "refused": false,
+      "condition_number": 247.02449244259677,
+      "q_relative_l2_error": 0.00227958393769752,
+      "field_relative_max_error": 0.000620137145608831,
+      "flux_relative_error": 0.0012940569956760766,
+      "worst_relative_error": 0.00227958393769752,
+      "within_tolerance": true
+    }
+  ],
+  "verdict": {
+    "passed": true,
+    "tolerance": 0.03,
+    "check_count": 37,
+    "checks": [
+      {
+        "case": "bipolar_ratio",
+        "check": "closed_form_constancy_spread",
+        "value": 1.6653345369377342e-15,
+        "threshold": 1e-10,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "closed_form_constant_matches_minus_tau_outer",
+        "value": 0.0,
+        "threshold": 1e-10,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "closed_form_constant_matches_minus_tau_inner",
+        "value": 2.4671622769447924e-16,
+        "threshold": 1e-10,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "closed_form_max_abs_laplacian_relative",
+        "value": 5.428212571000302e-15,
+        "threshold": 1e-06,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "closed_form_max_abs_laplacian_relative",
+        "value": 3.3251942099674105e-15,
+        "threshold": 1e-06,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "closed_form_max_abs_laplacian_relative",
+        "value": 2.3424396655896222e-14,
+        "threshold": 1e-06,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "q_relative_l2_error",
+        "value": 0.0023385676677752,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "q_relative_linf_error",
+        "value": 0.0028526776426384634,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "field_relative_max_error",
+        "value": 0.0007455984715010755,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "flux_relative_error",
+        "value": 0.0012660627741241876,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "flux_identity_relative",
+        "value": 0.00018272973328762847,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "analytic_flux_outer",
+        "value": 0.000532893631818289,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "analytic_flux_inner",
+        "value": 0.00035016389853066054,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "fitted_order_q_relative_l2",
+        "value": 1.9611514699638701,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "fitted_order_field_relative_max",
+        "value": 2.0982630849308705,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "q_relative_l2_error",
+        "value": 0.0022806356065587486,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "q_relative_linf_error",
+        "value": 0.0021242861578567506,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "field_relative_max_error",
+        "value": 0.0006201444176261597,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "flux_relative_error",
+        "value": 0.0012973359231895718,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "flux_identity_relative",
+        "value": 0.0001827171096321154,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "analytic_flux_outer",
+        "value": 0.0004983844084652967,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "analytic_flux_inner",
+        "value": 0.00031566729883318134,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "fitted_order_q_relative_l2",
+        "value": 1.9609630504773334,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "fitted_order_field_relative_max",
+        "value": 2.172163187172204,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "q_relative_l2_error",
+        "value": 0.006272390839310687,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "q_relative_linf_error",
+        "value": 0.006299074939769449,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "field_relative_max_error",
+        "value": 0.0004288815786601078,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "flux_relative_error",
+        "value": 2.2672749292587052e-05,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "flux_identity_relative",
+        "value": 5.865801007880904e-09,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "analytic_flux_outer",
+        "value": 1.6034987405179118e-05,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "analytic_flux_inner",
+        "value": 1.6029121604171237e-05,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "fitted_order_q_relative_l2",
+        "value": 2.0045239734497455,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "fitted_order_field_relative_max",
+        "value": 2.848896614428516,
+        "threshold": 1.5,
+        "passed": true
+      },
+      {
+        "case": "point_source",
+        "check": "orientation_control_caught",
+        "value": 0.7111294675349359,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "bipolar_ratio",
+        "check": "orientation_control_caught",
+        "value": 0.9043075619937347,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "hole_dipole",
+        "check": "orientation_control_caught",
+        "value": 0.2660372989463577,
+        "threshold": 0.03,
+        "passed": true
+      },
+      {
+        "case": "probe_guard",
+        "check": "hole_and_outside_probes_refused",
+        "value": 1.0,
+        "threshold": 1.0,
+        "passed": true
+      }
+    ],
+    "failed_checks": []
+  }
+}
