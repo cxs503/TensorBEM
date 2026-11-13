@@ -337,7 +337,9 @@ def run_mass_matrix_energy_check(
     """Check ``0.5*x^T M x`` against the rigid-body kinetic energy."""
     r_g = np.asarray(center_of_gravity, dtype=float)
     j_cg = np.diag([5.0e2, 7.0e2, 9.0e2]) if inertia is None else np.asarray(inertia, dtype=float)
-    m = compute_mass_matrix(mass, r_g, inertia=j_cg)
+    # ``j_cg`` is the tensor about the centre of gravity, so the CG convention
+    # must be requested explicitly (default is the origin convention).
+    m = compute_mass_matrix(mass, r_g, inertia=j_cg, inertia_about="cg")
 
     rng = np.random.default_rng(seed)
     errors: list[float] = []

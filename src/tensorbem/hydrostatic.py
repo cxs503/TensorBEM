@@ -498,73 +498,67 @@ def compute_mass_matrix(
     mass: float,
     center_of_gravity: FloatArray,
     inertia: FloatArray | None = None,
+    *,
+    inertia_about: str = "origin",
 ) -> FloatArray:
-    """Compute the 6×6 rigid-body mass matrix M.
+    """Compute the 6x6 rigid-body mass matrix M in the closed block form.
 
-    The mass matrix relates accelerations to inertial forces:
+    The mass matrix relates generalized accelerations to inertial forces and
+    moments.  With the centre of gravity at ``r_g`` relative to the body-fixed
+    reference point and ``S(a) b = a x b``,
 
-        M = [[m*I_3,    -m*S^T],
-             [-m*S,  J + m*S*S^T]]
+        M = [[ m I3,        -m S(r_g)                          ],
+             [ m S(r_g),     I_g + m S(r_g)^T S(r_g)            ]]
 
-    where m is the mass, S is the skew-symmetric matrix of the center of
-    gravity coordinates, and J is the inertia tensor about the origin.
+    which is Fossen (2011), *Handbook of Marine Craft Hydrodynamics and Motion
+    Control*, Sec. 3.3, eq. (3.44).  The lower-right block is the inertia about
+    the reference point; by the parallel-axis theorem
+    ``I_g + m S^T S = I_O``, so passing ``inertia`` already referred to the
+    origin (the default here, ``inertia_about="origin"``) gives
+    ``M[3:, 3:] = I_O`` exactly.  Pass ``inertia_about="cg"`` when ``inertia``
+    is the tensor about the centre of gravity.
 
-    For simplicity, if inertia is not provided, we use a diagonal approximation
-    with the moments of inertia computed from the mass and CG.
+    .. note::
+
+       Before mission m17324 this function assembled
+       ``[[m I3, -m S^T], [-m S, J + m S S^T]]`` with ``J`` documented as the
+       inertia about the origin.  That form is still symmetric, so it passed
+       the symmetry test, but it is *not* the block form above: both
+       off-diagonal blocks carry the wrong sign (kinetic-energy identity error
+       7.7e-1 relative) and the lower-right block double-counts the
+       parallel-axis transfer (``J + m S S^T = I_g + 2 m S^T S``).  The defect
+       was found by :mod:`tensorbem.benchmarks.rigid_body_mass_case`, which
+       compares this assembly entrywise with the closed form and with the
+       rigid-body kinetic energy.  The assembly is now delegated to
+       :func:`tensorbem.rigid_body_mass.rigid_body_mass_matrix`.
 
     Parameters
     ----------
     mass :
         Body mass (kg).
     center_of_gravity :
-        Center of gravity coordinates (m).
+        Center of gravity coordinates (m) in the reference frame of the
+        generalized coordinates.
     inertia :
-        Inertia tensor about the origin (3×3). If None, a diagonal approximation
-        is used.
+        Inertia tensor (3x3), interpreted according to ``inertia_about``.  If
+        None, the diagonal approximation ``I_g = m k^2 I3`` with
+        ``k = 0.4 * |r_g|`` is used (``k = 0.4 m`` when ``r_g`` vanishes).
+    inertia_about :
+        ``"origin"`` (default, tensor about the reference point) or ``"cg"``
+        (tensor about the centre of gravity).
 
     Returns
     -------
     M :
-        6×6 mass matrix (kg or kg·m²).
+        6x6 mass matrix (kg / kg m^2), mode order
+        ``(surge, sway, heave, roll, pitch, yaw)``.
     """
-    cg = np.asarray(center_of_gravity, dtype=float)
+    from tensorbem.rigid_body_mass import rigid_body_mass_matrix
 
-    # Skew-symmetric matrix of CG
-    # S = [[0, -z, y], [z, 0, -x], [-y, x, 0]]
-    x, y, z = cg
-    s = np.array([[0, -z, y], [z, 0, -x], [-y, x, 0]])
-
-    # Mass matrix blocks
-    m11 = mass * np.eye(3)
-    m12 = -mass * s.T
-    m21 = -mass * s
-
-    if inertia is not None:
-        j = np.asarray(inertia, dtype=float)
-    else:
-        # Default approximation: assume body has radius of gyration k = 0.4 * characteristic_length
-        # where characteristic_length is estimated from CG distance to origin
-        # This provides a more realistic inertia than point-mass approximation
-        r = np.linalg.norm(cg)
-        if r > 1e-10:
-            # Use radius of gyration k = 0.4 * r (typical for ship-like bodies)
-            k = 0.4 * r
-            # Inertia about CG: J_cg = m * k^2 * I
-            # Inertia about origin: J = J_cg + m * (|cg|^2 * I - cg⊗cg)
-            j_cg = mass * k**2 * np.eye(3)
-            j = j_cg + mass * (r**2 * np.eye(3) - np.outer(cg, cg))
-        else:
-            # CG at origin: use a default radius of gyration
-            k = 0.4  # meters
-            j = mass * k**2 * np.eye(3)
-
-    m22 = j + mass * (s @ s.T)
-
-    # Assemble full 6×6 matrix
-    m = np.zeros((6, 6), dtype=float)
-    m[0:3, 0:3] = m11
-    m[0:3, 3:6] = m12
-    m[3:6, 0:3] = m21
-    m[3:6, 3:6] = m22
-
-    return m
+    return rigid_body_mass_matrix(
+        mass,
+        center_of_gravity,
+        inertia,
+        inertia_about=inertia_about,
+        reference_point=(0.0, 0.0, 0.0),
+    )
