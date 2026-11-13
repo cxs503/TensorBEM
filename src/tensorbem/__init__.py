@@ -226,7 +226,48 @@ from .flexural_gravity import (
     wavelength_ratio_mass_loading,
 )
 
+# Ice-cover mass-loading dispersion verified by a periodic-strip BEM
+from .ice_mass_loading_dispersion import (
+    StripMesh,
+    StripSolve,
+    StripSolveField,
+    build_periodic_strip,
+    dispersion_row,
+    dtn_depth_factor,
+    evaluate_strip_interior_field,
+    long_wave_omega,
+    mass_loading_cutoff_omega,
+    mass_loading_mu,
+    strip_bem_depth_factor,
+    strip_bem_field,
+    strip_bem_mass_loading_omega,
+    strip_bem_mass_loading_omega2,
+    strip_bem_mode_sweep,
+    weitz_keller_deep_omega2,
+    weitz_keller_omega,
+    weitz_keller_omega2,
+)
+
 __all__ = [
+    # Ice-cover mass-loading dispersion (periodic-strip BEM)
+    "StripMesh",
+    "StripSolve",
+    "StripSolveField",
+    "build_periodic_strip",
+    "dispersion_row",
+    "dtn_depth_factor",
+    "evaluate_strip_interior_field",
+    "long_wave_omega",
+    "mass_loading_cutoff_omega",
+    "mass_loading_mu",
+    "strip_bem_depth_factor",
+    "strip_bem_field",
+    "strip_bem_mass_loading_omega",
+    "strip_bem_mass_loading_omega2",
+    "strip_bem_mode_sweep",
+    "weitz_keller_deep_omega2",
+    "weitz_keller_omega",
+    "weitz_keller_omega2",
     "PanelMesh",
     "regular_polygon",
     "ellipse_mesh",
