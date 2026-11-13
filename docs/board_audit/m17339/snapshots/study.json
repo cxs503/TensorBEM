@@ -1,0 +1,267 @@
+{
+  "case": {
+    "amplitude_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "geometry": "bottom-mounted vertical circular cylinder, radius a, deep water",
+    "gravity_m_s2": 9.81,
+    "ka_long_wave_scan": [
+      0.02,
+      0.03,
+      0.05,
+      0.08,
+      0.1,
+      0.15,
+      0.2,
+      0.3
+    ],
+    "ka_scan": [
+      0.2,
+      0.457143,
+      0.714286,
+      0.971429,
+      1.228571,
+      1.485714,
+      1.742857,
+      2.0
+    ],
+    "motion": "fixed (no radiation)",
+    "radius_m": 1.0
+  },
+  "energy_balance": [
+    {
+      "flux_interference": -0.3614913724359944,
+      "flux_scattered": 0.36149137243599444,
+      "flux_total": -4.3598356225107897e-16,
+      "ka": 0.5,
+      "probe_radius": 5.0,
+      "residual": 1.206069066913275e-15
+    },
+    {
+      "flux_interference": -0.3614913724359954,
+      "flux_scattered": 0.3614913724359954,
+      "flux_total": -8.719671245021579e-16,
+      "ka": 0.5,
+      "probe_radius": 10.0,
+      "residual": 2.4121381338265435e-15
+    },
+    {
+      "flux_interference": -0.3614913724358285,
+      "flux_scattered": 0.36149137243582846,
+      "flux_total": -3.4878684980086318e-15,
+      "ka": 0.5,
+      "probe_radius": 20.0,
+      "residual": 9.64855253531063e-15
+    },
+    {
+      "flux_interference": -2.000383456365476,
+      "flux_scattered": 2.000383456365475,
+      "flux_total": -1.7439342490043159e-15,
+      "ka": 1.0,
+      "probe_radius": 5.0,
+      "residual": 8.717999758770724e-16
+    },
+    {
+      "flux_interference": -2.000383456364554,
+      "flux_scattered": 2.0003834563645544,
+      "flux_total": -3.4878684980086318e-15,
+      "ka": 1.0,
+      "probe_radius": 10.0,
+      "residual": 1.7435999517549473e-15
+    },
+    {
+      "flux_interference": -2.000383481854221,
+      "flux_scattered": 2.0003834818542217,
+      "flux_total": -1.7439342490043159e-15,
+      "ka": 1.0,
+      "probe_radius": 20.0,
+      "residual": 8.717999647686581e-16
+    },
+    {
+      "flux_interference": -3.600247041050956,
+      "flux_scattered": 3.600247041050956,
+      "flux_total": -2.6159013735064736e-15,
+      "ka": 1.5,
+      "probe_radius": 5.0,
+      "residual": 7.265894100263909e-16
+    },
+    {
+      "flux_interference": -3.6002470411529166,
+      "flux_scattered": 3.6002470411529175,
+      "flux_total": -6.9757369960172635e-15,
+      "ka": 1.5,
+      "probe_radius": 10.0,
+      "residual": 1.9375717600155024e-15
+    },
+    {
+      "flux_interference": -3.6005867843110617,
+      "flux_scattered": 3.6005867843110613,
+      "flux_total": -8.71967124502158e-15,
+      "ka": 1.5,
+      "probe_radius": 20.0,
+      "residual": 2.4217361689533635e-15
+    }
+  ],
+  "figures": [
+    "/root/tp-agent/work/m17296/artifacts/cylinder_drift_asymptotic/fig_long_wave_law.png",
+    "/root/tp-agent/work/m17296/artifacts/cylinder_drift_asymptotic/fig_near_far_energy.png"
+  ],
+  "long_wave": {
+    "ansatz": "S ~ i kappa (2 cos theta - 1), kappa = pi (ka)^2 / 4",
+    "closed_form_coefficient": 3.0842513753404246,
+    "coefficient_rel_error_at_smallest_ka": 0.00011682436837413968,
+    "fit_band": [
+      0.02,
+      0.3
+    ],
+    "fitted_slope": 2.976814285761315,
+    "fitted_slope_target": 3.0,
+    "fitted_slope_tolerance": 0.2,
+    "ka_values": [
+      0.02,
+      0.03,
+      0.05,
+      0.08,
+      0.1,
+      0.15,
+      0.2,
+      0.3
+    ],
+    "normalised_coefficient": [
+      3.0838910596215934,
+      3.0832200496881503,
+      3.0806224562285256,
+      3.0731687405553787,
+      3.0655837127325487,
+      3.0364101426811905,
+      2.9908590329539257,
+      2.8418647289124888
+    ]
+  },
+  "repo_convention_audit": {
+    "convention_note": "tensorbem.maruo_drift applies the classical 1/R Kochin weight rho*omega^2/(4k); the free-surface wave part of the present deep-water solution decays as R^(-1/2) with the (i k/2) H_0^(1) normalisation, so the same |K|^2 integral carries rho g A^2 k/(8 pi).",
+    "exact_force": 6685.993519247995,
+    "ka": 1.0,
+    "ratio_repo_over_exact": 6.283181587517286,
+    "repo_maruo_force": 42009.31137439891,
+    "two_pi": 6.283185307179586
+  },
+  "rows": [
+    {
+      "far_field_force": 240.59068232887975,
+      "ka": 0.2,
+      "kochin_flux_total": 0.018239277317341138,
+      "kochin_flux_weighted": 0.030067394450722332,
+      "near_far_rel_diff": 2.835193032942392e-15,
+      "near_field_force": 240.59068232887907,
+      "normalised_force": 2.9908590329539257,
+      "surface_integral": -0.004411193592912486,
+      "waterline_integral": -0.15084740896593146
+    },
+    {
+      "far_field_force": 2337.143374798534,
+      "ka": 0.457143,
+      "kochin_flux_total": 0.418663194010024,
+      "kochin_flux_weighted": 0.6676124470484139,
+      "near_far_rel_diff": 3.89148013587882e-16,
+      "near_field_force": 2337.1433747985348,
+      "normalised_force": 2.432967237175191,
+      "surface_integral": -0.2053849216901191,
+      "waterline_integral": -1.421119807080915
+    },
+    {
+      "far_field_force": 5434.576802562787,
+      "ka": 0.714286,
+      "kochin_flux_total": 1.6159037913606134,
+      "kochin_flux_weighted": 2.425631725799441,
+      "near_far_rel_diff": 1.6735336251831738e-16,
+      "near_field_force": 5434.576802562788,
+      "normalised_force": 1.483052221602855,
+      "surface_integral": -1.0980715747864649,
+      "waterline_integral": -3.2379955816250514
+    },
+    {
+      "far_field_force": 6675.686196830317,
+      "ka": 0.971429,
+      "kochin_flux_total": 3.0014846621652267,
+      "kochin_flux_weighted": 4.052228937110008,
+      "near_far_rel_diff": 4.0871964692023666e-16,
+      "near_field_force": 6675.68619683032,
+      "normalised_force": 0.7242188892649037,
+      "surface_integral": -2.6332866923982237,
+      "waterline_integral": -4.050832964701603
+    },
+    {
+      "far_field_force": 6356.894215628344,
+      "ka": 1.228571,
+      "kochin_flux_total": 4.223061027521529,
+      "kochin_flux_weighted": 4.880139535576978,
+      "near_far_rel_diff": 0.0,
+      "near_field_force": 6356.894215628344,
+      "normalised_force": 0.3409190993803451,
+      "surface_integral": -5.084601485214522,
+      "waterline_integral": -4.213113120895219
+    },
+    {
+      "far_field_force": 6039.18280391078,
+      "ka": 1.485714,
+      "kochin_flux_total": 5.57322344800984,
+      "kochin_flux_weighted": 5.606610513808217,
+      "near_far_rel_diff": 3.0119793730501707e-16,
+      "near_field_force": 6039.182803910782,
+      "normalised_force": 0.18313850122673037,
+      "surface_integral": -9.280286452081468,
+      "waterline_integral": -4.50453656281382
+    },
+    {
+      "far_field_force": 6170.703321596897,
+      "ka": 1.742857,
+      "kochin_flux_total": 7.089250114652609,
+      "kochin_flux_weighted": 6.7202188630677595,
+      "near_far_rel_diff": 2.9477829491162864e-16,
+      "near_field_force": 6170.703321596895,
+      "normalised_force": 0.11591950787511537,
+      "surface_integral": -14.775504210723406,
+      "waterline_integral": -4.886860315636535
+    },
+    {
+      "far_field_force": 6306.398053942844,
+      "ka": 2.0,
+      "kochin_flux_total": 8.53731083290035,
+      "kochin_flux_weighted": 7.881309284952559,
+      "near_far_rel_diff": 8.653066558692407e-16,
+      "near_field_force": 6306.398053942849,
+      "normalised_force": 0.07839683317101569,
+      "surface_integral": -20.67599348003249,
+      "waterline_integral": -5.093197846476565
+    }
+  ],
+  "verdict": {
+    "all_gates_pass": true,
+    "energy_pass": true,
+    "energy_residual_max": 9.64855253531063e-15,
+    "energy_target": 0.01,
+    "long_wave_coefficient_pass": true,
+    "long_wave_coefficient_rel_error": 0.00011682436837413968,
+    "long_wave_slope": 2.976814285761315,
+    "long_wave_slope_pass": true,
+    "near_far_max_rel_diff": 2.835193032942392e-15,
+    "near_far_pass": true,
+    "near_far_target": 0.05,
+    "radius_independence_pass": true,
+    "scope_limits": [
+      "deep water only (omega^2 = g k); finite depth is not covered here",
+      "vertical circular cylinder, bottom-mounted, rigid and fixed: no forward speed, no mooring, no second-order potential",
+      "Wigley-hull RAO/first-order excitation comparison against towing-tank experiments is NOT part of this study (no digitised experimental data set is carried in the repository; inventing one would be fabrication)"
+    ],
+    "wall_anchor_pass": true,
+    "wall_anchor_rel_error": 0.0
+  },
+  "wall_anchor": {
+    "anchor_rho_g_A2_over_2": 5027.625,
+    "case": "fully reflecting vertical wall, deep water",
+    "near_field_force": 5027.625,
+    "rel_error": 0.0,
+    "surface_term": -5027.625,
+    "waterline_term": 10055.25
+  }
+}

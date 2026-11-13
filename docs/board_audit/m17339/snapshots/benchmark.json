@@ -1,0 +1,95 @@
+{
+  "case": "CASE-BEM-CYL-DRIFT-ASYMP",
+  "comparison": [
+    {
+      "got_far_field": 240.59068232887975,
+      "got_near_field": 240.59068232887907,
+      "ka": 0.2,
+      "near_far_rel_diff": 2.835193032942392e-15,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 2337.143374798534,
+      "got_near_field": 2337.1433747985348,
+      "ka": 0.457143,
+      "near_far_rel_diff": 3.89148013587882e-16,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 5434.576802562787,
+      "got_near_field": 5434.576802562788,
+      "ka": 0.714286,
+      "near_far_rel_diff": 1.6735336251831738e-16,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 6675.686196830317,
+      "got_near_field": 6675.68619683032,
+      "ka": 0.971429,
+      "near_far_rel_diff": 4.0871964692023666e-16,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 6356.894215628344,
+      "got_near_field": 6356.894215628344,
+      "ka": 1.228571,
+      "near_far_rel_diff": 0.0,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 6039.18280391078,
+      "got_near_field": 6039.182803910782,
+      "ka": 1.485714,
+      "near_far_rel_diff": 3.0119793730501707e-16,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 6170.703321596897,
+      "got_near_field": 6170.703321596895,
+      "ka": 1.742857,
+      "near_far_rel_diff": 2.9477829491162864e-16,
+      "pass_5pct": true
+    },
+    {
+      "got_far_field": 6306.398053942844,
+      "got_near_field": 6306.398053942849,
+      "ka": 2.0,
+      "near_far_rel_diff": 8.653066558692407e-16,
+      "pass_5pct": true
+    }
+  ],
+  "long_wave_law": {
+    "coefficient_pass": true,
+    "coefficient_rel_error": 0.00011682436837413968,
+    "fitted_slope": 2.976814285761315,
+    "got_coefficient_at_smallest_ka": 3.0838910596215934,
+    "ref_coefficient": 3.0842513753404246,
+    "slope_pass": true,
+    "slope_target": 3.0,
+    "slope_tolerance": 0.2
+  },
+  "ref_closed_form_coefficient": 3.0842513753404246,
+  "ref_source": "MacCamy-Fuchs (1954) near field + Maruo far field closed form; F_x = (5 pi^2/16) rho g A^2 a (ka)^3",
+  "tolerance_pct": 5.0,
+  "verdict": {
+    "all_gates_pass": true,
+    "energy_pass": true,
+    "energy_residual_max": 9.64855253531063e-15,
+    "energy_target": 0.01,
+    "long_wave_coefficient_pass": true,
+    "long_wave_coefficient_rel_error": 0.00011682436837413968,
+    "long_wave_slope": 2.976814285761315,
+    "long_wave_slope_pass": true,
+    "near_far_max_rel_diff": 2.835193032942392e-15,
+    "near_far_pass": true,
+    "near_far_target": 0.05,
+    "radius_independence_pass": true,
+    "scope_limits": [
+      "deep water only (omega^2 = g k); finite depth is not covered here",
+      "vertical circular cylinder, bottom-mounted, rigid and fixed: no forward speed, no mooring, no second-order potential",
+      "Wigley-hull RAO/first-order excitation comparison against towing-tank experiments is NOT part of this study (no digitised experimental data set is carried in the repository; inventing one would be fabrication)"
+    ],
+    "wall_anchor_pass": true,
+    "wall_anchor_rel_error": 0.0
+  }
+}

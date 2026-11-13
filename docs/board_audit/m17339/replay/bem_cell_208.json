@@ -1,0 +1,27 @@
+{
+ "check": "independent replay of one BEM panel rung from main-tree code",
+ "anchor_slug": "CASE-BEM-CYL-DRIFT-ASYMP",
+ "audit_mission": 17339,
+ "source_mission": 17204,
+ "code_path": "src/tensorbem/benchmarks/drift_far_field_3d_study.py run_case -> maruo_far_field_drift",
+ "ka": 0.5,
+ "mesh_n_theta_n_z": [
+  16,
+  6
+ ],
+ "panels": 208,
+ "closed_form_far_N": 2875.6569932775283,
+ "closed_form_near_N": 2875.6569932775274,
+ "replay_far_N": 2662.9862461194375,
+ "replay_near_N": 2007.1409159813616,
+ "replay_far_error": 0.07395553351990684,
+ "replay_near_error": 0.3020235303885376,
+ "delivered_far_error": 0.07395553351990668,
+ "delivered_near_error": 0.3020235303885386,
+ "far_abs_diff": 1.6653345369377348e-16,
+ "near_abs_diff": 9.992007221626409e-16,
+ "solver_relative_residual": 1.1623909012352613e-15,
+ "energy_identity_residual": 0.01156904515707375,
+ "wall_seconds": 8.905264854431152,
+ "replay_matches_delivered_to_1e-12": true
+}
