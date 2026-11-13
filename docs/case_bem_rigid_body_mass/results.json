@@ -1,0 +1,313 @@
+{
+  "benchmark": "CASE-BEM-RIGID-BODY-MASS",
+  "subject": "6x6 rigid-body mass matrix: closed-form block form, mesh quadrature, rotated/full-tensor orientation and momentum-definition route",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "wall_time_s": 9.77291608043015
+  },
+  "parameters": {
+    "semi_axes_m": [
+      60.0,
+      12.0,
+      8.0
+    ],
+    "density_kg_m3": 1025.0,
+    "cg_offset_m": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "mode_order": [
+      "surge",
+      "sway",
+      "heave",
+      "roll",
+      "pitch",
+      "yaw"
+    ],
+    "subdivisions": [
+      1,
+      2,
+      4
+    ],
+    "accepted_from_subdivision": 3,
+    "tolerance": 0.03,
+    "rotation_rad": [
+      0.3490658503988659,
+      0.2617993877991494,
+      0.4363323129985824
+    ],
+    "rotation_order": "R = Rz(yaw) @ Ry(pitch) @ Rx(roll)",
+    "reference": "Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control, Sec. 3.3, eq. (3.44) block form; solid-ellipsoid second moments Lamb (1932) Ch. VI; the numbers are evaluated from those closed forms, none transcribed"
+  },
+  "reference": {
+    "volume": 24127.43157956961,
+    "mass": 24730617.36905885,
+    "center_of_gravity": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "inertia_about_cg": [
+      [
+        1028793682.5528482,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        18122596408.046326,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        18518286285.951267
+      ]
+    ]
+  },
+  "base_case": {
+    "box_body": {
+      "levels": [
+        {
+          "subdivisions": 1,
+          "panels": 24,
+          "mesh_route_max_entry_rel_error": 4.3021183232422326e-16,
+          "max_entry_rel_error": 0.0,
+          "control_max_entry_rel_error": 2.0,
+          "kinetic_energy_error": 4.1431358603846484e-16
+        },
+        {
+          "subdivisions": 2,
+          "panels": 96,
+          "mesh_route_max_entry_rel_error": 4.3021183232422326e-16,
+          "max_entry_rel_error": 0.0,
+          "control_max_entry_rel_error": 2.0,
+          "kinetic_energy_error": 4.1431358603846484e-16
+        },
+        {
+          "subdivisions": 4,
+          "panels": 384,
+          "mesh_route_max_entry_rel_error": 1.2906354969726698e-15,
+          "max_entry_rel_error": 0.0,
+          "control_max_entry_rel_error": 2.0,
+          "kinetic_energy_error": 4.1431358603846484e-16
+        }
+      ],
+      "worst_accepted_entry_rel_error": 0.0,
+      "primary_max_entry_rel_error": 0.0,
+      "kinetic_energy_error": 4.1431358603846484e-16
+    },
+    "ellipsoid": {
+      "ladder": [
+        {
+          "panels": 20,
+          "volume_rel_error": 0.39453861708747423,
+          "inertia_cg_rel_error": 0.5618840275493934,
+          "max_entry_rel_error": 0.5564774169761859,
+          "control_max_entry_rel_error": 1.6054613829125255
+        },
+        {
+          "panels": 80,
+          "volume_rel_error": 0.12654679999693672,
+          "inertia_cg_rel_error": 0.20124512409027445,
+          "max_entry_rel_error": 0.19883176391667218,
+          "control_max_entry_rel_error": 1.8734532000030635
+        },
+        {
+          "panels": 320,
+          "volume_rel_error": 0.03383925140141284,
+          "inertia_cg_rel_error": 0.05571215644798204,
+          "max_entry_rel_error": 0.05500548466436325,
+          "control_max_entry_rel_error": 1.9661607485985875
+        },
+        {
+          "panels": 1280,
+          "volume_rel_error": 0.008606157370245051,
+          "inertia_cg_rel_error": 0.014299268159197298,
+          "max_entry_rel_error": 0.014115334623756828,
+          "control_max_entry_rel_error": 1.9913938426297562
+        },
+        {
+          "panels": 5120,
+          "volume_rel_error": 0.0021608283894018815,
+          "inertia_cg_rel_error": 0.0035985875401566654,
+          "max_entry_rel_error": 0.0035521362881938915,
+          "control_max_entry_rel_error": 1.9978391716106003
+        }
+      ]
+    },
+    "rao_caller": {
+      "caller": "tensorbem.rao.compute_rao_at_frequency (impedance -w^2(M+A)+iwB+C)",
+      "caller_line": "src/tensorbem/rao.py: m = compute_mass_matrix(mass, center_of_gravity, inertia)",
+      "omega": 0.6,
+      "panels": 108,
+      "rao_shipped": [
+        0.20854619008043956,
+        0.02921467979550399,
+        0.4251955794427707,
+        0.0036076523296351905,
+        0.025013007767262743,
+        0.0005949148735249303
+      ],
+      "rao_with_legacy_coupling": [
+        0.3207771143272502,
+        0.01992523061976754,
+        0.4245664161798007,
+        0.006987810466790742,
+        0.02510887799975185,
+        0.0005652105243825022
+      ],
+      "rao_change_fraction": [
+        0.5381585930844452,
+        0.3179719661745549,
+        0.0014797032080967464,
+        0.9369412094921454,
+        0.0038328150449216097,
+        0.04993041940005115
+      ],
+      "max_rao_change": 0.9369412094921454,
+      "max_rao_change_mode": "roll",
+      "replay_with_injected_ref_matrix": 0.0,
+      "modes": [
+        "surge",
+        "sway",
+        "heave",
+        "roll",
+        "pitch",
+        "yaw"
+      ]
+    }
+  },
+  "orientation_case": {
+    "levels": [
+      {
+        "subdivisions": 1,
+        "panels": 80,
+        "max_entry_rel_error": 0.19930520574032262,
+        "volume_rel_error": 0.12654679999693658,
+        "within_tolerance": false
+      },
+      {
+        "subdivisions": 2,
+        "panels": 320,
+        "max_entry_rel_error": 0.05514411626258779,
+        "volume_rel_error": 0.03383925140141269,
+        "within_tolerance": false
+      },
+      {
+        "subdivisions": 3,
+        "panels": 1280,
+        "max_entry_rel_error": 0.01415141785302352,
+        "volume_rel_error": 0.008606157370245202,
+        "within_tolerance": true
+      },
+      {
+        "subdivisions": 4,
+        "panels": 5120,
+        "max_entry_rel_error": 0.003561248879704681,
+        "volume_rel_error": 0.0021608283894006754,
+        "within_tolerance": true
+      }
+    ],
+    "worst_accepted_entry_rel_error": 0.01415141785302352,
+    "congruence_residual_rel": 1.0750761060096021e-16,
+    "external_status": "ok",
+    "checks": {
+      "rotation_is_orthonormal": true,
+      "rotation_creates_products_of_inertia": true,
+      "congruence_identity_roundoff": true,
+      "analytic_block_form_roundoff": true,
+      "analytic_energy_identity": true,
+      "rotated_mesh_levels_within_3pct": true,
+      "rotated_mesh_energy_identity": true,
+      "inertia_tensor_error_monotone": true,
+      "sweep_all_within_3pct": true,
+      "sweep_congruence_roundoff": true,
+      "negative_control_detected": true,
+      "external_anchor_within_3pct": true,
+      "external_anchor_convention_exact": true
+    }
+  },
+  "momentum_route": {
+    "route": "momentum definitions (4): p = m (v_O + w x r_g), h_O = I_g w + r_g x p",
+    "function": "tensorbem.rigid_body_mass.mass_matrix_from_momentum",
+    "configurations": [
+      {
+        "configuration": "cg-offset (axis-aligned ellipsoid, diagonal inertia)",
+        "max_relative_error": 0.0,
+        "worst_entry": [
+          "surge",
+          "surge"
+        ],
+        "scale": 19136551720.17774
+      },
+      {
+        "configuration": "reference-point offset o = (2, -1, 4) m",
+        "max_relative_error": 1.1476933129161745e-16,
+        "worst_entry": [
+          "roll",
+          "yaw"
+        ],
+        "scale": 19556972215.45174
+      },
+      {
+        "configuration": "rotated body (yaw 20 / pitch 15 / roll 25 deg, full inertia tensor)",
+        "max_relative_error": 0.0,
+        "worst_entry": [
+          "surge",
+          "surge"
+        ],
+        "scale": 17741521945.7539
+      },
+      {
+        "configuration": "two-component box body (payload station x = 30.0 m)",
+        "max_relative_error": 1.1472315528645955e-16,
+        "worst_entry": [
+          "roll",
+          "yaw"
+        ],
+        "scale": 17723578400.0
+      }
+    ],
+    "worst_relative_error": 1.1476933129161745e-16,
+    "roundoff_limit": 1e-09,
+    "control_flipped_coupling": {
+      "matrix_is_symmetric": true,
+      "momentum_relative_error": 2.0,
+      "momentum_worst_entry": [
+        "surge",
+        "pitch"
+      ],
+      "energy_relative_error": 0.17547538088661366,
+      "rejected": true
+    },
+    "control_antisymmetric_corruption": {
+      "magnitude_kg_m2": 1000000.0,
+      "energy_relative_error": 2.1434698780920608e-16,
+      "momentum_relative_error": 52.256018462594376,
+      "energy_blind": true,
+      "momentum_detects": true
+    }
+  },
+  "verdict": {
+    "overall": "PASS",
+    "all_pass": true,
+    "checks": {
+      "worst_accepted_entry_within_tolerance": true,
+      "momentum_route_roundoff": true,
+      "momentum_route_rejects_flipped_coupling": true,
+      "momentum_route_beats_energy_blind_spot": true,
+      "base_case_passed": true,
+      "orientation_case_passed": true,
+      "legacy_coupling_rejected": true,
+      "orientation_negative_control_rejected": true
+    },
+    "worst_accepted_entry_rel_error": 0.01415141785302352,
+    "tolerance": 0.03,
+    "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls"
+  }
+}
