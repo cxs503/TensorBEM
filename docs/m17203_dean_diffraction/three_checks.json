@@ -1,0 +1,73 @@
+{
+  "knowledge_search_TensorBEM": {
+    "available": false,
+    "reason": "engine_offline",
+    "detail": "[Errno 111] Connection refused",
+    "engine": {
+      "base": "http://127.0.0.1:8021",
+      "reachable": false
+    },
+    "checked_at": "2026-11-13T02:17:19Z",
+    "q": "TensorBEM diffraction",
+    "count": null,
+    "items": []
+  },
+  "knowledge_search_dean": {
+    "available": false,
+    "reason": "engine_offline",
+    "detail": "[Errno 111] Connection refused",
+    "engine": {
+      "base": "http://127.0.0.1:8021",
+      "reachable": false
+    },
+    "checked_at": "2026-11-13T02:17:19Z",
+    "q": "Dean cylinder diffraction",
+    "count": null,
+    "items": []
+  },
+  "negative_knowledge_search": {
+    "query": "TensorBEM",
+    "hits": [],
+    "count": 0
+  },
+  "capabilities_audit_summary": {
+    "status": "ok",
+    "data": {
+      "total_capabilities": 21,
+      "level_distribution": {
+        "REAL": 16,
+        "MOCK": 1,
+        "STUB": 1,
+        "WITHHELD": 1,
+        "NOT_SUPPORTED": 2
+      },
+      "withheld_count": 1,
+      "domain_coverage": {
+        "阻力": 1,
+        "推进": 1,
+        "耐波": 0,
+        "操纵": 0,
+        "稳性": 1,
+        "结构": 0,
+        "振动噪声": 0,
+        "绿色航行": 0,
+        "冰区航行": 0
+      },
+      "acceptance": {
+        "total_21": true,
+        "withheld_le_3": true,
+        "all_pass": true
+      }
+    }
+  },
+  "knowledge_overview": {
+    "available": false,
+    "reason": "engine_offline",
+    "detail": "[Errno 111] Connection refused",
+    "engine": {
+      "base": "http://127.0.0.1:8021",
+      "reachable": false
+    },
+    "checked_at": "2026-11-13T02:17:20Z"
+  }
+}
