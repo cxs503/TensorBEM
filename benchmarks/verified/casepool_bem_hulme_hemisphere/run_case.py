@@ -32,6 +32,19 @@ from typing import Sequence
 
 from tensorbem.benchmarks import hulme_hemisphere_case as case
 
+# Re-export symbols needed by the CI guard test
+# (tests/test_casepool_hulme_hemisphere.py loads this module via importlib)
+BAND_KA = case.BAND_KA
+COARSE_SUBDIVISIONS = case.COARSE_SUBDIVISIONS
+CASE_SUBDIVISIONS = case.CASE_SUBDIVISIONS
+QUANTITIES = case.QUANTITIES
+RADIUS = case.RADIUS
+reference = case.reference
+reference_ladder = case.reference_ladder
+_panel_cell = case._panel_cell
+build_tasks = case.build_tasks
+evaluate = case.evaluate
+
 REPO = Path(__file__).resolve().parents[2]
 
 
