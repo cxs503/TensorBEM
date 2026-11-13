@@ -1,0 +1,820 @@
+{
+ "case_code": "CASE-BEM-HULME-DIFF-VERIF",
+ "verdict": "PASS",
+ "tolerance": "<5%",
+ "gates": {
+  "G1_relative": {
+   "tolerance": 0.05,
+   "worst": 0.003656113831483191,
+   "worst_cell": "A11@ka=0.2",
+   "verdict": "PASS"
+  },
+  "G2_absolute_normalised_forces": {
+   "tolerance": 0.01,
+   "worst": 0.001910149364360046,
+   "worst_cell": "Fx@ka=2",
+   "verdict": "PASS"
+  },
+  "G3_phase": {
+   "tolerance_deg": 3.0,
+   "worst": 0.08994028059612447,
+   "worst_cell": "Fx@ka=2",
+   "verdict": "PASS"
+  },
+  "G4_extrapolation_quality": {
+   "spread_limit": 0.02,
+   "flagged_cells": [],
+   "verdict": "PASS"
+  }
+ },
+ "worst": {
+  "relative": 0.003656113831483191,
+  "relative_cell": "A11@ka=0.2",
+  "absolute_normalised": 0.001910149364360046,
+  "absolute_cell": "Fx@ka=2",
+  "phase_deg": 0.08994028059612447,
+  "phase_cell": "Fx@ka=2"
+ },
+ "counts": {
+  "cells": 48,
+  "flagged_extrapolation": 0
+ },
+ "scale_newtons": 10051.81625,
+ "displaced_volume": 2.0943951023931953,
+ "reference": {
+  "module": "tensorbem.analytic.hulme_hemisphere_radiation",
+  "n_terms": 144,
+  "quad_order": 512
+ },
+ "independent_code": {
+  "name": "capytaine",
+  "version": "3.1.dev0",
+  "ladder_faces": [
+   256,
+   576,
+   1024,
+   1600
+  ],
+  "ladder_file": "benchmarks/verified/casepool_bem_hulme_hemisphere/capytaine_excitation.json",
+  "ladder_sha256": "f9b0463fd2d65b2c357ae6ef1eef57af9ac8c6325bba2059afba184b1c290d37",
+  "extrapolation": "3-point Richardson in x = 1/panels, order p estimated per cell; two overlapping 3-point ladders bound the limit",
+  "froude_krylov": "exact reduced quadrature (run_case.exact_froude_krylov), mesh independent"
+ },
+ "machine": {
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6",
+  "numpy": "2.4.6"
+ },
+ "cells": {
+  "0.2": {
+   "ka": 0.2,
+   "quantities": {
+    "A11": {
+     "reference": 0.5515331322468928,
+     "independent_limit": 0.5495240099135159,
+     "finest_mesh": 0.5635329890332089,
+     "relative": 0.003656113831483191,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00010177537066902424,
+      "spread": 0.00021611904377838442,
+      "spread_relative": 0.0003932840783651969,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.008152780024490573,
+     "independent_limit": 0.00815147158859951,
+     "finest_mesh": 0.008376824915304741,
+     "relative": 0.00016051529798533464,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.000913394361111207,
+      "spread": 2.8771202745515173e-05,
+      "spread_relative": 0.003529571615725683,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.7938342111726919,
+     "independent_limit": 0.7930963418945088,
+     "finest_mesh": 0.8027345630970254,
+     "relative": 0.0009303652522472927,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00021658467362659168,
+      "spread": 0.0006637695718454406,
+      "spread_relative": 0.0008369343505731739,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.279303811819254,
+     "independent_limit": 0.27944436768645037,
+     "finest_mesh": 0.28156914510554276,
+     "relative": -0.0005029833607312751,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0003493476924856637,
+      "spread": 0.0003772392838856664,
+      "spread_relative": 0.0013499620228844495,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      29.340987356097468,
+      -5874.031757278903
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -3895.058435516969
+     ],
+     "independent_limit": [
+      29.334245321476146,
+      -5866.576982956599
+     ],
+     "reference_normalised": [
+      0.0029189737084676084,
+      -0.5843751627750758
+     ],
+     "independent_limit_normalised": [
+      0.002918302980466455,
+      -0.5836335282150227
+     ],
+     "amplitude_normalised": 0.5836408242652338,
+     "relative": 0.0012707042285589097,
+     "absolute_normalised": 0.0007416348633534402,
+     "phase_difference_deg": -0.0002978194238494325,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 8.877823045082448e-05,
+      "spread": 0.6764241294205097,
+      "spread_relative": 0.0003430600577741201,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      24282.813548612656,
+      -1184.7802575812934
+     ],
+     "exact_froude_krylov": [
+      27526.023027034116,
+      0.0
+     ],
+     "independent_limit": [
+      24286.07427728339,
+      -1185.3875548573797
+     ],
+     "reference_normalised": [
+      2.4157637729015047,
+      -0.11786728170456692
+     ],
+     "independent_limit_normalised": [
+      2.4160881648909363,
+      -0.11792769837564228
+     ],
+     "amplitude_normalised": 2.418964440121067,
+     "relative": 0.00013640969692802458,
+     "absolute_normalised": 0.0003299702061565834,
+     "phase_difference_deg": 0.0010548906359133525,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00021614030970185653,
+      "spread": 2.881488714876005,
+      "spread_relative": 0.0008352172233794707,
+      "limit_usable": true
+     }
+    }
+   }
+  },
+  "0.5": {
+   "ka": 0.5,
+   "quantities": {
+    "A11": {
+     "reference": 0.6438970564919971,
+     "independent_limit": 0.641992646920288,
+     "finest_mesh": 0.6576513823692625,
+     "relative": 0.0029664040247887424,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00021674815917686,
+      "spread": 0.0005377112758181424,
+      "spread_relative": 0.0008375660973651408,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.09866994683102834,
+     "independent_limit": 0.09865673385690718,
+     "finest_mesh": 0.10141358588253363,
+     "relative": 0.00013392876091277803,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0009745464124204939,
+      "spread": 0.00037152918315008776,
+      "spread_relative": 0.003765877590159814,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.5860847421136983,
+     "independent_limit": 0.585188239718443,
+     "finest_mesh": 0.5930575202445244,
+     "relative": 0.00153198976740653,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00013967272636238363,
+      "spread": 0.0003158427208868053,
+      "spread_relative": 0.000539728414635895,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.3390571199208853,
+     "independent_limit": 0.33908047619894016,
+     "finest_mesh": 0.3405754688677238,
+     "relative": -6.888122346856557e-05,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0001490383614270167,
+      "spread": 0.0001952830384116533,
+      "spread_relative": 0.0005759194413100912,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      675.4494904127786,
+      -12906.764683560275
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -8566.209838690826
+     ],
+     "independent_limit": [
+      675.3592142360217,
+      -12893.077149898854
+     ],
+     "reference_normalised": [
+      0.06719676062649658,
+      -1.2840231419431563
+     ],
+     "independent_limit_normalised": [
+      0.06718777954541516,
+      -1.2826614443831337
+     ],
+     "amplitude_normalised": 1.2844199385821096,
+     "relative": 0.0010601884447386078,
+     "absolute_normalised": 0.0013617271770766247,
+     "phase_difference_deg": -0.0027744351547198676,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00025120451713609327,
+      "spread": 4.251004232298695,
+      "spread_relative": 0.0009707136053995693,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      16530.69701017641,
+      -3706.77865647088
+     ],
+     "exact_froude_krylov": [
+      22035.893651273396,
+      0.0
+     ],
+     "independent_limit": [
+      16542.428614242297,
+      -3708.1631061795447
+     ],
+     "reference_normalised": [
+      1.6445482685953805,
+      -0.3687670530657462
+     ],
+     "independent_limit_normalised": [
+      1.6457153814607681,
+      -0.3689047843646709
+     ],
+     "amplitude_normalised": 1.686555619214411,
+     "relative": 0.0006968116594480145,
+     "absolute_normalised": 0.0011752116197761675,
+     "phase_difference_deg": -0.00410971738855892,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00014577036260711343,
+      "spread": 3.7334190947198636,
+      "spread_relative": 0.0005632911217518878,
+      "limit_usable": true
+     }
+    }
+   }
+  },
+  "0.8": {
+   "ka": 0.8,
+   "quantities": {
+    "A11": {
+     "reference": 0.6421154494627378,
+     "independent_limit": 0.64044941042483,
+     "finest_mesh": 0.6542837982422539,
+     "relative": 0.002601359312365853,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00015184635845223152,
+      "spread": 0.00037579663200770774,
+      "spread_relative": 0.0005867702052507632,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.26530801615807587,
+     "independent_limit": 0.2653322201467233,
+     "finest_mesh": 0.2718421065153534,
+     "relative": -9.122144545452414e-05,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0008970777692920768,
+      "spread": 0.0009197795671491704,
+      "spread_relative": 0.0034665204498743165,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.4697936977493893,
+     "independent_limit": 0.46891367970111175,
+     "finest_mesh": 0.4762325632133338,
+     "relative": 0.0018767165181413764,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00015056057202005277,
+      "spread": 0.00027281473975127035,
+      "spread_relative": 0.0005818016226891994,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.28989666797275304,
+     "independent_limit": 0.289985247584942,
+     "finest_mesh": 0.2902737864982249,
+     "relative": -0.0003054624775799918,
+     "extrapolation": {
+      "order_p": 0.6936746004285617,
+      "model_residual": 0.0,
+      "spread": 8.424910256843443e-05,
+      "spread_relative": 0.000290528926109444,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      2042.0670647363338,
+      -16629.68882340713
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -11878.14002102369
+     ],
+     "independent_limit": [
+      2042.6109475132218,
+      -16616.33799526649
+     ],
+     "reference_normalised": [
+      0.2031540384292574,
+      -1.6543964204883999
+     ],
+     "independent_limit_normalised": [
+      0.20320814634004297,
+      -1.6530682199116493
+     ],
+     "amplitude_normalised": 1.6655113600395604,
+     "relative": 0.0007981345964929585,
+     "absolute_normalised": 0.0013293022372996132,
+     "phase_difference_deg": -0.007416473328817119,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00040667869248381844,
+      "spread": 8.108523663931054,
+      "spread_relative": 0.0015715025522657757,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      11206.961241081632,
+      -5270.10199394358
+     ],
+     "exact_froude_krylov": [
+      17240.751926240177,
+      0.0
+     ],
+     "independent_limit": [
+      11213.365238209473,
+      -5274.090139500216
+     ],
+     "reference_normalised": [
+      1.1149190317801156,
+      -0.5242935070508855
+     ],
+     "independent_limit_normalised": [
+      1.1155561302873471,
+      -0.5246902657517457
+     ],
+     "amplitude_normalised": 1.2327876357249525,
+     "relative": 0.0006088162303536025,
+     "absolute_normalised": 0.0007505411212085956,
+     "phase_difference_deg": 0.004086451416014825,
+     "extrapolation": {
+      "order_p": 0.45727809380673934,
+      "model_residual": 0.00013781092477399692,
+      "spread": 9.42591652217197,
+      "spread_relative": 0.0011769032782277455,
+      "limit_usable": true
+     }
+    }
+   }
+  },
+  "1": {
+   "ka": 1.0,
+   "quantities": {
+    "A11": {
+     "reference": 0.5739517487330762,
+     "independent_limit": 0.572305572260444,
+     "finest_mesh": 0.5835597928730536,
+     "relative": 0.0028763942768026567,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 6.996807461351208e-05,
+      "spread": 0.00015473607258853495,
+      "spread_relative": 0.0002703731714115093,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.35348859091776147,
+     "independent_limit": 0.35368201357496437,
+     "finest_mesh": 0.36096789987991096,
+     "relative": -0.0005468829337624915,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0008288906797647334,
+      "spread": 0.0011328538967944057,
+      "spread_relative": 0.00320302942562357,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.42843570959147614,
+     "independent_limit": 0.42766775193276085,
+     "finest_mesh": 0.43482725058732535,
+     "relative": 0.0017956875524157614,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0002110277465015961,
+      "spread": 0.0003487464031287635,
+      "spread_relative": 0.0008154610712467149,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.24840307175945647,
+     "independent_limit": 0.2481488942710643,
+     "finest_mesh": 0.24814900675475057,
+     "relative": 0.001024294261470827,
+     "extrapolation": {
+      "order_p": 6.380559071840208,
+      "model_residual": 2.885742662633041e-14,
+      "spread": 3.3428305337035447e-05,
+      "spread_relative": 0.0001347106761657386,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      2480.1526114227067,
+      -17119.10220518623
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -13373.030058695209
+     ],
+     "independent_limit": [
+      2482.4228128862082,
+      -17106.596440135916
+     ],
+     "reference_normalised": [
+      0.2467367637587592,
+      -1.703085470268742
+     ],
+     "independent_limit_normalised": [
+      0.24696261363574054,
+      -1.7018413403782542
+     ],
+     "amplitude_normalised": 1.7196669678615826,
+     "relative": 0.000735295432045616,
+     "absolute_normalised": 0.0012644632661083569,
+     "phase_difference_deg": -0.013390450806355148,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.000531847165679115,
+      "spread": 9.214452119005424,
+      "spread_relative": 0.002055183105796171,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      8471.528207995196,
+      -5776.479803319853
+     ],
+     "exact_froude_krylov": [
+      14419.431442541158,
+      0.0
+     ],
+     "independent_limit": [
+      8474.073850675795,
+      -5780.661122123953
+     ],
+     "reference_normalised": [
+      0.842785820721225,
+      -0.5746702545741277
+     ],
+     "independent_limit_normalised": [
+      0.8430390727323329,
+      -0.5750862310205832
+     ],
+     "amplitude_normalised": 1.0205092117481602,
+     "relative": 0.00047721675208005425,
+     "absolute_normalised": 0.00048700409149823333,
+     "phase_difference_deg": 0.011285526218046016,
+     "extrapolation": {
+      "order_p": 0.4882518943841734,
+      "model_residual": 9.557808641476315e-05,
+      "spread": 3.0509726408886153,
+      "spread_relative": 0.0003679255053256739,
+      "limit_usable": true
+     }
+    }
+   }
+  },
+  "1.5": {
+   "ka": 1.5,
+   "quantities": {
+    "A11": {
+     "reference": 0.3683201762972719,
+     "independent_limit": 0.3682327382703967,
+     "finest_mesh": 0.37391467201512035,
+     "relative": 0.00023745315879805735,
+     "extrapolation": {
+      "order_p": 0.5080338119020387,
+      "model_residual": 0.0,
+      "spread": 9.335789276132545e-05,
+      "spread_relative": 0.00025352958349067776,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.40135178273326066,
+     "independent_limit": 0.4017288194716194,
+     "finest_mesh": 0.40669275868957483,
+     "relative": -0.0009385354499950096,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0005855178356699126,
+      "spread": 0.000908943293159159,
+      "spread_relative": 0.002262579255216646,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.3890475708965992,
+     "independent_limit": 0.38876479840385464,
+     "finest_mesh": 0.39554543072398607,
+     "relative": 0.0007273613606620983,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00043482765225097094,
+      "spread": 0.0006532324649841659,
+      "spread_relative": 0.0016802767834591297,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.1606194449365115,
+     "independent_limit": 0.1602873480985767,
+     "finest_mesh": 0.1590669095999503,
+     "relative": 0.0020718842870278776,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0008283200893838954,
+      "spread": 0.0005130516755752768,
+      "spread_relative": 0.0032008245295801515,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      566.6375420722951,
+      -15038.785518958146
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -14880.271499014238
+     ],
+     "independent_limit": [
+      571.4988490728031,
+      -15036.886073383646
+     ],
+     "reference_normalised": [
+      0.05637165741786168,
+      -1.4961261870418838
+     ],
+     "independent_limit_normalised": [
+      0.05685528215587935,
+      -1.4959372216323241
+     ],
+     "amplitude_normalised": 1.4970172658236316,
+     "relative": 0.00034684368336757786,
+     "absolute_normalised": 0.0005192309825431288,
+     "phase_difference_deg": -0.018769095810284853,
+     "extrapolation": {
+      "order_p": 0.7055986145203976,
+      "model_residual": 0.0019023154158338883,
+      "spread": 4.249662060218428,
+      "spread_relative": 0.007171579628899583,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      3513.736516243576,
+      -5742.350052901216
+     ],
+     "exact_froude_krylov": [
+      8611.616961908501,
+      0.0
+     ],
+     "independent_limit": [
+      3510.573321370699,
+      -5742.192750438065
+     ],
+     "reference_normalised": [
+      0.34956235060938123,
+      -0.5712748731256618
+     ],
+     "independent_limit_normalised": [
+      0.34924766172190014,
+      -0.5712592239674164
+     ],
+     "amplitude_normalised": 0.669560326024526,
+     "relative": 0.0004705741115894368,
+     "absolute_normalised": 0.000315077755574525,
+     "phase_difference_deg": 0.022270715766893545,
+     "extrapolation": {
+      "order_p": 0.5248743122711697,
+      "model_residual": 5.1671106923901645e-05,
+      "spread": 1.9715995323800242,
+      "spread_relative": 0.00025669470212304717,
+      "limit_usable": true
+     }
+    }
+   }
+  },
+  "2": {
+   "ka": 2.0,
+   "quantities": {
+    "A11": {
+     "reference": 0.24927898108430732,
+     "independent_limit": 0.24949015562574411,
+     "finest_mesh": 0.254237994456705,
+     "relative": -0.000846424344508294,
+     "extrapolation": {
+      "order_p": 0.5487388243406284,
+      "model_residual": 0.0,
+      "spread": 0.00028024959269565275,
+      "spread_relative": 0.0011232891814619344,
+      "limit_usable": true
+     }
+    },
+    "B11": {
+     "reference": 0.3424104934010589,
+     "independent_limit": 0.34255802615174863,
+     "finest_mesh": 0.3453840865323615,
+     "relative": -0.00043067959127129993,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.00034743942388105163,
+      "spread": 0.0004599143027979036,
+      "spread_relative": 0.0013425880221360443,
+      "limit_usable": true
+     }
+    },
+    "A33": {
+     "reference": 0.38837775391923524,
+     "independent_limit": 0.38890409617067323,
+     "finest_mesh": 0.39467535358486316,
+     "relative": -0.001353398579805664,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0008892322263680324,
+      "spread": 0.0013363535846829255,
+      "spread_relative": 0.003436203418378133,
+      "limit_usable": true
+     }
+    },
+    "B33": {
+     "reference": 0.10306536393605722,
+     "independent_limit": 0.10301223128499297,
+     "finest_mesh": 0.09959790007096783,
+     "relative": 0.0005157897310005743,
+     "extrapolation": {
+      "order_p": 0.4,
+      "model_residual": 0.0012595832800914588,
+      "spread": 0.0005013942549902256,
+      "spread_relative": 0.004867327391473266,
+      "limit_usable": true
+     }
+    }
+   },
+   "forces": {
+    "Surge": {
+     "reference": [
+      -2896.1781107789425,
+      -11684.647020047149
+     ],
+     "exact_froude_krylov": [
+      0.0,
+      -13783.961673789505
+     ],
+     "independent_limit": [
+      -2915.336118862679,
+      -11683.370779225095
+     ],
+     "reference_normalised": [
+      -0.2881248561202999,
+      -1.1624413667576892
+     ],
+     "independent_limit_normalised": [
+      -0.2900307811399436,
+      -1.1623144005666732
+     ],
+     "amplitude_normalised": 1.1979535131937762,
+     "relative": 0.0015945104240877733,
+     "absolute_normalised": 0.001910149364360046,
+     "phase_difference_deg": 0.08994028059612447,
+     "extrapolation": {
+      "order_p": 0.4311272653483207,
+      "model_residual": 0.0012324956583622362,
+      "spread": 24.82921789852083,
+      "spread_relative": 0.006909901950734168,
+      "limit_usable": true
+     }
+    },
+    "Heave": {
+     "reference": [
+      477.9443984803135,
+      -4645.722419205646
+     ],
+     "exact_froude_krylov": [
+      4428.26498335347,
+      0.0
+     ],
+     "independent_limit": [
+      481.855351079957,
+      -4651.820545931429
+     ],
+     "reference_normalised": [
+      0.04754806361291309,
+      -0.46217741188868683
+     ],
+     "independent_limit_normalised": [
+      0.04793714281038086,
+      -0.46278408102927954
+     ],
+     "amplitude_normalised": 0.465260223224528,
+     "relative": 0.0015490577833021345,
+     "absolute_normalised": 0.0007207149700468435,
+     "phase_difference_deg": -0.04001700257236962,
+     "extrapolation": {
+      "order_p": 0.4733289295913461,
+      "model_residual": 9.094868789062723e-05,
+      "spread": 13.338226003990693,
+      "spread_relative": 0.0021864891483718697,
+      "limit_usable": true
+     }
+    }
+   }
+  }
+ }
+}
