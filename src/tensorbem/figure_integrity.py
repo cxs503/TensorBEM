@@ -118,6 +118,16 @@ def _discover_cases() -> dict[str, dict[str, Any]]:
                 "figure_names": [f"{study}.png"],
             }
 
+    # CASE-BEM-ELLIPSOID-KOCHIN: pooled case, ellipsoid Kochin far field
+    ko_dir = _VERIFIED / "bem_ellipsoid_kochin"
+    if ko_dir.is_dir() and (ko_dir / "results.json").is_file():
+        cases["bem_ellipsoid_kochin"] = {
+            "module": "tensorbem.benchmarks.ellipsoid_kochin_case",
+            "builder": "_figure_kochin",
+            "result_file": "results.json",
+            "figure_names": ["bem_ellipsoid_kochin.png"],
+        }
+
     return cases
 
 
