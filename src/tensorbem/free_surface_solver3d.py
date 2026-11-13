@@ -533,6 +533,55 @@ def solve_radiation_3d(
     )
 
 
+def rigid_lid_heave_added_mass_dimless(degree_max: int = 160) -> float:
+    """Exact ``A33(ka->0)/(rho*nabla)`` of the floating hemisphere (rigid lid).
+
+    The ``ka -> 0`` endpoint of :func:`solve_radiation_3d` is the even-parity
+    double body (:mod:`tensorbem.rigid_lid`); it is the low-frequency anchor for
+    every heave radiation case on surface-piercing hulls.
+    """
+    from tensorbem.rigid_lid import rigid_lid_added_mass_dimless
+
+    return float(rigid_lid_added_mass_dimless(degree_max=degree_max)["value_dimless"])
+
+
+def verify_rigid_lid_heave_limit(
+    level: int = 3,
+    ka: float = 1.0e-3,
+    *,
+    radius: float = 1.0,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+    tolerance: float = 0.05,
+) -> dict:
+    """Solve the rigid-lid limit and score it against the exact endpoint.
+
+    Returns ``{"reference_dimless", "computed_dimless", "relative_error",
+    "panels", "ka", "within_tolerance"}``; the reference comes from
+    :func:`rigid_lid_heave_added_mass_dimless` (exact rational series), so a
+    regression of the solver at low frequency is caught without a stored number.
+    """
+    from tensorbem.geometry3d import hemisphere_hull_mesh
+
+    reference = rigid_lid_heave_added_mass_dimless()
+    mesh = hemisphere_hull_mesh(level, radius=radius)
+    result = solve_radiation_3d(
+        mesh, float(ka), modes=[2], density=density, gravity=gravity
+    )
+    volume = (2.0 / 3.0) * math.pi * radius**3
+    computed = float(result.added_mass[0, 0]) / (density * volume)
+    error = computed / reference - 1.0
+    return {
+        "reference_dimless": reference,
+        "computed_dimless": computed,
+        "relative_error": error,
+        "panels": int(mesh.areas.size),
+        "ka": float(ka),
+        "tolerance": float(tolerance),
+        "within_tolerance": bool(abs(error) < tolerance),
+    }
+
+
 def incident_airy_wave_3d(
     points: ArrayLike,
     nu: float,

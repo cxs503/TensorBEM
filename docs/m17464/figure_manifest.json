@@ -1,0 +1,18 @@
+{
+  "figures": [
+    "docs/m17464/fig_error_vs_ka.png",
+    "docs/m17464/fig_reference_routes.png",
+    "docs/m17464/fig_field_pressure.png"
+  ],
+  "field": {
+    "panels": 256,
+    "ka": 0.001,
+    "computed_dimless": 0.8281516869216776,
+    "phi_min": 0.38407640015240563,
+    "phi_max": 0.6795148452621347,
+    "condition_number": 2.1023280293100677,
+    "relative_residual": 8.95854624815055e-16
+  },
+  "reference_dimless": 0.8309512873124402,
+  "verdict": true
+}
