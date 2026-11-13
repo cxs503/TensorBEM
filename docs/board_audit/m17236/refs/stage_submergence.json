@@ -1,0 +1,325 @@
+{
+  "stage": "submergence",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "parameters": {
+    "radius_m": 1.0,
+    "amplitude_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "nominal_ka": 0.6,
+    "nominal_submergence_m": 2.0,
+    "nominal_panels": 128,
+    "nominal_panel_nodes": 24
+  },
+  "rows": [
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 1.5,
+      "wavenumber_times_submergence": 0.8999999999999999,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        6741.681024869285,
+        -13228.071523531218
+      ],
+      "exact_force_z": [
+        -13228.071523531218,
+        -6741.681024869285
+      ],
+      "exact_force_x_modulus": 14846.957239540367,
+      "exact_force_x_nondim": 1.4770422449316427,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 54.01129151596856,
+      "exact_phase_z_minus_x_degrees": -90.00000000000001,
+      "morison_limit_force_x": 15406.735473536048,
+      "morison_over_exact": 1.0377032293529398,
+      "panel_force_x": [
+        6829.610284960966,
+        -13243.408659065833
+      ],
+      "panel_force_z": [
+        -13243.408659065844,
+        -6829.610284960971
+      ],
+      "panel_force_x_relative_error": 0.006011793060999174,
+      "panel_force_z_relative_error": 0.006011793060999603,
+      "panel_reflection_modulus": 6.140595915344521e-17,
+      "panel_transmission_modulus": 1.0000000000000002,
+      "panel_transmission_phase_degrees": 54.560209504105245,
+      "panel_transmission_phase_error_degrees": 0.5489179881366866,
+      "panel_energy_balance_error": 4.440892098500626e-16,
+      "panel_phase_z_minus_x_degrees": -90.00000000000001,
+      "panel_condition_number": 3.2314224918690897,
+      "panel_relative_residual": 9.277902235275174e-16,
+      "mfs_force_x": [
+        6734.5332248940695,
+        -13226.080313894068
+      ],
+      "mfs_force_x_relative_error": 0.0004997637058670147,
+      "mfs_reflection_modulus": 8.314145252815208e-13,
+      "mfs_transmission_modulus_error": 6.961098364399732e-13,
+      "haskind_force_x": [
+        6829.786535031181,
+        -13243.444729197543
+      ],
+      "haskind_force_z": [
+        -13243.444729197545,
+        -6829.78653503118
+      ],
+      "haskind_vs_direct_x": 1.2073453364648851e-05,
+      "haskind_vs_direct_z": 1.2073453364167679e-05,
+      "haskind_vs_exact_x": 0.006023905086728017,
+      "runtime_seconds": 12.80791711807251,
+      "sweep": "submergence_sweep"
+    },
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 2.0,
+      "wavenumber_times_submergence": 1.2,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "exact_force_x_modulus": 10509.97425463582,
+      "exact_force_x_nondim": 1.0455796239446598,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 26.65524448182779,
+      "exact_phase_z_minus_x_degrees": -90.0,
+      "morison_limit_force_x": 11413.59036001888,
+      "morison_over_exact": 1.0859770046519843,
+      "panel_force_x": [
+        2455.2918199866967,
+        -10262.155887256517
+      ],
+      "panel_force_z": [
+        -10262.155887256518,
+        -2455.2918199866963
+      ],
+      "panel_force_x_relative_error": 0.004563953871089343,
+      "panel_force_z_relative_error": 0.00456395387108944,
+      "panel_reflection_modulus": 5.492315955627157e-17,
+      "panel_transmission_modulus": 0.9999999999999999,
+      "panel_transmission_phase_degrees": 26.91093996098877,
+      "panel_transmission_phase_error_degrees": 0.25569547916098045,
+      "panel_energy_balance_error": -2.220446049250313e-16,
+      "panel_phase_z_minus_x_degrees": -90.00000000000001,
+      "panel_condition_number": 2.4312454300018893,
+      "panel_relative_residual": 1.0461653550589175e-15,
+      "mfs_force_x": [
+        2420.2859085870155,
+        -10223.81902087042
+      ],
+      "mfs_force_x_relative_error": 0.00037656785186641016,
+      "mfs_reflection_modulus": 2.439767240096807e-15,
+      "mfs_transmission_modulus_error": 2.220446049250313e-15,
+      "haskind_force_x": [
+        2455.3453752657197,
+        -10262.160155388245
+      ],
+      "haskind_force_z": [
+        -10262.160155388245,
+        -2455.3453752657183
+      ],
+      "haskind_vs_direct_x": 5.09156066466058e-06,
+      "haskind_vs_direct_z": 5.091560664560963e-06,
+      "haskind_vs_exact_x": 0.0045677107899111035,
+      "runtime_seconds": 12.272682428359985,
+      "sweep": "submergence_sweep"
+    },
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 3.0,
+      "wavenumber_times_submergence": 1.7999999999999998,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        404.42310532275076,
+        -5828.278286034151
+      ],
+      "exact_force_z": [
+        -5828.278286034151,
+        -404.42310532275076
+      ],
+      "exact_force_x_modulus": 5842.292857053306,
+      "exact_force_x_nondim": 0.5812176338831607,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 7.9387609152332,
+      "exact_phase_z_minus_x_degrees": -90.0,
+      "morison_limit_force_x": 6263.9111991889695,
+      "morison_over_exact": 1.072166588093346,
+      "panel_force_x": [
+        410.091568416076,
+        -5853.318965473757
+      ],
+      "panel_force_z": [
+        -5853.318965473758,
+        -410.09156841607614
+      ],
+      "panel_force_x_relative_error": 0.004394550288082474,
+      "panel_force_z_relative_error": 0.004394550288082633,
+      "panel_reflection_modulus": 3.501730007583745e-17,
+      "panel_transmission_modulus": 1.0,
+      "panel_transmission_phase_degrees": 8.01534448554437,
+      "panel_transmission_phase_error_degrees": 0.07658357031117013,
+      "panel_energy_balance_error": 0.0,
+      "panel_phase_z_minus_x_degrees": -90.0,
+      "panel_condition_number": 2.104426699425199,
+      "panel_relative_residual": 9.689429718697538e-16,
+      "mfs_force_x": [
+        404.00798293770526,
+        -5826.217742623774
+      ],
+      "mfs_force_x_relative_error": 0.0003597805478458619,
+      "mfs_reflection_modulus": 2.1577446453043936e-15,
+      "mfs_transmission_modulus_error": 1.9984014443252818e-15,
+      "haskind_force_x": [
+        410.09975657585,
+        -5853.3160287645205
+      ],
+      "haskind_force_z": [
+        -5853.3160287645205,
+        -410.0997565758485
+      ],
+      "haskind_vs_direct_x": 1.4825079519656617e-06,
+      "haskind_vs_direct_z": 1.482507951753544e-06,
+      "haskind_vs_exact_x": 0.004394369712955555,
+      "runtime_seconds": 13.905538320541382,
+      "sweep": "submergence_sweep"
+    },
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 5.0,
+      "wavenumber_times_submergence": 3.0,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        12.011600767503277,
+        -1839.8893104461142
+      ],
+      "exact_force_z": [
+        -1839.8893104461142,
+        -12.011600767503277
+      ],
+      "exact_force_x_modulus": 1839.9285185155634,
+      "exact_force_x_nondim": 0.18304438449275906,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 0.7480931034037747,
+      "exact_phase_z_minus_x_degrees": -90.0,
+      "morison_limit_force_x": 1886.6537971277382,
+      "morison_over_exact": 1.025395159726027,
+      "panel_force_x": [
+        12.190669315841543,
+        -1848.7425988346283
+      ],
+      "panel_force_z": [
+        -1848.74259883463,
+        -12.190669315841005
+      ],
+      "panel_force_x_relative_error": 0.004812740850554755,
+      "panel_force_z_relative_error": 0.004812740850555615,
+      "panel_reflection_modulus": 1.862272441514014e-17,
+      "panel_transmission_modulus": 0.9999999999999999,
+      "panel_transmission_phase_degrees": 0.7556095461113357,
+      "panel_transmission_phase_error_degrees": 0.007516442707561022,
+      "panel_energy_balance_error": -2.220446049250313e-16,
+      "panel_phase_z_minus_x_degrees": -90.00000000000003,
+      "panel_condition_number": 2.027740148877221,
+      "panel_relative_residual": 9.432914185901434e-16,
+      "mfs_force_x": [
+        11.998669990718842,
+        -1839.1801803586295
+      ],
+      "mfs_force_x_relative_error": 0.00038547582962508015,
+      "mfs_reflection_modulus": 1.2967414042315306e-16,
+      "mfs_transmission_modulus_error": 0.0,
+      "haskind_force_x": [
+        12.190904886710316,
+        -1848.7422025311441
+      ],
+      "haskind_force_z": [
+        -1848.7422025311457,
+        -12.190904886710031
+      ],
+      "haskind_vs_direct_x": 2.493703140933417e-07,
+      "haskind_vs_direct_z": 2.4937031416354696e-07,
+      "haskind_vs_exact_x": 0.004812528094809867,
+      "runtime_seconds": 17.159454345703125,
+      "sweep": "submergence_sweep"
+    },
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 8.0,
+      "wavenumber_times_submergence": 4.8,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        0.05617901887834279,
+        -309.7328827592605
+      ],
+      "exact_force_z": [
+        -309.7328827592605,
+        -0.05617901887834279
+      ],
+      "exact_force_x_modulus": 309.7328878541056,
+      "exact_force_x_nondim": 0.03081362414022497,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 0.020784494141803566,
+      "exact_phase_z_minus_x_degrees": -90.0,
+      "morison_limit_force_x": 311.86177512424985,
+      "morison_over_exact": 1.0068733006846435,
+      "panel_force_x": [
+        0.05703694950161704,
+        -311.28140292493714
+      ],
+      "panel_force_z": [
+        -311.28140292493737,
+        -0.057036949501480985
+      ],
+      "panel_force_x_relative_error": 0.004999534967261097,
+      "panel_force_z_relative_error": 0.004999534967261831,
+      "panel_reflection_modulus": 4.749207397321332e-19,
+      "panel_transmission_modulus": 0.9999999999999999,
+      "panel_transmission_phase_degrees": 0.020996926995698207,
+      "panel_transmission_phase_error_degrees": 0.000212432853894641,
+      "panel_energy_balance_error": -2.220446049250313e-16,
+      "panel_phase_z_minus_x_degrees": -90.00000000000004,
+      "panel_condition_number": 2.0150395607259055,
+      "panel_relative_residual": 9.76024358385372e-16,
+      "mfs_force_x": [
+        0.05611732220107751,
+        -309.60984762852786
+      ],
+      "mfs_force_x_relative_error": 0.0003972298423139693,
+      "mfs_reflection_modulus": 2.772848912345058e-18,
+      "mfs_transmission_modulus_error": 0.0,
+      "haskind_force_x": [
+        0.05703804229495721,
+        -311.28139120944104
+      ],
+      "haskind_force_z": [
+        -311.28139120944087,
+        -0.0570380422947896
+      ],
+      "haskind_vs_direct_x": 3.7799727127154485e-08,
+      "haskind_vs_direct_z": 3.779972839049309e-08,
+      "haskind_vs_exact_x": 0.004999497144708412,
+      "runtime_seconds": 15.841315746307373,
+      "sweep": "submergence_sweep"
+    }
+  ]
+}

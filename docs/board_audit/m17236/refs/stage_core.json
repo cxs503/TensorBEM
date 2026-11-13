@@ -1,0 +1,81 @@
+{
+  "stage": "core",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "parameters": {
+    "radius_m": 1.0,
+    "amplitude_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "nominal_ka": 0.6,
+    "nominal_submergence_m": 2.0,
+    "nominal_panels": 128,
+    "nominal_panel_nodes": 24
+  },
+  "rows": [
+    {
+      "ka": 0.6,
+      "submergence_over_radius": 2.0,
+      "wavenumber_times_submergence": 1.2,
+      "panels": 128,
+      "panel_nodes": 24,
+      "sources": 32,
+      "exact_force_x": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "exact_force_x_modulus": 10509.97425463582,
+      "exact_force_x_nondim": 1.0455796239446598,
+      "exact_transmission_modulus": 1.0,
+      "exact_transmission_phase_degrees": 26.65524448182779,
+      "exact_phase_z_minus_x_degrees": -90.0,
+      "morison_limit_force_x": 11413.59036001888,
+      "morison_over_exact": 1.0859770046519843,
+      "panel_force_x": [
+        2455.2918199866967,
+        -10262.155887256517
+      ],
+      "panel_force_z": [
+        -10262.155887256518,
+        -2455.2918199866963
+      ],
+      "panel_force_x_relative_error": 0.004563953871089343,
+      "panel_force_z_relative_error": 0.00456395387108944,
+      "panel_reflection_modulus": 5.492315955627157e-17,
+      "panel_transmission_modulus": 0.9999999999999999,
+      "panel_transmission_phase_degrees": 26.91093996098877,
+      "panel_transmission_phase_error_degrees": 0.25569547916098045,
+      "panel_energy_balance_error": -2.220446049250313e-16,
+      "panel_phase_z_minus_x_degrees": -90.00000000000001,
+      "panel_condition_number": 2.4312454300018893,
+      "panel_relative_residual": 1.0461653550589175e-15,
+      "mfs_force_x": [
+        2420.2859085870155,
+        -10223.81902087042
+      ],
+      "mfs_force_x_relative_error": 0.00037656785186641016,
+      "mfs_reflection_modulus": 2.439767240096807e-15,
+      "mfs_transmission_modulus_error": 2.220446049250313e-15,
+      "haskind_force_x": [
+        2455.3453752657197,
+        -10262.160155388245
+      ],
+      "haskind_force_z": [
+        -10262.160155388245,
+        -2455.3453752657183
+      ],
+      "haskind_vs_direct_x": 5.09156066466058e-06,
+      "haskind_vs_direct_z": 5.091560664560963e-06,
+      "haskind_vs_exact_x": 0.0045677107899111035,
+      "runtime_seconds": 11.655245780944824,
+      "sweep": "core"
+    }
+  ]
+}

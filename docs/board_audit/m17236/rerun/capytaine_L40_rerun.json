@@ -1,0 +1,58 @@
+{
+  "solver": "capytaine 3.1.dev0",
+  "case": {
+    "radius_m": 1.0,
+    "submergence_m": 2.0,
+    "ka": 0.6,
+    "amplitude_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "water_depth": "infinite"
+  },
+  "reference": "Ursell(1950)/Ogilvie(1963) multipole closed form (2-D)",
+  "note": "3-D force divided by cylinder length; L/lambda -> inf recovers the 2-D force per unit length.",
+  "rows": [
+    {
+      "length_over_lambda": 3.819718634205488,
+      "length": 40.0,
+      "ntheta": 32,
+      "nx": 60,
+      "n_panels": 2176,
+      "force_x_total": [
+        97133.6379656335,
+        -412699.1328832217
+      ],
+      "force_z_total": [
+        -406543.2998914373,
+        -96566.32976328299
+      ],
+      "froude_krylov_x_per_length": [
+        0.0,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2428.3409491408374,
+        -4647.281669050032
+      ],
+      "force_x_per_length": [
+        2428.3409491408374,
+        -10317.478322080544
+      ],
+      "force_z_per_length": [
+        -10163.582497285932,
+        -2414.158244082075
+      ],
+      "runtime_seconds": 6.5262205600738525,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.008633019806757887,
+      "force_z_relative_error": 0.00608139884979968
+    }
+  ]
+}
