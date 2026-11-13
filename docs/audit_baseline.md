@@ -153,7 +153,8 @@ correction log inside the generated block records what changed.
 | Two-way Cummins memory-kernel closure with causality and decay gates | **REAL** | `tensorbem.benchmarks.cummins_memory_closure`, `tensorbem.time_domain` | 5 node(s) in 1 file(s) | `docs/cummins_memory_closure/cummins_memory_closure.md`, `docs/cummins_memory_closure/campaign.json` |
 | Discretisation and recovery uncertainty quantification | **REAL** | `tensorbem.uq`, `tensorbem.recovery_uncertainty` | 3 node(s) in 2 file(s) | `docs/recovery_robustness.md` |
 | Hydroelastic panel modes and the wet/dry frequency ratio | **REAL** | `tensorbem.hydroelastic` | 3 node(s) in 1 file(s) | `docs/bem_hydroelastic.md` |
-| Ice-cover mass loading, ice-region RAO and ice-class hull geometry | **REAL** | `tensorbem.ice`, `tensorbem.ice_rao` (+1) | 3 node(s) in 3 file(s) | `docs/ice_water_ship.md` |
+| Ice-cover mass loading, ice-region RAO and ice-class hull geometry | **REAL** | `tensorbem.ice`, `tensorbem.ice_rao` (+2) | 6 node(s) in 4 file(s) | `docs/ice_water_ship.md`, `docs/ice_finite_depth_radiation.md` |
+| Ice-cover mass-loading dispersion from a periodic-strip BEM | **REAL** | `tensorbem.ice_mass_loading_dispersion` | 4 node(s) in 1 file(s) | `docs/case_bem_ice_dispersion/REPORT.md` |
 | Piecewise-linear panel operators and tangential recovery smoothing | **REAL** | `tensorbem.panel_linear`, `tensorbem.panel_smoothing` | 3 node(s) in 2 file(s) | `docs/panel_linear_order.md` |
 | Multiply connected 2-D domains (nested loops, multi-component meshes) | **REAL** | `tensorbem.multiloop`, `tensorbem.multicomponent` | 3 node(s) in 2 file(s) | `docs/annulus_multicomponent.md` |
 | Thin-ship Michell resistance for general hullforms and tandem pairs | **REAL** | `tensorbem.thin_ship_michell`, `tensorbem.ellipsoid_kochin` (+1) | 3 node(s) in 2 file(s) | `docs/michell_validation.md` |
@@ -188,7 +189,7 @@ correction log inside the generated block records what changed.
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Pekeris two-layer shallow-water normal modes with an elastic ice cover | **REAL** | `tensorbem.pekeris_acoustics` | 3 node(s) in 1 file(s) | `docs/pekeris_w22_cross_route/report.md` |
 
-Counts: **79** REAL — 79 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **80** REAL — 80 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -203,16 +204,22 @@ Counts: **79** REAL — 79 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-96 of 104 core modules (outside `tensorbem.benchmarks`) are named by a row above; 8 more carry an accepted reason, so **0 are unowned**.
+98 of 109 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **7 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.coefficients` — hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.
-- `tensorbem.nk_steady_kernel` — steady Neumann-Kelvin spectral-form kernel candidate (m17117); the steady wave resistance physics it feeds is graded by the Neumann-Kelvin row and pinned by tests/test_nk_steady_kernel_candidate.py.
 - `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
-- `tensorbem.shape_gradient` — shape-gradient / adjoint-sensitivity module (m16955); the adjoint sign fix is pinned by tests/test_shape_gradient.py and the geometry it differentiates is graded by the panel-geometry rows.
-- `tensorbem.steady_kelvin` — steady Kelvin wave-resistance kernel (m16955); the steady wave-resistance physics is graded by the forward-speed-wave-resistance row and pinned by tests/test_steady_kelvin.py.
 - `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
-- `tensorbem.wave1d` — 1-D linear wave-equation solver (d'Alembert formula + retarded-potential boundary flux) exercised by the CASE-SHU-OSHER benchmark and pinned by tests/test_wave1d.py; it is a scalar wave solver, not a BEM boundary-value problem, so no capability row claims a BEM evidence level for it.
+
+**Core modules no row grades and no reason explains** (fails the gate):
+
+- `tensorbem.cylinder_qtf`
+- `tensorbem.fmm_multilevel`
+- `tensorbem.nk_steady_kernel`
+- `tensorbem.rigid_body_mass`
+- `tensorbem.shape_gradient`
+- `tensorbem.steady_kelvin`
+- `tensorbem.wave1d`
 
 ### Untested modules
 
@@ -220,7 +227,6 @@ Not referenced by any test file, with an accepted reason:
 
 - `tensorbem.benchmarks.acoustic3d_pulse_case` — CASE-ACOUSTIC-PULSE report driver: it assembles the route A/B/C, mesh-study and convergence-order numbers it prints from tensorbem.acoustic3d_pulse, which is pinned by tests/test_acoustic3d_pulse.py and graded by the acoustic-3d-pulse row.
 - `tensorbem.benchmarks.bem_wigley_wave_resistance_figures` — matplotlib helper rendering the Wigley report figures from the JSON artifact; exercised when figures are rebuilt, and its inputs are gated by tests/test_bem_wigley_wave_resistance.py.
-- `tensorbem.benchmarks.cathodic_protection_sphere` — closed-form CP sphere driver: it prints the analytic phi(r) = phi_a * a / r comparison; the model it exercises is pinned by tests/test_cathodic_protection.py and graded by the cathodic-protection row.
 - `tensorbem.benchmarks.cp_verification_m9204` — CP verification study driver (plate / cylinder analytic cases, GCI ladder, DNV-RP-B401 check); it only assembles results from tensorbem.cp_galvanic, which is pinned by tests/test_cathodic_protection.py.
 - `tensorbem.benchmarks.finite_depth3d_verification` — report driver that only assembles/prints the finite-depth 3-D checks (dispersion, boundary conditions, grid independence, reciprocity, deep-water limit); the kernel physics it reports on is pinned by tests/test_finite_depth3d.py and tests/test_finite_depth3d_quadrature.py.
 - `tensorbem.benchmarks.freq_time_bridge` — state-space vs IRF-convolution bridge driver; both paths it compares are pinned by tests/test_state_space.py and graded by the state-space row.
@@ -228,7 +234,6 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.multihull_frequency_figures` — matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact; the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.
 - `tensorbem.benchmarks.neumann_kelvin_verification` — Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the kernel and the steady wave-resistance physics it reports on are pinned by tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.
 - `tensorbem.benchmarks.quadratic_panel_convergence` — convergence study driver for the quadratic-panel operator; the operator itself is graded by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.
-- `tensorbem.benchmarks.shu_osher_wave_interaction` — CASE-SHU-OSHER benchmark driver: it runs the linear wave-interaction case through tensorbem.wave1d (pinned by tests/test_wave1d.py) and assembles the report/figures; the wave1d physics it exercises is graded by the wave1d test suite.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 - `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
 - `tensorbem.benchmarks.wave_loads_verification` — wave-load verification driver assembling the same pressure path as wave_loads_minimal; no physics of its own to pin.
@@ -240,6 +245,18 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.wigley_kcs_kochin_energy_figures` — matplotlib helper rendering the Wigley/KCS Kochin-energy report figures from its JSON artifact; exercised when the figures are rebuilt.
 - `tensorbem.verification.corrosion` — namespace package for the corrosion verification campaign; it holds no code of its own, the models live in tensorbem.cathodic_protection / cp_galvanic (pinned by tests/test_cathodic_protection.py) and its subpackages are inventoried separately.
 - `tensorbem.verification.seakeeping.benchmark_runner` — seakeeping study driver that assembles the hemisphere anchor, FK excitation, mesh-convergence and Wigley RAO runs it reports on; those modules are pinned by tests/test_seakeeping_verification.py.
+
+**Unreferenced and unexplained** (fails the gate):
+
+- `tensorbem.benchmarks.case_bem_ice_dispersion`
+- `tensorbem.benchmarks.cylinder_qtf_closed_form`
+- `tensorbem.benchmarks.fmm_multilevel_scaling`
+- `tensorbem.benchmarks.maruo_drift_far_field_case_figures`
+- `tensorbem.benchmarks.shu_osher_wave_interaction`
+
+Reasons that are now obsolete because the module is referenced:
+
+- `tensorbem.benchmarks.cathodic_protection_sphere`
 
 <!-- capability-matrix:end -->
 
