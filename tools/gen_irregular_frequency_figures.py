@@ -3,6 +3,7 @@
 import json
 import math
 import os
+from pathlib import Path
 import base64
 from io import BytesIO
 
@@ -139,9 +140,10 @@ if __name__ == "__main__":
     for f in figures:
         print(f"  {f['name']}: {len(f['png_base64'])} bytes")
 
-    # Save to JSON for report
+    # Save to JSON for report (repository-relative: never write into another worktree)
     output = {"figures": figures}
-    os.makedirs("/root/tp-agent/work/m9269/artifacts", exist_ok=True)
-    with open("/root/tp-agent/work/m9269/artifacts/irregular_frequency_figures.json", "w") as fp:
+    artifacts = Path(__file__).resolve().parents[1] / "artifacts"
+    os.makedirs(artifacts, exist_ok=True)
+    with open(artifacts / "irregular_frequency_figures.json", "w") as fp:
         json.dump(output, fp)
-    print("Saved to artifacts/irregular_frequency_figures.json")
+    print(f"Saved to {artifacts / 'irregular_frequency_figures.json'}")

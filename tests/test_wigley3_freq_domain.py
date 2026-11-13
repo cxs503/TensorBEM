@@ -9,7 +9,10 @@ Tests verify:
 5. Mesh convergence (basic check)
 """
 import sys
-sys.path.insert(0, '/root/tp-agent/work/m7078')
+from pathlib import Path
+
+# repository-relative import root (was an absolute path to another agent worktree)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import numpy as np
 import pytest

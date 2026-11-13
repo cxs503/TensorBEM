@@ -1,0 +1,1229 @@
+{
+  "repo": "TensorBEM",
+  "worktree": "/root/tp-agent/work/m17083",
+  "branch": "agent/m17083",
+  "head": "135050dbaac804816706bfd1283012e6df9e0a69",
+  "upstream_ref": "origin/main",
+  "upstream_sha": "135050dbaac804816706bfd1283012e6df9e0a69",
+  "ahead": 0,
+  "behind": 0,
+  "window": 15,
+  "commits": [
+    {
+      "sha": "135050dbaac804816706bfd1283012e6df9e0a69",
+      "abbr": "135050d",
+      "patch_key": "8299ae5735cd89b686077b62d9683a8ffc8f7288",
+      "date": "2026-11-13 08:27:18 +0800",
+      "subject": "Merge #749 (m17021) via push-merge",
+      "parents": [
+        "8d36e4dd870dd478171485592fee9d1cab8790c1",
+        "403be946a473bd536e6c209a871e49213f7f573e"
+      ],
+      "is_merge": true,
+      "gate": "merge:push-merge",
+      "mission": "m17021",
+      "files": 10,
+      "add": 1484,
+      "del": 2,
+      "binary": 1,
+      "areas": {
+        "root": 2,
+        "docs": 5,
+        "src": 2,
+        "tests": 1
+      },
+      "themes": {
+        "T7-root-scratch": 2,
+        "T5-docs-report": 5,
+        "T2-evidence-infra": 2,
+        "T4-test-evidence": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "dev_report_m17021_numeric_evidence.md",
+        "docs/audit_baseline.md",
+        "docs/fig_m17021_numeric_evidence.png",
+        "docs/m17021_numeric_evidence_report.md",
+        "docs/numeric_evidence_matrix.md",
+        "docs/numeric_evidence_registry.json",
+        "post_report_m17021.py",
+        "src/tensorbem/capability_evidence.py",
+        "src/tensorbem/numeric_evidence.py",
+        "tests/test_numeric_evidence.py"
+      ],
+      "scratch_paths": [
+        "post_report_m17021.py"
+      ],
+      "duplicate_of": "403be94",
+      "risk_flags": [
+        "RG1-provenance-push-merge",
+        "RG3-scratch-artifacts(1)",
+        "RG4-evidence-registry-churn",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 3
+    },
+    {
+      "sha": "403be946a473bd536e6c209a871e49213f7f573e",
+      "abbr": "403be94",
+      "patch_key": "8299ae5735cd89b686077b62d9683a8ffc8f7288",
+      "date": "2026-11-13 08:26:12 +0800",
+      "subject": "m17021: matured mission deliverables",
+      "parents": [
+        "8d36e4dd870dd478171485592fee9d1cab8790c1"
+      ],
+      "is_merge": false,
+      "gate": "mission-commit",
+      "mission": "m17021",
+      "files": 10,
+      "add": 1484,
+      "del": 2,
+      "binary": 1,
+      "areas": {
+        "root": 2,
+        "docs": 5,
+        "src": 2,
+        "tests": 1
+      },
+      "themes": {
+        "T7-root-scratch": 2,
+        "T5-docs-report": 5,
+        "T2-evidence-infra": 2,
+        "T4-test-evidence": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "dev_report_m17021_numeric_evidence.md",
+        "docs/audit_baseline.md",
+        "docs/fig_m17021_numeric_evidence.png",
+        "docs/m17021_numeric_evidence_report.md",
+        "docs/numeric_evidence_matrix.md",
+        "docs/numeric_evidence_registry.json",
+        "post_report_m17021.py",
+        "src/tensorbem/capability_evidence.py",
+        "src/tensorbem/numeric_evidence.py",
+        "tests/test_numeric_evidence.py"
+      ],
+      "scratch_paths": [
+        "post_report_m17021.py"
+      ],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG3-scratch-artifacts(1)",
+        "RG4-evidence-registry-churn",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 3
+    },
+    {
+      "sha": "8d36e4dd870dd478171485592fee9d1cab8790c1",
+      "abbr": "8d36e4d",
+      "patch_key": "01cf4abf83318f2e2b648a53a6ca4a0f47a0ce54",
+      "date": "2026-11-13 08:14:25 +0800",
+      "subject": "Merge #747 (m17022) via merge-master",
+      "parents": [
+        "38468b3834fa4b32cddf2cad14300731167d5668"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m17022",
+      "files": 2,
+      "add": 186,
+      "del": 0,
+      "binary": 1,
+      "areas": {
+        "root": 1,
+        "docs": 1
+      },
+      "themes": {
+        "T7-root-scratch": 1,
+        "T5-docs-report": 1
+      },
+      "primary_theme": "T7-root-scratch",
+      "paths": [
+        "dev_report_m17022_acoustic_pulse_verification.md",
+        "docs/acoustic3d_pulse/report_figure.png"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG7-docs-only",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 1
+    },
+    {
+      "sha": "38468b3834fa4b32cddf2cad14300731167d5668",
+      "abbr": "38468b3",
+      "patch_key": "883c52421722f2e9823fcac9432c5714e7f99f5e",
+      "date": "2026-11-13 07:45:31 +0800",
+      "subject": "Merge #746 (m16976) via merge-master",
+      "parents": [
+        "d922e72e044b008344c6db980d25226d15ca1388"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16976",
+      "files": 10,
+      "add": 2582,
+      "del": 2,
+      "binary": 2,
+      "areas": {
+        "root": 1,
+        "docs": 5,
+        "src": 3,
+        "tests": 1
+      },
+      "themes": {
+        "T7-root-scratch": 1,
+        "T5-docs-report": 5,
+        "T1-hydro-kernel": 2,
+        "T2-evidence-infra": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "dev_report_m16976.md",
+        "docs/audit_baseline.md",
+        "docs/wave_flume_wavemaker.md",
+        "docs/wave_flume_wavemaker/fig1_transfer_function.png",
+        "docs/wave_flume_wavemaker/fig2_near_field_decay.png",
+        "docs/wave_flume_wavemaker/study.json",
+        "src/tensorbem/benchmarks/wave_flume_wavemaker.py",
+        "src/tensorbem/capability_evidence.py",
+        "src/tensorbem/wavemaker.py",
+        "tests/test_wavemaker_transfer.py"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG4-evidence-registry-churn",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 1
+    },
+    {
+      "sha": "d922e72e044b008344c6db980d25226d15ca1388",
+      "abbr": "d922e72",
+      "patch_key": "9462a72a8f824ba59bd90865c5c5aee808747e74",
+      "date": "2026-11-13 07:45:27 +0800",
+      "subject": "Merge #745 (m16955) via merge-master",
+      "parents": [
+        "a20c695c65617227113cdfa0744cedfa490de592"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16955",
+      "files": 9,
+      "add": 1057,
+      "del": 0,
+      "binary": 2,
+      "areas": {
+        "docs": 5,
+        "root": 1,
+        "scripts": 1,
+        "src": 1,
+        "tests": 1
+      },
+      "themes": {
+        "T5-docs-report": 5,
+        "T7-root-scratch": 1,
+        "T6-tooling-data": 1,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "docs/dev_report_m16955_steady_kelvin_kernel.md",
+        "docs/fig_m16955_steady_kernel.png",
+        "docs/m16955_steady_kernel/evidence.json",
+        "docs/m16955_steady_kernel/fig_steady_kernel.png",
+        "docs/m16955_steady_kernel/report.md",
+        "post_report_m16955.py",
+        "scripts/m16955_steady_kernel_evidence.py",
+        "src/tensorbem/steady_kelvin.py",
+        "tests/test_steady_kelvin_identity.py"
+      ],
+      "scratch_paths": [
+        "post_report_m16955.py"
+      ],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG3-scratch-artifacts(1)",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "a20c695c65617227113cdfa0744cedfa490de592",
+      "abbr": "a20c695",
+      "patch_key": "d205804449b3afac2e883187251b14147254c74c",
+      "date": "2026-11-13 07:16:53 +0800",
+      "subject": "Merge #744 (m16953) via push-merge",
+      "parents": [
+        "512b2446060a9af81df393787a9d2be469cf053b",
+        "7bc94b79e9fed30cd6433bb6bc5eda76b7eece65"
+      ],
+      "is_merge": true,
+      "gate": "merge:push-merge",
+      "mission": "m16953",
+      "files": 8,
+      "add": 1418,
+      "del": 0,
+      "binary": 1,
+      "areas": {
+        "docs": 3,
+        "scripts": 3,
+        "src": 1,
+        "tests": 1
+      },
+      "themes": {
+        "T5-docs-report": 3,
+        "T6-tooling-data": 3,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "docs/shape_gradient_anchor/figure.png",
+        "docs/shape_gradient_anchor/report.md",
+        "docs/shape_gradient_anchor/results.json",
+        "scripts/build_shape_gradient_anchor.py",
+        "scripts/tmp_probe_opderiv.py",
+        "scripts/tmp_probe_shape_gradient.py",
+        "src/tensorbem/shape_gradient.py",
+        "tests/test_shape_gradient.py"
+      ],
+      "scratch_paths": [
+        "scripts/tmp_probe_opderiv.py",
+        "scripts/tmp_probe_shape_gradient.py"
+      ],
+      "duplicate_of": "7bc94b7",
+      "risk_flags": [
+        "RG1-provenance-push-merge",
+        "RG3-scratch-artifacts(2)",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "512b2446060a9af81df393787a9d2be469cf053b",
+      "abbr": "512b244",
+      "patch_key": "4e26659ea627f5f842266fcb289d917c10d7f03d",
+      "date": "2026-11-13 07:16:12 +0800",
+      "subject": "Merge #743 (m16957) via merge-master",
+      "parents": [
+        "543b685423406c44f78fbd53ea03f9f65d69b1fc"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16957",
+      "files": 1,
+      "add": 142,
+      "del": 0,
+      "binary": 0,
+      "areas": {
+        "tests": 1
+      },
+      "themes": {
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T4-test-physics",
+      "paths": [
+        "tests/test_propeller_wageningen_crosscheck.py"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG8-test-only-pin"
+      ],
+      "risk_score": 0
+    },
+    {
+      "sha": "543b685423406c44f78fbd53ea03f9f65d69b1fc",
+      "abbr": "543b685",
+      "patch_key": "2c2a1e85035f88c53db65e37caaf8182d7d59812",
+      "date": "2026-11-13 07:16:08 +0800",
+      "subject": "Merge #742 (m16956) via merge-master",
+      "parents": [
+        "a0e536b024473a96c14840a3b10ef523d4049212"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16956",
+      "files": 1,
+      "add": 232,
+      "del": 0,
+      "binary": 0,
+      "areas": {
+        "tests": 1
+      },
+      "themes": {
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T4-test-physics",
+      "paths": [
+        "tests/test_flexural_gravity_fox_squire.py"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG8-test-only-pin"
+      ],
+      "risk_score": 0
+    },
+    {
+      "sha": "7bc94b79e9fed30cd6433bb6bc5eda76b7eece65",
+      "abbr": "7bc94b7",
+      "patch_key": "d205804449b3afac2e883187251b14147254c74c",
+      "date": "2026-11-13 07:15:45 +0800",
+      "subject": "m16953: matured mission deliverables",
+      "parents": [
+        "a0e536b024473a96c14840a3b10ef523d4049212"
+      ],
+      "is_merge": false,
+      "gate": "mission-commit",
+      "mission": "m16953",
+      "files": 8,
+      "add": 1418,
+      "del": 0,
+      "binary": 1,
+      "areas": {
+        "docs": 3,
+        "scripts": 3,
+        "src": 1,
+        "tests": 1
+      },
+      "themes": {
+        "T5-docs-report": 3,
+        "T6-tooling-data": 3,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "docs/shape_gradient_anchor/figure.png",
+        "docs/shape_gradient_anchor/report.md",
+        "docs/shape_gradient_anchor/results.json",
+        "scripts/build_shape_gradient_anchor.py",
+        "scripts/tmp_probe_opderiv.py",
+        "scripts/tmp_probe_shape_gradient.py",
+        "src/tensorbem/shape_gradient.py",
+        "tests/test_shape_gradient.py"
+      ],
+      "scratch_paths": [
+        "scripts/tmp_probe_opderiv.py",
+        "scripts/tmp_probe_shape_gradient.py"
+      ],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG3-scratch-artifacts(2)",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "a0e536b024473a96c14840a3b10ef523d4049212",
+      "abbr": "a0e536b",
+      "patch_key": "79dc5f5a1ce5f0bb31fe96cf9994891e7d121674",
+      "date": "2026-11-13 06:51:10 +0800",
+      "subject": "Merge #741 (m16935) via merge-master",
+      "parents": [
+        "f6c933078c88e68748b7984d76e84f8b20037a91"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16935",
+      "files": 9,
+      "add": 522,
+      "del": 26,
+      "binary": 1,
+      "areas": {
+        "docs": 5,
+        "src": 1,
+        "tests": 3
+      },
+      "themes": {
+        "T5-docs-report": 5,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 3
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "docs/wigley3_hull_alpha_axis/REPORT.md",
+        "docs/wigley3_hull_alpha_axis/fig_alpha_axis.png",
+        "docs/wigley3_hull_alpha_axis/post_report.py",
+        "docs/wigley3_hull_alpha_axis/study.json",
+        "docs/wigley3_hull_alpha_axis/study.py",
+        "src/tensorbem/wigley3_hull.py",
+        "tests/test_multibody_frequency_dependence_3d.py",
+        "tests/test_wigley3_hull_alpha_axis.py",
+        "tests/test_wigley3_recalled_ref.py"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG5-binary-figure"
+      ],
+      "risk_score": 0
+    },
+    {
+      "sha": "f6c933078c88e68748b7984d76e84f8b20037a91",
+      "abbr": "f6c9330",
+      "patch_key": "618c315083331c8d9d3150887835dc17ccb270d8",
+      "date": "2026-11-13 06:26:48 +0800",
+      "subject": "Merge #740 (m16913) via push-merge",
+      "parents": [
+        "f87b64b38398741a7ae95957c93bbf81afc02f4c",
+        "eb116e5c9b044eedcaf0b9805ffdbbf92488e7e5"
+      ],
+      "is_merge": true,
+      "gate": "merge:push-merge",
+      "mission": "m16913",
+      "files": 7,
+      "add": 1421,
+      "del": 84,
+      "binary": 0,
+      "areas": {
+        "root": 4,
+        "src": 1,
+        "tests": 2
+      },
+      "themes": {
+        "T7-root-scratch": 4,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 2
+      },
+      "primary_theme": "T7-root-scratch",
+      "paths": [
+        "_deliver_m16913.py",
+        "_patch_nk.py",
+        "_scratch_nk_fs.py",
+        "_scratch_nk_pv.py",
+        "src/tensorbem/neumann_kelvin.py",
+        "tests/test_neumann_kelvin_verification.py",
+        "tests/test_nk_wave_kernel_verification.py"
+      ],
+      "scratch_paths": [
+        "_deliver_m16913.py",
+        "_patch_nk.py",
+        "_scratch_nk_fs.py",
+        "_scratch_nk_pv.py"
+      ],
+      "duplicate_of": "eb116e5",
+      "risk_flags": [
+        "RG1-provenance-push-merge",
+        "RG3-scratch-artifacts(4)"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "eb116e5c9b044eedcaf0b9805ffdbbf92488e7e5",
+      "abbr": "eb116e5",
+      "patch_key": "618c315083331c8d9d3150887835dc17ccb270d8",
+      "date": "2026-11-13 06:26:39 +0800",
+      "subject": "m16913: matured mission deliverables",
+      "parents": [
+        "f87b64b38398741a7ae95957c93bbf81afc02f4c"
+      ],
+      "is_merge": false,
+      "gate": "mission-commit",
+      "mission": "m16913",
+      "files": 7,
+      "add": 1421,
+      "del": 84,
+      "binary": 0,
+      "areas": {
+        "root": 4,
+        "src": 1,
+        "tests": 2
+      },
+      "themes": {
+        "T7-root-scratch": 4,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 2
+      },
+      "primary_theme": "T7-root-scratch",
+      "paths": [
+        "_deliver_m16913.py",
+        "_patch_nk.py",
+        "_scratch_nk_fs.py",
+        "_scratch_nk_pv.py",
+        "src/tensorbem/neumann_kelvin.py",
+        "tests/test_neumann_kelvin_verification.py",
+        "tests/test_nk_wave_kernel_verification.py"
+      ],
+      "scratch_paths": [
+        "_deliver_m16913.py",
+        "_patch_nk.py",
+        "_scratch_nk_fs.py",
+        "_scratch_nk_pv.py"
+      ],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG3-scratch-artifacts(4)"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "f87b64b38398741a7ae95957c93bbf81afc02f4c",
+      "abbr": "f87b64b",
+      "patch_key": "5f9159f62ca7d90d333a13c40df9aa51afd6c360",
+      "date": "2026-11-13 06:25:42 +0800",
+      "subject": "Merge #738 (m16890) via merge-master",
+      "parents": [
+        "8d22b31df17ff46a3f93cd7190e39ba151be7d18"
+      ],
+      "is_merge": false,
+      "gate": "merge:merge-master",
+      "mission": "m16890",
+      "files": 12,
+      "add": 1767,
+      "del": 5,
+      "binary": 2,
+      "areas": {
+        "docs": 6,
+        "src": 1,
+        "tests": 2,
+        "scripts": 3
+      },
+      "themes": {
+        "T5-docs-report": 6,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 2,
+        "T6-tooling-data": 3
+      },
+      "primary_theme": "T5-docs-report",
+      "paths": [
+        "docs/hemisphere_zero_frequency_envelope.md",
+        "docs/hemisphere_zero_frequency_envelope/fig1_a33_band.png",
+        "docs/hemisphere_zero_frequency_envelope/fig2_error_vs_exact.png",
+        "docs/hemisphere_zero_frequency_envelope/results.json",
+        "docs/hemisphere_zero_frequency_envelope/summary.md",
+        "docs/rigid_lid_zero_frequency_anchor/ERRATUM.md",
+        "src/tensorbem/benchmarks/hemisphere_zero_frequency_envelope.py",
+        "tests/test_hemisphere_zero_frequency_envelope.py",
+        "tests/test_rigid_lid_zero_frequency_anchor.py",
+        "tools/coverage_scan.py",
+        "tools/rigid_lid_spectral_probe.py",
+        "tools/selfstart_scan.py"
+      ],
+      "scratch_paths": [],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG5-binary-figure"
+      ],
+      "risk_score": 0
+    },
+    {
+      "sha": "8d22b31df17ff46a3f93cd7190e39ba151be7d18",
+      "abbr": "8d22b31",
+      "patch_key": "30a85ffe69fe07c1455518aa620afbca5b1fc082",
+      "date": "2026-11-13 06:09:08 +0800",
+      "subject": "Merge #739 (m16892) via push-merge",
+      "parents": [
+        "b68141c9302f7ac23f947b42e947fb54a603713c",
+        "a7cd712f3b4be0b4412e02f497559cfbcd5d5595"
+      ],
+      "is_merge": true,
+      "gate": "merge:push-merge",
+      "mission": "m16892",
+      "files": 8,
+      "add": 2300,
+      "del": 0,
+      "binary": 1,
+      "areas": {
+        "benchmarks": 2,
+        "docs": 2,
+        "scripts": 2,
+        "src": 1,
+        "tests": 1
+      },
+      "themes": {
+        "T6-tooling-data": 4,
+        "T5-docs-report": 2,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T6-tooling-data",
+      "paths": [
+        "benchmarks/verified/wigley3_recalled_ref/capytaine_ref.json",
+        "benchmarks/verified/wigley3_recalled_ref/results.json",
+        "docs/fig_wigley3_recalled_ref.png",
+        "docs/wigley3_recalled_ref.md",
+        "scripts/_tpapi_tmp.py",
+        "scripts/wigley3_recalled_ref_capytaine.py",
+        "src/tensorbem/benchmarks/wigley3_recalled_ref.py",
+        "tests/test_wigley3_recalled_ref.py"
+      ],
+      "scratch_paths": [
+        "scripts/_tpapi_tmp.py"
+      ],
+      "duplicate_of": "a7cd712",
+      "risk_flags": [
+        "RG1-provenance-push-merge",
+        "RG3-scratch-artifacts(1)",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 2
+    },
+    {
+      "sha": "a7cd712f3b4be0b4412e02f497559cfbcd5d5595",
+      "abbr": "a7cd712",
+      "patch_key": "30a85ffe69fe07c1455518aa620afbca5b1fc082",
+      "date": "2026-11-13 06:08:59 +0800",
+      "subject": "m16892: matured mission deliverables",
+      "parents": [
+        "b68141c9302f7ac23f947b42e947fb54a603713c"
+      ],
+      "is_merge": false,
+      "gate": "mission-commit",
+      "mission": "m16892",
+      "files": 8,
+      "add": 2300,
+      "del": 0,
+      "binary": 1,
+      "areas": {
+        "benchmarks": 2,
+        "docs": 2,
+        "scripts": 2,
+        "src": 1,
+        "tests": 1
+      },
+      "themes": {
+        "T6-tooling-data": 4,
+        "T5-docs-report": 2,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "primary_theme": "T6-tooling-data",
+      "paths": [
+        "benchmarks/verified/wigley3_recalled_ref/capytaine_ref.json",
+        "benchmarks/verified/wigley3_recalled_ref/results.json",
+        "docs/fig_wigley3_recalled_ref.png",
+        "docs/wigley3_recalled_ref.md",
+        "scripts/_tpapi_tmp.py",
+        "scripts/wigley3_recalled_ref_capytaine.py",
+        "src/tensorbem/benchmarks/wigley3_recalled_ref.py",
+        "tests/test_wigley3_recalled_ref.py"
+      ],
+      "scratch_paths": [
+        "scripts/_tpapi_tmp.py"
+      ],
+      "duplicate_of": "-",
+      "risk_flags": [
+        "RG3-scratch-artifacts(1)",
+        "RG5-binary-figure"
+      ],
+      "risk_score": 2
+    }
+  ],
+  "n_window": 15,
+  "n_distinct_changes": 11,
+  "n_duplicate_carriers": 4,
+  "by_mission": {
+    "m16890": {
+      "commits": [
+        "f87b64b"
+      ],
+      "files": 12,
+      "add": 1767,
+      "del": 5,
+      "themes": {
+        "T5-docs-report": 6,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 2,
+        "T6-tooling-data": 3
+      },
+      "areas": {
+        "docs": 6,
+        "src": 1,
+        "tests": 2,
+        "scripts": 3
+      }
+    },
+    "m16892": {
+      "commits": [
+        "a7cd712"
+      ],
+      "files": 8,
+      "add": 2300,
+      "del": 0,
+      "themes": {
+        "T6-tooling-data": 4,
+        "T5-docs-report": 2,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "benchmarks": 2,
+        "docs": 2,
+        "scripts": 2,
+        "src": 1,
+        "tests": 1
+      }
+    },
+    "m16913": {
+      "commits": [
+        "eb116e5"
+      ],
+      "files": 7,
+      "add": 1421,
+      "del": 84,
+      "themes": {
+        "T7-root-scratch": 4,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 2
+      },
+      "areas": {
+        "root": 4,
+        "src": 1,
+        "tests": 2
+      }
+    },
+    "m16935": {
+      "commits": [
+        "a0e536b"
+      ],
+      "files": 9,
+      "add": 522,
+      "del": 26,
+      "themes": {
+        "T5-docs-report": 5,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 3
+      },
+      "areas": {
+        "docs": 5,
+        "src": 1,
+        "tests": 3
+      }
+    },
+    "m16953": {
+      "commits": [
+        "7bc94b7"
+      ],
+      "files": 8,
+      "add": 1418,
+      "del": 0,
+      "themes": {
+        "T5-docs-report": 3,
+        "T6-tooling-data": 3,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "docs": 3,
+        "scripts": 3,
+        "src": 1,
+        "tests": 1
+      }
+    },
+    "m16955": {
+      "commits": [
+        "d922e72"
+      ],
+      "files": 9,
+      "add": 1057,
+      "del": 0,
+      "themes": {
+        "T5-docs-report": 5,
+        "T7-root-scratch": 1,
+        "T6-tooling-data": 1,
+        "T1-hydro-kernel": 1,
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "docs": 5,
+        "root": 1,
+        "scripts": 1,
+        "src": 1,
+        "tests": 1
+      }
+    },
+    "m16956": {
+      "commits": [
+        "543b685"
+      ],
+      "files": 1,
+      "add": 232,
+      "del": 0,
+      "themes": {
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "tests": 1
+      }
+    },
+    "m16957": {
+      "commits": [
+        "512b244"
+      ],
+      "files": 1,
+      "add": 142,
+      "del": 0,
+      "themes": {
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "tests": 1
+      }
+    },
+    "m16976": {
+      "commits": [
+        "38468b3"
+      ],
+      "files": 10,
+      "add": 2582,
+      "del": 2,
+      "themes": {
+        "T7-root-scratch": 1,
+        "T5-docs-report": 5,
+        "T1-hydro-kernel": 2,
+        "T2-evidence-infra": 1,
+        "T4-test-physics": 1
+      },
+      "areas": {
+        "root": 1,
+        "docs": 5,
+        "src": 3,
+        "tests": 1
+      }
+    },
+    "m17021": {
+      "commits": [
+        "403be94"
+      ],
+      "files": 10,
+      "add": 1484,
+      "del": 2,
+      "themes": {
+        "T7-root-scratch": 2,
+        "T5-docs-report": 5,
+        "T2-evidence-infra": 2,
+        "T4-test-evidence": 1
+      },
+      "areas": {
+        "root": 2,
+        "docs": 5,
+        "src": 2,
+        "tests": 1
+      }
+    },
+    "m17022": {
+      "commits": [
+        "8d36e4d"
+      ],
+      "files": 2,
+      "add": 186,
+      "del": 0,
+      "themes": {
+        "T7-root-scratch": 1,
+        "T5-docs-report": 1
+      },
+      "areas": {
+        "root": 1,
+        "docs": 1
+      }
+    }
+  },
+  "theme_histogram": {
+    "T5-docs-report": 32,
+    "T4-test-physics": 13,
+    "T6-tooling-data": 11,
+    "T7-root-scratch": 9,
+    "T1-hydro-kernel": 8,
+    "T2-evidence-infra": 3,
+    "T4-test-evidence": 1
+  },
+  "hotspots": [
+    {
+      "path": "docs/audit_baseline.md",
+      "count": 2
+    },
+    {
+      "path": "src/tensorbem/capability_evidence.py",
+      "count": 2
+    },
+    {
+      "path": "tests/test_wigley3_recalled_ref.py",
+      "count": 2
+    },
+    {
+      "path": "dev_report_m17021_numeric_evidence.md",
+      "count": 1
+    },
+    {
+      "path": "docs/fig_m17021_numeric_evidence.png",
+      "count": 1
+    },
+    {
+      "path": "docs/m17021_numeric_evidence_report.md",
+      "count": 1
+    },
+    {
+      "path": "docs/numeric_evidence_matrix.md",
+      "count": 1
+    },
+    {
+      "path": "docs/numeric_evidence_registry.json",
+      "count": 1
+    },
+    {
+      "path": "post_report_m17021.py",
+      "count": 1
+    },
+    {
+      "path": "src/tensorbem/numeric_evidence.py",
+      "count": 1
+    }
+  ],
+  "cross_mission_overlap": [
+    {
+      "path": "docs/audit_baseline.md",
+      "missions": [
+        "m16976",
+        "m17021"
+      ],
+      "count": 2
+    },
+    {
+      "path": "src/tensorbem/capability_evidence.py",
+      "missions": [
+        "m16976",
+        "m17021"
+      ],
+      "count": 2
+    },
+    {
+      "path": "tests/test_wigley3_recalled_ref.py",
+      "missions": [
+        "m16892",
+        "m16935"
+      ],
+      "count": 2
+    }
+  ],
+  "registry": {
+    "n_capabilities": 78,
+    "keys": [
+      "acoustic-3d-helmholtz",
+      "acoustic-3d-pulse",
+      "added-mass-neumann",
+      "benchmark-cli-contract",
+      "capability-evidence",
+      "cathodic-protection-bem",
+      "clearance",
+      "conditioning",
+      "coupled-memory-kernel-matrix",
+      "cummins-memory-kernel-closure",
+      "cylinder-and-farfield-drift",
+      "damping-rational-fit",
+      "dean-diffraction",
+      "declared-numbers",
+      "diffraction-drift-maturity",
+      "doc-claim-gate",
+      "figure-integrity",
+      "finite-depth-2d",
+      "finite-depth-3d",
+      "finite-depth-3d-quadrature-solver",
+      "finite-depth-green-kernel",
+      "flexural-gravity-dispersion",
+      "flexural-gravity-numeric",
+      "fmm-acceleration",
+      "forward-speed-wave-resistance",
+      "free-surface-2d",
+      "free-surface-3d",
+      "haskind-2d-excitation",
+      "hull-mesh-geometry",
+      "hulme-hemisphere",
+      "hydroelastic-dry-modes",
+      "hydrostatic-restoring-pressure-route",
+      "hydrostatics",
+      "ice-region-hydrodynamics",
+      "interior-panel-lid",
+      "irregular-frequency-predictor-verified",
+      "irregular-frequency-sanitisation",
+      "kcs-class-hull-anchors",
+      "kkr-causality",
+      "kutta-lifting",
+      "laplace-2d",
+      "laplace-3d",
+      "linear-panel-operators",
+      "maccamy-fuchs",
+      "maruo-far-field-drift",
+      "mesh-quality",
+      "michell-general-and-tandem",
+      "mixed-boundary",
+      "multibody-frequency-asymptotes",
+      "multiply-connected-domains",
+      "near-field-quadrature",
+      "near-singular",
+      "neumann-kelvin-steady",
+      "nk-panel-3d",
+      "numeric-evidence",
+      "pekeris-waveguide",
+      "pressure-forces",
+      "propeller-open-water",
+      "qtf-slow-drift",
+      "quadratic-panel-operator",
+      "quadrature-diagnostics",
+      "rankine-fs-panel",
+      "rankine-wave-series60",
+      "rao",
+      "reference-provenance",
+      "second-order-drift",
+      "state-space-realization",
+      "stf-fullspeed-strip",
+      "surface-velocity-recovery",
+      "symmetry3d",
+      "tank-free-surface",
+      "thin-ship-general-hullforms",
+      "time-domain-memory-kernel",
+      "uncertainty-quantification",
+      "ursell-radiation",
+      "wageningen-b-series",
+      "wave-flume-wavemaker",
+      "wigley3-hullform"
+    ]
+  },
+  "registry_coverage": [
+    {
+      "mission": "m16890",
+      "module": "hemisphere_zero_frequency_envelope",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    },
+    {
+      "mission": "m16892",
+      "module": "wigley3_recalled_ref",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    },
+    {
+      "mission": "m16913",
+      "module": "neumann_kelvin",
+      "match": "exact",
+      "matched_keys": [
+        "neumann-kelvin-steady"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m16935",
+      "module": "wigley3_hull",
+      "match": "exact",
+      "matched_keys": [
+        "wigley3-hullform"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m16953",
+      "module": "shape_gradient",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    },
+    {
+      "mission": "m16955",
+      "module": "steady_kelvin",
+      "match": "weak",
+      "matched_keys": [
+        "neumann-kelvin-steady"
+      ],
+      "covered": false
+    },
+    {
+      "mission": "m16976",
+      "module": "capability_evidence",
+      "match": "exact",
+      "matched_keys": [
+        "capability-evidence"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m16976",
+      "module": "wave_flume_wavemaker",
+      "match": "exact",
+      "matched_keys": [
+        "wave-flume-wavemaker"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m16976",
+      "module": "wavemaker",
+      "match": "exact",
+      "matched_keys": [
+        "wave-flume-wavemaker"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m17021",
+      "module": "capability_evidence",
+      "match": "exact",
+      "matched_keys": [
+        "capability-evidence"
+      ],
+      "covered": true
+    },
+    {
+      "mission": "m17021",
+      "module": "numeric_evidence",
+      "match": "exact",
+      "matched_keys": [
+        "numeric-evidence"
+      ],
+      "covered": true
+    }
+  ],
+  "registry_uncovered": [
+    {
+      "mission": "m16890",
+      "module": "hemisphere_zero_frequency_envelope",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    },
+    {
+      "mission": "m16892",
+      "module": "wigley3_recalled_ref",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    },
+    {
+      "mission": "m16953",
+      "module": "shape_gradient",
+      "match": "none",
+      "matched_keys": [],
+      "covered": false
+    }
+  ],
+  "registry_weak": [
+    {
+      "mission": "m16955",
+      "module": "steady_kelvin",
+      "match": "weak",
+      "matched_keys": [
+        "neumann-kelvin-steady"
+      ],
+      "covered": false
+    }
+  ],
+  "repo_size": [
+    "count: 2469",
+    "size: 17.18 MiB",
+    "in-pack: 15085",
+    "packs: 13",
+    "size-pack: 99.91 MiB",
+    "prune-packable: 2",
+    "garbage: 9",
+    "size-garbage: 5.00 MiB"
+  ]
+}
