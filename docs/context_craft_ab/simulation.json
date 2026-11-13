@@ -1,0 +1,754 @@
+{
+  "budgets": {
+    "L1": 1400,
+    "L2": 900,
+    "L3": 2200
+  },
+  "compressions": 54,
+  "final_entries": 212,
+  "missions": 60,
+  "total_forgotten": 189,
+  "trace": [
+    {
+      "duplicates": 0,
+      "forgotten": 0,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 549,
+        "L3": 440
+      },
+      "mission": 5,
+      "overflow": {}
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 0,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 936,
+        "L3": 916
+      },
+      "mission": 8,
+      "overflow": {
+        "L2": 36
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1031,
+        "L3": 977
+      },
+      "mission": 9,
+      "overflow": {
+        "L2": 131
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1154,
+        "L3": 1071
+      },
+      "mission": 10,
+      "overflow": {
+        "L2": 254
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 0,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1220,
+        "L3": 1237
+      },
+      "mission": 11,
+      "overflow": {
+        "L2": 320
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 0,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1354,
+        "L3": 1333
+      },
+      "mission": 12,
+      "overflow": {
+        "L2": 454
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1453,
+        "L3": 1465
+      },
+      "mission": 13,
+      "overflow": {
+        "L2": 553
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1482,
+        "L3": 1556
+      },
+      "mission": 14,
+      "overflow": {
+        "L2": 582
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1553,
+        "L3": 1650
+      },
+      "mission": 15,
+      "overflow": {
+        "L2": 653
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1552,
+        "L3": 1882
+      },
+      "mission": 16,
+      "overflow": {
+        "L2": 652
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1683,
+        "L3": 1986
+      },
+      "mission": 17,
+      "overflow": {
+        "L2": 783
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1781,
+        "L3": 2149
+      },
+      "mission": 18,
+      "overflow": {
+        "L2": 881
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1741,
+        "L3": 2185
+      },
+      "mission": 19,
+      "overflow": {
+        "L2": 841
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1774,
+        "L3": 2218
+      },
+      "mission": 20,
+      "overflow": {
+        "L2": 874,
+        "L3": 18
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1767,
+        "L3": 2307
+      },
+      "mission": 21,
+      "overflow": {
+        "L2": 867,
+        "L3": 107
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1802,
+        "L3": 2373
+      },
+      "mission": 22,
+      "overflow": {
+        "L2": 902,
+        "L3": 173
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1771,
+        "L3": 2503
+      },
+      "mission": 23,
+      "overflow": {
+        "L2": 871,
+        "L3": 303
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1783,
+        "L3": 2665
+      },
+      "mission": 24,
+      "overflow": {
+        "L2": 883,
+        "L3": 465
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1757,
+        "L3": 2727
+      },
+      "mission": 25,
+      "overflow": {
+        "L2": 857,
+        "L3": 527
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1726,
+        "L3": 2729
+      },
+      "mission": 26,
+      "overflow": {
+        "L2": 826,
+        "L3": 529
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1760,
+        "L3": 2765
+      },
+      "mission": 27,
+      "overflow": {
+        "L2": 860,
+        "L3": 565
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1855,
+        "L3": 2825
+      },
+      "mission": 28,
+      "overflow": {
+        "L2": 955,
+        "L3": 625
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1853,
+        "L3": 2931
+      },
+      "mission": 29,
+      "overflow": {
+        "L2": 953,
+        "L3": 731
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1813,
+        "L3": 2937
+      },
+      "mission": 30,
+      "overflow": {
+        "L2": 913,
+        "L3": 737
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1879,
+        "L3": 2971
+      },
+      "mission": 31,
+      "overflow": {
+        "L2": 979,
+        "L3": 771
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1941,
+        "L3": 3065
+      },
+      "mission": 32,
+      "overflow": {
+        "L2": 1041,
+        "L3": 865
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 1978,
+        "L3": 3063
+      },
+      "mission": 33,
+      "overflow": {
+        "L2": 1078,
+        "L3": 863
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2040,
+        "L3": 3099
+      },
+      "mission": 34,
+      "overflow": {
+        "L2": 1140,
+        "L3": 899
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2041,
+        "L3": 3263
+      },
+      "mission": 35,
+      "overflow": {
+        "L2": 1141,
+        "L3": 1063
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2107,
+        "L3": 3263
+      },
+      "mission": 36,
+      "overflow": {
+        "L2": 1207,
+        "L3": 1063
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2072,
+        "L3": 3326
+      },
+      "mission": 37,
+      "overflow": {
+        "L2": 1172,
+        "L3": 1126
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2202,
+        "L3": 3356
+      },
+      "mission": 38,
+      "overflow": {
+        "L2": 1302,
+        "L3": 1156
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2261,
+        "L3": 3359
+      },
+      "mission": 39,
+      "overflow": {
+        "L2": 1361,
+        "L3": 1159
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 8,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2205,
+        "L3": 3449
+      },
+      "mission": 40,
+      "overflow": {
+        "L2": 1305,
+        "L3": 1249
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2236,
+        "L3": 3418
+      },
+      "mission": 41,
+      "overflow": {
+        "L2": 1336,
+        "L3": 1218
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 8,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2204,
+        "L3": 3480
+      },
+      "mission": 42,
+      "overflow": {
+        "L2": 1304,
+        "L3": 1280
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2301,
+        "L3": 3508
+      },
+      "mission": 43,
+      "overflow": {
+        "L2": 1401,
+        "L3": 1308
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2241,
+        "L3": 3546
+      },
+      "mission": 44,
+      "overflow": {
+        "L2": 1341,
+        "L3": 1346
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 7,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2181,
+        "L3": 3520
+      },
+      "mission": 45,
+      "overflow": {
+        "L2": 1281,
+        "L3": 1320
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2175,
+        "L3": 3642
+      },
+      "mission": 46,
+      "overflow": {
+        "L2": 1275,
+        "L3": 1442
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2209,
+        "L3": 3702
+      },
+      "mission": 47,
+      "overflow": {
+        "L2": 1309,
+        "L3": 1502
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 7,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2142,
+        "L3": 3802
+      },
+      "mission": 48,
+      "overflow": {
+        "L2": 1242,
+        "L3": 1602
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2241,
+        "L3": 3899
+      },
+      "mission": 49,
+      "overflow": {
+        "L2": 1341,
+        "L3": 1699
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2238,
+        "L3": 3859
+      },
+      "mission": 50,
+      "overflow": {
+        "L2": 1338,
+        "L3": 1659
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2202,
+        "L3": 3891
+      },
+      "mission": 51,
+      "overflow": {
+        "L2": 1302,
+        "L3": 1691
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 1,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2301,
+        "L3": 3984
+      },
+      "mission": 52,
+      "overflow": {
+        "L2": 1401,
+        "L3": 1784
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2434,
+        "L3": 4058
+      },
+      "mission": 53,
+      "overflow": {
+        "L2": 1534,
+        "L3": 1858
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2469,
+        "L3": 4122
+      },
+      "mission": 54,
+      "overflow": {
+        "L2": 1569,
+        "L3": 1922
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 10,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2275,
+        "L3": 4194
+      },
+      "mission": 55,
+      "overflow": {
+        "L2": 1375,
+        "L3": 1994
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 6,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2243,
+        "L3": 4201
+      },
+      "mission": 56,
+      "overflow": {
+        "L2": 1343,
+        "L3": 2001
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 3,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2275,
+        "L3": 4265
+      },
+      "mission": 57,
+      "overflow": {
+        "L2": 1375,
+        "L3": 2065
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 5,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2373,
+        "L3": 4267
+      },
+      "mission": 58,
+      "overflow": {
+        "L2": 1473,
+        "L3": 2067
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 2,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2433,
+        "L3": 4394
+      },
+      "mission": 59,
+      "overflow": {
+        "L2": 1533,
+        "L3": 2194
+      }
+    },
+    {
+      "duplicates": 0,
+      "forgotten": 4,
+      "kept_tokens": {
+        "L1": 0,
+        "L2": 2400,
+        "L3": 4457
+      },
+      "mission": 60,
+      "overflow": {
+        "L2": 1500,
+        "L3": 2257
+      }
+    }
+  ]
+}
