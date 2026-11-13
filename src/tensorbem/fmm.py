@@ -464,6 +464,84 @@ def fmm_single_level_matvec(
 # Full FMM with octree
 # ---------------------------------------------------------------------------
 
+@dataclass(frozen=True)
+class PairPartition:
+    """Disjoint accounting of the (target, source-leaf) pairs of one matvec (m18196).
+
+    Every pair ``(target i, source leaf k)`` with a non-empty leaf falls into
+    exactly one bucket:
+
+    * ``far_pairs`` -- summed with the multipole expansion: the target clears
+      ``_ADMISSIBILITY`` times the leaf's own source radius *and* the leaf the
+      target is routed to is not a box-neighbour of ``k``;
+    * ``near_geometric_pairs`` -- summed directly because the target is too close
+      to the leaf's source ball for the expansion to converge (sound reason);
+    * ``near_box_pairs`` -- summed directly only because the *routed* leaf of the
+      target is a box-neighbour of ``k`` (the conservative ``_is_near`` margin).
+      Targets that sit outside the source cloud are routed to whichever leaf
+      centre happens to be closest, so for them this bucket is a routing
+      artifact rather than a property of the pair: see
+      ``docs/fmm_far_fraction_diagnostic/README.md``.
+
+    ``far_pair_fraction`` is the number :meth:`FMMOperator.far_fraction` reports.
+    ``far_source_fraction`` re-weights every bucket by the number of sources in
+    the leaf -- i.e. by the work a direct sum would do -- and is the honest
+    efficiency metric when leaf populations are uneven.
+    """
+
+    n_targets: int
+    n_leaves: int
+    total_pairs: int
+    far_pairs: int
+    near_geometric_pairs: int
+    near_box_pairs: int
+    far_sources: int
+    near_geometric_sources: int
+    near_box_sources: int
+
+    @property
+    def near_pairs(self) -> int:
+        """Pairs summed directly (both near buckets)."""
+        return self.near_geometric_pairs + self.near_box_pairs
+
+    @property
+    def total_sources(self) -> int:
+        """Source-weighted pair mass over all buckets."""
+        return self.far_sources + self.near_geometric_sources + self.near_box_sources
+
+    @property
+    def far_pair_fraction(self) -> float:
+        """Multipole-evaluated pairs over all (target, non-empty leaf) pairs."""
+        if self.total_pairs == 0:
+            return 0.0
+        return self.far_pairs / self.total_pairs
+
+    @property
+    def far_source_fraction(self) -> float:
+        """Multipole-evaluated source mass over all source mass (work fraction)."""
+        total = self.total_sources
+        if total == 0:
+            return 0.0
+        return self.far_sources / total
+
+    def as_dict(self) -> dict:
+        """JSON-ready view (all buckets plus both fractions)."""
+        return {
+            "n_targets": self.n_targets,
+            "n_leaves": self.n_leaves,
+            "total_pairs": self.total_pairs,
+            "far_pairs": self.far_pairs,
+            "near_geometric_pairs": self.near_geometric_pairs,
+            "near_box_pairs": self.near_box_pairs,
+            "near_pairs": self.near_pairs,
+            "far_sources": self.far_sources,
+            "near_geometric_sources": self.near_geometric_sources,
+            "near_box_sources": self.near_box_sources,
+            "far_pair_fraction": self.far_pair_fraction,
+            "far_source_fraction": self.far_source_fraction,
+        }
+
+
 @dataclass
 class FMMOperator:
     """Precomputed FMM operator for a given octree and expansion order."""
@@ -634,20 +712,39 @@ class FMMOperator:
             leaf_of_target[start:start + len(block)] = np.argmin(d2, axis=1)
         return leaf_of_target
 
-    def _near_mask(self, block: FloatArray, leaf_of_target: IntArray) -> tuple:
-        """Return ``(rel, r, near)`` for one target block.
+    def _pair_components(self, block: FloatArray, leaf_of_target: IntArray) -> tuple:
+        """Admissibility / box-proximity components of one target block (m18196).
 
         ``rel``/``r`` are the (block, n_leaves, 3) / (block, n_leaves)
-        target-to-leaf-centre offsets; ``near`` is the (block, n_leaves) mask of
-        target-leaf pairs that must be summed directly, i.e. exactly
-        ``not admissible or _is_near(tleaf, sleaf)`` on non-empty leaves.
+        target-to-leaf-centre offsets.  ``admissible`` is the sound criterion
+        (target clears ``_ADMISSIBILITY`` times the leaf's own source radius, and
+        the leaf holds a source); ``box_near`` is the conservative
+        ``_is_near``-style margin of the *routed* leaf, intersected with
+        non-empty leaves.
+
+        ``near`` is bitwise the mask :meth:`matvec` sums directly, and it equals
+        ``(~admissible) | box_near``.  The two components are the disjoint
+        attribution used by :meth:`pair_partition`: ``near`` splits into
+        ``~admissible`` (geometric reason) and ``admissible & box_near``
+        (routing/box margin), and the rest is far.
         """
         centers = self._leaf_centers
         rel = block[:, None, :] - centers[None, :, :]
         r = np.linalg.norm(rel, axis=2)
+        has_sources = self._has_sources[None, :]
         admissible = r > _ADMISSIBILITY * np.maximum(self._radii_vec, 1e-15)[None, :]
-        near = (~admissible) | self._leaf_near[leaf_of_target]
-        near &= self._has_sources[None, :]
+        box_near = self._leaf_near[leaf_of_target] & has_sources
+        near = ((~admissible) | self._leaf_near[leaf_of_target]) & has_sources
+        return rel, r, admissible & has_sources, box_near, near
+
+    def _near_mask(self, block: FloatArray, leaf_of_target: IntArray) -> tuple:
+        """Return ``(rel, r, near)`` for one target block.
+
+        ``near`` is the (block, n_leaves) mask of target-leaf pairs that must be
+        summed directly, i.e. exactly ``not admissible or _is_near(tleaf, sleaf)``
+        on non-empty leaves (see :meth:`_pair_components`).
+        """
+        rel, r, _, _, near = self._pair_components(block, leaf_of_target)
         return rel, r, near
 
     # -- far field -------------------------------------------------------
@@ -800,28 +897,71 @@ class FMMOperator:
         vals = charges[src] / (4.0 * math.pi * r)
         return np.bincount(tgt, weights=vals, minlength=nb)
 
+    def pair_partition(self, targets: FloatArray) -> PairPartition:
+        """Disjoint far/near accounting of the pairs this operator would sum (m18196).
+
+        The buckets are computed from the very same :meth:`_pair_components` mask
+        that :meth:`matvec` uses, so ``far_pairs`` is the number of
+        (target, leaf) pairs the multipole path actually evaluates -- a property
+        ``tests/test_fmm_diagnostic_evidence.py`` pins against an instrumented
+        ``matvec``.
+
+        Requires :meth:`setup`; an unset operator raises ``RuntimeError``
+        (fail-closed, m16109).  Empty target sets and source-free trees report
+        all-zero counts instead of raising.
+        """
+        targets = np.asarray(targets, dtype=float)
+        self._require_setup("pair_partition")
+        leaf_sizes = np.array(
+            [len(idx) for idx in self._leaf_indices], dtype=np.int64
+        ) if self._leaf_indices else np.zeros(0, dtype=np.int64)
+        n_leaves = int(self._has_sources.sum()) if self._has_sources is not None else 0
+        n_targets = int(len(targets))
+        if n_targets == 0 or n_leaves == 0:
+            return PairPartition(n_targets, n_leaves, 0, 0, 0, 0, 0, 0, 0)
+
+        leaf_of_target = self._route(targets)
+        far_pairs = near_geom = near_box = 0
+        far_sources = near_geom_sources = near_box_sources = 0
+        step = max(self.block_size, 1)
+        for start in range(0, n_targets, step):
+            tin = targets[start:start + step]
+            _, _, admissible, box_near, near = self._pair_components(
+                tin, leaf_of_target[start:start + step]
+            )
+            far = ~near
+            geom = (~admissible) & self._has_sources[None, :]
+            box = near & admissible
+            far_pairs += int(far.sum())
+            near_geom += int(geom.sum())
+            near_box += int(box.sum())
+            far_sources += int((far * leaf_sizes[None, :]).sum())
+            near_geom_sources += int((geom * leaf_sizes[None, :]).sum())
+            near_box_sources += int((box * leaf_sizes[None, :]).sum())
+        return PairPartition(
+            n_targets=n_targets,
+            n_leaves=n_leaves,
+            total_pairs=n_targets * n_leaves,
+            far_pairs=far_pairs,
+            near_geometric_pairs=near_geom,
+            near_box_pairs=near_box,
+            far_sources=far_sources,
+            near_geometric_sources=near_geom_sources,
+            near_box_sources=near_box_sources,
+        )
+
     def far_fraction(self, targets: FloatArray) -> float:
         """Fraction of target-leaf pairs evaluated with the multipole expansion.
 
-        Requires :meth:`setup`; an unset operator raises ``RuntimeError``
-        instead of silently reporting 0.0 (m16109).
+        Pair count only: with uneven leaf populations the work fraction is
+        :attr:`PairPartition.far_source_fraction`, which can differ substantially
+        (see ``docs/fmm_far_fraction_diagnostic``).  Requires :meth:`setup`; an
+        unset operator raises ``RuntimeError`` instead of silently reporting 0.0
+        (m16109).
         """
         targets = np.asarray(targets, dtype=float)
         self._require_setup("far_fraction")
-        if len(targets) == 0:
-            return 0.0
-        leaf_of_target = self._route(targets)
-        near_pairs = 0
-        total_pairs = 0
-        step = max(self.block_size, 1)
-        for start in range(0, len(targets), step):
-            tin = targets[start:start + step]
-            _, _, near = self._near_mask(tin, leaf_of_target[start:start + step])
-            near_pairs += int(near.sum())
-            total_pairs += tin.shape[0] * int(self._has_sources.sum())
-        if total_pairs == 0:
-            return 0.0
-        return 1.0 - near_pairs / total_pairs
+        return self.pair_partition(targets).far_pair_fraction
 
     def _is_near(self, tleaf: OctreeNode, sleaf: OctreeNode) -> bool:
         """Determine if two leaves are in the near-field."""
