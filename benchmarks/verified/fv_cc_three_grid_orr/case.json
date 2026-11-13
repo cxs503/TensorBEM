@@ -1,0 +1,123 @@
+{
+ "anchor_slug": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+ "case": {
+  "anchor": {
+   "exactness": "u_exact is available everywhere, so the ref value of every norm is 0 error; no experimental data and no literature number is needed",
+   "kind": "analytic",
+   "problems": {
+    "exp_sin": "u = exp(x) sin(pi y), f = (pi^2 - 1) exp(x) sin(pi y)",
+    "sin_sin": "u = sin(pi x) sin(pi y), f = 2 pi^2 sin(pi x) sin(pi y)"
+   }
+  },
+  "code": "FVM-CC-3GRID-OR",
+  "name": "\u5355\u5143\u4e2d\u5fc3\u6709\u9650\u4f53\u79ef\u4e09\u7f51\u683c log-log \u659c\u7387\u89c2\u6d4b\u9636\u4ea4\u53c9\u9a8c\u8bc1",
+  "ref_citations": [
+   "Ferziger, J.H. & Peric, M. (2002), Computational Methods for Fluid Dynamics, 3rd ed., Springer, Sec. 3.3 (order verification / manufactured solutions) and Sec. 4.3-4.4 (cell-centred FV face-flux balance).",
+   "Versteeg, H.K. & Malalasekera, W. (2007), An Introduction to Computational Fluid Dynamics: The Finite Volume Method, 2nd ed., Pearson, Sec. 4.2-4.3 (diffusion flux balance) and Sec. 5 (boundary treatment).",
+   "Roache, P.J. (1994), Perspective: a method for uniform reporting of grid refinement studies, J. Fluids Eng. 116(3):405-413 (three-grid GCI, Fs = 1.25).",
+   "Roache, P.J. (1998), Verification and Validation in Computational Science and Engineering, Hermosa (asymptotic-range ratio).",
+   "Celik, I.B. et al. (2008), Procedure for estimation and reporting of uncertainty due to discretization in CFD applications, J. Fluids Eng. 130(7):078001 (p from triple-grid differences; ASME V&V 20-2009)."
+  ],
+  "ref_source": "manufactured solution (analytic, exact) + Roache three-grid order/GCI",
+  "repo": "TensorBEM",
+  "tol_policy": "<15% (owner) ; <3% reporting line"
+ },
+ "design": {
+  "ladders": [
+   "r2_coarse",
+   "r2_fine",
+   "r15"
+  ],
+  "levels": {
+   "r15": [
+    40,
+    60,
+    90
+   ],
+   "r2_coarse": [
+    32,
+    64,
+    128
+   ],
+   "r2_fine": [
+    64,
+    128,
+    256
+   ]
+  },
+  "norm": "discrete L2 over cell centres (L1 and Linf reported beside it)",
+  "schemes": {
+   "fv1_bc": 1.0,
+   "fv1_src": 1.0,
+   "fv2": 2.0,
+   "skfem-P1": 2.0,
+   "skfem-P2": 4.0
+  }
+ },
+ "env": {
+  "git_commit": "20cbd2220ed481bf62945fbb8fe05a51d3aadf1f",
+  "machine": "loongarch64",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6",
+  "scipy": "1.16.0",
+  "skfem": "12.0.2"
+ },
+ "metric": {
+  "asymptotic_range": [
+   {
+    "asymptotic_ok": true,
+    "asymptotic_ratio_fine": 0.9999247032564496,
+    "p_32_64_128": 2.0003259506227926,
+    "p_64_128_256": 2.0000814894998213,
+    "problem": "sin_sin",
+    "rel_diff": 0.00012221064416784752
+   },
+   {
+    "asymptotic_ok": true,
+    "asymptotic_ratio_fine": 0.9999711087442187,
+    "p_32_64_128": 2.0004186775584802,
+    "p_64_128_256": 2.0001037531823713,
+    "problem": "exp_sin",
+    "rel_diff": 0.00015742923201121205
+   }
+  ],
+  "cross_implementation": {
+   "available": true,
+   "fv_p": 2.0003259506227926,
+   "fv_vs_theory": 0.00016297531139630728,
+   "pass": true,
+   "rel_diff": 0.0007658037706545959,
+   "skfem_p": 1.9987940934672674,
+   "skfem_vs_theory": 0.0006029532663662795
+  },
+  "primary": "rel_err(p_obs, p_exact) for scheme fv2, discrete L2",
+  "tight_line_worst": {
+   "got": 2.0004186775584802,
+   "ladder": "r2_coarse",
+   "norm": "l2",
+   "problem": "exp_sin",
+   "ref": 2.0,
+   "rel_err": 0.00020933877924012023
+  },
+  "worst_l2_cell": {
+   "got": 2.0004186775584802,
+   "ladder": "r2_coarse",
+   "norm": "l2",
+   "problem": "exp_sin",
+   "ref": 2.0,
+   "rel_err": 0.00020933877924012023
+  }
+ },
+ "mission_id": 18742,
+ "repro_cmd": "PYTHONPATH=src python3 scripts/m18742_fv_order_xval.py run --outdir docs/fv_order_xval",
+ "results_sha256": "52e6ac396d71673cde829ed2c1f2a306a9a97c4cb445b6181cb1122ed7f556cb",
+ "schema": "tensorbem.case_fv_cc_three_grid_orr/1",
+ "verdict": {
+  "all_pass": true,
+  "honest_note": "every predeclared criterion met",
+  "n_criteria": 10,
+  "n_pass": 10
+ },
+ "verify_cmd": "PYTHONPATH=src python3 scripts/m18742_fv_order_xval.py verify --outdir docs/fv_order_xval"
+}

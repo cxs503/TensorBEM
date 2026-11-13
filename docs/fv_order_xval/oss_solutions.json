@@ -1,0 +1,85 @@
+{
+ "feature_slug": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+ "mission_id": 18742,
+ "repo": "TensorBEM",
+ "registered_where": "in-repo structured artefact: the platform API surface exposed to this tenant (1324 routes under /api/v1) contains no oss_solutions / oss_inventory endpoint, so the row is stored here with the same feature_slug key and is machine-readable",
+ "decision": {
+  "chosen": "error-based three-grid log-log least-squares slope as the primary observed-order estimator, cross-checked against the functional (Roache/ASME V&V 20) route of tensorbem.uq.grid_convergence_index",
+  "alternatives_considered": [
+   {
+    "name": "functional-only GCI / Roache p (single quantity of interest)",
+    "rejected_because": "blind to a first-order quadrature defect on a symmetric problem: fv1_src/sin_sin returns functional p = 2.0009 while the pointwise solution is first order (p = 1.0034)"
+   },
+   {
+    "name": "Richardson extrapolation with a single refinement pair",
+    "rejected_because": "no independent estimate of the asymptotic range; two points always fit a straight line"
+   },
+   {
+    "name": "two-grid p from one pair only",
+    "rejected_because": "cannot distinguish a converged asymptote from a pre-asymptotic accident"
+   },
+   {
+    "name": "analytic-eigenvalue comparison without a grid ladder",
+    "rejected_because": "yields one error number, no order; order is the quantity under test"
+   }
+  ],
+  "reusable_estimator": "tensorbem.benchmarks.fv_order_xval.loglog_slope / pairwise_slopes / three_grid_slope; tensorbem.uq.grid_convergence_index reused unchanged for the functional route"
+ },
+ "method_lineage": [
+  "cell-centred FV flux balance: Versteeg & Malalasekera (2007) Sec. 4.2-4.3, 5; Ferziger & Peric (2002) Sec. 4.3-4.4",
+  "manufactured solutions / order verification: Ferziger & Peric (2002) Sec. 3.3",
+  "three-grid observed order + GCI: Roache (1994) JFE 116:405-413; Roache (1998) Hermosa; Celik et al. (2008) JFE 130:078001",
+  "independent route: P1/P2 Galerkin FEM via scikit-fem (OSS), same mesh ladder and same sampling norm"
+ ],
+ "migration_plan": [
+  {
+   "step": 1,
+   "what": "any new FV/FEM solver in the ecosystem reuses fv_order_xval.fv_ladder's estimator triple (error slope, pairwise, functional)",
+   "state": "available now"
+  },
+  {
+   "step": 2,
+   "what": "always run the negative control of the same code (one flag) so the estimator's discriminating power is demonstrated, not assumed",
+   "state": "available now"
+  },
+  {
+   "step": 3,
+   "what": "extend to non-orthogonal/polyhedral meshes (TensorFVM domain) -- not covered here, no implementation exists in this repo",
+   "state": "open"
+  },
+  {
+   "step": 4,
+   "what": "register the row in the platform oss_solutions table once a writable endpoint exists",
+   "state": "blocked: no endpoint"
+  }
+ ],
+ "verification_evidence": {
+  "results_sha256": "52e6ac396d71673cde829ed2c1f2a306a9a97c4cb445b6181cb1122ed7f556cb",
+  "verdict": {
+   "all_pass": true,
+   "n_pass": 10,
+   "n_criteria": 10,
+   "honest_note": "every predeclared criterion met"
+  },
+  "primary_worst_rel_err": {
+   "problem": "exp_sin",
+   "ladder": "r2_coarse",
+   "norm": "l2",
+   "got": 2.0004186775584802,
+   "ref": 2.0,
+   "rel_err": 0.00020933877924012023
+  },
+  "criteria": {
+   "C1_finiteness": true,
+   "C2_primary_order_15pct": true,
+   "C3_primary_order_3pct": true,
+   "C4_estimator_agreement": true,
+   "C5_refinement_ratio_independence": true,
+   "C6_asymptotic_range": true,
+   "C7_cross_implementation": true,
+   "C8_discrimination": true,
+   "C9_problem_independence": true,
+   "C10_procedure_verification": true
+  }
+ }
+}

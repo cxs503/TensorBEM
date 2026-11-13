@@ -1,0 +1,1556 @@
+{
+ "_sha256_note": "sha256 of the canonical json of this document with the results_sha256 field removed; a re-run of `run` reproduces it byte for byte",
+ "anchor": "XVAL-FVM-THREE-GRID-LOGLOG-SLOPE-CELLCENTRE-FV-OR",
+ "criteria": {
+  "C10_procedure_verification": {
+   "detail": {
+    "p_loglog": 1.6999999999999993,
+    "p_loglog_abs_err": 6.661338147750939e-16,
+    "p_pairwise": [
+     1.7,
+     1.7
+    ],
+    "p_pairwise_max_abs_err": 0.0,
+    "p_roache_abs_err": 2.220446049250313e-16,
+    "p_true": 1.7,
+    "pass": true,
+    "sequence": "e(h) = 3.0 h^1.7, h = [1.0, 0.5, 0.25]",
+    "tolerance": 1e-10
+   },
+   "pass": true
+  },
+  "C1_finiteness": {
+   "pass": true
+  },
+  "C2_primary_order_15pct": {
+   "pass": true,
+   "rows": [
+    {
+     "got": 2.0003259506227926,
+     "ladder": "r2_coarse",
+     "norm": "l2",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.00016297531139630728
+    },
+    {
+     "got": 2.0008691652230546,
+     "ladder": "r2_coarse",
+     "norm": "l1",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.00043458261152728994
+    },
+    {
+     "got": 1.9986957501268612,
+     "ladder": "r2_coarse",
+     "norm": "linf",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.0006521249365694093
+    },
+    {
+     "got": 2.0000814894998213,
+     "ladder": "r2_fine",
+     "norm": "l2",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 4.0744749910670564e-05
+    },
+    {
+     "got": 2.000217284462187,
+     "ladder": "r2_fine",
+     "norm": "l1",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.00010864223109341431
+    },
+    {
+     "got": 1.9996740699792281,
+     "ladder": "r2_fine",
+     "norm": "linf",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.00016296501038592925
+    },
+    {
+     "got": 2.000305240480407,
+     "ladder": "r15",
+     "norm": "l2",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.00015262024020357146
+    },
+    {
+     "got": 2.0008139502856244,
+     "ladder": "r15",
+     "norm": "l1",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.0004069751428121826
+    },
+    {
+     "got": 1.9987787351113309,
+     "ladder": "r15",
+     "norm": "linf",
+     "problem": "sin_sin",
+     "ref": 2.0,
+     "rel_err": 0.000610632444334569
+    },
+    {
+     "got": 2.0004186775584802,
+     "ladder": "r2_coarse",
+     "norm": "l2",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.00020933877924012023
+    },
+    {
+     "got": 2.001149770555288,
+     "ladder": "r2_coarse",
+     "norm": "l1",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.0005748852776439328
+    },
+    {
+     "got": 1.9996482151724166,
+     "ladder": "r2_coarse",
+     "norm": "linf",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.00017589241379167841
+    },
+    {
+     "got": 2.0001037531823713,
+     "ladder": "r2_fine",
+     "norm": "l2",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 5.1876591185662235e-05
+    },
+    {
+     "got": 2.000125909785477,
+     "ladder": "r2_fine",
+     "norm": "l1",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 6.295489273844268e-05
+    },
+    {
+     "got": 1.9997660209864931,
+     "ladder": "r2_fine",
+     "norm": "linf",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.00011698950675342878
+    },
+    {
+     "got": 2.000390785637553,
+     "ladder": "r15",
+     "norm": "l2",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.000195392818776563
+    },
+    {
+     "got": 1.9986916976684155,
+     "ladder": "r15",
+     "norm": "l1",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.0006541511657922605
+    },
+    {
+     "got": 1.9993737164712433,
+     "ladder": "r15",
+     "norm": "linf",
+     "problem": "exp_sin",
+     "ref": 2.0,
+     "rel_err": 0.00031314176437835517
+    }
+   ],
+   "tolerance": 0.15,
+   "worst": {
+    "got": 2.0004186775584802,
+    "ladder": "r2_coarse",
+    "norm": "l2",
+    "problem": "exp_sin",
+    "ref": 2.0,
+    "rel_err": 0.00020933877924012023
+   }
+  },
+  "C3_primary_order_3pct": {
+   "pass": true,
+   "tolerance": 0.03,
+   "worst": {
+    "got": 2.0004186775584802,
+    "ladder": "r2_coarse",
+    "norm": "l2",
+    "problem": "exp_sin",
+    "ref": 2.0,
+    "rel_err": 0.00020933877924012023
+   }
+  },
+  "C4_estimator_agreement": {
+   "pass": true,
+   "rows": [
+    {
+     "ladder": "r2_coarse",
+     "order_error_l2": 2.0003259506227926,
+     "order_roache_functional": 2.0011951594870907,
+     "problem": "sin_sin",
+     "rel_diff": 0.00043453361389800667
+    },
+    {
+     "ladder": "r2_fine",
+     "order_error_l2": 2.0000814894998213,
+     "order_roache_functional": 2.000298751703347,
+     "problem": "sin_sin",
+     "rel_diff": 0.00010862667579610713
+    },
+    {
+     "ladder": "r15",
+     "order_error_l2": 2.000305240480407,
+     "order_roache_functional": 2.001119193043694,
+     "problem": "sin_sin",
+     "rel_diff": 0.00040691417830379916
+    },
+    {
+     "ladder": "r2_coarse",
+     "order_error_l2": 2.0004186775584802,
+     "order_roache_functional": 2.002075902112509,
+     "problem": "exp_sin",
+     "rel_diff": 0.0008284388526363873
+    },
+    {
+     "ladder": "r2_fine",
+     "order_error_l2": 2.0001037531823713,
+     "order_roache_functional": 2.0005200354239614,
+     "problem": "exp_sin",
+     "rel_diff": 0.00020813032370331958
+    },
+    {
+     "ladder": "r15",
+     "order_error_l2": 2.000390785637553,
+     "order_roache_functional": 2.0019450199357274,
+     "problem": "exp_sin",
+     "rel_diff": 0.000776965335640103
+    }
+   ],
+   "worst": {
+    "ladder": "r2_coarse",
+    "order_error_l2": 2.0004186775584802,
+    "order_roache_functional": 2.002075902112509,
+    "problem": "exp_sin",
+    "rel_diff": 0.0008284388526363873
+   }
+  },
+  "C5_refinement_ratio_independence": {
+   "pass": true,
+   "rows": [
+    {
+     "p_r15": 2.000305240480407,
+     "p_r2": 2.0003259506227926,
+     "problem": "sin_sin",
+     "rel_diff": 1.0353383846779386e-05
+    },
+    {
+     "p_r15": 2.000390785637553,
+     "p_r2": 2.0004186775584802,
+     "problem": "exp_sin",
+     "rel_diff": 1.3943041644240528e-05
+    }
+   ]
+  },
+  "C6_asymptotic_range": {
+   "pass": true,
+   "rows": [
+    {
+     "asymptotic_ok": true,
+     "asymptotic_ratio_fine": 0.9999247032564496,
+     "p_32_64_128": 2.0003259506227926,
+     "p_64_128_256": 2.0000814894998213,
+     "problem": "sin_sin",
+     "rel_diff": 0.00012221064416784752
+    },
+    {
+     "asymptotic_ok": true,
+     "asymptotic_ratio_fine": 0.9999711087442187,
+     "p_32_64_128": 2.0004186775584802,
+     "p_64_128_256": 2.0001037531823713,
+     "problem": "exp_sin",
+     "rel_diff": 0.00015742923201121205
+    }
+   ]
+  },
+  "C7_cross_implementation": {
+   "available": true,
+   "fv_p": 2.0003259506227926,
+   "fv_vs_theory": 0.00016297531139630728,
+   "pass": true,
+   "rel_diff": 0.0007658037706545959,
+   "skfem_p": 1.9987940934672674,
+   "skfem_vs_theory": 0.0006029532663662795
+  },
+  "C8_discrimination": {
+   "pass": true,
+   "rows": [
+    {
+     "err_vs_own_target": 0.003419517784925663,
+     "err_vs_primary_target": 0.49829024110753717,
+     "p_exact": 1.0,
+     "p_obs_l2": 1.0034195177849257,
+     "roache_functional": 2.000868665859726,
+     "variant": "fv1_src:sin_sin"
+    },
+    {
+     "err_vs_own_target": 0.002643557549125486,
+     "err_vs_primary_target": 0.49867822122543726,
+     "p_exact": 1.0,
+     "p_obs_l2": 1.0026435575491255,
+     "roache_functional": 0.9604806008431828,
+     "variant": "fv1_src:exp_sin"
+    },
+    {
+     "err_vs_own_target": 0.0015218869412260139,
+     "err_vs_primary_target": 0.5007609434706131,
+     "p_exact": 1.0,
+     "p_obs_l2": 0.998478113058774,
+     "roache_functional": 1.0090222737549535,
+     "variant": "fv1_bc:sin_sin"
+    },
+    {
+     "err_vs_own_target": 0.010616529591556678,
+     "err_vs_primary_target": 0.5053082647957783,
+     "p_exact": 1.0,
+     "p_obs_l2": 0.9893834704084433,
+     "roache_functional": 1.0232375554244149,
+     "variant": "fv1_bc:exp_sin"
+    }
+   ]
+  },
+  "C9_problem_independence": {
+   "p_exp_sin": 2.0004186775584802,
+   "p_sin_sin": 2.0003259506227926,
+   "pass": true,
+   "rel_diff": 4.635591297446088e-05
+  }
+ },
+ "design": {
+  "controls": [
+   "fv1_src",
+   "fv1_bc"
+  ],
+  "ladders": [
+   "r2_coarse",
+   "r2_fine",
+   "r15"
+  ],
+  "primary": {
+   "ladder": "r2_coarse",
+   "problem": "sin_sin",
+   "scheme": "fv2"
+  },
+  "problems": [
+   "sin_sin",
+   "exp_sin"
+  ],
+  "skfem": {
+   "P1": "r2_coarse",
+   "P2": "r2_coarse"
+  }
+ },
+ "environment": {
+  "git_commit": "20cbd2220ed481bf62945fbb8fe05a51d3aadf1f",
+  "machine": "loongarch64",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6",
+  "scipy": "1.16.0",
+  "skfem": "12.0.2"
+ },
+ "fv": {
+  "exp_sin": {
+   "r15": {
+    "asymptotic_ratio": 0.9999025654742518,
+    "centre_value": [
+     1.6686410439143566,
+     1.6621563219461672,
+     1.6577461857531266
+    ],
+    "d_fine_medium": 0.00010660155878783328,
+    "errors": [
+     {
+      "l1": 0.00018849707264255634,
+      "l2": 0.00023534754791448164,
+      "linf": 0.0004706364574527111
+     },
+     {
+      "l1": 8.389127584748141e-05,
+      "l2": 0.00010457592338474278,
+      "linf": 0.00020926139983057368
+     },
+     {
+      "l1": 3.7273513719905876e-05,
+      "l2": 4.647367469049427e-05,
+      "linf": 9.301245261239544e-05
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.025,
+     0.016666666666666666,
+     0.011111111111111112
+    ],
+    "levels": [
+     40,
+     60,
+     90
+    ],
+    "mean_u": [
+     1.0943240747500338,
+     1.0940840320106304,
+     1.0939774304518426
+    ],
+    "order_l1": {
+     "intercept": -1.2032157111176207,
+     "n_points": 3,
+     "observed_order": 1.9986916976684155,
+     "r2": 0.9999996428145752,
+     "stderr": 0.0011945181431506746
+    },
+    "order_l2": {
+     "intercept": -0.9752671849155327,
+     "n_points": 3,
+     "observed_order": 2.000390785637553,
+     "r2": 0.9999999980938065,
+     "stderr": 8.733701434670122e-05
+    },
+    "order_linf": {
+     "intercept": -0.2859178160627336,
+     "n_points": 3,
+     "observed_order": 1.9993737164712433,
+     "r2": 0.9999999845512192,
+     "stderr": 0.00024850840786010126
+    },
+    "order_roache": 2.0019450199357274,
+    "pairwise_l1": [
+     1.9966227315539131,
+     2.000760663782914
+    ],
+    "pairwise_l2": [
+     2.0005420577837776,
+     2.000239513491324
+    ],
+    "pairwise_linf": [
+     1.9989432872827155,
+     1.9998041456597697
+    ],
+    "problem": "exp_sin",
+    "refinement_ratio": 1.5,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9999025654742518,
+     "coarse": 1.0943240747500338,
+     "converged": true,
+     "extrapolated": 1.0938922701416327,
+     "extrapolated_uncertainty": 8.516031020988635e-05,
+     "fine": 1.0939774304518426,
+     "gci_fine": 9.730583538494364e-05,
+     "gci_medium": 0.0002190895116224978,
+     "label": "fv fv2 exp_sin (40, 60, 90)",
+     "medium": 1.0940840320106304,
+     "monotone": true,
+     "observed_order": 2.0019450199357274,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 1.5,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   },
+   "r2_coarse": {
+    "asymptotic_ratio": 0.9998844066760337,
+    "centre_value": [
+     1.6734001335181024,
+     1.661334682216409,
+     1.6550951928256252
+    ],
+    "d_fine_medium": 0.00012646612354405562,
+    "errors": [
+     {
+      "l1": 0.00029536949116439634,
+      "l2": 0.0003678130446467136,
+      "linf": 0.0007354457325143837
+     },
+     {
+      "l1": 7.373080474595224e-05,
+      "l2": 9.191048435108061e-05,
+      "linf": 0.00018390184654681896
+     },
+     {
+      "l1": 1.8431191918865145e-05,
+      "l2": 2.2974976505920247e-05,
+      "linf": 4.598778001185799e-05
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.03125,
+     0.015625,
+     0.0078125
+    ],
+    "levels": [
+     32,
+     64,
+     128
+    ],
+    "mean_u": [
+     1.0945673846984119,
+     1.0940607917889986,
+     1.0939343256654546
+    ],
+    "order_l1": {
+     "intercept": -1.1920652252399146,
+     "n_points": 3,
+     "observed_order": 2.001149770555288,
+     "r2": 0.9999999114121456,
+     "stderr": 0.0005956164779146681
+    },
+    "order_l2": {
+     "intercept": -0.9750713165391609,
+     "n_points": 3,
+     "observed_order": 2.0004186775584802,
+     "r2": 0.9999999946840386,
+     "stderr": 0.00014585180698566236
+    },
+    "order_linf": {
+     "intercept": -0.284789211187702,
+     "n_points": 3,
+     "observed_order": 1.9996482151724166,
+     "r2": 0.999999999899566,
+     "stderr": 2.0039830846509402e-05
+    },
+    "order_roache": 2.002075902112509,
+    "pairwise_l1": [
+     2.0021814085568588,
+     2.000118132553713
+    ],
+    "pairwise_l2": [
+     2.000671300298554,
+     2.0001660548184037
+    ],
+    "pairwise_linf": [
+     1.9996829251776205,
+     1.9996135051672144
+    ],
+    "problem": "exp_sin",
+    "refinement_ratio": 2.0,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9998844066760337,
+     "coarse": 1.0945673846984119,
+     "converged": true,
+     "extrapolated": 1.093892251070875,
+     "extrapolated_uncertainty": 4.20745945794998e-05,
+     "fine": 1.0939343256654546,
+     "gci_fine": 4.807714868294462e-05,
+     "gci_medium": 0.0001925632462433545,
+     "label": "fv fv2 exp_sin (32, 64, 128)",
+     "medium": 1.0940607917889986,
+     "monotone": true,
+     "observed_order": 2.002075902112509,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 2.0,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   },
+   "r2_fine": {
+    "asymptotic_ratio": 0.9999711087442187,
+    "centre_value": [
+     1.661334682216409,
+     1.6550951928256252,
+     1.6519248811697713
+    ],
+    "d_fine_medium": 3.160513641065066e-05,
+    "errors": [
+     {
+      "l1": 7.373080474595224e-05,
+      "l2": 9.191048435108061e-05,
+      "linf": 0.00018390184654681896
+     },
+     {
+      "l1": 1.8431191918865145e-05,
+      "l2": 2.2974976505920247e-05,
+      "linf": 4.598778001185799e-05
+     },
+     {
+      "l1": 4.607371018916877e-06,
+      "l2": 5.743579099465518e-06,
+      "linf": 1.1497594207598993e-05
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.015625,
+     0.0078125,
+     0.00390625
+    ],
+    "levels": [
+     64,
+     128,
+     256
+    ],
+    "mean_u": [
+     1.0940607917889986,
+     1.0939343256654546,
+     1.093902720529044
+    ],
+    "order_l1": {
+     "intercept": -1.1967982635345429,
+     "n_points": 3,
+     "observed_order": 2.000125909785477,
+     "r2": 0.9999999999949601,
+     "stderr": 4.4901868525300994e-06
+    },
+    "order_l2": {
+     "intercept": -0.976512181427309,
+     "n_points": 3,
+     "observed_order": 2.0001037531823713,
+     "r2": 0.9999999996765757,
+     "stderr": 3.596986633408027e-05
+    },
+    "order_linf": {
+     "intercept": -0.2842800713718726,
+     "n_points": 3,
+     "observed_order": 1.9997660209864931,
+     "r2": 0.9999999980611235,
+     "stderr": 8.805504931535093e-05
+    },
+    "order_roache": 2.0005200354239614,
+    "pairwise_l1": [
+     2.000118132553713,
+     2.0001336870172417
+    ],
+    "pairwise_l2": [
+     2.0001660548184037,
+     2.00004145154634
+    ],
+    "pairwise_linf": [
+     1.9996135051672144,
+     1.999918536805771
+    ],
+    "problem": "exp_sin",
+    "refinement_ratio": 2.0,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9999711087442187,
+     "coarse": 1.0940607917889986,
+     "converged": true,
+     "extrapolated": 1.0938921905453518,
+     "extrapolated_uncertainty": 1.0529983692109113e-05,
+     "fine": 1.093902720529044,
+     "gci_fine": 1.2032586964240753e-05,
+     "gci_medium": 4.8146309054210733e-05,
+     "label": "fv fv2 exp_sin (64, 128, 256)",
+     "medium": 1.0939343256654546,
+     "monotone": true,
+     "observed_order": 2.0005200354239614,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 2.0,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   }
+  },
+  "sin_sin": {
+   "r15": {
+    "asymptotic_ratio": 0.9997461759914823,
+    "centre_value": [
+     0.9989720747904756,
+     0.9995431051909369,
+     0.9997969279065363
+    ],
+    "d_fine_medium": 0.00010291801218015317,
+    "errors": [
+     {
+      "l1": 0.0002085047624487729,
+      "l2": 0.00025710023907317344,
+      "linf": 0.0005134079239118572
+     },
+     {
+      "l1": 9.262644614894433e-05,
+      "l2": 0.00011424719272888987,
+      "linf": 0.00022833781365005912
+     },
+     {
+      "l1": 4.115894969990082e-05,
+      "l2": 5.077266316118619e-05,
+      "linf": 0.00010151439698835585
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.025,
+     0.016666666666666666,
+     0.011111111111111112
+    ],
+    "levels": [
+     40,
+     60,
+     90
+    ],
+    "mean_u": [
+     0.4057016369361021,
+     0.4054699663018661,
+     0.40536704828968595
+    ],
+    "order_l1": {
+     "intercept": -1.0948295165800381,
+     "n_points": 3,
+     "observed_order": 2.0008139502856244,
+     "r2": 0.9999999918385999,
+     "stderr": 0.0001807544693199633
+    },
+    "order_l2": {
+     "intercept": -0.8871754787119289,
+     "n_points": 3,
+     "observed_order": 2.000305240480407,
+     "r2": 0.9999999988516038,
+     "stderr": 6.778633150986258e-05
+    },
+    "order_linf": {
+     "intercept": -0.20112254464099502,
+     "n_points": 3,
+     "observed_order": 1.9987787351113309,
+     "r2": 0.9999999815815352,
+     "stderr": 0.0002712635477869692
+    },
+    "order_roache": 2.001119193043694,
+    "pairwise_l1": [
+     2.00112702621018,
+     2.000500874361067
+    ],
+    "pairwise_l2": [
+     2.00042264985064,
+     2.0001878311101704
+    ],
+    "pairwise_linf": [
+     1.998308892864319,
+     1.999248577358342
+    ],
+    "problem": "sin_sin",
+    "refinement_ratio": 1.5,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9997461759914823,
+     "coarse": 0.4057016369361021,
+     "converged": true,
+     "extrapolated": 0.4052847810933991,
+     "extrapolated_uncertainty": 8.226719628684487e-05,
+     "fine": 0.40536704828968595,
+     "gci_fine": 0.00025368119039872095,
+     "gci_medium": 0.0005708968106688335,
+     "label": "fv fv2 sin_sin (40, 60, 90)",
+     "medium": 0.4054699663018661,
+     "monotone": true,
+     "observed_order": 2.001119193043694,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 1.5,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   },
+   "r2_coarse": {
+    "asymptotic_ratio": 0.9996988413737125,
+    "centre_value": [
+     0.9983940062923843,
+     0.9995984289629471,
+     0.999899602704189
+    ],
+    "d_fine_medium": 0.0001221040214500757,
+    "errors": [
+     {
+      "l1": 0.00032593947387277167,
+      "l2": 0.00040178883968454513,
+      "linf": 0.0008016429562864857
+     },
+     {
+      "l1": 8.140635872718632e-05,
+      "l2": 0.00010041090484675435,
+      "linf": 0.00020070086036150236
+     },
+     {
+      "l1": 2.0346686235424e-05,
+      "l2": 2.5100457936349038e-05,
+      "linf": 5.0193356087357976e-05
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.03125,
+     0.015625,
+     0.0078125
+    ],
+    "levels": [
+     32,
+     64,
+     128
+    ],
+    "mean_u": [
+     0.40593635180971416,
+     0.4054475309419203,
+     0.40532542692047024
+    ],
+    "order_l1": {
+     "intercept": -1.0944352519567144,
+     "n_points": 3,
+     "observed_order": 2.0008691652230546,
+     "r2": 0.9999999773539896,
+     "stderr": 0.00030110262920499966
+    },
+    "order_l2": {
+     "intercept": -0.8870276067084747,
+     "n_points": 3,
+     "observed_order": 2.0003259506227926,
+     "r2": 0.9999999968133061,
+     "stderr": 0.00011292001962658358
+    },
+    "order_linf": {
+     "intercept": -0.20171477106055524,
+     "n_points": 3,
+     "observed_order": 1.9986957501268612,
+     "r2": 0.9999999488773702,
+     "stderr": 0.0004519113962437057
+    },
+    "order_roache": 2.0011951594870907,
+    "pairwise_l1": [
+     2.0013906902751297,
+     2.0003476401709794
+    ],
+    "pairwise_l2": [
+     2.000521533833979,
+     2.0001303674116095
+    ],
+    "pairwise_linf": [
+     1.997913016628047,
+     1.9994784836256774
+    ],
+    "problem": "sin_sin",
+    "refinement_ratio": 2.0,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9996988413737125,
+     "coarse": 0.40593635180971416,
+     "converged": true,
+     "extrapolated": 0.40528477050611966,
+     "extrapolated_uncertainty": 4.065641435058165e-05,
+     "fine": 0.40532542692047024,
+     "gci_fine": 0.00012538201297735137,
+     "gci_medium": 0.0005017925359617776,
+     "label": "fv fv2 sin_sin (32, 64, 128)",
+     "medium": 0.4054475309419203,
+     "monotone": true,
+     "observed_order": 2.0011951594870907,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 2.0,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   },
+   "r2_fine": {
+    "asymptotic_ratio": 0.9999247032564496,
+    "centre_value": [
+     0.9995984289629471,
+     0.999899602704189,
+     0.999974900392354
+    ],
+    "d_fine_medium": 3.0519684725338614e-05,
+    "errors": [
+     {
+      "l1": 8.140635872718632e-05,
+      "l2": 0.00010041090484675435,
+      "linf": 0.00020070086036150236
+     },
+     {
+      "l1": 2.0346686235424e-05,
+      "l2": 2.5100457936349038e-05,
+      "linf": 5.0193356087357976e-05
+     },
+     {
+      "l1": 5.086365073643475e-06,
+      "l2": 6.2749726390474444e-06,
+      "linf": 1.2549472782175108e-05
+     }
+    ],
+    "fine_field_finite": true,
+    "h": [
+     0.015625,
+     0.0078125,
+     0.00390625
+    ],
+    "levels": [
+     64,
+     128,
+     256
+    ],
+    "mean_u": [
+     0.4054475309419203,
+     0.40532542692047024,
+     0.4052949072357449
+    ],
+    "order_l1": {
+     "intercept": -1.0974174621357533,
+     "n_points": 3,
+     "observed_order": 2.000217284462187,
+     "r2": 0.9999999985842567,
+     "stderr": 7.526090356222796e-05
+    },
+    "order_l2": {
+     "intercept": -0.8881459637671856,
+     "n_points": 3,
+     "observed_order": 2.0000814894998213,
+     "r2": 0.9999999998009287,
+     "stderr": 2.8219675528311426e-05
+    },
+    "order_linf": {
+     "intercept": -0.1972391634547063,
+     "n_points": 3,
+     "observed_order": 1.9996740699792281,
+     "r2": 0.9999999968111256,
+     "stderr": 0.00011292183387317429
+    },
+    "order_roache": 2.000298751703347,
+    "pairwise_l1": [
+     2.0003476401709794,
+     2.0000869287533947
+    ],
+    "pairwise_l2": [
+     2.0001303674116095,
+     2.000032611588034
+    ],
+    "pairwise_linf": [
+     1.9994784836256774,
+     1.9998696563327805
+    ],
+    "problem": "sin_sin",
+    "refinement_ratio": 2.0,
+    "refinement_uniform": true,
+    "roache": {
+     "asymptotic_ratio": 0.9999247032564496,
+     "coarse": 0.4054475309419203,
+     "converged": true,
+     "extrapolated": 0.4052847368158997,
+     "extrapolated_uncertainty": 1.0170419845190182e-05,
+     "fine": 0.4052949072357449,
+     "gci_fine": 3.136734407347502e-05,
+     "gci_medium": 0.00012548591165277153,
+     "label": "fv fv2 sin_sin (64, 128, 256)",
+     "medium": 0.40532542692047024,
+     "monotone": true,
+     "observed_order": 2.000298751703347,
+     "oscillatory": false,
+     "quantity": "mean_u",
+     "refinement_ratio": 2.0,
+     "safety_factor": 1.25
+    },
+    "scheme": "fv2"
+   }
+  }
+ },
+ "fv1": {
+  "fv1_bc:exp_sin": {
+   "asymptotic_ratio": 0.9916329551571746,
+   "centre_value": [
+    1.709201601876992,
+    1.6792861888235695,
+    1.6640857951758996
+   ],
+   "d_fine_medium": 0.009307579322898274,
+   "errors": [
+    {
+     "l1": 0.03933484995423436,
+     "l2": 0.04410730275874178,
+     "linf": 0.09749788484612708
+    },
+    {
+     "l1": 0.019728764590383214,
+     "l2": 0.02226426183485156,
+     "linf": 0.05369099353332539
+    },
+    {
+     "l1": 0.009883603822030376,
+     "l2": 0.011190314620710809,
+     "linf": 0.028689842267843296
+    }
+   ],
+   "fine_field_finite": true,
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": [
+    1.1313268203570508,
+    1.112409398747257,
+    1.1031018194243587
+   ],
+   "order_l1": {
+    "intercept": 0.21763438697733786,
+    "n_points": 3,
+    "observed_order": 0.9963494964596276,
+    "r2": 0.9999997619247034,
+    "stderr": 0.0004861484712579892
+   },
+   "order_l2": {
+    "intercept": 0.3085271613752427,
+    "n_points": 3,
+    "observed_order": 0.9893834704084433,
+    "r2": 0.9999967366107115,
+    "stderr": 0.0017873096525906516
+   },
+   "order_linf": {
+    "intercept": 0.7353137379306479,
+    "n_points": 3,
+    "observed_order": 0.8824154422195122,
+    "r2": 0.9997980009576767,
+    "stderr": 0.012542716982210298
+   },
+   "order_roache": 1.0232375554244149,
+   "pairwise_l1": [
+    0.9955074626073862,
+    0.9971915303118684
+   ],
+   "pairwise_l2": [
+    0.9862877592812971,
+    0.9924791815355894
+   ],
+   "pairwise_linf": [
+    0.8606908191413661,
+    0.9041400652976578
+   ],
+   "problem": "exp_sin",
+   "refinement_ratio": 2.0,
+   "refinement_uniform": true,
+   "roache": {
+    "asymptotic_ratio": 0.9916329551571746,
+    "coarse": 1.1313268203570508,
+    "converged": true,
+    "extrapolated": 1.0940869958439365,
+    "extrapolated_uncertainty": 0.00901482358042216,
+    "fine": 1.1031018194243587,
+    "gci_fine": 0.01021531220155905,
+    "gci_medium": 0.02058864627981637,
+    "label": "fv fv1_bc exp_sin (32, 64, 128)",
+    "medium": 1.112409398747257,
+    "monotone": true,
+    "observed_order": 1.0232375554244149,
+    "oscillatory": false,
+    "quantity": "mean_u",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25
+   },
+   "scheme": "fv1_bc"
+  },
+  "fv1_bc:sin_sin": {
+   "asymptotic_ratio": 0.978339197428995,
+   "centre_value": [
+    1.0370036196523353,
+    1.0190256613482862,
+    1.009646340727585
+   ],
+   "d_fine_medium": 0.009175523879732583,
+   "errors": [
+    {
+     "l1": 0.03645612334432735,
+     "l2": 0.03707861708787886,
+     "linf": 0.046758852190874244
+    },
+    {
+     "l1": 0.018234240622803703,
+     "l2": 0.01856364986648338,
+     "linf": 0.0239400458519149
+    },
+    {
+     "l1": 0.009119761092029405,
+     "l2": 0.009289231878601019,
+     "linf": 0.01211827557346399
+    }
+   ],
+   "fine_field_finite": true,
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": [
+    0.44206653568016874,
+    0.42360036520599675,
+    0.41442484132626417
+   ],
+   "order_l1": {
+    "intercept": 0.15252695142366662,
+    "n_points": 3,
+    "observed_order": 0.9995466103735668,
+    "r2": 0.9999999995778175,
+    "stderr": 2.0537763924390915e-05
+   },
+   "order_l2": {
+    "intercept": 0.16583234510739375,
+    "n_points": 3,
+    "observed_order": 0.998478113058774,
+    "r2": 0.9999999539628802,
+    "stderr": 0.00021423608932191973
+   },
+   "order_linf": {
+    "intercept": 0.31486838150648255,
+    "n_points": 3,
+    "observed_order": 0.9740275487337697,
+    "r2": 0.9999762955489788,
+    "stderr": 0.00474232527326893
+   },
+   "order_roache": 1.0090222737549535,
+   "pairwise_l1": [
+    0.9995110379229769,
+    0.9995821828241578
+   ],
+   "pairwise_l2": [
+    0.9981070452672531,
+    0.9988491808502946
+   ],
+   "pairwise_linf": [
+    0.9658136004144501,
+    0.9822414970530904
+   ],
+   "problem": "sin_sin",
+   "refinement_ratio": 2.0,
+   "refinement_uniform": true,
+   "roache": {
+    "asymptotic_ratio": 0.978339197428995,
+    "coarse": 0.44206653568016874,
+    "converged": true,
+    "extrapolated": 0.40536301364702254,
+    "extrapolated_uncertainty": 0.00906182767924163,
+    "fine": 0.41442484132626417,
+    "gci_fine": 0.027332542525206383,
+    "gci_medium": 0.05381650093156015,
+    "label": "fv fv1_bc sin_sin (32, 64, 128)",
+    "medium": 0.42360036520599675,
+    "monotone": true,
+    "observed_order": 1.0090222737549535,
+    "oscillatory": false,
+    "quantity": "mean_u",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25
+   },
+   "scheme": "fv1_bc"
+  },
+  "fv1_src:exp_sin": {
+   "asymptotic_ratio": 1.0014026697066698,
+   "centre_value": [
+    1.6593235964413537,
+    1.6542667199699432,
+    1.6515548534948115
+   ],
+   "d_fine_medium": 0.0015300367393067393,
+   "errors": [
+    {
+     "l1": 0.008740106317791544,
+     "l2": 0.01130480282371434,
+     "linf": 0.02517087744774882
+    },
+    {
+     "l1": 0.00434984550172718,
+     "l2": 0.005636696203022403,
+     "linf": 0.01259379812802841
+    },
+    {
+     "l1": 0.0021726115035604343,
+     "l2": 0.0028158623452522735,
+     "linf": 0.006295571034837577
+    }
+   ],
+   "fine_field_finite": true,
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": [
+    1.087825908759626,
+    1.090803296051309,
+    1.0923333327906157
+   ],
+   "order_l1": {
+    "intercept": -1.2604470610103033,
+    "n_points": 3,
+    "observed_order": 1.0041103039159942,
+    "r2": 0.9999978055290936,
+    "stderr": 0.001487465200003414
+   },
+   "order_l2": {
+    "intercept": -1.0079465047323384,
+    "n_points": 3,
+    "observed_order": 1.0026435575491255,
+    "r2": 0.9999993771594891,
+    "stderr": 0.0007912890009368986
+   },
+   "order_linf": {
+    "intercept": -0.21731855629394314,
+    "n_points": 3,
+    "observed_order": 0.9996731808456659,
+    "r2": 0.9999998671429436,
+    "stderr": 0.00036437651918952457
+   },
+   "order_roache": 0.9604806008431828,
+   "pairwise_l1": [
+    1.0066866692168912,
+    1.0015339386150968
+   ],
+   "pairwise_l2": [
+    1.004014110302219,
+    1.0012730047960334
+   ],
+   "pairwise_linf": [
+    0.9990420622013456,
+    1.0003042994899873
+   ],
+   "problem": "exp_sin",
+   "refinement_ratio": 2.0,
+   "refinement_uniform": true,
+   "roache": {
+    "asymptotic_ratio": 1.0014026697066698,
+    "coarse": 1.087825908759626,
+    "converged": true,
+    "extrapolated": 1.0939507795244323,
+    "extrapolated_uncertainty": 0.0016174467338165854,
+    "fine": 1.0923333327906157,
+    "gci_fine": 0.0018509079203007,
+    "gci_medium": 0.0036068412661075895,
+    "label": "fv fv1_src exp_sin (32, 64, 128)",
+    "medium": 1.090803296051309,
+    "monotone": true,
+    "observed_order": 0.9604806008431828,
+    "oscillatory": false,
+    "quantity": "mean_u",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25
+   },
+   "scheme": "fv1_src"
+  },
+  "fv1_src:sin_sin": {
+   "asymptotic_ratio": 1.0001506587084084,
+   "centre_value": [
+    0.9987134910949241,
+    0.9996775486408911,
+    0.9999193355594375
+   ],
+   "d_fine_medium": 6.104741204132624e-05,
+   "errors": [
+    {
+     "l1": 0.009640803235836755,
+     "l2": 0.011935439313525146,
+     "linf": 0.024336278974521286
+    },
+    {
+     "l1": 0.004789587290841306,
+     "l2": 0.005945135723466962,
+     "linf": 0.012000474314469378
+    },
+    {
+     "l1": 0.0023909269022077016,
+     "l2": 0.0029697484391729393,
+     "linf": 0.005957295253091632
+    }
+   ],
+   "fine_field_finite": true,
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": [
+    0.40495900456588674,
+    0.40520334128815805,
+    0.4052643887001994
+   ],
+   "order_l1": {
+    "intercept": -1.156742077901488,
+    "n_points": 3,
+    "observed_order": 1.005791664112589,
+    "r2": 0.9999960545317382,
+    "stderr": 0.0019978283228374396
+   },
+   "order_l2": {
+    "intercept": -0.9511299288532347,
+    "n_points": 3,
+    "observed_order": 1.0034195177849257,
+    "r2": 0.9999986080207676,
+    "stderr": 0.0011838569403948892
+   },
+   "order_linf": {
+    "intercept": -0.1985233881761425,
+    "n_points": 3,
+    "observed_order": 1.0151896140502492,
+    "r2": 0.9999924623616077,
+    "stderr": 0.0027871892115325266
+   },
+   "order_roache": 2.000868665859726,
+   "pairwise_l1": [
+    1.0092520042725435,
+    1.0023313239526341
+   ],
+   "pairwise_l2": [
+    1.0054700181545821,
+    1.0013690174152696
+   ],
+   "pairwise_linf": [
+    1.020017167374932,
+    1.0103620607255677
+   ],
+   "problem": "sin_sin",
+   "refinement_ratio": 2.0,
+   "refinement_uniform": true,
+   "roache": {
+    "asymptotic_ratio": 1.0001506587084084,
+    "coarse": 0.40495900456588674,
+    "converged": true,
+    "extrapolated": 0.4052847215090919,
+    "extrapolated_uncertainty": 2.0332808892520315e-05,
+    "fine": 0.4052643887001994,
+    "gci_fine": 6.271464215529795e-05,
+    "gci_medium": 0.0002510474761730432,
+    "label": "fv fv1_src sin_sin (32, 64, 128)",
+    "medium": 0.40520334128815805,
+    "monotone": true,
+    "observed_order": 2.000868665859726,
+    "oscillatory": false,
+    "quantity": "mean_u",
+    "refinement_ratio": 2.0,
+    "safety_factor": 1.25
+   },
+   "scheme": "fv1_src"
+  }
+ },
+ "observations": {
+  "functional_route_blindness": [
+   {
+    "error_based_p": 1.0034195177849257,
+    "functional_p": 2.000868665859726,
+    "functional_route_blind": true,
+    "variant": "fv1_src:sin_sin"
+   },
+   {
+    "error_based_p": 1.0026435575491255,
+    "functional_p": 0.9604806008431828,
+    "functional_route_blind": false,
+    "variant": "fv1_src:exp_sin"
+   },
+   {
+    "error_based_p": 0.998478113058774,
+    "functional_p": 1.0090222737549535,
+    "functional_route_blind": false,
+    "variant": "fv1_bc:sin_sin"
+   },
+   {
+    "error_based_p": 0.9893834704084433,
+    "functional_p": 1.0232375554244149,
+    "functional_route_blind": false,
+    "variant": "fv1_bc:exp_sin"
+   }
+  ],
+  "n_blind": 1
+ },
+ "p_exact": {
+  "fv1_bc": 1.0,
+  "fv1_src": 1.0,
+  "fv2": 2.0,
+  "skfem-P1": 2.0,
+  "skfem-P2": 4.0
+ },
+ "procedure": {
+  "p_loglog": 1.6999999999999993,
+  "p_loglog_abs_err": 6.661338147750939e-16,
+  "p_pairwise": [
+   1.7,
+   1.7
+  ],
+  "p_pairwise_max_abs_err": 0.0,
+  "p_roache_abs_err": 2.220446049250313e-16,
+  "p_true": 1.7,
+  "pass": true,
+  "sequence": "e(h) = 3.0 h^1.7, h = [1.0, 0.5, 0.25]",
+  "tolerance": 1e-10
+ },
+ "results_sha256": "52e6ac396d71673cde829ed2c1f2a306a9a97c4cb445b6181cb1122ed7f556cb",
+ "skfem": {
+  "skfem-P1": {
+   "errors": [
+    {
+     "l1": 0.001827976748590769,
+     "l2": 0.00204239772868542,
+     "linf": 0.0032063426435732234
+    },
+    {
+     "l1": 0.0004576415874084162,
+     "l2": 0.0005112824940211708,
+     "linf": 0.0008027889406735378
+    },
+    {
+     "l1": 0.00011444875143996861,
+     "l2": 0.00012786343407080497,
+     "linf": 0.00020077251550332242
+    }
+   ],
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": null,
+   "order_l1": {
+    "intercept": 0.6227292900300998,
+    "n_points": 3,
+    "observed_order": 1.9987370452727962,
+    "r2": 0.9999999493151297,
+    "stderr": 0.00044998169018767536
+   },
+   "order_l2": {
+    "intercept": 0.7338286478767951,
+    "n_points": 3,
+    "observed_order": 1.9987940934672674,
+    "r2": 0.9999999564119999,
+    "stderr": 0.0004173030306301269
+   },
+   "order_linf": {
+    "intercept": 1.1843473903661794,
+    "n_points": 3,
+    "observed_order": 1.9986474571527444,
+    "r2": 0.9999999450482847,
+    "stderr": 0.0004685185968013515
+   },
+   "pairwise_l1": [
+    1.997957654122916,
+    1.9995164364226772
+   ],
+   "pairwise_l2": [
+    1.9980713034160618,
+    1.999516883518473
+   ],
+   "pairwise_linf": [
+    1.9978359591387944,
+    1.9994589551666961
+   ],
+   "problem": "sin_sin",
+   "route": "skfem P1 Galerkin"
+  },
+  "skfem-P2": {
+   "errors": [
+    {
+     "l1": 3.692876192081394e-07,
+     "l2": 4.114782013444013e-07,
+     "linf": 6.443312844384153e-07
+    },
+    {
+     "l1": 2.3147492550203936e-08,
+     "l2": 2.5788713259918513e-08,
+     "linf": 4.030772715601927e-08
+    },
+    {
+     "l1": 1.4483112546286793e-09,
+     "l2": 1.6135881905646277e-09,
+     "linf": 2.5211556176074623e-09
+    }
+   ],
+   "h": [
+    0.03125,
+    0.015625,
+    0.0078125
+   ],
+   "levels": [
+    32,
+    64,
+    128
+   ],
+   "mean_u": null,
+   "order_l1": {
+    "intercept": -0.9584462974574339,
+    "n_points": 3,
+    "observed_order": 3.9971147008610504,
+    "r2": 0.9999999648691121,
+    "stderr": 0.0007491886367630364
+   },
+   "order_l2": {
+    "intercept": -0.8499944153483711,
+    "n_points": 3,
+    "observed_order": 3.9971998815951753,
+    "r2": 0.9999999701791629,
+    "stderr": 0.0006902648968528313
+   },
+   "order_linf": {
+    "intercept": -0.3962877371142096,
+    "n_points": 3,
+    "observed_order": 3.998786831510274,
+    "r2": 0.9999999997360354,
+    "stderr": 6.496824209161292e-05
+   },
+   "pairwise_l1": [
+    3.995817068077726,
+    3.998412333644377
+   ],
+   "pairwise_l2": [
+    3.9960043077231457,
+    3.998395455467211
+   ],
+   "pairwise_linf": [
+    3.9986743032140897,
+    3.9988993598064586
+   ],
+   "problem": "sin_sin",
+   "route": "skfem P2 Galerkin"
+  }
+ },
+ "tolerances": {
+  "asymptotic_ratio": 0.1,
+  "gci_safety_factor": 1.25,
+  "owner": 0.15,
+  "tight_reporting_line": 0.03
+ },
+ "verdict": {
+  "all_pass": true,
+  "honest_note": "every predeclared criterion met",
+  "n_criteria": 10,
+  "n_pass": 10
+ }
+}
