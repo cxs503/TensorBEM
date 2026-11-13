@@ -1,0 +1,98 @@
+{
+  "case_id": "CASE-BEM-RIGID-LID-HEMISPHERE",
+  "schema": "tensorbem.case_bem_rigid_lid_hemisphere/1",
+  "repo": "TensorBEM",
+  "domain": "3-D free-surface radiation, rigid-lid endpoint (ka -> 0)",
+  "reference_provenance": {
+    "form": "even_parity_double_body (rigid-lid mirror, ka -> 0)",
+    "values": "evaluated from the double-body Legendre series by two independent formulations (pressure integral / kinetic energy); hand-typed numbers: 0",
+    "hand_typed_numbers": 0,
+    "corroboration": "Hulme (1982) multipole solution evaluated at ka = 1e-2 ... 1e-5 and extrapolated to ka = 0 via tensorbem.analytic.hulme_hemisphere_radiation",
+    "bibliography": [
+      "Hulme A. The wave forces acting on a floating hemisphere undergoing forced periodic oscillations. J. Fluid Mech. 121 (1982) 443-463.",
+      "Lamb H. Hydrodynamics. 6th ed. Cambridge University Press, 1932: method of images / added mass 0.5 rho * volume for a sphere.",
+      "TensorBEM in-repo derivation and erratum: docs/rigid_lid_zero_frequency_anchor/ERRATUM.md; docs/dev_report_m16850_rigid_lid_reference_correction.md."
+    ],
+    "page_or_article_number": "Hulme 1982 article-level citation only: the printed table digits are NOT transcribed here -- the finite-ka reference is evaluated by the shipped multipole implementation, whose truncation ladder (96/144 terms) is part of the payload.",
+    "refuted_reference": "translating-image reading A33(ka->0) = rho*nabla (1.0) -- retained as the negative control G5; see docs/rigid_lid_zero_frequency_anchor/ERRATUM.md"
+  },
+  "tolerance": 0.05,
+  "parameters": {
+    "radius_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "endpoint_band_ka": [
+      0.001,
+      0.01,
+      0.03,
+      0.1
+    ],
+    "out_of_band_ka": [
+      0.2,
+      0.3,
+      0.6,
+      1.0
+    ],
+    "mesh_levels": [
+      2,
+      3
+    ],
+    "degree_ladder": [
+      20,
+      40,
+      60,
+      80
+    ],
+    "hulme_ka_ladder": [
+      0.01,
+      0.001,
+      0.0001,
+      1e-05
+    ],
+    "hulme_terms_ladder": [
+      96,
+      144
+    ],
+    "pressure_release_dimless": 0.5,
+    "naive_translating_image_dimless": 1.0
+  },
+  "reference": {
+    "value_dimless": 0.8309512873124402,
+    "value_kg": 1783.848814136358,
+    "form": "even_parity_double_body",
+    "pressure_release_dimless": 0.5,
+    "refuted_translating_image_dimless": 1.0
+  },
+  "budget_panels": {
+    "panels": 256,
+    "max_abs_relative_error": 0.040203437904676065
+  },
+  "capability_reused": [
+    "tensorbem.free_surface_solver3d.solve_radiation_3d",
+    "tensorbem.geometry3d.hemisphere_hull_mesh",
+    "tensorbem.benchmarks.rigid_lid_hemisphere_attribution.even_mode_added_mass_dimless",
+    "tensorbem.analytic.hulme_hemisphere_radiation"
+  ],
+  "repro_cmd": "bash scripts/repro_case_bem_rigid_lid_hemisphere.sh",
+  "repro_cmd_module": "PYTHONPATH=src python -m tensorbem.benchmarks.case_bem_rigid_lid_hemisphere --outdir benchmarks/verified/case_bem_rigid_lid_hemisphere --check",
+  "test_cmd": "PYTHONPATH=src python -m pytest tests/test_case_bem_rigid_lid_hemisphere.py -q",
+  "artifacts": {
+    "results_json": "benchmarks/verified/case_bem_rigid_lid_hemisphere/results.json",
+    "report_md": "benchmarks/verified/case_bem_rigid_lid_hemisphere/report.md",
+    "case_json": "benchmarks/verified/case_bem_rigid_lid_hemisphere/case.json",
+    "figures": "benchmarks/verified/case_bem_rigid_lid_hemisphere/figures/"
+  },
+  "verdict_passed": true,
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64"
+  },
+  "friction": [
+    "tk knowledge/search -> engine_offline (127.0.0.1:8021 refused); sediment store 0 items for 'TensorBEM'",
+    "negative-knowledge/search?q=TensorBEM -> 0 hits",
+    "psql knowledge_base / negative_knowledge_ledger -> permission denied (read the repo instead: docs/rigid_lid_zero_frequency_anchor/ERRATUM.md)",
+    "1024-panel (subdivisions=4) solve exceeds the container per-command budget (~120 s), so the mesh ladder stops at 256 panels"
+  ]
+}
