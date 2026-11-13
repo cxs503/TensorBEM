@@ -1,0 +1,894 @@
+{
+  "case": "BEM-HULME-HEMISPHERE",
+  "case_pool_id": 138,
+  "mission_id": 17292,
+  "repo": "TensorBEM",
+  "case_dir": "benchmarks/verified/casepool_bem_hulme_hemisphere",
+  "verdict": "PASS",
+  "levels": {
+    "L1_artifact": true,
+    "L2_implementation": true,
+    "L3_integration": true,
+    "L4_benchmark": true
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "host": "36cb7828dbd5",
+    "machine": "loongarch64"
+  },
+  "impl_files": [
+    {
+      "path": "src/tensorbem/benchmarks/hulme_hemisphere_case.py",
+      "exists": true,
+      "ok": true,
+      "lines": 771,
+      "callables": 13,
+      "public_callables": [
+        "build_tasks",
+        "evaluate",
+        "main",
+        "reference",
+        "reference_ladder",
+        "run_cell",
+        "write_environment",
+        "write_figure",
+        "write_log",
+        "write_report"
+      ],
+      "empty_bodies": [],
+      "placeholder_markers": []
+    },
+    {
+      "path": "src/tensorbem/analytic.py",
+      "exists": true,
+      "ok": true,
+      "lines": 1793,
+      "callables": 49,
+      "public_callables": [
+        "bessel_j01_y01",
+        "bessel_jn_yn",
+        "dean_cylinder_diffraction",
+        "ellipse_added_mass",
+        "ellipse_added_mass_matrix",
+        "ellipse_added_moment_of_inertia",
+        "ellipse_translation_trace_scale",
+        "ellipsoid_added_mass",
+        "ellipsoid_added_mass_matrix",
+        "ellipsoid_added_moment_of_inertia",
+        "ellipsoid_shape_factors",
+        "ellipsoid_translation_trace_scale"
+      ],
+      "empty_bodies": [],
+      "placeholder_markers": []
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/run_case.py",
+      "exists": true,
+      "ok": true,
+      "lines": 103,
+      "callables": 3,
+      "public_callables": [
+        "main",
+        "run_sharded"
+      ],
+      "empty_bodies": [],
+      "placeholder_markers": []
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/make_doc.py",
+      "exists": true,
+      "ok": true,
+      "lines": 333,
+      "callables": 6,
+      "public_callables": [
+        "main",
+        "render"
+      ],
+      "empty_bodies": [],
+      "placeholder_markers": []
+    }
+  ],
+  "entry": [
+    {
+      "path": "src/tensorbem/benchmarks/hulme_hemisphere_case.py",
+      "kind": "cli",
+      "command": "python -m tensorbem.benchmarks.hulme_hemisphere_case --out benchmarks/verified/casepool_bem_hulme_hemisphere",
+      "note": "package entry: computes the task list, the Hulme reference, the verdict, report.md and figure.png",
+      "exists": true,
+      "sha256": "c6629f56152aa2b745913299d1cbb259e5cfd5ca611eb26d7674ae333198a7d0"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/run_case.py",
+      "kind": "case_pool_driver",
+      "command": "python benchmarks/verified/casepool_bem_hulme_hemisphere/run_case.py --out benchmarks/verified/casepool_bem_hulme_hemisphere --shards 4 --parallel 4",
+      "note": "shard orchestration over the package entry + merge; non-zero exit on FAIL",
+      "exists": true,
+      "sha256": "d1d4c8899653d3ebbe23e33529bc5fc9aef7f92bc10286a435a91a0d2da49483"
+    }
+  ],
+  "run_artifacts": [
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/results.json",
+      "exists": true,
+      "bytes": 42020,
+      "sha256": "e519548bbdf676524c167148b013b25e4501ae0701165506653865ba7f9c5eb2"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/reference.json",
+      "exists": true,
+      "bytes": 9223,
+      "sha256": "51f750fbd3fc23ffb99cf09050b1d1a1763b08763317301c1e4cfb7982e4fd51"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/environment.json",
+      "exists": true,
+      "bytes": 367,
+      "sha256": "3f513ce19cd695b234def4cb26d74b5793b0d61616b2fd11085f6b7408618dbe"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/run.log",
+      "exists": true,
+      "bytes": 2192,
+      "sha256": "e903b03e0065f06f44ae6d587f96c1b622ba94cb03d8342e006b23c66e1fa443"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/figure.png",
+      "exists": true,
+      "bytes": 159683,
+      "sha256": "f0381a807a6ee24480361462f26976fad62d24ff68533ce796e2690fca2ee768"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/report.md",
+      "exists": true,
+      "bytes": 7238,
+      "sha256": "fa6918ec6f80ed132c6b2598fd82da9479fb2e7910388900344d8fdf8aee79e7"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/logs/worker_0.log",
+      "exists": true,
+      "bytes": 284,
+      "sha256": "39da2e1da75102723b805ed0292925c473dcb9e4190ae532016017c8f7896853",
+      "role": "shard worker stdout"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/logs/worker_1.log",
+      "exists": true,
+      "bytes": 228,
+      "sha256": "be69874e44b1ce297b267811cd9cfbb088a2bd446c883fcb1da878adf828790f",
+      "role": "shard worker stdout"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/logs/worker_2.log",
+      "exists": true,
+      "bytes": 218,
+      "sha256": "a7ea0ebbf5aaa504ac0c87a58b93be2d28205e1a6b01b3e4defeb9d367a7d2d9",
+      "role": "shard worker stdout"
+    },
+    {
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/logs/worker_3.log",
+      "exists": true,
+      "bytes": 226,
+      "sha256": "a2df8b091c0bc1f108feb193c9ddbcc1b003bdea75458d8485e6ff16d1443f55",
+      "role": "shard worker stdout"
+    }
+  ],
+  "integration_callers": [
+    {
+      "file": "benchmarks/verified/casepool_bem_hulme_hemisphere/run_case.py",
+      "symbol": "hulme_hemisphere_case",
+      "kind": "case_pool_driver",
+      "note": "the case-pool driver imports the module and calls case.main() / case.build_tasks()",
+      "exists": true,
+      "verified": true,
+      "hits": 5,
+      "first_hit": "library module :mod:`tensorbem.benchmarks.hulme_hemisphere_case`; this driver"
+    },
+    {
+      "file": "tests/test_hulme_hemisphere_case.py",
+      "symbol": "run_cell",
+      "kind": "test",
+      "note": "the TensorBEM test suite solves a real BEM cell and applies evaluate()",
+      "exists": true,
+      "verified": true,
+      "hits": 2,
+      "first_hit": "def test_run_cell_solves_a_real_cell_and_matches_the_reference():"
+    },
+    {
+      "file": "tests/test_hulme_hemisphere_case.py",
+      "symbol": "evaluate",
+      "kind": "test",
+      "note": "gate evaluation is exercised on both passing and deliberately failing rows",
+      "exists": true,
+      "verified": true,
+      "hits": 6,
+      "first_hit": "def test_evaluate_passes_good_rows_and_rejects_out_of_tolerance_rows():"
+    },
+    {
+      "file": "benchmarks/verified/casepool_bem_hulme_hemisphere/evidence.py",
+      "symbol": "hulme_hemisphere_case",
+      "kind": "evidence",
+      "note": "this bundle re-derives the reference series through the module instead of trusting the stored numbers",
+      "exists": true,
+      "verified": true,
+      "hits": 11,
+      "first_hit": "\"src/tensorbem/benchmarks/hulme_hemisphere_case.py\","
+    }
+  ],
+  "benchmark": {
+    "source": "results.json rows (case mesh, kind=band)",
+    "n_rows": 48,
+    "all_pass": true,
+    "max_abs_rel_error": 0.011480004889855476,
+    "recompute_vs_stored_drift": 0.0,
+    "reproduces_stored_rows": true,
+    "rows": [
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.5515331322468904,
+        "got": 0.5493578300124821,
+        "rel_error": -0.003944100738873754,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.008152780024490543,
+        "got": 0.008074425549314245,
+        "rel_error": -0.009610767730875316,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.7938342111726953,
+        "got": 0.7925986272181836,
+        "rel_error": -0.0015564760716048618,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.27930381181925346,
+        "got": 0.2787340953840635,
+        "rel_error": -0.0020397732185575023,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 0.5843824529158171,
+        "got": 0.5813646277436147,
+        "rel_error": -0.005164126946565119,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 2.41863748886842,
+        "got": 2.4162369013206395,
+        "rel_error": -0.0009925371449127423,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -89.71380802310051,
+        "got": -89.71509820507117,
+        "rel_error": -0.0012901819706598872,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -2.7932973593010453,
+        "got": -2.790018620048841,
+        "rel_error": 0.0032787392522042325,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.6421154494627368,
+        "got": 0.639393394222809,
+        "rel_error": -0.004239199106960144,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.2653080161580761,
+        "got": 0.26276412481349376,
+        "rel_error": -0.009588445088921187,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.46979369774939467,
+        "got": 0.4691605367283115,
+        "rel_error": -0.0013477426881552922,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.2898966679727518,
+        "got": 0.29036316584117816,
+        "rel_error": 0.0016091867205254957,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 1.6668230498331096,
+        "got": 1.6579988005958126,
+        "rel_error": -0.00529405280193389,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 1.232042259405591,
+        "got": 1.2330356481530125,
+        "rel_error": 0.0008062943781657741,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -82.99932786199341,
+        "got": -83.03759370691225,
+        "rel_error": -0.038265844918839775,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -25.185374875194334,
+        "got": -25.162697083277642,
+        "rel_error": 0.02267779191669206,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.36832017629727126,
+        "got": 0.3682916889321184,
+        "rel_error": -7.734402562264662e-05,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.4013517827332631,
+        "got": 0.39842570944987454,
+        "rel_error": -0.007290545125928147,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.389047570896605,
+        "got": 0.3877054064818174,
+        "rel_error": -0.0034498722397738016,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.16061944493651015,
+        "got": 0.16173533605884433,
+        "rel_error": 0.006947422354592678,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 1.497187807628864,
+        "got": 1.4906261356886883,
+        "rel_error": -0.00438266455733944,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 0.6697378723264034,
+        "got": 0.6713892627888473,
+        "rel_error": 0.0024657265635996016,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -87.84220679614317,
+        "got": -87.88712966725096,
+        "rel_error": -0.04492287110778648,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -58.53759058072657,
+        "got": -58.508505719399295,
+        "rel_error": 0.029084861327277167,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.6438970564919952,
+        "got": 0.6409113856614221,
+        "rel_error": -0.004636876035494383,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.0986699468310282,
+        "got": 0.09769541193727022,
+        "rel_error": -0.009876714491666543,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.5860847421137021,
+        "got": 0.5854436013097956,
+        "rel_error": -0.001093938739292677,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.33905711992088367,
+        "got": 0.3389577660128984,
+        "rel_error": -0.0002930300003977213,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 1.2857802431536547,
+        "got": 1.2788943982461547,
+        "rel_error": -0.005355382417924674,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 1.685386646193346,
+        "got": 1.6852522979673716,
+        "rel_error": -7.971359348182731e-05,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -87.00427381794367,
+        "got": -87.01901130126816,
+        "rel_error": -0.014737483324495315,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -12.638716210611717,
+        "got": -12.627162314943911,
+        "rel_error": 0.011553895667805847,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.5739517487330752,
+        "got": 0.5720648928477615,
+        "rel_error": -0.003287481725560848,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.35348859091776197,
+        "got": 0.3502991691702468,
+        "rel_error": -0.009022700673972235,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.4284357095914814,
+        "got": 0.42765302187612947,
+        "rel_error": -0.0018268498582862073,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.248403071759455,
+        "got": 0.24914968705195412,
+        "rel_error": 0.0030056604663170625,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 1.7208658139525712,
+        "got": 1.7121304790344722,
+        "rel_error": -0.00507612786963047,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 1.0200656062729707,
+        "got": 1.0214271239861397,
+        "rel_error": 0.0013347354374034285,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -81.75655304309082,
+        "got": -81.80626329678661,
+        "rel_error": -0.04971025369579252,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -34.288898451775054,
+        "got": -34.2583329464705,
+        "rel_error": 0.030565505304551266,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "A11_dimless",
+        "ref": 0.24927898108430596,
+        "got": 0.24984845216892856,
+        "rel_error": 0.002284472931273768,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "B11_dimless",
+        "ref": 0.34241049340106217,
+        "got": 0.34043159077282187,
+        "rel_error": -0.005779328222638398,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "A33_dimless",
+        "ref": 0.3883777539192412,
+        "got": 0.3863365886018494,
+        "rel_error": -0.005255618522929685,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "B33_dimless",
+        "ref": 0.10306536393605607,
+        "got": 0.10424855481801673,
+        "rel_error": 0.011480004889855476,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "Fx_dimless",
+        "ref": 1.1976167433130802,
+        "got": 1.1928853817766318,
+        "rel_error": -0.003950647452840015,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "Fz_dimless",
+        "ref": 0.46461680814781375,
+        "got": 0.466884989139937,
+        "rel_error": 0.004881831548809624,
+        "tolerance": "<5%",
+        "pass": true
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "phase_Fx_deg",
+        "ref": -103.92088437211633,
+        "got": -103.91472680234834,
+        "rel_error": 0.006157569767992754,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "phase_Fz_deg",
+        "ref": -84.12616763617312,
+        "got": -84.12852514931367,
+        "rel_error": -0.0023575131405522143,
+        "tolerance": "5 deg absolute",
+        "pass": true,
+        "note": "phase delta is absolute (deg), not relative"
+      }
+    ]
+  },
+  "reference": {
+    "implementation": "tensorbem.analytic.hulme_hemisphere_radiation",
+    "terms_used": 144,
+    "n_values_compared": 48,
+    "max_drift": 0.0,
+    "matches": true,
+    "worst_96_144_term_drift": 6.46380031894343e-05,
+    "self_converged": true,
+    "values": [
+      {
+        "ka": 0.2,
+        "A33": 0.7938342111726953,
+        "B33": 0.27930381181925346
+      },
+      {
+        "ka": 0.5,
+        "A33": 0.5860847421137021,
+        "B33": 0.33905711992088367
+      },
+      {
+        "ka": 0.8,
+        "A33": 0.46979369774939467,
+        "B33": 0.2898966679727518
+      },
+      {
+        "ka": 1.0,
+        "A33": 0.4284357095914814,
+        "B33": 0.248403071759455
+      },
+      {
+        "ka": 1.5,
+        "A33": 0.389047570896605,
+        "B33": 0.16061944493651015
+      },
+      {
+        "ka": 2.0,
+        "A33": 0.3883777539192412,
+        "B33": 0.10306536393605607
+      }
+    ],
+    "paper_digits_transcribed": false,
+    "note": "no digit of Hulme's printed table is copied into the repository; the reference is the wave-free multipole series recomputed at run time (see docs/bem_hulme_case.md)"
+  },
+  "geometry": {
+    "criterion": "|nabla_mesh/nabla - 1| < 2 % and |A_wp,mesh/(pi a^2) - 1| < 2 %",
+    "worst_volume_rel_error": 0.005869620423973321,
+    "worst_waterplane_rel_error": 0.0016056069643816118,
+    "pass": true,
+    "rows": [
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 0.2,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 0.8,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 1.5,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 0.5,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 2.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      },
+      {
+        "ka": 1.0,
+        "panels": 1024,
+        "mesh_volume": 2.0821017981243184,
+        "nabla_exact": 2.0943951023931953,
+        "volume_rel_error": -0.005869620423973321,
+        "waterplane_rel_error": -0.0016056069643816118
+      }
+    ]
+  },
+  "tests": [
+    {
+      "path": "tests/test_hulme_hemisphere_case.py",
+      "exists": true,
+      "n_collected": 6,
+      "node_ids_sample": [
+        "tests/test_hulme_hemisphere_case.py::test_geometry_precondition_holds_on_the_case_mesh",
+        "tests/test_hulme_hemisphere_case.py::test_hulme_reference_series_is_self_converged",
+        "tests/test_hulme_hemisphere_case.py::test_run_cell_solves_a_real_cell_and_matches_the_reference",
+        "tests/test_hulme_hemisphere_case.py::test_evaluate_passes_good_rows_and_rejects_out_of_tolerance_rows"
+      ]
+    }
+  ],
+  "repro_cmd": {
+    "case_full": "python benchmarks/verified/casepool_bem_hulme_hemisphere/run_case.py --out benchmarks/verified/casepool_bem_hulme_hemisphere --shards 4 --parallel 4",
+    "case_package_cli": "python -m tensorbem.benchmarks.hulme_hemisphere_case --out benchmarks/verified/casepool_bem_hulme_hemisphere",
+    "evidence": "python benchmarks/verified/casepool_bem_hulme_hemisphere/evidence.py --strict",
+    "tests": "python -m pytest tests/test_hulme_hemisphere_case.py -q",
+    "doc": "python benchmarks/verified/casepool_bem_hulme_hemisphere/make_doc.py --results benchmarks/verified/casepool_bem_hulme_hemisphere/results.json"
+  },
+  "checks": {
+    "impl_files_ok": true,
+    "entries_exist": true,
+    "run_artifacts_exist": true,
+    "integration_callers_verified": true,
+    "tests_collected": true,
+    "benchmark_rows_recomputed": true,
+    "benchmark_rows_in_tolerance": true,
+    "reference_recomputed_matches": true,
+    "reference_self_converged": true,
+    "geometry_precondition": true,
+    "report_carries_verdict": true,
+    "verdict_pass": true
+  },
+  "ok": true
+}
