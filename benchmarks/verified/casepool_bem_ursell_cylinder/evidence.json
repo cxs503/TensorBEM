@@ -1,0 +1,38 @@
+{
+  "case_code": "BEM-URSELL-CYL-RAD",
+  "case_pool_id": 201,
+  "mission_id": 17530,
+  "verdict": "PASS",
+  "gates": {
+    "G1_case_error_below_5pct": {"pass": true, "measured_worst": 0.01814, "threshold": 0.05},
+    "G2_monotonic_convergence": {"pass": true, "note": "coarse > case > fine error for added mass at all ka"},
+    "G3_near_far_identity": {"pass": true, "measured_worst": 0.00535, "threshold": 0.03},
+    "G4_heave_sway_symmetry": {"pass": true, "measured_worst": 5.78e-16, "threshold": 1e-8},
+    "G5_reference_truncation_converged": {"pass": true, "note": "80->100 term delta < 1e-6 at all ka"}
+  },
+  "reference": {
+    "citation": "Ursell, F. (1949) On the heaving motion of a circular cylinder on the surface of a fluid. Quart. J. Mech. Appl. Math. 2:228-244.",
+    "method": "multipole expansion, closed-form infinite linear system",
+    "implementation": "tensorbem.analytic.ursell_cylinder_coefficients",
+    "terms_used": 80,
+    "independence": "pure NumPy evaluation; shares no code with BEM solver kernel"
+  },
+  "geometry": {
+    "body": "submerged circular cylinder",
+    "radius_m": 1.0,
+    "submergence_m": 2.0,
+    "a_over_f": 0.5,
+    "water_depth": "infinite (deep water)"
+  },
+  "band_ka": [0.2, 0.4, 0.6, 0.8, 1.0],
+  "case_mesh_panels": 128,
+  "worst_case_error": {"added_mass": 0.01136, "damping": 0.01814},
+  "convergence_verified": true,
+  "artifacts": [
+    "benchmarks/verified/casepool_bem_ursell_cylinder/results.json",
+    "benchmarks/verified/casepool_bem_ursell_cylinder/report.md",
+    "benchmarks/verified/casepool_bem_ursell_cylinder/ursell_casepool.png",
+    "benchmarks/verified/casepool_bem_ursell_cylinder/run_case.py",
+    "tests/test_casepool_ursell_cylinder.py"
+  ]
+}

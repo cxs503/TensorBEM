@@ -1,0 +1,6 @@
+{
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "host": "36cb7828dbd5",
+  "machine": "loongarch64"
+}
