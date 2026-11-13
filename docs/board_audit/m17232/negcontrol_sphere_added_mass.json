@@ -1,0 +1,21 @@
+{
+  "artifact_mode1": 2007.7327892588562,
+  "driver_matches_direct_solve": 0.0,
+  "mode1_relative_error": 0.06475922589787637,
+  "mode2_vs_mode1_ratio": 1.7553953523366812,
+  "panels": 80,
+  "production_run_mode1_via_driver": 2007.7327892588562,
+  "radius1_relative_error": 0.06475922589787637,
+  "radius2_added_mass": 16061.86231407085,
+  "radius2_over_radius1": 8.0,
+  "radius2_relative_error": 0.06475922589787637,
+  "ref_0p5_rho_V": 2146.754979953025,
+  "subdivisions": 1,
+  "verdict": {
+    "output_follows_input": true,
+    "radius_scaling_close_to_8": true,
+    "relative_error_scale_invariant": true
+  },
+  "wrong_mode2_cos2theta_added_mass": 3524.3648069989576,
+  "wrong_mode2_relative_error_vs_ref": 0.6417173081746278
+}
