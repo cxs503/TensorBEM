@@ -1,0 +1,302 @@
+{
+  "anchor_headline": {
+    "added_mass_dimless": 0.8333039583007392,
+    "ka": 0.001,
+    "panels": 1024,
+    "rel_error_vs_gauss_reference": 0.0028278464181319407,
+    "rel_error_vs_pin": 0.0028312583094431965
+  },
+  "anchor_rows": [
+    {
+      "added_mass_dimless": 0.8073878553120352,
+      "ka": 0.001,
+      "panels": 64,
+      "rel_error_vs_gauss_reference": -0.02836052067028283,
+      "rel_error_vs_pin": -0.028357214890223914
+    },
+    {
+      "added_mass_dimless": 0.8281516869216776,
+      "ka": 0.001,
+      "panels": 256,
+      "rel_error_vs_gauss_reference": -0.0033725816006695553,
+      "rel_error_vs_pin": -0.0033691908048898433
+    },
+    {
+      "added_mass_dimless": 0.8333039583007392,
+      "ka": 0.001,
+      "panels": 1024,
+      "rel_error_vs_gauss_reference": 0.0028278464181319407,
+      "rel_error_vs_pin": 0.0028312583094431965
+    }
+  ],
+  "criteria": {
+    "P1_pin_is_tail_free": {
+      "criterion": "Richardson tail correction < 1e-9",
+      "measured": 1.8507084753593972e-11,
+      "pass": true
+    },
+    "P2_pin_stable_over_truncation": {
+      "criterion": "|S(240) - S(400)| < 1e-8",
+      "measured": 1.2178091868264573e-10,
+      "pass": true
+    },
+    "P3_exact_vs_float_arithmetic": {
+      "criterion": "rational vs float64 partial sum agree < 1e-13",
+      "measured": 2.220446049250313e-16,
+      "pass": true
+    },
+    "P4_gauss_quadrature_bias_quantified": {
+      "criterion": "1e-7 < |gauss/pin - 1| < 1e-5 (a ppm-level bias, not round-off)",
+      "measured": 3.402270213559433e-06,
+      "pass": true
+    },
+    "P5_sphere_route_validation": {
+      "criterion": "|sphere A33/(rho*pi*4a^3/3) - 0.5| < 1e-4",
+      "measured": -1.5420679533306725e-07,
+      "pass": true
+    },
+    "P6_independent_route_agrees": {
+      "criterion": "|MFS - pin|/pin < 1e-3 (0.1 %)",
+      "measured": -3.597001981725523e-05,
+      "pass": true
+    },
+    "P7_anchor_verdict_unchanged": {
+      "criterion": "worst |m17243 row - pin|/pin < 5 % (case tolerance)",
+      "measured": 0.028357214890223914,
+      "pass": true
+    },
+    "P8_pin_vs_refuted_anchor_separation": {
+      "criterion": "pin < 0.9 (still refutes the 1.0 rho*nabla anchor)",
+      "measured": 0.8309513204699159,
+      "pass": true
+    }
+  },
+  "density": 1025.0,
+  "displaced_volume": 2.0943951023931953,
+  "mfs_best": {
+    "added_mass_dimless": 0.8309214311344515,
+    "collocation_rule": "chebyshev",
+    "condition_number": 237162718328.69193,
+    "contraction": 0.8,
+    "n_collocation": 128,
+    "n_sources": 64,
+    "neumann_residual": 0.0010658392514431823,
+    "rel_error_vs_pin": -3.597001981725523e-05,
+    "source_rule": "uniform",
+    "surface_integral": -1.74027777584154
+  },
+  "mfs_ladder": [
+    {
+      "added_mass_dimless": 0.8306314172729421,
+      "collocation_rule": "chebyshev",
+      "condition_number": 9619867.246621836,
+      "contraction": 0.6,
+      "n_collocation": 32,
+      "n_sources": 16,
+      "neumann_residual": 0.005402985219933748,
+      "rel_error_vs_pin": -0.00038498428138111773,
+      "source_rule": "uniform",
+      "surface_integral": -1.7396703722303684
+    },
+    {
+      "added_mass_dimless": 0.8310190626949717,
+      "collocation_rule": "chebyshev",
+      "condition_number": 130426557093.41542,
+      "contraction": 0.6,
+      "n_collocation": 64,
+      "n_sources": 32,
+      "neumann_residual": 0.002918582643627478,
+      "rel_error_vs_pin": 8.15236986655421e-05,
+      "source_rule": "uniform",
+      "surface_integral": -1.7404822549037324
+    },
+    {
+      "added_mass_dimless": 0.8316227751206569,
+      "collocation_rule": "chebyshev",
+      "condition_number": 320715448941.50055,
+      "contraction": 0.6,
+      "n_collocation": 128,
+      "n_sources": 64,
+      "neumann_residual": 0.002114891891699685,
+      "rel_error_vs_pin": 0.0008080553387426193,
+      "source_rule": "uniform",
+      "surface_integral": -1.7417466672513413
+    },
+    {
+      "added_mass_dimless": 0.8315573197253722,
+      "collocation_rule": "chebyshev",
+      "condition_number": 376358431250.00256,
+      "contraction": 0.6,
+      "n_collocation": 192,
+      "n_sources": 96,
+      "neumann_residual": 0.0022850874570767756,
+      "rel_error_vs_pin": 0.0007292837023396004,
+      "source_rule": "uniform",
+      "surface_integral": -1.7416095777920317
+    },
+    {
+      "added_mass_dimless": 0.8305871636197968,
+      "collocation_rule": "chebyshev",
+      "condition_number": 3307.609670858255,
+      "contraction": 0.8,
+      "n_collocation": 32,
+      "n_sources": 16,
+      "neumann_residual": 0.005859866745469956,
+      "rel_error_vs_pin": -0.0004382408946810301,
+      "source_rule": "uniform",
+      "surface_integral": -1.7395776875959579
+    },
+    {
+      "added_mass_dimless": 0.8308724830806032,
+      "collocation_rule": "chebyshev",
+      "condition_number": 4224799.557028463,
+      "contraction": 0.8,
+      "n_collocation": 64,
+      "n_sources": 32,
+      "neumann_residual": 0.0022474465444160753,
+      "rel_error_vs_pin": -9.487606237645885e-05,
+      "source_rule": "uniform",
+      "surface_integral": -1.7401752592772883
+    },
+    {
+      "added_mass_dimless": 0.8309214311344515,
+      "collocation_rule": "chebyshev",
+      "condition_number": 237162718328.69193,
+      "contraction": 0.8,
+      "n_collocation": 128,
+      "n_sources": 64,
+      "neumann_residual": 0.0010658392514431823,
+      "rel_error_vs_pin": -3.597001981725523e-05,
+      "source_rule": "uniform",
+      "surface_integral": -1.74027777584154
+    },
+    {
+      "added_mass_dimless": 0.8307628850157264,
+      "collocation_rule": "chebyshev",
+      "condition_number": 410255764157.71423,
+      "contraction": 0.8,
+      "n_collocation": 192,
+      "n_sources": 96,
+      "neumann_residual": 0.0009161595130523232,
+      "rel_error_vs_pin": -0.0002267707500398508,
+      "source_rule": "uniform",
+      "surface_integral": -1.7399457176269786
+    },
+    {
+      "added_mass_dimless": 0.8309189925963297,
+      "collocation_rule": "chebyshev",
+      "condition_number": 493100913942.14,
+      "contraction": 0.8,
+      "n_collocation": 256,
+      "n_sources": 128,
+      "neumann_residual": 0.0009803728968734802,
+      "rel_error_vs_pin": -3.8904653966831404e-05,
+      "source_rule": "uniform",
+      "surface_integral": -1.7402726685792407
+    }
+  ],
+  "pin": {
+    "degrees": [
+      20,
+      40,
+      60,
+      80,
+      120,
+      160,
+      240,
+      400
+    ],
+    "last_term": 3.702446270004377e-13,
+    "measured_tail_exponent": 3.965237779844143,
+    "partial_sums": [
+      0.8309491285358878,
+      0.8309511610714925,
+      0.8309512873124401,
+      0.8309513097011867,
+      0.8309513182860445,
+      0.8309513197696481,
+      0.8309513203296279,
+      0.8309513204514088
+    ],
+    "truncation_tail_estimate": 1.8507084753593972e-11,
+    "value": 0.8309513204699159
+  },
+  "radius": 1.0,
+  "reference_audit": {
+    "pinned_value": 0.8309513204699159,
+    "rows": [
+      {
+        "deviation": 5.679530084012896e-06,
+        "deviation_ppm": 6.834973294012059,
+        "key": "erratum_prose_m16850",
+        "source": "docs/rigid_lid_zero_frequency_anchor/ERRATUM.md",
+        "value": 0.830957
+      },
+      {
+        "deviation": 2.8271209265851027e-06,
+        "deviation_ppm": 3.402270213559433,
+        "key": "gauss_quadrature_series_m16802_m17243",
+        "source": "tensorbem.benchmarks.rigid_lid_hemisphere_attribution.even_mode_added_mass_dimless(degree_max=60, quad_order=400); committed in benchmarks/verified/bem_rigid_lid_hemisphere{,_ka0}/results.json",
+        "value": 0.8309541475908425
+      },
+      {
+        "deviation": 0.16904867953008407,
+        "deviation_ppm": 203439.93127597938,
+        "key": "refuted_report_15809_anchor",
+        "source": "report #15809 (rigid lid = translating sphere), refuted by m16850",
+        "value": 1.0
+      },
+      {
+        "deviation": -0.004876320469915929,
+        "deviation_ppm": -5868.358771195292,
+        "key": "stale_module_docstring",
+        "source": "docstring of src/tensorbem/benchmarks/rigid_lid_hemisphere_attribution.py ('The even-mode series gives A33(0)/(rho*nabla) = 0.826075...')",
+        "value": 0.826075
+      }
+    ]
+  },
+  "repro_cmd": "python3 benchmarks/verified/bem_rigid_lid_hemisphere_axisym/run_study.py && python3 benchmarks/verified/bem_rigid_lid_hemisphere_axisym/make_figure.py",
+  "sphere_ladder": [
+    {
+      "added_mass": 2146.7546489088195,
+      "added_mass_dimless": 0.49999992289660233,
+      "contraction": 0.5,
+      "exact_dimless": 0.5,
+      "n_collocation": 48,
+      "n_sources": 24,
+      "neumann_residual": 5.412198914183046e-10,
+      "rel_error": -1.5420679533306725e-07
+    },
+    {
+      "added_mass": 2146.7546482835423,
+      "added_mass_dimless": 0.4999999227509693,
+      "contraction": 0.8,
+      "exact_dimless": 0.5,
+      "n_collocation": 96,
+      "n_sources": 48,
+      "neumann_residual": 1.9142168278781914e-07,
+      "rel_error": -1.5449806145539924e-07
+    },
+    {
+      "added_mass": 2146.754648868635,
+      "added_mass_dimless": 0.499999922887243,
+      "contraction": 0.6,
+      "exact_dimless": 0.5,
+      "n_collocation": 128,
+      "n_sources": 64,
+      "neumann_residual": 2.7835509320294062e-11,
+      "rel_error": -1.5422551402632934e-07
+    }
+  ],
+  "sphere_validation": {
+    "added_mass": 2146.7546489088195,
+    "added_mass_dimless": 0.49999992289660233,
+    "contraction": 0.5,
+    "exact_dimless": 0.5,
+    "n_collocation": 48,
+    "n_sources": 24,
+    "neumann_residual": 5.412198914183046e-10,
+    "rel_error": -1.5420679533306725e-07
+  },
+  "verdict": "ALL PASS"
+}

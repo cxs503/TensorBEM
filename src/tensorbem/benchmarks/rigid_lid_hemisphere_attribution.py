@@ -26,10 +26,16 @@ That reference value is wrong, and this module demonstrates it two ways.
    *is* exactly ``1/3 rho pi a**3 = 0.5 rho*nabla`` (repository anchor A2), which
    is why the two limits were conflated.
 
-   The even-mode series gives ``A33(0) / (rho*nabla) = 0.826075...`` -- *not*
-   1.0.  It is an exactly evaluated (Gauss-Legendre, machine precision)
-   semi-analytic value, independent of any panel code or of the Kelvin Green
-   function.
+   The even-mode series gives ``A33(0) / (rho*nabla) = 0.8309541`` -- *not*
+   1.0.  It is a semi-analytic value, independent of any panel code or of the
+   Kelvin Green function.  (m17547 pinned this further: the Legendre
+   coefficients of ``|mu|`` are kinked at ``mu = 0``, so the Gauss-Legendre
+   quadrature used below is *not* exact and biases the value by **+3.4 ppm**.
+   The exact-rational series plus Richardson extrapolation gives
+   ``0.830951320470``; see
+   :mod:`tensorbem.benchmarks.rigid_lid_reference_pin`.  The 3.4 ppm bias is
+   immaterial for the 5 % case gate, so the default below is intentionally left
+   unchanged until the committed artifacts are regenerated.)
 
 2. **Solver.**  Running the solver at ``ka -> 0`` (where the Kelvin Green
    function degenerates to the mirror Rankine kernel, i.e. the rigid lid) and at
