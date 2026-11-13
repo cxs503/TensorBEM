@@ -129,7 +129,6 @@ the 3% limit.
 
 **Overall**: ✅ ALL GATES PASSED
 
-
 ## 7. Re-verification (m16170, reopen of closed PR #683)
 
 The original PR #683 carrying these deliverables was closed by the owner on
@@ -150,3 +149,5 @@ the loop, the anchor was re-verified against the current `main` on 2026-11-12:
 - **Conclusion**: the anchor is stable on the current `main`; the deliverables
   of the closed PR #683 are present and reproducible. No numeric drift since
   merge #645.
+
+
