@@ -143,6 +143,7 @@ correction log inside the generated block records what changed.
 | Body / free-surface clearance diagnostics | **REAL** | `tensorbem.clearance` | 2 node(s) in 1 file(s) | `docs/near_surface_error_budget.md` |
 | Benchmark drivers expose a runnable entry point | **REAL** | `tensorbem.benchmarks.finite_depth_kernel`, `tensorbem.benchmarks.hulme_diffraction_verification` (+5) | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
 | Machine-derived capability evidence registry | **REAL** | `tensorbem.capability_evidence` | 2 node(s) in 1 file(s) | `docs/audit_baseline.md` |
+| Numeric evidence layer (criterion + artifact + independent regrade) | **REAL** | `tensorbem.numeric_evidence` | 3 node(s) in 1 file(s) | `docs/numeric_evidence_matrix.md` |
 | Second-order mean wave drift force (near field / far field) | **REAL** | `tensorbem.drift`, `tensorbem.drift_force` (+1) | 4 node(s) in 2 file(s) | `docs/drift_second_order/drift_second_order.md` |
 | Maruo far-field mean drift force at arbitrary heading | **REAL** | `tensorbem.maruo_drift` | 4 node(s) in 1 file(s) | `docs/maruo_drift.md` |
 | Time-domain radiation memory kernel (Cummins equation) | **REAL** | `tensorbem.time_domain` | 3 node(s) in 1 file(s) | `docs/time_domain_pulse.md` |
@@ -186,7 +187,7 @@ correction log inside the generated block records what changed.
 | Wigley III hullform geometry (frequency-domain verification hull) | **REAL** | `tensorbem.wigley3_freq`, `tensorbem.wigley3_hull` | 1 node(s) in 1 file(s) | `docs/multibody_frequency_dependence_3d.md` |
 | Pekeris two-layer shallow-water normal modes with an elastic ice cover | **REAL** | `tensorbem.pekeris_acoustics` | 3 node(s) in 1 file(s) | `docs/pekeris_w22_cross_route/report.md` |
 
-Counts: **77** REAL — 77 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
+Counts: **78** REAL — 78 capabilities. The level is derived from code/test/doc evidence by `python -m tensorbem.capability_evidence`; the block is regenerated with `--write` and `tests/test_capability_evidence.py` fails when it stops matching the tree.
 
 **Corrections versus the 2026-10-29 baseline** — declared out of scope there, shipped since, and each now carries code plus touching tests:
 
@@ -201,12 +202,17 @@ Counts: **77** REAL — 77 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-94 of 98 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **0 are unowned**.
+95 of 101 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **2 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.coefficients` — hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.
 - `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
 - `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
+
+**Core modules no row grades and no reason explains** (fails the gate):
+
+- `tensorbem.shape_gradient`
+- `tensorbem.steady_kelvin`
 
 ### Untested modules
 

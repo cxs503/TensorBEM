@@ -721,6 +721,25 @@ CAPABILITIES: tuple[Capability, ...] = (
         published_2026_10_29='REAL',
         note='This capability: the table below is its own output.',
     ),
+    Capability(
+        key='numeric-evidence',
+        title='Numeric evidence layer (criterion + artifact + independent regrade)',
+        claim=(
+            'Each acceptance criterion with a tolerance is bound to a committed artifact and '
+            'its raw computed/reference pair, the error is recomputed from those numbers rather '
+            'than copied, the artifact digest is pinned, and a criterion the numbers do not meet '
+            'is published as a registered gap instead of a pass.'
+        ),
+        level=REAL,
+        modules=('tensorbem.numeric_evidence',),
+        symbols=('audit', 'grade_item', 'document_drift', 'check'),
+        tests=(
+            'tests/test_numeric_evidence.py::test_every_item_regrades_to_the_independently_recomputed_number',
+            'tests/test_numeric_evidence.py::test_artifact_error_field_that_contradicts_its_own_numbers_is_rejected',
+            'tests/test_numeric_evidence.py::test_tightening_the_tolerance_flips_a_green_item',
+        ),
+        docs=(('docs/numeric_evidence_matrix.md', 'Numeric evidence matrix'),),
+    ),
     # ------------------------------------------------------------------
     # Added 2026-11-08 (m6280).  These capabilities were shipped, tested and
     # documented before this mission but appeared in no row, so the published

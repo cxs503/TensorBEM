@@ -1,0 +1,149 @@
+{
+  "description": "Numeric evidence records: each item binds one acceptance criterion (tolerance + literature/analytic source) to the committed artifact carrying the raw computed/reference pair. Graded by tensorbem.numeric_evidence; digests are pinned by --write.",
+  "items": [
+    {
+      "artifact": "docs/hydrostatic_verification.json",
+      "capability": "hydrostatics",
+      "computed": {
+        "array": "/barge/panelizations/0/comparisons",
+        "field": "computed",
+        "match": {
+          "name": "displaced_volume"
+        }
+      },
+      "criterion": "Wall-sided barge displaced volume equals the analytic L*B*T to round-off (docs/hydrostatic_verification.md, exact-identity case)",
+      "expected_level": "REAL",
+      "id": "hydrostatics-barge-displaced-volume",
+      "reference": {
+        "array": "/barge/panelizations/0/comparisons",
+        "field": "reference",
+        "match": {
+          "name": "displaced_volume"
+        }
+      },
+      "reference_citation": "Closed-form hydrostatics of a wall-sided box; identity, no discretisation error expected",
+      "reported_error_pct": {
+        "array": "/barge/panelizations/0/comparisons",
+        "field": "relative_error",
+        "match": {
+          "name": "displaced_volume"
+        }
+      },
+      "sha256": "fb2922b1c61b5f07628594216fc327ba9d983f19f8ef352d1d6a4ee8a41716f7",
+      "tolerance_pct": 1e-06
+    },
+    {
+      "artifact": "docs/hydrostatic_verification.json",
+      "capability": "hydrostatics",
+      "computed": {
+        "array": "/barge/panelizations/0/comparisons",
+        "field": "computed",
+        "match": {
+          "name": "c_pitch"
+        }
+      },
+      "criterion": "Barge pitch restoring coefficient equals the analytic rho*g*I_L (docs/hydrostatic_verification.md)",
+      "expected_level": "REAL",
+      "id": "hydrostatics-barge-pitch-restoring",
+      "reference": {
+        "array": "/barge/panelizations/0/comparisons",
+        "field": "reference",
+        "match": {
+          "name": "c_pitch"
+        }
+      },
+      "reference_citation": "c55 = rho*g*I_yy with I_yy = B*L^3/12 for a wall-sided box",
+      "sha256": "fb2922b1c61b5f07628594216fc327ba9d983f19f8ef352d1d6a4ee8a41716f7",
+      "tolerance_pct": 1e-06
+    },
+    {
+      "artifact": "docs/hydrostatic_verification.json",
+      "capability": "hydrostatics",
+      "computed": "/hemisphere_convergence/levels/4/computed_volume",
+      "criterion": "Finest icosphere level (5 subdivisions, 4096 panels) reproduces the hemisphere displaced volume within 0.2% (second-order panel convergence, docs/hydrostatic_verification.md)",
+      "expected_level": "REAL",
+      "id": "hydrostatics-hemisphere-volume-convergence",
+      "reference": "/hemisphere_convergence/reference/displaced_volume",
+      "reference_citation": "V = 2*pi*R^3/3 for a half-submerged sphere, R = 1 m",
+      "reported_error_ratio": "/hemisphere_convergence/levels/4/volume_relative_error",
+      "sha256": "fb2922b1c61b5f07628594216fc327ba9d983f19f8ef352d1d6a4ee8a41716f7",
+      "tolerance_pct": 0.2
+    },
+    {
+      "artifact": "docs/hydrostatic_verification.json",
+      "capability": "hydrostatics",
+      "computed": "/hemisphere_convergence/levels/4/computed_gm_transverse",
+      "criterion": "Finest icosphere level reproduces the hemisphere transverse metacentric height within 0.2% (docs/hydrostatic_verification.md)",
+      "expected_level": "REAL",
+      "id": "hydrostatics-hemisphere-gm-transverse",
+      "reference": "/hemisphere_convergence/reference/gm_transverse",
+      "reference_citation": "GM = KB + BM - KG with BM = I_xx/V solved in closed form for a half-submerged sphere",
+      "sha256": "fb2922b1c61b5f07628594216fc327ba9d983f19f8ef352d1d6a4ee8a41716f7",
+      "tolerance_pct": 0.2
+    },
+    {
+      "artifact": "docs/rao_verification_metrics.json",
+      "capability": "rao",
+      "computed": "/box_hydrostatics/measured/c44",
+      "criterion": "Box hydrostatic roll restoring coefficient from the panel route equals the closed-form rho*g*I_xx (docs/rao_verification_metrics.json)",
+      "expected_level": "REAL",
+      "id": "rao-box-roll-restoring",
+      "reference": "/box_hydrostatics/reference/c44",
+      "reference_citation": "c44 = rho*g*I_xx + rho*g*V*KB for a wall-sided box",
+      "sha256": "90f03ebbc368ca09158ebe856cb1fce4dbc4ff4030b048e039746ff14ca71b7c",
+      "tolerance_pct": 1e-06
+    },
+    {
+      "artifact": "benchmarks/kp505_openwater_bem/verdict.json",
+      "capability": "propeller-open-water",
+      "computed": "/criteria/0/KT_bem",
+      "criterion": "|dK_T| <= 3.0% at the design advance ratio J = 0.8 (verdict criteria C1, benchmarks/kp505_openwater_bem/verdict.json)",
+      "expected_level": "WITHHELD",
+      "gap_note": "The KP505 lattice closes to |dK_T| = 29.1% at J = 0.8 against the 3% design-point criterion (verdict.json status FAIL, 2/3 criteria failed). Registered as an accepted gap so the honest FAIL stays visible; closing it needs the unpublished chord/radial pitch particulars or a higher-fidelity lifting-surface model, not a tolerance change.",
+      "id": "propeller-kp505-kt-design-point",
+      "reference": "/criteria/0/KT_anchor",
+      "reference_citation": "KP505 open-water experiment, Table 2 (anchor.source.doi in the same artifact)",
+      "reported_error_pct": "/criteria/0/measured_abs_pct",
+      "sha256": "c0eaf703c597975010b91d787c1e05b7b9e31081ed46cd64b74b6cf36da21b0f",
+      "tolerance_pct": 3.0
+    },
+    {
+      "artifact": "benchmarks/kp505_openwater_bem/verdict.json",
+      "capability": "propeller-open-water",
+      "computed": {
+        "array": "/points",
+        "field": "eta0_bem",
+        "match": {
+          "J": 0.9
+        }
+      },
+      "criterion": "|d eta_0| <= 5.0% at every anchor advance ratio in the physical range (verdict criteria C2, worst point J = 0.9)",
+      "expected_level": "WITHHELD",
+      "gap_note": "Worst efficiency error inside the physical J range is 24.4% at J = 0.9 against the 5% band (1 of 10 anchor points meets the band). Accepted gap, same model/geometry cause as the K_T row; the J = 1.0 outlier (787%) is outside the physical range and is reported in verdict.json rather than scored here.",
+      "id": "propeller-kp505-eta0-worst-physical-point",
+      "reference": {
+        "array": "/points",
+        "field": "eta0_anchor",
+        "match": {
+          "J": 0.9
+        }
+      },
+      "reference_citation": "KP505 open-water experiment, Table 2 efficiency derived from K_T, 10K_Q",
+      "sha256": "c0eaf703c597975010b91d787c1e05b7b9e31081ed46cd64b74b6cf36da21b0f",
+      "tolerance_pct": 5.0
+    },
+    {
+      "artifact": "docs/cummins_wigley_results.json",
+      "capability": "wigley3-hullform",
+      "computed": "/gates/0/values/block_coefficient",
+      "criterion": "Wigley parabolic hull form generator reproduces the analytic block coefficient Cb = 4/9 within 0.02% (geometry gate, docs/cummins_wigley_results.json gate W1)",
+      "expected_level": "REAL",
+      "id": "wigley3-hullform-block-coefficient",
+      "reference_citation": "Cb = 4/9 for the Wigley parabolic hull form (closed form of the generating equation)",
+      "reference_value": 0.4444444444444444,
+      "sha256": "e4a2702d70735101938104a170e6d39fb86c966027a2e3f0e52e21b9f6737afa",
+      "tolerance_pct": 0.02
+    }
+  ],
+  "schema_version": "tensorbem-numeric-evidence/1"
+}
