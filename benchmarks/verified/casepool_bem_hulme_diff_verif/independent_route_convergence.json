@@ -1,0 +1,675 @@
+{
+  "kind": "independent-route (capytaine + exact FK) mesh convergence",
+  "anchor": "CASE-BEM-HULME-DIFF-VERIF",
+  "question": "Is the case's worst independent-route deviation (ka=2.0 heave, 4.30% at 1024 faces) capytaine discretisation that vanishes under refinement, or a plateau that would indict the multipole reference?",
+  "ladder_resolutions": [
+    [
+      32,
+      64
+    ],
+    [
+      45,
+      90
+    ],
+    [
+      64,
+      128
+    ]
+  ],
+  "ka_grid": [
+    1.0,
+    1.5,
+    2.0
+  ],
+  "gates_declared": {
+    "G4_finest_rung_le_5pct": 0.05,
+    "extrapolated_le_3pct": 0.03,
+    "tail_order_ge_1": 1.0
+  },
+  "per_ka": {
+    "1.0": {
+      "ka": 1.0,
+      "froude_krylov_exact": {
+        "surge": {
+          "re": 0.0,
+          "im": -13373.030058695209
+        },
+        "heave": {
+          "re": 14419.431442541158,
+          "im": 0.0
+        }
+      },
+      "reference": {
+        "n_terms": 192,
+        "quad_order": 512,
+        "surge": {
+          "re": 2480.152697768944,
+          "im": -17119.10213900572
+        },
+        "heave": {
+          "re": 8471.466081545708,
+          "im": -5776.392324087691
+        }
+      },
+      "rungs": [
+        {
+          "resolution": [
+            32,
+            64
+          ],
+          "wetted_faces": 1024,
+          "h_mean": 0.07825349944761513,
+          "wall_clock_s": 1.15,
+          "scattered": {
+            "surge": {
+              "re": 2545.1820910060806,
+              "im": -3827.2883952914563
+            },
+            "heave": {
+              "re": -6069.706600704292,
+              "im": -5788.182593493402
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 2545.1820910060806,
+              "im": -17200.318453986663
+            },
+            "heave": {
+              "re": 8349.724841836865,
+              "im": -5788.182593493402
+            }
+          },
+          "relative": {
+            "surge": 0.006014792320021588,
+            "heave": 0.011928794042192119
+          }
+        },
+        {
+          "resolution": [
+            45,
+            90
+          ],
+          "wetted_faces": 2160,
+          "h_mean": 0.053906672872178256,
+          "wall_clock_s": 3.15,
+          "scattered": {
+            "surge": {
+              "re": 2540.9647580470028,
+              "im": -3816.3068093313113
+            },
+            "heave": {
+              "re": -6018.767243487258,
+              "im": -5764.587210753198
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 2540.9647580470028,
+              "im": -17189.33686802652
+            },
+            "heave": {
+              "re": 8400.6641990539,
+              "im": -5764.587210753198
+            }
+          },
+          "relative": {
+            "surge": 0.005370807802946578,
+            "heave": 0.007000528169908768
+          }
+        },
+        {
+          "resolution": [
+            64,
+            128
+          ],
+          "wetted_faces": 4096,
+          "h_mean": 0.03915623655055761,
+          "wall_clock_s": 11.86,
+          "scattered": {
+            "surge": {
+              "re": 2516.8734222712055,
+              "im": -3788.083632450926
+            },
+            "heave": {
+              "re": -6008.78053442857,
+              "im": -5783.664042879634
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 2516.8734222712055,
+              "im": -17161.113691146136
+            },
+            "heave": {
+              "re": 8410.650908112588,
+              "im": -5783.664042879634
+            }
+          },
+          "relative": {
+            "surge": 0.003225705144010498,
+            "heave": 0.005973462939662733
+          }
+        }
+      ],
+      "reference_truncation_sensitivity": {
+        "surge": {
+          "per_terms": {
+            "96": {
+              "re": 2480.1522609634817,
+              "im": -17119.102473822597
+            },
+            "192": {
+              "re": 2480.152697768944,
+              "im": -17119.10213900572
+            },
+            "288": {
+              "re": 2480.152742444371,
+              "im": -17119.102104765378
+            }
+          },
+          "max_relative_spread": 3.181698764385335e-08
+        },
+        "heave": {
+          "per_terms": {
+            "96": {
+              "re": 8471.704490238924,
+              "im": -5776.728012327431
+            },
+            "192": {
+              "re": 8471.466081545708,
+              "im": -5776.392324087691
+            },
+            "288": {
+              "re": 8471.421506128325,
+              "im": -5776.329556915669
+            }
+          },
+          "max_relative_spread": 4.015585485784137e-05
+        }
+      },
+      "extrapolation": {
+        "surge": {
+          "increments": {
+            "d12": 11.763550802702207,
+            "d23": 37.10714449649284
+          },
+          "observed_order": -3.593441439351287,
+          "asymptotic": false,
+          "limit": null,
+          "parts_monotone_toward_reference": true,
+          "finest_relative_to_reference": 0.003225705144010498
+        },
+        "heave": {
+          "increments": {
+            "d12": 56.13875845030167,
+            "d23": 21.53276298581091
+          },
+          "observed_order": 2.997394802698468,
+          "asymptotic": true,
+          "limit": {
+            "re": 8416.864901852188,
+            "im": -5795.534150911062
+          },
+          "parts_monotone_toward_reference": false,
+          "limit_relative_to_reference": 0.005642931463559662,
+          "finest_relative_to_reference": 0.005973462939662733
+        }
+      },
+      "parts_monotone_toward_reference": {
+        "surge": true,
+        "heave": false
+      }
+    },
+    "1.5": {
+      "ka": 1.5,
+      "froude_krylov_exact": {
+        "surge": {
+          "re": 0.0,
+          "im": -14880.271499014238
+        },
+        "heave": {
+          "re": 8611.616961908501,
+          "im": 0.0
+        }
+      },
+      "reference": {
+        "n_terms": 192,
+        "quad_order": 512,
+        "surge": {
+          "re": 566.6378189007156,
+          "im": -15038.785272724053
+        },
+        "heave": {
+          "re": 3513.721810483205,
+          "im": -5742.2445173741025
+        }
+      },
+      "rungs": [
+        {
+          "resolution": [
+            32,
+            64
+          ],
+          "wetted_faces": 1024,
+          "h_mean": 0.07825349944761513,
+          "wall_clock_s": 1.07,
+          "scattered": {
+            "surge": {
+              "re": 581.3870641515978,
+              "im": -166.86709430927112
+            },
+            "heave": {
+              "re": -5243.276583157612,
+              "im": -5710.212602732583
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 581.3870641515978,
+              "im": -15047.138593323509
+            },
+            "heave": {
+              "re": 3368.3403787508896,
+              "im": -5710.212602732583
+            }
+          },
+          "relative": {
+            "surge": 0.001126317295067403,
+            "heave": 0.02211360056176747
+          }
+        },
+        {
+          "resolution": [
+            45,
+            90
+          ],
+          "wetted_faces": 2160,
+          "h_mean": 0.053906672872178256,
+          "wall_clock_s": 3.76,
+          "scattered": {
+            "surge": {
+              "re": 600.0877623937774,
+              "im": -176.33630988348523
+            },
+            "heave": {
+              "re": -5182.255089318069,
+              "im": -5693.859595016841
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 600.0877623937774,
+              "im": -15056.607808897723
+            },
+            "heave": {
+              "re": 3429.3618725904325,
+              "im": -5693.859595016841
+            }
+          },
+          "relative": {
+            "surge": 0.0025184786570436827,
+            "heave": 0.014446068390705094
+          }
+        },
+        {
+          "resolution": [
+            64,
+            128
+          ],
+          "wetted_faces": 4096,
+          "h_mean": 0.03915623655055761,
+          "wall_clock_s": 11.17,
+          "scattered": {
+            "surge": {
+              "re": 574.4448055757418,
+              "im": -161.0619288281555
+            },
+            "heave": {
+              "re": -5169.515488893165,
+              "im": -5726.603923806791
+            }
+          },
+          "total": {
+            "surge": {
+              "re": 574.4448055757418,
+              "im": -15041.333427842394
+            },
+            "heave": {
+              "re": 3442.1014730153365,
+              "im": -5726.603923806791
+            }
+          },
+          "relative": {
+            "surge": 0.0005456885492260905,
+            "heave": 0.010889546951097628
+          }
+        }
+      ],
+      "reference_truncation_sensitivity": {
+        "surge": {
+          "per_terms": {
+            "96": {
+              "re": 566.6364184724912,
+              "im": -15038.786518546207
+            },
+            "192": {
+              "re": 566.6378189007156,
+              "im": -15038.785272724053
+            },
+            "288": {
+              "re": 566.6379621299044,
+              "im": -15038.785145333326
+            }
+          },
+          "max_relative_spread": 1.245475171730414e-07
+        },
+        "heave": {
+          "per_terms": {
+            "96": {
+              "re": 3513.778278764222,
+              "im": -5742.6496442074285
+            },
+            "192": {
+              "re": 3513.721810483205,
+              "im": -5742.2445173741025
+            },
+            "288": {
+              "re": 3513.71126407597,
+              "im": -5742.168818171866
+            }
+          },
+          "max_relative_spread": 6.0761177622285915e-05
+        }
+      },
+      "extrapolation": {
+        "surge": {
+          "increments": {
+            "d12": 20.961444567014,
+            "d23": 29.847411127182216
+          },
+          "observed_order": -1.1054718182557257,
+          "asymptotic": false,
+          "limit": null,
+          "parts_monotone_toward_reference": false,
+          "finest_relative_to_reference": 0.0005456885492260905
+        },
+        "heave": {
+          "increments": {
+            "d12": 63.174706740597486,
+            "d23": 35.13528834221422
+          },
+          "observed_order": 1.8351829795301782,
+          "asymptotic": true,
+          "limit": {
+            "re": 3458.0650542827498,
+            "im": -5767.634783194141
+          },
+          "parts_monotone_toward_reference": false,
+          "limit_relative_to_reference": 0.009087167442283772,
+          "finest_relative_to_reference": 0.010889546951097628
+        }
+      },
+      "parts_monotone_toward_reference": {
+        "surge": false,
+        "heave": false
+      }
+    },
+    "2.0": {
+      "ka": 2.0,
+      "froude_krylov_exact": {
+        "surge": {
+          "re": 0.0,
+          "im": -13783.961673789505
+        },
+        "heave": {
+          "re": 4428.26498335347,
+          "im": 0.0
+        }
+      },
+      "reference": {
+        "n_terms": 192,
+        "quad_order": 512,
+        "surge": {
+          "re": -2896.1775423371178,
+          "im": -11684.646621182686
+        },
+        "heave": {
+          "re": 477.97676246327285,
+          "im": -4645.622116981605
+        }
+      },
+      "rungs": [
+        {
+          "resolution": [
+            32,
+            64
+          ],
+          "wetted_faces": 1024,
+          "h_mean": 0.07825349944761513,
+          "wall_clock_s": 1.16,
+          "scattered": {
+            "surge": {
+              "re": -2910.964534249166,
+              "im": 2141.7222664912447
+            },
+            "heave": {
+              "re": -4108.252815362681,
+              "im": -4521.873438113691
+            }
+          },
+          "total": {
+            "surge": {
+              "re": -2910.964534249166,
+              "im": -11642.23940729826
+            },
+            "heave": {
+              "re": 320.01216799078884,
+              "im": -4521.873438113691
+            }
+          },
+          "relative": {
+            "surge": 0.0037307269641665705,
+            "heave": 0.04296766127388709
+          }
+        },
+        {
+          "resolution": [
+            45,
+            90
+          ],
+          "wetted_faces": 2160,
+          "h_mean": 0.053906672872178256,
+          "wall_clock_s": 3.14,
+          "scattered": {
+            "surge": {
+              "re": -2886.175908102147,
+              "im": 2114.3938146611345
+            },
+            "heave": {
+              "re": -4043.539919995016,
+              "im": -4533.042556110704
+            }
+          },
+          "total": {
+            "surge": {
+              "re": -2886.175908102147,
+              "im": -11669.56785912837
+            },
+            "heave": {
+              "re": 384.72506335845355,
+              "im": -4533.042556110704
+            }
+          },
+          "relative": {
+            "surge": 0.0015030662344952003,
+            "heave": 0.03130200443485533
+          }
+        },
+        {
+          "resolution": [
+            64,
+            128
+          ],
+          "wetted_faces": 4096,
+          "h_mean": 0.03915623655055761,
+          "wall_clock_s": 11.73,
+          "scattered": {
+            "surge": {
+              "re": -2909.419716643245,
+              "im": 2122.335805405411
+            },
+            "heave": {
+              "re": -4030.562940959124,
+              "im": -4584.087539081689
+            }
+          },
+          "total": {
+            "surge": {
+              "re": -2909.419716643245,
+              "im": -11661.625868384093
+            },
+            "heave": {
+              "re": 397.7020423943459,
+              "im": -4584.087539081689
+            }
+          },
+          "relative": {
+            "surge": 0.002206112794743791,
+            "heave": 0.021658016705690522
+          }
+        }
+      ],
+      "reference_truncation_sensitivity": {
+        "surge": {
+          "per_terms": {
+            "96": {
+              "re": -2896.1804180864187,
+              "im": -11684.64863942968
+            },
+            "192": {
+              "re": -2896.1775423371178,
+              "im": -11684.646621182686
+            },
+            "288": {
+              "re": -2896.1772482355145,
+              "im": -11684.64641483891
+            }
+          },
+          "max_relative_spread": 2.918451423217963e-07
+        },
+        "heave": {
+          "per_terms": {
+            "96": {
+              "re": 477.85250447077334,
+              "im": -4646.0073019030115
+            },
+            "192": {
+              "re": 477.97676246327285,
+              "im": -4645.622116981605
+            },
+            "288": {
+              "re": 477.9999724439476,
+              "im": -4645.55019443553
+            }
+          },
+          "max_relative_spread": 8.666352843223689e-05
+        }
+      },
+      "extrapolation": {
+        "surge": {
+          "increments": {
+            "d12": 36.89607385193309,
+            "d23": 24.56318082979908
+          },
+          "observed_order": 1.272641407743765,
+          "asymptotic": true,
+          "limit": {
+            "re": -2955.7139536356153,
+            "im": -11645.807961389348
+          },
+          "parts_monotone_toward_reference": false,
+          "limit_relative_to_reference": 0.005904911258276924,
+          "finest_relative_to_reference": 0.002206112794743791
+        },
+        "heave": {
+          "increments": {
+            "d12": 65.66968877417892,
+            "d23": 52.66870295921616
+          },
+          "observed_order": 0.690083846784127,
+          "asymptotic": false,
+          "limit": null,
+          "parts_monotone_toward_reference": true,
+          "finest_relative_to_reference": 0.021658016705690522
+        }
+      },
+      "parts_monotone_toward_reference": {
+        "surge": false,
+        "heave": true
+      }
+    }
+  },
+  "verdicts": {
+    "finest_rung_le_3pct": {
+      "worst_finest": 0.021658016705690522,
+      "cell": {
+        "ka": 2.0,
+        "dof": "heave"
+      },
+      "verdict": "PASS"
+    },
+    "coarsest_rung_le_5pct": {
+      "worst_any_rung": 0.04296766127388709,
+      "cell": {
+        "ka": 2.0,
+        "dof": "heave"
+      },
+      "verdict": "PASS"
+    },
+    "ka2_heave_refined_monotone": {
+      "sequence": [
+        0.04296766127388709,
+        0.03130200443485533,
+        0.021658016705690522
+      ],
+      "verdict": "PASS"
+    },
+    "extrapolation": {
+      "surge": {
+        "asymptotic": true,
+        "observed_order": 1.272641407743765,
+        "limit_relative_to_reference": 0.005904911258276924
+      },
+      "heave": {
+        "asymptotic": false,
+        "observed_order": 0.690083846784127,
+        "limit_relative_to_reference": null
+      }
+    },
+    "reference_truncation_sensitivity": {
+      "1.0": {
+        "surge": 3.181698764385335e-08,
+        "heave": 4.015585485784137e-05
+      },
+      "1.5": {
+        "surge": 1.245475171730414e-07,
+        "heave": 6.0761177622285915e-05
+      },
+      "2.0": {
+        "surge": 2.918451423217963e-07,
+        "heave": 8.666352843223689e-05
+      }
+    }
+  },
+  "normalisation": "force / (rho g a^2), a = 1 m, incident amplitude 1 m, exp(-i omega t), head seas",
+  "provenance": {
+    "capytaine": "3.1.dev0",
+    "numpy": "2.4.6",
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "wall_clock_s": 84.7,
+    "generated_utc": "2026-11-13T15:13:18Z",
+    "note": "capytaine forces are diffraction-only; the total exciting force here is exact Froude-Krylov (closed reduced quadrature) + scattered force, same convention as the case report."
+  }
+}
