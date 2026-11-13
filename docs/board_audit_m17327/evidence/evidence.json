@@ -1,0 +1,99 @@
+{
+  "repo": "TensorBEM",
+  "anchor": "CASE-BEM-MARUO-DRIFT",
+  "level": 3,
+  "subject_mission": 17276,
+  "audit_mission": 17327,
+  "impl_files": [
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case.py:1-569 (branch agent/m17276 @ 92c92b7, sha256 a9d0ac60d5889c7e914de40b99d719b75709eab3726d39b494b459e1bb981795)",
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case_figures.py (sha256 794b7df22f078ba15e4dae98b4adb5c71802d929883bd8f4e4540c0170318098)",
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case.py:125-212 (closed-form reference)",
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case.py:214-270 (BEM route under test)"
+  ],
+  "entry": "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --ka 0.2 0.5 1.0 2.0 --json <out>.json",
+  "run_artifacts": [
+    "artifacts/maruo_drift_far_field_case/study.json (16 cells, sha256 8caf1d519fb063997af60798464ed06d8070e872164b63262e36be89c6cf14bf)",
+    "docs/case_bem_maruo_drift/study.json (same sha256)",
+    "artifacts/maruo_drift_far_field_case/fig_bem_vs_closed_form.png",
+    "artifacts/maruo_drift_far_field_case/fig_coefficient_vs_ka.png",
+    "artifacts/maruo_drift_far_field_case/fig_convergence_and_quadrature.png",
+    "audit copy: artifacts/audit_m17327/ (existence.json, judge.json, repro.json, independent_ref.json, cluster_replay.json, fig_m17327_error_vs_panels.png)"
+  ],
+  "tests": [
+    "tests/test_maruo_drift_far_field_case.py (13 tests; audit re-run in work/m17276: 13 passed in 3.28 s)"
+  ],
+  "integration_callers": [
+    "tensorbem.free_surface_solver3d.solve_diffraction_3d (panel diffraction solve)",
+    "tensorbem.drift_far_field3d.bem_kochin -> maruo_far_field_drift (Kochin -> reduced Maruo kernel)",
+    "tensorbem.diffraction_drift_maturity.vertical_cylinder_hull_mesh (watertight cylinder mesh)"
+  ],
+  "benchmark": {
+    "anchor_slug": "CASE-BEM-MARUO-DRIFT",
+    "registered_referee_rows": 0,
+    "criterion_in_force": "per-cell relative error < 5 % at the declared production mesh",
+    "criterion_source": "mission 17276 goal text '容差判据：<5%' (no machine referee row)",
+    "production_resolution": "fine",
+    "production_cells_recomputed_match_declared": true,
+    "production_n_failures": 1,
+    "production_worst": {
+      "ka": 2.0,
+      "panels": 800,
+      "rel_error": 0.05330823134159171
+    },
+    "verdict_at_production_mesh": "FAIL",
+    "finest_mesh_worst_rel_error": null,
+    "got_always_below_ref": true,
+    "reference_verified_independently": {
+      "script": "scripts/audit/m17327_ref_independent.py",
+      "max_rel_diff_vs_delivered": 2.2307605588309023e-12,
+      "long_wave_limit_vs_5pi2_over_16": 2.8504177197647292e-05
+    },
+    "report_six_sections": true,
+    "report_numbers_traceable": true,
+    "report_untraceable_claims": [
+      "'(32,12,3.0)=832 三角形' (⑤-1) but study.json records 800 panels for that mesh",
+      "'(32,6,2.5)=416 三角形' (⑤-1) is not a rung of the delivered study (panel counts: [312, 544, 800, 1200])",
+      "'ka=1.0 ... 降到 fine 的 3.01%' (⑤-1) quotes the *finer* value (3.01%); fine is 3.07%"
+    ]
+  },
+  "repro_cmd": [
+    "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --merge artifacts/maruo_drift_far_field_case/cell_ka_*.json --json docs/case_bem_maruo_drift/study.json",
+    "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --ka 0.2 0.5 1.0 2.0 --json artifacts/maruo_drift_far_field_case/study.json --figures artifacts/maruo_drift_far_field_case  (full re-solve)",
+    "PYTHONPATH=src python3 -m pytest tests/test_maruo_drift_far_field_case.py -q"
+  ],
+  "external_anchor": {
+    "law": "F_x = (5 pi^2/16) rho g A^2 a (ka)^3 (Maruo 1960; Newman 1977 Sec. 7.3)",
+    "recovered_from_this_implementation": 3.0843392893881494,
+    "law_constant": 3.0842513753404246,
+    "rel_diff": 2.8504177197647292e-05,
+    "no_paper_table_used": "ref is the machine-evaluated closed form, not a transcribed table; offline sandbox is the declared reason (report ①)"
+  },
+  "repro_result": {
+    "delivered_repro_replayed": true,
+    "delivered_repro_exit_code": 1,
+    "delivered_repro_exit_code_consistent": true,
+    "study_identical_except_wallclock": true,
+    "solver_resolved_cells_rerun_on_cluster": false,
+    "cluster_job": "cj1489",
+    "cluster_state_at_verdict": "queued",
+    "cluster_max_rel_diff_production": null
+  },
+  "merge_state": {
+    "commit": "92c92b7",
+    "ancestor_of_main": false,
+    "branches_containing": [
+      "agent/m17276"
+    ],
+    "files_present_in_ecosystem_main": false,
+    "note": "an unmerged-but-committed branch is normal mid-battle; recorded for traceability only"
+  },
+  "verdict_reason": [
+    "blocking-for-L4: tensor_benchmark_cases has 0 rows for anchor CASE-BEM-MARUO-DRIFT -> no machine referee; criterion only in mission-goal text",
+    "blocking-for-L4: declared <5% criterion FAILS at the production mesh (ka=2.0, 800 panels, 5.331%)"
+  ],
+  "notes": [
+    "material: prose numbers with no artifact source (3 items)",
+    "note: delivered repro_cmd is merge-only (no BEM re-solve) -- reproducibility of the solver rests on the audit cluster replay"
+  ],
+  "report": "docs/board_audit_m17327/M17327_BOARD_AUDIT.md"
+}

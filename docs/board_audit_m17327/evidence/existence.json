@@ -1,0 +1,123 @@
+{
+  "files": {
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case.py": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/src/tensorbem/benchmarks/maruo_drift_far_field_case.py",
+      "bytes": 24181,
+      "sha256": "a9d0ac60d5889c7e914de40b99d719b75709eab3726d39b494b459e1bb981795",
+      "git_tracked": true
+    },
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case_figures.py": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/src/tensorbem/benchmarks/maruo_drift_far_field_case_figures.py",
+      "bytes": 6603,
+      "sha256": "794b7df22f078ba15e4dae98b4adb5c71802d929883bd8f4e4540c0170318098",
+      "git_tracked": true
+    },
+    "tests/test_maruo_drift_far_field_case.py": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/tests/test_maruo_drift_far_field_case.py",
+      "bytes": 4960,
+      "sha256": "7c4875e24453a846d059126d4199a08f981241afaa0a79b9f87993073f9c9f4b",
+      "git_tracked": true
+    },
+    "make_report_m17276.py": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/make_report_m17276.py",
+      "bytes": 17021,
+      "sha256": "d5cc85082aea6f9259c6dbe9f359a4b829d9dd71edc8632be613a2d4156c08f2",
+      "git_tracked": true
+    },
+    "docs/case_bem_maruo_drift/study.json": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/docs/case_bem_maruo_drift/study.json",
+      "bytes": 22561,
+      "sha256": "8caf1d519fb063997af60798464ed06d8070e872164b63262e36be89c6cf14bf",
+      "git_tracked": true
+    },
+    "docs/case_bem_maruo_drift_report.md": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/docs/case_bem_maruo_drift_report.md",
+      "bytes": 11320,
+      "sha256": "5b1656afdb0843169c9676c98a94f6d6b7a7c777ae7cb3b7e45eff98e982169f",
+      "git_tracked": true
+    },
+    "docs/maruo_drift_far_field_case.md": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/docs/maruo_drift_far_field_case.md",
+      "bytes": 5877,
+      "sha256": "377d776987cf3de4498ea8eeb927eb8b64af059b2211f01b7dd936bd6b908600",
+      "git_tracked": true
+    },
+    "artifacts/maruo_drift_far_field_case/study.json": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/artifacts/maruo_drift_far_field_case/study.json",
+      "bytes": 22561,
+      "sha256": "8caf1d519fb063997af60798464ed06d8070e872164b63262e36be89c6cf14bf",
+      "git_tracked": false
+    },
+    "artifacts/maruo_drift_far_field_case/fig_bem_vs_closed_form.png": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/artifacts/maruo_drift_far_field_case/fig_bem_vs_closed_form.png",
+      "bytes": 115091,
+      "sha256": "2ab9ae9c50bbb03c21b6f50e21415c033b22764dc7cb0f605071a566dff46bde",
+      "git_tracked": false
+    },
+    "artifacts/maruo_drift_far_field_case/fig_coefficient_vs_ka.png": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/artifacts/maruo_drift_far_field_case/fig_coefficient_vs_ka.png",
+      "bytes": 63369,
+      "sha256": "16924068e8492beab25aa240f120ec9de850410d87cac7b4d70d638c83075902",
+      "git_tracked": false
+    },
+    "artifacts/maruo_drift_far_field_case/fig_convergence_and_quadrature.png": {
+      "exists": true,
+      "path": "/root/tp-agent/work/m17276/artifacts/maruo_drift_far_field_case/fig_convergence_and_quadrature.png",
+      "bytes": 108047,
+      "sha256": "b660a3b179449b28234d202f239cd535b6985f790072edbb40e87aa3a87f6420",
+      "git_tracked": false
+    }
+  },
+  "n_missing": 0,
+  "n_untracked": [
+    "artifacts/maruo_drift_far_field_case/study.json",
+    "artifacts/maruo_drift_far_field_case/fig_bem_vs_closed_form.png",
+    "artifacts/maruo_drift_far_field_case/fig_coefficient_vs_ka.png",
+    "artifacts/maruo_drift_far_field_case/fig_convergence_and_quadrature.png"
+  ],
+  "case": "CASE-BEM-MARUO-DRIFT",
+  "n_cells": 16,
+  "ka_values": [
+    0.2,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "resolutions": [
+    [
+      "coarse",
+      24,
+      6,
+      2.5
+    ],
+    [
+      "medium",
+      32,
+      8,
+      2.5
+    ],
+    [
+      "fine",
+      32,
+      12,
+      3.0
+    ],
+    [
+      "finer",
+      48,
+      12,
+      3.0
+    ]
+  ],
+  "production_resolution": "fine"
+}
