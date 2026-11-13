@@ -999,6 +999,31 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='Absent from the 2026-10-29 table.',
     ),
     Capability(
+        key='case-bem-rigid-lid-hemisphere',
+        title='Pool case CASE-BEM-RIGID-LID-HEMISPHERE (rigid-lid heave added mass, ka -> 0)',
+        claim=(
+            'The 3-D radiation solver reproduces the even-parity double-body (rigid-lid) '
+            'heave added mass of a floating hemisphere within the pool tolerance of 5% over '
+            'ka = 1e-3 ... 0.1 on 256 constant panels, the two independent formulations of '
+            'that reference agree to 3e-6, and the translating-image reference rho*nabla is '
+            'refuted by measurement on every mesh and ka tested.'
+        ),
+        level=REAL,
+        modules=('tensorbem.benchmarks.case_bem_rigid_lid_hemisphere',),
+        symbols=('run_case', 'verdict', 'rigid_lid_reference'),
+        tests=(
+            'tests/test_case_bem_rigid_lid_hemisphere.py::test_two_routes_of_the_double_body_agree',
+            'tests/test_case_bem_rigid_lid_hemisphere.py::test_solver_row_reproduces_the_committed_number',
+            'tests/test_case_bem_rigid_lid_hemisphere.py::test_committed_verdict_is_reproduced_from_the_payload',
+        ),
+        docs=(('docs/case_bem_rigid_lid_hemisphere.md', 'Case card'),),
+        note=(
+            'Case-pool row BEM-RIGID-LID-HEMISPHERE; the refuted translating-image reference '
+            'is kept as a negative control. See docs/rigid_lid_zero_frequency_anchor/ERRATUM.md.'
+        ),
+        published_2026_10_29=None,
+    ),
+    Capability(
         key='thin-ship-general-hullforms',
         title='Thin-ship Michell resistance for general hullforms and tandem pairs',
         claim='The panel Kochin function matches the closed form, the panel resistance route matches the repository quadrature, and the tandem interference reduces to the analytic double-hull limits.',

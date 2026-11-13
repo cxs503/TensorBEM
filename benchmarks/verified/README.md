@@ -132,3 +132,33 @@ Records: `results.json` (schema `tensorbem.case_annulus_laplace/1`), `case.json`
 PYTHONPATH=src python -m tensorbem.benchmarks.case_annulus_laplace --outdir benchmarks/verified/bem_annulus_laplace --check
 PYTHONPATH=src python -m pytest tests/test_case_annulus_laplace.py -q
 ```
+
+## Rigid-lid hemisphere heave added mass: pool case `CASE-BEM-RIGID-LID-HEMISPHERE`
+
+`case_bem_rigid_lid_hemisphere/` is the round-1 case-pool entry for the
+zero-frequency (`ka -> 0`, rigid free surface) heave added mass of a floating
+hemisphere.  The solver is `tensorbem.free_surface_solver3d.solve_radiation_3d`
+reused unchanged; the case adds the pool furniture around it: a predeclared
+experiment (tolerance, endpoint band, mesh ladder, out-of-band scope control),
+the even-parity double-body reference evaluated by two independent formulations
+(pressure integral / kinetic energy) and corroborated by the Hulme (1982)
+multipole solution extrapolated to `ka = 0`, a negative control that refutes the
+translating-image reference (`1.0 rho*nabla`, the reading that made report
+#15809 a false FAIL -- see `docs/rigid_lid_zero_frequency_anchor/ERRATUM.md`),
+two sensitivity studies (mesh refinement, even-mode truncation) and an explicit
+out-of-band sweep that must *violate* the 5 % band so the case cannot claim more
+than it verifies.
+
+Registered separately, i.e. not listed in `summary.json`, because that file is
+the thin-ship mission record and its case set is pinned by
+`tests/test_bem_verified_anchors.py`.
+
+Records: `results.json` (schema `tensorbem.case_bem_rigid_lid_hemisphere/1`),
+`case.json` (pool card incl. repro command), `report.md` (rendered from
+`results.json`), `figures/`.  Case card document:
+`docs/case_bem_rigid_lid_hemisphere.md`.  Reproduce with
+
+```
+bash scripts/repro_case_bem_rigid_lid_hemisphere.sh
+PYTHONPATH=src python -m pytest tests/test_case_bem_rigid_lid_hemisphere.py -q
+```
