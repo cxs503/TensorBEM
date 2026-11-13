@@ -1,0 +1,197 @@
+{
+  "schema": "tensorbem.external_anchor/v1",
+  "anchor_id": "REDTEAM-REFERENCE-SHARES-SOLVER",
+  "case": {
+    "name": "bottom-mounted vertical circular cylinder, linear wave diffraction, deep water",
+    "class": "diffraction",
+    "physical_background": "A vertical circular pile in deep water scatters an incident Airy wave; the total horizontal force per unit length follows from the Hankel-function solution of the 2-D Helmholtz diffraction problem. The closed form is the classical diffraction reference used to grade a 3-D panel solver at zero forward speed."
+  },
+  "conditions": {
+    "radius_m": 1.0,
+    "water_depth_over_radius": "inf",
+    "wave_amplitude_m": 1.0,
+    "rho_kg_m3": 1025.0,
+    "g_m_s2": 9.80665,
+    "incident_angle_deg": 0.0,
+    "units_note": "SI; force is per unit length of pile (2-D reduction, deep water)"
+  },
+  "source": {
+    "class": "LITERATURE_CLOSED_FORM",
+    "primary": {
+      "authors": [
+        "MacCamy, R. C.",
+        "Fuchs, R. A."
+      ],
+      "year": 1954,
+      "title": "Wave Forces on Piles: A Diffraction Theory",
+      "series": "Beach Erosion Board Technical Report No. 4 (Technical Memorandum No. 69)",
+      "publisher": "U.S. Army Corps of Engineers, Beach Erosion Board",
+      "locator": "the diffraction force expression F_x = 4 rho g A / (k^2 H_1^(1)'(ka)); reproduced as the deep-water limit in Newman (1977) sec. 7.5 and in Dean & Dalrymple (1991) ch. 8",
+      "note": "Primary report scanned copies are not machine-resolvable offline; the identifiers below are for the textbooks that restate the same closed form, so a reader can verify the equation on paper."
+    },
+    "identifiers": [
+      {
+        "type": "isbn",
+        "value": "0-262-14026-8",
+        "work": "Newman, J. N. (1977) Marine Hydrodynamics, MIT Press, sec. 7.5"
+      },
+      {
+        "type": "isbn",
+        "value": "981-02-0421-3",
+        "work": "Dean, R. G. & Dalrymple, R. A. (1991) Water Wave Mechanics for Engineers and Scientists, World Scientific"
+      }
+    ],
+    "identifier_note": "Gate checks identifier FORM only (ISBN check digit, DOI pattern, absolute URL). Existence is not machine-verified offline -- recorded as a known limit of this gate."
+  },
+  "reference_method": {
+    "id": "maccamy_fuchs_hankel_force",
+    "equation": "F_x(ka) = 4*rho*g*A*tanh(k*h) / (k^2 * H_1^(1)'(k*a)),  k = ka/a; deep water: tanh(k*h) = 1",
+    "implementation": "src/tensorbem/analytic.py::maccamy_fuchs_diffraction",
+    "independent_of_repo_package": false,
+    "derivation": "re-implemented from the published closed form with scipy.special only; it does not import or call the solver being graded",
+    "uncertainty": {
+      "kind": "closed_form_exact_within_linear_potential_theory",
+      "relative": 1e-12,
+      "note": "the reference carries no truncation error; its physical limitations (linearised free surface, inviscid, no flow separation) are model error shared by the solver, so they cancel in this comparison"
+    }
+  },
+  "quantities": [
+    {
+      "id": "force_amplitude_ka_0.05",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 0.05
+      },
+      "reference": 63363.85916686674,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_0.10",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 0.1
+      },
+      "reference": 63763.12238351992,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_0.20",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 0.2
+      },
+      "reference": 64659.27138651153,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_0.50",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 0.5
+      },
+      "reference": 63335.278503605754,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_1.00",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 1.0
+      },
+      "reference": 43313.86143576316,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_1.50",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 1.5
+      },
+      "reference": 26590.60609149819,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_2.00",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 2.0
+      },
+      "reference": 17710.40590935075,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_amplitude_ka_3.00",
+      "kind": "force_amplitude",
+      "unit": "N/m",
+      "case": {
+        "ka": 3.0
+      },
+      "reference": 9717.827707274451,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "|F_x|, horizontal wave force per unit length of pile, deep water"
+    },
+    {
+      "id": "force_phase_ka_1.00",
+      "kind": "force_phase_deg",
+      "unit": "deg",
+      "case": {
+        "ka": 1.0
+      },
+      "reference": -69.49620343123244,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "arg(F_x) with time factor exp(-i omega t) and eta_I = A exp(i(kx - omega t))"
+    },
+    {
+      "id": "c_m_ka_0.05",
+      "kind": "c_m",
+      "unit": "1",
+      "case": {
+        "ka": 0.05
+      },
+      "reference": 2.006537156861686,
+      "reference_uncertainty_relative": 1e-12,
+      "note": "C_M = |F| / (rho g A pi a^2); approaches the Morison value 2 as ka -> 0"
+    }
+  ],
+  "limit_checks": [
+    {
+      "id": "c_m_long_wave_limit",
+      "reference": 2.0,
+      "unit": "1",
+      "reference_locator": "long-wave limit of the MacCamy & Fuchs force: C_M -> 2 (Morison inertia coefficient), Newman (1977) sec. 7.5",
+      "tolerance_relative": 0.05,
+      "extrapolation_kas": [
+        0.05,
+        0.025
+      ],
+      "extrapolation": "C_M(ka) = 2 + O(ka^2); L = (4*C_M(ka/2) - C_M(ka))/3 with ka = 0.05",
+      "note": "graded on the tolerance only: the reference is a stated limit, so there is no pointwise closed form to reproduce at 1e-6"
+    }
+  ],
+  "tolerance": {
+    "relative": 0.05,
+    "policy": "platform ledger: an error above 5 % is not acceptable evidence"
+  },
+  "_redteam": {
+    "models": "reference computed by the package's own analytic module: same derivation as the solver",
+    "expect": "FAIL",
+    "expected_codes": [
+      "reference_method_not_independent",
+      "provenance_points_into_repo"
+    ]
+  }
+}
