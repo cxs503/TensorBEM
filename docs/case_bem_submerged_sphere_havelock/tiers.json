@@ -1,0 +1,129 @@
+{
+  "tiers": {
+    "economy_mesh": {
+      "tier": "economy_mesh",
+      "gate": 0.05,
+      "n_items": 28,
+      "n_failures": 7,
+      "max_rel_error": 0.05591129869557249,
+      "worst_item": {
+        "item": "ka=0.5",
+        "quantity": "b33",
+        "got": 0.07996954821533321,
+        "ref": 0.0847055452573905,
+        "rel_error": 0.05591129869557249
+      },
+      "failures": [
+        {
+          "item": "ka=0.5",
+          "quantity": "b33",
+          "got": 0.07996954821533321,
+          "ref": 0.0847055452573905,
+          "rel_error": 0.05591129869557249
+        },
+        {
+          "item": "ka=0.1",
+          "quantity": "b33",
+          "got": 0.003137920011744757,
+          "ref": 0.0033222925988104154,
+          "rel_error": 0.05549558974175703
+        },
+        {
+          "item": "ka=0.5",
+          "quantity": "b11",
+          "got": 0.03891849044308842,
+          "ref": 0.041191792293890965,
+          "rel_error": 0.055188223774853606
+        },
+        {
+          "item": "ka=0.1",
+          "quantity": "b11",
+          "got": 0.0015308938135197522,
+          "ref": 0.001619752645273911,
+          "rel_error": 0.054859507106489236
+        },
+        {
+          "item": "ka=1",
+          "quantity": "b11",
+          "got": 0.03951059477466912,
+          "ref": 0.04173780149600059,
+          "rel_error": 0.053361860028609605
+        },
+        {
+          "item": "ka=1",
+          "quantity": "b33",
+          "got": 0.07636015346929807,
+          "ref": 0.08058234530115514,
+          "rel_error": 0.052395990909395194
+        },
+        {
+          "item": "ka=2",
+          "quantity": "b11",
+          "got": 0.005494809336246983,
+          "ref": 0.005786754346829018,
+          "rel_error": 0.050450562281430224
+        }
+      ],
+      "verdict": "FAIL"
+    },
+    "case_mesh": {
+      "tier": "case_mesh",
+      "gate": 0.05,
+      "n_items": 20,
+      "n_failures": 0,
+      "max_rel_error": 0.014311353989157588,
+      "worst_item": {
+        "item": "ka=0.5",
+        "quantity": "b33",
+        "got": 0.08349329421436738,
+        "ref": 0.0847055452573905,
+        "rel_error": 0.014311353989157588
+      },
+      "failures": [],
+      "verdict": "PASS"
+    }
+  },
+  "refinement": {
+    "economy_max_rel_error": 0.05591129869557249,
+    "case_max_rel_error": 0.014311353989157588,
+    "observed_order_a33": 2.027795693161446,
+    "verdict": "PASS"
+  },
+  "geometry_precondition": {
+    "gate": 0.02,
+    "gate_applied_to": "subdivision >= 3",
+    "exact_volume": 4.1887902047863905,
+    "levels": [
+      {
+        "subdivision": 1,
+        "n_panels": 80,
+        "h_mean": 0.5822835232876192,
+        "mesh_volume": 3.6587122085121595,
+        "volume_relative_error": 0.12654679999693674
+      },
+      {
+        "subdivision": 2,
+        "n_panels": 320,
+        "h_mean": 0.2993320753185587,
+        "mesh_volume": 4.047044679978849,
+        "volume_relative_error": 0.03383925140141275
+      },
+      {
+        "subdivision": 3,
+        "n_panels": 1280,
+        "h_mean": 0.1507297051948821,
+        "mesh_volume": 4.152740817093057,
+        "volume_relative_error": 0.008606157370245282
+      }
+    ],
+    "worst_volume_relative_error": 0.008606157370245282,
+    "verdict": "PASS"
+  },
+  "reference_gates": {
+    "truncation_machine_zero": true,
+    "haskind_residual": true,
+    "lamb_a33": true,
+    "lamb_cm": true,
+    "damping_vanishes": true
+  }
+}
