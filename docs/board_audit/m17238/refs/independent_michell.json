@@ -1,0 +1,127 @@
+{
+  "case_id": "CASE-BEM-WIGLEY3-WAVE-RES",
+  "audit_mission": 17238,
+  "audited_mission": 17206,
+  "implementation": "from-scratch classical Michell far field, no tensorbem import",
+  "quadrature": {
+    "n_lambda": 4000,
+    "lambda_max": 30.0,
+    "mapping": "lambda = 1 + s^2"
+  },
+  "prefactor": "4 rho g^2 / (pi U^2) on the one-side half-breadth amplitude",
+  "closed_form_selfcheck": [
+    {
+      "lam": 1.0,
+      "x_rel_diff": 4.503739971668228e-16,
+      "z_rel_diff": 0.0
+    },
+    {
+      "lam": 2.0,
+      "x_rel_diff": 4.649060979270137e-16,
+      "z_rel_diff": 0.0
+    },
+    {
+      "lam": 5.0,
+      "x_rel_diff": 8.402290678165673e-16,
+      "z_rel_diff": 0.0
+    },
+    {
+      "lam": 12.0,
+      "x_rel_diff": 1.3881555809871807e-13,
+      "z_rel_diff": 0.0
+    },
+    {
+      "lam": 30.0,
+      "x_rel_diff": 8.733006854782798e-14,
+      "z_rel_diff": 0.0
+    }
+  ],
+  "rows": [
+    {
+      "froude_number": 0.2,
+      "speed": 1.0848032079598586,
+      "k0": 8.33333333333333,
+      "Rw_independent": 0.7168239150975295,
+      "Rw_audited_reference": 0.7168235537456323,
+      "rel_diff_vs_audited": 5.04101595565825e-07,
+      "ratio_audited_over_independent": 0.9999994958986586
+    },
+    {
+      "froude_number": 0.25,
+      "speed": 1.3560040099498232,
+      "k0": 5.333333333333332,
+      "Rw_independent": 1.3425858809967752,
+      "Rw_audited_reference": 1.342588332526817,
+      "rel_diff_vs_audited": 1.825972997429721e-06,
+      "ratio_audited_over_independent": 1.0000018259763317
+    },
+    {
+      "froude_number": 0.3,
+      "speed": 1.6272048119397877,
+      "k0": 3.7037037037037037,
+      "Rw_independent": 3.8917740988605236,
+      "Rw_audited_reference": 3.8917804197511754,
+      "rel_diff_vs_audited": 1.624164256467169e-06,
+      "ratio_audited_over_independent": 1.0000016241668943
+    },
+    {
+      "froude_number": 0.35,
+      "speed": 1.8984056139297523,
+      "k0": 2.7210884353741496,
+      "Rw_independent": 3.086563405699017,
+      "Rw_audited_reference": 3.0865796854212073,
+      "rel_diff_vs_audited": 5.274356682644299e-06,
+      "ratio_audited_over_independent": 1.0000052743845016
+    },
+    {
+      "froude_number": 0.4,
+      "speed": 2.1696064159197173,
+      "k0": 2.0833333333333326,
+      "Rw_independent": 8.83200289876013,
+      "Rw_audited_reference": 8.832036025293156,
+      "rel_diff_vs_audited": 3.7507244004824026e-06,
+      "ratio_audited_over_independent": 1.0000037507384685
+    },
+    {
+      "froude_number": 0.45,
+      "speed": 2.440807217909682,
+      "k0": 1.6460905349794235,
+      "Rw_independent": 16.9851927013834,
+      "Rw_audited_reference": 16.98526388784892,
+      "rel_diff_vs_audited": 4.191072095715957e-06,
+      "ratio_audited_over_independent": 1.0000041910896609
+    }
+  ],
+  "ratio_audited_over_independent": {
+    "min": 0.9999994958986586,
+    "max": 1.0000052743845016,
+    "mean": 1.0000026937090858
+  },
+  "max_rel_diff_vs_audited": 5.274356682644299e-06,
+  "own_truncation_check": [
+    {
+      "froude_number": 0.2,
+      "rel_drift_lam30_to_lam120": 7.560602139000117e-07
+    },
+    {
+      "froude_number": 0.25,
+      "rel_drift_lam30_to_lam120": 1.5380666401396872e-06
+    },
+    {
+      "froude_number": 0.3,
+      "rel_drift_lam30_to_lam120": 1.5865787231955117e-06
+    },
+    {
+      "froude_number": 0.35,
+      "rel_drift_lam30_to_lam120": 5.076155630762567e-06
+    },
+    {
+      "froude_number": 0.4,
+      "rel_drift_lam30_to_lam120": 4.01438123888016e-06
+    },
+    {
+      "froude_number": 0.45,
+      "rel_drift_lam30_to_lam120": 4.209683707821509e-06
+    }
+  ]
+}
