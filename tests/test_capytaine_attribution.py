@@ -74,14 +74,33 @@ def test_classify_symmetric_in_truth_not_in_blame() -> None:
 # 2. the honest FAIL survives
 # --------------------------------------------------------------------------
 def test_cross_code_fail_is_not_overwritten(study: dict) -> None:
+    """The cross-code FAIL recorded here must survive in the crosscheck artifact.
+
+    The crosscheck study was later re-run at the mesh levels its module declares
+    (1024 / 1026 panels) and its *current* verdict is therefore PASS.  That does
+    not license deleting the FAIL this attribution study was computed against:
+    `carry_superseded_records` moves it to `superseded_records`, and this test
+    pins the attribution to that preserved record rather than to the mutable
+    headline verdict.
+    """
     cross = study["cross_code"]
     frozen = json.loads((ROOT / attr.CROSSCHECK_RESULTS).read_text())
-    assert cross["verdict"] == frozen["comparison"]["verdict"] == "FAIL"
+    superseded = [
+        rec for rec in frozen.get("superseded_records", []) if rec["verdict"] == "FAIL"
+    ]
+    assert superseded, "the FAIL this study was computed against must be preserved"
+    record = superseded[0]
+    assert cross["verdict"] == record["verdict"] == "FAIL"
     assert cross["worst_relative"] == pytest.approx(
-        frozen["comparison"]["worst_relative"], rel=0, abs=0
+        record["worst_relative"], rel=0, abs=0
     )
     assert cross["overwritten"] is False
-    assert cross["failures"] == list(frozen["comparison"]["failures"])
+    assert cross["failures"] == list(record["failures"])
+    # the superseding run is recorded, not hidden: the live verdict is the
+    # declared-level one, and it is a different mesh set
+    assert frozen["comparison"]["verdict"] == "PASS"
+    assert record["level_sets"]["hemisphere_r1"] == [64, 256]
+    assert len(frozen["tensorbem"]["hemisphere_r1"]["levels"]) == 3
 
 
 def test_finer_mesh_closes_the_cross_code_gap(study: dict) -> None:
