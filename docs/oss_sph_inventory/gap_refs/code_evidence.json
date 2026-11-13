@@ -1,0 +1,286 @@
+{
+ "anchor": "FEAT-OSS-INVENTORY-SPH",
+ "wave": 3,
+ "schema_version": 1,
+ "generated_at_utc": "2026-11-13T00:15:53Z",
+ "channel": "CODE-LEVEL",
+ "evidence_grade_note": "Every row is a verbatim source line at a frozen commit, located by regex and re-derivable with `gap_refs.py verify`. This is a code-read of the cited line, not a claim about numerical accuracy of the upstream code.",
+ "repos": {
+  "gpusph": {
+   "full_name": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "commit_date": "2021-05-29",
+   "language": "C/C++/CUDA",
+   "licence": "GPL-3.0",
+   "why": "only surveyed code that combines MPI domain decomposition with a volume-based semi-analytical (SA) boundary model and an SPS/k-epsilon turbulence closure -- one source per open gap."
+  },
+  "jax-sph": {
+   "full_name": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "commit_date": "2025-10-29",
+   "language": "Python/JAX",
+   "licence": "MIT",
+   "why": "density-diffusion (delta-SPH) and Riemann-solver formulations plus a ghost-wall boundary condition, all in <=700 lines of readable Python and shipped with a validation harness + reference data."
+  },
+  "salva": {
+   "full_name": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "commit_date": "2026-11-01",
+   "language": "Rust",
+   "licence": "Apache-2.0",
+   "why": "the only surveyed DFSPH *and* IISPH projection pair with explicit divergence/density-error stopping criteria -- the acceptance variable of GAP-SPH-ISPH-PROJECTION."
+  }
+ },
+ "claims": [
+  {
+   "id": "MPI-01",
+   "gap": "GAP-SPH-MPI-DOMAIN",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/NetworkManager.cc",
+   "line": 112,
+   "quote": "MPI_Comm_size(MPI_COMM_WORLD, &world_size);",
+   "file_sha256": "9c884da6f67a1dc194a16fb46afcde63a3cc90590b6fcaa4eae6cfab3ffac23c",
+   "statement": "MPI world size/rank are taken at start-up and every device is mapped to a global (rank, dev) pair, so a domain can span nodes.",
+   "port_recipe": "TensorSPH would need the same global-device indexing before any halo exchange can be addressed."
+  },
+  {
+   "id": "MPI-02",
+   "gap": "GAP-SPH-MPI-DOMAIN",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/NetworkManager.cc",
+   "line": 216,
+   "quote": "void NetworkManager::sendBuffer(unsigned char src_globalDevIdx, unsigned char dst_globalDevIdx, unsigned int count, void *src_data)",
+   "file_sha256": "9c884da6f67a1dc194a16fb46afcde63a3cc90590b6fcaa4eae6cfab3ffac23c",
+   "statement": "Halo exchange is an explicit point-to-point byte-buffer send (count, void* src_data), not a collective.",
+   "port_recipe": "Halo payload for TensorSPH = particle SoA slice; message = raw bytes, so the same routine serves float32 and float64."
+  },
+  {
+   "id": "MPI-03",
+   "gap": "GAP-SPH-MPI-DOMAIN",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/NetworkManager.cc",
+   "line": 244,
+   "quote": "int mpi_err = MPI_Recv(dst_data, count, MPI_BYTE, GlobalData::RANK(src_globalDevIdx), tag, MPI_COMM_WORLD, &status);",
+   "file_sha256": "9c884da6f67a1dc194a16fb46afcde63a3cc90590b6fcaa4eae6cfab3ffac23c",
+   "statement": "The matching receive lands the halo directly into the destination device buffer (zero extra copy inside the manager).",
+   "port_recipe": "Mirror the send/recv pair over a dict of (src,dst) -> buffer handles."
+  },
+  {
+   "id": "MPI-04",
+   "gap": "GAP-SPH-MPI-DOMAIN",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/NetworkManager.h",
+   "line": 50,
+   "quote": "class NetworkManager {",
+   "file_sha256": "ba13c3783f3a33a8bcebf714498605c45128c6b4c1b0faf06ee34514b90fd120",
+   "statement": "All inter-rank traffic is funnelled through one object that owns the tag space and the device-pair routing.",
+   "port_recipe": "Single choke point is what makes the 1-rank/2-rank equivalence test inspectable; keep TensorSPH's exchange in one module too."
+  },
+  {
+   "id": "BND-01",
+   "gap": "GAP-SPH-AKINCI-BOUNDARY",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/boundary_conditions_kernel.cu",
+   "line": 297,
+   "quote": "//! Auxiliary structures and functions for SA_BOUNDARY boundary conditions kernels",
+   "file_sha256": "219856dcb6b0cc1fa95152ee63bfd25ecf68c5f0fa5ed7070391f14a80ab1f05",
+   "statement": "Boundary treatment is isolated in its own kernel translation unit specialised to SA_BOUNDARY (semi-analytical walls), i.e. one selectable boundary model, not a hard-wired plane reflection.",
+   "port_recipe": "TensorSPH can add a volume-weighted boundary module behind the same interface its Adami extrapolation uses today."
+  },
+  {
+   "id": "BND-02",
+   "gap": "GAP-SPH-AKINCI-BOUNDARY",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/buildneibs_kernel.cu",
+   "line": 143,
+   "quote": "/// Specific variables used in neibsInCell with SA boundary",
+   "file_sha256": "f57f1f14bf2a031cc8385cc1b0fe746df52ee1675e797d2afb90b2e0fd4ee1f9",
+   "statement": "Boundary particles are counted in the neighbour list with a dedicated per-particle fluid+boundary counter, which is what volume-weighted boundary forces need.",
+   "port_recipe": "Requires the neighbour structure to distinguish fluid vs boundary neighbours; TensorSPH's neighbours3 currently does not."
+  },
+  {
+   "id": "BND-03",
+   "gap": "GAP-SPH-AKINCI-BOUNDARY",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/sa_bc_params.h",
+   "line": 130,
+   "quote": "float * __restrict__ tke; //! Turbulent Kinetic Energy",
+   "file_sha256": "c774a20f4ccc3d9659afe8ebcaeba3203be5fed7f3cf82b96cc96b6bcd6686e2",
+   "statement": "The SA boundary path optionally carries k-epsilon turbulence state alongside the wall data.",
+   "port_recipe": "Boundary data and turbulence state must be co-located for wall functions; a separate array per rank would break locality."
+  },
+  {
+   "id": "BND-04",
+   "gap": "GAP-SPH-AKINCI-BOUNDARY",
+   "repo": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "path": "jax_sph/solver.py",
+   "line": 533,
+   "quote": "def gwbc_fn_riemann_wrapper(is_free_slip, is_heat_conduction):",
+   "file_sha256": "cb6a3748c4b57f3609a67d5a1ec9655c5dfa8565daea8ec82fedc964911a8111",
+   "statement": "Alternative reference: ghost-wall boundary conditions implemented as a velocity/pressure mirror rather than as boundary particles.",
+   "port_recipe": "Cheapest boundary upgrade for TensorSPH (no new particle class); Akinci is only needed when wall shear accuracy dominates."
+  },
+  {
+   "id": "PRJ-01",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "path": "src/solver/pressure/dfsph_solver.rs",
+   "line": 20,
+   "quote": "pub min_pressure_iter: usize,",
+   "file_sha256": "00f4daf05a9bdb082e961e647c93df4ed432b9cf17564c39b270cd8de9c7bf02",
+   "statement": "DFSPH exposes min/max pressure-iteration bounds as public solver state (defaults 1/50), i.e. the projection is an iterative fixed-point with explicit termination.",
+   "port_recipe": "TensorSPH's acceptance wants density fluctuation <=1e-3; the number of iterations that buys it must be a reported quantity, not a constant."
+  },
+  {
+   "id": "PRJ-02",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "path": "src/solver/pressure/dfsph_solver.rs",
+   "line": 41,
+   "quote": "max_divergence_error: na::convert::<_, Real>(0.1),",
+   "file_sha256": "00f4daf05a9bdb082e961e647c93df4ed432b9cf17564c39b270cd8de9c7bf02",
+   "statement": "DFSPH stops on a *divergence* error threshold (default 0.1) -- a different stopping variable from WCSPH's acoustic density error.",
+   "port_recipe": "The GAP acceptance should report residual divergence, not only rho/rho0."
+  },
+  {
+   "id": "PRJ-03",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "path": "src/solver/pressure/iisph_solver.rs",
+   "line": 52,
+   "quote": "max_density_error: na::convert::<_, Real>(0.05),",
+   "file_sha256": "beda6e49ee7542dba0a962e2933bad35e4aadb603452bad0eb6a298003fb5ad3",
+   "statement": "The sibling IISPH solver instead stops on average density error (default 0.05), giving the two standard incompressibility criteria side by side.",
+   "port_recipe": "Pick one criterion per benchmark; mixing them hides the accuracy gain."
+  },
+  {
+   "id": "PRJ-04",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "path": "src/solver/pressure/mod.rs",
+   "line": 2,
+   "quote": "pub use self::iisph_solver::IISPHSolver;",
+   "file_sha256": "bb9577dd1506974c332721009f470f550ce0a22f409082fd4865930d9ef6e602",
+   "statement": "IISPH is re-exported from the same pressure-solver module that exports DFSPHSolver, so switching projection is a type change.",
+   "port_recipe": "Mirror as a strategy object in TensorSPH rather than a branch in the time-integration loop."
+  },
+  {
+   "id": "SPS-01",
+   "gap": "GAP-SPH-SPS-LES",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/visc_params.h",
+   "line": 41,
+   "quote": "struct tau_sps_params",
+   "file_sha256": "15a63260c3366b493bb1c3101b56a11a1e8c313a9a8b2e32c583611eeee9af03",
+   "statement": "Sub-particle-scale stresses are carried as an explicit tau array, filled only when the SPS_STORE_TAU flag is set.",
+   "port_recipe": "SPS-LES in TensorSPH needs one extra per-particle tensor field, allocated on demand to keep the WCSPH path unchanged."
+  },
+  {
+   "id": "SPS-02",
+   "gap": "GAP-SPH-SPS-LES",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/forces_params.h",
+   "line": 363,
+   "quote": "static const TurbulenceModel turbmodel = ViscSpec::turbmodel;",
+   "file_sha256": "a239a2b39dcc76a0b631039c11a99554a25edb3b9ddb20d58daa81050552c271",
+   "statement": "The turbulence closure is a compile-time template parameter resolved per viscosity spec, i.e. the model is a policy of the force kernel.",
+   "port_recipe": "Same policy pattern keeps TensorSPH's kernel-type dispatch (a hot path) branch-free."
+  },
+  {
+   "id": "ACC-01",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "path": "jax_sph/solver.py",
+   "line": 100,
+   "quote": "rho * ops.segment_sum(temp, i_s, N) + c_ref * delta * support * diff_term",
+   "file_sha256": "cb6a3748c4b57f3609a67d5a1ec9655c5dfa8565daea8ec82fedc964911a8111",
+   "statement": "delta-SPH density evolution: the continuity sum gets an additive c_ref*delta*support*diff_term -- a diffusion term that suppresses the acoustic floor without any projection step.",
+   "port_recipe": "Cheapest partial answer to the WCSPH noise documented in verification_startup_quiescence.md: ~2 lines in the density update, with delta as a tunable (default 0.1 in jax-sph defaults.py)."
+  },
+  {
+   "id": "ACC-02",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "path": "jax_sph/solver.py",
+   "line": 157,
+   "quote": "U_star = U_avg + 0.5 * (p_L - p_R) / (rho_avg * c_ref)",
+   "file_sha256": "cb6a3748c4b57f3609a67d5a1ec9655c5dfa8565daea8ec82fedc964911a8111",
+   "statement": "Riemann-solver formulation (Zhang 2017 eq. 7): an interface star velocity built from the pressure jump, i.e. dissipative upwinding inside the density evolution instead of an added diffusion term.",
+   "port_recipe": "Two mutually exclusive accuracy levers; TensorSPH should benchmark delta-SPH first (no EOS change) and Riemann second."
+  },
+  {
+   "id": "ACC-03",
+   "gap": "GAP-SPH-OBV",
+   "repo": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "path": "validation/validate.py",
+   "line": 19,
+   "quote": "def val_TGV(val_root, dim=2, nxs=[50, 100], save_fig=False):",
+   "file_sha256": "29bb9281a2db9967a85f93d47ef424d1489f56cf453b07f3f635bc1c1bbb77ff",
+   "statement": "Each validation case is a function comparing a run against a closed-form/reference series (here Taylor-Green at two resolutions), i.e. the repository ships its own reference-value harness.",
+   "port_recipe": "Directly reusable pattern for the benchmark judge that TensorSPH benchmarks still lack."
+  },
+  {
+   "id": "ACC-04",
+   "gap": "GAP-SPH-OBV",
+   "repo": "tumaer/jax-sph",
+   "commit": "808f87489e2d4d1f39efa69709fda45118d8f7f3",
+   "path": "jax_sph/kernel.py",
+   "line": 51,
+   "quote": "class QuinticKernel(BaseKernel):",
+   "file_sha256": "cc53d7459006a3aad680f79095cfbf75b545948bedd7cdbec75e582644b63931",
+   "statement": "Kernel family is a class with analytic w and grad_w per dimensionality, so a new kernel is a class, not an if-branch.",
+   "port_recipe": "TensorSPH kernel3.py already has the same shape -- confirms the design, no action."
+  },
+  {
+   "id": "BND-05",
+   "gap": "GAP-SPH-AKINCI-BOUNDARY",
+   "repo": "GPUSPH/gpusph",
+   "commit": "08ffd94ddc4a076361f0e5f6e2bfde7874ba087f",
+   "path": "src/cuda/boundary_conditions_kernel.cu",
+   "line": 1184,
+   "quote": "if (pout.shepard_div > 0.1f*pdata.gam) {",
+   "file_sha256": "219856dcb6b0cc1fa95152ee63bfd25ecf68c5f0fa5ed7070391f14a80ab1f05",
+   "statement": "Boundary kernels are renormalised by their Shepard divisor with a 0.1*gamma floor guard -- the numerical core of a volume-weighted boundary, where the wall must not divide by a near-empty neighbourhood.",
+   "port_recipe": "Any volume boundary in TensorSPH needs this guard, otherwise the first wall layer spikes on re-entry."
+  },
+  {
+   "id": "PRJ-05",
+   "gap": "GAP-SPH-ISPH-PROJECTION",
+   "repo": "dimforge/salva",
+   "commit": "34eda88e559248f21e4dbbb5894a7df997d16fb3",
+   "path": "src/solver/pressure/dfsph_solver.rs",
+   "line": 547,
+   "quote": "if avg_err <= max_err && i >= self.min_divergence_iter {",
+   "file_sha256": "00f4daf05a9bdb082e961e647c93df4ed432b9cf17564c39b270cd8de9c7bf02",
+   "statement": "The divergence-free projection exits only when the mean residual divergence is under threshold *and* the minimum iteration count is met -- the concrete form of the criterion GAP-SPH-ISPH-PROJECTION must report.",
+   "port_recipe": "TensorSPH's acceptance test can reuse this exit criterion and log (avg_err, iterations) per step."
+  }
+ ],
+ "claims_per_gap": {
+  "GAP-SPH-AKINCI-BOUNDARY": 5,
+  "GAP-SPH-ISPH-PROJECTION": 7,
+  "GAP-SPH-MPI-DOMAIN": 4,
+  "GAP-SPH-OBV": 2,
+  "GAP-SPH-SPS-LES": 2
+ },
+ "gaps_not_covered": {
+  "GAP-SPH-MULTIPHASE-SHARP": "none of the three wave-3 repositories implements a sharpening multiphase scheme; the wave-2 DualSPHysics and SPlisHSPlasH deep dives are the relevant references, so no new code evidence is claimed here."
+ }
+}
