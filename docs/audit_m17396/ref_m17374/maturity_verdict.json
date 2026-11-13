@@ -1,0 +1,58 @@
+{
+  "mission_id": 17374,
+  "case": "CASE-BEM-IRREG-FREQ-CYL",
+  "subject": "Irregular-frequency Bessel-zero prediction (TensorBEM)",
+  "level_achieved": "L4",
+  "impl_files": [
+    "src/tensorbem/irregular_frequency.py:1-736 (predict_irregular_frequencies, sanitise_with_chief, sanitise_with_interior_surface, frequency_sweep, irregular_frequency_sanitisation)",
+    "src/tensorbem/interior_panels.py (InteriorPanelSet, interior_panel_points \u2014 CHIEF/interior-lid support)",
+    "src/tensorbem/benchmarks/irregular_frequency_cylinder_exact.py (three-route verification: rigid-lid, free-surface, empirical BEM)"
+  ],
+  "entry": "scripts/run_irregular_frequency_bessel.py \u2014 entry point producing prediction.json, ref_vs_got.json, run_log.txt; scripts/benchmark_irregular_frequency_bessel.py \u2014 benchmark producing bessel_zero_comparison.png, convergence_error.png, benchmark.json; scripts/integration_caller_irregular_frequency.py \u2014 integration caller producing integration_check.json",
+  "run_artifacts": [
+    "runs/m17374_irregular_frequency_bessel/prediction.json",
+    "runs/m17374_irregular_frequency_bessel/ref_vs_got.json",
+    "runs/m17374_irregular_frequency_bessel/benchmark.json",
+    "runs/m17374_irregular_frequency_bessel/integration_check.json",
+    "runs/m17374_irregular_frequency_bessel/bessel_zero_comparison.png",
+    "runs/m17374_irregular_frequency_bessel/convergence_error.png",
+    "runs/m17374_irregular_frequency_bessel/run_log.txt"
+  ],
+  "tests": [
+    "tests/test_irregular_frequency_bessel_entry.py \u2014 13 passed (entry point artifacts, module exports, integration caller)",
+    "tests/test_irregular_frequency_cylinder_exact.py \u2014 23 passed (three-route verification: rigid-lid, free-surface, empirical BEM)",
+    "tests/test_irregular_frequency_sanitisation.py \u2014 pre-existing sanitisation tests",
+    "tests/test_irregular_frequency_study.py \u2014 pre-existing study tests"
+  ],
+  "integration_callers": "scripts/integration_caller_irregular_frequency.py \u2014 calls predict_irregular_frequencies + sanitise_with_chief from the solver pipeline for both cylinder and Wigley III hulls; src/tensorbem/__init__.py exports predict_irregular_frequencies, sanitise_with_chief, sanitise_with_interior_surface, irregular_frequency_sanitisation for library users; src/tensorbem/benchmarks/declared_numbers.py calls run_irregular_frequency_study; src/tensorbem/benchmarks/maccamy_fuchs.py calls run_irregular_frequency_check",
+  "benchmark": {
+    "reference_source": "Abramowitz & Stegun, Handbook of Mathematical Functions, Table 9.5",
+    "bessel_zeros": {
+      "j01": 2.404825557695773,
+      "j11": 3.831705970207512,
+      "j21": 5.135622301840683
+    },
+    "tolerance_pct": 2.0,
+    "results": {
+      "coarse_224_panels": {
+        "max_nu_error_pct": 0.3222,
+        "pass": true
+      },
+      "medium_704_panels": {
+        "max_nu_error_pct": 0.0804,
+        "pass": true
+      },
+      "fine_2176_panels": {
+        "max_nu_error_pct": 0.0201,
+        "pass": true
+      }
+    },
+    "verdict": "PASS \u2014 all configurations within 2% tolerance; error decreases with mesh refinement"
+  },
+  "repro_cmd": {
+    "entry_point": "cd /root/tp-agent/work/m17374 && PYTHONPATH=src python scripts/run_irregular_frequency_bessel.py",
+    "benchmark": "cd /root/tp-agent/work/m17374 && PYTHONPATH=src python scripts/benchmark_irregular_frequency_bessel.py",
+    "integration": "cd /root/tp-agent/work/m17374 && PYTHONPATH=src python scripts/integration_caller_irregular_frequency.py",
+    "tests": "cd /root/tp-agent/work/m17374 && PYTHONPATH=src python -m pytest tests/test_irregular_frequency_bessel_entry.py tests/test_irregular_frequency_cylinder_exact.py -v"
+  }
+}
