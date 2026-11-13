@@ -1,0 +1,36 @@
+{
+ "coefficient": {
+  "check": "coefficient",
+  "reference": 3.0842513753404246,
+  "rows": [
+   {
+    "ka": 0.0001,
+    "coefficient_ka3": 3.084251398942806,
+    "rel_diff_vs_5pi2_over_16": 7.65254789910048e-09
+   },
+   {
+    "ka": 0.001,
+    "coefficient_ka3": 3.084252315295781,
+    "rel_diff_vs_5pi2_over_16": 3.04759645640885e-07
+   },
+   {
+    "ka": 0.01,
+    "coefficient_ka3": 3.0842036001650537,
+    "rel_diff_vs_5pi2_over_16": 1.549003941536346e-05
+   },
+   {
+    "ka": 0.02,
+    "coefficient_ka3": 3.0838910596215943,
+    "rel_diff_vs_5pi2_over_16": 0.0001168243683738517
+   },
+   {
+    "ka": 0.05,
+    "coefficient_ka3": 3.080622456228523,
+    "rel_diff_vs_5pi2_over_16": 0.0011765964152325686
+   }
+  ],
+  "pass": true,
+  "note": "own S(theta)/integrand/quadrature; independent of tensorbem.cylinder_drift"
+ },
+ "all_pass": true
+}
