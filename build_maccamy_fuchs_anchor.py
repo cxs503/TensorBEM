@@ -374,6 +374,13 @@ def main() -> None:
     # Build and save report
     report = build_report(data, gates)
     report_path = OUT_DIR / "report.md"
+    # Preserve any existing re-verification section (historical record of the
+    # m16170 re-verification of the closed PR #683 deliverables).
+    if report_path.exists():
+        old_report = report_path.read_text()
+        if "## 7. Re-verification" in old_report:
+            idx = old_report.index("## 7. Re-verification")
+            report = report.rstrip() + "\n\n" + old_report[idx:]
     report_path.write_text(report + "\n")
     print(f"  → {report_path}")
 
