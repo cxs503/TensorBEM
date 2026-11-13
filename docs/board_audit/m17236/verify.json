@@ -1,0 +1,294 @@
+{
+  "subject_mission": 17203,
+  "audit_mission": 17236,
+  "repo": "TensorBEM",
+  "audited_branch": "agent/m17203",
+  "audited_commit": "3c0310e5743d0c47d60319ddfd752c247c3f3a27",
+  "parent_commit_main": "96f19f7ced7ba57e3e47c634615274d5811b36fd",
+  "audit_clean_tree": "/tmp/aud_m17236 = `git archive main@96f19f7` + only the 24 delivered paths",
+  "hash_integrity_all_equal": true,
+  "hashes": {
+    "all_stages.csv": {
+      "source": "de995192c7f6b12594fa199c9704b51e46f39e216c90770bc8a7715be20529bd",
+      "copy": "de995192c7f6b12594fa199c9704b51e46f39e216c90770bc8a7715be20529bd"
+    },
+    "stage_core.json": {
+      "source": "395e03f153b608efb18793c978dd752746ccab57a3e9bb95c612dfbe296bb3e4",
+      "copy": "395e03f153b608efb18793c978dd752746ccab57a3e9bb95c612dfbe296bb3e4"
+    },
+    "stage_panels.json": {
+      "source": "d50947e321530fdacc53c3449b48a126f7f3112c13998b9c9f1c084043472ad1",
+      "copy": "d50947e321530fdacc53c3449b48a126f7f3112c13998b9c9f1c084043472ad1"
+    },
+    "stage_nodes.json": {
+      "source": "a823342ba44c3c1f809351168acaa1466c8ca12851ef3a5b8423733380434ae2",
+      "copy": "a823342ba44c3c1f809351168acaa1466c8ca12851ef3a5b8423733380434ae2"
+    },
+    "stage_ka.json": {
+      "source": "5970408f6ed1a6fc4b7b22a1885b0d22cfd1e04d7368fc0385a85190a37fdf0e",
+      "copy": "5970408f6ed1a6fc4b7b22a1885b0d22cfd1e04d7368fc0385a85190a37fdf0e"
+    },
+    "stage_submergence.json": {
+      "source": "430092664736dbc7e548a5c53866de9d315b60f289a78de7836eaddc445366b7",
+      "copy": "430092664736dbc7e548a5c53866de9d315b60f289a78de7836eaddc445366b7"
+    },
+    "capytaine_crosscheck.json": {
+      "source": "8202fea19d63e8b4806c46584b941b8fec36d2084edaa153dd1a4a53442c68ed",
+      "copy": "8202fea19d63e8b4806c46584b941b8fec36d2084edaa153dd1a4a53442c68ed"
+    },
+    "capytaine_crosscheck_ntheta24.json": {
+      "source": "01ce85afa911b6fd997e0a60fe7624f52d46efe60c1df0d3b1359482067553a3",
+      "copy": "01ce85afa911b6fd997e0a60fe7624f52d46efe60c1df0d3b1359482067553a3"
+    },
+    "capytaine_crosscheck_ntheta32.json": {
+      "source": "953afbf3dd09d7ec5023eea405b7bb035af5e5f1d29e8e53ce69bbb1ef149935",
+      "copy": "953afbf3dd09d7ec5023eea405b7bb035af5e5f1d29e8e53ce69bbb1ef149935"
+    },
+    "capytaine_crosscheck_ntheta48.json": {
+      "source": "45a74b36c2f8bb846f6f1a555096b5cf35c0c045914278389b0ed09a4730a2a9",
+      "copy": "45a74b36c2f8bb846f6f1a555096b5cf35c0c045914278389b0ed09a4730a2a9"
+    },
+    "three_checks.json": {
+      "source": "61bc0d12abec6ed197b088316bf78273995f99c5cf854f1657f2ceb6e618b041",
+      "copy": "61bc0d12abec6ed197b088316bf78273995f99c5cf854f1657f2ceb6e618b041"
+    },
+    "sweep.log": {
+      "source": "5d4dc1ab2c86c0139b8bfbfe0e5ef8a37da76bbfca3dc831bb737ff0734ad739",
+      "copy": "5d4dc1ab2c86c0139b8bfbfe0e5ef8a37da76bbfca3dc831bb737ff0734ad739"
+    },
+    "figures/fig1_force_vs_ka.png": {
+      "source": "1c86dd9bb5d125f1328accac3b748b55355cbca86adfee8711d895fece79a6b3",
+      "copy": "1c86dd9bb5d125f1328accac3b748b55355cbca86adfee8711d895fece79a6b3"
+    },
+    "figures/fig2_convergence.png": {
+      "source": "882f564fe7d24a5c069fc9ff7564aa51857489c57b861a36b92392f06173171b",
+      "copy": "882f564fe7d24a5c069fc9ff7564aa51857489c57b861a36b92392f06173171b"
+    },
+    "figures/fig3_error_sweeps.png": {
+      "source": "9df9f0ae6e4aa717b57807ddd04dc2f6178f195c05a89c294ae8716d1e4c99dc",
+      "copy": "9df9f0ae6e4aa717b57807ddd04dc2f6178f195c05a89c294ae8716d1e4c99dc"
+    },
+    "figures/fig4_capytaine_limit.png": {
+      "source": "2f8e1aed43833c393616815301a59d607c5d4d551982f295672f57c495948ba7",
+      "copy": "2f8e1aed43833c393616815301a59d607c5d4d551982f295672f57c495948ba7"
+    },
+    "figures/fig5_wave_field.png": {
+      "source": "6ae5bd94740946be34f77757395b71e7dd89e7131be31d28849b4cec0707ec81",
+      "copy": "6ae5bd94740946be34f77757395b71e7dd89e7131be31d28849b4cec0707ec81"
+    },
+    "scripts/m17203_dean_case.py": {
+      "source": "325133a7bb7a238927aecfe0fa2a426197320c6dee0b6ae1bbe015f819309647",
+      "copy": "325133a7bb7a238927aecfe0fa2a426197320c6dee0b6ae1bbe015f819309647"
+    },
+    "scripts/m17203_capytaine_crosscheck.py": {
+      "source": "fd763439e759f2383ebfaca315bb9bd25a3624b819889ba9548d274733418424",
+      "copy": "fd763439e759f2383ebfaca315bb9bd25a3624b819889ba9548d274733418424"
+    },
+    "scripts/m17203_figures.py": {
+      "source": "aa4f17fe05653fa4340f1baeb571cd8d60798bca12a6400a41ff27c45e0f9974",
+      "copy": "aa4f17fe05653fa4340f1baeb571cd8d60798bca12a6400a41ff27c45e0f9974"
+    },
+    "scripts/m17203_three_checks.py": {
+      "source": "0271eb6a4ef69a29e86bca389a0440014c92fafef7a6c05515299ebc3b5f8941",
+      "copy": "0271eb6a4ef69a29e86bca389a0440014c92fafef7a6c05515299ebc3b5f8941"
+    },
+    "scripts/m17203_build_report.py": {
+      "source": "3f777c45db0c92d8b47e02d6dec6ed4b5b3038a170a75366b0bb1e2b7c2d44ac",
+      "copy": "3f777c45db0c92d8b47e02d6dec6ed4b5b3038a170a75366b0bb1e2b7c2d44ac"
+    },
+    "tests/test_case_dean_diffraction_m17203.py": {
+      "source": "8443542ceb57e58e90f1baddf61746527633ad9eff47befde26d0679f64b6092",
+      "copy": "8443542ceb57e58e90f1baddf61746527633ad9eff47befde26d0679f64b6092"
+    }
+  },
+  "benchmark_referee": {
+    "query": "SELECT case_name,metric,tolerance FROM tensor_benchmark_cases WHERE anchor_slug='CASE-BEM-DEAN-DIFFRACTION'",
+    "tensor_benchmark_cases_rows": 0,
+    "tensor_case_pool": "case_code=BEM-DEAN-DIFFRACTION repo=TensorBEM status=dispatched mission_id=17203 (registry exists, benchmark row absent)",
+    "tensorbench_results_rows": 0,
+    "platform_l4_api": "GET /api/v1/tensor/bench/l4-verdict/17203 -> CLAIMED_NOT_PROVEN, rows=0, failed_checks=[execution_success, source_cluster_job, cluster_job_bound, ref_got_error_present, within_tolerance]",
+    "criterion_used": "mission-17203 declared tolerance <5% for every force metric (declared before the run in the mission goal) + theorem-level literature anchors (R=0, |T|=1, -90 deg polarisation, energy balance)"
+  },
+  "nominal": {
+    "case": {
+      "a_m": 1.0,
+      "f_over_a": 2.0,
+      "ka": 0.6,
+      "panels": 128,
+      "panel_nodes": 24
+    },
+    "ref_force_x": [
+      2422.747483987926,
+      -10226.918082293312
+    ],
+    "got_force_x": [
+      2455.2918199866967,
+      -10262.155887256517
+    ],
+    "ref_force_z": [
+      -10226.918082293312,
+      -2422.747483987926
+    ],
+    "got_force_z": [
+      -10262.155887256518,
+      -2455.2918199866963
+    ],
+    "rel_err_force_x": 0.004563953871089343,
+    "rel_err_force_z": 0.00456395387108944,
+    "transmission_phase_err_deg": 0.25569547916098045,
+    "R": 5.492315955627157e-17,
+    "note": "ref = Ursell(1950)/Ogilvie(1963) multipole closed form evaluated by src/tensorbem/analytic.py:703 dean_cylinder_diffraction (pre-existing in main)"
+  },
+  "worst_case_over_28_rows": {
+    "max_force_rel_error": 0.014190229283005954,
+    "max_phase_err_deg": 0.8375112218662686,
+    "rows": 28,
+    "sweeps": {
+      "core": 1,
+      "frequency_sweep": 8,
+      "quadrature_sensitivity": 7,
+      "panel_convergence": 7,
+      "submergence_sweep": 5
+    },
+    "within_5pct": true
+  },
+  "theorem_invariants": {
+    "max_abs_R": 1.9659499268911825e-16,
+    "max_abs_T_minus_1": 2.220446049250313e-16,
+    "max_energy_balance_error": 4.440892098500626e-16,
+    "max_polarisation_deviation_deg": 5.684341886080802e-14,
+    "max_linear_residual": 1.8364927355553102e-15,
+    "max_condition_number": 3.2314224918690897
+  },
+  "capytaine_external": {
+    "rows": 5,
+    "worst_rel_error": 0.023424818742398223,
+    "within_5pct": true,
+    "solver": "capytaine 3.1.dev0"
+  },
+  "panel_convergence": {
+    "pairs": [
+      [
+        32,
+        0.014190229283005954
+      ],
+      [
+        64,
+        0.008452850488419617
+      ],
+      [
+        96,
+        0.005935495406069756
+      ],
+      [
+        128,
+        0.004563953871089343
+      ],
+      [
+        192,
+        0.0031173947253408784
+      ],
+      [
+        256,
+        0.0023660422785282053
+      ],
+      [
+        384,
+        0.0015960079709461123
+      ]
+    ],
+    "fitted_order": -0.879328064881241
+  },
+  "reproducibility": {
+    "pytest_clean_tree": "5 passed, 1 warning in 16.33s",
+    "core_fields_compared": 36,
+    "core_max_rel_diff": 0.0,
+    "panel_rerun": {
+      "64": {
+        "delivered_err": 0.008452850488419617,
+        "rerun_err": 0.008452850488419617,
+        "delivered_phase_deg": 0.48092244846244725,
+        "rerun_phase_deg": 0.48092244846244725,
+        "identical_1e-12": true
+      },
+      "192": {
+        "delivered_err": 0.0031173947253408784,
+        "rerun_err": 0.0031173947253408784,
+        "delivered_phase_deg": 0.17381288084051505,
+        "rerun_phase_deg": 0.17381288084051505,
+        "identical_1e-12": true
+      }
+    },
+    "capytaine_rerun": {
+      "L": 40.0,
+      "delivered": [
+        0.008633019806757887,
+        0.00608139884979968
+      ],
+      "rerun": [
+        0.008633019806757887,
+        0.00608139884979968
+      ],
+      "delta_rel": [
+        0.0,
+        0.0
+      ]
+    },
+    "figures_regenerated": {
+      "fig1_force_vs_ka.png": {
+        "delivered_sha256": "1c86dd9bb5d125f1328accac3b748b55355cbca86adfee8711d895fece79a6b3",
+        "regenerated_sha256": "1c86dd9bb5d125f1328accac3b748b55355cbca86adfee8711d895fece79a6b3",
+        "identical": true
+      },
+      "fig2_convergence.png": {
+        "delivered_sha256": "882f564fe7d24a5c069fc9ff7564aa51857489c57b861a36b92392f06173171b",
+        "regenerated_sha256": "882f564fe7d24a5c069fc9ff7564aa51857489c57b861a36b92392f06173171b",
+        "identical": true
+      },
+      "fig3_error_sweeps.png": {
+        "delivered_sha256": "9df9f0ae6e4aa717b57807ddd04dc2f6178f195c05a89c294ae8716d1e4c99dc",
+        "regenerated_sha256": "9df9f0ae6e4aa717b57807ddd04dc2f6178f195c05a89c294ae8716d1e4c99dc",
+        "identical": true
+      },
+      "fig4_capytaine_limit.png": {
+        "delivered_sha256": "2f8e1aed43833c393616815301a59d607c5d4d551982f295672f57c495948ba7",
+        "regenerated_sha256": "2f8e1aed43833c393616815301a59d607c5d4d551982f295672f57c495948ba7",
+        "identical": true
+      },
+      "fig5_wave_field.png": {
+        "delivered_sha256": "6ae5bd94740946be34f77757395b71e7dd89e7131be31d28849b4cec0707ec81",
+        "regenerated_sha256": "6ae5bd94740946be34f77757395b71e7dd89e7131be31d28849b4cec0707ec81",
+        "identical": true
+      }
+    },
+    "report_markdown_regenerated_vs_published": {
+      "published_lines": 225,
+      "regenerated_lines": 224,
+      "identical_except_one_blank_line": true
+    }
+  },
+  "report": {
+    "tensor_report_id": 16214,
+    "sections": [
+      "## ① 问题 + 参考出处",
+      "## ② 方法与实现",
+      "## ③ 参数表（无量纲数完整）",
+      "## ④ 对照表（ref vs got，逐项误差打勾/叉）",
+      "## ⑤ 收敛性 / 参数敏感性（≥2 点）",
+      "## ⑥ 失败模式、生态摩擦与工件"
+    ],
+    "six_sections_present": true,
+    "figures_registered": 5,
+    "figures_with_base64_payload": 0
+  },
+  "acceptance": {
+    "force_within_5pct": true,
+    "phase_within_1deg": true,
+    "dean_zero_reflection": true,
+    "unit_transmission": true,
+    "energy_balance": true,
+    "external_software_agrees": true,
+    "reproducible": true,
+    "verdict": "PASS"
+  }
+}

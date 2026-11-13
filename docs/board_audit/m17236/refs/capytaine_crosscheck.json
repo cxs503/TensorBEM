@@ -1,0 +1,226 @@
+{
+  "solver": "capytaine 3.1.dev0",
+  "case": {
+    "radius_m": 1.0,
+    "submergence_m": 2.0,
+    "ka": 0.6,
+    "amplitude_m": 1.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "water_depth": "infinite"
+  },
+  "reference": "Ursell(1950)/Ogilvie(1963) multipole closed form (2-D)",
+  "note": "3-D force divided by cylinder length; L/lambda -> inf recovers the 2-D force per unit length.",
+  "rows": [
+    {
+      "length_over_lambda": 1.909859317102744,
+      "length": 20.0,
+      "ntheta": 32,
+      "nx": 30,
+      "n_panels": 1216,
+      "force_x_total": [
+        46700.729723598335,
+        -206152.86632458586
+      ],
+      "force_z_total": [
+        -200119.85817807855,
+        -46282.055525996984
+      ],
+      "froude_krylov_x_per_length": [
+        -7.275957614183426e-13,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2335.0364861799176,
+        -4637.4466631987825
+      ],
+      "force_x_per_length": [
+        2335.0364861799167,
+        -10307.643316229292
+      ],
+      "force_z_per_length": [
+        -10005.992908903927,
+        -2314.102776299849
+      ],
+      "runtime_seconds": 2.4422357082366943,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.011342063216260533,
+      "force_z_relative_error": 0.023424818742398223
+    },
+    {
+      "length_over_lambda": 2.864788975654116,
+      "length": 30.0,
+      "ntheta": 32,
+      "nx": 45,
+      "n_panels": 1696,
+      "force_x_total": [
+        71901.58082126401,
+        -309434.2065126594
+      ],
+      "force_z_total": [
+        -303323.366931504,
+        -71404.87478300219
+      ],
+      "froude_krylov_x_per_length": [
+        0.0,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2396.7193607088,
+        -4644.276897391469
+      ],
+      "force_x_per_length": [
+        2396.7193607088,
+        -10314.473550421979
+      ],
+      "force_z_per_length": [
+        -10110.7788977168,
+        -2380.1624927667394
+      ],
+      "runtime_seconds": 4.1951212882995605,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.008691014693818883,
+      "force_z_relative_error": 0.011769811034918294
+    },
+    {
+      "length_over_lambda": 3.819718634205488,
+      "length": 40.0,
+      "ntheta": 32,
+      "nx": 60,
+      "n_panels": 2176,
+      "force_x_total": [
+        97133.6379656335,
+        -412699.1328832217
+      ],
+      "force_z_total": [
+        -406543.2998914373,
+        -96566.32976328299
+      ],
+      "froude_krylov_x_per_length": [
+        0.0,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2428.3409491408374,
+        -4647.281669050032
+      ],
+      "force_x_per_length": [
+        2428.3409491408374,
+        -10317.478322080544
+      ],
+      "force_z_per_length": [
+        -10163.582497285932,
+        -2414.158244082075
+      ],
+      "runtime_seconds": 5.4168853759765625,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.008633019806757887,
+      "force_z_relative_error": 0.00608139884979968
+    },
+    {
+      "length_over_lambda": 5.729577951308232,
+      "length": 60.0,
+      "ntheta": 32,
+      "nx": 90,
+      "n_panels": 3136,
+      "force_x_total": [
+        147627.4876776983,
+        -619213.339724207
+      ],
+      "force_z_total": [
+        -612971.0197316604,
+        -146933.25956954848
+      ],
+      "froude_krylov_x_per_length": [
+        -9.701276818911234e-13,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2460.458127961639,
+        -4650.0256757062725
+      ],
+      "force_x_per_length": [
+        2460.458127961638,
+        -10320.222328736783
+      ],
+      "force_z_per_length": [
+        -10216.18366219434,
+        -2448.8876594924745
+      ],
+      "runtime_seconds": 6.434478044509888,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.009575365748250528,
+      "force_z_relative_error": 0.002688721051072937
+    },
+    {
+      "length_over_lambda": 7.639437268410976,
+      "length": 80.0,
+      "ntheta": 32,
+      "nx": 120,
+      "n_panels": 4096,
+      "force_x_total": [
+        198137.01759796677,
+        -825720.2039411088
+      ],
+      "force_z_total": [
+        -819375.710984562,
+        -197337.34135927467
+      ],
+      "froude_krylov_x_per_length": [
+        0.0,
+        -5670.19665303051
+      ],
+      "diffraction_x_per_length": [
+        2476.7127199745846,
+        -4651.30589623335
+      ],
+      "force_x_per_length": [
+        2476.7127199745846,
+        -10321.50254926386
+      ],
+      "force_z_per_length": [
+        -10242.196387307025,
+        -2466.716766990933
+      ],
+      "runtime_seconds": 13.2415030002594,
+      "exact_force_x_per_length": [
+        2422.747483987926,
+        -10226.918082293312
+      ],
+      "exact_force_z_per_length": [
+        -10226.918082293312,
+        -2422.747483987926
+      ],
+      "force_x_relative_error": 0.010361261684710986,
+      "force_z_relative_error": 0.004428944010092891
+    }
+  ]
+}
