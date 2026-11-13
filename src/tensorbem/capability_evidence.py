@@ -553,6 +553,39 @@ CAPABILITIES: tuple[Capability, ...] = (
         ),
     ),
     Capability(
+        key='michell-canonical-spectrum-panel-route',
+        title='Michell wave resistance on the canonical spectrum for general hulls',
+        claim=(
+            'The centreplane panel Kochin amplitude evaluated on the steady free-surface pair '
+            '(k, alpha) = (k0 lam^2, k0 lam) with the canonical lam^2/sqrt(lam^2-1) weight and '
+            'rho g^2/(pi U^2) prefactor reproduces the independently written Wigley closed form to '
+            '< 1e-3 % at 64x32 Gauss panels over Fr 0.20-0.40, is exactly s^4 self-similar under '
+            '(L, B, T, U, g) -> s(L, B, T, U, g), and converges spectrally in the panel count.'
+        ),
+        level=REAL,
+        modules=('tensorbem.michell', 'tensorbem.wigley'),
+        symbols=(
+            'michell_resistance_canonical', 'canonical_resistance_nodes',
+            'wave_resistance_from_panels_canonical', 'ellipsoid_wave_resistance_canonical',
+            'tandem_interference_factor_canonical', 'tandem_pair_resistance_canonical',
+        ),
+        tests=(
+            'tests/test_michell_canonical_panel_route.py::test_panel_route_matches_wigley_closed_form_canonical',
+            'tests/test_michell_canonical_panel_route.py::test_similarity_law_is_s4_canonical_and_s2_legacy',
+            'tests/test_michell_canonical_panel_route.py::test_tandem_factored_and_merged_canonical_agree',
+        ),
+        docs=(('docs/michell_canonical_panel_route/README.md', 'canonical'),),
+        note=(
+            'Verification is against an independent implementation of the same thin-ship theory '
+            '(closed-form Wigley terms vs panel quadrature), not against experiment; absolute '
+            'magnitudes remain WITHHELD. The legacy single-wavenumber exports '
+            '(michell_resistance, wave_resistance_from_panels, tandem_interference_factor, '
+            'wigley.michell_wave_resistance) are untouched and still carry the defect: they '
+            'under-predict by ~12-24x and the tandem sigma they return is spectrum-biased by up '
+            'to 36 %. Re-pinning them is a cross-repository pin migration, not done here.'
+        ),
+    ),
+    Capability(
         key='kutta-lifting',
         title='Kutta condition / lifting foil',
         claim='Joukowski foil circulation enforces the Kutta condition; lift within 3% of the exact value.',

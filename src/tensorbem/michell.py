@@ -112,18 +112,24 @@ __all__ = [
     "DEFAULT_DENSITY",
     "DEFAULT_GRAVITY",
     "DEPTH_DECADES",
+    "canonical_resistance_nodes",
     "default_lambda_max",
     "ellipsoid_hydrostatic_reference",
     "ellipsoid_kochin_reference",
     "ellipsoid_panels",
     "ellipsoid_wave_resistance",
+    "ellipsoid_wave_resistance_canonical",
     "froude_number",
     "michell_resistance",
+    "michell_resistance_canonical",
     "resistance_nodes",
     "speed_for_froude",
     "tandem_interference_factor",
+    "tandem_interference_factor_canonical",
     "tandem_pair_resistance",
+    "tandem_pair_resistance_canonical",
     "wave_resistance_from_panels",
+    "wave_resistance_from_panels_canonical",
     "wigley_kochin_closed_form",
     "wigley_panels",
 ]
@@ -237,6 +243,40 @@ class CenterplanePanels:
             phase = np.exp(np.outer(kc, self.z) + 1j * np.outer(kc, self.x))
             out[start : start + chunk] = phase @ self.weight
         return out if np.ndim(k) else out[0]
+
+    def kochin_pair(self, k_depth, alpha):
+        """Kochin amplitude with decoupled depth and longitudinal wavenumbers.
+
+        ``H(k_depth, alpha) = sum_p weight_p exp(k_depth z_p + i alpha x_p)``.
+
+        The steady free-surface condition requires ``k_depth = alpha^2 / k0``
+        (not ``k_depth = alpha``), so this two-argument form is the one that
+        belongs in the resistance integral.  When ``k_depth == alpha`` it
+        reduces to :meth:`kochin`.
+
+        Parameters
+        ----------
+        k_depth, alpha :
+            Broadcastable arrays (or scalars) of the vertical decay rate and
+            the longitudinal wavenumber respectively.
+        """
+        kd = np.asarray(k_depth, dtype=float)
+        al = np.asarray(alpha, dtype=float)
+        scalar = kd.ndim == 0 and al.ndim == 0
+        kd_b, al_b = np.broadcast_arrays(kd, al)
+        shape = kd_b.shape
+        kd_f = np.ascontiguousarray(kd_b, dtype=float).ravel()
+        al_f = np.ascontiguousarray(al_b, dtype=float).ravel()
+        out = np.zeros(kd_f.size, dtype=complex)
+        chunk = max(1, int(_CHUNK_ELEMENTS // max(self.panel_count, 1)))
+        for start in range(0, kd_f.size, chunk):
+            kc = kd_f[start : start + chunk]
+            ac = al_f[start : start + chunk]
+            phase = np.exp(np.outer(kc, self.z) + 1j * np.outer(ac, self.x))
+            out[start : start + chunk] = phase @ self.weight
+        if scalar:
+            return complex(out[0])
+        return out.reshape(shape)
 
     def shifted(self, dx: float) -> "CenterplanePanels":
         """The same hull displaced a distance ``dx`` downstream (``+x``)."""
@@ -636,4 +676,229 @@ def tandem_pair_resistance(
     return wave_resistance_from_panels(
         merged, U, T, rho=rho, gravity=gravity, lambda_max=lam_max,
         n_seg=n_seg_used, n_quad=n_quad,
+    )
+
+def canonical_resistance_nodes(
+    U: float, T: float, gravity: float = DEFAULT_GRAVITY,
+    lambda_max: float | None = None, n_seg: int = 8, n_quad: int = 32,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Quadrature nodes/weights of the **canonical** Michell integral.
+
+    Canonical (steady free-surface) form, the same one used by
+    :func:`tensorbem.wigley.michell_wave_resistance_canonical`::
+
+        Rw = (rho g^2 / (pi U^2)) * int_1^inf lam^2 |H(k0 lam^2, k0 lam)|^2
+                                            / sqrt(lam^2 - 1) dlam.
+
+    With ``lam = 1 + s^2`` the ``1/sqrt(lam^2 - 1)`` endpoint cancels exactly
+    (``dlam = 2 s ds``, ``sqrt(lam^2-1) = s sqrt(2+s^2)``) and the returned
+    weight is ``2 lam^2 / sqrt(2 + s^2) * (Gauss weight)``, so the caller only
+    has to form ``sum(weight * |H|^2)``.
+
+    Returns
+    -------
+    (lam, weight) : ndarray
+        Wavenumber ratios ``k/k0`` and the weights of the canonical integral
+        (already including the endpoint-cancelling Jacobian).
+    """
+    if U <= 0:
+        raise ValueError("speed U must be positive")
+    if T <= 0:
+        raise ValueError("draft T must be positive")
+    if n_seg < 1 or n_quad < 1:
+        raise ValueError("need n_seg >= 1 and n_quad >= 1")
+    k0 = gravity / U**2
+    lam_max = default_lambda_max(k0, T) if lambda_max is None else float(lambda_max)
+    if lam_max <= 1.0:
+        raise ValueError("lambda_max must exceed 1")
+    s_max = math.sqrt(lam_max - 1.0)
+
+    x, w = leggauss(n_quad)
+    edges = np.linspace(0.0, s_max, n_seg + 1)
+    half = 0.5 * np.diff(edges)
+    centres = 0.5 * (edges[:-1] + edges[1:])
+    s = (centres[:, None] + half[:, None] * x[None, :]).ravel()
+    ws = (half[:, None] * w[None, :]).ravel()
+
+    lam = 1.0 + s * s
+    weight = ws * 2.0 * lam**2 / np.sqrt(2.0 + s * s)
+    return lam, weight
+
+
+def michell_resistance_canonical(
+    kochin_pair: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    U: float,
+    T: float,
+    rho: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    lambda_max: float | None = None,
+    n_seg: int = 8,
+    n_quad: int = 32,
+) -> float:
+    """Michell wave resistance on the canonical spectrum, for a general hull.
+
+    This is the hullform-independent counterpart of
+    :func:`tensorbem.wigley.michell_wave_resistance_canonical`: the same
+    physics, driven by a **two-argument** Kochin callable
+    ``H(k_depth, alpha)`` (see :meth:`CenterplanePanels.kochin_pair`) instead of
+    the Wigley closed form, so centreplane panel hulls, ellipsoids and merged
+    tandem pairs all get the correct spectrum.
+
+    Why the legacy :func:`michell_resistance` is not enough
+    -----------------------------------------------------
+    :func:`michell_resistance` samples ``H`` at a single wavenumber
+    ``k = alpha = k0 lam`` and weighs it with ``lam^-2``.  That integrand
+    violates the steady free-surface condition pointwise by ``lam - 1``
+    (50 % at ``lam = 2``, 89 % at ``lam = 9``) and the prefactor ``4 rho/U^2``
+    is dimensionally not a force; measured against this routine the legacy
+    panel route is low by a factor ~12-24 on the Wigley hull.  The legacy
+    routine is kept (pinned numbers depend on it) but must not be used for new
+    work -- see ``docs/michell_canonical_panel_route/README.md``.
+
+    Parameters
+    ----------
+    kochin_pair :
+        ``f(k_depth, alpha)`` for equal-length float arrays, returning the
+        complex amplitude ``sum_p weight_p exp(k_depth z_p + i alpha x_p)``.
+    """
+    lam, weight = canonical_resistance_nodes(
+        U, T, gravity=gravity, lambda_max=lambda_max, n_seg=n_seg, n_quad=n_quad
+    )
+    k0 = gravity / U**2
+    alpha = lam * k0
+    k_depth = alpha * alpha / k0                     # = k0 lam^2, canonical pair
+    H = np.asarray(kochin_pair(k_depth, alpha), dtype=complex)
+    if H.shape != lam.shape:
+        raise ValueError(
+            f"kochin_pair returned shape {H.shape}, expected {lam.shape}"
+        )
+    value = (rho * gravity**2 / (math.pi * U**2)) * float(np.sum(weight * np.abs(H) ** 2))
+    return max(value, 0.0)
+
+
+def wave_resistance_from_panels_canonical(
+    panels: CenterplanePanels,
+    U: float,
+    T: float,
+    rho: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    lambda_max: float | None = None,
+    n_seg: int = 8,
+    n_quad: int = 32,
+) -> float:
+    """Canonical-spectrum wave resistance of a centreplane panel hull."""
+    return michell_resistance_canonical(
+        panels.kochin_pair, U, T, rho=rho, gravity=gravity,
+        lambda_max=lambda_max, n_seg=n_seg, n_quad=n_quad,
+    )
+
+
+def ellipsoid_wave_resistance_canonical(
+    L: float,
+    B: float,
+    T: float,
+    U: float,
+    rho: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    n_psi: int = 96,
+    n_t: int = 384,
+    lambda_max: float | None = None,
+    n_seg: int = 8,
+    n_quad: int = 32,
+) -> float:
+    """Canonical-spectrum wave resistance of the ellipsoid hull (spectral panels)."""
+    panels = ellipsoid_panels(L, B, T, n_psi=n_psi, n_t=n_t, rule="gauss")
+    return wave_resistance_from_panels_canonical(
+        panels, U, T, rho=rho, gravity=gravity, lambda_max=lambda_max,
+        n_seg=n_seg, n_quad=n_quad,
+    )
+
+
+def tandem_interference_factor_canonical(
+    kochin_pair: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    U: float,
+    T: float,
+    separation: float,
+    rho: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    lambda_max: float | None = None,
+    n_seg: int = 8,
+    n_quad: int = 32,
+) -> dict[str, float]:
+    """Tandem interference factor ``sigma`` on the canonical spectrum.
+
+    Same definition as :func:`tandem_interference_factor`
+    (``sigma = R_pair / (2 R_single)``, so ``sigma in [0, 2]``) but with both
+    resistances evaluated through
+    :func:`wave_resistance_from_panels_canonical`, i.e. with the canonical
+    ``lam^2`` weight.  The legacy factor weights the same Kochin product with
+    ``lam^-2``, so the two factors are **not** the same number for the same
+    gap: the canonically weighted spectrum emphasises the long transverse waves
+    (``lam -> 1``) that carry the interference, and the shift is reported in
+    ``docs/michell_canonical_panel_route``.
+
+    ``kochin_pair`` is a two-argument Kochin callable (e.g.
+    :meth:`CenterplanePanels.kochin_pair`); the single-hull reference is the
+    same callable, so ``sigma`` carries no discretisation bias of its own.
+    """
+    if separation < 0:
+        raise ValueError("separation must be non-negative")
+    k0 = gravity / U**2
+    lam_max = default_lambda_max(k0, T) if lambda_max is None else float(lambda_max)
+    n_seg_used = _auto_segments(k0, lam_max, separation, n_seg)
+    single = michell_resistance_canonical(
+        kochin_pair, U, T, rho=rho, gravity=gravity, lambda_max=lam_max,
+        n_seg=n_seg_used, n_quad=n_quad,
+    )
+    lam, weight = canonical_resistance_nodes(
+        U, T, gravity=gravity, lambda_max=lam_max,
+        n_seg=n_seg_used, n_quad=n_quad,
+    )
+    k0_ = gravity / U**2
+    alpha = lam * k0_
+    k_depth = alpha * alpha / k0_
+    shifted = lambda kd, al: kochin_pair(kd, al) * (1.0 + np.exp(1j * al * float(separation)))
+    H_pair = np.asarray(shifted(k_depth, alpha), dtype=complex)
+    pair = (rho * gravity**2 / (math.pi * U**2)) * float(
+        np.sum(weight * np.abs(H_pair) ** 2)
+    )
+    if single <= 0.0:
+        raise ValueError("single-hull resistance must be positive")
+    return {
+        "sigma": pair / (2.0 * single),
+        "r_single": single,
+        "r_pair": pair,
+        "interference": pair - 2.0 * single,
+        "separation": float(separation),
+        "lambda_max": lam_max,
+        "n_seg": n_seg_used,
+        "n_quad": n_quad,
+    }
+
+
+def tandem_pair_resistance_canonical(
+    panels: CenterplanePanels,
+    U: float,
+    T: float,
+    separation: float,
+    rho: float = DEFAULT_DENSITY,
+    gravity: float = DEFAULT_GRAVITY,
+    lambda_max: float | None = None,
+    n_seg: int = 8,
+    n_quad: int = 32,
+) -> float:
+    """Pair resistance of a tandem pair on the canonical spectrum.
+
+    The two source distributions are concatenated
+    (:meth:`CenterplanePanels.merged`) and the *canonical* integral is applied
+    to the merged list, so the ``(1 + exp(i alpha s))`` factor is never formed
+    explicitly -- same independence argument as
+    :func:`tandem_pair_resistance`.
+    """
+    if separation < 0:
+        raise ValueError("separation must be non-negative")
+    merged = panels.merged(panels.shifted(separation))
+    return wave_resistance_from_panels_canonical(
+        merged, U, T, rho=rho, gravity=gravity, lambda_max=lambda_max,
+        n_seg=n_seg, n_quad=n_quad,
     )
