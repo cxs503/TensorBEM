@@ -1,0 +1,1274 @@
+{
+  "case_id": "CASE-BEM-WIGLEY3-WAVE-RES",
+  "schema": "case-pool-entry/v1",
+  "domain": "ship-total-performance/wave-resistance",
+  "repo": "TensorBEM",
+  "capability": "Forward-speed wave resistance (Wigley, Michell/Kochin)",
+  "generated_at_utc": "2026-11-13T02:41:37Z",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "git": {
+      "commit": "867315b387f1e1a76606148694749aef5a0530ad",
+      "branch": "agent/m17206"
+    }
+  },
+  "geometry": {
+    "hull": {
+      "L": 3.0,
+      "B": 0.3,
+      "T": 0.1875
+    },
+    "rows": [
+      {
+        "quantity": "L_over_B",
+        "spec": 10.0,
+        "derived": 10.0,
+        "rel_error": 0.0,
+        "passed": true
+      },
+      {
+        "quantity": "B_over_T",
+        "spec": 1.6,
+        "derived": 1.5999999999999999,
+        "rel_error": 1.3877787807814457e-16,
+        "passed": true
+      },
+      {
+        "quantity": "Cb",
+        "spec": 0.4444444444444444,
+        "derived": 0.4444444444444445,
+        "rel_error": 1.249000902703301e-16,
+        "passed": true
+      },
+      {
+        "quantity": "displaced_volume",
+        "spec": 0.075,
+        "derived": 0.075,
+        "rel_error": 0.0,
+        "passed": true
+      }
+    ],
+    "wetted_area": 1.3391156794462007,
+    "note": "The parabolic form y=(B/2)(1-(2x/L)^2)(1-(z/T)^2) has nabla = 4LBT/9 by construction, hence Cb = 4/9; a resistance number is quoted only after this gate passes.",
+    "passed": true
+  },
+  "fluid": {
+    "rho": 1025.0,
+    "g": 9.80665
+  },
+  "froude_numbers": [
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45
+  ],
+  "normalisation": {
+    "Cw_LT": "Rw / (0.5 rho U^2 L T) -- the area used by the repository's Wigley drivers",
+    "Cw_wetted": "Rw / (0.5 rho U^2 S_w), S_w from wigley_hydrostatics.wigley_wetted_area_reference",
+    "S_w": 1.3391156794462007,
+    "L_T": 0.5625
+  },
+  "reference": {
+    "method": "Michell (1898) far field in the wave-angle form, closed-form Wigley amplitude, graded composite Gauss in theta (tensorbem.thin_ship_michell.wave_resistance_theta_form)",
+    "formula": "Rw = (4 rho g^2/(pi U^2)) int_0^{pi/2} sec^3(theta)|A(theta)|^2 dtheta",
+    "levels": [
+      {
+        "n_cells": 75,
+        "gauss_order": 8
+      },
+      {
+        "n_cells": 150,
+        "gauss_order": 8
+      },
+      {
+        "n_cells": 300,
+        "gauss_order": 8
+      },
+      {
+        "n_cells": 600,
+        "gauss_order": 8
+      },
+      {
+        "n_cells": 1200,
+        "gauss_order": 8
+      }
+    ],
+    "cases": [
+      {
+        "froude_number": 0.2,
+        "speed": 1.0848032079598586,
+        "Rw": 0.7168235537456323,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 0.7166519878332485,
+            "rel_change_vs_finest": 0.00023934190148661903
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 0.7167645046389322,
+            "rel_change_vs_finest": 8.237606924553673e-05
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 0.716811560194812,
+            "rel_change_vs_finest": 1.6731524456342276e-05
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 0.7168244397426984,
+            "rel_change_vs_finest": 1.2360043994330876e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 0.7168235537456323,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            0.716811560194812,
+            0.7168244397426984,
+            0.7168235537456323
+          ],
+          "refinement": 2.0,
+          "observed_order": null,
+          "monotone": false,
+          "gci_fine": 1.5450054992913596e-06,
+          "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+        },
+        "truncation": {
+          "values": {
+            "8.0": 0.7167140148962778,
+            "30.0": 0.7168241291427581,
+            "None": 0.7168235537456323
+          },
+          "rel_drift": {
+            "8.0": 0.00015281145378401735,
+            "30.0": 8.027039886136822e-07
+          },
+          "worst_rel_drift": 0.00015281145378401735
+        }
+      },
+      {
+        "froude_number": 0.25,
+        "speed": 1.3560040099498232,
+        "Rw": 1.342588332526817,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 1.3421639151838682,
+            "rel_change_vs_finest": 0.0003161187481423081
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 1.3425951916257082,
+            "rel_change_vs_finest": 5.108862281097401e-06
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 1.3425662800775362,
+            "rel_change_vs_finest": 1.6425324685625048e-05
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 1.3425814764626778,
+            "rel_change_vs_finest": 5.106601907079781e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 1.342588332526817,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            1.3425662800775362,
+            1.3425814764626778,
+            1.342588332526817
+          ],
+          "refinement": 2.0,
+          "observed_order": 1.1482756704475416,
+          "monotone": true,
+          "gci_fine": 5.247278581855532e-06
+        },
+        "truncation": {
+          "values": {
+            "8.0": 1.3421834008090292,
+            "30.0": 1.3425861987705923,
+            "None": 1.342588332526817
+          },
+          "rel_drift": {
+            "8.0": 0.0003016052709364609,
+            "30.0": 1.5892855413128954e-06
+          },
+          "worst_rel_drift": 0.0003016052709364609
+        }
+      },
+      {
+        "froude_number": 0.3,
+        "speed": 1.6272048119397877,
+        "Rw": 3.8917804197511754,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 3.8919915436406,
+            "rel_change_vs_finest": 5.424866427540604e-05
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 3.8920041036214386,
+            "rel_change_vs_finest": 5.747597401126521e-05
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 3.8918341559428193,
+            "rel_change_vs_finest": 1.3807611388153563e-05
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 3.891764235741905,
+            "rel_change_vs_finest": 4.158510379559953e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 3.8917804197511754,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            3.8918341559428193,
+            3.891764235741905,
+            3.8917804197511754
+          ],
+          "refinement": 2.0,
+          "observed_order": null,
+          "monotone": false,
+          "gci_fine": 5.1981379744499415e-06,
+          "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+        },
+        "truncation": {
+          "values": {
+            "8.0": 3.89058864663181,
+            "30.0": 3.8917731596802794,
+            "None": 3.8917804197511754
+          },
+          "rel_drift": {
+            "8.0": 0.00030622825309387704,
+            "30.0": 1.8654883145962252e-06
+          },
+          "worst_rel_drift": 0.00030622825309387704
+        }
+      },
+      {
+        "froude_number": 0.35,
+        "speed": 1.8984056139297523,
+        "Rw": 3.0865796854212073,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 3.0874390603382933,
+            "rel_change_vs_finest": 0.0002784230457891816
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 3.0864337911868023,
+            "rel_change_vs_finest": 4.7267282647563124e-05
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 3.086568922785867,
+            "rel_change_vs_finest": 3.4869131651169954e-06
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 3.086596015973554,
+            "rel_change_vs_finest": 5.2908248000133005e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 3.0865796854212073,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            3.086568922785867,
+            3.086596015973554,
+            3.0865796854212073
+          ],
+          "refinement": 2.0,
+          "observed_order": null,
+          "monotone": false,
+          "gci_fine": 6.613531000016626e-06,
+          "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+        },
+        "truncation": {
+          "values": {
+            "8.0": 3.0835851101273035,
+            "30.0": 3.086563227776852,
+            "None": 3.0865796854212073
+          },
+          "rel_drift": {
+            "8.0": 0.000970192121735272,
+            "30.0": 5.332000477114112e-06
+          },
+          "worst_rel_drift": 0.000970192121735272
+        }
+      },
+      {
+        "froude_number": 0.4,
+        "speed": 2.1696064159197173,
+        "Rw": 8.832036025293156,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 8.83152692454626,
+            "rel_change_vs_finest": 5.764251248956532e-05
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 8.83157427851327,
+            "rel_change_vs_finest": 5.2280898601971e-05
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 8.832093056789716,
+            "rel_change_vs_finest": 6.457344195231302e-06
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 8.832059843106135,
+            "rel_change_vs_finest": 2.696752244960003e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 8.832036025293156,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            8.832093056789716,
+            8.832059843106135,
+            8.832036025293156
+          ],
+          "refinement": 2.0,
+          "observed_order": 0.4797367877668271,
+          "monotone": true,
+          "gci_fine": 8.545075722390879e-06
+        },
+        "truncation": {
+          "values": {
+            "8.0": 8.824950885615367,
+            "30.0": 8.832002874174714,
+            "None": 8.832036025293156
+          },
+          "rel_drift": {
+            "8.0": 0.0008022091007666796,
+            "30.0": 3.7535080639886423e-06
+          },
+          "worst_rel_drift": 0.0008022091007666796
+        }
+      },
+      {
+        "froude_number": 0.45,
+        "speed": 2.440807217909682,
+        "Rw": 16.98526388784892,
+        "levels": [
+          {
+            "n_cells": 75,
+            "gauss_order": 8,
+            "Rw": 16.986805354182586,
+            "rel_change_vs_finest": 9.075315778691625e-05
+          },
+          {
+            "n_cells": 150,
+            "gauss_order": 8,
+            "Rw": 16.985036726619573,
+            "rel_change_vs_finest": 1.3374018257642164e-05
+          },
+          {
+            "n_cells": 300,
+            "gauss_order": 8,
+            "Rw": 16.985209484727903,
+            "rel_change_vs_finest": 3.202960011415639e-06
+          },
+          {
+            "n_cells": 600,
+            "gauss_order": 8,
+            "Rw": 16.985293381629084,
+            "rel_change_vs_finest": 1.7364334378056222e-06
+          },
+          {
+            "n_cells": 1200,
+            "gauss_order": 8,
+            "Rw": 16.98526388784892,
+            "rel_change_vs_finest": 0.0
+          }
+        ],
+        "gci": {
+          "values": [
+            16.985209484727903,
+            16.985293381629084,
+            16.98526388784892
+          ],
+          "refinement": 2.0,
+          "observed_order": null,
+          "monotone": false,
+          "gci_fine": 2.1705417972570276e-06,
+          "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+        },
+        "truncation": {
+          "values": {
+            "8.0": 16.97260368866387,
+            "30.0": 16.985192699385795,
+            "None": 16.98526388784892
+          },
+          "rel_drift": {
+            "8.0": 0.0007453637028333843,
+            "30.0": 4.191189703876163e-06
+          },
+          "worst_rel_drift": 0.0007453637028333843
+        }
+      }
+    ],
+    "provenance": {
+      "kind": "published-analytic-form",
+      "citations": [
+        "Michell, J.H. (1898) The wave resistance of a ship, Phil. Mag. 45(5) 106-123 (far-field integral, sec^3 theta weight)",
+        "Tuck, E.O. (1989) The wave resistance formula of J.H. Michell (1898) ..., J. Austral. Math. Soc. Ser. B 30, 426-445 (Kochin form, Wigley test body)"
+      ],
+      "zero_hand_copy": "no reference number is typed in: every value is computed by the theta form from the closed-form amplitude and stored in this artifact",
+      "absolute_scale": {
+        "status": "WITHHELD",
+        "reason": "no experimental / first-principles Wigley Cw ships with this work tree, so the absolute scale is only fixed relative to the theta form of tensorbem.thin_ship_michell",
+        "pointer": "docs/michell_unit_arbitration.md section 6"
+      },
+      "convention": "both sides of the centreplane sheet (|H|^2 carries the factor 4 of the one-side amplitude |A|^2). A one-side convention scales Rw by 1/4 in *both* routes, so the 5% criterion is convention-invariant while the quoted absolute Cw is not; see docs/michell_unit_arbitration.md section 6 ('Sides convention').",
+      "table_status": {
+        "status": "WITHHELD",
+        "reason": "a tabulated Wigley Cw(Fr) (ITTC / towing tank / printed Michell table) with page citation, stated L/B/T and stated Cw reference area is not available offline in this work tree, and network egress is blocked; not reconstructed from memory",
+        "required_artifact": "table page + exact L/B/T + Cw reference area, transcribed by a script that re-reads the source file (zero hand-copy)"
+      }
+    }
+  },
+  "production_routes": {
+    "kochin": {
+      "route": "route_kochin",
+      "module": "tensorbem.wigley.michell_wave_resistance_canonical",
+      "formula": "Rw = (4 rho g^2/(pi U^2)) int_1^inf lam^2 |H(k0 lam^2, k0 lam)|^2 / sqrt(lam^2-1) dlam, lam = 1 + s^2",
+      "production_n_quad": 256,
+      "levels": [
+        64,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "cases": [
+        {
+          "froude_number": 0.2,
+          "speed": 1.0848032079598586,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 0.7165602513281747
+            },
+            {
+              "n_quad": 128,
+              "Rw": 0.7165602513236963
+            },
+            {
+              "n_quad": 256,
+              "Rw": 0.7165602513236836
+            },
+            {
+              "n_quad": 512,
+              "Rw": 0.7165602513236797
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 0.7165602513236965
+            }
+          ]
+        },
+        {
+          "froude_number": 0.25,
+          "speed": 1.3560040099498232,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 1.3424196313591117
+            },
+            {
+              "n_quad": 128,
+              "Rw": 1.3424196317436603
+            },
+            {
+              "n_quad": 256,
+              "Rw": 1.3424196317436663
+            },
+            {
+              "n_quad": 512,
+              "Rw": 1.342419631743669
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 1.342419631743661
+            }
+          ]
+        },
+        {
+          "froude_number": 0.3,
+          "speed": 1.6272048119397877,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 3.8916635973698477
+            },
+            {
+              "n_quad": 128,
+              "Rw": 3.891663597215948
+            },
+            {
+              "n_quad": 256,
+              "Rw": 3.891663597215892
+            },
+            {
+              "n_quad": 512,
+              "Rw": 3.891663597215878
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 3.8916635972159526
+            }
+          ]
+        },
+        {
+          "froude_number": 0.35,
+          "speed": 1.8984056139297523,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 3.0864934618520543
+            },
+            {
+              "n_quad": 128,
+              "Rw": 3.086493455463112
+            },
+            {
+              "n_quad": 256,
+              "Rw": 3.086493455463113
+            },
+            {
+              "n_quad": 512,
+              "Rw": 3.086493455463108
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 3.086493455463104
+            }
+          ]
+        },
+        {
+          "froude_number": 0.4,
+          "speed": 2.1696064159197173,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 8.831972923011703
+            },
+            {
+              "n_quad": 128,
+              "Rw": 8.831972913489244
+            },
+            {
+              "n_quad": 256,
+              "Rw": 8.831972913488974
+            },
+            {
+              "n_quad": 512,
+              "Rw": 8.831972913488901
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 8.83197291348923
+            }
+          ]
+        },
+        {
+          "froude_number": 0.45,
+          "speed": 2.440807217909682,
+          "levels": [
+            {
+              "n_quad": 64,
+              "Rw": 16.985212681380755
+            },
+            {
+              "n_quad": 128,
+              "Rw": 16.98521267465294
+            },
+            {
+              "n_quad": 256,
+              "Rw": 16.98521267465252
+            },
+            {
+              "n_quad": 512,
+              "Rw": 16.985212674652377
+            },
+            {
+              "n_quad": 1024,
+              "Rw": 16.98521267465291
+            }
+          ]
+        }
+      ]
+    },
+    "panels": {
+      "route": "route_panels",
+      "module": "tensorbem.thin_ship_michell.wigley_panels + wave_resistance_from_amplitude",
+      "formula": "A(theta) sampled from 2x2 Gauss points per centreplane panel",
+      "lam_max": 200.0,
+      "n_lam": 256,
+      "levels": [
+        {
+          "n_x": 20,
+          "n_z": 10
+        },
+        {
+          "n_x": 40,
+          "n_z": 20
+        },
+        {
+          "n_x": 80,
+          "n_z": 40
+        },
+        {
+          "n_x": 160,
+          "n_z": 80
+        }
+      ],
+      "cases": [
+        {
+          "froude_number": 0.2,
+          "speed": 1.0848032079598586,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 0.7524414399862084,
+              "seconds": 0.22097349166870117
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 0.7194197329504776,
+              "seconds": 0.08461189270019531
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 0.7169187145727927,
+              "seconds": 0.3265964984893799
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 0.7167596417142928,
+              "seconds": 1.2339611053466797
+            }
+          ]
+        },
+        {
+          "froude_number": 0.25,
+          "speed": 1.3560040099498232,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 1.3589665847290562,
+              "seconds": 0.017168283462524414
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 1.3435536056093003,
+              "seconds": 0.0751802921295166
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 1.3428249550577689,
+              "seconds": 0.2947242259979248
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 1.3428194503748658,
+              "seconds": 1.1633796691894531
+            }
+          ]
+        },
+        {
+          "froude_number": 0.3,
+          "speed": 1.6272048119397877,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 3.89973631927809,
+              "seconds": 0.01968836784362793
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 3.892112101039555,
+              "seconds": 0.07514500617980957
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 3.8918296479337893,
+              "seconds": 0.2754068374633789
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 3.891857629984944,
+              "seconds": 1.0473806858062744
+            }
+          ]
+        },
+        {
+          "froude_number": 0.35,
+          "speed": 1.8984056139297523,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 3.090338343013986,
+              "seconds": 0.01639842987060547
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 3.0865045336452104,
+              "seconds": 0.05968523025512695
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 3.0865041148517407,
+              "seconds": 0.2747232913970947
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 3.0865338563482134,
+              "seconds": 1.0853245258331299
+            }
+          ]
+        },
+        {
+          "froude_number": 0.4,
+          "speed": 2.1696064159197173,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 8.83352325462017,
+              "seconds": 0.01455235481262207
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 8.831818188281574,
+              "seconds": 0.06279778480529785
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 8.831969253419645,
+              "seconds": 0.2355058193206787
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 8.832016173693463,
+              "seconds": 1.036184549331665
+            }
+          ]
+        },
+        {
+          "froude_number": 0.45,
+          "speed": 2.440807217909682,
+          "levels": [
+            {
+              "n_x": 20,
+              "n_z": 10,
+              "panel_count": 200,
+              "Rw": 16.985378207634604,
+              "seconds": 0.013585329055786133
+            },
+            {
+              "n_x": 40,
+              "n_z": 20,
+              "panel_count": 800,
+              "Rw": 16.984946345716292,
+              "seconds": 0.05649137496948242
+            },
+            {
+              "n_x": 80,
+              "n_z": 40,
+              "panel_count": 3200,
+              "Rw": 16.98517725691231,
+              "seconds": 0.3034083843231201
+            },
+            {
+              "n_x": 160,
+              "n_z": 80,
+              "panel_count": 12800,
+              "Rw": 16.98524102668176,
+              "seconds": 1.129657506942749
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "froude_number": 0.2,
+      "speed": 1.0848032079598586,
+      "Rw_reference": 0.7168235537456323,
+      "Rw_kochin": 0.7165602513236836,
+      "kochin_rel_error": 0.0003673183178383015,
+      "kochin_signed_rel_error": -0.0003673183178383015,
+      "Rw_panels_finest": 0.7167596417142928,
+      "panels_finest_rel_error": 8.916006038797841e-05,
+      "panels_finest_signed_rel_error": -8.916006038797841e-05,
+      "panels_gci": {
+        "values": [
+          0.7194197329504776,
+          0.7169187145727927,
+          0.7167596417142928
+        ],
+        "refinement": 2.0,
+        "observed_order": 3.9747560538816695,
+        "monotone": true,
+        "gci_fine": 1.8843078269644152e-05
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 0.7524414399862084,
+          "rel_error": 0.04968849873090972
+        },
+        {
+          "panel_count": 800,
+          "Rw": 0.7194197329504776,
+          "rel_error": 0.003621782782219364
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 0.7169187145727927,
+          "rel_error": 0.00013275348816745418
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 0.7167596417142928,
+          "rel_error": 8.916006038797841e-05
+        }
+      ],
+      "Cw_reference_LT": 0.0021129730069705554,
+      "Cw_reference_wetted": 0.0008875613471365434,
+      "Cw_kochin_LT": 0.002112196873279997,
+      "Cw_kochin_wetted": 0.0008872353295955349
+    },
+    {
+      "froude_number": 0.25,
+      "speed": 1.3560040099498232,
+      "Rw_reference": 1.342588332526817,
+      "Rw_kochin": 1.3424196317436663,
+      "kochin_rel_error": 0.00012565339580546253,
+      "kochin_signed_rel_error": -0.00012565339580546253,
+      "Rw_panels_finest": 1.3428194503748658,
+      "panels_finest_rel_error": 0.00017214349510528675,
+      "panels_finest_signed_rel_error": 0.00017214349510528675,
+      "panels_gci": {
+        "values": [
+          1.3435536056093003,
+          1.3428249550577689,
+          1.3428194503748658
+        ],
+        "refinement": 2.0,
+        "observed_order": 7.048423818248574,
+        "monotone": true,
+        "gci_fine": 3.900597098693901e-08
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 1.3589665847290562,
+          "rel_error": 0.012199012761726018
+        },
+        {
+          "panel_count": 800,
+          "Rw": 1.3435536056093003,
+          "rel_error": 0.0007189643013405936
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 1.3428249550577689,
+          "rel_error": 0.0001762435477943317
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 1.3428194503748658,
+          "rel_error": 0.00017214349510528675
+        }
+      ],
+      "Cw_reference_LT": 0.002532821153014236,
+      "Cw_reference_wetted": 0.0010639199588490412,
+      "Cw_kochin_LT": 0.002532502895435392,
+      "Cw_kochin_wetted": 0.0010637862736933466
+    },
+    {
+      "froude_number": 0.3,
+      "speed": 1.6272048119397877,
+      "Rw_reference": 3.8917804197511754,
+      "Rw_kochin": 3.891663597215892,
+      "kochin_rel_error": 3.001776120007619e-05,
+      "kochin_signed_rel_error": -3.001776120007619e-05,
+      "Rw_panels_finest": 3.891857629984944,
+      "panels_finest_rel_error": 1.9839308861535754e-05,
+      "panels_finest_signed_rel_error": 1.9839308861535754e-05,
+      "panels_gci": {
+        "values": [
+          3.892112101039555,
+          3.8918296479337893,
+          3.891857629984944
+        ],
+        "refinement": 2.0,
+        "observed_order": null,
+        "monotone": false,
+        "gci_fine": 8.98736985496703e-06,
+        "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 3.89973631927809,
+          "rel_error": 0.0020442827366461067
+        },
+        {
+          "panel_count": 800,
+          "Rw": 3.892112101039555,
+          "rel_error": 8.52261054339692e-05
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 3.8918296479337893,
+          "rel_error": 1.2649270334997005e-05
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 3.891857629984944,
+          "rel_error": 1.9839308861535754e-05
+        }
+      ],
+      "Cw_reference_LT": 0.005098559507130392,
+      "Cw_reference_wetted": 0.0021416668976252293,
+      "Cw_kochin_LT": 0.005098406459788643,
+      "Cw_kochin_wetted": 0.0021416026095797264
+    },
+    {
+      "froude_number": 0.35,
+      "speed": 1.8984056139297523,
+      "Rw_reference": 3.0865796854212073,
+      "Rw_kochin": 3.086493455463113,
+      "kochin_rel_error": 2.793705877792931e-05,
+      "kochin_signed_rel_error": -2.793705877792931e-05,
+      "Rw_panels_finest": 3.0865338563482134,
+      "panels_finest_rel_error": 1.4847850262978687e-05,
+      "panels_finest_signed_rel_error": -1.4847850262978687e-05,
+      "panels_gci": {
+        "values": [
+          3.0865045336452104,
+          3.0865041148517407,
+          3.0865338563482134
+        ],
+        "refinement": 2.0,
+        "observed_order": null,
+        "monotone": false,
+        "gci_fine": 1.204486077949265e-05,
+        "note": "non-monotone triple (sign change); GCI replaced by the fine-grid difference"
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 3.090338343013986,
+          "rel_error": 0.0012177419590143849
+        },
+        {
+          "panel_count": 800,
+          "Rw": 3.0865045336452104,
+          "rel_error": 2.4347913760947786e-05
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 3.0865041148517407,
+          "rel_error": 2.4483595814341372e-05
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 3.0865338563482134,
+          "rel_error": 1.4847850262978687e-05
+        }
+      ],
+      "Cw_reference_LT": 0.0029708660990554127,
+      "Cw_reference_wetted": 0.0012479221969903063,
+      "Cw_kochin_LT": 0.0029707831017945817,
+      "Cw_kochin_wetted": 0.0012478873337145387
+    },
+    {
+      "froude_number": 0.4,
+      "speed": 2.1696064159197173,
+      "Rw_reference": 8.832036025293156,
+      "Rw_kochin": 8.831972913488974,
+      "kochin_rel_error": 7.1457820147003036e-06,
+      "kochin_signed_rel_error": -7.1457820147003036e-06,
+      "Rw_panels_finest": 8.832016173693463,
+      "panels_finest_rel_error": 2.2476810145491196e-06,
+      "panels_finest_signed_rel_error": -2.2476810145491196e-06,
+      "panels_gci": {
+        "values": [
+          8.831818188281574,
+          8.831969253419645,
+          8.832016173693463
+        ],
+        "refinement": 2.0,
+        "observed_order": 1.6868874244116852,
+        "monotone": true,
+        "gci_fine": 2.9918056285564388e-06
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 8.83352325462017,
+          "rel_error": 0.00016839031484408267
+        },
+        {
+          "panel_count": 800,
+          "Rw": 8.831818188281574,
+          "rel_error": 2.4664416105075133e-05
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 8.831969253419645,
+          "rel_error": 7.560190347956885e-06
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 8.832016173693463,
+          "rel_error": 2.2476810145491196e-06
+        }
+      ],
+      "Cw_reference_LT": 0.006508524176040881,
+      "Cw_reference_wetted": 0.002733927251555327,
+      "Cw_kochin_LT": 0.006508477667545882,
+      "Cw_kochin_wetted": 0.0027339077155071434
+    },
+    {
+      "froude_number": 0.45,
+      "speed": 2.440807217909682,
+      "Rw_reference": 16.98526388784892,
+      "Rw_kochin": 16.98521267465252,
+      "kochin_rel_error": 3.0151545915486292e-06,
+      "kochin_signed_rel_error": -3.0151545915486292e-06,
+      "Rw_panels_finest": 16.98524102668176,
+      "panels_finest_rel_error": 1.3459412412526535e-06,
+      "panels_finest_signed_rel_error": -1.3459412412526535e-06,
+      "panels_gci": {
+        "values": [
+          16.984946345716292,
+          16.98517725691231,
+          16.98524102668176
+        ],
+        "refinement": 2.0,
+        "observed_order": 1.8563935551812778,
+        "monotone": true,
+        "gci_fine": 1.7905394256068987e-06
+      },
+      "panels_by_level": [
+        {
+          "panel_count": 200,
+          "Rw": 16.985378207634604,
+          "rel_error": 6.730527499539522e-06
+        },
+        {
+          "panel_count": 800,
+          "Rw": 16.984946345716292,
+          "rel_error": 1.8695154501234797e-05
+        },
+        {
+          "panel_count": 3200,
+          "Rw": 16.98517725691231,
+          "rel_error": 5.100358592188979e-06
+        },
+        {
+          "panel_count": 12800,
+          "Rw": 16.98524102668176,
+          "rel_error": 1.3459412412526535e-06
+        }
+      ],
+      "Cw_reference_LT": 0.009889832682806167,
+      "Cw_reference_wetted": 0.004154257148552763,
+      "Cw_kochin_LT": 0.009889802863431744,
+      "Cw_kochin_wetted": 0.004154244622825247
+    }
+  ],
+  "legacy_defect": {
+    "note": "The legacy default wigley.michell_wave_resistance samples k=alpha=k0*lam (violates the steady free-surface condition by lam-1) and returns kg s^2 m^-1, not a force; it is recorded here as a defect probe only.",
+    "rows": [
+      {
+        "froude_number": 0.2,
+        "canonical_Rw": 0.7165602513236836,
+        "legacy_Rw": 0.069528924584419,
+        "canonical_over_legacy": 10.305930310394306
+      },
+      {
+        "froude_number": 0.25,
+        "canonical_Rw": 1.3424196317436663,
+        "legacy_Rw": 0.0971114170565367,
+        "canonical_over_legacy": 13.823499568152025
+      },
+      {
+        "froude_number": 0.3,
+        "canonical_Rw": 3.891663597215892,
+        "legacy_Rw": 0.3319010806816133,
+        "canonical_over_legacy": 11.725371876535391
+      },
+      {
+        "froude_number": 0.35,
+        "canonical_Rw": 3.086493455463113,
+        "legacy_Rw": 0.12655805406774906,
+        "canonical_over_legacy": 24.3879654929812
+      },
+      {
+        "froude_number": 0.4,
+        "canonical_Rw": 8.831972913488974,
+        "legacy_Rw": 0.7107444853800241,
+        "canonical_over_legacy": 12.426368540540492
+      },
+      {
+        "froude_number": 0.45,
+        "canonical_Rw": 16.98521267465252,
+        "legacy_Rw": 1.3117641247579215,
+        "canonical_over_legacy": 12.948374142940555
+      }
+    ],
+    "registered_case_artifact": "benchmarks/verified/bem_wigley_wave_resistance/results.json carries the legacy numbers (self-consistent quadrature study of the defective integrand, ~10x low in force); it is NOT used as the reference here."
+  },
+  "criteria": {
+    "geometry_gate": {
+      "measured": 1.3877787807814457e-16,
+      "limit": 1e-12,
+      "passed": true
+    },
+    "kochin_vs_reference_resistance": {
+      "measured": 0.0003673183178383015,
+      "limit": 0.05,
+      "passed": true
+    },
+    "panels_vs_reference_resistance": {
+      "measured": 0.00017214349510528675,
+      "limit": 0.05,
+      "passed": true
+    },
+    "panels_800_vs_reference_resistance": {
+      "measured": 0.003621782782219364,
+      "limit": 0.05,
+      "passed": true
+    },
+    "reference_quadrature_gci": {
+      "measured": 8.545075722390879e-06,
+      "limit": 0.001,
+      "passed": true
+    },
+    "reference_truncation_drift": {
+      "measured": 5.332000477114112e-06,
+      "limit": 0.001,
+      "passed": true
+    },
+    "panels_gci": {
+      "measured": 1.8843078269644152e-05,
+      "limit": 0.05,
+      "passed": true
+    },
+    "reference_truncation_probe_lam8": {
+      "measured": 0.000970192121735272,
+      "limit": null,
+      "passed": true,
+      "note": "report-only sensitivity: truncating at sec(theta)=8 loses up to this fraction"
+    },
+    "all_passed": true
+  },
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_wigley3_wave_resistance --output benchmarks/verified/case_bem_wigley3_wave_res",
+  "wall_seconds": 95.95970678329468,
+  "figures": [
+    "fig_cw_vs_fr.png",
+    "fig_panel_convergence.png"
+  ]
+}
