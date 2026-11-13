@@ -18,6 +18,14 @@ V12  variational (energy) balance: PE = rho_w g <eta^2> + bending energy versus
      quadrature.  It fixes the *placement* of the inertia term and therefore
      discriminates eq. (3) from the denominator-only variant
      ``(g k + D k^5/rho_w) tanh(kH) / (tanh(kH) + mu k)``.
+V13  boundary-integral (strip BEM) depth factor
+     (``tensorbem.ice_mass_loading_dispersion``): ``Lambda = (dphi/dz)/phi``
+     comes from a mixed BIE solve of Laplace's equation in the periodic strip
+     -- no analytic tanh and no grid derivative.  eq. (3) is rewritten as
+     ``omega^2 = (g + D k^4/rho_w) Lambda / (1 + mu Lambda)``, so the BEM value
+     of Lambda can be fed in directly; two independent routes (driven Rayleigh
+     quotient and the assembled Dirichlet-to-Neumann map) must agree, and the
+     result must converge to eq. (3) under panel refinement.
 
 Acceptance criteria (V1..V10) are listed in ``CRITERIA`` below; every entry
 records the measured quantity, the reference it is compared to, and pass/fail.
@@ -60,6 +68,10 @@ from tensorbem.flexural_gravity import (  # noqa: E402
 )
 from tensorbem.flexural_gravity_numeric import fd_omega2  # noqa: E402
 from tensorbem.ice import IceCover, mass_loading_omega  # noqa: E402
+from tensorbem.ice_mass_loading_dispersion import (  # noqa: E402
+    dtn_depth_factor,
+    strip_bem_depth_factor,
+)
 
 OUT = ROOT / "docs" / "flexural_gravity_mass_loading"
 TWO_PI = 2.0 * math.pi
@@ -81,6 +93,14 @@ FD_LEVELS = 5
 # V12: (h_ice [m], water depth [m]) x ENERGY_WAVENUMBERS
 ENERGY_CASES = ((1.0, 200.0), (2.0, 200.0), (2.0, 20.0), (0.5, 20.0))
 ENERGY_WAVENUMBERS = (0.005, 0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.50)
+
+# V13: same six (h_ice, H, k) combinations as V11, so the two independent
+# routes (finite difference vs boundary integral) can be read side by side.
+BEM_CASES = FD_CASES
+BEM_PANELS_PER_WAVELENGTH = (8, 16, 32, 64)
+BEM_CROSS_ROUTE_PPW = 32
+# V13 figure: omega(k) sweep compared curve-by-curve against eq. (3)
+BEM_SWEEP_WAVENUMBERS = (0.005, 0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.50, 0.80)
 
 
 # ---------------------------------------------------------------------------
@@ -647,6 +667,155 @@ def criterion_v12(table: list) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# V13  independent route: boundary-integral (strip BEM) depth factor
+# ---------------------------------------------------------------------------
+def omega2_from_depth_factor(lam: float, k: float, plate: IcePlate) -> float:
+    """eq. (3) rewritten in terms of ``Lambda = (dphi/dz)/phi = k tanh(kH)``.
+
+    Because ``tanh(kH) = Lambda / k``, eq. (3) is algebraically identical to
+
+        omega^2 = (g + D k^4/rho_w) * Lambda / (1 + mu * Lambda),
+
+    which is the form a boundary-element solve can feed: the BEM returns
+    ``Lambda`` for the rigid-bottom periodic strip and never evaluates
+    ``tanh``.  The identity is exact when ``Lambda = k tanh(kH)`` (checked as
+    ``identity_error`` in the table) and carries the BEM discretisation error
+    otherwise.
+    """
+    mu = mass_loading_parameter(plate)
+    return (
+        (plate.gravity + plate.flexural_rigidity * k ** 4 / plate.water_density)
+        * lam
+        / (1.0 + mu * lam)
+    )
+
+
+def bem_route_table() -> list:
+    rows = []
+    for h_ice, depth, k in BEM_CASES:
+        plate = IcePlate(thickness=h_ice, water_depth=depth)
+        reference = flexural_gravity_omega2_mass_loading(k, plate)
+        exact_lam = k * math.tanh(k * depth)
+        identity_error = rel_err(omega2_from_depth_factor(exact_lam, k, plate), reference)
+        lams, errors, n_panels, scatter = [], [], [], []
+        for ppw in BEM_PANELS_PER_WAVELENGTH:
+            solve = strip_bem_depth_factor(k, depth, panels_per_wavelength=ppw)
+            lams.append(solve.depth_factor_rq)
+            n_panels.append(solve.n_panels)
+            scatter.append(solve.panel_scatter)
+            errors.append(
+                rel_err(omega2_from_depth_factor(solve.depth_factor_rq, k, plate), reference)
+            )
+        lam_dtn = dtn_depth_factor(
+            k, depth, panels_per_wavelength=BEM_CROSS_ROUTE_PPW
+        )
+        lam_rq = strip_bem_depth_factor(
+            k, depth, panels_per_wavelength=BEM_CROSS_ROUTE_PPW
+        ).depth_factor_rq
+        rows.append({
+            "ice_thickness": h_ice,
+            "water_depth": depth,
+            "wavenumber": k,
+            "kH": k * depth,
+            "mu": mass_loading_parameter(plate),
+            "depth_factor_exact": exact_lam,
+            "identity_error": identity_error,
+            "panels_per_wavelength": list(BEM_PANELS_PER_WAVELENGTH),
+            "n_panels": n_panels,
+            "depth_factor_bem": lams,
+            "panel_scatter": scatter,
+            "omega2_relative_errors": errors,
+            "finest_error": errors[-1],
+            # one decade of ppw refinement: overall slope of the error curve
+            "order_first_last": math.log2(
+                errors[0] / errors[-1]
+            ) / math.log2(
+                BEM_PANELS_PER_WAVELENGTH[-1] / BEM_PANELS_PER_WAVELENGTH[0]
+            ),
+            "cross_route_ppw": BEM_CROSS_ROUTE_PPW,
+            "cross_route_rel_diff": abs(lam_dtn / lam_rq - 1.0),
+            "depth_factor_rel_error_at_cross_route": abs(lam_rq / exact_lam - 1.0),
+        })
+    return rows
+
+
+def bem_omega_sweep() -> list:
+    """omega(k) from the BEM depth factor against eq. (3), curve by curve.
+
+    Panel-resolved error tables answer "is 64 ppw enough"; this sweep answers
+    "is the whole dispersion curve reproduced", over four decades of frequency.
+    """
+    plate = IcePlate(thickness=2.0, water_depth=20.0)
+    rows = []
+    for k in BEM_SWEEP_WAVENUMBERS:
+        solve = strip_bem_depth_factor(
+            k, plate.water_depth, panels_per_wavelength=BEM_PANELS_PER_WAVELENGTH[-1]
+        )
+        omega_bem = math.sqrt(
+            omega2_from_depth_factor(solve.depth_factor_rq, k, plate)
+        )
+        omega_ref = flexural_gravity_omega_mass_loading(k, plate)
+        rows.append({
+            "wavenumber": k,
+            "kH": k * plate.water_depth,
+            "ice_thickness": plate.thickness,
+            "water_depth": plate.water_depth,
+            "panels_per_wavelength": BEM_PANELS_PER_WAVELENGTH[-1],
+            "depth_factor_exact": k * math.tanh(k * plate.water_depth),
+            "depth_factor_bem": solve.depth_factor_rq,
+            "omega_eq3": omega_ref,
+            "omega_bem": omega_bem,
+            "relative_error": abs(omega_bem / omega_ref - 1.0),
+        })
+    return rows
+
+
+def criterion_v13(table: list, sweep: list) -> dict:
+    worst_finest = max(r["finest_error"] for r in table)
+    worst_cross = max(r["cross_route_rel_diff"] for r in table)
+    worst_identity = max(r["identity_error"] for r in table)
+    monotone = all(
+        all(e1 > e2 for e1, e2 in zip(r["omega2_relative_errors"], r["omega2_relative_errors"][1:]))
+        for r in table
+    )
+    orders = [r["order_first_last"] for r in table]
+    return {
+        "description": (
+            "independent boundary-integral route (periodic strip BEM for "
+            "Lambda=(dphi/dz)/phi, no analytic tanh, no grid derivative) "
+            "reproduces eq.(3): at 64 panels/wavelength |d omega^2|/omega^2 "
+            "< 2e-3, the error decreases monotonically under refinement "
+            "(overall slope 1.0-2.2), the exact-Lambda rewriting is an identity "
+            "to roundoff, and the driven-Rayleigh-quotient / DtN routes agree"
+        ),
+        "rows": table,
+        "max_relative_error": worst_finest,
+        "max_cross_route_rel_diff": worst_cross,
+        "max_identity_error": worst_identity,
+        "omega_sweep": sweep,
+        "max_sweep_relative_error": max(r["relative_error"] for r in sweep),
+        "min_order_first_last": min(orders),
+        "max_order_first_last": max(orders),
+        "monotone_refinement": monotone,
+        "threshold": 2.0e-3,
+        "identity_threshold": 1.0e-12,
+        "cross_route_threshold": 1.0e-12,
+        "min_order_threshold": 1.0,
+        "max_order_threshold": 2.2,
+        "sweep_threshold": 3.0e-3,
+        "pass": (
+            worst_finest < 2.0e-3
+            and max(r["relative_error"] for r in sweep) < 3.0e-3
+            and worst_cross < 1.0e-12
+            and worst_identity < 1.0e-12
+            and monotone
+            and min(orders) > 1.0
+            and max(orders) < 2.2
+        ),
+    }
+
+
+# ---------------------------------------------------------------------------
 # figures
 # ---------------------------------------------------------------------------
 def figure_dispersion_models(plate: IcePlate, path: Path) -> None:
@@ -784,9 +953,17 @@ def figure_edge_coefficients(path: Path) -> None:
 # ---------------------------------------------------------------------------
 # markdown tables + main
 # ---------------------------------------------------------------------------
-def figure_verification_routes(fd_rows: list, energy_rows: list, path: Path) -> None:
-    """Left: FD grid convergence.  Right: energy-balance discrimination."""
-    fig, axes = plt.subplots(1, 2, figsize=(12.5, 5.0))
+def figure_verification_routes(
+    fd_rows: list, energy_rows: list, bem_rows: list, bem_sweep: list, path: Path
+) -> None:
+    """Left: FD grid convergence.  Middle: energy-balance discrimination.
+
+        Right: boundary-integral route -- the BEM depth factor fed into the
+    Lambda-form of eq. (3) converges to the analytic tanh form under panel
+    refinement, and the resulting omega(k) curve sits on the analytic one.
+    """
+    fig, axes = plt.subplots(2, 2, figsize=(13.5, 10.0))
+    axes = axes.ravel()
 
     ax = axes[0]
     for row in fd_rows:
@@ -818,6 +995,40 @@ def figure_verification_routes(fd_rows: list, energy_rows: list, path: Path) -> 
     ax.set_title("V12 energy balance: eq.3 vs unphysical variant")
     ax.grid(True, which="both", alpha=0.3)
     ax.legend(fontsize=6.5, loc="upper left")
+
+    ax = axes[2]
+    ppw = np.asarray(BEM_PANELS_PER_WAVELENGTH, dtype=float)
+    for row in bem_rows:
+        label = f"h={row['ice_thickness']:g} m, H={row['water_depth']:g} m, k={row['wavenumber']:g}"
+        ax.loglog(ppw, row["omega2_relative_errors"], "o-", markersize=4, label=label)
+    first = bem_rows[0]
+    ax.loglog(ppw, first["omega2_relative_errors"][0] * (ppw / ppw[0]) ** -1.0,
+              "k--", linewidth=1.0, label="slope -1 (reference)")
+    ax.axhline(2.0e-3, color="grey", linestyle=":", linewidth=1.0)
+    ax.set_xlabel("panels per wavelength")
+    ax.set_ylabel(r"$|\omega^2_{BEM}/\omega^2_{eq.3} - 1|$")
+    ax.set_title("V13 strip-BEM depth factor: panel convergence")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=6.5, loc="lower left")
+
+    # fourth panel: omega(k) from the BEM route (64 ppw) against eq. (3)
+    ax = axes[3]
+    k_sweep = np.asarray([r["wavenumber"] for r in bem_sweep], dtype=float)
+    omega_analytic = np.asarray([r["omega_eq3"] for r in bem_sweep])
+    omega_bem = np.asarray([r["omega_bem"] for r in bem_sweep])
+    omega_bem_err = [r["relative_error"] for r in bem_sweep]
+    ax.loglog(k_sweep, omega_analytic, "-", linewidth=1.6,
+              label="eq.3 (analytic tanh), h=2 m, H=20 m")
+    ax.loglog(k_sweep, omega_bem, "o", markersize=5,
+              label="strip-BEM Lambda (64 ppw)")
+    ax.set_xlabel("k [1/m]")
+    ax.set_ylabel(r"$\omega$ [rad/s]")
+    ax.set_title("V13 omega(k): analytic vs boundary-integral route")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=7.0, loc="upper left")
+    ax.text(0.03, 0.06,
+            "max rel. difference = %.2e" % max(omega_bem_err),
+            transform=ax.transAxes, fontsize=7.5)
 
     fig.tight_layout()
     fig.savefig(path, dpi=150)
@@ -900,8 +1111,42 @@ def write_results_markdown(report: dict, table: list, sensitivity: list, path: P
             f"{row['energy_residual_denominator_only']:.3e} | "
             f"{row['denominator_only_deviation_percent']:.3f} |"
         )
-    lines += ["", "## 杨氏模量敏感性（惯性修正 [%]）", "",
-              "| E [GPa] | h_ice [m] | " +
+    lines += [
+        "",
+        "## V13 独立边界积分路线（周期条带 BEM 求 Lambda=(dphi/dz)/phi，不用解析 tanh）",
+        "",
+        "eq.(3) 在 Lambda 表述下等价于 omega^2 = (g + D k^4/rho_w) Lambda / (1 + mu Lambda)；"
+        "Lambda 由 Laplace 方程混合边界积分方程解得，两条独立路线（driven 瑞利商 / 组装 DtN 映射）须一致。",
+        "",
+        "| h_ice [m] | H [m] | k [1/m] | kH | Lambda 精确 | Lambda_BEM(64ppw) | "
+        "rel err 序列 (8/16/32/64 ppw) | 整体斜率 | 最细 rel err | 双路线差 | 恒等式残差 |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for row in report["bem_route_table"]:
+        errs = ", ".join(f"{e:.3e}" for e in row["omega2_relative_errors"])
+        lines.append(
+            f"| {row['ice_thickness']} | {row['water_depth']} | {row['wavenumber']} | "
+            f"{row['kH']:.4g} | {row['depth_factor_exact']:.6f} | "
+            f"{row['depth_factor_bem'][-1]:.6f} | {errs} | "
+            f"{row['order_first_last']:.2f} | {row['finest_error']:.3e} | "
+            f"{row['cross_route_rel_diff']:.1e} | {row['identity_error']:.1e} |"
+        )
+    sweep = report["bem_omega_sweep"]
+    lines += [
+        "",
+        "V13 的 ω(k) 逐点比对（h=2 m, H=20 m, 64 ppw）：",
+        "",
+        "| k [1/m] | " + " | ".join(f"{r['wavenumber']:g}" for r in sweep) + " |",
+        "|---|" + "---|" * len(sweep),
+        "| ω_eq3 [rad/s] | " + " | ".join(f"{r['omega_eq3']:.6f}" for r in sweep) + " |",
+        "| ω_BEM [rad/s] | " + " | ".join(f"{r['omega_bem']:.6f}" for r in sweep) + " |",
+        "| rel | " + " | ".join(f"{r['relative_error']:.2e}" for r in sweep) + " |",
+        "",
+        "注：最细档（64 ppw）相对误差 ~1e-3 已接近常单元 BEM 的离散下限，"
+        "故整体斜率按 8->64 ppw 一段读出（`verification_report.json` 中 `order_first_last`）。",
+        "",
+        "## 杨氏模量敏感性（惯性修正 [%]）", "",
+        "| E [GPa] | h_ice [m] | " +
               " | ".join(f"f={f}" for f in FREQUENCIES) + " |",
               "|---|---|" + "---|" * len(FREQUENCIES)]
     for young in (1.0e9, 5.0e9, 10.0e9, 20.0e9, 30.0e9):
@@ -938,6 +1183,9 @@ def main() -> int:
     energy_rows = energy_balance_table()
     criteria["V11_fd_depth_factor"] = criterion_v11()
     criteria["V12_energy_balance"] = criterion_v12(energy_rows)
+    bem_rows = bem_route_table()
+    bem_sweep = bem_omega_sweep()
+    criteria["V13_bem_depth_factor"] = criterion_v13(bem_rows, bem_sweep)
 
     figures = []
     figure_dispersion_models(plate, OUT / "fig_dispersion_models.png")
@@ -948,7 +1196,10 @@ def main() -> int:
     figures.append("fig_wavelength_ratio.png")
     figure_edge_coefficients(OUT / "fig_edge_coefficients.png")
     figures.append("fig_edge_coefficients.png")
-    figure_verification_routes(fd_rows, energy_rows, OUT / "fig_verification_routes.png")
+    figure_verification_routes(
+        fd_rows, energy_rows, bem_rows, bem_sweep,
+        OUT / "fig_verification_routes.png",
+    )
     figures.append("fig_verification_routes.png")
 
     all_pass = all(c["pass"] for c in criteria.values())
@@ -971,6 +1222,8 @@ def main() -> int:
         "material_sensitivity_table": sensitivity,
         "fd_route_table": fd_rows,
         "energy_balance_table": energy_rows,
+        "bem_route_table": bem_rows,
+        "bem_omega_sweep": bem_sweep,
         "figures": figures,
         "all_criteria_pass": all_pass,
     }
