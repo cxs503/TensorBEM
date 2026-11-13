@@ -54,6 +54,7 @@ from typing import Any, Sequence
 from tensorbem.cathodic_protection import (
     SEAWATER_CONDUCTIVITY,
     verify_conducting_sphere,
+    verify_conducting_sphere_routes,
 )
 
 
@@ -62,14 +63,28 @@ def build_report(
     radius: float = 1.0,
     potential: float = -1.0,
     conductivity: float = SEAWATER_CONDUCTIVITY,
+    routes_subdivisions: int | None = None,
 ) -> dict[str, Any]:
-    """Assemble the conducting-sphere benchmark report."""
+    """Assemble the conducting-sphere benchmark report.
+
+    ``routes_subdivisions`` additionally runs the two-route cross-check
+    (:func:`tensorbem.cathodic_protection.verify_conducting_sphere_routes`) at
+    that icosphere level: the surface panel integral and the far-field
+    (Gauss-law) recovery of ``4 pi sigma a phi_a``.
+    """
     report = verify_conducting_sphere(
         subdivisions=tuple(int(s) for s in subdivisions),
         radius=radius,
         potential=potential,
         conductivity=conductivity,
     )
+    if routes_subdivisions is not None:
+        report["routes"] = verify_conducting_sphere_routes(
+            subdivisions=int(routes_subdivisions),
+            radius=radius,
+            potential=potential,
+            conductivity=conductivity,
+        )
     report["python"] = platform.python_version()
     report["platform"] = platform.platform()
     report["table"] = [
@@ -91,6 +106,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--radius", type=float, default=1.0)
     parser.add_argument("--potential", type=float, default=-1.0)
     parser.add_argument("--conductivity", type=float, default=SEAWATER_CONDUCTIVITY)
+    parser.add_argument(
+        "--routes-subdivisions",
+        type=int,
+        default=None,
+        help="also run the surface-vs-far-field current cross-check at this level",
+    )
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args(argv)
 
@@ -99,6 +120,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         radius=args.radius,
         potential=args.potential,
         conductivity=args.conductivity,
+        routes_subdivisions=args.routes_subdivisions,
     )
     payload = json.dumps(report, indent=2)
     if args.output is not None:
@@ -107,12 +129,26 @@ def main(argv: Sequence[str] | None = None) -> int:
         exact = report["exact_current_A"]
         finest = report["levels"][-1]
         print(f"wrote {args.output}")
+        # A single refinement level has no observed-order pair; print a dash
+        # instead of crashing on the None placeholder.
+        order = report["observed_order_finest_pair"]
+        order_text = f"{order:.2f}" if order is not None else "n/a (single level)"
         print(
             f"finest level: {finest['n_panels']} panels, "
             f"I = {finest['current_A']:.6f} A vs exact {exact:.6f} A "
             f"({100.0 * finest['current_rel_error']:.3f} %), "
-            f"observed order {report['observed_order_finest_pair']:.2f}"
+            f"observed order {order_text}"
         )
+        if "routes" in report:
+            routes = report["routes"]
+            print(
+                "routes: surface {:.4f} % | far-field {:.4f} % | "
+                "surface-vs-far-field {:.2e}".format(
+                    100.0 * routes["surface_rel_error"],
+                    100.0 * routes["far_field_rel_error"],
+                    routes["far_field"]["far_field_vs_surface_rel_error"],
+                )
+            )
     else:
         print(payload)
     return 0
