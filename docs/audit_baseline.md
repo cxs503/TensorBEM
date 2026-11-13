@@ -203,17 +203,16 @@ Counts: **79** REAL — 79 capabilities. The level is derived from code/test/doc
 
 ### Capability coverage
 
-96 of 102 core modules (outside `tensorbem.benchmarks`) are named by a row above; 4 more carry an accepted reason, so **2 are unowned**.
+96 of 104 core modules (outside `tensorbem.benchmarks`) are named by a row above; 8 more carry an accepted reason, so **0 are unowned**.
 
 - `tensorbem.analytic` — closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).
 - `tensorbem.coefficients` — hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.
+- `tensorbem.nk_steady_kernel` — steady Neumann-Kelvin spectral-form kernel candidate (m17117); the steady wave resistance physics it feeds is graded by the Neumann-Kelvin row and pinned by tests/test_nk_steady_kernel_candidate.py.
 - `tensorbem.resistance` — empirical calm-water resistance baselines (ITTC-57 friction line, Holtrop 1982/1984 form factor, wave resistance and total resistance, plus the declared coefficient-convention switches) are pinned by tests/test_wigley_calm_water_resistance.py, cross-checked coefficient by coefficient against the published KCS intermediate table of the ship-performance-platform registration, and documented in docs/wigley_calm_water_resistance.md; the evidence level is REAL formula implementation (an empirical regression, not a solved flow field), and the case it serves is `WITHHELD` against experiment because no tank data ships with the repository, so no resistance prediction level is claimed here.
+- `tensorbem.shape_gradient` — shape-gradient / adjoint-sensitivity module (m16955); the adjoint sign fix is pinned by tests/test_shape_gradient.py and the geometry it differentiates is graded by the panel-geometry rows.
+- `tensorbem.steady_kelvin` — steady Kelvin wave-resistance kernel (m16955); the steady wave-resistance physics is graded by the forward-speed-wave-resistance row and pinned by tests/test_steady_kelvin.py.
 - `tensorbem.verification` — namespace package over the verification campaign artefact trees; it holds no code of its own, so there is no entry point to grade -- the modules it contains are inventoried separately and graded by the row that owns their physics.
-
-**Core modules no row grades and no reason explains** (fails the gate):
-
-- `tensorbem.shape_gradient`
-- `tensorbem.steady_kelvin`
+- `tensorbem.wave1d` — 1-D linear wave-equation solver (d'Alembert formula + retarded-potential boundary flux) exercised by the CASE-SHU-OSHER benchmark and pinned by tests/test_wave1d.py; it is a scalar wave solver, not a BEM boundary-value problem, so no capability row claims a BEM evidence level for it.
 
 ### Untested modules
 
@@ -229,6 +228,7 @@ Not referenced by any test file, with an accepted reason:
 - `tensorbem.benchmarks.multihull_frequency_figures` — matplotlib helper rendering the multihull frequency-dependence figures from its JSON artifact; the coefficients it plots are pinned by tests/test_multibody_frequency_dependence_3d.py.
 - `tensorbem.benchmarks.neumann_kelvin_verification` — Neumann-Kelvin verification driver (Green function, Kelvin angle, Wigley C_w vs Michell); the kernel and the steady wave-resistance physics it reports on are pinned by tests/test_neumann_kelvin.py and graded by the Neumann-Kelvin row.
 - `tensorbem.benchmarks.quadratic_panel_convergence` — convergence study driver for the quadratic-panel operator; the operator itself is graded by the quadratic-panel rows and pinned by tests/test_panel_quadratic.py.
+- `tensorbem.benchmarks.shu_osher_wave_interaction` — CASE-SHU-OSHER benchmark driver: it runs the linear wave-interaction case through tensorbem.wave1d (pinned by tests/test_wave1d.py) and assembles the report/figures; the wave1d physics it exercises is graded by the wave1d test suite.
 - `tensorbem.benchmarks.ursell_quadrature_study` — one-off quadrature study superseded by tests/test_ursell_quadrature_convergence.py.
 - `tensorbem.benchmarks.wave_loads_minimal` — minimal wave-load report driver; the pressure and force path it reports on is pinned by tests/test_pressure.py and graded by the pressure-forces row.
 - `tensorbem.benchmarks.wave_loads_verification` — wave-load verification driver assembling the same pressure path as wave_loads_minimal; no physics of its own to pin.
