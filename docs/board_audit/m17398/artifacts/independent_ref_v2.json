@@ -1,0 +1,72 @@
+{
+  "method": "first-principles MacCamy-Fuchs series, all integer orders, no repo import",
+  "rows": [
+    {
+      "ka": 0.2,
+      "S_meansquare": 0.0029028711434787246,
+      "integral_modal": 0.03006739445072231,
+      "integral_quadrature": 0.03006739445071343,
+      "force_modal": 240.5906823288796,
+      "force_quadrature": 240.59068232880853,
+      "delivered_ref_force": 240.5907,
+      "rel_diff_vs_delivered": 7.344889220238145e-08,
+      "modal_vs_quadrature_rel": 2.954507406412053e-13
+    },
+    {
+      "ka": 0.5,
+      "S_meansquare": 0.09037284310899858,
+      "integral_modal": 0.8984503502473632,
+      "integral_quadrature": 0.8984503502469792,
+      "force_modal": 2875.656993277529,
+      "force_quadrature": 2875.6569932763,
+      "delivered_ref_force": 2875.657,
+      "rel_diff_vs_delivered": 2.3377165534689926e-09,
+      "modal_vs_quadrature_rel": 4.2744391710123697e-13
+    },
+    {
+      "ka": 1.0,
+      "S_meansquare": 0.5000958640913674,
+      "integral_modal": 4.177850997641725,
+      "integral_quadrature": 4.1778509976385365,
+      "force_modal": 6685.993519247998,
+      "force_quadrature": 6685.993519242896,
+      "delivered_ref_force": 6685.9935,
+      "rel_diff_vs_delivered": 2.8788538834971626e-09,
+      "modal_vs_quadrature_rel": 7.631274637430401e-13
+    },
+    {
+      "ka": 2.0,
+      "S_meansquare": 1.3587552197680772,
+      "integral_modal": 7.881309284952566,
+      "integral_quadrature": 7.881309284934975,
+      "force_modal": 6306.398053942849,
+      "force_quadrature": 6306.398053928773,
+      "delivered_ref_force": 6306.3981,
+      "rel_diff_vs_delivered": 7.303241915429482e-09,
+      "modal_vs_quadrature_rel": 2.2320585188147045e-12
+    }
+  ],
+  "long_wave": [
+    {
+      "ka": 0.01,
+      "coefficient": 3.084203600165055,
+      "law_5pi2_16": 3.0842513753404246,
+      "rel_err": 1.5490039414931502e-05
+    },
+    {
+      "ka": 0.02,
+      "coefficient": 3.0838910596215956,
+      "law_5pi2_16": 3.0842513753404246,
+      "rel_err": 0.00011682436837341974
+    },
+    {
+      "ka": 0.05,
+      "coefficient": 3.080622456228524,
+      "law_5pi2_16": 3.0842513753404246,
+      "rel_err": 0.0011765964152322807
+    }
+  ],
+  "max_rel_diff_vs_delivered": 7.344889220238145e-08,
+  "max_modal_vs_quadrature_rel": 2.2320585188147045e-12,
+  "max_long_wave_rel_err": 0.0011765964152322807
+}
