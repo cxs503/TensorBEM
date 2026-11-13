@@ -95,6 +95,8 @@ __all__ = [
     "round_trip_gate",
     "free_decay_gate",
     "negative_control_gate",
+    "sweep_grid",
+    "grid_convergence_study",
     "run_case",
     "render_markdown",
     "main",
@@ -113,12 +115,37 @@ VOLUME_ANALYTIC = CB_ANALYTIC * LENGTH * BEAM * DRAFT   # (4/9)LBT = 0.075 m^3
 
 DOF_NAMES = ("surge", "sway", "heave", "roll", "pitch", "yaw")
 
-#: Production band and node count, pre-declared.  The upper end is set by the
-#: discretisation (see ``TOLERANCES["panel_kh"]``): at omega = 6 rad/s the
-#: wavelength is 0.57 L and the 20-section mesh still resolves it.
+#: Production band and node count, pre-declared.
+#:
+#: Two independent constraints fix the band (m18249):
+#:
+#: * lower end -- below ``omega = 0.2 rad/s`` (``omega*sqrt(L/g) = 0.36``) the
+#:   radiation damping of the horizontal modes is at the level of the BEM
+#:   discretisation noise, so nothing is gained by going lower;
+#: * upper end -- gate C5 compares the time-domain decay rate with the
+#:   frequency-domain value ``B(omega_n)/(2 (m + A(omega_n)) omega_n)``.  For
+#:   this 3 m model the *highest* rigid-body natural frequency (heave) sits near
+#:   8.1 rad/s, so a band that stops at 8 rad/s cannot decide C5 at all: the
+#:   previous artifact recorded ``zeta_frequency_domain = nan`` and scored a
+#:   FAIL for a reason that was pure band coverage.  ``BAND[1] = 12 rad/s``
+#:   covers every natural frequency of the model.
+#:
+#: The upper end is still bounded by discretisation: gate C2 checks
+#: ``k*sqrt(A_panel) <= 1`` at ``BAND[1]``, i.e. at 12 rad/s with
+#: ``k = omega**2/g = 14.7 1/m`` the medium mesh must keep its largest panel
+#: below 6.8 cm.
+#:
+#: ``N_OMEGA`` is not a free knob either: gate C3 closes the Kramers-Kronig
+#: integral with the *piecewise-linear interpolant* of the tabulated damping, so
+#: the tabulated ``B(omega)`` has to resolve the resonance peaks of the hull.  The
+#: previous artifact ran 13 nodes over 0.15..8 rad/s (1.7 decades, ~7.5 nodes per
+#: decade) and its closure residual (3.5..16 %) was dominated by that
+#: interpolation error, not by a causality violation -- see
+#: :func:`grid_convergence_study`, which reports the residual as a function of
+#: ``N_OMEGA`` so the claim is checkable instead of asserted.
 MESHES: dict[str, tuple[int, int]] = {"coarse": (12, 4), "medium": (20, 6)}
-BAND = (0.2, 6.0)
-N_OMEGA = 21
+BAND = (0.2, 12.0)
+N_OMEGA = 41
 
 TOLERANCES = {
     "kk": 0.10,           # case pool id=145, tol_policy <10%
@@ -173,6 +200,46 @@ class Sweep:
         }
 
 
+def sweep_grid(band: tuple[float, float] = BAND, n_omega: int = N_OMEGA) -> np.ndarray:
+    """Log-spaced frequency nodes with both band ends exactly included."""
+    low, high = (float(band[0]), float(band[1]))
+    if not (0.0 < low < high):
+        raise ValueError(f"band must satisfy 0 < low < high, got {band!r}")
+    count = int(n_omega)
+    if count < 3:
+        raise ValueError("n_omega must be at least 3")
+    grid = np.logspace(math.log10(low), math.log10(high), count)
+    grid[0], grid[-1] = low, high
+    return grid
+
+
+def _refined_grid(
+    grid: np.ndarray,
+    added_mass: np.ndarray,
+    damping: np.ndarray,
+    *,
+    n_refine: int = 0,
+) -> np.ndarray:
+    """Geometric midpoints of the intervals where the damping varies fastest.
+
+    The KK closure integrates ``B`` with a piecewise-linear interpolant; the
+    residual therefore concentrates on the intervals that straddle a resonance
+    peak.  Ranking the intervals by the summed relative jump of ``B`` and
+    inserting one midpoint each is a cheap, deterministic refinement and it keeps
+    the adaptation tied to tabulated data only (nothing is extrapolated).
+    """
+    if n_refine <= 0 or grid.size < 3:
+        return grid
+    diag = np.zeros(grid.size - 1, dtype=float)
+    for dof in range(min(6, damping.shape[1])):
+        column = damping[:, dof, dof]
+        scale = max(float(np.max(np.abs(column))), 1e-300)
+        diag += np.abs(np.diff(column)) / scale
+    order = np.argsort(diag)[::-1][: int(n_refine)]
+    extra = np.sqrt(grid[order] * grid[order + 1])
+    return np.unique(np.concatenate([grid, extra]))
+
+
 def _solve_one(task: tuple[int, int, float]) -> tuple[float, Any, Any, float, int, float]:
     """Solve one frequency (module level so it is picklable)."""
     n_sections, n_levels, omega = task
@@ -204,19 +271,46 @@ def solve_sweep(
     band: tuple[float, float] = BAND,
     n_omega: int = N_OMEGA,
     jobs: int = 1,
+    omega_grid: Sequence[float] | None = None,
+    refine_peaks: int = 0,
 ) -> Sweep:
-    """Radiation sweep on the named mesh, CHIEF-regularised, optionally parallel."""
+    """Radiation sweep on the named mesh, CHIEF-regularised, optionally parallel.
+
+    ``omega_grid`` overrides the log-spaced grid (used by the grid-convergence
+    study).  ``refine_peaks`` adds one geometric midpoint per interval after the
+    first pass, taken from the intervals where the damping jumps most (see
+    :func:`_refined_grid`).
+    """
     if label not in MESHES:
         raise ValueError(f"unknown mesh label {label!r}; expected one of {sorted(MESHES)}")
     n_sections, n_levels = MESHES[label]
-    omega = np.logspace(math.log10(band[0]), math.log10(band[1]), int(n_omega))
+    omega = (
+        np.asarray(sorted(float(w) for w in omega_grid), dtype=float)
+        if omega_grid is not None
+        else sweep_grid(band, n_omega)
+    )
     tasks = [(n_sections, n_levels, float(w)) for w in omega]
     started = time.time()
-    if jobs > 1:
-        with ThreadPoolExecutor(max_workers=int(jobs)) as pool:
-            rows = list(pool.map(_solve_one, tasks))
-    else:
-        rows = [_solve_one(task) for task in tasks]
+
+    def _run(items: list[tuple[int, int, float]]) -> list[tuple]:
+        if jobs > 1:
+            with ThreadPoolExecutor(max_workers=int(jobs)) as pool:
+                return list(pool.map(_solve_one, items))
+        return [_solve_one(task) for task in items]
+
+    rows = _run(tasks)
+    if int(refine_peaks) > 0:
+        rows.sort(key=lambda row: row[0])
+        grid = np.array([row[0] for row in rows], dtype=float)
+        mass = np.array([row[1] for row in rows], dtype=float)
+        damper = np.array([row[2] for row in rows], dtype=float)
+        extra = [float(w) for w in _refined_grid(grid, mass, damper, n_refine=int(refine_peaks))]
+        known = set(round(float(w), 12) for w in grid)
+        tasks = [
+            (n_sections, n_levels, w) for w in extra if round(w, 12) not in known
+        ]
+        if tasks:
+            rows.extend(_run(tasks))
     rows.sort(key=lambda row: row[0])
     return Sweep(
         label=label,
@@ -416,14 +510,36 @@ def round_trip_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
     }
 
 
-def _decay_zeta(time_array: np.ndarray, displacement: np.ndarray) -> tuple[float, float, int]:
-    """Damping ratio from the logarithmic decrement of the positive peaks."""
+#: Peaks below this fraction of the largest excursion are not part of the
+#: physical decay: the memory kernel is truncated at ``omega_max``, which leaves
+#: a small ripple at the truncation frequency (period ``2 pi / omega_max``) that
+#: survives long after the hull mode has died away.  Fitting the logarithmic
+#: decrement across that residue produced the recorded C5 failure (zeta = 0.027
+#: from a mode whose measured decrement is 0.13): the peak spacing locked onto
+#: the ripple, not onto the hull mode.
+DECAY_AMPLITUDE_FLOOR = 1.0e-2
+
+
+def _decay_zeta(
+    time_array: np.ndarray,
+    displacement: np.ndarray,
+    *,
+    amplitude_floor: float = DECAY_AMPLITUDE_FLOOR,
+) -> tuple[float, float, int]:
+    """Damping ratio from the logarithmic decrement of the positive peaks.
+
+    Only peaks above ``amplitude_floor * max|displacement|`` are used, so a
+    decaying record is fitted over the part that carries the hull mode instead
+    of over whatever numerical ripple outlives it.
+    """
+    excursion = float(np.max(np.abs(displacement))) if displacement.size else 0.0
+    threshold = float(amplitude_floor) * excursion
     peaks: list[tuple[float, float]] = []
     for i in range(1, displacement.size - 1):
         if (
             displacement[i] > displacement[i - 1]
             and displacement[i] >= displacement[i + 1]
-            and displacement[i] > 0.0
+            and displacement[i] > threshold
         ):
             peaks.append((float(time_array[i]), float(displacement[i])))
     if len(peaks) < 3:
@@ -473,7 +589,10 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
         omega_n = omega_d / math.sqrt(max(1.0 - zeta_decay**2, 1e-12))
     else:
         omega_n = float("nan")
-    if math.isfinite(omega_n) and sweep.omega[0] <= omega_n <= sweep.omega[-1]:
+    in_band = bool(
+        math.isfinite(omega_n) and sweep.omega[0] <= omega_n <= sweep.omega[-1]
+    )
+    if in_band:
         a_at = float(np.interp(omega_n, sweep.omega, mass))
         b_at = float(np.interp(omega_n, sweep.omega, damper))
         zeta_fd = b_at / (2.0 * (displaced_mass + a_at) * omega_n)
@@ -483,7 +602,21 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
         relative = abs(zeta_decay - zeta_fd) / zeta_fd
     else:
         relative = float("inf")
-    passed = math.isfinite(relative) and relative <= TOLERANCES["free_decay"]
+    # A gate that cannot be evaluated must say so: "outside the computed band"
+    # and "the two routes disagree" are different failures and it was the first
+    # one that produced the recorded FAIL (omega_n = 8.15 rad/s > band top 8).
+    if not math.isfinite(omega_n):
+        status = "undecidable: decay record too short for a damping ratio"
+    elif not in_band:
+        status = (
+            "undecidable: natural frequency outside the computed band "
+            f"({sweep.omega[0]:.3g}..{sweep.omega[-1]:.3g} rad/s)"
+        )
+    elif not (math.isfinite(zeta_fd) and zeta_fd > 0.0):
+        status = "undecidable: non-positive frequency-domain damping at omega_n"
+    else:
+        status = "decided"
+    passed = status == "decided" and math.isfinite(relative) and relative <= TOLERANCES["free_decay"]
     return {
         "id": "C5",
         "title": f"Cummins free decay vs frequency-domain damping ratio ({DOF_NAMES[dof]})",
@@ -495,6 +628,9 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
             "zeta_decay": zeta_decay,
             "zeta_frequency_domain": zeta_fd,
             "relative_error": relative,
+            "natural_frequency_in_band": in_band,
+            "band_rad_s": [float(sweep.omega[0]), float(sweep.omega[-1])],
+            "status": status,
             "damped_period_s": damped_period,
             "natural_frequency_rad_s": omega_n,
             "added_mass_at_natural": a_at,
@@ -504,6 +640,7 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
             "added_mass_inf_used": added_mass_inf,
             "added_mass_inf_source": "KK closure (least-squares offset)",
             "n_peaks": n_peaks,
+            "peak_amplitude_floor": DECAY_AMPLITUDE_FLOOR,
             "dt": DT,
             "duration": DURATION,
         },
@@ -585,6 +722,52 @@ def _mesh_convergence(coarse: Sweep, medium: Sweep) -> dict[str, Any]:
     }
 
 
+def grid_convergence_study(
+    *,
+    label: str = "coarse",
+    band: tuple[float, float] = BAND,
+    node_counts: Sequence[int] = (13, 21, 33, 41, 61),
+    jobs: int = 1,
+) -> dict[str, Any]:
+    """KK closure residual as a function of the number of frequency nodes.
+
+    Gate C3 asks whether the tabulated damping is *causal*, and it closes the
+    Kramers-Kronig integral with the piecewise-linear interpolant of the
+    damping.  A residual that shrinks as the grid is refined is a statement
+    about the interpolant; a residual that stalls is a statement about the
+    BEM data.  Refining the node count and using nested log grids makes the two
+    separable, which is what turns the gate from an assertion into a measurement.
+    """
+    rows: list[dict[str, Any]] = []
+    for count in sorted(set(int(c) for c in node_counts)):
+        sweep = solve_sweep(label, band=band, n_omega=int(count), jobs=jobs)
+        gate = kk_gate(sweep)
+        per_dof = {
+            row["dof_name"]: float(row["max_relative_residual"])
+            for row in gate["values"]["per_dof"]
+        }
+        rows.append(
+            {
+                "n_omega": int(sweep.omega.size),
+                "mesh": label,
+                "panel_count": int(sweep.panel_count),
+                "omega_min": float(sweep.omega[0]),
+                "omega_max": float(sweep.omega[-1]),
+                "kk_residual_per_dof": per_dof,
+                "kk_residual_max": float(max(per_dof.values())),
+                "kk_gate_passed": bool(gate["passed"]),
+                "elapsed_s": float(sweep.elapsed),
+            }
+        )
+    return {
+        "case": CASE_SLUG,
+        "study": "kk closure vs frequency-node count",
+        "band_rad_s": [float(band[0]), float(band[1])],
+        "tolerance": TOLERANCES["kk"],
+        "rows": rows,
+    }
+
+
 def run_case(
     *,
     out_dir: str | Path,
@@ -595,6 +778,7 @@ def run_case(
     figure: bool = True,
     save_sweeps: bool = True,
     dof_free_decay: int = 2,
+    refine_peaks: int = 0,
 ) -> dict[str, Any]:
     """Run the whole case and write the artifacts; returns the results dict."""
     out_path = Path(out_dir)
@@ -619,6 +803,7 @@ def run_case(
         "settings": {
             "band_rad_s": [float(band[0]), float(band[1])],
             "n_omega": int(n_omega),
+            "refine_peaks": int(refine_peaks),
             "meshes": {label: list(MESHES[label]) for label in meshes},
             "chief_points": "auto",
             "tolerances": TOLERANCES,
@@ -632,7 +817,9 @@ def run_case(
     results["gates"] = {"C1": geometry_gate()}
     sweeps: dict[str, Sweep] = {}
     for label in meshes:
-        sweep = solve_sweep(label, band=band, n_omega=n_omega, jobs=jobs)
+        sweep = solve_sweep(
+            label, band=band, n_omega=n_omega, jobs=jobs, refine_peaks=refine_peaks
+        )
         sweeps[label] = sweep
         results.setdefault("sweeps", {})[label] = sweep.summary()
         if save_sweeps:
@@ -908,7 +1095,37 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     parser.add_argument("--no-figure", action="store_true")
     parser.add_argument("--quiet", action="store_true")
+    parser.add_argument(
+        "--grid-study",
+        nargs="+",
+        type=int,
+        default=None,
+        metavar="N",
+        help="run the KK-residual vs node-count study on these counts and exit",
+    )
+    parser.add_argument(
+        "--refine-peaks",
+        type=int,
+        default=0,
+        metavar="K",
+        help="add K geometric midpoints at the intervals with the largest damping jump",
+    )
     args = parser.parse_args(argv)
+    if args.grid_study:
+        study = grid_convergence_study(
+            label=args.meshes[-1],
+            band=(args.omega_min, args.omega_max),
+            node_counts=args.grid_study,
+            jobs=args.jobs,
+        )
+        out_path = Path(args.out)
+        out_path.mkdir(parents=True, exist_ok=True)
+        (out_path / "grid_convergence.json").write_text(
+            json.dumps(study, indent=2), encoding="utf-8"
+        )
+        if not args.quiet:
+            print(json.dumps(study, indent=2))
+        return 0
     results = run_case(
         out_dir=args.out,
         jobs=args.jobs,
@@ -916,6 +1133,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         band=(args.omega_min, args.omega_max),
         meshes=tuple(args.meshes),
         figure=not args.no_figure,
+        refine_peaks=args.refine_peaks,
     )
     verdict = results["verdict"]
     if not args.quiet:
