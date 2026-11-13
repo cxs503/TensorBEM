@@ -1,0 +1,8 @@
+{
+  "n_anode_panels": 42,
+  "n_panels": 320,
+  "total_current_A": -17.588070094961566,
+  "max_current_density": 12.924991659126631,
+  "mean_current_density_anode": 8.332286325019938,
+  "bem_residual": 6.693191823390343e-16
+}
