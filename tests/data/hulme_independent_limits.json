@@ -1,0 +1,30 @@
+{
+ "provenance": {
+  "why": "Independent limits for the Hulme (1982) floating-hemisphere reference, produced during the m17235 accountability audit of mission m17181 (CASE-BEM-HULME-HEMISPHERE). The mission's own results.json records that the published Hulme table digits were NOT AVAILABLE in the sandbox, so the reference it used is a re-derived multipole series; these numbers are the independent check of that series.",
+  "independent_code": "capytaine 3.1.dev0 (Rankine panel method, installed as an optional dependency; never imported by src/)",
+  "independent_meshes": "surface-piercing hemisphere R=1 m, immersed_part() of capytaine.mesh_sphere at resolutions (20,40)=400, (28,56)=784, (36,72)=1296, (44,88)=1936 faces",
+  "limit_method": "3-point Richardson extrapolation of the four-level ladder (geometric residual ratio r reported per cell)",
+  "body": "surface-piercing hemisphere, radius a = 1.0 m, flat face flush with the mean free surface, deep water",
+  "fluid": "rho = 1025 kg/m^3, g = 9.80665 m/s^2",
+  "normalisation": "A/(rho*nabla), B/(rho*omega*nabla) with nabla = 2*pi*a^3/3 (exact displaced volume)",
+  "runner": "scripts/independent_hemisphere_check.py (m17235 branch agent/m17235)",
+  "host": "loongarch64, python 3.11.6, numpy 2.4.6",
+  "caveat": "at the finest capytaine level the residual ratio is r = 0.62-0.76, i.e. the independent code is not fully converged; the extrapolated limit carries roughly +-1% uncertainty. The 3 % band asserted below is wider than that uncertainty and narrower than the 5 % case tolerance it is meant to police."
+ },
+ "ka_1.0": {
+  "surge_added_mass_dimless": 0.57914,
+  "surge_damping_dimless": 0.35709,
+  "heave_added_mass_dimless": 0.43177,
+  "heave_damping_dimless": 0.24816
+ },
+ "ka_2.0": {
+  "surge_added_mass_dimless": 0.251998,
+  "surge_damping_dimless": 0.34386,
+  "heave_added_mass_dimless": 0.39110,
+  "heave_damping_dimless": 0.10132
+ },
+ "measured_reference_deviation": {
+  "worst_cell": "heave_damping @ ka=2",
+  "worst_relative": 0.0172
+ }
+}
