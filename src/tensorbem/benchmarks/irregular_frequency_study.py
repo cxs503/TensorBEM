@@ -130,10 +130,19 @@ def dirichlet_zeros(order: int, count: int = 2, *, upper: float = 40.0) -> list[
     Bracketed on a fine grid and closed with 200 bisection steps, so the zeros
     are good to machine precision without any third-party special function
     library.
+
+    The scan starts at ``order + 1`` for ``order >= 1`` because
+    :func:`bessel_j` builds ``J_order`` by upward recurrence from ``J_0, J_1``,
+    which is only stable for ``x > order``.  Scanning from ``1e-3`` instead made
+    the recurrence overflow at small ``x`` and produced **spurious** sign changes
+    near ``x = 0.0027``: ``dirichlet_zeros(4, 2)`` used to return
+    ``[0.00274, 0.00490]`` (m9703/m17244 case audit).  The shift is lossless
+    because ``j_{m,1} > m + 1`` for every ``m >= 1``.
     """
     if int(count) < 1:
         raise ValueError("count must be >= 1")
-    grid = np.linspace(1.0e-3, float(upper), 40001)
+    lower = 1.0e-3 if int(order) == 0 else float(order) + 1.0
+    grid = np.linspace(lower, float(upper), 40001)
     values = bessel_j(int(order), grid)
     zeros: list[float] = []
     for i in range(len(grid) - 1):
