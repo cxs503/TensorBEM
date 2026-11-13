@@ -589,7 +589,7 @@ def evaluate_exterior_potential(
     """Evaluate the potential at exterior points using the representation formula.
 
     For the exterior problem:
-    phi(x) = integral_S G(x,y)*q(y) dS - integral_S dG/dn(x,y)*phi(y) dS
+    phi(x) = integral_S G(x,y)*q(y) dS + integral_S phi(y) dG/dn_body(x,y) dS
 
     ``q`` here is the boundary-integral unknown stored in
     :attr:`CathodicProtectionResult.single_layer_density` (units V/m).  It is
@@ -649,8 +649,13 @@ def evaluate_exterior_potential(
         dGdn = dot_xn / (_FOUR_PI * r**3)  # (F, Q)
         dl_contrib = np.sum(dGdn * phi_vals[:, None] * qw)
 
-        # Exterior representation: phi(x) = SL - DL (for exterior domain)
-        phi_at_points[m] = sl_contrib - dl_contrib
+        # Exterior representation formula (n = outward normal of the metal):
+        #     phi(x) = int G q dS + int phi dG/dn_body dS,     q = -dphi/dn_body
+        # The double-layer SIGN is fixed by the l = 1 (dipole) mode; a uniform
+        # surface potential cannot expose it because the double layer of a
+        # constant vanishes outside a closed surface.  Regression:
+        # tests/test_laplace_sphere_xval.py::test_exterior_potential_dipole_sign.
+        phi_at_points[m] = sl_contrib + dl_contrib
 
     return phi_at_points
 
