@@ -1,0 +1,941 @@
+{
+  "snapshot": {
+    "missions_total": 15919,
+    "missions_succeeded": 10873,
+    "verdict_rows": 409,
+    "verdict_missions": 236,
+    "deltas": 8331,
+    "reports": 10859,
+    "now": "2026-11-13T01:15:15+00"
+  },
+  "population": {
+    "succeeded_missions": 10873,
+    "missions_with_verdict": 231,
+    "verdict_missions_total": 236,
+    "succeeded_without_verdict": 10642
+  },
+  "tiers_old_strict": {
+    "-1": 1097,
+    "0": 1414,
+    "1": 5132,
+    "2": 1757,
+    "3": 1392,
+    "4": 81
+  },
+  "tiers_old_loose": {
+    "-1": 1097,
+    "0": 1414,
+    "1": 851,
+    "2": 4080,
+    "3": 3267,
+    "4": 164
+  },
+  "tiers_calibrated": {
+    "-1": 1097,
+    "0": 1414,
+    "1": 1010,
+    "2": 3953,
+    "3": 3235,
+    "4": 164
+  },
+  "L2plus": {
+    "old_strict": 3230,
+    "old_strict_pct": 29.71,
+    "old_loose": 7511,
+    "old_loose_pct": 69.08,
+    "calibrated": 7352,
+    "calibrated_pct": 67.62
+  },
+  "purity": {
+    "impl_rows": 7511,
+    "scratch_only_impl_rows": 56,
+    "scratch_only_pct_of_impl": 0.75
+  },
+  "structural_attribution": {
+    "gap_strict_vs_loose": 4281,
+    "gap_from_missing_pr_key": 4177,
+    "gap_from_recorded_not_merged": 104,
+    "cal_gap_scratch_only": 159
+  },
+  "era": [
+    {
+      "week": "2026-10-26",
+      "n": 1033,
+      "with_key": 0,
+      "merged": 0,
+      "impl_rows": 620,
+      "strict_L2plus": 0,
+      "cal_L2plus": 619,
+      "pr_key_pct": 0.0,
+      "strict_pct": 0.0,
+      "cal_pct": 99.84
+    },
+    {
+      "week": "2026-11-02",
+      "n": 5116,
+      "with_key": 1454,
+      "merged": 1317,
+      "impl_rows": 3596,
+      "strict_L2plus": 1090,
+      "cal_L2plus": 3468,
+      "pr_key_pct": 28.42,
+      "strict_pct": 30.31,
+      "cal_pct": 96.44
+    },
+    {
+      "week": "2026-11-09",
+      "n": 4724,
+      "with_key": 2717,
+      "merged": 2717,
+      "impl_rows": 3295,
+      "strict_L2plus": 2140,
+      "cal_L2plus": 3265,
+      "pr_key_pct": 57.51,
+      "strict_pct": 64.95,
+      "cal_pct": 99.09
+    }
+  ],
+  "confusion_loose_vs_verdict_level": {
+    "matrix": {
+      "2": {
+        "4": 32,
+        "0": 2,
+        "1": 7,
+        "2": 62,
+        "3": 24
+      },
+      "1": {
+        "2": 19,
+        "3": 14,
+        "4": 17,
+        "0": 1,
+        "1": 1
+      },
+      "0": {
+        "1": 1,
+        "2": 14,
+        "3": 6,
+        "4": 10,
+        "5": 2
+      },
+      "4": {
+        "4": 2,
+        "2": 5
+      },
+      "3": {
+        "4": 3,
+        "2": 1
+      }
+    },
+    "n": 223,
+    "exact": 65,
+    "exact_pct": 29.15,
+    "within1": 121,
+    "within1_pct": 54.26,
+    "mean_truth_minus_proxy": 1.179,
+    "proxy_overestimates": 16,
+    "proxy_underestimates": 142
+  },
+  "confusion_loose_vs_gate_level": {
+    "matrix": {
+      "2": {
+        "4": 17,
+        "1": 62,
+        "2": 34,
+        "3": 8,
+        "0": 6
+      },
+      "1": {
+        "2": 14,
+        "3": 7,
+        "4": 11,
+        "1": 19,
+        "0": 1
+      },
+      "0": {
+        "1": 14,
+        "2": 10,
+        "3": 3,
+        "4": 4,
+        "5": 1,
+        "0": 1
+      },
+      "4": {
+        "1": 5,
+        "2": 2
+      },
+      "3": {
+        "4": 1,
+        "1": 3
+      }
+    },
+    "n": 223,
+    "exact": 54,
+    "exact_pct": 24.22,
+    "within1": 154,
+    "within1_pct": 69.06,
+    "mean_truth_minus_proxy": 0.305,
+    "proxy_overestimates": 79,
+    "proxy_underestimates": 90
+  },
+  "confusion_cal_vs_gate_level": {
+    "matrix": {
+      "2": {
+        "4": 17,
+        "1": 60,
+        "2": 32,
+        "3": 8,
+        "0": 5
+      },
+      "1": {
+        "2": 16,
+        "3": 7,
+        "4": 11,
+        "1": 21,
+        "0": 2
+      },
+      "0": {
+        "1": 14,
+        "2": 10,
+        "3": 3,
+        "4": 4,
+        "5": 1,
+        "0": 1
+      },
+      "4": {
+        "1": 5,
+        "2": 2
+      },
+      "3": {
+        "4": 1,
+        "1": 3
+      }
+    },
+    "n": 223,
+    "exact": 54,
+    "exact_pct": 24.22,
+    "within1": 155,
+    "within1_pct": 69.51,
+    "mean_truth_minus_proxy": 0.327,
+    "proxy_overestimates": 77,
+    "proxy_underestimates": 92
+  },
+  "confusion_strict_vs_gate_level": {
+    "matrix": {
+      "2": {
+        "4": 14,
+        "1": 52,
+        "2": 26,
+        "3": 8,
+        "0": 6
+      },
+      "1": {
+        "2": 22,
+        "3": 7,
+        "4": 15,
+        "1": 30,
+        "0": 1
+      },
+      "0": {
+        "1": 14,
+        "2": 10,
+        "3": 3,
+        "4": 4,
+        "5": 1,
+        "0": 1
+      },
+      "4": {
+        "1": 4,
+        "2": 2
+      },
+      "3": {
+        "1": 3
+      }
+    },
+    "n": 223,
+    "exact": 57,
+    "exact_pct": 25.56,
+    "within1": 154,
+    "within1_pct": 69.06,
+    "mean_truth_minus_proxy": 0.422,
+    "proxy_overestimates": 68,
+    "proxy_underestimates": 98
+  },
+  "pr_gate_semantics": {
+    "with_key": 4171,
+    "with_key_pct": 38.36,
+    "merged_given_key": 4034,
+    "merged_given_key_pct": 96.72
+  },
+  "sensitivity": [
+    {
+      "q_assumed_merged_given_no_key": 0.0,
+      "expected_L2plus": 3230.0,
+      "candidate_missions": 4150
+    },
+    {
+      "q_assumed_merged_given_no_key": 0.25,
+      "expected_L2plus": 4267.5,
+      "candidate_missions": 4150
+    },
+    {
+      "q_assumed_merged_given_no_key": 0.5,
+      "expected_L2plus": 5305.0,
+      "candidate_missions": 4150
+    },
+    {
+      "q_assumed_merged_given_no_key": 0.75,
+      "expected_L2plus": 6342.5,
+      "candidate_missions": 4150
+    },
+    {
+      "q_assumed_merged_given_no_key": 0.967,
+      "expected_L2plus": 7243.0,
+      "candidate_missions": 4150
+    },
+    {
+      "q_assumed_merged_given_no_key": "1.0(max)",
+      "expected_L2plus": 7380,
+      "candidate_missions": 4150
+    }
+  ],
+  "cal_gap_decomposition": {
+    "total_drop": 159,
+    "by_scratch_only": 56,
+    "by_recorded_not_merged": 103
+  },
+  "conservation": {
+    "tiers_sum_equals_population": true,
+    "population": 10873,
+    "confusion_rows_sum_equals_n": true
+  },
+  "spotcheck": [
+    {
+      "id": 3606,
+      "repo": "TensorBEM",
+      "l_strict": 2,
+      "l_loose": 2,
+      "l_cal": 2,
+      "reason": "merged_impl",
+      "cal_reason": "merged_impl",
+      "pr_state": "merged",
+      "has_pr_gate_key": true,
+      "v_level": null,
+      "v_gate": null,
+      "files_head": [
+        "dev_report_m3606_annulus_multicomponent.md",
+        "docs/m3606/build_doc.py",
+        "src/tensorbem/benchmarks/multicomponent_annulus.py",
+        "src/tensorbem/multicomponent.py",
+        "tests/test_multicomponent.py"
+      ]
+    },
+    {
+      "id": 736,
+      "repo": "TensorLBM",
+      "l_strict": -1,
+      "l_loose": -1,
+      "l_cal": -1,
+      "reason": "no_changed_files",
+      "cal_reason": "no_changed_files",
+      "pr_state": "",
+      "has_pr_gate_key": false,
+      "v_level": null,
+      "v_gate": null,
+      "files_head": []
+    },
+    {
+      "id": 15552,
+      "repo": "TensorDG",
+      "l_strict": 2,
+      "l_loose": 2,
+      "l_cal": 2,
+      "reason": "merged_impl",
+      "cal_reason": "merged_impl",
+      "pr_state": "merged",
+      "has_pr_gate_key": true,
+      "v_level": 4,
+      "v_gate": 4,
+      "files_head": [
+        "artifacts/audit_m15552/audit_shu_osher.py",
+        "artifacts/audit_m15552/gen_sql.py",
+        "artifacts/audit_m15552/make_figs.py",
+        "artifacts/audit_m15552/register_verdict.py",
+        "docs/audit_m15552_CASE-SHU-OSHER-DG.md"
+      ]
+    },
+    {
+      "id": 16438,
+      "repo": "TensorSPH",
+      "l_strict": 0,
+      "l_loose": 0,
+      "l_cal": 0,
+      "reason": "docs_only",
+      "cal_reason": "docs_only",
+      "pr_state": "merged",
+      "has_pr_gate_key": true,
+      "v_level": null,
+      "v_gate": null,
+      "files_head": [
+        "docs/dev_report_couette_verification.md"
+      ]
+    },
+    {
+      "id": 10560,
+      "repo": "TensorPhysics",
+      "l_strict": 3,
+      "l_loose": 3,
+      "l_cal": 3,
+      "reason": "merged_integ",
+      "cal_reason": "merged_integ",
+      "pr_state": "merged",
+      "has_pr_gate_key": true,
+      "v_level": null,
+      "v_gate": null,
+      "files_head": [
+        "docs/P223W3_N09_DIGITAL_TWIN_UQ.md",
+        "generate_p223w3_n09_report.py",
+        "src/tensorphysics/ice_digital_twin/__init__.py",
+        "src/tensorphysics/ice_digital_twin/bayes.py",
+        "src/tensorphysics/ice_digital_twin/campaign.py",
+        "src/tensorphysics/ice_digital_twin/model_form.py",
+        "src/tensorphysics/ice_digital_twin/online.py",
+        "src/tensorphysics/ice_digital_twin/sensitivity.py"
+      ]
+    }
+  ],
+  "overclaim": {
+    "n_proxy_L2plus_but_gate_le1": 76,
+    "pct_of_audited_proxy_L2plus": 55.07,
+    "sample": [
+      {
+        "id": 15044,
+        "repo": "TensorLBM",
+        "l_loose": 4,
+        "l_cal": 4,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m14689 GAP-LBM-MCMP-POISEUILLE",
+        "reason": "merged_impl+bench"
+      },
+      {
+        "id": 15146,
+        "repo": "TensorPlatform",
+        "l_loose": 4,
+        "l_cal": 4,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15116 KPI-QC-RECHECK",
+        "reason": "merged_impl+bench"
+      },
+      {
+        "id": 15312,
+        "repo": "TensorFEM",
+        "l_loose": 4,
+        "l_cal": 4,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15274 XVAL-FEM-COOK",
+        "reason": "merged_impl+bench"
+      },
+      {
+        "id": 15895,
+        "repo": "TensorKnowledge",
+        "l_loose": 4,
+        "l_cal": 4,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15494 KBM-RCI-F1-SPEC",
+        "reason": "impl_without_merge_evidence+4"
+      },
+      {
+        "id": 14959,
+        "repo": "TensorFEM",
+        "l_loose": 4,
+        "l_cal": 4,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m14684 GAP-FEM-ELASTOPLASTIC",
+        "reason": "merged_impl+bench"
+      },
+      {
+        "id": 15646,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 0,
+        "v_gate": 0,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15481 GAP-PP-3-adjoint-ootc",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15816,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 0,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15466 CASE-RAYLEIGH-BENARD-RA1E5",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 16127,
+        "repo": "TensorDEM",
+        "l_loose": 3,
+        "l_cal": 3,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16065 CASE-DEM-MINDLIN-TANGENTIAL",
+        "reason": "merged_integ"
+      },
+      {
+        "id": 15903,
+        "repo": "TensorLBM",
+        "l_loose": 3,
+        "l_cal": 3,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15658 GAP-LBM-T4-PHYSICS-AI-LOOP",
+        "reason": "merged_integ"
+      },
+      {
+        "id": 16257,
+        "repo": "TensorSPH",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 0,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16214 CASE-SPH-FSI-ELASTIC-GATE",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 14498,
+        "repo": "TensorDEM",
+        "l_loose": 2,
+        "l_cal": 1,
+        "v_level": 4,
+        "v_gate": 0,
+        "v_auditors": "audit2-run",
+        "v_states": "unmapped",
+        "scope": "tests/full_suite#run",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 14484,
+        "repo": "TensorPlatform",
+        "l_loose": 3,
+        "l_cal": 3,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "audit2-ab",
+        "v_states": "unmapped",
+        "scope": "window:unwired_core_modules",
+        "reason": "merged_integ"
+      },
+      {
+        "id": 14488,
+        "repo": "TensorBEM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 0,
+        "v_auditors": "audit2-ab",
+        "v_states": "reopened,unmapped",
+        "scope": "w20_anchor_transcription#610-611",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 14496,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 0,
+        "v_auditors": "audit2-run",
+        "v_states": "unmapped",
+        "scope": "tests/systematic_sample#run",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15354,
+        "repo": "TensorPapers",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 0,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15283 JOUR-DIFFLBM",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 14978,
+        "repo": "TensorDEM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 1,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m14960 GAP-DEM-FRICTION",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15651,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 1,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15543 CASE-CAVITY-RE5000",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15712,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15432 CASE-CYLINDER-DRAG-RE100",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15032,
+        "repo": "TensorPlatform",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m14961 H6-MATURITY-GATE",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 14503,
+        "repo": "TensorData",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "audit2-ab",
+        "v_states": "unmapped",
+        "scope": "test-suite",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15815,
+        "repo": "TensorSPH",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15493 CASE-WAVE-FLUME",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15486,
+        "repo": "TensorDEM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15404 CASE-PENETRATION",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15344,
+        "repo": "TensorFVM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15310 REPRO-FVM-SOD1978",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15880,
+        "repo": "TensorPapers",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15775 GAP-PP-6-run-artifacts",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15149,
+        "repo": "TensorPlatform",
+        "l_loose": 2,
+        "l_cal": 1,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15120 KPI-TRACE-100",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 16351,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16321 CASE-LBM-SQUARE-CYL-NORBERG",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15135,
+        "repo": "TensorPlatform",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15119 KPI-SUCCESS-90",
+        "reason": "impl_without_merge_evidence+2"
+      },
+      {
+        "id": 16319,
+        "repo": "TensorDG",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16248 CASE-DG-PREFINEMENT-EXPONENTIAL",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15805,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 1,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15705 GAP-PP-3-adjoint-ootc",
+        "reason": "impl_without_merge_evidence+2"
+      },
+      {
+        "id": 15269,
+        "repo": "TensorKnowledge",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15269 KBM-CLEAN-W1",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15313,
+        "repo": "TensorFEM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15261 CASE-NAFEMS-LE1",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 16324,
+        "repo": "TensorSPH",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16239 CASE-SPH-STOKES-2ND-PROBLEM",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 16229,
+        "repo": "TensorDG",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m16180 CASE-DG-PREFINEMENT-EXPONENTIAL",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15320,
+        "repo": "TensorSPH",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15264 CASE-HYDROSTATIC",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15893,
+        "repo": "TensorLBM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15469 CASE-MCMP-CAPILLARY-RISE",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15424,
+        "repo": "TensorPlatform",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 2,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15359 GAP-PP-5-gpu-cluster",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15345,
+        "repo": "TensorDG",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15309 REPRO-DG-CKS1998",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15272,
+        "repo": "TensorFVM",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 3,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15213 REPRO-FVM-ARMALY1983",
+        "reason": "impl_without_merge_evidence+2"
+      },
+      {
+        "id": 15419,
+        "repo": "TensorSPH",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15340 CASE-HYDROSTATIC",
+        "reason": "merged_impl"
+      },
+      {
+        "id": 15550,
+        "repo": "TensorDG",
+        "l_loose": 2,
+        "l_cal": 2,
+        "v_level": 4,
+        "v_gate": 1,
+        "v_auditors": "board-audit",
+        "v_states": "reopened",
+        "scope": "m15480 CASE-SHU-OSHER",
+        "reason": "merged_impl"
+      }
+    ]
+  },
+  "pinned_recompute": {
+    "tiers_old_strict": {
+      "match": true,
+      "recomputed": {
+        "-1": 1097,
+        "0": 1414,
+        "1": 5132,
+        "2": 1757,
+        "3": 1392,
+        "4": 81
+      }
+    },
+    "tiers_old_loose": {
+      "match": true,
+      "recomputed": {
+        "-1": 1097,
+        "0": 1414,
+        "1": 851,
+        "2": 4080,
+        "3": 3267,
+        "4": 164
+      }
+    },
+    "tiers_calibrated": {
+      "match": true,
+      "recomputed": {
+        "-1": 1097,
+        "0": 1414,
+        "1": 1010,
+        "2": 3953,
+        "3": 3235,
+        "4": 164
+      }
+    },
+    "L2plus_match": {
+      "match": true,
+      "recomputed": {
+        "old_strict": 3230,
+        "old_loose": 7511,
+        "calibrated": 7352
+      }
+    },
+    "confusion_match": {
+      "match": true
+    },
+    "all_match": true,
+    "csv_rows": 10873
+  }
+}
