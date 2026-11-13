@@ -1,0 +1,92 @@
+{
+  "integration_checks": [
+    {
+      "hull_type": "cylinder",
+      "hull_label": "cylinder_R1_T0.5",
+      "mesh_panels": 224,
+      "predicted_irregular_frequencies": {
+        "nu_rad_per_m": [
+          2.412574099227309,
+          3.8440520352897694,
+          5.152169690306657
+        ],
+        "omega_rad_per_s": [
+          4.864079541926457,
+          6.13981049315648,
+          7.108130900134421
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "test_frequency": {
+        "nu_rad_per_m": 2.412574099227309,
+        "omega_rad_per_s": 4.864079541926457
+      },
+      "bare_solve": {
+        "added_mass_A33": 2011.3846190487086,
+        "damping_B33": 371.6658658685907,
+        "condition_number": 13.004895274484669,
+        "passivity_ok": true
+      },
+      "chief_solve": {
+        "added_mass_A33": 1983.7848118282272,
+        "damping_B33": 213.26793898721934,
+        "condition_number": 6.862423800969716,
+        "chief_points_used": 5,
+        "passivity_ok": true
+      },
+      "improvement": {
+        "condition_number_ratio": 1.8950877491196292,
+        "damping_change_pct": -42.618368117069934,
+        "passivity_restored": false
+      }
+    },
+    {
+      "hull_type": "wigley3",
+      "hull_label": "wigley3_L3_B0.3_T0.1875",
+      "mesh_panels": 128,
+      "predicted_irregular_frequencies": {
+        "nu_rad_per_m": [
+          7.539006115526254,
+          12.012203816551143,
+          16.099915362554526
+        ],
+        "omega_rad_per_s": [
+          8.598394868975577,
+          10.85354681924675,
+          12.565278945976303
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "test_frequency": {
+        "nu_rad_per_m": 7.539006115526254,
+        "omega_rad_per_s": 8.598394868975577
+      },
+      "bare_solve": {
+        "added_mass_A33": 40.50219250867774,
+        "damping_B33": 245.99706238551963,
+        "condition_number": 9.37557520214866,
+        "passivity_ok": true
+      },
+      "chief_solve": {
+        "added_mass_A33": 40.44531496277975,
+        "damping_B33": 244.3858216458605,
+        "condition_number": 9.37677924029261,
+        "chief_points_used": 5,
+        "passivity_ok": true
+      },
+      "improvement": {
+        "condition_number_ratio": 0.9998715936343285,
+        "damping_change_pct": -0.6549837319333704,
+        "passivity_restored": false
+      }
+    }
+  ]
+}
