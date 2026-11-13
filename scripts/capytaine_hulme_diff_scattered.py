@@ -168,10 +168,20 @@ def _radiation(cpt: Any, solver: Any, body: Any, ka: float) -> dict[str, float]:
 
 
 def _richardson(values: list[complex], panels: list[int], order: float) -> complex:
-    """Two-level Richardson extrapolation in the panel size ``h ~ N^-1/2``."""
+    """Two-level Richardson extrapolation in the panel size ``h ~ N^-1/2``.
+
+    ``r`` is the **coarse-to-fine** step ratio ``h_coarse / h_fine = sqrt(N_fine /
+    N_coarse) > 1``, so that ``r**order - 1 > 0`` and the correction points from
+    the fine level towards the limit.  (An earlier version of this helper used
+    the inverse ratio, which flips the sign of the correction and *amplifies*
+    the discretisation error instead of cancelling it; the guard below keeps the
+    mistake from coming back.)
+    """
     f2, f1 = values[-1], values[-2]
     n2, n1 = panels[-1], panels[-2]
-    r = math.sqrt(n1 / n2)
+    if not n2 > n1 > 0:
+        raise ValueError("panel counts must be positive and strictly increasing")
+    r = math.sqrt(n2 / n1)
     return complex(f2 + (f2 - f1) / (r**order - 1.0))
 
 
