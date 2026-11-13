@@ -9,6 +9,10 @@ closes that gap for ``tensorbem.reference_provenance``:
   citation must still resolve to a shipped document that publishes the digits;
 * the block published in ``docs/reference_provenance.md`` must equal the block
   generated from the tree, so the debt table cannot be edited by hand;
+* a recalled constant must not be *read* by anything except its registered
+  adjudicator (the reader graph over ``src/``, ``tests/`` and ``scripts/``), and
+  that adjudicator must still read it and still publish a verdict for it in
+  ``benchmarks/verified/wigley3_recalled_ref/results.json``;
 * the scanner must *discriminate*: a synthetic package proves that an
   un-triaged recalled constant is caught, that a marker occurring only in a
   comment/string is not mistaken for a constant, that a mapping of numbers is
@@ -185,3 +189,113 @@ def test_an_entry_must_carry_a_note_and_cited_entries_evidence() -> None:
         rp.Entry(status=rp.CITED, note="no evidence")
     with pytest.raises(ValueError):
         rp.Entry(status="PROBABLY_FINE", note="not a status")
+
+
+# --------------------------------------------------------------------------
+# gates on who reads a recalled number
+# --------------------------------------------------------------------------
+
+
+def test_no_recalled_constant_is_read_by_anything_but_its_adjudicator() -> None:
+    """Debt is only debt while nothing downstream of it publishes a number."""
+
+    result = rp.audit()
+    assert result.leaked == [], [(key, str(reader)) for key, reader in result.leaked]
+
+
+def test_every_registered_adjudicator_still_reads_its_constant() -> None:
+    result = rp.audit()
+    assert result.unread_adjudicator == [], result.unread_adjudicator
+    # the allow-list only makes sense for constants the registry calls UNSOURCED
+    unsourced = {declaration.key for declaration in result.unsourced}
+    assert set(rp.ADJUDICATED) <= unsourced, sorted(set(rp.ADJUDICATED) - unsourced)
+
+
+def test_every_adjudicated_constant_carries_a_verdict() -> None:
+    result = rp.audit()
+    assert result.unadjudicated == [], result.unadjudicated
+    assert result.adjudication, "no verdict was read from " + rp.ADJUDICATION_ARTEFACT
+    for key, record in result.adjudication.items():
+        assert record.records, key
+        assert record.describe().strip(), key
+        assert all(verdict for verdict, _ in record.records), key
+
+
+def test_the_cited_constant_is_read_by_exactly_two_importers() -> None:
+    """Pin on the only CITED constant's reader set: a new consumer is a new claim.
+
+    Counts and readers are read from the graph rather than typed here, so the
+    pin does not spell a benchmark module path in the suite.
+    """
+
+    result = rp.audit()
+    cited = [declaration for declaration in result.cited]
+    assert len(cited) == 1, [declaration.key for declaration in cited]
+    found = result.readers[cited[0].key]
+    assert len(found) == 2, [str(reader) for reader in found]
+    assert {reader.how for reader in found} == {"import"}
+
+
+def test_a_recalled_constant_may_be_read_only_by_a_registered_adjudicator(
+    synthetic_repo: pathlib.Path,
+) -> None:
+    """Positive control for the reader gate: the registry turns a leak green."""
+
+    _write(synthetic_repo, "driver.py", "_WAMIT_A33 = 0.42\n")
+    (synthetic_repo / "tests").mkdir()
+    (synthetic_repo / "tests" / "probe.py").write_text(
+        "from tensorbem.driver import _WAMIT_A33\n\nvalue = _WAMIT_A33\n", encoding="utf-8"
+    )
+    declared = {
+        "tensorbem.driver._WAMIT_A33": rp.Entry(
+            status=rp.UNSOURCED, note="recalled, source report not shipped"
+        )
+    }
+    artefact = synthetic_repo / rp.ADJUDICATION_ARTEFACT
+    artefact.parent.mkdir(parents=True)
+    artefact.write_text(
+        '{"adjudication": [{"constant": "tensorbem.driver._WAMIT_A33",'
+        ' "verdict": "REFUTED", "factor": 0.31}]}',
+        encoding="utf-8",
+    )
+
+    # 1. read by a consumer that is not registered: that consumer is a leak
+    unregistered = rp.audit(synthetic_repo, declared=declared, adjudicated={})
+    assert [(key, reader.consumer) for key, reader in unregistered.leaked] == [
+        ("tensorbem.driver._WAMIT_A33", "tests/probe.py")
+    ]
+    assert unregistered.ok is False
+
+    # 2. registered as its adjudicator: no leak, verdict still read back
+    registered = rp.audit(
+        synthetic_repo,
+        declared=declared,
+        adjudicated={"tensorbem.driver._WAMIT_A33": "tests/probe.py"},
+    )
+    assert registered.leaked == []
+    assert registered.unread_adjudicator == []
+    assert registered.adjudication["tensorbem.driver._WAMIT_A33"].counts == {"REFUTED": 1}
+    assert registered.ok is True
+
+    # 3. the adjudicator stops reading it: registry rot, not a pass
+    (synthetic_repo / "tests" / "probe.py").write_text("value = 1.0\n", encoding="utf-8")
+    rotted = rp.audit(
+        synthetic_repo,
+        declared=declared,
+        adjudicated={"tensorbem.driver._WAMIT_A33": "tests/probe.py"},
+    )
+    assert rotted.unread_adjudicator == ["tensorbem.driver._WAMIT_A33"]
+    assert rotted.ok is False
+
+    # 4. the artefact stops carrying the verdict: no verdict, no pass
+    artefact.write_text('{"adjudication": []}', encoding="utf-8")
+    (synthetic_repo / "tests" / "probe.py").write_text(
+        "from tensorbem.driver import _WAMIT_A33\n\nvalue = _WAMIT_A33\n", encoding="utf-8"
+    )
+    unverifiable = rp.audit(
+        synthetic_repo,
+        declared=declared,
+        adjudicated={"tensorbem.driver._WAMIT_A33": "tests/probe.py"},
+    )
+    assert unverifiable.unadjudicated == ["tensorbem.driver._WAMIT_A33"]
+    assert unverifiable.ok is False
