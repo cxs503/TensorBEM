@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+"""m17300 board-audit: insert maturity verdict for m17226 (CASE-BEM-MACCAMY-FUCHS-DIFF).
+
+Evidence pointers are CLEAN file paths (no ':line' suffixes) so the maturity_gate
+machine re-check (files_exist / impl_real / callers_verified) can resolve them
+against /root/tensor-ecosystem and /root/tp-agent/work/m17300.
+"""
+import json
+import subprocess
+
+EVIDENCE = {
+    "impl_files": [
+        "src/tensorbem/benchmarks/maccamy_fuchs.py",
+        "src/tensorbem/benchmarks/maccamy_fuchs_figure.py",
+        "src/tensorbem/helmholtz.py",
+        "src/tensorbem/analytic.py",
+        "src/tensorbem/geometry.py",
+    ],
+    "entry": "src/tensorbem/benchmarks/maccamy_fuchs.py",
+    "run_artifacts": [
+        "benchmarks/verified/bem_maccamy_fuchs/results.json",
+        "benchmarks/verified/bem_maccamy_fuchs/gates.json",
+        "benchmarks/verified/bem_maccamy_fuchs/report.md",
+    ],
+    "tests": [
+        "tests/test_bem_maccamy_fuchs_verified.py",
+        "tests/test_helmholtz_maccamy_fuchs.py",
+        "tests/test_doc_numbers_maccamy_fuchs.py",
+    ],
+    "integration_callers": [
+        "tensorbem.benchmarks.maccamy_fuchs",
+        "tensorbem.helmholtz.solve_vertical_cylinder_diffraction",
+        "src/tensorbem/benchmarks/doc_number_ledger.py",
+        "tests/test_helmholtz_maccamy_fuchs.py",
+        "tests/test_bem_maccamy_fuchs_verified.py",
+    ],
+    "benchmark": {
+        "reference": "MacCamy & Fuchs 1954 (USACE TM 69) Bessel/Hankel closed form; "
+                    "tensorbem.analytic.maccamy_fuchs_diffraction",
+        "got": {
+            "force_x_relative_error_ka1_128panels": 0.00013207074898697037,
+            "force_x_magnitude_N": 43101.93895697914,
+            "exact_force_x_magnitude_N": 43099.663722184494,
+            "surface_potential_relative_l2_error_128": 0.00018170722685468068,
+            "frequency_sweep_max_force_error": 0.0025779496039377344,
+            "observed_convergence_order_force": 2.006930874004945,
+        },
+        "tolerance": "<3% ecosystem / <5% mission; measured 0.01321%",
+        "all_gates_passed": True,
+        "gates": "G1-G6 all PASS (gates.json all_gates_passed=true)",
+        "benchmark_case_id": 36,
+    },
+    "repro_cmd": "python -m build_maccamy_fuchs_anchor && pytest "
+                 "tests/test_bem_maccamy_fuchs_verified.py "
+                 "tests/test_helmholtz_maccamy_fuchs.py "
+                 "tests/test_doc_numbers_maccamy_fuchs.py -q",
+    "external_anchor": "MacCamy, R. C. & Fuchs, R. A. (1954). Wave forces on piles: "
+                      "a diffraction theory. USACE Beach Erosion Board Technical "
+                      "Memorandum No. 69 (Bessel/Hankel closed form)",
+    "audit": {
+        "audited_mission": 17226,
+        "original_mission": 17180,
+        "level_rationale": "L4: real BEM solver + external closed-form anchor + "
+                           "per-point error table + O(h^2) convergence + sweep/CHIEF "
+                           "sensitivity + one-command byte-identical repro; no new "
+                           "physics -> not L5",
+        "findings": [
+            "F1 medium: m17226 new deliverables (evidence.json, "
+            "tools/emit_maccamy_fuchs_evidence.py, figures/) uncommitted in m17226 "
+            "worktree; core L4 evidence all point to committed files so gate resolves",
+            "F2 info: prior verdict#488 (m17201 audit of m17180) reopened to L1 "
+            "because evidence pointers carried ':line'/prose that broke files_exist; "
+            "this verdict uses clean paths",
+            "F3 info: external anchor is closed-form re-implementation; printed-table "
+            "(TM69/Newman) numeric cross-check WITHHELD",
+        ],
+        "checks_not_run": [
+            "ka>4 extended sweep (m17180 deliverable, not independently rerun)",
+            "second independent BEM implementation cross-check",
+            "printed-table (TM69/Newman) numeric anchor",
+        ],
+        "repro_rerun": "2026-11-13 audit rerun: build_maccamy_fuchs_anchor regenerated "
+                       "results.json/gates.json byte-identical (sha256 2a436541.../ "
+                       "ca65d377... match evidence pin); G1-G6 PASS; pytest 32 passed",
+    },
+}
+
+ev_json = json.dumps(EVIDENCE, ensure_ascii=False)
+ev_sql = ev_json.replace("'", "''")
+
+sql = (
+    "INSERT INTO tensor_maturity_verdicts "
+    "(repo, scope, mission_id, level, evidence, verdict_by) "
+    "VALUES ('TensorBEM', 'm17226 CASE-BEM-MACCAMY-FUCHS-DIFF', 17300, 4, "
+    f"'{ev_sql}'::jsonb, 'board-audit') "
+    "RETURNING id, gate_state;"
+)
+
+r = subprocess.run(
+    ["runuser", "-u", "postgres", "--", "psql", "-d", "tensorplatform", "-c", sql],
+    capture_output=True, text=True,
+)
+print("STDOUT:", r.stdout)
+print("STDERR:", r.stderr)
