@@ -59,6 +59,7 @@ __all__ = [
     "annulus_mesh",
     "solve_laplace_multiloop",
     "evaluate_multiloop_field",
+    "domain_membership",
     "boundary_flux",
 ]
 
@@ -219,6 +220,40 @@ def solve_laplace_multiloop(
     )
 
 
+def _point_in_polygon(points: FloatArray, polygon: FloatArray) -> NDArray[np.bool_]:
+    """Even-odd ray casting: True where a point lies inside the closed polygon."""
+    x = points[:, 0]
+    y = points[:, 1]
+    inside = np.zeros(len(points), dtype=bool)
+    count = len(polygon)
+    for i in range(count):
+        x1, y1 = polygon[i]
+        x2, y2 = polygon[(i + 1) % count]
+        crosses = (y1 > y) != (y2 > y)
+        if not bool(crosses.any()):
+            continue
+        x_at = (x2 - x1) * (y - y1) / (y2 - y1) + x1
+        inside ^= crosses & (x < x_at)
+    return inside
+
+
+def domain_membership(mesh: "MultiLoopMesh", points: FloatArray) -> tuple[FloatArray, FloatArray]:
+    """Where targets lie in a hole loop and where they lie outside the outer loop.
+
+    Green's representation summed over *all* loops is only the physical field in
+    the annular region.  Inside a hole the same sum evaluates the analytic
+    continuation (the ``c`` indicator functions no longer cancel), and outside the
+    outer loop it is neither; both would look plausible and be wrong, so the
+    evaluation below refuses them instead of returning a number.
+    """
+    targets = np.asarray(points, dtype=float)
+    in_hole = np.zeros(len(targets), dtype=bool)
+    for index in mesh.hole_loops:
+        in_hole |= _point_in_polygon(targets, mesh.loops[index].vertices)
+    outside = ~_point_in_polygon(targets, mesh.loops[0].vertices)
+    return in_hole, outside
+
+
 def evaluate_multiloop_field(
     mesh: MultiLoopMesh, result: LaplaceDirichletResult, points: FloatArray
 ) -> FloatArray:
@@ -240,6 +275,20 @@ def evaluate_multiloop_field(
         raise ValueError("points must all be finite")
     if result.normal_derivative.shape != (mesh.panel_count,):
         raise ValueError("result boundary traces must match the mesh panel count")
+
+    in_hole, outside = domain_membership(mesh, targets)
+    if bool(np.any(in_hole)):
+        raise ValueError(
+            "points must lie in the fluid domain: "
+            f"{int(np.sum(in_hole))} target(s) fall inside a hole loop, where the "
+            "Green representation evaluates the analytic continuation and not the "
+            "field of the problem"
+        )
+    if bool(np.any(outside)):
+        raise ValueError(
+            "points must lie in the fluid domain: "
+            f"{int(np.sum(outside))} target(s) fall outside the outer loop"
+        )
 
     from .kernels import integrate_double_layer_panel, integrate_single_layer_panel
 

@@ -252,4 +252,4 @@ OPENBLAS_NUM_THREADS=1 python -m tensorbem.benchmarks.analytical_suite \
 - Sauter S A, Schwab C. *Boundary Element Methods*. Springer, 2011. https://doi.org/10.1007/978-3-540-68093-2.（边界积分方法和误差分析背景，并非本报告表格的数据来源。）
 - Grisvard P. *Elliptic Problems in Nonsmooth Domains*. Pitman, 1985.（非光滑域椭圆问题的正则性背景；本文凹角解由第 3.4 节直接推导。）
 - 实现与原始数据生成入口：`src/tensorbem/benchmarks/analytical_suite.py`；回归测试：`tests/test_analytical_suite.py`。本文数值均由本仓库程序运行得到，不引用外部软件结果为解析真值。
-| 圆环径向导热，\(u=A\log r+B\) | 多连通边界、内外法向 | 已实现：`tensorbem.multiloop`（多环装配 + 孔洞法向翻转 + 逐环通量校验），见[圆环多连通验证报告](annulus_laplace.md) |
+| 圆环径向导热，\(u=A\log r+B\) | 多连通边界、内外法向 | 已实现：`tensorbem.multiloop`（多环装配 + 孔洞法向翻转 + 逐环通量校验），见[圆环多连通验证报告](annulus_laplace.md)；算例池条目 `CASE-BEM-ANNULUS-LAPLACE` 见[池记录](case_annulus_laplace.md) |

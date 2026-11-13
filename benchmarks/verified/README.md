@@ -105,3 +105,30 @@ Reproduce with
 PYTHONPATH=src python -m tensorbem.benchmarks.kp505_gci_ladder
 PYTHONPATH=src python -m pytest tests/test_kp505_gci_ladder.py -q
 ```
+
+## Annulus Laplace, multiply connected: pool case `CASE-BEM-ANNULUS-LAPLACE`
+
+`bem_annulus_laplace/` is the case-pool entry of round 1 for the multiply
+connected 2-D Laplace problem (annulus `b < r < a`, two boundary loops, the inner
+one carrying the domain-outward normal that points into the hole).  The solver it
+exercises is `tensorbem.multiloop` (`solve_laplace_multiloop`), reused unchanged;
+the case adds the pool furniture around it: predeclared thresholds (3 % on the
+boundary `q` error, on the interior field error, on the per-loop flux and on the
+budgeted panel count; fitted order > 1.5), a reference table generated from the
+two closed forms (`u = A log r + B` and `u = (r + c^2/r) cos theta`, harmonicity
+re-checked by finite differences), two sensitivity studies (wall ratio `b/a`,
+kernel reference length `L`) and two negative controls (wrong inner-loop
+orientation, probe inside the hole).
+
+It is registered separately, i.e. not listed in `summary.json`, because that file
+is the thin-ship mission record and its case set is pinned by
+`tests/test_bem_verified_anchors.py`.
+
+Records: `results.json` (schema `tensorbem.case_annulus_laplace/1`), `case.json`
+(pool card: parameters, budget panels, repro command), `report.md` (rendered from
+`results.json`), `figures/`.  Reproduce with
+
+```
+PYTHONPATH=src python -m tensorbem.benchmarks.case_annulus_laplace --outdir benchmarks/verified/bem_annulus_laplace --check
+PYTHONPATH=src python -m pytest tests/test_case_annulus_laplace.py -q
+```
