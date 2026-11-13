@@ -115,6 +115,7 @@ __all__ = [
     "kkr_check",
     "kkr_damping",
     "principal_value_integral",
+    "band_integral",
     "PowerTailFit",
     "fit_damping_power_tail",
     "power_tail_principal_value",
@@ -277,6 +278,22 @@ def _level_integral(
     if lower_tail:
         total += 0.5 * float(data[0]) * float(grid[0])
     return total
+
+
+def band_integral(
+    omegas: Sequence[float] | FloatArray,
+    values: Sequence[float] | FloatArray,
+    *,
+    lower_tail: bool = True,
+) -> float:
+    """``integral_0^inf values(s) ds`` for the piecewise-linear interpolant.
+
+    Public name for the band integral that the damping prediction already uses
+    internally.  The mixed-radiation sum rule ``A(w) - A_inf = -(2/pi) w^-2
+    integral B ds + O(w^-4)`` needs it on its own: the ``1/w^2`` coefficient of
+    the added-mass tail is a functional of the damping sweep only.
+    """
+    return _level_integral(omegas, values, lower_tail=lower_tail)
 
 
 def kkr_damping(
