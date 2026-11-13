@@ -1,0 +1,494 @@
+{
+ "analytic_reference": {
+  "added_mass": 0.0,
+  "damping": 0.0,
+  "reason": "the wetted hull is a spherical surface concentric with the rotation axis, so n . (Omega x r) = 0 on the whole hull and the radiation potential vanishes identically"
+ },
+ "anchor": "CASE-BEM-HULME-HEMISPHERE",
+ "ka_grid": [
+  0.2,
+  0.5,
+  0.8,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "mesh_ladder": [
+  {
+   "n_faces": 64,
+   "resolution": [
+    8,
+    16
+   ],
+   "values": {
+    "0.200": {
+     "Pitch": {
+      "added_mass": 0.1509148745376619,
+      "damping": 0.0004947259542232652
+     },
+     "Roll": {
+      "added_mass": 0.15091487453766195,
+      "damping": 0.0004947259542232608
+     },
+     "Yaw": {
+      "added_mass": 9.678622469840498e-30,
+      "damping": 9.045232364176627e-33
+     }
+    },
+    "0.500": {
+     "Pitch": {
+      "added_mass": 0.15596283436925473,
+      "damping": 0.010479590698707776
+     },
+     "Roll": {
+      "added_mass": 0.15596283436925476,
+      "damping": 0.010479590698707703
+     },
+     "Yaw": {
+      "added_mass": 9.869901855993272e-30,
+      "damping": 1.5399411278212965e-31
+     }
+    },
+    "0.800": {
+     "Pitch": {
+      "added_mass": 0.1565343428759383,
+      "damping": 0.03805996103549487
+     },
+     "Roll": {
+      "added_mass": 0.1565343428759383,
+      "damping": 0.038059961035494624
+     },
+     "Yaw": {
+      "added_mass": 1.0048678357350929e-29,
+      "damping": 6.226460173161176e-31
+     }
+    },
+    "1.000": {
+     "Pitch": {
+      "added_mass": 0.15322773209985077,
+      "damping": 0.05836082858694575
+     },
+     "Roll": {
+      "added_mass": 0.15322773209985077,
+      "damping": 0.05836082858694536
+     },
+     "Yaw": {
+      "added_mass": 1.0133352871342865e-29,
+      "damping": 1.0899115725786135e-30
+     }
+    },
+    "1.500": {
+     "Pitch": {
+      "added_mass": 0.14215371826965015,
+      "damping": 0.08522264571949216
+     },
+     "Roll": {
+      "added_mass": 0.14215371826965031,
+      "damping": 0.08522264571949145
+     },
+     "Yaw": {
+      "added_mass": 1.0249209326991482e-29,
+      "damping": 2.6447117001677216e-30
+     }
+    },
+    "2.000": {
+     "Pitch": {
+      "added_mass": 0.13507702448364312,
+      "damping": 0.08668047348893408
+     },
+     "Roll": {
+      "added_mass": 0.13507702448364334,
+      "damping": 0.08668047348893328
+     },
+     "Yaw": {
+      "added_mass": 1.0232644770577632e-29,
+      "damping": 4.260395218576878e-30
+     }
+    }
+   },
+   "volume": 1.9632981945556363
+  },
+  {
+   "n_faces": 256,
+   "resolution": [
+    16,
+    32
+   ],
+   "values": {
+    "0.200": {
+     "Pitch": {
+      "added_mass": 0.010489383794599657,
+      "damping": 3.6535950698755995e-05
+     },
+     "Roll": {
+      "added_mass": 0.010489383794599651,
+      "damping": 3.653595069875607e-05
+     },
+     "Yaw": {
+      "added_mass": 1.7908658681015355e-29,
+      "damping": 1.3356231157268327e-31
+     }
+    },
+    "0.500": {
+     "Pitch": {
+      "added_mass": 0.01081118484781077,
+      "damping": 0.0007400137360717923
+     },
+     "Roll": {
+      "added_mass": 0.010811184847810755,
+      "damping": 0.0007400137360717915
+     },
+     "Yaw": {
+      "added_mass": 1.7987512625942302e-29,
+      "damping": 3.7355371498773963e-31
+     }
+    },
+    "0.800": {
+     "Pitch": {
+      "added_mass": 0.010805177372307554,
+      "damping": 0.0025837890063525716
+     },
+     "Roll": {
+      "added_mass": 0.010805177372307538,
+      "damping": 0.002583789006352563
+     },
+     "Yaw": {
+      "added_mass": 1.8075849491000506e-29,
+      "damping": 6.634992800008111e-31
+     }
+    },
+    "1.000": {
+     "Pitch": {
+      "added_mass": 0.01055666084770142,
+      "damping": 0.003865221541069231
+     },
+     "Roll": {
+      "added_mass": 0.010556660847701403,
+      "damping": 0.003865221541069209
+     },
+     "Yaw": {
+      "added_mass": 1.8135380477322472e-29,
+      "damping": 8.822227636677866e-31
+     }
+    },
+    "1.500": {
+     "Pitch": {
+      "added_mass": 0.009809313822161514,
+      "damping": 0.005309169955073869
+     },
+     "Roll": {
+      "added_mass": 0.0098093138221615,
+      "damping": 0.0053091699550738185
+     },
+     "Yaw": {
+      "added_mass": 1.8308337683265153e-29,
+      "damping": 1.4845380365644464e-30
+     }
+    },
+    "2.000": {
+     "Pitch": {
+      "added_mass": 0.009383971484370153,
+      "damping": 0.005073039276189896
+     },
+     "Roll": {
+      "added_mass": 0.009383971484370144,
+      "damping": 0.005073039276189826
+     },
+     "Yaw": {
+      "added_mass": 1.855832277762119e-29,
+      "damping": 2.1542274014854006e-30
+     }
+    }
+   },
+   "volume": 2.0609708703929246
+  },
+  {
+   "n_faces": 576,
+   "resolution": [
+    24,
+    48
+   ],
+   "values": {
+    "0.200": {
+     "Pitch": {
+      "added_mass": 0.0020869554777072324,
+      "damping": 7.390859387927504e-06
+     },
+     "Roll": {
+      "added_mass": 0.00208695547770724,
+      "damping": 7.390859387927722e-06
+     },
+     "Yaw": {
+      "added_mass": 3.1936370280476045e-29,
+      "damping": 8.836086662658867e-34
+     }
+    },
+    "0.500": {
+     "Pitch": {
+      "added_mass": 0.0021502825307945454,
+      "damping": 0.00014825458990049882
+     },
+     "Roll": {
+      "added_mass": 0.002150282530794551,
+      "damping": 0.0001482545899005014
+     },
+     "Yaw": {
+      "added_mass": 3.2011359874537724e-29,
+      "damping": 1.8406152972456513e-32
+     }
+    },
+    "0.800": {
+     "Pitch": {
+      "added_mass": 0.0021477312607414583,
+      "damping": 0.0005140590387917007
+     },
+     "Roll": {
+      "added_mass": 0.002147731260741462,
+      "damping": 0.0005140590387917043
+     },
+     "Yaw": {
+      "added_mass": 3.209208828801973e-29,
+      "damping": 7.831206905455844e-32
+     }
+    },
+    "1.000": {
+     "Pitch": {
+      "added_mass": 0.0020976625836743243,
+      "damping": 0.0007663007025910786
+     },
+     "Roll": {
+      "added_mass": 0.0020976625836743265,
+      "damping": 0.0007663007025910783
+     },
+     "Yaw": {
+      "added_mass": 3.2155678760415523e-29,
+      "damping": 1.6195737241802843e-31
+     }
+    },
+    "1.500": {
+     "Pitch": {
+      "added_mass": 0.00194895146445151,
+      "damping": 0.0010430152897132159
+     },
+     "Roll": {
+      "added_mass": 0.001948951464451511,
+      "damping": 0.0010430152897131972
+     },
+     "Yaw": {
+      "added_mass": 3.228786780790797e-29,
+      "damping": 5.51384435462171e-31
+     }
+    },
+    "2.000": {
+     "Pitch": {
+      "added_mass": 0.0018657763468215916,
+      "damping": 0.000985656771427036
+     },
+     "Roll": {
+      "added_mass": 0.0018657763468215944,
+      "damping": 0.000985656771427002
+     },
+     "Yaw": {
+      "added_mass": 3.2387808892954736e-29,
+      "damping": 1.1889254981622763e-30
+     }
+    }
+   },
+   "volume": 2.0794857181704995
+  },
+  {
+   "n_faces": 1024,
+   "resolution": [
+    32,
+    64
+   ],
+   "values": {
+    "0.200": {
+     "Pitch": {
+      "added_mass": 0.000657843902674287,
+      "damping": 2.3512498251619597e-06
+     },
+     "Roll": {
+      "added_mass": 0.0006578439026742807,
+      "damping": 2.3512498251618733e-06
+     },
+     "Yaw": {
+      "added_mass": 6.071495743906977e-29,
+      "damping": 1.463217967208539e-32
+     }
+    },
+    "0.500": {
+     "Pitch": {
+      "added_mass": 0.0006778091758241309,
+      "damping": 4.699434531482588e-05
+     },
+     "Roll": {
+      "added_mass": 0.0006778091758241241,
+      "damping": 4.6994345314824536e-05
+     },
+     "Yaw": {
+      "added_mass": 6.08109528421653e-29,
+      "damping": 7.754933506369842e-32
+     }
+    },
+    "0.800": {
+     "Pitch": {
+      "added_mass": 0.0006768897629320249,
+      "damping": 0.0001625820427344704
+     },
+     "Roll": {
+      "added_mass": 0.0006768897629320188,
+      "damping": 0.00016258204273446688
+     },
+     "Yaw": {
+      "added_mass": 6.089430313176696e-29,
+      "damping": 2.034076977602841e-31
+     }
+    },
+    "1.000": {
+     "Pitch": {
+      "added_mass": 0.0006610120752104851,
+      "damping": 0.00024216455025019668
+     },
+     "Roll": {
+      "added_mass": 0.0006610120752104793,
+      "damping": 0.00024216455025019231
+     },
+     "Yaw": {
+      "added_mass": 6.093691594418972e-29,
+      "damping": 3.1777847678475324e-31
+     }
+    },
+    "1.500": {
+     "Pitch": {
+      "added_mass": 0.0006139424534725392,
+      "damping": 0.00032886238079873485
+     },
+     "Roll": {
+      "added_mass": 0.0006139424534725345,
+      "damping": 0.0003288623807987319
+     },
+     "Yaw": {
+      "added_mass": 6.106769840387209e-29,
+      "damping": 4.960954091831095e-31
+     }
+    },
+    "2.000": {
+     "Pitch": {
+      "added_mass": 0.0005877426390824826,
+      "damping": 0.00030981634324719144
+     },
+     "Roll": {
+      "added_mass": 0.0005877426390824778,
+      "damping": 0.0003098163432471912
+     },
+     "Yaw": {
+      "added_mass": 6.126654943578363e-29,
+      "damping": 6.836714015580165e-31
+     }
+    }
+   },
+   "volume": 2.0859978809346646
+  }
+ ],
+ "provenance": {
+  "density": 1025.0,
+  "generated_utc": "2026-11-13T10:25:03+00:00",
+  "gravity": 9.80665,
+  "machine": "loongarch64",
+  "note": "optional dependency; only this producer script imports capytaine, the study itself reads the frozen json",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6",
+  "rotation_centre": "origin (0, 0, 0) = centre of the sphere carrying the hull",
+  "tool": "capytaine",
+  "version": "3.1.dev0",
+  "water_depth": "infinite"
+ },
+ "quantity": "rotational radiation added mass / damping of the floating hemisphere r = 1 m, waterplane z = 0, rotation axis through the sphere centre",
+ "rotation_centre_probe": {
+  "0.200": {
+   "A22_sway": 1215.6449017646244,
+   "A24_sway_force_from_roll": 0.36439446024444344,
+   "A42_roll_moment_from_sway": 0.36384300305793144,
+   "A44_roll_about_origin": 0.0006578439026742807,
+   "A44c_roll_about_offset_axis": 303.54776455340755,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 303.9112254411561,
+   "predicted_full_superposition": 303.54804028200084,
+   "relative_dev_d2_A22_only": 0.0011973762622936263,
+   "relative_dev_full_superposition": 9.083532329748908e-07
+  },
+  "0.500": {
+   "A22_sway": 1418.386208300551,
+   "A24_sway_force_from_roll": 0.42800144131742596,
+   "A42_roll_moment_from_sway": 0.4273968081459562,
+   "A44_roll_about_origin": 0.0006778091758241241,
+   "A44c_roll_about_offset_axis": 354.1695307595819,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 354.59655207513777,
+   "predicted_full_superposition": 354.1698330761676,
+   "relative_dev_d2_A22_only": 0.0012056974936269537,
+   "relative_dev_full_superposition": 8.535928685187488e-07
+  },
+  "0.800": {
+   "A22_sway": 1410.391401294882,
+   "A24_sway_force_from_roll": 0.4251859267636275,
+   "A42_roll_moment_from_sway": 0.4246533341554135,
+   "A44_roll_about_origin": 0.0006768897629320188,
+   "A44c_roll_about_offset_axis": 352.17360758302385,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 352.5978503237205,
+   "predicted_full_superposition": 352.17387387932797,
+   "relative_dev_d2_A22_only": 0.0012046409258439767,
+   "relative_dev_full_superposition": 7.561506552023987e-07
+  },
+  "1.000": {
+   "A22_sway": 1257.4817475264947,
+   "A24_sway_force_from_roll": 0.3758340794768741,
+   "A42_roll_moment_from_sway": 0.3753564859280299,
+   "A44_roll_about_origin": 0.0006610120752104793,
+   "A44c_roll_about_offset_axis": 313.9955026109964,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 314.3704368816237,
+   "predicted_full_superposition": 313.9957414077709,
+   "relative_dev_d2_A22_only": 0.001194075289325878,
+   "relative_dev_full_superposition": 7.605101744077277e-07
+  },
+  "1.500": {
+   "A22_sway": 805.8073791606834,
+   "A24_sway_force_from_roll": 0.22980436831627674,
+   "A42_roll_moment_from_sway": 0.2293684559144078,
+   "A44_roll_about_origin": 0.0006139424534725345,
+   "A44c_roll_about_offset_axis": 201.22287232050894,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 201.45184479017084,
+   "predicted_full_superposition": 201.2230902767099,
+   "relative_dev_d2_A22_only": 0.0011379047869726703,
+   "relative_dev_full_superposition": 1.083158184040486e-06
+  },
+  "2.000": {
+   "A22_sway": 548.6149546522339,
+   "A24_sway_force_from_roll": 0.1475239829000365,
+   "A42_roll_moment_from_sway": 0.1470231707108336,
+   "A44_roll_about_origin": 0.0005877426390824778,
+   "A44c_roll_about_offset_axis": 137.00705282889206,
+   "n_faces": 1024,
+   "offset_d": 0.5,
+   "predicted_d2_A22_only": 137.15373866305848,
+   "predicted_full_superposition": 137.00730323498672,
+   "relative_dev_d2_A22_only": 0.0010706444021507053,
+   "relative_dev_full_superposition": 1.8276876226043613e-06
+  }
+ },
+ "rotational_dofs": [
+  "Roll",
+  "Pitch",
+  "Yaw"
+ ]
+}
