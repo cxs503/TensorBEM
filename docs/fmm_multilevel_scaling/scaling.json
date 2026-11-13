@@ -1,0 +1,136 @@
+{
+  "mission": "m17506",
+  "subject": "tensorbem.fmm_multilevel.MultiLevelFMM",
+  "estimator": "median of 3 wall-clock matvec calls in steady state",
+  "criteria": {
+    "accuracy_limit": 0.001,
+    "slope_band": [
+      0.9,
+      1.2
+    ],
+    "speed_ratio_below_one": true
+  },
+  "geometry": "icosphere panel centroids (unit sphere), charges = panel areas, targets = sphere vertices",
+  "rows": [
+    {
+      "n_panels": 1280,
+      "n_targets": 642,
+      "n_error_targets": 642,
+      "order": 6,
+      "max_leaf": 32,
+      "depth": 3,
+      "levels": 4,
+      "setup_s": 0.01732352003455162,
+      "first_matvec_s": 2.000359158962965,
+      "matvec_s": 0.09059445932507515,
+      "matvec_min_s": 0.08251761086285114,
+      "dense_s": 0.04985701013356447,
+      "dense_min_s": 0.046602578833699226,
+      "ratio": 1.8170856832845985,
+      "max_rel_error": 4.009660271273192e-05
+    },
+    {
+      "n_panels": 1280,
+      "n_targets": 642,
+      "n_error_targets": 642,
+      "order": 8,
+      "max_leaf": 32,
+      "depth": 3,
+      "levels": 4,
+      "setup_s": 0.02524588070809841,
+      "first_matvec_s": 3.7256751991808414,
+      "matvec_s": 0.1673525907099247,
+      "matvec_min_s": 0.16625876910984516,
+      "dense_s": 0.04985701013356447,
+      "dense_min_s": 0.046602578833699226,
+      "ratio": 3.3566511562084322,
+      "max_rel_error": 7.656763120284072e-06
+    },
+    {
+      "n_panels": 5120,
+      "n_targets": 2562,
+      "n_error_targets": 1024,
+      "order": 6,
+      "max_leaf": 32,
+      "depth": 4,
+      "levels": 5,
+      "setup_s": 0.010654270648956299,
+      "first_matvec_s": 0.5565727911889553,
+      "matvec_s": 0.29499009996652603,
+      "matvec_min_s": 0.28889392130076885,
+      "dense_s": 0.6901487000286579,
+      "dense_min_s": 0.6853799000382423,
+      "ratio": 0.42742976977900093,
+      "max_rel_error": 2.6137440446608636e-05
+    },
+    {
+      "n_panels": 5120,
+      "n_targets": 2562,
+      "n_error_targets": 1024,
+      "order": 8,
+      "max_leaf": 32,
+      "depth": 4,
+      "levels": 5,
+      "setup_s": 0.009875839576125145,
+      "first_matvec_s": 0.6783377397805452,
+      "matvec_s": 0.42457797937095165,
+      "matvec_min_s": 0.42396396957337856,
+      "dense_s": 0.6901487000286579,
+      "dense_min_s": 0.6853799000382423,
+      "ratio": 0.615197825270585,
+      "max_rel_error": 9.189964736159482e-06
+    },
+    {
+      "n_panels": 20480,
+      "n_targets": 10242,
+      "n_error_targets": 1024,
+      "order": 6,
+      "max_leaf": 32,
+      "depth": 5,
+      "levels": 6,
+      "setup_s": 0.036154551431536674,
+      "first_matvec_s": 1.477903040125966,
+      "matvec_s": 1.0117292199283838,
+      "matvec_min_s": 0.9469582606106997,
+      "dense_s": 9.487253579311073,
+      "dense_min_s": 9.203901559114456,
+      "ratio": 0.10664089575245143,
+      "max_rel_error": 2.2402033994404707e-05
+    },
+    {
+      "n_panels": 20480,
+      "n_targets": 10242,
+      "n_error_targets": 1024,
+      "order": 8,
+      "max_leaf": 32,
+      "depth": 5,
+      "levels": 6,
+      "setup_s": 0.03359821066260338,
+      "first_matvec_s": 1.991860618814826,
+      "matvec_s": 1.6644586697220802,
+      "matvec_min_s": 1.6268920600414276,
+      "dense_s": 9.487253579311073,
+      "dense_min_s": 9.203901559114456,
+      "ratio": 0.17544157071460365,
+      "max_rel_error": 9.56452477108994e-06
+    }
+  ],
+  "slope": {
+    "6": {
+      "slope": 0.8703141470718517,
+      "intercept": -8.63677946979309,
+      "slope_first_quartile": 0.8515859067341252,
+      "slope_upper_half": 0.889042387409579,
+      "worst_error": 4.009660271273192e-05,
+      "best_ratio": 0.10664089575245143
+    },
+    "8": {
+      "slope": 0.8285225643127241,
+      "intercept": -7.787940426645963,
+      "slope_first_quartile": 0.6715693316318448,
+      "slope_upper_half": 0.9854757969936032,
+      "worst_error": 9.56452477108994e-06,
+      "best_ratio": 0.17544157071460365
+    }
+  }
+}
