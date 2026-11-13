@@ -1,0 +1,146 @@
+{
+  "schema": "tensorbem.maturity_evidence/1",
+  "generated_utc": "2026-11-13T03:52:44.035765+00:00",
+  "repo_commit": "20d66f8e2b059521610079a044e51d6f94364de9",
+  "mission": 17226,
+  "original_mission": 17180,
+  "claimed_level": 4,
+  "impl_files": [
+    "src/tensorbem/benchmarks/maccamy_fuchs.py",
+    "src/tensorbem/benchmarks/maccamy_fuchs_figure.py",
+    "src/tensorbem/helmholtz.py",
+    "src/tensorbem/analytic.py",
+    "src/tensorbem/geometry.py",
+    "TensorBEM/src/tensorbem/benchmarks/maccamy_fuchs.py",
+    "TensorBEM/src/tensorbem/benchmarks/maccamy_fuchs_figure.py",
+    "TensorBEM/src/tensorbem/helmholtz.py",
+    "TensorBEM/src/tensorbem/analytic.py",
+    "TensorBEM/src/tensorbem/geometry.py"
+  ],
+  "entry": "src/tensorbem/benchmarks/maccamy_fuchs.py",
+  "entry_eco": "TensorBEM/src/tensorbem/benchmarks/maccamy_fuchs.py",
+  "entry_command": "python -m tensorbem.benchmarks.maccamy_fuchs --panels 16 32 64 128",
+  "run_artifacts": [
+    "benchmarks/verified/bem_maccamy_fuchs/results.json",
+    "benchmarks/verified/bem_maccamy_fuchs/gates.json",
+    "benchmarks/verified/bem_maccamy_fuchs/report.md",
+    "TensorBEM/benchmarks/verified/bem_maccamy_fuchs/results.json",
+    "TensorBEM/benchmarks/verified/bem_maccamy_fuchs/gates.json",
+    "TensorBEM/benchmarks/verified/bem_maccamy_fuchs/report.md"
+  ],
+  "integration_callers": [
+    "tests/test_helmholtz_maccamy_fuchs.py::test_quadratic_convergence_of_force_moment_and_surface_potential",
+    "tests/test_helmholtz_maccamy_fuchs.py::test_chief_suppresses_j01_and_j11_irregular_frequencies",
+    "tests/test_bem_maccamy_fuchs_verified.py::TestReproducibility::test_rerun_matches_stored_results",
+    "src/tensorbem/benchmarks/maccamy_fuchs.py:run -> solve_vertical_cylinder_diffraction (main solver)"
+  ],
+  "benchmark": {
+    "reference": {
+      "source": "tensorbem.analytic.maccamy_fuchs_diffraction (MacCamy & Fuchs 1954 closed form)",
+      "kind": "CLOSED_FORM",
+      "citation": "MacCamy, R. C. & Fuchs, R. A. (1954). Wave forces on piles: a diffraction theory. U.S. Army Corps of Engineers, Beach Erosion Board, Technical Memorandum No. 69.",
+      "values": {
+        "ka=1.0": {
+          "exact_force_x_magnitude_N": 43099.663722184494,
+          "exact_effective_cm": 1.371615831496945
+        },
+        "ka=0.1": {
+          "exact_effective_cm": 2.0191805862568715
+        },
+        "ka=3.0": {
+          "exact_effective_cm": 0.30773350353039136
+        }
+      }
+    },
+    "got": {
+      "refinement_128_panels": {
+        "force_x_magnitude_N": 43101.93895697914,
+        "force_x_relative_error": 0.00013207074898697037,
+        "surface_potential_relative_l2_error": 0.00018170722685468068,
+        "condition_number": 2.434227297102135
+      },
+      "frequency_sweep": [
+        {
+          "ka": 0.1,
+          "computed_effective_cm": 2.018386592028113,
+          "exact_effective_cm": 2.0191805862568715,
+          "force_relative_error": 0.000393239116931711
+        },
+        {
+          "ka": 0.5,
+          "computed_effective_cm": 2.0052701328304954,
+          "exact_effective_cm": 2.0056320957818383,
+          "force_relative_error": 0.00018054754461138033
+        },
+        {
+          "ka": 1.0,
+          "computed_effective_cm": 1.3719116816959822,
+          "exact_effective_cm": 1.371615831496945,
+          "force_relative_error": 0.0005305062248795069
+        },
+        {
+          "ka": 1.5,
+          "computed_effective_cm": 0.8422998785790999,
+          "exact_effective_cm": 0.8420421332853952,
+          "force_relative_error": 0.0011257474250017823
+        },
+        {
+          "ka": 2.0,
+          "computed_effective_cm": 0.5610094501104879,
+          "exact_effective_cm": 0.5608336990117753,
+          "force_relative_error": 0.001631840268520127
+        },
+        {
+          "ka": 3.0,
+          "computed_effective_cm": 0.3078363477297716,
+          "exact_effective_cm": 0.30773350353039136,
+          "force_relative_error": 0.0025779496039377344
+        }
+      ],
+      "irregular_frequency": [
+        {
+          "resonance": "j01_axisymmetric_resonance",
+          "ka": 2.4067584879839923,
+          "unaugmented_condition_number": 1002.5221006298091,
+          "chief_condition_number": 2.313496571088343,
+          "unaugmented_force_relative_error": 0.002030743980425593,
+          "chief_force_relative_error": 0.0020204498637242775
+        },
+        {
+          "resonance": "j11_dipole_resonance",
+          "ka": 3.8347857863304173,
+          "unaugmented_condition_number": 664.9551086994337,
+          "chief_condition_number": 3.342347066000406,
+          "unaugmented_force_relative_error": 0.10345376948243575,
+          "chief_force_relative_error": 0.0028068475467946867
+        }
+      ]
+    },
+    "design_point_ka1_128panels": {
+      "force_x_relative_error": 0.00013207074898697037,
+      "answer_under_3pct": true,
+      "threshold_pct": 3.0
+    }
+  },
+  "repro_cmd": "python -m build_maccamy_fuchs_anchor && python -m tools.emit_maccamy_fuchs_evidence && pytest tests/test_bem_maccamy_fuchs_verified.py tests/test_helmholtz_maccamy_fuchs.py tests/test_doc_numbers_maccamy_fuchs.py -q",
+  "tests": [
+    "tests/test_bem_maccamy_fuchs_verified.py",
+    "tests/test_helmholtz_maccamy_fuchs.py",
+    "tests/test_doc_numbers_maccamy_fuchs.py"
+  ],
+  "artefact_sha256": {
+    "results.json": "2a436541be85b62f67c46ecba84c2ef3747b2ffcd860362dfdb303783ff8980b",
+    "gates.json": "ca65d37753c1c3c06521befd29b440d9541568f9ac6a709e7dcd4a7ac0a0d52b"
+  },
+  "verdict": {
+    "all_criteria_pass": true,
+    "pass_by_id": {
+      "G1_force_convergence_128": true,
+      "G2_observed_order_force": true,
+      "G3_surface_potential_128": true,
+      "G4_frequency_sweep_max_error": true,
+      "G5_chief_condition_number_reduction": true,
+      "G6_morison_long_wave_limit": true
+    }
+  }
+}

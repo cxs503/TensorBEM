@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import subprocess
 import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -194,6 +196,11 @@ class TestHelmholtzAndVerticalCylinderBEM:
             solve_helmholtz_diffraction(mesh, -1.0)
 
         out = tmp_path / "maccamy_fuchs.json"
+        # The CLI subprocess runs a fresh interpreter; make sure the checked-out
+        # ``src`` tree is on its path (conftest only prepends it to this session).
+        src_dir = str(Path(__file__).resolve().parents[1] / "src")
+        env = dict(os.environ)
+        env["PYTHONPATH"] = src_dir + os.pathsep + env.get("PYTHONPATH", "")
         completed = subprocess.run(
             [
                 sys.executable,
@@ -209,6 +216,7 @@ class TestHelmholtzAndVerticalCylinderBEM:
             check=True,
             capture_output=True,
             text=True,
+            env=env,
         )
         parsed = json.loads(completed.stdout)
         assert parsed == json.loads(out.read_text(encoding="utf-8"))
