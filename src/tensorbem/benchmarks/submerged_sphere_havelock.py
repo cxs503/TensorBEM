@@ -25,9 +25,10 @@ def _observed_order(h_values, errors):
     return math.log(e0/e1)/math.log(h0/h1)
 
 
-def run_convergence_study(ka=0.8, radius=1.0, submergence=2.0, density=1025.0, gravity=9.80665):
-    """Panel convergence: subdivisions 1,2,3 (80,320,1280 panels)."""
-    subdivisions = [1, 2, 3]
+def run_convergence_study(ka=0.8, radius=1.0, submergence=2.0, density=1025.0, gravity=9.80665,
+                          subdivisions=(1, 2, 3)):
+    """Panel convergence over ``subdivisions`` (default 1,2,3 -> 80,320,1280 panels)."""
+    subdivisions = [int(s) for s in subdivisions]
     ref = submerged_sphere_wave_multipole(ka, radius=radius, submergence=submergence, density=density, gravity=gravity)
     vol = ref.displaced_volume
     omega = ref.omega
