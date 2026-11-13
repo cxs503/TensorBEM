@@ -1,0 +1,179 @@
+{
+  "repo": "TensorBEM",
+  "subject_mission": 17336,
+  "audit_mission": 17398,
+  "anchor": "CASE-BEM-MARUO-DRIFT",
+  "subject_commit": "4ecdd3b7d264dc0cd3af7f14f0946660462a3fd0",
+  "declared_level": 3,
+  "level_rationale": [
+    "L2 met: real code path mesh -> solve_diffraction_3d -> bem_kochin -> maruo_far_field_drift, inputs -> numbers -> JSON, no hard-coded result",
+    "L3 met: the case drives the production entry points exported by tensorbem.free_surface_solver3d / tensorbem.drift_far_field3d that main-side drivers already call, and it is registered in the repo capability registry (tensorbem.capability_evidence row 'maruo-far-field-drift-case') on the branch",
+    "L4 REFUSED: (a) tensor_benchmark_cases has 0 rows for anchor_slug='CASE-BEM-MARUO-DRIFT' -> no machine referee, the <5% criterion lives only in mission-goal text; (b) the declared <5% criterion FAILS at the production mesh (ka=2, 800 panels, 5.331%) and is still 5.037% at 1200 panels -> not a mesh accident"
+  ],
+  "impl_files": [
+    "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case.py",
+    "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case_figures.py",
+    "docs/board_audit/m17398/refs/src/tensorbem/drift_far_field3d.py"
+  ],
+  "impl_files_detail": [
+    "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case.py — case driver (closed-form ref at :153-212, BEM route at :214-252), sha256 a9d0ac60d5889c7e914de40b99d719b75709eab3726d39b494b459e1bb981795, audited commit 4ecdd3b",
+    "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case_figures.py — report figure helper, sha256 794b7df22f078ba15e4dae98b4adb5c71802d929883bd8f4e4540c0170318098",
+    "docs/board_audit/m17398/refs/src/tensorbem/drift_far_field3d.py — production far-field kernel consumed by the case, sha256 cec87afbe55c6d6fbe7105446041683cc3e15f6bfd438427ef553851304c4094"
+  ],
+  "entry": "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case.py",
+  "entry_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --json <out>.json --figures <dir>   (exit 1 when any gate fails: the delivered study has all_passed=false, so the reproducible run exits 1 by design)",
+  "run_artifacts": [
+    "docs/board_audit/m17398/refs/docs/case_bem_maruo_drift/study.json",
+    "docs/board_audit/m17398/refs/docs/case_bem_maruo_drift/fig_bem_vs_closed_form.png",
+    "docs/board_audit/m17398/refs/docs/case_bem_maruo_drift/fig_coefficient_vs_ka.png",
+    "docs/board_audit/m17398/refs/docs/case_bem_maruo_drift/fig_convergence_and_quadrature.png",
+    "docs/board_audit/m17398/artifacts/independent_ref_v2.json",
+    "docs/board_audit/m17398/artifacts/local_repro_ka2_coarse.json",
+    "docs/board_audit/m17398/artifacts/local_repro_ka1_coarse.json",
+    "docs/board_audit/m17398/artifacts/fig_m17398_error_vs_panels.png",
+    "docs/board_audit/m17398/artifacts/fig_m17398_ref_validation.png"
+  ],
+  "tests": [
+    "tests/test_maruo_drift_far_field_case.py::test_bem_route_runs_and_is_of_the_right_sign_and_size",
+    "tests/test_maruo_drift_far_field_case.py::test_closed_form_reproduces_the_repo_quadrature_route",
+    "tests/test_maruo_drift_far_field_case.py::test_closed_form_is_converged_in_the_modal_truncation",
+    "tests/test_maruo_drift_far_field_case.py::test_maruo_kernel_quadrature_is_converged",
+    "tests/test_maruo_drift_far_field_case.py::test_study_artifact_is_internally_consistent",
+    "auditor ran: PYTHONPATH=src pytest tests/test_maruo_drift_far_field_case.py -q -> 13 passed in 2.48s (worktree /root/tp-agent/work/m17336 @ 4ecdd3b)"
+  ],
+  "integration_callers": [
+    "tensorbem.drift_far_field3d.bem_kochin",
+    "src/tensorbem/benchmarks/maruo_drift_far_field_case.py:214-252 (bem_case body: solve_diffraction_3d -> bem_kochin -> maruo_far_field_drift -> closed_form_case)",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py:100,178 (main-side driver calling the same production chain: koch = bem_kochin(mesh, diffraction, ...) -> maruo_far_field_drift)",
+    "src/tensorbem/diffraction_drift_maturity.py:452 (vertical_cylinder_hull_mesh, the mesh generator the case reuses)",
+    "src/tensorbem/capability_evidence.py (branch): registry row 'maruo-far-field-drift-case' -> tensorbem.benchmarks.maruo_drift_far_field_case",
+    "merge state at audit time: branch agent/m17336 @ 4ecdd3b is NOT an ancestor of the ecosystem checkout (/root/tensor-ecosystem/TensorBEM @ ac57fda), so a main-only grep cannot see the case driver yet; the L3 grep resolves through the production chain that main already drives"
+  ],
+  "benchmark": {
+    "anchor_slug": "CASE-BEM-MARUO-DRIFT",
+    "registered_referee_rows": 0,
+    "referee_rows_detail": [],
+    "criterion_source": "mission 17336 goal 'CASE-BEM-MARUO-DRIFT … 容差' (mission text only; no tensor_benchmark_cases row for this anchor)",
+    "criterion_in_force": "per-cell relative error < 5% at the declared production mesh 'fine'",
+    "production_resolution": "fine",
+    "production_cells": [
+      {
+        "ka": 0.2,
+        "panels": 800,
+        "got": 233.29487122900113,
+        "ref": 240.5906823288798,
+        "rel_error": 0.030324578779428932
+      },
+      {
+        "ka": 0.5,
+        "panels": 800,
+        "got": 2779.979882072865,
+        "ref": 2875.6569932775283,
+        "rel_error": 0.03327139204304585
+      },
+      {
+        "ka": 1.0,
+        "panels": 800,
+        "got": 6480.772205661711,
+        "ref": 6685.993519247995,
+        "rel_error": 0.030694213656576524
+      },
+      {
+        "ka": 2.0,
+        "panels": 800,
+        "got": 5970.215127551096,
+        "ref": 6306.398053942844,
+        "rel_error": 0.053308231341591565
+      }
+    ],
+    "production_n_failures": 1,
+    "production_worst": {
+      "ka": 2.0,
+      "panels": 800,
+      "rel_error": 0.053308231341591565
+    },
+    "finest_mesh_worst_rel_error": 0.05036601736876548,
+    "ecosystem_target_3pct": "not met anywhere in the production row: best 3.032%",
+    "verdict_at_production_mesh": "FAIL (honest, declared as such by the deliverable)",
+    "all_passed_flag_in_study": false,
+    "neighbour_referee_rows": [
+      {
+        "id": 43,
+        "anchor_slug": "CASE-BEM-CYL-DRIFT-ASYMP",
+        "case_name": "Bottom-seated vertical cylinder (a=1 m, A=1 m) in deep-water monochromatic beam waves: second-order mean drift force, MacCamy-Fuchs near-field momentum integral + Maruo reduced far-field closed form vs real panel BEM (800 panels, kd=5)",
+        "tolerance": "<5% (case pool BEM-CYL-DRIFT-ASYMP id=140 tol_policy + mission 17204 criterion); ecosystem <3% met on the main far-field gate (max 2.028%), NOT met by the 800-panel near-field route (6.082%, 2.123% at 1776 panels)",
+        "status": "passed"
+      },
+      {
+        "id": 53,
+        "anchor_slug": "CASE-BEM-QTF-DRIFT",
+        "case_name": "BEM-QTF-DRIFT second-order difference-frequency QTF of a fixed bottom-mounted cylinder vs machine-precision closed form",
+        "tolerance": "<10%",
+        "status": "failed"
+      }
+    ],
+    "report_six_sections": true
+  },
+  "repro_cmd": [
+    "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --json artifacts/maruo_drift_far_field_case/study.json --figures docs/case_bem_maruo_drift (full 4x4 solve, ~20 min, exit 1 because G3 fails)",
+    "PYTHONPATH=src python3 -m pytest tests/test_maruo_drift_far_field_case.py -q   (13 passed)",
+    "auditor replay used in this verdict: --ka 2.0 --resolutions coarse --production coarse and --ka 1.0 --resolutions coarse, both reproducing the delivered cells"
+  ],
+  "external_anchor": {
+    "law": "F_x = (5 pi^2/16) rho g A^2 a (ka)^3 (Maruo 1960; Newman 1977 Sec. 7.3)",
+    "auditor_recovered_constant": 3.084203600165055,
+    "law_constant": 3.0842513753404246,
+    "rel_err_at_ka_0p01": 1.5490039414931502e-05,
+    "rel_err_at_ka_0p05": 0.0011765964152322807,
+    "reference_independence": "auditor rebuilt the MacCamy-Fuchs far-field amplitude from first principles (no TensorBEM import) -> max rel diff vs delivered ref 7.34e-08 (limited by 4-dp stored values), own modal vs quadrature 2.2e-12"
+  },
+  "auditor_reproduction": [
+    {
+      "cell": "ka=1 coarse (312 panels)",
+      "delivered_force": 5919.153020824078,
+      "recomputed_force": 5919.153020824078,
+      "abs_diff": 0.0,
+      "delivered_rel_error": 0.11469357489149451,
+      "recomputed_rel_error": 0.11469357489149451,
+      "delivered_exit_g3_passed": false,
+      "recomputed_gates": {
+        "G1_closed_form_vs_quadrature": true,
+        "G2_long_wave_coefficient": true,
+        "G3_bem_vs_ref_production": false,
+        "G4_quadrature_spread": true
+      }
+    },
+    {
+      "cell": "ka=2 coarse (312 panels)",
+      "delivered_force": 4884.7166262684495,
+      "recomputed_force": 4884.7166262684495,
+      "abs_diff": 0.0,
+      "delivered_rel_error": 0.22543477520984267,
+      "recomputed_rel_error": 0.22543477520984267,
+      "delivered_exit_g3_passed": false,
+      "recomputed_gates": {
+        "G1_closed_form_vs_quadrature": true,
+        "G2_long_wave_coefficient": true,
+        "G3_bem_vs_ref_production": false,
+        "G4_quadrature_spread": true
+      }
+    }
+  ],
+  "findings": [
+    "F1 blocking-for-L4 (persistent from m17276/audit m17327): 0 tensor_benchmark_cases rows for anchor CASE-BEM-MARUO-DRIFT; the case can never be machine-adjudicated until the row is registered",
+    "F2 blocking-for-L4 (persistent): production-mesh criterion <5% fails at ka=2 (5.331%), 5.037% at 1200 panels; ecosystem <3% target not met on any production cell",
+    "F3 minor: entry crashes with ValueError('max() arg is an empty sequence') when --resolutions omits the production rung (maruo_drift_far_field_case.py:397 gates on an empty production cell list)",
+    "F4 minor: report section 5 still carries the three untraceable numbers the m17327 audit flagged (832 triangles for a 800-panel mesh, a 416-triangle rung absent from the study, and 'fine 3.01%' quoting the finer value) -> docs/case_bem_maruo_drift_report.md:151-153",
+    "F5 minor: the figure helper tensorbem.benchmarks.maruo_drift_far_field_case_figures is listed as 'unreferenced and unexplained' in the regenerated docs/audit_baseline.md (gate-failing item the mission itself introduced)"
+  ],
+  "verdict_reason": [
+    "L4 refused: no registered referee row (0) + declared <5% criterion fails at production mesh",
+    "L3 granted: real BEM route, production entry points, capability registry row, 13 passing tests, two delivered cells reproduced bit-identically, reference independently re-derived to 1e-8"
+  ],
+  "report": "docs/board_audit/m17398/M17398_BOARD_AUDIT.md",
+  "audit_snapshots_sha256": {
+    "docs/board_audit/m17398/refs/src/tensorbem/benchmarks/maruo_drift_far_field_case.py": "a9d0ac60d5889c7e914de40b99d719b75709eab3726d39b494b459e1bb981795",
+    "docs/board_audit/m17398/refs/docs/case_bem_maruo_drift/study.json": "89f382eef3cc79d7126835402ae1e22caf80dd3f40e83747cfdf50464d4ad569",
+    "docs/board_audit/m17398/refs/tests/test_maruo_drift_far_field_case.py": "7c4875e24453a846d059126d4199a08f981241afaa0a79b9f87993073f9c9f4b"
+  }
+}
