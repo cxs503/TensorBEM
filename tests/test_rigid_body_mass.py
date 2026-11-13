@@ -160,19 +160,21 @@ class TestPlatformIntegration:
 
     def test_platform_assembly_matches_closed_form(self):
         inertia_origin = inertia_about_point(INERTIA_CG, MASS, CG)
-        matrix = compute_mass_matrix(MASS, CG, inertia_origin)
+        matrix = compute_mass_matrix(MASS, CG, inertia_origin, inertia_about="origin")
         residual = block_form_residual(matrix, MASS, INERTIA_CG, CG)
         assert residual["max_relative_error"] < 1e-12
         assert residual["block_relative_error"]["translation_rotation"] < 1e-12
 
     def test_platform_assembly_satisfies_kinetic_energy(self):
         inertia_origin = inertia_about_point(INERTIA_CG, MASS, CG)
-        matrix = compute_mass_matrix(MASS, CG, inertia_origin)
+        matrix = compute_mass_matrix(MASS, CG, inertia_origin, inertia_about="origin")
         assert energy_residual(matrix, MASS, INERTIA_CG, CG) < 1e-12
 
     def test_cg_convention_keyword(self):
         inertia_origin = inertia_about_point(INERTIA_CG, MASS, CG)
-        from_origin = compute_mass_matrix(MASS, CG, inertia_origin)
+        from_origin = compute_mass_matrix(
+            MASS, CG, inertia_origin, inertia_about="origin"
+        )
         from_cg = compute_mass_matrix(MASS, CG, INERTIA_CG, inertia_about="cg")
         assert np.allclose(from_origin, from_cg, rtol=1e-12, atol=1e-6)
 
