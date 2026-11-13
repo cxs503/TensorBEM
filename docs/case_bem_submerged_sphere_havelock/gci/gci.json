@@ -1,0 +1,1001 @@
+{
+  "case": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "study": "grid convergence (Richardson / GCI / ASME V&V 20), artefact-backed band",
+  "provenance_note": "The 320-panel and 1280-panel rungs are taken from the committed case artefact; the 80-panel rung is computed here. The full 7-wavenumber band (adding ka=4,5 on the case mesh) is produced by gci_continuum.py.",
+  "protocol": {
+    "ka_band": [
+      0.1,
+      0.5,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "subdivisions": [
+      1,
+      2,
+      3
+    ],
+    "panels": [
+      80,
+      320,
+      1280
+    ],
+    "refinement_ratio_linear": 2.0,
+    "safety_factor": 1.25,
+    "radius": 1.0,
+    "submergence": 2.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "gates": {
+      "G1_order_in_range": [
+        1.5,
+        3.0
+      ],
+      "G2_continuum_vs_reference": 0.01,
+      "G3_asme_validation": "E <= 1.25*GCI_1280",
+      "G4_economy_error_is_grid_scaling": 2.0
+    }
+  },
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "host": "36cb7828dbd5",
+    "git_head": "20cbd2220ed481bf62945fbb8fe05a51d3aadf1f",
+    "git_branch": "agent/m18506",
+    "git_dirty": true
+  },
+  "cells": [
+    {
+      "ka": 0.1,
+      "quantity": "a33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4908420502095952
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.5252971228342371
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.5344400441264381
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4908420502095952,
+      "medium": 0.5252971228342371,
+      "fine": 0.5344400441264381,
+      "reference": 0.5375037875884319,
+      "observed_order": 1.9139892929123663,
+      "order_resolved": true,
+      "richardson_continuum": 0.5377425295081625,
+      "gci_fine": 0.0077241718178191875,
+      "err_fine_vs_ref": 0.005699947670582186,
+      "err_coarse_vs_ref": 0.022709913931883614,
+      "err_continuum_vs_ref": 0.00044416788354506836,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.1,
+      "quantity": "b33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.002654067358685353
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.003137920011744757
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.0032751109296136876
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.002654067358685353,
+      "medium": 0.003137920011744757,
+      "fine": 0.0032751109296136876,
+      "reference": 0.0033222925988104154,
+      "observed_order": 1.8183827952825882,
+      "order_resolved": true,
+      "richardson_continuum": 0.003329404051799147,
+      "gci_fine": 0.020721863836175244,
+      "err_fine_vs_ref": 0.014201539386874528,
+      "err_coarse_vs_ref": 0.05549558974175703,
+      "err_continuum_vs_ref": 0.0021405257897145124,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.1,
+      "quantity": "a11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.47565225156256336
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.5073446868637264
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.5157045597521421
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.47565225156256336,
+      "medium": 0.5073446868637264,
+      "fine": 0.5157045597521421,
+      "reference": 0.5184990269480978,
+      "observed_order": 1.9225856116882505,
+      "order_resolved": true,
+      "richardson_continuum": 0.5186998362020312,
+      "gci_fine": 0.00726015601677218,
+      "err_fine_vs_ref": 0.00538953218948932,
+      "err_coarse_vs_ref": 0.02151275027462684,
+      "err_continuum_vs_ref": 0.0003872895482858823,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.1,
+      "quantity": "b11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.0012972665240940106
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.0015308938135197522
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.0015970216404204325
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.0012972665240940106,
+      "medium": 0.0015308938135197522,
+      "fine": 0.0015970216404204325,
+      "reference": 0.001619752645273911,
+      "observed_order": 1.8208794042235512,
+      "order_resolved": true,
+      "richardson_continuum": 0.00162312852712135,
+      "gci_fine": 0.02043404268933743,
+      "err_fine_vs_ref": 0.014033627245371504,
+      "err_coarse_vs_ref": 0.054859507106489236,
+      "err_continuum_vs_ref": 0.0020841959155239163,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.5,
+      "quantity": "a33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.48915014243798133
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.5229766141384147
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.5319285121763994
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.48915014243798133,
+      "medium": 0.5229766141384147,
+      "fine": 0.5319285121763994,
+      "reference": 0.5349252942959751,
+      "observed_order": 1.9178871941770677,
+      "order_resolved": true,
+      "richardson_continuum": 0.5351501343665899,
+      "gci_fine": 0.007570618317227439,
+      "err_fine_vs_ref": 0.005602244185367769,
+      "err_coarse_vs_ref": 0.02233710068484671,
+      "err_continuum_vs_ref": 0.00042032050645624507,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.5,
+      "quantity": "b33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.06755726188304668
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.07996954821533321
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.08349329421436738
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.06755726188304668,
+      "medium": 0.07996954821533321,
+      "fine": 0.08349329421436738,
+      "reference": 0.0847055452573905,
+      "observed_order": 1.816587043280364,
+      "order_resolved": true,
+      "richardson_continuum": 0.08489023740190714,
+      "gci_fine": 0.020914002745435187,
+      "err_fine_vs_ref": 0.014311353989157588,
+      "err_coarse_vs_ref": 0.05591129869557249,
+      "err_continuum_vs_ref": 0.0021804020498943743,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.5,
+      "quantity": "a11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4756485661797533
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.5072657341671192
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.5156016029327115
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4756485661797533,
+      "medium": 0.5072657341671192,
+      "fine": 0.5156016029327115,
+      "reference": 0.5183875440987197,
+      "observed_order": 1.9233036783478057,
+      "order_resolved": true,
+      "richardson_continuum": 0.5185862605935774,
+      "gci_fine": 0.007235862058732346,
+      "err_fine_vs_ref": 0.005374244033683074,
+      "err_coarse_vs_ref": 0.021454624167208978,
+      "err_continuum_vs_ref": 0.0003833357825045566,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 0.5,
+      "quantity": "b11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.032948236622315656
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.03891849044308842
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.04061013865126991
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.032948236622315656,
+      "medium": 0.03891849044308842,
+      "fine": 0.04061013865126991,
+      "reference": 0.041191792293890965,
+      "observed_order": 1.8193626882301135,
+      "order_resolved": true,
+      "richardson_continuum": 0.04127897189260026,
+      "gci_fine": 0.020587015445631646,
+      "err_fine_vs_ref": 0.014120619915519392,
+      "err_coarse_vs_ref": 0.055188223774853606,
+      "err_continuum_vs_ref": 0.002116431304743846,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 1.0,
+      "quantity": "a33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4195923613297916
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.4408899925942294
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.4462954892244769
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4195923613297916,
+      "medium": 0.4408899925942294,
+      "fine": 0.4462954892244769,
+      "reference": 0.4480732996737152,
+      "observed_order": 1.9781939051155766,
+      "order_resolved": true,
+      "richardson_continuum": 0.4481340964658701,
+      "gci_fine": 0.005149635403519591,
+      "err_fine_vs_ref": 0.00396767772266913,
+      "err_coarse_vs_ref": 0.01603154458147055,
+      "err_continuum_vs_ref": 0.00013568492521022512,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 1.0,
+      "quantity": "b33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.06517723020152004
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.07636015346929807
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.07950384947942324
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.06517723020152004,
+      "medium": 0.07636015346929807,
+      "fine": 0.07950384947942324,
+      "reference": 0.08058234530115514,
+      "observed_order": 1.8307637412454731,
+      "order_resolved": true,
+      "richardson_continuum": 0.0807331746729198,
+      "gci_fine": 0.019328076589151855,
+      "err_fine_vs_ref": 0.01338377305477163,
+      "err_coarse_vs_ref": 0.052395990909395194,
+      "err_continuum_vs_ref": 0.0018717421440263022,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 1.0,
+      "quantity": "a11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4409102536081389
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.4662684572132053
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.4728322747778816
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4409102536081389,
+      "medium": 0.4662684572132053,
+      "fine": 0.4728322747778816,
+      "reference": 0.4750090635190439,
+      "observed_order": 1.9498455013261362,
+      "order_resolved": true,
+      "richardson_continuum": 0.47512464553847805,
+      "gci_fine": 0.006060211207222841,
+      "err_fine_vs_ref": 0.004582625697783159,
+      "err_coarse_vs_ref": 0.01840092532358203,
+      "err_continuum_vs_ref": 0.00024332592430532766,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 1.0,
+      "quantity": "b11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.03363084821349777
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.03951059477466912
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.04116853637623207
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.03363084821349777,
+      "medium": 0.03951059477466912,
+      "fine": 0.04116853637623207,
+      "reference": 0.04173780149600059,
+      "observed_order": 1.8263607798885182,
+      "order_resolved": true,
+      "richardson_continuum": 0.041819625277896566,
+      "gci_fine": 0.01976900805126716,
+      "err_fine_vs_ref": 0.013639077751209993,
+      "err_coarse_vs_ref": 0.053361860028609605,
+      "err_continuum_vs_ref": 0.0019604238595033285,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 2.0,
+      "quantity": "a33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4133032665027595
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.43411981957393264
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.4394147706650681
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4133032665027595,
+      "medium": 0.43411981957393264,
+      "fine": 0.4394147706650681,
+      "reference": 0.44115699670515957,
+      "observed_order": 1.9750419349961468,
+      "order_resolved": true,
+      "richardson_continuum": 0.4412210601894081,
+      "gci_fine": 0.005138338663508369,
+      "err_fine_vs_ref": 0.003949220012611141,
+      "err_coarse_vs_ref": 0.015951638948911676,
+      "err_continuum_vs_ref": 0.00014521697429033205,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 2.0,
+      "quantity": "b33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.008938998316115514
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.01035651194708239
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.010750533991285421
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.008938998316115514,
+      "medium": 0.01035651194708239,
+      "fine": 0.010750533991285421,
+      "reference": 0.010885282356836614,
+      "observed_order": 1.8470143573795341,
+      "order_resolved": true,
+      "richardson_continuum": 0.010902223925355937,
+      "gci_fine": 0.017637488309124736,
+      "err_fine_vs_ref": 0.012378949955906486,
+      "err_coarse_vs_ref": 0.04857663700584886,
+      "err_continuum_vs_ref": 0.0015563738232920333,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 2.0,
+      "quantity": "a11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.43657445373241405
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.4613658232623557
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.46777716838727845
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.43657445373241405,
+      "medium": 0.4613658232623557,
+      "fine": 0.46777716838727845,
+      "reference": 0.4699023284298399,
+      "observed_order": 1.9511389945883941,
+      "order_resolved": true,
+      "richardson_continuum": 0.47001358251846137,
+      "gci_fine": 0.005976173812878729,
+      "err_fine_vs_ref": 0.00452255695276635,
+      "err_coarse_vs_ref": 0.01816655217693561,
+      "err_continuum_vs_ref": 0.00023676002839398506,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 2.0,
+      "quantity": "b11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.004718679577114204
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.005494809336246983
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.005712247699067702
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.004718679577114204,
+      "medium": 0.005494809336246983,
+      "fine": 0.005712247699067702,
+      "reference": 0.005786754346829018,
+      "observed_order": 1.8356913744023668,
+      "order_resolved": true,
+      "richardson_continuum": 0.005796873025210628,
+      "gci_fine": 0.018518394728562246,
+      "err_fine_vs_ref": 0.012875377680779364,
+      "err_coarse_vs_ref": 0.050450562281430224,
+      "err_continuum_vs_ref": 0.0017485930411328286,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 3.0,
+      "quantity": "a33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.4275473689462333
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.4508020157307671
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.45678172096138464
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.4275473689462333,
+      "medium": 0.4508020157307671,
+      "fine": 0.45678172096138464,
+      "reference": 0.45875883317959004,
+      "observed_order": 1.9593727532126235,
+      "order_resolved": true,
+      "richardson_continuum": 0.45885159046186746,
+      "gci_fine": 0.0056642741092134295,
+      "err_fine_vs_ref": 0.004309698419324871,
+      "err_coarse_vs_ref": 0.017344227235201983,
+      "err_continuum_vs_ref": 0.00020219181750580242,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 3.0,
+      "quantity": "b33",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.0005582915734791364
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.0006434399017906487
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.000667126164682006
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.0005582915734791364,
+      "medium": 0.0006434399017906487,
+      "fine": 0.000667126164682006,
+      "reference": 0.0006752187635019917,
+      "observed_order": 1.8459276114313106,
+      "order_resolved": true,
+      "richardson_continuum": 0.0006762543813457843,
+      "gci_fine": 0.01710361762705219,
+      "err_fine_vs_ref": 0.011985150972425284,
+      "err_coarse_vs_ref": 0.047064541788683974,
+      "err_continuum_vs_ref": 0.0015337515776686485,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 3.0,
+      "quantity": "a11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.44392725185119514
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.47000231811406995
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.47677515068321824
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.44392725185119514,
+      "medium": 0.47000231811406995,
+      "fine": 0.47677515068321824,
+      "reference": 0.4790243965429055,
+      "observed_order": 1.9448396824572705,
+      "order_resolved": true,
+      "richardson_continuum": 0.47915162491607477,
+      "gci_fine": 0.006230594834512206,
+      "err_fine_vs_ref": 0.004695472455933286,
+      "err_coarse_vs_ref": 0.018834277531473227,
+      "err_continuum_vs_ref": 0.00026559894253289215,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    },
+    {
+      "ka": 3.0,
+      "quantity": "b11",
+      "panels": [
+        80,
+        320,
+        1280
+      ],
+      "levels": [
+        {
+          "subdivision": 1,
+          "n_panels": 80,
+          "value": 0.00029430786979183567
+        },
+        {
+          "subdivision": 2,
+          "n_panels": 320,
+          "value": 0.0003393282321337248
+        },
+        {
+          "subdivision": 3,
+          "n_panels": 1280,
+          "value": 0.0003520871136961895
+        }
+      ],
+      "source": [
+        "computed here",
+        "numbers.json (economy tier)",
+        "numbers.json (case tier)"
+      ],
+      "coarse": 0.00029430786979183567,
+      "medium": 0.0003393282321337248,
+      "fine": 0.0003520871136961895,
+      "reference": 0.00035646366599458566,
+      "observed_order": 1.8190757995465863,
+      "order_resolved": true,
+      "richardson_continuum": 0.0003571330401320531,
+      "gci_fine": 0.017914339376453356,
+      "err_fine_vs_ref": 0.01227769536113849,
+      "err_coarse_vs_ref": 0.04807063242490787,
+      "err_continuum_vs_ref": 0.0018778186988561419,
+      "gate_order": true,
+      "gate_validation": true,
+      "gate_continuum": true
+    }
+  ],
+  "gates": {
+    "G1_order_in_range": {
+      "gate": [
+        1.5,
+        3.0
+      ],
+      "n_resolved": 20,
+      "n_cells": 20,
+      "n_failures": 0,
+      "order_min": 1.816587043280364,
+      "order_max": 1.9781939051155766,
+      "order_median": 1.9139892929123663,
+      "unresolved_cells": [],
+      "verdict": "PASS"
+    },
+    "G2_continuum_vs_reference": {
+      "gate": 0.01,
+      "max_rel_error": 0.0021804020498943743,
+      "worst_cell": {
+        "ka": 0.5,
+        "quantity": "b33",
+        "err": 0.0021804020498943743
+      },
+      "verdict": "PASS"
+    },
+    "G3_asme_validation_at_1280": {
+      "criterion": "E = |f_1280 - ref|/|ref| <= U_V = 1.25*GCI_1280",
+      "n_cells": 20,
+      "n_failures": 0,
+      "max_err_fine_vs_ref": 0.014311353989157588,
+      "max_gci_fine": 0.020914002745435187,
+      "verdict": "PASS"
+    },
+    "G4_economy_error_is_grid_scaling": {
+      "gate_factor": 2.0,
+      "ratio_min": 1.0255179711771507,
+      "ratio_max": 1.1096003944864903,
+      "n_cells": 20,
+      "verdict": "PASS"
+    }
+  },
+  "verdict": "PASS",
+  "runtime_seconds": 8.648775110021234,
+  "log": [
+    "ka=0.1 subdiv=1 (80 panels): 0.41 s",
+    "ka=0.5 subdiv=1 (80 panels): 0.42 s",
+    "ka=1 subdiv=1 (80 panels): 1.80 s",
+    "ka=2 subdiv=1 (80 panels): 3.50 s",
+    "ka=3 subdiv=1 (80 panels): 2.44 s"
+  ]
+}
