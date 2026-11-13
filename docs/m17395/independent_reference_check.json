@@ -1,0 +1,140 @@
+{
+ "audit": "m17395 independent re-derivation of CASE-BEM-RIGID-LID-HEMISPHERE",
+ "conventions": {
+  "radius_m": 1.0,
+  "density": 1025.0,
+  "nabla_m3": 2.0943951023931953,
+  "bem": "single-layer collocation, image Green function, pressure integral"
+ },
+ "route_R1_series": {
+  "rigid_lid_dimless": 0.830951320329628,
+  "rigid_lid_kg": 1783.8488850161705,
+  "pressure_release_dimless": 0.5,
+  "ladder": [
+   {
+    "degree_max": 20,
+    "dimless": 0.8309491285358879
+   },
+   {
+    "degree_max": 40,
+    "dimless": 0.8309511610714927
+   },
+   {
+    "degree_max": 60,
+    "dimless": 0.8309512873124403
+   },
+   {
+    "degree_max": 80,
+    "dimless": 0.8309513097011868
+   },
+   {
+    "degree_max": 120,
+    "dimless": 0.8309513182860445
+   },
+   {
+    "degree_max": 240,
+    "dimless": 0.830951320329628
+   }
+  ],
+  "n_modes": 121,
+  "moment_checks": {
+   "J0_minus_1_2": 0.0,
+   "J1_minus_1_3": 5.551115123125783e-17,
+   "J2_minus_1_8": 2.7755575615628914e-17
+  }
+ },
+ "route_R2_image_bem": {
+  "sphere_selftest": [
+   {
+    "panels": 128,
+    "a33_kg": 2057.2595834091453,
+    "dimless": 0.9583113129446015,
+    "coeff_of_cubature_volume": 3.81772961982836,
+    "residual": 9.992007221626409e-16,
+    "level": 2,
+    "expected_dimless": 1.0
+   },
+   {
+    "panels": 512,
+    "a33_kg": 2143.8953635516677,
+    "dimless": 0.9986679353591531,
+    "coeff_of_cubature_volume": 4.091600620085999,
+    "residual": 2.9976021664879227e-15,
+    "level": 3,
+    "expected_dimless": 1.0
+   },
+   {
+    "panels": 2048,
+    "a33_kg": 2156.442528973384,
+    "dimless": 1.0045126477454687,
+    "coeff_of_cubature_volume": 4.164203596248637,
+    "residual": 6.661338147750939e-15,
+    "level": 4,
+    "expected_dimless": 1.0
+   }
+  ],
+  "hemisphere": [
+   {
+    "panels": 64,
+    "a33_kg": 1779.2911698354862,
+    "dimless": 0.8288282484265719,
+    "coeff_of_cubature_volume": 1.90886480991418,
+    "residual": 5.551115123125783e-16,
+    "level": 2,
+    "pressure_release_dimless": 0.4764774238357091,
+    "mesh_area_rel_error": -0.0486599514180901
+   },
+   {
+    "panels": 256,
+    "a33_kg": 1800.6736182553577,
+    "dimless": 0.8387886065575866,
+    "coeff_of_cubature_volume": 2.0458003100429996,
+    "residual": 1.5543122344752192e-15,
+    "level": 3,
+    "pressure_release_dimless": 0.4987001652726948,
+    "mesh_area_rel_error": -0.012588107706705376
+   },
+   {
+    "panels": 1024,
+    "a33_kg": 1797.3241827068155,
+    "dimless": 0.8372283746821186,
+    "coeff_of_cubature_volume": 2.0821017981243184,
+    "residual": 3.219646771412954e-15,
+    "level": 4,
+    "pressure_release_dimless": 0.502102852027538,
+    "mesh_area_rel_error": -0.0031744046777224533
+   }
+  ]
+ },
+ "case_ships": 0.8309512873124402,
+ "referee_exact": 0.83095132,
+ "row_headline_1024": 0.833304,
+ "deltas": {
+  "R1_vs_case_ships": 3.973420392711091e-08,
+  "R1_vs_referee_exact": 3.966875716798768e-10,
+  "case_ships_vs_referee_exact": -3.93375148011188e-08,
+  "row_headline_vs_referee_exact": 0.002831309059115439,
+  "r2_hemisphere_vs_case_ships": [
+   {
+    "level": 2,
+    "dimless": 0.8288282484265719,
+    "rel_error": -0.0025549498728557607
+   },
+   {
+    "level": 3,
+    "dimless": 0.8387886065575866,
+    "rel_error": 0.009431743310122087
+   },
+   {
+    "level": 4,
+    "dimless": 0.8372283746821186,
+    "rel_error": 0.007554097894210576
+   }
+  ]
+ },
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "machine": "loongarch64"
+ }
+}
