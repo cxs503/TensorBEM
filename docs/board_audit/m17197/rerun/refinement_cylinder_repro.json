@@ -1,0 +1,145 @@
+{
+  "checks": {
+    "all_outputs_finite": true,
+    "cylinder_added_mass_error_decreases": true
+  },
+  "panel_counts": [
+    16,
+    32,
+    64,
+    128,
+    256
+  ],
+  "schema_version": 1,
+  "scope": "Constant-panel, midpoint-collocation 2-D Laplace prototype. These cases are narrow verification tests and do not validate general exterior flow, free-surface conditions, or 3-D ship flow.",
+  "study": "tensorbem_2d_refinement",
+  "translating_cylinder_added_mass": [
+    {
+      "added_mass_method": "boundary_energy_integral_using_computed_flux",
+      "added_mass_per_unit_span": 3304.605509034233,
+      "added_mass_relative_error": 0.026232783866355507,
+      "benchmark": "two_dimensional_translating_circular_cylinder",
+      "exact_added_mass_per_unit_span": 3220.132469929538,
+      "fluid_density": 1025.0,
+      "normal_derivative_rmse": 0.023233158107324275,
+      "note": "The polygon approximates the circular body. Added mass uses the computed boundary flux in the boundary energy integral. For this first angular mode, the bounded-domain flux trace matches the exterior fluid-normal trace; this does not validate a general exterior-domain solver.",
+      "panels": 16,
+      "radius": 1.0,
+      "residual_l2": 2.9275225451776116e-16,
+      "single_layer_condition_number": 9.808948675692799,
+      "speed": 1.0
+    },
+    {
+      "added_mass_method": "boundary_energy_integral_using_computed_flux",
+      "added_mass_per_unit_span": 3241.0005302467907,
+      "added_mass_relative_error": 0.006480497467767077,
+      "benchmark": "two_dimensional_translating_circular_cylinder",
+      "exact_added_mass_per_unit_span": 3220.132469929538,
+      "fluid_density": 1025.0,
+      "normal_derivative_rmse": 0.0057269344832457485,
+      "note": "The polygon approximates the circular body. Added mass uses the computed boundary flux in the boundary energy integral. For this first angular mode, the bounded-domain flux trace matches the exterior fluid-normal trace; this does not validate a general exterior-domain solver.",
+      "panels": 32,
+      "radius": 1.0,
+      "residual_l2": 3.7102000320074077e-16,
+      "single_layer_condition_number": 19.169224213940645,
+      "speed": 1.0
+    },
+    {
+      "added_mass_method": "boundary_energy_integral_using_computed_flux",
+      "added_mass_per_unit_span": 3225.3250921803083,
+      "added_mass_relative_error": 0.0016125492659884513,
+      "benchmark": "two_dimensional_translating_circular_cylinder",
+      "exact_added_mass_per_unit_span": 3220.132469929538,
+      "fluid_density": 1025.0,
+      "normal_derivative_rmse": 0.0014247531269344243,
+      "note": "The polygon approximates the circular body. Added mass uses the computed boundary flux in the boundary energy integral. For this first angular mode, the bounded-domain flux trace matches the exterior fluid-normal trace; this does not validate a general exterior-domain solver.",
+      "panels": 64,
+      "radius": 1.0,
+      "residual_l2": 6.736715478129529e-16,
+      "single_layer_condition_number": 38.11334353855527,
+      "speed": 1.0
+    },
+    {
+      "added_mass_method": "boundary_energy_integral_using_computed_flux",
+      "added_mass_per_unit_span": 3221.428000763002,
+      "added_mass_relative_error": 0.00040232221672928506,
+      "benchmark": "two_dimensional_translating_circular_cylinder",
+      "exact_added_mass_per_unit_span": 3220.132469929538,
+      "fluid_density": 1025.0,
+      "normal_derivative_rmse": 0.0003555109990453817,
+      "note": "The polygon approximates the circular body. Added mass uses the computed boundary flux in the boundary energy integral. For this first angular mode, the bounded-domain flux trace matches the exterior fluid-normal trace; this does not validate a general exterior-domain solver.",
+      "panels": 128,
+      "radius": 1.0,
+      "residual_l2": 1.2754099433848084e-15,
+      "single_layer_condition_number": 76.11357941479734,
+      "speed": 1.0
+    },
+    {
+      "added_mass_method": "boundary_energy_integral_using_computed_flux",
+      "added_mass_per_unit_span": 3220.456051122644,
+      "added_mass_relative_error": 0.0001004869197550041,
+      "benchmark": "two_dimensional_translating_circular_cylinder",
+      "exact_added_mass_per_unit_span": 3220.132469929538,
+      "fluid_density": 1025.0,
+      "normal_derivative_rmse": 8.880524715917633e-05,
+      "note": "The polygon approximates the circular body. Added mass uses the computed boundary flux in the boundary energy integral. For this first angular mode, the bounded-domain flux trace matches the exterior fluid-normal trace; this does not validate a general exterior-domain solver.",
+      "panels": 256,
+      "radius": 1.0,
+      "residual_l2": 2.553461397590111e-15,
+      "single_layer_condition_number": 152.17042055722953,
+      "speed": 1.0
+    }
+  ],
+  "unit_disk_manufactured_solution": [
+    {
+      "benchmark": "unit_disk_linear_harmonic_field",
+      "normal_derivative_max_abs_error_vs_circle_reference": 0.012760601468556287,
+      "normal_derivative_rmse_vs_circle_reference": 0.009199880963470788,
+      "note": "Circle reference is approximate for a polygonal boundary; use convergence trends, not a single value, as the verification criterion.",
+      "panels": 16,
+      "perimeter": 6.242890304516104,
+      "residual_l2": 2.3055512673781017e-16,
+      "single_layer_condition_number": 9.808948675692799
+    },
+    {
+      "benchmark": "unit_disk_linear_harmonic_field",
+      "normal_derivative_max_abs_error_vs_circle_reference": 0.003229210897840673,
+      "normal_derivative_rmse_vs_circle_reference": 0.0022944453050222032,
+      "note": "Circle reference is approximate for a polygonal boundary; use convergence trends, not a single value, as the verification criterion.",
+      "panels": 32,
+      "perimeter": 6.273096981091879,
+      "residual_l2": 2.978071086106445e-16,
+      "single_layer_condition_number": 19.169224213940645
+    },
+    {
+      "benchmark": "unit_disk_linear_harmonic_field",
+      "normal_derivative_max_abs_error_vs_circle_reference": 0.0008069611664511811,
+      "normal_derivative_rmse_vs_circle_reference": 0.0005712958638374364,
+      "note": "Circle reference is approximate for a polygonal boundary; use convergence trends, not a single value, as the verification criterion.",
+      "panels": 64,
+      "perimeter": 6.280662313909506,
+      "residual_l2": 7.178234598831753e-16,
+      "single_layer_condition_number": 38.11334353855527
+    },
+    {
+      "benchmark": "unit_disk_linear_harmonic_field",
+      "normal_derivative_max_abs_error_vs_circle_reference": 0.00020137507950324096,
+      "normal_derivative_rmse_vs_circle_reference": 0.00014243658349854838,
+      "note": "Circle reference is approximate for a polygonal boundary; use convergence trends, not a single value, as the verification criterion.",
+      "panels": 128,
+      "perimeter": 6.282554501865546,
+      "residual_l2": 1.3447788525205123e-15,
+      "single_layer_condition_number": 76.11357941479734
+    },
+    {
+      "benchmark": "unit_disk_linear_harmonic_field",
+      "normal_derivative_max_abs_error_vs_circle_reference": 5.0278181136564903e-05,
+      "normal_derivative_rmse_vs_circle_reference": 3.555472013586408e-05,
+      "note": "Circle reference is approximate for a polygonal boundary; use convergence trends, not a single value, as the verification criterion.",
+      "panels": 256,
+      "perimeter": 6.283027602288602,
+      "residual_l2": 3.3011047086442974e-15,
+      "single_layer_condition_number": 152.17042055722953
+    }
+  ]
+}
