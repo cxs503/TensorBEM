@@ -1,0 +1,180 @@
+{
+  "case": "CASE-BEM-MARUO-DRIFT",
+  "generated_by": "tensorbem.benchmarks.maruo_drift_far_field_case.run_study",
+  "parameters": {
+    "density": 1025.0,
+    "gravity": 9.81,
+    "radius": 1.0,
+    "amplitude": 1.0,
+    "depth_factor": 16.0,
+    "n_azimuth": 96,
+    "n_theta_quad": 2048,
+    "m_max": 14,
+    "ka_values": [
+      1.0
+    ],
+    "resolutions": [
+      [
+        "coarse",
+        24,
+        6,
+        2.5
+      ]
+    ],
+    "production_resolution": "coarse"
+  },
+  "cells": [
+    {
+      "ka": 1.0,
+      "wavenumber": 1.0,
+      "panels": 24,
+      "levels": 6,
+      "grading": 2.5,
+      "panel_count": 312,
+      "n_azimuth": 96,
+      "n_theta_quad": 2048,
+      "bem_force": 5919.153020824078,
+      "bem_force_coefficient": 0.5886629393425403,
+      "ref_force": 6685.993519247995,
+      "ref_force_coefficient": 0.6649256377760866,
+      "ref_integral": 4.177850997641723,
+      "bem_integral_total": 107.21024880017717,
+      "bem_integral_weighted": 145.13613772249565,
+      "rel_error": 0.11469357489149451,
+      "solver_relative_residual": 1.2932369069750766e-15,
+      "kochin_azimuth_rel_change": 0.0007861753804003665,
+      "elapsed_seconds": 31.533548831939697,
+      "resolution": "coarse"
+    }
+  ],
+  "reference": [
+    {
+      "ka": 1.0,
+      "m_max": 14,
+      "isotropic_moment": 3.1421949854401583,
+      "projection_moment": -1.0356560122015654,
+      "integral_weighted": 4.177850997641723,
+      "modal_energy_sum": 0.5000958640913673,
+      "wavenumber": 1.0,
+      "radius": 1.0,
+      "amplitude": 1.0,
+      "density": 1025.0,
+      "gravity": 9.81,
+      "mean_drift_force_x": 6685.993519247995,
+      "force_coefficient": 0.6649256377760866
+    }
+  ],
+  "cross_check_closed_form_vs_quadrature": [
+    {
+      "ka": 1.0,
+      "closed_form": 6685.993519247995,
+      "cylinder_drift_quadrature": 6685.993519247995,
+      "rel_error": 0.0
+    }
+  ],
+  "long_wave_anchors": [
+    {
+      "ka": 0.01,
+      "long_wave_coefficient_closed_form": 3.0842513753404246,
+      "long_wave_coefficient_measured": 3.0842036001650555,
+      "long_wave_force": 0.03101291864189181,
+      "closed_form_force": 0.031012438250559677,
+      "rel_error": 1.5490279359937593e-05
+    },
+    {
+      "ka": 0.02,
+      "long_wave_coefficient_closed_form": 3.0842513753404246,
+      "long_wave_coefficient_measured": 3.083891059621594,
+      "long_wave_force": 0.2481033491351345,
+      "closed_form_force": 0.2480743646180803,
+      "rel_error": 0.0001168380179016468
+    },
+    {
+      "ka": 0.05,
+      "long_wave_coefficient_closed_form": 3.0842513753404246,
+      "long_wave_coefficient_measured": 3.080622456228525,
+      "long_wave_force": 3.876614830236477,
+      "closed_form_force": 3.8720536191239856,
+      "rel_error": 0.0011779824251305778
+    }
+  ],
+  "quadrature_sensitivity": {
+    "1.0": {
+      "ka": 1.0,
+      "rows": [
+        {
+          "n_theta": 128,
+          "integral_total": 12.568757445371375,
+          "integral_weighted": 16.711383979452094,
+          "force_x": 681.5479625981054
+        },
+        {
+          "n_theta": 256,
+          "integral_total": 12.568756320551913,
+          "integral_weighted": 16.711382978895827,
+          "force_x": 681.547921791965
+        },
+        {
+          "n_theta": 512,
+          "integral_total": 12.568756039347047,
+          "integral_weighted": 16.711382728756753,
+          "force_x": 681.5479115904295
+        },
+        {
+          "n_theta": 1024,
+          "integral_total": 12.56875596904583,
+          "integral_weighted": 16.711382666221986,
+          "force_x": 681.5479090400456
+        },
+        {
+          "n_theta": 2048,
+          "integral_total": 12.568755951470527,
+          "integral_weighted": 16.71138265058829,
+          "force_x": 681.5479084024497
+        },
+        {
+          "n_theta": 4096,
+          "integral_total": 12.5687559470767,
+          "integral_weighted": 16.711382646679873,
+          "force_x": 681.5479082430506
+        }
+      ],
+      "spread_rel": 7.975235958138846e-08,
+      "last_step_rel": 2.3387762463364263e-10,
+      "unit_amplitude_force_ratio": 0.10193666899032644,
+      "expected_unit_amplitude_ratio_k_over_g": 0.1019367991845056
+    }
+  },
+  "production_worst_rel_error": 0.11469357489149451,
+  "gates": [
+    {
+      "name": "G1_closed_form_vs_quadrature",
+      "threshold": 1e-10,
+      "measured": 0.0,
+      "passed": true,
+      "note": "closed form (modal sum) vs repo quadrature route"
+    },
+    {
+      "name": "G2_long_wave_coefficient",
+      "threshold": 0.001,
+      "measured": 0.0001168380179016468,
+      "passed": true,
+      "note": "closed form vs symbolic 5 pi^2/16 at ka = 0.01 / 0.02; the ka = 0.05 anchor is reported for the O(ka^2) trend, not gated"
+    },
+    {
+      "name": "G3_bem_vs_ref_production",
+      "threshold": 0.05,
+      "measured": 0.11469357489149451,
+      "passed": false,
+      "note": "worst cell at resolution 'coarse' (task tolerance 5%)"
+    },
+    {
+      "name": "G4_quadrature_spread",
+      "threshold": 0.01,
+      "measured": 7.975235958138846e-08,
+      "passed": true,
+      "note": "Maruo kernel spread over n_theta = 128 ... 4096 on the exact field"
+    }
+  ],
+  "all_passed": false
+}
