@@ -185,6 +185,85 @@ def test_convergence_recorded_for_every_level(study: dict) -> None:
     )
 
 
+def test_artifact_uses_the_declared_mesh_levels(study: dict) -> None:
+    """The committed artifact must be the study the module declares.
+
+    Regression gate for a real drift: `render_document` hard-coded "three
+    (resp. two) hull densities" in the prose while `results.json` had been
+    produced with two (resp. one) level(s), and the declared constants
+    `HEMISPHERE_LEVELS = (2, 3, 4)` / `SPHERE_LEVELS = (2, 3)` were never
+    exercised by any recorded run.  Nothing failed, because no check tied the
+    artifact to the declared level sets.
+    """
+    from tensorbem.benchmarks.capytaine_crosscheck import (
+        HEMISPHERE_LEVELS,
+        SPHERE_LEVELS,
+    )
+    from tensorbem.geometry3d import floating_sphere_hull_mesh, hemisphere_hull_mesh
+
+    expected = {
+        "hemisphere_r1": [
+            int(hemisphere_hull_mesh(int(sub), radius=1.0).faces.shape[0])
+            for sub in HEMISPHERE_LEVELS
+        ],
+        "sphere_r1_z-0.5": [
+            int(
+                floating_sphere_hull_mesh(
+                    int(sub), radius=1.0, center=(0.0, 0.0, -0.5)
+                ).faces.shape[0]
+            )
+            for sub in SPHERE_LEVELS
+        ],
+    }
+    for case, faces in expected.items():
+        got = [int(row["n_faces"]) for row in study["tensorbem"][case]["levels"]]
+        assert got == faces, f"{case}: artifact levels {got} != declared {faces}"
+        assert len(faces) >= 2, f"{case} needs >= 2 levels for a convergence claim"
+        assert [int(r["n_faces"]) for r in study["convergence"][case]] == faces
+
+
+def test_analytic_decomposition_is_consistent(study: dict) -> None:
+    """Every three-way cell must be the arithmetic of the recorded numbers.
+
+    Section 3.5 of the document attributes the code-to-code gap with Hulme's
+    semi-analytical solution; this gate stops that section from becoming prose
+    that no longer matches the artifacts.
+    """
+    dec = study["analytic_decomposition"]
+    entries = dec["entries"]
+    assert len(entries) == 12, "12 (nu, dof, quantity) cells expected"
+    for entry in entries:
+        base = entry["hulme"]
+        assert entry["tensorbem_vs_hulme"] == pytest.approx(
+            (entry["tensorbem"] - base) / abs(base), rel=1e-12
+        )
+        assert entry["capytaine_vs_hulme"] == pytest.approx(
+            (entry["capytaine"] - base) / abs(base), rel=1e-12
+        )
+        assert entry["code_to_code"] == pytest.approx(
+            (entry["tensorbem"] - entry["capytaine"]) / abs(entry["capytaine"]),
+            rel=1e-12,
+        )
+        # the same cells are the ones compared code-to-code
+        cell = next(
+            e
+            for e in study["comparison"]["cases"]["hemisphere_r1"]["entries"]
+            if e["nu"] == entry["nu"]
+            and e["dof"] == entry["dof"]
+            and e["quantity"] == entry["quantity"]
+        )
+        assert entry["tensorbem"] == pytest.approx(cell["tensorbem"], rel=1e-12)
+        assert entry["capytaine"] == pytest.approx(cell["capytaine"], rel=1e-12)
+    worst_tb = max(abs(e["tensorbem_vs_hulme"]) for e in entries)
+    assert dec["tensorbem_worst_vs_hulme"]["relative"] == pytest.approx(
+        math.copysign(worst_tb, dec["tensorbem_worst_vs_hulme"]["relative"]),
+        rel=1e-12,
+    )
+    # documented finding: this solver is much closer to the analytic axis than
+    # the foreign code on the cell that drives the code-to-code residual
+    assert worst_tb < abs(dec["capytaine_worst_vs_hulme"]["relative"])
+
+
 def test_document_matches_artifacts(study: dict) -> None:
     doc = (REPO_ROOT / DOC_PATH).read_text()
     assert doc == render_document(study)
