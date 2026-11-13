@@ -1,0 +1,18 @@
+{
+  "anchor_slug": "CASE-BEM-MARUO-DRIFT",
+  "registered_rows": [],
+  "registered_rows_count": 0,
+  "criterion_in_mission_goal": "容差判据：<5%",
+  "criterion_in_force": "per-cell relative error < 5 % at the declared production mesh",
+  "sibling_drift_rows": [
+    {
+      "id": 43,
+      "anchor_slug": "CASE-BEM-CYL-DRIFT-ASYMP",
+      "metric": "BEM far-field (Kochin->Maruo) relative error vs closed form at 800 panels: got 2.028% (ka=0.5) / 1.068% (ka=1.0) / 1.317% (ka=2.0), max 0.020284; long-wave law 5*pi^2/16*rho*g*A^2*a*(ka)^3 at ka=0.02: 0.011684%; law valid band ka<=0.24 (ka=0.30 already 7.86% off); slope 2.9964; near-vs-far closed-form routes 2.84e-15; amplitude^2 scaling 4.000000; BEM mesh ladder 208/456/800/1776 panels far 7.396/3.179/2.028/1.406%, near 30.202/13.350/6.082/2.123% (near-field at the 800-panel main mesh misses <5%, disclosed); audit m17263 reran the 208/456 rungs bit-identically (|diff|<=1e-15) and submitted the full 750 s repro to the cluster (cj1470)",
+      "tolerance": "<5% (case pool BEM-CYL-DRIFT-ASYMP id=140 tol_policy + mission 17204 criterion); ecosystem <3% met on the main far-field gate (max 2.028%), NOT met by the 800-panel near-field route (6.082%, 2.123% at 1776 panels)"
+    }
+  ],
+  "ref_law": "F_x = rho g A^2/(2 pi k) Int |S|^2 (1-cos th) dth (Maruo 1957); long-wave limit (5 pi^2/16) rho g A^2 a (ka)^3 (Maruo 1960; Newman 1977 7.3)",
+  "ref_source_declared_by_mission": "ref 原文/手册查得 (zero transcription)",
+  "ref_source_actually_used": "machine evaluation of the closed form + long-wave law; the delivery states (report ①) that the paper table could not be opened offline -> honest deviation, but the literal 'table vs got' requirement is not met"
+}

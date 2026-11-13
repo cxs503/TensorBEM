@@ -1,0 +1,9 @@
+{
+  "commit": "92c92b7",
+  "ancestor_of_main": false,
+  "branches_containing": [
+    "agent/m17276"
+  ],
+  "files_present_in_ecosystem_main": false,
+  "note": "an unmerged-but-committed branch is normal mid-battle; recorded for traceability only"
+}

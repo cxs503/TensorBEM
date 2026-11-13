@@ -1,0 +1,14 @@
+{
+  "level": 3,
+  "blockers": [
+    "blocking-for-L4: tensor_benchmark_cases has 0 rows for anchor CASE-BEM-MARUO-DRIFT -> no machine referee; criterion only in mission-goal text",
+    "blocking-for-L4: declared <5% criterion FAILS at the production mesh (ka=2.0, 800 panels, 5.331%)"
+  ],
+  "notes": [
+    "material: prose numbers with no artifact source (3 items)",
+    "note: delivered repro_cmd is merge-only (no BEM re-solve) -- reproducibility of the solver rests on the audit cluster replay"
+  ],
+  "anchor": "CASE-BEM-MARUO-DRIFT",
+  "subject_mission": 17276,
+  "audit_mission": 17327
+}

@@ -1,0 +1,23 @@
+{
+  "sections_present": {
+    "①": true,
+    "②": true,
+    "③": true,
+    "④": true,
+    "⑤": true,
+    "⑥": true
+  },
+  "sections_complete": true,
+  "table_rows_parsed": 16,
+  "table_rows_traceable": 16,
+  "table_rows_drifting": [],
+  "every_table_number_traceable": true,
+  "untraceable_prose_claims": [
+    "'(32,12,3.0)=832 三角形' (⑤-1) but study.json records 800 panels for that mesh",
+    "'(32,6,2.5)=416 三角形' (⑤-1) is not a rung of the delivered study (panel counts: [312, 544, 800, 1200])",
+    "'ka=1.0 ... 降到 fine 的 3.01%' (⑤-1) quotes the *finer* value (3.01%); fine is 3.07%"
+  ],
+  "honest_fail_disclosed": true,
+  "declares_5pct_target": true,
+  "has_error_judgement_section": true
+}
