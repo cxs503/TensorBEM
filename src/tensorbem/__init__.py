@@ -424,3 +424,30 @@ __all__.extend([
     "HavelockFiniteDepthResult",
     "parameter_study",
 ])
+
+# Irregular-frequency prediction and sanitisation (Bessel-zero based)
+from .irregular_frequency import (
+    IrregularFrequencyPrediction,
+    SanitisationResult,
+    FrequencySweepResult,
+    predict_irregular_frequencies,
+    sanitise_with_chief,
+    sanitise_with_interior_surface,
+    irregular_frequency_sanitisation,
+    _BESSEL_J01,
+    _BESSEL_J11,
+    _BESSEL_J21,
+)
+
+__all__.extend([
+    "IrregularFrequencyPrediction",
+    "SanitisationResult",
+    "FrequencySweepResult",
+    "predict_irregular_frequencies",
+    "sanitise_with_chief",
+    "sanitise_with_interior_surface",
+    "irregular_frequency_sanitisation",
+    "_BESSEL_J01",
+    "_BESSEL_J11",
+    "_BESSEL_J21",
+])
