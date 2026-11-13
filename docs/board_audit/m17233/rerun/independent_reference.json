@@ -1,0 +1,70 @@
+{
+  "alpha_abs_diff_vs_repo": [
+    2.5834889783027393e-13,
+    5.760947274779937e-13,
+    1.0189626920009687e-12
+  ],
+  "alpha_definition": [
+    0.40092757455492406,
+    0.6707129177980916,
+    0.9283595076469844
+  ],
+  "alpha_max_rel_diff_vs_repo": 1.0975949334377423e-12,
+  "alpha_sum": 2.0,
+  "alpha_sum_identity_residual": 2.249999999999086e-18,
+  "definition": "Lamb (1932) Hydrodynamics 5th ed. \u00a7114: alpha_i = a1a2a3 * int_0^inf dlam / ((a_i^2+lam) sqrt(prod_j(a_j^2+lam))), A_ii = rho V alpha_i/(2-alpha_i)",
+  "density": 1025.0,
+  "got_added_mass_320_panels": [
+    1191.2955950090695,
+    2394.8177826981614,
+    4104.549811866565
+  ],
+  "implementation": "mpmath adaptive quadrature, 40 digits, substitution lam=t/(1-t)",
+  "max_rel_error_320_panels": 0.019080294464579917,
+  "passes_3pct": true,
+  "passes_5pct": true,
+  "ref_added_mass": [
+    1211.0519952419288,
+    2437.1535015128825,
+    4184.389189761621
+  ],
+  "ref_mass_max_rel_diff_vs_repo": 2.048346289226006e-12,
+  "rel_error_320_panels": [
+    0.016313420324213734,
+    0.01737096936587738,
+    0.019080294464579917
+  ],
+  "repo_alpha": [
+    0.4009275745546657,
+    0.6707129177975155,
+    0.9283595076459654
+  ],
+  "repo_ref_added_mass": [
+    1211.051995240953,
+    2437.153501509733,
+    4184.38918975305
+  ],
+  "semi_axes": [
+    1.5,
+    1.0,
+    0.75
+  ],
+  "sphere_limit": {
+    "added_mass_over_rhoV": 0.5,
+    "alpha": [
+      0.6666666666666666,
+      0.6666666666666666,
+      0.6666666666666666
+    ],
+    "max_abs_diff_from_two_thirds": 6.666666666666667e-19
+  },
+  "spheroid_2_1_1": {
+    "alpha_axial_abs_diff": 1.3333333333297334e-18,
+    "alpha_axial_closed_form": 0.34712799506792846,
+    "alpha_axial_integral": 0.34712799506792846,
+    "alpha_transverse_abs_diff": 1.3333333333321333e-18,
+    "alpha_transverse_closed_form": 0.8264360024660358,
+    "alpha_transverse_integral": 0.8264360024660358
+  },
+  "volume_exact": 4.71238898038469
+}
