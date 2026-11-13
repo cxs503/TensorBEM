@@ -236,6 +236,47 @@ def mass_loading_omega(
     return math.sqrt(numerator / denominator)
 
 
+def mass_loading_omega_bem(
+    k: float,
+    ice: IceCover,
+    *,
+    panels_per_wavelength: int = 64,
+    route: str = "driven",
+) -> float:
+    """Mass-loading frequency obtained from a boundary-element solve.
+
+    Unlike :func:`mass_loading_omega` (eq. 1 evaluated in closed form), this
+    entry point solves the Laplace boundary integral equation of one periodic
+    cell of the ice-covered basin and reads the free-surface depth factor off the
+    numerical flux; ``tanh(k H)`` never enters the computation.  It is the
+    solver-side caller of :mod:`tensorbem.ice_mass_loading_dispersion` and exists
+    so that the ice module can quote a numerically verified frequency without
+    duplicating the BEM.
+
+    Parameters
+    ----------
+    k :
+        Wavenumber of the mode (1/m).
+    ice :
+        Ice cover; ``water_depth``, ``mu`` and ``gravity`` are taken from it.
+    panels_per_wavelength :
+        Free-surface panels per wavelength of the mode.
+    route :
+        ``'driven'`` (driven Dirichlet solve) or ``'dtn'`` (assembled
+        Dirichlet-to-Neumann map).
+    """
+    from .ice_mass_loading_dispersion import strip_bem_mass_loading_omega
+
+    return strip_bem_mass_loading_omega(
+        k,
+        depth=ice.water_depth,
+        mu=ice.mu,
+        gravity=ice.gravity,
+        panels_per_wavelength=panels_per_wavelength,
+        route=route,
+    )
+
+
 def robin_coefficient(omega: float, ice: IceCover) -> float:
     """Mass-loading Robin coefficient ``K = omega**2/(g - mu omega**2)``.
 

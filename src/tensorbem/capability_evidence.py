@@ -969,6 +969,40 @@ CAPABILITIES: tuple[Capability, ...] = (
         note='The PC6 hull is parametric: the offset table is not public property, so absolute RAO magnitudes in ice remain WITHHELD in the document.',
     ),
     Capability(
+        key='ice-mass-loading-bem-dispersion',
+        title='Ice-cover mass-loading dispersion from a periodic-strip BEM',
+        claim=(
+            'The free-surface Dirichlet-to-Neumann problem of one periodic cell of '
+            'the ice-covered basin reproduces the Weitz-Keller mass-loading dispersion '
+            'relation to better than 0.4 % over kH = 0.04 .. 80, with the two '
+            'numerical routes (driven solve, assembled DtN map) agreeing to 1e-14 and '
+            'the recovered interior potential matching the exact mode to 0.6 %.'
+        ),
+        level=REAL,
+        modules=('tensorbem.ice_mass_loading_dispersion',),
+        symbols=(
+            'strip_bem_depth_factor',
+            'dtn_depth_factor',
+            'strip_bem_mass_loading_omega',
+            'strip_bem_field',
+        ),
+        tests=(
+            'tests/test_ice_mass_loading_dispersion.py::test_depth_factor_reproduces_k_tanh',
+            'tests/test_ice_mass_loading_dispersion.py::test_dtn_route_agrees_with_the_driven_route',
+            'tests/test_ice_mass_loading_dispersion.py::test_interior_field_matches_the_exact_mode',
+            'tests/test_ice_mass_loading_dispersion.py::test_ice_module_callers_use_the_bem',
+        ),
+        docs=(('docs/case_bem_ice_dispersion/REPORT.md', 'Weitz'),),
+        note=(
+            'Complements ice-region-hydrodynamics: that row evaluates the closed form '
+            'and an RK4 shooting of the vertical ODE, this one solves the Laplace BIE '
+            'of the basin and never uses tanh(kH) on the numerical side. Absolute '
+            'validation against the printed table of Weitz & Keller (1950) remains '
+            'WITHHELD (offline environment); the deep-water and long-wave limits are '
+            'used as independent anchors instead.'
+        ),
+    ),
+    Capability(
         key='linear-panel-operators',
         title='Piecewise-linear panel operators and tangential recovery smoothing',
         claim='The linear-panel self integral matches the graded Duffy rule and smoothing preserves the area-weighted mean exactly.',
@@ -1701,10 +1735,6 @@ UNTESTED_MODULES: dict[str, str] = {
         "CASE-ACOUSTIC-PULSE report driver: it assembles the route A/B/C, mesh-study and"
         " convergence-order numbers it prints from tensorbem.acoustic3d_pulse, which is pinned by"
         " tests/test_acoustic3d_pulse.py and graded by the acoustic-3d-pulse row.",
-    "tensorbem.benchmarks.shu_osher_wave_interaction":
-        "CASE-SHU-OSHER benchmark driver: it runs the linear wave-interaction case through"
-        " tensorbem.wave1d (pinned by tests/test_wave1d.py) and assembles the report/figures;"
-        " the wave1d physics it exercises is graded by the wave1d test suite.",
     "tensorbem.benchmarks.hydrostatic_figures":
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
@@ -1789,23 +1819,6 @@ AUXILIARY_MODULES: dict[str, str] = {
         'hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.',
     'tensorbem.analytic':
         'closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).',
-    'tensorbem.wave1d':
-        '1-D linear wave-equation solver (d\'Alembert formula + retarded-potential boundary flux)'
-        ' exercised by the CASE-SHU-OSHER benchmark and pinned by tests/test_wave1d.py;'
-        ' it is a scalar wave solver, not a BEM boundary-value problem, so no capability'
-        ' row claims a BEM evidence level for it.',
-    'tensorbem.nk_steady_kernel':
-        'steady Neumann-Kelvin spectral-form kernel candidate (m17117); the steady wave'
-        ' resistance physics it feeds is graded by the Neumann-Kelvin row and pinned by'
-        ' tests/test_nk_steady_kernel_candidate.py.',
-    'tensorbem.shape_gradient':
-        'shape-gradient / adjoint-sensitivity module (m16955); the adjoint sign fix is'
-        ' pinned by tests/test_shape_gradient.py and the geometry it differentiates is'
-        ' graded by the panel-geometry rows.',
-    'tensorbem.steady_kelvin':
-        'steady Kelvin wave-resistance kernel (m16955); the steady wave-resistance'
-        ' physics is graded by the forward-speed-wave-resistance row and pinned by'
-        ' tests/test_steady_kelvin.py.',
 }
 
 
