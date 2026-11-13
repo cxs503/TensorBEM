@@ -412,6 +412,99 @@ def prolate_spheroid_shape_factors(
     return np.array([alpha_axial, alpha_transverse, alpha_transverse])
 
 
+def spheroid_geometric_capacitance(semi_axes: FloatArray) -> float:
+    r"""Geometric capacitance (unit: metre) of a spheroid of revolution.
+
+    For a conductor held at a uniform potential in an unbounded medium the
+    total charge is :math:`Q = C \varphi` with :math:`C = \varepsilon_0 \kappa`,
+    where :math:`\kappa` depends on the shape only.  In a medium of
+    conductivity :math:`\sigma` the same geometry carries the total current
+
+    .. math::
+
+        I = \frac{\sigma}{\varepsilon_0} C \varphi = \sigma \kappa \varphi,
+
+    so :math:`\kappa` is the single geometric number a cathodic-protection
+    anchor needs, and :math:`R = 1/(\sigma\kappa)` is the spreading resistance
+    of the body (for a sphere :math:`\kappa = 4\pi a`,
+    :math:`R = 1/(4\pi\sigma a)`).
+
+    Two of the three semi-axes must be equal.  With :math:`a` the axis of
+    revolution, :math:`b` the two other semi-axes and
+    :math:`e = \sqrt{|a^2-b^2|}/\max(a,b)`:
+
+    * prolate (:math:`a > b`, long axis of revolution):
+      :math:`\kappa = 4\pi a e / \operatorname{arctanh} e`
+    * oblate (:math:`a < b`, short axis of revolution):
+      :math:`\kappa = 4\pi b e / \arctan(e\,b/a)`, :math:`e = \sqrt{b^2-a^2}/b`
+
+    (Smythe, *Static and Dynamic Electricity*, 3rd ed., Sec. 5.10; Landau &
+    Lifshitz, *Electrodynamics of Continuous Media*, Sec. 3.)  Both branches
+    tend to the sphere value :math:`4\pi a` as :math:`e \to 0`; the prolate
+    branch tends to :math:`0` (vanishingly thin rod) and the oblate branch to
+    :math:`8b` (vanishingly thin disc), which are the standard limits.
+
+    Parameters
+    ----------
+    semi_axes :
+        ``(a1, a2, a3)``; at least two must be equal (spheroid of revolution).
+
+    Returns
+    -------
+    float
+        :math:`\kappa` in metres, strictly positive.
+    """
+    axes = _as_semi_axes(semi_axes)
+    scale = float(np.max(axes))
+    pairs = ((0, 1), (1, 2), (0, 2))
+    equal = [
+        pair
+        for pair in pairs
+        if abs(float(axes[pair[0]] - axes[pair[1]])) <= 1.0e-12 * scale
+    ]
+    if not equal:
+        raise ValueError(
+            "semi_axes must describe a spheroid of revolution "
+            "(at least two semi-axes equal)"
+        )
+    pair = equal[0]
+    axis = ({0, 1, 2} - set(pair)).pop()
+    a = float(axes[axis])
+    b = float(axes[pair[0]])
+    major = max(a, b)
+    minor = min(a, b)
+    if major - minor <= 1.0e-15 * major:
+        return 4.0 * math.pi * major
+    eccentricity = math.sqrt(max(1.0 - (minor / major) ** 2, 0.0))
+    if a > b:  # prolate: axis of revolution is the long axis
+        return 4.0 * math.pi * a * eccentricity / math.atanh(eccentricity)
+    # oblate: axis of revolution is the short axis; with equatorial semi-axis
+    # b and polar semi-axis a the closed form is
+    #   kappa = 4 pi sqrt(b^2-a^2) / arctan(sqrt(b^2-a^2)/a),
+    # whose arctan argument is e*b/a -- *not* e.  Both branches collapse to
+    # 4 pi (radius) for e -> 0, but only the correct argument reproduces the
+    # thin-disc limit 8 b (the e-only form gives 16 b, a factor 2 too large).
+    return 4.0 * math.pi * b * eccentricity / math.atan(eccentricity * b / a)
+
+
+def spheroid_spreading_current(
+    semi_axes: FloatArray,
+    potential: float,
+    conductivity: float = 3.5,
+) -> float:
+    r"""Total current of a spheroidal conductor held at a uniform potential.
+
+    Returns :math:`I = \sigma \kappa \varphi` with :math:`\kappa` from
+    :func:`spheroid_geometric_capacitance`, i.e. the potential-control
+    counterpart of the DNV-RP-B401 spreading resistance; the sign follows the
+    sign of ``potential``.
+    """
+    if not math.isfinite(potential):
+        raise ValueError("potential must be finite")
+    sigma = _positive("conductivity", conductivity)
+    return sigma * spheroid_geometric_capacitance(semi_axes) * float(potential)
+
+
 def ellipsoid_added_mass(
     semi_axes: FloatArray, density: float = 1.0
 ) -> FloatArray:
