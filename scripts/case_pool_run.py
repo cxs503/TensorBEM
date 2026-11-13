@@ -49,6 +49,7 @@ def _check(code: str | None) -> int:
             "status": status,
             "verdict": verdict,
             "missing": missing,
+            "regenerable_missing": entry.regenerable_missing(),
             "repro_cmd": entry.repro_cmd,
         }, ensure_ascii=False))
         bad += 1 if missing else 0

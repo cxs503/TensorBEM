@@ -85,3 +85,55 @@ def test_verdict_extraction_handles_known_schemas():
     tiers = {"tiers": {"case_mesh": {"verdict": "PASS"}, "economy_mesh": {"verdict": "FAIL"}}}
     assert registry._verdict_of(tiers) == {"case_mesh": "PASS", "economy_mesh": "FAIL"}
     assert registry._verdict_of({"something": 1}) == "see artifact"
+
+
+def test_regenerable_paths_never_shadow_required_ones():
+    """Anti-cheat: the ``regenerable`` field must not swallow real deliverables.
+
+    An entry, its document and its machine-readable artefacts are the evidence a
+    case exists at all; only build products (figures, logs) may be declared
+    regenerable.  Otherwise a rot could be "fixed" by relabelling it.
+    """
+    for entry in registry.list_cases():
+        required = {entry.entry, entry.doc, *entry.artifacts}
+        assert not required.intersection(entry.regenerable), entry.case_code
+        for rel in entry.regenerable:
+            assert rel not in entry.figures, (
+                f"{entry.case_code}: {rel} is a committed figure and cannot also be "
+                "regenerable"
+            )
+
+
+def test_regenerable_missing_is_reported_but_does_not_fail_the_check():
+    """Absent build products are reported by ``--check``, not treated as loss."""
+    check = subprocess.run(
+        [sys.executable, "scripts/case_pool_run.py", "--check"],
+        cwd=ROOT, capture_output=True, text=True, check=False,
+        env={"PYTHONPATH": str(ROOT / "src"), "PATH": "/usr/bin:/bin"},
+    )
+    assert check.returncode == 0, check.stdout + check.stderr
+    lines = [json.loads(line) for line in check.stdout.strip().splitlines() if line.startswith("{")]
+    assert len(lines) == len(registry.list_cases())
+    for line in lines:
+        entry = registry.resolve(line["case_code"])
+        assert line["status"] == "OK"
+        assert line["missing"] == []
+        assert line["regenerable_missing"] == entry.regenerable_missing()
+        # every reported path is genuinely absent, and every declared one is real
+        assert set(line["regenerable_missing"]).issubset(set(entry.regenerable))
+
+
+def test_regenerable_declaration_is_rejected_for_a_required_path():
+    with pytest.raises(ValueError):
+        registry.CaseEntry(
+            case_code="CASE-TEST-SELF-CONTRADICTORY",
+            pool_code="TEST-SELF-CONTRADICTORY",
+            repo="TensorBEM",
+            tolerance="<3%",
+            entry="scripts/case_pool_run.py",
+            entry_args=(),
+            library="tensorbem.benchmarks.case_pool_registry",
+            artifacts=(),
+            doc="scripts/case_pool_run.py",
+            regenerable=("scripts/case_pool_run.py",),
+        )
