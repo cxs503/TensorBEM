@@ -1,0 +1,130 @@
+{
+  "added_mass_method": "boundary_energy_integral_using_computed_flux",
+  "aspect_ratios": [
+    1.5,
+    1.3333333333333333
+  ],
+  "axes": [
+    {
+      "added_mass": 1191.2955950090695,
+      "added_mass_relative_error": 0.016313420323421063,
+      "benchmark": "three_dimensional_translating_ellipsoid_x",
+      "boundary_trace_scale": 0.2507250879790571,
+      "double_layer_condition": 2.1304866002120275,
+      "double_layer_row_sum_error": 4.440892098500626e-16,
+      "exact_added_mass": 1211.051995240953,
+      "motion_axis": "x",
+      "near_singular_ratio": 0.003125,
+      "normal_derivative_max_abs_error": 0.03389572461111823,
+      "normal_derivative_relative_l2_error": 0.027289947748073626,
+      "normal_derivative_rmse": 0.011682312318425616,
+      "panels": 320,
+      "relative_residual_l2": 6.089675615083497e-16,
+      "residual_l2": 1.8777111535862422e-15,
+      "semi_axes": [
+        1.5,
+        1.0,
+        0.75
+      ],
+      "shape_factor": 0.4009275745546657,
+      "single_layer_condition": 44.67000993385523,
+      "single_layer_condition_number": 44.67000993385523,
+      "subdivisions": 2,
+      "vertices": 162
+    },
+    {
+      "added_mass": 2394.8177826981614,
+      "added_mass_relative_error": 0.01737096936460751,
+      "benchmark": "three_dimensional_translating_ellipsoid_y",
+      "boundary_trace_scale": 0.5045658885710504,
+      "double_layer_condition": 2.1304866002120275,
+      "double_layer_row_sum_error": 4.440892098500626e-16,
+      "exact_added_mass": 2437.153501509733,
+      "motion_axis": "y",
+      "near_singular_ratio": 0.003125,
+      "normal_derivative_max_abs_error": 0.03496334508563148,
+      "normal_derivative_relative_l2_error": 0.02842310957179092,
+      "normal_derivative_rmse": 0.01692280645483629,
+      "panels": 320,
+      "relative_residual_l2": 7.037578166649395e-16,
+      "residual_l2": 2.4172687729496954e-15,
+      "semi_axes": [
+        1.5,
+        1.0,
+        0.75
+      ],
+      "shape_factor": 0.6707129177975155,
+      "single_layer_condition": 44.67000993385523,
+      "single_layer_condition_number": 44.67000993385523,
+      "subdivisions": 2,
+      "vertices": 162
+    },
+    {
+      "added_mass": 4104.549811866565,
+      "added_mass_relative_error": 0.019080294462570657,
+      "benchmark": "three_dimensional_translating_ellipsoid_z",
+      "boundary_trace_scale": 0.8662975263342944,
+      "double_layer_condition": 2.1304866002120275,
+      "double_layer_row_sum_error": 4.440892098500626e-16,
+      "exact_added_mass": 4184.38918975305,
+      "motion_axis": "z",
+      "near_singular_ratio": 0.003125,
+      "normal_derivative_max_abs_error": 0.07029386638692237,
+      "normal_derivative_relative_l2_error": 0.033482624916254686,
+      "normal_derivative_rmse": 0.02544948501604913,
+      "panels": 320,
+      "relative_residual_l2": 6.671381991268319e-16,
+      "residual_l2": 2.3747130010021174e-15,
+      "semi_axes": [
+        1.5,
+        1.0,
+        0.75
+      ],
+      "shape_factor": 0.9283595076459654,
+      "single_layer_condition": 44.67000993385523,
+      "single_layer_condition_number": 44.67000993385523,
+      "subdivisions": 2,
+      "vertices": 162
+    }
+  ],
+  "benchmark": "three_dimensional_translating_ellipsoid",
+  "exact_volume": 4.71238898038469,
+  "fluid_density": 1025.0,
+  "h_max": 0.48737954434935943,
+  "h_mean": 0.3323886391941554,
+  "max_aspect_ratio": 2.460749549083607,
+  "mesh_quality": {
+    "area_ratio": 2.3081979206030545,
+    "max_angle_deg": 100.37254516352922,
+    "max_area": 0.06521542032277305,
+    "max_aspect_ratio": 1.7915085269596867,
+    "mean_aspect_ratio": 1.410819537856775,
+    "mean_min_angle_deg": 44.18618402093965,
+    "mesh_panels": 320,
+    "min_angle_deg": 33.35602422642662,
+    "min_area": 0.028253825090412722,
+    "min_aspect_ratio": 1.0304941636346574,
+    "panels_above_5_aspect": 0,
+    "panels_below_30_deg": 0
+  },
+  "min_angle_degrees": 33.35602422642662,
+  "note": "Flat triangular panels approximate the ellipsoid, so the reference is the true ellipsoid: assess refinement trends, not a single value. The Dirichlet trace is the exact linear surface potential of the translating ellipsoid and the flux is the exterior fluid-normal derivative; the added mass uses the computed flux. No free-surface, wave, viscosity or ship-hull physics is included.",
+  "panels": 320,
+  "semi_axes": [
+    1.5,
+    1.0,
+    0.75
+  ],
+  "shape_factor_sum": 1.9999999999981466,
+  "shape_factors": [
+    0.4009275745546657,
+    0.6707129177975155,
+    0.9283595076459654
+  ],
+  "speed": 1.0,
+  "subdivisions": 2,
+  "surface_area": 14.18069408028465,
+  "vertices": 162,
+  "volume": 4.5529252649762055,
+  "volume_ratio": 0.9661607485985874
+}
