@@ -464,3 +464,94 @@ def test_v12_energy_balance_rejects_denominator_only_variant():
         shallow, rel=1.0e-3
     )
     assert omega2_variant / omega2_eq3 > 2.0
+
+
+# ---------------------------------------------------------------------------
+# V13  independent boundary-integral route: Lambda = (dphi/dz)/phi from a
+# periodic strip BEM solve of Laplace's equation (no analytic tanh, no grid
+# derivative).  eq. (3) is rewritten as
+#     omega^2 = (g + D k^4/rho_w) Lambda / (1 + mu Lambda),
+# which is exact when Lambda = k tanh(kH); feeding the BEM value of Lambda
+# tests the dispersion relation against an independent numerical solution of
+# the water-side boundary-value problem.
+# ---------------------------------------------------------------------------
+from tensorbem.ice_mass_loading_dispersion import (  # noqa: E402
+    dtn_depth_factor,
+    strip_bem_depth_factor,
+)
+
+BEM_CASES = (
+    (1.0, 200.0, 0.01),
+    (2.0, 20.0, 0.05),
+    (0.5, 20.0, 0.60),
+)
+
+
+@pytest.mark.parametrize("h_ice,depth,k", BEM_CASES)
+def test_v13_lambda_rewriting_is_an_identity(h_ice, depth, k):
+    """With the exact Lambda = k tanh(kH) the Lambda-form *is* eq. (3)."""
+    verifier = _verifier()
+    plate = IcePlate(thickness=h_ice, water_depth=depth)
+    lam = k * math.tanh(k * depth)
+    reference = flexural_gravity_omega2_mass_loading(k, plate)
+    measured = verifier.omega2_from_depth_factor(lam, k, plate)
+    assert measured == pytest.approx(reference, rel=1.0e-13)
+
+
+@pytest.mark.parametrize("h_ice,depth,k", BEM_CASES)
+def test_v13_bem_depth_factor_reproduces_eq3(h_ice, depth, k):
+    """Constant-panel BEM Lambda at 32 panels/wavelength gives omega^2 to <0.8%.
+
+    The floor is the constant-panel discretisation of the free-surface flux
+    (0.52% in the worst case, k H = 2); the 64-panels/wavelength claim
+    (< 2e-3 for every case) is pinned by the convergence test below.
+    """
+    verifier = _verifier()
+    plate = IcePlate(thickness=h_ice, water_depth=depth)
+    reference = flexural_gravity_omega2_mass_loading(k, plate)
+    solve = strip_bem_depth_factor(k, depth, panels_per_wavelength=32)
+    measured = verifier.omega2_from_depth_factor(solve.depth_factor_rq, k, plate)
+    assert abs(measured - reference) / reference < 8.0e-3
+    # the depth factor itself is the tanh factor, not e.g. its reciprocal
+    assert solve.depth_factor_rq == pytest.approx(k * math.tanh(k * depth), rel=1.0e-2)
+
+
+@pytest.mark.parametrize("h_ice,depth,k", BEM_CASES)
+def test_v13_driven_and_dtn_routes_agree(h_ice, depth, k):
+    """Driven Rayleigh quotient and assembled DtN map are two routes to Lambda."""
+    lam_rq = strip_bem_depth_factor(k, depth, panels_per_wavelength=32).depth_factor_rq
+    lam_dtn = dtn_depth_factor(k, depth, panels_per_wavelength=32)
+    assert lam_rq == pytest.approx(lam_dtn, rel=1.0e-12)
+
+
+def test_v13_bem_route_converges_under_panel_refinement():
+    """The BEM route approaches eq. (3) monotonically as ppw is refined."""
+    verifier = _verifier()
+    plate = IcePlate(thickness=2.0, water_depth=20.0)
+    k = 0.05
+    reference = flexural_gravity_omega2_mass_loading(k, plate)
+    errors = []
+    for ppw in (8, 16, 32, 64):
+        lam = strip_bem_depth_factor(k, plate.water_depth, panels_per_wavelength=ppw)
+        measured = verifier.omega2_from_depth_factor(lam.depth_factor_rq, k, plate)
+        errors.append(abs(measured - reference) / reference)
+    for coarse, fine in zip(errors, errors[1:]):
+        assert fine < coarse
+    assert errors[-1] < 2.0e-3
+    # overall slope over the one-decade refinement: faster than first order,
+    # slower than second order (constant panels, ~1e-3 floor at 64 ppw)
+    assert 1.0 < math.log2(errors[0] / errors[-1]) / 3.0 < 2.2
+
+
+def test_v13_omega_sweep_matches_eq3_along_the_whole_curve():
+    """The BEM route reproduces omega(k) to <0.3% over four decades of omega."""
+    verifier = _verifier()
+    sweep = verifier.bem_omega_sweep()
+    assert len(sweep) == 9
+    for row in sweep:
+        assert row["relative_error"] < 3.0e-3
+        assert row["omega_bem"] == pytest.approx(row["omega_eq3"], rel=3.0e-3)
+    # the error is not accidental: it shrinks towards short waves, where the
+    # bending term carries the dispersion and the depth factor weighs less
+    errors = [row["relative_error"] for row in sweep]
+    assert errors[-1] < errors[0]
