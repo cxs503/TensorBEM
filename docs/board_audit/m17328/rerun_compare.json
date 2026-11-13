@@ -1,0 +1,98 @@
+{
+  "delivered": "/root/tp-agent/work/m17277/docs/case_qtf_drift_closed_form/study.json",
+  "rerun": "/tmp/audit_m17328/study_rerun.json",
+  "rerun_present": true,
+  "status": "rerun matched the delivered study.json numerically (max rel delta 0.00e+00)",
+  "coarse_verified_by_stdout": true,
+  "levels": [
+    {
+      "level": "coarse",
+      "panels": 336,
+      "bem_delivered": [
+        1787.6065153633099,
+        3484.6773329465323,
+        4910.02660664802,
+        3484.6773329465323,
+        4097.546803443251,
+        5114.311755828654,
+        4910.026606648021,
+        5114.311755828654,
+        5641.8469881324745
+      ],
+      "bem_rerun": [
+        1787.6065153633099,
+        3484.6773329465323,
+        4910.02660664802,
+        3484.6773329465323,
+        4097.546803443251,
+        5114.311755828654,
+        4910.026606648021,
+        5114.311755828654,
+        5641.8469881324745
+      ],
+      "max_abs_rel_delta": 0.0,
+      "delivered_solve_seconds_total": 0.23534440994262695,
+      "rerun_solve_seconds_total": 82.95437860488892
+    },
+    {
+      "level": "medium",
+      "panels": 696,
+      "bem_delivered": [
+        1753.4894765075242,
+        3490.7039008915867,
+        5110.7355285036,
+        3490.7039008915867,
+        4330.962238331387,
+        5592.779671689063,
+        5110.7355285036,
+        5592.779671689063,
+        6390.102151036333
+      ],
+      "bem_rerun": [
+        1753.4894765075242,
+        3490.7039008915867,
+        5110.7355285036,
+        3490.7039008915867,
+        4330.962238331387,
+        5592.779671689063,
+        5110.7355285036,
+        5592.779671689063,
+        6390.102151036333
+      ],
+      "max_abs_rel_delta": 0.0,
+      "delivered_solve_seconds_total": 0.5819709300994873,
+      "rerun_solve_seconds_total": 390.0315115451813
+    }
+  ],
+  "depth_sensitivity_not_in_delivered_artifact": {
+    "ka": 0.6,
+    "level": "coarse",
+    "rows": [
+      {
+        "bem": 3654.3312290731674,
+        "depth": 10.0,
+        "depth_factor": 6.0,
+        "k_depth": 6.0,
+        "ref": 4162.162814986472,
+        "relative_error": 0.12201146579004143
+      },
+      {
+        "bem": 3659.638136612856,
+        "depth": 20.0,
+        "depth_factor": 12.0,
+        "k_depth": 12.0,
+        "ref": 4162.162814986472,
+        "relative_error": 0.12073642976295942
+      },
+      {
+        "bem": 3894.1133502548973,
+        "depth": 40.0,
+        "depth_factor": 24.0,
+        "k_depth": 24.0,
+        "ref": 4162.162814986472,
+        "relative_error": 0.06440148467196513
+      }
+    ]
+  },
+  "depth_sweep_reading": "kH=6 -> 12.20%, kH=12 -> 12.07%, kH=24 -> 6.44% (coarse, ka=0.6); the trend is NOT monotone and the study's own mesh (depth 30 m -> kH=18 at ka=0.6) gives 1.55% on the same level, so this sweep confounds physical bottom-cap truncation with the fixed n_z=10 grading (a longer cylinder gets coarser z-panels) and cannot by itself validate the e^{-kH} argument; the delivered artifact's choice to leave it unrun and quote the analytic bound is therefore defensible but unverified by the sweep it ships"
+}
