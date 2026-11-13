@@ -1,0 +1,38 @@
+======================================================================
+CASE-BEM-IRREG-FREQ-CYL: Irregular-Frequency Bessel-Zero Prediction
+======================================================================
+
+--- Configuration: coarse ---
+  Mesh: 224 panels
+  R_wp: 0.996788 m (true: 1.0 m, error: 0.3212%)
+  Predicted nu: [2.412574099227309, 3.8440520352897694, 5.152169690306657]
+  Reference nu: [2.404825557695773, 3.831705970207512, 5.135622301840683]
+  Max nu error: 0.3222%
+  Within 2% tolerance: True
+
+--- Configuration: medium ---
+  Mesh: 704 panels
+  R_wp: 0.999197 m (true: 1.0 m, error: 0.0803%)
+  Predicted nu: [2.4067584879839923, 3.834785786330417, 5.139750168772368]
+  Reference nu: [2.404825557695773, 3.831705970207512, 5.135622301840683]
+  Max nu error: 0.0804%
+  Within 2% tolerance: True
+
+--- Configuration: fine ---
+  Mesh: 2176 panels
+  R_wp: 0.999799 m (true: 1.0 m, error: 0.0201%)
+  Predicted nu: [2.405308528216241, 3.8324755067008307, 5.136653708949656]
+  Reference nu: [2.404825557695773, 3.831705970207512, 5.135622301840683]
+  Max nu error: 0.0201%
+  Within 2% tolerance: True
+
+--- Configuration: R2_T2 ---
+  Mesh: 704 panels
+  R_wp: 1.998394 m (true: 2.0 m, error: 0.0803%)
+  Predicted nu: [1.2033792439919961, 1.9173928931652084, 2.569875084386184]
+  Reference nu: [1.2024127788478864, 1.915852985103756, 2.5678111509203414]
+  Max nu error: 0.0804%
+  Within 2% tolerance: True
+
+Saved: /root/tp-agent/work/m17374/runs/m17374_irregular_frequency_bessel/prediction.json
+Saved: /root/tp-agent/work/m17374/runs/m17374_irregular_frequency_bessel/ref_vs_got.json

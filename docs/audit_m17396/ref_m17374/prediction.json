@@ -1,0 +1,298 @@
+{
+  "case": "CASE-BEM-IRREG-FREQ-CYL",
+  "description": "Irregular-frequency Bessel-zero prediction for surface-piercing circular cylinder",
+  "configurations": [
+    {
+      "case": "CASE-BEM-IRREG-FREQ-CYL",
+      "geometry": {
+        "type": "surface-piercing circular cylinder",
+        "radius_m": 1.0,
+        "draft_m": 0.5,
+        "draft_ratio": 0.5
+      },
+      "mesh": {
+        "n_theta": 32,
+        "n_levels": 3,
+        "panels": 224,
+        "waterline_edges": 32
+      },
+      "waterplane_radius": {
+        "predicted_m": 0.996788267960757,
+        "true_m": 1.0,
+        "error_pct": 0.3211732039242965
+      },
+      "prediction": {
+        "nu_rad_per_m": [
+          2.412574099227309,
+          3.8440520352897694,
+          5.152169690306657
+        ],
+        "omega_rad_per_s": [
+          4.864079541926457,
+          6.13981049315648,
+          7.108130900134421
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "reference": {
+        "bessel_zeros": {
+          "j01": 2.404825557695773,
+          "j11": 3.831705970207512,
+          "j21": 5.135622301840683
+        },
+        "nu_rad_per_m": [
+          2.404825557695773,
+          3.831705970207512,
+          5.135622301840683
+        ],
+        "omega_rad_per_s": [
+          4.856262200023517,
+          6.12994285069082,
+          7.096707014266964
+        ],
+        "source": "Abramowitz & Stegun, Handbook of Mathematical Functions, Table 9.5"
+      },
+      "error_analysis": {
+        "nu_error_pct": [
+          0.32220804984126705,
+          0.322208049841275,
+          0.32220804984126883
+        ],
+        "omega_error_pct": [
+          0.16097446103511598,
+          0.16097446103511442,
+          0.16097446103511365
+        ],
+        "max_nu_error_pct": 0.322208049841275,
+        "max_omega_error_pct": 0.16097446103511598,
+        "tolerance_pct": 2.0,
+        "all_within_tolerance": true
+      },
+      "runtime_s": 0.031,
+      "label": "coarse"
+    },
+    {
+      "case": "CASE-BEM-IRREG-FREQ-CYL",
+      "geometry": {
+        "type": "surface-piercing circular cylinder",
+        "radius_m": 1.0,
+        "draft_m": 0.5,
+        "draft_ratio": 0.5
+      },
+      "mesh": {
+        "n_theta": 64,
+        "n_levels": 5,
+        "panels": 704,
+        "waterline_edges": 64
+      },
+      "waterplane_radius": {
+        "predicted_m": 0.999196874012133,
+        "true_m": 1.0,
+        "error_pct": 0.0803125987867026
+      },
+      "prediction": {
+        "nu_rad_per_m": [
+          2.4067584879839923,
+          3.834785786330417,
+          5.139750168772368
+        ],
+        "omega_rad_per_s": [
+          4.8582134706276765,
+          6.132405892593638,
+          7.099558506878547
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "reference": {
+        "bessel_zeros": {
+          "j01": 2.404825557695773,
+          "j11": 3.831705970207512,
+          "j21": 5.135622301840683
+        },
+        "nu_rad_per_m": [
+          2.404825557695773,
+          3.831705970207512,
+          5.135622301840683
+        ],
+        "omega_rad_per_s": [
+          4.856262200023517,
+          6.12994285069082,
+          7.096707014266964
+        ],
+        "source": "Abramowitz & Stegun, Handbook of Mathematical Functions, Table 9.5"
+      },
+      "error_analysis": {
+        "nu_error_pct": [
+          0.08037715176611247,
+          0.08037715176611199,
+          0.08037715176611819
+        ],
+        "omega_error_pct": [
+          0.04018050351873734,
+          0.04018050351874125,
+          0.040180503518754566
+        ],
+        "max_nu_error_pct": 0.08037715176611819,
+        "max_omega_error_pct": 0.040180503518754566,
+        "tolerance_pct": 2.0,
+        "all_within_tolerance": true
+      },
+      "runtime_s": 0.086,
+      "label": "medium"
+    },
+    {
+      "case": "CASE-BEM-IRREG-FREQ-CYL",
+      "geometry": {
+        "type": "surface-piercing circular cylinder",
+        "radius_m": 1.0,
+        "draft_m": 0.5,
+        "draft_ratio": 0.5
+      },
+      "mesh": {
+        "n_theta": 128,
+        "n_levels": 8,
+        "panels": 2176,
+        "waterline_edges": 128
+      },
+      "waterplane_radius": {
+        "predicted_m": 0.999799206415808,
+        "true_m": 1.0,
+        "error_pct": 0.0200793584192005
+      },
+      "prediction": {
+        "nu_rad_per_m": [
+          2.405308528216241,
+          3.8324755067008307,
+          5.136653708949656
+        ],
+        "omega_rad_per_s": [
+          4.856749826605422,
+          6.130558369984556,
+          7.097419608200655
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "reference": {
+        "bessel_zeros": {
+          "j01": 2.404825557695773,
+          "j11": 3.831705970207512,
+          "j21": 5.135622301840683
+        },
+        "nu_rad_per_m": [
+          2.404825557695773,
+          3.831705970207512,
+          5.135622301840683
+        ],
+        "omega_rad_per_s": [
+          4.856262200023517,
+          6.12994285069082,
+          7.096707014266964
+        ],
+        "source": "Abramowitz & Stegun, Handbook of Mathematical Functions, Table 9.5"
+      },
+      "error_analysis": {
+        "nu_error_pct": [
+          0.02008339103527632,
+          0.02008339103527308,
+          0.02008339103527442
+        ],
+        "omega_error_pct": [
+          0.010041191390011696,
+          0.010041191390005467,
+          0.010041191390008723
+        ],
+        "max_nu_error_pct": 0.02008339103527632,
+        "max_omega_error_pct": 0.010041191390011696,
+        "tolerance_pct": 2.0,
+        "all_within_tolerance": true
+      },
+      "runtime_s": 0.218,
+      "label": "fine"
+    },
+    {
+      "case": "CASE-BEM-IRREG-FREQ-CYL",
+      "geometry": {
+        "type": "surface-piercing circular cylinder",
+        "radius_m": 2.0,
+        "draft_m": 2.0,
+        "draft_ratio": 1.0
+      },
+      "mesh": {
+        "n_theta": 64,
+        "n_levels": 5,
+        "panels": 704,
+        "waterline_edges": 64
+      },
+      "waterplane_radius": {
+        "predicted_m": 1.998393748024266,
+        "true_m": 2.0,
+        "error_pct": 0.0803125987867026
+      },
+      "prediction": {
+        "nu_rad_per_m": [
+          1.2033792439919961,
+          1.9173928931652084,
+          2.569875084386184
+        ],
+        "omega_rad_per_s": [
+          3.4352756895326624,
+          4.3362657916413045,
+          5.0201459636444605
+        ],
+        "mode_labels": [
+          "j01_axisymmetric",
+          "j11_dipole",
+          "j21_quadrupole"
+        ]
+      },
+      "reference": {
+        "bessel_zeros": {
+          "j01": 2.404825557695773,
+          "j11": 3.831705970207512,
+          "j21": 5.135622301840683
+        },
+        "nu_rad_per_m": [
+          1.2024127788478864,
+          1.915852985103756,
+          2.5678111509203414
+        ],
+        "omega_rad_per_s": [
+          3.433895932856531,
+          4.334524158009475,
+          5.0181296538823075
+        ],
+        "source": "Abramowitz & Stegun, Handbook of Mathematical Functions, Table 9.5"
+      },
+      "error_analysis": {
+        "nu_error_pct": [
+          0.08037715176611247,
+          0.08037715176611199,
+          0.08037715176611819
+        ],
+        "omega_error_pct": [
+          0.04018050351874761,
+          0.04018050351874074,
+          0.04018050351873882
+        ],
+        "max_nu_error_pct": 0.08037715176611819,
+        "max_omega_error_pct": 0.04018050351874761,
+        "tolerance_pct": 2.0,
+        "all_within_tolerance": true
+      },
+      "runtime_s": 0.071,
+      "label": "R2_T2"
+    }
+  ]
+}

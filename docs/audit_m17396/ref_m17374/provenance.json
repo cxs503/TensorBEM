@@ -1,0 +1,29 @@
+{
+  "audited_repo": "TensorBEM",
+  "audited_branch": "agent/m17374",
+  "audited_commit": "4339e14493357f545682856b72676940c45cd558",
+  "in_origin_main": false,
+  "files": {
+    "scripts/benchmark_irregular_frequency_bessel.py": {
+      "snapshot_sha256": "c192dab3e0795028269936374280192d4692addce5ea11595fa18cd0e8e45b75",
+      "source_sha256": "c192dab3e0795028269936374280192d4692addce5ea11595fa18cd0e8e45b75"
+    },
+    "scripts/integration_caller_irregular_frequency.py": {
+      "snapshot_sha256": "f1ef48b1b3db347155d8876de4d92854fd9179048e1699e9afe37f799a47f137",
+      "source_sha256": "f1ef48b1b3db347155d8876de4d92854fd9179048e1699e9afe37f799a47f137"
+    },
+    "scripts/run_irregular_frequency_bessel.py": {
+      "snapshot_sha256": "2ab34801e5012a60ddc7ed6bc088b0a511d3052f72d7062948674af25b396de7",
+      "source_sha256": "2ab34801e5012a60ddc7ed6bc088b0a511d3052f72d7062948674af25b396de7"
+    },
+    "tests/test_irregular_frequency_bessel_entry.py": {
+      "snapshot_sha256": "81b2e7fe92de92061797d54d746de2ff76565932c0e9ab31aa14ab2cd9ccb899",
+      "source_sha256": "81b2e7fe92de92061797d54d746de2ff76565932c0e9ab31aa14ab2cd9ccb899"
+    },
+    "tests/test_irregular_frequency_cylinder_exact.py": {
+      "snapshot_sha256": "2f8f61441392b6e197b7e4099c56bef82efcb958f81e293bc678effed41356cf",
+      "source_sha256": "2f8f61441392b6e197b7e4099c56bef82efcb958f81e293bc678effed41356cf"
+    }
+  },
+  "snapshot_matches_source": true
+}
