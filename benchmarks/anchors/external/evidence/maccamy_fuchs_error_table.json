@@ -1,0 +1,159 @@
+{
+  "all_pass_1pct": true,
+  "all_pass_5pct": true,
+  "anchor_id": "XANCHOR-BEM-MACCAMY-FUCHS-1954",
+  "case": "bottom-mounted vertical circular cylinder, linear wave diffraction, deep water",
+  "convergence": [
+    {
+      "computed": 43352.81282434941,
+      "error_pct": 0.08992822919751475,
+      "ka": 1.0,
+      "max_error_pct": 0.08992822919751475,
+      "panels": 32,
+      "reference": 43313.86143576316
+    },
+    {
+      "computed": 43323.204004019215,
+      "error_pct": 0.021569465169738032,
+      "ka": 1.0,
+      "max_error_pct": 0.021569465169738032,
+      "panels": 64,
+      "reference": 43313.86143576316
+    },
+    {
+      "computed": 43316.147978072746,
+      "error_pct": 0.005279008229218802,
+      "ka": 1.0,
+      "max_error_pct": 0.005279008229218802,
+      "panels": 128,
+      "reference": 43313.86143576316
+    }
+  ],
+  "failures": [],
+  "max_error_pct": 0.018835725045551754,
+  "max_reference_deviation": 0.0,
+  "quantities": [
+    {
+      "check": "pointwise",
+      "computed": 63357.54101125502,
+      "error_pct": 0.009971229175106015,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_0.05",
+      "reference": 63363.85916686674
+    },
+    {
+      "check": "pointwise",
+      "computed": 63756.81763536707,
+      "error_pct": 0.00988776571342724,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_0.10",
+      "reference": 63763.12238351992
+    },
+    {
+      "check": "pointwise",
+      "computed": 64653.18781440437,
+      "error_pct": 0.009408661707291212,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_0.20",
+      "reference": 64659.27138651153
+    },
+    {
+      "check": "pointwise",
+      "computed": 63332.37096913587,
+      "error_pct": 0.004590702904576652,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_0.50",
+      "reference": 63335.278503605754
+    },
+    {
+      "check": "pointwise",
+      "computed": 43316.147978072746,
+      "error_pct": 0.005279008229218802,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_1.00",
+      "reference": 43313.86143576316
+    },
+    {
+      "check": "pointwise",
+      "computed": 26592.595851327198,
+      "error_pct": 0.007482942743619121,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_1.50",
+      "reference": 26590.60609149819
+    },
+    {
+      "check": "pointwise",
+      "computed": 17711.74739738354,
+      "error_pct": 0.007574575307066615,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_2.00",
+      "reference": 17710.40590935075
+    },
+    {
+      "check": "pointwise",
+      "computed": 9718.585997606462,
+      "error_pct": 0.007803084751576426,
+      "pass_5pct": true,
+      "quantity": "force_amplitude_ka_3.00",
+      "reference": 9717.827707274451
+    },
+    {
+      "check": "pointwise",
+      "computed": -69.48926730054418,
+      "error_pct": 0.009980589364314311,
+      "pass_5pct": true,
+      "quantity": "force_phase_ka_1.00",
+      "reference": -69.49620343123244
+    },
+    {
+      "check": "pointwise",
+      "computed": 2.006337080443292,
+      "error_pct": 0.009971229175102125,
+      "pass_5pct": true,
+      "quantity": "c_m_ka_0.05",
+      "reference": 2.006537156861686
+    },
+    {
+      "check": "limit",
+      "computed": 2.000376714500911,
+      "error_pct": 0.018835725045551754,
+      "pass_5pct": true,
+      "quantity": "c_m_long_wave_limit",
+      "reference": 2.0
+    }
+  ],
+  "reference": {
+    "authors": [
+      "MacCamy, R. C.",
+      "Fuchs, R. A."
+    ],
+    "identifiers": [
+      {
+        "type": "isbn",
+        "value": "0-262-14026-8",
+        "work": "Newman, J. N. (1977) Marine Hydrodynamics, MIT Press, sec. 7.5"
+      },
+      {
+        "type": "isbn",
+        "value": "981-02-0421-3",
+        "work": "Dean, R. G. & Dalrymple, R. A. (1991) Water Wave Mechanics for Engineers and Scientists, World Scientific"
+      }
+    ],
+    "locator": "the diffraction force expression F_x = 4 rho g A / (k^2 H_1^(1)'(ka)); reproduced as the deep-water limit in Newman (1977) sec. 7.5 and in Dean & Dalrymple (1991) ch. 8",
+    "source_class": "LITERATURE_CLOSED_FORM",
+    "title": "Wave Forces on Piles: A Diffraction Theory",
+    "year": 1954
+  },
+  "reference_reproducible": true,
+  "schema": "tensorbem.external_anchor_error_table/v1",
+  "solver": {
+    "chief_points": "auto",
+    "git_commit_at_generation": "ed471ef4271ff5a42d419ddd1c686114079a4a1e",
+    "panel_nodes": 12,
+    "panels": 128,
+    "route": "tensorbem.helmholtz.solve_vertical_cylinder_diffraction",
+    "water_depth_over_radius": "inf"
+  },
+  "tolerance_relative": 0.05,
+  "verdict": "PASS"
+}
