@@ -831,12 +831,17 @@ CAPABILITIES: tuple[Capability, ...] = (
         key='damping-rational-fit',
         title='Radiation-damping rational fit (Sanathanan-Koerner iteration)',
         claim=(
-            'The SK iteration relocates the decay rates instead of fixing them on a log grid: on a '
-            'curve that is exactly a sum of three real decay rates it recovers the rates, residues and '
-            'asymptote to 1.2e-15 where the pre-rewrite fixed-grid fit misses by 8.1e-01 at the same '
-            'order, and it is never worse than that baseline anywhere in the order scan. The measured '
-            'Hulme hemisphere curve is NOT representable by real decay rates (12-order floor 1.7e-01 '
-            'against a 1.3e-06 unconstrained rational ceiling), which is reported, not hidden.'
+            'The SK iteration relocates the decay rates instead of fixing them on a log grid, and a '
+            'bounded simplex then relocates them again in the physical basis (residues staying the '
+            'solution of the constrained linear least squares): on a curve that is exactly a sum of '
+            'three real decay rates it recovers the rates, residues and asymptote to 1.2e-15 where the '
+            'pre-rewrite fixed-grid fit misses by 8.1e-01 at the same order. On the measured Hulme '
+            'hemisphere curve the round-1 projection stalled at 1.7e-01 (12 orders), which was reported '
+            'as a model-class floor; the physical-basis relocation reaches 2.0e-04 at the same order '
+            '(823x) and meets the 3 % accuracy bar from 6 decay rates up, so that floor was a method '
+            'limit and the claim is retracted in the report. Below 6 orders the curve is still missed '
+            '(3.8e-01 at 4), the returned fit is never worse than any candidate pole set, and '
+            'convergence of the relocation is measured by a one-pole probe, not asserted.'
         ),
         level=REAL,
         modules=('tensorbem.sk_fit',),
@@ -845,7 +850,7 @@ CAPABILITIES: tuple[Capability, ...] = (
             'tests/test_sk_fit.py::test_recovers_an_exact_three_rate_curve',
             'tests/test_sk_fit.py::test_the_pre_rewrite_fixed_grid_cannot_represent_the_same_curve',
             'tests/test_sk_fit.py::test_never_worse_than_the_fixed_grid',
-            'tests/test_sk_fit.py::test_measured_curve_shows_the_real_pole_model_class_floor',
+            'tests/test_sk_fit.py::test_pole_refinement_meets_the_accuracy_bar_on_the_measured_curve',
         ),
         docs=(('docs/sk_fit_sanathanan_koerner.md', 'Sanathanan'),),
     ),

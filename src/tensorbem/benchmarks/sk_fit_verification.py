@@ -1,10 +1,17 @@
 """Verification study for :mod:`tensorbem.sk_fit` (Sanathanan-Koerner damping fit).
 
-Two curves, both with a *known* answer, are fitted over an order scan by
+Two curves, both with a *known* answer, are fitted over an order scan by three
+estimators that are measured against each other:
 
-* the SK iteration of ``sk_fit.sk_fit_damping_report`` (relocated poles), and
 * ``sk_fit.fixed_grid_damping_fit`` -- the pre-rewrite fixed-log-grid
-  least-squares behaviour, kept as the measured baseline.
+  least-squares behaviour, kept as the measured baseline;
+* the SK iteration *without* the physical-basis pole refinement
+  (``refine_maxfev=0``: round 1 of this module), and
+* the SK iteration *with* the pole refinement (round 2, the shipped default).
+
+The three columns are what makes the round-2 claim checkable: the refinement has
+to beat the unrefined SK fit on the same data at the same order, and the
+returned fit has to be the best of all candidates.
 
 Case A is *representable*: a synthetic damping curve that is exactly a sum of
 three real decay rates, with the decay rates deliberately off the logarithmic
@@ -14,9 +21,12 @@ the recovery error is a statement about the method and not about the grid.
 Case B is the *measured* Hulme floating-hemisphere heave damping curve shipped
 in ``tests/data/time_domain_hemisphere_sweep.json`` (Hulme 1982 reference
 solution of the radiation problem, used by ``tests/test_state_space.py``).  It
-is not a finite sum of real exponentials, so the real-decay-rate basis has a
-model-class floor: the study reports the unconstrained rational error as the
-ceiling that no real-pole fit can beat there.
+is not a finite sum of real exponentials, and round 1 of this module reported
+17-49 % of the peak on it as a "model-class floor".  The scan below measures
+that claim: the unrefined SK column does stall there, while the refined column
+reaches the platform's 3 % accuracy bar from 6 decay rates up, so the floor was
+a *method* limit (badly placed projected poles), not a limit of the basis.  The
+unconstrained rational error is still reported, as the ceiling of the basis.
 
 Nothing below is transcribed by hand: ``run_study`` writes ``results.json`` and
 ``render_markdown`` renders the document from it.
@@ -46,6 +56,10 @@ __all__ = [
 ORDERS: tuple[int, ...] = (2, 3, 4, 6, 8, 10, 12)
 SK_MAX_ITER = 200
 SK_TOL = 1e-12
+SK_REFINE_MAXFEV = 1500
+#: The platform's accuracy bar for a fitted curve (owner standard: >15 % is
+#: unacceptable, <3 % is the target of a verification claim).
+ACCURACY_BAR = 3e-2
 
 
 def representable_case() -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
@@ -74,7 +88,14 @@ def hulme_case() -> tuple[np.ndarray, np.ndarray]:
     return np.asarray(record["omega"], dtype=float), np.asarray(record["damping"], dtype=float)
 
 
-def _row(order: int, result, report: SKFitReport, baseline, truth: dict | None) -> dict:
+def _row(
+    order: int,
+    result,
+    report: SKFitReport,
+    baseline,
+    unrefined,
+    truth: dict | None,
+) -> dict:
     row: dict[str, Any] = {
         "order": order,
         "pole_source": report.pole_source,
@@ -86,6 +107,18 @@ def _row(order: int, result, report: SKFitReport, baseline, truth: dict | None) 
         "returned_rel_error": float(result.relative_error_max),
         "returned_pointwise_error": float(result.relative_error_max_pointwise),
         "baseline_rel_error": float(baseline.relative_error_max),
+        "unrefined_rel_error": float(unrefined.relative_error_max),
+        "refined_rel_error": float(report.refined_pole_rel_error),
+        "refine_start": report.refine_start,
+        "refine_evaluations": int(report.refine_evaluations),
+        "refine_probe_gain": float(report.refine_probe_gain),
+        "refine_converged": bool(report.refine_converged),
+        "gain_vs_unrefined": (
+            float(unrefined.relative_error_max) / float(result.relative_error_max)
+            if float(result.relative_error_max) > 0.0
+            else float("inf")
+        ),
+        "meets_accuracy_bar": bool(float(result.relative_error_max) <= ACCURACY_BAR),
         "real_root_count": report.real_root_count,
         "complex_pair_count": report.complex_pair_count,
         "asymptote": float(result.constant),
@@ -122,10 +155,23 @@ def run_study(orders: Sequence[int] = ORDERS) -> dict[str, Any]:
         rows = []
         for order in orders:
             result, report = sk_fit_damping_report(
-                omega, damping, n_poles=order, max_iter=SK_MAX_ITER, tol=SK_TOL
+                omega,
+                damping,
+                n_poles=order,
+                max_iter=SK_MAX_ITER,
+                tol=SK_TOL,
+                refine_maxfev=SK_REFINE_MAXFEV,
+            )
+            unrefined, _ = sk_fit_damping_report(
+                omega,
+                damping,
+                n_poles=order,
+                max_iter=SK_MAX_ITER,
+                tol=SK_TOL,
+                refine_maxfev=0,
             )
             baseline = fixed_grid_damping_fit(omega, damping, n_poles=order)
-            rows.append(_row(order, result, report, baseline, truth_case))
+            rows.append(_row(order, result, report, baseline, unrefined, truth_case))
         cases[name] = {
             "points": int(omega.size),
             "omega_band": [float(omega[0]), float(omega[-1])],
@@ -136,12 +182,25 @@ def run_study(orders: Sequence[int] = ORDERS) -> dict[str, Any]:
             "regression_free": all(
                 r["returned_rel_error"] <= r["baseline_rel_error"] * (1.0 + 1e-12) for r in rows
             ),
+            "never_worse_than_unrefined": all(
+                r["returned_rel_error"] <= r["unrefined_rel_error"] * (1.0 + 1e-12)
+                for r in rows
+            ),
             "sk_wins_order_count": sum(1 for r in rows if r["pole_source"] == "sk"),
+            "refined_wins_order_count": sum(
+                1 for r in rows if r["pole_source"] == "refined"
+            ),
+            "accuracy_bar": ACCURACY_BAR,
+            "orders_meeting_accuracy_bar": [
+                r["order"] for r in rows if r["meets_accuracy_bar"]
+            ],
         }
     return {
-        "mission": "m16021",
+        "mission": "m17837",
+        "round": 2,
         "sk_max_iter": SK_MAX_ITER,
         "sk_tol": SK_TOL,
+        "sk_refine_maxfev": SK_REFINE_MAXFEV,
         "orders": list(orders),
         "cases": cases,
     }
@@ -153,20 +212,29 @@ def _fmt(value: float) -> str:
 
 def render_markdown(results: dict[str, Any]) -> str:
     lines: list[str] = []
-    lines.append("| case | order | returned max err | baseline max err | " "SK wins? | pole source | SK iters | converged |")
-    lines.append("|---|---|---|---|---|---|---|---|")
+    lines.append(
+        "| case | order | returned max err | fixed-grid baseline | SK unrefined "
+        "| SK + pole refinement | gain vs unrefined | pole source | refine seed "
+        "| probe gain | <3 %? |"
+    )
+    lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
     for name, case in results["cases"].items():
         for row in case["rows"]:
+            gain = row["gain_vs_unrefined"]
             lines.append(
-                "| {name} | {order} | {err} | {base} | {win} | {src} | {it} | {conv} |".format(
+                "| {name} | {order} | {err} | {base} | {unref} | {refined} | {gain} "
+                "| {src} | {seed} | {probe} | {bar} |".format(
                     name=name,
                     order=row["order"],
                     err=_fmt(row["returned_rel_error"]),
                     base=_fmt(row["baseline_rel_error"]),
-                    win="yes" if row["returned_rel_error"] < row["baseline_rel_error"] else "no",
+                    unref=_fmt(row["unrefined_rel_error"]),
+                    refined=_fmt(row["refined_rel_error"]),
+                    gain=f"{gain:.1f}x",
                     src=row["pole_source"],
-                    it=row["sk_iterations"],
-                    conv="yes" if row["sk_converged"] else "no",
+                    seed=row["refine_start"],
+                    probe=_fmt(row["refine_probe_gain"]),
+                    bar="yes" if row["meets_accuracy_bar"] else "no",
                 )
             )
     return "\n".join(lines)
@@ -182,9 +250,13 @@ def write_figure(results: dict[str, Any], path: Path) -> None:
     for axis, (name, case) in zip(axes, results["cases"].items()):
         orders = [row["order"] for row in case["rows"]]
         axis.loglog(orders, [max(row["returned_rel_error"], 1e-16) for row in case["rows"]],
-                    "o-", label="SK fit (returned)")
+                    "o-", label="SK + pole refinement (returned)")
+        axis.loglog(orders, [max(row["unrefined_rel_error"], 1e-16) for row in case["rows"]],
+                    "d--", label="SK without pole refinement (round 1)")
         axis.loglog(orders, [max(row["baseline_rel_error"], 1e-16) for row in case["rows"]],
                     "s--", label="fixed-grid baseline")
+        axis.axhline(results["cases"][name]["accuracy_bar"], color="k", lw=0.8,
+                     ls="-.", label="3 % accuracy bar")
         axis.loglog(orders, [max(row["rational_rel_error"], 1e-16) for row in case["rows"]],
                     "^:", label="unconstrained rational ceiling")
         axis.set_xlabel("decay rates (order)")
