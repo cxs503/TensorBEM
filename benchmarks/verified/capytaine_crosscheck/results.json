@@ -1,4 +1,183 @@
 {
+  "analytic_decomposition": {
+    "capytaine_worst_vs_hulme": {
+      "cell": {
+        "capytaine": 943.9980026305,
+        "capytaine_vs_hulme": -0.03700670483326779,
+        "code_to_code": 0.04973556814429947,
+        "dof": "heave",
+        "hulme": 980.2747406118301,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 990.9482796184118,
+        "tensorbem_vs_hulme": 0.010888313821000712
+      },
+      "relative": -0.03700670483326779
+    },
+    "entries": [
+      {
+        "capytaine": 1274.6390081377788,
+        "capytaine_vs_hulme": 0.013015661514927567,
+        "code_to_code": -0.01398983953887859,
+        "dof": "heave",
+        "hulme": 1258.261897186864,
+        "nu": 0.5,
+        "quantity": "added_mass",
+        "tensorbem": 1256.807012943936,
+        "tensorbem_vs_hulme": -0.001156265040037217
+      },
+      {
+        "capytaine": 1619.6099348231735,
+        "capytaine_vs_hulme": 0.004766767941195564,
+        "code_to_code": -0.005139013251840006,
+        "dof": "heave",
+        "hulme": 1611.9262564204969,
+        "nu": 0.5,
+        "quantity": "damping",
+        "tensorbem": 1611.2867379053055,
+        "tensorbem_vs_hulme": -0.00039674179426269195
+      },
+      {
+        "capytaine": 1414.7772028237819,
+        "capytaine_vs_hulme": 0.023503006936014446,
+        "code_to_code": -0.027493718438563568,
+        "dof": "surge",
+        "hulme": 1382.2892490165673,
+        "nu": 0.5,
+        "quantity": "added_mass",
+        "tensorbem": 1375.8797167560463,
+        "tensorbem_vs_hulme": -0.004636896557707509
+      },
+      {
+        "capytaine": 483.2557611961571,
+        "capytaine_vs_hulme": 0.030301533265447246,
+        "code_to_code": -0.03899656320046541,
+        "dof": "surge",
+        "hulme": 469.04303797794205,
+        "nu": 0.5,
+        "quantity": "damping",
+        "tensorbem": 464.41044736268213,
+        "tensorbem_vs_hulme": -0.009876685592075185
+      },
+      {
+        "capytaine": 934.8282365728253,
+        "capytaine_vs_hulme": 0.016334958587525202,
+        "code_to_code": -0.017926876804772868,
+        "dof": "heave",
+        "hulme": 919.8032879554042,
+        "nu": 1.0,
+        "quantity": "added_mass",
+        "tensorbem": 918.0696859421612,
+        "tensorbem_vs_hulme": -0.0018847530074572961
+      },
+      {
+        "capytaine": 1668.2101860660848,
+        "capytaine_vs_hulme": -0.001193166033758219,
+        "code_to_code": 0.004036758010814298,
+        "dof": "heave",
+        "hulme": 1670.203015573748,
+        "nu": 1.0,
+        "quantity": "damping",
+        "tensorbem": 1674.944346898409,
+        "tensorbem_vs_hulme": 0.0028387754545110737
+      },
+      {
+        "capytaine": 1254.885167889813,
+        "capytaine_vs_hulme": 0.018464771010487147,
+        "code_to_code": -0.021358135042967637,
+        "dof": "surge",
+        "hulme": 1232.1340939900722,
+        "nu": 1.0,
+        "quantity": "added_mass",
+        "tensorbem": 1228.0831610106052,
+        "tensorbem_vs_hulme": -0.0032877371052599464
+      },
+      {
+        "capytaine": 2431.082148879298,
+        "capytaine_vs_hulme": 0.023013822259250263,
+        "code_to_code": -0.0313156604224479,
+        "dof": "surge",
+        "hulme": 2376.3922793442157,
+        "nu": 1.0,
+        "quantity": "damping",
+        "tensorbem": 2354.951205845919,
+        "tensorbem_vs_hulme": -0.00902253120609089
+      },
+      {
+        "capytaine": 848.4002873735379,
+        "capytaine_vs_hulme": 0.01754846041102279,
+        "code_to_code": -0.022455426821869424,
+        "dof": "heave",
+        "hulme": 833.768926377069,
+        "nu": 2.0,
+        "quantity": "added_mass",
+        "tensorbem": 829.3490968047685,
+        "tensorbem_vs_hulme": -0.0053010245794428285
+      },
+      {
+        "capytaine": 943.9980026305,
+        "capytaine_vs_hulme": -0.03700670483326779,
+        "code_to_code": 0.04973556814429947,
+        "dof": "heave",
+        "hulme": 980.2747406118301,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 990.9482796184118,
+        "tensorbem_vs_hulme": 0.010888313821000712
+      },
+      {
+        "capytaine": 547.0354259876593,
+        "capytaine_vs_hulme": 0.022223679643203386,
+        "code_to_code": -0.019508823985213076,
+        "dof": "surge",
+        "hulme": 535.1425885365876,
+        "nu": 2.0,
+        "quantity": "added_mass",
+        "tensorbem": 536.36340814839,
+        "tensorbem_vs_hulme": 0.002281297803527291
+      },
+      {
+        "capytaine": 3286.11372652679,
+        "capytaine_vs_hulme": 0.009432186505259343,
+        "code_to_code": -0.015070751052112493,
+        "dof": "surge",
+        "hulme": 3255.408110081765,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 3236.589524625375,
+        "tensorbem_vs_hulme": -0.005780714681551009
+      }
+    ],
+    "reference": "Hulme (1982) semi-analytical multipole solution",
+    "tensorbem_worst_vs_hulme": {
+      "cell": {
+        "capytaine": 943.9980026305,
+        "capytaine_vs_hulme": -0.03700670483326779,
+        "code_to_code": 0.04973556814429947,
+        "dof": "heave",
+        "hulme": 980.2747406118301,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 990.9482796184118,
+        "tensorbem_vs_hulme": 0.010888313821000712
+      },
+      "relative": 0.010888313821000712
+    },
+    "worst_code_to_code": {
+      "cell": {
+        "capytaine": 943.9980026305,
+        "capytaine_vs_hulme": -0.03700670483326779,
+        "code_to_code": 0.04973556814429947,
+        "dof": "heave",
+        "hulme": 980.2747406118301,
+        "nu": 2.0,
+        "quantity": "damping",
+        "tensorbem": 990.9482796184118,
+        "tensorbem_vs_hulme": 0.010888313821000712
+      },
+      "relative": 0.04973556814429947
+    }
+  },
   "capytaine_provenance": {
     "density": 1025.0,
     "generated_utc": "2026-11-12T13:29:04+00:00",
@@ -24,101 +203,101 @@
             "dof": "heave",
             "nu": 0.5,
             "quantity": "added_mass",
-            "relative": -0.017285000130169224,
-            "tensorbem": 1252.6068727161985
+            "relative": -0.01398983953887859,
+            "tensorbem": 1256.807012943936
           },
           {
             "capytaine": 1619.6099348231735,
             "dof": "heave",
             "nu": 0.5,
             "quantity": "damping",
-            "relative": -0.006062738771290067,
-            "tensorbem": 1609.7906628769545
+            "relative": -0.005139013251840006,
+            "tensorbem": 1611.2867379053055
           },
           {
             "capytaine": 1414.7772028237819,
             "dof": "surge",
             "nu": 0.5,
             "quantity": "added_mass",
-            "relative": -0.04089621014500492,
-            "tensorbem": 1356.9181770287382
+            "relative": -0.027493718438563568,
+            "tensorbem": 1375.8797167560463
           },
           {
             "capytaine": 483.2557611961571,
             "dof": "surge",
             "nu": 0.5,
             "quantity": "damping",
-            "relative": -0.06700561176265912,
-            "tensorbem": 450.8749132793791
+            "relative": -0.03899656320046541,
+            "tensorbem": 464.41044736268213
           },
           {
             "capytaine": 934.8282365728253,
             "dof": "heave",
             "nu": 1.0,
             "quantity": "added_mass",
-            "relative": -0.02330716706271132,
-            "tensorbem": 913.0400386880826
+            "relative": -0.017926876804772868,
+            "tensorbem": 918.0696859421612
           },
           {
             "capytaine": 1668.2101860660848,
             "dof": "heave",
             "nu": 1.0,
             "quantity": "damping",
-            "relative": 0.012929928569526556,
-            "tensorbem": 1689.780024610876
+            "relative": 0.004036758010814298,
+            "tensorbem": 1674.944346898409
           },
           {
             "capytaine": 1254.885167889813,
             "dof": "surge",
             "nu": 1.0,
             "quantity": "added_mass",
-            "relative": -0.030931959637337542,
-            "tensorbem": 1216.0691105271517
+            "relative": -0.021358135042967637,
+            "tensorbem": 1228.0831610106052
           },
           {
             "capytaine": 2431.082148879298,
             "dof": "surge",
             "nu": 1.0,
             "quantity": "damping",
-            "relative": -0.05697744763221021,
-            "tensorbem": 2292.565293051927
+            "relative": -0.0313156604224479,
+            "tensorbem": 2354.951205845919
           },
           {
             "capytaine": 848.4002873735379,
             "dof": "heave",
             "nu": 2.0,
             "quantity": "added_mass",
-            "relative": -0.03766259728439721,
-            "tensorbem": 816.4473290142215
+            "relative": -0.022455426821869424,
+            "tensorbem": 829.3490968047685
           },
           {
             "capytaine": 943.9980026305,
             "dof": "heave",
             "nu": 2.0,
             "quantity": "damping",
-            "relative": 0.08505813142954162,
-            "tensorbem": 1024.2927088074698
+            "relative": 0.04973556814429947,
+            "tensorbem": 990.9482796184118
           },
           {
             "capytaine": 547.0354259876593,
             "dof": "surge",
             "nu": 2.0,
             "quantity": "added_mass",
-            "relative": -0.013364612961656884,
-            "tensorbem": 539.7245092430192
+            "relative": -0.019508823985213076,
+            "tensorbem": 536.36340814839
           },
           {
             "capytaine": 3286.11372652679,
             "dof": "surge",
             "nu": 2.0,
             "quantity": "damping",
-            "relative": -0.0315606614348684,
-            "tensorbem": 3182.401803767404
+            "relative": -0.015070751052112493,
+            "tensorbem": 3236.589524625375
           }
         ],
-        "tensorbem_faces": 256,
-        "verdict": "FAIL",
-        "worst_relative": 0.08505813142954162
+        "tensorbem_faces": 1024,
+        "verdict": "PASS",
+        "worst_relative": 0.04973556814429947
       },
       "sphere_r1_z-0.5": {
         "capytaine_faces": 1120,
@@ -129,24 +308,24 @@
             "dof": "heave",
             "nu": 0.5,
             "quantity": "added_mass",
-            "relative": -0.03484874359427915,
-            "tensorbem": 1117.0496887624586
+            "relative": -0.024173886517041714,
+            "tensorbem": 1129.4045872268907
           },
           {
             "capytaine": 275.26803829772,
             "dof": "heave",
             "nu": 0.5,
             "quantity": "damping",
-            "relative": -0.08751328049478489,
-            "tensorbem": 251.17842925092245
+            "relative": -0.028820058135821697,
+            "tensorbem": 267.3347974310461
           },
           {
             "capytaine": 1229.710258636283,
             "dof": "heave",
             "nu": 1.0,
             "quantity": "added_mass",
-            "relative": -0.03308644946192965,
-            "tensorbem": 1189.0235123110972
+            "relative": -0.023740416679611704,
+            "tensorbem": 1200.5164247010646
           },
           {
             "dof": "heave",
@@ -160,48 +339,51 @@
             "dof": "heave",
             "nu": 2.0,
             "quantity": "added_mass",
-            "relative": -0.03890091355761025,
-            "tensorbem": 1234.079233757781
+            "relative": -0.024525177919605512,
+            "tensorbem": 1252.5380972309767
           },
           {
             "capytaine": 417.295730401492,
             "dof": "heave",
             "nu": 2.0,
             "quantity": "damping",
-            "relative": 0.0148542088118199,
-            "tensorbem": 423.49432831715666
+            "relative": -0.03903467204949833,
+            "tensorbem": 401.0067284176139
           }
         ],
-        "tensorbem_faces": 270,
-        "verdict": "FAIL",
-        "worst_relative": 0.08751328049478489
+        "tensorbem_faces": 1026,
+        "verdict": "PASS",
+        "worst_relative": 0.03903467204949833
       }
     },
-    "failures": [
-      "hemisphere_r1 nu=0.50 surge damping: -6.70%",
-      "hemisphere_r1 nu=1.00 surge damping: -5.70%",
-      "hemisphere_r1 nu=2.00 heave damping: +8.51%",
-      "sphere_r1_z-0.5 nu=0.50 heave damping: -8.75%"
-    ],
+    "failures": [],
     "tolerance": 0.05,
-    "verdict": "FAIL",
-    "worst_relative": 0.08751328049478489
+    "verdict": "PASS",
+    "worst_relative": 0.04973556814429947
   },
   "convergence": {
     "hemisphere_r1": [
       {
         "n_faces": 64,
-        "worst_relative": 0.22098284491834055
+        "worst_relative": 0.22098284491834128
       },
       {
         "n_faces": 256,
         "worst_relative": 0.08505813142954162
+      },
+      {
+        "n_faces": 1024,
+        "worst_relative": 0.04973556814429947
       }
     ],
     "sphere_r1_z-0.5": [
       {
         "n_faces": 270,
-        "worst_relative": 0.08751328049478489
+        "worst_relative": 0.08751328049478468
+      },
+      {
+        "n_faces": 1026,
+        "worst_relative": 0.03903467204949833
       }
     ]
   },
@@ -282,6 +464,28 @@
     1.0,
     2.0
   ],
+  "superseded_records": [
+    {
+      "failures": [
+        "hemisphere_r1 nu=0.50 surge damping: -6.70%",
+        "hemisphere_r1 nu=1.00 surge damping: -5.70%",
+        "hemisphere_r1 nu=2.00 heave damping: +8.51%",
+        "sphere_r1_z-0.5 nu=0.50 heave damping: -8.75%"
+      ],
+      "level_sets": {
+        "hemisphere_r1": [
+          64,
+          256
+        ],
+        "sphere_r1_z-0.5": [
+          270
+        ]
+      },
+      "reason": "superseded by a run at the mesh levels declared in HEMISPHERE_LEVELS / SPHERE_LEVELS; kept for the audit trail, not deleted",
+      "verdict": "FAIL",
+      "worst_relative": 0.08751328049478489
+    }
+  ],
   "tensorbem": {
     "hemisphere_r1": {
       "levels": [
@@ -312,10 +516,10 @@
             "2.000": {
               "heave": {
                 "added_mass": 767.6639031732587,
-                "damping": 1152.605366849019
+                "damping": 1152.6053668490197
               },
               "surge": {
-                "added_mass": 549.1453498803477,
+                "added_mass": 549.1453498803476,
                 "damping": 2984.8377101856922
               }
             }
@@ -327,7 +531,7 @@
           "values": {
             "0.500": {
               "heave": {
-                "added_mass": 1252.6068727161985,
+                "added_mass": 1252.6068727161987,
                 "damping": 1609.7906628769545
               },
               "surge": {
@@ -356,41 +560,77 @@
               }
             }
           }
+        },
+        {
+          "level": 4,
+          "n_faces": 1024,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1256.807012943936,
+                "damping": 1611.2867379053055
+              },
+              "surge": {
+                "added_mass": 1375.8797167560463,
+                "damping": 464.41044736268213
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 918.0696859421612,
+                "damping": 1674.944346898409
+              },
+              "surge": {
+                "added_mass": 1228.0831610106052,
+                "damping": 2354.951205845919
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 829.3490968047685,
+                "damping": 990.9482796184118
+              },
+              "surge": {
+                "added_mass": 536.36340814839,
+                "damping": 3236.589524625375
+              }
+            }
+          }
         }
       ],
       "reference": {
         "0.500": {
           "heave": {
-            "added_mass": 1252.6068727161985,
-            "damping": 1609.7906628769545
+            "added_mass": 1256.807012943936,
+            "damping": 1611.2867379053055
           },
           "surge": {
-            "added_mass": 1356.9181770287382,
-            "damping": 450.8749132793791
+            "added_mass": 1375.8797167560463,
+            "damping": 464.41044736268213
           }
         },
         "1.000": {
           "heave": {
-            "added_mass": 913.0400386880826,
-            "damping": 1689.780024610876
+            "added_mass": 918.0696859421612,
+            "damping": 1674.944346898409
           },
           "surge": {
-            "added_mass": 1216.0691105271517,
-            "damping": 2292.565293051927
+            "added_mass": 1228.0831610106052,
+            "damping": 2354.951205845919
           }
         },
         "2.000": {
           "heave": {
-            "added_mass": 816.4473290142215,
-            "damping": 1024.2927088074698
+            "added_mass": 829.3490968047685,
+            "damping": 990.9482796184118
           },
           "surge": {
-            "added_mass": 539.7245092430192,
-            "damping": 3182.401803767404
+            "added_mass": 536.36340814839,
+            "damping": 3236.589524625375
           }
         }
       },
-      "reference_faces": 256
+      "reference_faces": 1024
     },
     "sphere_r1_z-0.5": {
       "levels": [
@@ -401,13 +641,13 @@
             "0.500": {
               "heave": {
                 "added_mass": 1117.0496887624586,
-                "damping": 251.17842925092245
+                "damping": 251.1784292509225
               }
             },
             "1.000": {
               "heave": {
                 "added_mass": 1189.0235123110972,
-                "damping": 0.06870010134012582
+                "damping": 0.06870010134012156
               }
             },
             "2.000": {
@@ -417,29 +657,53 @@
               }
             }
           }
+        },
+        {
+          "level": 3,
+          "n_faces": 1026,
+          "values": {
+            "0.500": {
+              "heave": {
+                "added_mass": 1129.4045872268907,
+                "damping": 267.3347974310461
+              }
+            },
+            "1.000": {
+              "heave": {
+                "added_mass": 1200.5164247010646,
+                "damping": 0.5509681937516537
+              }
+            },
+            "2.000": {
+              "heave": {
+                "added_mass": 1252.5380972309767,
+                "damping": 401.0067284176139
+              }
+            }
+          }
         }
       ],
       "reference": {
         "0.500": {
           "heave": {
-            "added_mass": 1117.0496887624586,
-            "damping": 251.17842925092245
+            "added_mass": 1129.4045872268907,
+            "damping": 267.3347974310461
           }
         },
         "1.000": {
           "heave": {
-            "added_mass": 1189.0235123110972,
-            "damping": 0.06870010134012582
+            "added_mass": 1200.5164247010646,
+            "damping": 0.5509681937516537
           }
         },
         "2.000": {
           "heave": {
-            "added_mass": 1234.079233757781,
-            "damping": 423.49432831715666
+            "added_mass": 1252.5380972309767,
+            "damping": 401.0067284176139
           }
         }
       },
-      "reference_faces": 270
+      "reference_faces": 1026
     }
   }
 }
