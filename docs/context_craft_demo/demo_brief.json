@@ -1,0 +1,275 @@
+{
+  "budget_tokens": 900,
+  "density_per_1k": 34.483,
+  "dropped_duplicates": 3,
+  "kinds": {
+    "CONTEXT": 1,
+    "NEGATIVE": 3,
+    "PIN": 2,
+    "TOLERANCE": 21,
+    "TRAP": 1,
+    "VERDICT": 4
+  },
+  "package_sha256": "eebdb85e29ce1e3dc34f8138999273a27f2d8fd902af3742d5b23b2c436900a4",
+  "provenance": [
+    {
+      "item_id": "ecec7a778c74c28b",
+      "kind": "TOLERANCE",
+      "lineno": 69,
+      "sha256": "e93ea44e82504f497612d737942aaedbed789fa8e1192c4d532bdb7cf46e3009",
+      "source": "dev_report_m7534_quadratic_panel_verification.md",
+      "tokens": 18
+    },
+    {
+      "item_id": "66f6e9974a911d78",
+      "kind": "TOLERANCE",
+      "lineno": 150,
+      "sha256": "b8b3811c1e2bc1a6d69534337682d373be33a9a86613710a487332270ea82878",
+      "source": "docs/drift_second_order/drift_second_order.md",
+      "tokens": 17
+    },
+    {
+      "item_id": "6d9a1d1c46408b15",
+      "kind": "VERDICT",
+      "lineno": 179,
+      "sha256": "5aa282446b2f6de67354adeda42de55568ed5f8408fab038965a38451fe49e97",
+      "source": "docs/audit_baseline.md",
+      "tokens": 38
+    },
+    {
+      "item_id": "51a1059862d3613e",
+      "kind": "TOLERANCE",
+      "lineno": 161,
+      "sha256": "27440e74fcb0b9aac88e5e2cc08b5eb1e2a508e65b3c1e8f2bf2616cbc5d7b90",
+      "source": "docs/m5240/potential_flow_anchor_maturation.md",
+      "tokens": 20
+    },
+    {
+      "item_id": "6d34111c225e63e2",
+      "kind": "TOLERANCE",
+      "lineno": 23,
+      "sha256": "df8a93dc3550e4da806742bd4282696bd6909264a9d84dead5790a7f41ced8ee",
+      "source": "docs/numeric_evidence_matrix.md",
+      "tokens": 30
+    },
+    {
+      "item_id": "b7199cb16a9f4c77",
+      "kind": "TOLERANCE",
+      "lineno": 24,
+      "sha256": "fa385a0c00aad80fbafb555ce8e264bb5731dd6baff351d3570b12a4db348b73",
+      "source": "docs/numeric_evidence_matrix.md",
+      "tokens": 33
+    },
+    {
+      "item_id": "b22890ac6e8c947a",
+      "kind": "NEGATIVE",
+      "lineno": 83,
+      "sha256": "6f37093c5ceeeefe59452a190d2c1b60ca07b7915517715386df4f4a175ef578",
+      "source": "docs/lifting_kutta_closure.md",
+      "tokens": 97
+    },
+    {
+      "item_id": "7b2c9e2f927aa28f",
+      "kind": "TOLERANCE",
+      "lineno": 4,
+      "sha256": "d568a199b5b2eab531dff8336bd28b3c06c26af537a51698405ee4995a2865a8",
+      "source": "docs/acoustic3d_pulse.md",
+      "tokens": 11
+    },
+    {
+      "item_id": "02fcb97d68dbcc16",
+      "kind": "TOLERANCE",
+      "lineno": 106,
+      "sha256": "6c25fd0f33fbd78f8ae4cf2c9c0a5c9d9cfb3c30636055350422643daf672950",
+      "source": "docs/m2970/mutation_gap_closure.md",
+      "tokens": 23
+    },
+    {
+      "item_id": "3ebefd254ef32ae2",
+      "kind": "TOLERANCE",
+      "lineno": 161,
+      "sha256": "70033b9b763a2163a8ddc0ff527974b2b25e1d1bfbd27603f6cf470f7adae808",
+      "source": "dev_report_m7534_quadratic_panel_verification.md",
+      "tokens": 24
+    },
+    {
+      "item_id": "7c598de1cf890836",
+      "kind": "TOLERANCE",
+      "lineno": 115,
+      "sha256": "be268190762626219d57b1d288ad5b871142b39b53337350755b0c5db991d866",
+      "source": "dev_report_m17021_numeric_evidence.md",
+      "tokens": 20
+    },
+    {
+      "item_id": "58db1f4426f30fef",
+      "kind": "PIN",
+      "lineno": 62,
+      "sha256": "cd79fb8ee364f526ee280488e505c854f86012cfc8b0b02ec4179f69f09e23d6",
+      "source": "docs/finite_depth3d_offaxis_split.md",
+      "tokens": 18
+    },
+    {
+      "item_id": "cf9d2c61d4d2c775",
+      "kind": "NEGATIVE",
+      "lineno": 51,
+      "sha256": "092a968fc0670d8cb8a9421b387eb7555f5fa3969dffe7143e8bec15c91a6d2b",
+      "source": "docs/benchmarks/verified/bem_rankine_fs_panel/report.md",
+      "tokens": 74
+    },
+    {
+      "item_id": "9d56ef42a0c875c4",
+      "kind": "VERDICT",
+      "lineno": 159,
+      "sha256": "99140f9cd3ff4809e23d731a93e11d7f6ad83e81bdfbc9fbc6bc24abcf118a7e",
+      "source": "docs/bem_hydroelastic.md",
+      "tokens": 27
+    },
+    {
+      "item_id": "277884448148b16e",
+      "kind": "TOLERANCE",
+      "lineno": 38,
+      "sha256": "2f3ec335843909a52a5a185d78de98a14e194760ba452858b8ac36f0ef05e4cb",
+      "source": "docs/numeric_evidence_matrix.md",
+      "tokens": 44
+    },
+    {
+      "item_id": "352ed416db82987c",
+      "kind": "TOLERANCE",
+      "lineno": 37,
+      "sha256": "ee90b4199ab4bc3a81a7b14f04d0fe75680e54724c60ec757ef5aae528e5bedb",
+      "source": "docs/numeric_evidence_matrix.md",
+      "tokens": 41
+    },
+    {
+      "item_id": "0bf13c6e3a245117",
+      "kind": "TOLERANCE",
+      "lineno": 57,
+      "sha256": "5e5a15467caffa64130672e146e7f71192f3b3ead362f19e6a141841a76931f5",
+      "source": "docs/m17021_numeric_evidence_report.md",
+      "tokens": 30
+    },
+    {
+      "item_id": "847f5ea810a3ba05",
+      "kind": "TOLERANCE",
+      "lineno": 56,
+      "sha256": "d579fdc5d45be0d239b9e394cd2ae8664aa093ef6ebc9e83461373167932b755",
+      "source": "docs/m17021_numeric_evidence_report.md",
+      "tokens": 30
+    },
+    {
+      "item_id": "dcfe6afd48b3cf2c",
+      "kind": "PIN",
+      "lineno": 116,
+      "sha256": "2c404238239485e97c1884dedcae5d16806aeb6d1f87c5e328239f326702c381",
+      "source": "docs/rao_input_validation.md",
+      "tokens": 19
+    },
+    {
+      "item_id": "ade565af6da65cb8",
+      "kind": "TOLERANCE",
+      "lineno": 167,
+      "sha256": "3c0bbca4ef903a2b299f2bfd0f1444192141fac7267d712436af3bff436f49af",
+      "source": "docs/wave_flume_wavemaker.md",
+      "tokens": 36
+    },
+    {
+      "item_id": "ba9e95cb62241e09",
+      "kind": "VERDICT",
+      "lineno": 200,
+      "sha256": "4eb941651691320038dad5823dd252e3d152e355f8f9737fa7bcc7d51dfc0dd6",
+      "source": "dev_report_m7534_quadratic_panel_verification.md",
+      "tokens": 25
+    },
+    {
+      "item_id": "e477d025d3d62062",
+      "kind": "TOLERANCE",
+      "lineno": 24,
+      "sha256": "89a6968cc9f063a68c23c7e2904e0f19dee52f2ca5307f4dc39378e36536d916",
+      "source": "docs/assembly_scaling.md",
+      "tokens": 30
+    },
+    {
+      "item_id": "44a975051bd4db4a",
+      "kind": "TOLERANCE",
+      "lineno": 116,
+      "sha256": "6b95e0d7e0c207bb2a5b64126793de712a84501ca3ac3f96da165840bd71fb86",
+      "source": "docs/cathodic_protection_linear/REPORT.md",
+      "tokens": 20
+    },
+    {
+      "item_id": "d1fe6ca12c1837b2",
+      "kind": "TOLERANCE",
+      "lineno": 43,
+      "sha256": "24674763e39b81a5c14f87bd7f9264aeb418b30ab2a8f8ce6c073a9013417eff",
+      "source": "dev_report_m16976.md",
+      "tokens": 22
+    },
+    {
+      "item_id": "dd38ce0a7d02037c",
+      "kind": "TOLERANCE",
+      "lineno": 13,
+      "sha256": "97ba09aea020ebaa49533c6d25d665ca3159c54a4c2171832d5f31bf25f534d2",
+      "source": "dev_report_m5242_second_order_drift.md",
+      "tokens": 15
+    },
+    {
+      "item_id": "50c8f7c18fb4aa81",
+      "kind": "TOLERANCE",
+      "lineno": 17,
+      "sha256": "5e7f3184eb8f23f2175e46cd991ac9ee6b2558d5411c8f95cf9cf9264002a9f6",
+      "source": "docs/context_craft_ab/ab_results.md",
+      "tokens": 18
+    },
+    {
+      "item_id": "99f8726ed78f1f7a",
+      "kind": "CONTEXT",
+      "lineno": 3,
+      "sha256": "120fea913a54a19d683bcac90e7208b29a6922ac41dee31c37c4a20b505338fa",
+      "source": "docs/quadratic_panel_verification/README.md",
+      "tokens": 20
+    },
+    {
+      "item_id": "d4ff4c83040ed251",
+      "kind": "VERDICT",
+      "lineno": 109,
+      "sha256": "27a9787311724c2a39e320dddc9382f4246c6ff195370e314083ce00d086898a",
+      "source": "docs/fmm_acceleration/report.md",
+      "tokens": 19
+    },
+    {
+      "item_id": "0b0a3ab88aea2f71",
+      "kind": "NEGATIVE",
+      "lineno": 217,
+      "sha256": "0a948ad98030c6029d81e77f1f80ccd690d6430c01905afe7e9ec43d356e2cf9",
+      "source": "docs/drift_second_order/drift_second_order.md",
+      "tokens": 21
+    },
+    {
+      "item_id": "410f525f999f58e5",
+      "kind": "TOLERANCE",
+      "lineno": 12,
+      "sha256": "16bbd7374dec7a2996f61664709aa46bd99eff1e3cf41ffc93777b0a5500a5af",
+      "source": "dev_report_m5242_second_order_drift.md",
+      "tokens": 16
+    },
+    {
+      "item_id": "51e5734936733cc2",
+      "kind": "TOLERANCE",
+      "lineno": 95,
+      "sha256": "3bdd6106ade287bda3f16bc01adb2717675df6b03d6fb4abdb709cc01b86ea2b",
+      "source": "docs/rao_input_validation.md",
+      "tokens": 25
+    },
+    {
+      "item_id": "ad2da007f41e2776",
+      "kind": "TRAP",
+      "lineno": 28,
+      "sha256": "266cec0d942135ad5bda74f32321636861017dea2d35f2fda38de5bef0cf8455",
+      "source": "docs/m14775/hull_reference_quadrature.md",
+      "tokens": 18
+    }
+  ],
+  "query": "quadratic panel near singular quadrature tolerance verification of the operator",
+  "skipped_over_budget": 1,
+  "tokens_used": 899
+}
