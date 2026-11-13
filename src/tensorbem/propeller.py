@@ -80,6 +80,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+import warnings
 
 import numpy as np
 from numpy.typing import NDArray
@@ -94,6 +95,16 @@ WATER_NU = 1.14e-6
 
 #: Reference density for non-dimensionalisation (cancels in K_T / K_Q).
 RHO = 1.0
+
+#: Physical envelope of the open-water coefficients.  No propeller in the
+#: published literature reaches these values (K_T is O(0.1..0.5), K_Q is
+#: O(0.01..0.1); the log of the bound is described in the module docstring).
+#: They exist to separate *physics* from a near-singular induction solve: once
+#: the trailing-vortex legs of two neighbouring panels nearly coincide the
+#: horseshoe influence matrix loses rank and the circulation -- hence K_T / K_Q
+#: -- explodes by 2..9 orders of magnitude (see ``tests`` for the pinned case).
+PLAUSIBLE_KT_MAX = 1.0
+PLAUSIBLE_KQ_MAX = 0.2
 
 
 # ---------------------------------------------------------------------------
@@ -677,6 +688,47 @@ def section_drag_coefficient(reynolds: FloatArray, thickness_ratio: float) -> Fl
     )
 
 
+def _warn_if_unphysical(
+    advance_ratio: float,
+    thrust: float,
+    torque: float,
+    efficiency: float,
+    momentum_bound: float,
+) -> None:
+    """Warn when a solved point is outside the physical envelope.
+
+    The lattice is a direct dense solve of a horseshoe influence matrix; for
+    some trailing-vortex geometries (notably the non-geometric helices at low
+    advance ratio) that matrix becomes near singular and the solution explodes
+    instead of raising.  Returning the number silently is what makes such a
+    point later read as a 1e6 % "model error", so the kernel reports it.
+    """
+
+    issues: list[str] = []
+    if not (math.isfinite(thrust) and math.isfinite(torque)):
+        issues.append("non-finite K_T / K_Q")
+    else:
+        if abs(thrust) > PLAUSIBLE_KT_MAX or abs(torque) > PLAUSIBLE_KQ_MAX:
+            issues.append(
+                f"|K_T| = {abs(thrust):.3e} and |K_Q| = {abs(torque):.3e} outside "
+                f"the physical envelope (K_T <= {PLAUSIBLE_KT_MAX:g}, "
+                f"K_Q <= {PLAUSIBLE_KQ_MAX:g}): near-singular induction solve"
+            )
+        if (math.isfinite(efficiency) and math.isfinite(momentum_bound)
+                and efficiency > momentum_bound * (1.0 + 1e-9)):
+            issues.append(
+                f"eta_0 = {efficiency:.4g} exceeds the actuator-disc momentum "
+                f"bound {momentum_bound:.4g}"
+            )
+    if issues:
+        warnings.warn(
+            f"open_water_point(J={advance_ratio:g}): unphysical solution -- "
+            + "; ".join(issues),
+            RuntimeWarning,
+            stacklevel=3,
+        )
+
+
 def open_water_point(
     geometry: BladeGeometry,
     advance_ratio: float,
@@ -785,6 +837,8 @@ def open_water_point(
         efficiency = advance_ratio * thrust / (TWO_PI * torque)
         ct = 8.0 * thrust / (math.pi * max(advance_ratio, 1e-12) ** 2)
         bound = 2.0 / (1.0 + math.sqrt(max(1.0 + ct, 0.0)))
+
+    _warn_if_unphysical(advance_ratio, thrust, torque, efficiency, bound)
 
     return OpenWaterResult(
         advance_ratio=float(advance_ratio),
