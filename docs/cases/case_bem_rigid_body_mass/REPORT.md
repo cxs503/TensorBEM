@@ -111,7 +111,7 @@ ref 对角线（闭式）：surge = 24730617, sway = 24730617, heave = 24730617,
 | 1 | 80 | 12.655 % | 20.125 % | 19.883 % | ❌ | 3.2e-16 | 0.00 |
 | 2 | 320 | 3.384 % | 5.571 % | 5.501 % | ❌ | 2.1e-16 | 0.01 |
 | 3 | 1280 | 0.861 % | 1.430 % | 1.412 % | ✅ | 4.5e-16 | 0.02 |
-| 4 | 5120 | 0.216 % | 0.360 % | 0.355 % | ✅ | 3.5e-16 | 0.10 |
+| 4 | 5120 | 0.216 % | 0.360 % | 0.355 % | ✅ | 3.5e-16 | 0.14 |
 
 观测收敛阶（对面板数取对数）：体积 +0.82, +0.95, +0.99, +1.00；6×6 最差元素 +0.74, +0.93, +0.98, +1.00。
 细化比 4（每级面元 ×4）下误差按 h² 律下降 4 倍左右，与内接多面体体积/二阶矩的 O(h²) 误差一致；因此 3 % 判据是**有意义的判据**：320 面元（细分 2）时仍然 5.501 % 未过线，1280 面元才通过。
@@ -164,7 +164,7 @@ ref 对角线（闭式）：surge = 24730617, sway = 24730617, heave = 24730617,
 
 | 工件 | sha256 |
 |---|---|
-| `docs/cases/case_bem_rigid_body_mass/run.json` | `f9cd0e4fd562f9b7772da1d528077e8726294e703e1254a889621ef9cc6503c9` |
+| `docs/cases/case_bem_rigid_body_mass/run.json` | `fe1772ed8dfebb9d6d53ec7dca3f549c6428054e6165ad1f231ab7aaeacb4340` |
 | `docs/cases/case_bem_rigid_body_mass/fig_convergence.png` | `1915e96c9642971b6eb612b11b0ad15f78fbdf1f78853afdbc4a29feb7c1ed0b` |
 | `docs/cases/case_bem_rigid_body_mass/fig_block_matrix.png` | `4a622ed21704e6646162f06e2b19280bbc6a33f0f6db21e116778c77eb13703e` |
 | `docs/cases/case_bem_rigid_body_mass/fig_energy_identity.png` | `178acee1155af2b67e244b22d17150e688371cb74f35331e49a043b45c1a91aa` |
@@ -192,5 +192,5 @@ PYTHONPATH=src python -m pytest tests/test_rigid_body_mass.py -q
 
 ### (e) 环境
 
-Python 3.11.6，numpy 2.4.6，Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38（loongarch64）。总运行 0.14 s（本地 CPU，无需集群）。
+Python 3.11.6，numpy 2.4.6，Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38（loongarch64）。总运行 0.18 s（本地 CPU，无需集群）。
 

@@ -498,6 +498,8 @@ def compute_mass_matrix(
     mass: float,
     center_of_gravity: FloatArray,
     inertia: FloatArray | None = None,
+    *,
+    inertia_about: str = "cg",
 ) -> FloatArray:
     """Compute the 6×6 rigid-body mass matrix M.
 
@@ -532,10 +534,18 @@ def compute_mass_matrix(
     center_of_gravity :
         Center of gravity coordinates (m).
     inertia :
-        Inertia tensor about the centre of gravity (3×3, ``I_g``). The
-        parallel-axis term ``m*S(r_g)*S(r_g)^T`` is added internally, so
-        passing a tensor that already refers to the origin would double count
-        it. If None, a diagonal approximation is used (see Notes).
+        Inertia tensor (3×3).  The reference point is selected by
+        ``inertia_about`` selects the reference point: ``"cg"`` (default, what
+        ``tensorbem.rao`` / ``tensorbem.ice_rao`` pass) treats ``inertia`` as the
+        tensor about the centre of gravity and adds the parallel-axis term
+        ``m*(|r_g|^2 I - r_g r_g^T)`` internally; ``"origin"`` treats it as
+        already referred to the body-frame origin and adds nothing.  Using the
+        wrong flag double counts (or drops) the transfer -- a 4.4 % error on the
+        rotation block of a ship-form ellipsoid with ``|r_g| = 5.8 m`` -- so the
+        reference point is explicit rather than guessed.  If None, a diagonal
+        approximation is used (see Notes).
+    inertia_about :
+        ``"origin"`` or ``"cg"`` -- reference point of ``inertia``.
 
     Returns
     -------
@@ -556,8 +566,15 @@ def compute_mass_matrix(
     m12 = -mass * s
     m21 = -mass * s.T
 
+    convention = str(inertia_about).strip().lower()
+    if convention not in ("origin", "cg"):
+        raise ValueError('inertia_about must be "origin" or "cg"')
+
     if inertia is not None:
         j = np.asarray(inertia, dtype=float)
+        if convention == "cg":
+            # parallel-axis transfer to the body-frame origin
+            j = j + mass * (float(cg @ cg) * np.eye(3) - np.outer(cg, cg))
     else:
         # Default approximation: assume body has radius of gyration k = 0.4 * characteristic_length
         # where characteristic_length is estimated from CG distance to origin
@@ -575,7 +592,11 @@ def compute_mass_matrix(
             k = 0.4  # meters
             j = mass * k**2 * np.eye(3)
 
-    m22 = j + mass * (s @ s.T)
+    # ``j`` was converted to the origin-referred tensor above (either supplied
+    # as such, or via the parallel-axis term for ``inertia_about="cg"``), so the
+    # rotation block is ``j`` itself -- adding ``m*S*S^T`` again would double
+    # count the transfer.
+    m22 = j
 
     # Assemble full 6×6 matrix
     m = np.zeros((6, 6), dtype=float)

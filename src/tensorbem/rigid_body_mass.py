@@ -286,8 +286,11 @@ def mesh_mass_properties(
     density:
         Uniform density (kg/m^3).
     reference_point:
-        Point about which the moments are taken (default: the coordinate
-        origin).
+        Point about which ``inertia_reference`` is taken (default: the
+        coordinate origin).  ``inertia_cg`` and ``centroid`` are referred to the
+        same point: translating mesh *and* ``reference_point`` by the same
+        vector leaves both unchanged (tested in
+        ``tests/test_rigid_body_mass.py``).
 
     Returns
     -------
@@ -325,12 +328,17 @@ def mesh_mass_properties(
     first_moment = np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
     centroid = first_moment / volume
 
-    # int xi xj dV per tetra, then summed
-    sum_sq = np.einsum("fi,fj->fij", a, a)
-    sum_sq += np.einsum("fi,fj->fij", b, b)
-    sum_sq += np.einsum("fi,fj->fij", c, c)
-    sum_sq += np.outer(p0, p0)[None, :, :]
-    sum_first = np.einsum("fi,fj->fij", vertex_sum, vertex_sum)
+    # int xi xj dV per tetra, then summed.  The integrand must be expressed in
+    # coordinates *relative to the reference point* p0 (the fourth tetra vertex),
+    # otherwise the returned tensor is about the coordinate origin and the
+    # parallel-axis transfer back to the CG is applied at the wrong lever arm.
+    # For p0 = 0 the two are identical, so every zero-reference call is
+    # numerically unchanged.
+    sum_sq = np.einsum("fi,fj->fij", rel_a, rel_a)
+    sum_sq += np.einsum("fi,fj->fij", rel_b, rel_b)
+    sum_sq += np.einsum("fi,fj->fij", rel_c, rel_c)
+    rel_sum = rel_a + rel_b + rel_c  # p0 contributes zero in p0-relative frames
+    sum_first = np.einsum("fi,fj->fij", rel_sum, rel_sum)
     # Second moments of volume, scaled by density so every tensor below is in
     # SI mass units (kg m^2) rather than geometric units (m^5).
     second = rho * np.einsum("f,fij->ij", tet_vol, sum_sq + sum_first) / 20.0
