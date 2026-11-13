@@ -195,6 +195,30 @@ CASES: dict[str, CaseEntry] = {
         "elliptic cylinder vs rho*pi*b^2 / rho*pi*a^2; two routes (first-kind S and "
         "second-kind 1/2 I - H) plus an interior-extension negative control",
     ),
+    "CASE-BEM-RIGID-BODY-MASS": CaseEntry(
+        case_code="CASE-BEM-RIGID-BODY-MASS",
+        pool_code="BEM-RIGID-BODY-MASS",
+        repo="TensorBEM",
+        tolerance="<3%",
+        entry="src/tensorbem/benchmarks/casepool_bem_rigid_body_mass.py",
+        entry_args=("--outdir", "docs/case_bem_rigid_body_mass"),
+        library="tensorbem.benchmarks.casepool_bem_rigid_body_mass",
+        artifacts=(
+            "docs/case_bem_rigid_body_mass/results.json",
+            "docs/case_bem_rigid_body_mass/verdict.json",
+        ),
+        doc="docs/case_bem_rigid_body_mass/CASE.md",
+        figures=("docs/case_bem_rigid_body_mass/fig_momentum_route.png",),
+        repro_cmd=(
+            "PYTHONPATH=src python3 -m tensorbem.benchmarks.casepool_bem_rigid_body_mass "
+            "--outdir docs/case_bem_rigid_body_mass"
+        ),
+        notes="6x6 rigid-body mass matrix M_RB: closed block form (Fossen 2011 eq. 3.44) "
+        "vs signed-tetrahedron quadrature of the panelised body, rotated body with a full "
+        "inertia tensor, capytaine external assembly, and the momentum-definition route "
+        "(route P) that pins the off-diagonal sign convention; pre-fix coupling control "
+        "and an antisymmetric control show the discriminating power of each check",
+    ),
 }
 
 

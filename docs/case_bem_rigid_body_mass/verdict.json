@@ -1,0 +1,17 @@
+{
+  "overall": "PASS",
+  "all_pass": true,
+  "checks": {
+    "worst_accepted_entry_within_tolerance": true,
+    "momentum_route_roundoff": true,
+    "momentum_route_rejects_flipped_coupling": true,
+    "momentum_route_beats_energy_blind_spot": true,
+    "base_case_passed": true,
+    "orientation_case_passed": true,
+    "legacy_coupling_rejected": true,
+    "orientation_negative_control_rejected": true
+  },
+  "worst_accepted_entry_rel_error": 0.01415141785302352,
+  "tolerance": 0.03,
+  "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls"
+}
