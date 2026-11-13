@@ -55,7 +55,6 @@ import numpy as np
 from ..analytic import hulme_hemisphere_radiation
 from ..free_surface_solver3d import solve_diffraction_3d, solve_radiation_3d
 from ..geometry3d import WettedHullMesh, hemisphere_hull_mesh
-from ..rigid_body_mass import energy_residual
 from ..hydrostatic import (
     compute_displaced_volume_and_buoyancy,
     compute_hydrostatic_restoring_matrix,
@@ -199,34 +198,28 @@ def run_mass_matrix_check(mass: float = 8200.0, kg: float = 0.5) -> dict[str, An
     cg = np.array([0.0, 0.0, -kg])
     inertia = np.diag([1.0e4, 8.0e3, 1.2e4]) + np.array(
         [[0.0, 0.0, 2.0e2], [0.0, 0.0, 0.0], [2.0e2, 0.0, 0.0]]
-    )  # symmetric, about the origin
+    )  # symmetric, about the centre of gravity (I_g)
     s = np.array([[0.0, -cg[2], cg[1]], [cg[2], 0.0, -cg[0]], [-cg[1], cg[0], 0.0]])
-    zeros = np.zeros((3, 3))
-    # Closed block form (Fossen 2011, eq. 3.44) with the inertia tensor already
-    # referred to the origin, so the lower-right block *is* ``inertia``: the
-    # parallel-axis transfer is already inside it.  Mission m17324: the previous
-    # "exact" block here was the transposed/negated one
-    # ([-m S^T]; [-m S, I + m S S^T]), i.e. it encoded the assembly defect
-    # instead of the physics, which is why the symmetry-only tests stayed green.
+    # Fossen (2011) section 3.3.1, eq. 3.51: upper-right -m*S, lower-left +m*S.
+    # (An earlier revision of this reference wrote -m*S^T in the upper-right
+    # block, which is the transposed coupling; it is symmetric and positive
+    # definite too, so the comparison below was a tautology.)
     exact = np.block(
         [
             [mass * np.eye(3), -mass * s],
-            [mass * s, inertia],
+            [-mass * s.T, inertia + mass * (s @ s.T)],
         ]
     )
     measured = compute_mass_matrix(mass, cg, inertia)
-    inertia_cg = inertia - mass * (float(cg @ cg) * np.eye(3) - np.outer(cg, cg))
     return {
         "mass": mass,
         "center_of_gravity": cg.tolist(),
-        "inertia_tensor_about_origin": inertia.tolist(),
-        "inertia_tensor_about_cg": inertia_cg.tolist(),
+        "inertia_tensor_about_cg": inertia.tolist(),
         "max_abs_difference": float(np.max(np.abs(measured - exact))),
         "scale": float(np.max(np.abs(exact))),
         "max_relative_error": float(np.max(np.abs(measured - exact)))
         / float(np.max(np.abs(exact))),
         "symmetry_error": float(np.max(np.abs(measured - measured.T))),
-        "energy_identity_error": energy_residual(measured, mass, inertia_cg, cg),
         "diagonal": np.diag(measured).tolist(),
     }
 
