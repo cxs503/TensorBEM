@@ -1,0 +1,508 @@
+{
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "tolerance": 0.05,
+  "independent_tolerance": 0.05,
+  "case_mesh_panels": 1024,
+  "reference_kind": "Hulme (1982) multi-pole series, re-derived in-repo",
+  "rows": [
+    {
+      "ka": 0.2,
+      "quantity": "A11_dimless",
+      "ref": 0.5515331322468904,
+      "got": 0.5493578300124817,
+      "abs_error": -0.0021753022344086492,
+      "rel_error": -0.003944100738874357,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.2,
+      "quantity": "B11_dimless",
+      "ref": 0.008152780024490543,
+      "got": 0.008074425549314245,
+      "abs_error": -7.835447517629858e-05,
+      "rel_error": -0.009610767730875316,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.2,
+      "quantity": "A33_dimless",
+      "ref": 0.7938342111726953,
+      "got": 0.7925986272181831,
+      "abs_error": -0.001235583954512176,
+      "rel_error": -0.001556476071605561,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.2,
+      "quantity": "B33_dimless",
+      "ref": 0.2793038118192534,
+      "got": 0.27873409538406363,
+      "abs_error": -0.000569716435189771,
+      "rel_error": -0.0020397732185569064,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.2,
+      "quantity": "Fx_dimless",
+      "ref": 0.5843824529158171,
+      "got": 0.5813646277436146,
+      "abs_error": -0.003017825172202504,
+      "rel_error": -0.0051641269465653086,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.2,
+      "quantity": "Fz_dimless",
+      "ref": 2.418637488868419,
+      "got": 2.4162369013206395,
+      "abs_error": -0.002400587547779498,
+      "rel_error": -0.0009925371449123754,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "A11_dimless",
+      "ref": 0.24927898108430602,
+      "got": 0.24984845216892856,
+      "abs_error": 0.000569471084622547,
+      "rel_error": 0.0022844729312735445,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.25375917378936685,
+      "independent_limit": 0.24941612609520575,
+      "independent_limit_geometric": 0.25200205160323635,
+      "independent_bracket": [
+        0.24941612609520575,
+        0.25375917378936685
+      ],
+      "rel_error_vs_independent": -0.015411153662111108,
+      "rel_error_vs_independent_finest": -0.015411153662111108,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "B11_dimless",
+      "ref": 0.34241049340106217,
+      "got": 0.3404315907728218,
+      "abs_error": -0.0019789026282403532,
+      "rel_error": -0.005779328222638561,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.3451665900363668,
+      "independent_limit": 0.33913030278698636,
+      "independent_limit_geometric": 0.3438637837358807,
+      "independent_bracket": [
+        0.33913030278698636,
+        0.3451665900363668
+      ],
+      "rel_error_vs_independent": -0.013718011534795708,
+      "rel_error_vs_independent_finest": -0.013718011534795708,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "A33_dimless",
+      "ref": 0.38837775391924145,
+      "got": 0.3863365886018493,
+      "abs_error": -0.0020411653173921795,
+      "rel_error": -0.0052556185229306815,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.39421977730217944,
+      "independent_limit": 0.37184623950865875,
+      "independent_limit_geometric": 0.39109869542872633,
+      "independent_bracket": [
+        0.37184623950865875,
+        0.39421977730217944
+      ],
+      "rel_error_vs_independent": 0.03896865842273256,
+      "rel_error_vs_independent_finest": -0.01999693864746797,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "B33_dimless",
+      "ref": 0.10306536393605632,
+      "got": 0.1042485548180168,
+      "abs_error": 0.0011831908819604775,
+      "rel_error": 0.011480004889853698,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.09986192869785573,
+      "independent_limit": 0.10571605765856673,
+      "independent_limit_geometric": 0.10132071662769293,
+      "independent_bracket": [
+        0.09986192869785573,
+        0.10571605765856673
+      ],
+      "rel_error_vs_independent": 0.04392691166053212,
+      "rel_error_vs_independent_finest": 0.04392691166053212,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "Fx_dimless",
+      "ref": 1.1976167433130802,
+      "got": 1.1928853817766316,
+      "abs_error": -0.004731361536448597,
+      "rel_error": -0.003950647452840201,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 2.0,
+      "quantity": "Fz_dimless",
+      "ref": 0.4646168081478149,
+      "got": 0.4668849891399367,
+      "abs_error": 0.002268180992121782,
+      "rel_error": 0.004881831548806505,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "A11_dimless",
+      "ref": 0.6438970564919958,
+      "got": 0.640911385661423,
+      "abs_error": -0.002985670830572773,
+      "rel_error": -0.004636876035493862,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.6564980858990913,
+      "independent_limit": 0.6408768103517398,
+      "independent_limit_geometric": 0.6512662271388439,
+      "independent_bracket": [
+        0.6408768103517398,
+        0.6564980858990913
+      ],
+      "rel_error_vs_independent": -0.02374218687373915,
+      "rel_error_vs_independent_finest": -0.02374218687373915,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "B11_dimless",
+      "ref": 0.09866994683102831,
+      "got": 0.09769541193727033,
+      "abs_error": -0.0009745348937579834,
+      "rel_error": -0.00987671449166653,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.10120399248655101,
+      "independent_limit": 0.09670845358726171,
+      "independent_limit_geometric": 0.1000546351680115,
+      "independent_bracket": [
+        0.09670845358726171,
+        0.10120399248655101
+      ],
+      "rel_error_vs_independent": -0.03466840055491825,
+      "rel_error_vs_independent_finest": -0.03466840055491825,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "A33_dimless",
+      "ref": 0.5860847421137021,
+      "got": 0.5854436013097958,
+      "abs_error": -0.0006411408039063149,
+      "rel_error": -0.001093938739292298,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.5924730869587906,
+      "independent_limit": 0.5842431947077639,
+      "independent_limit_geometric": 0.5897773994274071,
+      "independent_bracket": [
+        0.5842431947077639,
+        0.5924730869587906
+      ],
+      "rel_error_vs_independent": -0.011864649726247893,
+      "rel_error_vs_independent_finest": -0.011864649726247893,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "B33_dimless",
+      "ref": 0.3390571199208837,
+      "got": 0.33895776601289895,
+      "abs_error": -9.935390798476718e-05,
+      "rel_error": -0.00029303000039624776,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.3404606830449701,
+      "independent_limit": 0.33803773110258684,
+      "independent_limit_geometric": 0.33983822782451695,
+      "independent_bracket": [
+        0.33803773110258684,
+        0.3404606830449701
+      ],
+      "rel_error_vs_independent": -0.0044143629702835824,
+      "rel_error_vs_independent_finest": -0.0044143629702835824,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "Fx_dimless",
+      "ref": 1.2857802431536558,
+      "got": 1.278894398246155,
+      "abs_error": -0.006885844907500882,
+      "rel_error": -0.00535538241792536,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.5,
+      "quantity": "Fz_dimless",
+      "ref": 1.6853866461933462,
+      "got": 1.6852522979673705,
+      "abs_error": -0.00013434822597568896,
+      "rel_error": -7.971359348261779e-05,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "A11_dimless",
+      "ref": 0.642115449462737,
+      "got": 0.6393933942228088,
+      "abs_error": -0.0027220552399281894,
+      "rel_error": -0.004239199106960834,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "B11_dimless",
+      "ref": 0.26530801615807614,
+      "got": 0.26276412481349354,
+      "abs_error": -0.002543891344582605,
+      "rel_error": -0.00958844508892223,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "A33_dimless",
+      "ref": 0.4697936977493944,
+      "got": 0.46916053672831176,
+      "abs_error": -0.0006331610210826288,
+      "rel_error": -0.0013477426881541112,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "B33_dimless",
+      "ref": 0.2898966679727515,
+      "got": 0.29036316584117866,
+      "abs_error": 0.00046649786842717367,
+      "rel_error": 0.00160918672052837,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "Fx_dimless",
+      "ref": 1.66682304983311,
+      "got": 1.6579988005958133,
+      "abs_error": -0.008824249237296744,
+      "rel_error": -0.005294052801933756,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 0.8,
+      "quantity": "Fz_dimless",
+      "ref": 1.2320422594055895,
+      "got": 1.2330356481530111,
+      "abs_error": 0.0009933887474216085,
+      "rel_error": 0.0008062943781659554,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "A11_dimless",
+      "ref": 0.5739517487330749,
+      "got": 0.5720648928477613,
+      "abs_error": -0.0018868558853135653,
+      "rel_error": -0.0032874817255606563,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.5827394337151265,
+      "independent_limit": 0.5723804078785354,
+      "independent_limit_geometric": 0.579135793293315,
+      "independent_bracket": [
+        0.5723804078785354,
+        0.5827394337151265
+      ],
+      "rel_error_vs_independent": -0.018317862581071636,
+      "rel_error_vs_independent_finest": -0.018317862581071636,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "B11_dimless",
+      "ref": 0.3534885909177618,
+      "got": 0.3502991691702468,
+      "abs_error": -0.00318942174751502,
+      "rel_error": -0.009022700673971767,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.36040280088040394,
+      "independent_limit": 0.34548616076963173,
+      "independent_limit_geometric": 0.357090594297336,
+      "independent_bracket": [
+        0.34548616076963173,
+        0.36040280088040394
+      ],
+      "rel_error_vs_independent": -0.028034276330471543,
+      "rel_error_vs_independent_finest": -0.028034276330471543,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "A33_dimless",
+      "ref": 0.4284357095914814,
+      "got": 0.4276530218761297,
+      "abs_error": -0.0007826877153517264,
+      "rel_error": -0.001826849858285689,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.4342933684520156,
+      "independent_limit": 0.4263528033227517,
+      "independent_limit_geometric": 0.4317673891321943,
+      "independent_bracket": [
+        0.4263528033227517,
+        0.4342933684520156
+      ],
+      "rel_error_vs_independent": -0.015290002238704676,
+      "rel_error_vs_independent_finest": -0.015290002238704676,
+      "pass_vs_independent": true,
+      "independent_method": "3-point Richardson"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "B33_dimless",
+      "ref": 0.24840307175945486,
+      "got": 0.24914968705195417,
+      "abs_error": 0.0007466152924993086,
+      "rel_error": 0.0030056604663178466,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)",
+      "independent_finest": 0.2481563250445362,
+      "independent_limit": 0.2481563250445362,
+      "independent_limit_geometric": 0.2481563250445362,
+      "independent_bracket": [
+        0.2481563250445362,
+        0.2481563250445362
+      ],
+      "rel_error_vs_independent": 0.004002968722395867,
+      "rel_error_vs_independent_finest": 0.004002968722395867,
+      "pass_vs_independent": true,
+      "independent_method": "finest-value fallback (residual ratio d21/d32=-2.682: not monotone decreasing)"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "Fx_dimless",
+      "ref": 1.7208658139525703,
+      "got": 1.7121304790344738,
+      "abs_error": -0.008735334918096527,
+      "rel_error": -0.0050761278696290525,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.0,
+      "quantity": "Fz_dimless",
+      "ref": 1.0200656062729703,
+      "got": 1.0214271239861394,
+      "abs_error": 0.0013615177131691691,
+      "rel_error": 0.0013347354374036468,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "A11_dimless",
+      "ref": 0.3683201762972711,
+      "got": 0.3682916889321177,
+      "abs_error": -2.8487365153373467e-05,
+      "rel_error": -7.734402562400308e-05,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "B11_dimless",
+      "ref": 0.40135178273326266,
+      "got": 0.39842570944987443,
+      "abs_error": -0.002926073283388231,
+      "rel_error": -0.007290545125927325,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "A33_dimless",
+      "ref": 0.3890475708966049,
+      "got": 0.38770540648181717,
+      "abs_error": -0.0013421644147877387,
+      "rel_error": -0.0034498722397740883,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "B33_dimless",
+      "ref": 0.16061944493651,
+      "got": 0.16173533605884433,
+      "abs_error": 0.001115891122334317,
+      "rel_error": 0.006947422354593548,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "Fx_dimless",
+      "ref": 1.4971878076288627,
+      "got": 1.4906261356886892,
+      "abs_error": -0.006561671940173541,
+      "rel_error": -0.00438266455733796,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    },
+    {
+      "ka": 1.5,
+      "quantity": "Fz_dimless",
+      "ref": 0.6697378723264028,
+      "got": 0.6713892627888466,
+      "abs_error": 0.0016513904624437803,
+      "rel_error": 0.002465726563599438,
+      "pass": true,
+      "reference_kind": "Hulme multi-pole series (re-derived in-repo)"
+    }
+  ],
+  "verdict": {
+    "criterion": "|rel err vs Hulme series| < 5% for every quantity and every ka, case mesh",
+    "measured": 0.011480004889853698,
+    "worst_quantity": "B33_dimless",
+    "worst_ka": 2.0,
+    "pass": true
+  }
+}

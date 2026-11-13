@@ -1,0 +1,8 @@
+[
+  {
+    "case_code": "BEM-HULME-HEMISPHERE",
+    "module": "tensorbem.benchmarks.hulme_hemisphere_case",
+    "case_pool_id": "138",
+    "tolerance": "<5%"
+  }
+]
