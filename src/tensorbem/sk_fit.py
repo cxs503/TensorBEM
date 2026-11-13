@@ -23,6 +23,21 @@ denominator roots are then projected onto the *real decay-rate* basis that
 is a :class:`~tensorbem.state_space.VectorFitResult` and stays physically
 admissible (real poles, non-negative asymptotic damping).
 
+Round 2 (this revision) adds the step that was missing between the SK
+iteration and the physical basis: **pole relocation in the physical basis
+itself**.  The SK step places the *denominator roots* well in ``u``, but a
+conjugate pair can only be projected onto its modulus, and on the measured
+Hulme curve that projection leaves the real poles so badly placed that the fit
+stalls at 17-49 % of the peak (the number the first round of this module
+reported as a "model-class floor").  A bounded downhill-simplex search on
+``log(alpha_k)`` -- residues still solved linearly, so only ``n_poles``
+variables move, seeded from both the SK projection and the fixed grid -- reaches
+1.3e-03 of the peak on the same curve and the same 12 orders.  The floor was a
+*method* limit, not a model-class limit; see
+``docs/sk_fit_sanathanan_koerner.md`` and ``docs/dev_report_m16042_sk_iteration.md``.
+The refinement is budgeted (``refine_maxfev``), reported, and can be switched
+off (``refine_maxfev=0``) to reproduce the first-round numbers exactly.
+
 Two properties are deliberately not assumed:
 
 * **SK is not automatically better on measured curves.** A measured 3-D
@@ -36,7 +51,13 @@ Two properties are deliberately not assumed:
   same order.
 * **Convergence is reported, not asserted.** The SK iteration can limit-cycle on
   a stiff measured curve; the best iterate (lowest weighted residual) is
-  returned and ``converged`` says whether the stopping rule was met.
+  returned and ``converged`` says whether the stopping rule was met.  The same
+  discipline applies to the pole refinement: the simplex never satisfies its own
+  simplex-size test within a sensible budget, so the module does *not* forward
+  that flag.  It measures local optimality instead -- a one-pole +/-5 % log
+  probe at the returned poles, reported as ``refine_probe_gain`` -- so
+  "converged" here means "no measured single-pole move lowers the weighted
+  residual by more than 0.1 %", not "the optimiser said so".
 
 References
 ----------
@@ -51,6 +72,7 @@ from typing import Sequence
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy import optimize
 
 from .state_space import (
     VectorFitResult,
@@ -61,6 +83,23 @@ from .state_space import (
 )
 
 FloatArray = NDArray[np.float64]
+
+#: Default evaluation budget of the physical-basis pole refinement (per start).
+#: ``refine_maxfev=0`` disables the step and reproduces the first-round results.
+REFINE_MAXFEV = 1500
+
+#: Warm restarts of the pole-relocation simplex (each one re-seeded from the
+#: previous best).  A single Nelder-Mead run on 8-12 variables does not finish
+#: within any sensible budget; one restart is enough to make the measured
+#: one-pole probe small on the curves of the study.
+_REFINE_RESTARTS = 2
+
+#: One-pole log probe used to *measure* local optimality of the refined poles.
+_PROBE_FACTORS = (0.95, 0.98, 1.02, 1.05)
+
+#: A probe gain above this means the pole set is not a local optimum of the
+#: weighted residual; reported as ``refine_converged = False``.
+_PROBE_TOL = 1e-3
 
 __all__ = [
     "SKFitReport",
@@ -79,9 +118,11 @@ class SKFitReport:
     order : int
         Number of decay rates requested (``n_poles``).
     pole_source : str
-        ``"sk"`` when the SK-relocated pole set won the residual comparison,
-        ``"grid"`` when the fixed log grid did.  The returned fit is always the
-        better of the two by weighted residual.
+        Which pole set produced the returned fit, by measured
+        scale-normalised max error: ``"sk"`` for the SK-relocated projection,
+        ``"grid"`` for the fixed log grid, ``"refined"`` for the
+        physical-basis pole refinement of round 2 (which start it came from is
+        in ``refine_start``).
     sk_iterations, sk_converged : int, bool
         Iterations performed and whether the stopping rule was met.
     residual_history : tuple[float, ...]
@@ -96,6 +137,21 @@ class SKFitReport:
         exactly onto decay rates, complex pairs are projected onto their
         modulus (an unavoidable model-class error, quantified by
         ``rational_rel_error``).
+    refined_pole_rel_error : float
+        Best scale-normalised max error of the two refined pole sets;
+        ``nan`` when the refinement is disabled (``refine_maxfev=0``).
+    refine_start : str
+        ``"sk"`` / ``"grid"``: which seed the winning refined pole set came
+        from; ``"none"`` when no refined candidate won or the step is off.
+    refine_evaluations : int
+        Weighted-residual evaluations spent by the refinement (both seeds).
+    refine_probe_gain : float
+        Best relative objective gain available from a single-pole +/-5 % move
+        at the returned poles: ``0`` means ``refine_converged`` is a measured
+        statement, not an assumption.  ``nan`` when the step is off.
+    refine_converged : bool
+        ``refine_probe_gain <= 1e-3`` -- the returned pole set is a measured
+        local optimum of the weighted residual.
     """
 
     order: int
@@ -108,6 +164,11 @@ class SKFitReport:
     grid_pole_rel_error: float
     real_root_count: int
     complex_pair_count: int
+    refined_pole_rel_error: float = float("nan")
+    refine_start: str = "none"
+    refine_evaluations: int = 0
+    refine_probe_gain: float = float("nan")
+    refine_converged: bool = False
 
     def as_dict(self) -> dict:
         data = dict(self.__dict__)
@@ -224,6 +285,109 @@ def _real_pole_projection(denominator: FloatArray, u_reference: float) -> tuple[
     return poles, pairs
 
 
+def _refine_poles(
+    omega: FloatArray,
+    damping: FloatArray,
+    poles0: FloatArray,
+    weight_floor: float,
+    maxfev: int,
+) -> tuple[FloatArray, int]:
+    """Relocate the real decay rates by downhill simplex on ``log(alpha)``.
+
+    The residues are *not* free variables here: for any pole set they are the
+    solution of the weighted linear least-squares problem
+    :func:`tensorbem.state_space._solve_linear` already solves, so only the
+    ``n_poles`` decay rates move and every iterate stays a physically
+    admissible ``(alpha, c, d >= 0)`` fit.  The objective is that same weighted
+    residual, which makes the refinement a continuation of the SK step rather
+    than a second, differently-weighted fit.
+
+    Why this is needed at all: :func:`_real_pole_projection` maps a complex
+    conjugate pair onto its modulus, i.e. onto a *duplicated* real pole.  On the
+    measured Hulme hemisphere curve that projection is the dominant error term
+    (17-49 % of the peak at 6-12 orders) while the unconstrained rational model
+    of the same order is already at 1e-6; the SK roots are good, their
+    projection is not.
+
+    Parameters
+    ----------
+    omega, damping : FloatArray
+        Data on the fit band.
+    poles0 : FloatArray
+        Seed decay rates (SK projection or the fixed log grid).
+    weight_floor : float
+        Relative weight floor, see :func:`tensorbem.state_space._weights`.
+    maxfev : int
+        Objective-evaluation budget of the simplex.
+
+    Returns
+    -------
+    tuple[FloatArray, int]
+        Refined decay rates and the number of objective evaluations spent.
+    """
+    weights = _weights(omega, damping, weight_floor)
+    log_low = float(np.log(0.05 * float(omega[0])))
+    log_high = float(np.log(50.0 * float(omega[-1])))
+
+    def objective(log_poles: FloatArray) -> float:
+        poles = np.exp(np.clip(log_poles, log_low, log_high))
+        return _solve_linear(omega, damping, weights, poles)[1]
+
+    best = np.clip(np.log(np.abs(np.asarray(poles0, dtype=float))), log_low, log_high)
+    best_objective = objective(best)
+    evaluations = 0
+    for _ in range(_REFINE_RESTARTS):
+        # Nelder-Mead carries no random state: same seed, same iterates, bit for bit.
+        outcome = optimize.minimize(
+            objective,
+            best,
+            method="Nelder-Mead",
+            options={"maxfev": int(maxfev), "xatol": 1e-8, "fatol": 0.0, "adaptive": True},
+        )
+        evaluations += int(outcome.nfev)
+        candidate = np.clip(np.asarray(outcome.x, dtype=float), log_low, log_high)
+        candidate_objective = objective(candidate)
+        if candidate_objective < best_objective:
+            best, best_objective = candidate, candidate_objective
+        else:
+            break
+    refined = np.exp(best)
+    return np.sort(refined), evaluations
+
+
+def _probe_local_optimality(
+    omega: FloatArray,
+    damping: FloatArray,
+    poles: FloatArray,
+    weight_floor: float,
+) -> float:
+    """Best relative gain of a single-pole ``+/-5 %`` log move, at ``poles``.
+
+    The simplex used by :func:`_refine_poles` does not converge to its own
+    simplex-size tolerance on these flat objectives, so its ``success`` flag is
+    not reported as convergence.  This probe answers the question the caller
+    actually cares about -- "is there a cheaper one-pole move I am leaving on
+    the table?" -- with a measurement.  Returns ``0.0`` when no probe improves.
+    """
+    weights = _weights(omega, damping, weight_floor)
+    base = _solve_linear(omega, damping, weights, poles)[1]
+    # Round-off guard: on a curve the basis represents exactly the residual is
+    # ~1e-32 and a *relative* gain on it is noise, not headroom.
+    scale = float(np.max(np.abs(damping))) if damping.size else 0.0
+    floor = (1e-10 * max(scale, 1e-300)) ** 2 * max(omega.size, 1)
+    if not np.isfinite(base) or base <= floor:
+        return 0.0
+    gain = 0.0
+    for k in range(poles.size):
+        for factor in _PROBE_FACTORS:
+            trial = np.array(poles, dtype=float, copy=True)
+            trial[k] = trial[k] * factor
+            candidate = _solve_linear(omega, damping, weights, trial)[1]
+            if np.isfinite(candidate):
+                gain = max(gain, (base - candidate) / base)
+    return float(gain)
+
+
 def _result(
     omega: FloatArray,
     damping: FloatArray,
@@ -289,12 +453,16 @@ def sk_fit_damping_report(
     max_iter: int = 50,
     tol: float = 1e-8,
     weight_floor: float = 1e-3,
+    refine_maxfev: int = REFINE_MAXFEV,
 ) -> tuple[VectorFitResult, SKFitReport]:
     """SK fit of radiation damping, plus a report of what the fit did.
 
     See :func:`sk_fit_damping` for the model; this variant returns the
     :class:`SKFitReport` alongside the fit so the caller can see the residual
     history, which pole set won and how much headroom the real-pole basis left.
+
+    ``refine_maxfev`` budgets the physical-basis pole refinement (round 2);
+    ``0`` disables it and reproduces the first-round result bit for bit.
     """
     omega = np.asarray(omega, dtype=float)
     damping = np.asarray(damping, dtype=float)
@@ -328,10 +496,52 @@ def sk_fit_damping_report(
         float(np.max(np.abs(rational - damping)) / scale) if scale > 0 else np.inf
     )
 
-    if sk_result.relative_error_max <= grid_result.relative_error_max:
-        result, source = sk_result, "sk"
-    else:
-        result, source = grid_result, "grid"
+    # Candidate pole sets, each scored by the same measured metric the caller
+    # sees (scale-normalised max error), so "the returned fit is never worse"
+    # is an invariant and not a hope.
+    candidates: list[tuple[str, str, VectorFitResult]] = [
+        ("sk", "none", sk_result),
+        ("grid", "none", grid_result),
+    ]
+    refined_error = float("nan")
+    refine_start = "none"
+    refine_evaluations = 0
+    probe_gain = float("nan")
+    refine_converged = False
+    if int(refine_maxfev) > 0:
+        probe_gain = 0.0
+        for start_name, start_poles in (
+            ("sk", sk_poles),
+            ("grid", _initial_poles(omega, n_poles)),
+        ):
+            refined_poles, evaluations = _refine_poles(
+                omega, damping, start_poles, weight_floor, int(refine_maxfev)
+            )
+            refine_evaluations += evaluations
+            refined = _result(
+                omega,
+                damping,
+                refined_poles,
+                weight_floor,
+                iterations + refine_evaluations,
+                False,
+            )
+            if not np.isfinite(refined_error) or refined.relative_error_max < refined_error:
+                refined_error = float(refined.relative_error_max)
+            candidates.append(("refined", start_name, refined))
+        probe_gain = _probe_local_optimality(omega, damping, refined_poles, weight_floor)
+        refine_converged = bool(probe_gain <= _PROBE_TOL)
+
+    source, refine_start, result = min(
+        candidates, key=lambda item: item[2].relative_error_max
+    )
+    if source == "refined":
+        # The refinement is the stage that produced the returned poles, so the
+        # returned ``converged`` reports the *measured* probe, not the simplex's
+        # own (never-met) flag.  See ``SKFitReport.refine_converged``.
+        result = _result(
+            omega, damping, result.poles, weight_floor, result.n_iter, refine_converged
+        )
 
     report = SKFitReport(
         order=int(n_poles),
@@ -344,6 +554,11 @@ def sk_fit_damping_report(
         grid_pole_rel_error=float(grid_result.relative_error_max),
         real_root_count=int(n_poles - 2 * complex_pairs),
         complex_pair_count=int(complex_pairs),
+        refined_pole_rel_error=refined_error,
+        refine_start=refine_start,
+        refine_evaluations=int(refine_evaluations),
+        refine_probe_gain=probe_gain,
+        refine_converged=refine_converged,
     )
     return result, report
 
@@ -355,6 +570,7 @@ def sk_fit_damping(
     max_iter: int = 50,
     tol: float = 1e-8,
     weight_floor: float = 1e-3,
+    refine_maxfev: int = REFINE_MAXFEV,
 ) -> VectorFitResult:
     """Fit radiation damping with the Sanathanan-Koerner iteration.
 
@@ -374,13 +590,20 @@ def sk_fit_damping(
         change (a relative weighted-residual change of 1e-12 also stops it).
     weight_floor : float
         Relative weight floor, see :func:`tensorbem.state_space._weights`.
+    refine_maxfev : int
+        Evaluation budget of the physical-basis pole refinement that follows
+        the SK iteration (``0`` disables it: first-round behaviour, bit for
+        bit).  The returned fit is always the best of the candidate pole sets by
+        measured error, so a larger budget can only lower the error; it is an
+        accuracy-per-second knob, not a correctness one.
 
     Returns
     -------
     VectorFitResult
-        Fit on the real decay-rate basis; ``n_iter`` is the number of SK
-        iterations actually performed and ``converged`` reports the stopping
-        rule, not an assumption.
+        Fit on the real decay-rate basis; ``n_iter`` counts the SK iterations
+        (plus the refinement evaluations when a refined pole set won) and
+        ``converged`` reports the stopping rule of the stage that produced the
+        returned poles, not an assumption.
     """
     result, _ = sk_fit_damping_report(
         omega,
@@ -389,5 +612,6 @@ def sk_fit_damping(
         max_iter=max_iter,
         tol=tol,
         weight_floor=weight_floor,
+        refine_maxfev=refine_maxfev,
     )
     return result
