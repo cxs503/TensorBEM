@@ -1158,18 +1158,42 @@ def _local_response_scan(
 def _half_power_crossing(
     scan: FloatArray, amplitude: FloatArray, level: float, *, rising: bool
 ) -> float:
-    """Frequency where ``amplitude`` crosses ``level``, linearly interpolated."""
-    excess = amplitude - level
+    """Frequency where ``amplitude`` crosses ``level``, linearly interpolated.
+
+    A crossing has to be *bracketed inside the scan window*: the previous
+    implementation clamped a crossing that fell outside the window to
+    ``scan[0]`` on the rising side (a silently low ``zeta``) and raised a bare
+    ``IndexError`` on the descending side (``index 0 is out of bounds for axis 0
+    with size 0``, which is exactly the verdict the Cummins/Wigley case recorded
+    for its G4 gate).  Both cases now raise a ``ValueError`` that names the
+    window, so the caller can widen the window instead of reporting a number.
+    """
+    values = np.asarray(amplitude, dtype=float)
+    excess = values - float(level)
     if rising:
-        index = int(np.nonzero(excess >= 0.0)[0][0])
+        index = int(np.nonzero(excess >= 0.0)[0][0]) if np.any(excess >= 0.0) else -1
+        if index < 0:
+            raise ValueError(
+                f"the half-power level {level:.6g} is never reached on the "
+                f"rising side of the scan (peak {float(np.max(values)):.6g})")
         if index == 0:
-            return float(scan[0])
-        left, right = index - 1, index
+            raise ValueError(
+                f"the lower half-power point lies below the scan window: the "
+                f"first sample {float(values[0]):.6g} is already at or above "
+                f"level {level:.6g}")
     else:
-        index = int(np.nonzero(excess < 0.0)[0][0])
+        index = int(np.nonzero(excess < 0.0)[0][0]) if np.any(excess < 0.0) else -1
+        if index < 0:
+            raise ValueError(
+                f"the half-power level {level:.6g} is never crossed on the "
+                f"descending side of the scan (last sample "
+                f"{float(values[-1]):.6g})")
         if index == 0:
-            return float(scan[0])
-        left, right = index - 1, index
+            raise ValueError(
+                f"the upper half-power point lies above the scan window: the "
+                f"first sample {float(values[0]):.6g} is already below level "
+                f"{level:.6g}")
+    left, right = index - 1, index
     weight = excess[left] / (excess[left] - excess[right])
     return float(scan[left] + weight * (scan[right] - scan[left]))
 
@@ -1218,20 +1242,45 @@ def half_power_damping(
         raise ValueError("mass + added_mass must be positive")
     zeta_guess = damp / (2.0 * inertia * centre)
 
-    width = float(width_scale) * zeta_guess * centre
-    if not (width > 0.0):
+    base_width = float(width_scale) * zeta_guess * centre
+    if not (base_width > 0.0):
         raise ValueError("the energy-identity damping is zero; no half-power width")
-    width = min(width, 0.9 * centre, 0.9 * (high - centre))
-    scan, amplitude = _local_response_scan(
-        grid, a, b, mass=mass, restoring=restoring,
-        centre=centre, half_width=width, samples=samples,
-    )
-    peak_index = int(np.argmax(amplitude))
-    peak_amplitude = float(amplitude[peak_index])
-    peak_omega = float(scan[peak_index])
-    level = peak_amplitude / math.sqrt(2.0)
-    lower = _half_power_crossing(scan[: peak_index + 1], amplitude[: peak_index + 1], level, rising=True)
-    upper = _half_power_crossing(scan[peak_index:], amplitude[peak_index:], level, rising=False)
+    cap = min(0.9 * centre, 0.9 * (high - centre))
+    width = min(base_width, cap)
+    # The window is sized by the *energy-identity* zeta, which is itself read off
+    # the tabulated sweep.  Where the sweep under-resolves the damping peak (a
+    # light resonance sampled by a coarse frequency grid), that guess is too
+    # small and the half-power points fall outside the window.  Widen by x4 and
+    # retry instead of reporting a clipped crossing; the number of widenings is
+    # part of the answer, because it is a direct measure of how badly the sweep
+    # resolved the width.
+    widenings = 0
+    attempts: list[dict] = []
+    while True:
+        scan, amplitude = _local_response_scan(
+            grid, a, b, mass=mass, restoring=restoring,
+            centre=centre, half_width=width, samples=samples,
+        )
+        peak_index = int(np.argmax(amplitude))
+        peak_amplitude = float(amplitude[peak_index])
+        peak_omega = float(scan[peak_index])
+        level = peak_amplitude / math.sqrt(2.0)
+        try:
+            lower = _half_power_crossing(
+                scan[: peak_index + 1], amplitude[: peak_index + 1], level, rising=True)
+            upper = _half_power_crossing(
+                scan[peak_index:], amplitude[peak_index:], level, rising=False)
+            break
+        except ValueError as exc:
+            attempts.append({"scan_half_width": width, "error": str(exc)})
+            if width >= cap * (1.0 - 1e-12):
+                raise ValueError(
+                    "the half-power points are not bracketed even with the widest "
+                    f"admissible window {width:.6g} rad/s around omega_n="
+                    f"{centre:.6g} (band [{float(grid[0]):.6g}, {high:.6g}]); "
+                    f"attempts={attempts}") from None
+            widenings += 1
+            width = min(width * 4.0, cap)
     zeta = (upper - lower) / (2.0 * peak_omega)
     added_peak = float(np.interp(peak_omega, grid, a))
     damp_peak = float(np.interp(peak_omega, grid, b))
@@ -1246,6 +1295,8 @@ def half_power_damping(
         "half_power_ratio": level / peak_amplitude,
         "scan_half_width": width,
         "scan_width_over_half_power_width": width / max(upper - lower, 1e-30),
+        "scan_widenings": widenings,
+        "scan_attempts": attempts,
         "samples": int(max(int(samples), 9)),
         "added_mass_at_peak": added_peak,
         "damping_at_peak": damp_peak,
