@@ -8,13 +8,13 @@ number below is rendered from the JSON that the same process wrote
 
 | level | panels | p | leaves | avg leaf | t_FMM (s) | t_dense (s) | FMM/dense | per-interaction vs per-pair cost |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 320 | 2 | 56 | 5.71 | 0.043 | 0.0059 | 7.2x | 7.2x |
-| 3 | 1280 | 2 | 56 | 22.86 | 0.117 | 0.1011 | 1.2x | 1.2x |
-| 2 | 320 | 4 | 56 | 5.71 | 0.083 | 0.0059 | 14.1x | 14.1x |
+| 2 | 320 | 2 | 56 | 5.71 | 0.040 | 0.0054 | 7.5x | 7.5x |
+| 3 | 1280 | 2 | 56 | 22.86 | 0.125 | 0.1003 | 1.2x | 1.2x |
+| 2 | 320 | 4 | 56 | 5.71 | 0.082 | 0.0045 | 18.0x | 18.0x |
 
 The last column is `c_fmm / (avg_leaf * c_dense)`: the cost of one
 multipole target-leaf interaction divided by the cost of summing the same
-leaf directly. The **FMM/dense wall-time ratio** is 7.25x at 320 panels, 1.16x at 1280 panels, 14.08x at 320 panels. A ratio below one is an acceleration on that configuration.
+leaf directly. The **FMM/dense wall-time ratio** is 7.48x at 320 panels, 1.24x at 1280 panels, 18.02x at 320 panels. A ratio below one is an acceleration on that configuration.
 
 ## 2. Routing on the audit surface
 
@@ -54,11 +54,11 @@ the multipole expansion.
 
 | panels | p | leaves | far fraction | t_FMM (s) | t_dense (s) | FMM/dense |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1280 | 2 | 56 | 0.740 | 0.101 | 0.111 | 0.91x |
-| 5120 | 2 | 56 | 0.740 | 0.749 | 1.412 | 0.53x |
-| 20480 | 2 | 272 | 0.936 | 5.963 | 21.975 | 0.27x |
+| 1280 | 2 | 56 | 0.740 | 0.100 | 0.108 | 0.92x |
+| 5120 | 2 | 56 | 0.740 | 0.897 | 1.802 | 0.50x |
+| 20480 | 2 | 272 | 0.936 | 7.071 | 23.164 | 0.31x |
 
-Measured log-log slopes: FMM **1.47**, dense **1.91**. The campaign report asked for a FMM slope
+Measured log-log slopes: FMM **1.54**, dense **1.94**. The campaign report asked for a FMM slope
 in `[0.9, 1.2]`; the value above is the measurement that replaces the
 extrapolation the m14931 audit flagged.
 
@@ -74,22 +74,22 @@ The accuracy column is measured against the dense matvec on a seeded
 
 | panels | max_leaf | p | leaves | far fraction | interactions / dense | t_FMM (s) | t_dense (s) | FMM/dense | class | per-interaction cost ratio | max rel error |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|
-| 1280 | 32 | 2 | 56 | 0.74 | 0.044 | 0.101 | 0.114 | 0.89x | at parity | 0.89x | 8.00e-04 |
-| 1280 | 32 | 4 | 56 | 0.74 | 0.044 | 0.149 | 0.114 | 1.30x | slower | 1.30x | 2.46e-05 |
-| 1280 | 64 | 2 | 56 | 0.74 | 0.044 | 0.101 | 0.114 | 0.88x | at parity | 0.88x | 8.00e-04 |
-| 1280 | 64 | 4 | 56 | 0.74 | 0.044 | 0.149 | 0.114 | 1.31x | slower | 1.31x | 2.46e-05 |
-| 1280 | 128 | 2 | 56 | 0.74 | 0.044 | 0.100 | 0.114 | 0.88x | at parity | 0.88x | 8.00e-04 |
-| 1280 | 128 | 4 | 56 | 0.74 | 0.044 | 0.146 | 0.114 | 1.28x | slower | 1.28x | 2.46e-05 |
-| 1280 | 256 | 2 | 8 | 0.00 | 0.006 | 0.166 | 0.114 | 1.45x | slower | 1.45x | 3.27e-15 |
-| 1280 | 256 | 4 | 8 | 0.00 | 0.006 | 0.166 | 0.114 | 1.45x | slower | 1.45x | 3.27e-15 |
-| 5120 | 32 | 2 | 272 | 0.94 | 0.053 | 1.080 | 1.391 | 0.78x | at parity | 0.78x | 2.09e-04 |
-| 5120 | 32 | 4 | 272 | 0.94 | 0.053 | 2.106 | 1.391 | 1.51x | slower | 1.51x | 1.76e-05 |
-| 5120 | 64 | 2 | 272 | 0.94 | 0.053 | 1.350 | 1.391 | 0.97x | at parity | 0.97x | 2.09e-04 |
-| 5120 | 64 | 4 | 272 | 0.94 | 0.053 | 2.108 | 1.391 | 1.52x | slower | 1.52x | 1.76e-05 |
-| 5120 | 128 | 2 | 56 | 0.74 | 0.011 | 0.800 | 1.391 | 0.58x | accelerated | 0.58x | 5.84e-04 |
-| 5120 | 128 | 4 | 56 | 0.74 | 0.011 | 0.905 | 1.391 | 0.65x | accelerated | 0.65x | 1.81e-05 |
-| 5120 | 256 | 2 | 56 | 0.74 | 0.011 | 0.807 | 1.391 | 0.58x | accelerated | 0.58x | 5.84e-04 |
-| 5120 | 256 | 4 | 56 | 0.74 | 0.011 | 0.983 | 1.391 | 0.71x | accelerated | 0.71x | 1.81e-05 |
+| 1280 | 32 | 2 | 56 | 0.74 | 0.044 | 0.085 | 0.083 | 1.03x | at parity | 1.03x | 8.00e-04 |
+| 1280 | 32 | 4 | 56 | 0.74 | 0.044 | 0.101 | 0.083 | 1.21x | at parity | 1.21x | 2.46e-05 |
+| 1280 | 64 | 2 | 56 | 0.74 | 0.044 | 0.081 | 0.083 | 0.97x | at parity | 0.97x | 8.00e-04 |
+| 1280 | 64 | 4 | 56 | 0.74 | 0.044 | 0.110 | 0.083 | 1.32x | slower | 1.32x | 2.46e-05 |
+| 1280 | 128 | 2 | 56 | 0.74 | 0.044 | 0.069 | 0.083 | 0.83x | at parity | 0.83x | 8.00e-04 |
+| 1280 | 128 | 4 | 56 | 0.74 | 0.044 | 0.135 | 0.083 | 1.62x | slower | 1.62x | 2.46e-05 |
+| 1280 | 256 | 2 | 8 | 0.00 | 0.006 | 0.114 | 0.083 | 1.37x | slower | 1.37x | 3.27e-15 |
+| 1280 | 256 | 4 | 8 | 0.00 | 0.006 | 0.114 | 0.083 | 1.37x | slower | 1.37x | 3.27e-15 |
+| 5120 | 32 | 2 | 272 | 0.94 | 0.053 | 1.105 | 1.209 | 0.91x | at parity | 0.91x | 2.09e-04 |
+| 5120 | 32 | 4 | 272 | 0.94 | 0.053 | 1.752 | 1.209 | 1.45x | slower | 1.45x | 1.76e-05 |
+| 5120 | 64 | 2 | 272 | 0.94 | 0.053 | 0.904 | 1.209 | 0.75x | accelerated | 0.75x | 2.09e-04 |
+| 5120 | 64 | 4 | 272 | 0.94 | 0.053 | 1.771 | 1.209 | 1.46x | slower | 1.46x | 1.76e-05 |
+| 5120 | 128 | 2 | 56 | 0.74 | 0.011 | 0.666 | 1.209 | 0.55x | accelerated | 0.55x | 5.84e-04 |
+| 5120 | 128 | 4 | 56 | 0.74 | 0.011 | 0.792 | 1.209 | 0.66x | accelerated | 0.66x | 1.81e-05 |
+| 5120 | 256 | 2 | 56 | 0.74 | 0.011 | 0.662 | 1.209 | 0.55x | accelerated | 0.55x | 5.84e-04 |
+| 5120 | 256 | 4 | 56 | 0.74 | 0.011 | 0.801 | 1.209 | 0.66x | accelerated | 0.66x | 1.81e-05 |
 
 Decision rule (pre-declared in `regime_map`): a row is **at parity** when its ratio is within 25% of one, and only a row
 at or below 0.75 counts as **accelerated**;
@@ -97,9 +97,9 @@ an **admissible** row is accelerated, keeps the multipole path (far fraction >= 
 the same configuration reproduces to 0.89-1.03 at `N = 1280` and to
 0.58-0.69 at `N = 5120` over five repeats (`docs/fmm_cost_audit/repro/noise_ratio.json`).
 
-**Verdict: accelerated with accuracy.** Best admissible row: `N = 5120` panels, `max_leaf = 128`, `p = 2` -> **0.58x** the dense wall time with max relative error 5.84e-04. Accelerated panel counts: [5120].
+**Verdict: accelerated with accuracy.** Best admissible row: `N = 5120` panels, `max_leaf = 256`, `p = 2` -> **0.55x** the dense wall time with max relative error 5.84e-04. Accelerated panel counts: [5120].
 
-The per-interaction cost ratio spans 0.58x-1.52x (one multipole interaction versus summing the same leaf directly: below
+The per-interaction cost ratio spans 0.55x-1.62x (one multipole interaction versus summing the same leaf directly: below
 one for the p=2 rows, above one for p=4, where a 25-term expansion must
 be evaluated per interaction), while the interaction count drops to
 0.006-0.053 of the dense matrix. The FMM wins
@@ -124,14 +124,14 @@ implementation: one recurrence per order `m`, `O(p^2)` per target.
 
 | p | harmonics | points | t_reference (s) | t_ladder (s) | speedup | max rel diff |
 |---:|---:|---:|---:|---:|---:|---:|
-| 2 | 9 | 200000 | 0.1072 | 0.0465 | 2.31x | 1.8e-16 |
-| 4 | 25 | 200000 | 0.3590 | 0.1517 | 2.37x | 1.3e-16 |
-| 6 | 49 | 200000 | 0.8704 | 0.2712 | 3.21x | 1.1e-16 |
-| 8 | 81 | 200000 | 1.5272 | 0.4077 | 3.75x | 1.9e-16 |
+| 2 | 9 | 200000 | 0.1088 | 0.0464 | 2.34x | 1.8e-16 |
+| 4 | 25 | 200000 | 0.3398 | 0.1239 | 2.74x | 1.3e-16 |
+| 6 | 49 | 200000 | 0.7282 | 0.2473 | 2.94x | 1.1e-16 |
+| 8 | 81 | 200000 | 1.3913 | 0.3743 | 3.72x | 1.9e-16 |
 
 The two columns agree to 1.9e-16 relative (max over all rows): the
 change is a cost change, not a numerical one, and every accuracy table
-above is unaffected. The kernel itself is 2.31x-3.75x faster; in the coupled matvec the
+above is unaffected. The kernel itself is 2.34x-3.72x faster; in the coupled matvec the
 gain is smaller because the near-field direct sums do not use the
 harmonic kernel (measured 1.16x-1.47x at p=2/4, see
 `docs/fmm_cost_audit/repro/ab_harmonics.json`). Figure: `fig_harmonics_ladder.png`.
