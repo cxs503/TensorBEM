@@ -1,0 +1,55 @@
+{
+  "schema": "tensorbem.external_anchor_registry/v1",
+  "description": "Machine-readable EXTERNAL anchors for TensorBEM, with a provenance gate. Every record must cite an external work (DOI/ISBN/URL + locator) and carry a reference that is re-derivable from the cited closed form without importing the package under test. See docs/external_anchors_bem.md.",
+  "tolerance_relative": 0.05,
+  "provenance_rules": [
+    "source.class in {LITERATURE_CLOSED_FORM, LITERATURE_TABLE, EXPERIMENT}",
+    "at least one identifier with a valid form (DOI pattern / ISBN check digit / absolute URL)",
+    "source.primary.locator present (equation, table or page)",
+    "reference_method.independent_of_repo_package == true and its implementation is outside src/",
+    "stored reference reproduces from the cited equation to 1e-6 relative",
+    "solver error <= 5 % on every pointwise quantity (literature limits: their own tolerance)"
+  ],
+  "anchors": [
+    {
+      "anchor_id": "XANCHOR-BEM-MACCAMY-FUCHS-1954",
+      "file": "maccamy_fuchs_cylinder.json",
+      "case_class": "diffraction",
+      "source_class": "LITERATURE_CLOSED_FORM",
+      "status": "verified",
+      "evidence": "artifacts/external_anchors/maccamy_fuchs_error_table.json"
+    }
+  ],
+  "redteam": [
+    {
+      "file": "redteam/provenance_swap_hulme_in_repo.json",
+      "expect": "FAIL",
+      "rule": "provenance",
+      "models": "report 16348: in-repo series labelled as literature"
+    },
+    {
+      "file": "redteam/value_tamper_10pct.json",
+      "expect": "FAIL",
+      "rule": "reference_reproducible + tolerance",
+      "models": "reference digit edited by 10 %"
+    },
+    {
+      "file": "redteam/missing_identifier.json",
+      "expect": "FAIL",
+      "rule": "provenance",
+      "models": "no DOI/ISBN/URL"
+    },
+    {
+      "file": "redteam/reference_shares_solver.json",
+      "expect": "FAIL",
+      "rule": "provenance",
+      "models": "reference computed by the package under test"
+    },
+    {
+      "file": "redteam/loose_tolerance.json",
+      "expect": "FAIL",
+      "rule": "provenance",
+      "models": "gate tolerance loosened beyond the ledger"
+    }
+  ]
+}
