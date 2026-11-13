@@ -1,0 +1,86 @@
+{
+  "subject": "m17296 CASE-BEM-CYL-DRIFT-ASYMP (return-round 1 of mission 17204; anchor row tensor_benchmark_cases.id=43)",
+  "verdict_doc": "docs/board_audit/m17339/AUDIT_m17296.md",
+  "impl_files": [
+    "src/tensorbem/cylinder_drift.py",
+    "src/tensorbem/benchmarks/cylinder_drift_asymptotic.py",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py",
+    "src/tensorbem/diffraction_drift_maturity.py"
+  ],
+  "entry": "src/tensorbem/benchmarks/cylinder_drift_asymptotic.py",
+  "run_artifacts": [
+    "docs/board_audit/m17339/snapshots/study.json",
+    "docs/board_audit/m17339/snapshots/benchmark.json",
+    "docs/board_audit/m17339/snapshots/m17204_results.json",
+    "docs/board_audit/m17339/snapshots/fig_long_wave_law.png",
+    "docs/board_audit/m17339/snapshots/fig_near_far_energy.png",
+    "docs/board_audit/m17339/replay/bem_cell_208.json",
+    "docs/board_audit/m17339/fig_m17339_benchmark_vs_ref.png"
+  ],
+  "run_artifacts_source": {
+    "m17296_worktree": "/root/tp-agent/work/m17296/artifacts/cylinder_drift_asymptotic/{study.json,benchmark.json,fig_long_wave_law.png,fig_near_far_energy.png} (sha256 ef52eac4/6859c468/192cce05/b5c7c332 - frozen into this audit branch because artifacts/ is gitignored and branch agent/m17296 is not an ancestor of origin/main)",
+    "m17204_worktree": "/root/tp-agent/work/m17204/artifacts/case_cyl_drift_asymptotic/results.json (sha256 ac14e4e52cf1ef90de58fcd3ac8b742fc882b1cf0f14fa5daf51639347a8d326, 531 lines, run.wall_seconds 750.4, run.git_rev 96f19f7ced; same sha as recorded in verdict 509)"
+  },
+  "tests": [
+    "tests/test_cylinder_drift_asymptotic.py - audit m17339 re-ran it on main tree: 29 passed in 1.91 s (exact MF field, near/far drift, (ka)^3 law, energy balance, wall anchor)",
+    "tests/test_cylinder_drift_asymptotic.py::test_wall_anchor_reproduces_rho_g_A2_over_2 (analytic anchor rho g A^2/2)",
+    "tests/test_cylinder_drift_asymptotic.py::test_energy_balance_rejects_unresolved_probe_radius (negative control on kR)",
+    "audit replay: docs/board_audit/m17339/replay_bem_cell.py (single 208-panel BEM rung from main-tree code)"
+  ],
+  "integration_callers": [
+    "cylinder_asymptotic_gate",
+    "src/tensorbem/diffraction_drift_maturity.py:576 cylinder_asymptotic_gate -> :583/:584 tense near_field_cylinder_drift/far_field_cylinder_drift -> :597 far_field_cylinder_drift for the (ka)^3 law; :425 cylinder_bem_case and :536 cylinder_energy_balance sit on the same main-solver verification surface",
+    "src/tensorbem/benchmarks/drift_far_field_3d_study.py:81 run_case (panel BEM -> Kochin -> Maruo; the route this audit replayed for the 208-panel rung)"
+  ],
+  "benchmark": {
+    "machine_judge": "tensor_benchmark_cases.id=43 anchor_slug=CASE-BEM-CYL-DRIFT-ASYMP repo=TensorBEM status=passed",
+    "criterion": "<5% per the case-pool tol_policy (id=140) + mission 17204 goal; ecosystem <3% on the main far-field gate",
+    "ref_source": "MacCamy & Fuchs (1954) diffraction potential + Maruo (1960) far-field momentum theorem; long-wave coefficient 5*pi^2/16 = 3.0842513753 (no verbatim page -> WITHHELD for L5, independently re-derived by m17263 to 7.7e-9)",
+    "ref_vs_got_800_panels": {
+      "ka=0.5": {"ref_N": 2875.65699, "got_N": 2817.3272, "rel_error": 0.02028398, "pass_5pct": true, "pass_3pct": true},
+      "ka=1.0": {"ref_N": 6685.99352, "got_N": 6614.5977, "rel_error": 0.01067841, "pass_5pct": true, "pass_3pct": true},
+      "ka=2.0": {"ref_N": 6306.39812, "got_N": 6223.3267, "rel_error": 0.01317255, "pass_5pct": true, "pass_3pct": true}
+    },
+    "long_wave_law": {"ka": 0.02, "ref_law_N": 0.24810335, "got_closed_form_N": 0.24807436, "rel_error": 0.0001168244, "pass": true},
+    "slope": {"fitted": 2.99643341, "band": "ka<=0.1", "target": 3.0, "pass": true},
+    "near_vs_far_closed_forms": 2.835193032942392e-15,
+    "amplitude_squared_scaling": {"ratio": 4.0, "pass": true},
+    "bem_mesh_ladder": {"panels": [208, 456, 800, 1776], "far_error": [0.073956, 0.031792, 0.020284, 0.014062], "near_error": [0.302024, 0.133502, 0.060817, 0.021233]},
+    "disclosed_miss": "near-field at the 800-panel production mesh, ka=0.5: 6.0817% > 5% (ka=1.0 4.1211%, ka=2.0 4.8491% pass); converges to 2.123% at 1776 panels - discretisation, not formulation",
+    "registered_metric_rounding_note": "row 43 metric text quotes 0.011684% for the long-wave error; the artifact value is 0.0116824% (rel 1.6e-5, far below tolerance)"
+  },
+  "repro_cmd": "cd /root/tp-agent/work/m17296 && PYTHONPATH=src python3 repro_cylinder_drift_asymptotic.py   [audit m17339 re-ran it from a /tmp copy: 3.39 s, exit 0, 5/5 gates PASS, benchmark.json byte-identical, both PNGs sha256-identical; scope: analytic half only, NO BEM solve]",
+  "bem_replay_cmd": "cd /root/tp-agent/work/m17339 && PYTHONPATH=src python3 docs/board_audit/m17339/replay_bem_cell.py   [8.9 s, main-tree code only: 208-panel BEM -> Kochin -> Maruo; far error 0.07395553351990684 vs delivered 0.07395553351990668, |diff| 1.7e-16]",
+  "external_anchor": [
+    "docs/board_audit/m17339/snapshots/m17204_results.json",
+    "docs/board_audit/m17339/AUDIT_m17296.md"
+  ],
+  "three_piece_check": {
+    "run_artifacts": "REAL: 4 files in the m17296 worktree, non-empty, frozen into this branch with sha256; replay regenerates them byte-identically",
+    "benchmark_ref_vs_got": "REAL but analytic-only in m17296's own artifact: 8 ka near/far pairs (2.8e-15) + coefficient 3.0838911 vs 3.0842514 (1.168e-4). The BEM 800-panel numbers registered in row 43 live in the m17204 artifact (verified, frozen here) and were re-derived from main-tree code at the 208-panel rung",
+    "repro_cmd": "EXECUTABLE and deterministic (3.39 s, byte-identical), but replays the analytic half only - it cannot detect BEM solver drift"
+  },
+  "level_rationale": "L4: implementation on main (cylinder_drift.py exact MacCamy-Fuchs field + near/far drift + long-wave coefficient, benchmark module with main():279), integration caller in the main-solver verification surface (diffraction_drift_maturity.py:576 cylinder_asymptotic_gate), complete case (8 ka, long-wave band, BEM 800 panels at 3 ka on two independent routes, 4-rung panel ladder, azimuth sensitivity, amplitude^2 scaling, energy balance), per-cell error analysis against a pre-declared 5% gate (9 of 10 registered items pass, the 800-panel near-field cell at ka=0.5 truthfully disclosed at 6.08% and converged to 2.12% at 1776 panels), and reproducibility verified twice by this audit (analytic leg 3.39 s byte-identical; 208-panel BEM rung from main-tree code to 1.7e-16). NOT L5: the external anchor is an analytic closed form, there is no experimental or printed-table anchor, and the 5*pi^2/16 coefficient has no verbatim literature page (WITHHELD, independently re-derived). Honest scope note: m17296's own delivery alone would be L3 (impl+entry+artifacts+integration, repro covers the analytic leg); the L4 BEM leg is established here through the m17204 artifact (sha256-pinned) plus this audit's main-tree replay, and made durable by snapshotting into docs/board_audit/m17339/.",
+  "findings": [
+    "D1 material (non-blocking): artifacts/ is gitignored, commit cc3c087 contains only repro_cylinder_drift_asymptotic.py + post_report_m17296.py, branch agent/m17296 is not an ancestor of origin/main -> the run artifacts had no durable home; mitigated here by sha256 snapshots; remaining fix = commit case_cyl_drift_asymptotic.py (sha256 7cd5cfd9, branch agent/m17204) + a narrowed results summary under benchmarks/verified/cylinder_drift_asymptotic/",
+    "D2 material (non-blocking): m17296's repro_cmd replays the analytic half only (0 BEM solves) while the registered metric's primary quantity is the 800-panel BEM far-field error -> the report's 'L4 delivered' wording is stronger than its own command can prove; narrowed in this verdict",
+    "D3 minor: report SS6 slope 2.977 (fit band ka in [0.02,0.30]) vs row 43's 2.9964 (fit band ka<=0.1) - both pass their own tolerance but the fit band is not labelled",
+    "D4 minor: the 800-panel near-field 6.08% (ka=0.5) miss is not listed in the return-round machine table (which shows 5/5 gates PASS); disclosure exists only in row 43 / the m17204 report",
+    "D5 minor: no standalone parameter table in the six-section report (rho/g/A/a/ka/kd spread through SS2 and SS3.1)",
+    "D6 bookkeeping: row 43 passed_at 03:18:54 predates this return round (artifacts 04:19) - the registered 'passed' belongs to the m17204 round",
+    "D7 minor: row 43 metric text 0.011684% vs artifact 0.0116824% for the long-wave error (rounding, 1.6e-5 relative)"
+  ],
+  "checks_not_run": [
+    "full 750 s end-to-end case rerun (800-panel x3 + 1776 rung + 360-azimuth); this audit replayed only the 208-panel rung (8.9 s) - the 800/1776 numbers are verified for numerical identity with the artifact, not for solver re-execution",
+    "MacCamy-Fuchs (1954) / Maruo (1960) original tables and the two transcription PDFs (pdf_sha256 declared by m17204, not independently verifiable in sandbox)",
+    "PNG pixel content (sha256 + regeneration determinism only)",
+    "code review of the unmerged 611-line case driver on branch agent/m17204 (bypassed: the replay drives main-tree run_case directly)"
+  ],
+  "audit_artifacts": [
+    "docs/board_audit/m17339/AUDIT_m17296.md",
+    "docs/board_audit/m17339/fig_m17339_benchmark_vs_ref.png",
+    "docs/board_audit/m17339/replay_bem_cell.py",
+    "docs/board_audit/m17339/replay/bem_cell_208.json",
+    "docs/board_audit/m17339/make_figure.py"
+  ]
+}
