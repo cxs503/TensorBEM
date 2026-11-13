@@ -1,0 +1,15 @@
+{
+  "delivered_repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --merge artifacts/maruo_drift_far_field_case/cell_ka_*.json --json docs/case_bem_maruo_drift/study.json",
+  "replayed_cmd": "env PYTHONPATH=src python3 -m tensorbem.benchmarks.maruo_drift_far_field_case --merge artifacts/maruo_drift_far_field_case/cell_ka_0.2.json artifacts/maruo_drift_far_field_case/cell_ka_0.5.json artifacts/maruo_drift_far_field_case/cell_ka_1.0.json artifacts/maruo_drift_far_field_case/cell_ka_2.0.json --json /tmp/m17327_repro_study.json",
+  "returncode": 1,
+  "returncode_consistent_with_gate_outcome": true,
+  "stdout_tail": [
+    "[case] wrote /tmp/m17327_repro_study.json",
+    "[gate] G1_closed_form_vs_quadrature       measured=2.36266e-16 passed=True",
+    "[gate] G2_long_wave_coefficient           measured=0.000116838 passed=True",
+    "[gate] G3_bem_vs_ref_production           measured=0.0533082 passed=False",
+    "[gate] G4_quadrature_spread               measured=1.71369e-07 passed=True"
+  ],
+  "study_identical_except_wallclock": true,
+  "scope_note": "the delivered repro_cmd is a *merge-only* replay: it re-derives the gates and the reference from the per-cell JSONs but does NOT re-run the BEM solves, so it cannot detect drift in the solver; the four production cells were therefore re-executed separately (cluster_replay.json)"
+}

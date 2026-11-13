@@ -1,0 +1,122 @@
+{
+  "what": "independent (tensorbem-free) re-derivation of the m17276 reference",
+  "conventions": {
+    "incident": "e^{ikx} plane wave, amplitude A",
+    "A_m": "J_m'(ka)/H_m'^(1)(ka)  (MacCamy & Fuchs 1954), cosine form with eps_m",
+    "S_theta": "-sum_m eps_m A_m cos(m theta)  (far-field scattering amplitude)",
+    "F_x": "rho g A^2/(2 pi k) * Int |S|^2 (1-cos th) d th  (Maruo 1957)"
+  },
+  "m_max": 14,
+  "n_theta": 20001,
+  "per_ka": [
+    {
+      "ka": 0.2,
+      "ref_force_delivered": 240.5906823288798,
+      "ref_force_independent": 240.59068232880853,
+      "rel_diff": 2.962776719424799e-13,
+      "integral_delivered": 0.03006739445072234,
+      "integral_independent_quadrature": 0.03006739445071343,
+      "integral_independent_modal": 0.030067394450722318,
+      "modal_vs_quadrature_rel": 2.95626649840763e-13,
+      "coefficient_delivered": 0.023926872263631417,
+      "coefficient_independent": 0.02392687226362433
+    },
+    {
+      "ka": 0.5,
+      "ref_force_delivered": 2875.6569932775283,
+      "ref_force_independent": 2875.6569932763,
+      "rel_diff": 4.271276433926901e-13,
+      "integral_delivered": 0.898450350247363,
+      "integral_independent_quadrature": 0.8984503502469792,
+      "integral_independent_modal": 0.8984503502473631,
+      "modal_vs_quadrature_rel": 4.273081109154701e-13,
+      "coefficient_delivered": 0.28598562872902494,
+      "coefficient_independent": 0.2859856287289028
+    },
+    {
+      "ka": 1.0,
+      "ref_force_delivered": 6685.993519247995,
+      "ref_force_independent": 6685.993519242897,
+      "rel_diff": 7.62583344339302e-13,
+      "integral_delivered": 4.177850997641723,
+      "integral_independent_quadrature": 4.177850997638537,
+      "integral_independent_modal": 4.177850997641725,
+      "modal_vs_quadrature_rel": 7.629933068712909e-13,
+      "coefficient_delivered": 0.6649256377760866,
+      "coefficient_independent": 0.6649256377755796
+    },
+    {
+      "ka": 2.0,
+      "ref_force_delivered": 6306.398053942844,
+      "ref_force_independent": 6306.398053928776,
+      "rel_diff": 2.2307605588309023e-12,
+      "integral_delivered": 7.881309284952559,
+      "integral_independent_quadrature": 7.881309284934979,
+      "integral_independent_modal": 7.881309284952565,
+      "modal_vs_quadrature_rel": 2.2314592985329433e-12,
+      "coefficient_delivered": 0.6271746653681255,
+      "coefficient_independent": 0.6271746653667264
+    }
+  ],
+  "long_wave_anchor": {
+    "law": "F_x = (5 pi^2/16) rho g A^2 a (ka)^3",
+    "law_constant_from_pi": 3.0842513753404246,
+    "rows": [
+      {
+        "ka": 0.002,
+        "force": 0.0002481035140527109,
+        "long_wave_coefficient": 3.084253425483092
+      },
+      {
+        "ka": 0.005,
+        "force": 0.0038766131977752043,
+        "long_wave_coefficient": 3.0842500765472396
+      },
+      {
+        "ka": 0.01,
+        "force": 0.031012438250552006,
+        "long_wave_coefficient": 3.0842036001642925
+      },
+      {
+        "ka": 0.02,
+        "force": 0.2480743646180189,
+        "long_wave_coefficient": 3.083891059620831
+      },
+      {
+        "ka": 0.05,
+        "force": 3.872053619123008,
+        "long_wave_coefficient": 3.0806224562277476
+      }
+    ],
+    "extrapolated_limit_ka2_zero": 3.0843392893881494,
+    "rel_diff_limit_vs_law": 2.8504177197647292e-05,
+    "fit_slope_vs_ka2": -1.4776589295300666,
+    "note": "the departure from the law is O(ka^2); intercept = ka->0 limit"
+  },
+  "long_wave_vs_delivered": [
+    {
+      "ka": 0.01,
+      "closed_form_force_delivered": 0.031012438250559677,
+      "closed_form_force_independent": 0.031012438250552006,
+      "rel_diff": 2.4735066455572884e-13
+    },
+    {
+      "ka": 0.02,
+      "closed_form_force_delivered": 0.2480743646180803,
+      "closed_form_force_independent": 0.2480743646180189,
+      "rel_diff": 2.474876166922429e-13
+    },
+    {
+      "ka": 0.05,
+      "closed_form_force_delivered": 3.8720536191239856,
+      "closed_form_force_independent": 3.872053619123008,
+      "rel_diff": 2.524346114559034e-13
+    }
+  ],
+  "modal_truncation": {
+    "ka": 1.0,
+    "integral_m_max_8": 4.177850997638537,
+    "integral_m_max_14": 4.177850997638537,
+    "rel_diff": 0.0
+  }
+}
