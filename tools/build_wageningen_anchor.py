@@ -34,6 +34,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import os
 import hashlib
 import importlib.util
 import json
@@ -96,8 +97,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--source",
-        default="/root/tp-agent/work/m6783/backend/services/wageningen_b_series.py",
-        help="reference implementation of the O&O (1975) regression",
+        default=os.environ.get("SHIP_PLATFORM_WAGENINGEN_SRC"),
+        help="reference implementation of the O&O (1975) regression; defaults to "
+             "$SHIP_PLATFORM_WAGENINGEN_SRC (no absolute path is baked into this tool)",
     )
     parser.add_argument(
         "--out",
@@ -105,6 +107,11 @@ def main(argv=None) -> int:
         help="output anchor path (relative to the repository root)",
     )
     args = parser.parse_args(argv)
+    if not args.source:
+        raise SystemExit(
+            "no reference implementation given: pass --source PATH or set "
+            "SHIP_PLATFORM_WAGENINGEN_SRC"
+        )
 
     source = Path(args.source)
     module = load_module(source)
