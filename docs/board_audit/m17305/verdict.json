@@ -1,0 +1,110 @@
+{
+ "impl_files": [
+  "/root/tp-agent/work/m17246/src/tensorbem/nk_panel3d.py",
+  "/root/tp-agent/work/m17246/scripts/case_bem_neumann_kelvin_michell.py"
+ ],
+ "entry": "/root/tp-agent/work/m17246/scripts/case_bem_neumann_kelvin_michell.py",
+ "run_artifacts": [
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/numbers.json",
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/table.md",
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/fig_cw_vs_froude.png",
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/fig_route_a_convergence.png",
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/fig_kelvin_wake.png",
+  "/root/tp-agent/work/m17246/docs/case_bem_neumann_kelvin/wave_field.npz"
+ ],
+ "tests": [
+  "tests/test_case_neumann_kelvin_michell.py — auditor rerun 2026-11-13 on 27ecfe7 copy: 5 passed in 5.68 s",
+  "tests/test_nk_panel3d.py + tests/test_neumann_kelvin.py — auditor rerun: 64 passed in 18.42 s (regression surface of the changed default prefactor)"
+ ],
+ "integration_callers": [
+  "thin_ship_reference"
+ ],
+ "integration_callers_detail": "nk_panel3d.wave_resistance_far <- thin_ship_reference (src/tensorbem/nk_panel3d.py:922) <- caller scripts/nk_panel3d_study.py:199; grep hit in ECO TensorBEM main",
+ "benchmark": {
+  "anchor_slug": "CASE-BEM-NEUMANN-KELVIN",
+  "ref": "Michell thin-ship Cw(Fr), Phil. Mag. 45 (1898) 106-123, via the arbitrated tensorbem.wigley.michell_wave_resistance_canonical; referee row enrolled by this audit and independently re-derived by audit m17305 (own Gauss-Legendre quadrature in (x,z), no TensorBEM import)",
+  "tolerance": "<5% (tensor_case_pool id=167 tol_policy); ecosystem <3%",
+  "max_rel_error": 0.022672557293364686,
+  "max_rel_error_vs_delivered_ref": 0.023086387392335452,
+  "rows": {
+   "Fr=0.20": {
+    "ref": 26.539268567543782,
+    "ref_auditor": 26.550007829157476,
+    "got": 27.15196440280333,
+    "err_vs_auditor_ref": 0.022672557293364686
+   },
+   "Fr=0.25": {
+    "ref": 49.71924562013586,
+    "ref_auditor": 49.72591496544159,
+    "got": 50.25401148655669,
+    "err_vs_auditor_ref": 0.010620146888842934
+   },
+   "Fr=0.30": {
+    "ref": 144.13568878577385,
+    "ref_auditor": 144.14018555914643,
+    "got": 144.81853143270416,
+    "err_vs_auditor_ref": 0.004706153741417095
+   },
+   "Fr=0.35": {
+    "ref": 114.31457242455964,
+    "ref_auditor": 114.31768951824922,
+    "got": 114.79024581134657,
+    "err_vs_auditor_ref": 0.004133711021354259
+   },
+   "Fr=0.40": {
+    "ref": 327.11010790699873,
+    "ref_auditor": 327.11249339063806,
+    "got": 327.7550088324336,
+    "err_vs_auditor_ref": 0.0019642033085793256
+   }
+  },
+  "ref_route_spread_max": 0.00040465552343168257,
+  "route_a_all_passed": true,
+  "route_b": {
+   "max_abs_error": 49.567203744843155,
+   "any_passed": false
+  },
+  "artifact": "runs/m17305/audit_numbers.json, docs/board_audit/m17305/table_audit.md",
+  "auditor_error_summary": "Fr=0.20:+2.2673%, Fr=0.25:+1.0620%, Fr=0.30:+0.4706%, Fr=0.35:+0.4134%, Fr=0.40:+0.1964%"
+ },
+ "repro_cmd": "cd <TensorBEM @ 27ecfe7> && PYTHONPATH=src python3 scripts/case_bem_neumann_kelvin_michell.py --stage cheap --only geometry,kernel,route_a,route_b,wave_field",
+ "external_anchor": "/root/tp-agent/work/m17246/docs/michell_exit_arbitration.md",
+ "external_anchor_note": "Michell 1898 Phil. Mag. 45:106-123 (thin-ship theory). Auditor-side independent re-derivation (scripts/audit/m17305_independent_michell.py, runs/m17305/independent_michell.json) agrees with the delivered ref to 0.0405%; no experimental towing-tank anchor used, so L5 is NOT claimed",
+ "audit": {
+  "mission": 17305,
+  "subject_mission": 17246,
+  "subject_commit": "27ecfe7",
+  "repro_verification": "repro_cmd re-run on a copy of 27ecfe7 reproduced every numeric leaf of numbers.json (only generated_at_utc/git_head/python/platform/seconds/blocks_run differ)",
+  "findings": [
+   "F1 high(platform): tensor_benchmark_cases had 0 rows for the anchor -> the machine referee did not exist; enrolled by this audit from case pool id=167 (tol <5%). Same break as verdicts #493/#499/#509/#514; root cause (case-pool dispatch not writing the benchmark row) unfixed.",
+   "F2 medium(provenance): numbers.json records git_head=0516776 (pre-fix parent, no kochin_prefactor) and blocks_run=['route_b'] -> artifact is a merge of partial invocations from a dirty tree; attribution established only by the auditor re-run at 27ecfe7.",
+   "F3 medium(delivery): 27ecfe7 lives only on branch agent/m17246; origin/main has neither docs/case_bem_neumann_kelvin/ nor kochin_prefactor -> not reproducible from a clean main checkout until the platform pushes the branch (process fact, not an author defect).",
+   "F4 medium(judging boundary): Route A (thin-ship sheet into the steady Kochin operator) and the ref share analytic structure, so the 0.197-2.309% agreement certifies steady dispersion + residue constant kappa/(2 pi g) + normalisation + centreplane panel convergence, NOT the hull single-layer NK BEM (Route B: +1399%..+4957%, diverges under refinement). Disclosed by the delivery in section 6; audit confirms the disclosure is accurate. L4 is claimed only in this reduced sense.",
+   "F5 medium(existing debt, confirmed): benchmarks/verified/bem_wigley_wave_resistance/results.json carries refs from the defective legacy exit wigley.michell_wave_resistance: 2.5752/12.2926/26.3239 N at Fr=0.20/0.30/0.40 vs correct 26.5393/144.1357/327.1101 (10.31x/11.73x/12.43x low, Fr-dependent). Reissue mission required.",
+   "F6 low(artifact consistency): richardson_rw_extrapolated/observed_order = NaN (2-rung ladder; report states order ~1.15 in prose only); the quoted radiation ratio 3.02 is not stored in numbers.json (only downstream 0.9858) - auditor re-ran verify_radiation_direction and got 3.019989, so the number is right but unregistered; wave-pattern half-angle 74.60 deg vs theory 19.47 deg is declared qualitative by the delivery."
+  ],
+  "not_run": [
+   "--stage full ladder",
+   "cluster/loong64 independent replay",
+   "independent wave-angle estimator",
+   "experimental (towing tank) external comparison"
+  ],
+  "disposition": "approve with notes",
+  "checks_run": [
+   "diff review of 27ecfe7",
+   "repro_cmd re-run (bit-identical numeric leaves)",
+   "pytest 5 + 64 passed",
+   "independent Michell quadrature (no TensorBEM import)",
+   "legacy exit / verified-benchmark ref audit",
+   "verify_radiation_direction both modes"
+  ],
+  "artifacts": [
+   "docs/board_audit/m17305/REPORT.md",
+   "docs/board_audit/m17305/table_audit.md",
+   "docs/board_audit/m17305/fig_audit_cw_vs_fr.png",
+   "runs/m17305/audit_numbers.json",
+   "runs/m17305/independent_michell.json",
+   "runs/m17305/repro_tree/docs/case_bem_neumann_kelvin/numbers.json"
+  ]
+ }
+}
