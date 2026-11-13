@@ -71,6 +71,9 @@ __all__ = [
     "kinetic_energy",
     "energy_residual",
     "block_form_residual",
+    "momentum_map",
+    "mass_matrix_from_momentum",
+    "momentum_residual",
     "mass_at_equilibrium",
 ]
 
@@ -469,6 +472,156 @@ def block_form_residual(
             for name, block in blocks.items()
         },
         "exact": exact,
+    }
+
+
+def momentum_map(
+    mass: float,
+    inertia_cg: ArrayLike,
+    center_of_gravity: ArrayLike,
+    velocity: ArrayLike,
+    omega: ArrayLike,
+    *,
+    rotation: ArrayLike | None = None,
+) -> dict[str, FloatArray]:
+    """Linear and angular momentum of a rigid body from their definitions.
+
+    This is the *physics* statement of the rigid-body inertia, written before
+    any matrix algebra and therefore independent of the closed block form (1):
+
+        v_g = v_O + w x r_g                                   (CG velocity)
+        p   = m v_g                          (linear momentum)          (4)
+        h_O = I_g w + r_g x p                (angular momentum about O)
+
+    where ``v_O`` / ``w`` are the velocity / angular velocity of the reference
+    point and ``r_g`` is the CG position relative to it.  The angular-momentum
+    term ``r_g x p`` is the momentum translation (the angular momentum of the
+    linear momentum acting at the CG); it is the piece that the parallel-axis
+    theorem encodes inside the block form.
+
+    Parameters
+    ----------
+    rotation:
+        Optional ``(3, 3)`` rotation of the body in its frame; when given,
+        ``r_g`` and ``I_g`` are rotated into the frame of the twist
+        (``R r_g``, ``R I_g R^T``) before taking the momenta.  This is how a
+        body with a full (non-diagonal) inertia tensor is handled.
+
+    Returns
+    -------
+    dict
+        ``{"linear": p, "angular": h_O, "velocity_cg": v_g}`` for the twist
+        ``(velocity, omega)``.
+    """
+    m = float(mass)
+    if not math.isfinite(m) or m <= 0.0:
+        raise ValueError("mass must be finite and positive")
+    r = np.asarray(center_of_gravity, dtype=float).reshape(3)
+    i_cg = np.asarray(inertia_cg, dtype=float)
+    if i_cg.shape != (3, 3):
+        raise ValueError("inertia_cg must be a (3, 3) matrix")
+    v = np.asarray(velocity, dtype=float).reshape(3)
+    w = np.asarray(omega, dtype=float).reshape(3)
+    if rotation is not None:
+        rot = np.asarray(rotation, dtype=float)
+        if rot.shape != (3, 3):
+            raise ValueError("rotation must be a (3, 3) matrix")
+        r = rot @ r
+        i_cg = rot @ i_cg @ rot.T
+    v_g = v + np.cross(w, r)
+    p = m * v_g
+    h = i_cg @ w + np.cross(r, p)
+    return {"linear": p, "angular": h, "velocity_cg": v_g}
+
+
+def mass_matrix_from_momentum(
+    mass: float,
+    inertia_cg: ArrayLike,
+    center_of_gravity: ArrayLike,
+    *,
+    reference_point: ArrayLike = (0.0, 0.0, 0.0),
+    rotation: ArrayLike | None = None,
+) -> FloatArray:
+    """Assemble ``M_RB`` from the momentum definitions (4) — route "P".
+
+    ``M_RB`` is by definition the matrix that maps a twist ``x = (v_O, w)`` to
+    the generalized momentum ``(p, h_O)``.  Because that map is linear, column
+    ``j`` is simply the generalized momentum of the unit twist ``e_j``
+    (:func:`momentum_map`), evaluated with exact arithmetic on the twist:
+    no finite differencing and no use of the block form (1) enter here.
+
+    Comparing this matrix with :func:`rigid_body_mass_matrix` therefore checks
+    the *sign convention* and the *placement of the parallel-axis term* against
+    momentum conservation rather than against the same book equation twice.
+    """
+    r_g = np.asarray(center_of_gravity, dtype=float).reshape(3) - np.asarray(
+        reference_point, dtype=float
+    ).reshape(3)
+    matrix = np.zeros((6, 6), dtype=float)
+    for j in range(6):
+        twist = np.zeros(6, dtype=float)
+        twist[j] = 1.0
+        momenta = momentum_map(
+            mass,
+            inertia_cg,
+            r_g,
+            twist[:3],
+            twist[3:],
+            rotation=rotation,
+        )
+        matrix[:3, j] = momenta["linear"]
+        matrix[3:, j] = momenta["angular"]
+    return matrix
+
+
+def momentum_residual(
+    matrix: ArrayLike,
+    mass: float,
+    inertia_cg: ArrayLike,
+    center_of_gravity: ArrayLike,
+    *,
+    reference_point: ArrayLike = (0.0, 0.0, 0.0),
+    rotation: ArrayLike | None = None,
+) -> dict[str, object]:
+    """Entry-wise comparison of ``matrix`` with route "P" (momentum).
+
+    The metric mirrors :func:`block_form_residual` and the case-pool convention:
+    ``rel_ij = |got_ij - exact_ij| / max(|exact_ij|, 1e-6 * scale)`` with
+    ``scale`` the largest entry of the momentum-route matrix.  The floor keeps
+    structurally zero entries finite; because it is *relative to the entry*
+    rather than to the whole matrix, a sign error confined to one of the
+    off-diagonal blocks (whose entries are ``m |r_g|`` times smaller than the
+    rotational diagonal) is still reported at O(1) instead of being diluted to
+    a few percent by the inertia terms — see the "flipped coupling" control in
+    ``tests/test_rigid_body_mass_momentum.py``.
+
+    Returns
+    -------
+    dict
+        ``max_relative_error``, ``max_absolute_error``, ``scale``,
+        ``worst_entry`` (``(i, j, got, exact)``, mode labels in :data:`MODES`).
+    """
+    got = np.asarray(matrix, dtype=float)
+    if got.shape != (6, 6):
+        raise ValueError("matrix must be (6, 6)")
+    exact = mass_matrix_from_momentum(
+        mass,
+        inertia_cg,
+        center_of_gravity,
+        reference_point=reference_point,
+        rotation=rotation,
+    )
+    scale = float(np.max(np.abs(exact)))
+    if scale == 0.0:  # pragma: no cover - mass > 0 rules this out
+        raise ValueError("momentum route is identically zero; check the inputs")
+    deviation = np.abs(got - exact)
+    rel = deviation / np.maximum(np.abs(exact), 1e-6 * scale)
+    i, j = (int(v) for v in np.unravel_index(int(np.argmax(rel)), rel.shape))
+    return {
+        "max_relative_error": float(rel[i, j]),
+        "max_absolute_error": float(deviation[i, j]),
+        "scale": scale,
+        "worst_entry": (MODES[i], MODES[j], float(got[i, j]), float(exact[i, j])),
     }
 
 
