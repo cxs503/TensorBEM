@@ -88,15 +88,50 @@ def all_real_spherical_harmonics(l_max: int, theta: FloatArray, phi: FloatArray)
 
     Shape: (n_points, n_harmonics) where n_harmonics = (l_max+1)^2.
     Ordering: l=0,m=0; l=1,m=-1,0,1; l=2,m=-2,-1,0,1,2; ...
+
+    Evaluation cost is O(l_max**2) per point: one associated-Legendre ladder
+    per order ``m`` (``P_m^m -> P_{m+1}^m -> ... -> P_{l_max}^m``) supplies
+    every ``l`` for that ``m``.  The previous implementation called
+    :func:`real_spherical_harmonic` once per ``(l, m)``, and each of those calls
+    restarted the recurrence from ``P_m^m`` -- O(l_max**3) work per point and a
+    measurable share of the FMM matvec wall time at ``p >= 4`` (m17299).  The
+    numbers are unchanged: same recurrence, same normalisation, same column
+    order (verified to <1e-14 relative in tests/test_fmm_harmonics_ladder.py).
     """
     n = len(theta)
     n_harm = (l_max + 1) ** 2
     result = np.zeros((n, n_harm), dtype=float)
-    idx = 0
-    for l in range(l_max + 1):
-        for m in range(-l, l + 1):
-            result[:, idx] = real_spherical_harmonic(l, m, theta, phi)
-            idx += 1
+    if n == 0 or l_max < 0:
+        return result
+
+    ct = np.cos(theta)
+    sqrt2 = math.sqrt(2.0)
+    for m in range(l_max + 1):
+        # P_m^m and then the l-ladder m -> l_max for this order m
+        pmm = _legendre_pmm(m, m, ct)
+        ladder: list[FloatArray | None] = [None] * (l_max + 1)
+        ladder[m] = pmm
+        if l_max > m:
+            pmmp1 = ct * (2.0 * m + 1.0) * pmm
+            ladder[m + 1] = pmmp1
+            for l in range(m + 2, l_max + 1):
+                pll = ((2.0 * l - 1.0) * ct * pmmp1
+                       - (l + m - 1.0) * pmm) / (l - m)
+                ladder[l] = pll
+                pmm, pmmp1 = pmmp1, pll
+        if m == 0:
+            cos_m = sin_m = None
+        else:
+            cos_m = np.cos(m * phi)
+            sin_m = np.sin(m * phi)
+        for l in range(m, l_max + 1):
+            norm = _schmidt_seminorm(m, l)
+            base = norm * ladder[l]
+            if m == 0:
+                result[:, _sph_index(l, 0)] = base
+            else:
+                result[:, _sph_index(l, m)] = sqrt2 * base * cos_m
+                result[:, _sph_index(l, -m)] = sqrt2 * base * sin_m
     return result
 
 

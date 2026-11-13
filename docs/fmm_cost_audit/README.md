@@ -8,13 +8,13 @@ number below is rendered from the JSON that the same process wrote
 
 | level | panels | p | leaves | avg leaf | t_FMM (s) | t_dense (s) | FMM/dense | per-interaction vs per-pair cost |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 2 | 320 | 2 | 56 | 5.71 | 0.055 | 0.0059 | 9.3x | 9.3x |
-| 3 | 1280 | 2 | 56 | 22.86 | 0.134 | 0.1121 | 1.2x | 1.2x |
-| 2 | 320 | 4 | 56 | 5.71 | 0.151 | 0.0068 | 22.2x | 22.2x |
+| 2 | 320 | 2 | 56 | 5.71 | 0.043 | 0.0059 | 7.2x | 7.2x |
+| 3 | 1280 | 2 | 56 | 22.86 | 0.117 | 0.1011 | 1.2x | 1.2x |
+| 2 | 320 | 4 | 56 | 5.71 | 0.083 | 0.0059 | 14.1x | 14.1x |
 
 The last column is `c_fmm / (avg_leaf * c_dense)`: the cost of one
 multipole target-leaf interaction divided by the cost of summing the same
-leaf directly. The **FMM/dense wall-time ratio** is 9.32x at 320 panels, 1.20x at 1280 panels, 22.18x at 320 panels. A ratio below one is an acceleration on that configuration.
+leaf directly. The **FMM/dense wall-time ratio** is 7.25x at 320 panels, 1.16x at 1280 panels, 14.08x at 320 panels. A ratio below one is an acceleration on that configuration.
 
 ## 2. Routing on the audit surface
 
@@ -54,11 +54,85 @@ the multipole expansion.
 
 | panels | p | leaves | far fraction | t_FMM (s) | t_dense (s) | FMM/dense |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1280 | 2 | 56 | 0.740 | 0.153 | 0.149 | 1.03x |
-| 5120 | 2 | 56 | 0.740 | 1.199 | 1.881 | 0.64x |
-| 20480 | 2 | 272 | 0.936 | 9.310 | 23.343 | 0.40x |
+| 1280 | 2 | 56 | 0.740 | 0.101 | 0.111 | 0.91x |
+| 5120 | 2 | 56 | 0.740 | 0.749 | 1.412 | 0.53x |
+| 20480 | 2 | 272 | 0.936 | 5.963 | 21.975 | 0.27x |
 
-Measured log-log slopes: FMM **1.48**, dense **1.82**. The campaign report asked for a FMM slope
+Measured log-log slopes: FMM **1.47**, dense **1.91**. The campaign report asked for a FMM slope
 in `[0.9, 1.2]`; the value above is the measurement that replaces the
 extrapolation the m14931 audit flagged.
+
+## 7. Leaf-capacity regime map (m17299 decision table)
+
+`max_leaf` is the leaf capacity: one multipole interaction replaces up to
+`max_leaf` direct pair sums, while the near field grows with the leaf
+size. Sections 1 and 6 used different capacities (32 and 128), and they
+disagree about the same `N`, so the verdict has to name the capacity.
+The accuracy column is measured against the dense matvec on a seeded
+256-vertex subsample of the same mesh (seed
+20260101), i.e. on non-coincident targets.
+
+| panels | max_leaf | p | leaves | far fraction | interactions / dense | t_FMM (s) | t_dense (s) | FMM/dense | class | per-interaction cost ratio | max rel error |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|
+| 1280 | 32 | 2 | 56 | 0.74 | 0.044 | 0.101 | 0.114 | 0.89x | at parity | 0.89x | 8.00e-04 |
+| 1280 | 32 | 4 | 56 | 0.74 | 0.044 | 0.149 | 0.114 | 1.30x | slower | 1.30x | 2.46e-05 |
+| 1280 | 64 | 2 | 56 | 0.74 | 0.044 | 0.101 | 0.114 | 0.88x | at parity | 0.88x | 8.00e-04 |
+| 1280 | 64 | 4 | 56 | 0.74 | 0.044 | 0.149 | 0.114 | 1.31x | slower | 1.31x | 2.46e-05 |
+| 1280 | 128 | 2 | 56 | 0.74 | 0.044 | 0.100 | 0.114 | 0.88x | at parity | 0.88x | 8.00e-04 |
+| 1280 | 128 | 4 | 56 | 0.74 | 0.044 | 0.146 | 0.114 | 1.28x | slower | 1.28x | 2.46e-05 |
+| 1280 | 256 | 2 | 8 | 0.00 | 0.006 | 0.166 | 0.114 | 1.45x | slower | 1.45x | 3.27e-15 |
+| 1280 | 256 | 4 | 8 | 0.00 | 0.006 | 0.166 | 0.114 | 1.45x | slower | 1.45x | 3.27e-15 |
+| 5120 | 32 | 2 | 272 | 0.94 | 0.053 | 1.080 | 1.391 | 0.78x | at parity | 0.78x | 2.09e-04 |
+| 5120 | 32 | 4 | 272 | 0.94 | 0.053 | 2.106 | 1.391 | 1.51x | slower | 1.51x | 1.76e-05 |
+| 5120 | 64 | 2 | 272 | 0.94 | 0.053 | 1.350 | 1.391 | 0.97x | at parity | 0.97x | 2.09e-04 |
+| 5120 | 64 | 4 | 272 | 0.94 | 0.053 | 2.108 | 1.391 | 1.52x | slower | 1.52x | 1.76e-05 |
+| 5120 | 128 | 2 | 56 | 0.74 | 0.011 | 0.800 | 1.391 | 0.58x | accelerated | 0.58x | 5.84e-04 |
+| 5120 | 128 | 4 | 56 | 0.74 | 0.011 | 0.905 | 1.391 | 0.65x | accelerated | 0.65x | 1.81e-05 |
+| 5120 | 256 | 2 | 56 | 0.74 | 0.011 | 0.807 | 1.391 | 0.58x | accelerated | 0.58x | 5.84e-04 |
+| 5120 | 256 | 4 | 56 | 0.74 | 0.011 | 0.983 | 1.391 | 0.71x | accelerated | 0.71x | 1.81e-05 |
+
+Decision rule (pre-declared in `regime_map`): a row is **at parity** when its ratio is within 25% of one, and only a row
+at or below 0.75 counts as **accelerated**;
+an **admissible** row is accelerated, keeps the multipole path (far fraction >= 0.2) and its error is <= 1e-03. The band is a measured noise tolerance:
+the same configuration reproduces to 0.89-1.03 at `N = 1280` and to
+0.58-0.69 at `N = 5120` over five repeats (`docs/fmm_cost_audit/repro/noise_ratio.json`).
+
+**Verdict: accelerated with accuracy.** Best admissible row: `N = 5120` panels, `max_leaf = 128`, `p = 2` -> **0.58x** the dense wall time with max relative error 5.84e-04. Accelerated panel counts: [5120].
+
+The per-interaction cost ratio spans 0.58x-1.52x (one multipole interaction versus summing the same leaf directly: below
+one for the p=2 rows, above one for p=4, where a 25-term expansion must
+be evaluated per interaction), while the interaction count drops to
+0.006-0.053 of the dense matrix. The FMM wins
+exactly when the second factor outweighs the first -- which is what the
+wall-clock column above measures. Both columns are required: quoting
+only the first would reject an acceleration that exists, quoting only the
+second hides that it depends on the leaf capacity.
+
+Panel counts with at least one accelerated row: [5120]; panel counts where no row leaves the parity band: [1280, 5120]. A single-run ratio inside the band is not
+decisive -- the same row has moved by more than the band between
+independent regenerations on this shared host -- so the class column is
+a decision aid, not a measurement of a 5 % effect.
+
+## 8. Real-spherical-harmonic kernel: same numbers, `O(p^2)` cost (m17299)
+
+The multipole build and the far-field evaluation both go through
+`all_real_spherical_harmonics`. The reference column is the path shipped
+before m17299: `real_spherical_harmonic(l, m)` once per `(l, m)`, and every
+one of those calls restarted the associated-Legendre recurrence at
+`P_m^m` -- `O(p^3)` work per target. The ladder column is the shipped
+implementation: one recurrence per order `m`, `O(p^2)` per target.
+
+| p | harmonics | points | t_reference (s) | t_ladder (s) | speedup | max rel diff |
+|---:|---:|---:|---:|---:|---:|---:|
+| 2 | 9 | 200000 | 0.1072 | 0.0465 | 2.31x | 1.8e-16 |
+| 4 | 25 | 200000 | 0.3590 | 0.1517 | 2.37x | 1.3e-16 |
+| 6 | 49 | 200000 | 0.8704 | 0.2712 | 3.21x | 1.1e-16 |
+| 8 | 81 | 200000 | 1.5272 | 0.4077 | 3.75x | 1.9e-16 |
+
+The two columns agree to 1.9e-16 relative (max over all rows): the
+change is a cost change, not a numerical one, and every accuracy table
+above is unaffected. The kernel itself is 2.31x-3.75x faster; in the coupled matvec the
+gain is smaller because the near-field direct sums do not use the
+harmonic kernel (measured 1.16x-1.47x at p=2/4, see
+`docs/fmm_cost_audit/repro/ab_harmonics.json`). Figure: `fig_harmonics_ladder.png`.
 
