@@ -136,7 +136,10 @@ def test_mass_matrix_obeys_the_rigid_body_block_identity() -> None:
     expected[3:6, 0:3] = mass * skew
     expected[3:6, 3:6] = inertia
 
-    measured = compute_mass_matrix(mass, cg, inertia)
+    # ``inertia`` above is the tensor about the origin (J), which is what the
+    # reference block form puts in the rotation block; declare it explicitly so
+    # the default centre-of-gravity convention cannot shift the transfer twice.
+    measured = compute_mass_matrix(mass, cg, inertia, inertia_about="origin")
     assert np.allclose(measured, expected, rtol=1e-12, atol=1e-9)
     assert np.allclose(measured, measured.T, rtol=1e-12, atol=1e-9)
     # A rigid-body translation [v; 0] must produce momentum [m v; m r_g x v].

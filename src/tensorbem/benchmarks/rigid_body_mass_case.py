@@ -477,7 +477,12 @@ def _platform_assembly(reference: dict[str, Any]) -> dict[str, Any]:
     inertia_origin = inertia_cg + mass * (
         float(centroid @ centroid) * np.eye(3) - np.outer(centroid, centroid)
     )
-    measured = compute_mass_matrix(mass, centroid, inertia=inertia_origin)
+    # Explicit flag: the solver call sites (``rao.py`` / ``ice_rao.py``) pass an
+    # origin-referred tensor, which stays the default convention; the transfer
+    # must not be added twice (it would be, with ``inertia_about="cg"``).
+    measured = compute_mass_matrix(
+        mass, centroid, inertia=inertia_origin, inertia_about="origin"
+    )  # equivalent to compute_mass_matrix(mass, centroid, inertia=inertia_cg)
     ref_matrix = np.asarray(reference["matrix"], dtype=float)
     form = block_form_residual(
         measured,
@@ -493,7 +498,7 @@ def _platform_assembly(reference: dict[str, Any]) -> dict[str, Any]:
             "tensorbem.ice_rao.compute_ice_rao (line 413)",
             "tensorbem.benchmarks.hydrostatic_rao_verification.run_mass_matrix_check",
         ],
-        "inertia_convention": "inertia_about_origin (docstring of compute_mass_matrix)",
+        "inertia_convention": "inertia_about=origin (explicitly passed; matches rao.py / ice_rao.py call sites)",
         "max_entry_rel_error": float(
             np.max(np.abs(measured - ref_matrix)) / np.max(np.abs(ref_matrix))
         ),

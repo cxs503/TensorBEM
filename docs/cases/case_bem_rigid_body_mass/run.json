@@ -138,7 +138,7 @@
     {
       "subdivisions": 0,
       "panels": 20,
-      "wall_time_s": 0.0023213308304548264,
+      "wall_time_s": 0.0028674788773059845,
       "volume": 14608.228090293562,
       "volume_rel_error": 0.39453861708747423,
       "mass": 14973433.792550901,
@@ -533,7 +533,7 @@
     {
       "subdivisions": 1,
       "panels": 80,
-      "wall_time_s": 0.0027774199843406677,
+      "wall_time_s": 0.0031697209924459457,
       "volume": 21074.18232103004,
       "volume_rel_error": 0.12654679999693672,
       "mass": 21601036.87905579,
@@ -928,7 +928,7 @@
     {
       "subdivisions": 2,
       "panels": 320,
-      "wall_time_s": 0.005794880911707878,
+      "wall_time_s": 0.006559109315276146,
       "volume": 23310.977356678166,
       "volume_rel_error": 0.03383925140141284,
       "mass": 23893751.79059512,
@@ -1323,7 +1323,7 @@
     {
       "subdivisions": 3,
       "panels": 1280,
-      "wall_time_s": 0.02248470112681389,
+      "wall_time_s": 0.020970409736037254,
       "volume": 23919.787106456013,
       "volume_rel_error": 0.008606157370245051,
       "mass": 24517781.78411741,
@@ -1718,7 +1718,7 @@
     {
       "subdivisions": 4,
       "panels": 5120,
-      "wall_time_s": 0.10413197986781597,
+      "wall_time_s": 0.1429210714995861,
       "volume": 24075.296340449124,
       "volume_rel_error": 0.0021608283894018815,
       "mass": 24677178.748960353,
@@ -2342,7 +2342,7 @@
       "tensorbem.ice_rao.compute_ice_rao (line 413)",
       "tensorbem.benchmarks.hydrostatic_rao_verification.run_mass_matrix_check"
     ],
-    "inertia_convention": "inertia_about_origin (docstring of compute_mass_matrix)",
+    "inertia_convention": "inertia_about=origin (explicitly passed; matches rao.py / ice_rao.py call sites)",
     "max_entry_rel_error": 0.0,
     "block_form_residual": 0.0,
     "block_relative_error": {
