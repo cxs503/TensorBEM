@@ -21,12 +21,14 @@ from pathlib import Path
 
 import pytest
 
+# The physics, reference, and gate logic live in the library module;
+# run_case.py is only a shard orchestrator.
 DRIVER = (
     Path(__file__).resolve().parents[1]
+    / "src"
+    / "tensorbem"
     / "benchmarks"
-    / "verified"
-    / "casepool_bem_hulme_hemisphere"
-    / "run_case.py"
+    / "hulme_hemisphere_case.py"
 )
 
 
