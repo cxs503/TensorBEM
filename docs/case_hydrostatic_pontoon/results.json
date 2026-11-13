@@ -1,0 +1,770 @@
+{
+  "case": {
+    "case_code": "CASE-BEM-HYDROSTATIC-PONTOON",
+    "pool_anchor": "BEM-HYDROSTATIC-PONTOON",
+    "repo": "TensorBEM",
+    "length_m": 50.0,
+    "beam_m": 12.0,
+    "depth_m": 5.0,
+    "draft_m": 3.0,
+    "kg_m": 4.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "tolerance_rel": 0.03
+  },
+  "citation": {
+    "primary": "Biran & Lopez-Pulido, Ship Hydrostatics and Stability, 2nd ed. (Butterworth-Heinemann), ch. 3-4 (box-shaped vessel hydrostatics, metacentric height)",
+    "secondary": "Rawson & Tupper, Basic Ship Theory, 5th ed., ch. 3-4 (box barge hydrostatics, BM = I/nabla)",
+    "ecosystem_cross_reference": "TensorPlatform/docs/verification_debt/stability_pontoon/refs.py::pontoon_analytic (same formula set already used by the stability gate)",
+    "page_level_claim": "none -- print original not reachable from this sandbox; citations are chapter-level and every number is evaluated from the closed forms in code (zero hand-copying)"
+  },
+  "environment": {
+    "generated_utc": "2026-11-13T02:56:26+00:00",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "git_commit": "05167765cb6bb1689dc8577b9a223390c62e2d54",
+    "repo": "TensorBEM",
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "tolerance_rel": 0.03,
+    "refinement_levels": [
+      [
+        2,
+        2,
+        2
+      ],
+      [
+        4,
+        3,
+        3
+      ],
+      [
+        8,
+        6,
+        6
+      ],
+      [
+        16,
+        12,
+        12
+      ]
+    ],
+    "draft_sweep": [
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0
+    ],
+    "gravity_sweep": [
+      9.80665,
+      9.81,
+      9.8
+    ],
+    "fd_steps": [
+      0.004,
+      0.002,
+      0.001,
+      0.0005
+    ]
+  },
+  "reference": {
+    "displaced_volume_m3": 1800.0,
+    "displacement_t": 1845.0,
+    "waterplane_area_m2": 600.0,
+    "block_coefficient_Cb": 1.0,
+    "waterplane_coefficient_Cwp": 1.0,
+    "midship_coefficient_Cm": 1.0,
+    "prismatic_coefficient_Cp": 1.0,
+    "kb_m": 1.5,
+    "vcb_m": 1.5,
+    "lcb_m": 0.0,
+    "lcf_m": 0.0,
+    "tcf_m": 0.0,
+    "i_transverse_m4": 7200.0,
+    "i_longitudinal_m4": 125000.0,
+    "i_product_m4": 0.0,
+    "bm_transverse_m": 4.0,
+    "bm_longitudinal_m": 69.44444444444444,
+    "km_transverse_m": 5.5,
+    "km_longitudinal_m": 70.94444444444444,
+    "gm_transverse_m": 1.5,
+    "gm_longitudinal_m": 66.94444444444444,
+    "c33_N_per_m": 6031089.75,
+    "c44_Nm_per_rad": 27139903.875,
+    "c55_Nm_per_rad": 1211243858.125
+  },
+  "geometry_gate": {
+    "bbox_got": [
+      50.0,
+      12.0,
+      3.0
+    ],
+    "bbox_ref": [
+      50.0,
+      12.0,
+      3.0
+    ],
+    "bbox_rel_err": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "cb_got": 1.0,
+    "cwp_got": 1.0,
+    "divergence_vs_property_volume": 0.0,
+    "trace_area_vs_property_area": 0.0,
+    "pass": true
+  },
+  "primary_level": [
+    4,
+    3,
+    3
+  ],
+  "comparison_panels": {
+    "waterplane": 108,
+    "pressure": 132
+  },
+  "comparison": [
+    {
+      "quantity": "displaced volume nabla",
+      "unit": "m^3",
+      "reference": 1800.0,
+      "error_scale": "relative",
+      "waterplane": 1800.0,
+      "err_waterplane_rel": 0.0,
+      "pressure": 1799.9999999999998,
+      "err_pressure_rel": -1.2631870857957337e-16,
+      "max_abs_rel_err": 1.2631870857957337e-16,
+      "pass": true
+    },
+    {
+      "quantity": "displacement Delta",
+      "unit": "t",
+      "reference": 1845.0,
+      "error_scale": "relative",
+      "waterplane": 1845.0,
+      "err_waterplane_rel": 0.0,
+      "pressure": 1844.9999999999998,
+      "err_pressure_rel": -1.2323776446787645e-16,
+      "max_abs_rel_err": 1.2323776446787645e-16,
+      "pass": true
+    },
+    {
+      "quantity": "block coefficient Cb",
+      "unit": "-",
+      "reference": 1.0,
+      "error_scale": "relative",
+      "waterplane": 1.0,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "waterplane area A_wp",
+      "unit": "m^2",
+      "reference": 600.0,
+      "error_scale": "relative",
+      "waterplane": 600.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "waterplane coeff Cwp",
+      "unit": "-",
+      "reference": 1.0,
+      "error_scale": "relative",
+      "waterplane": 1.0,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "KB (above keel)",
+      "unit": "m",
+      "reference": 1.5,
+      "error_scale": "relative",
+      "waterplane": 1.5,
+      "err_waterplane_rel": 0.0,
+      "pressure": 1.4999999999999996,
+      "err_pressure_rel": -2.9605947323337506e-16,
+      "max_abs_rel_err": 2.9605947323337506e-16,
+      "pass": true
+    },
+    {
+      "quantity": "LCB (from midship)",
+      "unit": "m",
+      "reference": 0.0,
+      "error_scale": "|x|/50",
+      "waterplane": 0.0,
+      "err_waterplane_rel": 0.0,
+      "pressure": -4.632608433403657e-16,
+      "err_pressure_rel": -9.265216866807315e-18,
+      "max_abs_rel_err": 9.265216866807315e-18,
+      "pass": true
+    },
+    {
+      "quantity": "LCF",
+      "unit": "m",
+      "reference": 0.0,
+      "error_scale": "|x|/50",
+      "waterplane": 0.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "TCF",
+      "unit": "m",
+      "reference": 0.0,
+      "error_scale": "|x|/50",
+      "waterplane": 0.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "I_T = int y^2 dA",
+      "unit": "m^4",
+      "reference": 7200.0,
+      "error_scale": "relative",
+      "waterplane": 7200.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "I_L = int x^2 dA",
+      "unit": "m^4",
+      "reference": 125000.0,
+      "error_scale": "relative",
+      "waterplane": 125000.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "I_xy",
+      "unit": "m^4",
+      "reference": 0.0,
+      "error_scale": "|x|/7200",
+      "waterplane": 0.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "BM_T = I_T/nabla",
+      "unit": "m",
+      "reference": 4.0,
+      "error_scale": "relative",
+      "waterplane": 4.0,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "BM_L = I_L/nabla",
+      "unit": "m",
+      "reference": 69.44444444444444,
+      "error_scale": "relative",
+      "waterplane": 69.44444444444444,
+      "err_waterplane_rel": 0.0,
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "KM_T = KB+BM_T",
+      "unit": "m",
+      "reference": 5.5,
+      "error_scale": "relative",
+      "waterplane": 5.5,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "KM_L = KB+BM_L",
+      "unit": "m",
+      "reference": 70.94444444444444,
+      "error_scale": "relative",
+      "waterplane": 70.94444444444444,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "GM_T = KM_T-KG",
+      "unit": "m",
+      "reference": 1.5,
+      "error_scale": "relative",
+      "waterplane": 1.5,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "GM_L = KM_L-KG",
+      "unit": "m",
+      "reference": 66.94444444444444,
+      "error_scale": "relative",
+      "waterplane": 66.94444444444444,
+      "err_waterplane_rel": 0.0,
+      "derived_from": "measured components (volume / area / KB+BM)",
+      "max_abs_rel_err": 0.0,
+      "pass": true
+    },
+    {
+      "quantity": "C33 (heave)",
+      "unit": "N/m or N m/rad",
+      "reference": 6031089.75,
+      "error_scale": "relative",
+      "waterplane": 6031089.75,
+      "err_waterplane_rel": 0.0,
+      "pressure": 6031089.749990342,
+      "err_pressure_rel": -1.6013383151465308e-12,
+      "max_abs_rel_err": 1.6013383151465308e-12,
+      "pass": true
+    },
+    {
+      "quantity": "C44 (roll)",
+      "unit": "N/m or N m/rad",
+      "reference": 27139903.875,
+      "error_scale": "relative",
+      "waterplane": 27139903.875,
+      "err_waterplane_rel": 0.0,
+      "pressure": 27139903.874966733,
+      "err_pressure_rel": -1.2257538758605826e-12,
+      "max_abs_rel_err": 1.2257538758605826e-12,
+      "pass": true
+    },
+    {
+      "quantity": "C55 (pitch)",
+      "unit": "N/m or N m/rad",
+      "reference": 1211243858.125,
+      "error_scale": "relative",
+      "waterplane": 1211243858.125,
+      "err_waterplane_rel": 0.0,
+      "pressure": 1211243858.1242993,
+      "err_pressure_rel": -5.785063010054734e-13,
+      "max_abs_rel_err": 5.785063010054734e-13,
+      "pass": true
+    },
+    {
+      "quantity": "max |off-diagonal C_ij| / max|C|",
+      "unit": "-",
+      "reference": 0.0,
+      "error_scale": "|x|/max|C|",
+      "waterplane": 0.0,
+      "pressure": 6.950114052711531e-14,
+      "err_waterplane_rel": 0.0,
+      "err_pressure_rel": 6.950114052711531e-14,
+      "max_abs_rel_err": 6.950114052711531e-14,
+      "pass": true
+    }
+  ],
+  "matrix": {
+    "analytic": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        6031089.75,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        27139903.875,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1211243858.125,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "waterplane": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        6031089.75,
+        0.0,
+        -0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        27139903.875,
+        -0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -0.0,
+        -0.0,
+        1211243858.125,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "pressure": [
+      [
+        0.0,
+        -2.0842586915629604e-09,
+        -2.1486812329385433e-08,
+        -6.588152245967649e-08,
+        1.3073986337985905e-09,
+        1.8568850161197286e-09
+      ],
+      [
+        2.752737297366062e-07,
+        0.0,
+        -1.4612548208485046e-07,
+        4.826385217408339e-07,
+        -2.9103830456733714e-08,
+        -1.2975568767596238e-07
+      ],
+      [
+        0.0,
+        0.0,
+        6031089.749990342,
+        1.7074247201283776e-06,
+        2.483526865641276e-06,
+        0.0
+      ],
+      [
+        0.0,
+        1.033185981214045e-06,
+        -1.9014502565066018e-06,
+        27139903.874966733,
+        1.7074247201283774e-06,
+        5.238689482212067e-06
+      ],
+      [
+        8.418282959610224e-05,
+        -7.761021455128986e-07,
+        2.4241065451254453e-06,
+        -7.285658891002337e-06,
+        1211243858.1242993,
+        -2.965559057580928e-05
+      ],
+      [
+        -1.1253481109937031e-06,
+        -4.2685618003209435e-07,
+        7.76102145512899e-08,
+        1.7656323810418448e-06,
+        4.2685618003209425e-07,
+        -7.644606133302053e-06
+      ]
+    ]
+  },
+  "refinement": [
+    {
+      "level": [
+        2,
+        2,
+        2
+      ],
+      "panels": 40,
+      "max_abs_rel_err_waterplane": 1.4703556011442956e-12,
+      "max_abs_rel_err_pressure": 1.4703556011442956e-12,
+      "volume_rel": 0.0,
+      "c33_rel_waterplane": 0.0,
+      "c33_rel_pressure": -4.689743937415636e-13,
+      "c44_rel_waterplane": 0.0,
+      "c44_rel_pressure": -1.4703556011442956e-12,
+      "c55_rel_waterplane": 0.0,
+      "c55_rel_pressure": -5.806715168309448e-13
+    },
+    {
+      "level": [
+        4,
+        3,
+        3
+      ],
+      "panels": 108,
+      "max_abs_rel_err_waterplane": 1.6013383151465308e-12,
+      "max_abs_rel_err_pressure": 1.6013383151465308e-12,
+      "volume_rel": 0.0,
+      "c33_rel_waterplane": 0.0,
+      "c33_rel_pressure": -1.6013383151465308e-12,
+      "c44_rel_waterplane": 0.0,
+      "c44_rel_pressure": -1.2257538758605826e-12,
+      "c55_rel_waterplane": 0.0,
+      "c55_rel_pressure": -5.785063010054734e-13
+    },
+    {
+      "level": [
+        8,
+        6,
+        6
+      ],
+      "panels": 432,
+      "max_abs_rel_err_waterplane": 5.012945585786097e-12,
+      "max_abs_rel_err_pressure": 5.012945585786097e-12,
+      "volume_rel": -1.2631870857957337e-16,
+      "c33_rel_waterplane": 0.0,
+      "c33_rel_pressure": 5.012945585786097e-12,
+      "c44_rel_waterplane": 2.745249442016982e-16,
+      "c44_rel_pressure": -1.0986488266951963e-12,
+      "c55_rel_waterplane": 0.0,
+      "c55_rel_pressure": -6.401165331302482e-13
+    },
+    {
+      "level": [
+        16,
+        12,
+        12
+      ],
+      "panels": 1728,
+      "max_abs_rel_err_waterplane": 3.891962439099192e-11,
+      "max_abs_rel_err_pressure": 3.891962439099192e-11,
+      "volume_rel": -1.2631870857957337e-16,
+      "c33_rel_waterplane": 0.0,
+      "c33_rel_pressure": -3.891962439099192e-11,
+      "c44_rel_waterplane": 2.745249442016982e-16,
+      "c44_rel_pressure": -2.3677776437396472e-12,
+      "c55_rel_waterplane": 0.0,
+      "c55_rel_pressure": -1.096780234502381e-12
+    }
+  ],
+  "sensitivity": {
+    "draft": [
+      {
+        "draft_m": 2.0,
+        "bm_transverse_ref_m": 6.0,
+        "bm_transverse_got_m": 6.0,
+        "bm_transverse_rel_err": 0.0,
+        "c33_rel_err": 0.0,
+        "c44_rel_err": -2.0589370815127366e-16,
+        "dvol_dT_got_m2": 599.9999999996817,
+        "dvol_dT_ref_m2": 600.0,
+        "dvol_dT_rel_err": -5.305385760342082e-13
+      },
+      {
+        "draft_m": 2.5,
+        "bm_transverse_ref_m": 4.8,
+        "bm_transverse_got_m": 4.8,
+        "bm_transverse_rel_err": 0.0,
+        "c33_rel_err": 0.0,
+        "c44_rel_err": 6.026157311744596e-16,
+        "dvol_dT_got_m2": 599.999999999909,
+        "dvol_dT_ref_m2": 600.0,
+        "dvol_dT_rel_err": -1.5158245029548803e-13
+      },
+      {
+        "draft_m": 3.0,
+        "bm_transverse_ref_m": 4.0,
+        "bm_transverse_got_m": 4.0,
+        "bm_transverse_rel_err": 0.0,
+        "c33_rel_err": 0.0,
+        "c44_rel_err": 0.0,
+        "dvol_dT_got_m2": 599.9999999997954,
+        "dvol_dT_ref_m2": 600.0,
+        "dvol_dT_rel_err": -3.410605131648481e-13
+      },
+      {
+        "draft_m": 3.5,
+        "bm_transverse_ref_m": 3.4285714285714284,
+        "bm_transverse_got_m": 3.4285714285714284,
+        "bm_transverse_rel_err": 0.0,
+        "c33_rel_err": 0.0,
+        "c44_rel_err": 1.0481861505883022e-15,
+        "dvol_dT_got_m2": 599.9999999996817,
+        "dvol_dT_ref_m2": 600.0,
+        "dvol_dT_rel_err": -5.305385760342082e-13
+      },
+      {
+        "draft_m": 4.0,
+        "bm_transverse_ref_m": 3.0,
+        "bm_transverse_got_m": 3.0,
+        "bm_transverse_rel_err": 0.0,
+        "c33_rel_err": 0.0,
+        "c44_rel_err": -1.235362248907642e-15,
+        "dvol_dT_got_m2": 600.0000000001364,
+        "dvol_dT_ref_m2": 600.0,
+        "dvol_dT_rel_err": 2.2737367544323206e-13
+      }
+    ],
+    "gravity": [
+      {
+        "gravity_m_s2": 9.80665,
+        "c33_rel_err_vs_standard_g": 0.0,
+        "c44_rel_err_vs_standard_g": 0.0,
+        "volume_rel_err_vs_standard_g": 0.0
+      },
+      {
+        "gravity_m_s2": 9.81,
+        "c33_rel_err_vs_standard_g": 0.00034160493134760593,
+        "c44_rel_err_vs_standard_g": 0.00034160493134760593,
+        "volume_rel_err_vs_standard_g": 0.0
+      },
+      {
+        "gravity_m_s2": 9.8,
+        "c33_rel_err_vs_standard_g": -0.0006781112816303223,
+        "c44_rel_err_vs_standard_g": -0.0006781112816303223,
+        "volume_rel_err_vs_standard_g": 0.0
+      }
+    ],
+    "fd_step": [
+      {
+        "step": 0.004,
+        "c33_rel_err": -2.6313215901732773e-13,
+        "c44_rel_err": 1.8666839477740723e-05,
+        "c55_rel_err": 5.632157049461178e-06
+      },
+      {
+        "step": 0.002,
+        "c33_rel_err": 8.17809808776859e-13,
+        "c44_rel_err": 4.666677545324048e-06,
+        "c55_rel_err": 1.4080264208639093e-06,
+        "observed_order_c44": 2.000009992906704,
+        "observed_order_c55": 2.0000131576265967
+      },
+      {
+        "step": 0.001,
+        "c33_rel_err": 5.089692465499485e-13,
+        "c44_rel_err": 1.1666678109009884e-06,
+        "c55_rel_err": 3.520057260891427e-07,
+        "observed_order_c44": 2.0000019481668443,
+        "observed_order_c55": 2.000003603095765
+      },
+      {
+        "step": 0.0005,
+        "c33_rel_err": -2.5794363757191565e-12,
+        "c44_rel_err": 2.916666893871944e-07,
+        "c55_rel_err": 8.800144293887821e-08,
+        "observed_order_c44": 2.000001302570177,
+        "observed_order_c55": 1.9999998128364496
+      }
+    ]
+  },
+  "heel_check": [
+    {
+      "heel_deg": 0.5,
+      "righting_moment_got_Nm": 236861.38406785953,
+      "righting_moment_ref_wall_sided_Nm": 236861.38406787335,
+      "gz_got_m": 0.01309113244240587,
+      "gz_small_angle_m": 0.013089803247560903,
+      "gz_wall_sided_m": 0.013091132442406634,
+      "gz_rel_err_vs_wall_sided": -5.830498872330379e-14
+    },
+    {
+      "heel_deg": 1.0,
+      "righting_moment_got_Nm": 473849.0509185839,
+      "righting_moment_ref_wall_sided_Nm": 473849.05091858044,
+      "gz_got_m": 0.0261892444295872,
+      "gz_small_angle_m": 0.026178609655925267,
+      "gz_wall_sided_m": 0.02618924442958701,
+      "gz_rel_err_vs_wall_sided": 7.2861812745492e-15
+    },
+    {
+      "heel_deg": 2.0,
+      "righting_moment_got_Nm": 948709.0322261708,
+      "righting_moment_ref_wall_sided_Nm": 948709.032226173,
+      "gz_got_m": 0.05243436214415318,
+      "gz_small_angle_m": 0.05234924505375145,
+      "gz_wall_sided_m": 0.0524343621441533,
+      "gz_rel_err_vs_wall_sided": -2.249692597425373e-15
+    },
+    {
+      "heel_deg": 3.0,
+      "righting_moment_got_Nm": 1425594.4428156223,
+      "righting_moment_ref_wall_sided_Nm": 1425594.4428156272,
+      "gz_got_m": 0.07879142365692825,
+      "gz_small_angle_m": 0.07850393436441575,
+      "gz_wall_sided_m": 0.07879142365692851,
+      "gz_rel_err_vs_wall_sided": -3.3465313369202994e-15
+    },
+    {
+      "heel_deg": 5.0,
+      "righting_moment_got_Nm": 2389538.9999859915,
+      "righting_moment_ref_wall_sided_Nm": 2389538.999985988,
+      "gz_got_m": 0.13206784064112634,
+      "gz_small_angle_m": 0.13073361412148726,
+      "gz_wall_sided_m": 0.13206784064112614,
+      "gz_rel_err_vs_wall_sided": 1.4711305066110127e-15
+    }
+  ],
+  "repro_cmd": "python3 scripts/case_hydrostatic_pontoon.py --out artifacts/case_hydrostatic_pontoon",
+  "verdict": {
+    "tolerance_rel": 0.03,
+    "n_quantities": 22,
+    "n_fail": 0,
+    "max_abs_rel_err": 1.6013383151465308e-12,
+    "pass": true
+  },
+  "figures": [
+    "fig_rel_errors.png",
+    "fig_refinement.png",
+    "fig_draft_sensitivity.png",
+    "fig_heel_righting.png"
+  ],
+  "artifacts_sha256": {
+    "script": "8a5fba88f6c88926c0f6a6b366d5db96d35f95e58000499b158c54d4aa2501c3"
+  }
+}
