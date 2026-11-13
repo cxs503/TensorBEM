@@ -57,6 +57,8 @@ FloatArray = NDArray[np.float64]
 __all__ = [
     "MultiLoopMesh",
     "annulus_mesh",
+    "eccentric_annulus_geometry",
+    "eccentric_annulus_mesh",
     "solve_laplace_multiloop",
     "evaluate_multiloop_field",
     "domain_membership",
@@ -169,6 +171,114 @@ def annulus_mesh(
     theta_i = 2.0 * np.pi * np.arange(inner_panels) / inner_panels
     outer = PanelMesh(outer_radius * np.column_stack((np.cos(theta_o), np.sin(theta_o))))
     inner = PanelMesh(inner_radius * np.column_stack((np.cos(theta_i), np.sin(theta_i))))
+    return MultiLoopMesh(loops=(outer, inner), hole_loops=(1,))
+
+
+def eccentric_annulus_geometry(
+    outer_parameter: float = 0.8,
+    inner_parameter: float = 1.8,
+    half_distance: float = 1.0,
+) -> dict:
+    """Describe an eccentric annulus as two circles of the bipolar family.
+
+    Bipolar coordinates place the focal points at ``(+/- half_distance, 0)`` and
+    the family of coaxal circles has parameter ``tau > 0``::
+
+        radius(tau) = half_distance / sinh(tau)
+        centre(tau) = half_distance * coth(tau) * e_x
+
+    Circles of one family are nested and never intersect: ``inner_parameter >
+    outer_parameter > 0`` gives the small circle inside the big one, with the
+    inner one carrying the focus ``(+half_distance, 0)`` in its interior.  The
+    two foci therefore sit in the two places a harmonic function may be
+    singular without touching the fluid: the ``+`` focus is inside the hole, the
+    ``-`` focus lies outside the outer circle (its distance to the outer centre
+    is ``half_distance * (coth(tau_outer) + 1) > radius(tau_outer)``).
+
+    Returns the radii, centres, the offset ``e`` between the centres, the exact
+    minimum/maximum clearance ``a - (e + b)`` / ``a - (b - e)`` and the relative
+    eccentricity ``e / (a - b)``.
+    """
+    outer_parameter = float(outer_parameter)
+    inner_parameter = float(inner_parameter)
+    half_distance = _validate_length("half_distance", half_distance)
+    if not math.isfinite(outer_parameter) or outer_parameter <= 0.0:
+        raise ValueError("outer_parameter must be a positive finite number")
+    if not math.isfinite(inner_parameter) or inner_parameter <= outer_parameter:
+        raise ValueError("inner_parameter must be finite and larger than outer_parameter")
+
+    outer_radius = half_distance / math.sinh(outer_parameter)
+    inner_radius = half_distance / math.sinh(inner_parameter)
+    outer_centre = half_distance / math.tanh(outer_parameter)
+    inner_centre = half_distance / math.tanh(inner_parameter)
+    offset = outer_centre - inner_centre
+    wall = outer_radius - inner_radius
+    return {
+        "half_distance": half_distance,
+        "outer_parameter": outer_parameter,
+        "inner_parameter": inner_parameter,
+        "outer_radius": outer_radius,
+        "inner_radius": inner_radius,
+        "outer_centre_x": outer_centre,
+        "inner_centre_x": inner_centre,
+        "centre_offset": offset,
+        "mean_wall_thickness": wall,
+        "relative_eccentricity": offset / wall if wall > 0.0 else 0.0,
+        "min_clearance": outer_radius - (offset + inner_radius),
+        "max_clearance": outer_radius - (inner_radius - offset),
+        "focus_plus": (half_distance, 0.0),
+        "focus_minus": (-half_distance, 0.0),
+        "focus_plus_inside_inner": math.hypot(half_distance - inner_centre, 0.0)
+        < inner_radius,
+        "focus_minus_outside_outer": math.hypot(-half_distance - outer_centre, 0.0)
+        > outer_radius,
+    }
+
+
+def _bipolar_circle(parameter: float, half_distance: float, panels: int) -> PanelMesh:
+    """CCW inscribed polygon of the bipolar circle ``tau = parameter``."""
+    radius = half_distance / math.sinh(parameter)
+    centre = half_distance / math.tanh(parameter)
+    theta = 2.0 * np.pi * np.arange(panels) / panels
+    vertices = np.column_stack(
+        (centre + radius * np.cos(theta), radius * np.sin(theta))
+    )
+    return PanelMesh(vertices)
+
+
+def eccentric_annulus_mesh(
+    outer_panels: int = 64,
+    inner_panels: int = 32,
+    outer_parameter: float = 0.8,
+    inner_parameter: float = 1.8,
+    half_distance: float = 1.0,
+) -> MultiLoopMesh:
+    """Eccentric annulus (two non-concentric circles) as a two-loop mesh.
+
+    Same convention as :func:`annulus_mesh`: both polygons are counter-clockwise
+    and the inner loop is declared a hole, so its entry in
+    ``MultiLoopMesh.normals`` points into the hole, i.e. out of the fluid.
+    """
+    outer_panels = _validate_panel_count(outer_panels)
+    inner_panels = _validate_panel_count(inner_panels)
+    geometry = eccentric_annulus_geometry(outer_parameter, inner_parameter, half_distance)
+    if geometry["min_clearance"] <= 0.0:
+        raise ValueError("the two circles of the eccentric annulus must not intersect")
+    outer = _bipolar_circle(geometry["outer_parameter"], half_distance, outer_panels)
+    inner = _bipolar_circle(geometry["inner_parameter"], half_distance, inner_panels)
+    # The polygons are *inscribed*, so a gap that is positive on the circles can still
+    # collapse on the mesh.  Both polygons are convex, hence "every inner vertex
+    # strictly inside the outer polygon" is exactly "the hole polygon is contained and
+    # the loops do not cross"; without this guard a thin annulus silently assembles a
+    # self-intersecting boundary and returns plausible-looking nonsense.
+    inside = _point_in_polygon(inner.vertices, outer.vertices)
+    if not bool(np.all(inside)):
+        raise ValueError(
+            "the inscribed polygons of the eccentric annulus overlap: "
+            f"{int(np.sum(~inside))} inner vertex/vertices fall outside the outer polygon "
+            f"(circle clearance {geometry['min_clearance']:.3e}); refine the panels or "
+            "increase the clearance"
+        )
     return MultiLoopMesh(loops=(outer, inner), hole_loops=(1,))
 
 

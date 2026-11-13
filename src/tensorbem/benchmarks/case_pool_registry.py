@@ -139,10 +139,18 @@ CASES: dict[str, CaseEntry] = {
         entry="src/tensorbem/benchmarks/case_annulus_laplace.py",
         entry_args=(),
         library="tensorbem.benchmarks.case_annulus_laplace",
-        artifacts=("benchmarks/verified/bem_annulus_laplace/results.json",),
+        artifacts=(
+            "benchmarks/verified/bem_annulus_laplace/results.json",
+            "benchmarks/verified/bem_annulus_laplace_eccentric/results.json",
+        ),
         doc="benchmarks/verified/bem_annulus_laplace/report.md",
-        figures=(),
-        notes="multiply connected 2-D Laplace, closed-form harmonic reference",
+        figures=(
+            "benchmarks/verified/bem_annulus_laplace_eccentric/figures/convergence.png",
+            "benchmarks/verified/bem_annulus_laplace_eccentric/figures/clearance_sweep.png",
+            "benchmarks/verified/bem_annulus_laplace_eccentric/figures/field.png",
+        ),
+        notes="multiply connected 2-D Laplace, closed-form harmonic reference; round 2 "
+        "adds the eccentric (bipolar) annulus with the classical log(rho+/rho-) solution",
     ),
     "CASE-BEM-NEUMANN-KELVIN": CaseEntry(
         case_code="CASE-BEM-NEUMANN-KELVIN",
