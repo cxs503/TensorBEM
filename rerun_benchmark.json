@@ -1,0 +1,430 @@
+{
+  "benchmark": "two_cylinder_mutual_added_mass_refinement",
+  "separation_ratio": 3.0,
+  "radius": 1.0,
+  "panels_per_body": [
+    48,
+    64,
+    96
+  ],
+  "max_relative_errors": [
+    0.0022034075117916257,
+    0.0012394885311633667,
+    0.0005507946241165166
+  ],
+  "monotone_decrease": true,
+  "observed_orders": [
+    1.9997986198424411,
+    2.000399234731374
+  ],
+  "rows": [
+    {
+      "benchmark": "two_cylinder_mutual_added_mass",
+      "panels_per_body": 48,
+      "radius": 1.0,
+      "separation": 3.0,
+      "separation_ratio": 3.0,
+      "fluid_density": 1025.0,
+      "multipole_terms": 24,
+      "single_layer_condition_number": 2.5483664312977203,
+      "reference_boundary_residual": 3.6899733268924706e-11,
+      "reference_reflection_symmetry_error": 2.5419613610291836e-15,
+      "displaced_mass_per_span": 3220.132469929538,
+      "bem_added_mass_matrix": [
+        [
+          3322.537892083,
+          3.271688475692258e-13,
+          -728.8965046309794,
+          -1.4135827924866007e-13
+        ],
+        [
+          4.569695316591904e-13,
+          3322.537892082999,
+          -2.8360560427875825e-13,
+          728.8965046309789
+        ],
+        [
+          -728.896504630979,
+          3.356147824928879e-14,
+          3322.537892083,
+          1.3157877565284082e-13
+        ],
+        [
+          2.7115896333862466e-13,
+          728.8965046309794,
+          1.4580350815585064e-13,
+          3322.5378920830003
+        ]
+      ],
+      "reference_added_mass_matrix": [
+        [
+          3322.936921146587,
+          -1.886166190682298e-13,
+          -730.5061072751591,
+          1.0637988428520428e-13
+        ],
+        [
+          -2.7393723140561876e-13,
+          3322.9369211465887,
+          4.744726204812533e-13,
+          730.5061072751554
+        ],
+        [
+          -730.5061072751595,
+          9.048471810691426e-14,
+          3322.936921146587,
+          -2.4854386127329264e-13
+        ],
+        [
+          -7.461386177421044e-14,
+          730.5061072751636,
+          1.3414589534674337e-12,
+          3322.936921146583
+        ]
+      ],
+      "modes": [
+        "body0_surge",
+        "body0_heave",
+        "body1_surge",
+        "body1_heave"
+      ],
+      "bem": {
+        "self": 3322.537892083,
+        "mutual_along": -728.8965046309794,
+        "mutual_transverse": 728.8965046309789,
+        "in_phase_surge": 2593.6413874520204,
+        "in_phase_heave": 4051.434396713978
+      },
+      "reference": {
+        "self": 3322.936921146587,
+        "mutual_along": -730.5061072751591,
+        "mutual_transverse": 730.5061072751554,
+        "in_phase_surge": 2592.4308138714277,
+        "in_phase_heave": 4053.443028421744
+      },
+      "relative_errors": {
+        "self": 0.00012008324956386368,
+        "mutual_along": 0.0022034075117916257,
+        "mutual_transverse": 0.002203407511787124,
+        "in_phase_surge": 0.00046696466270773444,
+        "in_phase_heave": 0.0004955371751082149
+      },
+      "max_relative_error": 0.0022034075117916257,
+      "checks": {
+        "self_within_1_percent": {
+          "value": 0.00012008324956386368,
+          "limit": 0.01,
+          "passed": true
+        },
+        "mutual_along_within_2_percent": {
+          "value": 0.0022034075117916257,
+          "limit": 0.02,
+          "passed": true
+        },
+        "mutual_transverse_within_2_percent": {
+          "value": 0.002203407511787124,
+          "limit": 0.02,
+          "passed": true
+        },
+        "in_phase_heave_within_1_percent": {
+          "value": 0.0004955371751082149,
+          "limit": 0.01,
+          "passed": true
+        },
+        "interaction_is_resolved": {
+          "value": 0.21937944074853322,
+          "limit": 0.05,
+          "passed": true
+        }
+      },
+      "all_checks_passed": true,
+      "layer_sign": 1.0
+    },
+    {
+      "benchmark": "two_cylinder_mutual_added_mass",
+      "panels_per_body": 64,
+      "radius": 1.0,
+      "separation": 3.0,
+      "separation_ratio": 3.0,
+      "fluid_density": 1025.0,
+      "multipole_terms": 24,
+      "single_layer_condition_number": 2.5458443518862843,
+      "reference_boundary_residual": 3.6899733268924706e-11,
+      "reference_reflection_symmetry_error": 2.5419613610291836e-15,
+      "displaced_mass_per_span": 3220.132469929538,
+      "bem_added_mass_matrix": [
+        [
+          3322.717054866312,
+          -4.800847219765814e-13,
+          -729.6006533332468,
+          -1.1855425495477245e-12
+        ],
+        [
+          -3.12944115066216e-13,
+          3322.717054866313,
+          -2.8138298982516297e-13,
+          729.6006533332464
+        ],
+        [
+          -729.6006533332463,
+          6.96567369756762e-13,
+          3322.7170548663134,
+          -1.1290881424264043e-13
+        ],
+        [
+          -4.209631775109468e-13,
+          729.6006533332464,
+          -3.8051159445551264e-13,
+          3322.7170548663144
+        ]
+      ],
+      "reference_added_mass_matrix": [
+        [
+          3322.936921146587,
+          -1.886166190682298e-13,
+          -730.5061072751591,
+          1.0637988428520428e-13
+        ],
+        [
+          -2.7393723140561876e-13,
+          3322.9369211465887,
+          4.744726204812533e-13,
+          730.5061072751554
+        ],
+        [
+          -730.5061072751595,
+          9.048471810691426e-14,
+          3322.936921146587,
+          -2.4854386127329264e-13
+        ],
+        [
+          -7.461386177421044e-14,
+          730.5061072751636,
+          1.3414589534674337e-12,
+          3322.936921146583
+        ]
+      ],
+      "modes": [
+        "body0_surge",
+        "body0_heave",
+        "body1_surge",
+        "body1_heave"
+      ],
+      "bem": {
+        "self": 3322.717054866312,
+        "mutual_along": -729.6006533332468,
+        "mutual_transverse": 729.6006533332464,
+        "in_phase_surge": 2593.116401533065,
+        "in_phase_heave": 4052.3177081995595
+      },
+      "reference": {
+        "self": 3322.936921146587,
+        "mutual_along": -730.5061072751591,
+        "mutual_transverse": 730.5061072751554,
+        "in_phase_surge": 2592.4308138714277,
+        "in_phase_heave": 4053.443028421744
+      },
+      "relative_errors": {
+        "self": 6.616625156969126e-05,
+        "mutual_along": 0.0012394885311633667,
+        "mutual_transverse": 0.0012394885311587042,
+        "in_phase_surge": 0.0002644574574445441,
+        "in_phase_heave": 0.0002776208310550282
+      },
+      "max_relative_error": 0.0012394885311633667,
+      "checks": {
+        "self_within_1_percent": {
+          "value": 6.616625156969126e-05,
+          "limit": 0.01,
+          "passed": true
+        },
+        "mutual_along_within_2_percent": {
+          "value": 0.0012394885311633667,
+          "limit": 0.02,
+          "passed": true
+        },
+        "mutual_transverse_within_2_percent": {
+          "value": 0.0012394885311587042,
+          "limit": 0.02,
+          "passed": true
+        },
+        "in_phase_heave_within_1_percent": {
+          "value": 0.0002776208310550282,
+          "limit": 0.01,
+          "passed": true
+        },
+        "interaction_is_resolved": {
+          "value": 0.21957953123474774,
+          "limit": 0.05,
+          "passed": true
+        }
+      },
+      "all_checks_passed": true,
+      "layer_sign": 1.0
+    },
+    {
+      "benchmark": "two_cylinder_mutual_added_mass",
+      "panels_per_body": 96,
+      "radius": 1.0,
+      "separation": 3.0,
+      "separation_ratio": 3.0,
+      "fluid_density": 1025.0,
+      "multipole_terms": 24,
+      "single_layer_condition_number": 2.544049000639949,
+      "reference_boundary_residual": 3.6899733268924706e-11,
+      "reference_reflection_symmetry_error": 2.5419613610291836e-15,
+      "displaced_mass_per_span": 3220.132469929538,
+      "bem_added_mass_matrix": [
+        [
+          3322.8414061593007,
+          -8.44593492366208e-15,
+          -730.1037484383877,
+          -6.601164927177994e-14
+        ],
+        [
+          3.6762043062466e-13,
+          3322.8414061593026,
+          -3.3917096561864035e-13,
+          730.1037484383879
+        ],
+        [
+          -730.1037484383883,
+          -4.739725322291943e-13,
+          3322.841406159302,
+          1.4224732503009818e-13
+        ],
+        [
+          -1.4735933827336734e-13,
+          730.1037484383887,
+          8.44593492366208e-14,
+          3322.8414061593016
+        ]
+      ],
+      "reference_added_mass_matrix": [
+        [
+          3322.936921146587,
+          -1.886166190682298e-13,
+          -730.5061072751591,
+          1.0637988428520428e-13
+        ],
+        [
+          -2.7393723140561876e-13,
+          3322.9369211465887,
+          4.744726204812533e-13,
+          730.5061072751554
+        ],
+        [
+          -730.5061072751595,
+          9.048471810691426e-14,
+          3322.936921146587,
+          -2.4854386127329264e-13
+        ],
+        [
+          -7.461386177421044e-14,
+          730.5061072751636,
+          1.3414589534674337e-12,
+          3322.936921146583
+        ]
+      ],
+      "modes": [
+        "body0_surge",
+        "body0_heave",
+        "body1_surge",
+        "body1_heave"
+      ],
+      "bem": {
+        "self": 3322.8414061593007,
+        "mutual_along": -730.1037484383877,
+        "mutual_transverse": 730.1037484383879,
+        "in_phase_surge": 2592.737657720913,
+        "in_phase_heave": 4052.9451545976904
+      },
+      "reference": {
+        "self": 3322.936921146587,
+        "mutual_along": -730.5061072751591,
+        "mutual_transverse": 730.5061072751554,
+        "in_phase_surge": 2592.4308138714277,
+        "in_phase_heave": 4053.443028421744
+      },
+      "relative_errors": {
+        "self": 2.8744146985851748e-05,
+        "mutual_along": 0.0005507946241165166,
+        "mutual_transverse": 0.0005507946241110725,
+        "in_phase_surge": 0.00011836144202704813,
+        "in_phase_heave": 0.0001228273891017764
+      },
+      "max_relative_error": 0.0005507946241165166,
+      "checks": {
+        "self_within_1_percent": {
+          "value": 2.8744146985851748e-05,
+          "limit": 0.01,
+          "passed": true
+        },
+        "mutual_along_within_2_percent": {
+          "value": 0.0005507946241165166,
+          "limit": 0.02,
+          "passed": true
+        },
+        "mutual_transverse_within_2_percent": {
+          "value": 0.0005507946241110725,
+          "limit": 0.02,
+          "passed": true
+        },
+        "in_phase_heave_within_1_percent": {
+          "value": 0.0001228273891017764,
+          "limit": 0.01,
+          "passed": true
+        },
+        "interaction_is_resolved": {
+          "value": 0.21972271896126297,
+          "limit": 0.05,
+          "passed": true
+        }
+      },
+      "all_checks_passed": true,
+      "layer_sign": 1.0
+    }
+  ],
+  "interaction_decay": [
+    {
+      "separation_ratio": 3.0,
+      "self_over_displaced": 1.0319255347961813,
+      "mutual_along_over_displaced": -0.22685591791543405,
+      "mutual_transverse_over_displaced": 0.2268559179154329,
+      "in_phase_heave_over_displaced": 1.2587814527116143,
+      "mutual_transverse_times_separation_squared": 6574.554965476398
+    },
+    {
+      "separation_ratio": 5.0,
+      "self_over_displaced": 1.0034788223397904,
+      "mutual_along_over_displaced": -0.08015151623952732,
+      "mutual_transverse_over_displaced": 0.08015151623952808,
+      "in_phase_heave_over_displaced": 1.0836303385793185,
+      "mutual_transverse_times_separation_squared": 6452.462498924726
+    },
+    {
+      "separation_ratio": 10.0,
+      "self_over_displaced": 1.0002040820641986,
+      "mutual_along_over_displaced": -0.020002082682540664,
+      "mutual_transverse_over_displaced": 0.02000208268254089,
+      "in_phase_heave_over_displaced": 1.0202061647467395,
+      "mutual_transverse_times_separation_squared": 6440.935591226523
+    },
+    {
+      "separation_ratio": 20.0,
+      "self_over_displaced": 1.0000125628144687,
+      "mutual_along_over_displaced": -0.005000031565058273,
+      "mutual_transverse_over_displaced": 0.005000031565058299,
+      "in_phase_heave_over_displaced": 1.005012594379527,
+      "mutual_transverse_times_separation_squared": 6440.305597326733
+    },
+    {
+      "separation_ratio": 40.0,
+      "self_over_displaced": 1.0000007822277865,
+      "mutual_along_over_displaced": -0.0012500004895045426,
+      "mutual_transverse_over_displaced": 0.0012500004895055641,
+      "in_phase_heave_over_displaced": 1.0012507827172923,
+      "mutual_transverse_times_separation_squared": 6440.267461895493
+    }
+  ]
+}
