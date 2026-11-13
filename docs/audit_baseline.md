@@ -180,7 +180,7 @@ correction log inside the generated block records what changed.
 | Propeller open-water performance by vortex-lattice lifting surface | **REAL** | `tensorbem.propeller` | 3 node(s) in 1 file(s) | `docs/dev_report_m4614_doc_claim_audit_ratchet.md` |
 | Rankine-source free-surface panel method (truncated domain) | **REAL** | `tensorbem.rankine_fs` | 3 node(s) in 1 file(s) | `docs/benchmarks/verified/bem_rankine_fs_panel/report.md` |
 | Rankine wave resistance + Series 60 empirical reference | **REAL** | `tensorbem.rankine_wave`, `tensorbem.series60` | 4 node(s) in 1 file(s) | `docs/in32_b01/report.md`, `docs/in32_b01/report.md` |
-| Machine-checked provenance of reference constants | **REAL** | `tensorbem.reference_provenance` | 3 node(s) in 1 file(s) | `docs/reference_provenance.md` |
+| Machine-checked provenance of reference constants | **REAL** | `tensorbem.reference_provenance` | 5 node(s) in 1 file(s) | `docs/reference_provenance.md` |
 | State-space realisation of the Cummins radiation memory | **REAL** | `tensorbem.state_space` | 2 node(s) in 1 file(s) | `docs/sk_fit_sanathanan_koerner.md` |
 | STF (1970) strip theory with forward speed | **REAL** | `tensorbem.stf_fullspeed` | 3 node(s) in 1 file(s) | `docs/strip_theory_fullspeed_closure.md` |
 | Slack-tank free-surface correction to hydrostatics | **REAL** | `tensorbem.tank_free_surface` | 3 node(s) in 1 file(s) | `docs/tank_free_surface_correction.md` |
