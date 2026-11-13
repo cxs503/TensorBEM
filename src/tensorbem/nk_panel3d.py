@@ -682,23 +682,67 @@ def kochin_amplitude(
     return H
 
 
+def kochin_prefactor(kappa: float, g: float = _G) -> float:
+    """Exact far-field (Havelock/Kochin) prefactor ``1/(2 pi U^2) = kappa/(2 pi g)``.
+
+    See :func:`wave_resistance_far` for the derivation.  The quantity is *not*
+    free: it is fixed by the residue of the steady kernel's wavenumber pole and
+    carries the units of ``1/U^2`` that the ``kappa``-normalised Kochin
+    amplitude ``H`` (units ``m^3/s``) leaves open.
+    """
+    if kappa <= 0.0 or g <= 0.0:
+        raise ValueError("kappa and g must be positive")
+    return kappa / (2.0 * math.pi * g)
+
+
 def wave_resistance_far(
     sigma: FloatArray,
     mesh: PanelMesh,
     kappa: float,
     rho: float = _RHO,
     g: float = _G,
-    n_theta: int = 721,
+    n_theta: int = 7201,
     mirror: bool = True,
-    prefactor: float = 0.5,
+    prefactor: float | None = None,
 ) -> tuple[float, FloatArray, ComplexArray]:
-    """Far-field (Havelock/Kochin) resistance from a source distribution.
+    """Far-field (Havelock/Kochin) resistance of a steady source distribution.
 
-    ``Rw = prefactor * rho * g * kappa * int |H(theta)|^2 sec^3(theta) dtheta``.
-    The prefactor is anchored on the thin-ship (Michell) limit, see
-    :func:`thin_ship_reference`.
+    .. math::
+
+        R_w = \frac{\rho\kappa^2}{2\pi}\int_{-\pi/2}^{\pi/2}
+              |H(\theta)|^2 \sec^3\theta\,d\theta,
+        \qquad
+        H(\theta) = \int_S \sigma\,e^{\kappa\sec^2\theta
+                     (z + i(x\cos\theta + y\sin\theta))}\,dS .
+
+    Derivation (what fixes the constant, *not* fitted to any data)
+
+    The steady wave field is the residue of the pole ``k = kappa sec^2 theta``
+    of the double Fourier transform of ``G_W`` (see :func:`nk_wave_kernel`), so
+    every wave component carries the depth decay ``exp(kappa sec^2 theta z)``
+    and the streamwise phase ``kappa sec theta x = kappa sec^2 theta x cos
+    theta``.  Substituting the residue amplitude into the pressure integral over
+    a control surface in the radiation field gives the classical Kochin form;
+    written with the *source strength* ``sigma`` (units m/s, the single-layer
+    density of :func:`solve_nk_panel`) the amplitude is ``H`` above and the
+    constant is ``rho kappa^2/(2 pi)``.  For the thin-ship sheet the same
+    formula with ``sigma = -2 U db/dx`` is Michell's integral
+    ``(4 rho g^2/(pi U^2)) int_0^{pi/2} sec^3 theta |A|^2 dtheta`` with
+    ``H = -2 U A`` -- i.e. ``rho kappa^2/(2 pi) = (rho g kappa)/(2 pi U^2)``
+    over the full range equals ``4 rho g^2/(pi U^2)`` over the half range.
+
+    The historical defect (mission m10003 "implied prefactor drifting 4.8x
+    between Fr = 0.2 and 0.4") is now explained: the old default was the
+    dimensionless ``0.5``, but the exact value is ``kappa/(2 pi g) = 1/(2 pi
+    U^2)``, which varies by ``(0.4/0.2)^2 = 4`` over that Froude range.  The
+    constant was never Froude-dependent -- the missing ``1/U^2`` was.
+
+    ``prefactor=None`` (default) uses :func:`kochin_prefactor`; passing a number
+    is kept for linearity/sensitivity tests only.
     """
-    th = np.linspace(-0.5 * math.pi + 1e-6, 0.5 * math.pi - 1e-6, n_theta)
+    if prefactor is None:
+        prefactor = kochin_prefactor(kappa, g)
+    th = np.linspace(-0.5 * math.pi + 1e-7, 0.5 * math.pi - 1e-7, n_theta)
     H = kochin_amplitude(sigma, mesh, kappa, th, mirror=mirror)
     sec3 = 1.0 / np.cos(th) ** 3
     integrand = np.abs(H) ** 2 * sec3
@@ -860,7 +904,7 @@ def thin_ship_reference(
     nz: int = 60,
     g: float = _G,
     rho: float = _RHO,
-    prefactor: float = 0.5,
+    prefactor: float | None = None,
     near_field: bool = False,
 ) -> dict:
     """Thin-ship (Michell) source sheet on the centreplane.
@@ -887,14 +931,21 @@ def thin_ship_reference(
         dphi_dx = (Gxw * mesh.areas[None, :]) @ sigma
         Rw_near = -rho * U * float(np.sum(dphi_dx * (-b_x) * mesh.areas)) * 2.0
     s_ref = L * T
+    from .wigley import michell_wave_resistance_canonical
+
+    rw_michell = float(michell_wave_resistance_canonical(L, B, T, U, rho, g))
     return {
         "mesh": mesh,
         "sigma": sigma,
         "b_x": b_x,
         "rw_far": Rw_far,
         "rw_near": Rw_near,
+        "rw_michell": rw_michell,
+        "rel_error_far_vs_michell": abs(Rw_far - rw_michell) / rw_michell,
         "cw_far": Rw_far / (0.5 * rho * U**2 * s_ref),
+        "cw_michell": rw_michell / (0.5 * rho * U**2 * s_ref),
         "cw_near": Rw_near / (0.5 * rho * U**2 * s_ref),
+        "s_ref": s_ref,
         "H": H,
         "theta": th,
         "kappa": kappa,
