@@ -1,0 +1,131 @@
+{
+  "aggregate_sha256": "0e1fd6233293e565ceffbfda0a68146e2ee916bab1d14d612af56075a361bbab",
+  "algorithm": "sha256",
+  "case": "BEM-HULME-HEMISPHERE",
+  "case_pool_id": 138,
+  "files": [
+    {
+      "bytes": 6618,
+      "path": "README.md",
+      "sha256": "385133ec74cfef6bebeb7d59ed7b79128d7cf7361cfa94266b6180a0425a429f"
+    },
+    {
+      "bytes": 42020,
+      "path": "results.json",
+      "sha256": "e519548bbdf676524c167148b013b25e4501ae0701165506653865ba7f9c5eb2"
+    },
+    {
+      "bytes": 9223,
+      "path": "reference.json",
+      "sha256": "51f750fbd3fc23ffb99cf09050b1d1a1763b08763317301c1e4cfb7982e4fd51"
+    },
+    {
+      "bytes": 7238,
+      "path": "report.md",
+      "sha256": "fa6918ec6f80ed132c6b2598fd82da9479fb2e7910388900344d8fdf8aee79e7"
+    },
+    {
+      "bytes": 26552,
+      "path": "evidence.json",
+      "sha256": "526d6c3a27323175ab7e27ad23db82d31f7f29f3cab9161a064ff06a2b774829"
+    },
+    {
+      "bytes": 367,
+      "path": "environment.json",
+      "sha256": "3f513ce19cd695b234def4cb26d74b5793b0d61616b2fd11085f6b7408618dbe"
+    },
+    {
+      "bytes": 31981,
+      "path": "excitation_xval_results.json",
+      "sha256": "a9cf63507dcfd4d22bad2ff72700370202128aec02cd754eb933967b9edd7f4f"
+    },
+    {
+      "bytes": 39745,
+      "path": "capytaine_excitation.json",
+      "sha256": "f9b0463fd2d65b2c357ae6ef1eef57af9ac8c6325bba2059afba184b1c290d37"
+    },
+    {
+      "bytes": 116136,
+      "path": "field_data.json",
+      "sha256": "ad676a69852b52f094100aaef38299e57c71efddea227371bec7d68cf71c17f8"
+    },
+    {
+      "bytes": 8175,
+      "path": "shard_0.json",
+      "sha256": "3e622a093e29822a64e9cd73922fe4386e72792f4f43d187c24f66d581381df8"
+    },
+    {
+      "bytes": 6552,
+      "path": "shard_1.json",
+      "sha256": "d48933b68c84a93be4b72548392714ff51d845d58a2bf36d14f4bd1522b6b2dc"
+    },
+    {
+      "bytes": 6543,
+      "path": "shard_2.json",
+      "sha256": "35d868ffab72f571f05363a8c12692234392fc2911fad9c0d98c3d550f529306"
+    },
+    {
+      "bytes": 6557,
+      "path": "shard_3.json",
+      "sha256": "c725d36af0ee64df1909dc977df1388f3aaff64b88065fcf56f7246caf6911b2"
+    },
+    {
+      "bytes": 4329,
+      "path": "run_case.py",
+      "sha256": "d1d4c8899653d3ebbe23e33529bc5fc9aef7f92bc10286a435a91a0d2da49483"
+    },
+    {
+      "bytes": 27537,
+      "path": "independent_axis.py",
+      "sha256": "380fc488e8e0cc28d760a377fbf8ca50f90e330eb9f0d29cf47f6826915a8409"
+    },
+    {
+      "bytes": 18145,
+      "path": "evidence.py",
+      "sha256": "59dc39b18f785e74e9a4f3fbcf4e95b100246af49284c4a788513fc5bc1806f7"
+    },
+    {
+      "bytes": 18060,
+      "path": "make_doc.py",
+      "sha256": "17eb7c2501020b74bb138b74ef2095eed24153515784a787e362ecf15fa4febc"
+    },
+    {
+      "bytes": 30791,
+      "path": "excitation_capytaine_xval.py",
+      "sha256": "3e7aed002033fecae82da3c0666e1c5e12e483f013aa3afb8f21049a543f0b28"
+    },
+    {
+      "bytes": 4712,
+      "path": "make_field_figure.py",
+      "sha256": "8a87422ba7f7e806d4a50ff4acfa36d08f794101a61b420538d0c9d619f91549"
+    },
+    {
+      "bytes": 12124,
+      "path": "evidence/reference.json",
+      "sha256": "c743f415fb1d0e268be6bdd05084ac8b6a1bb34072937b511fe60e238953f31c"
+    },
+    {
+      "bytes": 22046,
+      "path": "evidence/benchmark.json",
+      "sha256": "9e1b9f4a26c00db40305c058980e7ac7205a2f902dcdb9a944ca130894f03a5d"
+    },
+    {
+      "bytes": 16263,
+      "path": "evidence/independent.json",
+      "sha256": "23422a604eaa1f7ea6807f34a39beb10b322cc4838f290abd80b36af68da04d8"
+    },
+    {
+      "bytes": 3701,
+      "path": "evidence/anchor_registry.json",
+      "sha256": "0b69ce22944c7877bbd9064a8bb57f416c310cd95fe5e45eda61b3e6eea06ab3"
+    },
+    {
+      "bytes": 34469,
+      "path": "evidence/build_evidence.py",
+      "sha256": "572233d787a236bf1c8a9e8e551ba926484d52b8dda310da853db293d33ed75f"
+    }
+  ],
+  "note": "paths are relative to the case directory; manifest does not list itself",
+  "root": "benchmarks/verified/casepool_bem_hulme_hemisphere",
+  "schema": "tensorbem.case_evidence_manifest/v1"
+}

@@ -1,0 +1,54 @@
+{
+  "anchors": [
+    {
+      "anchor_id": "CASEANCHOR-BEM-HULME-HEMISPHERE-1982",
+      "benchmark_file": "evidence/benchmark.json",
+      "citation": "Hulme, A. (1982) The wave forces acting on a floating hemisphere undergoing forced periodic oscillations. J. Fluid Mech. 121:443-463.",
+      "identifier": {
+        "kind": "NONE_VERIFIED",
+        "value": null,
+        "why": "no DOI/ISBN was verified in this sandbox; only the bibliographic citation (journal, volume, pages) is claimed"
+      },
+      "independent_file": "evidence/independent.json",
+      "locator": "J. Fluid Mech. 121:443-463, wave-free multipole expansion (the semi-analytical radiation/diffraction solution)",
+      "measured_worst_error": {
+        "ka": 2.0,
+        "panels": 1024,
+        "quantity": "B33",
+        "rel_error": 0.011480004889855476
+      },
+      "reference_file": "evidence/reference.json",
+      "self_convergence": {
+        "gate_tolerance": 0.05,
+        "margin_factor": 773.5387470659518,
+        "rule": "reference self-converged when the 96 -> 144 term drift is at least 20x below the 5 % gate",
+        "worst_96_144_relative_drift": 6.46380031894343e-05
+      },
+      "source_class": "LITERATURE_CLOSED_FORM",
+      "status": "verified_at_case_level",
+      "terms_used": 144,
+      "transcribed_digits": null,
+      "transcribed_digits_note": "NOT AVAILABLE (publisher paywall, no copy in the sandbox): no digit of Hulme's printed table is transcribed or hand-copied anywhere in this repository. Every reference number in results.json is computed at run time by the wave-free multipole series (recomputed and cross-checked by evidence.py), so 'ref' here means 'Hulme's semi-analytical method, re-derived and self-converged', not 'Hulme's printed digits' -- see docs/bem_hulme_hemisphere_case.md sections 1 and 6."
+    }
+  ],
+  "case": "BEM-HULME-HEMISPHERE",
+  "case_pool_id": 138,
+  "external_ledger": "benchmarks/anchors/external/index.json",
+  "external_ledger_eligible": false,
+  "external_ledger_verdict": {
+    "independent_of_repo_package": false,
+    "repo_markers_hit": [
+      "tensorbem."
+    ],
+    "result": "FAIL",
+    "rule": "reference_method.independent_of_repo_package must be true: a reference computed from this package's own solver shares the discretisation it is meant to judge",
+    "rule_source": "benchmarks/anchors/external_anchor_gate.py",
+    "why": "the reference lives in tensorbem.analytic.hulme_hemisphere_radiation (inside src/) and shares tensorbem.free_surface3d.wave_function_3d with the solver, so it cannot be registered as an external anchor; it is a LITERATURE_CLOSED_FORM re-derivation registered at case level"
+  },
+  "limits": [
+    "NOT AVAILABLE (publisher paywall, no copy in the sandbox): no digit of Hulme's printed table is transcribed or hand-copied anywhere in this repository. Every reference number in results.json is computed at run time by the wave-free multipole series (recomputed and cross-checked by evidence.py), so 'ref' here means 'Hulme's semi-analytical method, re-derived and self-converged', not 'Hulme's printed digits' -- see docs/bem_hulme_hemisphere_case.md sections 1 and 6.",
+    "the reference series and the solver share tensorbem.free_surface3d.wave_function_3d, so agreement alone cannot catch a defect in that kernel; the independent axes are the third-party BEM crosscheck (capytaine, docs/capytaine_crosscheck.md) and the ka->0 rigid-lid even-mode series.",
+    "the third-party axis (evidence/independent.json) is what adjudicates a defect inside the shared wave-function kernel; it agrees with the reference to 3.36 % at worst over all six quantities"
+  ],
+  "schema": "tensorbem.case_anchor_registry/v1"
+}
