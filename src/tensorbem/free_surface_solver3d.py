@@ -251,6 +251,30 @@ def _vectorized_single_layer_rankine(
     return out
 
 
+def _resolve_panel_areas(
+    mesh: SurfaceMesh3D, panel_areas: ArrayLike | None
+) -> FloatArray:
+    """Return the surface measure used for every body-panel integral.
+
+    ``None`` keeps the flat-triangle areas of the mesh.  A supplied vector must
+    be positive and of length ``mesh.panel_count``; it then replaces the flat
+    measure *everywhere* (single-layer operator, wave-tail quadrature weights and
+    the force/moment integral), while the panels, their normals and the
+    collocation points stay unchanged.  That is the "exact surface measure" route
+    of :func:`tensorbem.geometry3d.spherical_patch_areas`.
+    """
+    if panel_areas is None:
+        return mesh.areas
+    areas = np.asarray(panel_areas, dtype=float)
+    if areas.shape != (mesh.panel_count,):
+        raise ValueError(
+            f"panel_areas must have shape ({mesh.panel_count},), got {areas.shape}"
+        )
+    if not np.isfinite(areas).all() or np.any(areas <= 0.0):
+        raise ValueError("panel_areas must be finite and strictly positive")
+    return areas
+
+
 def _build_target_operators_3d(
     targets: FloatArray,
     mesh: SurfaceMesh3D,
@@ -258,9 +282,10 @@ def _build_target_operators_3d(
     *,
     self_interaction: bool,
     rankine_order: int,
+    panel_areas: ArrayLike | None = None,
 ) -> tuple[ComplexArray, ComplexArray]:
     v0, v1, v2 = mesh.v0, mesh.v1, mesh.v2
-    areas = mesh.areas
+    areas = _resolve_panel_areas(mesh, panel_areas)
     normals = mesh.normals
     p_cnt = mesh.panel_count
     m_cnt = targets.shape[0]
@@ -387,6 +412,7 @@ def assemble_free_surface_operators_3d(
     chief_points: ArrayLike | Literal["auto"] | None = None,
     interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
+    panel_areas: ArrayLike | None = None,
 ) -> FreeSurface3DOperators:
     """Assemble 3-D Kelvin BEM single/double-layer matrices and interior rows.
 
@@ -394,6 +420,13 @@ def assemble_free_surface_operators_3d(
     ``interior_panels`` adds the null-field rows of a *distributed interior
     waterplane lid* (:mod:`tensorbem.interior_panels`), which suppresses the
     irregular-frequency resonances of several interior modes at once.
+
+    ``panel_areas`` optionally replaces the flat-triangle surface measure by a
+    panelling-independent one (see
+    :func:`tensorbem.geometry3d.spherical_patch_areas`); the panels, their
+    normals and the collocation points are untouched, so the principal-value
+    structure of the double layer and the self term of the single layer keep
+    their flat-panel form.
     """
     _validate_mesh_3d(mesh)
     freq = _validate_positive("nu", nu)
@@ -409,12 +442,14 @@ def assemble_free_surface_operators_3d(
         chief_pts = (
             lid_pts if chief_pts.shape[0] == 0 else np.vstack((chief_pts, lid_pts))
         )
+    area_measure = _resolve_panel_areas(mesh, panel_areas)
     s_body, h_body = _build_target_operators_3d(
         mesh.centroids,
         mesh,
         freq,
         self_interaction=True,
         rankine_order=r_order,
+        panel_areas=area_measure,
     )
     sys_body = 0.5 * np.eye(mesh.panel_count, dtype=np.complex128) - h_body
 
@@ -425,6 +460,7 @@ def assemble_free_surface_operators_3d(
             freq,
             self_interaction=False,
             rankine_order=r_order,
+            panel_areas=area_measure,
         )
         system_matrix = np.vstack((sys_body, -h_chief))
     else:
@@ -473,6 +509,7 @@ def solve_radiation_3d(
     interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
     operators: FreeSurface3DOperators | None = None,
+    panel_areas: ArrayLike | None = None,
 ) -> Radiation3DResult:
     """Solve 3-D wave radiation for up to 6 rigid-body degrees of freedom.
 
@@ -504,6 +541,7 @@ def solve_radiation_3d(
             chief_points=chief_points,
             interior_panels=interior_panels,
             rankine_order=rankine_order,
+            panel_areas=panel_areas,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
@@ -514,7 +552,7 @@ def solve_radiation_3d(
     q_ext = (-n_modes).astype(np.complex128)
     potentials, rel_res = _solve_system(ops, q_ext)
 
-    weighted_normals = mesh.areas[:, None] * n_modes
+    weighted_normals = _resolve_panel_areas(mesh, panel_areas)[:, None] * n_modes
     impedance = -rho * (weighted_normals.T @ potentials)
     added_mass = np.asarray(impedance.real, dtype=float)
     damping = np.asarray(omega * impedance.imag, dtype=float)
@@ -587,8 +625,14 @@ def solve_diffraction_3d(
     interior_panels: InteriorPanelSet | ArrayLike | Literal["auto"] | None = None,
     rankine_order: int = 5,
     operators: FreeSurface3DOperators | None = None,
+    panel_areas: ArrayLike | None = None,
 ) -> Diffraction3DResult:
-    """Solve 3-D regular-wave scattering and compute 6-DOF wave exciting loads."""
+    """Solve 3-D regular-wave scattering and compute 6-DOF wave exciting loads.
+
+    ``panel_areas`` follows :func:`assemble_free_surface_operators_3d`: it
+    replaces the flat-triangle measure in both the assembled operator and the
+    exciting-force integral.
+    """
     _validate_mesh_3d(mesh)
     freq = _validate_positive("nu", nu)
     amp = _validate_positive("amplitude", amplitude)
@@ -606,6 +650,7 @@ def solve_diffraction_3d(
             chief_points=chief_points,
             interior_panels=interior_panels,
             rankine_order=rankine_order,
+            panel_areas=panel_areas,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
@@ -620,7 +665,9 @@ def solve_diffraction_3d(
     phi_tot = phi_inc + phi_scat
 
     n6 = rigid_body_normals_3d(mesh, center=center)
-    forces = -1.0j * omega * rho * ((mesh.areas[:, None] * n6).T @ phi_tot)
+    forces = -1.0j * omega * rho * (
+        (_resolve_panel_areas(mesh, panel_areas)[:, None] * n6).T @ phi_tot
+    )
 
     return Diffraction3DResult(
         total_potential=phi_tot,

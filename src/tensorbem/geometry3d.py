@@ -11,7 +11,7 @@ from dataclasses import dataclass
 import math
 
 import numpy as np
-from numpy.typing import NDArray
+from numpy.typing import ArrayLike, NDArray
 
 FloatArray = NDArray[np.float64]
 IntArray = NDArray[np.int64]
@@ -658,6 +658,79 @@ def submerged_sphere_mesh(
     base = icosphere(subdivisions, radius=radius)
     offset = np.array([float(xy[0]), float(xy[1]), -float(submergence)])
     return TriangleMesh(base.vertices + offset, base.faces)
+
+
+def spherical_patch_areas(
+    vertices: ArrayLike,
+    faces: IntArray,
+    *,
+    center: ArrayLike,
+    radius: float,
+) -> FloatArray:
+    """Exact solid-surface areas of the spherical patches spanned by a triangle mesh.
+
+    A flat-panel discretisation of a curved hull integrates over *chords*, so the
+    discrete surface measure underestimates the wetted surface: for the inscribed
+    icosphere of subdivision 2 the deficit is already ~1.9 %, and it propagates
+    one-to-one into the radiation coefficients (see
+    ``tensorbem.benchmarks.submerged_sphere_havelock.run_area_deficit_diagnostic``).
+    Keeping the flat panel for the singular kernels and the collocation point but
+    weighting each panel by the area of the *true* surface patch it represents
+    removes that bias at no extra cost.
+
+    This helper returns those patch areas for a body whose surface is the sphere
+    of ``radius`` about ``center``: the three vertices of every panel are
+    projected radially onto the sphere and the area of the enclosed spherical
+    triangle is evaluated with Van Oosterom & Strackee's
+    ``tan(E/2) = |a.(b x c)| / (1 + a.b + b.c + c.a)`` on unit vectors,
+    ``A = E * radius**2``.  Summing the result over a closed mesh gives
+    ``4*pi*radius**2`` to round-off, which is the invariant the caller can test.
+
+    Parameters
+    ----------
+    vertices:
+        ``(V, 3)`` vertex coordinates; every vertex must already lie on the
+        sphere (the usual icosphere/geodesic meshes do, to round-off).
+    faces:
+        ``(F, 3)`` integer connectivity with the same conventions as
+        :class:`TriangleMesh`.
+    center:
+        Sphere centre, ``(3,)``.
+    radius:
+        Sphere radius, strictly positive.
+
+    Returns
+    -------
+    FloatArray
+        ``(F,)`` patch areas, in the same order as ``faces``; each entry is
+        ``>=`` the flat-triangle area of the same panel.
+    """
+    verts = np.asarray(vertices, dtype=float)
+    tris = np.asarray(faces)
+    ctr = np.asarray(center, dtype=float).reshape(-1)
+    if verts.ndim != 2 or verts.shape[1] != 3 or not np.isfinite(verts).all():
+        raise ValueError("vertices must be a finite (V, 3) array")
+    if tris.ndim != 2 or tris.shape[1] != 3 or not np.issubdtype(tris.dtype, np.integer):
+        raise ValueError("faces must be an integer (F, 3) array")
+    if tris.size and (tris.min() < 0 or tris.max() >= verts.shape[0]):
+        raise ValueError("face indices must be in range [0, V)")
+    if ctr.shape != (3,) or not np.isfinite(ctr).all():
+        raise ValueError("center must be a finite 3-element coordinate")
+    if isinstance(radius, (bool, np.bool_)) or not isinstance(radius, (int, float, np.floating)):
+        raise ValueError("radius must be a real scalar")
+    r = float(radius)
+    if not math.isfinite(r) or r <= 0.0:
+        raise ValueError("radius must be finite and strictly positive")
+
+    rel = verts[tris] - ctr  # (F, 3, 3)
+    norms = np.linalg.norm(rel, axis=2)
+    if np.any(np.abs(norms - r) > 1.0e-9 * r):
+        raise ValueError("every vertex must lie on the sphere within 1e-9 * radius")
+    unit = rel / norms[:, :, None]
+    a, b, c = unit[:, 0, :], unit[:, 1, :], unit[:, 2, :]
+    num = np.abs(np.einsum("ij,ij->i", a, np.cross(b, c)))
+    den = 1.0 + np.einsum("ij,ij->i", a, b) + np.einsum("ij,ij->i", b, c) + np.einsum("ij,ij->i", c, a)
+    return 2.0 * np.arctan2(num, den) * r * r
 
 
 def floating_sphere_hull_mesh(
