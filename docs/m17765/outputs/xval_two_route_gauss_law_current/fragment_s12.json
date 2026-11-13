@@ -1,0 +1,548 @@
+{
+  "sphere_cases": [
+    {
+      "label": "sphere_sub1",
+      "n_panels": 80,
+      "exact_current_A": 43.982297150257104,
+      "surface_route": {
+        "current_A": -41.82060350083252,
+        "rel_error": 0.04914917567946877
+      },
+      "far_field_route": {
+        "extrapolated_current_A": -41.82060574081399,
+        "rel_error": 0.04914912475030829,
+        "current_by_radius_A": [
+          -41.82059692662944,
+          -41.820603184559786,
+          -41.8206034820062,
+          -41.8206034992224,
+          -41.8206035007745
+        ],
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "n_directions": 24,
+        "extrapolation_max_rel_residual": 4.8280635229958004e-08,
+        "directional_spread_by_radius": [
+          7.222981321775728e-06,
+          3.376140832015469e-07,
+          2.143957852483471e-08,
+          2.4763806967518267e-09,
+          3.4722286942777546e-10
+        ],
+        "surface_vs_far_field_rel_error": 5.356167252818769e-08
+      },
+      "gauss_law_exact_sphere_rule": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -41.82060350083253,
+          -41.82060350083255,
+          -41.82060350083254,
+          -41.82060350083253,
+          -41.82060350083255
+        ],
+        "directional_spread_by_radius": [
+          8.014244769289642e-06,
+          3.751199969161666e-07,
+          2.209148278876326e-08,
+          2.5189817684266133e-09,
+          3.509859308234339e-10
+        ]
+      },
+      "flux_route": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -41.820645321477286,
+          -41.82064532147821,
+          -41.82064532147784,
+          -41.82064532147739,
+          -41.820645321478395
+        ],
+        "max_rel_error": 0.049148224827706186
+      },
+      "directional_sampling_audit": [
+        {
+          "radius_m": 3.0,
+          "fibonacci_current_A": -41.82059692662944,
+          "exact_sphere_rule_current_A": -41.82060350083253,
+          "fibonacci_vs_exact_rule_rel": 0.049149325153313994,
+          "exact_rule_rel_error": 0.04914917567946844,
+          "sampling_rel_difference": 1.4947384555172158e-07
+        },
+        {
+          "radius_m": 5.0,
+          "fibonacci_current_A": -41.820603184559786,
+          "exact_sphere_rule_current_A": -41.82060350083255,
+          "fibonacci_vs_exact_rule_rel": 0.04914918287037859,
+          "exact_rule_rel_error": 0.04914917567946812,
+          "sampling_rel_difference": 7.190910465389427e-09
+        },
+        {
+          "radius_m": 8.0,
+          "fibonacci_current_A": -41.8206034820062,
+          "exact_sphere_rule_current_A": -41.82060350083254,
+          "fibonacci_vs_exact_rule_rel": 0.04914917610751189,
+          "exact_rule_rel_error": 0.049149175679468284,
+          "sampling_rel_difference": 4.2804361287490303e-10
+        },
+        {
+          "radius_m": 12.0,
+          "fibonacci_current_A": -41.8206034992224,
+          "exact_sphere_rule_current_A": -41.82060350083253,
+          "fibonacci_vs_exact_rule_rel": 0.04914917571607709,
+          "exact_rule_rel_error": 0.04914917567946844,
+          "sampling_rel_difference": 3.660864884559856e-11
+        },
+        {
+          "radius_m": 20.0,
+          "fibonacci_current_A": -41.8206035007745,
+          "exact_sphere_rule_current_A": -41.82060350083255,
+          "fibonacci_vs_exact_rule_rel": 0.04914917568078784,
+          "exact_rule_rel_error": 0.04914917567946812,
+          "sampling_rel_difference": 1.3197181558285952e-12
+        }
+      ],
+      "condition_number": 18.61849180223567,
+      "relative_residual": 2.633125101432526e-16,
+      "independence_audit": {
+        "surface_rel_error": 0.04914917567946877,
+        "far_field_rel_error": 0.04914912475030829,
+        "far_over_surface_error_ratio": 0.9999989637840355,
+        "surface_vs_far_field_rel_error": 5.356167252818769e-08,
+        "verdict": "far-field and surface routes share the same boundary density q; the sub-1e-8 agreement measures the exterior representation formula and the Gauss flux bookkeeping, not an independent discretisation. Accepted as an implementation consistency check only; physics accuracy is carried by the closed-form comparison."
+      }
+    },
+    {
+      "label": "sphere_sub2",
+      "n_panels": 320,
+      "exact_current_A": 43.982297150257104,
+      "surface_route": {
+        "current_A": -43.410385653943344,
+        "rel_error": 0.013003220235631024
+      },
+      "far_field_route": {
+        "extrapolated_current_A": -43.410386238438655,
+        "rel_error": 0.013003206946299892,
+        "current_by_radius_A": [
+          -43.41038393843469,
+          -43.41038557140818,
+          -43.410385649003764,
+          -43.41038565350871,
+          -43.410385653922745
+        ],
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "n_directions": 24,
+        "extrapolation_max_rel_residual": 1.2137301343961657e-08,
+        "directional_spread_by_radius": [
+          1.812987719785006e-06,
+          8.509806134931552e-08,
+          5.083573149929242e-09,
+          4.4956552719233954e-10,
+          2.2231951149399674e-11
+        ],
+        "surface_vs_far_field_rel_error": 1.3464411845531748e-08
+      },
+      "gauss_law_exact_sphere_rule": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -43.41038565394336,
+          -43.410385653943365,
+          -43.41038565394336,
+          -43.41038565394335,
+          -43.410385653943365
+        ],
+        "directional_spread_by_radius": [
+          2.009924538801211e-06,
+          9.442125610225976e-08,
+          5.639931793898925e-09,
+          4.982251750836708e-10,
+          2.4418237133779282e-11
+        ]
+      },
+      "flux_route": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -43.41042906437196,
+          -43.41042906437262,
+          -43.41042906437246,
+          -43.41042906437199,
+          -43.41042906437276
+        ],
+        "max_rel_error": 0.013002233237874432
+      },
+      "directional_sampling_audit": [
+        {
+          "radius_m": 3.0,
+          "fibonacci_current_A": -43.41038393843469,
+          "exact_sphere_rule_current_A": -43.41038565394336,
+          "fibonacci_vs_exact_rule_rel": 0.013003259240157019,
+          "exact_rule_rel_error": 0.013003220235630702,
+          "sampling_rel_difference": 3.900452631696047e-08
+        },
+        {
+          "radius_m": 5.0,
+          "fibonacci_current_A": -43.41038557140818,
+          "exact_sphere_rule_current_A": -43.410385653943365,
+          "fibonacci_vs_exact_rule_rel": 0.013003222112185266,
+          "exact_rule_rel_error": 0.01300322023563054,
+          "sampling_rel_difference": 1.8765547259007244e-09
+        },
+        {
+          "radius_m": 8.0,
+          "fibonacci_current_A": -43.410385649003764,
+          "exact_sphere_rule_current_A": -43.41038565394336,
+          "fibonacci_vs_exact_rule_rel": 0.01300322034793938,
+          "exact_rule_rel_error": 0.013003220235630702,
+          "sampling_rel_difference": 1.1230867742414711e-10
+        },
+        {
+          "radius_m": 12.0,
+          "fibonacci_current_A": -43.41038565350871,
+          "exact_sphere_rule_current_A": -43.41038565394335,
+          "fibonacci_vs_exact_rule_rel": 0.013003220245512998,
+          "exact_rule_rel_error": 0.013003220235630863,
+          "sampling_rel_difference": 9.882134850291979e-12
+        },
+        {
+          "radius_m": 20.0,
+          "fibonacci_current_A": -43.410385653922745,
+          "exact_sphere_rule_current_A": -43.410385653943365,
+          "fibonacci_vs_exact_rule_rel": 0.013003220236099363,
+          "exact_rule_rel_error": 0.01300322023563054,
+          "sampling_rel_difference": 4.688238570467112e-13
+        }
+      ],
+      "condition_number": 37.560018353814904,
+      "relative_residual": 4.075441060841823e-16,
+      "independence_audit": {
+        "surface_rel_error": 0.013003220235631024,
+        "far_field_rel_error": 0.013003206946299892,
+        "far_over_surface_error_ratio": 0.99999897799692,
+        "surface_vs_far_field_rel_error": 1.3464411845531748e-08,
+        "verdict": "far-field and surface routes share the same boundary density q; the sub-1e-8 agreement measures the exterior representation formula and the Gauss flux bookkeeping, not an independent discretisation. Accepted as an implementation consistency check only; physics accuracy is carried by the closed-form comparison."
+      }
+    }
+  ],
+  "spheroid_cases": [
+    {
+      "label": "spheroid2x1_sub1",
+      "n_panels": 80,
+      "exact_current_A": 57.8451091532398,
+      "surface_route": {
+        "current_A": -55.00003050686764,
+        "rel_error": 0.049184428692755106
+      },
+      "far_field_route": {
+        "extrapolated_current_A": -54.998340999568704,
+        "rel_error": 0.04921363612833032,
+        "current_by_radius_A": [
+          -55.007430909200174,
+          -55.002646410776585,
+          -55.001169811032796,
+          -55.00055989810167,
+          -55.00022561312446
+        ],
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "n_directions": 24,
+        "extrapolation_max_rel_residual": 1.509124959237564e-05,
+        "directional_spread_by_radius": [
+          0.11744628372579384,
+          0.0372835057770163,
+          0.014005656693373609,
+          0.006141344154298924,
+          0.002195845410066755
+        ],
+        "surface_vs_far_field_rel_error": 3.071829748754927e-05
+      },
+      "gauss_law_exact_sphere_rule": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -55.00003049396906,
+          -55.00003050686767,
+          -55.00003050686767,
+          -55.00003050686765,
+          -55.000030506867674
+        ],
+        "directional_spread_by_radius": [
+          0.11800185638479292,
+          0.03743152434686051,
+          0.014060581717899477,
+          0.006165467436441479,
+          0.002204500302666979
+        ]
+      },
+      "flux_route": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -55.0000850824503,
+          -55.000085506953766,
+          -55.00008550695303,
+          -55.00008550695253,
+          -55.00008550695354
+        ],
+        "max_rel_error": 0.04918348521484559
+      },
+      "directional_sampling_audit": [
+        {
+          "radius_m": 3.0,
+          "fibonacci_current_A": -55.007430909200174,
+          "exact_sphere_rule_current_A": -55.00003049396906,
+          "fibonacci_vs_exact_rule_rel": 0.049056493895140135,
+          "exact_rule_rel_error": 0.04918442891573994,
+          "sampling_rel_difference": 0.0001279350205998026
+        },
+        {
+          "radius_m": 5.0,
+          "fibonacci_current_A": -55.002646410776585,
+          "exact_sphere_rule_current_A": -55.00003050686767,
+          "fibonacci_vs_exact_rule_rel": 0.04913920613293563,
+          "exact_rule_rel_error": 0.04918442869275461,
+          "sampling_rel_difference": 4.522255981898272e-05
+        },
+        {
+          "radius_m": 8.0,
+          "fibonacci_current_A": -55.001169811032796,
+          "exact_sphere_rule_current_A": -55.00003050686767,
+          "fibonacci_vs_exact_rule_rel": 0.04916473291930364,
+          "exact_rule_rel_error": 0.04918442869275461,
+          "sampling_rel_difference": 1.9695773450970355e-05
+        },
+        {
+          "radius_m": 12.0,
+          "fibonacci_current_A": -55.00055989810167,
+          "exact_sphere_rule_current_A": -55.00003050686765,
+          "fibonacci_vs_exact_rule_rel": 0.04917527681731081,
+          "exact_rule_rel_error": 0.04918442869275486,
+          "sampling_rel_difference": 9.15187544404868e-06
+        },
+        {
+          "radius_m": 20.0,
+          "fibonacci_current_A": -55.00022561312446,
+          "exact_sphere_rule_current_A": -55.000030506867674,
+          "fibonacci_vs_exact_rule_rel": 0.0491810557843161,
+          "exact_rule_rel_error": 0.049184428692754495,
+          "sampling_rel_difference": 3.372908438391694e-06
+        }
+      ],
+      "pointwise_distribution": {
+        "l2_rel": 0.03834628321470043,
+        "linf_rel": 0.05638357832066382,
+        "mean_rel_bias": 0.024381629005053734
+      },
+      "condition_number": 22.352099948947195,
+      "relative_residual": 2.2988587967508084e-16,
+      "spheroid_semi_axes_m": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "exact_spreading_resistance_ohm": 0.017287546253061083,
+      "independence_audit": {
+        "surface_rel_error": 0.049184428692755106,
+        "far_field_rel_error": 0.04921363612833032,
+        "far_over_surface_error_ratio": 1.000593835007369,
+        "surface_vs_far_field_rel_error": 3.071829748754927e-05,
+        "verdict": "far-field and surface routes share the same boundary density q; the sub-1e-8 agreement measures the exterior representation formula and the Gauss flux bookkeeping, not an independent discretisation. Accepted as an implementation consistency check only; physics accuracy is carried by the closed-form comparison."
+      },
+      "closed_form_self_consistency": {
+        "surface_integral_of_local_jn_A": 57.816201052713424,
+        "exact_total_A": 57.8451091532398
+      }
+    },
+    {
+      "label": "spheroid2x1_sub2",
+      "n_panels": 320,
+      "exact_current_A": 57.8451091532398,
+      "surface_route": {
+        "current_A": -57.09291204546596,
+        "rel_error": 0.013003642292059006
+      },
+      "far_field_route": {
+        "extrapolated_current_A": -57.090897370814915,
+        "rel_error": 0.01303847107327379,
+        "current_by_radius_A": [
+          -57.10153615232343,
+          -57.09580462256633,
+          -57.094178963772826,
+          -57.09350269107592,
+          -57.09313013274765
+        ],
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "n_directions": 24,
+        "extrapolation_max_rel_residual": 1.8767502016243898e-05,
+        "directional_spread_by_radius": [
+          0.12874680359754243,
+          0.04039861394474072,
+          0.015126685473380943,
+          0.006625763904625305,
+          0.0023677875904172126
+        ],
+        "surface_vs_far_field_rel_error": 3.528764918207445e-05
+      },
+      "gauss_law_exact_sphere_rule": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -57.092912042352765,
+          -57.09291204546598,
+          -57.092912045465994,
+          -57.092912045465965,
+          -57.09291204546598
+        ],
+        "directional_spread_by_radius": [
+          0.1294095115484444,
+          0.04056034282632445,
+          0.015185979431912747,
+          0.0066517191892186455,
+          0.0023770716282045536
+        ]
+      },
+      "flux_route": {
+        "radii_m": [
+          3.0,
+          5.0,
+          8.0,
+          12.0,
+          20.0
+        ],
+        "current_A": [
+          -57.09296903720568,
+          -57.09296913843567,
+          -57.09296913843486,
+          -57.092969138434356,
+          -57.09296913843595
+        ],
+        "max_rel_error": 0.013002657044722577
+      },
+      "directional_sampling_audit": [
+        {
+          "radius_m": 3.0,
+          "fibonacci_current_A": -57.10153615232343,
+          "exact_sphere_rule_current_A": -57.092912042352765,
+          "fibonacci_vs_exact_rule_rel": 0.012854552645869065,
+          "exact_rule_rel_error": 0.013003642345878478,
+          "sampling_rel_difference": 0.00014908970000941375
+        },
+        {
+          "radius_m": 5.0,
+          "fibonacci_current_A": -57.09580462256633,
+          "exact_sphere_rule_current_A": -57.09291204546598,
+          "fibonacci_vs_exact_rule_rel": 0.01295363673164584,
+          "exact_rule_rel_error": 0.013003642292058637,
+          "sampling_rel_difference": 5.000556041279722e-05
+        },
+        {
+          "radius_m": 8.0,
+          "fibonacci_current_A": -57.094178963772826,
+          "exact_sphere_rule_current_A": -57.092912045465994,
+          "fibonacci_vs_exact_rule_rel": 0.012981740383230174,
+          "exact_rule_rel_error": 0.013003642292058392,
+          "sampling_rel_difference": 2.1901908828217804e-05
+        },
+        {
+          "radius_m": 12.0,
+          "fibonacci_current_A": -57.09350269107592,
+          "exact_sphere_rule_current_A": -57.092912045465965,
+          "fibonacci_vs_exact_rule_rel": 0.01299343147875764,
+          "exact_rule_rel_error": 0.013003642292058883,
+          "sampling_rel_difference": 1.0210813301243974e-05
+        },
+        {
+          "radius_m": 20.0,
+          "fibonacci_current_A": -57.09313013274765,
+          "exact_sphere_rule_current_A": -57.09291204546598,
+          "fibonacci_vs_exact_rule_rel": 0.0129998720980895,
+          "exact_rule_rel_error": 0.013003642292058637,
+          "sampling_rel_difference": 3.7701939691387575e-06
+        }
+      ],
+      "pointwise_distribution": {
+        "l2_rel": 0.014578383889911051,
+        "linf_rel": 0.03284006457249346,
+        "mean_rel_bias": 0.006246179579441009
+      },
+      "condition_number": 46.42692840499002,
+      "relative_residual": 3.9301346228832453e-16,
+      "spheroid_semi_axes_m": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "exact_spreading_resistance_ohm": 0.017287546253061083,
+      "independence_audit": {
+        "surface_rel_error": 0.013003642292059006,
+        "far_field_rel_error": 0.01303847107327379,
+        "far_over_surface_error_ratio": 1.0026783865960425,
+        "surface_vs_far_field_rel_error": 3.528764918207445e-05,
+        "verdict": "far-field error differs from the surface error; the route adds information"
+      },
+      "closed_form_self_consistency": {
+        "surface_integral_of_local_jn_A": 57.816201052713424,
+        "exact_total_A": 57.8451091532398
+      }
+    }
+  ]
+}
