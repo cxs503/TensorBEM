@@ -165,6 +165,36 @@ CASES: dict[str, CaseEntry] = {
         figures=(),
         notes="steady Neumann-Kelvin thin-ship route vs Michell (1898)",
     ),
+    "CASE-BEM-ELLIPSE-2D-ADDED-MASS": CaseEntry(
+        case_code="CASE-BEM-ELLIPSE-2D-ADDED-MASS",
+        pool_code="BEM-ELLIPSE-2D-ADDED-MASS",
+        repo="TensorBEM",
+        tolerance="<3%",
+        entry="src/tensorbem/benchmarks/case_ellipse_2d_added_mass.py",
+        entry_args=(
+            "--output",
+            "benchmarks/verified/case_bem_ellipse_2d_added_mass",
+            "--doc",
+            "docs/CASE-BEM-ELLIPSE-2D-ADDED-MASS.md",
+        ),
+        library="tensorbem.benchmarks.case_ellipse_2d_added_mass",
+        artifacts=("benchmarks/verified/case_bem_ellipse_2d_added_mass/results.json",),
+        doc="docs/CASE-BEM-ELLIPSE-2D-ADDED-MASS.md",
+        figures=(
+            "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/convergence.png",
+            "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/aspect_ratio.png",
+            "benchmarks/verified/case_bem_ellipse_2d_added_mass/figures/"
+            "boundary_flux_error.png",
+        ),
+        repro_cmd=(
+            "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_ellipse_2d_added_mass "
+            "--output benchmarks/verified/case_bem_ellipse_2d_added_mass "
+            "--doc docs/CASE-BEM-ELLIPSE-2D-ADDED-MASS.md"
+        ),
+        notes="2-D exterior operator on a non-circular section: added mass of an "
+        "elliptic cylinder vs rho*pi*b^2 / rho*pi*a^2; two routes (first-kind S and "
+        "second-kind 1/2 I - H) plus an interior-extension negative control",
+    ),
 }
 
 
