@@ -1701,6 +1701,10 @@ UNTESTED_MODULES: dict[str, str] = {
         "CASE-ACOUSTIC-PULSE report driver: it assembles the route A/B/C, mesh-study and"
         " convergence-order numbers it prints from tensorbem.acoustic3d_pulse, which is pinned by"
         " tests/test_acoustic3d_pulse.py and graded by the acoustic-3d-pulse row.",
+    "tensorbem.benchmarks.shu_osher_wave_interaction":
+        "CASE-SHU-OSHER benchmark driver: it runs the linear wave-interaction case through"
+        " tensorbem.wave1d (pinned by tests/test_wave1d.py) and assembles the report/figures;"
+        " the wave1d physics it exercises is graded by the wave1d test suite.",
     "tensorbem.benchmarks.hydrostatic_figures":
         "matplotlib helper rendering report figures from JSON artifacts; exercised during figure builds.",
     "tensorbem.benchmarks.ursell_quadrature_study":
@@ -1785,6 +1789,23 @@ AUXILIARY_MODULES: dict[str, str] = {
         'hydrodynamic coefficient interchange layer (WAMIT .1/.3 and Nemoh tec read/write plus a canonical JSON container); it neither assembles nor solves a boundary-value problem, so no physics level is claimed, and its own conformance is graded by tests/test_coefficients_io.py (32 assertions: exact native round trip, dialect round trips to 1e-6, capytaine-written file parsing, tamper detection) with evidence in docs/coefficient_io/; the reference constants this layer exists to replace are still hard-coded in the Wigley drivers, so the anchor GAP-BEM-COEFF-IO is only half closed.',
     'tensorbem.analytic':
         'closed-form reference library shared by the benchmark drivers; each reference it exports is graded through the row that consumes it (Ursell, Hulme, MacCamy-Fuchs, added-mass).',
+    'tensorbem.wave1d':
+        '1-D linear wave-equation solver (d\'Alembert formula + retarded-potential boundary flux)'
+        ' exercised by the CASE-SHU-OSHER benchmark and pinned by tests/test_wave1d.py;'
+        ' it is a scalar wave solver, not a BEM boundary-value problem, so no capability'
+        ' row claims a BEM evidence level for it.',
+    'tensorbem.nk_steady_kernel':
+        'steady Neumann-Kelvin spectral-form kernel candidate (m17117); the steady wave'
+        ' resistance physics it feeds is graded by the Neumann-Kelvin row and pinned by'
+        ' tests/test_nk_steady_kernel_candidate.py.',
+    'tensorbem.shape_gradient':
+        'shape-gradient / adjoint-sensitivity module (m16955); the adjoint sign fix is'
+        ' pinned by tests/test_shape_gradient.py and the geometry it differentiates is'
+        ' graded by the panel-geometry rows.',
+    'tensorbem.steady_kelvin':
+        'steady Kelvin wave-resistance kernel (m16955); the steady wave-resistance'
+        ' physics is graded by the forward-speed-wave-resistance row and pinned by'
+        ' tests/test_steady_kelvin.py.',
 }
 
 
