@@ -1,0 +1,531 @@
+{
+ "literature": {
+  "maccamy_fuchs_1954": {
+   "citation": "MacCamy, R.C. & Fuchs, R.A. (1954) Wave forces on a pile: a diffraction theory. Technical Memorandum No. 69, Beach Erosion Board, US Army, 17 pp.",
+   "equation": "psi(r,theta) = sum_m [ i^m J_m(kr) + A_m H_m^(1)(kr) ] e^{i m theta}, A_m = -i^m J_m'(ka) / H_m'^(1)(ka)",
+   "implemented_in": "src/tensorbem/cylinder_drift.py: maccamy_fuchs_modes / near_field_cylinder_drift",
+   "transcription": {
+    "reproduced_in": "Chakrabarti, S.K. & Gupta, A. (2007) Steady wave drift force on basic objects of symmetry. WIT Transactions on the Built Environment, Vol. 92 (Fluid Structure Interaction and Moving Boundary Problems IV), WIT Press, pp. 1-11.",
+    "section": "4.1 Vertical cylinder, Eq. (3)",
+    "url": "http://www.witpress.com/Secure/elibrary/papers/FSI07/FSI07001FU1.pdf",
+    "pdf_sha256": "c8506effb013fcd8d55029d10f1c006a5abb0d0ffd9917ef14c0d517f4c5db86",
+    "pdf_page": 3,
+    "snippet": "For a bottom-seated cylinder extended above the free surface, MacCamy and Fuchs [4] developed the forces on a fixed vertical cylinder in a closed form using the Bessel function series. ... The total linear velocity potential including diffraction at the surface of a bottom-mounted cylinder, r = a ... is written as Eq. (3) [psi = sum_n (a_n cos n theta + b_n sin n theta) ...] with the coefficients A_n = 2 J_n'(ka) / ... ; A_n^2 = [J_n'(ka)]^2 + [Y_n'(ka)]^2",
+    "extraction": "pypdf 6.x text extraction, page index 3 (1-based); PDF fetched by this node"
+   }
+  },
+  "maruo_1960": {
+   "citation": "Maruo, H. (1960) On the increase of the resistance of a ship in rough seas (the drift force). J. Soc. Nav. Archit. Japan 107, 59-67.",
+   "equation": "F_x = (rho g A^2 / (2 pi k)) Int_0^{2 pi} |S(theta)|^2 (1 - cos theta) dtheta  (deep water, reduced / radiation-radius-free form)",
+   "implemented_in": "src/tensorbem/cylinder_drift.py: far_field_cylinder_drift",
+   "transcription": {
+    "reproduced_in": "McIver, P. (1986) Mean drift forces on arrays of bodies due to incident long waves. Brunel University, Department of Mathematics, Report TR/13/86.",
+    "section": "5 The mean drift force, Eqs. (5.1)-(5.2)",
+    "url": "http://bura.brunel.ac.uk/bitstream/2438/2010/1/TR_13_86.pdf",
+    "pdf_sha256": "d24ff37ec34abb7846983dba873c94be51bc3131d17e2aebe7413c5c3aebac16",
+    "pdf_page": 15,
+    "snippet": "The mean drift forces and moments on a body have been related to the far field of the first order scattering potential by Maruo (1960) and Newman (1967). The result for the mean horizontal drift force in the direction of wave advance is [Eq. (5.1): f_x^(2) = rho g A^2/2 * k/(...) * Int_0^{2 pi} (1 - cos psi) |A(psi)|^2 dpsi] ... where A(psi) is related to the far field form of the scattered wave through [Eq. (5.2): phi ~ ... (2/(pi k r))^(1/2) e^{i(kr-pi/4)} A(psi) cosh k(z+h)/cosh kh]",
+    "extraction": "pypdf 6.x text extraction, page index 15 (1-based); the fraction layout of (5.1) is mangled by PDF text extraction, so the deep-water reduction used here is the one verified numerically against the independent near-field momentum integral"
+   }
+  },
+  "long_wave_law": {
+   "expression": "5*pi**2/16",
+   "value": 3.0842513753404246,
+   "status": "derived, not quoted verbatim: no freely reachable copy of Maruo (1960) carries a typeset statement of this coefficient (publisher full text blocked in this sandbox). The value is obtained here three independent ways -- (i) truncated-mode asymptotics of the MacCamy-Fuchs A_m (m = 0, +-1) + analytic Maruo kernel integral, (ii) exact near-field momentum integral, (iii) exact far-field integral over ka = 0.01 .. 0.4 -- so the *number* is verified even though the literature quote is not. Recorded as a known gap, see report section 6."
+  }
+ },
+ "long_wave": {
+  "rows": [
+   {
+    "ka": 0.02,
+    "reference_law": 0.24810334913513446,
+    "near_field": 0.24807436461748192,
+    "far_field": 0.24807436461808025,
+    "rel_error_near": 0.0001168243707857189,
+    "rel_error_far": 0.00011682436837411525,
+    "normalised_coefficient": 3.0838910596215934,
+    "pass": true
+   },
+   {
+    "ka": 0.05,
+    "reference_law": 3.8766148302364765,
+    "near_field": 3.8720536191245007,
+    "far_field": 3.8720536191239865,
+    "rel_error_near": 0.0011765964150989637,
+    "rel_error_far": 0.0011765964152316195,
+    "normalised_coefficient": 3.0806224562285256,
+    "pass": true
+   },
+   {
+    "ka": 0.1,
+    "reference_law": 31.01291864189181,
+    "near_field": 30.825210627453576,
+    "far_field": 30.82521062745397,
+    "rel_error_near": 0.006052574948063186,
+    "rel_error_far": 0.00605257494805047,
+    "normalised_coefficient": 3.0655837127325487,
+    "pass": true
+   },
+   {
+    "ka": 0.15,
+    "reference_law": 104.66860041638482,
+    "near_field": 103.04503791928357,
+    "far_field": 103.04503791928325,
+    "rel_error_near": 0.015511457023811456,
+    "rel_error_far": 0.015511457023814578,
+    "normalised_coefficient": 3.0364101426811905,
+    "pass": true
+   },
+   {
+    "ka": 0.2,
+    "reference_law": 248.1033491351345,
+    "near_field": 240.59068232887907,
+    "far_field": 240.59068232887975,
+    "rel_error_near": 0.030280392555940464,
+    "rel_error_far": 0.030280392555937716,
+    "normalised_coefficient": 2.9908590329539257,
+    "pass": true
+   },
+   {
+    "ka": 0.25,
+    "reference_law": 484.5768537795594,
+    "near_field": 459.820783995659,
+    "far_field": 459.82078399565785,
+    "rel_error_near": 0.0510880154320419,
+    "rel_error_far": 0.05108801543204425,
+    "normalised_coefficient": 2.926683093480729,
+    "pass": false
+   },
+   {
+    "ka": 0.3,
+    "reference_law": 837.3488033310786,
+    "near_field": 771.5428285157263,
+    "far_field": 771.542828515727,
+    "rel_error_near": 0.07858848612856172,
+    "rel_error_far": 0.0785884861285609,
+    "normalised_coefficient": 2.8418647289124888,
+    "pass": false
+   }
+  ],
+  "tolerance": 0.05,
+  "law_valid_ka": 0.24,
+  "law_valid_ka_gate": 0.2,
+  "closed_form_coefficient": 3.0842513753404246,
+  "module_coefficient": 3.0842513753404246,
+  "coefficient_abs_diff": 0.0
+ },
+ "slope": {
+  "ka": [
+   0.02,
+   0.05,
+   0.1
+  ],
+  "forces": [
+   0.24807436461808025,
+   3.8720536191239865,
+   30.82521062745397
+  ],
+  "fitted_slope": 2.996433413822807,
+  "fitted_intercept": 10.328754274034463,
+  "target_slope": 3.0,
+  "slope_tolerance": 0.05,
+  "pass": true
+ },
+ "wide_ka": {
+  "rows": [
+   {
+    "ka": 0.2,
+    "near_field": 240.59068232887907,
+    "far_field": 240.59068232887975,
+    "near_vs_far": 2.835193032942392e-15,
+    "drift_coefficient": 0.02392687226363141,
+    "law_rel_error": 0.030280392555937716
+   },
+   {
+    "ka": 0.5,
+    "near_field": 2875.6569932775274,
+    "far_field": 2875.6569932775283,
+    "near_vs_far": 3.162737085469753e-16,
+    "drift_coefficient": 0.28598562872902494,
+    "law_rel_error": 0.25820409836741204
+   },
+   {
+    "ka": 0.7,
+    "near_field": 5296.273595011985,
+    "far_field": 5296.273595011984,
+    "near_vs_far": 1.7172351191023967e-16,
+    "drift_coefficient": 0.5267172467131085,
+    "law_rel_error": 0.5021097153884043
+   },
+   {
+    "ka": 1.0,
+    "near_field": 6685.993519247998,
+    "far_field": 6685.993519247995,
+    "near_vs_far": 4.080895528037649e-16,
+    "drift_coefficient": 0.6649256377760866,
+    "law_rel_error": 0.7844126315084498
+   },
+   {
+    "ka": 1.5,
+    "near_field": 6037.260100111309,
+    "far_field": 6037.260100111309,
+    "near_vs_far": 0.0,
+    "drift_coefficient": 0.6004087516582193,
+    "law_rel_error": 0.9423202366698864
+   },
+   {
+    "ka": 2.0,
+    "near_field": 6306.398053942849,
+    "far_field": 6306.398053942844,
+    "near_vs_far": 8.653066558692407e-16,
+    "drift_coefficient": 0.6271746653681255,
+    "law_rel_error": 0.9745815682217658
+   },
+   {
+    "ka": 3.0,
+    "near_field": 6364.148577953521,
+    "far_field": 6364.148577953524,
+    "near_vs_far": 4.2872727936784983e-16,
+    "drift_coefficient": 0.6329179859231271,
+    "law_rel_error": 0.9923996445058066
+   }
+  ],
+  "max_near_vs_far": 2.835193032942392e-15,
+  "gate": 1e-06,
+  "pass": true
+ },
+ "scaling": {
+  "ka": 1.0,
+  "force_amplitude_1": 6685.993519247995,
+  "force_amplitude_2": 26743.97407699198,
+  "ratio": 4.0,
+  "target": 4.0,
+  "gate": 1e-09,
+  "pass": true
+ },
+ "bem": {
+  "rows": [
+   {
+    "ka": 0.5,
+    "n_theta": 32,
+    "n_z": 12,
+    "n_azimuth": 180,
+    "panels": 800,
+    "depth_over_radius": 10.0,
+    "bem_near_field": 2700.768668345595,
+    "bem_far_field": 2817.3272241375685,
+    "closed_form": 2875.6569932775283,
+    "closed_form_near": 2875.6569932775274,
+    "law": 3876.6148302364754,
+    "bem_far_vs_closed_error": 0.02028398007005644,
+    "bem_near_vs_closed_error": 0.06081682389129574,
+    "bem_near_vs_far_gap": 0.04137203332057179,
+    "drift_coefficient_bem": 0.2801847019355629,
+    "energy_identity_residual": 0.003451381184422193,
+    "solver_relative_residual": 1.751973351568383e-15,
+    "azimuth_rel_change": 0.00012275554172622033,
+    "seconds": 57.177091458812356
+   },
+   {
+    "ka": 1.0,
+    "n_theta": 32,
+    "n_z": 12,
+    "n_azimuth": 180,
+    "panels": 800,
+    "depth_over_radius": 5.0,
+    "bem_near_field": 6410.460063386696,
+    "bem_far_field": 6614.597739039964,
+    "closed_form": 6685.993519247995,
+    "closed_form_near": 6685.993519247998,
+    "law": 31012.918641891803,
+    "bem_far_vs_closed_error": 0.010678410022757769,
+    "bem_near_vs_closed_error": 0.04121054785172639,
+    "bem_near_vs_far_gap": 0.030861691626148154,
+    "drift_coefficient_bem": 0.6578252891812699,
+    "energy_identity_residual": 0.003184140434426025,
+    "solver_relative_residual": 1.5918789519239759e-15,
+    "azimuth_rel_change": 0.00023109395247187143,
+    "seconds": 57.612688951194286
+   },
+   {
+    "ka": 2.0,
+    "n_theta": 32,
+    "n_z": 12,
+    "n_azimuth": 180,
+    "panels": 800,
+    "depth_over_radius": 2.5,
+    "bem_near_field": 6000.597469716888,
+    "bem_far_field": 6223.326700089784,
+    "closed_form": 6306.398053942844,
+    "closed_form_near": 6306.398053942849,
+    "law": 248103.34913513443,
+    "bem_far_vs_closed_error": 0.013172551612266626,
+    "bem_near_vs_closed_error": 0.04849053003160352,
+    "bem_near_vs_far_gap": 0.03578941635342446,
+    "drift_coefficient_bem": 0.6189131747186578,
+    "energy_identity_residual": 0.004936583993308461,
+    "solver_relative_residual": 1.6685641638773658e-15,
+    "azimuth_rel_change": 0.0006083633664649786,
+    "seconds": 58.81892872042954
+   }
+  ],
+  "mesh": [
+   32,
+   12
+  ],
+  "tolerance": 0.05,
+  "max_bem_far_error": 0.02028398007005644,
+  "max_bem_near_error": 0.06081682389129574,
+  "far_pass": true,
+  "near_pass": false,
+  "seconds": 173.60870913043618
+ },
+ "convergence": {
+  "ka": 0.5,
+  "rows": [
+   {
+    "panels": 208,
+    "n_theta": 16,
+    "n_z": 6,
+    "far_error": 0.07395553351990668,
+    "near_error": 0.3020235303885386,
+    "gap": 0.2462819066729284,
+    "seconds": 8.232223439961672
+   },
+   {
+    "panels": 456,
+    "n_theta": 24,
+    "n_z": 9,
+    "far_error": 0.03179163294647602,
+    "near_error": 0.13350243364647582,
+    "gap": 0.10505052854431422,
+    "seconds": 31.054936399683356
+   },
+   {
+    "panels": 800,
+    "n_theta": 32,
+    "n_z": 12,
+    "far_error": 0.02028398007005644,
+    "near_error": 0.06081682389129574,
+    "gap": 0.04137203332057179,
+    "seconds": 69.45702884159982
+   },
+   {
+    "panels": 1776,
+    "n_theta": 48,
+    "n_z": 18,
+    "far_error": 0.014061529326107741,
+    "near_error": 0.021233359958808807,
+    "gap": 0.007274115825706046,
+    "seconds": 296.4027123488486
+   }
+  ],
+  "orders": [
+   {
+    "panels": [
+     208,
+     456
+    ],
+    "quantity": "far_error",
+    "observed_order": 2.1511071705731455
+   },
+   {
+    "panels": [
+     208,
+     456
+    ],
+    "quantity": "near_error",
+    "observed_order": 2.080082306127711
+   },
+   {
+    "panels": [
+     456,
+     800
+    ],
+    "quantity": "far_error",
+    "observed_order": 1.5988493195123104
+   },
+   {
+    "panels": [
+     456,
+     800
+    ],
+    "quantity": "near_error",
+    "observed_order": 2.797462324821687
+   },
+   {
+    "panels": [
+     800,
+     1776
+    ],
+    "quantity": "far_error",
+    "observed_order": 0.9188350033576547
+   },
+   {
+    "panels": [
+     800,
+     1776
+    ],
+    "quantity": "near_error",
+    "observed_order": 2.638955327320422
+   }
+  ],
+  "far_monotone": true,
+  "near_monotone": true,
+  "near_error_at_finest": 0.021233359958808807,
+  "far_error_at_finest": 0.014061529326107741,
+  "near_pass_at_finest": true,
+  "far_pass_at_finest": true,
+  "pass": true
+ },
+ "azimuth": {
+  "ka": 1.0,
+  "rows": [
+   {
+    "ka": 1.0,
+    "n_theta": 32,
+    "n_z": 12,
+    "n_azimuth": 180,
+    "panels": 800,
+    "depth_over_radius": 5.0,
+    "bem_near_field": 6410.460063386696,
+    "bem_far_field": 6614.597739039964,
+    "closed_form": 6685.993519247995,
+    "closed_form_near": 6685.993519247998,
+    "law": 31012.918641891803,
+    "bem_far_vs_closed_error": 0.010678410022757769,
+    "bem_near_vs_closed_error": 0.04121054785172639,
+    "bem_near_vs_far_gap": 0.030861691626148154,
+    "drift_coefficient_bem": 0.6578252891812699,
+    "energy_identity_residual": 0.003184140434426025,
+    "solver_relative_residual": 1.5918789519239759e-15,
+    "azimuth_rel_change": 0.00023109395247187143,
+    "seconds": 83.67562524974346
+   },
+   {
+    "ka": 1.0,
+    "n_theta": 32,
+    "n_z": 12,
+    "n_azimuth": 360,
+    "panels": 800,
+    "depth_over_radius": 5.0,
+    "bem_near_field": 6410.460063386696,
+    "bem_far_field": 6615.005551690935,
+    "closed_form": 6685.993519247995,
+    "closed_form_near": 6685.993519247998,
+    "law": 31012.918641891803,
+    "bem_far_vs_closed_error": 0.010617414951524575,
+    "bem_near_vs_closed_error": 0.04121054785172639,
+    "bem_near_vs_far_gap": 0.030921438645195577,
+    "drift_coefficient_bem": 0.6578658463679108,
+    "energy_identity_residual": 0.00309218541260072,
+    "solver_relative_residual": 1.5918789519239759e-15,
+    "azimuth_rel_change": 5.779471558864263e-05,
+    "seconds": 86.50870044901967
+   }
+  ],
+  "spread": 6.165343185788328e-05,
+  "gate": 0.01,
+  "pass": true
+ },
+ "gates": {
+  "G1_law_at_ka002": {
+   "got": 0.00011682436837411525,
+   "threshold": 0.05,
+   "pass": true,
+   "what": "exact closed form vs published long-wave law at ka = 0.02"
+  },
+  "G2_law_band": {
+   "got": 0.24,
+   "threshold": 0.2,
+   "pass": true,
+   "what": "widest ka at which the law holds to < 5 %"
+  },
+  "G3_coefficient_identity": {
+   "got": 0.0,
+   "threshold": 1e-12,
+   "pass": true,
+   "what": "5 pi^2/16 (literature expression) vs module long_wave_drift_coefficient()"
+  },
+  "G4_slope": {
+   "got": 2.996433413822807,
+   "threshold": 3.0,
+   "tol": 0.05,
+   "pass": true,
+   "what": "log-log exponent of F(ka), ka <= 0.1"
+  },
+  "G5_near_vs_far": {
+   "got": 2.835193032942392e-15,
+   "threshold": 1e-06,
+   "pass": true,
+   "what": "two independent closed-form routes, ka = 0.2 .. 3"
+  },
+  "G6_amplitude_square": {
+   "got": 4.0,
+   "threshold": 4.0,
+   "pass": true,
+   "what": "F(2A)/F(A) = 4 (second order)"
+  },
+  "G7_bem_far_vs_closed_form": {
+   "got": 0.02028398007005644,
+   "threshold": 0.05,
+   "pass": true,
+   "what": "real BEM solve -> Kochin -> Maruo vs closed form, 800 panels, ka = 0.5/1/2"
+  },
+  "G8_bem_near_converged": {
+   "got": 0.021233359958808807,
+   "threshold": 0.05,
+   "pass": true,
+   "what": "BEM near-field pressure integral at the finest panel rung (ka = 0.5)"
+  },
+  "G9_convergence_monotone": {
+   "got": {
+    "far": true,
+    "near": true
+   },
+   "threshold": true,
+   "pass": true,
+   "what": "both BEM routes converge monotonically under panel refinement"
+  },
+  "G10_azimuth": {
+   "got": 6.165343185788328e-05,
+   "threshold": 0.01,
+   "pass": true,
+   "what": "BEM Kochin azimuth resolution 180 -> 360"
+  },
+  "all_pass": true
+ },
+ "run": {
+  "case": "CASE-BEM-CYL-DRIFT-ASYMP",
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cyl_drift_asymptotic --json artifacts/case_cyl_drift_asymptotic/results.json --figures artifacts/case_cyl_drift_asymptotic",
+  "git_rev": "96f19f7ced7ba57e3e47c634615274d5811b36fd",
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "host": "36cb7828dbd5",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "started_utc": "2026-11-13T02:39:44Z",
+  "wall_seconds": 750.4193534851074,
+  "units": {
+   "rho": "kg/m^3",
+   "g": "m/s^2",
+   "A": "m",
+   "a": "m",
+   "ka": "dimensionless",
+   "force": "N",
+   "drift_coefficient": "F_x/(rho g A^2 a)"
+  },
+  "parameters": {
+   "density": 1025.0,
+   "gravity": 9.81,
+   "radius": 1.0,
+   "amplitude": 1.0,
+   "wave_heading": "beam seas (beta = 0), fixed body, deep water (omega^2 = g k)",
+   "water_depth_rule": "BEM meshes use depth = 5/k (kd = 5, i.e. e^-5 = 0.7 % depth decay)"
+  }
+ },
+ "figures": [
+  "artifacts/case_cyl_drift_asymptotic/cyl_drift_coefficient.png",
+  "artifacts/case_cyl_drift_asymptotic/cyl_drift_long_wave_plateau.png",
+  "artifacts/case_cyl_drift_asymptotic/cyl_drift_bem_convergence.png"
+ ]
+}
