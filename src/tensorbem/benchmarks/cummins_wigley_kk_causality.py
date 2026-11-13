@@ -640,19 +640,33 @@ def gates_from_sweep(
     dt: float = 0.02,
     tau_max: float = 40.0,
     decay_duration: float = 120.0,
+    include_cross_solver: bool = True,
 ) -> dict:
-    """Evaluate all five gates on one sweep (all DOF for G1/G2/G3/G5, heave G4)."""
+    """Evaluate all five gates on one sweep (all DOF for G1/G2/G3/G5, heave G4).
+
+    ``include_cross_solver=False`` marks G1 as *skipped* instead of evaluating it,
+    for sweeps whose mesh level the frozen capytaine reference does not cover
+    (a cached sweep from another artifact, an off-ladder mesh).  A skipped gate is
+    neither passed nor failed; it is reported as ``passed: None`` and left out of
+    the failure list, so a band study cannot borrow G1's authority by accident.
+    """
     studies = {}
     for dof in range(6):
         studies[DOF_LABELS[dof]] = analysis_gates(sweep, dof, dt=dt, tau_max=tau_max)
     decay = heave_decay_gate(studies["heave"], sweep, dt=dt,
                              duration=decay_duration)
-    cross = cross_solver_table(sweep, reference or load_capytaine_reference())
-
-    g1 = _verdict("G1_cross_solver", cross["worst_rel_err"], GATES["G1_cross_solver"]["tol"],
-                  {"worst_added_mass": cross["worst_added_mass_rel_err"],
-                   "worst_damping": cross["worst_damping_rel_err"],
-                   "omega": 1.0, "level": sweep["level"]})
+    if include_cross_solver:
+        cross = cross_solver_table(sweep, reference or load_capytaine_reference())
+        g1 = _verdict("G1_cross_solver", cross["worst_rel_err"],
+                      GATES["G1_cross_solver"]["tol"],
+                      {"worst_added_mass": cross["worst_added_mass_rel_err"],
+                       "worst_damping": cross["worst_damping_rel_err"],
+                       "omega": 1.0, "level": sweep["level"]})
+    else:
+        cross = {"skipped": "no independent reference for this mesh level",
+                 "level": sweep["level"]}
+        g1 = {"id": "G1_cross_solver", "value": None, "tol": GATES["G1_cross_solver"]["tol"],
+              "passed": None, "skipped": cross["skipped"], "level": sweep["level"]}
     g2 = _verdict("G2_kernel_at_zero",
                   max(s["G2"]["rel_err"] for s in studies.values()),
                   GATES["G2_kernel_at_zero"]["tol"],
@@ -672,7 +686,7 @@ def gates_from_sweep(
                   {"worst_dof": worst_r5["dof_label"],
                    "per_dof": {k: v["G5"]["rel_err"] for k, v in studies.items()}})
     gates = {g["id"]: g for g in (g1, g2, g3, g4, g5)}
-    failed = [key for key, value in gates.items() if not value["passed"]]
+    failed = [key for key, value in gates.items() if value["passed"] is False]
     return {
         "level": sweep["level"],
         "omega": sweep["omega"],
