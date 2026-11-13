@@ -1,0 +1,556 @@
+{
+  "criteria": {
+    "direction_sweep_max_rel": 0.01,
+    "interference_ratio_high": 1.0,
+    "interference_ratio_low": 0.6931471805599453,
+    "mutant_detection_min_rel": 0.01,
+    "oblate_2to1_analytic_rel": 0.05,
+    "prolate_2to1_analytic_rel": 0.03,
+    "prolate_4to1_analytic_rel": 0.05,
+    "radius_independence_rel": 0.01,
+    "sphere_analytic_rel": 0.03,
+    "two_route_rel": 0.01
+  },
+  "direction_sweep": [
+    {
+      "fit_max_rel_residual": 4.721141105891312e-05,
+      "intercept_rel_error": 0.0002928531454214133,
+      "n_directions": 12.0,
+      "radius_spread_rel": 0.001032800111546558
+    },
+    {
+      "fit_max_rel_residual": 1.6667911801435148e-05,
+      "intercept_rel_error": 4.6695002942153234e-05,
+      "n_directions": 24.0,
+      "radius_spread_rel": 0.0001407164023533003
+    },
+    {
+      "fit_max_rel_residual": 3.5179014124757537e-06,
+      "intercept_rel_error": 1.1113089720110188e-05,
+      "n_directions": 48.0,
+      "radius_spread_rel": 3.337734402349209e-05
+    },
+    {
+      "fit_max_rel_residual": 1.933001677243281e-07,
+      "intercept_rel_error": 1.5378587012009183e-06,
+      "n_directions": 96.0,
+      "radius_spread_rel": 5.739507228999278e-06
+    }
+  ],
+  "elapsed_seconds": 39.2201439794153,
+  "far_field_quadrature_axis": [
+    {
+      "intercept_rel_error": 1.0897417820945091e-05,
+      "quadrature_order": 2.0
+    },
+    {
+      "intercept_rel_error": 1.1113086389202568e-05,
+      "quadrature_order": 4.0
+    },
+    {
+      "intercept_rel_error": 1.1113089720110188e-05,
+      "quadrature_order": 8.0
+    }
+  ],
+  "mixed_bc": {
+    "anode_potential_V": -1.05,
+    "bem_relative_residual": 6.693191823390343e-16,
+    "cap_fraction": 0.25,
+    "far_field": {
+      "body_extent_m": 2.0,
+      "current_by_radius_A": [
+        -17.59777457087244,
+        -17.59603365082735,
+        -17.593642880005913,
+        -17.592270351885677,
+        -17.59085269652356
+      ],
+      "extrapolated_current_A": -17.588792045080908,
+      "extrapolation_intercept_shape": [
+        -17.588792045080908,
+        -0.027771051871725207
+      ],
+      "extrapolation_max_rel_residual": 1.699052315512722e-05,
+      "far_field_vs_surface_rel_error": 4.1047716744582293e-05,
+      "monopole_max_rel_error_by_radius": [
+        1.354067814627319,
+        0.8174487591729355,
+        0.4518089245657358,
+        0.3114577388943339,
+        0.1919031190635899
+      ],
+      "n_directions": 48,
+      "radii_m": [
+        3.0,
+        4.0,
+        6.0,
+        8.0,
+        12.0
+      ],
+      "radius_independence": {
+        "max_rel_deviation": 0.0005106960028015662,
+        "rel_by_radius": [
+          0.0005106960028015662,
+          0.00041171705981190443,
+          0.0002757912489141956,
+          0.000197757003201493,
+          0.00011715707578835201
+        ],
+        "spread_rel": 0.00039353892701321416
+      },
+      "surface_current_A": -17.588070094961566
+    },
+    "far_field_current_A": -17.588792045080908,
+    "n_anode_panels": 42,
+    "n_panels": 320,
+    "name": "mixed_bc_prolate_cap",
+    "semi_axes_m": [
+      2.0,
+      1.0,
+      1.0
+    ],
+    "surface_current_A": -17.588070094961566,
+    "two_route_rel": 4.1047716744582293e-05
+  },
+  "mutant": {
+    "base_rel_error": 1.1113089720110188e-05,
+    "intercept_A": -59.4702826762477,
+    "intercept_rel_error": 0.0416489151124442,
+    "offset_fraction": 1.0,
+    "offset_m": 2.0
+  },
+  "oblate_2to1": {
+    "analytic_current_A": -36.373066958946424,
+    "bem_condition_number": 46.08830675858676,
+    "bem_relative_residual": 3.9594279570806816e-16,
+    "body_extent_m": 1.0,
+    "conductivity_S_m": 3.5,
+    "far_field": {
+      "body_extent_m": 1.0,
+      "current_by_radius_A": [
+        -35.897909102952,
+        -35.89903970590366,
+        -35.89964525755733,
+        -35.89982441124972,
+        -35.89994347709646
+      ],
+      "extrapolated_current_A": -35.90082146369067,
+      "extrapolation_intercept_shape": [
+        -35.90082146369067,
+        0.004041059318748419
+      ],
+      "extrapolation_max_rel_residual": 6.650874900166087e-06,
+      "far_field_vs_surface_rel_error": 2.194278211716893e-05,
+      "monopole_max_rel_error_by_radius": [
+        0.08896741287395248,
+        0.053510920438936974,
+        0.025040778689532837,
+        0.014353631832163833,
+        0.006467723260786744
+      ],
+      "n_directions": 48,
+      "radii_m": [
+        1.5,
+        2.0,
+        3.0,
+        4.0,
+        6.0
+      ],
+      "radius_independence": {
+        "max_rel_deviation": 8.112239831656516e-05,
+        "rel_by_radius": [
+          -8.112239831656516e-05,
+          -4.96300004948258e-05,
+          -3.2762652367905345e-05,
+          -2.7772413006188437e-05,
+          -2.445589149261262e-05
+        ],
+        "spread_rel": 5.666650682395254e-05
+      },
+      "surface_current_A": -35.900033717072816
+    },
+    "far_field_current_A": -35.90082146369067,
+    "far_field_rel_error": 0.012983383990928504,
+    "geometric_capacitance_m": 10.392304845413264,
+    "n_panels": 320,
+    "name": "oblate_2to1",
+    "potential_V": -1.0,
+    "radius_independence": {
+      "max_rel_deviation": 8.112239831656516e-05,
+      "rel_by_radius": [
+        -8.112239831656516e-05,
+        -4.96300004948258e-05,
+        -3.2762652367905345e-05,
+        -2.7772413006188437e-05,
+        -2.445589149261262e-05
+      ],
+      "spread_rel": 5.666650682395254e-05
+    },
+    "semi_axes_m": [
+      0.5,
+      1.0,
+      1.0
+    ],
+    "solve_seconds": 0.48231974989175797,
+    "surface_current_A": -35.900033717072816,
+    "surface_rel_error": 0.013005041406255672,
+    "two_route_rel": 2.194278211716893e-05
+  },
+  "pass": true,
+  "prolate_2to1": {
+    "analytic_current_A": -57.845109153239804,
+    "bem_condition_number": 46.43311437996011,
+    "bem_relative_residual": 4.1079189588794176e-16,
+    "body_extent_m": 2.0,
+    "conductivity_S_m": 3.5,
+    "far_field": {
+      "body_extent_m": 2.0,
+      "current_by_radius_A": [
+        -57.094486615041234,
+        -57.093488174441546,
+        -57.092953949176945,
+        -57.09274292971769,
+        -57.09258104206341
+      ],
+      "extrapolated_current_A": -57.09180983617786,
+      "extrapolation_intercept_shape": [
+        -57.09180983617786,
+        -0.007516726488590232
+      ],
+      "extrapolation_max_rel_residual": 3.5179014124757537e-06,
+      "far_field_vs_surface_rel_error": 1.1113089720110188e-05,
+      "monopole_max_rel_error_by_radius": [
+        0.1282463718263918,
+        0.0655793856011484,
+        0.027397313497453286,
+        0.015097005184554261,
+        0.006613944236633134
+      ],
+      "n_directions": 48,
+      "radii_m": [
+        3.0,
+        4.0,
+        6.0,
+        8.0,
+        12.0
+      ],
+      "radius_independence": {
+        "max_rel_deviation": 4.6885514245487965e-05,
+        "rel_by_radius": [
+          4.6885514245487965e-05,
+          2.9397180935466232e-05,
+          2.003987966695493e-05,
+          1.6343737262939188e-05,
+          1.3508170221995875e-05
+        ],
+        "spread_rel": 3.337734402349209e-05
+      },
+      "surface_current_A": -57.09244430963381
+    },
+    "far_field_current_A": -57.09180983617786,
+    "far_field_rel_error": 0.013022696786107697,
+    "geometric_capacitance_m": 16.5271740437828,
+    "n_panels": 320,
+    "name": "prolate_2to1",
+    "potential_V": -1.0,
+    "radius_independence": {
+      "max_rel_deviation": 4.6885514245487965e-05,
+      "rel_by_radius": [
+        4.6885514245487965e-05,
+        2.9397180935466232e-05,
+        2.003987966695493e-05,
+        1.6343737262939188e-05,
+        1.3508170221995875e-05
+      ],
+      "spread_rel": 3.337734402349209e-05
+    },
+    "semi_axes_m": [
+      2.0,
+      1.0,
+      1.0
+    ],
+    "solve_seconds": 0.6416838895529509,
+    "surface_current_A": -57.09244430963381,
+    "surface_rel_error": 0.013011728296891564,
+    "two_route_rel": 1.1113089720110188e-05
+  },
+  "prolate_4to1": {
+    "analytic_current_A": -82.5528953408142,
+    "bem_condition_number": 58.703479341984746,
+    "bem_relative_residual": 3.982223896528735e-16,
+    "body_extent_m": 4.0,
+    "conductivity_S_m": 3.5,
+    "far_field": {
+      "body_extent_m": 4.0,
+      "current_by_radius_A": [
+        -81.48484817451661,
+        -81.48184476998101,
+        -81.48089563993467,
+        -81.4805323828055,
+        -81.48024919758075
+      ],
+      "extrapolated_current_A": -81.47829752169716,
+      "extrapolation_intercept_shape": [
+        -81.47829752169716,
+        -0.03523316104163661
+      ],
+      "extrapolation_max_rel_residual": 1.05168722521433e-05,
+      "far_field_vs_surface_rel_error": 2.0977331395236542e-05,
+      "monopole_max_rel_error_by_radius": [
+        0.17014814200365214,
+        0.08442054111494324,
+        0.03465778524631651,
+        0.018994007975701294,
+        0.008290432976049261
+      ],
+      "n_directions": 48,
+      "radii_m": [
+        6.0,
+        8.0,
+        12.0,
+        16.0,
+        24.0
+      ],
+      "radius_independence": {
+        "max_rel_deviation": 8.039751711444028e-05,
+        "rel_by_radius": [
+          8.039751711444028e-05,
+          4.35361119678137e-05,
+          3.188724257306561e-05,
+          2.7428912683817017e-05,
+          2.395332184094069e-05
+        ],
+        "spread_rel": 5.644419527349959e-05
+      },
+      "surface_current_A": -81.48000675480094
+    },
+    "far_field_current_A": -81.47829752169716,
+    "far_field_rel_error": 0.013017082134801435,
+    "geometric_capacitance_m": 23.586541525946917,
+    "n_panels": 320,
+    "name": "prolate_4to1",
+    "potential_V": -1.0,
+    "radius_independence": {
+      "max_rel_deviation": 8.039751711444028e-05,
+      "rel_by_radius": [
+        8.039751711444028e-05,
+        4.35361119678137e-05,
+        3.188724257306561e-05,
+        2.7428912683817017e-05,
+        2.395332184094069e-05
+      ],
+      "spread_rel": 5.644419527349959e-05
+    },
+    "semi_axes_m": [
+      4.0,
+      1.0,
+      1.0
+    ],
+    "solve_seconds": 0.6614221893250942,
+    "surface_current_A": -81.48000675480094,
+    "surface_rel_error": 0.012996377432722542,
+    "two_route_rel": 2.0977331395236542e-05
+  },
+  "prolate_convergence": [
+    {
+      "n_panels": 80.0,
+      "subdivisions": 1.0,
+      "surface_current_A": 54.99907644436096,
+      "surface_rel_error": 0.04920092209246775
+    },
+    {
+      "n_panels": 320.0,
+      "observed_order": 1.9188727515796553,
+      "subdivisions": 2.0,
+      "surface_current_A": 57.09244430963381,
+      "surface_rel_error": 0.013011728296891564
+    },
+    {
+      "n_panels": 1280.0,
+      "observed_order": 1.971242897479224,
+      "subdivisions": 3.0,
+      "surface_current_A": 57.65315461244191,
+      "surface_rel_error": 0.0033184230025287
+    }
+  ],
+  "quick": false,
+  "scored": {
+    "direction_sweep_max_rel": {
+      "criterion": 0.01,
+      "pass": true,
+      "value": 0.0002928531454214133
+    },
+    "interference_ratio_high": {
+      "criterion": 1.0,
+      "pass": true,
+      "value": 0.859288416618266
+    },
+    "interference_ratio_low": {
+      "criterion": 0.6931471805599453,
+      "pass": true,
+      "value": 0.7297413737055725
+    },
+    "mutant_detection_min_rel": {
+      "criterion": 0.01,
+      "pass": true,
+      "value": 0.0416489151124442
+    },
+    "oblate_2to1_analytic_rel": {
+      "criterion": 0.05,
+      "pass": true,
+      "value": 0.013005041406255672
+    },
+    "prolate_2to1_analytic_rel": {
+      "criterion": 0.03,
+      "pass": true,
+      "value": 0.013011728296891564
+    },
+    "prolate_4to1_analytic_rel": {
+      "criterion": 0.05,
+      "pass": true,
+      "value": 0.012996377432722542
+    },
+    "radius_independence_rel": {
+      "criterion": 0.01,
+      "pass": true,
+      "value": 5.666650682395254e-05
+    },
+    "sphere_analytic_rel": {
+      "criterion": 0.03,
+      "pass": true,
+      "value": 0.013007219495090124
+    },
+    "two_route_rel": {
+      "criterion": 0.01,
+      "pass": true,
+      "value": 4.1047716744582293e-05
+    },
+    "two_sphere_monotone": {
+      "criterion": 1.0,
+      "pass": true,
+      "value": 1.0
+    }
+  },
+  "sphere": {
+    "analytic_current_A": -43.982297150257104,
+    "bem_condition_number": 37.56559992086564,
+    "bem_relative_residual": 4.1914595253563364e-16,
+    "body_extent_m": 1.0,
+    "conductivity_S_m": 3.5,
+    "far_field": {
+      "body_extent_m": 1.0,
+      "current_by_radius_A": [
+        -43.41026718381908,
+        -43.41021291504618,
+        -43.41020980877632,
+        -43.4102097597145,
+        -43.41020975731431
+      ],
+      "extrapolated_current_A": -43.4101823018898,
+      "extrapolation_intercept_shape": [
+        -43.4101823018898,
+        -0.00010326011547025068
+      ],
+      "extrapolation_max_rel_residual": 4.841468115421624e-07,
+      "far_field_vs_surface_rel_error": 6.324649382872668e-07,
+      "monopole_max_rel_error_by_radius": [
+        0.00011113518438596454,
+        2.1714626525023938e-05,
+        1.972044323594917e-06,
+        3.5292775072022805e-07,
+        3.104741319756864e-08
+      ],
+      "n_directions": 48,
+      "radii_m": [
+        1.5,
+        2.0,
+        3.0,
+        4.0,
+        6.0
+      ],
+      "radius_independence": {
+        "max_rel_deviation": 1.9553460681733245e-06,
+        "rel_by_radius": [
+          1.9553460681733245e-06,
+          7.052068146201759e-07,
+          6.33650564599853e-07,
+          6.325203729668437e-07,
+          6.324650821384617e-07
+        ],
+        "spread_rel": 1.3228809860348627e-06
+      },
+      "surface_current_A": -43.41020975732543
+    },
+    "far_field_current_A": -43.4101823018898,
+    "far_field_rel_error": 0.013007843733418135,
+    "geometric_capacitance_m": 12.566370614359172,
+    "n_panels": 320,
+    "name": "sphere_r1",
+    "potential_V": -1.0,
+    "radius_independence": {
+      "max_rel_deviation": 1.9553460681733245e-06,
+      "rel_by_radius": [
+        1.9553460681733245e-06,
+        7.052068146201759e-07,
+        6.33650564599853e-07,
+        6.325203729668437e-07,
+        6.324650821384617e-07
+      ],
+      "spread_rel": 1.3228809860348627e-06
+    },
+    "semi_axes_m": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "solve_seconds": 0.5324424710124731,
+    "surface_current_A": -43.41020975732543,
+    "surface_rel_error": 0.013007219495090124,
+    "two_route_rel": 6.324649382872668e-07
+  },
+  "two_sphere": {
+    "isolated_current_A": 43.41020975732543,
+    "monotone_increasing": true,
+    "name": "two_sphere_interference",
+    "radius_m": 1.0,
+    "rows": [
+      {
+        "far_field_current_A": 63.35565743693067,
+        "interference_ratio": 0.7297413737055725,
+        "n_panels": 640.0,
+        "separation_m": 2.5,
+        "separation_over_radius": 2.5,
+        "surface_current_A": 63.35645220231542,
+        "two_route_rel": 1.2544348004347514e-05
+      },
+      {
+        "far_field_current_A": 65.92403915178377,
+        "interference_ratio": 0.7593252368175123,
+        "n_panels": 640.0,
+        "separation_m": 3.0,
+        "separation_over_radius": 3.0,
+        "surface_current_A": 65.92493560855803,
+        "two_route_rel": 1.359814410103535e-05
+      },
+      {
+        "far_field_current_A": 69.85004649058197,
+        "interference_ratio": 0.8045481383508165,
+        "n_panels": 640.0,
+        "separation_m": 4.0,
+        "separation_over_radius": 4.0,
+        "surface_current_A": 69.85120689134925,
+        "two_route_rel": 1.6612465538080348e-05
+      },
+      {
+        "far_field_current_A": 74.60186760645844,
+        "interference_ratio": 0.859288416618266,
+        "n_panels": 640.0,
+        "separation_m": 6.0,
+        "separation_over_radius": 6.0,
+        "surface_current_A": 74.60378081487795,
+        "two_route_rel": 2.5644925747888053e-05
+      }
+    ],
+    "subdivisions": 2
+  }
+}
