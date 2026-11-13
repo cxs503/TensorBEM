@@ -1,0 +1,104 @@
+{
+ "audit": {
+  "auditor_mission": 17267,
+  "subject_mission": 17247,
+  "verdict_doc": "docs/audit_m17247_hydrostatic_pontoon.md",
+  "independent_recompute": "auditor wrote the closed forms from first principles (nabla=LBT, KB=T/2, I_T=LB^3/12, BM=I/nabla, C33=rho*g*A_wp, C44=rho*g*nabla*GM_T): 30 (quantity x route) values vs results.json got, worst rel err 1.601e-12, 0 mismatches >1e-9",
+  "rerun": "PYTHONPATH=src python3 scripts/case_hydrostatic_pontoon.py --out /tmp/m17267_repro -> pass=true, n_quantities=22, max_abs_rel_err=1.6013383151465308e-12; field-by-field diff vs committed docs/case_hydrostatic_pontoon/results.json: 0 numeric diffs >1e-12 (bit-reproducible)",
+  "anti_hardcode_probe": "auditor-driven geometry perturbation through the same library routes (L=50/75 x T=3/4): nabla=1800/2400/2700/3600, BM_T=4/3/4/3, C44=2.714e7/2.412e7/4.071e7/3.619e7 all matching closed form -> outputs are computed, not constants",
+  "findings": [
+   "F1 medium (registry gap): tensor_benchmark_cases had 0 rows for anchor CASE-BEM-HYDROSTATIC-PONTOON (5 other BEM anchors present) -> no benchmark judge existed; row registered by this audit at the mission's 3% criterion, not loosened",
+   "F2 medium (interpretation): max err 1.6e-12 is algebra-level exactness inherent to a wall-sided box with planar panels (waterplane route reduces to exact rectangle moments; refinement ladder 1.47e-12/1.60e-12/5.01e-12/3.89e-11 rises with panel count = pure rounding, no convergence order). The number validates the Green's-theorem integration + C assembly, it does NOT measure discretisation accuracy; report section 5 discloses this ('只查实现、不查剖面离散')",
+   "F3 low (external anchor): citations are chapter-level only (Biran & Lopez-Pulido ch.3-4; Rawson & Tupper ch.3-4, no page, no printed table); reference values are evaluated by the same script's own closed-form function (self-reference risk) -> mitigated by auditor's from-scratch recompute and the perturbation probe; residual: no printed-handbook digit-level cross-check (sandbox has no book)",
+   "F4 low (repro hygiene): results.json.repro_cmd omits PYTHONPATH=src; copying it verbatim raises ImportError (auditor needed PYTHONPATH=src); path is repo-relative (good, unlike earlier audits)",
+   "F5 info (real trap, reusable): hydrostatic_pressure_route.PressureRouteResult.center_of_buoyancy[2] is identically 0 (vertical buoyancy cannot see z_B); using it as KB gives 3.0 m vs true 1.5 m (100% fake error). Mission hit it and documented the fix (immersed first moment via divergence theorem)",
+   "F6 low (platform semantics): tensorbench_results has 0 rows for mission 17247, so tools/maturity_gate/benchmark_source.py would return CLAIMED_NOT_PROVEN for this mission; the L4 here rests on auditor rerun + registered case row + closed-form anchor, not on platform-recomputed cluster rows (8 s local compute needed no cluster)",
+   "F7 info: report id 16242 has all six owner elements incl. an explicit '是否<3%' answer, 4 PNG figures, and every table row traces to results.json (auditor diff 0)"
+  ],
+  "checks_not_run": [
+   "no printed-handbook digit-level cross-check (Biran/Rawson & Tupper originals unreachable in sandbox)",
+   "no non-wall-sided hull (curved/trapezoidal waterplane) through this case script: the anchor's planar-box geometry cannot expose panelisation error, so curvature sensitivity of the two routes was NOT tested by this audit",
+   "no cluster rerun (not needed: 8 s local, deterministic)"
+  ],
+  "level_rationale": "L4: real repo API path (tensorbem.hydrostatic + tensorbem.hydrostatic_pressure_route, exported in src/tensorbem/__init__.py, referenced by 34 test files), complete case (geometry gate Cb/L/B first) with 22-quantity closed-form comparison, per-item error analysis, one-command repro (auditor rerun bit-identical, 0 diffs >1e-12), 8/8 regression tests. NOT L5: reference is chapter-level and self-evaluated, and the wall-sided box structurally cannot evidence discretisation accuracy (F2)."
+ },
+ "impl_files": [
+  "scripts/case_hydrostatic_pontoon.py:108-148 (reference_values, closed forms evaluated from geometry, zero hand-copy)",
+  "scripts/case_hydrostatic_pontoon.py:149-174 (immersed_first_moment_z: 3rd independent route for z_B via divergence theorem)",
+  "scripts/case_hydrostatic_pontoon.py:175-251 (measure_waterplane_route / measure_pressure_route: the two independent existing TensorBEM routes)",
+  "scripts/case_hydrostatic_pontoon.py:472-508 (heel_check: 4th independent route, 0.5-5 deg righting arm)",
+  "src/tensorbem/hydrostatic.py:364 compute_hydrostatic_restoring_matrix (pre-existing public API, untouched by commit 7c4043a)",
+  "src/tensorbem/hydrostatic_pressure_route.py:622 richardson_restoring_matrix (pre-existing public API, untouched)",
+  "docs/case_hydrostatic_pontoon/results.json (770 lines, all numbers) + docs/case_hydrostatic_pontoon/report.md (146 lines)"
+ ],
+ "entry": "cd <TensorBEM_checkout> && PYTHONPATH=src python3 scripts/case_hydrostatic_pontoon.py --out artifacts/case_hydrostatic_pontoon",
+ "run_artifacts": [
+  "docs/case_hydrostatic_pontoon/results.json (committed; verdict.pass=true, n_fail=0, max_abs_rel_err=1.6013383151465308e-12; auditor rerun diff 0)",
+  "docs/case_hydrostatic_pontoon/report.md (146 lines, six-element report)",
+  "artifacts/case_hydrostatic_pontoon/results.json (19,809 B, rerun output) + report.md",
+  "artifacts/case_hydrostatic_pontoon/fig_rel_errors.png (119,887 B), fig_refinement.png (56,035 B), fig_draft_sensitivity.png (64,141 B), fig_heel_righting.png (67,559 B)",
+  "/tmp/m17267_repro/{results.json,report.md,fig_*.png} (auditor rerun, bit-identical to committed numbers)"
+ ],
+ "tests": [
+  "tests/test_case_hydrostatic_pontoon.py: 8 tests, auditor run 2026-11-13: 8 passed in 8.60 s (PYTHONPATH=src, TORCH_DEVICE_BACKEND_AUTOLOAD=0)"
+ ],
+ "integration_callers": "case script itself has no downstream caller (grep in src/scripts/tests examples benchmarks finds none) -> the CASE is standalone by design; the CAPABILITY it exercises is integrated: compute_hydrostatic_restoring_matrix is exported in src/tensorbem/__init__.py and referenced by 34 test files + src/tensorbem/benchmarks/hydrostatic_*.py (analytic/convergence/curved_waterplane/pressure_route_study/verification); richardson_restoring_matrix likewise. Commit 7c4043a touches no src/ file.",
+ "benchmark": {
+  "anchor": "CASE-BEM-HYDROSTATIC-PONTOON",
+  "registry_state_before_audit": "0 rows in tensor_benchmark_cases for this anchor_slug (checked via SELECT; 5 sibling BEM anchors present)",
+  "registry_row_created_by_audit": true,
+  "tolerance": "<3% (mission m17247 criterion, not loosened)",
+  "metric": "max relative error over 22 hydrostatic quantities vs closed form, two independent TensorBEM routes",
+  "ref_vs_got": {
+   "max_abs_rel_err_over_22_quantities": [
+    0.0,
+    1.6013383151465308e-12,
+    1.6013383151465308e-12
+   ],
+   "nabla_m3": [
+    1800.0,
+    1800.0,
+    -1.263e-16
+   ],
+   "KB_m": [
+    1.5,
+    1.5,
+    -2.961e-16
+   ],
+   "BM_T_m": [
+    4.0,
+    4.0,
+    0.0
+   ],
+   "C33_N_per_m": [
+    6031089.75,
+    6031089.75,
+    -1.601e-12
+   ],
+   "C44_Nm_per_rad": [
+    27139903.875,
+    27139903.87,
+    -1.226e-12
+   ],
+   "C55_Nm_per_rad": [
+    1211243858.0,
+    1211243858.0,
+    -5.785e-13
+   ],
+   "offdiag_max_rel": [
+    0.0,
+    6.950114053e-14,
+    6.95e-14
+   ],
+   "heel_GZ_5deg_m": [
+    0.1320678,
+    0.1320678,
+    1.47e-15
+   ]
+  },
+  "auditor_note": "[ref, got, rel_err] per metric; all within 3% by ~10.3 orders of magnitude"
+ },
+ "repro_cmd": "cd <TensorBEM_checkout> && PYTHONPATH=src python3 scripts/case_hydrostatic_pontoon.py --out /tmp/m17267_repro  (auditor executed: exit 0, pass=true, max_abs_rel_err=1.6013383151465308e-12; note the published repro_cmd in results.json omits PYTHONPATH=src -> finding F4) && PYTHONPATH=src python3 -m pytest tests/test_case_hydrostatic_pontoon.py -q",
+ "external_anchor": "Biran & Lopez-Pulido, Ship Hydrostatics and Stability, 2nd ed., ch.3-4 (box-shaped vessel hydrostatics, BM=I/nabla, GM=KB+BM-KG) + Rawson & Tupper, Basic Ship Theory, 5th ed., ch.3-4 (box barge hydrostatics) -- chapter-level only, no page-level table (mission discloses this honestly; auditor independently re-derived and re-evaluated 30 route values, worst 1.601e-12)",
+ "report": "tensor_reports id=16242 (mission 17247, six elements, 4 figures) + docs/dev_report_m17247_case_hydrostatic_pontoon.md + docs/case_hydrostatic_pontoon/report.md + docs/audit_m17247_hydrostatic_pontoon.md (this audit)"
+}
