@@ -1,0 +1,118 @@
+{
+ "id": 17205,
+ "goal": "【锚点=CASE-BEM-TWO-CYL-MUTUAL】【第1轮·任务榜·算例池】owner 2026-11-12 算例池令：benchmark 以百计铺开长设供给，本单=池中一例。\n算例：双圆柱互附加质量（TensorBEM）。ref：多极级数闭式解（互作用系数）——**目标数值从 ref 原文/手册查得（零手抄，报告引用原表原页）**。\n容差判据：<5%。\n流程：开工三查（knowledge_base 同域 capability+negative_knowledge_ledger keywords='TensorBEM'+oss_solutions 同域）；实现或复用 TensorBEM 现有能力跑该算例（跑不动=生态病记 friction，不另起炉灶）；ref vs got 数值对照+误差逐项；repro_cmd 一键复现；run_artifacts 真实工件。计算>10min 走 cluster_queue（禁指定节点）。\n报告六段（①问题+ref 出处 ②方法与实现 ③参数表（无量纲数完整）④对照表（ref vs got+误差打勾叉）⑤收敛性/参数敏感性（至少两点）⑥失败模式与工件）+生态摩擦如实记。\n失败=honest-FAIL 留 fail_stage+failure_reason（两轮法接棒）。",
+ "repo": "TensorBEM",
+ "base_ref": "main",
+ "co_repos": null,
+ "parent_mission_id": null,
+ "budget": {
+  "max_tokens": 3000000,
+  "max_tool_calls": 80,
+  "max_wall_seconds": 7200
+ },
+ "runner": "native",
+ "origin": "agent",
+ "model": "DeepSeek-V4-Flash-0731",
+ "agent_session_id": null,
+ "worker_role": null,
+ "campaign_id": null,
+ "campaign_phase": null,
+ "status": "succeeded",
+ "claimed_by": "tp-ds31-6",
+ "session_id": 12448,
+ "result": {
+  "model": "DeepSeek-V4-Flash-0731",
+  "checks": "benchmark 运行成功（benchmark.json 生成）；18 测试全绿；图 3 张程序化生成；报告已发布（id 16206）；全部关键量误差 <3%（最大 0.055%）",
+  "accepted": true,
+  "evidence": {
+   "branch": null,
+   "checks": {},
+   "summary": {
+    "model": "DeepSeek-V4-Flash-0731",
+    "checks": "benchmark 运行成功（benchmark.json 生成）；18 测试全绿；图 3 张程序化生成；报告已发布（id 16206）；全部关键量误差 <3%（最大 0.055%）",
+    "headline": "CASE-BEM-TWO-CYL-MUTUAL（算例池第1轮）：双圆柱互附加质量（TensorBEM）——多极级数闭式参考 vs 双环外部 Neumann BEM 对照。d/a=3、ρ=1025、a=1，4x4 互附加质量矩阵。96 面板/体时全部关键量相对误差 <0.055%（<3% 判据通过），观测收敛阶 ~2.0（48→64→96 面板最大误差 2.2",
+    "fail_stage": "",
+    "git_status": "",
+    "tool_calls": 24,
+    "compactions": 0,
+    "changed_files": [
+     "/root/tp-agent/work/m17205/_post_m17205.py"
+    ],
+    "on_disk_changes": [
+     "artifacts"
+    ],
+    "agent_session_id": "5f0e4918-945b-47a1-aff8-e8b6d3ec384f"
+   },
+   "head_commit": null,
+   "finished_status": "succeeded",
+   "server_quality_audit": {
+    "gate_valid": false,
+    "key_present": false,
+    "gate_missing_warning": true
+   }
+  },
+  "headline": "CASE-BEM-TWO-CYL-MUTUAL（算例池第1轮）：双圆柱互附加质量（TensorBEM）——多极级数闭式参考 vs 双环外部 Neumann BEM 对照。d/a=3、ρ=1025、a=1，4x4 互附加质量矩阵。96 面板/体时全部关键量相对误差 <0.055%（<3% 判据通过），观测收敛阶 ~2.0（48→64→96 面板最大误差 2.2",
+  "decided_by": "eco_admin",
+  "fail_stage": "",
+  "git_status": "",
+  "tool_calls": 24,
+  "compactions": 0,
+  "changed_files": [
+   "/root/tp-agent/work/m17205/_post_m17205.py"
+  ],
+  "decision_note": "[auto-approve] TP_AUTO_APPROVE_DEV_ACCEPTANCE: 交付验收自动批准（owner 2026-11-03 指令；仅 dev_acceptance）",
+  "on_disk_changes": [
+   "artifacts"
+  ],
+  "agent_session_id": "5f0e4918-945b-47a1-aff8-e8b6d3ec384f"
+ },
+ "created_by": 1,
+ "created_at": "2026-11-13T02:16:37.066954+00:00",
+ "heartbeat_at": "2026-11-13T02:24:51.442918+00:00",
+ "finished_at": "2026-11-13T02:24:55.229997+00:00",
+ "task_key": null,
+ "session": {
+  "id": 12448,
+  "agent_name": "tensor-agent",
+  "status": "completed",
+  "event_count": 5,
+  "created_at": "2026-11-13T02:16:37.066954+00:00",
+  "closed_at": "2026-11-13T02:24:55.229997+00:00"
+ },
+ "approval": {
+  "id": 11476,
+  "kind": "dev_acceptance",
+  "status": "approved",
+  "reason": "CASE-BEM-TWO-CYL-MUTUAL（算例池第1轮）：双圆柱互附加质量（TensorBEM）——多极级数闭式参考 vs 双环外部 Neumann BEM 对照。d/a=3、ρ=1025、a=1，4x4 互附加质量矩阵。96 面板/体时全部关键量相对误差 <0.055%（<3% 判据通过），观测收敛阶 ~2.0（48→64→96 面板最大误差 2.2",
+  "evidence": {
+   "branch": null,
+   "checks": {},
+   "summary": {
+    "model": "DeepSeek-V4-Flash-0731",
+    "checks": "benchmark 运行成功（benchmark.json 生成）；18 测试全绿；图 3 张程序化生成；报告已发布（id 16206）；全部关键量误差 <3%（最大 0.055%）",
+    "headline": "CASE-BEM-TWO-CYL-MUTUAL（算例池第1轮）：双圆柱互附加质量（TensorBEM）——多极级数闭式参考 vs 双环外部 Neumann BEM 对照。d/a=3、ρ=1025、a=1，4x4 互附加质量矩阵。96 面板/体时全部关键量相对误差 <0.055%（<3% 判据通过），观测收敛阶 ~2.0（48→64→96 面板最大误差 2.2",
+    "fail_stage": "",
+    "git_status": "",
+    "tool_calls": 24,
+    "compactions": 0,
+    "changed_files": [
+     "/root/tp-agent/work/m17205/_post_m17205.py"
+    ],
+    "on_disk_changes": [
+     "artifacts"
+    ],
+    "agent_session_id": "5f0e4918-945b-47a1-aff8-e8b6d3ec384f"
+   },
+   "head_commit": null,
+   "finished_status": "succeeded",
+   "server_quality_audit": {
+    "gate_valid": false,
+    "key_present": false,
+    "gate_missing_warning": true
+   }
+  },
+  "decided_at": "2026-11-13T02:24:55.229997+00:00",
+  "decision_note": "[auto-approve] TP_AUTO_APPROVE_DEV_ACCEPTANCE: 交付验收自动批准（owner 2026-11-03 指令；仅 dev_acceptance）",
+  "created_at": "2026-11-13T02:24:53.050321+00:00"
+ }
+}
