@@ -172,6 +172,30 @@ class RowEvidence:
 #: what the m308 baseline said, so the correction log can state what changed.
 CAPABILITIES: tuple[Capability, ...] = (
     Capability(
+        key='elastic-contact-boussinesq',
+        title='Axisymmetric elastic normal contact on a half-space (Boussinesq boundary integral)',
+        claim=(
+            'Frictionless Signorini contact solved as a primal active-set QP on annular-element '
+            'pressures with the analytic angular average of the half-space kernel '
+            '(4 K(k)/(r+rho)); contact radius, peak pressure and load are outputs. Verified '
+            'against the Hertz closed form (contact radius 0.15 %, penetration 0.001 %, peak '
+            'pressure 0.003 % at 400 elements), against the rigid flat punch P = 2 E* a delta '
+            '(0.17 %) and against the uniform-disk displacement w(0) = 2 p a / E* (1.6e-6); the '
+            'shape-free rim estimate agrees with the free-exponent rim fit.'
+        ),
+        level=REAL,
+        modules=('tensorbem.elastic_contact',),
+        symbols=('solve_normal_contact', 'displacement_influence', 'ring_kernel',
+                 'hertz_sphere_halfspace'),
+        tests=(
+            'tests/test_elastic_contact.py::test_hertz_anchor_contact_radius_and_penetration',
+            'tests/test_elastic_contact.py::test_flat_punch_load_matches_its_own_closed_form',
+            'tests/test_elastic_contact.py::test_influence_matrix_reproduces_the_uniformly_loaded_circle',
+            'tests/test_elastic_contact.py::test_ring_kernel_matches_direct_angular_quadrature',
+        ),
+        docs=(('docs/elastic_contact.md', 'bem-elastic-contact-boussinesq'),),
+    ),
+    Capability(
         key='acoustic-3d-pulse',
         title='Transient (pulse) acoustics through the frequency-domain Helmholtz BEM',
         claim='Gaussian radial-velocity pulse on a rigid sphere: the exact transient comes from the retarded-time ODE (no far-field or ka<<1 approximation) and the harmonic BEM bins are synthesised back to the waveform; CASE-ACOUSTIC-PULSE acceptance (L2 and peak error < 8 %) is measured on the pulse, and the (ka, panels-per-wavelength) accuracy envelope of the same solver is published as a separate injected artifact.',
