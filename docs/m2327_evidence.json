@@ -1,0 +1,26 @@
+{
+  "mission_id": 2327,
+  "task": "backfill report for TensorBEM verification status audit",
+  "completed_at": "2026-06-26",
+  "report_file": "docs/report_m2327.md",
+  "report_api_id": 17721,
+  "git_commit": "d476de6",
+  "audit_results": {
+    "total_benchmarks": 37,
+    "with_results_json": 25,
+    "all_passed": 25,
+    "failed": 0,
+    "max_error_percent": 1.15,
+    "max_error_case": "Hulme hemisphere B33 at ka=2.0"
+  },
+  "doc_guard_coverage": {
+    "number_coverage_percent": 88.6,
+    "document_coverage_percent": 75.4,
+    "unguarded_docs": 31
+  },
+  "evidence_commands": [
+    "python3 -c json.load benchmarks/verified/*/results.json -> 25/25 PASS",
+    "POST /tensor/reports -> report_id=17721 readback.ok=true",
+    "git log -> d476de6 m2327 backfill report"
+  ]
+}
