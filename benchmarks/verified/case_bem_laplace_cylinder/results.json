@@ -1,0 +1,1054 @@
+{
+  "case_id": "CASE-BEM-LAPLACE-CYLINDER",
+  "pool_code": "BEM-LAPLACE-CYLINDER",
+  "schema": "tensorbem/case_bem_laplace_cylinder/1",
+  "repo": "TensorBEM",
+  "domain": "ship-total-performance/resistance-potential-flow",
+  "capability": "2-D exterior Laplace operator: potential AND velocity field outside a body, verified against the cylinder complex potential",
+  "generated_at_utc": "2026-11-14T11:44:36Z",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "machine": "loongarch64"
+  },
+  "parameters": {
+    "radius": 1.0,
+    "speed": 1.0,
+    "panel_ladder": [
+      32,
+      64,
+      128
+    ],
+    "budget_panels": 128,
+    "probe_rings": [
+      1.25,
+      1.5,
+      2.0,
+      3.0
+    ],
+    "probe_angles": 16,
+    "probe_count": 64,
+    "far_field_radius_over_a": 8.0
+  },
+  "reference": {
+    "complex_potential": "W(z) = U (z + a**2/z)",
+    "velocity": "dW/dz = u - i v = U (1 - a**2/z**2)",
+    "perturbation_potential": "phi - U x = U a**2 cos(theta) / r",
+    "surface_speed": "|v| = 2 U |sin(theta)|",
+    "pressure_coefficient": "Cp = 1 - 4 sin(theta)**2",
+    "probe_table": [
+      {
+        "x_over_a": 1.225981600504038,
+        "y_over_a": 0.2438629025201603,
+        "u_over_U": 0.40871709919277643,
+        "v_over_U": -0.2449173967136574,
+        "perturbation_potential_over_Ua": 0.7846282243225844
+      },
+      {
+        "x_over_a": 1.0393370153781816,
+        "y_over_a": 0.6944627912745027,
+        "u_over_U": 0.7550826032863425,
+        "v_over_U": -0.5912829008072236,
+        "perturbation_potential_over_Ua": 0.6651756898420362
+      },
+      {
+        "x_over_a": 0.6944627912745028,
+        "y_over_a": 1.0393370153781816,
+        "u_over_U": 1.2449173967136575,
+        "v_over_U": -0.5912829008072235,
+        "perturbation_potential_over_Ua": 0.4444561864156818
+      },
+      {
+        "x_over_a": 0.2438629025201604,
+        "y_over_a": 1.225981600504038,
+        "u_over_U": 1.5912829008072236,
+        "v_over_U": -0.2449173967136576,
+        "perturbation_potential_over_Ua": 0.15607225761290267
+      },
+      {
+        "x_over_a": -0.24386290252016024,
+        "y_over_a": 1.225981600504038,
+        "u_over_U": 1.5912829008072236,
+        "v_over_U": 0.24491739671365736,
+        "perturbation_potential_over_Ua": -0.15607225761290255
+      },
+      {
+        "x_over_a": -0.6944627912745025,
+        "y_over_a": 1.0393370153781818,
+        "u_over_U": 1.2449173967136578,
+        "v_over_U": 0.5912829008072233,
+        "perturbation_potential_over_Ua": -0.4444561864156816
+      },
+      {
+        "x_over_a": -1.0393370153781816,
+        "y_over_a": 0.6944627912745027,
+        "u_over_U": 0.7550826032863425,
+        "v_over_U": 0.5912829008072236,
+        "perturbation_potential_over_Ua": -0.6651756898420362
+      },
+      {
+        "x_over_a": -1.225981600504038,
+        "y_over_a": 0.24386290252016077,
+        "u_over_U": 0.40871709919277677,
+        "v_over_U": 0.2449173967136578,
+        "perturbation_potential_over_Ua": -0.7846282243225844
+      },
+      {
+        "x_over_a": -1.225981600504038,
+        "y_over_a": -0.24386290252016046,
+        "u_over_U": 0.40871709919277655,
+        "v_over_U": -0.2449173967136576,
+        "perturbation_potential_over_Ua": -0.7846282243225844
+      },
+      {
+        "x_over_a": -1.0393370153781818,
+        "y_over_a": -0.6944627912745025,
+        "u_over_U": 0.7550826032863422,
+        "v_over_U": -0.5912829008072233,
+        "perturbation_potential_over_Ua": -0.6651756898420363
+      },
+      {
+        "x_over_a": -0.6944627912745027,
+        "y_over_a": -1.0393370153781816,
+        "u_over_U": 1.2449173967136575,
+        "v_over_U": -0.5912829008072236,
+        "perturbation_potential_over_Ua": -0.44445618641568174
+      },
+      {
+        "x_over_a": -0.24386290252016082,
+        "y_over_a": -1.2259816005040378,
+        "u_over_U": 1.5912829008072236,
+        "v_over_U": -0.244917396713658,
+        "perturbation_potential_over_Ua": -0.15607225761290297
+      },
+      {
+        "x_over_a": 0.24386290252016038,
+        "y_over_a": -1.225981600504038,
+        "u_over_U": 1.5912829008072236,
+        "v_over_U": 0.24491739671365753,
+        "perturbation_potential_over_Ua": 0.15607225761290264
+      },
+      {
+        "x_over_a": 0.6944627912745023,
+        "y_over_a": -1.0393370153781818,
+        "u_over_U": 1.244917396713658,
+        "v_over_U": 0.5912829008072233,
+        "perturbation_potential_over_Ua": 0.44445618641568146
+      },
+      {
+        "x_over_a": 1.0393370153781816,
+        "y_over_a": -0.6944627912745027,
+        "u_over_U": 0.7550826032863425,
+        "v_over_U": 0.5912829008072236,
+        "perturbation_potential_over_Ua": 0.6651756898420362
+      },
+      {
+        "x_over_a": 1.2259816005040378,
+        "y_over_a": -0.2438629025201609,
+        "u_over_U": 0.40871709919277655,
+        "v_over_U": 0.24491739671365811,
+        "perturbation_potential_over_Ua": 0.7846282243225842
+      },
+      {
+        "x_over_a": 1.4711779206048456,
+        "y_over_a": 0.2926354830241924,
+        "u_over_U": 0.5893868744394282,
+        "v_over_U": -0.17008152549559546,
+        "perturbation_potential_over_Ua": 0.6538568536021536
+      },
+      {
+        "x_over_a": 1.2472044184538178,
+        "y_over_a": 0.8333553495294033,
+        "u_over_U": 0.8299184745044046,
+        "v_over_U": -0.4106131255605719,
+        "perturbation_potential_over_Ua": 0.5543130748683636
+      },
+      {
+        "x_over_a": 0.8333553495294035,
+        "y_over_a": 1.2472044184538178,
+        "u_over_U": 1.1700815254955954,
+        "v_over_U": -0.4106131255605719,
+        "perturbation_potential_over_Ua": 0.37038015534640156
+      },
+      {
+        "x_over_a": 0.2926354830241925,
+        "y_over_a": 1.4711779206048456,
+        "u_over_U": 1.4106131255605718,
+        "v_over_U": -0.17008152549559546,
+        "perturbation_potential_over_Ua": 0.1300602146774189
+      },
+      {
+        "x_over_a": -0.2926354830241923,
+        "y_over_a": 1.4711779206048456,
+        "u_over_U": 1.4106131255605718,
+        "v_over_U": 0.17008152549559535,
+        "perturbation_potential_over_Ua": -0.1300602146774188
+      },
+      {
+        "x_over_a": -0.8333553495294029,
+        "y_over_a": 1.2472044184538182,
+        "u_over_U": 1.1700815254955956,
+        "v_over_U": 0.41061312556057167,
+        "perturbation_potential_over_Ua": -0.3703801553464012
+      },
+      {
+        "x_over_a": -1.247204418453818,
+        "y_over_a": 0.8333553495294033,
+        "u_over_U": 0.8299184745044045,
+        "v_over_U": 0.4106131255605718,
+        "perturbation_potential_over_Ua": -0.5543130748683633
+      },
+      {
+        "x_over_a": -1.4711779206048456,
+        "y_over_a": 0.2926354830241929,
+        "u_over_U": 0.5893868744394284,
+        "v_over_U": 0.17008152549559566,
+        "perturbation_potential_over_Ua": -0.6538568536021536
+      },
+      {
+        "x_over_a": -1.4711779206048456,
+        "y_over_a": -0.2926354830241925,
+        "u_over_U": 0.5893868744394282,
+        "v_over_U": -0.17008152549559552,
+        "perturbation_potential_over_Ua": -0.6538568536021536
+      },
+      {
+        "x_over_a": -1.2472044184538182,
+        "y_over_a": -0.8333553495294029,
+        "u_over_U": 0.8299184745044044,
+        "v_over_U": -0.41061312556057167,
+        "perturbation_potential_over_Ua": -0.5543130748683635
+      },
+      {
+        "x_over_a": -0.8333553495294033,
+        "y_over_a": -1.2472044184538178,
+        "u_over_U": 1.1700815254955954,
+        "v_over_U": -0.4106131255605719,
+        "perturbation_potential_over_Ua": -0.3703801553464015
+      },
+      {
+        "x_over_a": -0.292635483024193,
+        "y_over_a": -1.4711779206048454,
+        "u_over_U": 1.4106131255605718,
+        "v_over_U": -0.17008152549559583,
+        "perturbation_potential_over_Ua": -0.13006021467741913
+      },
+      {
+        "x_over_a": 0.29263548302419246,
+        "y_over_a": -1.4711779206048456,
+        "u_over_U": 1.4106131255605718,
+        "v_over_U": 0.17008152549559544,
+        "perturbation_potential_over_Ua": 0.13006021467741888
+      },
+      {
+        "x_over_a": 0.8333553495294028,
+        "y_over_a": -1.2472044184538182,
+        "u_over_U": 1.1700815254955959,
+        "v_over_U": 0.4106131255605718,
+        "perturbation_potential_over_Ua": 0.37038015534640123
+      },
+      {
+        "x_over_a": 1.2472044184538178,
+        "y_over_a": -0.8333553495294033,
+        "u_over_U": 0.8299184745044046,
+        "v_over_U": 0.4106131255605719,
+        "perturbation_potential_over_Ua": 0.5543130748683636
+      },
+      {
+        "x_over_a": 1.4711779206048454,
+        "y_over_a": -0.29263548302419307,
+        "u_over_U": 0.5893868744394282,
+        "v_over_U": 0.17008152549559585,
+        "perturbation_potential_over_Ua": 0.6538568536021536
+      },
+      {
+        "x_over_a": 1.9615705608064609,
+        "y_over_a": 0.3901806440322565,
+        "u_over_U": 0.7690301168721783,
+        "v_over_U": -0.09567085809127245,
+        "perturbation_potential_over_Ua": 0.4903926402016152
+      },
+      {
+        "x_over_a": 1.6629392246050905,
+        "y_over_a": 1.1111404660392044,
+        "u_over_U": 0.9043291419087276,
+        "v_over_U": -0.2309698831278217,
+        "perturbation_potential_over_Ua": 0.4157348061512726
+      },
+      {
+        "x_over_a": 1.1111404660392046,
+        "y_over_a": 1.6629392246050905,
+        "u_over_U": 1.0956708580912724,
+        "v_over_U": -0.23096988312782168,
+        "perturbation_potential_over_Ua": 0.27778511650980114
+      },
+      {
+        "x_over_a": 0.39018064403225666,
+        "y_over_a": 1.9615705608064609,
+        "u_over_U": 1.2309698831278217,
+        "v_over_U": -0.09567085809127247,
+        "perturbation_potential_over_Ua": 0.09754516100806417
+      },
+      {
+        "x_over_a": -0.3901806440322564,
+        "y_over_a": 1.9615705608064609,
+        "u_over_U": 1.2309698831278217,
+        "v_over_U": 0.09567085809127242,
+        "perturbation_potential_over_Ua": -0.09754516100806412
+      },
+      {
+        "x_over_a": -1.111140466039204,
+        "y_over_a": 1.662939224605091,
+        "u_over_U": 1.0956708580912726,
+        "v_over_U": 0.23096988312782163,
+        "perturbation_potential_over_Ua": -0.277785116509801
+      },
+      {
+        "x_over_a": -1.6629392246050907,
+        "y_over_a": 1.1111404660392044,
+        "u_over_U": 0.9043291419087276,
+        "v_over_U": 0.23096988312782163,
+        "perturbation_potential_over_Ua": -0.4157348061512727
+      },
+      {
+        "x_over_a": -1.9615705608064609,
+        "y_over_a": 0.3901806440322572,
+        "u_over_U": 0.7690301168721785,
+        "v_over_U": 0.09567085809127257,
+        "perturbation_potential_over_Ua": -0.4903926402016152
+      },
+      {
+        "x_over_a": -1.9615705608064609,
+        "y_over_a": -0.3901806440322567,
+        "u_over_U": 0.7690301168721783,
+        "v_over_U": -0.09567085809127249,
+        "perturbation_potential_over_Ua": -0.4903926402016152
+      },
+      {
+        "x_over_a": -1.662939224605091,
+        "y_over_a": -1.111140466039204,
+        "u_over_U": 0.9043291419087274,
+        "v_over_U": -0.23096988312782163,
+        "perturbation_potential_over_Ua": -0.41573480615127273
+      },
+      {
+        "x_over_a": -1.1111404660392044,
+        "y_over_a": -1.6629392246050905,
+        "u_over_U": 1.0956708580912724,
+        "v_over_U": -0.2309698831278217,
+        "perturbation_potential_over_Ua": -0.2777851165098011
+      },
+      {
+        "x_over_a": -0.39018064403225733,
+        "y_over_a": -1.9615705608064606,
+        "u_over_U": 1.2309698831278215,
+        "v_over_U": -0.09567085809127263,
+        "perturbation_potential_over_Ua": -0.09754516100806436
+      },
+      {
+        "x_over_a": 0.3901806440322566,
+        "y_over_a": -1.9615705608064609,
+        "u_over_U": 1.2309698831278217,
+        "v_over_U": 0.09567085809127246,
+        "perturbation_potential_over_Ua": 0.09754516100806415
+      },
+      {
+        "x_over_a": 1.1111404660392037,
+        "y_over_a": -1.662939224605091,
+        "u_over_U": 1.0956708580912726,
+        "v_over_U": 0.23096988312782163,
+        "perturbation_potential_over_Ua": 0.2777851165098009
+      },
+      {
+        "x_over_a": 1.6629392246050905,
+        "y_over_a": -1.1111404660392044,
+        "u_over_U": 0.9043291419087276,
+        "v_over_U": 0.2309698831278217,
+        "perturbation_potential_over_Ua": 0.4157348061512726
+      },
+      {
+        "x_over_a": 1.9615705608064606,
+        "y_over_a": -0.39018064403225744,
+        "u_over_U": 0.7690301168721784,
+        "v_over_U": 0.09567085809127267,
+        "perturbation_potential_over_Ua": 0.49039264020161527
+      },
+      {
+        "x_over_a": 2.9423558412096913,
+        "y_over_a": 0.5852709660483848,
+        "u_over_U": 0.897346718609857,
+        "v_over_U": -0.042520381373898866,
+        "perturbation_potential_over_Ua": 0.3269284268010768
+      },
+      {
+        "x_over_a": 2.4944088369076356,
+        "y_over_a": 1.6667106990588065,
+        "u_over_U": 0.9574796186261011,
+        "v_over_U": -0.10265328139014297,
+        "perturbation_potential_over_Ua": 0.2771565374341818
+      },
+      {
+        "x_over_a": 1.666710699058807,
+        "y_over_a": 2.4944088369076356,
+        "u_over_U": 1.0425203813738988,
+        "v_over_U": -0.10265328139014297,
+        "perturbation_potential_over_Ua": 0.18519007767320078
+      },
+      {
+        "x_over_a": 0.585270966048385,
+        "y_over_a": 2.9423558412096913,
+        "u_over_U": 1.1026532813901428,
+        "v_over_U": -0.042520381373898866,
+        "perturbation_potential_over_Ua": 0.06503010733870945
+      },
+      {
+        "x_over_a": -0.5852709660483846,
+        "y_over_a": 2.9423558412096913,
+        "u_over_U": 1.102653281390143,
+        "v_over_U": 0.04252038137389884,
+        "perturbation_potential_over_Ua": -0.0650301073387094
+      },
+      {
+        "x_over_a": -1.6667106990588059,
+        "y_over_a": 2.4944088369076365,
+        "u_over_U": 1.042520381373899,
+        "v_over_U": 0.10265328139014292,
+        "perturbation_potential_over_Ua": -0.1851900776732006
+      },
+      {
+        "x_over_a": -2.494408836907636,
+        "y_over_a": 1.6667106990588065,
+        "u_over_U": 0.9574796186261011,
+        "v_over_U": 0.10265328139014294,
+        "perturbation_potential_over_Ua": -0.27715653743418167
+      },
+      {
+        "x_over_a": -2.9423558412096913,
+        "y_over_a": 0.5852709660483858,
+        "u_over_U": 0.897346718609857,
+        "v_over_U": 0.042520381373898915,
+        "perturbation_potential_over_Ua": -0.3269284268010768
+      },
+      {
+        "x_over_a": -2.9423558412096913,
+        "y_over_a": -0.585270966048385,
+        "u_over_U": 0.897346718609857,
+        "v_over_U": -0.04252038137389888,
+        "perturbation_potential_over_Ua": -0.3269284268010768
+      },
+      {
+        "x_over_a": -2.4944088369076365,
+        "y_over_a": -1.6667106990588059,
+        "u_over_U": 0.9574796186261011,
+        "v_over_U": -0.10265328139014292,
+        "perturbation_potential_over_Ua": -0.2771565374341817
+      },
+      {
+        "x_over_a": -1.6667106990588065,
+        "y_over_a": -2.4944088369076356,
+        "u_over_U": 1.0425203813738988,
+        "v_over_U": -0.10265328139014297,
+        "perturbation_potential_over_Ua": -0.18519007767320075
+      },
+      {
+        "x_over_a": -0.585270966048386,
+        "y_over_a": -2.942355841209691,
+        "u_over_U": 1.1026532813901428,
+        "v_over_U": -0.042520381373898956,
+        "perturbation_potential_over_Ua": -0.06503010733870956
+      },
+      {
+        "x_over_a": 0.5852709660483849,
+        "y_over_a": -2.9423558412096913,
+        "u_over_U": 1.1026532813901428,
+        "v_over_U": 0.04252038137389886,
+        "perturbation_potential_over_Ua": 0.06503010733870944
+      },
+      {
+        "x_over_a": 1.6667106990588056,
+        "y_over_a": -2.4944088369076365,
+        "u_over_U": 1.042520381373899,
+        "v_over_U": 0.10265328139014294,
+        "perturbation_potential_over_Ua": 0.18519007767320061
+      },
+      {
+        "x_over_a": 2.4944088369076356,
+        "y_over_a": -1.6667106990588065,
+        "u_over_U": 0.9574796186261011,
+        "v_over_U": 0.10265328139014297,
+        "perturbation_potential_over_Ua": 0.2771565374341818
+      },
+      {
+        "x_over_a": 2.942355841209691,
+        "y_over_a": -0.5852709660483861,
+        "u_over_U": 0.897346718609857,
+        "v_over_U": 0.04252038137389896,
+        "perturbation_potential_over_Ua": 0.3269284268010768
+      }
+    ],
+    "hand_typed_numbers": 0,
+    "bibliography": [
+      "Lamb H. Hydrodynamics. 6th ed. Cambridge University Press, 1932: uniform flow past a circular cylinder (same edition as docs/classical_benchmarks.md ref. [1]).",
+      "Milne-Thomson L M. Theoretical Hydrodynamics. 5th ed. Macmillan, 1968: circle theorem / translating-cylinder potential (docs/classical_benchmarks.md ref. [3])."
+    ],
+    "page_or_article_number": "WITHHELD: neither book is reachable from this container, so the exact page/article number was not verified here; the formulas are elementary and are instead re-derived numerically by the harmonicity gate (Laplacian and curl of the reference)."
+  },
+  "geometry_gate": {
+    "panels": 128,
+    "radius": 1.0,
+    "vertex_radius_max_deviation": 1.1102230246251565e-16,
+    "area": 3.140331156954754,
+    "inscribed_area_closed_form": 3.140331156954753,
+    "area_relative_deviation": 2.8282954099701096e-16,
+    "circle_area": 3.141592653589793,
+    "area_ratio_to_circle": 0.9995984531496794,
+    "perimeter": 6.282554501865546,
+    "inscribed_perimeter_closed_form": 6.282554501865546,
+    "perimeter_relative_deviation": 0.0,
+    "circle_perimeter": 6.283185307179586,
+    "perimeter_ratio_to_circle": 0.9998996042161418,
+    "h_mean": 0.049082457045824576,
+    "h_max": 0.04908245704582536
+  },
+  "harmonicity": {
+    "points": 64,
+    "finite_difference_step": 0.0001,
+    "laplacian_scaled_max": 7.771561172376096e-08,
+    "curl_scaled_max": 2.5711099915781688e-08,
+    "perturbation_formula_max_abs_difference": 2.220446049250313e-16,
+    "reference_velocity_max_over_speed": 1.6100204351543017
+  },
+  "gradient_kernel_crosscheck": {
+    "panels": 32,
+    "step": 2.5e-06,
+    "points": 16,
+    "max_abs_difference": 9.382686294578946e-11,
+    "gradient_scale": 0.6405675573581155,
+    "relative_crosscheck": 1.4647457847031526e-10
+  },
+  "routes": {
+    "dirichlet": {
+      "boundary_data": "phi' = U a**2 cos(theta)/r on panel midpoints",
+      "recovered": "potential and grad(phi) at exterior probes",
+      "levels": [
+        {
+          "route": "dirichlet",
+          "panels": 32,
+          "condition_number": 19.169224213940645,
+          "relative_residual_l2": 1.7032179029615049e-16,
+          "potential_relative_l2": 2.3342307209819606e-05,
+          "potential_max_abs_error": 1.7167428369102566e-05,
+          "velocity_relative_l2": 0.0002265665438862169,
+          "velocity_max_abs_error": 0.0006711988619391255,
+          "normal_derivative_net_flux_over_speed_radius": -4.787836793695988e-16,
+          "h_mean": 0.1960342806591212
+        },
+        {
+          "route": "dirichlet",
+          "panels": 64,
+          "condition_number": 38.11334353855527,
+          "relative_residual_l2": 2.272289621318698e-16,
+          "potential_relative_l2": 2.997878055220035e-06,
+          "potential_max_abs_error": 2.350990074950765e-06,
+          "velocity_relative_l2": 1.2289117975938238e-06,
+          "velocity_max_abs_error": 2.419734456914844e-06,
+          "normal_derivative_net_flux_over_speed_radius": -8.326672684688674e-17,
+          "h_mean": 0.09813534865483603
+        },
+        {
+          "route": "dirichlet",
+          "panels": 128,
+          "condition_number": 76.11357941479734,
+          "relative_residual_l2": 3.8807484285919976e-16,
+          "potential_relative_l2": 3.578165252983032e-07,
+          "potential_max_abs_error": 2.8075294467022616e-07,
+          "velocity_relative_l2": 1.3656224320923946e-07,
+          "velocity_max_abs_error": 2.2900288661295448e-07,
+          "normal_derivative_net_flux_over_speed_radius": 1.8735013540549517e-16,
+          "h_mean": 0.049082457045824576
+        }
+      ],
+      "observed_order_velocity": [
+        7.53951965123384,
+        3.1711289098675235
+      ],
+      "observed_order_potential": [
+        2.966091110944456,
+        3.06798305547801
+      ],
+      "finest": {
+        "route": "dirichlet",
+        "panels": 128,
+        "condition_number": 76.11357941479734,
+        "relative_residual_l2": 3.8807484285919976e-16,
+        "potential_relative_l2": 3.578165252983032e-07,
+        "potential_max_abs_error": 2.8075294467022616e-07,
+        "velocity_relative_l2": 1.3656224320923946e-07,
+        "velocity_max_abs_error": 2.2900288661295448e-07,
+        "normal_derivative_net_flux_over_speed_radius": 1.8735013540549517e-16,
+        "h_mean": 0.049082457045824576
+      }
+    },
+    "neumann": {
+      "boundary_data": "q_e = U a**2 cos(theta)/r**2 (zero total normal velocity)",
+      "recovered": "surface velocity from q_e and d(phi)/ds; grad(phi) outside",
+      "levels": [
+        {
+          "route": "neumann",
+          "panels": 32,
+          "condition_number": 2.103309600312263,
+          "relative_residual_l2": 3.089741280896852e-16,
+          "surface_velocity_relative_l2": 0.0016332624547677696,
+          "surface_speed_max_error_over_speed": 0.006387471070254724,
+          "normal_velocity_residual_over_speed": 0.00965384570411433,
+          "cp_relative_l2": 0.004601027161379183,
+          "cp_min": -2.987038215197846,
+          "cp_min_exact": -3.000094100797094,
+          "velocity_relative_l2": 0.002564771661913654,
+          "velocity_max_abs_error": 0.004767986260479642,
+          "potential_offset": 8.890457814381136e-18,
+          "potential_relative_l2_up_to_constant": 0.006441360851112292,
+          "normal_derivative_net_flux_over_speed_radius": 1.5959455978986625e-16,
+          "h_mean": 0.1960342806591212
+        },
+        {
+          "route": "neumann",
+          "panels": 64,
+          "condition_number": 2.050330425510918,
+          "relative_residual_l2": 4.985616875763608e-16,
+          "surface_velocity_relative_l2": 0.0004046292256971318,
+          "surface_speed_max_error_over_speed": 0.0016012841456127802,
+          "normal_velocity_residual_over_speed": 0.0024105402652203024,
+          "cp_relative_l2": 0.0011433147127329635,
+          "cp_min": -2.9967694387702344,
+          "cp_min_exact": -3.0000058247282,
+          "velocity_relative_l2": 0.0006130933686988105,
+          "velocity_max_abs_error": 0.0010284761658714235,
+          "potential_offset": 4.4885969940899884e-17,
+          "potential_relative_l2_up_to_constant": 0.0016062144609975194,
+          "normal_derivative_net_flux_over_speed_radius": 1.1102230246251565e-16,
+          "h_mean": 0.09813534865483603
+        },
+        {
+          "route": "neumann",
+          "panels": 128,
+          "condition_number": 2.0248495990182516,
+          "relative_residual_l2": 5.495278959395815e-16,
+          "surface_velocity_relative_l2": 0.00010075873250396247,
+          "surface_speed_max_error_over_speed": 0.0004009359164942605,
+          "normal_velocity_residual_over_speed": 0.0006024533450978006,
+          "cp_relative_l2": 0.00028491716813754445,
+          "cp_min": -2.999194333808323,
+          "cp_min_exact": -3.000000363168759,
+          "velocity_relative_l2": 0.0001532015925717173,
+          "velocity_max_abs_error": 0.00025690535237449187,
+          "potential_offset": 4.4885969940899884e-17,
+          "potential_relative_l2_up_to_constant": 0.0004014146126000333,
+          "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
+          "h_mean": 0.049082457045824576
+        }
+      ],
+      "observed_order_velocity": [
+        2.068248030773628,
+        2.0015453338106735
+      ],
+      "observed_order_surface_velocity": [
+        2.0165907313184706,
+        2.0065676588343466
+      ],
+      "finest": {
+        "route": "neumann",
+        "panels": 128,
+        "condition_number": 2.0248495990182516,
+        "relative_residual_l2": 5.495278959395815e-16,
+        "surface_velocity_relative_l2": 0.00010075873250396247,
+        "surface_speed_max_error_over_speed": 0.0004009359164942605,
+        "normal_velocity_residual_over_speed": 0.0006024533450978006,
+        "cp_relative_l2": 0.00028491716813754445,
+        "cp_min": -2.999194333808323,
+        "cp_min_exact": -3.000000363168759,
+        "velocity_relative_l2": 0.0001532015925717173,
+        "velocity_max_abs_error": 0.00025690535237449187,
+        "potential_offset": 4.4885969940899884e-17,
+        "potential_relative_l2_up_to_constant": 0.0004014146126000333,
+        "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
+        "h_mean": 0.049082457045824576
+      }
+    }
+  },
+  "probe_reference": {
+    "points": 64,
+    "velocity_norm_max_over_speed": 1.6100204351543017,
+    "velocity_norm_min_over_speed": 0.4764810577405495
+  },
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md",
+  "near_wall": {
+    "window": {
+      "clearance_over_h_max": 2.0,
+      "relative_error_tolerance": 0.01,
+      "levels": [
+        {
+          "panels": 32,
+          "h_max_over_radius": 0.19603428065912168,
+          "max_relative_velocity_error": 0.006609026346237187
+        },
+        {
+          "panels": 64,
+          "h_max_over_radius": 0.0981353486548366,
+          "max_relative_velocity_error": 0.0035998411389108285
+        },
+        {
+          "panels": 128,
+          "h_max_over_radius": 0.04908245704582536,
+          "max_relative_velocity_error": 0.0018882109089338656
+        }
+      ],
+      "observed_order_in_h": 0.9046978473113044
+    },
+    "exclusion": {
+      "clearance_over_h_max": 0.1,
+      "levels": [
+        {
+          "panels": 32,
+          "max_relative_velocity_error": 0.1794571055935658
+        },
+        {
+          "panels": 64,
+          "max_relative_velocity_error": 0.17715412187692683
+        },
+        {
+          "panels": 128,
+          "max_relative_velocity_error": 0.17566853543452338
+        }
+      ],
+      "saturation_ratio_coarsest_over_finest": 1.0215665836210865,
+      "saturation_band": [
+        0.5,
+        2.0
+      ]
+    },
+    "guard": {
+      "factor": 4.0,
+      "sampled_clearance_factor": 1.0,
+      "all_levels_rejected": true,
+      "messages": [
+        "evaluation point is on or too close to the boundary",
+        "evaluation point is on or too close to the boundary",
+        "evaluation point is on or too close to the boundary"
+      ]
+    },
+    "ladder": [
+      32,
+      64,
+      128
+    ],
+    "factors": [
+      2.0,
+      1.0,
+      0.5,
+      0.25,
+      0.1
+    ],
+    "levels": [
+      {
+        "panels": 32,
+        "h_max_over_radius": 0.19603428065912168,
+        "h_mean_over_radius": 0.1960342806591212,
+        "condition_number": 2.103309600312263,
+        "sweep": [
+          {
+            "clearance_over_h_max": 2.0,
+            "clearance_over_radius": 0.39206856131824336,
+            "max_relative_velocity_error": 0.006609026346237187,
+            "mean_relative_velocity_error": 0.0035840924493795202
+          },
+          {
+            "clearance_over_h_max": 1.0,
+            "clearance_over_radius": 0.19603428065912168,
+            "max_relative_velocity_error": 0.014327138254042263,
+            "mean_relative_velocity_error": 0.004769138864633798
+          },
+          {
+            "clearance_over_h_max": 0.5,
+            "clearance_over_radius": 0.09801714032956084,
+            "max_relative_velocity_error": 0.03688914689039491,
+            "mean_relative_velocity_error": 0.024430376485768478
+          },
+          {
+            "clearance_over_h_max": 0.25,
+            "clearance_over_radius": 0.04900857016478042,
+            "max_relative_velocity_error": 0.09085779205936403,
+            "mean_relative_velocity_error": 0.08966401277363908
+          },
+          {
+            "clearance_over_h_max": 0.1,
+            "clearance_over_radius": 0.01960342806591217,
+            "max_relative_velocity_error": 0.1794571055935658,
+            "mean_relative_velocity_error": 0.17896951112709558
+          }
+        ],
+        "guard_factor": 4.0,
+        "guard_sampled_clearance_factor": 1.0,
+        "guard_rejected": true,
+        "guard_message": "evaluation point is on or too close to the boundary"
+      },
+      {
+        "panels": 64,
+        "h_max_over_radius": 0.0981353486548366,
+        "h_mean_over_radius": 0.09813534865483603,
+        "condition_number": 2.050330425510918,
+        "sweep": [
+          {
+            "clearance_over_h_max": 2.0,
+            "clearance_over_radius": 0.1962706973096732,
+            "max_relative_velocity_error": 0.0035998411389108285,
+            "mean_relative_velocity_error": 0.0013157132248928904
+          },
+          {
+            "clearance_over_h_max": 1.0,
+            "clearance_over_radius": 0.0981353486548366,
+            "max_relative_velocity_error": 0.007850690043503103,
+            "mean_relative_velocity_error": 0.0018121853918897169
+          },
+          {
+            "clearance_over_h_max": 0.5,
+            "clearance_over_radius": 0.0490676743274183,
+            "max_relative_velocity_error": 0.02696144859909341,
+            "mean_relative_velocity_error": 0.022332139690882255
+          },
+          {
+            "clearance_over_h_max": 0.25,
+            "clearance_over_radius": 0.02453383716370915,
+            "max_relative_velocity_error": 0.08830271161661365,
+            "mean_relative_velocity_error": 0.08794901096389575
+          },
+          {
+            "clearance_over_h_max": 0.1,
+            "clearance_over_radius": 0.009813534865483661,
+            "max_relative_velocity_error": 0.17715412187692683,
+            "mean_relative_velocity_error": 0.17694146894661844
+          }
+        ],
+        "guard_factor": 4.0,
+        "guard_sampled_clearance_factor": 1.0,
+        "guard_rejected": true,
+        "guard_message": "evaluation point is on or too close to the boundary"
+      },
+      {
+        "panels": 128,
+        "h_max_over_radius": 0.04908245704582536,
+        "h_mean_over_radius": 0.049082457045824576,
+        "condition_number": 2.0248495990182516,
+        "sweep": [
+          {
+            "clearance_over_h_max": 2.0,
+            "clearance_over_radius": 0.09816491409165072,
+            "max_relative_velocity_error": 0.0018882109089338656,
+            "mean_relative_velocity_error": 0.0004344876710895189
+          },
+          {
+            "clearance_over_h_max": 1.0,
+            "clearance_over_radius": 0.04908245704582536,
+            "max_relative_velocity_error": 0.004387124560813369,
+            "mean_relative_velocity_error": 0.0011808487925063283
+          },
+          {
+            "clearance_over_h_max": 0.5,
+            "clearance_over_radius": 0.02454122852291268,
+            "max_relative_velocity_error": 0.022123101725346452,
+            "mean_relative_velocity_error": 0.021495354730818907
+          },
+          {
+            "clearance_over_h_max": 0.25,
+            "clearance_over_radius": 0.01227061426145634,
+            "max_relative_velocity_error": 0.08732332215117415,
+            "mean_relative_velocity_error": 0.08705934907586117
+          },
+          {
+            "clearance_over_h_max": 0.1,
+            "clearance_over_radius": 0.004908245704582537,
+            "max_relative_velocity_error": 0.17566853543452338,
+            "mean_relative_velocity_error": 0.17559885341771164
+          }
+        ],
+        "guard_factor": 4.0,
+        "guard_sampled_clearance_factor": 1.0,
+        "guard_rejected": true,
+        "guard_message": "evaluation point is on or too close to the boundary"
+      }
+    ],
+    "probe_directions": "radial, one above each panel midpoint",
+    "note": "the error reported here is the total velocity (grad(phi) + U x_hat) against dW/dz at the same points; it is a property of the constant-density panel representation, not of the linear solver"
+  },
+  "controls": {
+    "wrong_reference": {
+      "panels": 128,
+      "relative_l2_vs_correct_reference": 1.3656224320923946e-07,
+      "relative_l2_vs_mirror_reference": 0.5397407116943231,
+      "discrimination_ratio": 3952342.1628871253
+    },
+    "far_field": {
+      "radius_over_a": 8.0,
+      "max_velocity_error_vs_exact_over_speed": 5.590883391489002e-09,
+      "max_perturbation_over_speed": 0.015625000000000097,
+      "max_perturbation_potential_over_speed_radius": 0.1225982039180524
+    }
+  },
+  "criteria": [
+    {
+      "name": "geometry_vertices_on_circle",
+      "value": 1.1102230246251565e-16,
+      "threshold": "<= 1e-12 a",
+      "ok": true,
+      "note": "the body must be the inscribed polygon of radius a, not a rescaled one"
+    },
+    {
+      "name": "geometry_area_matches_inscribed_closed_form",
+      "value": 2.8282954099701096e-16,
+      "threshold": "<= 1e-12",
+      "ok": true,
+      "note": "polygon area vs N/2 a^2 sin(2 pi/N)"
+    },
+    {
+      "name": "geometry_perimeter_matches_inscribed_closed_form",
+      "value": 0.0,
+      "threshold": "<= 1e-12",
+      "ok": true,
+      "note": "polygon perimeter vs 2 N a sin(pi/N)"
+    },
+    {
+      "name": "reference_is_harmonic",
+      "value": 7.771561172376096e-08,
+      "threshold": "<= 1e-06 U/a",
+      "ok": true,
+      "note": "Laplacian of the closed-form perturbation potential at the probes"
+    },
+    {
+      "name": "reference_is_irrotational",
+      "value": 2.5711099915781688e-08,
+      "threshold": "<= 1e-06 U/a",
+      "ok": true,
+      "note": "curl of the closed-form velocity at the probes"
+    },
+    {
+      "name": "field_gradient_matches_finite_difference",
+      "value": 1.4647457847031526e-10,
+      "threshold": "<= 1e-05",
+      "ok": true,
+      "note": "closed-form panel-integral gradients vs central differences of the potential"
+    },
+    {
+      "name": "dirichlet_velocity_relative_l2",
+      "value": 1.3656224320923946e-07,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "BEM grad(phi) + U x_hat vs dW/dz at the exterior probes (budget panels)"
+    },
+    {
+      "name": "dirichlet_potential_relative_l2",
+      "value": 3.578165252983032e-07,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "recovered perturbation potential vs closed form (same probes)"
+    },
+    {
+      "name": "neumann_surface_velocity_relative_l2",
+      "value": 0.00010075873250396247,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "fluid-side surface velocity vs 2 U sin(theta) at the panel midpoints"
+    },
+    {
+      "name": "neumann_velocity_relative_l2",
+      "value": 0.0001532015925717173,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "BEM grad(phi) + U x_hat vs dW/dz at the exterior probes"
+    },
+    {
+      "name": "neumann_normal_velocity_residual",
+      "value": 0.0006024533450978006,
+      "threshold": "<= 0.01 U",
+      "ok": true,
+      "note": "the body must be a streamline (max |v.n|/U)"
+    },
+    {
+      "name": "neumann_cp_relative_l2",
+      "value": 0.00028491716813754445,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "Cp = 1 - (|v|/U)^2 vs 1 - 4 sin^2(theta) at the panel midpoints"
+    },
+    {
+      "name": "neumann_surface_velocity_observed_order",
+      "value": [
+        2.0165907313184706,
+        2.0065676588343466
+      ],
+      "threshold": ">= 1.5",
+      "ok": true,
+      "note": "second-order faceting convergence of the polygon surface velocity"
+    },
+    {
+      "name": "near_wall_window_error",
+      "value": 0.006609026346237187,
+      "threshold": "<= 0.01",
+      "ok": true,
+      "note": "at the documented clearance window delta = 2 h_max the exterior velocity error stays inside one third of the case tolerance, on every ladder level"
+    },
+    {
+      "name": "near_wall_window_error_scales_with_h",
+      "value": {
+        "observed_order_in_h": 0.9046978473113044,
+        "monotone_decreasing": true
+      },
+      "threshold": "decreasing with order >= 0.5",
+      "ok": true,
+      "note": "the window error is a discretisation error: it must shrink as h shrinks (first order at best; the constant-density term dominates)"
+    },
+    {
+      "name": "near_wall_exclusion_zone_is_real",
+      "value": 0.17566853543452338,
+      "threshold": ">= 0.03",
+      "ok": true,
+      "note": "inside delta = 0.1 h_max the constant-panel field is *not* usable; documenting the window only means something if this holds"
+    },
+    {
+      "name": "near_wall_error_is_panel_relative",
+      "value": 1.0215665836210865,
+      "threshold": "in [0.5, 2.0]",
+      "ok": true,
+      "note": "at fixed delta/h_max mesh refinement must not buy near-wall accuracy (ratio of the error at the coarsest and the finest level)"
+    },
+    {
+      "name": "near_wall_guard_rejects_inside_window",
+      "value": true,
+      "threshold": "True on every level",
+      "ok": true,
+      "note": "minimum_clearance_factor must refuse targets closer than the requested clearance instead of returning a plausible wrong velocity"
+    },
+    {
+      "name": "wrong_reference_is_rejected",
+      "value": 3952342.1628871253,
+      "threshold": ">= 10",
+      "ok": true,
+      "note": "the mirrored image-sign flow must not be accepted by the reference"
+    },
+    {
+      "name": "far_field_matches_closed_form",
+      "value": 5.590883391489002e-09,
+      "threshold": "<= 0.01 U",
+      "ok": true,
+      "note": "at r = 8a (disturbance still ~3% of U) the BEM velocity matches dW/dz to 1% of U"
+    }
+  ],
+  "acceptance": {
+    "passed": true,
+    "failed_checks": [],
+    "tolerance": 0.03,
+    "order_min": 1.5,
+    "n_checks": 20
+  },
+  "overall": "PASS",
+  "wall_seconds": 40.898725271224976
+}

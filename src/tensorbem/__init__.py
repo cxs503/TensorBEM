@@ -173,10 +173,13 @@ from .rao import (
 )
 from .recovery import recover_tangent_gradient
 from .solver import (
+    ExteriorField,
     LaplaceDirichletResult,
     RigidBodyAddedMass2DResult,
     assemble_matrices,
     compute_added_mass_matrix_2d,
+    evaluate_exterior_field,
+    evaluate_exterior_surface_velocity,
     evaluate_interior_field,
     solve_laplace_dirichlet,
     solve_laplace_exterior_dirichlet,
@@ -279,6 +282,9 @@ __all__ = [
     "compute_added_mass_matrix_2d",
     "assemble_matrices",
     "evaluate_interior_field",
+    "ExteriorField",
+    "evaluate_exterior_field",
+    "evaluate_exterior_surface_velocity",
     "TriangleMesh",
     "WettedHullMesh",
     "SurfaceMesh3D",

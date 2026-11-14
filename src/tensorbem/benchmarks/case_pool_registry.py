@@ -152,6 +152,44 @@ CASES: dict[str, CaseEntry] = {
         notes="multiply connected 2-D Laplace, closed-form harmonic reference; round 2 "
         "adds the eccentric (bipolar) annulus with the classical log(rho+/rho-) solution",
     ),
+    "CASE-BEM-LAPLACE-CYLINDER": CaseEntry(
+        case_code="CASE-BEM-LAPLACE-CYLINDER",
+        pool_code="BEM-LAPLACE-CYLINDER",
+        repo="TensorBEM",
+        tolerance="<3%",
+        entry="src/tensorbem/benchmarks/case_cylinder_stream.py",
+        entry_args=(
+            "--outdir",
+            "benchmarks/verified/case_bem_laplace_cylinder",
+            "--doc",
+            "docs/CASE-BEM-LAPLACE-CYLINDER.md",
+        ),
+        library="tensorbem.benchmarks.case_cylinder_stream",
+        artifacts=(
+            "benchmarks/verified/case_bem_laplace_cylinder/results.json",
+            "benchmarks/verified/case_bem_laplace_cylinder/case.json",
+        ),
+        doc="docs/CASE-BEM-LAPLACE-CYLINDER.md",
+        figures=(
+            "benchmarks/verified/case_bem_laplace_cylinder/figures/field.png",
+            "benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png",
+            "benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png",
+        ),
+        repro_cmd=(
+            "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
+            "--outdir benchmarks/verified/case_bem_laplace_cylinder "
+            "--doc docs/CASE-BEM-LAPLACE-CYLINDER.md"
+        ),
+        notes=(
+            "2-D exterior Laplace operator on the cylinder: uniform stream vs the "
+            "complex potential W = U(z + a^2/z). Route D (Dirichlet perturbation "
+            "potential) drives the new exterior field evaluator (potential AND "
+            "velocity from closed-form panel-integral gradients); route N (Neumann "
+            "zero normal flow) checks the fluid-side surface speed 2U|sin theta| and "
+            "Cp = 1 - 4 sin^2(theta). Controls: mirrored image sign, far-field decay, "
+            "polygon geometry gate."
+        ),
+    ),
     "CASE-BEM-NEUMANN-KELVIN": CaseEntry(
         case_code="CASE-BEM-NEUMANN-KELVIN",
         pool_code="BEM-NEUMANN-KELVIN",
