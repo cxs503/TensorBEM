@@ -1,0 +1,62 @@
+{
+ "case": "CASE-BEM-CUMMINS-WIGLEY / KK lower-band-tail attribution",
+ "kernel": {
+  "poles_rad_s": [
+   0.8,
+   2.2,
+   5.5,
+   14.0
+  ],
+  "coefficients": [
+   1.0,
+   -29.891840154532048,
+   57.29097510749858,
+   26.889227982480325
+  ],
+  "sum_c_over_a": 5.329070518200751e-15
+ },
+ "band_rad_s": [
+  0.1,
+  20.0
+ ],
+ "band_nodes": 28,
+ "sample_points": [
+  0.22360679774997896,
+  0.34641016151377546,
+  0.570087712549569,
+  0.8944271909999159,
+  1.3416407864998738,
+  2.0627651344736266,
+  3.0854497241083023,
+  4.33589667773576,
+  5.786190456595773,
+  7.389181280764467,
+  9.086253353280437,
+  11.726039399558575,
+  17.320508075688775
+ ],
+ "scales": {
+  "max_abs_B": 5.481192942977146,
+  "max_abs_A": 2.734259654851951,
+  "B_at_lowest_node": 0.0052437418222435195
+ },
+ "low_frequency_fit": {
+  "exponent_q": 2.173058796739481,
+  "coefficient": 0.777446541738045
+ },
+ "closure_constant_tail": {
+  "max_relative_residual": 0.003443843209193276,
+  "rms_relative_residual": 0.0022726226195167224,
+  "relative_residual_max": 0.0050911411766311025
+ },
+ "lower_tail_bound": {
+  "max_relative_residual": 0.004348312759866509,
+  "rms_relative_residual": 0.0022723383171435445,
+  "added_mass_inf": 0.016875559094291073
+ },
+ "exact_truth_max_abs_A": 2.734259654851951,
+ "verdict": {
+  "lower_tail_is_the_culprit": false,
+  "constant_tail_under_3_percent": true
+ }
+}
