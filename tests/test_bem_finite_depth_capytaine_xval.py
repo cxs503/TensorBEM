@@ -13,8 +13,8 @@ from pathlib import Path
 
 import pytest
 
-CASE_DIR = Path(__file__).resolve().parent
-RESULT_FILE = CASE_DIR / "xval_results.json"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+RESULT_FILE = REPO_ROOT / "benchmarks" / "verified" / "bem_finite_depth_capytaine_xval" / "xval_results.json"
 
 
 @pytest.fixture(scope="module")
