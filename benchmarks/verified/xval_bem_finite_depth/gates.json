@@ -1,0 +1,89 @@
+{
+ "all_gates_passed": false,
+ "case": "xval_bem_finite_depth",
+ "failed_gates": [
+  "G4_mode_truncation",
+  "G8_xval_freq_grid",
+  "G11_symmetry"
+ ],
+ "gates": [
+  {
+   "criterion": "exact patch area of every sphere mesh within 1 % of 4*pi*a^2",
+   "id": "G1_geometry",
+   "measured": 2.220446049250313e-16,
+   "note": "flat-area ratio of the coarsest mesh 0.7619",
+   "passed": true
+  },
+  {
+   "criterion": "|B33 - B33_analytic| / B33_analytic falls from 80 to 320 panels and is below 15 % at 320",
+   "id": "G2_damping_mesh_convergence",
+   "measured": 0.0675016403376996,
+   "note": "80 panels 0.2087 -> 320 panels 0.0675",
+   "passed": true
+  },
+  {
+   "criterion": "A33 and B33 at 320 panels with the exact surface measure within 15 % of the closed form",
+   "id": "G3_exact_measure_320",
+   "measured": 0.04468970532775496,
+   "note": "A33 0.0447, B33 0.0272",
+   "passed": true
+  },
+  {
+   "criterion": "B33 relative change over the last truncation step below 1 %",
+   "id": "G4_mode_truncation",
+   "measured": 0.01420610864095547,
+   "note": "256 -> 512 modes",
+   "passed": false
+  },
+  {
+   "criterion": "route C (independent code) at 320 panels within 15 % of the closed form",
+   "id": "G5_capytaine_analytic_320",
+   "measured": 0.037397074264351814,
+   "note": "",
+   "passed": true
+  },
+  {
+   "criterion": "max |T+ - C| / C over the depth ladder within 15 %",
+   "id": "G6_xval_depth_grid",
+   "measured": 0.1060515078346836,
+   "note": "3 depth stations, matched mesh",
+   "passed": true
+  },
+  {
+   "criterion": "T+ at h/a = 20 within 15 % of the deep-water closed form",
+   "id": "G7_deep_water_limit",
+   "measured": 0.04468970532775484,
+   "note": "",
+   "passed": true
+  },
+  {
+   "criterion": "max |T+ - C| / C over the frequency ladder within 15 %",
+   "id": "G8_xval_freq_grid",
+   "measured": 0.1581611472725644,
+   "note": "4 (ka, depth) stations",
+   "passed": false
+  },
+  {
+   "criterion": "T+ in deep water within 15 % of the closed form over the ka ladder",
+   "id": "G9_deep_water_freq",
+   "measured": 0.026286677573941864,
+   "note": "",
+   "passed": true
+  },
+  {
+   "criterion": "max|A - A^T|/max|A| and max|B - B^T|/max|B| below 1e-3",
+   "id": "G10_reciprocity",
+   "measured": 0.0002145944481752902,
+   "note": "",
+   "passed": true
+  },
+  {
+   "criterion": "|A11 - A22| / A11 below 5e-2 (the geodesic mesh is not 4-fold symmetric) and surge/heave decoupling below 1e-3",
+   "id": "G11_symmetry",
+   "measured": 0.06926561101857438,
+   "note": "",
+   "passed": false
+  }
+ ],
+ "threshold": 0.15
+}
