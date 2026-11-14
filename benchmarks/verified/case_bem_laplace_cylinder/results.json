@@ -5,7 +5,7 @@
   "repo": "TensorBEM",
   "domain": "ship-total-performance/resistance-potential-flow",
   "capability": "2-D exterior Laplace operator: potential AND velocity field outside a body, verified against the cylinder complex potential",
-  "generated_at_utc": "2026-11-14T11:44:36Z",
+  "generated_at_utc": "2026-11-14T15:13:32Z",
   "environment": {
     "python": "3.11.6",
     "numpy": "2.4.6",
@@ -880,6 +880,334 @@
     "probe_directions": "radial, one above each panel midpoint",
     "note": "the error reported here is the total velocity (grad(phi) + U x_hat) against dW/dz at the same points; it is a property of the constant-density panel representation, not of the linear solver"
   },
+  "multipole": {
+    "radii_over_a": [
+      1.5,
+      2.5,
+      4.0
+    ],
+    "order": 4,
+    "families": {
+      "uniform_flow": {
+        "harmonic": 1,
+        "potential": "phi' = U a**2 cos(theta)/r",
+        "excitation": "uniform stream U along +x",
+        "exact_moment": "A_1 = U a**2",
+        "contaminants": "A_2 = A_3 = A_4 = 0 and no 2-D source",
+        "bibliography": "Lamb H. Hydrodynamics, 6th ed., 1932 (uniform flow past a cylinder).",
+        "levels": [
+          {
+            "family": "uniform_flow",
+            "panels": 32,
+            "h_mean": 0.1960342806591212,
+            "condition_number": 19.169224213940645,
+            "relative_residual": 1.7032179029615049e-16,
+            "samples_per_ring": 64,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 1,
+            "scale": 1.0,
+            "target_moment_over_scale": 1.000026302732066,
+            "target_cosine_over_scale": 1.000026302732066,
+            "target_moment_relative_error": 2.630273206594147e-05,
+            "target_moment_ring_spread_relative": 5.351134229243374e-14,
+            "contaminant_over_scale": {
+              "2": 1.6644300725223491e-15,
+              "3": 4.6507071092247634e-15,
+              "4": 1.8315215777134454e-14
+            },
+            "largest_contaminant_over_scale": 1.8315215777134454e-14,
+            "source_over_scale": 5.445057208759574e-17,
+            "source_trend_residual_over_scale": 3.2797060217090044e-17,
+            "fit_relative_residual_max": 8.613992400037111e-08,
+            "ring_fit_condition_number_max": 1.4142135623730958,
+            "ring_constants_over_scale": [
+              1.3877787807814454e-17,
+              -6.245004513516504e-17,
+              -3.816391647148975e-17
+            ]
+          },
+          {
+            "family": "uniform_flow",
+            "panels": 64,
+            "h_mean": 0.09813534865483603,
+            "condition_number": 38.11334353855527,
+            "relative_residual": 2.272289621318698e-16,
+            "samples_per_ring": 128,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 1,
+            "scale": 1.0,
+            "target_moment_over_scale": 1.0000029991226047,
+            "target_cosine_over_scale": 1.0000029991226047,
+            "target_moment_relative_error": 2.9991226047076935e-06,
+            "target_moment_ring_spread_relative": 2.2204393898803465e-16,
+            "contaminant_over_scale": {
+              "2": 2.1255324108285887e-15,
+              "3": 1.5822978318409701e-15,
+              "4": 7.688853238091247e-15
+            },
+            "largest_contaminant_over_scale": 7.688853238091247e-15,
+            "source_over_scale": 1.0957399715717932e-16,
+            "source_trend_residual_over_scale": 1.1304087570611258e-17,
+            "fit_relative_residual_max": 9.807923342169209e-14,
+            "ring_fit_condition_number_max": 1.4142135623730958,
+            "ring_constants_over_scale": [
+              1.9626155733547187e-17,
+              -1.9626155733547187e-17,
+              -8.831770080096235e-17
+            ]
+          },
+          {
+            "family": "uniform_flow",
+            "panels": 128,
+            "h_mean": 0.049082457045824576,
+            "condition_number": 76.11357941479734,
+            "relative_residual": 3.8807484285919976e-16,
+            "samples_per_ring": 256,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 1,
+            "scale": 1.0,
+            "target_moment_over_scale": 1.000000357816526,
+            "target_cosine_over_scale": 1.000000357816526,
+            "target_moment_relative_error": 3.5781652596433844e-07,
+            "target_moment_ring_spread_relative": 6.661335764214917e-16,
+            "contaminant_over_scale": {
+              "2": 2.9397483453286304e-15,
+              "3": 2.2729864219635294e-15,
+              "4": 1.498025383388895e-14
+            },
+            "largest_contaminant_over_scale": 1.498025383388895e-14,
+            "source_over_scale": 4.532170213531691e-16,
+            "source_trend_residual_over_scale": 5.223528277049715e-17,
+            "fit_relative_residual_max": 2.638121750434247e-15,
+            "ring_fit_condition_number_max": 1.4142135623730951,
+            "ring_constants_over_scale": [
+              -9.020562075079397e-17,
+              2.185751579730777e-16,
+              3.5214886562329184e-16
+            ]
+          }
+        ],
+        "observed_order_target_moment": [
+          3.138056822676945,
+          3.068582114265124
+        ],
+        "finest": {
+          "family": "uniform_flow",
+          "panels": 128,
+          "h_mean": 0.049082457045824576,
+          "condition_number": 76.11357941479734,
+          "relative_residual": 3.8807484285919976e-16,
+          "samples_per_ring": 256,
+          "rings_over_a": [
+            1.5,
+            2.5,
+            4.0
+          ],
+          "harmonic": 1,
+          "scale": 1.0,
+          "target_moment_over_scale": 1.000000357816526,
+          "target_cosine_over_scale": 1.000000357816526,
+          "target_moment_relative_error": 3.5781652596433844e-07,
+          "target_moment_ring_spread_relative": 6.661335764214917e-16,
+          "contaminant_over_scale": {
+            "2": 2.9397483453286304e-15,
+            "3": 2.2729864219635294e-15,
+            "4": 1.498025383388895e-14
+          },
+          "largest_contaminant_over_scale": 1.498025383388895e-14,
+          "source_over_scale": 4.532170213531691e-16,
+          "source_trend_residual_over_scale": 5.223528277049715e-17,
+          "fit_relative_residual_max": 2.638121750434247e-15,
+          "ring_fit_condition_number_max": 1.4142135623730951,
+          "ring_constants_over_scale": [
+            -9.020562075079397e-17,
+            2.185751579730777e-16,
+            3.5214886562329184e-16
+          ]
+        },
+        "worst": {
+          "largest_contaminant_over_scale": 1.8315215777134454e-14,
+          "source_over_scale": 4.532170213531691e-16,
+          "target_moment_ring_spread_relative": 5.351134229243374e-14,
+          "fit_relative_residual_max": 8.613992400037111e-08
+        }
+      },
+      "pure_strain": {
+        "harmonic": 2,
+        "potential": "phi' = (gamma/2) a**4 cos(2 theta)/r**2",
+        "excitation": "plane straining flow u = gamma x, v = -gamma y",
+        "exact_moment": "A_2 = (gamma/2) a**4",
+        "contaminants": "A_1 = A_3 = A_4 = 0 and no 2-D source",
+        "bibliography": "Milne-Thomson L M. Theoretical Hydrodynamics, 5th ed., 1968: straining flow past a circular cylinder.",
+        "levels": [
+          {
+            "family": "pure_strain",
+            "panels": 32,
+            "h_mean": 0.1960342806591212,
+            "condition_number": 19.169224213940645,
+            "relative_residual": 2.841508890396571e-16,
+            "samples_per_ring": 64,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 2,
+            "scale": 0.5,
+            "target_moment_over_scale": 0.9981186175155141,
+            "target_cosine_over_scale": 0.9981186175155141,
+            "target_moment_relative_error": 0.0018813824844858829,
+            "target_moment_ring_spread_relative": 3.6250369182169334e-13,
+            "contaminant_over_scale": {
+              "1": 1.9444419426005386e-16,
+              "3": 5.650901277187759e-15,
+              "4": 9.544227585516514e-15
+            },
+            "largest_contaminant_over_scale": 9.544227585516514e-15,
+            "source_over_scale": 1.3897898602264154e-16,
+            "source_trend_residual_over_scale": 1.7503644419073626e-17,
+            "fit_relative_residual_max": 3.41182882041492e-07,
+            "ring_fit_condition_number_max": 1.4142135623730958,
+            "ring_constants_over_scale": [
+              6.938893903907227e-18,
+              -3.816391647148975e-17,
+              -1.301042606982605e-16
+            ]
+          },
+          {
+            "family": "pure_strain",
+            "panels": 64,
+            "h_mean": 0.09813534865483603,
+            "condition_number": 38.11334353855527,
+            "relative_residual": 3.835579056749488e-16,
+            "samples_per_ring": 128,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 2,
+            "scale": 0.5,
+            "target_moment_over_scale": 0.9995633081754635,
+            "target_cosine_over_scale": 0.9995633081754635,
+            "target_moment_relative_error": 0.0004366918245365392,
+            "target_moment_ring_spread_relative": 4.220690634669653e-15,
+            "contaminant_over_scale": {
+              "1": 4.458088926056925e-16,
+              "3": 5.499257620083672e-15,
+              "4": 3.0497049211255674e-15
+            },
+            "largest_contaminant_over_scale": 5.499257620083672e-15,
+            "source_over_scale": 3.2243646699268874e-16,
+            "source_trend_residual_over_scale": 5.205256385133284e-18,
+            "fit_relative_residual_max": 3.761758274253077e-13,
+            "ring_fit_condition_number_max": 1.4142135623730958,
+            "ring_constants_over_scale": [
+              4.906538933386797e-18,
+              -1.521027069349907e-16,
+              -3.1156522227006157e-16
+            ]
+          },
+          {
+            "family": "pure_strain",
+            "panels": 128,
+            "h_mean": 0.049082457045824576,
+            "condition_number": 76.11357941479734,
+            "relative_residual": 4.587621814003073e-16,
+            "samples_per_ring": 256,
+            "rings_over_a": [
+              1.5,
+              2.5,
+              4.0
+            ],
+            "harmonic": 2,
+            "scale": 0.5,
+            "target_moment_over_scale": 0.9998951696278672,
+            "target_cosine_over_scale": 0.9998951696278672,
+            "target_moment_relative_error": 0.00010483037213282476,
+            "target_moment_ring_spread_relative": 2.7314349779230774e-14,
+            "contaminant_over_scale": {
+              "1": 3.1625627683888966e-16,
+              "3": 1.048222211935468e-14,
+              "4": 1.645936576354471e-14
+            },
+            "largest_contaminant_over_scale": 1.645936576354471e-14,
+            "source_over_scale": 5.522239870099921e-16,
+            "source_trend_residual_over_scale": 7.199612429829313e-19,
+            "fit_relative_residual_max": 2.0432892813505823e-14,
+            "ring_fit_condition_number_max": 1.4142135623730951,
+            "ring_constants_over_scale": [
+              -6.591949208711867e-17,
+              -3.469446951953614e-16,
+              -6.075868974608767e-16
+            ]
+          }
+        ],
+        "observed_order_target_moment": [
+          2.1107760459785254,
+          2.059453751540193
+        ],
+        "finest": {
+          "family": "pure_strain",
+          "panels": 128,
+          "h_mean": 0.049082457045824576,
+          "condition_number": 76.11357941479734,
+          "relative_residual": 4.587621814003073e-16,
+          "samples_per_ring": 256,
+          "rings_over_a": [
+            1.5,
+            2.5,
+            4.0
+          ],
+          "harmonic": 2,
+          "scale": 0.5,
+          "target_moment_over_scale": 0.9998951696278672,
+          "target_cosine_over_scale": 0.9998951696278672,
+          "target_moment_relative_error": 0.00010483037213282476,
+          "target_moment_ring_spread_relative": 2.7314349779230774e-14,
+          "contaminant_over_scale": {
+            "1": 3.1625627683888966e-16,
+            "3": 1.048222211935468e-14,
+            "4": 1.645936576354471e-14
+          },
+          "largest_contaminant_over_scale": 1.645936576354471e-14,
+          "source_over_scale": 5.522239870099921e-16,
+          "source_trend_residual_over_scale": 7.199612429829313e-19,
+          "fit_relative_residual_max": 2.0432892813505823e-14,
+          "ring_fit_condition_number_max": 1.4142135623730951,
+          "ring_constants_over_scale": [
+            -6.591949208711867e-17,
+            -3.469446951953614e-16,
+            -6.075868974608767e-16
+          ]
+        },
+        "worst": {
+          "largest_contaminant_over_scale": 1.645936576354471e-14,
+          "source_over_scale": 5.522239870099921e-16,
+          "target_moment_ring_spread_relative": 3.6250369182169334e-13,
+          "fit_relative_residual_max": 3.41182882041492e-07
+        }
+      }
+    },
+    "mirror_control": {
+      "dipole_over_scale": 1.000000357816526,
+      "target_cosine_over_scale": -1.000000357816526,
+      "signed_error_of_the_mirror": 3.5781652596433844e-07,
+      "discrimination_ratio": 5589456.760304382
+    }
+  },
   "controls": {
     "wrong_reference": {
       "panels": 128,
@@ -1028,6 +1356,75 @@
       "note": "minimum_clearance_factor must refuse targets closer than the requested clearance instead of returning a plausible wrong velocity"
     },
     {
+      "name": "multipole_uniform_flow_moment_relative_error",
+      "value": 3.5781652596433844e-07,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "far-field harmonic A_1 recovered from the ring fits vs A_1 = U a**2 (budget panels)"
+    },
+    {
+      "name": "multipole_uniform_flow_moment_observed_order",
+      "value": [
+        3.138056822676945,
+        3.068582114265124
+      ],
+      "threshold": ">= 1.5",
+      "ok": true,
+      "note": "the faceting error of the multipole moment must converge with h"
+    },
+    {
+      "name": "multipole_pure_strain_moment_relative_error",
+      "value": 0.00010483037213282476,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "far-field harmonic A_2 recovered from the ring fits vs A_2 = (gamma/2) a**4 (budget panels)"
+    },
+    {
+      "name": "multipole_pure_strain_moment_observed_order",
+      "value": [
+        2.1107760459785254,
+        2.059453751540193
+      ],
+      "threshold": ">= 1.5",
+      "ok": true,
+      "note": "the faceting error of the multipole moment must converge with h"
+    },
+    {
+      "name": "multipole_purity",
+      "value": 1.8315215777134454e-14,
+      "threshold": "< 1e-09",
+      "ok": true,
+      "note": "harmonics the boundary data does not excite must stay at roundoff (largest spurious A_n over the moment scale, every level)"
+    },
+    {
+      "name": "multipole_no_source_leak",
+      "value": 5.522239870099921e-16,
+      "threshold": "< 1e-09",
+      "ok": true,
+      "note": "the exterior field must be solenoidal: no 2-D log source, measured as the slope of the ring mean against log(r)"
+    },
+    {
+      "name": "multipole_radius_independence",
+      "value": 3.6250369182169334e-13,
+      "threshold": "< 1e-09",
+      "ok": true,
+      "note": "the moment measured on r/a = 1.5, 2.5, 4 must not depend on the ring"
+    },
+    {
+      "name": "multipole_fit_residual",
+      "value": 3.41182882041492e-07,
+      "threshold": "< 1e-05",
+      "ok": true,
+      "note": "the truncated harmonic fit must explain the sampled field (relative rms residual of the order-4 fit)"
+    },
+    {
+      "name": "multipole_mirror_control_is_rejected",
+      "value": 5589456.760304382,
+      "threshold": ">= 10",
+      "ok": true,
+      "note": "the image-sign data must be read as a negative dipole, i.e. the moment carries its sign"
+    },
+    {
       "name": "wrong_reference_is_rejected",
       "value": 3952342.1628871253,
       "threshold": ">= 10",
@@ -1047,8 +1444,8 @@
     "failed_checks": [],
     "tolerance": 0.03,
     "order_min": 1.5,
-    "n_checks": 20
+    "n_checks": 29
   },
   "overall": "PASS",
-  "wall_seconds": 40.898725271224976
+  "wall_seconds": 102.58537006378174
 }
