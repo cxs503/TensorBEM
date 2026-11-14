@@ -1,0 +1,163 @@
+{
+  "audited": {
+    "mission": 20079,
+    "case_code": "CASE-BEM-HELMHOLTZ-SPHERE",
+    "worktree": "/root/tp-agent/work/m20079",
+    "tolerance": 0.06,
+    "verdict_in_artifacts": "PASS"
+  },
+  "reference_independence": {
+    "case_two_implementations_max_rel_diff": 8.523784746079401e-16,
+    "auditor_third_implementation_max_rel_diff_vs_case_ref": 1.0745878838389137e-15,
+    "auditor_rayleigh_limit_7over9": 0.7774845250387948,
+    "auditor_extinction_ka100": 1.915816500891244,
+    "case_declared_rayleigh_check_value": 0.0003770392358347958,
+    "case_declared_extinction_check_value": 0.042091749554378444
+  },
+  "got_vs_ref": [
+    {
+      "ka": 0.5,
+      "panels": 320,
+      "panels_per_wavelength": 64.019,
+      "sigma_hat_bem": 0.03655205541759543,
+      "sigma_hat_ref": 0.03874356304363881,
+      "rel_error_pct": 5.6564,
+      "auditor_rel_error_vs_own_series_pct": 5.656443171153193,
+      "within_tolerance": true,
+      "boundary_residual": 2.000767085476209e-05
+    },
+    {
+      "ka": 1.0,
+      "panels": 320,
+      "panels_per_wavelength": 32.009,
+      "sigma_hat_bem": 0.3090907383416423,
+      "sigma_hat_ref": 0.3216288590901783,
+      "rel_error_pct": 3.8983,
+      "auditor_rel_error_vs_own_series_pct": 3.89831956746776,
+      "within_tolerance": true,
+      "boundary_residual": 3.258121975819141e-05
+    },
+    {
+      "ka": 2.0,
+      "panels": 320,
+      "panels_per_wavelength": 16.005,
+      "sigma_hat_bem": 0.766779234430294,
+      "sigma_hat_ref": 0.7815000432542466,
+      "rel_error_pct": 1.8837,
+      "auditor_rel_error_vs_own_series_pct": 1.8836606537669582,
+      "within_tolerance": true,
+      "boundary_residual": 0.00017858109488747782
+    }
+  ],
+  "worst_error_pct": 5.6564431711532945,
+  "worst_error_pct_vs_auditor_series": 5.656443171153193,
+  "within_3pct": false,
+  "ladder": {
+    "rows": [
+      {
+        "panels": 80,
+        "edge_over_lambda": 0.06077638256601008,
+        "rel_error_pct": 14.6696,
+        "order_vs_previous": null
+      },
+      {
+        "panels": 320,
+        "edge_over_lambda": 0.031240934357525927,
+        "rel_error_pct": 3.8983,
+        "order_vs_previous": 1.991423672549687
+      }
+    ],
+    "finest_mesh_error_pct": 3.8983,
+    "declared_limit_pct": 1.0,
+    "check_passed": false,
+    "blocking": false
+  },
+  "quadrature": {
+    "orders": [
+      32,
+      64
+    ],
+    "spread_pct": 0.0,
+    "declared_limit": 0.005,
+    "check_passed": true
+  },
+  "chief": {
+    "ka": 3.141592653589793,
+    "error_with_chief_pct": 1.2488,
+    "error_without_chief_pct": 8.8647,
+    "cond": 65.96524222073728,
+    "residual_with_chief": 0.004015157554276802,
+    "residual_without_chief": 1.281163252655365e-15
+  },
+  "pattern": {
+    "max_rel_deviation_pct": 4.914613688790773,
+    "declared_limit_pct": 6.0,
+    "check_passed": true,
+    "n_angles": 73
+  },
+  "declared_checks": [
+    {
+      "name": "sweep_within_tolerance",
+      "value": 0.05656443171153295,
+      "limit": 0.06,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "chiefs_suppress_irregular_frequency",
+      "value": 0.0124879348099486,
+      "limit": 0.06,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "quadrature_independence",
+      "value": 1.0931762027640146e-15,
+      "limit": 0.005,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "reference_two_implementations",
+      "value": 8.523784746079401e-16,
+      "limit": 1e-10,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "reference_rayleigh_limit",
+      "value": 0.0003770392358347958,
+      "limit": 0.001,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "reference_extinction_limit",
+      "value": 0.042091749554378444,
+      "limit": 0.05,
+      "blocking": true,
+      "passed": true
+    },
+    {
+      "name": "mesh_ladder_converged",
+      "value": 0.03898319567467843,
+      "limit": 0.01,
+      "blocking": false,
+      "passed": false
+    },
+    {
+      "name": "angular_pattern",
+      "value": 0.04914613688790773,
+      "limit": 0.06,
+      "blocking": false,
+      "passed": true
+    }
+  ],
+  "failed_checks": [
+    "mesh_ladder_converged"
+  ],
+  "knowledge_engine_at_case_time": {
+    "available": false,
+    "reason": "engine_offline"
+  }
+}

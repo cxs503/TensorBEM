@@ -1,0 +1,41 @@
+-- referee rows for the audited anchor
+SQL: SELECT case_name, metric, tolerance FROM tensor_benchmark_cases WHERE anchor_slug='CASE-BEM-HELMHOLTZ-SPHERE'
+RESULT: 0 rows
+
+-- benchmark table size
+SQL: SELECT count(*) FROM tensor_benchmark_cases
+RESULT: (123,)
+
+-- helmholtz-keyword benchmark rows
+SQL: SELECT anchor_slug, left(case_name,60) FROM tensor_benchmark_cases WHERE anchor_slug ILIKE '%%HELMHOLTZ%%' OR case_name ILIKE '%%helmholtz%%'
+RESULT: ('CASE-BEM-ACOUSTIC-PULSE', 'Pulsating sphere (a=0.1 m, c=1500 m/s, rho=1025 kg/m3) drive')
+
+-- case pool row
+SQL: SELECT case_code, repo, tier, status, mission_id, source FROM tensor_case_pool WHERE case_code='BEM-HELMHOLTZ-SPHERE'
+RESULT: ('BEM-HELMHOLTZ-SPHERE', 'TensorBEM', 'core', 'dispatched', 19973, 'pool-expand-1114')
+
+-- case pool status histogram
+SQL: SELECT status, count(*) FROM tensor_case_pool GROUP BY 1 ORDER BY 2 DESC
+RESULT: ('passed', 108)
+RESULT: ('dispatched', 56)
+RESULT: ('pending', 19)
+RESULT: ('done', 1)
+
+-- earlier audit verdict on the same anchor (lineage)
+SQL: SELECT id, mission_id, level, gate_state, gate_level, left(coalesce(gate_note::text,''),200) FROM tensor_maturity_verdicts WHERE scope ILIKE '%%HELMHOLTZ%%' ORDER BY id
+RESULT: (810, 19997, 3, 'reopened', 1, '{"why": ["L3 缺: impl_files(占位/缺失),entry(工件缺失),run_artifacts(工件缺失)", "L2 缺: impl_files(占位/缺失),entry(工件缺失),run_artifacts(工件缺失)", "L1 缺: tests(工件缺失)"], "claimed": "3", "gate_level": 1}')
+RESULT: (838, 20147, 3, 'pending', None, '')
+
+-- reports filed for the anchor
+SQL: SELECT id, mission_id, qa_status, jsonb_array_length(coalesce(figures,'[]'::jsonb)) AS n_figs, length(markdown) FROM tensor_reports WHERE scenario_key='CASE-BEM-HELMHOLTZ-SPHERE' ORDER BY id
+RESULT: (18218, 19973, 'pending', 4, 7694)
+RESULT: (18232, 19997, 'pending', 3, 7352)
+RESULT: (18331, 20079, 'pending', 4, 4997)
+RESULT: (18349, 20147, 'pending', 3, 8159)
+
+-- this audit's verdict row
+SQL: SELECT id, repo, scope, mission_id, level, gate_state, gate_level FROM tensor_maturity_verdicts WHERE mission_id=20147
+RESULT: (838, 'TensorBEM', 'm20079 CASE-BEM-HELMHOLTZ-SPHERE', 20147, 3, 'pending', None)
+
+-- gate pre-check of the inserted evidence (maturity_gate.judge, read-only)
+judge pre-check: 3 []   (declared L3, no missing key)
