@@ -1,0 +1,384 @@
+{
+  "case_code": "CASE-BEM-HULME-SURGE-LOWFREQ",
+  "anchor": "CASE-BEM-HULME-HEMISPHERE",
+  "scope": "horizontal (surge) long-wave end, ka -> 0, of the floating-hemisphere radiation anchor",
+  "physical_case": {
+    "body": "half-submerged hemisphere, flat face flush with the mean free surface",
+    "radius_m": 1.0,
+    "displaced_volume_m3": 2.0943951023931953,
+    "waterplane_area_m2": 3.141592653589793,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "rho_nabla_kg": 2146.754979953025,
+    "depth": "infinite (deep water)",
+    "mode": "surge, unit velocity amplitude, exp(-i*omega*t)",
+    "normalisation": "A11/(rho*nabla), B11/(omega*rho*nabla)",
+    "limit": "ka -> 0 is the rigid-wall (omega -> 0) limit of the free surface"
+  },
+  "exact_anchor": {
+    "statement": "A11(ka->0) = A_sph/2 = rho*nabla/2 (exact)",
+    "sphere_volume_m3": 4.1887902047863905,
+    "hemisphere_volume_m3": 2.0943951023931953,
+    "sphere_added_mass_kg": 2146.754979953025,
+    "hemisphere_added_mass_kg": 1073.3774899765126,
+    "hemisphere_added_mass_per_rho_nabla": 0.5,
+    "derivation_steps": [
+      "omega -> 0: dphi/dz - nu*phi = 0 degenerates to the rigid wall dphi/dz = 0 on z = 0 (r > a)",
+      "even continuation z -> -z preserves the horizontal Neumann data u.n = U*n_x",
+      "the mirrored problem is a full sphere translating in x in unbounded fluid",
+      "Kirchhoff: A_sph = rho*(4/3)*pi*a^3/2",
+      "T_doubled = 2*T_hemisphere at equal U  =>  A_hemi = A_sph/2 = rho*nabla/2",
+      "normalising by rho*nabla with nabla = (2/3)*pi*a^3 gives exactly 1/2"
+    ]
+  },
+  "doubled_body_self_test": {
+    "method": "tensorbem.benchmarks.hemisphere_zero_frequency_envelope.spectral_added_mass('translation', n_terms=60)",
+    "full_sphere_dimensionless_vs_rho_nabla": 1.0,
+    "spectral_lower_half_dimensionless_vs_rho_nabla": 0.4999999999999474,
+    "lower_half_added_mass_kg": 1073.3774899763996,
+    "note": "the spectral projector integrates the translating-sphere potential over the lower hemisphere, so it returns the half-space (hemisphere) value directly: 0.5 rho*nabla in rho*nabla units; the closed-form full sphere is 1.0 in the same units, and halving it for the half-space gives the same 1/2"
+  },
+  "reference": {
+    "module": "tensorbem.analytic.hulme_hemisphere_radiation",
+    "knot": "Hulme (1982) J. Fluid Mech. 121:443-463 wave-free multipole series, re-derived in-repo (not the printed table)",
+    "kas": [
+      0.002,
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.5
+    ],
+    "n_terms_ladder": [
+      48,
+      96,
+      144
+    ],
+    "quad_order": 512
+  },
+  "reference_ladder": [
+    {
+      "ka": 0.002,
+      "a11_dimless": 0.500376222576115,
+      "b11_dimless": 9.410655561577722e-09,
+      "b11_far_field_dimless": 9.410655561578215e-09,
+      "a33_dimless": 0.8380109000232827,
+      "b33_dimless": 0.0046893838428479105,
+      "excess_over_exact": 0.0003762225761150262,
+      "excess_per_ka": 0.1881112880575131,
+      "a11_terms_48_dimless": 0.5003762225764325,
+      "a11_terms_96_dimless": 0.5003762225761452,
+      "a11_terms_144_dimless": 0.500376222576115
+    },
+    {
+      "ka": 0.005,
+      "a11_dimless": 0.5009452557399681,
+      "b11_dimless": 1.4671138321396874e-07,
+      "b11_far_field_dimless": 1.4671138321401654e-07,
+      "a33_dimless": 0.8450349645090582,
+      "b33_dimless": 0.011636770180132405,
+      "excess_over_exact": 0.000945255739968065,
+      "excess_per_ka": 0.189051147993613,
+      "a11_terms_48_dimless": 0.5009452557419529,
+      "a11_terms_96_dimless": 0.5009452557401565,
+      "a11_terms_144_dimless": 0.5009452557399681
+    },
+    {
+      "ka": 0.01,
+      "a11_dimless": 0.501906636624011,
+      "b11_dimless": 1.1693089995197141e-06,
+      "b11_far_field_dimless": 1.1693089995212394e-06,
+      "a33_dimless": 0.8535903642442932,
+      "b33_dimless": 0.02298446435636508,
+      "excess_over_exact": 0.0019066366240110266,
+      "excess_per_ka": 0.19066366240110266,
+      "a11_terms_48_dimless": 0.5019066366319502,
+      "a11_terms_96_dimless": 0.5019066366247646,
+      "a11_terms_144_dimless": 0.501906636624011
+    },
+    {
+      "ka": 0.02,
+      "a11_dimless": 0.5038803508389516,
+      "b11_dimless": 9.284958785623938e-06,
+      "b11_far_field_dimless": 9.284958785672568e-06,
+      "a33_dimless": 0.8648129450696875,
+      "b33_dimless": 0.044817819655250696,
+      "excess_over_exact": 0.0038803508389515518,
+      "excess_per_ka": 0.1940175419475776,
+      "a11_terms_48_dimless": 0.5038803508707084,
+      "a11_terms_96_dimless": 0.5038803508419656,
+      "a11_terms_144_dimless": 0.5038803508389516
+    },
+    {
+      "ka": 0.05,
+      "a11_dimless": 0.5102350270502429,
+      "b11_dimless": 0.00014189574427691485,
+      "b11_far_field_dimless": 0.00014189574428161673,
+      "a33_dimless": 0.8763702983581098,
+      "b33_dimless": 0.10365029690982155,
+      "excess_over_exact": 0.010235027050242929,
+      "excess_per_ka": 0.20470054100485857,
+      "a11_terms_48_dimless": 0.5102350272486182,
+      "a11_terms_96_dimless": 0.5102350270690685,
+      "a11_terms_144_dimless": 0.5102350270502429
+    },
+    {
+      "ka": 0.1,
+      "a11_dimless": 0.5223218843666719,
+      "b11_dimless": 0.001094688179984934,
+      "b11_far_field_dimless": 0.0010946881801330043,
+      "a33_dimless": 0.8627362844946018,
+      "b33_dimless": 0.18161626753805202,
+      "excess_over_exact": 0.02232188436667193,
+      "excess_per_ka": 0.2232188436667193,
+      "a11_terms_48_dimless": 0.5223218851577829,
+      "a11_terms_96_dimless": 0.5223218844417283,
+      "a11_terms_144_dimless": 0.5223218843666719
+    },
+    {
+      "ka": 0.2,
+      "a11_dimless": 0.5515331322468926,
+      "b11_dimless": 0.00815278002449057,
+      "b11_far_field_dimless": 0.008152780029080545,
+      "a33_dimless": 0.7938342111726915,
+      "b33_dimless": 0.2793038118192538,
+      "excess_over_exact": 0.0515331322468926,
+      "excess_per_ka": 0.257665661234463,
+      "a11_terms_48_dimless": 0.5515331353552577,
+      "a11_terms_96_dimless": 0.5515331325416393,
+      "a11_terms_144_dimless": 0.5515331322468926
+    },
+    {
+      "ka": 0.5,
+      "a11_dimless": 0.6438970564919978,
+      "b11_dimless": 0.09866994683102848,
+      "b11_far_field_dimless": 0.09866994721979526,
+      "a33_dimless": 0.5860847421136979,
+      "b33_dimless": 0.339057119920885,
+      "excess_over_exact": 0.1438970564919978,
+      "excess_per_ka": 0.2877941129839956,
+      "a11_terms_48_dimless": 0.6438970734549395,
+      "a11_terms_96_dimless": 0.6438970580976102,
+      "a11_terms_144_dimless": 0.6438970564919978
+    }
+  ],
+  "extrapolation": {
+    "method": "ordinary least squares A11 = a0 + a1*ka over the 3 smallest ka",
+    "kas_used": [
+      0.002,
+      0.005,
+      0.01
+    ],
+    "a0_dimless": 0.49999143158882714,
+    "a1_dimless_per_ka": 0.19140118668308453,
+    "max_residual": 3.181782274541689e-06,
+    "rel_error_vs_exact": -1.7136822345720226e-05,
+    "smallest_ka": 0.002,
+    "value_at_smallest_ka": 0.500376222576115,
+    "rel_error_at_smallest_ka": 0.0007524451522300524,
+    "note": "the excess is linear in ka over the fitted window, so the intercept is the limit"
+  },
+  "solver": {
+    "module": "tensorbem.free_surface_solver3d.solve_radiation_3d",
+    "mesh": "tensorbem.geometry3d.hemisphere_hull_mesh",
+    "mesh_ladder_subdivisions": [
+      2,
+      3,
+      4
+    ],
+    "mesh_ladder_ka": 0.001,
+    "ka_ladder": [
+      0.001,
+      0.01,
+      0.03,
+      0.1
+    ],
+    "ka_ladder_subdivisions": 3,
+    "chief_points": "auto"
+  },
+  "solver_mesh_ladder": [
+    {
+      "subdivisions": 2,
+      "panels": 64,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass_kg": 1016.444884923938,
+      "added_mass_dimless": 0.4734796911691243,
+      "damping_dimless": 1.0134215647972333e-09,
+      "rel_error_vs_exact": -0.05304061766175139,
+      "condition_number": 2.176601451443266,
+      "relative_residual": 3.726213539072724e-16,
+      "solve_seconds": 0.08710193634033203
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass_kg": 1059.059101070824,
+      "added_mass_dimless": 0.4933302174494073,
+      "damping_dimless": 1.133425038139812e-09,
+      "rel_error_vs_exact": -0.013339565101185391,
+      "condition_number": 2.1023280293100677,
+      "relative_residual": 7.630406698689731e-16,
+      "solve_seconds": 1.094252109527588
+    },
+    {
+      "subdivisions": 4,
+      "panels": 1024,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass_kg": 1070.1032876365482,
+      "added_mass_dimless": 0.49847481320852177,
+      "damping_dimless": 1.1660938343755044e-09,
+      "rel_error_vs_exact": -0.003050373582956456,
+      "condition_number": 2.0615944233134407,
+      "relative_residual": 1.2484581747786388e-15,
+      "solve_seconds": 19.014265060424805
+    }
+  ],
+  "solver_ka_ladder": [
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.001,
+      "omega": 0.09902853124226371,
+      "added_mass_kg": 1059.059101070824,
+      "added_mass_dimless": 0.4933302174494073,
+      "damping_dimless": 1.133425038139812e-09,
+      "rel_error_vs_exact": -0.013339565101185391,
+      "condition_number": 2.1023280293100677,
+      "relative_residual": 7.630406698689731e-16,
+      "solve_seconds": 1.094252109527588
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.01,
+      "omega": 0.31315571206669696,
+      "added_mass_kg": 1062.6214413963974,
+      "added_mass_dimless": 0.4949896244887944,
+      "damping_dimless": 1.1257943776219627e-06,
+      "rel_error_vs_exact": -0.010020751022411178,
+      "condition_number": 2.1124499329327513,
+      "relative_residual": 7.864030334257555e-16,
+      "solve_seconds": 1.0731871128082275
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.03,
+      "omega": 0.5424016039799292,
+      "added_mass_kg": 1070.9486141269854,
+      "added_mass_dimless": 0.49886858264114503,
+      "damping_dimless": 2.9946082619152192e-05,
+      "rel_error_vs_exact": -0.0022628347177099384,
+      "condition_number": 2.136486383383963,
+      "relative_residual": 8.816247125872657e-16,
+      "solve_seconds": 1.152547836303711
+    },
+    {
+      "subdivisions": 3,
+      "panels": 256,
+      "ka": 0.1,
+      "omega": 0.9902853124226371,
+      "added_mass_kg": 1104.9179757971906,
+      "added_mass_dimless": 0.5146921684659924,
+      "damping_dimless": 0.0010537052434573277,
+      "rel_error_vs_exact": 0.029384336931984834,
+      "condition_number": 2.2280305340454563,
+      "relative_residual": 8.618817941546008e-16,
+      "solve_seconds": 1.1304056644439697
+    }
+  ],
+  "cross_link": {
+    "heave_rigid_lid_dimless_settled": 0.8309572,
+    "heave_reference_at_min_ka": 0.8380109000232827,
+    "source": "benchmarks/verified/bem_rigid_lid_hemisphere_ka0 + tensorbem.benchmarks.hemisphere_zero_frequency_envelope"
+  },
+  "machine": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "numpy": "2.4.6"
+  },
+  "runtime_seconds": 0.5175509452819824,
+  "gates": {
+    "G1_exact_closed_form": {
+      "measured": 0.5,
+      "criterion": "closed form A11(0)/(rho*nabla) = 1/2 to 1e-12",
+      "pass": true
+    },
+    "G2_doubled_body_self_test": {
+      "measured": 0.4999999999999474,
+      "criterion": "independent spectral solve of the translating-sphere BC, integrated over the lower hemisphere, returns 1/2 (rho*nabla units) to 1e-6",
+      "pass": true
+    },
+    "G3_reference_at_min_ka_within_0p5pct": {
+      "measured": 0.07524451522300524,
+      "criterion": "|A11(ka=2e-3)/0.5 - 1| < 0.5 %",
+      "pass": true,
+      "where": {
+        "ka": 0.002
+      }
+    },
+    "G4_extrapolated_limit_within_0p2pct": {
+      "measured": -0.0017136822345720226,
+      "criterion": "|linear extrapolation to ka=0 / 0.5 - 1| < 0.2 %",
+      "pass": true
+    },
+    "G5_monotone_approach_from_above": {
+      "measured": [
+        0.0003762225761150262,
+        0.000945255739968065,
+        0.0019066366240110266,
+        0.0038803508389515518,
+        0.010235027050242929,
+        0.02232188436667193,
+        0.0515331322468926,
+        0.1438970564919978
+      ],
+      "criterion": "excess A11-1/2 strictly increasing with ka (decreasing as ka falls), positive at the smallest ka",
+      "pass": true
+    },
+    "G6_reference_term_truncation": {
+      "measured": 2.6344182733728526e-08,
+      "criterion": "|A11(144 terms) - A11(48 terms)| / A11 < 1e-4 at every ka",
+      "pass": true
+    },
+    "G7_solver_finest_within_case_tolerance": {
+      "measured": -0.3050373582956456,
+      "criterion": "|A11(ka=1e-3, 1024 panels)/(0.5 rho*nabla) - 1| < 5 % (case tolerance)",
+      "pass": true,
+      "where": {
+        "ka": 0.001,
+        "panels": 1024
+      }
+    },
+    "G8_solver_mesh_monotone": {
+      "measured": [
+        5.304061766175138,
+        1.333956510118539,
+        0.3050373582956456
+      ],
+      "criterion": "|error| decreases 64 -> 256 -> 1024 panels",
+      "pass": true
+    },
+    "G9_damping_vanishes": {
+      "measured": {
+        "min_ka": 0.001,
+        "b11_dimless": 1.133425038139812e-09
+      },
+      "criterion": "B11(ka=1e-3) < 1e-3 and B11 increases with ka over the ladder",
+      "pass": true
+    },
+    "G10_heave_crosslink_1pct": {
+      "measured": 0.8488644208489715,
+      "criterion": "reference A33 at ka=2e-3 within 1 % of the settled rigid-lid heave anchor 0.8309572 (harness consistency)",
+      "pass": true
+    }
+  },
+  "verdict": "PASS",
+  "failing": []
+}
