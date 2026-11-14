@@ -173,9 +173,11 @@ def test_committed_case_artifact_matches_the_committed_document(tmp_path) -> Non
     ``is_file()`` assertion on those paths is red on GitHub no matter what the
     case computed.  The durable invariant is the one this test now states: both
     documents are exactly what ``render_markdown`` makes of the committed
-    ``results.json``, and all four figures -- including the multipole panel the
+    ``results.json``, and all five figures -- including the multipole panel the
     registry used to omit -- are rebuildable from that JSON alone, non-blank, and
-    linked from the rendered prose.
+    linked from the rendered prose.  The same invariant now covers the
+    prescribed-circulation panel (route G, rotating cylinder), which is the
+    fifth committed figure of this case.
     """
     from pathlib import Path
     import json
@@ -201,6 +203,7 @@ def test_committed_case_artifact_matches_the_committed_document(tmp_path) -> Non
         (case.plot_convergence, "convergence.png"),
         (case.plot_near_wall, "near_wall.png"),
         (case.plot_multipole, "multipole.png"),
+        (case.plot_circulation, "circulation.png"),
     )
     rebuilt = [builder(payload, tmp_path / name) for builder, name in builders]
     assert_reproducible_figures(rebuilt, minimum=len(builders), embedded_in=rendered)

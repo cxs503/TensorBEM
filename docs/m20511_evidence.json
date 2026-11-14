@@ -1,0 +1,114 @@
+{
+  "anchor": "CASE-BEM-LAPLACE-CYLINDER",
+  "mission": 20511,
+  "repo": "TensorBEM",
+  "declared_level": 5,
+  "impl_files": [
+    "src/tensorbem/lifting_cylinder.py",
+    "src/tensorbem/benchmarks/case_cylinder_stream.py"
+  ],
+  "entry": [
+    "src/tensorbem/benchmarks/case_cylinder_stream.py",
+    "benchmarks/verified/case_bem_laplace_cylinder/case.json"
+  ],
+  "run_artifacts": [
+    "benchmarks/verified/case_bem_laplace_cylinder/results.json",
+    "benchmarks/verified/case_bem_laplace_cylinder/report.md",
+    "benchmarks/verified/case_bem_laplace_cylinder/case.json",
+    "benchmarks/verified/case_bem_laplace_cylinder/figures/circulation.png",
+    "benchmarks/verified/case_bem_laplace_cylinder/figures/field.png",
+    "benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png",
+    "benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png",
+    "docs/CASE-BEM-LAPLACE-CYLINDER.md"
+  ],
+  "integration_callers": [
+    "tensorbem.benchmarks.case_cylinder_stream: platform case-pool dispatch of CASE-BEM-LAPLACE-CYLINDER (case_pool_registry entry, library= tensorbem.benchmarks.case_cylinder_stream, artifact + 4 figures)",
+    "tensorbem.lifting_cylinder.solve_rotating_cylinder: called by case_cylinder_stream.route_circulation / circulation_sweep and by tests/test_lifting_cylinder.py"
+  ],
+  "benchmark": {
+    "reference": "closed form W(z)=U(z+a^2/z)-i Gamma/(2 pi) ln(z/a); L'=-rho U Gamma; sin(theta_s)=Gamma/(4 pi U a)",
+    "ref_vs_got": {
+      "surface_speed_relative_l2": {
+        "got": 0.00021307971529883443,
+        "tolerance": 0.03
+      },
+      "cp_relative_l2": {
+        "got": 0.0005586728931165331,
+        "tolerance": 0.03
+      },
+      "exterior_velocity_relative_l2": {
+        "got": 0.00014807883969341002,
+        "tolerance": 0.03
+      },
+      "lift": {
+        "got": -3.0012042438378006,
+        "ref": -3.0,
+        "relative_error": 0.0004014146126002001,
+        "tolerance": 0.03
+      },
+      "circulation": {
+        "got": 3.000602538033003,
+        "ref": 3.0,
+        "relative_error": 0.00020084601100093616
+      },
+      "drag_coefficient": {
+        "got": 7.979727989493313e-17,
+        "ref": 0.0
+      },
+      "stagnation_angle_deg": {
+        "got": [
+          13.817320065142402,
+          166.18267993485796
+        ],
+        "ref": [
+          13.811738527766154,
+          166.18826147223385
+        ],
+        "max_abs_error_deg": 0.005581537376247983
+      },
+      "circulation_sweep_max_lift_deviation": 0.00040141461260034816
+    },
+    "observed_order": {
+      "surface_velocity": [
+        2.0084326626949522,
+        2.0009051001603915
+      ],
+      "lift_error": [
+        2.007921397294378,
+        2.0013703647305294
+      ]
+    },
+    "criteria": {
+      "n": 29,
+      "failed": [],
+      "overall": "PASS"
+    },
+    "platform_referee_row": "tensor_benchmark_cases anchor_slug=CASE-BEM-LAPLACE-CYLINDER (route G supplementary row)"
+  },
+  "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md --check",
+  "tests": [
+    "tests/test_lifting_cylinder.py (15 passed, incl. convergence-order and vortex-flux zero/non-zero invariants)",
+    "tests/test_case_cylinder_stream.py (existing kernel/field/case tests, unchanged and passing)"
+  ],
+  "external_anchor": {
+    "bibliography": [
+      "Lamb H. Hydrodynamics. 6th ed. Cambridge University Press, 1932: uniform flow past a circular cylinder (same edition as docs/classical_benchmarks.md ref. [1]).",
+      "Milne-Thomson L M. Theoretical Hydrodynamics. 5th ed. Macmillan, 1968: circle theorem / translating-cylinder potential (docs/classical_benchmarks.md ref. [3])."
+    ],
+    "page_or_article_number": "WITHHELD: neither book is reachable from this container, so the exact page/article number was not verified here; the formulas are elementary and are instead re-derived numerically by the harmonicity gate (Laplacian and curl of the reference).",
+    "self_consistency": {
+      "harmonicity": 7.771561172376096e-08,
+      "irrotationality": 2.5711099915781688e-08
+    }
+  },
+  "checks_not_run": [
+    "no printed-page citation (books unreachable; WITHHELD)",
+    "no viscous/separation or Magnus-decay comparison (potential flow scope)",
+    "tests/test_case_pool_registry.py::test_every_registered_case_resolves_its_paths fails on 3 OTHER cases (HAVELOCK run.log, ANNULUS/ellipse figures missing in HEAD) - pre-existing, out of this anchor's scope"
+  ],
+  "commit_artifacts": {
+    "case_verdict": "PASS",
+    "wall_seconds": 59.67078423500061,
+    "generated_at_utc": "2026-11-14T14:26:21Z"
+  }
+}
