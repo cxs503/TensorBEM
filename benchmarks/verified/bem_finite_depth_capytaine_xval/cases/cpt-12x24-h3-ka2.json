@@ -1,0 +1,16 @@
+{
+  "added_mass_heave": 3307.730855546561,
+  "case_id": "cpt-12x24-h3-ka2",
+  "damping_heave": 233.23002235590616,
+  "depth": 3.0,
+  "depth_ratio": 3.0,
+  "finished_utc": "2026-11-14T13:24:51+00:00",
+  "ka": 2.0,
+  "n_faces": 288,
+  "resolution": [
+    12,
+    24
+  ],
+  "seconds": 21.957,
+  "tool": "capytaine"
+}

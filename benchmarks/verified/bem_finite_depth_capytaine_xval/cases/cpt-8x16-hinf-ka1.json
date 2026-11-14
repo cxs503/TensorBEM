@@ -1,0 +1,16 @@
+{
+  "added_mass_heave": 1996.343393868196,
+  "case_id": "cpt-8x16-hinf-ka1",
+  "damping_heave": 1079.2285432541696,
+  "depth": Infinity,
+  "depth_ratio": "inf",
+  "finished_utc": "2026-11-14T13:23:57+00:00",
+  "ka": 1.0,
+  "n_faces": 128,
+  "resolution": [
+    8,
+    16
+  ],
+  "seconds": 3.404,
+  "tool": "capytaine"
+}
