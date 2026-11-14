@@ -1,0 +1,418 @@
+{
+ "audit_nodes": {
+  "count": 400,
+  "families": {
+   "A": "mid-point rule in mu on (0, 1), surface measure dS ~ dmu",
+   "B": "Gauss-Legendre in mu, 801 nodes"
+  },
+  "note": "the Galerkin projection imposes orthogonality against the odd-Legendre test space, not a pointwise zero residual, so a pointwise residual is a direct measure of BVP violation",
+  "residual_is_pointwise": true
+ },
+ "body_condition": {
+  "at_ka2_by_terms": {
+   "heave": [
+    {
+     "max_relative": 0.04066837952656539,
+     "n_terms": 24,
+     "rms_relative": 0.003971402716829188,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.019197837440729594,
+     "n_terms": 48,
+     "rms_relative": 0.0014224151629235497,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.008436764646934275,
+     "n_terms": 96,
+     "rms_relative": 0.0004988397082482373,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.004887388626825226,
+     "n_terms": 144,
+     "rms_relative": 0.0002644248343527916,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.0031485642398692173,
+     "n_terms": 192,
+     "rms_relative": 0.00016474213120020847,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.0014839294684441343,
+     "n_terms": 288,
+     "rms_relative": 7.839376744448426e-05,
+     "target_rms": 0.5773498181345519
+    },
+    {
+     "max_relative": 0.0007246552710870755,
+     "n_terms": 384,
+     "rms_relative": 4.042068269160576e-05,
+     "target_rms": 0.5773498181345519
+    }
+   ],
+   "surge": [
+    {
+     "max_relative": 0.02832733023016813,
+     "n_terms": 24,
+     "rms_relative": 0.0031614813985674467,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.012991255173609436,
+     "n_terms": 48,
+     "rms_relative": 0.0011495625193395523,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.005212515172076009,
+     "n_terms": 96,
+     "rms_relative": 0.00040444665825110606,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.0026654080858819987,
+     "n_terms": 144,
+     "rms_relative": 0.00021340260607234546,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.0014429751904847126,
+     "n_terms": 192,
+     "rms_relative": 0.00013180950219851803,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.0009042838161555554,
+     "n_terms": 288,
+     "rms_relative": 6.159417614169424e-05,
+     "target_rms": 0.8164968998716408
+    },
+    {
+     "max_relative": 0.0003782572095988671,
+     "n_terms": 384,
+     "rms_relative": 3.302759516052725e-05,
+     "target_rms": 0.8164968998716408
+    }
+   ]
+  },
+  "at_reference_ka2": {
+   "heave": {
+    "max_relative": 0.004887388626825226,
+    "rms_relative": 0.0002644248343527916,
+    "target_rms": 0.5773498181345519
+   },
+   "surge": {
+    "max_relative": 0.0026654080858819987,
+    "rms_relative": 0.00021340260607234546,
+    "target_rms": 0.8164968998716408
+   }
+  },
+  "band_at_reference": {
+   "0.2": {
+    "heave": {
+     "max_relative": 0.0036987312801880358,
+     "rms_relative": 0.0002001785970301127,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.00011252166646561997,
+     "rms_relative": 9.0164605995633e-06,
+     "target_rms": 0.8164968998716408
+    }
+   },
+   "0.5": {
+    "heave": {
+     "max_relative": 0.00357028315026859,
+     "rms_relative": 0.0001932165931933745,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.00019758388370515501,
+     "rms_relative": 1.5830380471272742e-05,
+     "target_rms": 0.8164968998716408
+    }
+   },
+   "0.8": {
+    "heave": {
+     "max_relative": 0.0037428894880810206,
+     "rms_relative": 0.00020254693918547937,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.00044775626185878043,
+     "rms_relative": 3.586925174396345e-05,
+     "target_rms": 0.8164968998716408
+    }
+   },
+   "1": {
+    "heave": {
+     "max_relative": 0.0039315028719920965,
+     "rms_relative": 0.00021274621267586104,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.0007753057846969678,
+     "rms_relative": 6.210304016485365e-05,
+     "target_rms": 0.8164968998716408
+    }
+   },
+   "1.5": {
+    "heave": {
+     "max_relative": 0.004443721247849565,
+     "rms_relative": 0.0002404424967035778,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.0017383954688639021,
+     "rms_relative": 0.0001392151146834066,
+     "target_rms": 0.8164968998716408
+    }
+   },
+   "2": {
+    "heave": {
+     "max_relative": 0.004887388626825226,
+     "rms_relative": 0.0002644248343527916,
+     "target_rms": 0.5773498181345519
+    },
+    "surge": {
+     "max_relative": 0.0026654080858819987,
+     "rms_relative": 0.00021340260607234546,
+     "target_rms": 0.8164968998716408
+    }
+   }
+  }
+ },
+ "case_code": "BEM-HULME-HEMISPHERE",
+ "energy_identity": {
+  "0.2": {
+   "144": {
+    "heave_far": 0.2793077245012343,
+    "heave_near": 0.2793038118192534,
+    "heave_relative_gap": -1.4008499005568886e-05,
+    "surge_far": 0.008152780029080554,
+    "surge_near": 0.008152780024490543,
+    "surge_relative_gap": -5.629994248579351e-10
+   },
+   "288": {
+    "heave_far": 0.279302322224608,
+    "heave_near": 0.2793013374496831,
+    "heave_relative_gap": -3.525838657703062e-06,
+    "surge_far": 0.008152780025679028,
+    "surge_near": 0.008152780025097842,
+    "surge_relative_gap": -7.128686529966899e-11
+   },
+   "48": {
+    "heave_far": 0.27936377685726405,
+    "heave_near": 0.2793294839582754,
+    "heave_relative_gap": -0.00012275356302249296,
+    "surge_far": 0.008152780125599977,
+    "surge_near": 0.008152780007814962,
+    "surge_relative_gap": -1.444722075305549e-08
+   }
+  },
+  "0.5": {
+   "144": {
+    "heave_far": 0.3390630717099508,
+    "heave_near": 0.3390571199208837,
+    "heave_relative_gap": -1.755363401001464e-05,
+    "surge_far": 0.09866994721979526,
+    "surge_near": 0.09866994683102831,
+    "surge_relative_gap": -3.940074599917409e-09
+   },
+   "288": {
+    "heave_far": 0.3390552742359952,
+    "heave_near": 0.3390537766082916,
+    "heave_relative_gap": -4.417060631034531e-06,
+    "surge_far": 0.09866994703457019,
+    "surge_near": 0.0986699469853448,
+    "surge_relative_gap": -4.988893742563505e-10
+   },
+   "48": {
+    "heave_far": 0.33914406999194424,
+    "heave_near": 0.33909184905283185,
+    "heave_relative_gap": -0.00015397862953536734,
+    "surge_far": 0.09866995247719516,
+    "surge_near": 0.0986699424987886,
+    "surge_relative_gap": -1.0112913106929966e-07
+   }
+  },
+  "0.8": {
+   "144": {
+    "heave_far": 0.2899029179788943,
+    "heave_near": 0.2898966679727515,
+    "heave_relative_gap": -2.155896251876399e-05,
+    "surge_far": 0.2653080191297508,
+    "surge_near": 0.26530801615807614,
+    "surge_relative_gap": -1.1200847582770734e-08
+   },
+   "288": {
+    "heave_far": 0.2898945856196341,
+    "heave_near": 0.28989301334117434,
+    "heave_relative_gap": -5.423621336042572e-06,
+    "surge_far": 0.26530801797407877,
+    "surge_near": 0.26530801759781586,
+    "surge_relative_gap": -1.4182116592209582e-09
+   },
+   "48": {
+    "heave_far": 0.2899895757606489,
+    "heave_near": 0.28993467759949315,
+    "heave_relative_gap": -0.00018931080888584528,
+    "surge_far": 0.26530805195383356,
+    "surge_near": 0.26530797566541753,
+    "surge_relative_gap": -2.875465537899302e-07
+   }
+  },
+  "1": {
+   "144": {
+    "heave_far": 0.24840915639844147,
+    "heave_near": 0.24840307175945486,
+    "heave_relative_gap": -2.4494423131682375e-05,
+    "surge_far": 0.3534885975247428,
+    "surge_near": 0.3534885909177618,
+    "surge_relative_gap": -1.8690789693742715e-08
+   },
+   "288": {
+    "heave_far": 0.2484007836407074,
+    "heave_near": 0.24839925321715206,
+    "heave_relative_gap": -6.161105987279036e-06,
+    "surge_far": 0.35348859423065493,
+    "surge_near": 0.3534885933941155,
+    "surge_relative_gap": -2.3665245318937878e-09
+   },
+   "48": {
+    "heave_far": 0.2484963038817602,
+    "heave_near": 0.24844281800172147,
+    "heave_relative_gap": -0.00021523813112400703,
+    "surge_far": 0.35348869112091774,
+    "surge_near": 0.35348852148671167,
+    "surge_relative_gap": -4.798858077581514e-07
+   }
+  },
+  "1.5": {
+   "144": {
+    "heave_far": 0.16062471347302928,
+    "heave_near": 0.16061944493651,
+    "heave_relative_gap": -3.2800285867384815e-05,
+    "surge_far": 0.4013518023804019,
+    "surge_near": 0.40135178273326266,
+    "surge_relative_gap": -4.8952413123082295e-08
+   },
+   "288": {
+    "heave_far": 0.16061670773569947,
+    "heave_near": 0.1606153831374043,
+    "heave_relative_gap": -8.246952099999483e-06,
+    "surge_far": 0.40135178330982235,
+    "surge_near": 0.40135178082229916,
+    "surge_relative_gap": -6.1978625565117795e-09
+   },
+   "48": {
+    "heave_far": 0.1607082055914518,
+    "heave_near": 0.1606618038508276,
+    "heave_relative_gap": -0.00028873286496744477,
+    "surge_far": 0.4013523444316671,
+    "surge_near": 0.40135183985255524,
+    "surge_relative_gap": -1.2571973700969963e-06
+   }
+  },
+  "2": {
+   "144": {
+    "heave_far": 0.10306974943113523,
+    "heave_near": 0.10306536393605632,
+    "heave_relative_gap": -4.254880896781277e-05,
+    "surge_far": 0.34241052756113655,
+    "surge_near": 0.34241049340106217,
+    "surge_relative_gap": -9.976350501261777e-08
+   },
+   "288": {
+    "heave_far": 0.10306243871483098,
+    "heave_near": 0.1030613365987259,
+    "heave_relative_gap": -1.069367384287645e-05,
+    "surge_far": 0.3424104823389351,
+    "surge_near": 0.3424104780140679,
+    "surge_relative_gap": -1.2630650858547199e-08
+   },
+   "48": {
+    "heave_far": 0.10314614035053524,
+    "heave_near": 0.10310743839857714,
+    "heave_relative_gap": -0.0003752147373287107,
+    "surge_far": 0.342411813203085,
+    "surge_near": 0.34241093569644204,
+    "surge_relative_gap": -2.562723040333559e-06
+   }
+  }
+ },
+ "fault_injection": {
+  "a33_clean_public": 0.38837775391924145,
+  "a33_perturbed": 0.38876613167316026,
+  "body_residual_clean": 0.0002644248343527916,
+  "body_residual_perturbed": 0.001034398775579771,
+  "body_residual_response": 2.9118820972756736,
+  "ka": 2.0,
+  "n_terms": 144,
+  "relative_coefficient_fault": 0.001
+ },
+ "gates": {
+  "B1_body_condition_satisfied": {
+   "criterion": "relative RMS body impermeability residual of the 144-term reference, on 400 off-quadrature nodes, < 1e-03 at ka=2 and at every ka in the band",
+   "margin_vs_graded_bem_error": 43.415002671568395,
+   "measured_band_worst": 0.0002644248343527916,
+   "measured_ka2": 0.0002644248343527916,
+   "pass": true
+  },
+  "B2_truncation_is_real": {
+   "criterion": "the residual must fall by at least 10x from the coarsest to the 144-term level, must never rise by more than 10% between consecutive rungs of [24, 48, 96, 144, 192, 288, 384], and must agree between two independent node families to within 25% -- a residual that does not respond to n_terms, or that only exists on one node set, would be an artefact",
+   "decade_ratio": {
+    "heave": 15.019023181198643,
+    "surge": 14.814633507782352
+   },
+   "monotone": {
+    "heave": true,
+    "surge": true
+   },
+   "never_rises": {
+    "heave": true,
+    "surge": true
+   },
+   "node_family_spread": {
+    "heave": 0.05481533629680942,
+    "surge": 0.07003957924180752
+   },
+   "pass": true
+  },
+  "B3_energy_identity": {
+   "criterion": "near-field (pressure work) and far-field (Kochin) damping agree to < 1e-03 at 144 terms, all band ka",
+   "measured": 4.254880896781277e-05,
+   "pass": true
+  },
+  "B4_audit_is_not_vacuous": {
+   "body_residual_response": 2.9118820972756736,
+   "criterion": "a 1e-03 relative fault in the Kochin coefficient must move the graded heave added mass by more than 1e-04 absolute",
+   "measured": 0.0003883777539188116,
+   "pass": true
+  }
+ },
+ "graded_bem_error": 0.011480004889855476,
+ "ka_band": [
+  0.2,
+  0.5,
+  0.8,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "reference_terms": 144,
+ "terms_ladder": [
+  24,
+  48,
+  96,
+  144,
+  192,
+  288,
+  384
+ ],
+ "verdict": "PASS"
+}
