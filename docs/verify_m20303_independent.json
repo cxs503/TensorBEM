@@ -1,0 +1,44 @@
+{
+  "source_artifact": "benchmarks/verified/case_bem_laplace_cylinder/results.json",
+  "probe_table_velocity_max_abs_diff": 0.0,
+  "probe_table_potential_max_abs_diff": 0.0,
+  "multipole_fit": {
+    "modes": 6,
+    "condition_number": 1.001507268128429,
+    "relative_fit_residual": 1.9247287550105277e-16
+  },
+  "multipole_velocity_relative_l2": 1.1041457611968413e-16,
+  "multipole_potential_relative_l2": 2.4856776683038067e-16,
+  "route_d_velocity_relative_l2": 1.3656224320923946e-07,
+  "route_d_potential_relative_l2": 3.578165252983032e-07,
+  "route_n_velocity_relative_l2": 0.0001532015925717173,
+  "near_wall": [
+    {
+      "clearance_over_h_max": 2.0,
+      "panel_bem_max_relative_error": 0.0018882109089338656,
+      "multipole_max_relative_error": 1.890310086189604e-15
+    },
+    {
+      "clearance_over_h_max": 1.0,
+      "panel_bem_max_relative_error": 0.004387124560813369,
+      "multipole_max_relative_error": 4.338850899882387e-15
+    },
+    {
+      "clearance_over_h_max": 0.5,
+      "panel_bem_max_relative_error": 0.022123101725346452,
+      "multipole_max_relative_error": 6.614246005285267e-15
+    },
+    {
+      "clearance_over_h_max": 0.25,
+      "panel_bem_max_relative_error": 0.08732332215117415,
+      "multipole_max_relative_error": 8.23779950439936e-15
+    },
+    {
+      "clearance_over_h_max": 0.1,
+      "panel_bem_max_relative_error": 0.17566853543452338,
+      "multipole_max_relative_error": 8.969674972812171e-15
+    }
+  ],
+  "near_wall_committed_vs_recomputed_max_abs_diff": 0.0,
+  "route_metrics_committed_vs_recomputed_max_abs_diff": 0.0
+}
