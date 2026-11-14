@@ -14,6 +14,9 @@ dependencies = ["numpy>=1.24", "scipy>=1.10"]
 [project.optional-dependencies]
 dev = ["pytest>=7.4", "pytest-xdist>=3.5"]
 visualization = ["matplotlib>=3.10.8"]
+# external referee used by the case-pool verification routes (route "T" of
+# CASE-BEM-RIGID-BODY-MASS). Never imported by the solver itself.
+external-verification = ["trimesh>=4.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
