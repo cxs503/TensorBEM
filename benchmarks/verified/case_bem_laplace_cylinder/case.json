@@ -43,7 +43,9 @@
     "tensorbem.solver.evaluate_exterior_field",
     "tensorbem.solver.evaluate_exterior_surface_velocity",
     "tensorbem.kernels.integrate_single_layer_panel_gradient",
-    "tensorbem.kernels.integrate_double_layer_panel_gradient"
+    "tensorbem.kernels.integrate_double_layer_panel_gradient",
+    "tensorbem.multipole2d.fit_ring",
+    "tensorbem.multipole2d.decompose_rings"
   ],
   "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md",
   "test_cmd": "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py -q",

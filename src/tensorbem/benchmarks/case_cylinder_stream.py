@@ -51,6 +51,7 @@ from typing import Any, Sequence
 import numpy as np
 
 from ..geometry import regular_polygon
+from ..multipole2d import decompose_rings, fit_ring, ring_angles
 from ..solver import (
     evaluate_exterior_field,
     evaluate_exterior_surface_velocity,
@@ -92,6 +93,26 @@ NEAR_WALL_SATURATION_BAND = (0.5, 2.0)
 NEAR_WALL_ORDER_MIN = 0.5
 GRADIENT_CROSSCHECK_TOL = 1.0e-5
 HARMONICITY_TOL = 1.0e-6
+# Far-field multipole study (route M).  The disturbance potential of an exterior
+# harmonic field decays as sum_n A_n r**(-n): ring fits recover A_n, which must
+# agree on every ring (radius independence), carry no spurious source (the 2-D
+# log term, which a single ring cannot separate from the ring mean), and put all
+# of the strength in the harmonic the boundary data excites.
+MULTIPOLE_RADII: tuple[float, ...] = (1.5, 2.5, 4.0)
+MULTIPOLE_ORDER = 4
+# Nyquist guard: a regular N-gon field carries facet harmonics at n = k N +- 1,
+# which alias onto the low harmonics when the ring is sampled at about N points.
+MULTIPOLE_MIN_SAMPLES = 64
+# Cross-harmonic contamination, source leakage and ring-to-ring spread all come
+# out at roundoff (< 1e-13 measured); this threshold still forbids an O(h^2) leak.
+MULTIPOLE_PURITY_TOL = 1.0e-9
+MULTIPOLE_RADIUS_INDEPENDENCE_TOL = 1.0e-9
+MULTIPOLE_SOURCE_TOL = 1.0e-9
+# The truncated (order 4) ring fit leaves the n >= 5 facet content in the
+# residual: small, but not roundoff.
+MULTIPOLE_FIT_RESIDUAL_TOL = 1.0e-5
+MULTIPOLE_ORDER_MIN = ORDER_MIN
+MULTIPOLE_CONTROL_SIGN = -1.0
 
 
 # ---------------------------------------------------------------------------
@@ -560,6 +581,192 @@ def wrong_reference_control(
     }
 
 
+# ---------------------------------------------------------------------------
+# far-field multipole content (route M)
+# ---------------------------------------------------------------------------
+def _uniform_flow_perturbation(
+    centers: np.ndarray, radius: float, speed: float
+) -> np.ndarray:
+    """``phi' = U a**2 cos(theta)/r = U a**2 x / r**2`` on the given points."""
+    r = np.hypot(centers[:, 0], centers[:, 1])
+    return speed * radius**2 * centers[:, 0] / r**2
+
+
+def _pure_strain_perturbation(
+    centers: np.ndarray, radius: float, speed: float
+) -> np.ndarray:
+    """``phi' = (gamma/2) a**4 cos(2 theta)/r**2`` for ``u = gamma x, v = -gamma y``.
+
+    The full potential of the straining flow past the cylinder is
+    ``phi = (gamma/2) (r**2 + a**4/r**2) cos(2 theta)``: its normal derivative
+    vanishes on ``r = a`` and it tends to ``(gamma/2)(x**2 - y**2)`` at infinity.
+    Only the decaying part is imposed on the boundary, exactly as for the
+    uniform-flow dipole.
+    """
+    r = np.hypot(centers[:, 0], centers[:, 1])
+    theta = np.arctan2(centers[:, 1], centers[:, 0])
+    return 0.5 * speed * radius**4 * np.cos(2.0 * theta) / r**2
+
+
+MULTIPOLE_FAMILIES: dict[str, dict[str, Any]] = {
+    "uniform_flow": {
+        "harmonic": 1,
+        "potential": "phi' = U a**2 cos(theta)/r",
+        "excitation": "uniform stream U along +x",
+        "boundary_values": _uniform_flow_perturbation,
+        "exact_moment": "A_1 = U a**2",
+        "scale": lambda radius, speed: speed * radius**2,
+        "contaminants": "A_2 = A_3 = A_4 = 0 and no 2-D source",
+        "bibliography": (
+            "Lamb H. Hydrodynamics, 6th ed., 1932 (uniform flow past a cylinder)."
+        ),
+    },
+    "pure_strain": {
+        "harmonic": 2,
+        "potential": "phi' = (gamma/2) a**4 cos(2 theta)/r**2",
+        "excitation": "plane straining flow u = gamma x, v = -gamma y",
+        "boundary_values": _pure_strain_perturbation,
+        "exact_moment": "A_2 = (gamma/2) a**4",
+        "scale": lambda radius, speed: 0.5 * speed * radius**4,
+        "contaminants": "A_1 = A_3 = A_4 = 0 and no 2-D source",
+        "bibliography": (
+            "Milne-Thomson L M. Theoretical Hydrodynamics, 5th ed., 1968: "
+            "straining flow past a circular cylinder."
+        ),
+    },
+}
+
+
+def multipole_level(
+    panels: int,
+    family: str,
+    radius: float = RADIUS,
+    speed: float = SPEED,
+    scale_sign: float = 1.0,
+) -> dict[str, Any]:
+    """Recover the far-field multipole spectrum of one exterior Dirichlet solve.
+
+    ``scale_sign = -1`` feeds the mirrored (image-sign) data instead: the
+    negative control, since a reference that cannot tell ``A_1`` from ``-A_1``
+    is not measuring the moment at all.
+    """
+    if family not in MULTIPOLE_FAMILIES:
+        raise ValueError(f"unknown multipole family {family!r}")
+    entry = MULTIPOLE_FAMILIES[family]
+    mesh = regular_polygon(panels, radius)
+    data = scale_sign * entry["boundary_values"](mesh.centers, radius, speed)
+    result = solve_laplace_exterior_dirichlet(mesh, data)
+    samples = max(MULTIPOLE_MIN_SAMPLES, 2 * int(panels))
+    angles = ring_angles(samples)
+    fits = []
+    for ring in MULTIPOLE_RADII:
+        points = np.column_stack(
+            (ring * radius * np.cos(angles), ring * radius * np.sin(angles))
+        )
+        field = evaluate_exterior_field(mesh, result, points)
+        fits.append(
+            fit_ring(field.potential, ring * radius, angles, order=MULTIPOLE_ORDER)
+        )
+    report = decompose_rings(fits)
+    harmonic = int(entry["harmonic"])
+    scale = float(entry["scale"](radius, speed))
+    spectrum = report["spectrum"]
+    target = spectrum[harmonic]
+    contaminant_orders = [
+        n for n in range(1, MULTIPOLE_ORDER + 1) if n != harmonic
+    ]
+    largest_contaminant = max(
+        abs(float(spectrum[n]["mean"])) for n in contaminant_orders
+    )
+    return {
+        "family": family,
+        "panels": int(panels),
+        "h_mean": float(np.mean(mesh.lengths)),
+        "condition_number": result.condition_number,
+        "relative_residual": result.relative_residual_l2,
+        "samples_per_ring": int(samples),
+        "rings_over_a": [float(ring) for ring in MULTIPOLE_RADII],
+        "harmonic": harmonic,
+        "scale": scale,
+        "target_moment_over_scale": float(target["mean"]) / scale,
+        # signed cosine projection: the amplitude above is a magnitude, so only
+        # this number can tell A_n from -A_n (the mirror control needs it)
+        "target_cosine_over_scale": float(
+            np.mean([fit.cos_strength(harmonic) for fit in fits])
+        )
+        / scale,
+        "target_moment_relative_error": abs(float(target["mean"]) / scale - 1.0),
+        "target_moment_ring_spread_relative": float(target["relative_spread"]),
+        "contaminant_over_scale": {
+            str(n): float(spectrum[n]["mean"]) / scale for n in contaminant_orders
+        },
+        "largest_contaminant_over_scale": largest_contaminant / scale,
+        "source_over_scale": abs(float(report["source_strength"])) / scale,
+        "source_trend_residual_over_scale": float(report["source_trend_residual"])
+        / scale,
+        "fit_relative_residual_max": float(max(report["relative_residual"])),
+        "ring_fit_condition_number_max": float(max(report["condition_number"])),
+        "ring_constants_over_scale": [
+            float(value) / scale for value in report["constants"]
+        ],
+    }
+
+
+def multipole_study(
+    ladder: Sequence[int] = LADDER,
+    radius: float = RADIUS,
+    speed: float = SPEED,
+) -> dict[str, Any]:
+    """Route M: multipole spectrum of the exterior field on both analytic flows."""
+    families: dict[str, Any] = {}
+    for family, entry in MULTIPOLE_FAMILIES.items():
+        levels = [multipole_level(panels, family, radius, speed) for panels in ladder]
+        families[family] = {
+            "harmonic": int(entry["harmonic"]),
+            "potential": entry["potential"],
+            "excitation": entry["excitation"],
+            "exact_moment": entry["exact_moment"],
+            "contaminants": entry["contaminants"],
+            "bibliography": entry["bibliography"],
+            "levels": levels,
+            "observed_order_target_moment": _observed_orders(
+                levels, "target_moment_relative_error"
+            ),
+            "finest": levels[-1],
+            "worst": {
+                "largest_contaminant_over_scale": max(
+                    level["largest_contaminant_over_scale"] for level in levels
+                ),
+                "source_over_scale": max(
+                    level["source_over_scale"] for level in levels
+                ),
+                "target_moment_ring_spread_relative": max(
+                    level["target_moment_ring_spread_relative"] for level in levels
+                ),
+                "fit_relative_residual_max": max(
+                    level["fit_relative_residual_max"] for level in levels
+                ),
+            },
+        }
+    control = multipole_level(
+        max(ladder), "uniform_flow", radius, speed, scale_sign=MULTIPOLE_CONTROL_SIGN
+    )
+    correct = families["uniform_flow"]["levels"][-1]["target_moment_relative_error"]
+    return {
+        "radii_over_a": [float(ring) for ring in MULTIPOLE_RADII],
+        "order": MULTIPOLE_ORDER,
+        "families": families,
+        "mirror_control": {
+            "dipole_over_scale": control["target_moment_over_scale"],
+            "target_cosine_over_scale": control["target_cosine_over_scale"],
+            "signed_error_of_the_mirror": abs(
+                control["target_cosine_over_scale"] + 1.0
+            ),
+            "discrimination_ratio": 2.0 / correct if correct > 0.0 else float("inf"),
+        },
+    }
+
+
 def far_field_check(
     panels: int = BUDGET_PANELS, radius: float = RADIUS, speed: float = SPEED
 ) -> dict[str, Any]:
@@ -756,6 +963,7 @@ def run_case(
         ),
     }
     artifact["near_wall"] = near_wall_study(radius, speed)
+    artifact["multipole"] = multipole_study(panels, radius, speed)
     if with_controls:
         artifact["controls"] = {
             "wrong_reference": wrong_reference_control(budget, radius, speed),
@@ -951,6 +1159,96 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "clearance instead of returning a plausible wrong velocity",
     )
 
+    multipole = artifact["multipole"]
+    for family, block in multipole["families"].items():
+        finest = block["finest"]
+        add(
+            f"multipole_{family}_moment_relative_error",
+            finest["target_moment_relative_error"],
+            f"< {TOLERANCE:g}",
+            finest["target_moment_relative_error"] < TOLERANCE,
+            f"far-field harmonic A_{finest['harmonic']} recovered from the ring fits "
+            f"vs {block['exact_moment']} (budget panels)",
+        )
+        orders = [
+            order
+            for order in block["observed_order_target_moment"]
+            if math.isfinite(order)
+        ]
+        add(
+            f"multipole_{family}_moment_observed_order",
+            block["observed_order_target_moment"],
+            f">= {MULTIPOLE_ORDER_MIN:g}",
+            bool(orders) and min(orders) >= MULTIPOLE_ORDER_MIN,
+            "the faceting error of the multipole moment must converge with h",
+        )
+    add(
+        "multipole_purity",
+        max(
+            block["worst"]["largest_contaminant_over_scale"]
+            for block in multipole["families"].values()
+        ),
+        f"< {MULTIPOLE_PURITY_TOL:g}",
+        all(
+            block["worst"]["largest_contaminant_over_scale"] < MULTIPOLE_PURITY_TOL
+            for block in multipole["families"].values()
+        ),
+        "harmonics the boundary data does not excite must stay at roundoff "
+        "(largest spurious A_n over the moment scale, every level)",
+    )
+    add(
+        "multipole_no_source_leak",
+        max(
+            block["worst"]["source_over_scale"]
+            for block in multipole["families"].values()
+        ),
+        f"< {MULTIPOLE_SOURCE_TOL:g}",
+        all(
+            block["worst"]["source_over_scale"] < MULTIPOLE_SOURCE_TOL
+            for block in multipole["families"].values()
+        ),
+        "the exterior field must be solenoidal: no 2-D log source, measured as the "
+        "slope of the ring mean against log(r)",
+    )
+    add(
+        "multipole_radius_independence",
+        max(
+            block["worst"]["target_moment_ring_spread_relative"]
+            for block in multipole["families"].values()
+        ),
+        f"< {MULTIPOLE_RADIUS_INDEPENDENCE_TOL:g}",
+        all(
+            block["worst"]["target_moment_ring_spread_relative"]
+            < MULTIPOLE_RADIUS_INDEPENDENCE_TOL
+            for block in multipole["families"].values()
+        ),
+        "the moment measured on r/a = "
+        + ", ".join(f"{ring:g}" for ring in multipole["radii_over_a"])
+        + " must not depend on the ring",
+    )
+    add(
+        "multipole_fit_residual",
+        max(
+            block["worst"]["fit_relative_residual_max"]
+            for block in multipole["families"].values()
+        ),
+        f"< {MULTIPOLE_FIT_RESIDUAL_TOL:g}",
+        all(
+            block["worst"]["fit_relative_residual_max"] < MULTIPOLE_FIT_RESIDUAL_TOL
+            for block in multipole["families"].values()
+        ),
+        "the truncated harmonic fit must explain the sampled field "
+        "(relative rms residual of the order-4 fit)",
+    )
+    control_m = multipole["mirror_control"]
+    add(
+        "multipole_mirror_control_is_rejected",
+        control_m["discrimination_ratio"],
+        f">= {WRONG_REFERENCE_FACTOR:g}",
+        control_m["discrimination_ratio"] >= WRONG_REFERENCE_FACTOR,
+        "the image-sign data must be read as a negative dipole, i.e. the moment "
+        "carries its sign",
+    )
     if "controls" in artifact:
         control = artifact["controls"]["wrong_reference"]
         add(
@@ -978,6 +1276,7 @@ def render_markdown(artifact: dict[str, Any]) -> str:
     """Render the case document from the artifact (no hand-copied numbers)."""
     rows_d = artifact["routes"]["dirichlet"]["levels"]
     rows_n = artifact["routes"]["neumann"]["levels"]
+    multipole = artifact["multipole"]
     gate = artifact["geometry_gate"]
     budget = artifact["parameters"]["budget_panels"]
     tolerance = artifact["acceptance"]["tolerance"]
@@ -1110,6 +1409,57 @@ def render_markdown(artifact: dict[str, Any]) -> str:
     factors = near["factors"]
     lines += [
         "",
+        "### 远场多极矩（路线 M，本轮新增）",
+        "",
+        "外部扰动势在 $r>a$ 上有衰减多极展开 "
+        "$\\phi'=\\sum_{n\\ge 1}(A_n\\cos n\\theta+B_n\\sin n\\theta)/r^n$。"
+        "物面只给边界量、点值比较无法说明**远场内容**是否正确，故新增路线 M：",
+        "在 $r/a=$ "
+        + ", ".join(f"{ring:g}" for ring in MULTIPOLE_RADII)
+        + " 三个环上采样 BEM 外部势，按 $\\cos n\\theta,\\sin n\\theta\ (n\\le "
+        f"{MULTIPOLE_ORDER})"
+        + ")$ 做最小二乘谐波拟合（`tensorbem.multipole2d`），"
+        "并用「环均值 vs $\\log r$ 的斜率」分离二维源项（单个环无法与常数分离）。",
+        "两个解析场交替检验：均匀来流只激发出 $A_1$（偶极），"
+        "纯应变流 $u=\\gamma x,\\ v=-\\gamma y$ 只激发出 $A_2$（四极，$A_2=\\gamma a^4/2$）；"
+        "两组数据各自都含「不该被激发的谐波必须≈0」的干净判据。",
+        "",
+        "| 激励 | $N$ | $h_{mean}/a$ | 目标矩 $A_n$/尺度 | 相对误差 | 环间相对离散 | 最大污染谐波 | 源项 | 拟合相对残差 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for family, block in multipole["families"].items():
+        for row in block["levels"]:
+            lines.append(
+                "| %s | %d | %.4e | %.9f | %.3e | %.2e | %.2e | %.2e | %.2e |"
+                % (
+                    family,
+                    row["panels"],
+                    row["h_mean"] / artifact["parameters"]["radius"],
+                    row["target_moment_over_scale"],
+                    row["target_moment_relative_error"],
+                    row["target_moment_ring_spread_relative"],
+                    row["largest_contaminant_over_scale"],
+                    row["source_over_scale"],
+                    row["fit_relative_residual_max"],
+                )
+            )
+    lines += [
+        "",
+        "收敛阶（目标矩相对误差）："
+        + "；".join(
+            "%s %s"
+            % (
+                family,
+                "["
+                + ", ".join("%.4g" % order for order in block["observed_order_target_moment"])
+                + "]",
+            )
+            for family, block in multipole["families"].items()
+        )
+        + "；镜像（$A_1\\to-A_1$）对照的判别比 "
+        + "%.4g×" % multipole["mirror_control"]["discrimination_ratio"]
+        + "。",
+        "",
         "### 近壁适用窗（第 2 轮补充）",
         "",
         "常值面板的单/双层积分是闭式的，但**密度**是分片常数，故恢复出的速度场只在",
@@ -1175,6 +1525,12 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "",
         "`figures/convergence.png`：两条路线的误差随 $h_{mean}$ 收敛，附 $h^2$、$h^4$ 参考斜率。",
         "",
+        "![multipole](benchmarks/verified/case_bem_laplace_cylinder/figures/multipole.png)",
+        "",
+        "`figures/multipole.png`：左=均匀来流（偶极）与纯应变（四极）的谐波谱 "
+        "$|A_n|/(\\text{尺度})$（预算面板，解析值 1 与 0 作参考线）；"
+        "右=目标矩相对误差随 $h_{mean}$ 的收敛（附 $h^2$ 参考斜率）。",
+        "",
         "## 5. 注意点",
         "",
         "- 多面体不是圆：离散体是内接正 $N$ 边形，离散解只能**收敛**到圆柱解；面板中点半径",
@@ -1204,6 +1560,22 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         )
     lines += [
         "",
+        "| 路线 M 偶极矩 $A_1$ | %.3e | %s |"
+        % (
+            multipole["families"]["uniform_flow"]["finest"]["target_moment_relative_error"],
+            "是"
+            if multipole["families"]["uniform_flow"]["finest"]["target_moment_relative_error"]
+            < tolerance
+            else "**否**",
+        ),
+        "| 路线 M 四极矩 $A_2$ | %.3e | %s |"
+        % (
+            multipole["families"]["pure_strain"]["finest"]["target_moment_relative_error"],
+            "是"
+            if multipole["families"]["pure_strain"]["finest"]["target_moment_relative_error"]
+            < tolerance
+            else "**否**",
+        ),
         "结论：预算面板下所有关键量均 `<3%`；误差随加密按网格化阶（路线 N 约二阶）下降，",
         "不是靠放宽阈值通过的。",
         "",
@@ -1241,6 +1613,8 @@ def write_case_card(artifact: dict[str, Any], path: Path) -> Path:
             "tensorbem.solver.evaluate_exterior_surface_velocity",
             "tensorbem.kernels.integrate_single_layer_panel_gradient",
             "tensorbem.kernels.integrate_double_layer_panel_gradient",
+            "tensorbem.multipole2d.fit_ring",
+            "tensorbem.multipole2d.decompose_rings",
         ],
         "repro_cmd": artifact["repro_cmd"],
         "test_cmd": "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py -q",
@@ -1497,6 +1871,67 @@ def plot_near_wall(artifact: dict[str, Any], output: Path) -> Path:
     return output
 
 
+def plot_multipole(artifact: dict[str, Any], output: Path) -> Path:
+    """Harmonic spectrum of both analytic flows plus the moment convergence."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    multipole = artifact["multipole"]
+    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.0))
+    width = 0.38
+    orders = np.arange(1, int(multipole["order"]) + 1)
+    for offset, (family, block) in zip(
+        (-width / 2.0, width / 2.0), multipole["families"].items()
+    ):
+        finest = block["finest"]
+        scale = float(finest["scale"])
+        values = []
+        for n in orders:
+            if n == int(finest["harmonic"]):
+                values.append(finest["target_moment_over_scale"])
+            else:
+                values.append(finest["contaminant_over_scale"][str(n)])
+        axes[0].bar(
+            orders + offset,
+            np.abs(values),
+            width=width,
+            label=f"{family} (A_{finest['harmonic']} excited)",
+        )
+    axes[0].set_yscale("log")
+    axes[0].set_ylim(1e-18, 10.0)
+    axes[0].axhline(1.0, color="k", ls="--", lw=0.8, label="analytic |A_n|/scale = 1")
+    axes[0].axhline(1e-15, color="0.5", ls=":", lw=0.8, label="roundoff floor")
+    axes[0].set_xticks(orders)
+    axes[0].set_xlabel("harmonic $n$")
+    axes[0].set_ylabel(r"$|A_n| / $ scale")
+    axes[0].set_title(
+        "far-field harmonic spectrum, N = %d" % int(finest["panels"])
+    )
+    axes[0].grid(True, which="both", axis="y", alpha=0.3)
+    axes[0].legend(fontsize=7)
+
+    for family, block in multipole["families"].items():
+        h = [row["h_mean"] for row in block["levels"]]
+        err = [row["target_moment_relative_error"] for row in block["levels"]]
+        axes[1].loglog(h, err, "o-", label=f"{family} A_{block['finest']['harmonic']}")
+        reference = err[0] * (np.asarray(h) / h[0]) ** 2
+        axes[1].loglog(h, reference, "k:", lw=0.8)
+    axes[1].annotate(r"$h^2$", xy=(h[-1], err[-1] * 4.0), fontsize=8)
+    axes[1].axhline(TOLERANCE, color="r", ls="--", lw=0.8, label=f"tolerance {TOLERANCE:g}")
+    axes[1].set_xlabel(r"$h_{mean}/a$")
+    axes[1].set_ylabel("relative error of the moment")
+    axes[1].set_title("multipole convergence")
+    axes[1].grid(True, which="both", alpha=0.3)
+    axes[1].legend(fontsize=7)
+    fig.tight_layout()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=150)
+    plt.close(fig)
+    return output
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -1537,6 +1972,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     plot_field(artifact, figures / "field.png")
     plot_convergence(artifact, figures / "convergence.png")
     plot_near_wall(artifact, figures / "near_wall.png")
+    plot_multipole(artifact, figures / "multipole.png")
     if args.doc is not None:
         args.doc.parent.mkdir(parents=True, exist_ok=True)
         args.doc.write_text(render_markdown(artifact) + "\n", encoding="utf-8")
