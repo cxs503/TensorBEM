@@ -255,3 +255,183 @@ def integrate_double_layer_panel_gradient(
     a_term = -xi / r0 - z1 / r1
     b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
     return (a_term * n - 2.0 * eta * b_term * t) / _TWO_PI
+
+
+# ---------------------------------------------------------------------------
+# First-moment (linearly varying density) panel integrals.
+#
+# A piecewise-constant density makes the recovered field first-order accurate
+# near the body: the representation error is set by the tangential variation of
+# the density *within* a panel, which the basis cannot carry.  These integrals
+# add the missing first moment, i.e. the contribution of a density that varies
+# linearly across the panel, so a caller that can estimate the tangential slope
+# recovers a second-order-accurate near-field.
+#
+# The abscissa ``s`` is measured from the panel start (0 <= s <= L), the same
+# convention as the density traces in :mod:`tensorbem.solver`.
+# ---------------------------------------------------------------------------
+
+
+def _log_sqrt_first_moment_primitive(z: float, normal_distance: float) -> float:
+    r"""Primitive of ``z*log(rho)`` with ``rho = sqrt(z*z + h*h)``, ``h=|eta|``.
+
+    ``B(z) = ((z^2 + h^2) log(z^2 + h^2) - z^2) / 4``.  At ``r2 -> 0`` both the
+    ``r2*log(r2)`` and ``z^2`` terms vanish, so ``B = 0`` is the continuous
+    branch there and no singularity is introduced for a target at a panel
+    endpoint.
+    """
+    h = abs(normal_distance)
+    r2 = z * z + h * h
+    if r2 <= 0.0:
+        return 0.0
+    return 0.25 * (r2 * math.log(r2) - z * z)
+
+
+def integrate_single_layer_panel_first_moment(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
+) -> float:
+    r"""Integrate ``s * G(target, y(s))`` exactly over a straight panel.
+
+    With ``xi``/``eta`` the target coordinates along the panel tangent and its
+    left normal, ``z0 = -xi``, ``z1 = L - xi`` and ``P``/``B`` the primitives of
+    ``log(rho)`` and ``z*log(rho)``, the closed form is
+
+        integral s G ds = -(1/2 pi) [ xi (P(z1)-P(z0)) + B(z1)-B(z0)
+                                     - (L^2/2) log(L_ref) ].
+    """
+    length = _validate_panel_length(length)
+    reference = validate_reference_length(reference_length)
+    t = np.asarray(tangent, dtype=float)
+    n = np.array([-t[1], t[0]], dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    z0, z1 = -xi, length - xi
+    integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
+    first_moment = xi * integral_log_r + (
+        _log_sqrt_first_moment_primitive(z1, eta)
+        - _log_sqrt_first_moment_primitive(z0, eta)
+    )
+    return -(first_moment - 0.5 * length * length * math.log(reference)) / _TWO_PI
+
+
+def integrate_double_layer_panel_first_moment(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+    length: float,
+) -> float:
+    r"""Integrate ``s * dG/dn_y`` exactly over a straight panel.
+
+    Same local coordinates as :func:`integrate_double_layer_panel`;
+
+        integral s (dG/dn) ds = (1/2 pi) [ xi (atan(z1/eta) - atan(z0/eta))
+                                           + eta log(rho1/rho0) ],
+
+    which also vanishes on the panel's own line, matching the principal-value
+    convention of the constant-density integral.
+    """
+    length = _validate_panel_length(length)
+    n = np.asarray(normal, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    h = abs(eta)
+    if h <= 1.0e-14:
+        return 0.0
+    z0, z1 = -xi, length - xi
+    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
+    r2_0 = z0 * z0 + h * h
+    r2_1 = z1 * z1 + h * h
+    logarithm = 0.5 * math.log(r2_1 / r2_0)
+    return (xi * angle + eta * logarithm) / _TWO_PI
+
+
+def integrate_single_layer_panel_first_moment_gradient(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
+) -> FloatArray:
+    r"""Gradient of :func:`integrate_single_layer_panel_first_moment`.
+
+    Differentiating the closed form in ``(xi, eta)`` and mapping back with
+    ``grad = t*d/dxi + n*d/deta`` (the panel frame is orthonormal) gives
+
+        d/dxi  J = I + xi log(rho0/rho1) + z0 log(rho0) - z1 log(rho1),
+        d/deta J = xi (atan(z1/eta) - atan(z0/eta)) + eta log(rho1/rho0),
+        J = xi I + B(z1) - B(z0),  I = P(z1) - P(z0),
+
+    and ``grad(integral s G ds) = -(t d/dxi + n d/deta) J / (2 pi)``.  The
+    reference-length term is constant and drops out.
+    """
+    length = _validate_panel_length(length)
+    validate_reference_length(reference_length)
+    t = np.asarray(tangent, dtype=float)
+    n = np.array([-t[1], t[0]], dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    h = abs(eta)
+    z0, z1 = -xi, length - xi
+    r2_0 = z0 * z0 + h * h
+    r2_1 = z1 * z1 + h * h
+    if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
+        raise ValueError(
+            "first-moment gradient is singular at a panel endpoint; "
+            "keep the target a finite distance from the boundary"
+        )
+    log_rho0 = 0.5 * math.log(r2_0)
+    log_rho1 = 0.5 * math.log(r2_1)
+    integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
+    along = integral_log_r + xi * (log_rho0 - log_rho1) + z0 * log_rho0 - z1 * log_rho1
+    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
+    across = xi * angle + eta * (log_rho1 - log_rho0)
+    return -(t * along + n * across) / _TWO_PI
+
+
+def integrate_double_layer_panel_first_moment_gradient(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+    length: float,
+) -> FloatArray:
+    r"""Gradient of :func:`integrate_double_layer_panel_first_moment`.
+
+    With ``R = xi*Delta + eta*log(rho1/rho0)``, ``Delta = atan(z1/eta) -
+    atan(z0/eta)`` and ``r2_i = z_i^2 + eta^2``,
+
+        d R/d xi  = Delta + xi*eta (1/r2_0 - 1/r2_1) + eta (z0/r2_0 - z1/r2_1),
+        d R/d eta = xi (z0/r2_0 - z1/r2_1) + log(rho1/rho0)
+                    + eta^2 (1/r2_1 - 1/r2_0),
+
+    and the gradient is ``(t d/dxi + n d/deta) R / (2 pi)``.
+    """
+    length = _validate_panel_length(length)
+    n = np.asarray(normal, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    h = abs(eta)
+    z0, z1 = -xi, length - xi
+    r2_0 = z0 * z0 + h * h
+    r2_1 = z1 * z1 + h * h
+    if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
+        raise ValueError(
+            "first-moment gradient is singular at a panel endpoint; "
+            "keep the target a finite distance from the boundary"
+        )
+    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
+    logarithm = 0.5 * math.log(r2_1 / r2_0)
+    along = (
+        angle
+        + xi * eta * (1.0 / r2_0 - 1.0 / r2_1)
+        + eta * (z0 / r2_0 - z1 / r2_1)
+    )
+    across = (
+        xi * (z0 / r2_0 - z1 / r2_1)
+        + logarithm
+        + eta * eta * (1.0 / r2_1 - 1.0 / r2_0)
+    )
+    return (t * along + n * across) / _TWO_PI
