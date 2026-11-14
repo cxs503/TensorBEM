@@ -41,6 +41,7 @@ verification case for the potential-flow chain, not a drag prediction.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import platform
@@ -1209,6 +1210,56 @@ def explicit_probe_table(
     ]
 
 
+GENERATING_SOURCE_FILES: tuple[str, ...] = (
+    "benchmarks/case_cylinder_stream.py",
+    "solver.py",
+    "kernels.py",
+    "near_singular.py",
+    "geometry.py",
+    "multipole2d.py",
+    "lifting_cylinder.py",
+    "lifting.py",
+)
+
+GUARDED_SOURCE_FILE = "benchmarks/case_cylinder_stream.py"
+
+
+def generator_provenance() -> dict[str, Any]:
+    """Digests of the sources whose numbers this record contains.
+
+    A committed ``results.json`` is the record of *one* run, and the way it goes
+    stale is silent: the case module can grow a study and a set of criteria, be
+    merged, and leave the record -- and the prose rendered from it -- describing
+    the previous study, while docstrings elsewhere point at the record as
+    evidence for the new one.  Recording the digests makes the code-to-record
+    link explicit and checkable without re-running the case.
+
+    ``GUARDED_SOURCE_FILE`` is the file that decides what the record contains
+    and how it is rendered, so a change to it *must* be followed by a
+    regeneration; the case-pool test asserts exactly that digest.  The other
+    files are recorded for traceability: a change there changes the numbers
+    without changing the record's shape, and regenerating is the responsibility
+    of whoever made it.
+    """
+    package = Path(__file__).resolve().parent.parent
+    digests: dict[str, str | None] = {}
+    for name in GENERATING_SOURCE_FILES:
+        path = package / name
+        digests[name] = (
+            hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+        )
+    combined = hashlib.sha256(
+        "\n".join(
+            f"{name}:{digests[name]}" for name in GENERATING_SOURCE_FILES
+        ).encode()
+    ).hexdigest()
+    return {
+        "files": digests,
+        "combined_sha256": combined,
+        "guarded_file": GUARDED_SOURCE_FILE,
+    }
+
+
 def run_case(
     ladder: Sequence[int] = LADDER,
     radius: float = RADIUS,
@@ -1246,6 +1297,7 @@ def run_case(
             "numpy": np.__version__,
             "machine": platform.machine(),
         },
+        "provenance": {"generator": generator_provenance()},
         "parameters": {
             "radius": radius,
             "speed": speed,
@@ -2052,6 +2104,10 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "| 层 | $h_{max}/a$ | 常值 $\\delta=0.5h$ | 线性 $\\delta=0.5h$ | 常值 $\\delta=2h$ | 线性 $\\delta=2h$ |",
         "| --- | --- | --- | --- | --- | --- |",
     ]
+    # `linear_near` is the near-wall linear-density study; `criteria()` reads the
+    # same block from `artifact["near_wall"]["linear"]`, and this renderer used to
+    # reference the name without binding it (NameError on every render).
+    linear_near = near["linear"]
     for level in near["levels"]:
         row_half = next(
             row

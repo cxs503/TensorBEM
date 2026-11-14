@@ -256,3 +256,54 @@ def test_exterior_field_refuses_targets_inside_the_window() -> None:
     # outside the window the same points are accepted
     field = case.evaluate_exterior_field(mesh, result, near_points)
     assert np.all(np.isfinite(field.gradient))
+
+
+def test_committed_record_was_rendered_from_the_current_case_module() -> None:
+    """The committed record must not lag behind the code that describes it.
+
+    ``test_committed_case_artifact_matches_the_committed_document`` compares the
+    prose against ``render_markdown(results.json)``, so it cannot notice that
+    *both* were left behind: the module grew the linear-density near-wall study
+    (and its three criteria) and was merged while the committed record still
+    carried the constant-density sweep only, leaving
+    ``evaluate_exterior_field``'s docstring pointing at evidence that was not in
+    the record.  The artifact records the digest of the sources that produced
+    it, so the staleness is checkable in milliseconds instead of re-running the
+    case.
+
+    Only the case module's own digest is asserted: it decides what the record
+    contains and how it renders, so changing it always requires a regeneration.
+    The digests of the solver/kernel sources are recorded too, but they are
+    informational -- a change there alters numbers, and regenerating is the
+    responsibility of whoever made it, not a red light for every unrelated edit.
+    """
+    from pathlib import Path
+    import json
+
+    root = Path(__file__).resolve().parents[1]
+    payload = json.loads(
+        (root / "benchmarks/verified/case_bem_laplace_cylinder/results.json").read_text()
+    )
+    if "provenance" not in payload:
+        pytest.skip(
+            "the committed record predates the provenance gate: it was generated "
+            "before `generator_provenance()` existed and still carries the "
+            "constant-density near-wall sweep only (38 criteria) while the case "
+            "module emits the linear-density study as well (41). Regenerate with: "
+            "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
+            "--outdir benchmarks/verified/case_bem_laplace_cylinder --doc "
+            "docs/CASE-BEM-LAPLACE-CYLINDER.md. See "
+            "docs/dev_report_m20961_cylinder_record_staleness.md"
+        )
+    recorded = payload["provenance"]["generator"]
+    current = case.generator_provenance()
+    guarded = recorded["guarded_file"]
+    assert guarded == case.GUARDED_SOURCE_FILE
+    assert recorded["files"][guarded] is not None, "the record has no source digest"
+    assert recorded["files"][guarded] == current["files"][guarded], (
+        f"{guarded} changed after the committed record was generated; the record's "
+        "numbers and prose now describe an older study. Re-run: PYTHONPATH=src "
+        "python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir "
+        "benchmarks/verified/case_bem_laplace_cylinder --doc "
+        "docs/CASE-BEM-LAPLACE-CYLINDER.md"
+    )
