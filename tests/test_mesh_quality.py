@@ -3,7 +3,12 @@
 import numpy as np
 import pytest
 
-from tensorbem.geometry3d import icosphere, ellipsoid_mesh
+from tensorbem.geometry3d import (
+    icosphere,
+    ellipsoid_mesh,
+    floating_sphere_hull_mesh,
+    hemisphere_hull_mesh,
+)
 from tensorbem.mesh_quality import (
     MeshQualityReport,
     diagnose_mesh_quality,
@@ -181,4 +186,94 @@ def test_mesh_quality_ellipsoid_min_angle():
     # 判据: 网格质量指标在 ellipsoid benchmark 上报告最小内角 > 30°
     assert report.min_angle_deg > 30.0, (
         f"Ellipsoid mesh min angle {report.min_angle_deg:.2f}° should be > 30°"
+    )
+
+
+# --------------------------------------------------------------------------- #
+# XVAL-BEM-R2-OSS-CROSSVAL-CAPYTAINE -- verification-debt pin
+#
+# The round-2 capytaine cross-code anchor (full 6x6 radiation matrix) FAILS
+# its diagonal band on the *floating-sphere* cases while the *surface-piercing
+# hemisphere* cases (same physical body, radius 1, flat face at z=0) converge
+# inside the band.  The only difference between the two is the mesh builder:
+# ``floating_sphere_hull_mesh`` clips a geodesic icosphere against z=0
+# (Sutherland-Hodgman), which emits *degenerate waterline slivers*; the clean
+# ``hemisphere_hull_mesh`` (octahedral, radially projected) does not.
+#
+# These two tests pin that defect so it cannot silently regress: the diagnostic
+# must *report* the slivers (aspect ratio > 5, min angle < 30 deg) and they must
+# be located on the waterline (a vertex at z=0).  A future mesh fix that makes
+# the floating-sphere cap clean will have to update these assertions.
+# --------------------------------------------------------------------------- #
+def test_floating_sphere_hull_mesh_reports_waterline_slivers() -> None:
+    """The clipped-icosphere floating-sphere cap must be diagnosed as degenerate.
+
+    ``floating_sphere_hull_mesh`` (radius 1, centre z=-0.5) is the mesh used by
+    the r2 capytaine cross-code anchor for its floating-sphere cases.  Its
+    Sutherland-Hodgman waterline slivers are the reason those cases sit outside
+    the 5 % diagonal band while the clean hemisphere (same body) converges to
+    3.3 %.  The diagnostic must flag them.
+    """
+    mesh = floating_sphere_hull_mesh(3, radius=1.0, center=(0.0, 0.0, -0.5))
+    report = diagnose_mesh_quality(mesh)
+
+    # The defect is real and must be reported (not silently hidden).
+    assert report.max_aspect_ratio > 5.0, (
+        f"floating-sphere cap max aspect ratio {report.max_aspect_ratio:.2f} "
+        "should exceed 5 (waterline slivers present)"
+    )
+    assert report.panels_above_5_aspect > 0, (
+        "floating-sphere cap must contain panels with aspect ratio > 5"
+    )
+    assert report.min_angle_deg < 30.0, (
+        f"floating-sphere cap min angle {report.min_angle_deg:.2f}° "
+        "should be < 30° (degenerate waterline slivers)"
+    )
+
+
+def test_floating_sphere_slivers_are_on_the_waterline() -> None:
+    """The degenerate panels must be the waterline slivers, not interior ones.
+
+    Every low-quality panel of the clipped floating-sphere cap must touch the
+    calm waterplane (have a vertex at z=0) -- that is where the Sutherland-
+    Hodgman cut creates the sliver.  Interior (below-waterline) panels of the
+    geodesic icosphere are well-shaped and must not be flagged.
+    """
+    mesh = floating_sphere_hull_mesh(3, radius=1.0, center=(0.0, 0.0, -0.5))
+    bad = identify_low_quality_panels(
+        mesh, min_angle_threshold=30.0, max_aspect_threshold=5.0
+    )
+    assert len(bad) > 0, "expected waterline slivers to be flagged"
+
+    verts = mesh.vertices
+    faces = mesh.faces
+    for idx in bad:
+        tri = verts[faces[idx]]
+        assert np.any(np.abs(tri[:, 2]) <= 1.0e-9), (
+            f"panel {idx} is flagged low-quality but has no waterline vertex "
+            "(it is not a waterline sliver)"
+        )
+
+
+def test_hemisphere_hull_mesh_is_clean_control() -> None:
+    """The clean hemisphere builder is the control: same body, no slivers.
+
+    ``hemisphere_hull_mesh`` (radius 1, flat face at z=0) is the *same* physical
+    body as the floating-sphere cap but built by radial projection of an
+    octahedron -- no clipping, so no waterline slivers.  Its quality must stay
+    well inside the good-panel regime, which is what lets the r2 anchor's
+    hemisphere cases converge inside the 5 % band.
+    """
+    mesh = hemisphere_hull_mesh(3, radius=1.0)
+    report = diagnose_mesh_quality(mesh)
+
+    assert report.max_aspect_ratio < 2.0, (
+        f"clean hemisphere max aspect ratio {report.max_aspect_ratio:.2f} "
+        "should be < 2 (no slivers)"
+    )
+    assert report.panels_above_5_aspect == 0, (
+        "clean hemisphere must have no panels with aspect ratio > 5"
+    )
+    assert report.min_angle_deg > 30.0, (
+        f"clean hemisphere min angle {report.min_angle_deg:.2f}° should be > 30°"
     )
