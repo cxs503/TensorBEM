@@ -1,0 +1,57 @@
+{
+ "fig_verdict": "11 numeric criteria margins",
+ "fig_convergence": {
+  "h_mean": [
+   0.1960342806591212,
+   0.09813534865483603,
+   0.049082457045824576
+  ],
+  "route_D_velocity": [
+   0.0002265665438862169,
+   1.2289117975938238e-06,
+   1.3656224320923946e-07
+  ],
+  "route_N_surface": [
+   0.0016332624547677696,
+   0.0004046292256971318,
+   0.00010075873250396247
+  ]
+ },
+ "fig_field": {
+  "max_rel_error_all_grid_points": 1.2250945581028787,
+  "cond_S": 76.11357941479734,
+  "note": "grid samples run from r/a=1.002 outward; the near-wall band carries the largest error"
+ },
+ "field_error_by_radius_band": {
+  "r/a in [1.002,1.05)": {
+   "points": 14,
+   "max_rel_error": 1.2250945581028787,
+   "p99_rel_error": 1.0873893095041933,
+   "rms_rel_error": 0.3328841603685913
+  },
+  "r/a in [1.05,1.25)": {
+   "points": 62,
+   "max_rel_error": 0.0009125572561629362,
+   "p99_rel_error": 0.0006454823666164972,
+   "rms_rel_error": 0.0001482548038619099
+  },
+  "r/a in [1.25,1.6)": {
+   "points": 138,
+   "max_rel_error": 5.504399194845824e-07,
+   "p99_rel_error": 5.263926719569776e-07,
+   "rms_rel_error": 2.2121046515867757e-07
+  },
+  "r/a in [1.6,3.2)": {
+   "points": 1048,
+   "max_rel_error": 1.9982724517740287e-07,
+   "p99_rel_error": 1.731654228262638e-07,
+   "rms_rel_error": 7.257873058219771e-08
+  },
+  "r/a in [1.25,99.0)": {
+   "points": 1617,
+   "max_rel_error": 5.504399194845824e-07,
+   "p99_rel_error": 2.952318124133016e-07,
+   "rms_rel_error": 8.837485604353092e-08
+  }
+ }
+}

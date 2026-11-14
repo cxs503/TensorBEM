@@ -1,0 +1,66 @@
+{
+ "mission_audited": 20029,
+ "case": "CASE-BEM-LAPLACE-CYLINDER",
+ "reference_table_check": {
+  "points": 64,
+  "max_abs_diff_vs_case_json_table": 2.220446049250313e-16,
+  "max_abs_diff_u": 0.0,
+  "max_abs_diff_v": 0.0,
+  "max_abs_diff_phi": 2.220446049250313e-16,
+  "surface_speed_check_2U_sin": {
+   "note": "|v|=2U|sin th| and Cp=1-4 sin^2 th re-derived on the circle",
+   "max_abs_diff": 4.440892098500626e-16
+  }
+ },
+ "continuum_polygon_dirichlet_multipole": {
+  "32": {
+   "bc_fit_rel_residual_max": 1.77206972063239e-15,
+   "coef_n1": 0.9999999999999997,
+   "velocity_relative_l2_vs_cylinder": 3.078419950731656e-16,
+   "velocity_max_abs_error_over_U": 1.1934897514720433e-15,
+   "perturbation_potential_relative_l2": 1.988737714413712e-16
+  },
+  "64": {
+   "bc_fit_rel_residual_max": 8.876431726280487e-16,
+   "coef_n1": 1.0000000000000004,
+   "velocity_relative_l2_vs_cylinder": 3.537068322379588e-16,
+   "velocity_max_abs_error_over_U": 6.661338147750939e-16,
+   "perturbation_potential_relative_l2": 2.3688346183101295e-16
+  },
+  "128": {
+   "bc_fit_rel_residual_max": 8.880446481911963e-16,
+   "coef_n1": 1.0,
+   "velocity_relative_l2_vs_cylinder": 2.982629563955523e-16,
+   "velocity_max_abs_error_over_U": 6.938893903907228e-16,
+   "perturbation_potential_relative_l2": 9.04554752245968e-17
+  }
+ },
+ "reference_length_invariance": {
+  "L=2.0": {
+   "dirichlet_cond": 76.11357941479734,
+   "dirichlet_velocity_relative_l2": 1.3656224318170642e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.0001532015925717168
+  },
+  "L=3.0": {
+   "dirichlet_cond": 120.62112835137059,
+   "dirichlet_velocity_relative_l2": 1.365622432212048e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.00015320159257173314
+  },
+  "L=5.0": {
+   "dirichlet_cond": 176.69400858982314,
+   "dirichlet_velocity_relative_l2": 1.365622432300295e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.00015320159257171815
+  }
+ },
+ "claimed": {
+  "dirichlet_velocity_relative_l2_N128": 1.3656224320923946e-07,
+  "neumann_velocity_relative_l2_N128": 0.0001532015925717173,
+  "neumann_surface_velocity_relative_l2_N128": 0.00010075873250396247
+ },
+ "overall": "PASS",
+ "n_criteria": 15,
+ "criteria_all_ok": true
+}
