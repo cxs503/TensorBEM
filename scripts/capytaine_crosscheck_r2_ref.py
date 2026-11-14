@@ -286,6 +286,51 @@ def build(out_path: Path, capytaine_source: Path | None) -> dict[str, Any]:
         ),
     }
 
+    # ------------------------------------------------------------------------
+    # Non-degenerate rotation.  Round 2's own two bodies put the rotation centre
+    # on the sphere centre of curvature, where capytaine's ``(r - centre) x n``
+    # vanishes pointwise -- the rotational block is an exact zero and a relative
+    # comparison of it measures the discretisation residual of a zero.  These
+    # two bodies keep the geometry and move the rotation centre, which is the
+    # case that actually exercises the rotational generalised normals.
+    # ------------------------------------------------------------------------
+    payload["cases"]["hemisphere_r1_cz-0.5"] = {
+        "kind": (
+            "surface-piercing hemisphere, radius 1.0, centre (0,0,0), "
+            "rotation centre (0,0,-0.5)"
+        ),
+        "rotation_center": [0.0, 0.0, -0.5],
+        "dofs": list(DOF_ORDER),
+        **_study(
+            cpt,
+            solver,
+            lambda lvl: _body(
+                cpt, _mesh(cpt, "hemisphere_r1", lvl), (0.0, 0.0, -0.5)
+            ),
+            HEMISPHERE_LEVELS,
+            DOF_ORDER,
+            NU_GRID,
+        ),
+    }
+    payload["cases"]["sphere_r1_z-0.5_c0"] = {
+        "kind": (
+            "floating sphere, radius 1.0, centre (0,0,-0.5), "
+            "rotation centre at the waterline origin (0,0,0)"
+        ),
+        "rotation_center": [0.0, 0.0, 0.0],
+        "dofs": list(DOF_ORDER),
+        **_study(
+            cpt,
+            solver,
+            lambda lvl: _body(
+                cpt, _mesh(cpt, "sphere_r1_z-0.5", lvl), (0.0, 0.0, 0.0)
+            ),
+            SPHERE_LEVELS,
+            DOF_ORDER,
+            NU_GRID,
+        ),
+    }
+
     deep: dict[str, Any] = {"depths": list(DEEP_DEPTHS), "nu_grid": list(DEEP_NU),
                             "dofs": ["surge", "roll"], "cases": {}}
     for depth in DEEP_DEPTHS:
