@@ -397,3 +397,45 @@ def test_production_artifact_replays_to_the_published_verdict() -> None:
     assert worst <= case.TOLERANCES["kk"]
     # panel adequacy at the top of the band is what the medium mesh buys
     assert replay["gates"]["C2"]["values"]["k_times_panel_scale"] <= case.TOLERANCES["panel_kh"]
+
+
+def _synthetic_sweep(*, residual: float, damping_floor: float) -> case.Sweep:
+    omega = np.linspace(0.2, 12.0, 9)
+    added = np.zeros((omega.size, 6, 6))
+    damper = np.zeros((omega.size, 6, 6))
+    for dof in range(6):
+        added[:, dof, dof] = 1.0 + omega**-2
+        damper[:, dof, dof] = damping_floor + omega**-3
+    return case.Sweep(
+        label="coarse",
+        n_sections=12,
+        n_levels=4,
+        panel_count=192,
+        max_panel_scale=0.1,
+        omega=omega,
+        added_mass=added,
+        damping=damper,
+        solver_relative_residual=np.full(omega.size, float(residual)),
+        elapsed=0.0,
+    )
+
+
+def test_solver_validity_gate_rejects_a_non_converged_sweep() -> None:
+    """A 125 % linear-solve residual must void the case, not be scored as physics."""
+    bad = _synthetic_sweep(residual=1.25, damping_floor=-129.9)
+    gate = case.solver_validity_gate(bad)
+    assert gate["id"] == "C0"
+    assert gate["passed"] is False
+    assert gate["values"]["solver_relative_residual_max"] == pytest.approx(1.25)
+    assert gate["values"]["min_radiation_damping"] < 0.0
+
+    good = _synthetic_sweep(residual=1.0e-3, damping_floor=0.0)
+    assert case.solver_validity_gate(good)["passed"] is True
+
+
+def test_free_decay_gate_reports_negative_damping_instead_of_raising() -> None:
+    bad = _synthetic_sweep(residual=1.25, damping_floor=-129.9)
+    gate = case.free_decay_gate(bad)
+    assert gate["passed"] is False
+    assert gate["values"]["status"].startswith("undecidable: non-physical negative")
+    assert gate["values"]["min_radiation_damping"] < 0.0
