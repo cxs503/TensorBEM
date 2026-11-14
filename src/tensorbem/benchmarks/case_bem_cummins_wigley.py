@@ -98,6 +98,10 @@ __all__ = [
     "sweep_grid",
     "grid_convergence_study",
     "run_case",
+    "save_sweep",
+    "load_sweep",
+    "case_verdict",
+    "gates_from_artifact",
     "render_markdown",
     "main",
 ]
@@ -198,6 +202,92 @@ class Sweep:
             ),
             "failed_frequencies": self.failed_frequencies,
         }
+
+
+#: Mesh identity fields that a sweep artifact must carry, so gate evaluation can
+#: be replayed from the committed evidence instead of re-solving the BEM system.
+SWEEP_METADATA = ("label", "n_sections", "n_levels", "panel_count", "max_panel_scale")
+
+
+def save_sweep(sweep: Sweep, path: str | Path) -> Path:
+    """Write a solved sweep to ``.npz``: coefficients *and* the mesh identity.
+
+    The identity is part of the artifact on purpose.  Gate C2 reads
+    ``max_panel_scale``, and C3's residual is only interpretable next to
+    ``panel_count``; an artifact that stores only the coefficients cannot be
+    re-judged later (see :func:`gates_from_artifact`).
+    """
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(
+        target,
+        omega=np.asarray(sweep.omega, dtype=float),
+        added_mass=np.asarray(sweep.added_mass, dtype=float),
+        damping=np.asarray(sweep.damping, dtype=float),
+        solver_relative_residual=np.asarray(sweep.solver_relative_residual, dtype=float),
+        label=np.array(str(sweep.label)),
+        n_sections=np.array(int(sweep.n_sections)),
+        n_levels=np.array(int(sweep.n_levels)),
+        panel_count=np.array(int(sweep.panel_count)),
+        max_panel_scale=np.array(float(sweep.max_panel_scale)),
+        elapsed=np.array(float(sweep.elapsed)),
+    )
+    return target
+
+
+def load_sweep(
+    path: str | Path,
+    *,
+    label: str | None = None,
+    n_sections: int | None = None,
+    n_levels: int | None = None,
+    panel_count: int | None = None,
+    max_panel_scale: float | None = None,
+) -> Sweep:
+    """Rebuild a :class:`Sweep` from an artifact written by :func:`save_sweep`.
+
+    Older artifacts stored the coefficients only.  Those can still be replayed,
+    but every missing identity field has to be supplied by the caller: silently
+    defaulting ``max_panel_scale`` would make gate C2 pass or fail on an
+    invented mesh.
+    """
+    payload = np.load(Path(path), allow_pickle=False)
+
+    def _metadata(name: str, fallback):
+        if name in payload.files:
+            return payload[name].item()
+        if fallback is None:
+            raise KeyError(
+                f"sweep artifact {path} has no {name!r} field; pass it explicitly "
+                "(it is needed to interpret the gates)"
+            )
+        return fallback
+
+    sweep = Sweep(
+        label=str(_metadata("label", label)),
+        n_sections=int(_metadata("n_sections", n_sections)),
+        n_levels=int(_metadata("n_levels", n_levels)),
+        panel_count=int(_metadata("panel_count", panel_count)),
+        max_panel_scale=float(_metadata("max_panel_scale", max_panel_scale)),
+        omega=np.asarray(payload["omega"], dtype=float),
+        added_mass=np.asarray(payload["added_mass"], dtype=float),
+        damping=np.asarray(payload["damping"], dtype=float),
+        solver_relative_residual=np.asarray(
+            payload["solver_relative_residual"], dtype=float
+        ),
+        elapsed=float(payload["elapsed"].item()) if "elapsed" in payload.files else 0.0,
+    )
+    if sweep.added_mass.shape != (sweep.omega.size, 6, 6) or sweep.damping.shape != (
+        sweep.omega.size,
+        6,
+        6,
+    ):
+        raise ValueError(
+            f"sweep artifact {path} has coefficient shapes "
+            f"{sweep.added_mass.shape}/{sweep.damping.shape}, expected "
+            f"({sweep.omega.size}, 6, 6)"
+        )
+    return sweep
 
 
 def sweep_grid(band: tuple[float, float] = BAND, n_omega: int = N_OMEGA) -> np.ndarray:
@@ -436,6 +526,10 @@ def kk_gate(sweep: Sweep, *, corrupt: bool = False) -> dict[str, Any]:
                 "added_mass_inf_closure_source": closure.added_mass_inf_source,
                 "added_mass_inf_tail_fit": float(asymptote.added_mass_inf),
                 "added_mass_inf_tail_fit_residual": float(asymptote.relative_residual),
+                "added_mass_inf_cross_check": float(
+                    abs(closure.added_mass_inf - asymptote.added_mass_inf)
+                    / max(float(closure.added_mass_scale), 1e-300)
+                ),
                 "damping_tail_valid": bool(tail.valid),
                 "damping_tail_exponent": float(tail.exponent),
                 "damping_tail_coefficient": float(tail.coefficient),
@@ -471,6 +565,16 @@ def kk_gate(sweep: Sweep, *, corrupt: bool = False) -> dict[str, Any]:
             "per_dof": rows,
             "tail_fit_model": "B(s) = C s^-p on the upper quartile of the sweep",
             "added_mass_inf_estimator": "least-squares closure (one free parameter)",
+            "added_mass_inf_cross_check_worst": float(
+                max(row["added_mass_inf_cross_check"] for row in rows)
+            ),
+            "added_mass_inf_cross_check_note": (
+                "C3 lets one free parameter (A_inf) absorb a constant offset, so a "
+                "closure that only shifts A would still pass. The independent "
+                "A_inf + c/omega^2 tail fit is therefore reported next to it: a "
+                "closure A_inf far from the tail fit means the residual is being "
+                "absorbed, not explained."
+            ),
         },
     }
 
@@ -768,6 +872,59 @@ def grid_convergence_study(
     }
 
 
+def case_verdict(gates: dict[str, Any]) -> dict[str, Any]:
+    """Tally a gate dictionary into the case verdict (shared by run and replay)."""
+    present = {key: value for key, value in gates.items() if value is not None}
+    passed = [key for key, value in present.items() if value["passed"]]
+    failed = [key for key, value in present.items() if not value["passed"]]
+    return {
+        "passed": not failed,
+        "gates_passed": len(passed),
+        "gates_total": len(present),
+        "passed_list": passed,
+        "failed_list": failed,
+        "case_tolerance": TOLERANCES["kk"],
+        "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)",
+    }
+
+
+def gates_from_artifact(
+    path: str | Path,
+    *,
+    dof_free_decay: int = 2,
+    include_geometry: bool = True,
+    corrupted_control: bool = True,
+) -> dict[str, Any]:
+    """Re-judge a committed sweep artifact without solving the BEM system again.
+
+    Every gate in this case is a *function of the tabulated coefficients* plus
+    the hull constants, so the verdict is reproducible from
+    ``sweep_<label>.npz`` alone.  That is what makes the accepted numbers
+    testable in CI (see ``tests/test_case_bem_cummins_wigley.py``) and what lets
+    a later reader re-derive the verdict from the evidence that was actually
+    committed instead of trusting the report.
+    """
+    sweep = load_sweep(path)
+    gates: dict[str, Any] = {}
+    if include_geometry:
+        gates["C1"] = geometry_gate()
+    gates["C2"] = panel_adequacy_gate(sweep)
+    gates["C3"] = kk_gate(sweep)
+    gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
+    gates["C5"] = free_decay_gate(sweep, dof=int(dof_free_decay))
+    gates["C6a"] = negative_control_gate(sweep, dof=int(dof_free_decay))
+    if corrupted_control:
+        gates["C6b"] = kk_gate(sweep, corrupt=True)
+    return {
+        "case": CASE_SLUG,
+        "artifact": str(path),
+        "dof_free_decay": DOF_NAMES[int(dof_free_decay)],
+        "sweep": sweep.summary(),
+        "gates": gates,
+        "verdict": case_verdict(gates),
+    }
+
+
 def run_case(
     *,
     out_dir: str | Path,
@@ -779,13 +936,14 @@ def run_case(
     save_sweeps: bool = True,
     dof_free_decay: int = 2,
     refine_peaks: int = 0,
+    mission: str = "m17375",
 ) -> dict[str, Any]:
     """Run the whole case and write the artifacts; returns the results dict."""
     out_path = Path(out_dir)
     out_path.mkdir(parents=True, exist_ok=True)
     results: dict[str, Any] = {
         "case": CASE_SLUG,
-        "mission": "m17375",
+        "mission": str(mission),
         "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "platform": platform.platform(),
         "python": platform.python_version(),
@@ -823,13 +981,7 @@ def run_case(
         sweeps[label] = sweep
         results.setdefault("sweeps", {})[label] = sweep.summary()
         if save_sweeps:
-            np.savez(
-                out_path / f"sweep_{label}.npz",
-                omega=sweep.omega,
-                added_mass=sweep.added_mass,
-                damping=sweep.damping,
-                solver_relative_residual=sweep.solver_relative_residual,
-            )
+            save_sweep(sweep, out_path / f"sweep_{label}.npz")
 
     production = sweeps[meshes[-1]]
     results["gates"]["C2"] = panel_adequacy_gate(production)
@@ -843,18 +995,7 @@ def run_case(
     if len(meshes) > 1:
         results["mesh_convergence"] = _mesh_convergence(sweeps[meshes[0]], production)
 
-    gates = {key: value for key, value in results["gates"].items() if value is not None}
-    passed = [key for key, value in gates.items() if value["passed"]]
-    failed = [key for key, value in gates.items() if not value["passed"]]
-    results["verdict"] = {
-        "passed": not failed,
-        "gates_passed": len(passed),
-        "gates_total": len(gates),
-        "passed_list": passed,
-        "failed_list": failed,
-        "case_tolerance": TOLERANCES["kk"],
-        "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)",
-    }
+    results["verdict"] = case_verdict(results["gates"])
 
     figure_name = _make_figure(sweeps, results, out_path) if figure else None
     results["figure"] = figure_name
@@ -1094,6 +1235,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         choices=sorted(MESHES),
     )
     parser.add_argument("--no-figure", action="store_true")
+    parser.add_argument(
+        "--mission",
+        default="m17375",
+        help="mission id written into the artifact metadata (provenance only)",
+    )
+    parser.add_argument(
+        "--replay",
+        default=None,
+        metavar="NPZ",
+        help="re-judge a committed sweep artifact instead of solving (no BEM solve)",
+    )
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument(
         "--grid-study",
@@ -1126,6 +1278,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         if not args.quiet:
             print(json.dumps(study, indent=2))
         return 0
+    if args.replay:
+        replay = gates_from_artifact(args.replay)
+        if not args.quiet:
+            print(json.dumps(replay["verdict"], indent=2))
+        return 0 if replay["verdict"]["passed"] else 1
     results = run_case(
         out_dir=args.out,
         jobs=args.jobs,
@@ -1134,6 +1291,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         meshes=tuple(args.meshes),
         figure=not args.no_figure,
         refine_peaks=args.refine_peaks,
+        mission=args.mission,
     )
     verdict = results["verdict"]
     if not args.quiet:
