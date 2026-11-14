@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import math
+import pathlib
 
 import numpy as np
 import pytest
@@ -301,3 +303,97 @@ def test_decay_zeta_is_nan_when_no_peak_clears_the_floor() -> None:
     record = 2.0e-3 * np.cos(omega_d * t)  # nothing above 1 % of the excursion
     got, period, n_peaks = case._decay_zeta(t, record, amplitude_floor=0.01)
     assert got != got  # nan: no peak clears the floor (max == excursion here)
+
+
+# ---------------------------------------------------------------------------
+# artifact replay: the committed sweep is the evidence, and the gates must be
+# re-derivable from it without solving the BEM system again
+# ---------------------------------------------------------------------------
+
+ARTIFACT_DIR = pathlib.Path(__file__).resolve().parents[1] / "benchmarks" / "verified" / "casepool_bem_cummins_wigley"
+
+
+def test_save_load_sweep_round_trip(tmp_path) -> None:
+    w, mass, b = _synthetic_pair()
+    sweep = _fake_sweep(w, mass, b)
+    sweep.max_panel_scale = 0.0375
+    path = case.save_sweep(sweep, tmp_path / "sweep_test.npz")
+    back = case.load_sweep(path)
+    assert back.label == sweep.label
+    assert (back.n_sections, back.n_levels) == (sweep.n_sections, sweep.n_levels)
+    assert back.panel_count == sweep.panel_count
+    assert back.max_panel_scale == pytest.approx(sweep.max_panel_scale)
+    np.testing.assert_allclose(back.omega, sweep.omega)
+    np.testing.assert_allclose(back.added_mass, sweep.added_mass)
+    np.testing.assert_allclose(back.damping, sweep.damping)
+
+
+def test_load_sweep_refuses_to_invent_a_mesh_identity(tmp_path) -> None:
+    """A coefficients-only artifact cannot be judged: C2 needs max_panel_scale."""
+    w, mass, b = _synthetic_pair()
+    sweep = _fake_sweep(w, mass, b)
+    legacy = tmp_path / "legacy.npz"
+    np.savez(
+        legacy,
+        omega=sweep.omega,
+        added_mass=sweep.added_mass,
+        damping=sweep.damping,
+        solver_relative_residual=sweep.solver_relative_residual,
+    )
+    with pytest.raises(KeyError):
+        case.load_sweep(legacy)
+    supplied = case.load_sweep(
+        legacy, label="coarse", n_sections=12, n_levels=4,
+        panel_count=192, max_panel_scale=0.1,
+    )
+    assert supplied.panel_count == 192
+    assert supplied.max_panel_scale == pytest.approx(0.1)
+
+
+def test_load_sweep_rejects_coefficient_shape_mismatch(tmp_path) -> None:
+    w, mass, b = _synthetic_pair()
+    sweep = _fake_sweep(w, mass, b)
+    path = case.save_sweep(sweep, tmp_path / "bad.npz")
+    payload = dict(np.load(path, allow_pickle=False))
+    payload["damping"] = payload["damping"][:, :3, :3]
+    np.savez(path, **payload)
+    with pytest.raises(ValueError):
+        case.load_sweep(path)
+
+
+def test_case_verdict_tally() -> None:
+    gates = {
+        "C1": {"passed": True},
+        "C2": {"passed": False},
+        "C3": None,  # skipped gates are neither passed nor failed
+    }
+    verdict = case.case_verdict(gates)
+    assert verdict["passed"] is False
+    assert verdict["passed_list"] == ["C1"]
+    assert verdict["failed_list"] == ["C2"]
+    assert verdict["gates_total"] == 2
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "sweep_medium.npz").exists(),
+    reason="production sweep artifact not committed",
+)
+def test_production_artifact_replays_to_the_published_verdict() -> None:
+    """The committed case_result.json must be re-derivable from the committed sweep."""
+    replay = case.gates_from_artifact(ARTIFACT_DIR / "sweep_medium.npz")
+    published = json.loads((ARTIFACT_DIR / "case_result.json").read_text())
+    assert replay["sweep"]["panel_count"] == published["sweeps"]["medium"]["panel_count"]
+    assert replay["sweep"]["max_panel_scale"] == pytest.approx(
+        published["sweeps"]["medium"]["max_panel_scale"]
+    )
+    for key in ("C2", "C3", "C4", "C5", "C6a", "C6b"):
+        assert key in published["gates"], key
+        assert replay["gates"][key]["passed"] == published["gates"][key]["passed"], key
+    # the case criterion: KK closure of the added mass, per DOF, < 10 %
+    worst = replay["gates"]["C3"]["values"]["worst_relative_residual"]
+    assert worst == pytest.approx(
+        published["gates"]["C3"]["values"]["worst_relative_residual"], rel=1e-9
+    )
+    assert worst <= case.TOLERANCES["kk"]
+    # panel adequacy at the top of the band is what the medium mesh buys
+    assert replay["gates"]["C2"]["values"]["k_times_panel_scale"] <= case.TOLERANCES["panel_kh"]
