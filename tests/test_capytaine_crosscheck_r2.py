@@ -90,7 +90,13 @@ def test_every_entry_is_classified_exactly_once(study: dict) -> None:
     for case, block in comparison["cases"].items():
         assert block["compared"] is True
         assert block["n_entries"] == 6 * 6 * len(r2.NU_GRID) * 2
-        assert block["n_active"] + block["n_null"] + block["n_conflict"] == block["n_entries"]
+        assert (
+            block["n_active"]
+            + block["n_null"]
+            + block["n_invariant"]
+            + block["n_conflict"]
+            == block["n_entries"]
+        ), "the classes must partition the entries"
         seen = {
             (e["nu"], e["quantity"], e["row"], e["column"]) for e in block["entries"]
         }
@@ -174,8 +180,16 @@ def test_structural_nulls_are_null_in_both_codes(study: dict) -> None:
         for e in block["entries"]
         if e["class"] == "null"
     }
+    invariants = {
+        (e["row"], e["column"])
+        for block in study["comparison"]["cases"].values()
+        for e in block["entries"]
+        if e["class"] == "invariant"
+    }
     for pair in (("surge", "sway"), ("heave", "roll"), ("surge", "heave")):
-        assert pair in nulls, f"expected structural null {pair} was not classified null"
+        assert pair in nulls or pair in invariants, (
+            f"expected structural null {pair} was not classified null/invariant"
+        )
 
 
 # --------------------------------------------------------------------------- 6
