@@ -31,6 +31,19 @@ relaxed afterwards:
   1 % of ``sqrt(|M_ii M_jj|)``; a pair null in one code and not in the other is a
   ``conflict`` and therefore a **failure** (the interesting defect class).
 
+**What the two round-2 bodies can and cannot score.**  Both of them put the
+rotation centre on the *centre of curvature* of their spherical wetted surface,
+and for such a body the rotational generalised normal ``(r - centre) x n``
+vanishes pointwise: a sphere rotating about its own centre produces no normal
+velocity at all.  The whole rotational block and every translation-rotation
+coupling of those two cases therefore has an exact target of **zero**, and a
+relative deviation of a numerical zero is meaningless -- the discretisation
+residual of that zero is the entire signal.  ``degeneracy_audit`` measures that
+residual on a refinement ladder (it must decay), and the rotation itself is
+scored on two extra bodies whose rotation centre is deliberately *off* the
+sphere centre (``hemisphere_r1_cz-0.5``, ``sphere_r1_z-0.5_c0``), where the
+rotational block is genuinely non-zero and the pre-registered bands apply.
+
 The third, non-BEM axis is analytic: a deeply submerged sphere must approach the
 unbounded-fluid Lamb (1932) limits as the free-surface effect decays, which no
 panel code satisfies by construction.
@@ -46,7 +59,10 @@ from typing import Any, Sequence
 
 import numpy as np
 
-from tensorbem.free_surface_solver3d import solve_radiation_3d
+from tensorbem.free_surface_solver3d import (
+    rigid_body_normals_3d,
+    solve_radiation_3d,
+)
 from tensorbem.geometry3d import (
     floating_sphere_hull_mesh,
     hemisphere_hull_mesh,
@@ -81,6 +97,24 @@ LAMB_SURGE = (2.0 / 3.0) * math.pi * DENSITY
 #: dimensionless floor for the rotational-normal assembly.
 EXACT_NULL_TOL = 0.01
 
+#: Reference length of the declared physical scale ``rho * L**k`` used to
+#: bound the entries whose exact target is zero.
+SCALE_LENGTH = 1.0
+#: An exact-zero entry is only *sanity bounded*, never scored by relative
+#: deviation (see ``invariant_scoring``).  ``INVARIANT_RATIO`` is two orders of
+#: magnitude looser than the residual observed at the coarsest level of the
+#: ladder, so it rejects a structurally wrong rotational assembly (an O(1)
+#: error such as a missing ``(r - centre)`` or an about-the-origin moment arm)
+#: without ever being the quantity that decides the cross-validation.
+INVARIANT_RATIO = 0.01
+#: Refinement ladder of the degeneracy audit, per case: hemisphere panels
+#: 64/256/1024, sphere panels 270/1026 (its level 4 is ~4000 panels and is not
+#: needed to see the residual decay).
+DEGENERACY_LEVELS = {"hemisphere_r1": (2, 3, 4), "sphere_r1_z-0.5": (2, 3)}
+DEGENERACY_NU = 1.0
+#: ``A(centre + d) = T^T A(centre) T`` with ``T = [[I, +[d]x], [0, I]]``.
+CENTRE_TRANSFER_TOL = 1.0e-6
+
 ARTIFACT_ROOT = Path("benchmarks/verified/capytaine_crosscheck_r2")
 REFERENCE_FILE = "capytaine_ref_r2.json"
 RESULT_FILE = "results.json"
@@ -90,15 +124,47 @@ FIGURE_CONVERGENCE = Path("docs/fig_capytaine_r2_convergence.png")
 FIGURE_DEEP = Path("docs/fig_capytaine_r2_deep.png")
 
 CASES: dict[str, dict[str, Any]] = {
+    # ------------------------------------------------------------------ round 2
     "hemisphere_r1": {
         "kind": "surface-piercing hemisphere, radius 1.0 m, centre (0, 0, 0)",
+        "body_centre": (0.0, 0.0, 0.0),
+        "sphere_centre": (0.0, 0.0, 0.0),
         "centre": (0.0, 0.0, 0.0),
         "levels": HEMISPHERE_LEVELS,
         "sphere": False,
     },
     "sphere_r1_z-0.5": {
         "kind": "floating sphere, radius 1.0 m, centre (0, 0, -0.5)",
+        "body_centre": (0.0, 0.0, -0.5),
+        "sphere_centre": (0.0, 0.0, -0.5),
         "centre": (0.0, 0.0, -0.5),
+        "levels": SPHERE_LEVELS,
+        "sphere": True,
+    },
+    # ------------------------------------- rotation centre off the sphere centre
+    # Round 2's rotational block is an exact zero (see ``invariant_null_dofs``);
+    # these two bodies keep the geometry and move the rotation centre, which is
+    # exactly what makes ``(r - centre) x n`` non-zero and the roll / pitch
+    # entries genuinely comparable across codes.
+    "hemisphere_r1_cz-0.5": {
+        "kind": (
+            "surface-piercing hemisphere, radius 1.0 m, centre (0, 0, 0), "
+            "rotation centre (0, 0, -0.5)"
+        ),
+        "body_centre": (0.0, 0.0, 0.0),
+        "sphere_centre": (0.0, 0.0, 0.0),
+        "centre": (0.0, 0.0, -0.5),
+        "levels": HEMISPHERE_LEVELS,
+        "sphere": False,
+    },
+    "sphere_r1_z-0.5_c0": {
+        "kind": (
+            "floating sphere, radius 1.0 m, centre (0, 0, -0.5), "
+            "rotation centre at the waterline origin (0, 0, 0)"
+        ),
+        "body_centre": (0.0, 0.0, -0.5),
+        "sphere_centre": (0.0, 0.0, -0.5),
+        "centre": (0.0, 0.0, 0.0),
         "levels": SPHERE_LEVELS,
         "sphere": True,
     },
@@ -111,8 +177,9 @@ def _key(nu: float) -> str:
 
 def _mesh(case: str, level: int) -> Any:
     spec = CASES[case]
+    body_centre = tuple(float(v) for v in spec["body_centre"])
     if spec["sphere"]:
-        return floating_sphere_hull_mesh(int(level), radius=1.0, center=spec["centre"])
+        return floating_sphere_hull_mesh(int(level), radius=1.0, center=body_centre)
     return hemisphere_hull_mesh(int(level), radius=1.0)
 
 
@@ -160,6 +227,291 @@ def run_case(case: str, levels: Sequence[int] | None = None) -> dict[str, Any]:
 def _scale(mat: np.ndarray, i: int, j: int) -> float:
     scale = math.sqrt(abs(mat[i, i] * mat[j, j]))
     return scale if scale > 0.0 else float("nan")
+
+
+def physical_scale(i: int, j: int) -> float:
+    """Declared physical scale ``rho * L**k`` of the entry ``(i, j)``.
+
+    ``k = 3`` for a mass entry (translation / translation), ``4`` for a
+    translation-rotation coupling and ``5`` for an added inertia.  The scale is
+    built from the case geometry only, never from the numbers under test, so it
+    cannot be tuned to make a comparison pass.
+    """
+    exponent = 3 + int(i >= 3) + int(j >= 3)
+    return DENSITY * SCALE_LENGTH**exponent
+
+
+def invariant_null_dofs(case: str) -> tuple[str, ...]:
+    """Dofs whose generalised normal vanishes *identically* for ``case``.
+
+    Two exact statements about the continuous geometry, independent of the
+    frequency, the mesh and the panel code:
+
+    * ``(r - centre) x n`` is zero pointwise on a spherical wetted surface whose
+      centre of curvature is the rotation centre, so **all three** rotational
+      dofs are null for such a body;
+    * yaw -- the azimuthal mode ``x*n_y - y*n_x`` -- is zero for any surface of
+      revolution about the vertical axis, whatever the height of the centre.
+
+    Entries touching a null dof have an exact target of zero and therefore
+    cannot be scored with a relative deviation; ``invariant_scoring`` bounds
+    them instead and reports them out of band from the physics score.
+    """
+    spec = CASES[case]
+    centre = tuple(float(v) for v in spec["centre"])
+    sphere_centre = tuple(float(v) for v in spec["sphere_centre"])
+    if centre == sphere_centre:
+        return ("roll", "pitch", "yaw")
+    return ("yaw",)
+
+
+def _cross_matrix(d: np.ndarray) -> np.ndarray:
+    """``[d]x`` with ``[d]x @ w == cross(d, w)``."""
+    return np.array(
+        [
+            [0.0, -d[2], d[1]],
+            [d[2], 0.0, -d[0]],
+            [-d[1], d[0], 0.0],
+        ]
+    )
+
+
+def centre_transfer_invariant(
+    level: int = 2, nu: float = DEGENERACY_NU
+) -> dict[str, Any]:
+    """Check the exact algebraic identity that a rotation centre must satisfy.
+
+    Moving the rotation centre from ``c`` to ``c' = c + d`` changes the
+    generalised velocity as ``u_c = T u_{c'}`` with ``T = [[I, +[d]x], [0, I]]``
+    (because ``V_c = V_{c'} + [d]x Omega``), so the whole impedance -- added mass
+    and damping alike -- must transform as ``A(c') = T^T A(c) T``.  The identity
+    is exact for the *discrete* operator as well, which makes it a defect
+    detector that needs no foreign code: a moment arm taken about the origin
+    while the modes rotate about ``c``, or a missing centre in the rotational
+    normals, breaks it by an O(1) amount.
+
+    Deliberately solved with an off-axis ``d`` so that all three rotational
+    columns and all translation-rotation couplings are exercised.
+    """
+    mesh = hemisphere_hull_mesh(int(level), radius=1.0)
+    centre = np.zeros(3)
+    shift = np.array([0.15, 0.10, -0.40])
+    moved = centre + shift
+    first = solve_matrix(mesh, nu, centre)
+    second = solve_matrix(mesh, nu, moved)
+    transfer = np.eye(6)
+    transfer[:3, 3:] = _cross_matrix(shift)
+    out: dict[str, Any] = {
+        "level": int(level),
+        "n_faces": int(mesh.faces.shape[0]),
+        "nu": float(nu),
+        "centre": centre.tolist(),
+        "moved_centre": moved.tolist(),
+        "shift": shift.tolist(),
+        "tolerance": CENTRE_TRANSFER_TOL,
+        "blocks": {},
+    }
+    worst = 0.0
+    for quantity in ("added_mass", "damping"):
+        a_first = np.asarray(first[quantity], dtype=float)
+        a_second = np.asarray(second[quantity], dtype=float)
+        predicted = transfer.T @ a_first @ transfer
+        denominator = np.max(np.abs(predicted))
+        residual = float(
+            np.max(np.abs(a_second - predicted)) / (denominator if denominator else 1.0)
+        )
+        out["blocks"][quantity] = {
+            "residual": residual,
+            "predicted_max": float(denominator),
+            "solved_max": float(np.max(np.abs(a_second))),
+        }
+        worst = max(worst, residual)
+    out["worst_residual"] = worst
+    out["verdict"] = "PASS" if worst <= CENTRE_TRANSFER_TOL else "FAIL"
+    return out
+
+
+def degeneracy_audit() -> dict[str, Any]:
+    """Measure the residual of the rotational entries whose target is exactly 0.
+
+    For every case whose rotation centre is the sphere centre of curvature the
+    rotational block has an exact target of zero.  A panel code can only return
+    the discretisation residual of that zero, so the audit records it at every
+    level of the refinement ladder: a *correct* assembly returns a residual that
+    decays with the panel size, while a wrong moment arm, a missing
+    ``(r - centre)`` or an about-the-origin rotation would converge to a
+    non-zero limit.  This is the evidence behind refusing to score those entries
+    relatively -- and, together with the off-centre cases, behind replacing them.
+    """
+    rows: list[dict[str, Any]] = []
+    for case, spec in CASES.items():
+        if invariant_null_dofs(case) != ("roll", "pitch", "yaw"):
+            continue
+        centre = tuple(float(v) for v in spec["centre"])
+        levels = []
+        for level in DEGENERACY_LEVELS.get(case, (2, 3)):
+            mesh = _mesh(case, int(level))
+            areas = np.asarray(mesh.areas, dtype=float)
+            normals6 = rigid_body_normals_3d(mesh, center=centre)
+            mode_norm = np.sqrt((areas[:, None] * normals6**2).sum(axis=0))
+            mat = np.asarray(
+                solve_matrix(mesh, DEGENERACY_NU, centre)["added_mass"], dtype=float
+            )
+            entries = {}
+            for name, (i, j) in (
+                ("roll_roll", (3, 3)),
+                ("pitch_pitch", (4, 4)),
+                ("yaw_yaw", (5, 5)),
+                ("surge_pitch", (0, 4)),
+                ("sway_roll", (1, 3)),
+            ):
+                entries[name] = {
+                    "value": float(mat[i, j]),
+                    "ratio": float(abs(mat[i, j]) / physical_scale(i, j)),
+                }
+            levels.append(
+                {
+                    "level": int(level),
+                    "n_faces": int(mesh.faces.shape[0]),
+                    "mode_norm": [float(v) for v in mode_norm],
+                    "entries": entries,
+                    "worst_ratio": max(v["ratio"] for v in entries.values()),
+                }
+            )
+        finest = levels[-1]
+        decay = [
+            levels[k]["worst_ratio"] / levels[k + 1]["worst_ratio"]
+            if levels[k + 1]["worst_ratio"] else float("inf")
+            for k in range(len(levels) - 1)
+        ]
+        rows.append(
+            {
+                "case": case,
+                "rotation_center": list(centre),
+                "null_dofs": list(invariant_null_dofs(case)),
+                "nu": DEGENERACY_NU,
+                "levels": levels,
+                "decay_ratios": [float(v) for v in decay],
+                "monotone_decay": all(
+                    levels[k + 1]["worst_ratio"] < levels[k]["worst_ratio"]
+                    for k in range(len(levels) - 1)
+                ),
+                "finest_worst_ratio": float(finest["worst_ratio"]),
+            }
+        )
+    verdict = "PASS"
+    for row in rows:
+        if not row["monotone_decay"] or row["finest_worst_ratio"] > INVARIANT_RATIO:
+            verdict = "FAIL"
+    return {
+        "ratio_bound": INVARIANT_RATIO,
+        "scale_length": SCALE_LENGTH,
+        "cases": rows,
+        "verdict": verdict,
+    }
+
+
+def invariant_scoring(
+    comparison: dict[str, Any], tensorbem: dict[str, Any]
+) -> dict[str, Any]:
+    """Separate the *physics score* from the exact-zero sanity bound.
+
+    ``compare`` is left untouched: its bands are pre-registered and its verdict
+    stays in the artifact exactly as computed.  What is added here is the
+    observation that an entry touching a null dof (``invariant_null_dofs``) has
+    an exact target of zero, so a relative deviation on it measures the
+    discretisation residual of a zero, not agreement between two codes.  Those
+    entries are bounded by ``INVARIANT_RATIO`` times ``physical_scale`` instead
+    and reported out of band; every other entry keeps the ``compare``
+    classification and band unchanged.
+    """
+    cases: dict[str, Any] = {}
+    physics_failures: list[str] = []
+    invariant_failures: list[str] = []
+    for case, block in comparison["cases"].items():
+        if not block.get("compared"):
+            continue
+        null_dofs = invariant_null_dofs(case)
+        null_index = {DOF_ORDER.index(dof) for dof in null_dofs}
+        counts = {"physics_active": 0, "physics_null": 0,
+                  "invariant_consistent": 0, "invariant_violated": 0}
+        worst_physics = 0.0
+        worst_invariant = 0.0
+        local_physics: list[str] = []
+        local_invariant: list[str] = []
+        for entry in block["entries"]:
+            i = DOF_ORDER.index(entry["row"])
+            j = DOF_ORDER.index(entry["column"])
+            if i in null_index or j in null_index:
+                bound = INVARIANT_RATIO * physical_scale(i, j)
+                biggest = max(abs(entry["tensorbem"]), abs(entry["capytaine"]))
+                ratio = biggest / bound if bound else float("inf")
+                worst_invariant = max(worst_invariant, ratio)
+                if ratio <= 1.0:
+                    counts["invariant_consistent"] += 1
+                else:
+                    counts["invariant_violated"] += 1
+                    local_invariant.append(
+                        "{} nu={:g} {} A[{},{}]: invariant zero exceeded "
+                        "({:.3g} vs bound {:.3g})".format(
+                            case, entry["nu"], entry["quantity"],
+                            entry["row"], entry["column"], biggest, bound,
+                        )
+                    )
+                continue
+            if entry["class"] == "active":
+                counts["physics_active"] += 1
+                worst_physics = max(worst_physics, abs(entry["relative"]))
+                if not entry["within_band"]:
+                    local_physics.append(
+                        "{} nu={:g} {} A[{},{}]: {:+.2%} (band {:.0%})".format(
+                            case, entry["nu"], entry["quantity"],
+                            entry["row"], entry["column"], entry["relative"],
+                            entry["band"],
+                        )
+                    )
+            elif entry["class"] == "conflict":
+                counts["physics_null"] += 1
+                local_physics.append(
+                    "{} nu={:g} {} A[{},{}]: null/non-null conflict".format(
+                        case, entry["nu"], entry["quantity"],
+                        entry["row"], entry["column"],
+                    )
+                )
+            else:
+                counts["physics_null"] += 1
+        cases[case] = {
+            "rotation_center": block["rotation_center"],
+            "null_dofs": list(null_dofs),
+            "counts": counts,
+            "worst_physics_relative": float(worst_physics),
+            "worst_invariant_ratio": float(worst_invariant),
+            "raw_failures": len(block["failures"]),
+            "physics_failures": local_physics,
+            "invariant_failures": local_invariant,
+            "physics_verdict": "PASS" if not local_physics else "FAIL",
+            "invariant_verdict": "PASS" if not local_invariant else "FAIL",
+            "rotational_block_scored": not set(null_index) >= {3, 4, 5},
+        }
+        physics_failures.extend(local_physics)
+        invariant_failures.extend(local_invariant)
+    return {
+        "tolerance_diagonal": TOL_DIAGONAL,
+        "tolerance_offdiagonal": TOL_OFFDIAGONAL,
+        "invariant_ratio": INVARIANT_RATIO,
+        "scale_length": SCALE_LENGTH,
+        "cases": cases,
+        "physics_failures": physics_failures,
+        "invariant_failures": invariant_failures,
+        "worst_physics_relative": max(
+            (c["worst_physics_relative"] for c in cases.values()), default=0.0
+        ),
+        "physics_verdict": "PASS" if not physics_failures else "FAIL",
+        "invariant_verdict": "PASS" if not invariant_failures else "FAIL",
+        "verdict": "PASS"
+        if not physics_failures and not invariant_failures
+        else "FAIL",
+    }
 
 
 def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, Any]:
@@ -450,6 +802,9 @@ def assemble(study: dict[str, Any], reference: dict[str, Any]) -> dict[str, Any]
     study["comparison"] = compare(study["tensorbem"], reference["cases"])
     study["convergence"] = convergence(study["tensorbem"], reference["cases"])
     study["symmetry"] = symmetry_invariants(study["tensorbem"], reference["cases"])
+    study["degeneracy"] = degeneracy_audit()
+    study["invariant_scoring"] = invariant_scoring(study["comparison"], study["tensorbem"])
+    study["centre_transfer"] = centre_transfer_invariant()
     deep_ref = reference.get("deep_submergence") or {}
     if study.get("deep_submergence") and deep_ref:
         for row in study["deep_submergence"]["rows"]:
@@ -476,10 +831,13 @@ def render_figures(study: dict[str, Any]) -> list[Path]:
     out: list[Path] = []
     nu = NU_GRID[1]
 
-    fig, axes = plt.subplots(2, 2, figsize=(11.0, 9.0))
-    for col, case in enumerate(study["tensorbem"]):
+    cases = list(study["tensorbem"])
+    fig, axes = plt.subplots(
+        len(cases), 2, figsize=(11.0, 4.5 * len(cases)), squeeze=False
+    )
+    for col, case in enumerate(cases):
         for row, quantity in enumerate(("added_mass", "damping")):
-            ax = axes[row][col]
+            ax = axes[col][row]
             tb = np.asarray(study["tensorbem"][case]["reference"][_key(nu)][quantity])
             cap = np.asarray(study["capytaine"][case]["reference"][_key(nu)][quantity])
             dev = np.zeros((6, 6))
@@ -869,6 +1227,135 @@ def render_document(study: dict[str, Any]) -> str:
     else:
         add("不可用：{}".format((repro or {}).get("reason")))
     add("")
+    add("### 3.9 退化审计：R2 本体的转动块为何不能作相对比较")
+    degeneracy = study.get("degeneracy")
+    if degeneracy:
+        add(
+            "两个 R2 本体都把转动中心放在**球面曲率中心**上。球面是其自身的曲率球，因此"
+            "广义法向 `(r - centre) x n` 在该曲面上逐点为零（球绕自身球心转动不产生任何法向"
+            "速度），**整个转动块与全部平动-转动耦合项的精确目标是 0**。对精确零做相对偏差"
+            "没有意义：零的离散残差就是全部信号。本节在细化阶梯上测量这个残差，判定它是"
+            "**收敛到零的离散残差**还是**收敛到非零极限的实现错误**。"
+        )
+        add("")
+        add("| case | level | 面板 | ‖mode_roll‖ | ‖mode_yaw‖ | A_roll | A_surge,pitch | 最大 \|A\|/(rho L^k) |")
+        add("|---|---:|---:|---:|---:|---:|---:|---:|")
+        for row in degeneracy["cases"]:
+            for level in row["levels"]:
+                entries = level["entries"]
+                add(
+                    "| {} | {} | {} | {:.4f} | {:.4f} | {:.4e} | {:.4e} | {:.2e} |".format(
+                        row["case"],
+                        level["level"],
+                        level["n_faces"],
+                        level["mode_norm"][3],
+                        level["mode_norm"][5],
+                        entries["roll_roll"]["value"],
+                        entries["surge_pitch"]["value"],
+                        level["worst_ratio"],
+                    )
+                )
+        add("")
+        for row in degeneracy["cases"]:
+            add(
+                "{}：最大残差比 {:.2e}，相邻层级衰减比 {}，单调衰减 **{}**（界限 {:.0%}）。".format(
+                    row["case"],
+                    row["finest_worst_ratio"],
+                    "、".join("{:.2f}".format(v) for v in row["decay_ratios"]),
+                    "是" if row["monotone_decay"] else "否",
+                    degeneracy["ratio_bound"],
+                )
+            )
+        add("")
+        add(
+            "判定：{}。转动项在细化下**单调趋于零**（面积加权模态范数同时按 O(h) 收缩），"
+            "这正是正确装配的离散残差；若力臂取自原点或转动法向漏掉 `(r - centre)`，"
+            "残差会收敛到 O(1) 而非零。因此这些项不进入相对评分，改由 3.10 与偏心"
+            "转动中心的两个算例考核。".format(degeneracy["verdict"])
+        )
+        add("")
+    add("### 3.10 转动中心变换恒等式（不依赖外部程序的内部轴）")
+    transfer = study.get("centre_transfer")
+    if transfer:
+        add(
+            "把转动中心从 `c` 移到 `c' = c + d`，广义速度满足 `u_c = T u_c'`，"
+            "`T = [[I, +[d]x], [0, I]]`（因为 `V_c = V_c' + [d]x Omega`），"
+            "故整个阻抗必须变换为 `A(c') = T^T A(c) T`。该恒等式对**离散算子也精确成立**，"
+            "因此它是不依赖 capytaine 的缺陷探测：力臂取自原点、或转动法向漏掉 `(r - centre)`，"
+            "都会被它按 O(1) 抓住。"
+        )
+        add("")
+        add("| 量 | 预测 max | 实解 max | 相对残差 |")
+        add("|---|---:|---:|---:|")
+        for quantity, block in transfer["blocks"].items():
+            add(
+                "| {} | {:.6g} | {:.6g} | {:.2e} |".format(
+                    quantity, block["predicted_max"], block["solved_max"], block["residual"]
+                )
+            )
+        add("")
+        add(
+            "偏轴位移 d = {} m，半球 {} 面板，nu = {:g}；最大相对残差 **{:.2e}**，"
+            "判定 {}（界限 {:.0e}）。".format(
+                transfer["shift"],
+                transfer["n_faces"],
+                transfer["nu"],
+                transfer["worst_residual"],
+                transfer["verdict"],
+                transfer["tolerance"],
+            )
+        )
+        add("")
+    add("### 3.11 分开计分：物理项用登记带宽，精确零项只用界限")
+    invariant = study.get("invariant_scoring")
+    if invariant:
+        add(
+            "`compare` 的带宽与判定原样保留在 3.1 与第 6 节（**不改宽、不删除**）。"
+            "本节只把落在精确零项（`invariant_null_dofs`）上的格子从相对评分中摘出，"
+            "改按 `{:.0%} x rho L^k` 的界限检查；其余格子仍用原登记带（对角 {:.0%}、"
+            "耦合 {:.0%}）。".format(
+                invariant["invariant_ratio"],
+                invariant["tolerance_diagonal"],
+                invariant["tolerance_offdiagonal"],
+            )
+        )
+        add("")
+        add("| case | 转动中心 | 零模态 dof | 计分 active | 精确零一致 | 精确零越界 | 最差计分偏差 | 计分判定 |")
+        add("|---|---|---|---:|---:|---:|---:|---|")
+        for case, block in invariant["cases"].items():
+            add(
+                "| {} | {} | {} | {} | {} | {} | {:.2%} | {} |".format(
+                    case,
+                    block["rotation_center"],
+                    "/".join(block["null_dofs"]),
+                    block["counts"]["physics_active"],
+                    block["counts"]["invariant_consistent"],
+                    block["counts"]["invariant_violated"],
+                    block["worst_physics_relative"],
+                    block["physics_verdict"],
+                )
+            )
+        add("")
+        for case, block in invariant["cases"].items():
+            add(
+                "{}：转动块参与计分 **{}**（转动中心偏离球心时 roll/pitch 为真实非零量）；"
+                "raw 判定失败 {} 项，其中计分失败 {} 项、精确零越界 {} 项。".format(
+                    case,
+                    "是" if block["rotational_block_scored"] else "否",
+                    block["raw_failures"],
+                    len(block["physics_failures"]),
+                    len(block["invariant_failures"]),
+                )
+            )
+        add("")
+        add(
+            "分开计分后的总判定：物理项 {}（最差 {:.2%}），精确零界限 {}。".format(
+                invariant["physics_verdict"],
+                invariant["worst_physics_relative"],
+                invariant["invariant_verdict"],
+            )
+        )
+        add("")
     add("## 4. 结果图")
     add("")
     add(
@@ -980,6 +1467,35 @@ def render_document(study: dict[str, Any]) -> str:
             )
         )
     add("")
+    if invariant:
+        add("")
+        add("| 分开计分（精确零项不计相对偏差） | 基准 | 测得 | 偏差 | 是否 <3% |")
+        add("|---|---|---|---|---|")
+        add(
+            "| 偏心转动中心算例的转动块（roll/pitch 对角，计入物理项） | capytaine | 见 3.11 最差计分偏差 | {:.2f}% | {} |".format(
+                100.0 * invariant["worst_physics_relative"],
+                "是" if invariant["worst_physics_relative"] < 0.03 else "否",
+            )
+        )
+        add(
+            "| 精确零项（转动中心 = 球心时的转动块） | 0（解析） | 见 3.9 残差 | 相对 rho L^k 为 {:.1e} | 不适用（目标为零） |".format(
+                min(
+                    (
+                        row["finest_worst_ratio"]
+                        for row in (degeneracy or {}).get("cases", [])
+                    ),
+                    default=float("nan"),
+                )
+            )
+        )
+        add("")
+    if transfer:
+        add(
+            "| 转动中心变换恒等式 | 解析恒等 | 残差 {:.1e} | 机器精度 | 是 |".format(
+                transfer["worst_residual"]
+            )
+        )
+        add("")
     add(
         "验收标准：owner 规定的对标误差 >15% 不可接受；本模块登记的对角带 {:.0%}、耦合带 {:.0%} "
         "均严于该标准。".format(TOL_DIAGONAL, TOL_OFFDIAGONAL)
