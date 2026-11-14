@@ -23,7 +23,9 @@ from .kernels import (
     REFERENCE_LENGTH,
     validate_clearance_factor,
     integrate_double_layer_panel,
+    integrate_double_layer_panel_gradient,
     integrate_single_layer_panel,
+    integrate_single_layer_panel_gradient,
     validate_reference_length,
 )
 
@@ -381,3 +383,174 @@ def evaluate_interior_field(
                 - double * result.boundary_values[j]
             )
     return values
+
+
+@dataclass(frozen=True)
+class ExteriorField:
+    """Potential and its gradient at points of the unbounded exterior domain."""
+
+    potential: FloatArray
+    gradient: FloatArray
+
+
+def _screen_exterior_targets(
+    mesh: PanelMesh,
+    points: FloatArray,
+    minimum_clearance_factor: float,
+) -> FloatArray:
+    """Validate exterior field-evaluation targets and return them as an array."""
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    targets = np.asarray(points, dtype=float)
+    if targets.ndim != 2 or targets.shape[1] != 2:
+        raise ValueError("points must have shape (M, 2)")
+    if not np.isfinite(targets).all():
+        raise ValueError("points must all be finite")
+    factor = validate_clearance_factor(minimum_clearance_factor)
+    h_max = float(np.max(mesh.lengths))
+    clearance = factor * h_max
+    distance = mesh.boundary_clearance(targets)
+    too_close = (distance <= 1.0e-12 * h_max) | (distance < clearance)
+    if np.any(too_close):
+        index = int(np.flatnonzero(too_close)[0])
+        raise ValueError(
+            "evaluation point is on or too close to the boundary; choose a "
+            "point strictly outside the polygon "
+            f"(first: index {index} at distance {distance[index]:.3e}, "
+            f"threshold {max(clearance, 1.0e-12 * h_max):.3e} = "
+            "minimum_clearance_factor * h_max)"
+        )
+    inside = mesh.contains_point(targets)
+    if np.any(inside):
+        index = int(np.flatnonzero(inside)[0])
+        raise ValueError(
+            "evaluation points must lie strictly outside the polygon; "
+            f"{int(np.sum(inside))} of {len(targets)} point(s) are inside "
+            f"(first: index {index} at {targets[index, :].tolist()}). The "
+            "exterior Green representation is not valid inside the body, and "
+            "it returns a finite but meaningless value there."
+        )
+    return targets
+
+
+def evaluate_exterior_field(
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
+) -> ExteriorField:
+    r"""Evaluate the exterior harmonic potential and its gradient at fluid points.
+
+    The exterior Green representation of a solution that decays at infinity is
+
+        u(x) = integral( G q_e ds ) + integral( u dG/dn_body ds ),
+
+    with ``q_e = grad(u) . n_e`` the fluid-domain normal derivative of the
+    result and ``n_e = -n_body`` (the fluid normal is opposite the polygon's
+    outward normal used by :func:`solve_laplace_exterior_dirichlet` /
+    :func:`solve_laplace_exterior_neumann`). The two signs follow from the
+    boundary equation ``(1/2 I - H) u = S q_e`` that those solvers invert.
+
+    Both panel integrals are evaluated in closed form, including their target
+    gradients, so no finite-difference step enters the reported velocity field.
+    The gradient is insensitive to ``reference_length``; the potential itself
+    is only defined up to a constant by an exterior Neumann solve, so callers
+    that need absolute potentials must use the Dirichlet formulation.
+
+    Targets strictly inside the polygon, on the boundary, or closer than
+    ``minimum_clearance_factor * h_max`` are refused: outside their domain the
+    panel integrals still return finite numbers, so an unscreened call would
+    look plausible and be wrong.
+
+    Accuracy window. The panel densities are piecewise constant, so the recovered
+    gradient degrades within a few panel lengths of the body even though every
+    panel integral is closed form. Case ``CASE-BEM-LAPLACE-CYLINDER`` measures
+    this (`benchmarks/verified/case_bem_laplace_cylinder/results.json`,
+    ``near_wall``): with the cylinder at ``a = 1`` the relative velocity error at
+    ``delta = 2 h_max`` stays below 1% on every ladder level, while at
+    ``delta = 0.1 h_max`` it reaches ~18% and does *not* shrink when the mesh is
+    refined (it is a property of the constant-density representation, not of the
+    linear solve). The default clearance factor stays zero for backward
+    compatibility, so a caller evaluating close to the body should pass
+    ``minimum_clearance_factor`` of order one to two.
+    """
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    if result.domain != "exterior":
+        raise ValueError(
+            "evaluate_exterior_field requires a result from an exterior solve "
+            "(solve_laplace_exterior_dirichlet or solve_laplace_exterior_neumann)"
+        )
+    n = mesh.panel_count
+    if (
+        result.normal_derivative.shape != (n,)
+        or result.boundary_values.shape != (n,)
+    ):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    targets = _screen_exterior_targets(mesh, points, minimum_clearance_factor)
+
+    lengths = mesh.lengths
+    tangents = mesh.vectors / lengths[:, None]
+    normals = mesh.normals
+    reference = result.reference_length
+    potential = np.zeros(len(targets), dtype=float)
+    gradient = np.zeros((len(targets), 2), dtype=float)
+    for i, target in enumerate(targets):
+        for j in range(n):
+            start = mesh.vertices[j]
+            tangent = tangents[j]
+            length = float(lengths[j])
+            single = integrate_single_layer_panel(
+                target, start, tangent, length, reference
+            )
+            double = integrate_double_layer_panel(
+                target, start, tangent, normals[j], length
+            )
+            potential[i] += single * result.normal_derivative[j] + double * result.boundary_values[j]
+            gradient[i] += (
+                integrate_single_layer_panel_gradient(
+                    target, start, tangent, length, reference
+                )
+                * result.normal_derivative[j]
+                + integrate_double_layer_panel_gradient(
+                    target, start, tangent, normals[j], length
+                )
+                * result.boundary_values[j]
+            )
+    return ExteriorField(potential=potential, gradient=gradient)
+
+
+def evaluate_exterior_surface_velocity(
+    mesh: PanelMesh, result: LaplaceDirichletResult
+) -> FloatArray:
+    r"""Fluid-side velocity ``grad(u)`` at panel midpoints of an exterior solve.
+
+    The normal component is the solved ``q_e``. The tangential component is the
+    arc-length derivative ``d(u)/ds`` of the panel-midpoint trace, taken with a
+    periodic central difference on the closed boundary. For a smooth periodic
+    trace that difference is spectrally accurate, so the surface velocity is not
+    limited by a first-order one-sided stencil.
+
+    The polygon's counter-clockwise tangent is ``t`` and the panel spacing
+    ``ds`` varies, so the difference is centred in arc length rather than in
+    panel index.
+    """
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    if result.domain != "exterior":
+        raise ValueError(
+            "evaluate_exterior_surface_velocity requires a result from an "
+            "exterior solve"
+        )
+    n = mesh.panel_count
+    values = np.asarray(result.boundary_values, dtype=float)
+    flux = np.asarray(result.normal_derivative, dtype=float)
+    if values.shape != (n,) or flux.shape != (n,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    lengths = mesh.lengths
+    tangents = mesh.vectors / lengths[:, None]
+    # Arc-length abscissa of the panel midpoints (midpoints are equally spaced
+    # in arc length for an inscribed polygon of a circle, but not in general).
+    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
+    derivative = (np.roll(values, -1) - np.roll(values, 1)) / spacing
+    return flux[:, None] * (-mesh.normals) + derivative[:, None] * tangents

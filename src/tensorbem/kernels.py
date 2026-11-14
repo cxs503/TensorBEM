@@ -153,3 +153,105 @@ def integrate_double_layer_panel(
     return math.copysign(1.0, eta) * (
         math.atan(z1 / h) - math.atan(z0 / h)
     ) / _TWO_PI
+
+
+def _panel_local_coordinates(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+) -> tuple[float, float]:
+    """Return ``(xi, eta)``: target coordinates along and across the panel."""
+    x = np.asarray(target, dtype=float)
+    a = np.asarray(start, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    n = np.asarray(normal, dtype=float)
+    if any(v.shape != (2,) for v in (x, a, t, n)):
+        raise ValueError("target, start, tangent, and normal must each have shape (2,)")
+    if not all(np.isfinite(v).all() for v in (x, a, t, n)):
+        raise ValueError("panel integral inputs must be finite")
+    delta = x - a
+    return float(np.dot(delta, t)), float(np.dot(delta, n))
+
+
+def _validate_panel_length(length: float) -> float:
+    if isinstance(length, (bool, np.bool_)) or not math.isfinite(float(length)):
+        raise ValueError("length must be a positive finite number")
+    value = float(length)
+    if value <= 0.0:
+        raise ValueError("length must be a positive finite number")
+    return value
+
+
+def integrate_single_layer_panel_gradient(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
+) -> FloatArray:
+    r"""Gradient of :func:`integrate_single_layer_panel` with respect to the target.
+
+    With ``xi``/``eta`` the target coordinates along the panel tangent and its
+    left normal, the closed form is
+
+        d/dx integral G ds = -(1/2 pi) * [
+            t * (1/2) log((xi^2 + eta^2) / ((xi - L)^2 + eta^2))
+            + n * (atan(z1/eta) - atan(z0/eta)) ],
+
+    with ``z0 = -xi``, ``z1 = L - xi``. The reference-length shift of the
+    potential is constant, so it drops out of the gradient.
+    """
+    length = _validate_panel_length(length)
+    validate_reference_length(reference_length)
+    t = np.asarray(tangent, dtype=float)
+    n = np.array([-t[1], t[0]], dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    z0, z1 = -xi, length - xi
+    along = 0.5 * math.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
+    if eta == 0.0:
+        # Target on the panel's line: the integral of eta/rho^2 vanishes off
+        # the panel and is undefined on it, so the caller must stay clear.
+        across = 0.0
+    else:
+        across = math.atan(z1 / eta) - math.atan(z0 / eta)
+    return -(t * along + n * across) / _TWO_PI
+
+
+def integrate_double_layer_panel_gradient(
+    target: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+    length: float,
+) -> FloatArray:
+    r"""Gradient of :func:`integrate_double_layer_panel` with respect to the target.
+
+    Differentiating the constant-panel kernel ``eta/(2*pi*rho^2)`` (the panel
+    normal ``n`` is fixed, the target moves) gives, with ``u = xi - s``,
+
+        d/dx integral dG/dn ds = (1/2 pi) [ A n - 2 eta B t ],
+        A = integral (u^2 - eta^2)/(u^2 + eta^2)^2 ds
+          = -xi/(xi^2 + eta^2) - z1/(z1^2 + eta^2),
+        B = integral u/(u^2 + eta^2)^2 ds
+          = -1/(2 (xi^2 + eta^2)) + 1/(2 (z1^2 + eta^2)).
+
+    ``B`` and ``A`` stay finite for a target on the panel's line (``eta = 0``)
+    as long as it is not at an endpoint; that case is common for collinear
+    panels of a polygonal boundary.
+    """
+    length = _validate_panel_length(length)
+    n = np.asarray(normal, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    xi, eta = _panel_local_coordinates(target, start, t, n)
+    z1 = length - xi
+    r0 = xi * xi + eta * eta
+    r1 = z1 * z1 + eta * eta
+    if r0 <= 1.0e-28 or r1 <= 1.0e-28:
+        raise ValueError(
+            "double-layer gradient is singular at a panel endpoint; "
+            "keep the target a finite distance from the boundary"
+        )
+    a_term = -xi / r0 - z1 / r1
+    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
+    return (a_term * n - 2.0 * eta * b_term * t) / _TWO_PI
