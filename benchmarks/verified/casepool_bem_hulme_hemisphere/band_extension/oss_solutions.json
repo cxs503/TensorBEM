@@ -1,0 +1,10 @@
+{
+ "repo": "TensorBEM",
+ "feature_slug": "CASE-BEM-HULME-HEMISPHERE",
+ "tag": "band-extension|irregular-frequency|chief-vs-lid|method-lineage",
+ "method": "求解：深水 Kelvin/Havelock Green 函数 BIE，常数面元，内部 CHIEF 空场方程抑制不规则频率；参考：Hulme(1982) 球谐波-free 多极级数（spherical wave-free potential，∂ψ/∂z−Kψ=0，奇次 Legendre 谐波投影，Kochin/Haskind 得激励力）；独立第三方轴：capytaine 3.1.dev0（Delhommeau Green 函数 + Hess-Smith 面元，不规则频率用刚盖 lid 而非 CHIEF）。选型结论：保留 Kelvin+CHIEF 主路线（薄体、自由面无限域无需建盖，面元数 1024 即达 <5%），把 capytaine 仅用作独立轴，不引入 lid 方案（lid 会改变物体拓扑并使 A_wp 前置校验失去意义）。本轮把验证频带从 ka≤2 扩到 ka≤4 并跨 ka=2.58 首个不规则频率。",
+ "files": "src/tensorbem/benchmarks/hulme_hemisphere_case.py（单元/判据/参考，771 行）；src/tensorbem/analytic.py:hulme_hemisphere_radiation（多极参考）；src/tensorbem/free_surface_solver3d.py（BIE 装配与辐射/绕射求解）；src/tensorbem/geometry3d.py:hemisphere_hull_mesh（网格，水线顶点严格在 z=0）；benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension.py（本轮新增：频带扩展研究 + E1–E5 判据 + 渲染）；tests/test_hulme_band_extension.py（本轮新增：9 项，含判据可翻 FAIL 的反向测试）；scripts/capytaine_hulme_excitation_ref.py（capytaine 独立轴生产脚本）。",
+ "conventions": "时间约定 exp(−iωt)；A/(ρ∇)、B/(ρω∇)，∇=2πa³/3 精确值（不用网格体积）；力按 ρgAa² 归一，波幅 A=1 m；ka=k·a=ν·a，ω√(a/g)=√ka；capytaine ≥3.0 的 DiffractionResult.forces 只含绕射部分，须另加 Froude-Krylov 力才是总激励力（旧版陷阱，已记账）。",
+ "transfer": "迁移到其他浮体算例的四步：(1) 用 geometry*_hull_mesh 出网格并先验证 Cb/∇ 与 A_wp 前置（<2%），否则系数表不可读；(2) 参考解优先取半解析多极/级数解并做截断阶梯（96/144/192，要求最细两档漂移×20 < 容差）；(3) 求解侧一律用chief_points='auto' 并单独跑 chief=off 对照臂，把不规则频率频点纳入扫描而不是绕开；(4) 独立轴用 capytaine 同几何同归一化三路对照，注意 FK 项。频带扩展脚本可按 KA_EXTENDED/MESH_EXT 常量改成其它锚点，判据函数 evaluate() 与渲染器可直接复用。",
+ "evidence": "artifacts/hulme_band_extension/results.json（扩展带 ka 2.2–4.0，1024 面元，带内最大 |rel err| = 104.1616%；判据 E1–E5 见 verdict.criteria）；artifacts/hulme_band_extension/report.md / figure.png；docs/hulme_band_extension.md；benchmarks/verified/casepool_bem_hulme_hemisphere/results.json（已入库算例 ka≤2，总判定 + G1 1.1480e-02）；docs/case_bem_hulme_independent_axis.md（capytaine 三路对照，带内最差 3.36%）。"
+}

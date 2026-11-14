@@ -22,7 +22,10 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT = ROOT / "artifacts" / "hulme_band_extension" / "results.json"
+COMMITTED = (ROOT / "benchmarks" / "verified" / "casepool_bem_hulme_hemisphere"
+             / "band_extension" / "results.json")
+LOCAL = ROOT / "artifacts" / "hulme_band_extension" / "results.json"
+ARTIFACT = COMMITTED if COMMITTED.exists() else LOCAL
 CASE_DIR = ROOT / "benchmarks" / "verified" / "casepool_bem_hulme_hemisphere"
 if str(CASE_DIR) not in sys.path:
     sys.path.insert(0, str(CASE_DIR))

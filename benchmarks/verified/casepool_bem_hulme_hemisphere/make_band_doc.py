@@ -236,11 +236,13 @@ def render(data: dict) -> str:
     L.append("")
     L.append("**工件**：")
     L.append("")
-    L.append("- `artifacts/hulme_band_extension/results.json`（cells + 参考阶梯 + 判据）")
-    L.append("- `artifacts/hulme_band_extension/report.md`（程序渲染的数表）")
-    L.append("- `artifacts/hulme_band_extension/figure.png`（系数对照 / 误差 / 条件数）")
-    L.append("- `artifacts/hulme_band_extension/cells/*.json`（逐单元原始输出）")
-    L.append("- `artifacts/hulme_band_extension/oss_solutions.json`（方法选型与迁移方案，"
+    L.append("- `benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension/"
+             "results.json`（cells + 参考阶梯 + 判据；`artifacts/` 被 git-ignore，"
+             "故工件直接落在算例目录下）")
+    L.append("- `.../band_extension/report.md`（程序渲染的数表）")
+    L.append("- `.../band_extension/figure.png`（系数对照 / 误差 / 条件数）")
+    L.append("- `.../band_extension/cells/*.json`（逐单元原始输出）")
+    L.append("- `.../band_extension/oss_solutions.json`（方法选型与迁移方案，"
              "`feature_slug = CASE-BEM-HULME-HEMISPHERE`）")
     L.append("")
     L.append("```bash")
