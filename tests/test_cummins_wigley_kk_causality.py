@@ -188,3 +188,135 @@ def test_heave_resonance_helper_reports_absence_honestly():
     # C33 > w^2 (m + A) over the whole band, so no crossing exists
     assert band["inside_band"] is False
     assert "error" in band
+
+# ---------------------------------------------------------------------------
+# Round 4: the closure band (extended tails + a local resonance cluster) and
+# the second Kramers-Kronig direction.  These tests never run a panel solve:
+# they pin the *grid design* and the *estimator's* behaviour on analytic data,
+# which is what decides whether G3/G4 can answer at all.
+# ---------------------------------------------------------------------------
+
+RESONANCE_MEDIUM = 7.378504598323515  # round-2 medium level, 400 quads
+
+
+def test_closure_grid_spans_both_kramers_kronig_tails():
+    """The closure band must contain the round-2 nodes and both omitted tails."""
+    grid = case.closure_grid()
+    assert list(grid) == sorted(grid)
+    assert grid[0] == 0.10 and grid[-1] == 20.0
+    # every predeclared node survives, so the narrow-band A/B control is a
+    # strict subset of the same run (no re-solve, no interpolation)
+    for w in case.OMEGA_GRID:
+        assert round(w, 9) in {round(v, 9) for v in grid}
+    for w in case.EXTENDED_GRID:
+        assert round(w, 9) in {round(v, 9) for v in grid}
+    assert 1.0 in grid  # G1's reference frequency
+
+
+def test_closure_grid_cluster_resolves_the_half_power_width():
+    """G4 needs >= 5 samples per half-power width (2*zeta*omega_n ~ 0.074 rad/s)."""
+    zeta_declared = 0.005  # round-2 free-decay estimate, the design assumption
+    width = 2.0 * zeta_declared * RESONANCE_MEDIUM
+    grid = np.asarray(case.closure_grid(RESONANCE_MEDIUM), dtype=float)
+    inside = grid[np.abs(grid - RESONANCE_MEDIUM) <= case.RESONANCE_HALF_WIDTH + 1e-9]
+    assert inside.size >= 40
+    assert np.max(np.diff(inside)) <= 2.0 * case.RESONANCE_STEP + 1e-12
+    assert width / case.RESONANCE_STEP >= 5.0
+
+
+def test_closure_grid_rejects_a_missing_resonance():
+    for bad in (0.0, -1.0, float("nan"), float("inf")):
+        with pytest.raises(ValueError):
+            case.closure_grid(bad)
+
+
+def test_kk_directions_agree_on_an_exact_causal_pair():
+    """Both Hilbert directions must be small on the exact pair (midpoint error only).
+
+    The residual is evaluated at grid midpoints against the mean of the bracketing
+    nodes, so it carries an O(h^2) interpolation term of its own, and the damping
+    direction additionally inherits ``kkr_damping``'s tail fit.  On a 400-node grid
+    over five decades the measured floor is ~1e-3 (A from B) and ~6e-2 (B from A);
+    both are asserted below the 10 % gate so the estimator is demonstrably good
+    enough to judge the case, and the floor is documented rather than hidden.
+    """
+    omegas = np.geomspace(0.01, 12.5, 400)
+    _, added, damping = exact_pair(omegas=omegas)
+    directions = case.kk_directions(sweep_of(omegas, added, damping), 2)
+    assert directions["added_from_damping"]["max"] < 0.02
+    assert directions["damping_from_added"]["max"] < 0.10
+    exact_floor = directions["damping_from_added"]["max"]
+
+
+def test_kk_directions_have_power_against_a_ten_percent_inconsistency():
+    """A pair built from two 10 %-different kernels must read ~10 % (not vacuous).
+
+    ``A`` comes from ``c = 2.0`` and ``B`` from ``c = 2.2``, i.e. the two halves of
+    the Hilbert pair disagree by 10 % in amplitude by construction.
+    """
+    omegas = np.geomspace(0.01, 12.5, 400)
+    _, added, _ = exact_pair(c=2.0, omegas=omegas)
+    _, _, damping = exact_pair(c=2.2, omegas=omegas)
+    directions = case.kk_directions(sweep_of(omegas, added, damping), 2)
+    assert 0.08 <= directions["added_from_damping"]["max"] <= 0.12
+    # the damping direction carries a ~6 % discretisation/tail-fit floor of its own
+    # (see the exact-pair test), so the injected 10 % must still show up on top of
+    # it: the reading has to grow by the injected amount, not by a rounding.
+    assert 0.12 <= directions["damping_from_added"]["max"] <= 0.18
+
+
+def _lorentzian_sweep(omega, *, zeta=0.005, resonance=RESONANCE_MEDIUM):
+    """Analytic heave-like sweep: constant added mass, Lorentzian damping peak.
+
+    The peak width is ``2 zeta omega_n``; the added mass is chosen so the
+    undamped resonance sits at ``resonance``.  The model is analytic, so the
+    *same* estimator applied to a very fine sampling is the reference.
+    """
+    ref = case.__dict__["wigley3_hydrostatic_reference"]()
+    mass = float(ref["volume"]) * case.DENSITY
+    restoring = float(ref["C33"])
+    added = restoring / resonance**2 - mass
+    gamma = zeta * resonance
+    peak = 2.0 * zeta * (mass + added) * resonance
+    omega = np.asarray(omega, dtype=float)
+    damping = peak * gamma**2 / ((omega - resonance) ** 2 + gamma**2) + 1e-3
+    return mass, restoring, np.full_like(omega, added), damping
+
+
+def test_half_power_zeta_is_decidable_on_the_closure_grid_and_not_on_a_coarse_one():
+    """Round-3's G4 defect, made into a controlled experiment.
+
+    The same estimator is handed the same analytic resonance sampled two ways:
+    on the closure grid (0.0125 rad/s across the peak) and on a 0.5 rad/s global
+    grid.  The closure grid reproduces the fine-sampling reference to under 3 %;
+    the coarse grid is off by tens of percent *silently* -- which is exactly why
+    G4 was undecidable on the round-2 band and why the cluster is part of the
+    band design rather than a convenience.
+    """
+    fine = np.linspace(RESONANCE_MEDIUM - 0.5, RESONANCE_MEDIUM + 0.5, 20001)
+    mass, restoring, added_f, damping_f = _lorentzian_sweep(fine)
+    reference = td.half_power_damping(fine, added_f, damping_f,
+                                      mass=mass, restoring=restoring)
+    zeta_ref = float(reference["zeta"])
+    assert zeta_ref > 0.0
+
+    closure = np.asarray(case.closure_grid(RESONANCE_MEDIUM), dtype=float)
+    coarse = np.array([0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 6.5, 7.0,
+                       7.4, 7.5, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0])
+
+    def zeta_on(grid):
+        _, _, added, damping = _lorentzian_sweep(grid)
+        dense = case.decay_response_grid(grid)
+        return float(td.half_power_damping(
+            dense, np.interp(dense, grid, added), np.interp(dense, grid, damping),
+            mass=mass, restoring=restoring)["zeta"])
+
+    assert abs(zeta_on(closure) - zeta_ref) / zeta_ref < 0.03
+    assert abs(zeta_on(coarse) - zeta_ref) / zeta_ref > 0.20
+
+
+def test_decay_response_grid_is_fine_enough_for_the_peak():
+    grid = np.asarray(case.closure_grid(RESONANCE_MEDIUM), dtype=float)
+    dense = case.decay_response_grid(grid)
+    assert np.max(np.diff(dense)) <= case.DENSE_STEP + 1e-12
+    assert dense[0] == grid[0] and dense[-1] == grid[-1]
