@@ -1,0 +1,7 @@
+{
+  "case_id": "tbem-modeM96-sub3-h20-ka1",
+  "error": "Traceback (most recent call last):\n  File \"/data/test002/jobs/cj2681/repo/benchmarks/verified/bem_finite_depth_capytaine_xval/run_cases.py\", line 158, in tbem_case\n    payload = _tbem_solve(case[\"ka\"], case[\"depth_ratio\"], case[\"subdivisions\"], case[\"mode_count\"])\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/test002/jobs/cj2681/repo/benchmarks/verified/bem_finite_depth_capytaine_xval/run_cases.py\", line 114, in _tbem_solve\n    res = solve_radiation_finite_depth_3d(\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/test002/jobs/cj2681/repo/src/tensorbem/finite_depth_solver3d.py\", line 510, in solve_radiation_finite_depth_3d\n    else assemble_finite_depth_operators_3d(\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/data/test002/jobs/cj2681/repo/src/tensorbem/finite_depth_solver3d.py\", line 452, in assemble_finite_depth_operators_3d\n    single, double = _smooth_remainder(\n                     ^^^^^^^^^^^^^^^^^^\nnumpy.linalg.LinAlgError: Eigenvalues did not converge\n",
+  "finished_utc": "2026-11-14T12:55:44+00:00",
+  "seconds": 3.059,
+  "tool": "TensorBEM"
+}

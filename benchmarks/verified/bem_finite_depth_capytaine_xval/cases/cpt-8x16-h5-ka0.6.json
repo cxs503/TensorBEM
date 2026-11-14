@@ -1,0 +1,16 @@
+{
+  "added_mass_heave": 2359.6604041090973,
+  "case_id": "cpt-8x16-h5-ka0.6",
+  "damping_heave": 942.3829130510208,
+  "depth": 5.0,
+  "depth_ratio": 5.0,
+  "finished_utc": "2026-11-14T13:23:38+00:00",
+  "ka": 0.6,
+  "n_faces": 128,
+  "resolution": [
+    8,
+    16
+  ],
+  "seconds": 1.927,
+  "tool": "capytaine"
+}
