@@ -90,6 +90,7 @@ __all__ = [
     "Sweep",
     "solve_sweep",
     "geometry_gate",
+    "solver_validity_gate",
     "panel_adequacy_gate",
     "kk_gate",
     "round_trip_gate",
@@ -158,6 +159,7 @@ TOLERANCES = {
     "geometry": 0.01,     # Cb / L/B / B/T contract
     "volume": 0.02,       # meshed displaced volume vs (4/9)LBT
     "panel_kh": 1.0,      # k*sqrt(max panel area) at the top of the band
+    "solver_residual": 1.0e-2,  # gate C0: the BIE solve must actually have converged
     "negative_control": 0.10,
 }
 
@@ -466,6 +468,49 @@ def geometry_gate() -> dict[str, Any]:
     }
 
 
+def solver_validity_gate(sweep: Sweep) -> dict[str, Any]:
+    """C0: a sweep whose BIE solves did not converge cannot be judged.
+
+    The gates below read ``A``/``B`` as data.  If the linear system behind them
+    was solved badly (rank-deficient LAPACK path, corrupted operator assembly),
+    ``B`` can come out *negative* -- energy created instead of radiated -- and
+    every downstream gate would then score garbage: C3 would report a closure
+    residual that is a property of the failed solve, and C5 would either be
+    undecidable or, worse, agree with itself.  This gate checks the residual the
+    solver already reports and refuses the sweep if it is not small.
+
+    It was added after a run of this same case on a cluster node returned
+    ``max solver residual = 1.25`` and ``min B = -129.9`` (negative damping) on
+    the *same* mesh, band and node count that give ``1.1e-3`` and ``B > 0``
+    locally; without C0 the case verdict silently followed the machine.
+    """
+    residual = np.asarray(sweep.solver_relative_residual, dtype=float)
+    worst = float(np.max(residual)) if residual.size else float("inf")
+    damper = np.asarray(sweep.damping, dtype=float)
+    off_diagonal = damper - np.eye(6) * damper
+    min_damping = float(np.min(np.diagonal(damper, axis1=-2, axis2=-1)))
+    tolerance = TOLERANCES["solver_residual"]
+    passed = bool(worst <= tolerance and min_damping >= 0.0)
+    return {
+        "id": "C0",
+        "title": "solver validity: converged BIE solves and non-negative damping",
+        "threshold": f"max solver relative residual <= {tolerance:g} and min B >= 0",
+        "passed": passed,
+        "values": {
+            "mesh": sweep.label,
+            "solver_relative_residual_max": worst,
+            "solver_relative_residual_median": float(np.median(residual)) if residual.size else float("nan"),
+            "min_radiation_damping": min_damping,
+            "n_frequencies": int(sweep.omega.size),
+            "note": (
+                "C2..C6 read A/B as data; this gate is the precondition that the "
+                "data is a solution at all. A FAIL here voids the other gates "
+                "instead of reinterpreting them."
+            ),
+        },
+    }
+
+
 def panel_adequacy_gate(sweep: Sweep) -> dict[str, Any]:
     """C2: the top of the band must still be resolved by the panel mesh."""
     kh = float(sweep.omega[-1]) ** 2 / GRAVITY * sweep.max_panel_scale
@@ -670,6 +715,30 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
     """C5: time-domain Cummins free decay vs the frequency-domain damping ratio."""
     mass = sweep.added_mass[:, dof, dof]
     damper = sweep.damping[:, dof, dof]
+    min_damping = float(np.min(damper)) if damper.size else float("nan")
+    if min_damping < 0.0:
+        # ``cummins_free_decay`` (rightly) refuses to build a kernel from a
+        # negative damping.  Raising here used to abort the whole case run after
+        # the sweep was already on disk, so the artifact directory kept the
+        # *previous* JSON while the .npz files were overwritten -- a silent
+        # provenance break.  An undecidable gate is the honest outcome; gate C0
+        # records the reason.
+        return {
+            "id": "C5",
+            "title": f"Cummins free decay vs frequency-domain damping ratio ({DOF_NAMES[dof]})",
+            "threshold": f"|zeta_decay - zeta_fd|/zeta_fd <= {TOLERANCES['free_decay']:.0%}",
+            "passed": False,
+            "values": {
+                "dof": int(dof),
+                "dof_name": DOF_NAMES[dof],
+                "status": (
+                    "undecidable: non-physical negative radiation damping in the sweep "
+                    f"(min B = {min_damping:.4g} N s/m); see gate C0"
+                ),
+                "min_radiation_damping": min_damping,
+                "band_rad_s": [float(sweep.omega[0]), float(sweep.omega[-1])],
+            },
+        }
     closure = kk_added_mass_closure(sweep.omega, mass, damper)
     added_mass_inf = float(closure.added_mass_inf)
     tau = np.arange(0.0, TAU_MAX + 0.5 * DT, DT)
@@ -908,6 +977,7 @@ def gates_from_artifact(
     gates: dict[str, Any] = {}
     if include_geometry:
         gates["C1"] = geometry_gate()
+    gates["C0"] = solver_validity_gate(sweep)
     gates["C2"] = panel_adequacy_gate(sweep)
     gates["C3"] = kk_gate(sweep)
     gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
@@ -984,16 +1054,40 @@ def run_case(
             save_sweep(sweep, out_path / f"sweep_{label}.npz")
 
     production = sweeps[meshes[-1]]
-    results["gates"]["C2"] = panel_adequacy_gate(production)
-    results["gates"]["C3"] = kk_gate(production)
+    results["gates"]["C0"] = solver_validity_gate(production)
     if len(meshes) > 1:
-        results["gates"]["C3_coarse"] = kk_gate(sweeps[meshes[0]])
-    results["gates"]["C4"] = round_trip_gate(production, dof=int(dof_free_decay))
-    results["gates"]["C5"] = free_decay_gate(production, dof=int(dof_free_decay))
-    results["gates"]["C6a"] = negative_control_gate(production, dof=int(dof_free_decay))
-    results["gates"]["C6b"] = kk_gate(production, corrupt=True)
-    if len(meshes) > 1:
-        results["mesh_convergence"] = _mesh_convergence(sweeps[meshes[0]], production)
+        results["gates"]["C0_coarse"] = solver_validity_gate(sweeps[meshes[0]])
+    if not results["gates"]["C0"]["passed"]:
+        # A sweep that failed C0 is not evidence about the physics, so C2..C6
+        # are *voided* rather than evaluated: scoring them would label a failed
+        # linear solve "non-causal" (C3) or "undecidable" (C5) and the artifact
+        # would hide the real defect behind an ordinary-looking FAIL.
+        for key in ("C2", "C3", "C4", "C5", "C6a", "C6b"):
+            results["gates"][key] = {
+                "id": key,
+                "title": f"{key} voided: the sweep failed gate C0",
+                "threshold": "not evaluated",
+                "passed": False,
+                "voided": True,
+                "values": {
+                    "voided_by": "C0",
+                    "note": (
+                        "the BIE solve that produced A/B did not converge or gave "
+                        "negative damping; re-run the sweep on a validating node"
+                    ),
+                },
+            }
+    else:
+        results["gates"]["C2"] = panel_adequacy_gate(production)
+        results["gates"]["C3"] = kk_gate(production)
+        if len(meshes) > 1:
+            results["gates"]["C3_coarse"] = kk_gate(sweeps[meshes[0]])
+        results["gates"]["C4"] = round_trip_gate(production, dof=int(dof_free_decay))
+        results["gates"]["C5"] = free_decay_gate(production, dof=int(dof_free_decay))
+        results["gates"]["C6a"] = negative_control_gate(production, dof=int(dof_free_decay))
+        results["gates"]["C6b"] = kk_gate(production, corrupt=True)
+        if len(meshes) > 1:
+            results["mesh_convergence"] = _mesh_convergence(sweeps[meshes[0]], production)
 
     results["verdict"] = case_verdict(results["gates"])
 
