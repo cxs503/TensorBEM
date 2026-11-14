@@ -90,7 +90,11 @@ Confounders / controls
 Reproduce
 ---------
     python benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension.py \\
-        --out artifacts/hulme_band_extension --parallel 7
+        --parallel 7
+
+The default output directory is ``band_extension/`` next to this file, which is
+committed (``artifacts/`` is git-ignored, so a study that only wrote there left
+no evidence behind -- that is how round 2 ended without numbers).
 
 ``--parallel`` fans the deterministic cell list over worker processes; each
 worker writes ``cells/<name>.json`` and the merge step is byte-stable.
@@ -101,7 +105,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import multiprocessing as mp
+import os
 import platform
 import subprocess
 import sys
@@ -402,6 +406,45 @@ def write_figure(out_dir: Path, cells: list[dict[str, Any]]) -> Path:
 
 
 # --- driver ----------------------------------------------------------------
+def run_cells(todo: Sequence[dict[str, Any]], spec_dir: Path, cells_dir: Path,
+              parallel: int) -> None:
+    """Fan the cells out over *separate interpreter processes*, not a fork pool.
+
+    A ``multiprocessing`` fork pool inherits the parent's already-warm BLAS
+    thread pool and hangs at zero CPU inside the first BEM assembly (measured
+    once, see docs/hulme_band_extension.md 6.1).  Each cell is therefore run by
+    a fresh ``python band_extension.py --cell-name ...`` child with the BLAS
+    thread count pinned to 1, which is both deadlock-free and deterministic:
+    a cell's numbers never depend on how many siblings run next to it.
+    """
+    env = dict(os.environ)
+    for var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+        env[var] = "1"
+    script = Path(__file__).resolve()
+    queue = list(todo)
+    running: list[tuple[dict[str, Any], subprocess.Popen]] = []
+    failed: list[tuple[str, int]] = []
+    while queue or running:
+        while queue and len(running) < max(1, parallel):
+            spec = queue.pop(0)
+            cmd = [sys.executable, str(script), "--cell-name", cell_name(spec),
+                   "--cells-dir", str(cells_dir), "--specs-dir", str(spec_dir)]
+            running.append((spec, subprocess.Popen(cmd, cwd=str(REPO), env=env)))
+        still: list[tuple[dict[str, Any], subprocess.Popen]] = []
+        for spec, proc in running:
+            rc = proc.poll()
+            if rc is None:
+                still.append((spec, proc))
+            elif rc != 0:
+                failed.append((cell_name(spec), rc))
+        running = still
+        if running:
+            time.sleep(1.0)
+    if failed:
+        raise SystemExit(f"cells failed: {failed}")
+
+
 def build(out_dir: Path, parallel: int) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     cells_dir = out_dir / "cells"
@@ -410,14 +453,10 @@ def build(out_dir: Path, parallel: int) -> int:
     todo = [s for s in specs if not (cells_dir / f"{cell_name(s)}.json").exists()]
     spec_dir = out_dir / "specs"
     spec_dir.mkdir(exist_ok=True)
-    for s in todo:
+    for s in specs:
         (spec_dir / f"{cell_name(s)}.json").write_text(json.dumps(s))
     if todo:
-        ctx = mp.get_context("fork")
-        with ctx.Pool(min(max(1, parallel), len(todo))) as pool:
-            pool.starmap(_worker,
-                         [(str(spec_dir / f"{cell_name(s)}.json"), str(cells_dir))
-                          for s in todo])
+        run_cells(todo, spec_dir, cells_dir, parallel)
     cells = [json.loads(p.read_text()) for p in sorted(cells_dir.glob("*.json"))]
     ladders = {f"{ka:g}": reference_ladder(ka)
                for ka in (max(KA_EXTENDED), 2.58)}
@@ -452,10 +491,18 @@ def _git_head() -> str | None:
 def main(argv: Sequence[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("--out", default="artifacts/hulme_band_extension")
+    p.add_argument("--out", default=str(Path(__file__).resolve().parent
+                                        / "band_extension"))
     p.add_argument("--parallel", type=int, default=4)
     p.add_argument("--spec", action="store_true", help="print the cell list and exit")
+    p.add_argument("--cell-name", default=None,
+                   help="compute exactly one cell (used by the parent fan-out)")
+    p.add_argument("--cells-dir", default=None)
+    p.add_argument("--specs-dir", default=None)
     args = p.parse_args(argv)
+    if args.cell_name:
+        spec_path = Path(args.specs_dir) / f"{args.cell_name}.json"
+        return _worker(str(spec_path), str(Path(args.cells_dir).resolve()))
     if args.spec:
         print(json.dumps({"cells": cell_spec(), "ka_extended": list(KA_EXTENDED),
                           "gate": E_GATE, "geometry_gate": GEOM_GATE}, indent=2))
