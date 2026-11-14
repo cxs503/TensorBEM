@@ -1,0 +1,153 @@
+{
+  "base_spectrum": {
+    "heave_rel_error": 1.22790947101177e-16,
+    "labels": [
+      "heave",
+      "pitch",
+      "roll"
+    ],
+    "omega": [
+      1.8083141320025122,
+      1.874740079783906,
+      2.1542312616725074
+    ]
+  },
+  "case": "CASE-BEM-RIGID-BODY-MASS/spectrum-binding",
+  "checks": {
+    "cg_form_is_textbook_diagonal_inertia": true,
+    "cg_form_reproduces_shipped_spectrum": true,
+    "coupling_sign_flip_invisible_to_heave": true,
+    "coupling_sign_flip_rejected": true,
+    "heave_matches_closed_form": true,
+    "legacy_inertia_fallback_rejected": true,
+    "spectrum_invariant_under_reference_shift": true
+  },
+  "controls": {
+    "coupling_sign_flip_heave_rel_error": 1.22790947101177e-16,
+    "coupling_sign_flip_worst_rel_change": 1.7892464855525618,
+    "legacy_inertia": [
+      {
+        "offset": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "worst_rel_change": 3.885245933622372
+      },
+      {
+        "offset": [
+          5.0,
+          -3.0,
+          0.0
+        ],
+        "worst_rel_change": 0.9894942679489581
+      },
+      {
+        "offset": [
+          -7.2,
+          4.4,
+          0.0
+        ],
+        "worst_rel_change": 0.43854636730963414
+      }
+    ]
+  },
+  "cross_formulation": {
+    "cg_form_vs_textbook_inertia_rel_error": 0.0,
+    "omega_cg_form": [
+      1.8083141320025122,
+      1.874740079783906,
+      2.1542312616725074
+    ],
+    "worst_rel_spectrum_change": 0.0
+  },
+  "environment": {
+    "numpy": "2.4.6",
+    "python": "3.11.6",
+    "scipy": "1.16.0"
+  },
+  "not_pinned": {
+    "added_mass": "no hydrodynamic added mass is included; A_ij stays verified elsewhere",
+    "classic_metacentric_roll_period": "the shipped C[3,3] uses the waterline-origin form rho g [I_xx + nabla (z_B - z_G)]; its difference from rho g nabla GM is reported as an open question, not asserted"
+  },
+  "parameters": {
+    "beam": 8.0,
+    "density": 1025.0,
+    "draft": 3.0,
+    "gm": 0.6777777777777776,
+    "gravity": 9.81,
+    "inertia_diagonal": [
+      2993000.0,
+      16769000.0,
+      19024000.0
+    ],
+    "kg": 2.6,
+    "km": 3.2777777777777777,
+    "length": 20.0,
+    "mass": 492000.0,
+    "waterplane_area": 160.0
+  },
+  "reference": {
+    "formula": "omega^2 = rho g A_wp / m",
+    "heave_omega": 1.8083141320025125,
+    "route": "vacuum rigid-body spectrum, no added mass"
+  },
+  "reference_shift": [
+    {
+      "labels": [
+        "heave",
+        "pitch",
+        "roll"
+      ],
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "spectrum": [
+        1.8083141320025122,
+        1.874740079783906,
+        2.1542312616725074
+      ],
+      "worst_rel_change": 0.0
+    },
+    {
+      "labels": [
+        "heave",
+        "pitch",
+        "roll"
+      ],
+      "offset": [
+        5.0,
+        -3.0,
+        0.0
+      ],
+      "spectrum": [
+        1.8083141320025122,
+        1.8747400797839058,
+        2.154231261672506
+      ],
+      "worst_rel_change": 6.184422504925672e-16
+    },
+    {
+      "labels": [
+        "heave",
+        "pitch",
+        "roll"
+      ],
+      "offset": [
+        -7.2,
+        4.4,
+        0.0
+      ],
+      "spectrum": [
+        1.808314132002512,
+        1.8747400797839062,
+        2.154231261672505
+      ],
+      "worst_rel_change": 1.2368845009851343e-15
+    }
+  ],
+  "roundoff_limit": 1e-09,
+  "tolerance": 0.03
+}
