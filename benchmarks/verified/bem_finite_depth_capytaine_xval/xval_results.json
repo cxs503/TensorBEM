@@ -1,0 +1,44 @@
+{
+  "case": "bem_finite_depth_capytaine_xval",
+  "geometry": {
+    "type": "submerged_sphere",
+    "radius_m": 1.0,
+    "centre_z_m": -2.0,
+    "bottom_z_m": -3.0
+  },
+  "parameters": {
+    "ka_grid": [0.3, 0.6, 1.0, 1.5, 2.0],
+    "depth_ratios": [3.0, 5.0, 8.0, 12.0, 20.0, "inf"],
+    "density": 1025.0,
+    "gravity": 9.80665
+  },
+  "tbem_study": {
+    "rows": [],
+    "seconds": 0.0,
+    "note": "Computation submitted to cluster (job cj2147); results pending"
+  },
+  "cpt_study": {
+    "provenance": {
+      "tool": "capytaine",
+      "version": "3.1.dev0",
+      "note": "Computation submitted to cluster (job cj2147); results pending"
+    },
+    "levels": [],
+    "seconds": 0.0
+  },
+  "comparison": {
+    "comparison": [],
+    "gates": {
+      "G1_tbem_cpt_am_heave": {"passed": false, "max_error": 0.0, "threshold": 0.10, "note": "pending computation"},
+      "G2_tbem_cpt_b_heave": {"passed": false, "max_error": 0.0, "threshold": 0.15, "note": "pending computation"},
+      "G3_cpt_self_conv_am": {"passed": false, "max_error": 0.0, "threshold": 0.05, "note": "pending computation"},
+      "G4_tbem_self_conv_am": {"passed": false, "max_error": 0.0, "threshold": 0.05, "note": "pending computation"},
+      "G5_dw_limit_am": {"passed": false, "max_error": 0.0, "threshold": 0.05, "note": "pending computation"}
+    },
+    "all_gates_passed": false,
+    "note": "Computation in progress on cluster (job cj2147)"
+  },
+  "generated_utc": "2026-11-13T22:30:00+00:00",
+  "status": "computation_pending",
+  "cluster_job": "cj2147"
+}
