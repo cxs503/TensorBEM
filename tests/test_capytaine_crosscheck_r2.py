@@ -40,6 +40,7 @@ import math
 import pathlib
 import re
 
+import numpy as np
 import pytest
 
 from tensorbem.benchmarks import capytaine_crosscheck_r2 as r2
@@ -308,3 +309,127 @@ def test_document_states_the_analytic_axes(study: dict) -> None:
     assert "精确为零" in text, "the exact rotational null must be stated in prose"
     assert "{:.2f} kg".format(deep["lamb_surge"]) in text
     assert deep["verdict"] in text
+
+
+# ------------------------------------------------- 9. degeneracy / invariant axis
+def test_degenerate_cases_are_analytic_zeros() -> None:
+    """The null dofs are a statement about the geometry, not about the numbers.
+
+    Both round-2 bodies rotate about their sphere centre of curvature, where
+    ``(r - centre) x n`` vanishes pointwise, so all three rotational dofs are
+    exact zeros and the whole rotational block of those cases is *unfalsifiable*
+    by a relative comparison.  The off-centre cases keep only the yaw null
+    (azimuthal mode of a surface of revolution), which is what makes roll and
+    pitch scoreable there.
+    """
+    assert r2.invariant_null_dofs("hemisphere_r1") == ("roll", "pitch", "yaw")
+    assert r2.invariant_null_dofs("sphere_r1_z-0.5") == ("roll", "pitch", "yaw")
+    for case in ("hemisphere_r1_cz-0.5", "sphere_r1_z-0.5_c0"):
+        assert r2.invariant_null_dofs(case) == ("yaw",), (
+            f"{case} must keep roll/pitch non-null, otherwise the rotational block "
+            "is again a comparison of two zeros"
+        )
+        spec = r2.CASES[case]
+        assert tuple(spec["centre"]) != tuple(spec["sphere_centre"])
+        # the geometry itself is untouched: only the rotation centre moved
+        assert tuple(spec["body_centre"]) == tuple(spec["sphere_centre"])
+
+
+def test_rotation_centre_transfer_identity_is_exact() -> None:
+    """``A(c + d) = T^T A(c) T`` with ``T = [[I, +[d]x], [0, I]]``.
+
+    Re-derived in-process on the coarsest mesh: an exact algebraic identity of
+    the formulation, so it catches an about-the-origin moment arm or a missing
+    ``(r - centre)`` in the generalised normals without any foreign code.
+    """
+    result = r2.centre_transfer_invariant(level=2)
+    assert result["worst_residual"] <= r2.CENTRE_TRANSFER_TOL, result["blocks"]
+    assert result["verdict"] == "PASS"
+    for quantity in ("added_mass", "damping"):
+        assert result["blocks"][quantity]["residual"] <= r2.CENTRE_TRANSFER_TOL
+    assert np.allclose(result["moved_centre"], np.add(result["centre"], result["shift"]))
+
+
+def test_degeneracy_audit_residual_decays_to_zero(study: dict) -> None:
+    """The residual of the exact-zero entries must decay, not converge to O(1)."""
+    audit = study.get("degeneracy")
+    assert audit, "the degeneracy audit must be recorded in the artifact"
+    assert audit["verdict"] == "PASS"
+    assert {row["case"] for row in audit["cases"]} == {
+        "hemisphere_r1",
+        "sphere_r1_z-0.5",
+    }
+    for row in audit["cases"]:
+        assert row["null_dofs"] == ["roll", "pitch", "yaw"]
+        assert len(row["levels"]) >= 2
+        assert row["monotone_decay"], row["decay_ratios"]
+        assert min(row["decay_ratios"]) > 1.0
+        assert row["finest_worst_ratio"] <= audit["ratio_bound"]
+        # the area-weighted rotational mode norm itself must shrink with the mesh
+        norms = [level["mode_norm"][3] for level in row["levels"]]
+        assert all(b < a for a, b in zip(norms, norms[1:])), norms
+        # and the residuals quoted are the entries the raw verdict failed on
+        assert sorted(row["levels"][0]["entries"]) == [
+            "pitch_pitch",
+            "roll_roll",
+            "surge_pitch",
+            "sway_roll",
+            "yaw_yaw",
+        ]
+
+
+def test_invariant_scoring_does_not_touch_the_bands(study: dict) -> None:
+    """The separate scoring keeps the pre-registered bands and only re-classifies."""
+    scoring = study["invariant_scoring"]
+    assert scoring["tolerance_diagonal"] == r2.TOL_DIAGONAL
+    assert scoring["tolerance_offdiagonal"] == r2.TOL_OFFDIAGONAL
+    assert scoring["invariant_ratio"] == r2.INVARIANT_RATIO
+    comparison = study["comparison"]
+    for case, block in scoring["cases"].items():
+        null = set(r2.invariant_null_dofs(case))
+        expected_invariant = sum(
+            1
+            for entry in comparison["cases"][case]["entries"]
+            if entry["row"] in null or entry["column"] in null
+        )
+        got_invariant = (
+            block["counts"]["invariant_consistent"] + block["counts"]["invariant_violated"]
+        )
+        assert got_invariant == expected_invariant, case
+        expected_physics = comparison["cases"][case]["n_entries"] - expected_invariant
+        assert block["counts"]["physics_active"] + block["counts"]["physics_null"] == expected_physics
+        # nothing vanishes: the classes still partition every entry
+        assert got_invariant + expected_physics == comparison["cases"][case]["n_entries"]
+
+
+def test_off_centre_cases_actually_score_the_rotational_block(study: dict) -> None:
+    """Guard against the score becoming vacuous again."""
+    scoring = study["invariant_scoring"]
+    for case in ("hemisphere_r1_cz-0.5", "sphere_r1_z-0.5_c0"):
+        block = scoring["cases"][case]
+        assert block["rotational_block_scored"] is True
+        assert block["counts"]["physics_active"] > 0
+        entries = study["comparison"]["cases"][case]["entries"]
+        rotational = {
+            (entry["row"], entry["column"])
+            for entry in entries
+            if entry["class"] == "active"
+            and (entry["row"] in {"roll", "pitch"} or entry["column"] in {"roll", "pitch"})
+        }
+        assert rotational, f"{case} must produce scored entries in the rotational block"
+        # roll/pitch are genuinely non-zero on both sides (not a numeric zero)
+        for entry in entries:
+            if {entry["row"], entry["column"]} == {"roll"} or {
+                entry["row"],
+                entry["column"],
+            } == {"pitch"}:
+                assert entry["class"] == "active"
+                assert abs(entry["capytaine"]) > 1.0, entry
+
+
+def test_physical_scale_is_built_from_geometry_only() -> None:
+    """``rho L^k`` with k = 3/4/5 for mass / coupling / inertia entries."""
+    assert r2.physical_scale(0, 1) == r2.DENSITY * r2.SCALE_LENGTH**3
+    assert r2.physical_scale(0, 4) == r2.DENSITY * r2.SCALE_LENGTH**4
+    assert r2.physical_scale(4, 3) == r2.DENSITY * r2.SCALE_LENGTH**4
+    assert r2.physical_scale(3, 3) == r2.DENSITY * r2.SCALE_LENGTH**5
