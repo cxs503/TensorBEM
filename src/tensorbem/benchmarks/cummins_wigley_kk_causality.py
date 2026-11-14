@@ -90,7 +90,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from tensorbem import time_domain as td
-from tensorbem.causality import fit_added_mass_asymptote, kkr_added_mass
+from tensorbem.causality import fit_added_mass_asymptote, kkr_added_mass, kkr_damping
 from tensorbem.free_surface_solver3d import solve_radiation_3d
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
@@ -108,13 +108,18 @@ __all__ = [
     "CAPYTAINE_REF_PATH",
     "DENSITY",
     "DOF_LABELS",
+    "EXTENDED_GRID",
     "GATES",
     "GRAVITY",
     "LEGACY_GRID",
     "MESH_LEVELS",
     "OMEGA_GRID",
+    "RESONANCE_HALF_WIDTH",
+    "RESONANCE_STEP",
     "ROTATION_CENTER",
     "analysis_gates",
+    "closure_grid",
+    "decay_response_grid",
     "cross_solver_table",
     "geometry_gate",
     "heave_decay_gate",
@@ -151,6 +156,33 @@ OMEGA_GRID = (
 
 #: Round-1 band, kept as the A/B control (audit F2).
 LEGACY_GRID = (0.5, 0.7, 1.0, 1.5, 2.2, 3.2, 4.2, 6.0)
+
+#: Extended band (rad/s), predeclared by the round-3 hand-off
+#: (``docs/dev_report_m17773_cummins_band_budget.md`` §5) and *solved* in round 4.
+#: It adds four nodes below ``OMEGA_GRID`` (0.10-0.25) and two above it
+#: (15, 20) so that both Kramers-Kronig tails are measured rather than modelled:
+#: the lower tail of ``B`` scales like ``w**3`` (a dipole) and the upper tail
+#: decays, so holding either end constant over a wide omitted band is a
+#: modelling error, not a quadrature one.
+EXTENDED_GRID = (
+    0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.65, 0.80, 1.00, 1.20, 1.50,
+    1.85, 2.30, 2.80, 3.40, 4.00, 4.70, 5.40, 6.20, 7.00, 7.80, 8.60, 9.60,
+    11.00, 12.50, 15.00, 20.00,
+)
+
+#: Half-width (rad/s) and step of the local cluster around the heave resonance.
+#: G4 compares a free-decay ``zeta`` with the *half-power* ``zeta``, i.e. with
+#: the width of the ``B33`` peak at ``1/sqrt(2)`` of its maximum; that width is
+#: ``2 zeta omega_n ~ 0.075 rad/s``.  A node spacing of 0.5 rad/s (the global
+#: grid, and the round-3 outage) cannot represent a 0.075 rad/s feature at all,
+#: which is why G4 was *undecidable* rather than inaccurate.  ``RESONANCE_STEP``
+#: is therefore predeclared at 0.0125 rad/s (six samples per half-power width),
+#: and :func:`closure_grid` places the cluster around a supplied resonance.
+RESONANCE_HALF_WIDTH = 0.25
+RESONANCE_STEP = 0.0125
+
+#: Step (rad/s) of the dense response grid the G4 half-power scan interpolates on.
+DENSE_STEP = 0.001
 
 #: Predeclared gates.  ``tol`` is a relative tolerance; G1 carries the case-pool
 #: tolerance (<10 %), G2/G5 are identities between two numerical routes and are
@@ -236,6 +268,100 @@ def sweep_signature(level: str = "medium") -> dict:
         "mesh_volume_rel_error": volume / float(
             wigley3_hydrostatic_reference()["volume"]
         ) - 1.0,
+    }
+
+
+def closure_grid(resonance: float | None = None) -> tuple[float, ...]:
+    """Extended band, optionally plus a local cluster around the heave resonance.
+
+    The cluster is what makes G4 *decidable*: the half-power width of ``B33`` is
+    ``2 zeta omega_n``, i.e. a fraction of a rad/s wide, so a global grid -- any
+    global grid, however wide -- resolves the peak with at most one sample.  The
+    cluster is placed around the resonance *found by the run* (see
+    :func:`heave_resonance_band`) rather than hard-coded, because ``omega_n``
+    moves with the mesh (7.39 rad/s at 400 quads, 7.74 rad/s at 192 panels in
+    the round-3 cached sweep).
+
+    Returns a sorted tuple; nodes inside the cluster never disturb the global
+    nodes (they are merged, not interleaved by index).
+    """
+    nodes = {round(float(w), 9) for w in EXTENDED_GRID}
+    if resonance is not None:
+        centre = float(resonance)
+        if not math.isfinite(centre) or centre <= 0.0:
+            raise ValueError(f"resonance must be a positive finite frequency, got {resonance!r}")
+        steps = int(round(RESONANCE_HALF_WIDTH / RESONANCE_STEP))
+        for k in range(-steps, steps + 1):
+            nodes.add(round(centre + k * RESONANCE_STEP, 9))
+    grid = sorted(w for w in nodes if w > 0.0)
+    if len(grid) < 8:
+        raise ValueError("closure grid collapsed below the minimum sweep length")
+    return tuple(grid)
+
+
+def kk_directions(
+    sweep: dict,
+    dof: int,
+    *,
+    added_mass_inf: float | None = None,
+) -> dict:
+    """Both Kramers-Kronig directions on one diagonal of one sweep.
+
+    The predeclared gate G3 tests **A from B** and normalises by
+    ``max|A - A_inf|``.  For surge, sway, roll and yaw that scale is small, so a
+    residual expressed against it can be large while the *damping* predicted by
+    the same data is accurate -- and it is ``B`` that the Cummins kernel
+    integrates, so the damping direction is the physically decisive one.
+    **B from A** is therefore reported next to it, normalised by ``max|B|``.
+    Neither statistic is derived from the other, and neither is the gate: G3
+    keeps its predeclared definition, and a passing G3b would not turn a failing
+    G3 into a pass.
+
+    Both directions are evaluated at the grid midpoints (the principal value
+    needs the pole strictly inside an interval) with the measured value taken as
+    the mean of the two bracketing nodes.
+    """
+    omega, added, damping = _as_diag(sweep, dof)
+    infinity = (float(fit_added_mass_asymptote(omega, added).added_mass_inf)
+                if added_mass_inf is None else float(added_mass_inf))
+    fit = fit_added_mass_asymptote(omega, added)
+    mid = 0.5 * (omega[:-1] + omega[1:])
+    measured_a = 0.5 * (added[:-1] + added[1:])
+    measured_b = 0.5 * (damping[:-1] + damping[1:])
+    pred_a = np.array([kkr_added_mass(omega, damping, float(w), added_mass_inf=infinity)
+                       for w in mid])
+    pred_b = np.array([kkr_damping(omega, added, float(w), added_mass_inf=infinity,
+                                   tail_coefficient=float(fit.tail_coefficient))
+                       for w in mid])
+    scale_a = max(float(np.max(np.abs(measured_a - infinity))), 1e-30)
+    scale_b = max(float(np.max(np.abs(measured_b))), 1e-30)
+    res_a = np.abs(pred_a - measured_a) / scale_a
+    res_b = np.abs(pred_b - measured_b) / scale_b
+
+    def summarise(res: FloatArray) -> dict:
+        interior = res[1:-1] if res.size > 2 else res
+        return {
+            "max": float(np.max(res)),
+            "rms": float(np.sqrt(np.mean(res ** 2))),
+            "interior_max": float(np.max(interior)),
+            "argmax_omega": float(mid[int(np.argmax(res))]),
+        }
+
+    return {
+        "dof": int(dof),
+        "dof_label": DOF_LABELS[dof],
+        "omega_mid": mid.tolist(),
+        "added_mass_inf": infinity,
+        "added_from_damping": {
+            **summarise(res_a),
+            "scale": scale_a,
+            "residual": res_a.tolist(),
+        },
+        "damping_from_added": {
+            **summarise(res_b),
+            "scale": scale_b,
+            "residual": res_b.tolist(),
+        },
     }
 
 
@@ -465,6 +591,18 @@ def analysis_gates(
     scale = max(float(np.max(np.abs(kk_measured - a_inf))), 1e-30)
     r3 = float(np.max(kk_abs)) / scale
     r3_pointwise = (kk_abs / np.maximum(np.abs(kk_measured), 1e-30)).tolist()
+    # The max of a principal-value residual over the midpoints is dominated by
+    # the outermost intervals, where the PV quadrature is worst conditioned
+    # (round-3 measurement, docs/dev_report_m17773_cummins_band_budget.md §4).
+    # rms and the interior max are recorded *beside* the gate statistic so the
+    # report can separate an edge artefact from a band-wide inconsistency; they
+    # do not replace the predeclared G3 (max, normalised by max|A - A_inf|).
+    r3_profile = kk_abs / scale
+    r3_interior = (float(np.max(r3_profile[1:-1]))
+                   if r3_profile.size > 2 else float(np.max(r3_profile)))
+    r3_rms = float(np.sqrt(np.mean(r3_profile ** 2)))
+
+    directions = kk_directions(sweep, dof, added_mass_inf=a_inf)
 
     # G5: band-limited round trip B -> K -> (B, A)
     trip = td.fourier_round_trip(omega, added, damping, a_inf, dt=dt, tau_max=tau_max)
@@ -510,8 +648,18 @@ def analysis_gates(
         },
         "G3": {
             "rel_err": r3,
+            "rms": r3_rms,
+            "interior_max": r3_interior,
+            "argmax_omega": float(kk_omega[int(np.argmax(r3_profile))]),
             "pointwise_rel_err": r3_pointwise,
             "omega": kk_omega.tolist(),
+        },
+        "G3b": {
+            "rel_err": directions["damping_from_added"]["max"],
+            "rms": directions["damping_from_added"]["rms"],
+            "interior_max": directions["damping_from_added"]["interior_max"],
+            "scale": directions["damping_from_added"]["scale"],
+            "profile": directions["damping_from_added"]["residual"],
         },
         "G5": {
             "rel_err": r5,
@@ -520,6 +668,19 @@ def analysis_gates(
             "band": list(band),
         },
     }
+
+
+def decay_response_grid(omega: Sequence[float]) -> FloatArray:
+    """Dense uniform grid the G4 half-power scan interpolates the sweep onto.
+
+    The half-power scan needs to resolve ``2 zeta omega_n``; a fixed 801-point
+    grid over the closure band [0.1, 20] would give 0.025 rad/s, i.e. three
+    samples across a lightly damped peak.  ``DENSE_STEP`` keeps ~70.
+    """
+    grid = np.asarray(omega, dtype=float)
+    span = float(grid[-1]) - float(grid[0])
+    n_dense = max(801, int(math.ceil(span / DENSE_STEP)) + 1)
+    return np.linspace(float(grid[0]), float(grid[-1]), n_dense)
 
 
 def heave_resonance_band(
@@ -587,7 +748,7 @@ def heave_decay_gate(
                if np.isfinite(omega_d) and np.isfinite(rate) else float("nan"))
     zeta_decay = rate / omega_n if omega_n and np.isfinite(omega_n) else float("nan")
 
-    dense = np.linspace(float(omega[0]), float(omega[-1]), 801)
+    dense = decay_response_grid(omega)
     try:
         half_power = td.half_power_damping(
             dense, np.interp(dense, omega, added), np.interp(dense, omega, damping),
