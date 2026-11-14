@@ -1,0 +1,120 @@
+{
+ "mission_audited": 20029,
+ "case": "CASE-BEM-LAPLACE-CYLINDER",
+ "reference_table_check": {
+  "points": 64,
+  "max_abs_diff_vs_case_json_table": 2.220446049250313e-16,
+  "max_abs_diff_u": 0.0,
+  "max_abs_diff_v": 0.0,
+  "max_abs_diff_phi": 2.220446049250313e-16,
+  "surface_speed_check_2U_sin": {
+   "note": "|v|=2U|sin th| and Cp=1-4 sin^2 th re-derived on the circle",
+   "max_abs_diff": 4.440892098500626e-16
+  }
+ },
+ "continuum_polygon_dirichlet_multipole": {
+  "32": {
+   "bc_fit_rel_residual_max": 1.77206972063239e-15,
+   "coef_n1": 0.9999999999999997,
+   "velocity_relative_l2_vs_cylinder": 3.078419950731656e-16,
+   "velocity_max_abs_error_over_U": 1.1934897514720433e-15,
+   "perturbation_potential_relative_l2": 1.988737714413712e-16
+  },
+  "64": {
+   "bc_fit_rel_residual_max": 8.876431726280487e-16,
+   "coef_n1": 1.0000000000000004,
+   "velocity_relative_l2_vs_cylinder": 3.537068322379588e-16,
+   "velocity_max_abs_error_over_U": 6.661338147750939e-16,
+   "perturbation_potential_relative_l2": 2.3688346183101295e-16
+  },
+  "128": {
+   "bc_fit_rel_residual_max": 8.880446481911963e-16,
+   "coef_n1": 1.0,
+   "velocity_relative_l2_vs_cylinder": 2.982629563955523e-16,
+   "velocity_max_abs_error_over_U": 6.938893903907228e-16,
+   "perturbation_potential_relative_l2": 9.04554752245968e-17
+  }
+ },
+ "reference_length_invariance": {
+  "L=2.0": {
+   "dirichlet_cond": 76.11357941479734,
+   "dirichlet_velocity_relative_l2": 1.3656224318170642e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.0001532015925717168
+  },
+  "L=3.0": {
+   "dirichlet_cond": 120.62112835137059,
+   "dirichlet_velocity_relative_l2": 1.365622432212048e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.00015320159257173314
+  },
+  "L=5.0": {
+   "dirichlet_cond": 176.69400858982314,
+   "dirichlet_velocity_relative_l2": 1.365622432300295e-07,
+   "neumann_cond": 2.0248495990182516,
+   "neumann_velocity_relative_l2": 0.00015320159257171815
+  }
+ },
+ "claimed": {
+  "dirichlet_velocity_relative_l2_N128": 1.3656224320923946e-07,
+  "neumann_velocity_relative_l2_N128": 0.0001532015925717173,
+  "neumann_surface_velocity_relative_l2_N128": 0.00010075873250396247
+ },
+ "overall": "PASS",
+ "n_criteria": 15,
+ "criteria_all_ok": true,
+ "continuum_polygon_neumann_multipole": {
+  "32": {
+   "bc_fit_rel_residual_max": 3.007210221608285e-14,
+   "surface_speed_relative_l2_vs_2U_sin": 0.004850278267632315,
+   "surface_speed_max_error_over_U": 0.009653845704120867,
+   "signed_tangential_velocity_vs_minus_2U_sin_max_error_over_U": 0.009653845704120867,
+   "normal_velocity_residual_over_U": 3.0309088572266774e-14
+  },
+  "64": {
+   "bc_fit_rel_residual_max": 7.645547039262646e-15,
+   "surface_speed_relative_l2_vs_2U_sin": 0.0012067236841360285,
+   "surface_speed_max_error_over_U": 0.0024105402652221386,
+   "signed_tangential_velocity_vs_minus_2U_sin_max_error_over_U": 0.0024105402652221386,
+   "normal_velocity_residual_over_U": 7.66053886991358e-15
+  },
+  "128": {
+   "bc_fit_rel_residual_max": 5.853560337756017e-15,
+   "surface_speed_relative_l2_vs_2U_sin": 0.0003013174237233259,
+   "surface_speed_max_error_over_U": 0.0006024533451010061,
+   "signed_tangential_velocity_vs_minus_2U_sin_max_error_over_U": 0.0006024533451010061,
+   "normal_velocity_residual_over_U": 5.856426454897701e-15
+  }
+ },
+ "discrete_neumann_claimed": {
+  "32": {
+   "surface_velocity_relative_l2": 0.0016332624547677696,
+   "surface_speed_max_error_over_speed": 0.006387471070254724
+  },
+  "64": {
+   "surface_velocity_relative_l2": 0.0004046292256971318,
+   "surface_speed_max_error_over_speed": 0.0016012841456127802
+  },
+  "128": {
+   "surface_velocity_relative_l2": 0.00010075873250396247,
+   "surface_speed_max_error_over_speed": 0.0004009359164942605
+  }
+ },
+ "continuum_neumann_with_discrete_data": {
+  "32": {
+   "surface_speed_relative_l2_vs_2U_sin": 0.05470303092816082,
+   "surface_speed_max_error_over_U": 0.10940092970004178,
+   "normal_velocity_residual_over_U": 0.11630879618347437
+  },
+  "64": {
+   "surface_speed_relative_l2_vs_2U_sin": 0.008219220427453686,
+   "surface_speed_max_error_over_U": 0.016420922329657653,
+   "normal_velocity_residual_over_U": 0.08192926052651328
+  },
+  "128": {
+   "surface_speed_relative_l2_vs_2U_sin": 0.004095364794811111,
+   "surface_speed_max_error_over_U": 0.008188533666150612,
+   "normal_velocity_residual_over_U": 0.040920760895643504
+  }
+ }
+}
