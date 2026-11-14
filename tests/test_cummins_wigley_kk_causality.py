@@ -14,8 +14,9 @@ import math
 import numpy as np
 import pytest
 
-from tensorbem import time_domain as td
+from tensorbem import causality, time_domain as td
 from tensorbem.benchmarks import cummins_wigley_kk_causality as case
+from tensorbem.benchmarks import kk_band_floor
 
 
 def exact_pair(a: float = 1.2, c: float = 2.0, omegas=None) -> tuple:
@@ -320,3 +321,87 @@ def test_decay_response_grid_is_fine_enough_for_the_peak():
     dense = case.decay_response_grid(grid)
     assert np.max(np.diff(dense)) <= case.DENSE_STEP + 1e-12
     assert dense[0] == grid[0] and dense[-1] == grid[-1]
+
+
+# ---------------------------------------------------------------------------
+# round 5: the closed-form causal pair, its convention, and what G3 measures
+# ---------------------------------------------------------------------------
+
+
+def test_damped_oscillator_pair_is_kramers_kronig_consistent():
+    """The library pair must be causal, and its residual must *converge*.
+
+    Round 4 reported a "45 % KK floor that survives 350x refinement" from exactly
+    this closed form and concluded that G3's residual is not a sampling effect.
+    The pair it used carried a ``1/pi`` prefactor on ``B``, so ``(A, B)`` differed
+    from a causal pair by ``1 - 2/pi = 36.3 %``: the floor was the pair.  This test
+    pins both halves of the correction -- the library pair converges, the round-4
+    prefactor saturates -- so the withdrawn conclusion cannot be re-derived by
+    accident.
+    """
+    sigma, omega_n = 0.037, 7.378504598323515
+
+    def residual(n: int, prefactor: float) -> float:
+        omega = np.linspace(0.4, 15.0, n)
+        added, damping = kk_band_floor.damped_oscillator_pair(
+            omega, sigma=sigma, omega_n=omega_n)
+        return kk_band_floor.kk_residual(
+            omega, added, prefactor * damping, added_mass_inf=0.0,
+            scale=float(np.max(np.abs(added))))["max"]
+
+    coarse, fine = residual(201, 1.0), residual(801, 1.0)
+    assert fine < coarse / 3.0, (coarse, fine)
+    assert fine < 0.10, fine
+    # the round-4 convention error does not improve with refinement
+    bad_coarse, bad_fine = residual(201, 2.0 / math.pi), residual(801, 2.0 / math.pi)
+    assert bad_fine > 0.30 and abs(bad_fine - bad_coarse) < 0.10, (bad_coarse, bad_fine)
+
+
+def test_profile_added_mass_inf_is_exact_and_affine():
+    """``AInfProfile`` reproduces the G3 definition exactly for *any* ``A_inf``.
+
+    The profile is the closed-form solution of ``max_i |a - e_i| / scale``, so the
+    identity ``residual_at(a) == |a - e|_max / scale`` is an algebraic fact, not an
+    approximation -- which is what makes the decomposition
+    ``reported = calibration + profile`` exact (closure error ~1e-16 in
+    ``scripts/cummins_wigley_g3_conditioning.py``).
+    """
+    sigma, omega_n = 0.037, 7.378504598323515
+    # the predeclared closure grid: what a run of this case would actually use
+    omega = np.asarray(case.closure_grid(omega_n), dtype=float)
+    added, damping = kk_band_floor.damped_oscillator_pair(
+        omega, sigma=sigma, omega_n=omega_n)
+    profile = causality.profile_added_mass_inf(omega, added, damping,
+                                              added_mass_inf=0.0)
+    for installed in (0.0, 0.01, -0.02, 0.5):
+        expected = float(np.max(np.abs(installed - profile.implied_added_mass_inf))
+                         / profile.scale)
+        assert abs(profile.residual_at(installed) - expected) < 1e-12
+    # on a causal pair the profile residual is the sampling floor: small, and no
+    # choice of A_inf can remove it
+    assert profile.residual < 0.05, profile.residual
+    assert profile.best_added_mass_inf == pytest.approx(0.0, abs=0.05)
+
+
+def test_tail_fit_can_leave_the_physical_range_of_the_sweep():
+    """The installed ``A_inf`` is what G3 actually measures -- and it can be junk.
+
+    On a sweep whose added mass is nearly flat in the tail, the two-term
+    ``A_inf + c/w**2`` extrapolation is ill-conditioned (``1/w**2`` has almost no
+    leverage over the fitted band) and lands *outside* ``[min A, max A]``, which no
+    passive body's infinite-frequency added mass can do.  This is recorded as a
+    characterisation of the current estimator, not as a desirable property: it is
+    the mechanism behind the 23-51 % G3 residuals on the panel sweep, where the
+    profile residual of the *same* datum is 1.3-5.1 %.
+    """
+    omega = np.linspace(0.4, 12.0, 41)
+    added = 100.0 + 0.5 * np.tanh(omega / 3.0) / np.tanh(4.0)   # flat-ish tail
+    damping = 1e-3 * np.exp(-((omega - 7.4) ** 2) / 0.5)
+    fit = causality.fit_added_mass_asymptote(omega, added)
+    profile = causality.profile_added_mass_inf(omega, added, damping,
+                                              added_mass_inf=fit.added_mass_inf)
+    assert fit.added_mass_inf > float(np.max(added))             # outside the data
+    assert profile.residual_at(fit.added_mass_inf) > 0.5        # so G3 looks terrible
+    assert profile.residual_at(profile.best_added_mass_inf) == pytest.approx(
+        profile.residual, rel=1e-12)                            # the exact minimiser
+    assert profile.residual < 0.5                               # yet the datum is causal

@@ -48,6 +48,8 @@ anything.**  The shape-preserving re-expression below has no free parameters.
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -56,6 +58,7 @@ from tensorbem.causality import fit_added_mass_asymptote, kkr_added_mass
 FloatArray = NDArray[np.float64]
 
 __all__ = [
+    "damped_oscillator_pair",
     "estimator_floor",
     "kk_residual",
     "refine_sweep",
@@ -75,6 +78,82 @@ def _validate(omega, added_mass, damping) -> tuple[FloatArray, FloatArray, Float
     if not (np.all(np.isfinite(a)) and np.all(np.isfinite(b))):
         raise ValueError("added_mass and damping must be finite")
     return grid, a, b
+
+
+
+
+def damped_oscillator_pair(
+    omega: FloatArray,
+    *,
+    sigma: float,
+    omega_n: float,
+    coefficient: float = 1.0,
+) -> tuple[FloatArray, FloatArray]:
+    """Closed-form ``(A - A_inf, B)`` of the causal kernel
+    ``K(t) = c exp(-sigma t) cos(omega_n t)``, ``t >= 0``.
+
+    This is the synthetic arm every KK-resolution claim needs: a datum whose
+    causal partner is known *exactly*, so a residual measured on it belongs to
+    the estimator and not to the physics.  Getting the pair consistent matters:
+    a factor of two in ``B`` alone makes the pair non-causal by 36 %, which then
+    looks like an estimator floor that does not shrink with refinement.
+
+    Derivation (the convention of :mod:`tensorbem.causality`::
+    ``B(w) = int_0^inf K(s) cos(ws) ds``, ``w*(A - A_inf) = -int_0^inf K(s) sin(ws) ds``)
+
+    .. math::
+
+        K = \\frac{c}{2}(e^{-a_1 t} + e^{-a_2 t}), \\quad a_{1,2} = \\sigma \\mp i\\omega_n
+
+    and for the exponential family ``K = sum_j c_j e^{-a_j t}``
+
+    .. math::
+
+        B(\\omega) = \\sum_j \\frac{c_j a_j}{a_j^2+\\omega^2}, \\qquad
+        A(\\omega) - A_\\infty = -\\sum_j \\frac{c_j}{a_j^2+\\omega^2}.
+
+    The pair sums are elementary (``X = \\sigma^2+\\omega^2-\\omega_n^2``,
+    ``Y = 2\\sigma\\omega_n``) and give, in either of two equal forms,
+
+    .. math::
+
+        B(\\omega)   = \\frac{c\\sigma(\\sigma^2+\\omega^2+\\omega_n^2)}
+                        {[(\\omega-\\omega_n)^2+\\sigma^2][(\\omega+\\omega_n)^2+\\sigma^2]}
+                      = \\frac{c\\sigma}{2}\\left[\\frac{1}{\\sigma^2+(\\omega-\\omega_n)^2}
+                        + \\frac{1}{\\sigma^2+(\\omega+\\omega_n)^2}\\right],
+
+        A(\\omega)-A_\\infty
+                      = -\\frac{c(\\sigma^2+\\omega^2-\\omega_n^2)}
+                        {[(\\omega-\\omega_n)^2+\\sigma^2][(\\omega+\\omega_n)^2+\\sigma^2]}
+                      = -\\frac{c}{2\\omega}\\left[\\frac{\\omega-\\omega_n}
+                        {\\sigma^2+(\\omega-\\omega_n)^2}
+                        + \\frac{\\omega+\\omega_n}{\\sigma^2+(\\omega+\\omega_n)^2}\\right].
+
+    Note the ``c*sigma/2`` and ``-c/(2*omega)`` prefactors: the ``1/pi`` that
+    appears in the ``K(t) = (2/pi) int B cos`` half of the pair convention does
+    *not* belong here.  ``scripts/cummins_wigley_gate_resolution.py`` carried that
+    ``1/pi`` in round 4, which made the synthetic pair non-causal by
+    ``1 - 2/pi = 36.3 %`` and produced the "45 % KK floor that does not respond to
+    350x refinement" recorded in ``docs/dev_report_m20256_cummins_band_closure.md``
+    §4.  That floor was the pair, not the estimator
+    (``tests/test_cummins_wigley_kk_causality.py::
+    test_damped_oscillator_pair_is_kramers_kronig_consistent``).
+    """
+    w = np.asarray(omega, dtype=float)
+    if w.ndim != 1:
+        raise ValueError("omega must be one-dimensional")
+    if not np.all(np.isfinite(w)) or np.any(w <= 0.0):
+        raise ValueError("omega must be finite and strictly positive")
+    if not math.isfinite(sigma) or sigma <= 0.0:
+        raise ValueError("sigma must be positive and finite")
+    if not math.isfinite(omega_n) or omega_n <= 0.0:
+        raise ValueError("omega_n must be positive and finite")
+    s2m = sigma * sigma + (w - omega_n) ** 2
+    s2p = sigma * sigma + (w + omega_n) ** 2
+    damping = 0.5 * coefficient * sigma * (1.0 / s2m + 1.0 / s2p)
+    added = -(0.5 * coefficient / w) * ((w - omega_n) / s2m + (w + omega_n) / s2p)
+    return added, damping
+
 
 
 def refine_sweep(
