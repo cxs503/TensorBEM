@@ -58,6 +58,17 @@ from ..solver import (
     solve_laplace_exterior_dirichlet,
     solve_laplace_exterior_neumann,
 )
+from ..lifting_cylinder import (
+    angle_difference,
+    exact_pressure_coefficient as circulation_pressure_coefficient,
+    exact_surface_speed as circulation_surface_speed,
+    exact_velocity as circulation_velocity,
+    exterior_velocity_field as circulation_velocity_field,
+    joukowski_lift,
+    solve_rotating_cylinder,
+    stagnation_angles as circulation_stagnation_angles,
+    stagnation_angles_from_surface as circulation_stagnation_from_surface,
+)
 
 CASE_ID = "CASE-BEM-LAPLACE-CYLINDER"
 POOL_CODE = "BEM-LAPLACE-CYLINDER"
@@ -113,6 +124,20 @@ MULTIPOLE_SOURCE_TOL = 1.0e-9
 MULTIPOLE_FIT_RESIDUAL_TOL = 1.0e-5
 MULTIPOLE_ORDER_MIN = ORDER_MIN
 MULTIPOLE_CONTROL_SIGN = -1.0
+# Prescribed circulation of the rotating-cylinder route, in units of U a. The
+# two-stagnation-point regime is |Gamma| < 4 pi U a ~= 12.566; 3.0 keeps both
+# stagnation points well resolved and off the shoulders (theta_s ~ 13.8 deg).
+CIRCULATION = 3.0
+CIRCULATION_SWEEP: tuple[float, ...] = (1.0, 2.0, 3.0)
+# The solve must reproduce the prescribed contour integral, not merely a flow
+# that looks like it: a 1% band is far tighter than the 3% case tolerance and
+# still loose enough for the faceting residual.
+CIRCULATION_FLUX_TOL = 0.01
+# Closed-form stagnation angles are O(1) numbers (deg); the interpolated
+# numerical zeros are second order, so 1 deg is a weak but meaningful bound.
+STAGNATION_TOL_DEG = 1.0
+# d'Alembert: the pressure integral of a steady inviscid flow has no drag.
+DRAG_TOL = 0.01
 
 
 # ---------------------------------------------------------------------------
@@ -302,6 +327,129 @@ def route_neumann(
         "h_mean": float(np.mean(mesh.lengths)),
     }
 
+
+def route_circulation(
+    panels: int,
+    radius: float = RADIUS,
+    speed: float = SPEED,
+    circulation: float = CIRCULATION,
+) -> dict[str, Any]:
+    """Route G: prescribed circulation (rotating cylinder), lift vs Kutta-Joukowski.
+
+    The circulation is *prescribed* -- that is what a rotating cylinder does --
+    so well-posedness comes from the data and no Kutta condition is involved.
+    The solve is two constant-panel exterior Neumann problems (the doublet data
+    and the unit-vortex response), the same decomposition as the verified
+    lifting solve of :mod:`tensorbem.lifting`; see
+    :func:`tensorbem.lifting_cylinder.solve_rotating_cylinder`.
+
+    Everything is then compared with closed form: surface speed
+    ``v_theta = Gamma/(2 pi a) - 2 U sin(theta)``, ``Cp``, the external
+    velocity field, the stagnation angles ``sin(theta_s) = Gamma/(4 pi U a)``,
+    the lift ``L' = -rho U Gamma`` and the vanishing drag.
+    """
+    mesh = regular_polygon(panels, radius)
+    solution = solve_rotating_cylinder(mesh, radius, speed, circulation)
+    centers = mesh.centers
+    theta = np.arctan2(centers[:, 1], centers[:, 0])
+    surface_speed = np.linalg.norm(solution.surface_velocity, axis=1)
+    exact_speed = circulation_surface_speed(theta, radius, speed, circulation)
+    exact_cp = circulation_pressure_coefficient(theta, radius, speed, circulation)
+    points = probe_points()
+    total_velocity = circulation_velocity_field(solution, points)
+    exact_velocity_field = circulation_velocity(points, radius, speed, circulation)
+    exact_lift = joukowski_lift(radius, speed, circulation)
+    found = sorted(
+        circulation_stagnation_from_surface(mesh, solution.surface_velocity)
+    )
+    reference = sorted(circulation_stagnation_angles(radius, speed, circulation))
+    if len(found) != len(reference):
+        stagnation_error_deg = float("inf")
+    else:
+        stagnation_error_deg = math.degrees(
+            max(angle_difference(a, b) for a, b in zip(found, reference))
+        )
+    dynamic_pressure_area = 0.5 * speed**2 * (2.0 * radius)
+    return {
+        "route": "circulation",
+        "panels": int(panels),
+        "circulation": float(circulation),
+        "circulation_measured": solution.circulation_ccw,
+        "circulation_relative_error": abs(solution.circulation_ccw - circulation)
+        / abs(circulation),
+        "surface_velocity_relative_l2": _relative_l2(surface_speed, exact_speed),
+        "surface_speed_max_error_over_speed": float(
+            np.max(np.abs(surface_speed - exact_speed))
+        )
+        / speed,
+        "cp_relative_l2": _relative_l2(
+            solution.surface_pressure_coefficient, exact_cp
+        ),
+        "cp_min": float(np.min(solution.surface_pressure_coefficient)),
+        "cp_min_exact": float(np.min(exact_cp)),
+        "velocity_relative_l2": _relative_l2(total_velocity, exact_velocity_field),
+        "velocity_max_abs_error": float(
+            np.max(np.linalg.norm(total_velocity - exact_velocity_field, axis=1))
+        )
+        / speed,
+        "lift": solution.lift,
+        "lift_exact": exact_lift,
+        "lift_relative_error": solution.lift_relative_error_vs_joukowski,
+        "drag": solution.drag,
+        "drag_coefficient": solution.drag / dynamic_pressure_area,
+        "stagnation_angles_found_deg": [math.degrees(value) for value in found],
+        "stagnation_angles_exact_deg": [math.degrees(value) for value in reference],
+        "stagnation_angle_max_error_deg": stagnation_error_deg,
+        "condition_number": solution.condition_number,
+        "relative_residual_l2": solution.relative_residual_l2,
+        "h_mean": float(np.mean(mesh.lengths)),
+    }
+
+
+def circulation_sweep(
+    panels: int,
+    radius: float = RADIUS,
+    speed: float = SPEED,
+    circulations: Sequence[float] = CIRCULATION_SWEEP,
+) -> dict[str, Any]:
+    """Lift must be linear in the prescribed circulation (Kutta-Joukowski).
+
+    A single circulation level only checks one point of the lift curve. Sweeping
+    ``Gamma`` at a fixed mesh shows that the pressure integral tracks
+    ``L' = -rho U Gamma`` across a factor of three instead of being tuned at one
+    value, and that the stagnation angle follows
+    ``sin(theta_s) = Gamma/(4 pi U a)``.
+    """
+    rows: list[dict[str, Any]] = []
+    for circulation in circulations:
+        row = route_circulation(panels, radius, speed, circulation)
+        rows.append(
+            {
+                "circulation": row["circulation"],
+                "lift": row["lift"],
+                "lift_exact": row["lift_exact"],
+                "lift_over_joukowski": row["lift"] / row["lift_exact"]
+                if row["lift_exact"]
+                else float("nan"),
+                "lift_relative_error": row["lift_relative_error"],
+                "circulation_relative_error": row["circulation_relative_error"],
+                "cp_min": row["cp_min"],
+                "cp_min_exact": row["cp_min_exact"],
+                "stagnation_angle_max_error_deg": row[
+                    "stagnation_angle_max_error_deg"
+                ],
+            }
+        )
+    deviations = [abs(row["lift_over_joukowski"] - 1.0) for row in rows]
+    return {
+        "panels": int(panels),
+        "note": "rho = 1 (dimensionless); lift per unit span",
+        "rows": rows,
+        "max_lift_deviation_from_joukowski": max(deviations),
+        "max_stagnation_error_deg": max(
+            row["stagnation_angle_max_error_deg"] for row in rows
+        ),
+    }
 
 def near_wall_study(
     radius: float = RADIUS,
@@ -869,7 +1017,8 @@ def run_case(
         "domain": "ship-total-performance/resistance-potential-flow",
         "capability": (
             "2-D exterior Laplace operator: potential AND velocity field outside a "
-            "body, verified against the cylinder complex potential"
+            "body, plus the prescribed-circulation (rotating cylinder) exterior "
+            "Neumann problem, verified against the cylinder complex potential"
         ),
         "generated_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "environment": {
@@ -886,6 +1035,8 @@ def run_case(
             "probe_angles": PROBE_ANGLES,
             "probe_count": int(len(probes)),
             "far_field_radius_over_a": FAR_FIELD_RADIUS,
+            "circulation": CIRCULATION,
+            "circulation_sweep": list(CIRCULATION_SWEEP),
         },
         "reference": {
             "complex_potential": "W(z) = U (z + a**2/z)",
@@ -893,6 +1044,21 @@ def run_case(
             "perturbation_potential": "phi - U x = U a**2 cos(theta) / r",
             "surface_speed": "|v| = 2 U |sin(theta)|",
             "pressure_coefficient": "Cp = 1 - 4 sin(theta)**2",
+            "lifting_complex_potential": (
+                "W(z) = U (z + a**2/z) - i Gamma/(2 pi) ln(z/a) "
+                "(Gamma counter-clockwise)"
+            ),
+            "lifting_velocity": (
+                "dW/dz = u - i v = U (1 - a**2/z**2) - i Gamma/(2 pi z)"
+            ),
+            "lifting_surface_speed": (
+                "v_theta = Gamma/(2 pi a) - 2 U sin(theta); "
+                "Cp = 1 - (v_theta/U)**2"
+            ),
+            "lifting_stagnation": "sin(theta_s) = Gamma/(4 pi U a)",
+            "lifting_lift": (
+                "L' = -rho U Gamma (Kutta-Joukowski, rho = 1); drag = 0"
+            ),
             "probe_table": explicit_probe_table(probes, radius, speed),
             "hand_typed_numbers": 0,
             "bibliography": [
@@ -962,6 +1128,36 @@ def run_case(
             "--doc docs/CASE-BEM-LAPLACE-CYLINDER.md"
         ),
     }
+    circulation_levels = [route_circulation(n, radius, speed) for n in panels]
+    artifact["routes"]["circulation"] = {
+        "declared": {
+            "circulation": CIRCULATION,
+            "surface_speed": "v_theta = Gamma/(2 pi a) - 2 U sin(theta)",
+            "pressure_coefficient": "Cp = 1 - (v_theta/U)**2",
+            "stagnation_angles": "sin(theta_s) = Gamma/(4 pi U a)",
+            "lift": "L' = -rho U Gamma (Kutta-Joukowski, rho = 1)",
+            "drag": "0 (d'Alembert)",
+            "imposed": (
+                "doublet Neumann data q_e = grad(phi_d).n_e plus the unit-vortex "
+                "response q_e = v_unit.n_body; the circulation itself is "
+                "prescribed, so no Kutta condition is solved"
+            ),
+            "recovered": (
+                "surface velocity from the solved traces, pressure integral for "
+                "lift and drag, interpolated zeros of v_theta for the "
+                "stagnation points"
+            ),
+        },
+        "levels": circulation_levels,
+        "observed_order_surface_velocity": _observed_orders(
+            circulation_levels, "surface_velocity_relative_l2"
+        ),
+        "observed_order_lift": _observed_orders(
+            circulation_levels, "lift_relative_error"
+        ),
+        "finest": circulation_levels[-1],
+    }
+    artifact["circulation_sweep"] = circulation_sweep(budget, radius, speed)
     artifact["near_wall"] = near_wall_study(radius, speed)
     artifact["multipole"] = multipole_study(panels, radius, speed)
     if with_controls:
@@ -1249,6 +1445,77 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "the image-sign data must be read as a negative dipole, i.e. the moment "
         "carries its sign",
     )
+    circulation = artifact["routes"]["circulation"]
+    finest_circulation = circulation["finest"]
+    add(
+        "circulation_surface_velocity_relative_l2",
+        finest_circulation["surface_velocity_relative_l2"],
+        f"< {TOLERANCE:g}",
+        finest_circulation["surface_velocity_relative_l2"] < TOLERANCE,
+        "surface speed vs v_theta = Gamma/(2 pi a) - 2 U sin(theta) at the budget mesh",
+    )
+    add(
+        "circulation_cp_relative_l2",
+        finest_circulation["cp_relative_l2"],
+        f"< {TOLERANCE:g}",
+        finest_circulation["cp_relative_l2"] < TOLERANCE,
+        "Cp built from the same surface velocity that is integrated for the lift",
+    )
+    add(
+        "circulation_velocity_relative_l2",
+        finest_circulation["velocity_relative_l2"],
+        f"< {TOLERANCE:g}",
+        finest_circulation["velocity_relative_l2"] < TOLERANCE,
+        "external velocity field vs dW/dz of the lifting complex potential",
+    )
+    add(
+        "circulation_measured_matches_prescribed",
+        finest_circulation["circulation_relative_error"],
+        f"<= {CIRCULATION_FLUX_TOL:g}",
+        finest_circulation["circulation_relative_error"] <= CIRCULATION_FLUX_TOL,
+        "the counter-clockwise contour integral of the solved surface velocity must "
+        "reproduce the prescribed Gamma, otherwise the lift agreement is a coincidence",
+    )
+    add(
+        "circulation_lift_matches_joukowski",
+        finest_circulation["lift_relative_error"],
+        f"< {TOLERANCE:g}",
+        finest_circulation["lift_relative_error"] < TOLERANCE,
+        "pressure-integrated lift vs L' = -rho U Gamma",
+    )
+    add(
+        "circulation_drag_vanishes",
+        abs(finest_circulation["drag_coefficient"]),
+        f"<= {DRAG_TOL:g}",
+        abs(finest_circulation["drag_coefficient"]) <= DRAG_TOL,
+        "d'Alembert: no drag in a steady inviscid flow, for any Gamma",
+    )
+    add(
+        "circulation_stagnation_angle_matches_closed_form",
+        finest_circulation["stagnation_angle_max_error_deg"],
+        f"<= {STAGNATION_TOL_DEG:g} deg",
+        finest_circulation["stagnation_angle_max_error_deg"] <= STAGNATION_TOL_DEG,
+        "interpolated zeros of the surface tangential velocity vs "
+        "sin(theta_s) = Gamma/(4 pi U a)",
+    )
+    order = circulation["observed_order_surface_velocity"][-1]
+    add(
+        "circulation_observed_order",
+        circulation["observed_order_surface_velocity"],
+        f">= {ORDER_MIN:g}",
+        bool(math.isfinite(order)) and order >= ORDER_MIN,
+        "the circulation route must converge on refinement (faceting O(h^2)) "
+        "instead of sitting at a plateau",
+    )
+    sweep = artifact["circulation_sweep"]
+    add(
+        "circulation_sweep_lift_is_linear",
+        sweep["max_lift_deviation_from_joukowski"],
+        f"< {TOLERANCE:g}",
+        sweep["max_lift_deviation_from_joukowski"] < TOLERANCE,
+        "lift/(rho U Gamma) must stay at 1 across Gamma in " + str(CIRCULATION_SWEEP),
+    )
+
     if "controls" in artifact:
         control = artifact["controls"]["wrong_reference"]
         add(
@@ -1319,7 +1586,16 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "1. 路线 D（Dirichlet）：解析扰动势 $\\phi'$ 加在面板中点 → 第一类外部 Dirichlet 问题 →",
         "   新求值器给出外部测点的 $\\phi'$ 与 $\\nabla\\phi'$，加回 $U\\hat x$ 与 $dW/dz$ 比较；",
         "2. 路线 N（Neumann）：解析流体法向导数 $q_e=Ua^2\\cos\\theta/r^2$（等价于物面无穿透）→",
-        "   第二类外部 Neumann 问题 → 物面速度与 $2U|\\sin\\theta|$ 比较，外部测点比较速度场。",
+        "   第二类外部 Neumann 问题 → 物面速度与 $2U|\\sin\\theta|$ 比较，外部测点比较速度场；",
+        "3. 路线 $\\Gamma$（给定环量 / 旋转圆柱）：环量由**数据给定**（无 Kutta 条件）。扰动拆成"
+        "**单值**偶极子 $\\phi_d=Ua^2\\cos\\theta/r$（Neumann 数据 "
+        "$q_e=\\nabla\\phi_d\\cdot n_e$）与**单位点涡响应**（数据 $q_e=v_{unit}\\cdot n_{body}$），"
+        "各解一次外部 Neumann 问题；",
+        "   总速度 $U\\hat x+\\nabla\\phi_d+\\Gamma(v_{unit}+\\nabla\\phi_c)$，"
+        "再与 Kutta-Joukowski 升力、驻点角、$Cp$ 闭式逐项对照（模块 `tensorbem.lifting_cylinder`）。"
+        "**实测**：内接多面体的面板中点法向恰为径向、点涡在该点纯切向，故响应数据恒为零（$\\sim10^{-16}$，"
+        "`tests/test_lifting_cylinder.py` 已钉住该零、并在椭圆网格上验证其非零），即圆柱阶梯上环量由解析项承载，"
+        "BEM 解的是折面体上的偶极子 Neumann 问题。",
         "",
         "参考值全部由闭式公式在同一点现算（`hand_typed_numbers = 0`），并以有限差分反查参考自身满足",
         "$\\nabla^2\\phi'=0$、$\\nabla\\times v=0$；闭式面板梯度再以势的中心差分反查（`field_gradient_matches_finite_difference`）。",
@@ -1507,6 +1783,66 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "写进本表与 `evaluate_exterior_field` docstring，并新增守门判据。",
         "",
     ]
+    rows_c = artifact["routes"]["circulation"]["levels"]
+    sweep = artifact["circulation_sweep"]
+    circulation = artifact["routes"]["circulation"]
+    finest_c = circulation["finest"]
+    lines += [
+        "",
+        "路线 $\\Gamma$（给定环量 = 旋转圆柱 / Magnus，"
+        f"$\\Gamma={finest_c['circulation']:g}\\,Ua$）：闭式 "
+        "$W(z)=U(z+a^2/z)-i\\Gamma/(2\\pi)\\ln(z/a)$，物面 "
+        "$v_\\theta=\\Gamma/(2\\pi a)-2U\\sin\\theta$，"
+        "$\\sin\\theta_s=\\Gamma/(4\\pi Ua)$，$L'=-\\rho U\\Gamma$。",
+        "",
+        "| N | 环量（实测/给定） | 物面速度 L2 | $Cp$ L2 | 外部速度 L2 | 升力 $L'$ | $L'_{ref}$ | 升力相对误差 | 阻力系数 | 驻点误差(deg) |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in rows_c:
+        lines.append(
+            "| %d | %.6f / %.1f | %.3e | %.3e | %.3e | %.6f | %.6f | %.3e | %.1e | %.3f |"
+            % (
+                row["panels"],
+                row["circulation_measured"],
+                row["circulation"],
+                row["surface_velocity_relative_l2"],
+                row["cp_relative_l2"],
+                row["velocity_relative_l2"],
+                row["lift"],
+                row["lift_exact"],
+                row["lift_relative_error"],
+                row["drag_coefficient"],
+                row["stagnation_angle_max_error_deg"],
+            )
+        )
+    lines += [
+        "",
+        f"环量扫描（$N={sweep['panels']}$，升力比 $L'/(\\rho U\\Gamma)$ 应为 1）：",
+        "",
+        "| $\\Gamma/(Ua)$ | $L'$ | $-\\rho U\\Gamma$ | 比值 | 相对误差 | $Cp_{min}$ | $Cp_{min,ref}$ | 驻点误差(deg) |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in sweep["rows"]:
+        lines.append(
+            "| %.1f | %.6f | %.6f | %.6f | %.3e | %.5f | %.5f | %.3f |"
+            % (
+                row["circulation"],
+                row["lift"],
+                row["lift_exact"],
+                row["lift_over_joukowski"],
+                row["lift_relative_error"],
+                row["cp_min"],
+                row["cp_min_exact"],
+                row["stagnation_angle_max_error_deg"],
+            )
+        )
+    lines += [
+        "",
+        f"实测收敛阶：物面速度 {circulation['observed_order_surface_velocity']}、"
+        f"升力误差 {circulation['observed_order_lift']}（面元阶梯 "
+        f"{artifact['parameters']['panel_ladder']}）。",
+        "",
+    ]
     lines += [
         "",
         "## 4. 结果图",
@@ -1523,7 +1859,12 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "",
         "![convergence](benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png)",
         "",
-        "`figures/convergence.png`：两条路线的误差随 $h_{mean}$ 收敛，附 $h^2$、$h^4$ 参考斜率。",
+        "`figures/convergence.png`：三条路线的误差随 $h_{mean}$ 收敛，附 $h^2$、$h^4$ 参考斜率。",
+        "",
+        "![circulation](benchmarks/verified/case_bem_laplace_cylinder/figures/circulation.png)",
+        "",
+        "`figures/circulation.png`：左=给定环量下的 $Cp(\theta)$（BEM 面板 vs 闭式，"
+        "虚线为闭式驻点位置）；右=升力随 $\Gamma$ 的线性（数值 vs Kutta-Joukowski）与相对误差。",
         "",
         "![multipole](benchmarks/verified/case_bem_laplace_cylinder/figures/multipole.png)",
         "",
@@ -1539,8 +1880,14 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "- 单层算子 $S$ 的条件数随加密增长（对数容量退化），本算例 $L=2$、$a=1$ 远离退化点，",
         "  但仍逐级报告 $cond(S)$；第二类算子 $\\frac12 I-H$ 条件数 $O(1)$；",
         "- 只在 $r/a\\ge 1.25$ 求值：贴壁/体内点必须被守门拒绝；",
+        "- 路线 $\\Gamma$ 的环量是**给定**的（旋转圆柱），不是解出来的：本算例验证的是"
+        "「带环量的外部 Neumann 问题 + 压力积分 + 驻点定位」，不验证 Kutta 条件（后者见 "
+        "`docs/lifting_kutta_closure.md` 与 lifting 家族算例）；",
+        "- 圆柱阶梯上点涡响应数据实测恒为零（见 §2 第 3 条），所以本路线的数值部分=折面体偶极子解；"
+        "不把「升力吻合」读成「环量被 BEM 解出来」；",
+        "- 环量须满足 $|\\Gamma|<4\\pi Ua$ 才有两个物面驻点；超临界时物面无驻点，模块直接拒绝；",
         "- 只验证势流算子链（边界积分、外部场求值、物面速度），无粘性尾流/分离/自由面，",
-        "  不能当阻力预报用。",
+        "  不能当阻力预报用（$L'=-\\rho U\\Gamma$ 是理想化结果，真实旋转圆柱有粘性分离与 Magnus 失效）。",
         "",
         "## 6. 误差判定",
         "",
@@ -1553,6 +1900,10 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         ("路线 N 物面速度 L2（vs 2U sinθ）", rows_n[-1]["surface_velocity_relative_l2"]),
         ("路线 N 外部速度场 L2", rows_n[-1]["velocity_relative_l2"]),
         ("路线 N Cp L2", rows_n[-1]["cp_relative_l2"]),
+        ("路线 $\\Gamma$ 物面速度 L2", rows_c[-1]["surface_velocity_relative_l2"]),
+        ("路线 $\\Gamma$ 外部速度 L2", rows_c[-1]["velocity_relative_l2"]),
+        ("路线 $\\Gamma$ 升力 vs $\\rho U\\Gamma$", rows_c[-1]["lift_relative_error"]),
+        ("路线 $\\Gamma$ 环量（实测 vs 给定）", rows_c[-1]["circulation_relative_error"]),
     ]
     for name, value in checks:
         lines.append(
@@ -1615,9 +1966,15 @@ def write_case_card(artifact: dict[str, Any], path: Path) -> Path:
             "tensorbem.kernels.integrate_double_layer_panel_gradient",
             "tensorbem.multipole2d.fit_ring",
             "tensorbem.multipole2d.decompose_rings",
+            "tensorbem.lifting_cylinder.solve_rotating_cylinder",
+            "tensorbem.lifting_cylinder.exterior_velocity_field",
+            "tensorbem.lifting.vortex_velocity_field",
         ],
         "repro_cmd": artifact["repro_cmd"],
-        "test_cmd": "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py -q",
+        "test_cmd": (
+            "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py "
+            "tests/test_lifting_cylinder.py -q"
+        ),
         "artifacts": {
             "results_json": "benchmarks/verified/case_bem_laplace_cylinder/results.json",
             "report_md": "benchmarks/verified/case_bem_laplace_cylinder/report.md",
@@ -1629,6 +1986,99 @@ def write_case_card(artifact: dict[str, Any], path: Path) -> Path:
     path.write_text(json.dumps(card, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return path
 
+
+def plot_circulation(artifact: dict[str, Any], output: Path) -> Path:
+    """Circulation route: Cp(theta) against closed form, and lift vs Gamma."""
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError as error:  # pragma: no cover - optional dependency
+        raise RuntimeError("matplotlib is required for plotting") from error
+
+    radius = float(artifact["parameters"]["radius"])
+    speed = float(artifact["parameters"]["speed"])
+    rows_c = artifact["routes"]["circulation"]["levels"]
+    finest = rows_c[-1]
+    circulation = float(finest["circulation"])
+    mesh = regular_polygon(int(finest["panels"]), radius)
+    solution = solve_rotating_cylinder(mesh, radius, speed, circulation)
+    theta = np.arctan2(mesh.centers[:, 1], mesh.centers[:, 0])
+    order = np.argsort(theta)
+    reference_theta = np.linspace(0.0, 2.0 * np.pi, 721)
+    sweep = artifact["circulation_sweep"]["rows"]
+
+    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.2))
+    axes[0].plot(
+        np.degrees(reference_theta),
+        circulation_pressure_coefficient(
+            reference_theta, radius, speed, circulation
+        ),
+        "k-",
+        lw=1.0,
+        label="closed form",
+    )
+    axes[0].plot(
+        np.degrees(theta[order]),
+        solution.surface_pressure_coefficient[order],
+        "o",
+        ms=2.5,
+        label=f"BEM constant panels, N={finest['panels']}",
+    )
+    for angle in finest["stagnation_angles_exact_deg"]:
+        axes[0].axvline(angle, color="tab:red", ls=":", lw=0.9)
+    axes[0].annotate(
+        r"$\theta_s$ (closed form)",
+        (finest["stagnation_angles_exact_deg"][0], 0.7),
+        fontsize=7,
+        color="tab:red",
+    )
+    axes[0].set_xlabel(r"$\theta$ (deg)")
+    axes[0].set_ylabel(r"$C_p$")
+    axes[0].set_title(rf"$C_p(\theta)$ at $\Gamma={circulation:g}Ua$")
+    axes[0].legend(fontsize=7)
+    axes[0].grid(True, alpha=0.3)
+
+    gammas = [row["circulation"] for row in sweep]
+    axes[1].plot(
+        gammas,
+        [row["lift_exact"] for row in sweep],
+        "k-",
+        lw=1.0,
+        label=r"$-\rho U\Gamma$",
+    )
+    axes[1].plot(
+        gammas,
+        [row["lift"] for row in sweep],
+        "o",
+        ms=4.0,
+        label=f"BEM pressure integral, N={artifact['circulation_sweep']['panels']}",
+    )
+    axes[1].set_xlabel(r"$\Gamma/(Ua)$")
+    axes[1].set_ylabel("lift per unit span")
+    axes[1].grid(True, alpha=0.3)
+    axes[1].legend(fontsize=7, loc="upper left")
+    twin = axes[1].twinx()
+    twin.semilogy(
+        gammas,
+        [max(row["lift_relative_error"], 1.0e-18) for row in sweep],
+        "s--",
+        ms=3.0,
+        color="tab:green",
+        label="relative error",
+    )
+    twin.set_ylabel("lift relative error", color="tab:green")
+    twin.legend(fontsize=7, loc="center right")
+    axes[1].set_title(
+        "lift linearity; max deviation "
+        f"{artifact['circulation_sweep']['max_lift_deviation_from_joukowski']:.2e}"
+    )
+    fig.tight_layout()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=150)
+    plt.close(fig)
+    return output
 
 def plot_field(
     artifact: dict[str, Any], output: Path, panels: int = 64
@@ -1973,6 +2423,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     plot_convergence(artifact, figures / "convergence.png")
     plot_near_wall(artifact, figures / "near_wall.png")
     plot_multipole(artifact, figures / "multipole.png")
+    plot_circulation(artifact, figures / "circulation.png")
     if args.doc is not None:
         args.doc.parent.mkdir(parents=True, exist_ok=True)
         args.doc.write_text(render_markdown(artifact) + "\n", encoding="utf-8")
@@ -1988,6 +2439,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "neumann_surface_velocity_relative_l2": artifact["routes"]["neumann"][
                     "finest"
                 ]["surface_velocity_relative_l2"],
+                "circulation_surface_velocity_relative_l2": artifact["routes"][
+                    "circulation"
+                ]["finest"]["surface_velocity_relative_l2"],
+                "circulation_lift_relative_error": artifact["routes"]["circulation"][
+                    "finest"
+                ]["lift_relative_error"],
                 "wall_seconds": artifact["wall_seconds"],
             },
             indent=2,

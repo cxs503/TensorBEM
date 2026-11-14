@@ -35,7 +35,13 @@
     ],
     "probe_angles": 16,
     "probe_count": 64,
-    "far_field_radius_over_a": 8.0
+    "far_field_radius_over_a": 8.0,
+    "circulation": 3.0,
+    "circulation_sweep": [
+      1.0,
+      2.0,
+      3.0
+    ]
   },
   "capability_reused": [
     "tensorbem.solver.solve_laplace_exterior_dirichlet",
@@ -45,10 +51,13 @@
     "tensorbem.kernels.integrate_single_layer_panel_gradient",
     "tensorbem.kernels.integrate_double_layer_panel_gradient",
     "tensorbem.multipole2d.fit_ring",
-    "tensorbem.multipole2d.decompose_rings"
+    "tensorbem.multipole2d.decompose_rings",
+    "tensorbem.lifting_cylinder.solve_rotating_cylinder",
+    "tensorbem.lifting_cylinder.exterior_velocity_field",
+    "tensorbem.lifting.vortex_velocity_field"
   ],
   "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md",
-  "test_cmd": "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py -q",
+  "test_cmd": "PYTHONPATH=src python3 -m pytest tests/test_case_cylinder_stream.py tests/test_lifting_cylinder.py -q",
   "artifacts": {
     "results_json": "benchmarks/verified/case_bem_laplace_cylinder/results.json",
     "report_md": "benchmarks/verified/case_bem_laplace_cylinder/report.md",

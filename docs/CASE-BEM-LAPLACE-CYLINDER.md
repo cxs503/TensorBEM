@@ -1,8 +1,8 @@
 # CASE-BEM-LAPLACE-CYLINDER — 圆柱绕势流速度场（BEM vs 解析复势）
 
 - 算例码 `CASE-BEM-LAPLACE-CYLINDER` / 池码 `BEM-LAPLACE-CYLINDER`，域：ship-total-performance/resistance-potential-flow
-- 容差 `< 3%`；判定 **PASS**（29 项判据，失败 0 项）
-- 生成 2026-11-14T15:13:32Z · Python 3.11.6 · NumPy 2.4.6 · loongarch64
+- 容差 `< 3%`；判定 **PASS**（38 项判据，失败 0 项）
+- 生成 2026-11-14T19:08:10Z · Python 3.11.6 · NumPy 2.4.6 · loongarch64
 
 ## 1. 案例介绍
 
@@ -31,7 +31,9 @@ BEM 只给边界量、拿不到物体外速度场。本单新增：
 1. 路线 D（Dirichlet）：解析扰动势 $\phi'$ 加在面板中点 → 第一类外部 Dirichlet 问题 →
    新求值器给出外部测点的 $\phi'$ 与 $\nabla\phi'$，加回 $U\hat x$ 与 $dW/dz$ 比较；
 2. 路线 N（Neumann）：解析流体法向导数 $q_e=Ua^2\cos\theta/r^2$（等价于物面无穿透）→
-   第二类外部 Neumann 问题 → 物面速度与 $2U|\sin\theta|$ 比较，外部测点比较速度场。
+   第二类外部 Neumann 问题 → 物面速度与 $2U|\sin\theta|$ 比较，外部测点比较速度场；
+3. 路线 $\Gamma$（给定环量 / 旋转圆柱）：环量由**数据给定**（无 Kutta 条件）。扰动拆成**单值**偶极子 $\phi_d=Ua^2\cos\theta/r$（Neumann 数据 $q_e=\nabla\phi_d\cdot n_e$）与**单位点涡响应**（数据 $q_e=v_{unit}\cdot n_{body}$），各解一次外部 Neumann 问题；
+   总速度 $U\hat x+\nabla\phi_d+\Gamma(v_{unit}+\nabla\phi_c)$，再与 Kutta-Joukowski 升力、驻点角、$Cp$ 闭式逐项对照（模块 `tensorbem.lifting_cylinder`）。**实测**：内接多面体的面板中点法向恰为径向、点涡在该点纯切向，故响应数据恒为零（$\sim10^{-16}$，`tests/test_lifting_cylinder.py` 已钉住该零、并在椭圆网格上验证其非零），即圆柱阶梯上环量由解析项承载，BEM 解的是折面体上的偶极子 Neumann 问题。
 
 参考值全部由闭式公式在同一点现算（`hand_typed_numbers = 0`），并以有限差分反查参考自身满足
 $\nabla^2\phi'=0$、$\nabla\times v=0$；闭式面板梯度再以势的中心差分反查（`field_gradient_matches_finite_difference`）。
@@ -111,6 +113,25 @@ $\nabla^2\phi'=0$、$\nabla\times v=0$；闭式面板梯度再以势的中心差
 近壁相对速度误差在 $0.1h_{max}$ 处仍有 17.6%（见上表末列），更贴壁只会更大。本轮不改既有 API 默认值（避免破坏调用方），而是把可用窗口写进本表与 `evaluate_exterior_field` docstring，并新增守门判据。
 
 
+路线 $\Gamma$（给定环量 = 旋转圆柱 / Magnus，$\Gamma=3\,Ua$）：闭式 $W(z)=U(z+a^2/z)-i\Gamma/(2\pi)\ln(z/a)$，物面 $v_\theta=\Gamma/(2\pi a)-2U\sin\theta$，$\sin\theta_s=\Gamma/(4\pi Ua)$，$L'=-\rho U\Gamma$。
+
+| N | 环量（实测/给定） | 物面速度 L2 | $Cp$ L2 | 外部速度 L2 | 升力 $L'$ | $L'_{ref}$ | 升力相对误差 | 阻力系数 | 驻点误差(deg) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 32 | 3.009676 / 3.0 | 3.421e-03 | 8.971e-03 | 2.479e-03 | -3.019334 | -3.000000 | 6.445e-03 | 1.9e-16 | 0.070 |
+| 64 | 3.002412 / 3.0 | 8.523e-04 | 2.235e-03 | 5.926e-04 | -3.004819 | -3.000000 | 1.606e-03 | -3.6e-16 | 0.008 |
+| 128 | 3.000603 / 3.0 | 2.131e-04 | 5.587e-04 | 1.481e-04 | -3.001204 | -3.000000 | 4.014e-04 | 8.0e-17 | 0.006 |
+
+环量扫描（$N=128$，升力比 $L'/(\rho U\Gamma)$ 应为 1）：
+
+| $\Gamma/(Ua)$ | $L'$ | $-\rho U\Gamma$ | 比值 | 相对误差 | $Cp_{min}$ | $Cp_{min,ref}$ | 驻点误差(deg) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1.0 | -1.000401 | -1.000000 | 1.000401 | 4.014e-04 | -3.66129 | -3.65935 | 0.001 |
+| 2.0 | -2.000803 | -2.000000 | 1.000401 | 4.014e-04 | -4.37407 | -4.37177 | 0.003 |
+| 3.0 | -3.001204 | -3.000000 | 1.000401 | 4.014e-04 | -5.13755 | -5.13485 | 0.006 |
+
+实测收敛阶：物面速度 [2.0084326626949522, 2.0009051001603915]、升力误差 [2.007921397294378, 2.0013703647305294]（面元阶梯 [32, 64, 128]）。
+
+
 ## 4. 结果图
 
 ![velocity field](benchmarks/verified/case_bem_laplace_cylinder/figures/field.png)
@@ -123,7 +144,11 @@ $\nabla^2\phi'=0$、$\nabla\times v=0$；闭式面板梯度再以势的中心差
 
 ![convergence](benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png)
 
-`figures/convergence.png`：两条路线的误差随 $h_{mean}$ 收敛，附 $h^2$、$h^4$ 参考斜率。
+`figures/convergence.png`：三条路线的误差随 $h_{mean}$ 收敛，附 $h^2$、$h^4$ 参考斜率。
+
+![circulation](benchmarks/verified/case_bem_laplace_cylinder/figures/circulation.png)
+
+`figures/circulation.png`：左=给定环量下的 $Cp(	heta)$（BEM 面板 vs 闭式，虚线为闭式驻点位置）；右=升力随 $\Gamma$ 的线性（数值 vs Kutta-Joukowski）与相对误差。
 
 ![multipole](benchmarks/verified/case_bem_laplace_cylinder/figures/multipole.png)
 
@@ -137,8 +162,11 @@ $\nabla^2\phi'=0$、$\nabla\times v=0$；闭式面板梯度再以势的中心差
 - 单层算子 $S$ 的条件数随加密增长（对数容量退化），本算例 $L=2$、$a=1$ 远离退化点，
   但仍逐级报告 $cond(S)$；第二类算子 $\frac12 I-H$ 条件数 $O(1)$；
 - 只在 $r/a\ge 1.25$ 求值：贴壁/体内点必须被守门拒绝；
+- 路线 $\Gamma$ 的环量是**给定**的（旋转圆柱），不是解出来的：本算例验证的是「带环量的外部 Neumann 问题 + 压力积分 + 驻点定位」，不验证 Kutta 条件（后者见 `docs/lifting_kutta_closure.md` 与 lifting 家族算例）；
+- 圆柱阶梯上点涡响应数据实测恒为零（见 §2 第 3 条），所以本路线的数值部分=折面体偶极子解；不把「升力吻合」读成「环量被 BEM 解出来」；
+- 环量须满足 $|\Gamma|<4\pi Ua$ 才有两个物面驻点；超临界时物面无驻点，模块直接拒绝；
 - 只验证势流算子链（边界积分、外部场求值、物面速度），无粘性尾流/分离/自由面，
-  不能当阻力预报用。
+  不能当阻力预报用（$L'=-\rho U\Gamma$ 是理想化结果，真实旋转圆柱有粘性分离与 Magnus 失效）。
 
 ## 6. 误差判定
 
@@ -149,6 +177,10 @@ $\nabla^2\phi'=0$、$\nabla\times v=0$；闭式面板梯度再以势的中心差
 | 路线 N 物面速度 L2（vs 2U sinθ） | 1.008e-04 | 是 |
 | 路线 N 外部速度场 L2 | 1.532e-04 | 是 |
 | 路线 N Cp L2 | 2.849e-04 | 是 |
+| 路线 $\Gamma$ 物面速度 L2 | 2.131e-04 | 是 |
+| 路线 $\Gamma$ 外部速度 L2 | 1.481e-04 | 是 |
+| 路线 $\Gamma$ 升力 vs $\rho U\Gamma$ | 4.014e-04 | 是 |
+| 路线 $\Gamma$ 环量（实测 vs 给定） | 2.008e-04 | 是 |
 
 | 路线 M 偶极矩 $A_1$ | 3.578e-07 | 是 |
 | 路线 M 四极矩 $A_2$ | 1.048e-04 | 是 |
