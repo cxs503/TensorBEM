@@ -53,6 +53,7 @@ import numpy as np
 from ..geometry import regular_polygon
 from ..multipole2d import decompose_rings, fit_ring, ring_angles
 from ..solver import (
+    LaplaceDirichletResult,
     evaluate_exterior_field,
     evaluate_exterior_surface_velocity,
     solve_laplace_exterior_dirichlet,
@@ -90,6 +91,10 @@ NEAR_WALL_FACTORS: tuple[float, ...] = (2.0, 1.0, 0.5, 0.25, 0.1)
 # beyond delta >= NEAR_WALL_WINDOW_FACTOR * h_max the relative velocity error
 # must stay inside one third of the case tolerance.
 NEAR_WALL_WINDOW_FACTOR = 2.0
+# The linear-density (first-moment) basis is required to hold the 1% bound this
+# far in; NEAR_WALL_LINEAR_MIN_GAIN is the least improvement it must buy there.
+NEAR_WALL_LINEAR_FACTOR = 0.5
+NEAR_WALL_LINEAR_MIN_GAIN = 3.0
 NEAR_WALL_WINDOW_TOL = 0.01
 # Inside delta <= NEAR_WALL_EXCLUSION_FACTOR * h_max the error must exceed the
 # case tolerance: the window above is an exclusion, not a cosmetic remark.
@@ -484,6 +489,21 @@ def near_wall_study(
         cos_theta = centers[:, 0] / r
         normal_derivative = speed * radius**2 * cos_theta / r**2
         result = solve_laplace_exterior_neumann(mesh, normal_derivative)
+        result_linear = solve_laplace_exterior_neumann(
+            mesh, normal_derivative, linear_density=True
+        )
+        # Representation-only control: the same exterior field, but with the two
+        # traces taken from the exact solution at the panel midpoints, so the
+        # solve error is removed and what is left is the panel basis itself.
+        exact_result = LaplaceDirichletResult(
+            normal_derivative=normal_derivative.copy(),
+            boundary_values=exact_perturbation_potential(centers, speed, radius),
+            single_layer_matrix=np.zeros((mesh.panel_count, mesh.panel_count)),
+            double_layer_matrix=np.zeros((mesh.panel_count, mesh.panel_count)),
+            condition_number=1.0,
+            residual_l2=0.0,
+            domain="exterior",
+        )
         h_max = float(np.max(mesh.lengths))
         theta = np.arctan2(centers[:, 1], centers[:, 0])
         sweep: list[dict[str, Any]] = []
@@ -495,11 +515,24 @@ def near_wall_study(
                     (radius + delta) * np.sin(theta),
                 )
             )
-            field = evaluate_exterior_field(mesh, result, points)
-            total_velocity = field.gradient + np.array([speed, 0.0])
             exact = exact_velocity(points, radius, speed)
-            relative = np.linalg.norm(total_velocity - exact, axis=1) / np.linalg.norm(
-                exact, axis=1
+            exact_speed = np.linalg.norm(exact, axis=1)
+
+            def _relative(field: Any) -> np.ndarray:
+                total = field.gradient + np.array([speed, 0.0])
+                return np.linalg.norm(total - exact, axis=1) / exact_speed
+
+            relative = _relative(evaluate_exterior_field(mesh, result, points))
+            relative_linear = _relative(
+                evaluate_exterior_field(mesh, result_linear, points)
+            )
+            representation = _relative(
+                evaluate_exterior_field(mesh, exact_result, points)
+            )
+            representation_linear = _relative(
+                evaluate_exterior_field(
+                    mesh, exact_result, points, linear_density=True
+                )
             )
             sweep.append(
                 {
@@ -507,6 +540,16 @@ def near_wall_study(
                     "clearance_over_radius": delta / radius,
                     "max_relative_velocity_error": float(np.max(relative)),
                     "mean_relative_velocity_error": float(np.mean(relative)),
+                    "max_relative_velocity_error_linear": float(
+                        np.max(relative_linear)
+                    ),
+                    "mean_relative_velocity_error_linear": float(
+                        np.mean(relative_linear)
+                    ),
+                    "representation_error_constant": float(np.max(representation)),
+                    "representation_error_linear": float(
+                        np.max(representation_linear)
+                    ),
                 }
             )
         guard_factor = 2.0 * NEAR_WALL_WINDOW_FACTOR
@@ -575,7 +618,184 @@ def near_wall_study(
         if finest > 0.0
         else float("inf")
     )
+    def linear_at(level: dict[str, Any], factor: float) -> float:
+        for row in level["sweep"]:
+            if row["clearance_over_h_max"] == float(factor):
+                return float(row["max_relative_velocity_error_linear"])
+        raise KeyError(factor)
+
+    def representation_at(level: dict[str, Any], factor: float, key: str) -> float:
+        for row in level["sweep"]:
+            if row["clearance_over_h_max"] == float(factor):
+                return float(row[key])
+        raise KeyError(factor)
+
+    half = float(NEAR_WALL_LINEAR_FACTOR)
+    linear_half = [
+        {"panels": level["panels"], "max_relative_velocity_error": linear_at(level, half)}
+        for level in levels
+    ]
+    constant_half = [
+        {
+            "panels": level["panels"],
+            "max_relative_velocity_error": error_at(level, half),
+        }
+        for level in levels
+    ]
+    half_h = [level["h_max_over_radius"] for level in linear_half]
+    half_error = [row["max_relative_velocity_error"] for row in linear_half]
+    if len(half_h) > 1 and all(value > 0.0 for value in half_error):
+        half_order = float(np.polyfit(np.log(half_h), np.log(half_error), 1)[0])
+    else:  # pragma: no cover - defensive
+        half_order = float("nan")
+    usable_factor = None
+    for factor in sorted(factors, reverse=True):
+        worst = max(
+            float(
+                next(
+                    row["max_relative_velocity_error_linear"]
+                    for row in level["sweep"]
+                    if row["clearance_over_h_max"] == float(factor)
+                )
+            )
+            for level in levels
+        )
+        if worst <= NEAR_WALL_WINDOW_TOL:
+            usable_factor = float(factor)
+        else:
+            break
+    # Faceting attribution: the inscribed polygon's panel midpoints sit at
+    # radius a*cos(pi/N), i.e. a*(1 - h^2/8), so a probe placed at a + delta
+    # above the *circle* is (delta + h^2/8) above the *surface it is measured
+    # against*; at fixed delta/h_max that offset is O(h) of delta, which is
+    # exactly the first-order behaviour of the exclusion-zone error measured
+    # above. Re-referencing the probes to the polygon surface isolates it.
+    faceting = []
+    for level, panels in zip(levels, ladder):
+        mesh = regular_polygon(int(panels), radius)
+        centers = mesh.centers
+        theta = np.arctan2(centers[:, 1], centers[:, 0])
+        h_max = float(np.max(mesh.lengths))
+        delta = NEAR_WALL_EXCLUSION_FACTOR * h_max
+        exact_result = LaplaceDirichletResult(
+            normal_derivative=speed * radius**2 * (centers[:, 0] / np.hypot(centers[:, 0], centers[:, 1])) / np.hypot(centers[:, 0], centers[:, 1]) ** 2,
+            boundary_values=exact_perturbation_potential(centers, speed, radius),
+            single_layer_matrix=np.zeros((mesh.panel_count, mesh.panel_count)),
+            double_layer_matrix=np.zeros((mesh.panel_count, mesh.panel_count)),
+            condition_number=1.0,
+            residual_l2=0.0,
+            domain="exterior",
+        )
+
+        def _err(surface_radius: float) -> tuple[float, float]:
+            points = np.column_stack(
+                (
+                    (surface_radius + delta) * np.cos(theta),
+                    (surface_radius + delta) * np.sin(theta),
+                )
+            )
+            exact = exact_velocity(points, radius, speed)
+            exact_speed = np.linalg.norm(exact, axis=1)
+            values = []
+            for linear in (False, True):
+                field = evaluate_exterior_field(
+                    mesh, exact_result, points, linear_density=linear
+                )
+                total = field.gradient + np.array([speed, 0.0])
+                values.append(
+                    float(
+                        np.max(
+                            np.linalg.norm(total - exact, axis=1) / exact_speed
+                        )
+                    )
+                )
+            return values[0], values[1]
+
+        circle_constant, circle_linear = _err(radius)
+        polygon_constant, polygon_linear = _err(radius * math.cos(math.pi / panels))
+        faceting.append(
+            {
+                "panels": int(panels),
+                "midpoint_radius_over_radius": math.cos(math.pi / panels),
+                "faceting_offset_over_h_max": (
+                    (radius - radius * math.cos(math.pi / panels)) / h_max
+                ),
+                "circle_referenced_constant": circle_constant,
+                "circle_referenced_linear": circle_linear,
+                "surface_referenced_constant": polygon_constant,
+                "surface_referenced_linear": polygon_linear,
+            }
+        )
     return {
+        "faceting": {
+            "clearance_over_h_max": NEAR_WALL_EXCLUSION_FACTOR,
+            "levels": faceting,
+            "note": (
+                "probes measured from the inscribed polygon surface rather than "
+                "from the circle: the residual difference is the faceting offset "
+                "a(1-cos(pi/N)) ~ h^2/8, which is O(h) relative to delta = "
+                "0.1 h_max and is the reason the exclusion-zone error saturates "
+                "at first order instead of improving like h^2"
+            ),
+        },
+        "linear": {
+            "clearance_over_h_max": half,
+            "levels": linear_half,
+            "constant_mode_levels": constant_half,
+            "observed_order_in_h": half_order,
+            "error_tolerance": NEAR_WALL_WINDOW_TOL,
+            "usable_clearance_over_h_max": usable_factor,
+            "improvement_at_half_h_finest": (
+                constant_half[-1]["max_relative_velocity_error"]
+                / linear_half[-1]["max_relative_velocity_error"]
+                if linear_half[-1]["max_relative_velocity_error"] > 0.0
+                else float("inf")
+            ),
+            "improvement_at_window_finest": (
+                error_at(levels[-1], NEAR_WALL_WINDOW_FACTOR)
+                / linear_at(levels[-1], NEAR_WALL_WINDOW_FACTOR)
+            ),
+            "improvement_at_exclusion_finest": (
+                error_at(levels[-1], NEAR_WALL_EXCLUSION_FACTOR)
+                / linear_at(levels[-1], NEAR_WALL_EXCLUSION_FACTOR)
+            ),
+            "note": (
+                "linear_density=True expands both panel densities as sigma(s) = "
+                "sigma_i + sigma'_i (s - L_i/2) with closed-form first-moment "
+                "integrals; the representation error drops by an order of "
+                "magnitude, so the 1%-accurate window moves in from "
+                f"delta = {NEAR_WALL_WINDOW_FACTOR:g} h_max to "
+                "delta ~ 0.5 h_max"
+            ),
+        },
+        "attribution": {
+            "factors": [float(value) for value in factors],
+            "representation_constant": {
+                str(level["panels"]): {
+                    f"{factor:g}": representation_at(
+                        level, factor, "representation_error_constant"
+                    )
+                    for factor in factors
+                }
+                for level in levels
+            },
+            "representation_linear": {
+                str(level["panels"]): {
+                    f"{factor:g}": representation_at(
+                        level, factor, "representation_error_linear"
+                    )
+                    for factor in factors
+                }
+                for level in levels
+            },
+            "note": (
+                "the two representation rows use the exact traces at the panel "
+                "midpoints, so they isolate the panel basis from the solve; the "
+                "difference between them and the sweep rows above measures how "
+                "much of the near-wall error is boundary-trace error amplified "
+                "as 1/delta"
+            ),
+        },
         "window": {
             "clearance_over_h_max": NEAR_WALL_WINDOW_FACTOR,
             "relative_error_tolerance": NEAR_WALL_WINDOW_TOL,
@@ -1355,6 +1575,46 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "clearance instead of returning a plausible wrong velocity",
     )
 
+    linear_near = near["linear"]
+    add(
+        "near_wall_linear_window_extends_to_half_panel",
+        {
+            "usable_clearance_over_h_max": linear_near["usable_clearance_over_h_max"],
+            "levels": linear_near["levels"],
+        },
+        f"<= {NEAR_WALL_LINEAR_FACTOR:g} at <= {NEAR_WALL_WINDOW_TOL:g} error",
+        linear_near["usable_clearance_over_h_max"] is not None
+        and linear_near["usable_clearance_over_h_max"] <= NEAR_WALL_LINEAR_FACTOR,
+        "with the first-moment (linear density) basis the 1% window must reach "
+        f"delta = {NEAR_WALL_LINEAR_FACTOR:g} h_max, against "
+        f"{NEAR_WALL_WINDOW_FACTOR:g} h_max for constant panels",
+    )
+    add(
+        "near_wall_linear_beats_constant_basis",
+        linear_near["improvement_at_half_h_finest"],
+        f">= {NEAR_WALL_LINEAR_MIN_GAIN:g}",
+        linear_near["improvement_at_half_h_finest"] >= NEAR_WALL_LINEAR_MIN_GAIN,
+        f"at delta = {NEAR_WALL_LINEAR_FACTOR:g} h_max the linear-density error must "
+        "be at least three times smaller than the constant-density error on the "
+        "finest level",
+    )
+    faceting = near["faceting"]["levels"]
+    add(
+        "near_wall_exclusion_floor_is_faceting",
+        {
+            "circle_referenced": faceting[-1]["circle_referenced_linear"],
+            "surface_referenced": faceting[-1]["surface_referenced_linear"],
+            "faceting_offset_over_h_max": faceting[-1]["faceting_offset_over_h_max"],
+        },
+        "surface_referenced <= circle_referenced / 3",
+        faceting[-1]["surface_referenced_linear"]
+        <= faceting[-1]["circle_referenced_linear"] / 3.0,
+        "the exclusion-zone floor is geometric faceting (the inscribed polygon's "
+        "panel midpoints sit at a(1-cos(pi/N)) ~ h^2/8 below the circle, an O(h) "
+        "offset relative to delta = 0.1 h_max): re-referencing the probes to the "
+        "polygon surface must collapse most of it",
+    )
+
     multipole = artifact["multipole"]
     for family, block in multipole["families"].items():
         finest = block["finest"]
@@ -1781,6 +2041,64 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         f"{exclusion['levels'][-1]['max_relative_velocity_error']:.1%}（见上表末列），"
         "更贴壁只会更大。本轮不改既有 API 默认值（避免破坏调用方），而是把可用窗口"
         "写进本表与 `evaluate_exterior_field` docstring，并新增守门判据。",
+        "",
+        "#### 一阶矩（线性密度）基与近壁窗口的再评估（第 3 轮）",
+        "",
+        "常值密度下近壁误差是**一阶**且不随加密改善，根因是基函数无法承载面板内密度的切向变化。"
+        "本轮给两个层都加上一阶矩项 $\\int s K\\,ds$ 的闭式积分（`tensorbem.kernels`），"
+        "密度展开为 $\\sigma(s)=\\sigma_i+\\sigma'_i(s-L_i/2)$（斜率由弧长中心差分给出），"
+        "求解与外部场求值都可用 `linear_density=True` 打开。逐层结果：",
+        "",
+        "| 层 | $h_{max}/a$ | 常值 $\\delta=0.5h$ | 线性 $\\delta=0.5h$ | 常值 $\\delta=2h$ | 线性 $\\delta=2h$ |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for level in near["levels"]:
+        row_half = next(
+            row
+            for row in level["sweep"]
+            if row["clearance_over_h_max"] == linear_near["clearance_over_h_max"]
+        )
+        row_window = next(
+            row
+            for row in level["sweep"]
+            if row["clearance_over_h_max"] == window["clearance_over_h_max"]
+        )
+        lines.append(
+            f"| {level['panels']} | {level['h_max_over_radius']:.3e} | "
+            f"{row_half['max_relative_velocity_error']:.3e} | "
+            f"{row_half['max_relative_velocity_error_linear']:.3e} | "
+            f"{row_window['max_relative_velocity_error']:.3e} | "
+            f"{row_window['max_relative_velocity_error_linear']:.3e} |"
+        )
+    lines += [
+        "",
+        f"判读：$\\delta={linear_near['clearance_over_h_max']:g}\\,h_{{max}}$ 处线性基把误差降到 "
+        f"{linear_near['levels'][-1]['max_relative_velocity_error']:.3e}"
+        f"（常值 {linear_near['constant_mode_levels'][-1]['max_relative_velocity_error']:.3e}，"
+        f"改善 {linear_near['improvement_at_half_h_finest']:.1f}×），"
+        f"1% 窗口从 $\\delta\\ge{NEAR_WALL_WINDOW_FACTOR:g}h$ 扩展到 "
+        f"$\\delta\\ge{linear_near['usable_clearance_over_h_max']:g}h$；"
+        f"$\\delta={NEAR_WALL_WINDOW_FACTOR:g}h$ 处两模式几乎相同"
+        f"（改善 {linear_near['improvement_at_window_finest']:.2f}×，"
+        "该处误差已由边界迹精度而非基函数决定）。",
+        "",
+        "**误差归因（第 3 轮修订）**：把物面两条迹换成解析值（去掉求解误差）后，"
+        "表示误差本身在 $\\delta=0.1h_{{max}}$ 处由 "
+        f"{near['attribution']['representation_constant'][finest_key][exclusion_key]:.3e}"
+        f"（常值）降到 "
+        f"{near['attribution']['representation_linear'][finest_key][exclusion_key]:.3e}"
+        f"（线性，改善 "
+        f"{near['attribution']['representation_constant'][finest_key][exclusion_key] / near['attribution']['representation_linear'][finest_key][exclusion_key]:.1f}×）。"
+        "但即便如此，贴壁残差仍停在 $\\sim10^{-1}$ —— 说明主项两者都不是，"
+        "而是**折面几何**：内接正多边形面板中点半径 $a\\cos(\\pi/N)=a(1-h^2/8)$，"
+        "所以从圆周量起的 $\\delta=0.1h_{{max}}$ 相对真实物面是 "
+        "$(0.1h+h^2/8)/h$，该偏移是 $\\delta$ 的 $O(h)$ 倍，正解释上表实测的一阶饱和。"
+        "把探针距离改为从折面（$a\\cos\\pi/N$）量起后，最细网格上误差由 "
+        f"{near['faceting']['levels'][-1]['circle_referenced_linear']:.3e} 降到 "
+        f"{near['faceting']['levels'][-1]['surface_referenced_linear']:.3e}"
+        f"（{near['faceting']['levels'][-1]['circle_referenced_linear'] / max(near['faceting']['levels'][-1]['surface_referenced_linear'], 1e-30):.1f}×）。"
+        "结论：近壁误差预算 = 折面几何（一阶，$\\propto h/\\delta$）+ 基函数（可被一阶矩项压掉）"
+        "+ 边界迹求解误差（$O(h^2)$，被 $1/\\delta$ 放大）；要再收窄窗口需曲边面板/更高阶求解。",
         "",
     ]
     rows_c = artifact["routes"]["circulation"]["levels"]
@@ -2286,6 +2604,19 @@ def plot_near_wall(artifact: dict[str, Any], output: Path) -> Path:
             [row["max_relative_velocity_error"] for row in level["sweep"]]
         )
         axes.loglog(clearance, error, "o-", ms=4.0, label=f"N={level['panels']}")
+        error_linear = np.array(
+            [row["max_relative_velocity_error_linear"] for row in level["sweep"]]
+        )
+        axes.loglog(
+            clearance,
+            error_linear,
+            "s--",
+            ms=3.5,
+            color=axes.lines[-1].get_color(),
+            lw=1.0,
+            alpha=0.85,
+            label=f"N={level['panels']} linear",
+        )
     axes.axvline(
         near["window"]["clearance_over_h_max"],
         color="tab:green",
