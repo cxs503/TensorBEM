@@ -1,0 +1,127 @@
+{
+  "anchor": "CASE-BEM-RIGID-BODY-MASS",
+  "anchor_numbers": {
+    "base_ladder": [
+      {
+        "control_max_entry_rel_error": 2.0,
+        "max_entry_rel_error": 0.0,
+        "mesh_route_max_entry_rel_error": 4.3021183232422326e-16,
+        "panels": 24,
+        "subdivision": 1
+      },
+      {
+        "control_max_entry_rel_error": 2.0,
+        "max_entry_rel_error": 0.0,
+        "mesh_route_max_entry_rel_error": 4.3021183232422326e-16,
+        "panels": 96,
+        "subdivision": 2
+      },
+      {
+        "control_max_entry_rel_error": 2.0,
+        "max_entry_rel_error": 0.0,
+        "mesh_route_max_entry_rel_error": 1.2906354969726698e-15,
+        "panels": 384,
+        "subdivision": 4
+      }
+    ],
+    "checks": {
+      "base_case_passed": true,
+      "legacy_coupling_rejected": true,
+      "momentum_route_beats_energy_blind_spot": true,
+      "momentum_route_rejects_flipped_coupling": true,
+      "momentum_route_roundoff": true,
+      "orientation_case_passed": true,
+      "orientation_negative_control_rejected": true,
+      "worst_accepted_entry_within_tolerance": true
+    },
+    "momentum_route": [
+      {
+        "configuration": "cg-offset (axis-aligned ellipsoid, diagonal inertia)",
+        "max_relative_error": 0.0
+      },
+      {
+        "configuration": "reference-point offset o = (2, -1, 4) m",
+        "max_relative_error": 1.1476933129161745e-16
+      },
+      {
+        "configuration": "rotated body (yaw 20 / pitch 15 / roll 25 deg, full inertia tensor)",
+        "max_relative_error": 0.0
+      },
+      {
+        "configuration": "two-component box body (payload station x = 30.0 m)",
+        "max_relative_error": 1.1472315528645955e-16
+      }
+    ],
+    "orientation_ladder": [
+      {
+        "max_entry_rel_error": 0.19930520574032262,
+        "panels": 80,
+        "subdivision": 1,
+        "volume_rel_error": 0.12654679999693658,
+        "within_tolerance": false
+      },
+      {
+        "max_entry_rel_error": 0.05514411626258779,
+        "panels": 320,
+        "subdivision": 2,
+        "volume_rel_error": 0.03383925140141269,
+        "within_tolerance": false
+      },
+      {
+        "max_entry_rel_error": 0.01415141785302352,
+        "panels": 1280,
+        "subdivision": 3,
+        "volume_rel_error": 0.008606157370245202,
+        "within_tolerance": true
+      },
+      {
+        "max_entry_rel_error": 0.003561248879704681,
+        "panels": 5120,
+        "subdivision": 4,
+        "volume_rel_error": 0.0021608283894006754,
+        "within_tolerance": true
+      }
+    ],
+    "tolerance": 0.03,
+    "worst_accepted_entry_rel_error": 0.01415141785302352
+  },
+  "case_pool": {
+    "cases": [
+      "CASE-BEM-ANNULUS-LAPLACE",
+      "CASE-BEM-ELLIPSE-2D-ADDED-MASS",
+      "CASE-BEM-HULME-HEMISPHERE",
+      "CASE-BEM-LAPLACE-CYLINDER",
+      "CASE-BEM-NEUMANN-KELVIN",
+      "CASE-BEM-RIGID-BODY-MASS",
+      "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK"
+    ],
+    "missing_after": {},
+    "missing_before": {
+      "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": 1
+    },
+    "pytest_before": {
+      "failed": 4,
+      "passed": 8
+    },
+    "regenerated": [
+      "docs/case_bem_submerged_sphere_havelock/run.log"
+    ],
+    "verdicts": {
+      "CASE-BEM-ANNULUS-LAPLACE": {
+        "failed_checks": [],
+        "passed": true
+      },
+      "CASE-BEM-ELLIPSE-2D-ADDED-MASS": "PASS",
+      "CASE-BEM-HULME-HEMISPHERE": "PASS",
+      "CASE-BEM-LAPLACE-CYLINDER": "PASS",
+      "CASE-BEM-NEUMANN-KELVIN": "see artifact",
+      "CASE-BEM-RIGID-BODY-MASS": "PASS",
+      "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": "PASS"
+    }
+  },
+  "figures": [
+    "docs/case_pool_records/fig_anchor_mass_matrix.png",
+    "docs/case_pool_records/fig_case_pool_health.png"
+  ],
+  "mission": "m20485"
+}
