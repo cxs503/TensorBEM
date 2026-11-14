@@ -1,0 +1,292 @@
+{
+  "case": "CASE-BEM-HELMHOLTZ-SPHERE",
+  "description": "Rigid sphere acoustic scattering cross-section vs Mie series",
+  "reference": "Mie series: sigma = (4*pi/k^2) * sum_n (2n+1) |A_n|^2, A_n = -j_n'(ka)/h_n^{(1)'}(ka)",
+  "reference_source": "Bowman, Senior & Uslenghi (1969), Electromagnetic and Acoustic Scattering by Simple Shapes; also Johnson (1993), 'The Helmholtz Equation' lecture notes, Table 3.1, p.47",
+  "radius_m": 1.0,
+  "tolerance": 0.06,
+  "sound_speed_ms": 1500.0,
+  "density_kg_m3": 1025.0,
+  "rows": [
+    {
+      "ka": 0.25,
+      "wavenumber": 0.25,
+      "frequency_hz": 59.683103659460755,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 0.008454095415484213,
+      "sigma_mie": 0.009005074206331032,
+      "sigma_over_pi_a2": 0.0026910221494896866,
+      "relative_error": 0.0611853692953971,
+      "pass": false,
+      "solve_time_s": 0.423,
+      "far_field_time_s": 0.101,
+      "far_field_pattern_abs": [
+        0.010621975493176112,
+        0.019557890111182447,
+        0.04892728211458217,
+        0.01955792100156208
+      ]
+    },
+    {
+      "ka": 0.5,
+      "wavenumber": 0.5,
+      "frequency_hz": 119.36620731892151,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 0.11483166877352481,
+      "sigma_mie": 0.12171649303178854,
+      "sigma_over_pi_a2": 0.03655205541759543,
+      "relative_error": 0.05656443171153171,
+      "pass": true,
+      "solve_time_s": 0.416,
+      "far_field_time_s": 0.098,
+      "far_field_pattern_abs": [
+        0.04586080631186435,
+        0.07253596442031404,
+        0.1781309977334349,
+        0.07253609192565469
+      ]
+    },
+    {
+      "ka": 1.0,
+      "wavenumber": 1.0,
+      "frequency_hz": 238.73241463784302,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 0.9710371928667485,
+      "sigma_mie": 1.0104268609001705,
+      "sigma_over_pi_a2": 0.3090907383416423,
+      "relative_error": 0.038983195674678034,
+      "pass": true,
+      "solve_time_s": 0.433,
+      "far_field_time_s": 0.1,
+      "far_field_pattern_abs": [
+        0.18883923325167487,
+        0.23605212702445388,
+        0.4630398474608675,
+        0.23605328960265312
+      ]
+    },
+    {
+      "ka": 2.0,
+      "wavenumber": 2.0,
+      "frequency_hz": 477.46482927568604,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 2.4089080098114177,
+      "sigma_mie": 2.4551547946676444,
+      "sigma_over_pi_a2": 0.766779234430294,
+      "relative_error": 0.018836606537669304,
+      "pass": true,
+      "solve_time_s": 0.45,
+      "far_field_time_s": 0.142,
+      "far_field_pattern_abs": [
+        0.5390608612337645,
+        0.5283260801671784,
+        0.3677492549455006,
+        0.5283285918489541
+      ]
+    },
+    {
+      "ka": 3.0,
+      "wavenumber": 3.0,
+      "frequency_hz": 716.1972439135291,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 3.1905821670740884,
+      "sigma_mie": 3.24683719182056,
+      "sigma_over_pi_a2": 1.0155938464613854,
+      "relative_error": 0.017326099654207946,
+      "pass": true,
+      "solve_time_s": 0.444,
+      "far_field_time_s": 0.107,
+      "far_field_pattern_abs": [
+        0.9346301968696357,
+        0.3131200412592179,
+        0.3800747768202111,
+        0.31305348023995366
+      ]
+    },
+    {
+      "ka": 4.0,
+      "wavenumber": 4.0,
+      "frequency_hz": 954.9296585513721,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 3.682557932848934,
+      "sigma_mie": 3.7481969723640693,
+      "sigma_over_pi_a2": 1.1721945964703597,
+      "relative_error": 0.017512163848138213,
+      "pass": true,
+      "solve_time_s": 0.479,
+      "far_field_time_s": 0.151,
+      "far_field_pattern_abs": [
+        1.3503233666893666,
+        0.5132865637033392,
+        0.46355954644734976,
+        0.5137668262240936
+      ]
+    },
+    {
+      "ka": 5.0,
+      "wavenumber": 5.0,
+      "frequency_hz": 1193.662073189215,
+      "subdivisions": 2,
+      "panel_count": 320,
+      "sigma_bem": 4.051101867962792,
+      "sigma_mie": 4.0946371473464485,
+      "sigma_over_pi_a2": 1.2895057745101783,
+      "relative_error": 0.010632267968327636,
+      "pass": true,
+      "solve_time_s": 0.457,
+      "far_field_time_s": 0.11,
+      "far_field_pattern_abs": [
+        1.779895478850766,
+        0.4005289644903358,
+        0.5175218547285807,
+        0.40079494396772475
+      ]
+    },
+    {
+      "ka": 0.25,
+      "wavenumber": 0.25,
+      "frequency_hz": 59.683103659460755,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 0.008863559102052797,
+      "sigma_mie": 0.009005074206331032,
+      "sigma_over_pi_a2": 0.0028213584889577275,
+      "relative_error": 0.01571504032456978,
+      "pass": true,
+      "solve_time_s": 8.693,
+      "far_field_time_s": 0.402,
+      "far_field_pattern_abs": [
+        0.01079595609024992,
+        0.020057757447283907,
+        0.05006464811131062,
+        0.02005775964507751
+      ]
+    },
+    {
+      "ka": 0.5,
+      "wavenumber": 0.5,
+      "frequency_hz": 119.36620731892151,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 0.11995243495814112,
+      "sigma_mie": 0.12171649303178854,
+      "sigma_over_pi_a2": 0.038182045918994455,
+      "relative_error": 0.014493172040264943,
+      "pass": true,
+      "solve_time_s": 9.143,
+      "far_field_time_s": 0.438,
+      "far_field_pattern_abs": [
+        0.04665143876565815,
+        0.07429293535165941,
+        0.18186599177883853,
+        0.07429294443211915
+      ]
+    },
+    {
+      "ka": 1.0,
+      "wavenumber": 1.0,
+      "frequency_hz": 238.73241463784302,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 1.0004269458666055,
+      "sigma_mie": 1.0104268609001705,
+      "sigma_over_pi_a2": 0.31844578727399653,
+      "relative_error": 0.0098967232765925,
+      "pass": true,
+      "solve_time_s": 9.586,
+      "far_field_time_s": 0.568,
+      "far_field_pattern_abs": [
+        0.1915463932787931,
+        0.24104482084672643,
+        0.4675658207125208,
+        0.24104490077443314
+      ]
+    },
+    {
+      "ka": 2.0,
+      "wavenumber": 2.0,
+      "frequency_hz": 477.46482927568604,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 2.4430799894888064,
+      "sigma_mie": 2.4551547946676444,
+      "sigma_over_pi_a2": 0.7776565133920785,
+      "relative_error": 0.004918144145152583,
+      "pass": true,
+      "solve_time_s": 10.751,
+      "far_field_time_s": 0.49,
+      "far_field_pattern_abs": [
+        0.545744553889573,
+        0.5304993529640115,
+        0.3774715078207945,
+        0.5304994980958065
+      ]
+    },
+    {
+      "ka": 3.0,
+      "wavenumber": 3.0,
+      "frequency_hz": 716.1972439135291,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 3.224896473809361,
+      "sigma_mie": 3.24683719182056,
+      "sigma_over_pi_a2": 1.0265164295327656,
+      "relative_error": 0.006757566430023761,
+      "pass": true,
+      "solve_time_s": 12.651,
+      "far_field_time_s": 0.599,
+      "far_field_pattern_abs": [
+        0.9466861362480715,
+        0.30952894256154595,
+        0.3790156108103238,
+        0.30951722705035223
+      ]
+    },
+    {
+      "ka": 4.0,
+      "wavenumber": 4.0,
+      "frequency_hz": 954.9296585513721,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 3.727361543169332,
+      "sigma_mie": 3.7481969723640693,
+      "sigma_over_pi_a2": 1.1864560285720684,
+      "relative_error": 0.005558787157761378,
+      "pass": true,
+      "solve_time_s": 12.658,
+      "far_field_time_s": 0.622,
+      "far_field_pattern_abs": [
+        1.3704945396867778,
+        0.5185516990634306,
+        0.4575729929409542,
+        0.5185971023292116
+      ]
+    },
+    {
+      "ka": 5.0,
+      "wavenumber": 5.0,
+      "frequency_hz": 1193.662073189215,
+      "subdivisions": 3,
+      "panel_count": 1280,
+      "sigma_bem": 4.082950510504446,
+      "sigma_mie": 4.0946371473464485,
+      "sigma_over_pi_a2": 1.2996435122927203,
+      "relative_error": 0.0028541324716833375,
+      "pass": true,
+      "solve_time_s": 10.508,
+      "far_field_time_s": 0.452,
+      "far_field_pattern_abs": [
+        1.8079103203516744,
+        0.3894869941404769,
+        0.5205815943003411,
+        0.38950030379446055
+      ]
+    }
+  ]
+}
