@@ -1,0 +1,71 @@
+{
+  "case": "CASE-BEM-CRACK-SIF",
+  "description": "Centre-crack Mode-I stress intensity factor",
+  "reference": "Tada, Paris & Irwin (2000), Eq. 2.1a",
+  "parameters": {
+    "sigma_MPa": 100.0,
+    "a_mm": 10.0,
+    "E_GPa": 200.0,
+    "nu": 0.3
+  },
+  "primary_solve": {
+    "method": "chebyshev",
+    "n_elements": 200,
+    "K_ref_MPa_sqrt_m": 17.72453850905516,
+    "K_got_MPa_sqrt_m": 17.72453850905516,
+    "error_pct": 0.0,
+    "chebyshev_c0": 0.00182
+  },
+  "convergence_study": [
+    {
+      "n_elements": 10,
+      "K_got_MPa_sqrt_m": 16.12008173670561,
+      "error_pct": 9.052177982122684,
+      "condition_number": 36.691924914449075,
+      "residual_l2": 5.954873920288111e-07
+    },
+    {
+      "n_elements": 20,
+      "K_got_MPa_sqrt_m": 17.456830226866547,
+      "error_pct": 1.5103822424027877,
+      "condition_number": 140.55629276658868,
+      "residual_l2": 4.945928632257126e-06
+    },
+    {
+      "n_elements": 40,
+      "K_got_MPa_sqrt_m": 18.368575698811217,
+      "error_pct": 3.6335907387773774,
+      "condition_number": 550.6647895657512,
+      "residual_l2": 1.0327440019253069e-05
+    },
+    {
+      "n_elements": 80,
+      "K_got_MPa_sqrt_m": 18.850351068516613,
+      "error_pct": 6.351717190753902,
+      "condition_number": 2180.418398061714,
+      "residual_l2": 2.124686132845189e-05
+    },
+    {
+      "n_elements": 160,
+      "K_got_MPa_sqrt_m": 19.09284799068548,
+      "error_pct": 7.7198595660545735,
+      "condition_number": 8678.044806551778,
+      "residual_l2": 0.0001634477608296288
+    },
+    {
+      "n_elements": 320,
+      "K_got_MPa_sqrt_m": 19.21373335850799,
+      "error_pct": 8.401882219342562,
+      "condition_number": 34625.78705320913,
+      "residual_l2": 0.001102874275824088
+    },
+    {
+      "n_elements": 640,
+      "K_got_MPa_sqrt_m": 19.273948469845763,
+      "error_pct": 8.741609605231965,
+      "condition_number": 138331.31004656377,
+      "residual_l2": 0.008640055838803248
+    }
+  ],
+  "verdict": "PASS"
+}
