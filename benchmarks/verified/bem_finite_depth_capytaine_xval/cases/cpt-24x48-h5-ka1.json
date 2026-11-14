@@ -1,0 +1,18 @@
+{
+  "case_id": "cpt-24x48-h5-ka1",
+  "tool": "capytaine",
+  "ka": 1.0,
+  "depth_ratio": 5.0,
+  "depth": 5.0,
+  "resolution": [
+    24,
+    48
+  ],
+  "added_mass_heave": 2030.5876339854178,
+  "damping_heave": 1126.1075607499072,
+  "n_faces": 1152,
+  "n_vertices": 1106,
+  "status": "ok",
+  "seconds": 2.295,
+  "finished_utc": "2026-11-14T19:26:17+00:00"
+}
