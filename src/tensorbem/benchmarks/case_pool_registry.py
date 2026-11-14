@@ -260,6 +260,7 @@ CASES: dict[str, CaseEntry] = {
             "benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png",
             "benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png",
             "benchmarks/verified/case_bem_laplace_cylinder/figures/multipole.png",
+            "benchmarks/verified/case_bem_laplace_cylinder/figures/circulation.png",
         ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
@@ -272,8 +273,11 @@ CASES: dict[str, CaseEntry] = {
             "potential) drives the new exterior field evaluator (potential AND "
             "velocity from closed-form panel-integral gradients); route N (Neumann "
             "zero normal flow) checks the fluid-side surface speed 2U|sin theta| and "
-            "Cp = 1 - 4 sin^2(theta). Controls: mirrored image sign, far-field decay, "
-            "polygon geometry gate."
+            "Cp = 1 - 4 sin^2(theta). Route G prescribes a circulation "
+            "(rotating cylinder) and checks the pressure-integrated lift against "
+            "Kutta-Joukowski L' = -rho U Gamma, the stagnation angle "
+            "sin(theta_s) = Gamma/(4 pi U a) and zero drag. Controls: mirrored "
+            "image sign, far-field decay, polygon geometry gate."
         ),
     ),
     "CASE-BEM-NEUMANN-KELVIN": CaseEntry(

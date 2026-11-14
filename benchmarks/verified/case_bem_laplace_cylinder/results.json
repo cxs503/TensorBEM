@@ -4,8 +4,8 @@
   "schema": "tensorbem/case_bem_laplace_cylinder/1",
   "repo": "TensorBEM",
   "domain": "ship-total-performance/resistance-potential-flow",
-  "capability": "2-D exterior Laplace operator: potential AND velocity field outside a body, verified against the cylinder complex potential",
-  "generated_at_utc": "2026-11-14T15:13:32Z",
+  "capability": "2-D exterior Laplace operator: potential AND velocity field outside a body, plus the prescribed-circulation (rotating cylinder) exterior Neumann problem, verified against the cylinder complex potential",
+  "generated_at_utc": "2026-11-14T19:08:10Z",
   "environment": {
     "python": "3.11.6",
     "numpy": "2.4.6",
@@ -28,7 +28,13 @@
     ],
     "probe_angles": 16,
     "probe_count": 64,
-    "far_field_radius_over_a": 8.0
+    "far_field_radius_over_a": 8.0,
+    "circulation": 3.0,
+    "circulation_sweep": [
+      1.0,
+      2.0,
+      3.0
+    ]
   },
   "reference": {
     "complex_potential": "W(z) = U (z + a**2/z)",
@@ -36,6 +42,11 @@
     "perturbation_potential": "phi - U x = U a**2 cos(theta) / r",
     "surface_speed": "|v| = 2 U |sin(theta)|",
     "pressure_coefficient": "Cp = 1 - 4 sin(theta)**2",
+    "lifting_complex_potential": "W(z) = U (z + a**2/z) - i Gamma/(2 pi) ln(z/a) (Gamma counter-clockwise)",
+    "lifting_velocity": "dW/dz = u - i v = U (1 - a**2/z**2) - i Gamma/(2 pi z)",
+    "lifting_surface_speed": "v_theta = Gamma/(2 pi a) - 2 U sin(theta); Cp = 1 - (v_theta/U)**2",
+    "lifting_stagnation": "sin(theta_s) = Gamma/(4 pi U a)",
+    "lifting_lift": "L' = -rho U Gamma (Kutta-Joukowski, rho = 1); drag = 0",
     "probe_table": [
       {
         "x_over_a": 1.225981600504038,
@@ -674,6 +685,152 @@
         "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
         "h_mean": 0.049082457045824576
       }
+    },
+    "circulation": {
+      "declared": {
+        "circulation": 3.0,
+        "surface_speed": "v_theta = Gamma/(2 pi a) - 2 U sin(theta)",
+        "pressure_coefficient": "Cp = 1 - (v_theta/U)**2",
+        "stagnation_angles": "sin(theta_s) = Gamma/(4 pi U a)",
+        "lift": "L' = -rho U Gamma (Kutta-Joukowski, rho = 1)",
+        "drag": "0 (d'Alembert)",
+        "imposed": "doublet Neumann data q_e = grad(phi_d).n_e plus the unit-vortex response q_e = v_unit.n_body; the circulation itself is prescribed, so no Kutta condition is solved",
+        "recovered": "surface velocity from the solved traces, pressure integral for lift and drag, interpolated zeros of v_theta for the stagnation points"
+      },
+      "levels": [
+        {
+          "route": "circulation",
+          "panels": 32,
+          "circulation": 3.0,
+          "circulation_measured": 3.009675589699274,
+          "circulation_relative_error": 0.003225196566424652,
+          "surface_velocity_relative_l2": 0.003421054387116494,
+          "surface_speed_max_error_over_speed": 0.008697675347149936,
+          "cp_relative_l2": 0.008971057439621954,
+          "cp_min": -5.133210538833,
+          "cp_min_exact": -5.090206046474965,
+          "velocity_relative_l2": 0.0024790108601320617,
+          "velocity_max_abs_error": 0.004767986260479642,
+          "lift": -3.019333864142198,
+          "lift_exact": -3.0,
+          "lift_relative_error": 0.006444621380732614,
+          "drag": 1.9255430583342559e-16,
+          "drag_coefficient": 1.9255430583342559e-16,
+          "stagnation_angles_found_deg": [
+            13.881252033116745,
+            166.11874796688323
+          ],
+          "stagnation_angles_exact_deg": [
+            13.811738527766154,
+            166.18826147223385
+          ],
+          "stagnation_angle_max_error_deg": 0.06951350535059092,
+          "condition_number": 2.103309600312263,
+          "relative_residual_l2": 3.4212065954389596e-16,
+          "h_mean": 0.1960342806591212
+        },
+        {
+          "route": "circulation",
+          "panels": 64,
+          "circulation": 3.0,
+          "circulation_measured": 3.0024118960679624,
+          "circulation_relative_error": 0.0008039653559874793,
+          "surface_velocity_relative_l2": 0.000852339863995476,
+          "surface_speed_max_error_over_speed": 0.00217710436762264,
+          "cp_relative_l2": 0.0022351625767720812,
+          "cp_min": -5.136682573567086,
+          "cp_min_exact": -5.125900924452989,
+          "velocity_relative_l2": 0.0005925927605365195,
+          "velocity_max_abs_error": 0.0010284761658712076,
+          "lift": -3.004818647123605,
+          "lift_exact": -3.0,
+          "lift_relative_error": 0.0016062157078683785,
+          "drag": -3.5648567431323386e-16,
+          "drag_coefficient": -3.5648567431323386e-16,
+          "stagnation_angles_found_deg": [
+            13.819890731171707,
+            166.18010926882803
+          ],
+          "stagnation_angles_exact_deg": [
+            13.811738527766154,
+            166.18826147223385
+          ],
+          "stagnation_angle_max_error_deg": 0.008152203405804921,
+          "condition_number": 2.050330425510918,
+          "relative_residual_l2": 5.501634611617543e-16,
+          "h_mean": 0.09813534865483603
+        },
+        {
+          "route": "circulation",
+          "panels": 128,
+          "circulation": 3.0,
+          "circulation_measured": 3.000602538033003,
+          "circulation_relative_error": 0.00020084601100093616,
+          "surface_velocity_relative_l2": 0.00021307971529883443,
+          "surface_speed_max_error_over_speed": 0.0005447827097166957,
+          "cp_relative_l2": 0.0005586728931165331,
+          "cp_min": -5.1375466792697315,
+          "cp_min_exact": -5.134847678789158,
+          "velocity_relative_l2": 0.00014807883969341002,
+          "velocity_max_abs_error": 0.00025690535237444937,
+          "lift": -3.0012042438378006,
+          "lift_exact": -3.0,
+          "lift_relative_error": 0.0004014146126002001,
+          "drag": 7.979727989493313e-17,
+          "drag_coefficient": 7.979727989493313e-17,
+          "stagnation_angles_found_deg": [
+            13.817320065142402,
+            166.18267993485796
+          ],
+          "stagnation_angles_exact_deg": [
+            13.811738527766154,
+            166.18826147223385
+          ],
+          "stagnation_angle_max_error_deg": 0.005581537376247983,
+          "condition_number": 2.0248495990182516,
+          "relative_residual_l2": 5.783267971103129e-16,
+          "h_mean": 0.049082457045824576
+        }
+      ],
+      "observed_order_surface_velocity": [
+        2.0084326626949522,
+        2.0009051001603915
+      ],
+      "observed_order_lift": [
+        2.007921397294378,
+        2.0013703647305294
+      ],
+      "finest": {
+        "route": "circulation",
+        "panels": 128,
+        "circulation": 3.0,
+        "circulation_measured": 3.000602538033003,
+        "circulation_relative_error": 0.00020084601100093616,
+        "surface_velocity_relative_l2": 0.00021307971529883443,
+        "surface_speed_max_error_over_speed": 0.0005447827097166957,
+        "cp_relative_l2": 0.0005586728931165331,
+        "cp_min": -5.1375466792697315,
+        "cp_min_exact": -5.134847678789158,
+        "velocity_relative_l2": 0.00014807883969341002,
+        "velocity_max_abs_error": 0.00025690535237444937,
+        "lift": -3.0012042438378006,
+        "lift_exact": -3.0,
+        "lift_relative_error": 0.0004014146126002001,
+        "drag": 7.979727989493313e-17,
+        "drag_coefficient": 7.979727989493313e-17,
+        "stagnation_angles_found_deg": [
+          13.817320065142402,
+          166.18267993485796
+        ],
+        "stagnation_angles_exact_deg": [
+          13.811738527766154,
+          166.18826147223385
+        ],
+        "stagnation_angle_max_error_deg": 0.005581537376247983,
+        "condition_number": 2.0248495990182516,
+        "relative_residual_l2": 5.783267971103129e-16,
+        "h_mean": 0.049082457045824576
+      }
     }
   },
   "probe_reference": {
@@ -682,6 +839,47 @@
     "velocity_norm_min_over_speed": 0.4764810577405495
   },
   "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md",
+  "circulation_sweep": {
+    "panels": 128,
+    "note": "rho = 1 (dimensionless); lift per unit span",
+    "rows": [
+      {
+        "circulation": 1.0,
+        "lift": -1.0004014146126001,
+        "lift_exact": -1.0,
+        "lift_over_joukowski": 1.0004014146126001,
+        "lift_relative_error": 0.0004014146126001261,
+        "circulation_relative_error": 0.00020084601100078814,
+        "cp_min": -3.661287327302932,
+        "cp_min_exact": -3.6593492427154475,
+        "stagnation_angle_max_error_deg": 0.0011482681902330477
+      },
+      {
+        "circulation": 2.0,
+        "lift": -2.0008028292252007,
+        "lift_exact": -2.0,
+        "lift_over_joukowski": 1.0004014146126003,
+        "lift_relative_error": 0.00040141461260034816,
+        "circulation_relative_error": 0.00020084601100101018,
+        "cp_min": -4.374071442456735,
+        "cp_min_exact": -4.371768164841718,
+        "stagnation_angle_max_error_deg": 0.002870218203521706
+      },
+      {
+        "circulation": 3.0,
+        "lift": -3.0012042438378006,
+        "lift_exact": -3.0,
+        "lift_over_joukowski": 1.0004014146126001,
+        "lift_relative_error": 0.0004014146126002001,
+        "circulation_relative_error": 0.00020084601100093616,
+        "cp_min": -5.1375466792697315,
+        "cp_min_exact": -5.134847678789158,
+        "stagnation_angle_max_error_deg": 0.005581537376247983
+      }
+    ],
+    "max_lift_deviation_from_joukowski": 0.00040141461260034816,
+    "max_stagnation_error_deg": 0.005581537376247983
+  },
   "near_wall": {
     "window": {
       "clearance_over_h_max": 2.0,
@@ -1425,6 +1623,72 @@
       "note": "the image-sign data must be read as a negative dipole, i.e. the moment carries its sign"
     },
     {
+      "name": "circulation_surface_velocity_relative_l2",
+      "value": 0.00021307971529883443,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "surface speed vs v_theta = Gamma/(2 pi a) - 2 U sin(theta) at the budget mesh"
+    },
+    {
+      "name": "circulation_cp_relative_l2",
+      "value": 0.0005586728931165331,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "Cp built from the same surface velocity that is integrated for the lift"
+    },
+    {
+      "name": "circulation_velocity_relative_l2",
+      "value": 0.00014807883969341002,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "external velocity field vs dW/dz of the lifting complex potential"
+    },
+    {
+      "name": "circulation_measured_matches_prescribed",
+      "value": 0.00020084601100093616,
+      "threshold": "<= 0.01",
+      "ok": true,
+      "note": "the counter-clockwise contour integral of the solved surface velocity must reproduce the prescribed Gamma, otherwise the lift agreement is a coincidence"
+    },
+    {
+      "name": "circulation_lift_matches_joukowski",
+      "value": 0.0004014146126002001,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "pressure-integrated lift vs L' = -rho U Gamma"
+    },
+    {
+      "name": "circulation_drag_vanishes",
+      "value": 7.979727989493313e-17,
+      "threshold": "<= 0.01",
+      "ok": true,
+      "note": "d'Alembert: no drag in a steady inviscid flow, for any Gamma"
+    },
+    {
+      "name": "circulation_stagnation_angle_matches_closed_form",
+      "value": 0.005581537376247983,
+      "threshold": "<= 1 deg",
+      "ok": true,
+      "note": "interpolated zeros of the surface tangential velocity vs sin(theta_s) = Gamma/(4 pi U a)"
+    },
+    {
+      "name": "circulation_observed_order",
+      "value": [
+        2.0084326626949522,
+        2.0009051001603915
+      ],
+      "threshold": ">= 1.5",
+      "ok": true,
+      "note": "the circulation route must converge on refinement (faceting O(h^2)) instead of sitting at a plateau"
+    },
+    {
+      "name": "circulation_sweep_lift_is_linear",
+      "value": 0.00040141461260034816,
+      "threshold": "< 0.03",
+      "ok": true,
+      "note": "lift/(rho U Gamma) must stay at 1 across Gamma in (1.0, 2.0, 3.0)"
+    },
+    {
       "name": "wrong_reference_is_rejected",
       "value": 3952342.1628871253,
       "threshold": ">= 10",
@@ -1444,8 +1708,8 @@
     "failed_checks": [],
     "tolerance": 0.03,
     "order_min": 1.5,
-    "n_checks": 29
+    "n_checks": 38
   },
   "overall": "PASS",
-  "wall_seconds": 102.58537006378174
+  "wall_seconds": 144.6406683921814
 }
