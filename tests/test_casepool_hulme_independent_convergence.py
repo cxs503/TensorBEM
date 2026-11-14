@@ -18,6 +18,7 @@ import pytest
 
 from tensorbem.benchmarks.hemisphere_independent_convergence import (
     CASE_ARTIFACT,
+    CASE_KEY,
     EXTENDED_ARTIFACT,
     FROZEN_ARTIFACT,
     INHOUSE_ARTIFACT,
@@ -110,3 +111,62 @@ def test_inhouse_ladder_reproduces_the_graded_row() -> None:
     rung = [r for r in ladder["rows"] if r["panels"] == 1024][0]
     for key in ("A11_dimless", "B33_dimless", "Fz_dimless"):
         assert float(rung[key]) == pytest.approx(float(graded[key]), rel=1e-9), key
+
+
+# --- E7/E9: the in-house ladder must be *identified*, not merely reproduced ---
+def _synthetic_ladder(path: Path, panels: list[int], ka: float = 2.0) -> Path:
+    """In-house ladder artifact obeying ``v(N) = v_inf + C N^-p`` exactly."""
+    rows = []
+    for n in panels:
+        row = {"subdivisions": int(round((n / 4) ** 0.25)), "panels": n,
+               "ka": ka}
+        for i, (name, _) in enumerate(QUANTITIES):
+            v_inf = 0.2 + 0.1 * i
+            row[CASE_KEY[name]] = v_inf * (1.0 + 0.5 * (n / 64.0) ** -0.9)
+        rows.append(row)
+    payload = {"case_code": "BEM-HULME-HEMISPHERE", "ka": ka,
+               "quantities": [CASE_KEY[name] for name, _ in QUANTITIES],
+               "rows": rows, "failures": [],
+               "environment": {"host": "synthetic"}}
+    path.write_text(json.dumps(payload))
+    return path
+
+
+def test_three_rung_inhouse_ladder_is_not_evidence(tmp_path: Path) -> None:
+    """A three-parameter model on three rungs has zero residual by construction."""
+    ladder = _synthetic_ladder(tmp_path / "l3.json", [64, 256, 1024])
+    payload = analyse(inhouse_path=ladder)
+    e7 = payload["gates"]["E7_inhouse_model_credible"]
+    assert e7["n_rungs"] == 3
+    assert e7["fit_identified"] is False
+    assert e7["pass"] is False, "an exactly-determined fit must not pass E7"
+    assert payload["gates"]["E9_inhouse_order_and_limit_stable"]["pass"] is False
+    assert payload["gates"]["E9_inhouse_order_and_limit_stable"]["measured"] is None
+
+
+def test_four_rung_inhouse_ladder_passes_only_on_identified_fits(tmp_path: Path) -> None:
+    ladder = _synthetic_ladder(tmp_path / "l4.json", [64, 256, 1024, 4096])
+    payload = analyse(inhouse_path=ladder)
+    e7 = payload["gates"]["E7_inhouse_model_credible"]
+    assert e7["n_rungs"] == 4 and e7["fit_identified"] is True
+    assert e7["measured"] < 1e-6, "exact power law must reproduce every rung"
+    assert e7["pass"] is True
+    # E9 measures a genuine window change: with a clean power law the finest
+    # three rungs and all four rungs must agree on order and limit
+    e9 = payload["gates"]["E9_inhouse_order_and_limit_stable"]
+    assert e9["pass"] is True and e9["worst_order_shift"] < 1e-6
+    assert e9["worst_limit_shift"] < 1e-6
+
+
+def test_committed_inhouse_ladder_has_enough_rungs_to_carry_e7() -> None:
+    """The committed artifact either carries >= 4 rungs or records the failure."""
+    if not INHOUSE_ARTIFACT.exists():
+        pytest.skip("in-house ladder not produced")
+    ladder = json.loads(INHOUSE_ARTIFACT.read_text())
+    n = len(ladder["rows"])
+    assert n >= 1
+    if n < 4:
+        assert ladder.get("failures"), "fewer than four rungs must say why"
+    stored = json.loads(EVIDENCE.read_text())
+    e7 = stored["gates"]["E7_inhouse_model_credible"]
+    assert e7["n_rungs"] == n
