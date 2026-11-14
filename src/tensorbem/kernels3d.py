@@ -16,13 +16,60 @@ Gauss rule.
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss
+from numpy.polynomial.legendre import leggauss as _numpy_leggauss
 from numpy.typing import NDArray
 
 FloatArray = NDArray[np.float64]
 _FOUR_PI = 4.0 * np.pi
+
+
+@lru_cache(maxsize=None)
+def _legendre_newton(order: int) -> tuple[FloatArray, FloatArray]:
+    """Gauss-Legendre nodes/weights by Newton iteration on ``P_n``.
+
+    ``numpy.polynomial.legendre.leggauss`` obtains them as the eigenvalues of the
+    Jacobi matrix, i.e. through ``eigvalsh``; on some LAPACK builds that call
+    raises ``LinAlgError: Eigenvalues did not converge`` for perfectly ordinary
+    orders (``n = 64`` was observed on an HPC node, killing an otherwise correct
+    BEM run).  Newton on ``P_n`` with the standard asymptotic start needs no
+    eigenvalue routine and is monotone, so the quadrature has a path that cannot
+    be taken down by the linear-algebra backend.
+    """
+    n = int(order)
+    if n < 2:
+        raise ValueError("quadrature order must be an integer >= 2")
+    idx = np.arange(1, n + 1, dtype=float)
+    x = np.cos(np.pi * (idx - 0.25) / (n + 0.5))
+    derivative = np.zeros_like(x)
+    for _ in range(200):
+        p_prev = np.ones_like(x)
+        p_cur = x.copy()
+        for k in range(2, n + 1):
+            p_prev, p_cur = p_cur, ((2 * k - 1) * x * p_cur - (k - 1) * p_prev) / k
+        derivative = n * (x * p_cur - p_prev) / (x * x - 1.0)
+        step = p_cur / derivative
+        x = x - step
+        if np.max(np.abs(step)) <= 4.0 * np.finfo(float).eps:
+            break
+    weights = 2.0 / ((1.0 - x * x) * derivative * derivative)
+    return x[::-1].copy(), weights[::-1].copy()
+
+
+def leggauss(order: int) -> tuple[FloatArray, FloatArray]:
+    """Gauss-Legendre rule, with a backend-independent fallback.
+
+    The NumPy rule is preferred when it works so that numbers do not move; the
+    Newton path exists so that a LAPACK ``eigvalsh`` failure degrades the speed
+    of the quadrature, not the solve.  Both paths agree to round-off (see
+    ``tests/test_gauss_legendre_fallback.py``).
+    """
+    try:
+        return _numpy_leggauss(int(order))
+    except np.linalg.LinAlgError:  # pragma: no cover - backend dependent
+        return _legendre_newton(int(order))
 
 
 def fundamental_solution_3d(distance: FloatArray | float) -> FloatArray:
