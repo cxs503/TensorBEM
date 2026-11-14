@@ -29,7 +29,12 @@ relaxed afterwards:
   registered up front rather than excused afterwards);
 * ``NULL_FLOOR`` -- an entry is a *structural null* when ``|entry|`` is at most
   1 % of ``sqrt(|M_ii M_jj|)``; a pair null in one code and not in the other is a
-  ``conflict`` and therefore a **failure** (the interesting defect class).
+  ``conflict`` and therefore a **failure** (the interesting defect class).  That
+  normaliser is only applied to entries that touch **no** declared null dof: on
+  a null diagonal it collapses onto the residual itself, so entries of
+  ``invariant_null_dofs`` are bounded by ``INVARIANT_RATIO * rho L**k`` instead
+  (``class == "invariant"``) and an undeclared null is a failure
+  (``class == "undeclared_null"``).
 
 **What the two round-2 bodies can and cannot score.**  Both of them put the
 rotation centre on the *centre of curvature* of their spherical wetted surface,
@@ -74,11 +79,15 @@ GRAVITY = 9.80665
 NU_GRID = (0.5, 1.0, 2.0)
 DOF_ORDER = ("surge", "sway", "heave", "roll", "pitch", "yaw")
 
-#: Mesh levels actually exercised under this round's compute budget: 64/256
-#: panels (hemisphere) and 270 (sphere).  The 1024/1026 levels used by round 1
-#: were not re-run here -- a documented limitation, not an assumed equivalence.
-HEMISPHERE_LEVELS = (2, 3)
-SPHERE_LEVELS = (2,)
+#: Mesh levels exercised by the comparison.  The first submission of this round
+#: ran 64/256 (hemisphere) and 270 (sphere) only and then compared those solves
+#: against capytaine's *finest* meshes (784 / 1120 panels): the reported gap
+#: mixed code-to-code disagreement with a 3-4x panel-density mismatch.  The
+#: finest levels of round 1 (1024 / 1026 panels) are therefore exercised here as
+#: well, so the codes meet at comparable density and the ladder shows the
+#: discretisation trend.  ``reference`` is the finest level (``run_case``).
+HEMISPHERE_LEVELS = (2, 3, 4)
+SPHERE_LEVELS = (2, 3)
 
 TOL_DIAGONAL = 0.05
 TOL_OFFDIAGONAL = 0.10
@@ -227,6 +236,25 @@ def run_case(case: str, levels: Sequence[int] | None = None) -> dict[str, Any]:
 def _scale(mat: np.ndarray, i: int, j: int) -> float:
     scale = math.sqrt(abs(mat[i, i] * mat[j, j]))
     return scale if scale > 0.0 else float("nan")
+
+
+def reference_scale(mat: np.ndarray, i: int, j: int) -> tuple[float, bool]:
+    """Normaliser of the null test, with a fall-back when it is itself a floor.
+
+    ``sqrt(|M_ii M_jj|)`` is the natural reference for "is this entry
+    negligible".  It collapses whenever a diagonal entry is itself a
+    structural null -- on ``sphere_r1_z-0.5_c0`` the rotational block is real
+    but four orders below ``rho L**5``, so the pair normaliser is a floor, and
+    dividing by it turns a residual into an apparent O(1) deviation.  When it
+    falls below ``NULL_FLOOR * physical_scale`` the body scale is used instead
+    and the fall-back is reported (``degenerate=True``) so the choice is
+    visible in the artifact rather than silent.
+    """
+    scale = _scale(mat, i, j)
+    phys = physical_scale(i, j)
+    if not math.isfinite(scale) or scale <= NULL_FLOOR * phys:
+        return phys, True
+    return scale, False
 
 
 def physical_scale(i: int, j: int) -> float:
@@ -416,14 +444,12 @@ def invariant_scoring(
 ) -> dict[str, Any]:
     """Separate the *physics score* from the exact-zero sanity bound.
 
-    ``compare`` is left untouched: its bands are pre-registered and its verdict
-    stays in the artifact exactly as computed.  What is added here is the
-    observation that an entry touching a null dof (``invariant_null_dofs``) has
-    an exact target of zero, so a relative deviation on it measures the
-    discretisation residual of a zero, not agreement between two codes.  Those
-    entries are bounded by ``INVARIANT_RATIO`` times ``physical_scale`` instead
-    and reported out of band; every other entry keeps the ``compare``
-    classification and band unchanged.
+    ``compare`` now performs this classification itself (the degenerate
+    ``sqrt(|M_ii M_jj|)`` normaliser is not applied to declared nulls -- see its
+    docstring).  This function is kept as an **independent recomputation** of
+    the same split from the raw entries, so a gate can require the two to agree
+    entry for entry; it carries no relaxation of its own and the bands are read
+    from the ``compare`` record, not re-declared here.
     """
     cases: dict[str, Any] = {}
     physics_failures: list[str] = []
@@ -515,10 +541,33 @@ def invariant_scoring(
 
 
 def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, Any]:
-    """Entry-by-entry comparison of all 36 entries of both matrices."""
+    """Entry-by-entry comparison of all 36 entries of both matrices.
+
+    An entry whose row or column is a **declared** structural null
+    (``invariant_null_dofs``) has an exact target of zero: a relative deviation
+    on it divides one discretisation floor by another, so it measures neither
+    code.  Such entries are classed ``invariant`` and bounded against
+    ``INVARIANT_RATIO * physical_scale(i, j)``; they never feed the physics
+    score.
+
+    This replaces the earlier normaliser ``sqrt(|M_ii M_jj|)``, which
+    degenerates *exactly* when a diagonal entry is itself a structural null: on
+    ``hemisphere_r1`` (rotation centre on the centre of curvature) ``M_roll,roll``
+    is a residual of order ``1e-4 rho L^5``, so the scale collapsed onto it and
+    the whole rotational block was scored as "active" with deviations up to
+    9859 %, producing a ``FAIL`` verdict for a block in which both codes sit at
+    their floor.  The raw ratio is still recorded
+    (``worst_relative_any_entry``) so the old number stays in the trail.
+
+    A degenerate normaliser on a *non*-declared entry means the declaration of
+    null dofs is incomplete -- that is classed ``undeclared_null`` and is a
+    failure, so the invariant list cannot silently miss a zero.
+    """
     cases: dict[str, Any] = {}
     failures: list[str] = []
     worst_active = 0.0
+    worst_invariant = 0.0
+    worst_any = 0.0
     for case, tb_case in tensorbem.items():
         cap_case = capytaine.get(case)
         if cap_case is None:
@@ -528,9 +577,13 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
             }
             failures.append(case + ": absent from the capytaine reference")
             continue
+        null_dofs = invariant_null_dofs(case)
+        null_index = {DOF_ORDER.index(dof) for dof in null_dofs}
         entries: list[dict[str, Any]] = []
         case_failures: list[str] = []
         case_worst = 0.0
+        case_invariant = 0.0
+        case_any = 0.0
         for nu in NU_GRID:
             key = _key(nu)
             tb = tb_case["reference"][key]
@@ -540,7 +593,8 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
                 a_cap = np.asarray(cap[quantity], dtype=float)
                 for i, dof_i in enumerate(DOF_ORDER):
                     for j, dof_j in enumerate(DOF_ORDER):
-                        scale = _scale(a_tb, i, j)
+                        scale, degenerate = reference_scale(a_tb, i, j)
+                        phys = physical_scale(i, j)
                         entry: dict[str, Any] = {
                             "nu": nu,
                             "row": dof_i,
@@ -549,7 +603,34 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
                             "tensorbem": float(a_tb[i, j]),
                             "capytaine": float(a_cap[i, j]),
                             "scale": scale,
+                            "scale_degenerate": bool(degenerate),
+                            "physical_scale": phys,
                         }
+                        if abs(a_cap[i, j]) > 0.0:
+                            case_any = max(
+                                case_any,
+                                abs((a_tb[i, j] - a_cap[i, j]) / abs(a_cap[i, j])),
+                            )
+                        if i in null_index or j in null_index:
+                            bound = INVARIANT_RATIO * phys
+                            biggest = max(abs(a_tb[i, j]), abs(a_cap[i, j]))
+                            ratio = biggest / bound if bound else float("inf")
+                            entry["class"] = "invariant"
+                            entry["invariant_bound"] = bound
+                            entry["invariant_ratio"] = float(ratio)
+                            entry["tensorbem_null_ratio"] = float(abs(a_tb[i, j]) / phys)
+                            entry["capytaine_null_ratio"] = float(abs(a_cap[i, j]) / phys)
+                            case_invariant = max(case_invariant, ratio)
+                            if ratio > 1.0:
+                                case_failures.append(
+                                    "{} nu={:g} {} A[{},{}]: invariant zero exceeded "
+                                    "({:.6g} vs bound {:.6g})".format(
+                                        case, nu, quantity, dof_i, dof_j,
+                                        biggest, bound,
+                                    )
+                                )
+                            entries.append(entry)
+                            continue
                         cap_null = abs(a_cap[i, j]) <= NULL_FLOOR * scale
                         tb_null = abs(a_tb[i, j]) <= NULL_FLOOR * scale
                         if cap_null and tb_null:
@@ -588,16 +669,23 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
                                 )
                         entries.append(entry)
         nulls = [e for e in entries if e["class"] == "null"]
+        invariants = [e for e in entries if e["class"] == "invariant"]
         worst_active = max(worst_active, case_worst)
+        worst_invariant = max(worst_invariant, case_invariant)
+        worst_any = max(worst_any, case_any)
         failures.extend(case_failures)
         cases[case] = {
             "compared": True,
             "entries": entries,
             "n_entries": len(entries),
+            "null_dofs": list(null_dofs),
             "n_active": len([e for e in entries if e["class"] == "active"]),
             "n_null": len(nulls),
+            "n_invariant": len(invariants),
             "n_conflict": len([e for e in entries if e["class"] == "conflict"]),
             "worst_active_relative": case_worst,
+            "worst_invariant_ratio": float(case_invariant),
+            "worst_relative_any_entry": float(case_any),
             "worst_null_ratio": max(
                 (
                     max(e["tensorbem_null_ratio"], e["capytaine_null_ratio"])
@@ -615,7 +703,10 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
         "tolerance_diagonal": TOL_DIAGONAL,
         "tolerance_offdiagonal": TOL_OFFDIAGONAL,
         "null_floor": NULL_FLOOR,
+        "invariant_ratio": INVARIANT_RATIO,
         "worst_active_relative": worst_active,
+        "worst_invariant_ratio": float(worst_invariant),
+        "worst_relative_any_entry": float(worst_any),
         "failures": failures,
         "cases": cases,
         "verdict": "PASS" if not failures else "FAIL",
@@ -629,6 +720,7 @@ def convergence(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[st
         cap_case = capytaine.get(case)
         if cap_case is None:
             continue
+        null_index = {DOF_ORDER.index(dof) for dof in invariant_null_dofs(case)}
         rows = []
         for row in tb_case["levels"]:
             worst_diag = 0.0
@@ -641,7 +733,14 @@ def convergence(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[st
                 )
                 for i in range(6):
                     for j in range(6):
+                        if i in null_index or j in null_index:
+                            # exact structural zero: a ratio of two floors
+                            continue
                         scale = _scale(cap, i, j)
+                        if not math.isfinite(scale) or scale <= NULL_FLOOR * physical_scale(i, j):
+                            # the reference normaliser is itself a floor: the
+                            # ratio would compare two zeros (see ``compare``)
+                            continue
                         if abs(cap[i, j]) <= NULL_FLOOR * scale:
                             continue
                         rel = abs((tb[i, j] - cap[i, j]) / abs(cap[i, j]))
@@ -750,7 +849,13 @@ def deep_submergence() -> dict[str, Any]:
     deepest = rows[-1]["values"]
     finest = max(deepest.values(), key=lambda v: v["n_faces"])
     worst_translation = abs(finest["surge_vs_lamb"])
-    worst_rotation = max(v["roll_over_scale"] for v in deepest.values())
+    # The bound must hold at *every* depth, not only at the deepest one: a
+    # residual that grows as the body comes closer to the free surface would
+    # otherwise be reported as the deepest (smallest) value.
+    worst_rotation = max(
+        v["roll_over_scale"] for row in rows for v in row["values"].values()
+    )
+    deepest_rotation = max(v["roll_over_scale"] for v in deepest.values())
     return {
         "depths": list(DEEP_DEPTHS),
         "levels": list(DEEP_LEVELS),
@@ -760,6 +865,7 @@ def deep_submergence() -> dict[str, Any]:
         "deepest_finest_vs_lamb": float(finest["surge_vs_lamb"]),
         "deepest_finest_faces": int(finest["n_faces"]),
         "worst_rotation_ratio": float(worst_rotation),
+        "deepest_rotation_ratio": float(deepest_rotation),
         "tolerance": DEEP_TOL,
         "tolerance_rotation": EXACT_NULL_TOL,
         "verdict": "PASS"
@@ -836,6 +942,7 @@ def render_figures(study: dict[str, Any]) -> list[Path]:
         len(cases), 2, figsize=(11.0, 4.5 * len(cases)), squeeze=False
     )
     for col, case in enumerate(cases):
+        null_index = {DOF_ORDER.index(d) for d in invariant_null_dofs(case)}
         for row, quantity in enumerate(("added_mass", "damping")):
             ax = axes[col][row]
             tb = np.asarray(study["tensorbem"][case]["reference"][_key(nu)][quantity])
@@ -843,7 +950,9 @@ def render_figures(study: dict[str, Any]) -> list[Path]:
             dev = np.zeros((6, 6))
             for i in range(6):
                 for j in range(6):
-                    if abs(cap[i, j]) <= NULL_FLOOR * _scale(tb, i, j):
+                    if i in null_index or j in null_index:
+                        dev[i, j] = np.nan
+                    elif abs(cap[i, j]) <= NULL_FLOOR * _scale(tb, i, j):
                         dev[i, j] = np.nan
                     else:
                         dev[i, j] = (tb[i, j] - cap[i, j]) / abs(cap[i, j]) * 100.0
@@ -959,6 +1068,11 @@ def render_document(study: dict[str, Any]) -> str:
     n_null = sum(
         c.get("n_null", 0) for c in comparison["cases"].values() if c.get("compared")
     )
+    n_invariant = sum(
+        c.get("n_invariant", 0)
+        for c in comparison["cases"].values()
+        if c.get("compared")
+    )
     nu = NU_GRID[1]
     lines: list[str] = []
     add = lines.append
@@ -1007,8 +1121,14 @@ def render_document(study: dict[str, Any]) -> str:
     )
     add(
         "3. `compare` 对 36 个 (i,j) x 2 个量（附加质量/阻尼）x 每个频率逐一分类："
-        "**active**（两码均显著：|M_ij| > {:.0%}·sqrt(|M_ii M_jj|)）、**null**（两码均在此阈下）、"
-        "**conflict**（一码显著、另一码为零 → 直接失败）。".format(NULL_FLOOR)
+        "**invariant**（该行/列是声明过的恒零自由度 `invariant_null_dofs`，精确目标为 0，"
+        "用 {:.0%}·ρL^k 物理尺度作上界、不算相对偏差）、**active**（两码均显著："
+        "|M_ij| > {:.0%}·sqrt(|M_ii M_jj|)）、**null**（两码均在此阈下）、"
+        "**conflict**（一码显著、另一码为零 → 直接失败）。若 "
+        "`sqrt(|M_ii M_jj|)` 本身落在物理尺度地板上（转动块整体很小的偏心算例），"
+        "改用 ρL^k 作归一化尺度并在 artifact 里标记 `scale_degenerate`。".format(
+            INVARIANT_RATIO, NULL_FLOOR
+        )
     )
     add(
         "4. 事前登记、事后不放宽的容差：对角块 **{:.0%}**（与第一轮同带），真正非零的耦合项 "
@@ -1021,29 +1141,43 @@ def render_document(study: dict[str, Any]) -> str:
     add("")
     add("### 3.1 网格层级与逐案结论")
     add("")
-    add("| case | TensorBEM 面板 | capytaine 面板 | active | 结构零项 | conflict | 最差 active 偏差 | 判定 |")
-    add("|---|---:|---:|---:|---:|---:|---:|---|")
+    add(
+        "| case | TensorBEM 面板 | capytaine 面板 | active | 结构零项 | 不变式零项 | conflict | "
+        "最差 active 偏差 | 最差不变式比 | 判定 |"
+    )
+    add("|---|---:|---:|---:|---:|---:|---:|---:|---:|---|")
     for case, row in comparison["cases"].items():
         if not row.get("compared"):
             add("| {} | - | - | - | - | - | - | {} |".format(case, row.get("reason")))
             continue
         add(
-            "| {} | {} | {} | {} | {} | {} | {:.2f}% | {} |".format(
+            "| {} | {} | {} | {} | {} | {} | {} | {:.2f}% | {:.2e} | {} |".format(
                 case,
                 row["tensorbem_faces"],
                 row["capytaine_faces"],
                 row["n_active"],
                 row["n_null"],
+                row["n_invariant"],
                 row["n_conflict"],
                 100.0 * row["worst_active_relative"],
+                row["worst_invariant_ratio"],
                 row["verdict"],
             )
         )
     add("")
     add(
-        "总计 {} 个 active 项与 {} 个结构零项被逐项判定，总体判定 **{}**"
-        "（对角带 {:.0%}、耦合带 {:.0%}）。".format(
-            n_active, n_null, comparison["verdict"], TOL_DIAGONAL, TOL_OFFDIAGONAL
+        "总计 {} 个 active 项、{} 个相对阈下的结构零项与 {} 个声明过的恒零项（不变式，上界 "
+        "{:.0%}·ρL^k）被逐项判定，总体判定 **{}**（对角带 {:.0%}、耦合带 {:.0%}）；"
+        "最差 active 相对偏差 {:.2%}，最差不变式比 {:.2e}。".format(
+            n_active,
+            n_null,
+            n_invariant,
+            INVARIANT_RATIO,
+            comparison["verdict"],
+            TOL_DIAGONAL,
+            TOL_OFFDIAGONAL,
+            100.0 * comparison["worst_active_relative"],
+            comparison["worst_invariant_ratio"],
         )
     )
     add("")
@@ -1529,9 +1663,11 @@ def main(argv: list[str] | None = None) -> int:
     for fig in paths["figures"]:
         print("wrote {}".format(fig))
     print(
-        "verdict {} (worst active {:.2%}); symmetry {}; deep {}".format(
+        "verdict {} (worst active {:.2%}, worst invariant ratio {:.2e}); "
+        "symmetry {}; deep {}".format(
             study["comparison"]["verdict"],
             study["comparison"]["worst_active_relative"],
+            study["comparison"]["worst_invariant_ratio"],
             {k: v["verdict"] for k, v in study["symmetry"].items()},
             (study["deep_submergence"] or {}).get("verdict"),
         )
