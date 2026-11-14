@@ -6,7 +6,7 @@
     "numpy": "2.4.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
     "machine": "loongarch64",
-    "wall_time_s": 9.77291608043015
+    "wall_time_s": 5.125658979639411
   },
   "parameters": {
     "semi_axes_m": [
@@ -293,10 +293,63 @@
       "momentum_detects": true
     }
   },
+  "rao_caller": {
+    "status": "run",
+    "caller": "tensorbem.rao.compute_rao_at_frequency (impedance -w^2(M+A)+iwB+C)",
+    "caller_line": "src/tensorbem/rao.py: m = compute_mass_matrix(mass, center_of_gravity, inertia)",
+    "omega_rad_s": 0.6,
+    "panels": 108,
+    "modes": [
+      "surge",
+      "sway",
+      "heave",
+      "roll",
+      "pitch",
+      "yaw"
+    ],
+    "rao_shipped": [
+      0.20854619008043956,
+      0.02921467979550399,
+      0.4251955794427707,
+      0.0036076523296351905,
+      0.025013007767262743,
+      0.0005949148735249303
+    ],
+    "rao_with_legacy_coupling": [
+      0.3207771143272502,
+      0.01992523061976754,
+      0.4245664161798007,
+      0.006987810466790742,
+      0.02510887799975185,
+      0.0005652105243825022
+    ],
+    "rao_change_fraction": [
+      0.5381585930844452,
+      0.3179719661745549,
+      0.0014797032080967464,
+      0.9369412094921454,
+      0.0038328150449216097,
+      0.04993041940005115
+    ],
+    "replay_rel_residual": 0.0,
+    "replay_roundoff_limit": 1e-09,
+    "legacy_coupling_max_rao_change": 0.9369412094921454,
+    "legacy_coupling_max_rao_change_mode": "roll",
+    "legacy_change_floor": 0.03,
+    "checks": {
+      "rao_caller_verified": true,
+      "rao_caller_replay_roundoff": true,
+      "rao_caller_legacy_coupling_material": true
+    }
+  },
   "verdict": {
     "overall": "PASS",
     "all_pass": true,
+    "not_run": [],
     "checks": {
+      "rao_caller_verified": true,
+      "rao_caller_replay_roundoff": true,
+      "rao_caller_legacy_coupling_material": true,
       "worst_accepted_entry_within_tolerance": true,
       "momentum_route_roundoff": true,
       "momentum_route_rejects_flipped_coupling": true,
@@ -308,6 +361,6 @@
     },
     "worst_accepted_entry_rel_error": 0.01415141785302352,
     "tolerance": 0.03,
-    "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls"
+    "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
   }
 }
