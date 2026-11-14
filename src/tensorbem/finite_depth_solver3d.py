@@ -178,11 +178,42 @@ def _validate_depth_mesh(mesh: SurfaceMesh3D, depth: float) -> float:
     return h
 
 
-def quadrature_points(mesh: SurfaceMesh3D) -> tuple[FloatArray, FloatArray, FloatArray]:
+def _resolve_panel_areas(
+    mesh: SurfaceMesh3D, panel_areas: ArrayLike | None
+) -> FloatArray:
+    """Return the surface measure attached to every panel.
+
+    ``None`` keeps the flat-triangle areas of the mesh.  A supplied vector must be
+    positive and of length ``mesh.panel_count``; it then replaces the flat measure
+    in every integral that carries a weight (Rankine quadrature, eigenseries
+    remainder quadrature and the force/moment integral), while the panels, their
+    normals and the collocation points stay unchanged.  That is the
+    exact-surface-measure route of
+    :func:`tensorbem.geometry3d.spherical_patch_areas`, with the same semantics as
+    the argument of the same name in
+    :func:`tensorbem.free_surface_solver3d.solve_radiation_3d`.
+    """
+    if panel_areas is None:
+        return mesh.areas
+    areas = np.asarray(panel_areas, dtype=float)
+    if areas.shape != (mesh.panel_count,):
+        raise ValueError(
+            f"panel_areas must have shape ({mesh.panel_count},), got {areas.shape}"
+        )
+    if not np.isfinite(areas).all() or np.any(areas <= 0.0):
+        raise ValueError("panel_areas must be finite and strictly positive")
+    return areas
+
+
+def quadrature_points(
+    mesh: SurfaceMesh3D, areas: ArrayLike | None = None
+) -> tuple[FloatArray, FloatArray, FloatArray]:
     """Return ``(points, weights, normals)`` of the 6-point triangle rule.
 
-    ``weights`` already include the triangle area, so ``sum(weights)`` equals the
+    ``weights`` already include the panel measure, so ``sum(weights)`` equals the
     wetted area; entries are ordered panel-major (panel 0 rule points first).
+    ``areas`` overrides the flat-triangle measure, see
+    :func:`_resolve_panel_areas`.
     """
     v0, v1, v2 = mesh.v0, mesh.v1, mesh.v2
     bary = _DEG4_BARY
@@ -191,7 +222,8 @@ def quadrature_points(mesh: SurfaceMesh3D) -> tuple[FloatArray, FloatArray, Floa
         + bary[None, :, 1, None] * v1[:, None, :]
         + bary[None, :, 2, None] * v2[:, None, :]
     ).reshape(-1, 3)
-    weights = (mesh.areas[:, None] * _DEG4_WEIGHTS[None, :]).reshape(-1)
+    measure = _resolve_panel_areas(mesh, areas)
+    weights = (measure[:, None] * _DEG4_WEIGHTS[None, :]).reshape(-1)
     normals = np.repeat(mesh.normals, bary.shape[0], axis=0)
     return pts, weights, normals
 
@@ -215,12 +247,18 @@ def mode_count_for(mesh: SurfaceMesh3D, depth: float) -> int:
 
 
 def _rankine_operators(
-    targets: FloatArray, mesh: SurfaceMesh3D, *, self_interaction: bool, order: int
+    targets: FloatArray,
+    mesh: SurfaceMesh3D,
+    *,
+    self_interaction: bool,
+    order: int,
+    areas: ArrayLike | None = None,
 ) -> tuple[ComplexArray, ComplexArray]:
     """Exact single-layer / solid-angle operators of ``1/(4*pi*r)``."""
     v0, v1, v2 = mesh.v0, mesh.v1, mesh.v2
     single = _vectorized_single_layer_rankine(
-        targets, v0, v1, v2, mesh.areas, self_diagonal=False, order=order
+        targets, v0, v1, v2, _resolve_panel_areas(mesh, areas),
+        self_diagonal=False, order=order,
     ).astype(np.complex128)
     double = _vectorized_solid_angle_dl(targets, v0, v1, v2).astype(np.complex128)
     if self_interaction:
@@ -291,6 +329,7 @@ def _smooth_remainder(
     kernel: str = "eigenseries",
     kernel_nodes: int = 16,
     group_rows: int = 8,
+    areas: ArrayLike | None = None,
 ) -> tuple[ComplexArray, ComplexArray]:
     """Quadratured single- and double-layer operators of ``G_fd - 1/(4*pi*r)``.
 
@@ -307,11 +346,11 @@ def _smooth_remainder(
         empty = np.zeros((0, p_cnt), dtype=np.complex128)
         return empty, empty
 
-    qpts, qweights, qnormals = quadrature_points(mesh)
+    qpts, qweights, qnormals = quadrature_points(mesh, areas)
     per_panel = _DEG4_BARY.shape[0]
 
     single, double = _rankine_operators(
-        targets, mesh, self_interaction=True, order=order
+        targets, mesh, self_interaction=True, order=order, areas=areas
     )
 
     value_fn, grad_fn = kernel_functions(
@@ -370,6 +409,7 @@ def assemble_finite_depth_operators_3d(
     rankine_order: int = 5,
     kernel: str = "eigenseries",
     kernel_nodes: int = 16,
+    panel_areas: ArrayLike | None = None,
 ) -> FiniteDepth3DOperators:
     """Assemble the finite-depth 3-D single/double-layer operators and system.
 
@@ -412,6 +452,7 @@ def assemble_finite_depth_operators_3d(
     single, double = _smooth_remainder(
         mesh.centroids, mesh, freq, h, count,
         order=int(rankine_order), kernel=kernel, kernel_nodes=int(kernel_nodes),
+        areas=panel_areas,
     )
     system = 0.5 * np.eye(mesh.panel_count, dtype=np.complex128) - double
     return FiniteDepth3DOperators(
@@ -440,6 +481,7 @@ def solve_radiation_finite_depth_3d(
     kernel: str = "eigenseries",
     kernel_nodes: int = 16,
     operators: FiniteDepth3DOperators | None = None,
+    panel_areas: ArrayLike | None = None,
 ) -> FiniteDepth3DResult:
     """Solve 3-D wave radiation in water of finite depth for up to 6 DOF.
 
@@ -467,7 +509,7 @@ def solve_radiation_finite_depth_3d(
         if operators is not None
         else assemble_finite_depth_operators_3d(
             mesh, freq, h, mode_count=mode_count, rankine_order=rankine_order,
-            kernel=kernel, kernel_nodes=kernel_nodes,
+            kernel=kernel, kernel_nodes=kernel_nodes, panel_areas=panel_areas,
         )
     )
     if abs(ops.wavenumber - freq) > 1.0e-14 * max(1.0, freq):
@@ -484,7 +526,7 @@ def solve_radiation_finite_depth_3d(
     denom = max(float(np.linalg.norm(rhs)), 1.0e-30)
     residual = float(np.linalg.norm(ops.system_matrix @ solution - rhs) / denom)
 
-    weighted_normals = mesh.areas[:, None] * n_modes
+    weighted_normals = _resolve_panel_areas(mesh, panel_areas)[:, None] * n_modes
     impedance = -rho * (weighted_normals.T @ solution)
     return FiniteDepth3DResult(
         modes=mode_arr,

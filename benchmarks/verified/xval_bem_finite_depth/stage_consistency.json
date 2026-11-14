@@ -1,0 +1,13 @@
+{
+ "axisymmetry_A11_A22": 0.06926561101857438,
+ "axisymmetry_B11_B22": 0.07666701824757997,
+ "condition_number": 13.144479937099431,
+ "mode_count": 128,
+ "panels": 320,
+ "reciprocity_A": 0.00016691510749526964,
+ "reciprocity_B": 0.0002145944481752902,
+ "roll_over_surge": 3.1600243868101916e-05,
+ "seconds": 66.4406259059906,
+ "stage": "consistency",
+ "surge_heave_coupling": 6.581047608866247e-17
+}
