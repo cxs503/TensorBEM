@@ -259,6 +259,7 @@ CASES: dict[str, CaseEntry] = {
             "benchmarks/verified/case_bem_laplace_cylinder/figures/field.png",
             "benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png",
             "benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png",
+            "benchmarks/verified/case_bem_laplace_cylinder/figures/multipole.png",
         ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
