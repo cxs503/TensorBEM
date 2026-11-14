@@ -64,10 +64,17 @@ Predeclared gates (fixed before the extended ladder was fetched)
                                      spread was the third code's error, not the
                                      reference's
 ``E7_inhouse_model_credible``        same 0.3 % reproduction test for the
-                                     in-house ladder at ka = 2
+                                     in-house ladder at ka = 2, over *all* its
+                                     rungs and only when at least four rungs
+                                     exist (three rungs determine a
+                                     three-parameter model, so their residual
+                                     is zero by construction and is not evidence)
 ``E8_inhouse_extrapolated_error``    ``|BEM v_inf / reference - 1| < 1 %`` for
                                      every quantity at ka = 2 -- the graded
                                      1.15 % must be discretisation, not bias
+``E9_inhouse_order_and_limit_stable`` dropping the coarsest in-house rung must
+                                     move the observed order < 25 % and the
+                                     extrapolated limit < 0.5 %
 ===================================  =========================================
 """
 
@@ -96,6 +103,12 @@ STABILITY_BAND = 0.005
 FROZEN_RESIDUAL_BAND = 0.02
 ADJUDICATED_BAND = 0.02
 INHOUSE_EXTRAPOLATED_BAND = 0.01
+#: a three-parameter model fitted to exactly three rungs is determined, so its
+#: residual is zero by construction -- E7 requires one spare degree of freedom
+INHOUSE_MIN_RUNGS = 4
+#: order / limit stability of the in-house fit, finest-three rungs vs all rungs
+INHOUSE_ORDER_SHIFT_BAND = 0.25
+INHOUSE_LIMIT_SHIFT_BAND = 0.005
 #: the worst cell of the published adjudication (docs/case_bem_hulme_independent_axis.md)
 WORST_CELL = ("B33", 2.0)
 
@@ -389,23 +402,77 @@ def analyse(
                 "finest_value": panel_values[-1],
                 "finest_error": abs(panel_values[-1] / ref - 1.0),
             }
+        # the same fits re-done on the finest three rungs only: with four or
+        # more rungs the two windows are a real stability test, with exactly
+        # three rungs the three-parameter model is *determined* and the
+        # all-rung residual is identically zero (vacuous evidence, not support)
+        for name, _ in QUANTITIES:
+            panels, panel_values, _ = inhouse_cell(inhouse_path, name)
+            q = per_q_in[name]
+            if len(panels) >= 3:
+                fit3 = fit_convergence(panels[-3:], panel_values[-3:])
+                q["fit_finest3"] = fit3
+                q["order_shift"] = abs(fit3["p"] - q["fit"]["p"]) / q["fit"]["p"]
+                q["limit_shift"] = abs(fit3["v_inf"] - q["fit"]["v_inf"]) / abs(
+                    q["fit"]["v_inf"]
+                )
         inhouse = {
             "ka": float(json.loads(Path(inhouse_path).read_text())["ka"]),
             "panels": panels_in,
+            "n_rungs": len(panels_in or []),
             "quantities": per_q_in,
         }
         worst_model_in = max(
-            max(abs(v) for v in list(q["fit"]["rel_residual_by_panels"].values())[-3:])
+            max(abs(v) for v in q["fit"]["rel_residual_by_panels"].values())
             for q in per_q_in.values()
         )
+        identified = len(panels_in or []) >= INHOUSE_MIN_RUNGS
         gates["E7_inhouse_model_credible"] = {
             "criterion": (
-                "the same convergence model reproduces the last three in-house "
-                f"rungs at ka=2 to within {MODEL_BAND:.1%} for every quantity"
+                "the same convergence model reproduces *every* in-house rung at "
+                f"ka=2 to within {MODEL_BAND:.1%} per quantity, on at least "
+                f"{INHOUSE_MIN_RUNGS} rungs -- with exactly three rungs a "
+                "three-parameter model is determined and the residual is zero by "
+                "construction, which is not evidence"
             ),
             "measured": worst_model_in,
-            "pass": bool(worst_model_in < MODEL_BAND),
+            "n_rungs": len(panels_in or []),
+            "fit_identified": bool(identified),
+            "pass": bool(identified and worst_model_in < MODEL_BAND),
         }
+        if identified:
+            worst_order = max(per_q_in.items(), key=lambda kv: kv[1]["order_shift"])
+            worst_limit = max(
+                per_q_in.items(), key=lambda kv: kv[1]["limit_shift"]
+            )
+            gates["E9_inhouse_order_and_limit_stable"] = {
+                "criterion": (
+                    "the in-house fit is stable under dropping its coarsest "
+                    f"rung: |dp|/p < {INHOUSE_ORDER_SHIFT_BAND:.0%} and "
+                    f"|dv_inf|/|v_inf| < {INHOUSE_LIMIT_SHIFT_BAND:.1%} for every "
+                    "quantity (finest three rungs vs all rungs)"
+                ),
+                "measured": max(
+                    worst_order[1]["order_shift"], worst_limit[1]["limit_shift"]
+                ),
+                "worst_order_quantity": worst_order[0],
+                "worst_order_shift": worst_order[1]["order_shift"],
+                "worst_limit_quantity": worst_limit[0],
+                "worst_limit_shift": worst_limit[1]["limit_shift"],
+                "pass": bool(
+                    worst_order[1]["order_shift"] < INHOUSE_ORDER_SHIFT_BAND
+                    and worst_limit[1]["limit_shift"] < INHOUSE_LIMIT_SHIFT_BAND
+                ),
+            }
+        else:
+            gates["E9_inhouse_order_and_limit_stable"] = {
+                "criterion": (
+                    "the in-house fit is stable under dropping its coarsest rung "
+                    f"(needs >= {INHOUSE_MIN_RUNGS} rungs)"
+                ),
+                "measured": None,
+                "pass": False,
+            }
         worst_in = max(per_q_in.items(), key=lambda kv: kv[1]["extrapolated_error"])
         gates["E8_inhouse_extrapolated_error"] = {
             "criterion": (
@@ -531,13 +598,30 @@ def render_document(payload: dict[str, Any]) -> str:
     L.append("")
     inhouse = payload.get("inhouse")
     if inhouse:
-        L.append("| 量 | v(1024) 误差（算例判据所用） | v(4096) 误差 | v_inf 误差 | 观测阶 p |")
-        L.append("|---|---|---|---|---|")
+        L.append(
+            f"阶梯档位：" + ", ".join(f"{p:g}" for p in inhouse["panels"])
+            + f" 面板（共 {inhouse.get('n_rungs', len(inhouse['panels']))} 档）。"
+            f"三参数模型 `v(N)=v_inf+C·N^-p`；仅当档数 ≥ {INHOUSE_MIN_RUNGS} 时残差才有"
+            "自由度，三档恰好决定三参数、残差恒为零，**不构成证据**。"
+        )
+        L.append("")
+        L.append(
+            "| 量 | v(1024) 误差（算例判据所用） | 最细档误差 | v_inf 误差 | 观测阶 p | "
+            "p（最细三档） | |Δp|/p | |Δv_inf|/|v_inf| |"
+        )
+        L.append("|---|---|---|---|---|---|---|---|")
         for name, q in inhouse["quantities"].items():
             graded = _pct(q["graded_error"]) if q["graded_error"] is not None else "n/a"
+            if "fit_finest3" in q:
+                p3 = f"{q['fit_finest3']['p']:.2f}"
+                dp = _pct(q["order_shift"])
+                dl = _pct(q["limit_shift"])
+            else:
+                p3 = dp = dl = "n/a"
             L.append(
                 f"| {name} | {graded} | {_pct(q['finest_error'])} | "
-                f"{_pct(q['extrapolated_error'])} | {q['fit']['p']:.2f} |"
+                f"{_pct(q['extrapolated_error'])} | {q['fit']['p']:.2f} | "
+                f"{p3} | {dp} | {dl} |"
             )
         L.append("")
     else:
