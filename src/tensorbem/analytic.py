@@ -1206,6 +1206,186 @@ def struve_h01(x: FloatArray | float) -> tuple[FloatArray, FloatArray]:
     return h0.reshape(original_shape), h1.reshape(original_shape)
 
 
+# ---------------------------------------------------------------------------
+# Hulme hemisphere: surface basis as a single source of truth
+# ---------------------------------------------------------------------------
+def _hulme_plm_table(mu: FloatArray, *, mode: str, max_degree: int) -> FloatArray:
+    """Legendre table on the hemisphere surface ``mu = cos(theta)``.
+
+    ``mode="heave"`` builds ``P_k(mu)`` (Hulme's ``p0``), ``mode="surge"``
+    builds the associated ``P_k^1(mu)`` (Hulme's ``p1``).  The table is the
+    *same* object the projection quadrature uses, so an off-quadrature node set
+    can reuse it without re-deriving the recurrences.
+    """
+    mu = np.atleast_1d(np.asarray(mu, dtype=float))
+    table = np.zeros((int(max_degree) + 1, mu.size), dtype=float)
+    if mode == "heave":
+        table[0] = 1.0
+        if int(max_degree) >= 1:
+            table[1] = mu
+        for deg in range(2, int(max_degree) + 1):
+            table[deg] = (
+                (2 * deg - 1) * mu * table[deg - 1] - (deg - 1) * table[deg - 2]
+            ) / deg
+    elif mode == "surge":
+        s = np.sqrt(np.maximum(0.0, 1.0 - mu * mu))
+        if int(max_degree) >= 1:
+            table[1] = s
+        if int(max_degree) >= 2:
+            table[2] = 3.0 * mu * s
+        for deg in range(3, int(max_degree) + 1):
+            table[deg] = (
+                (2 * deg - 1) * mu * table[deg - 1] - deg * table[deg - 2]
+            ) / (deg - 1)
+    else:  # pragma: no cover - guarded by the callers
+        raise ValueError(f"unknown mode {mode!r}")
+    return table
+
+
+def _hulme_test_table(mu: FloatArray, *, mode: str, n_terms: int) -> FloatArray:
+    """Galerkin test functions: every other odd harmonic (``p0[1::2]``)."""
+    table = _hulme_plm_table(mu, mode=mode, max_degree=2 * int(n_terms) + 3)
+    return table[1 : 2 * int(n_terms) + 2 : 2]
+
+
+def hulme_hemisphere_surface_basis(
+    ka: float,
+    mu: FloatArray,
+    *,
+    mode: str,
+    n_terms: int,
+) -> tuple[FloatArray, FloatArray, FloatArray]:
+    """Hulme's wave-free multipole basis evaluated at arbitrary surface nodes.
+
+    Returns ``(phi, dphi_dn, target)``: the complex potential basis, its outward
+    normal derivative basis (both shape ``(n_terms + 1, n_nodes)``), and the
+    body boundary condition target ``-mu`` (heave) or ``sin(theta)`` (surge).
+    ``mu`` is the same coordinate the projection quadrature uses, so ``phi`` and
+    ``dphi_dn`` reduce *identically* to the matrices assembled in
+    :func:`hulme_hemisphere_radiation` when ``mu`` is the quadrature node set.
+    The value of this entry point is that it can also be called on node sets the
+    projection never sees, which is what a residual audit needs.
+    """
+    from .free_surface3d import wave_function_3d
+
+    if mode not in ("heave", "surge"):
+        raise ValueError("mode must be 'heave' or 'surge'")
+    k_a = _positive("ka", ka)
+    m_max = int(n_terms)
+    if m_max < 1:
+        raise ValueError("n_terms must be >= 1")
+
+    mu = np.atleast_1d(np.asarray(mu, dtype=float))
+    s = np.sqrt(np.maximum(0.0, 1.0 - mu * mu))
+    plm = _hulme_plm_table(mu, mode=mode, max_degree=2 * m_max + 3)
+
+    x_dim = k_a * s
+    y_dim = k_a * mu
+    d_dim = np.hypot(x_dim, y_dim)
+    f_val, fx_val, fy_val = wave_function_3d(x_dim, y_dim)
+
+    j0 = np.ones_like(x_dim)
+    j1 = np.zeros_like(x_dim)
+    nz = x_dim > 1.0e-15
+    if np.any(nz):
+        j0[nz], j1[nz], _, _ = bessel_j01_y01(x_dim[nz])
+    exp_my = np.exp(-y_dim)
+    w_val = f_val + 1.0j * math.pi * exp_my * j0
+    wx_val = fx_val - 1.0j * math.pi * exp_my * j1
+    wy_val = fy_val - 1.0j * math.pi * exp_my * j0
+
+    phi = np.zeros((m_max + 1, mu.size), dtype=np.complex128)
+    dphi = np.zeros((m_max + 1, mu.size), dtype=np.complex128)
+    if mode == "heave":
+        phi[0] = 2.0 + 2.0 * k_a * w_val
+        dphi[0] = -2.0 + 2.0 * (k_a * k_a) * (s * wx_val + mu * wy_val)
+        for n in range(1, m_max + 1):
+            phi[n] = plm[2 * n] + (k_a / (2.0 * n)) * plm[2 * n - 1]
+            dphi[n] = -(2 * n + 1) * plm[2 * n] - k_a * plm[2 * n - 1]
+        target = -mu
+    else:
+        w_yy = w_val + 1.0 / d_dim + y_dim / (d_dim**3)
+        w_xx = -w_yy - wx_val / np.maximum(x_dim, 1.0e-30)
+        w_xy = -wx_val + x_dim / (d_dim**3)
+        phi[0] = 2.0 * s - 2.0 * (k_a * k_a) * wx_val
+        dphi[0] = -4.0 * s - 2.0 * (k_a**3) * (s * w_xx + mu * w_xy)
+        for n in range(1, m_max + 1):
+            phi[n] = plm[2 * n + 1] + (k_a / (2.0 * n)) * plm[2 * n]
+            dphi[n] = (
+                -(2 * n + 2) * plm[2 * n + 1]
+                - (k_a * (2 * n + 1) / (2.0 * n)) * plm[2 * n]
+            )
+        target = s
+    return phi, dphi, target
+
+
+@dataclass(frozen=True)
+class HulmeSurfaceSolution:
+    """Assembled Hulme projection: coefficients plus the surface they solve on."""
+
+    ka: float
+    n_terms: int
+    quad_order: int
+    heave_coefficients: FloatArray
+    surge_coefficients: FloatArray
+
+    def coefficients(self, mode: str) -> FloatArray:
+        if mode == "heave":
+            return self.heave_coefficients
+        if mode == "surge":
+            return self.surge_coefficients
+        raise ValueError("mode must be 'heave' or 'surge'")
+
+    def normal_derivative_residual(
+        self, mu: FloatArray, *, mode: str
+    ) -> FloatArray:
+        """Body impermeability residual ``sum_n c_n dphi_n/dn - target``."""
+        _, dphi, target = hulme_hemisphere_surface_basis(
+            self.ka, mu, mode=mode, n_terms=self.n_terms
+        )
+        return self.coefficients(mode) @ dphi - target
+
+
+def hulme_hemisphere_surface_solution(
+    ka: float,
+    *,
+    n_terms: int = 48,
+    quad_order: int = 128,
+) -> HulmeSurfaceSolution:
+    """Run only the surface projection of :func:`hulme_hemisphere_radiation`.
+
+    Same quadrature, same basis, same Galerkin test functions -- so the returned
+    coefficients are bit-identical to the ones the reference series solves for.
+    """
+    k_a = _positive("ka", ka)
+    m_max = int(n_terms)
+    q_order = int(quad_order)
+    if m_max < 4:
+        raise ValueError("n_terms must be >= 4")
+    if q_order < 2 * m_max:
+        raise ValueError("quad_order must be >= 2 * n_terms")
+    nodes, weights = leggauss(q_order)
+    mu = 0.5 * (nodes + 1.0)
+    w = 0.5 * weights
+
+    coeffs = {}
+    for mode in ("heave", "surge"):
+        _, dphi, target = hulme_hemisphere_surface_basis(
+            k_a, mu, mode=mode, n_terms=m_max
+        )
+        test = _hulme_test_table(mu, mode=mode, n_terms=m_max)
+        lhs = (test * w[None, :]) @ dphi.T
+        rhs = (test * w[None, :]) @ target
+        coeffs[mode] = np.linalg.solve(lhs, rhs)
+    return HulmeSurfaceSolution(
+        ka=k_a,
+        n_terms=m_max,
+        quad_order=q_order,
+        heave_coefficients=coeffs["heave"],
+        surge_coefficients=coeffs["surge"],
+    )
+
+
 @dataclass(frozen=True)
 class HulmeHemisphereResult:
     """Semi-analytical reference for Hulme's (1982) floating hemisphere."""
@@ -1290,24 +1470,13 @@ def hulme_hemisphere_radiation(
     wy_val = fy_val - 1.0j * math.pi * exp_my * j0
 
     # --- Heave (axisymmetric m = 0, body normal n_z = -mu) ---
-    p0 = np.zeros((2 * m_max + 4, q_order), dtype=float)
-    p0[0] = 1.0
-    p0[1] = mu
-    for deg in range(2, 2 * m_max + 4):
-        p0[deg] = ((2 * deg - 1) * mu * p0[deg - 1] - (deg - 1) * p0[deg - 2]) / deg
-
-    basis_phi0 = np.zeros((m_max + 1, q_order), dtype=np.complex128)
-    basis_dphi0 = np.zeros((m_max + 1, q_order), dtype=np.complex128)
-    basis_phi0[0] = 2.0 + 2.0 * k_a * w_val
-    basis_dphi0[0] = -2.0 + 2.0 * (k_a * k_a) * (s * wx_val + mu * wy_val)
-    for n in range(1, m_max + 1):
-        basis_phi0[n] = p0[2 * n] + (k_a / (2.0 * n)) * p0[2 * n - 1]
-        basis_dphi0[n] = -(2 * n + 1) * p0[2 * n] - k_a * p0[2 * n - 1]
-
-    test0 = p0[1 : 2 * m_max + 2 : 2]
+    basis_phi0, basis_dphi0, target0 = hulme_hemisphere_surface_basis(
+        k_a, mu, mode="heave", n_terms=m_max
+    )
+    test0 = _hulme_test_table(mu, mode="heave", n_terms=m_max)
     coeffs_heave = np.linalg.solve(
         (test0 * w[None, :]) @ basis_dphi0.T,
-        (test0 * w[None, :]) @ (-mu),
+        (test0 * w[None, :]) @ target0,
     )
     phi_heave = coeffs_heave @ basis_phi0
     heave_dimless = -3.0 * np.sum(w * phi_heave * (-mu))
@@ -1316,31 +1485,13 @@ def hulme_hemisphere_radiation(
     b33_ff_dimless = float(12.0 * math.pi * k_a * (abs(coeffs_heave[0]) ** 2))
 
     # --- Surge (m = 1, body normal n_x = +sin(theta)*cos(varphi)) ---
-    w_yy = w_val + 1.0 / d_dim + y_dim / (d_dim**3)
-    w_xx = -w_yy - wx_val / np.maximum(x_dim, 1.0e-30)
-    w_xy = -wx_val + x_dim / (d_dim**3)
-
-    p1 = np.zeros((2 * m_max + 4, q_order), dtype=float)
-    p1[1] = s
-    p1[2] = 3.0 * mu * s
-    for deg in range(3, 2 * m_max + 4):
-        p1[deg] = ((2 * deg - 1) * mu * p1[deg - 1] - deg * p1[deg - 2]) / (deg - 1)
-
-    basis_phi1 = np.zeros((m_max + 1, q_order), dtype=np.complex128)
-    basis_dphi1 = np.zeros((m_max + 1, q_order), dtype=np.complex128)
-    basis_phi1[0] = 2.0 * s - 2.0 * (k_a * k_a) * wx_val
-    basis_dphi1[0] = -4.0 * s - 2.0 * (k_a**3) * (s * w_xx + mu * w_xy)
-    for n in range(1, m_max + 1):
-        basis_phi1[n] = p1[2 * n + 1] + (k_a / (2.0 * n)) * p1[2 * n]
-        basis_dphi1[n] = (
-            -(2 * n + 2) * p1[2 * n + 1]
-            - (k_a * (2 * n + 1) / (2.0 * n)) * p1[2 * n]
-        )
-
-    test1 = p1[1 : 2 * m_max + 2 : 2]
+    basis_phi1, basis_dphi1, target1 = hulme_hemisphere_surface_basis(
+        k_a, mu, mode="surge", n_terms=m_max
+    )
+    test1 = _hulme_test_table(mu, mode="surge", n_terms=m_max)
     coeffs_surge = np.linalg.solve(
         (test1 * w[None, :]) @ basis_dphi1.T,
-        (test1 * w[None, :]) @ s,
+        (test1 * w[None, :]) @ target1,
     )
     phi_surge = coeffs_surge @ basis_phi1
     surge_dimless = -1.5 * np.sum(w * phi_surge * s)
