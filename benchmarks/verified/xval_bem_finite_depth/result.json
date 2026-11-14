@@ -1,0 +1,752 @@
+{
+ "case": "xval_bem_finite_depth",
+ "case_definition": {
+  "body": "geodesic sphere, closed, fully submerged",
+  "center": [
+   0.0,
+   0.0,
+   -1.5
+  ],
+  "density": 1025.0,
+  "depth_ratios": [
+   3.0,
+   5.0,
+   20.0
+  ],
+  "gravity": 9.80665,
+  "ka_grid": [
+   0.5,
+   2.0
+  ],
+  "mode_ladder": [
+   64,
+   128,
+   256,
+   512
+  ],
+  "radius": 1.0,
+  "submergence": 1.5,
+  "threshold": 0.15,
+  "work_mode_count": 32,
+  "work_subdivision": 2
+ },
+ "consistency": {
+  "axisymmetry_A11_A22": 0.06926561101857438,
+  "axisymmetry_B11_B22": 0.07666701824757997,
+  "condition_number": 13.144479937099431,
+  "mode_count": 128,
+  "panels": 320,
+  "reciprocity_A": 0.00016691510749526964,
+  "reciprocity_B": 0.0002145944481752902,
+  "roll_over_surge": 3.1600243868101916e-05,
+  "seconds": 66.4406259059906,
+  "stage": "consistency",
+  "surge_heave_coupling": 6.581047608866247e-17
+ },
+ "depth": {
+  "analytic": {
+   "A11": 2047.848954957577,
+   "A33": 1853.4234281971942,
+   "B11": 1598.3188645906966,
+   "B33": 3114.0676227039326,
+   "B33_far_field_dimless": 0.23160889078107558,
+   "depth_ratio": Infinity,
+   "ka": 1.0,
+   "route": "analytic_multipole"
+  },
+  "mode_count": 32,
+  "panels": 320,
+  "rows": [
+   {
+    "capytaine": {
+     "A11": 2174.338144482182,
+     "A33": 2387.2367279867954,
+     "B11": 1746.8102972341555,
+     "B33": 3149.660401969283,
+     "depth_ratio": 3.0,
+     "ka": 1.0,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.473529577255249
+    },
+    "depth_ratio": 3.0,
+    "ka": 1.0,
+    "rel_diff_A11": 0.001399830026510854,
+    "rel_diff_A33": 0.021283634017406843,
+    "rel_diff_B11": 0.015427905115280452,
+    "rel_diff_B33": 0.029792652126609826,
+    "rel_err_vs_analytic_A33": 0.2606011230947003,
+    "rel_err_vs_analytic_B33": 0.01870349795323498,
+    "tensorbem": {
+     "A11": 2171.294440659748,
+     "A13": -1.1379786002407855e-13,
+     "A33": 2336.4276551554126,
+     "B11": 1719.8606737140321,
+     "B33": 3055.8236652964542,
+     "condition_number": 12.895549202793324,
+     "depth_ratio": 3.0,
+     "ka": 1.0,
+     "mode_count": 32,
+     "panels": 320,
+     "relative_residual": 3.9089699575187975e-16,
+     "route": "tensorbem_exact_measure",
+     "seconds": 10.492007493972778
+    }
+   },
+   {
+    "capytaine": {
+     "A11": 2125.0689316593302,
+     "A33": 1970.1829763323676,
+     "B11": 1632.2173510709938,
+     "B33": 3212.201517205006,
+     "depth_ratio": 5.0,
+     "ka": 1.0,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.45881128311157227
+    },
+    "depth_ratio": 5.0,
+    "ka": 1.0,
+    "rel_diff_A11": 0.007453478193086069,
+    "rel_diff_A33": 0.1060515078346836,
+    "rel_diff_B11": 0.022201989518501896,
+    "rel_diff_B33": 0.08615089785802993,
+    "rel_err_vs_analytic_A33": 0.04973570842619743,
+    "rel_err_vs_analytic_B33": 0.05735268849171169,
+    "tensorbem": {
+     "A11": 2109.2297767184027,
+     "A13": -1.2802259252708836e-13,
+     "A33": 1761.2421009820953,
+     "B11": 1595.9788785505987,
+     "B33": 2935.4674723968687,
+     "condition_number": 212.67395554463923,
+     "depth_ratio": 5.0,
+     "ka": 1.0,
+     "mode_count": 32,
+     "panels": 320,
+     "relative_residual": 4.475958077802068e-16,
+     "route": "tensorbem_exact_measure",
+     "seconds": 12.325246095657349
+    }
+   },
+   {
+    "capytaine": {
+     "A11": 2124.4862944446463,
+     "A33": 1922.7360463469386,
+     "B11": 1631.0235851187244,
+     "B33": 3171.1771231378434,
+     "depth_ratio": 20.0,
+     "ka": 1.0,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.4235384464263916
+    },
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "rel_diff_A11": 0.08008589204792042,
+    "rel_diff_A33": 0.07912763964273321,
+    "rel_diff_B11": 0.03786658257619511,
+    "rel_diff_B33": 0.04467623775089465,
+    "rel_err_vs_analytic_A33": 0.04468970532775484,
+    "rel_err_vs_analytic_B33": 0.027156366821657067,
+    "tensorbem": {
+     "A11": 1954.344914410466,
+     "A13": -0.0,
+     "A33": 1770.5944813435044,
+     "B11": 1569.2622958491045,
+     "B33": 3029.500860034339,
+     "condition_number": 3.4123114029076693,
+     "depth_ratio": 20.0,
+     "ka": 1.0,
+     "mode_count": 32,
+     "panels": 320,
+     "relative_residual": 4.060782426632457e-16,
+     "route": "tensorbem_exact_measure",
+     "seconds": 17.03817868232727
+    }
+   }
+  ],
+  "seconds": 41.52135753631592,
+  "stage": "depth"
+ },
+ "environment": {
+  "capytaine_available": true,
+  "capytaine_note": "capytaine 3.1.dev0",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "python": "3.11.6"
+ },
+ "finished": "2026-11-14T04:18:08",
+ "freq": {
+  "mode_count": 32,
+  "panels": 320,
+  "rows": [
+   {
+    "capytaine": {
+     "A11": 2504.5512388978054,
+     "A33": 2864.744540939822,
+     "B11": 703.8883806074613,
+     "B33": 1416.0897854940845,
+     "depth_ratio": 5.0,
+     "ka": 0.5,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.4811415672302246
+    },
+    "depth_ratio": 5.0,
+    "ka": 0.5,
+    "rel_diff_A33": 0.11424077768584848,
+    "rel_diff_B33": 0.11302877031651881,
+    "tensorbem": {
+     "A11": 2477.5174116691574,
+     "A13": 8.534839501805891e-14,
+     "A33": 2537.4738967115677,
+     "B11": 706.0469676258236,
+     "B33": 1256.0308983819052,
+     "condition_number": 201.1099294053515,
+     "depth_ratio": 5.0,
+     "ka": 0.5,
+     "mode_count": 32,
+     "panels": 320,
+     "relative_residual": 4.360626238883075e-16,
+     "route": "tensorbem_exact_measure",
+     "seconds": 12.819356679916382
+    }
+   },
+   {
+    "analytic": {
+     "A11": 2421.652587693859,
+     "A33": 2692.444355339936,
+     "B11": 697.469084491707,
+     "B33": 1540.0614649752927,
+     "B33_far_field_dimless": 0.16198702879037125,
+     "depth_ratio": Infinity,
+     "ka": 0.5,
+     "route": "analytic_multipole"
+    },
+    "capytaine": {
+     "A11": 2507.6125914139793,
+     "A33": 2783.265898511522,
+     "B11": 714.6418893012833,
+     "B33": 1581.9634036123402,
+     "depth_ratio": null,
+     "ka": 0.5,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.1397712230682373
+    },
+    "depth_ratio": null,
+    "ka": 0.5,
+    "rel_diff_A33": 0.024852196440703647,
+    "rel_diff_B33": 0.04223730940431583,
+    "rel_err_vs_analytic_A33": 0.008041492954951976,
+    "rel_err_vs_analytic_B33": 0.016178535515808865,
+    "tensorbem": {
+     "A11": 2448.2431910060477,
+     "A13": 4.623038063478191e-14,
+     "A33": 2714.0956276550023,
+     "B11": 687.4523423324393,
+     "B33": 1515.1455258676613,
+     "depth_ratio": null,
+     "ka": 0.5,
+     "mode_count": null,
+     "panels": 320,
+     "route": "tensorbem_exact_measure",
+     "seconds": 2.1308302879333496
+    }
+   },
+   {
+    "capytaine": {
+     "A11": 1869.5476440819348,
+     "A33": 1570.6366198151352,
+     "B11": 703.8201866392603,
+     "B33": 1185.4296052179172,
+     "depth_ratio": 5.0,
+     "ka": 2.0,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.4376397132873535
+    },
+    "depth_ratio": 5.0,
+    "ka": 2.0,
+    "rel_diff_A33": 0.1581611472725644,
+    "rel_diff_B33": 0.03384336487250422,
+    "tensorbem": {
+     "A11": 1858.557517431785,
+     "A13": 2.8449465006019636e-14,
+     "A33": 1322.2229300768709,
+     "B11": 688.122357178172,
+     "B33": 1225.5485318779758,
+     "condition_number": 239.5039485159686,
+     "depth_ratio": 5.0,
+     "ka": 2.0,
+     "mode_count": 32,
+     "panels": 320,
+     "relative_residual": 4.771520305957904e-16,
+     "route": "tensorbem_exact_measure",
+     "seconds": 13.761489391326904
+    }
+   },
+   {
+    "analytic": {
+     "A11": 1793.5406134475516,
+     "A33": 1471.5208996573247,
+     "B11": 691.0244452910325,
+     "B33": 1156.3905937521477,
+     "B33_far_field_dimless": 0.06081584425789423,
+     "depth_ratio": Infinity,
+     "ka": 2.0,
+     "route": "analytic_multipole"
+    },
+    "capytaine": {
+     "A11": 1866.7543484313662,
+     "A33": 1539.386855442266,
+     "B11": 703.7951284915041,
+     "B33": 1173.7483495976749,
+     "depth_ratio": null,
+     "ka": 2.0,
+     "panels": 320,
+     "route": "capytaine",
+     "seconds": 0.13443779945373535
+    },
+    "depth_ratio": null,
+    "ka": 2.0,
+    "rel_diff_A33": 0.018958561487747504,
+    "rel_diff_B33": 0.01851157674385996,
+    "rel_err_vs_analytic_A33": 0.026286677573941864,
+    "rel_err_vs_analytic_B33": 0.0037791528482164333,
+    "tensorbem": {
+     "A11": 1828.6679853919293,
+     "A13": -1.4224732503009818e-13,
+     "A33": 1510.2022950899336,
+     "B11": 686.3896447875169,
+     "B33": 1152.0204169461185,
+     "depth_ratio": null,
+     "ka": 2.0,
+     "mode_count": null,
+     "panels": 320,
+     "route": "tensorbem_exact_measure",
+     "seconds": 23.99293541908264
+    }
+   }
+  ],
+  "seconds": 54.307350635528564,
+  "stage": "freq"
+ },
+ "gates": {
+  "all_gates_passed": false,
+  "case": "xval_bem_finite_depth",
+  "failed_gates": [
+   "G4_mode_truncation",
+   "G8_xval_freq_grid",
+   "G11_symmetry"
+  ],
+  "gates": [
+   {
+    "criterion": "exact patch area of every sphere mesh within 1 % of 4*pi*a^2",
+    "id": "G1_geometry",
+    "measured": 2.220446049250313e-16,
+    "note": "flat-area ratio of the coarsest mesh 0.7619",
+    "passed": true
+   },
+   {
+    "criterion": "|B33 - B33_analytic| / B33_analytic falls from 80 to 320 panels and is below 15 % at 320",
+    "id": "G2_damping_mesh_convergence",
+    "measured": 0.0675016403376996,
+    "note": "80 panels 0.2087 -> 320 panels 0.0675",
+    "passed": true
+   },
+   {
+    "criterion": "A33 and B33 at 320 panels with the exact surface measure within 15 % of the closed form",
+    "id": "G3_exact_measure_320",
+    "measured": 0.04468970532775496,
+    "note": "A33 0.0447, B33 0.0272",
+    "passed": true
+   },
+   {
+    "criterion": "B33 relative change over the last truncation step below 1 %",
+    "id": "G4_mode_truncation",
+    "measured": 0.01420610864095547,
+    "note": "256 -> 512 modes",
+    "passed": false
+   },
+   {
+    "criterion": "route C (independent code) at 320 panels within 15 % of the closed form",
+    "id": "G5_capytaine_analytic_320",
+    "measured": 0.037397074264351814,
+    "note": "",
+    "passed": true
+   },
+   {
+    "criterion": "max |T+ - C| / C over the depth ladder within 15 %",
+    "id": "G6_xval_depth_grid",
+    "measured": 0.1060515078346836,
+    "note": "3 depth stations, matched mesh",
+    "passed": true
+   },
+   {
+    "criterion": "T+ at h/a = 20 within 15 % of the deep-water closed form",
+    "id": "G7_deep_water_limit",
+    "measured": 0.04468970532775484,
+    "note": "",
+    "passed": true
+   },
+   {
+    "criterion": "max |T+ - C| / C over the frequency ladder within 15 %",
+    "id": "G8_xval_freq_grid",
+    "measured": 0.1581611472725644,
+    "note": "4 (ka, depth) stations",
+    "passed": false
+   },
+   {
+    "criterion": "T+ in deep water within 15 % of the closed form over the ka ladder",
+    "id": "G9_deep_water_freq",
+    "measured": 0.026286677573941864,
+    "note": "",
+    "passed": true
+   },
+   {
+    "criterion": "max|A - A^T|/max|A| and max|B - B^T|/max|B| below 1e-3",
+    "id": "G10_reciprocity",
+    "measured": 0.0002145944481752902,
+    "note": "",
+    "passed": true
+   },
+   {
+    "criterion": "|A11 - A22| / A11 below 5e-2 (the geodesic mesh is not 4-fold symmetric) and surge/heave decoupling below 1e-3",
+    "id": "G11_symmetry",
+    "measured": 0.06926561101857438,
+    "note": "",
+    "passed": false
+   }
+  ],
+  "threshold": 0.15
+ },
+ "mesh": {
+  "analytic": {
+   "A11": 2047.8489549575766,
+   "A33": 1853.4234281971944,
+   "B11": 1598.3188645906966,
+   "B33": 3114.067622703933,
+   "B33_far_field_dimless": 0.2316088907810756,
+   "depth_ratio": Infinity,
+   "ka": 1.0,
+   "route": "analytic_multipole"
+  },
+  "deep_water_solver": {
+   "A11": 2080.395581903956,
+   "A13": 1.4224732503009818e-14,
+   "A33": 1890.1643858229827,
+   "B11": 1575.964377591313,
+   "B33": 3069.4601234863794,
+   "depth_ratio": null,
+   "ka": 1.0,
+   "mode_count": null,
+   "panels": 320,
+   "rel_err_A11": 0.01589307984243095,
+   "rel_err_A33": 0.019823294055112822,
+   "rel_err_B11": 0.013986249862043812,
+   "rel_err_B33": 0.014324512060152719,
+   "route": "tensorbem_exact_measure",
+   "seconds": 4.2470972537994385
+  },
+  "mode_ladder": [
+   {
+    "A11": 2135.2260755987863,
+    "A13": -2.6387416390388395e-14,
+    "A33": 1943.7908831979196,
+    "B11": 1487.430037465208,
+    "B33": 2950.989081133021,
+    "condition_number": 6.418044018305156,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 64,
+    "panels": 80,
+    "relative_residual": 3.7934454920358086e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 1.804656982421875
+   },
+   {
+    "A11": 2196.6892497440867,
+    "A13": -6.086714967174268e-14,
+    "A33": 2000.9446911728828,
+    "B11": 1521.1192857262847,
+    "B33": 2952.1128043270974,
+    "condition_number": 3.677958728776787,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 128,
+    "panels": 80,
+    "relative_residual": 3.59254717618761e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 2.9822804927825928
+   },
+   {
+    "A11": 2161.404444288634,
+    "A13": 5.952081650527974e-14,
+    "A33": 2002.2210316948447,
+    "B11": 1521.161351834417,
+    "B33": 2987.4760720120835,
+    "condition_number": 6.956483890881094,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 256,
+    "panels": 80,
+    "relative_residual": 3.3531674627189675e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 5.659715890884399
+   },
+   {
+    "A11": 2157.3264602577556,
+    "A13": 2.3325576721550826e-13,
+    "A33": 1974.6405925613426,
+    "B11": 1515.2360198871083,
+    "B33": 2945.63013036406,
+    "condition_number": 2.326443986080847,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 512,
+    "panels": 80,
+    "relative_residual": 3.92761436121972e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 24.33633542060852
+   }
+  ],
+  "rows": [
+   {
+    "A11": 1535.6929077467757,
+    "A13": -1.242573363390014e-13,
+    "A33": 1472.1318267622617,
+    "B11": 698.6210604184488,
+    "B33": 1398.7343676047917,
+    "condition_number": 2.8783502345446355,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 9.574541383273937,
+     "flat_area_ratio": 0.7619177944929801,
+     "panels": 20,
+     "patch_area": 12.566370614359172,
+     "patch_area_ratio": 1.0,
+     "z_max": -0.64934919164796,
+     "z_min": -2.35065080835204
+    },
+    "ka": 1.0,
+    "measure": "flat",
+    "mode_count": 32,
+    "panels": 20,
+    "rel_err_A11": 0.2500946400226137,
+    "rel_err_A33": 0.20572287780230075,
+    "rel_err_B11": 0.5629025747641699,
+    "rel_err_B33": 0.550833656466883,
+    "relative_residual": 2.504859604304022e-16,
+    "route": "tensorbem",
+    "seconds": 0.10042262077331543
+   },
+   {
+    "A11": 2194.120112065421,
+    "A13": 2.5110852420892203e-14,
+    "A33": 2074.3079811175894,
+    "B11": 1245.454525100438,
+    "B33": 2484.3182183997424,
+    "condition_number": 3.220484486685005,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 9.574541383273937,
+     "flat_area_ratio": 0.7619177944929801,
+     "panels": 20,
+     "patch_area": 12.566370614359172,
+     "patch_area_ratio": 1.0,
+     "z_max": -0.64934919164796,
+     "z_min": -2.35065080835204
+    },
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 32,
+    "panels": 20,
+    "rel_err_A11": 0.07142673132886138,
+    "rel_err_A33": 0.11917651927776,
+    "rel_err_B11": 0.22077217963677187,
+    "rel_err_B33": 0.202227273329852,
+    "relative_residual": 2.5216119642225786e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 0.09800887107849121
+   },
+   {
+    "A11": 1734.3600385823506,
+    "A33": 1657.9153422731456,
+    "B11": 828.775923923435,
+    "B33": 1627.6067958504852,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "capytaine_builtin",
+    "panels": 20,
+    "rel_err_A11": 0.15308205012694415,
+    "rel_err_A33": 0.10548484655458223,
+    "rel_err_B11": 0.4814702233176288,
+    "rel_err_B33": 0.4773373628806299,
+    "route": "capytaine",
+    "seconds": 0.06685209274291992
+   },
+   {
+    "A11": 1829.3081733603042,
+    "A13": 9.599980101477785e-14,
+    "A33": 1688.522603448995,
+    "B11": 1277.885789458113,
+    "B33": 2464.0219178219645,
+    "condition_number": 3.710964127314918,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 11.665931391718317,
+     "flat_area_ratio": 0.928345323381442,
+     "panels": 80,
+     "patch_area": 12.566370614359176,
+     "patch_area_ratio": 1.0000000000000002,
+     "z_max": -0.5,
+     "z_min": -2.5
+    },
+    "ka": 1.0,
+    "measure": "flat",
+    "mode_count": 32,
+    "panels": 80,
+    "rel_err_A11": 0.10671723667324853,
+    "rel_err_A33": 0.08897094006661868,
+    "rel_err_B11": 0.2004813196111786,
+    "rel_err_B33": 0.2087448904907005,
+    "relative_residual": 3.485960021920274e-16,
+    "route": "tensorbem",
+    "seconds": 1.1520569324493408
+   },
+   {
+    "A11": 2061.4321443078543,
+    "A13": -5.3095577665155465e-14,
+    "A33": 1895.82255202646,
+    "B11": 1509.3614722715715,
+    "B33": 2898.56827062157,
+    "condition_number": 3.967339267185882,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 11.665931391718317,
+     "flat_area_ratio": 0.928345323381442,
+     "panels": 80,
+     "patch_area": 12.566370614359176,
+     "patch_area_ratio": 1.0000000000000002,
+     "z_max": -0.5,
+     "z_min": -2.5
+    },
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 32,
+    "panels": 80,
+    "rel_err_A11": 0.006632905868079087,
+    "rel_err_A33": 0.022876113026426333,
+    "rel_err_B11": 0.05565684938712505,
+    "rel_err_B33": 0.06920188582650172,
+    "relative_residual": 3.616454916081414e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 1.0520496368408203
+   },
+   {
+    "A11": 2084.098621775688,
+    "A33": 1913.3519631040483,
+    "B11": 1449.488925870757,
+    "B33": 2822.423207502533,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "capytaine_builtin",
+    "panels": 80,
+    "rel_err_A11": 0.01770133814330194,
+    "rel_err_A33": 0.032333968587602104,
+    "rel_err_B11": 0.09311655015599947,
+    "rel_err_B33": 0.09365384780827796,
+    "route": "capytaine",
+    "seconds": 0.030322790145874023
+   },
+   {
+    "A11": 1890.7113252224603,
+    "A13": -9.957312752106873e-14,
+    "A33": 1714.022239074081,
+    "B11": 1503.3480587062118,
+    "B33": 2903.862950048897,
+    "condition_number": 3.3679770202585906,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 12.329848595234669,
+     "flat_area_ratio": 0.9811781757531297,
+     "panels": 320,
+     "patch_area": 12.566370614359172,
+     "patch_area_ratio": 1.0,
+     "z_max": -0.5,
+     "z_min": -2.5
+    },
+    "ka": 1.0,
+    "measure": "flat",
+    "mode_count": 32,
+    "panels": 320,
+    "rel_err_A11": 0.07673301751806763,
+    "rel_err_A33": 0.07521281268075236,
+    "rel_err_B11": 0.05941918598877663,
+    "rel_err_B33": 0.0675016403376996,
+    "relative_residual": 3.663798836496825e-16,
+    "route": "tensorbem",
+    "seconds": 23.07248544692993
+   },
+   {
+    "A11": 1954.344914410466,
+    "A13": -0.0,
+    "A33": 1770.5944813435044,
+    "B11": 1569.2622958491045,
+    "B33": 3029.500860034339,
+    "condition_number": 3.4123114029076693,
+    "depth_ratio": 20.0,
+    "geometry": {
+     "exact_area": 12.566370614359172,
+     "flat_area": 12.329848595234669,
+     "flat_area_ratio": 0.9811781757531297,
+     "panels": 320,
+     "patch_area": 12.566370614359172,
+     "patch_area_ratio": 1.0,
+     "z_max": -0.5,
+     "z_min": -2.5
+    },
+    "ka": 1.0,
+    "measure": "exact_measure",
+    "mode_count": 32,
+    "panels": 320,
+    "rel_err_A11": 0.045659637309064964,
+    "rel_err_A33": 0.04468970532775496,
+    "rel_err_B11": 0.018179456793831365,
+    "rel_err_B33": 0.02715636682165721,
+    "relative_residual": 4.060782426632457e-16,
+    "route": "tensorbem_exact_measure",
+    "seconds": 18.43638253211975
+   },
+   {
+    "A11": 2124.4862922899993,
+    "A33": 1922.7360417847744,
+    "B11": 1631.0235838035558,
+    "B33": 3171.177117660851,
+    "depth_ratio": 20.0,
+    "ka": 1.0,
+    "measure": "capytaine_builtin",
+    "panels": 320,
+    "rel_err_A11": 0.037423334932439066,
+    "rel_err_A33": 0.037397074264351814,
+    "rel_err_B11": 0.020461949074995284,
+    "rel_err_B33": 0.01833919550768454,
+    "route": "capytaine",
+    "seconds": 0.13463926315307617
+   }
+  ],
+  "seconds": 116.49458527565002,
+  "stage": "mesh"
+ }
+}
