@@ -1,0 +1,181 @@
+{
+ "provenance": {
+  "tool": "capytaine",
+  "version": "3.1.dev0",
+  "python": "3.11.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "machine": "loongarch64",
+  "numpy": "2.4.6",
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "water_depth": "finite (per cell)",
+  "finite_depth_method": "newer",
+  "finite_depth_legacy_method": "legacy",
+  "producer": "scripts/capytaine_finite_depth_ref.py",
+  "plan_module": "tensorbem.benchmarks.finite_depth_crossval_plan",
+  "resolutions": [
+   [
+    12,
+    24
+   ],
+   [
+    24,
+    48
+   ],
+   [
+    48,
+    96
+   ]
+  ],
+  "legacy_resolution": [
+   24,
+   48
+  ],
+  "generated_utc": "2026-11-14T07:49:35+00:00",
+  "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it"
+ },
+ "plan": {
+  "depth_ratios": [
+   3.0,
+   5.0,
+   10.0,
+   20.0
+  ],
+  "ka_grid": [
+   0.5,
+   1.0,
+   2.0
+  ],
+  "sphere_radius": 1.0,
+  "sphere_submergence": 1.5,
+  "resolutions": [
+   [
+    12,
+    24
+   ],
+   [
+    24,
+    48
+   ],
+   [
+    48,
+    96
+   ]
+  ],
+  "legacy_resolution": [
+   24,
+   48
+  ],
+  "cells_executed": [
+   [
+    3.0,
+    0.5
+   ]
+  ],
+  "cells_planned": 12
+ },
+ "cells": [
+  {
+   "cell": "h_over_a=3.0|ka=0.50",
+   "h_over_a": 3.0,
+   "ka": 0.5,
+   "k0h": 1.5,
+   "depth": 3.0,
+   "k0": 0.5,
+   "nu": 0.4525741268224332,
+   "omega": 2.106712144741947,
+   "levels": [
+    {
+     "resolution": [
+      12,
+      24
+     ],
+     "panels": 288,
+     "seconds": 0.361,
+     "values": {
+      "surge": {
+       "added_mass": 2666.3539028713376,
+       "damping": 822.9105830899832
+      },
+      "heave": {
+       "added_mass": 3060.621357105338,
+       "damping": 752.7126043379607
+      }
+     }
+    },
+    {
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "seconds": 1.437,
+     "values": {
+      "surge": {
+       "added_mass": 2608.1527027140874,
+       "damping": 811.8250805550074
+      },
+      "heave": {
+       "added_mass": 3034.658288409657,
+       "damping": 751.2928532501794
+      }
+     }
+    },
+    {
+     "resolution": [
+      48,
+      96
+     ],
+     "panels": 4608,
+     "seconds": 7.097,
+     "values": {
+      "surge": {
+       "added_mass": 2566.4946126639593,
+       "damping": 797.4058033003466
+      },
+      "heave": {
+       "added_mass": 2999.9167870380857,
+       "damping": 740.8990345979539
+      }
+     }
+    }
+   ],
+   "legacy": {
+    "method": "legacy",
+    "resolution": [
+     24,
+     48
+    ],
+    "panels": 1152,
+    "values": {
+     "surge": {
+      "added_mass": 2608.1536680855165,
+      "damping": 811.8256700562376
+     },
+     "heave": {
+      "added_mass": 3034.6737810058994,
+      "damping": 751.2971795362248
+     }
+    }
+   },
+   "infinite_depth": {
+    "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+    "resolution": [
+     24,
+     48
+    ],
+    "values": {
+     "surge": {
+      "added_mass": 2522.099860334603,
+      "damping": 591.9189046313982
+     },
+     "heave": {
+      "added_mass": 2806.8762702386553,
+      "damping": 1300.8510095205877
+     }
+    }
+   }
+  }
+ ],
+ "elapsed_seconds": 13.61
+}
