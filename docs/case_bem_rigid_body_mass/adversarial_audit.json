@@ -1,0 +1,203 @@
+{
+  "audit": "CASE-BEM-RIGID-BODY-MASS independent review",
+  "environment": {
+    "python": "3.11.6",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "numpy": "2.4.6"
+  },
+  "parameters": {
+    "semi_axes_m": [
+      60.0,
+      12.0,
+      8.0
+    ],
+    "density_kg_m3": 1025.0,
+    "cg_offset_m": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "tolerance": 0.03
+  },
+  "symbolic_energy_hessian": {
+    "symbolic_difference_is_zero": true,
+    "symbolic_nonzero_entries_of_difference": 0,
+    "hessian_vs_shipped_max_abs": 0.0,
+    "hessian_vs_shipped_scale": 18500000000.0,
+    "note": "energy-Hessian route sees only the symmetric part of M (by construction); it complements, and does not replace, the momentum route which pins the off-diagonal signs"
+  },
+  "quadrature_convergence": {
+    "levels": [
+      {
+        "subdivisions": 1,
+        "faces": 80,
+        "volume_rel_error": 0.12654679999693672,
+        "worst_entry_rel_error": 0.20124512409027492,
+        "worst_entry": [
+          "roll",
+          "roll"
+        ]
+      },
+      {
+        "subdivisions": 2,
+        "faces": 320,
+        "volume_rel_error": 0.03383925140141284,
+        "worst_entry_rel_error": 0.05571215644798279,
+        "worst_entry": [
+          "roll",
+          "roll"
+        ]
+      },
+      {
+        "subdivisions": 3,
+        "faces": 1280,
+        "volume_rel_error": 0.008606157370245202,
+        "worst_entry_rel_error": 0.014299268159196474,
+        "worst_entry": [
+          "yaw",
+          "yaw"
+        ]
+      },
+      {
+        "subdivisions": 4,
+        "faces": 5120,
+        "volume_rel_error": 0.002160828389401731,
+        "worst_entry_rel_error": 0.003598587540159006,
+        "worst_entry": [
+          "pitch",
+          "pitch"
+        ]
+      }
+    ],
+    "log_log_slope": -2.8179677848775144,
+    "reference": "solid ellipsoid (Lamb 1932, Ch. VI)"
+  },
+  "topology_controls": {
+    "cases": {
+      "closed": {
+        "legacy_volume": 23919.787106456013,
+        "legacy_volume_rel_error": 0.008606157370245051,
+        "guard_outcome": "accepted",
+        "is_closed": true,
+        "open_edges": 0,
+        "nonmanifold_edges": 0,
+        "orientation_mismatches": 0
+      },
+      "open_patch": {
+        "legacy_volume": 23897.35142622045,
+        "legacy_volume_rel_error": 0.009536040029390557,
+        "guard_outcome": "rejected",
+        "is_closed": false,
+        "open_edges": 3,
+        "nonmanifold_edges": 0,
+        "orientation_mismatches": 0
+      },
+      "flipped_triangle": {
+        "legacy_volume": 23885.036284519534,
+        "legacy_volume_rel_error": 0.010046460778499454,
+        "guard_outcome": "rejected",
+        "is_closed": false,
+        "open_edges": 0,
+        "nonmanifold_edges": 0,
+        "orientation_mismatches": 3
+      },
+      "duplicated_triangle": {
+        "legacy_volume": 23937.16251742425,
+        "legacy_volume_rel_error": 0.007886005666117924,
+        "guard_outcome": "rejected",
+        "is_closed": false,
+        "open_edges": 0,
+        "nonmanifold_edges": 3,
+        "orientation_mismatches": 0
+      },
+      "inward_oriented": {
+        "legacy_volume": -23919.787106456013,
+        "legacy_volume_rel_error": 1.9913938426297548,
+        "guard_outcome": "rejected",
+        "is_closed": true,
+        "open_edges": 0,
+        "nonmanifold_edges": 0,
+        "orientation_mismatches": 0
+      }
+    },
+    "prefix_silently_accepted": {
+      "closed": 0.008606157370245051,
+      "open_patch": 0.009536040029390557,
+      "flipped_triangle": 0.010046460778499454,
+      "duplicated_triangle": 0.007886005666117924
+    },
+    "max_prefix_silent_rel_error": 0.010046460778499454,
+    "prefix_but_inside_tolerance": [
+      "closed",
+      "duplicated_triangle",
+      "flipped_triangle",
+      "open_patch"
+    ],
+    "post_fix_all_rejected": true
+  },
+  "metric_sensitivity": {
+    "coupling_injection": [
+      {
+        "injected_rel": 0.0001,
+        "target": "surge-pitch coupling",
+        "entry_over_scale": 0.0038769707934866895,
+        "predicted_rel": 0.02579333333333333,
+        "reported_max_rel": 0.02579333333333325,
+        "ratio": 257.9333333333325
+      },
+      {
+        "injected_rel": 0.001,
+        "target": "surge-pitch coupling",
+        "entry_over_scale": 0.0038769707934866895,
+        "predicted_rel": 0.25793333333333335,
+        "reported_max_rel": 0.25793333333333335,
+        "ratio": 257.93333333333334
+      },
+      {
+        "injected_rel": 0.01,
+        "target": "surge-pitch coupling",
+        "entry_over_scale": 0.0038769707934866895,
+        "predicted_rel": 2.5793333333333335,
+        "reported_max_rel": 2.5793333333333335,
+        "ratio": 257.93333333333334
+      },
+      {
+        "injected_rel": 0.029,
+        "target": "surge-pitch coupling",
+        "entry_over_scale": 0.0038769707934866895,
+        "predicted_rel": 7.480066666666667,
+        "reported_max_rel": 7.480066666666667,
+        "ratio": 257.93333333333334
+      }
+    ],
+    "diagonal_injection": [
+      {
+        "injected_rel": 0.0001,
+        "target": "roll-roll diagonal",
+        "entry_over_scale": 0.06539157405014215,
+        "predicted_rel": 0.0015292490118577076,
+        "reported_max_rel": 0.0015292490118577386,
+        "ratio": 15.292490118577385
+      },
+      {
+        "injected_rel": 0.001,
+        "target": "roll-roll diagonal",
+        "entry_over_scale": 0.06539157405014215,
+        "predicted_rel": 0.015292490118577078,
+        "reported_max_rel": 0.015292490118577006,
+        "ratio": 15.292490118577007
+      },
+      {
+        "injected_rel": 0.01,
+        "target": "roll-roll diagonal",
+        "entry_over_scale": 0.06539157405014215,
+        "predicted_rel": 0.15292490118577076,
+        "reported_max_rel": 0.15292490118577082,
+        "ratio": 15.292490118577081
+      }
+    ],
+    "floor_is_relative_to_entry": true,
+    "reported_matches_definition_residual": 2.0276738381159506e-14
+  }
+}

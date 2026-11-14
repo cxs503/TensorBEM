@@ -68,6 +68,7 @@ __all__ = [
     "rigid_body_mass_matrix",
     "solid_ellipsoid_mass_properties",
     "mesh_mass_properties",
+    "mesh_topology_report",
     "kinetic_energy",
     "energy_residual",
     "block_form_residual",
@@ -259,6 +260,142 @@ def solid_ellipsoid_mass_properties(
     }
 
 
+def mesh_topology_report(
+    vertices: ArrayLike,
+    faces: ArrayLike,
+    *,
+    weld_tolerance: float | None = None,
+) -> dict[str, object]:
+    """Structural validity of a triangle mesh (watertight, oriented, manifold).
+
+    Signed-tetrahedron integration (:func:`mesh_mass_properties`) is only
+    defined for a *closed, outward-oriented* surface.  An open patch, a single
+    flipped triangle or a duplicated triangle keeps the signed sum finite and
+    plausible-looking while it is wrong at the percent level -- the same order
+    as the panelisation error the mass-property comparison is asked to resolve.
+    That makes such a defect invisible to a tolerance test, so it is caught
+    structurally *before* the integration runs.
+
+    The surface is accepted when every undirected edge is shared by exactly two
+    triangles traversed in opposite directions.  Coincident vertices are welded
+    first (by exact coordinate equality, or within ``weld_tolerance`` when it is
+    given), so a mesh that duplicates its seam nodes is still recognised as
+    closed.
+
+    Parameters
+    ----------
+    vertices, faces:
+        ``(V, 3)`` float array and ``(F, 3)`` integer array.
+    weld_tolerance:
+        Optional absolute welding distance (m).  ``None`` welds only vertices
+        whose coordinates are *exactly* equal; pass e.g. ``1e-9`` for meshes
+        whose seam nodes differ in the last bits.
+
+    Returns
+    -------
+    dict
+        ``is_closed`` (bool), ``n_faces``, ``n_vertices``, ``welded_vertices``,
+        ``open_edges``, ``nonmanifold_edges``, ``orientation_mismatches``,
+        ``degenerate_faces``, ``boundary_length`` (summed length of the open /
+        non-manifold edges, m) and ``weld_tolerance``.
+    """
+    verts = np.asarray(vertices, dtype=float)
+    tris = np.asarray(faces, dtype=int)
+    if verts.ndim != 2 or verts.shape[1] != 3:
+        raise ValueError("vertices must have shape (V, 3)")
+    if tris.ndim != 2 or tris.shape[1] != 3:
+        raise ValueError("faces must have shape (F, 3)")
+    if not np.all(np.isfinite(verts)):
+        raise ValueError("vertices must be finite")
+    if tris.size and (tris.min() < 0 or tris.max() >= verts.shape[0]):
+        raise ValueError("faces index vertices out of range")
+
+    tol = None if weld_tolerance is None else float(weld_tolerance)
+    if tol is not None and (not math.isfinite(tol) or tol <= 0.0):
+        raise ValueError("weld_tolerance must be finite and positive")
+    n_vertices = int(verts.shape[0])
+    if tol is None:
+        _, canonical = np.unique(verts, axis=0, return_inverse=True)
+        canonical = canonical.reshape(-1)
+    else:
+        # Distance-based welding: a grid hash would mis-bucket nodes that sit on
+        # a bucket boundary, so the neighbours are found with a KD-tree
+        # (scipy is already a runtime dependency; imported lazily because the
+        # exact-equality path above is the common one).
+        from scipy.spatial import cKDTree
+
+        parent = np.arange(n_vertices)
+
+        def find(i: int) -> int:  # iterative path compression
+            root = i
+            while parent[root] != root:
+                root = parent[root]
+            while parent[i] != root:
+                parent[i], i = root, parent[i]
+            return root
+
+        for i, j in cKDTree(verts).query_pairs(tol):
+            root_i, root_j = find(int(i)), find(int(j))
+            if root_i != root_j:
+                parent[max(root_i, root_j)] = min(root_i, root_j)
+        canonical = np.array([find(i) for i in range(n_vertices)], dtype=int)
+    welded = n_vertices - int(np.unique(canonical).size)
+
+    face_nodes = canonical[tris]
+    a, b, c = (verts[tris[:, k]] for k in range(3))
+    area2 = np.linalg.norm(np.cross(b - a, c - a), axis=1)
+    area_scale = max(float(np.max(area2)) if area2.size else 0.0, 1.0)
+    degenerate = int(np.count_nonzero(area2 <= 1e-14 * area_scale))
+
+    edges = np.concatenate(
+        [face_nodes[:, [0, 1]], face_nodes[:, [1, 2]], face_nodes[:, [2, 0]]], axis=0
+    )
+    lengths = np.concatenate(
+        [
+            np.linalg.norm(a - b, axis=1),
+            np.linalg.norm(b - c, axis=1),
+            np.linalg.norm(c - a, axis=1),
+        ]
+    )
+    live = edges[:, 0] != edges[:, 1]
+    edges, lengths = edges[live], lengths[live]
+
+    if edges.size:
+        low = np.minimum(edges[:, 0], edges[:, 1]).astype(np.int64)
+        high = np.maximum(edges[:, 0], edges[:, 1]).astype(np.int64)
+        keys = low * max(n_vertices, 1) + high
+        unique_keys, counts = np.unique(keys, return_counts=True)
+        slot = np.searchsorted(unique_keys, keys)
+        direction = np.where(edges[:, 0] < edges[:, 1], 1.0, -1.0)
+        net = np.bincount(slot, weights=direction, minlength=unique_keys.size)
+        edge_lengths = np.bincount(slot, weights=lengths, minlength=unique_keys.size)
+        open_mask = counts == 1
+        nonmanifold_mask = counts > 2
+        # Two triangles sharing an edge must run it in opposite directions;
+        # |net| == 2 means both run it the same way, i.e. one of them is flipped.
+        mismatch_mask = (counts == 2) & (np.abs(net) == 2.0)
+        open_edges = int(np.count_nonzero(open_mask))
+        nonmanifold = int(np.count_nonzero(nonmanifold_mask))
+        mismatches = int(np.count_nonzero(mismatch_mask))
+        boundary_length = float(np.sum(edge_lengths[open_mask | nonmanifold_mask]))
+    else:
+        open_edges = nonmanifold = mismatches = 0
+        boundary_length = 0.0
+
+    return {
+        "is_closed": bool(open_edges == 0 and nonmanifold == 0 and mismatches == 0),
+        "n_vertices": n_vertices,
+        "n_faces": int(tris.shape[0]),
+        "welded_vertices": welded,
+        "open_edges": open_edges,
+        "nonmanifold_edges": nonmanifold,
+        "orientation_mismatches": mismatches,
+        "degenerate_faces": degenerate,
+        "boundary_length": boundary_length,
+        "weld_tolerance": tol,
+    }
+
+
 def mesh_mass_properties(
     vertices: ArrayLike,
     faces: ArrayLike,
@@ -310,6 +447,16 @@ def mesh_mass_properties(
     rho = float(density)
     if not math.isfinite(rho) or rho <= 0.0:
         raise ValueError("density must be finite and positive")
+    topology = mesh_topology_report(verts, tris)
+    if not topology["is_closed"]:
+        raise ValueError(
+            "mesh is not a closed, consistently oriented surface: "
+            f"{topology['open_edges']} open edges, "
+            f"{topology['nonmanifold_edges']} non-manifold edges, "
+            f"{topology['orientation_mismatches']} flipped-edge pairs "
+            f"(boundary length {topology['boundary_length']:.3g} m); "
+            "signed-tetrahedron integration would silently return a wrong volume"
+        )
     p0 = np.asarray(reference_point, dtype=float).reshape(3)
 
     a = verts[tris[:, 0]]
