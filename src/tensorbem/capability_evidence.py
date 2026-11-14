@@ -1774,6 +1774,27 @@ CAPABILITIES: tuple[Capability, ...] = (
         ),
     ),
 
+    Capability(
+        key='crack-sif-mode-i',
+        title='Centre-crack Mode-I stress intensity factor by displacement-discontinuity BEM',
+        claim=(
+            'Infinite plate with centre crack under remote tension: hypersingular BIE solved by '
+            'Chebyshev collocation (exact for uniform loading) and constant DD elements (pedagogical baseline). '
+            'Verified against Tada-Paris-Irwin closed form K_I = sigma sqrt(pi a) with machine-precision error '
+            '(Chebyshev) and <10% error (constant DD, 200 elements).'
+        ),
+        level=REAL,
+        modules=('tensorbem.crack_sif', 'tensorbem.benchmarks.case_bem_crack_sif'),
+        symbols=('solve_crack_sif', 'analytical_sif', 'analytical_cod', 'convergence_study'),
+        tests=(
+            'tests/test_crack_sif.py::TestChebyshevSolver::test_exact_sif',
+            'tests/test_crack_sif.py::TestChebyshevSolver::test_cod_matches_analytical',
+            'tests/test_crack_sif.py::TestConstantDDSolver::test_sif_within_tolerance',
+            'tests/test_crack_sif.py::TestEdgeCases::test_plane_strain_modulus',
+        ),
+        docs=(('docs/case_bem_crack_sif.md', 'CASE-BEM-CRACK-SIF'),),
+    ),
+
 )
 
 #: Modules not referenced by any test file, with the reason this is acceptable.
