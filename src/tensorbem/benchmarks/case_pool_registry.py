@@ -64,23 +64,108 @@ class CaseEntry:
         return json.loads(self.path(target).read_text())
 
 
+#: keys a case artefact may use for a boolean pass/fail flag
+PASS_KEYS: tuple[str, ...] = ("passed", "pass", "ok", "all_pass", "overall_passed")
+
+#: keys a case artefact may use for a scalar verdict string
+VERDICT_KEYS: tuple[str, ...] = ("overall", "verdict", "status", "level")
+
+
+def _as_bool(value: Any) -> bool | None:
+    """Return ``value`` when it is a real boolean, else ``None``."""
+    return value if isinstance(value, bool) else None
+
+
+def _verdict_from_criteria(criteria: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Fold a ``{name: {...}}`` criteria mapping into one pass/fail record.
+
+    The pool's drivers write their per-item gates in several shapes
+    (``{"pass": bool}``, ``{"passed": bool}``, a bare boolean).  Only entries
+    that carry an explicit boolean are counted; a criteria block with no
+    boolean at all yields ``None`` instead of a fabricated verdict.
+    """
+    failed: list[str] = []
+    count = 0
+    for name, item in criteria.items():
+        if isinstance(item, Mapping):
+            flag = next((_as_bool(item.get(key)) for key in PASS_KEYS
+                         if _as_bool(item.get(key)) is not None), None)
+        else:
+            flag = _as_bool(item)
+        if flag is None:
+            continue
+        count += 1
+        if not flag:
+            failed.append(str(name))
+    if not count:
+        return None
+    return {"passed": not failed, "failed_checks": failed, "check_count": count}
+
+
 def _verdict_of(payload: Mapping[str, Any]) -> Any:
-    """Best-effort verdict extraction from the assorted artefact schemas."""
-    for key in ("overall", "verdict", "status", "level"):
-        if key in payload and not isinstance(payload[key], dict):
-            return payload[key]
+    """Best-effort verdict extraction from the assorted artefact schemas.
+
+    Every branch of the pool writes a verdict, but in four different shapes:
+    a scalar string at the top level, ``{"verdict": "PASS"}`` inside a nested
+    block, a boolean flag (``{"passed": true}``), or a ``{"criteria": {...}}``
+    mapping whose per-item booleans have to be folded.  The function answers
+    "what did this case last verdict?" for all four, and never returns ``None``
+    (a missing verdict is reported as a string, not as silence).
+    """
+    if not isinstance(payload, Mapping):
+        return "unreadable artifact"
+
+    # (1) scalar verdict written straight into the artefact
+    for key in ("overall", "status", "level"):
+        value = payload.get(key)
+        if value is not None and not isinstance(value, (dict, list)):
+            return value
+
+    # (2) the nested verdict block
     verdict = payload.get("verdict")
-    if isinstance(verdict, dict):
-        for key in ("overall", "verdict", "status"):
-            if not isinstance(verdict.get(key), dict):
-                return verdict.get(key)
-    acceptance = payload.get("acceptance")
-    if isinstance(acceptance, dict) and "passed" in acceptance:
-        return {"passed": acceptance["passed"],
-                "failed_checks": acceptance.get("failed_checks", [])}
+    if isinstance(verdict, str) and verdict:
+        return verdict
+    if isinstance(verdict, Mapping):
+        # a verdict the artefact states in words wins over a derived boolean
+        for key in VERDICT_KEYS:
+            value = verdict.get(key)
+            if value is not None and not isinstance(value, (dict, list)):
+                return value
+        for key in PASS_KEYS:
+            flag = _as_bool(verdict.get(key))
+            if flag is not None:
+                return {"passed": flag,
+                        "failed_checks": list(verdict.get("failed_checks") or
+                                              verdict.get("failures") or [])}
+        folded = _verdict_from_criteria(verdict.get("criteria") or {})
+        if folded is not None:
+            return folded
+        acceptance = verdict.get("acceptance")
+        if isinstance(acceptance, Mapping):
+            for key in PASS_KEYS:
+                flag = _as_bool(acceptance.get(key))
+                if flag is not None:
+                    return {"passed": flag,
+                            "failed_checks": list(acceptance.get("failed_checks") or [])}
+
+    # (3) acceptance block / (4) criteria block at the top level
+    for key in ("acceptance", "criteria"):
+        block = payload.get(key)
+        if isinstance(block, Mapping):
+            for name in PASS_KEYS:
+                flag = _as_bool(block.get(name))
+                if flag is not None:
+                    return {"passed": flag,
+                            "failed_checks": list(block.get("failed_checks") or [])}
+            folded = _verdict_from_criteria(block)
+            if folded is not None:
+                return folded
+
+    # (5) tiered artefacts: {tier: {"verdict": ...}}
     tiers = payload.get("tiers")
-    if isinstance(tiers, dict) and tiers:
-        return {name: tier.get("verdict") for name, tier in tiers.items()}
+    if isinstance(tiers, Mapping) and tiers:
+        return {name: tier.get("verdict") for name, tier in tiers.items()
+                if isinstance(tier, Mapping)}
     return "see artifact"
 
 
