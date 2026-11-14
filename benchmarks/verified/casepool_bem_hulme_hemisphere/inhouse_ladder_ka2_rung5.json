@@ -1,0 +1,73 @@
+{
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "environment": {
+    "generated_utc": "2026-11-14T14:41:00+00:00",
+    "host": "node330",
+    "machine": "loongarch64",
+    "numpy": "2.0.1",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "python": "3.11.6",
+    "thread_env": {
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": null,
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    }
+  },
+  "failures": [],
+  "ka": 2.0,
+  "purpose": "in-house panel-solver refinement ladder at the worst band point, so that the solver's own convergence order and continuum limit can be extrapolated and compared with the reference series and with the independent code's extrapolated limit",
+  "quantities": [
+    "A11_dimless",
+    "B11_dimless",
+    "A33_dimless",
+    "B33_dimless",
+    "Fx_dimless",
+    "Fz_dimless"
+  ],
+  "rows": [
+    {
+      "A11_dimless": 0.23964173118674906,
+      "A33_dimless": 0.2078574201645333,
+      "B11_dimless": 0.3443527250705128,
+      "B33_dimless": 0.04717757509849204,
+      "Fx_dimless": 1.1620591645856844,
+      "Fx_imag": -1.1269223593072606,
+      "Fx_real": -0.283597422574565,
+      "Fz_dimless": 0.16345289216546174,
+      "Fz_imag": -0.16265984096559333,
+      "Fz_real": 0.016081793876988607,
+      "chief": true,
+      "condition_number": 2.41632651393966,
+      "delta_phase_Fx_deg": -0.20465581631945895,
+      "delta_phase_Fz_deg": -0.22748373212645845,
+      "ka": 2.0,
+      "mesh_volume": 2.0913126356037455,
+      "mesh_waterplane_area": 3.1403311569547525,
+      "nabla_exact": 2.0943951023931953,
+      "nu": 2.0,
+      "panels": 4096,
+      "peak_rss_mb": 1418.71875,
+      "phase_Fx_deg": -104.12554018843579,
+      "phase_Fz_deg": -84.3536513682996,
+      "reference": {
+        "A11_dimless": 0.24927898108430666,
+        "A33_dimless": 0.38837775391923846,
+        "B11_dimless": 0.34241049340106067,
+        "B33_dimless": 0.10306536393605695,
+        "Fx_dimless": 1.1976167433130807,
+        "Fz_dimless": 0.4646168081478153,
+        "phase_Fx_deg": -103.92088437211633,
+        "phase_Fz_deg": -84.12616763617314
+      },
+      "rel_error_A11_dimless": -0.03866049939564804,
+      "rel_error_A33_dimless": -0.4648060604218944,
+      "rel_error_B11_dimless": 0.0056722317419671256,
+      "rel_error_B33_dimless": -0.5422557753954897,
+      "rel_error_Fx_dimless": -0.029690281908576185,
+      "rel_error_Fz_dimless": -0.6481984954072947,
+      "subdivisions": 5,
+      "wall_seconds": 654.3979613780975
+    }
+  ]
+}

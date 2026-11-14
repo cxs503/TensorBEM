@@ -76,7 +76,16 @@
 
 ## ⑥ 本仓求解器的同一处理（ka = 2）
 
-（本轮未取得本仓延拓阶梯工件，本节不作为证据。）
+阶梯档位：64, 256, 1024, 4096 面板（共 4 档）。三参数模型 `v(N)=v_inf+C·N^-p`；仅当档数 ≥ 4 时残差才有自由度，三档恰好决定三参数、残差恒为零，**不构成证据**。
+
+| 量 | v(1024) 误差（算例判据所用） | 最细档误差 | v_inf 误差 | 观测阶 p | p（最细三档） | |Δp|/p | |Δv_inf|/|v_inf| |
+|---|---|---|---|---|---|---|---|
+| A11 | 0.228% | 3.866% | 45.757% | 0.03 | 0.03 | 0.000% | 16.448% |
+| B11 | 0.578% | 0.567% | 0.793% | 0.76 | 0.27 | 64.532% | 2.281% |
+| A33 | 0.526% | 46.481% | 271.811% | 0.03 | 0.03 | 0.000% | 144.966% |
+| B33 | 1.148% | 54.226% | 517.497% | 0.03 | 0.03 | 0.000% | 40.533% |
+| Fx | 0.395% | 2.969% | 1.640% | 7.93 | 0.03 | 99.603% | 16.137% |
+| Fz | 0.488% | 64.820% | 504.754% | 0.03 | 0.03 | 0.000% | 67.779% |
 
 ## ⑦ 判据裁定
 
@@ -88,6 +97,9 @@
 | `E4_frozen_level_residual` | the anchor's frozen 1600-panel level sits below 2% from the extrapolated limit (it is a discretised value, not a converged one) | 21.021%（A33, ka=2） | FAIL |
 | `E5_adjudicated_spread` | |reference/v_inf - 1| < 2% for every cell: the independent axis confirms the reference once its own discretisation error is removed | 16.335%（B33, ka=2） | FAIL |
 | `E6_extrapolation_moves_toward_ref` | at the published worst cell (B33, ka=2) extrapolation reduces the distance to the reference: |ref-v_inf| < |ref-v(1600)| | 16.335% | FAIL |
+| `E7_inhouse_model_credible` | the same convergence model reproduces *every* in-house rung at ka=2 to within 0.3% per quantity, on at least 4 rungs -- with exactly three rungs a three-parameter model is determined and the residual is zero by construction, which is not evidence | 54.825% | FAIL |
+| `E9_inhouse_order_and_limit_stable` | the in-house fit is stable under dropping its coarsest rung: |dp|/p < 25% and |dv_inf|/|v_inf| < 0.5% for every quantity (finest three rungs vs all rungs) | 144.966% | FAIL |
+| `E8_inhouse_extrapolated_error` | |BEM v_inf / reference - 1| < 1% for every quantity at ka=2 -- the graded 1.15 % is discretisation, not bias | 517.497%（B33） | FAIL |
 
 **总判定：FAIL**
 
@@ -105,4 +117,5 @@
 |---|---|---|---|
 | 参考 vs 独立码（外推极限）最坏 | 16.335% （B33, ka=2） | ❌ | ❌ |
 | 参考 vs 独立码（冻结档，已发布口径）最坏 | 3.364% （B33, ka=2） | ❌ | ✅ |
+| 本仓求解器 v_inf vs 参考（ka=2）最坏 | 517.497%（B33） | ❌ | ❌ |
 
