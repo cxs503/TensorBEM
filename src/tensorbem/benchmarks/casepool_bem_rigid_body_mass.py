@@ -74,6 +74,14 @@ __all__ = ["TOLERANCE", "momentum_section", "run", "write_doc", "main"]
 
 TOLERANCE = 0.03
 ROUNDOFF_LIMIT = 1.0e-9
+#: The caller replay is a *reproduction* check: the closed block form is injected at
+#: the seakeeping solver's single mass-matrix call site and must reproduce the
+#: shipped RAO to round-off, otherwise the solver consumes something else.
+RAO_REPLAY_ROUNDOFF = 1.0e-9
+#: ... and a *discriminating* check: the pre-fix coupling convention must move the
+#: delivered RAO by more than the anchor tolerance, else the end-to-end probe could
+#: not tell the two conventions apart and would pass vacuously.
+RAO_LEGACY_CHANGE_FLOOR = TOLERANCE
 DISCIPLINE = "CASE-BEM-RIGID-BODY-MASS"
 
 DEFAULT_SUBDIVISIONS = (1, 2, 4)
@@ -196,6 +204,59 @@ def momentum_section(reference: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def rao_caller_section(raw: dict[str, Any] | None) -> dict[str, Any]:
+    """Fold the seakeeping caller replay into the anchor's machine verdict.
+
+    ``case_rigid_body_mass._rao_integration_check`` re-runs
+    :func:`tensorbem.rao.compute_rao_at_frequency` three times with the *same*
+    body: as shipped, with the pre-fix coupling block injected at the single
+    ``compute_mass_matrix`` call site, and with the closed block form injected.
+    The first two isolate what the matrix does to the delivered RAO; the third
+    proves that the caller reads this matrix and nothing else from the mass
+    model.
+
+    The numbers used to live in the payload without being part of the verdict,
+    so a caller regression (or a silent switch to another mass model) left the
+    anchor ``PASS``.  This function turns them into checked invariants and
+    reports ``not_run`` -- never a pass -- when the driver is invoked with
+    ``--no-rao``.
+    """
+    if not raw:
+        return {
+            "status": "not_run",
+            "reason": "--no-rao: the end-to-end caller probe was skipped, not passed",
+            "caller": "tensorbem.rao.compute_rao_at_frequency",
+            "replay_roundoff_limit": RAO_REPLAY_ROUNDOFF,
+            "legacy_change_floor": RAO_LEGACY_CHANGE_FLOOR,
+            "checks": {},
+        }
+    replay = float(raw["replay_with_injected_ref_matrix"])
+    legacy_change = float(raw["max_rao_change"])
+    return {
+        "status": "run",
+        "caller": raw["caller"],
+        "caller_line": raw["caller_line"],
+        "omega_rad_s": float(raw["omega"]),
+        "panels": int(raw["panels"]),
+        "modes": list(raw["modes"]),
+        "rao_shipped": [float(v) for v in raw["rao_shipped"]],
+        "rao_with_legacy_coupling": [float(v) for v in raw["rao_with_legacy_coupling"]],
+        "rao_change_fraction": [float(v) for v in raw["rao_change_fraction"]],
+        "replay_rel_residual": replay,
+        "replay_roundoff_limit": RAO_REPLAY_ROUNDOFF,
+        "legacy_coupling_max_rao_change": legacy_change,
+        "legacy_coupling_max_rao_change_mode": str(raw["max_rao_change_mode"]),
+        "legacy_change_floor": RAO_LEGACY_CHANGE_FLOOR,
+        "checks": {
+            "rao_caller_verified": True,
+            "rao_caller_replay_roundoff": bool(replay < RAO_REPLAY_ROUNDOFF),
+            "rao_caller_legacy_coupling_material": bool(
+                legacy_change > RAO_LEGACY_CHANGE_FLOOR
+            ),
+        },
+    }
+
+
 def run(
     subdivisions: Sequence[int] = DEFAULT_SUBDIVISIONS,
     with_rao: bool = True,
@@ -207,6 +268,7 @@ def run(
 
     reference = base["ellipsoid"]["reference"]
     momentum = momentum_section(reference)
+    rao_caller = rao_caller_section(base.get("rao_integration"))
 
     base_levels = [
         {
@@ -267,6 +329,13 @@ def run(
         ),
     }
     checks = {
+        "rao_caller_verified": bool(rao_caller["checks"].get("rao_caller_verified", False)),
+        "rao_caller_replay_roundoff": bool(
+            rao_caller["checks"].get("rao_caller_replay_roundoff", False)
+        ),
+        "rao_caller_legacy_coupling_material": bool(
+            rao_caller["checks"].get("rao_caller_legacy_coupling_material", False)
+        ),
         "worst_accepted_entry_within_tolerance": bool(worst_accepted < TOLERANCE),
         "momentum_route_roundoff": bool(momentum["worst_relative_error"] < ROUNDOFF_LIMIT),
         "momentum_route_rejects_flipped_coupling": bool(
@@ -280,7 +349,14 @@ def run(
         "orientation_case_passed": bool(orientation["verdict"]["all_pass"]),
         **controls,
     }
-    all_pass = all(checks.values())
+    not_run = [] if rao_caller["status"] == "run" else [
+        "rao_caller_verified",
+        "rao_caller_replay_roundoff",
+        "rao_caller_legacy_coupling_material",
+    ]
+    executed = {name: ok for name, ok in checks.items() if name not in not_run}
+    all_pass = bool(not not_run and all(executed.values()))
+    overall = "PASS" if all_pass else ("INCOMPLETE" if all(executed.values()) else "FAIL")
 
     return {
         "benchmark": DISCIPLINE,
@@ -331,14 +407,19 @@ def run(
             "checks": orientation["verdict"]["checks"],
         },
         "momentum_route": momentum,
+        "rao_caller": rao_caller,
         "verdict": {
-            "overall": "PASS" if all_pass else "FAIL",
+            "overall": overall,
             "all_pass": bool(all_pass),
+            "not_run": not_run,
             "checks": checks,
             "worst_accepted_entry_rel_error": float(worst_accepted),
             "tolerance": TOLERANCE,
             "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted "
-            "mesh levels; route P must agree to round-off and must reject both controls",
+            "mesh levels; route P must agree to round-off and must reject both controls; "
+            "the seakeeping caller must reproduce the shipped RAO when the reference "
+            "block form is injected at its mass-matrix call site (< 1e-9) and must react "
+            "to the pre-fix convention by more than the 3% anchor tolerance",
         },
     }
 
@@ -357,11 +438,21 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
     add = lines.append
     add(f"# {DISCIPLINE} — 6×6 刚体质量矩阵的第三条独立路线（动量定义）与机器注册")
     add("")
+    rao_caller = payload["rao_caller"]
+    trunk_note = (
+        f"端到端回放 {_fmt(rao_caller['replay_rel_residual'])}、旧约定令 RAO 变 "
+        f"{rao_caller['legacy_coupling_max_rao_change']*100:.2f}%。"
+        if rao_caller["status"] == "run"
+        else "端到端回放 not_run（本次 --no-rao，判定不得为 PASS）。"
+    )
     add(
         f"**判定：{verdict['overall']}** — 接受层级最大逐元素相对误差 "
         f"{verdict['worst_accepted_entry_rel_error']*100:.4f}%（判据 {verdict['tolerance']*100:.0f}%）；"
         f"动量定义路线（route P）与出厂装配在 4 种配置上一致到 {_fmt(momentum['worst_relative_error'])}"
-        f"（圆整极限 {_fmt(momentum['roundoff_limit'])}）；route P 拒绝两种错误约定。"
+        f"（圆整极限 {_fmt(momentum['roundoff_limit'])}）；route P 拒绝两种错误约定；"
+        + trunk_note
+    )
+    add(
         "本文所有数字由 `src/tensorbem/benchmarks/casepool_bem_rigid_body_mass.py` 从 "
         "`results.json` 注入，无人工转录。"
     )
@@ -451,6 +542,33 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
             f"{'✅' if row['within_tolerance'] else '❌'} |"
         )
     add("")
+    rao = payload["rao_caller"]
+    if rao["status"] == "run":
+        add("**端到端调用者回放（`tensorbem.rao.compute_rao_at_frequency`，ω = "
+            f"{rao['omega_rad_s']:.3f} rad/s，{rao['panels']} 面元）**")
+    else:
+        add("**端到端调用者回放（`tensorbem.rao.compute_rao_at_frequency`）— not_run**")
+    add("")
+    if rao["status"] == "run":
+        add("| 模态 | \\|RAO\\| 出厂装配 | \\|RAO\\| 注入旧耦合约定 | 相对变化 |")
+        add("|---|---|---|---|")
+        for name, shipped, legacy, change in zip(
+            rao["modes"], rao["rao_shipped"], rao["rao_with_legacy_coupling"],
+            rao["rao_change_fraction"],
+        ):
+            add(f"| {name} | {shipped:.6e} | {legacy:.6e} | {change*100:.4f}% |")
+        add("")
+        add(
+            f"回放判据：把闭式块形式注入求解器唯一的质量矩阵调用点后，RAO 复现到 "
+            f"{_fmt(rao['replay_rel_residual'])}（圆整极限 {_fmt(rao['replay_roundoff_limit'])}）"
+            f"——证明求解器读的就是这一矩阵；旧耦合约定使 "
+            f"{rao['legacy_coupling_max_rao_change_mode']} 的 RAO 改变 "
+            f"{rao['legacy_coupling_max_rao_change']*100:.2f}%，远超锚点判据 "
+            f"{rao['legacy_change_floor']*100:.0f}%，端到端可分辨。"
+        )
+    else:
+        add(f"**not_run** — {rao['reason']}（缺此项不得判 PASS）")
+    add("")
     add("**对照（判别力）**")
     add("")
     add("| 对照 | 能量恒等式（只测 sym(M)） | route P | 判决 |")
@@ -481,8 +599,22 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
         "故 route P 采用**逐元素**相对误差（`max(|exact_ij|, 1e-6·scale)`），与基例口径一致。"
     )
     add(
+        "- **端到端那一层只钉到调用点**：回放注入的位置是 `tensorbem/rao.py` 里唯一的 "
+        "`compute_mass_matrix(...)` 调用，因此它证明的是「求解器读这一矩阵、且只读它」，"
+        "不是「`M_RB` 的块约定已与外部 BEM 商软对齐」。后者由 "
+        "`docs/case_rigid_body_mass.md` 的 Sensitivity C 与 capytaine 交叉装配（本锚点 "
+        "orientation 例）覆盖。"
+    )
+    add(
         "- **假设与适用范围**：均匀密度刚体、参考点为广义坐标取矩点；不覆盖附加质量 `A` 的约定"
-        "（那是辐射问题的责任，见 `docs/case_bem_rigid_body_mass/` 中 RAO caller 回放一节）。"
+        "（那是辐射问题的责任）；`M_RB` 本身在求解器里的落地见本文 ④ 的端到端调用者回放。"
+    )
+    add(
+        "- **回放残差恰为 0 的含义**：出厂 `compute_mass_matrix` 与用于注入的闭式块形式是"
+        "同一函数，故残差是精确 0 而非 1e-16 量级。这一项证明的是「调用者除该函数外不再"
+        "给矩阵加任何东西」（例如额外的质心平移）；它的非平凡性由同组的旧耦合约定对照提供"
+        "——若调用点被绕过，注入旧约定就不会移动 RAO（实测 roll 变化 "
+        f"{payload['rao_caller']['legacy_coupling_max_rao_change']*100:.2f}%）。"
     )
     add("")
     add("## ⑥ 误差判定")
@@ -494,6 +626,24 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
         f"闭式块形式 | {verdict['worst_accepted_entry_rel_error']*100:.4f}% | "
         f"{'是' if verdict['worst_accepted_entry_rel_error'] < params['tolerance'] else '否'} |"
     )
+    if rao["status"] == "run":
+        add(
+            f"| RAO 回放（注入闭式块形式） | 出厂 RAO | "
+            f"{_fmt(rao['replay_rel_residual'])} | "
+            + ("是（<1e-9 圆整） |"
+               if rao["checks"].get("rao_caller_replay_roundoff") else "否 |")
+        )
+        add(
+            f"| 端到端判别力（旧耦合约定 → RAO 变化） | 锚点判据 "
+            f"{rao['legacy_change_floor']*100:.0f}% | "
+            f"{rao['legacy_coupling_max_rao_change']*100:.2f}% | "
+            + ("是（超判据 ⇒ 可分辨） |"
+               if rao["checks"].get("rao_caller_legacy_coupling_material") else "否（盲） |")
+        )
+    else:
+        add("| RAO 回放（注入闭式块形式） | 出厂 RAO | not_run | 未知（不得判 PASS） |")
+        add("| 端到端判别力（旧耦合约定 → RAO 变化） | 锚点判据 "
+            f"{rao['legacy_change_floor']*100:.0f}% | not_run | 未知（不得判 PASS） |")
     add(
         f"| route P vs 出厂装配（4 配置最差） | 动量定义 | {_fmt(momentum['worst_relative_error'])} | "
         f"是（远小于，属圆整） |"
@@ -575,11 +725,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     write_doc(payload, outdir / "CASE.md")
     plot(payload, outdir / "fig_momentum_route.png")
     verdict = payload["verdict"]
-    print(json.dumps({"verdict": verdict["overall"], "checks": verdict["checks"],
+    print(json.dumps({"verdict": verdict["overall"], "not_run": verdict["not_run"],
+                      "checks": verdict["checks"],
                       "worst_accepted_entry_rel_error":
                           verdict["worst_accepted_entry_rel_error"],
                       "outdir": str(outdir)}, indent=2))
-    return 0 if verdict["all_pass"] else 1
+    return 0 if verdict["overall"] != "FAIL" else 1
 
 
 if __name__ == "__main__":  # pragma: no cover

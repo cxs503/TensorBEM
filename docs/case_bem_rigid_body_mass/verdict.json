@@ -1,7 +1,11 @@
 {
   "overall": "PASS",
   "all_pass": true,
+  "not_run": [],
   "checks": {
+    "rao_caller_verified": true,
+    "rao_caller_replay_roundoff": true,
+    "rao_caller_legacy_coupling_material": true,
     "worst_accepted_entry_within_tolerance": true,
     "momentum_route_roundoff": true,
     "momentum_route_rejects_flipped_coupling": true,
@@ -13,5 +17,5 @@
   },
   "worst_accepted_entry_rel_error": 0.01415141785302352,
   "tolerance": 0.03,
-  "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls"
+  "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
 }

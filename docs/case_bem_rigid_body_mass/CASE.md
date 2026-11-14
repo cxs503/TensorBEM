@@ -1,6 +1,7 @@
 # CASE-BEM-RIGID-BODY-MASS — 6×6 刚体质量矩阵的第三条独立路线（动量定义）与机器注册
 
-**判定：PASS** — 接受层级最大逐元素相对误差 1.4151%（判据 3%）；动量定义路线（route P）与出厂装配在 4 种配置上一致到 1.1477e-16（圆整极限 1.0000e-09）；route P 拒绝两种错误约定。本文所有数字由 `src/tensorbem/benchmarks/casepool_bem_rigid_body_mass.py` 从 `results.json` 注入，无人工转录。
+**判定：PASS** — 接受层级最大逐元素相对误差 1.4151%（判据 3%）；动量定义路线（route P）与出厂装配在 4 种配置上一致到 1.1477e-16（圆整极限 1.0000e-09）；route P 拒绝两种错误约定；端到端回放 0.0000e+00、旧约定令 RAO 变 93.69%。
+本文所有数字由 `src/tensorbem/benchmarks/casepool_bem_rigid_body_mass.py` 从 `results.json` 注入，无人工转录。
 
 ## ① 案例介绍
 
@@ -60,6 +61,19 @@
 | 3 | 1280 | 1.4151% | ✅ |
 | 4 | 5120 | 0.3561% | ✅ |
 
+**端到端调用者回放（`tensorbem.rao.compute_rao_at_frequency`，ω = 0.600 rad/s，108 面元）**
+
+| 模态 | \|RAO\| 出厂装配 | \|RAO\| 注入旧耦合约定 | 相对变化 |
+|---|---|---|---|
+| surge | 2.085462e-01 | 3.207771e-01 | 53.8159% |
+| sway | 2.921468e-02 | 1.992523e-02 | 31.7972% |
+| heave | 4.251956e-01 | 4.245664e-01 | 0.1480% |
+| roll | 3.607652e-03 | 6.987810e-03 | 93.6941% |
+| pitch | 2.501301e-02 | 2.510888e-02 | 0.3833% |
+| yaw | 5.949149e-04 | 5.652105e-04 | 4.9930% |
+
+回放判据：把闭式块形式注入求解器唯一的质量矩阵调用点后，RAO 复现到 0.0000e+00（圆整极限 1.0000e-09）——证明求解器读的就是这一矩阵；旧耦合约定使 roll 的 RAO 改变 93.69%，远超锚点判据 3%，端到端可分辨。
+
 **对照（判别力）**
 
 | 对照 | 能量恒等式（只测 sym(M)） | route P | 判决 |
@@ -71,15 +85,19 @@
 
 - **能量恒等式的盲区**：`0.5 xᵀ M x` 只看到 `sym(M)`，任意反对称污染对它完全不可见（上表实测能量残差为 0 量级）。route P 逐元素定义式的比较补上了这一盲区，这是它相对既有检查的净增量。
 - **块符号翻转的归一化陷阱**：若以「整矩阵最大元素」归一，耦合块符号错误（~`m|r_g|`）会被惯性对角项（~`I_O`）稀释到 1%量级，恰好落在 3% 判据以内。故 route P 采用**逐元素**相对误差（`max(|exact_ij|, 1e-6·scale)`），与基例口径一致。
-- **假设与适用范围**：均匀密度刚体、参考点为广义坐标取矩点；不覆盖附加质量 `A` 的约定（那是辐射问题的责任，见 `docs/case_bem_rigid_body_mass/` 中 RAO caller 回放一节）。
+- **端到端那一层只钉到调用点**：回放注入的位置是 `tensorbem/rao.py` 里唯一的 `compute_mass_matrix(...)` 调用，因此它证明的是「求解器读这一矩阵、且只读它」，不是「`M_RB` 的块约定已与外部 BEM 商软对齐」。后者由 `docs/case_rigid_body_mass.md` 的 Sensitivity C 与 capytaine 交叉装配（本锚点 orientation 例）覆盖。
+- **假设与适用范围**：均匀密度刚体、参考点为广义坐标取矩点；不覆盖附加质量 `A` 的约定（那是辐射问题的责任）；`M_RB` 本身在求解器里的落地见本文 ④ 的端到端调用者回放。
+- **回放残差恰为 0 的含义**：出厂 `compute_mass_matrix` 与用于注入的闭式块形式是同一函数，故残差是精确 0 而非 1e-16 量级。这一项证明的是「调用者除该函数外不再给矩阵加任何东西」（例如额外的质心平移）；它的非平凡性由同组的旧耦合约定对照提供——若调用点被绕过，注入旧约定就不会移动 RAO（实测 roll 变化 93.69%）。
 
 ## ⑥ 误差判定
 
 | 关键量 | 基准 | 误差 | <3%？ |
 |---|---|---|---|
 | 6×6 最差元素（接受层级 = 细分 ≥ 3） | 闭式块形式 | 1.4151% | 是 |
+| RAO 回放（注入闭式块形式） | 出厂 RAO | 0.0000e+00 | 是（<1e-9 圆整） |
+| 端到端判别力（旧耦合约定 → RAO 变化） | 锚点判据 3% | 93.69% | 是（超判据 ⇒ 可分辨） |
 | route P vs 出厂装配（4 配置最差） | 动量定义 | 1.1477e-16 | 是（远小于，属圆整） |
 | 旧耦合约定对照（几何上必错） | 闭式块形式 | 200.00% | 否（预期，判别力证据） |
 
-检查项：`{"worst_accepted_entry_within_tolerance": true, "momentum_route_roundoff": true, "momentum_route_rejects_flipped_coupling": true, "momentum_route_beats_energy_blind_spot": true, "base_case_passed": true, "orientation_case_passed": true, "legacy_coupling_rejected": true, "orientation_negative_control_rejected": true}`
+检查项：`{"rao_caller_verified": true, "rao_caller_replay_roundoff": true, "rao_caller_legacy_coupling_material": true, "worst_accepted_entry_within_tolerance": true, "momentum_route_roundoff": true, "momentum_route_rejects_flipped_coupling": true, "momentum_route_beats_energy_blind_spot": true, "base_case_passed": true, "orientation_case_passed": true, "legacy_coupling_rejected": true, "orientation_negative_control_rejected": true}`
 
