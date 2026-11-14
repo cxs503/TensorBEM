@@ -1,0 +1,18 @@
+{
+  "case_id": "cpt-16x32-hinf-ka1.5",
+  "tool": "capytaine",
+  "ka": 1.5,
+  "depth_ratio": "inf",
+  "depth": Infinity,
+  "resolution": [
+    16,
+    32
+  ],
+  "added_mass_heave": 1914.0335011660254,
+  "damping_heave": 582.4714818194769,
+  "n_faces": 512,
+  "n_vertices": 482,
+  "status": "ok",
+  "seconds": 0.512,
+  "finished_utc": "2026-11-14T19:25:58+00:00"
+}

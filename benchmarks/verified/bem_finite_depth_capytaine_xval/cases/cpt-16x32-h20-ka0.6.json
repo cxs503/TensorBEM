@@ -1,0 +1,18 @@
+{
+  "case_id": "cpt-16x32-h20-ka0.6",
+  "tool": "capytaine",
+  "ka": 0.6,
+  "depth_ratio": 20.0,
+  "depth": 20.0,
+  "resolution": [
+    16,
+    32
+  ],
+  "added_mass_heave": 2285.3078742181283,
+  "damping_heave": 1032.4478221016097,
+  "n_faces": 512,
+  "n_vertices": 482,
+  "status": "ok",
+  "seconds": 0.795,
+  "finished_utc": "2026-11-14T19:25:53+00:00"
+}

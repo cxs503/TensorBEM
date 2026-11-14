@@ -1,0 +1,18 @@
+{
+  "case_id": "cpt-24x48-hinf-ka0.3",
+  "tool": "capytaine",
+  "ka": 0.3,
+  "depth_ratio": "inf",
+  "depth": Infinity,
+  "resolution": [
+    24,
+    48
+  ],
+  "added_mass_heave": 2455.330691809838,
+  "damping_heave": 315.85020012993465,
+  "n_faces": 1152,
+  "n_vertices": 1106,
+  "status": "ok",
+  "seconds": 1.373,
+  "finished_utc": "2026-11-14T19:26:57+00:00"
+}
