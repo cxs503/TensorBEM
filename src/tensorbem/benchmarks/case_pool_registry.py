@@ -206,9 +206,13 @@ CASES: dict[str, CaseEntry] = {
         artifacts=(
             "docs/case_bem_rigid_body_mass/results.json",
             "docs/case_bem_rigid_body_mass/verdict.json",
+            "docs/case_bem_rigid_body_mass/adversarial_audit.json",
         ),
         doc="docs/case_bem_rigid_body_mass/CASE.md",
-        figures=("docs/case_bem_rigid_body_mass/fig_momentum_route.png",),
+        figures=(
+            "docs/case_bem_rigid_body_mass/fig_momentum_route.png",
+            "docs/case_bem_rigid_body_mass/fig_adversarial_audit.png",
+        ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.casepool_bem_rigid_body_mass "
             "--outdir docs/case_bem_rigid_body_mass"
@@ -217,7 +221,11 @@ CASES: dict[str, CaseEntry] = {
         "vs signed-tetrahedron quadrature of the panelised body, rotated body with a full "
         "inertia tensor, capytaine external assembly, and the momentum-definition route "
         "(route P) that pins the off-diagonal sign convention; pre-fix coupling control "
-        "and an antisymmetric control show the discriminating power of each check",
+        "and an antisymmetric control show the discriminating power of each check; the independent "
+        "adversarial review (docs/case_bem_rigid_body_mass/ADVERSARIAL_REVIEW.md, built by "
+        "scripts/audit_m19935_rigid_body_mass.py) re-derives M_RB as a symbolic kinetic-energy Hessian, "
+        "fits the quadrature convergence order and records the validity domain of the quadrature route "
+        "(mesh_topology_report guard)",
     ),
 }
 
