@@ -25,6 +25,10 @@ from .kernels import (
     integrate_double_layer_panel,
     integrate_double_layer_panel_gradient,
     integrate_single_layer_panel,
+    integrate_double_layer_panel_first_moment,
+    integrate_double_layer_panel_first_moment_gradient,
+    integrate_single_layer_panel_first_moment,
+    integrate_single_layer_panel_first_moment_gradient,
     integrate_single_layer_panel_gradient,
     validate_reference_length,
 )
@@ -49,6 +53,7 @@ class LaplaceDirichletResult:
     relative_residual_l2: float = 0.0
     domain: str = "interior"
     reference_length: float = REFERENCE_LENGTH
+    linear_density: bool = False
 
 
 def _validate_domain(domain: str) -> str:
@@ -57,10 +62,41 @@ def _validate_domain(domain: str) -> str:
     return domain
 
 
+def _difference_operator(mesh: PanelMesh) -> FloatArray:
+    """Arc-length central-difference operator on a closed panel loop.
+
+    ``D[i, :]`` differentiates the panel-midpoint trace at panel ``i`` in arc
+    length: ``(sigma_{i+1} - sigma_{i-1}) / spacing_i``. It is the discrete
+    tangential slope that the first-moment (linear-density) panel basis uses.
+    """
+    n = mesh.panel_count
+    lengths = mesh.lengths
+    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
+    operator = np.zeros((n, n), dtype=float)
+    rows = np.arange(n)
+    operator[rows, (rows + 1) % n] = 1.0 / spacing
+    operator[rows, (rows - 1) % n] = -1.0 / spacing
+    return operator
+
+
 def assemble_matrices(
-    mesh: PanelMesh, reference_length: float = REFERENCE_LENGTH
+    mesh: PanelMesh,
+    reference_length: float = REFERENCE_LENGTH,
+    linear_density: bool = False,
 ) -> tuple[FloatArray, FloatArray]:
-    """Assemble analytically integrated single- and double-layer matrices."""
+    """Assemble analytically integrated single- and double-layer matrices.
+
+    ``linear_density=True`` integrates the densities of both layers as
+    ``sigma(s) = sigma_i + sigma'_i (s - L_i/2)``, with the tangential slopes
+    ``sigma'`` supplied by the arc-length difference operator
+    :func:`_difference_operator`. The extra term is added in closed form with
+    the first-moment panel integrals, so no quadrature error enters and the
+    boundary equation stays a linear system in the panel-midpoint values; the
+    resulting solve is second-order accurate on a smooth boundary instead of
+    first-order. The jump coefficient ``1/2 I`` is unchanged: the double-layer
+    kernel on the collocation panel is a delta at the midpoint, where the
+    linear basis equals the midpoint value.
+    """
     reference = validate_reference_length(reference_length)
     centers = mesh.centers
     starts = mesh.vertices
@@ -70,6 +106,9 @@ def assemble_matrices(
     n = mesh.panel_count
     single = np.empty((n, n), dtype=float)
     double = np.empty((n, n), dtype=float)
+    if linear_density:
+        single_moment = np.empty((n, n), dtype=float)
+        double_moment = np.empty((n, n), dtype=float)
 
     for i, target in enumerate(centers):
         for j in range(n):
@@ -79,7 +118,17 @@ def assemble_matrices(
             double[i, j] = integrate_double_layer_panel(
                 target, starts[j], tangents[j], normals[j], float(lengths[j])
             )
-    return single, double
+            if linear_density:
+                single_moment[i, j] = integrate_single_layer_panel_first_moment(
+                    target, starts[j], tangents[j], float(lengths[j]), reference
+                ) - 0.5 * float(lengths[j]) * single[i, j]
+                double_moment[i, j] = integrate_double_layer_panel_first_moment(
+                    target, starts[j], tangents[j], normals[j], float(lengths[j])
+                ) - 0.5 * float(lengths[j]) * double[i, j]
+    if not linear_density:
+        return single, double
+    difference = _difference_operator(mesh)
+    return single + single_moment @ difference, double + double_moment @ difference
 
 
 def _solve(
@@ -87,6 +136,7 @@ def _solve(
     boundary_values: FloatArray,
     domain: str,
     reference_length: float,
+    linear_density: bool = False,
 ) -> LaplaceDirichletResult:
     values = np.asarray(boundary_values, dtype=float)
     n = mesh.panel_count
@@ -96,7 +146,9 @@ def _solve(
         raise ValueError("boundary_values must all be finite")
     reference = validate_reference_length(reference_length)
 
-    single, double = assemble_matrices(mesh, reference_length=reference)
+    single, double = assemble_matrices(
+        mesh, reference_length=reference, linear_density=linear_density
+    )
     sign = 1.0 if domain == "interior" else -1.0
     rhs = 0.5 * values + sign * (double @ values)
     condition = float(np.linalg.cond(single))
@@ -120,6 +172,7 @@ def _solve(
         relative_residual_l2=residual / rhs_norm if rhs_norm > 0.0 else residual,
         domain=domain,
         reference_length=reference,
+        linear_density=bool(linear_density),
     )
 
 
@@ -127,20 +180,30 @@ def solve_laplace_dirichlet(
     mesh: PanelMesh,
     boundary_values: FloatArray,
     reference_length: float = REFERENCE_LENGTH,
+    linear_density: bool = False,
 ) -> LaplaceDirichletResult:
     """Solve for the unknown outward normal derivative given boundary values.
 
     The baseline targets smooth, closed, simply connected 2-D domains.
     Boundary values are piecewise constant at panel midpoints. The returned
     ``normal_derivative`` is the derivative along the polygon's outward normal.
+    ``linear_density=True`` uses the first-moment (linearly varying density)
+    panel basis, which is second-order accurate on a smooth boundary.
     """
-    return _solve(mesh, boundary_values, "interior", reference_length)
+    return _solve(
+        mesh,
+        boundary_values,
+        "interior",
+        reference_length,
+        linear_density=linear_density,
+    )
 
 
 def solve_laplace_exterior_dirichlet(
     mesh: PanelMesh,
     boundary_values: FloatArray,
     reference_length: float = REFERENCE_LENGTH,
+    linear_density: bool = False,
 ) -> LaplaceDirichletResult:
     """Solve the exterior 2-D Laplace Dirichlet problem.
 
@@ -193,6 +256,7 @@ def solve_laplace_exterior_neumann(
     mesh: PanelMesh,
     normal_derivative: FloatArray,
     reference_length: float = REFERENCE_LENGTH,
+    linear_density: bool = False,
 ) -> LaplaceDirichletResult:
     """Solve the exterior 2-D Laplace Neumann boundary-value problem.
 
@@ -210,6 +274,12 @@ def solve_laplace_exterior_neumann(
     identically for rigid-body translations and rotations of a closed body),
     the exterior potential decays as ``O(1/r)`` and ``u`` is invariant to
     ``reference_length``.
+
+    ``linear_density=True`` uses the first-moment (linearly varying density)
+    panel basis for both layers, making the solve second-order accurate on a
+    smooth boundary; this is the setting that
+    :func:`evaluate_exterior_field` documents for its ``linear_density``
+    near-wall mode.
     """
     if not isinstance(mesh, PanelMesh):
         raise TypeError("mesh must be a PanelMesh")
@@ -221,7 +291,9 @@ def solve_laplace_exterior_neumann(
         raise ValueError("normal_derivative must all be finite")
     reference = validate_reference_length(reference_length)
 
-    single, double = assemble_matrices(mesh, reference_length=reference)
+    single, double = assemble_matrices(
+        mesh, reference_length=reference, linear_density=linear_density
+    )
     system = 0.5 * np.eye(n) - double
     rhs = single @ flux
     condition = float(np.linalg.cond(system))
@@ -238,6 +310,7 @@ def solve_laplace_exterior_neumann(
         relative_residual_l2=residual / rhs_norm if rhs_norm > 0.0 else residual,
         domain="exterior",
         reference_length=reference,
+        linear_density=bool(linear_density),
     )
 
 
@@ -433,11 +506,36 @@ def _screen_exterior_targets(
     return targets
 
 
+def tangential_slope(mesh: PanelMesh, values: FloatArray) -> FloatArray:
+    r"""Estimate the arc-length derivative of a panel-midpoint trace.
+
+    The trace of a smooth boundary function at the midpoints of a closed
+    boundary is differentiated with a periodic central difference that is
+    centred in *arc length* (``spacing_i`` is the distance between the two
+    neighbouring midpoints through panel ``i``). For a smooth periodic trace
+    that difference is second-order accurate, so it is a legitimate estimate of
+    the tangential slope used by the first-moment (linearly varying density)
+    panel integrals; it is not a one-sided first-order stencil.
+    """
+    if not isinstance(mesh, PanelMesh):
+        raise TypeError("mesh must be a PanelMesh")
+    trace = np.asarray(values, dtype=float)
+    n = mesh.panel_count
+    if trace.shape != (n,):
+        raise ValueError(f"values must have shape ({n},)")
+    if not np.isfinite(trace).all():
+        raise ValueError("values must all be finite")
+    lengths = mesh.lengths
+    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
+    return (np.roll(trace, -1) - np.roll(trace, 1)) / spacing
+
+
 def evaluate_exterior_field(
     mesh: PanelMesh,
     result: LaplaceDirichletResult,
     points: FloatArray,
     minimum_clearance_factor: float = 0.0,
+    linear_density: bool | None = None,
 ) -> ExteriorField:
     r"""Evaluate the exterior harmonic potential and its gradient at fluid points.
 
@@ -473,6 +571,17 @@ def evaluate_exterior_field(
     linear solve). The default clearance factor stays zero for backward
     compatibility, so a caller evaluating close to the body should pass
     ``minimum_clearance_factor`` of order one to two.
+
+    ``linear_density=True`` removes that first-order limitation: the densities
+    are expanded as ``sigma(s) = sigma_i + sigma'_i (s - L_i/2)`` on each panel,
+    where ``sigma'_i`` is the arc-length slope of the panel trace estimated by
+    :func:`tangential_slope`, and the first-moment panel integrals of
+    :mod:`tensorbem.kernels` supply the extra term in closed form (value and
+    target gradient, no extra quadrature). The near-wall error then falls with
+    the square of the panel size instead of linearly; the far field is
+    unchanged to the same order. ``CASE-BEM-LAPLACE-CYLINDER`` reports both
+    modes side by side (``near_wall`` in
+    ``benchmarks/verified/case_bem_laplace_cylinder/results.json``).
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
@@ -487,12 +596,20 @@ def evaluate_exterior_field(
         or result.boundary_values.shape != (n,)
     ):
         raise ValueError("result boundary traces must match the mesh panel count")
+    if linear_density is None:
+        linear_density = bool(getattr(result, "linear_density", False))
+    elif not isinstance(linear_density, (bool, np.bool_)):
+        raise ValueError("linear_density must be a boolean")
     targets = _screen_exterior_targets(mesh, points, minimum_clearance_factor)
 
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
     reference = result.reference_length
+    if linear_density:
+        half = 0.5 * lengths
+        flux_slope = tangential_slope(mesh, result.normal_derivative)
+        value_slope = tangential_slope(mesh, result.boundary_values)
     potential = np.zeros(len(targets), dtype=float)
     gradient = np.zeros((len(targets), 2), dtype=float)
     for i, target in enumerate(targets):
@@ -517,6 +634,47 @@ def evaluate_exterior_field(
                 )
                 * result.boundary_values[j]
             )
+            if linear_density:
+                # First moment of the density about the panel midpoint:
+                #   integral (s - L/2) kernel ds = K1 - (L/2) K0.
+                potential[i] += (
+                    (
+                        integrate_single_layer_panel_first_moment(
+                            target, start, tangent, length, reference
+                        )
+                        - half[j] * single
+                    )
+                    * flux_slope[j]
+                    + (
+                        integrate_double_layer_panel_first_moment(
+                            target, start, tangent, normals[j], length
+                        )
+                        - half[j] * double
+                    )
+                    * value_slope[j]
+                )
+                gradient[i] += (
+                    (
+                        integrate_single_layer_panel_first_moment_gradient(
+                            target, start, tangent, length, reference
+                        )
+                        - half[j]
+                        * integrate_single_layer_panel_gradient(
+                            target, start, tangent, length, reference
+                        )
+                    )
+                    * flux_slope[j]
+                    + (
+                        integrate_double_layer_panel_first_moment_gradient(
+                            target, start, tangent, normals[j], length
+                        )
+                        - half[j]
+                        * integrate_double_layer_panel_gradient(
+                            target, start, tangent, normals[j], length
+                        )
+                    )
+                    * value_slope[j]
+                )
     return ExteriorField(potential=potential, gradient=gradient)
 
 
@@ -549,8 +707,7 @@ def evaluate_exterior_surface_velocity(
         raise ValueError("result boundary traces must match the mesh panel count")
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
-    # Arc-length abscissa of the panel midpoints (midpoints are equally spaced
-    # in arc length for an inscribed polygon of a circle, but not in general).
-    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
-    derivative = (np.roll(values, -1) - np.roll(values, 1)) / spacing
+    # Arc-length difference of the panel midpoints (equally spaced in arc
+    # length for an inscribed polygon of a circle, but not in general).
+    derivative = tangential_slope(mesh, values)
     return flux[:, None] * (-mesh.normals) + derivative[:, None] * tangents
