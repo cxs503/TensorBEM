@@ -6,7 +6,7 @@
     "numpy": "2.4.6",
     "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
     "machine": "loongarch64",
-    "wall_time_s": 5.125658979639411
+    "wall_time_s": 7.566689159721136
   },
   "parameters": {
     "semi_axes_m": [
@@ -293,6 +293,373 @@
       "momentum_detects": true
     }
   },
+  "external_route": {
+    "status": "run",
+    "reason": "route T executed",
+    "route": "external referee: trimesh (Mirtich 1996) integration, uv_sphere discretisation",
+    "independence": {
+      "mesh_generator": "trimesh.creation.uv_sphere (not tensorbem.geometry3d.ellipsoid_mesh)",
+      "integration": "trimesh mass_properties (not tensorbem signed-tetrahedron quadrature)",
+      "shared_with_the_anchor": [
+        "the closed-form reference (the object under test)",
+        "the 6x6 assembly rigid_body_mass_matrix (route P pins it separately)",
+        "the entry-relative error metric (the anchor's acceptance metric)"
+      ]
+    },
+    "tolerance": 0.03,
+    "roundoff_limit": 1e-09,
+    "self_calibration": {
+      "side_m": 3.0,
+      "density_kg_m3": 1025.0,
+      "panels": 12,
+      "watertight": true,
+      "volume_rel_error": 0.0,
+      "mass_rel_error": 0.0,
+      "centroid_abs_error_m": 0.0,
+      "inertia_rel_error": 0.0
+    },
+    "layer_attribution": {
+      "method": "trimesh (Mirtich projection) vs tensorbem signed-tetrahedron, same vertices+faces",
+      "roundoff_limit": 1e-09,
+      "levels": [
+        {
+          "subdivisions": 1,
+          "panels": 80,
+          "external_watertight": true,
+          "volume_rel_difference": 0.0,
+          "inertia_rel_difference": 1.0299811782581054e-16,
+          "matrix_max_entry_difference": 1.7988035659708326e-13,
+          "worst_entry": "surge-yaw",
+          "external_vs_closed_form": 0.19883176391667207,
+          "tensorbem_vs_closed_form": 0.19883176391667218
+        },
+        {
+          "subdivisions": 2,
+          "panels": 320,
+          "external_watertight": true,
+          "volume_rel_difference": 0.0,
+          "inertia_rel_difference": 4.1199247130324216e-16,
+          "matrix_max_entry_difference": 3.2992182153937814e-12,
+          "worst_entry": "roll-pitch",
+          "external_vs_closed_form": 0.055005484664363655,
+          "tensorbem_vs_closed_form": 0.05500548466436325
+        },
+        {
+          "subdivisions": 3,
+          "panels": 1280,
+          "external_watertight": true,
+          "volume_rel_difference": 0.0,
+          "inertia_rel_difference": 2.0599623565162108e-16,
+          "matrix_max_entry_difference": 6.3247623742128625e-12,
+          "worst_entry": "roll-pitch",
+          "external_vs_closed_form": 0.014115334623757025,
+          "tensorbem_vs_closed_form": 0.014115334623756828
+        },
+        {
+          "subdivisions": 4,
+          "panels": 5120,
+          "external_watertight": true,
+          "volume_rel_difference": 1.5110837082322894e-16,
+          "inertia_rel_difference": 2.0599623565162108e-16,
+          "matrix_max_entry_difference": 1.6061467195137242e-11,
+          "worst_entry": "roll-pitch",
+          "external_vs_closed_form": 0.0035521362881938915,
+          "tensorbem_vs_closed_form": 0.0035521362881938915
+        }
+      ],
+      "worst_matrix_difference": 1.6061467195137242e-11,
+      "worst_error_budget_difference": 4.0245584642661925e-16,
+      "checks": {
+        "external_integrator_roundoff": true
+      }
+    },
+    "independent_mesh_route": {
+      "method": "trimesh.creation.uv_sphere scaled by the semi-axes + trimesh mass_properties; assembly = shipped rigid_body_mass_matrix (inputs are external)",
+      "tolerance": 0.03,
+      "accepted_counts": [
+        32,
+        64,
+        128
+      ],
+      "levels": [
+        {
+          "uv_count": 16,
+          "panels": 1792,
+          "watertight": true,
+          "accepted": false,
+          "volume_rel_error": 0.012514263415253614,
+          "cg_abs_error_m": 8.881784197001252e-16,
+          "inertia_rel_error": 0.021267429174021343,
+          "max_entry_rel_error": 0.020984631107377222,
+          "worst_entry": "yaw-yaw",
+          "legacy_coupling_rel_error": 1.9874857365847465,
+          "within_tolerance": true
+        },
+        {
+          "uv_count": 32,
+          "panels": 7680,
+          "watertight": true,
+          "accepted": true,
+          "volume_rel_error": 0.0029658550508574123,
+          "cg_abs_error_m": 8.881784197001252e-16,
+          "inertia_rel_error": 0.005069916168433362,
+          "max_entry_rel_error": 0.005001937972595341,
+          "worst_entry": "yaw-yaw",
+          "legacy_coupling_rel_error": 1.9970341449491427,
+          "within_tolerance": true
+        },
+        {
+          "uv_count": 64,
+          "panels": 31744,
+          "watertight": true,
+          "accepted": true,
+          "volume_rel_error": 0.0007218727744624818,
+          "cg_abs_error_m": 4.440892098500626e-16,
+          "inertia_rel_error": 0.0012361700568099892,
+          "max_entry_rel_error": 0.0012195540939530876,
+          "worst_entry": "yaw-yaw",
+          "legacy_coupling_rel_error": 1.9992781272255375,
+          "within_tolerance": true
+        },
+        {
+          "uv_count": 128,
+          "panels": 129024,
+          "watertight": true,
+          "accepted": true,
+          "volume_rel_error": 0.00017806704690136665,
+          "cg_abs_error_m": 8.881784197001252e-16,
+          "inertia_rel_error": 0.00030511956144640246,
+          "max_entry_rel_error": 0.00030101473737861694,
+          "worst_entry": "yaw-yaw",
+          "legacy_coupling_rel_error": 1.9998219329530986,
+          "within_tolerance": true
+        }
+      ],
+      "worst_accepted_entry_rel_error": 0.005001937972595341,
+      "worst_accepted_level": 32,
+      "coarsest_within_tolerance_count": 16,
+      "declared_acceptance_note": "the acceptance set is predeclared at uv >= 32; the ladder also reports the coarsest level that already meets the tolerance, so the margin is visible rather than implied",
+      "observed_order": -0.9926363748312619,
+      "legacy_coupling_worst_rel_error": 1.9998219329530986,
+      "checks": {
+        "external_mesh_route_within_tolerance": true,
+        "external_route_rejects_legacy_coupling": true
+      }
+    },
+    "ship_shape": {
+      "hull": {
+        "length_m": 120.0,
+        "beam_m": 24.0,
+        "draft_m": 8.0,
+        "block_coefficient": 0.4444444444444444,
+        "density_kg_m3": 1025.0,
+        "cg_m": [
+          6.0,
+          0.0,
+          -3.6
+        ]
+      },
+      "mesh": {
+        "n_sections": 48,
+        "n_levels": 24,
+        "panels": 4704,
+        "wetted_panels": 4608,
+        "lid_panels": 96,
+        "external_watertight": true
+      },
+      "reference": {
+        "volume_m3": 10240.0,
+        "mass_kg": 10496000.0,
+        "centroid_m": [
+          0.0,
+          0.0,
+          -3.0
+        ],
+        "inertia_at_design_cg": [
+          [
+            280555937.95918363,
+            0.0,
+            37785600.00000001
+          ],
+          [
+            0.0,
+            7978639360.0,
+            0.0
+          ],
+          [
+            37785600.00000001,
+            0.0,
+            8171868577.959184
+          ]
+        ]
+      },
+      "external": {
+        "volume_m3": 10234.44637345679,
+        "mass_kg": 10490307.53279321,
+        "centroid_m": [
+          -1.895808813669034e-15,
+          -1.0967232001987803e-17,
+          -3.000325132027163
+        ]
+      },
+      "volume_rel_error": 0.0005423463421102781,
+      "mass_rel_error": 0.0005423463421102497,
+      "centroid_abs_error_m": 0.00032513202716311085,
+      "inertia_rel_error": 0.0003949199282610461,
+      "matrix_max_entry_rel_error": 0.0012482890626886402,
+      "worst_entry": "roll-roll",
+      "block_max_entry_rel_error": {
+        "translation-translation": 0.0005423463421102497,
+        "translation-rotation": 0.00054234634211023,
+        "rotation-rotation": 0.0012482890626886402
+      },
+      "tolerance": 0.03,
+      "checks": {
+        "external_ship_shape_within_tolerance": true
+      }
+    },
+    "topology_referee": {
+      "method": "tensorbem.rigid_body_mass.mesh_topology_report vs trimesh.Trimesh.is_watertight (+ winding sign) on the same triangles; every corruption is also integrated through the external route as a naive external workflow would",
+      "subdivisions": 2,
+      "variants": [
+        {
+          "variant": "closed (control)",
+          "guard_is_closed": true,
+          "guard_volume_positive": true,
+          "guard_open_edges": 0,
+          "guard_orientation_mismatches": 0,
+          "guard_nonmanifold_edges": 0,
+          "external_watertight": true,
+          "external_winding_positive": true,
+          "guard_accepts": true,
+          "external_accepts": true,
+          "guard_laxer_than_external": false,
+          "external_laxer_than_guard": false,
+          "volume_rel_error_vs_closed_form": 0.03383925140141284,
+          "naive_workflow_undefined": false,
+          "naive_worst_entry": "yaw-yaw",
+          "matrix_max_entry_rel_error": 0.055005484664363655,
+          "maskable_by_tolerance": false
+        },
+        {
+          "variant": "open patch (every 7th face removed)",
+          "guard_is_closed": false,
+          "guard_volume_positive": true,
+          "guard_open_edges": 138,
+          "guard_orientation_mismatches": 0,
+          "guard_nonmanifold_edges": 0,
+          "external_watertight": false,
+          "external_winding_positive": true,
+          "guard_accepts": false,
+          "external_accepts": false,
+          "guard_laxer_than_external": false,
+          "external_laxer_than_guard": false,
+          "volume_rel_error_vs_closed_form": 0.18153025130585992,
+          "naive_workflow_undefined": false,
+          "naive_worst_entry": "roll-pitch",
+          "matrix_max_entry_rel_error": 3852.762704503929,
+          "maskable_by_tolerance": false
+        },
+        {
+          "variant": "single flipped face",
+          "guard_is_closed": false,
+          "guard_volume_positive": true,
+          "guard_open_edges": 0,
+          "guard_orientation_mismatches": 3,
+          "guard_nonmanifold_edges": 0,
+          "external_watertight": true,
+          "external_winding_positive": true,
+          "guard_accepts": false,
+          "external_accepts": true,
+          "guard_laxer_than_external": false,
+          "external_laxer_than_guard": true,
+          "volume_rel_error_vs_closed_form": 0.054248218950099826,
+          "naive_workflow_undefined": false,
+          "naive_worst_entry": "roll-pitch",
+          "matrix_max_entry_rel_error": 3305.146164410177,
+          "maskable_by_tolerance": false
+        },
+        {
+          "variant": "duplicated face",
+          "guard_is_closed": false,
+          "guard_volume_positive": true,
+          "guard_open_edges": 0,
+          "guard_orientation_mismatches": 0,
+          "guard_nonmanifold_edges": 3,
+          "external_watertight": false,
+          "external_winding_positive": true,
+          "guard_accepts": false,
+          "external_accepts": false,
+          "guard_laxer_than_external": false,
+          "external_laxer_than_guard": false,
+          "volume_rel_error_vs_closed_form": 0.031574882154673224,
+          "naive_workflow_undefined": false,
+          "naive_worst_entry": "roll-pitch",
+          "matrix_max_entry_rel_error": 397.9575137434846,
+          "maskable_by_tolerance": false
+        },
+        {
+          "variant": "inward winding (all faces)",
+          "guard_is_closed": true,
+          "guard_volume_positive": false,
+          "guard_open_edges": 0,
+          "guard_orientation_mismatches": 0,
+          "guard_nonmanifold_edges": 0,
+          "external_watertight": true,
+          "external_winding_positive": false,
+          "guard_accepts": false,
+          "external_accepts": false,
+          "guard_laxer_than_external": false,
+          "external_laxer_than_guard": false,
+          "volume_rel_error_vs_closed_form": 1.9661607485985872,
+          "naive_workflow_undefined": true,
+          "naive_worst_entry": null,
+          "matrix_max_entry_rel_error": Infinity,
+          "maskable_by_tolerance": false
+        }
+      ],
+      "weld_sensitivity": {
+        "variant": "fully split vertices (same closed surface, unwelded indices)",
+        "guard_is_closed": true,
+        "guard_volume_m3": 23310.977356678166,
+        "external_watertight_as_given": false,
+        "external_watertight_after_merge": true,
+        "policies_agree_after_alignment": true
+      },
+      "guard_never_laxer": true,
+      "guard_rejects_every_corruption": true,
+      "corruptions_the_external_predicate_misses": [
+        "single flipped face"
+      ],
+      "missed_and_inside_the_tolerance": [],
+      "note": "The external predicate is *weaker*, not merely different: it decides watertightness on edge incidence, so a single flipped triangle keeps it 'watertight' while the enclosed volume it integrates is wrong. In this configuration the corrupted 6x6 is nevertheless far outside the 3 % tolerance (the entry-relative metric's floor on structurally-zero entries amplifies it), so the tolerance test did see the defect here -- but the external predicate did not, which is why the guard cannot be outsourced to trimesh.",
+      "checks": {
+        "external_topology_guard_agrees": true,
+        "external_guard_is_load_bearing": true
+      }
+    },
+    "checks": {
+      "external_integrator_roundoff": true,
+      "external_mesh_route_within_tolerance": true,
+      "external_route_rejects_legacy_coupling": true,
+      "external_ship_shape_within_tolerance": true,
+      "external_topology_guard_agrees": true,
+      "external_guard_is_load_bearing": true
+    },
+    "required_checks": [
+      "external_integrator_roundoff",
+      "external_mesh_route_within_tolerance",
+      "external_ship_shape_within_tolerance",
+      "external_topology_guard_agrees",
+      "external_guard_is_load_bearing",
+      "external_route_rejects_legacy_coupling"
+    ],
+    "residual_limitations": [
+      "trimesh and TensorBEM both integrate a *triangulated* surface, so a systematic geometric error common to all triangle meshes (a mis-scaled semi-axis, say) is outside every route in this anchor; Cb/L/B geometry verification is the job of the geometry anchors",
+      "the external route assembles M_RB with the shipped assembly, so it certifies the mass-property inputs, not the block convention (route P owns that)",
+      "trimesh's is_watertight is a topological predicate only; it does not check self-intersection"
+    ]
+  },
   "rao_caller": {
     "status": "run",
     "caller": "tensorbem.rao.compute_rao_at_frequency (impedance -w^2(M+A)+iwB+C)",
@@ -356,11 +723,17 @@
       "momentum_route_beats_energy_blind_spot": true,
       "base_case_passed": true,
       "orientation_case_passed": true,
+      "external_integrator_roundoff": true,
+      "external_mesh_route_within_tolerance": true,
+      "external_route_rejects_legacy_coupling": true,
+      "external_ship_shape_within_tolerance": true,
+      "external_topology_guard_agrees": true,
+      "external_guard_is_load_bearing": true,
       "legacy_coupling_rejected": true,
       "orientation_negative_control_rejected": true
     },
     "worst_accepted_entry_rel_error": 0.01415141785302352,
     "tolerance": 0.03,
-    "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
+    "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; route T (external trimesh referee) must reproduce the closed form inside the tolerance on its own discretisation, agree with TensorBEM's integrator to round-off on shared triangles, referee the topology guard and reject the legacy coupling; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
   }
 }

@@ -12,10 +12,16 @@
     "momentum_route_beats_energy_blind_spot": true,
     "base_case_passed": true,
     "orientation_case_passed": true,
+    "external_integrator_roundoff": true,
+    "external_mesh_route_within_tolerance": true,
+    "external_route_rejects_legacy_coupling": true,
+    "external_ship_shape_within_tolerance": true,
+    "external_topology_guard_agrees": true,
+    "external_guard_is_load_bearing": true,
     "legacy_coupling_rejected": true,
     "orientation_negative_control_rejected": true
   },
   "worst_accepted_entry_rel_error": 0.01415141785302352,
   "tolerance": 0.03,
-  "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
+  "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted mesh levels; route P must agree to round-off and must reject both controls; route T (external trimesh referee) must reproduce the closed form inside the tolerance on its own discretisation, agree with TensorBEM's integrator to round-off on shared triangles, referee the topology guard and reject the legacy coupling; the seakeeping caller must reproduce the shipped RAO when the reference block form is injected at its mass-matrix call site (< 1e-9) and must react to the pre-fix convention by more than the 3% anchor tolerance"
 }

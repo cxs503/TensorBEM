@@ -340,6 +340,7 @@ CASES: dict[str, CaseEntry] = {
         figures=(
             "docs/case_bem_rigid_body_mass/fig_momentum_route.png",
             "docs/case_bem_rigid_body_mass/fig_adversarial_audit.png",
+            "docs/case_bem_rigid_body_mass/fig_external_route.png",
         ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.casepool_bem_rigid_body_mass "

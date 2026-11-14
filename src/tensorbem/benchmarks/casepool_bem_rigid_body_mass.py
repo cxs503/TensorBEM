@@ -61,6 +61,7 @@ from typing import Any, Sequence
 import numpy as np
 
 from tensorbem.benchmarks import case_rigid_body_mass as base_case
+from tensorbem.benchmarks import rigid_body_mass_external_route as external_route
 from tensorbem.benchmarks import rigid_body_mass_orientation as orientation_case
 from tensorbem.rigid_body_mass import (
     MODES,
@@ -70,7 +71,7 @@ from tensorbem.rigid_body_mass import (
     skew_matrix,
 )
 
-__all__ = ["TOLERANCE", "momentum_section", "run", "write_doc", "main"]
+__all__ = ["TOLERANCE", "momentum_section", "run", "write_doc", "plot", "main"]
 
 TOLERANCE = 0.03
 ROUNDOFF_LIMIT = 1.0e-9
@@ -260,8 +261,9 @@ def rao_caller_section(raw: dict[str, Any] | None) -> dict[str, Any]:
 def run(
     subdivisions: Sequence[int] = DEFAULT_SUBDIVISIONS,
     with_rao: bool = True,
+    with_external: bool = True,
 ) -> dict[str, Any]:
-    """Execute the anchor: base case + orientation extension + route "P"."""
+    """Execute the anchor: base case + orientation extension + routes "P" and "T"."""
     start = time.perf_counter()
     base = base_case.run(list(subdivisions), with_rao=with_rao)
     orientation = orientation_case.run()
@@ -269,6 +271,11 @@ def run(
     reference = base["ellipsoid"]["reference"]
     momentum = momentum_section(reference)
     rao_caller = rao_caller_section(base.get("rao_integration"))
+    external = (
+        external_route.run()
+        if with_external
+        else external_route.not_run("--no-external: route T was skipped, not passed")
+    )
 
     base_levels = [
         {
@@ -347,6 +354,7 @@ def run(
         ),
         "base_case_passed": bool(base["passed"]),
         "orientation_case_passed": bool(orientation["verdict"]["all_pass"]),
+        **external["checks"],
         **controls,
     }
     not_run = [] if rao_caller["status"] == "run" else [
@@ -354,6 +362,8 @@ def run(
         "rao_caller_replay_roundoff",
         "rao_caller_legacy_coupling_material",
     ]
+    if external["status"] != "run":
+        not_run.extend(external["required_checks"])
     executed = {name: ok for name, ok in checks.items() if name not in not_run}
     all_pass = bool(not not_run and all(executed.values()))
     overall = "PASS" if all_pass else ("INCOMPLETE" if all(executed.values()) else "FAIL")
@@ -407,6 +417,7 @@ def run(
             "checks": orientation["verdict"]["checks"],
         },
         "momentum_route": momentum,
+        "external_route": external,
         "rao_caller": rao_caller,
         "verdict": {
             "overall": overall,
@@ -417,6 +428,10 @@ def run(
             "tolerance": TOLERANCE,
             "criterion": "entry-wise |got-ref|/max(|ref|, 1e-6 scale) < 3% on accepted "
             "mesh levels; route P must agree to round-off and must reject both controls; "
+            "route T (external trimesh referee) must reproduce the closed form inside the "
+            "tolerance on its own discretisation, agree with TensorBEM's integrator to "
+            "round-off on shared triangles, referee the topology guard and reject the "
+            "legacy coupling; "
             "the seakeeping caller must reproduce the shipped RAO when the reference "
             "block form is injected at its mass-matrix call site (< 1e-9) and must react "
             "to the pre-fix convention by more than the 3% anchor tolerance",
@@ -586,6 +601,72 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
         f"{'拒绝 ✅' if ac['momentum_detects'] else '漏检 ❌'} |"
     )
     add("")
+    add("**外部裁判路线（route T，trimesh Mirtich 积分 + uv_sphere 离散，可选依赖）**")
+    add("")
+    ext = payload["external_route"]
+    if ext["status"] != "run":
+        add(f"not_run —— {ext['reason']}")
+        add("")
+    else:
+        cal = ext["self_calibration"]
+        add(
+            "| 层 | 外部实现 | 结果 |")
+        add("|---|---|---|")
+        add(
+            f"| 裁判自校准（边长 {cal['side_m']:.1f} m 立方体 vs `I=m L²/6`） | trimesh | "
+            f"体积误差 {_fmt(cal['volume_rel_error'])}、惯量误差 {_fmt(cal['inertia_rel_error'])} |")
+        att = ext["layer_attribution"]
+        add(
+            f"| 同一网格两积分器一致性（{len(att['levels'])} 层，最差） | trimesh vs 四面体 | "
+            f"{_fmt(att['worst_matrix_difference'])}（限值 {_fmt(att['roundoff_limit'])}） |")
+        ship = ext["ship_shape"]
+        add(
+            f"| 船型体（Wigley，{ship['mesh']['panels']} 面元）vs 闭式积分 | trimesh | "
+            f"6×6 最差 {ship['matrix_max_entry_rel_error']*100:.4f}%（判据 "
+            f"{ship['tolerance']*100:.0f}%，最差位置 {ship['worst_entry']}） |")
+        topo = ext["topology_referee"]
+        add(
+            f"| 拓扑守卫外部复核（{len(topo['variants'])} 个变体） | trimesh `is_watertight` | "
+            f"守卫从不更宽松：{topo['guard_never_laxer']}；外部漏检："
+            f"{', '.join(topo['corruptions_the_external_predicate_misses']) or '无'} |")
+        add("")
+        add("外部路线自身的收敛阶梯（椭球，uv_sphere + trimesh，参照=闭式块形式）")
+        add("")
+        add("| uv 计数 | 面元 | 6×6 最差元素 | 最差位置 | 旧耦合约定对照 | 接受 |")
+        add("|---|---|---|---|---|---|")
+        for row in ext["independent_mesh_route"]["levels"]:
+            add(
+                f"| {row['uv_count']} | {row['panels']} | {row['max_entry_rel_error']*100:.4f}% | "
+                f"{row['worst_entry']} | {row['legacy_coupling_rel_error']*100:.2f}% | "
+                f"{'✅' if row['accepted'] else '—'} |"
+            )
+        ladder = ext["independent_mesh_route"]
+        add("")
+        add(
+            f"接受层级（uv ≥ {ladder['accepted_counts'][0]}）最差 "
+            f"{ladder['worst_accepted_entry_rel_error']*100:.4f}%，拟合收敛阶 "
+            f"{ladder['observed_order']:+.3f}（误差 ~ 面元数^{ladder['observed_order']:+.2f}）。"
+        )
+        add("")
+        add("外部裁判对拓扑守卫的逐变体裁决")
+        add("")
+        add("| 变体 | 守卫接受 | 外部接受 | 体积误差 | 直接采信外部的 6×6 最差元素 |")
+        add("|---|---|---|---|---|")
+        for row in topo["variants"]:
+            err = row["matrix_max_entry_rel_error"]
+            add(
+                f"| {row['variant']} | {'是' if row['guard_accepts'] else '否'} | "
+                f"{'是' if row['external_accepts'] else '否'} | "
+                f"{row['volume_rel_error_vs_closed_form']*100:.4f}% | "
+                f"{'未定义（质量≤0）' if row['naive_workflow_undefined'] else f'{err*100:.3f}%'} |"
+            )
+        add("")
+        add(
+            "第 3 行是净增量：**单个翻转面**在 trimesh 的边关联判据下仍算 watertight（外部实现会"
+            "直接采信它并积出一个偏 2% 的体积），而 TensorBEM 守卫按有向半边判定并拒绝。"
+            "外部实现比守卫**更宽松**，因此守卫不能被外部库替代。"
+        )
+        add("")
     add("## ⑤ 注意点")
     add("")
     add(
@@ -617,6 +698,19 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
         f"{payload['rao_caller']['legacy_coupling_max_rao_change']*100:.2f}%）。"
     )
     add("")
+    add(
+        "- **route T 与前四条路线不共享的层**：外部裁判换掉了离散（uv_sphere 而非 icosphere）"
+        "与积分（Mirtich 投影而非带符号四面体），但仍共用闭式参照、`rigid_body_mass_matrix` "
+        "的装配与逐元素误差口径；因此它证伪的是「质量特性输入」，块约定仍由 route P 负责。"
+    )
+    add(
+        "- **外部判据比守卫更宽松**：trimesh 的 `is_watertight` 只看边关联次数，不看绕向，"
+        "单个翻转面对它不可见（见 ④ 表格第 3 行）；把拓扑校验外包给第三方库会引入盲区。"
+    )
+    add(
+        "- **三角网格的公共盲区**：trimesh 与 TensorBEM 都积分三角化表面，"
+        "任何「所有三角网格共有」的几何误差（例如半轴标错）不在本锚点覆盖范围内。"
+    )
     add("## ⑥ 误差判定")
     add("")
     add("| 关键量 | 基准 | 误差 | <3%？ |")
@@ -648,6 +742,26 @@ def write_doc(payload: dict[str, Any], path: Path) -> Path:
         f"| route P vs 出厂装配（4 配置最差） | 动量定义 | {_fmt(momentum['worst_relative_error'])} | "
         f"是（远小于，属圆整） |"
     )
+    if ext["status"] == "run":
+        add(
+            f"| route T：外部网格+外部积分（接受层级最差） | 闭式块形式 | "
+            f"{ext['independent_mesh_route']['worst_accepted_entry_rel_error']*100:.4f}% | "
+            + ("是 |" if ext["independent_mesh_route"]["checks"]["external_mesh_route_within_tolerance"]
+               else "否 |")
+        )
+        add(
+            f"| route T：Wigley 船型体 6×6（{ext['ship_shape']['mesh']['panels']} 面元） | "
+            f"闭式积分 | {ext['ship_shape']['matrix_max_entry_rel_error']*100:.4f}% | "
+            + ("是 |" if ext["ship_shape"]["checks"]["external_ship_shape_within_tolerance"]
+               else "否 |")
+        )
+        add(
+            f"| route T：两积分器在共享网格上的一致性 | 逐元素（限值 "
+            f"{_fmt(ext['layer_attribution']['roundoff_limit'])}） | "
+            f"{_fmt(ext['layer_attribution']['worst_matrix_difference'])} | 是（圆整量级） |"
+        )
+    else:
+        add("| route T（外部裁判） | 闭式块形式 | not_run | 未知（不得判 PASS） |")
     add(
         f"| 旧耦合约定对照（几何上必错） | 闭式块形式 | "
         f"{base['box_body']['levels'][0]['control_max_entry_rel_error']*100:.2f}% | 否（预期，判别力证据） |"
@@ -708,14 +822,79 @@ def plot(payload: dict[str, Any], path: Path) -> Path:
     return path
 
 
+def plot_external(payload: dict[str, Any], path: Path) -> Path:
+    """Route T: the external UV-sphere ladder and the external topology referee.
+
+    A skipped route (``--no-external`` / trimesh absent) is drawn as an
+    explicit "not run" panel instead of silently omitting the figure: a missing
+    check must stay visible.
+    """
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    section = payload["external_route"]
+    fig, axes = plt.subplots(1, 2, figsize=(11.0, 4.2))
+    if section["status"] != "run":
+        for ax in axes:
+            ax.axis("off")
+        axes[0].text(0.5, 0.5, f"route T not run\n{section['reason']}", ha="center",
+                     va="center", fontsize=10, transform=axes[0].transAxes)
+    else:
+        ladder = section["independent_mesh_route"]["levels"]
+        accepted = [row for row in ladder if row["accepted"]]
+        rejected = [row for row in ladder if not row["accepted"]]
+        for rows, marker, colour in ((rejected, "s", "tab:grey"), (accepted, "o", "tab:blue")):
+            if rows:
+                axes[0].loglog([row["panels"] for row in rows],
+                               [row["max_entry_rel_error"] for row in rows],
+                               marker + "-", color=colour,
+                               label="rejected level" if marker == "s" else "accepted level")
+        axes[0].loglog([row["panels"] for row in ladder],
+                       [row["legacy_coupling_rel_error"] for row in ladder], "^--",
+                       color="tab:red", label="pre-fix coupling control")
+        axes[0].axhline(section["tolerance"], color="k", ls=":", label="3 % criterion")
+        axes[0].set_xlabel("panels (external uv_sphere, trimesh integration)")
+        axes[0].set_ylabel("max entry relative error")
+        axes[0].set_title("route T: independent discretisation + integrator")
+        axes[0].grid(True, which="both", alpha=0.3)
+        axes[0].legend(fontsize=8)
+
+        variants = section["topology_referee"]["variants"]
+        names = [row["variant"].split(" (")[0].replace(" ", "\n", 2) for row in variants]
+        guard = [1.0 if row["guard_accepts"] else 0.0 for row in variants]
+        external = [1.0 if row["external_accepts"] else 0.0 for row in variants]
+        x = np.arange(len(variants))
+        axes[1].bar(x - 0.2, guard, 0.4, label="TensorBEM guard accepts", color="tab:blue")
+        axes[1].bar(x + 0.2, external, 0.4, label="trimesh is_watertight accepts",
+                    color="tab:orange")
+        axes[1].set_xticks(x)
+        axes[1].set_xticklabels(names, fontsize=6)
+        axes[1].set_ylim(0.0, 1.35)
+        axes[1].set_ylabel("accepts (1 = valid)")
+        axes[1].set_title("external referee of the topology guard")
+        axes[1].legend(fontsize=8)
+    fig.suptitle(f"{DISCIPLINE}: route T — third-party mass-property referee (trimesh)")
+    fig.tight_layout()
+    fig.savefig(path, dpi=130)
+    plt.close(fig)
+    return path
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--outdir", type=Path, default=Path("docs/case_bem_rigid_body_mass"))
     parser.add_argument("--subdivisions", type=int, nargs="+", default=list(DEFAULT_SUBDIVISIONS))
     parser.add_argument("--no-rao", action="store_true")
+    parser.add_argument("--no-external", action="store_true")
     args = parser.parse_args(argv)
 
-    payload = run(args.subdivisions, with_rao=not args.no_rao)
+    payload = run(
+        args.subdivisions,
+        with_rao=not args.no_rao,
+        with_external=not args.no_external,
+    )
     outdir = args.outdir
     outdir.mkdir(parents=True, exist_ok=True)
     (outdir / "results.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -724,6 +903,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     write_doc(payload, outdir / "CASE.md")
     plot(payload, outdir / "fig_momentum_route.png")
+    plot_external(payload, outdir / "fig_external_route.png")
     verdict = payload["verdict"]
     print(json.dumps({"verdict": verdict["overall"], "not_run": verdict["not_run"],
                       "checks": verdict["checks"],
