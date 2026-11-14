@@ -69,6 +69,7 @@ from .hydrostatic import (
     HydrostaticProperties,
     compute_hydrostatic_restoring_matrix,
     compute_mass_matrix,
+    mass_matrix_from_hull_geometry,
 )
 from .ice import (
     IceCover,
@@ -410,7 +411,13 @@ def compute_ice_rao_spectrum(
             hull, mass_value, cg, density, ice.gravity
         )
     restoring = np.asarray(hydrostatic_props.restoring_matrix, dtype=float)
-    mass_matrix = compute_mass_matrix(mass_value, cg, inertia)
+    if inertia is None:
+        # Same geometry-anchored default as the open-water RAO path.
+        mass_matrix = mass_matrix_from_hull_geometry(
+            hydrostatic_props, mass_value, cg, density=density
+        )
+    else:
+        mass_matrix = compute_mass_matrix(mass_value, cg, inertia)
     damping_extra = None if extra_damping is None else np.asarray(extra_damping, dtype=float)
 
     n = omega_arr.size

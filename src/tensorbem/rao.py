@@ -43,6 +43,7 @@ from .hydrostatic import (
     HydrostaticProperties,
     compute_hydrostatic_restoring_matrix,
     compute_mass_matrix,
+    mass_matrix_from_hull_geometry,
 )
 
 FloatArray = NDArray[np.float64]
@@ -433,8 +434,16 @@ def _assemble_rao_at_frequency(
     # Get restoring matrix
     c = hydrostatic_props.restoring_matrix
 
-    # Compute mass matrix
-    m = compute_mass_matrix(mass, center_of_gravity, inertia)
+    # Compute mass matrix.  With no inertia tensor the rotational block is
+    # derived from the hull hydrostatics (invariant under a change of origin)
+    # rather than from the distance between the origin and the CG; see
+    # ``tensorbem.hydrostatic.mass_matrix_from_hull_geometry``.
+    if inertia is None:
+        m = mass_matrix_from_hull_geometry(
+            hydrostatic_props, mass, center_of_gravity, density=density
+        )
+    else:
+        m = compute_mass_matrix(mass, center_of_gravity, inertia)
 
     # Solve radiation problem to get added mass and damping
     rad_result: Radiation3DResult = solve_radiation_3d(
