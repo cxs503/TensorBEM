@@ -163,24 +163,56 @@ def test_case_acceptance_passes_on_the_quick_ladder() -> None:
     assert artifact["harmonicity"]["laplacian_scaled_max"] <= case.HARMONICITY_TOL
 
 
-def test_committed_case_artifact_matches_the_committed_document() -> None:
+def test_committed_case_artifact_matches_the_committed_document(tmp_path) -> None:
+    """The committed record must carry itself: prose and figures derive from it.
+
+    A committed ``*.png`` is **not** an invariant here.  The platform push gate
+    drops images outside ``docs/`` (``tp_pusher._EXCLUDE2``, see
+    ``tests/_figure_integrity.py``), so a clean checkout legitimately has no
+    ``benchmarks/verified/case_bem_laplace_cylinder/figures/`` directory and an
+    ``is_file()`` assertion on those paths is red on GitHub no matter what the
+    case computed.  The durable invariant is the one this test now states: both
+    documents are exactly what ``render_markdown`` makes of the committed
+    ``results.json``, and all four figures -- including the multipole panel the
+    registry used to omit -- are rebuildable from that JSON alone, non-blank, and
+    linked from the rendered prose.
+    """
     from pathlib import Path
     import json
 
+    from _figure_integrity import assert_reproducible_figures
+
     root = Path(__file__).resolve().parents[1]
-    results = root / "benchmarks/verified/case_bem_laplace_cylinder/results.json"
-    payload = json.loads(results.read_text())
+    case_dir = root / "benchmarks/verified/case_bem_laplace_cylinder"
+    payload = json.loads((case_dir / "results.json").read_text())
     assert payload["case_id"] == case.CASE_ID
     assert payload["overall"] == "PASS"
     assert payload["acceptance"]["failed_checks"] == []
-    for path in (
-        root / "benchmarks/verified/case_bem_laplace_cylinder/case.json",
-        root / "docs/CASE-BEM-LAPLACE-CYLINDER.md",
-        root / "benchmarks/verified/case_bem_laplace_cylinder/figures/field.png",
-        root / "benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png",
-        root / "benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png",
-    ):
-        assert path.is_file(), path
+    assert (case_dir / "case.json").is_file()
+
+    rendered = case.render_markdown(payload)
+    for path in (case_dir / "report.md", root / "docs/CASE-BEM-LAPLACE-CYLINDER.md"):
+        assert path.read_text().strip() == rendered.strip(), (
+            f"{path} has drifted from results.json; re-run the case entry point"
+        )
+
+    builders = (
+        (case.plot_field, "field.png"),
+        (case.plot_convergence, "convergence.png"),
+        (case.plot_near_wall, "near_wall.png"),
+        (case.plot_multipole, "multipole.png"),
+    )
+    rebuilt = [builder(payload, tmp_path / name) for builder, name in builders]
+    assert_reproducible_figures(rebuilt, minimum=len(builders), embedded_in=rendered)
+
+    # Registry and entry point must declare the same panels: the multipole figure
+    # was produced and linked from the prose but missing from the case index.
+    from tensorbem.benchmarks.case_pool_registry import CASES
+
+    entry = CASES[case.CASE_ID]
+    assert {Path(path).name for path in entry.figures} == {
+        name for _, name in builders
+    }, entry.figures
 
 def test_near_wall_window_and_exclusion_are_measured_not_assumed() -> None:
     """The documented validity window must be a measured property, not a note."""
