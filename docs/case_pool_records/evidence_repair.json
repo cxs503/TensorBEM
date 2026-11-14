@@ -1,0 +1,37 @@
+{
+  "missing_after": {},
+  "missing_before": {
+    "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": [
+      "docs/case_bem_submerged_sphere_havelock/run.log"
+    ]
+  },
+  "producers": {
+    "CASE-BEM-ANNULUS-LAPLACE": "_annulus_figures",
+    "CASE-BEM-ELLIPSE-2D-ADDED-MASS": "_ellipse_figures",
+    "CASE-BEM-LAPLACE-CYLINDER": "_cylinder_figures",
+    "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": "_havelock_log"
+  },
+  "regenerated": [
+    {
+      "bytes": 200,
+      "path": "docs/case_bem_submerged_sphere_havelock/run.log",
+      "sha256": "78a8b2698e7de3192370d0300610bdc8fb1d1ad74ff8916da7e075984ae15017"
+    }
+  ],
+  "schema": "tensorbem/case_pool_evidence_repair/1",
+  "verdicts_after": {
+    "CASE-BEM-ANNULUS-LAPLACE": {
+      "failed_checks": [],
+      "passed": true
+    },
+    "CASE-BEM-ELLIPSE-2D-ADDED-MASS": "PASS",
+    "CASE-BEM-HULME-HEMISPHERE": "PASS",
+    "CASE-BEM-LAPLACE-CYLINDER": "PASS",
+    "CASE-BEM-NEUMANN-KELVIN": "see artifact",
+    "CASE-BEM-RIGID-BODY-MASS": {
+      "failed_checks": [],
+      "passed": true
+    },
+    "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK": "PASS"
+  }
+}
