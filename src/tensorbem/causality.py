@@ -120,7 +120,9 @@ __all__ = [
     "fit_damping_power_tail",
     "power_tail_principal_value",
     "KKRClosure",
+    "AInfProfile",
     "kk_added_mass_closure",
+    "profile_added_mass_inf",
 ]
 
 _MINIMUM_POINTS = 8
@@ -681,4 +683,89 @@ def kk_added_mass_closure(
         damping_scale=max(float(np.max(np.abs(damper))), 1e-300),
         added_mass_scale=scale,
         tail=tail,
+    )
+
+
+@dataclass(frozen=True)
+class AInfProfile:
+    """The whole KK (2) residual of a sweep as a function of ``A_inf``.
+
+    ``kkr_added_mass`` is **affine in ``added_mass_inf`` with unit slope**, so for
+    a tabulated damping sweep
+
+        A_pred(w_i; a) = a + q_i,    q_i = (2/pi) PV int B(s)/(s^2-w_i^2) ds,
+        e_i = A_i - q_i     (the A_inf implied by sample i)
+
+    and the G3-style residual ``max_i |A_pred - A_i| / scale = max_i |a - e_i|/scale``
+    is a max of absolute affine functions.  It is therefore convex and minimised
+    in closed form by the midrange of ``e``:
+
+        a* = (max e + min e)/2,   residual* = (max e - min e)/(2 scale).
+
+    Two consequences that matter when reading a large reported residual:
+
+    * ``residual*`` is the part that cannot be absorbed by the instantaneous
+      added mass: it is the *spread* of the implied ``A_inf`` along the band, i.e.
+      the actual causality inconsistency of the tabulated pair;
+    * an installed ``A_inf`` that differs from ``a*`` by ``d`` adds exactly
+      ``|d|/scale`` to the residual.  A large Kramers-Kronig residual is therefore
+      not by itself evidence of a non-causal solve: it is first of all a statement
+      about how the installed ``A_inf`` was obtained (a two-term tail fit is
+      ill-conditioned on DOFs whose added mass is nearly flat in frequency).
+    """
+
+    sample_omegas: FloatArray
+    implied_added_mass_inf: FloatArray
+    best_added_mass_inf: float
+    scale: float
+    residual: float
+    installed_added_mass_inf: float
+    installed_residual: float
+
+    def residual_at(self, added_mass_inf: float) -> float:
+        """Exact residual the G3 definition would report for an arbitrary ``A_inf``."""
+        e = self.implied_added_mass_inf
+        return float(max(abs(float(added_mass_inf) - float(np.max(e))),
+                         abs(float(added_mass_inf) - float(np.min(e)))) / self.scale)
+
+
+def profile_added_mass_inf(
+    omegas: Sequence[float] | FloatArray,
+    added_mass: Sequence[float] | FloatArray,
+    damping: Sequence[float] | FloatArray,
+    *,
+    added_mass_inf: float | None = None,
+    tail_fraction: float = 0.25,
+) -> AInfProfile:
+    """Kramers-Kronig (2) residual as an exact function of ``A_inf``.
+
+    ``added_mass_inf`` defaults to :func:`fit_added_mass_asymptote` (what the
+    Cummins/Wigley case's G3 uses), and both that value and the profile minimum
+    are reported so the calibration contribution can be separated from the
+    causality one.  Only interior midpoints are sampled: the principal value
+    needs the pole strictly inside an interval.
+    """
+    grid, mass = _as_sweep(omegas, added_mass, "added_mass")
+    _, damper = _as_sweep(omegas, damping, "damping")
+    fit = (fit_added_mass_asymptote(grid, mass, tail_fraction=tail_fraction)
+           if added_mass_inf is None else None)
+    installed = float(fit.added_mass_inf) if fit is not None else float(added_mass_inf)
+    scale = max(float(np.max(np.abs(mass - installed))), 1e-30)
+    mid = 0.5 * (grid[:-1] + grid[1:])
+    measured = 0.5 * (mass[:-1] + mass[1:])
+    implied = np.array([
+        measured[i] - 2.0 / math.pi * principal_value_integral(grid, damper, float(w))
+        for i, w in enumerate(mid)
+    ])
+    best = 0.5 * (float(np.max(implied)) + float(np.min(implied)))
+    residual = 0.5 * (float(np.max(implied)) - float(np.min(implied))) / scale
+    return AInfProfile(
+        sample_omegas=mid,
+        implied_added_mass_inf=implied,
+        best_added_mass_inf=best,
+        scale=scale,
+        residual=residual,
+        installed_added_mass_inf=installed,
+        installed_residual=float(max(abs(installed - float(np.max(implied))),
+                                     abs(installed - float(np.min(implied)))) / scale),
     )

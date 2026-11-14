@@ -57,13 +57,19 @@ COEFF = 1.0
 
 
 def exact_pair(omega: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """``(A - A_inf, B)`` of ``K(t) = c exp(-sigma t) cos(Omega t)``."""
-    w = np.asarray(omega, dtype=float)
-    s2m = SIGMA * SIGMA + (w - OMEGA) ** 2
-    s2p = SIGMA * SIGMA + (w + OMEGA) ** 2
-    damping = (COEFF / math.pi) * (SIGMA / s2m + SIGMA / s2p)
-    added = -(COEFF / (2.0 * w)) * ((w - OMEGA) / s2m + (w + OMEGA) / s2p)
-    return added, damping
+    """``(A - A_inf, B)`` of ``K(t) = c exp(-sigma t) cos(Omega t)``.
+
+    Round 4 carried a ``1/pi`` prefactor on ``damping`` here, which makes the
+    pair itself non-causal by ``1 - 2/pi = 36.3 %``; the "45 % residual that
+    survives 350x refinement" it reported was that inconsistency, not an
+    estimator floor.  The closed form now lives in the library
+    (:func:`tensorbem.benchmarks.kk_band_floor.damped_oscillator_pair`) with its
+    derivation, and the regression is
+    ``tests/test_cummins_wigley_kk_causality.py::
+    test_damped_oscillator_pair_is_kramers_kronig_consistent``.
+    """
+    return kk_band_floor.damped_oscillator_pair(
+        np.asarray(omega, dtype=float), sigma=SIGMA, omega_n=OMEGA, coefficient=COEFF)
 
 
 def heave_model(omega: np.ndarray) -> tuple[float, float, np.ndarray, np.ndarray]:
@@ -89,7 +95,7 @@ def grids() -> dict[str, np.ndarray]:
                        7.4, 7.5, 8.0, 9.0, 10.0, 12.0, 15.0, 20.0])
     global_only = np.asarray(case.closure_grid(), dtype=float)
     widths = {}
-    for step in (0.5, 0.25, 0.1, 0.05, 0.025, 0.0125):
+    for step in (0.5, 0.25, 0.1, 0.05, 0.025, 0.0125, 0.00625, 0.003125):
         nodes = {round(float(w), 9) for w in case.EXTENDED_GRID}
         steps = int(round(case.RESONANCE_HALF_WIDTH / step))
         for k in range(-steps, steps + 1):
