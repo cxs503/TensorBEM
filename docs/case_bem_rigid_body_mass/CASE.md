@@ -160,7 +160,8 @@
 * 水平平移不变性：惯量相对变化 0.0000；动能恒等式最差残差 2.2537e-16。
 * 交付：`docs/case_bem_rigid_body_mass/geometry_inertia/{results,verdict}.json`、`GEOMETRY_INERTIA.md`、`fig_geometry_inertia.png`；测试 `tests/test_rigid_body_mass_wetted_hull_inertia.py`（21 项）。
 * **已收口（本单）**：`rao.py`/`ice_rao.py` 的 `inertia=None` 分支不再走等效半椭球近似——两条频域链改调 `hydrostatic.mass_matrix_from_hull`（湿表面网格体积矩，多面体船体到圆整；网格不可封闭时带 `RuntimeWarning` 回退到半椭球）。同一艘 20×8×3 驳船的转动块误差由 −8.49%/−17.36%/−20.00% 降到 0（圆整），ω=1.0 rad/s 迎浪 RAO 最差偏差由 14.91% 降到 0；曲面船体（半球）按二阶（实测斜率 1.96）收敛到解析惯量。另修一处质量一致性缺陷：湿网格惯量原按排水质量给出，非中性浮力船体（如 1000 kg 对 ρ∇≈2097 kg）会被放大 2.097 倍，现按 body mass 缩放。交付：`production_path/{PRODUCTION_PATH_INERTIA.md, results.json, fig_production_path_inertia.png}`、`production_path_inertia.py`、`tests/test_rao_default_inertia_mesh.py`（10 项）。
-* 仍未覆盖：垂直平移会改变浸没体，故不变性只在水平方向成立；网格路线假定均质船体（CG 即体积质心），非均质质量分布仍须显式给惯量张量。
+* 已收口（round 6）：网格路线不再假定均质船体——`mesh_mass_properties` / `wetted_hull_mass_properties` / `hydrostatic.mass_matrix_from_wetted_hull` 接受无量纲密度场 `rho(x)=density*f(x)`（`density_field=`），CG 取质量质心、排水质量取 `∫rho dV`。仿射场由 3 阶精确四面体求积**精确**积分（对解析箱体逐元误差 1.8e-11）；双线性场二阶收敛（拟合阶 2.00，4 cells/edge 时块归一误差 3.3e-4）；曲面船体线性场二阶收敛（1.98）落在 3.6e-3 < 3%。见 `inhomogeneous_mass/INHOMOGENEOUS_MASS.md`。
+* 仍未覆盖：垂直平移会改变浸没体，故不变性只在水平方向成立；密度场是**给定**的（仓内无法由几何反推非均质质量分布）；水上部分只有封口水线处进入积分，故场不得依赖湿表面未携带的船体部分。
 
 复现：`PYTHONPATH=src python3 -m tensorbem.benchmarks.rigid_body_mass_hull_inertia --outdir docs/case_bem_rigid_body_mass/geometry_inertia`
 
