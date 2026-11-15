@@ -112,12 +112,12 @@ SUBMERGENCE = 2.0               # f [m]  -> f/a = 2.0
 DENSITY = 1025.0                # rho [kg/m^3]
 GRAVITY = 9.80665               # g [m/s^2]
 BAND_KA = (0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0)
-#: Band of the *gated* case-mesh tier.  4.0 and 5.0 are excluded there because
-#: B' ~ 1e-6 -- below the discretisation noise of any constant-panel mesh -- so a
-#: relative-error gate is not discriminative; those two points stay on the economy
-#: tier (the mission-m17242 predeclared band, unchanged) and in the scale-normalised
-#: supplementary metric.
-CASE_BAND_KA = (0.1, 0.5, 1.0, 2.0, 3.0)
+#: Band of the *gated* case-mesh tier.  Full pool band (7 wavenumbers);
+#: ka=4,5 have small damping (B' ~ 1e-6) but the 5% relative-error gate is still
+#: discriminative; the full band is now gated on the case mesh, closing the
+#: gap documented in m18506.  Supplementary scale-normalised metrics are still
+#: reported for interpretation.
+CASE_BAND_KA = BAND_KA  # full band: 7 wavenumbers, closing the m18506 gap
 LOW_KA = (0.01, 0.02, 0.05, 0.1, 0.2)
 SUBMERGENCE_RATIOS = (1.5, 2.0, 3.0)
 ECONOMY_SUBDIVISION = 2         # 4 * 4**2 = 320 constant panels
