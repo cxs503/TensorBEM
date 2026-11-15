@@ -297,6 +297,50 @@ def admissible_rows(
     return admitted, dropped, unproven
 
 
+def rung_ledger(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    """One line per rung the fit actually consumed: what, from where, how healthy.
+
+    The gate's scalar summary (worst residual, count used) is enough to pass or
+    fail it, but not enough to audit *which* rung was admitted: a mixed ladder --
+    cheap rungs on the control plane, the expensive one from a cluster node whose
+    linear driver has already been caught returning a wrong vector (m20910) --
+    hides that distinction behind a single maximum.  The ledger keeps the rungs
+    separable, including the solve-stage warnings a rung was repaired under.
+    """
+    ledger: list[dict[str, Any]] = []
+    for row in sorted(rows, key=lambda r: float(r["panels"])):
+        ledger.append(
+            {
+                "panels": float(row["panels"]),
+                "subdivisions": row.get("subdivisions"),
+                "residual": rung_residual(row),
+                "host": row.get("host"),
+                "host_source": row.get("host_source", "row"),
+                "numpy": row.get("numpy"),
+                "solve_warnings": list(row.get("solve_warnings") or []),
+            }
+        )
+    return ledger
+
+
+def mixed_provenance(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Disclose whether the admitted rungs came from more than one host.
+
+    Mixing is not a defect -- the expensive rung is *supposed* to go through the
+    compute gate -- but a reader is entitled to know that a ladder is not one
+    run, so it is recorded rather than smoothed over.  ``unknown`` counts rungs
+    whose provenance was never recorded (artifacts older than per-row ledger).
+    """
+    hosts = [row.get("host") for row in rows]
+    known = sorted({h for h in hosts if h})
+    return {
+        "hosts": known,
+        "n_rungs": len(hosts),
+        "n_rungs_unknown_host": sum(1 for h in hosts if not h),
+        "is_mixed": len(known) > 1,
+    }
+
+
 def inhouse_cell(
     path: Path,
     name: str,
@@ -476,6 +520,8 @@ def analyse(
             "n_rungs_dropped": len(dropped_in),
             "dropped": dropped_in,
             "unproven_panels": unproven_in,
+            "rung_ledger": rung_ledger(rows_in),
+            "mixed_provenance": mixed_provenance(rows_in),
             "pass": bool(not dropped_in),
         }
         for name, _ in QUANTITIES:

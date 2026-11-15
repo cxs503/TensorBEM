@@ -162,6 +162,13 @@ def build(
             raise
         cell["wall_seconds"] = time.time() - started
         cell["peak_rss_mb"] = _peak_rss_mb()
+        # Per-row provenance, not just per-file: a ladder can legitimately be
+        # assembled from rungs computed in different processes (or on different
+        # hosts, when the expensive rung goes through the compute gate), and the
+        # reader must be able to see which machine produced which rung without
+        # trusting the file-level ``environment`` block.
+        cell["host"] = platform.node()
+        cell["numpy"] = np.__version__
         payload["rows"] = sorted(
             [r for r in payload["rows"] if int(r["subdivisions"]) != sub] + [cell],
             key=lambda r: r["panels"],
@@ -197,7 +204,16 @@ def merge_ladders(*paths: Path) -> dict[str, Any]:
             merged["ka"] = this_ka
         elif this_ka != ka:
             raise ValueError(f"{path}: ka {this_ka} != {ka}")
-        merged["rows"].extend(payload.get("rows", []))
+        file_env = payload.get("environment", {})
+        for row in payload.get("rows", []):
+            # older rungs predate per-row provenance: stamp them from the
+            # file-level environment and say so, rather than inventing a host
+            if not row.get("host"):
+                row["host"] = file_env.get("host")
+                row["host_source"] = "file_environment"
+            if not row.get("numpy"):
+                row["numpy"] = file_env.get("numpy")
+            merged["rows"].append(row)
         merged["failures"].extend(payload.get("failures", []))
         merged["provenance"].append(
             {
