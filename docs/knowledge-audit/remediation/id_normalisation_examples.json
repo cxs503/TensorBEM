@@ -1,0 +1,7 @@
+{
+  "tke:oss-lbm:thermalmulti:latent-heat-src": "tke:oss-lbm:thermalmulti-latent-heat-src",
+  "tkc:oss-lbm:thermalmulti:contact-angle": "tkc:oss-lbm:thermalmulti-contact-angle",
+  "tke:oss-lbm:kruger:force-matrix": "tke:oss-lbm:kruger-force-matrix",
+  "tkc:oss-lbm:mflbm:decomp-src": "tkc:oss-lbm:mflbm-decomp-src",
+  "tke:oss-lbm:ludwig:free-energy": "tke:oss-lbm:ludwig-free-energy"
+}

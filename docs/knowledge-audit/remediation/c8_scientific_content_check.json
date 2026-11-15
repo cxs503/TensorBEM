@@ -1,0 +1,16 @@
+{
+  "description": "C8: Scientific content cross-check against known LBM benchmark references",
+  "checked": 14,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 13,
+  "details": [
+    {
+      "anchor": "GAP-LBM-MCMP-POISEUILLE",
+      "claim_count": 27,
+      "benchmark": "poiseuille",
+      "reference": "Zou & He 1997",
+      "status": "reference_available"
+    }
+  ]
+}
