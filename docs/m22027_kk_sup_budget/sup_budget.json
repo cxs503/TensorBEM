@@ -1,0 +1,225 @@
+{
+ "case": "CASE-BEM-CUMMINS-WIGLEY",
+ "mission": "m22027",
+ "purpose": "Decide how much of the KK certification gap on surge/sway/yaw is a real data limitation and how much is the closed-form route's p>2.05 bar, by re-judging the same committed sweeps against a distribution-free kernel-sup bound that only needs p>1.",
+ "budget_bar": 0.05,
+ "audits": [
+  {
+   "label": "coarse",
+   "mesh": [
+    12,
+    4
+   ],
+   "panels": 192,
+   "band": [
+    0.2,
+    12.0
+   ],
+   "budget_bar": 0.05,
+   "rows": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "measured_tail_exponent": 1.044068779339145,
+     "amplitude_scale_max_abs_A": 2.2460112733259203,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.0672094911588484,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": Infinity,
+     "sup_bound_admissible": false,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "measured tail exponent 1.04 is not > 1.05: the envelope int s^-p ds diverges, so no amplitude-only bound exists"
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "measured_tail_exponent": 1.538755062847817,
+     "amplitude_scale_max_abs_A": 193.71432837234005,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.07170655266844601,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": 0.683925323905784,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-1.54 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "measured_tail_exponent": 2.9711698765162344,
+     "amplitude_scale_max_abs_A": 140.57842608585273,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.00793275535811622,
+     "closed_form_budget_relative": 0.012930663923300945,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.03709140504500201,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": true,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-2.97 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "measured_tail_exponent": 3.202219708738416,
+     "amplitude_scale_max_abs_A": 0.6211345384133271,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.024822393426227544,
+     "closed_form_budget_relative": 0.023121702819570808,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.062141085554573164,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-3.2 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "measured_tail_exponent": 2.947268518586818,
+     "amplitude_scale_max_abs_A": 33.88761491261046,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.01102689990343909,
+     "closed_form_budget_relative": 0.01706406973229113,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.04930812208620146,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": true,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-2.95 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "measured_tail_exponent": 1.7377044756690032,
+     "amplitude_scale_max_abs_A": 149.4388543546467,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.08398453379343991,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": 0.5222243391010644,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-1.74 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    }
+   ]
+  },
+  {
+   "label": "medium",
+   "mesh": [
+    20,
+    6
+   ],
+   "panels": 480,
+   "band": [
+    0.2,
+    12.0
+   ],
+   "budget_bar": 0.05,
+   "rows": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "measured_tail_exponent": 1.0949350652579886,
+     "amplitude_scale_max_abs_A": 2.271317281460082,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.07067342384113562,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": 3.4686187801194186,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-1.09 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "measured_tail_exponent": 1.5291641901106952,
+     "amplitude_scale_max_abs_A": 189.28304975244757,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.07617774333071702,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": 0.7015910119795142,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-1.53 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "measured_tail_exponent": 2.8704666923445337,
+     "amplitude_scale_max_abs_A": 141.4520325048492,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.009117216594108702,
+     "closed_form_budget_relative": 0.013029665561240326,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.038580344809176985,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": true,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-2.87 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "measured_tail_exponent": 3.1966336069814294,
+     "amplitude_scale_max_abs_A": 0.5789691030455965,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.024527464219704528,
+     "closed_form_budget_relative": 0.022689231701844084,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.06106809951732787,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-3.2 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "measured_tail_exponent": 3.0700887094254705,
+     "amplitude_scale_max_abs_A": 34.25812460289788,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.01173724128060603,
+     "closed_form_budget_relative": 0.015754180487596685,
+     "closed_form_decidable_all_samples": true,
+     "sup_bound_budget_relative": 0.04389441871421662,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": true,
+     "decidable_under_sup_bound": true,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-3.07 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "measured_tail_exponent": 1.6156127312870796,
+     "amplitude_scale_max_abs_A": 143.17358812842366,
+     "n_samples": 12,
+     "observed_kk_residual_relative": 0.08852694686485775,
+     "closed_form_budget_relative": Infinity,
+     "closed_form_decidable_all_samples": false,
+     "sup_bound_budget_relative": 0.6428532132819803,
+     "sup_bound_admissible": true,
+     "decidable_under_closed_form": false,
+     "decidable_under_sup_bound": false,
+     "sup_bound_reason": "kernel-sup envelope B(s) <= B(s_max) (s/s_max)^-1.62 over s > 12; bound (2/pi) B(s_max) s_max /((p-1)(s_max^2-omega^2))"
+    }
+   ]
+  }
+ ],
+ "figure": "/srv/tensor/agent/work/m22027/docs/m22027_kk_sup_budget/fig_m22027_kk_sup_budget.png",
+ "cluster_jobs": {
+  "extended_band_sweep": "cj3855 (60x16, 0.2..20 rad/s, 55 nodes, 25 shards)",
+  "extended_anchor_ladder": "cj3856 (44x14 + 60x16 image anchors)",
+  "probe_node_54": "cj3854",
+  "status": "queued at submission time; artifacts not yet available"
+ }
+}
