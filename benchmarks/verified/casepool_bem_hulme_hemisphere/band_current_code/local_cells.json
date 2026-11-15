@@ -1,0 +1,18 @@
+{
+ "2.58": {
+  "A11_dimless": 0.19032097419978278,
+  "B33_dimless": 0.06450485357459329,
+  "condition_number": 8.287032392418086,
+  "diffraction_relative_residual": 0.0018101293176312832,
+  "diffraction_solve_method": "lstsq",
+  "diffraction_stationarity": 5.68876001060097e-14,
+  "panels": 1024,
+  "radiation_relative_residual": 0.0012985698373427649,
+  "radiation_solve_method": "lstsq",
+  "radiation_stationarity": 8.319432123604283e-14,
+  "rel_error_A11_dimless": 0.002264286296625381,
+  "rel_error_B33_dimless": 0.022543810901039015,
+  "rel_error_Fz_dimless": 0.01047828111221532,
+  "wall_seconds": 33.02
+ }
+}
