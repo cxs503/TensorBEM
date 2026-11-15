@@ -1,0 +1,196 @@
+{
+  "schema": "tensorbem.propulsion_block_api_receipts/v1",
+  "mission": 21514,
+  "purpose": "raw receipts of the ship-performance platform propulsion/resistance endpoints, archived as returned; consumed by benchmarks/anchors/build_openwater_efficiency_closure.py for the eta_R convention audit. No number in this file was typed from a model or an estimate: every value below is a verbatim copy of the JSON body returned by the endpoint.",
+  "endpoint_base": "http://127.0.0.1:8002/api/v1/",
+  "transport": "tool channel call_ship_api (shell curl to the loopback API is blocked by the worktree sandbox policy), so the receipts are transcribed from the tool's return payload; field-level precision is exactly the precision the endpoint returned (2 dp for kW, 4 dp for non-dimensional quantities), which bounds the identity residuals quoted in the artefact at ~1e-3 relative and is declared there.",
+  "hull": {
+    "length_m": 180.0,
+    "beam_m": 32.0,
+    "draft_m": 11.0,
+    "cb": 0.82,
+    "displacement_m3": 51955.2,
+    "note": "displacement is a VOLUME in m^3 for this API: the geometry gate of calculations/resistance rejects L*B*T*Cb vs displacement mismatch >= 5 % (a call with displacement=45000.0 was rejected with 'displacement=45000.0 m3 ... 相差 15.46%'). The propulsion endpoint accepts the same 45000.0 without that gate and returns identical numbers, i.e. it does not consume displacement at all.",
+    "propeller": {
+      "diameter_m": 6.0,
+      "n_blades": 5,
+      "expanded_area_ratio": 0.7,
+      "declared_by": "implicit platform constant: the returned K_T/K_Q at J=0.5372, P/D=0.95 are reproduced to 4 dp by the Oosterveld & van Oossanen 39/47-term regression at Z=5, Ae/Ao=0.70 (see artefact section propulsion_block_kt_kq_anchor_check)",
+      "prop_pitch_field_semantics": "prop_pitch is read as the P/D RATIO, not as a pitch length: a call with prop_pitch=5.4 and prop_diameter=6.0 returned validity note 'P/D=5.400 超出 B 系列回归有效域 [0.5, 1.4]'"
+    }
+  },
+  "states": [
+    {
+      "id": "S1",
+      "inputs": {"speed_kn": 12.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 1070.69, "torque": 962.667, "delivered_power": 10081.03,
+        "open_water_eff": 0.4565, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.4884, "cavitation_number": 0.979,
+        "advance_ratio_J": 0.4298, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2902, "torque_coefficient_KQ": 0.04348,
+        "advance_speed_Va": 4.298, "effective_power_pe": 4923.7,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S2",
+      "inputs": {"speed_kn": 13.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 1013.35, "torque": 921.068, "delivered_power": 9645.4,
+        "open_water_eff": 0.4892, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.5234, "cavitation_number": 0.972,
+        "advance_ratio_J": 0.4656, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2746, "torque_coefficient_KQ": 0.0416,
+        "advance_speed_Va": 4.656, "effective_power_pe": 5048.38,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S3",
+      "inputs": {"speed_kn": 14.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 954.53, "torque": 878.087, "delivered_power": 9195.3,
+        "open_water_eff": 0.5205, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.5569, "cavitation_number": 0.966,
+        "advance_ratio_J": 0.5014, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2587, "torque_coefficient_KQ": 0.03966,
+        "advance_speed_Va": 5.014, "effective_power_pe": 5121.13,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S4",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 894.3, "torque": 833.731, "delivered_power": 8730.81,
+        "open_water_eff": 0.5503, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.5888, "cavitation_number": 0.959,
+        "advance_ratio_J": 0.5372, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2424, "torque_coefficient_KQ": 0.03766,
+        "advance_speed_Va": 5.372, "effective_power_pe": 5140.69,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S5",
+      "inputs": {"speed_kn": 16.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 832.73, "torque": 788.011, "delivered_power": 8252.03,
+        "open_water_eff": 0.5783, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.6187, "cavitation_number": 0.951,
+        "advance_ratio_J": 0.5731, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2257, "torque_coefficient_KQ": 0.03559,
+        "advance_speed_Va": 5.731, "effective_power_pe": 5105.91,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S6",
+      "inputs": {"speed_kn": 17.0, "prop_rpm": 100.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 769.91, "torque": 740.936, "delivered_power": 7759.06,
+        "open_water_eff": 0.6042, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.6464, "cavitation_number": 0.944,
+        "advance_ratio_J": 0.6089, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2086, "torque_coefficient_KQ": 0.03347,
+        "advance_speed_Va": 6.089, "effective_power_pe": 5015.75,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S7",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 85.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 526.43, "torque": 512.8, "delivered_power": 4564.52,
+        "open_water_eff": 0.6196, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.663, "cavitation_number": 1.299,
+        "advance_ratio_J": 0.632, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.1975, "torque_coefficient_KQ": 0.03206,
+        "advance_speed_Va": 5.372, "effective_power_pe": 3026.08,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S8",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 90.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 640.7, "torque": 612.99, "delivered_power": 5777.29,
+        "open_water_eff": 0.5958, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.6375, "cavitation_number": 1.168,
+        "advance_ratio_J": 0.5969, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2144, "torque_coefficient_KQ": 0.03418,
+        "advance_speed_Va": 5.372, "effective_power_pe": 3682.92,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S9",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 95.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 763.34, "torque": 719.969, "delivered_power": 7162.52,
+        "open_water_eff": 0.5726, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.6126, "cavitation_number": 1.056,
+        "advance_ratio_J": 0.5655, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2292, "torque_coefficient_KQ": 0.03603,
+        "advance_speed_Va": 5.372, "effective_power_pe": 4387.88,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S10",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 105.0, "prop_pitch": 0.95},
+      "propulsion_response": {
+        "thrust": 1033.55, "torque": 954.273, "delivered_power": 10492.77,
+        "open_water_eff": 0.5292, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.5662, "cavitation_number": 0.874,
+        "advance_ratio_J": 0.5117, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2541, "torque_coefficient_KQ": 0.03909,
+        "advance_speed_Va": 5.372, "effective_power_pe": 5941.16,
+        "in_validity_envelope": true
+      }
+    },
+    {
+      "id": "S11",
+      "inputs": {"speed_kn": 15.0, "prop_rpm": 100.0, "prop_pitch": 1.05},
+      "propulsion_response": {
+        "thrust": 1086.14, "torque": 1078.724, "delivered_power": 11296.37,
+        "open_water_eff": 0.5166, "hull_eff": 1.07, "relative_rot_eff": 1.0,
+        "propulsive_eff": 0.5527, "cavitation_number": 0.959,
+        "advance_ratio_J": 0.5372, "wake_fraction_w": 0.3038, "thrust_deduction_t": 0.2551,
+        "thrust_coefficient_KT": 0.2943, "torque_coefficient_KQ": 0.04872,
+        "advance_speed_Va": 5.372, "effective_power_pe": 6243.46,
+        "in_validity_envelope": true
+      }
+    }
+  ],
+  "resistance_receipts": {
+    "note": "consumed fields only (pe, rt, speed_ms, froude, ct); the full body additionally carries the Holtrop wave-leg internals and the assumptions list, which this analysis does not use",
+    "method": "ITTC-57 摩擦线 + ITTC-78 ks 粗糙度补贴 + Holtrop-1982/1984 剩余阻力（(1+k) 形状因子 + 兴波回归 + 球鼻/艉封板/附体）",
+    "rows": [
+      {"speed_kn": 12.0, "speed_ms": 6.173333, "froude_number": 0.1469342827353429, "ct": 0.002594, "rt_kN": 414.73, "pe_kW": 2560.28},
+      {"speed_kn": 13.0, "speed_ms": 6.687778, "froude_number": 0.15917880629662148, "ct": 0.002695, "rt_kN": 505.58, "pe_kW": 3381.23},
+      {"speed_kn": 14.0, "speed_ms": 7.202222, "froude_number": 0.17142332985790004, "ct": 0.002865, "rt_kN": 623.63, "pe_kW": 4491.56},
+      {"speed_kn": 15.0, "speed_ms": 7.716667, "froude_number": 0.1836678534191786, "ct": 0.003125, "rt_kN": 780.44, "pe_kW": 6022.41},
+      {"speed_kn": 16.0, "speed_ms": 8.231111, "froude_number": 0.1959123769804572, "ct": 0.003484, "rt_kN": 990.13, "pe_kW": 8149.85},
+      {"speed_kn": 17.0, "speed_ms": 8.745556, "froude_number": 0.20815690054173577, "ct": 0.003953, "rt_kN": 1268.1, "pe_kW": 11090.24}
+    ]
+  },
+  "diagnostic_calls": [
+    {
+      "what": "geometry-gate probe on calculations/resistance",
+      "request": {"length": 180.0, "beam": 32.0, "draft": 11.0, "displacement": 45000.0, "speed": 15.0, "cb": 0.82},
+      "http_status": 422,
+      "body": "几何不自洽：displacement=45000.0 m³ 与 L·B·T·Cb=51955.2 m³ 相差 15.46% ≥ 5%（D3 门禁）"
+    },
+    {
+      "what": "P/D semantics probe on calculations/propulsion",
+      "request": {"length": 180.0, "beam": 32.0, "draft": 11.0, "displacement": 45000.0, "speed": 15.0, "cb": 0.82, "prop_diameter": 6.0, "prop_pitch": 5.4, "prop_rpm": 100.0},
+      "http_status": 200,
+      "returned": {"open_water_eff": 0.999, "thrust_coefficient_KT": 93.2805, "torque_coefficient_KQ": 0.0,
+                    "relative_rot_eff": 1.0, "hull_eff": 1.07, "propulsive_eff": 1.0689,
+                    "in_validity_envelope": false,
+                    "validity_notes": ["P/D=5.400 超出 B 系列回归有效域 [0.5, 1.4]"]}
+    }
+  ]
+}
