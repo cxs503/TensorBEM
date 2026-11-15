@@ -1,0 +1,226 @@
+{
+ "probe": "probe: the probe meshes exceed gate C2 (k*sqrt(A_panel) > 1) above the frequency where the certified mesh starts to matter, so these numbers bound the physics but do not certify it",
+ "certified_gates": {
+  "C8": "not_run",
+  "C9": "not_run"
+ },
+ "manifest": {
+  "band": [
+   12.0,
+   20.0
+  ],
+  "n_omega": 10,
+  "slope_bar": 2.05,
+  "meshes": {
+   "coarse": {
+    "n_sections": 12,
+    "n_levels": 4,
+    "panel_count": 192,
+    "max_panel_scale": 0.1004034358093167,
+    "band_limit_rad_s": 9.882937536144832,
+    "c2_holds_over_probe_band": false
+   },
+   "medium": {
+    "n_sections": 20,
+    "n_levels": 6,
+    "panel_count": 480,
+    "max_panel_scale": 0.06450176101204128,
+    "band_limit_rad_s": 12.330325797847129,
+    "c2_holds_over_probe_band": false
+   }
+  },
+  "shared_band_reproduction": {
+   "n_shared_frequencies": 1,
+   "join_frequency_rad_s": 12.0,
+   "same_mesh_as_committed": true,
+   "worst_dof": "pitch",
+   "worst_relative_difference_of_B": 1.3603488251879592e-15,
+   "note": "the probe shares only the join frequency with the committed sweep; this checks continuation, not the accuracy of the tail"
+  }
+ },
+ "per_dof": [
+  {
+   "dof": 0,
+   "dof_name": "surge",
+   "exponent_at_12": 1.0949350652579886,
+   "exponent_at_20_coarse": 6.528241009620139,
+   "budget_coarse": {
+    "admissible": true,
+    "reason": "continuation B = C s^-6.53 anchored at s_max = 20",
+    "max_relative": 0.08045910946516116
+   },
+   "B_top_coarse": 1.1480269162179744,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 4.5404015368270985,
+   "budget_medium": {
+    "admissible": true,
+    "reason": "continuation B = C s^-4.54 anchored at s_max = 20",
+    "max_relative": 0.18278663248362503
+   },
+   "B_top_medium": 1.5135616199299595,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "robust: both meshes put the tail above the algebraic-decay bar"
+  },
+  {
+   "dof": 1,
+   "dof_name": "sway",
+   "exponent_at_12": 1.5291641901106952,
+   "exponent_at_20_coarse": 4.785531150011922,
+   "budget_coarse": {
+    "admissible": true,
+    "reason": "continuation B = C s^-4.79 anchored at s_max = 20",
+    "max_relative": 0.06060435113723388
+   },
+   "B_top_coarse": 110.55738584715962,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 2.5465506982793493,
+   "budget_medium": {
+    "admissible": true,
+    "reason": "continuation B = C s^-2.55 anchored at s_max = 20",
+    "max_relative": 0.13647422078694735
+   },
+   "B_top_medium": 168.32811205435962,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "robust: both meshes put the tail above the algebraic-decay bar"
+  },
+  {
+   "dof": 2,
+   "dof_name": "heave",
+   "exponent_at_12": 2.8704666923445337,
+   "exponent_at_20_coarse": 4.871002560104445,
+   "budget_coarse": {
+    "admissible": true,
+    "reason": "continuation B = C s^-4.87 anchored at s_max = 20",
+    "max_relative": 0.0034181526407824825
+   },
+   "B_top_coarse": 5.312291644913446,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 1.9876348918154334,
+   "budget_medium": {
+    "admissible": false,
+    "reason": "measured tail exponent 1.99 is not > 2.05: the damping has not entered an algebraically decaying band, so the omitted integral above the band top is unbounded",
+    "max_relative": Infinity
+   },
+   "B_top_medium": 10.799279056602447,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "inconclusive: the two meshes straddle the bar, so the mesh error is as large as the margin"
+  },
+  {
+   "dof": 3,
+   "dof_name": "roll",
+   "exponent_at_12": 3.1966336069814294,
+   "exponent_at_20_coarse": 5.4927393572343535,
+   "budget_coarse": {
+    "admissible": true,
+    "reason": "continuation B = C s^-5.49 anchored at s_max = 20",
+    "max_relative": 0.004106886922757616
+   },
+   "B_top_coarse": 0.05604195326913818,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 7.5247526264550375,
+   "budget_medium": {
+    "admissible": true,
+    "reason": "continuation B = C s^-7.52 anchored at s_max = 20",
+    "max_relative": 0.002603013202589638
+   },
+   "B_top_medium": 0.0390327701447547,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "robust: both meshes put the tail above the algebraic-decay bar"
+  },
+  {
+   "dof": 4,
+   "dof_name": "pitch",
+   "exponent_at_12": 3.0700887094254705,
+   "exponent_at_20_coarse": -2.0325927572486098,
+   "budget_coarse": {
+    "admissible": false,
+    "reason": "measured tail exponent -2.03 is not > 2.05: the damping has not entered an algebraically decaying band, so the omitted integral above the band top is unbounded",
+    "max_relative": Infinity
+   },
+   "B_top_coarse": 4.967751144226723,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 5.9317600131786365,
+   "budget_medium": {
+    "admissible": true,
+    "reason": "continuation B = C s^-5.93 anchored at s_max = 20",
+    "max_relative": 0.0041888674271796465
+   },
+   "B_top_medium": 2.0915315894482847,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "inconclusive: the two meshes straddle the bar, so the mesh error is as large as the margin"
+  },
+  {
+   "dof": 5,
+   "dof_name": "yaw",
+   "exponent_at_12": 1.6156127312870796,
+   "exponent_at_20_coarse": 1.9679964138158448,
+   "budget_coarse": {
+    "admissible": false,
+    "reason": "measured tail exponent 1.97 is not > 2.05: the damping has not entered an algebraically decaying band, so the omitted integral above the band top is unbounded",
+    "max_relative": Infinity
+   },
+   "B_top_coarse": 106.07910099822368,
+   "panel_scale_coarse": 0.1004034358093167,
+   "band_limit_coarse": 9.882937536144832,
+   "exponent_at_20_medium": 5.580444042960265,
+   "budget_medium": {
+    "admissible": true,
+    "reason": "continuation B = C s^-5.58 anchored at s_max = 20",
+    "max_relative": 0.07256258685111401
+   },
+   "B_top_medium": 90.047609946337,
+   "panel_scale_medium": 0.06450176101204128,
+   "band_limit_medium": 12.330325797847129,
+   "probe_verdict": "inconclusive: the two meshes straddle the bar, so the mesh error is as large as the margin"
+  }
+ ],
+ "robust_dof": [
+  "surge",
+  "sway",
+  "roll"
+ ],
+ "inconclusive_dof": [
+  "heave",
+  "pitch",
+  "yaw"
+ ],
+ "cost": {
+  "probe_omega": 2.0,
+  "points": [
+   {
+    "n_sections": 12,
+    "n_levels": 4,
+    "panel_count": 192,
+    "wall_s": 0.5886991024017334
+   },
+   {
+    "n_sections": 20,
+    "n_levels": 6,
+    "panel_count": 480,
+    "wall_s": 3.460878849029541
+   }
+  ],
+  "fitted_exponent": 1.9331884362342557,
+  "certified_mesh": [
+   60,
+   16
+  ],
+  "certified_panel_count": 3840,
+  "certified_wall_s_per_node": 192.76559202068185,
+  "certified_cpu_hours_for_band": 0.5354599778352274,
+  "declared_plan_cpu_hours": [
+   2.0,
+   4.0
+  ]
+ }
+}
