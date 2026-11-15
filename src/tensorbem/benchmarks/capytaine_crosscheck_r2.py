@@ -1176,7 +1176,7 @@ def render_document(study: dict[str, Any]) -> str:
             comparison["verdict"],
             TOL_DIAGONAL,
             TOL_OFFDIAGONAL,
-            100.0 * comparison["worst_active_relative"],
+            comparison["worst_active_relative"],
             comparison["worst_invariant_ratio"],
         )
     )
@@ -1231,7 +1231,7 @@ def render_document(study: dict[str, Any]) -> str:
                     entry["tensorbem"],
                     entry["capytaine"],
                     100.0 * entry["relative"],
-                    100.0 * entry["band"],
+                    entry["band"],
                 )
             )
         add("")
@@ -1372,7 +1372,7 @@ def render_document(study: dict[str, Any]) -> str:
             "**收敛到零的离散残差**还是**收敛到非零极限的实现错误**。"
         )
         add("")
-        add("| case | level | 面板 | ‖mode_roll‖ | ‖mode_yaw‖ | A_roll | A_surge,pitch | 最大 \|A\|/(rho L^k) |")
+        add("| case | level | 面板 | ‖mode_roll‖ | ‖mode_yaw‖ | A_roll | A_surge,pitch | 最大 \\|A\\|/(rho L^k) |")
         add("|---|---:|---:|---:|---:|---:|---:|---:|")
         for row in degeneracy["cases"]:
             for level in row["levels"]:
