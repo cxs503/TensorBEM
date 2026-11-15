@@ -1,0 +1,104 @@
+{
+  "version": "1.0",
+  "generated_by": "remediate_oss_lbm.py",
+  "purpose": "Cache manifest for FEAT-TK-OSS-LANDING remediation",
+  "repos": [
+    {
+      "name": "lbm-principles-practice/code",
+      "url": "https://github.com/mortezakarimi/lbm-principles-practice",
+      "path_in_cache": "lbm-principles-practice_code",
+      "audit_stats": {
+        "records": 36,
+        "repo_absent": 36
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "openlb",
+      "url": "https://gitlab.openlb.net/openlb/openlb",
+      "path_in_cache": "openlb",
+      "audit_stats": {
+        "records": 13,
+        "repo_absent": 13
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "MF-LBM",
+      "url": "https://github.com/zhao-yu-github/MF-LBM",
+      "path_in_cache": "MF-LBM",
+      "audit_stats": {
+        "records": 10,
+        "unparsable": 5,
+        "repo_absent": 5
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "fingering_dynamics",
+      "url": "https://github.com/zhao-yu-github/fingering_dynamics",
+      "path_in_cache": "fingering_dynamics",
+      "audit_stats": {
+        "records": 23,
+        "repo_absent": 23
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "ThermalMultiphaseOpenLB",
+      "url": "https://github.com/zhao-yu-github/ThermalMultiphaseOpenLB",
+      "path_in_cache": "ThermalMultiphaseOpenLB",
+      "audit_stats": {
+        "records": 17,
+        "repo_absent": 17
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "ludwig-cf/ludwig",
+      "url": "https://github.com/SoftCompPhys/ludwig",
+      "path_in_cache": "ludwig-cf_ludwig",
+      "audit_stats": {
+        "records": 20,
+        "repo_absent": 20
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "lettuce",
+      "url": "https://github.com/lettucecfd/lettuce",
+      "path_in_cache": "lettuce",
+      "audit_stats": {
+        "records": 5,
+        "repo_absent": 5
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "XLB",
+      "url": "https://github.com/flow-tree/xlb",
+      "path_in_cache": "xlb",
+      "audit_stats": {},
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    },
+    {
+      "name": "lbmpy",
+      "url": "https://github.com/PyCQA/lbmpy",
+      "path_in_cache": "lbmpy",
+      "audit_stats": {
+        "records": 3,
+        "repo_absent": 3
+      },
+      "status": "missing",
+      "action": "git init && git fetch --depth 1 origin <sha> for each sha cited in evidence"
+    }
+  ]
+}
