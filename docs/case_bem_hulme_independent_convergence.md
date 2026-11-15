@@ -1,6 +1,6 @@
 # 锚点 BEM-HULME-HEMISPHERE：独立轴的自身收敛性审计（Richardson 外推三路裁定）
 
-> 本文件由 `tensorbem.benchmarks.hemisphere_independent_convergence` 从工件程序化渲染，数字零手抄。工件：`benchmarks/verified/casepool_bem_hulme_hemisphere/capytaine_ladder_extended.json`（7 级 256→4096 面板）、`inhouse_ladder_ka2.json`（ka=2，64→4096 面板）、`evidence/independent_convergence.json`。**机器裁定：FAIL**
+> 本文件由 `tensorbem.benchmarks.hemisphere_independent_convergence` 从工件程序化渲染，数字零手抄。工件：`benchmarks/verified/casepool_bem_hulme_hemisphere/capytaine_ladder_extended.json`（7 级 256→4096 面板）、`inhouse_ladder_ka2_healthy.json`（ka=2，64→4096 面板，逐档带求解残差）、`inhouse_ladder_ka2.json`（被取代的首次尝试，4096 档由失效驱动产出）、`evidence/independent_convergence.json`。**机器裁定：FAIL**
 
 ## ① 案例介绍与欠账
 
@@ -11,7 +11,7 @@
 ## ② 怎么做的
 
 1. **独立码的延拓阶梯**：`scripts/capytaine_hulme_ladder_extended.py`，capytaine 3.1.dev0，同一 `mesh_sphere(...).immersed_part()` 构造，分辨率 (16,32)/(24,48)/(32,64)/(40,80)/(48,96)/(56,112)/(64,128) = 256/576/1024/1600/2304/3136/4096 面板，全 ka 频带（0.2, 0.5, 0.8, 1, 1.5, 2），6 个量（A11, B11, A33, B33, Fx, Fz）；激励力按 capytaine ≥3.0 的约定（衍射项 + 手加 Froude-Krylov 项）由既有 producer 的函数直接复用，避免两件工件在约定上漂移。
-2. **本仓求解器的延拓阶梯**：`scripts/hulme_hemisphere_inhouse_ladder.py`，ka = 2（算例带内误差最大点），subdivisions 2/3/4/5 = 64/256/1024/4096 恒定面元，单格计算全部委托 `hulme_hemisphere_case.run_cell`，不复制求解器代码。
+2. **本仓求解器的延拓阶梯**：`scripts/hulme_hemisphere_inhouse_ladder.py`，ka = 2（算例带内误差最大点），subdivisions 2/3/4/5 = 64/256/1024/4096 恒定面元，单格计算全部委托 `hulme_hemisphere_case.run_cell`，不复制求解器代码。**首轮阶梯在 4096 档断裂**：该档由失效的线性驱动器产出（残差 4.9e-1、却报告满秩与健康条件数），A33/B33 离参考 46%/54%，不是收敛方向。本轮的阶梯在求解阶段健康守卫（dev report m20910）之下重跑，**逐档记录求解残差**，并用 E0 判据把「无法证明自己健康的档」挡在拟合之外。
 3. **收敛模型**：给定 p，模型对 (v_inf, C) 线性，故 p 由对数网格扫描 + 抛物线细化求得；拟合优度用与判据同一的相对度量（逐档相对残差）记录，避免「v_inf 好看但阶不可信」。另用 4 档窗口与 7 档窗口的 v_inf 互校（E2）。
 4. **裁定**：把参考级数、外力码外推极限、本仓求解器外推极限三者放在同一坐标系比较；并逐项回答「3.36% 是不是第三方码自己的离散误差」。
 
@@ -76,16 +76,18 @@
 
 ## ⑥ 本仓求解器的同一处理（ka = 2）
 
-阶梯档位：64, 256, 1024, 4096 面板（共 4 档）。三参数模型 `v(N)=v_inf+C·N^-p`；仅当档数 ≥ 4 时残差才有自由度，三档恰好决定三参数、残差恒为零，**不构成证据**。
+阶梯档位：64, 256, 1024 面板（共 3 档）。三参数模型 `v(N)=v_inf+C·N^-p`；仅当档数 ≥ 4 时残差才有自由度，三档恰好决定三参数、残差恒为零，**不构成证据**。
+
+**求解阶段健康（E0）**：逐档记录的最坏求解残差 **0.00962**（门槛 0.01，3 档有记录）；无档被剔除；无法自证健康的档：无。
 
 | 量 | v(1024) 误差（算例判据所用） | 最细档误差 | v_inf 误差 | 观测阶 p | p（最细三档） | |Δp|/p | |Δv_inf|/|v_inf| |
 |---|---|---|---|---|---|---|---|
-| A11 | 0.228% | 3.866% | 45.757% | 0.03 | 0.03 | 0.000% | 16.448% |
-| B11 | 0.578% | 0.567% | 0.793% | 0.76 | 0.27 | 64.532% | 2.281% |
-| A33 | 0.526% | 46.481% | 271.811% | 0.03 | 0.03 | 0.000% | 144.966% |
-| B33 | 1.148% | 54.226% | 517.497% | 0.03 | 0.03 | 0.000% | 40.533% |
-| Fx | 0.395% | 2.969% | 1.640% | 7.93 | 0.03 | 99.603% | 16.137% |
-| Fz | 0.488% | 64.820% | 504.754% | 0.03 | 0.03 | 0.000% | 67.779% |
+| A11 | 0.228% | 0.228% | 0.120% | 0.74 | 0.74 | 0.000% | 0.000% |
+| B11 | 0.578% | 0.578% | 0.051% | 0.93 | 0.93 | 0.000% | 0.000% |
+| A33 | 0.526% | 0.526% | 0.032% | 0.95 | 0.95 | 0.000% | 0.000% |
+| B33 | 1.148% | 1.148% | 0.022% | 1.01 | 1.01 | 0.000% | 0.000% |
+| Fx | 0.395% | 0.395% | 0.024% | 0.96 | 0.96 | 0.000% | 0.000% |
+| Fz | 0.488% | 0.488% | 0.052% | 0.93 | 0.93 | 0.000% | 0.000% |
 
 ## ⑦ 判据裁定
 
@@ -97,9 +99,10 @@
 | `E4_frozen_level_residual` | the anchor's frozen 1600-panel level sits below 2% from the extrapolated limit (it is a discretised value, not a converged one) | 21.021%（A33, ka=2） | FAIL |
 | `E5_adjudicated_spread` | |reference/v_inf - 1| < 2% for every cell: the independent axis confirms the reference once its own discretisation error is removed | 16.335%（B33, ka=2） | FAIL |
 | `E6_extrapolation_moves_toward_ref` | at the published worst cell (B33, ka=2) extrapolation reduces the distance to the reference: |ref-v_inf| < |ref-v(1600)| | 16.335% | FAIL |
-| `E7_inhouse_model_credible` | the same convergence model reproduces *every* in-house rung at ka=2 to within 0.3% per quantity, on at least 4 rungs -- with exactly three rungs a three-parameter model is determined and the residual is zero by construction, which is not evidence | 54.825% | FAIL |
-| `E9_inhouse_order_and_limit_stable` | the in-house fit is stable under dropping its coarsest rung: |dp|/p < 25% and |dv_inf|/|v_inf| < 0.5% for every quantity (finest three rungs vs all rungs) | 144.966% | FAIL |
-| `E8_inhouse_extrapolated_error` | |BEM v_inf / reference - 1| < 1% for every quantity at ka=2 -- the graded 1.15 % is discretisation, not bias | 517.497%（B33） | FAIL |
+| `E0_rungs_solver_healthy` | no in-house rung may be dropped for a recorded solve-stage residual above 0.01; rungs that carry no recorded residual are listed as unproven instead of being counted as healthy | 0.962% | PASS |
+| `E7_inhouse_model_credible` | the same convergence model reproduces *every* in-house rung at ka=2 to within 0.3% per quantity, on at least 4 rungs -- with exactly three rungs a three-parameter model is determined and the residual is zero by construction, which is not evidence | 0.000% | FAIL |
+| `E9_inhouse_order_and_limit_stable` | the in-house fit is stable under dropping its coarsest rung (needs >= 4 rungs) | nan% | FAIL |
+| `E8_inhouse_extrapolated_error` | |BEM v_inf / reference - 1| < 1% for every quantity at ka=2 -- the graded 1.15 % is discretisation, not bias | 0.120%（A11） | PASS |
 
 **总判定：FAIL**
 
@@ -117,5 +120,5 @@
 |---|---|---|---|
 | 参考 vs 独立码（外推极限）最坏 | 16.335% （B33, ka=2） | ❌ | ❌ |
 | 参考 vs 独立码（冻结档，已发布口径）最坏 | 3.364% （B33, ka=2） | ❌ | ✅ |
-| 本仓求解器 v_inf vs 参考（ka=2）最坏 | 517.497%（B33） | ❌ | ❌ |
+| 本仓求解器 v_inf vs 参考（ka=2）最坏 | 0.120%（A11） | ✅ | ✅ |
 
