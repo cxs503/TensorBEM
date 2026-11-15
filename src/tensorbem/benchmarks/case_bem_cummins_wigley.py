@@ -63,6 +63,7 @@ from dataclasses import dataclass, field
 import json
 import math
 import platform
+import statistics
 import time
 from pathlib import Path
 from typing import Any, Sequence
@@ -103,6 +104,7 @@ __all__ = [
     "round_trip_gate",
     "free_decay_gate",
     "negative_control_gate",
+    "c5c_decision",
     "extension_consistency_gate",
     "truncation_decidability_gate",
     "sweep_grid",
@@ -923,19 +925,22 @@ def _decay_zeta_multi_window(
             qualifying.append(zeta)
             qualifying_periods.append(period)
     if len(qualifying) >= 2:
-        sorted_z = sorted(qualifying)
-        median_z = sorted_z[len(sorted_z) // 2]
-        sorted_p = sorted(qualifying_periods)
-        median_p = sorted_p[len(sorted_p) // 2]
+        # True median: for an even count this is the mean of the two middle
+        # samples.  Taking ``sorted_z[len // 2]`` silently returned the *upper*
+        # of two windows, which biases a monotone window sequence upward.
+        median_z = float(statistics.median(qualifying))
+        median_p = float(statistics.median(qualifying_periods))
         spread = (max(qualifying) - min(qualifying)) / median_z if median_z > 0 else float("inf")
         converged = spread <= bar
         consensus_zeta = median_z
         consensus_period = median_p
     elif len(qualifying) == 1:
+        # One qualifying window is not a consensus.  Report the estimate but do
+        # not claim agreement: the spread is undefined (nan), not zero.
         consensus_zeta = qualifying[0]
         consensus_period = qualifying_periods[0]
-        converged = True
-        spread = 0.0
+        converged = False
+        spread = float("nan")
     else:
         consensus_zeta = float("nan")
         consensus_period = float("nan")
@@ -2153,6 +2158,24 @@ def decay_modes_gate(sweep: Sweep, *, audit: dict[str, Any] | None = None) -> di
 
 
 
+def c5c_decision(*, in_band: bool, relative: float, n_qualifying: int, bar: float) -> tuple[str, bool]:
+    """Pure decision rule of gate C5c (separated so it can be failure-injected).
+
+    Returns ``(status, passed)``.  The rule is deliberately factored out of
+    :func:`robust_decay_gate` because the surrounding function needs a full
+    Cummins free-decay integration (~1.5 min), which makes it impractical to
+    drive with injected faults in CI.  The decision itself has no side effects
+    and no dependence on the solver, so every branch can be exercised directly.
+    """
+    if in_band and math.isfinite(relative) and relative <= bar and n_qualifying >= 2:
+        return "decided", True
+    if not in_band:
+        return "undecidable: natural frequency outside computed band", False
+    if n_qualifying < 2:
+        return "undecidable: fewer than 2 qualifying windows", False
+    return "beyond_bar", False
+
+
 def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = None) -> dict[str, Any]:
     """C5c: robust multi-window consensus estimator for free-decay damping ratio.
 
@@ -2162,10 +2185,20 @@ def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = 
     evaluates the decay at three floors (1 %, 0.1 %, 0.01 %) and reports a
     *consensus* when the wider windows converge.
 
-    A mode is **decided** when:
-    - at least two floors yield >= 5 peaks and finite zeta, AND
-    - the spread of zeta across qualifying floors <= the case bar (5 %), AND
-    - the consensus zeta agrees with the frequency-domain estimate within the bar.
+    A mode is **decided** when, and only when:
+    - at least two floors yield >= 5 peaks and a finite positive zeta, AND
+    - the consensus (median) zeta agrees with the frequency-domain estimate
+      within the case bar (5 %).
+
+    The cross-window **spread is reported as a diagnostic, not enforced**.  For
+    a hull whose decay is not a single exponential the log-decrement drifts
+    monotonically with window width, so requiring a small spread would reject a
+    physically correct impedance pair rather than detect a numerical fault.  The
+    operative evidence is instead the agreement between two independent
+    *reductions* of the same coefficients (time-domain decay vs frequency-domain
+    impedance), and it is disclosed through ``convergence_claimed`` and
+    ``non_exponential_decay`` in the gate values so that a passing verdict can
+    never be read as "the windows converged".
 
     This gate does not widen the criterion: it uses the same 5 % bar as C5.
     It only changes *how* the decay-side number is obtained.
@@ -2222,18 +2255,12 @@ def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = 
     # a diagnostic (it tells us the decay is not a single exponential) but
     # not a pass/fail criterion -- what matters is whether the two *routes*
     # (time-domain consensus vs frequency-domain impedance) agree.
-    if in_band and math.isfinite(relative) and relative <= bar and multi["n_qualifying_floors"] >= 2:
-        status = "decided"
-        passed = True
-    elif not in_band:
-        status = "undecidable: natural frequency outside computed band"
-        passed = False
-    elif multi["n_qualifying_floors"] < 2:
-        status = "undecidable: fewer than 2 qualifying windows"
-        passed = False
-    else:
-        status = "beyond_bar"
-        passed = False
+    status, passed = c5c_decision(
+        in_band=in_band,
+        relative=relative,
+        n_qualifying=int(multi["n_qualifying_floors"]),
+        bar=bar,
+    )
 
     per_floor_detail = []
     for entry in multi["per_floor"]:
@@ -2260,6 +2287,14 @@ def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = 
             "natural_frequency_in_band": in_band,
             "band_rad_s": [float(sweep.omega[0]), float(sweep.omega[-1])],
             "status": status,
+            "criterion_enforced": (
+                "|zeta_decay_consensus - zeta_fd|/zeta_fd <= bar AND >= 2 qualifying "
+                "windows; cross-window spread is a reported diagnostic, not enforced"
+            ),
+            "convergence_claimed": bool(multi["converged"]),
+            "non_exponential_decay": bool(
+                math.isfinite(multi["spread"]) and multi["spread"] > bar
+            ),
             "multi_window": {
                 "converged": multi["converged"],
                 "spread": multi["spread"],
