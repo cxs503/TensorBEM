@@ -51,7 +51,7 @@ from typing import Any, Sequence
 
 import numpy as np
 
-from ..geometry import regular_polygon
+from ..geometry import PanelMesh, regular_polygon
 from ..multipole2d import decompose_rings, fit_ring, ring_angles
 from ..solver import (
     LaplaceDirichletResult,
@@ -1703,6 +1703,306 @@ def far_field_check(
 
 
 # ---------------------------------------------------------------------------
+# oblique-inflow heading sweep
+# ---------------------------------------------------------------------------
+# Every number above is measured with the stream along ``+x``, and the inscribed
+# regular N-gon carries a *vertex* on that axis: the body is mirror-symmetric
+# about the flow direction, so an error that is odd in ``y`` -- a flipped kernel
+# sign, a normal-orientation slip, a panel-ordering assumption -- cancels between
+# the upper and lower halves and never reaches the L2 norms.  Rotating the body
+# against the fixed inflow breaks that symmetry: the stagnation streamline then
+# meets a chord midpoint, where a piecewise-constant trace is at its worst.
+#
+# One heading is structural: a *quadrant* is a whole number of panel steps for
+# every even panel count, and its rotation matrix is exact, so rotating the body
+# by 90 deg **and the probe set by the same 90 deg** must reproduce the
+# axis-aligned solve to roundoff.  That is rotational equivariance of the whole
+# chain (assembly, boundary data, exterior evaluation): it fails if any stage
+# leans on the panel ordering or on the phase between the inflow and the lattice.
+# It is not an identity test -- the body rotated by 90 deg with the inflow left
+# along +x is a *different* configuration (its field differs by O(U)), which is
+# why the probes have to rotate with it.
+OBLIQUE_HEADING_DEG = 30.0
+LATTICE_HEADING_DEG = 90.0
+# The oblique configuration must not be materially worse than the axis-aligned
+# reference; the symmetry argument above is only worth something if breaking the
+# symmetry costs nothing.
+OBLIQUE_HEADING_PENALTY_MAX = 3.0
+# Equivariance is a roundoff statement; the exact rotation makes the two solves
+# bit-comparable up to the 1e-16 error in cos(90 deg).
+HEADING_LATTICE_COVARIANCE_TOL = 1.0e-9
+QUADRANT_ROTATION = np.array([[0.0, -1.0], [1.0, 0.0]])
+# The axis-aligned configuration is exactly mirror-symmetric about the flow axis
+# (body, data and probe set), so the discrete error must be too: the part of the
+# error that is antisymmetric in ``y`` is a direct measure of how much asymmetry
+# the implementation itself introduces.  It is not a symmetry the *answer* has to
+# have -- it is a property of this one configuration -- but if it holds, the L2
+# numbers above cannot have cancelled a y-odd defect, and the oblique headings
+# are what would expose one.
+MIRROR_ODD_TOL = 1.0e-9
+
+
+def oblique_headings(panels: int) -> tuple[float, ...]:
+    """Headings (deg) of the sweep: axis-aligned, half a panel step, generic.
+
+    Half a panel step is the worst alignment for a constant-panel trace (the
+    upstream stagnation point sits over a chord midpoint); the generic heading is
+    not commensurate with the lattice at any panel count used here.
+    """
+    if panels <= 0:
+        raise ValueError("panels must be positive")
+    return (0.0, 180.0 / float(panels), OBLIQUE_HEADING_DEG)
+
+
+def rotated_polygon(panels: int, heading: float, radius: float = RADIUS) -> PanelMesh:
+    """Inscribed regular polygon rotated by ``heading`` radians about the origin.
+
+    Rotating the body against a fixed ``+x`` inflow is the same physical
+    configuration as rotating the inflow over a fixed body, and it keeps the
+    closed-form reference in the frame the rest of the case validates.
+    """
+    base = regular_polygon(panels, radius)
+    c, s = math.cos(heading), math.sin(heading)
+    rotation = np.array([[c, -s], [s, c]])
+    return PanelMesh(base.vertices @ rotation.T)
+
+
+def heading_velocity(
+    points: np.ndarray, heading: float, radius: float = RADIUS, speed: float = SPEED
+) -> np.ndarray:
+    """Cartesian velocity of ``W(z) = U e^{-i h} z + U a**2 e^{i h} / z``.
+
+    The field is the axis-aligned closed form evaluated in the rotated frame and
+    rotated back, so it cannot drift from :func:`exact_velocity` at ``h = 0``.
+    """
+    pts = np.asarray(points, dtype=float)
+    c, s = math.cos(heading), math.sin(heading)
+    back = np.column_stack(
+        (c * pts[:, 0] + s * pts[:, 1], -s * pts[:, 0] + c * pts[:, 1])
+    )
+    flow = exact_velocity(back, radius, speed)
+    return np.column_stack(
+        (c * flow[:, 0] - s * flow[:, 1], s * flow[:, 0] + c * flow[:, 1])
+    )
+
+
+def heading_perturbation_potential(
+    points: np.ndarray, heading: float, radius: float = RADIUS, speed: float = SPEED
+) -> np.ndarray:
+    """Decaying part ``U a**2 cos(theta - h) / r`` of the heading-``h`` potential."""
+    pts = np.asarray(points, dtype=float)
+    r = np.hypot(pts[:, 0], pts[:, 1])
+    if np.any(r == 0.0):
+        raise ValueError("the perturbation potential is singular at the centre")
+    theta = np.arctan2(pts[:, 1], pts[:, 0]) - heading
+    return speed * radius**2 * np.cos(theta) / r
+
+
+def heading_neumann_data(
+    centers: np.ndarray, heading: float, radius: float = RADIUS, speed: float = SPEED
+) -> np.ndarray:
+    """Fluid-normal derivative ``q_e = U a**2 cos(theta - h) / r**2`` (radial normals)."""
+    pts = np.asarray(centers, dtype=float)
+    r = np.hypot(pts[:, 0], pts[:, 1])
+    if np.any(r == 0.0):
+        raise ValueError("the centre is not on the body")
+    cos_theta = (pts[:, 0] * math.cos(heading) + pts[:, 1] * math.sin(heading)) / r
+    return speed * radius**2 * cos_theta / r**2
+
+
+def _heading_level(
+    panels: int,
+    heading_deg: float,
+    radius: float,
+    speed: float,
+    points: np.ndarray | None = None,
+) -> tuple[dict[str, Any], np.ndarray]:
+    """Solve both routes once with the body rotated by ``heading_deg``."""
+    heading = math.radians(heading_deg)
+    mesh = rotated_polygon(panels, heading, radius)
+    centers = mesh.centers
+    probes = probe_points() if points is None else points
+    inflow = speed * np.array([math.cos(heading), math.sin(heading)])
+
+    dirichlet = solve_laplace_exterior_dirichlet(
+        mesh, heading_perturbation_potential(centers, heading, radius, speed)
+    )
+    field = evaluate_exterior_field(mesh, dirichlet, probes)
+    velocity = field.gradient + inflow
+    exact = heading_velocity(probes, heading, radius, speed)
+
+    neumann = solve_laplace_exterior_neumann(
+        mesh, heading_neumann_data(centers, heading, radius, speed)
+    )
+    surface = evaluate_exterior_surface_velocity(mesh, neumann) + inflow
+    exact_surface = heading_velocity(centers, heading, radius, speed)
+    normal_residual = np.sum(surface * mesh.normals, axis=1)
+
+    row: dict[str, Any] = {
+        "panels": int(panels),
+        "heading_deg": float(heading_deg),
+        "panel_steps": float(heading_deg) * panels / 360.0,
+        "h_mean": float(np.mean(mesh.lengths)),
+        "dirichlet_condition_number": float(dirichlet.condition_number),
+        "dirichlet_velocity_relative_l2": _relative_l2(velocity, exact),
+        "dirichlet_velocity_max_abs_error_over_speed": float(
+            np.max(np.linalg.norm(velocity - exact, axis=1))
+        )
+        / speed,
+        "neumann_condition_number": float(neumann.condition_number),
+        "neumann_surface_velocity_relative_l2": _relative_l2(surface, exact_surface),
+        "neumann_surface_velocity_max_abs_error_over_speed": float(
+            np.max(np.linalg.norm(surface - exact_surface, axis=1))
+        )
+        / speed,
+        "normal_velocity_residual_over_speed": float(np.max(np.abs(normal_residual)))
+        / speed,
+    }
+    return row, velocity
+
+
+def mirror_partner_indices(points: np.ndarray) -> np.ndarray:
+    """Index of the mirror image ``(x, -y)`` of every point (must be in the set)."""
+    pts = np.asarray(points, dtype=float)
+    lookup = {
+        (round(float(x), 12), round(float(-y), 12)): index
+        for index, (x, y) in enumerate(pts)
+    }
+    partners: list[int] = []
+    for x, y in pts:
+        index = lookup.get((round(float(x), 12), round(float(y), 12)))
+        if index is None:
+            raise ValueError("the probe set is not symmetric about the flow axis")
+        partners.append(index)
+    return np.asarray(partners, dtype=int)
+
+
+def mirror_error_split(
+    points: np.ndarray,
+    computed: np.ndarray,
+    radius: float = RADIUS,
+    speed: float = SPEED,
+) -> dict[str, Any]:
+    """Split the velocity error into its mirror-symmetric and antisymmetric parts.
+
+    ``computed`` and the closed form are taken at the axis-aligned heading, the
+    one configuration in which the probe set comes in ``(x, y) / (x, -y)`` pairs.
+    """
+    pts = np.asarray(points, dtype=float)
+    exact = heading_velocity(pts, 0.0, radius, speed)
+    error = np.asarray(computed, dtype=float) - exact
+    partners = mirror_partner_indices(pts)
+    mirrored = error[partners] * np.array([1.0, -1.0])
+    even = 0.5 * (error + mirrored)
+    odd = 0.5 * (error - mirrored)
+    even_norm = float(np.max(np.linalg.norm(even, axis=1)))
+    odd_norm = float(np.max(np.linalg.norm(odd, axis=1)))
+    return {
+        "probe_pairs": int(len(pts)),
+        "error_max_over_speed": float(np.max(np.linalg.norm(error, axis=1))) / speed,
+        "even_part_max_over_speed": even_norm / speed,
+        "odd_part_max_over_speed": odd_norm / speed,
+        "odd_fraction": odd_norm / even_norm if even_norm > 0.0 else float("nan"),
+        "tolerance": MIRROR_ODD_TOL,
+        "note": (
+            "the axis-aligned body/data/probe set are mirror-symmetric about y = 0, "
+            "so a mirror-symmetric implementation leaves only the even part; the "
+            "oblique headings are the ones that would expose a y-odd defect"
+        ),
+    }
+
+
+def heading_study(
+    panels: int = BUDGET_PANELS, radius: float = RADIUS, speed: float = SPEED
+) -> dict[str, Any]:
+    """Re-measure both routes with the body rotated against the inflow."""
+    points = probe_points()
+    headings = oblique_headings(panels)
+    rows: list[dict[str, Any]] = []
+    fields: list[np.ndarray] = []
+    for heading_deg in headings:
+        row, velocity = _heading_level(panels, heading_deg, radius, speed, points)
+        rows.append(row)
+        fields.append(velocity)
+    lattice_row, lattice_field = _heading_level(
+        panels,
+        LATTICE_HEADING_DEG,
+        radius,
+        speed,
+        points @ QUADRANT_ROTATION.T,
+    )
+
+    axis = rows[0]
+    worst_d = max(rows, key=lambda row: row["dirichlet_velocity_relative_l2"])
+    worst_n = max(rows, key=lambda row: row["neumann_surface_velocity_relative_l2"])
+    penalty_d = worst_d["dirichlet_velocity_relative_l2"] / axis[
+        "dirichlet_velocity_relative_l2"
+    ]
+    penalty_n = worst_n["neumann_surface_velocity_relative_l2"] / axis[
+        "neumann_surface_velocity_relative_l2"
+    ]
+    # The velocity is a vector: the rotated solve must equal the axis-aligned
+    # solve rotated by the same quadrant, not the axis-aligned vectors verbatim.
+    covariance = float(
+        np.max(
+            np.linalg.norm(
+                lattice_field - fields[0] @ QUADRANT_ROTATION.T, axis=1
+            )
+        )
+    ) / speed
+    return {
+        "panels": int(panels),
+        "probe_count": int(len(points)),
+        "headings_deg": [float(deg) for deg in headings],
+        "panel_step_deg": 360.0 / float(panels),
+        "levels": rows,
+        "axis_level": {
+            "heading_deg": axis["heading_deg"],
+            "dirichlet_velocity_relative_l2": axis["dirichlet_velocity_relative_l2"],
+            "neumann_surface_velocity_relative_l2": axis[
+                "neumann_surface_velocity_relative_l2"
+            ],
+        },
+        "max_dirichlet_velocity_relative_l2": worst_d["dirichlet_velocity_relative_l2"],
+        "worst_dirichlet_heading_deg": worst_d["heading_deg"],
+        "max_dirichlet_velocity_max_abs_error_over_speed": worst_d[
+            "dirichlet_velocity_max_abs_error_over_speed"
+        ],
+        "dirichlet_penalty_max": penalty_d,
+        "max_neumann_surface_velocity_relative_l2": worst_n[
+            "neumann_surface_velocity_relative_l2"
+        ],
+        "worst_neumann_heading_deg": worst_n["heading_deg"],
+        "neumann_penalty_max": penalty_n,
+        "lattice": {
+            "heading_deg": float(LATTICE_HEADING_DEG),
+            "panel_steps": lattice_row["panel_steps"],
+            "dirichlet_velocity_relative_l2": lattice_row[
+                "dirichlet_velocity_relative_l2"
+            ],
+            "neumann_surface_velocity_relative_l2": lattice_row[
+                "neumann_surface_velocity_relative_l2"
+            ],
+            "velocity_field_max_difference_over_speed": covariance,
+            "dirichlet_error_relative_difference": abs(
+                lattice_row["dirichlet_velocity_relative_l2"]
+                - axis["dirichlet_velocity_relative_l2"]
+            )
+            / axis["dirichlet_velocity_relative_l2"],
+        },
+        "mirror_split": mirror_error_split(points, fields[0], radius, speed),
+        "note": (
+            "the lattice level rotates body and probes together by 90 deg (a whole "
+            "number of panel steps with an exact rotation matrix), so it must "
+            "reproduce the axis-aligned solve to roundoff; the half-panel and 30 "
+            "deg headings break the mirror symmetry of the axis-aligned "
+            "configuration while leaving the body in place"
+        ),
+        "lattice_probe_rotation_deg": LATTICE_HEADING_DEG,
+    }
+
+
+# ---------------------------------------------------------------------------
 # study driver
 # ---------------------------------------------------------------------------
 def _observed_orders(levels: list[dict[str, Any]], key: str) -> list[float]:
@@ -1835,6 +2135,8 @@ def run_case(
             "far_field_radius_over_a": FAR_FIELD_RADIUS,
             "circulation": CIRCULATION,
             "circulation_sweep": list(CIRCULATION_SWEEP),
+            "oblique_headings_deg": list(oblique_headings(budget)),
+            "lattice_heading_deg": LATTICE_HEADING_DEG,
         },
         "reference": {
             "complex_potential": "W(z) = U (z + a**2/z)",
@@ -1958,6 +2260,7 @@ def run_case(
     artifact["circulation_sweep"] = circulation_sweep(budget, radius, speed)
     artifact["near_wall"] = near_wall_study(radius, speed)
     artifact["multipole"] = multipole_study(panels, radius, speed)
+    artifact["heading_sweep"] = heading_study(budget, radius, speed)
     if with_controls:
         artifact["controls"] = {
             "wrong_reference": wrong_reference_control(budget, radius, speed),
@@ -2471,11 +2774,134 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
             "at r = 8a (disturbance still ~3% of U) the BEM velocity matches "
             "dW/dz to 1% of U",
         )
+
+    heading = artifact["heading_sweep"]
+    add(
+        "oblique_heading_dirichlet_velocity",
+        heading["max_dirichlet_velocity_relative_l2"],
+        f"< {TOLERANCE:g}",
+        heading["max_dirichlet_velocity_relative_l2"] < TOLERANCE,
+        "rotating the body against the inflow breaks the mirror symmetry about the "
+        "flow axis; worst heading "
+        f"{heading['worst_dirichlet_heading_deg']:g} deg",
+    )
+    add(
+        "oblique_heading_neumann_surface_velocity",
+        heading["max_neumann_surface_velocity_relative_l2"],
+        f"< {TOLERANCE:g}",
+        heading["max_neumann_surface_velocity_relative_l2"] < TOLERANCE,
+        "route N surface velocity with the stagnation streamline over a chord "
+        "midpoint instead of a vertex; worst heading "
+        f"{heading['worst_neumann_heading_deg']:g} deg",
+    )
+    penalty = max(heading["dirichlet_penalty_max"], heading["neumann_penalty_max"])
+    add(
+        "oblique_heading_within_penalty_of_axis",
+        penalty,
+        f"<= {OBLIQUE_HEADING_PENALTY_MAX:g}",
+        penalty <= OBLIQUE_HEADING_PENALTY_MAX,
+        "an oblique heading must not be materially worse than the axis-aligned one",
+    )
+    add(
+        "mirror_antisymmetric_error_is_roundoff",
+        heading["mirror_split"]["odd_part_max_over_speed"],
+        f"<= {MIRROR_ODD_TOL:g} U",
+        heading["mirror_split"]["odd_part_max_over_speed"] <= MIRROR_ODD_TOL,
+        "the axis-aligned body, data and probe set are mirror-symmetric about "
+        "y = 0; an antisymmetric residual would mean the implementation, not the "
+        "configuration, introduced the asymmetry (and could have cancelled)",
+    )
+    add(
+        "lattice_heading_is_covariant",
+        heading["lattice"]["velocity_field_max_difference_over_speed"],
+        f"<= {HEADING_LATTICE_COVARIANCE_TOL:g} U",
+        heading["lattice"]["velocity_field_max_difference_over_speed"]
+        <= HEADING_LATTICE_COVARIANCE_TOL,
+        f"{heading['lattice']['panel_steps']:g} panel steps rotate the body onto "
+        "itself, so the recovered velocity field must not move",
+    )
     return checks
 
 # ---------------------------------------------------------------------------
 # reporting
 # ---------------------------------------------------------------------------
+def render_heading_section(study: dict[str, Any]) -> list[str]:
+    """Render the oblique-heading section from :func:`heading_study` alone.
+
+    Kept separate from :func:`render_markdown` because the rest of the record
+    needs the whole (slow) case run, while this section only needs the study:
+    a formatting error here then fails a unit test instead of the case.
+    """
+    lines: list[str] = [
+        "",
+        "### 来流方位（斜来流）扫描",
+        "",
+        "上面所有数字的来流都沿 $+x$，而内接正 $N$ 边形在该轴上恰有一个**顶点**："
+        "物形关于来流方向镜像对称，任一关于 $y$ 为奇的误差（核函数符号、法向定向、"
+        "面板编号假设）都会在上下两半相互抵消，L2 范数看不见。把物体相对固定来流转一个角度即可打掉该对称："
+        "驻点流线落在弦中点而非顶点时，常值面板的迹处于最不利状态。"
+        f"$N={study['panels']}$ 时面板步长 {study['panel_step_deg']:.4f}$^\\circ$；"
+        f"$\\gamma={study['lattice']['heading_deg']:g}^\\circ$ 恰为 "
+        f"{study['lattice']['panel_steps']:g} 个面板步长且旋转矩阵精确可表，"
+        "把**探针集合同样转该角度**后，数值解必须与 0$^\\circ$ 情形逐位一致"
+        "（装配、边界数据、外部求值全链的旋转等变性：任何环节依赖面板编号或来流-格点相位都会破）。",
+        "",
+        "| 来流方位 (deg) | 面板步长 | 路线 D 速度 L2 | 路线 D 最大偏差/U | 路线 N 物面速度 L2 | 路线 N $\\vert v\\cdot n\\vert/U$ |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in list(study["levels"]) + [
+        {
+            "heading_deg": study["lattice"]["heading_deg"],
+            "panel_steps": study["lattice"]["panel_steps"],
+            "dirichlet_velocity_relative_l2": study["lattice"][
+                "dirichlet_velocity_relative_l2"
+            ],
+            "dirichlet_velocity_max_abs_error_over_speed": float("nan"),
+            "neumann_surface_velocity_relative_l2": study["lattice"][
+                "neumann_surface_velocity_relative_l2"
+            ],
+            "normal_velocity_residual_over_speed": float("nan"),
+        }
+    ]:
+        best = row["heading_deg"] == study["lattice"]["heading_deg"]
+        lines.append(
+            "| %s%.4f | %.3f | %.3e | %s | %.3e | %s |"
+            % (
+                "（格点）" if best else "",
+                row["heading_deg"],
+                row["panel_steps"],
+                row["dirichlet_velocity_relative_l2"],
+                "—" if best else "%.3e" % row["dirichlet_velocity_max_abs_error_over_speed"],
+                row["neumann_surface_velocity_relative_l2"],
+                "—" if best else "%.3e" % row["normal_velocity_residual_over_speed"],
+            )
+        )
+    lines += [
+        "",
+        f"镜像分解（0$^\\circ$，探针在 $y=0$ 两侧成对，{study['mirror_split']['probe_pairs']} 对）："
+        f"误差最大 {study['mirror_split']['error_max_over_speed']:.3e} $U$，其中镜像**偶部** "
+        f"{study['mirror_split']['even_part_max_over_speed']:.3e} $U$、**奇部** "
+        f"{study['mirror_split']['odd_part_max_over_speed']:.3e} $U$（奇部占比 "
+        f"{study['mirror_split']['odd_fraction']:.1e}）。"
+        "奇部只剩舍入，说明上面的 L2 数字不是靠上下两半相互抵消得来的（该位形本可抵消），"
+        "而斜来流两行才是真正检验「打掉镜像对称后仍准」的那道门。",
+        "",
+        f"判读：最差方位（{study['worst_dirichlet_heading_deg']:g}$^\\circ$）路线 D 速度 L2 "
+        f"{study['max_dirichlet_velocity_relative_l2']:.3e}、路线 N 物面速度 L2 "
+        f"{study['max_neumann_surface_velocity_relative_l2']:.3e}，"
+        f"相对轴对称基线（{study['axis_level']['heading_deg']:g}$^\\circ$）分别放大 "
+        f"{study['dirichlet_penalty_max']:.2f}×/{study['neumann_penalty_max']:.2f}×，"
+        "即打掉镜像对称并未带来精度损失；"
+        f"格点角 {study['lattice']['heading_deg']:g}$^\\circ$（{study['lattice']['panel_steps']:g} 个步长，"
+        "探针同转）后外部速度场与 0$^\\circ$ 情形最大差 "
+        f"{study['lattice']['velocity_field_max_difference_over_speed']:.2e} $U$，"
+        "落在舍入量级；注意「物体自转格点角、来流不动」是**另一个**位形（其速度场差 $O(U)$），"
+        "脚本比对的是旋转等变性，不是恒等性。",
+        "",
+    ]
+    return lines
+
+
 def render_markdown(artifact: dict[str, Any]) -> str:
     """Render the case document from the artifact (no hand-copied numbers)."""
     rows_d = artifact["routes"]["dirichlet"]["levels"]
@@ -2588,6 +3014,10 @@ def render_markdown(artifact: dict[str, Any]) -> str:
                 row["velocity_relative_l2"],
             )
         )
+    if "heading_sweep" in artifact:
+        # Records written before this section existed must still render:
+        # the committed record may legitimately be older than the module.
+        lines += render_heading_section(artifact["heading_sweep"])
     lines += [
         "",
         "收敛阶（以 $h_{mean}$ 为尺度）：路线 N 物面速度 "
@@ -3035,6 +3465,18 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         ("路线 $\\Gamma$ 升力 vs $\\rho U\\Gamma$", rows_c[-1]["lift_relative_error"]),
         ("路线 $\\Gamma$ 环量（实测 vs 给定）", rows_c[-1]["circulation_relative_error"]),
     ]
+    heading = artifact.get("heading_sweep")
+    if heading is not None:
+        checks += [
+            (
+                "斜来流最差方位路线 D 外部速度 L2",
+                heading["max_dirichlet_velocity_relative_l2"],
+            ),
+            (
+                "斜来流最差方位路线 N 物面速度 L2",
+                heading["max_neumann_surface_velocity_relative_l2"],
+            ),
+        ]
     for name, value in checks:
         lines.append(
             "| %s | %.3e | %s |" % (name, value, "是" if value < tolerance else "**否**")
