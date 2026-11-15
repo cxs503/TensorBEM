@@ -13,17 +13,17 @@
      "level": 0,
      "panels": 20,
      "mode_count": 133,
-     "condition_number": 2.3775592710065805,
-     "relative_residual": 2.1975656628717369e-16,
-     "seconds": 0.192,
+     "condition_number": 2.377480403574993,
+     "relative_residual": 1.7334455696266773e-16,
+     "seconds": 0.163,
      "values": {
       "surge": {
-       "added_mass": 1748.4594926354607,
-       "damping": 332.01075636965624
+       "added_mass": 1748.44694354568,
+       "damping": 332.0072414365854
       },
       "heave": {
-       "added_mass": 1928.8212179105965,
-       "damping": 293.27705435359474
+       "added_mass": 1928.7589929594217,
+       "damping": 293.2627380177748
       }
      }
     },
@@ -31,23 +31,26 @@
      "level": 1,
      "panels": 80,
      "mode_count": 341,
-     "condition_number": 2.2165778082515124,
-     "relative_residual": 3.7520944011233447e-16,
-     "seconds": 11.597,
+     "condition_number": 2.2166274621419677,
+     "relative_residual": 3.6928181883540294e-16,
+     "seconds": 3.6,
      "values": {
       "surge": {
-       "added_mass": 2276.473853506618,
-       "damping": 616.0321624688042
+       "added_mass": 2276.483577841137,
+       "damping": 616.0365022862962
       },
       "heave": {
-       "added_mass": 2617.261302192633,
-       "damping": 564.1905660182496
+       "added_mass": 2617.3245384173943,
+       "damping": 564.2107100505647
       }
      }
     }
    },
    "negative_control": {
+    "level": 1,
     "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.137,
     "values": {
      "surge": {
       "added_mass": 2209.404570706978,
@@ -60,12 +63,5 @@
     }
    }
   }
- },
- "environment": {
-  "levels": [
-   0,
-   1
-  ],
-  "note": "one cell, 20/80 panels; 320-panel rung and the remaining 11 cells are NOT run"
  }
 }

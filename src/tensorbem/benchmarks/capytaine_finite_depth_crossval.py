@@ -117,6 +117,7 @@ def deep_water_values(level: int, cell: dict[str, float]) -> dict[str, Any]:
     mesh = submerged_sphere_mesh(
         int(level), radius=plan.SPHERE_RADIUS, submergence=plan.SPHERE_SUBMERGENCE
     )
+    t0 = time.perf_counter()
     result = solve_radiation_3d(
         mesh, cell["nu"], modes=list(MODES), center=CENTER,
         density=plan.DENSITY, gravity=plan.GRAVITY,
@@ -127,7 +128,13 @@ def deep_water_values(level: int, cell: dict[str, float]) -> dict[str, Any]:
             "added_mass": float(result.added_mass[slot, slot]),
             "damping": float(result.damping[slot, slot]),
         }
-    return {"panels": int(mesh.panel_count), "values": values}
+    return {
+        "level": int(level),
+        "panels": int(mesh.panel_count),
+        "mode_count": int(getattr(result, "mode_count", 0)),
+        "seconds": round(time.perf_counter() - t0, 3),
+        "values": values,
+    }
 
 
 def _worker(cell: dict[str, float], level: int, control_level: int) -> dict[str, Any]:
@@ -192,8 +199,8 @@ def build_ladder(
         else:
             cache["cells"][key]["levels"][str(level)] = record
         print(
-            f"  tb {key} level={level} panels={record['panels']} "
-            f"seconds={record['seconds']}",
+            f"  tb {key} level={level} panels={record.get('panels')} "
+            f"seconds={record.get('seconds')}",
             flush=True,
         )
         if cache_path is not None:
@@ -226,6 +233,82 @@ def build_ladder(
         "control_level": int(control_level),
     }
     return cache
+
+
+def merge_ladders(
+    paths: Sequence[Path],
+    *,
+    out: Path | None = None,
+    required_levels: Sequence[int] | None = None,
+) -> dict[str, Any]:
+    """Merge sharded ladder caches into one, refusing to lose or double-count work.
+
+    A shard is one ``(cell, level)`` subset of the grid, computed on its own node
+    with its own cache.  Two shards that both computed the same rung must agree
+    (they are the same deterministic solve), and every requested rung must be
+    present afterwards: a study whose ladder silently lost a shard would still
+    produce a comparison table, and that table would be wrong.  Both conditions
+    raise here instead.
+    """
+    merged: dict[str, Any] = {"cells": {}, "environment": {}}
+    environments: list[dict[str, Any]] = []
+    cell_fields = ("h_over_a", "ka", "depth", "k0", "k0h", "nu")
+    for path in paths:
+        payload = json.loads(Path(path).read_text())
+        environments.append(payload.get("environment", {}))
+        for key, entry in payload.get("cells", {}).items():
+            target = merged["cells"].setdefault(
+                key,
+                {
+                    **{field: entry[field] for field in cell_fields},
+                    "cell": entry.get("cell", key),
+                    "levels": {},
+                    "negative_control": None,
+                },
+            )
+            for field in cell_fields:
+                if float(target[field]) != float(entry[field]):
+                    raise ValueError(f"{key}: {field} disagrees between shards")
+            for level, record in entry.get("levels", {}).items():
+                previous = target["levels"].get(level)
+                if previous is not None:
+                    if int(previous["panels"]) != int(record["panels"]):
+                        raise ValueError(
+                            f"{key} level {level}: panel count disagrees between shards"
+                        )
+                    for dof in previous["values"]:
+                        for quantity in previous["values"][dof]:
+                            a = previous["values"][dof][quantity]
+                            b = record["values"][dof][quantity]
+                            if abs(a - b) > 1e-9 * max(abs(a), 1e-12):
+                                raise ValueError(
+                                    f"{key} level {level} {dof}.{quantity}: "
+                                    "two shards disagree on the same solve"
+                                )
+                target["levels"][level] = record
+            control = entry.get("negative_control")
+            if control is not None:
+                previous = target["negative_control"]
+                if previous is not None and int(previous["panels"]) != int(control["panels"]):
+                    raise ValueError(f"{key}: negative control disagrees between shards")
+                target["negative_control"] = control
+    if required_levels is not None:
+        wanted = {str(int(level)) for level in required_levels}
+        for key, entry in merged["cells"].items():
+            missing = wanted - set(entry["levels"])
+            if missing:
+                raise ValueError(f"{key}: missing ladder rungs {sorted(missing)}")
+    if environments:
+        merged["environment"] = {
+            **environments[0],
+            "merged_from": [str(path) for path in paths],
+            "shard_environments": environments,
+        }
+    if out is not None:
+        out = Path(out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(merged, indent=1) + "\n")
+    return merged
 
 
 # --------------------------------------------------------------------------- #
@@ -735,6 +818,51 @@ def write_figures(result: dict[str, Any], out_dir: Path) -> list[dict[str, str]]
 # --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
+def execution_status(
+    ladder: dict[str, Any],
+    levels: Sequence[int],
+    extra_level: int | None = None,
+    extra_cells: Sequence[tuple[float, float]] = plan.EXTRA_LEVEL_CELLS,
+) -> str:
+    """Derive how much of the pre-registered study the ladder actually covers.
+
+    The status used to be prose written by hand into ``results.json``, so a study
+    that had only laddered one cell of twelve could be published with a status
+    string that no longer matched the artifact.  It is computed here from the
+    ladder itself, and ``tests/test_capytaine_finite_depth_crossval.py`` reads it
+    to decide whether a gate may be judged at all.
+    """
+    planned = [plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()]
+    done = [key for key in planned if key in ladder.get("cells", {})]
+    wanted = {str(int(level)) for level in levels}
+    thin = [
+        key for key in done
+        if not wanted <= set(ladder["cells"][key].get("levels", {}))
+    ]
+    extra_missing = []
+    if extra_level is not None:
+        wanted_extra = {str(int(extra_level))}
+        extra_keys = {
+            plan.cell_id(float(ratio), float(ka)) for ratio, ka in extra_cells
+        }
+        for key in done:
+            if key in extra_keys and not wanted_extra <= set(
+                ladder["cells"][key].get("levels", {})
+            ):
+                extra_missing.append(key)
+    parts = []
+    if len(done) < len(planned):
+        parts.append(f"{len(done)} of {len(planned)} planned cells")
+    if thin:
+        parts.append(f"{len(thin)} covered cells missing rungs {sorted(wanted)}")
+    if extra_missing:
+        parts.append(
+            f"{len(extra_missing)} confirmation cells missing the "
+            f"{int(extra_level)}-subdivision rung"
+        )
+    return "COMPLETE" if not parts else "PARTIAL: " + "; ".join(parts)
+
+
 def run_study(
     ref_path: Path,
     root: Path,
@@ -744,6 +872,8 @@ def run_study(
     extra_cells: Sequence[tuple[float, float]] = plan.EXTRA_LEVEL_CELLS,
     control_level: int = 1,
     jobs: int = 1,
+    cache_path: Path | None = None,
+    cell_ids: Sequence[str] | None = None,
     write_doc: bool = False,
     doc_path: Path = DOC_PATH,
     figure_dir: Path | None = None,
@@ -751,17 +881,24 @@ def run_study(
     reference = json.loads(Path(ref_path).read_text())
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
-    ladder_path = root / LADDER_FILE
+    ladder_path = Path(cache_path) if cache_path is not None else root / LADDER_FILE
     # Only ladder the cells the frozen reference actually covers: a cell with no
     # reference can never enter the comparison, so computing its ladder is pure
     # cost (and on a partially produced reference it is the difference between a
-    # minutes-long and an hours-long study).
+    # minutes-long and an hours-long study).  ``cell_ids`` narrows the set one
+    # shard at a time; the merged cache is what the verdict is computed on.
     covered = {cell["cell"] for cell in reference.get("cells", [])}
     cells = [
         cell
         for cell in plan.cells()
         if plan.cell_id(cell["h_over_a"], cell["ka"]) in covered
     ] or list(plan.cells())
+    if cell_ids is not None:
+        wanted_ids = set(cell_ids)
+        unknown = wanted_ids - {plan.cell_id(c["h_over_a"], c["ka"]) for c in cells}
+        if unknown:
+            raise ValueError(f"cell ids not covered by the reference: {sorted(unknown)}")
+        cells = [c for c in cells if plan.cell_id(c["h_over_a"], c["ka"]) in wanted_ids]
     ladder = build_ladder(
         cells,
         levels,
@@ -782,6 +919,8 @@ def run_study(
             "ka_grid": list(plan.KA_GRID),
             "density": plan.DENSITY,
             "gravity": plan.GRAVITY,
+            "levels": [int(level) for level in levels],
+            "execution_status": execution_status(ladder, levels, extra_level),
         },
         "reference_provenance": reference.get("provenance", {}),
         "tensor_environment": ladder.get("environment", {}),
@@ -807,20 +946,99 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--levels", type=str, default=",".join(map(str, plan.TENSORBEM_LEVELS)))
     parser.add_argument("--extra-level", type=int, default=plan.EXTRA_TENSORBEM_LEVEL)
+    parser.add_argument("--merge-caches", type=Path, nargs="+", default=None,
+                        help="merge these shard ladder caches into --cache instead of "
+                             "solving (the shard collector)")
+    parser.add_argument("--shard", type=int, default=0,
+                        help="ladder-only: this shard index over the plan's cells")
+    parser.add_argument("--shards", type=int, default=1,
+                        help="ladder-only: total shards (assignment: index %% shards)")
+    parser.add_argument("--no-extra-level", action="store_true",
+                        help="skip the 1280-panel confirmation rung (budget runs); "
+                             "the frozen study then says so instead of pretending")
     parser.add_argument("--control-level", type=int, default=1)
     parser.add_argument("--jobs", type=int, default=1,
                         help="parallel worker processes for the TensorBEM ladder")
+    parser.add_argument("--cache", type=Path, default=None,
+                        help="ladder cache path (default: <out-root>/%s); a shard "
+                             "writes its own cache, the merged cache feeds the verdict"
+                             % LADDER_FILE)
+    parser.add_argument("--cell-ids", type=str, default=None,
+                        help="comma-separated subset of plan cell ids to ladder")
+    parser.add_argument("--ladder-only", action="store_true",
+                        help="produce/resume the ladder cache and stop: no comparison, "
+                             "no gates, no page (the shard entry point)")
     parser.add_argument("--write-doc", action="store_true")
     parser.add_argument("--doc", type=Path, default=DOC_PATH)
     args = parser.parse_args(argv)
     levels = [int(v) for v in args.levels.split(",") if v.strip()]
+    extra_level = None if args.no_extra_level else args.extra_level
+    if args.merge_caches:
+        merged = merge_ladders(
+            args.merge_caches,
+            out=args.cache,
+            required_levels=levels,
+        )
+        print(json.dumps({"merged_cells": sorted(merged["cells"]),
+                          "cache": str(args.cache)}, indent=1))
+        return 0
+    cell_ids = (
+        [c.strip() for c in args.cell_ids.split(",") if c.strip()]
+        if args.cell_ids
+        else None
+    )
+    if args.ladder_only:
+        if args.shards > 1:
+            if not 0 <= args.shard < args.shards:
+                parser.error("--shard must satisfy 0 <= shard < shards")
+            all_ids = [plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()]
+            mine = {key for index, key in enumerate(all_ids)
+                    if index % args.shards == args.shard}
+            cells = [
+                c for c in plan.cells()
+                if plan.cell_id(c["h_over_a"], c["ka"]) in mine
+            ]
+        if cell_ids is not None:
+            # Explicit ids beat the reference filter: the ladder and the
+            # reference are independent computations, so a shard must not have
+            # to wait for (or be reduced by) the other side's progress.
+            known = {plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()}
+            unknown = set(cell_ids) - known
+            if unknown:
+                raise SystemExit(f"cell ids not in the plan: {sorted(unknown)}")
+            cells = [
+                c for c in plan.cells()
+                if plan.cell_id(c["h_over_a"], c["ka"]) in set(cell_ids)
+            ]
+        else:
+            reference = json.loads(Path(args.ref).read_text())
+            covered = {cell["cell"] for cell in reference.get("cells", [])}
+            cells = [
+                cell for cell in plan.cells()
+                if plan.cell_id(cell["h_over_a"], cell["ka"]) in covered
+            ] or list(plan.cells())
+        ladder = build_ladder(
+            cells,
+            levels,
+            cache_path=args.cache or (args.out_root / LADDER_FILE),
+            extra_level=extra_level,
+            extra_cells=plan.EXTRA_LEVEL_CELLS,
+            control_level=args.control_level,
+            jobs=args.jobs,
+        )
+        print(json.dumps({"ladder_cells": sorted(ladder["cells"]),
+                          "cache": str(args.cache or (args.out_root / LADDER_FILE))},
+                         indent=1))
+        return 0
     result = run_study(
         args.ref,
         args.out_root,
         levels=levels,
-        extra_level=args.extra_level,
+        extra_level=extra_level,
         control_level=args.control_level,
         jobs=args.jobs,
+        cache_path=args.cache,
+        cell_ids=cell_ids,
         write_doc=args.write_doc,
         doc_path=args.doc,
     )
