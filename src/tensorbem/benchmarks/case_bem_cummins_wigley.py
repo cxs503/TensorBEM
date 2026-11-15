@@ -543,6 +543,7 @@ C0_DEPENDENT_GATES: tuple[str, ...] = (
     "C5b",  # per-DOF decay audit
     "C5c",  # robust (multi-window) decay gate
     "C11",  # state-space reduction validation
+    "C13",  # time-domain discretisation budget
 )
 
 
@@ -1599,6 +1600,225 @@ def free_decay_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# time-domain discretisation budget (gate C13)
+# ---------------------------------------------------------------------------
+
+#: The time-domain route (``C5``, ``C5b``, ``C5c``, ``C11``) is quoted at exactly
+#: one pair of integration constants: ``dt = DT = 0.002 s`` and a memory window
+#: ``tau_max = TAU_MAX = 25 s``, i.e. shorter than the simulated ``DURATION``.
+#: Nothing in the case said whether those numbers are fine enough -- every gate
+#: re-used them, so a discretisation error would appear identically in the
+#: "independent" routes and cancel.  ``C13`` spends the two refinements that the
+#: convolution actually has:
+#:
+#: * **step**: rerun the heave decay at ``dt_coarse`` (coarser, hence cheap) and
+#:   ask the decay rate to move by no more than ``zeta_bar``.  A trapezoid memory
+#:   sum plus RK4 should converge from above, so the coarse leg is a one-sided
+#:   bound on the committed step, not an estimate of an asymptotic order.
+#: * **memory window**: rerun the *same* step with ``tau_max_long = 2 TAU_MAX``.
+#:   Since ``DURATION > TAU_MAX`` the committed run drops every lag beyond 25 s
+#:   for ``t > 25 s``, so this leg is a real physics change and not a numerical
+#:   nicety.
+#:
+#: ``zeta_bar`` is pre-declared at 2 %: half the 5 % bar ``C5`` uses for its own
+#: frequency-domain comparison, because a discretisation error is not allowed to
+#: eat half of the case tolerance it is supposed to support.  The kernel-weight
+#: fraction beyond ``TAU_MAX`` is reported next to them but *not* scored: it is a
+#: property of the hull's kernel (a slowly decaying tail), not of the settings.
+TIME_DOMAIN_CONVERGENCE = {
+    "dt_coarse": 0.003,
+    "tau_max_factor": 2.0,
+    "zeta_bar": 0.02,
+    "weight_probe_factor": 4.0,
+}
+
+
+def _decay_at(
+    sweep: Sweep,
+    dof: int,
+    *,
+    dt: float,
+    tau_max: float,
+    duration: float,
+    damping: np.ndarray | None = None,
+    omega: np.ndarray | None = None,
+    added_mass_inf: float | None = None,
+    amplitude_floor: float | None = None,
+) -> dict[str, Any]:
+    """One Cummins free decay at an explicit ``(dt, tau_max, duration)``."""
+    omega_used = np.asarray(sweep.omega if omega is None else omega, dtype=float)
+    damper = np.asarray(sweep.damping[:, dof, dof] if damping is None else damping, dtype=float)
+    if added_mass_inf is None:
+        closure = kk_added_mass_closure(omega_used, sweep.added_mass[:, dof, dof], damper)
+        added_mass_inf = float(closure.added_mass_inf)
+    oscillator = oscillator_properties(dof, label=sweep.label)
+    tau = np.arange(0.0, float(tau_max) + 0.5 * float(dt), float(dt))
+    kernel = td.radiation_memory_kernel(omega_used, damper, tau)
+    decay = td.cummins_free_decay(
+        kernel,
+        mass=oscillator["inertia"],
+        restoring=oscillator["stiffness"],
+        added_mass_inf=float(added_mass_inf),
+        initial_displacement=1.0,
+        dt=float(dt),
+        duration=float(duration),
+    )
+    kwargs = {} if amplitude_floor is None else {"amplitude_floor": amplitude_floor}
+    zeta, period, peaks = _decay_zeta(
+        np.asarray(decay.time), np.asarray(decay.displacement), **kwargs
+    )
+    return {
+        "dt": float(dt),
+        "tau_max": float(tau_max),
+        "duration": float(duration),
+        "zeta": float(zeta),
+        "damped_period": float(period),
+        "n_peaks": int(peaks),
+        "added_mass_inf": float(added_mass_inf),
+        "kernel_span": float(kernel.span),
+        "kernel_truncation": kernel.truncation,
+    }
+
+
+def kernel_weight_beyond(
+    sweep: Sweep,
+    dof: int,
+    tau_max: float = TAU_MAX,
+    *,
+    factor: float | None = None,
+) -> dict[str, Any]:
+    """Share of the memory kernel's absolute weight that lies beyond ``tau_max``.
+
+    ``integral |K|`` is used rather than ``integral K``: the latter cancels the
+    oscillating tail (its ``omega -> 0`` limit is the DC gain) and would report a
+    truncation that is not there, while the weight is exactly the mass of memory
+    the finite window abandons.
+    """
+    if factor is None:
+        factor = float(TIME_DOMAIN_CONVERGENCE["weight_probe_factor"])
+    damper = np.asarray(sweep.damping[:, int(dof), int(dof)], dtype=float)
+    omega = np.asarray(sweep.omega, dtype=float)
+    long_span = float(tau_max) * float(factor)
+    grid = np.arange(0.0, long_span + 0.5 * DT, DT)
+    kernel = td.radiation_memory_kernel(omega, damper, grid)
+    values = np.abs(np.asarray(kernel(grid), dtype=float))
+    inside = grid <= float(tau_max)
+    kept = float(np.trapezoid(values[inside], grid[inside]))
+    total = float(np.trapezoid(values, grid))
+    return {
+        "dof": DOF_NAMES[int(dof)],
+        "tau_max": float(tau_max),
+        "probe_span": long_span,
+        "weight_kept": kept,
+        "weight_total": total,
+        "fraction_beyond": (1.0 - kept / total) if total > 0.0 else float("nan"),
+    }
+
+
+def time_domain_convergence_gate(
+    sweep: Sweep,
+    *,
+    dof: int = 2,
+    dt: float | None = None,
+    tau_max: float | None = None,
+    duration: float | None = None,
+    identifier: str = "C13",
+) -> dict[str, Any]:
+    """C13: does the time-domain verdict survive a finer step and a longer memory?
+
+    The three legs share everything except the parameter under test, so the
+    difference between them is the discretisation contribution alone -- this is
+    the one comparison the case's routes cannot make between themselves, because
+    they all consumed the same ``DT``/``TAU_MAX``.
+    """
+    criteria = TIME_DOMAIN_CONVERGENCE
+    step = float(DT if dt is None else dt)
+    window = float(TAU_MAX if tau_max is None else tau_max)
+    span = float(DURATION if duration is None else duration)
+    bar = float(criteria["zeta_bar"])
+
+    baseline = _decay_at(sweep, dof, dt=step, tau_max=window, duration=span)
+    coarse = _decay_at(
+        sweep, dof, dt=float(criteria["dt_coarse"]), tau_max=window, duration=span
+    )
+    longer = _decay_at(
+        sweep,
+        dof,
+        dt=step,
+        tau_max=window * float(criteria["tau_max_factor"]),
+        duration=span,
+    )
+
+    def _shift(reference: dict[str, Any], leg: dict[str, Any]) -> dict[str, float]:
+        zeta_ref = float(reference["zeta"])
+        period_ref = float(reference["damped_period"])
+        return {
+            "zeta_relative_shift": (
+                abs(float(leg["zeta"]) - zeta_ref) / abs(zeta_ref) if zeta_ref else float("nan")
+            ),
+            "period_relative_shift": (
+                abs(float(leg["damped_period"]) - period_ref) / abs(period_ref)
+                if period_ref
+                else float("nan")
+            ),
+        }
+
+    step_shift = _shift(baseline, coarse)
+    window_shift = _shift(baseline, longer)
+    finite = all(
+        math.isfinite(value)
+        for value in (
+            baseline["zeta"],
+            coarse["zeta"],
+            longer["zeta"],
+            step_shift["zeta_relative_shift"],
+            window_shift["zeta_relative_shift"],
+        )
+    )
+    passed = bool(
+        finite
+        and step_shift["zeta_relative_shift"] <= bar
+        and window_shift["zeta_relative_shift"] <= bar
+    )
+    return {
+        "id": identifier,
+        "title": (
+            f"time-domain discretisation budget: dt {step:g} -> "
+            f"{float(criteria['dt_coarse']):g} s and memory window {window:g} -> "
+            f"{window * float(criteria['tau_max_factor']):g} s ({DOF_NAMES[int(dof)]})"
+        ),
+        "threshold": (
+            f"|zeta(refined) - zeta(committed)|/zeta(committed) <= {bar:.0%} on both "
+            "legs (step and memory window)"
+        ),
+        "passed": passed,
+        "values": {
+            "dof": int(dof),
+            "dof_name": DOF_NAMES[int(dof)],
+            "criteria": dict(criteria),
+            "bar": bar,
+            "baseline": baseline,
+            "coarse_step": {**coarse, **_shift(baseline, coarse)},
+            "long_window": {**longer, **_shift(baseline, longer)},
+            "worst_shift": max(
+                step_shift["zeta_relative_shift"],
+                window_shift["zeta_relative_shift"],
+            ),
+            "kernel_weight_beyond_tau_max": kernel_weight_beyond(
+                sweep, int(dof), window
+            ),
+            "kernel_weight_note": (
+                "reported, not scored: the share of integral |K| beyond the committed "
+                "memory window is a property of the hull's kernel tail. It is only "
+                "allowed to be large if the long-window leg above stays inside the "
+                "bar -- otherwise the truncation is eating the verdict"
+            ),
+            "amplitude_floor": DECAY_AMPLITUDE_FLOOR,
+        },
+    }
+
+
 def negative_control_gate(sweep: Sweep, *, dof: int = 2) -> dict[str, Any]:
     """C6a: zero damping must give a zero kernel and a non-decaying record."""
     zeros = np.zeros_like(sweep.damping[:, dof, dof])
@@ -2634,6 +2854,7 @@ def gates_from_artifact(
     corrupted_control: bool = True,
     include_decay_modes: bool = True,
     include_external_anchor: bool = True,
+    include_time_convergence: bool = False,
     extended_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """Re-judge a committed sweep artifact without solving the BEM system again.
@@ -2677,6 +2898,8 @@ def gates_from_artifact(
         gates["C7"] = added_mass_inf_gate(
             sweep, anchor, closure_rows=gates["C3"]["values"]["per_dof"]
         )
+    if include_time_convergence:
+        gates["C13"] = time_domain_convergence_gate(sweep, dof=int(dof_free_decay))
     gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
     gates["C5"] = free_decay_gate(sweep, dof=int(dof_free_decay))
     gates["C6a"] = negative_control_gate(sweep, dof=int(dof_free_decay))
@@ -2730,6 +2953,7 @@ def run_case(
     save_sweeps: bool = True,
     dof_free_decay: int = 2,
     refine_peaks: int = 0,
+    include_time_convergence: bool = True,
     mission: str = "m17375",
 ) -> dict[str, Any]:
     """Run the whole case and write the artifacts; returns the results dict."""
@@ -2826,6 +3050,10 @@ def run_case(
             ],
         )
         results["gates"]["C11"] = state_space_gate(production, dof=int(dof_free_decay))
+        if include_time_convergence:
+            results["gates"]["C13"] = time_domain_convergence_gate(
+                production, dof=int(dof_free_decay)
+            )
         if len(meshes) > 1:
             results["mesh_convergence"] = _mesh_convergence(sweeps[meshes[0]], production)
         extended_info = attach_extended_band_gates(
