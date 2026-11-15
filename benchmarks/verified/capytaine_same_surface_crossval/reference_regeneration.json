@@ -1,0 +1,73 @@
+{
+ "method": "independent re-solve of the committed capytaine reference column with the installed capytaine; deviation normalised by the column maximum so near-zero entries are not divided by a floor",
+ "capytaine_version": "3.1.dev0",
+ "checks": [
+  {
+   "case": "hemisphere_r1",
+   "level": [
+    28,
+    56
+   ],
+   "nu": 1.0,
+   "dof": "surge",
+   "added_mass_dev_of_colmax": 5.517225790372107e-17,
+   "damping_dev_of_colmax": 1.8619523717132206e-16
+  },
+  {
+   "case": "hemisphere_r1",
+   "level": [
+    28,
+    56
+   ],
+   "nu": 0.5,
+   "dof": "heave",
+   "added_mass_dev_of_colmax": 1.7707447929502282e-20,
+   "damping_dev_of_colmax": 1.4024550818380256e-16
+  },
+  {
+   "case": "hemisphere_r1_cz-0.5",
+   "level": [
+    28,
+    56
+   ],
+   "nu": 2.0,
+   "dof": "roll",
+   "added_mass_dev_of_colmax": 3.159955434345724e-17,
+   "damping_dev_of_colmax": 9.364198481154138e-17
+  },
+  {
+   "case": "hemisphere_r1_cz-0.5",
+   "level": [
+    16,
+    32
+   ],
+   "nu": 1.0,
+   "dof": "pitch",
+   "added_mass_dev_of_colmax": 1.7837305511194643e-16,
+   "damping_dev_of_colmax": 7.381833602625041e-17
+  },
+  {
+   "case": "sphere_r1_z-0.5",
+   "level": [
+    28,
+    56
+   ],
+   "nu": 0.5,
+   "dof": "heave",
+   "added_mass_dev_of_colmax": 4.0065668249252403e-17,
+   "damping_dev_of_colmax": 4.537398930973696e-19
+  },
+  {
+   "case": "sphere_r1_z-0.5_c0",
+   "level": [
+    28,
+    56
+   ],
+   "nu": 1.0,
+   "dof": "pitch",
+   "added_mass_dev_of_colmax": 2.1987852695672574e-17,
+   "damping_dev_of_colmax": 1.1640386147405447e-16
+  }
+ ],
+ "worst_deviation": 1.8619523717132206e-16
+}
