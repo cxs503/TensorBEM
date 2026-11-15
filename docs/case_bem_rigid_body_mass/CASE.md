@@ -139,3 +139,27 @@
 
 检查项：`{"rao_caller_verified": true, "rao_caller_replay_roundoff": true, "rao_caller_legacy_coupling_material": true, "worst_accepted_entry_within_tolerance": true, "momentum_route_roundoff": true, "momentum_route_rejects_flipped_coupling": true, "momentum_route_beats_energy_blind_spot": true, "base_case_passed": true, "orientation_case_passed": true, "external_integrator_roundoff": true, "external_mesh_route_within_tolerance": true, "external_route_rejects_legacy_coupling": true, "external_ship_shape_within_tolerance": true, "external_topology_guard_agrees": true, "external_guard_is_load_bearing": true, "legacy_coupling_rejected": true, "orientation_negative_control_rejected": true}`
 
+
+## ⑦ 补强：由船体网格精确导出惯量（geometry route）
+
+上一版止步于「不给惯量张量」时的等效半椭球近似：箱形船体三个转动惯量偏低 11.6% / 18.5% / 20.0%（最差 20.0%），超出 3% 容差，只发 `RuntimeWarning`。
+
+本单新增 `rigid_body_mass.wetted_hull_solid` / `wetted_hull_mass_properties` 与装配入口 `hydrostatic.mass_matrix_from_wetted_hull`：把湿表面用静水面封口（边界半边反向三角扇），直接积分真实体积矩；封口位于 `z=0` 故封闭体积与湿表面有符号体积恒等（断言，非假设），并由 `mesh_topology_report` 逐例校验水密。
+
+| 参照 | 船体 | 接受档最差惯量相对误差 | <3%？ |
+|---|---|---|---|
+| R1 box | R1 box 20x8x3 m | 0.0000 | 是 |
+| R2 half-ellipsoid | R2 half-ellipsoid 60:12:8 m (subdivisions=4) | 0.0098 | 是 |
+| R3 elliptic cylinder | R3 elliptic cylinder 15:5:2.5 m (n-gon 64) | 1.8282e-15 | 是 |
+
+| 曲面收敛阶梯 | 档位 | 最差相对误差 | log-log 斜率 |
+|---|---|---|---|
+| 半椭球 60:12:8 m | 2, 3, 4, 5 | 0.1427, 0.0383, 0.0098, 0.0025 | 1.96（对网格尺度，二阶） |
+
+* 同一艘驳船：旧路线最差 0.200 → 网格精确路线 0.0000（舍入误差）。
+* 水平平移不变性：惯量相对变化 0.0000；动能恒等式最差残差 2.2537e-16。
+* 交付：`docs/case_bem_rigid_body_mass/geometry_inertia/{results,verdict}.json`、`GEOMETRY_INERTIA.md`、`fig_geometry_inertia.png`；测试 `tests/test_rigid_body_mass_wetted_hull_inertia.py`（21 项）。
+* 未覆盖：`rao.py`/`ice_rao.py` 的 `inertia=None` 分支仍走旧路线（接网格需改调用点，独立改动）；垂直平移会改变浸没体，故不变性只在水平方向成立。
+
+复现：`PYTHONPATH=src python3 -m tensorbem.benchmarks.rigid_body_mass_hull_inertia --outdir docs/case_bem_rigid_body_mass/geometry_inertia`
+

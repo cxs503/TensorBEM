@@ -998,3 +998,228 @@ def equivalent_inertia_from_hydrostatics(
 def _as_list(values: Sequence[float]) -> list[float]:
     """Small helper so callers can serialise tuples without numpy scalars."""
     return [float(value) for value in values]
+
+def _boundary_half_edges(faces: NDArray[np.integer], n_vertices: int) -> NDArray[np.int64]:
+    """Directed half-edges of an open surface that have no opposite partner."""
+    tris = np.asarray(faces, dtype=np.int64)
+    directed = np.concatenate(
+        (tris[:, [0, 1]], tris[:, [1, 2]], tris[:, [2, 0]]), axis=0
+    )
+    keys = directed[:, 0] * n_vertices + directed[:, 1]
+    reverse = directed[:, 1] * n_vertices + directed[:, 0]
+    return directed[~np.isin(reverse, keys)]
+
+
+def _waterline_loop_groups(
+    half_edges: NDArray[np.int64], n_vertices: int
+) -> list[NDArray[np.int64]]:
+    """Group boundary half-edges into their connected waterline loops."""
+    parent = np.arange(n_vertices)
+
+    def find(index: int) -> int:
+        root = index
+        while parent[root] != root:
+            root = int(parent[root])
+        while parent[index] != root:
+            parent[index], index = root, int(parent[index])
+        return root
+
+    for a, b in half_edges:
+        root_a, root_b = find(int(a)), find(int(b))
+        if root_a != root_b:
+            parent[max(root_a, root_b)] = min(root_a, root_b)
+    roots = np.array([find(int(a)) for a in half_edges[:, 0]], dtype=np.int64)
+    return [half_edges[roots == root] for root in np.unique(roots)]
+
+
+def wetted_hull_solid(
+    vertices: ArrayLike,
+    faces: ArrayLike,
+    *,
+    reference_point: ArrayLike = (0.0, 0.0, 0.0),
+) -> dict[str, object]:
+    """Close a ``WettedHullMesh`` with the calm-waterplane lid and check it.
+
+    A :class:`~tensorbem.geometry3d.WettedHullMesh` is deliberately *open* along
+    ``z = 0`` (its panels are the wetted surface only), while
+    :func:`mesh_mass_properties` needs a closed, outward-oriented solid.  The
+    body is closed here by a triangle fan from each waterline loop's centroid
+    over that loop's boundary half-edges, traversed in the reverse direction so
+    that every lid half-edge cancels a wetted one.
+
+    Because the lid lies in the plane ``z = 0`` and its fan apex lies in the same
+    plane, its contribution to the signed-tetrahedron volume about any origin on
+    that plane is *exactly* zero: the displaced volume of the closed solid and
+    the signed volume of the wetted panels are then equal to round-off, which is
+    what :func:`wetted_hull_mass_properties` asserts rather than assumes.
+
+    Parameters
+    ----------
+    vertices, faces:
+        Wetted hull panels (``(V, 3)``, ``(F, 3)``), e.g. the
+        ``mesh.vertices`` / ``mesh.faces`` of a ``WettedHullMesh``.  Panels must
+        be outward-oriented into the fluid and every open boundary edge must lie
+        on ``z = 0``.
+    reference_point:
+        Unused except as the origin of the signed volume cached in the report;
+        kept explicit so the volume check is not silently origin dependent.
+
+    Returns
+    -------
+    dict with ``vertices``, ``faces`` (the closed solid), ``lid_faces``,
+    ``wetted_faces``, ``waterline_loops`` (one per disjoint waterline loop),
+    ``lid_panels``, ``wetted_volume``, ``solid_volume``,
+    ``volume_mismatch`` (relative) and ``topology``
+    (:func:`mesh_topology_report` of the closed solid).
+
+    Raises
+    ------
+    ValueError
+        If a boundary edge is off the waterplane, a loop is degenerate, the lid
+        normal does not point up (``+z``) or the closed solid is not watertight.
+    """
+    verts = np.asarray(vertices, dtype=float)
+    tris = np.asarray(faces, dtype=np.int64)
+    if verts.ndim != 2 or verts.shape[1] != 3:
+        raise ValueError("vertices must have shape (V, 3)")
+    if tris.ndim != 2 or tris.shape[1] != 3:
+        raise ValueError("faces must have shape (F, 3)")
+    if not np.all(np.isfinite(verts)):
+        raise ValueError("vertices must be finite")
+    if tris.size == 0:
+        raise ValueError("a wetted hull needs at least one panel")
+    if tris.min() < 0 or tris.max() >= verts.shape[0]:
+        raise ValueError("faces index vertices out of range")
+    scale = max(1.0, float(np.max(np.linalg.norm(verts - verts.mean(axis=0), axis=1))))
+    tol = 1.0e-10 * scale
+
+    n_vertices = int(verts.shape[0])
+    half_edges = _boundary_half_edges(tris, n_vertices)
+    if half_edges.shape[0] == 0:
+        raise ValueError(
+            "the wetted hull has no open waterline boundary; refusing to add a lid "
+            "to what is already a closed surface"
+        )
+    if np.any(np.abs(verts[half_edges.ravel(), 2]) > tol):
+        raise ValueError("open hull boundary edges must lie on the calm waterplane z = 0")
+
+    loops = _waterline_loop_groups(half_edges, n_vertices)
+    new_vertices = verts
+    lid_rows: list[tuple[int, int, int]] = []
+    loop_centres: list[list[float]] = []
+    for loop in loops:
+        loop_vertices = np.unique(loop.ravel())
+        if loop_vertices.size < 3:
+            raise ValueError("degenerate waterline loop: fewer than three vertices")
+        apex = verts[loop_vertices].mean(axis=0)
+        apex[2] = 0.0
+        apex_index = int(new_vertices.shape[0])
+        new_vertices = np.vstack((new_vertices, apex))
+        loop_centres.append([float(value) for value in apex])
+        # Reverse traversal: each lid half-edge is the opposite of the wetted one.
+        for a, b in loop:
+            lid_rows.append((apex_index, int(b), int(a)))
+    lid = np.asarray(lid_rows, dtype=np.int64)
+    closed_faces = np.vstack((tris, lid))
+
+    lid_normal_z = 0.5 * float(
+        np.sum(
+            np.cross(
+                new_vertices[lid[:, 1]] - new_vertices[lid[:, 0]],
+                new_vertices[lid[:, 2]] - new_vertices[lid[:, 0]],
+            )[:, 2]
+        )
+    )
+    if lid_normal_z <= tol * tol:
+        raise ValueError(
+            "the waterplane lid came out with a non-positive (+z) area; the wetted "
+            "panels are not outward-oriented into the fluid"
+        )
+
+    topology = mesh_topology_report(new_vertices, closed_faces)
+    if not topology["is_closed"]:
+        raise ValueError(
+            "closing the wetted hull with the waterplane lid did not produce a "
+            f"watertight surface (open edges {topology['open_edges']}, "
+            f"non-manifold {topology['nonmanifold_edges']}, flipped "
+            f"{topology['orientation_mismatches']})"
+        )
+
+    def _signed_volume(nodes: NDArray[np.float64], rows: NDArray[np.int64]) -> float:
+        a, b, c = (nodes[rows[:, k]] for k in range(3))
+        return float(np.sum(np.einsum("ij,ij->i", a, np.cross(b, c))) / 6.0)
+
+    wetted_volume = _signed_volume(verts, tris)
+    solid_volume = _signed_volume(new_vertices, closed_faces)
+    if solid_volume <= 0.0:
+        raise ValueError(
+            "the closed wetted solid encloses a non-positive volume; check panel "
+            "orientation (outward normals must point into the fluid)"
+        )
+    mismatch = abs(solid_volume - wetted_volume) / max(abs(solid_volume), 1e-300)
+    if mismatch > 1.0e-12:
+        raise ValueError(
+            "the planar lid changed the displaced volume (relative mismatch "
+            f"{mismatch:.3e}); the boundary is not a planar waterplane loop"
+        )
+    return {
+        "vertices": new_vertices,
+        "faces": closed_faces,
+        "lid_faces": lid,
+        "wetted_faces": int(tris.shape[0]),
+        "lid_panels": int(lid.shape[0]),
+        "waterline_loops": len(loops),
+        "loop_centres": loop_centres,
+        "wetted_volume": wetted_volume,
+        "solid_volume": solid_volume,
+        "volume_mismatch": mismatch,
+        "topology": topology,
+    }
+
+
+def wetted_hull_mass_properties(
+    vertices: ArrayLike,
+    faces: ArrayLike,
+    density: float = DEFAULT_DENSITY,
+    *,
+    reference_point: ArrayLike = (0.0, 0.0, 0.0),
+) -> dict[str, object]:
+    """Mass, centroid and inertia tensor of a floating body *from its hull mesh*.
+
+    This is the geometry-exact counterpart of
+    :func:`equivalent_inertia_from_hydrostatics`: instead of reconstructing the
+    body as the half-ellipsoid that matches the displaced volume and the
+    waterplane second moments, the wetted hull panels are closed with the
+    waterplane (:func:`wetted_hull_solid`) and integrated directly with
+    :func:`mesh_mass_properties`.  The reconstruction is exact for any
+    waterplane whose lid fan is a valid triangulation, so box-like hulls -- which
+    the two-moment reconstruction misses by ~20 % -- are reproduced to
+    panelisation error.
+
+    Returns
+    -------
+    dict of :func:`mesh_mass_properties` plus ``displaced_volume``,
+    ``solid`` (the closure report of :func:`wetted_hull_solid`) and
+    ``waterplane_lid_area``.
+    """
+    solid = wetted_hull_solid(vertices, faces, reference_point=reference_point)
+    props = mesh_mass_properties(
+        solid["vertices"], solid["faces"], density, reference_point=reference_point
+    )
+    lid = np.asarray(solid["lid_faces"], dtype=np.int64)
+    nodes = np.asarray(solid["vertices"], dtype=float)
+    lid_area = 0.5 * float(
+        np.sum(
+            np.linalg.norm(
+                np.cross(
+                    nodes[lid[:, 1]] - nodes[lid[:, 0]],
+                    nodes[lid[:, 2]] - nodes[lid[:, 0]],
+                ),
+                axis=1,
+            )
+        )
+    )
+    props["displaced_volume"] = float(solid["solid_volume"])
+    props["waterplane_lid_area"] = lid_area
+    props["solid"] = solid
+    return props

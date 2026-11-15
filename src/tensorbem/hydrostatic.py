@@ -46,6 +46,7 @@ from .geometry3d import WettedHullMesh
 from .rigid_body_mass import (
     equivalent_inertia_from_hydrostatics,
     waterplane_central_moments,
+    wetted_hull_mass_properties,
 )
 
 FloatArray = NDArray[np.float64]
@@ -732,5 +733,86 @@ def mass_matrix_from_hull_geometry(
         )
     return compute_mass_matrix(
         mass, center_of_gravity, np.asarray(derived["inertia_cg"], dtype=float),
+        inertia_about="cg",
+    )
+
+
+def mass_matrix_from_wetted_hull(
+    hull: "WettedHullMesh",
+    mass: float | None = None,
+    center_of_gravity: FloatArray | None = None,
+    *,
+    density: float = _DEFAULT_DENSITY,
+    reference_point: FloatArray = (0.0, 0.0, 0.0),
+    inertia: FloatArray | None = None,
+) -> FloatArray:
+    """6x6 rigid-body mass matrix from the hull mesh itself (geometry-exact).
+
+    :func:`mass_matrix_from_hull_geometry` reconstructs the inertia from two
+    hydrostatic scalars (displaced volume and the waterplane second moments),
+    which pins an equivalent half-ellipsoid.  That reconstruction is exact for
+    elliptic waterplanes and ~16--20 % low for box-like hulls -- an approximation
+    class nobody can remove without more geometric information.  A hull *mesh*
+    carries that information, so this entry integrates the actual
+    submerged volume (closed with the calm waterplane, see
+    :func:`tensorbem.rigid_body_mass.wetted_hull_solid`) and builds the inertia
+    tensor about the true centre of gravity.  For an exactly polyhedral hull
+    (barge, box) the result is exact to round-off; for a curved hull the error is
+    the panelisation of the surface, i.e. a convergence ladder, not a declared
+    bias.
+
+    Defaults are geometry-anchored on purpose: with ``mass=None`` the body is
+    neutrally buoyant (``mass = density * displaced_volume``) and with
+    ``center_of_gravity=None`` the CG is the volume centroid, so a caller that
+    knows nothing about the ship still gets a matrix that is a property of the
+    body rather than of the coordinate origin.
+
+    Parameters
+    ----------
+    hull :
+        ``WettedHullMesh`` in ``z <= 0`` (wetted panels only, no lid), e.g. from
+        :func:`tensorbem.geometry3d.rectangular_barge_hull_mesh`,
+        :func:`~tensorbem.geometry3d.spheroid_hull_mesh` or
+        :func:`~tensorbem.geometry3d.elliptic_cylinder_hull_mesh`.
+    mass :
+        Body mass (kg); default ``density * displaced_volume`` (neutral buoyancy).
+    center_of_gravity :
+        CG position in the same frame as the mesh (m); default the volume
+        centroid.
+    density :
+        Density used for the volume integration and the default mass (kg/m^3).
+    reference_point :
+        Point the generalized coordinates are taken about (m).
+    inertia :
+        Optional explicit tensor about the CG; when given it is passed through
+        unchanged, so this function can serve as the single assembly entry point.
+
+    Returns
+    -------
+    M :
+        6x6 rigid-body mass matrix (kg, kg*m).
+    """
+    props = wetted_hull_mass_properties(
+        hull.vertices, hull.faces, density, reference_point=reference_point
+    )
+    body_mass = float(density * props["displaced_volume"]) if mass is None else float(mass)
+    if not math.isfinite(body_mass) or body_mass <= 0.0:
+        raise ValueError("mass must be a positive finite number")
+    cg = (
+        np.asarray(props["centroid"], dtype=float).reshape(3)
+        if center_of_gravity is None
+        else np.asarray(center_of_gravity, dtype=float).reshape(3)
+    )
+    if inertia is not None:
+        return compute_mass_matrix(
+            body_mass,
+            cg,
+            inertia,
+            inertia_about="cg",
+        )
+    return compute_mass_matrix(
+        body_mass,
+        cg,
+        np.asarray(props["inertia_cg"], dtype=float),
         inertia_about="cg",
     )

@@ -1,0 +1,71 @@
+{
+  "accepted": {
+    "R1 box": {
+      "case": "R1 box 20x8x3 m",
+      "per_axis_rel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "worst_rel": 0.0
+    },
+    "R2 half-ellipsoid": {
+      "case": "R2 half-ellipsoid 60:12:8 m (subdivisions=4)",
+      "per_axis_rel": [
+        0.009690988107857755,
+        0.009757963053072052,
+        0.009761121882953624
+      ],
+      "worst_rel": 0.009761121882953624
+    },
+    "R3 elliptic cylinder": {
+      "case": "R3 elliptic cylinder 15:5:2.5 m (n-gon 64)",
+      "per_axis_rel": [
+        1.8281624635699226e-15,
+        8.722458913759403e-16,
+        3.9615085185374117e-16
+      ],
+      "worst_rel": 1.8281624635699226e-15
+    }
+  },
+  "checks": {
+    "accepted_levels_within_3pct": true,
+    "box_exact_to_roundoff": true,
+    "energy_identity": true,
+    "lid_volume_consistent": true,
+    "mass_matrix_positive_definite": true,
+    "mass_matrix_symmetric": true,
+    "previous_route_fails_on_box": true,
+    "spheroid_error_monotone": true,
+    "spheroid_slope_at_least_first_order": true,
+    "translation_invariance": true
+  },
+  "energy_identity": {
+    "mass": 599902.7401995943,
+    "samples": 16,
+    "worst_rel_residual": 2.2536916921916413e-16
+  },
+  "improvement": {
+    "box_geometry_route_worst_rel": 0.0,
+    "box_previous_route_per_axis": [
+      0.11635741139503165,
+      0.18507112721720634,
+      0.2
+    ],
+    "box_previous_route_worst_rel": 0.2,
+    "ratio": null
+  },
+  "invariance": {
+    "centroid_shift_error": 0.0,
+    "inertia_rel_change": 0.0,
+    "matrix_rel_change_upper_blocks": 0.0,
+    "shift": [
+      7.0,
+      -4.0,
+      0.0
+    ],
+    "volume_rel_change": 0.0
+  },
+  "tolerance": 0.03,
+  "verdict": "PASS"
+}
