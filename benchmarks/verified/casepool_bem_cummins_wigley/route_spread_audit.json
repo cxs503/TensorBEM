@@ -1,0 +1,721 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "purpose": "Measure how much of the free-decay closure residual is agreement between independent routes and how much is the single-frequency reference's own sensitivity, by adding a complex-resonance route that is not built from the measured period, and by falsifying the sampled-kernel root route.",
+  "sweep": "benchmarks/verified/casepool_bem_cummins_wigley/sweep_medium.npz",
+  "decay_artifact": "benchmarks/verified/casepool_bem_cummins_wigley/decay_dof_audit.json",
+  "symmetry": {
+    "blocks": {
+      "vertical": [
+        "surge",
+        "heave",
+        "pitch"
+      ],
+      "horizontal": [
+        "sway",
+        "roll",
+        "yaw"
+      ]
+    },
+    "forbidden_pairs": [
+      {
+        "i": 0,
+        "j": 1,
+        "dofs": [
+          "surge",
+          "sway"
+        ],
+        "added_mass": 2.1010797621704804e-06,
+        "damping": 7.785408831701006e-07
+      },
+      {
+        "i": 0,
+        "j": 3,
+        "dofs": [
+          "surge",
+          "roll"
+        ],
+        "added_mass": 2.18245553300254e-06,
+        "damping": 4.1033992603495966e-06
+      },
+      {
+        "i": 0,
+        "j": 5,
+        "dofs": [
+          "surge",
+          "yaw"
+        ],
+        "added_mass": 7.844786580273225e-09,
+        "damping": 1.5110888378622448e-07
+      },
+      {
+        "i": 1,
+        "j": 2,
+        "dofs": [
+          "sway",
+          "heave"
+        ],
+        "added_mass": 3.218349621281016e-07,
+        "damping": 1.074923836189424e-06
+      },
+      {
+        "i": 1,
+        "j": 4,
+        "dofs": [
+          "sway",
+          "pitch"
+        ],
+        "added_mass": 1.281353731667357e-07,
+        "damping": 3.978023389434128e-07
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "dofs": [
+          "heave",
+          "roll"
+        ],
+        "added_mass": 1.3771994211208707e-07,
+        "damping": 6.820891099373608e-07
+      },
+      {
+        "i": 2,
+        "j": 5,
+        "dofs": [
+          "heave",
+          "yaw"
+        ],
+        "added_mass": 1.3581469770002065e-07,
+        "damping": 2.1194531510962776e-07
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "dofs": [
+          "roll",
+          "pitch"
+        ],
+        "added_mass": 5.059388166170024e-08,
+        "damping": 5.0354324768923076e-08
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "dofs": [
+          "pitch",
+          "yaw"
+        ],
+        "added_mass": 5.4469648461760684e-08,
+        "damping": 5.399695418214303e-07
+      }
+    ],
+    "allowed_in_block_pairs": [
+      {
+        "i": 0,
+        "j": 2,
+        "dofs": [
+          "surge",
+          "heave"
+        ],
+        "added_mass": 5.2126884922742047e-05,
+        "damping": 0.0003857232420188523
+      },
+      {
+        "i": 0,
+        "j": 4,
+        "dofs": [
+          "surge",
+          "pitch"
+        ],
+        "added_mass": 0.40142230479460184,
+        "damping": 0.46709894430367677
+      },
+      {
+        "i": 1,
+        "j": 3,
+        "dofs": [
+          "sway",
+          "roll"
+        ],
+        "added_mass": 0.08804241208803387,
+        "damping": 0.07729229487828698
+      },
+      {
+        "i": 1,
+        "j": 5,
+        "dofs": [
+          "sway",
+          "yaw"
+        ],
+        "added_mass": 0.0014021784829952042,
+        "damping": 0.0015099429559840864
+      },
+      {
+        "i": 2,
+        "j": 4,
+        "dofs": [
+          "heave",
+          "pitch"
+        ],
+        "added_mass": 0.00035299448701155405,
+        "damping": 0.000985631179989798
+      },
+      {
+        "i": 3,
+        "j": 5,
+        "dofs": [
+          "roll",
+          "yaw"
+        ],
+        "added_mass": 0.0001032663393395919,
+        "damping": 0.00018828924839678362
+      }
+    ],
+    "worst_forbidden_relative": 4.1033992603495966e-06,
+    "worst_allowed_in_block_relative": 0.46709894430367677,
+    "forbidden_threshold": 0.01,
+    "blocks_are_exact": true,
+    "note": "forbidden pairs are those the hull's mirror symmetries set to zero; they are bounded by the BEM discretisation, and the measured value is the honest size of that bound on this sweep"
+  },
+  "coupled_block_modes": {
+    "vertical": {
+      "block": "vertical",
+      "dofs": [
+        "surge",
+        "heave",
+        "pitch"
+      ],
+      "roots": [
+        {
+          "omega": 7.465341904009717,
+          "gamma": 1.0552206584828083,
+          "zeta": 0.13995803478040342,
+          "mode_shape": [
+            -0.00011135509417391474,
+            1.0,
+            0.0006071276206412426
+          ]
+        },
+        {
+          "omega": 7.8554798900409,
+          "gamma": 0.7920349942076319,
+          "zeta": 0.10031717875215893,
+          "mode_shape": [
+            -0.004659470590396647,
+            -0.00029415180971501486,
+            1.0
+          ]
+        }
+      ],
+      "n_roots_found": 2,
+      "zero_restoring_modes": [
+        "surge"
+      ],
+      "usable": true,
+      "note": "a block with two zero-restoring modes has a structurally singular determinant; the frequency scan then has a continuum of zeros and the reported root is not identifiable -- such a block is marked unusable instead of being quoted"
+    },
+    "horizontal": {
+      "block": "horizontal",
+      "dofs": [
+        "sway",
+        "roll",
+        "yaw"
+      ],
+      "roots": [
+        {
+          "omega": 6.626333679866587,
+          "gamma": 0.17282933882238513,
+          "zeta": 0.026073329670531973,
+          "mode_shape": [
+            -0.03255098665913541,
+            1.0,
+            -6.65567775721123e-05
+          ]
+        }
+      ],
+      "n_roots_found": 1,
+      "zero_restoring_modes": [
+        "sway",
+        "yaw"
+      ],
+      "usable": false,
+      "note": "a block with two zero-restoring modes has a structurally singular determinant; the frequency scan then has a continuum of zeros and the reported root is not identifiable -- such a block is marked unusable instead of being quoted"
+    }
+  },
+  "modes": {
+    "heave": {
+      "dof": 2,
+      "mode": "heave",
+      "routes": {
+        "case_decay": 0.1346015530611902,
+        "quadratic_at_measured": 0.12947445178669487,
+        "complex_resonance": 0.13995819193516718
+      },
+      "route_spread": 0.07788721534072028,
+      "route_spread_bar": 0.1,
+      "frequency_gap_measured_vs_resonance": 0.04165046021635922,
+      "dispersion": {
+        "centre": 7.789789478462638,
+        "half_width": 0.15,
+        "zeta_min": 0.08783627861754435,
+        "zeta_max": 0.18302963781010048,
+        "relative_range": 0.7352289033004303,
+        "d_log_zeta_d_log_omega": -2.4409975819871477
+      },
+      "dispersion_amplified_gap": 0.10166867267678475,
+      "within_bar": true,
+      "zeta_decay": 0.1346015530611902,
+      "omega_measured": 7.789789478462638,
+      "omega_resonance": 7.4653411616961165,
+      "residual_decay_vs_resonance": 0.03827313571225846,
+      "case_tolerance": 0.1,
+      "residual_within_case_tolerance": true,
+      "kernel_root": {
+        "rows": [
+          {
+            "span_s": 10.0,
+            "omega": 6.431070090974789,
+            "gamma": 0.6382759189702669,
+            "zeta": 0.09876355465905194,
+            "residual_determinant": 7.558251190218763e-12
+          },
+          {
+            "span_s": 25.0,
+            "omega": 7.722738294239302,
+            "gamma": 0.2708205124890808,
+            "zeta": 0.03504639590863402,
+            "residual_determinant": 1.985455264340657e-12
+          },
+          {
+            "span_s": 40.0,
+            "omega": 7.758226718452164,
+            "gamma": 0.1765304329364078,
+            "zeta": 0.02274807870152105,
+            "residual_determinant": 4.607123154972237e-12
+          },
+          {
+            "span_s": 60.0,
+            "omega": 7.8043442795600795,
+            "gamma": 0.12528348988508914,
+            "zeta": 0.016050976958940782,
+            "residual_determinant": 3.273593689098964e-11
+          }
+        ],
+        "spread_over_span": 2.8623005316005665,
+        "usable_threshold": 0.05,
+        "usable": false,
+        "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+      },
+      "grade": "within_bar",
+      "scored": true
+    },
+    "roll": {
+      "dof": 3,
+      "mode": "roll",
+      "routes": {
+        "case_decay": 0.09012447943425081,
+        "quadratic_at_measured": 0.07274632827609444,
+        "complex_resonance": 0.07921262191411055
+      },
+      "route_spread": 0.2193861374390476,
+      "route_spread_bar": 0.1,
+      "frequency_gap_measured_vs_resonance": 0.03299440203569939,
+      "dispersion": {
+        "centre": 5.809262573178575,
+        "half_width": 0.15,
+        "zeta_min": 0.039007946663207387,
+        "zeta_max": 0.09363552425370046,
+        "relative_range": 0.7509324372106425,
+        "d_log_zeta_d_log_omega": 3.335561097678408
+      },
+      "dispersion_amplified_gap": 0.11005484387144014,
+      "within_bar": false,
+      "zeta_decay": 0.09012447943425081,
+      "omega_measured": 5.809262573178575,
+      "omega_resonance": 6.000935718048971,
+      "residual_decay_vs_resonance": 0.13775402526092217,
+      "case_tolerance": 0.1,
+      "residual_within_case_tolerance": false,
+      "kernel_root": {
+        "rows": [
+          {
+            "span_s": 10.0,
+            "omega": 5.674946340766453,
+            "gamma": 0.42997080255163433,
+            "zeta": 0.07554995729810562,
+            "residual_determinant": 2.843558383173335e-14
+          },
+          {
+            "span_s": 25.0,
+            "omega": 5.747819826895466,
+            "gamma": 0.25606108655894577,
+            "zeta": 0.04450511286366501,
+            "residual_determinant": 2.132090750023575e-14
+          },
+          {
+            "span_s": 40.0,
+            "omega": 5.901978216870446,
+            "gamma": 0.18548122082178836,
+            "zeta": 0.03141144988968692,
+            "residual_determinant": 5.86197757002083e-14
+          },
+          {
+            "span_s": 60.0,
+            "omega": 5.819128230902429,
+            "gamma": 0.11928419943249888,
+            "zeta": 0.020494332026214243,
+            "residual_determinant": 1.2495253113136323e-13
+          }
+        ],
+        "spread_over_span": 1.450424604990708,
+        "usable_threshold": 0.05,
+        "usable": false,
+        "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+      },
+      "grade": "route_spread_beyond_bar",
+      "scored": false
+    },
+    "pitch": {
+      "dof": 4,
+      "mode": "pitch",
+      "routes": {
+        "case_decay": 0.098389930575596,
+        "quadratic_at_measured": 0.09381026362984408,
+        "complex_resonance": 0.10049756427932287
+      },
+      "route_spread": 0.06796732765596095,
+      "route_spread_bar": 0.1,
+      "frequency_gap_measured_vs_resonance": 0.029893969907100505,
+      "dispersion": {
+        "centre": 8.105032535633002,
+        "half_width": 0.15,
+        "zeta_min": 0.06085081147660489,
+        "zeta_max": 0.13861201560731398,
+        "relative_range": 0.8289200042922673,
+        "d_log_zeta_d_log_omega": -2.7591900952751587
+      },
+      "dispersion_amplified_gap": 0.08248314567612537,
+      "within_bar": true,
+      "zeta_decay": 0.098389930575596,
+      "omega_measured": 8.105032535633002,
+      "omega_resonance": 7.862740936916719,
+      "residual_decay_vs_resonance": 0.020971987916731098,
+      "case_tolerance": 0.1,
+      "residual_within_case_tolerance": true,
+      "kernel_root": {
+        "rows": [
+          {
+            "span_s": 10.0,
+            "omega": 8.171486950934828,
+            "gamma": 0.4848545713203368,
+            "zeta": 0.059230752453305814,
+            "residual_determinant": 2.8421709430404007e-12
+          },
+          {
+            "span_s": 25.0,
+            "omega": 7.979153908912901,
+            "gamma": 0.25566966601848135,
+            "zeta": 0.032025766333105235,
+            "residual_determinant": 3.1548097467748456e-12
+          },
+          {
+            "span_s": 40.0,
+            "omega": 8.072039423604787,
+            "gamma": 0.17399946864433496,
+            "zeta": 0.02155081867898966,
+            "residual_determinant": 5.700519240482951e-12
+          },
+          {
+            "span_s": 60.0,
+            "omega": 8.117448667741433,
+            "gamma": 0.12389170890559358,
+            "zeta": 0.015260617810538316,
+            "residual_determinant": 1.9177810381549253e-11
+          }
+        ],
+        "spread_over_span": 1.641393703344148,
+        "usable_threshold": 0.05,
+        "usable": false,
+        "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+      },
+      "grade": "within_bar",
+      "scored": true
+    }
+  },
+  "gate": {
+    "id": "C11",
+    "title": "independent frequency-domain route (complex resonance) confirms the Cummins decay",
+    "threshold": "|zeta_decay - zeta_complex_resonance| / zeta_complex_resonance <= 10% (case tolerance) on every mode whose route spread is within the 5% decay bar; modes outside the spread bar are reported, not scored",
+    "passed": true,
+    "status": "pass",
+    "values": {
+      "scored_modes": [
+        "heave",
+        "pitch"
+      ],
+      "reported_modes": [
+        "roll"
+      ],
+      "worst_relative_to_resonance": 0.03827313571225846,
+      "route_spread_bar": 0.1,
+      "modes": {
+        "heave": {
+          "dof": 2,
+          "mode": "heave",
+          "routes": {
+            "case_decay": 0.1346015530611902,
+            "quadratic_at_measured": 0.12947445178669487,
+            "complex_resonance": 0.13995819193516718
+          },
+          "route_spread": 0.07788721534072028,
+          "route_spread_bar": 0.1,
+          "frequency_gap_measured_vs_resonance": 0.04165046021635922,
+          "dispersion": {
+            "centre": 7.789789478462638,
+            "half_width": 0.15,
+            "zeta_min": 0.08783627861754435,
+            "zeta_max": 0.18302963781010048,
+            "relative_range": 0.7352289033004303,
+            "d_log_zeta_d_log_omega": -2.4409975819871477
+          },
+          "dispersion_amplified_gap": 0.10166867267678475,
+          "within_bar": true,
+          "zeta_decay": 0.1346015530611902,
+          "omega_measured": 7.789789478462638,
+          "omega_resonance": 7.4653411616961165,
+          "residual_decay_vs_resonance": 0.03827313571225846,
+          "case_tolerance": 0.1,
+          "residual_within_case_tolerance": true,
+          "kernel_root": {
+            "rows": [
+              {
+                "span_s": 10.0,
+                "omega": 6.431070090974789,
+                "gamma": 0.6382759189702669,
+                "zeta": 0.09876355465905194,
+                "residual_determinant": 7.558251190218763e-12
+              },
+              {
+                "span_s": 25.0,
+                "omega": 7.722738294239302,
+                "gamma": 0.2708205124890808,
+                "zeta": 0.03504639590863402,
+                "residual_determinant": 1.985455264340657e-12
+              },
+              {
+                "span_s": 40.0,
+                "omega": 7.758226718452164,
+                "gamma": 0.1765304329364078,
+                "zeta": 0.02274807870152105,
+                "residual_determinant": 4.607123154972237e-12
+              },
+              {
+                "span_s": 60.0,
+                "omega": 7.8043442795600795,
+                "gamma": 0.12528348988508914,
+                "zeta": 0.016050976958940782,
+                "residual_determinant": 3.273593689098964e-11
+              }
+            ],
+            "spread_over_span": 2.8623005316005665,
+            "usable_threshold": 0.05,
+            "usable": false,
+            "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+          },
+          "grade": "within_bar",
+          "scored": true
+        },
+        "roll": {
+          "dof": 3,
+          "mode": "roll",
+          "routes": {
+            "case_decay": 0.09012447943425081,
+            "quadratic_at_measured": 0.07274632827609444,
+            "complex_resonance": 0.07921262191411055
+          },
+          "route_spread": 0.2193861374390476,
+          "route_spread_bar": 0.1,
+          "frequency_gap_measured_vs_resonance": 0.03299440203569939,
+          "dispersion": {
+            "centre": 5.809262573178575,
+            "half_width": 0.15,
+            "zeta_min": 0.039007946663207387,
+            "zeta_max": 0.09363552425370046,
+            "relative_range": 0.7509324372106425,
+            "d_log_zeta_d_log_omega": 3.335561097678408
+          },
+          "dispersion_amplified_gap": 0.11005484387144014,
+          "within_bar": false,
+          "zeta_decay": 0.09012447943425081,
+          "omega_measured": 5.809262573178575,
+          "omega_resonance": 6.000935718048971,
+          "residual_decay_vs_resonance": 0.13775402526092217,
+          "case_tolerance": 0.1,
+          "residual_within_case_tolerance": false,
+          "kernel_root": {
+            "rows": [
+              {
+                "span_s": 10.0,
+                "omega": 5.674946340766453,
+                "gamma": 0.42997080255163433,
+                "zeta": 0.07554995729810562,
+                "residual_determinant": 2.843558383173335e-14
+              },
+              {
+                "span_s": 25.0,
+                "omega": 5.747819826895466,
+                "gamma": 0.25606108655894577,
+                "zeta": 0.04450511286366501,
+                "residual_determinant": 2.132090750023575e-14
+              },
+              {
+                "span_s": 40.0,
+                "omega": 5.901978216870446,
+                "gamma": 0.18548122082178836,
+                "zeta": 0.03141144988968692,
+                "residual_determinant": 5.86197757002083e-14
+              },
+              {
+                "span_s": 60.0,
+                "omega": 5.819128230902429,
+                "gamma": 0.11928419943249888,
+                "zeta": 0.020494332026214243,
+                "residual_determinant": 1.2495253113136323e-13
+              }
+            ],
+            "spread_over_span": 1.450424604990708,
+            "usable_threshold": 0.05,
+            "usable": false,
+            "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+          },
+          "grade": "route_spread_beyond_bar",
+          "scored": false
+        },
+        "pitch": {
+          "dof": 4,
+          "mode": "pitch",
+          "routes": {
+            "case_decay": 0.098389930575596,
+            "quadratic_at_measured": 0.09381026362984408,
+            "complex_resonance": 0.10049756427932287
+          },
+          "route_spread": 0.06796732765596095,
+          "route_spread_bar": 0.1,
+          "frequency_gap_measured_vs_resonance": 0.029893969907100505,
+          "dispersion": {
+            "centre": 8.105032535633002,
+            "half_width": 0.15,
+            "zeta_min": 0.06085081147660489,
+            "zeta_max": 0.13861201560731398,
+            "relative_range": 0.8289200042922673,
+            "d_log_zeta_d_log_omega": -2.7591900952751587
+          },
+          "dispersion_amplified_gap": 0.08248314567612537,
+          "within_bar": true,
+          "zeta_decay": 0.098389930575596,
+          "omega_measured": 8.105032535633002,
+          "omega_resonance": 7.862740936916719,
+          "residual_decay_vs_resonance": 0.020971987916731098,
+          "case_tolerance": 0.1,
+          "residual_within_case_tolerance": true,
+          "kernel_root": {
+            "rows": [
+              {
+                "span_s": 10.0,
+                "omega": 8.171486950934828,
+                "gamma": 0.4848545713203368,
+                "zeta": 0.059230752453305814,
+                "residual_determinant": 2.8421709430404007e-12
+              },
+              {
+                "span_s": 25.0,
+                "omega": 7.979153908912901,
+                "gamma": 0.25566966601848135,
+                "zeta": 0.032025766333105235,
+                "residual_determinant": 3.1548097467748456e-12
+              },
+              {
+                "span_s": 40.0,
+                "omega": 8.072039423604787,
+                "gamma": 0.17399946864433496,
+                "zeta": 0.02155081867898966,
+                "residual_determinant": 5.700519240482951e-12
+              },
+              {
+                "span_s": 60.0,
+                "omega": 8.117448667741433,
+                "gamma": 0.12389170890559358,
+                "zeta": 0.015260617810538316,
+                "residual_determinant": 1.9177810381549253e-11
+              }
+            ],
+            "spread_over_span": 1.641393703344148,
+            "usable_threshold": 0.05,
+            "usable": false,
+            "note": "the span study is the only honest test of this route: a root that moves with tau_max is reporting the truncation, not the decay rate"
+          },
+          "grade": "within_bar",
+          "scored": true
+        }
+      }
+    }
+  },
+  "artifact": {
+    "case": "CASE-BEM-CUMMINS-WIGLEY",
+    "sweep_summary": {
+      "label": "medium",
+      "n_sections": 20,
+      "n_levels": 6,
+      "panel_count": 480,
+      "max_panel_scale": 0.06450176101204128,
+      "n_omega": 41,
+      "omega": [
+        0.2,
+        0.2215561332442578,
+        0.24543560089073657,
+        0.2718888134691625,
+        0.3011931709229846,
+        0.3336559715463664,
+        0.3696176344483451,
+        0.4094552693363246,
+        0.45358663105321095,
+        0.502474500337196,
+        0.5566315367427482,
+        0.6166256546126614,
+        0.6830859784759524,
+        0.7567094403225115,
+        0.8382680879364105,
+        0.9286171809262428,
+        1.0287041593510085,
+        1.1395785789904709,
+        1.2624031174455737,
+        1.3984657664836895,
+        1.549193338482967,
+        1.7161664286102438,
+        1.901135989632466,
+        2.106041693172322,
+        2.333032269952246,
+        2.584488042323465,
+        2.8630458853660428,
+        3.1716268783129147,
+        3.5134669362628275,
+        3.892150743399706,
+        4.3116493435570105,
+        4.776361782318168,
+        5.291161237330323,
+        5.861446120574045,
+        6.4931966884697045,
+        7.193037753458836,
+        7.968308154681512,
+        8.827137716249615,
+        9.778532500134064,
+        10.83246924766504,
+        12.0
+      ],
+      "elapsed_s": 81.34056520462036,
+      "solver_relative_residual_max": 0.00244707823996248,
+      "failed_frequencies": []
+    },
+    "elapsed_s": 3.9449875354766846,
+    "replay": "PYTHONPATH=src python3 scripts/case_cummins_wigley_route_spread.py"
+  }
+}
