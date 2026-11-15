@@ -42,7 +42,31 @@
     }
    }
   },
-  "refinement": null,
+  "refinement": {
+   "missing_cells": [],
+   "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_edge_refinement/results.json",
+   "provenance": {
+    "generated_utc": "2026-11-15T20:11:23Z",
+    "git_commit": null,
+    "git_dirty": null,
+    "host": "node330",
+    "numpy": "2.0.1",
+    "schema": "metadata",
+    "source_sha256": {
+     "src/tensorbem/analytic.py": "68e66e5530e2d88c9de8baf794b40001281c13e2c5338cf08bb30bae0eec8799",
+     "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+     "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+     "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+    },
+    "thread_env": {
+     "MKL_NUM_THREADS": null,
+     "NUMEXPR_NUM_THREADS": null,
+     "OMP_NUM_THREADS": null,
+     "OPENBLAS_NUM_THREADS": null,
+     "VECLIB_MAXIMUM_THREADS": null
+    }
+   }
+  },
   "round1_pre_audit": "benchmarks/verified/casepool_bem_hulme_hemisphere/evidence/np246_contradiction.json"
  },
  "band_edge": {
@@ -94,6 +118,13 @@
      "radiation_relative_residual": 0.00044537979574307807,
      "solve_method": "lstsq",
      "source": "band_current_code/extension"
+    },
+    "4096": {
+     "band_max": 0.0068140930371132155,
+     "condition_number": 2.8167051511236547,
+     "radiation_relative_residual": 5.735914811594683e-05,
+     "solve_method": "qr",
+     "source": "band_edge_refinement"
     }
    },
    "4": {
@@ -108,6 +139,13 @@
      "band_max": 0.3448700291918858,
      "condition_number": 19.537210108111186,
      "source": "band_extension/ladder_coarse"
+    },
+    "4096": {
+     "band_max": 0.021835057444637665,
+     "condition_number": 13.709810325320674,
+     "radiation_relative_residual": 0.0001221413915794872,
+     "solve_method": "qr",
+     "source": "band_edge_refinement"
     }
    }
   }
@@ -189,6 +227,7 @@
  "band_status": {
   "ka_2_to_3.5": "PASS -- worst 2.78% on the case mesh, reproduced by two independent runs",
   "ka_4.0": "NOT creditable on the case mesh -- 8.94% at 1024 panels",
+  "ka_4_at_4096_panels": "PASS -- band-max 2.18%, so the case-mesh miss is a discretisation limit (band edge movable by mesh), not a method limit",
   "ka_le_2": "PASS (declared case band, unchanged)"
  },
  "case_code": "BEM-HULME-HEMISPHERE",
@@ -288,6 +327,10 @@
      [
       1024,
       0.08935259927681688
+     ],
+     [
+      4096,
+      0.021835057444637665
      ]
     ]
    },

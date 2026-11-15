@@ -106,9 +106,13 @@ def test_band_edge_error_falls_with_mesh_refinement():
     ka = max(coarse)
     ladder = [("256", _band_max(coarse[ka])), ("1024", _band_max(fine[ka]))]
     if REFINE.exists():
-        for r in json.loads(REFINE.read_text())["cells"]:
-            if abs(r["ka"] - ka) < 1e-9:
-                ladder.append((str(r["panels"]), _band_max(r)))
+        # one entry per panel count: the refinement artifact re-runs the 1024 rung
+        # as its own control (R1), so duplicates by mesh are expected
+        rungs = {int(r["panels"]): _band_max(r)
+                 for r in json.loads(REFINE.read_text())["cells"]
+                 if abs(r["ka"] - ka) < 1e-9}
+        ladder = [(n, e) for n, e in ladder if int(n) not in rungs] + [
+            (str(n), e) for n, e in rungs.items()]
     ladder.sort(key=lambda kv: int(kv[0]))
     assert len(ladder) >= 2
     for (_, e0), (_, e1) in zip(ladder, ladder[1:]):
