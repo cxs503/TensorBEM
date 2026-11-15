@@ -297,6 +297,16 @@ def build() -> dict[str, Any]:
         "ka_4.0": (f"NOT creditable on the case mesh -- {band_max(failing[0]):.2%} "
                    "at 1024 panels" if failing else "PASS"),
     }
+    # The 4096-panel rung, when it exists, decides *why* that cell misses.
+    edge_ladder = (ladders.get(f"{first_fail:g}") if first_fail is not None else None) or {}
+    fine = edge_ladder.get("4096")
+    if fine is not None:
+        payload["band_status"][f"ka_{first_fail:g}_at_4096_panels"] = (
+            f"PASS -- band-max {fine['band_max']:.2%}, so the case-mesh miss is a "
+            "discretisation limit (band edge movable by mesh), not a method limit"
+            if fine["band_max"] < GATE else
+            f"STILL FAILS -- band-max {fine['band_max']:.2%} at 4096 panels; the miss "
+            "does not reach the gate and the band edge stands at the case mesh")
     return payload
 
 
@@ -419,21 +429,108 @@ def render(payload: dict[str, Any]) -> str:
                for k in ("256", "1024", "4096")]
         L.append(f"| {ka} | {row[0]} | {row[1]} | {row[2]} |")
     L.append("")
-    L.append("A 4096-panel rung that is missing is shown as `—`: the refinement "
-             "statement then rests on two rungs and the script says so instead of "
-             "extrapolating.")
+    first_fail = payload["band_edge"]["first_failing_ka"]
+    edge_ladder = (payload["band_edge"]["refinement_ladder"].get(f"{first_fail:g}")
+                   if first_fail is not None else None) or {}
+    if all(str(n) in edge_ladder for n in (256, 1024, 4096)):
+        met = (payload["artifacts"]["refinement"] or {}).get("provenance") or {}
+        L.append("Three rungs are present at the band edge, so the direction of the "
+                 "error under refinement is measured rather than extrapolated from a "
+                 "pair; the order is reported by `band_edge_refinement.py` "
+                 "(`criteria` in its own artifact) and is *not* used to pass any gate "
+                 "here. Its formal Richardson limit is quoted nowhere: with two rungs "
+                 "whose ratio happens to be ~4 the extrapolation collapses to ~0 and "
+                 "is a coincidence of the ratio, not an error bound.")
+        L.append("")
+        L.append(f"The 4096-panel cells ran on host `{met.get('host')}`, numpy "
+                 f"`{met.get('numpy')}` (the 1024-panel cells of the case band ran on "
+                 f"`{(payload['artifacts']['current']['provenance'] or {}).get('host')}`, "
+                 f"numpy `{(payload['artifacts']['current']['provenance'] or {}).get('numpy')}`). "
+                 "That is a cross-environment check, not a defect: in the other "
+                 "environment the 1024-panel control cells reproduce the committed "
+                 "`band_current_code` numbers bit for bit (gate R1 of "
+                 "`band_edge_refinement/results.json`), so the rungs are comparable "
+                 "cell for cell. The staged copy carries no `.git`, so that artifact "
+                 "records `git_commit: null` and pins its code identity by per-module "
+                 "sha256 instead.")
+    else:
+        L.append("A 4096-panel rung that is missing is shown as `—`: the refinement "
+                 "statement then rests on two rungs and the script says so instead of "
+                 "extrapolating.")
     L.append("")
     L.append("## 7. Scope")
     L.append("")
     L.append("* the credited statement is about the *case mesh* (1024 constant "
              "panels) and the Hulme (1982) wave-free multipole reference, "
              "deep water, unit-radius hemisphere, ``exp(-i*omega*t)``;")
-    L.append("* `ka = 4.0` is not credited on any mesh here — the ladder only "
-             "classifies the reason;")
+    fine = edge_ladder.get("4096")
+    if fine is None:
+        L.append("* `ka = 4.0` is not credited on any mesh here — the ladder only "
+                 "classifies the reason;")
+    elif fine["band_max"] < GATE:
+        L.append("* `ka = 4.0` passes at 4096 panels and fails on the 1024-panel case "
+                 "mesh: the credit is therefore *mesh-dependent* and is stated with "
+                 "its mesh, never as a case-mesh result;")
+    else:
+        L.append("* `ka = 4.0` fails at every mesh computed here (256/1024/4096 "
+                 "panels) — the band edge is not movable by refinement at these "
+                 "resolutions;")
     L.append("* the CHIEF-off row is a control, not a gate: it is reported so a "
              "reader can see what the null-field equations buy at the irregular "
              "frequency.")
     return "\n".join(L) + "\n"
+
+
+README = HERE / "README.md"
+README_BEGIN = "<!-- band-refinement:begin -->"
+README_END = "<!-- band-refinement:end -->"
+
+
+def update_readme(payload: dict[str, Any]) -> str | None:
+    """Inject the 4096-panel verdict into the case README, between markers.
+
+    The README is prose a human edits; the paragraph between the markers is
+    regenerated from ``results.json`` so the two cannot drift apart.
+    """
+    if not README.exists():
+        return None
+    first_fail = payload["band_edge"]["first_failing_ka"]
+    ladder = (payload["band_edge"]["refinement_ladder"].get(f"{first_fail:g}")
+              if first_fail is not None else None) or {}
+    fine = ladder.get("4096")
+    lines = ["", README_BEGIN,
+             "**4096-panel rung at the band edge** (generated by "
+             "`resolve_band_edge.py`, never typed):"]
+    if fine is None:
+        lines.append("")
+        lines.append(f"`ka = {first_fail:g}` has no 4096-panel cell yet, so the "
+                     "refinement statement rests on the 256/1024 rungs only.")
+    else:
+        verdict = ("**passes**" if fine["band_max"] < GATE else "still **fails**")
+        lines.append("")
+        lines.append(f"`ka = {first_fail:g}` on 4096 panels {verdict} the "
+                     f"{GATE:.0%} gate with band-max {fine['band_max']:.2%} "
+                     f"(cond {fine['condition_number']:.1f}, radiation residual "
+                     f"{fine['radiation_relative_residual']:.2e}); the 1024-panel "
+                     f"rung is {100 * ladder['1024']['band_max']:.2f} %. "
+                     + ("The case-mesh miss is therefore a discretisation limit, not "
+                        "a method limit." if fine["band_max"] < GATE else
+                        "The miss does not close under refinement, so the band edge "
+                        "is not movable by mesh at these resolutions."))
+    lines.append("")
+    lines.append("Artifact: `band_edge_refinement/results.json`; prose: "
+                 "`docs/case_bem_hulme_band_edge.md`.")
+    lines.append(README_END)
+    block = "\n".join(lines)
+    text = README.read_text()
+    if README_BEGIN in text and README_END in text:
+        head, rest = text.split(README_BEGIN, 1)
+        tail = rest.split(README_END, 1)[1]
+        text = head.rstrip("\n") + block + tail
+    else:
+        text = text.rstrip("\n") + "\n" + block + "\n"
+    README.write_text(text)
+    return str(README)
 
 
 def main() -> int:
@@ -444,6 +541,7 @@ def main() -> int:
     if png:
         doc += f"\n![band]({Path(png).name})\n"
     OUT_DOC.write_text(doc)
+    update_readme(payload)
     print(json.dumps({k: v["pass"] for k, v in payload["gates"].items()}, indent=1))
     print("VERDICT", payload["verdict"])
     for key, value in payload["band_status"].items():
