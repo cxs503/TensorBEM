@@ -289,7 +289,7 @@ def test_committed_record_was_rendered_from_the_current_case_module() -> None:
             "the committed record predates the provenance gate: it was generated "
             "before `generator_provenance()` existed and still carries the "
             "constant-density near-wall sweep only (38 criteria) while the case "
-            "module emits the linear-density study as well (41). Regenerate with: "
+            "module emits the linear-density, faceting and azimuthal studies as well (44). Regenerate with: "
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
             "--outdir benchmarks/verified/case_bem_laplace_cylinder --doc "
             "docs/CASE-BEM-LAPLACE-CYLINDER.md. See "
@@ -345,7 +345,12 @@ def test_near_wall_azimuth_sweep_is_measured_not_midpoint_only() -> None:
     """
     import numpy as np
 
-    azimuth = case.near_wall_azimuth_study(ladder=(32, 64))
+    # the cross-check compares the azimuthal sweep against the *radial ladder*,
+    # so it lives in `attach_azimuth_study`, which is what `near_wall_study`
+    # calls; reaching for `near_wall_azimuth_study` alone yields the sweep
+    # without the frame comparison and cannot verify it.
+    near = case.near_wall_study(ladder=(32, 64))
+    azimuth = near["azimuth"]
     window = azimuth["window"]
     assert window["clearance_over_h_max"] == case.NEAR_WALL_WINDOW_FACTOR
     assert window["worst_over_levels"] <= case.NEAR_WALL_AZIMUTH_WINDOW_TOL
