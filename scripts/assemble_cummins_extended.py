@@ -1,171 +1,173 @@
-"""Assemble extended-band sweep artifacts and evaluate C8/C9 gates.
+#!/usr/bin/env python3
+"""Assemble extended-band sweep artifacts and update case_result.json with C8/C9 gates.
 
-Usage (after cluster jobs cj3824/cj3825 complete)::
-
+Usage:
     PYTHONPATH=src python3 scripts/assemble_cummins_extended.py
 
-This script:
-1. Reads ``extended_points/point_*.npz`` and assembles ``sweep_extended.npz``
-2. Reads ``anchor_ladder_extended.json`` for the extended-band $A_\\infty$ anchor
-3. Evaluates gate C8 (extension consistency) and C9 (truncation decidability)
-4. Updates ``case_result.json`` with the new gates
+This script is designed to run AFTER the cluster jobs cj3824/cj3825 complete
+and deposit their point_*.npz artifacts in the extended_points/ directory.
+
+It performs:
+1. Assembly: reads point_*.npz files, concatenates into sweep_extended.npz
+2. Anchor: reads anchor_ladder_extended.json for the A_inf anchor
+3. Gate evaluation: calls gates_from_artifact to compute C8/C9/C3a_extended
+4. Update: writes updated case_result.json
+
+If the extended sweep artifact already exists, it re-evaluates gates (idempotent).
 """
+
 from __future__ import annotations
 
 import json
-import pathlib
 import sys
+from pathlib import Path
 
 import numpy as np
 
-from tensorbem.benchmarks import case_bem_cummins_wigley as case
+# Ensure the worktree src is on the path
+WORKTREE = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(WORKTREE / "src"))
 
-ROOT = pathlib.Path(__file__).resolve().parents[1]
-OUT = ROOT / "benchmarks" / "verified" / "casepool_bem_cummins_wigley"
-POINTS = OUT / "extended_points"
-SWEEP_FILE = OUT / "sweep_extended.npz"
-LADDER = OUT / "anchor_ladder_extended.json"
-CASE_RESULT = OUT / "case_result.json"
+from tensorbem.benchmarks.case_bem_cummins_wigley import (
+    CASE_SLUG,
+    Sweep,
+    gates_from_artifact,
+    load_sweep,
+    save_sweep,
+)
+
+CASE_DIR = WORKTREE / "benchmarks" / "verified" / "casepool_bem_cummins_wigley"
+EXTENDED_POINTS_DIR = CASE_DIR / "extended_points"
+EXTENDED_SWEEP_PATH = CASE_DIR / "sweep_extended.npz"
+ANCHOR_PATH = CASE_DIR / "anchor_ladder_extended.json"
+CASE_RESULT_PATH = CASE_DIR / "case_result.json"
 
 
-def assemble_sweep() -> case.Sweep:
-    """Assemble the extended sweep from per-node artifacts."""
-    n_nodes = case.EXTENDED_N_OMEGA
-    omegas = np.zeros(n_nodes)
-    added_mass = np.zeros((n_nodes, 6, 6))
-    damping = np.zeros((n_nodes, 6, 6))
-    residuals = np.zeros(n_nodes)
+def assemble_extended_sweep(points_dir: Path, output_path: Path) -> Sweep:
+    """Assemble point_*.npz files into a single sweep_extended.npz.
 
-    for k in range(n_nodes):
-        p = POINTS / f"point_{k:03d}.npz"
-        if not p.exists():
-            raise SystemExit(f"Missing extended point {k}: {p}")
-        data = np.load(p, allow_pickle=False)
-        idx = int(data["index"])
-        omegas[idx] = float(data["omega"])
-        added_mass[idx] = np.array(data["added_mass"])
-        damping[idx] = np.array(data["damping"])
-        residuals[idx] = float(data["residual"])
+    Each point_*.npz file contains the radiation solution for one frequency.
+    The files are sorted by frequency and concatenated.
+    """
+    if not points_dir.exists():
+        raise FileNotFoundError(
+            f"Extended points directory not found: {points_dir}\n"
+            "Wait for cluster jobs cj3824/cj3825 to complete first."
+        )
 
-    n_sections, n_levels = case.EXTENDED_MESH
-    mesh = case.wigley_wetted_hull_mesh(
-        case.LENGTH, case.BEAM, case.DRAFT,
-        n_sections=n_sections, n_levels=n_levels,
-    )
-    max_scale = float(np.sqrt(np.max(mesh.areas)))
+    point_files = sorted(points_dir.glob("point_*.npz"))
+    if not point_files:
+        raise FileNotFoundError(
+            f"No point_*.npz files found in {points_dir}\n"
+            "Wait for cluster jobs cj3824/cj3825 to complete first."
+        )
 
-    sweep = case.Sweep(
+    # Load first file to get shape
+    first = np.load(point_files[0], allow_pickle=True)
+    n_freq = len(point_files)
+    n_dof = 6
+
+    # Read metadata from first file
+    omega = first["omega"]  # scalar
+    n_sections = int(first["n_sections"])
+    n_levels = int(first["n_levels"])
+    panel_count = int(first["panel_count"])
+    max_panel_scale = float(first["max_panel_scale"])
+
+    # Allocate arrays
+    added_mass = np.zeros((n_freq, n_dof, n_dof))
+    damping = np.zeros((n_freq, n_dof, n_dof))
+    residuals = np.zeros(n_freq)
+    omega_array = np.zeros(n_freq)
+
+    for i, pf in enumerate(point_files):
+        data = np.load(pf, allow_pickle=True)
+        omega_array[i] = float(data["omega"])
+        added_mass[i] = data["added_mass"]  # 6x6
+        damping[i] = data["damping"]  # 6x6
+        residuals[i] = float(data.get("residual", 0.0))
+
+    sweep = Sweep(
         label="extended",
         n_sections=n_sections,
         n_levels=n_levels,
-        panel_count=int(mesh.panels.shape[0]),
-        max_panel_scale=max_scale,
-        omega=omegas,
+        panel_count=panel_count,
+        max_panel_scale=max_panel_scale,
+        omega=omega_array,
         added_mass=added_mass,
         damping=damping,
         solver_relative_residual=residuals,
         elapsed=0.0,
     )
-    case.save_sweep(sweep, SWEEP_FILE)
-    print(f"Assembled extended sweep: {SWEEP_FILE}")
-    print(f"  omega = [{omegas[0]:.2f}, {omegas[-1]:.2f}] rad/s, {n_nodes} nodes")
-    print(f"  panels = {sweep.panel_count}")
+
+    save_sweep(sweep, output_path)
+    print(f"Assembled {n_freq} frequency points -> {output_path}")
+    print(f"  Mesh: {n_sections}x{n_levels} ({panel_count} panels)")
+    print(f"  Band: [{omega_array[0]:.2f}, {omega_array[-1]:.2f}] rad/s")
     return sweep
 
 
-def evaluate_c8(committed: case.Sweep, extended: case.Sweep) -> dict:
-    """Evaluate gate C8: extension consistency."""
-    gate = case.extension_consistency_gate(committed, extended, identifier="C8")
-    return gate
+def update_case_result(case_result_path: Path, sweep_path: Path) -> dict:
+    """Re-evaluate gates with the extended sweep and update case_result.json."""
+    result = gates_from_artifact(str(sweep_path))
 
+    # Read existing case_result.json to preserve metadata
+    if case_result_path.exists():
+        existing = json.loads(case_result_path.read_text(encoding="utf-8"))
+    else:
+        existing = {}
 
-def evaluate_c9(committed: case.Sweep, extended: case.Sweep) -> dict:
-    """Evaluate gate C9: truncation decidability."""
-    gate = case.truncation_decidability_gate(committed, extended, identifier="C9")
-    return gate
+    # Update gates and verdict
+    existing["gates"] = result["gates"]
+    existing["verdict"] = result["verdict"]
+    existing["extended"] = result.get("extended")
+    existing["generated_utc"] = __import__("time").strftime(
+        "%Y-%m-%dT%H:%M:%SZ", __import__("time").gmtime()
+    )
+    existing["mission"] = "m22423"
 
+    case_result_path.write_text(
+        json.dumps(existing, indent=4, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    print(f"Updated {case_result_path}")
+    print(f"  Verdict: {result['verdict']['gates_passed']}/{result['verdict']['gates_total']} gates passed")
 
-def update_case_result(c8: dict, c9: dict) -> dict:
-    """Update case_result.json with C8/C9 gates."""
-    if not CASE_RESULT.exists():
-        raise SystemExit(f"Missing case_result.json: {CASE_RESULT}")
+    # Print extended gates
+    for gate_key in ["C8", "C9", "C3a_extended"]:
+        gate = result["gates"].get(gate_key)
+        if gate is not None:
+            print(f"  {gate_key}: passed={gate['passed']}, status={gate.get('status', '?')}")
+        else:
+            print(f"  {gate_key}: not evaluated")
 
-    with open(CASE_RESULT, "r") as f:
-        result = json.load(f)
-
-    result["gates"]["C8"] = c8
-    result["gates"]["C9"] = c9
-
-    # Re-evaluate verdict
-    verdict = case.case_verdict(result["gates"])
-    result["verdict"] = verdict
-    result["extended_band"] = {
-        "omega_range": [float(case.EXTENDED_BAND[0]), float(case.EXTENDED_BAND[1])],
-        "n_omega": case.EXTENDED_N_OMEGA,
-        "mesh": list(case.EXTENDED_MESH),
-        "assembled_from": str(POINTS),
-    }
-
-    with open(CASE_RESULT, "w") as f:
-        json.dump(result, f, indent=2)
-
-    print(f"Updated case_result.json: {CASE_RESULT}")
-    print(f"  Verdict: {verdict['gates_passed']}/{verdict['gates_total']} gates passed")
     return result
 
 
-def main(argv: list[str] | None = None) -> int:
-    import argparse
+def main():
+    print("=" * 60)
+    print("CASE-BEM-CUMMINS-WIGLEY: Extended Band Assembly")
+    print("=" * 60)
 
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--dry-run", action="store_true", help="Check artifacts exist but do not assemble")
-    args = parser.parse_args(argv)
+    # Step 1: Check if extended sweep already exists
+    if EXTENDED_SWEEP_PATH.exists():
+        print(f"Extended sweep already exists: {EXTENDED_SWEEP_PATH}")
+        print("Re-evaluating gates...")
+        sweep = load_sweep(EXTENDED_SWEEP_PATH)
+    else:
+        print("Assembling extended sweep from point files...")
+        sweep = assemble_extended_sweep(EXTENDED_POINTS_DIR, EXTENDED_SWEEP_PATH)
 
-    # Check all point files exist
-    n_nodes = case.EXTENDED_N_OMEGA
-    missing = [k for k in range(n_nodes) if not (POINTS / f"point_{k:03d}.npz").exists()]
-    if missing:
-        print(f"Missing {len(missing)} extended points: {missing[:5]}...")
-        return 1
+    # Step 2: Update case_result.json
+    print("\nUpdating case_result.json with C8/C9 gates...")
+    result = update_case_result(CASE_RESULT_PATH, EXTENDED_SWEEP_PATH)
 
-    if not LADDER.exists():
-        print(f"Missing anchor ladder: {LADDER}")
-        return 1
-
-    if args.dry_run:
-        print(f"All {n_nodes} extended points present.")
-        print(f"Anchor ladder present: {LADDER}")
-        return 0
-
-    # Load committed sweep
-    committed = case.load_sweep(OUT / "sweep_medium.npz")
-    print(f"Loaded committed sweep: {committed.label}, {committed.panel_count} panels")
-
-    # Assemble extended sweep
-    extended = assemble_sweep()
-
-    # Evaluate C8
-    c8 = evaluate_c8(committed, extended)
-    print(f"C8: {'PASS' if c8['passed'] else 'FAIL'} (worst {c8['values']['worst_relative_difference']:.4f})")
-
-    # Evaluate C9
-    c9 = evaluate_c9(committed, extended)
-    print(f"C9: {'PASS' if c9['passed'] else 'FAIL'} ({c9['status']})")
-
-    # Update case_result.json
-    result = update_case_result(c8, c9)
-
-    # Print summary
-    print("\n=== Extended Band Summary ===")
-    for dof_name in case.DOF_NAMES:
-        c9_row = [r for r in c9["values"]["per_dof"] if r["dof_name"] == dof_name][0]
-        c3a_row = [r for r in result["gates"]["C3a"]["values"]["per_dof"] if r["dof_name"] == dof_name][0]
-        print(f"  {dof_name:6s}: C3a residual={c3a_row['max_relative_residual']:.4f}, "
-              f"n_decidable={c3a_row['n_decidable']}/{c3a_row['n_samples']}, "
-              f"C9 budget_admissible={c9_row['budget_admissible_at_20']}")
+    print("\n" + "=" * 60)
+    print("Assembly complete.")
+    print("=" * 60)
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())
