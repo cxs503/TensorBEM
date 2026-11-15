@@ -17,6 +17,7 @@ What these tests assert
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 
@@ -142,3 +143,98 @@ class TestStudyStatus:
     def test_panel_counts_are_the_real_ones(self, xval_data):
         assert xval_data["parameters"]["tbem_panels"] == {"2": 320, "3": 1280}
         assert xval_data["parameters"]["cpt_faces"]["24x48"] == 1152
+
+
+class TestDocIntegrity:
+    """``docs/finite_depth_capytaine_xval.md`` is rendered, never typed.
+
+    The report used to ship as a skeleton whose result cells were literal
+    ``<!-- 注入 -->`` placeholders -- it announced a cross-validation table and
+    contained none.  ``make_doc.py`` is now the only writer, and the document is
+    pinned to its output here: a re-assembled cache, a hand edit or a reverted
+    render all fail CI instead of quietly leaving stale numbers in the report.
+    """
+
+    DOC = REPO_ROOT / "docs" / "finite_depth_capytaine_xval.md"
+    RENDERER = (
+        REPO_ROOT / "benchmarks" / "verified" / "bem_finite_depth_capytaine_xval"
+        / "make_doc.py"
+    )
+
+    @staticmethod
+    def _load_renderer():
+        spec = importlib.util.spec_from_file_location(
+            "_fd_xval_make_doc", TestDocIntegrity.RENDERER
+        )
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
+
+    def test_document_matches_the_render(self, xval_data):
+        assert self.DOC.exists(), self.DOC
+        assert self.DOC.read_text() == self._load_renderer().render_doc(xval_data)
+
+    def test_no_unfilled_placeholders(self):
+        text = self.DOC.read_text()
+        for marker in ("<!-- 注入", "待注入", "TODO", "TBD", "将由"):
+            assert marker not in text, f"unfilled placeholder {marker!r} in {self.DOC.name}"
+
+    def test_every_measured_station_is_tabulated(self, xval_data):
+        """No station may be dropped from the report's station table."""
+        text = self.DOC.read_text()
+        pairs = {
+            (float(r["depth_ratio"]), float(r["ka"]))
+            for r in xval_data["comparison"]["comparison"] if "am_rel_error" in r
+        }
+        assert len(pairs) == 16
+        for depth_ratio, ka in pairs:
+            row = f"| {depth_ratio:g} | {ka:g} |"
+            assert row in text, f"station h/R={depth_ratio:g}, ka={ka:g} missing from the table"
+
+    def test_verdict_is_not_upgraded(self, xval_data):
+        """A partial study must not read as a pass, and WITHHELD must be stated."""
+        text = self.DOC.read_text()
+        assert "WITHHELD" in text
+        assert "PARTIAL" in text
+        assert not all(g["passed"] for g in xval_data["comparison"]["gates"].values())
+
+
+class TestModeRequirement:
+    """The mode-cap artefact is recomputed from the solver, not trusted.
+
+    ``mode_requirement.json`` is what the report's 3.5 table renders, so it has
+    to be regenerable: a solver change that moves ``mode_count_for`` would
+    otherwise leave the report claiming an obsolete requirement.
+    """
+
+    ARTIFACT = (
+        REPO_ROOT / "benchmarks" / "verified" / "bem_finite_depth_capytaine_xval"
+        / "mode_requirement.json"
+    )
+
+    def test_artifact_matches_the_solver(self, xval_data):
+        pytest.importorskip("tensorbem.finite_depth_solver3d")
+        from tensorbem.finite_depth_solver3d import mode_count_for
+        from tensorbem.geometry3d import submerged_sphere_mesh
+
+        payload = json.loads(self.ARTIFACT.read_text())
+        rows = payload["rows"]
+        assert rows
+        # every cached TensorBEM case pinned the same mode count: that is the defect
+        assert payload["pinned_modes_in_cache"] == sorted(
+            {int(r["mode_count"]) for r in xval_data["tbem_study"]["rows"]}
+        )
+        for row in rows:
+            mesh = submerged_sphere_mesh(
+                row["subdivisions"], radius=1.0, submergence=2.0
+            )
+            assert mesh.panel_count == row["panels"]
+            assert mode_count_for(mesh, row["depth_ratio"]) == row["required_modes"]
+
+    def test_requirement_far_exceeds_the_pinned_cap(self):
+        payload = json.loads(self.ARTIFACT.read_text())
+        shortfall = [
+            r["required_modes"] / r["pinned_modes"] for r in payload["rows"]
+        ]
+        assert min(shortfall) > 10.0, shortfall

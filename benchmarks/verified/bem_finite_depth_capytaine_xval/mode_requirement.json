@@ -1,0 +1,73 @@
+{
+  "how": "make_doc.py --write-mode-requirement",
+  "note": "mode_count_for() = evanescent modes needed for an exp(-1e-12*mu*r) tail at the nearest target/quadrature separation; the cache pinned every TensorBEM case to the same mode_count, which is the recorded defect.",
+  "pinned_modes_in_cache": [
+    48
+  ],
+  "rows": [
+    {
+      "depth_ratio": 3.0,
+      "panel_level": "icosphere sub=2",
+      "panels": 320,
+      "pinned_modes": 48,
+      "required_modes": 1075,
+      "subdivisions": 2
+    },
+    {
+      "depth_ratio": 5.0,
+      "panel_level": "icosphere sub=2",
+      "panels": 320,
+      "pinned_modes": 48,
+      "required_modes": 1791,
+      "subdivisions": 2
+    },
+    {
+      "depth_ratio": 12.0,
+      "panel_level": "icosphere sub=2",
+      "panels": 320,
+      "pinned_modes": 48,
+      "required_modes": 4096,
+      "subdivisions": 2
+    },
+    {
+      "depth_ratio": 20.0,
+      "panel_level": "icosphere sub=2",
+      "panels": 320,
+      "pinned_modes": 48,
+      "required_modes": 4096,
+      "subdivisions": 2
+    },
+    {
+      "depth_ratio": 3.0,
+      "panel_level": "icosphere sub=3",
+      "panels": 1280,
+      "pinned_modes": 48,
+      "required_modes": 3446,
+      "subdivisions": 3
+    },
+    {
+      "depth_ratio": 5.0,
+      "panel_level": "icosphere sub=3",
+      "panels": 1280,
+      "pinned_modes": 48,
+      "required_modes": 4096,
+      "subdivisions": 3
+    },
+    {
+      "depth_ratio": 12.0,
+      "panel_level": "icosphere sub=3",
+      "panels": 1280,
+      "pinned_modes": 48,
+      "required_modes": 4096,
+      "subdivisions": 3
+    },
+    {
+      "depth_ratio": 20.0,
+      "panel_level": "icosphere sub=3",
+      "panels": 1280,
+      "pinned_modes": 48,
+      "required_modes": 4096,
+      "subdivisions": 3
+    }
+  ]
+}
