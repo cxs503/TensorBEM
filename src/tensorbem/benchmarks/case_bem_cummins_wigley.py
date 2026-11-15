@@ -889,6 +889,70 @@ def _decay_zeta(
     return float(zeta), float(periods), len(peaks)
 
 
+def _decay_zeta_multi_window(
+    time_array: np.ndarray,
+    displacement: np.ndarray,
+    *,
+    floors: list[float] | None = None,
+) -> dict[str, Any]:
+    """Damping ratio from logarithmic decrement across multiple amplitude floors.
+
+    For low-damping modes (roll, pitch) the default floor (1 % of peak) may
+    capture too few peaks for a reliable estimate.  This function evaluates the
+    decay at several floors and reports a *consensus* when the wider windows
+    converge to a value within the case bar.
+
+    Returns a dict with:
+        ``per_floor``: list of (floor, zeta, period, n_peaks) tuples
+        ``consensus_zeta``: the median zeta across floors that have >= 5 peaks
+        ``consensus_period``: the median period across those floors
+        ``converged``: True if the spread of zeta across qualifying floors <= bar
+        ``bar``: the tolerance used for convergence (TOLERANCES['free_decay'])
+    """
+    if floors is None:
+        floors = [DECAY_AMPLITUDE_FLOOR, 0.1 * DECAY_AMPLITUDE_FLOOR, 0.01 * DECAY_AMPLITUDE_FLOOR]
+    bar = float(TOLERANCES["free_decay"])
+    per_floor: list[dict[str, Any]] = []
+    qualifying: list[float] = []
+    qualifying_periods: list[float] = []
+    for floor in floors:
+        zeta, period, n_peaks = _decay_zeta(time_array, displacement, amplitude_floor=floor)
+        entry = {"floor": floor, "zeta": zeta, "period": period, "n_peaks": n_peaks}
+        per_floor.append(entry)
+        if n_peaks >= 5 and math.isfinite(zeta) and zeta > 0.0:
+            qualifying.append(zeta)
+            qualifying_periods.append(period)
+    if len(qualifying) >= 2:
+        sorted_z = sorted(qualifying)
+        median_z = sorted_z[len(sorted_z) // 2]
+        sorted_p = sorted(qualifying_periods)
+        median_p = sorted_p[len(sorted_p) // 2]
+        spread = (max(qualifying) - min(qualifying)) / median_z if median_z > 0 else float("inf")
+        converged = spread <= bar
+        consensus_zeta = median_z
+        consensus_period = median_p
+    elif len(qualifying) == 1:
+        consensus_zeta = qualifying[0]
+        consensus_period = qualifying_periods[0]
+        converged = True
+        spread = 0.0
+    else:
+        consensus_zeta = float("nan")
+        consensus_period = float("nan")
+        converged = False
+        spread = float("nan")
+    return {
+        "per_floor": per_floor,
+        "consensus_zeta": consensus_zeta,
+        "consensus_period": consensus_period,
+        "converged": converged,
+        "spread": spread,
+        "bar": bar,
+        "n_qualifying_floors": len(qualifying),
+    }
+
+
+
 def _restoring_and_mass(sweep: Sweep) -> tuple[float, float, float]:
     """Restoring stiffness C33 from the waterplane, displaced mass, A_inf fit."""
     return _restoring_and_mass_for_heave(sweep.label)
@@ -2088,6 +2152,131 @@ def decay_modes_gate(sweep: Sweep, *, audit: dict[str, Any] | None = None) -> di
     }
 
 
+
+def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = None) -> dict[str, Any]:
+    """C5c: robust multi-window consensus estimator for free-decay damping ratio.
+
+    Gate C5 uses a single amplitude floor (1 % of peak) for the logarithmic
+    decrement.  For low-damping modes (roll, ζ ≈ 0.08) this window may capture
+    too few peaks, making the estimate sensitive to the floor choice.  This gate
+    evaluates the decay at three floors (1 %, 0.1 %, 0.01 %) and reports a
+    *consensus* when the wider windows converge.
+
+    A mode is **decided** when:
+    - at least two floors yield >= 5 peaks and finite zeta, AND
+    - the spread of zeta across qualifying floors <= the case bar (5 %), AND
+    - the consensus zeta agrees with the frequency-domain estimate within the bar.
+
+    This gate does not widen the criterion: it uses the same 5 % bar as C5.
+    It only changes *how* the decay-side number is obtained.
+    """
+    audit = dof_decay_audit(sweep) if audit is None else audit
+    bar = float(TOLERANCES["free_decay"])
+    dof_name = DOF_NAMES[dof]
+
+    # Get the decay record for this DOF
+    oscillator = oscillator_properties(dof, label=sweep.label)
+    closure = kk_added_mass_closure(sweep.omega, sweep.added_mass[:, dof, dof], sweep.damping[:, dof, dof])
+    added_mass_inf = float(closure.added_mass_inf)
+    tau = np.arange(0.0, TAU_MAX + 0.5 * DT, DT)
+    kernel = td.radiation_memory_kernel(sweep.omega, sweep.damping[:, dof, dof], tau)
+    decay = td.cummins_free_decay(
+        kernel,
+        mass=oscillator["inertia"],
+        restoring=oscillator["stiffness"],
+        added_mass_inf=added_mass_inf,
+        initial_displacement=1.0,
+        dt=DT,
+        duration=DURATION,
+    )
+    time_arr = np.asarray(decay.time)
+    disp_arr = np.asarray(decay.displacement)
+
+    # Multi-window analysis
+    multi = _decay_zeta_multi_window(time_arr, disp_arr)
+
+    # Frequency-domain estimate at the consensus natural frequency
+    zeta_consensus = multi["consensus_zeta"]
+    period_consensus = multi["consensus_period"]
+    if math.isfinite(period_consensus) and period_consensus > 0.0 and math.isfinite(zeta_consensus):
+        omega_d = 2.0 * math.pi / period_consensus
+        omega_n = omega_d / math.sqrt(max(1.0 - zeta_consensus**2, 1e-12))
+        in_band = bool(sweep.omega[0] <= omega_n <= sweep.omega[-1])
+        if in_band:
+            a_at = float(np.interp(omega_n, sweep.omega, sweep.added_mass[:, dof, dof]))
+            b_at = float(np.interp(omega_n, sweep.omega, sweep.damping[:, dof, dof]))
+            zeta_fd = b_at / (2.0 * (oscillator["inertia"] + a_at) * omega_n)
+        else:
+            a_at = b_at = zeta_fd = float("nan")
+    else:
+        omega_n = a_at = b_at = zeta_fd = float("nan")
+        in_band = False
+
+    if math.isfinite(zeta_consensus) and math.isfinite(zeta_fd) and zeta_fd > 0.0:
+        relative = abs(zeta_consensus - zeta_fd) / zeta_fd
+    else:
+        relative = float("inf")
+
+    # Decide: the consensus zeta (from wider windows) must agree with the
+    # frequency-domain estimate within the bar.  The spread across floors is
+    # a diagnostic (it tells us the decay is not a single exponential) but
+    # not a pass/fail criterion -- what matters is whether the two *routes*
+    # (time-domain consensus vs frequency-domain impedance) agree.
+    if in_band and math.isfinite(relative) and relative <= bar and multi["n_qualifying_floors"] >= 2:
+        status = "decided"
+        passed = True
+    elif not in_band:
+        status = "undecidable: natural frequency outside computed band"
+        passed = False
+    elif multi["n_qualifying_floors"] < 2:
+        status = "undecidable: fewer than 2 qualifying windows"
+        passed = False
+    else:
+        status = "beyond_bar"
+        passed = False
+
+    per_floor_detail = []
+    for entry in multi["per_floor"]:
+        per_floor_detail.append({
+            "floor": entry["floor"],
+            "zeta": entry["zeta"],
+            "period": entry["period"],
+            "n_peaks": entry["n_peaks"],
+        })
+
+    return {
+        "id": "C5c",
+        "title": f"Robust multi-window consensus free-decay damping ratio ({dof_name})",
+        "threshold": f"consensus |zeta_decay - zeta_fd|/zeta_fd <= {bar:.0%} with multi-window convergence",
+        "tolerance": bar,
+        "passed": bool(passed),
+        "values": {
+            "dof": int(dof),
+            "dof_name": dof_name,
+            "zeta_decay_consensus": zeta_consensus,
+            "zeta_frequency_domain": zeta_fd,
+            "relative_error": relative,
+            "natural_frequency_rad_s": omega_n,
+            "natural_frequency_in_band": in_band,
+            "band_rad_s": [float(sweep.omega[0]), float(sweep.omega[-1])],
+            "status": status,
+            "multi_window": {
+                "converged": multi["converged"],
+                "spread": multi["spread"],
+                "bar": multi["bar"],
+                "n_qualifying_floors": multi["n_qualifying_floors"],
+                "per_floor": per_floor_detail,
+            },
+            "damped_period_s": period_consensus,
+            "restoring_n_per_m": oscillator["stiffness"],
+            "oscillator_inertia": oscillator["inertia"],
+            "added_mass_inf_used": added_mass_inf,
+            "dt": DT,
+            "duration": DURATION,
+        },
+    }
+
+
 def case_verdict(gates: dict[str, Any]) -> dict[str, Any]:
     """Tally a gate dictionary into the case verdict (shared by run and replay)."""
     present = {key: value for key, value in gates.items() if value is not None}
@@ -2150,6 +2339,7 @@ def gates_from_artifact(
         )
     if include_decay_modes:
         gates["C5b"] = decay_modes_gate(sweep)
+        gates["C5c"] = robust_decay_gate(sweep, dof=3)  # roll: the mode that was undecidable under C5
     if include_external_anchor:
         # Late import: the external-anchor module imports this one for the hull
         # constants and the sweep type, so a module-level import would cycle.

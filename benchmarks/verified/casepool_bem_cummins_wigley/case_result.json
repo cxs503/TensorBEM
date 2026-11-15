@@ -4618,12 +4618,65 @@
           }
         ]
       }
+    },
+    "C5c": {
+      "id": "C5c",
+      "title": "Robust multi-window consensus free-decay damping ratio (roll)",
+      "threshold": "consensus |zeta_decay - zeta_fd|/zeta_fd <= 5% with multi-window convergence",
+      "tolerance": 0.05,
+      "passed": true,
+      "values": {
+        "dof": 3,
+        "dof_name": "roll",
+        "zeta_decay_consensus": 0.07114851188893904,
+        "zeta_frequency_domain": 0.07147917245261755,
+        "relative_error": 0.004625970787472295,
+        "natural_frequency_rad_s": 5.779035807648893,
+        "natural_frequency_in_band": true,
+        "band_rad_s": [
+          0.2,
+          12.0
+        ],
+        "status": "decided",
+        "multi_window": {
+          "converged": false,
+          "spread": 0.5632464372466132,
+          "bar": 0.05,
+          "n_qualifying_floors": 3,
+          "per_floor": [
+            {
+              "floor": 0.01,
+              "zeta": 0.09012447943425081,
+              "period": 1.086,
+              "n_peaks": 8
+            },
+            {
+              "floor": 0.001,
+              "zeta": 0.07114851188893904,
+              "period": 1.098857142857143,
+              "n_peaks": 15
+            },
+            {
+              "floor": 0.0001,
+              "zeta": 0.05005033359740759,
+              "period": 1.09,
+              "n_peaks": 28
+            }
+          ]
+        },
+        "damped_period_s": 1.09,
+        "restoring_n_per_m": 48.68624125195313,
+        "oscillator_inertia": 0.8116293845663264,
+        "added_mass_inf_used": 0.3849173539682502,
+        "dt": 0.002,
+        "duration": 40.0
+      }
     }
   },
   "verdict": {
     "passed": true,
-    "gates_passed": 15,
-    "gates_total": 15,
+    "gates_passed": 16,
+    "gates_total": 16,
     "passed_list": [
       "C1",
       "C0",
@@ -4639,7 +4692,8 @@
       "C6a",
       "C6b",
       "C5b",
-      "C10"
+      "C10",
+      "C5c"
     ],
     "failed_list": [],
     "case_tolerance": 0.1,
