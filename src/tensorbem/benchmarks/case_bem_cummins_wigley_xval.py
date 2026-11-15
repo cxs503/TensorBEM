@@ -55,6 +55,7 @@ __all__ = [
     "external_anchor_gate",
     "geometry_matches",
     "load_reference",
+    "reference_noise_floor",
     "render_document",
     "run_study",
     "write_outputs",
@@ -362,6 +363,110 @@ def convergence(
             "damping": float(np.max(np.abs(damping_f - damping_m) / scale_b)),
         }
     return {"variant": variant, "ladder": ladder, "capytaine_self_shift": self_shift}
+
+
+def reference_noise_floor(
+    sweep: case.Sweep,
+    reference: dict[str, Any],
+    *,
+    level: str = PRIMARY_LEVEL,
+    variant: str = PRIMARY_VARIANT,
+) -> dict[str, Any]:
+    """Compare the C10 residual with the foreign code's *own* mesh sensitivity.
+
+    Gate C10 says "TensorBEM and capytaine agree on the identical panels".  That
+    is only informative if the residual is larger than the amount by which the
+    foreign code moves when its panels change: the frozen reference also carries
+    capytaine solves on ``coarse`` and ``fine`` panels, so the reference's own
+    discretisation noise is measurable from the artifact itself, on the same
+    normalisation the gate uses.
+
+    For every cell the ladder spread is ``max_levels |X_capytaine(level) -
+    X_capytaine(primary)|`` divided by the band amplitude of the TensorBEM cell
+    (the same yardstick as :func:`_cell_scores`), and the C10 residual on that
+    cell is divided by the same yardstick.  ``distinguishable`` is true when the
+    residual exceeds the spread: only then is the disagreement attributable to
+    the comparison rather than to the reference's own panel dependence.
+
+    This does **not** validate the foreign code (no self-convergence on fixed
+    panels is available in the artifact); it bounds what the gate can claim.
+    """
+    ours_added = np.asarray(sweep.added_mass, dtype=float)
+    ours_damping = np.asarray(sweep.damping, dtype=float)
+    amp_added = np.max(np.abs(ours_added), axis=0)
+    amp_damping = np.max(np.abs(ours_damping), axis=0)
+    added_ref, damping_ref = _matrices(reference, level, variant)
+
+    rows: dict[str, Any] = {}
+    for name, ours, theirs, amplitude in (
+        ("added_mass", ours_added, added_ref, amp_added),
+        ("damping", ours_damping, damping_ref, amp_damping),
+    ):
+        diagonal = np.diag(amplitude)
+        null = amplitude <= NULL_FRACTION * np.maximum.outer(diagonal, diagonal)
+        ladder = []
+        for other in reference["levels"]:
+            if other == level:
+                continue
+            variants = reference["levels"][other]["variants"]
+            other_variant = variant if variant in variants else "no_lid"
+            other_added, other_damping = _matrices(reference, other, other_variant)
+            ladder.append(other_added if name == "added_mass" else other_damping)
+        if not ladder:
+            rows[name] = {"status": "undecidable: reference carries a single level"}
+            continue
+        spread_abs = np.max(
+            np.abs(np.asarray(ladder) - theirs[None, :, :]), axis=0
+        )
+        with np.errstate(divide="ignore", invalid="ignore"):
+            spread = np.where(amplitude > 0.0, spread_abs / amplitude, np.inf)
+            deviation = np.where(amplitude > 0.0, np.abs(theirs - ours) / amplitude, np.inf)
+        spread = np.where(null, 0.0, spread)
+        deviation = np.where(null, 0.0, deviation)
+        cell_residual = deviation.max(axis=0)
+        cell_floor = spread.max(axis=0)
+        index = np.unravel_index(int(np.argmax(cell_residual)), cell_residual.shape)
+        residual = float(cell_residual[index])
+        floor = float(cell_floor[index])
+        worst_floor = float(np.max(spread))
+        rows[name] = {
+            "worst": {
+                "dof_from": case.DOF_NAMES[index[1]],
+                "dof_to": case.DOF_NAMES[index[0]],
+                "i": int(index[0]),
+                "j": int(index[1]),
+                "residual": residual,
+                "reference_ladder_spread": floor,
+                "ratio": float(residual / floor) if floor > 0.0 else float("inf"),
+                "distinguishable": bool(residual > floor),
+            },
+            "worst_reference_ladder_spread": worst_floor,
+            "scored_cells": int(np.count_nonzero(~null)),
+            "cells_where_cell_max_residual_exceeds_floor": int(
+                np.count_nonzero((cell_residual > cell_floor) & (~null))
+            ),
+            "per_frequency": {
+                "residual": deviation.max(axis=(1, 2)).tolist(),
+                "reference_ladder_spread": spread.max(axis=(1, 2)).tolist(),
+            },
+        }
+    return {
+        "level": level,
+        "variant": variant,
+        "levels_in_ladder": sorted(reference["levels"]),
+        "normalisation": "band-max |X_tensorbem| of the same cell (identical to gate C10)",
+        "quantities": rows,
+        "verdict": (
+            "the gate residual is not distinguishable from the reference's own panel "
+            "dependence"
+            if all(
+                row.get("worst", {}).get("distinguishable") is False
+                for row in rows.values()
+                if "worst" in row
+            )
+            else "at least one quantity's residual exceeds the reference's panel dependence"
+        ),
+    }
 
 
 # ---------------------------------------------------------------------------
