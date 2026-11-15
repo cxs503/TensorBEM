@@ -34,6 +34,15 @@ Artefacts written (repo-relative)::
 Run::
 
     PYTHONPATH=src python3 scripts/audit_m19935_rigid_body_mass.py
+    PYTHONPATH=src python3 scripts/audit_m19935_rigid_body_mass.py --check
+
+The first form rewrites the three artefacts above and must be a no-op on a
+clean checkout: the review is rendered from this module *including* the
+addendum of section 6, which was authored in a later change set but belongs to
+the same document.  The second form writes nothing, recomputes the four probes
+and compares them with the committed artefacts (review character for
+character, numbers to 1e-9 relative); it exits non-zero on drift.
+``tests/test_audit_m19935_rigid_body_mass.py`` gates both properties.
 """
 
 from __future__ import annotations
@@ -64,6 +73,49 @@ DENSITY = 1025.0
 CG = (5.0, 0.0, -3.0)
 TOLERANCE = 0.03
 FLOOR = 1.0e-6
+
+# Section 6 of ADVERSARIAL_REVIEW.md was written by a *later* change set (the RAO
+# caller replay of the anchor verdict) but belongs to the same document.  It is
+# kept here, as authored text, because ``write_review`` rewrites the whole file:
+# anything that is not in this module is deleted when the documented command
+# ``python3 scripts/audit_m19935_rigid_body_mass.py`` is re-run.  Regenerating the
+# review must be a no-op on a clean checkout -- see
+# ``tests/test_audit_m19935_rigid_body_mass.py``.
+ADDENDUM_SECTION: tuple[str, ...] = (
+    '## 6. Addendum — the end-to-end claim was not in the verdict (fixed)',
+    '',
+    'This review verified the *closure* route (block form vs quadrature vs symbols) and',
+    "the two controls. It did not check that the anchor's **machine** verdict covered",
+    'the strongest claim it makes, namely that the seakeeping solver consumes this',
+    'matrix. It did not: `verdict.json` listed eight checks, none of them the RAO',
+    'caller replay, whose numbers sat unused in `results.json["base_case"]["rao_caller"]`.',
+    'A regression at the call site would therefore have left the anchor `PASS`.',
+    '',
+    'Remediation shipped with this change set:',
+    '',
+    '* `casepool_bem_rigid_body_mass.rao_caller_section` promotes the replay to a',
+    '  top-level `rao_caller` section with two checks — *reproduction* (injecting the',
+    "  closed block form at the solver's single `compute_mass_matrix` call site must",
+    '  reproduce the shipped RAO, `< 1e-9`) and *discriminating power* (the pre-fix',
+    '  coupling convention must move the delivered RAO by more than the 3 % anchor',
+    '  tolerance; measured 93.69 % in roll);',
+    '* the driver reports `INCOMPLETE` (never `PASS`) when run with `--no-rao`, and',
+    '  lists the unrun checks in `verdict["not_run"]`;',
+    '* `CASE.md` §4 now tabulates the replay per mode and §5 states what the zero',
+    '  replay residual does and does not prove (the shipped matrix *is* the injected',
+    '  form, so the non-triviality comes from the legacy-coupling control);',
+    '* the dangling cross-reference in §5 ("见 ... RAO caller 回放一节", a section that',
+    '  did not exist in this directory) points at the material that now exists;',
+    '* `tests/test_casepool_bem_rigid_body_mass.py` gates the ledger (9 tests): the',
+    "  helper's three-state behaviour, the committed artefacts' invariants, the",
+    '  premise that the shipped call-site matrix equals the injected form, and the',
+    '  `INCOMPLETE`/`PASS` driver semantics.',
+    '',
+    'Residual limitation, unchanged: the probe pins the *call site*, not the',
+    'agreement of the block convention with an external BEM code (that remains',
+    '`docs/case_rigid_body_mass.md` §Sensitivity C and the capytaine cross-assembly',
+    'of the orientation case).',
+)
 
 
 # --------------------------------------------------------------------------- A
@@ -301,7 +353,7 @@ def make_figure(convergence, controls, path: Path) -> None:
 
 
 # --------------------------------------------------------------------------- md
-def write_review(payload: dict[str, object], path: Path) -> None:
+def render_review(payload: dict[str, object]) -> str:
     conv = payload["quadrature_convergence"]
     ctl = payload["topology_controls"]
     sym = payload["symbolic_energy_hessian"]
@@ -400,12 +452,70 @@ def write_review(payload: dict[str, object], path: Path) -> None:
         "(C) concerned the validity domain of the reference route and is fixed and regression-tested in",
         "this change set.",
         "",
+        *ADDENDUM_SECTION,
+        "",
     ]
-    path.write_text("\n".join(lines))
+    return "\n".join(lines)
 
 
-def main() -> dict[str, object]:
-    OUT.mkdir(parents=True, exist_ok=True)
+def write_review(payload: dict[str, object], path: Path) -> None:
+    path.write_text(render_review(payload))
+
+
+def _walk_diff(reference: object, candidate: object, path: str = "audit") -> list[str]:
+    """Collect human-readable differences between two nested audit payloads."""
+    if isinstance(reference, dict):
+        if not isinstance(candidate, dict):
+            return [f"{path}: object -> {type(candidate).__name__}"]
+        diffs: list[str] = []
+        for key in sorted(set(reference) | set(candidate)):
+            if key not in reference or key not in candidate:
+                diffs.append(f"{path}.{key}: present on one side only")
+            else:
+                diffs += _walk_diff(reference[key], candidate[key], f"{path}.{key}")
+        return diffs
+    if isinstance(reference, list):
+        if not isinstance(candidate, list) or len(reference) != len(candidate):
+            return [f"{path}: list shape changed"]
+        diffs = []
+        for index, (ref_item, cand_item) in enumerate(zip(reference, candidate)):
+            diffs += _walk_diff(ref_item, cand_item, f"{path}[{index}]")
+        return diffs
+    if isinstance(reference, float) or isinstance(candidate, float):
+        ref_num, cand_num = float(reference), float(candidate)  # type: ignore[arg-type]
+        if not math.isclose(ref_num, cand_num, rel_tol=1e-9, abs_tol=1e-12):
+            return [f"{path}: {ref_num!r} -> {cand_num!r}"]
+        return []
+    if reference != candidate:
+        return [f"{path}: {reference!r} -> {candidate!r}"]
+    return []
+
+
+def compare_committed(payload: dict[str, object], outdir: Path = OUT) -> dict[str, object]:
+    """Compare a freshly computed payload with the artefacts committed in ``outdir``.
+
+    The probes are deterministic, so the committed review must reproduce
+    character for character and the committed numbers must agree within a 1e-9
+    relative tolerance.  The figure is only checked for presence: matplotlib
+    embeds encoder metadata in the PNG stream, so byte equality is not a
+    meaningful test of it.
+    """
+    committed = json.loads((outdir / "adversarial_audit.json").read_text())
+    live = {key: value for key, value in payload.items() if key != "environment"}
+    reference = {key: value for key, value in committed.items() if key != "environment"}
+    diffs = _walk_diff(reference, live)
+    review_matches = (outdir / "ADVERSARIAL_REVIEW.md").read_text() == render_review(payload)
+    figure_present = (outdir / "fig_adversarial_audit.png").exists()
+    return {
+        "review_matches": review_matches,
+        "payload_diff_count": len(diffs),
+        "payload_diffs": diffs[:20],
+        "figure_present": figure_present,
+        "ok": bool(review_matches and not diffs and figure_present),
+    }
+
+
+def main(write: bool = True) -> dict[str, object]:
     payload = {
         "audit": "CASE-BEM-RIGID-BODY-MASS independent review",
         "environment": {
@@ -421,6 +531,9 @@ def main() -> dict[str, object]:
         "topology_controls": topology_controls(),
         "metric_sensitivity": metric_sensitivity(),
     }
+    if not write:
+        return payload
+    OUT.mkdir(parents=True, exist_ok=True)
     make_figure(payload["quadrature_convergence"], payload["topology_controls"],
                 OUT / "fig_adversarial_audit.png")
     write_review(payload, OUT / "ADVERSARIAL_REVIEW.md")
@@ -430,5 +543,25 @@ def main() -> dict[str, object]:
     return payload
 
 
+def cli(argv: list[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Independent audit of the anchor CASE-BEM-RIGID-BODY-MASS.")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="recompute the probes and verify that the committed artefacts still reproduce "
+             "(nothing is written); exit status 1 on drift",
+    )
+    args = parser.parse_args(argv)
+    if not args.check:
+        main()
+        return 0
+    status = compare_committed(main(write=False))
+    print(json.dumps(status, indent=1))
+    return 0 if status["ok"] else 1
+
+
 if __name__ == "__main__":
-    main()
+    sys.exit(cli())
