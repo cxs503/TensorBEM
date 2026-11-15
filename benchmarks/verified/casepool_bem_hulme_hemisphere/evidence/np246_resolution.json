@@ -1,0 +1,190 @@
+{
+  "artifacts": {
+    "new": null,
+    "old": {
+      "metadata": {
+        "generated_utc": "2026-11-14T08:53:21Z",
+        "git_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
+        "host": "ec6ae0b42a0c",
+        "machine": "loongarch64",
+        "numpy": "2.4.6",
+        "python": "3.11.6"
+      },
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension/results.json",
+      "verdict": "FAIL"
+    }
+  },
+  "band_status": {
+    "ka_gt_2": "WITHHELD -- current-code re-run artifact missing",
+    "ka_le_2": "PASS (declared band, unchanged)"
+  },
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "catastrophic_threshold": 0.1,
+  "code_identity": {
+    "audit_absent_at_old_commit": true,
+    "audit_introduced": {
+      "commit": "a7ddc4f124dad8817c457a1065cb4a8cd8128af8",
+      "date": "2026-11-15T09:03:27+08:00",
+      "revisions": 1
+    },
+    "audit_symbol": "_solve_least_squares",
+    "new_source_sha256": null,
+    "old_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
+    "old_commit_date": "2026-11-14T15:54:55+08:00",
+    "old_commit_is_ancestor_of_audit": true,
+    "old_source_sha256": null
+  },
+  "gate": 0.05,
+  "gates": {
+    "B1_artifacts_are_not_the_same_code": {
+      "criterion": "the audit symbol of the current solver is absent at the commit that produced the failing artifact, and that commit is an ancestor of the commit that introduced it",
+      "measured": {
+        "audit_absent_at_old_commit": true,
+        "old_commit_is_ancestor": true
+      },
+      "pass": true
+    },
+    "B2_blast_radius_names_the_lstsq_path": {
+      "criterion": "inside the failing artifact every catastrophic cell (band max > 10%) is a CHIEF-on (over-determined lstsq) cell, and the CHIEF-off square controls stay below that level",
+      "measured": {
+        "catastrophic_all_chief_on": true,
+        "catastrophic_cells": [
+          "extension_ka2.2_n1024_chief_on",
+          "extension_ka2.58_n1024_chief_on",
+          "extension_ka3_n1024_chief_on",
+          "ladder_coarse_ka3_n256_chief_on",
+          "extension_ka3.5_n1024_chief_on",
+          "extension_ka4_n1024_chief_on",
+          "ladder_coarse_ka4_n256_chief_on"
+        ],
+        "chief_off_cells": 2,
+        "chief_on_cells": 7,
+        "worst_chief_off": 0.061212661563295946,
+        "worst_chief_on": 1.0416155792450397
+      },
+      "pass": true
+    },
+    "B3_numpy_version_cannot_be_the_variable": {
+      "criterion": "both artifacts record the same numpy version, so a numpy version change cannot explain their difference",
+      "measured": {
+        "new": null,
+        "old": "2.4.6"
+      },
+      "pass": null
+    },
+    "B4_failed_cells_recover_under_current_code": {
+      "criterion": "current-code re-run available",
+      "measured": null,
+      "pass": null
+    }
+  },
+  "local_cells": {
+    "2.58": {
+      "A11_dimless": 0.19032097419978278,
+      "B33_dimless": 0.06450485357459329,
+      "condition_number": 8.287032392418086,
+      "diffraction_relative_residual": 0.0018101293176312832,
+      "diffraction_solve_method": "lstsq",
+      "diffraction_stationarity": 5.68876001060097e-14,
+      "panels": 1024,
+      "radiation_relative_residual": 0.0012985698373427649,
+      "radiation_solve_method": "lstsq",
+      "radiation_stationarity": 8.319432123604283e-14,
+      "rel_error_A11_dimless": 0.002264286296625381,
+      "rel_error_B33_dimless": 0.022543810901039015,
+      "rel_error_Fz_dimless": 0.01047828111221532,
+      "wall_seconds": 33.02
+    }
+  },
+  "old_band": [
+    {
+      "band_max": 0.1555914764012461,
+      "chief": true,
+      "condition_number": 3.0940228890973365,
+      "ka": 2.2,
+      "name": "extension_ka2.2_n1024_chief_on",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.18502332414052006,
+      "chief": true,
+      "condition_number": 8.28703239241808,
+      "ka": 2.58,
+      "name": "extension_ka2.58_n1024_chief_on",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.061212661563295946,
+      "chief": false,
+      "condition_number": 65.32041973204852,
+      "ka": 2.58,
+      "name": "chief_off_ka2.58_n1024_chief_off",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.1060910909133725,
+      "chief": true,
+      "condition_number": 2.7263409220453716,
+      "ka": 3.0,
+      "name": "extension_ka3_n1024_chief_on",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.2293871573077481,
+      "chief": true,
+      "condition_number": 2.55533522432705,
+      "ka": 3.0,
+      "name": "ladder_coarse_ka3_n256_chief_on",
+      "panels": 256
+    },
+    {
+      "band_max": 0.022442020330123314,
+      "chief": false,
+      "condition_number": 2.8249989167685285,
+      "ka": 3.0,
+      "name": "chief_off_ka3_n1024_chief_off",
+      "panels": 1024
+    },
+    {
+      "band_max": 1.0416155792450397,
+      "chief": true,
+      "condition_number": 2.7783313589262097,
+      "ka": 3.5,
+      "name": "extension_ka3.5_n1024_chief_on",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.39950757742968757,
+      "chief": true,
+      "condition_number": 14.803996414371078,
+      "ka": 4.0,
+      "name": "extension_ka4_n1024_chief_on",
+      "panels": 1024
+    },
+    {
+      "band_max": 0.3267299013416491,
+      "chief": true,
+      "condition_number": 19.53721010811123,
+      "ka": 4.0,
+      "name": "ladder_coarse_ka4_n256_chief_on",
+      "panels": 256
+    }
+  ],
+  "old_failure_localisation": {
+    "catastrophic_all_chief_on": true,
+    "catastrophic_cells": [
+      "extension_ka2.2_n1024_chief_on",
+      "extension_ka2.58_n1024_chief_on",
+      "extension_ka3_n1024_chief_on",
+      "ladder_coarse_ka3_n256_chief_on",
+      "extension_ka3.5_n1024_chief_on",
+      "extension_ka4_n1024_chief_on",
+      "ladder_coarse_ka4_n256_chief_on"
+    ],
+    "chief_off_cells": 2,
+    "chief_on_cells": 7,
+    "worst_chief_off": 0.061212661563295946,
+    "worst_chief_on": 1.0416155792450397
+  },
+  "verdict": "INCOMPLETE"
+}

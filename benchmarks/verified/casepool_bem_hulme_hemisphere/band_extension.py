@@ -464,7 +464,19 @@ def build(out_dir: Path, parallel: int) -> int:
     meta = {"python": platform.python_version(), "numpy": np.__version__,
             "host": platform.node(), "machine": platform.machine(),
             "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            "git_commit": _git_head()}
+            "git_commit": _git_head(),
+            "git_dirty": _git_dirty(),
+            # A commit hash is not enough to identify a physics run: the
+            # 2026-11-14 artifact (commit 56f0649) and the 2026-11-15 re-run of
+            # the *same* cell disagree by 104 %, and the discriminator was the
+            # source of the solver, not the numpy version (see
+            # docs/case_bem_hulme_np246_contradiction_audit.md).  Hash the
+            # modules whose code produces the numbers, and record the BLAS
+            # thread environment the children were pinned to.
+            "source_sha256": _source_sha256(),
+            "thread_env": {v: os.environ.get(v) for v in (
+                "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS")}}
     (out_dir / "results.json").write_text(json.dumps(
         {"case_code": "BEM-HULME-HEMISPHERE", "study": "band_extension",
          "ka_extended": list(KA_EXTENDED), "mesh_panels": 4 * 4 ** MESH_EXT,
@@ -478,6 +490,32 @@ def build(out_dir: Path, parallel: int) -> int:
     print(json.dumps({k: v["pass"] for k, v in verdict["criteria"].items()}, indent=1))
     print("VERDICT", verdict["verdict"])
     return 0 if verdict["verdict"] == "PASS" else 1
+
+
+SOURCE_FILES = ("src/tensorbem/free_surface_solver3d.py",
+                "src/tensorbem/analytic.py",
+                "src/tensorbem/geometry3d.py",
+                "src/tensorbem/benchmarks/hulme_hemisphere_case.py")
+
+
+def _source_sha256() -> dict[str, str]:
+    """sha256 of every module that can change a cell's numbers."""
+    import hashlib
+    out: dict[str, str] = {}
+    for rel in SOURCE_FILES:
+        path = REPO / rel
+        if path.exists():
+            out[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return out
+
+
+def _git_dirty() -> bool | None:
+    try:
+        return bool(subprocess.check_output(
+            ["git", "status", "--porcelain"], cwd=REPO, text=True,
+            stderr=subprocess.DEVNULL).strip())
+    except Exception:
+        return None
 
 
 def _git_head() -> str | None:

@@ -112,6 +112,8 @@ class Radiation3DResult:
     chief_points_used: FloatArray
     condition_number: float
     relative_residual: float
+    solve_method: str = ""
+    least_squares_stationarity: float = float("nan")
 
 
 @dataclass(frozen=True)
@@ -130,6 +132,8 @@ class Diffraction3DResult:
     chief_points_used: FloatArray
     condition_number: float
     relative_residual: float
+    solve_method: str = ""
+    least_squares_stationarity: float = float("nan")
 
 
 def _validate_positive(name: str, value: float) -> float:
@@ -595,17 +599,29 @@ def _solve_square(
 
 def _solve_system(
     ops: FreeSurface3DOperators, q_ext: ComplexArray
-) -> tuple[ComplexArray, float]:
+) -> tuple[ComplexArray, float, str, float]:
+    """Solve one excitation case and return the solve's own diagnostics.
+
+    Returns ``(solution, relative_residual, solve_method, stationarity)``.
+    ``solve_method`` is ``"lstsq"``/``"solve"`` when the primary driver passed
+    its audit and ``"qr"`` when the Householder fallback had to rescue it;
+    ``stationarity`` is the dimensionless least-squares stationarity
+    ``||A^H r|| / (||A|| ||r||)``.  Both are recorded by the case drivers so a
+    ranked artifact can be audited years later without re-running it: a rescued
+    solve says the primary driver was wrong at that cell, which is invisible in
+    the residual alone (see dev report m20910).
+    """
     rhs_body = ops.single_layer @ q_ext
     if ops.chief_points.shape[0] > 0:
         rhs = np.vstack((rhs_body, ops.chief_single_layer @ q_ext))
-        sol, _method = _solve_least_squares(ops.system_matrix, rhs)
+        sol, method = _solve_least_squares(ops.system_matrix, rhs)
     else:
         rhs = rhs_body
-        sol, _method = _solve_square(ops.system_matrix, rhs)
+        sol, method = _solve_square(ops.system_matrix, rhs)
     denom = max(float(np.linalg.norm(rhs)), 1.0e-30)
     rel_res = float(np.linalg.norm(ops.system_matrix @ sol - rhs) / denom)
-    return np.asarray(sol, dtype=np.complex128), rel_res
+    stationarity = least_squares_stationarity(ops.system_matrix, sol, rhs)
+    return np.asarray(sol, dtype=np.complex128), rel_res, method, stationarity
 
 
 def solve_radiation_3d(
@@ -661,7 +677,7 @@ def solve_radiation_3d(
     n6 = rigid_body_normals_3d(mesh, center=center)
     n_modes = n6[:, mode_arr]
     q_ext = (-n_modes).astype(np.complex128)
-    potentials, rel_res = _solve_system(ops, q_ext)
+    potentials, rel_res, method, stationarity = _solve_system(ops, q_ext)
 
     weighted_normals = _resolve_panel_areas(mesh, panel_areas)[:, None] * n_modes
     impedance = -rho * (weighted_normals.T @ potentials)
@@ -679,6 +695,8 @@ def solve_radiation_3d(
         chief_points_used=ops.chief_points,
         condition_number=ops.condition_number,
         relative_residual=rel_res,
+        solve_method=method,
+        least_squares_stationarity=stationarity,
     )
 
 
@@ -771,7 +789,9 @@ def solve_diffraction_3d(
         mesh.centroids, freq, amplitude=amp, wave_angle=beta, gravity=g
     )
     dphi_inc_dn = np.einsum("pk,pk->p", grad_inc, mesh.normals)
-    phi_scat_2d, rel_res = _solve_system(ops, dphi_inc_dn[:, None])
+    phi_scat_2d, rel_res, method, stationarity = _solve_system(
+        ops, dphi_inc_dn[:, None]
+    )
     phi_scat = phi_scat_2d[:, 0]
     phi_tot = phi_inc + phi_scat
 
@@ -793,6 +813,8 @@ def solve_diffraction_3d(
         chief_points_used=ops.chief_points,
         condition_number=ops.condition_number,
         relative_residual=rel_res,
+        solve_method=method,
+        least_squares_stationarity=stationarity,
     )
 
 
