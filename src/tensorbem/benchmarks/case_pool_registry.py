@@ -380,6 +380,35 @@ CASES: dict[str, CaseEntry] = {
         "fits the quadrature convergence order and records the validity domain of the quadrature route "
         "(mesh_topology_report guard)",
     ),
+    "CASE-BEM-CUMMINS-WIGLEY": CaseEntry(
+        case_code="CASE-BEM-CUMMINS-WIGLEY",
+        pool_code="BEM-CUMMINS-WIGLEY",
+        repo="TensorBEM",
+        tolerance="<10%",
+        entry="src/tensorbem/benchmarks/case_bem_cummins_wigley.py",
+        entry_args=("--out", "benchmarks/verified/casepool_bem_cummins_wigley"),
+        library="tensorbem.benchmarks.case_bem_cummins_wigley",
+        artifacts=(
+            "benchmarks/verified/casepool_bem_cummins_wigley/case_result.json",
+            "benchmarks/verified/casepool_bem_cummins_wigley/anchor_audit.json",
+            "benchmarks/verified/casepool_bem_cummins_wigley/causal_decay_audit.json",
+        ),
+        doc="benchmarks/verified/casepool_bem_cummins_wigley/CASE.md",
+        figures=(
+            "benchmarks/verified/casepool_bem_cummins_wigley/fig_kk_closure.png",
+        ),
+        repro_cmd=(
+            "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_bem_cummins_wigley "
+            "--out benchmarks/verified/casepool_bem_cummins_wigley --jobs 1"
+        ),
+        notes="Wigley hull (L/B=10, B/T=1.6, Cb=4/9) 6-DOF Cummins memory kernel: "
+        "Kramers-Kronig causality closure of A(omega) from B(omega) (criterion <10%), "
+        "Cummins round-trip B->K->B (<=2%), free-decay vs frequency-domain damping "
+        "ratio (<=5%), plus negative controls (zero damping -> zero decay; corrupted "
+        "damping shape must fail the KK gate). CHIEF irregular-frequency suppression "
+        "and a power-law tail closure for the truncated band. Committed medium-mesh "
+        "sweep (480 panels x 41 frequencies, band 0.2..12 rad/s) replays 10/10 gates.",
+    ),
 }
 
 
