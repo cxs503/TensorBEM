@@ -1,16 +1,16 @@
 """Full-band verification for CASE-BEM-SUBMERGED-SPHERE-HAVELOCK.
 
-Closes the m18506/m21484 gap: the case-mesh tier now gates all 7 wavenumbers
-(ka = 0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0) at 1280 panels.
-
-ka=4,5 values: originally GCI-scaled estimates (condition_number=2.05 placeholder).
-Cluster job cj3866 computes actual BEM values on 1280-panel mesh; once available,
-run ``python3 update_ka45_case_mesh.py /tmp/ka45_results/ka45_case_mesh.json`` to replace.
+Closes the m18506/m21484/m22072 gap: the case-mesh tier now gates all 7
+wavenumbers (ka = 0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0) at 1280 panels with
+**directly computed** BEM values (no GCI estimates).  ka=4,5 were originally
+GCI-scaled estimates (condition_number=2.05 placeholder); cluster job cj3884
+replaced them with real 1280-panel solves (elapsed 1288 s).
 """
 from __future__ import annotations
 
 import json
 import math
+import re
 from pathlib import Path
 
 import pytest
@@ -22,8 +22,8 @@ ARTIFACT = ROOT / "docs/case_bem_submerged_sphere_havelock/numbers.json"
 COEFFICIENTS = ("a33", "b33", "a11", "b11")
 GATE = 0.05
 FULL_BAND_KA = (0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0)
-#: Placeholder condition_number used for GCI-estimated ka=4,5 rows
-PLACEHOLDER_COND = 2.05
+#: Minimum significant digits for a valid condition number (computed, not placeholder)
+MIN_COND_SIGDIGITS = 10
 
 
 @pytest.fixture(scope="module")
@@ -33,7 +33,7 @@ def payload() -> dict:
 
 
 def test_full_band_case_mesh_has_7_ka_values(payload):
-    """The case-mesh tier now covers all 7 wavenumbers."""
+    """The case-mesh tier covers all 7 wavenumbers."""
     kas = {row["ka"] for row in payload["band_sweep_case"]}
     assert kas == set(FULL_BAND_KA), f"missing ka values: {set(FULL_BAND_KA) - kas}"
 
@@ -48,11 +48,7 @@ def test_full_band_case_mesh_all_pass(payload):
 
 
 def test_full_band_case_mesh_ka4_5_values_plausible(payload):
-    """ka=4,5 values are physically plausible (whether GCI-estimated or computed).
-
-    When cluster job cj3866 completes and update_ka45_case_mesh.py runs, the
-    condition_number will change from placeholder 2.05 to a realistic 16-digit float.
-    """
+    """ka=4,5 values are physically plausible and directly computed."""
     for row in payload["band_sweep_case"]:
         if row["ka"] not in (4.0, 5.0):
             continue
@@ -109,30 +105,39 @@ def test_full_band_nondimensional_parameters_updated(payload):
     assert params.get("case_gated_band_ka") == list(FULL_BAND_KA)
 
 
-def test_full_band_case_mesh_condition_numbers_documented(payload):
-    """All case-mesh rows have documented condition numbers.
+def test_full_band_case_mesh_condition_numbers_valid(payload):
+    """All case-mesh rows have condition numbers with >= 10 significant digits.
 
-    ka=4,5 rows currently have placeholder condition_number=2.05 (GCI-estimated).
-    After cluster job cj3866 completes and values are updated, all rows should
-    have condition_number with >= 10 significant digits.
-
-    This test documents the gap but does not fail on placeholder values.
+    This confirms ka=4,5 are directly computed (not GCI-estimated placeholders).
+    Placeholder values like 2.05 have only 3 significant digits.
     """
     for row in payload["band_sweep_case"]:
         cond = row.get("condition_number")
         assert cond is not None, f"ka={row['ka']}: missing condition_number"
         assert math.isfinite(cond), f"ka={row['ka']}: non-finite condition_number"
+        # Check significant digits: a placeholder like 2.05 has only 3 sig digits
+        # A computed value like 2.0482266938297014 has 16
+        s = f"{cond:.16g}"
+        # Count digits after removing decimal point and leading zeros
+        digits = s.replace(".", "").replace("-", "").lstrip("0")
+        assert len(digits) >= MIN_COND_SIGDIGITS, (
+            f"ka={row['ka']}: condition_number={cond} has only {len(digits)} sig digits "
+            f"(need >= {MIN_COND_SIGDIGITS}, likely a placeholder)"
+        )
 
 
-def test_full_band_verdict_honest_note_mentions_ka45_status(payload):
-    """verdict.json honest_note should mention ka=4,5 status."""
+def test_full_band_verdict_honest_note_accurate(payload):
+    """verdict.json honest_note accurately describes the current state."""
     verdict_path = ROOT / "docs/case_bem_submerged_sphere_havelock/verdict.json"
     assert verdict_path.is_file(), f"verdict.json missing: {verdict_path}"
     verdict = json.loads(verdict_path.read_text())
     note = verdict.get("honest_note", "")
-    # The note should mention ka=4,5 status (either GCI-estimated or computed)
-    assert "ka=4" in note or "ka=5" in note or "4,5" in note or "GCI" in note or "cj3866" in note, \
-        f"honest_note should mention ka=4,5 status: {note}"
+    # The note should mention that ka=4,5 are now computed (not GCI-estimated)
+    assert "computed" in note.lower() or "direct" in note.lower() or "BEM solve" in note, \
+        f"honest_note should confirm ka=4,5 are computed: {note}"
+    # Should also mention economy mesh FAIL
+    assert "FAIL" in note or "fail" in note, \
+        f"honest_note should mention economy mesh FAIL: {note}"
 
 
 def test_full_band_max_error_below_2_percent(payload):
@@ -141,3 +146,21 @@ def test_full_band_max_error_below_2_percent(payload):
     assert tier["max_rel_error"] < 0.02, (
         f"case_mesh max error {tier['max_rel_error']:.4%} >= 2% target"
     )
+
+
+def test_full_band_degenerate_items_documented(payload):
+    """Items with |ref| < 1e-4 are documented as degenerate (noise-dominated)."""
+    deg = payload.get("degenerate_items", {})
+    assert "items" in deg, "degenerate_items block missing"
+    assert len(deg["items"]) == 4, f"expected 4 degenerate items, got {len(deg['items'])}"
+    # All 4 should be ka=4,5 damping coefficients
+    for item in deg["items"]:
+        assert item["quantity"] in ("b33", "b11"), f"unexpected degenerate quantity: {item['quantity']}"
+        # Extract ka from "item" field (e.g., "ka=4") or "ka" field
+        item_str = item.get("item", "")
+        ka_val = item.get("ka")
+        if ka_val is None and item_str:
+            m = re.search(r"ka=(\d+)", item_str)
+            if m:
+                ka_val = int(m.group(1))
+        assert ka_val in (4, 5), f"degenerate item should be ka=4 or 5: {item}"
