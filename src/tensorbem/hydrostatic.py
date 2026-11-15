@@ -810,9 +810,124 @@ def mass_matrix_from_wetted_hull(
             inertia,
             inertia_about="cg",
         )
+    # The volume integral yields the second moments of a *fluid-filled* solid of
+    # density ``density``; a body of the same shape but another mass has the same
+    # specific inertia (homogeneous body), so scale by mass / (density * V).
+    # Without this the rotational block would describe the displaced water mass
+    # rather than the body (measured 2.15x on a half-sphere launched at 47 % of
+    # its buoyant mass).
+    mesh_mass = float(props["mass"])
+    if not math.isfinite(mesh_mass) or mesh_mass <= 0.0:
+        raise ValueError("the closed hull solid must have a positive volume")
+    inertia_cg = np.asarray(props["inertia_cg"], dtype=float) * (body_mass / mesh_mass)
+    return compute_mass_matrix(
+        body_mass,
+        cg,
+        inertia_cg,
+        inertia_about="cg",
+    )
     return compute_mass_matrix(
         body_mass,
         cg,
         np.asarray(props["inertia_cg"], dtype=float),
         inertia_about="cg",
+    )
+
+def mass_matrix_from_hull(
+    hull: "WettedHullMesh",
+    mass: float,
+    center_of_gravity: FloatArray,
+    *,
+    hydrostatic_props: HydrostaticProperties | None = None,
+    density: float = _DEFAULT_DENSITY,
+    gravity: float = _DEFAULT_GRAVITY,
+    source: str = "auto",
+) -> FloatArray:
+    """Rigid-body mass matrix of a floating body from its wetted hull, best route.
+
+    This is the single entry point the frequency-domain chains call when the
+    caller has **not** supplied an inertia tensor
+    (:func:`tensorbem.rao.compute_rao_at_frequency`,
+    :func:`tensorbem.ice_rao.compute_ice_rao_spectrum`).  It selects between the
+    two routes that exist in this module and reports which one it used:
+
+    ``"mesh"``
+        :func:`mass_matrix_from_wetted_hull` -- closes the wetted panels with
+        the calm waterplane and integrates the displaced volume's second
+        moments.  This is a property of the *body*: exact to round-off for an
+        exactly polyhedral hull (barge, box), panelisation error (second order)
+        for a curved one.
+    ``"hydrostatics"``
+        :func:`mass_matrix_from_hull_geometry` -- pins the body to the
+        half-ellipsoid matching the displaced volume and the waterplane second
+        moments.  Exact for an elliptic waterplane, but *declared* approximate
+        for box-like hulls (measured 8--20 % low on the rotational block; the
+        helper emits a ``RuntimeWarning`` of its own).
+
+    ``source="auto"`` (default) takes the mesh route and falls back to the
+    hydrostatic reconstruction only when the mesh cannot be closed/integrated
+    (open patch, non-manifold boundary, no ``vertices``/``faces``), emitting a
+    ``RuntimeWarning`` that names the reason.  The fallback is therefore never
+    silent, and a hull whose panels are usable always gets the exact route --
+    the defect this function removes is that the *approximate* route used to be
+    the default of the production RAO path.
+
+    Parameters
+    ----------
+    hull :
+        ``WettedHullMesh`` (or any object exposing ``vertices``/``faces`` in
+        ``z <= 0``, wetted panels only, no lid).
+    mass :
+        Body mass (kg), strictly positive.
+    center_of_gravity :
+        CG coordinates in the mesh frame (m); the returned 6x6 matrix refers its
+        generalized coordinates to the mesh-frame origin, exactly like
+        :func:`compute_mass_matrix`.
+    hydrostatic_props :
+        Pre-computed hydrostatics, only needed by the fallback route (computed
+        here when omitted).
+    density, gravity :
+        Fluid properties used by the volume integration / the hydrostatics.
+    source :
+        ``"auto"``, ``"mesh"`` or ``"hydrostatics"``; the last two force a
+        route (``"mesh"`` raises instead of falling back, for verification).
+
+    Returns
+    -------
+    M :
+        6x6 rigid-body mass matrix (kg, kg*m).
+    """
+    if source not in ("auto", "mesh", "hydrostatics"):
+        raise ValueError(
+            "source must be 'auto', 'mesh' or 'hydrostatics'"
+        )
+    body_mass = float(mass)
+    if not math.isfinite(body_mass) or body_mass <= 0.0:
+        raise ValueError("mass must be a positive finite number")
+    if source in ("auto", "mesh"):
+        try:
+            return mass_matrix_from_wetted_hull(
+                hull, body_mass, center_of_gravity, density=density
+            )
+        except (AttributeError, TypeError, ValueError) as exc:
+            if source == "mesh":
+                raise
+            warnings.warn(
+                "mass_matrix_from_hull: the wetted-hull mesh route is unusable "
+                f"({type(exc).__name__}: {exc}); falling back to the "
+                "equivalent-half-ellipsoid reconstruction, which is ~8-20 % "
+                "low on the rotational block for box-like hulls.  Pass an "
+                "explicit inertia tensor for such hulls.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+    if hydrostatic_props is None:
+        hydrostatic_props = compute_hydrostatic_restoring_matrix(
+            hull, body_mass, center_of_gravity, density, gravity
+        )
+    return mass_matrix_from_hull_geometry(
+        hydrostatic_props,
+        body_mass,
+        center_of_gravity,
+        density=density,
     )

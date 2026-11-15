@@ -43,6 +43,7 @@ from .hydrostatic import (
     HydrostaticProperties,
     compute_hydrostatic_restoring_matrix,
     compute_mass_matrix,
+    mass_matrix_from_hull,
     mass_matrix_from_hull_geometry,
 )
 
@@ -435,12 +436,21 @@ def _assemble_rao_at_frequency(
     c = hydrostatic_props.restoring_matrix
 
     # Compute mass matrix.  With no inertia tensor the rotational block is
-    # derived from the hull hydrostatics (invariant under a change of origin)
-    # rather than from the distance between the origin and the CG; see
-    # ``tensorbem.hydrostatic.mass_matrix_from_hull_geometry``.
+    # derived from the *hull geometry* (a property of the body, invariant under
+    # a change of origin) rather than from the distance between the origin and
+    # the CG.  ``mass_matrix_from_hull`` integrates the wetted mesh's displaced
+    # volume -- exact to round-off for a polyhedral hull -- and only falls back
+    # to the equivalent-half-ellipsoid reconstruction (8-20 % low on the
+    # rotational block for box-like hulls, with a RuntimeWarning) when the
+    # panels cannot be closed; see its docstring.
     if inertia is None:
-        m = mass_matrix_from_hull_geometry(
-            hydrostatic_props, mass, center_of_gravity, density=density
+        m = mass_matrix_from_hull(
+            hull,
+            mass,
+            center_of_gravity,
+            hydrostatic_props=hydrostatic_props,
+            density=density,
+            gravity=gravity,
         )
     else:
         m = compute_mass_matrix(mass, center_of_gravity, inertia)
