@@ -1,0 +1,412 @@
+{
+ "anchor": "XVAL-BEM-R2-OSS-CROSSVAL-CAPYTAINE",
+ "cases": {
+  "hemisphere_r1": {
+   "capytaine_faces": 784,
+   "case": "hemisphere_r1",
+   "counts": {
+    "active": 18,
+    "conflict": 0,
+    "invariant": 162,
+    "null": 36
+   },
+   "invariant_defect_capytaine_max": 0.0,
+   "invariant_defect_ratio_tb_over_cap": null,
+   "invariant_defect_tensorbem_max": 0.0,
+   "invariant_violations": [],
+   "invariant_violations_set_by": [],
+   "n_entries": 216,
+   "n_invariant_violations": 0,
+   "n_over_ledger_band": 0,
+   "n_over_self_band": 1,
+   "over_ledger_band": [],
+   "over_self_band": [
+    {
+     "capytaine": 936.4587166787599,
+     "case": "hemisphere_r1",
+     "column": "heave",
+     "nu": 2.0,
+     "quantity": "damping",
+     "relative": 0.05818682870816025,
+     "row": "heave",
+     "tensorbem": 990.9482796184104
+    }
+   ],
+   "tensorbem_faces": 1024,
+   "worst_active_entry": {
+    "capytaine": 936.4587166787599,
+    "case": "hemisphere_r1",
+    "column": "heave",
+    "nu": 2.0,
+    "quantity": "damping",
+    "relative": 0.05818682870816025,
+    "row": "heave",
+    "tensorbem": 990.9482796184104
+   },
+   "worst_active_relative": 0.05818682870816025,
+   "worst_invariant_ratio": 0.4205951146724884
+  },
+  "hemisphere_r1_cz-0.5": {
+   "capytaine_faces": 784,
+   "case": "hemisphere_r1_cz-0.5",
+   "counts": {
+    "active": 54,
+    "conflict": 0,
+    "invariant": 66,
+    "null": 96
+   },
+   "invariant_defect_capytaine_max": 0.0,
+   "invariant_defect_ratio_tb_over_cap": null,
+   "invariant_defect_tensorbem_max": 0.0,
+   "invariant_violations": [],
+   "invariant_violations_set_by": [],
+   "n_entries": 216,
+   "n_invariant_violations": 0,
+   "n_over_ledger_band": 0,
+   "n_over_self_band": 1,
+   "over_ledger_band": [],
+   "over_self_band": [
+    {
+     "capytaine": 936.4587166787599,
+     "case": "hemisphere_r1_cz-0.5",
+     "column": "heave",
+     "nu": 2.0,
+     "quantity": "damping",
+     "relative": 0.05818682870816025,
+     "row": "heave",
+     "tensorbem": 990.9482796184104
+    }
+   ],
+   "tensorbem_faces": 1024,
+   "worst_active_entry": {
+    "capytaine": 936.4587166787599,
+    "case": "hemisphere_r1_cz-0.5",
+    "column": "heave",
+    "nu": 2.0,
+    "quantity": "damping",
+    "relative": 0.05818682870816025,
+    "row": "heave",
+    "tensorbem": 990.9482796184104
+   },
+   "worst_active_relative": 0.05818682870816025,
+   "worst_invariant_ratio": 0.0008712960955259691
+  },
+  "sphere_r1_z-0.5": {
+   "capytaine_faces": 1120,
+   "case": "sphere_r1_z-0.5",
+   "counts": {
+    "active": 17,
+    "conflict": 0,
+    "invariant": 162,
+    "null": 37
+   },
+   "invariant_defect_capytaine_max": 0.015175189114127588,
+   "invariant_defect_ratio_tb_over_cap": 0.8664711429197158,
+   "invariant_defect_tensorbem_max": 0.01314886345574096,
+   "invariant_violations": [
+    {
+     "bound": 10.25,
+     "capytaine": -13.820089508077569,
+     "capytaine_null_ratio": 0.013483014154222019,
+     "column": "pitch",
+     "nu": 1.0,
+     "quantity": "damping",
+     "ratio": 1.3483014154222017,
+     "row": "surge",
+     "set_by": "capytaine",
+     "tensorbem": -10.372960950137307,
+     "tensorbem_null_ratio": 0.010119961902572982
+    },
+    {
+     "bound": 10.25,
+     "capytaine": 13.82008950807755,
+     "capytaine_null_ratio": 0.013483014154222,
+     "column": "roll",
+     "nu": 1.0,
+     "quantity": "damping",
+     "ratio": 1.3483014154222,
+     "row": "sway",
+     "set_by": "capytaine",
+     "tensorbem": 11.969278267977046,
+     "tensorbem_null_ratio": 0.011677344651684922
+    },
+    {
+     "bound": 10.25,
+     "capytaine": 14.444873631862254,
+     "capytaine_null_ratio": 0.014092559640841223,
+     "column": "sway",
+     "nu": 1.0,
+     "quantity": "damping",
+     "ratio": 1.4092559640841225,
+     "row": "roll",
+     "set_by": "capytaine",
+     "tensorbem": 12.009873092561659,
+     "tensorbem_null_ratio": 0.01171694935859674
+    },
+    {
+     "bound": 10.25,
+     "capytaine": -14.444873631862269,
+     "capytaine_null_ratio": 0.014092559640841237,
+     "column": "surge",
+     "nu": 1.0,
+     "quantity": "damping",
+     "ratio": 1.4092559640841238,
+     "row": "pitch",
+     "set_by": "capytaine",
+     "tensorbem": -10.429368023148768,
+     "tensorbem_null_ratio": 0.010174993193315872
+    },
+    {
+     "bound": 10.25,
+     "capytaine": -14.83378713034704,
+     "capytaine_null_ratio": 0.014471987444241016,
+     "column": "pitch",
+     "nu": 2.0,
+     "quantity": "damping",
+     "ratio": 1.4471987444241015,
+     "row": "surge",
+     "set_by": "capytaine",
+     "tensorbem": -11.9183758104018,
+     "tensorbem_null_ratio": 0.01162768371746517
+    },
+    {
+     "bound": 10.25,
+     "capytaine": 14.833787130347025,
+     "capytaine_null_ratio": 0.014471987444241,
+     "column": "roll",
+     "nu": 2.0,
+     "quantity": "damping",
+     "ratio": 1.4471987444241,
+     "row": "sway",
+     "set_by": "capytaine",
+     "tensorbem": 13.438806430665583,
+     "tensorbem_null_ratio": 0.013111030664063984
+    },
+    {
+     "bound": 10.25,
+     "capytaine": 15.554568841980753,
+     "capytaine_null_ratio": 0.015175189114127564,
+     "column": "sway",
+     "nu": 2.0,
+     "quantity": "damping",
+     "ratio": 1.5175189114127565,
+     "row": "roll",
+     "set_by": "capytaine",
+     "tensorbem": 13.477585042134486,
+     "tensorbem_null_ratio": 0.01314886345574096
+    },
+    {
+     "bound": 10.25,
+     "capytaine": -15.554568841980778,
+     "capytaine_null_ratio": 0.015175189114127588,
+     "column": "surge",
+     "nu": 2.0,
+     "quantity": "damping",
+     "ratio": 1.5175189114127587,
+     "row": "pitch",
+     "set_by": "capytaine",
+     "tensorbem": -11.977592743592707,
+     "tensorbem_null_ratio": 0.011685456335212396
+    }
+   ],
+   "invariant_violations_set_by": [
+    "capytaine"
+   ],
+   "n_entries": 216,
+   "n_invariant_violations": 8,
+   "n_over_ledger_band": 0,
+   "n_over_self_band": 2,
+   "over_ledger_band": [],
+   "over_self_band": [
+    {
+     "capytaine": 350.6609804981351,
+     "case": "sphere_r1_z-0.5",
+     "column": "surge",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06492495435449269,
+     "row": "surge",
+     "tensorbem": 327.894332345392
+    },
+    {
+     "capytaine": 350.660980498135,
+     "case": "sphere_r1_z-0.5",
+     "column": "sway",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06523207229094585,
+     "row": "sway",
+     "tensorbem": 327.7866380686667
+    }
+   ],
+   "tensorbem_faces": 1026,
+   "worst_active_entry": {
+    "capytaine": 350.660980498135,
+    "case": "sphere_r1_z-0.5",
+    "column": "sway",
+    "nu": 2.0,
+    "quantity": "added_mass",
+    "relative": -0.06523207229094585,
+    "row": "sway",
+    "tensorbem": 327.7866380686667
+   },
+   "worst_active_relative": 0.06523207229094585,
+   "worst_invariant_ratio": 1.5175189114127587
+  },
+  "sphere_r1_z-0.5_c0": {
+   "capytaine_faces": 1120,
+   "case": "sphere_r1_z-0.5_c0",
+   "counts": {
+    "active": 53,
+    "conflict": 0,
+    "invariant": 66,
+    "null": 97
+   },
+   "invariant_defect_capytaine_max": 0.0,
+   "invariant_defect_ratio_tb_over_cap": null,
+   "invariant_defect_tensorbem_max": 0.0,
+   "invariant_violations": [],
+   "invariant_violations_set_by": [],
+   "n_entries": 216,
+   "n_invariant_violations": 0,
+   "n_over_ledger_band": 0,
+   "n_over_self_band": 4,
+   "over_ledger_band": [],
+   "over_self_band": [
+    {
+     "capytaine": 350.6609804981351,
+     "case": "sphere_r1_z-0.5_c0",
+     "column": "surge",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06492495435449269,
+     "row": "surge",
+     "tensorbem": 327.894332345392
+    },
+    {
+     "capytaine": 350.660980498135,
+     "case": "sphere_r1_z-0.5_c0",
+     "column": "sway",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06523207229094585,
+     "row": "sway",
+     "tensorbem": 327.7866380686667
+    },
+    {
+     "capytaine": 87.18062063734729,
+     "case": "sphere_r1_z-0.5_c0",
+     "column": "roll",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06705166051637783,
+     "row": "roll",
+     "tensorbem": 81.33501525876476
+    },
+    {
+     "capytaine": 87.18062063734726,
+     "case": "sphere_r1_z-0.5_c0",
+     "column": "pitch",
+     "nu": 2.0,
+     "quantity": "added_mass",
+     "relative": -0.06535692203807295,
+     "row": "pitch",
+     "tensorbem": 81.48276361112134
+    }
+   ],
+   "tensorbem_faces": 1026,
+   "worst_active_entry": {
+    "capytaine": 87.18062063734729,
+    "case": "sphere_r1_z-0.5_c0",
+    "column": "roll",
+    "nu": 2.0,
+    "quantity": "added_mass",
+    "relative": -0.06705166051637783,
+    "row": "roll",
+    "tensorbem": 81.33501525876476
+   },
+   "worst_active_relative": 0.06705166051637783,
+   "worst_invariant_ratio": 0.017301433306858217
+  }
+ },
+ "degeneracy_ladder": {
+  "hemisphere_r1": {
+   "decay_ratios": [
+    3.473827160312097,
+    3.8407352221992537
+   ],
+   "finest_worst_ratio": 0.0010981693677420137
+  },
+  "sphere_r1_z-0.5": {
+   "decay_ratios": [
+    3.3594395021040087
+   ],
+   "finest_worst_ratio": 0.0028061560805223286
+  }
+ },
+ "ledger_band": 0.15,
+ "policy_echo": {
+  "invariant_ratio": 0.01,
+  "null_floor": 0.01,
+  "tolerance_diagonal": 0.05,
+  "tolerance_offdiagonal": 0.1
+ },
+ "policy_source": "recorded artifact (comparison block) + anchor module's invariant_null_dofs; not re-derived here",
+ "primary_sources": [
+  "benchmarks/verified/capytaine_crosscheck_r2/capytaine_ref_r2.json",
+  "benchmarks/verified/capytaine_crosscheck_r2/solves/<case>.json"
+ ],
+ "reproduction": {
+  "hemisphere_r1": {
+   "counts_match": true,
+   "worst_active_abs_diff": 0.0,
+   "worst_active_recomputed": 0.05818682870816025,
+   "worst_active_recorded": 0.05818682870816025,
+   "worst_invariant_abs_diff": 0.0,
+   "worst_invariant_recomputed": 0.4205951146724884,
+   "worst_invariant_recorded": 0.4205951146724884
+  },
+  "hemisphere_r1_cz-0.5": {
+   "counts_match": true,
+   "worst_active_abs_diff": 0.0,
+   "worst_active_recomputed": 0.05818682870816025,
+   "worst_active_recorded": 0.05818682870816025,
+   "worst_invariant_abs_diff": 0.0,
+   "worst_invariant_recomputed": 0.0008712960955259691,
+   "worst_invariant_recorded": 0.0008712960955259691
+  },
+  "sphere_r1_z-0.5": {
+   "counts_match": true,
+   "worst_active_abs_diff": 0.0,
+   "worst_active_recomputed": 0.06523207229094585,
+   "worst_active_recorded": 0.06523207229094585,
+   "worst_invariant_abs_diff": 0.0,
+   "worst_invariant_recomputed": 1.5175189114127587,
+   "worst_invariant_recorded": 1.5175189114127587
+  },
+  "sphere_r1_z-0.5_c0": {
+   "counts_match": true,
+   "worst_active_abs_diff": 0.0,
+   "worst_active_recomputed": 0.06705166051637783,
+   "worst_active_recorded": 0.06705166051637783,
+   "worst_invariant_abs_diff": 0.0,
+   "worst_invariant_recomputed": 0.017301433306858217,
+   "worst_invariant_recorded": 0.017301433306858217
+  }
+ },
+ "totals": {
+  "invariant_defect_capytaine_max": 0.015175189114127588,
+  "invariant_defect_tensorbem_max": 0.01314886345574096,
+  "n_active": 142,
+  "n_invariant_violations": 8,
+  "n_over_ledger_band": 0,
+  "n_over_self_band": 8,
+  "worst_active_relative": 0.06705166051637783
+ },
+ "verdict": {
+  "invariant_class": "FAIL",
+  "ledger_15pct": "PASS",
+  "module_self_band": "FAIL",
+  "reproduction": "PASS"
+ }
+}
