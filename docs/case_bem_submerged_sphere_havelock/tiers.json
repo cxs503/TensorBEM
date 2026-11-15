@@ -69,7 +69,7 @@
     "case_mesh": {
       "tier": "case_mesh",
       "gate": 0.05,
-      "n_items": 20,
+      "n_items": 28,
       "n_failures": 0,
       "max_rel_error": 0.014311353989157588,
       "worst_item": {
