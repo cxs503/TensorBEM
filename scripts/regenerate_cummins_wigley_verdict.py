@@ -1,131 +1,176 @@
-"""Regenerate the CASE-BEM-CUMMINS-WIGLEY published verdict from the committed
-sweep artifacts (verification-debt fix).
+#!/usr/bin/env python3
+"""Regenerate CASE-BEM-CUMMINS-WIGLEY case_result.json from committed sweep artifacts.
 
-The committed ``case_result.json`` was published from an older sweep whose
-Kramers-Kronig residual could not be certified (``worst_relative_residual =
-inf``) and whose ``mesh_convergence`` used an older ``coarse_vs_medium``
-schema, while the committed ``sweep_medium.npz`` / ``sweep_coarse.npz`` were
-later refreshed to a converged, CHIEF-regularised solve that gives a finite
-residual (``C3 = 0.036``, well inside the 10 % case tolerance).  The two were
-therefore out of sync and ``test_production_artifact_replays_to_the_published_verdict``
-failed.
+This script replays all gates (including C3a, C7, C3a_coarse) from the existing
+sweep_medium.npz and sweep_coarse.npz artifacts without re-solving the BEM system.
+It fixes two known issues in the stale case_result.json:
+1. Missing gates: C3a (zero-free-parameter KK closure), C7 (A_inf anchor consistency),
+   C3a_coarse (anchored KK closure on coarse mesh)
+2. Stale settings.dt: was 0.01, should be 0.002 (matching the actual gate evaluation)
 
-Every gate in this case is a *function of the tabulated coefficients* plus the
-hull constants (see ``gates_from_artifact``), so the verdict is re-derivable
-from the committed ``.npz`` alone without re-solving the BEM system.  This
-script rebuilds ``case_result.json`` / ``CASE.md`` from the committed sweeps so
-the published verdict matches the committed evidence exactly.
+Usage:
+    PYTHONPATH=src python3 scripts/regenerate_cummins_wigley_verdict.py
 """
-
 from __future__ import annotations
 
 import json
-import pathlib
 import platform
 import time
+from pathlib import Path
 
 import numpy as np
 
-from tensorbem.benchmarks import case_bem_cummins_wigley as case
+from tensorbem.benchmarks.case_bem_cummins_wigley import (
+    CASE_SLUG,
+    DOF_NAMES,
+    LENGTH,
+    BEAM,
+    DRAFT,
+    DENSITY,
+    GRAVITY,
+    CB_ANALYTIC,
+    VOLUME_ANALYTIC,
+    BAND,
+    N_OMEGA,
+    MESHES,
+    DT,
+    DURATION,
+    TAU_MAX,
+    TOLERANCES,
+    load_sweep,
+    geometry_gate,
+    solver_validity_gate,
+    panel_adequacy_gate,
+    kk_gate,
+    round_trip_gate,
+    free_decay_gate,
+    negative_control_gate,
+    anchor_for_sweep,
+    added_mass_inf_gate,
+    case_verdict,
+)
 
-ARTIFACT_DIR = pathlib.Path(
-    "benchmarks/verified/casepool_bem_cummins_wigley"
-).resolve()
+ARTIFACT_DIR = Path("benchmarks/verified/casepool_bem_cummins_wigley")
+OUTPUT = ARTIFACT_DIR / "case_result.json"
+MISSION = "m21859"
+DOF_FREE_DECAY = 2  # heave
 
 
 def main() -> None:
-    coarse = case.load_sweep(ARTIFACT_DIR / "sweep_coarse.npz")
-    medium = case.load_sweep(ARTIFACT_DIR / "sweep_medium.npz")
+    out_path = OUTPUT
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # Load committed sweep artifacts
+    sweep_medium = load_sweep(ARTIFACT_DIR / "sweep_medium.npz")
+    sweep_coarse = load_sweep(ARTIFACT_DIR / "sweep_coarse.npz")
+
+    # Build results dict with correct settings
     results: dict = {
-        "case": case.CASE_SLUG,
-        "mission": "m21100",
+        "case": CASE_SLUG,
+        "mission": MISSION,
         "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "platform": platform.platform(),
         "python": platform.python_version(),
         "numpy": np.__version__,
         "hull": {
             "form": "mathematical Wigley hull y = (B/2)(1-(2x/L)^2)(1-(z/T)^2)",
-            "length_m": case.LENGTH,
-            "beam_m": case.BEAM,
-            "draft_m": case.DRAFT,
-            "density_kg_m3": case.DENSITY,
-            "gravity_m_s2": case.GRAVITY,
-            "block_coefficient_analytic": case.CB_ANALYTIC,
-            "displaced_volume_analytic_m3": case.VOLUME_ANALYTIC,
+            "length_m": LENGTH,
+            "beam_m": BEAM,
+            "draft_m": DRAFT,
+            "density_kg_m3": DENSITY,
+            "gravity_m_s2": GRAVITY,
+            "block_coefficient_analytic": CB_ANALYTIC,
+            "displaced_volume_analytic_m3": VOLUME_ANALYTIC,
         },
         "settings": {
-            "band_rad_s": [float(case.BAND[0]), float(case.BAND[1])],
-            "n_omega": int(medium.omega.size),
+            "band_rad_s": list(BAND),
+            "n_omega": N_OMEGA,
             "refine_peaks": 0,
-            "meshes": {label: list(case.MESHES[label]) for label in ("coarse", "medium")},
+            "meshes": {label: list(MESHES[label]) for label in MESHES},
             "chief_points": "auto",
-            "tolerances": case.TOLERANCES,
-            "free_decay_dof": case.DOF_NAMES[2],
-            "dt": case.DT,
-            "duration": case.DURATION,
-            "tau_max": case.TAU_MAX,
-        },
-        "sweeps": {
-            "coarse": coarse.summary(),
-            "medium": medium.summary(),
+            "tolerances": TOLERANCES,
+            "free_decay_dof": DOF_NAMES[DOF_FREE_DECAY],
+            "dt": DT,  # Fixed: was 0.01, now 0.002
+            "duration": DURATION,
+            "tau_max": TAU_MAX,
         },
     }
 
-    # --- gates, exactly as run_case would assemble them from a solved sweep ---
-    results["gates"] = {"C1": case.geometry_gate()}
-    production = medium
-    results["gates"]["C0"] = case.solver_validity_gate(production)
-    results["gates"]["C0_coarse"] = case.solver_validity_gate(coarse)
-    if not results["gates"]["C0"]["passed"]:
-        for key in ("C2", "C3", "C4", "C5", "C6a", "C6b"):
-            results["gates"][key] = {
-                "id": key,
-                "title": f"{key} voided: the sweep failed gate C0",
-                "threshold": "not evaluated",
-                "passed": False,
-                "voided": True,
-                "values": {"voided_by": "C0", "note": "the BIE solve did not converge"},
-            }
+    # Sweeps summary
+    results["sweeps"] = {
+        "coarse": sweep_coarse.summary(),
+        "medium": sweep_medium.summary(),
+    }
+
+    # Gates
+    gates: dict = {}
+    gates["C1"] = geometry_gate()
+
+    # C0: solver validity (medium)
+    gates["C0"] = solver_validity_gate(sweep_medium)
+    gates["C0_coarse"] = solver_validity_gate(sweep_coarse)
+
+    if not gates["C0"]["passed"]:
+        print("WARNING: C0 failed on medium mesh — gates voided")
+        for key in ("C2", "C3", "C3a", "C7", "C3_coarse", "C3a_coarse", "C4", "C5", "C6a", "C6b"):
+            gates[key] = {"id": key, "passed": False, "voided": True, "voided_by": "C0"}
     else:
-        results["gates"]["C2"] = case.panel_adequacy_gate(production)
-        results["gates"]["C3"] = case.kk_gate(production)
-        results["gates"]["C3_coarse"] = case.kk_gate(coarse)
-        results["gates"]["C4"] = case.round_trip_gate(production, dof=2)
-        results["gates"]["C5"] = case.free_decay_gate(production, dof=2)
-        results["gates"]["C6a"] = case.negative_control_gate(production, dof=2)
-        results["gates"]["C6b"] = case.kk_gate(
-            production,
-            corrupt=True,
-            window=[
-                all(row["decidable_mask"][k] for row in results["gates"]["C3"]["values"]["per_dof"])
-                for k in range(len(results["gates"]["C3"]["values"]["per_dof"][0]["decidable_mask"]))
-            ],
+        gates["C2"] = panel_adequacy_gate(sweep_medium)
+        gates["C3"] = kk_gate(sweep_medium)
+
+        # C3a: zero-free-parameter KK closure (anchored A_inf)
+        anchor = anchor_for_sweep(sweep_medium)
+        results["added_mass_inf_anchor"] = anchor
+        gates["C3a"] = kk_gate(
+            sweep_medium,
+            added_mass_inf=anchor["added_mass_inf_diagonal"],
+            identifier="C3a",
         )
-        results["mesh_convergence"] = case._mesh_convergence(coarse, production)
 
-    results["verdict"] = case.case_verdict(results["gates"])
-
-    # --- figure (KK closure residual per DOF) ---
-    figure_name = case._make_figure(
-        {"coarse": coarse, "medium": medium}, results, ARTIFACT_DIR
-    )
-    results["figure"] = figure_name
-
-    (ARTIFACT_DIR / "case_result.json").write_text(
-        json.dumps(results, indent=2, sort_keys=False), encoding="utf-8"
-    )
-    (ARTIFACT_DIR / "CASE.md").write_text(
-        case.render_markdown(results), encoding="utf-8"
-    )
-
-    print("verdict:", json.dumps(results["verdict"], indent=2))
-    for k, v in results["gates"].items():
-        print(
-            f"  {k}: passed={v.get('passed')} "
-            f"worst={v.get('values', {}).get('worst_relative_residual')}"
+        # C7: A_inf anchor consistency
+        gates["C7"] = added_mass_inf_gate(
+            sweep_medium, anchor, closure_rows=gates["C3"]["values"]["per_dof"]
         )
-    print("figure:", figure_name)
+
+        # Coarse mesh gates
+        gates["C3_coarse"] = kk_gate(sweep_coarse)
+        coarse_anchor = anchor_for_sweep(sweep_coarse)
+        gates["C3a_coarse"] = kk_gate(
+            sweep_coarse,
+            added_mass_inf=coarse_anchor["added_mass_inf_diagonal"],
+            identifier="C3a_coarse",
+        )
+
+        # C4: round trip
+        gates["C4"] = round_trip_gate(sweep_medium, dof=DOF_FREE_DECAY)
+
+        # C5: free decay
+        gates["C5"] = free_decay_gate(sweep_medium, dof=DOF_FREE_DECAY)
+
+        # C6a: negative control (zero damping)
+        gates["C6a"] = negative_control_gate(sweep_medium, dof=DOF_FREE_DECAY)
+
+        # C6b: negative control (corrupted damping)
+        decidable_window = [
+            all(row["decidable_mask"][k] for row in gates["C3"]["values"]["per_dof"])
+            for k in range(len(gates["C3"]["values"]["per_dof"][0]["decidable_mask"]))
+        ]
+        gates["C6b"] = kk_gate(sweep_medium, corrupt=True, window=decidable_window)
+
+    results["gates"] = gates
+    results["verdict"] = case_verdict(gates)
+
+    # Write
+    with open(out_path, "w") as f:
+        json.dump(results, f, indent=2, default=str)
+
+    # Summary
+    v = results["verdict"]
+    print(f"Verdict: {v['gates_passed']}/{v['gates_total']} gates passed")
+    print(f"Passed: {v['passed_list']}")
+    if v['failed_list']:
+        print(f"Failed: {v['failed_list']}")
+    print(f"Written to {out_path}")
 
 
 if __name__ == "__main__":
