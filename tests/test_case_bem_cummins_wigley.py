@@ -380,7 +380,13 @@ def test_case_verdict_tally() -> None:
 )
 def test_production_artifact_replays_to_the_published_verdict() -> None:
     """The committed case_result.json must be re-derivable from the committed sweep."""
-    replay = case.gates_from_artifact(ARTIFACT_DIR / "sweep_medium.npz")
+    # Skip the anchor BEM solve (~60s) and multi-DOF decay (~30s) since this test
+    # only verifies C2, C3, C4, C5, C6a, C6b -- none of which need them.
+    replay = case.gates_from_artifact(
+        ARTIFACT_DIR / "sweep_medium.npz",
+        include_anchor=False,
+        include_decay_modes=False,
+    )
     published = json.loads((ARTIFACT_DIR / "case_result.json").read_text())
     assert replay["sweep"]["panel_count"] == published["sweeps"]["medium"]["panel_count"]
     assert replay["sweep"]["max_panel_scale"] == pytest.approx(

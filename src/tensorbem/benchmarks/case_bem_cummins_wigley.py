@@ -2630,6 +2630,7 @@ def gates_from_artifact(
     *,
     dof_free_decay: int = 2,
     include_geometry: bool = True,
+    include_anchor: bool = True,
     corrupted_control: bool = True,
     include_decay_modes: bool = True,
     include_external_anchor: bool = True,
@@ -2668,13 +2669,14 @@ def gates_from_artifact(
         }
     gates["C2"] = panel_adequacy_gate(sweep)
     gates["C3"] = kk_gate(sweep)
-    anchor = anchor_for_sweep(sweep)
-    gates["C3a"] = kk_gate(
-        sweep, added_mass_inf=anchor["added_mass_inf_diagonal"], identifier="C3a"
-    )
-    gates["C7"] = added_mass_inf_gate(
-        sweep, anchor, closure_rows=gates["C3"]["values"]["per_dof"]
-    )
+    anchor = anchor_for_sweep(sweep) if include_anchor else None
+    if include_anchor:
+        gates["C3a"] = kk_gate(
+            sweep, added_mass_inf=anchor["added_mass_inf_diagonal"], identifier="C3a"
+        )
+        gates["C7"] = added_mass_inf_gate(
+            sweep, anchor, closure_rows=gates["C3"]["values"]["per_dof"]
+        )
     gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
     gates["C5"] = free_decay_gate(sweep, dof=int(dof_free_decay))
     gates["C6a"] = negative_control_gate(sweep, dof=int(dof_free_decay))
