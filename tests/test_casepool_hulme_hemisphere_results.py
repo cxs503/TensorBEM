@@ -8,7 +8,9 @@ directory and verifies:
 3. The worst relative error on the case mesh is below the 5% gate.
 4. The reference truncation ladder shows geometric convergence.
 5. Key numbers at ka=1.0 match the published Hulme (1982) table within tolerance.
-6. The figure artefact exists.
+6. The figure artefact is rebuildable from the committed numbers (the
+   delivery gate strips binaries, so requiring a committed PNG would be a
+   test that can never pass on a delivered branch).
 
 This is a *lightweight* test: it does not re-run any BEM solves, only reads
 and validates the stored artefacts.  It serves as a regression guard so that
@@ -160,10 +162,31 @@ def test_geometry_precondition(rows):
 
 # --- Artefact existence ---------------------------------------------------
 
-def test_figure_artifact_exists():
-    """The comparison figure must exist."""
-    assert FIGURE.is_file(), f"figure.png missing: {FIGURE}"
-    assert FIGURE.stat().st_size > 10000, f"figure.png too small: {FIGURE.stat().st_size}"
+def test_figure_is_rebuildable_from_the_committed_numbers(tmp_path):
+    """The comparison figure must be reproducible from ``results.json``.
+
+    A committed ``figure.png`` is *not* required: the delivery gate filters
+    binary artefacts out of the branch, so an assertion on the committed PNG
+    fails on every delivered branch while saying nothing about the case.  The
+    invariant that actually matters is that the plot is a pure function of the
+    committed numbers -- so rebuild it into ``tmp_path`` and, if a PNG did
+    survive delivery, additionally check that the committed one is a real plot.
+    """
+    import sys
+
+    sys.path.insert(0, str(CASEPOOL_DIR))
+    try:
+        import generate_figures
+    finally:
+        sys.path.pop(0)
+
+    rebuilt = generate_figures.generate_comparison_figure(tmp_path / "figure.png")
+    assert rebuilt.is_file(), "the figure generator produced no file"
+    assert rebuilt.stat().st_size > 10000, f"rebuilt figure too small: {rebuilt.stat().st_size}"
+    assert rebuilt.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n", "rebuilt figure is not a PNG"
+
+    if FIGURE.is_file():  # only possible when the artefact survived delivery
+        assert FIGURE.stat().st_size > 10000, f"figure.png too small: {FIGURE}"
 
 
 def test_environment_artifact_exists():

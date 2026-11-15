@@ -49,8 +49,14 @@ def _band_rows(results: dict, subdivisions: int) -> list[dict]:
     )
 
 
-def generate_comparison_figure() -> Path:
-    """figure.png: BEM vs Hulme reference comparison curves."""
+def generate_comparison_figure(out: Path | None = None) -> Path:
+    """figure.png: BEM vs Hulme reference comparison curves.
+
+    ``out`` lets a caller rebuild the figure somewhere else (the test suite
+    rebuilds it under ``tmp_path``, because the delivery gate strips binary
+    artefacts from commits); it is byte-for-byte the same plot either way.
+    """
+    destination = Path(out) if out is not None else FIGURE
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -87,10 +93,11 @@ def generate_comparison_figure() -> Path:
         "BEM vs Hulme (1982) Analytical Reference",
         fontsize=12, fontweight="bold")
     fig.tight_layout()
-    fig.savefig(FIGURE, dpi=150, bbox_inches="tight")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(destination, dpi=150, bbox_inches="tight")
     plt.close(fig)
-    print(f"Wrote {FIGURE} ({FIGURE.stat().st_size} bytes)")
-    return FIGURE
+    print(f"Wrote {destination} ({destination.stat().st_size} bytes)")
+    return destination
 
 
 def generate_independent_axis_figure() -> Path:

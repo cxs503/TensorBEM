@@ -216,6 +216,53 @@ def test_unrecorded_residual_is_unproven_not_healthy(tmp_path: Path) -> None:
     assert e0["n_rungs_used"] == 4
 
 
+# --- E0 provenance: a mixed ladder must be disclosed, not smoothed over -----
+def test_rung_ledger_keeps_the_rungs_separable(tmp_path: Path) -> None:
+    """One ledger line per admitted rung, carrying its residual and its host.
+
+    The gate's scalar summary (worst residual, how many rungs used) is enough to
+    pass it but not to audit it: a ladder whose cheap rungs ran on the control
+    plane and whose expensive rung came back from a cluster node -- where the
+    linear driver has already been caught returning a wrong vector (m20910) --
+    looks identical to a single-host ladder once reduced to a maximum.
+    """
+    ladder = json.loads(_synthetic_ladder(tmp_path / "l4.json", [64, 256, 1024, 4096]).read_text())
+    hosts = ["control-plane", "control-plane", "control-plane", "node315"]
+    for row, host, residual in zip(ladder["rows"], hosts, [6e-3, 1e-3, 2e-4, 3e-5]):
+        row["host"] = host
+        row["numpy"] = "2.4.6"
+        row["radiation_relative_residual"] = residual
+        row["solve_warnings"] = []
+    path = tmp_path / "l4_hosts.json"
+    path.write_text(json.dumps(ladder))
+
+    payload = analyse(inhouse_path=path)
+    e0 = payload["gates"]["E0_rungs_solver_healthy"]
+    ledger = e0["rung_ledger"]
+    assert [entry["panels"] for entry in ledger] == [64.0, 256.0, 1024.0, 4096.0]
+    assert [entry["residual"] for entry in ledger] == pytest.approx([6e-3, 1e-3, 2e-4, 3e-5])
+    assert [entry["host"] for entry in ledger] == hosts
+    assert e0["mixed_provenance"]["is_mixed"] is True
+    assert e0["mixed_provenance"]["hosts"] == ["control-plane", "node315"]
+    assert e0["mixed_provenance"]["n_rungs_unknown_host"] == 0
+    # disclosing a mixture is not a defect: the gate still passes on residuals
+    assert e0["pass"] is True
+
+
+def test_unrecorded_provenance_is_counted_as_unknown_not_assumed(tmp_path: Path) -> None:
+    """A rung older than the ledger must not be credited with a host."""
+    path = _synthetic_ladder(tmp_path / "l4.json", [64, 256, 1024, 4096])
+    ladder = json.loads(path.read_text())
+    for row in ladder["rows"]:
+        row.pop("host", None)
+    path.write_text(json.dumps(ladder))
+    payload = analyse(inhouse_path=path)
+    e0 = payload["gates"]["E0_rungs_solver_healthy"]
+    assert all(entry["host"] is None for entry in e0["rung_ledger"])
+    assert e0["mixed_provenance"]["is_mixed"] is False
+    assert e0["mixed_provenance"]["n_rungs_unknown_host"] == 4
+
+
 def test_committed_healthy_ladder_proves_its_own_health() -> None:
     if not INHOUSE_ARTIFACT.exists():
         pytest.skip("healthy in-house ladder not produced")

@@ -1,7 +1,8 @@
 {
-  "absence_reason": "the fourth (4096-panel) rung is not in this artifact: the healthy re-run was submitted to the cluster as job cj3341 (node n315, numpy 2.4.6) and its payload did not land in this session, so the committed ladder stops at 1024 panels; E7/E9 therefore stay FAIL (a three-parameter model on three rungs is exactly determined and is not evidence). The superseded 4096 rung is registered in admissibility.superseded_reason and is excluded by gate E0.",
+  "absence_reason": "the fourth (4096-panel) rung is still not in this artifact. Attempts: the healthy re-run submitted as cluster job cj3341 (n315, numpy 2.4.6) never delivered its payload in that session; the re-submission cj3371 (n330) exited rc=1 with ModuleNotFoundError (the staged tree did not put ``src`` on sys.path -- a submitter fault, not a solver fault) and produced no rung; the corrected re-submission cj3395 (PYTHONPATH=src) was still queued when this session's work closed. The committed ladder therefore stops at 1024 panels and E7/E9 stay FAIL: a three-parameter model on three rungs is exactly determined, which is not evidence. The superseded 4096 rung is registered in admissibility.superseded_reason and is excluded by gate E0.",
   "admissibility": {
     "policy": "a rung enters the convergence fit only if it records the solve-stage residual it was produced with, and that residual is below 1e-2",
+    "provenance_note": "rungs now carry per-row host/numpy (ladder driver); this artifact predates that and its rows have no host, so E0 reports all three rungs as provenance-unknown rather than crediting them with the file-level host",
     "superseded_artifact": "inhouse_ladder_ka2.json",
     "superseded_reason": "its 4096-panel rung was produced by a linear driver that did not solve its system (residual 4.9e-1, A33/B33 46%/54% off the reference), so that rung is arithmetic noise",
     "tolerance": 0.01
