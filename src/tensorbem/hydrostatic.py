@@ -35,6 +35,7 @@ pitch. See :func:`compute_hydrostatic_restoring_matrix`.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 import math
 import warnings
@@ -745,6 +746,7 @@ def mass_matrix_from_wetted_hull(
     density: float = _DEFAULT_DENSITY,
     reference_point: FloatArray = (0.0, 0.0, 0.0),
     inertia: FloatArray | None = None,
+    density_field: Callable[[FloatArray], NDArray] | None = None,
 ) -> FloatArray:
     """6x6 rigid-body mass matrix from the hull mesh itself (geometry-exact).
 
@@ -786,6 +788,15 @@ def mass_matrix_from_wetted_hull(
     inertia :
         Optional explicit tensor about the CG; when given it is passed through
         unchanged, so this function can serve as the single assembly entry point.
+    density_field :
+        Optional dimensionless shape factor ``f(x)`` with ``rho(x) = density *
+        f(x)``, forwarded to
+        :func:`tensorbem.rigid_body_mass.wetted_hull_mass_properties`.  This is
+        how a hull whose mass is *not* uniformly distributed (ballast forward,
+        machinery aft) is represented without hand-supplying an inertia tensor:
+        the CG becomes the mass centroid and the rotational block is integrated
+        from the same field, so the parallel-axis shift and the products of
+        inertia stay consistent.
 
     Returns
     -------
@@ -793,9 +804,23 @@ def mass_matrix_from_wetted_hull(
         6x6 rigid-body mass matrix (kg, kg*m).
     """
     props = wetted_hull_mass_properties(
-        hull.vertices, hull.faces, density, reference_point=reference_point
+        hull.vertices,
+        hull.faces,
+        density,
+        reference_point=reference_point,
+        density_field=density_field,
     )
-    body_mass = float(density * props["displaced_volume"]) if mass is None else float(mass)
+    if mass is None:
+        # Neutral buoyancy: the displaced mass.  With a density field that is the
+        # integrated ``int rho dV`` over the closed hull solid, which coincides
+        # with ``density * displaced_volume`` for a homogeneous body.
+        body_mass = (
+            float(props["mass"])
+            if density_field is not None
+            else float(density * props["displaced_volume"])
+        )
+    else:
+        body_mass = float(mass)
     if not math.isfinite(body_mass) or body_mass <= 0.0:
         raise ValueError("mass must be a positive finite number")
     cg = (
