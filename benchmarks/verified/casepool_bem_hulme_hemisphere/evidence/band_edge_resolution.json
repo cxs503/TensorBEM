@@ -1,0 +1,327 @@
+{
+ "artifacts": {
+  "committed": {
+   "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension/results.json",
+   "provenance": {
+    "generated_utc": null,
+    "git_commit": "92f4014dc0cbe6553f270634093ad2a79c5238ee",
+    "git_dirty": true,
+    "host": "ec6ae0b42a0c",
+    "numpy": "2.4.6",
+    "schema": "git_head/environment",
+    "source_sha256": {
+     "src/tensorbem/analytic.py": "26f8e7708ba175a03cd2160e746507fe7326b27ff8758a5f8321c259cdea1d72",
+     "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+     "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+     "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+    },
+    "thread_env": null
+   }
+  },
+  "current": {
+   "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_current_code/results.json",
+   "provenance": {
+    "generated_utc": "2026-11-15T12:06:24Z",
+    "git_commit": "f35b9e4a9a5175ff6d6ef1d2ebabd79b69777659",
+    "git_dirty": true,
+    "host": "ec6ae0b42a0c",
+    "numpy": "2.4.6",
+    "schema": "metadata",
+    "source_sha256": {
+     "src/tensorbem/analytic.py": "26f8e7708ba175a03cd2160e746507fe7326b27ff8758a5f8321c259cdea1d72",
+     "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+     "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+     "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+    },
+    "thread_env": {
+     "MKL_NUM_THREADS": null,
+     "NUMEXPR_NUM_THREADS": null,
+     "OMP_NUM_THREADS": null,
+     "OPENBLAS_NUM_THREADS": null,
+     "VECLIB_MAXIMUM_THREADS": null
+    }
+   }
+  },
+  "refinement": null,
+  "round1_pre_audit": "benchmarks/verified/casepool_bem_hulme_hemisphere/evidence/np246_contradiction.json"
+ },
+ "band_edge": {
+  "credited_ka_on_case_mesh": [
+   2.2,
+   2.58,
+   3.0,
+   3.5
+  ],
+  "first_failing_band_max": 0.08935259927681688,
+  "first_failing_ka": 4.0,
+  "refinement_ladder": {
+   "2.2": {
+    "1024": {
+     "band_max": 0.01353899132177966,
+     "condition_number": 3.0940228890973374,
+     "radiation_relative_residual": 0.0003139951775490164,
+     "solve_method": "lstsq",
+     "source": "band_current_code/extension"
+    }
+   },
+   "2.58": {
+    "1024": {
+     "band_max": 0.022543810901039015,
+     "condition_number": 8.287032392418086,
+     "radiation_relative_residual": 0.0012985698373427649,
+     "solve_method": "lstsq",
+     "source": "band_current_code/extension"
+    }
+   },
+   "3": {
+    "1024": {
+     "band_max": 0.023059163302106785,
+     "condition_number": 2.726340922045399,
+     "radiation_relative_residual": 0.0005640442940932779,
+     "solve_method": "lstsq",
+     "source": "band_current_code/extension"
+    },
+    "256": {
+     "band_max": 0.09732064328448041,
+     "condition_number": 2.5553352243270764,
+     "source": "band_extension/ladder_coarse"
+    }
+   },
+   "3.5": {
+    "1024": {
+     "band_max": 0.027820079602306952,
+     "condition_number": 2.778331358926212,
+     "radiation_relative_residual": 0.00044537979574307807,
+     "solve_method": "lstsq",
+     "source": "band_current_code/extension"
+    }
+   },
+   "4": {
+    "1024": {
+     "band_max": 0.08935259927681688,
+     "condition_number": 14.803996414371047,
+     "radiation_relative_residual": 0.001011819384799009,
+     "solve_method": "lstsq",
+     "source": "band_current_code/extension"
+    },
+    "256": {
+     "band_max": 0.3448700291918858,
+     "condition_number": 19.537210108111186,
+     "source": "band_extension/ladder_coarse"
+    }
+   }
+  }
+ },
+ "band_extension_cells": [
+  {
+   "band_max": 0.01353899132177966,
+   "chief": true,
+   "condition_number": 3.0940228890973374,
+   "ka": 2.2,
+   "name": "extension_ka2.2_n1024_chief_on",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.022543810901039015,
+   "chief": true,
+   "condition_number": 8.287032392418086,
+   "ka": 2.58,
+   "name": "extension_ka2.58_n1024_chief_on",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.06121266156329975,
+   "chief": false,
+   "condition_number": 65.32041973204934,
+   "ka": 2.58,
+   "name": "chief_off_ka2.58_n1024_chief_off",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.023059163302106785,
+   "chief": true,
+   "condition_number": 2.726340922045399,
+   "ka": 3.0,
+   "name": "extension_ka3_n1024_chief_on",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.09732064328448041,
+   "chief": true,
+   "condition_number": 2.5553352243270764,
+   "ka": 3.0,
+   "name": "ladder_coarse_ka3_n256_chief_on",
+   "panels": 256
+  },
+  {
+   "band_max": 0.02244202033014222,
+   "chief": false,
+   "condition_number": 2.8249989167685605,
+   "ka": 3.0,
+   "name": "chief_off_ka3_n1024_chief_off",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.027820079602306952,
+   "chief": true,
+   "condition_number": 2.778331358926212,
+   "ka": 3.5,
+   "name": "extension_ka3.5_n1024_chief_on",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.08935259927681688,
+   "chief": true,
+   "condition_number": 14.803996414371047,
+   "ka": 4.0,
+   "name": "extension_ka4_n1024_chief_on",
+   "panels": 1024
+  },
+  {
+   "band_max": 0.3448700291918858,
+   "chief": true,
+   "condition_number": 19.537210108111186,
+   "ka": 4.0,
+   "name": "ladder_coarse_ka4_n256_chief_on",
+   "panels": 256
+  }
+ ],
+ "band_status": {
+  "ka_2_to_3.5": "PASS -- worst 2.78% on the case mesh, reproduced by two independent runs",
+  "ka_4.0": "NOT creditable on the case mesh -- 8.94% at 1024 panels",
+  "ka_le_2": "PASS (declared case band, unchanged)"
+ },
+ "case_code": "BEM-HULME-HEMISPHERE",
+ "catastrophic_threshold": 0.1,
+ "cell_replication": {
+  "cells": 9,
+  "max_abs_delta": {
+   "chief_off_ka2.58_n1024_chief_off": 0.0,
+   "chief_off_ka3_n1024_chief_off": 0.0,
+   "extension_ka2.2_n1024_chief_on": 0.0,
+   "extension_ka2.58_n1024_chief_on": 0.0,
+   "extension_ka3.5_n1024_chief_on": 0.0,
+   "extension_ka3_n1024_chief_on": 0.0,
+   "extension_ka4_n1024_chief_on": 0.0,
+   "ladder_coarse_ka3_n256_chief_on": 0.0,
+   "ladder_coarse_ka4_n256_chief_on": 0.0
+  }
+ },
+ "gate": 0.05,
+ "gates": {
+  "D1_every_artifact_is_machine_provenanced": {
+   "criterion": "each artifact this verdict uses records host, numpy, git head and per-module sha256",
+   "measured": {
+    "band_current_code/results.json": {
+     "complete": true,
+     "git_commit": "f35b9e4a9a5175ff6d6ef1d2ebabd79b69777659",
+     "git_dirty": true,
+     "has_source_sha256": true,
+     "host": "ec6ae0b42a0c",
+     "numpy": "2.4.6",
+     "schema": "metadata"
+    },
+    "band_extension/results.json": {
+     "complete": true,
+     "git_commit": "92f4014dc0cbe6553f270634093ad2a79c5238ee",
+     "git_dirty": true,
+     "has_source_sha256": true,
+     "host": "ec6ae0b42a0c",
+     "numpy": "2.4.6",
+     "schema": "git_head/environment"
+    },
+    "round2_consequence": "the artifact in the tree records git_head/environment, round 2 read metadata.git_commit/metadata.numpy -> null; its B1/B3 FAILs are a schema artefact and are not evidence about the solver",
+    "round2_read_only_metadata_key": true
+   },
+   "pass": true
+  },
+  "D2_two_current_code_runs_agree": {
+   "criterion": "the committed driver artifact and this round's re-run agree on every cell to |delta rel_error| < 1e-9",
+   "measured": {
+    "cells": 9,
+    "max_abs_delta": 0.0
+   },
+   "pass": true
+  },
+  "D3_pre_audit_catastrophic_cells_recovered": {
+   "criterion": "the quantities that crashed the pre-audit artifact are inside the 5% gate in the current-code run",
+   "measured": {
+    "recovered": [
+     {
+      "cell": "extension_ka3.5_n1024_chief_on",
+      "current_rel_error": -0.009832712727201511,
+      "current_value": 0.16183588248989664,
+      "pre_audit_rel_error": 1.0416155792450397,
+      "pre_audit_value": -0.0068017738810570985,
+      "quantity": "A11",
+      "ref": 0.16344297026378257
+     },
+     {
+      "cell": "extension_ka3.5_n1024_chief_on",
+      "current_rel_error": 0.027820079602306952,
+      "current_value": 0.03192672720124228,
+      "pre_audit_rel_error": 1.0194513785888477,
+      "pre_audit_value": -0.0006042096960535369,
+      "quantity": "B33",
+      "ref": 0.031062564192748436
+     }
+    ],
+    "still_failing": []
+   },
+   "pass": true
+  },
+  "D4_band_edge_localised_with_refinement": {
+   "criterion": "the last passing and first failing ka of the predeclared grid are named on the case mesh, and the first failing ka's error is shown falling with mesh refinement (discretisation) rather than saturating",
+   "measured": {
+    "credited_ka_on_case_mesh": [
+     2.2,
+     2.58,
+     3.0,
+     3.5
+    ],
+    "first_failing_ka": 4.0,
+    "ladder_at_edge": [
+     [
+      256,
+      0.3448700291918858
+     ],
+     [
+      1024,
+      0.08935259927681688
+     ]
+    ]
+   },
+   "pass": true
+  },
+  "D5_no_ka_credited_that_fails_the_gate": {
+   "criterion": "no failing ka appears in the credited list",
+   "measured": [],
+   "pass": true
+  }
+ },
+ "overclaimed_ka": [],
+ "pre_audit_recovery": [
+  {
+   "cell": "extension_ka3.5_n1024_chief_on",
+   "current_rel_error": -0.009832712727201511,
+   "current_value": 0.16183588248989664,
+   "pre_audit_rel_error": 1.0416155792450397,
+   "pre_audit_value": -0.0068017738810570985,
+   "quantity": "A11",
+   "ref": 0.16344297026378257
+  },
+  {
+   "cell": "extension_ka3.5_n1024_chief_on",
+   "current_rel_error": 0.027820079602306952,
+   "current_value": 0.03192672720124228,
+   "pre_audit_rel_error": 1.0194513785888477,
+   "pre_audit_value": -0.0006042096960535369,
+   "quantity": "B33",
+   "ref": 0.031062564192748436
+  }
+ ],
+ "round1_catastrophic_cells_in_committed_artifact": [
+  "ladder_coarse_ka4_n256_chief_on"
+ ],
+ "verdict": "PASS"
+}

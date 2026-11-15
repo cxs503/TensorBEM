@@ -1,37 +1,161 @@
 {
   "artifacts": {
-    "new": null,
-    "old": {
+    "new": {
       "metadata": {
-        "generated_utc": "2026-11-14T08:53:21Z",
-        "git_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
+        "generated_utc": "2026-11-15T12:06:24Z",
+        "git_commit": "f35b9e4a9a5175ff6d6ef1d2ebabd79b69777659",
+        "git_dirty": true,
         "host": "ec6ae0b42a0c",
         "machine": "loongarch64",
         "numpy": "2.4.6",
-        "python": "3.11.6"
+        "python": "3.11.6",
+        "source_sha256": {
+          "src/tensorbem/analytic.py": "26f8e7708ba175a03cd2160e746507fe7326b27ff8758a5f8321c259cdea1d72",
+          "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+          "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+          "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+        },
+        "thread_env": {
+          "MKL_NUM_THREADS": null,
+          "NUMEXPR_NUM_THREADS": null,
+          "OMP_NUM_THREADS": null,
+          "OPENBLAS_NUM_THREADS": null,
+          "VECLIB_MAXIMUM_THREADS": null
+        }
       },
+      "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_current_code/results.json",
+      "verdict": "FAIL"
+    },
+    "old": {
+      "metadata": {},
       "path": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_extension/results.json",
       "verdict": "FAIL"
     }
   },
   "band_status": {
-    "ka_gt_2": "WITHHELD -- current-code re-run artifact missing",
+    "ka_gt_2": "FAIL -- current-code re-run still exceeds the gate, see B4",
     "ka_le_2": "PASS (declared band, unchanged)"
   },
   "case_code": "BEM-HULME-HEMISPHERE",
   "catastrophic_threshold": 0.1,
+  "cell_comparison": [
+    {
+      "chief": true,
+      "ka": 2.2,
+      "name": "extension_ka2.2_n1024_chief_on",
+      "new_band_max": 0.01353899132177966,
+      "new_radiation_residual": 0.0003139951775490164,
+      "new_radiation_stationarity": 5.778831419820156e-13,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.01353899132177966,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 2.58,
+      "name": "extension_ka2.58_n1024_chief_on",
+      "new_band_max": 0.022543810901039015,
+      "new_radiation_residual": 0.0012985698373427649,
+      "new_radiation_stationarity": 8.319432123604283e-14,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.022543810901039015,
+      "panels": 1024
+    },
+    {
+      "chief": false,
+      "ka": 2.58,
+      "name": "chief_off_ka2.58_n1024_chief_off",
+      "new_band_max": 0.06121266156329975,
+      "new_radiation_residual": 4.4176208293751688e-16,
+      "new_radiation_stationarity": 0.03143136509418776,
+      "new_solve_method": "solve",
+      "old_band_max": 0.06121266156329975,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 3.0,
+      "name": "extension_ka3_n1024_chief_on",
+      "new_band_max": 0.023059163302106785,
+      "new_radiation_residual": 0.0005640442940932779,
+      "new_radiation_stationarity": 1.7590287705797047e-13,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.023059163302106785,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 3.0,
+      "name": "ladder_coarse_ka3_n256_chief_on",
+      "new_band_max": 0.09732064328448041,
+      "new_radiation_residual": 0.003971186194735373,
+      "new_radiation_stationarity": 3.432080103617652e-14,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.09732064328448041,
+      "panels": 256
+    },
+    {
+      "chief": false,
+      "ka": 3.0,
+      "name": "chief_off_ka3_n1024_chief_off",
+      "new_band_max": 0.02244202033014222,
+      "new_radiation_residual": 4.862051802705348e-16,
+      "new_radiation_stationarity": 0.03155601935809101,
+      "new_solve_method": "solve",
+      "old_band_max": 0.02244202033014222,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 3.5,
+      "name": "extension_ka3.5_n1024_chief_on",
+      "new_band_max": 0.027820079602306952,
+      "new_radiation_residual": 0.00044537979574307807,
+      "new_radiation_stationarity": 3.6461534812806963e-13,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.027820079602306952,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 4.0,
+      "name": "extension_ka4_n1024_chief_on",
+      "new_band_max": 0.08935259927681688,
+      "new_radiation_residual": 0.001011819384799009,
+      "new_radiation_stationarity": 1.177203284082104e-13,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.08935259927681688,
+      "panels": 1024
+    },
+    {
+      "chief": true,
+      "ka": 4.0,
+      "name": "ladder_coarse_ka4_n256_chief_on",
+      "new_band_max": 0.3448700291918858,
+      "new_radiation_residual": 0.0095044471890811,
+      "new_radiation_stationarity": 1.8273050049464665e-14,
+      "new_solve_method": "lstsq",
+      "old_band_max": 0.3448700291918858,
+      "panels": 256
+    }
+  ],
   "code_identity": {
-    "audit_absent_at_old_commit": true,
+    "audit_absent_at_old_commit": false,
     "audit_introduced": {
       "commit": "a7ddc4f124dad8817c457a1065cb4a8cd8128af8",
       "date": "2026-11-15T09:03:27+08:00",
       "revisions": 1
     },
     "audit_symbol": "_solve_least_squares",
-    "new_source_sha256": null,
-    "old_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
-    "old_commit_date": "2026-11-14T15:54:55+08:00",
-    "old_commit_is_ancestor_of_audit": true,
+    "new_source_sha256": {
+      "src/tensorbem/analytic.py": "26f8e7708ba175a03cd2160e746507fe7326b27ff8758a5f8321c259cdea1d72",
+      "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+      "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+      "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+    },
+    "old_commit": null,
+    "old_commit_date": null,
+    "old_commit_is_ancestor_of_audit": false,
     "old_source_sha256": null
   },
   "gate": 0.05,
@@ -39,43 +163,58 @@
     "B1_artifacts_are_not_the_same_code": {
       "criterion": "the audit symbol of the current solver is absent at the commit that produced the failing artifact, and that commit is an ancestor of the commit that introduced it",
       "measured": {
-        "audit_absent_at_old_commit": true,
-        "old_commit_is_ancestor": true
+        "audit_absent_at_old_commit": false,
+        "old_commit_is_ancestor": false
       },
-      "pass": true
+      "pass": false
     },
     "B2_blast_radius_names_the_lstsq_path": {
       "criterion": "inside the failing artifact every catastrophic cell (band max > 10%) is a CHIEF-on (over-determined lstsq) cell, and the CHIEF-off square controls stay below that level",
       "measured": {
         "catastrophic_all_chief_on": true,
         "catastrophic_cells": [
-          "extension_ka2.2_n1024_chief_on",
-          "extension_ka2.58_n1024_chief_on",
-          "extension_ka3_n1024_chief_on",
-          "ladder_coarse_ka3_n256_chief_on",
-          "extension_ka3.5_n1024_chief_on",
-          "extension_ka4_n1024_chief_on",
           "ladder_coarse_ka4_n256_chief_on"
         ],
         "chief_off_cells": 2,
         "chief_on_cells": 7,
-        "worst_chief_off": 0.061212661563295946,
-        "worst_chief_on": 1.0416155792450397
+        "worst_chief_off": 0.06121266156329975,
+        "worst_chief_on": 0.3448700291918858
       },
       "pass": true
     },
     "B3_numpy_version_cannot_be_the_variable": {
       "criterion": "both artifacts record the same numpy version, so a numpy version change cannot explain their difference",
       "measured": {
-        "new": null,
-        "old": "2.4.6"
+        "new": "2.4.6",
+        "old": null
       },
-      "pass": null
+      "pass": false
     },
     "B4_failed_cells_recover_under_current_code": {
-      "criterion": "current-code re-run available",
-      "measured": null,
-      "pass": null
+      "criterion": "every cell that was catastrophic under the pre-audit code is back inside the 5% gate in the current-code run",
+      "measured": {
+        "ladder_coarse_ka4_n256_chief_on": 0.3448700291918858
+      },
+      "pass": false
+    },
+    "B5_fallback_actually_fired": {
+      "criterion": "the current-code run records which driver produced each vector, so 'the backend was rescued' is an observation and not an inference",
+      "measured": {
+        "any_method_recorded": true,
+        "cells_primary_driver_ok": [
+          "extension_ka2.2_n1024_chief_on",
+          "extension_ka2.58_n1024_chief_on",
+          "chief_off_ka2.58_n1024_chief_off",
+          "extension_ka3_n1024_chief_on",
+          "ladder_coarse_ka3_n256_chief_on",
+          "chief_off_ka3_n1024_chief_off",
+          "extension_ka3.5_n1024_chief_on",
+          "extension_ka4_n1024_chief_on",
+          "ladder_coarse_ka4_n256_chief_on"
+        ],
+        "cells_rescued_by_qr": []
+      },
+      "pass": true
     }
   },
   "local_cells": {
@@ -96,75 +235,140 @@
       "wall_seconds": 33.02
     }
   },
+  "new_criteria": {
+    "E1_extension_band_error_below_5pct": {
+      "criterion": "|rel err| < 5% for all six magnitudes, every ka of [2.2, 2.58, 3.0, 3.5, 4.0] on the 1024-panel mesh",
+      "measured": 0.08935259927681688,
+      "pass": false,
+      "per_ka": {
+        "2.2": {
+          "band_max": 0.01353899132177966,
+          "worst_quantity": "B33_dimless"
+        },
+        "2.58": {
+          "band_max": 0.022543810901039015,
+          "worst_quantity": "B33_dimless"
+        },
+        "3": {
+          "band_max": 0.023059163302106785,
+          "worst_quantity": "B33_dimless"
+        },
+        "3.5": {
+          "band_max": 0.027820079602306952,
+          "worst_quantity": "B33_dimless"
+        },
+        "4": {
+          "band_max": 0.08935259927681688,
+          "worst_quantity": "A11_dimless"
+        }
+      },
+      "worst_ka": 4.0,
+      "worst_quantity": "A11_dimless"
+    },
+    "E2_geometry_precondition": {
+      "criterion": "|nabla_mesh/nabla-1| < 2% and |A_wp/(pi a^2)-1| < 2% on the extension mesh",
+      "measured_volume_error": 0.005869620423973321,
+      "measured_waterplane_error": 0.0016056069643816118,
+      "pass": true
+    },
+    "E3_refinement_does_not_worsen_beyond_ka2": {
+      "criterion": "band-max error at 1024 panels <= band-max error at 256 panels for ka = 3 and ka = 4",
+      "measured": {
+        "3": {
+          "coarse_mesh_max": 0.09732064328448041,
+          "extension_mesh_max": 0.023059163302106785
+        },
+        "4": {
+          "coarse_mesh_max": 0.3448700291918858,
+          "extension_mesh_max": 0.08935259927681688
+        }
+      },
+      "pass": true
+    },
+    "E4_reference_self_converged_up_to_ka4": {
+      "criterion": "reference 144->192 term drift at ka = 4 at least 20x below the 5 % gate (< 2.5e-3)",
+      "margin_factor": 134.73226919464204,
+      "measured_drift": 7.422126903803143e-05,
+      "pass": true
+    },
+    "E5_chief_keeps_irregular_frequency_cell_inside_gate": {
+      "control_chief_off_band_max": 0.06121266156329975,
+      "control_chief_off_cond": 65.32041973204934,
+      "criterion": "at ka = 2.58 the CHIEF-on cell is finite and inside 5 % on every magnitude; the CHIEF-off cell is the control",
+      "measured_chief_on_band_max": 0.022543810901039015,
+      "measured_chief_on_cond": 8.287032392418086,
+      "pass": true
+    }
+  },
   "old_band": [
     {
-      "band_max": 0.1555914764012461,
+      "band_max": 0.01353899132177966,
       "chief": true,
-      "condition_number": 3.0940228890973365,
+      "condition_number": 3.0940228890973374,
       "ka": 2.2,
       "name": "extension_ka2.2_n1024_chief_on",
       "panels": 1024
     },
     {
-      "band_max": 0.18502332414052006,
+      "band_max": 0.022543810901039015,
       "chief": true,
-      "condition_number": 8.28703239241808,
+      "condition_number": 8.287032392418086,
       "ka": 2.58,
       "name": "extension_ka2.58_n1024_chief_on",
       "panels": 1024
     },
     {
-      "band_max": 0.061212661563295946,
+      "band_max": 0.06121266156329975,
       "chief": false,
-      "condition_number": 65.32041973204852,
+      "condition_number": 65.32041973204934,
       "ka": 2.58,
       "name": "chief_off_ka2.58_n1024_chief_off",
       "panels": 1024
     },
     {
-      "band_max": 0.1060910909133725,
+      "band_max": 0.023059163302106785,
       "chief": true,
-      "condition_number": 2.7263409220453716,
+      "condition_number": 2.726340922045399,
       "ka": 3.0,
       "name": "extension_ka3_n1024_chief_on",
       "panels": 1024
     },
     {
-      "band_max": 0.2293871573077481,
+      "band_max": 0.09732064328448041,
       "chief": true,
-      "condition_number": 2.55533522432705,
+      "condition_number": 2.5553352243270764,
       "ka": 3.0,
       "name": "ladder_coarse_ka3_n256_chief_on",
       "panels": 256
     },
     {
-      "band_max": 0.022442020330123314,
+      "band_max": 0.02244202033014222,
       "chief": false,
-      "condition_number": 2.8249989167685285,
+      "condition_number": 2.8249989167685605,
       "ka": 3.0,
       "name": "chief_off_ka3_n1024_chief_off",
       "panels": 1024
     },
     {
-      "band_max": 1.0416155792450397,
+      "band_max": 0.027820079602306952,
       "chief": true,
-      "condition_number": 2.7783313589262097,
+      "condition_number": 2.778331358926212,
       "ka": 3.5,
       "name": "extension_ka3.5_n1024_chief_on",
       "panels": 1024
     },
     {
-      "band_max": 0.39950757742968757,
+      "band_max": 0.08935259927681688,
       "chief": true,
-      "condition_number": 14.803996414371078,
+      "condition_number": 14.803996414371047,
       "ka": 4.0,
       "name": "extension_ka4_n1024_chief_on",
       "panels": 1024
     },
     {
-      "band_max": 0.3267299013416491,
+      "band_max": 0.3448700291918858,
       "chief": true,
-      "condition_number": 19.53721010811123,
+      "condition_number": 19.537210108111186,
       "ka": 4.0,
       "name": "ladder_coarse_ka4_n256_chief_on",
       "panels": 256
@@ -173,18 +377,12 @@
   "old_failure_localisation": {
     "catastrophic_all_chief_on": true,
     "catastrophic_cells": [
-      "extension_ka2.2_n1024_chief_on",
-      "extension_ka2.58_n1024_chief_on",
-      "extension_ka3_n1024_chief_on",
-      "ladder_coarse_ka3_n256_chief_on",
-      "extension_ka3.5_n1024_chief_on",
-      "extension_ka4_n1024_chief_on",
       "ladder_coarse_ka4_n256_chief_on"
     ],
     "chief_off_cells": 2,
     "chief_on_cells": 7,
-    "worst_chief_off": 0.061212661563295946,
-    "worst_chief_on": 1.0416155792450397
+    "worst_chief_off": 0.06121266156329975,
+    "worst_chief_on": 0.3448700291918858
   },
-  "verdict": "INCOMPLETE"
+  "verdict": "FAIL"
 }
