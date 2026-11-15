@@ -514,6 +514,52 @@ def geometry_gate() -> dict[str, Any]:
     }
 
 
+#: Gates that read the tabulated ``A``/``B`` as *physical data*.  When gate C0
+#: fails -- the BIE solve did not converge, or it returned negative damping --
+#: these are **voided** rather than scored, on both the run path
+#: (:func:`run_case`) and the replay path (:func:`gates_from_artifact`).
+#:
+#: The distinction is not cosmetic.  The m20021 medium-mesh sweep was produced on
+#: a node where the same mesh, band and node count gave ``max residual = 1.25``
+#: and ``min B = -129.9`` instead of ``2.4e-3`` and ``B > 0``; scoring that
+#: artifact would have published "the added mass is not causal" (C3) and "the
+#: free decay is undecidable" (C5) -- two statements about a *linear solve*, not
+#: about the Wigley hull.  Read as a C0 failure it says the one true thing: the
+#: evidence is not admissible.
+C0_DEPENDENT_GATES: tuple[str, ...] = (
+    "C2",   # panel adequacy: a mesh property, but meaningless for a void sweep
+    "C3",   # KK closure of the added mass (the case criterion)
+    "C3a",  # the same closure with zero free parameters
+    "C7",   # A_inf anchor consistency
+    "C4",   # B -> K -> B round trip
+    "C5",   # free-decay damping ratio
+    "C6a",  # negative control: B == 0 -> zero kernel
+    "C6b",  # negative control: corrupted high band -> C3 must fail
+    "C5b",  # per-DOF decay audit
+    "C5c",  # robust (multi-window) decay gate
+)
+
+
+def _voided_gate(identifier: str) -> dict[str, Any]:
+    """Record of a gate that was *not* evaluated because gate C0 failed."""
+    return {
+        "id": identifier,
+        "title": f"{identifier} voided: the sweep failed gate C0",
+        "threshold": "not evaluated",
+        "passed": False,
+        "voided": True,
+        "values": {
+            "voided_by": "C0",
+            "note": (
+                "the BIE solve that produced A/B did not converge or gave negative "
+                "damping, so this gate has no physical input to score; re-run the "
+                "sweep on a validating node (or replay a committed sweep that "
+                "passes C0) instead of reading this FAIL as a result"
+            ),
+        },
+    }
+
+
 def solver_validity_gate(sweep: Sweep) -> dict[str, Any]:
     """C0: a sweep whose BIE solves did not converge cannot be judged.
 
@@ -2445,6 +2491,23 @@ def gates_from_artifact(
     if include_geometry:
         gates["C1"] = geometry_gate()
     gates["C0"] = solver_validity_gate(sweep)
+    if not gates["C0"]["passed"]:
+        # Same policy as :func:`run_case`: an inadmissible sweep is *judged* (C0
+        # FAIL, dependents voided) and never raised on.  Raising here made a
+        # contaminated artifact -- e.g. the committed m20021 sweeps -- impossible
+        # to re-judge at all, which is the opposite of what this function is for.
+        for key in C0_DEPENDENT_GATES:
+            gates[key] = _voided_gate(key)
+        return {
+            "case": CASE_SLUG,
+            "artifact": str(path),
+            "added_mass_inf_anchor": None,
+            "dof_free_decay": DOF_NAMES[int(dof_free_decay)],
+            "sweep": sweep.summary(),
+            "extended": None,
+            "gates": gates,
+            "verdict": case_verdict(gates),
+        }
     gates["C2"] = panel_adequacy_gate(sweep)
     gates["C3"] = kk_gate(sweep)
     anchor = anchor_for_sweep(sweep)
@@ -2563,21 +2626,8 @@ def run_case(
         # are *voided* rather than evaluated: scoring them would label a failed
         # linear solve "non-causal" (C3) or "undecidable" (C5) and the artifact
         # would hide the real defect behind an ordinary-looking FAIL.
-        for key in ("C2", "C3", "C4", "C5", "C6a", "C6b"):
-            results["gates"][key] = {
-                "id": key,
-                "title": f"{key} voided: the sweep failed gate C0",
-                "threshold": "not evaluated",
-                "passed": False,
-                "voided": True,
-                "values": {
-                    "voided_by": "C0",
-                    "note": (
-                        "the BIE solve that produced A/B did not converge or gave "
-                        "negative damping; re-run the sweep on a validating node"
-                    ),
-                },
-            }
+        for key in C0_DEPENDENT_GATES:
+            results["gates"][key] = _voided_gate(key)
     else:
         results["gates"]["C2"] = panel_adequacy_gate(production)
         results["gates"]["C3"] = kk_gate(production)
@@ -2702,6 +2752,79 @@ def _fmt(value: Any, digits: int = 4) -> str:
     return str(value)
 
 
+def _sweep_voided(gates: dict[str, Any]) -> bool:
+    """True when the production sweep failed C0, so sections 3-4 have no input."""
+    c3 = gates.get("C3") or {}
+    if c3.get("voided"):
+        return True
+    return "per_dof" not in (c3.get("values") or {})
+
+
+def _voided_lines(gates: dict[str, Any]) -> list[str]:
+    """Render a run whose sweep failed gate C0 -- an *evidential* failure."""
+    c0 = gates.get("C0") or {}
+    values = c0.get("values") or {}
+    lines = ["## 3. Voided: the radiation sweep failed gate C0", ""]
+    lines.append(
+        "A and B are the output of a linear solve that did not converge, so no "
+        "downstream gate is scored: a KK residual computed from them would be a "
+        "property of the solver, not of the hull. Re-run the sweep (section 6) or "
+        "re-judge with `--replay`."
+    )
+    lines.append("")
+    lines.append("| quantity | value |")
+    lines.append("| --- | --- |")
+    for name in (
+        "mesh",
+        "solver_relative_residual_max",
+        "solver_relative_residual_median",
+        "min_radiation_damping",
+        "n_frequencies",
+    ):
+        if name in values:
+            lines.append(f"| {name} | {_fmt(values[name])} |")
+    lines.append("")
+    lines.append("| voided gate | reason |")
+    lines.append("| --- | --- |")
+    for key, gate in gates.items():
+        if isinstance(gate, dict) and gate.get("voided"):
+            lines.append(f"| {key} | {gate['title']} |")
+    lines.append("")
+    return lines
+
+
+def _verdict_and_reproduction_lines(
+    verdict: dict[str, Any], results: dict[str, Any]
+) -> list[str]:
+    """Closing sections, shared by the scored and the voided rendering."""
+    lines: list[str] = []
+    lines.append("## 5. Verdict")
+    lines.append("")
+    lines.append(
+        f"{verdict['gates_passed']} / {verdict['gates_total']} gates passed "
+        f"({'all pass' if verdict['passed'] else 'FAILED: ' + ', '.join(verdict['failed_list'])})."
+    )
+    lines.append("")
+    lines.append(
+        "Case tolerance (KK closure) = "
+        f"{100.0*verdict['case_tolerance']:.0f}%; coarse-mesh closure and the corrupted "
+        "damping control are reported alongside so the verdict cannot be read as a "
+        "self-fulfilling gate."
+    )
+    lines.append("")
+    lines.append("## 6. Reproduction")
+    lines.append("")
+    lines.append("```")
+    lines.append(
+        "PYTHONPATH=src python -m tensorbem.benchmarks.case_bem_cummins_wigley "
+        f"--out {results.get('output_dir', 'benchmarks/verified/casepool_bem_cummins_wigley')} "
+        f"--jobs {results.get('jobs', 1)}"
+    )
+    lines.append("```")
+    lines.append("")
+    return lines
+
+
 def render_markdown(results: dict[str, Any]) -> str:
     """Render the case document from the numbers in ``results`` (no hand copy)."""
     gates = results["gates"]
@@ -2754,6 +2877,13 @@ def render_markdown(results: dict[str, Any]) -> str:
             f"{'PASS' if gate['passed'] else 'FAIL'} |"
         )
     lines.append("")
+    if _sweep_voided(gates):
+        # No physics section has input: C2..C6 were voided by C0, so their
+        # ``values`` hold no coefficients.  The m20021 run hit exactly this and
+        # died on a KeyError instead of publishing the (correct) FAIL.
+        lines.extend(_voided_lines(gates))
+        lines.extend(_verdict_and_reproduction_lines(verdict, results))
+        return "\n".join(lines) + "\n"
     lines.append("## 3. Reference vs got (KK closure, per DOF)")
     lines.append("")
     lines.append(
@@ -2872,30 +3002,7 @@ def render_markdown(results: dict[str, Any]) -> str:
                 continue
             lines.append(f"| {name} | {_fmt(value)} |")
         lines.append("")
-    lines.append("## 5. Verdict")
-    lines.append("")
-    lines.append(
-        f"{verdict['gates_passed']} / {verdict['gates_total']} gates passed "
-        f"({'all pass' if verdict['passed'] else 'FAILED: ' + ', '.join(verdict['failed_list'])})."
-    )
-    lines.append("")
-    lines.append(
-        "Case tolerance (KK closure) = "
-        f"{100.0*verdict['case_tolerance']:.0f}%; coarse-mesh closure and the corrupted "
-        "damping control are reported alongside so the verdict cannot be read as a "
-        "self-fulfilling gate."
-    )
-    lines.append("")
-    lines.append("## 6. Reproduction")
-    lines.append("")
-    lines.append("```")
-    lines.append(
-        "PYTHONPATH=src python -m tensorbem.benchmarks.case_bem_cummins_wigley "
-        f"--out {results.get('output_dir', 'benchmarks/verified/casepool_bem_cummins_wigley')} "
-        f"--jobs {results.get('jobs', 1)}"
-    )
-    lines.append("```")
-    lines.append("")
+    lines.extend(_verdict_and_reproduction_lines(verdict, results))
     return "\n".join(lines) + "\n"
 
 

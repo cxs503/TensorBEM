@@ -1,0 +1,110 @@
+{
+  "note": "independent recomputation of committed healthy sweep nodes on the build node, BLAS pinned to 1 thread",
+  "artifact_dir": "benchmarks/verified/casepool_bem_cummins_wigley",
+  "rows": [
+    {
+      "mesh": "coarse",
+      "omega": 1.0287041593510085,
+      "panels": 192,
+      "B33_recomputed": 18.64445510731295,
+      "B33_artifact": 18.64445510731295,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.00020377627970233892,
+      "residual_artifact": 0.00020377627970233892,
+      "elapsed_s": 0.57
+    },
+    {
+      "mesh": "coarse",
+      "omega": 2.8630458853660428,
+      "panels": 192,
+      "B33_recomputed": 218.3057314874648,
+      "B33_artifact": 218.3057314874648,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.0003442296768309251,
+      "residual_artifact": 0.0003442296768309251,
+      "elapsed_s": 0.57
+    },
+    {
+      "mesh": "coarse",
+      "omega": 5.291161237330323,
+      "panels": 192,
+      "B33_recomputed": 305.168283992898,
+      "B33_artifact": 305.168283992898,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.001061155203565951,
+      "residual_artifact": 0.001061155203565951,
+      "elapsed_s": 0.63
+    },
+    {
+      "mesh": "coarse",
+      "omega": 10.83246924766504,
+      "panels": 192,
+      "B33_recomputed": 113.64482559025,
+      "B33_artifact": 113.64482559025,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.006392332932499873,
+      "residual_artifact": 0.006392332932499873,
+      "elapsed_s": 0.67
+    },
+    {
+      "mesh": "medium",
+      "omega": 1.0287041593510085,
+      "panels": 480,
+      "B33_recomputed": 18.807769280137695,
+      "B33_artifact": 18.807769280137695,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 4.1510581864213984e-05,
+      "residual_artifact": 4.1510581864213984e-05,
+      "elapsed_s": 3.55
+    },
+    {
+      "mesh": "medium",
+      "omega": 2.8630458853660428,
+      "panels": 480,
+      "B33_recomputed": 219.79471438609795,
+      "B33_artifact": 219.79471438609795,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 8.061295499317259e-05,
+      "residual_artifact": 8.061295499317259e-05,
+      "elapsed_s": 3.56
+    },
+    {
+      "mesh": "medium",
+      "omega": 5.291161237330323,
+      "panels": 480,
+      "B33_recomputed": 305.1865250106657,
+      "B33_artifact": 305.1865250106657,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.00028415818442084845,
+      "residual_artifact": 0.00028415818442084845,
+      "elapsed_s": 3.63
+    },
+    {
+      "mesh": "medium",
+      "omega": 10.83246924766504,
+      "panels": 480,
+      "B33_recomputed": 107.71640701777125,
+      "B33_artifact": 107.71640701777125,
+      "B33_rel": 0.0,
+      "max_diag_damping_rel": 0.0,
+      "max_diag_added_mass_rel": 0.0,
+      "residual_recomputed": 0.00244707823996248,
+      "residual_artifact": 0.00244707823996248,
+      "elapsed_s": 4.32
+    }
+  ]
+}
