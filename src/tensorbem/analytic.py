@@ -62,12 +62,13 @@ from a truncated analytical system, not from another BEM solve.
 
 from __future__ import annotations
 
+from .quadrature import gauss_legendre
+
 from dataclasses import dataclass
 import math
 
 import numpy as np
 from numpy.polynomial.laguerre import laggauss
-from numpy.polynomial.legendre import leggauss
 from numpy.typing import NDArray
 
 FloatArray = NDArray[np.float64]
@@ -361,7 +362,7 @@ def ellipsoid_shape_factors(
     lower = math.log(float(np.min(squared))) - math.log(range_value)
     upper = math.log(float(np.max(squared))) + math.log(range_value)
 
-    nodes_array, weights = leggauss(int(nodes))
+    nodes_array, weights = gauss_legendre(int(nodes))
     exponent = 0.5 * (upper - lower) * nodes_array + 0.5 * (upper + lower)
     node_weights = 0.5 * (upper - lower) * weights
     lam = np.exp(exponent)
@@ -1364,7 +1365,7 @@ def hulme_hemisphere_surface_solution(
         raise ValueError("n_terms must be >= 4")
     if q_order < 2 * m_max:
         raise ValueError("quad_order must be >= 2 * n_terms")
-    nodes, weights = leggauss(q_order)
+    nodes, weights = gauss_legendre(q_order)
     mu = 0.5 * (nodes + 1.0)
     w = 0.5 * weights
 
@@ -1449,7 +1450,7 @@ def hulme_hemisphere_radiation(
     omega = math.sqrt(g * nu)
     volume = (2.0 / 3.0) * math.pi * (a**3)
 
-    nodes, weights = leggauss(q_order)
+    nodes, weights = gauss_legendre(q_order)
     mu = 0.5 * (nodes + 1.0)
     w = 0.5 * weights
     s = np.sqrt(np.maximum(0.0, 1.0 - mu * mu))
