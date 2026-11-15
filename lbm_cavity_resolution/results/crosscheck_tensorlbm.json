@@ -1,0 +1,19 @@
+{
+  "n": 33,
+  "steps": 200,
+  "re": 100.0,
+  "u_lid": 0.1,
+  "collision": "rlbm",
+  "tensorlbm_src": "/root/tp-agent/work/m22289/TensorLBM/src",
+  "centreline_max_abs_du": 0.03991568782412781,
+  "centreline_max_abs_dv": 0.024652964808181535,
+  "u_at_centreline_mid": [
+    -0.06706181153015603,
+    -0.09510344440246339
+  ],
+  "mapped_field_max_abs_du": 0.08588187906373945,
+  "mapped_field_max_abs_dv": 0.011965466313905753,
+  "raw_field_max_abs_du": 0.02271590135358855,
+  "raw_field_max_abs_dv": 0.021619050179781527,
+  "verdict": "FAIL"
+}
