@@ -78,6 +78,9 @@ DENSITY = 1025.0
 GRAVITY = 9.80665
 NU_GRID = (0.5, 1.0, 2.0)
 DOF_ORDER = ("surge", "sway", "heave", "roll", "pitch", "yaw")
+#: The two 6x6 radiation matrices the anchor compares.  A deviation can
+#: live in either of them, so every comparison axis has to walk both.
+QUANTITIES = ("added_mass", "damping")
 
 #: Mesh levels exercised by the comparison.  The first submission of this round
 #: ran 64/256 (hemisphere) and 270 (sphere) only and then compared those solves
@@ -737,7 +740,21 @@ def compare(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, A
 
 
 def convergence(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[str, Any]:
-    """Worst deviation per mesh level, diagonal block and active couplings apart."""
+    """Worst deviation per mesh level, diagonal block and active couplings apart.
+
+    **Both** radiation matrices are scored.  The first submission of this round
+    walked ``added_mass`` only, and that made the refinement ladder blind to the
+    entry that actually leaves the 5 % band at the short-wave end: on
+    ``hemisphere_r1`` at 1024 panels the added-mass-only diagonal reads
+    3.30 %, while ``damping A[heave,heave]`` deviates by 5.82 % -- the single
+    failure the per-entry table reports for that case.  A ladder built from one
+    of the two matrices cannot support a claim of the form "the gap is
+    discretisation and decays", because the entry that does not decay is not in
+    it.  ``worst_diagonal`` / ``worst_coupling`` are therefore the max over both
+    matrices, and the per-matrix ladders are kept in the same row
+    (``worst_diagonal_added_mass`` / ``worst_diagonal_damping`` and the coupling
+    pair) so that a reader can see which matrix carries the deviation.
+    """
     out: dict[str, Any] = {}
     for case, tb_case in tensorbem.items():
         cap_case = capytaine.get(case)
@@ -746,39 +763,39 @@ def convergence(tensorbem: dict[str, Any], capytaine: dict[str, Any]) -> dict[st
         null_index = {DOF_ORDER.index(dof) for dof in invariant_null_dofs(case)}
         rows = []
         for row in tb_case["levels"]:
-            worst_diag = 0.0
-            worst_off = 0.0
+            per = {q: {"diagonal": 0.0, "coupling": 0.0} for q in QUANTITIES}
             for nu in NU_GRID:
                 key = _key(nu)
-                tb = np.asarray(row["matrices"][key]["added_mass"], dtype=float)
-                cap = np.asarray(
-                    cap_case["reference"][key]["added_mass"], dtype=float
-                )
-                for i in range(6):
-                    for j in range(6):
-                        if i in null_index or j in null_index:
-                            # exact structural zero: a ratio of two floors
-                            continue
-                        scale = _scale(cap, i, j)
-                        if not math.isfinite(scale) or scale <= NULL_FLOOR * physical_scale(i, j):
-                            # the reference normaliser is itself a floor: the
-                            # ratio would compare two zeros (see ``compare``)
-                            continue
-                        if abs(cap[i, j]) <= NULL_FLOOR * scale:
-                            continue
-                        rel = abs((tb[i, j] - cap[i, j]) / abs(cap[i, j]))
-                        if i == j:
-                            worst_diag = max(worst_diag, rel)
-                        else:
-                            worst_off = max(worst_off, rel)
-            rows.append(
-                {
-                    "level": row["level"],
-                    "n_faces": row["n_faces"],
-                    "worst_diagonal": worst_diag,
-                    "worst_coupling": worst_off,
-                }
-            )
+                for quantity in QUANTITIES:
+                    tb = np.asarray(row["matrices"][key][quantity], dtype=float)
+                    cap = np.asarray(
+                        cap_case["reference"][key][quantity], dtype=float
+                    )
+                    for i in range(6):
+                        for j in range(6):
+                            if i in null_index or j in null_index:
+                                # exact structural zero: a ratio of two floors
+                                continue
+                            scale = _scale(cap, i, j)
+                            if not math.isfinite(scale) or scale <= NULL_FLOOR * physical_scale(i, j):
+                                # the reference normaliser is itself a floor: the
+                                # ratio would compare two zeros (see ``compare``)
+                                continue
+                            if abs(cap[i, j]) <= NULL_FLOOR * scale:
+                                continue
+                            rel = abs((tb[i, j] - cap[i, j]) / abs(cap[i, j]))
+                            slot = "diagonal" if i == j else "coupling"
+                            per[quantity][slot] = max(per[quantity][slot], rel)
+            entry: dict[str, Any] = {
+                "level": row["level"],
+                "n_faces": row["n_faces"],
+                "worst_diagonal": max(per[q]["diagonal"] for q in QUANTITIES),
+                "worst_coupling": max(per[q]["coupling"] for q in QUANTITIES),
+            }
+            for quantity in QUANTITIES:
+                entry["worst_diagonal_" + quantity] = per[quantity]["diagonal"]
+                entry["worst_coupling_" + quantity] = per[quantity]["coupling"]
+            rows.append(entry)
         out[case] = rows
     return out
 
@@ -1022,11 +1039,24 @@ def render_figures(study: dict[str, Any]) -> list[Path]:
         (axes[1], "worst_coupling", "active couplings"),
     ):
         for case, rows in study["convergence"].items():
+            # solid: worst over both radiation matrices; dashed: added mass only.
+            # The dashed curve is the axis the first submission of this round
+            # plotted as "the" ladder, and it hides the damping entry that
+            # breaks the band (see ``convergence``).
             ax.plot(
                 [r["n_faces"] for r in rows],
                 [100.0 * r[key] for r in rows],
                 marker="o",
                 label=case,
+            )
+            ax.plot(
+                [r["n_faces"] for r in rows],
+                [100.0 * r[key + "_added_mass"] for r in rows],
+                marker="x",
+                ls=":",
+                lw=0.9,
+                alpha=0.7,
+                label="{} (added mass only)".format(case),
             )
         ax.axhline(5.0, color="0.5", ls="--", lw=0.8)
         ax.set_xlabel("TensorBEM panels")
@@ -1293,18 +1323,30 @@ def render_document(study: dict[str, Any]) -> str:
     add("")
     add("### 3.5 网格收敛（最差偏差随面板数）")
     add("")
-    add("| case | 面板 | 对角最差偏差 | 耦合最差偏差 |")
-    add("|---|---:|---:|---:|")
+    add(
+        "| case | 面板 | 对角最差 (A) | 对角最差 (B) | 耦合最差 (A) | 耦合最差 (B) | 两阵最大值 (对角) |"
+    )
+    add("|---|---:|---:|---:|---:|---:|---:|")
     for case, rows in study["convergence"].items():
         for r in rows:
             add(
-                "| {} | {} | {:.2f}% | {:.2f}% |".format(
+                "| {} | {} | {:.2f}% | {:.2f}% | {:.2f}% | {:.2f}% | {:.2f}% |".format(
                     case,
                     r["n_faces"],
+                    100.0 * r["worst_diagonal_added_mass"],
+                    100.0 * r["worst_diagonal_damping"],
+                    100.0 * r["worst_coupling_added_mass"],
+                    100.0 * r["worst_coupling_damping"],
                     100.0 * r["worst_diagonal"],
-                    100.0 * r["worst_coupling"],
                 )
             )
+    add("")
+    add(
+        "上表的「两阵最大值（对角）」是 §3.3 逐项表的同一批项在对角块上的最大偏差；"
+        "只统计附加质量会漏掉阻尼侧的失败项（本轮 `hemisphere_r1 nu=2 "
+        "damping A[heave,heave]`），因此两张矩阵都要进阶梯。最细网格上对角块仍未"
+        "进入登记带（见局限 5），阶梯的用途是**趋势**而不是达标证明。"
+    )
     add("")
     add("### 3.6 几何恒等式（不依赖外部程序的独立轴）")
     add("")
@@ -1538,7 +1580,7 @@ def render_document(study: dict[str, Any]) -> str:
     add("")
     add(
         "![convergence](fig_capytaine_r2_convergence.png)\n\n"
-        "*图 2 — 对角块（左）与 active 耦合项（右）最差偏差随 TensorBEM 面板数的收敛。*"
+        "*图 2 — 对角块（左）与 active 耦合项（右）最差偏差随 TensorBEM 面板数的收敛；实线 = 两张辐射矩阵的最大值，点线 = 只看附加质量（首版阶梯的口径）。*"
     )
     add("")
     if deep:
@@ -1569,11 +1611,23 @@ def render_document(study: dict[str, Any]) -> str:
         "4. **转动中心**。所有转动量都是关于登记转动中心的；换中心会得到不同的耦合矩阵"
         "（同一物理，不同表示）。artifact 记录了两侧的中心并断言一致。"
     )
+    hemi = study["comparison"]["cases"].get("hemisphere_r1", {})
+    sph = study["comparison"]["cases"].get("sphere_r1_z-0.5", {})
+    worst_diag = max(
+        rows[-1]["worst_diagonal"] for rows in study["convergence"].values() if rows
+    ) if study["convergence"] else 0.0
     add(
-        "5. **本轮的网格预算**。受本单算力预算限制，TensorBEM 侧半球只跑到 256 面板"
-        "（第一轮用 1024）、球只用 270（第一轮 1026），深潜块只用单一 320 面板网格；"
-        "因此本轮给出的是**自由度覆盖**（转动块与耦合项首次入库）而非收敛证明，"
-        "偏差中含本侧离散误差。capytaine 侧仍取其自身网格阶梯的最细一层。"
+        "5. **网格预算与阶梯口径**。TensorBEM 侧半球跑到 {} 面板、浮球 {} 面板，"
+        "capytaine 侧对应 {} / {}；深潜块只用单一网格。最细网格上对角块最差偏差仍为 "
+        "{:.2f}%（登记带 {:.0%}），因此本轮给出的是**自由度覆盖**（转动块与耦合项首次入库）"
+        "而非收敛证明，偏差中含两侧离散误差；§3.5 的阶梯只用来读趋势。".format(
+            hemi.get("tensorbem_faces", "?"),
+            sph.get("tensorbem_faces", "?"),
+            hemi.get("capytaine_faces", "?"),
+            sph.get("capytaine_faces", "?"),
+            100.0 * worst_diag,
+            TOL_DIAGONAL,
+        )
     )
     add(
         "6. **网格各向异性**。TensorBEM 侧几何由 icosphere 派生，surge/sway 与 roll/pitch "

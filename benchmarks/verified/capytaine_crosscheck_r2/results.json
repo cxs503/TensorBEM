@@ -19105,39 +19105,63 @@
         "level": 2,
         "n_faces": 64,
         "worst_coupling": 0.0,
-        "worst_diagonal": 0.09810731914572308
+        "worst_coupling_added_mass": 0.0,
+        "worst_coupling_damping": 0.0,
+        "worst_diagonal": 0.23081279112531758,
+        "worst_diagonal_added_mass": 0.09810731914572308,
+        "worst_diagonal_damping": 0.23081279112531758
       },
       {
         "level": 3,
         "n_faces": 256,
         "worst_coupling": 0.0,
-        "worst_diagonal": 0.04633485246175883
+        "worst_coupling_added_mass": 0.0,
+        "worst_coupling_damping": 0.0,
+        "worst_diagonal": 0.09379376854990516,
+        "worst_diagonal_added_mass": 0.04633485246175883,
+        "worst_diagonal_damping": 0.09379376854990516
       },
       {
         "level": 4,
         "n_faces": 1024,
         "worst_coupling": 0.0,
-        "worst_diagonal": 0.03300836020325538
+        "worst_coupling_added_mass": 0.0,
+        "worst_coupling_damping": 0.0,
+        "worst_diagonal": 0.05818682870816025,
+        "worst_diagonal_added_mass": 0.03300836020325538,
+        "worst_diagonal_damping": 0.05818682870816025
       }
     ],
     "hemisphere_r1_cz-0.5": [
       {
         "level": 2,
         "n_faces": 64,
-        "worst_coupling": 0.07378834808036941,
-        "worst_diagonal": 0.09810731914572308
+        "worst_coupling": 0.1506264647069898,
+        "worst_coupling_added_mass": 0.07378834808036941,
+        "worst_coupling_damping": 0.1506264647069898,
+        "worst_diagonal": 0.23081279112531758,
+        "worst_diagonal_added_mass": 0.09810731914572308,
+        "worst_diagonal_damping": 0.23081279112531758
       },
       {
         "level": 3,
         "n_faces": 256,
-        "worst_coupling": 0.039203894406923845,
-        "worst_diagonal": 0.04633485246175883
+        "worst_coupling": 0.0652131730062377,
+        "worst_coupling_added_mass": 0.039203894406923845,
+        "worst_coupling_damping": 0.0652131730062377,
+        "worst_diagonal": 0.09379376854990516,
+        "worst_diagonal_added_mass": 0.04633485246175883,
+        "worst_diagonal_damping": 0.09379376854990516
       },
       {
         "level": 4,
         "n_faces": 1024,
-        "worst_coupling": 0.030583741516504424,
-        "worst_diagonal": 0.03300836020325538
+        "worst_coupling": 0.042404186097188955,
+        "worst_coupling_added_mass": 0.030583741516504424,
+        "worst_coupling_damping": 0.042404186097188955,
+        "worst_diagonal": 0.05818682870816025,
+        "worst_diagonal_added_mass": 0.03300836020325538,
+        "worst_diagonal_damping": 0.05818682870816025
       }
     ],
     "sphere_r1_z-0.5": [
@@ -19145,13 +19169,21 @@
         "level": 2,
         "n_faces": 270,
         "worst_coupling": 0.0,
-        "worst_diagonal": 0.07249403330272008
+        "worst_coupling_added_mass": 0.0,
+        "worst_coupling_damping": 0.0,
+        "worst_diagonal": 0.0875132804947851,
+        "worst_diagonal_added_mass": 0.07249403330272008,
+        "worst_diagonal_damping": 0.0875132804947851
       },
       {
         "level": 3,
         "n_faces": 1026,
         "worst_coupling": 0.0,
-        "worst_diagonal": 0.06523207229094585
+        "worst_coupling_added_mass": 0.0,
+        "worst_coupling_damping": 0.0,
+        "worst_diagonal": 0.06523207229094585,
+        "worst_diagonal_added_mass": 0.06523207229094585,
+        "worst_diagonal_damping": 0.043212838465274774
       }
     ],
     "sphere_r1_z-0.5_c0": [
@@ -19159,13 +19191,21 @@
         "level": 2,
         "n_faces": 270,
         "worst_coupling": 0.08150204009279875,
-        "worst_diagonal": 0.08896856195859816
+        "worst_coupling_added_mass": 0.08150204009279875,
+        "worst_coupling_damping": 0.07075845766539728,
+        "worst_diagonal": 0.08896856195859816,
+        "worst_diagonal_added_mass": 0.08896856195859816,
+        "worst_diagonal_damping": 0.0875132804947851
       },
       {
         "level": 3,
         "n_faces": 1026,
         "worst_coupling": 0.06624401496233095,
-        "worst_diagonal": 0.06705166051637783
+        "worst_coupling_added_mass": 0.06624401496233095,
+        "worst_coupling_damping": 0.04401892578373952,
+        "worst_diagonal": 0.06705166051637783,
+        "worst_diagonal_added_mass": 0.06705166051637783,
+        "worst_diagonal_damping": 0.044719347249150165
       }
     ]
   },
