@@ -1,0 +1,519 @@
+{
+  "remediation_items": {
+    "R1_cache_manifest": "9 repos to fetch",
+    "R2_schema_patch": "gap_anchor/gap_anchors added to schema",
+    "R3_id_normalisation": "5 example ids to normalise (4-segment -> 3-segment)",
+    "R4_locator_normalisation": "71 locators to fix",
+    "C8_scientific_content": "14 anchors cross-checked",
+    "R5_assessment_gap": "0/197 evidence assessed"
+  },
+  "audit_summary": {
+    "claims": 162,
+    "evidence": 197,
+    "C1_schema_failures": [
+      {
+        "id": "tkc:oss-lbm:mflbm-csf-multiphase",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-aa-streaming",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-mpi-openacc-hybrid",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-comm-compute-overlap",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-soa-layout",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-mrt-collision",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-domain-decomposition",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-contact-angle-akail",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-checkpoint-restart",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:mflbm-bsd3-license",
+        "error": "Additional properties are not allowed ('gap_anchors' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-free-energy-catalog",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-fe-vtable-contract",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-ch-fd-evolution",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-ch-flux-first-order-mu",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-symm-phi4-density",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-symm-analytic-sigma",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-symm-mu-discrete",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-force-methods",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-no-gauge-formulation",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-no-scmp-pseudopotential",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-poiseuille-init",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-shear-wave-init",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-gradient-stencil-selection",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-spinodal-smoke-test",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-unit-test-ch-scope",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-sigma-droplet-calibration",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:ludwig-ansi-c-not-fortran",
+        "error": "Additional properties are not allowed ('gap_anchor' was unexpected)"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:pr-eos",
+        "error": "'tkc:oss-lbm:thermalmulti:pr-eos' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:cs-eos",
+        "error": "'tkc:oss-lbm:thermalmulti:cs-eos' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:modified-guo-forcing",
+        "error": "'tkc:oss-lbm:thermalmulti:modified-guo-forcing' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:semi-hybrid-thermal",
+        "error": "'tkc:oss-lbm:thermalmulti:semi-hybrid-thermal' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:maxwell-construction",
+        "error": "'tkc:oss-lbm:thermalmulti:maxwell-construction' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:latent-heat-eos",
+        "error": "'tkc:oss-lbm:thermalmulti:latent-heat-eos' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:mrt-thermal",
+        "error": "'tkc:oss-lbm:thermalmulti:mrt-thermal' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:pool-boiling",
+        "error": "'tkc:oss-lbm:thermalmulti:pool-boiling' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:evaporating-droplet",
+        "error": "'tkc:oss-lbm:thermalmulti:evaporating-droplet' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:laplace-law",
+        "error": "'tkc:oss-lbm:thermalmulti:laplace-law' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:wall-wettability",
+        "error": "'tkc:oss-lbm:thermalmulti:wall-wettability' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:thermo-consistency",
+        "error": "'tkc:oss-lbm:thermalmulti:thermo-consistency' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:fluid-properties",
+        "error": "'tkc:oss-lbm:thermalmulti:fluid-properties' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:interaction-potential",
+        "error": "'tkc:oss-lbm:thermalmulti:interaction-potential' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:phase-separation",
+        "error": "'tkc:oss-lbm:thermalmulti:phase-separation' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:d2-law",
+        "error": "'tkc:oss-lbm:thermalmulti:d2-law' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tkc:oss-lbm:thermalmulti:openlb-compat",
+        "error": "'tkc:oss-lbm:thermalmulti:openlb-compat' does not match '^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-force-matrix",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-guo-force",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-poiseuille-l2",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-sc-potential",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-tg-decay",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:kruger-young-laplace",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:lbmpy-creation-functions",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:lbmpy-force-models-list",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:lbmpy-mcmp-tutorial",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:lbmpy-scmp-test",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-free-energy",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:luma-kernels",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mcmp-lbm-eos",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mcmp-lbm-mrt",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mcmp-lbm-taichi",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mplbm-ut-omega-order",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mplbm-ut-simple-potential",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mplbm-ut-two-lattice",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:mplbm-ut-wetting",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-csf-force",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-isotropy-weights",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-porter-force-collision",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-porter-velocity",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-pr-eos-code",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:openlbmpm-wetting-bc",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:sailfish-barycentric-velocity",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:sailfish-chemical-potential",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:sailfish-free-energy-eq",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:sailfish-mako-templates",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:sailfish-sympy-grids",
+        "error": "'source' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-enum-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-vtable-mu-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-ch-equation-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-ch-fd-scheme-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-ch-flux-mu-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-symm-fed-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-symm-sigma-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-symm-xi-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-fe-symm-mu-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-force-method-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-thermo-stress-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-poiseuille-comment-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-poiseuille-formula-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-shear-wave-init-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-sigma-calib-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-gradient-rt-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-grad-27pt-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-spinodal-inp-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-unit-ch-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-readme-ansi-c-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-no-scmp-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:ludwig-no-gauge-src",
+        "error": "'source_type' is a required property"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:pr-eos-src",
+        "error": "'tke:oss-lbm:thermalmulti:pr-eos-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:cs-eos-src",
+        "error": "'tke:oss-lbm:thermalmulti:cs-eos-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:guo-forcing-src",
+        "error": "'tke:oss-lbm:thermalmulti:guo-forcing-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:semi-hybrid-src",
+        "error": "'tke:oss-lbm:thermalmulti:semi-hybrid-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:maxwell-src",
+        "error": "'tke:oss-lbm:thermalmulti:maxwell-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:latent-heat-src",
+        "error": "'tke:oss-lbm:thermalmulti:latent-heat-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:mrt-thermal-src",
+        "error": "'tke:oss-lbm:thermalmulti:mrt-thermal-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:pool-boiling-src",
+        "error": "'tke:oss-lbm:thermalmulti:pool-boiling-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:evap-droplet-src",
+        "error": "'tke:oss-lbm:thermalmulti:evap-droplet-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:laplace-src",
+        "error": "'tke:oss-lbm:thermalmulti:laplace-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:wettability-src",
+        "error": "'tke:oss-lbm:thermalmulti:wettability-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:thermo-consist-src",
+        "error": "'tke:oss-lbm:thermalmulti:thermo-consist-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:fluid-props-src",
+        "error": "'tke:oss-lbm:thermalmulti:fluid-props-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:interaction-pot-src",
+        "error": "'tke:oss-lbm:thermalmulti:interaction-pot-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:phase-sep-src",
+        "error": "'tke:oss-lbm:thermalmulti:phase-sep-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:d2law-src",
+        "error": "'tke:oss-lbm:thermalmulti:d2law-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      },
+      {
+        "id": "tke:oss-lbm:thermalmulti:compat-src",
+        "error": "'tke:oss-lbm:thermalmulti:compat-src' does not match '^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$'"
+      }
+    ],
+    "C4_unverifiable": 135,
+    "C4_verified": 18,
+    "C5_unmapped": [
+      "tkc:oss-lbm:pylbm-equiv-eq",
+      "tkc:oss-lbm:pylbm-stability",
+      "tkc:oss-lbm:pylbm-bfl-bounce-back",
+      "tkc:oss-lbm:pylbm-linear-bb-family",
+      "tkc:oss-lbm:pylbm-sympy-scheme",
+      "tkc:oss-lbm:lettuce-torch-context",
+      "tkc:oss-lbm:lettuce-bgk-differentiable",
+      "tkc:oss-lbm:lettuce-native-cuda",
+      "tkc:oss-lbm:lbmpy-chapman-enskog",
+      "tkc:oss-lbm:lbmpy-pipeline",
+      "tkc:oss-lbm:lbmpy-method-spaces",
+      "tkc:oss-lbm:xlb-warp-kernel",
+      "tkc:oss-lbm:xlb-jax-distribute",
+      "tkc:oss-lbm:xlb-operator-pattern",
+      "tkc:oss-lbm:lettuce-test-invariants",
+      "tkc:oss-lbm:lettuce-test-parametrize",
+      "tkc:oss-lbm:xlb-test-organization",
+      "tkc:oss-lbm:lbm-principles-practice-set-equi",
+      "tkc:oss-lbm:lbm-principles-practice-collide",
+      "tkc:oss-lbm:lbm-principles-practice-get-epsilon",
+      "tkc:oss-lbm:lbm-principles-practice-get-normal",
+      "tkc:oss-lbm:lbm-principles-practice-interface-mass-exchange",
+      "tkc:oss-lbm:lbm-principles-practice-update-rho-u",
+      "tkc:oss-lbm:lbm-principles-practice-set-inlet",
+      "tkc:oss-lbm:lbm-principles-practice-set-outlet",
+      "tkc:oss-lbm:lbm-principles-practice-evolve",
+      "tkc:oss-lbm:fing-free-energy-calibration",
+      "tkc:oss-lbm:fing-chemical-potential-sign-equivalence",
+      "tkc:oss-lbm:fing-zou-he-force-corrected",
+      "tkc:oss-lbm:fing-halfway-bounceback",
+      "tkc:oss-lbm:fing-wetting-via-order-parameter",
+      "tkc:oss-lbm:fing-validation-no-angle-measurement",
+      "tkc:oss-lbm:fing-one-sided-initial-perturbation",
+      "tkc:oss-lbm:fing-mixed-viscosity-relaxation",
+      "tkc:oss-lbm:fing-mobility-fixed-relaxation",
+      "tkc:oss-lbm:fing-guo-forcing-chemical-potential",
+      "tkc:oss-lbm:fing-spectral-ab2-integrating-factor",
+      "tkc:oss-lbm:fing-no-buoyancy-capillary-driven"
+    ],
+    "acceptance_met": false
+  },
+  "next_steps": [
+    "1. Review patches in out-dir",
+    "2. Fetch missing repos to oss-cache (R1)",
+    "3. Apply schema patch to TensorKnowledge (R2)",
+    "4. Normalise ids and locators (R3, R4)",
+    "5. Re-run audit_oss_lbm_claims.py",
+    "6. Verify acceptance_met == true"
+  ]
+}

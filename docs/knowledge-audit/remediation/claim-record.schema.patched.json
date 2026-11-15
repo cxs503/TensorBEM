@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/cxs503/TensorKnowledge/blob/main/schemas/claim-record.schema.json",
+  "title": "Claim Record",
+  "description": "Atomic, independently assessable knowledge claim. Evidence is linked by identifiers; a claim record does not itself assert truth. epistemic_status=\"draft\" marks a producer-recorded claim that has not yet been independently reviewed (additive to the original vocabulary; see knowledge/sediment/m2591/INDEX.md).",
+  "type": "object",
+  "required": [
+    "id",
+    "statement",
+    "claim_type",
+    "epistemic_status",
+    "created_at",
+    "version"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^tkc:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$"
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_type": {
+      "enum": [
+        "definition",
+        "descriptive",
+        "causal",
+        "predictive",
+        "normative",
+        "methodological",
+        "mathematical",
+        "interpretive",
+        "hypothesis",
+        "other"
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "population": {
+          "type": "string",
+          "minLength": 1
+        },
+        "system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geography": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "modality": {
+      "enum": [
+        "asserted",
+        "conditional",
+        "probabilistic",
+        "hypothetical",
+        "normative",
+        "question"
+      ]
+    },
+    "epistemic_status": {
+      "description": "Epistemic standing of the claim. \"draft\" is the pre-review state written by producers (e.g. the sediment pipeline): a draft claim has evidence attached but no independent review-event yet, and must not be cited as if it were reviewed.",
+      "enum": [
+        "draft",
+        "established",
+        "well-supported",
+        "provisional",
+        "contested",
+        "speculative",
+        "superseded",
+        "not-assessed",
+        "draft"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^tke:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$"
+      },
+      "uniqueItems": true
+    },
+    "relation_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^tkr:[a-z][a-z0-9-]*:[a-z0-9][a-z0-9-]*$"
+      },
+      "uniqueItems": true
+    },
+    "valid_time": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gap_anchor": {
+      "type": "string",
+      "pattern": "^GAP-[A-Z0-9][A-Z0-9-]*$",
+      "description": "Primary GAP anchor this claim maps to"
+    },
+    "gap_anchors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^GAP-[A-Z0-9][A-Z0-9-]*$"
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "All GAP anchors this claim maps to"
+    }
+  },
+  "additionalProperties": false,
+  "anyOf": [
+    {
+      "required": [
+        "gap_anchor"
+      ]
+    },
+    {
+      "required": [
+        "gap_anchors"
+      ]
+    }
+  ]
+}

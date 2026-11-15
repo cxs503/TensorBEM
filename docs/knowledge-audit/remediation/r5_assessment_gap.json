@@ -1,0 +1,7 @@
+{
+  "self_approved": [],
+  "evidence_assessed": 0,
+  "evidence_total": 197,
+  "assessment_coverage": "0/197",
+  "recommendation": "Rotate producer/assessor agent ids and assert captured_by != assessed_by"
+}
