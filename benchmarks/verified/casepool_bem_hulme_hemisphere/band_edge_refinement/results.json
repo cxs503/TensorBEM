@@ -1,0 +1,315 @@
+{
+ "absence_reason": null,
+ "case_code": "BEM-HULME-HEMISPHERE",
+ "cells": [
+  {
+   "A11_dimless": 0.16183588248989664,
+   "A33_dimless": 0.42067823272870186,
+   "B11_dimless": 0.18235593520938181,
+   "B33_dimless": 0.03192672720124228,
+   "Fx_dimless": 0.6571858635573304,
+   "Fx_imag": -0.07131780443094571,
+   "Fx_real": -0.6533046992259764,
+   "Fz_dimless": 0.1970183551951022,
+   "Fz_imag": -0.050640042254046544,
+   "Fz_real": -0.19039910295033385,
+   "chief": true,
+   "condition_number": 2.778331358926212,
+   "delta_phase_Fx_deg": 0.5422422562762108,
+   "delta_phase_Fz_deg": -0.23864853681524778,
+   "diffraction_relative_residual": 0.0003503338079600634,
+   "diffraction_solve_method": "lstsq",
+   "diffraction_stationarity": 5.199593847160861e-13,
+   "id": "ka3.5_sub4",
+   "ka": 3.5,
+   "kind": "extension",
+   "mesh_volume": 2.0821017981243184,
+   "mesh_waterplane_area": 3.1365484905459393,
+   "nabla_exact": 2.0943951023931953,
+   "name": "extension_ka3.5_n1024_chief_on",
+   "nu": 3.5,
+   "panels": 1024,
+   "phase_Fx_deg": -173.7699933976331,
+   "phase_Fz_deg": -165.10596974127188,
+   "radiation_relative_residual": 0.00044537979574307807,
+   "radiation_solve_method": "lstsq",
+   "radiation_stationarity": 3.6461534812806963e-13,
+   "reference": {
+    "A11_dimless": 0.16344297026378093,
+    "A33_dimless": 0.4224621660445701,
+    "B11_dimless": 0.18263714474912074,
+    "B33_dimless": 0.031062564192748256,
+    "Fx_dimless": 0.6611803348482506,
+    "Fz_dimless": 0.192817543255731,
+    "phase_Fx_deg": -174.3122356539093,
+    "phase_Fz_deg": -164.86732120445663
+   },
+   "rel_error_A11_dimless": -0.009832712727201511,
+   "rel_error_A33_dimless": -0.004222705508923678,
+   "rel_error_B11_dimless": -0.001539717126684212,
+   "rel_error_B33_dimless": 0.027820079602306952,
+   "rel_error_Fx_dimless": -0.006041424828276091,
+   "rel_error_Fz_dimless": 0.021786461275464533,
+   "solve_warnings": [],
+   "subdivisions": 4,
+   "wall_seconds": 78.19660353660583
+  },
+  {
+   "A11_dimless": 0.16302876057636512,
+   "A33_dimless": 0.4220256650189846,
+   "B11_dimless": 0.18257262504053157,
+   "B33_dimless": 0.031274227395129126,
+   "Fx_dimless": 0.6602370027073243,
+   "Fx_imag": -0.06699913707654992,
+   "Fx_real": -0.6568287565073175,
+   "Fz_dimless": 0.19386359169256734,
+   "Fz_imag": -0.050398887693766,
+   "Fz_real": -0.1871978747293185,
+   "chief": true,
+   "condition_number": 2.8167051511236547,
+   "delta_phase_Fx_deg": 0.1364879728358801,
+   "delta_phase_Fz_deg": -0.06434477746995526,
+   "diffraction_relative_residual": 4.651482332471454e-05,
+   "diffraction_solve_method": "qr",
+   "diffraction_stationarity": 1.3105996811407095e-12,
+   "id": "ka3.5_sub5",
+   "ka": 3.5,
+   "kind": "extension",
+   "mesh_volume": 2.0913126356037455,
+   "mesh_waterplane_area": 3.1403311569547525,
+   "nabla_exact": 2.0943951023931953,
+   "name": "extension_ka3.5_n4096_chief_on",
+   "nu": 3.5,
+   "panels": 4096,
+   "phase_Fx_deg": -174.17574768107343,
+   "phase_Fz_deg": -164.93166598192659,
+   "radiation_relative_residual": 5.735914811594683e-05,
+   "radiation_solve_method": "qr",
+   "radiation_stationarity": 2.708305877510225e-13,
+   "reference": {
+    "A11_dimless": 0.16344297026378257,
+    "A33_dimless": 0.42246216604456704,
+    "B11_dimless": 0.18263714474911885,
+    "B33_dimless": 0.031062564192748436,
+    "Fx_dimless": 0.6611803348482506,
+    "Fz_dimless": 0.19281754325573072,
+    "phase_Fx_deg": -174.3122356539093,
+    "phase_Fz_deg": -164.86732120445663
+   },
+   "rel_error_A11_dimless": -0.002534276553766473,
+   "rel_error_A33_dimless": -0.001033231045679983,
+   "rel_error_B11_dimless": -0.0003532671772541842,
+   "rel_error_B33_dimless": 0.0068140930371132155,
+   "rel_error_Fx_dimless": -0.0014267395613675367,
+   "rel_error_Fz_dimless": 0.00542506879391809,
+   "solve_warnings": [
+    "numpy.linalg.lstsq failed the least-squares stationarity audit (backend defect); recovered the solution through the Householder QR path",
+    "numpy.linalg.lstsq failed the least-squares stationarity audit (backend defect); recovered the solution through the Householder QR path"
+   ],
+   "subdivisions": 5,
+   "wall_seconds": 1956.7813489437103
+  },
+  {
+   "A11_dimless": 0.17651479840748743,
+   "A33_dimless": 0.43018523619786736,
+   "B11_dimless": 0.14933055999495815,
+   "B33_dimless": 0.022605540980634872,
+   "Fx_dimless": 0.5513759792735777,
+   "Fx_imag": 0.23714428707948293,
+   "Fx_real": -0.4977730985353273,
+   "Fz_dimless": 0.15426642675678878,
+   "Fz_imag": 0.03239487036628432,
+   "Fz_real": -0.15082673104678532,
+   "chief": true,
+   "condition_number": 14.803996414371047,
+   "delta_phase_Fx_deg": -4.964034904807761,
+   "delta_phase_Fz_deg": 0.3648364514070579,
+   "diffraction_relative_residual": 0.0013492632628640782,
+   "diffraction_solve_method": "lstsq",
+   "diffraction_stationarity": 9.691635637513137e-14,
+   "id": "ka4_sub4",
+   "ka": 4.0,
+   "kind": "extension",
+   "mesh_volume": 2.0821017981243184,
+   "mesh_waterplane_area": 3.1365484905459393,
+   "nabla_exact": 2.0943951023931953,
+   "name": "extension_ka4_n1024_chief_on",
+   "nu": 4.0,
+   "panels": 1024,
+   "phase_Fx_deg": 154.52638368779978,
+   "phase_Fz_deg": 167.87805774002237,
+   "radiation_relative_residual": 0.001011819384799009,
+   "radiation_solve_method": "lstsq",
+   "radiation_stationarity": 1.177203284082104e-13,
+   "reference": {
+    "A11_dimless": 0.16203642284846012,
+    "A33_dimless": 0.43221004667735025,
+    "B11_dimless": 0.15108400738228453,
+    "B33_dimless": 0.02189410963181751,
+    "Fx_dimless": 0.5625209334011358,
+    "Fz_dimless": 0.15142551760234077,
+    "phase_Fx_deg": 159.49041859260754,
+    "phase_Fz_deg": 167.5132212886153
+   },
+   "rel_error_A11_dimless": 0.08935259927681688,
+   "rel_error_A33_dimless": -0.004684783463616314,
+   "rel_error_B11_dimless": -0.011605777591599588,
+   "rel_error_B33_dimless": 0.03249418956884541,
+   "rel_error_Fx_dimless": -0.019812514460880705,
+   "rel_error_Fz_dimless": 0.018761099182163846,
+   "solve_warnings": [],
+   "subdivisions": 4,
+   "wall_seconds": 107.18660306930542
+  },
+  {
+   "A11_dimless": 0.16557449744948163,
+   "A33_dimless": 0.43171131825035813,
+   "B11_dimless": 0.1508133571262372,
+   "B33_dimless": 0.022067926849292815,
+   "Fx_dimless": 0.5595239315502967,
+   "Fx_imag": 0.20709216509292463,
+   "Fx_real": -0.5197882887624787,
+   "Fz_dimless": 0.15212866373771913,
+   "Fz_imag": 0.03265105496198243,
+   "Fz_real": -0.14858344100367854,
+   "chief": true,
+   "condition_number": 13.709810325320674,
+   "delta_phase_Fx_deg": -1.2135654727469785,
+   "delta_phase_Fz_deg": 0.093081029750266,
+   "diffraction_relative_residual": 0.00016216866680683652,
+   "diffraction_solve_method": "qr",
+   "diffraction_stationarity": 3.615393669548319e-13,
+   "id": "ka4_sub5",
+   "ka": 4.0,
+   "kind": "extension",
+   "mesh_volume": 2.0913126356037455,
+   "mesh_waterplane_area": 3.1403311569547525,
+   "nabla_exact": 2.0943951023931953,
+   "name": "extension_ka4_n4096_chief_on",
+   "nu": 4.0,
+   "panels": 4096,
+   "phase_Fx_deg": 158.27685311986053,
+   "phase_Fz_deg": 167.60630231836558,
+   "radiation_relative_residual": 0.0001221413915794872,
+   "radiation_solve_method": "qr",
+   "radiation_stationarity": 1.245045406380945e-13,
+   "reference": {
+    "A11_dimless": 0.16203642284846187,
+    "A33_dimless": 0.43221004667734725,
+    "B11_dimless": 0.15108400738228256,
+    "B33_dimless": 0.02189410963181767,
+    "Fx_dimless": 0.5625209334011356,
+    "Fz_dimless": 0.15142551760234077,
+    "phase_Fx_deg": 159.4904185926075,
+    "phase_Fz_deg": 167.5132212886153
+   },
+   "rel_error_A11_dimless": 0.021835057444637665,
+   "rel_error_A33_dimless": -0.0011539029016635158,
+   "rel_error_B11_dimless": -0.0017913891796670835,
+   "rel_error_B33_dimless": 0.00793899456968759,
+   "rel_error_Fx_dimless": -0.005327805016461106,
+   "rel_error_Fz_dimless": 0.004643511519801426,
+   "solve_warnings": [
+    "numpy.linalg.lstsq failed the least-squares stationarity audit (backend defect); recovered the solution through the Householder QR path",
+    "numpy.linalg.lstsq failed the least-squares stationarity audit (backend defect); recovered the solution through the Householder QR path"
+   ],
+   "subdivisions": 5,
+   "wall_seconds": 2255.8841485977173
+  }
+ ],
+ "criteria": {
+  "R1_ladder_is_self_consistent": {
+   "criterion": "1024-panel rungs reproduce band_current_code bit for bit (max |delta rel_error| == 0)",
+   "measured": {
+    "ka3.5": 0.0,
+    "ka4": 0.0
+   },
+   "pass": true
+  },
+  "R2_ka4_error_falls_under_refinement": {
+   "criterion": "band_max(ka=4, 4096) < band_max(ka=4, 1024)",
+   "measured": {
+    "1024": 0.08935259927681688,
+    "4096": 0.021835057444637665
+   },
+   "pass": true
+  },
+  "R3_credited_band_edge_localised": {
+   "criterion": "the largest predeclared ka that passes on the case mesh is reported, together with the mesh (if any) at which the first failing ka would pass",
+   "measured": {
+    "credited_ka_on_case_mesh": [
+     3.5
+    ],
+    "first_failing_ka": 4.0,
+    "first_failing_ka_passes_at_panels": 4096
+   },
+   "pass": true
+  }
+ },
+ "driver": "band_edge_refinement",
+ "gate": 0.05,
+ "ka_edge": [
+  3.5,
+  4.0
+ ],
+ "ladders": {
+  "3.5": {
+   "ladder": [
+    {
+     "band_max": 0.027820079602306952,
+     "panels": 1024
+    },
+    {
+     "band_max": 0.0068140930371132155,
+     "panels": 4096
+    }
+   ],
+   "observed_panel_exponent": 1.0147664985994915,
+   "ratio": 4.082726703434167,
+   "richardson_limit_band_max": 2.6020852139652106e-18
+  },
+  "4": {
+   "ladder": [
+    {
+     "band_max": 0.08935259927681688,
+     "panels": 1024
+    },
+    {
+     "band_max": 0.021835057444637665,
+     "panels": 4096
+    }
+   ],
+   "observed_panel_exponent": 1.0164316857016793,
+   "ratio": 4.092162317565161,
+   "richardson_limit_band_max": 3.469446951953614e-18
+  }
+ },
+ "metadata": {
+  "generated_utc": "2026-11-15T20:11:23Z",
+  "git_commit": null,
+  "git_dirty": null,
+  "host": "node330",
+  "numpy": "2.0.1",
+  "python": "3.11.6",
+  "source_sha256": {
+   "src/tensorbem/analytic.py": "68e66e5530e2d88c9de8baf794b40001281c13e2c5338cf08bb30bae0eec8799",
+   "src/tensorbem/benchmarks/hulme_hemisphere_case.py": "7caf215c5939c3d00594cb19f3cee01ae47b307292217b24517d397302621ad5",
+   "src/tensorbem/free_surface_solver3d.py": "e7b545bb56a2a6ca1f0c8840b51e1e97454a8d35da44c705af0a673136cfb4e6",
+   "src/tensorbem/geometry3d.py": "2b5f54d2474fc2948ecc2025e29331bc532b755fbf62f2b1d1c1efd44cefc2f2"
+  },
+  "thread_env": {
+   "MKL_NUM_THREADS": null,
+   "NUMEXPR_NUM_THREADS": null,
+   "OMP_NUM_THREADS": null,
+   "OPENBLAS_NUM_THREADS": null,
+   "VECLIB_MAXIMUM_THREADS": null
+  }
+ },
+ "missing_cells": [],
+ "repro_cmd": "PYTHONPATH=src python benchmarks/verified/casepool_bem_hulme_hemisphere/band_edge_refinement.py --out-dir benchmarks/verified/casepool_bem_hulme_hemisphere/band_edge_refinement --parallel 2",
+ "subdivisions": [
+  4,
+  5
+ ],
+ "verdict": "PASS"
+}
