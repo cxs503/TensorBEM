@@ -64,8 +64,7 @@ def test_analytic_reference_recomputes() -> None:
 
 
 def test_patch_area_measure_is_exact() -> None:
-    mesh = submerged_sphere_mesh(1, radius=xval.RADIUS, submergence=xval.SUBMERGEENCE) if False else \
-        submerged_sphere_mesh(1, radius=xval.RADIUS, submergence=xval.SUBMERGENCE)
+    mesh = submerged_sphere_mesh(1, radius=xval.RADIUS, submergence=xval.SUBMERGENCE)
     patch = spherical_patch_areas(mesh.vertices, mesh.faces, center=xval.CENTER, radius=xval.RADIUS)
     assert patch.sum() == pytest.approx(4.0 * math.pi * xval.RADIUS**2, rel=1e-12)
     assert patch.sum() > mesh.areas.sum()
