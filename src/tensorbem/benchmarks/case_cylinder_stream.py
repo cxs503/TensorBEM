@@ -709,12 +709,17 @@ def near_wall_study(
 
     half = float(NEAR_WALL_LINEAR_FACTOR)
     linear_half = [
-        {"panels": level["panels"], "max_relative_velocity_error": linear_at(level, half)}
+        {
+            "panels": level["panels"],
+            "h_max_over_radius": level["h_max_over_radius"],
+            "max_relative_velocity_error": linear_at(level, half),
+        }
         for level in levels
     ]
     constant_half = [
         {
             "panels": level["panels"],
+            "h_max_over_radius": level["h_max_over_radius"],
             "max_relative_velocity_error": error_at(level, half),
         }
         for level in levels
