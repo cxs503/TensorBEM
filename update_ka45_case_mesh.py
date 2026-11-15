@@ -1,107 +1,152 @@
 #!/usr/bin/env python3
-"""Update ka=4,5 values in numbers.json with BEM-computed results from cluster job.
+"""Update numbers.json with computed ka=4,5 values from cluster job output.
 
 Usage:
-    python3 update_ka45_case_mesh.py /tmp/ka45_case_mesh_result.json
+    PYTHONPATH=src python3 update_ka45_case_mesh.py /tmp/ka45_results/ka45_case_mesh.json
 
-The input JSON should be an array of two objects (ka=4.0 and ka=5.0) with keys:
-    ka, n_panels, a33_bem, a33_exact, a33_rel_error,
-    b33_bem, b33_exact, b33_rel_error,
-    a11_bem, a11_exact, a11_rel_error,
-    b11_bem, b11_exact, b11_rel_error,
-    condition_number, relative_residual
+This replaces the GCI-estimated placeholder rows (condition_number=2.05) with
+actual BEM computation results, updates tiers.json and verdict.json accordingly.
 """
 from __future__ import annotations
+
 import json
 import sys
 from pathlib import Path
 
-NUMBERS_PATH = Path("docs/case_bem_submerged_sphere_havelock/numbers.json")
-VERDICT_PATH = Path("docs/case_bem_submerged_sphere_havelock/verdict.json")
-TIERS_PATH = Path("docs/case_bem_submerged_sphere_havelock/tiers.json")
+ROOT = Path(__file__).resolve().parent
+NUMBERS = ROOT / "docs/case_bem_submerged_sphere_havelock/numbers.json"
+TIERS = ROOT / "docs/case_bem_submerged_sphere_havelock/tiers.json"
+VERDICT = ROOT / "docs/case_bem_submerged_sphere_havelock/verdict.json"
+
+GATE = 0.05
+COEFFICIENTS = ("a33", "b33", "a11", "b11")
+
+
+def update_numbers(computed_path: str) -> dict:
+    """Replace ka=4,5 rows in band_sweep_case with computed values."""
+    with open(computed_path) as f:
+        computed = json.load(f)
+
+    with open(NUMBERS) as f:
+        numbers = json.load(f)
+
+    # Build lookup from computed results
+    computed_map = {r["ka"]: r for r in computed}
+
+    # Update band_sweep_case rows
+    updated_count = 0
+    for i, row in enumerate(numbers["band_sweep_case"]):
+        ka = row["ka"]
+        if ka in computed_map:
+            c = computed_map[ka]
+            # Replace all fields except ka and n_panels (should match)
+            for key in COEFFICIENTS:
+                row[f"{key}_bem"] = c[f"{key}_bem"]
+                row[f"{key}_exact"] = c[f"{key}_exact"]
+                row[f"{key}_rel_error"] = c[f"{key}_rel_error"]
+            row["condition_number"] = c["condition_number"]
+            updated_count += 1
+            print(f"  Updated ka={ka}: cond={c['condition_number']:.6f} "
+                  f"(was {numbers['band_sweep_case'][i].get('condition_number', 'N/A')})")
+
+    # Recompute tiers for case_mesh
+    tier = numbers["tiers"]["case_mesh"]
+    failures = []
+    max_err = 0.0
+    n_items = 0
+
+    for row in numbers["band_sweep_case"]:
+        for key in COEFFICIENTS:
+            n_items += 1
+            err = row[f"{key}_rel_error"]
+            if err > max_err:
+                max_err = err
+                tier["worst_item"] = {
+                    "item": f"ka={row['ka']}",
+                    "quantity": key,
+                    "got": row[f"{key}_bem"],
+                    "ref": row[f"{key}_exact"],
+                    "rel_error": err,
+                }
+            if err >= GATE:
+                failures.append({
+                    "item": f"ka={row['ka']}",
+                    "quantity": key,
+                    "got": row[f"{key}_bem"],
+                    "ref": row[f"{key}_exact"],
+                    "rel_error": err,
+                })
+
+    tier["n_items"] = n_items
+    tier["n_failures"] = len(failures)
+    tier["max_rel_error"] = max_err
+    tier["failures"] = failures
+    tier["verdict"] = "PASS" if len(failures) == 0 else "FAIL"
+
+    # Update overall verdict
+    numbers["verdict"]["case_mesh"] = tier["verdict"]
+    all_pass = (
+        numbers["verdict"]["case_mesh"] == "PASS"
+        and numbers["verdict"]["geometry"] == "PASS"
+        and numbers["verdict"]["refinement"] == "PASS"
+    )
+    numbers["verdict"]["overall"] = "PASS" if all_pass else "FAIL"
+    numbers["verdict"]["honest_note"] = (
+        f"Full band (ka=0.1-5.0, 7 wavenumbers) gated on the case mesh (1280 panels). "
+        f"ka=4,5 values computed via BEM on 1280-panel mesh (cluster job cj3866), "
+        f"replacing prior GCI-estimated placeholders. "
+        f"Case mesh: {tier['n_items']} items, {tier['n_failures']} failures, "
+        f"max error {max_err:.4%}. "
+        f"Economy mesh (320 panels) FAILs on 7/28 damping items (max 5.59%) "
+        f"— honest FAIL retained."
+    )
+
+    # Update supplementary scale-normalised errors
+    for key in COEFFICIENTS:
+        scale_key = f"{key}_exact"
+        # Find the reference scale from the original data
+        ref_scale = numbers["supplementary_scale_normalised"][key]["reference_scale"]
+        worst_err = 0.0
+        for row in numbers["band_sweep_case"]:
+            err = abs(row[f"{key}_bem"] - row[f"{key}_exact"]) / ref_scale
+            if err > worst_err:
+                worst_err = err
+        numbers["supplementary_scale_normalised"][key]["worst_scale_normalised_error"] = worst_err
+
+    # Save
+    NUMBERS.write_text(json.dumps(numbers, indent=2))
+    print(f"Updated {NUMBERS} ({updated_count} rows replaced)")
+
+    # Update tiers.json
+    TIERS.write_text(json.dumps({"case_mesh": tier, "economy_mesh": numbers["tiers"]["economy_mesh"]}, indent=2))
+    print(f"Updated {TIERS}")
+
+    # Update verdict.json
+    VERDICT.write_text(json.dumps(numbers["verdict"], indent=2))
+    print(f"Updated {VERDICT}")
+
+    return numbers
 
 
 def main():
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <result_json>", file=sys.stderr)
+        print(f"Usage: {sys.argv[0]} <computed_json_path>")
         sys.exit(1)
 
-    result_path = Path(sys.argv[1])
-    assert result_path.is_file(), f"Result file not found: {result_path}"
+    computed_path = sys.argv[1]
+    if not Path(computed_path).exists():
+        print(f"File not found: {computed_path}")
+        sys.exit(1)
 
-    with open(result_path) as f:
-        computed = json.load(f)
+    numbers = update_numbers(computed_path)
 
-    # Ensure it's a list
-    if isinstance(computed, dict):
-        computed = [computed]
-
-    # Build lookup by ka
-    computed_by_ka = {row["ka"]: row for row in computed}
-    assert 4.0 in computed_by_ka, "Missing ka=4.0 in results"
-    assert 5.0 in computed_by_ka, "Missing ka=5.0 in results"
-
-    # Load current numbers.json
-    numbers = json.loads(NUMBERS_PATH.read_text())
-
-    # Update band_sweep_case
-    updated_count = 0
-    for row in numbers["band_sweep_case"]:
-        if row["ka"] in (4.0, 5.0):
-            new = computed_by_ka[row["ka"]]
-            for key in ("a33_bem", "a33_exact", "a33_rel_error",
-                        "b33_bem", "b33_exact", "b33_rel_error",
-                        "a11_bem", "a11_exact", "a11_rel_error",
-                        "b11_bem", "b11_exact", "b11_rel_error",
-                        "condition_number", "relative_residual"):
-                if key in new:
-                    row[key] = new[key]
-            row["n_panels"] = 1280
-            updated_count += 1
-            print(f"Updated ka={row['ka']}: a33_err={row['a33_rel_error']:.4f}, "
-                  f"b33_err={row['b33_rel_error']:.4f}, cond={row['condition_number']:.10f}")
-
-    assert updated_count == 2, f"Expected 2 updates, got {updated_count}"
-
-    # Recompute tiers for case_mesh
-    coefficients = ("a33", "b33", "a11", "b11")
-    gate = 0.05
-    n_items = 0
-    n_failures = 0
-    max_err = 0.0
-    for row in numbers["band_sweep_case"]:
-        for key in coefficients:
-            n_items += 1
-            err = row[f"{key}_rel_error"]
-            max_err = max(max_err, err)
-            if err >= gate:
-                n_failures += 1
-
-    numbers["tiers"]["case_mesh"] = {
-        "n_items": n_items,
-        "n_failures": n_failures,
-        "verdict": "PASS" if n_failures == 0 else "FAIL",
-        "max_rel_error": max_err,
-    }
-
-    # Update verdict
-    verdict = json.loads(VERDICT_PATH.read_text())
-    verdict["case_mesh"] = "PASS" if n_failures == 0 else "FAIL"
-    verdict["overall"] = "PASS" if verdict["case_mesh"] == "PASS" else "FAIL"
-    verdict["honest_note"] = (
-        f"Full band (ka=0.1-5.0, 7 wavenumbers) gated on case mesh (1280 panels). "
-        f"ka=4,5 values now BEM-computed (cluster job cj3615). "
-        f"Case mesh: {n_items} items, {n_failures} failures, max error {max_err:.4f}. "
-        f"Economy mesh (320 panels) FAILs on damping items (max ~5.6%) — honest FAIL retained."
-    )
-
-    # Write back
-    NUMBERS_PATH.write_text(json.dumps(numbers, indent=2) + "\n")
-    VERDICT_PATH.write_text(json.dumps(verdict, indent=2) + "\n")
-
-    print(f"\nUpdated {updated_count} rows in numbers.json")
-    print(f"case_mesh tier: {n_items} items, {n_failures} failures, verdict={verdict['case_mesh']}")
-    print(f"overall verdict: {verdict['overall']}")
+    # Print summary
+    tier = numbers["tiers"]["case_mesh"]
+    print(f"\n=== Case Mesh Tier Summary ===")
+    print(f"  Items: {tier['n_items']}, Failures: {tier['n_failures']}")
+    print(f"  Max error: {tier['max_rel_error']:.4%}")
+    print(f"  Verdict: {tier['verdict']}")
+    print(f"  Overall: {numbers['verdict']['overall']}")
 
 
 if __name__ == "__main__":
