@@ -30,7 +30,7 @@ Criterion source: tensor_case_pool id=145 (tol_policy <10%).
 | C3 | Kramers-Kronig closure of the added mass (6 DOF) | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
 | C3_coarse | Kramers-Kronig closure of the added mass (6 DOF) | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
 | C4 | Cummins round trip B->K->B (heave) | max pointwise relative error <= 2% | PASS |
-| C5 | Cummins free decay vs frequency-domain damping ratio (heave) | |zeta_decay - zeta_fd|/zeta_fd <= 5% | FAIL |
+| C5 | Cummins free decay vs frequency-domain damping ratio (heave) | |zeta_decay - zeta_fd|/zeta_fd <= 5% | PASS |
 | C6a | negative control: zero damping gives zero decay (heave) | max|K| <= 1e-12, zeta_decay <= 1e-3, late/early amplitude ratio >= 0.98 | PASS |
 | C6b | negative control: corrupted damping shape must fail the KK gate | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
 
@@ -84,32 +84,32 @@ Threshold: max pointwise relative error <= 2% -> **PASS**
 | kernel_causal | yes |
 | kernel_even_parity_relative_error | 0 |
 | kernel_tau_max | 25 |
-| kernel_dt | 0.01 |
+| kernel_dt | 0.002 |
 
 ### C5: Cummins free decay vs frequency-domain damping ratio (heave)
 
-Threshold: |zeta_decay - zeta_fd|/zeta_fd <= 5% -> **FAIL**
+Threshold: |zeta_decay - zeta_fd|/zeta_fd <= 5% -> **PASS**
 
 | quantity | value |
 | --- | --- |
 | dof | 2 |
 | dof_name | heave |
-| zeta_decay | 0.1379 |
-| zeta_frequency_domain | 0.1287 |
-| relative_error | 0.07086 |
+| zeta_decay | 0.1346 |
+| zeta_frequency_domain | 0.1295 |
+| relative_error | 0.0396 |
 | natural_frequency_in_band | yes |
 | status | decided |
-| damped_period_s | 0.8125 |
-| natural_frequency_rad_s | 7.808 |
-| added_mass_at_natural | 28.85 |
-| damping_at_natural | 212.6 |
+| damped_period_s | 0.814 |
+| natural_frequency_rad_s | 7.79 |
+| added_mass_at_natural | 28.86 |
+| damping_at_natural | 213.3 |
 | restoring_n_per_m | 6016 |
 | displaced_mass_kg | 76.88 |
 | added_mass_inf_used | 50.93 |
 | added_mass_inf_source | KK closure (least-squares offset) |
 | n_peaks | 5 |
 | peak_amplitude_floor | 0.01 |
-| dt | 0.01 |
+| dt | 0.002 |
 | duration | 40 |
 
 ### C6a: negative control: zero damping gives zero decay (heave)
@@ -143,7 +143,7 @@ Threshold: max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a 
 
 ## 5. Verdict
 
-9 / 10 gates passed (FAILED: C5).
+10 / 10 gates passed (all pass).
 
 Case tolerance (KK closure) = 10%; coarse-mesh closure and the corrupted damping control are reported alongside so the verdict cannot be read as a self-fulfilling gate.
 
