@@ -35,3 +35,17 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 ```
 
 判级自评（诚实，非自声明生效）：L2 具备（非占位实现 + 入口 + 真实运行工件）；L3 具备（注册表/CLI/测试的真实调用面）；L4 具备（ref vs got 逐项 + 误差 + repro_cmd + CASE.md + 4 图全部落地）。
+
+## 第 4 轮对抗性复核（m21580）
+
+`docs/case_bem_submerged_sphere_havelock_round4/AUDIT.md`（工件 `audit.json`）复核本证据包，
+**不改动本目录已判 PASS 的 $ka\le3$ 结论**，三条 major 发现：
+
+1. 本目录 `capytaine_crosscheck.json` 原先只跑 $ka\le3$，其 PASS 对 $ka=4/5$ 无信息量；
+   本轮已把该工件补跑到整带，整带判定为 **FAIL**（$ka$=5, $b'_{11}$, 320 面元, +6.76%），
+   并归因为 capytaine 自身平面面元误差（加密到 9216 面元时偏差外推到 0，参考解在深潜极限与
+   Lamb 精确值差 <0.9%）。
+2. `numbers.json` 的 1280 面元 $ka$=4/5 两行为 320 面元 GCI 外推（`verdict.json` 自述），
+   但无 provenance 标记，`condition_number` 为两位数占位符 2.05（其余行均为 16 位）。
+   真值替换已递交集群（`cj3545`），本轮未返回——如实登记为未完成。
+3. `$ka\ge4$` 的 $B'$ 项量级 1e-5~1e-6，5% 相对判据在那 6 项上不携带信息，宜标为退化项。
