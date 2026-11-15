@@ -1,0 +1,29 @@
+{
+ "probe_omega": 2.0,
+ "points": [
+  {
+   "n_sections": 12,
+   "n_levels": 4,
+   "panel_count": 192,
+   "wall_s": 0.5886991024017334
+  },
+  {
+   "n_sections": 20,
+   "n_levels": 6,
+   "panel_count": 480,
+   "wall_s": 3.460878849029541
+  }
+ ],
+ "fitted_exponent": 1.9331884362342557,
+ "certified_mesh": [
+  60,
+  16
+ ],
+ "certified_panel_count": 3840,
+ "certified_wall_s_per_node": 192.76559202068185,
+ "certified_cpu_hours_for_band": 0.5354599778352274,
+ "declared_plan_cpu_hours": [
+  2.0,
+  4.0
+ ]
+}
