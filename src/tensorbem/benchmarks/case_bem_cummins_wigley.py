@@ -2011,6 +2011,83 @@ def truncation_decidability_gate(
     }
 
 
+#: Decay grades that the single-frequency estimator can actually decide; only
+#: these modes are scored by gate ``C5b``.  The other grades are reported.
+DECAY_SCORED_GRADES = ("within_bar", "beyond_bar")
+
+
+def decay_modes_gate(sweep: Sweep, *, audit: dict[str, Any] | None = None) -> dict[str, Any]:
+    """C5b: the same 5 % free-decay bar, scored on every *decidable* restoring mode.
+
+    Gate ``C5`` is declared on heave only.  :func:`dof_decay_audit` already
+    evaluates the identical estimator on heave, roll and pitch and grades each
+    mode, but the published verdict did not carry the result, so the wider record
+    lived only in a side audit.  This gate folds it into the verdict **without
+    widening the criterion**: a mode is *scored* only when its residual is decided
+    by the estimator (``within_bar`` / ``beyond_bar``); a mode whose residual
+    moves by more than the bar across defensible windows is *reported, not
+    scored*, because no defensible reading of that route can separate the two
+    sides of the comparison at a 5 % bar.
+
+    ``C5`` (heave) stays the case criterion; this gate states how far the
+    time-domain verification generalises over the rigid-body modes.
+    """
+    audit = dof_decay_audit(sweep) if audit is None else audit
+    bar = float(TOLERANCES["free_decay"])
+    modes: dict[str, Any] = {}
+    scored: list[str] = []
+    unscored: list[str] = []
+    failed: list[str] = []
+    for name, row in audit["modes"].items():
+        values = row["values"]
+        grade = str(row["grade"])
+        relative = values.get("relative_error")
+        relative = float(relative) if relative is not None else float("nan")
+        is_scored = grade in DECAY_SCORED_GRADES
+        passed = bool(is_scored and math.isfinite(relative) and relative <= bar)
+        modes[name] = {
+            "dof": int(values.get("dof", -1)),
+            "grade": grade,
+            "scored": is_scored,
+            "passed": passed if is_scored else None,
+            "relative_error": relative,
+            "zeta_decay": values.get("zeta_decay"),
+            "zeta_frequency_domain": values.get("zeta_frequency_domain"),
+            "natural_frequency_rad_s": values.get("natural_frequency_rad_s"),
+            "status": values.get("status"),
+        }
+        if is_scored:
+            scored.append(name)
+            if not passed:
+                failed.append(name)
+        else:
+            unscored.append(name)
+    return {
+        "id": "C5b",
+        "title": "Cummins free decay vs frequency-domain damping ratio, all decidable restoring modes",
+        "threshold": (
+            f"|zeta_decay - zeta_fd|/zeta_fd <= {bar:.0%} on every scored mode "
+            "(heave C5 is the case criterion; modes whose residual is not decided by "
+            "the single-frequency estimator are reported, not scored)"
+        ),
+        "tolerance": bar,
+        "passed": bool(scored) and not failed,
+        "values": {
+            "modes": modes,
+            "scored_modes": scored,
+            "unscored_modes": unscored,
+            "failed_modes": failed,
+            "restoring_modes": [DOF_NAMES[dof] for dof in RESTORING_MODES],
+            "estimator_note": (
+                "unscored = the residual moves by more than the bar across defensible "
+                "windows or a closed band top (see dof_decay_audit residual_probes), so "
+                "the single-frequency estimator cannot separate decay from frequency-"
+                "domain impedance at this bar"
+            ),
+        },
+    }
+
+
 def case_verdict(gates: dict[str, Any]) -> dict[str, Any]:
     """Tally a gate dictionary into the case verdict (shared by run and replay)."""
     present = {key: value for key, value in gates.items() if value is not None}
@@ -2033,6 +2110,8 @@ def gates_from_artifact(
     dof_free_decay: int = 2,
     include_geometry: bool = True,
     corrupted_control: bool = True,
+    include_decay_modes: bool = True,
+    include_external_anchor: bool = True,
 ) -> dict[str, Any]:
     """Re-judge a committed sweep artifact without solving the BEM system again.
 
@@ -2069,6 +2148,17 @@ def gates_from_artifact(
                 for k in range(len(gates["C3"]["values"]["per_dof"][0]["decidable_mask"]))
             ],
         )
+    if include_decay_modes:
+        gates["C5b"] = decay_modes_gate(sweep)
+    if include_external_anchor:
+        # Late import: the external-anchor module imports this one for the hull
+        # constants and the sweep type, so a module-level import would cycle.
+        from . import case_bem_cummins_wigley_xval as xval
+
+        try:
+            gates["C10"] = xval.external_anchor_gate(sweep, xval.load_reference())
+        except FileNotFoundError:
+            gates["C10"] = None
     return {
         "case": CASE_SLUG,
         "artifact": str(path),
@@ -2325,8 +2415,11 @@ def render_markdown(results: dict[str, Any]) -> str:
     for key, gate in gates.items():
         if gate is None:
             continue
+        # Gates added later (C10) carry ``criterion`` instead of ``threshold``;
+        # render whichever is present rather than assuming one spelling.
+        criterion = gate.get("threshold") or gate.get("criterion") or ""
         lines.append(
-            f"| {key} | {gate['title']} | {gate['threshold']} | "
+            f"| {key} | {gate['title']} | {criterion} | "
             f"{'PASS' if gate['passed'] else 'FAIL'} |"
         )
     lines.append("")
