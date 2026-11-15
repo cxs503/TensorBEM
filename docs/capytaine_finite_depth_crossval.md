@@ -1,7 +1,7 @@
 # Finite-depth cross-validation against capytaine
 **Scope**: code-to-code verification of `tensorbem.finite_depth_solver3d` in water of *finite* depth against capytaine's finite-depth Green function (the existing `docs/capytaine_crosscheck.md` is infinite depth only).
 **Plan**: `tensorbem.benchmarks.finite_depth_crossval_plan` — submerged sphere `a = 1.0 m`, centre `z = -1.5 m`, grid `h/a in [3.0, 5.0, 10.0, 20.0]` x `k0 a in [0.5, 1.0, 2.0]`, `nu` back-computed per cell from `k0 tanh(k0 h) = nu` so `k0 a` is exact at every depth.
-**Reference**: `scripts/capytaine_finite_depth_ref.py` (capytaine 3.1.dev0, `finite_depth_method=newer`, ladder [[12, 24], [24, 48], [48, 96]] panels, generated 2026-11-14T07:49:35+00:00).
+**Reference**: `scripts/capytaine_finite_depth_ref.py` (capytaine 3.1.dev0, `finite_depth_method=newer`, ladder [[12, 24], [24, 48], [48, 96]] panels, generated 2026-11-15T12:55:54+00:00).
 **Execution status**: `PARTIAL: 1 of 12 planned cells`; every number below is written by the study driver from the frozen artifacts, none is transcribed.
 ## 1. Headline
 | quantity | worst extrapolated deviation | pre-registered limit | owner limit |
@@ -25,7 +25,7 @@
 ## 3. Per-cell comparison (Richardson-extrapolated)
 | `h/a` | `k0 a` | `k0 h` | A33 TB | A33 capytaine | delta | B33 TB | B33 capytaine | delta | A11 TB | A11 capytaine | delta | B11 TB | B11 capytaine | delta |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 3 | 0.50 | 1.50 | 2617.3245 | 2999.9168 | -12.75 % | 564.2107 | 740.8990 | -23.85 % | 2276.4836 | 2461.5931 | -7.52 % | 616.0365 | 797.4058 | -22.74 % |
+| 3 | 0.50 | 1.50 | 2617.3245 | 2999.9145 | -12.75 % | 564.2107 | 740.8984 | -23.85 % | 2276.4836 | 2461.5906 | -7.52 % | 616.0365 | 797.4057 | -22.74 % |
 
 Observed convergence orders (same three-level ladder):
 | `h/a` | `k0 a` | p (A33, TB) | p (A33, capytaine) | p (B33, TB) | p (B33, capytaine) |
