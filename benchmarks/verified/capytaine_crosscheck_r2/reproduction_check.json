@@ -1,0 +1,170 @@
+{
+ "capytaine_version_installed": "3.1.dev0",
+ "capytaine_version_recorded": "3.1.dev0",
+ "cases": [
+  {
+   "case": "hemisphere_r1",
+   "level": [
+    28,
+    56
+   ],
+   "n_faces": 784,
+   "nu_rows": [
+    {
+     "nu": 0.5,
+     "worst_relative": 2.2813388337842227e-16
+    },
+    {
+     "nu": 1.0,
+     "worst_relative": 2.8242415593409696e-16
+    },
+    {
+     "nu": 2.0,
+     "worst_relative": 5.342615507998015e-16
+    }
+   ],
+   "rotation_center": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "verdict": "PASS",
+   "worst_entry": {
+    "case": "hemisphere_r1",
+    "column": "heave",
+    "nu": 2.0,
+    "quantity": "added_mass",
+    "recorded": 851.1699002215248,
+    "reproduced": 851.1699002215253,
+    "row": "heave"
+   },
+   "worst_relative": 5.342615507998015e-16
+  },
+  {
+   "case": "hemisphere_r1_cz-0.5",
+   "level": [
+    28,
+    56
+   ],
+   "n_faces": 784,
+   "nu_rows": [
+    {
+     "nu": 0.5,
+     "worst_relative": 2.2813388337842227e-16
+    },
+    {
+     "nu": 1.0,
+     "worst_relative": 2.8242415593409696e-16
+    },
+    {
+     "nu": 2.0,
+     "worst_relative": 5.342615507998015e-16
+    }
+   ],
+   "rotation_center": [
+    0.0,
+    0.0,
+    -0.5
+   ],
+   "verdict": "PASS",
+   "worst_entry": {
+    "case": "hemisphere_r1_cz-0.5",
+    "column": "heave",
+    "nu": 2.0,
+    "quantity": "added_mass",
+    "recorded": 851.1699002215248,
+    "reproduced": 851.1699002215253,
+    "row": "heave"
+   },
+   "worst_relative": 5.342615507998015e-16
+  },
+  {
+   "case": "sphere_r1_z-0.5",
+   "level": [
+    28,
+    56
+   ],
+   "n_faces": 1120,
+   "nu_rows": [
+    {
+     "nu": 0.5,
+     "worst_relative": 1.5883646728073385e-16
+    },
+    {
+     "nu": 1.0,
+     "worst_relative": 2.3363422613090576e-16
+    },
+    {
+     "nu": 2.0,
+     "worst_relative": 1.7703493516401157e-16
+    }
+   ],
+   "rotation_center": [
+    0.0,
+    0.0,
+    -0.5
+   ],
+   "verdict": "PASS",
+   "worst_entry": {
+    "case": "sphere_r1_z-0.5",
+    "column": "sway",
+    "nu": 1.0,
+    "quantity": "damping",
+    "recorded": 7785.628987966314,
+    "reproduced": 7785.628987966315,
+    "row": "sway"
+   },
+   "worst_relative": 2.3363422613090576e-16
+  },
+  {
+   "case": "sphere_r1_z-0.5_c0",
+   "level": [
+    28,
+    56
+   ],
+   "n_faces": 1120,
+   "nu_rows": [
+    {
+     "nu": 0.5,
+     "worst_relative": 2.0098216053224908e-16
+    },
+    {
+     "nu": 1.0,
+     "worst_relative": 2.3363422613090576e-16
+    },
+    {
+     "nu": 2.0,
+     "worst_relative": 1.7703493516401157e-16
+    }
+   ],
+   "rotation_center": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "verdict": "PASS",
+   "worst_entry": {
+    "case": "sphere_r1_z-0.5_c0",
+    "column": "sway",
+    "nu": 1.0,
+    "quantity": "damping",
+    "recorded": 7785.628987966314,
+    "reproduced": 7785.628987966315,
+    "row": "sway"
+   },
+   "worst_relative": 2.3363422613090576e-16
+  }
+ ],
+ "check": "capytaine round-2 reference re-solve",
+ "generated_utc": "2026-11-15T02:25:05+00:00",
+ "n_cases": 4,
+ "numpy_installed": "2.4.6",
+ "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+ "recorded_git_commit": null,
+ "reference_path": "/srv/tensor/agent/work/m21258/benchmarks/verified/capytaine_crosscheck_r2/capytaine_ref_r2.json",
+ "tolerance_reason": "identical discrete problem re-run: only BLAS/numpy build differences are admissible; recorded numpy 2.4.6 vs installed 2.4.6",
+ "tolerance_relative": 1e-08,
+ "verdict": "PASS",
+ "version_match": true,
+ "worst_relative": 5.342615507998015e-16
+}
