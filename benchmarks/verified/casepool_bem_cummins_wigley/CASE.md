@@ -38,6 +38,7 @@ Criterion source: tensor_case_pool id=145 (tol_policy <10%).
 | C6b | negative control: corrupted damping shape must fail the KK gate | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
 | C5b | Cummins free decay vs frequency-domain damping ratio, all decidable restoring modes | |zeta_decay - zeta_fd|/zeta_fd <= 5% on every scored mode (heave C5 is the case criterion; modes whose residual is not decided by the single-frequency estimator are reported, not scored) | PASS |
 | C10 | external code anchor: capytaine, solved on the identical panels, must reproduce the 6x6 radiation matrices | max_{cells,omega} |X_capytaine - X_tensorbem| / max_omega |X_tensorbem| <= 10% (case criterion), null cells excluded (amplitude < 1% of the largest diagonal amplitude) | PASS |
+| C5c | Robust multi-window consensus free-decay damping ratio (roll) | consensus |zeta_decay - zeta_fd|/zeta_fd <= 5% with multi-window convergence | PASS |
 
 ## 3. Reference vs got (KK closure, per DOF)
 
@@ -157,7 +158,7 @@ Threshold: max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a 
 
 ## 5. Verdict
 
-15 / 15 gates passed (all pass).
+16 / 16 gates passed (all pass).
 
 Case tolerance (KK closure) = 10%; coarse-mesh closure and the corrupted damping control are reported alongside so the verdict cannot be read as a self-fulfilling gate.
 

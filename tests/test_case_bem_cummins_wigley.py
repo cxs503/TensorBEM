@@ -433,6 +433,108 @@ def test_solver_validity_gate_rejects_a_non_converged_sweep() -> None:
     assert case.solver_validity_gate(good)["passed"] is True
 
 
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "case_result.json").exists(),
+    reason="production case_result.json not committed",
+)
+def test_published_case_md_is_the_render_of_the_published_json() -> None:
+    """CASE.md must be the render of case_result.json, not a hand-kept copy.
+
+    The committed pair had drifted once already: C5c was added to the gates but
+    the document still said "15 / 15 gates passed" while its own JSON said
+    16 / 16.  A generated document that is not regenerated is a second, silent
+    source of truth.
+    """
+    published = json.loads((ARTIFACT_DIR / "case_result.json").read_text())
+    rendered = case.render_markdown(published)
+    assert rendered == (ARTIFACT_DIR / "CASE.md").read_text()
+
+
+def test_replay_of_an_inadmissible_artifact_is_voided_not_raised(tmp_path) -> None:
+    """A contaminated sweep must be *judged* (C0 FAIL, dependents voided), not raised on.
+
+    The m20021 medium-mesh sweep is the motivating artifact: same mesh, band and
+    node count as the committed one, but ``max residual = 1.25`` and
+    ``min B = -129.9``.  Replaying it used to raise ``ValueError`` from the
+    negative-damping guard inside C4, which left the evidence unjudgeable -- the
+    one thing :func:`gates_from_artifact` exists to prevent.
+    """
+    bad = _synthetic_sweep(residual=1.25, damping_floor=-129.9)
+    path = case.save_sweep(bad, tmp_path / "sweep_bad.npz")
+    replay = case.gates_from_artifact(path)  # must not raise
+
+    assert replay["gates"]["C0"]["passed"] is False
+    assert replay["gates"]["C0"]["values"]["min_radiation_damping"] < 0.0
+    for key in case.C0_DEPENDENT_GATES:
+        gate = replay["gates"][key]
+        assert gate["voided"] is True, key
+        assert gate["passed"] is False, key
+        assert gate["values"]["voided_by"] == "C0", key
+    assert replay["verdict"]["passed"] is False
+    assert "C0" in replay["verdict"]["failed_list"]
+    # a voided sweep carries no anchor and no extended-band study: both would
+    # need physical coefficients to mean anything
+    assert replay["added_mass_inf_anchor"] is None
+    assert replay["extended"] is None
+
+
+def test_run_case_voids_the_same_gates_when_the_sweep_fails_c0(tmp_path, monkeypatch) -> None:
+    """The run path must record the same voiding, and still write its artifacts.
+
+    A run that dies on an inadmissible sweep must leave a *judged* failure
+    (``case_result.json`` with C0 FAIL and dependents voided) rather than no
+    artifact at all: the m20021 run aborted and left the reader with two
+    committed ``.npz`` files and no verdict.
+    """
+    bad = _synthetic_sweep(residual=1.25, damping_floor=-129.9)
+    monkeypatch.setattr(case, "solve_sweep", lambda label, **kwargs: bad)
+
+    results = case.run_case(out_dir=tmp_path, meshes=("medium",), figure=False)
+
+    assert results["gates"]["C0"]["passed"] is False
+    assert results["verdict"]["passed"] is False
+    for key in case.C0_DEPENDENT_GATES:
+        assert results["gates"][key]["voided"] is True, key
+    published = json.loads((tmp_path / "case_result.json").read_text())
+    assert published["gates"]["C0"]["passed"] is False
+    assert published["verdict"]["failed_list"][0] == "C0"
+    assert (tmp_path / "CASE.md").exists()
+
+
+def test_voided_gates_cover_both_paths_through_the_module() -> None:
+    """The run path and the replay path must void the *same* gates, or a replayed
+    verdict could disagree with the one the run published."""
+    voided = set(case.C0_DEPENDENT_GATES)
+    assert {"C2", "C3", "C3a", "C7", "C4", "C5", "C6a", "C6b"} <= voided
+    # C0 itself and the geometry gate C1 are *not* voided by C0: they are the
+    # evidence that the sweep is unusable / that the hull is the hull
+    assert "C0" not in voided and "C1" not in voided
+
+
+M20021_DIR = pathlib.Path(__file__).resolve().parents[1] / "docs" / "m20021"
+
+
+@pytest.mark.skipif(
+    not (M20021_DIR / "sweep_medium.npz").exists(),
+    reason="m20021 contaminated artifact not committed",
+)
+def test_committed_contaminated_sweep_is_kept_as_the_c0_negative_control() -> None:
+    """The m20021 sweep stays in the tree as C0's permanent negative control.
+
+    It is the only committed artifact of this case that *fails* the linear-solve
+    precondition, so it is what proves the precondition bites in production and
+    not just on a synthetic sweep.
+    """
+    replay = case.gates_from_artifact(M20021_DIR / "sweep_medium.npz")
+    c0 = replay["gates"]["C0"]
+    assert c0["passed"] is False
+    assert c0["values"]["solver_relative_residual_max"] > case.TOLERANCES["solver_residual"]
+    assert c0["values"]["min_radiation_damping"] < 0.0
+    assert replay["verdict"]["passed"] is False
+    assert replay["verdict"]["passed_list"] == ["C1"]
+    assert all(replay["gates"][key]["voided"] for key in case.C0_DEPENDENT_GATES)
+
+
 def test_free_decay_gate_reports_negative_damping_instead_of_raising() -> None:
     bad = _synthetic_sweep(residual=1.25, damping_floor=-129.9)
     gate = case.free_decay_gate(bad)
