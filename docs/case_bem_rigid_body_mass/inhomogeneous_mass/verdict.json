@@ -1,0 +1,37 @@
+{
+  "overall": "PASS",
+  "all_pass": true,
+  "not_run": [],
+  "checks": {
+    "affine_fields_exact_roundoff": true,
+    "affine_fields_block_metric_roundoff": true,
+    "momentum_route_consistent": true,
+    "homogeneous_limit_backward_compatible": true,
+    "quadrupole_accepted_within_tolerance": true,
+    "quadrupole_second_order": true,
+    "ellipsoid_accepted_within_tolerance": true,
+    "ellipsoid_second_order": true,
+    "production_path_matches_analytic": true,
+    "controls_reject_flagged_fields": true,
+    "non_physical_fields_rejected": true
+  },
+  "tolerance": 0.03,
+  "criterion": "M_RB from mesh-integrated inhomogeneous mass properties vs M_RB from analytic mass properties: affine density fields must agree to round-off (<1e-10) on the exactly polyhedral bodies, every accepted discretisation must be inside 3% (bilinear field on a refined box, linear field on a curved hull), both ladders must converge at second order (order > 1.5), the homogeneous limit must reproduce the pre-existing uniform route to 1e-12, and the field-ignoring control must exceed the 3% block tolerance on the cases where the field moves the CG or creates a product of inertia",
+  "worst_exact_entry_rel_error": 1.7593253272310638e-11,
+  "worst_exact_block_rel_error": 5.874616744841118e-16,
+  "quadrupole_convergence_order": 2.0000000000005946,
+  "worst_ellipsoid_accepted_entry_rel_error": 0.003598587540163406,
+  "worst_ellipsoid_accepted_block_rel_error": 0.0035985875401610286,
+  "worst_quadrupole_accepted_block_rel_error": 0.0003270174808427623,
+  "worst_quadrupole_accepted_entry_rel_error": 3.367456896553684,
+  "ellipsoid_convergence_order": 1.9840722222762368,
+  "controls_that_fail_as_required": [
+    "box_longitudinal",
+    "box_vertical",
+    "barge_production_vertical",
+    "box_quadrupole_cells4",
+    "box_quadrupole_cells8",
+    "box_quadrupole_cells16"
+  ],
+  "controls_below_block_tolerance": []
+}

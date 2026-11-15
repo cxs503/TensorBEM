@@ -53,7 +53,7 @@ Mode ordering is TensorBEM's ``(surge, sway, heave, roll, pitch, yaw)`` about
 from __future__ import annotations
 
 import math
-from typing import Sequence
+from typing import Callable, Sequence
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -86,6 +86,36 @@ MODES: tuple[str, ...] = ("surge", "sway", "heave", "roll", "pitch", "yaw")
 
 #: Water density used when a caller does not supply one (ITTC sea water).
 DEFAULT_DENSITY = 1025.0
+
+
+def _tet_quadrature_rule() -> tuple[FloatArray, FloatArray]:
+    """Degree-3 exact symmetric rule on a tetrahedron (barycentric, 5 points).
+
+    The five-point rule of Keast (``-4/5`` at the centroid, ``9/20`` at each of
+    the four points ``(1/2, 1/6, 1/6, 1/6)``) integrates every polynomial of
+    degree <= 3 *exactly*, independently of the element shape -- which is what
+    makes an affine density field exact on the elongated tetrahedra of the
+    signed-decomposition (whose apex is the vertex mean, far from the surface
+    panels), while a bilinear or steeper field stays second order.
+
+    Returns
+    -------
+    (barycentric, weights) :
+        ``(5, 4)`` coordinates and ``(5,)`` weights summing to 1.
+    """
+    centroid = np.full(4, 0.25)
+    points = [centroid]
+    for vertex in range(4):
+        point = np.full(4, 1.0 / 6.0)
+        point[vertex] = 0.5
+        points.append(point)
+    barycentric = np.asarray(points, dtype=float)
+    weights = np.asarray([-0.8, 0.45, 0.45, 0.45, 0.45], dtype=float)
+    return barycentric, weights
+
+
+#: Barycentric points / weights of the degree-3 exact tetrahedron rule.
+_TET_BARYCENTRIC, _TET_WEIGHTS = _tet_quadrature_rule()
 
 
 def skew_matrix(vector: ArrayLike) -> FloatArray:
@@ -405,6 +435,7 @@ def mesh_mass_properties(
     density: float = DEFAULT_DENSITY,
     *,
     reference_point: ArrayLike = (0.0, 0.0, 0.0),
+    density_field: "Callable[[FloatArray], ArrayLike] | None" = None,
 ) -> dict[str, object]:
     """Mass properties of a closed surface mesh by signed-tetrahedron integration.
 
@@ -434,6 +465,18 @@ def mesh_mass_properties(
         same point: translating mesh *and* ``reference_point`` by the same
         vector leaves both unchanged (tested in
         ``tests/test_rigid_body_mass.py``).
+    density_field:
+        Optional *dimensionless* shape factor ``f(x) >= 0`` applied as
+        ``rho(x) = density * f(x)`` -- the inhomogeneous counterpart of the
+        uniform ``density``.  ``f`` is called once with the ``(4 F, 3)`` corner
+        coordinates of every signed tetrahedron (including the apex, i.e. the
+        vertex mean of the mesh), so a *linearly varying* density is integrated
+        **exactly**: the tetrahedral decomposition interpolates ``f`` linearly
+        from its four corners and every resulting cubic monomial has a closed
+        form here (:data:`_BARYCENTRIC_TRIPLE_MOMENTS`).  A quadratic or steeper
+        field is integrated with second-order accuracy in the mesh size, exactly
+        like the geometry itself.  ``None`` (default) is the homogeneous body and
+        keeps the pre-existing arithmetic unchanged.
 
     Returns
     -------
@@ -495,23 +538,72 @@ def mesh_mass_properties(
             "or not closed"
         )
 
-    vertex_sum = rel_a + rel_b + rel_c  # the apex contributes zero
-    first_moment = np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
-    centroid_apex = first_moment / volume
+    if density_field is None:
+        vertex_sum = rel_a + rel_b + rel_c  # the apex contributes zero
+        first_moment = np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
+        # int xi xj dV per tetra, then summed, in coordinates relative to the apex.
+        sum_sq = np.einsum("fi,fj->fij", rel_a, rel_a)
+        sum_sq += np.einsum("fi,fj->fij", rel_b, rel_b)
+        sum_sq += np.einsum("fi,fj->fij", rel_c, rel_c)
+        sum_first = np.einsum("fi,fj->fij", vertex_sum, vertex_sum)
+        # Second moments of volume, scaled by density so every tensor below is in
+        # SI mass units (kg m^2) rather than geometric units (m^5).
+        second = rho * np.einsum("f,fij->ij", tet_vol, sum_sq + sum_first) / 20.0
+        mass = rho * volume
+        density_min = density_max = rho
+        density_field_kind = "uniform"
+    else:
+        corners = np.empty((tet_vol.shape[0], 4, 3), dtype=float)
+        corners[:, 1:] = np.stack((a, b, c), axis=1)
+        corners[:, 0] = p0 + apex  # relative coordinates of the apex are zero
+        probe = np.asarray(density_field(corners.reshape(-1, 3)), dtype=float)
+        if probe.size != corners.shape[0] * 4:
+            raise ValueError(
+                "density_field must return one value per point: expected "
+                f"{corners.shape[0] * 4}, got {probe.size}"
+            )
+        if not np.all(np.isfinite(probe)):
+            raise ValueError("density_field returned non-finite values")
+        probe = probe.reshape(corners.shape[0], 4)
+        if np.any(probe <= 0.0):
+            raise ValueError(
+                "density_field must be positive on the body "
+                f"(min {rho * float(probe.min()):.3g} kg/m^3)"
+            )
+        rel = corners - p0 - apex
+        # Degree-3 exact quadrature inside every tetrahedron: the integrands are
+        # rho (affine), rho * x and rho * x x, i.e. of degree <= 3 for an affine
+        # field, so those are integrated exactly whatever the element shape.
+        samples = np.einsum("qk,fkb->fqb", _TET_BARYCENTRIC, rel)
+        # ``rel`` is measured from the apex in the reference frame, so the field
+        # (defined in the caller's frame) must be sampled at the absolute points.
+        sample_density = rho * np.asarray(
+            density_field((samples + (p0 + apex)).reshape(-1, 3)), dtype=float
+        ).reshape(samples.shape[0], samples.shape[1])
+        if not np.all(np.isfinite(sample_density)):
+            raise ValueError("density_field returned non-finite values")
+        if np.any(sample_density <= 0.0):
+            raise ValueError(
+                "density_field must be positive inside the body "
+                f"(min {float(sample_density.min()):.3g} kg/m^3)"
+            )
+        weighted_volume = tet_vol[:, None] * _TET_WEIGHTS[None, :] * sample_density
+        mass = float(np.sum(weighted_volume))
+        first_moment = np.einsum("fq,fqb->b", weighted_volume, samples)
+        second = np.einsum("fq,fqa,fqb->ab", weighted_volume, samples, samples)
+        density_min = float(rho * min(probe.min(), sample_density.min() / rho))
+        density_max = float(rho * max(probe.max(), sample_density.max() / rho))
+        density_field_kind = "field"
 
-    # int xi xj dV per tetra, then summed, in coordinates relative to the apex.
-    sum_sq = np.einsum("fi,fj->fij", rel_a, rel_a)
-    sum_sq += np.einsum("fi,fj->fij", rel_b, rel_b)
-    sum_sq += np.einsum("fi,fj->fij", rel_c, rel_c)
-    sum_first = np.einsum("fi,fj->fij", vertex_sum, vertex_sum)
-    # Second moments of volume, scaled by density so every tensor below is in
-    # SI mass units (kg m^2) rather than geometric units (m^5).
-    second = rho * np.einsum("f,fij->ij", tet_vol, sum_sq + sum_first) / 20.0
+    if not math.isfinite(mass) or mass <= 0.0:
+        raise ValueError(
+            f"integrated mass is not positive ({mass:.3g} kg); check the density field"
+        )
+    centroid_apex = first_moment / mass
 
     second = 0.5 * (second + second.T)
     inertia_apex = np.trace(second) * np.eye(3) - second
 
-    mass = rho * volume
     centroid = p0 + apex + centroid_apex
     inertia_cg = inertia_about_centroid(inertia_apex, mass, centroid_apex)
     inertia_reference = inertia_about_point(inertia_cg, mass, centroid - p0)
@@ -527,6 +619,9 @@ def mesh_mass_properties(
         ],
         "face_count": int(tris.shape[0]),
         "density": rho,
+        "density_field": density_field_kind,
+        "density_min": float(density_min),
+        "density_max": float(density_max),
     }
 
 
@@ -1198,6 +1293,7 @@ def wetted_hull_mass_properties(
     density: float = DEFAULT_DENSITY,
     *,
     reference_point: ArrayLike = (0.0, 0.0, 0.0),
+    density_field: "Callable[[FloatArray], ArrayLike] | None" = None,
 ) -> dict[str, object]:
     """Mass, centroid and inertia tensor of a floating body *from its hull mesh*.
 
@@ -1216,10 +1312,22 @@ def wetted_hull_mass_properties(
     dict of :func:`mesh_mass_properties` plus ``displaced_volume``,
     ``solid`` (the closure report of :func:`wetted_hull_solid`) and
     ``waterplane_lid_area``.
+
+    ``density_field`` is the inhomogeneous-mass hook of
+    :func:`mesh_mass_properties` (``rho(x) = density * f(x)``, ``f`` evaluated on
+    the hull nodes *and* the waterline-lid fan nodes, so the field is continuous
+    across the closure).  With it the ``centroid`` returned here is the **mass**
+    centroid rather than the volume centroid -- that is the whole point, since a
+    non-uniform mass distribution moves the CG away from the volume centroid and
+    a CG displaced by ``r`` adds ``-m S(r)`` blocks to ``M_RB``.
     """
     solid = wetted_hull_solid(vertices, faces, reference_point=reference_point)
     props = mesh_mass_properties(
-        solid["vertices"], solid["faces"], density, reference_point=reference_point
+        solid["vertices"],
+        solid["faces"],
+        density,
+        reference_point=reference_point,
+        density_field=density_field,
     )
     lid = np.asarray(solid["lid_faces"], dtype=np.int64)
     nodes = np.asarray(solid["vertices"], dtype=float)
