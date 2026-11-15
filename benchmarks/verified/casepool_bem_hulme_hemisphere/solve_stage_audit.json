@@ -1,0 +1,90 @@
+{
+ "guard": {
+  "stationarity_tolerance": 1e-06,
+  "definition": "||A^H r|| / (||A|| ||r||), r = A x - b"
+ },
+ "perturbation_sweep": {
+  "panels": 64,
+  "rows": [
+   {
+    "relative_perturbation": 0.0,
+    "stationarity": 4.033629079157879e-14,
+    "relative_residual": 0.004258322775814571
+   },
+   {
+    "relative_perturbation": 1e-12,
+    "stationarity": 5.323934501669756e-11,
+    "relative_residual": 0.0042583227758145525
+   },
+   {
+    "relative_perturbation": 1e-10,
+    "stationarity": 5.3221980481666616e-09,
+    "relative_residual": 0.0042583227758146045
+   },
+   {
+    "relative_perturbation": 1e-08,
+    "stationarity": 5.322192210578367e-07,
+    "relative_residual": 0.0042583227758262645
+   },
+   {
+    "relative_perturbation": 1e-06,
+    "stationarity": 5.322192097676536e-05,
+    "relative_residual": 0.0042583228932296345
+   },
+   {
+    "relative_perturbation": 0.0001,
+    "stationarity": 0.005320725358859756,
+    "relative_residual": 0.0042594967639015295
+   },
+   {
+    "relative_perturbation": 0.001,
+    "stationarity": 0.051812464977304656,
+    "relative_residual": 0.004374162174600762
+   },
+   {
+    "relative_perturbation": 0.01,
+    "stationarity": 0.20851930879181527,
+    "relative_residual": 0.010868831562396063
+   },
+   {
+    "relative_perturbation": 0.1,
+    "stationarity": 0.2264329696073871,
+    "relative_residual": 0.1000897196505938
+   }
+  ]
+ },
+ "rungs": [
+  {
+   "subdivisions": 2,
+   "panels": 64,
+   "condition_number": 2.389459885990851,
+   "inherent_relative_residual": 0.004258322775814571,
+   "stationarity": 4.033629079157879e-14,
+   "solve_reported_relative_residual": 0.006326603383633635,
+   "A33_dimless": 0.358459837459815
+  },
+  {
+   "subdivisions": 3,
+   "panels": 256,
+   "condition_number": 2.352259378914911,
+   "inherent_relative_residual": 0.0009423884921245362,
+   "stationarity": 1.9295167337375154e-13,
+   "solve_reported_relative_residual": 0.0011985195041430484,
+   "A33_dimless": 0.38043529106287255
+  },
+  {
+   "subdivisions": 4,
+   "panels": 1024,
+   "condition_number": 2.3986154006206855,
+   "inherent_relative_residual": 1.906315021726878e-05,
+   "stationarity": 8.265730322379714e-12,
+   "solve_reported_relative_residual": 0.00017686262956013635,
+   "A33_dimless": 0.3863365886018494
+  }
+ ],
+ "cross_environment_reference": {
+  "note": "geometry/assembly identical across environments; the residual column is the m20910 fingerprint measurement, reproduced here for the healthy control-plane side",
+  "control_plane_reported_relative_residual_1024_panels": 0.0001769,
+  "cluster_node_reported_relative_residual_1024_panels": 0.491
+ }
+}
