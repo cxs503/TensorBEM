@@ -103,6 +103,8 @@ __all__ = [
     "round_trip_gate",
     "free_decay_gate",
     "negative_control_gate",
+    "extension_consistency_gate",
+    "truncation_decidability_gate",
     "sweep_grid",
     "grid_convergence_study",
     "run_case",
@@ -164,6 +166,18 @@ MESHES: dict[str, tuple[int, int]] = {"coarse": (12, 4), "medium": (20, 6)}
 BAND = (0.2, 12.0)
 N_OMEGA = 41
 
+#: Panels needed by gate ``C2`` to reach ``omega = 20 rad/s``: there
+#: ``k = omega**2/g = 40.8 1/m`` forces ``sqrt(A_panel) <= 2.45 cm``, which the
+#: structured Wigley mesh reaches at ``60 x 16`` (3840 panels,
+#: ``sqrt(A_max) = 2.32 cm``, admissible to ``20.54 rad/s``).
+EXTENDED_MESH = (60, 16)
+#: Extended band and node count.  The extension is a *pre-declared* experiment:
+#: the 12 rad/s band top leaves the truncation budget of surge/sway/yaw
+#: unbounded (their damping has not entered algebraic decay there), so the only
+#: honest way to certify those DOF is a band whose top the mesh can still resolve.
+EXTENDED_BAND = (0.2, 20.0)
+EXTENDED_N_OMEGA = 55
+
 TOLERANCES = {
     "kk": 0.10,           # case pool id=145, tol_policy <10%
     "round_trip": 0.02,   # Cummins transform self-consistency
@@ -184,6 +198,12 @@ TOLERANCES = {
                           # not evidence either way
     "solver_residual": 1.0e-2,  # gate C0: the BIE solve must actually have converged
     "negative_control": 0.10,
+    # The extended-band sweep must be the *same physics* as the committed one on
+    # the band they share; otherwise comparing the two verdicts is void.  This is
+    # a discretisation check, not a criterion of the case: it is normalised by
+    # the amplitude of the DOF, so a 5 % bar means the 8x panel increase may not
+    # move the tabulated coefficients by more than a twentieth of their peak.
+    "extension_overlap": 0.05,
 }
 
 DT = 0.002
@@ -1295,6 +1315,228 @@ def added_mass_inf_gate(
             "anchor_symmetry_error": anchor["symmetry_error"],
             "anchor_method": anchor["method"],
             "anchor_center_m": anchor["center_m"],
+            "per_dof": rows,
+        },
+    }
+
+
+def _interp_diagonal(
+    sweep: Sweep, omega: np.ndarray, dof: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Piecewise-linear interpolation of ``A_ii``/``B_ii`` of one DOF to ``omega``."""
+    grid = np.asarray(sweep.omega, dtype=float)
+    order = np.argsort(grid)
+    mass = np.asarray(sweep.added_mass, dtype=float)[order][:, dof, dof]
+    damper = np.asarray(sweep.damping, dtype=float)[order][:, dof, dof]
+    return (
+        np.interp(omega, grid[order], mass),
+        np.interp(omega, grid[order], damper),
+    )
+
+
+def extension_consistency_gate(
+    coarse_band: Sweep,
+    extended: Sweep,
+    *,
+    identifier: str = "C8",
+) -> dict[str, Any]:
+    """C8: is the extended band the same physics as the committed sweep?
+
+    Widening the band to ``omega = 20 rad/s`` is only worth anything if the wider
+    sweep still reproduces the committed one where the two overlap.  The checking
+    mesh is *finer* (3840 panels vs 480), so a disagreement on the shared band is a
+    discretisation error of the **committed** sweep, not of the extension -- and if
+    it is large the two verdicts cannot be compared at all: the residual that
+    ``C3a`` measures would then be dominated by the mesh change instead of by the
+    causality of the data.
+
+    The criterion is normalised by the amplitude of each DOF (``max|A_ii|``,
+    ``max|B_ii|`` over the shared band), so it is independent of where the DOF
+    peaks and of the near-zero samples.
+    """
+    shared = np.asarray(
+        [w for w in coarse_band.omega if extended.omega[0] <= w <= extended.omega[-1]],
+        dtype=float,
+    )
+    if shared.size < 3:
+        raise ValueError(
+            "the two sweeps do not share at least three frequencies; the "
+            "extension consistency check cannot be evaluated"
+        )
+    rows = []
+    worst = 0.0
+    worst_dof = ""
+    for index, name in enumerate(DOF_NAMES):
+        mass_ref, damper_ref = _interp_diagonal(extended, shared, index)
+        mass_old, damper_old = _interp_diagonal(coarse_band, shared, index)
+        mass_scale = max(float(np.max(np.abs(mass_ref))), 1e-300)
+        damper_scale = max(float(np.max(np.abs(damper_ref))), 1e-300)
+        mass_diff = np.abs(mass_ref - mass_old) / mass_scale
+        damper_diff = np.abs(damper_ref - damper_old) / damper_scale
+        rows.append(
+            {
+                "dof": int(index),
+                "dof_name": name,
+                "added_mass_relative_difference_max": float(np.max(mass_diff)),
+                "damping_relative_difference_max": float(np.max(damper_diff)),
+                "added_mass_difference_at_band_top": float(mass_diff[-1]),
+                "damping_difference_at_band_top": float(damper_diff[-1]),
+                "worst_omega_added_mass": float(shared[int(np.argmax(mass_diff))]),
+                "worst_omega_damping": float(shared[int(np.argmax(damper_diff))]),
+            }
+        )
+        local_worst = max(
+            float(np.max(mass_diff)), float(np.max(damper_diff))
+        )
+        if local_worst > worst:
+            worst = local_worst
+            worst_dof = name
+    tolerance = float(TOLERANCES["extension_overlap"])
+    passed = bool(worst <= tolerance)
+    return {
+        "id": identifier,
+        "title": (
+            "extended band is the same physics: the resolved sweep reproduces the "
+            "committed one on the shared band"
+        ),
+        "threshold": (
+            "max over DOF and shared-band samples of |A,B(extended mesh) - "
+            f"A,B(committed mesh)| / max|A,B| <= {tolerance:.0%}"
+        ),
+        "passed": passed,
+        "status": (
+            "pass: the panel refinement moves the shared band by "
+            f"{100.0 * worst:.2f}% or less"
+            if passed
+            else "fail: the two bands disagree on the shared band by "
+            f"{100.0 * worst:.2f}% ({worst_dof}); the verdicts are not comparable"
+        ),
+        "values": {
+            "committed_mesh": {
+                "label": coarse_band.label,
+                "panels": int(coarse_band.panel_count),
+                "band": [float(coarse_band.omega[0]), float(coarse_band.omega[-1])],
+            },
+            "extended_mesh": {
+                "label": extended.label,
+                "panels": int(extended.panel_count),
+                "band": [float(extended.omega[0]), float(extended.omega[-1])],
+            },
+            "n_shared_frequencies": int(shared.size),
+            "worst_dof": worst_dof,
+            "worst_relative_difference": float(worst),
+            "tolerance": tolerance,
+            "per_dof": rows,
+        },
+    }
+
+
+def truncation_decidability_gate(
+    coarse_band: Sweep,
+    extended: Sweep,
+    *,
+    closure_rows: Sequence[dict[str, Any]] | None = None,
+    reference_rows: Sequence[dict[str, Any]] | None = None,
+    identifier: str = "C9",
+) -> dict[str, Any]:
+    """C9: does the wider band move the damping into algebraic decay?
+
+    ``C3a`` can only certify the samples whose truncation budget is small, and
+    that budget is ``inf`` whenever the measured damping slope ``p`` at the band
+    top is not ``> 2.05`` (the omitted integral ``int^inf B(s) ds/(s^2-omega^2)``
+    does not converge for ``p <= 2``).  On the 0.2..12 rad/s sweep that happens
+    for surge, sway and yaw, i.e. three of the six DOF are *not* certified.
+
+    This gate is the audit of the extension itself: per DOF it reports the
+    measured slope at the old and at the new band top together with the budget
+    that follows, and it refuses to let the extension lose ground -- a DOF that
+    was certifiable at 12 rad/s may not become uncertifiable at 20.
+
+    Passing does **not** mean every DOF became certifiable: it means the
+    extension was judged and nothing got worse.  Which DOF actually gained is
+    reported in ``newly_decidable``; if that list is empty the extension is an
+    honest negative result (the horizontal modes are still not in decay).
+    """
+    from tensorbem.causality import high_band_truncation_budget, local_tail_exponent
+
+    if closure_rows is None:
+        closure_rows = kk_gate(extended)["values"]["per_dof"]
+    if reference_rows is None:
+        reference_rows = kk_gate(coarse_band)["values"]["per_dof"]
+    rows = []
+    newly: list[str] = []
+    lost: list[str] = []
+    for index, name in enumerate(DOF_NAMES):
+        old = reference_rows[index]
+        new = closure_rows[index]
+        budget = high_band_truncation_budget(
+            extended.omega, extended.damping[:, index, index]
+        )
+        exponent, _ = local_tail_exponent(
+            extended.omega, extended.damping[:, index, index]
+        )
+        scale = max(float(new["residual_scale"]), 1e-300)
+        budget_relative = budget.relative(scale)
+        finite = budget_relative[np.isfinite(budget_relative)]
+        old_admissible = bool(old["truncation_budget_admissible"])
+        new_admissible = bool(budget.admissible)
+        if new_admissible and not old_admissible:
+            newly.append(name)
+        if old_admissible and not new_admissible:
+            lost.append(name)
+        rows.append(
+            {
+                "dof": int(index),
+                "dof_name": name,
+                "exponent_at_12": float(old["measured_tail_exponent"]),
+                "exponent_at_20": float(exponent),
+                "budget_admissible_at_12": old_admissible,
+                "budget_admissible_at_20": new_admissible,
+                "budget_max_relative_at_20": (
+                    float(np.max(finite)) if finite.size else float("inf")
+                ),
+                "budget_reason": budget.reason,
+                "n_decidable_at_12": int(old["n_decidable"]),
+                "n_decidable_at_20": int(new["n_decidable"]),
+                "n_samples": int(new["n_samples"]),
+                "worst_anchored_residual": float(
+                    new["max_relative_residual_decidable"]
+                ),
+            }
+        )
+    passed = not lost
+    return {
+        "id": identifier,
+        "title": (
+            "band extension 12 -> 20 rad/s: does the damping reach algebraic decay "
+            "so the truncation budget becomes finite?"
+        ),
+        "threshold": (
+            "no DOF may lose truncation-budget admissibility (a DOF is certifiable "
+            f"only when the measured slope p > 2.05 and the budget <= "
+            f"{TOLERANCES['kk_budget']:.0%} of the added-mass scale)"
+        ),
+        "passed": bool(passed),
+        "status": (
+            ("widened: " + ", ".join(newly) + " became certifiable")
+            if newly and not lost
+            else (
+                "no widening: " + ", ".join(lost) + " lost certifiability"
+                if lost
+                else "no widening: no DOF reached algebraic decay by 20 rad/s"
+            )
+        ),
+        "values": {
+            "band_at_12": [float(coarse_band.omega[0]), float(coarse_band.omega[-1])],
+            "band_at_20": [float(extended.omega[0]), float(extended.omega[-1])],
+            "decidable_dof_at_12": int(
+                sum(1 for row in reference_rows if row["n_decidable"] > 0)
+            ),
+            "decidable_dof_at_20": int(
+                sum(1 for row in closure_rows if row["n_decidable"] > 0)
+            ),
+            "newly_decidable": newly,
+            "lost_decidability": lost,
             "per_dof": rows,
         },
     }
