@@ -119,6 +119,25 @@ MIN_OBSERVED_ORDER = 0.3
 #: depth-blind deep-water solver by at least this much at ``k0*h = 1.5``.
 NEGATIVE_CONTROL_MIN_GAP = 0.02
 
+#: Fraction of a quantity's tolerance that the *extrapolation uncertainty* is
+#: allowed to consume.  Richardson extrapolation assumes the panel ladder is in
+#: its asymptotic range; where four rungs exist the assumption is measured by
+#: re-extrapolating after dropping the coarsest rung (the "band").  A band
+#: larger than a third of the tolerance means the discretisation uncertainty is
+#: no longer small against the quantity being judged -- the tolerance would be
+#: spent on mesh noise, so the comparison would stop being a solver statement.
+#: One third is the classical "uncertainty well below the acceptance band" rule
+#: and is fixed here *before* the confirmation run is looked at.
+EXTRAPOLATION_BAND_FRACTION = 1.0 / 3.0
+
+
+def extrapolation_limit(quantity: str) -> float:
+    """Largest admissible extrapolation band for ``quantity``."""
+    base = TOL_ADDED_MASS if quantity == "added_mass" else TOL_DAMPING
+    if quantity not in ("added_mass", "damping"):
+        raise ValueError(f"unknown quantity {quantity!r}")
+    return float(base * EXTRAPOLATION_BAND_FRACTION)
+
 
 def depth_for(ratio: float) -> float:
     """Dimensional depth for a depth ratio ``h/a``."""
@@ -187,6 +206,8 @@ __all__ = [
     "OWNER_LIMIT",
     "MIN_OBSERVED_ORDER",
     "NEGATIVE_CONTROL_MIN_GAP",
+    "EXTRAPOLATION_BAND_FRACTION",
+    "extrapolation_limit",
     "depth_for",
     "wavenumber_for",
     "nu_for",
