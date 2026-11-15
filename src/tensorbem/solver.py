@@ -572,16 +572,29 @@ def evaluate_exterior_field(
     compatibility, so a caller evaluating close to the body should pass
     ``minimum_clearance_factor`` of order one to two.
 
-    ``linear_density=True`` removes that first-order limitation: the densities
-    are expanded as ``sigma(s) = sigma_i + sigma'_i (s - L_i/2)`` on each panel,
-    where ``sigma'_i`` is the arc-length slope of the panel trace estimated by
+    ``linear_density=True`` expands the densities as
+    ``sigma(s) = sigma_i + sigma'_i (s - L_i/2)`` on each panel, where
+    ``sigma'_i`` is the arc-length slope of the panel trace estimated by
     :func:`tangential_slope`, and the first-moment panel integrals of
     :mod:`tensorbem.kernels` supply the extra term in closed form (value and
-    target gradient, no extra quadrature). The near-wall error then falls with
-    the square of the panel size instead of linearly; the far field is
-    unchanged to the same order. ``CASE-BEM-LAPLACE-CYLINDER`` reports both
-    modes side by side (``near_wall`` in
-    ``benchmarks/verified/case_bem_laplace_cylinder/results.json``).
+    target gradient, no extra quadrature). That basis is *not* a uniform
+    improvement; the extent of its gain is measured, not assumed
+    (``near_wall`` in
+    ``benchmarks/verified/case_bem_laplace_cylinder/results.json``):
+
+    * above a panel *midpoint* it buys an order of magnitude at
+      ``delta <= 0.5 h_max`` (cylinder: 2.8e-2 -> 3.2e-3 at ``delta = 0.5 h_max``)
+      and moves the 1%-accurate window in from ``2 h_max`` to ``0.5 h_max``;
+    * inside the documented window it is ~1.2x *worse* than constant panels, and
+      its 1% window does not move in at all once the target is allowed to sit
+      anywhere across the panel, not just above the midpoint;
+    * towards a vertex it degrades sharply, because the arc-length slope
+      extrapolates a density that is discontinuous across the kink: on the
+      cylinder at ``delta = 0.1 h_max`` the worst-azimuth error is 1.40, 0.129
+      and 1.26 on the 32/64/128-panel levels, i.e. not even monotone in ``h``.
+
+    Use it for smooth (curved) boundaries and targets away from vertices; keep
+    the constant basis plus a clearance guard as the default elsewhere.
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
