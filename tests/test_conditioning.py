@@ -136,3 +136,42 @@ def test_condition_number_increases_with_refinement():
     # Condition number should generally increase (not strictly monotonic)
     # Just check that finest mesh has higher condition than coarsest
     assert conditions[2] > conditions[0]
+
+
+def test_condition_number_with_fallback_uses_the_svd_when_finite():
+    """A healthy SVD result is reported unchanged, tagged as the SVD."""
+    from tensorbem.conditioning import condition_number_with_fallback
+
+    matrix = np.diag([1.0, 7.0])
+    condition, source = condition_number_with_fallback(matrix)
+    assert source == "svd"
+    assert condition == pytest.approx(7.0, rel=1.0e-12)
+
+
+def test_condition_number_with_fallback_survives_an_infinite_svd(monkeypatch):
+    """A non-finite ``numpy.linalg.cond`` must not be read as "singular".
+
+    ``numpy.linalg.cond`` is SVD based and some LAPACK builds return ``inf``
+    for perfectly conditioned matrices (loongarch64 compute nodes).  The
+    fallback must produce a finite LU-based estimate instead of propagating
+    ``inf`` into the solver guards.
+    """
+    from tensorbem.conditioning import condition_number_with_fallback
+
+    matrix = np.diag([1.0, 7.0])
+    monkeypatch.setattr(np.linalg, "cond", lambda *a, **k: float("inf"))
+    condition, source = condition_number_with_fallback(matrix)
+    assert source == "power_iteration"
+    assert np.isfinite(condition)
+    assert condition == pytest.approx(7.0, rel=0.5)
+
+
+def test_condition_number_with_fallback_still_reports_a_singular_matrix(monkeypatch):
+    """A genuinely singular matrix stays singular after the fallback."""
+    from tensorbem.conditioning import condition_number_with_fallback
+
+    matrix = np.array([[1.0, 2.0], [2.0, 4.0]])
+    monkeypatch.setattr(np.linalg, "cond", lambda *a, **k: float("inf"))
+    condition, source = condition_number_with_fallback(matrix)
+    assert source == "power_iteration"
+    assert not np.isfinite(condition) or condition > 1.0e12
