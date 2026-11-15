@@ -378,7 +378,7 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
     out.append(
         f"> 机读工件：`numbers.json` / `verdict.json` / `tiers.json` / `table_band_economy.csv` / "
         f"`table_band_case.csv` / `table_ladder.csv` / `table_low_frequency.csv` / "
-        f"`table_submergence.csv` / `run.log`；图 1-4 见本节末尾。\n"
+        f"`table_submergence.csv` / `run.txt`；图 1-4 见本节末尾。\n"
     )
     out.append(f"> 运行环境：Python {env['python']}，numpy {env['numpy']}，{env['platform']}；"
                f"git `{prov['git_head'][:7]}`（dirty={prov['git_dirty']}）；"
@@ -543,7 +543,7 @@ def build_markdown(payload: dict[str, Any], crosscheck: dict[str, Any] | None = 
         "有限水深路径、时间域因果性交叉。\n"
     )
     out.append("**工件清单**：`numbers.json`（全部数值）、`verdict.json`（判级）、"
-               "`tiers.json`（分级门）、四张 CSV（带内/阶梯/低频/潜深）、`run.log`（分段计时）、"
+               "`tiers.json`（分级门）、四张 CSV（带内/阶梯/低频/潜深）、`run.txt`（分段计时）、"
                "`fig1_band.png`~`fig4_submergence.png`。\n")
     out.append("**复现命令**：见 ② 的两条命令；冒烟版加 `--stage cheap`（约 2 分钟）。\n")
     return "\n".join(out) + "\n"
