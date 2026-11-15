@@ -1,0 +1,382 @@
+{
+  "gate": "C5",
+  "criterion": "|zeta_decay - zeta_fd| / zeta_fd <= 5% (same bar as the heave gate)",
+  "tolerance": 0.05,
+  "modes": {
+    "heave": {
+      "dof": 2,
+      "grade": "within_bar",
+      "passed": true,
+      "threshold": "|zeta_decay - zeta_fd|/zeta_fd <= 5%",
+      "values": {
+        "dof": 2,
+        "dof_name": "heave",
+        "zeta_decay": 0.1346015530611902,
+        "zeta_frequency_domain": 0.12947445178669487,
+        "relative_error": 0.03959932792719662,
+        "natural_frequency_in_band": true,
+        "band_rad_s": [
+          0.2,
+          12.0
+        ],
+        "status": "decided",
+        "damped_period_s": 0.8140000000000001,
+        "natural_frequency_rad_s": 7.789789478462638,
+        "added_mass_at_natural": 28.860097103691732,
+        "damping_at_natural": 213.2843382692734,
+        "restoring_n_per_m": 6016.012025625,
+        "oscillator_stiffness_source": "rho g A_wp of the panelised hull (A_wp = 0.5985 m^2)",
+        "oscillator_inertia": 76.875,
+        "oscillator_inertia_kind": "mass",
+        "oscillator_inertia_source": "rho * nabla (displaced mass at equilibrium)",
+        "displaced_mass_kg": 76.875,
+        "added_mass_inf_used": 50.93021596754935,
+        "added_mass_inf_source": "KK closure (least-squares offset)",
+        "n_peaks": 5,
+        "peak_amplitude_floor": 0.01,
+        "dt": 0.002,
+        "duration": 40.0
+      },
+      "attribution": {
+        "dof": 2,
+        "dof_name": "heave",
+        "inertia": 76.875,
+        "stiffness": 6016.012025625,
+        "status": "reported",
+        "natural_frequency_rad_s": 7.5395498292496175,
+        "natural_frequency_from_decay_rad_s": 7.789789478462638,
+        "added_mass_at_natural": 28.95720971902092,
+        "added_mass_inf": 50.93021596754935,
+        "added_mass_dispersion_across_band": 3.890610170855419,
+        "added_mass_effective_from_decay": 22.26690371603732,
+        "added_mass_effective_over_band_value": 0.7689588856142798,
+        "zeta_frequency_domain": 0.13995819193516712,
+        "zeta_frequency_domain_with_a_inf": 0.11589577630805369,
+        "zeta_decay": 0.1346015530611902,
+        "relative_error": 0.03959932792719662,
+        "relative_error_at_impedance_frequency": 0.03827313571225808,
+        "tail_closure": {
+          "available": true,
+          "tail_exponent": 2.607348363575926,
+          "omega_max_extended_rad_s": 120.0,
+          "zeta_decay": 0.1330191844183839,
+          "zeta_frequency_domain": 0.1310958094894619,
+          "relative_error": 0.014671521053284394,
+          "period_s": 0.8180000000000001,
+          "n_peaks": 5
+        },
+        "window": {
+          "amplitude_floor": 0.001,
+          "zeta_decay": 0.12999200846968165,
+          "relative_error": 0.03435928282152205,
+          "period_s": 0.8037142857142857,
+          "n_peaks": 8,
+          "shift_from_declared_window": 0.03424584996737034
+        },
+        "n_peaks": 5,
+        "period_s": 0.8140000000000001
+      },
+      "residual_probes": {
+        "declared_window": 0.03959932792719662,
+        "tail_closed_band": 0.014671521053284394,
+        "ten_times_wider_window": 0.03435928282152205
+      },
+      "residual_probe_spread": 0.024927806873912228,
+      "most_sensitive_probe": "tail_closed_band"
+    },
+    "roll": {
+      "dof": 3,
+      "grade": "undecidable_estimator",
+      "passed": false,
+      "threshold": "|zeta_decay - zeta_fd|/zeta_fd <= 5%",
+      "values": {
+        "dof": 3,
+        "dof_name": "roll",
+        "zeta_decay": 0.09012447943425081,
+        "zeta_frequency_domain": 0.07274632827609444,
+        "relative_error": 0.23888698673836847,
+        "natural_frequency_in_band": true,
+        "band_rad_s": [
+          0.2,
+          12.0
+        ],
+        "status": "decided",
+        "damped_period_s": 1.086,
+        "natural_frequency_rad_s": 5.809262573178575,
+        "added_mass_at_natural": 0.5526302636650231,
+        "damping_at_natural": 1.1530791365305244,
+        "restoring_n_per_m": 48.68624125195313,
+        "oscillator_stiffness_source": "rho g nabla GM_T (closed-form Wigley hydrostatics)",
+        "oscillator_inertia": 0.8116293845663264,
+        "oscillator_inertia_kind": "moment_of_inertia",
+        "oscillator_inertia_source": "uniform-density body filling the displaced volume, second moment about CENTER (closed form)",
+        "displaced_mass_kg": 0.8116293845663264,
+        "added_mass_inf_used": 0.3849173539682502,
+        "added_mass_inf_source": "KK closure (least-squares offset)",
+        "n_peaks": 8,
+        "peak_amplitude_floor": 0.01,
+        "dt": 0.002,
+        "duration": 40.0
+      },
+      "attribution": {
+        "dof": 3,
+        "dof_name": "roll",
+        "inertia": 0.8116293845663264,
+        "stiffness": 48.68624125195313,
+        "status": "reported",
+        "natural_frequency_rad_s": 6.019851636727581,
+        "natural_frequency_from_decay_rad_s": 5.809262573178575,
+        "added_mass_at_natural": 0.5318613355008964,
+        "added_mass_inf": 0.3849173539682502,
+        "added_mass_dispersion_across_band": 0.5357674290895246,
+        "added_mass_effective_from_decay": 0.6310314229068833,
+        "added_mass_effective_over_band_value": 1.1864585386952229,
+        "zeta_frequency_domain": 0.07921262191410856,
+        "zeta_frequency_domain_with_a_inf": 0.08894046427650107,
+        "zeta_decay": 0.09012447943425081,
+        "relative_error": 0.23888698673836847,
+        "relative_error_at_impedance_frequency": 0.13775402526095068,
+        "tail_closure": {
+          "available": true,
+          "tail_exponent": 2.893015633773214,
+          "omega_max_extended_rad_s": 120.0,
+          "zeta_decay": 0.08768414583589175,
+          "zeta_frequency_domain": 0.07173676962814082,
+          "relative_error": 0.22230407488958226,
+          "period_s": 1.0902857142857143,
+          "n_peaks": 8
+        },
+        "window": {
+          "amplitude_floor": 0.001,
+          "zeta_decay": 0.07114851188893904,
+          "relative_error": 0.023608165886256395,
+          "period_s": 1.098857142857143,
+          "n_peaks": 15,
+          "shift_from_declared_window": 0.2105528671503223
+        },
+        "n_peaks": 8,
+        "period_s": 1.086
+      },
+      "residual_probes": {
+        "declared_window": 0.23888698673836847,
+        "tail_closed_band": 0.22230407488958226,
+        "ten_times_wider_window": 0.023608165886256395
+      },
+      "residual_probe_spread": 0.21527882085211208,
+      "most_sensitive_probe": "ten_times_wider_window"
+    },
+    "pitch": {
+      "dof": 4,
+      "grade": "within_bar",
+      "passed": true,
+      "threshold": "|zeta_decay - zeta_fd|/zeta_fd <= 5%",
+      "values": {
+        "dof": 4,
+        "dof_name": "pitch",
+        "zeta_decay": 0.098389930575596,
+        "zeta_frequency_domain": 0.09381026362984408,
+        "relative_error": 0.048818399699017336,
+        "natural_frequency_in_band": true,
+        "band_rad_s": [
+          0.2,
+          12.0
+        ],
+        "status": "decided",
+        "damped_period_s": 0.7789999999999999,
+        "natural_frequency_rad_s": 8.105032535633002,
+        "added_mass_at_natural": 8.571278244198693,
+        "damping_at_natural": 66.46174809810786,
+        "restoring_n_per_m": 2731.659595751953,
+        "oscillator_stiffness_source": "rho g nabla GM_L (closed-form Wigley hydrostatics)",
+        "oscillator_inertia": 35.13427734375,
+        "oscillator_inertia_kind": "moment_of_inertia",
+        "oscillator_inertia_source": "uniform-density body filling the displaced volume, second moment about CENTER (closed form)",
+        "displaced_mass_kg": 35.13427734375,
+        "added_mass_inf_used": 14.811621906606772,
+        "added_mass_inf_source": "KK closure (least-squares offset)",
+        "n_peaks": 7,
+        "peak_amplitude_floor": 0.01,
+        "dt": 0.002,
+        "duration": 40.0
+      },
+      "attribution": {
+        "dof": 4,
+        "dof_name": "pitch",
+        "inertia": 35.13427734375,
+        "stiffness": 2731.659595751953,
+        "status": "reported",
+        "natural_frequency_rad_s": 7.902750155806436,
+        "natural_frequency_from_decay_rad_s": 8.105032535633002,
+        "added_mass_at_natural": 8.604846071576548,
+        "added_mass_inf": 14.811621906606772,
+        "added_mass_dispersion_across_band": 2.9859362901905464,
+        "added_mass_effective_from_decay": 6.448840969029625,
+        "added_mass_effective_over_band_value": 0.7494429203482652,
+        "zeta_frequency_domain": 0.1004975642793221,
+        "zeta_frequency_domain_with_a_inf": 0.08800873410886847,
+        "zeta_decay": 0.098389930575596,
+        "relative_error": 0.048818399699017336,
+        "relative_error_at_impedance_frequency": 0.020971987916723663,
+        "tail_closure": {
+          "available": true,
+          "tail_exponent": 2.829347668410361,
+          "omega_max_extended_rad_s": 120.0,
+          "zeta_decay": 0.09896360120158217,
+          "zeta_frequency_domain": 0.09556749765988015,
+          "relative_error": 0.03553617730777647,
+          "period_s": 0.7843333333333334,
+          "n_peaks": 7
+        },
+        "window": {
+          "amplitude_floor": 0.001,
+          "zeta_decay": 0.08791564276548994,
+          "relative_error": 0.09869419553816652,
+          "period_s": 0.7894545454545455,
+          "n_peaks": 12,
+          "shift_from_declared_window": 0.10645690823064813
+        },
+        "n_peaks": 7,
+        "period_s": 0.7789999999999999
+      },
+      "residual_probes": {
+        "declared_window": 0.048818399699017336,
+        "tail_closed_band": 0.03553617730777647,
+        "ten_times_wider_window": 0.09869419553816652
+      },
+      "residual_probe_spread": 0.06315801823039005,
+      "most_sensitive_probe": "ten_times_wider_window"
+    }
+  },
+  "decided": [
+    "heave",
+    "pitch"
+  ],
+  "within_bar": [
+    "heave",
+    "pitch"
+  ],
+  "beyond_bar": [],
+  "undecidable": [],
+  "estimator_undecidable": [
+    "roll"
+  ],
+  "grade_legend": {
+    "within_bar": "the decay and the frequency-domain impedance agree within the case bar",
+    "beyond_bar": "they disagree by more than the bar and no defensible probe moves the residual below it",
+    "undecidable_estimator": "they disagree, but the residual moves by more than the bar across defensible windows / a closed band top, so the single-frequency estimator cannot separate the two routes at this bar",
+    "undecidable": "omega_n outside the computed band, or non-physical damping"
+  },
+  "body_inertia": {
+    "second_moments_kg_m2": {
+      "roll": 0.8116293845663264,
+      "pitch": 35.13427734375,
+      "yaw": 34.86485204081632
+    },
+    "radii_of_gyration": {
+      "k_xx_over_B": 0.34250353789324245,
+      "k_yy_over_L": 0.22534695471649935
+    }
+  },
+  "stiffness_routes": {
+    "closed_form": {
+      "heave": 6031.08975,
+      "roll": 48.68624125195313,
+      "pitch": 2731.659595751953
+    },
+    "meshes": {
+      "coarse": {
+        "mesh_values": {
+          "heave": 5989.207182291667,
+          "roll": 47.89187656896871,
+          "pitch": 2700.0396716231776
+        },
+        "relative_error_vs_closed_form": {
+          "heave": 0.00694444444444442,
+          "roll": 0.016315999398547665,
+          "pitch": 0.011575353011754497
+        },
+        "cross_coupling_max": 5.114889010023511e-13
+      },
+      "medium": {
+        "mesh_values": {
+          "heave": 6016.012025625,
+          "roll": 48.39001073211493,
+          "pitch": 2720.2468610895558
+        },
+        "relative_error_vs_closed_form": {
+          "heave": 0.0024999999999999467,
+          "roll": 0.006084481204971071,
+          "pitch": 0.004177949068084996
+        },
+        "cross_coupling_max": 8.137323425037406e-14
+      }
+    }
+  },
+  "band_rad_s": [
+    0.2,
+    12.0
+  ],
+  "dt": 0.002,
+  "duration": 40.0,
+  "tau_max": 25.0,
+  "artifact": {
+    "case": "CASE-BEM-CUMMINS-WIGLEY",
+    "sweep": "benchmarks/verified/casepool_bem_cummins_wigley/sweep_medium.npz",
+    "sweep_summary": {
+      "label": "medium",
+      "n_sections": 20,
+      "n_levels": 6,
+      "panel_count": 480,
+      "max_panel_scale": 0.06450176101204128,
+      "n_omega": 41,
+      "omega": [
+        0.2,
+        0.2215561332442578,
+        0.24543560089073657,
+        0.2718888134691625,
+        0.3011931709229846,
+        0.3336559715463664,
+        0.3696176344483451,
+        0.4094552693363246,
+        0.45358663105321095,
+        0.502474500337196,
+        0.5566315367427482,
+        0.6166256546126614,
+        0.6830859784759524,
+        0.7567094403225115,
+        0.8382680879364105,
+        0.9286171809262428,
+        1.0287041593510085,
+        1.1395785789904709,
+        1.2624031174455737,
+        1.3984657664836895,
+        1.549193338482967,
+        1.7161664286102438,
+        1.901135989632466,
+        2.106041693172322,
+        2.333032269952246,
+        2.584488042323465,
+        2.8630458853660428,
+        3.1716268783129147,
+        3.5134669362628275,
+        3.892150743399706,
+        4.3116493435570105,
+        4.776361782318168,
+        5.291161237330323,
+        5.861446120574045,
+        6.4931966884697045,
+        7.193037753458836,
+        7.968308154681512,
+        8.827137716249615,
+        9.778532500134064,
+        10.83246924766504,
+        12.0
+      ],
+      "elapsed_s": 81.34056520462036,
+      "solver_relative_residual_max": 0.00244707823996248,
+      "failed_frequencies": []
+    },
+    "elapsed_s": 27.26273488998413,
+    "replay": "PYTHONPATH=src python3 scripts/case_cummins_wigley_decay_dof.py"
+  }
+}
