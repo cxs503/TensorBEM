@@ -752,8 +752,18 @@ def run_study(
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     ladder_path = root / LADDER_FILE
+    # Only ladder the cells the frozen reference actually covers: a cell with no
+    # reference can never enter the comparison, so computing its ladder is pure
+    # cost (and on a partially produced reference it is the difference between a
+    # minutes-long and an hours-long study).
+    covered = {cell["cell"] for cell in reference.get("cells", [])}
+    cells = [
+        cell
+        for cell in plan.cells()
+        if plan.cell_id(cell["h_over_a"], cell["ka"]) in covered
+    ] or list(plan.cells())
     ladder = build_ladder(
-        list(plan.cells()),
+        cells,
         levels,
         cache_path=ladder_path,
         extra_level=extra_level,
