@@ -1,0 +1,430 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "mission": "m22460",
+  "question": "gate C3a reads the added-mass residual as a causality statement on the samples where the power-law truncation budget is small; is that budget an upper bound on the tail the band never solved, and how much tail error can the certification absorb?",
+  "tolerance": 0.1,
+  "budget_tolerance": 0.05,
+  "committed_band": {
+    "mesh": "medium",
+    "panel_count": 480,
+    "band": [
+      0.2,
+      12.0
+    ]
+  },
+  "probe": {
+    "panel_scale_m": 0.06450176101204128,
+    "c2_admissible_top": 12.330325797847129,
+    "omega_max": 20.0,
+    "per_dof": {
+      "surge": {
+        "min_damping": 1.5135616199299595,
+        "non_positive_at": []
+      },
+      "sway": {
+        "min_damping": 168.32811205435962,
+        "non_positive_at": []
+      },
+      "heave": {
+        "min_damping": 10.799279056602447,
+        "non_positive_at": []
+      },
+      "roll": {
+        "min_damping": 0.0390327701447547,
+        "non_positive_at": []
+      },
+      "pitch": {
+        "min_damping": 2.0915315894482847,
+        "non_positive_at": []
+      },
+      "yaw": {
+        "min_damping": 90.047609946337,
+        "non_positive_at": []
+      }
+    },
+    "usable_as_evidence": true
+  },
+  "coarse_probe": {
+    "panel_scale_m": 0.1004034358093167,
+    "c2_admissible_top": 9.882937536144832,
+    "omega_max": 20.0,
+    "per_dof": {
+      "surge": {
+        "min_damping": -0.5499720275032677,
+        "non_positive_at": [
+          16.868653306034986
+        ]
+      },
+      "sway": {
+        "min_damping": 103.69890702596155,
+        "non_positive_at": []
+      },
+      "heave": {
+        "min_damping": 5.312291644913446,
+        "non_positive_at": []
+      },
+      "roll": {
+        "min_damping": 0.05604195326913818,
+        "non_positive_at": []
+      },
+      "pitch": {
+        "min_damping": 3.6342458136424924,
+        "non_positive_at": []
+      },
+      "yaw": {
+        "min_damping": 106.07910099822368,
+        "non_positive_at": []
+      }
+    },
+    "usable_as_evidence": false
+  },
+  "per_dof": {
+    "surge": {
+      "tail_exponent": 1.0949350652579886,
+      "budget_relative_max": null,
+      "n_declared_decidable": 0,
+      "allowance_min": 0.0,
+      "omission_lower_relative_max": 0.06277467165859564,
+      "omission_total_relative_max": 0.0673364139967557,
+      "measured_over_budget_max": Infinity,
+      "verdict": "uncertified",
+      "reason": "the measured damping has not entered algebraic decay at s_max, so the power-law continuation is unbounded and no sample is certified; the measured tail omission is reported as a magnitude only",
+      "c3a_residual": 0.07067342384113562,
+      "c3a_n_decidable": 0,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.008306705250892044,
+        "resolved_fraction": 0.13232574590064972
+      },
+      "coarse_mesh": {
+        "tail_exponent": 1.044068779339145,
+        "n_declared_decidable": 0,
+        "verdict": "uncertified"
+      }
+    },
+    "sway": {
+      "tail_exponent": 1.5291641901106952,
+      "budget_relative_max": null,
+      "n_declared_decidable": 0,
+      "allowance_min": 0.0,
+      "omission_lower_relative_max": 0.06924847402614495,
+      "omission_total_relative_max": 0.07854233900877317,
+      "measured_over_budget_max": Infinity,
+      "verdict": "uncertified",
+      "reason": "the measured damping has not entered algebraic decay at s_max, so the power-law continuation is unbounded and no sample is certified; the measured tail omission is reported as a magnitude only",
+      "c3a_residual": 0.07617774333071702,
+      "c3a_n_decidable": 0,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.00934725048400361,
+        "resolved_fraction": 0.13498132075046923
+      },
+      "coarse_mesh": {
+        "tail_exponent": 1.538755062847817,
+        "n_declared_decidable": 0,
+        "verdict": "uncertified"
+      }
+    },
+    "heave": {
+      "tail_exponent": 2.8704666923445337,
+      "budget_relative_max": 0.013029665561240326,
+      "n_declared_decidable": 12,
+      "allowance_min": 7.674794071267073,
+      "omission_lower_relative_max": 0.010479675480692716,
+      "omission_total_relative_max": null,
+      "measured_over_budget_max": 0.8042935124802335,
+      "verdict": "certified",
+      "reason": "wherever a budget exists it also bounds the probe-measured tail, so the continuation is conservative on this evidence",
+      "c3a_residual": 0.009117216594108702,
+      "c3a_n_decidable": 12,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.001786983031077638,
+        "resolved_fraction": 0.17051892822157474
+      },
+      "coarse_mesh": {
+        "tail_exponent": 2.9711698765162344,
+        "n_declared_decidable": 12,
+        "verdict": "certified"
+      }
+    },
+    "roll": {
+      "tail_exponent": 3.1966336069814294,
+      "budget_relative_max": 0.022689231701844084,
+      "n_declared_decidable": 12,
+      "allowance_min": 4.40737709033455,
+      "omission_lower_relative_max": 0.01799971060686195,
+      "omission_total_relative_max": 0.018305256258561733,
+      "measured_over_budget_max": 0.7933151216133516,
+      "verdict": "certified",
+      "reason": "wherever a budget exists it also bounds the probe-measured tail, so the continuation is conservative on this evidence",
+      "c3a_residual": 0.024527464219704528,
+      "c3a_n_decidable": 12,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.0032878275135314414,
+        "resolved_fraction": 0.18266002078266955
+      },
+      "coarse_mesh": {
+        "tail_exponent": 3.202219708738416,
+        "n_declared_decidable": 12,
+        "verdict": "certified"
+      }
+    },
+    "pitch": {
+      "tail_exponent": 3.0700887094254705,
+      "budget_relative_max": 0.015754180487596685,
+      "n_declared_decidable": 12,
+      "allowance_min": 6.347521540630458,
+      "omission_lower_relative_max": 0.012313885354882906,
+      "omission_total_relative_max": 0.012651328004776089,
+      "measured_over_budget_max": 0.7816265253897318,
+      "verdict": "certified",
+      "reason": "wherever a budget exists it also bounds the probe-measured tail, so the continuation is conservative on this evidence",
+      "c3a_residual": 0.01173724128060603,
+      "c3a_n_decidable": 12,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.002214718269152246,
+        "resolved_fraction": 0.1798553588347344
+      },
+      "coarse_mesh": {
+        "tail_exponent": 2.947268518586818,
+        "n_declared_decidable": 12,
+        "verdict": "certified"
+      }
+    },
+    "yaw": {
+      "tail_exponent": 1.6156127312870796,
+      "budget_relative_max": null,
+      "n_declared_decidable": 0,
+      "allowance_min": 0.0,
+      "omission_lower_relative_max": 0.0715677764877704,
+      "omission_total_relative_max": 0.07522135041504728,
+      "measured_over_budget_max": Infinity,
+      "verdict": "uncertified",
+      "reason": "the measured damping has not entered algebraic decay at s_max, so the power-law continuation is unbounded and no sample is certified; the measured tail omission is reported as a magnitude only",
+      "c3a_residual": 0.08852694686485775,
+      "c3a_n_decidable": 0,
+      "probe_resolution": {
+        "c2_admissible_top": 12.330325797847129,
+        "resolved_omission_relative": 0.009937011372010111,
+        "resolved_fraction": 0.1388475632424903
+      },
+      "coarse_mesh": {
+        "tail_exponent": 1.7377044756690032,
+        "n_declared_decidable": 0,
+        "verdict": "uncertified"
+      }
+    }
+  },
+  "sensitivity": {
+    "heave": {
+      "damping_at_band_top": 77.07541366697149,
+      "first_falsified_peak_ratio": null,
+      "rows": [
+        {
+          "peak_over_damping_at_band_top": 0.0,
+          "measured_over_budget": 0.8042935124802335,
+          "worst_omission_relative": 0.010479675480692716,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.1,
+          "measured_over_budget": 0.8140012668222999,
+          "worst_omission_relative": 0.010606164273120519,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.3,
+          "measured_over_budget": 0.8321657679603035,
+          "worst_omission_relative": 0.010842841648035475,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 1.0,
+          "measured_over_budget": 0.8893382827820852,
+          "worst_omission_relative": 0.011587780395458346,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 3.0,
+          "measured_over_budget": 1.0350692367034706,
+          "worst_omission_relative": 0.013486605986974523,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 10.0,
+          "measured_over_budget": 1.5862691165265264,
+          "worst_omission_relative": 0.019631139089409062,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 30.0,
+          "measured_over_budget": 3.1529843232501116,
+          "worst_omission_relative": 0.03664080799052392,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 100.0,
+          "measured_over_budget": 8.588294100733544,
+          "worst_omission_relative": 0.09564279249183925,
+          "verdict": "certified_within_allowance"
+        }
+      ]
+    },
+    "roll": {
+      "damping_at_band_top": 0.5864324646523047,
+      "first_falsified_peak_ratio": 100.0,
+      "rows": [
+        {
+          "peak_over_damping_at_band_top": 0.0,
+          "measured_over_budget": 0.7933151216133516,
+          "worst_omission_relative": 0.01799971060686195,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.1,
+          "measured_over_budget": 0.803742935139895,
+          "worst_omission_relative": 0.01823630968410932,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.3,
+          "measured_over_budget": 0.8230279683961652,
+          "worst_omission_relative": 0.0186738722720386,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 1.0,
+          "measured_over_budget": 0.8831868500857165,
+          "worst_omission_relative": 0.020038831077616656,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 3.0,
+          "measured_over_budget": 1.036913220390198,
+          "worst_omission_relative": 0.023519635454986663,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 10.0,
+          "measured_over_budget": 1.6413786703788087,
+          "worst_omission_relative": 0.03486053570060981,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 30.0,
+          "measured_over_budget": 3.3362970627413207,
+          "worst_omission_relative": 0.06641048476875247,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 100.0,
+          "measured_over_budget": 9.226959317219656,
+          "worst_omission_relative": 0.17604246734693546,
+          "verdict": "falsified"
+        }
+      ]
+    },
+    "pitch": {
+      "damping_at_band_top": 23.50457655946195,
+      "first_falsified_peak_ratio": 100.0,
+      "rows": [
+        {
+          "peak_over_damping_at_band_top": 0.0,
+          "measured_over_budget": 0.7816265253897318,
+          "worst_omission_relative": 0.012313885354882906,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.1,
+          "measured_over_budget": 0.7918209551008325,
+          "worst_omission_relative": 0.012474490240519706,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 0.3,
+          "measured_over_budget": 0.8107789654650124,
+          "worst_omission_relative": 0.012773158157482725,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 1.0,
+          "measured_over_budget": 0.8701110865048007,
+          "worst_omission_relative": 0.013707887101055484,
+          "verdict": "certified"
+        },
+        {
+          "peak_over_damping_at_band_top": 3.0,
+          "measured_over_budget": 1.0213455169582013,
+          "worst_omission_relative": 0.016086554285398555,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 10.0,
+          "measured_over_budget": 1.6094850989308733,
+          "worst_omission_relative": 0.023798986571878938,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 30.0,
+          "measured_over_budget": 3.255067006779764,
+          "worst_omission_relative": 0.04519251334236718,
+          "verdict": "certified_within_allowance"
+        },
+        {
+          "peak_over_damping_at_band_top": 100.0,
+          "measured_over_budget": 8.969125881031847,
+          "worst_omission_relative": 0.11946659641411085,
+          "verdict": "falsified"
+        }
+      ]
+    }
+  },
+  "headline": {
+    "certified_dof": [
+      "heave",
+      "roll",
+      "pitch"
+    ],
+    "uncertified_dof": [
+      "surge",
+      "sway",
+      "yaw"
+    ],
+    "smallest_allowance_among_certified": 4.40737709033455,
+    "omission_vs_residual": {
+      "surge": {
+        "omission_lower_relative": 0.06277467165859564,
+        "c3a_residual": 0.07067342384113562,
+        "ratio": 0.8882358918920454
+      },
+      "sway": {
+        "omission_lower_relative": 0.06924847402614495,
+        "c3a_residual": 0.07617774333071702,
+        "ratio": 0.9090381389418504
+      },
+      "heave": {
+        "omission_lower_relative": 0.010479675480692716,
+        "c3a_residual": 0.009117216594108702,
+        "ratio": 1.1494380299645834
+      },
+      "roll": {
+        "omission_lower_relative": 0.01799971060686195,
+        "c3a_residual": 0.024527464219704528,
+        "ratio": 0.7338594175749158
+      },
+      "pitch": {
+        "omission_lower_relative": 0.012313885354882906,
+        "c3a_residual": 0.01173724128060603,
+        "ratio": 1.0491294385529666
+      },
+      "yaw": {
+        "omission_lower_relative": 0.0715677764877704,
+        "c3a_residual": 0.08852694686485775,
+        "ratio": 0.8084292864750362
+      }
+    }
+  }
+}
