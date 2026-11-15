@@ -1,0 +1,10 @@
+[
+  {
+    "name": "fig_matrix_zero_pattern.png",
+    "caption": "Left: entries the two mirror planes allow (diagonals plus surge-pitch and sway-roll). Right: the 26 forbidden entries, all at or below the C0 residual floor. Values are max(|A_ij|)/max|A| and max(|B_ij|)/max|B| over the band."
+  },
+  {
+    "name": "fig_matrix_round_trip.png",
+    "caption": "Cummins transform closure of the cross coefficients B_15 (surge-pitch) and B_24 (sway-roll): the same 2% band the C4 gate declares for heave. Diagonal values quoted in the title for scale."
+  }
+]
