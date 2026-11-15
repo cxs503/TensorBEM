@@ -96,6 +96,8 @@ __all__ = [
     "doubled_body_mesh",
     "generalized_normals_6dof",
     "added_mass_limit",
+    "half_immersed_sphere_mesh",
+    "half_immersed_sphere_added_mass",
 ]
 
 ADDED_MASS_LIMITS = ("infinite_frequency", "zero_frequency")
@@ -287,6 +289,71 @@ def added_mass_limit(
         quadrature_order=int(quadrature_order),
     )
 
+
+
+def half_immersed_sphere_mesh(
+    nlat: int = 6, nlon: int = 18, radius: float = 1.0
+) -> WettedHullMesh:
+    """Lower hemisphere with its waterline on the equator (analytic test body).
+
+    The antisymmetric image of this hull closes into a *full* sphere, so the
+    infinite-frequency heave added mass is known in closed form
+    (:func:`half_immersed_sphere_added_mass`).  It is the only body in this
+    module whose limit has an exact value, which makes it the calibration
+    case for any judge that uses ``added_mass_limit`` as a reference.
+    """
+    if int(nlat) < 1 or int(nlon) < 3:
+        raise ValueError("nlat must be >= 1 and nlon >= 3")
+    if not math.isfinite(float(radius)) or float(radius) <= 0.0:
+        raise ValueError("radius must be a positive finite number")
+    radius = float(radius)
+    verts: list[tuple[float, float, float]] = []
+    rings: list[list[int]] = []
+    for i in range(int(nlat)):
+        theta = 0.5 * math.pi * i / nlat
+        z = -radius * math.sin(theta)
+        r = radius * math.cos(theta)
+        row = []
+        for j in range(int(nlon)):
+            phi = 2.0 * math.pi * j / nlon
+            row.append(len(verts))
+            verts.append((r * math.cos(phi), r * math.sin(phi), z))
+        rings.append(row)
+    pole = len(verts)
+    verts.append((0.0, 0.0, -radius))
+    faces: list[tuple[int, int, int]] = []
+    for i in range(int(nlat) - 1):
+        for j in range(int(nlon)):
+            j2 = (j + 1) % int(nlon)
+            a, b = rings[i][j], rings[i][j2]
+            c, d = rings[i + 1][j2], rings[i + 1][j]
+            faces.append((a, b, c))
+            faces.append((a, c, d))
+    for j in range(int(nlon)):
+        j2 = (j + 1) % int(nlon)
+        faces.append((rings[-1][j], rings[-1][j2], pole))
+    return WettedHullMesh(
+        np.asarray(verts, dtype=float),
+        np.asarray(faces, dtype=np.int64)[:, ::-1],
+    )
+
+
+def half_immersed_sphere_added_mass(radius: float = 1.0, density: float = _DEFAULT_DENSITY) -> float:
+    """Exact ``A_inf`` of the half-immersed sphere in heave.
+
+    For a fully immersed sphere the infinite-fluid heave added mass is half the
+    displaced mass; a half-immersed sphere only has the lower half space, which
+    halves it again:
+
+        ``A_inf(heave) = (1/4) * rho * (4/3) pi R**3``.
+    """
+    radius = float(radius)
+    if not math.isfinite(radius) or radius <= 0.0:
+        raise ValueError("radius must be a positive finite number")
+    density = float(density)
+    if not math.isfinite(density) or density <= 0.0:
+        raise ValueError("density must be a positive finite number")
+    return 0.25 * density * 4.0 / 3.0 * math.pi * radius**3
 
 def mesh_panel_areas(mesh: TriangleMesh) -> FloatArray:
     """Panel areas of a triangulated surface, shape ``(M,)``."""

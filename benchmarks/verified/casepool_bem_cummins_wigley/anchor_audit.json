@@ -1,0 +1,304 @@
+{
+ "case": "CASE-BEM-CUMMINS-WIGLEY",
+ "mission": "m21471",
+ "purpose": "Anchor the A_inf that gate C3 fits as a free parameter with the independent antisymmetric-image solve, and re-judge the KK criterion with zero free parameters (C3a).",
+ "tolerances": {
+  "kk": 0.1,
+  "round_trip": 0.02,
+  "free_decay": 0.05,
+  "geometry": 0.01,
+  "volume": 0.02,
+  "panel_kh": 1.0,
+  "kk_budget": 0.05,
+  "anchor": 0.1,
+  "anchor_analytic": 0.03,
+  "solver_residual": 0.01,
+  "negative_control": 0.1
+ },
+ "anchor_self_check": {
+  "body": "half-immersed sphere, R = 1 m, free surface on the equator",
+  "exact_rule": "A_inf(heave) = rho * (4/3) pi R^3 / 4",
+  "panels": 360,
+  "doubled_panels": 720,
+  "added_mass_inf_heave": 1051.66791190884,
+  "added_mass_inf_exact": 1073.3774899765126,
+  "relative_error": 0.020225482898982308,
+  "tolerance": 0.03,
+  "passed": true
+ },
+ "anchor_ladder": [
+  {
+   "n_sections": 12,
+   "n_levels": 4,
+   "panel_count": 192,
+   "doubled_panel_count": 384,
+   "condition_number": 8.642275239977232,
+   "solver_relative_residual_l2": 5.46423602826864e-16,
+   "added_mass_inf": {
+    "surge": 0.488384105144912,
+    "sway": 68.64136561148683,
+    "heave": 49.65751980474244,
+    "roll": 0.3954674965645697,
+    "pitch": 14.433637518434486,
+    "yaw": 50.739666289033856
+   }
+  },
+  {
+   "n_sections": 20,
+   "n_levels": 6,
+   "panel_count": 480,
+   "doubled_panel_count": 960,
+   "condition_number": 12.00937152006282,
+   "solver_relative_residual_l2": 5.818812559218374e-16,
+   "added_mass_inf": {
+    "surge": 0.4849049624803166,
+    "sway": 66.62486603169928,
+    "heave": 50.06612984031308,
+    "roll": 0.3749057251486032,
+    "pitch": 14.573266401169054,
+    "yaw": 49.255177065980504
+   }
+  },
+  {
+   "n_sections": 28,
+   "n_levels": 8,
+   "panel_count": 896,
+   "doubled_panel_count": 1792,
+   "condition_number": 15.446282973994716,
+   "solver_relative_residual_l2": 6.476744029447691e-16,
+   "added_mass_inf": {
+    "surge": 0.4834921485809993,
+    "sway": 65.66832220061384,
+    "heave": 50.19577261992701,
+    "roll": 0.3639074319046009,
+    "pitch": 14.622168011140456,
+    "yaw": 48.391231784174565
+   }
+  }
+ ],
+ "anchor_convergence": {
+  "surge": {
+   "values": [
+    0.488384105144912,
+    0.4849049624803166,
+    0.4834921485809993
+   ],
+   "coarse_to_medium_relative_change": 0.007174895977140254,
+   "medium_to_fine_relative_change": 0.0029221030857766073,
+   "richardson_estimate": 0.4830212106145602
+  },
+  "sway": {
+   "values": [
+    68.64136561148683,
+    66.62486603169928,
+    65.66832220061384
+   ],
+   "coarse_to_medium_relative_change": 0.030266471062442717,
+   "medium_to_fine_relative_change": 0.014566290092858486,
+   "richardson_estimate": 65.3494742569187
+  },
+  "heave": {
+   "values": [
+    49.65751980474244,
+    50.06612984031308,
+    50.19577261992701
+   ],
+   "coarse_to_medium_relative_change": 0.008161406461292476,
+   "medium_to_fine_relative_change": 0.002582742985062947,
+   "richardson_estimate": 50.238986879798325
+  },
+  "roll": {
+   "values": [
+    0.3954674965645697,
+    0.3749057251486032,
+    0.3639074319046009
+   ],
+   "coarse_to_medium_relative_change": 0.054845178498718096,
+   "medium_to_fine_relative_change": 0.03022277722232817,
+   "richardson_estimate": 0.36024133415660015
+  },
+  "pitch": {
+   "values": [
+    14.433637518434486,
+    14.573266401169054,
+    14.622168011140456
+   ],
+   "coarse_to_medium_relative_change": 0.009581165875302142,
+   "medium_to_fine_relative_change": 0.0033443474274228407,
+   "richardson_estimate": 14.63846854779759
+  },
+  "yaw": {
+   "values": [
+    50.739666289033856,
+    49.255177065980504,
+    48.391231784174565
+   ],
+   "coarse_to_medium_relative_change": 0.030138745031101647,
+   "medium_to_fine_relative_change": 0.01785334346641857,
+   "richardson_estimate": 48.103250023572585
+  }
+ },
+ "verdicts": {
+  "coarse": {
+   "verdict": {
+    "passed": false,
+    "gates_passed": 9,
+    "gates_total": 10,
+    "passed_list": [
+     "C1",
+     "C0",
+     "C3",
+     "C3a",
+     "C7",
+     "C4",
+     "C5",
+     "C6a",
+     "C6b"
+    ],
+    "failed_list": [
+     "C2"
+    ],
+    "case_tolerance": 0.1,
+    "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
+   },
+   "C3": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_residual": 0.034003121869823724,
+    "free_parameters": 1
+   },
+   "C3a": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_residual": 0.08398453379343986,
+    "free_parameters": 0
+   },
+   "C7": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_to_added_mass_scale": 0.04998141192361613,
+    "worst_relative_to_anchor": 0.19047910484940914
+   }
+  },
+  "medium": {
+   "verdict": {
+    "passed": true,
+    "gates_passed": 10,
+    "gates_total": 10,
+    "passed_list": [
+     "C1",
+     "C0",
+     "C2",
+     "C3",
+     "C3a",
+     "C7",
+     "C4",
+     "C5",
+     "C6a",
+     "C6b"
+    ],
+    "failed_list": [],
+    "case_tolerance": 0.1,
+    "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
+   },
+   "C3": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_residual": 0.03598043283997282,
+    "free_parameters": 1
+   },
+   "C3a": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_residual": 0.08852694686485775,
+    "free_parameters": 0
+   },
+   "C7": {
+    "passed": true,
+    "worst_dof": "yaw",
+    "worst_relative_to_added_mass_scale": 0.05254651402488493,
+    "worst_relative_to_anchor": 0.2082975409546838
+   }
+  }
+ },
+ "per_dof_medium": [
+  {
+   "dof": "surge",
+   "added_mass_inf_fitted": 0.5859094737616898,
+   "added_mass_inf_anchor": 0.4849049624803166,
+   "relative_to_anchor": 0.2082975409546838,
+   "relative_to_added_mass_scale": 0.04446957371646639,
+   "kk_residual_fitted": 0.026203850124669234,
+   "kk_residual_anchored": 0.07067342384113562,
+   "truncation_budget_max_relative": Infinity,
+   "n_decidable": 0,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  },
+  {
+   "dof": "sway",
+   "added_mass_inf_fitted": 75.73297470729959,
+   "added_mass_inf_anchor": 66.62486603169928,
+   "relative_to_anchor": 0.1367073469426082,
+   "relative_to_added_mass_scale": 0.04811898734467919,
+   "kk_residual_fitted": 0.028058755986037822,
+   "kk_residual_anchored": 0.07617774333071702,
+   "truncation_budget_max_relative": Infinity,
+   "n_decidable": 0,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  },
+  {
+   "dof": "heave",
+   "added_mass_inf_fitted": 50.93021596754935,
+   "added_mass_inf_anchor": 50.06612984031308,
+   "relative_to_anchor": 0.017258895984017336,
+   "relative_to_added_mass_scale": 0.006108686541542962,
+   "kk_residual_fitted": 0.003008530052565741,
+   "kk_residual_anchored": 0.009117216594108702,
+   "truncation_budget_max_relative": 0.013029665561240326,
+   "n_decidable": 12,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  },
+  {
+   "dof": "roll",
+   "added_mass_inf_fitted": 0.3849173539682502,
+   "added_mass_inf_anchor": 0.3749057251486032,
+   "relative_to_anchor": 0.026704390325537584,
+   "relative_to_added_mass_scale": 0.017292164239822223,
+   "kk_residual_fitted": 0.0072352999798823035,
+   "kk_residual_anchored": 0.024527464219704528,
+   "truncation_budget_max_relative": 0.022689231701844084,
+   "n_decidable": 12,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  },
+  {
+   "dof": "pitch",
+   "added_mass_inf_fitted": 14.811621906606772,
+   "added_mass_inf_anchor": 14.573266401169054,
+   "relative_to_anchor": 0.01635566789739039,
+   "relative_to_added_mass_scale": 0.00695763437726408,
+   "kk_residual_fitted": 0.0047796069033419495,
+   "kk_residual_anchored": 0.01173724128060603,
+   "truncation_budget_max_relative": 0.015754180487596685,
+   "n_decidable": 12,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  },
+  {
+   "dof": "yaw",
+   "added_mass_inf_fitted": 56.77845002256382,
+   "added_mass_inf_anchor": 49.255177065980504,
+   "relative_to_anchor": 0.15274075548455343,
+   "relative_to_added_mass_scale": 0.05254651402488493,
+   "kk_residual_fitted": 0.03598043283997282,
+   "kk_residual_anchored": 0.08852694686485775,
+   "truncation_budget_max_relative": Infinity,
+   "n_decidable": 0,
+   "n_samples": 12,
+   "worst_sample_omega": 9.290664833127178
+  }
+ ]
+}
