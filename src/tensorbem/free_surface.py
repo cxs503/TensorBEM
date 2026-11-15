@@ -80,9 +80,10 @@ from __future__ import annotations
 import math
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss
 from numpy.typing import NDArray
 from scipy.special import exp1
+
+from .quadrature import gauss_legendre
 
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
@@ -101,7 +102,7 @@ _PAIR_BLOCK = 8192
 _RESIDUE_SIGN = -1.0
 _MIN_SCALED_DEPTH = 1.0e-6
 
-_LEGENDRE_X, _LEGENDRE_W = leggauss(_LEGENDRE_NODES)
+_LEGENDRE_X, _LEGENDRE_W = gauss_legendre(_LEGENDRE_NODES)
 
 
 def _legendre_rule(phase: float):
@@ -114,7 +115,7 @@ def _legendre_rule(phase: float):
         nodes = _LEGENDRE_LADDER[-1]
     rule = _LEGENDRE_RULES.get(nodes)
     if rule is None:
-        rule = leggauss(nodes)
+        rule = gauss_legendre(nodes)
         _LEGENDRE_RULES[nodes] = rule
     return rule
 
