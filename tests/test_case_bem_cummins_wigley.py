@@ -567,3 +567,138 @@ def test_replay_artifact_reports_the_anchor_gates() -> None:
     )
     assert replay["gates"]["C7"]["values"]["anchor_self_check"]["passed"] is True
     assert replay["added_mass_inf_anchor"]["doubled_volume_over_hull_volume"] == pytest.approx(2.0, rel=1e-9)
+
+# ---------------------------------------------------------------------------
+# band-extension gates (C8 consistency, C9 truncation decidability)
+# ---------------------------------------------------------------------------
+
+
+def _decaying_sweep(band, *, n=41, exponent=3.0, panels=480, label="extended", mass=5.0):
+    """Synthetic sweep with an algebraic damping tail ``B ~ omega^-exponent``."""
+    w = case.sweep_grid(band, n)
+    b = 40.0 * w ** (-exponent)
+    added = np.zeros((w.size, 6, 6))
+    damper = np.zeros((w.size, 6, 6))
+    for i in range(6):
+        added[:, i, i] = -mass / (1.0 + w**2)
+        damper[:, i, i] = b
+    return case.Sweep(
+        label=label,
+        n_sections=60,
+        n_levels=16,
+        panel_count=panels,
+        max_panel_scale=0.0232,
+        omega=w,
+        added_mass=added,
+        damping=damper,
+        solver_relative_residual=np.full(w.size, 1e-12),
+        elapsed=0.0,
+    )
+
+
+def test_extension_consistency_gate_passes_on_a_reproduced_band() -> None:
+    """A finer mesh that returns the same coefficients on the shared band passes."""
+    committed = _decaying_sweep((0.2, 12.0), n=41, panels=480, label="medium")
+    extended = _decaying_sweep((0.2, 20.0), n=55, panels=3840)
+    gate = case.extension_consistency_gate(committed, extended)
+    assert gate["id"] == "C8"
+    assert gate["passed"] is True
+    assert gate["values"]["n_shared_frequencies"] == 41
+    # What is left over is the piecewise-linear interpolation error between two
+    # different log grids (~0.5 % on smooth data here), not physics.
+    assert 0.0 < gate["values"]["worst_relative_difference"] < 0.01
+
+
+def test_extension_consistency_gate_bites_when_the_band_changes() -> None:
+    """A 20 % coefficient shift on the shared band must not be waved through."""
+    committed = _decaying_sweep((0.2, 12.0), n=41, panels=480, label="medium")
+    extended = _decaying_sweep((0.2, 20.0), n=55, panels=3840)
+    shifted = case.Sweep(
+        label=extended.label,
+        n_sections=extended.n_sections,
+        n_levels=extended.n_levels,
+        panel_count=extended.panel_count,
+        max_panel_scale=extended.max_panel_scale,
+        omega=extended.omega,
+        added_mass=extended.added_mass * 1.2,
+        damping=extended.damping,
+        solver_relative_residual=extended.solver_relative_residual,
+        elapsed=0.0,
+    )
+    gate = case.extension_consistency_gate(committed, shifted)
+    assert gate["passed"] is False
+    # the 20 % shift is measured against the amplitude of the *extended* sweep
+    assert gate["values"]["worst_relative_difference"] == pytest.approx(
+        0.2 / 1.2, rel=1e-6
+    )
+
+
+def test_extension_consistency_gate_needs_a_shared_band() -> None:
+    committed = _decaying_sweep((0.2, 12.0), n=41, panels=480, label="medium")
+    disjoint = _decaying_sweep((15.0, 20.0), n=11)
+    with pytest.raises(ValueError):
+        case.extension_consistency_gate(committed, disjoint)
+
+
+def test_truncation_decidability_gate_credits_a_decaying_tail() -> None:
+    """``B ~ omega^-3`` above the old band top makes the budget finite again."""
+    committed = _decaying_sweep((0.2, 12.0), n=41, exponent=1.0, panels=480, label="medium")
+    extended = _decaying_sweep((0.2, 20.0), n=55, exponent=3.0, panels=3840)
+    gate = case.truncation_decidability_gate(committed, extended)
+    assert gate["id"] == "C9"
+    assert gate["passed"] is True
+    assert set(gate["values"]["newly_decidable"]) == set(case.DOF_NAMES)
+    assert gate["values"]["lost_decidability"] == []
+    assert "widened" in gate["status"]
+    for row in gate["values"]["per_dof"]:
+        assert row["budget_admissible_at_20"] is True
+        assert row["exponent_at_20"] == pytest.approx(3.0, rel=0.05)
+
+
+def test_truncation_decidability_gate_reports_a_negative_result() -> None:
+    """No decay gain: the gate must say so instead of claiming a widening."""
+    committed = _decaying_sweep((0.2, 12.0), n=41, exponent=1.0, panels=480, label="medium")
+    extended = _decaying_sweep((0.2, 20.0), n=55, exponent=1.0, panels=3840)
+    gate = case.truncation_decidability_gate(committed, extended)
+    assert gate["values"]["newly_decidable"] == []
+    assert gate["values"]["lost_decidability"] == []
+    assert gate["passed"] is True  # nothing got worse ...
+    assert "no widening" in gate["status"]  # ... but nothing was gained either
+    assert all(
+        row["budget_admissible_at_20"] is False for row in gate["values"]["per_dof"]
+    )
+
+
+def test_truncation_decidability_gate_refuses_to_lose_ground() -> None:
+    """A band that was certifiable at 12 rad/s may not become uncertifiable at 20."""
+    committed = _decaying_sweep((0.2, 12.0), n=41, exponent=3.0, panels=480, label="medium")
+    flat = _decaying_sweep((0.2, 20.0), n=55, exponent=1.0, panels=3840)
+    gate = case.truncation_decidability_gate(committed, flat)
+    assert gate["passed"] is False
+    assert set(gate["values"]["lost_decidability"]) == set(case.DOF_NAMES)
+    assert "lost certifiability" in gate["status"]
+
+
+def test_extended_band_constants_are_panel_resolved() -> None:
+    """C2 must hold at the pre-declared extended band top, by construction."""
+    mesh = case.wigley_wetted_hull_mesh(
+        case.LENGTH, case.BEAM, case.DRAFT,
+        n_sections=case.EXTENDED_MESH[0], n_levels=case.EXTENDED_MESH[1],
+    )
+    scale = math.sqrt(float(np.max(mesh.areas)))
+    kh = case.EXTENDED_BAND[1] ** 2 / case.GRAVITY * scale
+    assert kh <= case.TOLERANCES["panel_kh"], (
+        f"extended mesh {case.EXTENDED_MESH} resolves only up to "
+        f"{math.sqrt(case.GRAVITY / scale):.2f} rad/s"
+    )
+    # ... and the committed band top would *not* be resolved by that check if the
+    # extension were simply run on the medium mesh: the reason the sweep is
+    # expensive is a physical one, not a matter of taste.
+    medium = case.wigley_wetted_hull_mesh(
+        case.LENGTH, case.BEAM, case.DRAFT,
+        n_sections=case.MESHES["medium"][0], n_levels=case.MESHES["medium"][1],
+    )
+    medium_kh = case.EXTENDED_BAND[1] ** 2 / case.GRAVITY * math.sqrt(
+        float(np.max(medium.areas))
+    )
+    assert medium_kh > case.TOLERANCES["panel_kh"]
