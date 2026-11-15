@@ -1,0 +1,46 @@
+[
+  {
+    "ka": 0.2,
+    "status": "not_computed"
+  },
+  {
+    "ka": 0.5,
+    "status": "not_computed"
+  },
+  {
+    "ka": 0.8,
+    "status": "not_computed"
+  },
+  {
+    "ka": 1.0,
+    "status": "not_computed"
+  },
+  {
+    "ka": 1.5,
+    "status": "not_computed"
+  },
+  {
+    "ka": 2.0,
+    "status": "not_computed"
+  },
+  {
+    "ka": 2.2,
+    "status": "not_computed"
+  },
+  {
+    "ka": 2.58,
+    "status": "not_computed"
+  },
+  {
+    "ka": 3.0,
+    "status": "not_computed"
+  },
+  {
+    "ka": 3.5,
+    "status": "not_computed"
+  },
+  {
+    "ka": 4.0,
+    "status": "not_computed"
+  }
+]
