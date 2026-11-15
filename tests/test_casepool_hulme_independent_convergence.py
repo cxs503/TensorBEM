@@ -166,7 +166,77 @@ def test_committed_inhouse_ladder_has_enough_rungs_to_carry_e7() -> None:
     n = len(ladder["rows"])
     assert n >= 1
     if n < 4:
-        assert ladder.get("failures"), "fewer than four rungs must say why"
+        assert ladder.get("failures") or ladder.get(
+            "absence_reason"
+        ), "fewer than four rungs must say why"
     stored = json.loads(EVIDENCE.read_text())
     e7 = stored["gates"]["E7_inhouse_model_credible"]
     assert e7["n_rungs"] == n
+
+
+# --- E0: a rung that cannot prove its solve-stage health is not physics -----
+def test_contaminated_rung_is_dropped_and_the_gate_fails(tmp_path: Path) -> None:
+    """A 4096-panel rung produced by a broken driver must not enter the fit.
+
+    Reproduction of the first ladder's top rung (dev report m20910): the value
+    is 46 % off, the recorded residual is 4.9e-1 -- the driver did not solve the
+    system it was handed.  E0 must drop it and must fail, while the four healthy
+    rungs still carry E7.
+    """
+    ladder = json.loads(_synthetic_ladder(tmp_path / "l4.json", [64, 256, 1024, 2048]).read_text())
+    for row in ladder["rows"]:
+        row["radiation_relative_residual"] = 1e-3
+    bad = dict(ladder["rows"][-1])
+    bad.update({"subdivisions": 5, "panels": 4096, "radiation_relative_residual": 0.49})
+    for name, _ in QUANTITIES:
+        bad[CASE_KEY[name]] *= 0.54
+    ladder["rows"].append(bad)
+    path = tmp_path / "l5.json"
+    path.write_text(json.dumps(ladder))
+
+    payload = analyse(inhouse_path=path)
+    e0 = payload["gates"]["E0_rungs_solver_healthy"]
+    assert e0["pass"] is False
+    assert [d["panels"] for d in e0["dropped"]] == [4096.0]
+    assert e0["dropped"][0]["residual"] == pytest.approx(0.49)
+    assert e0["n_rungs_used"] == 4, "the dropped rung must not be fitted"
+    assert 4096.0 not in payload["inhouse"]["panels"]
+    assert payload["verdict"] == "FAIL"
+
+
+def test_unrecorded_residual_is_unproven_not_healthy(tmp_path: Path) -> None:
+    """Artifacts older than the guard can be used, but must not testify."""
+    ladder = _synthetic_ladder(tmp_path / "l4.json", [64, 256, 1024, 4096])
+    payload = analyse(inhouse_path=ladder)
+    e0 = payload["gates"]["E0_rungs_solver_healthy"]
+    assert e0["measured"] is None
+    assert e0["n_rungs_recorded"] == 0
+    assert e0["unproven_panels"] == [64.0, 256.0, 1024.0, 4096.0]
+    assert e0["pass"] is True, "no rung was *shown* unhealthy"
+    assert e0["n_rungs_used"] == 4
+
+
+def test_committed_healthy_ladder_proves_its_own_health() -> None:
+    if not INHOUSE_ARTIFACT.exists():
+        pytest.skip("healthy in-house ladder not produced")
+    ladder = json.loads(INHOUSE_ARTIFACT.read_text())
+    assert ladder["rows"], "ladder must carry rungs"
+    for row in ladder["rows"]:
+        residual = max(
+            float(row[k]) for k in ("radiation_relative_residual", "diffraction_relative_residual")
+            if row.get(k) is not None
+        )
+        assert residual < 1e-2, (row["panels"], residual)
+    stored = json.loads(EVIDENCE.read_text())
+    assert stored["gates"]["E0_rungs_solver_healthy"]["pass"] is True
+    assert stored["gates"]["E0_rungs_solver_healthy"]["n_rungs_recorded"] == len(ladder["rows"])
+
+
+def test_case_cell_records_the_residual_it_was_produced_with() -> None:
+    """The graded cell must carry its own solve-stage health, not just a value."""
+    from tensorbem.benchmarks.hulme_hemisphere_case import run_cell
+
+    cell = run_cell(2.0, 2)
+    assert cell["radiation_relative_residual"] < 1e-2
+    assert cell["diffraction_relative_residual"] < 1e-2
+    assert cell["solve_warnings"] == []
