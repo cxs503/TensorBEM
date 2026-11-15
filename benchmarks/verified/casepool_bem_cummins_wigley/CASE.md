@@ -131,7 +131,7 @@ Threshold: max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a 
 | --- | --- |
 | mesh | medium |
 | worst_dof | surge |
-| worst_relative_residual | n/a |
+| worst_relative_residual | 0.2064 |
 | worst_relative_residual_all_samples | 0.2064 |
 | all_dof_fully_decidable | no |
 | kk_budget_tolerance | 0.05 |
