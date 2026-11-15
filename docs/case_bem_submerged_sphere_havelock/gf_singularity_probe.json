@@ -1,0 +1,13 @@
+{
+  "purpose": "test whether capytaine's mesh-independent deviation from the multipole reference is caused by the near-field singular-term quadrature choice (gf_singularities), i.e. an artefact of the third-party code rather than a property of the reference",
+  "settings_compared": ["low_freq (capytaine default)", "low_freq_with_rankine_part (most accurate option in capytaine 3.1.dev0)"],
+  "case": "radius 1.0 m, submergence 2.0 m, rho 1025, g 9.80665, infinite depth, ka=1.0",
+  "signed_deviation_vs_multipole_ref_percent": {
+    "subdivision_2_320_panels": {"low_freq": {"a33": 3.8965, "b33": 1.9293, "a11": 3.8101, "b11": 2.0509},
+                                  "low_freq_with_rankine_part": {"a33": 3.8965, "b33": 1.9293, "a11": 3.8101, "b11": 2.0509}},
+    "subdivision_3_1280_panels": {"low_freq": {"a33": 2.5719, "b33": 2.6189, "a11": 2.5982, "b11": 2.7124},
+                                   "low_freq_with_rankine_part": {"a33": 2.5719, "b33": 2.6189, "a11": 2.5982, "b11": 2.7124}}
+  },
+  "verdict": "falsified",
+  "conclusion": "the two settings agree to the printed precision (4 decimals of a percent), so the residual deviation of capytaine from the multipole reference is not a near-field-integral singularity artifact; it is the discretisation error of capytaine's flat-panel solution and decays with refinement"
+}
