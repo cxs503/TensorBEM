@@ -8,34 +8,34 @@ Environment: python 3.11.6, numpy 2.4.6, host ec6ae0b42a0c, arch loongarch64.
 
 | ka | A11 ref | got | err | B11 ref | got | err | A33 ref | got | err | B33 ref | got | err |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2.2 | 0.22220 | 0.20423 | -8.09% X | 0.31511 | 0.32041 | +1.68% OK | 0.39195 | 0.35580 | -9.22% X | 0.08670 | 0.07321 | -15.56% X |
-| 2.58 | 0.18989 | 0.18839 | -0.79% OK | 0.26748 | 0.26780 | +0.12% OK | 0.40074 | 0.37558 | -6.28% X | 0.06308 | 0.05336 | -15.41% X |
-| 3 | 0.17195 | 0.16138 | -6.15% X | 0.22367 | 0.23616 | +5.58% X | 0.41109 | 0.40433 | -1.64% OK | 0.04516 | 0.04037 | -10.61% X |
-| 3.5 | 0.16344 | -0.00680 | -104.16% X | 0.18264 | 0.15678 | -14.16% X | 0.42246 | 0.17198 | -59.29% X | 0.03106 | -0.00060 | -101.95% X |
-| 4 | 0.16204 | 0.09818 | -39.41% X | 0.15108 | 0.17517 | +15.94% X | 0.43221 | 0.25954 | -39.95% X | 0.02189 | 0.02811 | +28.38% X |
+| 2.2 | 0.22220 | 0.22279 | +0.27% OK | 0.31511 | 0.31346 | -0.52% OK | 0.39195 | 0.38948 | -0.63% OK | 0.08670 | 0.08788 | +1.35% OK |
+| 2.58 | 0.18989 | 0.19032 | +0.23% OK | 0.26748 | 0.26636 | -0.42% OK | 0.40074 | 0.39886 | -0.47% OK | 0.06308 | 0.06450 | +2.25% OK |
+| 3 | 0.17195 | 0.17191 | -0.03% OK | 0.22367 | 0.22299 | -0.30% OK | 0.41109 | 0.40980 | -0.31% OK | 0.04516 | 0.04620 | +2.31% OK |
+| 3.5 | 0.16344 | 0.16184 | -0.98% OK | 0.18264 | 0.18236 | -0.15% OK | 0.42246 | 0.42068 | -0.42% OK | 0.03106 | 0.03193 | +2.78% OK |
+| 4 | 0.16204 | 0.17651 | +8.94% X | 0.15108 | 0.14933 | -1.16% OK | 0.43221 | 0.43019 | -0.47% OK | 0.02189 | 0.02261 | +3.25% OK |
 
 | ka | Fx ref | got | err | Fz ref | got | err | dphase Fx (deg) | dphase Fz (deg) | cond | wall (s) |
 |---|---|---|---|---|---|---|---|---|---|
-| 2.2 | 1.09542 | 1.10035 | +0.45% | 0.40631 | 0.36610 | -9.90% | +2.169 | +3.746 | 3.09 | 23.1 |
-| 2.58 | 0.93196 | 0.88576 | -4.96% | 0.32004 | 0.26082 | -18.50% | +2.787 | -1.140 | 8.29 | 33.6 |
-| 3 | 0.79032 | 0.77785 | -1.58% | 0.25111 | 0.26986 | +7.46% | -4.844 | -3.140 | 2.73 | 56.7 |
-| 3.5 | 0.66118 | 0.41849 | -36.71% | 0.19282 | 0.09193 | -52.32% | +20.168 | +18.377 | 2.78 | 92.2 |
-| 4 | 0.56252 | 0.50545 | -10.15% | 0.15143 | 0.18620 | +22.97% | -7.353 | +10.981 | 14.80 | 112.5 |
+| 2.2 | 1.09542 | 1.09107 | -0.40% | 0.40631 | 0.40926 | +0.73% | +0.040 | +0.040 | 3.09 | 34.9 |
+| 2.58 | 0.93196 | 0.92774 | -0.45% | 0.32004 | 0.32339 | +1.05% | +0.121 | -0.424 | 8.29 | 58.5 |
+| 3 | 0.79032 | 0.78579 | -0.57% | 0.25111 | 0.25464 | +1.40% | +0.220 | -0.782 | 2.73 | 66.4 |
+| 3.5 | 0.66118 | 0.65719 | -0.60% | 0.19282 | 0.19702 | +2.18% | +0.542 | -0.239 | 2.78 | 126.8 |
+| 4 | 0.56252 | 0.55138 | -1.98% | 0.15143 | 0.15427 | +1.88% | -4.964 | +0.365 | 14.80 | 125.5 |
 
 ## 2. Mesh control (256 panels, same ka)
 
 | ka | panels | band-max err | A11 err | A33 err | B33 err |
 |---|---|---|---|---|---|
-| 3 | 256 | 22.94% | -20.47% | -16.29% | -19.72% |
-| 4 | 256 | 32.67% | +8.41% | -6.63% | +32.67% |
+| 3 | 256 | 9.73% | -0.14% | -1.48% | +9.73% |
+| 4 | 256 | 34.49% | +34.49% | -1.91% | +13.33% |
 
 ## 3. CHIEF control at / near the irregular frequency
 
 | ka | chief | cond | band-max err | A33 | B33 |
 |---|---|---|---|---|---|
-| 2.58 | on | 8.29 | 18.50% | 0.37558 | 0.05336 |
+| 2.58 | on | 8.29 | 2.25% | 0.39886 | 0.06450 |
 | 2.58 | off | 65.32 | 6.12% | 0.41959 | 0.06259 |
-| 3 | on | 2.73 | 10.61% | 0.40433 | 0.04037 |
+| 3 | on | 2.73 | 2.31% | 0.40980 | 0.04620 |
 | 3 | off | 2.82 | 2.24% | 0.40990 | 0.04617 |
 
 ## 4. Reference truncation ladder
@@ -49,11 +49,11 @@ Environment: python 3.11.6, numpy 2.4.6, host ec6ae0b42a0c, arch loongarch64.
 
 | gate | criterion | measured | verdict |
 |---|---|---|---|
-| `E1_extension_band_error_below_5pct` | |rel err| < 5% for all six magnitudes, every ka of [2.2, 2.58, 3.0, 3.5, 4.0] on the 1024-panel mesh | 1.0416 | FAIL |
+| `E1_extension_band_error_below_5pct` | |rel err| < 5% for all six magnitudes, every ka of [2.2, 2.58, 3.0, 3.5, 4.0] on the 1024-panel mesh | 0.0894 | FAIL |
 | `E2_geometry_precondition` | |nabla_mesh/nabla-1| < 2% and |A_wp/(pi a^2)-1| < 2% on the extension mesh | None | PASS |
-| `E3_refinement_does_not_worsen_beyond_ka2` | band-max error at 1024 panels <= band-max error at 256 panels for ka = 3 and ka = 4 | {'3': {'coarse_mesh_max': 0.2293871573077481, 'extension_mesh_max': 0.1060910909133725}, '4': {'coarse_mesh_max': 0.3267299013416491, 'extension_mesh_max': 0.39950757742968757}} | FAIL |
+| `E3_refinement_does_not_worsen_beyond_ka2` | band-max error at 1024 panels <= band-max error at 256 panels for ka = 3 and ka = 4 | {'3': {'coarse_mesh_max': 0.09732064328448041, 'extension_mesh_max': 0.023059163302106785}, '4': {'coarse_mesh_max': 0.3448700291918858, 'extension_mesh_max': 0.08935259927681688}} | PASS |
 | `E4_reference_self_converged_up_to_ka4` | reference 144->192 term drift at ka = 4 at least 20x below the 5 % gate (< 2.5e-3) | 7.422e-05 | PASS |
-| `E5_chief_keeps_irregular_frequency_cell_inside_gate` | at ka = 2.58 the CHIEF-on cell is finite and inside 5 % on every magnitude; the CHIEF-off cell is the control | None | FAIL |
+| `E5_chief_keeps_irregular_frequency_cell_inside_gate` | at ka = 2.58 the CHIEF-on cell is finite and inside 5 % on every magnitude; the CHIEF-off cell is the control | None | PASS |
 
 **Overall: FAIL**
 
