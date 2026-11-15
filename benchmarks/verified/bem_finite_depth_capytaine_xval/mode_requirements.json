@@ -1,0 +1,68 @@
+{
+ "anchor": "XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN",
+ "mode_decay": 10.0,
+ "note": "raw = uncapped requirement; ceiling_bound_rows hit MODES_CAP",
+ "study": "mode budget of the finite-depth eigenseries rows",
+ "table": [
+  {
+   "ceiling_bound_rows": 0,
+   "depth_ratio": 5.0,
+   "modes_cap": 4096,
+   "n_panels": 80,
+   "raw_max": 567,
+   "raw_median": 232,
+   "raw_min": 144,
+   "subdivisions": 1
+  },
+  {
+   "ceiling_bound_rows": 0,
+   "depth_ratio": 12.0,
+   "modes_cap": 4096,
+   "n_panels": 80,
+   "raw_max": 1358,
+   "raw_median": 555,
+   "raw_min": 342,
+   "subdivisions": 1
+  },
+  {
+   "ceiling_bound_rows": 0,
+   "depth_ratio": 5.0,
+   "modes_cap": 4096,
+   "n_panels": 320,
+   "raw_max": 1791,
+   "raw_median": 460,
+   "raw_min": 271,
+   "subdivisions": 2
+  },
+  {
+   "ceiling_bound_rows": 8,
+   "depth_ratio": 12.0,
+   "modes_cap": 4096,
+   "n_panels": 320,
+   "raw_max": 4294,
+   "raw_median": 1100,
+   "raw_min": 648,
+   "subdivisions": 2
+  },
+  {
+   "ceiling_bound_rows": 12,
+   "depth_ratio": 5.0,
+   "modes_cap": 4096,
+   "n_panels": 1280,
+   "raw_max": 5742,
+   "raw_median": 936,
+   "raw_min": 526,
+   "subdivisions": 3
+  },
+  {
+   "ceiling_bound_rows": 136,
+   "depth_ratio": 12.0,
+   "modes_cap": 4096,
+   "n_panels": 1280,
+   "raw_max": 13777,
+   "raw_median": 2244,
+   "raw_min": 1259,
+   "subdivisions": 3
+  }
+ ]
+}
