@@ -1,0 +1,53 @@
+{
+  "anchor": "GAP-DIFFLBM-CAV-RES",
+  "case": "D2Q9 lid-driven cavity, Re=100, u_lid=0.1, Ghia et al. (1982)",
+  "reference_provenance": {
+    "table_I_II": "benchmarks/anchors/ghia1982_provenance.json (TensorLBM)",
+    "ocr_witness_sha256": "3637ef9ef72a76bb090f4e31765ed2870d18db67f0f99611730e61927e060f5b",
+    "pdf_sha256": "1d76e4636d24d0fad41c7bdb5ed383e9b224b0bfe3aa0317ce7dfc50619f2d93",
+    "note": "Table II uses its own x-stations, different from Table I y-stations"
+  },
+  "rows": [
+    {
+      "n": 33,
+      "L": 32,
+      "h": 0.03125,
+      "re": 100.0,
+      "tau": 0.596,
+      "collision": "rlbm",
+      "u_lid": 0.1,
+      "steps": 20000,
+      "resid": 9.557570760411471e-07,
+      "converged": false,
+      "wall_seconds": 93.73154664039612,
+      "errors": {
+        "l2_u": 0.02481677632284604,
+        "l2_v": 0.017992823855576663,
+        "max_u": 0.1056505938574076,
+        "max_v": 0.03192996353697619,
+        "max_uv": 0.1056505938574076,
+        "max_u_at_y": 0.96875,
+        "max_v_at_x": 0.71875
+      },
+      "errors_legacy_v": {
+        "l2_u": 0.02481677632284604,
+        "l2_v": 0.16528407329794978,
+        "max_u": 0.1056505938574076,
+        "max_v": 0.40962269578632204,
+        "max_uv": 0.40962269578632204,
+        "max_u_at_y": 0.96875,
+        "max_v_at_x": 0.96875
+      },
+      "errors_at_ghia_points": {
+        "max_u_pts": 0.1053247077814583,
+        "max_v_pts": 0.02831250591290432,
+        "max_uv_pts": 0.1053247077814583,
+        "l2_u_pts": 0.05093135428379614,
+        "l2_v_pts": 0.019859158112766402,
+        "max_u_pt_y": 0.9688,
+        "max_v_pt_x": 0.9688
+      }
+    }
+  ],
+  "order_fits": {}
+}
