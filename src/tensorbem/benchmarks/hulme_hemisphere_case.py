@@ -221,6 +221,12 @@ def _panel_cell(
     norm_a = DENSITY * vol
     norm_b = DENSITY * math.sqrt(GRAVITY * nu) * vol
     cell["radiation_relative_residual"] = float(rad.relative_residual)
+    # Which driver produced the vector, and how stationary it is: the residual
+    # alone cannot separate "solved" from "silently solved wrongly" (m20910).
+    cell["radiation_solve_method"] = str(getattr(rad, "solve_method", ""))
+    cell["radiation_stationarity"] = float(
+        getattr(rad, "least_squares_stationarity", float("nan"))
+    )
     cell["A11_dimless"] = float(rad.added_mass[0, 0]) / norm_a
     cell["A33_dimless"] = float(rad.added_mass[1, 1]) / norm_a
     cell["B11_dimless"] = float(rad.damping[0, 0]) / norm_b
@@ -239,6 +245,12 @@ def _panel_cell(
                 operators=ops,
             )
         cell["diffraction_relative_residual"] = float(diff.relative_residual)
+        cell["diffraction_solve_method"] = str(
+            getattr(diff, "solve_method", "")
+        )
+        cell["diffraction_stationarity"] = float(
+            getattr(diff, "least_squares_stationarity", float("nan"))
+        )
         scale_f = DENSITY * GRAVITY * AMPLITUDE * RADIUS * RADIUS
         fx = complex(diff.excitation_force[0]) / scale_f
         fz = complex(diff.excitation_force[2]) / scale_f
