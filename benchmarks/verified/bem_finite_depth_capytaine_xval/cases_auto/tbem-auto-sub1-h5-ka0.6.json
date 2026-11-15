@@ -1,0 +1,19 @@
+{
+ "added_mass_heave": 2093.5311224199318,
+ "added_mass_surge": 2010.8747422336828,
+ "case_id": "tbem-auto-sub1-h5-ka0.6",
+ "condition_number": 2.1926656738095938,
+ "damping_heave": 751.5600748278398,
+ "damping_surge": 404.17985011765177,
+ "depth_ratio": 5.0,
+ "ka": 0.6,
+ "mode_cap_bound_rows": 0,
+ "mode_count": 567,
+ "mode_requirement_max": 567,
+ "n_panels": 80,
+ "relative_residual": 3.6218380077568797e-16,
+ "seconds": 7.3,
+ "status": "ok",
+ "subdivisions": 1,
+ "tool": "TensorBEM"
+}
