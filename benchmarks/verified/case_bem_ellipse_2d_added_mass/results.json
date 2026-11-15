@@ -5,7 +5,7 @@
   "repo": "TensorBEM",
   "domain": "ship-total-performance/seakeeping-hydrodynamics",
   "capability": "2-D exterior BEM operator on a non-circular section (added mass of an elliptic cylinder)",
-  "generated_at_utc": "2026-11-13T10:23:40Z",
+  "generated_at_utc": "2026-11-15T03:18:03Z",
   "environment": {
     "python": "3.11.6",
     "numpy": "2.4.6",
@@ -1858,7 +1858,7 @@
     "n_checks": 33
   },
   "overall": "PASS",
-  "wall_seconds": 58.07326698303223,
+  "wall_seconds": 35.572954416275024,
   "figures": [
     "convergence.png",
     "aspect_ratio.png",
