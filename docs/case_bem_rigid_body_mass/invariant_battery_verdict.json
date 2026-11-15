@@ -1,0 +1,23 @@
+{
+  "conditioning_domain": {
+    "legacy_first_ratio_above_anchor_tolerance": 100000.0,
+    "legacy_first_ratio_with_numerical_loss": 100000.0,
+    "shipped_stays_at_panelisation_floor": true
+  },
+  "criterion": "the shipped assembly must satisfy every exact invariant to 1e-9; each injected defect (except the deliberately sub-tolerance 2 % density error, which no 3 % gate can see) must push at least one invariant above the 3 % anchor acceptance tolerance; the quadrature route must reject an inverted and a half-inverted mesh, must satisfy the parallel-axis covariance of its reference-point handling to 1e-9, and must hold the panelisation floor for every reference-point distance up to d/L = 1e6",
+  "defects_caught": [
+    "flipped_coupling",
+    "double_parallel_axis",
+    "missing_parallel_axis",
+    "asymmetric_coupling_entry",
+    "mode_swap_roll_pitch",
+    "reference_point_sign_flip"
+  ],
+  "defects_not_caught": [
+    "density_error_2pct"
+  ],
+  "designed_sub_tolerance_defect": "density_error_2pct",
+  "overall": "PASS",
+  "route_properties_ok": true,
+  "shipped_passes_all_invariants": true
+}
