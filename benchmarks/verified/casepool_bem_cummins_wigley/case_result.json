@@ -4638,6 +4638,9 @@
           12.0
         ],
         "status": "decided",
+        "criterion_enforced": "|zeta_decay_consensus - zeta_fd|/zeta_fd <= bar AND >= 2 qualifying windows; cross-window spread is a reported diagnostic, not enforced",
+        "convergence_claimed": false,
+        "non_exponential_decay": true,
         "multi_window": {
           "converged": false,
           "spread": 0.5632464372466132,
@@ -4669,7 +4672,8 @@
         "oscillator_inertia": 0.8116293845663264,
         "added_mass_inf_used": 0.3849173539682502,
         "dt": 0.002,
-        "duration": 40.0
+        "duration": 40.0,
+        "audit_source": "recomputed from sweep_medium.npz (m22091 regeneration)"
       }
     }
   },

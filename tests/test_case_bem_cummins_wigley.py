@@ -734,3 +734,151 @@ def test_c5c_gate_passes_on_roll_from_artifact() -> None:
     assert c5c["values"]["dof_name"] == "roll"
     assert c5c["values"]["relative_error"] < 0.05
     assert c5c["values"]["multi_window"]["n_qualifying_floors"] >= 2
+
+
+# ---------------------------------------------------------------------------
+# C5c failure injection (negative controls).
+#
+# Gate C5c decides the roll damping ratio from a multi-window consensus.  A gate
+# that has only ever been observed to pass is indistinguishable from a rubber
+# stamp, so every branch of its decision rule is falsified here by construction.
+# The decision rule is factored out as ``case.c5c_decision`` exactly so that it
+# can be exercised without paying the ~1.5 min Cummins free-decay integration.
+# ---------------------------------------------------------------------------
+
+BAR = case.TOLERANCES["free_decay"]
+
+
+def test_c5c_decision_passes_only_inside_bar_with_two_windows() -> None:
+    status, passed = case.c5c_decision(in_band=True, relative=0.0, n_qualifying=3, bar=BAR)
+    assert passed is True
+    assert status == "decided"
+
+
+def test_c5c_decision_boundary_exactly_at_bar_passes() -> None:
+    """The bar is inclusive; a hair beyond it must fail."""
+    assert case.c5c_decision(in_band=True, relative=BAR, n_qualifying=3, bar=BAR)[1] is True
+    status, passed = case.c5c_decision(
+        in_band=True, relative=BAR * (1 + 1e-9), n_qualifying=3, bar=BAR
+    )
+    assert passed is False
+    assert status == "beyond_bar"
+
+
+def test_c5c_decision_rejects_disagreement_beyond_bar() -> None:
+    """A consensus that disagrees with the impedance route must NOT pass."""
+    status, passed = case.c5c_decision(in_band=True, relative=0.30, n_qualifying=3, bar=BAR)
+    assert passed is False
+    assert status == "beyond_bar"
+
+
+def test_c5c_decision_rejects_out_of_band_natural_frequency() -> None:
+    """Even a perfect agreement is void when omega_n lies outside the computed band."""
+    status, passed = case.c5c_decision(in_band=False, relative=0.0, n_qualifying=3, bar=BAR)
+    assert passed is False
+    assert "outside computed band" in status
+
+
+def test_c5c_decision_rejects_single_qualifying_window() -> None:
+    """The whole point of C5c: one window is not a consensus."""
+    status, passed = case.c5c_decision(in_band=True, relative=0.0, n_qualifying=1, bar=BAR)
+    assert passed is False
+    assert "fewer than 2" in status
+
+
+def test_c5c_decision_rejects_nonfinite_relative() -> None:
+    """zeta_fd == 0 or nan makes the relative error infinite -> never a pass."""
+    for bad in (math.inf, math.nan):
+        assert case.c5c_decision(in_band=True, relative=bad, n_qualifying=3, bar=BAR)[1] is False
+
+
+def _fake_decay(monkeypatch, per_floor):
+    """Force ``_decay_zeta`` to return prescribed (zeta, period, n_peaks) per floor."""
+    def fake(time_array, displacement, amplitude_floor=None):
+        zeta, period, n_peaks = per_floor[amplitude_floor]
+        return zeta, period, n_peaks
+
+    monkeypatch.setattr(case, "_decay_zeta", fake)
+
+
+def _toy_signal():
+    t = np.linspace(0.0, 40.0, 4001)
+    return t, np.exp(-0.05 * t) * np.cos(3.0 * t)
+
+
+def test_multi_window_even_count_uses_true_median(monkeypatch) -> None:
+    """With exactly two qualifying windows the consensus is their MEAN.
+
+    Regression: the previous ``sorted_z[len // 2]`` convention returned the
+    upper of the two samples, biasing a monotone window sequence upward.
+    """
+    floors = [0.01, 0.001]
+    _fake_decay(monkeypatch, {floors[0]: (0.09, 1.1, 8), floors[1]: (0.05, 1.1, 15)})
+    t, d = _toy_signal()
+    out = case._decay_zeta_multi_window(t, d, floors=floors)
+    assert out["n_qualifying_floors"] == 2
+    assert out["consensus_zeta"] == pytest.approx(0.07)      # mean, not 0.09
+    assert out["consensus_period"] == pytest.approx(1.1)
+    assert out["converged"] is False
+    assert out["spread"] > out["bar"]
+
+
+def test_multi_window_odd_count_uses_middle_sample(monkeypatch) -> None:
+    floors = [0.01, 0.001, 0.0001]
+    _fake_decay(
+        monkeypatch,
+        {floors[0]: (0.0901, 1.086, 8), floors[1]: (0.0711, 1.0989, 15), floors[2]: (0.0501, 1.09, 28)},
+    )
+    t, d = _toy_signal()
+    out = case._decay_zeta_multi_window(t, d, floors=floors)
+    assert out["consensus_zeta"] == pytest.approx(0.0711)
+    assert out["converged"] is False       # spread 56 % >> 5 % bar
+    assert out["spread"] == pytest.approx((0.0901 - 0.0501) / 0.0711, rel=1e-6)
+
+
+def test_multi_window_single_window_is_not_a_consensus(monkeypatch) -> None:
+    """One qualifying window must not be reported as converged with spread 0.
+
+    Regression: the old code returned ``converged=True, spread=0.0`` for a
+    single window, which is a false statement about window agreement.
+    """
+    floors = [0.01, 0.001]
+    _fake_decay(monkeypatch, {floors[0]: (0.09, 1.1, 8), floors[1]: (float("nan"), 1.1, 3)})
+    t, d = _toy_signal()
+    out = case._decay_zeta_multi_window(t, d, floors=floors)
+    assert out["n_qualifying_floors"] == 1
+    assert out["converged"] is False
+    assert math.isnan(out["spread"])
+    assert out["consensus_zeta"] == pytest.approx(0.09)
+
+
+def test_multi_window_no_qualifying_window_is_undecidable(monkeypatch) -> None:
+    floors = [0.01]
+    _fake_decay(monkeypatch, {floors[0]: (float("nan"), float("nan"), 2)})
+    t, d = _toy_signal()
+    out = case._decay_zeta_multi_window(t, d, floors=floors)
+    assert out["n_qualifying_floors"] == 0
+    assert out["converged"] is False
+    assert math.isnan(out["consensus_zeta"])
+
+
+def test_committed_roll_verdict_is_disclosed_as_non_convergent() -> None:
+    """The accepted roll verdict passes while its windows do NOT converge.
+
+    This test pins the honest reading of the committed evidence: C5c passes on
+    the agreement between the time-domain consensus and the frequency-domain
+    impedance, not because the three amplitude windows agreed.  Any regeneration
+    that silently turns this into a 'converged' claim must fail here.
+    """
+    with open("benchmarks/verified/casepool_bem_cummins_wigley/case_result.json") as f:
+        data = json.load(f)
+    c5c = data["gates"]["C5c"]
+    mw = c5c["values"]["multi_window"]
+    assert c5c["passed"] is True
+    assert c5c["values"]["status"] == "decided"
+    assert mw["converged"] is False, "committed roll windows did not converge"
+    assert mw["spread"] > mw["bar"], "spread must exceed the bar to be non-exponential"
+    assert mw["n_qualifying_floors"] >= 2
+    # monotone window drift is the physical signature, not scatter noise
+    zetas = [row["zeta"] for row in sorted(mw["per_floor"], key=lambda r: -r["floor"])]
+    assert all(a > b for a, b in zip(zetas, zetas[1:])), f"expected monotone drift, got {zetas}"
