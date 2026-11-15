@@ -17,6 +17,23 @@ Usage (needs capytaine importable)::
     PYTHONPATH=src python scripts/capytaine_finite_depth_ref.py \
         --out benchmarks/verified/capytaine_finite_depth/capytaine_ref.json
 
+Computing the whole 12-cell grid is a ~20 minute single-core job (the 4608-panel
+rung dominates), so the producer can be spread over shards and merged::
+
+    # shard 3 of 4, each shard writes its own partial file
+    PYTHONPATH=src python scripts/capytaine_finite_depth_ref.py \
+        --shard 3 --shards 4 --out /tmp/cp_ref_shard3.json
+    # merge the shards back into the frozen reference, in plan order
+    PYTHONPATH=src python scripts/capytaine_finite_depth_ref.py \
+        --merge /tmp/cp_ref_shard0.json /tmp/cp_ref_shard1.json \
+                /tmp/cp_ref_shard2.json /tmp/cp_ref_shard3.json \
+        --out benchmarks/verified/capytaine_finite_depth/capytaine_ref.json
+
+A shard assignment is ``index % shards == shard`` over the plan's cell list, so
+the assignment is reproducible without any extra bookkeeping; ``--merge``
+refuses to write a reference that does not cover every planned cell exactly
+once, so a lost shard cannot silently become a smaller study.
+
 Reference ``nu`` is back-computed per cell from ``k0 tanh(k0 h) = nu`` so that
 ``k0*a`` is exact at every depth.  For each cell the reference is evaluated at
 three resolutions with ``finite_depth_method="newer"`` plus once at the middle
@@ -177,6 +194,57 @@ def _solve_infinite_depth(
     return out
 
 
+def _merge_shards(paths: list[Path], out: Path) -> int:
+    """Merge sharded reference files into one frozen reference, in plan order.
+
+    A merge that does not cover every planned cell exactly once is refused: a
+    study over a silently reduced grid would report a *smaller* cross-validation
+    as if it were the pre-registered one.
+    """
+    order = [plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()]
+    merged: dict[str, dict[str, Any]] = {}
+    provenance: dict[str, Any] | None = None
+    elapsed = 0.0
+    for path in paths:
+        payload = json.loads(Path(path).read_text())
+        if provenance is None:
+            provenance = payload.get("provenance", {})
+        elapsed += float(payload.get("elapsed_seconds", 0.0) or 0.0)
+        for record in payload.get("cells", []):
+            key = record["cell"]
+            if key in merged:
+                raise SystemExit(f"cell {key} appears in more than one shard")
+            if key not in order:
+                raise SystemExit(f"cell {key} is not in the plan")
+            merged[key] = record
+    missing = [key for key in order if key not in merged]
+    if missing:
+        raise SystemExit(f"reference incomplete: missing {missing}")
+    merged_prov = dict(provenance or {})
+    merged_prov["shards"] = [str(p) for p in paths]
+    merged_prov["sharded"] = len(paths) > 1
+    merged_prov["merged_utc"] = _dt.datetime.now(_dt.timezone.utc).isoformat(
+        timespec="seconds"
+    )
+    payload_out = {
+        "provenance": merged_prov,
+        "plan": {
+            "depth_ratios": list(plan.DEPTH_RATIOS),
+            "ka_grid": list(plan.KA_GRID),
+            "sphere_radius": plan.SPHERE_RADIUS,
+            "sphere_submergence": plan.SPHERE_SUBMERGENCE,
+            "resolutions": [list(r) for r in plan.CAPYTAINE_RESOLUTIONS],
+            "legacy_resolution": list(plan.CAPYTAINE_LEGACY_RESOLUTION),
+        },
+        "cells": [merged[key] for key in order],
+        "elapsed_seconds": round(elapsed, 2),
+    }
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(payload_out, indent=1, sort_keys=False) + "\n")
+    print(f"wrote {out} ({len(payload_out['cells'])} cells from {len(paths)} shards)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -190,7 +258,31 @@ def main(argv: list[str] | None = None) -> int:
         default=0,
         help="produce only the first N cells (smoke runs); 0 = all",
     )
+    parser.add_argument(
+        "--shard",
+        type=int,
+        default=0,
+        help="this shard index (cells with index %% shards == shard)",
+    )
+    parser.add_argument(
+        "--shards",
+        type=int,
+        default=1,
+        help="total number of shards; 1 = single process",
+    )
+    parser.add_argument(
+        "--merge",
+        type=Path,
+        nargs="+",
+        default=None,
+        help="merge these shard files into --out instead of solving",
+    )
     args = parser.parse_args(argv)
+
+    if args.merge:
+        return _merge_shards(args.merge, args.out)
+    if not 0 <= args.shard < args.shards:
+        parser.error("--shard must satisfy 0 <= shard < shards")
 
     import capytaine as cpt  # imported here: optional dependency
 
@@ -210,6 +302,8 @@ def main(argv: list[str] | None = None) -> int:
     for index, cell in enumerate(plan.cells()):
         if args.max_cells and index >= args.max_cells:
             break
+        if index % args.shards != args.shard:
+            continue
         record = _record(
             cpt,
             cell,

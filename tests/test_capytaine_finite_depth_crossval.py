@@ -293,3 +293,119 @@ def test_published_page_quotes_the_frozen_numbers(results):
     assert cell_line in text
     assert "scripts/capytaine_finite_depth_ref.py" in text
     assert "capytaine" in text
+
+# --------------------------------------------------------------------------- #
+# 8. producing the study in shards cannot silently shrink it
+# --------------------------------------------------------------------------- #
+def _ref_shard_module():
+    """Import the producer script (it imports capytaine only inside main())."""
+    import importlib.util
+
+    path = ROOT / "scripts" / "capytaine_finite_depth_ref.py"
+    spec = importlib.util.spec_from_file_location("_cp_ref_producer", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _fake_ref_shard(cells, tag: str) -> dict:
+    return {
+        "provenance": {"tool": "capytaine", "tag": tag},
+        "cells": [
+            {"cell": plan.cell_id(c["h_over_a"], c["ka"]),
+             "h_over_a": c["h_over_a"], "ka": c["ka"]}
+            for c in cells
+        ],
+        "elapsed_seconds": 1.0,
+    }
+
+
+def _ladder_shard(keys, level_values, panels=20) -> dict:
+    cells = {}
+    for key in keys:
+        h_over_a, ka = (float(part.split("=")[1]) for part in key.split("|"))
+        cell = next(
+            c for c in plan.cells()
+            if plan.cell_id(c["h_over_a"], c["ka"]) == key
+        )
+        cells[key] = {
+            "cell": key,
+            "h_over_a": h_over_a,
+            "ka": ka,
+            "depth": cell["depth"],
+            "k0": cell["k0"],
+            "k0h": cell["k0h"],
+            "nu": cell["nu"],
+            "levels": {
+                str(level): {
+                    "level": level,
+                    "panels": panels,
+                    "values": {
+                        "heave": {"added_mass": value, "damping": value},
+                        "surge": {"added_mass": value, "damping": value},
+                    },
+                }
+                for level, value in level_values.items()
+            },
+            "negative_control": None,
+        }
+    return {"cells": cells, "environment": {"levels": sorted(level_values)}}
+
+
+def test_reference_shards_merge_in_plan_order_and_refuse_a_lost_shard(tmp_path):
+    """The 12-cell reference may be produced in shards -- but only losslessly."""
+    producer = _ref_shard_module()
+    planned = list(plan.cells())
+    half = len(planned) // 2
+    shards = [
+        tmp_path / "shard0.json",
+        tmp_path / "shard1.json",
+    ]
+    shards[0].write_text(json.dumps(_fake_ref_shard(planned[:half], "a")))
+    shards[1].write_text(json.dumps(_fake_ref_shard(planned[half:], "b")))
+    out = tmp_path / "merged.json"
+    assert producer._merge_shards(shards, out) == 0
+    merged = json.loads(out.read_text())
+    assert [c["cell"] for c in merged["cells"]] == [
+        plan.cell_id(c["h_over_a"], c["ka"]) for c in planned
+    ]
+    assert merged["provenance"]["sharded"] is True
+
+    # dropping a shard must fail loudly, not yield an 11-cell "study"
+    with pytest.raises(SystemExit):
+        producer._merge_shards(shards[:1], tmp_path / "short.json")
+    assert not (tmp_path / "short.json").exists()
+
+    # the same cell arriving twice is also an error, not a silent overwrite
+    with pytest.raises(SystemExit):
+        producer._merge_shards([shards[0], shards[0]], tmp_path / "dup.json")
+
+
+def test_ladder_shard_merge_requires_every_rung(tmp_path):
+    keys = sorted(
+        plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()
+    )
+    shard_a = tmp_path / "a.json"
+    shard_b = tmp_path / "b.json"
+    shard_a.write_text(json.dumps(
+        _ladder_shard(keys[:1], {0: 100.0, 1: 120.0})))
+    shard_b.write_text(json.dumps(
+        _ladder_shard(keys[1:2], {0: 200.0, 1: 220.0})))
+    merged = study.merge_ladders([shard_a, shard_b], required_levels=(0, 1))
+    assert sorted(merged["cells"]) == keys[:2]
+
+    # a ladder missing the 80-panel rung must not be merged into a "complete" one
+    shard_c = tmp_path / "c.json"
+    shard_c.write_text(json.dumps(_ladder_shard(keys[2:3], {0: 300.0})))
+    with pytest.raises(ValueError):
+        study.merge_ladders([shard_a, shard_c], required_levels=(0, 1))
+
+
+def test_ladder_shard_merge_rejects_disagreeing_duplicates(tmp_path):
+    key = plan.cell_id(plan.DEPTH_RATIOS[0], plan.KA_GRID[0])
+    first = tmp_path / "first.json"
+    second = tmp_path / "second.json"
+    first.write_text(json.dumps(_ladder_shard([key], {0: 100.0, 1: 120.0})))
+    second.write_text(json.dumps(_ladder_shard([key], {0: 100.5, 1: 120.0})))
+    with pytest.raises(ValueError):
+        study.merge_ladders([first, second])
