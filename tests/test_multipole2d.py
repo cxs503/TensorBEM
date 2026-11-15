@@ -160,3 +160,16 @@ def test_cylinder_field_has_a_pure_dipole() -> None:
     for n in (2, 3, 4):
         assert report["spectrum"][n]["mean"] / (speed * radius ** (n + 1)) < 1e-2
     assert abs(report["source_strength"]) < 1e-9
+
+def test_ring_fit_survives_an_infinite_condition_estimate(monkeypatch):
+    """``fit_ring`` must not need the LAPACK SVD to accept a healthy basis."""
+    theta = ring_angles(32, offset=0.5)
+    values = _synthetic(2.0, theta, {1: (3.0, 0.0)})
+    reference = fit_ring(values, 2.0, theta, order=2)
+
+    monkeypatch.setattr(np.linalg, "cond", lambda *a, **k: float("inf"))
+    fit = fit_ring(values, 2.0, theta, order=2)
+    assert np.isfinite(fit.condition_number)
+    assert fit.condition_number < 1.0e10
+    assert np.allclose(fit.cos_coefficients, reference.cos_coefficients, rtol=0.0, atol=1.0e-12)
+    assert fit.rms_residual == pytest.approx(reference.rms_residual, rel=0.0, abs=1.0e-12)

@@ -18,6 +18,7 @@ import math
 import numpy as np
 from numpy.typing import NDArray
 
+from .conditioning import condition_number_with_fallback
 from .geometry import PanelMesh
 from .kernels import (
     REFERENCE_LENGTH,
@@ -54,6 +55,7 @@ class LaplaceDirichletResult:
     domain: str = "interior"
     reference_length: float = REFERENCE_LENGTH
     linear_density: bool = False
+    condition_number_source: str = "svd"
 
 
 def _validate_domain(domain: str) -> str:
@@ -151,7 +153,7 @@ def _solve(
     )
     sign = 1.0 if domain == "interior" else -1.0
     rhs = 0.5 * values + sign * (double @ values)
-    condition = float(np.linalg.cond(single))
+    condition, condition_source = condition_number_with_fallback(single)
     if not math.isfinite(condition) or condition > _MAX_CONDITION:
         raise ValueError(
             "the single-layer matrix is numerically singular "
@@ -173,6 +175,7 @@ def _solve(
         domain=domain,
         reference_length=reference,
         linear_density=bool(linear_density),
+        condition_number_source=condition_source,
     )
 
 
@@ -296,7 +299,7 @@ def solve_laplace_exterior_neumann(
     )
     system = 0.5 * np.eye(n) - double
     rhs = single @ flux
-    condition = float(np.linalg.cond(system))
+    condition, condition_source = condition_number_with_fallback(system)
     potential = np.linalg.solve(system, rhs)
     residual = float(np.linalg.norm(system @ potential - rhs))
     rhs_norm = float(np.linalg.norm(rhs))
@@ -311,6 +314,7 @@ def solve_laplace_exterior_neumann(
         domain="exterior",
         reference_length=reference,
         linear_density=bool(linear_density),
+        condition_number_source=condition_source,
     )
 
 
@@ -350,7 +354,7 @@ def compute_added_mass_matrix_2d(
     )
     system = 0.5 * np.eye(n) - double
     rhs = single @ (-mode_normals)
-    condition = float(np.linalg.cond(system))
+    condition, _ = condition_number_with_fallback(system)
     potentials = np.linalg.solve(system, rhs)
     residuals = np.linalg.norm(system @ potentials - rhs, axis=0)
     rhs_norms = np.linalg.norm(rhs, axis=0)

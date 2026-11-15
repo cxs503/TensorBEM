@@ -71,3 +71,42 @@ def test_exact_panel_integration_preserves_refinement_trend():
         theta = np.arctan2(mesh.normals[:, 1], mesh.normals[:, 0])
         errors.append(np.sqrt(np.mean((result.normal_derivative - np.cos(theta)) ** 2)))
     assert all(b < a for a, b in zip(errors, errors[1:]))
+
+
+def test_dirichlet_solve_survives_an_infinite_condition_estimate(monkeypatch):
+    """The condition-number gate must not reject a solvable system.
+
+    The gate exists to reject the logarithmic-capacity degeneracy, not to
+    depend on the LAPACK SVD succeeding: on the loongarch64 nodes
+    ``numpy.linalg.cond`` returned ``inf`` for the 128-panel single-layer
+    matrix whose true condition number is ~76, which made every case that
+    touches this solve unrunnable there.  With the SVD unavailable the solve
+    must still succeed, keep its algebraic residual, and record that the
+    condition number came from the LU-based fallback.
+    """
+    mesh = regular_polygon(32)
+    values = mesh.centers[:, 0]
+    reference = solve_laplace_dirichlet(mesh, values)
+    assert reference.condition_number_source == "svd"
+
+    monkeypatch.setattr(np.linalg, "cond", lambda *a, **k: float("inf"))
+    result = solve_laplace_dirichlet(mesh, values)
+    assert result.condition_number_source == "power_iteration"
+    assert np.isfinite(result.condition_number)
+    assert result.relative_residual_l2 < 1.0e-10
+    assert np.allclose(result.normal_derivative, reference.normal_derivative, rtol=0.0, atol=1.0e-12)
+
+
+def test_dirichlet_gate_still_rejects_a_singular_system(monkeypatch):
+    """If the fallback also fails to bound the condition number, raise."""
+    import tensorbem.solver as solver_module
+
+    mesh = regular_polygon(16)
+    monkeypatch.setattr(np.linalg, "cond", lambda *a, **k: float("inf"))
+    monkeypatch.setattr(
+        solver_module,
+        "condition_number_with_fallback",
+        lambda matrix: (float("inf"), "power_iteration"),
+    )
+    with pytest.raises(ValueError, match="numerically singular"):
+        solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
