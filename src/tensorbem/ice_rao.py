@@ -69,6 +69,7 @@ from .hydrostatic import (
     HydrostaticProperties,
     compute_hydrostatic_restoring_matrix,
     compute_mass_matrix,
+    mass_matrix_from_hull,
     mass_matrix_from_hull_geometry,
 )
 from .ice import (
@@ -412,9 +413,15 @@ def compute_ice_rao_spectrum(
         )
     restoring = np.asarray(hydrostatic_props.restoring_matrix, dtype=float)
     if inertia is None:
-        # Same geometry-anchored default as the open-water RAO path.
-        mass_matrix = mass_matrix_from_hull_geometry(
-            hydrostatic_props, mass_value, cg, density=density
+        # Same geometry-exact default as the open-water RAO path (wetted-mesh
+        # volume moments; equivalent-half-ellipsoid only as a warned fallback).
+        mass_matrix = mass_matrix_from_hull(
+            hull,
+            mass_value,
+            cg,
+            hydrostatic_props=hydrostatic_props,
+            density=density,
+            gravity=ice.gravity,
         )
     else:
         mass_matrix = compute_mass_matrix(mass_value, cg, inertia)
