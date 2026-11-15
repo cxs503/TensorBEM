@@ -1,0 +1,902 @@
+{
+ "case": "CASE-BEM-CUMMINS-WIGLEY",
+ "audit": "C5 attribution",
+ "gates_definition": {
+  "D0_estimator_validation": {
+   "tol": 1e-06,
+   "quantity": "complex root vs closed form"
+  },
+  "D0b_cubic_memory_root": {
+   "tol": 1e-08,
+   "quantity": "Newton vs numpy.roots"
+  },
+  "D1_fit_band": {
+   "tol": 0.03,
+   "quantity": "max in-band |B_fit - B_bem| / max|B|"
+  },
+  "D1_kk_added_mass": {
+   "tol": 0.05,
+   "quantity": "max |A_fit - A_bem| / max|A|"
+  },
+  "D2_kernel_decay": {
+   "tol": 0.001,
+   "quantity": "|K(tau_max)| / |K(0)| (causal)"
+  },
+  "D3_causal_decay": {
+   "tol": 0.05,
+   "quantity": "|zeta_decay_causal - zeta_exact|/zeta_exact"
+  },
+  "D4_legacy_bias": {
+   "tol": 0.05,
+   "quantity": "|zeta_decay_legacy - zeta_exact|/zeta_exact"
+  },
+  "D5_band_robustness": {
+   "tol": 1.0,
+   "quantity": "max/min zeta over band tops (legacy)"
+  }
+ },
+ "levels": {
+  "coarse": {
+   "case": "CASE-BEM-CUMMINS-WIGLEY",
+   "audit": "C5 attribution (causal continuation vs truncated kernel)",
+   "level": "coarse",
+   "heave": {
+    "omega": [
+     0.2,
+     0.2215561332442578,
+     0.24543560089073657,
+     0.2718888134691625,
+     0.3011931709229846,
+     0.3336559715463664,
+     0.3696176344483451,
+     0.4094552693363246,
+     0.45358663105321095,
+     0.502474500337196,
+     0.5566315367427482,
+     0.6166256546126614,
+     0.6830859784759524,
+     0.7567094403225115,
+     0.8382680879364105,
+     0.9286171809262428,
+     1.0287041593510085,
+     1.1395785789904709,
+     1.2624031174455737,
+     1.3984657664836895,
+     1.549193338482967,
+     1.7161664286102438,
+     1.901135989632466,
+     2.106041693172322,
+     2.333032269952246,
+     2.584488042323465,
+     2.8630458853660428,
+     3.1716268783129147,
+     3.5134669362628275,
+     3.892150743399706,
+     4.3116493435570105,
+     4.776361782318168,
+     5.291161237330323,
+     5.861446120574045,
+     6.4931966884697045,
+     7.193037753458836,
+     7.968308154681512,
+     8.827137716249615,
+     9.778532500134064,
+     10.83246924766504,
+     12.0
+    ],
+    "added_mass": [
+     130.772299920843,
+     130.9885154740828,
+     131.23990127613123,
+     131.53117655041703,
+     131.86734631170364,
+     132.25357010473815,
+     132.6949498594295,
+     133.1962049759295,
+     133.7611923094796,
+     134.39221565119416,
+     135.08905352806104,
+     135.84761622430477,
+     136.65812468764955,
+     137.50268967234945,
+     138.35216756771206,
+     139.16219525828726,
+     139.86838570915273,
+     140.38083751398764,
+     140.57842608585273,
+     140.30385132375145,
+     139.36112751622798,
+     137.5180101680679,
+     134.51642278218458,
+     130.09361956964227,
+     124.01479589706167,
+     116.11403424241222,
+     106.33745583437523,
+     94.78858318240997,
+     81.80514936036444,
+     68.13960502058447,
+     55.21265306493052,
+     44.85700081069565,
+     37.93857861181439,
+     33.54566299117926,
+     30.499087807240418,
+     28.84925399291606,
+     28.48148616085287,
+     29.13793768957858,
+     30.5923878078183,
+     32.79858261056287,
+     35.55779326209763
+    ],
+    "damping": [
+     0.148017077845496,
+     0.20109356468706846,
+     0.27316249393188924,
+     0.3709929597270424,
+     0.5037482640878793,
+     0.6838201563421743,
+     0.9279450369709435,
+     1.258691286015185,
+     1.706430622910924,
+     2.311933071929905,
+     3.129752027619449,
+     4.232587128675134,
+     5.716816444930992,
+     7.709354607083796,
+     10.37588379273221,
+     13.930262230675243,
+     18.64445510731295,
+     24.857544186837185,
+     32.98113851885008,
+     43.496771693140246,
+     56.93876972108861,
+     73.85416051054898,
+     94.73064282095615,
+     119.88607574479748,
+     149.31925719067578,
+     182.52896490334825,
+     218.3057314874648,
+     254.47496970691023,
+     287.5519488859287,
+     312.50077187643365,
+     323.79565440798547,
+     319.57593458629975,
+     305.168283992898,
+     287.408180748403,
+     266.0803830148017,
+     238.88183159620422,
+     208.40649290356345,
+     175.48645322080233,
+     142.58245070154152,
+     113.64482559025,
+     77.60802000510785
+    ]
+   },
+   "body": {
+    "displaced_mass": 76.875,
+    "restoring_C33": 5989.207182291667,
+    "added_mass_inf_closure": 50.377129848038464,
+    "omega_natural_legacy": 7.82702758750338
+   },
+   "gates_definition": {
+    "D0_estimator_validation": {
+     "tol": 1e-06,
+     "quantity": "complex root vs closed form"
+    },
+    "D0b_cubic_memory_root": {
+     "tol": 1e-08,
+     "quantity": "Newton vs numpy.roots"
+    },
+    "D1_fit_band": {
+     "tol": 0.03,
+     "quantity": "max in-band |B_fit - B_bem| / max|B|"
+    },
+    "D1_kk_added_mass": {
+     "tol": 0.05,
+     "quantity": "max |A_fit - A_bem| / max|A|"
+    },
+    "D2_kernel_decay": {
+     "tol": 0.001,
+     "quantity": "|K(tau_max)| / |K(0)| (causal)"
+    },
+    "D3_causal_decay": {
+     "tol": 0.05,
+     "quantity": "|zeta_decay_causal - zeta_exact|/zeta_exact"
+    },
+    "D4_legacy_bias": {
+     "tol": 0.05,
+     "quantity": "|zeta_decay_legacy - zeta_exact|/zeta_exact"
+    },
+    "D5_band_robustness": {
+     "tol": 1.0,
+     "quantity": "max/min zeta over band tops (legacy)"
+    }
+   },
+   "gates": {
+    "D0_estimator_validation": {
+     "id": "D0_estimator_validation",
+     "quantity": "complex root vs closed form",
+     "value": 2.4337663135137073e-16,
+     "tolerance": 1e-06,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D0b_cubic_memory_root": {
+     "id": "D0b_cubic_memory_root",
+     "quantity": "Newton vs numpy.roots",
+     "value": 2.3106575364524093e-15,
+     "tolerance": 1e-08,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D1_fit_band": {
+     "id": "D1_fit_band",
+     "quantity": "max in-band |B_fit - B_bem| / max|B|",
+     "value": 0.022966468393546834,
+     "tolerance": 0.03,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D1_kk_added_mass": {
+     "id": "D1_kk_added_mass",
+     "quantity": "max |A_fit - A_bem| / max|A|",
+     "value": 0.0517860131585305,
+     "tolerance": 0.05,
+     "passed": false,
+     "status": "FAIL"
+    },
+    "D2_kernel_decay": {
+     "id": "D2_kernel_decay",
+     "quantity": "|K(tau_max)| / |K(0)| (causal)",
+     "value": 3.5515541604872195e-06,
+     "tolerance": 0.001,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D3_causal_decay": {
+     "id": "D3_causal_decay",
+     "quantity": "|zeta_decay_causal - zeta_exact|/zeta_exact",
+     "value": 0.03429009359749195,
+     "tolerance": 0.05,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D4_legacy_bias": {
+     "id": "D4_legacy_bias",
+     "quantity": "|zeta_decay_legacy - zeta_exact|/zeta_exact",
+     "value": 0.0014852005936716694,
+     "tolerance": 0.05,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D5_band_robustness": {
+     "id": "D5_band_robustness",
+     "quantity": "max/min zeta over band tops (legacy)",
+     "value": 61.32360983404969,
+     "tolerance": 1.0,
+     "passed": true,
+     "status": "PASS"
+    }
+   },
+   "legacy_route": {
+    "zeta_decay": 0.1334501996247945,
+    "damped_period": 0.81,
+    "n_peaks": 4,
+    "band_top": 12.0,
+    "tau_max": 25.0,
+    "kernel_at_zero": 1387.8116450391763,
+    "kernel_at_tau_max": -1.9625713345611466,
+    "kernel_decay_ratio": 0.001414148196245857
+   },
+   "legacy_reference": {
+    "omega_natural": 7.82702758750338,
+    "added_mass_at_omega_n": 28.54850593591692,
+    "damping_at_omega_n": 213.96013345097975,
+    "zeta_frequency_domain": 0.1296488130119626
+   },
+   "causal_model": {
+    "n_poles_selected": 10,
+    "fit_relative_error_max": 0.022966468395705437,
+    "kk_added_mass_relative": 0.0517860131585305,
+    "zeta_exact": 0.1332522932397667,
+    "zeta_exact_order_scan": [
+     0.1338736487267439,
+     0.1342384172969078,
+     0.13475008740319697
+    ],
+    "zeta_exact_order_spread": 0.0008764386764530674,
+    "zeta_exact_orders_used": [
+     7,
+     8,
+     9
+    ],
+    "omega_damped": 7.923947762900066,
+    "residual_relative": 1.7756802098201916e-13,
+    "kernel_at_zero": -25344.706867375055,
+    "kernel_at_tau_max": -0.09001309912115488,
+    "kernel_decay_ratio": 3.5515541604872195e-06,
+    "zeta_decay_time_domain": 0.12868305963249466,
+    "damped_period_time_domain": 0.79,
+    "n_peaks": 5,
+    "substeps": 1
+   },
+   "order_scan": [
+    {
+     "n_poles": 4.0,
+     "fit_relative_error_max": 0.1431393551958857,
+     "kk_added_mass_relative": 0.06268633656409177,
+     "zeta_exact": 0.12745927860036022,
+     "omega_damped": 7.4088828242079625,
+     "residual_relative": 1.3170738158756288e-11,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 5.0,
+     "fit_relative_error_max": 0.03954492026832878,
+     "kk_added_mass_relative": 0.6434017465852073,
+     "zeta_exact": 0.17102686787105295,
+     "omega_damped": 5.457243535201612,
+     "residual_relative": 2.4996332432885523e-12,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 6.0,
+     "fit_relative_error_max": 0.030886825592566537,
+     "kk_added_mass_relative": 0.015849353836356002,
+     "zeta_exact": 0.13446606643160774,
+     "omega_damped": 7.76731349503475,
+     "residual_relative": 7.330550979799686e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 7.0,
+     "fit_relative_error_max": 0.024934722890412528,
+     "kk_added_mass_relative": 0.018973641338166085,
+     "zeta_exact": 0.1338736487267439,
+     "omega_damped": 7.792909355074769,
+     "residual_relative": 1.1104138499895857e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 8.0,
+     "fit_relative_error_max": 0.02511430572448991,
+     "kk_added_mass_relative": 0.01872326008997127,
+     "zeta_exact": 0.1342384172969078,
+     "omega_damped": 7.7888518763092405,
+     "residual_relative": 2.7326005001649077e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 9.0,
+     "fit_relative_error_max": 0.024412156402267498,
+     "kk_added_mass_relative": 0.032260335012248016,
+     "zeta_exact": 0.13475008740319697,
+     "omega_damped": 7.8314426747092325,
+     "residual_relative": 1.7545870580851907e-11,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 10.0,
+     "fit_relative_error_max": 0.022966468395705437,
+     "kk_added_mass_relative": 0.0517860131585305,
+     "zeta_exact": 0.1332522932397667,
+     "omega_damped": 7.923947762900066,
+     "residual_relative": 1.7756802098201916e-13,
+     "converged": 1.0
+    }
+   ],
+   "band_top_scan": [
+    {
+     "band_top": 8.0,
+     "n_nodes": 37,
+     "zeta_decay": 0.002180588987731608,
+     "damped_period": 0.7676470588235293,
+     "n_peaks": 52
+    },
+    {
+     "band_top": 9.0,
+     "n_nodes": 38,
+     "zeta_decay": 0.008715940521855947,
+     "damped_period": 0.7076363636363635,
+     "n_peaks": 56
+    },
+    {
+     "band_top": 10.0,
+     "n_nodes": 39,
+     "zeta_decay": 0.11399071196651922,
+     "damped_period": 0.7950000000000002,
+     "n_peaks": 5
+    },
+    {
+     "band_top": 11.0,
+     "n_nodes": 40,
+     "zeta_decay": 0.1337215882920785,
+     "damped_period": 0.82,
+     "n_peaks": 5
+    },
+    {
+     "band_top": 12.0,
+     "n_nodes": 41,
+     "zeta_decay": 0.1334501996247945,
+     "damped_period": 0.81,
+     "n_peaks": 4
+    }
+   ],
+   "attribution": {
+    "legacy_C5_relative_error": 0.029320643394407035,
+    "legacy_vs_exact": 0.0014852005936716694,
+    "reference_vs_exact": 0.027042538182215005,
+    "verdict": "H-reference: the interpolated energy identity carries the bias"
+   },
+   "estimator_validation": {
+    "constant_damping": [
+     {
+      "damping": 100.0,
+      "zeta_closed_form": 0.05702185838778681,
+      "zeta_complex_root": 0.0570218583877868,
+      "relative_error": 2.4337663135137073e-16
+     },
+     {
+      "damping": 250.0,
+      "zeta_closed_form": 0.14255464596946701,
+      "zeta_complex_root": 0.142554645969467,
+      "relative_error": 1.947013050810966e-16
+     }
+    ],
+    "single_exponential_memory": {
+     "pole": 3.0,
+     "residue": 2500.0,
+     "zeta_reference": 0.05105092143924134,
+     "zeta_newton": 0.05105092143924122,
+     "relative_error": 2.3106575364524093e-15,
+     "root_reference": {
+      "real": -0.4110857619414128,
+      "imag": 8.04196507590729
+     },
+     "root_newton": {
+      "real": -0.4110857619414118,
+      "imag": 8.04196507590729
+     },
+     "converged": 1.0
+    }
+   },
+   "decision": {
+    "hypothesis": "H-reference: the interpolated energy identity carries the bias",
+    "remediation": "drive the Cummins free decay with the causal (rational) kernel and score it against the exact modal root of the same model (gate D3); keep C5 as the recorded legacy comparison",
+    "case_tolerance_statement": "legacy C5 relative error 2.93% is inside the anchor's <10 % case tolerance but outside the module's internal 5 % gate"
+   }
+  },
+  "medium": {
+   "case": "CASE-BEM-CUMMINS-WIGLEY",
+   "audit": "C5 attribution (causal continuation vs truncated kernel)",
+   "level": "medium",
+   "heave": {
+    "omega": [
+     0.2,
+     0.2215561332442578,
+     0.24543560089073657,
+     0.2718888134691625,
+     0.3011931709229846,
+     0.3336559715463664,
+     0.3696176344483451,
+     0.4094552693363246,
+     0.45358663105321095,
+     0.502474500337196,
+     0.5566315367427482,
+     0.6166256546126614,
+     0.6830859784759524,
+     0.7567094403225115,
+     0.8382680879364105,
+     0.9286171809262428,
+     1.0287041593510085,
+     1.1395785789904709,
+     1.2624031174455737,
+     1.3984657664836895,
+     1.549193338482967,
+     1.7161664286102438,
+     1.901135989632466,
+     2.106041693172322,
+     2.333032269952246,
+     2.584488042323465,
+     2.8630458853660428,
+     3.1716268783129147,
+     3.5134669362628275,
+     3.892150743399706,
+     4.3116493435570105,
+     4.776361782318168,
+     5.291161237330323,
+     5.861446120574045,
+     6.4931966884697045,
+     7.193037753458836,
+     7.968308154681512,
+     8.827137716249615,
+     9.778532500134064,
+     10.83246924766504,
+     12.0
+    ],
+    "added_mass": [
+     131.59697945937134,
+     131.81493368136626,
+     132.06832697507713,
+     132.3619098447063,
+     132.70071844807083,
+     133.08994146772582,
+     133.53470518888096,
+     134.03974456243168,
+     134.6089174836465,
+     135.24450631622324,
+     135.9462347713248,
+     136.7099101748685,
+     137.52558278418942,
+     138.37509945301622,
+     139.22892718743645,
+     140.0421485729374,
+     140.74961163843184,
+     141.26039062480973,
+     141.4520325048492,
+     141.16557701666517,
+     140.20305595369584,
+     138.32999254226382,
+     135.28599098760247,
+     130.80617024919778,
+     124.65415744826372,
+     116.66354779482415,
+     106.78186346256469,
+     95.11757989341535,
+     82.0204009521714,
+     68.26585226989967,
+     55.30223337512663,
+     44.962810254795045,
+     38.07265111501635,
+     33.6949069263338,
+     30.68401169567206,
+     29.091683588485722,
+     28.790817852433022,
+     29.537683661327033,
+     31.081668515961827,
+     33.212096051532924,
+     35.91655262042466
+    ],
+    "damping": [
+     0.1493439405219282,
+     0.20289590208515895,
+     0.27561023191510653,
+     0.3743164418566213,
+     0.5082595213561678,
+     0.6899415188486833,
+     0.9362475200131158,
+     1.269945916427851,
+     1.7216767723435382,
+     2.3325689274110655,
+     3.1576535072561094,
+     4.2702627064442655,
+     5.767606191440183,
+     7.777681722648941,
+     10.467565010062328,
+     14.052878043595774,
+     18.807769280137695,
+     25.07394079495958,
+     33.266009387915,
+     43.86873325654058,
+     57.41951434515218,
+     74.46765790329081,
+     95.5013153946889,
+     120.83549166150827,
+     150.46080028070264,
+     183.8597588659468,
+     219.79471438609795,
+     256.046061157778,
+     289.0658619800036,
+     313.7593688719224,
+     324.6227868298474,
+     319.9525324001422,
+     305.1865250106657,
+     287.0121925147416,
+     265.0815785326613,
+     237.2950519490707,
+     206.10151727087492,
+     172.44771447668987,
+     138.71456400794898,
+     107.71640701777125,
+     77.07541366697149
+    ]
+   },
+   "body": {
+    "displaced_mass": 76.875,
+    "restoring_C33": 6016.012025625,
+    "added_mass_inf_closure": 50.93021596754935,
+    "omega_natural_legacy": 7.807714085101556
+   },
+   "gates_definition": {
+    "D0_estimator_validation": {
+     "tol": 1e-06,
+     "quantity": "complex root vs closed form"
+    },
+    "D0b_cubic_memory_root": {
+     "tol": 1e-08,
+     "quantity": "Newton vs numpy.roots"
+    },
+    "D1_fit_band": {
+     "tol": 0.03,
+     "quantity": "max in-band |B_fit - B_bem| / max|B|"
+    },
+    "D1_kk_added_mass": {
+     "tol": 0.05,
+     "quantity": "max |A_fit - A_bem| / max|A|"
+    },
+    "D2_kernel_decay": {
+     "tol": 0.001,
+     "quantity": "|K(tau_max)| / |K(0)| (causal)"
+    },
+    "D3_causal_decay": {
+     "tol": 0.05,
+     "quantity": "|zeta_decay_causal - zeta_exact|/zeta_exact"
+    },
+    "D4_legacy_bias": {
+     "tol": 0.05,
+     "quantity": "|zeta_decay_legacy - zeta_exact|/zeta_exact"
+    },
+    "D5_band_robustness": {
+     "tol": 1.0,
+     "quantity": "max/min zeta over band tops (legacy)"
+    }
+   },
+   "gates": {
+    "D0_estimator_validation": {
+     "id": "D0_estimator_validation",
+     "quantity": "complex root vs closed form",
+     "value": 2.4337663135137073e-16,
+     "tolerance": 1e-06,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D0b_cubic_memory_root": {
+     "id": "D0b_cubic_memory_root",
+     "quantity": "Newton vs numpy.roots",
+     "value": 2.3106575364524093e-15,
+     "tolerance": 1e-08,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D1_fit_band": {
+     "id": "D1_fit_band",
+     "quantity": "max in-band |B_fit - B_bem| / max|B|",
+     "value": 0.017024644253833335,
+     "tolerance": 0.03,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D1_kk_added_mass": {
+     "id": "D1_kk_added_mass",
+     "quantity": "max |A_fit - A_bem| / max|A|",
+     "value": 0.03629238861784921,
+     "tolerance": 0.05,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D2_kernel_decay": {
+     "id": "D2_kernel_decay",
+     "quantity": "|K(tau_max)| / |K(0)| (causal)",
+     "value": 2.8021460967242868e-08,
+     "tolerance": 0.001,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D3_causal_decay": {
+     "id": "D3_causal_decay",
+     "quantity": "|zeta_decay_causal - zeta_exact|/zeta_exact",
+     "value": 0.036316068163512835,
+     "tolerance": 0.05,
+     "passed": true,
+     "status": "PASS"
+    },
+    "D4_legacy_bias": {
+     "id": "D4_legacy_bias",
+     "quantity": "|zeta_decay_legacy - zeta_exact|/zeta_exact",
+     "value": 0.06389047017377095,
+     "tolerance": 0.05,
+     "passed": false,
+     "status": "FAIL"
+    },
+    "D5_band_robustness": {
+     "id": "D5_band_robustness",
+     "quantity": "max/min zeta over band tops (legacy)",
+     "value": 65.63207589248027,
+     "tolerance": 1.0,
+     "passed": true,
+     "status": "PASS"
+    }
+   },
+   "legacy_route": {
+    "zeta_decay": 0.13787172247279808,
+    "damped_period": 0.8125000000000001,
+    "n_peaks": 5,
+    "band_top": 12.0,
+    "tau_max": 25.0,
+    "kernel_at_zero": 1379.1589718114953,
+    "kernel_at_tau_max": -1.954564397058193,
+    "kernel_decay_ratio": 0.001417214720715564
+   },
+   "legacy_reference": {
+    "omega_natural": 7.807714085101556,
+    "added_mass_at_omega_n": 28.85314095012084,
+    "damping_at_omega_n": 212.56312946534862,
+    "zeta_frequency_domain": 0.1287488748744322
+   },
+   "causal_model": {
+    "n_poles_selected": 10,
+    "fit_relative_error_max": 0.017024644250964397,
+    "kk_added_mass_relative": 0.03629238861784921,
+    "zeta_exact": 0.12959202694077968,
+    "zeta_exact_order_scan": [
+     0.13097904766013266,
+     0.130228573720411,
+     0.13027192364301948,
+     0.13070971491340871,
+     0.12959202694077968
+    ],
+    "zeta_exact_order_spread": 0.0013870207193529827,
+    "zeta_exact_orders_used": [
+     6,
+     7,
+     8,
+     9,
+     10
+    ],
+    "omega_damped": 7.867044380595734,
+    "residual_relative": 1.818753865596925e-13,
+    "kernel_at_zero": -17274.495021351533,
+    "kernel_at_tau_max": -0.00048405658796963323,
+    "kernel_decay_ratio": 2.8021460967242868e-08,
+    "zeta_decay_time_domain": 0.12488575405695053,
+    "damped_period_time_domain": 0.7975000000000001,
+    "n_peaks": 5,
+    "substeps": 1
+   },
+   "order_scan": [
+    {
+     "n_poles": 4.0,
+     "fit_relative_error_max": 0.1500496902209498,
+     "kk_added_mass_relative": 0.06634120555583456,
+     "zeta_exact": 0.12492301636545758,
+     "omega_damped": 7.405137300652596,
+     "residual_relative": 1.4268437732066025e-12,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 5.0,
+     "fit_relative_error_max": 0.03683334706550943,
+     "kk_added_mass_relative": 0.6578339020700166,
+     "zeta_exact": 0.16996231369680256,
+     "omega_damped": 5.432793930162633,
+     "residual_relative": 2.57131182981632e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 6.0,
+     "fit_relative_error_max": 0.028628609121725747,
+     "kk_added_mass_relative": 0.01793036454861137,
+     "zeta_exact": 0.13097904766013266,
+     "omega_damped": 7.749648742558432,
+     "residual_relative": 6.496693988582412e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 7.0,
+     "fit_relative_error_max": 0.021386226357471932,
+     "kk_added_mass_relative": 0.014862630058949096,
+     "zeta_exact": 0.130228573720411,
+     "omega_damped": 7.778544999250854,
+     "residual_relative": 1.9241038312300865e-12,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 8.0,
+     "fit_relative_error_max": 0.020247595847412564,
+     "kk_added_mass_relative": 0.017182189298907965,
+     "zeta_exact": 0.13027192364301948,
+     "omega_damped": 7.7897833041017215,
+     "residual_relative": 2.6552582956177587e-14,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 9.0,
+     "fit_relative_error_max": 0.021494586816319907,
+     "kk_added_mass_relative": 0.017114113210487395,
+     "zeta_exact": 0.13070971491340871,
+     "omega_damped": 7.783796282166202,
+     "residual_relative": 6.163443227728249e-13,
+     "converged": 1.0
+    },
+    {
+     "n_poles": 10.0,
+     "fit_relative_error_max": 0.017024644250964397,
+     "kk_added_mass_relative": 0.03629238861784921,
+     "zeta_exact": 0.12959202694077968,
+     "omega_damped": 7.867044380595734,
+     "residual_relative": 1.818753865596925e-13,
+     "converged": 1.0
+    }
+   ],
+   "band_top_scan": [
+    {
+     "band_top": 8.0,
+     "n_nodes": 37,
+     "zeta_decay": 0.0021006759362398072,
+     "damped_period": 0.768,
+     "n_peaks": 51
+    },
+    {
+     "band_top": 9.0,
+     "n_nodes": 38,
+     "zeta_decay": 0.009009705773111337,
+     "damped_period": 0.708,
+     "n_peaks": 56
+    },
+    {
+     "band_top": 10.0,
+     "n_nodes": 39,
+     "zeta_decay": 0.11359927087742216,
+     "damped_period": 0.7950000000000002,
+     "n_peaks": 5
+    },
+    {
+     "band_top": 11.0,
+     "n_nodes": 40,
+     "zeta_decay": 0.13251058265948787,
+     "damped_period": 0.8175,
+     "n_peaks": 5
+    },
+    {
+     "band_top": 12.0,
+     "n_nodes": 41,
+     "zeta_decay": 0.13787172247279808,
+     "damped_period": 0.8125000000000001,
+     "n_peaks": 5
+    }
+   ],
+   "attribution": {
+    "legacy_C5_relative_error": 0.07085768793912427,
+    "legacy_vs_exact": 0.06389047017377095,
+    "reference_vs_exact": 0.006506203246074455,
+    "verdict": "H-route: the truncated-kernel free decay carries the bias"
+   },
+   "estimator_validation": {
+    "constant_damping": [
+     {
+      "damping": 100.0,
+      "zeta_closed_form": 0.05702185838778681,
+      "zeta_complex_root": 0.0570218583877868,
+      "relative_error": 2.4337663135137073e-16
+     },
+     {
+      "damping": 250.0,
+      "zeta_closed_form": 0.14255464596946701,
+      "zeta_complex_root": 0.142554645969467,
+      "relative_error": 1.947013050810966e-16
+     }
+    ],
+    "single_exponential_memory": {
+     "pole": 3.0,
+     "residue": 2500.0,
+     "zeta_reference": 0.05105092143924134,
+     "zeta_newton": 0.05105092143924122,
+     "relative_error": 2.3106575364524093e-15,
+     "root_reference": {
+      "real": -0.4110857619414128,
+      "imag": 8.04196507590729
+     },
+     "root_newton": {
+      "real": -0.4110857619414118,
+      "imag": 8.04196507590729
+     },
+     "converged": 1.0
+    }
+   },
+   "decision": {
+    "hypothesis": "H-route: the truncated-kernel free decay carries the bias",
+    "remediation": "drive the Cummins free decay with the causal (rational) kernel and score it against the exact modal root of the same model (gate D3); keep C5 as the recorded legacy comparison",
+    "case_tolerance_statement": "legacy C5 relative error 7.09% is inside the anchor's <10 % case tolerance but outside the module's internal 5 % gate"
+   }
+  }
+ }
+}
