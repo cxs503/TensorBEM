@@ -353,8 +353,14 @@ def render(art: dict, outdir: Path) -> str:
     add("- 第 1 轮（m17242）：平面测度，320 面板 7 项超 5%，如实判 FAIL 并把原因定位到面积亏损。")
     add("- 第 2 轮（m21069）：球面片测度，两个频点 + 潜深/低频/精化，320 面板全项 <5%；")
     add("  但整条带、1280 面板精化与参考解完整性一节缺失/被注入成 nan。")
-    add("- 第 3 轮（本轮）：补齐上述三处，320 面板整条带 %d 项全部 <5%%，1280 面板精化给出误差随 $h$ 下降的证据。"
-        % prod["n_items"])
+    if art.get("refinement_status") == "completed":
+        add("- 第 3 轮（本轮）：补齐上述三处，320 面板整条带 %d 项全部 <5%%，"
+            "1280 面板精化（%s）给出误差随 $h$ 下降的证据。"
+            % (prod["n_items"], ", ".join("%.1f" % k for k in params["ka_refinement"])))
+    else:
+        add("- 第 3 轮（本轮）：补齐上述三处，320 面板整条带 %d 项全部 <5%%；"
+            "1280 面板精化尚未取得（%s），误差随 $h$ 下降的证据留待下一轮。"
+            % (prod["n_items"], art.get("refinement_status", "n/a")))
     add("")
     return "\n".join(lines) + "\n"
 
