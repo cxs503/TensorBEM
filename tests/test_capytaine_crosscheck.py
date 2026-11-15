@@ -284,7 +284,7 @@ def test_capytaine_not_a_runtime_dependency() -> None:
     import guarded by ``importlib.util.find_spec`` (the pattern used e.g. by
     ``tensorbem.benchmarks.laplace_sphere_xval``) is the *correct* way to offer an
     optional route, so it is not an offence; the previous column-agnostic
-    ``^\s*import`` pattern wrongly failed that pattern.
+    ``^\\s*import`` pattern wrongly failed that pattern.
     """
     offenders = []
     for path in list((REPO_ROOT / "src").rglob("*.py")) + list(
