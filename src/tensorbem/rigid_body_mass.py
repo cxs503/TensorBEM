@@ -465,8 +465,26 @@ def mesh_mass_properties(
     a = verts[tris[:, 0]]
     b = verts[tris[:, 1]]
     c = verts[tris[:, 2]]
-    # 6 * signed tetra volume = det[a - p0, b - p0, c - p0]
-    rel_a, rel_b, rel_c = a - p0, b - p0, c - p0
+    # Tetrahedral apex.  The signed-tetrahedron sum is exact for *any* apex, but
+    # what it produces is the second moment about that apex, so the choice of
+    # apex decides the conditioning.  With the apex at the reference point every
+    # lever arm is |v - p0|: a reference point far outside the body makes the
+    # individual tetrahedra enormous while the body's own inertia is only the
+    # tiny residue of their sum, and the CG transfer then cancels two
+    # O(m |p0|^2) numbers.  Taking the apex at the vertex mean keeps every lever
+    # arm O(L), the body size (the identity holds for an interior apex and, via
+    # the divergence theorem, for any apex at all), so the CG inertia condenses
+    # out of the apex tensor through an O(L) transfer only and the reference
+    # tensor is a single well-scaled parallel-axis step.  Measured on the
+    # CASE-BEM-RIGID-BODY-MASS ellipsoid: apex-at-reference loses every
+    # significant digit for |p0|/L >~ 1e5 (I_cg relative error 1.6e+0 at
+    # |p0|/L = 1.7e5), this route stays at the panelisation error for any |p0|
+    # (see docs/case_bem_rigid_body_mass/INVARIANT_BATTERY.md).
+    apex = np.unique(verts, axis=0).mean(axis=0) - p0
+    rel_a = a - p0 - apex
+    rel_b = b - p0 - apex
+    rel_c = c - p0 - apex
+    # 6 * signed tetra volume = det[a - apex, b - apex, c - apex]
     six_vol = np.einsum("ij,ij->i", rel_a, np.cross(rel_b, rel_c))
     tet_vol = six_vol / 6.0
 
@@ -477,29 +495,26 @@ def mesh_mass_properties(
             "or not closed"
         )
 
-    vertex_sum = a + b + c + p0  # (F, 3)
+    vertex_sum = rel_a + rel_b + rel_c  # the apex contributes zero
     first_moment = np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
-    centroid = first_moment / volume
+    centroid_apex = first_moment / volume
 
-    # int xi xj dV per tetra, then summed.  The integrand must be expressed in
-    # coordinates *relative to the reference point* p0 (the fourth tetra vertex),
-    # otherwise the returned tensor is about the coordinate origin and the
-    # parallel-axis transfer back to the CG is applied at the wrong lever arm.
-    # For p0 = 0 the two are identical, so every zero-reference call is
-    # numerically unchanged.
+    # int xi xj dV per tetra, then summed, in coordinates relative to the apex.
     sum_sq = np.einsum("fi,fj->fij", rel_a, rel_a)
     sum_sq += np.einsum("fi,fj->fij", rel_b, rel_b)
     sum_sq += np.einsum("fi,fj->fij", rel_c, rel_c)
-    rel_sum = rel_a + rel_b + rel_c  # p0 contributes zero in p0-relative frames
-    sum_first = np.einsum("fi,fj->fij", rel_sum, rel_sum)
+    sum_first = np.einsum("fi,fj->fij", vertex_sum, vertex_sum)
     # Second moments of volume, scaled by density so every tensor below is in
     # SI mass units (kg m^2) rather than geometric units (m^5).
     second = rho * np.einsum("f,fij->ij", tet_vol, sum_sq + sum_first) / 20.0
 
     second = 0.5 * (second + second.T)
-    inertia_reference = np.trace(second) * np.eye(3) - second
+    inertia_apex = np.trace(second) * np.eye(3) - second
+
     mass = rho * volume
-    inertia_cg = inertia_about_centroid(inertia_reference, mass, centroid - p0)
+    centroid = p0 + apex + centroid_apex
+    inertia_cg = inertia_about_centroid(inertia_apex, mass, centroid_apex)
+    inertia_reference = inertia_about_point(inertia_cg, mass, centroid - p0)
 
     return {
         "volume": volume,

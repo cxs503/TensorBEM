@@ -1,0 +1,293 @@
+{
+  "benchmark": "case_bem_rigid_body_mass",
+  "conditioning_domain": {
+    "legacy_first_ratio_above_anchor_tolerance": 100000.0,
+    "legacy_first_ratio_with_numerical_loss": 100000.0,
+    "panelisation_floor": 0.014299268159196474,
+    "rows": [
+      {
+        "d_over_L": 0.0,
+        "legacy_inertia_cg_rel_error": 0.014299268159196474,
+        "legacy_mass_rel_error": 0.008606157370245332,
+        "legacy_numerical_loss": 1.0,
+        "shipped_inertia_cg_rel_error": 0.014299268159196474,
+        "shipped_mass_rel_error": 0.008606157370245332,
+        "shipped_numerical_loss": 1.0
+      },
+      {
+        "d_over_L": 1.0,
+        "legacy_inertia_cg_rel_error": 0.014299268159188234,
+        "legacy_mass_rel_error": 0.008606157370245332,
+        "legacy_numerical_loss": 0.9999999999994238,
+        "shipped_inertia_cg_rel_error": 0.014299268159196474,
+        "shipped_mass_rel_error": 0.008606157370245332,
+        "shipped_numerical_loss": 1.0
+      },
+      {
+        "d_over_L": 10.0,
+        "legacy_inertia_cg_rel_error": 0.014299268158757289,
+        "legacy_mass_rel_error": 0.008606157370244429,
+        "legacy_numerical_loss": 0.9999999999692862,
+        "shipped_inertia_cg_rel_error": 0.014299268159194826,
+        "shipped_mass_rel_error": 0.008606157370245332,
+        "shipped_numerical_loss": 0.9999999999998848
+      },
+      {
+        "d_over_L": 100.0,
+        "legacy_inertia_cg_rel_error": 0.014299268955689158,
+        "legacy_mass_rel_error": 0.008606157370248044,
+        "legacy_numerical_loss": 1.0000000557016397,
+        "shipped_inertia_cg_rel_error": 0.01429926815919503,
+        "shipped_mass_rel_error": 0.00860615737024488,
+        "shipped_numerical_loss": 0.9999999999998991
+      },
+      {
+        "d_over_L": 1000.0,
+        "legacy_inertia_cg_rel_error": 0.014298586049625134,
+        "legacy_mass_rel_error": 0.008606157370274556,
+        "legacy_numerical_loss": 0.9999522975886775,
+        "shipped_inertia_cg_rel_error": 0.014299268159182671,
+        "shipped_mass_rel_error": 0.008606157370245934,
+        "shipped_numerical_loss": 0.9999999999990347
+      },
+      {
+        "d_over_L": 10000.0,
+        "legacy_inertia_cg_rel_error": 0.013121515576503854,
+        "legacy_mass_rel_error": 0.008606157369849916,
+        "legacy_numerical_loss": 0.9176354643062514,
+        "shipped_inertia_cg_rel_error": 0.014299268159009223,
+        "shipped_mass_rel_error": 0.00860615737023524,
+        "shipped_numerical_loss": 0.9999999999869048
+      },
+      {
+        "d_over_L": 100000.0,
+        "legacy_inertia_cg_rel_error": 0.45582568179418675,
+        "legacy_mass_rel_error": 0.008606157370313118,
+        "legacy_numerical_loss": 31.87755322296167,
+        "shipped_inertia_cg_rel_error": 0.014299268160508876,
+        "shipped_mass_rel_error": 0.008606157370568595,
+        "shipped_numerical_loss": 1.000000000091781
+      },
+      {
+        "d_over_L": 1000000.0,
+        "legacy_inertia_cg_rel_error": 716.8111084299545,
+        "legacy_mass_rel_error": 0.00860615732831615,
+        "legacy_numerical_loss": 50129.216436083305,
+        "shipped_inertia_cg_rel_error": 0.014299268169584864,
+        "shipped_mass_rel_error": 0.008606157372783679,
+        "shipped_numerical_loss": 1.000000000726498
+      }
+    ],
+    "shipped_stays_at_panelisation_floor": true,
+    "shipped_worst_inertia_cg_rel_error": 0.014299268169584864,
+    "subdivisions": 3
+  },
+  "defects": [
+    "flipped_coupling",
+    "double_parallel_axis",
+    "missing_parallel_axis",
+    "asymmetric_coupling_entry",
+    "mode_swap_roll_pitch",
+    "reference_point_sign_flip",
+    "density_error_2pct"
+  ],
+  "detection": {
+    "anchor_tolerance": 0.03,
+    "caught_by": {
+      "asymmetric_coupling_entry": [
+        "J3_kinetic_energy",
+        "J4_momentum_route"
+      ],
+      "density_error_2pct": [],
+      "double_parallel_axis": [
+        "J3_kinetic_energy",
+        "J4_momentum_route",
+        "J5_reference_point_congruence"
+      ],
+      "flipped_coupling": [
+        "J3_kinetic_energy",
+        "J4_momentum_route",
+        "J5_reference_point_congruence"
+      ],
+      "missing_parallel_axis": [
+        "J2_positive_definiteness",
+        "J3_kinetic_energy",
+        "J4_momentum_route",
+        "J5_reference_point_congruence"
+      ],
+      "mode_swap_roll_pitch": [
+        "J3_kinetic_energy",
+        "J4_momentum_route",
+        "J5_reference_point_congruence"
+      ],
+      "reference_point_sign_flip": [
+        "J3_kinetic_energy",
+        "J4_momentum_route",
+        "J5_reference_point_congruence"
+      ]
+    },
+    "residuals": {
+      "asymmetric_coupling_entry": {
+        "J1_symmetry": 0.011295802570395011,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 0.06911915543974008,
+        "J4_momentum_route": 0.1097306535409801,
+        "J5_reference_point_congruence": 0.011295802570395011,
+        "J6_scale_covariance": 0.0
+      },
+      "density_error_2pct": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 0.020000000000000462,
+        "J4_momentum_route": 0.02,
+        "J5_reference_point_congruence": 0.02,
+        "J6_scale_covariance": 0.0
+      },
+      "double_parallel_axis": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 1.9490868594478918,
+        "J4_momentum_route": 1.0015898251192368,
+        "J5_reference_point_congruence": 0.8529411764705882,
+        "J6_scale_covariance": 0.0
+      },
+      "flipped_coupling": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 5.104803768406758,
+        "J4_momentum_route": 2.0,
+        "J5_reference_point_congruence": 0.20588235294117646,
+        "J6_scale_covariance": 0.0
+      },
+      "missing_parallel_axis": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.5396623058207511,
+        "J3_kinetic_energy": 1.9490868594478918,
+        "J4_momentum_route": 1.0015898251192368,
+        "J5_reference_point_congruence": 0.8529411764705882,
+        "J6_scale_covariance": 0.0
+      },
+      "mode_swap_roll_pitch": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 4.441619120465135,
+        "J4_momentum_route": 1.3333333333333333,
+        "J5_reference_point_congruence": 0.21568627450980393,
+        "J6_scale_covariance": 0.0
+      },
+      "reference_point_sign_flip": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 8.140347426939053,
+        "J4_momentum_route": 1.9077901430842608,
+        "J5_reference_point_congruence": 0.7058823529411765,
+        "J6_scale_covariance": 0.0
+      },
+      "shipped": {
+        "J1_symmetry": 0.0,
+        "J2_positive_definiteness": 0.0,
+        "J3_kinetic_energy": 6.355490062944114e-16,
+        "J4_momentum_route": 0.0,
+        "J5_reference_point_congruence": 0.0,
+        "J6_scale_covariance": 0.0
+      }
+    },
+    "roundoff_tolerance": 1e-09,
+    "uncalled_by": [
+      "density_error_2pct"
+    ]
+  },
+  "invariants": [
+    "J1_symmetry",
+    "J2_positive_definiteness",
+    "J3_kinetic_energy",
+    "J4_momentum_route",
+    "J5_reference_point_congruence",
+    "J6_scale_covariance"
+  ],
+  "route_properties": {
+    "all_flipped_message": "mesh volume is non-positive: the triangulation is not outward oriented or not closed",
+    "all_flipped_raises": true,
+    "half_flipped_raises": true,
+    "inertia_cg_offset_invariance_ok": true,
+    "inertia_cg_offset_invariance_residual": 1.1114230496794962e-17,
+    "reference_point_covariance_ok": true,
+    "reference_point_covariance_residual": 1.3541846408800123e-17,
+    "subdivisions": 2,
+    "topology_is_closed": true
+  },
+  "section": "invariant battery (round 3) \u2014 invariants vs mutants",
+  "subject": {
+    "cg_m": [
+      5.0,
+      0.0,
+      -3.0
+    ],
+    "density_kg_m3": 1025.0,
+    "inertia_cg_kg_m2": [
+      [
+        100000000.0,
+        2000000.0,
+        -1000000.0
+      ],
+      [
+        2000000.0,
+        300000000.0,
+        500000.0
+      ],
+      [
+        -1000000.0,
+        500000.0,
+        250000000.0
+      ]
+    ],
+    "mass_kg": 30000000.0,
+    "modes": [
+      "surge",
+      "sway",
+      "heave",
+      "roll",
+      "pitch",
+      "yaw"
+    ],
+    "reference_point_m": [
+      2.0,
+      -1.0,
+      4.0
+    ],
+    "scale_factor": 7.5,
+    "semi_axes_m": [
+      60.0,
+      12.0,
+      8.0
+    ]
+  },
+  "thresholds": {
+    "anchor_acceptance": 0.03,
+    "energy_samples": 512,
+    "roundoff": 1e-09
+  },
+  "verdict": {
+    "conditioning_domain": {
+      "legacy_first_ratio_above_anchor_tolerance": 100000.0,
+      "legacy_first_ratio_with_numerical_loss": 100000.0,
+      "shipped_stays_at_panelisation_floor": true
+    },
+    "criterion": "the shipped assembly must satisfy every exact invariant to 1e-9; each injected defect (except the deliberately sub-tolerance 2 % density error, which no 3 % gate can see) must push at least one invariant above the 3 % anchor acceptance tolerance; the quadrature route must reject an inverted and a half-inverted mesh, must satisfy the parallel-axis covariance of its reference-point handling to 1e-9, and must hold the panelisation floor for every reference-point distance up to d/L = 1e6",
+    "defects_caught": [
+      "flipped_coupling",
+      "double_parallel_axis",
+      "missing_parallel_axis",
+      "asymmetric_coupling_entry",
+      "mode_swap_roll_pitch",
+      "reference_point_sign_flip"
+    ],
+    "defects_not_caught": [
+      "density_error_2pct"
+    ],
+    "designed_sub_tolerance_defect": "density_error_2pct",
+    "overall": "PASS",
+    "route_properties_ok": true,
+    "shipped_passes_all_invariants": true
+  }
+}
