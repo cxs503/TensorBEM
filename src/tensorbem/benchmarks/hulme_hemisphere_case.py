@@ -82,6 +82,7 @@ import math
 import platform
 import sys
 import time
+import warnings
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
@@ -189,14 +190,23 @@ def _panel_cell(
     ops = assemble_free_surface_operators_3d(
         mesh, nu, chief_points="auto" if chief else None
     )
-    rad = solve_radiation_3d(
-        mesh,
-        nu,
-        modes=(0, 2),
-        density=DENSITY,
-        gravity=GRAVITY,
-        operators=ops,
-    )
+    # The solve-stage health of the rung is recorded with the rung: on the
+    # ecosystem's cluster nodes the least-squares driver has been observed to
+    # return a full-rank, well-conditioned *wrong* vector (dev report m20910),
+    # and a rung that cannot prove its own residual is admissible could be
+    # graded as physics.  Warnings emitted by the solve-stage guard are kept
+    # verbatim for the same reason: a repaired rung is admissible, but it must
+    # stay visible that it was repaired.
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        rad = solve_radiation_3d(
+            mesh,
+            nu,
+            modes=(0, 2),
+            density=DENSITY,
+            gravity=GRAVITY,
+            operators=ops,
+        )
     cell: dict[str, Any] = {
         "ka": ka,
         "nu": nu,
@@ -210,21 +220,25 @@ def _panel_cell(
     vol = (2.0 / 3.0) * math.pi * RADIUS**3
     norm_a = DENSITY * vol
     norm_b = DENSITY * math.sqrt(GRAVITY * nu) * vol
+    cell["radiation_relative_residual"] = float(rad.relative_residual)
     cell["A11_dimless"] = float(rad.added_mass[0, 0]) / norm_a
     cell["A33_dimless"] = float(rad.added_mass[1, 1]) / norm_a
     cell["B11_dimless"] = float(rad.damping[0, 0]) / norm_b
     cell["B33_dimless"] = float(rad.damping[1, 1]) / norm_b
     cell["nabla_exact"] = vol
     if with_diffraction:
-        diff = solve_diffraction_3d(
-            mesh,
-            nu,
-            amplitude=AMPLITUDE,
-            wave_angle=0.0,
-            density=DENSITY,
-            gravity=GRAVITY,
-            operators=ops,
-        )
+        with warnings.catch_warnings(record=True) as caught_diff:
+            warnings.simplefilter("always")
+            diff = solve_diffraction_3d(
+                mesh,
+                nu,
+                amplitude=AMPLITUDE,
+                wave_angle=0.0,
+                density=DENSITY,
+                gravity=GRAVITY,
+                operators=ops,
+            )
+        cell["diffraction_relative_residual"] = float(diff.relative_residual)
         scale_f = DENSITY * GRAVITY * AMPLITUDE * RADIUS * RADIUS
         fx = complex(diff.excitation_force[0]) / scale_f
         fz = complex(diff.excitation_force[2]) / scale_f
@@ -234,6 +248,9 @@ def _panel_cell(
         cell["phase_Fz_deg"] = math.degrees(math.atan2(fz.imag, fz.real))
         cell["Fx_real"], cell["Fx_imag"] = fx.real, fx.imag
         cell["Fz_real"], cell["Fz_imag"] = fz.real, fz.imag
+    cell["solve_warnings"] = [
+        str(w.message) for w in (list(caught) + list(caught_diff))
+    ] if with_diffraction else [str(w.message) for w in caught]
     cell["wall_seconds"] = time.time() - t0
     ref = reference(ka)
     cell["reference"] = {k: ref[k] for k in QUANTITIES + PHASE_KEYS}
