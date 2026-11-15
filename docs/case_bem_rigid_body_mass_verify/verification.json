@@ -1,0 +1,70 @@
+{
+  "all_pass": true,
+  "benchmark": "CASE-BEM-RIGID-BODY-MASS",
+  "box_body_worst_entry_rel_error": 0.0,
+  "criterion_met": true,
+  "ellipsoid_ladder": [
+    {
+      "max_entry_rel_error": 0.5564774169761859,
+      "panels": 20,
+      "volume_rel_error": 0.39453861708747423
+    },
+    {
+      "max_entry_rel_error": 0.19883176391667218,
+      "panels": 80,
+      "volume_rel_error": 0.12654679999693672
+    },
+    {
+      "max_entry_rel_error": 0.05500548466436325,
+      "panels": 320,
+      "volume_rel_error": 0.03383925140141284
+    },
+    {
+      "max_entry_rel_error": 0.014115334623756828,
+      "panels": 1280,
+      "volume_rel_error": 0.008606157370245051
+    },
+    {
+      "max_entry_rel_error": 0.0035521362881938915,
+      "panels": 5120,
+      "volume_rel_error": 0.0021608283894018815
+    }
+  ],
+  "ellipsoid_worst_accepted_entry_rel_error": 0.0035521362881938915,
+  "figure": "fig_rigid_body_mass_convergence.png",
+  "mission": "m21501",
+  "momentum_route_roundoff_max_rel_error": 1.1476933129161745e-16,
+  "orientation_levels": [
+    {
+      "max_entry_rel_error": 0.1993052057403223,
+      "panels": 80,
+      "subdivisions": 1,
+      "within_tolerance": false
+    },
+    {
+      "max_entry_rel_error": 0.05514411626258833,
+      "panels": 320,
+      "subdivisions": 2,
+      "within_tolerance": false
+    },
+    {
+      "max_entry_rel_error": 0.014151417853024595,
+      "panels": 1280,
+      "subdivisions": 3,
+      "within_tolerance": true
+    },
+    {
+      "max_entry_rel_error": 0.0035612488797081214,
+      "panels": 5120,
+      "subdivisions": 4,
+      "within_tolerance": true
+    }
+  ],
+  "orientation_worst_accepted_entry_rel_error": 0.014151417853024595,
+  "rao_caller_replay_rel_residual": 0.0,
+  "reference": "Fossen (2011) Handbook of Marine Craft Hydrodynamics and Motion Control, Sec. 3.3 eq. (3.44) block form M_RB = [[m I3, -m S(r_g)], [m S(r_g), I_g + m S(r_g) S(r_g)^T]]; Newman (1977) Marine Hydrodynamics sec. 4.5; solid-ellipsoid second moments Lamb (1932) Ch. VI",
+  "tolerance": 0.03,
+  "verdict": "PASS",
+  "worst_accepted_entry_rel_error": 0.014151417853024595,
+  "worst_accepted_entry_rel_error_pct": 1.4151417853024595
+}
