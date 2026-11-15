@@ -1,0 +1,1036 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "healthy_dir": "benchmarks/verified/casepool_bem_cummins_wigley",
+  "contaminated_dir": "docs/m20021",
+  "c0_tolerance": 0.01,
+  "meshes": {
+    "coarse": {
+      "same_mesh_identity_and_grid": true,
+      "healthy": {
+        "label": "coarse",
+        "panel_count": 192,
+        "max_panel_scale": 0.1004034358093167,
+        "n_omega": 41,
+        "residual_median": 0.00021901853465010934,
+        "residual_max": 0.006392332932499873,
+        "n_nodes_above_c0_tolerance": 0,
+        "min_diagonal_damping": 2.7008333262541133e-13,
+        "n_negative_diagonal": 0,
+        "damping_scale": 914.2914504186923,
+        "min_diagonal_over_scale": 2.954017917390881e-16,
+        "passes_c0": true
+      },
+      "contaminated": {
+        "label": "coarse",
+        "panel_count": 192,
+        "max_panel_scale": 0.1004034358093167,
+        "n_omega": 41,
+        "residual_median": 0.6102172101558702,
+        "residual_max": 1.253398436298637,
+        "n_nodes_above_c0_tolerance": 41,
+        "min_diagonal_damping": -1.462524112347752,
+        "n_negative_diagonal": 39,
+        "damping_scale": 413.3663805839639,
+        "min_diagonal_over_scale": -0.003538081907584356,
+        "passes_c0": false
+      },
+      "per_frequency": [
+        {
+          "omega": 0.2,
+          "B33_healthy": 0.148017077845496,
+          "B33_contaminated": 0.12486727773487752,
+          "B33_rel_deviation": 0.15639952124161535,
+          "residual_healthy": 0.00020529456658112212,
+          "residual_contaminated": 0.6847322810716596
+        },
+        {
+          "omega": 0.2215561332442578,
+          "B33_healthy": 0.20109356468706846,
+          "B33_contaminated": 0.16962509577203866,
+          "B33_rel_deviation": 0.15648670291363836,
+          "residual_healthy": 0.0002050857094581733,
+          "residual_contaminated": 0.679669207391005
+        },
+        {
+          "omega": 0.24543560089073657,
+          "B33_healthy": 0.27316249393188924,
+          "B33_contaminated": 0.23096555634818108,
+          "B33_rel_deviation": 0.1544755906139501,
+          "residual_healthy": 0.00020484998325004397,
+          "residual_contaminated": 0.6742981033261067
+        },
+        {
+          "omega": 0.2718888134691625,
+          "B33_healthy": 0.3709929597270424,
+          "B33_contaminated": 0.314907808820102,
+          "B33_rel_deviation": 0.15117578227954775,
+          "residual_healthy": 0.0002045861209588554,
+          "residual_contaminated": 0.6744173285437624
+        },
+        {
+          "omega": 0.3011931709229846,
+          "B33_healthy": 0.5037482640878793,
+          "B33_contaminated": 0.5123289901456126,
+          "B33_rel_deviation": 0.017033758068169515,
+          "residual_healthy": 0.000204293712851275,
+          "residual_contaminated": 0.6059750534151663
+        },
+        {
+          "omega": 0.3336559715463664,
+          "B33_healthy": 0.6838201563421743,
+          "B33_contaminated": 0.6952253990956868,
+          "B33_rel_deviation": 0.01667871683473086,
+          "residual_healthy": 0.0002039736712435655,
+          "residual_contaminated": 0.6102172101558702
+        },
+        {
+          "omega": 0.3696176344483451,
+          "B33_healthy": 0.9279450369709435,
+          "B33_contaminated": 0.9424078399127994,
+          "B33_rel_deviation": 0.015585840072022215,
+          "residual_healthy": 0.00020362886283338915,
+          "residual_contaminated": 0.5957102027886378
+        },
+        {
+          "omega": 0.4094552693363246,
+          "B33_healthy": 1.258691286015185,
+          "B33_contaminated": 1.280997948573364,
+          "B33_rel_deviation": 0.0177221077209474,
+          "residual_healthy": 0.00020326496001878266,
+          "residual_contaminated": 0.6127590104904039
+        },
+        {
+          "omega": 0.45358663105321095,
+          "B33_healthy": 1.706430622910924,
+          "B33_contaminated": 1.7508179964286341,
+          "B33_rel_deviation": 0.026011824285004686,
+          "residual_healthy": 0.0002028915770208052,
+          "residual_contaminated": 0.6027169190854208
+        },
+        {
+          "omega": 0.502474500337196,
+          "B33_healthy": 2.311933071929905,
+          "B33_contaminated": 2.362811669282592,
+          "B33_rel_deviation": 0.022006950793872042,
+          "residual_healthy": 0.00020252377483237095,
+          "residual_contaminated": 0.5993501000315169
+        },
+        {
+          "omega": 0.5566315367427482,
+          "B33_healthy": 3.129752027619449,
+          "B33_contaminated": 3.294912693998837,
+          "B33_rel_deviation": 0.05277116682787575,
+          "residual_healthy": 0.00020218404203193002,
+          "residual_contaminated": 0.6090670331830687
+        },
+        {
+          "omega": 0.6166256546126614,
+          "B33_healthy": 4.232587128675134,
+          "B33_contaminated": 4.407991407535196,
+          "B33_rel_deviation": 0.04144138644464618,
+          "residual_healthy": 0.00020190488741631611,
+          "residual_contaminated": 0.6204563259982251
+        },
+        {
+          "omega": 0.6830859784759524,
+          "B33_healthy": 5.716816444930992,
+          "B33_contaminated": 5.004337925534786,
+          "B33_rel_deviation": 0.12462854567037028,
+          "residual_healthy": 0.00020173221623481015,
+          "residual_contaminated": 0.6602895903463276
+        },
+        {
+          "omega": 0.7567094403225115,
+          "B33_healthy": 7.709354607083796,
+          "B33_contaminated": 6.665837793066168,
+          "B33_rel_deviation": 0.1353572208312723,
+          "residual_healthy": 0.0002017297049750324,
+          "residual_contaminated": 0.6685169235324165
+        },
+        {
+          "omega": 0.8382680879364105,
+          "B33_healthy": 10.37588379273221,
+          "B33_contaminated": 10.434648447392421,
+          "B33_rel_deviation": 0.005663580648558558,
+          "residual_healthy": 0.00020198443915068416,
+          "residual_contaminated": 0.576002657978961
+        },
+        {
+          "omega": 0.9286171809262428,
+          "B33_healthy": 13.930262230675243,
+          "B33_contaminated": 12.402801821596256,
+          "B33_rel_deviation": 0.10965051366480603,
+          "residual_healthy": 0.0002026141307212615,
+          "residual_contaminated": 0.623212291179021
+        },
+        {
+          "omega": 1.0287041593510085,
+          "B33_healthy": 18.64445510731295,
+          "B33_contaminated": 16.497643172456836,
+          "B33_rel_deviation": 0.11514479358606011,
+          "residual_healthy": 0.00020377627970233892,
+          "residual_contaminated": 0.6134535350479493
+        },
+        {
+          "omega": 1.1395785789904709,
+          "B33_healthy": 24.857544186837185,
+          "B33_contaminated": 23.117851091902278,
+          "B33_rel_deviation": 0.0699865232807723,
+          "residual_healthy": 0.00020567968079110557,
+          "residual_contaminated": 0.6018526492724403
+        },
+        {
+          "omega": 1.2624031174455737,
+          "B33_healthy": 32.98113851885008,
+          "B33_contaminated": 34.10431153038658,
+          "B33_rel_deviation": 0.03405501028700272,
+          "residual_healthy": 0.00020859870592693493,
+          "residual_contaminated": 0.5615957141858821
+        },
+        {
+          "omega": 1.3984657664836895,
+          "B33_healthy": 43.496771693140246,
+          "B33_contaminated": 41.55854238023987,
+          "B33_rel_deviation": 0.044560302694971,
+          "residual_healthy": 0.00021289087374968985,
+          "residual_contaminated": 0.5991366970901179
+        },
+        {
+          "omega": 1.549193338482967,
+          "B33_healthy": 56.93876972108861,
+          "B33_contaminated": 58.293217177953295,
+          "B33_rel_deviation": 0.023787789295402213,
+          "residual_healthy": 0.00021901853465010934,
+          "residual_contaminated": 0.5545865386426773
+        },
+        {
+          "omega": 1.7161664286102438,
+          "B33_healthy": 73.85416051054898,
+          "B33_contaminated": 74.78555054533575,
+          "B33_rel_deviation": 0.012611206035626626,
+          "residual_healthy": 0.00022757650882644425,
+          "residual_contaminated": 0.5154260238415846
+        },
+        {
+          "omega": 1.901135989632466,
+          "B33_healthy": 94.73064282095615,
+          "B33_contaminated": 90.23196455240378,
+          "B33_rel_deviation": 0.04748915593294357,
+          "residual_healthy": 0.00023933008396016402,
+          "residual_contaminated": 0.5357353121418647
+        },
+        {
+          "omega": 2.106041693172322,
+          "B33_healthy": 119.88607574479748,
+          "B33_contaminated": 123.06753846357002,
+          "B33_rel_deviation": 0.02653738308646405,
+          "residual_healthy": 0.00025527322930077924,
+          "residual_contaminated": 0.4651988189536189
+        },
+        {
+          "omega": 2.333032269952246,
+          "B33_healthy": 149.31925719067578,
+          "B33_contaminated": 142.95488089197286,
+          "B33_rel_deviation": 0.04262260888812099,
+          "residual_healthy": 0.0002767266299831041,
+          "residual_contaminated": 0.5888570646885825
+        },
+        {
+          "omega": 2.584488042323465,
+          "B33_healthy": 182.52896490334825,
+          "B33_contaminated": 189.88134976815599,
+          "B33_rel_deviation": 0.04028064734109968,
+          "residual_healthy": 0.00030550928533034863,
+          "residual_contaminated": 0.48081123668701914
+        },
+        {
+          "omega": 2.8630458853660428,
+          "B33_healthy": 218.3057314874648,
+          "B33_contaminated": 240.22919501562083,
+          "B33_rel_deviation": 0.1004255059121747,
+          "residual_healthy": 0.0003442296768309251,
+          "residual_contaminated": 0.40585343573075866
+        },
+        {
+          "omega": 3.1716268783129147,
+          "B33_healthy": 254.47496970691023,
+          "B33_contaminated": 279.8517130658365,
+          "B33_rel_deviation": 0.09972196239242617,
+          "residual_healthy": 0.0003967230368824925,
+          "residual_contaminated": 0.3868428816665242
+        },
+        {
+          "omega": 3.5134669362628275,
+          "B33_healthy": 287.5519488859287,
+          "B33_contaminated": 312.655109173533,
+          "B33_rel_deviation": 0.08729956581710617,
+          "residual_healthy": 0.00046851599324189137,
+          "residual_contaminated": 0.4447486017855712
+        },
+        {
+          "omega": 3.892150743399706,
+          "B33_healthy": 312.50077187643365,
+          "B33_contaminated": 302.3945800033464,
+          "B33_rel_deviation": 0.03233973411458759,
+          "residual_healthy": 0.0005667715369969822,
+          "residual_contaminated": 0.4891569136189556
+        },
+        {
+          "omega": 4.3116493435570105,
+          "B33_healthy": 323.79565440798547,
+          "B33_contaminated": 274.19639563774507,
+          "B33_rel_deviation": 0.1531807425301171,
+          "residual_healthy": 0.0006986495372807962,
+          "residual_contaminated": 0.6047215196273107
+        },
+        {
+          "omega": 4.776361782318168,
+          "B33_healthy": 319.57593458629975,
+          "B33_contaminated": 161.05322564922358,
+          "B33_rel_deviation": 0.4960408209156562,
+          "residual_healthy": 0.000867312860975195,
+          "residual_contaminated": 0.7576631048914275
+        },
+        {
+          "omega": 5.291161237330323,
+          "B33_healthy": 305.168283992898,
+          "B33_contaminated": 62.34982660290083,
+          "B33_rel_deviation": 0.795687068829368,
+          "residual_healthy": 0.001061155203565951,
+          "residual_contaminated": 0.9346776207174933
+        },
+        {
+          "omega": 5.861446120574045,
+          "B33_healthy": 287.408180748403,
+          "B33_contaminated": 53.24941978815562,
+          "B33_rel_deviation": 0.814725455449822,
+          "residual_healthy": 0.0012224753532184794,
+          "residual_contaminated": 1.1226122781601346
+        },
+        {
+          "omega": 6.4931966884697045,
+          "B33_healthy": 266.0803830148017,
+          "B33_contaminated": 70.61446641154043,
+          "B33_rel_deviation": 0.7346122791486953,
+          "residual_healthy": 0.0012871608211791892,
+          "residual_contaminated": 1.1652488394418181
+        },
+        {
+          "omega": 7.193037753458836,
+          "B33_healthy": 238.88183159620422,
+          "B33_contaminated": 61.825879404972035,
+          "B33_rel_deviation": 0.7411863472753345,
+          "residual_healthy": 0.001498752168750349,
+          "residual_contaminated": 1.193620458385572
+        },
+        {
+          "omega": 7.968308154681512,
+          "B33_healthy": 208.40649290356345,
+          "B33_contaminated": 162.37669838916693,
+          "B33_rel_deviation": 0.22086545324524037,
+          "residual_healthy": 0.002235205913274592,
+          "residual_contaminated": 1.1526046916743165
+        },
+        {
+          "omega": 8.827137716249615,
+          "B33_healthy": 175.48645322080233,
+          "B33_contaminated": 11.616739088103778,
+          "B33_rel_deviation": 0.9338026447347064,
+          "residual_healthy": 0.003141354566671232,
+          "residual_contaminated": 1.2219074515213038
+        },
+        {
+          "omega": 9.778532500134064,
+          "B33_healthy": 142.58245070154152,
+          "B33_contaminated": 21.564589957001107,
+          "B33_rel_deviation": 0.848757053544122,
+          "residual_healthy": 0.004129049256854219,
+          "residual_contaminated": 1.1899147697299388
+        },
+        {
+          "omega": 10.83246924766504,
+          "B33_healthy": 113.64482559025,
+          "B33_contaminated": 14.392628886578372,
+          "B33_rel_deviation": 0.8733542964950164,
+          "residual_healthy": 0.006392332932499873,
+          "residual_contaminated": 1.253398436298637
+        },
+        {
+          "omega": 12.0,
+          "B33_healthy": 77.60802000510785,
+          "B33_contaminated": 33.14346609097909,
+          "B33_rel_deviation": 0.5729376153547311,
+          "residual_healthy": 0.0031236304440945143,
+          "residual_contaminated": 1.2460717041940332
+        }
+      ]
+    },
+    "medium": {
+      "same_mesh_identity_and_grid": true,
+      "healthy": {
+        "label": "medium",
+        "panel_count": 480,
+        "max_panel_scale": 0.06450176101204128,
+        "n_omega": 41,
+        "residual_median": 4.517674028095625e-05,
+        "residual_max": 0.00244707823996248,
+        "n_nodes_above_c0_tolerance": 0,
+        "min_diagonal_damping": 2.5309952611136287e-13,
+        "n_negative_diagonal": 0,
+        "damping_scale": 890.4392687153179,
+        "min_diagonal_over_scale": 2.842411998254777e-16,
+        "passes_c0": true
+      },
+      "contaminated": {
+        "label": "medium",
+        "panel_count": 480,
+        "max_panel_scale": 0.06450176101204128,
+        "n_omega": 41,
+        "residual_median": 0.5457550510442025,
+        "residual_max": 1.24506058251773,
+        "n_nodes_above_c0_tolerance": 41,
+        "min_diagonal_damping": -129.91712236225968,
+        "n_negative_diagonal": 26,
+        "damping_scale": 550.5455294820744,
+        "min_diagonal_over_scale": -0.2359788889476211,
+        "passes_c0": false
+      },
+      "per_frequency": [
+        {
+          "omega": 0.2,
+          "B33_healthy": 0.1493439405219282,
+          "B33_contaminated": 0.1489455066382509,
+          "B33_rel_deviation": 0.0026678945411836076,
+          "residual_healthy": 4.234232002795073e-05,
+          "residual_contaminated": 0.5623367133093683
+        },
+        {
+          "omega": 0.2215561332442578,
+          "B33_healthy": 0.20289590208515895,
+          "B33_contaminated": 0.20212154940507723,
+          "B33_rel_deviation": 0.0038165023153435094,
+          "residual_healthy": 4.229108537242595e-05,
+          "residual_contaminated": 0.5610374044169366
+        },
+        {
+          "omega": 0.24543560089073657,
+          "B33_healthy": 0.27561023191510653,
+          "B33_contaminated": 0.2748436151511614,
+          "B33_rel_deviation": 0.0027815250494083997,
+          "residual_healthy": 4.22325293025766e-05,
+          "residual_contaminated": 0.557939725942379
+        },
+        {
+          "omega": 0.2718888134691625,
+          "B33_healthy": 0.3743164418566213,
+          "B33_contaminated": 0.37385678221473057,
+          "B33_rel_deviation": 0.001227997465488778,
+          "residual_healthy": 4.216602478675386e-05,
+          "residual_contaminated": 0.5557047758355639
+        },
+        {
+          "omega": 0.3011931709229846,
+          "B33_healthy": 0.5082595213561678,
+          "B33_contaminated": 0.5093206898372484,
+          "B33_rel_deviation": 0.0020878477165546237,
+          "residual_healthy": 4.209105926107707e-05,
+          "residual_contaminated": 0.554292741839312
+        },
+        {
+          "omega": 0.3336559715463664,
+          "B33_healthy": 0.6899415188486833,
+          "B33_contaminated": 0.692953014696013,
+          "B33_rel_deviation": 0.004364856679961904,
+          "residual_healthy": 4.200732762775185e-05,
+          "residual_contaminated": 0.5499805238702522
+        },
+        {
+          "omega": 0.3696176344483451,
+          "B33_healthy": 0.9362475200131158,
+          "B33_contaminated": 0.9411403931533956,
+          "B33_rel_deviation": 0.005226046569619974,
+          "residual_healthy": 4.191486534893181e-05,
+          "residual_contaminated": 0.5457550510442025
+        },
+        {
+          "omega": 0.4094552693363246,
+          "B33_healthy": 1.269945916427851,
+          "B33_contaminated": 1.2793446910938537,
+          "B33_rel_deviation": 0.007400925145253353,
+          "residual_healthy": 4.181423687203042e-05,
+          "residual_contaminated": 0.5418608150002642
+        },
+        {
+          "omega": 0.45358663105321095,
+          "B33_healthy": 1.7216767723435382,
+          "B33_contaminated": 1.741492342796859,
+          "B33_rel_deviation": 0.01150946029570223,
+          "residual_healthy": 4.170680041758285e-05,
+          "residual_contaminated": 0.5411634039716005
+        },
+        {
+          "omega": 0.502474500337196,
+          "B33_healthy": 2.3325689274110655,
+          "B33_contaminated": 2.366012527814797,
+          "B33_rel_deviation": 0.014337668658242403,
+          "residual_healthy": 4.159507824952799e-05,
+          "residual_contaminated": 0.5337814082870076
+        },
+        {
+          "omega": 0.5566315367427482,
+          "B33_healthy": 3.1576535072561094,
+          "B33_contaminated": 3.1917770323995227,
+          "B33_rel_deviation": 0.010806608472082004,
+          "residual_healthy": 4.148327279138796e-05,
+          "residual_contaminated": 0.540034091224328
+        },
+        {
+          "omega": 0.6166256546126614,
+          "B33_healthy": 4.2702627064442655,
+          "B33_contaminated": 4.336637060599866,
+          "B33_rel_deviation": 0.015543388947812235,
+          "residual_healthy": 4.137798437553482e-05,
+          "residual_contaminated": 0.5299627149705319
+        },
+        {
+          "omega": 0.6830859784759524,
+          "B33_healthy": 5.767606191440183,
+          "B33_contaminated": 5.853085099563486,
+          "B33_rel_deviation": 0.014820517435841018,
+          "residual_healthy": 4.128920699328351e-05,
+          "residual_contaminated": 0.5179485913754556
+        },
+        {
+          "omega": 0.7567094403225115,
+          "B33_healthy": 7.777681722648941,
+          "B33_contaminated": 7.9148441593511665,
+          "B33_rel_deviation": 0.017635388229220363,
+          "residual_healthy": 4.1231704485567e-05,
+          "residual_contaminated": 0.4999462800063323
+        },
+        {
+          "omega": 0.8382680879364105,
+          "B33_healthy": 10.467565010062328,
+          "B33_contaminated": 10.709434539483457,
+          "B33_rel_deviation": 0.02310657055280982,
+          "residual_healthy": 4.122689954063588e-05,
+          "residual_contaminated": 0.4827027072230056
+        },
+        {
+          "omega": 0.9286171809262428,
+          "B33_healthy": 14.052878043595774,
+          "B33_contaminated": 14.218591095428934,
+          "B33_rel_deviation": 0.01179210773188767,
+          "residual_healthy": 4.130543550756229e-05,
+          "residual_contaminated": 0.4758333962874167
+        },
+        {
+          "omega": 1.0287041593510085,
+          "B33_healthy": 18.807769280137695,
+          "B33_contaminated": 19.139506793325843,
+          "B33_rel_deviation": 0.017638323197556774,
+          "residual_healthy": 4.1510581864213984e-05,
+          "residual_contaminated": 0.4735113020681334
+        },
+        {
+          "omega": 1.1395785789904709,
+          "B33_healthy": 25.07394079495958,
+          "B33_contaminated": 25.690073542069207,
+          "B33_rel_deviation": 0.024572633083407625,
+          "residual_healthy": 4.1902621484635286e-05,
+          "residual_contaminated": 0.4464007092556671
+        },
+        {
+          "omega": 1.2624031174455737,
+          "B33_healthy": 33.266009387915,
+          "B33_contaminated": 34.35650864590522,
+          "B33_rel_deviation": 0.0327811865040351,
+          "residual_healthy": 4.256424546880925e-05,
+          "residual_contaminated": 0.4196034727842514
+        },
+        {
+          "omega": 1.3984657664836895,
+          "B33_healthy": 43.86873325654058,
+          "B33_contaminated": 45.35334552572944,
+          "B33_rel_deviation": 0.0338421504105663,
+          "residual_healthy": 4.3606769101370897e-05,
+          "residual_contaminated": 0.41250368319957037
+        },
+        {
+          "omega": 1.549193338482967,
+          "B33_healthy": 57.41951434515218,
+          "B33_contaminated": 59.47029174159353,
+          "B33_rel_deviation": 0.0357156869024353,
+          "residual_healthy": 4.517674028095625e-05,
+          "residual_contaminated": 0.38817484361049764
+        },
+        {
+          "omega": 1.7161664286102438,
+          "B33_healthy": 74.46765790329081,
+          "B33_contaminated": 71.43122739132173,
+          "B33_rel_deviation": 0.040775157933829735,
+          "residual_healthy": 4.746252786110351e-05,
+          "residual_contaminated": 0.42870892915988157
+        },
+        {
+          "omega": 1.901135989632466,
+          "B33_healthy": 95.5013153946889,
+          "B33_contaminated": 92.76847915286412,
+          "B33_rel_deviation": 0.028615692155971765,
+          "residual_healthy": 5.070135021096758e-05,
+          "residual_contaminated": 0.4088911006559381
+        },
+        {
+          "omega": 2.106041693172322,
+          "B33_healthy": 120.83549166150827,
+          "B33_contaminated": 123.60911740533021,
+          "B33_rel_deviation": 0.022953734086600876,
+          "residual_healthy": 5.5189651350072466e-05,
+          "residual_contaminated": 0.34489884590662123
+        },
+        {
+          "omega": 2.333032269952246,
+          "B33_healthy": 150.46080028070264,
+          "B33_contaminated": 153.04875017947083,
+          "B33_rel_deviation": 0.017200160400184343,
+          "residual_healthy": 6.130393603803021e-05,
+          "residual_contaminated": 0.3579459974523267
+        },
+        {
+          "omega": 2.584488042323465,
+          "B33_healthy": 183.8597588659468,
+          "B33_contaminated": 186.98221577308266,
+          "B33_rel_deviation": 0.016982818461175463,
+          "residual_healthy": 6.954400590438592e-05,
+          "residual_contaminated": 0.35069413812579947
+        },
+        {
+          "omega": 2.8630458853660428,
+          "B33_healthy": 219.79471438609795,
+          "B33_contaminated": 185.3502760790015,
+          "B33_rel_deviation": 0.15671185907860513,
+          "residual_healthy": 8.061295499317259e-05,
+          "residual_contaminated": 0.5970450870203473
+        },
+        {
+          "omega": 3.1716268783129147,
+          "B33_healthy": 256.046061157778,
+          "B33_contaminated": 197.03481181631048,
+          "B33_rel_deviation": 0.23047122488287075,
+          "residual_healthy": 9.55407369957904e-05,
+          "residual_contaminated": 0.5749868350291443
+        },
+        {
+          "omega": 3.5134669362628275,
+          "B33_healthy": 289.0658619800036,
+          "B33_contaminated": 188.47968709117342,
+          "B33_rel_deviation": 0.34796974710140044,
+          "residual_healthy": 0.00011581965409184253,
+          "residual_contaminated": 0.6751320322957161
+        },
+        {
+          "omega": 3.892150743399706,
+          "B33_healthy": 313.7593688719224,
+          "B33_contaminated": 279.8190646554707,
+          "B33_rel_deviation": 0.1081730382696755,
+          "residual_healthy": 0.00014341563930471684,
+          "residual_contaminated": 0.4469767109060242
+        },
+        {
+          "omega": 4.3116493435570105,
+          "B33_healthy": 324.6227868298474,
+          "B33_contaminated": 291.60980885908,
+          "B33_rel_deviation": 0.10169642831657212,
+          "residual_healthy": 0.0001803997359988755,
+          "residual_contaminated": 0.5751418244371687
+        },
+        {
+          "omega": 4.776361782318168,
+          "B33_healthy": 319.9525324001422,
+          "B33_contaminated": 134.76699353776056,
+          "B33_rel_deviation": 0.5787906645814045,
+          "residual_healthy": 0.00022803075108323472,
+          "residual_contaminated": 0.7612197749815622
+        },
+        {
+          "omega": 5.291161237330323,
+          "B33_healthy": 305.1865250106657,
+          "B33_contaminated": -129.91712236225968,
+          "B33_rel_deviation": 1.4256974398123223,
+          "residual_healthy": 0.00028415818442084845,
+          "residual_contaminated": 1.24506058251773
+        },
+        {
+          "omega": 5.861446120574045,
+          "B33_healthy": 287.0121925147416,
+          "B33_contaminated": 18.07939983760361,
+          "B33_rel_deviation": 0.9370082515338612,
+          "residual_healthy": 0.00033567282762452113,
+          "residual_contaminated": 1.1178963216591862
+        },
+        {
+          "omega": 6.4931966884697045,
+          "B33_healthy": 265.0815785326613,
+          "B33_contaminated": 191.87631341373805,
+          "B33_rel_deviation": 0.27616126901063953,
+          "residual_healthy": 0.00037066848625420356,
+          "residual_contaminated": 0.9438636001574194
+        },
+        {
+          "omega": 7.193037753458836,
+          "B33_healthy": 237.2950519490707,
+          "B33_contaminated": 151.07598256953116,
+          "B33_rel_deviation": 0.36334120189764535,
+          "residual_healthy": 0.0004480069574221609,
+          "residual_contaminated": 0.9329255832326722
+        },
+        {
+          "omega": 7.968308154681512,
+          "B33_healthy": 206.10151727087492,
+          "B33_contaminated": 72.45334152246467,
+          "B33_rel_deviation": 0.6484579905967371,
+          "residual_healthy": 0.0006424622968941896,
+          "residual_contaminated": 0.8943462191405137
+        },
+        {
+          "omega": 8.827137716249615,
+          "B33_healthy": 172.44771447668987,
+          "B33_contaminated": 15.865652537111767,
+          "B33_rel_deviation": 0.9079973162575236,
+          "residual_healthy": 0.0008944084621777949,
+          "residual_contaminated": 0.9241845319310046
+        },
+        {
+          "omega": 9.778532500134064,
+          "B33_healthy": 138.71456400794898,
+          "B33_contaminated": 82.01414381786486,
+          "B33_rel_deviation": 0.40875607111330375,
+          "residual_healthy": 0.0012985524935748695,
+          "residual_contaminated": 0.8669250159922707
+        },
+        {
+          "omega": 10.83246924766504,
+          "B33_healthy": 107.71640701777125,
+          "B33_contaminated": 44.360782322834375,
+          "B33_rel_deviation": 0.5881706088143503,
+          "residual_healthy": 0.00244707823996248,
+          "residual_contaminated": 1.089684921058545
+        },
+        {
+          "omega": 12.0,
+          "B33_healthy": 77.07541366697149,
+          "B33_contaminated": 20.057869450227244,
+          "B33_rel_deviation": 0.7397630645630582,
+          "residual_healthy": 0.0005423295018157217,
+          "residual_contaminated": 0.8500268086832743
+        }
+      ]
+    }
+  },
+  "replay_healthy_medium": {
+    "verdict": {
+      "passed": true,
+      "gates_passed": 13,
+      "gates_total": 13,
+      "passed_list": [
+        "C1",
+        "C0",
+        "C2",
+        "C3",
+        "C3a",
+        "C7",
+        "C4",
+        "C5",
+        "C6a",
+        "C6b",
+        "C5b",
+        "C5c",
+        "C10"
+      ],
+      "failed_list": [],
+      "case_tolerance": 0.1,
+      "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
+    },
+    "gates": {
+      "C1": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C0": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "solver_relative_residual_max": 0.00244707823996248,
+          "min_radiation_damping": 2.5309952611136287e-13
+        }
+      },
+      "C2": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "k_times_panel_scale": 0.947138277162328
+        }
+      },
+      "C3": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "worst_relative_residual": 0.03598043283997282
+        }
+      },
+      "C3a": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "worst_relative_residual": 0.08852694686485775
+        }
+      },
+      "C7": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C4": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C5": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "zeta_decay": 0.1346015530611902,
+          "relative_error": 0.03959932792719662
+        }
+      },
+      "C6a": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C6b": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "worst_relative_residual": 0.20635512621955798
+        }
+      },
+      "C5b": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C5c": {
+        "passed": true,
+        "voided": false,
+        "kv": {
+          "relative_error": 0.004625970787472295
+        }
+      },
+      "C10": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      }
+    },
+    "sweep": {
+      "label": "medium",
+      "n_sections": 20,
+      "n_levels": 6,
+      "panel_count": 480,
+      "max_panel_scale": 0.06450176101204128,
+      "n_omega": 41,
+      "omega": [
+        0.2,
+        0.2215561332442578,
+        0.24543560089073657,
+        0.2718888134691625,
+        0.3011931709229846,
+        0.3336559715463664,
+        0.3696176344483451,
+        0.4094552693363246,
+        0.45358663105321095,
+        0.502474500337196,
+        0.5566315367427482,
+        0.6166256546126614,
+        0.6830859784759524,
+        0.7567094403225115,
+        0.8382680879364105,
+        0.9286171809262428,
+        1.0287041593510085,
+        1.1395785789904709,
+        1.2624031174455737,
+        1.3984657664836895,
+        1.549193338482967,
+        1.7161664286102438,
+        1.901135989632466,
+        2.106041693172322,
+        2.333032269952246,
+        2.584488042323465,
+        2.8630458853660428,
+        3.1716268783129147,
+        3.5134669362628275,
+        3.892150743399706,
+        4.3116493435570105,
+        4.776361782318168,
+        5.291161237330323,
+        5.861446120574045,
+        6.4931966884697045,
+        7.193037753458836,
+        7.968308154681512,
+        8.827137716249615,
+        9.778532500134064,
+        10.83246924766504,
+        12.0
+      ],
+      "elapsed_s": 81.34056520462036,
+      "solver_relative_residual_max": 0.00244707823996248,
+      "failed_frequencies": []
+    }
+  },
+  "replay_contaminated_medium": {
+    "verdict": {
+      "passed": false,
+      "gates_passed": 1,
+      "gates_total": 12,
+      "passed_list": [
+        "C1"
+      ],
+      "failed_list": [
+        "C0",
+        "C2",
+        "C3",
+        "C3a",
+        "C7",
+        "C4",
+        "C5",
+        "C6a",
+        "C6b",
+        "C5b",
+        "C5c"
+      ],
+      "case_tolerance": 0.1,
+      "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
+    },
+    "gates": {
+      "C1": {
+        "passed": true,
+        "voided": false,
+        "kv": {}
+      },
+      "C0": {
+        "passed": false,
+        "voided": false,
+        "kv": {
+          "solver_relative_residual_max": 1.24506058251773,
+          "min_radiation_damping": -129.91712236225968
+        }
+      },
+      "C2": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C3": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C3a": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C7": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C4": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C5": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C6a": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C6b": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C5b": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      },
+      "C5c": {
+        "passed": false,
+        "voided": true,
+        "kv": {}
+      }
+    },
+    "sweep": {
+      "label": "medium",
+      "n_sections": 20,
+      "n_levels": 6,
+      "panel_count": 480,
+      "max_panel_scale": 0.06450176101204128,
+      "n_omega": 41,
+      "omega": [
+        0.2,
+        0.2215561332442578,
+        0.24543560089073657,
+        0.2718888134691625,
+        0.3011931709229846,
+        0.3336559715463664,
+        0.3696176344483451,
+        0.4094552693363246,
+        0.45358663105321095,
+        0.502474500337196,
+        0.5566315367427482,
+        0.6166256546126614,
+        0.6830859784759524,
+        0.7567094403225115,
+        0.8382680879364105,
+        0.9286171809262428,
+        1.0287041593510085,
+        1.1395785789904709,
+        1.2624031174455737,
+        1.3984657664836895,
+        1.549193338482967,
+        1.7161664286102438,
+        1.901135989632466,
+        2.106041693172322,
+        2.333032269952246,
+        2.584488042323465,
+        2.8630458853660428,
+        3.1716268783129147,
+        3.5134669362628275,
+        3.892150743399706,
+        4.3116493435570105,
+        4.776361782318168,
+        5.291161237330323,
+        5.861446120574045,
+        6.4931966884697045,
+        7.193037753458836,
+        7.968308154681512,
+        8.827137716249615,
+        9.778532500134064,
+        10.83246924766504,
+        12.0
+      ],
+      "elapsed_s": 105.35424995422363,
+      "solver_relative_residual_max": 1.24506058251773,
+      "failed_frequencies": []
+    }
+  }
+}
