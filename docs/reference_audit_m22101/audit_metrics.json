@@ -1,0 +1,74 @@
+{
+  "case_id": "CASE-BEM-LAPLACE-CYLINDER",
+  "radius": 1.0,
+  "speed": 1.0,
+  "probe_count": 64,
+  "free_stream": {
+    "velocity_max_abs_error_over_U": 2.942091015256665e-15,
+    "perturbation_potential_max_abs_error": 2.220446049250313e-16,
+    "cp_max_abs_residual": 5.10702591327572e-15
+  },
+  "lifting": [
+    {
+      "circulation": 1.0,
+      "velocity_max_abs_error_over_U": 2.4424906541753444e-15,
+      "surface_speed_max_abs_error_over_U": 4.107825191113079e-15,
+      "surface_radial_velocity_over_U": 5.974387651264124e-15,
+      "lift_from_pressure_integral": -1.0000000000000016,
+      "lift_joukowski": -1.0,
+      "lift_relative_error": 1.5543122344752192e-15,
+      "drag_from_pressure_integral": -2.77394541482249e-15,
+      "drag_over_lift": 2.77394541482249e-15,
+      "stagnation_stated_deg": [
+        4.564279208067077,
+        175.43572079193294
+      ],
+      "stagnation_bisection_deg": [
+        4.564279208067091,
+        175.43572079193297
+      ],
+      "stagnation_max_deviation_deg": 2.842170943040401e-14
+    },
+    {
+      "circulation": 2.0,
+      "velocity_max_abs_error_over_U": 2.886579864025407e-15,
+      "surface_speed_max_abs_error_over_U": 4.884981308350689e-15,
+      "surface_radial_velocity_over_U": 5.131312041939395e-15,
+      "lift_from_pressure_integral": -2.0000000000000027,
+      "lift_joukowski": -2.0,
+      "lift_relative_error": 1.3322676295501878e-15,
+      "drag_from_pressure_integral": -2.3979095923809345e-15,
+      "drag_over_lift": 1.1989547961904672e-15,
+      "stagnation_stated_deg": [
+        9.157849511918702,
+        170.8421504880813
+      ],
+      "stagnation_bisection_deg": [
+        9.157849511919263,
+        170.8421504880807
+      ],
+      "stagnation_max_deviation_deg": 5.968558980384842e-13
+    },
+    {
+      "circulation": 3.0,
+      "velocity_max_abs_error_over_U": 3.774758283725532e-15,
+      "surface_speed_max_abs_error_over_U": 9.2148511043888e-15,
+      "surface_radial_velocity_over_U": 7.049916206369744e-15,
+      "lift_from_pressure_integral": -3.000000000000004,
+      "lift_joukowski": -3.0,
+      "lift_relative_error": 1.3322676295501878e-15,
+      "drag_from_pressure_integral": -3.1826800044328763e-15,
+      "drag_over_lift": 1.0608933348109587e-15,
+      "stagnation_stated_deg": [
+        13.811738527766154,
+        166.18826147223385
+      ],
+      "stagnation_bisection_deg": [
+        13.811738527767371,
+        166.1882614722326
+      ],
+      "stagnation_max_deviation_deg": 1.2505552149377763e-12
+    }
+  ],
+  "duration_of_audit_seconds": 0.783
+}
