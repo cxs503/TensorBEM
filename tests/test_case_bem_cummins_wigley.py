@@ -882,3 +882,142 @@ def test_committed_roll_verdict_is_disclosed_as_non_convergent() -> None:
     # monotone window drift is the physical signature, not scatter noise
     zetas = [row["zeta"] for row in sorted(mw["per_floor"], key=lambda r: -r["floor"])]
     assert all(a > b for a, b in zip(zetas, zetas[1:])), f"expected monotone drift, got {zetas}"
+
+
+# ---------------------------------------------------------------------------
+# band extension: C8/C9 attachment and the cheap-mesh *probe*
+# ---------------------------------------------------------------------------
+
+
+def _probe_sweep(exponent, panels, label, panel_scale):
+    """Extended-band synthetic on one mesh, with that mesh's own panel scale."""
+    import dataclasses
+
+    sweep = _decaying_sweep(
+        case.EXTENDED_BAND, n=case.EXTENDED_N_OMEGA, exponent=exponent,
+        panels=panels, label=label,
+    )
+    return dataclasses.replace(sweep, max_panel_scale=float(panel_scale))
+
+
+def _probe_report(exponents=(3.0, 3.0)):
+    from tensorbem.benchmarks import cummins_wigley_extended_probe as probe
+
+    committed = _probe_sweep(3.0, 480, "medium", 0.0645)
+    coarse = _probe_sweep(exponents[0], 192, "coarse", 0.15)
+    medium = _probe_sweep(exponents[1], 480, "medium", 0.0645)
+    import dataclasses
+
+    grid = case.sweep_grid((0.2, 12.0), case.N_OMEGA)
+    committed = dataclasses.replace(
+        committed,
+        omega=grid,
+        added_mass=np.asarray(committed.added_mass)[: grid.size],
+        damping=np.asarray(committed.damping)[: grid.size],
+        solver_relative_residual=np.full(grid.size, 1e-12),
+    )
+    return probe.probe_report(
+        committed=committed, coarse=coarse, medium=medium, cost=None
+    )
+
+
+def test_attach_extended_band_gates_without_artifact_changes_nothing(tmp_path) -> None:
+    """No artifact means *not evaluated*: gates C8/C9 must not appear as passes."""
+    sweep = _decaying_sweep((0.2, 12.0), panels=480, label="medium")
+    gates = {"C1": {"passed": True}}
+    assert case.attach_extended_band_gates(gates, sweep, tmp_path) is None
+    assert set(gates) == {"C1"}
+
+
+def test_extended_anchor_for_sweep_selects_the_rung_by_mesh_identity(tmp_path) -> None:
+    """An anchor solved on another mesh is not an anchor for this sweep."""
+    ladder = tmp_path / case.EXTENDED_ANCHOR_NAME
+    ladder.write_text(
+        json.dumps(
+            {
+                "rungs": [
+                    {
+                        "n_sections": 44,
+                        "n_levels": 14,
+                        "added_mass_inf_diagonal": [1.0] * 6,
+                    },
+                    {
+                        "n_sections": 60,
+                        "n_levels": 16,
+                        "added_mass_inf_diagonal": [9.0] * 6,
+                    },
+                ]
+            }
+        )
+    )
+    sweep = _decaying_sweep((0.2, 12.0))
+    assert (sweep.n_sections, sweep.n_levels) == case.EXTENDED_MESH
+    assert case.extended_anchor_for_sweep(sweep, ladder)["added_mass_inf_diagonal"][0] == 9.0
+    assert case.extended_anchor_for_sweep(sweep, tmp_path / "absent.json") is None
+
+
+def test_probe_band_limit_is_the_C2_rule() -> None:
+    """The probe's 'how much of the band does this mesh resolve' is gate C2."""
+    from tensorbem.benchmarks import cummins_wigley_extended_probe as probe
+
+    scale = 0.0645  # committed medium mesh
+    limit = probe._band_limit(scale)
+    assert limit == pytest.approx(math.sqrt(case.GRAVITY / scale), rel=1e-12)
+    # the medium mesh stops resolving around 12 rad/s, i.e. it cannot carry a
+    # 20 rad/s band -- which is exactly why the probe is not a gate
+    assert limit == pytest.approx(12.33, abs=0.05)
+    assert limit < case.EXTENDED_BAND[1]
+
+
+def test_probe_never_promotes_itself_to_a_gate() -> None:
+    """Even a clean bracket leaves C8/C9 explicitly not_run."""
+    report = _probe_report((3.0, 3.0))
+    assert report["certified_gates"] == {"C8": "not_run", "C9": "not_run"}
+    assert "probe" in report["probe"]
+    assert report["manifest"]["shared_band_reproduction"]["n_shared_frequencies"] > 0
+
+
+def test_probe_reports_robust_widening_only_when_both_meshes_agree() -> None:
+    assert all(
+        row["probe_verdict"].startswith("robust") for row in _probe_report((3.0, 3.0))["per_dof"]
+    )
+    bracketed = _probe_report((3.0, 1.2))
+    assert all(row["probe_verdict"].startswith("inconclusive") for row in bracketed["per_dof"])
+    stuck = _probe_report((1.2, 1.2))
+    assert all(row["probe_verdict"].startswith("not widened") for row in stuck["per_dof"])
+    assert stuck["robust_dof"] == []
+
+
+def test_probe_reports_the_C2_price_of_the_cheap_meshes() -> None:
+    """The probe must publish *why* its numbers are not certified."""
+    manifest = _probe_report((3.0, 3.0))["manifest"]
+    for info in manifest["meshes"].values():
+        assert info["c2_holds_over_probe_band"] is False
+        assert info["band_limit_rad_s"] < case.EXTENDED_BAND[1]
+
+
+def test_probe_renders_the_cost_of_the_certified_sweep() -> None:
+    from tensorbem.benchmarks import cummins_wigley_extended_probe as probe
+
+    cost = {
+        "points": [
+            {"n_sections": 12, "n_levels": 4, "panel_count": 192, "wall_s": 2.0},
+            {"n_sections": 20, "n_levels": 6, "panel_count": 480, "wall_s": 14.6},
+            {"n_sections": 32, "n_levels": 10, "panel_count": 640, "wall_s": 40.0},
+        ],
+        "fitted_exponent": 3.1,
+        "certified_panel_count": 3840,
+        "certified_wall_s_per_node": 3600.0,
+        "certified_cpu_hours_for_band": 55.0,
+        "declared_plan_cpu_hours": [2.0, 4.0],
+    }
+    text = probe.render_markdown(
+        probe.probe_report(
+            committed=_decaying_sweep((0.2, 12.0), panels=480, label="medium"),
+            coarse=_probe_sweep(3.0, 192, "coarse", 0.15),
+            medium=_probe_sweep(3.0, 480, "medium", 0.0645),
+            cost=cost,
+        )
+    )
+    assert "CPU-hours" in text
+    assert "not_run" in text
