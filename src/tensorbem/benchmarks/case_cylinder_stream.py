@@ -108,6 +108,34 @@ NEAR_WALL_SATURATION_BAND = (0.5, 2.0)
 # O(h^2) term is swamped by the piecewise-constant density); a lower bound of
 # half an order is the weakest statement that still forbids a plateau.
 NEAR_WALL_ORDER_MIN = 0.5
+
+# Azimuthal (intra-panel) sweep.  The window above is measured on radial probes
+# above the panel *midpoints*, which is where a constant-density panel is at its
+# best; callers evaluate wherever the geometry puts them, so the same ladder is
+# re-probed across one panel up to the vertex, where the two adjacent densities
+# meet and the trace is not smooth.
+NEAR_WALL_AZIMUTH_FACTORS: tuple[float, ...] = (2.0, 1.0, 0.5, 0.25, 0.1)
+NEAR_WALL_AZIMUTH_OFFSETS: tuple[float, ...] = (0.0, 0.125, 0.25, 0.375, 0.5)
+# Six panels per level, strided: they reach the stagnation, shoulder and
+# broadside azimuths without evaluating the closed-form kernels at every panel.
+# ``tests/test_case_cylinder_stream.py`` checks the sampled maximum against the
+# all-panel maximum.
+NEAR_WALL_AZIMUTH_PANELS = 6
+# The documented window must not depend on where across the panel the target
+# sits, so the same 1% tolerance is demanded of the worst azimuth.
+NEAR_WALL_AZIMUTH_WINDOW_TOL = 0.01
+# Inside the exclusion zone the vertex direction is measurably worse than the
+# midpoint direction: the midpoint-only column understates the worst case by at
+# least this factor.
+NEAR_WALL_AZIMUTH_VERTEX_PENALTY = 2.0
+# The two studies probe from different reference surfaces (the circle for the
+# radial ladder, the chord for the azimuthal sweep), so their midpoint errors
+# agree to a few percent, not to roundoff.
+NEAR_WALL_AZIMUTH_FRAME_TOL = 0.10
+# First-moment (linear) density is not a uniform improvement: at the documented
+# window it is measurably worse than constant panels, because the arc-length
+# slope extrapolates a density that is discontinuous across the vertex.
+NEAR_WALL_LINEAR_WINDOW_GAIN_MAX = 1.1
 GRADIENT_CROSSCHECK_TOL = 1.0e-5
 HARMONICITY_TOL = 1.0e-6
 # Far-field multipole study (route M).  The disturbance potential of an exterior
@@ -457,6 +485,54 @@ def circulation_sweep(
         ),
     }
 
+
+def attach_azimuth_study(
+    window: Sequence[dict[str, Any]],
+    radius: float = RADIUS,
+    speed: float = SPEED,
+    ladder: Sequence[int] = NEAR_WALL_LADDER,
+) -> dict[str, Any]:
+    """Measure the azimuthal sweep and cross-check it against the radial ladder.
+
+    ``window`` is the ``near_wall["window"]["levels"]`` list: the same midpoint
+    direction measured from the circle instead of from the chord, which is what
+    makes the two studies comparable.
+    """
+    azimuth = near_wall_azimuth_study(radius=radius, speed=speed, ladder=ladder)
+    frame = []
+    for index, level in enumerate(azimuth["levels"]):
+        row = next(
+            row
+            for row in level["sweep"]
+            if row["clearance_over_h_max"] == NEAR_WALL_WINDOW_FACTOR
+        )
+        midpoint = float(row["midpoint_error"])
+        circle = float(window[index]["max_relative_velocity_error"])
+        frame.append(
+            {
+                "panels": level["panels"],
+                "midpoint_error_from_chord": midpoint,
+                "midpoint_error_from_circle": circle,
+                "relative_difference": (
+                    abs(midpoint - circle) / circle if circle > 0.0 else float("inf")
+                ),
+            }
+        )
+    azimuth["midpoint_cross_check"] = {
+        "levels": frame,
+        "max_relative_difference": max(item["relative_difference"] for item in frame),
+        "tolerance": NEAR_WALL_AZIMUTH_FRAME_TOL,
+        "note": (
+            "the radial ladder probes at radius a + delta (measured from the "
+            "circle) and the azimuthal sweep at chord midpoint + delta (measured "
+            "from the polygon), so the same midpoint direction differs by the "
+            "faceting offset; agreement within NEAR_WALL_AZIMUTH_FRAME_TOL "
+            "confirms both studies measure the same regime"
+        ),
+    }
+    return azimuth
+
+
 def near_wall_study(
     radius: float = RADIUS,
     speed: float = SPEED,
@@ -727,7 +803,9 @@ def near_wall_study(
                 "surface_referenced_linear": polygon_linear,
             }
         )
+    azimuth = attach_azimuth_study(window, radius, speed, ladder)
     return {
+        "azimuth": azimuth,
         "faceting": {
             "clearance_over_h_max": NEAR_WALL_EXCLUSION_FACTOR,
             "levels": faceting,
@@ -823,6 +901,278 @@ def near_wall_study(
             "the error reported here is the total velocity (grad(phi) + U x_hat) "
             "against dW/dz at the same points; it is a property of the "
             "constant-density panel representation, not of the linear solver"
+        ),
+    }
+
+
+
+def _distance_to_polygon(points: np.ndarray, vertices: np.ndarray) -> np.ndarray:
+    """Distance from each point to the closed polygon boundary."""
+    ends = np.roll(vertices, -1, axis=0)
+    nearest = np.full(len(points), np.inf)
+    for start, end in zip(vertices, ends):
+        segment = end - start
+        projection = np.clip(
+            ((points - start) @ segment) / float(segment @ segment), 0.0, 1.0
+        )
+        closest = start + projection[:, None] * segment
+        nearest = np.minimum(nearest, np.linalg.norm(points - closest, axis=1))
+    return nearest
+
+
+def near_wall_azimuth_study(
+    radius: float = RADIUS,
+    speed: float = SPEED,
+    ladder: Sequence[int] = NEAR_WALL_LADDER,
+    factors: Sequence[float] = NEAR_WALL_AZIMUTH_FACTORS,
+    offsets: Sequence[float] = NEAR_WALL_AZIMUTH_OFFSETS,
+) -> dict[str, Any]:
+    """Re-probe the near-wall ladder across a panel, not only above its midpoint.
+
+    The classic near-wall table (:func:`near_wall_study`) puts its probes on the
+    radial rays through the panel midpoints.  That is the most favourable
+    azimuth a constant-density panel offers, so the window it quotes is only a
+    statement about midpoints.  This study walks the probe along one panel,
+    ``zeta in [0, 0.5] h_max`` from the midpoint to the vertex, and pushes it out
+    along the local outward normal (the bisector of the two adjacent panel
+    normals at the vertex).  The offset distance actually realised is measured
+    against the polygon, not assumed, because the bisector probe is slightly
+    closer to the boundary than the nominal offset.
+
+    Reported per level and clearance: the midpoint error (both panel bases), the
+    worst error over the azimuth sweep, where that worst azimuth sits, and the
+    ratio between them.  Aggregates answer three questions the midpoint table
+    cannot:
+
+    * does the documented window survive at every azimuth?
+    * how much worse than the quoted exclusion-zone number is the worst azimuth?
+    * does ``linear_density=True`` keep its advantage once the azimuth is free?
+    """
+    levels: list[dict[str, Any]] = []
+    for panels in ladder:
+        mesh = regular_polygon(int(panels), radius)
+        centers, vectors, lengths = mesh.centers, mesh.vectors, mesh.lengths
+        h_max = float(np.max(lengths))
+        stride = max(1, int(panels) // NEAR_WALL_AZIMUTH_PANELS)
+        select = np.arange(0, int(panels), stride)
+        tangents = vectors / lengths[:, None]
+        normals = np.column_stack((tangents[:, 1], -tangents[:, 0]))
+        following = np.roll(normals, -1, axis=0)
+        bisectors = normals + following
+        bisectors /= np.linalg.norm(bisectors, axis=1)[:, None]
+        r = np.hypot(centers[:, 0], centers[:, 1])
+        normal_derivative = speed * radius**2 * (centers[:, 0] / r) / r**2
+        result = solve_laplace_exterior_neumann(mesh, normal_derivative)
+        result_linear = solve_laplace_exterior_neumann(
+            mesh, normal_derivative, linear_density=True
+        )
+        blocks: list[np.ndarray] = []
+        tags: list[tuple[float, float]] = []
+        for factor in factors:
+            delta = float(factor) * h_max
+            for offset in offsets:
+                if float(offset) >= 0.5:
+                    base = centers[select] + 0.5 * h_max * tangents[select]
+                    direction = bisectors[select]
+                else:
+                    base = centers[select] + float(offset) * h_max * tangents[select]
+                    direction = normals[select]
+                blocks.append(base + delta * direction)
+                tags.append((float(factor), float(offset)))
+        points = np.vstack(blocks)
+        exact = exact_velocity(points, radius, speed)
+        exact_speed = np.linalg.norm(exact, axis=1)
+
+        def _relative(field: Any) -> np.ndarray:
+            total = field.gradient + np.array([speed, 0.0])
+            return np.linalg.norm(total - exact, axis=1) / exact_speed
+
+        constant = _relative(evaluate_exterior_field(mesh, result, points))
+        linear = _relative(
+            evaluate_exterior_field(mesh, result_linear, points, linear_density=True)
+        )
+        clearance = _distance_to_polygon(points, mesh.vertices) / h_max
+        shape = (len(factors), len(offsets), len(select))
+        constant = constant.reshape(shape)
+        linear = linear.reshape(shape)
+        clearance = clearance.reshape(shape)
+        sweep: list[dict[str, Any]] = []
+        for i, factor in enumerate(factors):
+            rows = [
+                {
+                    "offset_over_h_max": float(offset),
+                    "max_relative_velocity_error": float(constant[i, j].max()),
+                    "max_relative_velocity_error_linear": float(linear[i, j].max()),
+                    "min_clearance_over_h_max": float(clearance[i, j].min()),
+                }
+                for j, offset in enumerate(offsets)
+            ]
+            midpoint = next(
+                row for row in rows if row["offset_over_h_max"] == 0.0
+            )
+            worst = max(rows, key=lambda row: row["max_relative_velocity_error"])
+            worst_linear = max(
+                rows, key=lambda row: row["max_relative_velocity_error_linear"]
+            )
+            midpoint_error = midpoint["max_relative_velocity_error"]
+            midpoint_error_linear = midpoint["max_relative_velocity_error_linear"]
+            sweep.append(
+                {
+                    "clearance_over_h_max": float(factor),
+                    "offsets": rows,
+                    "midpoint_error": midpoint_error,
+                    "midpoint_error_linear": midpoint_error_linear,
+                    "worst_error": worst["max_relative_velocity_error"],
+                    "worst_error_linear": worst_linear[
+                        "max_relative_velocity_error_linear"
+                    ],
+                    "worst_offset_over_h_max": worst["offset_over_h_max"],
+                    "worst_offset_over_h_max_linear": worst_linear[
+                        "offset_over_h_max"
+                    ],
+                    "azimuth_penalty": (
+                        worst["max_relative_velocity_error"] / midpoint_error
+                        if midpoint_error > 0.0
+                        else float("inf")
+                    ),
+                    "azimuth_penalty_linear": (
+                        worst_linear["max_relative_velocity_error_linear"]
+                        / midpoint_error_linear
+                        if midpoint_error_linear > 0.0
+                        else float("inf")
+                    ),
+                    "min_clearance_over_h_max": min(
+                        row["min_clearance_over_h_max"] for row in rows
+                    ),
+                }
+            )
+        levels.append(
+            {
+                "panels": int(panels),
+                "h_max_over_radius": h_max / radius,
+                "sampled_panels": int(len(select)),
+                "panel_stride": int(stride),
+                "sweep": sweep,
+            }
+        )
+
+    def _at(level: dict[str, Any], factor: float) -> dict[str, Any]:
+        return next(
+            row for row in level["sweep"] if row["clearance_over_h_max"] == float(factor)
+        )
+
+    def _window_factor(key: str) -> float | None:
+        factor: float | None = None
+        for candidate in sorted(factors, key=float, reverse=True):
+            worst = max(
+                float(_at(level, candidate)[key]) for level in levels
+            )
+            if worst <= NEAR_WALL_AZIMUTH_WINDOW_TOL:
+                factor = float(candidate)
+            else:
+                break
+        return factor
+
+    window = {
+        "clearance_over_h_max": NEAR_WALL_WINDOW_FACTOR,
+        "relative_error_tolerance": NEAR_WALL_AZIMUTH_WINDOW_TOL,
+        "levels": [
+            {
+                "panels": level["panels"],
+                "h_max_over_radius": level["h_max_over_radius"],
+                "midpoint_error": _at(level, NEAR_WALL_WINDOW_FACTOR)["midpoint_error"],
+                "worst_error": _at(level, NEAR_WALL_WINDOW_FACTOR)["worst_error"],
+                "worst_error_linear": _at(level, NEAR_WALL_WINDOW_FACTOR)[
+                    "worst_error_linear"
+                ],
+                "azimuth_penalty": _at(level, NEAR_WALL_WINDOW_FACTOR)[
+                    "azimuth_penalty"
+                ],
+            }
+            for level in levels
+        ],
+    }
+    window["worst_over_levels"] = max(
+        row["worst_error"] for row in window["levels"]
+    )
+    window["worst_over_levels_linear"] = max(
+        row["worst_error_linear"] for row in window["levels"]
+    )
+    exclusion = {
+        "clearance_over_h_max": NEAR_WALL_EXCLUSION_FACTOR,
+        "levels": [
+            {
+                "panels": level["panels"],
+                "midpoint_error": _at(level, NEAR_WALL_EXCLUSION_FACTOR)[
+                    "midpoint_error"
+                ],
+                "worst_error": _at(level, NEAR_WALL_EXCLUSION_FACTOR)["worst_error"],
+                "worst_error_linear": _at(level, NEAR_WALL_EXCLUSION_FACTOR)[
+                    "worst_error_linear"
+                ],
+                "worst_offset_over_h_max": _at(level, NEAR_WALL_EXCLUSION_FACTOR)[
+                    "worst_offset_over_h_max"
+                ],
+                "azimuth_penalty": _at(level, NEAR_WALL_EXCLUSION_FACTOR)[
+                    "azimuth_penalty"
+                ],
+                "azimuth_penalty_linear": _at(level, NEAR_WALL_EXCLUSION_FACTOR)[
+                    "azimuth_penalty_linear"
+                ],
+            }
+            for level in levels
+        ],
+    }
+    exclusion["min_azimuth_penalty"] = min(
+        row["azimuth_penalty"] for row in exclusion["levels"]
+    )
+    exclusion["worst_over_levels"] = max(
+        row["worst_error"] for row in exclusion["levels"]
+    )
+    linear_gain = {
+        "clearance_over_h_max": NEAR_WALL_WINDOW_FACTOR,
+        "levels": [
+            {
+                "panels": level["panels"],
+                "constant_worst": _at(level, NEAR_WALL_WINDOW_FACTOR)["worst_error"],
+                "linear_worst": _at(level, NEAR_WALL_WINDOW_FACTOR)[
+                    "worst_error_linear"
+                ],
+                "ratio_linear_over_constant": (
+                    _at(level, NEAR_WALL_WINDOW_FACTOR)["worst_error_linear"]
+                    / _at(level, NEAR_WALL_WINDOW_FACTOR)["worst_error"]
+                ),
+            }
+            for level in levels
+        ],
+    }
+    linear_gain["min_ratio"] = min(
+        row["ratio_linear_over_constant"] for row in linear_gain["levels"]
+    )
+    linear_gain["max_ratio"] = max(
+        row["ratio_linear_over_constant"] for row in linear_gain["levels"]
+    )
+    return {
+        "ladder": [int(value) for value in ladder],
+        "factors": [float(value) for value in factors],
+        "offsets_over_h_max": [float(value) for value in offsets],
+        "levels": levels,
+        "window": window,
+        "exclusion": exclusion,
+        "linear_at_window": linear_gain,
+        "windows_including_azimuth": {
+            "relative_error_tolerance": NEAR_WALL_AZIMUTH_WINDOW_TOL,
+            "constant_density": _window_factor("worst_error"),
+            "linear_density": _window_factor("worst_error_linear"),
+        },
+        "probe_directions": (
+            "along one panel from the midpoint to the vertex (bisector normal at "
+            "the vertex), pushed out along the local outward normal"
+        ),
+        "note": (
+            "zones are reported per azimuth: the midpoint column reproduces the "
+            "radial ladder (from the circle, so it agrees to a few percent) while "
+            "the worst column is the honest bound for an arbitrary target"
         ),
     }
 
@@ -1667,6 +2017,70 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "polygon surface must collapse most of it",
     )
 
+    azimuth = near["azimuth"]
+    add(
+        "near_wall_window_is_azimuth_independent",
+        {
+            "worst_over_levels": azimuth["window"]["worst_over_levels"],
+            "levels": azimuth["window"]["levels"],
+        },
+        f"<= {NEAR_WALL_AZIMUTH_WINDOW_TOL:g} on every level",
+        azimuth["window"]["worst_over_levels"] <= NEAR_WALL_AZIMUTH_WINDOW_TOL,
+        "the documented window was measured above the panel midpoints only; "
+        "walking the probe across the panel (midpoint -> vertex) must not break "
+        "the same 1% tolerance, otherwise the window is an azimuth-specific "
+        "statement rather than a validity claim",
+    )
+    add(
+        "near_wall_exclusion_is_worse_at_vertices",
+        {
+            "clearance_over_h_max": azimuth["exclusion"]["clearance_over_h_max"],
+            "min_azimuth_penalty": azimuth["exclusion"]["min_azimuth_penalty"],
+            "worst_over_levels": azimuth["exclusion"]["worst_over_levels"],
+            "levels": azimuth["exclusion"]["levels"],
+        },
+        f">= {NEAR_WALL_AZIMUTH_VERTEX_PENALTY:g} on every level",
+        azimuth["exclusion"]["min_azimuth_penalty"] >= NEAR_WALL_AZIMUTH_VERTEX_PENALTY,
+        "inside the exclusion zone the midpoint column is the *best* azimuth: at "
+        "the vertex the piecewise-constant density is discontinuous across the "
+        "kink, so the quoted midpoint number understates the worst case",
+    )
+    add(
+        "near_wall_azimuth_window_is_not_extended_by_linear_density",
+        azimuth["windows_including_azimuth"],
+        f"constant and linear both {NEAR_WALL_WINDOW_FACTOR:g} h_max",
+        azimuth["windows_including_azimuth"]["constant_density"]
+        == NEAR_WALL_WINDOW_FACTOR
+        and azimuth["windows_including_azimuth"]["linear_density"]
+        == NEAR_WALL_WINDOW_FACTOR,
+        "the midpoint-only study moves the 1% window of the first-moment basis in "
+        "to 0.5 h_max; once the azimuth is free that gain disappears, so the "
+        "linear basis must not be advertised as widening the usable window",
+    )
+    add(
+        "near_wall_linear_density_is_worse_in_the_window",
+        {
+            "min_ratio": azimuth["linear_at_window"]["min_ratio"],
+            "levels": azimuth["linear_at_window"]["levels"],
+        },
+        f">= {NEAR_WALL_LINEAR_WINDOW_GAIN_MAX:g} on every level",
+        azimuth["linear_at_window"]["min_ratio"] >= NEAR_WALL_LINEAR_WINDOW_GAIN_MAX,
+        "inside the documented window the first-moment basis is measurably worse "
+        "than constant panels (its arc-length slope extrapolates the density "
+        "across the vertex), which is the qualification the library docstring "
+        "needs",
+    )
+    add(
+        "near_wall_azimuth_midpoint_cross_check",
+        azimuth["midpoint_cross_check"]["max_relative_difference"],
+        f"<= {NEAR_WALL_AZIMUTH_FRAME_TOL:g}",
+        azimuth["midpoint_cross_check"]["max_relative_difference"]
+        <= NEAR_WALL_AZIMUTH_FRAME_TOL,
+        "the azimuthal sweep and the radial ladder probe the same midpoint "
+        "direction from different reference surfaces (chord vs circle); their "
+        "agreement is what makes the two windows comparable",
+    )
+
     multipole = artifact["multipole"]
     for family, block in multipole["families"].items():
         finest = block["finest"]
@@ -2157,6 +2571,68 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "+ 边界迹求解误差（$O(h^2)$，被 $1/\\delta$ 放大）；要再收窄窗口需曲边面板/更高阶求解。",
         "",
     ]
+    azimuth = near["azimuth"]
+    azimuth_window = azimuth["window"]
+    azimuth_exclusion = azimuth["exclusion"]
+    lines += [
+        "",
+        "**方位（面内）敏感性（第 4 轮补充）**：前面两张表的探针都落在**面板中点法向**上，"
+        "那是常值面板最有利的方向，而用户可以在任意位置求值。本轮把探针在同一面板内从中点"
+        "（$\\zeta=0$）走到顶点（$\\zeta=0.5h_{max}$，顶点处取相邻面板法向的角平分线），"
+        "逐层给出面内最差误差（线性基同测）。到折面的实测间隙由程序逐段量距，非名义值：",
+        "",
+        "| N | $\\delta/h_{max}$ | 中点误差 | 面内最差 | 最差位置 $\\zeta/h_{max}$ | 顶点/中点 | 线性基面内最差 | 实测最小间隙/h |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for level in azimuth["levels"]:
+        for row in level["sweep"]:
+            lines.append(
+                "| %d | %.2f | %.3e | %.3e | %.3f | %.2f | %.3e | %.3f |"
+                % (
+                    level["panels"],
+                    row["clearance_over_h_max"],
+                    row["midpoint_error"],
+                    row["worst_error"],
+                    row["worst_offset_over_h_max"],
+                    row["azimuth_penalty"],
+                    row["worst_error_linear"],
+                    row["min_clearance_over_h_max"],
+                )
+            )
+    lines += [
+        "",
+        f"判读一（窗内方位无关）：$\\delta={azimuth_window['clearance_over_h_max']:g}h_{{max}}$ 处逐层最差/中点比为 "
+        + "、".join(f"{row['azimuth_penalty']:.2f}" for row in azimuth_window["levels"])
+        + f"，最差 {azimuth_window['worst_over_levels']:.3e} 仍在 1% 容差内 ——"
+        "「$\\delta\\ge2h_{max}$」这条窗对任意方位成立，不只对中点法向。",
+        "",
+        f"判读二（排除区在中点方向被低估）：$\\delta={azimuth_exclusion['clearance_over_h_max']:g}h_{{max}}$ 处逐层中点误差 "
+        + "、".join(f"{row['midpoint_error']:.3f}" for row in azimuth_exclusion["levels"])
+        + "，面内最差却达 "
+        + "、".join(f"{row['worst_error']:.3f}" for row in azimuth_exclusion["levels"])
+        + f"（顶点/中点比 {azimuth_exclusion['min_azimuth_penalty']:.2f}–"
+        + f"{max(row['azimuth_penalty'] for row in azimuth_exclusion['levels']):.2f}）。"
+        "理由：常值密度在顶点处**不连续**，而折面顶点相对真实圆的偏差最直接地投影到该方向。"
+        "结论：排除区里的「18%」只是最有利方位的数字，贴壁任意方向应按 ~60% 或更大预留误差；"
+        "守门参数照旧建议 $\\ge1$–$2h_{max}$。",
+        "",
+        f"判读三（一阶矩基的窗没有前移）：窗内 $\\delta={azimuth['linear_at_window']['clearance_over_h_max']:g}h_{{max}}$ 处线性基面内最差比常值大 "
+        f"{azimuth['linear_at_window']['min_ratio']:.2f}–{azimuth['linear_at_window']['max_ratio']:.2f}×；"
+        "含方位后 1% 窗对两种基都是 $\\delta\\ge"
+        f"{azimuth['windows_including_azimuth']['constant_density']:g}h_{{max}}$"
+        f"（线性 {azimuth['windows_including_azimuth']['linear_density']:g}）。"
+        "线性基的优势只在**中点方向**、$\\delta\\le0.5h_{max}$ 处（上一表 3–9×）；"
+        "换到顶点方向在 $\\delta=0.1h_{max}$ 反而更差且逐层不单调（"
+        + "、".join(f"{row['worst_error_linear']:.3f}" for row in azimuth_exclusion["levels"])
+        + "，随加密 1.40→0.129→1.26）：弧长中心差分给出的斜率把密度外推过了顶点折角。"
+        "故 `linear_density=True` 只能当「光滑曲边 + 离壁」选项，不能当通用改进"
+        "（见 `evaluate_exterior_field` docstring）。",
+        "",
+        f"两条研究在 $\\delta=2h_{{max}}$ 的中点方向互相校核：同一方向、不同参考面（折面弦 vs 圆周）"
+        f"的误差最大相差 {azimuth['midpoint_cross_check']['max_relative_difference']:.2%}，"
+        "与折面偏移 $a(1-\\cos\\pi/N)\\sim h^2/8$ 同量级，说明两表量的是同一 regime。",
+        "",
+    ]
     rows_c = artifact["routes"]["circulation"]["levels"]
     sweep = artifact["circulation_sweep"]
     circulation = artifact["routes"]["circulation"]
@@ -2228,8 +2704,9 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "",
         "![near wall](benchmarks/verified/case_bem_laplace_cylinder/figures/near_wall.png)",
         "",
-        "`figures/near_wall.png`：近壁误差随 $\\delta/h_{max}$ 的变化（三层网格），"
-        "竖线为适用窗与排除区边界。",
+        "`figures/near_wall.png`：左=近壁误差随 $\\delta/h_{max}$ 的变化（三层网格，实线常值基、"
+        "虚线一阶矩基），竖线为适用窗与排除区边界；右=面内方位扫描的「最差方位/中点」误差比，"
+        "比值 1 表示该层该间隙下中点就是最差方位。",
         "",
         "![convergence](benchmarks/verified/case_bem_laplace_cylinder/figures/convergence.png)",
         "",
@@ -2653,7 +3130,7 @@ def plot_near_wall(artifact: dict[str, Any], output: Path) -> Path:
     import matplotlib.pyplot as plt
 
     near = artifact["near_wall"]
-    fig, axes = plt.subplots(figsize=(6.4, 4.4))
+    fig, (axes, azimuth_axes) = plt.subplots(1, 2, figsize=(11.6, 4.4))
     for level in near["levels"]:
         clearance = np.array([row["clearance_over_h_max"] for row in level["sweep"]])
         error = np.array(
@@ -2699,9 +3176,48 @@ def plot_near_wall(artifact: dict[str, Any], output: Path) -> Path:
     )
     axes.set_xlabel(r"$\delta/h_{max}$")
     axes.set_ylabel("max relative velocity error")
-    axes.set_title("exterior field: near-wall validity window")
+    axes.set_title("midpoint rays: validity window")
     axes.grid(True, which="both", alpha=0.3)
     axes.legend(fontsize=7)
+
+    azimuth = near["azimuth"]
+    for level in azimuth["levels"]:
+        clearance = np.array(
+            [row["clearance_over_h_max"] for row in level["sweep"]]
+        )
+        penalty = np.array([row["azimuth_penalty"] for row in level["sweep"]])
+        penalty_linear = np.array(
+            [row["azimuth_penalty_linear"] for row in level["sweep"]]
+        )
+        azimuth_axes.semilogx(clearance, penalty, "o-", ms=4.0, label=f"N={level['panels']}")
+        azimuth_axes.semilogx(
+            clearance,
+            penalty_linear,
+            "s--",
+            ms=3.5,
+            lw=1.0,
+            alpha=0.85,
+            color=azimuth_axes.lines[-1].get_color(),
+            label=f"N={level['panels']} linear",
+        )
+    azimuth_axes.axvline(
+        near["window"]["clearance_over_h_max"],
+        color="tab:green",
+        ls="--",
+        lw=1.0,
+    )
+    azimuth_axes.axvline(
+        near["exclusion"]["clearance_over_h_max"],
+        color="tab:red",
+        ls=":",
+        lw=1.0,
+    )
+    azimuth_axes.set_xlabel(r"$\delta/h_{max}$")
+    azimuth_axes.set_ylabel("worst azimuth error / midpoint error")
+    azimuth_axes.set_title("across one panel: azimuth penalty")
+    azimuth_axes.grid(True, which="both", alpha=0.3)
+    azimuth_axes.legend(fontsize=7)
+    fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=150)
     plt.close(fig)
