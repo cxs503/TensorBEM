@@ -1,0 +1,1584 @@
+{
+  "artifact_id": "openwater_efficiency_closure_w30",
+  "mission": 21514,
+  "topic": "propeller-openwater-bem: anchor registration, eta0 identity closure, eta_R convention audit",
+  "generated_by": "benchmarks/anchors/build_openwater_efficiency_closure.py",
+  "regenerate": "PYTHONPATH=src python benchmarks/anchors/build_openwater_efficiency_closure.py",
+  "git_commit": "00dc41ffcde9f359f47af44a04fa36253499c226+dirty",
+  "gates": {
+    "eta0_residual_max_pct": 0.5,
+    "solver_deviation_max_pct": 10.0,
+    "tight_pct": 3.0,
+    "etar_window": [
+      0.9,
+      1.1
+    ],
+    "predeclared": "fixed at the top of the module before the sweep was run; not retuned after the numbers were seen"
+  },
+  "anchors": [
+    {
+      "anchor_id": "AN-OVO-1975-B4.70-OPENWATER",
+      "source_class": "LITERATURE_CLOSED_FORM",
+      "citation": {
+        "authors": "Oosterveld, M.W.C. & van Oossanen, P.",
+        "year": 1975,
+        "title": "Further computer-analyzed data of the Wageningen B-screw series",
+        "journal": "International Shipbuilding Progress, 22(251)",
+        "report": "Netherlands Ship Model Basin (NSMB) Publication 479",
+        "content": "39-term KT and 47-term KQ multiple regression of the Wageningen B-screw series open-water tests, valid Z=2-7, Ae/Ao=0.30-1.05, P/D=0.5-1.4, Re=2e6 at the 0.75R chord, hub ratio 0.18-0.20"
+      },
+      "provenance_depth": "SECONDARY_REPRODUCTION",
+      "provenance_chain": [
+        {
+          "step": 1,
+          "what": "published regression tables of Oosterveld & van Oossanen (1975)",
+          "artifact": "NSMB Publication 479 / ISP 22(251)",
+          "verification_in_worktree": "not held"
+        },
+        {
+          "step": 2,
+          "what": "platform reference implementation; its own provenance note records a programmatic extraction from two independent public implementations (AlfredMylne/PropCalc, isulovsky/Wageningen-B-series-propeller-calculator, fetched 2026-11-01, agreeing term for term)",
+          "artifact": "/root/tp-agent/work/m6783/backend/services/wageningen_b_series.py",
+          "sha256": "49fd4deaf669eb2e0368ba47e558f59cb2c6c96e6523baf10d3bbd870a42b516"
+        },
+        {
+          "step": 3,
+          "what": "this extraction (importlib read of the coefficient tuples, no retyping)",
+          "tool": "tools/build_wageningen_anchor.py",
+          "command": "python tools/build_wageningen_anchor.py --source /root/tp-agent/work/m6783/backend/services/wageningen_b_series.py --out benchmarks/anchors/wageningen_b_series.json"
+        }
+      ],
+      "declared_limit": "the printed NSMB tables are not available offline in this worktree; the coefficients enter through the two-step machine chain below and the regression is additionally adjudicated against physics anchors (tests/test_wageningen_anchor.py) rather than trusted on faith",
+      "geometry": {
+        "Z": 4,
+        "Ae_Ao": 0.7,
+        "P_D": 1.0
+      },
+      "geometry_validity": {
+        "z": [
+          2,
+          7
+        ],
+        "p_d": [
+          0.5,
+          1.4
+        ],
+        "ae_ao": [
+          0.3,
+          1.05
+        ],
+        "j_min": -0.2
+      },
+      "carrier": {
+        "path": "benchmarks/anchors/wageningen_b_series.json",
+        "sha256": "fa8635c1892613ba15656a34d1b3fd263e73a2782f0754d25d7661faf7cd0988",
+        "term_counts": {
+          "KT": 39,
+          "KQ": 47
+        },
+        "declared_term_sha256": {
+          "n_kt_terms": 39,
+          "n_kq_terms": 47,
+          "kt_table_sha256": "fdaef48bf39b2382d0a151e103f58f17b48a41080a9cb7308e2ddbe9c6ff69f8",
+          "kq_table_sha256": "748c18607b51c49417a4fe09a31572adef5b8623302906074affd83777bb29fc"
+        }
+      },
+      "n_points": 8,
+      "points": [
+        {
+          "J": 0.1,
+          "KT_registered": 0.42543955101100006,
+          "KQ_registered": 0.06376634982179993,
+          "10KQ_registered": 0.6376634982179994,
+          "eta0_registered": 0.10618579818261574,
+          "KT_independent": 0.42543955101100006,
+          "KQ_independent": 0.06376634982179993,
+          "10KQ_independent": 0.6376634982179994,
+          "eta0_independent": 0.10618579818261574,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.2,
+          "KT_registered": 0.3919342357600001,
+          "KQ_registered": 0.059423369206399956,
+          "10KQ_registered": 0.5942336920639996,
+          "eta0_registered": 0.20994525157765745,
+          "KT_independent": 0.3919342357600001,
+          "KQ_independent": 0.059423369206399956,
+          "10KQ_independent": 0.5942336920639996,
+          "eta0_independent": 0.20994525157765745,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.3,
+          "KT_registered": 0.35470809162100003,
+          "KQ_registered": 0.05455582001259998,
+          "10KQ_registered": 0.5455582001259998,
+          "eta0_registered": 0.31043551058239127,
+          "KT_independent": 0.35470809162100003,
+          "KQ_independent": 0.05455582001259998,
+          "10KQ_independent": 0.5455582001259998,
+          "eta0_independent": 0.31043551058239127,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.4,
+          "KT_registered": 0.3142459223680002,
+          "KQ_registered": 0.049210094899199995,
+          "10KQ_registered": 0.49210094899199996,
+          "eta0_registered": 0.4065327814854696,
+          "KT_independent": 0.3142459223680002,
+          "KQ_independent": 0.049210094899199995,
+          "10KQ_independent": 0.49210094899199996,
+          "eta0_independent": 0.4065327814854696,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.5,
+          "KT_registered": 0.2710325317750001,
+          "KQ_registered": 0.04343258652499997,
+          "10KQ_registered": 0.4343258652499997,
+          "eta0_registered": 0.49658759265779745,
+          "KT_independent": 0.2710325317750001,
+          "KQ_independent": 0.04343258652499997,
+          "10KQ_independent": 0.4343258652499997,
+          "eta0_independent": 0.49658759265779745,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.6,
+          "KT_registered": 0.22555272361600004,
+          "KQ_registered": 0.037269687548799994,
+          "10KQ_registered": 0.37269687548799996,
+          "eta0_registered": 0.5779146526676312,
+          "KT_independent": 0.22555272361600004,
+          "KQ_independent": 0.037269687548799994,
+          "10KQ_independent": 0.37269687548799996,
+          "eta0_independent": 0.5779146526676312,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.7,
+          "KT_registered": 0.17829130166499996,
+          "KQ_registered": 0.030767790629399994,
+          "10KQ_registered": 0.30767790629399994,
+          "eta0_registered": 0.6455828960370972,
+          "KT_independent": 0.17829130166499996,
+          "KQ_independent": 0.030767790629399994,
+          "10KQ_independent": 0.30767790629399994,
+          "eta0_independent": 0.6455828960370972,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        },
+        {
+          "J": 0.8,
+          "KT_registered": 0.12973306969600001,
+          "KQ_registered": 0.023973288425599974,
+          "10KQ_registered": 0.23973288425599976,
+          "eta0_registered": 0.6890221802881272,
+          "KT_independent": 0.12973306969600001,
+          "KQ_independent": 0.023973288425599974,
+          "10KQ_independent": 0.23973288425599976,
+          "eta0_independent": 0.6890221802881272,
+          "eta0_residual_pct": 0.0,
+          "KT_reproduction_pct": 0.0,
+          "KQ_reproduction_pct": 0.0,
+          "quote": "J * KT / (2 pi KQ)",
+          "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE",
+          "quote_note": "the printed NSMB Publication 479 tables are not reachable offline from this worktree; the machine-extracted quotation is the closed form recorded with the coefficients, and the coefficients themselves enter through the two-step chain recorded in this anchor's provenance block"
+        }
+      ],
+      "peak": {
+        "J": 0.8,
+        "eta0": 0.6890221802881272
+      }
+    },
+    {
+      "anchor_id": "AN-KP505-2023-TABLE2",
+      "source_class": "LITERATURE_TABLE",
+      "citation": {
+        "authors": "Iftikhar, H. & Takinaci, A.C.",
+        "year": 2023,
+        "title": "CFD analysis of the KP505 propeller in open water (MARINE 2023)",
+        "locator": "Table 2, page 10",
+        "columns_used": "Experimental KT, 10KQ"
+      },
+      "provenance_depth": "SECONDARY_REPRODUCTION",
+      "declared_limit": "PROVENANCE GAP (honest): the primary KRISO/KCS-workshop EFD handout and the Hino (2005) Tokyo-2015 proceedings were not reachable from this sandbox (egress allowlist). The transcribed curve is a SECONDARY reproduction: the 'Experimental' columns of Table 2 of Iftikhar & Takinaci, MARINE 2023.",
+      "carrier": {
+        "anchor_json": "benchmarks/anchors/kp505_openwater.json",
+        "anchor_json_sha256": "9771a40b9a24e3f23812b85fc196ef0156f9be99491fba8ecbc5c5e1276ac404",
+        "transcript": "benchmarks/anchors/sources/kp505_marine2023_p10_table2.txt",
+        "transcript_sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+        "pdf_sha256": "161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c",
+        "declared_sha256": {
+          "transcript_sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+          "pdf_sha256": "161ef62673c89e8158c86113f2dd496787840a358ab984ceb87bedf568a5bc7c"
+        },
+        "sha256_checks": {
+          "transcript_sha256_matches_declared": true,
+          "pdf_sha256_matches_declared": true
+        }
+      },
+      "header_quotes": [
+        "Table 2. Comparison of CFD and Experimental Results"
+      ],
+      "n_points": 10,
+      "points": [
+        {
+          "J": 0.1,
+          "KT": 0.494,
+          "10KQ": 0.683,
+          "KQ": 0.0683,
+          "KT_cfd": 0.479,
+          "10KQ_cfd": 0.644,
+          "eta0_registered": 0.1151135313139038,
+          "eta0_recomputed_registered_path": 0.1151135313139038,
+          "eta0_independent": 0.11511353131390381,
+          "eta0_residual_pct": 1.2055739798278824e-14,
+          "quote": "0.1 0.479 0.644 0.494 0.683 3.06% 5.73%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.2,
+          "KT": 0.447,
+          "10KQ": 0.636,
+          "KQ": 0.0636,
+          "KT_cfd": 0.432,
+          "10KQ_cfd": 0.59,
+          "eta0_registered": 0.2237177973650227,
+          "eta0_recomputed_registered_path": 0.2237177973650227,
+          "eta0_independent": 0.2237177973650227,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.2 0.432 0.590 0.447 0.636 3.24% 7.22%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.3,
+          "KT": 0.392,
+          "10KQ": 0.585,
+          "KQ": 0.058499999999999996,
+          "KT_cfd": 0.382,
+          "10KQ_cfd": 0.554,
+          "eta0_registered": 0.31994224457447684,
+          "eta0_recomputed_registered_path": 0.31994224457447684,
+          "eta0_independent": 0.31994224457447684,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.3 0.382 0.554 0.392 0.585 2.64% 5.32%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.4,
+          "KT": 0.343,
+          "10KQ": 0.53,
+          "KQ": 0.053000000000000005,
+          "KT_cfd": 0.33,
+          "10KQ_cfd": 0.5,
+          "eta0_registered": 0.41200109796618944,
+          "eta0_recomputed_registered_path": 0.41200109796618944,
+          "eta0_independent": 0.41200109796618944,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.4 0.330 0.500 0.343 0.530 3.73% 5.72%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.5,
+          "KT": 0.29,
+          "10KQ": 0.471,
+          "KQ": 0.047099999999999996,
+          "KT_cfd": 0.278,
+          "10KQ_cfd": 0.473,
+          "eta0_registered": 0.4899674468858774,
+          "eta0_recomputed_registered_path": 0.4899674468858774,
+          "eta0_independent": 0.4899674468858774,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.5 0.278 0.473 0.290 0.471 4.23% 0.50%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.6,
+          "KT": 0.241,
+          "10KQ": 0.409,
+          "KQ": 0.0409,
+          "KT_cfd": 0.225,
+          "10KQ_cfd": 0.414,
+          "eta0_registered": 0.5626847132295371,
+          "eta0_recomputed_registered_path": 0.5626847132295371,
+          "eta0_independent": 0.5626847132295371,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.6 0.225 0.414 0.241 0.409 6.49% 1.26%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.7,
+          "KT": 0.193,
+          "10KQ": 0.342,
+          "KQ": 0.0342,
+          "KT_cfd": 0.173,
+          "10KQ_cfd": 0.356,
+          "eta0_registered": 0.6287085617460544,
+          "eta0_recomputed_registered_path": 0.6287085617460544,
+          "eta0_independent": 0.6287085617460544,
+          "eta0_residual_pct": 0.0,
+          "quote": "0.7 0.173 0.356 0.193 0.342 10.31% 4.01%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.8,
+          "KT": 0.141,
+          "10KQ": 0.27,
+          "KQ": 0.027000000000000003,
+          "KT_cfd": 0.12,
+          "10KQ_cfd": 0.288,
+          "eta0_registered": 0.664913984472807,
+          "eta0_recomputed_registered_path": 0.664913984472807,
+          "eta0_independent": 0.6649139844728071,
+          "eta0_residual_pct": 1.6697242809615793e-14,
+          "quote": "0.8 0.120 0.288 0.141 0.270 15.17% 6.66%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 0.9,
+          "KT": 0.087,
+          "10KQ": 0.192,
+          "KQ": 0.019200000000000002,
+          "KT_cfd": 0.063,
+          "10KQ_cfd": 0.152,
+          "eta0_registered": 0.6490537522966356,
+          "eta0_recomputed_registered_path": 0.6490537522966356,
+          "eta0_independent": 0.6490537522966355,
+          "eta0_residual_pct": -1.7105255469161106e-14,
+          "quote": "0.9 0.063 0.152 0.087 0.192 27.60% 20.89%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        },
+        {
+          "J": 1.0,
+          "KT": 0.029,
+          "10KQ": 0.108,
+          "KQ": 0.0108,
+          "KT_cfd": 0.03,
+          "10KQ_cfd": 0.094,
+          "eta0_registered": 0.42736049533934867,
+          "eta0_recomputed_registered_path": 0.42736049533934867,
+          "eta0_independent": 0.4273604953393486,
+          "eta0_residual_pct": -1.2989303371894214e-14,
+          "quote": "1 0.030 0.094 0.029 0.108 2.27% 13.25%",
+          "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+        }
+      ]
+    }
+  ],
+  "eta0_identity": {
+    "formula": "eta0 = J * KT / (2 * pi * KQ)  with  KQ = 10KQ / 10",
+    "n_rows": 18,
+    "max_abs_residual_pct": 1.7105255469161106e-14,
+    "rows": [
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.1,
+        "eta0_registered": 0.10618579818261574,
+        "eta0_independent": 0.10618579818261574,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.2,
+        "eta0_registered": 0.20994525157765745,
+        "eta0_independent": 0.20994525157765745,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.3,
+        "eta0_registered": 0.31043551058239127,
+        "eta0_independent": 0.31043551058239127,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.4,
+        "eta0_registered": 0.4065327814854696,
+        "eta0_independent": 0.4065327814854696,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.5,
+        "eta0_registered": 0.49658759265779745,
+        "eta0_independent": 0.49658759265779745,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.6,
+        "eta0_registered": 0.5779146526676312,
+        "eta0_independent": 0.5779146526676312,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.7,
+        "eta0_registered": 0.6455828960370972,
+        "eta0_independent": 0.6455828960370972,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-OVO-1975-B4.70-OPENWATER",
+        "J": 0.8,
+        "eta0_registered": 0.6890221802881272,
+        "eta0_independent": 0.6890221802881272,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.1,
+        "eta0_registered": 0.1151135313139038,
+        "eta0_independent": 0.11511353131390381,
+        "eta0_residual_pct": 1.2055739798278824e-14
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.2,
+        "eta0_registered": 0.2237177973650227,
+        "eta0_independent": 0.2237177973650227,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.3,
+        "eta0_registered": 0.31994224457447684,
+        "eta0_independent": 0.31994224457447684,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.4,
+        "eta0_registered": 0.41200109796618944,
+        "eta0_independent": 0.41200109796618944,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.5,
+        "eta0_registered": 0.4899674468858774,
+        "eta0_independent": 0.4899674468858774,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.6,
+        "eta0_registered": 0.5626847132295371,
+        "eta0_independent": 0.5626847132295371,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.7,
+        "eta0_registered": 0.6287085617460544,
+        "eta0_independent": 0.6287085617460544,
+        "eta0_residual_pct": 0.0
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.8,
+        "eta0_registered": 0.664913984472807,
+        "eta0_independent": 0.6649139844728071,
+        "eta0_residual_pct": 1.6697242809615793e-14
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 0.9,
+        "eta0_registered": 0.6490537522966356,
+        "eta0_independent": 0.6490537522966355,
+        "eta0_residual_pct": -1.7105255469161106e-14
+      },
+      {
+        "anchor": "AN-KP505-2023-TABLE2",
+        "J": 1.0,
+        "eta0_registered": 0.42736049533934867,
+        "eta0_independent": 0.4273604953393486,
+        "eta0_residual_pct": -1.2989303371894214e-14
+      }
+    ]
+  },
+  "solver_vs_anchor": {
+    "b4_70": [
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.1,
+        "KT_solver": 0.4549181082345392,
+        "KT_anchor": 0.42543955101100006,
+        "dKT_pct": 6.9289649148715275,
+        "10KQ_solver": 0.615330416221428,
+        "10KQ_anchor": 0.6376634982179994,
+        "d10KQ_pct": -3.5023303135561163,
+        "eta0_solver": 0.11766436977411919,
+        "eta0_anchor": 0.10618579818261574,
+        "deta0_pct": 10.80989340190567,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.3786697166951907
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.2,
+        "KT_solver": 0.4110552197301292,
+        "KT_anchor": 0.3919342357600001,
+        "dKT_pct": 4.87862049944466,
+        "10KQ_solver": 0.5766550299866615,
+        "10KQ_anchor": 0.5942336920639996,
+        "d10KQ_pct": -2.9582068994238058,
+        "eta0_solver": 0.22689985069683172,
+        "eta0_anchor": 0.20994525157765745,
+        "deta0_pct": 8.075724024128675,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": true,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.3722801866177767
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.3,
+        "KT_solver": 0.36537422630860794,
+        "KT_anchor": 0.35470809162100003,
+        "dKT_pct": 3.0070175841955433,
+        "10KQ_solver": 0.5316242914664558,
+        "10KQ_anchor": 0.5455582001259998,
+        "d10KQ_pct": -2.5540645629239553,
+        "eta0_solver": 0.32815156377628185,
+        "eta0_anchor": 0.31043551058239127,
+        "deta0_pct": 5.706838486568257,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": true,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.361744444688901
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.4,
+        "KT_solver": 0.3178750436856121,
+        "KT_anchor": 0.3142459223680002,
+        "dKT_pct": 1.1548666376526544,
+        "10KQ_solver": 0.4802385634340879,
+        "10KQ_anchor": 0.49210094899199996,
+        "d10KQ_pct": -2.4105593744963345,
+        "eta0_solver": 0.42138543915631166,
+        "eta0_anchor": 0.4065327814854696,
+        "deta0_pct": 3.653495695124627,
+        "within_10pct": true,
+        "within_3pct_dKT": true,
+        "within_3pct_d10KQ": true,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.347227475025323
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.5,
+        "KT_solver": 0.2685575968818902,
+        "KT_anchor": 0.2710325317750001,
+        "dKT_pct": -0.9131504904232276,
+        "10KQ_solver": 0.422498172869551,
+        "10KQ_anchor": 0.4343258652499997,
+        "d10KQ_pct": -2.7232300276753403,
+        "eta0_solver": 0.5058278567021206,
+        "eta0_anchor": 0.49658759265779745,
+        "deta0_pct": 1.860752097100963,
+        "within_10pct": true,
+        "within_3pct_dKT": true,
+        "within_3pct_d10KQ": true,
+        "within_3pct_deta0": true,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.328950254589129
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.6,
+        "KT_solver": 0.21742181617030748,
+        "KT_anchor": 0.22555272361600004,
+        "dKT_pct": -3.604881074074415,
+        "10KQ_solver": 0.3584034006388672,
+        "10KQ_anchor": 0.37269687548799996,
+        "d10KQ_pct": -3.8351474855852277,
+        "eta0_solver": 0.5792984673332788,
+        "eta0_anchor": 0.5779146526676312,
+        "deta0_pct": 0.23944965909066288,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": true,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.307180751569179
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.7,
+        "KT_solver": 0.16446763619668184,
+        "KT_anchor": 0.17829130166499996,
+        "dKT_pct": -7.753415527972344,
+        "10KQ_solver": 0.28795447552462805,
+        "10KQ_anchor": 0.30767790629399994,
+        "d10KQ_pct": -6.410415036601708,
+        "eta0_solver": 0.6363188508237609,
+        "eta0_anchor": 0.6455828960370972,
+        "deta0_pct": -1.434989258576004,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": true,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.2822236282065025
+        }
+      },
+      {
+        "case": "B4-70 lattice (B4_70_FINE)",
+        "J": 0.8,
+        "KT_solver": 0.10969499613587627,
+        "KT_anchor": 0.12973306969600001,
+        "dKT_pct": -15.445617379653791,
+        "10KQ_solver": 0.21115157161279152,
+        "10KQ_anchor": 0.23973288425599976,
+        "d10KQ_pct": -11.922149408876072,
+        "eta0_solver": 0.6614585241917634,
+        "eta0_anchor": 0.6890221802881272,
+        "deta0_pct": -4.000401857141602,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 24,
+          "n_chord": 2,
+          "wake_model": "geometric",
+          "wake_length": 2.0,
+          "wake_steps": 48,
+          "rev_per_second": 2.254409373087686
+        }
+      }
+    ],
+    "kp505": [
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.1,
+        "KT_solver": 0.5285686804764528,
+        "KT_anchor": 0.494,
+        "dKT_pct": 6.997708598472224,
+        "10KQ_solver": 0.65289772732519,
+        "10KQ_anchor": 0.683,
+        "d10KQ_pct": -4.407360567322112,
+        "eta0_solver": 0.12884761998794353,
+        "eta0_anchor": 0.1151135313139038,
+        "deta0_pct": 11.930907268050149,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.2,
+        "KT_solver": 0.47342587798159697,
+        "KT_anchor": 0.447,
+        "dKT_pct": 5.91182952608433,
+        "10KQ_solver": 0.6103839702500271,
+        "10KQ_anchor": 0.636,
+        "d10KQ_pct": -4.027677633643538,
+        "eta0_solver": 0.24688744246519898,
+        "eta0_anchor": 0.2237177973650227,
+        "deta0_pct": 10.356639200399504,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.3,
+        "KT_solver": 0.4162526755117284,
+        "KT_anchor": 0.392,
+        "dKT_pct": 6.186907018298057,
+        "10KQ_solver": 0.5598870285704958,
+        "10KQ_anchor": 0.585,
+        "d10KQ_pct": -4.2928156289750765,
+        "eta0_solver": 0.3549752048305057,
+        "eta0_anchor": 0.31994224457447684,
+        "deta0_pct": 10.949776358111977,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.4,
+        "KT_solver": 0.35704913431469,
+        "KT_anchor": 0.343,
+        "dKT_pct": 4.095957526148676,
+        "10KQ_solver": 0.5014066583015517,
+        "10KQ_anchor": 0.53,
+        "d10KQ_pct": -5.394970131782697,
+        "eta0_solver": 0.4533337059811367,
+        "eta0_anchor": 0.41200109796618944,
+        "deta0_pct": 10.032159676025714,
+        "within_10pct": true,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.5,
+        "KT_solver": 0.2958153170105801,
+        "KT_anchor": 0.29,
+        "dKT_pct": 2.0052817277862536,
+        "10KQ_solver": 0.4349426381841892,
+        "10KQ_anchor": 0.471,
+        "d10KQ_pct": -7.655490831382328,
+        "eta0_solver": 0.5412261964138849,
+        "eta0_anchor": 0.4899674468858774,
+        "deta0_pct": 10.461664311332635,
+        "within_10pct": true,
+        "within_3pct_dKT": true,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.6,
+        "KT_solver": 0.23255128436468964,
+        "KT_anchor": 0.241,
+        "dKT_pct": -3.5056911349835502,
+        "10KQ_solver": 0.36049476301730304,
+        "10KQ_anchor": 0.409,
+        "d10KQ_pct": -11.859471144913677,
+        "eta0_solver": 0.6160148256117584,
+        "eta0_anchor": 0.5626847132295371,
+        "deta0_pct": 9.47779655788627,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.7,
+        "KT_solver": 0.16725709463059585,
+        "KT_anchor": 0.193,
+        "dKT_pct": -13.338292937515106,
+        "10KQ_solver": 0.2780628399716476,
+        "10KQ_anchor": 0.342,
+        "d10KQ_pct": -18.695076031681996,
+        "eta0_solver": 0.6701310885788891,
+        "eta0_anchor": 0.6287085617460544,
+        "deta0_pct": 6.5885100590639,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.8,
+        "KT_solver": 0.0999328035758505,
+        "KT_anchor": 0.141,
+        "dKT_pct": -29.125671222801053,
+        "10KQ_solver": 0.18764668632178882,
+        "10KQ_anchor": 0.27,
+        "d10KQ_pct": -30.501227288226367,
+        "eta0_solver": 0.6780743098805785,
+        "eta0_anchor": 0.664913984472807,
+        "deta0_pct": 1.9792523115912406,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": true,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 0.9,
+        "KT_solver": 0.030578464684578466,
+        "KT_anchor": 0.087,
+        "dKT_pct": -64.85233944301325,
+        "10KQ_solver": 0.08924612793246778,
+        "10KQ_anchor": 0.192,
+        "d10KQ_pct": -53.5176417018397,
+        "eta0_solver": 0.49078234849077357,
+        "eta0_anchor": 0.6490537522966356,
+        "deta0_pct": -24.384945506566865,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      },
+      {
+        "case": "KP505 vortex lattice (32 panels/blade)",
+        "J": 1.0,
+        "KT_solver": -0.040805870612996425,
+        "KT_anchor": 0.029,
+        "dKT_pct": -240.7098986655049,
+        "10KQ_solver": 0.01713900181451987,
+        "10KQ_anchor": 0.108,
+        "d10KQ_pct": -84.13055387544456,
+        "eta0_solver": -3.7892848635587977,
+        "eta0_anchor": 0.42736049533934867,
+        "deta0_pct": -986.671768889141,
+        "within_10pct": false,
+        "within_3pct_dKT": false,
+        "within_3pct_d10KQ": false,
+        "within_3pct_deta0": false,
+        "solver": {
+          "n_radial": 16,
+          "n_chord": 2,
+          "blades": 5,
+          "pitch_ratio": 0.95,
+          "expanded_area_ratio": 0.8,
+          "n_panels": 32
+        }
+      }
+    ]
+  },
+  "etaR_audit": {
+    "grid_definition": {
+      "hull": {
+        "length_m": 180.0,
+        "beam_m": 32.0,
+        "draft_m": 11.0,
+        "cb": 0.82,
+        "displacement_m3": 51955.2,
+        "note": "displacement is a VOLUME in m^3 for this API: the geometry gate of calculations/resistance rejects L*B*T*Cb vs displacement mismatch >= 5 % (a call with displacement=45000.0 was rejected with 'displacement=45000.0 m3 ... 相差 15.46%'). The propulsion endpoint accepts the same 45000.0 without that gate and returns identical numbers, i.e. it does not consume displacement at all.",
+        "propeller": {
+          "diameter_m": 6.0,
+          "n_blades": 5,
+          "expanded_area_ratio": 0.7,
+          "declared_by": "implicit platform constant: the returned K_T/K_Q at J=0.5372, P/D=0.95 are reproduced to 4 dp by the Oosterveld & van Oossanen 39/47-term regression at Z=5, Ae/Ao=0.70 (see artefact section propulsion_block_kt_kq_anchor_check)",
+          "prop_pitch_field_semantics": "prop_pitch is read as the P/D RATIO, not as a pitch length: a call with prop_pitch=5.4 and prop_diameter=6.0 returned validity note 'P/D=5.400 超出 B 系列回归有效域 [0.5, 1.4]'"
+        }
+      },
+      "states": "11 states: S1..S6 speed sweep at 100 rpm (12..17 kn); S7..S10 rpm sweep at 15 kn (85/90/95/105 rpm); S11 P/D 1.05 at 15 kn / 100 rpm",
+      "predeclared_before_calls": true,
+      "note": "this is THIS mission's grid.  The wave audit's own 11-state list is not held in this worktree, so the audit count is reported as a reproduction in count, not as the identification of the same states"
+    },
+    "receipts": {
+      "path": "data/w30/propulsion_states/api_receipts.json",
+      "sha256": "37a26be1ba93c5c4ddd1ad6c41c5ae6d81c63f60f3e625e88607850155eacd37",
+      "endpoint_base": "http://127.0.0.1:8002/api/v1/",
+      "resistance_method": "ITTC-57 摩擦线 + ITTC-78 ks 粗糙度补贴 + Holtrop-1982/1984 剩余阻力（(1+k) 形状因子 + 兴波回归 + 球鼻/艉封板/附体）",
+      "precision_note": "tool channel call_ship_api (shell curl to the loopback API is blocked by the worktree sandbox policy), so the receipts are transcribed from the tool's return payload; field-level precision is exactly the precision the endpoint returned (2 dp for kW, 4 dp for non-dimensional quantities), which bounds the identity residuals quoted in the artefact at ~1e-3 relative and is declared there."
+    },
+    "states": [
+      {
+        "state": "S1",
+        "inputs": {
+          "speed_kn": 12.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.4298,
+        "KT": 0.2902,
+        "KQ": 0.04348,
+        "eta0_returned": 0.4565,
+        "eta0_recomputed_from_KT_KQ": 0.4565563793874931,
+        "eta0_residual_pct": 0.012350358706043474,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.4884,
+        "etaD_identity_residual_pct": 0.011261261261266841,
+        "pe_resistance_kW": 2560.28,
+        "pd_propulsion_kW": 10081.03,
+        "pe_propulsion_kW": 4923.7,
+        "pe_module_disagreement_pct": -48.00089363689908,
+        "etaD_implied_pe_over_pd": 0.2539700804382092,
+        "etaR_identity_implied": 0.9998874000675599,
+        "etaR_cross_module_implied": 0.5199457072569821,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S2",
+        "inputs": {
+          "speed_kn": 13.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.4656,
+        "KT": 0.2746,
+        "KQ": 0.0416,
+        "eta0_returned": 0.4892,
+        "eta0_recomputed_from_KT_KQ": 0.48914802636742427,
+        "eta0_residual_pct": -0.010624209439033624,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.5234,
+        "etaD_identity_residual_pct": 0.008406572411166222,
+        "pe_resistance_kW": 3381.23,
+        "pd_propulsion_kW": 9645.4,
+        "pe_propulsion_kW": 5048.38,
+        "pe_module_disagreement_pct": -33.023464953113674,
+        "etaD_implied_pe_over_pd": 0.3505536317830261,
+        "etaR_identity_implied": 0.9999159413423403,
+        "etaR_cross_module_implied": 0.6697060846681328,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S3",
+        "inputs": {
+          "speed_kn": 14.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5014,
+        "KT": 0.2587,
+        "KQ": 0.03966,
+        "eta0_returned": 0.5205,
+        "eta0_recomputed_from_KT_KQ": 0.5205328952653979,
+        "eta0_residual_pct": 0.006319935715265825,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.5569,
+        "etaD_identity_residual_pct": 0.00628479080625018,
+        "pe_resistance_kW": 4491.56,
+        "pd_propulsion_kW": 9195.3,
+        "pe_propulsion_kW": 5121.13,
+        "pe_module_disagreement_pct": -12.29357583189647,
+        "etaD_implied_pe_over_pd": 0.4884625841462487,
+        "etaR_identity_implied": 0.9999371560415489,
+        "etaR_cross_module_implied": 0.8770549240867404,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S4",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5372,
+        "KT": 0.2424,
+        "KQ": 0.03766,
+        "eta0_returned": 0.5503,
+        "eta0_recomputed_from_KT_KQ": 0.5503113061067819,
+        "eta0_residual_pct": 0.0020545351230066068,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.5888,
+        "etaD_identity_residual_pct": 0.0035665760869648027,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 8730.81,
+        "pe_propulsion_kW": 5140.69,
+        "pe_module_disagreement_pct": 17.151783126389656,
+        "etaD_implied_pe_over_pd": 0.689788232706931,
+        "etaR_identity_implied": 0.9999643355111315,
+        "etaR_cross_module_implied": 1.1714735593787093,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S5",
+        "inputs": {
+          "speed_kn": 16.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5731,
+        "KT": 0.2257,
+        "KQ": 0.03559,
+        "eta0_returned": 0.5783,
+        "eta0_recomputed_from_KT_KQ": 0.5784343976640167,
+        "eta0_residual_pct": 0.02324012865583318,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.6187,
+        "etaD_identity_residual_pct": 0.013091967027638231,
+        "pe_resistance_kW": 8149.85,
+        "pd_propulsion_kW": 8252.03,
+        "pe_propulsion_kW": 5105.91,
+        "pe_module_disagreement_pct": 59.616013599926376,
+        "etaD_implied_pe_over_pd": 0.9876175922772942,
+        "etaR_identity_implied": 0.99986909746744,
+        "etaR_cross_module_implied": 1.596069679381387,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S6",
+        "inputs": {
+          "speed_kn": 17.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.6089,
+        "KT": 0.2086,
+        "KQ": 0.03347,
+        "eta0_returned": 0.6042,
+        "eta0_recomputed_from_KT_KQ": 0.6039829756626666,
+        "eta0_residual_pct": -0.03591928787378245,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.6464,
+        "etaD_identity_residual_pct": 0.014542079207926748,
+        "pe_resistance_kW": 11090.24,
+        "pd_propulsion_kW": 7759.06,
+        "pe_propulsion_kW": 5015.75,
+        "pe_module_disagreement_pct": 121.10830882719434,
+        "etaD_implied_pe_over_pd": 1.4293277793959576,
+        "etaR_identity_implied": 0.9998546003520528,
+        "etaR_cross_module_implied": 2.2108910204827232,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S7",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 85.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.632,
+        "KT": 0.1975,
+        "KQ": 0.03206,
+        "eta0_returned": 0.6196,
+        "eta0_recomputed_from_KT_KQ": 0.6196419212953954,
+        "eta0_residual_pct": 0.006765864331080559,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.663,
+        "etaD_identity_residual_pct": -0.004223227752626995,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 4564.52,
+        "pe_propulsion_kW": 3026.08,
+        "pe_module_disagreement_pct": 99.0168799238619,
+        "etaD_implied_pe_over_pd": 1.3193961248937456,
+        "etaR_identity_implied": 1.0000422340611668,
+        "etaR_cross_module_implied": 1.9901234515088801,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S8",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 90.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5969,
+        "KT": 0.2144,
+        "KQ": 0.03418,
+        "eta0_returned": 0.5958,
+        "eta0_recomputed_from_KT_KQ": 0.5959014376233125,
+        "eta0_residual_pct": 0.017025448692932987,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.6375,
+        "etaD_identity_residual_pct": 0.0009411764705978843,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 5777.29,
+        "pe_propulsion_kW": 3682.92,
+        "pe_module_disagreement_pct": 63.52269394936626,
+        "etaD_implied_pe_over_pd": 1.04242819730358,
+        "etaR_identity_implied": 0.9999905883238746,
+        "etaR_cross_module_implied": 1.6351660961678478,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S9",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 95.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5655,
+        "KT": 0.2292,
+        "KQ": 0.03603,
+        "eta0_returned": 0.5726,
+        "eta0_recomputed_from_KT_KQ": 0.5725363857061503,
+        "eta0_residual_pct": -0.011109726484406559,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.6126,
+        "etaD_identity_residual_pct": 0.013385569702909973,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 7162.52,
+        "pe_propulsion_kW": 4387.88,
+        "pe_module_disagreement_pct": 37.251018715188195,
+        "etaD_implied_pe_over_pd": 0.8408227830428396,
+        "etaR_identity_implied": 0.9998661622179205,
+        "etaR_cross_module_implied": 1.3723641024917324,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": false
+      },
+      {
+        "state": "S10",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 105.0,
+          "prop_pitch": 0.95
+        },
+        "J": 0.5117,
+        "KT": 0.2541,
+        "KQ": 0.03909,
+        "eta0_returned": 0.5292,
+        "eta0_recomputed_from_KT_KQ": 0.5293885492706375,
+        "eta0_residual_pct": 0.03562911387707761,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.5662,
+        "etaD_identity_residual_pct": 0.00777110561639774,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 10492.77,
+        "pe_propulsion_kW": 5941.16,
+        "pe_module_disagreement_pct": 1.3675780487312243,
+        "etaD_implied_pe_over_pd": 0.5739580682698657,
+        "etaR_identity_implied": 0.9999222949823751,
+        "etaR_cross_module_implied": 1.0136232229743107,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": true
+      },
+      {
+        "state": "S11",
+        "inputs": {
+          "speed_kn": 15.0,
+          "prop_rpm": 100.0,
+          "prop_pitch": 1.05
+        },
+        "J": 0.5372,
+        "KT": 0.2943,
+        "KQ": 0.04872,
+        "eta0_returned": 0.5166,
+        "eta0_recomputed_from_KT_KQ": 0.5164628864274374,
+        "eta0_residual_pct": -0.02654153553281445,
+        "etaH_returned": 1.07,
+        "etaR_returned": 1.0,
+        "etaD_returned": 0.5527,
+        "etaD_identity_residual_pct": 0.011217658766058711,
+        "pe_resistance_kW": 6022.41,
+        "pd_propulsion_kW": 11296.37,
+        "pe_propulsion_kW": 6243.46,
+        "pe_module_disagreement_pct": -3.5405047842061963,
+        "etaD_implied_pe_over_pd": 0.5331278986081369,
+        "etaR_identity_implied": 0.9998878359945148,
+        "etaR_cross_module_implied": 0.9644800087707494,
+        "etaR_returned_in_window": true,
+        "etaR_identity_in_window": true,
+        "etaR_cross_module_in_window": true
+      }
+    ],
+    "summary": {
+      "n_states": 11,
+      "n_etaR_returned_out_of_window": 0,
+      "n_etaR_cross_module_out_of_window": 9,
+      "distinct_etaR_returned": [
+        1.0
+      ],
+      "distinct_etaH_returned": [
+        1.07
+      ],
+      "max_abs_eta0_residual_pct": 0.03591928787378245,
+      "worst_eta0_state": "S6",
+      "verdict": "the platform's relative_rot_eff is a CONSTANT equal to 1.0000 on all 11 states (and hull_eff is the constant 1.0700); the multiplicative identity eta_D = eta_H eta_R eta_O therefore closes to rounding error by construction, which is exactly why it has no diagnostic power.  Inverting the identity against the resistance module's independent P_E puts 9/11 states outside [0.90, 1.10]"
+    }
+  },
+  "criteria": [
+    {
+      "id": "C1-anchors-registered",
+      "statement": ">= 5 advance ratios per anchor with a machine-extracted quotation and a verifiable sha256",
+      "measured": {
+        "anchors": {
+          "AN-OVO-1975-B4.70-OPENWATER": {
+            "n_points": 8,
+            "sha256": "fa8635c1892613ba15656a34d1b3fd263e73a2782f0754d25d7661faf7cd0988",
+            "quote_status": "PUBLISHED_TABLE_NOT_IN_WORKTREE"
+          },
+          "AN-KP505-2023-TABLE2": {
+            "n_points": 10,
+            "sha256": "07a7ebabe67f98eacf96ce9fe2d2dfeb57aae13c9d5ef7ea695a963b08b2a987",
+            "quote_status": "VERBATIM_TRANSCRIPT_IN_WORKTREE"
+          }
+        },
+        "kp505_sha256_matches_declared": true
+      },
+      "passed": true
+    },
+    {
+      "id": "C2-eta0-identity-residual",
+      "statement": "|eta0_recomputed - eta0_registered| / eta0_registered <= 0.5 % on every anchor row",
+      "measured": {
+        "n_rows": 18,
+        "max_abs_residual_pct": 1.7105255469161106e-14,
+        "worst_row": {
+          "anchor": "AN-KP505-2023-TABLE2",
+          "J": 0.9,
+          "eta0_registered": 0.6490537522966356,
+          "eta0_independent": 0.6490537522966355,
+          "eta0_residual_pct": -1.7105255469161106e-14
+        }
+      },
+      "passed": true
+    },
+    {
+      "id": "C3-solver-versus-anchor",
+      "statement": "per-point |dKT| and |d(10KQ)| < 10.0 % against the anchor",
+      "measured": {
+        "b4_70": {
+          "n_points": 8,
+          "max_abs_dKT_pct": 15.445617379653791,
+          "max_abs_d10KQ_pct": 11.922149408876072,
+          "worst_dKT": 0.8
+        },
+        "kp505": {
+          "n_points": 10,
+          "max_abs_dKT_pct": 240.7098986655049,
+          "max_abs_d10KQ_pct": 84.13055387544456,
+          "worst_dKT": 1.0
+        },
+        "n_points_over_10pct": {
+          "b4_70": [
+            0.8
+          ],
+          "kp505": [
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0
+          ]
+        }
+      },
+      "passed": false
+    },
+    {
+      "id": "C4-etar-window",
+      "statement": "every propulsion state's eta_R judged against [0.90, 1.10]; out-of-window is physically inadmissible and must be reported",
+      "measured": {
+        "n_states": 11,
+        "n_etaR_returned_out_of_window": 0,
+        "n_etaR_cross_module_out_of_window": 9,
+        "distinct_etaR_returned": [
+          1.0
+        ],
+        "distinct_etaH_returned": [
+          1.07
+        ],
+        "max_abs_eta0_residual_pct": 0.03591928787378245,
+        "worst_eta0_state": "S6",
+        "verdict": "the platform's relative_rot_eff is a CONSTANT equal to 1.0000 on all 11 states (and hull_eff is the constant 1.0700); the multiplicative identity eta_D = eta_H eta_R eta_O therefore closes to rounding error by construction, which is exactly why it has no diagnostic power.  Inverting the identity against the resistance module's independent P_E puts 9/11 states outside [0.90, 1.10]"
+      },
+      "passed": false
+    },
+    {
+      "id": "C5-under-3pct",
+      "statement": "explicit per-row answer to 'is it < 3 %?'",
+      "measured": {
+        "b4_70_rows_under_3pct": [
+          {
+            "J": 0.1,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.2,
+            "dKT": false,
+            "d10KQ": true,
+            "deta0": false
+          },
+          {
+            "J": 0.3,
+            "dKT": false,
+            "d10KQ": true,
+            "deta0": false
+          },
+          {
+            "J": 0.4,
+            "dKT": true,
+            "d10KQ": true,
+            "deta0": false
+          },
+          {
+            "J": 0.5,
+            "dKT": true,
+            "d10KQ": true,
+            "deta0": true
+          },
+          {
+            "J": 0.6,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": true
+          },
+          {
+            "J": 0.7,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": true
+          },
+          {
+            "J": 0.8,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          }
+        ],
+        "kp505_rows_under_3pct": [
+          {
+            "J": 0.1,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.2,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.3,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.4,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.5,
+            "dKT": true,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.6,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.7,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 0.8,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": true
+          },
+          {
+            "J": 0.9,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          },
+          {
+            "J": 1.0,
+            "dKT": false,
+            "d10KQ": false,
+            "deta0": false
+          }
+        ],
+        "eta0_identity_under_3pct_all_rows": true,
+        "n_solver_rows_under_3pct": {
+          "b4_70": 2,
+          "kp505": 0
+        }
+      },
+      "passed": null
+    }
+  ],
+  "tensor_reports": [
+    {
+      "id": 19430,
+      "title": "W30 敞水性能锚值核销与效率恒等回归：η0 恒等 ~1e-14 %，ηR 9/11 越物理窗",
+      "note": "posted from benchmarks/anchors/publish_openwater_closure_w30.py; every number in it is injected from this artefact"
+    }
+  ],
+  "honest_notes": [
+    "The Oosterveld & van Oossanen anchor is a CLOSED-FORM anchor: the printed NSMB tables are not in this worktree, so no table digit is claimed.  What is claimed is that the published 39/47-term regression, fed the machine-chain coefficients already registered in benchmarks/anchors/wageningen_b_series.json, reproduces the registered B4-70 curve and satisfies the efficiency identity.",
+    "The KP505 anchor is a LITERATURE_TABLE anchor but a SECONDARY_REPRODUCTION: the digits are the 'Experimental' columns of Table 2 of Iftikhar & Takinaci (MARINE 2023), not the KRISO handout; the paper does not state where its experimental column came from.",
+    "The eta_R window judgement on the platform path is possible at all only because the resistance module and the propulsion module are independent code paths; without that second P_E the identity is a tautology (see etaR_audit.summary).",
+    "Receipt precision: the archived endpoint fields carry 2 dp (kW) / 4 dp (dimensionless), which is what bounds the identity residuals at ~1e-3, not a solver effect."
+  ],
+  "verdict": {
+    "all_criteria_pass": false,
+    "c5_is_informational": true
+  },
+  "artifacts": {
+    "json": "papers/artifacts/w30/propeller-openwater-bem/openwater_efficiency_closure.json",
+    "csv": [
+      "papers/artifacts/w30/propeller-openwater-bem/solver_vs_anchor.csv",
+      "papers/artifacts/w30/propeller-openwater-bem/etar_audit.csv",
+      "papers/artifacts/w30/propeller-openwater-bem/eta0_identity.csv"
+    ]
+  }
+}
