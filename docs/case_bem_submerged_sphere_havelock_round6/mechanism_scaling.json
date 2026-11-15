@@ -1,0 +1,302 @@
+{
+  "case_code": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "round": "round6",
+  "kind": "reanalysis_of_committed_artefact (no new solves)",
+  "source_artifact": "docs/case_bem_submerged_sphere_havelock/numbers.json",
+  "deficit_by_subdivision": {
+    "1": 0.07165467661855796,
+    "2": 0.01882182424687029,
+    "3": 0.004764930322906702
+  },
+  "ladder_ka": 0.8,
+  "ladder_rows": [
+    {
+      "subdivision": 1,
+      "n_panels": 80,
+      "area_deficit": 0.07165467661855796,
+      "ka": 0.8,
+      "a33_rel_error": 0.07075387582011426,
+      "a33_over_deficit": 0.9874285832976547,
+      "b33_rel_error": 0.19575014426190773,
+      "b33_over_deficit": 2.7318544092237254,
+      "a11_rel_error": 0.07537230689364684,
+      "a11_over_deficit": 1.051882590928141,
+      "b11_rel_error": 0.19687379376540456,
+      "b11_over_deficit": 2.7475358630592983
+    },
+    {
+      "subdivision": 2,
+      "n_panels": 320,
+      "area_deficit": 0.01882182424687029,
+      "ka": 0.8,
+      "a33_rel_error": 0.018077891557544256,
+      "a33_over_deficit": 0.9604749954325105,
+      "b33_rel_error": 0.0538200360975145,
+      "b33_over_deficit": 2.8594484462080634,
+      "a11_rel_error": 0.019425076711692395,
+      "a11_over_deficit": 1.0320506905658953,
+      "b11_rel_error": 0.05417986546392716,
+      "b11_over_deficit": 2.8785661131086293
+    },
+    {
+      "subdivision": 3,
+      "n_panels": 1280,
+      "area_deficit": 0.004764930322906702,
+      "ka": 0.8,
+      "a33_rel_error": 0.0044973544155247095,
+      "a33_over_deficit": 0.9438447386951997,
+      "b33_rel_error": 0.013759126639719444,
+      "b33_over_deficit": 2.8875819177406363,
+      "a11_rel_error": 0.004847928587843138,
+      "a11_over_deficit": 1.017418568438962,
+      "b11_rel_error": 0.013854689084735418,
+      "b11_over_deficit": 2.907637288656885
+    }
+  ],
+  "case_band_ratios": [
+    {
+      "ka": 0.1,
+      "quantity": "a33",
+      "rel_error": 0.005699947670582186,
+      "over_deficit": 1.196228965443739
+    },
+    {
+      "ka": 0.1,
+      "quantity": "b33",
+      "rel_error": 0.014201539386874528,
+      "over_deficit": 2.9804296022132193
+    },
+    {
+      "ka": 0.1,
+      "quantity": "a11",
+      "rel_error": 0.00538953218948932,
+      "over_deficit": 1.1310831059963116
+    },
+    {
+      "ka": 0.1,
+      "quantity": "b11",
+      "rel_error": 0.014033627245371504,
+      "over_deficit": 2.9451904423254427
+    },
+    {
+      "ka": 0.5,
+      "quantity": "a33",
+      "rel_error": 0.005602244185367769,
+      "over_deficit": 1.17572426157751
+    },
+    {
+      "ka": 0.5,
+      "quantity": "b33",
+      "rel_error": 0.014311353989157588,
+      "over_deficit": 3.00347602573701
+    },
+    {
+      "ka": 0.5,
+      "quantity": "a11",
+      "rel_error": 0.005374244033683074,
+      "over_deficit": 1.1278746318382005
+    },
+    {
+      "ka": 0.5,
+      "quantity": "b11",
+      "rel_error": 0.014120619915519392,
+      "over_deficit": 2.963447303234758
+    },
+    {
+      "ka": 1.0,
+      "quantity": "a33",
+      "rel_error": 0.00396767772266913,
+      "over_deficit": 0.832683261619819
+    },
+    {
+      "ka": 1.0,
+      "quantity": "b33",
+      "rel_error": 0.01338377305477163,
+      "over_deficit": 2.808807715493993
+    },
+    {
+      "ka": 1.0,
+      "quantity": "a11",
+      "rel_error": 0.004582625697783159,
+      "over_deficit": 0.96174033768193
+    },
+    {
+      "ka": 1.0,
+      "quantity": "b11",
+      "rel_error": 0.013639077751209993,
+      "over_deficit": 2.8623876587748054
+    },
+    {
+      "ka": 2.0,
+      "quantity": "a33",
+      "rel_error": 0.003949220012611141,
+      "over_deficit": 0.8288096037051889
+    },
+    {
+      "ka": 2.0,
+      "quantity": "b33",
+      "rel_error": 0.012378949955906486,
+      "over_deficit": 2.597928850375105
+    },
+    {
+      "ka": 2.0,
+      "quantity": "a11",
+      "rel_error": 0.00452255695276635,
+      "over_deficit": 0.9491339109461522
+    },
+    {
+      "ka": 2.0,
+      "quantity": "b11",
+      "rel_error": 0.012875377680779364,
+      "over_deficit": 2.7021124776752514
+    },
+    {
+      "ka": 3.0,
+      "quantity": "a33",
+      "rel_error": 0.004309698419324871,
+      "over_deficit": 0.904462002016405
+    },
+    {
+      "ka": 3.0,
+      "quantity": "b33",
+      "rel_error": 0.011985150972425284,
+      "over_deficit": 2.5152835739923485
+    },
+    {
+      "ka": 3.0,
+      "quantity": "a11",
+      "rel_error": 0.004695472455933286,
+      "over_deficit": 0.9854231096225043
+    },
+    {
+      "ka": 3.0,
+      "quantity": "b11",
+      "rel_error": 0.01227769536113849,
+      "over_deficit": 2.5766788870165165
+    },
+    {
+      "ka": 4.0,
+      "quantity": "a33",
+      "rel_error": 0.004437117027715276,
+      "over_deficit": 0.9312029194602256
+    },
+    {
+      "ka": 4.0,
+      "quantity": "b33",
+      "rel_error": 0.011621632298748682,
+      "over_deficit": 2.438993125015783
+    },
+    {
+      "ka": 4.0,
+      "quantity": "a11",
+      "rel_error": 0.004758086665381262,
+      "over_deficit": 0.9985637444701888
+    },
+    {
+      "ka": 4.0,
+      "quantity": "b11",
+      "rel_error": 0.010717171163802872,
+      "over_deficit": 2.24917688980291
+    },
+    {
+      "ka": 5.0,
+      "quantity": "a33",
+      "rel_error": 0.004494467476920112,
+      "over_deficit": 0.943238866539899
+    },
+    {
+      "ka": 5.0,
+      "quantity": "b33",
+      "rel_error": 0.011947091149688477,
+      "over_deficit": 2.507296086210242
+    },
+    {
+      "ka": 5.0,
+      "quantity": "a11",
+      "rel_error": 0.0047862442361251015,
+      "over_deficit": 1.0044730797249932
+    },
+    {
+      "ka": 5.0,
+      "quantity": "b11",
+      "rel_error": 0.0059421327820557085,
+      "over_deficit": 1.2470555452804375
+    }
+  ],
+  "ratio_stability": {
+    "a33": {
+      "ladder_ratios": [
+        0.9874285832976547,
+        0.9604749954325105,
+        0.9438447386951997
+      ],
+      "ladder_spread": 0.04521539202408119,
+      "case_band_median_ratio": 0.9312029194602256,
+      "case_vs_ladder_mean": 0.966062205879637
+    },
+    "b33": {
+      "ladder_ratios": [
+        2.7318544092237254,
+        2.8594484462080634,
+        2.8875819177406363
+      ],
+      "ladder_spread": 0.05509952523814448,
+      "case_band_median_ratio": 2.597928850375105,
+      "case_vs_ladder_mean": 0.9191994890395502
+    },
+    "a11": {
+      "ladder_ratios": [
+        1.051882590928141,
+        1.0320506905658953,
+        1.017418568438962
+      ],
+      "ladder_spread": 0.03333774188496889,
+      "case_band_median_ratio": 0.9985637444701888,
+      "case_vs_ladder_mean": 0.9659307870776693
+    },
+    "b11": {
+      "ladder_ratios": [
+        2.7475358630592983,
+        2.8785661131086293,
+        2.907637288656885
+      ],
+      "ladder_spread": 0.05628298004985038,
+      "case_band_median_ratio": 2.7021124776752514,
+      "case_vs_ladder_mean": 0.9499162303258123
+    }
+  },
+  "prediction_case_mesh_patch_measure": {
+    "band_max_flat": 0.014311353989157588,
+    "band_max_patch_predicted": 0.001932404033251102,
+    "per_coefficient": {
+      "a33": {
+        "flat_band_max_rel_error": 0.005699947670582186,
+        "predicted_patch_band_max_rel_error": 0.0012628306428669094,
+        "expected_reduction_factor": 4.51362793798068
+      },
+      "b33": {
+        "flat_band_max_rel_error": 0.014311353989157588,
+        "predicted_patch_band_max_rel_error": 0.001932404033251102,
+        "expected_reduction_factor": 7.4059843298298125
+      },
+      "a11": {
+        "flat_band_max_rel_error": 0.00538953218948932,
+        "predicted_patch_band_max_rel_error": 0.0006314455241080577,
+        "expected_reduction_factor": 8.535229063666659
+      },
+      "b11": {
+        "flat_band_max_rel_error": 0.014120619915519392,
+        "predicted_patch_band_max_rel_error": 0.0012452422347400283,
+        "expected_reduction_factor": 11.33965707360334
+      }
+    },
+    "note": "prediction from err/deficit constancy; to be tested by cluster job cj4012 (T3), not yet returned"
+  },
+  "status": "prediction_registered_pending_measurement",
+  "not_run": [
+    "T3 case-mesh exact-measure solves (cluster job cj4012 queued, not returned in this session)",
+    "per-ka rows of T1/T2 (declared in the study, never written: run interrupted before write_artifacts)",
+    "5120-panel (subdivision 4) rung"
+  ],
+  "tolerance": 0.05
+}
