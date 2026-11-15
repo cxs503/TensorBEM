@@ -1,0 +1,782 @@
+{
+  "certificate": {
+    "case": "CASE-BEM-CUMMINS-WIGLEY",
+    "purpose": "quantify the detection power of the Kramers-Kronig gate that the negative control C6b exercises, on an exact causal pair, so that the 'pass, not certified' label is replaced by a finite sensitivity statement that does not depend on the un-solved high band",
+    "pair": {
+      "name": "two-exponential (c=(-8,32), a=(2,8))",
+      "coefficients": [
+        -8.0,
+        32.0
+      ],
+      "rates": [
+        2.0,
+        8.0
+      ],
+      "added_mass_inf": 3.0,
+      "kernel": "sum_j c_j exp(-a_j s)  (exact causal memory kernel)",
+      "damping_at_band_ends": [
+        0.03710552192008665,
+        1.1226611226611227
+      ],
+      "damping_hump_omega": 4.0003685104612465,
+      "damping_max_on_band": 2.3988527730370532,
+      "added_mass_amplitude_on_band": 1.4805103246114744,
+      "damping_positive_on_band": true
+    },
+    "criteria": {
+      "kk_bar": 0.1,
+      "tail_admissibility_rule": "power-tail fit p > 2.05, else no tail model",
+      "case_c6b_injected_step": 0.3,
+      "case_c6b_step_omega": 1.0
+    },
+    "channels": {
+      "damping_step": {
+        "channel": "damping_step",
+        "band": [
+          0.2,
+          12.0
+        ],
+        "n_omega": 41,
+        "bar": 0.1,
+        "floor": 0.005653357405812935,
+        "floor_amplitude_normalised": 0.017490074307770394,
+        "normalisations": {
+          "reported_residual": "max|A_measured - A_KK| / max|A_measured|  (case statistic)",
+          "amplitude_normalised_residual": "max|A_measured - A_KK| / max|A_measured - A_inf|, A_inf from the closure (invariant to the arbitrary instantaneous offset)"
+        },
+        "residual_scale": "max |A_measured - A_inf| on the band",
+        "points": [
+          {
+            "delta": 0.0,
+            "reported_residual": 0.005653357405812935,
+            "amplitude_normalised_residual": 0.017490074307770394,
+            "dilution_amplitude_over_scale": 0.32323232630871623,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.0,
+            "above_floor_amplitude_normalised": 0.0
+          },
+          {
+            "delta": 0.01,
+            "reported_residual": 0.004780292462149459,
+            "amplitude_normalised_residual": 0.014730674611702617,
+            "dilution_amplitude_over_scale": 0.3245127998653782,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0008730649436634761,
+            "above_floor_amplitude_normalised": -0.0027593996960677773
+          },
+          {
+            "delta": 0.02,
+            "reported_residual": 0.004649642874884648,
+            "amplitude_normalised_residual": 0.014271758363965333,
+            "dilution_amplitude_over_scale": 0.32579327342204034,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0010037145309282867,
+            "above_floor_amplitude_normalised": -0.0032183159438050613
+          },
+          {
+            "delta": 0.05,
+            "reported_residual": 0.009903067812126475,
+            "amplitude_normalised_residual": 0.03004255313417277,
+            "dilution_amplitude_over_scale": 0.32963469409202595,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.00424971040631354,
+            "above_floor_amplitude_normalised": 0.012552478826402376
+          },
+          {
+            "delta": 0.1,
+            "reported_residual": 0.01865877604086226,
+            "amplitude_normalised_residual": 0.05552594686054111,
+            "dilution_amplitude_over_scale": 0.33603706187533583,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.013005418635049325,
+            "above_floor_amplitude_normalised": 0.038035872552770716
+          },
+          {
+            "delta": 0.15,
+            "reported_residual": 0.027414484269598242,
+            "amplitude_normalised_residual": 0.08005644763783736,
+            "dilution_amplitude_over_scale": 0.3424394296586455,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.021761126863785306,
+            "above_floor_amplitude_normalised": 0.06256637333006695
+          },
+          {
+            "delta": 0.2,
+            "reported_residual": 0.036170192498334225,
+            "amplitude_normalised_residual": 0.10368652140760934,
+            "dilution_amplitude_over_scale": 0.34884179744195537,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.03051683509252129,
+            "above_floor_amplitude_normalised": 0.08619644709983895
+          },
+          {
+            "delta": 0.3,
+            "reported_residual": 0.053681608955805794,
+            "amplitude_normalised_residual": 0.14843667519559206,
+            "dilution_amplitude_over_scale": 0.3616465330085749,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.04802825154999286,
+            "above_floor_amplitude_normalised": 0.13094660088782167
+          },
+          {
+            "delta": 0.45,
+            "reported_residual": 0.07994873364201394,
+            "amplitude_normalised_residual": 0.2099198379893026,
+            "dilution_amplitude_over_scale": 0.38085363635850406,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.074295376236201,
+            "above_floor_amplitude_normalised": 0.19242976368153222
+          },
+          {
+            "delta": 0.6,
+            "reported_residual": 0.10621585832822149,
+            "amplitude_normalised_residual": 0.26549932994082914,
+            "dilution_amplitude_over_scale": 0.4000607397084333,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.10056250092240855,
+            "above_floor_amplitude_normalised": 0.24800925563305876
+          },
+          {
+            "delta": 0.9,
+            "reported_residual": 0.1587501077006368,
+            "amplitude_normalised_residual": 0.3620505778061363,
+            "dilution_amplitude_over_scale": 0.4384749464082921,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.15309675029482386,
+            "above_floor_amplitude_normalised": 0.3445605034983659
+          }
+        ],
+        "damping_tail_valid": false,
+        "damping_tail_exponent": 0.8061122483421101,
+        "damping_tail_reason": "fitted exponent 0.806 < 3: the sweep has not reached the algebraic tail"
+      },
+      "added_mass_bump": {
+        "channel": "added_mass_bump",
+        "band": [
+          0.2,
+          12.0
+        ],
+        "n_omega": 41,
+        "bar": 0.1,
+        "floor": 0.005653357405812935,
+        "floor_amplitude_normalised": 0.017490074307770394,
+        "normalisations": {
+          "reported_residual": "max|A_measured - A_KK| / max|A_measured|  (case statistic)",
+          "amplitude_normalised_residual": "max|A_measured - A_KK| / max|A_measured - A_inf|, A_inf from the closure (invariant to the arbitrary instantaneous offset)"
+        },
+        "residual_scale": "max |A_measured - A_inf| on the band",
+        "points": [
+          {
+            "delta": 0.0,
+            "reported_residual": 0.005653357405812935,
+            "amplitude_normalised_residual": 0.017490074307770394,
+            "dilution_amplitude_over_scale": 0.32323232630871623,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.0,
+            "above_floor_amplitude_normalised": 0.0
+          },
+          {
+            "delta": 0.01,
+            "reported_residual": 0.004367788761867209,
+            "amplitude_normalised_residual": 0.013566823751580621,
+            "dilution_amplitude_over_scale": 0.32194630385452855,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0012855686439457257,
+            "above_floor_amplitude_normalised": -0.003923250556189773
+          },
+          {
+            "delta": 0.02,
+            "reported_residual": 0.003129678918843619,
+            "amplitude_normalised_residual": 0.009760107815210221,
+            "dilution_amplitude_over_scale": 0.3206602814331933,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0025236784869693157,
+            "above_floor_amplitude_normalised": -0.007729966492560173
+          },
+          {
+            "delta": 0.05,
+            "reported_residual": 0.008595717364290831,
+            "amplitude_normalised_residual": 0.02713275657332389,
+            "dilution_amplitude_over_scale": 0.3168022143663015,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.0029423599584778963,
+            "above_floor_amplitude_normalised": 0.009642682265553496
+          },
+          {
+            "delta": 0.1,
+            "reported_residual": 0.018500199731756324,
+            "amplitude_normalised_residual": 0.05960651597975956,
+            "dilution_amplitude_over_scale": 0.3103721032451955,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.01284684232594339,
+            "above_floor_amplitude_normalised": 0.04211644167198916
+          },
+          {
+            "delta": 0.2,
+            "reported_residual": 0.038309160671433355,
+            "amplitude_normalised_residual": 0.12876514452134236,
+            "dilution_amplitude_over_scale": 0.2975118834669094,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.03265580326562042,
+            "above_floor_amplitude_normalised": 0.11127507021357197
+          },
+          {
+            "delta": 0.4,
+            "reported_residual": 0.07792706736977495,
+            "amplitude_normalised_residual": 0.2867164007182379,
+            "dilution_amplitude_over_scale": 0.2717914537660351,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.07227370996396201,
+            "above_floor_amplitude_normalised": 0.2692263264104675
+          },
+          {
+            "delta": 0.8,
+            "reported_residual": 0.1571628200424669,
+            "amplitude_normalised_residual": 0.7132397004782608,
+            "dilution_amplitude_over_scale": 0.22035063378704497,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.15150946263665396,
+            "above_floor_amplitude_normalised": 0.6957496261704904
+          }
+        ],
+        "damping_tail_valid": false,
+        "damping_tail_exponent": 0.8061122483421104,
+        "damping_tail_reason": "fitted exponent 0.806 < 3: the sweep has not reached the algebraic tail"
+      },
+      "added_mass_bump_zero_mean": {
+        "channel": "added_mass_bump_zero_mean",
+        "band": [
+          0.2,
+          12.0
+        ],
+        "n_omega": 41,
+        "bar": 0.1,
+        "floor": 0.005653357405812935,
+        "floor_amplitude_normalised": 0.017490074307770394,
+        "normalisations": {
+          "reported_residual": "max|A_measured - A_KK| / max|A_measured|  (case statistic)",
+          "amplitude_normalised_residual": "max|A_measured - A_KK| / max|A_measured - A_inf|, A_inf from the closure (invariant to the arbitrary instantaneous offset)"
+        },
+        "residual_scale": "max |A_measured - A_inf| on the band",
+        "points": [
+          {
+            "delta": 0.0,
+            "reported_residual": 0.005653357405812935,
+            "amplitude_normalised_residual": 0.017490074307770394,
+            "dilution_amplitude_over_scale": 0.32323232630871623,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.0,
+            "above_floor_amplitude_normalised": 0.0
+          },
+          {
+            "delta": 0.01,
+            "reported_residual": 0.0036855096479771745,
+            "amplitude_normalised_residual": 0.011451833540504273,
+            "dilution_amplitude_over_scale": 0.3218270362507283,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0019678477578357603,
+            "above_floor_amplitude_normalised": -0.006038240767266121
+          },
+          {
+            "delta": 0.02,
+            "reported_residual": 0.00479271594589518,
+            "amplitude_normalised_residual": 0.014957757069562544,
+            "dilution_amplitude_over_scale": 0.3204167525656538,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": -0.0008606414599177546,
+            "above_floor_amplitude_normalised": -0.0025323172382078502
+          },
+          {
+            "delta": 0.05,
+            "reported_residual": 0.014026679864477563,
+            "amplitude_normalised_residual": 0.0443663710632679,
+            "dilution_amplitude_over_scale": 0.3161556721525648,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.008373322458664628,
+            "above_floor_amplitude_normalised": 0.026876296755497506
+          },
+          {
+            "delta": 0.1,
+            "reported_residual": 0.02963852331049369,
+            "amplitude_normalised_residual": 0.09593261711161677,
+            "dilution_amplitude_over_scale": 0.30895147242787635,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.023985165904680757,
+            "above_floor_amplitude_normalised": 0.07844254280384638
+          },
+          {
+            "delta": 0.2,
+            "reported_residual": 0.06172184050897154,
+            "amplitude_normalised_residual": 0.20983375132808324,
+            "dilution_amplitude_over_scale": 0.2941463902652488,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.0560684831031586,
+            "above_floor_amplitude_normalised": 0.19234367702031285
+          },
+          {
+            "delta": 0.4,
+            "reported_residual": 0.12955630364661314,
+            "amplitude_normalised_residual": 0.49290248834205475,
+            "dilution_amplitude_over_scale": 0.2628436794514744,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.1239029462408002,
+            "above_floor_amplitude_normalised": 0.47541241403428436
+          },
+          {
+            "delta": 0.8,
+            "reported_residual": 0.257346986473577,
+            "amplitude_normalised_residual": 0.9780469892792286,
+            "dilution_amplitude_over_scale": 0.26312333588719367,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.2516936290677641,
+            "above_floor_amplitude_normalised": 0.9605569149714582
+          }
+        ],
+        "damping_tail_valid": false,
+        "damping_tail_exponent": 0.8061122483421104,
+        "damping_tail_reason": "fitted exponent 0.806 < 3: the sweep has not reached the algebraic tail"
+      },
+      "damping_bump": {
+        "channel": "damping_bump",
+        "band": [
+          0.2,
+          12.0
+        ],
+        "n_omega": 41,
+        "bar": 0.1,
+        "floor": 0.005653357405812935,
+        "floor_amplitude_normalised": 0.017490074307770394,
+        "normalisations": {
+          "reported_residual": "max|A_measured - A_KK| / max|A_measured|  (case statistic)",
+          "amplitude_normalised_residual": "max|A_measured - A_KK| / max|A_measured - A_inf|, A_inf from the closure (invariant to the arbitrary instantaneous offset)"
+        },
+        "residual_scale": "max |A_measured - A_inf| on the band",
+        "points": [
+          {
+            "delta": 0.0,
+            "reported_residual": 0.005653357405812935,
+            "amplitude_normalised_residual": 0.017490074307770394,
+            "dilution_amplitude_over_scale": 0.32323232630871623,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.0,
+            "above_floor_amplitude_normalised": 0.0
+          },
+          {
+            "delta": 0.05,
+            "reported_residual": 0.006800160850226442,
+            "amplitude_normalised_residual": 0.02077547297455038,
+            "dilution_amplitude_over_scale": 0.32731677678561294,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.001146803444413507,
+            "above_floor_amplitude_normalised": 0.0032853986667799873
+          },
+          {
+            "delta": 0.1,
+            "reported_residual": 0.012434313967135794,
+            "amplitude_normalised_residual": 0.03752042220799114,
+            "dilution_amplitude_over_scale": 0.33140122726250987,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.006780956561322859,
+            "above_floor_amplitude_normalised": 0.02003034790022075
+          },
+          {
+            "delta": 0.2,
+            "reported_residual": 0.024532793334504612,
+            "amplitude_normalised_residual": 0.07224661799131345,
+            "dilution_amplitude_over_scale": 0.33957012821630356,
+            "detected": false,
+            "detected_amplitude_normalised": false,
+            "above_floor": 0.01887943592869168,
+            "above_floor_amplitude_normalised": 0.05475654368354305
+          },
+          {
+            "delta": 0.4,
+            "reported_residual": 0.049745971340902743,
+            "amplitude_normalised_residual": 0.13977202284755574,
+            "dilution_amplitude_over_scale": 0.3559079301238908,
+            "detected": false,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.04409261393508981,
+            "above_floor_amplitude_normalised": 0.12228194853978536
+          },
+          {
+            "delta": 0.8,
+            "reported_residual": 0.1001723273536992,
+            "amplitude_normalised_residual": 0.25778839967369144,
+            "dilution_amplitude_over_scale": 0.38858353393906525,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.09451896994788626,
+            "above_floor_amplitude_normalised": 0.24029832536592105
+          },
+          {
+            "delta": 1.6,
+            "reported_residual": 0.20102503937929234,
+            "amplitude_normalised_residual": 0.4428500860812658,
+            "dilution_amplitude_over_scale": 0.45393474156941443,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.1953716819734794,
+            "above_floor_amplitude_normalised": 0.4253600117734954
+          },
+          {
+            "delta": 3.2,
+            "reported_residual": 0.40273046343047836,
+            "amplitude_normalised_residual": 0.6888554015520882,
+            "dilution_amplitude_over_scale": 0.5846371568301125,
+            "detected": true,
+            "detected_amplitude_normalised": true,
+            "above_floor": 0.39707710602466545,
+            "above_floor_amplitude_normalised": 0.6713653272443179
+          }
+        ],
+        "damping_tail_valid": false,
+        "damping_tail_exponent": 1.8550321122333762,
+        "damping_tail_reason": "fitted exponent 1.86 < 3: the sweep has not reached the algebraic tail"
+      }
+    },
+    "localisation": {
+      "channel": "damping_bump_localisation",
+      "bar": 0.1,
+      "rows": [
+        {
+          "log_width": 0.15,
+          "delta": 0.3,
+          "reported_residual": 0.024827674255013744,
+          "amplitude_normalised_residual": 0.07511458751048959,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.15,
+          "delta": 0.5,
+          "reported_residual": 0.042171240495206735,
+          "amplitude_normalised_residual": 0.12573558768792648,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.15,
+          "delta": 1.0,
+          "reported_residual": 0.0855301560956895,
+          "amplitude_normalised_residual": 0.2460873789510803,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.15,
+          "delta": 2.0,
+          "reported_residual": 0.17224798729665503,
+          "amplitude_normalised_residual": 0.4631718099258379,
+          "passes_bar": false
+        },
+        {
+          "log_width": 0.25,
+          "delta": 0.3,
+          "reported_residual": 0.02812728842853997,
+          "amplitude_normalised_residual": 0.0839778925299515,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.25,
+          "delta": 0.5,
+          "reported_residual": 0.04767059745108404,
+          "amplitude_normalised_residual": 0.13908683738659297,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.25,
+          "delta": 1.0,
+          "reported_residual": 0.09652887000744392,
+          "amplitude_normalised_residual": 0.26647228832065645,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.25,
+          "delta": 2.0,
+          "reported_residual": 0.19424541512016377,
+          "amplitude_normalised_residual": 0.48408588799947416,
+          "passes_bar": false
+        },
+        {
+          "log_width": 0.4,
+          "delta": 0.3,
+          "reported_residual": 0.030752426745537305,
+          "amplitude_normalised_residual": 0.09016318842701519,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.4,
+          "delta": 0.5,
+          "reported_residual": 0.051707634357157986,
+          "amplitude_normalised_residual": 0.14649281999874614,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.4,
+          "delta": 1.0,
+          "reported_residual": 0.1040956533862099,
+          "amplitude_normalised_residual": 0.27199720324717647,
+          "passes_bar": false
+        },
+        {
+          "log_width": 0.4,
+          "delta": 2.0,
+          "reported_residual": 0.2088716914443137,
+          "amplitude_normalised_residual": 0.47236293598415785,
+          "passes_bar": false
+        },
+        {
+          "log_width": 0.6,
+          "delta": 0.3,
+          "reported_residual": 0.037139382337703426,
+          "amplitude_normalised_residual": 0.10680245592891631,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.6,
+          "delta": 0.5,
+          "reported_residual": 0.06235256034410196,
+          "amplitude_normalised_residual": 0.17126209366175665,
+          "passes_bar": true
+        },
+        {
+          "log_width": 0.6,
+          "delta": 1.0,
+          "reported_residual": 0.12538550536009763,
+          "amplitude_normalised_residual": 0.3096539852559961,
+          "passes_bar": false
+        },
+        {
+          "log_width": 0.6,
+          "delta": 2.0,
+          "reported_residual": 0.2514513953920888,
+          "amplitude_normalised_residual": 0.516740751151429,
+          "passes_bar": false
+        },
+        {
+          "log_width": 1.0,
+          "delta": 0.3,
+          "reported_residual": 0.04436398406997183,
+          "amplitude_normalised_residual": 0.12461809286829924,
+          "passes_bar": true
+        },
+        {
+          "log_width": 1.0,
+          "delta": 0.5,
+          "reported_residual": 0.07389282511022491,
+          "amplitude_normalised_residual": 0.19556419041177509,
+          "passes_bar": true
+        },
+        {
+          "log_width": 1.0,
+          "delta": 1.0,
+          "reported_residual": 0.14846603489234364,
+          "amplitude_normalised_residual": 0.34330869300081074,
+          "passes_bar": false
+        },
+        {
+          "log_width": 1.0,
+          "delta": 2.0,
+          "reported_residual": 0.297612454456581,
+          "amplitude_normalised_residual": 0.5494244115211881,
+          "passes_bar": false
+        }
+      ],
+      "worst_passing_corruption": {
+        "log_width": 0.15,
+        "delta": 1.0,
+        "reported_residual": 0.0855301560956895,
+        "amplitude_normalised_residual": 0.2460873789510803,
+        "passes_bar": true
+      },
+      "statement": "a damping corruption confined to a narrow band can be large in relative terms and still pass the KK gate: the declared statistic integrates the corruption away"
+    },
+    "recovery_slope": {
+      "damping_step": {
+        "slope": 0.17445506053053508,
+        "intercept": -0.004134587774838381,
+        "n_points": 10,
+        "max_abs_linear_residual": 0.001516972225869554,
+        "monotone_increasing": false
+      },
+      "added_mass_bump": {
+        "slope": 0.19628587550952825,
+        "intercept": -0.005958964612187431,
+        "n_points": 7,
+        "max_abs_linear_residual": 0.002710537213146423,
+        "monotone_increasing": false
+      },
+      "added_mass_bump_zero_mean": {
+        "slope": 0.3239746438450344,
+        "intercept": -0.007240697102548498,
+        "n_points": 7,
+        "max_abs_linear_residual": 0.0020331029062623943,
+        "monotone_increasing": true
+      },
+      "damping_bump": {
+        "slope": 0.12588606696084337,
+        "intercept": -0.005929851055115242,
+        "n_points": 7,
+        "max_abs_linear_residual": 0.0007823511514865799,
+        "monotone_increasing": true
+      }
+    },
+    "detection_threshold": {
+      "damping_step": {
+        "reported": {
+          "delta": 0.5645039660651248,
+          "bracket": [
+            0.45,
+            0.6
+          ],
+          "bar": 0.1,
+          "statistic": "reported_residual",
+          "source": "linear interpolation between bracketing grid points"
+        },
+        "amplitude_normalised": {
+          "delta": 0.19219951354463144,
+          "bracket": [
+            0.15,
+            0.2
+          ],
+          "bar": 0.1,
+          "statistic": "amplitude_normalised_residual",
+          "source": "linear interpolation between bracketing grid points"
+        }
+      },
+      "added_mass_bump": {
+        "reported": {
+          "delta": 0.5114291560851537,
+          "bracket": [
+            0.4,
+            0.8
+          ],
+          "bar": 0.1,
+          "statistic": "reported_residual",
+          "source": "linear interpolation between bracketing grid points"
+        },
+        "amplitude_normalised": {
+          "delta": 0.15840700556395965,
+          "bracket": [
+            0.1,
+            0.2
+          ],
+          "bar": 0.1,
+          "statistic": "amplitude_normalised_residual",
+          "source": "linear interpolation between bracketing grid points"
+        }
+      },
+      "added_mass_bump_zero_mean": {
+        "reported": {
+          "delta": 0.3128575585933628,
+          "bracket": [
+            0.2,
+            0.4
+          ],
+          "bar": 0.1,
+          "statistic": "reported_residual",
+          "source": "linear interpolation between bracketing grid points"
+        },
+        "amplitude_normalised": {
+          "delta": 0.10357097663369469,
+          "bracket": [
+            0.1,
+            0.2
+          ],
+          "bar": 0.1,
+          "statistic": "amplitude_normalised_residual",
+          "source": "linear interpolation between bracketing grid points"
+        }
+      },
+      "damping_bump": {
+        "reported": {
+          "delta": 0.7986330374246716,
+          "bracket": [
+            0.4,
+            0.8
+          ],
+          "bar": 0.1,
+          "statistic": "reported_residual",
+          "source": "linear interpolation between bracketing grid points"
+        },
+        "amplitude_normalised": {
+          "delta": 0.2822013050281503,
+          "bracket": [
+            0.2,
+            0.4
+          ],
+          "bar": 0.1,
+          "statistic": "amplitude_normalised_residual",
+          "source": "linear interpolation between bracketing grid points"
+        }
+      }
+    },
+    "predicted_c6b_residual": 0.053681608955805794,
+    "predicted_c6b_residual_amplitude_normalised": 0.14843667519559206,
+    "c6b_detection_margin": 1.8816798868837492,
+    "c6b_detection_margin_amplitude_normalised": 0.6406650451487715
+  },
+  "gate": {
+    "id": "C6b_cal",
+    "title": "negative control calibrated against an exact causal pair: the KK gate reports an injected damping-shape corruption, with a measured detection threshold",
+    "threshold": "floor <= 25% of the KK bar; damping-step residual strictly increasing for injected delta >= 0.05 with positive slope; amplitude-normalised detection threshold <= the 0.30 step C6b injects",
+    "passed": true,
+    "values": {
+      "floor_relative_residual": 0.005653357405812935,
+      "floor_over_bar": 0.056533574058129345,
+      "damping_step_slope": 0.17445506053053508,
+      "damping_step_monotone_over_0p05": true,
+      "detection_threshold_step_reported": 0.5645039660651248,
+      "detection_threshold_step_amplitude_normalised": 0.19219951354463144,
+      "injected_step_C6b": 0.3,
+      "predicted_residual_at_c6b_step": 0.053681608955805794,
+      "predicted_residual_at_c6b_step_amplitude_normalised": 0.14843667519559206,
+      "detection_margin_reported": 1.8816798868837492,
+      "detection_margin_amplitude_normalised": 0.6406650451487715,
+      "added_mass_bump_slope": 0.19628587550952825,
+      "added_mass_bump_zero_mean_slope": 0.3239746438450344,
+      "damping_bump_threshold_reported": 0.7986330374246716,
+      "localisation_worst_passing_corruption": {
+        "log_width": 0.15,
+        "delta": 1.0,
+        "reported_residual": 0.0855301560956895,
+        "amplitude_normalised_residual": 0.2460873789510803,
+        "passes_bar": true
+      },
+      "claims": {
+        "floor_ok": true,
+        "responsive_ok": true,
+        "detection_ok": true
+      },
+      "note": "certifies the detector, not the sweep: the case's truncation budget on surge/sway/yaw stays unbounded until the 20 rad/s band artifact exists, which is what gates C8/C9 and C3a_extended address"
+    }
+  }
+}
