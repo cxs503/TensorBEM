@@ -1,0 +1,554 @@
+{
+  "case": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "round": 3,
+  "benchmark": "submerged_sphere_havelock_radiation_case",
+  "purpose": "close round-2 declared gaps: full ka band under the spherical-patch measure, 1280-panel refinement under the same measure, and a non-degenerate reference-integrity block",
+  "geometry": {
+    "body": "sphere",
+    "radius": 1.0,
+    "submergence": 2.0,
+    "submergence_ratio": 2.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "displaced_volume": 4.1887902047863905
+  },
+  "nondimensional_parameters": {
+    "ka": [
+      0.1,
+      0.5,
+      1.0,
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "ka_refinement": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "submergence_ratio_f_over_a": 2.0,
+    "normalisation": "A' = A/(rho*volume), B' = B/(rho*omega*volume)",
+    "production_subdivision": 2,
+    "refinement_subdivision": 3
+  },
+  "surface_measure": {
+    "primary": "spherical_patch",
+    "control": "flat",
+    "production_mesh": {
+      "subdivision": 2,
+      "n_panels": 320,
+      "h_mean": 0.2993320753185587,
+      "sphere_area": 12.566370614359172,
+      "flat_area_over_sphere_area": 0.9811781757531297,
+      "patch_area_over_sphere_area": 1.0,
+      "flat_measure_deficit": 0.01882182424687029,
+      "patch_to_flat_area_ratio_min": 1.0178926171618254,
+      "patch_to_flat_area_ratio_max": 1.0225506588492792
+    },
+    "refinement_mesh": {
+      "subdivision": 3,
+      "n_panels": 1280,
+      "h_mean": 0.1507297051948821,
+      "sphere_area": 12.566370614359172,
+      "flat_area_over_sphere_area": 0.9952350696770933,
+      "patch_area_over_sphere_area": 1.0,
+      "flat_measure_deficit": 0.004764930322906702,
+      "patch_to_flat_area_ratio_min": 1.0044475357680112,
+      "patch_to_flat_area_ratio_max": 1.0056836074643578
+    }
+  },
+  "frequency_sweep": [
+    {
+      "ka": 0.1,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.5441204857132146,
+      "a33_exact": 0.5375037875884319,
+      "a33_rel_error": 0.012310049301176535,
+      "b33_bem": 0.0032787936131062276,
+      "b33_exact": 0.0033222925988104154,
+      "b33_rel_error": 0.013093062820464149,
+      "a11_bem": 0.5254444037258877,
+      "a11_exact": 0.5184990269480979,
+      "a11_rel_error": 0.01339515875019197,
+      "b11_bem": 0.0015991909345680773,
+      "b11_exact": 0.0016197526452739115,
+      "b11_rel_error": 0.012694352292511306,
+      "condition_number": 2.0921578290322804
+    },
+    {
+      "ka": 0.5,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.5416069352845657,
+      "a33_exact": 0.5349252942959751,
+      "a33_rel_error": 0.012490792751508255,
+      "b33_bem": 0.08356696219079,
+      "b33_exact": 0.0847055452573905,
+      "b33_rel_error": 0.013441659139797118,
+      "a11_bem": 0.5253408158358879,
+      "a11_exact": 0.5183875440987198,
+      "a11_rel_error": 0.013413269312358193,
+      "b11_bem": 0.040658760913877254,
+      "b11_exact": 0.04119179229389097,
+      "b11_rel_error": 0.012940232758281081,
+      "condition_number": 2.114047400228336
+    },
+    {
+      "ka": 1.0,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.4559134699525871,
+      "a33_exact": 0.44807329967371523,
+      "a33_rel_error": 0.01749751722448319,
+      "b33_bem": 0.07959883043587306,
+      "b33_exact": 0.08058234530115516,
+      "b33_rel_error": 0.012205091097888435,
+      "a11_bem": 0.4825272936807344,
+      "a11_exact": 0.4750090635190437,
+      "a11_rel_error": 0.01582755096501282,
+      "b11_bem": 0.041224719318756,
+      "b11_exact": 0.04173780149600058,
+      "b11_rel_error": 0.012292985228120916,
+      "condition_number": 2.113648434309333
+    },
+    {
+      "ka": 2.0,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.4489790686292821,
+      "a33_exact": 0.44115699670515945,
+      "a33_rel_error": 0.01773081234694871,
+      "b33_bem": 0.010780159562869235,
+      "b33_exact": 0.010885282356836612,
+      "b33_rel_error": 0.009657332765590014,
+      "a11_bem": 0.4774488750748219,
+      "a11_exact": 0.46990232842983987,
+      "a11_rel_error": 0.016059819644219563,
+      "b11_bem": 0.005727489585011559,
+      "b11_exact": 0.005786754346829016,
+      "b11_rel_error": 0.010241451125350177,
+      "condition_number": 2.0958833636164513
+    },
+    {
+      "ka": 3.0,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.46636815395996106,
+      "a33_exact": 0.45875883317959015,
+      "a33_rel_error": 0.016586755894446376,
+      "b33_bem": 0.0006698183957696202,
+      "b33_exact": 0.0006752187635019919,
+      "b33_rel_error": 0.007997952699600552,
+      "a11_bem": 0.48645912165458105,
+      "a11_exact": 0.4790243965429054,
+      "a11_rel_error": 0.01552055629177068,
+      "b11_bem": 0.0003537410698549616,
+      "b11_exact": 0.00035646366599458555,
+      "b11_rel_error": 0.0076377942532446655,
+      "condition_number": 2.0902034924168404
+    },
+    {
+      "ka": 4.0,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.47297305951058394,
+      "a33_exact": 0.46544052420263277,
+      "a33_rel_error": 0.016183668839011168,
+      "b33_bem": 2.8889886715324875e-05,
+      "b33_exact": 2.907550208438637e-05,
+      "b33_rel_error": 0.006383909331050623,
+      "a11_bem": 0.48987358816147103,
+      "a11_exact": 0.4824791535991987,
+      "a11_rel_error": 0.015325915134594586,
+      "b11_bem": 1.533914984289185e-05,
+      "b11_exact": 1.5344197399049232e-05,
+      "b11_rel_error": 0.0003289553716047257,
+      "condition_number": 2.088601157791501
+    },
+    {
+      "ka": 5.0,
+      "n_panels": 320,
+      "area_measure": "spherical_patch",
+      "a33_bem": 0.4759680521171402,
+      "a33_exact": 0.46847102632603627,
+      "a33_rel_error": 0.016003179214516317,
+      "b33_bem": 1.0075312679300802e-06,
+      "b33_exact": 1.0153123047181988e-06,
+      "b33_rel_error": 0.007663688061259384,
+      "a11_bem": 0.4914141785318904,
+      "a11_exact": 0.48403805736897987,
+      "a11_rel_error": 0.015238721523270122,
+      "b11_bem": 5.506304263004306e-07,
+      "b11_exact": 5.384990989653186e-07,
+      "b11_rel_error": 0.022528036459896397,
+      "condition_number": 2.087920827903901
+    }
+  ],
+  "control_frequency_sweep": [
+    {
+      "ka": 0.1,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.5252971228342371,
+      "a33_exact": 0.5375037875884319,
+      "a33_rel_error": 0.022709913931883614,
+      "b33_bem": 0.003137920011744757,
+      "b33_exact": 0.0033222925988104154,
+      "b33_rel_error": 0.05549558974175703,
+      "a11_bem": 0.5073446868637264,
+      "a11_exact": 0.5184990269480979,
+      "a11_rel_error": 0.021512750274627047,
+      "b11_bem": 0.0015308938135197522,
+      "b11_exact": 0.0016197526452739115,
+      "b11_rel_error": 0.054859507106489486,
+      "condition_number": 2.091993053557415
+    },
+    {
+      "ka": 0.5,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.5229766141384147,
+      "a33_exact": 0.5349252942959751,
+      "a33_rel_error": 0.02233710068484671,
+      "b33_bem": 0.07996954821533321,
+      "b33_exact": 0.0847055452573905,
+      "b33_rel_error": 0.05591129869557249,
+      "a11_bem": 0.5072657341671192,
+      "a11_exact": 0.5183875440987198,
+      "a11_rel_error": 0.02145462416720919,
+      "b11_bem": 0.03891849044308842,
+      "b11_exact": 0.04119179229389097,
+      "b11_rel_error": 0.055188223774853766,
+      "condition_number": 2.1129152553673607
+    },
+    {
+      "ka": 1.0,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.4408899925942294,
+      "a33_exact": 0.44807329967371523,
+      "a33_rel_error": 0.016031544581470672,
+      "b33_bem": 0.07636015346929807,
+      "b33_exact": 0.08058234530115516,
+      "b33_rel_error": 0.05239599090939536,
+      "a11_bem": 0.4662684572132053,
+      "a11_exact": 0.4750090635190437,
+      "a11_rel_error": 0.018400925323581688,
+      "b11_bem": 0.03951059477466912,
+      "b11_exact": 0.04173780149600058,
+      "b11_rel_error": 0.053361860028609286,
+      "condition_number": 2.1122493765690624
+    },
+    {
+      "ka": 2.0,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.43411981957393264,
+      "a33_exact": 0.44115699670515945,
+      "a33_rel_error": 0.01595163894891143,
+      "b33_bem": 0.01035651194708239,
+      "b33_exact": 0.010885282356836612,
+      "b33_rel_error": 0.048576637005848716,
+      "a11_bem": 0.4613658232623557,
+      "a11_exact": 0.46990232842983987,
+      "a11_rel_error": 0.018166552176935493,
+      "b11_bem": 0.005494809336246983,
+      "b11_exact": 0.005786754346829016,
+      "b11_rel_error": 0.05045056228142994,
+      "condition_number": 2.0951710476543215
+    },
+    {
+      "ka": 3.0,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.4508020157307671,
+      "a33_exact": 0.45875883317959015,
+      "a33_rel_error": 0.01734422723520222,
+      "b33_bem": 0.0006434399017906487,
+      "b33_exact": 0.0006752187635019919,
+      "b33_rel_error": 0.04706454178868428,
+      "a11_bem": 0.47000231811406995,
+      "a11_exact": 0.4790243965429054,
+      "a11_rel_error": 0.018834277531473,
+      "b11_bem": 0.0003393282321337248,
+      "b11_exact": 0.00035646366599458555,
+      "b11_rel_error": 0.048070632424907576,
+      "condition_number": 2.089771343477312
+    },
+    {
+      "ka": 4.0,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.45713866363509165,
+      "a33_exact": 0.46544052420263277,
+      "a33_rel_error": 0.017836565867923537,
+      "b33_bem": 2.7745635512279943e-05,
+      "b33_exact": 2.907550208438637e-05,
+      "b33_rel_error": 0.04573838719093248,
+      "a11_bem": 0.4732753395757881,
+      "a11_exact": 0.4824791535991987,
+      "a11_rel_error": 0.019076086406535825,
+      "b11_bem": 1.470591283635127e-05,
+      "b11_exact": 1.5344197399049232e-05,
+      "b11_rel_error": 0.041597780978594075,
+      "condition_number": 2.0882525348589223
+    },
+    {
+      "ka": 5.0,
+      "n_panels": 320,
+      "area_measure": "flat",
+      "a33_bem": 0.46001132429406066,
+      "a33_exact": 0.46847102632603627,
+      "a33_rel_error": 0.01805811150866778,
+      "b33_bem": 9.670632483538807e-07,
+      "b33_exact": 1.0153123047181988e-06,
+      "b33_rel_error": 0.04752139429425083,
+      "a11_bem": 0.47475188667531887,
+      "a11_exact": 0.48403805736897987,
+      "a11_rel_error": 0.01918479456788291,
+      "b11_bem": 5.271097119419672e-07,
+      "b11_exact": 5.384990989653186e-07,
+      "b11_rel_error": 0.02115024341774227,
+      "condition_number": 2.0876084143277653
+    }
+  ],
+  "refinement_status": "not_completed",
+  "refinement_sweep_1280": [],
+  "refinement_error_ratios": [],
+  "reference_integrity": {
+    "benchmark": "submerged_sphere_havelock_reference_integrity",
+    "geometry": {
+      "radius": 1.0,
+      "submergence": 2.0,
+      "submergence_ratio": 2.0,
+      "density": 1025.0,
+      "gravity": 9.80665
+    },
+    "truncation": {
+      "rows": [
+        {
+          "ka": 0.1,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.5375037875884319,
+          "a33_n40": 0.5375037875884319,
+          "b33_n20": 0.0033222925988104154,
+          "b33_n40": 0.0033222925988104154,
+          "a11_n20": 0.5184990269480978,
+          "a11_n40": 0.5184990269480978,
+          "b11_n20": 0.001619752645273911,
+          "b11_n40": 0.001619752645273911,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 8.802733649327082e-16,
+          "haskind_error_x": 1.289670323507645e-16
+        },
+        {
+          "ka": 1.0,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.4480732996737152,
+          "a33_n40": 0.4480732996737152,
+          "b33_n20": 0.08058234530115514,
+          "b33_n40": 0.08058234530115514,
+          "a11_n20": 0.4750090635190439,
+          "a11_n40": 0.4750090635190439,
+          "b11_n20": 0.04173780149600059,
+          "b11_n40": 0.04173780149600059,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 6.295768078316083e-16,
+          "haskind_error_x": 2.0258524209022277e-16
+        },
+        {
+          "ka": 5.0,
+          "n_terms_low": 20,
+          "n_terms_high": 40,
+          "a33_n20": 0.46847102632603627,
+          "a33_n40": 0.46847102632603627,
+          "b33_n20": 1.0153123047181986e-06,
+          "b33_n40": 1.0153123047181986e-06,
+          "a11_n20": 0.48403805736897987,
+          "a11_n40": 0.48403805736897987,
+          "b11_n20": 5.384990989653186e-07,
+          "b11_n40": 5.384990989653186e-07,
+          "max_truncation_rel_delta": 0.0,
+          "truncation_rel_delta": {
+            "heave_added_mass_dimless": 0.0,
+            "heave_damping_dimless": 0.0,
+            "surge_added_mass_dimless": 0.0,
+            "surge_damping_dimless": 0.0
+          },
+          "haskind_error_z": 0.0,
+          "haskind_error_x": 6.938893903907228e-18
+        }
+      ],
+      "worst_truncation_rel_delta": 0.0,
+      "worst_haskind_error": 8.802733649327082e-16,
+      "n_terms_low": 20,
+      "n_terms_high": 40
+    },
+    "deep_submergence_limit": {
+      "ka": 0.001,
+      "rows": [
+        {
+          "submergence_ratio": 2.0,
+          "a33": 0.5239882350395347,
+          "a33_excess_over_lamb": 0.023988235039534733,
+          "a11": 0.5118859873425542,
+          "a11_excess_over_lamb": 0.011885987342554194,
+          "inertia_coefficient_cm": 1.5239882350395346,
+          "b33": 4.844936423956377e-09
+        },
+        {
+          "submergence_ratio": 3.0,
+          "a33": 0.5070219458160851,
+          "a33_excess_over_lamb": 0.007021945816085062,
+          "a11": 0.5035023019512864,
+          "a11_excess_over_lamb": 0.003502301951286424,
+          "inertia_coefficient_cm": 1.507021945816085,
+          "b33": 4.728165540925317e-09
+        },
+        {
+          "submergence_ratio": 5.0,
+          "a33": 0.5015167346050169,
+          "a33_excess_over_lamb": 0.0015167346050168895,
+          "a11": 0.5007579763579411,
+          "a11_excess_over_lamb": 0.0007579763579410592,
+          "inertia_coefficient_cm": 1.501516734605017,
+          "b33": 4.674940738361986e-09
+        },
+        {
+          "submergence_ratio": 10.0,
+          "a33": 0.5001913544629628,
+          "a33_excess_over_lamb": 0.00019135446296281167,
+          "a11": 0.5000956710989077,
+          "a11_excess_over_lamb": 9.567109890773473e-05,
+          "inertia_coefficient_cm": 1.5001913544629628,
+          "b33": 4.62025606848917e-09
+        },
+        {
+          "submergence_ratio": 20.0,
+          "a33": 0.5000244166470572,
+          "a33_excess_over_lamb": 2.4416647057212693e-05,
+          "a11": 0.5000122082240464,
+          "a11_excess_over_lamb": 1.220822404635058e-05,
+          "inertia_coefficient_cm": 1.500024416647057,
+          "b33": 4.5277609692213e-09
+        }
+      ],
+      "lamb_added_mass_dimless": 0.5,
+      "morison_inertia_coefficient": 1.5,
+      "observed_excess_decay_orders": [
+        3.0299108788792246,
+        3.0000073455640526,
+        2.986649213461781,
+        2.970310544123217
+      ],
+      "observed_excess_decay_order_last": 2.970310544123217
+    },
+    "low_frequency_damping": [
+      {
+        "ka": 0.001,
+        "b33": 4.844936423956377e-09,
+        "b11": 2.384140247280267e-09,
+        "a33": 0.5239882350395347,
+        "a11": 0.5118859873425542
+      },
+      {
+        "ka": 0.01,
+        "b33": 4.67959155719776e-06,
+        "b11": 2.301320998999292e-06,
+        "a33": 0.5249058384266153,
+        "a11": 0.5123367644456248
+      },
+      {
+        "ka": 0.05,
+        "b33": 0.0005019018424020191,
+        "b11": 0.0002459836827759926,
+        "a33": 0.5298748619498139,
+        "a11": 0.5147731545000064
+      }
+    ]
+  },
+  "judgement": {
+    "tolerance": 0.05,
+    "criteria": "per-item relative error |got-ref|/|ref| < 5% against the in-repo multipole reference, production mesh 320 panels, spherical-patch area measure",
+    "production_sweep_spherical": {
+      "tolerance": 0.05,
+      "n_items": 28,
+      "n_failures": 0,
+      "passed": true,
+      "failures": [],
+      "worst_item": {
+        "item": "sweep/ka=5",
+        "quantity": "b11",
+        "rel_error": 0.022528036459896397,
+        "got": 5.506304263004306e-07,
+        "ref": 5.384990989653186e-07
+      }
+    },
+    "production_sweep_flat_control": {
+      "tolerance": 0.05,
+      "n_items": 28,
+      "n_failures": 7,
+      "passed": false,
+      "failures": [
+        {
+          "item": "sweep/ka=0.1",
+          "quantity": "b33",
+          "rel_error": 0.05549558974175703
+        },
+        {
+          "item": "sweep/ka=0.1",
+          "quantity": "b11",
+          "rel_error": 0.054859507106489486
+        },
+        {
+          "item": "sweep/ka=0.5",
+          "quantity": "b33",
+          "rel_error": 0.05591129869557249
+        },
+        {
+          "item": "sweep/ka=0.5",
+          "quantity": "b11",
+          "rel_error": 0.055188223774853766
+        },
+        {
+          "item": "sweep/ka=1",
+          "quantity": "b33",
+          "rel_error": 0.05239599090939536
+        },
+        {
+          "item": "sweep/ka=1",
+          "quantity": "b11",
+          "rel_error": 0.053361860028609286
+        },
+        {
+          "item": "sweep/ka=2",
+          "quantity": "b11",
+          "rel_error": 0.05045056228142994
+        }
+      ],
+      "worst_item": {
+        "item": "sweep/ka=0.5",
+        "quantity": "b33",
+        "rel_error": 0.05591129869557249,
+        "got": 0.07996954821533321,
+        "ref": 0.0847055452573905
+      }
+    }
+  }
+}
