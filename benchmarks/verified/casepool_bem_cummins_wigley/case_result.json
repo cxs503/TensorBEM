@@ -1607,8 +1607,8 @@
       "values": {
         "dof": 2,
         "dof_name": "heave",
-        "damping_relative_error_max": 0.0008686638601146082,
-        "added_mass_relative_error_max": 0.10882434922565816,
+        "damping_relative_error_max": 0.0008686640204692131,
+        "added_mass_relative_error_max": 0.1088242683263727,
         "round_trip_band": [
           0.5026548245743669,
           7.199999999999999
@@ -1616,37 +1616,37 @@
         "kernel_causal": true,
         "kernel_even_parity_relative_error": 0.0,
         "kernel_tau_max": 25.0,
-        "kernel_dt": 0.01
+        "kernel_dt": 0.002
       }
     },
     "C5": {
       "id": "C5",
       "title": "Cummins free decay vs frequency-domain damping ratio (heave)",
       "threshold": "|zeta_decay - zeta_fd|/zeta_fd <= 5%",
-      "passed": false,
+      "passed": true,
       "values": {
         "dof": 2,
         "dof_name": "heave",
-        "zeta_decay": 0.13787172247279808,
-        "zeta_frequency_domain": 0.1287488748744322,
-        "relative_error": 0.07085768793912427,
+        "zeta_decay": 0.1346015530611902,
+        "zeta_frequency_domain": 0.12947445178669487,
+        "relative_error": 0.03959932792719662,
         "natural_frequency_in_band": true,
         "band_rad_s": [
           0.2,
           12.0
         ],
         "status": "decided",
-        "damped_period_s": 0.8125000000000001,
-        "natural_frequency_rad_s": 7.807714085101556,
-        "added_mass_at_natural": 28.85314095012084,
-        "damping_at_natural": 212.56312946534862,
+        "damped_period_s": 0.8140000000000001,
+        "natural_frequency_rad_s": 7.789789478462638,
+        "added_mass_at_natural": 28.860097103691732,
+        "damping_at_natural": 213.2843382692734,
         "restoring_n_per_m": 6016.012025625,
         "displaced_mass_kg": 76.875,
         "added_mass_inf_used": 50.93021596754935,
         "added_mass_inf_source": "KK closure (least-squares offset)",
         "n_peaks": 5,
         "peak_amplitude_floor": 0.01,
-        "dt": 0.01,
+        "dt": 0.002,
         "duration": 40.0
       }
     },
@@ -2391,8 +2391,8 @@
     "worst_damping_change": 0.10990671562247194
   },
   "verdict": {
-    "passed": false,
-    "gates_passed": 9,
+    "passed": true,
+    "gates_passed": 10,
     "gates_total": 10,
     "passed_list": [
       "C1",
@@ -2402,12 +2402,11 @@
       "C3",
       "C3_coarse",
       "C4",
+      "C5",
       "C6a",
       "C6b"
     ],
-    "failed_list": [
-      "C5"
-    ],
+    "failed_list": [],
     "case_tolerance": 0.1,
     "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
   },
