@@ -3,9 +3,9 @@
 * 算例 ID：`CASE-BEM-ELLIPSE-2D-ADDED-MASS` ｜ 仓：`TensorBEM` ｜ 域：`ship-total-performance/seakeeping-hydrodynamics`
 * 能力：2-D exterior BEM operator on a non-circular section (added mass of an elliptic cylinder)
 * 工件：`benchmarks/verified/case_bem_ellipse_2d_added_mass/`（`results.json` / `report.md` / `figures/` / `repro.sh`）
-* 一键复现：`PYTHONPATH=src python3 -m tensorbem.benchmarks.case_ellipse_2d_added_mass`（本次运行 58 s）
+* 一键复现：`PYTHONPATH=src python3 -m tensorbem.benchmarks.case_ellipse_2d_added_mass`（本次运行 36 s）
 * 判据：预算 128 面板下两条独立路线相对误差 < 3%，收敛阶 > 1.5，几何门先过。
-* 生成：2026-11-13T10:23:40Z，**数字零手抄**（全部由驱动脚本程序化产出）。
+* 生成：2026-11-15T03:18:03Z，**数字零手抄**（全部由驱动脚本程序化产出）。
 
 ## 0. 结论
 

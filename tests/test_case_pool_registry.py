@@ -85,3 +85,28 @@ def test_verdict_extraction_handles_known_schemas():
     tiers = {"tiers": {"case_mesh": {"verdict": "PASS"}, "economy_mesh": {"verdict": "FAIL"}}}
     assert registry._verdict_of(tiers) == {"case_mesh": "PASS", "economy_mesh": "FAIL"}
     assert registry._verdict_of({"something": 1}) == "see artifact"
+
+
+PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
+
+
+@pytest.mark.parametrize("case_code", [e.case_code for e in registry.list_cases()])
+def test_registered_figures_are_real_png_files(case_code):
+    """A registered figure must be a decodable, non-degenerate PNG.
+
+    Path existence alone is too weak an invariant: a truncated or placeholder
+    file satisfies ``is_file()`` while the case document promises a plot.  The
+    three offsets checked below (signature, IHDR width/height, IEND trailer)
+    turn a corrupt image red here instead of in a report reader's browser.
+    """
+    entry = registry.resolve(case_code)
+    if not entry.figures or any(not entry.path(rel).is_file() for rel in entry.figures):
+        pytest.skip("figure set incomplete; owned by test_every_registered_case_resolves_its_paths")
+    for rel in entry.figures:
+        blob = entry.path(rel).read_bytes()
+        assert blob[:8] == PNG_SIGNATURE, rel
+        assert blob[-8:] == b"IEND" + blob[-4:], rel  # ends with a complete IEND chunk
+        width = int.from_bytes(blob[16:20], "big")
+        height = int.from_bytes(blob[20:24], "big")
+        assert width >= 200 and height >= 150, (rel, width, height)
+        assert len(blob) > 5_000, (rel, len(blob))
