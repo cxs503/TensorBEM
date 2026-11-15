@@ -1,0 +1,241 @@
+{
+  "source": "benchmarks/verified/casepool_bem_cummins_wigley/case_result.json",
+  "question": "the pre-declared KK criterion is |A - A_KK| / max|A| <= 10 %, and max|A| contains the arbitrary instantaneous offset A_inf; the same bar therefore corresponds to a different fraction of the added-mass *amplitude* max|A - A_inf| for every DOF -- by how much, per gate",
+  "gates": {
+    "C3": {
+      "passed_as_declared": true,
+      "status_as_declared": "pass, certified only where the truncation budget is small",
+      "rows": [
+        {
+          "dof": 0,
+          "dof_name": "surge",
+          "residual_scale_max_abs_A": 2.271317281460082,
+          "added_mass_amplitude": 1.6254896456748549,
+          "dilution_amplitude_over_scale": 0.7156594364614411,
+          "residual_reported": 0.026203850124669234,
+          "residual_amplitude_normalised": 0.03661497185621344,
+          "bar_in_amplitude_units": 0.13973126728328675,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 1,
+          "dof_name": "sway",
+          "residual_scale_max_abs_A": 189.28304975244757,
+          "added_mass_amplitude": 107.20866196180954,
+          "dilution_amplitude_over_scale": 0.566393356943591,
+          "residual_reported": 0.028058755986037822,
+          "residual_amplitude_normalised": 0.04953934512482688,
+          "bar_in_amplitude_units": 0.1765557430610178,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 2,
+          "dof_name": "heave",
+          "residual_scale_max_abs_A": 141.4520325048492,
+          "added_mass_amplitude": 90.06825126156664,
+          "dilution_amplitude_over_scale": 0.6367405944377573,
+          "residual_reported": 0.003008530052565741,
+          "residual_amplitude_normalised": 0.004724891233332275,
+          "bar_in_amplitude_units": 0.1570498266853869,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 3,
+          "dof_name": "roll",
+          "residual_scale_max_abs_A": 0.5789691030455965,
+          "added_mass_amplitude": 0.19158184816613388,
+          "dilution_amplitude_over_scale": 0.3309016787913913,
+          "residual_reported": 0.0072352999798823035,
+          "residual_amplitude_normalised": 0.021865407290494944,
+          "bar_in_amplitude_units": 0.3022045713555975,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 4,
+          "dof_name": "pitch",
+          "residual_scale_max_abs_A": 34.25812460289788,
+          "added_mass_amplitude": 18.536702864599206,
+          "dilution_amplitude_over_scale": 0.5410892475716897,
+          "residual_reported": 0.0047796069033419495,
+          "residual_amplitude_normalised": 0.008833306011516506,
+          "bar_in_amplitude_units": 0.18481239545746259,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 5,
+          "dof_name": "yaw",
+          "residual_scale_max_abs_A": 143.17358812842366,
+          "added_mass_amplitude": 84.89753482088645,
+          "dilution_amplitude_over_scale": 0.5929692475454004,
+          "residual_reported": 0.03598043283997282,
+          "residual_amplitude_normalised": 0.060678412900692626,
+          "bar_in_amplitude_units": 0.16864280974763968,
+          "above_bar_in_amplitude_units": false
+        }
+      ],
+      "worst_dof_amplitude_normalised": "yaw",
+      "worst_residual_amplitude_normalised": 0.060678412900692626,
+      "dofs_above_bar_in_amplitude_units": []
+    },
+    "C3a": {
+      "passed_as_declared": true,
+      "status_as_declared": "pass, certified only where the truncation budget is small",
+      "rows": [
+        {
+          "dof": 0,
+          "dof_name": "surge",
+          "residual_scale_max_abs_A": 2.271317281460082,
+          "added_mass_amplitude": 1.7264941569562282,
+          "dilution_amplitude_over_scale": 0.7601290101779076,
+          "residual_reported": 0.07067342384113562,
+          "residual_amplitude_normalised": 0.09297556453554451,
+          "bar_in_amplitude_units": 0.13155661560212664,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 1,
+          "dof_name": "sway",
+          "residual_scale_max_abs_A": 189.28304975244757,
+          "added_mass_amplitude": 116.31677063740985,
+          "dilution_amplitude_over_scale": 0.6145123442882703,
+          "residual_reported": 0.07617774333071702,
+          "residual_amplitude_normalised": 0.1239645452833763,
+          "bar_in_amplitude_units": 0.16273066103467823,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 2,
+          "dof_name": "heave",
+          "residual_scale_max_abs_A": 141.4520325048492,
+          "added_mass_amplitude": 90.9323373888029,
+          "dilution_amplitude_over_scale": 0.6428492809793002,
+          "residual_reported": 0.009117216594108702,
+          "residual_amplitude_normalised": 0.014182510370424258,
+          "bar_in_amplitude_units": 0.15555745795913867,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 3,
+          "dof_name": "roll",
+          "residual_scale_max_abs_A": 0.5789691030455965,
+          "added_mass_amplitude": 0.2015934769857809,
+          "dilution_amplitude_over_scale": 0.34819384303121353,
+          "residual_reported": 0.024527464219704528,
+          "residual_amplitude_normalised": 0.07044198141523653,
+          "bar_in_amplitude_units": 0.28719634767073005,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 4,
+          "dof_name": "pitch",
+          "residual_scale_max_abs_A": 34.25812460289788,
+          "added_mass_amplitude": 18.775058370036927,
+          "dilution_amplitude_over_scale": 0.5480468819489539,
+          "residual_reported": 0.01173724128060603,
+          "residual_amplitude_normalised": 0.021416491302470832,
+          "bar_in_amplitude_units": 0.18246614166361444,
+          "above_bar_in_amplitude_units": false
+        },
+        {
+          "dof": 5,
+          "dof_name": "yaw",
+          "residual_scale_max_abs_A": 143.17358812842366,
+          "added_mass_amplitude": 92.42080777746976,
+          "dilution_amplitude_over_scale": 0.6455157615702853,
+          "residual_reported": 0.08852694686485775,
+          "residual_amplitude_normalised": 0.13714141797174184,
+          "bar_in_amplitude_units": 0.15491488504748424,
+          "above_bar_in_amplitude_units": true
+        }
+      ],
+      "worst_dof_amplitude_normalised": "yaw",
+      "worst_residual_amplitude_normalised": 0.13714141797174184,
+      "dofs_above_bar_in_amplitude_units": [
+        "sway",
+        "yaw"
+      ]
+    },
+    "C6b": {
+      "passed_as_declared": true,
+      "status_as_declared": "pass, not certified: no sample has a truncation budget below 5% of the added-mass scale -- the measured damping does not decay fast enough at the top of the band for the omitted integral above s_max to be bounded, so the agreement holds empirically but is not implied by band-limited data alone",
+      "rows": [
+        {
+          "dof": 0,
+          "dof_name": "surge",
+          "residual_scale_max_abs_A": 2.271317281460082,
+          "added_mass_amplitude": 1.903901959005966,
+          "dilution_amplitude_over_scale": 0.838236900915081,
+          "residual_reported": 0.20635512621955798,
+          "residual_amplitude_normalised": 0.24617757342141056,
+          "bar_in_amplitude_units": 0.1192980169339153,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 1,
+          "dof_name": "sway",
+          "residual_scale_max_abs_A": 189.28304975244757,
+          "added_mass_amplitude": 126.58361806613891,
+          "dilution_amplitude_over_scale": 0.6687530565028953,
+          "residual_reported": 0.19209017567479886,
+          "residual_amplitude_normalised": 0.28723633306334984,
+          "bar_in_amplitude_units": 0.14953202684848899,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 2,
+          "dof_name": "heave",
+          "residual_scale_max_abs_A": 141.4520325048492,
+          "added_mass_amplitude": 105.6086355538014,
+          "dilution_amplitude_over_scale": 0.7466038747105381,
+          "residual_reported": 0.15748529489229207,
+          "residual_amplitude_normalised": 0.21093554457288327,
+          "bar_in_amplitude_units": 0.13393983528249231,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 3,
+          "dof_name": "roll",
+          "residual_scale_max_abs_A": 0.5789691030455965,
+          "added_mass_amplitude": 0.22325603884793216,
+          "dilution_amplitude_over_scale": 0.38560959069062745,
+          "residual_reported": 0.10797103490477766,
+          "residual_amplitude_normalised": 0.2800009063866937,
+          "bar_in_amplitude_units": 0.2593296495061231,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 4,
+          "dof_name": "pitch",
+          "residual_scale_max_abs_A": 34.25812460289788,
+          "added_mass_amplitude": 21.513201477847723,
+          "dilution_amplitude_over_scale": 0.627973706302298,
+          "residual_reported": 0.14571023914139417,
+          "residual_amplitude_normalised": 0.23203238874344087,
+          "bar_in_amplitude_units": 0.15924233609848207,
+          "above_bar_in_amplitude_units": true
+        },
+        {
+          "dof": 5,
+          "dof_name": "yaw",
+          "residual_scale_max_abs_A": 143.17358812842366,
+          "added_mass_amplitude": 98.14470783050746,
+          "dilution_amplitude_over_scale": 0.6854945043528122,
+          "residual_reported": 0.18687215663933401,
+          "residual_amplitude_normalised": 0.27260927031904275,
+          "bar_in_amplitude_units": 0.1458800900153267,
+          "above_bar_in_amplitude_units": true
+        }
+      ],
+      "worst_dof_amplitude_normalised": "sway",
+      "worst_residual_amplitude_normalised": 0.28723633306334984,
+      "dofs_above_bar_in_amplitude_units": [
+        "surge",
+        "sway",
+        "heave",
+        "roll",
+        "pitch",
+        "yaw"
+      ]
+    }
+  }
+}
