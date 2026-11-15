@@ -1,7 +1,7 @@
 {
   "case": "CASE-BEM-CUMMINS-WIGLEY",
-  "mission": "m21859",
-  "generated_utc": "2026-11-15T12:22:45Z",
+  "mission": "m21960",
+  "generated_utc": "2026-11-15T13:53:51Z",
   "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
   "python": "3.11.6",
   "numpy": "2.4.6",
@@ -203,6 +203,229 @@
       "relative_error": 0.020225482898981885,
       "tolerance": 0.03,
       "passed": true
+    }
+  },
+  "external_anchor": {
+    "gate": "C10",
+    "reference": "/srv/tensor/agent/work/m21960/benchmarks/verified/casepool_bem_cummins_wigley/capytaine_ref.json",
+    "noise_floor": {
+      "level": "medium",
+      "variant": "lid",
+      "levels_in_ladder": [
+        "coarse",
+        "fine",
+        "medium"
+      ],
+      "normalisation": "band-max |X_tensorbem| of the same cell (identical to gate C10)",
+      "quantities": {
+        "added_mass": {
+          "worst": {
+            "dof_from": "roll",
+            "dof_to": "roll",
+            "i": 3,
+            "j": 3,
+            "residual": 0.0489202017786533,
+            "reference_ladder_spread": 0.06457701173572902,
+            "ratio": 0.7575482430009507,
+            "distinguishable": false
+          },
+          "worst_reference_ladder_spread": 0.06554214167637053,
+          "scored_cells": 10,
+          "cells_where_cell_max_residual_exceeds_floor": 4,
+          "per_frequency": {
+            "residual": [
+              0.042057371480913576,
+              0.042059322634016835,
+              0.04206191919022132,
+              0.04206461120491161,
+              0.042068667735941596,
+              0.0420733021997648,
+              0.04207901804203761,
+              0.04208752328756333,
+              0.04209376617424797,
+              0.04210446092482051,
+              0.04211666105351865,
+              0.04213391698435443,
+              0.04215348948523978,
+              0.042177275814907024,
+              0.042208493850495674,
+              0.04224875080820922,
+              0.04229451868431426,
+              0.0423550181468504,
+              0.04243010524159427,
+              0.042527432095381665,
+              0.042647881872822896,
+              0.042804719875999674,
+              0.043009555759724094,
+              0.04326665394482319,
+              0.043599566308270894,
+              0.043993872557899015,
+              0.044568826965156384,
+              0.04513504067461259,
+              0.045846637576914595,
+              0.04658503475975119,
+              0.047485062541551694,
+              0.04874958475919868,
+              0.0489202017786533,
+              0.04623267607114777,
+              0.043080726658124645,
+              0.036284787160091724,
+              0.031351276955123214,
+              0.027405338296792554,
+              0.026518405953609134,
+              0.027420286376917877,
+              0.028656992496991218
+            ],
+            "reference_ladder_spread": [
+              0.04861445444314735,
+              0.04862010131960891,
+              0.04862765158434158,
+              0.04863527868391696,
+              0.0486457044129727,
+              0.04865865210044085,
+              0.048675161250842404,
+              0.0486949533501785,
+              0.04871728937282979,
+              0.048747719611520114,
+              0.048782303626270875,
+              0.04882700074717747,
+              0.048883128740586874,
+              0.04895179080181067,
+              0.04903607607842265,
+              0.04913238719538331,
+              0.0492867355026244,
+              0.04944719571114201,
+              0.049659742274253536,
+              0.04992801606672861,
+              0.050277429073287805,
+              0.05071200419426833,
+              0.05131432609912561,
+              0.05208684818475542,
+              0.05301169215170168,
+              0.05425971954245354,
+              0.055929611558245926,
+              0.058429382636468415,
+              0.06109009479293745,
+              0.06361839945210375,
+              0.06536084650493482,
+              0.06554214167637053,
+              0.06453539910066237,
+              0.05669901031042543,
+              0.04441269541109676,
+              0.031104486742502,
+              0.018746349571861727,
+              0.011499899314101504,
+              0.01677199432150906,
+              0.031572884439889114,
+              0.02461021681022246
+            ]
+          }
+        },
+        "damping": {
+          "worst": {
+            "dof_from": "heave",
+            "dof_to": "heave",
+            "i": 2,
+            "j": 2,
+            "residual": 0.060927557074455255,
+            "reference_ladder_spread": 0.08267767023492044,
+            "ratio": 0.7369288092097372,
+            "distinguishable": false
+          },
+          "worst_reference_ladder_spread": 0.1161767637486271,
+          "scored_cells": 10,
+          "cells_where_cell_max_residual_exceeds_floor": 2,
+          "per_frequency": {
+            "residual": [
+              1.027992431049198e-05,
+              1.3960427775566057e-05,
+              1.8954071342251617e-05,
+              2.572621459181819e-05,
+              3.490531248125675e-05,
+              4.7337841204509815e-05,
+              6.416242924992667e-05,
+              8.690580866381437e-05,
+              0.00011760993112129678,
+              0.0001589906650452958,
+              0.00021464052627153402,
+              0.0002892909709106726,
+              0.0003890910078904041,
+              0.0005219596261055819,
+              0.0006979345219022713,
+              0.0009294842785709329,
+              0.0012316498157255752,
+              0.0016217382000092424,
+              0.0021190816279436538,
+              0.0027425677277827013,
+              0.003508230722647198,
+              0.004426092028072249,
+              0.0054922703159363435,
+              0.006688242566402909,
+              0.007972870661300674,
+              0.009291460315600637,
+              0.01056730123161101,
+              0.011745697408785338,
+              0.012740878031825593,
+              0.013422366314369279,
+              0.013619250754633274,
+              0.015903620345919182,
+              0.017899459053803392,
+              0.028098771147214884,
+              0.0364041292738441,
+              0.047166279652081686,
+              0.04463551924241877,
+              0.035593831587756794,
+              0.026323755935442353,
+              0.060927557074455255,
+              0.043051990937690764
+            ],
+            "reference_ladder_spread": [
+              2.2440181544674834e-06,
+              3.04643059921227e-06,
+              4.134438931742351e-06,
+              5.6087139069332546e-06,
+              7.605136257098623e-06,
+              1.030591110584484e-05,
+              1.3955331679702888e-05,
+              1.887913275235443e-05,
+              2.5511636058810744e-05,
+              3.442542128398995e-05,
+              4.6366294834038276e-05,
+              6.231436290886027e-05,
+              8.35157885826739e-05,
+              0.00011153248008735079,
+              0.00014829090301116793,
+              0.00019610723149995294,
+              0.0002575981561603383,
+              0.0003353048398757442,
+              0.000431982108463312,
+              0.0005492096465349326,
+              0.0006864008213656285,
+              0.0008413219740768135,
+              0.0010068143467091679,
+              0.0011718045458077354,
+              0.0013220975968484918,
+              0.0015720306319422798,
+              0.0026752898901621675,
+              0.004578957315183588,
+              0.0073112278664573096,
+              0.01182405857318302,
+              0.01972874112258752,
+              0.03127393044731452,
+              0.05115728692458759,
+              0.08035865142281683,
+              0.09671741073503165,
+              0.1161767637486271,
+              0.10840068570149694,
+              0.09094154561732067,
+              0.08664102839663877,
+              0.08267767023492044,
+              0.03648335338440376
+            ]
+          }
+        }
+      },
+      "verdict": "the gate residual is not distinguishable from the reference's own panel dependence"
     }
   },
   "gates": {
@@ -3917,12 +4140,490 @@
         "added_mass_inf_cross_check_worst": 0.32603773274741,
         "added_mass_inf_cross_check_note": "C3 lets one free parameter (A_inf) absorb a constant offset, so a closure that only shifts A would still pass. The independent A_inf + c/omega^2 tail fit is therefore reported next to it: a closure A_inf far from the tail fit means the residual is being absorbed, not explained."
       }
+    },
+    "C5b": {
+      "id": "C5b",
+      "title": "Cummins free decay vs frequency-domain damping ratio, all decidable restoring modes",
+      "threshold": "|zeta_decay - zeta_fd|/zeta_fd <= 5% on every scored mode (heave C5 is the case criterion; modes whose residual is not decided by the single-frequency estimator are reported, not scored)",
+      "tolerance": 0.05,
+      "passed": true,
+      "values": {
+        "modes": {
+          "heave": {
+            "dof": 2,
+            "grade": "within_bar",
+            "scored": true,
+            "passed": true,
+            "relative_error": 0.03959932792719662,
+            "zeta_decay": 0.1346015530611902,
+            "zeta_frequency_domain": 0.12947445178669487,
+            "natural_frequency_rad_s": 7.789789478462638,
+            "status": "decided"
+          },
+          "roll": {
+            "dof": 3,
+            "grade": "undecidable_estimator",
+            "scored": false,
+            "passed": null,
+            "relative_error": 0.23888698673836847,
+            "zeta_decay": 0.09012447943425081,
+            "zeta_frequency_domain": 0.07274632827609444,
+            "natural_frequency_rad_s": 5.809262573178575,
+            "status": "decided"
+          },
+          "pitch": {
+            "dof": 4,
+            "grade": "within_bar",
+            "scored": true,
+            "passed": true,
+            "relative_error": 0.048818399699017336,
+            "zeta_decay": 0.098389930575596,
+            "zeta_frequency_domain": 0.09381026362984408,
+            "natural_frequency_rad_s": 8.105032535633002,
+            "status": "decided"
+          }
+        },
+        "scored_modes": [
+          "heave",
+          "pitch"
+        ],
+        "unscored_modes": [
+          "roll"
+        ],
+        "failed_modes": [],
+        "restoring_modes": [
+          "heave",
+          "roll",
+          "pitch"
+        ],
+        "estimator_note": "unscored = the residual moves by more than the bar across defensible windows or a closed band top (see dof_decay_audit residual_probes), so the single-frequency estimator cannot separate decay from frequency-domain impedance at this bar"
+      }
+    },
+    "C10": {
+      "id": "C10",
+      "gate": "C10",
+      "title": "external code anchor: capytaine, solved on the identical panels, must reproduce the 6x6 radiation matrices",
+      "criterion": "max_{cells,omega} |X_capytaine - X_tensorbem| / max_omega |X_tensorbem| <= 10% (case criterion), null cells excluded (amplitude < 1% of the largest diagonal amplitude)",
+      "tolerance": 0.1,
+      "status": "passed",
+      "passed": true,
+      "values": {
+        "reference": "/srv/tensor/agent/work/m21960/benchmarks/verified/casepool_bem_cummins_wigley/capytaine_ref.json",
+        "foreign_code": "capytaine",
+        "foreign_code_version": "3.1.dev0",
+        "level": "medium",
+        "variant": "lid",
+        "panel_count": 480,
+        "identical_panels": true,
+        "worst": {
+          "dof_from": "heave",
+          "dof_to": "heave",
+          "i": 2,
+          "j": 2,
+          "relative": 0.060927557074455255,
+          "absolute": 19.77847337224425,
+          "scale": 324.6227868298474
+        },
+        "worst_frequency_rad_s": 10.832469247665,
+        "worst_frequency_deviation": 0.060927557074455255,
+        "scored_cells": 20,
+        "cells_within_target": 16,
+        "target_fraction": 0.03,
+        "added_mass_worst": {
+          "dof_from": "roll",
+          "dof_to": "roll",
+          "i": 3,
+          "j": 3,
+          "relative": 0.0489202017786533,
+          "absolute": 0.028323285344596494,
+          "scale": 0.5789691030455965
+        },
+        "damping_worst": {
+          "dof_from": "heave",
+          "dof_to": "heave",
+          "i": 2,
+          "j": 2,
+          "relative": 0.060927557074455255,
+          "absolute": 19.77847337224425,
+          "scale": 324.6227868298474
+        },
+        "capytaine_symmetry_error": {
+          "added_mass": 0.08212013698117548,
+          "damping": 0.32090488124569916
+        },
+        "null_cells": [
+          {
+            "quantity": "added_mass",
+            "dof_from": "sway",
+            "dof_to": "surge",
+            "absolute": 0.00020123550196515978,
+            "amplitude": 0.00020123550196515978
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "heave",
+            "dof_to": "surge",
+            "absolute": 0.010078911341510973,
+            "amplitude": 0.0037459252575109733
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "roll",
+            "dof_to": "surge",
+            "absolute": 3.1103116452531115e-06,
+            "amplitude": 3.1103116452531115e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "yaw",
+            "dof_to": "surge",
+            "absolute": 5.704921210642823e-07,
+            "amplitude": 5.704921210642823e-07
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "surge",
+            "dof_to": "sway",
+            "absolute": 1.174463508512211e-06,
+            "amplitude": 1.174463508512211e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "heave",
+            "dof_to": "sway",
+            "absolute": 5.322105633635583e-05,
+            "amplitude": 5.322105633635583e-05
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "pitch",
+            "dof_to": "sway",
+            "absolute": 1.4321765897076257e-05,
+            "amplitude": 1.4321765897076257e-05
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "yaw",
+            "dof_to": "sway",
+            "absolute": 0.34472970048921275,
+            "amplitude": 0.23308177208274297
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "surge",
+            "dof_to": "heave",
+            "absolute": 0.005253545654256762,
+            "amplitude": 0.004540045358256761
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "sway",
+            "dof_to": "heave",
+            "absolute": 0.0003934404266898854,
+            "amplitude": 0.0003934404266898854
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "roll",
+            "dof_to": "heave",
+            "absolute": 9.780250659780509e-06,
+            "amplitude": 9.780250659780509e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "pitch",
+            "dof_to": "heave",
+            "absolute": 0.03874409292348437,
+            "amplitude": 0.031012358385484374
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "yaw",
+            "dof_to": "heave",
+            "absolute": 1.932817131199436e-05,
+            "amplitude": 1.932817131199436e-05
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "surge",
+            "dof_to": "roll",
+            "absolute": 1.118789210179422e-07,
+            "amplitude": 1.118789210179422e-07
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "heave",
+            "dof_to": "roll",
+            "absolute": 2.441956023857964e-06,
+            "amplitude": 2.441956023857964e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "pitch",
+            "dof_to": "roll",
+            "absolute": 8.812718981980332e-07,
+            "amplitude": 8.812718981980332e-07
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "yaw",
+            "dof_to": "roll",
+            "absolute": 0.008285165923357379,
+            "amplitude": 0.007422400177999506
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "sway",
+            "dof_to": "pitch",
+            "absolute": 0.0008243293080975313,
+            "amplitude": 0.0008243293080975313
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "heave",
+            "dof_to": "pitch",
+            "absolute": 0.04433921600795901,
+            "amplitude": 0.020024041426959006
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "roll",
+            "dof_to": "pitch",
+            "absolute": 1.4670141466400438e-05,
+            "amplitude": 1.4670141466400438e-05
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "yaw",
+            "dof_to": "pitch",
+            "absolute": 4.832321509221596e-06,
+            "amplitude": 4.832321509221596e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "surge",
+            "dof_to": "yaw",
+            "absolute": 4.064619628672203e-08,
+            "amplitude": 4.064619628672203e-08
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "sway",
+            "dof_to": "yaw",
+            "absolute": 0.31337035413436465,
+            "amplitude": 0.23407488527936465
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "heave",
+            "dof_to": "yaw",
+            "absolute": 3.2639541554481235e-06,
+            "amplitude": 3.2639541554481235e-06
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "roll",
+            "dof_to": "yaw",
+            "absolute": 0.0071773382388792654,
+            "amplitude": 0.0071718085378792654
+          },
+          {
+            "quantity": "added_mass",
+            "dof_from": "pitch",
+            "dof_to": "yaw",
+            "absolute": 9.838618916468043e-08,
+            "amplitude": 9.838618916468043e-08
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "sway",
+            "dof_to": "surge",
+            "absolute": 0.0003498546931555227,
+            "amplitude": 0.0003498546931555227
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "heave",
+            "dof_to": "surge",
+            "absolute": 0.09603439955783319,
+            "amplitude": 0.06420904952436739
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "roll",
+            "dof_to": "surge",
+            "absolute": 2.0604166548351663e-05,
+            "amplitude": 2.0604166548351663e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "yaw",
+            "dof_to": "surge",
+            "absolute": 5.5535546401348716e-05,
+            "amplitude": 5.5535546401348716e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "surge",
+            "dof_to": "sway",
+            "absolute": 5.259649146115927e-05,
+            "amplitude": 5.259649146115927e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "heave",
+            "dof_to": "sway",
+            "absolute": 0.000653049582977408,
+            "amplitude": 0.000653049582977408
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "pitch",
+            "dof_to": "sway",
+            "absolute": 0.0001987414320599812,
+            "amplitude": 0.0001987414320599812
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "yaw",
+            "dof_to": "sway",
+            "absolute": 1.679118902632521,
+            "amplitude": 1.2209203194230882
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "surge",
+            "dof_to": "heave",
+            "absolute": 0.11057828284548207,
+            "amplitude": 0.06361284231648207
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "sway",
+            "dof_to": "heave",
+            "absolute": 0.002755463367656419,
+            "amplitude": 0.002755463367656419
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "roll",
+            "dof_to": "heave",
+            "absolute": 0.00011130329371703289,
+            "amplitude": 0.00011130329371703289
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "pitch",
+            "dof_to": "heave",
+            "absolute": 0.3775708858424208,
+            "amplitude": 0.21357662673642083
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "yaw",
+            "dof_to": "heave",
+            "absolute": 0.00011141516068830948,
+            "amplitude": 0.00011141516068830948
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "surge",
+            "dof_to": "roll",
+            "absolute": 1.7043743124525042e-06,
+            "amplitude": 1.7043743124525042e-06
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "heave",
+            "dof_to": "roll",
+            "absolute": 2.7822205094777318e-05,
+            "amplitude": 2.7822205094777318e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "pitch",
+            "dof_to": "roll",
+            "absolute": 2.7819461216843085e-06,
+            "amplitude": 2.7819461216843085e-06
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "yaw",
+            "dof_to": "roll",
+            "absolute": 0.08678636433899828,
+            "amplitude": 0.06858172473720749
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "sway",
+            "dof_to": "pitch",
+            "absolute": 0.0023215756515294035,
+            "amplitude": 0.0023215756515294035
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "heave",
+            "dof_to": "pitch",
+            "absolute": 0.38201469755033796,
+            "amplitude": 0.2401012714447312
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "roll",
+            "dof_to": "pitch",
+            "absolute": 2.301589667041539e-05,
+            "amplitude": 2.301589667041539e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "yaw",
+            "dof_to": "pitch",
+            "absolute": 0.0002255702408975588,
+            "amplitude": 0.0002255702408975588
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "surge",
+            "dof_to": "yaw",
+            "absolute": 3.24447901066742e-07,
+            "amplitude": 3.24447901066742e-07
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "sway",
+            "dof_to": "yaw",
+            "absolute": 1.5109638090728004,
+            "amplitude": 1.2393878723819354
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "heave",
+            "dof_to": "yaw",
+            "absolute": 2.572642138367374e-05,
+            "amplitude": 2.572642138367374e-05
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "roll",
+            "dof_to": "yaw",
+            "absolute": 0.03765011059982562,
+            "amplitude": 0.015098606230825623
+          },
+          {
+            "quantity": "damping",
+            "dof_from": "pitch",
+            "dof_to": "yaw",
+            "absolute": 1.7649063940993167e-06,
+            "amplitude": 1.7649063940993167e-06
+          }
+        ]
+      }
     }
   },
   "verdict": {
     "passed": true,
-    "gates_passed": 13,
-    "gates_total": 13,
+    "gates_passed": 15,
+    "gates_total": 15,
     "passed_list": [
       "C1",
       "C0",
@@ -3936,10 +4637,13 @@
       "C4",
       "C5",
       "C6a",
-      "C6b"
+      "C6b",
+      "C5b",
+      "C10"
     ],
     "failed_list": [],
     "case_tolerance": 0.1,
     "criterion_source": "tensor_case_pool id=145 (tol_policy <10%)"
-  }
+  },
+  "figure": "fig_kk_closure.png"
 }

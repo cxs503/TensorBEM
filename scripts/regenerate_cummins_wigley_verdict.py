@@ -8,6 +8,16 @@ It fixes two known issues in the stale case_result.json:
    C3a_coarse (anchored KK closure on coarse mesh)
 2. Stale settings.dt: was 0.01, should be 0.002 (matching the actual gate evaluation)
 
+m21960 adds the two gates that existed in code but were missing from the verdict:
+
+3. ``C10`` -- the external-code anchor (capytaine on the identical panels) was a
+   standalone module; the published verdict therefore rested only on
+   self-consistency statements.  It is replayed here into the verdict.
+4. ``C5b`` -- the free-decay gate over every *decidable* restoring mode (heave and
+   pitch scored, roll reported as estimator-undecidable) instead of heave only.
+   The gate's noise floor (the reference code's own panel dependence) is written
+   beside it, because a residual below that floor cannot be read as a defect.
+
 Usage:
     PYTHONPATH=src python3 scripts/regenerate_cummins_wigley_verdict.py
 """
@@ -47,12 +57,14 @@ from tensorbem.benchmarks.case_bem_cummins_wigley import (
     negative_control_gate,
     anchor_for_sweep,
     added_mass_inf_gate,
+    decay_modes_gate,
     case_verdict,
 )
+from tensorbem.benchmarks import case_bem_cummins_wigley_xval as xval
 
 ARTIFACT_DIR = Path("benchmarks/verified/casepool_bem_cummins_wigley")
 OUTPUT = ARTIFACT_DIR / "case_result.json"
-MISSION = "m21859"
+MISSION = "m21960"
 DOF_FREE_DECAY = 2  # heave
 
 
@@ -156,6 +168,14 @@ def main() -> None:
             for k in range(len(gates["C3"]["values"]["per_dof"][0]["decidable_mask"]))
         ]
         gates["C6b"] = kk_gate(sweep_medium, corrupt=True, window=decidable_window)
+        gates["C5b"] = decay_modes_gate(sweep_medium)
+        reference = xval.load_reference()
+        gates["C10"] = xval.external_anchor_gate(sweep_medium, reference)
+        results["external_anchor"] = {
+            "gate": "C10",
+            "reference": str(xval.REFERENCE_PATH),
+            "noise_floor": xval.reference_noise_floor(sweep_medium, reference),
+        }
 
     results["gates"] = gates
     results["verdict"] = case_verdict(gates)
