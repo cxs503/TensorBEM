@@ -534,7 +534,7 @@ def solve_radiation_3d_symmetric(
             continue
         ops = operators_for_parity(blk, s)
         q_ext = (-n_modes[:, cols]).astype(np.complex128)
-        sol, rel_res = _solve_system(ops, q_ext)
+        sol, rel_res, _method, _stationarity = _solve_system(ops, q_ext)
         potentials[:, cols] = sol
         worst_residual = max(worst_residual, rel_res)
         worst_condition = max(worst_condition, ops.condition_number)
@@ -617,7 +617,7 @@ def solve_diffraction_3d_symmetric(
         # The scattered problem has q_e = -d(phi_S)/dn = +d(phi_I)/dn, matching
         # the convention of :func:`tensorbem.free_surface_solver3d.solve_diffraction_3d`.
         q_ext = (0.5 * (q_half + s * q_mirror))[:, None].astype(np.complex128)
-        sol, rel_res = _solve_system(ops, q_ext)
+        sol, rel_res, _method, _stationarity = _solve_system(ops, q_ext)
         phi_s = sol[:, 0]
         scattered += phi_s
         phi_inc_s = 0.5 * (phi_inc_half + s * phi_inc_mirror)
