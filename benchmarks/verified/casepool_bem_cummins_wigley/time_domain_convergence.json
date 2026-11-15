@@ -1,0 +1,287 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "gate": {
+    "id": "C13",
+    "title": "time-domain discretisation budget: dt 0.002 -> 0.003 s and memory window 25 -> 50 s (heave)",
+    "threshold": "|zeta(refined) - zeta(committed)|/zeta(committed) <= 2% on both legs (step and memory window)",
+    "passed": true,
+    "values": {
+      "dof": 2,
+      "dof_name": "heave",
+      "criteria": {
+        "dt_coarse": 0.003,
+        "tau_max_factor": 2.0,
+        "zeta_bar": 0.02,
+        "weight_probe_factor": 4.0
+      },
+      "bar": 0.02,
+      "baseline": {
+        "dt": 0.002,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.1346015530611902,
+        "damped_period": 0.8140000000000001,
+        "n_peaks": 5,
+        "added_mass_inf": 50.93021596754935,
+        "kernel_span": 25.0,
+        "kernel_truncation": {
+          "tau_max": 25.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.58252264136751,
+          "high_frequency_band_bound": 588.8127876456547,
+          "low_frequency_band_bound": 0.004477352624638093,
+          "relative_high_frequency_bound": 0.4269361253346029,
+          "relative_low_frequency_bound": 3.2464369345016026e-06
+        }
+      },
+      "coarse_step": {
+        "dt": 0.003,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.13501935011802862,
+        "damped_period": 0.8145000000000001,
+        "n_peaks": 5,
+        "added_mass_inf": 50.93021596754935,
+        "kernel_span": 24.999,
+        "kernel_truncation": {
+          "tau_max": 24.999,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.58252264136751,
+          "high_frequency_band_bound": 588.8127876456547,
+          "low_frequency_band_bound": 0.004477352624638093,
+          "relative_high_frequency_bound": 0.4269361253346029,
+          "relative_low_frequency_bound": 3.2464369345016026e-06
+        },
+        "zeta_relative_shift": 0.0031039542065943978,
+        "period_relative_shift": 0.000614250614250683
+      },
+      "long_window": {
+        "dt": 0.002,
+        "tau_max": 50.0,
+        "duration": 40.0,
+        "zeta": 0.1346015530611902,
+        "damped_period": 0.8140000000000001,
+        "n_peaks": 5,
+        "added_mass_inf": 50.93021596754935,
+        "kernel_span": 50.0,
+        "kernel_truncation": {
+          "tau_max": 50.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.58252264136751,
+          "high_frequency_band_bound": 588.8127876456547,
+          "low_frequency_band_bound": 0.004477352624638093,
+          "relative_high_frequency_bound": 0.4269361253346029,
+          "relative_low_frequency_bound": 3.2464369345016026e-06
+        },
+        "zeta_relative_shift": 0.0,
+        "period_relative_shift": 0.0
+      },
+      "worst_shift": 0.0031039542065943978,
+      "kernel_weight_beyond_tau_max": {
+        "dof": "heave",
+        "tau_max": 25.0,
+        "probe_span": 100.0,
+        "weight_kept": 555.7926109091004,
+        "weight_total": 599.1075563180401,
+        "fraction_beyond": 0.07229911382714338
+      },
+      "kernel_weight_note": "reported, not scored: the share of integral |K| beyond the committed memory window is a property of the hull's kernel tail. It is only allowed to be large if the long-window leg above stays inside the bar -- otherwise the truncation is eating the verdict",
+      "amplitude_floor": 0.01
+    }
+  },
+  "coarse_mesh": {
+    "id": "C13_coarse",
+    "title": "time-domain discretisation budget: dt 0.002 -> 0.003 s and memory window 25 -> 50 s (heave)",
+    "threshold": "|zeta(refined) - zeta(committed)|/zeta(committed) <= 2% on both legs (step and memory window)",
+    "passed": true,
+    "values": {
+      "dof": 2,
+      "dof_name": "heave",
+      "criteria": {
+        "dt_coarse": 0.003,
+        "tau_max_factor": 2.0,
+        "zeta_bar": 0.02,
+        "weight_probe_factor": 4.0
+      },
+      "bar": 0.02,
+      "baseline": {
+        "dt": 0.002,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.13706924397686368,
+        "damped_period": 0.8155000000000001,
+        "n_peaks": 5,
+        "added_mass_inf": 50.377129848038464,
+        "kernel_span": 25.0,
+        "kernel_truncation": {
+          "tau_max": 25.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.428968091280982,
+          "high_frequency_band_bound": 592.8816003546056,
+          "low_frequency_band_bound": 0.0044382502795492565,
+          "relative_high_frequency_bound": 0.42720609995880904,
+          "relative_low_frequency_bound": 3.1980206358795685e-06
+        }
+      },
+      "coarse_step": {
+        "dt": 0.003,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.13749220993140077,
+        "damped_period": 0.8152499999999999,
+        "n_peaks": 5,
+        "added_mass_inf": 50.377129848038464,
+        "kernel_span": 24.999,
+        "kernel_truncation": {
+          "tau_max": 24.999,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.428968091280982,
+          "high_frequency_band_bound": 592.8816003546056,
+          "low_frequency_band_bound": 0.0044382502795492565,
+          "relative_high_frequency_bound": 0.42720609995880904,
+          "relative_low_frequency_bound": 3.1980206358795685e-06
+        },
+        "zeta_relative_shift": 0.0030857830849966555,
+        "period_relative_shift": 0.0003065603923975407
+      },
+      "long_window": {
+        "dt": 0.002,
+        "tau_max": 50.0,
+        "duration": 40.0,
+        "zeta": 0.13706924397686368,
+        "damped_period": 0.8155000000000001,
+        "n_peaks": 5,
+        "added_mass_inf": 50.377129848038464,
+        "kernel_span": 50.0,
+        "kernel_truncation": {
+          "tau_max": 50.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 17.428968091280982,
+          "high_frequency_band_bound": 592.8816003546056,
+          "low_frequency_band_bound": 0.0044382502795492565,
+          "relative_high_frequency_bound": 0.42720609995880904,
+          "relative_low_frequency_bound": 3.1980206358795685e-06
+        },
+        "zeta_relative_shift": 0.0,
+        "period_relative_shift": 0.0
+      },
+      "worst_shift": 0.0030857830849966555,
+      "kernel_weight_beyond_tau_max": {
+        "dof": "heave",
+        "tau_max": 25.0,
+        "probe_span": 100.0,
+        "weight_kept": 558.0092296300364,
+        "weight_total": 601.6217573985023,
+        "fraction_beyond": 0.07249160661518061
+      },
+      "kernel_weight_note": "reported, not scored: the share of integral |K| beyond the committed memory window is a property of the hull's kernel tail. It is only allowed to be large if the long-window leg above stays inside the bar -- otherwise the truncation is eating the verdict",
+      "amplitude_floor": 0.01
+    }
+  },
+  "provenance": {
+    "artifact": "benchmarks/verified/casepool_bem_cummins_wigley/sweep_medium.npz",
+    "generated_utc": "2026-11-15T23:04:56Z",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "elapsed_s": 11.6,
+    "repro": "PYTHONPATH=src python -m tensorbem.benchmarks.case_bem_cummins_wigley --out <dir>  # gate C13"
+  },
+  "roll_mode": {
+    "id": "C13_roll",
+    "title": "time-domain discretisation budget: dt 0.002 -> 0.003 s and memory window 25 -> 50 s (roll)",
+    "threshold": "|zeta(refined) - zeta(committed)|/zeta(committed) <= 2% on both legs (step and memory window)",
+    "passed": true,
+    "values": {
+      "dof": 3,
+      "dof_name": "roll",
+      "criteria": {
+        "dt_coarse": 0.003,
+        "tau_max_factor": 2.0,
+        "zeta_bar": 0.02,
+        "weight_probe_factor": 4.0
+      },
+      "bar": 0.02,
+      "baseline": {
+        "dt": 0.002,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.09012447943425081,
+        "damped_period": 1.086,
+        "n_peaks": 8,
+        "added_mass_inf": 0.3849173539682502,
+        "kernel_span": 25.0,
+        "kernel_truncation": {
+          "tau_max": 25.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 3.4815695029052965e-05,
+          "high_frequency_band_bound": 4.4800140258709185,
+          "low_frequency_band_bound": 8.865743937685934e-09,
+          "relative_high_frequency_bound": 0.7880851371725989,
+          "relative_low_frequency_bound": 1.5595846323070574e-09
+        }
+      },
+      "coarse_step": {
+        "dt": 0.003,
+        "tau_max": 25.0,
+        "duration": 40.0,
+        "zeta": 0.09030978642709103,
+        "damped_period": 1.0864285714285713,
+        "n_peaks": 8,
+        "added_mass_inf": 0.3849173539682502,
+        "kernel_span": 24.999,
+        "kernel_truncation": {
+          "tau_max": 24.999,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 3.4815695029052965e-05,
+          "high_frequency_band_bound": 4.4800140258709185,
+          "low_frequency_band_bound": 8.865743937685934e-09,
+          "relative_high_frequency_bound": 0.7880851371725989,
+          "relative_low_frequency_bound": 1.5595846323070574e-09
+        },
+        "zeta_relative_shift": 0.0020561227538119795,
+        "period_relative_shift": 0.00039463299131788467
+      },
+      "long_window": {
+        "dt": 0.002,
+        "tau_max": 50.0,
+        "duration": 40.0,
+        "zeta": 0.09012447943425081,
+        "damped_period": 1.086,
+        "n_peaks": 8,
+        "added_mass_inf": 0.3849173539682502,
+        "kernel_span": 50.0,
+        "kernel_truncation": {
+          "tau_max": 50.0,
+          "omega_max": 12.0,
+          "low_frequency_model": "cubic",
+          "damping_scale": 3.4815695029052965e-05,
+          "high_frequency_band_bound": 4.4800140258709185,
+          "low_frequency_band_bound": 8.865743937685934e-09,
+          "relative_high_frequency_bound": 0.7880851371725989,
+          "relative_low_frequency_bound": 1.5595846323070574e-09
+        },
+        "zeta_relative_shift": 0.0,
+        "period_relative_shift": 0.0
+      },
+      "worst_shift": 0.0020561227538119795,
+      "kernel_weight_beyond_tau_max": {
+        "dof": "roll",
+        "tau_max": 25.0,
+        "probe_span": 100.0,
+        "weight_kept": 2.9523814582320975,
+        "weight_total": 3.2820491305480513,
+        "fraction_beyond": 0.10044568475454363
+      },
+      "kernel_weight_note": "reported, not scored: the share of integral |K| beyond the committed memory window is a property of the hull's kernel tail. It is only allowed to be large if the long-window leg above stays inside the bar -- otherwise the truncation is eating the verdict",
+      "amplitude_floor": 0.01
+    }
+  }
+}

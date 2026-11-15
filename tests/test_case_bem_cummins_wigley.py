@@ -1129,3 +1129,78 @@ def test_probe_renders_the_cost_of_the_certified_sweep() -> None:
     )
     assert "CPU-hours" in text
     assert "not_run" in text
+
+
+# ---------------------------------------------------------------------------
+# C13: the time-domain route is quoted at one (dt, tau_max); these tests pin the
+# discretisation budget and make sure the gate can actually fail
+# ---------------------------------------------------------------------------
+
+
+def _budget_sweep(label: str = "medium") -> "case.Sweep":
+    if not (ARTIFACT_DIR / f"sweep_{label}.npz").exists():
+        pytest.skip("committed sweep artifact not available")
+    return case.load_sweep(ARTIFACT_DIR / f"sweep_{label}.npz")
+
+
+def test_time_domain_budget_passes_on_the_committed_sweep() -> None:
+    sweep = _budget_sweep()
+    gate = case.time_domain_convergence_gate(sweep, dt=case.DT, tau_max=6.0, duration=10.0)
+    values = gate["values"]
+    assert gate["passed"] is True
+    # both legs must be measured, not assumed
+    assert values["coarse_step"]["dt"] == pytest.approx(case.TIME_DOMAIN_CONVERGENCE["dt_coarse"])
+    assert values["long_window"]["tau_max"] == pytest.approx(12.0)
+    assert values["worst_shift"] <= gate["values"]["bar"]
+    # the shorter probe still reproduces the committed (dt=0.002) decay rate
+    assert values["baseline"]["dt"] == pytest.approx(case.DT)
+
+
+def test_time_domain_budget_fails_a_step_that_is_too_coarse(monkeypatch) -> None:
+    sweep = _budget_sweep()
+    monkeypatch.setitem(case.TIME_DOMAIN_CONVERGENCE, "dt_coarse", 0.05)
+    gate = case.time_domain_convergence_gate(sweep, dt=case.DT, tau_max=6.0, duration=10.0)
+    assert gate["passed"] is False
+    assert gate["values"]["coarse_step"]["zeta_relative_shift"] > case.TIME_DOMAIN_CONVERGENCE["zeta_bar"]
+
+
+def test_time_domain_budget_is_a_real_physics_change_not_a_rename() -> None:
+    """The long-window leg must use a longer kernel, not the same one relabelled."""
+    sweep = _budget_sweep()
+    gate = case.time_domain_convergence_gate(sweep, dt=case.DT, tau_max=6.0, duration=10.0)
+    baseline = gate["values"]["baseline"]
+    longer = gate["values"]["long_window"]
+    assert longer["kernel_span"] == pytest.approx(2.0 * baseline["kernel_span"])
+    assert longer["tau_max"] == pytest.approx(2.0 * baseline["tau_max"])
+
+
+def test_kernel_weight_beyond_tau_max_shrinks_with_the_window() -> None:
+    sweep = _budget_sweep()
+    short = case.kernel_weight_beyond(sweep, 2, 5.0)
+    long = case.kernel_weight_beyond(sweep, 2, 20.0)
+    assert 0.0 <= long["fraction_beyond"] < short["fraction_beyond"] < 1.0
+    # the weight kept inside the longer window cannot be smaller than the short one
+    assert long["weight_kept"] > short["weight_kept"] > 0.0
+    assert long["probe_span"] > short["probe_span"]
+
+
+def test_c13_is_voided_when_the_sweep_fails_c0() -> None:
+    """A gate that reads A/B has no input if the linear solve did not converge."""
+    assert "C13" in case.C0_DEPENDENT_GATES
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "sweep_medium.npz").exists(),
+    reason="production sweep artifact not committed",
+)
+def test_replay_can_attach_the_time_domain_budget() -> None:
+    replay = case.gates_from_artifact(
+        ARTIFACT_DIR / "sweep_medium.npz",
+        include_anchor=False,
+        include_decay_modes=False,
+        include_time_convergence=True,
+        dof_free_decay=2,
+    )
+    assert "C13" in replay["gates"]
+    assert replay["gates"]["C13"]["passed"] is True
+    assert replay["gates"]["C13"]["values"]["dof_name"] == "heave"
