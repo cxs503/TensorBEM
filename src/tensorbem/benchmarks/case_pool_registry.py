@@ -336,6 +336,8 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_rigid_body_mass/adversarial_audit.json",
             "docs/case_bem_rigid_body_mass/invariant_battery.json",
             "docs/case_bem_rigid_body_mass/invariant_battery_verdict.json",
+            "docs/case_bem_rigid_body_mass/inhomogeneous_mass/results.json",
+            "docs/case_bem_rigid_body_mass/inhomogeneous_mass/verdict.json",
         ),
         doc="docs/case_bem_rigid_body_mass/CASE.md",
         figures=(
@@ -344,12 +346,24 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_rigid_body_mass/fig_external_route.png",
             "docs/case_bem_rigid_body_mass/fig_invariant_detection.png",
             "docs/case_bem_rigid_body_mass/fig_quadrature_conditioning.png",
+            "docs/case_bem_rigid_body_mass/inhomogeneous_mass/fig_inhomogeneous_mass.png",
         ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.casepool_bem_rigid_body_mass "
             "--outdir docs/case_bem_rigid_body_mass"
         ),
-        notes="round 3 (invariants): docs/case_bem_rigid_body_mass/INVARIANT_BATTERY.md "
+        notes="round 6 (inhomogeneous mass): docs/case_bem_rigid_body_mass/inhomogeneous_mass/"
+        "INHOMOGENEOUS_MASS.md and src/tensorbem/benchmarks/rigid_body_mass_inhomogeneous.py "
+        "close the documented limit of every earlier round ('the mesh route assumes a homogeneous "
+        "hull'): mesh_mass_properties / wetted_hull_mass_properties / "
+        "hydrostatic.mass_matrix_from_wetted_hull accept a dimensionless density field "
+        "rho(x) = density * f(x). An affine field is integrated exactly (degree-3 exact "
+        "tetrahedron rule, round-off against the analytic box: 1.8e-11 entry-wise); a bilinear "
+        "field is second order (fitted order 2.00, 3.3e-4 block-normalised at 4 cells/edge); a "
+        "linear field on a curved hull converges at order 1.98 and lands at 3.6e-3 < 3%. "
+        "A field-ignoring control is shown to fail where the field moves the CG or creates a "
+        "product of inertia, and non-physical fields (negative/zero/NaN/wrong length) are "
+        "refused. Round 3 (invariants): docs/case_bem_rigid_body_mass/INVARIANT_BATTERY.md "
         "and src/tensorbem/benchmarks/rigid_body_mass_invariant_battery.py quantify which "
         "rigid-body invariants (symmetry / positive definiteness / kinetic energy / momentum "
         "definition / reference-point congruence / scale covariance) are load-bearing against "
