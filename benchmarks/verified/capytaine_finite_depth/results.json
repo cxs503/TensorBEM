@@ -54,8 +54,18 @@
    24,
    48
   ],
-  "generated_utc": "2026-11-14T07:49:35+00:00",
-  "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it"
+  "generated_utc": "2026-11-15T12:55:54+00:00",
+  "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it",
+  "shards": [
+   "/tmp/cpref/shard0.json",
+   "/tmp/cpref/shard1.json",
+   "/tmp/cpref/shard2.json",
+   "/tmp/cpref/shard3.json",
+   "/tmp/cpref/shard4.json",
+   "/tmp/cpref/shard5.json"
+  ],
+  "sharded": true,
+  "merged_utc": "2026-11-15T13:04:54+00:00"
  },
  "tensor_environment": {
   "python": "3.11.6",
@@ -98,7 +108,7 @@
     "quantities": {
      "surge.added_mass": {
       "tensorbem": 2276.483577841137,
-      "capytaine": 2461.5931488287247,
+      "capytaine": 2461.590618763296,
       "tensorbem_panels": [
        20.0,
        80.0
@@ -106,14 +116,14 @@
       "tensorbem_order": null,
       "tensorbem_extrapolated": false,
       "tensorbem_shift": 0.0,
-      "capytaine_order": 0.24122610356986013,
-      "capytaine_shift": 0.04261527291183306,
-      "relative": -0.07519909253715078,
-      "relative_finest_levels": -0.11299888703908005
+      "capytaine_order": 0.24122460741737867,
+      "capytaine_shift": 0.042616296141394436,
+      "relative": -0.07519814201077703,
+      "relative_finest_levels": -0.1129988458728196
      },
      "surge.damping": {
       "tensorbem": 616.0365022862962,
-      "capytaine": 797.4058033003466,
+      "capytaine": 797.4057238410546,
       "tensorbem_panels": [
        20.0,
        80.0
@@ -123,12 +133,12 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.22744918617771434,
-      "relative_finest_levels": -0.22744918617771434
+      "relative": -0.22744910919514588,
+      "relative_finest_levels": -0.22744910919514588
      },
      "heave.added_mass": {
       "tensorbem": 2617.3245384173943,
-      "capytaine": 2999.9167870380857,
+      "capytaine": 2999.9145494265917,
       "tensorbem_panels": [
        20.0,
        80.0
@@ -138,12 +148,12 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.12753428704215394,
-      "relative_finest_levels": -0.12753428704215394
+      "relative": -0.12753363627718206,
+      "relative_finest_levels": -0.12753363627718206
      },
      "heave.damping": {
       "tensorbem": 564.2107100505647,
-      "capytaine": 740.8990345979539,
+      "capytaine": 740.8984143025195,
       "tensorbem_panels": [
        20.0,
        80.0
@@ -153,18 +163,18 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.23847827611662162,
-      "relative_finest_levels": -0.23847827611662162
+      "relative": -0.23847763855492707,
+      "relative_finest_levels": -0.23847763855492707
      }
     },
     "negative_control_gap_added_mass": 0.07010306762190792
    }
   ],
   "worst_relative": {
-   "surge.added_mass": 0.07519909253715078,
-   "surge.damping": 0.22744918617771434,
-   "heave.added_mass": 0.12753428704215394,
-   "heave.damping": 0.23847827611662162
+   "surge.added_mass": 0.07519814201077703,
+   "surge.damping": 0.22744910919514588,
+   "heave.added_mass": 0.12753363627718206,
+   "heave.damping": 0.23847763855492707
   },
   "failures": [
    "h_over_a=3.0|ka=0.50 surge.added_mass: -7.52% > 3%",
@@ -183,13 +193,13 @@
  "gates": [
   {
    "gate": "added_mass_agreement",
-   "worst": 0.12753428704215394,
+   "worst": 0.12753363627718206,
    "limit": 0.03,
    "passed": false
   },
   {
    "gate": "damping_agreement",
-   "worst": 0.23847827611662162,
+   "worst": 0.23847763855492707,
    "limit": 0.05,
    "passed": false
   },
@@ -201,7 +211,7 @@
   },
   {
    "gate": "reference_ladder_in_asymptotic_range",
-   "min_order": 0.24122610356986013,
+   "min_order": 0.24122460741737867,
    "limit": 0.3,
    "passed": false
   },
@@ -256,8 +266,18 @@
     24,
     48
    ],
-   "generated_utc": "2026-11-14T07:49:35+00:00",
-   "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it"
+   "generated_utc": "2026-11-15T12:55:54+00:00",
+   "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it",
+   "shards": [
+    "/tmp/cpref/shard0.json",
+    "/tmp/cpref/shard1.json",
+    "/tmp/cpref/shard2.json",
+    "/tmp/cpref/shard3.json",
+    "/tmp/cpref/shard4.json",
+    "/tmp/cpref/shard5.json"
+   ],
+   "sharded": true,
+   "merged_utc": "2026-11-15T13:04:54+00:00"
   },
   "plan": {
    "depth_ratios": [
@@ -290,14 +310,7 @@
    "legacy_resolution": [
     24,
     48
-   ],
-   "cells_executed": [
-    [
-     3.0,
-     0.5
-    ]
-   ],
-   "cells_planned": 12
+   ]
   },
   "cells": [
    {
@@ -316,15 +329,15 @@
        24
       ],
       "panels": 288,
-      "seconds": 0.361,
+      "seconds": 0.355,
       "values": {
        "surge": {
-        "added_mass": 2666.3539028713376,
-        "damping": 822.9105830899832
+        "added_mass": 2666.3552294177393,
+        "damping": 822.9113776037838
        },
        "heave": {
-        "added_mass": 3060.621357105338,
-        "damping": 752.7126043379607
+        "added_mass": 3060.6415461969837,
+        "damping": 752.7182551334539
        }
       }
      },
@@ -334,15 +347,15 @@
        48
       ],
       "panels": 1152,
-      "seconds": 1.437,
+      "seconds": 2.158,
       "values": {
        "surge": {
-        "added_mass": 2608.1527027140874,
-        "damping": 811.8250805550074
+        "added_mass": 2608.1532370434247,
+        "damping": 811.8253950971952
        },
        "heave": {
-        "added_mass": 3034.658288409657,
-        "damping": 751.2928532501794
+        "added_mass": 3034.6663769324095,
+        "damping": 751.295110679919
        }
       }
      },
@@ -352,15 +365,15 @@
        96
       ],
       "panels": 4608,
-      "seconds": 7.097,
+      "seconds": 28.192,
       "values": {
        "surge": {
-        "added_mass": 2566.4946126639593,
-        "damping": 797.4058033003466
+        "added_mass": 2566.494493551391,
+        "damping": 797.4057238410546
        },
        "heave": {
-        "added_mass": 2999.9167870380857,
-        "damping": 740.8990345979539
+        "added_mass": 2999.9145494265917,
+        "damping": 740.8984143025195
        }
       }
      }
@@ -374,12 +387,12 @@
      "panels": 1152,
      "values": {
       "surge": {
-       "added_mass": 2608.1536680855165,
-       "damping": 811.8256700562376
+       "added_mass": 2608.1536256839713,
+       "damping": 811.8256419218559
       },
       "heave": {
-       "added_mass": 3034.6737810058994,
-       "damping": 751.2971795362248
+       "added_mass": 3034.6730076480017,
+       "damping": 751.2969633328355
       }
      }
     },
@@ -400,9 +413,1120 @@
       }
      }
     }
+   },
+   {
+    "cell": "h_over_a=3.0|ka=1.00",
+    "h_over_a": 3.0,
+    "ka": 1.0,
+    "k0h": 3.0,
+    "depth": 3.0,
+    "k0": 1.0,
+    "nu": 0.9950547536867305,
+    "omega": 3.1238043633111814,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.427,
+      "values": {
+       "surge": {
+        "added_mass": 2219.7059118673073,
+        "damping": 1797.8894987309036
+       },
+       "heave": {
+        "added_mass": 2388.3588448605437,
+        "damping": 3174.1942828738897
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.958,
+      "values": {
+       "surge": {
+        "added_mass": 2167.3976025534334,
+        "damping": 1778.0571208200988
+       },
+       "heave": {
+        "added_mass": 2364.3906763121436,
+        "damping": 3175.4994376451673
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 41.201,
+      "values": {
+       "surge": {
+        "added_mass": 2133.731969545562,
+        "damping": 1749.9681049312114
+       },
+       "heave": {
+        "added_mass": 2340.1447083763724,
+        "damping": 3139.2582630538764
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2167.3972894315257,
+       "damping": 1778.0569532337445
+      },
+      "heave": {
+       "added_mass": 2364.3905651709956,
+       "damping": 3175.499353735827
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2120.5939480011352,
+       "damping": 1658.9115422435148
+      },
+      "heave": {
+       "added_mass": 1903.108355599312,
+       "damping": 3200.832017675342
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=3.0|ka=2.00",
+    "h_over_a": 3.0,
+    "ka": 2.0,
+    "k0h": 6.0,
+    "depth": 3.0,
+    "k0": 2.0,
+    "nu": 1.9999754233015912,
+    "omega": 4.428663340661666,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.339,
+      "values": {
+       "surge": {
+        "added_mass": 1980.3258490569467,
+        "damping": 721.8395626650217
+       },
+       "heave": {
+        "added_mass": 1850.1407728477393,
+        "damping": 1251.26437009299
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.497,
+      "values": {
+       "surge": {
+        "added_mass": 1929.8200255046745,
+        "damping": 713.9656360491498
+       },
+       "heave": {
+        "added_mass": 1824.1937884106014,
+        "damping": 1254.4607843336496
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 37.484,
+      "values": {
+       "surge": {
+        "added_mass": 1898.7584422220218,
+        "damping": 705.1239169311289
+       },
+       "heave": {
+        "added_mass": 1803.1635074057701,
+        "damping": 1246.6395241495363
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 1929.815303335663,
+       "damping": 713.964474084726
+      },
+      "heave": {
+       "added_mass": 1824.1930497178967,
+       "damping": 1254.4603443650349
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 1855.0675885436294,
+       "damping": 711.6656930426509
+      },
+      "heave": {
+       "added_mass": 1509.7948698272317,
+       "damping": 1174.872573507447
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=5.0|ka=0.50",
+    "h_over_a": 5.0,
+    "ka": 0.5,
+    "k0h": 2.5,
+    "depth": 5.0,
+    "k0": 0.5,
+    "nu": 0.49330714907571516,
+    "omega": 2.1994750631647,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.345,
+      "values": {
+       "surge": {
+        "added_mass": 2561.1110702558176,
+        "damping": 726.1066953862546
+       },
+       "heave": {
+        "added_mass": 2871.7278009160887,
+        "damping": 1427.8267521670246
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.723,
+      "values": {
+       "surge": {
+        "added_mass": 2504.2057561759193,
+        "damping": 716.7464160677005
+       },
+       "heave": {
+        "added_mass": 2846.3687418451177,
+        "damping": 1425.8871511570744
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 40.506,
+      "values": {
+       "surge": {
+        "added_mass": 2464.209676262897,
+        "damping": 704.2333310569518
+       },
+       "heave": {
+        "added_mass": 2814.3930043205864,
+        "damping": 1407.1125501703007
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2504.2061504422304,
+       "damping": 716.746551889437
+      },
+      "heave": {
+       "added_mass": 2846.3695895617634,
+       "damping": 1425.887668601643
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2509.895631809901,
+       "damping": 708.3959221018571
+      },
+      "heave": {
+       "added_mass": 2771.498835859846,
+       "damping": 1551.8808735730663
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=5.0|ka=1.00",
+    "h_over_a": 5.0,
+    "ka": 1.0,
+    "k0h": 5.0,
+    "depth": 5.0,
+    "k0": 1.0,
+    "nu": 0.9999092042625951,
+    "omega": 3.1314149514208074,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.337,
+      "values": {
+       "surge": {
+        "added_mass": 2169.149669582766,
+        "damping": 1679.8863061214622
+       },
+       "heave": {
+        "added_mass": 1968.5891692339587,
+        "damping": 3235.2796441032915
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.698,
+      "values": {
+       "surge": {
+        "added_mass": 2117.306086029919,
+        "damping": 1661.7844405530698
+       },
+       "heave": {
+        "added_mass": 1944.1271326175745,
+        "damping": 3241.1096753653856
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 38.066,
+      "values": {
+       "surge": {
+        "added_mass": 2084.3142978010956,
+        "damping": 1635.6659512968065
+       },
+       "heave": {
+        "added_mass": 1924.295841881262,
+        "damping": 3208.2848306611286
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2117.306644681655,
+       "damping": 1661.7847388778312
+      },
+      "heave": {
+       "added_mass": 1944.1272869342724,
+       "damping": 3241.109848625649
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2116.7832725832013,
+       "damping": 1660.5527219619212
+      },
+      "heave": {
+       "added_mass": 1895.9642094658996,
+       "damping": 3199.5662884336457
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=5.0|ka=2.00",
+    "h_over_a": 5.0,
+    "ka": 2.0,
+    "k0h": 10.0,
+    "depth": 5.0,
+    "k0": 2.0,
+    "nu": 1.9999999917553855,
+    "omega": 4.4286905422650555,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.321,
+      "values": {
+       "surge": {
+        "added_mass": 1907.6783388987471,
+        "damping": 719.2793588020551
+       },
+       "heave": {
+        "added_mass": 1568.2229538764723,
+        "damping": 1182.2786888436174
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.25,
+      "values": {
+       "surge": {
+        "added_mass": 1857.9128486049308,
+        "damping": 711.6521166574139
+       },
+       "heave": {
+        "added_mass": 1541.347538863455,
+        "damping": 1186.4680019569917
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 30.122,
+      "values": {
+       "surge": {
+        "added_mass": 1827.9551033751402,
+        "damping": 702.8564631969639
+       },
+       "heave": {
+        "added_mass": 1522.8851411699638,
+        "damping": 1179.8967166965008
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 1857.9134514834593,
+       "damping": 711.6522639863528
+      },
+      "heave": {
+       "added_mass": 1541.3477136450792,
+       "damping": 1186.4680827463992
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 1855.069277803027,
+       "damping": 711.6396753395143
+      },
+      "heave": {
+       "added_mass": 1509.7988729852625,
+       "damping": 1174.828643049861
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=10.0|ka=0.50",
+    "h_over_a": 10.0,
+    "ka": 0.5,
+    "k0h": 5.0,
+    "depth": 10.0,
+    "k0": 0.5,
+    "nu": 0.49995460213129755,
+    "omega": 2.214244746858596,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.333,
+      "values": {
+       "surge": {
+        "added_mass": 2564.3478074026693,
+        "damping": 736.8459317817076
+       },
+       "heave": {
+        "added_mass": 2797.3352768924474,
+        "damping": 1596.545069404775
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.177,
+      "values": {
+       "surge": {
+        "added_mass": 2507.405566130393,
+        "damping": 727.3463565187484
+       },
+       "heave": {
+        "added_mass": 2772.3050114720004,
+        "damping": 1594.6403031594161
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 32.608,
+      "values": {
+       "surge": {
+        "added_mass": 2467.3596564641116,
+        "damping": 714.6229896463062
+       },
+       "heave": {
+        "added_mass": 2741.4605427281035,
+        "damping": 1574.020899083683
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2507.4055505575407,
+       "damping": 727.3463528743756
+      },
+      "heave": {
+       "added_mass": 2772.305001577528,
+       "damping": 1594.6402977584469
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2507.3401935651996,
+       "damping": 727.598849561631
+      },
+      "heave": {
+       "added_mass": 2764.4622436478658,
+       "damping": 1592.9190333787242
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=10.0|ka=1.00",
+    "h_over_a": 10.0,
+    "ka": 1.0,
+    "k0h": 10.0,
+    "depth": 10.0,
+    "k0": 1.0,
+    "nu": 0.9999999958776927,
+    "omega": 3.131557114212349,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.334,
+      "values": {
+       "surge": {
+        "added_mass": 2168.571488632049,
+        "damping": 1678.6641496700154
+       },
+       "heave": {
+        "added_mass": 1924.0317064981323,
+        "damping": 3197.194852122928
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.472,
+      "values": {
+       "surge": {
+        "added_mass": 2116.7345665004073,
+        "damping": 1660.5827640908303
+       },
+       "heave": {
+        "added_mass": 1899.5068576135307,
+        "damping": 3203.447409503231
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 35.77,
+      "values": {
+       "surge": {
+        "added_mass": 2083.7512530237254,
+        "damping": 1634.4818110824735
+       },
+       "heave": {
+        "added_mass": 1880.0891801962712,
+        "damping": 3171.48683659671
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2116.734493032699,
+       "damping": 1660.5827250401983
+      },
+      "heave": {
+       "added_mass": 1899.5068271941454,
+       "damping": 3203.4473778552892
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2116.711933616428,
+       "damping": 1660.5796894468056
+      },
+      "heave": {
+       "added_mass": 1895.831072807468,
+       "damping": 3199.5423924183997
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=10.0|ka=2.00",
+    "h_over_a": 10.0,
+    "ka": 2.0,
+    "k0h": 20.0,
+    "depth": 10.0,
+    "k0": 2.0,
+    "nu": 2.0,
+    "omega": 4.428690551393267,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.325,
+      "values": {
+       "surge": {
+        "added_mass": 1904.8774407245814,
+        "damping": 719.2583021754434
+       },
+       "heave": {
+        "added_mass": 1539.6200003905963,
+        "damping": 1171.6630146823675
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.339,
+      "values": {
+       "surge": {
+        "added_mass": 1855.1408324358533,
+        "damping": 711.6428304237144
+       },
+       "heave": {
+        "added_mass": 1512.6737953687916,
+        "damping": 1175.9847664995661
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 32.724,
+      "values": {
+       "surge": {
+        "added_mass": 1825.2237616606965,
+        "damping": 702.8488687727574
+       },
+       "heave": {
+        "added_mass": 1494.4701034704258,
+        "damping": 1169.5830088279843
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 1855.140830109197,
+       "damping": 711.642828517069
+      },
+      "heave": {
+       "added_mass": 1512.673785097671,
+       "damping": 1175.9847587497086
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 1855.0692783699285,
+       "damping": 711.6396666086665
+      },
+      "heave": {
+       "added_mass": 1509.7988743286621,
+       "damping": 1174.8286283079983
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=20.0|ka=0.50",
+    "h_over_a": 20.0,
+    "ka": 0.5,
+    "k0h": 10.0,
+    "depth": 20.0,
+    "k0": 0.5,
+    "nu": 0.49999999793884636,
+    "omega": 2.2143452711325278,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.338,
+      "values": {
+       "surge": {
+        "added_mass": 2564.2643963059063,
+        "damping": 737.2339563115357
+       },
+       "heave": {
+        "added_mass": 2790.0632474496515,
+        "damping": 1595.351343199309
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.563,
+      "values": {
+       "surge": {
+        "added_mass": 2507.3235514951866,
+        "damping": 727.7298395351947
+       },
+       "heave": {
+        "added_mass": 2765.0450040026476,
+        "damping": 1593.4824714084725
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 34.295,
+      "values": {
+       "surge": {
+        "added_mass": 2467.279510432626,
+        "damping": 715.000131954405
+       },
+       "heave": {
+        "added_mass": 2734.2937971931938,
+        "damping": 1572.915904840681
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2507.3235458358613,
+       "damping": 727.7298383086936
+      },
+      "heave": {
+       "added_mass": 2765.0450008449347,
+       "damping": 1593.482470020694
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2507.321710547761,
+       "damping": 727.7293957448369
+      },
+      "heave": {
+       "added_mass": 2764.4132205740216,
+       "damping": 1593.1990869643216
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=20.0|ka=1.00",
+    "h_over_a": 20.0,
+    "ka": 1.0,
+    "k0h": 20.0,
+    "depth": 20.0,
+    "k0": 1.0,
+    "nu": 1.0,
+    "omega": 3.1315571206669692,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.361,
+      "values": {
+       "surge": {
+        "added_mass": 2168.5510286309514,
+        "damping": 1678.6618764285022
+       },
+       "heave": {
+        "added_mass": 1920.783043171163,
+        "damping": 3193.688690958911
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.697,
+      "values": {
+       "surge": {
+        "added_mass": 2116.7139774190514,
+        "damping": 1660.5805419106498
+       },
+       "heave": {
+        "added_mass": 1896.2505772749869,
+        "damping": 3199.967657952616
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 36.402,
+      "values": {
+       "surge": {
+        "added_mass": 2083.730952576441,
+        "damping": 1634.4796814702022
+       },
+       "heave": {
+        "added_mass": 1876.8637776307144,
+        "damping": 3168.0778316450446
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 2116.713975461944,
+       "damping": 1660.5805407165906
+      },
+      "heave": {
+       "added_mass": 1896.250573285572,
+       "damping": 3199.9676531683467
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 2116.7119303775467,
+       "damping": 1660.5796906700973
+      },
+      "heave": {
+       "added_mass": 1895.8310667630815,
+       "damping": 3199.5423913313784
+      }
+     }
+    }
+   },
+   {
+    "cell": "h_over_a=20.0|ka=2.00",
+    "h_over_a": 20.0,
+    "ka": 2.0,
+    "k0h": 40.0,
+    "depth": 20.0,
+    "k0": 2.0,
+    "nu": 2.0,
+    "omega": 4.428690551393267,
+    "levels": [
+     {
+      "resolution": [
+       12,
+       24
+      ],
+      "panels": 288,
+      "seconds": 0.334,
+      "values": {
+       "surge": {
+        "added_mass": 1904.806610439179,
+        "damping": 719.2547063897142
+       },
+       "heave": {
+        "added_mass": 1537.1197689784028,
+        "damping": 1170.6298844376893
+       }
+      }
+     },
+     {
+      "resolution": [
+       24,
+       48
+      ],
+      "panels": 1152,
+      "seconds": 2.257,
+      "values": {
+       "surge": {
+        "added_mass": 1855.0706010945703,
+        "damping": 711.6395881012885
+       },
+       "heave": {
+        "added_mass": 1510.168321676215,
+        "damping": 1174.9595276795537
+       }
+      }
+     },
+     {
+      "resolution": [
+       48,
+       96
+      ],
+      "panels": 4608,
+      "seconds": 29.565,
+      "values": {
+       "surge": {
+        "added_mass": 1825.154612751185,
+        "damping": 702.8457467524584
+       },
+       "heave": {
+        "added_mass": 1491.986867491724,
+        "damping": 1168.574148714155
+       }
+      }
+     }
+    ],
+    "legacy": {
+     "method": "legacy",
+     "resolution": [
+      24,
+      48
+     ],
+     "panels": 1152,
+     "values": {
+      "surge": {
+       "added_mass": 1855.0706240336135,
+       "damping": 711.6395934906434
+      },
+      "heave": {
+       "added_mass": 1510.1683290492565,
+       "damping": 1174.959529310745
+      }
+     }
+    },
+    "infinite_depth": {
+     "note": "same mesh and omega, water_depth=inf -- the depth-free control",
+     "resolution": [
+      24,
+      48
+     ],
+     "values": {
+      "surge": {
+       "added_mass": 1855.0692783699285,
+       "damping": 711.6396666086665
+      },
+      "heave": {
+       "added_mass": 1509.7988743286624,
+       "damping": 1174.8286283079985
+      }
+     }
+    }
    }
   ],
-  "elapsed_seconds": 13.61
+  "elapsed_seconds": 518.72
  },
  "ladder": {
   "cells": {
