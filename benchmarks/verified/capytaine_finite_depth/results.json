@@ -4,14 +4,23 @@
   "radius": 1.0,
   "submergence": 1.5,
   "depth_ratios": [
-   3.0
+   3.0,
+   5.0,
+   10.0,
+   20.0
   ],
   "ka_grid": [
-   0.5
+   0.5,
+   1.0,
+   2.0
   ],
   "density": 1025.0,
   "gravity": 9.80665,
-  "execution_status": "PARTIAL: 1 of 12 planned cells; TensorBEM ladder 20/80 panels only (320/1280 not run)"
+  "levels": [
+   0,
+   1
+  ],
+  "execution_status": "PARTIAL: 1 of 12 planned cells"
  },
  "reference_provenance": {
   "tool": "capytaine",
@@ -49,11 +58,35 @@
   "note": "capytaine built from source (no loongarch64 wheel on the index); only this producer script imports it"
  },
  "tensor_environment": {
+  "python": "3.11.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "numpy": "2.4.6",
+  "density": 1025.0,
+  "gravity": 9.80665,
   "levels": [
    0,
    1
   ],
-  "note": "one cell, 20/80 panels; 320-panel rung and the remaining 11 cells are NOT run"
+  "extra_level": null,
+  "extra_cells": [
+   [
+    3.0,
+    0.5
+   ],
+   [
+    3.0,
+    2.0
+   ],
+   [
+    20.0,
+    0.5
+   ],
+   [
+    20.0,
+    2.0
+   ]
+  ],
+  "control_level": 1
  },
  "comparison": {
   "rows": [
@@ -64,7 +97,7 @@
     "k0h": 1.5,
     "quantities": {
      "surge.added_mass": {
-      "tensorbem": 2276.473853506618,
+      "tensorbem": 2276.483577841137,
       "capytaine": 2461.5931488287247,
       "tensorbem_panels": [
        20.0,
@@ -75,11 +108,11 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": 0.24122610356986013,
       "capytaine_shift": 0.04261527291183306,
-      "relative": -0.0752030429602837,
-      "relative_finest_levels": -0.11300267599482965
+      "relative": -0.07519909253715078,
+      "relative_finest_levels": -0.11299888703908005
      },
      "surge.damping": {
-      "tensorbem": 616.0321624688042,
+      "tensorbem": 616.0365022862962,
       "capytaine": 797.4058033003466,
       "tensorbem_panels": [
        20.0,
@@ -90,11 +123,11 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.22745462859796514,
-      "relative_finest_levels": -0.22745462859796514
+      "relative": -0.22744918617771434,
+      "relative_finest_levels": -0.22744918617771434
      },
      "heave.added_mass": {
-      "tensorbem": 2617.261302192633,
+      "tensorbem": 2617.3245384173943,
       "capytaine": 2999.9167870380857,
       "tensorbem_panels": [
        20.0,
@@ -105,11 +138,11 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.12755536636843204,
-      "relative_finest_levels": -0.12755536636843204
+      "relative": -0.12753428704215394,
+      "relative_finest_levels": -0.12753428704215394
      },
      "heave.damping": {
-      "tensorbem": 564.1905660182496,
+      "tensorbem": 564.2107100505647,
       "capytaine": 740.8990345979539,
       "tensorbem_panels": [
        20.0,
@@ -120,24 +153,24 @@
       "tensorbem_shift": 0.0,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.23850546475012555,
-      "relative_finest_levels": -0.23850546475012555
+      "relative": -0.23847827611662162,
+      "relative_finest_levels": -0.23847827611662162
      }
     },
-    "negative_control_gap_added_mass": 0.07007721325149706
+    "negative_control_gap_added_mass": 0.07010306762190792
    }
   ],
   "worst_relative": {
-   "surge.added_mass": 0.0752030429602837,
-   "surge.damping": 0.22745462859796514,
-   "heave.added_mass": 0.12755536636843204,
-   "heave.damping": 0.23850546475012555
+   "surge.added_mass": 0.07519909253715078,
+   "surge.damping": 0.22744918617771434,
+   "heave.added_mass": 0.12753428704215394,
+   "heave.damping": 0.23847827611662162
   },
   "failures": [
    "h_over_a=3.0|ka=0.50 surge.added_mass: -7.52% > 3%",
-   "h_over_a=3.0|ka=0.50 surge.damping: -22.75% > 5%",
-   "h_over_a=3.0|ka=0.50 surge.damping: -22.75% exceeds the owner 15% limit",
-   "h_over_a=3.0|ka=0.50 heave.added_mass: -12.76% > 3%",
+   "h_over_a=3.0|ka=0.50 surge.damping: -22.74% > 5%",
+   "h_over_a=3.0|ka=0.50 surge.damping: -22.74% exceeds the owner 15% limit",
+   "h_over_a=3.0|ka=0.50 heave.added_mass: -12.75% > 3%",
    "h_over_a=3.0|ka=0.50 heave.damping: -23.85% > 5%",
    "h_over_a=3.0|ka=0.50 heave.damping: -23.85% exceeds the owner 15% limit"
   ],
@@ -150,19 +183,19 @@
  "gates": [
   {
    "gate": "added_mass_agreement",
-   "worst": 0.12755536636843204,
+   "worst": 0.12753428704215394,
    "limit": 0.03,
    "passed": false
   },
   {
    "gate": "damping_agreement",
-   "worst": 0.23850546475012555,
+   "worst": 0.23847827611662162,
    "limit": 0.05,
    "passed": false
   },
   {
    "gate": "negative_control_separates_depth",
-   "min_gap": 0.07007721325149706,
+   "min_gap": 0.07010306762190792,
    "limit": 0.02,
    "passed": true
   },
@@ -180,7 +213,7 @@
   },
   {
    "gate": "linear_solve_residuals",
-   "max": 3.7520944011233447e-16,
+   "max": 3.6928181883540294e-16,
    "limit": 1e-08,
    "passed": true
   },
@@ -386,17 +419,17 @@
       "level": 0,
       "panels": 20,
       "mode_count": 133,
-      "condition_number": 2.3775592710065805,
-      "relative_residual": 2.1975656628717369e-16,
-      "seconds": 0.192,
+      "condition_number": 2.377480403574993,
+      "relative_residual": 1.7334455696266773e-16,
+      "seconds": 0.163,
       "values": {
        "surge": {
-        "added_mass": 1748.4594926354607,
-        "damping": 332.01075636965624
+        "added_mass": 1748.44694354568,
+        "damping": 332.0072414365854
        },
        "heave": {
-        "added_mass": 1928.8212179105965,
-        "damping": 293.27705435359474
+        "added_mass": 1928.7589929594217,
+        "damping": 293.2627380177748
        }
       }
      },
@@ -404,23 +437,26 @@
       "level": 1,
       "panels": 80,
       "mode_count": 341,
-      "condition_number": 2.2165778082515124,
-      "relative_residual": 3.7520944011233447e-16,
-      "seconds": 11.597,
+      "condition_number": 2.2166274621419677,
+      "relative_residual": 3.6928181883540294e-16,
+      "seconds": 3.6,
       "values": {
        "surge": {
-        "added_mass": 2276.473853506618,
-        "damping": 616.0321624688042
+        "added_mass": 2276.483577841137,
+        "damping": 616.0365022862962
        },
        "heave": {
-        "added_mass": 2617.261302192633,
-        "damping": 564.1905660182496
+        "added_mass": 2617.3245384173943,
+        "damping": 564.2107100505647
        }
       }
      }
     },
     "negative_control": {
+     "level": 1,
      "panels": 80,
+     "mode_count": 0,
+     "seconds": 0.137,
      "values": {
       "surge": {
        "added_mass": 2209.404570706978,
@@ -435,11 +471,49 @@
    }
   },
   "environment": {
+   "python": "3.11.6",
+   "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+   "numpy": "2.4.6",
+   "density": 1025.0,
+   "gravity": 9.80665,
    "levels": [
     0,
     1
    ],
-   "note": "one cell, 20/80 panels; 320-panel rung and the remaining 11 cells are NOT run"
+   "extra_level": null,
+   "extra_cells": [
+    [
+     3.0,
+     0.5
+    ],
+    [
+     3.0,
+     2.0
+    ],
+    [
+     20.0,
+     0.5
+    ],
+    [
+     20.0,
+     2.0
+    ]
+   ],
+   "control_level": 1
   }
- }
+ },
+ "figures": [
+  {
+   "path": "docs/fig_capytaine_finite_depth_frequency.png",
+   "caption": "Heave added mass and damping vs k0*h for every h/a; TensorBEM (solid markers) against capytaine (crosses)."
+  },
+  {
+   "path": "docs/fig_capytaine_finite_depth_difference_map.png",
+   "caption": "Extrapolated deviation map over the (h/a, k0 a) grid; the pre-registered bands are 3 % (added mass) and 5 % (damping)."
+  },
+  {
+   "path": "docs/fig_capytaine_finite_depth_convergence.png",
+   "caption": "Panel ladder of both codes for one cell; dotted lines are the Richardson extrapolations that the comparison uses."
+  }
+ ]
 }
