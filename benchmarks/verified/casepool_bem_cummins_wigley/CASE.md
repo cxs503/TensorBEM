@@ -28,11 +28,16 @@ Criterion source: tensor_case_pool id=145 (tol_policy <10%).
 | C0_coarse | solver validity: converged BIE solves and non-negative damping | max solver relative residual <= 0.01 and min B >= 0 | PASS |
 | C2 | panel resolution at the top of the band (medium mesh) | k*sqrt(A_panel,max) <= 1 | PASS |
 | C3 | Kramers-Kronig closure of the added mass (6 DOF) | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
+| C3a | Kramers-Kronig closure of the added mass (6 DOF) with A_inf supplied by the independent image solve: zero free parameters | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
+| C7 | A_inf anchor: the band-closure least-squares offset vs the independent image-method limit | |A_inf(fit) - A_inf(anchor)| / max|A_ii| <= 10% per DOF; anchor self-check (half-immersed sphere, exact m_full/4) <= 3% | PASS |
 | C3_coarse | Kramers-Kronig closure of the added mass (6 DOF) | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
+| C3a_coarse | Kramers-Kronig closure of the added mass (6 DOF) with A_inf supplied by the independent image solve: zero free parameters | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
 | C4 | Cummins round trip B->K->B (heave) | max pointwise relative error <= 2% | PASS |
 | C5 | Cummins free decay vs frequency-domain damping ratio (heave) | |zeta_decay - zeta_fd|/zeta_fd <= 5% | PASS |
 | C6a | negative control: zero damping gives zero decay (heave) | max|K| <= 1e-12, zeta_decay <= 1e-3, late/early amplitude ratio >= 0.98 | PASS |
 | C6b | negative control: corrupted damping shape must fail the KK gate | max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a sample is decidable when the closed-form bound on the omitted s > s_max integral is <= 5%) | PASS |
+| C5b | Cummins free decay vs frequency-domain damping ratio, all decidable restoring modes | |zeta_decay - zeta_fd|/zeta_fd <= 5% on every scored mode (heave C5 is the case criterion; modes whose residual is not decided by the single-frequency estimator are reported, not scored) | PASS |
+| C10 | external code anchor: capytaine, solved on the identical panels, must reproduce the 6x6 radiation matrices | max_{cells,omega} |X_capytaine - X_tensorbem| / max_omega |X_tensorbem| <= 10% (case criterion), null cells excluded (amplitude < 1% of the largest diagonal amplitude) | PASS |
 
 ## 3. Reference vs got (KK closure, per DOF)
 
@@ -58,18 +63,22 @@ Reference = direct BEM added mass at the same sample frequency; got = KK reconst
 | pitch | 0.50% | 0.48% |
 | yaw | 3.40% | 3.60% |
 
-## 4. Mesh convergence (ref vs got)
+### 3c. A_inf anchor (independent image solve) and the zero-free-parameter closure
 
-Reference = medium mesh (480 panels), got = coarse mesh (192 panels); relative change of the diagonal coefficients over the same band.
+`C3` estimates `A_inf` by least squares on the same band it judges (one free parameter).  `C3a` supplies it from the antisymmetric-image solve instead, so the KK relation is tested with no free parameter; `C7` is the same comparison read the other way round -- how far off the fitted parameter is.
 
-| DOF | added mass change | damping change |
-| --- | --- | --- |
-| surge | 1.11% | 1.52% |
-| sway | 2.34% | 2.68% |
-| heave | 0.62% | 1.83% |
-| roll | 7.41% | 10.99% |
-| pitch | 1.12% | 1.32% |
-| yaw | 4.38% | 5.39% |
+| DOF | A_inf (fit) | A_inf (anchor) | abs. diff | diff / max\|A\| | diff / \|A_inf(anchor)\| | KK residual, A_inf fitted (C3) | KK residual, A_inf anchored (C3a) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| surge | 0.585909 | 0.484905 | 0.101 | 4.45% | 20.83% | 2.62% | 7.07% |
+| sway | 75.733 | 66.6249 | 9.11 | 4.81% | 13.67% | 2.81% | 7.62% |
+| heave | 50.9302 | 50.0661 | 0.864 | 0.61% | 1.73% | 0.30% | 0.91% |
+| roll | 0.384917 | 0.374906 | 0.01 | 1.73% | 2.67% | 0.72% | 2.45% |
+| pitch | 14.8116 | 14.5733 | 0.238 | 0.70% | 1.64% | 0.48% | 1.17% |
+| yaw | 56.7785 | 49.2552 | 7.52 | 5.25% | 15.27% | 3.60% | 8.85% |
+
+Anchor self-check (half-immersed sphere, exact `A_inf(heave) = m_full/4`): 360 panels, error 2.02% vs the 3% bar -> PASS.
+
+Anchored closure worst DOF: **yaw** at 8.85% (criterion 10%).
 
 ### C4: Cummins round trip B->K->B (heave)
 
@@ -104,6 +113,10 @@ Threshold: |zeta_decay - zeta_fd|/zeta_fd <= 5% -> **PASS**
 | added_mass_at_natural | 28.86 |
 | damping_at_natural | 213.3 |
 | restoring_n_per_m | 6016 |
+| oscillator_stiffness_source | rho g A_wp of the panelised hull (A_wp = 0.5985 m^2) |
+| oscillator_inertia | 76.88 |
+| oscillator_inertia_kind | mass |
+| oscillator_inertia_source | rho * nabla (displaced mass at equilibrium) |
 | displaced_mass_kg | 76.88 |
 | added_mass_inf_used | 50.93 |
 | added_mass_inf_source | KK closure (least-squares offset) |
@@ -119,7 +132,7 @@ Threshold: max|K| <= 1e-12, zeta_decay <= 1e-3, late/early amplitude ratio >= 0.
 | quantity | value |
 | --- | --- |
 | kernel_max_abs | 0 |
-| zeta_zero_damping | 9.062e-07 |
+| zeta_zero_damping | -6.145e-08 |
 | amplitude_ratio_late_over_early | 1 |
 | n_peaks | 36 |
 
@@ -138,12 +151,13 @@ Threshold: max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= 10% (a 
 | tail_fit_model | B(s) = C s^-p on the upper quartile of the sweep |
 | truncation_budget_model | B continued above s_max as C s^-p with p from the last three tabulated samples, anchored at the last sample; the omitted PV integral is then closed in form |
 | added_mass_inf_estimator | least-squares closure (one free parameter) |
+| free_parameters | 1 |
 | added_mass_inf_cross_check_worst | 0.326 |
 | added_mass_inf_cross_check_note | C3 lets one free parameter (A_inf) absorb a constant offset, so a closure that only shifts A would still pass. The independent A_inf + c/omega^2 tail fit is therefore reported next to it: a closure A_inf far from the tail fit means the residual is being absorbed, not explained. |
 
 ## 5. Verdict
 
-10 / 10 gates passed (all pass).
+15 / 15 gates passed (all pass).
 
 Case tolerance (KK closure) = 10%; coarse-mesh closure and the corrupted damping control are reported alongside so the verdict cannot be read as a self-fulfilling gate.
 
