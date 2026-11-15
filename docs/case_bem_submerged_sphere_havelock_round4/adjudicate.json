@@ -1,0 +1,63 @@
+{
+ "stage": "adjudicate",
+ "case": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "capytaine": "3.1.dev0"
+ },
+ "rows": [
+  {
+   "f_over_a": 2.0,
+   "subdivision": 3,
+   "n_panels": 1280,
+   "ka": 0.5,
+   "capytaine_a33": 0.548864870349363,
+   "multipole_a33": 0.5349252942959751,
+   "lamb_a33": 0.5,
+   "capytaine_vs_lamb": 0.09772974069872609,
+   "multipole_vs_lamb": 0.06985058859195026,
+   "capytaine_vs_multipole": 0.02605892112791941
+  },
+  {
+   "f_over_a": 2.0,
+   "subdivision": 3,
+   "n_panels": 1280,
+   "ka": 1.0,
+   "capytaine_a33": 0.45959740395348403,
+   "multipole_a33": 0.4480732996737152,
+   "lamb_a33": 0.5,
+   "capytaine_vs_lamb": -0.08080519209303194,
+   "multipole_vs_lamb": -0.10385340065256965,
+   "capytaine_vs_multipole": 0.025719238990943305
+  },
+  {
+   "f_over_a": 5.0,
+   "subdivision": 2,
+   "n_panels": 320,
+   "ka": 0.5,
+   "capytaine_a33": 0.5142998533662618,
+   "multipole_a33": 0.49573232744784984,
+   "lamb_a33": 0.5,
+   "capytaine_vs_lamb": 0.028599706732523655,
+   "multipole_vs_lamb": -0.008535345104300318,
+   "capytaine_vs_multipole": 0.03745474097685353
+  },
+  {
+   "f_over_a": 5.0,
+   "subdivision": 2,
+   "n_panels": 320,
+   "ka": 1.0,
+   "capytaine_a33": 0.5153772616084885,
+   "multipole_a33": 0.49678669600291825,
+   "lamb_a33": 0.5,
+   "capytaine_vs_lamb": 0.030754523216977026,
+   "multipole_vs_lamb": -0.006426607994163502,
+   "capytaine_vs_multipole": 0.03742162532762561
+  }
+ ],
+ "worst_deep_multipole_vs_lamb": 0.008535345104300318,
+ "worst_deep_capytaine_vs_lamb": 0.030754523216977026,
+ "reading": "multipole reference reproduces the exact infinite-fluid value; capytaine keeps its offset where the exact answer is known"
+}
