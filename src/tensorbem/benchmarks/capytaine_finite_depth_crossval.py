@@ -144,6 +144,20 @@ def _worker(cell: dict[str, float], level: int, control_level: int) -> dict[str,
     return tensorbem_values(level, cell)
 
 
+def cells_for_shard(shard: int, shards: int) -> list[dict[str, float]]:
+    """The plan cells that belong to ``shard`` of ``shards`` (index % shards).
+
+    Sharding is an index filter over the plan's cell list, so it is reproducible
+    without any bookkeeping and every shard is a disjoint subset of the grid.
+    """
+    if shards < 1 or not 0 <= shard < shards:
+        raise ValueError(f"invalid shard {shard} of {shards}")
+    return [
+        cell for index, cell in enumerate(plan.cells())
+        if index % shards == shard
+    ]
+
+
 def build_ladder(
     cells: Iterable[dict[str, float]],
     levels: Sequence[int],
@@ -1031,28 +1045,26 @@ def main(argv: list[str] | None = None) -> int:
         else None
     )
     if args.ladder_only:
-        if args.shards > 1:
-            if not 0 <= args.shard < args.shards:
-                parser.error("--shard must satisfy 0 <= shard < shards")
-            all_ids = [plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()]
-            mine = {key for index, key in enumerate(all_ids)
-                    if index % args.shards == args.shard}
-            cells = [
-                c for c in plan.cells()
-                if plan.cell_id(c["h_over_a"], c["ka"]) in mine
-            ]
         if cell_ids is not None:
-            # Explicit ids beat the reference filter: the ladder and the
-            # reference are independent computations, so a shard must not have
-            # to wait for (or be reduced by) the other side's progress.
+            # Explicit ids beat both filters: the ladder and the reference are
+            # independent computations, so a shard must not have to wait for (or
+            # be reduced by) the other side's progress.
             known = {plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()}
             unknown = set(cell_ids) - known
             if unknown:
                 raise SystemExit(f"cell ids not in the plan: {sorted(unknown)}")
+            wanted = set(cell_ids)
             cells = [
                 c for c in plan.cells()
-                if plan.cell_id(c["h_over_a"], c["ka"]) in set(cell_ids)
+                if plan.cell_id(c["h_over_a"], c["ka"]) in wanted
             ]
+        elif args.shards > 1:
+            # A shard is the plan's cell list filtered by index: without this
+            # branch the reference filter below would silently hand every shard
+            # the whole grid, turning N parallel shards into N full duplicates.
+            if not 0 <= args.shard < args.shards:
+                parser.error("--shard must satisfy 0 <= shard < shards")
+            cells = cells_for_shard(args.shard, args.shards)
         else:
             reference = json.loads(Path(args.ref).read_text())
             covered = {cell["cell"] for cell in reference.get("cells", [])}
