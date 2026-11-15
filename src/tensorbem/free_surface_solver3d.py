@@ -51,6 +51,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
+import warnings
 from typing import Literal, Sequence
 
 import numpy as np
@@ -482,16 +483,126 @@ def assemble_free_surface_operators_3d(
     )
 
 
+# --- solve-stage health guards -------------------------------------------
+# A CHIEF-augmented system is rectangular and *genuinely* inconsistent at the
+# discretisation level: at 1024 panels its minimum relative residual is 1.8e-4,
+# which is the CHIEF rows disagreeing with the body rows, not a solver failure.
+# So the residual cannot be used to judge a solve, and neither can
+# ``numpy.linalg.cond``: extra rows only *add* singular values, hence a perfect
+# condition number is reported even when the rows are nearly dependent and the
+# solution is worthless.  The stationarity measure below can judge it:
+# at a least-squares minimum ``A^H r = 0`` exactly, so
+# ``||A^H r|| / (||A|| ||r||)`` is O(machine eps) for any correct solve however
+# inconsistent the system is, and O(1) for a wrong vector.
+#
+# This guard exists because a broken complex LAPACK driver is not hypothetical:
+# on this ecosystem's loongarch64 clusters (numpy 2.0.1) ``np.linalg.lstsq``
+# returns a full-rank, perfectly conditioned *wrong* answer whose relative
+# residual is 4.9e-1 against 1.8e-4 on the control plane (dev report m20910),
+# with the assembled matrix bit-identical.  Silently wrong is the worst failure
+# mode a solver can have; the fallback below turns it into either a right answer
+# (Householder QR, a different LAPACK path) or a loud error.
+_STATIONARITY_TOL = 1.0e-6
+_SQUARE_RESIDUAL_TOL = 1.0e-8
+
+
+def least_squares_stationarity(
+    matrix: ComplexArray, solution: ComplexArray, rhs: ComplexArray
+) -> float:
+    """Dimensionless stationarity ``||A^H r|| / (||A|| ||r||)``, ``r = A x - b``.
+
+    Zero (to rounding) exactly when ``x`` is a least-squares minimiser; O(1)
+    when it is not.  Unlike the residual itself it is insensitive to how
+    inconsistent the system is, which is what makes it usable on the
+    CHIEF-augmented BEM system.
+    """
+    mat = np.asarray(matrix, dtype=np.complex128)
+    sol = np.asarray(solution, dtype=np.complex128)
+    b = np.asarray(rhs, dtype=np.complex128)
+    resid = mat @ sol - b
+    grad = mat.conj().T @ resid
+    scale = float(np.linalg.norm(mat)) * float(np.linalg.norm(resid))
+    if scale <= 1.0e-300:
+        return 0.0
+    return float(np.linalg.norm(grad) / scale)
+
+
+def _solve_least_squares(
+    matrix: ComplexArray, rhs: ComplexArray
+) -> tuple[ComplexArray, str]:
+    """Solve an over-determined system, auditing whichever driver did it.
+
+    Returns ``(solution, method)`` with ``method`` one of ``"lstsq"`` (the
+    primary SVD driver) or ``"qr"`` (the Householder fallback).  Raises
+    ``RuntimeError`` -- never returns a wrong vector silently -- if both paths
+    fail the stationarity audit, which is what a broken LAPACK backend looks
+    like from here.
+    """
+    ncols = int(matrix.shape[1])
+    sol, *_ = np.linalg.lstsq(matrix, rhs, rcond=None)
+    if least_squares_stationarity(matrix, sol, rhs) <= _STATIONARITY_TOL:
+        return np.asarray(sol, dtype=np.complex128), "lstsq"
+    q_mat, r_mat = np.linalg.qr(matrix)
+    try:
+        alt = np.linalg.solve(r_mat[:ncols], (q_mat.conj().T @ rhs)[:ncols])
+    except np.linalg.LinAlgError as exc:  # pragma: no cover - rank-deficient R
+        raise RuntimeError(
+            "least-squares solve failed the stationarity audit and the "
+            "Householder fallback is singular; the BLAS/LAPACK backend of this "
+            "interpreter cannot be trusted for complex solves"
+        ) from exc
+    if least_squares_stationarity(matrix, alt, rhs) <= _STATIONARITY_TOL:
+        warnings.warn(
+            "numpy.linalg.lstsq failed the least-squares stationarity audit "
+            "(backend defect); recovered the solution through the Householder "
+            "QR path",
+            RuntimeWarning,
+            stacklevel=3,
+        )
+        return np.asarray(alt, dtype=np.complex128), "qr"
+    raise RuntimeError(
+        "neither numpy.linalg.lstsq nor the Householder QR fallback reached a "
+        "least-squares stationary point; the BLAS/LAPACK backend of this "
+        "interpreter cannot be trusted for complex solves "
+        f"(stationarity {least_squares_stationarity(matrix, alt, rhs):.3e})"
+    )
+
+
+def _solve_square(
+    matrix: ComplexArray, rhs: ComplexArray
+) -> tuple[ComplexArray, str]:
+    """Square solve with a backward-stability audit and a QR fallback."""
+    sol = np.linalg.solve(matrix, rhs)
+    denom = max(float(np.linalg.norm(rhs)), 1.0e-300)
+    if float(np.linalg.norm(matrix @ sol - rhs) / denom) <= _SQUARE_RESIDUAL_TOL:
+        return np.asarray(sol, dtype=np.complex128), "solve"
+    q_mat, r_mat = np.linalg.qr(matrix)
+    alt = np.linalg.solve(r_mat, q_mat.conj().T @ rhs)
+    if float(np.linalg.norm(matrix @ alt - rhs) / denom) <= _SQUARE_RESIDUAL_TOL:
+        warnings.warn(
+            "numpy.linalg.solve failed its residual audit (backend defect); "
+            "recovered the solution through the Householder QR path",
+            RuntimeWarning,
+            stacklevel=3,
+        )
+        return np.asarray(alt, dtype=np.complex128), "qr"
+    raise RuntimeError(
+        "square complex solve is not backward stable in this interpreter "
+        f"(relative residual {float(np.linalg.norm(matrix @ sol - rhs) / denom):.3e}); "
+        "BLAS/LAPACK backend cannot be trusted"
+    )
+
+
 def _solve_system(
     ops: FreeSurface3DOperators, q_ext: ComplexArray
 ) -> tuple[ComplexArray, float]:
     rhs_body = ops.single_layer @ q_ext
     if ops.chief_points.shape[0] > 0:
         rhs = np.vstack((rhs_body, ops.chief_single_layer @ q_ext))
-        sol, *_ = np.linalg.lstsq(ops.system_matrix, rhs, rcond=None)
+        sol, _method = _solve_least_squares(ops.system_matrix, rhs)
     else:
         rhs = rhs_body
-        sol = np.linalg.solve(ops.system_matrix, rhs)
+        sol, _method = _solve_square(ops.system_matrix, rhs)
     denom = max(float(np.linalg.norm(rhs)), 1.0e-30)
     rel_res = float(np.linalg.norm(ops.system_matrix @ sol - rhs) / denom)
     return np.asarray(sol, dtype=np.complex128), rel_res
