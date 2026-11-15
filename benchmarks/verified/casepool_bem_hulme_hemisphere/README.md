@@ -76,6 +76,25 @@ Context only: the ka -> 0 even-mode limit of the same quantity is 0.8310 (antece
 3. **Case-level anchor only.** the reference lives in tensorbem.analytic.hulme_hemisphere_radiation (inside src/) and shares tensorbem.free_surface3d.wave_function_3d with the solver, so it cannot be registered as an external anchor; it is a LITERATURE_CLOSED_FORM re-derivation registered at case level. The external-anchor gate rule `reference_method.independent_of_repo_package` is therefore not satisfied, and the gate's own markers ['tensorbem.'] flag the implementation path.
 4. **Band edge.** heave damping at ka = 2 is the constraining cell; the band is not widened to hide discretisation error, instead the mesh ladder in `report.md` shows the error falling under refinement.
 
+## Band status (per ka range, current code)
+
+The declared case band stops at `ka = 2`. The question whether it can be
+extended is answered from artifacts, not from a verdict field
+(`resolve_band_edge.py` -> `evidence/band_edge_resolution.json`,
+prose in `docs/case_bem_hulme_band_edge.md`):
+
+| ka range | status | evidence |
+|---|---|---|
+| `ka <= 2` | **PASS** (declared band, unchanged) | `results.json`, gates G1-G4 |
+| `2 < ka <= 3.5` | **PASS**, worst 2.78 % (`B33` at ka = 3.5) | `band_current_code/results.json`, reproduced cell-for-cell by the committed `band_extension/results.json` |
+| `ka = 4.0` | **NOT creditable on the case mesh** -- 8.94 % at 1024 panels | same artifact; the 256-panel rung is 34.49 %, i.e. the miss is mesh-limited, not a solver artefact (every cell records its own solve residual and driver) |
+
+Two schema generations of artifact live side by side and a reader must not
+assume either: the case driver records `git_head` / `environment`, later
+drivers record `metadata`. The round-2 gates read only `metadata` and therefore
+reported the artifacts as unprovenanced; `resolve_band_edge.py` reads both and
+records which one each artifact used.
+
 ## Reproduce
 
 ```
