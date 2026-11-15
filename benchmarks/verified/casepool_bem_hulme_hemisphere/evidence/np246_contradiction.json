@@ -1,0 +1,98 @@
+{
+  "band_status": {
+    "ka_gt_2": "WITHHELD -- two committed artifacts of the same code and the same numpy version disagree; neither is refuted",
+    "ka_le_2": "PASS (declared band, gates G1-G4 in the case README)"
+  },
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "condition_number": {
+    "band_extension": 2.7783313589262097,
+    "identical": true,
+    "numpy2_reverification": 2.78
+  },
+  "experiment_that_would_settle_it": {
+    "absence_reason": "both jobs were still queued (28+ min, 50 jobs in flight) when this session closed; no number is fabricated here.",
+    "driver": "benchmarks/verified/casepool_bem_hulme_hemisphere/probe_ka35_env.py",
+    "factors": [
+      "entry point (case driver run_cell vs hand-assembled solve)",
+      "BLAS thread count (1, 4, 8)"
+    ],
+    "jobs_submitted": [
+      "cj3579 (band re-run + 4096-panel healthy rung)",
+      "cj3585 (thread/entry-point probe)"
+    ],
+    "payload_received_in_this_session": false,
+    "recorded_per_arm": [
+      "A11",
+      "B33",
+      "condition_number",
+      "radiation residual",
+      "diffraction residual"
+    ]
+  },
+  "gates": {
+    "A1_same_matrix": {
+      "criterion": "both artifacts report the same condition number (within the healthy artifact's 3 significant digits), so the matrix is not the explanation",
+      "measured": 0.0006002306020828074,
+      "measured_band": 2.7783313589262097,
+      "measured_reverify": 2.78,
+      "pass": true
+    },
+    "A2_numpy_version_attribution_supported": {
+      "criterion": "the artifact carrying the failing ka=3.5 values must record a numpy version different from the healthy one",
+      "measured_numpy_band": "2.4.6",
+      "measured_numpy_reverify": "2.4.6",
+      "pass": false
+    },
+    "A3_healthy_artifact_is_machine_provenanced": {
+      "criterion": "the healthy artifact records host + BLAS thread env and distinct per-solve residuals",
+      "host": null,
+      "pass": false,
+      "residuals_distinct": false,
+      "thread_env_present": false
+    },
+    "A4_failing_cell_records_its_residual": {
+      "criterion": "the failing cell records the solve-stage residual it was produced with (E0 admissibility)",
+      "measured": null,
+      "pass": false
+    }
+  },
+  "ka": 3.5,
+  "panels": 1024,
+  "provenance": {
+    "band_extension": {
+      "generated_utc": "2026-11-14T08:53:21Z",
+      "git_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
+      "host": "ec6ae0b42a0c",
+      "machine": "loongarch64",
+      "numpy": "2.4.6",
+      "python": "3.11.6"
+    },
+    "band_extension_records_solve_residual": false,
+    "numpy2_reverification": {
+      "arch": "loongarch64",
+      "numpy": "2.4.6",
+      "python": "3.11.6"
+    },
+    "numpy2_reverification_generated_at": "2026-11-15T08:00:00+00:00",
+    "numpy2_reverification_residuals_identical": true
+  },
+  "relative_gap_between_artifacts": 1.0420277674311487,
+  "rows": {
+    "A11": {
+      "band_extension": -0.0068017738810570985,
+      "err_band_extension": 1.0416155792450397,
+      "err_numpy2_reverification": 0.009807520391947766,
+      "numpy2_reverification": 0.16184,
+      "ref": 0.16344297026378257
+    },
+    "B33": {
+      "band_extension": -0.0006042096960535369,
+      "err_band_extension": 1.0194513785888477,
+      "err_numpy2_reverification": 0.027925441115195015,
+      "numpy2_reverification": 0.03193,
+      "ref": 0.031062564192748436
+    }
+  },
+  "tolerance": 0.05,
+  "verdict": "FAIL"
+}
