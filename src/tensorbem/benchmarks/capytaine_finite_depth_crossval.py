@@ -412,11 +412,51 @@ def richardson(
     return out
 
 
+def extrapolation_band(
+    panels: Sequence[float], values: Sequence[float]
+) -> dict[str, Any]:
+    """Measure the extrapolation's own uncertainty on a four-rung ladder.
+
+    ``richardson`` fits the observed order to the three *finest* rungs.  With a
+    fourth (finest) rung available the same fit can be repeated after dropping
+    the *coarsest* rung; the two extrapolants should agree if the ladder is in
+    its asymptotic range, and their relative spread is then a measured, per-cell
+    uncertainty of the extrapolated value.
+
+    Without four rungs the band is ``None`` -- unknown, not zero.  A two-rung
+    ladder is not evidence that the extrapolation converged.
+    """
+    fine = richardson(panels, values)
+    order = list(np.argsort([float(p) for p in panels]))
+    panels_sorted = [float(panels[i]) for i in order]
+    values_sorted = [float(values[i]) for i in order]
+    out: dict[str, Any] = {
+        "fine": fine,
+        "coarse_value": None,
+        "coarse_order": None,
+        "band": None,
+        "band_basis": None,
+    }
+    if len(panels_sorted) < 4 or not fine["extrapolated"]:
+        return out
+    coarse = richardson(panels_sorted[:-1], values_sorted[:-1])
+    out["coarse_value"] = coarse["value"]
+    out["coarse_order"] = coarse["order"]
+    if coarse["extrapolated"] and fine["value"]:
+        out["band"] = float(
+            abs(fine["value"] - coarse["value"]) / abs(fine["value"])
+        )
+        out["band_basis"] = "drop-coarsest-rung"
+    return out
+
+
 def _extrapolated_entry(levels: dict[str, Any], dof: str, quantity: str) -> dict[str, Any]:
     ordered = sorted(levels.values(), key=lambda rec: rec["panels"])
     panels = [rec["panels"] for rec in ordered]
     values = [rec["values"][dof][quantity] for rec in ordered]
-    return richardson(panels, values)
+    out = dict(richardson(panels, values))
+    out.update(extrapolation_band(panels, values))
+    return out
 
 
 def _reference_entry(cell: dict[str, Any], dof: str, quantity: str) -> dict[str, Any]:
@@ -475,6 +515,10 @@ def compare(
                     "capytaine_shift": cp["extrapolation_shift"],
                     "relative": float(rel),
                     "relative_finest_levels": float(raw_rel),
+                    "tensorbem_extrapolation_band": tb["band"],
+                    "tensorbem_extrapolation_band_basis": tb["band_basis"],
+                    "tensorbem_value_without_finest_rung": tb["coarse_value"],
+                    "tensorbem_order_without_finest_rung": tb["coarse_order"],
                 }
                 slot = f"{dof}.{quantity}"
                 worst[slot] = max(worst.get(slot, 0.0), abs(rel))
@@ -502,6 +546,12 @@ def compare(
         "tolerances": {"added_mass": tol_added_mass, "damping": tol_damping,
                        "owner_limit": plan.OWNER_LIMIT},
     }
+
+
+def q_band(quantities: dict[str, Any], dof: str, quantity: str) -> float | None:
+    """Extrapolation band of one ``dof``/``quantity`` entry, if measured."""
+    entry = quantities.get(f"{dof}.{quantity}") or {}
+    return entry.get("tensorbem_extrapolation_band")
 
 
 def gates(comparison: dict[str, Any], ladder: dict[str, Any],
@@ -568,6 +618,33 @@ def gates(comparison: dict[str, Any], ladder: dict[str, Any],
             "min_order": min(tb_orders) if tb_orders else None,
             "limit": plan.MIN_OBSERVED_ORDER,
             "passed": bool(tb_orders) and min(tb_orders) >= plan.MIN_OBSERVED_ORDER,
+        }
+    )
+    # Extrapolation self-consistency: on the cells that carry the confirmation
+    # rung, dropping the coarsest rung must not move the extrapolant by more
+    # than its share of the tolerance.  Without those cells the check is unknown
+    # (``worst`` is None), never passed.
+    band_ratios: dict[str, float] = {}
+    for quantity in ("added_mass", "damping"):
+        limit = plan.extrapolation_limit(quantity)
+        bands = [
+            band
+            for row in comparison["rows"]
+            for dof in MODE_NAMES
+            if (band := q_band(row["quantities"], dof, quantity)) is not None
+        ]
+        if bands:
+            band_ratios[quantity] = max(bands) / limit
+    out.append(
+        {
+            "gate": "extrapolation_self_consistent",
+            "worst": max(band_ratios.values()) if band_ratios else None,
+            "limit": 1.0,
+            "limits": {key: plan.extrapolation_limit(key)
+                       for key in ("added_mass", "damping")},
+            "note": "worst band as a fraction of its admissible share "
+                    f"({plan.EXTRAPOLATION_BAND_FRACTION:.2f} x tolerance)",
+            "passed": bool(band_ratios) and max(band_ratios.values()) <= 1.0,
         }
     )
     residuals = [
@@ -721,6 +798,31 @@ def render_document(result: dict[str, Any]) -> str:
             f"{_num(q['heave.damping']['tensorbem_order'], 2)} | "
             f"{_num(q['heave.damping']['capytaine_order'], 2)} |\n"
         )
+    lines.append(
+        "\n## 3b. Extrapolation uncertainty (cells with the confirmation rung)\n"
+    )
+    lines.append(
+        "The extrapolant is recomputed after dropping the coarsest rung; the "
+        "spread between the two is the measured uncertainty of the extrapolated "
+        "value.  A cell listed as `n/a` has only three rungs, so its "
+        "extrapolation uncertainty is unknown (not zero).\n\n"
+        "| `h/a` | `k0 a` | band A33 | band B33 | band A11 | band B11 | "
+        "admissible (A / B) |\n"
+        "|---:|---:|---:|---:|---:|---:|---:|\n"
+    )
+    for row in rows:
+        q = row["quantities"]
+        cells = [
+            _pct(q[f"{dof}.{quantity}"]["tensorbem_extrapolation_band"])
+            for dof, quantity in (("heave", "added_mass"), ("heave", "damping"),
+                                  ("surge", "added_mass"), ("surge", "damping"))
+        ]
+        lines.append(
+            f"| {row['h_over_a']:.0f} | {row['ka']:.2f} | "
+            + " | ".join(cells)
+            + f" | {_pct(plan.extrapolation_limit('added_mass')).lstrip('+')} / "
+            f"{_pct(plan.extrapolation_limit('damping')).lstrip('+')} |\n"
+        )
     lines.append("\n## 4. Negative control (the plan must see depth)\n")
     lines.append(
         "| `h/a` | `k0 a` | `k0 h` | (A33 finite − A33 deep)/A33 deep |\n"
@@ -748,6 +850,11 @@ def render_document(result: dict[str, Any]) -> str:
         "* Damping involves the radiated-wave amplitude and converges more "
         "slowly than added mass on both sides; the per-cell orders above make "
         "that visible rather than hiding it behind one number.\n"
+        "* The extrapolation band (section 3b) is a *self-consistency* measure, "
+        "not a truth bound: capytaine and TensorBEM share the inscribed-polyhedron "
+        "geometry bias, so a common geometric error would sit inside every band "
+        "and stay invisible.  What the band rules out is a discretisation error "
+        "of the TensorBEM ladder being mistaken for a solver disagreement.\n"
         f"* Measured order available on {_order_coverage(rows)} of the judged "
         "code/cell entries; where the reference ladder is not yet asymptotic "
         "(`n/a` order) the comparison uses the finest reference level, so that "
