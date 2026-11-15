@@ -1,0 +1,96 @@
+{
+  "case_code": "CASE-BEM-HULME-HEMISPHERE",
+  "study": "numpy_2.0.1_to_2.4.6_reverification",
+  "generated_at": "2026-11-15T08:00:00+00:00",
+  "environment": {
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "arch": "loongarch64"
+  },
+  "constants": {
+    "radius": 1.0,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "amplitude": 1.0,
+    "subdivisions": 4,
+    "panels": 1024
+  },
+  "cells": [
+    {
+      "ka": 2.2,
+      "panels": 1024,
+      "condition_number": 2.45,
+      "A11": 0.21965,
+      "A33": 0.38842,
+      "B11": 0.31789,
+      "B33": 0.08512,
+      "ref_A11": 0.22220,
+      "ref_A33": 0.39195,
+      "ref_B11": 0.31511,
+      "ref_B33": 0.08670,
+      "err_A11": -0.0115,
+      "err_A33": -0.0090,
+      "err_B11": 0.0088,
+      "err_B33": -0.0182,
+      "max_error": 0.0182,
+      "verdict": "PASS"
+    },
+    {
+      "ka": 3.5,
+      "panels": 1024,
+      "condition_number": 2.78,
+      "radiation_residual": 4.45e-04,
+      "diffraction_residual": 4.45e-04,
+      "A11": 0.16184,
+      "A33": 0.42068,
+      "B11": 0.18236,
+      "B33": 0.03193,
+      "ref_A11": 0.16344,
+      "ref_A33": 0.42246,
+      "ref_B11": 0.18264,
+      "ref_B33": 0.03106,
+      "err_A11": -0.0098,
+      "err_A33": -0.0042,
+      "err_B11": -0.0016,
+      "err_B33": 0.0279,
+      "max_error": 0.0279,
+      "verdict": "PASS",
+      "numpy_201_comparison": {
+        "A11": -0.00680,
+        "A33": 0.17198,
+        "B11": 0.15678,
+        "B33": -0.00060,
+        "err_A11": -1.0416,
+        "err_A33": -0.5929,
+        "err_B11": -0.1416,
+        "err_B33": -1.0195,
+        "max_error": 1.0416,
+        "verdict": "FAIL"
+      }
+    }
+  ],
+  "verdict": {
+    "criteria": {
+      "E1_numpy2_fix_verified": {
+        "criterion": "ka=3.5 errors <5% with numpy 2.4.6 (was >100% with numpy 2.0.1)",
+        "measured": 0.0279,
+        "numpy_201_measured": 1.0416,
+        "pass": true
+      },
+      "E2_no_sign_flip": {
+        "criterion": "A11 and B33 have same sign as reference at ka=3.5",
+        "A11_sign_match": true,
+        "B33_sign_match": true,
+        "pass": true
+      },
+      "E3_residual_healthy": {
+        "criterion": "Solver residual < 1e-2 at ka=3.5",
+        "measured": 4.45e-04,
+        "pass": true
+      }
+    },
+    "verdict": "PASS"
+  },
+  "conclusion": "The ka>2 'breakdown' reported in m20034 was caused by the numpy 2.0.1 solver bug (m20910), not a fundamental method limitation. With numpy 2.4.6, ka=3.5 results are within 3% of the Hulme reference.",
+  "repro_cmd": "PYTHONPATH=src python -m pytest tests/test_hulme_numpy2_regression.py -v"
+}
