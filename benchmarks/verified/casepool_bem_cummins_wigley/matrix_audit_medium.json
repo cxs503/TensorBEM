@@ -1,0 +1,1267 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "scope": "matrix-level audit of the committed 6-DOF radiation sweep",
+  "sweep": {
+    "label": "medium",
+    "band": [
+      0.2,
+      12.0
+    ],
+    "n_omega": 41,
+    "n_sections": 20,
+    "n_levels": 6,
+    "panel_count": 480,
+    "solver_residual_max": 0.00244707823996248,
+    "path": "benchmarks/verified/casepool_bem_cummins_wigley/sweep_medium.npz"
+  },
+  "environment": {
+    "length": 3.0,
+    "beam": 0.3,
+    "draft": 0.1875,
+    "density": 1025.0,
+    "gravity": 9.80665,
+    "band_default": [
+      0.2,
+      12.0
+    ],
+    "n_omega_default": 41,
+    "dt": 0.002,
+    "tau_max": 25.0
+  },
+  "tolerances": {
+    "round_trip": 0.02,
+    "reciprocity_factor": 0.5,
+    "zero_pattern_factor": 1.0,
+    "roundoff_level": 1e-06
+  },
+  "gates": {
+    "M0": {
+      "id": "M0",
+      "title": "mesh symmetry precondition (medium)",
+      "threshold": "mirror centroid distance <= 1e-09 L",
+      "passed": true,
+      "values": {
+        "mesh": "medium",
+        "n_sections": 20,
+        "n_levels": 6,
+        "panel_count": 480,
+        "x_mirror": {
+          "max_centroid_distance": 4.460365043975677e-16,
+          "median_centroid_distance": 2.2215299868541707e-16,
+          "relative_to_length": 1.4867883479918924e-16
+        },
+        "y_mirror": {
+          "max_centroid_distance": 2.220446049250313e-16,
+          "median_centroid_distance": 0.0,
+          "relative_to_length": 7.401486830834377e-17
+        }
+      }
+    },
+    "M1": {
+      "id": "M1",
+      "title": "reciprocity of the radiation matrices (A_ij = A_ji, B_ij = B_ji)",
+      "threshold": "max relative asymmetry <= 0.5 * C0 residual = 1.224e-03",
+      "passed": true,
+      "values": {
+        "added_mass_relative_asymmetry": 0.00019777749278608386,
+        "damping_relative_asymmetry": 0.0005051647716891499,
+        "added_mass_absolute_asymmetry": 0.03743592700694265,
+        "damping_absolute_asymmetry": 0.44981854988362713,
+        "worst_added_mass_pair": [
+          "sway",
+          "roll",
+          4.3116493435570105
+        ],
+        "worst_damping_pair": [
+          "surge",
+          "pitch",
+          12.0
+        ],
+        "matrix_scale_added_mass": 189.28304975244757,
+        "matrix_scale_damping": 890.4392687153179,
+        "solver_residual": 0.00244707823996248,
+        "limit": 0.00122353911998124,
+        "per_entry": [
+          {
+            "pair": [
+              "surge",
+              "surge"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 0.011999580968452312
+          },
+          {
+            "pair": [
+              "surge",
+              "sway"
+            ],
+            "added_mass_relative_asymmetry": 1.0015936820471127,
+            "damping_relative_asymmetry": 0.8496618953807251,
+            "added_mass_share_of_matrix": 1.0631459194489108e-06
+          },
+          {
+            "pair": [
+              "surge",
+              "heave"
+            ],
+            "added_mass_relative_asymmetry": 0.8840794260753889,
+            "damping_relative_asymmetry": 0.8014253381552586,
+            "added_mass_share_of_matrix": 2.3985482927258548e-05
+          },
+          {
+            "pair": [
+              "surge",
+              "roll"
+            ],
+            "added_mass_relative_asymmetry": 1.0359703250922425,
+            "damping_relative_asymmetry": 0.9172801137841291,
+            "added_mass_share_of_matrix": 1.6432066417573627e-08
+          },
+          {
+            "pair": [
+              "surge",
+              "pitch"
+            ],
+            "added_mass_relative_asymmetry": 0.001999167714748517,
+            "damping_relative_asymmetry": 0.01643566871158484,
+            "added_mass_share_of_matrix": 0.03879068276665739
+          },
+          {
+            "pair": [
+              "surge",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 1.0712476032287606,
+            "damping_relative_asymmetry": 0.9941578336382613,
+            "added_mass_share_of_matrix": 3.0139630664784626e-09
+          },
+          {
+            "pair": [
+              "sway",
+              "sway"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 1.0
+          },
+          {
+            "pair": [
+              "sway",
+              "heave"
+            ],
+            "added_mass_relative_asymmetry": 1.0523621407099346,
+            "damping_relative_asymmetry": 1.237001729234688,
+            "added_mass_share_of_matrix": 2.078582457353913e-06
+          },
+          {
+            "pair": [
+              "sway",
+              "roll"
+            ],
+            "added_mass_relative_asymmetry": 0.004459104656433938,
+            "damping_relative_asymmetry": 0.005578730846017013,
+            "added_mass_share_of_matrix": 0.04435363330185923
+          },
+          {
+            "pair": [
+              "sway",
+              "pitch"
+            ],
+            "added_mass_relative_asymmetry": 1.0173738404741781,
+            "damping_relative_asymmetry": 1.0856062700041909,
+            "added_mass_share_of_matrix": 4.3550085925582045e-06
+          },
+          {
+            "pair": [
+              "sway",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 0.09247698074831921,
+            "damping_relative_asymmetry": 0.06814518806133042,
+            "added_mass_share_of_matrix": 0.0012366394433389453
+          },
+          {
+            "pair": [
+              "heave",
+              "heave"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 0.7473042762669251
+          },
+          {
+            "pair": [
+              "heave",
+              "roll"
+            ],
+            "added_mass_relative_asymmetry": 0.8763738973981704,
+            "damping_relative_asymmetry": 0.7500325087817267,
+            "added_mass_share_of_matrix": 5.166997611551344e-08
+          },
+          {
+            "pair": [
+              "heave",
+              "pitch"
+            ],
+            "added_mass_relative_asymmetry": 0.35432058477914896,
+            "damping_relative_asymmetry": 1.1116724581753035,
+            "added_mass_share_of_matrix": 0.00016384118084553084
+          },
+          {
+            "pair": [
+              "heave",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 1.0121482242808368,
+            "damping_relative_asymmetry": 0.9248286533992431,
+            "added_mass_share_of_matrix": 1.021125311393311e-07
+          },
+          {
+            "pair": [
+              "roll",
+              "roll"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 0.003058747752652955
+          },
+          {
+            "pair": [
+              "roll",
+              "pitch"
+            ],
+            "added_mass_relative_asymmetry": 1.060072488068124,
+            "damping_relative_asymmetry": 0.8791293616963348,
+            "added_mass_share_of_matrix": 7.750372516496683e-08
+          },
+          {
+            "pair": [
+              "roll",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 1.1824766997529252,
+            "damping_relative_asymmetry": 0.9215115705427132,
+            "added_mass_share_of_matrix": 3.921323218168155e-05
+          },
+          {
+            "pair": [
+              "pitch",
+              "pitch"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 0.18098886639718725
+          },
+          {
+            "pair": [
+              "pitch",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 1.00343571904314,
+            "damping_relative_asymmetry": 0.9921758012622737,
+            "added_mass_share_of_matrix": 2.552960508371728e-08
+          },
+          {
+            "pair": [
+              "yaw",
+              "yaw"
+            ],
+            "added_mass_relative_asymmetry": 0.0,
+            "damping_relative_asymmetry": 0.0,
+            "added_mass_share_of_matrix": 0.7563994151387151
+          }
+        ],
+        "worst_per_entry_relative_asymmetry": 1.237001729234688,
+        "worst_per_entry_pair": [
+          "sway",
+          "heave"
+        ],
+        "resolution": {
+          "resolvable_absolute_asymmetry": 0.23159521612147496,
+          "smallest_resolvable_relative_break_on_surge_pitch": 0.03154208775703571,
+          "smallest_resolvable_relative_break_on_sway_roll": 0.027585995304018337
+        },
+        "resolution_note": "the gate normalises by the matrix scale, so a break confined to a low-magnitude entry is below its resolution: an entry carrying a fraction f of the matrix scale is only resolved down to limit/f of its own value (per_entry lists f and the measured per-entry asymmetry)"
+      }
+    },
+    "M2": {
+      "id": "M2",
+      "title": "geometric selection rules: symmetry-forbidden entries vanish",
+      "threshold": "max relative peak of a forbidden entry <= 1.0 * C0 residual = 2.447e-03",
+      "passed": true,
+      "values": {
+        "n_forbidden_entries": 26,
+        "n_allowed_entries": 10,
+        "forbidden_worst_pair": [
+          "sway",
+          "yaw"
+        ],
+        "forbidden_worst_relative_peak": 0.001391883664531174,
+        "limit": 0.00244707823996248,
+        "seated_above_roundoff": true,
+        "forbidden": [
+          {
+            "pair": [
+              "surge",
+              "sway"
+            ],
+            "added_mass_relative_peak": 1.0631459194489108e-06,
+            "damping_relative_peak": 3.929012403735023e-07
+          },
+          {
+            "pair": [
+              "surge",
+              "heave"
+            ],
+            "added_mass_relative_peak": 1.9790072393751335e-05,
+            "damping_relative_peak": 7.210940912006841e-05
+          },
+          {
+            "pair": [
+              "surge",
+              "roll"
+            ],
+            "added_mass_relative_peak": 1.6432066417573627e-08,
+            "damping_relative_peak": 2.3139328275670438e-08
+          },
+          {
+            "pair": [
+              "surge",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 3.0139630664784626e-09,
+            "damping_relative_peak": 6.236870761716594e-08
+          },
+          {
+            "pair": [
+              "sway",
+              "surge"
+            ],
+            "added_mass_relative_peak": 6.204800218763509e-09,
+            "damping_relative_peak": 5.9068027780314434e-08
+          },
+          {
+            "pair": [
+              "sway",
+              "heave"
+            ],
+            "added_mass_relative_peak": 2.8117180278931786e-07,
+            "damping_relative_peak": 7.334015984263542e-07
+          },
+          {
+            "pair": [
+              "sway",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 7.566322455078186e-08,
+            "damping_relative_peak": 2.231948197283747e-07
+          },
+          {
+            "pair": [
+              "sway",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 0.0012313927337264338,
+            "damping_relative_peak": 0.001371143841381313
+          },
+          {
+            "pair": [
+              "heave",
+              "surge"
+            ],
+            "added_mass_relative_peak": 2.3985482927258548e-05,
+            "damping_relative_peak": 7.143984385174248e-05
+          },
+          {
+            "pair": [
+              "heave",
+              "sway"
+            ],
+            "added_mass_relative_peak": 2.078582457353913e-06,
+            "damping_relative_peak": 3.0944989338036115e-06
+          },
+          {
+            "pair": [
+              "heave",
+              "roll"
+            ],
+            "added_mass_relative_peak": 5.166997611551344e-08,
+            "damping_relative_peak": 1.2499818643175499e-07
+          },
+          {
+            "pair": [
+              "heave",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 0.00016384118084553084,
+            "damping_relative_peak": 0.00023985535481219143
+          },
+          {
+            "pair": [
+              "heave",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 1.021125311393311e-07,
+            "damping_relative_peak": 1.2512381765131924e-07
+          },
+          {
+            "pair": [
+              "roll",
+              "surge"
+            ],
+            "added_mass_relative_peak": 5.910667709774448e-10,
+            "damping_relative_peak": 1.9140826020751444e-09
+          },
+          {
+            "pair": [
+              "roll",
+              "heave"
+            ],
+            "added_mass_relative_peak": 1.2901081354361407e-08,
+            "damping_relative_peak": 3.124548306917981e-08
+          },
+          {
+            "pair": [
+              "roll",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 4.655841605207641e-09,
+            "damping_relative_peak": 3.124240158116526e-09
+          },
+          {
+            "pair": [
+              "roll",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 3.921323218168155e-05,
+            "damping_relative_peak": 7.702010361262911e-05
+          },
+          {
+            "pair": [
+              "pitch",
+              "sway"
+            ],
+            "added_mass_relative_peak": 4.3550085925582045e-06,
+            "damping_relative_peak": 2.6072251450442645e-06
+          },
+          {
+            "pair": [
+              "pitch",
+              "heave"
+            ],
+            "added_mass_relative_peak": 0.00010578887783743605,
+            "damping_relative_peak": 0.0002696436240858262
+          },
+          {
+            "pair": [
+              "pitch",
+              "roll"
+            ],
+            "added_mass_relative_peak": 7.750372516496683e-08,
+            "damping_relative_peak": 2.5847800607021295e-08
+          },
+          {
+            "pair": [
+              "pitch",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 2.552960508371728e-08,
+            "damping_relative_peak": 2.5332467785590865e-07
+          },
+          {
+            "pair": [
+              "yaw",
+              "surge"
+            ],
+            "added_mass_relative_peak": 2.1473764470659607e-10,
+            "damping_relative_peak": 3.6436836566612737e-10
+          },
+          {
+            "pair": [
+              "yaw",
+              "sway"
+            ],
+            "added_mass_relative_peak": 0.0012366394433389453,
+            "damping_relative_peak": 0.001391883664531174
+          },
+          {
+            "pair": [
+              "yaw",
+              "heave"
+            ],
+            "added_mass_relative_peak": 1.7243774124079583e-08,
+            "damping_relative_peak": 2.889183157969949e-08
+          },
+          {
+            "pair": [
+              "yaw",
+              "roll"
+            ],
+            "added_mass_relative_peak": 3.788933318254784e-05,
+            "damping_relative_peak": 1.6956357116425415e-05
+          },
+          {
+            "pair": [
+              "yaw",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 5.197834105766685e-10,
+            "damping_relative_peak": 1.9820626247151443e-09
+          }
+        ],
+        "allowed": [
+          {
+            "pair": [
+              "surge",
+              "surge"
+            ],
+            "added_mass_relative_peak": 0.011999580968452312,
+            "damping_relative_peak": 0.00932718850593404
+          },
+          {
+            "pair": [
+              "surge",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 0.03873493367012337,
+            "damping_relative_peak": 0.030703929757347086
+          },
+          {
+            "pair": [
+              "sway",
+              "sway"
+            ],
+            "added_mass_relative_peak": 1.0,
+            "damping_relative_peak": 1.0
+          },
+          {
+            "pair": [
+              "sway",
+              "roll"
+            ],
+            "added_mass_relative_peak": 0.04415585580907314,
+            "damping_relative_peak": 0.038721543682281125
+          },
+          {
+            "pair": [
+              "heave",
+              "heave"
+            ],
+            "added_mass_relative_peak": 0.7473042762669251,
+            "damping_relative_peak": 0.36456476958636075
+          },
+          {
+            "pair": [
+              "roll",
+              "roll"
+            ],
+            "added_mass_relative_peak": 0.003058747752652955,
+            "damping_relative_peak": 0.0019509381434815187
+          },
+          {
+            "pair": [
+              "pitch",
+              "pitch"
+            ],
+            "added_mass_relative_peak": 0.18098886639718725,
+            "damping_relative_peak": 0.12213930325896889
+          },
+          {
+            "pair": [
+              "yaw",
+              "yaw"
+            ],
+            "added_mass_relative_peak": 0.7563994151387151,
+            "damping_relative_peak": 0.8161531678363135
+          }
+        ],
+        "rules": {
+          "reflections": {
+            "x_mirror": [
+              -1.0,
+              1.0,
+              1.0
+            ],
+            "y_mirror": [
+              1.0,
+              -1.0,
+              1.0
+            ]
+          },
+          "parities": {
+            "x_mirror": [
+              1,
+              0,
+              0,
+              0,
+              1,
+              1
+            ],
+            "y_mirror": [
+              0,
+              1,
+              0,
+              1,
+              0,
+              1
+            ]
+          },
+          "allowed_pairs": [
+            [
+              "surge",
+              "surge"
+            ],
+            [
+              "surge",
+              "pitch"
+            ],
+            [
+              "sway",
+              "sway"
+            ],
+            [
+              "sway",
+              "roll"
+            ],
+            [
+              "heave",
+              "heave"
+            ],
+            [
+              "roll",
+              "roll"
+            ],
+            [
+              "pitch",
+              "pitch"
+            ],
+            [
+              "yaw",
+              "yaw"
+            ]
+          ],
+          "forbidden_pairs": [
+            [
+              "surge",
+              "sway"
+            ],
+            [
+              "surge",
+              "heave"
+            ],
+            [
+              "surge",
+              "roll"
+            ],
+            [
+              "surge",
+              "yaw"
+            ],
+            [
+              "sway",
+              "heave"
+            ],
+            [
+              "sway",
+              "pitch"
+            ],
+            [
+              "sway",
+              "yaw"
+            ],
+            [
+              "heave",
+              "roll"
+            ],
+            [
+              "heave",
+              "pitch"
+            ],
+            [
+              "heave",
+              "yaw"
+            ],
+            [
+              "roll",
+              "pitch"
+            ],
+            [
+              "roll",
+              "yaw"
+            ],
+            [
+              "pitch",
+              "yaw"
+            ]
+          ]
+        }
+      }
+    },
+    "M3": {
+      "id": "M3",
+      "title": "Cummins round trip on every non-zero entry of the 6-DOF matrix",
+      "threshold": "max pointwise relative error <= 2% on the entries the selection rules declare non-zero",
+      "passed": true,
+      "values": {
+        "n_entries_evaluated": 36,
+        "n_entries_gated": 10,
+        "gated_only_allowed": true,
+        "worst_pair": [
+          "roll",
+          "roll"
+        ],
+        "worst_relative_error": 0.002770560601591988,
+        "worst_even_parity_pair": [
+          "surge",
+          "surge"
+        ],
+        "worst_even_parity_error": 0.0,
+        "worst_impulse_pair": [
+          "heave",
+          "heave"
+        ],
+        "worst_impulse_relative_error": 5.099517217207276e-06,
+        "non_causal_pairs": [],
+        "kernel_dt": 0.002,
+        "kernel_tau_max": 25.0,
+        "entries": [
+          {
+            "pair": [
+              "surge",
+              "surge"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.001415841948793773,
+            "added_mass_relative_error_max": 0.21283268144350542,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 40.27528989525973,
+            "impulse_identity": 40.2752889340427,
+            "impulse_relative_error": 2.3866173490496076e-08,
+            "damping_peak": 8.305294912393824,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "surge",
+              "sway"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -4.240e-07, max 3.499e-04): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "surge",
+              "heave"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -6.421e-02, max 1.537e-08): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "surge",
+              "roll"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -1.866e-07, max 2.060e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "surge",
+              "pitch"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0009818598398761388,
+            "added_mass_relative_error_max": 0.18556383569262533,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 107.24926046043291,
+            "impulse_identity": 107.2492571398539,
+            "impulse_relative_error": 3.0961324118322296e-08,
+            "damping_peak": 27.339984759818627,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "surge",
+              "yaw"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -5.554e-05, max 1.012e-06): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "sway",
+              "surge"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -7.014e-07, max 5.260e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "sway",
+              "sway"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.002264358415875122,
+            "added_mass_relative_error_max": 0.2379324963829204,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 3470.0041987033537,
+            "impulse_identity": 3470.004190413534,
+            "impulse_relative_error": 2.3889941067999033e-09,
+            "damping_peak": 890.4392687153179,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "sway",
+              "heave"
+            ],
+            "allowed": false,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0025436206493731437,
+            "added_mass_relative_error_max": 0.8923643493134282,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 0.00144148861416372,
+            "impulse_identity": 0.0014414885277766632,
+            "impulse_relative_error": 5.992906300087916e-08,
+            "damping_peak": 0.000653049582977408,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "sway",
+              "roll"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0024494122721192696,
+            "added_mass_relative_error_max": 0.211194693308726,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 122.64836133318146,
+            "impulse_identity": 122.64836099454473,
+            "impulse_relative_error": 2.76103749980434e-09,
+            "damping_peak": 34.47918303997864,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "sway",
+              "pitch"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -1.326e-05, max 1.987e-04): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "sway",
+              "yaw"
+            ],
+            "allowed": false,
+            "sign_applied": -1.0,
+            "damping_relative_error_max": 0.002481088109078524,
+            "added_mass_relative_error_max": 0.34359100015385596,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 4.511977194830807,
+            "impulse_identity": 4.511977187942296,
+            "impulse_relative_error": 1.526716738125365e-09,
+            "damping_peak": 1.2209203194230882,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "heave",
+              "surge"
+            ],
+            "allowed": false,
+            "sign_applied": -1.0,
+            "damping_relative_error_max": 0.0003536756505159688,
+            "added_mass_relative_error_max": 0.5167886205161905,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 0.10766996459930454,
+            "impulse_identity": 0.10766996327675055,
+            "impulse_relative_error": 1.2283407151117519e-08,
+            "damping_peak": 0.06361284231648207,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "heave",
+              "sway"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.755e-03, max 2.586e-03): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "heave",
+              "heave"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0008686640204692131,
+            "added_mass_relative_error_max": 0.1088242683263727,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 1379.1589718114953,
+            "impulse_identity": 1379.1519388024383,
+            "impulse_relative_error": 5.099517217207276e-06,
+            "damping_peak": 324.6227868298474,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "heave",
+              "roll"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.137e-05, max 1.113e-04): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "heave",
+              "pitch"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.136e-01, max 2.681e-02): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "heave",
+              "yaw"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -8.832e-05, max 1.114e-04): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "roll",
+              "surge"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -5.346e-08, max 1.704e-06): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "roll",
+              "sway"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0024406263208682647,
+            "added_mass_relative_error_max": 0.21030675645520847,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 123.14189572192,
+            "impulse_identity": 123.14189538101758,
+            "impulse_relative_error": 2.768370718603474e-09,
+            "damping_peak": 34.63470715128712,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "roll",
+              "heave"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -8.009e-06, max 2.782e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "roll",
+              "roll"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.002770560601591988,
+            "added_mass_relative_error_max": 0.15017861815928357,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 5.684682802093943,
+            "impulse_identity": 5.684682788167665,
+            "impulse_relative_error": 2.449789799639255e-09,
+            "damping_peak": 1.7371919337905035,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "roll",
+              "pitch"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -6.315e-07, max 2.782e-06): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "roll",
+              "yaw"
+            ],
+            "allowed": false,
+            "sign_applied": -1.0,
+            "damping_relative_error_max": 0.002759527912200006,
+            "added_mass_relative_error_max": 0.5463253876734637,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 0.24284288727877465,
+            "impulse_identity": 0.24284288699550574,
+            "impulse_relative_error": 1.166469859729107e-09,
+            "damping_peak": 0.06858172473720749,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "pitch",
+              "surge"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0010021925281189442,
+            "added_mass_relative_error_max": 0.1839766572111756,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 107.70162871180601,
+            "impulse_identity": 107.70162539294898,
+            "impulse_relative_error": 3.0815291909831545e-08,
+            "damping_peak": 27.368436160225606,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "pitch",
+              "sway"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.322e-03, max 5.228e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "pitch",
+              "heave"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.401e-01, max 9.895e-08): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "pitch",
+              "roll"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.500e-06, max 2.302e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "pitch",
+              "pitch"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0011287959940576991,
+            "added_mass_relative_error_max": 0.14004809032064355,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 376.1494875630824,
+            "impulse_identity": 376.1494760974567,
+            "impulse_relative_error": 3.048156757922632e-08,
+            "damping_peak": 108.7576318753147,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "pitch",
+              "yaw"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -2.256e-04, max 6.150e-06): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "yaw",
+              "surge"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -3.244e-07, max 6.990e-08): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "yaw",
+              "sway"
+            ],
+            "allowed": false,
+            "sign_applied": -1.0,
+            "damping_relative_error_max": 0.001874967306529332,
+            "added_mass_relative_error_max": 0.327476202805918,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 4.349107873612011,
+            "impulse_identity": 4.349107873531312,
+            "impulse_relative_error": 1.8555300393137667e-11,
+            "damping_peak": 1.2393878723819354,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          },
+          {
+            "pair": [
+              "yaw",
+              "heave"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -8.829e-06, max 2.573e-05): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "yaw",
+              "roll"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -1.510e-02, max 2.376e-04): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "yaw",
+              "pitch"
+            ],
+            "allowed": false,
+            "round_trip_skipped": "entry changes sign inside the band (min -1.765e-06, max 4.119e-07): not a passive spectrum"
+          },
+          {
+            "pair": [
+              "yaw",
+              "yaw"
+            ],
+            "allowed": true,
+            "sign_applied": 1.0,
+            "damping_relative_error_max": 0.0022403087050074976,
+            "added_mass_relative_error_max": 0.25737193463829483,
+            "kernel_causal": true,
+            "kernel_even_parity_relative_error": 0.0,
+            "kernel_at_zero": 2587.9108165338303,
+            "impulse_identity": 2587.9108164699705,
+            "impulse_relative_error": 2.4676165550690367e-11,
+            "damping_peak": 726.7348299278572,
+            "band": [
+              0.5026548245743669,
+              7.199999999999999
+            ]
+          }
+        ]
+      }
+    },
+    "M4": {
+      "id": "M4",
+      "title": "kernel sign/impulse identity and causality on the cross entries",
+      "threshold": "K_ij(0+) = (2/pi) int B_ij domega within 2% on gated entries",
+      "passed": true,
+      "values": {
+        "worst_gated_pair": [
+          "heave",
+          "heave"
+        ],
+        "worst_gated_impulse_relative_error": 5.099517217207276e-06,
+        "worst_cross_pair": [
+          "surge",
+          "pitch"
+        ],
+        "worst_cross_impulse_relative_error": 3.0961324118322296e-08,
+        "cross_entry_kernel_at_zero": {
+          "surge/pitch": 107.24926046043291
+        },
+        "cross_entry_impulse_identity": {
+          "surge/pitch": 107.2492571398539
+        },
+        "non_causal_pairs": [],
+        "sign_note": "a cross entry K_ij is even in tau but its sign follows the sign of B_ij, so |B| would pass the magnitude check and fail here"
+      }
+    },
+    "M5": {
+      "id": "M5",
+      "title": "negative controls: every gate must fail under its own corruption",
+      "threshold": "each control leaves its gate in FAIL",
+      "passed": true,
+      "values": {
+        "controls": {
+          "M1_unilateral_break_50pct_sway_roll": {
+            "passed_under_corruption": false,
+            "measured": 0.019186111853904318,
+            "limit": 0.00122353911998124
+          },
+          "M2_forbidden_entry_filled_10pct": {
+            "passed_under_corruption": false,
+            "measured": 0.10001979007239375,
+            "limit": 0.00244707823996248
+          },
+          "M3_kernel_undersampled_dt_0p2": {
+            "passed_under_corruption": false,
+            "measured": 0.19050539481592552,
+            "limit": 0.02,
+            "note": "heave entry re-transformed on a 0.2 s kernel grid: the memory is sampled too coarsely for a 12 rad/s band"
+          }
+        }
+      }
+    }
+  },
+  "verdict": {
+    "n_gates": 6,
+    "n_passed": 6,
+    "passed": [
+      "M0",
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ],
+    "failed": [],
+    "all_passed": true
+  }
+}
