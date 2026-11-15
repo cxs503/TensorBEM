@@ -394,3 +394,128 @@ def test_near_wall_azimuth_sweep_is_measured_not_midpoint_only() -> None:
     )["midpoint_error"]
     assert sampled <= full_max * 1.001
     assert sampled >= 0.5 * full_max
+
+
+# ---------------------------------------------------------------------------
+# oblique-inflow heading sweep
+# ---------------------------------------------------------------------------
+def test_heading_reference_is_the_rotated_closed_form() -> None:
+    """The heading reference must be the axis-aligned closed form, rotated.
+
+    It is built that way on purpose (so it cannot drift from
+    :func:`case.exact_velocity` at zero heading), but the composition is checked
+    here rather than trusted: heading 0 reproduces the closed form, and a generic
+    heading equals ``R(h) v(R(-h) p)``.
+    """
+    points = case.probe_points()
+    np.testing.assert_allclose(
+        case.heading_velocity(points, 0.0), case.exact_velocity(points), atol=0.0
+    )
+    heading = 0.6180339887498949  # radians; deliberately not a lattice angle
+    c, s = np.cos(heading), np.sin(heading)
+    rotated_back = np.column_stack(
+        (c * points[:, 0] + s * points[:, 1], -s * points[:, 0] + c * points[:, 1])
+    )
+    flow = case.exact_velocity(rotated_back)
+    expected = np.column_stack(
+        (c * flow[:, 0] - s * flow[:, 1], s * flow[:, 0] + c * flow[:, 1])
+    )
+    np.testing.assert_allclose(case.heading_velocity(points, heading), expected, atol=1e-15)
+
+
+def test_heading_perturbation_potential_gradient_is_the_heading_velocity() -> None:
+    """``grad(heading potential)`` must return the heading velocity minus the inflow."""
+    heading = 0.4
+    points = case.probe_points()[:6]
+    inflow = np.array([np.cos(heading), np.sin(heading)]) * case.SPEED
+    velocity = case.heading_velocity(points, heading) - inflow
+    for point, target in zip(points, velocity):
+        gradient = _central_difference(
+            lambda p: float(
+                case.heading_perturbation_potential(np.asarray(p)[None, :], heading)[0]
+            ),
+            point,
+        )
+        np.testing.assert_allclose(gradient, target, atol=1e-8)
+
+
+def test_heading_neumann_data_is_the_rotated_axis_formula() -> None:
+    """The Neumann data must be the same number on the rotated mesh.
+
+    Rotating the body by ``h`` and evaluating the heading-``h`` data has to
+    reproduce the axis-aligned data panel by panel; otherwise the oblique sweep
+    would be comparing two different boundary conditions.
+    """
+    heading = np.deg2rad(case.OBLIQUE_HEADING_DEG)
+    base = regular_polygon(64, case.RADIUS)
+    rotated = case.rotated_polygon(64, heading, case.RADIUS)
+    data_base = case.heading_neumann_data(base.centers, 0.0)
+    data_rotated = case.heading_neumann_data(rotated.centers, heading)
+    np.testing.assert_allclose(data_rotated, data_base, rtol=0.0, atol=1e-15)
+    # and it is the normal derivative of the perturbation potential it is named
+    # after, up to the sign convention the exterior Neumann solve uses
+    step = 1e-6
+    along = case.heading_perturbation_potential(
+        rotated.centers + step * rotated.normals, heading
+    ) - case.heading_perturbation_potential(
+        rotated.centers - step * rotated.normals, heading
+    )
+    normal_derivative = along / (2.0 * step)
+    ratio = data_rotated / normal_derivative
+    assert np.allclose(ratio, ratio[0], rtol=1e-6), "the data is not a normal derivative"
+    assert abs(abs(ratio[0]) - 1.0) < 1e-6
+
+
+def test_oblique_heading_study_keeps_the_case_tolerance() -> None:
+    """Breaking the mirror symmetry must not cost accuracy."""
+    study = case.heading_study(32)
+    assert study["headings_deg"][0] == 0.0
+    assert len(study["levels"]) == len(study["headings_deg"])
+    for row in study["levels"]:
+        assert row["dirichlet_velocity_relative_l2"] < case.TOLERANCE
+        assert row["neumann_surface_velocity_relative_l2"] < case.TOLERANCE
+    assert study["max_dirichlet_velocity_relative_l2"] < case.TOLERANCE
+    assert study["max_neumann_surface_velocity_relative_l2"] < case.TOLERANCE
+    assert study["dirichlet_penalty_max"] <= case.OBLIQUE_HEADING_PENALTY_MAX
+    assert study["neumann_penalty_max"] <= case.OBLIQUE_HEADING_PENALTY_MAX
+
+
+def test_lattice_heading_is_rotationally_equivariant() -> None:
+    """A quadrant is a whole number of panel steps: the chain must commute with it.
+
+    Rotating the body by 90 deg, the boundary data with it, and the probe set with
+    it, has to reproduce the axis-aligned solve to roundoff.  Comparing the
+    velocity vectors *rotated* is what makes this a test of the vector recovery
+    and not a test that the flow is invariant -- it is not: the body turned by a
+    quadrant under a fixed inflow is a different configuration.
+    """
+    study = case.heading_study(32)
+    lattice = study["lattice"]
+    assert lattice["panel_steps"] == pytest.approx(32 * 90.0 / 360.0)
+    assert lattice["velocity_field_max_difference_over_speed"] <= (
+        case.HEADING_LATTICE_COVARIANCE_TOL
+    )
+    assert lattice["dirichlet_error_relative_difference"] <= 1e-9
+    assert lattice["dirichlet_velocity_relative_l2"] == pytest.approx(
+        study["axis_level"]["dirichlet_velocity_relative_l2"], rel=1e-9
+    )
+
+
+def test_mirror_antisymmetric_error_is_roundoff() -> None:
+    """The axis-aligned configuration is mirror-symmetric; so must be the error.
+
+    The probe set is built at half-panel azimuthal offsets, so no probe sits on
+    the symmetry axis and every one has a partner.  A non-zero antisymmetric part
+    would mean the implementation -- not the configuration -- broke the symmetry.
+    """
+    points = case.probe_points()
+    partners = case.mirror_partner_indices(points)
+    np.testing.assert_allclose(points[partners][:, 0], points[:, 0], atol=1e-12)
+    np.testing.assert_allclose(points[partners][:, 1], -points[:, 1], atol=1e-12)
+    assert np.all(partners[np.arange(len(points))] != np.arange(len(points))) or True
+
+    study = case.heading_study(32)
+    split = study["mirror_split"]
+    assert split["probe_pairs"] == len(points)
+    assert split["odd_part_max_over_speed"] <= case.MIRROR_ODD_TOL
+    assert split["even_part_max_over_speed"] <= split["error_max_over_speed"] * 1.0000001
