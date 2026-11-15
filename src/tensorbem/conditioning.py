@@ -99,7 +99,7 @@ def _power_iteration_smallest(
         for _ in range(iterations):
             w = lu_solve((lu, piv), v)
             sigma = np.linalg.norm(w)
-            if sigma < tol:
+            if not np.isfinite(sigma) or sigma < tol:
                 return 0.0
             v = w / sigma
         return float(1.0 / sigma)
@@ -111,7 +111,7 @@ def _power_iteration_smallest(
             except np.linalg.LinAlgError:
                 return 0.0
             sigma = np.linalg.norm(w)
-            if sigma < tol:
+            if not np.isfinite(sigma) or sigma < tol:
                 return 0.0
             v = w / sigma
         return float(1.0 / sigma)
@@ -163,6 +163,46 @@ def estimate_condition_number(
         else:
             cond = sigma_max / sigma_min
         return cond, "power_iteration", power_iterations
+
+
+def condition_number_with_fallback(matrix: FloatArray) -> tuple[float, str]:
+    """Condition number of ``matrix`` with a non-SVD fallback.
+
+    ``numpy.linalg.cond`` is singular-value based.  Some LAPACK builds return
+    ``inf`` (or ``nan``) for perfectly well conditioned panels; the loongarch64
+    compute nodes did exactly that for the 128-panel single-layer matrix whose
+    true condition number is ~76 (``docs/dev_report_m21296_cylinder_near_wall_keyerror.md``).
+    Callers that treat the condition number as a hard "is this system singular"
+    gate then reject a solvable problem.  A non-finite SVD result is therefore
+    re-estimated with the LU-based power iteration of
+    :func:`estimate_condition_number`, which never calls into the SVD.
+
+    Parameters
+    ----------
+    matrix : ndarray
+        Square matrix to analyse.
+
+    Returns
+    -------
+    (condition, source) : tuple[float, str]
+        ``source`` is ``"svd"`` when ``numpy.linalg.cond`` returned a finite
+        value and ``"power_iteration"`` when the fallback was needed.
+    """
+    condition = float(np.linalg.cond(matrix))
+    if np.isfinite(condition):
+        return condition, "svd"
+    # ``estimate_condition_number`` works on square matrices only, so a
+    # least-squares system is estimated through its Gram matrix, using
+    # ``cond(A) = sqrt(cond(A^T A))`` in the 2-norm.
+    square = np.asarray(matrix, dtype=float)
+    gram = square.shape[0] != square.shape[1]
+    if gram:
+        square = square.T @ square
+    estimate, method, _ = estimate_condition_number(square, method="power_iteration")
+    if gram:
+        method = f"{method}_gram"
+        estimate = float(np.sqrt(estimate)) if np.isfinite(estimate) else float(estimate)
+    return float(estimate), method
 
 
 def estimate_operator_conditions(

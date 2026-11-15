@@ -50,6 +50,8 @@ import math
 import numpy as np
 from numpy.typing import NDArray
 
+from .conditioning import condition_number_with_fallback
+
 FloatArray = NDArray[np.float64]
 
 # A ring fit is a small linear least-squares problem; conditioning above this
@@ -180,11 +182,12 @@ def fit_ring(
     for n in range(1, order + 1):
         columns.append(np.sin(n * theta))
     basis = np.column_stack(columns)
-    condition_number = float(np.linalg.cond(basis))
+    condition_number, condition_source = condition_number_with_fallback(basis)
     if not np.isfinite(condition_number) or condition_number > _MAX_FIT_CONDITION:
         raise ValueError(
             "the harmonic basis is numerically rank deficient for this sampling "
-            f"(condition number {condition_number:.3e} > {_MAX_FIT_CONDITION:.1e}); "
+            f"(condition number {condition_number:.3e} > {_MAX_FIT_CONDITION:.1e}, "
+            f"estimated by {condition_source}); "
             "use more samples or a lower order"
         )
     coefficients, *_ = np.linalg.lstsq(basis, samples, rcond=None)
