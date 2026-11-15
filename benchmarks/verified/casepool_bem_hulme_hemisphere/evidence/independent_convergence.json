@@ -1,6 +1,6 @@
 {
   "anchor_band": 0.05,
-  "artifact_dir": "/root/tp-agent/work/m21334/benchmarks/verified/casepool_bem_hulme_hemisphere",
+  "artifact_dir": "/root/tp-agent/work/m21359/benchmarks/verified/casepool_bem_hulme_hemisphere",
   "capytaine_panels": [
     256.0,
     576.0,
@@ -1608,10 +1608,45 @@
       "criterion": "no in-house rung may be dropped for a recorded solve-stage residual above 0.01; rungs that carry no recorded residual are listed as unproven instead of being counted as healthy",
       "dropped": [],
       "measured": 0.009622410465603701,
+      "mixed_provenance": {
+        "hosts": [],
+        "is_mixed": false,
+        "n_rungs": 3,
+        "n_rungs_unknown_host": 3
+      },
       "n_rungs_dropped": 0,
       "n_rungs_recorded": 3,
       "n_rungs_used": 3,
       "pass": true,
+      "rung_ledger": [
+        {
+          "host": null,
+          "host_source": "row",
+          "numpy": null,
+          "panels": 64.0,
+          "residual": 0.009622410465603701,
+          "solve_warnings": [],
+          "subdivisions": 2
+        },
+        {
+          "host": null,
+          "host_source": "row",
+          "numpy": null,
+          "panels": 256.0,
+          "residual": 0.00211598595759268,
+          "solve_warnings": [],
+          "subdivisions": 3
+        },
+        {
+          "host": null,
+          "host_source": "row",
+          "numpy": null,
+          "panels": 1024.0,
+          "residual": 0.0003239687125906378,
+          "solve_warnings": [],
+          "subdivisions": 4
+        }
+      ],
       "unproven_panels": []
     },
     "E1_convergence_model_credible": {
@@ -1727,7 +1762,7 @@
     }
   },
   "inhouse": {
-    "artifact": "/root/tp-agent/work/m21334/benchmarks/verified/casepool_bem_hulme_hemisphere/inhouse_ladder_ka2_healthy.json",
+    "artifact": "/root/tp-agent/work/m21359/benchmarks/verified/casepool_bem_hulme_hemisphere/inhouse_ladder_ka2_healthy.json",
     "dropped_rungs": [],
     "ka": 2.0,
     "n_rungs": 3,
