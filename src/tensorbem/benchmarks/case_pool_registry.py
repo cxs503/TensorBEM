@@ -334,18 +334,29 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_rigid_body_mass/results.json",
             "docs/case_bem_rigid_body_mass/verdict.json",
             "docs/case_bem_rigid_body_mass/adversarial_audit.json",
+            "docs/case_bem_rigid_body_mass/invariant_battery.json",
+            "docs/case_bem_rigid_body_mass/invariant_battery_verdict.json",
         ),
         doc="docs/case_bem_rigid_body_mass/CASE.md",
         figures=(
             "docs/case_bem_rigid_body_mass/fig_momentum_route.png",
             "docs/case_bem_rigid_body_mass/fig_adversarial_audit.png",
             "docs/case_bem_rigid_body_mass/fig_external_route.png",
+            "docs/case_bem_rigid_body_mass/fig_invariant_detection.png",
+            "docs/case_bem_rigid_body_mass/fig_quadrature_conditioning.png",
         ),
         repro_cmd=(
             "PYTHONPATH=src python3 -m tensorbem.benchmarks.casepool_bem_rigid_body_mass "
             "--outdir docs/case_bem_rigid_body_mass"
         ),
-        notes="6x6 rigid-body mass matrix M_RB: closed block form (Fossen 2011 eq. 3.44) "
+        notes="round 3 (invariants): docs/case_bem_rigid_body_mass/INVARIANT_BATTERY.md "
+        "and src/tensorbem/benchmarks/rigid_body_mass_invariant_battery.py quantify which "
+        "rigid-body invariants (symmetry / positive definiteness / kinetic energy / momentum "
+        "definition / reference-point congruence / scale covariance) are load-bearing against "
+        "seven injected defects, name the blind spots, and pin the conditioning domain of the "
+        "quadrature route (apex at the vertex mean; the pre-fix apex-at-reference formulation "
+        "loses every significant digit for reference points ~1e5 body lengths away). "
+        "6x6 rigid-body mass matrix M_RB: closed block form (Fossen 2011 eq. 3.44) "
         "vs signed-tetrahedron quadrature of the panelised body, rotated body with a full "
         "inertia tensor, capytaine external assembly, and the momentum-definition route "
         "(route P) that pins the off-diagonal sign convention; pre-fix coupling control "
