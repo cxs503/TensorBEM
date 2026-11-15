@@ -439,3 +439,131 @@ def test_free_decay_gate_reports_negative_damping_instead_of_raising() -> None:
     assert gate["passed"] is False
     assert gate["values"]["status"].startswith("undecidable: non-physical negative")
     assert gate["values"]["min_radiation_damping"] < 0.0
+"""Anchor-gate tests: zero free parameters, and the A_inf referee itself."""
+
+# appended to tests/test_case_bem_cummins_wigley.py
+
+
+def _fake_anchor(values, *, self_check_passed=True):
+    return {
+        "method": "synthetic",
+        "center_m": [0.0, 0.0, 0.0],
+        "n_sections": 12,
+        "n_levels": 4,
+        "panel_count": 192,
+        "doubled_panel_count": 384,
+        "doubled_volume_over_hull_volume": 2.0,
+        "condition_number": 8.0,
+        "solver_relative_residual_l2": 1e-14,
+        "symmetry_error": 0.0,
+        "added_mass_inf_diagonal": list(values),
+        "added_mass_inf": {name: float(values[i]) for i, name in enumerate(case.DOF_NAMES)},
+        "self_check": {
+            "passed": bool(self_check_passed),
+            "relative_error": 0.001,
+            "tolerance": case.TOLERANCES["anchor_analytic"],
+            "panels": 360,
+        },
+    }
+
+
+def test_added_mass_inf_gate_passes_at_the_anchor_and_fails_off_it() -> None:
+    """C7 must bite when the fitted A_inf walks away from the physical limit."""
+    w, mass, b = _synthetic_pair()
+    sweep = _fake_sweep(w, mass, b)
+    rows = case.kk_gate(sweep)["values"]["per_dof"]
+    fitted = [row["added_mass_inf_closure"] for row in rows]
+    scale = [row["residual_scale"] for row in rows]
+
+    ok = case.added_mass_inf_gate(sweep, _fake_anchor(fitted), closure_rows=rows)
+    assert ok["passed"] is True
+    assert ok["values"]["worst_relative_to_added_mass_scale"] == pytest.approx(0.0)
+
+    # shift every anchor by 25 % of the added-mass amplitude: the free parameter
+    # the closure spent is now larger than the criterion it is judged by.
+    off = [fitted[i] + 0.25 * scale[i] for i in range(6)]
+    bad = case.added_mass_inf_gate(sweep, _fake_anchor(off), closure_rows=rows)
+    assert bad["passed"] is False
+    assert bad["values"]["worst_relative_to_added_mass_scale"] == pytest.approx(0.25)
+    assert "fail" in bad["status"]
+
+    # an anchor that cannot referee anything decides nothing
+    unvalidated = case.added_mass_inf_gate(
+        sweep, _fake_anchor(fitted, self_check_passed=False), closure_rows=rows
+    )
+    assert unvalidated["passed"] is False
+    assert unvalidated["status"].startswith("undecidable")
+
+
+def test_anchored_kk_gate_has_no_free_parameter() -> None:
+    """Supplying A_inf removes the parameter that could absorb a constant offset."""
+    w, mass, b = _synthetic_pair()
+    exact_inf = 0.0  # by construction A - A_inf = -sum c/(a^2+w^2)
+    clean = _fake_sweep(w, mass, b)
+    fitted_clean = case.kk_gate(clean)["values"]["per_dof"][0]
+    anchored_clean = case.kk_gate(
+        clean, added_mass_inf=[exact_inf] * 6, identifier="C3a"
+    )["values"]["per_dof"][0]
+    assert anchored_clean["free_parameters"] == 0
+    assert fitted_clean["free_parameters"] == 1
+    # the residual is not zero even on an exact pair: the band is finite, so the
+    # omitted tails of the analytic damping are missing from the reconstruction
+    assert anchored_clean["max_relative_residual"] <= case.TOLERANCES["kk"]
+
+    # a constant offset in A is invisible to the fitted gate and fatal to the
+    # anchored one: that is exactly the hole the anchor closes.
+    shifted = _fake_sweep(w, mass + 0.2 * float(np.max(np.abs(mass))), b)
+    fitted_shifted = case.kk_gate(shifted)["values"]["per_dof"][0]
+    anchored_shifted = case.kk_gate(
+        shifted, added_mass_inf=[exact_inf] * 6, identifier="C3a"
+    )["values"]["per_dof"][0]
+    # the free parameter absorbs the offset: the fitted gate stays inside the
+    # criterion and barely moves, the anchored one is pushed out of it
+    assert fitted_shifted["max_relative_residual"] <= case.TOLERANCES["kk"]
+    assert fitted_shifted["max_relative_residual"] < 1.5 * fitted_clean["max_relative_residual"]
+    assert anchored_shifted["max_relative_residual"] > 3.0 * anchored_clean["max_relative_residual"]
+    assert anchored_shifted["max_relative_residual"] > case.TOLERANCES["kk"]
+
+
+def test_anchor_self_check_meets_its_bar() -> None:
+    """The image method must reproduce the closed-form half-sphere A_inf."""
+    check = case.anchor_self_check(8, 24)
+    assert check["added_mass_inf_exact"] == pytest.approx(
+        0.25 * case.DENSITY * 4.0 / 3.0 * math.pi
+    )
+    assert check["relative_error"] <= case.TOLERANCES["anchor_analytic"]
+    assert check["passed"] is True
+
+
+def test_anchor_is_mesh_converged_between_the_case_meshes() -> None:
+    """The A_inf referee must not move by its own tolerance over the mesh ladder."""
+    coarse = case.added_mass_inf_anchor(12, 4)
+    medium = case.added_mass_inf_anchor(20, 6)
+    worst = max(
+        abs(a - b) / max(abs(b), 1e-300)
+        for a, b in zip(coarse["added_mass_inf_diagonal"], medium["added_mass_inf_diagonal"])
+    )
+    assert worst < 0.06
+    assert medium["doubled_volume_over_hull_volume"] == pytest.approx(2.0, rel=1e-9)
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "sweep_medium.npz").exists(),
+    reason="production sweep artifact not committed",
+)
+def test_replay_artifact_reports_the_anchor_gates() -> None:
+    """The committed sweep must replay into the anchored verdict, not just the fit."""
+    replay = case.gates_from_artifact(ARTIFACT_DIR / "sweep_medium.npz")
+    for key in ("C3a", "C7"):
+        assert key in replay["gates"], key
+        assert replay["gates"][key]["passed"] is True, key
+    assert replay["gates"]["C3a"]["values"]["free_parameters"] == 0
+    assert replay["gates"]["C3"]["values"]["free_parameters"] == 1
+    # the anchored closure is a *stronger* test: its worst DOF cannot be better
+    # than the gate that was allowed to fit its own asymptote
+    assert (
+        replay["gates"]["C3a"]["values"]["worst_relative_residual"]
+        >= replay["gates"]["C3"]["values"]["worst_relative_residual"]
+    )
+    assert replay["gates"]["C7"]["values"]["anchor_self_check"]["passed"] is True
+    assert replay["added_mass_inf_anchor"]["doubled_volume_over_hull_volume"] == pytest.approx(2.0, rel=1e-9)

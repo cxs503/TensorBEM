@@ -77,6 +77,11 @@ from tensorbem.causality import (
     kk_added_mass_closure,
     local_tail_exponent,
 )
+from tensorbem.added_mass_limit import (
+    added_mass_limit,
+    half_immersed_sphere_added_mass,
+    half_immersed_sphere_mesh,
+)
 from tensorbem.free_surface_solver3d import solve_radiation_3d
 from tensorbem.hydrostatic import (
     compute_displaced_volume_and_buoyancy,
@@ -122,6 +127,11 @@ VOLUME_ANALYTIC = CB_ANALYTIC * LENGTH * BEAM * DRAFT   # (4/9)LBT = 0.075 m^3
 
 DOF_NAMES = ("surge", "sway", "heave", "roll", "pitch", "yaw")
 
+#: Rotation centre of every rigid-body mode in this case.  The radiation sweep
+#: and the added-mass limit solve must use the *same* centre, otherwise the two
+#: ``A_inf`` columns differ by a rigid-body transfer and the comparison is void.
+CENTER = (0.0, 0.0, 0.0)
+
 #: Production band and node count, pre-declared.
 #:
 #: Two independent constraints fix the band (m18249):
@@ -161,7 +171,15 @@ TOLERANCES = {
     "geometry": 0.01,     # Cb / L/B / B/T contract
     "volume": 0.02,       # meshed displaced volume vs (4/9)LBT
     "panel_kh": 1.0,      # k*sqrt(max panel area) at the top of the band
-    "kk_budget": 0.05,    # half the case tolerance: above this the un-solved band
+    "kk_budget": 0.05,
+    # Independent A_inf anchor (image method).  The offset the band closure had
+    # to absorb must be smaller than the case tolerance when measured against
+    # the added-mass amplitude of the same DOF -- i.e. the free parameter the
+    # fitted gate spent is not allowed to exceed the criterion it is judged by.
+    "anchor": 0.10,
+    # The anchor itself is refereed by a closed-form case (half-immersed sphere,
+    # A_inf(heave) = m_full/4).  Measured 0.91 % at 828 panels, 2.0 % at 360.
+    "anchor_analytic": 0.03,    # half the case tolerance: above this the un-solved band
                           # can produce the residual on its own, so the sample is
                           # not evidence either way
     "solver_residual": 1.0e-2,  # gate C0: the BIE solve must actually have converged
@@ -347,6 +365,7 @@ def _solve_one(task: tuple[int, int, float]) -> tuple[float, Any, Any, float, in
         mesh,
         omega**2 / GRAVITY,
         modes=tuple(range(6)),
+        center=CENTER,
         density=DENSITY,
         gravity=GRAVITY,
         chief_points="auto",
@@ -541,6 +560,8 @@ def kk_gate(
     *,
     corrupt: bool = False,
     window: Sequence[bool] | None = None,
+    added_mass_inf: Sequence[float] | None = None,
+    identifier: str | None = None,
 ) -> dict[str, Any]:
     """C3: per-DOF Kramers-Kronig closure of the added mass (the case criterion).
 
@@ -556,6 +577,13 @@ def kk_gate(
     tabulated damping.  A sample therefore counts towards the gate only when the
     bound is below ``TOLERANCES["kk_budget"]`` (half the case tolerance); the
     remaining samples are reported as undecidable instead of as a violation.
+
+    ``added_mass_inf`` supplies the asymptote from outside the band (the
+    independent image-method limit).  The closure then spends **no** free
+    parameter: with it, the gate asks whether the KK *relation* holds rather
+    than whether one constant can absorb the disagreement.  ``identifier``
+    relabels the gate (``"C3a"``) so the anchored and fitted verdicts cannot be
+    confused in an artifact.
 
     ``window`` freezes the decidable mask, so the corrupted negative control
     (``corrupt=True``) is judged on exactly the samples where the clean sweep was
@@ -576,8 +604,17 @@ def kk_gate(
             # band.  A constant rescale would be invisible to a closure that
             # normalises by the same scale, so the corruption has to be in shape.
             damper_used = damper * np.where(sweep.omega > 1.0, 1.3, 1.0)
+        supplied = (
+            None
+            if added_mass_inf is None
+            else float(np.asarray(added_mass_inf, dtype=float).reshape(-1)[index])
+        )
         closure = kk_added_mass_closure(
-            sweep.omega, mass, damper_used, damping_tail=tail
+            sweep.omega,
+            mass,
+            damper_used,
+            damping_tail=tail,
+            added_mass_inf="closure" if supplied is None else supplied,
         )
         asymptote = fit_added_mass_asymptote(sweep.omega, mass)
         errors = np.abs(closure.relative_residual)
@@ -638,6 +675,7 @@ def kk_gate(
                 ),
                 "added_mass_inf_closure": float(closure.added_mass_inf),
                 "added_mass_inf_closure_source": closure.added_mass_inf_source,
+                "free_parameters": 1 if supplied is None else 0,
                 "added_mass_inf_tail_fit": float(asymptote.added_mass_inf),
                 "added_mass_inf_tail_fit_residual": float(asymptote.relative_residual),
                 "added_mass_inf_cross_check": float(
@@ -695,13 +733,19 @@ def kk_gate(
         status = "decided and certified"
     else:
         status = "pass, certified only where the truncation budget is small"
-    return {
-        "id": "C3" if not corrupt else "C6b",
-        "title": (
+    gate_id = identifier if identifier is not None else ("C3" if not corrupt else "C6b")
+    if not corrupt:
+        title = (
             "Kramers-Kronig closure of the added mass (6 DOF)"
-            if not corrupt
-            else "negative control: corrupted damping shape must fail the KK gate"
-        ),
+            if identifier is None
+            else "Kramers-Kronig closure of the added mass (6 DOF) with A_inf "
+            "supplied by the independent image solve: zero free parameters"
+        )
+    else:
+        title = "negative control: corrupted damping shape must fail the KK gate"
+    return {
+        "id": gate_id,
+        "title": title,
         "threshold": (
             f"max over decidable samples and DOF |A_BEM-A_KK|/max|A_BEM| <= "
             f"{tolerance:.0%} (a sample is decidable when the closed-form bound on "
@@ -729,7 +773,12 @@ def kk_gate(
                 "tabulated samples, anchored at the last sample; the omitted "
                 "PV integral is then closed in form"
             ),
-            "added_mass_inf_estimator": "least-squares closure (one free parameter)",
+            "added_mass_inf_estimator": (
+                "least-squares closure (one free parameter)"
+                if identifier is None
+                else "supplied by the independent image solve (zero free parameters)"
+            ),
+            "free_parameters": 0 if identifier is not None else 1,
             "added_mass_inf_cross_check_worst": float(
                 max(row["added_mass_inf_cross_check"] for row in rows)
             ),
@@ -1061,6 +1110,196 @@ def grid_convergence_study(
     }
 
 
+# ---------------------------------------------------------------------------
+# independent A_inf anchor (image method)
+# ---------------------------------------------------------------------------
+
+_ANCHOR_CACHE: dict[tuple[int, int], dict[str, Any]] = {}
+
+
+def anchor_self_check(nlat: int = 8, nlon: int = 24) -> dict[str, Any]:
+    """Referee the anchor itself against a closed-form case.
+
+    A half-immersed sphere is the one body whose infinite-frequency heave added
+    mass is exact: the antisymmetric image closes it into a full sphere driven
+    in rigid translation, so ``A_inf(heave) = m_full / 4``.  If the image
+    machinery cannot reproduce that within ``TOLERANCES["anchor_analytic"]``,
+    its numbers are not evidence about anything else either.
+    """
+    radius = 1.0
+    density = DENSITY
+    body = half_immersed_sphere_mesh(int(nlat), int(nlon), radius)
+    result = added_mass_limit(body, "infinite_frequency", density=density)
+    got = float(np.diag(np.asarray(result.added_mass_matrix, dtype=float))[2])
+    exact = half_immersed_sphere_added_mass(radius, density)
+    error = abs(got - exact) / exact
+    return {
+        "body": "half-immersed sphere, R = 1 m, free surface on the equator",
+        "exact_rule": "A_inf(heave) = rho * (4/3) pi R^3 / 4",
+        "panels": int(body.panel_count),
+        "doubled_panels": int(result.doubled_panel_count),
+        "added_mass_inf_heave": got,
+        "added_mass_inf_exact": exact,
+        "relative_error": float(error),
+        "tolerance": float(TOLERANCES["anchor_analytic"]),
+        "passed": bool(error <= TOLERANCES["anchor_analytic"]),
+    }
+
+
+def added_mass_inf_anchor(
+    n_sections: int,
+    n_levels: int,
+    *,
+    self_check: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """``A_inf`` of the six diagonal modes from the independent image solve.
+
+    The guess this replaces is the least-squares offset of :func:`kk_gate`: a
+    free parameter fitted to the same band that is being judged.  Here the same
+    quantity is obtained from a *different* boundary-value problem (the free
+    surface replaced by its high-frequency limit ``phi = 0``, closed exactly by
+    the antisymmetric image), so the KK relation can be tested with no free
+    parameter at all.
+    """
+    key = (int(n_sections), int(n_levels))
+    cached = _ANCHOR_CACHE.get(key)
+    if cached is not None:
+        return cached
+    mesh = wigley_wetted_hull_mesh(
+        LENGTH, BEAM, DRAFT, n_sections=key[0], n_levels=key[1]
+    )
+    result = added_mass_limit(
+        mesh, "infinite_frequency", center=CENTER, density=DENSITY
+    )
+    diagonal = np.diag(np.asarray(result.added_mass_matrix, dtype=float))
+    payload = {
+        "method": "antisymmetric image (phi = 0 on the calm waterplane) about z = 0",
+        "center_m": list(CENTER),
+        "n_sections": key[0],
+        "n_levels": key[1],
+        "panel_count": int(mesh.panel_count),
+        "doubled_panel_count": int(result.doubled_panel_count),
+        "doubled_volume_over_hull_volume": float(
+            result.doubled_volume / max(abs(result.hull_volume), 1e-300)
+        ),
+        "condition_number": float(result.condition_number),
+        "solver_relative_residual_l2": float(result.max_relative_residual_l2),
+        "symmetry_error": float(result.symmetry_error),
+        "added_mass_inf_diagonal": [float(value) for value in diagonal],
+        "added_mass_inf": {
+            name: float(diagonal[index]) for index, name in enumerate(DOF_NAMES)
+        },
+        "self_check": anchor_self_check() if self_check is None else self_check,
+    }
+    _ANCHOR_CACHE[key] = payload
+    return payload
+
+
+def anchor_for_sweep(sweep: Sweep, **kwargs: Any) -> dict[str, Any]:
+    """Anchor for the mesh the sweep was actually solved on (artifact identity)."""
+    return added_mass_inf_anchor(sweep.n_sections, sweep.n_levels, **kwargs)
+
+
+def added_mass_inf_gate(
+    sweep: Sweep,
+    anchor: dict[str, Any],
+    *,
+    closure_rows: Sequence[dict[str, Any]] | None = None,
+    identifier: str = "C7",
+) -> dict[str, Any]:
+    """C7: is the least-squares ``A_inf`` of the band closure physical?
+
+    ``C3`` may spend one free parameter (the ``A_inf`` the KK relation needs but
+    a finite band cannot supply).  This gate spends none: it compares that
+    fitted parameter with the image-method limit.  Two normalisations are
+    reported because they answer different questions -- against the added-mass
+    amplitude of the same DOF (comparable with the C3 residual scale, used for
+    the verdict) and against the anchor value itself (the estimator error).
+    """
+    self_check = anchor.get("self_check") or {}
+    anchor_values = np.asarray(anchor["added_mass_inf_diagonal"], dtype=float)
+    if closure_rows is None:
+        closure_rows = kk_gate(sweep)["values"]["per_dof"]
+    rows = []
+    worst = 0.0
+    worst_dof = ""
+    for index, name in enumerate(DOF_NAMES):
+        scale = float(closure_rows[index]["residual_scale"])
+        fitted = float(closure_rows[index]["added_mass_inf_closure"])
+        anchored = float(anchor_values[index])
+        difference = abs(fitted - anchored)
+        relative_scale = difference / max(scale, 1e-300)
+        relative_anchor = difference / max(abs(anchored), 1e-300)
+        rows.append(
+            {
+                "dof": int(index),
+                "dof_name": name,
+                "added_mass_inf_fitted": fitted,
+                "added_mass_inf_anchor": anchored,
+                "absolute_difference": float(difference),
+                "relative_to_added_mass_scale": float(relative_scale),
+                "relative_to_anchor": float(relative_anchor),
+                "added_mass_scale": scale,
+                "passed": bool(relative_scale <= TOLERANCES["anchor"]),
+            }
+        )
+        if relative_scale > worst:
+            worst = relative_scale
+            worst_dof = name
+    anchor_ok = bool(
+        self_check.get("passed", False)
+        and anchor["solver_relative_residual_l2"] <= TOLERANCES["solver_residual"]
+        and math.isfinite(anchor["condition_number"])
+    )
+    passed = bool(anchor_ok and worst <= TOLERANCES["anchor"])
+    if not anchor_ok:
+        status = (
+            "undecidable: the anchor is not validated (self-check "
+            f"{100.0 * float(self_check.get('relative_error', float('nan'))):.2f}% vs "
+            f"{100.0 * TOLERANCES['anchor_analytic']:.0f}% bar, solver residual "
+            f"{anchor['solver_relative_residual_l2']:.2e})"
+        )
+    else:
+        status = (
+            "pass" if passed else "fail: the fitted A_inf is off the physical limit "
+            f"by {100.0 * worst:.2f}% of the added-mass amplitude ({worst_dof})"
+        )
+    return {
+        "id": identifier,
+        "title": (
+            "A_inf anchor: the band-closure least-squares offset vs the independent "
+            "image-method limit"
+        ),
+        "threshold": (
+            f"|A_inf(fit) - A_inf(anchor)| / max|A_ii| <= {TOLERANCES['anchor']:.0%} "
+            "per DOF; anchor self-check (half-immersed sphere, exact m_full/4) "
+            f"<= {TOLERANCES['anchor_analytic']:.0%}"
+        ),
+        "passed": passed,
+        "status": status,
+        "values": {
+            "mesh": sweep.label,
+            "n_sections": int(sweep.n_sections),
+            "n_levels": int(sweep.n_levels),
+            "worst_dof": worst_dof,
+            "worst_relative_to_added_mass_scale": float(worst),
+            "worst_relative_to_anchor": float(
+                max(row["relative_to_anchor"] for row in rows)
+            ),
+            "anchor_validated": bool(self_check.get("passed", False)),
+            "anchor_self_check": self_check,
+            "anchor_condition_number": anchor["condition_number"],
+            "anchor_solver_relative_residual_l2": anchor[
+                "solver_relative_residual_l2"
+            ],
+            "anchor_symmetry_error": anchor["symmetry_error"],
+            "anchor_method": anchor["method"],
+            "anchor_center_m": anchor["center_m"],
+            "per_dof": rows,
+        },
+    }
+
+
 def case_verdict(gates: dict[str, Any]) -> dict[str, Any]:
     """Tally a gate dictionary into the case verdict (shared by run and replay)."""
     present = {key: value for key, value in gates.items() if value is not None}
@@ -1100,6 +1339,13 @@ def gates_from_artifact(
     gates["C0"] = solver_validity_gate(sweep)
     gates["C2"] = panel_adequacy_gate(sweep)
     gates["C3"] = kk_gate(sweep)
+    anchor = anchor_for_sweep(sweep)
+    gates["C3a"] = kk_gate(
+        sweep, added_mass_inf=anchor["added_mass_inf_diagonal"], identifier="C3a"
+    )
+    gates["C7"] = added_mass_inf_gate(
+        sweep, anchor, closure_rows=gates["C3"]["values"]["per_dof"]
+    )
     gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
     gates["C5"] = free_decay_gate(sweep, dof=int(dof_free_decay))
     gates["C6a"] = negative_control_gate(sweep, dof=int(dof_free_decay))
@@ -1115,6 +1361,7 @@ def gates_from_artifact(
     return {
         "case": CASE_SLUG,
         "artifact": str(path),
+        "added_mass_inf_anchor": anchor,
         "dof_free_decay": DOF_NAMES[int(dof_free_decay)],
         "sweep": sweep.summary(),
         "gates": gates,
@@ -1207,8 +1454,24 @@ def run_case(
     else:
         results["gates"]["C2"] = panel_adequacy_gate(production)
         results["gates"]["C3"] = kk_gate(production)
+        anchor = anchor_for_sweep(production)
+        results["added_mass_inf_anchor"] = anchor
+        results["gates"]["C3a"] = kk_gate(
+            production,
+            added_mass_inf=anchor["added_mass_inf_diagonal"],
+            identifier="C3a",
+        )
+        results["gates"]["C7"] = added_mass_inf_gate(
+            production, anchor, closure_rows=results["gates"]["C3"]["values"]["per_dof"]
+        )
         if len(meshes) > 1:
             results["gates"]["C3_coarse"] = kk_gate(sweeps[meshes[0]])
+            coarse_anchor = anchor_for_sweep(sweeps[meshes[0]])
+            results["gates"]["C3a_coarse"] = kk_gate(
+                sweeps[meshes[0]],
+                added_mass_inf=coarse_anchor["added_mass_inf_diagonal"],
+                identifier="C3a_coarse",
+            )
         results["gates"]["C4"] = round_trip_gate(production, dof=int(dof_free_decay))
         results["gates"]["C5"] = free_decay_gate(production, dof=int(dof_free_decay))
         results["gates"]["C6a"] = negative_control_gate(production, dof=int(dof_free_decay))
@@ -1390,6 +1653,57 @@ def render_markdown(results: dict[str, Any]) -> str:
                 f"| {medium_row['dof_name']} | {100.0*coarse_row['max_relative_residual']:.2f}% | "
                 f"{100.0*medium_row['max_relative_residual']:.2f}% |"
             )
+        lines.append("")
+    if "C3a" in gates and "C7" in gates:
+        lines.append(
+            "### 3c. A_inf anchor (independent image solve) and the "
+            "zero-free-parameter closure"
+        )
+        lines.append("")
+        lines.append(
+            "`C3` estimates `A_inf` by least squares on the same band it judges "
+            "(one free parameter).  `C3a` supplies it from the antisymmetric-image "
+            "solve instead, so the KK relation is tested with no free parameter; "
+            "`C7` is the same comparison read the other way round -- how far off "
+            "the fitted parameter is."
+        )
+        lines.append("")
+        lines.append(
+            "| DOF | A_inf (fit) | A_inf (anchor) | abs. diff | diff / max\\|A\\| | "
+            "diff / \\|A_inf(anchor)\\| | KK residual, A_inf fitted (C3) | "
+            "KK residual, A_inf anchored (C3a) |"
+        )
+        lines.append("| --- | --- | --- | --- | --- | --- | --- | --- |")
+        for fitted_row, anchored_row, anchor_row in zip(
+            gates["C3"]["values"]["per_dof"],
+            gates["C3a"]["values"]["per_dof"],
+            gates["C7"]["values"]["per_dof"],
+        ):
+            lines.append(
+                f"| {fitted_row['dof_name']} | "
+                f"{anchor_row['added_mass_inf_fitted']:.6g} | "
+                f"{anchor_row['added_mass_inf_anchor']:.6g} | "
+                f"{anchor_row['absolute_difference']:.3g} | "
+                f"{100.0*anchor_row['relative_to_added_mass_scale']:.2f}% | "
+                f"{100.0*anchor_row['relative_to_anchor']:.2f}% | "
+                f"{100.0*fitted_row['max_relative_residual']:.2f}% | "
+                f"{100.0*anchored_row['max_relative_residual']:.2f}% |"
+            )
+        lines.append("")
+        self_check = gates["C7"]["values"]["anchor_self_check"]
+        lines.append(
+            "Anchor self-check (half-immersed sphere, exact `A_inf(heave) = "
+            f"m_full/4`): {self_check['panels']} panels, error "
+            f"{100.0*self_check['relative_error']:.2f}% vs the "
+            f"{100.0*self_check['tolerance']:.0f}% bar -> "
+            f"{'PASS' if self_check['passed'] else 'FAIL'}."
+        )
+        lines.append("")
+        lines.append(
+            f"Anchored closure worst DOF: **{gates['C3a']['values']['worst_dof']}** at "
+            f"{100.0*gates['C3a']['values']['worst_relative_residual']:.2f}% "
+            f"(criterion {100.0*TOLERANCES['kk']:.0f}%)."
+        )
         lines.append("")
     convergence = results.get("mesh_convergence")
     if convergence:
