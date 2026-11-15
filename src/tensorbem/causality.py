@@ -652,11 +652,16 @@ class HighBandBudget:
 
         ``budget(omega) = (2/pi) PV integral_{s_N}^inf C s^-p/(s^2-omega^2) ds``
 
-    in closed form (:func:`power_tail_principal_value`).  ``budget`` is then a
-    conservative estimate of the truncation error, and
-    ``|residual| <= tolerance*scale`` can only be read as a causality test where
-    ``budget`` is small compared with the tolerance.  Samples where it is not are
-    reported as undecidable rather than as a violation.
+    in closed form (:func:`power_tail_principal_value`).  ``budget`` is then an
+    upper bound on the truncation error **only under the hypothesis** that the
+    damping above ``s_max`` never exceeds this continuation: band-limited data
+    cannot exclude a second resonance above the top of the band, and where one
+    exists the power-law integral is a lower bound instead (see
+    :mod:`tensorbem.kk_tail_certificate`, which tests the hypothesis against a
+    wider-band probe and reports the allowance ``tolerance/budget``).  With that
+    proviso, ``|residual| <= tolerance*scale`` can only be read as a causality
+    test where ``budget`` is small compared with the tolerance.  Samples where it
+    is not are reported as undecidable rather than as a violation.
 
     If the measured exponent is not ``> 2`` the tail integral of eq. (2) does not
     converge at all; the budget is then ``inf`` (``admissible = False``) and the
