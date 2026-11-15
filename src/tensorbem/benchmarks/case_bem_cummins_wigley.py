@@ -168,7 +168,7 @@ TOLERANCES = {
     "negative_control": 0.10,
 }
 
-DT = 0.01
+DT = 0.002
 DURATION = 40.0
 TAU_MAX = 25.0
 
