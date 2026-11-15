@@ -89,6 +89,8 @@ from tensorbem.hydrostatic import (
     compute_waterplane_properties,
 )
 from tensorbem.wigley_hydrostatics import wigley_wetted_hull_mesh
+from tensorbem import state_space as _ss_mod
+
 
 __all__ = [
     "CASE_SLUG",
@@ -114,6 +116,7 @@ __all__ = [
     "load_sweep",
     "case_verdict",
     "gates_from_artifact",
+    "state_space_gate",
     "render_markdown",
     "main",
 ]
@@ -206,6 +209,8 @@ TOLERANCES = {
     # the amplitude of the DOF, so a 5 % bar means the 8x panel increase may not
     # move the tabulated coefficients by more than a twentieth of their peak.
     "extension_overlap": 0.05,
+    "state_space_fit": 0.03,  # C11: SS fit max relative error
+    "state_space_decay": 0.10,  # C11: SS vs convolution decay zeta error
 }
 
 DT = 0.002
@@ -537,6 +542,7 @@ C0_DEPENDENT_GATES: tuple[str, ...] = (
     "C6b",  # negative control: corrupted high band -> C3 must fail
     "C5b",  # per-DOF decay audit
     "C5c",  # robust (multi-window) decay gate
+    "C11",  # state-space reduction validation
 )
 
 
@@ -2358,6 +2364,158 @@ def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = 
     }
 
 
+
+def state_space_gate(
+    sweep: Sweep,
+    *,
+    dof: int = 2,
+    target_error: float = 0.03,
+    max_poles: int = 12,
+) -> dict[str, Any]:
+    """C11: State-space reduction validation gate.
+
+    Fits the BEM damping curve with vector fitting, validates the state-space
+    realization (stability, passivity, KK consistency), and compares the
+    SS-based time-domain decay with the convolution-based decay from C5.
+
+    Parameters
+    ----------
+    sweep : Sweep
+        The radiation sweep artifact.
+    dof : int
+        Degree of freedom index (default 2 = heave).
+    target_error : float
+        Target maximum relative error for the vector fit.
+    max_poles : int
+        Maximum number of poles to try.
+
+    Returns
+    -------
+    dict
+        Gate result with 'passed', 'values', and 'status' keys.
+    """
+    omega = sweep.omega
+    damping_diag = sweep.damping[:, dof, dof]
+    added_mass_diag = sweep.added_mass[:, dof, dof]
+    added_mass_inf = float(added_mass_diag[-1])
+
+    # Fit damping with vector fitting
+    fit = _ss_mod.adaptive_order_fit(
+        omega, damping_diag,
+        target_error=target_error,
+        max_poles=max_poles,
+        min_poles=2,
+    )
+
+    # Build state-space realization
+    ss_real = _ss_mod.state_space_from_fit(fit)
+
+    # Get hydrostatic properties
+    if dof == 2:  # heave
+        restoring, displaced_mass, _ = _restoring_and_mass_for_heave(sweep.label)
+    else:
+        # For other DOFs, use a simplified estimate
+        restoring = displaced_mass = float(np.mean(added_mass_diag)) * 0.1
+
+    # Run validation
+    try:
+        report = _ss_mod.validate_state_space(
+            omega, added_mass_diag, damping_diag,
+            mass=displaced_mass,
+            added_mass_inf=added_mass_inf,
+            restoring=restoring,
+            omega_band=(float(omega[0]), float(omega[-1])),
+        )
+    except Exception as exc:
+        return {
+            "passed": False,
+            "values": {
+                "dof": dof,
+                "dof_name": DOF_NAMES[dof],
+                "error": str(exc),
+                "fit_poles": len(fit.poles),
+                "fit_error_max": fit.relative_error_max,
+            },
+            "status": f"failed: {exc}",
+        }
+
+    # Compare SS decay with C5 convolution decay
+    ss_result = _ss_mod.cummins_state_space(
+        ss_real, displaced_mass, added_mass_inf, restoring,
+        initial_displacement=0.05, initial_velocity=0.0,
+        dt=DT, duration=DURATION,
+    )
+
+    # Compute decay metrics from SS result
+    zeta_ss, period_ss, n_peaks_ss = _decay_zeta(
+        ss_result.time, ss_result.displacement, amplitude_floor=0.01
+    )
+
+    # Compute decay metrics from convolution (C5 reference)
+    kernel = td.compute_kernel(omega, damping_diag)
+    cummins_result = td.cummins_convolution(
+        kernel, omega, added_mass_diag, added_mass_inf,
+        displaced_mass, restoring,
+        initial_displacement=0.05, initial_velocity=0.0,
+        dt=DT, duration=DURATION, tau_max=TAU_MAX,
+    )
+    zeta_conv, period_conv, n_peaks_conv = _decay_zeta(
+        cummins_result.time, cummins_result.displacement, amplitude_floor=0.01
+    )
+
+    # Compare the two decay routes
+    if math.isfinite(zeta_ss) and math.isfinite(zeta_conv) and zeta_conv > 0:
+        zeta_relative_error = abs(zeta_ss - zeta_conv) / zeta_conv
+    else:
+        zeta_relative_error = float("nan")
+
+    if math.isfinite(period_ss) and math.isfinite(period_conv) and period_conv > 0:
+        period_relative_error = abs(period_ss - period_conv) / period_conv
+    else:
+        period_relative_error = float("nan")
+
+    # C11 passes if:
+    # 1. SS fit error < target_error
+    # 2. All poles stable (positive)
+    # 3. KK residual < 5%
+    # 4. SS vs convolution decay zeta error < 10%
+    fit_ok = fit.relative_error_max <= target_error
+    poles_ok = all(p > 0 for p in fit.poles) if len(fit.poles) > 0 else False
+    kk_ok = getattr(report, "c5_kk_residual", 1.0) <= 0.05
+    decay_ok = zeta_relative_error <= 0.10 if math.isfinite(zeta_relative_error) else False
+
+    passed = fit_ok and poles_ok and kk_ok and decay_ok
+
+    return {
+        "passed": passed,
+        "values": {
+            "dof": dof,
+            "dof_name": DOF_NAMES[dof],
+            "fit_poles": len(fit.poles),
+            "fit_error_max": fit.relative_error_max,
+            "fit_error_rms": fit.relative_error_rms,
+            "min_pole": float(min(fit.poles)) if len(fit.poles) > 0 else float("nan"),
+            "all_poles_positive": poles_ok,
+            "kk_residual": getattr(report, "c5_kk_residual", float("nan")),
+            "zeta_ss": zeta_ss,
+            "zeta_convolution": zeta_conv,
+            "zeta_relative_error": zeta_relative_error,
+            "period_ss": period_ss,
+            "period_convolution": period_conv,
+            "period_relative_error": period_relative_error,
+            "n_peaks_ss": n_peaks_ss,
+            "n_peaks_conv": n_peaks_conv,
+            "c1_pass": getattr(report, "c1_pass", fit_ok),
+            "c2_pass": getattr(report, "c2_pass", poles_ok),
+            "c3_pass": getattr(report, "c3_pass", decay_ok),
+            "c4_pass": getattr(report, "c4_pass", True),
+            "c5_pass": getattr(report, "c5_pass", kk_ok),
+            "c6_pass": getattr(report, "c6_pass", True),
+        },
+        "status": "pass" if passed else "fail",
+    }
+
+
 def case_verdict(gates: dict[str, Any]) -> dict[str, Any]:
     """Tally a gate dictionary into the case verdict (shared by run and replay)."""
     present = {key: value for key, value in gates.items() if value is not None}
@@ -2665,6 +2823,7 @@ def run_case(
                 )
             ],
         )
+        results["gates"]["C11"] = state_space_gate(production, dof=int(dof_free_decay))
         if len(meshes) > 1:
             results["mesh_convergence"] = _mesh_convergence(sweeps[meshes[0]], production)
         extended_info = attach_extended_band_gates(
