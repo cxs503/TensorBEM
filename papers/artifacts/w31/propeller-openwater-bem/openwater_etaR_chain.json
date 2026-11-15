@@ -1,0 +1,2594 @@
+{
+ "schema": "tensorbem.w31.openwater_etar_chain/v1",
+ "mission": 22286,
+ "repo": "TensorBEM",
+ "generated_utc": "2026-11-15T19:10:34+00:00",
+ "commit": "5a2764db5e50ea220bd6a185a6281f1f82f7d9c7+dirty",
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "wall_seconds": 35.21
+ },
+ "preregistration": {
+  "mission": 22286,
+  "topic": "propeller-openwater-bem / eta_R de-constantisation (item 9, external track)",
+  "decision": "Is eta_R deliverable as a computed state-dependent quantity from the behind-hull K_T/K_Q and the open-water curve read at the same J, with eta_D = eta_0 eta_R eta_H closing as a chain?",
+  "alternatives": {
+   "A1_platform_constant": "eta_R = 1.0 as returned by the propulsion block",
+   "A2_empirical_regression": "Holtrop(1984)-type closed form (near-constant, kept as fallback)",
+   "A3_behind_hull_ratio": "eta_0,open-water(J) / eta_0,behind-hull(J) from the same lattice"
+  },
+  "adopted": "A3_behind_hull_ratio",
+  "gates": {
+   "C1": {
+    "statement": "std(eta_R over 11 states) > 1e-3",
+    "threshold": 0.001,
+    "direction": "greater"
+   },
+   "C2": {
+    "statement": ">= 9 of 11 states inside eta_R window [0.90, 1.10]",
+    "threshold": 9,
+    "window": [
+     0.9,
+     1.1
+    ]
+   },
+   "C3": {
+    "statement": "eta_D = eta_0 eta_R eta_H relative residual <= 1e-6 per state",
+    "threshold": 1e-06
+   },
+   "C4": {
+    "statement": "over J <= 0.8, worst |dK_T| vs KP505 measured curve < 15 %, each point answered for < 3 %",
+    "threshold_pct": 15.0,
+    "strict_pct": 3.0,
+    "J_region_max": 0.8
+   }
+  },
+  "declared_config": {
+   "wake_exponent_primary": 0.5,
+   "wake_exponent_sensitivity": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+   ],
+   "hub_ratio": 0.18,
+   "panel_primary": [
+    16,
+    2
+   ],
+   "panel_sensitivity": [
+    [
+     8,
+     1
+    ],
+    [
+     16,
+     2
+    ],
+    [
+     24,
+     2
+    ]
+   ],
+   "wake_model": "geometric",
+   "wake_length": 1.0,
+   "wake_steps": 24,
+   "lattice_convention": "non-dimensional D = 1; Re preserved by n_eff = n_phys D_phys^2",
+   "open_water_ladder": {
+    "start": 0.1,
+    "stop": 0.75,
+    "step": 0.05
+   },
+   "interpolation": "piecewise linear in J on the ladder"
+  },
+  "stopping_rule": "one pass of the full state set at the primary configuration, one null control, one panel ladder and one wake-shape ladder; no iteration on thresholds or on the shape exponent after seeing eta_R",
+  "design": {
+   "hypothesis": "H1: the propeller responds to the radial non-uniformity of the afterbody wake, so eta_R = eta_0,OW(J)/eta_0,BH(J) differs from 1 by an amount that depends on J, i.e. eta_R is a computed quantity and not a constant. H0 (the platform's implicit hypothesis): eta_0,BH == eta_0,OW at the same J, so eta_R == 1.",
+   "metrics": [
+    "eta_R per state in four conventions (platform return / platform identity reverse / open-water-interpolated over behind-hull / independent P_E-P_D reverse)",
+    "eta_D = eta_0 eta_R eta_H and its algebraic residual",
+    "|dK_T|, |d10K_Q|, |deta_0| of the open-water model against the KP505 measured curve"
+   ],
+   "unit_of_analysis": "one propulsion state (11 states), not one solver run: the gate is a property of the series",
+   "baseline": "the platform's constant eta_R = 1.0 on the identical 11 states",
+   "control": "q = 0 uniform wake: the inflow field then equals the open-water inflow point by point, so eta_R must be exactly 1. Any departure would be a code defect, and the control is what separates a code defect from a physical effect.",
+   "confounders_and_nuisances": [
+    "panel density (n_radial x n_chord): declared ladder (8,1)/(16,2)/(24,2)",
+    "wake shape exponent q: declared ladder 0/0.25/0.5/1.0, monotonicity checked",
+    "open-water curve interpolation error: measured against a direct solve per state",
+    "receipt rounding (4 dp non-dimensional): bounds identity residuals at ~1e-3",
+    "Reynolds number: preserved by n_eff = n_phys D^2 so it is not a free variable",
+    "kernel scale-invariance defect at D=6: avoided by the D=1 convention, recorded"
+   ],
+   "repetition_rationale": "the solver is deterministic (no random seed, one dense linear solve); repeating a state can only reproduce it, so repetitions are replaced by (a) an explicit determinism re-solve recorded in the artefact and (b) the panel/shape ladders, which vary the two nuisance variables that actually move the number",
+   "environment_controls": "single machine, one process, same numpy/Python as recorded; wall time and commit recorded in the artefact; the run is short (~40 s) so it is not submitted to the cluster and no cross-node variability enters",
+   "analysis_plan": "gate arithmetic is computed by the builder, never typed; the doc reads every number from the artefact; the KP505 comparison keeps all 10 anchor points (no selection) and reports the region-restricted (J<=0.8) and the stricter (J<=0.7, J<=0.6) worst deviations side by side",
+   "resource_limits": "8 cores unused (single-threaded numpy), < 60 s wall, < 4 GB RAM; no cluster job",
+   "interpretation_limits": [
+    "eta_R here is a nominal-axial-wake eta_R: no swirl, no measured wake field",
+    "the absolute value of eta_R has no experimental anchor inside the evidence surface (WITHHELD); only its non-constancy, window and sensitivity are claimed",
+    "the eta_D chain is algebraic; it cannot validate eta_R (see caveats)"
+   ]
+  }
+ },
+ "provenance": {
+  "receipts": {
+   "path": "data/w30/propulsion_states/api_receipts.json",
+   "sha256": "37a26be1ba93c5c4ddd1ad6c41c5ae6d81c63f60f3e625e88607850155eacd37",
+   "n_states": 11,
+   "endpoint_base": "http://127.0.0.1:8002/api/v1/"
+  },
+  "live_recheck": {
+   "path": "data/w31/propulsion_states/live_recheck.json",
+   "sha256": "42c7700ce27e87a0476bb1f927fad6c1e799687d32eee1db745a2045619fdf26",
+   "content": {
+    "schema": "tensorbem.w31.propulsion_block_live_recheck/v1",
+    "mission": 22286,
+    "purpose": "Live re-verification that the platform's propulsion block still returns relative_rot_eff = 1.0 and that its K_T/K_Q are its own open-water curve, on two states of the W30 state grid (S1 at 12 kn, P/D 0.95; S11 at 15 kn, P/D 1.05). Consumed by benchmarks/anchors/build_w31_etaR_chain.py.",
+    "provenance": {
+     "endpoint": "POST /api/v1/calculations/propulsion",
+     "port": 8002,
+     "transport": "tool channel call_ship_api (loopback curl is blocked by the worktree sandbox); the two response bodies below are verbatim copies of the tool payloads, field names and precision unchanged (2 dp kW, 4 dp non-dimensional)",
+     "method_field_returned_by_platform": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+     "request_schema_note": "the endpoint names the ship speed field `speed` (kn); a body using `speed_kn` is rejected 422 with 'Field required: body.speed'. The W30 receipts record the same values under an inputs.speed_kn key, so the two files are consistent in content."
+    },
+    "hull": {
+     "length": 180.0,
+     "beam": 32.0,
+     "draft": 11.0,
+     "cb": 0.82,
+     "displacement": 51955.2
+    },
+    "requests": [
+     {
+      "state": "S1",
+      "request_body": {
+       "length": 180.0,
+       "beam": 32.0,
+       "draft": 11.0,
+       "cb": 0.82,
+       "displacement": 51955.2,
+       "speed": 15.0,
+       "prop_rpm": 100.0,
+       "prop_pitch": 0.95,
+       "prop_diameter": 6.0,
+       "n_blades": 5
+      },
+      "response": {
+       "thrust": 1070.69,
+       "torque": 962.667,
+       "delivered_power": 10081.03,
+       "open_water_eff": 0.4565,
+       "hull_eff": 1.07,
+       "relative_rot_eff": 1.0,
+       "propulsive_eff": 0.4884,
+       "cavitation_number": 0.979,
+       "cavitation_risk": "高风险",
+       "method": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+       "advance_ratio_J": 0.4298,
+       "wake_fraction_w": 0.3038,
+       "thrust_deduction_t": 0.2551,
+       "thrust_coefficient_KT": 0.2902,
+       "torque_coefficient_KQ": 0.04348,
+       "advance_speed_Va": 4.298,
+       "effective_power_pe": 4923.7,
+       "in_validity_envelope": true,
+       "validity_notes": []
+      }
+     },
+     {
+      "state": "S11",
+      "request_body": {
+       "length": 180.0,
+       "beam": 32.0,
+       "draft": 11.0,
+       "cb": 0.82,
+       "displacement": 51955.2,
+       "speed": 15.0,
+       "prop_rpm": 100.0,
+       "prop_pitch": 1.05,
+       "prop_diameter": 6.0,
+       "n_blades": 5
+      },
+      "response": {
+       "thrust": 1086.14,
+       "torque": 1078.724,
+       "delivered_power": 11296.37,
+       "open_water_eff": 0.5166,
+       "hull_eff": 1.07,
+       "relative_rot_eff": 1.0,
+       "propulsive_eff": 0.5527,
+       "cavitation_number": 0.959,
+       "cavitation_risk": "高风险",
+       "method": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+       "advance_ratio_J": 0.5372,
+       "wake_fraction_w": 0.3038,
+       "thrust_deduction_t": 0.2551,
+       "thrust_coefficient_KT": 0.2943,
+       "torque_coefficient_KQ": 0.04872,
+       "advance_speed_Va": 5.372,
+       "effective_power_pe": 6243.46,
+       "in_validity_envelope": true,
+       "validity_notes": []
+      }
+     }
+    ],
+    "conclusion": "relative_rot_eff = 1.0 on both a P/D = 0.95 and a P/D = 1.05 state; hull_eff = 1.07 on both; the two responses reproduce the archived W30 receipts field for field, so the constant is a property of the block, not of one state."
+   }
+  },
+  "kp505_anchor": "benchmarks/anchors/kp505_openwater.json",
+  "wake_field_module": "src/tensorbem/wake_field.py",
+  "solver": "src/tensorbem/propeller.py::open_water_point (inflow_field hook added in W31)"
+ },
+ "platform_block_audit": {
+  "question": "does the platform's returned K_T/K_Q differ from its own open-water curve at J?",
+  "reference": "Oosterveld & van Oossanen (1975) B-series regression, Z=5, Ae/Ao=0.70, P/D as input",
+  "rows": [
+   {
+    "state": "S1",
+    "P_D": 0.95,
+    "J": 0.4298,
+    "KT_platform": 0.2902,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.29015680418470297,
+    "dKT": -4.319581529704797e-05,
+    "KQ_platform": 0.04348,
+    "KQ_B_series": 0.04350753272327602,
+    "dKQ": 2.753272327601919e-05,
+    "eta0_platform": 0.4565,
+    "eta0_B_series": 0.45619954367762316
+   },
+   {
+    "state": "S2",
+    "P_D": 0.95,
+    "J": 0.4656,
+    "KT_platform": 0.2746,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.27462606749866836,
+    "dKT": 2.6067498668347344e-05,
+    "KQ_platform": 0.0416,
+    "KQ_B_series": 0.04162948744182188,
+    "dKQ": 2.9487441821879345e-05,
+    "eta0_platform": 0.4892,
+    "eta0_B_series": 0.48884794926257663
+   },
+   {
+    "state": "S3",
+    "P_D": 0.95,
+    "J": 0.5014,
+    "KT_platform": 0.2587,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.2586925491858297,
+    "dKT": -7.4508141703066855e-06,
+    "KQ_platform": 0.03966,
+    "KQ_B_series": 0.03968903088122034,
+    "dKQ": 2.903088122033909e-05,
+    "eta0_platform": 0.5205,
+    "eta0_B_series": 0.5201371661325593
+   },
+   {
+    "state": "S4",
+    "P_D": 0.95,
+    "J": 0.5372,
+    "KT_platform": 0.2424,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.24237704965595147,
+    "dKT": -2.2950344048533466e-05,
+    "KQ_platform": 0.03766,
+    "KQ_B_series": 0.03768658119297354,
+    "dKQ": 2.658119297353767e-05,
+    "eta0_platform": 0.5503,
+    "eta0_B_series": 0.5498710926454767
+   },
+   {
+    "state": "S5",
+    "P_D": 0.95,
+    "J": 0.5731,
+    "KT_platform": 0.2257,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.22565330000976103,
+    "dKT": -4.66999902389853e-05,
+    "KQ_platform": 0.03559,
+    "KQ_B_series": 0.03561670524874391,
+    "dKQ": 2.670524874391622e-05,
+    "eta0_platform": 0.5783,
+    "eta0_B_series": 0.577881094944549
+   },
+   {
+    "state": "S6",
+    "P_D": 0.95,
+    "J": 0.6089,
+    "KT_platform": 0.2086,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.2086353176238637,
+    "dKT": 3.531762386368986e-05,
+    "KQ_platform": 0.03347,
+    "KQ_B_series": 0.03349135351623577,
+    "dKQ": 2.135351623577114e-05,
+    "eta0_platform": 0.6042,
+    "eta0_B_series": 0.6037000802893773
+   },
+   {
+    "state": "S7",
+    "P_D": 0.95,
+    "J": 0.632,
+    "KT_platform": 0.1975,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.19748353280526232,
+    "dKT": -1.6467194737690427e-05,
+    "KQ_platform": 0.03206,
+    "KQ_B_series": 0.03208770160555087,
+    "dKQ": 2.7701605550871367e-05,
+    "eta0_platform": 0.6196,
+    "eta0_B_series": 0.6190553587451443
+   },
+   {
+    "state": "S8",
+    "P_D": 0.95,
+    "J": 0.5969,
+    "KT_platform": 0.2144,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.21437630178067998,
+    "dKT": -2.369821932002303e-05,
+    "KQ_platform": 0.03418,
+    "KQ_B_series": 0.034210550011166914,
+    "dKQ": 3.055001116691186e-05,
+    "eta0_platform": 0.5958,
+    "eta0_B_series": 0.5953034900141588
+   },
+   {
+    "state": "S9",
+    "P_D": 0.95,
+    "J": 0.5655,
+    "KT_platform": 0.2292,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.22922296654250274,
+    "dKT": 2.296654250275032e-05,
+    "KQ_platform": 0.03603,
+    "KQ_B_series": 0.036060041923404895,
+    "dKQ": 3.00419234048957e-05,
+    "eta0_platform": 0.5726,
+    "eta0_B_series": 0.5721167229460122
+   },
+   {
+    "state": "S10",
+    "P_D": 0.95,
+    "J": 0.5117,
+    "KT_platform": 0.2541,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.25403665039859674,
+    "dKT": -6.334960140325085e-05,
+    "KQ_platform": 0.03909,
+    "KQ_B_series": 0.039119240907795505,
+    "dKQ": 2.9240907795505255e-05,
+    "eta0_platform": 0.5292,
+    "eta0_B_series": 0.5288609580779864
+   },
+   {
+    "state": "S11",
+    "P_D": 1.05,
+    "J": 0.5372,
+    "KT_platform": 0.2943,
+    "KT_B_series_OandO_Z5_AeAo0.70": 0.2943664249976725,
+    "dKT": 6.642499767250953e-05,
+    "KQ_platform": 0.04872,
+    "KQ_B_series": 0.04877456464368664,
+    "dKQ": 5.4564643686638714e-05,
+    "eta0_platform": 0.5166,
+    "eta0_B_series": 0.5160015515752394
+   }
+  ],
+  "worst_abs_dKT": 6.642499767250953e-05,
+  "worst_abs_dKQ": 5.4564643686638714e-05,
+  "area_ratio_identification": {
+   "ladder": [
+    {
+     "Ae_Ao": 0.55,
+     "worst_abs_dKT": 0.005815964275044105
+    },
+    {
+     "Ae_Ao": 0.6,
+     "worst_abs_dKT": 0.0036592734247694048
+    },
+    {
+     "Ae_Ao": 0.65,
+     "worst_abs_dKT": 0.0017350172715204226
+    },
+    {
+     "Ae_Ao": 0.7,
+     "worst_abs_dKT": 6.642499767250953e-05
+    },
+    {
+     "Ae_Ao": 0.75,
+     "worst_abs_dKT": 0.0014881114406221085
+    },
+    {
+     "Ae_Ao": 0.8,
+     "worst_abs_dKT": 0.002690069417587093
+    },
+    {
+     "Ae_Ao": 0.85,
+     "worst_abs_dKT": 0.0036722989285671304
+    },
+    {
+     "Ae_Ao": 0.9,
+     "worst_abs_dKT": 0.004434799973562331
+    }
+   ],
+   "argmin_Ae_Ao": 0.7,
+   "argmin_worst_abs_dKT": 6.642499767250953e-05,
+   "declared_Ae_Ao": 0.7,
+   "note": "the platform reports no Ae/Ao; the value is identified here by minimising the K_T residual over the declared ladder, so it is a measurable claim about the platform rather than an assumption copied from the W30 note"
+  },
+  "receipt_precision": "4 dp on K_T/K_Q, so agreement at the 1e-4 level is agreement to receipt precision",
+  "conclusion": "the platform's behind-hull K_T/K_Q reproduce its open-water regression to receipt precision, so eta_R = 1.0 is structural, not computed"
+ },
+ "states": [
+  {
+   "id": "S1",
+   "inputs": {
+    "speed_kn": 12.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.4298,
+   "Va": 4.298,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2902,
+    "KQ": 0.04348,
+    "eta0": 0.4565,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.4884,
+    "P_E_kW": 4923.7,
+    "P_D_kW": 10081.03
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.3216044805111191,
+    "interp_KQ": 0.04400704812450036,
+    "interp_eta0": 0.4994005443887575,
+    "direct_KT": 0.3216628981066319,
+    "direct_KQ": 0.04403170448858945,
+    "direct_eta0": 0.49971457412273323,
+    "interp_residual_pct_KT": -0.018161123292938022,
+    "interp_residual_pct_KQ": -0.05599684221963212,
+    "interp_residual_pct_eta0": -0.06284182015844803
+   },
+   "behind_hull": {
+    "KT": 0.31965401600133125,
+    "KQ": 0.0431463404249202,
+    "10KQ": 0.43146340424920204,
+    "eta0": 0.5067838216034283,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.6245302511185788,
+    "KQ_shift_vs_open_water_pct": -2.0107422003131554
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9998874000675599,
+    "openwater_interp": 0.9854311110577472,
+    "openwater_direct": 0.9860507633050943,
+    "power_route_reverse": 0.5199457072569821
+   },
+   "etaD": {
+    "chain": 0.48133875335171195,
+    "product": 0.48133875335171195,
+    "identity_relative_residual": 0.0,
+    "platform": 0.4884,
+    "chain_vs_platform_pct": -1.4457916970286764,
+    "power_route": {
+     "P_E_resistance_kW": 2560.28,
+     "R_T_kN": 414.73,
+     "P_D_propulsion_kW": 10081.03,
+     "etaD_power_route": 0.2539700804382092,
+     "etaD_power_route_vs_chain_pct": -47.236727009878955,
+     "etaR_power_route_reverse": 0.5199457072569821
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S2",
+   "inputs": {
+    "speed_kn": 13.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.4656,
+   "Va": 4.656,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2746,
+    "KQ": 0.0416,
+    "eta0": 0.4892,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.5234,
+    "P_E_kW": 5048.38,
+    "P_D_kW": 9645.4
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.300926040260585,
+    "interp_KQ": 0.0418653737799575,
+    "interp_eta0": 0.5321601684937562,
+    "direct_KT": 0.3009781184191511,
+    "direct_KQ": 0.04188735482319772,
+    "direct_eta0": 0.5324576738246242,
+    "interp_residual_pct_KT": -0.017302971671046878,
+    "interp_residual_pct_KQ": -0.052476560845154736,
+    "interp_residual_pct_eta0": -0.055873986890065806
+   },
+   "behind_hull": {
+    "KT": 0.29896626064352116,
+    "KQ": 0.040977921339565675,
+    "10KQ": 0.40977921339565676,
+    "eta0": 0.5406364943191477,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.668439880678695,
+    "KQ_shift_vs_open_water_pct": -2.1711408788420083
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9999159413423403,
+    "openwater_interp": 0.9843215803696971,
+    "openwater_direct": 0.9848718675478547,
+    "power_route_reverse": 0.6697060846681328
+   },
+   "etaD": {
+    "chain": 0.5152372253150358,
+    "product": 0.5152372253150358,
+    "identity_relative_residual": 0.0,
+    "platform": 0.5234,
+    "chain_vs_platform_pct": -1.5595671923890295,
+    "power_route": {
+     "P_E_resistance_kW": 3381.23,
+     "R_T_kN": 505.58,
+     "P_D_propulsion_kW": 9645.4,
+     "etaD_power_route": 0.3505536317830261,
+     "etaD_power_route_vs_chain_pct": -31.96267378222057,
+     "etaR_power_route_reverse": 0.6697060846681328
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S3",
+   "inputs": {
+    "speed_kn": 14.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5014,
+   "Va": 5.014,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2587,
+    "KQ": 0.03966,
+    "eta0": 0.5205,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.5569,
+    "P_E_kW": 5121.13,
+    "P_D_kW": 9195.3
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.28003798240501493,
+    "interp_KQ": 0.03963522507655212,
+    "interp_eta0": 0.5637514046334543,
+    "direct_KT": 0.28004458528661563,
+    "direct_KQ": 0.03963801205313981,
+    "direct_eta0": 0.5637931251277382,
+    "interp_residual_pct_KT": -0.0023577965608389583,
+    "interp_residual_pct_KQ": -0.007031070538941357,
+    "interp_residual_pct_eta0": -0.007399965062434267
+   },
+   "behind_hull": {
+    "KT": 0.2780550193292091,
+    "KQ": 0.038712149528016486,
+    "10KQ": 0.3871214952801649,
+    "eta0": 0.5731758898045315,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.7104461439132145,
+    "KQ_shift_vs_open_water_pct": -2.3357945496411108
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9999371560415489,
+    "openwater_interp": 0.9835574291614199,
+    "openwater_direct": 0.983630217453855,
+    "power_route_reverse": 0.8770549240867404
+   },
+   "etaD": {
+    "chain": 0.5477775568100154,
+    "product": 0.5477775568100154,
+    "identity_relative_residual": 0.0,
+    "platform": 0.5569,
+    "chain_vs_platform_pct": -1.6380756311697908,
+    "power_route": {
+     "P_E_resistance_kW": 4491.56,
+     "R_T_kN": 623.63,
+     "P_D_propulsion_kW": 9195.3,
+     "etaD_power_route": 0.4884625841462487,
+     "etaD_power_route_vs_chain_pct": -10.828295523677099,
+     "etaR_power_route_reverse": 0.8770549240867404
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S4",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5372,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2424,
+    "KQ": 0.03766,
+    "eta0": 0.5503,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.5888,
+    "P_E_kW": 5140.69,
+    "P_D_kW": 8730.81
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.25881609181458504,
+    "interp_KQ": 0.03726417149100495,
+    "interp_eta0": 0.5933148514586792,
+    "direct_KT": 0.2588623002473223,
+    "direct_KQ": 0.0372836754555958,
+    "direct_eta0": 0.5936168536851557,
+    "interp_residual_pct_KT": -0.017850584149617,
+    "interp_residual_pct_KQ": -0.052312344082271665,
+    "interp_residual_pct_eta0": -0.05087494140397991
+   },
+   "behind_hull": {
+    "KT": 0.25692029232899194,
+    "KQ": 0.0363490244586414,
+    "10KQ": 0.36349024458641405,
+    "eta0": 0.6043127864671589,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.7502088625786549,
+    "KQ_shift_vs_open_water_pct": -2.5068638902501688
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9999643355111315,
+    "openwater_interp": 0.981800922875099,
+    "openwater_direct": 0.982300667764235,
+    "power_route_reverse": 1.1714735593787093
+   },
+   "etaD": {
+    "chain": 0.5781050012082387,
+    "product": 0.5781050012082387,
+    "identity_relative_residual": 0.0,
+    "platform": 0.5888,
+    "chain_vs_platform_pct": -1.8164060447964128,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 8730.81,
+     "etaD_power_route": 0.689788232706931,
+     "etaD_power_route_vs_chain_pct": 19.31884887092734,
+     "etaR_power_route_reverse": 1.1714735593787093
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S5",
+   "inputs": {
+    "speed_kn": 16.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5731,
+   "Va": 5.731,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2257,
+    "KQ": 0.03559,
+    "eta0": 0.5783,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.6187,
+    "P_E_kW": 5105.91,
+    "P_D_kW": 8252.03
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.23731075152838416,
+    "interp_KQ": 0.03479187469523057,
+    "interp_eta0": 0.6213816159580294,
+    "direct_KT": 0.23737105319527038,
+    "direct_KQ": 0.03481732763162457,
+    "direct_eta0": 0.6218460250595101,
+    "interp_residual_pct_KT": -0.02540396820694859,
+    "interp_residual_pct_KQ": -0.07310422173492823,
+    "interp_residual_pct_eta0": -0.07468233015339579
+   },
+   "behind_hull": {
+    "KT": 0.23550210711134106,
+    "KQ": 0.03388153641064469,
+    "10KQ": 0.33881536410644686,
+    "eta0": 0.6339897572826491,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.7873521471010421,
+    "KQ_shift_vs_open_water_pct": -2.6877169634636164
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.99986909746744,
+    "openwater_interp": 0.9801130204710885,
+    "openwater_direct": 0.980845538774651,
+    "power_route_reverse": 1.596069679381387
+   },
+   "etaD": {
+    "chain": 0.6064753149201207,
+    "product": 0.6064753149201207,
+    "identity_relative_residual": 0.0,
+    "platform": 0.6187,
+    "chain_vs_platform_pct": -1.9758663455437664,
+    "power_route": {
+     "P_E_resistance_kW": 8149.85,
+     "R_T_kN": 990.13,
+     "P_D_propulsion_kW": 8252.03,
+     "etaD_power_route": 0.9876175922772942,
+     "etaD_power_route_vs_chain_pct": 62.845472516449234,
+     "etaR_power_route_reverse": 1.596069679381387
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S6",
+   "inputs": {
+    "speed_kn": 17.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.6089,
+   "Va": 6.089,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2086,
+    "KQ": 0.03347,
+    "eta0": 0.6042,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.6464,
+    "P_E_kW": 5015.75,
+    "P_D_kW": 7759.06
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005156235113901,
+     0.47475801201156453,
+     0.4485151468292108,
+     0.4217870325723089,
+     0.3945736739828166,
+     0.36687507576772516,
+     0.3386912425292823,
+     0.3100221787404179,
+     0.2808678887409535,
+     0.2512283767431464,
+     0.22110364684106365,
+     0.19049370302111734,
+     0.15939854917248192,
+     0.12781818909681317
+    ],
+    "ladder_KQ": [
+     0.058847412152027864,
+     0.057174254017771174,
+     0.05529630783836345,
+     0.05321357106439628,
+     0.050926041293166906,
+     0.0484337162378836,
+     0.045736593706841716,
+     0.042834671588819304,
+     0.03972794784246737,
+     0.03641642048835121,
+     0.03290008760280869,
+     0.029178947313091407,
+     0.025252997793436198,
+     0.021122237261827673
+    ],
+    "ladder_eta0": [
+     0.13536625089097443,
+     0.19823630150199067,
+     0.25818505958161564,
+     0.3153776838464225,
+     0.36993853655411457,
+     0.4219476682648518,
+     0.47143331902662183,
+     0.5183581937953058,
+     0.5625952921877752,
+     0.6038850223906033,
+     0.6417564370387119,
+     0.6753742412275827,
+     0.7032173788234246,
+     0.7223274821570266
+    ],
+    "interp_KT": 0.2156550768411132,
+    "interp_KQ": 0.032237724631239015,
+    "interp_eta0": 0.6477404061843309,
+    "direct_KT": 0.21569057400797845,
+    "direct_KQ": 0.03225270798435654,
+    "direct_eta0": 0.6480836832782914,
+    "interp_residual_pct_KT": -0.016457449301389614,
+    "interp_residual_pct_KQ": -0.04645610881663583,
+    "interp_residual_pct_eta0": -0.0529680198433603
+   },
+   "behind_hull": {
+    "KT": 0.21391978533510042,
+    "KQ": 0.03132343131454561,
+    "10KQ": 0.31323431314545613,
+    "eta0": 0.6618319503630273,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.8209856555032046,
+    "KQ_shift_vs_open_water_pct": -2.881236112830134
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9998546003520528,
+    "openwater_interp": 0.9787082745537339,
+    "openwater_direct": 0.9792269516798112,
+    "power_route_reverse": 2.2108910204827232
+   },
+   "etaD": {
+    "chain": 0.6327290272493417,
+    "product": 0.6327290272493417,
+    "identity_relative_residual": 0.0,
+    "platform": 0.6464,
+    "chain_vs_platform_pct": -2.1149400913765963,
+    "power_route": {
+     "P_E_resistance_kW": 11090.24,
+     "R_T_kN": 1268.1,
+     "P_D_propulsion_kW": 7759.06,
+     "etaD_power_route": 1.4293277793959576,
+     "etaD_power_route_vs_chain_pct": 125.89887895765807,
+     "etaR_power_route_reverse": 2.2108910204827232
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S7",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 85.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.632,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 51.0,
+   "platform": {
+    "KT": 0.1975,
+    "KQ": 0.03206,
+    "eta0": 0.6196,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.663,
+    "P_E_kW": 3026.08,
+    "P_D_kW": 4564.52
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5004704443358747,
+     0.4747109685926205,
+     0.4484661909381997,
+     0.42173611600809013,
+     0.3945207485874076,
+     0.36682009343521393,
+     0.33863415521108164,
+     0.3099629384484577,
+     0.2808064475496726,
+     0.2511646867907692,
+     0.2210376603304393,
+     0.19042537222028755,
+     0.15932782641507737,
+     0.12774502678233968
+    ],
+    "ladder_KQ": [
+     0.05889681598847543,
+     0.05722441897036256,
+     0.055347245319095455,
+     0.053265292425128744,
+     0.05097855782863267,
+     0.04848703918810317,
+     0.0457907342591278,
+     0.0428896408794904,
+     0.03978375695834843,
+     0.03647308046811426,
+     0.03295760943818954,
+     0.029237341950008443,
+     0.02531227613302995,
+     0.021182410161435093
+    ],
+    "ladder_eta0": [
+     0.135240494330012,
+     0.19804289467033365,
+     0.2579192900600703,
+     0.3150334133498485,
+     0.3695078674120562,
+     0.42142047082325024,
+     0.47079655370102225,
+     0.5175949196121176,
+     0.5616831792230609,
+     0.6027940471686717,
+     0.6404451691261245,
+     0.6737835664068178,
+     0.701259251003127,
+     0.7198632844256505
+    ],
+    "interp_KT": 0.2014457959399422,
+    "interp_KQ": 0.03057663824575364,
+    "interp_eta0": 0.6617817433857682,
+    "direct_KT": 0.20150169783098526,
+    "direct_KQ": 0.030600230916532245,
+    "direct_eta0": 0.6623556052910362,
+    "interp_residual_pct_KT": -0.027742640208401073,
+    "interp_residual_pct_KQ": -0.07709964948617212,
+    "interp_residual_pct_eta0": -0.0866395484063018
+   },
+   "behind_hull": {
+    "KT": 0.1998101715270269,
+    "KQ": 0.029679140945483264,
+    "10KQ": 0.2967914094548326,
+    "eta0": 0.677178991513642,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.8394600751092274,
+    "KQ_shift_vs_open_water_pct": -3.0100752296981774
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 1.0000422340611668,
+    "openwater_interp": 0.9772626612449131,
+    "openwater_direct": 0.9781100914110281,
+    "power_route_reverse": 1.9901234515088801
+   },
+   "etaD": {
+    "chain": 0.6478977810508626,
+    "product": 0.6478977810508626,
+    "identity_relative_residual": 0.0,
+    "platform": 0.663,
+    "chain_vs_platform_pct": -2.2778610783012723,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 4564.52,
+     "etaD_power_route": 1.3193961248937456,
+     "etaD_power_route_vs_chain_pct": 103.64263676806259,
+     "etaR_power_route_reverse": 1.9901234515088801
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S8",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 90.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5969,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 54.0,
+   "platform": {
+    "KT": 0.2144,
+    "KQ": 0.03418,
+    "eta0": 0.5958,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.6375,
+    "P_E_kW": 3682.92,
+    "P_D_kW": 5777.29
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5004864116022645,
+     0.47472759485802346,
+     0.4484834932820315,
+     0.42175411150122527,
+     0.39453945428647585,
+     0.36683952637931716,
+     0.3386543324198299,
+     0.30998387692075413,
+     0.28082816426293744,
+     0.251187198700428,
+     0.22106098436957516,
+     0.19044952529939652,
+     0.15935282542189014,
+     0.12777088858168717
+    ],
+    "ladder_KQ": [
+     0.05887935090695459,
+     0.05720668455954232,
+     0.05532923753502013,
+     0.05324700724505797,
+     0.050959991249986,
+     0.04846818722761277,
+     0.0457715929521347,
+     0.04287020627934259,
+     0.03976402513587357,
+     0.036453047511148425,
+     0.032937271451149414,
+     0.029216695053497808,
+     0.02529131646347389,
+     0.021161133870737144
+    ],
+    "ladder_eta0": [
+     0.13528492609013595,
+     0.198111227539697,
+     0.2580131880753928,
+     0.31515504385920395,
+     0.369660018698426,
+     0.42160671874733513,
+     0.4710215006977433,
+     0.5178645441117276,
+     0.5620053597334009,
+     0.6031793738587721,
+     0.640908250812931,
+     0.6743452381767193,
+     0.7019505263289509,
+     0.7207329469643967
+    ],
+    "interp_KT": 0.22292880965808803,
+    "interp_KQ": 0.033155249566869355,
+    "interp_eta0": 0.6385690604417732,
+    "direct_KT": 0.22294291964558677,
+    "direct_KQ": 0.03316120473175035,
+    "direct_eta0": 0.6386826152683929,
+    "interp_residual_pct_KT": -0.006328968653126336,
+    "interp_residual_pct_KQ": -0.017958228385143486,
+    "interp_residual_pct_eta0": -0.0177795393055999
+   },
+   "behind_hull": {
+    "KT": 0.22113791500368007,
+    "KQ": 0.032228852334783106,
+    "10KQ": 0.3222885233478311,
+    "eta0": 0.6518386088476469,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.8096263585208789,
+    "KQ_shift_vs_open_water_pct": -2.8115757690629257
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9999905883238746,
+    "openwater_interp": 0.9796428928483812,
+    "openwater_direct": 0.9798170998147657,
+    "power_route_reverse": 1.6351660961678478
+   },
+   "etaD": {
+    "chain": 0.6245282220482001,
+    "product": 0.6245282220482001,
+    "identity_relative_residual": 0.0,
+    "platform": 0.6375,
+    "chain_vs_platform_pct": -2.034788698321541,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 5777.29,
+     "etaD_power_route": 1.04242819730358,
+     "etaD_power_route_vs_chain_pct": 66.9145061026765,
+     "etaR_power_route_reverse": 1.6351660961678478
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S9",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 95.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5655,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 57.0,
+   "platform": {
+    "KT": 0.2292,
+    "KQ": 0.03603,
+    "eta0": 0.5726,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.6126,
+    "P_E_kW": 4387.88,
+    "P_D_kW": 7162.52
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005014383211902,
+     0.47474324162037235,
+     0.44849977612648484,
+     0.42177104645723995,
+     0.3945570573690868,
+     0.36685781358618225,
+     0.33867331972948944,
+     0.3100035802915746,
+     0.28084859963245407,
+     0.2512083819849241,
+     0.22108293146380653,
+     0.1904722520764054,
+     0.15937634773287607,
+     0.1277952222559138
+    ],
+    "ladder_KQ": [
+     0.05886291937004535,
+     0.057189999895659524,
+     0.05531229594921767,
+     0.053229804962394,
+     0.050942524514521276,
+     0.04845045230160715,
+     0.045753586115380024,
+     0.042851923828592584,
+     0.03974546338434448,
+     0.036434202788072925,
+     0.03291814010137183,
+     0.029197273437101837,
+     0.02527160095543675,
+     0.021141120860605413
+    ],
+    "ladder_eta0": [
+     0.13532675372869368,
+     0.1981755562367647,
+     0.25810158526658705,
+     0.3152695512604981,
+     0.36980326324924856,
+     0.4217820698191134,
+     0.47123329561414395,
+     0.5181184179647231,
+     0.5623087402416371,
+     0.6035422480455159,
+     0.6413444003948175,
+     0.6748743278485198,
+     0.7026018461926583,
+     0.7215526127847047
+    ],
+    "interp_KT": 0.24186949232337768,
+    "interp_KQ": 0.03534422335519559,
+    "interp_eta0": 0.6152609152737994,
+    "direct_KT": 0.24192138779003572,
+    "direct_KQ": 0.0353661270278715,
+    "direct_eta0": 0.615657966571515,
+    "interp_residual_pct_KT": -0.02145137605736704,
+    "interp_residual_pct_KQ": -0.06193404400388471,
+    "interp_residual_pct_eta0": -0.06449218872722554
+   },
+   "behind_hull": {
+    "KT": 0.24003553028616198,
+    "KQ": 0.03442991884644693,
+    "10KQ": 0.3442991884644693,
+    "eta0": 0.6274689979338007,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.7795331868344275,
+    "KQ_shift_vs_open_water_pct": -2.6471888784620363
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9998661622179205,
+    "openwater_interp": 0.9805439269506518,
+    "openwater_direct": 0.9811767092857521,
+    "power_route_reverse": 1.3723641024917324
+   },
+   "etaD": {
+    "chain": 0.6007616142519794,
+    "product": 0.6007616142519794,
+    "identity_relative_residual": 0.0,
+    "platform": 0.6126,
+    "chain_vs_platform_pct": -1.9324821658538445,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 7162.52,
+     "etaD_power_route": 0.8408227830428396,
+     "etaD_power_route_vs_chain_pct": 39.95947195956675,
+     "etaR_power_route_reverse": 1.3723641024917324
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S10",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 105.0,
+    "prop_pitch": 0.95
+   },
+   "J": 0.5117,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 63.0,
+   "platform": {
+    "KT": 0.2541,
+    "KQ": 0.03909,
+    "eta0": 0.5292,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.5662,
+    "P_E_kW": 5941.16,
+    "P_D_kW": 10492.77
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5005290515845018,
+     0.47477199394805314,
+     0.44852969690706446,
+     0.42180216505941215,
+     0.3945894031325728,
+     0.36689141581662543,
+     0.3387082076955201,
+     0.310039783223083,
+     0.2808861467195576,
+     0.25124730237734305,
+     0.22112325427048296,
+     0.19051400636526925,
+     0.15941956253070116,
+     0.12783992654822882
+    ],
+    "ladder_KQ": [
+     0.05883273619471787,
+     0.05715935239232052,
+     0.05528117717050014,
+     0.05319820799778497,
+     0.050910442488500615,
+     0.04841787837215599,
+     0.045720513472743626,
+     0.04281834569422335,
+     0.03971137300997688,
+     0.036399593454897544,
+     0.03288300511928603,
+     0.029161606144021152,
+     0.025235394716655278,
+     0.021104369068196606
+    ],
+    "ladder_eta0": [
+     0.1354036508808916,
+     0.19829382204979296,
+     0.2582641037693484,
+     0.3154800796056146,
+     0.37006663621759744,
+     0.422104489683155,
+     0.4716227480924963,
+     0.5185852807897642,
+     0.5628666967171048,
+     0.6042097032971915,
+     0.6421467652737003,
+     0.6758478836690726,
+     0.7038006807911754,
+     0.7230619937834296
+    ],
+    "interp_KT": 0.2739506571434794,
+    "interp_KQ": 0.038936416594088315,
+    "interp_eta0": 0.5725409602568451,
+    "direct_KT": 0.2739941422883604,
+    "direct_KQ": 0.038954771866729285,
+    "direct_eta0": 0.5728173469194503,
+    "interp_residual_pct_KT": -0.015870830127178655,
+    "interp_residual_pct_KQ": -0.04711944586343979,
+    "interp_residual_pct_eta0": -0.048250400252643856
+   },
+   "behind_hull": {
+    "KT": 0.27201511343711426,
+    "KQ": 0.03802561042149375,
+    "10KQ": 0.3802561042149375,
+    "eta0": 0.5825757308792292,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -0.722288744831387,
+    "KQ_shift_vs_open_water_pct": -2.3852313868358634
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9999222949823751,
+    "openwater_interp": 0.9827751653725095,
+    "openwater_direct": 0.9832495872338324,
+    "power_route_reverse": 1.0136232229743107
+   },
+   "etaD": {
+    "chain": 0.5564905407411913,
+    "product": 0.5564905407411913,
+    "identity_relative_residual": 0.0,
+    "platform": 0.5662,
+    "chain_vs_platform_pct": -1.7148462131417745,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 10492.77,
+     "etaD_power_route": 0.5739580682698657,
+     "etaD_power_route_vs_chain_pct": 3.1388723167530164,
+     "etaR_power_route_reverse": 1.0136232229743107
+    }
+   },
+   "window_ok": true
+  },
+  {
+   "id": "S11",
+   "inputs": {
+    "speed_kn": 15.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 1.05
+   },
+   "J": 0.5372,
+   "Va": 5.372,
+   "wake_fraction_w": 0.3038,
+   "thrust_deduction_t": 0.2551,
+   "reynolds_matched_rev_per_second": 60.0,
+   "platform": {
+    "KT": 0.2943,
+    "KQ": 0.04872,
+    "eta0": 0.5166,
+    "etaH": 1.07,
+    "etaR_returned": 1.0,
+    "etaD": 0.5527,
+    "P_E_kW": 6243.46,
+    "P_D_kW": 11296.37
+   },
+   "open_water_curve": {
+    "ladder_J": [
+     0.1,
+     0.15,
+     0.2,
+     0.25,
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75
+    ],
+    "ladder_KT": [
+     0.5860385348339139,
+     0.5597565271856029,
+     0.5329454430186735,
+     0.5056052896153913,
+     0.47773607465635215,
+     0.44933780590137473,
+     0.42041049104407213,
+     0.3909541376462532,
+     0.36096875311047544,
+     0.33045434467126655,
+     0.2994109193955122,
+     0.2678384841872245,
+     0.23573704579423577,
+     0.2031066108155407
+    ],
+    "ladder_KQ": [
+     0.07444120746646082,
+     0.07273112845240423,
+     0.07079087422765855,
+     0.06862044217160289,
+     0.06621982986699049,
+     0.06358903505261271,
+     0.06072805559167566,
+     0.05763688944980194,
+     0.05431553467912676,
+     0.05076398940640169,
+     0.04698225182383296,
+     0.042970320181848626,
+     0.038728192783269104,
+     0.03425586797852534
+    ],
+    "ladder_eta0": [
+     0.12529475654082065,
+     0.18373429670043154,
+     0.2396379549769192,
+     0.29316912915856835,
+     0.34446203468477465,
+     0.39362158120240615,
+     0.44072155530385115,
+     0.48580046312648323,
+     0.5288538693270741,
+     0.5698211206327282,
+     0.6085625016378426,
+     0.6448190761287032,
+     0.6781390864943497,
+     0.7077346815339696
+    ],
+    "interp_KT": 0.33826603323170407,
+    "interp_KQ": 0.05167318499621931,
+    "interp_eta0": 0.5593335042984807,
+    "direct_KT": 0.33831641284196345,
+    "direct_KQ": 0.05169510659925585,
+    "direct_eta0": 0.5595382339685381,
+    "interp_residual_pct_KT": -0.014891269931654634,
+    "interp_residual_pct_KQ": -0.0424055669455841,
+    "interp_residual_pct_eta0": -0.03658904032443101
+   },
+   "behind_hull": {
+    "KT": 0.333077713393667,
+    "KQ": 0.050123540921144245,
+    "10KQ": 0.5012354092114425,
+    "eta0": 0.5681460171605267,
+    "wake_exponent": 0.5,
+    "KT_shift_vs_open_water_pct": -1.5484615139684648,
+    "KQ_shift_vs_open_water_pct": -3.0400666165455363
+   },
+   "etaR": {
+    "platform_returned": 1.0,
+    "identity_reverse": 0.9998878359945148,
+    "openwater_interp": 0.9844890000178316,
+    "openwater_direct": 0.9848493469425192,
+    "power_route_reverse": 0.9644800087707494
+   },
+   "etaD": {
+    "chain": 0.5441881086278566,
+    "product": 0.5441881086278566,
+    "identity_relative_residual": 0.0,
+    "platform": 0.5527,
+    "chain_vs_platform_pct": -1.540056336555702,
+    "power_route": {
+     "P_E_resistance_kW": 6022.41,
+     "R_T_kN": 780.44,
+     "P_D_propulsion_kW": 11296.37,
+     "etaD_power_route": 0.5331278986081369,
+     "etaD_power_route_vs_chain_pct": -2.032424054176314,
+     "etaR_power_route_reverse": 0.9644800087707494
+    }
+   },
+   "window_ok": true
+  }
+ ],
+ "etar_summary": {
+  "n_states": 11,
+  "primary_wake_exponent": 0.5,
+  "std_openwater_interp": 0.0025211006514520634,
+  "mean_openwater_interp": 0.9816950895384611,
+  "min_openwater_interp": 0.9772626612449131,
+  "max_openwater_interp": 0.9854311110577472,
+  "std_openwater_direct": 0.002454483715711286,
+  "n_in_window_openwater_direct": 11,
+  "std_power_route_reverse": 0.5134449911617103,
+  "min_power_route_reverse": 0.5199457072569821,
+  "max_power_route_reverse": 2.2108910204827232,
+  "n_in_window_power_route_reverse": 2,
+  "std_platform_returned": 0.0,
+  "mean_platform_returned": 1.0,
+  "std_identity_reverse": 5.562965443164906e-05,
+  "mean_identity_reverse": 0.9999216042147204,
+  "n_in_window_openwater_interp": 11,
+  "n_in_window_platform_returned": 11,
+  "window": [
+   0.9,
+   1.1
+  ]
+ },
+ "identity_table": [
+  {
+   "state": "S1",
+   "eta0": 0.4565,
+   "etaR": 0.9854311110577472,
+   "etaH": 1.07,
+   "etaD_chain": 0.48133875335171195,
+   "etaD_product": 0.48133875335171195,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.4884,
+   "chain_vs_platform_pct": -1.4457916970286764
+  },
+  {
+   "state": "S2",
+   "eta0": 0.4892,
+   "etaR": 0.9843215803696971,
+   "etaH": 1.07,
+   "etaD_chain": 0.5152372253150358,
+   "etaD_product": 0.5152372253150358,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.5234,
+   "chain_vs_platform_pct": -1.5595671923890295
+  },
+  {
+   "state": "S3",
+   "eta0": 0.5205,
+   "etaR": 0.9835574291614199,
+   "etaH": 1.07,
+   "etaD_chain": 0.5477775568100154,
+   "etaD_product": 0.5477775568100154,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.5569,
+   "chain_vs_platform_pct": -1.6380756311697908
+  },
+  {
+   "state": "S4",
+   "eta0": 0.5503,
+   "etaR": 0.981800922875099,
+   "etaH": 1.07,
+   "etaD_chain": 0.5781050012082387,
+   "etaD_product": 0.5781050012082387,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.5888,
+   "chain_vs_platform_pct": -1.8164060447964128
+  },
+  {
+   "state": "S5",
+   "eta0": 0.5783,
+   "etaR": 0.9801130204710885,
+   "etaH": 1.07,
+   "etaD_chain": 0.6064753149201207,
+   "etaD_product": 0.6064753149201207,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.6187,
+   "chain_vs_platform_pct": -1.9758663455437664
+  },
+  {
+   "state": "S6",
+   "eta0": 0.6042,
+   "etaR": 0.9787082745537339,
+   "etaH": 1.07,
+   "etaD_chain": 0.6327290272493417,
+   "etaD_product": 0.6327290272493417,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.6464,
+   "chain_vs_platform_pct": -2.1149400913765963
+  },
+  {
+   "state": "S7",
+   "eta0": 0.6196,
+   "etaR": 0.9772626612449131,
+   "etaH": 1.07,
+   "etaD_chain": 0.6478977810508626,
+   "etaD_product": 0.6478977810508626,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.663,
+   "chain_vs_platform_pct": -2.2778610783012723
+  },
+  {
+   "state": "S8",
+   "eta0": 0.5958,
+   "etaR": 0.9796428928483812,
+   "etaH": 1.07,
+   "etaD_chain": 0.6245282220482001,
+   "etaD_product": 0.6245282220482001,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.6375,
+   "chain_vs_platform_pct": -2.034788698321541
+  },
+  {
+   "state": "S9",
+   "eta0": 0.5726,
+   "etaR": 0.9805439269506518,
+   "etaH": 1.07,
+   "etaD_chain": 0.6007616142519794,
+   "etaD_product": 0.6007616142519794,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.6126,
+   "chain_vs_platform_pct": -1.9324821658538445
+  },
+  {
+   "state": "S10",
+   "eta0": 0.5292,
+   "etaR": 0.9827751653725095,
+   "etaH": 1.07,
+   "etaD_chain": 0.5564905407411913,
+   "etaD_product": 0.5564905407411913,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.5662,
+   "chain_vs_platform_pct": -1.7148462131417745
+  },
+  {
+   "state": "S11",
+   "eta0": 0.5166,
+   "etaR": 0.9844890000178316,
+   "etaH": 1.07,
+   "etaD_chain": 0.5441881086278566,
+   "etaD_product": 0.5441881086278566,
+   "relative_residual": 0.0,
+   "etaD_platform": 0.5527,
+   "chain_vs_platform_pct": -1.540056336555702
+  }
+ ],
+ "max_identity_relative_residual": 0.0,
+ "control_null": [
+  {
+   "state": "S1",
+   "wake_exponent": 0.0,
+   "etaR_openwater_interp": 0.9993715817984156,
+   "etaR_openwater_direct": 1.0,
+   "deviation_from_unity_interp": 0.0006284182015844353,
+   "deviation_from_unity_direct": 0.0,
+   "KT_open_water": 0.3216628981066319,
+   "KT_behind_hull": 0.3216628981066319,
+   "interpolation_bias_pct": -0.06284182015844803,
+   "tautology_guard_messages": [
+    "eta_0,open-water == eta_0,behind-hull: the behind-hull point is the open-water point, so eta_R carries no information (the platform's constant 1.0 failure mode)"
+   ],
+   "interpretation": "etaR_openwater_direct = 1 exactly means the behind-hull solve reproduces the open-water solve when the inflow is uniform (same code path, only the field differs); the remaining offset of etaR_openwater_interp from 1 is the interpolation bias of reading eta_0 off the ladder and is reported separately"
+  },
+  {
+   "state": "S6",
+   "wake_exponent": 0.0,
+   "etaR_openwater_interp": 0.9994703198015664,
+   "etaR_openwater_direct": 1.0,
+   "deviation_from_unity_interp": 0.0005296801984335797,
+   "deviation_from_unity_direct": 0.0,
+   "KT_open_water": 0.21569057400797845,
+   "KT_behind_hull": 0.21569057400797845,
+   "interpolation_bias_pct": -0.0529680198433603,
+   "tautology_guard_messages": [
+    "eta_0,open-water == eta_0,behind-hull: the behind-hull point is the open-water point, so eta_R carries no information (the platform's constant 1.0 failure mode)"
+   ],
+   "interpretation": "etaR_openwater_direct = 1 exactly means the behind-hull solve reproduces the open-water solve when the inflow is uniform (same code path, only the field differs); the remaining offset of etaR_openwater_interp from 1 is the interpolation bias of reading eta_0 off the ladder and is reported separately"
+  }
+ ],
+ "panel_sensitivity": [
+  {
+   "state": "S1",
+   "n_radial": 8,
+   "n_chord": 1,
+   "n_panels_per_blade": 8,
+   "J": 0.4298,
+   "etaR": 0.9906335090830267,
+   "eta0_open_water": 0.5162363189098819,
+   "eta0_behind_hull": 0.5211173599283276
+  },
+  {
+   "state": "S4",
+   "n_radial": 8,
+   "n_chord": 1,
+   "n_panels_per_blade": 8,
+   "J": 0.5372,
+   "etaR": 0.9878254237416295,
+   "eta0_open_water": 0.611160916207363,
+   "eta0_behind_hull": 0.6186932442905165
+  },
+  {
+   "state": "S7",
+   "n_radial": 8,
+   "n_chord": 1,
+   "n_panels_per_blade": 8,
+   "J": 0.632,
+   "etaR": 0.9839028366190696,
+   "eta0_open_water": 0.6810073913690528,
+   "eta0_behind_hull": 0.6921490273461965
+  },
+  {
+   "state": "S1",
+   "n_radial": 16,
+   "n_chord": 2,
+   "n_panels_per_blade": 32,
+   "J": 0.4298,
+   "etaR": 0.9854311110577472,
+   "eta0_open_water": 0.4994005443887575,
+   "eta0_behind_hull": 0.5067838216034283
+  },
+  {
+   "state": "S4",
+   "n_radial": 16,
+   "n_chord": 2,
+   "n_panels_per_blade": 32,
+   "J": 0.5372,
+   "etaR": 0.981800922875099,
+   "eta0_open_water": 0.5933148514586792,
+   "eta0_behind_hull": 0.6043127864671589
+  },
+  {
+   "state": "S7",
+   "n_radial": 16,
+   "n_chord": 2,
+   "n_panels_per_blade": 32,
+   "J": 0.632,
+   "etaR": 0.9772626612449131,
+   "eta0_open_water": 0.6617817433857682,
+   "eta0_behind_hull": 0.677178991513642
+  },
+  {
+   "state": "S1",
+   "n_radial": 24,
+   "n_chord": 2,
+   "n_panels_per_blade": 48,
+   "J": 0.4298,
+   "etaR": 0.9844166810757251,
+   "eta0_open_water": 0.4841412165872102,
+   "eta0_behind_hull": 0.4918051734537483
+  },
+  {
+   "state": "S4",
+   "n_radial": 24,
+   "n_chord": 2,
+   "n_panels_per_blade": 48,
+   "J": 0.5372,
+   "etaR": 0.980875310793787,
+   "eta0_open_water": 0.5803903773832636,
+   "eta0_behind_hull": 0.5917065818626576
+  },
+  {
+   "state": "S7",
+   "n_radial": 24,
+   "n_chord": 2,
+   "n_panels_per_blade": 48,
+   "J": 0.632,
+   "etaR": 0.9769783796244423,
+   "eta0_open_water": 0.6524717177516841,
+   "eta0_behind_hull": 0.6678466293210081
+  }
+ ],
+ "wake_shape_sensitivity": [
+  {
+   "state": "S1",
+   "wake_exponent": 0.0,
+   "J": 0.4298,
+   "KT_behind_hull": 0.3216628981066319,
+   "eta0_behind_hull": 0.49971457412273323,
+   "etaR": 0.9993715817984156,
+   "etaR_direct_numerator": 1.0
+  },
+  {
+   "state": "S4",
+   "wake_exponent": 0.0,
+   "J": 0.5372,
+   "KT_behind_hull": 0.2588623002473223,
+   "eta0_behind_hull": 0.5936168536851557,
+   "etaR": 0.9994912505859602,
+   "etaR_direct_numerator": 1.0
+  },
+  {
+   "state": "S7",
+   "wake_exponent": 0.0,
+   "J": 0.632,
+   "KT_behind_hull": 0.20150169783098526,
+   "eta0_behind_hull": 0.6623556052910362,
+   "etaR": 0.999133604515937,
+   "etaR_direct_numerator": 1.0
+  },
+  {
+   "state": "S1",
+   "wake_exponent": 0.25,
+   "J": 0.4298,
+   "KT_behind_hull": 0.32140599594193453,
+   "eta0_behind_hull": 0.5035734749304456,
+   "etaR": 0.9917133630950985,
+   "etaR_direct_numerator": 0.9923369657064536
+  },
+  {
+   "state": "S4",
+   "wake_exponent": 0.25,
+   "J": 0.5372,
+   "KT_behind_hull": 0.2588876690400561,
+   "eta0_behind_hull": 0.599268013566604,
+   "etaR": 0.9900659438295498,
+   "etaR_direct_numerator": 0.9905698956835443
+  },
+  {
+   "state": "S7",
+   "wake_exponent": 0.25,
+   "J": 0.632,
+   "KT_behind_hull": 0.2018927304596259,
+   "eta0_behind_hull": 0.6699366066958006,
+   "etaR": 0.9878274104914896,
+   "etaR_direct_numerator": 0.9886840018458543
+  },
+  {
+   "state": "S1",
+   "wake_exponent": 0.5,
+   "J": 0.4298,
+   "KT_behind_hull": 0.31965401600133125,
+   "eta0_behind_hull": 0.5067838216034283,
+   "etaR": 0.9854311110577472,
+   "etaR_direct_numerator": 0.9860507633050943
+  },
+  {
+   "state": "S4",
+   "wake_exponent": 0.5,
+   "J": 0.5372,
+   "KT_behind_hull": 0.25692029232899194,
+   "eta0_behind_hull": 0.6043127864671589,
+   "etaR": 0.981800922875099,
+   "etaR_direct_numerator": 0.982300667764235
+  },
+  {
+   "state": "S7",
+   "wake_exponent": 0.5,
+   "J": 0.632,
+   "KT_behind_hull": 0.1998101715270269,
+   "eta0_behind_hull": 0.677178991513642,
+   "etaR": 0.9772626612449131,
+   "etaR_direct_numerator": 0.9781100914110281
+  },
+  {
+   "state": "S1",
+   "wake_exponent": 1.0,
+   "J": 0.4298,
+   "KT_behind_hull": 0.31399746716064275,
+   "eta0_behind_hull": 0.5114941461858455,
+   "etaR": 0.9763563241392522,
+   "etaR_direct_numerator": 0.9769702700393519
+  },
+  {
+   "state": "S4",
+   "wake_exponent": 1.0,
+   "J": 0.5372,
+   "KT_behind_hull": 0.2500461218037423,
+   "eta0_behind_hull": 0.612586289221776,
+   "etaR": 0.9685408601169003,
+   "etaR_direct_numerator": 0.9690338555230824
+  },
+  {
+   "state": "S7",
+   "wake_exponent": 1.0,
+   "J": 0.632,
+   "KT_behind_hull": 0.19192767011961703,
+   "eta0_behind_hull": 0.6903476516571817,
+   "etaR": 0.958620981468046,
+   "etaR_direct_numerator": 0.9594522465616411
+  }
+ ],
+ "wake_profiles": [
+  {
+   "wake_exponent": 0.0,
+   "xi": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+   ],
+   "r_over_R": [
+    0.18,
+    0.385,
+    0.5900000000000001,
+    0.7949999999999999,
+    1.0
+   ],
+   "w": [
+    0.3038,
+    0.3038,
+    0.3038,
+    0.3038,
+    0.3038
+   ],
+   "w_hub": 0.3038,
+   "w_tip": 0.3038
+  },
+  {
+   "wake_exponent": 0.25,
+   "xi": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+   ],
+   "r_over_R": [
+    0.18,
+    0.385,
+    0.5900000000000001,
+    0.7949999999999999,
+    1.0
+   ],
+   "w": [
+    0.411525,
+    0.38296716464199154,
+    0.3460498972872849,
+    0.290992118127794,
+    0.0
+   ],
+   "w_hub": 0.411525,
+   "w_tip": 0.0
+  },
+  {
+   "wake_exponent": 0.5,
+   "xi": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+   ],
+   "r_over_R": [
+    0.18,
+    0.385,
+    0.5900000000000001,
+    0.7949999999999999,
+    1.0
+   ],
+   "w": [
+    0.5292578740157481,
+    0.4583507640505818,
+    0.37424183171291087,
+    0.26462893700787404,
+    0.0
+   ],
+   "w_hub": 0.5292578740157481,
+   "w_tip": 0.0
+  },
+  {
+   "wake_exponent": 1.0,
+   "xi": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+   ],
+   "r_over_R": [
+    0.18,
+    0.385,
+    0.5900000000000001,
+    0.7949999999999999,
+    1.0
+   ],
+   "w": [
+    0.7907735294117646,
+    0.5930801470588234,
+    0.39538676470588224,
+    0.19769338235294123,
+    0.0
+   ],
+   "w_hub": 0.7907735294117646,
+   "w_tip": 0.0
+  }
+ ],
+ "determinism": {
+  "state": "S4",
+  "etaR_first": 0.981800922875099,
+  "etaR_repeat": 0.981800922875099,
+  "abs_difference": 0.0,
+  "KT_behind_hull_first": 0.25692029232899194,
+  "KT_behind_hull_repeat": 0.25692029232899194
+ },
+ "kp505_comparison": {
+  "anchor": {
+   "path": "benchmarks/anchors/kp505_openwater.json",
+   "sha256": "9771a40b9a24e3f23812b85fc196ef0156f9be99491fba8ecbc5c5e1276ac404",
+   "citation": "Iftikhar & Takinaci (2023), Table 2 experimental columns (SECONDARY_REPRODUCTION)"
+  },
+  "rows": [
+   {
+    "J": 0.1,
+    "KT_measured": 0.494,
+    "10KQ_measured": 0.683,
+    "eta0_measured": 0.1151135313139038,
+    "KT_VLM": 0.5285686804764528,
+    "10KQ_VLM": 0.65289772732519,
+    "eta0_VLM": 0.12884761998794353,
+    "dKT_pct_VLM": 6.997708598472224,
+    "d10KQ_pct_VLM": -4.407360567322112,
+    "deta0_pct_VLM": 11.930907268050149,
+    "KT_B_series": 0.4213361183766667,
+    "dKT_pct_B_series": -14.709287778002697,
+    "d10KQ_pct_B_series": -11.918886245742362,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.2,
+    "KT_measured": 0.447,
+    "10KQ_measured": 0.636,
+    "eta0_measured": 0.2237177973650227,
+    "KT_VLM": 0.47342587798159697,
+    "10KQ_VLM": 0.6103839702500271,
+    "eta0_VLM": 0.24688744246519898,
+    "dKT_pct_VLM": 5.91182952608433,
+    "d10KQ_pct_VLM": -4.027677633643538,
+    "deta0_pct_VLM": 10.356639200399504,
+    "KT_B_series": 0.38704789641227594,
+    "dKT_pct_B_series": -13.41210371090024,
+    "d10KQ_pct_B_series": -11.989725292792356,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.3,
+    "KT_measured": 0.392,
+    "10KQ_measured": 0.585,
+    "eta0_measured": 0.31994224457447684,
+    "KT_VLM": 0.4162526755117284,
+    "10KQ_VLM": 0.5598870285704958,
+    "eta0_VLM": 0.3549752048305057,
+    "dKT_pct_VLM": 6.186907018298057,
+    "d10KQ_pct_VLM": -4.2928156289750765,
+    "deta0_pct_VLM": 10.949776358111977,
+    "KT_B_series": 0.3484724475853488,
+    "dKT_pct_B_series": -11.10396745271715,
+    "d10KQ_pct_B_series": -12.431755667780566,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.4,
+    "KT_measured": 0.343,
+    "10KQ_measured": 0.53,
+    "eta0_measured": 0.41200109796618944,
+    "KT_VLM": 0.35704913431469,
+    "10KQ_VLM": 0.5014066583015517,
+    "eta0_VLM": 0.4533337059811367,
+    "dKT_pct_VLM": 4.095957526148676,
+    "d10KQ_pct_VLM": -5.394970131782697,
+    "deta0_pct_VLM": 10.032159676025714,
+    "KT_B_series": 0.306119428673224,
+    "dKT_pct_B_series": -10.752353156494467,
+    "d10KQ_pct_B_series": -13.273387780754769,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.5,
+    "KT_measured": 0.29,
+    "10KQ_measured": 0.471,
+    "eta0_measured": 0.4899674468858774,
+    "KT_VLM": 0.2958153170105801,
+    "10KQ_VLM": 0.4349426381841892,
+    "eta0_VLM": 0.5412261964138849,
+    "dKT_pct_VLM": 2.0052817277862536,
+    "d10KQ_pct_VLM": -7.655490831382328,
+    "deta0_pct_VLM": 10.461664311332635,
+    "KT_B_series": 0.26049849645324086,
+    "dKT_pct_B_series": -10.172932257503147,
+    "d10KQ_pct_B_series": -14.576181614250695,
+    "lt3pct_VLM_KT": true,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.6,
+    "KT_measured": 0.241,
+    "10KQ_measured": 0.409,
+    "eta0_measured": 0.5626847132295371,
+    "KT_VLM": 0.23255128436468964,
+    "10KQ_VLM": 0.36049476301730304,
+    "eta0_VLM": 0.6160148256117584,
+    "dKT_pct_VLM": -3.5056911349835502,
+    "d10KQ_pct_VLM": -11.859471144913677,
+    "deta0_pct_VLM": 9.47779655788627,
+    "KT_B_series": 0.21211930770273832,
+    "dKT_pct_B_series": -11.983689749901108,
+    "d10KQ_pct_B_series": -16.667471870021092,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.7,
+    "KT_measured": 0.193,
+    "10KQ_measured": 0.342,
+    "eta0_measured": 0.6287085617460544,
+    "KT_VLM": 0.16725709463059585,
+    "10KQ_VLM": 0.2780628399716476,
+    "eta0_VLM": 0.6701310885788891,
+    "dKT_pct_VLM": -13.338292937515106,
+    "d10KQ_pct_VLM": -18.695076031681996,
+    "deta0_pct_VLM": 6.5885100590639,
+    "KT_B_series": 0.16149151919905513,
+    "dKT_pct_B_series": -16.325637720696825,
+    "d10KQ_pct_B_series": -19.423098734007816,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.8,
+    "KT_measured": 0.141,
+    "10KQ_measured": 0.27,
+    "eta0_measured": 0.6649139844728071,
+    "KT_VLM": 0.0999328035758505,
+    "10KQ_VLM": 0.18764668632178882,
+    "eta0_VLM": 0.6780743098805785,
+    "dKT_pct_VLM": -29.125671222801053,
+    "d10KQ_pct_VLM": -30.501227288226367,
+    "deta0_pct_VLM": 1.9792523115912235,
+    "KT_B_series": 0.10912478771953026,
+    "dKT_pct_B_series": -22.60653353224804,
+    "d10KQ_pct_B_series": -23.316495320514836,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 0.9,
+    "KT_measured": 0.087,
+    "10KQ_measured": 0.192,
+    "eta0_measured": 0.6490537522966356,
+    "KT_VLM": 0.030578464684578466,
+    "10KQ_VLM": 0.08924612793246778,
+    "eta0_VLM": 0.49078234849077357,
+    "dKT_pct_VLM": -64.85233944301325,
+    "d10KQ_pct_VLM": -53.5176417018397,
+    "deta0_pct_VLM": -24.384945506566865,
+    "KT_B_series": 0.05552877004150317,
+    "dKT_pct_B_series": -36.1738275385021,
+    "d10KQ_pct_B_series": -29.313639494867875,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   },
+   {
+    "J": 1.0,
+    "KT_measured": 0.029,
+    "10KQ_measured": 0.108,
+    "eta0_measured": 0.4273604953393486,
+    "KT_VLM": -0.040805870612996425,
+    "10KQ_VLM": 0.01713900181451987,
+    "eta0_VLM": -3.7892848635587977,
+    "dKT_pct_VLM": -240.7098986655049,
+    "d10KQ_pct_VLM": -84.13055387544456,
+    "deta0_pct_VLM": -986.6717688891412,
+    "KT_B_series": 0.0012131229423123675,
+    "dKT_pct_B_series": -95.81681744030219,
+    "d10KQ_pct_B_series": -42.536627649151804,
+    "lt3pct_VLM_KT": false,
+    "lt3pct_VLM_10KQ": false,
+    "lt3pct_B_series_KT": false
+   }
+  ],
+  "J_region_max": 0.8,
+  "worst_dKT_VLM": {
+   "J": 0.8,
+   "pct": -29.125671222801053
+  },
+  "worst_dKT_B_series": {
+   "J": 0.8,
+   "pct": -22.60653353224804
+  },
+  "points_lt3pct_VLM_KT": [
+   0.5
+  ],
+  "n_points_in_region": 8,
+  "n_points_lt3pct_VLM_KT": 1,
+  "verdict_C4": "honest FAIL",
+  "note": "the lattice is configuration-identical to the registered KP505 case (16 x 2 panels/blade, geometric wake); the KP505 anchor is a SECONDARY_REPRODUCTION of the MARINE 2023 experimental columns, so the deviation is against that transcription, not against the KRISO handout"
+ },
+ "verdicts": {
+  "C1": {
+   "verdict": "PASS",
+   "measured": 0.0025211006514520634,
+   "threshold": 0.001,
+   "note": "the platform's own eta_R series has std = 0, i.e. the gate FAILS on the current platform output -- that is what the gate is for"
+  },
+  "C2": {
+   "verdict": "PASS",
+   "measured": 11,
+   "threshold": 9,
+   "note": "window count for the computed (openwater_interp) eta_R; the platform's constant 1.0 also sits in the window, which is exactly why a window test alone cannot detect a constant -- C1 and C2 are reported together"
+  },
+  "C3": {
+   "verdict": "PASS",
+   "measured": 0.0,
+   "threshold": 1e-06,
+   "note": "this closes the implemented chain and is algebraically exact by construction; the informative number is chain_vs_platform_pct, which is the amount by which the platform's eta_D differs from the chain with a computed eta_R"
+  },
+  "C4": {
+   "verdict": "honest FAIL",
+   "measured_pct": -29.125671222801053,
+   "measured_at_J": 0.8,
+   "threshold_pct": 15.0,
+   "n_points_lt3pct": 1,
+   "n_points_in_region": 8,
+   "note": "gate as stated over J <= 0.8; the same ladder restricted to J <= 0.7 gives 13.34 % (reported, not substituted for the verdict)"
+  }
+ },
+ "caveats": [
+  "the wake is axial only: no swirl and no radial velocity, because the platform reports no swirl. A wake swirl changes K_Q directly, so the eta_R above is a 'nominal axial wake' eta_R, not a full behind-hull eta_R.",
+  "the radial wake shape exponent q is an ASSUMED shape (the measured KP505/KCS nominal wake is not available offline in this worktree); the declared q ladder and the q=0 null control bound what is and is not a measurement here.",
+  "the lattice is non-dimensional (D=1) because the kernel's horseshoe influence matrix loses rank at D=6 in this build; the Reynolds number is preserved by n_eff = n_phys D_phys^2, and this is a kernel scale-invariance defect recorded rather than fixed here.",
+  "the kernel returns torque with the bound-vorticity sign convention; K_Q is taken positive here (same convention flip as the registered KP505 case).",
+  "receipts carry 4 dp on non-dimensional quantities and 2 dp on kW, which bounds any identity residual computed from receipts at ~1e-3 relative.",
+  "the eta_D chain closes with the platform's eta_0 and eta_H; the eta_0 of the chain is therefore the platform's open-water value, not the lattice value, so C3 closes an algebraic identity and is not evidence that eta_D is right."
+ ],
+ "pytest_run": {
+  "command": "PYTHONPATH=src python -m pytest tests/test_etaR_chain.py -q",
+  "returncode": 0,
+  "stdout_tail": "........x......                                                          [100%]\n=============================== warnings summary ===============================\n../../../../usr/lib/python3.11/site-packages/anyio/pytest_plugin.py:14\n  /usr/lib/python3.11/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.\n  The CallSpec2 alias will be removed in pytest 10.\n  Update imports to use CallSpec instead.\n  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed\n    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nXFAIL tests/test_etaR_chain.py::test_c4_point_by_point_against_kp505 - C4 is an honest FAIL: worst |dK_T| vs the KP505 measured curve over J<=0.8 is 29.13 % at J=0.8 (gate 15 %). Remove this xfail only together with a regenerated artefact and an updated doc.\n14 passed, 1 xfailed, 1 warning in 6.43s",
+  "non_constancy_assertion": "test_c1_etar_is_not_a_constant: std(eta_R) > 1e-3 while std(platform return) == 0"
+ }
+}
