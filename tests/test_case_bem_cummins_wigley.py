@@ -702,3 +702,35 @@ def test_extended_band_constants_are_panel_resolved() -> None:
         float(np.max(medium.areas))
     )
     assert medium_kh > case.TOLERANCES["panel_kh"]
+
+def test_robust_decay_zeta_multi_window_on_synthetic() -> None:
+    """_decay_zeta_multi_window recovers known damping on a clean exponential."""
+    from tensorbem.benchmarks.case_bem_cummins_wigley import _decay_zeta_multi_window
+    import numpy as np
+    t = np.linspace(0, 20, 2000)
+    zeta_true = 0.08
+    omega_n = 6.0
+    omega_d = omega_n * np.sqrt(1 - zeta_true**2)
+    d = np.exp(-zeta_true * omega_n * t) * np.cos(omega_d * t)
+    result = _decay_zeta_multi_window(t, d)
+    assert result["n_qualifying_floors"] >= 2
+    assert result["converged"] is True
+    assert abs(result["consensus_zeta"] - zeta_true) / zeta_true < 0.1
+
+
+def test_c5c_gate_passes_on_roll_from_artifact() -> None:
+    """C5c gate passes on roll when replaying the committed medium sweep.
+
+    Uses the pre-computed case_result.json to avoid re-running the heavy
+    free-decay simulation (which takes ~60s per DOF).
+    """
+    import json
+    with open("benchmarks/verified/casepool_bem_cummins_wigley/case_result.json") as f:
+        data = json.load(f)
+    c5c = data["gates"]["C5c"]
+    assert c5c["passed"] is True
+    assert c5c["values"]["status"] == "decided"
+    assert c5c["values"]["dof"] == 3
+    assert c5c["values"]["dof_name"] == "roll"
+    assert c5c["values"]["relative_error"] < 0.05
+    assert c5c["values"]["multi_window"]["n_qualifying_floors"] >= 2
