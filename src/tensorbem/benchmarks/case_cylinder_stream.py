@@ -108,6 +108,38 @@ NEAR_WALL_SATURATION_BAND = (0.5, 2.0)
 # O(h^2) term is swamped by the piecewise-constant density); a lower bound of
 # half an order is the weakest statement that still forbids a plateau.
 NEAR_WALL_ORDER_MIN = 0.5
+# Where the case tolerance actually ends.  The gates above pin two clearance
+# levels -- delta = 2 h_max inside 1 %, delta = 0.1 h_max outside 3 % -- but not
+# the boundary between them, and the boundary is the number a caller needs:
+# at delta = 0.25 h_max the measured error is already about 9 %, i.e. outside the
+# case tolerance while every gated criterion still passes.  This study locates
+# the crossing on a log-spaced grid in the scaled clearance delta/h_max, so that
+# "the field meets the < 3 % acceptance" comes with a measured inner bound
+# instead of an assumed one.
+NEAR_WALL_FLOOR_GRID: tuple[float, ...] = (
+    4.0,
+    3.0,
+    2.0,
+    1.5,
+    1.0,
+    0.75,
+    0.6,
+    0.45,
+    0.35,
+    0.25,
+    0.15,
+    0.1,
+    0.07,
+    0.05,
+)
+# Refining the mesh must move the tolerance boundary *into* the body (the usable
+# envelope cannot shrink when h shrinks); the slack still forbids a boundary that
+# jumps around by panel-unit amounts across the ladder.
+NEAR_WALL_FLOOR_MONOTONE_TOL = 0.05
+# The gated 1 % window has to sit at least this many times outside the measured
+# 3 % boundary, so "inside the window" cannot be true merely because the window
+# was placed next to the boundary it is supposed to be safely away from.
+NEAR_WALL_FLOOR_WINDOW_MARGIN = 2.0
 
 # Azimuthal (intra-panel) sweep.  The window above is measured on radial probes
 # above the panel *midpoints*, which is where a constant-density panel is at its
@@ -541,6 +573,13 @@ def near_wall_study(
 ) -> dict[str, Any]:
     """Measure how the exterior field degrades as the probe approaches the body.
 
+    ``factors`` selects the clearance sweep, but three levels are part of the
+    study's contract rather than of the caller's choice: the documented window,
+    the first-moment window and the exclusion zone.  They are unioned in here
+    instead of being demanded of the caller -- passing a shorter tuple used to
+    die with a bare ``KeyError: 0.5`` from the summary lookups, which is a
+    caller-visible crash for an argument that reads as a sampling choice.
+
     The constant-panel single- and double-layer potentials are integrated in
     closed form, but the *densities* are piecewise constant, so the recovered
     gradient is only meaningful at distances of the order of the panel size and
@@ -558,6 +597,17 @@ def near_wall_study(
     Probes are placed radially above the panel midpoints, so one direction per
     panel is sampled and no probe sits on a vertex ray.
     """
+    factors = tuple(
+        sorted(
+            {float(value) for value in factors}
+            | {
+                float(NEAR_WALL_WINDOW_FACTOR),
+                float(NEAR_WALL_LINEAR_FACTOR),
+                float(NEAR_WALL_EXCLUSION_FACTOR),
+            },
+            reverse=True,
+        )
+    )
     levels: list[dict[str, Any]] = []
     for panels in ladder:
         mesh = regular_polygon(int(panels), radius)
@@ -646,11 +696,82 @@ def near_wall_study(
         except ValueError as error:  # the demanded behaviour
             guard_rejected = True
             guard_message = str(error).split(";")[0]
+        # Locate the case-tolerance boundary on this level.  Only the
+        # constant-density field is probed: the boundary is a property of the
+        # representation that the gated window/criteria use, and the linear and
+        # representation-only variants are already reported on the coarse grid
+        # above.  The grid is log-spaced in delta/h_max because the error is a
+        # power law in the scaled clearance over the whole usable range.
+        floor_samples: list[dict[str, float]] = []
+        for factor in sorted(float(value) for value in NEAR_WALL_FLOOR_GRID):
+            delta = factor * h_max
+            points = np.column_stack(
+                (
+                    (radius + delta) * np.cos(theta),
+                    (radius + delta) * np.sin(theta),
+                )
+            )
+            exact = exact_velocity(points, radius, speed)
+            total = evaluate_exterior_field(mesh, result, points).gradient + np.array(
+                [speed, 0.0]
+            )
+            floor_samples.append(
+                {
+                    "clearance_over_h_max": factor,
+                    "clearance_over_radius": delta / radius,
+                    "max_relative_velocity_error": float(
+                        np.max(
+                            np.linalg.norm(total - exact, axis=1)
+                            / np.linalg.norm(exact, axis=1)
+                        )
+                    ),
+                }
+            )
+        floor_block: dict[str, Any] = {
+            "tolerance": float(TOLERANCE),
+            "grid": floor_samples,
+            "clearance_over_h_max": None,
+            "bracket": None,
+            "errors_at_bracket": None,
+            "observed_order_in_clearance": None,
+            "note": (
+                "the clearance delta/h_max at which the worst-direction relative "
+                "velocity error crosses the case tolerance, log-log interpolated "
+                "between the two grid samples that straddle it"
+            ),
+        }
+        for coarse, fine in zip(floor_samples, floor_samples[1:]):
+            error_coarse = coarse["max_relative_velocity_error"]
+            error_fine = fine["max_relative_velocity_error"]
+            if error_fine >= TOLERANCE or error_coarse < TOLERANCE:
+                continue
+            ratio = error_coarse / error_fine
+            c_ratio = fine["clearance_over_h_max"] / coarse["clearance_over_h_max"]
+            order = math.log(ratio) / math.log(c_ratio) if ratio > 0.0 else float("nan")
+            if math.isfinite(order) and order != 0.0:
+                boundary = coarse["clearance_over_h_max"] * (error_coarse / TOLERANCE) ** (
+                    1.0 / order
+                )
+            else:  # pragma: no cover - degenerate, never triggered by a power law
+                boundary = float("nan")
+            floor_block.update(
+                {
+                    "clearance_over_h_max": float(boundary),
+                    "bracket": [
+                        coarse["clearance_over_h_max"],
+                        fine["clearance_over_h_max"],
+                    ],
+                    "errors_at_bracket": [error_coarse, error_fine],
+                    "observed_order_in_clearance": float(order),
+                }
+            )
+            break
         levels.append(
             {
                 "panels": int(panels),
                 "h_max_over_radius": h_max / radius,
                 "h_mean_over_radius": float(np.mean(mesh.lengths)) / radius,
+                "three_percent_floor": floor_block,
                 "condition_number": result.condition_number,
                 "sweep": sweep,
                 "guard_factor": guard_factor,
@@ -809,7 +930,57 @@ def near_wall_study(
             }
         )
     azimuth = attach_azimuth_study(window, radius, speed, ladder)
+    floor_levels = [
+        {
+            "panels": level["panels"],
+            "h_max_over_radius": level["h_max_over_radius"],
+            "clearance_over_h_max": level["three_percent_floor"][
+                "clearance_over_h_max"
+            ],
+            "bracket": level["three_percent_floor"]["bracket"],
+        }
+        for level in levels
+    ]
+    located = [row for row in floor_levels if row["clearance_over_h_max"] is not None]
+    finest_floor = (
+        floor_levels[-1]["clearance_over_h_max"]
+        if floor_levels and floor_levels[-1]["clearance_over_h_max"] is not None
+        else None
+    )
+    shifts = [
+        coarse["clearance_over_h_max"] / fine["clearance_over_h_max"]
+        for coarse, fine in zip(floor_levels, floor_levels[1:])
+        if coarse["clearance_over_h_max"] is not None
+        and fine["clearance_over_h_max"] is not None
+        and fine["clearance_over_h_max"] > 0.0
+    ]
+    floor_summary = {
+        "tolerance": float(TOLERANCE),
+        "levels": floor_levels,
+        "all_levels_located": len(located) == len(floor_levels),
+        "refinement_shifts": shifts,
+        "monotone_tolerance": NEAR_WALL_FLOOR_MONOTONE_TOL,
+        "boundary_moves_inward_with_refinement": bool(shifts)
+        and all(shift >= 1.0 / (1.0 + NEAR_WALL_FLOOR_MONOTONE_TOL) for shift in shifts),
+        "finest_level_clearance_over_h_max": finest_floor,
+        "window_factor_over_finest_floor": (
+            float(NEAR_WALL_WINDOW_FACTOR) / finest_floor
+            if finest_floor
+            else None
+        ),
+        "window_margin_required": NEAR_WALL_FLOOR_WINDOW_MARGIN,
+        "note": (
+            "the case acceptance is < 3 % on the exterior velocity field; this "
+            "block measures *where* that holds. Above the reported clearance the "
+            "worst-direction relative error is inside the tolerance, below it the "
+            "field is outside the acceptance however many criteria pass -- the "
+            "probe rings of routes D/N stop at r/a = 1.25, i.e. delta = 0.25 a, "
+            "which is many panels out on every level, so the routes themselves "
+            "are unaffected"
+        ),
+    }
     return {
+        "floor": floor_summary,
         "azimuth": azimuth,
         "faceting": {
             "clearance_over_h_max": NEAR_WALL_EXCLUSION_FACTOR,
@@ -1982,6 +2153,41 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "clearance instead of returning a plausible wrong velocity",
     )
 
+    floor = near["floor"]
+    add(
+        "near_wall_tolerance_boundary_is_located",
+        floor["finest_level_clearance_over_h_max"],
+        "bracketed on every level",
+        bool(floor["all_levels_located"]),
+        "the acceptance is < 3 % on the exterior velocity field, so the record "
+        "must say *where* that holds: on every level the worst-direction error "
+        "has to cross the tolerance inside the probed clearance grid, otherwise "
+        "the usable region is unbounded (an assumed bound) or empty",
+    )
+    floor_ok = bool(floor["boundary_moves_inward_with_refinement"]) and all(
+        shift is not None for shift in floor["refinement_shifts"]
+    )
+    add(
+        "near_wall_tolerance_boundary_moves_inward_with_refinement",
+        [round(float(shift), 6) for shift in floor["refinement_shifts"]],
+        f"each coarse/fine <= {1.0 + floor['monotone_tolerance']:g}",
+        floor_ok,
+        "refining the mesh may not shrink the usable envelope: if the boundary "
+        "moved outward the reported window would be a property of one mesh only",
+    )
+    margin = floor["window_factor_over_finest_floor"]
+    add(
+        "near_wall_window_clears_measured_tolerance_boundary",
+        margin,
+        f">= {floor['window_margin_required']:g}",
+        margin is not None and float(margin) >= floor["window_margin_required"],
+        "the gated 1 % window delta = "
+        f"{NEAR_WALL_WINDOW_FACTOR:g} h_max must sit at least "
+        f"{floor['window_margin_required']:g}x outside the *measured* 3 % boundary, "
+        "so the acceptance is not true merely because the window was placed next "
+        "to the edge of the region where it fails",
+    )
+
     linear_near = near["linear"]
     add(
         "near_wall_linear_window_extends_to_half_panel",
@@ -2513,6 +2719,67 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "更贴壁只会更大。本轮不改既有 API 默认值（避免破坏调用方），而是把可用窗口"
         "写进本表与 `evaluate_exterior_field` docstring，并新增守门判据。",
         "",
+        "#### 容差边界（第 6 轮）：<3% 到底从多远开始成立",
+        "",
+        "上面两个闸门钉住了 $2\\,h_{max}$（$\\le1\\%$）与 $0.1\\,h_{max}$"
+        "（$>3\\%$）两个**离散**的 clearance，却没钉住二者之间的容差边界——"
+        "而调用方要的正是这个数。在 $\\delta/h_{max}$ 上按对数网格逐点测量最差方向"
+        "相对速度误差，取穿越 $3\\%$ 的相邻两点做对数-对数插值：",
+        "",
+        "| 层 | $h_{max}/a$ | 3% 边界 $\\delta^*/h_{max}$ | 夹逼区间 | 区间端点误差 | 区内幂次 |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for level in near["floor"]["levels"]:
+        detail = next(
+            row["three_percent_floor"]
+            for row in near["levels"]
+            if row["panels"] == level["panels"]
+        )
+        boundary = detail["clearance_over_h_max"]
+        lines.append(
+            f"| {level['panels']} | {level['h_max_over_radius']:.3e} | "
+            + (f"{boundary:.3f}" if boundary is not None else "未跨越")
+            + " | "
+            + (
+                f"[{detail['bracket'][0]:g}, {detail['bracket'][1]:g}]"
+                if detail["bracket"]
+                else "—"
+            )
+            + " | "
+            + (
+                " / ".join(f"{value:.3e}" for value in detail["errors_at_bracket"])
+                if detail["errors_at_bracket"]
+                else "—"
+            )
+            + " | "
+            + (
+                f"{detail['observed_order_in_clearance']:.2f}"
+                if detail["observed_order_in_clearance"] is not None
+                else "—"
+            )
+            + " |"
+        )
+    floor_block = near["floor"]
+    lines += [
+        "",
+        f"判读：最细层容差边界 $\\delta^*={floor_block['finest_level_clearance_over_h_max']:.3f}\\,h_{{max}}$"
+        if floor_block["finest_level_clearance_over_h_max"] is not None
+        else "判读：最细层未在网格上跨越容差。",
+        "（粗/细层边界比 "
+        + "、".join(f"{shift:.3f}" for shift in floor_block["refinement_shifts"])
+        + "：加密使边界**向内**移动，即可用包络不随加密缩小）。"
+        f"守门的 $1\\%$ 窗口 $\\delta={NEAR_WALL_WINDOW_FACTOR:g}\\,h_{{max}}$ 距该边界 "
+        f"{floor_block['window_factor_over_finest_floor']:.2f}x"
+        f"（判据要求 $\\ge{floor_block['window_margin_required']:g}x$）——"
+        "也就是说「$<3\\%$」有实测内边界，不是把窗口摆在失效边缘得来的。"
+        "路线 D/N 的探针环最近在 $r/a=1.25$，即 $\\delta=0.25\\,a$；"
+        f"最细层 $h_{{max}}=0.049\\,a$，该处 $\\delta/h_{{max}}\\approx5.1$，"
+        "远在边界之外，故各路线判据不受本轮边界测量影响。",
+        "",
+        "适用范围（消费方须知）：给定需要评价的物理 clearance $\\delta$ 与特征长度 $a$，"
+        "要求的网格满足 $h_{max}\\le\\delta/\\delta^*$（本层实测 $\\delta^*$ 见上表）。"
+        "边界随加密**缓慢**内移，故按最细层 $\\delta^*$ 取网格是偏保守的一侧。",
+        "",
         "#### 一阶矩（线性密度）基与近壁窗口的再评估（第 3 轮）",
         "",
         "常值密度下近壁误差是**一阶**且不随加密改善，根因是基函数无法承载面板内密度的切向变化。"
@@ -2545,6 +2812,13 @@ def render_markdown(artifact: dict[str, Any]) -> str:
             f"{row_window['max_relative_velocity_error']:.3e} | "
             f"{row_window['max_relative_velocity_error_linear']:.3e} |"
         )
+    # The attribution tables are keyed by panel count and clearance factor; the
+    # prose below quotes the finest level at the exclusion clearance.  Both names
+    # were referenced and never bound, so every render_markdown() call died with
+    # NameError before it wrote a byte -- which is why the committed record and
+    # the committed document both predate this section.
+    finest_key = str(near["levels"][-1]["panels"])
+    exclusion_key = f"{NEAR_WALL_EXCLUSION_FACTOR:g}"
     lines += [
         "",
         f"判读：$\\delta={linear_near['clearance_over_h_max']:g}\\,h_{{max}}$ 处线性基把误差降到 "
