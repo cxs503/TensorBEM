@@ -593,6 +593,17 @@ def _num(value: float | None, digits: int = 4) -> str:
     return "n/a" if value is None else f"{value:.{digits}f}"
 
 
+def _order_coverage(rows: Sequence[dict[str, Any]]) -> str:
+    """How many reference ladders were asymptotic (``s/n``), from the result."""
+    entries = [
+        quantity
+        for row in rows
+        for quantity in row["quantities"].values()
+    ]
+    measured = sum(1 for entry in entries if entry.get("capytaine_order"))
+    return f"{measured}/{len(entries)}"
+
+
 def render_document(result: dict[str, Any]) -> str:
     """Markdown page, every number taken from ``result``."""
     comparison = result["comparison"]
@@ -613,6 +624,17 @@ def render_document(result: dict[str, Any]) -> str:
         "`nu` back-computed per cell from `k0 tanh(k0 h) = nu` so `k0 a` is "
         "exact at every depth.\n"
     )
+    provenance = result.get("reference", {}).get("provenance", {})
+    status = str(result.get("case", {}).get("execution_status", "")) or "n/a"
+    lines.append(
+        "**Reference**: `scripts/capytaine_finite_depth_ref.py` "
+        f"({provenance.get('tool', 'capytaine')} {provenance.get('version', 'n/a')}, "
+        f"`finite_depth_method={provenance.get('finite_depth_method', 'n/a')}`, "
+        f"ladder {[list(r) for r in provenance.get('resolutions', [])]} panels, "
+        f"generated {provenance.get('generated_utc', 'n/a')}).\n"
+        f"**Execution status**: `{status}`; every number below is written by the "
+        "study driver from the frozen artifacts, none is transcribed.\n"
+    )
     worst = comparison["worst_relative"]
     lines.append("## 1. Headline\n")
     lines.append(
@@ -632,15 +654,26 @@ def render_document(result: dict[str, Any]) -> str:
     for gate in result["gates"]:
         measured = gate.get("worst", gate.get("min_gap", gate.get("min_order",
                               gate.get("max"))))
+        if measured is None:
+            # boolean gates carry no measurement: show the symbol instead of a
+            # stray "n/a", otherwise the verdict column says FAIL/PASS about a
+            # number the page never printed
+            shown = "yes" if gate["passed"] else "no"
+        elif isinstance(measured, bool):
+            shown = str(measured)
+        else:
+            shown = _num(measured)
         lines.append(
-            f"| `{gate['gate']}` | {_num(measured) if not isinstance(measured, bool) else measured} "
+            f"| `{gate['gate']}` | {shown} "
             f"| {gate['limit']} | {'PASS' if gate['passed'] else 'FAIL'} |\n"
         )
     lines.append("\n## 3. Per-cell comparison (Richardson-extrapolated)\n")
     lines.append(
         "| `h/a` | `k0 a` | `k0 h` | A33 TB | A33 capytaine | delta | "
-        "B33 TB | B33 capytaine | delta |\n"
-        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n"
+        "B33 TB | B33 capytaine | delta | A11 TB | A11 capytaine | delta | "
+        "B11 TB | B11 capytaine | delta |\n"
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|"
+        "---:|---:|---:|---:|---:|---:|\n"
     )
     for row in rows:
         q = row["quantities"]
@@ -651,7 +684,13 @@ def render_document(result: dict[str, Any]) -> str:
             f"{_pct(q['heave.added_mass']['relative'])} | "
             f"{_num(q['heave.damping']['tensorbem'])} | "
             f"{_num(q['heave.damping']['capytaine'])} | "
-            f"{_pct(q['heave.damping']['relative'])} |\n"
+            f"{_pct(q['heave.damping']['relative'])} | "
+            f"{_num(q['surge.added_mass']['tensorbem'])} | "
+            f"{_num(q['surge.added_mass']['capytaine'])} | "
+            f"{_pct(q['surge.added_mass']['relative'])} | "
+            f"{_num(q['surge.damping']['tensorbem'])} | "
+            f"{_num(q['surge.damping']['capytaine'])} | "
+            f"{_pct(q['surge.damping']['relative'])} |\n"
         )
     lines.append("\nObserved convergence orders (same three-level ladder):\n")
     lines.append(
@@ -695,6 +734,10 @@ def render_document(result: dict[str, Any]) -> str:
         "* Damping involves the radiated-wave amplitude and converges more "
         "slowly than added mass on both sides; the per-cell orders above make "
         "that visible rather than hiding it behind one number.\n"
+        f"* Measured order available on {_order_coverage(rows)} of the judged "
+        "code/cell entries; where the reference ladder is not yet asymptotic "
+        "(`n/a` order) the comparison uses the finest reference level, so that "
+        "entry's benchmark is the least certain number in this study.\n"
     )
     return "".join(lines)
 
