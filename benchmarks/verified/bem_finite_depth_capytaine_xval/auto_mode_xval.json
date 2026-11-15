@@ -1,0 +1,1019 @@
+{
+ "anchor": "XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN",
+ "comparison": [
+  {
+   "am": 2178.376776753596,
+   "am_rel_error": 0.11464142975121472,
+   "b": 240.8610079814334,
+   "b_rel_error": 0.22887148358040899,
+   "case_id": "tbem-auto-sub1-h12-ka0.3",
+   "cpt": {
+    "added_mass_heave": 2460.445801232232,
+    "damping_heave": 312.34872378960847,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 2033.7124901693733,
+   "am_rel_error": 0.10418583255228298,
+   "b": 798.0592956128768,
+   "b_rel_error": 0.22438913778903158,
+   "case_id": "tbem-auto-sub1-h12-ka0.6",
+   "cpt": {
+    "added_mass_heave": 2270.2392572821955,
+    "damping_heave": 1028.942907449641,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1803.2648690622482,
+   "am_rel_error": 0.08705072647306866,
+   "b": 876.8942945231752,
+   "b_rel_error": 0.21298965398612124,
+   "case_id": "tbem-auto-sub1-h12-ka1",
+   "cpt": {
+    "added_mass_heave": 1975.2081756917605,
+    "damping_heave": 1114.2093607340091,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 1.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1741.2295578920455,
+   "am_rel_error": 0.08345160350948833,
+   "b": 463.43795183298863,
+   "b_rel_error": 0.20303452859173676,
+   "case_id": "tbem-auto-sub1-h12-ka1.5",
+   "cpt": {
+    "added_mass_heave": 1899.768265984928,
+    "damping_heave": 581.503174803896,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1776.0795589760849,
+   "am_rel_error": 0.08707563348143466,
+   "b": 170.06731811229687,
+   "b_rel_error": 0.19661053719519894,
+   "case_id": "tbem-auto-sub1-h12-ka2",
+   "cpt": {
+    "added_mass_heave": 1945.4837926488474,
+    "damping_heave": 211.68726500165462,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 2188.9367851731795,
+   "am_rel_error": 0.11539041121342086,
+   "b": 164.96418113758074,
+   "b_rel_error": 0.2292043695846202,
+   "case_id": "tbem-auto-sub1-h5-ka0.3",
+   "cpt": {
+    "added_mass_heave": 2474.4664911170007,
+    "damping_heave": 214.0180543689408,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 2093.5311224199318,
+   "am_rel_error": 0.10826259712776165,
+   "b": 751.5600748278398,
+   "b_rel_error": 0.22662326886320805,
+   "case_id": "tbem-auto-sub1-h5-ka0.6",
+   "cpt": {
+    "added_mass_heave": 2347.699127205812,
+    "damping_heave": 971.7903895597121,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1846.7716971808989,
+   "am_rel_error": 0.09052351828014682,
+   "b": 884.58796898008,
+   "b_rel_error": 0.2144729333039842,
+   "case_id": "tbem-auto-sub1-h5-ka1",
+   "cpt": {
+    "added_mass_heave": 2030.5876339854178,
+    "damping_heave": 1126.1075607499072,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 1.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1777.2415297906016,
+   "am_rel_error": 0.08652503373053089,
+   "b": 468.73384871804603,
+   "b_rel_error": 0.20418313971985125,
+   "case_id": "tbem-auto-sub1-h5-ka1.5",
+   "cpt": {
+    "added_mass_heave": 1945.583180071874,
+    "damping_heave": 588.9971325224741,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1810.4978981796567,
+   "am_rel_error": 0.08986778124939088,
+   "b": 171.8624452118985,
+   "b_rel_error": 0.19761470754116772,
+   "case_id": "tbem-auto-sub1-h5-ka2",
+   "cpt": {
+    "added_mass_heave": 1989.2690983569742,
+    "damping_heave": 214.1894259866636,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 2166.1839734044083,
+   "am_rel_error": 0.04583450116282295,
+   "b": 943.0046631492156,
+   "b_rel_error": 0.08352090643535681,
+   "case_id": "tbem-auto-sub2-h12-ka0.6",
+   "cpt": {
+    "added_mass_heave": 2270.2392572821955,
+    "damping_heave": 1028.942907449641,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 4096,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 1865.6502107137187,
+   "am_rel_error": 0.04103533642212065,
+   "b": 197.03773103822385,
+   "b_rel_error": 0.0692036621254295,
+   "case_id": "tbem-auto-sub2-h12-ka2",
+   "cpt": {
+    "added_mass_heave": 1945.4837926488474,
+    "damping_heave": 211.68726500165462,
+    "level": "24x48"
+   },
+   "depth_ratio": 12.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 4096,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 2351.6801938079775,
+   "am_rel_error": 0.049621321504982774,
+   "b": 195.63609023576262,
+   "b_rel_error": 0.08588978246428658,
+   "case_id": "tbem-auto-sub2-h5-ka0.3",
+   "cpt": {
+    "added_mass_heave": 2474.4664911170007,
+    "damping_heave": 214.0180543689408,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1791,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 1866.3260286904895,
+   "am_rel_error": 0.04073696369972557,
+   "b": 545.6205996874514,
+   "b_rel_error": 0.07364472667168298,
+   "case_id": "tbem-auto-sub2-h5-ka1.5",
+   "cpt": {
+    "added_mass_heave": 1945.583180071874,
+    "damping_heave": 588.9971325224741,
+    "level": "24x48"
+   },
+   "depth_ratio": 5.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1791,
+   "n_panels": 320,
+   "subdivisions": 2
+  }
+ ],
+ "cpt_self_convergence": [
+  {
+   "depth_ratio": 5.0,
+   "fine_level": "24x48",
+   "ka": 0.3,
+   "levels": {
+    "16x32": {
+     "added_mass_heave": 2492.9337864895324,
+     "damping_heave": 215.0388085344376,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 2474.4664911170007,
+     "damping_heave": 214.0180543689408,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.007463142232407183,
+   "self_conv_b": 0.004769476895333025
+  },
+  {
+   "depth_ratio": 5.0,
+   "fine_level": "24x48",
+   "ka": 0.6,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2373.551435593024,
+     "damping_heave": 972.5590464835212,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 2365.4464350814396,
+     "damping_heave": 976.0319396209085,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 2347.699127205812,
+     "damping_heave": 971.7903895597121,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.0075594473201299195,
+   "self_conv_b": 0.0043646758671054275
+  },
+  {
+   "depth_ratio": 5.0,
+   "fine_level": "24x48",
+   "ka": 1.0,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2056.353983649876,
+     "damping_heave": 1125.7801951366746,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 2047.1014298280436,
+     "damping_heave": 1129.8871909486998,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 2030.5876339854178,
+     "damping_heave": 1126.1075607499072,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008132520638971075,
+   "self_conv_b": 0.003356366949774925
+  },
+  {
+   "depth_ratio": 5.0,
+   "fine_level": "24x48",
+   "ka": 1.5,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 1971.5849228045063,
+     "damping_heave": 588.0168607255756,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 1961.962382235465,
+     "damping_heave": 590.4250851672193,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 1945.583180071874,
+     "damping_heave": 588.9971325224741,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008418659418604646,
+   "self_conv_b": 0.0024243796207119583
+  },
+  {
+   "depth_ratio": 5.0,
+   "fine_level": "24x48",
+   "ka": 2.0,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2015.3427574387433,
+     "damping_heave": 213.54734298623,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 2005.8838205665716,
+     "damping_heave": 214.58414827536714,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 1989.2690983569742,
+     "damping_heave": 214.1894259866636,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008352174285178426,
+   "self_conv_b": 0.001842865430379037
+  },
+  {
+   "depth_ratio": 12.0,
+   "fine_level": "24x48",
+   "ka": 0.3,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2486.60510059493,
+     "damping_heave": 312.7163664110616,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 2478.821392007521,
+     "damping_heave": 313.7600546683802,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 2460.445801232232,
+     "damping_heave": 312.34872378960847,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.00746839892432738,
+   "self_conv_b": 0.004518446118967789
+  },
+  {
+   "depth_ratio": 12.0,
+   "fine_level": "24x48",
+   "ka": 0.6,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2295.958349003437,
+     "damping_heave": 1029.4188671252848,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 2287.6145617232683,
+     "damping_heave": 1033.162726809212,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 2270.2392572821955,
+     "damping_heave": 1028.942907449641,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.0076535124592433945,
+   "self_conv_b": 0.004101120994196128
+  },
+  {
+   "depth_ratio": 12.0,
+   "fine_level": "24x48",
+   "ka": 1.0,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 2001.00749043351,
+     "damping_heave": 1113.6272740806207,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 1991.5245231220267,
+     "damping_heave": 1117.777580456649,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 1975.2081756917605,
+     "damping_heave": 1114.2093607340091,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008260571027938202,
+   "self_conv_b": 0.0032024679098812125
+  },
+  {
+   "depth_ratio": 12.0,
+   "fine_level": "24x48",
+   "ka": 1.5,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 1925.8084414133561,
+     "damping_heave": 580.4269809483136,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 1915.9877755113494,
+     "damping_heave": 582.8439739306757,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 1899.768265984928,
+     "damping_heave": 581.503174803896,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008537625255053083,
+   "self_conv_b": 0.0023057468727181174
+  },
+  {
+   "depth_ratio": 12.0,
+   "fine_level": "24x48",
+   "ka": 2.0,
+   "levels": {
+    "12x24": {
+     "added_mass_heave": 1971.5910420515934,
+     "damping_heave": 211.0083728190477,
+     "level": "12x24"
+    },
+    "16x32": {
+     "added_mass_heave": 1961.9236785948096,
+     "damping_heave": 212.0507469759727,
+     "level": "16x32"
+    },
+    "24x48": {
+     "added_mass_heave": 1945.4837926488474,
+     "damping_heave": 211.68726500165462,
+     "level": "24x48"
+    }
+   },
+   "self_conv_am": 0.008450281625620004,
+   "self_conv_b": 0.0017170705772746597
+  }
+ ],
+ "gates": {
+  "G1_tbem_auto_vs_cpt_am_sub2": {
+   "ledger_threshold": 0.15,
+   "max_error": 0.049621321504982774,
+   "n": 4,
+   "passed": true,
+   "threshold": 0.1
+  },
+  "G2_tbem_auto_vs_cpt_b_sub2": {
+   "ledger_threshold": 0.15,
+   "max_error": 0.08588978246428658,
+   "n": 4,
+   "passed": true,
+   "threshold": 0.15
+  },
+  "G4_tbem_mesh_self_conv_am_sub1_to_sub2": {
+   "max_error": 0.06920303579683362,
+   "n": 4,
+   "passed": false,
+   "threshold": 0.05
+  }
+ },
+ "geometry": {
+  "centre_z_m": -2.0,
+  "density": 1025.0,
+  "radius_m": 1.0,
+  "type": "submerged_sphere"
+ },
+ "grid": {
+  "depth_ratios": [
+   5.0,
+   12.0
+  ],
+  "ka": [
+   0.3,
+   0.6,
+   1.0,
+   1.5,
+   2.0
+  ],
+  "note": "sub 3 only on the ka = 1.0 refinement spine",
+  "subdivisions": [
+   1,
+   2,
+   3
+  ]
+ },
+ "ledger_verdict": {
+  "A33_max_rel_error": 0.049621321504982774,
+  "B33_max_rel_error": 0.08588978246428658,
+  "meets_ledger": true,
+  "tolerance": 0.15
+ },
+ "mesh_trend": [
+  {
+   "depth_ratio": 5.0,
+   "ka": 0.3,
+   "points": [
+    {
+     "am": 2188.9367851731795,
+     "am_rel_error": 0.11539041121342086,
+     "b": 164.96418113758074,
+     "b_rel_error": 0.2292043695846202,
+     "case_id": "tbem-auto-sub1-h5-ka0.3",
+     "cpt": {
+      "added_mass_heave": 2474.4664911170007,
+      "damping_heave": 214.0180543689408,
+      "level": "24x48"
+     },
+     "depth_ratio": 5.0,
+     "ka": 0.3,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 567,
+     "n_panels": 80,
+     "subdivisions": 1
+    },
+    {
+     "am": 2351.6801938079775,
+     "am_rel_error": 0.049621321504982774,
+     "b": 195.63609023576262,
+     "b_rel_error": 0.08588978246428658,
+     "case_id": "tbem-auto-sub2-h5-ka0.3",
+     "cpt": {
+      "added_mass_heave": 2474.4664911170007,
+      "damping_heave": 214.0180543689408,
+      "level": "24x48"
+     },
+     "depth_ratio": 5.0,
+     "ka": 0.3,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 1791,
+     "n_panels": 320,
+     "subdivisions": 2
+    }
+   ],
+   "steps": [
+    {
+     "am_rel_change": 0.06920303579683362,
+     "b_rel_change": 0.1567804235978082,
+     "from_sub": 1,
+     "to_sub": 2
+    }
+   ]
+  },
+  {
+   "depth_ratio": 5.0,
+   "ka": 1.5,
+   "points": [
+    {
+     "am": 1777.2415297906016,
+     "am_rel_error": 0.08652503373053089,
+     "b": 468.73384871804603,
+     "b_rel_error": 0.20418313971985125,
+     "case_id": "tbem-auto-sub1-h5-ka1.5",
+     "cpt": {
+      "added_mass_heave": 1945.583180071874,
+      "damping_heave": 588.9971325224741,
+      "level": "24x48"
+     },
+     "depth_ratio": 5.0,
+     "ka": 1.5,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 567,
+     "n_panels": 80,
+     "subdivisions": 1
+    },
+    {
+     "am": 1866.3260286904895,
+     "am_rel_error": 0.04073696369972557,
+     "b": 545.6205996874514,
+     "b_rel_error": 0.07364472667168298,
+     "case_id": "tbem-auto-sub2-h5-ka1.5",
+     "cpt": {
+      "added_mass_heave": 1945.583180071874,
+      "damping_heave": 588.9971325224741,
+      "level": "24x48"
+     },
+     "depth_ratio": 5.0,
+     "ka": 1.5,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 1791,
+     "n_panels": 320,
+     "subdivisions": 2
+    }
+   ],
+   "steps": [
+    {
+     "am_rel_change": 0.047732549152944115,
+     "b_rel_change": 0.1409161439532315,
+     "from_sub": 1,
+     "to_sub": 2
+    }
+   ]
+  },
+  {
+   "depth_ratio": 12.0,
+   "ka": 0.6,
+   "points": [
+    {
+     "am": 2033.7124901693733,
+     "am_rel_error": 0.10418583255228298,
+     "b": 798.0592956128768,
+     "b_rel_error": 0.22438913778903158,
+     "case_id": "tbem-auto-sub1-h12-ka0.6",
+     "cpt": {
+      "added_mass_heave": 2270.2392572821955,
+      "damping_heave": 1028.942907449641,
+      "level": "24x48"
+     },
+     "depth_ratio": 12.0,
+     "ka": 0.6,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 1358,
+     "n_panels": 80,
+     "subdivisions": 1
+    },
+    {
+     "am": 2166.1839734044083,
+     "am_rel_error": 0.04583450116282295,
+     "b": 943.0046631492156,
+     "b_rel_error": 0.08352090643535681,
+     "case_id": "tbem-auto-sub2-h12-ka0.6",
+     "cpt": {
+      "added_mass_heave": 2270.2392572821955,
+      "damping_heave": 1028.942907449641,
+      "level": "24x48"
+     },
+     "depth_ratio": 12.0,
+     "ka": 0.6,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 4096,
+     "n_panels": 320,
+     "subdivisions": 2
+    }
+   ],
+   "steps": [
+    {
+     "am_rel_change": 0.061154308618967756,
+     "b_rel_change": 0.15370588630207394,
+     "from_sub": 1,
+     "to_sub": 2
+    }
+   ]
+  },
+  {
+   "depth_ratio": 12.0,
+   "ka": 2.0,
+   "points": [
+    {
+     "am": 1776.0795589760849,
+     "am_rel_error": 0.08707563348143466,
+     "b": 170.06731811229687,
+     "b_rel_error": 0.19661053719519894,
+     "case_id": "tbem-auto-sub1-h12-ka2",
+     "cpt": {
+      "added_mass_heave": 1945.4837926488474,
+      "damping_heave": 211.68726500165462,
+      "level": "24x48"
+     },
+     "depth_ratio": 12.0,
+     "ka": 2.0,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 1358,
+     "n_panels": 80,
+     "subdivisions": 1
+    },
+    {
+     "am": 1865.6502107137187,
+     "am_rel_error": 0.04103533642212065,
+     "b": 197.03773103822385,
+     "b_rel_error": 0.0692036621254295,
+     "case_id": "tbem-auto-sub2-h12-ka2",
+     "cpt": {
+      "added_mass_heave": 1945.4837926488474,
+      "damping_heave": 211.68726500165462,
+      "level": "24x48"
+     },
+     "depth_ratio": 12.0,
+     "ka": 2.0,
+     "mode_cap_bound_rows": 0,
+     "mode_count": 4096,
+     "n_panels": 320,
+     "subdivisions": 2
+    }
+   ],
+   "steps": [
+    {
+     "am_rel_change": 0.048010420829833866,
+     "b_rel_change": 0.1368794331106813,
+     "from_sub": 1,
+     "to_sub": 2
+    }
+   ]
+  }
+ ],
+ "reference": "capytaine cached in cases/ (24x48 = 1152 faces is the fine level)",
+ "rows": [
+  {
+   "added_mass_heave": 2178.376776753596,
+   "added_mass_surge": 2075.374144255997,
+   "case_id": "tbem-auto-sub1-h12-ka0.3",
+   "condition_number": 2.1850745103405362,
+   "damping_heave": 240.8610079814334,
+   "damping_surge": 117.19195884014644,
+   "depth_ratio": 12.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "mode_requirement_max": 1358,
+   "n_panels": 80,
+   "relative_residual": 3.3918525224540704e-16,
+   "seconds": 15.0,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 2033.7124901693733,
+   "added_mass_surge": 2009.6822234863298,
+   "case_id": "tbem-auto-sub1-h12-ka0.6",
+   "condition_number": 2.1934822388406863,
+   "damping_heave": 798.0592956128768,
+   "damping_surge": 393.4033983097877,
+   "depth_ratio": 12.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "mode_requirement_max": 1358,
+   "n_panels": 80,
+   "relative_residual": 3.2140819032851946e-16,
+   "seconds": 15.4,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1803.2648690622482,
+   "added_mass_surge": 1893.086189042158,
+   "case_id": "tbem-auto-sub1-h12-ka1",
+   "condition_number": 2.190999052421851,
+   "damping_heave": 876.8942945231752,
+   "damping_surge": 452.1873749453711,
+   "depth_ratio": 12.0,
+   "ka": 1.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "mode_requirement_max": 1358,
+   "n_panels": 80,
+   "relative_residual": 3.085061432747178e-16,
+   "seconds": 14.6,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1741.2295578920455,
+   "added_mass_surge": 1857.3547990994562,
+   "case_id": "tbem-auto-sub1-h12-ka1.5",
+   "condition_number": 2.1820719491922604,
+   "damping_heave": 463.43795183298863,
+   "damping_surge": 244.29440955338148,
+   "depth_ratio": 12.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "mode_requirement_max": 1358,
+   "n_panels": 80,
+   "relative_residual": 3.593474218555641e-16,
+   "seconds": 13.7,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1776.0795589760849,
+   "added_mass_surge": 1874.4899666644396,
+   "case_id": "tbem-auto-sub1-h12-ka2",
+   "condition_number": 2.175904780198337,
+   "damping_heave": 170.06731811229687,
+   "damping_surge": 89.72811974503725,
+   "depth_ratio": 12.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1358,
+   "mode_requirement_max": 1358,
+   "n_panels": 80,
+   "relative_residual": 3.416875451367403e-16,
+   "seconds": 13.6,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 2188.9367851731795,
+   "added_mass_surge": 2078.2171551432875,
+   "case_id": "tbem-auto-sub1-h5-ka0.3",
+   "condition_number": 2.1793708207988125,
+   "damping_heave": 164.96418113758074,
+   "damping_surge": 140.66814414203864,
+   "depth_ratio": 5.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "mode_requirement_max": 567,
+   "n_panels": 80,
+   "relative_residual": 3.286504290522268e-16,
+   "seconds": 7.1,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 2093.5311224199318,
+   "added_mass_surge": 2010.8747422336828,
+   "case_id": "tbem-auto-sub1-h5-ka0.6",
+   "condition_number": 2.1926656738095938,
+   "damping_heave": 751.5600748278398,
+   "damping_surge": 404.17985011765177,
+   "depth_ratio": 5.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "mode_requirement_max": 567,
+   "n_panels": 80,
+   "relative_residual": 3.6218380077568797e-16,
+   "seconds": 7.3,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1846.7716971808989,
+   "added_mass_surge": 1896.5747944564519,
+   "case_id": "tbem-auto-sub1-h5-ka1",
+   "condition_number": 2.1933303204013685,
+   "damping_heave": 884.58796898008,
+   "damping_surge": 454.2436074946507,
+   "depth_ratio": 5.0,
+   "ka": 1.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "mode_requirement_max": 567,
+   "n_panels": 80,
+   "relative_residual": 3.113289121097103e-16,
+   "seconds": 6.8,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1777.2415297906016,
+   "added_mass_surge": 1862.6692015493202,
+   "case_id": "tbem-auto-sub1-h5-ka1.5",
+   "condition_number": 2.184765285895444,
+   "damping_heave": 468.73384871804603,
+   "damping_surge": 244.55826441404557,
+   "depth_ratio": 5.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "mode_requirement_max": 567,
+   "n_panels": 80,
+   "relative_residual": 3.002699760384268e-16,
+   "seconds": 6.7,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1810.4978981796567,
+   "added_mass_surge": 1880.485305164872,
+   "case_id": "tbem-auto-sub1-h5-ka2",
+   "condition_number": 2.1782577072413885,
+   "damping_heave": 171.8624452118985,
+   "damping_surge": 89.79597129536664,
+   "depth_ratio": 5.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 567,
+   "mode_requirement_max": 567,
+   "n_panels": 80,
+   "relative_residual": 3.0791239393777815e-16,
+   "seconds": 6.3,
+   "status": "ok",
+   "subdivisions": 1,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 2166.1839734044083,
+   "added_mass_surge": 2139.38161817314,
+   "case_id": "tbem-auto-sub2-h12-ka0.6",
+   "condition_number": 2.1146627728049627,
+   "damping_heave": 943.0046631492156,
+   "damping_surge": 464.3105001074077,
+   "depth_ratio": 12.0,
+   "ka": 0.6,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 4096,
+   "mode_requirement_max": 4096,
+   "n_panels": 320,
+   "relative_residual": 5.052667766128206e-16,
+   "seconds": 801.7,
+   "status": "ok",
+   "subdivisions": 2,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1865.6502107137187,
+   "added_mass_surge": 1980.9193708904409,
+   "case_id": "tbem-auto-sub2-h12-ka2",
+   "condition_number": 2.095303985436436,
+   "damping_heave": 197.03773103822385,
+   "damping_surge": 104.48156190114636,
+   "depth_ratio": 12.0,
+   "ka": 2.0,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 4096,
+   "mode_requirement_max": 4096,
+   "n_panels": 320,
+   "relative_residual": 5.320661641652088e-16,
+   "seconds": 839.0,
+   "status": "ok",
+   "subdivisions": 2,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 2351.6801938079775,
+   "added_mass_surge": 2220.6927366453074,
+   "case_id": "tbem-auto-sub2-h5-ka0.3",
+   "condition_number": 2.0988177879227914,
+   "damping_heave": 195.63609023576262,
+   "damping_surge": 166.21351749462247,
+   "depth_ratio": 5.0,
+   "ka": 0.3,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1791,
+   "mode_requirement_max": 1791,
+   "n_panels": 320,
+   "relative_residual": 5.085431259229464e-16,
+   "seconds": 307.8,
+   "status": "ok",
+   "subdivisions": 2,
+   "tool": "TensorBEM"
+  },
+  {
+   "added_mass_heave": 1866.3260286904895,
+   "added_mass_surge": 1966.792743622902,
+   "case_id": "tbem-auto-sub2-h5-ka1.5",
+   "condition_number": 2.1054051494691524,
+   "damping_heave": 545.6205996874514,
+   "damping_surge": 285.8352815657898,
+   "depth_ratio": 5.0,
+   "ka": 1.5,
+   "mode_cap_bound_rows": 0,
+   "mode_count": 1791,
+   "mode_requirement_max": 1791,
+   "n_panels": 320,
+   "relative_residual": 4.984254305863709e-16,
+   "seconds": 310.6,
+   "status": "ok",
+   "subdivisions": 2,
+   "tool": "TensorBEM"
+  }
+ ],
+ "study": "finite-depth 3-D cross-validation, automatic mode count"
+}
