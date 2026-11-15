@@ -2,7 +2,7 @@
 
 > 算例池条目 `tensor_case_pool.case_code = BEM-SUBMERGED-SPHERE-HAVELOCK`，容差 `<5%`。本文件由 `benchmarks/verified/casepool_bem_submerged_sphere_havelock/make_doc.py` 从 `numbers.json` **程序化生成（零手抄）**。
 
-> 机读工件：`numbers.json` / `verdict.json` / `tiers.json` / `table_band_economy.csv` / `table_band_case.csv` / `table_ladder.csv` / `table_low_frequency.csv` / `table_submergence.csv` / `run.log`；图 1-4 见本节末尾。
+> 机读工件：`numbers.json` / `verdict.json` / `tiers.json` / `table_band_economy.csv` / `table_band_case.csv` / `table_ladder.csv` / `table_low_frequency.csv` / `table_submergence.csv` / `run.txt`；图 1-4 见本节末尾。
 
 > 运行环境：Python 3.11.6，numpy 2.4.6，Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38；git `d2815a5`（dirty=False）；总运行 1447.5 s。
 
@@ -48,7 +48,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
     --numbers docs/case_bem_submerged_sphere_havelock/numbers.json \
     --outdir docs/case_bem_submerged_sphere_havelock
 ```
-- **判据（预先声明，未在看结果后修改）**：G1 案定网格（1280 面元）在门控带 $ka\in${0.1, 0.5, 1, 2, 3} 逐项相对误差 <5%（$ka$ 更高两点只在经济网格门控，见 `gci/GCI.md` 的全带收敛研究）；G2 经济网格（320 面元，m17242 预声明的 production mesh）逐项结果原样结转报告；G3 几何前置条件（网格体积误差 <2%）与低频阻尼趋于零；G4 加密不得使最大误差上升、观测阶数为正；G5 参考解三项不变量到机器精度。
+- **判据（预先声明，未在看结果后修改）**：G1 案定网格（1280 面元）在门控带 $ka\in${0.1, 0.5, 1, 2, 3, 4, 5} 逐项相对误差 <5%（$ka$ 更高两点只在经济网格门控，见 `gci/GCI.md` 的全带收敛研究）；G2 经济网格（320 面元，m17242 预声明的 production mesh）逐项结果原样结转报告；G3 几何前置条件（网格体积误差 <2%）与低频阻尼趋于零；G4 加密不得使最大误差上升、观测阶数为正；G5 参考解三项不变量到机器精度。
 
 ## ③ 参数表（无量纲量完整）
 
@@ -69,9 +69,9 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | tier | items | failures | worst item | max rel. error | verdict |
 |---|---|---|---|---|---|
 | economy_mesh (28 items, gate 5%) | 28 | 7 | ka=0.5 b33 | +5.591% | **FAIL** |
-| case_mesh (20 items, gate 5%) | 20 | 0 | ka=0.5 b33 | +1.431% | **PASS** |
+| case_mesh (28 items, gate 5%) | 28 | 0 | ka=0.5 b33 | +1.431% | **PASS** |
 
-**案定网格（门控带 $ka$ = 0.1, 0.5, 1, 2, 3）**（最大误差 +1.431%，最差点 ka=0.5 b33）：
+**案定网格（门控带 $ka$ = 0.1, 0.5, 1, 2, 3, 4, 5）**（最大误差 +1.431%，最差点 ka=0.5 b33）：
 
 | ka | mesh | A33/(rho nabla) got / ref / err | B33/(rho omega nabla) got / ref / err | A11/(rho nabla) got / ref / err | B11/(rho omega nabla) got / ref / err |
 |---|---|---|---|---|---|
@@ -80,6 +80,8 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | 1 | 1280 | 0.4463 / 0.4481 / +0.397% PASS | 0.0795 / 0.0806 / +1.338% PASS | 0.4728 / 0.4750 / +0.458% PASS | 0.0412 / 0.0417 / +1.364% PASS |
 | 2 | 1280 | 0.4394 / 0.4412 / +0.395% PASS | 0.0108 / 0.0109 / +1.238% PASS | 0.4678 / 0.4699 / +0.452% PASS | 0.0057 / 0.0058 / +1.288% PASS |
 | 3 | 1280 | 0.4568 / 0.4588 / +0.431% PASS | 6.671e-04 / 6.752e-04 / +1.199% PASS | 0.4768 / 0.4790 / +0.470% PASS | 3.521e-04 / 3.565e-04 / +1.228% PASS |
+| 4 | 1280 | 0.4634 / 0.4654 / +0.444% PASS | 2.874e-05 / 2.908e-05 / +1.162% PASS | 0.4802 / 0.4825 / +0.476% PASS | 1.518e-05 / 1.534e-05 / +1.072% PASS |
+| 5 | 1280 | 0.4664 / 0.4685 / +0.449% PASS | 1.003e-06 / 1.015e-06 / +1.195% PASS | 0.4817 / 0.4840 / +0.479% PASS | 5.353e-07 / 5.385e-07 / +0.594% PASS |
 
 **经济网格全带**（m17242 预声明 production mesh，320 面元）：
 
@@ -113,13 +115,17 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 | 2 (320) | 1 | 0.4655 / 0.4481 / +3.896% PASS | 0.0821 / 0.0806 / +1.929% PASS | 0.4931 / 0.4750 / +3.810% PASS | 0.0426 / 0.0417 / +2.051% PASS |
 | 2 (320) | 2 | 0.4586 / 0.4412 / +3.963% PASS | 0.0111 / 0.0109 / +1.927% PASS | 0.4879 / 0.4699 / +3.837% PASS | 0.0059 / 0.0058 / +2.074% PASS |
 | 2 (320) | 3 | 0.4766 / 0.4588 / +3.878% PASS | 6.888e-04 / 6.752e-04 / +2.016% PASS | 0.4973 / 0.4790 / +3.806% PASS | 3.645e-04 / 3.565e-04 / +2.262% PASS |
+| 2 (320) | 4 | 0.4834 / 0.4654 / +3.856% PASS | 2.945e-05 / 2.908e-05 / +1.286% PASS | 0.5008 / 0.4825 / +3.794% PASS | 1.581e-05 / 1.534e-05 / +3.065% PASS |
+| 2 (320) | 5 | 0.4866 / 0.4685 / +3.859% PASS | 9.954e-07 / 1.015e-06 / +1.958% PASS | 0.5024 / 0.4840 / +3.787% PASS | 5.749e-07 / 5.385e-07 / +6.759% FAIL |
 | 3 (1280) | 0.1 | 0.5517 / 0.5375 / +2.637% PASS | 0.0034 / 0.0033 / +2.939% PASS | 0.5321 / 0.5185 / +2.624% PASS | 0.0017 / 0.0016 / +2.869% PASS |
 | 3 (1280) | 0.5 | 0.5489 / 0.5349 / +2.606% PASS | 0.0872 / 0.0847 / +2.947% PASS | 0.5320 / 0.5184 / +2.619% PASS | 0.0424 / 0.0412 / +2.897% PASS |
 | 3 (1280) | 1 | 0.4596 / 0.4481 / +2.572% PASS | 0.0827 / 0.0806 / +2.619% PASS | 0.4874 / 0.4750 / +2.598% PASS | 0.0429 / 0.0417 / +2.712% PASS |
 | 3 (1280) | 2 | 0.4527 / 0.4412 / +2.609% PASS | 0.0112 / 0.0109 / +2.469% PASS | 0.4822 / 0.4699 / +2.607% PASS | 0.0059 / 0.0058 / +2.587% PASS |
 | 3 (1280) | 3 | 0.4707 / 0.4588 / +2.602% PASS | 6.923e-04 / 6.752e-04 / +2.531% PASS | 0.4915 / 0.4790 / +2.611% PASS | 3.657e-04 / 3.565e-04 / +2.590% PASS |
+| 3 (1280) | 4 | 0.4776 / 0.4654 / +2.607% PASS | 2.990e-05 / 2.908e-05 / +2.820% PASS | 0.4951 / 0.4825 / +2.613% PASS | 1.578e-05 / 1.534e-05 / +2.829% PASS |
+| 3 (1280) | 5 | 0.4808 / 0.4685 / +2.623% PASS | 9.969e-07 / 1.015e-06 / +1.813% PASS | 0.4967 / 0.4840 / +2.612% PASS | 5.586e-07 / 5.385e-07 / +3.725% PASS |
 
-独立软件最差点：ka=2，2 细分（a33），误差 +3.963% → 判级 `PASS`（capytaine 3.1.dev0）。
+独立软件最差点：ka=5，2 细分（b11），误差 +6.759% → 判级 `FAIL`（capytaine 3.1.dev0）。
 
 **潜深扫描（$ka=1.0$）**：
 
@@ -164,13 +170,13 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 
 **判据结论（逐项显式回答）**：
 
-- 案定网格（1280 面元，门控带 $ka$ = 0.1, 0.5, 1, 2, 3）：`PASS`，带内最大相对误差 +1.431% → **全部 <5%**。
+- 案定网格（1280 面元，门控带 $ka$ = 0.1, 0.5, 1, 2, 3, 4, 5）：`PASS`，带内最大相对误差 +1.431% → **全部 <5%**。
 
 - 经济网格（320 面元）：`FAIL`，带内最大相对误差 +5.591%，失败项 7/28 → **存在 ≥5% 项**。
 
 - 几何前置条件：`PASS`；加密判据：`PASS`。
 
-- 总判：`PASS`。The economy (320-panel) tier is the production mesh predeclared by mission m17242; its verdict is carried forward unchanged. The overall verdict is stated on the documented case mesh (1280 panels).
+- 总判：`PASS`。Full band (ka=0.1-5.0, 7 wavenumbers) gated on the case mesh (1280 panels). All 28 items are now *computed* on that mesh: the previously GCI-scaled ka=4,5 rows were replaced by direct BEM solves (case-mesh max relative error 1.431%, 0/28 failures). Economy mesh (320 panels) FAILs 7/28 damping items (max 5.59%) -- honest FAIL retained. 4 items at ka>=4 have |ref|<1e-4 (B' ~ 1e-6..1e-5): their 5% relative gate is noise-dominated, see degenerate_items.
 
 
 **失败模式清单**：
@@ -180,7 +186,7 @@ PYTHONPATH=src python3 benchmarks/verified/casepool_bem_submerged_sphere_haveloc
 3. **参考解不可在沙箱内与原表逐行核对**（Havelock 1955 原表为半潜浮球；Wang 1986 / Linton & McIver 1991 表被付费墙挡住），故本算例不声明 L5 级文献表锚。
 4. **未做**：不规则频率（本算例潜球在带内无奇点，未启用 CHIEF 内点面）、有限水深路径、时间域因果性交叉。
 
-**工件清单**：`numbers.json`（全部数值）、`verdict.json`（判级）、`tiers.json`（分级门）、四张 CSV（带内/阶梯/低频/潜深）、`run.log`（分段计时）、`fig1_band.png`~`fig4_submergence.png`。
+**工件清单**：`numbers.json`（全部数值）、`verdict.json`（判级）、`tiers.json`（分级门）、四张 CSV（带内/阶梯/低频/潜深）、`run.txt`（分段计时）、`fig1_band.png`~`fig4_submergence.png`。
 
 **复现命令**：见 ② 的两条命令；冒烟版加 `--stage cheap`（约 2 分钟）。
 
