@@ -119,6 +119,45 @@
     "worst_volume_relative_error": 0.008606157370245282,
     "verdict": "PASS"
   },
+  "degenerate_items": {
+    "rule": "|ref| < 0.0001 -> relative criterion is noise-dominated",
+    "reference_scale": 0.5375037875884319,
+    "items": [
+      {
+        "item": "ka=4",
+        "quantity": "b33",
+        "ref": 2.907550208438637e-05,
+        "got": 2.873759729026013e-05,
+        "rel_error": 0.011621632298748682,
+        "scale_normalised_error": 6.286556521625367e-07
+      },
+      {
+        "item": "ka=4",
+        "quantity": "b11",
+        "ref": 1.5344197399049232e-05,
+        "got": 1.5179751009152443e-05,
+        "rel_error": 0.010717171163802872,
+        "scale_normalised_error": 3.059446160083741e-07
+      },
+      {
+        "item": "ka=5",
+        "quantity": "b33",
+        "ref": 1.0153123047181984e-06,
+        "got": 1.0031822760683298e-06,
+        "rel_error": 0.011947091149688477,
+        "scale_normalised_error": 2.2567336137836845e-08
+      },
+      {
+        "item": "ka=5",
+        "quantity": "b11",
+        "ref": 5.384990989653186e-07,
+        "got": 5.352992658162493e-07,
+        "rel_error": 0.0059421327820557085,
+        "scale_normalised_error": 5.953136001935305e-09
+      }
+    ],
+    "note": "descriptive only: the declared 5% relative criterion is applied unchanged to every item; these rows carry the supplementary scale-normalised error so the PASS is not over-read"
+  },
   "reference_gates": {
     "truncation_machine_zero": true,
     "haskind_residual": true,

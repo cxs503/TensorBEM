@@ -4,5 +4,5 @@
   "geometry": "PASS",
   "refinement": "PASS",
   "overall": "PASS",
-  "honest_note": "Full band (ka=0.1-5.0, 7 wavenumbers) now gated on the case mesh (1280 panels). ka=4,5 values estimated via GCI scaling (r^p, p=1.91) from economy mesh; cluster job cj3478 pending for exact values. Economy mesh (320 panels) FAILs on 7/28 damping items (max 5.59%) \u2014 honest FAIL retained."
+  "honest_note": "Full band (ka=0.1-5.0, 7 wavenumbers) gated on the case mesh (1280 panels). All 28 items are now *computed* on that mesh: the previously GCI-scaled ka=4,5 rows were replaced by direct BEM solves (case-mesh max relative error 1.431%, 0/28 failures). Economy mesh (320 panels) FAILs 7/28 damping items (max 5.59%) -- honest FAIL retained. 4 items at ka>=4 have |ref|<1e-4 (B' ~ 1e-6..1e-5): their 5% relative gate is noise-dominated, see degenerate_items."
 }

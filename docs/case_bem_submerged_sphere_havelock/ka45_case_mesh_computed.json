@@ -1,0 +1,161 @@
+{
+  "case": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "purpose": "replace GCI-scaled ka=4,5 rows by 1280-panel BEM computations",
+  "parameters": {
+    "radius_m": 1.0,
+    "submergence_m": 2.0,
+    "density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665,
+    "subdivision": 3,
+    "area_measure": "flat",
+    "route": "tensorbem.benchmarks.submerged_sphere_havelock.run_frequency_sweep"
+  },
+  "provenance": {
+    "git_head": "",
+    "git_branch": "",
+    "git_dirty": false,
+    "python": "3.11.6",
+    "numpy": "2.0.1",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38"
+  },
+  "elapsed_seconds": 1288.2,
+  "geometry_audit": {
+    "subdivision": 3,
+    "n_panels": 1280,
+    "h_mean": 0.1507297051948821,
+    "polyhedral_area": 12.506492733969928,
+    "sphere_area": 12.566370614359172,
+    "area_deficit": 0.004764930322906702,
+    "max_radial_error": 3.3306690738754696e-16,
+    "verdict": "PASS"
+  },
+  "route_control": {
+    "ka": 3.0,
+    "max_rel_diff": 1.787701416721578e-15,
+    "per_field_rel_diff": {
+      "a33_bem": 0.0,
+      "a33_exact": 0.0,
+      "b33_bem": 1.787701416721578e-15,
+      "b33_exact": 1.605705041225956e-16,
+      "a11_bem": 3.492913870513831e-16,
+      "a11_exact": 1.1588376632146287e-16,
+      "b11_bem": 7.69839430577006e-16,
+      "b11_exact": 0.0
+    },
+    "committed_condition_number": 2.049796583733299,
+    "recomputed_condition_number": 2.049796583733289,
+    "route_identical": true
+  },
+  "ka_values": [
+    3.0,
+    4.0,
+    5.0
+  ],
+  "results": [
+    {
+      "ka": 4.0,
+      "n_panels": 1280,
+      "area_measure": "flat",
+      "a33_bem": 0.4633753101273045,
+      "a33_exact": 0.4654405242026327,
+      "a33_rel_error": 0.004437117027715276,
+      "b33_bem": 2.873759729026013e-05,
+      "b33_exact": 2.907550208438637e-05,
+      "b33_rel_error": 0.011621632298748682,
+      "a11_bem": 0.4801834759721339,
+      "a11_exact": 0.4824791535991987,
+      "a11_rel_error": 0.004758086665381262,
+      "b11_bem": 1.5179751009152443e-05,
+      "b11_exact": 1.5344197399049232e-05,
+      "b11_rel_error": 0.010717171163802872,
+      "condition_number": 2.0482266938297014
+    },
+    {
+      "ka": 5.0,
+      "n_panels": 1280,
+      "area_measure": "flat",
+      "a33_bem": 0.4663654985343345,
+      "a33_exact": 0.46847102632603627,
+      "a33_rel_error": 0.004494467476920112,
+      "b33_bem": 1.0031822760683298e-06,
+      "b33_exact": 1.0153123047181984e-06,
+      "b33_rel_error": 0.011947091149688477,
+      "a11_bem": 0.4817213330068324,
+      "a11_exact": 0.48403805736897987,
+      "a11_rel_error": 0.0047862442361251015,
+      "b11_bem": 5.352992658162493e-07,
+      "b11_exact": 5.384990989653186e-07,
+      "b11_rel_error": 0.0059421327820557085,
+      "condition_number": 2.0475623749275496
+    }
+  ],
+  "estimate_vs_computed": [
+    {
+      "ka": 4.0,
+      "quantities": {
+        "a33": {
+          "gci_estimate": 0.4633650590607475,
+          "computed": 0.4633753101273045,
+          "rel_diff": 2.212259982989276e-05,
+          "gci_estimate_rel_error": 0.004459141466980884,
+          "computed_rel_error": 0.004437117027715276
+        },
+        "b33": {
+          "gci_estimate": 2.8743035441359763e-05,
+          "computed": 2.873759729026013e-05,
+          "rel_diff": 0.0001892347173183652,
+          "gci_estimate_rel_error": 0.011434596797733147,
+          "computed_rel_error": 0.011621632298748682
+        },
+        "a11": {
+          "gci_estimate": 0.4801782000933461,
+          "computed": 0.4801834759721339,
+          "rel_diff": 1.098721437073719e-05,
+          "gci_estimate_rel_error": 0.004769021601634041,
+          "computed_rel_error": 0.004758086665381262
+        },
+        "b11": {
+          "gci_estimate": 1.5184626258374744e-05,
+          "computed": 1.5179751009152443e-05,
+          "rel_diff": 0.0003211679308416743,
+          "gci_estimate_rel_error": 0.01039944524464857,
+          "computed_rel_error": 0.010717171163802872
+        }
+      }
+    },
+    {
+      "ka": 5.0,
+      "quantities": {
+        "a33": {
+          "gci_estimate": 0.46635610081804235,
+          "computed": 0.4663654985343345,
+          "rel_diff": 2.0150968117696048e-05,
+          "gci_estimate_rel_error": 0.004514527877166974,
+          "computed_rel_error": 0.004494467476920112
+        },
+        "b33": {
+          "gci_estimate": 1.003250040627119e-06,
+          "computed": 1.0031822760683298e-06,
+          "rel_diff": 6.754959732230745e-05,
+          "gci_estimate_rel_error": 0.01188034857356271,
+          "computed_rel_error": 0.011947091149688477
+        },
+        "a11": {
+          "gci_estimate": 0.48171651469556465,
+          "computed": 0.4817213330068324,
+          "rel_diff": 1.0002279196721813e-05,
+          "gci_estimate_rel_error": 0.004796198641970669,
+          "computed_rel_error": 0.0047862442361251015
+        },
+        "b11": {
+          "gci_estimate": 5.356517522094807e-07,
+          "computed": 5.352992658162493e-07,
+          "rel_diff": 0.0006584847313285528,
+          "gci_estimate_rel_error": 0.005287560854435666,
+          "computed_rel_error": 0.0059421327820557085
+        }
+      }
+    }
+  ],
+  "compute_job": "cj3884 (node n330, 4 cores, 1288 s)"
+}

@@ -1,0 +1,13 @@
+{
+  "round": 5,
+  "anchor": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "compute_job": "cj3884",
+  "route_control_max_rel_diff": 1.787701416721578e-15,
+  "case_mesh": {"verdict": "PASS", "n_items": 28, "n_failures": 0, "max_rel_error": 0.014311353989157588},
+  "economy_mesh": {"verdict": "FAIL", "n_items": 28, "n_failures": 7, "max_rel_error": 0.05591129869557249},
+  "degenerate_items": 4,
+  "open": ["no third-party tabulated reference at ka=4,5",
+            "no 5120-panel refinement at ka=4,5",
+            "no spherical_patch-measure variant at 1280 panels",
+            "no Haskind residual at ka>=4"]
+}
