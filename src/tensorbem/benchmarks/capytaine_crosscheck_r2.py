@@ -110,12 +110,25 @@ EXACT_NULL_TOL = 0.01
 #: bound the entries whose exact target is zero.
 SCALE_LENGTH = 1.0
 #: An exact-zero entry is only *sanity bounded*, never scored by relative
-#: deviation (see ``invariant_scoring``).  ``INVARIANT_RATIO`` is two orders of
-#: magnitude looser than the residual observed at the coarsest level of the
-#: ladder, so it rejects a structurally wrong rotational assembly (an O(1)
-#: error such as a missing ``(r - centre)`` or an about-the-origin moment arm)
-#: without ever being the quantity that decides the cross-validation.
-INVARIANT_RATIO = 0.01
+#: deviation (see ``invariant_scoring``).  ``INVARIANT_RATIO`` is a **structural**
+#: bound in units of ``rho L**k``, not a convergence target.
+#:
+#: The zero is exact only for the *smooth* sphere: on a faceted mesh
+#: ``(r - c) x n`` is non-zero on every panel, so the entry is a discretisation
+#: residue rather than physics.  Measured on the floating-sphere case (see
+#: ``benchmarks/verified/capytaine_crosscheck_r2/invariant_residual_audit.json``):
+#: the damping residue is 1.17 % of ``rho L**3`` for TensorBEM at 1026 panels and
+#: 1.35 % for the capytaine reference at 1120 panels, decaying as ~1/N on both
+#: ladders (TensorBEM 3.87 % -> 1.17 % for 270 -> 1026 panels; capytaine
+#: 1.35 % -> 0.66 % for 1120 -> 2240 panels).  A 1 % bound therefore failed on
+#: the *reference solver's own numbers* before TensorBEM was involved; the bound
+#: has to stay above the reference's noise floor to say anything at all.
+#:
+#: 3 % is 2.2x that floor and still separates a real rotational-assembly defect
+#: by a wide margin: taking the rotation centre at the waterline origin instead
+#: of the sphere centre (the classical missing ``(r - centre)`` moment arm)
+#: returns 368 % of ``rho L**3`` on the same entry, i.e. 123x this bound.
+INVARIANT_RATIO = 0.03
 #: Refinement ladder of the degeneracy audit, per case: hemisphere panels
 #: 64/256/1024, sphere panels 270/1026 (its level 4 is ~4000 panels and is not
 #: needed to see the residual decay).
@@ -284,6 +297,12 @@ def invariant_null_dofs(case: str) -> tuple[str, ...]:
     Entries touching a null dof have an exact target of zero and therefore
     cannot be scored with a relative deviation; ``invariant_scoring`` bounds
     them instead and reports them out of band from the physics score.
+
+    Caveat, measured: the argument is about the *smooth* surface.  On a faceted
+    mesh the rotational generalised normal is O(facet angle) rather than zero,
+    so the entry is a discretisation residue of ~1 % of ``rho L**3`` at ~1000
+    panels on both codes and decays as ~1/N -- see ``INVARIANT_RATIO`` and
+    ``benchmarks/verified/capytaine_crosscheck_r2/invariant_residual_audit.json``.
     """
     spec = CASES[case]
     centre = tuple(float(v) for v in spec["centre"])
@@ -525,6 +544,10 @@ def invariant_scoring(
         "tolerance_diagonal": TOL_DIAGONAL,
         "tolerance_offdiagonal": TOL_OFFDIAGONAL,
         "invariant_ratio": INVARIANT_RATIO,
+        "invariant_bound_kind": "structural (facet residue, not a convergence target)",
+        "invariant_residue_audit": (
+            "benchmarks/verified/capytaine_crosscheck_r2/invariant_residual_audit.json"
+        ),
         "scale_length": SCALE_LENGTH,
         "cases": cases,
         "physics_failures": physics_failures,
@@ -910,6 +933,21 @@ def assemble(study: dict[str, Any], reference: dict[str, Any]) -> dict[str, Any]
     study["symmetry"] = symmetry_invariants(study["tensorbem"], reference["cases"])
     study["degeneracy"] = degeneracy_audit()
     study["invariant_scoring"] = invariant_scoring(study["comparison"], study["tensorbem"])
+    study["ledger_acceptance"] = {
+        "anchor": "XVAL-BEM-R2-OSS-CROSSVAL-CAPYTAINE",
+        "threshold": 0.15,
+        "metric": "worst active relative deviation of the 6x6 radiation matrices",
+        "worst_active_relative": study["comparison"]["worst_active_relative"],
+        "satisfied": bool(study["comparison"]["worst_active_relative"] <= 0.15),
+        "internal_bands": {
+            "diagonal": TOL_DIAGONAL,
+            "offdiagonal": TOL_OFFDIAGONAL,
+            "note": (
+                "self-imposed QoS bands, stricter than the 0.15 acceptance; the "
+                "internal verdict may stay FAIL while the acceptance is met"
+            ),
+        },
+    }
     study["centre_transfer"] = centre_transfer_invariant()
     deep_ref = reference.get("deep_submergence") or {}
     if study.get("deep_submergence") and deep_ref:
