@@ -409,3 +409,147 @@ def test_ladder_shard_merge_rejects_disagreeing_duplicates(tmp_path):
     second.write_text(json.dumps(_ladder_shard([key], {0: 100.5, 1: 120.0})))
     with pytest.raises(ValueError):
         study.merge_ladders([first, second])
+
+
+# --------------------------------------------------------------------------- #
+# 9. the extrapolation's own uncertainty is measured, and unknown is not zero
+# --------------------------------------------------------------------------- #
+def _power_law(panels, base, coefficients, exponent):
+    """``base`` plus ``sum_k c_k N^(-(exponent+k))``: a ladder with known order."""
+    return [
+        base + sum(c * n ** (-(exponent + k)) for k, c in enumerate(coefficients))
+        for n in panels
+    ]
+
+
+def test_extrapolation_band_vanishes_on_an_exact_power_law():
+    """A perfect second-order ladder must extrapolate identically from both sides."""
+    panels = [20.0, 80.0, 320.0, 1280.0]
+    values = _power_law(panels, 100.0, (3.0,), 2)
+    band = study.extrapolation_band(panels, values)
+    assert band["fine"]["extrapolated"] is True
+    assert band["fine"]["order"] == pytest.approx(2.0, abs=1e-6)
+    assert band["fine"]["value"] == pytest.approx(100.0, rel=1e-9)
+    assert band["band"] is not None
+    assert band["band"] < 1e-9
+    assert band["coarse_value"] == pytest.approx(100.0, rel=1e-9)
+
+
+def test_extrapolation_band_reports_unknown_without_a_fourth_rung():
+    """Three rungs: the extrapolation may be fine, but its uncertainty is unknown."""
+    panels = [20.0, 80.0, 320.0]
+    values = _power_law(panels, 100.0, (3.0,), 2)
+    band = study.extrapolation_band(panels, values)
+    assert band["fine"]["extrapolated"] is True
+    assert band["band"] is None
+    assert band["band_basis"] is None
+
+
+def test_extrapolation_band_grows_when_the_ladder_is_not_asymptotic():
+    """A mixed-order ladder must show a non-zero band: this is the alarm.
+
+    ``100 + 300/N + 30000/N^3``: the 1/N term dominates the differences in every
+    window, so the measured order is ~1, and the extrapolant still carries an
+    ``N^-3`` residual that is 16x larger in the window that still contains the
+    20-panel rung.  The spread between the two extrapolants is the band.
+    """
+    panels = [20.0, 80.0, 320.0, 1280.0]
+    values = [100.0 + 300.0 / n + 30000.0 / n ** 3 for n in panels]
+    band = study.extrapolation_band(panels, values)
+    assert band["band"] is not None
+    assert band["band"] > 1e-3
+    # dropping the coarsest rung moves the measured order towards the leading 1
+    assert abs(band["coarse_order"] - 1.0) > abs(band["fine"]["order"] - 1.0)
+    assert abs(band["coarse_value"] - 100.0) > abs(band["fine"]["value"] - 100.0)
+
+
+def _synthetic_study(panels, tensor_coefficients):
+    """One-cell ladder/reference pair with the same body on both sides."""
+    cell = next(iter(plan.cells()))
+    key = plan.cell_id(cell["h_over_a"], cell["ka"])
+
+    def values(coefficients, panel):
+        """Added mass and damping on one rung; damping uses doubled increments."""
+        out = {}
+        for dof, scale in (("heave", 1.0), ("surge", 0.8)):
+            out[dof] = {
+                "added_mass": _power_law([panel], 1000.0 * scale, coefficients, 2)[0],
+                "damping": _power_law(
+                    [panel], 1000.0 * scale, tuple(2.0 * c for c in coefficients), 2
+                )[0],
+            }
+        return out
+
+    ladder_cell = {
+        "cell": key,
+        "h_over_a": cell["h_over_a"],
+        "ka": cell["ka"],
+        "k0h": cell["k0h"],
+        "levels": {
+            str(level): {
+                "level": level,
+                "panels": panels[level],
+                "relative_residual": 1e-14,
+                "values": values(tensor_coefficients, panels[level]),
+            }
+            for level in range(len(panels))
+        },
+        "negative_control": None,
+    }
+    reference_cell = {
+        "cell": key,
+        "h_over_a": cell["h_over_a"],
+        "ka": cell["ka"],
+        "k0h": cell["k0h"],
+        "depth": cell["depth"],
+        "levels": [
+            {"panels": panels[level], "values": values((3.0,), panels[level])}
+            for level in range(len(panels))
+        ],
+    }
+    ladder = {"cells": {key: ladder_cell}, "environment": {}}
+    reference = {"cells": [reference_cell], "provenance": {}}
+    return ladder, reference
+
+
+def test_gate_passes_on_a_self_consistent_four_rung_ladder():
+    panels = [20.0, 80.0, 320.0, 1280.0]
+    ladder, reference = _synthetic_study(panels, (3.0,))
+    comparison = study.compare(ladder, reference)
+    gate = next(
+        g for g in study.gates(comparison, ladder, reference)
+        if g["gate"] == "extrapolation_self_consistent"
+    )
+    assert gate["worst"] is not None
+    assert gate["limit"] == 1.0
+    assert gate["passed"] is True
+    # both codes extrapolate to the same 1000-scaled value: no deviation
+    assert comparison["worst_relative"]["heave.added_mass"] < 1e-9
+    assert all(
+        q["tensorbem_extrapolation_band"] is not None
+        for q in comparison["rows"][0]["quantities"].values()
+    )
+
+
+def test_gate_reports_unknown_not_passed_when_the_fourth_rung_is_missing():
+    panels = [20.0, 80.0, 320.0]
+    ladder, reference = _synthetic_study(panels, (3.0,))
+    comparison = study.compare(ladder, reference)
+    gate = next(
+        g for g in study.gates(comparison, ladder, reference)
+        if g["gate"] == "extrapolation_self_consistent"
+    )
+    assert gate["worst"] is None
+    assert gate["passed"] is False
+    assert all(
+        q["tensorbem_extrapolation_band"] is None
+        for q in comparison["rows"][0]["quantities"].values()
+    )
+
+
+def test_band_limits_are_inside_the_registered_tolerances():
+    assert plan.extrapolation_limit("added_mass") < plan.TOL_ADDED_MASS
+    assert plan.extrapolation_limit("damping") < plan.TOL_DAMPING
+    assert plan.extrapolation_limit("damping") < plan.OWNER_LIMIT
+    with pytest.raises(ValueError):
+        plan.extrapolation_limit("virtual_mass")
