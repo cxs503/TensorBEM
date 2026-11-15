@@ -1,0 +1,94 @@
+{
+ "schema": "tensorbem.w31.propulsion_block_live_recheck/v1",
+ "mission": 22286,
+ "purpose": "Live re-verification that the platform's propulsion block still returns relative_rot_eff = 1.0 and that its K_T/K_Q are its own open-water curve, on two states of the W30 state grid (S1 at 12 kn, P/D 0.95; S11 at 15 kn, P/D 1.05). Consumed by benchmarks/anchors/build_w31_etaR_chain.py.",
+ "provenance": {
+  "endpoint": "POST /api/v1/calculations/propulsion",
+  "port": 8002,
+  "transport": "tool channel call_ship_api (loopback curl is blocked by the worktree sandbox); the two response bodies below are verbatim copies of the tool payloads, field names and precision unchanged (2 dp kW, 4 dp non-dimensional)",
+  "method_field_returned_by_platform": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+  "request_schema_note": "the endpoint names the ship speed field `speed` (kn); a body using `speed_kn` is rejected 422 with 'Field required: body.speed'. The W30 receipts record the same values under an inputs.speed_kn key, so the two files are consistent in content."
+ },
+ "hull": {
+  "length": 180.0,
+  "beam": 32.0,
+  "draft": 11.0,
+  "cb": 0.82,
+  "displacement": 51955.2
+ },
+ "requests": [
+  {
+   "state": "S1",
+   "request_body": {
+    "length": 180.0,
+    "beam": 32.0,
+    "draft": 11.0,
+    "cb": 0.82,
+    "displacement": 51955.2,
+    "speed": 15.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 0.95,
+    "prop_diameter": 6.0,
+    "n_blades": 5
+   },
+   "response": {
+    "thrust": 1070.69,
+    "torque": 962.667,
+    "delivered_power": 10081.03,
+    "open_water_eff": 0.4565,
+    "hull_eff": 1.07,
+    "relative_rot_eff": 1.0,
+    "propulsive_eff": 0.4884,
+    "cavitation_number": 0.979,
+    "cavitation_risk": "高风险",
+    "method": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+    "advance_ratio_J": 0.4298,
+    "wake_fraction_w": 0.3038,
+    "thrust_deduction_t": 0.2551,
+    "thrust_coefficient_KT": 0.2902,
+    "torque_coefficient_KQ": 0.04348,
+    "advance_speed_Va": 4.298,
+    "effective_power_pe": 4923.7,
+    "in_validity_envelope": true,
+    "validity_notes": []
+   }
+  },
+  {
+   "state": "S11",
+   "request_body": {
+    "length": 180.0,
+    "beam": 32.0,
+    "draft": 11.0,
+    "cb": 0.82,
+    "displacement": 51955.2,
+    "speed": 15.0,
+    "prop_rpm": 100.0,
+    "prop_pitch": 1.05,
+    "prop_diameter": 6.0,
+    "n_blades": 5
+   },
+   "response": {
+    "thrust": 1086.14,
+    "torque": 1078.724,
+    "delivered_power": 11296.37,
+    "open_water_eff": 0.5166,
+    "hull_eff": 1.07,
+    "relative_rot_eff": 1.0,
+    "propulsive_eff": 0.5527,
+    "cavitation_number": 0.959,
+    "cavitation_risk": "高风险",
+    "method": "Wageningen B 系列 (Oosterveld & van Oossanen 1975) + Holtrop (1984) 伴流/推力减额 + 功率链闭合 P_E = eta_D*P_D + sigma_0.7R 空泡数",
+    "advance_ratio_J": 0.5372,
+    "wake_fraction_w": 0.3038,
+    "thrust_deduction_t": 0.2551,
+    "thrust_coefficient_KT": 0.2943,
+    "torque_coefficient_KQ": 0.04872,
+    "advance_speed_Va": 5.372,
+    "effective_power_pe": 6243.46,
+    "in_validity_envelope": true,
+    "validity_notes": []
+   }
+  }
+ ],
+ "conclusion": "relative_rot_eff = 1.0 on both a P/D = 0.95 and a P/D = 1.05 state; hull_eff = 1.07 on both; the two responses reproduce the archived W30 receipts field for field, so the constant is a property of the block, not of one state."
+}
