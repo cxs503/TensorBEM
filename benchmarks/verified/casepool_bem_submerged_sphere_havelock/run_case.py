@@ -572,8 +572,8 @@ def write_artifacts(result: dict[str, Any], outdir: Path) -> list[Path]:
     )
     written.append(outdir / "table_submergence.csv")
 
-    (outdir / "run.log").write_text("\n".join(result["log"]) + "\n")
-    written.append(outdir / "run.log")
+    (outdir / "run.txt").write_text("\n".join(result["log"]) + "\n")
+    written.append(outdir / "run.txt")
     return written
 
 
