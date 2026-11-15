@@ -740,8 +740,21 @@ def open_water_point(
     viscosity: float = WATER_NU,
     viscous: bool = True,
     core_ratio: float = 0.05,
+    inflow_field=None,
 ) -> OpenWaterResult:
-    """Compute ``K_T``, ``K_Q`` and ``eta_0`` at one advance ratio."""
+    """Compute ``K_T``, ``K_Q`` and ``eta_0`` at one advance ratio.
+
+    ``inflow_field`` overrides the uniform inflow ``W_inf = J x_hat - omega r
+    (x_hat x e_r)`` with an arbitrary ``callable(points (P, 3)) -> (P, 3)``
+    velocity field in the blade-fixed frame.  It exists so that the *same*
+    lattice can be solved in a non-uniform (behind-hull) inflow: the advance
+    ratio ``J`` then keeps its mean-flow meaning, i.e. it normalises the
+    area-averaged axial inflow, while the local inflow seen by the sections is
+    the supplied field.  With a field whose area average equals ``J`` the
+    returned ``K_T``/``K_Q`` are the behind-hull coefficients at the same
+    advance ratio, and ``eta_0`` is the behind-hull value
+    ``J K_T / (2 pi K_Q)`` of the ITTC self-propulsion analysis.
+    """
 
     if advance_ratio < 0.0:
         raise ValueError("advance_ratio must be non-negative")
@@ -757,7 +770,9 @@ def open_water_point(
         wake_length,
         wake_steps,
     )
-    inflow = inflow_velocity(advance_ratio)
+    inflow = inflow_velocity(advance_ratio) if inflow_field is None else inflow_field
+    if not callable(inflow):
+        raise TypeError("inflow_field must be callable: points (P, 3) -> velocity (P, 3)")
     solution = solve_lifting_surface(
         lattice["bound_a"],
         lattice["bound_b"],
