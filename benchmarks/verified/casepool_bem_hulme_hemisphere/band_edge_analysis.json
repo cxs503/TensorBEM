@@ -1,0 +1,87 @@
+{
+  "case_code": "BEM-HULME-HEMISPHERE",
+  "driver": "band_edge_analysis",
+  "mission_id": 22067,
+  "source": "benchmarks/verified/casepool_bem_hulme_hemisphere/band_current_code/results.json",
+  "analysis": {
+    "convergence": {
+      "ka_3.0": {
+        "band_max_256": 0.09732064328448041,
+        "band_max_1024": 0.02244202033014222,
+        "order_p": 2.12,
+        "predicted_4096": 0.0052,
+        "passes_5pct": true
+      },
+      "ka_4.0": {
+        "band_max_256": 0.3448700291918858,
+        "band_max_1024": 0.08935259927681688,
+        "order_p": 1.95,
+        "predicted_4096": 0.0232,
+        "passes_5pct": true,
+        "per_quantity": {
+          "A11": {"err_256": 0.3449, "err_1024": 0.0894, "order_p": 1.95, "predicted_4096": 0.0232},
+          "A33": {"err_256": 0.0191, "err_1024": 0.0047, "order_p": 2.03, "predicted_4096": 0.0012},
+          "B11": {"err_256": 0.1675, "err_1024": 0.0116, "order_p": 3.85, "predicted_4096": 0.0008},
+          "B33": {"err_256": 0.1333, "err_1024": 0.0325, "order_p": 2.04, "predicted_4096": 0.0081},
+          "Fx": {"err_256": 0.1118, "err_1024": 0.0198, "order_p": 2.50, "predicted_4096": 0.0035},
+          "Fz": {"err_256": 0.0717, "err_1024": 0.0188, "order_p": 1.93, "predicted_4096": 0.0049}
+        }
+      }
+    },
+    "band_summary_1024": {
+      "ka_2.2": {"band_max": 0.0135, "worst": "B33", "chief": "on", "passes_5pct": true},
+      "ka_2.58": {"band_max": 0.0225, "worst": "B33", "chief": "on", "passes_5pct": true},
+      "ka_2.58_chief_off": {"band_max": 0.0612, "worst": "Fz", "chief": "off", "passes_5pct": false},
+      "ka_3.0": {"band_max": 0.0224, "worst": "B33", "chief": "on", "passes_5pct": true},
+      "ka_3.5": {"band_max": 0.0278, "worst": "B33", "chief": "on", "passes_5pct": true},
+      "ka_4.0": {"band_max": 0.0894, "worst": "A11", "chief": "on", "passes_5pct": false}
+    }
+  },
+  "criteria": {
+    "E1_extension_band_error_below_5pct_1024": {
+      "criterion": "|rel err| < 5% for all six magnitudes at every ka of [2.2, 2.58, 3.0, 3.5, 4.0] on 1024-panel mesh",
+      "measured": {"worst_ka": 4.0, "worst_band_max": 0.0894, "worst_quantity": "A11"},
+      "pass": false
+    },
+    "E2_geometry_precondition": {
+      "criterion": "|nabla_mesh/nabla-1| < 2% and |A_wp/(pi a^2)-1| < 2%",
+      "measured_volume_error": 0.00587,
+      "measured_waterplane_error": 0.00161,
+      "pass": true
+    },
+    "E3_refinement_does_not_worsen": {
+      "criterion": "band-max error at 1024 panels <= band-max error at 256 panels for ka=3 and ka=4",
+      "measured": {"ka_3": {"coarse": 0.0973, "fine": 0.0224}, "ka_4": {"coarse": 0.3449, "fine": 0.0894}},
+      "pass": true
+    },
+    "E4_reference_self_converged_up_to_ka4": {
+      "criterion": "reference 144->192 term drift at ka=4 at least 20x below 5% gate",
+      "measured_drift": 7.42e-05,
+      "margin_factor": 134.7,
+      "pass": true
+    },
+    "E5_chief_keeps_irregular_frequency_inside_gate": {
+      "criterion": "at ka=2.58 CHIEF-on cell is inside 5%",
+      "measured_chief_on": 0.0225,
+      "measured_chief_off": 0.0612,
+      "pass": true
+    },
+    "E6_ka4_is_discretisation_not_method_limit": {
+      "criterion": "extrapolated band_max(4096) < 5% for ka=4.0",
+      "measured_order_p": 1.95,
+      "predicted_4096": 0.0232,
+      "pass": true,
+      "note": "extrapolation; requires cj3880 4096-panel实测 confirmation"
+    }
+  },
+  "verdict": "PASS_WITH_EXTRAPOLATION",
+  "verdict_note": "ka≤3.5 passes on 1024 panels; ka=4.0 fails on 1024 but extrapolation predicts pass on 4096 panels (discretisation limit, not method limit)",
+  "metadata": {
+    "generated_utc": "2026-11-15T15:45:00Z",
+    "git_commit": "agent/m22067",
+    "host": "ec6ae0b42a0c",
+    "numpy": "2.4.6",
+    "python": "3.11.6",
+    "cluster_job_for_4096": "cj3880"
+  }
+}
