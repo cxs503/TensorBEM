@@ -187,7 +187,6 @@ CASES: dict[str, CaseEntry] = {
             "docs/case_bem_submerged_sphere_havelock/table_ladder.csv",
             "docs/case_bem_submerged_sphere_havelock/table_low_frequency.csv",
             "docs/case_bem_submerged_sphere_havelock/table_submergence.csv",
-            "docs/case_bem_submerged_sphere_havelock/run.log",
         ),
         doc="docs/case_bem_submerged_sphere_havelock/CASE.md",
         figures=(
