@@ -276,6 +276,14 @@ def test_committed_record_was_rendered_from_the_current_case_module() -> None:
     The digests of the solver/kernel sources are recorded too, but they are
     informational -- a change there alters numbers, and regenerating is the
     responsibility of whoever made it, not a red light for every unrelated edit.
+
+    The missing-provenance branch is still a ``pytest.skip``, and that is the
+    remaining debt: it turns the one condition this gate exists to catch -- "the
+    committed record lags the code" -- into a green run.  A skip is only honest
+    when the check cannot run at all.  It cannot be promoted to ``pytest.fail``
+    before the record is regenerated (main would go red for every other change);
+    the promoted text is kept in
+    ``docs/dev_report_m22521_cylinder_record_gate_and_routeM_recheck.md``.
     """
     from pathlib import Path
     import json
@@ -286,14 +294,20 @@ def test_committed_record_was_rendered_from_the_current_case_module() -> None:
     )
     if "provenance" not in payload:
         pytest.skip(
-            "the committed record predates the provenance gate: it was generated "
-            "before `generator_provenance()` existed and still carries the "
-            "constant-density near-wall sweep only (38 criteria) while the case "
-            "module emits the linear-density, faceting and azimuthal studies as well (44). Regenerate with: "
-            "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
-            "--outdir benchmarks/verified/case_bem_laplace_cylinder --doc "
+            "the committed record carries no generator provenance, so it cannot "
+            "be shown to describe the current case module: it is the constant-"
+            "density near-wall sweep only (38 criteria) while the case module "
+            "emits the linear-density, faceting, azimuthal and oblique-heading "
+            "studies as well. Regenerate with: PYTHONPATH=src python3 -m "
+            "tensorbem.benchmarks.case_cylinder_stream --outdir "
+            "benchmarks/verified/case_bem_laplace_cylinder --doc "
             "docs/CASE-BEM-LAPLACE-CYLINDER.md. See "
-            "docs/dev_report_m20961_cylinder_record_staleness.md"
+            "docs/dev_report_m20961_cylinder_record_staleness.md. This skip is "
+            "itself the debt: the replacement (pytest.fail, so that stale does "
+            "not read as green) is written down in "
+            "docs/dev_report_m22521_cylinder_record_gate_and_routeM_recheck.md "
+            "and must land together with the regenerated record, otherwise main "
+            "goes red for everyone."
         )
     recorded = payload["provenance"]["generator"]
     current = case.generator_provenance()
@@ -307,6 +321,33 @@ def test_committed_record_was_rendered_from_the_current_case_module() -> None:
         "benchmarks/verified/case_bem_laplace_cylinder --doc "
         "docs/CASE-BEM-LAPLACE-CYLINDER.md"
     )
+    assert len(payload["criteria"]) == payload["acceptance"]["n_checks"], (
+        "results.json holds "
+        f"{len(payload['criteria'])} criteria but its acceptance summary counts "
+        f"{payload['acceptance']['n_checks']}; the record is truncated"
+    )
+def test_committed_record_criteria_are_all_counted() -> None:
+    """Every criterion the record holds must be counted by its acceptance summary.
+
+    ``provenance`` guards the *module*, not the payload: a record whose criteria
+    list was truncated -- or hand-picked -- still carries a matching digest, and
+    ``render_markdown`` happily renders the shorter list.  The record's own
+    arithmetic is the cheapest invariant that cannot be satisfied by dropping
+    evidence, so it runs on the committed JSON without re-running the case.
+    """
+    import json
+    from pathlib import Path
+
+    payload = json.loads(
+        (
+            Path(__file__).resolve().parents[1]
+            / "benchmarks/verified/case_bem_laplace_cylinder/results.json"
+        ).read_text()
+    )
+    assert len(payload["criteria"]) == payload["acceptance"]["n_checks"]
+    assert payload["acceptance"]["n_checks"] == len(payload["criteria"])
+    names = [row["name"] for row in payload["criteria"]]
+    assert len(set(names)) == len(names), "criteria names must be unique"
 
 
 def test_near_wall_half_panel_rows_carry_the_panel_size() -> None:
