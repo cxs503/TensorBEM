@@ -4042,15 +4042,23 @@ def main(argv: Sequence[str] | None = None) -> int:
         render_markdown(artifact) + "\n", encoding="utf-8"
     )
     write_case_card(artifact, args.outdir / "case.json")
+    # The document is written before the figures: the record, the report and the
+    # case document are the artifacts the staleness gate compares, and each is a
+    # pure function of ``results.json``, while the figures need matplotlib.  On a
+    # node without it the entry point used to die *after* publishing the record
+    # but *before* re-rendering the document, leaving the two describing
+    # different runs (this is what happened on the cj3969 regeneration, see
+    # docs/audit_m22235_cylinder_record_regeneration.md).  Ordering the writes by
+    # their dependencies keeps a plotting failure from corrupting the record.
+    if args.doc is not None:
+        args.doc.parent.mkdir(parents=True, exist_ok=True)
+        args.doc.write_text(render_markdown(artifact) + "\n", encoding="utf-8")
     figures = args.outdir / "figures"
     plot_field(artifact, figures / "field.png")
     plot_convergence(artifact, figures / "convergence.png")
     plot_near_wall(artifact, figures / "near_wall.png")
     plot_multipole(artifact, figures / "multipole.png")
     plot_circulation(artifact, figures / "circulation.png")
-    if args.doc is not None:
-        args.doc.parent.mkdir(parents=True, exist_ok=True)
-        args.doc.write_text(render_markdown(artifact) + "\n", encoding="utf-8")
     print(
         json.dumps(
             {
