@@ -36,6 +36,12 @@ Everything is read from artifacts; nothing is hand-copied into the document.
 Predeclared gates (fixed before the extended ladder was fetched)
 ---------------------------------------------------------------
 ===================================  =========================================
+``E0_rungs_solver_healthy``           no in-house rung may be dropped for a
+                                     recorded solve-stage residual above 1e-2
+                                     (a rung produced by a driver that did not
+                                     solve its system is arithmetic noise, not
+                                     physics); rungs without a recorded residual
+                                     are reported as unproven, never as healthy
 ``E1_convergence_model_credible``    the fitted model reproduces the last three
                                      rungs of every (quantity, ka) cell to
                                      within 0.3 % -- otherwise ``p`` and
@@ -90,7 +96,16 @@ ARTIFACT_DIR = Path(__file__).resolve().parents[3] / "benchmarks" / "verified" /
 CASE_ARTIFACT = ARTIFACT_DIR / "results.json"
 FROZEN_ARTIFACT = ARTIFACT_DIR / "capytaine_excitation.json"
 EXTENDED_ARTIFACT = ARTIFACT_DIR / "capytaine_ladder_extended.json"
-INHOUSE_ARTIFACT = ARTIFACT_DIR / "inhouse_ladder_ka2.json"
+#: The in-house ladder the fit consumes.  It is the ladder re-run *under the
+#: solve-stage health guard* (dev report m20910): every rung carries the
+#: least-squares residual it was produced with, so no rung can be graded as
+#: physics when the linear driver handed back a wrong vector.
+INHOUSE_ARTIFACT = ARTIFACT_DIR / "inhouse_ladder_ka2_healthy.json"
+#: Kept as the honest record of the rejected first attempt (the 4096-panel rung
+#: of that file was produced by a broken driver and sits 46 % off the
+#: reference); it is no longer allowed into the fit, and ``E0`` reports what the
+#: admissibility filter would drop from it.
+SUPERSEDED_INHOUSE_ARTIFACT = ARTIFACT_DIR / "inhouse_ladder_ka2.json"
 EVIDENCE_DIR = ARTIFACT_DIR / "evidence"
 EVIDENCE = EVIDENCE_DIR / "independent_convergence.json"
 DOCUMENT = Path(__file__).resolve().parents[3] / "docs" / "case_bem_hulme_independent_convergence.md"
@@ -106,6 +121,12 @@ INHOUSE_EXTRAPOLATED_BAND = 0.01
 #: a three-parameter model fitted to exactly three rungs is determined, so its
 #: residual is zero by construction -- E7 requires one spare degree of freedom
 INHOUSE_MIN_RUNGS = 4
+#: a rung may only enter the in-house fit if it can prove its own solve-stage
+#: health: the CHIEF least-squares residual it was produced with must be
+#: recorded and below this band.  The healthy control plane sits at 1.1e-3
+#: (1024 panels) and the broken node environment at 4.9e-1, so the band is not
+#: delicate -- it separates the two regimes by more than two decades.
+ADMISSIBLE_RESIDUAL = 1e-2
 #: order / limit stability of the in-house fit, finest-three rungs vs all rungs
 INHOUSE_ORDER_SHIFT_BAND = 0.25
 INHOUSE_LIMIT_SHIFT_BAND = 0.005
@@ -227,16 +248,73 @@ def capytaine_cell(path: Path, name: str) -> dict[str, dict[float, float]]:
     return out
 
 
+#: residual keys a rung may carry, in the order they are inspected
+RESIDUAL_KEYS = ("radiation_relative_residual", "diffraction_relative_residual")
+
+
+def rung_residual(row: dict[str, Any]) -> float | None:
+    """Worst solve-stage residual recorded on a rung, or ``None`` if unrecorded."""
+    recorded = [float(row[k]) for k in RESIDUAL_KEYS if row.get(k) is not None]
+    return max(recorded) if recorded else None
+
+
+def admissible_rows(
+    rows: Sequence[dict[str, Any]],
+    *,
+    tolerance: float = ADMISSIBLE_RESIDUAL,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[float]]:
+    """Split ladder rows into admitted, dropped, and unproven.
+
+    A rung whose recorded residual exceeds ``tolerance`` is **dropped**: the
+    driver that produced it did not solve the system it was handed, so its value
+    is arithmetic noise, however plausible it looks.  A rung with no recorded
+    residual (an artifact older than the guard) is admitted but reported as
+    *unproven* -- it may still be right, but it cannot testify to its own
+    health, and the document must not pretend otherwise.
+    """
+    admitted: list[dict[str, Any]] = []
+    dropped: list[dict[str, Any]] = []
+    unproven: list[float] = []
+    for row in rows:
+        residual = rung_residual(row)
+        if residual is None:
+            admitted.append(row)
+            unproven.append(float(row["panels"]))
+        elif residual <= tolerance:
+            admitted.append(row)
+        else:
+            dropped.append(
+                {
+                    "panels": float(row["panels"]),
+                    "subdivisions": row.get("subdivisions"),
+                    "residual": residual,
+                    "reason": (
+                        f"solve-stage residual {residual:.3g} > {tolerance:g}: the "
+                        "linear driver did not solve the system it was handed"
+                    ),
+                }
+            )
+    return admitted, dropped, unproven
+
+
 def inhouse_cell(
-    path: Path, name: str
+    path: Path,
+    name: str,
+    *,
+    rows: Sequence[dict[str, Any]] | None = None,
 ) -> tuple[list[float], list[float], str]:
-    """Rung panel counts, rung values, and the ``ka`` tag of an in-house ladder."""
+    """Rung panel counts, rung values, and the ``ka`` tag of an in-house ladder.
+
+    ``rows`` overrides the ladder's own rows (the caller passes the admissible
+    subset once, so all quantities are fitted on the same rungs).
+    """
     key = CASE_KEY[name]
     payload = json.loads(Path(path).read_text())
     ka_tag = f"{float(payload['ka']):g}"
-    rows = sorted(payload["rows"], key=lambda r: r["panels"])
-    panels = [float(row["panels"]) for row in rows]
-    values = [float(row[key]) for row in rows]
+    selected = list(rows) if rows is not None else payload["rows"]
+    ordered = sorted(selected, key=lambda r: r["panels"])
+    panels = [float(row["panels"]) for row in ordered]
+    values = [float(row[key]) for row in ordered]
     return panels, values, ka_tag
 
 
@@ -382,8 +460,26 @@ def analyse(
     if Path(inhouse_path).exists():
         panels_in: list[float] | None = None
         per_q_in: dict[str, dict[str, Any]] = {}
+        ladder_payload = json.loads(Path(inhouse_path).read_text())
+        rows_in, dropped_in, unproven_in = admissible_rows(ladder_payload["rows"])
+        recorded = [r for r in (rung_residual(row) for row in ladder_payload["rows"]) if r is not None]
+        gates["E0_rungs_solver_healthy"] = {
+            "criterion": (
+                "no in-house rung may be dropped for a recorded solve-stage "
+                f"residual above {ADMISSIBLE_RESIDUAL:g}; rungs that carry no "
+                "recorded residual are listed as unproven instead of being "
+                "counted as healthy"
+            ),
+            "measured": max(recorded) if recorded else None,
+            "n_rungs_recorded": len(recorded),
+            "n_rungs_used": len(rows_in),
+            "n_rungs_dropped": len(dropped_in),
+            "dropped": dropped_in,
+            "unproven_panels": unproven_in,
+            "pass": bool(not dropped_in),
+        }
         for name, _ in QUANTITIES:
-            panels, panel_values, ka_tag = inhouse_cell(inhouse_path, name)
+            panels, panel_values, ka_tag = inhouse_cell(inhouse_path, name, rows=rows_in)
             panels_in = panels
             fit = fit_convergence(panels, panel_values)
             ref = float(reference[ka_tag][CASE_KEY[name]])
@@ -407,7 +503,7 @@ def analyse(
         # three rungs the three-parameter model is *determined* and the
         # all-rung residual is identically zero (vacuous evidence, not support)
         for name, _ in QUANTITIES:
-            panels, panel_values, _ = inhouse_cell(inhouse_path, name)
+            panels, panel_values, _ = inhouse_cell(inhouse_path, name, rows=rows_in)
             q = per_q_in[name]
             if len(panels) >= 3:
                 fit3 = fit_convergence(panels[-3:], panel_values[-3:])
@@ -417,9 +513,13 @@ def analyse(
                     q["fit"]["v_inf"]
                 )
         inhouse = {
-            "ka": float(json.loads(Path(inhouse_path).read_text())["ka"]),
+            "ka": float(ladder_payload["ka"]),
             "panels": panels_in,
             "n_rungs": len(panels_in or []),
+            "artifact": str(inhouse_path),
+            "dropped_rungs": dropped_in,
+            "unproven_panels": unproven_in,
+            "n_rungs_recorded": len(recorded),
             "quantities": per_q_in,
         }
         worst_model_in = max(
@@ -518,8 +618,10 @@ def render_document(payload: dict[str, Any]) -> str:
     L.append(
         "> 本文件由 `tensorbem.benchmarks.hemisphere_independent_convergence` 从工件程序化渲染，"
         "数字零手抄。工件：`benchmarks/verified/casepool_bem_hulme_hemisphere/"
-        "capytaine_ladder_extended.json`（7 级 256→4096 面板）、`inhouse_ladder_ka2.json`"
-        f"（ka=2，64→4096 面板）、`evidence/independent_convergence.json`。**机器裁定：{payload['verdict']}**"
+        "capytaine_ladder_extended.json`（7 级 256→4096 面板）、"
+        "`inhouse_ladder_ka2_healthy.json`（ka=2，64→4096 面板，逐档带求解残差）、"
+        "`inhouse_ladder_ka2.json`（被取代的首次尝试，4096 档由失效驱动产出）、"
+        f"`evidence/independent_convergence.json`。**机器裁定：{payload['verdict']}**"
     )
     L.append("")
     L.append("## ① 案例介绍与欠账")
@@ -550,7 +652,11 @@ def render_document(payload: dict[str, Any]) -> str:
              "（衍射项 + 手加 Froude-Krylov 项）由既有 producer 的函数直接复用，避免两件工件在约定上漂移。")
     L.append("2. **本仓求解器的延拓阶梯**：`scripts/hulme_hemisphere_inhouse_ladder.py`，"
              "ka = 2（算例带内误差最大点），subdivisions 2/3/4/5 = 64/256/1024/4096 恒定面元，"
-             "单格计算全部委托 `hulme_hemisphere_case.run_cell`，不复制求解器代码。")
+             "单格计算全部委托 `hulme_hemisphere_case.run_cell`，不复制求解器代码。"
+             "**首轮阶梯在 4096 档断裂**：该档由失效的线性驱动器产出（残差 4.9e-1、"
+             "却报告满秩与健康条件数），A33/B33 离参考 46%/54%，不是收敛方向。"
+             "本轮的阶梯在求解阶段健康守卫（dev report m20910）之下重跑，**逐档记录求解残差**，"
+             "并用 E0 判据把「无法证明自己健康的档」挡在拟合之外。")
     L.append("3. **收敛模型**：给定 p，模型对 (v_inf, C) 线性，故 p 由对数网格扫描 + 抛物线细化求得；"
              "拟合优度用与判据同一的相对度量（逐档相对残差）记录，避免「v_inf 好看但阶不可信」。"
              "另用 4 档窗口与 7 档窗口的 v_inf 互校（E2）。")
@@ -603,6 +709,33 @@ def render_document(payload: dict[str, Any]) -> str:
             + f" 面板（共 {inhouse.get('n_rungs', len(inhouse['panels']))} 档）。"
             f"三参数模型 `v(N)=v_inf+C·N^-p`；仅当档数 ≥ {INHOUSE_MIN_RUNGS} 时残差才有"
             "自由度，三档恰好决定三参数、残差恒为零，**不构成证据**。"
+        )
+        L.append("")
+        e0 = gates.get("E0_rungs_solver_healthy", {})
+        L.append(
+            "**求解阶段健康（E0）**：逐档记录的最坏求解残差 "
+            + (
+                f"**{e0['measured']:.3g}**"
+                if e0.get("measured") is not None
+                else "**未记录**"
+            )
+            + f"（门槛 {ADMISSIBLE_RESIDUAL:g}，{e0.get('n_rungs_recorded', 0)} 档有记录）；"
+            + (
+                "被剔除的档："
+                + "，".join(
+                    f"{d['panels']:g} 面元（残差 {d['residual']:.3g}）"
+                    for d in e0.get("dropped", [])
+                )
+                if e0.get("dropped")
+                else "无档被剔除"
+            )
+            + "；无法自证健康的档："
+            + (
+                "，".join(f"{p:g}" for p in e0.get("unproven_panels", []))
+                if e0.get("unproven_panels")
+                else "无"
+            )
+            + "。"
         )
         L.append("")
         L.append(
