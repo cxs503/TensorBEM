@@ -1,0 +1,62 @@
+azimuth = near["azimuth"]
+    azimuth_window = azimuth["window"]
+    azimuth_exclusion = azimuth["exclusion"]
+    lines += [
+        "",
+        "**方位（面内）敏感性（第 4 轮补充）**：前面两张表的探针都落在**面板中点法向**上，"
+        "那是常值面板最有利的方向，而用户可以在任意位置求值。本轮把探针在同一面板内从中点"
+        "（$\\zeta=0$）走到顶点（$\\zeta=0.5h_{max}$，顶点处取相邻面板法向的角平分线），"
+        "逐层给出面内最差误差（线性基同测）。到折面的实测间隙由程序逐段量距，非名义值：",
+        "",
+        "| N | $\\delta/h_{max}$ | 中点误差 | 面内最差 | 最差位置 $\\zeta/h_{max}$ | 顶点/中点 | 线性基面内最差 | 实测最小间隙/h |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for level in azimuth["levels"]:
+        for row in level["sweep"]:
+            lines.append(
+                "| %d | %.2f | %.3e | %.3e | %.3f | %.2f | %.3e | %.3f |"
+                % (
+                    level["panels"],
+                    row["clearance_over_h_max"],
+                    row["midpoint_error"],
+                    row["worst_error"],
+                    row["worst_offset_over_h_max"],
+                    row["azimuth_penalty"],
+                    row["worst_error_linear"],
+                    row["min_clearance_over_h_max"],
+                )
+            )
+    lines += [
+        "",
+        f"判读一（窗内方位无关）：$\\delta={azimuth_window['clearance_over_h_max']:g}h_{{max}}$ 处逐层最差/中点比为 "
+        + "、".join(f"{row['azimuth_penalty']:.2f}" for row in azimuth_window["levels"])
+        + f"，最差 {azimuth_window['worst_over_levels']:.3e} 仍在 1% 容差内 ——"
+        "「$\\delta\\ge2h_{max}$」这条窗对任意方位成立，不只对中点法向。",
+        "",
+        f"判读二（排除区在中点方向被低估）：$\\delta={azimuth_exclusion['clearance_over_h_max']:g}h_{{max}}$ 处逐层中点误差 "
+        + "、".join(f"{row['midpoint_error']:.3f}" for row in azimuth_exclusion["levels"])
+        + "，面内最差却达 "
+        + "、".join(f"{row['worst_error']:.3f}" for row in azimuth_exclusion["levels"])
+        + f"（顶点/中点比 {azimuth_exclusion['min_azimuth_penalty']:.2f}–"
+        + f"{max(row['azimuth_penalty'] for row in azimuth_exclusion['levels']):.2f}）。"
+        "理由：常值密度在顶点处**不连续**，而折面顶点相对真实圆的偏差最直接地投影到该方向。"
+        "结论：排除区里的「18%」只是最有利方位的数字，贴壁任意方向应按 ~60% 或更大预留误差；"
+        "守门参数照旧建议 $\\ge1$–$2h_{max}$。",
+        "",
+        f"判读三（一阶矩基的窗没有前移）：窗内 $\\delta={azimuth['linear_at_window']['clearance_over_h_max']:g}h_{{max}}$ 处线性基面内最差比常值大 "
+        f"{azimuth['linear_at_window']['min_ratio']:.2f}–{azimuth['linear_at_window']['max_ratio']:.2f}×；"
+        "含方位后 1% 窗对两种基都是 $\\delta\\ge"
+        f"{azimuth['windows_including_azimuth']['constant_density']:g}h_{{max}}$"
+        f"（线性 {azimuth['windows_including_azimuth']['linear_density']:g}）。"
+        "线性基的优势只在**中点方向**、$\\delta\\le0.5h_{max}$ 处（上一表 3–9×）；"
+        "换到顶点方向在 $\\delta=0.1h_{max}$ 反而更差且逐层不单调（"
+        + "、".join(f"{row['worst_error_linear']:.3f}" for row in azimuth_exclusion["levels"])
+        + "，随加密 1.40→0.129→1.26）：弧长中心差分给出的斜率把密度外推过了顶点折角。"
+        "故 `linear_density=True` 只能当「光滑曲边 + 离壁」选项，不能当通用改进"
+        "（见 `evaluate_exterior_field` docstring）。",
+        "",
+        f"两条研究在 $\\delta=2h_{{max}}$ 的中点方向互相校核：同一方向、不同参考面（折面弦 vs 圆周）"
+        f"的误差最大相差 {azimuth['midpoint_cross_check']['max_relative_difference']:.2%}，"
+        "与折面偏移 $a(1-\\cos\\pi/N)\\sim h^2/8$ 同量级，说明两表量的是同一 regime。",
+        "",
+    ]
