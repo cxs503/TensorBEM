@@ -148,29 +148,51 @@ def test_hull_geometry_assembly_matches_the_explicit_tensor():
     assert np.max(np.abs(derived_matrix - explicit)) / scale < 5.0e-3
 
 
-def test_rao_omitting_inertia_uses_the_geometry_default():
-    """``inertia=None`` and the closed-form tensor must give the same RAO."""
-    from tensorbem.rao import compute_rao_at_frequency
+def test_rao_omitting_inertia_uses_the_wetted_mesh_tensor():
+    """``inertia=None`` must reproduce the wetted-mesh tensor, not an approximation.
 
-    hull = spheroid_hull_mesh((1.0, 1.0, 1.0), subdivisions=2)
+    The production RAO path used to take the equivalent-half-ellipsoid
+    reconstruction of the waterplane moments; it now integrates the wetted mesh
+    itself (``hydrostatic.mass_matrix_from_hull``).  The invariant is exact:
+    passing that same tensor explicitly must reproduce the default RAO to
+    round-off.  The closed-form (smooth) hemisphere tensor is then a
+    *panelisation* reference, so it is compared with a declared band.
+    """
+    from tensorbem.hydrostatic import mass_matrix_from_wetted_hull
+    from tensorbem.rao import compute_rao_at_frequency
+    from tensorbem.rigid_body_mass import wetted_hull_mass_properties
+
+    hull = spheroid_hull_mesh((1.0, 1.0, 1.0), subdivisions=3)
     mass = 1000.0
     cg = (0.0, 0.0, -3.0 / 8.0)
-    tensor = np.diag(closed_form_inertia_cg((1.0, 1.0, 1.0), mass))
+    props = wetted_hull_mass_properties(hull.vertices, hull.faces)
+    # the body's mass is not the displaced-water mass, so the specific second
+    # moments are scaled by mass / (density * V) inside the assembly
+    tensor = np.asarray(props["inertia_cg"]) * (mass / float(props["mass"]))
+    matrix = mass_matrix_from_wetted_hull(hull, mass, cg)
+    assert np.allclose(matrix[3:, 3:] - mass * _skew_outer(cg), tensor, rtol=1e-12, atol=0.0)
+
     kwargs = dict(hull=hull, omega=1.2, wave_angle=0.0, mass=mass, center_of_gravity=cg)
     default = compute_rao_at_frequency(inertia=None, **kwargs)
     explicit = compute_rao_at_frequency(inertia=tensor, **kwargs)
-    # The two assemblies describe the same body up to the panelisation error of
-    # the waterplane moments at subdivisions=2 (~5 % on roll), so the RAOs agree
-    # to that order -- and *far* better than with the legacy origin-scaled guess,
-    # which is the discriminating part of this test.
     r_default = np.asarray(default.rao_amplitude)
     r_explicit = np.asarray(explicit.rao_amplitude)
-    legacy = compute_mass_matrix(mass, cg).__class__  # noqa: F841  (documentation only)
-    r_ref = np.abs(r_explicit)
-    mask = r_ref > 1e-3
-    assert np.allclose(r_default[mask], r_explicit[mask], rtol=5e-3, atol=0.0)
-    # heave (the largest purely translational entry) must not move at all
-    assert r_default[2] == pytest.approx(r_explicit[2], rel=5e-5)
+    assert np.allclose(r_default, r_explicit, rtol=1e-9, atol=0.0)
+
+    # closed-form smooth hemisphere: agreement at panelisation level (subdiv=3)
+    closed = compute_rao_at_frequency(
+        inertia=np.diag(closed_form_inertia_cg((1.0, 1.0, 1.0), mass)), **kwargs
+    )
+    r_closed = np.abs(np.asarray(closed.rao_amplitude))
+    mask = r_closed > 1e-3
+    assert np.allclose(r_default[mask], r_closed[mask], rtol=2e-2, atol=0.0)
+
+
+def _skew_outer(cg):
+    """``S(r)^T S(r)`` -- the parallel-axis term that the assembly adds back."""
+    c = np.asarray(cg, dtype=float)
+    s = np.array([[0.0, -c[2], c[1]], [c[2], 0.0, -c[0]], [-c[1], c[0], 0.0]])
+    return s.T @ s
 
 
 def test_barge_is_a_declared_approximation():
