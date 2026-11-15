@@ -45,6 +45,7 @@ from pathlib import Path
 
 import numpy as np
 
+from ..quadrature import gauss_legendre
 from ..analytic import bessel_j01_y01
 from ..finite_depth3d import green_function_3d as finite_depth_green
 from ..free_surface3d import green_function_3d as deep_green
@@ -54,7 +55,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_OUTPUT = REPO_ROOT / "docs" / "m4776" / "outputs" / "finite_depth3d_deepwater_arbitration.json"
 DEFAULT_FIGURE = REPO_ROOT / "docs" / "m4776" / "figures" / "fig_deepwater_arbitration.png"
 
-_LEG_X, _LEG_W = np.polynomial.legendre.leggauss(24)
+_LEG_X, _LEG_W = gauss_legendre(24)
 
 
 def finite_depth_wavenumber(nu: float, depth: float) -> float:
