@@ -307,3 +307,57 @@ def test_committed_record_was_rendered_from_the_current_case_module() -> None:
         "benchmarks/verified/case_bem_laplace_cylinder --doc "
         "docs/CASE-BEM-LAPLACE-CYLINDER.md"
     )
+
+
+def test_near_wall_azimuth_sweep_is_measured_not_midpoint_only() -> None:
+    """The validity window must hold across the panel, not only above its midpoint.
+
+    ``near_wall_study`` probes the radial rays through the panel midpoints; this
+    test pins the fourth-round study that walks the probe to the vertex.
+    """
+    import numpy as np
+
+    azimuth = case.near_wall_azimuth_study(ladder=(32, 64))
+    window = azimuth["window"]
+    assert window["clearance_over_h_max"] == case.NEAR_WALL_WINDOW_FACTOR
+    assert window["worst_over_levels"] <= case.NEAR_WALL_AZIMUTH_WINDOW_TOL
+    # inside the exclusion zone the midpoint is the best azimuth, not the worst
+    exclusion = azimuth["exclusion"]
+    assert exclusion["min_azimuth_penalty"] >= case.NEAR_WALL_AZIMUTH_VERTEX_PENALTY
+    assert exclusion["worst_over_levels"] > exclusion["levels"][-1]["midpoint_error"]
+    # the first-moment basis must not be advertised as widening the window
+    windows = azimuth["windows_including_azimuth"]
+    assert windows["constant_density"] == case.NEAR_WALL_WINDOW_FACTOR
+    assert windows["linear_density"] == case.NEAR_WALL_WINDOW_FACTOR
+    assert azimuth["linear_at_window"]["min_ratio"] >= case.NEAR_WALL_LINEAR_WINDOW_GAIN_MAX
+    assert (
+        azimuth["midpoint_cross_check"]["max_relative_difference"]
+        <= case.NEAR_WALL_AZIMUTH_FRAME_TOL
+    )
+
+    # the strided azimuth sample must stand for the all-panel maximum at the
+    # documented window; otherwise the reported worst case would be an artefact
+    # of which panels happened to be probed
+    mesh = case.regular_polygon(32, case.RADIUS)
+    centers = mesh.centers
+    h_max = float(np.max(mesh.lengths))
+    radial = np.hypot(centers[:, 0], centers[:, 1])
+    result = case.solve_laplace_exterior_neumann(
+        mesh, case.SPEED * case.RADIUS**2 * (centers[:, 0] / radial) / radial**2
+    )
+    tangents = mesh.vectors / mesh.lengths[:, None]
+    normals = np.column_stack((tangents[:, 1], -tangents[:, 0]))
+    points = centers + case.NEAR_WALL_WINDOW_FACTOR * h_max * normals
+    exact = case.exact_velocity(points)
+    field = case.evaluate_exterior_field(mesh, result, points)
+    total = field.gradient + np.array([case.SPEED, 0.0])
+    full_max = float(
+        np.max(np.linalg.norm(total - exact, axis=1) / np.linalg.norm(exact, axis=1))
+    )
+    sampled = next(
+        row
+        for row in azimuth["levels"][0]["sweep"]
+        if row["clearance_over_h_max"] == case.NEAR_WALL_WINDOW_FACTOR
+    )["midpoint_error"]
+    assert sampled <= full_max * 1.001
+    assert sampled >= 0.5 * full_max
