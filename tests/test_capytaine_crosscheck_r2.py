@@ -31,6 +31,11 @@ Checks:
    ``render_document`` of the committed ``results.json``.
 8. **Optional-dependency hygiene** -- ``capytaine`` may be imported only by the
    producer script; it must not leak into ``src/`` or ``tests/``.
+9. **Ladder coverage** -- the mesh-convergence ladder must score *both*
+   radiation matrices: at the anchor's finest level it has to equal the
+   per-entry maximum of ``comparison`` (an added-mass-only ladder hid the very
+   damping entry that fails the band on ``hemisphere_r1``), and the committed
+   block must reproduce offline from the frozen matrices.
 """
 
 from __future__ import annotations
@@ -447,3 +452,229 @@ def test_physical_scale_is_built_from_geometry_only() -> None:
     assert r2.physical_scale(0, 4) == r2.DENSITY * r2.SCALE_LENGTH**4
     assert r2.physical_scale(4, 3) == r2.DENSITY * r2.SCALE_LENGTH**4
     assert r2.physical_scale(3, 3) == r2.DENSITY * r2.SCALE_LENGTH**5
+
+
+# -------------------------------------------------------------------------- 14
+def test_convergence_ladder_is_the_per_entry_maximum_of_both_matrices(
+    study: dict,
+) -> None:
+    """The ladder must carry the worst entry of *either* radiation matrix.
+
+    ``comparison`` scores both matrices entry by entry; the ladder is the same
+    scan over the coarser levels.  If the two disagree at the anchor's finest
+    level something has been dropped from one of them -- and the first
+    submission of this round dropped damping, which is where the hemisphere
+    failure lives.
+    """
+    for case, block in study["comparison"]["cases"].items():
+        if not block.get("compared"):
+            continue
+        ladder = study["convergence"][case]
+        finest = ladder[-1]
+        assert finest["n_faces"] == block["tensorbem_faces"]
+        active = [e for e in block["entries"] if e["class"] == "active"]
+        for quantity in ("added_mass", "damping"):
+            sel = [e for e in active if e["quantity"] == quantity]
+            diag = max(
+                [abs(e["relative"]) for e in sel if e["row"] == e["column"]] or [0.0]
+            )
+            off = max(
+                [abs(e["relative"]) for e in sel if e["row"] != e["column"]] or [0.0]
+            )
+            assert finest["worst_diagonal_" + quantity] == pytest.approx(
+                diag, rel=1e-12, abs=1e-15
+            ), (case, quantity)
+            assert finest["worst_coupling_" + quantity] == pytest.approx(
+                off, rel=1e-12, abs=1e-15
+            ), (case, quantity)
+        assert finest["worst_diagonal"] == pytest.approx(
+            max(finest["worst_diagonal_added_mass"], finest["worst_diagonal_damping"])
+        )
+        assert finest["worst_coupling"] == pytest.approx(
+            max(finest["worst_coupling_added_mass"], finest["worst_coupling_damping"])
+        )
+
+
+def test_damping_ladder_is_not_the_added_mass_ladder(study: dict) -> None:
+    """Pin the defect this axis was fixed for.
+
+    On ``hemisphere_r1`` at 1024 panels the added-mass diagonal stays inside the
+    registered 5 % band (3.30 %) while the damping diagonal -- the matrix that
+    actually fails, ``A[heave,heave]`` at nu = 2 m^-1 -- is at 5.82 %.  A ladder
+    that reports only the first number reads "the gap is inside the band and
+    decays", so the two must be kept apart and the maximum must be the headline.
+    """
+    finest = study["convergence"]["hemisphere_r1"][-1]
+    assert finest["worst_diagonal_added_mass"] <= r2.TOL_DIAGONAL
+    assert finest["worst_diagonal_damping"] > r2.TOL_DIAGONAL
+    assert finest["worst_diagonal"] == pytest.approx(finest["worst_diagonal_damping"])
+    assert finest["worst_diagonal_damping"] == pytest.approx(0.05818682870816025)
+
+
+def test_committed_ladder_reproduces_offline() -> None:
+    """``scripts/capytaine_r2_recompute_convergence.py --check`` must be clean.
+
+    The ladder is a pure function of the frozen matrices, so a committed block
+    that no longer reproduces from them is a stale artifact, not a rounding
+    question.
+    """
+    import subprocess
+    import sys
+
+    script = ROOT / "scripts" / "capytaine_r2_recompute_convergence.py"
+    proc = subprocess.run(
+        [sys.executable, str(script), "--check"],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+
+
+# -------------------------------------------------------------------------- 17
+def _referee_ladder_module():
+    import importlib.util
+
+    path = ROOT / "scripts" / "capytaine_r2_referee_ladder.py"
+    spec = importlib.util.spec_from_file_location("capytaine_r2_referee_ladder", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.fixture(scope="module")
+def referee_ladder() -> dict:
+    path = ROOT / r2.ARTIFACT_ROOT / "referee_ladder.json"
+    if not path.exists():
+        pytest.skip(f"{path} not produced yet")
+    return json.loads(path.read_text())
+
+
+def test_referee_ladder_arithmetic_and_verdict(referee_ladder: dict) -> None:
+    """Every number in the referee verdict must be the arithmetic of its ladder."""
+    scoring = referee_ladder["scoring"]
+    tol = scoring["criteria"]["C1_asymptotic"]["tolerance"]
+    assert tol == referee_ladder.get("tolerance", tol)
+    rows = [row for rows in scoring["cases"].values() for row in rows]
+    assert rows, "referee ladder is empty"
+    for row in rows:
+        values, faces = row["values"], row["n_faces"]
+        assert len(values) == len(faces) >= 3
+        assert row["change_finest_pair"] == pytest.approx(
+            abs(values[-1] - values[-2]) / abs(values[-1]), rel=1e-12
+        )
+        assert row["change_anchor_mesh_to_finest"] == pytest.approx(
+            abs(values[-1] - values[0]) / abs(values[-1]), rel=1e-12
+        )
+        assert row["deviation_vs_finest_referee"] == pytest.approx(
+            (row["anchor_tensorbem"] - values[-1]) / abs(values[-1]), rel=1e-12
+        )
+        assert row["referee_asymptotically_converged"] == (
+            row["change_finest_pair"] <= tol
+        )
+        assert row["referee_converged_at_anchor_mesh"] == (
+            row["change_anchor_mesh_to_finest"] <= tol
+        )
+        assert row["within_band_vs_finest_referee"] == (
+            abs(row["deviation_vs_finest_referee"]) <= row["anchor_band"]
+        )
+    c1, c2 = scoring["criteria"]["C1_asymptotic"], scoring["criteria"]["C2_anchor_mesh"]
+    assert c1["satisfied"] == all(r["referee_asymptotically_converged"] for r in rows)
+    assert c2["satisfied"] == all(r["referee_converged_at_anchor_mesh"] for r in rows)
+    assert scoring["verdict"] == (
+        "CONVERGED" if (c1["satisfied"] and c2["satisfied"]) else "NOT_CONVERGED"
+    )
+    # the headline the document prints
+    assert scoring["worst_finest_pair_change"] == pytest.approx(
+        max(r["change_finest_pair"] for r in rows), rel=1e-12
+    )
+    assert scoring["worst_anchor_mesh_to_finest_change"] == pytest.approx(
+        max(r["change_anchor_mesh_to_finest"] for r in rows), rel=1e-12
+    )
+    over = [r for r in rows if abs(r["anchor_deviation"]) > r["anchor_band"]]
+    assert len(scoring["anchor_band_failures"]) == len(over)
+    resolved = [r for r in over if r["within_band_vs_finest_referee"]]
+    assert (
+        len(scoring["anchor_band_failures_resolved_against_finest_referee"])
+        == len(resolved)
+    )
+
+
+def test_referee_ladder_starts_at_the_frozen_reference(
+    referee_ladder: dict, reference: dict, study: dict
+) -> None:
+    """Row 0 of each ladder must be the anchor's own referee mesh, bit for bit."""
+    nu_key = "{:.3f}".format(referee_ladder["nu"])
+    for case, block in referee_ladder["referee"].items():
+        anchor = referee_ladder["anchor_entries"][case]
+        first = block["levels"][0]
+        assert first["n_faces"] == anchor["capytaine_faces"]
+        frozen = reference["cases"][case]["reference"][nu_key]
+        for quantity in ("added_mass", "damping"):
+            # the frozen 6x6 matrices carry the referee's own round-off floor
+            # (~1e-14 on couplings that are physically zero); the ladder is a
+            # separate live run, so compare to a noise floor scaled by the
+            # matrix magnitude rather than bit for bit.
+            a = np.asarray(first["matrices"][quantity], dtype=float)
+            b = np.asarray(frozen[quantity], dtype=float)
+            np.testing.assert_allclose(
+                a, b, rtol=1e-10, atol=1e-9 * float(np.abs(b).max())
+            )
+        # and the TensorBEM column is the committed one, not a re-solve
+        tb = study["tensorbem"][case]["levels"][-1]["matrices"][nu_key]
+        for key, entry in anchor["entries"].items():
+            quantity, i, j = key.split("|")
+            assert entry["tensorbem"] == pytest.approx(
+                np.asarray(tb[quantity])[int(i), int(j)], rel=1e-12
+            )
+
+
+def test_referee_ladder_document_is_the_arithmetic_of_the_artifact(
+    referee_ladder: dict,
+) -> None:
+    module = _referee_ladder_module()
+    text = (ROOT / module.DOC).read_text()
+    assert text == module.render_document(referee_ladder)
+
+
+def test_referee_ladder_live_first_rung_reproduces(referee_ladder: dict) -> None:
+    """Live capytaine must still produce the coarsest rung (optional dep)."""
+    cpt = pytest.importorskip("capytaine")
+    module = _referee_ladder_module()
+    sys_path = ROOT / "scripts"
+    import sys as _sys
+
+    if str(sys_path) not in _sys.path:
+        _sys.path.insert(0, str(sys_path))
+    import capytaine_crosscheck_r2_ref as ref
+
+    solver = cpt.BEMSolver()
+    for case, block in referee_ladder["referee"].items():
+        first = block["levels"][0]
+        centre = tuple(float(v) for v in block["rotation_center"])
+        mesh = ref._mesh(cpt, case, tuple(first["level"]))
+        body = ref._body(cpt, mesh, centre)
+        columns = ref._columns(cpt, solver, body, r2.DOF_ORDER, (referee_ladder["nu"],))
+        key = "{:.3f}".format(referee_ladder["nu"])
+        for quantity in ("added_mass", "damping"):
+            np.testing.assert_allclose(
+                np.asarray(first["matrices"][quantity], dtype=float),
+                np.asarray(columns[key][quantity], dtype=float),
+                rtol=1e-12,
+                atol=0.0,
+                err_msg="{} {}".format(case, quantity),
+            )
+
+
+def test_referee_ladder_reproduces_offline() -> None:
+    import subprocess
+    import sys
+
+    script = ROOT / "scripts" / "capytaine_r2_referee_ladder.py"
+    proc = subprocess.run(
+        [sys.executable, str(script), "--check"],
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
