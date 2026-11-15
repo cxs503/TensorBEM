@@ -1,0 +1,404 @@
+{
+ "anchor": "XVAL-BEM-R2-OSS-CROSSVAL-CAPYTAINE",
+ "case": "sphere_r1_z-0.5",
+ "geometry": {
+  "kind": "floating sphere, radius 1.0 m, centre (0, 0, -0.5), truncated at z = 0",
+  "rotation_center": [
+   0.0,
+   0.0,
+   -0.5
+  ],
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "nu_grid": [
+   1.0,
+   2.0
+  ]
+ },
+ "claim_under_test": "(r - c) x n == 0 pointwise on a sphere whose centre of curvature is the rotation centre, so every entry touching roll/pitch/yaw has an exact zero target. True for the smooth surface; the audit measures the residue a faceted mesh leaves behind.",
+ "definitions": {
+  "facet_residue": "sum_k A_k |(r_k - c) x n_k| / sum_k A_k |r_k - c| ; zero for a smooth sphere about its centre of curvature, O(facet angle) otherwise",
+  "residue_ratio": "max(|A_ij|,|B_ij|) / (rho * L**k) of the entry under test",
+  "symmetry_defect": "|B[surge,pitch] + B[sway,roll]| ; exactly zero for any body of revolution about z, faceted or not, because the x->y swap is an exact symmetry of the discrete problem"
+ },
+ "tensorbem": [
+  {
+   "subdivisions": 2,
+   "faces": 270,
+   "facet_residue": {
+    "mean": 0.015098807090603803,
+    "max": 0.11949082851130485
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": -9.662789375625467,
+    "damping_surge_pitch": -39.65218598028831,
+    "damping_sway_roll": 37.421550720334054,
+    "damping_symmetry_defect": 2.230635259954255,
+    "residue_ratio_added_mass": 0.009427111585976065,
+    "residue_ratio_damping": 0.038685059492964205
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": 2.0176803641112526,
+    "damping_surge_pitch": -45.04122222402342,
+    "damping_sway_roll": 41.72428157122045,
+    "damping_symmetry_defect": 3.3169406528029697,
+    "residue_ratio_added_mass": 0.001968468647913417,
+    "residue_ratio_damping": 0.04394265582831553
+   }
+  },
+  {
+   "subdivisions": 3,
+   "faces": 1026,
+   "facet_residue": {
+    "mean": 0.006944319450263687,
+    "max": 0.0729947305457405
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": -2.526466808211624,
+    "damping_surge_pitch": -10.372960950137307,
+    "damping_sway_roll": 11.969278267977046,
+    "damping_symmetry_defect": 1.5963173178397394,
+    "residue_ratio_added_mass": 0.002806156080522328,
+    "residue_ratio_damping": 0.011677344651684922
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": 0.5038177083753761,
+    "damping_surge_pitch": -11.918375810401802,
+    "damping_sway_roll": 13.438806430665585,
+    "damping_symmetry_defect": 1.5204306202637827,
+    "residue_ratio_added_mass": 0.0006078122603308828,
+    "residue_ratio_damping": 0.013111030664063985
+   }
+  }
+ ],
+ "capytaine": [
+  {
+   "resolution": [
+    12,
+    24
+   ],
+   "faces": 192,
+   "facet_residue": {
+    "mean": 0.0037465840872770947,
+    "max": 0.04126262063361946
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": 0.925683579553581,
+    "damping_surge_pitch": 5.830042880089913,
+    "damping_sway_roll": -5.830042880089707,
+    "damping_symmetry_defect": 2.0605739337042905e-13,
+    "residue_ratio_added_mass": 0.0009031059312717864,
+    "residue_ratio_damping": 0.005687846712282842
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": -1.2795263851002585,
+    "damping_surge_pitch": 9.21138858398257,
+    "damping_sway_roll": -9.211388583982378,
+    "damping_symmetry_defect": 1.9184653865522705e-13,
+    "residue_ratio_added_mass": 0.0012483184244880571,
+    "residue_ratio_damping": 0.008986720569739093
+   }
+  },
+  {
+   "resolution": [
+    20,
+    40
+   ],
+   "faces": 600,
+   "facet_residue": {
+    "mean": 0.0030308141059255667,
+    "max": 0.06215224822861279
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": -6.760252087382986,
+    "damping_surge_pitch": -28.060066044199555,
+    "damping_sway_roll": 28.06006604419965,
+    "damping_symmetry_defect": 9.592326932761353e-14,
+    "residue_ratio_added_mass": 0.006595367890129763,
+    "residue_ratio_damping": 0.027375674189463073
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": 1.077083507264286,
+    "damping_surge_pitch": -30.72818682693463,
+    "damping_sway_roll": 30.728186826934724,
+    "damping_symmetry_defect": 9.592326932761353e-14,
+    "residue_ratio_added_mass": 0.0010508131778188214,
+    "residue_ratio_damping": 0.029978718855546073
+   }
+  },
+  {
+   "resolution": [
+    28,
+    56
+   ],
+   "faces": 1120,
+   "facet_residue": {
+    "mean": 0.001800771627664254,
+    "max": 0.03375193549891677
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": -3.376278881745133,
+    "damping_surge_pitch": -13.820089508077569,
+    "damping_sway_roll": 13.82008950807755,
+    "damping_symmetry_defect": 1.9539925233402755e-14,
+    "residue_ratio_added_mass": 0.003293930616336715,
+    "residue_ratio_damping": 0.013483014154222019
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": 0.47719443762740416,
+    "damping_surge_pitch": -14.833787130347043,
+    "damping_sway_roll": 14.833787130347025,
+    "damping_symmetry_defect": 1.7763568394002505e-14,
+    "residue_ratio_added_mass": 0.00046555554890478456,
+    "residue_ratio_damping": 0.014471987444241018
+   }
+  },
+  {
+   "resolution": [
+    40,
+    80
+   ],
+   "faces": 2240,
+   "facet_residue": {
+    "mean": 0.0008868982411796726,
+    "max": 0.02390260276749773
+   },
+   "nu=1": {
+    "added_mass_surge_pitch": -1.6830278079660284,
+    "damping_surge_pitch": -6.814958808366377,
+    "damping_sway_roll": 6.8149588083663435,
+    "damping_symmetry_defect": 3.375077994860476e-14,
+    "residue_ratio_added_mass": 0.0016419783492351496,
+    "residue_ratio_damping": 0.0066487403008452465
+   },
+   "nu=2": {
+    "added_mass_surge_pitch": 0.22955622380178436,
+    "damping_surge_pitch": -7.475919341944855,
+    "damping_sway_roll": 7.47591934194481,
+    "damping_symmetry_defect": 4.529709940470639e-14,
+    "residue_ratio_added_mass": 0.00022395729151393595,
+    "residue_ratio_damping": 0.007293579845799859
+   }
+  }
+ ],
+ "decay": {
+  "tensorbem_damping": {
+   "quantity": "residue_ratio_damping",
+   "nu": 1.0,
+   "faces": [
+    270,
+    1026
+   ],
+   "values": [
+    0.038685059492964205,
+    0.011677344651684922
+   ],
+   "step_decay_ratios": [
+    3.312830155045766
+   ],
+   "monotone": true,
+   "face_ratio": [
+    3.8
+   ]
+  },
+  "tensorbem_added_mass": {
+   "quantity": "residue_ratio_added_mass",
+   "nu": 1.0,
+   "faces": [
+    270,
+    1026
+   ],
+   "values": [
+    0.009427111585976065,
+    0.002806156080522328
+   ],
+   "step_decay_ratios": [
+    3.359439502104008
+   ],
+   "monotone": true,
+   "face_ratio": [
+    3.8
+   ]
+  },
+  "capytaine_damping": {
+   "quantity": "residue_ratio_damping",
+   "nu": 1.0,
+   "faces": [
+    192,
+    600,
+    1120,
+    2240
+   ],
+   "values": [
+    0.005687846712282842,
+    0.027375674189463073,
+    0.013483014154222019,
+    0.0066487403008452465
+   ],
+   "step_decay_ratios": [
+    0.20777010541980004,
+    2.0303823667566765,
+    2.027905068349254
+   ],
+   "monotone": false,
+   "face_ratio": [
+    3.125,
+    1.8666666666666667,
+    2.0
+   ]
+  },
+  "capytaine_added_mass": {
+   "quantity": "residue_ratio_added_mass",
+   "nu": 1.0,
+   "faces": [
+    192,
+    600,
+    1120,
+    2240
+   ],
+   "values": [
+    0.0009031059312717864,
+    0.006595367890129763,
+    0.003293930616336715,
+    0.0016419783492351496
+   ],
+   "step_decay_ratios": [
+    0.13693033448874342,
+    2.0022789361193896,
+    2.0060743297078565
+   ],
+   "monotone": false,
+   "face_ratio": [
+    3.125,
+    1.8666666666666667,
+    2.0
+   ]
+  }
+ },
+ "facet_tracking": {
+  "tensorbem": {
+   "facet_mean_vs_damping_residue": [
+    [
+     0.015098807090603803,
+     0.038685059492964205
+    ],
+    [
+     0.006944319450263687,
+     0.011677344651684922
+    ]
+   ],
+   "amplification": [
+    2.5621268793505187,
+    1.6815678966556638
+   ]
+  },
+  "capytaine": {
+   "facet_mean_vs_damping_residue": [
+    [
+     0.0037465840872770947,
+     0.005687846712282842
+    ],
+    [
+     0.0030308141059255667,
+     0.027375674189463073
+    ],
+    [
+     0.001800771627664254,
+     0.013483014154222019
+    ],
+    [
+     0.0008868982411796726,
+     0.0066487403008452465
+    ]
+   ],
+   "amplification": [
+    1.518142014107736,
+    9.0324491152198,
+    7.48735372497543,
+    7.4966213621099165
+   ]
+  }
+ },
+ "findings": {
+  "tensorbem_residue_decays": true,
+  "capytaine_residue_decays": false,
+  "step_decay_ratios": {
+   "tensorbem_damping": [
+    3.312830155045766
+   ],
+   "tensorbem_added_mass": [
+    3.359439502104008
+   ],
+   "capytaine_damping": [
+    0.20777010541980004,
+    2.0303823667566765,
+    2.027905068349254
+   ],
+   "capytaine_added_mass": [
+    0.13693033448874342,
+    2.0022789361193896,
+    2.0060743297078565
+   ]
+  },
+  "finest": {
+   "tensorbem": {
+    "faces": 1026,
+    "damping_residue": 0.011677344651684922
+   },
+   "capytaine": {
+    "faces": 2240,
+    "damping_residue": 0.0066487403008452465
+   }
+  },
+  "symmetry_defect_finest": {
+   "tensorbem": 1.5963173178397394,
+   "capytaine": 3.375077994860476e-14
+  },
+  "verdict": "DISCRETISATION-DOMINATED: the rotational coupling entries are not physics at the mesh level of the cross-validation. They decay as the mesh refines on at least the TensorBEM ladder and they are not reproducible between the two codes as a physical quantity, so they must be bounded by a facet-derived bound and never scored by relative deviation against a foreign code."
+ },
+ "defect_sensitivity": {
+  "defect": "rotation centre taken at the waterline origin (0,0,0) instead of the sphere centre (0,0,-0.5); the classical missing (r - centre) moment arm",
+  "mesh_subdivisions": 2,
+  "faces": 270,
+  "nu": 1.0,
+  "quantity": "damping",
+  "damping_surge_pitch_wrong_centre": -3769.9671169978074,
+  "damping_surge_pitch_right_centre": -39.65218598028831,
+  "residue_ratio_wrong_centre": 3.678016699510056,
+  "residue_ratio_right_centre": 0.038685059492964205,
+  "ratio_to_structural_bound_0p03": 122.60055665033521,
+  "note": "a wrong moment arm lands 1-2 orders of magnitude above any facet residue, which is what the structural bound has to separate"
+ },
+ "provenance": {
+  "producer": "scripts/capytaine_r2_invariant_residual_audit.py",
+  "capytaine": "3.1.dev0, BEMSolver() defaults, water_depth=inf, immersed_part() clipping",
+  "tensorbem": "tensorbem.benchmarks.capytaine_crosscheck_r2.solve_matrix, geodesic floating_sphere_hull_mesh",
+  "frozen_reference_ladder": [
+   [
+    12,
+    24
+   ],
+   [
+    20,
+    40
+   ],
+   [
+    28,
+    56
+   ]
+  ],
+  "extension_levels": {
+   "tensorbem_subdivisions": [
+    2,
+    3
+   ],
+   "capytaine": [
+    [
+     40,
+     80
+    ]
+   ]
+  },
+  "honest_note": "the TensorBEM ladder has two points here; its three-point decay law is the module's own degeneracy audit (hemisphere_r1: 1.465% -> 0.422% -> 0.110% over 64/256/1024 faces). The capytaine (20,40) level is non-monotone and is reported as such rather than smoothed."
+ }
+}
