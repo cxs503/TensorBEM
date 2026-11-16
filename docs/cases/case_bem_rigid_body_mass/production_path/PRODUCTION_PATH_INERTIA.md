@@ -21,27 +21,27 @@ second moments `m(L²+B²)/12` etc., evaluated in machine arithmetic.
 
 | DOF | closed form | legacy route | legacy error | new default | new error |
 |---|---|---|---|---|---|
-| roll | 4.100000e+06 | 3.751742e+06 | -8.49% | 4.100000e+06 | +0.00e+00% |
-| pitch | 1.787600e+07 | 1.477254e+07 | -17.36% | 1.787600e+07 | +0.00e+00% |
-| yaw | 1.902400e+07 | 1.521920e+07 | -20.00% | 1.902400e+07 | +0.00e+00% |
+| roll | 4.100000e+06 | 3.751742e+06 | -8.49% | 4.100000e+06 | -4.44e-14% |
+| pitch | 1.787600e+07 | 1.477254e+07 | -17.36% | 1.787600e+07 | -9.99e-14% |
+| yaw | 1.902400e+07 | 1.521920e+07 | -20.00% | 1.902400e+07 | -9.99e-14% |
 
 Worst entry of the whole 6×6 matrix: legacy 20.00%,
-new 0.00e+00% (round-off). Every rotational
+new 9.79e-14% (round-off). Every rotational
 entry of the legacy route violates the 3 % criterion.
 
 ## 2. Consequence in the response (RAO, ω = 1.0 rad/s, head seas)
 
 | DOF | RAO with closed-form inertia | RAO with legacy inertia | legacy rel. diff | RAO with new default | new rel. diff |
 |---|---|---|---|---|---|
-| surge | 5.143977e-01 | 5.256096e-01 | 2.18e+00% | 5.143977e-01 | 0.00e+00% |
-| sway | 4.930271e-03 | 4.195291e-03 | 1.49e+01% | 4.930271e-03 | 0.00e+00% |
+| surge | 5.143977e-01 | 5.256096e-01 | 2.18e+00% | 5.143977e-01 | 1.51e-13% |
+| sway | 4.930271e-03 | 4.195291e-03 | 1.49e+01% | 4.930271e-03 | 5.28e-14% |
 | heave | 1.102132e+00 | 1.102133e+00 | 1.36e-04% | 1.102132e+00 | 0.00e+00% |
-| roll | 4.999972e-03 | 4.451266e-03 | 1.10e+01% | 4.999972e-03 | 0.00e+00% |
-| pitch | 1.138563e-01 | 9.987645e-02 | 1.23e+01% | 1.138563e-01 | 0.00e+00% |
-| yaw | 1.038990e-03 | 1.189360e-03 | 1.45e+01% | 1.038990e-03 | 0.00e+00% |
+| roll | 4.999972e-03 | 4.451266e-03 | 1.10e+01% | 4.999972e-03 | 3.47e-14% |
+| pitch | 1.138563e-01 | 9.987645e-02 | 1.23e+01% | 1.138563e-01 | 9.75e-14% |
+| yaw | 1.038990e-03 | 1.189360e-03 | 1.45e+01% | 1.038990e-03 | 6.26e-14% |
 
 Worst response error: legacy 14.91%,
-new 0.00e+00%.
+new 1.51e-13%.
 
 ## 3. Curved hull: the mesh route converges to the analytic half-sphere
 
@@ -74,9 +74,9 @@ large for this body.
 
 | quantity | reference | worst error | < 3 % ? |
 |---|---|---|---|
-| barge 6×6 matrix, new default | closed-form block form | 0.00e+00% | yes (round-off) |
+| barge 6×6 matrix, new default | closed-form block form | 9.79e-14% | yes (round-off) |
 | barge 6×6 matrix, legacy route | closed-form block form | 20.00% | **no** |
-| barge RAO, new default | RAO with closed-form inertia | 0.00e+00% | yes (round-off) |
+| barge RAO, new default | RAO with closed-form inertia | 1.51e-13% | yes (round-off) |
 | barge RAO, legacy route | RAO with closed-form inertia | 14.91% | **no** |
 | half-sphere matrix, new default, subdiv 4 | analytic half-sphere | 0.16% | yes |
 
