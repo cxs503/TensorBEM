@@ -323,6 +323,122 @@ def rung_ledger(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
     return ledger
 
 
+#: two environments agree when the same discretisation, computed in both,
+#: differs by less than this -- rounding level, orders below any physics band.
+ENV_AGREEMENT_BAND = 1.0e-6
+
+
+def environment_consistency(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Numeric environment of a ladder, and whether mixing it is controlled.
+
+    A refinement ladder is only a ladder if every rung was computed by the same
+    arithmetic: same numpy build, same code revision.  A ladder assembled from
+    two machines is still legitimate -- the expensive rung belongs on the
+    compute gate -- but the mixture has to be *controlled*: at least one panel
+    count must have been recomputed in both environments, and those replicates
+    must agree to rounding (``ENV_AGREEMENT_BAND``).  Without that control a
+    cross-environment difference of the size observed in m21674 (a factor 2.05
+    in ``B33``) cannot be attributed to the mesh rather than to the machine.
+    """
+    hosts = sorted({str(r["host"]) for r in rows if r.get("host")})
+    numpys = sorted({str(r["numpy"]) for r in rows if r.get("numpy")})
+    revisions = sorted({str(r["revision"]) for r in rows if r.get("revision")})
+    # replicates are measurements too: a rung recomputed in another build means
+    # the ladder is mixed even though every *canonical* rung shares one build
+    replicate_numpy = sorted(
+        {
+            str(rep["numpy"])
+            for row in rows
+            for rep in (row.get("replicates") or [])
+            if rep.get("numpy")
+        }
+    )
+    replicate_revisions = sorted(
+        {
+            str(rep["revision"])
+            for row in rows
+            for rep in (row.get("replicates") or [])
+            if rep.get("revision")
+        }
+    )
+    unknown_replicate_numpy = sum(
+        1
+        for row in rows
+        for rep in (row.get("replicates") or [])
+        if not rep.get("numpy")
+    )
+    unknown_numpy = sum(1 for r in rows if not r.get("numpy"))
+    unknown_revision = sum(1 for r in rows if not r.get("revision"))
+
+    overlaps: list[dict[str, Any]] = []
+    worst_delta = 0.0
+    worst_pair: dict[str, Any] | None = None
+    for row in sorted(rows, key=lambda r: float(r["panels"])):
+        for rep in row.get("replicates") or []:
+            deltas = {k: float(v) for k, v in (rep.get("delta_vs_rung") or {}).items()}
+            if not deltas:
+                continue
+            quantity = max(deltas, key=deltas.get)
+            overlaps.append(
+                {
+                    "panels": float(row["panels"]),
+                    "numpy": rep.get("numpy"),
+                    "revision": rep.get("revision"),
+                    "host": rep.get("host"),
+                    "quantity": quantity,
+                    "delta": deltas[quantity],
+                }
+            )
+            if deltas[quantity] > worst_delta:
+                worst_delta = deltas[quantity]
+                worst_pair = overlaps[-1]
+
+    is_homogeneous = (
+        len(set(numpys) | set(replicate_numpy)) <= 1
+        and len(set(revisions) | set(replicate_revisions)) <= 1
+        and unknown_numpy == 0
+        and unknown_revision == 0
+        and unknown_replicate_numpy == 0
+    )
+    if is_homogeneous:
+        admissible = True
+        reason = "single numpy build and single code revision on every rung"
+    elif overlaps and worst_delta <= ENV_AGREEMENT_BAND:
+        admissible = True
+        reason = (
+            "mixed environments, but the overlapping panel counts agree to "
+            f"{worst_delta:.3g} < {ENV_AGREEMENT_BAND:g}"
+        )
+    else:
+        admissible = False
+        missing = "no rung was recomputed in the other environment"
+        reason = (
+            f"{missing}; the cross-environment difference cannot be separated "
+            "from a refinement effect"
+            if not overlaps
+            else (
+                "overlapping panel counts disagree by "
+                f"{worst_delta:.3g} >= {ENV_AGREEMENT_BAND:g}"
+            )
+        )
+    return {
+        "hosts": hosts,
+        "numpy": numpys,
+        "revisions": revisions,
+        "replicate_numpy": replicate_numpy,
+        "replicate_revisions": replicate_revisions,
+        "n_rungs": len(rows),
+        "n_rungs_unknown_numpy": unknown_numpy,
+        "n_rungs_unknown_revision": unknown_revision,
+        "is_homogeneous": bool(is_homogeneous),
+        "overlaps": overlaps,
+        "worst_replicate_delta": worst_delta,
+        "worst_replicate": worst_pair,
+        "admissible": bool(admissible),
+        "reason": reason,
+    }
+
+
 def mixed_provenance(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     """Disclose whether the admitted rungs came from more than one host.
 
@@ -630,6 +746,32 @@ def analyse(
             "worst_quantity": worst_in[0],
             "graded_worst_error": max(q["graded_error"] or 0.0 for q in per_q_in.values()),
             "pass": bool(worst_in[1]["extrapolated_error"] < INHOUSE_EXTRAPOLATED_BAND),
+        }
+
+        # E10 -- what arithmetic produced the ladder.  The in-house gates E7/E9/
+        # E8 read the ladder's *shape* (order, limit, residuals); a ladder whose
+        # rungs were computed by different numpy builds or different revisions
+        # can produce that shape from a machine effect instead of a mesh effect,
+        # which is exactly what m21674 suspected without a control.
+        env = environment_consistency(rows_in)
+        inhouse["environment"] = env
+        gates["E10_ladder_environment_homogeneous"] = {
+            "criterion": (
+                "the in-house ladder is numerically homogeneous (one numpy build, "
+                "one code revision), or -- if it is mixed -- at least one panel "
+                "count was recomputed in both environments and agrees to within "
+                f"{ENV_AGREEMENT_BAND:g} relative, so the mixing is controlled"
+            ),
+            "measured": env["worst_replicate_delta"],
+            "is_homogeneous": env["is_homogeneous"],
+            "numpy": env["numpy"],
+            "revisions": env["revisions"],
+            "hosts": env["hosts"],
+            "n_rungs_unknown_numpy": env["n_rungs_unknown_numpy"],
+            "n_rungs_unknown_revision": env["n_rungs_unknown_revision"],
+            "overlaps": env["overlaps"],
+            "reason": env["reason"],
+            "pass": bool(env["admissible"]),
         }
 
     verdict = "PASS" if all(g["pass"] for g in gates.values()) else "FAIL"
