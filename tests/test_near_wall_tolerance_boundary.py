@@ -94,14 +94,37 @@ RECORD = (
 )
 
 
-def test_committed_record_gates_the_tolerance_boundary() -> None:
-    """A stale record cannot carry the new gates; skip until it is regenerated."""
-    if not RECORD.is_file():
-        pytest.skip("committed record missing")
+def test_committed_record_gates_the_tolerance_boundary(tmp_path) -> None:
+    """The committed record must carry the boundary study *and* its provenance.
+
+    The previous version of this test ``skip``ped whenever the committed record
+    predated the study, and looked for the generator digest under the wrong key
+    (``provenance["combined_sha256"]``; it lives at
+    ``provenance["generator"]["combined_sha256"]``), so the record could rot for
+    ten merges while the only test that reads it stayed silent.  A stale record
+    is now a failure with the regeneration command in the message: the case
+    document, the ``solver.evaluate_exterior_field`` docstring and this gate all
+    cite the record as evidence, and a skip cannot stand behind a citation.
+
+    The figures are *not* checked as committed binaries -- the push gate drops
+    ``*.png`` outside ``docs/`` (see ``tests/_figure_integrity.py``).  The
+    durable invariant is that the near-wall panel still rebuilds from the
+    committed numbers and stays linked from the rendered prose.
+    """
+    from _figure_integrity import assert_reproducible_figures
+
+    rerun = (
+        "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream "
+        "--outdir benchmarks/verified/case_bem_laplace_cylinder "
+        "--doc docs/CASE-BEM-LAPLACE-CYLINDER.md --check"
+    )
+    assert RECORD.is_file(), f"committed record missing; re-run: {rerun}"
     record = json.loads(RECORD.read_text())
     floor = record.get("near_wall", {}).get("floor")
-    if floor is None:
-        pytest.skip("committed record predates the tolerance-boundary study")
+    assert floor is not None, (
+        "the committed record predates the tolerance-boundary study and is now "
+        f"cited by the rendered document; re-run: {rerun}"
+    )
     assert floor["all_levels_located"]
     by_name = {row["name"]: row for row in record["criteria"]}
     for name in (
@@ -111,13 +134,16 @@ def test_committed_record_gates_the_tolerance_boundary() -> None:
     ):
         assert name in by_name, name
         assert by_name[name]["ok"], by_name[name]
-    assert record["provenance"]["combined_sha256"]
-    figures = RECORD.parent / "figures"
-    assert figures.is_dir(), "the rendered document references figures/"
-    assert sorted(path.name for path in figures.glob("*.png")) == [
-        "circulation.png",
-        "convergence.png",
-        "field.png",
-        "multipole.png",
-        "near_wall.png",
-    ]
+
+    # the record must be the output of the *current* case module, not an older one
+    generator = record["provenance"]["generator"]
+    assert generator["guarded_file"] == case.GUARDED_SOURCE_FILE
+    current = case.generator_provenance()
+    assert generator["files"][case.GUARDED_SOURCE_FILE] == current["files"][
+        case.GUARDED_SOURCE_FILE
+    ], f"{case.GUARDED_SOURCE_FILE} changed after the record was generated; re-run: {rerun}"
+    assert generator["combined_sha256"]
+
+    report = (RECORD.parent / "report.md").read_text()
+    figure = case.plot_near_wall(record, tmp_path / "near_wall.png")
+    assert_reproducible_figures([figure], minimum=1, embedded_in=report)
