@@ -48,6 +48,7 @@ from typing import Any, Iterable, Sequence
 
 import numpy as np
 
+from tensorbem.benchmarks import crossval_decidability as decidability
 from tensorbem.benchmarks import finite_depth_crossval_plan as plan
 from tensorbem.finite_depth_solver3d import solve_radiation_finite_depth_3d
 from tensorbem.free_surface_solver3d import solve_radiation_3d
@@ -61,6 +62,7 @@ DEFAULT_ROOT = Path("benchmarks/verified/capytaine_finite_depth")
 REFERENCE_FILE = "capytaine_ref.json"
 LADDER_FILE = "tensor_ladder.json"
 RESULT_FILE = "results.json"
+TRUTH_FILE = "reference_truth_audit.json"
 DOC_PATH = Path("docs/capytaine_finite_depth_crossval.md")
 FIGURE_FREQUENCY = "fig_capytaine_finite_depth_frequency.png"
 FIGURE_MAP = "fig_capytaine_finite_depth_difference_map.png"
@@ -494,6 +496,35 @@ def _extrapolated_entry(levels: dict[str, Any], dof: str, quantity: str) -> dict
     return out
 
 
+def load_reference_truth(root: Path) -> dict[str, dict[str, float]]:
+    """Load the measured reference error produced by the truth audit.
+
+    The audit (:mod:`scripts.finite_depth_reference_truth_audit`) measures
+    capytaine's own error against the closed-form multipole solution on the
+    grid cells where the seabed image is negligible.  A missing artifact is not
+    an error: the comparison then simply keeps its model bounds.
+    """
+    path = Path(root) / TRUTH_FILE
+    if not path.exists():
+        return {}
+    report = json.loads(path.read_text())
+    return {
+        row["cell"]: {
+            slot: float(quantity["finest_error_abs"])
+            for slot, quantity in row["quantities"].items()
+        }
+        for row in report.get("cells", [])
+    }
+
+
+def _refinement_ratio(panels: Sequence[float]) -> float | None:
+    """Panel ratio between the two finest rungs of a ladder."""
+    ordered = sorted(float(p) for p in panels)
+    if len(ordered) < 2 or ordered[-2] <= 0.0:
+        return None
+    return float(ordered[-1] / ordered[-2])
+
+
 def _reference_entry(cell: dict[str, Any], dof: str, quantity: str) -> dict[str, Any]:
     ordered = sorted(cell["levels"], key=lambda rec: rec["panels"])
     panels = [rec["panels"] for rec in ordered]
@@ -510,13 +541,34 @@ def compare(
     *,
     tol_added_mass: float = plan.TOL_ADDED_MASS,
     tol_damping: float = plan.TOL_DAMPING,
+    reference_truth: dict[str, dict[str, float]] | None = None,
 ) -> dict[str, Any]:
-    """Cell-by-cell extrapolated comparison plus gates."""
+    """Cell-by-cell extrapolated comparison plus gates.
+
+    ``reference_truth`` (``cell -> quantity slot -> exact relative error``, see
+    :func:`load_reference_truth`) marks the cells on which capytaine's own error
+    has been *measured* against the closed-form multipole anchor.  On those cells
+    the reference bound is replaced by that measurement -- a measurement beats a
+    model bound in both directions -- so the deviation there is judged with an
+    honest reference budget instead of an optimistic one.
+    """
     ref_cells = {cell["cell"]: cell for cell in reference["cells"]}
     rows: list[dict[str, Any]] = []
     failures: list[str] = []
     worst: dict[str, float] = {}
     without_ladder: list[str] = []
+    decisions: dict[str, list[dict[str, Any]]] = {
+        "added_mass": [],
+        "damping": [],
+        "owner_limit": [],
+    }
+    truth_cells = reference_truth or {}
+    truth_decisions: dict[str, list[dict[str, Any]]] = {
+        "added_mass": [],
+        "damping": [],
+        "owner_limit": [],
+    }
+    truth_covered: list[str] = []
     for key, entry in sorted(ladder["cells"].items()):
         ref = ref_cells.get(key)
         if ref is None:
@@ -590,6 +642,82 @@ def compare(
                     "tensorbem_value_without_finest_rung": tb["coarse_value"],
                     "tensorbem_order_without_finest_rung": tb["coarse_order"],
                 }
+                _ref_panels = [rec["panels"] for rec in ref["levels"]]
+                _u_ref = decidability.ladder_uncertainty(
+                    last_rung_change=cp["last_rung_change"],
+                    order=cp["order"],
+                    refinement=_refinement_ratio(_ref_panels),
+                    min_order=plan.MIN_OBSERVED_ORDER,
+                    safety_factor=decidability.GCI_SAFETY_FACTOR,
+                )
+                _u_tb = decidability.ladder_uncertainty(
+                    last_rung_change=tb["last_rung_change"],
+                    order=tb["order"],
+                    refinement=_refinement_ratio(tb["panels"]),
+                    min_order=plan.MIN_OBSERVED_ORDER,
+                    measured_band=tb["band"],
+                    safety_factor=decidability.GCI_SAFETY_FACTOR,
+                )
+                _measured_ref = (truth_cells.get(key) or {}).get(
+                    f"{dof}.{quantity}"
+                )
+                if _measured_ref is not None:
+                    _u_ref = decidability.ladder_uncertainty(
+                        last_rung_change=None,
+                        measured_error=_measured_ref,
+                    )
+                    row["quantities"][f"{dof}.{quantity}"][
+                        "reference_error_measured"
+                    ] = float(_measured_ref)
+                row["quantities"][f"{dof}.{quantity}"]["uncertainty"] = {
+                    "reference": _u_ref,
+                    "solver": _u_tb,
+                }
+                row["quantities"][f"{dof}.{quantity}"]["decidability"] = (
+                    decidability.decide(
+                        deviation=rel,
+                        tolerance=tols[quantity],
+                        reference=_u_ref,
+                        solver=_u_tb,
+                    )
+                )
+                row["quantities"][f"{dof}.{quantity}"]["decidability_owner_limit"] = (
+                    decidability.decide(
+                        deviation=rel,
+                        tolerance=plan.OWNER_LIMIT,
+                        reference=_u_ref,
+                        solver=_u_tb,
+                    )
+                )
+                if _measured_ref is not None:
+                    if key not in truth_covered:
+                        truth_covered.append(key)
+                    _dec_truth = decidability.decide(
+                        deviation=rel,
+                        tolerance=tols[quantity],
+                        reference=_u_ref,
+                        solver=_u_tb,
+                    )
+                    _dec_truth_owner = decidability.decide(
+                        deviation=rel,
+                        tolerance=plan.OWNER_LIMIT,
+                        reference=_u_ref,
+                        solver=_u_tb,
+                    )
+                    row["quantities"][f"{dof}.{quantity}"][
+                        "decidability_measured_reference"
+                    ] = _dec_truth
+                    row["quantities"][f"{dof}.{quantity}"][
+                        "decidability_measured_reference_owner_limit"
+                    ] = _dec_truth_owner
+                    truth_decisions[quantity].append(_dec_truth)
+                    truth_decisions["owner_limit"].append(_dec_truth_owner)
+                decisions[quantity].append(
+                    row["quantities"][f"{dof}.{quantity}"]["decidability"]
+                )
+                decisions["owner_limit"].append(
+                    row["quantities"][f"{dof}.{quantity}"]["decidability_owner_limit"]
+                )
                 slot = f"{dof}.{quantity}"
                 worst[slot] = max(worst.get(slot, 0.0), abs(rel))
                 if abs(rel) > tols[quantity]:
@@ -616,6 +744,34 @@ def compare(
         "cells_without_ladder": without_ladder,
         "tolerances": {"added_mass": tol_added_mass, "damping": tol_damping,
                        "owner_limit": plan.OWNER_LIMIT},
+        "decidability": {
+            "added_mass": decidability.summarise(
+                decisions["added_mass"], tolerance=tol_added_mass
+            ),
+            "damping": decidability.summarise(
+                decisions["damping"], tolerance=tol_damping
+            ),
+            "owner_limit": decidability.summarise(
+                decisions["owner_limit"], tolerance=plan.OWNER_LIMIT
+            ),
+            "criteria": {
+                "budget_share": decidability.BUDGET_SHARE,
+                "safety_factor": decidability.GCI_SAFETY_FACTOR,
+                "module": "tensorbem.benchmarks.crossval_decidability",
+            },
+            "measured_reference": {
+                "cells": truth_covered,
+                "added_mass": decidability.summarise(
+                    truth_decisions["added_mass"], tolerance=tol_added_mass
+                ),
+                "damping": decidability.summarise(
+                    truth_decisions["damping"], tolerance=tol_damping
+                ),
+                "owner_limit": decidability.summarise(
+                    truth_decisions["owner_limit"], tolerance=plan.OWNER_LIMIT
+                ),
+            },
+        },
     }
 
 
@@ -1195,7 +1351,9 @@ def run_study(
         control_level=control_level,
         jobs=jobs,
     )
-    comparison = compare(ladder, reference)
+    comparison = compare(
+        ladder, reference, reference_truth=load_reference_truth(root)
+    )
     gate_rows = gates(comparison, ladder, reference)
     result = {
         "case": {
