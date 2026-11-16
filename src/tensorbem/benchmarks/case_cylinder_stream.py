@@ -93,9 +93,24 @@ NEAR_WALL_FACTORS: tuple[float, ...] = (2.0, 1.0, 0.5, 0.25, 0.1)
 # must stay inside one third of the case tolerance.
 NEAR_WALL_WINDOW_FACTOR = 2.0
 # The linear-density (first-moment) basis is required to hold the 1% bound this
-# far in; NEAR_WALL_LINEAR_MIN_GAIN is the least improvement it must buy there.
+# far in *on the finest level*; NEAR_WALL_LINEAR_MIN_GAIN is the least
+# improvement it must buy there.  The win is a finest-mesh statement, not a
+# level-independent one: on the coarsest level (N = 32) the first-moment basis
+# still needs delta >= 2 h_max for 1 %, exactly like constant panels.  Phrasing
+# it as a window over *all* levels was measured false (1.579e-02 at
+# delta = 1 h_max, 1.639e-02 at 0.5 h_max on N = 32), which is why the two
+# criteria below are separate -- see
+# criteria_near_wall_linear_window_{extends_the_finest,does_not_widen_the_worst}
+# and docs/CASE-BEM-LAPLACE-CYLINDER-NEAR-WALL-CRITERIA-AUDIT.md.
 NEAR_WALL_LINEAR_FACTOR = 0.5
 NEAR_WALL_LINEAR_MIN_GAIN = 3.0
+# Re-referencing an exclusion-zone probe from the circle to the inscribed
+# polygon surface *shortens* the true clearance by the faceting offset
+# a(1 - cos(pi/N)) ~ h^2/8, i.e. by O(h) of delta = 0.1 h_max, so the measured
+# error must *grow*; the growth per unit offset, (surface/circle - 1) /
+# (offset/delta), is the measured exponent of the geometric attribution and must
+# be level-independent.  Measured 0.59 / 0.61 / 0.69 on N = 128 / 64 / 32.
+NEAR_WALL_FACETING_PER_OFFSET_BAND = (0.3, 1.2)
 NEAR_WALL_WINDOW_TOL = 0.01
 # Inside delta <= NEAR_WALL_EXCLUSION_FACTOR * h_max the error must exceed the
 # case tolerance: the window above is an exclusion, not a cosmetic remark.
@@ -851,22 +866,34 @@ def near_wall_study(
         half_order = float(np.polyfit(np.log(half_h), np.log(half_error), 1)[0])
     else:  # pragma: no cover - defensive
         half_order = float("nan")
-    usable_factor = None
-    for factor in sorted(factors, reverse=True):
-        worst = max(
-            float(
-                next(
-                    row["max_relative_velocity_error_linear"]
-                    for row in level["sweep"]
-                    if row["clearance_over_h_max"] == float(factor)
-                )
-            )
-            for level in levels
-        )
-        if worst <= NEAR_WALL_WINDOW_TOL:
-            usable_factor = float(factor)
-        else:
-            break
+    def _sweep_value(level: dict[str, Any], factor: float, key: str) -> float:
+        for row in level["sweep"]:
+            if row["clearance_over_h_max"] == float(factor):
+                return float(row[key])
+        raise KeyError(factor)
+
+    def _usable_window(key: str, subset: Sequence[dict[str, Any]]) -> float | None:
+        """Largest delta/h_max at which every level of ``subset`` is within 1 %.
+
+        The scan walks the clearance grid from far to near and stops at the
+        first factor that violates the tolerance, so the answer is the widest
+        *contiguous* usable band rather than the best isolated sample.
+        """
+        usable = None
+        for factor in sorted(factors, reverse=True):
+            worst = max(_sweep_value(level, factor, key) for level in subset)
+            if worst <= NEAR_WALL_WINDOW_TOL:
+                usable = float(factor)
+            else:
+                break
+        return usable
+
+    usable_factor = _usable_window("max_relative_velocity_error_linear", levels)
+    usable_factor_constant = _usable_window("max_relative_velocity_error", levels)
+    finest_usable_linear = _usable_window(
+        "max_relative_velocity_error_linear", levels[-1:]
+    )
+    finest_usable_constant = _usable_window("max_relative_velocity_error", levels[-1:])
     # Faceting attribution: the inscribed polygon's panel midpoints sit at
     # radius a*cos(pi/N), i.e. a*(1 - h^2/8), so a probe placed at a + delta
     # above the *circle* is (delta + h^2/8) above the *surface it is measured
@@ -929,6 +956,28 @@ def near_wall_study(
                 "surface_referenced_linear": polygon_linear,
             }
         )
+    # The faceting attribution is a *sign* statement as well as a magnitude one:
+    # re-referencing the probe to the polygon surface puts it the faceting offset
+    # closer to the density it integrates, so the error must grow, and the growth
+    # per unit offset is the measurable consequence of the offset itself.
+    for row in faceting:
+        row["offset_over_delta"] = (
+            row["faceting_offset_over_h_max"] / NEAR_WALL_EXCLUSION_FACTOR
+        )
+        for basis in ("constant", "linear"):
+            circle = row[f"circle_referenced_{basis}"]
+            surface = row[f"surface_referenced_{basis}"]
+            row[f"amplification_{basis}"] = (
+                surface / circle if circle > 0.0 else float("inf")
+            )
+            row[f"amplification_per_offset_{basis}"] = (
+                (surface / circle - 1.0) / row["offset_over_delta"]
+                if circle > 0.0 and row["offset_over_delta"] > 0.0
+                else float("inf")
+            )
+    faceting_amplification = [row["amplification_linear"] for row in faceting]
+    faceting_per_offset = [row["amplification_per_offset_linear"] for row in faceting]
+
     azimuth = attach_azimuth_study(window, radius, speed, ladder)
     floor_levels = [
         {
@@ -985,6 +1034,26 @@ def near_wall_study(
         "faceting": {
             "clearance_over_h_max": NEAR_WALL_EXCLUSION_FACTOR,
             "levels": faceting,
+            "amplification": {
+                "linear": faceting_amplification,
+                "constant": [
+                    row["amplification_constant"] for row in faceting
+                ],
+                "per_offset_linear": faceting_per_offset,
+                "per_offset_band": list(NEAR_WALL_FACETING_PER_OFFSET_BAND),
+                "offset_over_delta": [
+                    row["offset_over_delta"] for row in faceting
+                ],
+                "grows_on_every_level": all(
+                    value > 1.0 for value in faceting_amplification
+                ),
+                "decays_with_refinement": all(
+                    later < earlier
+                    for earlier, later in zip(
+                        faceting_amplification, faceting_amplification[1:]
+                    )
+                ),
+            },
             "note": (
                 "probes measured from the inscribed polygon surface rather than "
                 "from the circle: the residual difference is the faceting offset "
@@ -1000,6 +1069,11 @@ def near_wall_study(
             "observed_order_in_h": half_order,
             "error_tolerance": NEAR_WALL_WINDOW_TOL,
             "usable_clearance_over_h_max": usable_factor,
+            "usable_clearance_over_h_max_constant": usable_factor_constant,
+            "finest_level_usable_clearance_over_h_max": finest_usable_linear,
+            "finest_level_usable_clearance_over_h_max_constant": (
+                finest_usable_constant
+            ),
             "improvement_at_half_h_finest": (
                 constant_half[-1]["max_relative_velocity_error"]
                 / linear_half[-1]["max_relative_velocity_error"]
@@ -1017,10 +1091,14 @@ def near_wall_study(
             "note": (
                 "linear_density=True expands both panel densities as sigma(s) = "
                 "sigma_i + sigma'_i (s - L_i/2) with closed-form first-moment "
-                "integrals; the representation error drops by an order of "
-                "magnitude, so the 1%-accurate window moves in from "
-                f"delta = {NEAR_WALL_WINDOW_FACTOR:g} h_max to "
-                "delta ~ 0.5 h_max"
+                "integrals.  On the finest level its 1%-accurate window moves in "
+                f"from delta = {NEAR_WALL_WINDOW_FACTOR:g} h_max to delta = "
+                f"{finest_usable_linear if finest_usable_linear is not None else float('nan'):g}"
+                " h_max, but the coarse levels do not follow: the worst-over-"
+                "levels window is "
+                f"{usable_factor if usable_factor is not None else float('nan'):g}"
+                " h_max, the same as constant panels.  The gain is therefore a "
+                "finest-mesh statement, not a widened envelope"
             ),
         },
         "attribution": {
@@ -2492,18 +2570,56 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
     )
 
     linear_near = near["linear"]
+    finest_linear_window = linear_near["finest_level_usable_clearance_over_h_max"]
     add(
-        "near_wall_linear_window_extends_to_half_panel",
+        "near_wall_linear_window_extends_the_finest_window",
         {
-            "usable_clearance_over_h_max": linear_near["usable_clearance_over_h_max"],
-            "levels": linear_near["levels"],
+            "finest_level_usable_clearance_over_h_max": finest_linear_window,
+            "finest_level_usable_clearance_over_h_max_constant": (
+                linear_near[
+                    "finest_level_usable_clearance_over_h_max_constant"
+                ]
+            ),
         },
         f"<= {NEAR_WALL_LINEAR_FACTOR:g} at <= {NEAR_WALL_WINDOW_TOL:g} error",
+        finest_linear_window is not None
+        and finest_linear_window <= NEAR_WALL_LINEAR_FACTOR,
+        "on the finest level the first-moment (linear density) basis must hold "
+        f"the 1 % bound at delta = {NEAR_WALL_LINEAR_FACTOR:g} h_max, against "
+        f"{NEAR_WALL_WINDOW_FACTOR:g} h_max for constant panels.  This is the "
+        "measurement the original single criterion quoted -- and it only holds "
+        "there; see the worst-case criterion below",
+    )
+    add(
+        "near_wall_linear_window_does_not_widen_the_worst_case_window",
+        {
+            "usable_clearance_over_h_max": linear_near["usable_clearance_over_h_max"],
+            "usable_clearance_over_h_max_constant": linear_near[
+                "usable_clearance_over_h_max_constant"
+            ],
+            "levels": [
+                {
+                    "panels": row["panels"],
+                    "max_relative_velocity_error": row[
+                        "max_relative_velocity_error"
+                    ],
+                }
+                for row in linear_near["levels"]
+            ],
+        },
+        f"<= the constant-panel window ({NEAR_WALL_WINDOW_FACTOR:g} h_max)",
         linear_near["usable_clearance_over_h_max"] is not None
-        and linear_near["usable_clearance_over_h_max"] <= NEAR_WALL_LINEAR_FACTOR,
-        "with the first-moment (linear density) basis the 1% window must reach "
-        f"delta = {NEAR_WALL_LINEAR_FACTOR:g} h_max, against "
-        f"{NEAR_WALL_WINDOW_FACTOR:g} h_max for constant panels",
+        and linear_near["usable_clearance_over_h_max_constant"] is not None
+        and linear_near["usable_clearance_over_h_max"]
+        <= linear_near["usable_clearance_over_h_max_constant"],
+        "the 1 % window of the first-moment basis over *all* levels may not be "
+        "advertised as wider than the constant-panel window.  A previous "
+        "revision asserted delta = 0.5 h_max here; measurement falsified it "
+        "(on N = 32 the linear error is 1.579e-02 at delta = 1 h_max and "
+        "1.639e-02 at 0.5 h_max, i.e. outside 1 %), so the level-independent "
+        "part of that claim is retired while the finest-level part is kept in "
+        "near_wall_linear_window_extends_the_finest_window.  Recorded in "
+        "docs/CASE-BEM-LAPLACE-CYLINDER-NEAR-WALL-CRITERIA-AUDIT.md",
     )
     add(
         "near_wall_linear_beats_constant_basis",
@@ -2515,20 +2631,40 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "finest level",
     )
     faceting = near["faceting"]["levels"]
+    faceting_amp = near["faceting"]["amplification"]
+    per_offset_ok = all(
+        NEAR_WALL_FACETING_PER_OFFSET_BAND[0]
+        <= value
+        <= NEAR_WALL_FACETING_PER_OFFSET_BAND[1]
+        for value in faceting_amp["per_offset_linear"]
+    )
     add(
         "near_wall_exclusion_floor_is_faceting",
         {
-            "circle_referenced": faceting[-1]["circle_referenced_linear"],
-            "surface_referenced": faceting[-1]["surface_referenced_linear"],
-            "faceting_offset_over_h_max": faceting[-1]["faceting_offset_over_h_max"],
+            "amplification_linear": faceting_amp["linear"],
+            "amplification_per_offset_linear": faceting_amp["per_offset_linear"],
+            "offset_over_delta": faceting_amp["offset_over_delta"],
+            "per_offset_band": faceting_amp["per_offset_band"],
+            "grows_on_every_level": faceting_amp["grows_on_every_level"],
+            "decays_with_refinement": faceting_amp["decays_with_refinement"],
         },
-        "surface_referenced <= circle_referenced / 3",
-        faceting[-1]["surface_referenced_linear"]
-        <= faceting[-1]["circle_referenced_linear"] / 3.0,
-        "the exclusion-zone floor is geometric faceting (the inscribed polygon's "
+        "surface_referenced > circle_referenced on every level and "
+        f"(amplification - 1)/(offset/delta) in "
+        f"[{NEAR_WALL_FACETING_PER_OFFSET_BAND[0]:g}, "
+        f"{NEAR_WALL_FACETING_PER_OFFSET_BAND[1]:g}], decaying with h",
+        bool(faceting_amp["grows_on_every_level"])
+        and per_offset_ok
+        and bool(faceting_amp["decays_with_refinement"]),
+        "the exclusion-zone floor is geometric faceting: the inscribed polygon's "
         "panel midpoints sit at a(1-cos(pi/N)) ~ h^2/8 below the circle, an O(h) "
-        "offset relative to delta = 0.1 h_max): re-referencing the probes to the "
-        "polygon surface must collapse most of it",
+        "offset relative to delta = 0.1 h_max, so a probe re-referenced to the "
+        "polygon surface is the same offset *closer* to the density it "
+        "integrates and its error must *grow* -- the earlier 'must collapse by "
+        "3x' phrasing had the sign of the geometry inverted (measured 1.04x the "
+        "other way, cj3969).  What faceting explains is the growth *rate*: the "
+        "amplification per unit offset is level independent (0.69 / 0.61 / 0.59 "
+        "from coarse to fine) and the amplification itself decays with h, which "
+        "is the O(h) claim this criterion now measures",
     )
 
     azimuth = near["azimuth"]
@@ -3255,8 +3391,14 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         f"{linear_near['levels'][-1]['max_relative_velocity_error']:.3e}"
         f"（常值 {linear_near['constant_mode_levels'][-1]['max_relative_velocity_error']:.3e}，"
         f"改善 {linear_near['improvement_at_half_h_finest']:.1f}×），"
-        f"1% 窗口从 $\\delta\\ge{NEAR_WALL_WINDOW_FACTOR:g}h$ 扩展到 "
-        f"$\\delta\\ge{linear_near['usable_clearance_over_h_max']:g}h$；"
+        f"1% 窗口（**最细层**）从 $\\delta\\ge{NEAR_WALL_WINDOW_FACTOR:g}h$ 收到 "
+        f"$\\delta\\ge{linear_near['finest_level_usable_clearance_over_h_max']:g}h$；"
+        "但**跨层最差**口径下窗口并未变宽：线性基 "
+        f"{linear_near['usable_clearance_over_h_max']:g}$h$ vs 常值 "
+        f"{linear_near['usable_clearance_over_h_max_constant']:g}$h$"
+        "（粗层 N=32 的线性基在 $1\\,h_{{max}}$ 处仍有 1.58e-2，超 1%）——"
+        "「窗口收到 $0.5h$」是单层结论，原判据把它写成了跨层断言，已按实测拆分"
+        "（见 `criterion near_wall_linear_window_does_not_widen_the_worst_case_window`）；"
         f"$\\delta={NEAR_WALL_WINDOW_FACTOR:g}h$ 处两模式几乎相同"
         f"（改善 {linear_near['improvement_at_window_finest']:.2f}×，"
         "该处误差已由边界迹精度而非基函数决定）。",
@@ -3272,10 +3414,18 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "而是**折面几何**：内接正多边形面板中点半径 $a\\cos(\\pi/N)=a(1-h^2/8)$，"
         "所以从圆周量起的 $\\delta=0.1h_{{max}}$ 相对真实物面是 "
         "$(0.1h+h^2/8)/h$，该偏移是 $\\delta$ 的 $O(h)$ 倍，正解释上表实测的一阶饱和。"
-        "把探针距离改为从折面（$a\\cos\\pi/N$）量起后，最细网格上误差由 "
-        f"{near['faceting']['levels'][-1]['circle_referenced_linear']:.3e} 降到 "
+        "把探针距离改为从折面（$a\\cos\\pi/N$）量起——注意方向：折面在圆周**内**"
+        "（$a\\cos(\\pi/N)<a$），所以同一名义 $\\delta$ 对应的真实间隙**变小**，"
+        "误差必须**升高**，而不是收敛。最细网格上误差由 "
+        f"{near['faceting']['levels'][-1]['circle_referenced_linear']:.3e} 升到 "
         f"{near['faceting']['levels'][-1]['surface_referenced_linear']:.3e}"
-        f"（{near['faceting']['levels'][-1]['circle_referenced_linear'] / max(near['faceting']['levels'][-1]['surface_referenced_linear'], 1e-30):.1f}×）。"
+        f"（{near['faceting']['amplification']['linear'][-1]:.3f}×）；"
+        "折面几何能解释的是**增长率**：单位偏移的放大 "
+        f"{' / '.join('%.2f' % v for v in near['faceting']['amplification']['per_offset_linear'])} "
+        "（粗→细）与层无关，而放大本身随 $h$ 单调下降（"
+        f"{' / '.join('%.3f' % v for v in near['faceting']['amplification']['linear'])}），"
+        "即折面偏移是 $O(h)$。原判据写成「改参考面后误差塌缩 3 倍」，"
+        "方向与几何相反（cj3969 实测 1.04× 反向），已按实测改写。"
         "结论：近壁误差预算 = 折面几何（一阶，$\\propto h/\\delta$）+ 基函数（可被一阶矩项压掉）"
         "+ 边界迹求解误差（$O(h^2)$，被 $1/\\delta$ 放大）；要再收窄窗口需曲边面板/更高阶求解。",
         "",
