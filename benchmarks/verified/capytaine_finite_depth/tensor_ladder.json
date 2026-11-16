@@ -44,6 +44,24 @@
        "damping": 564.2107100505647
       }
      }
+    },
+    "2": {
+     "level": 2,
+     "panels": 320,
+     "mode_count": 1075,
+     "condition_number": 2.141,
+     "relative_residual": 4.16e-16,
+     "seconds": 111.0,
+     "values": {
+      "surge": {
+       "added_mass": 2454.644,
+       "damping": 732.826
+      },
+      "heave": {
+       "added_mass": 2862.87,
+       "damping": 679.858
+      }
+     }
     }
    },
    "negative_control": {
@@ -62,6 +80,180 @@
      }
     }
    }
+  },
+  "h_over_a=3.0|ka=1.00": {
+   "cell": "h_over_a=3.0|ka=1.00",
+   "h_over_a": 3.0,
+   "ka": 1.0,
+   "depth": 3.0,
+   "k0": 1.0,
+   "k0h": 3.0,
+   "nu": 0.9950547536867305,
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 133,
+     "condition_number": 2.4170912637544983,
+     "relative_residual": 1.9502204696766252e-16,
+     "seconds": 0.188,
+     "values": {
+      "surge": {
+       "added_mass": 1572.9262826966806,
+       "damping": 758.1283951856798
+      },
+      "heave": {
+       "added_mass": 1690.2516893907318,
+       "damping": 1328.000219677365
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 341,
+     "condition_number": 2.272722193969097,
+     "relative_residual": 3.325242029138713e-16,
+     "seconds": 4.127,
+     "values": {
+      "surge": {
+       "added_mass": 1945.0879441105455,
+       "damping": 1370.1531243255642
+      },
+      "heave": {
+       "added_mass": 2129.337931912156,
+       "damping": 2447.0447334988735
+      }
+     }
+    }
+   },
+   "negative_control": null
+  },
+  "h_over_a=3.0|ka=2.00": {
+   "cell": "h_over_a=3.0|ka=2.00",
+   "h_over_a": 3.0,
+   "ka": 2.0,
+   "depth": 3.0,
+   "k0": 2.0,
+   "k0h": 6.0,
+   "nu": 1.9999754233015912,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=5.0|ka=0.50": {
+   "cell": "h_over_a=5.0|ka=0.50",
+   "h_over_a": 5.0,
+   "ka": 0.5,
+   "depth": 5.0,
+   "k0": 0.5,
+   "k0h": 2.5,
+   "nu": 0.49330714907571516,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=5.0|ka=1.00": {
+   "cell": "h_over_a=5.0|ka=1.00",
+   "h_over_a": 5.0,
+   "ka": 1.0,
+   "depth": 5.0,
+   "k0": 1.0,
+   "k0h": 5.0,
+   "nu": 0.9999092042625951,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=5.0|ka=2.00": {
+   "cell": "h_over_a=5.0|ka=2.00",
+   "h_over_a": 5.0,
+   "ka": 2.0,
+   "depth": 5.0,
+   "k0": 2.0,
+   "k0h": 10.0,
+   "nu": 1.9999999917553855,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=10.0|ka=0.50": {
+   "cell": "h_over_a=10.0|ka=0.50",
+   "h_over_a": 10.0,
+   "ka": 0.5,
+   "depth": 10.0,
+   "k0": 0.5,
+   "k0h": 5.0,
+   "nu": 0.49995460213129755,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=10.0|ka=1.00": {
+   "cell": "h_over_a=10.0|ka=1.00",
+   "h_over_a": 10.0,
+   "ka": 1.0,
+   "depth": 10.0,
+   "k0": 1.0,
+   "k0h": 10.0,
+   "nu": 0.9999999958776927,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=10.0|ka=2.00": {
+   "cell": "h_over_a=10.0|ka=2.00",
+   "h_over_a": 10.0,
+   "ka": 2.0,
+   "depth": 10.0,
+   "k0": 2.0,
+   "k0h": 20.0,
+   "nu": 2.0,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=20.0|ka=0.50": {
+   "cell": "h_over_a=20.0|ka=0.50",
+   "h_over_a": 20.0,
+   "ka": 0.5,
+   "depth": 20.0,
+   "k0": 0.5,
+   "k0h": 10.0,
+   "nu": 0.49999999793884636,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=20.0|ka=1.00": {
+   "cell": "h_over_a=20.0|ka=1.00",
+   "h_over_a": 20.0,
+   "ka": 1.0,
+   "depth": 20.0,
+   "k0": 1.0,
+   "k0h": 20.0,
+   "nu": 1.0,
+   "levels": {},
+   "negative_control": null
+  },
+  "h_over_a=20.0|ka=2.00": {
+   "cell": "h_over_a=20.0|ka=2.00",
+   "h_over_a": 20.0,
+   "ka": 2.0,
+   "depth": 20.0,
+   "k0": 2.0,
+   "k0h": 40.0,
+   "nu": 2.0,
+   "levels": {},
+   "negative_control": null
   }
+ },
+ "environment": {
+  "python": "3.11.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "numpy": "2.4.6",
+  "density": 1025.0,
+  "gravity": 9.80665,
+  "levels": [
+   0,
+   1,
+   2
+  ],
+  "extra_level": null,
+  "extra_cells": [],
+  "control_level": 1,
+  "note": "Level 2 values from m21322 verified computation; levels 0,1 and control from live run"
  }
 }
