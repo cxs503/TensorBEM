@@ -2595,154 +2595,218 @@ def robust_decay_gate(sweep: Sweep, *, dof: int, audit: dict[str, Any] | None = 
 
 
 
+#: Declared bar of gate ``C11`` (state-space reduction).  ``C5``'s 5% bar
+#: compares two routes of the *same* full model; ``C11`` compares a reduced
+#: model to it, so its bar is the case-pool acceptance tolerance (10%).
+STATE_SPACE_BAR = 0.10
+
+
 def state_space_gate(
     sweep: Sweep,
     *,
     dof: int = 2,
     target_error: float = 0.03,
     max_poles: int = 12,
+    corrupt: bool = False,
 ) -> dict[str, Any]:
-    """C11: State-space reduction validation gate.
+    """C11: a reduced-order state-space realization must reproduce the convolution.
 
-    Fits the BEM damping curve with vector fitting, validates the state-space
-    realization (stability, passivity, KK consistency), and compares the
-    SS-based time-domain decay with the convolution-based decay from C5.
+    Why this gate exists
+    --------------------
+    ``C4``/``M3`` certify ``B -> K -> B`` and ``C5``/``C5b``/``C5c`` certify the
+    convolution route against the frequency-domain damping.  None of them
+    touches the substitution every operational seakeeping code makes: replacing
+    the ``O(N^2)`` memory convolution by a finite sum of decaying exponentials
+    (vector fit -> state-space realization).  That substitution is exact only at
+    infinite order, so it needs its own acceptance test, with the reduction
+    order capped at ``max_poles`` and the fit required to reach ``target_error``
+    on the *measured* damping.
 
-    Parameters
-    ----------
-    sweep : Sweep
-        The radiation sweep artifact.
-    dof : int
-        Degree of freedom index (default 2 = heave).
-    target_error : float
-        Target maximum relative error for the vector fit.
-    max_poles : int
-        Maximum number of poles to try.
+    A spectrum the cap cannot represent is reported as *undecidable*, not as a
+    physics FAIL: ``adaptive_order_fit`` landing above ``target_error`` at
+    ``max_poles`` says the ROM is too small, which is a statement about the ROM
+    order and not about the BEM coefficients.
 
-    Returns
-    -------
-    dict
-        Gate result with 'passed', 'values', and 'status' keys.
+    ``corrupt=True`` is the gate's own negative control: the measured damping is
+    modulated by ``1 + 0.3 cos(7 omega)``, which no 12-pole real fit at 3% can
+    absorb, so the fit error and the decay comparison must both go bad.
     """
-    omega = sweep.omega
-    damping_diag = sweep.damping[:, dof, dof]
-    added_mass_diag = sweep.added_mass[:, dof, dof]
-    added_mass_inf = float(added_mass_diag[-1])
+    dof = int(dof)
+    if dof not in RESTORING_MODES:
+        raise ValueError(
+            f"C11 needs a hydrostatic restoring mode {RESTORING_MODES}; "
+            f"dof {dof} ({DOF_NAMES[dof]}) has none, so there is no oscillator "
+            f"whose decay could be compared"
+        )
+    omega = np.asarray(sweep.omega, dtype=float)
+    measured = np.asarray(sweep.damping[:, dof, dof], dtype=float)
+    added = np.asarray(sweep.added_mass[:, dof, dof], dtype=float)
+    scale = float(np.max(np.abs(measured))) if measured.size else 0.0
+    distorted = measured * (1.0 + 0.3 * np.cos(7.0 * omega)) if corrupt else measured
 
-    # Fit damping with vector fitting
+    identifier = "C11_control" if corrupt else "C11"
+    title = (
+        f"state-space reduction of the memory kernel ({DOF_NAMES[dof]})"
+        + (" [negative control: corrupted damping]" if corrupt else "")
+    )
+    threshold = (
+        f"ROM fit error <= {target_error:.0%} at <= {max_poles} poles AND "
+        f"|zeta_ss - zeta_conv|/zeta_conv <= {STATE_SPACE_BAR:.0%} AND "
+        f"|T_ss - T_conv|/T_conv <= {STATE_SPACE_BAR:.0%}"
+    )
+    base_values: dict[str, Any] = {
+        "dof": dof,
+        "dof_name": DOF_NAMES[dof],
+        "bar": STATE_SPACE_BAR,
+        "fit_target_error": target_error,
+        "max_poles": max_poles,
+        "negative_control": bool(corrupt),
+        "band_rad_s": [float(omega[0]), float(omega[-1])],
+        "reference_route": "C5 convolution (td.cummins_free_decay on the same oscillator)",
+    }
+
+    if scale <= 0.0 or float(np.min(measured)) < 0.0:
+        return {
+            "id": identifier,
+            "title": title,
+            "threshold": threshold,
+            "passed": False,
+            "values": {
+                **base_values,
+                "status": "undecidable: no usable radiation damping in the sweep",
+                "min_radiation_damping": float(np.min(measured)) if measured.size else float("nan"),
+            },
+        }
+
+    closure = kk_added_mass_closure(omega, added, measured)
+    added_mass_inf = float(closure.added_mass_inf)
+    oscillator = oscillator_properties(dof, label=sweep.label)
     fit = _ss_mod.adaptive_order_fit(
-        omega, damping_diag,
+        omega,
+        distorted,
         target_error=target_error,
         max_poles=max_poles,
         min_poles=2,
     )
+    realization = _ss_mod.state_space_from_fit(fit)
+    # The bar is scored against the *measured* damping, so the control cannot
+    # hide behind the fit being accurate for the corrupted data it was given.
+    fit_error = float(np.max(np.abs(fit.B_reconstructed - measured)) / scale)
+    order = int(len(fit.poles))
+    poles = np.asarray(fit.poles, dtype=float)
+    all_poles_stable = bool(poles.size > 0 and np.all(poles > 0.0))
+    nonnegative = bool(np.all(np.asarray(fit.B_reconstructed, dtype=float) >= -1e-9 * scale))
+    min_pole = float(np.min(poles)) if poles.size else float("nan")
 
-    # Build state-space realization
-    ss_real = _ss_mod.state_space_from_fit(fit)
-
-    # Get hydrostatic properties
-    if dof == 2:  # heave
-        restoring, displaced_mass, _ = _restoring_and_mass_for_heave(sweep.label)
-    else:
-        # For other DOFs, use a simplified estimate
-        restoring = displaced_mass = float(np.mean(added_mass_diag)) * 0.1
-
-    # Run validation
-    try:
-        report = _ss_mod.validate_state_space(
-            omega, added_mass_diag, damping_diag,
-            mass=displaced_mass,
-            added_mass_inf=added_mass_inf,
-            restoring=restoring,
-            omega_band=(float(omega[0]), float(omega[-1])),
-        )
-    except Exception as exc:
-        return {
-            "passed": False,
-            "values": {
-                "dof": dof,
-                "dof_name": DOF_NAMES[dof],
-                "error": str(exc),
-                "fit_poles": len(fit.poles),
-                "fit_error_max": fit.relative_error_max,
-            },
-            "status": f"failed: {exc}",
-        }
-
-    # Compare SS decay with C5 convolution decay
-    ss_result = _ss_mod.cummins_state_space(
-        ss_real, displaced_mass, added_mass_inf, restoring,
-        initial_displacement=0.05, initial_velocity=0.0,
-        dt=DT, duration=DURATION,
+    ss_decay = _ss_mod.cummins_state_space(
+        realization,
+        oscillator["inertia"],
+        added_mass_inf,
+        oscillator["stiffness"],
+        initial_displacement=1.0,
+        initial_velocity=0.0,
+        dt=DT,
+        duration=DURATION,
     )
-
-    # Compute decay metrics from SS result
     zeta_ss, period_ss, n_peaks_ss = _decay_zeta(
-        ss_result.time, ss_result.displacement, amplitude_floor=0.01
+        np.asarray(ss_decay.time), np.asarray(ss_decay.displacement)
+    )
+    zeta_conv, period_conv, n_peaks_conv, _decay = _decay_zeta_for(
+        sweep, dof, damping=measured, omega=omega, added_mass_inf=added_mass_inf
     )
 
-    # Compute decay metrics from convolution (C5 reference)
-    kernel = td.compute_kernel(omega, damping_diag)
-    cummins_result = td.cummins_convolution(
-        kernel, omega, added_mass_diag, added_mass_inf,
-        displaced_mass, restoring,
-        initial_displacement=0.05, initial_velocity=0.0,
-        dt=DT, duration=DURATION, tau_max=TAU_MAX,
-    )
-    zeta_conv, period_conv, n_peaks_conv = _decay_zeta(
-        cummins_result.time, cummins_result.displacement, amplitude_floor=0.01
-    )
+    def _relative(a: float, b: float) -> float:
+        if not (math.isfinite(a) and math.isfinite(b) and b > 0.0):
+            return float("inf")
+        return abs(a - b) / b
 
-    # Compare the two decay routes
-    if math.isfinite(zeta_ss) and math.isfinite(zeta_conv) and zeta_conv > 0:
-        zeta_relative_error = abs(zeta_ss - zeta_conv) / zeta_conv
+    zeta_error = _relative(zeta_ss, zeta_conv)
+    period_error = _relative(period_ss, period_conv)
+
+    if not all_poles_stable:
+        status = "failed: the realization has a pole outside the stable half plane"
+    elif fit_error > target_error:
+        status = (
+            f"undecidable: the damping spectrum is not representable with {order} "
+            f"<= {max_poles} real poles to {target_error:.0%} (ROM fit error "
+            f"{fit_error:.1%}); the reduction order, not the BEM data, is the limit"
+        )
+    elif not nonnegative:
+        status = "failed: the reconstructed damping changes sign inside the band"
     else:
-        zeta_relative_error = float("nan")
+        status = "decided"
 
-    if math.isfinite(period_ss) and math.isfinite(period_conv) and period_conv > 0:
-        period_relative_error = abs(period_ss - period_conv) / period_conv
-    else:
-        period_relative_error = float("nan")
-
-    # C11 passes if:
-    # 1. SS fit error < target_error
-    # 2. All poles stable (positive)
-    # 3. KK residual < 5%
-    # 4. SS vs convolution decay zeta error < 10%
-    fit_ok = fit.relative_error_max <= target_error
-    poles_ok = all(p > 0 for p in fit.poles) if len(fit.poles) > 0 else False
-    kk_ok = getattr(report, "c5_kk_residual", 1.0) <= 0.05
-    decay_ok = zeta_relative_error <= 0.10 if math.isfinite(zeta_relative_error) else False
-
-    passed = fit_ok and poles_ok and kk_ok and decay_ok
-
+    passed = (
+        status == "decided"
+        and zeta_error <= STATE_SPACE_BAR
+        and period_error <= STATE_SPACE_BAR
+    )
     return {
-        "passed": passed,
+        "id": identifier,
+        "title": title,
+        "threshold": threshold,
+        "passed": bool(passed),
         "values": {
-            "dof": dof,
-            "dof_name": DOF_NAMES[dof],
-            "fit_poles": len(fit.poles),
-            "fit_error_max": fit.relative_error_max,
-            "fit_error_rms": fit.relative_error_rms,
-            "min_pole": float(min(fit.poles)) if len(fit.poles) > 0 else float("nan"),
-            "all_poles_positive": poles_ok,
-            "kk_residual": getattr(report, "c5_kk_residual", float("nan")),
-            "zeta_ss": zeta_ss,
+            **base_values,
+            "status": status,
+            "fit_order": order,
+            "fit_error": fit_error,
+            "fit_error_self": float(fit.relative_error_max),
+            "min_pole": min_pole,
+            "all_poles_stable": all_poles_stable,
+            "damping_nonnegative_in_band": nonnegative,
+            "zeta_state_space": zeta_ss,
             "zeta_convolution": zeta_conv,
-            "zeta_relative_error": zeta_relative_error,
-            "period_ss": period_ss,
-            "period_convolution": period_conv,
-            "period_relative_error": period_relative_error,
-            "n_peaks_ss": n_peaks_ss,
-            "n_peaks_conv": n_peaks_conv,
-            "c1_pass": getattr(report, "c1_pass", fit_ok),
-            "c2_pass": getattr(report, "c2_pass", poles_ok),
-            "c3_pass": getattr(report, "c3_pass", decay_ok),
-            "c4_pass": getattr(report, "c4_pass", True),
-            "c5_pass": getattr(report, "c5_pass", kk_ok),
-            "c6_pass": getattr(report, "c6_pass", True),
+            "zeta_relative_error": zeta_error,
+            "period_state_space_s": period_ss,
+            "period_convolution_s": period_conv,
+            "period_relative_error": period_error,
+            "n_peaks_state_space": int(n_peaks_ss),
+            "n_peaks_convolution": int(n_peaks_conv),
+            "state_space_substeps": int(ss_decay.substeps),
+            "oscillator_inertia": oscillator["inertia"],
+            "oscillator_stiffness": oscillator["stiffness"],
+            "added_mass_inf_used": added_mass_inf,
+            "added_mass_inf_source": "KK closure (least-squares offset), same as C5",
+            "dt": DT,
+            "duration": DURATION,
         },
-        "status": "pass" if passed else "fail",
+    }
+
+
+def state_space_audit(sweep: Sweep, **kwargs: Any) -> dict[str, Any]:
+    """``C11`` on every restoring mode plus its negative control (reported only).
+
+    The verdict tallies ``C11`` on the case's declared free-decay DOF only.  The
+    other restoring modes are reported here because a ROM that cannot be built
+    at the declared order is information about the reduction, not a failure of
+    the BEM coefficients -- but it must not be silently dropped either.
+    """
+    rows = {}
+    for dof in RESTORING_MODES:
+        gate = state_space_gate(sweep, dof=int(dof), **kwargs)
+        rows[DOF_NAMES[int(dof)]] = {
+            "passed": bool(gate["passed"]),
+            "status": gate["values"].get("status"),
+            "fit_order": gate["values"].get("fit_order"),
+            "fit_error": gate["values"].get("fit_error"),
+            "zeta_state_space": gate["values"].get("zeta_state_space"),
+            "zeta_convolution": gate["values"].get("zeta_convolution"),
+            "zeta_relative_error": gate["values"].get("zeta_relative_error"),
+            "period_relative_error": gate["values"].get("period_relative_error"),
+            "bar": STATE_SPACE_BAR,
+        }
+    control = state_space_gate(sweep, dof=int(RESTORING_MODES[0]), corrupt=True, **kwargs)
+    return {
+        "scored_dof": DOF_NAMES[int(RESTORING_MODES[0])],
+        "bar": STATE_SPACE_BAR,
+        "per_mode": rows,
+        "negative_control": {
+            "dof": DOF_NAMES[int(RESTORING_MODES[0])],
+            "passed": bool(control["passed"]),
+            "status": control["values"].get("status"),
+            "fit_error": control["values"].get("fit_error"),
+        },
     }
 
 
@@ -2865,6 +2929,7 @@ def gates_from_artifact(
     include_decay_modes: bool = True,
     include_external_anchor: bool = True,
     include_time_convergence: bool = False,
+    include_state_space: bool = False,
     extended_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """Re-judge a committed sweep artifact without solving the BEM system again.
@@ -2912,6 +2977,11 @@ def gates_from_artifact(
         gates["C13"] = time_domain_convergence_gate(sweep, dof=int(dof_free_decay))
     gates["C4"] = round_trip_gate(sweep, dof=int(dof_free_decay))
     gates["C5"] = free_decay_gate(sweep, dof=int(dof_free_decay))
+    if include_state_space:
+        # Off by default: the published 16-gate verdict predates C11, and
+        # folding a new gate into it is a separate, re-rendered decision.  Turn
+        # it on to score the ROM route alongside the direct convolution.
+        gates["C11"] = state_space_gate(sweep, dof=int(dof_free_decay))
     gates["C6a"] = negative_control_gate(sweep, dof=int(dof_free_decay))
     if corrupted_control:
         gates["C6b"] = kk_gate(
@@ -2943,6 +3013,9 @@ def gates_from_artifact(
     return {
         "case": CASE_SLUG,
         "artifact": str(path),
+        "state_space_reduction": (
+            state_space_audit(sweep) if include_state_space else None
+        ),
         "added_mass_inf_anchor": anchor,
         "dof_free_decay": DOF_NAMES[int(dof_free_decay)],
         "sweep": sweep.summary(),
