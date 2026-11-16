@@ -105,10 +105,8 @@ __all__ = [
     "analytic_oscillator_checks",
 ]
 
-#: Heave is the DOF the case's own verdict scores C5 on.  Roll and pitch are
-#: scored alongside it by :func:`case_bem_cummins_wigley.dof_decay_audit`, which
-#: builds the C44/C55 restoring terms and the declared body inertia this audit
-#: used to record as open debt (see ``decay_dof_audit.json``).
+#: Heave is the only DOF the case scores C5 on; roll/pitch would need C44/C55
+#: restoring terms the case module does not build (recorded as open debt).
 HEAVE = 2
 
 #: Frozen sweeps of the case-pool artifact (``case.run_case`` output).
