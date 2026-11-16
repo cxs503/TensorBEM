@@ -266,10 +266,15 @@ def _panel_cell(
     cell["wall_seconds"] = time.time() - t0
     ref = reference(ka)
     cell["reference"] = {k: ref[k] for k in QUANTITIES + PHASE_KEYS}
+    # ``with_diffraction=False`` is a documented switch: the excitation
+    # quantities then do not exist in the cell, so their scores must not be
+    # emitted (grading a missing number against the reference raises KeyError).
     for k in QUANTITIES:
-        cell[f"rel_error_{k}"] = (cell[k] - ref[k]) / abs(ref[k])
+        if k in cell:
+            cell[f"rel_error_{k}"] = (cell[k] - ref[k]) / abs(ref[k])
     for k in PHASE_KEYS:
-        cell[f"delta_{k}"] = cell[k] - ref[k]
+        if k in cell:
+            cell[f"delta_{k}"] = cell[k] - ref[k]
     return cell
 
 
