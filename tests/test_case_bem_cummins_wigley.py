@@ -1309,3 +1309,107 @@ def test_render_markdown_carries_the_extended_band_numbers(tmp_path) -> None:
     assert "## 4b." not in case.render_markdown(
         json.loads((ARTIFACT_DIR / "case_result.json").read_text())
     )
+
+
+# ---------------------------------------------------------------------------
+# The casepool note: prose that quotes artifact numbers must be rendered
+# from them, or it becomes a second, silently drifting source of truth.
+# ---------------------------------------------------------------------------
+
+README_TOOL = pathlib.Path(__file__).resolve().parents[1] / "tools" / "render_casepool_bem_cummins_wigley_readme.py"
+CASE_NOTE = pathlib.Path(__file__).resolve().parents[1] / "docs" / "casepool_bem_cummins_wigley" / "README.md"
+
+
+def _readme_tool():
+    """Import the README renderer by path (it lives in ``tools/``, not a package)."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("_casepool_readme_render", README_TOOL)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "case_result.json").exists() or not CASE_NOTE.exists(),
+    reason="case artifacts or the casepool note are not committed",
+)
+def test_casepool_readme_is_the_render_of_the_artifacts() -> None:
+    """``docs/casepool_bem_cummins_wigley/README.md`` is generated, not hand-kept.
+
+    The note outlived its own subject once already: it kept asserting that the
+    committed ``case_result.json`` was a 13-node / 0.15-8 rad/s / coarse run with
+    a 5/7 verdict and that ``sweep_medium.npz`` had never been committed, long
+    after the artifact had been regenerated and the replay test had turned green.
+    Rendering the numbers out of the artifacts is the only version of this
+    document that cannot do that again.
+    """
+    renderer = _readme_tool()
+    assert renderer.render() == CASE_NOTE.read_text()
+
+
+@pytest.mark.skipif(not CASE_NOTE.exists(), reason="casepool note not committed")
+def test_casepool_readme_does_not_restate_the_pre_fix_state() -> None:
+    """The note must record the pre-fix state as history, not as the current one."""
+    text = CASE_NOTE.read_text()
+    published = json.loads((ARTIFACT_DIR / "case_result.json").read_text())
+    verdict = published["verdict"]
+
+    # no stale-current-state claims: the pre-fix numbers may only appear as
+    # quoted history, so the note must not say the artifact *is* that run
+    for stale in (
+        "已提交 `case_result.json` | 0.15",
+        "提交件的判定 `5/7 gates passed",
+        "生产网格的 sweep 从来没提交过",
+    ):
+        assert stale not in text, stale
+
+    # the current state is stated from the artifact, not from memory
+    assert f"{verdict['gates_passed']}/{verdict['gates_total']}" in text
+    assert f"{published['settings']['n_omega']}" in text
+    assert (ARTIFACT_DIR / "sweep_medium.npz").exists()
+    assert "已入库" in text
+    # a document that ships figures must name files that are actually present
+    for figure in ("fig_node_vs_local.png", "fig_matrix_round_trip.png", "fig_matrix_zero_pattern.png"):
+        assert f"`{figure}`" in text
+        assert (CASE_NOTE.parent / figure).exists(), figure
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "case_result.json").exists(), reason="production artifact not committed"
+)
+def test_casepool_readme_render_tracks_the_artifact(tmp_path) -> None:
+    """Bite test: change the artifact and the note must change with it.
+
+    Replaying the *pre-fix* artifact (13 nodes, 0.15-8 rad/s, 5/7 gates) through
+    the renderer has to produce prose that differs from the committed note --
+    otherwise the note is quoting memory, and the equality test above would pass
+    for the wrong reason.
+    """
+    import shutil
+
+    renderer = _readme_tool()
+    staged = tmp_path / "casepool_bem_cummins_wigley"
+    staged.mkdir()
+    for name in ("case_result.json", "sweep_coarse.npz", "sweep_medium.npz"):
+        shutil.copy(ARTIFACT_DIR / name, staged / name)
+
+    stale = json.loads((staged / "case_result.json").read_text())
+    stale["settings"]["band_rad_s"] = [0.15, 8.0]
+    stale["settings"]["n_omega"] = 13
+    stale["verdict"].update({"passed": False, "gates_passed": 5, "gates_total": 7,
+                             "failed_list": ["C3", "C5"]})
+    (staged / "case_result.json").write_text(json.dumps(stale))
+
+    original = renderer.ARTIFACT_DIR
+    try:
+        renderer.ARTIFACT_DIR = staged
+        restaged = renderer.render()
+    finally:
+        renderer.ARTIFACT_DIR = original
+
+    assert restaged != CASE_NOTE.read_text()
+    assert "0.15 .. 8.0 / 13" in restaged
+    assert "5/7 未通过" in restaged
+    # and the committed render still says what the committed artifact says
+    assert "5/7 未通过" not in renderer.render()
