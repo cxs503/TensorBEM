@@ -23,6 +23,9 @@ and through the Hilbert pair (Kramers-Kronig, Kotik & Mangulis 1962; Newman
 Gates (predeclared, machine-decided)
 ------------------------------------
 ======================  ======  ==================================================
+G0 solver_validity       1 %    max relative residual of the nodes in the band: a
+                                diverged node is not data, so no other gate on it
+                                is interpretable
 G1 cross_solver         10 %    diagonal A_ii, B_ii at w = 1 rad/s vs the frozen
                                 capytaine 3.1 reference on the same wetted surface
 G2 kernel_at_zero        2 %    K(0) sampled vs (2/pi) int B dw of the same sweep
@@ -184,11 +187,19 @@ RESONANCE_STEP = 0.0125
 #: Step (rad/s) of the dense response grid the G4 half-power scan interpolates on.
 DENSE_STEP = 0.001
 
+#: Predeclared *solver-validity* tolerance: a node whose BEM solve did not
+#: converge to this relative residual is not data, whatever the coefficients say.
+#: It is the same 1 % the case pool's ``C0`` gate uses ("residual < 1 %"), so a
+#: band can never be built from nodes the case pool would reject one at a time.
+SOLVER_RESIDUAL_TOL = 0.01
+
 #: Predeclared gates.  ``tol`` is a relative tolerance; G1 carries the case-pool
 #: tolerance (<10 %), G2/G5 are identities between two numerical routes and are
 #: held tighter, G3 is the case-tolerance causality residual, G4 compares two
 #: estimators of the same damping.
 GATES = {
+    "G0_solver_validity": {"tol": SOLVER_RESIDUAL_TOL,
+                           "quantity": "max relative residual over the band's nodes"},
     "G1_cross_solver": {"tol": 0.10, "quantity": "diag A_ii, B_ii at omega=1.0"},
     "G2_kernel_at_zero": {"tol": 0.02, "quantity": "K(0) vs (2/pi) int B dw"},
     "G3_kramers_kronig": {"tol": 0.10, "quantity": "A(w) vs Hilbert(B)"},
@@ -453,6 +464,61 @@ def sweep_from_points(points: dict[float, dict], omegas: Sequence[float]) -> dic
         "wall_seconds": walls,
         "density": first["density"],
         "gravity": first["gravity"],
+    }
+
+
+def _residual_field(sweep) -> tuple[FloatArray, FloatArray]:
+    """``(omega, relative_residual)`` of a sweep, whether it is a dict or a Sweep."""
+    if isinstance(sweep, dict):
+        omega = np.asarray(sweep.get("omega", ()), dtype=float)
+        residual = sweep.get("relative_residual")
+        residual = np.asarray(() if residual is None else residual, dtype=float)
+    else:  # :class:`case_bem_cummins_wigley.Sweep`
+        omega = np.asarray(getattr(sweep, "omega"), dtype=float)
+        residual = np.asarray(getattr(sweep, "solver_relative_residual"), dtype=float)
+    if residual.size == 1 and omega.size != 1:
+        residual = np.full(omega.size, float(residual[0]))
+    if residual.size not in (0, omega.size):
+        raise ValueError(f"{residual.size} residuals for {omega.size} nodes")
+    if residual.size == 0:
+        residual = np.full(omega.size, np.nan)
+    return omega, residual
+
+
+def residual_admissibility(sweep, tol: float = SOLVER_RESIDUAL_TOL) -> dict:
+    """Screen the *solver* before any gate reads a coefficient (gate ``G0``).
+
+    The five consistency gates all compare a sweep with itself, so every one of
+    them is blind to a node whose linear solve never converged: the numbers are
+    finite, the transforms are exact, and the verdict is meaningless.  This is
+    not hypothetical -- ``docs/m20021/sweep_medium.npz`` has 41/41 nodes above
+    1 % residual (worst 1.245) and its heave damping at ``w = 5.2912`` rad/s is
+    ``B33 = -129.9``, a *negative* damping read as physics until the residual
+    exposes it as a bad node solve.
+
+    ``passed`` is ``None`` (skipped, never passed) when the sweep records no
+    residual at all: an old artifact must not be able to borrow this gate.
+    """
+    omega, residual = _residual_field(sweep)
+    finite = np.isfinite(residual)
+    offenders = [
+        {"omega": float(w), "residual": float(r)}
+        for w, r in zip(omega[finite], residual[finite]) if float(r) > tol
+    ]
+    worst = float(np.max(residual[finite])) if finite.any() else None
+    worst_omega = (float(omega[finite][int(np.argmax(residual[finite]))])
+                   if finite.any() else None)
+    return {
+        "id": "G0_solver_validity",
+        "tol": float(tol),
+        "nodes": int(omega.size),
+        "reported": int(finite.sum()),
+        "unavailable": int((~finite).sum()),
+        "worst_residual": worst,
+        "worst_omega": worst_omega,
+        "n_offenders": len(offenders),
+        "offenders": offenders,
+        "passed": None if worst is None else bool(worst <= tol),
     }
 
 
@@ -802,6 +868,8 @@ def gates_from_sweep(
     tau_max: float = 40.0,
     decay_duration: float = 120.0,
     include_cross_solver: bool = True,
+    include_residual_gate: bool = True,
+    residual_tol: float = SOLVER_RESIDUAL_TOL,
 ) -> dict:
     """Evaluate all five gates on one sweep (all DOF for G1/G2/G3/G5, heave G4).
 
@@ -810,6 +878,12 @@ def gates_from_sweep(
     (a cached sweep from another artifact, an off-ladder mesh).  A skipped gate is
     neither passed nor failed; it is reported as ``passed: None`` and left out of
     the failure list, so a band study cannot borrow G1's authority by accident.
+
+    ``G0_solver_validity`` (:func:`residual_admissibility`) is evaluated first and
+    is *not* a consistency statement: it asks whether the nodes in the band are
+    converged solves at all.  When it fails, the study is still summarised (the
+    numbers are what the diverged nodes produce) but ``interpretable`` is False:
+    a gate that "passes" on inadmissible nodes must never be quoted as evidence.
     """
     studies = {}
     for dof in range(6):
@@ -846,12 +920,29 @@ def gates_from_sweep(
                   GATES["G5_round_trip"]["tol"],
                   {"worst_dof": worst_r5["dof_label"],
                    "per_dof": {k: v["G5"]["rel_err"] for k, v in studies.items()}})
-    gates = {g["id"]: g for g in (g1, g2, g3, g4, g5)}
+    admissibility = residual_admissibility(sweep, tol=residual_tol)
+    g0 = {
+        "id": "G0_solver_validity",
+        "value": admissibility["worst_residual"],
+        "tol": residual_tol,
+        "passed": admissibility["passed"],
+        "worst_omega": admissibility["worst_omega"],
+        "offenders": admissibility["offenders"],
+        "nodes": admissibility["nodes"],
+        "reported": admissibility["reported"],
+    }
+    if admissibility["passed"] is None:
+        g0["skipped"] = "the sweep records no solver residual"
+    ordered = (g0, g1, g2, g3, g4, g5) if include_residual_gate else (g1, g2, g3, g4, g5)
+    gates = {g["id"]: g for g in ordered}
     failed = [key for key, value in gates.items() if value["passed"] is False]
     return {
         "level": sweep["level"],
         "omega": sweep["omega"],
         "rotation_center": sweep["rotation_center"],
+        "solver_admissibility": admissibility,
+        "admissible": admissibility["passed"],
+        "interpretable": admissibility["passed"] is not False,
         "gates": gates,
         "failed": failed,
         "verdict": "PASS" if not failed else "FAIL:" + ",".join(failed),
