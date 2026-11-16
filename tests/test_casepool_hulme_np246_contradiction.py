@@ -75,9 +75,10 @@ def test_the_contradiction_is_still_on_disk(stored) -> None:
     gap = float(stored["relative_gap_between_artifacts"])
     assert gap > 0.5, (
         f"artifacts now agree to {gap:.1%}; regenerate the audit and retire it")
-    band = json.loads((HERE / "band_extension" / "results.json").read_text())
+    band = json.loads((HERE / "evidence"
+                       / "np246_failing_snapshot_m20034.json").read_text())
     rev = json.loads((HERE / "evidence" / "numpy2_reverification.json").read_text())
-    cell = [c for c in band["cells"]
+    cell = [c for c in band["payload"]["cells"]
             if c["kind"] == "extension" and float(c["ka"]) == stored["ka"]][0]
     rev_cell = [c for c in rev["cells"] if float(c["ka"]) == stored["ka"]][0]
     assert float(cell["A11_dimless"]) == pytest.approx(
@@ -86,11 +87,18 @@ def test_the_contradiction_is_still_on_disk(stored) -> None:
         float(stored["rows"]["A11"]["numpy2_reverification"]), rel=1e-9)
 
 
-def test_version_attribution_gate_records_the_same_version(stored) -> None:
-    """The point of the audit: the failing artifact is NOT the older numpy."""
+def test_version_attribution_gate_cannot_be_passed_vacuously(stored) -> None:
+    """The point of the audit: the failing artifact is NOT the older numpy.
+
+    The frozen failing artifact records no environment at all, so the
+    attribution must fail *for the stated reason* -- a missing version is not
+    an unequal version, and the gate must never pass because a field is absent.
+    """
     gate = stored["gates"]["A2_numpy_version_attribution_supported"]
     assert gate["pass"] is False
-    assert gate["measured_numpy_band"] == gate["measured_numpy_reverify"]
+    assert gate["measured_numpy_band"] is None
+    assert "no environment is recorded" in gate["reason"]
+    assert gate["measured_numpy_reverify"] is not None
 
 
 def test_healthy_artifact_provenance_gate_lists_what_is_missing(stored) -> None:

@@ -37,7 +37,7 @@ import math
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-BAND = HERE / "band_extension" / "results.json"
+BAND = HERE / "evidence" / "np246_failing_snapshot_m20034.json"
 REVERIFY = HERE / "evidence" / "numpy2_reverification.json"
 OUT_JSON = HERE / "evidence" / "np246_contradiction.json"
 OUT_DOC = HERE.parents[2] / "docs" / "case_bem_hulme_np246_contradiction_audit.md"
@@ -52,7 +52,7 @@ def _band_cell(payload: dict, ka: float) -> dict:
 
 
 def build() -> dict:
-    band = json.loads(BAND.read_text())
+    band = json.loads(BAND.read_text())["payload"]
     rev = json.loads(REVERIFY.read_text())
     cell = _band_cell(band, KA)
     rev_cell = [c for c in rev["cells"] if float(c["ka"]) == KA][0]
@@ -70,6 +70,8 @@ def build() -> dict:
             row[f"err_{key}"] = abs(row[key] / row["ref"] - 1.0)
     gap = max(abs(rows[k]["band_extension"] / rows[k]["numpy2_reverification"] - 1.0)
               for k in rows)
+    band_numpy = (band.get("environment") or {}).get("numpy")
+    rev_numpy = rev.get("environment", {}).get("numpy")
     cond_a = float(cell["condition_number"])
     cond_b = float(rev_cell["condition_number"])
     # "same matrix" is stated with the precision the healthy artifact quotes
@@ -87,7 +89,8 @@ def build() -> dict:
                              "numpy2_reverification": rev_cell["condition_number"],
                              "identical": same_cond},
         "provenance": {
-            "band_extension": band.get("metadata", {}),
+            "band_extension": band.get("environment"),
+            "band_extension_generated_at": band.get("generated_at"),
             "numpy2_reverification": rev.get("environment", {}),
             "numpy2_reverification_generated_at": rev.get("generated_at"),
             "numpy2_reverification_residuals_identical": rev_res_dup,
@@ -106,11 +109,16 @@ def build() -> dict:
             },
             "A2_numpy_version_attribution_supported": {
                 "criterion": "the artifact carrying the failing ka=3.5 values must "
-                             "record a numpy version different from the healthy one",
-                "measured_numpy_band": band.get("metadata", {}).get("numpy"),
-                "measured_numpy_reverify": rev.get("environment", {}).get("numpy"),
-                "pass": (band.get("metadata", {}).get("numpy")
-                         != rev.get("environment", {}).get("numpy")),
+                             "record a numpy version, and it must differ from the "
+                             "healthy one; a missing version never supports the "
+                             "attribution",
+                "measured_numpy_band": band_numpy,
+                "measured_numpy_reverify": rev_numpy,
+                "reason": (None if (band_numpy is not None and rev_numpy is not None)
+                           else "no environment is recorded by the failing artifact, "
+                                "so the version attribution has no artifact behind it"),
+                "pass": (band_numpy is not None and rev_numpy is not None
+                         and band_numpy != rev_numpy),
             },
             "A3_healthy_artifact_is_machine_provenanced": {
                 "criterion": "the healthy artifact records host + BLAS thread env and "
@@ -171,10 +179,13 @@ def render(payload: dict) -> str:
              "numpy 2.4.6 restores agreement. The two artifacts behind those "
              "statements: ")
     L.append("")
-    L.append(f"* `band_extension/results.json`: numpy "
-             f"{prov['band_extension'].get('numpy')}, host "
-             f"{prov['band_extension'].get('host')}, generated "
-             f"{prov['band_extension'].get('generated_utc')} — **failing**;")
+    _band_env = prov["band_extension"] or {}
+    L.append("* frozen snapshot (m20034, immutable git object): "
+             f"numpy {_band_env.get('numpy')}, host {_band_env.get('host')}, "
+             "generated "
+             f"{prov['band_extension_generated_at']} — **failing**; it records no "
+             "environment at all, which is why the version attribution in the "
+             "prose has no artifact behind it.")
     L.append("* `evidence/numpy2_reverification.json`: numpy "
              f"{prov['numpy2_reverification'].get('numpy')}, host "
              f"{prov['numpy2_reverification'].get('host')}, generated "
