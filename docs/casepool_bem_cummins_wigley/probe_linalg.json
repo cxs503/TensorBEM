@@ -1,0 +1,57 @@
+{
+  "problems": {
+    "solve_cond_1e3": {
+      "shape": [
+        192,
+        192
+      ],
+      "condition_number": 999.999999999947,
+      "rel_residual": 6.084515474136812e-16,
+      "rel_error": 2.9897647802185894e-14
+    },
+    "solve_cond_1e8": {
+      "shape": [
+        192,
+        192
+      ],
+      "condition_number": 100000000.00603136,
+      "rel_residual": 7.383305961766931e-16,
+      "rel_error": 1.4880329037326426e-09
+    },
+    "lstsq_overdetermined": {
+      "shape": [
+        384,
+        192
+      ],
+      "condition_number": 1.4141428569978352,
+      "rel_residual": 2.435899951392971e-15,
+      "rel_error": 2.507688168107344e-15
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64",
+    "python": "3.11.6",
+    "numpy": "2.4.6",
+    "hostname": "ec6ae0b42a0c",
+    "threads": "OMP/BLAS=1"
+  },
+  "verdict": {
+    "passed": true,
+    "failures": [],
+    "bounds": {
+      "solve_cond_1e3": {
+        "rel_residual": 1e-10,
+        "rel_error": 1e-10
+      },
+      "solve_cond_1e8": {
+        "rel_residual": 1e-06,
+        "rel_error": 0.0001
+      },
+      "lstsq_overdetermined": {
+        "rel_residual": 1e-10,
+        "rel_error": 1e-10
+      }
+    }
+  }
+}
