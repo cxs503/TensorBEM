@@ -435,3 +435,178 @@ def integrate_double_layer_panel_first_moment_gradient(
         + eta * eta * (1.0 / r2_1 - 1.0 / r2_0)
     )
     return (t * along + n * across) / _TWO_PI
+
+
+# ---------------------------------------------------------------------------
+# Batched (many-target) constant-panel integrals.
+#
+# The scalar entry points above are the reference: they are transcribed here
+# with the target axis vectorised so that a caller evaluating ``M`` targets
+# against one panel pays one numpy call per panel instead of ``M`` python-level
+# calls per panel.  The algebra, the special cases and the validity domain are
+# unchanged; only the accumulation loop moves.  ``tests/test_kernels_batch.py``
+# pins the two implementations against each other.
+# ---------------------------------------------------------------------------
+
+
+def _validate_target_batch(targets: FloatArray, name: str = "targets") -> NDArray:
+    array = np.asarray(targets, dtype=float)
+    if array.ndim != 2 or array.shape[1] != 2:
+        raise ValueError(f"{name} must have shape (M, 2)")
+    if not np.isfinite(array).all():
+        raise ValueError(f"{name} must all be finite")
+    return array
+
+
+def _log_distance_primitive_many(z: NDArray, normal_distance: NDArray) -> NDArray:
+    """Vectorised :func:`_log_distance_primitive` (same stable branch)."""
+    h = np.abs(normal_distance)
+    tiny = h <= 1.0e-14
+    result = np.empty_like(z)
+    if np.any(tiny):
+        z_tiny = z[tiny]
+        branch = np.empty_like(z_tiny)
+        at_origin = np.abs(z_tiny) <= 1.0e-14
+        branch[at_origin] = 0.0
+        off = ~at_origin
+        branch[off] = z_tiny[off] * np.log(np.abs(z_tiny[off])) - z_tiny[off]
+        result[tiny] = branch
+    regular = ~tiny
+    if np.any(regular):
+        z_r = z[regular]
+        h_r = h[regular]
+        result[regular] = (
+            0.5 * z_r * np.log(z_r * z_r + h_r * h_r)
+            - z_r
+            + h_r * np.arctan(z_r / h_r)
+        )
+    return result
+
+
+def integrate_single_layer_panel_many(
+    targets: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
+) -> NDArray:
+    """Batched :func:`integrate_single_layer_panel` over ``targets`` shape (M, 2)."""
+    x = _validate_target_batch(targets)
+    a = np.asarray(start, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    if a.shape != (2,) or t.shape != (2,):
+        raise ValueError("start and tangent must each have shape (2,)")
+    if not np.isfinite(a).all() or not np.isfinite(t).all():
+        raise ValueError("panel integral inputs must be finite")
+    if not math.isfinite(length) or length <= 0.0:
+        raise ValueError("length must be a positive finite number")
+    reference = validate_reference_length(reference_length)
+    delta = x - a
+    xi = delta @ t
+    normal_distance = delta @ np.array([-t[1], t[0]])
+    integral_log_r = _log_distance_primitive_many(
+        length - xi, normal_distance
+    ) - _log_distance_primitive_many(-xi, normal_distance)
+    return -(integral_log_r - length * math.log(reference)) / _TWO_PI
+
+
+def integrate_double_layer_panel_many(
+    targets: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+    length: float,
+) -> NDArray:
+    """Batched :func:`integrate_double_layer_panel` over ``targets`` shape (M, 2)."""
+    x = _validate_target_batch(targets)
+    a = np.asarray(start, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    n = np.asarray(normal, dtype=float)
+    if any(v.shape != (2,) for v in (a, t, n)):
+        raise ValueError("start, tangent, and normal must each have shape (2,)")
+    if not all(np.isfinite(v).all() for v in (a, t, n)):
+        raise ValueError("panel integral inputs must be finite")
+    if not math.isfinite(length) or length <= 0.0:
+        raise ValueError("length must be a positive finite number")
+    delta = x - a
+    xi = delta @ t
+    eta = delta @ n
+    h = np.abs(eta)
+    z0, z1 = -xi, length - xi
+    values = np.zeros(x.shape[0], dtype=float)
+    regular = h > 1.0e-14
+    if np.any(regular):
+        h_r = h[regular]
+        values[regular] = (
+            np.sign(eta[regular])
+            * (np.arctan(z1[regular] / h_r) - np.arctan(z0[regular] / h_r))
+            / _TWO_PI
+        )
+    return values
+
+
+def integrate_single_layer_panel_gradient_many(
+    targets: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    length: float,
+    reference_length: float = REFERENCE_LENGTH,
+) -> NDArray:
+    """Batched :func:`integrate_single_layer_panel_gradient` -> shape (M, 2)."""
+    x = _validate_target_batch(targets)
+    length = _validate_panel_length(length)
+    validate_reference_length(reference_length)
+    t = np.asarray(tangent, dtype=float)
+    if t.shape != (2,):
+        raise ValueError("tangent must have shape (2,)")
+    if not np.isfinite(t).all():
+        raise ValueError("panel integral inputs must be finite")
+    n = np.array([-t[1], t[0]], dtype=float)
+    delta = x - np.asarray(start, dtype=float)
+    xi = delta @ t
+    eta = delta @ n
+    z0, z1 = -xi, length - xi
+    along = 0.5 * np.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
+    across = np.zeros_like(eta)
+    regular = eta != 0.0
+    if np.any(regular):
+        across[regular] = np.arctan(z1[regular] / eta[regular]) - np.arctan(
+            z0[regular] / eta[regular]
+        )
+    return -(
+        along[:, None] * t[None, :] + across[:, None] * n[None, :]
+    ) / _TWO_PI
+
+
+def integrate_double_layer_panel_gradient_many(
+    targets: FloatArray,
+    start: FloatArray,
+    tangent: FloatArray,
+    normal: FloatArray,
+    length: float,
+) -> NDArray:
+    """Batched :func:`integrate_double_layer_panel_gradient` -> shape (M, 2)."""
+    x = _validate_target_batch(targets)
+    length = _validate_panel_length(length)
+    n = np.asarray(normal, dtype=float)
+    t = np.asarray(tangent, dtype=float)
+    if n.shape != (2,) or t.shape != (2,):
+        raise ValueError("tangent and normal must each have shape (2,)")
+    if not np.isfinite(n).all() or not np.isfinite(t).all():
+        raise ValueError("panel integral inputs must be finite")
+    delta = x - np.asarray(start, dtype=float)
+    xi = delta @ t
+    eta = delta @ n
+    z1 = length - xi
+    r0 = xi * xi + eta * eta
+    r1 = z1 * z1 + eta * eta
+    if np.any(r0 <= 1.0e-28) or np.any(r1 <= 1.0e-28):
+        raise ValueError(
+            "double-layer gradient is singular at a panel endpoint; "
+            "keep the target a finite distance from the boundary"
+        )
+    a_term = -xi / r0 - z1 / r1
+    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
+    return (
+        a_term[:, None] * n[None, :] - 2.0 * eta[:, None] * b_term[:, None] * t[None, :]
+    ) / _TWO_PI
