@@ -35,6 +35,7 @@ import pytest
 from tensorbem.benchmarks import capytaine_finite_depth_crossval as study
 from tensorbem.benchmarks import finite_depth_crossval_plan as plan
 from tensorbem.finite_depth_solver3d import solve_radiation_finite_depth_3d
+from tensorbem.free_surface_solver3d import solve_radiation_3d
 from tensorbem.geometry3d import submerged_sphere_mesh
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -233,7 +234,12 @@ def test_frozen_ladder_reproduces_under_a_live_recompute():
     if not LADDER.exists():
         pytest.skip("TensorBEM ladder not produced in this checkout")
     ladder = json.loads(LADDER.read_text())
-    key, entry = sorted(ladder["cells"].items())[0]
+    # Pick the first *completed* cell (one with at least one ladder rung); the
+    # partial-run ladder file carries empty cells for the not-yet-computed grid,
+    # and a live recompute of an empty cell is not a reproduction of anything.
+    key, entry = next(
+        (k, e) for k, e in sorted(ladder["cells"].items()) if e["levels"]
+    )
     level = min(int(name) for name in entry["levels"])
     record = entry["levels"][str(level)]
     mesh = submerged_sphere_mesh(
@@ -553,3 +559,48 @@ def test_band_limits_are_inside_the_registered_tolerances():
     assert plan.extrapolation_limit("damping") < plan.OWNER_LIMIT
     with pytest.raises(ValueError):
         plan.extrapolation_limit("virtual_mass")
+
+
+# --------------------------------------------------------------------------- #
+# 8. the deep-water negative control is accurate against the analytic anchor
+#    (same-wavenumber comparison; a k0-mismatch is an artifact, not a defect)
+# --------------------------------------------------------------------------- #
+def test_deep_water_negative_control_matches_analytic_at_same_wavenumber():
+    """The depth-blind deep-water solver must agree with the Thorne/Wang/Linton
+    multipole anchor when both are evaluated at the *same* wavenumber.
+
+    The negative control is run at the finite-depth cell's ``nu`` (deep-water
+    dispersion ``k0 = nu``), so the analytic reference must be at ``ka = nu``,
+    not at the finite-depth target ``ka``.  Comparing at different wavenumbers
+    produces a ~20 % damping 'discrepancy' that is a comparison artifact.
+    """
+    from tensorbem.analytic import submerged_sphere_wave_multipole
+
+    cell = next(c for c in plan.cells() if c["h_over_a"] == 3.0 and c["ka"] == 0.5)
+    nu = cell["nu"]
+    an = submerged_sphere_wave_multipole(
+        ka=nu, radius=plan.SPHERE_RADIUS, submergence=plan.SPHERE_SUBMERGENCE,
+        density=plan.DENSITY, gravity=plan.GRAVITY, n_terms=20,
+    )
+    mesh = submerged_sphere_mesh(
+        3, radius=plan.SPHERE_RADIUS, submergence=plan.SPHERE_SUBMERGENCE
+    )
+    res = solve_radiation_3d(
+        mesh, nu, modes=[0, 2], center=(0.0, 0.0, -plan.SPHERE_SUBMERGENCE),
+        density=plan.DENSITY, gravity=plan.GRAVITY,
+    )
+    # 1280-panel rung: all four coefficients within 3 % of the analytic anchor.
+    for slot, name, ref in (
+        (0, "surge", an.surge_added_mass),
+        (1, "heave", an.heave_added_mass),
+    ):
+        assert abs(res.added_mass[slot, slot] - ref) / ref < 0.03, (
+            f"{name} added mass deviates {abs(res.added_mass[slot,slot]-ref)/ref:.2%}"
+        )
+    for slot, name, ref in (
+        (0, "surge", an.surge_damping),
+        (1, "heave", an.heave_damping),
+    ):
+        assert abs(res.damping[slot, slot] - ref) / ref < 0.03, (
+            f"{name} damping deviates {abs(res.damping[slot,slot]-ref)/ref:.2%}"
+        )
