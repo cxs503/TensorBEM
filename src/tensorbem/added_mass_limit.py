@@ -98,6 +98,7 @@ __all__ = [
     "added_mass_limit",
     "half_immersed_sphere_mesh",
     "half_immersed_sphere_added_mass",
+    "shift_added_mass",
 ]
 
 ADDED_MASS_LIMITS = ("infinite_frequency", "zero_frequency")
@@ -354,6 +355,51 @@ def half_immersed_sphere_added_mass(radius: float = 1.0, density: float = _DEFAU
     if not math.isfinite(density) or density <= 0.0:
         raise ValueError("density must be a positive finite number")
     return 0.25 * density * 4.0 / 3.0 * math.pi * radius**3
+
+def shift_added_mass(
+    matrix: Sequence[Sequence[float]],
+    from_center: Sequence[float],
+    to_center: Sequence[float],
+) -> FloatArray:
+    """Re-express an added-mass matrix about a different reference point.
+
+    A radiation sweep and the image solves of :func:`added_mass_limit` only
+    share a physical meaning if both are taken about the *same* point: the
+    added mass of a moment mode is not invariant under a shift of the
+    reference point (``A_55`` changes by the ``A_35`` coupling when the centre
+    is moved along ``z``).  With the reference moved from ``O1 = from_center``
+    to ``O2 = to_center`` and ``a = O2 - O1``, the rigid-body velocity
+    transforms as ``X(O1) = T X(O2)``,
+
+        T = [[I, [a x]], [0, I]],
+
+    and the kinetic energy ``1/2 X^T A X`` is invariant, so
+
+        A(O2) = T^T A(O1) T .
+
+    Validated against a direct image solve about ``to_center`` (see
+    ``tests/test_added_mass_limit.py::test_shift_added_mass_matches_direct_solve``);
+    the shift is a pure re-reference, so ``T`` is invertible and no
+    information is created.  Translation modes are mode-invariant.
+    """
+    dense = np.asarray(matrix, dtype=float)
+    if dense.shape != (6, 6):
+        raise ValueError("matrix must be 6x6")
+    if not np.all(np.isfinite(dense)):
+        raise ValueError("matrix must be finite")
+    origin = np.asarray(from_center, dtype=float).reshape(-1)
+    target = np.asarray(to_center, dtype=float).reshape(-1)
+    for name, vector in (("from_center", origin), ("to_center", target)):
+        if vector.size != 3 or not np.all(np.isfinite(vector)):
+            raise ValueError(f"{name} must be three finite numbers")
+    a = target - origin
+    cross = np.array([[0.0, -a[2], a[1]],
+                      [a[2], 0.0, -a[0]],
+                      [-a[1], a[0], 0.0]])
+    transform = np.eye(6)
+    transform[:3, 3:] = cross
+    return transform.T @ dense @ transform
+
 
 def mesh_panel_areas(mesh: TriangleMesh) -> FloatArray:
     """Panel areas of a triangulated surface, shape ``(M,)``."""
