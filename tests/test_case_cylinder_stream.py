@@ -386,10 +386,17 @@ def test_near_wall_half_panel_rows_carry_the_panel_size() -> None:
     in ``h`` raised ``KeyError: 'h_max_over_radius'`` and the whole case could
     not be regenerated (the committed record went stale).  Pin the row contract
     the order fit depends on, and the fit itself.
+
+    The factors tuple must include NEAR_WALL_WINDOW_FACTOR (2.0) and
+    NEAR_WALL_EXCLUSION_FACTOR (0.1) because near_wall_study internally queries
+    those specific clearance levels for window/exclusion analysis.
     """
     import math
 
-    study = case.near_wall_study(ladder=(16, 32), factors=(1.0, 0.5))
+    study = case.near_wall_study(
+        ladder=(16, 32),
+        factors=(case.NEAR_WALL_WINDOW_FACTOR, 1.0, 0.5, case.NEAR_WALL_EXCLUSION_FACTOR),
+    )
     linear = study["linear"]
     rows = linear["levels"] + linear["constant_mode_levels"]
     assert len(rows) == 4
