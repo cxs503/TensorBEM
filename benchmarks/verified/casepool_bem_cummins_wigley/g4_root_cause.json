@@ -1,0 +1,26 @@
+{
+  "case": "CASE-BEM-CUMMINS-WIGLEY",
+  "gate": "G4_free_decay",
+  "purpose": "verify the G4 failure mechanism (verification debt)",
+  "wigley": {
+    "zeta_decay": 0.2255760341032654,
+    "zeta_half_power": 0.16663787508482897,
+    "rel_err": 0.3536900538874087,
+    "omega_n": 7.384763256323229,
+    "peak_omega": 7.43461040830341,
+    "half_power_width": 2.477775361046466,
+    "half_power_width_pct_omega_n": 33.55253614833031,
+    "A_variation_pct": 12.9661599063044,
+    "B_variation_pct": 40.291705381545036
+  },
+  "const_B_control": {
+    "kernel_max_abs_at_t_gt_0": 3732.012550968841,
+    "note": "constant B -> delta-function memory kernel -> decay route not comparable to half-power"
+  },
+  "synthetic_causal_pair": {
+    "zeta_decay": 0.0023176799460322057,
+    "zeta_half_power": 0.0021199696483897384,
+    "rel_err": 0.09326090955719192
+  },
+  "conclusion": "G4's ~28-35% is a genuine estimator bias: the half-power bandwidth proxy is exact only for constant-coefficient single-DOF oscillators; the real Wigley's B(w) varies ~40% across the half-power width, biasing the proxy low.  The time-domain decay zeta is the true damping ratio of the free response.  NOT a solver bug."
+}
