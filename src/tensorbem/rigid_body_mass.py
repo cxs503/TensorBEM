@@ -540,7 +540,12 @@ def mesh_mass_properties(
 
     if density_field is None:
         vertex_sum = rel_a + rel_b + rel_c  # the apex contributes zero
-        first_moment = np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
+        # Mass moment (kg m), not a volume moment: the shared tail below divides
+        # by ``mass``, exactly like the density-field branch whose weights already
+        # carry the density.  Dividing a volume moment by mass would return the
+        # apex plus c_apex/rho instead of the centroid (m23857 regression pin:
+        # tests/test_rigid_body_mass_wetted_hull_inertia.py).
+        first_moment = rho * np.einsum("i,ij->j", tet_vol, vertex_sum) / 4.0
         # int xi xj dV per tetra, then summed, in coordinates relative to the apex.
         sum_sq = np.einsum("fi,fj->fij", rel_a, rel_a)
         sum_sq += np.einsum("fi,fj->fij", rel_b, rel_b)

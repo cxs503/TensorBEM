@@ -151,6 +151,35 @@ class TestGeometryInertia:
         slope = float(np.polyfit(np.log([2.0**-s for s in (2, 3, 4, 5)]), np.log(errors), 1)[0])
         assert 1.8 < slope < 2.2
 
+    def test_uniform_route_matches_constant_density_field_route(self) -> None:
+        """Cross-route pin: ``f = 1`` through the field branch must equal the uniform branch.
+
+        The two branches are independent quadratures of the same closed solid:
+        the uniform branch is exact for any polyhedron, and the field branch's
+        degree-3 tetrahedral rule is exact for a constant (affine) field, so the
+        two must agree to roundoff.  Internal-consistency checks (energy
+        identity, reference-point congruence) cannot see a unit slip that
+        shifts the centroid, because the matrix is assembled from the same
+        shifted (centroid, inertia) pair; this pin compares two *independent*
+        routes and catches the m23857 regression, where the uniform branch
+        divided a volume moment by the mass (kg) instead of the volume (m^3)
+        and returned the vertex-mean apex plus ``c_apex / rho`` instead of the
+        centroid.
+        """
+        for hull in (_barge(), _spheroid(3), _cylinder(16)):
+            base = wetted_hull_mass_properties(hull.vertices, hull.faces, DENSITY)
+            field = wetted_hull_mass_properties(
+                hull.vertices, hull.faces, DENSITY, density_field=lambda x: np.ones(x.shape[0])
+            )
+            assert float(field["mass"]) == pytest.approx(float(base["mass"]), rel=1.0e-13)
+            assert np.asarray(field["centroid"]) == pytest.approx(
+                np.asarray(base["centroid"]), abs=1.0e-9
+            )
+            base_inertia = np.asarray(base["inertia_cg"], dtype=float)
+            field_inertia = np.asarray(field["inertia_cg"], dtype=float)
+            scale = float(np.max(np.abs(base_inertia)))
+            assert np.max(np.abs(field_inertia - base_inertia)) / scale < 1.0e-12
+
     def test_prismatic_hull_matches_independent_2d_polygon_route(self) -> None:
         hull = _cylinder(32)
         props = wetted_hull_mass_properties(hull.vertices, hull.faces, DENSITY)
