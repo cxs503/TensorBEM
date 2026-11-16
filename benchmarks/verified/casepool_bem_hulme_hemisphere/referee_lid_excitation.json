@@ -1,0 +1,538 @@
+{
+ "case_code": "BEM-HULME-HEMISPHERE",
+ "study": "referee_lid_excitation",
+ "generated_at": "2026-11-16T07:02:20.315802+00:00",
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "capytaine": "3.1.dev0",
+  "machine": "loongarch64",
+  "host": "ec6ae0b42a0c"
+ },
+ "constants": {
+  "radius": 1.0,
+  "gravity": 9.80665,
+  "density": 1025.0,
+  "amplitude": 1.0,
+  "norm": 10051.81625,
+  "subdivisions": 5,
+  "panels": "4096 wetted + 960 lid",
+  "ref_n_terms": 144,
+  "target_ka": [
+   2.0,
+   2.58,
+   3.0,
+   3.5,
+   4.0
+  ],
+  "force_convention": "total = froude_krylov_force + DiffractionResult.forces; |F| / (rho g A a^2)"
+ },
+ "rows": [
+  {
+   "ka": 2.0,
+   "role": "in_band_control",
+   "reference": {
+    "Fx": 1.1976167433130802,
+    "Fz": 0.46461680814781375
+   },
+   "open_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": false,
+    "lid_panels": 0,
+    "Fx": 1.1945557047854223,
+    "Fx_phase_deg": -104.02179635571242,
+    "Fx_fk": 1.370117882663526,
+    "Fx_scattering": 0.35826871039011504,
+    "Fz": 0.4574677855575273,
+    "Fz_phase_deg": -84.89805986863819,
+    "Fz_fk": 0.44136479248771604,
+    "Fz_scattering": 0.6067690739082001,
+    "total_dimless": {
+     "Fx": [
+      -0.28943009174335943,
+      -1.1589622745494468
+     ],
+     "Fz": [
+      0.04068170641433433,
+      -0.4556553232281235
+     ]
+    },
+    "seconds": 3.2480082511901855
+   },
+   "lid_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": true,
+    "lid_panels": 960,
+    "Fx": 1.1936750585066127,
+    "Fx_phase_deg": -104.01778569870021,
+    "Fx_fk": 1.370117882663526,
+    "Fx_scattering": 0.35852348411528984,
+    "Fz": 0.4655016488467215,
+    "Fz_phase_deg": -84.9663409624248,
+    "Fz_fk": 0.44136479248771604,
+    "Fz_scattering": 0.6127322806647004,
+    "total_dimless": {
+     "Fx": [
+      -0.28913565178106765,
+      -1.1581281104307513
+     ],
+     "Fz": [
+      0.04084355840319926,
+      -0.4637063605515681
+     ]
+    },
+    "seconds": 5.099987030029297
+   },
+   "open_error": {
+    "Fx": 0.002555941660593266,
+    "Fz": 0.015386922007376102
+   },
+   "lid_error": {
+    "Fx": 0.0032912739642928257,
+    "Fz": 0.0019044526228725212
+   },
+   "lid_vs_open": {
+    "Fx": 0.0007372165862853267,
+    "Fz": 0.01756159349975459
+   },
+   "open_worst": 0.015386922007376102,
+   "lid_worst": 0.0032912739642928257
+  },
+  {
+   "ka": 2.58,
+   "role": "unresolved_in_xval",
+   "reference": {
+    "Fx": 0.931955565968338,
+    "Fz": 0.32003818120129673
+   },
+   "open_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": false,
+    "lid_panels": 0,
+    "Fx": 0.9282033247622369,
+    "Fx_phase_deg": -129.08745137157473,
+    "Fx_fk": 1.0303434822946906,
+    "Fx_scattering": 0.6622179820630316,
+    "Fz": 0.4708713879540345,
+    "Fz_phase_deg": -93.72986511867894,
+    "Fz_fk": 0.12978582566169483,
+    "Fz_scattering": 0.49650302346233094,
+    "total_dimless": {
+     "Fx": [
+      -0.5852376045264285,
+      -0.7204570482324663
+     ],
+     "Fz": [
+      -0.030631341019915114,
+      -0.46987400964628867
+     ]
+    },
+    "seconds": 3.1180801391601562
+   },
+   "lid_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": true,
+    "lid_panels": 960,
+    "Fx": 0.9272587786503163,
+    "Fx_phase_deg": -129.14968098875005,
+    "Fx_fk": 1.0303434822946906,
+    "Fx_scattering": 0.6630235634294295,
+    "Fz": 0.32323343754622214,
+    "Fz_phase_deg": -115.64129600378989,
+    "Fz_fk": 0.12978582566169483,
+    "Fz_scattering": 0.3970285927081901,
+    "total_dimless": {
+     "Fx": [
+      -0.5854234182764032,
+      -0.719088495192106
+     ],
+     "Fz": [
+      -0.13987462633959413,
+      -0.29140168848911363
+     ]
+    },
+    "seconds": 5.314159631729126
+   },
+   "open_error": {
+    "Fx": 0.004026201830987882,
+    "Fz": 0.47129753764556953
+   },
+   "lid_error": {
+    "Fx": 0.0050397116445584575,
+    "Fz": 0.0099839848262219
+   },
+   "lid_vs_open": {
+    "Fx": 0.0010176069043521035,
+    "Fz": 0.3135419865906664
+   },
+   "tensorbem": {
+    "id": "ka2.58_n1024",
+    "panels": 1024,
+    "Fx": 0.9277421756637985,
+    "Fz": 0.3233916312305658
+   },
+   "tensorbem_error": {
+    "Fx": 0.0045210205919652535,
+    "Fz": 0.010478281112214619
+   },
+   "cross_code_vs_lid": {
+    "Fx": 0.0005213183467357697,
+    "Fz": 0.0004894100237418798
+   },
+   "open_worst": 0.47129753764556953,
+   "lid_worst": 0.0099839848262219
+  },
+  {
+   "ka": 3.0,
+   "role": "unresolved_in_xval",
+   "reference": {
+    "Fx": 0.7903194728391987,
+    "Fz": 0.25111456696222356
+   },
+   "open_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": false,
+    "lid_panels": 0,
+    "Fx": 0.7858868114504045,
+    "Fx_phase_deg": -149.43021458518487,
+    "Fx_fk": 0.713602074059959,
+    "Fx_scattering": 0.7459247227200965,
+    "Fz": 0.25759822309636565,
+    "Fz_phase_deg": -136.83482054498842,
+    "Fz_fk": 0.0029950266773439886,
+    "Fz_scattering": 0.25542191498443284,
+    "total_dimless": {
+     "Fx": [
+      -0.6766566764198152,
+      -0.39969215987829076
+     ],
+     "Fz": [
+      -0.18788815495396177,
+      -0.17622396480161542
+     ]
+    },
+    "seconds": 3.2183778285980225
+   },
+   "lid_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": true,
+    "lid_panels": 960,
+    "Fx": 0.7869610117222807,
+    "Fx_phase_deg": -149.52782687649034,
+    "Fx_fk": 0.713602074059959,
+    "Fx_scattering": 0.7476375274330826,
+    "Fz": 0.2546332494396655,
+    "Fz_phase_deg": -138.07697175037518,
+    "Fz_fk": 0.0029950266773439886,
+    "Fz_scattering": 0.2524127527427813,
+    "total_dimless": {
+     "Fx": [
+      -0.6782624589634794,
+      -0.3990835385376978
+     ],
+     "Fz": [
+      -0.18945810506416796,
+      -0.17012853419017518
+     ]
+    },
+    "seconds": 4.906950950622559
+   },
+   "open_error": {
+    "Fx": 0.00560869564920369,
+    "Fz": 0.025819514226418653
+   },
+   "lid_error": {
+    "Fx": 0.004249498123654711,
+    "Fz": 0.014012259503731807
+   },
+   "lid_vs_open": {
+    "Fx": 0.001366863848871198,
+    "Fz": 0.011510070298858392
+   },
+   "tensorbem": {
+    "id": "ka3.0_n1024",
+    "panels": 1024,
+    "Fx": 0.7857854321344618,
+    "Fz": 0.2546351290826461
+   },
+   "tensorbem_error": {
+    "Fx": 0.005736972022780153,
+    "Fz": 0.01401974470462371
+   },
+   "cross_code_vs_lid": {
+    "Fx": 0.0014938218924545018,
+    "Fz": 7.381765675660495e-06
+   },
+   "open_worst": 0.025819514226418653,
+   "lid_worst": 0.014012259503731807
+  },
+  {
+   "ka": 3.5,
+   "role": "extension_control",
+   "reference": {
+    "Fx": 0.6611803348482501,
+    "Fz": 0.19281754325573103
+   },
+   "open_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": false,
+    "lid_panels": 0,
+    "Fx": 0.6539870637325587,
+    "Fx_phase_deg": -175.2566217647341,
+    "Fx_fk": 0.3316777840901612,
+    "Fx_scattering": 0.7084030264252595,
+    "Fz": 0.19549528643792397,
+    "Fz_phase_deg": -164.69216436565324,
+    "Fz_fk": 0.08420871065966333,
+    "Fz_scattering": 0.11641662564444089,
+    "total_dimless": {
+     "Fx": [
+      -0.6517472012802837,
+      -0.05408017338037096
+     ],
+     "Fz": [
+      -0.18855937227395803,
+      -0.05161172489945335
+     ]
+    },
+    "seconds": 3.158626079559326
+   },
+   "lid_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": true,
+    "lid_panels": 960,
+    "Fx": 0.6607069484950148,
+    "Fx_phase_deg": -175.00588483375793,
+    "Fx_fk": 0.3316777840901612,
+    "Fx_scattering": 0.7130145395113411,
+    "Fz": 0.1955212729976036,
+    "Fz_phase_deg": -165.01847025149863,
+    "Fz_fk": 0.08420871065966333,
+    "Fz_scattering": 0.11623156045079502,
+    "total_dimless": {
+     "Fx": [
+      -0.6581986700897523,
+      -0.057516801733715706
+     ],
+     "Fz": [
+      -0.18887535061130398,
+      -0.05054374467785743
+     ]
+    },
+    "seconds": 4.805256605148315
+   },
+   "open_error": {
+    "Fx": 0.01087943899199968,
+    "Fz": 0.013887445804874127
+   },
+   "lid_error": {
+    "Fx": 0.0007159716166452508,
+    "Fz": 0.014022218602208113
+   },
+   "lid_vs_open": {
+    "Fx": 0.010275256400490722,
+    "Fz": 0.00013292678382756382
+   },
+   "tensorbem": {
+    "id": "ka3.5_sub5",
+    "panels": 4096,
+    "Fx": 0.6602370027073243,
+    "Fz": 0.19386359169256734
+   },
+   "tensorbem_error": {
+    "Fx": 0.001426739561366866,
+    "Fz": 0.005425068793916498
+   },
+   "cross_code_vs_lid": {
+    "Fx": 0.0007112771990076716,
+    "Fz": 0.008478265713094991
+   },
+   "open_worst": 0.013887445804874127,
+   "lid_worst": 0.014022218602208113
+  },
+  {
+   "ka": 4.0,
+   "role": "unresolved_in_xval",
+   "reference": {
+    "Fx": 0.5625209334011354,
+    "Fz": 0.15142551760234055
+   },
+   "open_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": false,
+    "lid_panels": 0,
+    "Fx": 0.5872493357258135,
+    "Fx_phase_deg": 164.11376072459055,
+    "Fx_fk": 0.0036289455467636723,
+    "Fx_scattering": 0.5882530354788991,
+    "Fz": 0.15281463854173533,
+    "Fz_phase_deg": 167.51203870630567,
+    "Fz_fk": 0.10625683859781991,
+    "Fz_scattering": 0.05418435642583522,
+    "total_dimless": {
+     "Fx": [
+      -0.5648205679945291,
+      0.160746720902004
+     ],
+     "Fz": [
+      -0.14919926772982758,
+      0.033043793086212865
+     ]
+    },
+    "seconds": 3.1332695484161377
+   },
+   "lid_referee": {
+    "subdivisions": 5,
+    "panels": 4096,
+    "lid": true,
+    "lid_panels": 960,
+    "Fx": 0.5646648069481539,
+    "Fx_phase_deg": 158.83732129334572,
+    "Fx_fk": 0.0036289455467636723,
+    "Fx_scattering": 0.565985036416154,
+    "Fz": 0.15265358150089706,
+    "Fz_phase_deg": 167.6567556587158,
+    "Fz_fk": 0.10625683859781991,
+    "Fz_scattering": 0.05387528891143004,
+    "total_dimless": {
+     "Fx": [
+      -0.5265833370452556,
+      0.20385370575998532
+     ],
+     "Fz": [
+      -0.14912491918997448,
+      0.03263241366547375
+     ]
+    },
+    "seconds": 4.951169013977051
+   },
+   "open_error": {
+    "Fx": 0.043959968165387726,
+    "Fz": 0.009173625168267589
+   },
+   "lid_error": {
+    "Fx": 0.003811188917105955,
+    "Fz": 0.008110019486818162
+   },
+   "lid_vs_open": {
+    "Fx": 0.03845815976913136,
+    "Fz": 0.0010539372561109912
+   },
+   "tensorbem": {
+    "id": "ka4_sub5",
+    "panels": 4096,
+    "Fx": 0.5595239315502967,
+    "Fz": 0.15212866373771913
+   },
+   "tensorbem_error": {
+    "Fx": 0.0053278050164607136,
+    "Fz": 0.0046435115198029
+   },
+   "cross_code_vs_lid": {
+    "Fx": 0.009104295742534666,
+    "Fz": 0.0034386206862420635
+   },
+   "open_worst": 0.043959968165387726,
+   "lid_worst": 0.008110019486818162
+  }
+ ],
+ "gates": {
+  "E1_open_referee_excitation_polluted": {
+   "criterion": "without the lid, the referee's |F| error at ka = 2.58 exceeds the 5% case tolerance (the irregular frequency spoils the exciting force as well as the radiation coefficients)",
+   "threshold": 0.05,
+   "note": "pre-registered; a FAIL here would mean the pole is confined to the radiation channel, which is itself a finding",
+   "measured": {
+    "ka": 2.58,
+    "open_error": {
+     "Fx": 0.004026201830987882,
+     "Fz": 0.47129753764556953
+    },
+    "worst": 0.47129753764556953
+   },
+   "verdict": "PASS"
+  },
+  "E2_lid_referee_excitation_accuracy": {
+   "criterion": "worst lid-closed referee |F| error against the Hulme series over TARGET_KA <= 5% (the case tolerance)",
+   "threshold": 0.05,
+   "note": "pre-registered threshold, fixed before these solves were run",
+   "measured": {
+    "worst": 0.014022218602208113,
+    "per_ka": {
+     "2.00": {
+      "Fx": 0.0032912739642928257,
+      "Fz": 0.0019044526228725212
+     },
+     "2.58": {
+      "Fx": 0.0050397116445584575,
+      "Fz": 0.0099839848262219
+     },
+     "3.00": {
+      "Fx": 0.004249498123654711,
+      "Fz": 0.014012259503731807
+     },
+     "3.50": {
+      "Fx": 0.0007159716166452508,
+      "Fz": 0.014022218602208113
+     },
+     "4.00": {
+      "Fx": 0.003811188917105955,
+      "Fz": 0.008110019486818162
+     }
+    }
+   },
+   "verdict": "PASS"
+  },
+  "E3_cross_code_excitation_defined": {
+   "criterion": "at ka = 2.58, 3.0, 4.0 the TensorBEM |F| agrees with the lid-closed referee within 5%, so the attribution is defined",
+   "threshold": 0.05,
+   "note": "pre-registered",
+   "measured": {
+    "2.58": {
+     "panels": 1024,
+     "cross_code": {
+      "Fx": 0.0005213183467357697,
+      "Fz": 0.0004894100237418798
+     },
+     "worst": 0.0005213183467357697
+    },
+    "3.00": {
+     "panels": 1024,
+     "cross_code": {
+      "Fx": 0.0014938218924545018,
+      "Fz": 7.381765675660495e-06
+     },
+     "worst": 0.0014938218924545018
+    },
+    "4.00": {
+     "panels": 4096,
+     "cross_code": {
+      "Fx": 0.009104295742534666,
+      "Fz": 0.0034386206862420635
+     },
+     "worst": 0.009104295742534666
+    }
+   },
+   "verdict": "PASS"
+  },
+  "E4_lid_leaves_in_band_force_alone": {
+   "criterion": "at ka = 2.0: |lid - open| / |open| <= 3% on both |Fx| and |Fz|",
+   "threshold": 0.03,
+   "note": "pre-registered",
+   "measured": {
+    "worst": 0.01756159349975459
+   },
+   "verdict": "PASS"
+  }
+ },
+ "overall": "PASS",
+ "repro_cmd": "PYTHONPATH=src python benchmarks/verified/casepool_bem_hulme_hemisphere/referee_lid_excitation.py"
+}
