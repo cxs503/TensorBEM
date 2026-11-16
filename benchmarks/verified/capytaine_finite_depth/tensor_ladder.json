@@ -125,9 +125,42 @@
        "damping": 2447.0447334988735
       }
      }
+    },
+    "2": {
+     "level": 2,
+     "panels": 320,
+     "mode_count": 1075,
+     "condition_number": 2.2041228330891207,
+     "relative_residual": 3.602132129061011e-16,
+     "seconds": 111.243,
+     "values": {
+      "surge": {
+       "added_mass": 2058.0648382192935,
+       "damping": 1617.1050061665417
+      },
+      "heave": {
+       "added_mass": 2263.1863179155607,
+       "damping": 2905.217883303954
+      }
+     }
     }
    },
-   "negative_control": null
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.332,
+    "values": {
+     "surge": {
+      "added_mass": 1908.171669191518,
+      "damping": 1277.255117790035
+     },
+     "heave": {
+      "added_mass": 1769.7137321883067,
+      "damping": 2502.3085768892774
+     }
+    }
+   }
   },
   "h_over_a=3.0|ka=2.00": {
    "cell": "h_over_a=3.0|ka=2.00",
@@ -137,8 +170,60 @@
    "k0": 2.0,
    "k0h": 6.0,
    "nu": 1.9999754233015912,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 133,
+     "condition_number": 2.406001006696919,
+     "relative_residual": 1.841742279349425e-16,
+     "seconds": 0.219,
+     "values": {
+      "surge": {
+       "added_mass": 1456.9285848647846,
+       "damping": 353.96668902229
+      },
+      "heave": {
+       "added_mass": 1415.681470351661,
+       "damping": 658.3294189309576
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 341,
+     "condition_number": 2.2561884060789508,
+     "relative_residual": 3.0112612681364036e-16,
+     "seconds": 4.849,
+     "values": {
+      "surge": {
+       "added_mass": 1752.0241817768963,
+       "damping": 581.8670697797686
+      },
+      "heave": {
+       "added_mass": 1680.5191027320675,
+       "damping": 1052.5694470234523
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 1.623,
+    "values": {
+     "surge": {
+      "added_mass": 1694.5908254457581,
+      "damping": 578.9828122209872
+     },
+     "heave": {
+      "added_mass": 1432.8733716857225,
+      "damping": 992.4848079884946
+     }
+    }
+   }
   },
   "h_over_a=5.0|ka=0.50": {
    "cell": "h_over_a=5.0|ka=0.50",
@@ -148,8 +233,60 @@
    "k0": 0.5,
    "k0h": 2.5,
    "nu": 0.49330714907571516,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 220,
+     "condition_number": 2.3892095891228653,
+     "relative_residual": 1.927748778720867e-16,
+     "seconds": 0.298,
+     "values": {
+      "surge": {
+       "added_mass": 1703.5477919177558,
+       "damping": 294.1647373677151
+      },
+      "heave": {
+       "added_mass": 1856.110801294053,
+       "damping": 564.1112137106045
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 567,
+     "condition_number": 2.2309964348613467,
+     "relative_residual": 3.015685444328812e-16,
+     "seconds": 7.115,
+     "values": {
+      "surge": {
+       "added_mass": 2196.101319672102,
+       "damping": 544.6182070443863
+      },
+      "heave": {
+       "added_mass": 2476.5131466225735,
+       "damping": 1076.3507838854998
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.299,
+    "values": {
+     "surge": {
+      "added_mass": 2200.4004500918963,
+      "damping": 538.0002804486844
+     },
+     "heave": {
+      "added_mass": 2420.620867788864,
+      "damping": 1175.0844684029562
+     }
+    }
+   }
   },
   "h_over_a=5.0|ka=1.00": {
    "cell": "h_over_a=5.0|ka=1.00",
@@ -159,8 +296,60 @@
    "k0": 1.0,
    "k0h": 5.0,
    "nu": 0.9999092042625951,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 220,
+     "condition_number": 2.4110221845760025,
+     "relative_residual": 2.282411888354294e-16,
+     "seconds": 0.315,
+     "values": {
+      "surge": {
+       "added_mass": 1550.1711966436924,
+       "damping": 707.5189890513203
+      },
+      "heave": {
+       "added_mass": 1510.7241751234444,
+       "damping": 1404.1432476616174
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 567,
+     "condition_number": 2.264877469641491,
+     "relative_residual": 3.2681321355858886e-16,
+     "seconds": 7.122,
+     "values": {
+      "surge": {
+       "added_mass": 1905.6470110540572,
+       "damping": 1279.8402615521961
+      },
+      "heave": {
+       "added_mass": 1802.5372298219743,
+       "damping": 2530.4421945632726
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.306,
+    "values": {
+     "surge": {
+      "added_mass": 1905.2609297278402,
+      "damping": 1278.8255517517762
+     },
+     "heave": {
+      "added_mass": 1764.121291137173,
+      "damping": 2502.405588725252
+     }
+    }
+   }
   },
   "h_over_a=5.0|ka=2.00": {
    "cell": "h_over_a=5.0|ka=2.00",
@@ -170,8 +359,60 @@
    "k0": 2.0,
    "k0h": 10.0,
    "nu": 1.9999999917553855,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 220,
+     "condition_number": 2.39281488133004,
+     "relative_residual": 2.062876030140405e-16,
+     "seconds": 0.322,
+     "values": {
+      "surge": {
+       "added_mass": 1426.2202023570949,
+       "damping": 351.34526372175463
+      },
+      "heave": {
+       "added_mass": 1290.222637607068,
+       "damping": 632.1565170274757
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 567,
+     "condition_number": 2.2381881972906275,
+     "relative_residual": 3.179230320230191e-16,
+     "seconds": 7.242,
+     "values": {
+      "surge": {
+       "added_mass": 1696.767278699263,
+       "damping": 579.027123167413
+      },
+      "heave": {
+       "added_mass": 1458.1167048369368,
+       "damping": 1001.2636517251256
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 2.008,
+    "values": {
+     "surge": {
+      "added_mass": 1694.5918365990685,
+      "damping": 578.9628835708421
+     },
+     "heave": {
+      "added_mass": 1432.8760796635027,
+      "damping": 992.4495305449325
+     }
+    }
+   }
   },
   "h_over_a=10.0|ka=0.50": {
    "cell": "h_over_a=10.0|ka=0.50",
@@ -181,8 +422,60 @@
    "k0": 0.5,
    "k0h": 5.0,
    "nu": 0.49995460213129755,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 437,
+     "condition_number": 2.393920165308386,
+     "relative_residual": 1.8753805465340163e-16,
+     "seconds": 0.828,
+     "values": {
+      "surge": {
+       "added_mass": 1704.8882206447893,
+       "damping": 298.11778782910756
+      },
+      "heave": {
+       "added_mass": 1828.177657594388,
+       "damping": 635.7543296632426
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 1132,
+     "condition_number": 2.237928024059418,
+     "relative_residual": 3.295325290143805e-16,
+     "seconds": 14.733,
+     "values": {
+      "surge": {
+       "added_mass": 2198.5789108337526,
+       "damping": 552.3952495111026
+      },
+      "heave": {
+       "added_mass": 2421.6186871255936,
+       "damping": 1207.2403291332698
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.202,
+    "values": {
+     "surge": {
+      "added_mass": 2198.5240473939334,
+      "damping": 552.5834885475398
+     },
+     "heave": {
+      "added_mass": 2415.5629961560094,
+      "damping": 1206.242693149016
+     }
+    }
+   }
   },
   "h_over_a=10.0|ka=1.00": {
    "cell": "h_over_a=10.0|ka=1.00",
@@ -192,8 +485,60 @@
    "k0": 1.0,
    "k0h": 10.0,
    "nu": 0.9999999958776927,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 437,
+     "condition_number": 2.4104094672914513,
+     "relative_residual": 2.283089675840985e-16,
+     "seconds": 0.832,
+     "values": {
+      "surge": {
+       "added_mass": 1549.9206645988754,
+       "damping": 706.9243317364917
+      },
+      "heave": {
+       "added_mass": 1490.3713534933227,
+       "damping": 1394.2011809958458
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 1132,
+     "condition_number": 2.264280873421575,
+     "relative_residual": 3.220821191031786e-16,
+     "seconds": 13.749,
+     "values": {
+      "surge": {
+       "added_mass": 1905.232344025866,
+       "damping": 1278.8763201811219
+      },
+      "heave": {
+       "added_mass": 1767.009538826219,
+       "damping": 2505.205675175774
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.244,
+    "values": {
+     "surge": {
+      "added_mass": 1905.2066577184369,
+      "damping": 1278.8539049748888
+     },
+     "heave": {
+      "added_mass": 1764.0171727098652,
+      "damping": 2502.405475775627
+     }
+    }
+   }
   },
   "h_over_a=10.0|ka=2.00": {
    "cell": "h_over_a=10.0|ka=2.00",
@@ -203,8 +548,60 @@
    "k0": 2.0,
    "k0h": 20.0,
    "nu": 2.0,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 437,
+     "condition_number": 2.391006172731167,
+     "relative_residual": 2.1503746487712663e-16,
+     "seconds": 0.743,
+     "values": {
+      "surge": {
+       "added_mass": 1425.0307651244073,
+       "damping": 351.2842455248664
+      },
+      "heave": {
+       "added_mass": 1276.9737069084865,
+       "damping": 628.1544765879004
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 1132,
+     "condition_number": 2.2356258208596036,
+     "relative_residual": 2.6146555737310556e-16,
+     "seconds": 14.173,
+     "values": {
+      "surge": {
+       "added_mass": 1694.646429183952,
+       "damping": 578.991111331267
+      },
+      "heave": {
+       "added_mass": 1435.2238466518115,
+       "damping": 993.3243829237593
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 1.558,
+    "values": {
+     "surge": {
+      "added_mass": 1694.5918369384078,
+      "damping": 578.9628768833118
+     },
+     "heave": {
+      "added_mass": 1432.8760805722666,
+      "damping": 992.44951870677
+     }
+    }
+   }
   },
   "h_over_a=20.0|ka=0.50": {
    "cell": "h_over_a=20.0|ka=0.50",
@@ -214,8 +611,60 @@
    "k0": 0.5,
    "k0h": 10.0,
    "nu": 0.49999999793884636,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 872,
+     "condition_number": 2.393931823232368,
+     "relative_residual": 2.180834046992229e-16,
+     "seconds": 1.466,
+     "values": {
+      "surge": {
+       "added_mass": 1704.8474604344703,
+       "damping": 298.27396221970275
+      },
+      "heave": {
+       "added_mass": 1825.1967634889647,
+       "damping": 635.7497680861607
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 2261,
+     "condition_number": 2.2380117606031567,
+     "relative_residual": 3.443619567990757e-16,
+     "seconds": 30.882,
+     "values": {
+      "surge": {
+       "added_mass": 2198.5311010492674,
+       "damping": 552.6911987837228
+      },
+      "heave": {
+       "added_mass": 2416.06428212205,
+       "damping": 1206.6944346047903
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.207,
+    "values": {
+     "surge": {
+      "added_mass": 2198.5108548771404,
+      "damping": 552.6831688111805
+     },
+     "heave": {
+      "added_mass": 2415.5275932870195,
+      "damping": 1206.455367872836
+     }
+    }
+   }
   },
   "h_over_a=20.0|ka=1.00": {
    "cell": "h_over_a=20.0|ka=1.00",
@@ -225,8 +674,60 @@
    "k0": 1.0,
    "k0h": 20.0,
    "nu": 1.0,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 872,
+     "condition_number": 2.4103245465511023,
+     "relative_residual": 2.0064588109213088e-16,
+     "seconds": 1.675,
+     "values": {
+      "surge": {
+       "added_mass": 1549.900615596832,
+       "damping": 706.914141935458
+      },
+      "heave": {
+       "added_mass": 1488.8357950695477,
+       "damping": 1393.1285084308583
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 2261,
+     "condition_number": 2.264219018543034,
+     "relative_residual": 3.17126849932574e-16,
+     "seconds": 34.592,
+     "values": {
+      "surge": {
+       "added_mass": 1905.2232379842155,
+       "damping": 1278.880218725885
+      },
+      "heave": {
+       "added_mass": 1764.3675120254834,
+       "damping": 2502.7713207274182
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 0.235,
+    "values": {
+     "surge": {
+      "added_mass": 1905.206655254407,
+      "damping": 1278.853906261394
+     },
+     "heave": {
+      "added_mass": 1764.0171679828638,
+      "damping": 2502.4054757688973
+     }
+    }
+   }
   },
   "h_over_a=20.0|ka=2.00": {
    "cell": "h_over_a=20.0|ka=2.00",
@@ -236,8 +737,60 @@
    "k0": 2.0,
    "k0h": 40.0,
    "nu": 2.0,
-   "levels": {},
-   "negative_control": null
+   "levels": {
+    "0": {
+     "level": 0,
+     "panels": 20,
+     "mode_count": 872,
+     "condition_number": 2.3908069586115985,
+     "relative_residual": 1.9450015923974923e-16,
+     "seconds": 1.487,
+     "values": {
+      "surge": {
+       "added_mass": 1424.9942845121298,
+       "damping": 351.27764290287655
+      },
+      "heave": {
+       "added_mass": 1275.7739162935586,
+       "damping": 627.7599654527914
+      }
+     }
+    },
+    "1": {
+     "level": 1,
+     "panels": 80,
+     "mode_count": 2261,
+     "condition_number": 2.235375904170793,
+     "relative_residual": 3.340618035163301e-16,
+     "seconds": 32.746,
+     "values": {
+      "surge": {
+       "added_mass": 1694.6037013473822,
+       "damping": 578.9922692588688
+      },
+      "heave": {
+       "added_mass": 1433.1733846144018,
+       "damping": 992.5549059741429
+      }
+     }
+    }
+   },
+   "negative_control": {
+    "level": 1,
+    "panels": 80,
+    "mode_count": 0,
+    "seconds": 1.513,
+    "values": {
+     "surge": {
+      "added_mass": 1694.5918369384078,
+      "damping": 578.9628768833118
+     },
+     "heave": {
+      "added_mass": 1432.8760805722666,
+      "damping": 992.44951870677
+     }
+    }
+   }
   }
  },
  "environment": {
