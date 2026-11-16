@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 CASE_DIR = REPO_ROOT / "benchmarks" / "verified" / "casepool_bem_hulme_hemisphere"
 RESULTS_FILE = CASE_DIR / "haskind_verification_results.json"
 GATE = 0.03  # 3% Haskind agreement gate
@@ -184,3 +184,98 @@ class TestFigureArtifacts:
         fig = CASE_DIR / "fig_haskind_three_way.png"
         assert fig.is_file(), f"Missing {fig}"
         assert fig.stat().st_size > 10000, f"Figure too small: {fig.stat().st_size} bytes"
+
+
+class TestArtifactProvenance:
+    """The band gate must be decided on the case mesh, not on a coarser one."""
+
+    def test_band_cells_on_case_mesh(self):
+        data = _load_results()
+        for cell in data["cells"]:
+            sub = data["mesh_subdivisions"]
+            assert cell["subdivisions"] == sub, (
+                f"ka={cell['ka']}: band cell ran on subdivisions="
+                f"{cell['subdivisions']} but the artifact declares {sub}"
+            )
+            assert cell["panels"] == 4 * 4 ** sub, (
+                f"ka={cell['ka']}: band cell has {cell['panels']} panels, "
+                f"expected {4 * 4 ** sub} for subdivisions={sub}"
+            )
+
+    def test_environment_recorded(self):
+        data = _load_results()
+        env = data["environment"]
+        assert env["python"] and env["numpy"], "run environment not recorded"
+        assert set(env["threads"]) == {
+            "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"
+        }
+
+    def test_gate_matches_test_module(self):
+        data = _load_results()
+        assert data["gate"] == GATE
+
+    def test_band_verdict_decided_before_ladder(self):
+        """The ladder may not soften the band verdict."""
+        data = _load_results()
+        band_max = max(
+            max(c["rel_err_Fx"], c["rel_err_Fz"]) for c in data["cells"]
+        )
+        assert data["band_verdict"] == ("PASS" if band_max < GATE else "FAIL")
+        assert data["verdict"] == ("PASS" if data["band_verdict"] == "PASS"
+                                   and data.get("ladder_verdict", "PASS") == "PASS"
+                                   else "FAIL")
+
+
+class TestMeshLadder:
+    """Gate H2: the two routes must converge together under mesh refinement."""
+
+    def test_ladder_ran(self):
+        data = _load_results()
+        assert data["mesh_ladder"], "mesh ladder not recorded (run with --ladder)"
+        kas = {row["ka"] for row in data["mesh_ladder"]}
+        assert kas == {1.0, 2.0}, f"unexpected ladder ka set: {kas}"
+        panels = {row["panels"] for row in data["mesh_ladder"]}
+        assert panels == {64, 256}, f"unexpected ladder panel counts: {panels}"
+
+    def test_ladder_under_gate(self):
+        data = _load_results()
+        for row in data["mesh_ladder"]:
+            assert row["rel_err_Fz"] < GATE, (
+                f"ka={row['ka']}, {row['panels']} panels: heave discrepancy "
+                f"{row['rel_err_Fz']*100:.3f}% exceeds gate"
+            )
+
+    def test_ladder_converges_heave(self):
+        """Heave is the constraining component; its discrepancy must shrink."""
+        data = _load_results()
+        by_ka: dict[float, list[dict]] = {}
+        for row in data["mesh_ladder"]:
+            by_ka.setdefault(row["ka"], []).append(row)
+        for ka, rows in by_ka.items():
+            rows.sort(key=lambda r: r["panels"])
+            coarse, fine = rows[0], rows[-1]
+            assert fine["rel_err_Fz"] < coarse["rel_err_Fz"], (
+                f"ka={ka}: heave discrepancy did not shrink from {coarse['panels']} "
+                f"to {fine['panels']} panels "
+                f"({coarse['rel_err_Fz']*100:.3f}% -> {fine['rel_err_Fz']*100:.3f}%)"
+            )
+
+
+class TestHaskindVsReference:
+    """The Haskind route must also land on the Hulme series, not only on the solver."""
+
+    def test_haskind_surge_vs_hulme(self):
+        data = _load_results()
+        for cell in data["cells"]:
+            assert cell["rel_err_Fx_haskind_vs_hulme"] < 0.05, (
+                f"ka={cell['ka']}: Haskind surge vs Hulme "
+                f"{cell['rel_err_Fx_haskind_vs_hulme']*100:.3f}% exceeds 5%"
+            )
+
+    def test_haskind_heave_vs_hulme(self):
+        data = _load_results()
+        for cell in data["cells"]:
+            assert cell["rel_err_Fz_haskind_vs_hulme"] < 0.05, (
+                f"ka={cell['ka']}: Haskind heave vs Hulme "
+                f"{cell['rel_err_Fz_haskind_vs_hulme']*100:.3f}% exceeds 5%"
+            )
