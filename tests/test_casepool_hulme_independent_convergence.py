@@ -287,3 +287,33 @@ def test_case_cell_records_the_residual_it_was_produced_with() -> None:
     assert cell["radiation_relative_residual"] < 1e-2
     assert cell["diffraction_relative_residual"] < 1e-2
     assert cell["solve_warnings"] == []
+
+
+def test_committed_healthy_ladder_carries_per_row_provenance() -> None:
+    """Every committed healthy rung must name the machine and driver behind it.
+
+    The three control-plane rungs were originally stamped only by the file-level
+    ``environment`` block, so E0 had to report all of them as provenance-unknown:
+    a rung whose origin is unknown cannot be told apart from one produced on the
+    node where the least-squares driver returned a full-rank wrong vector
+    (m20910 / m20515).  The ladder is now rebuilt through the current driver so
+    that each row carries host, numpy, solve method and stationarity, and the
+    artifact names the file it came from.
+    """
+    if not INHOUSE_ARTIFACT.exists():
+        pytest.skip("healthy in-house ladder not produced")
+    ladder = json.loads(INHOUSE_ARTIFACT.read_text())
+    assert ladder["rows"], "ladder must carry rungs"
+    for row in ladder["rows"]:
+        assert row.get("host"), row["panels"]
+        assert row.get("numpy"), row["panels"]
+        assert row.get("radiation_solve_method") in {"lstsq", "qr"}, row["panels"]
+        assert float(row["radiation_stationarity"]) < 1e-6, row["panels"]
+    assert ladder.get("provenance"), "the contributing files must be named"
+    named = sorted({r for entry in ladder["provenance"] for r in entry["rows"]})
+    assert named == sorted(int(r["subdivisions"]) for r in ladder["rows"])
+    stored = json.loads(EVIDENCE.read_text())
+    e0 = stored["gates"]["E0_rungs_solver_healthy"]
+    assert e0["pass"] is True
+    assert e0["mixed_provenance"]["n_rungs_unknown_host"] == 0
+    assert all(entry["host"] is not None for entry in e0["rung_ledger"])
