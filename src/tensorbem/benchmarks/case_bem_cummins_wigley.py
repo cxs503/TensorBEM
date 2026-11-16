@@ -2267,7 +2267,7 @@ def truncation_decidability_gate(
     reported in ``newly_decidable``; if that list is empty the extension is an
     honest negative result (the horizontal modes are still not in decay).
     """
-    from tensorbem.causality import high_band_truncation_budget, local_tail_exponent
+    from tensorbem.causality import high_band_truncation_budget, local_tail_exponent, robust_tail_exponent
 
     if closure_rows is None:
         closure_rows = kk_gate(extended)["values"]["per_dof"]
@@ -2282,14 +2282,20 @@ def truncation_decidability_gate(
         budget = high_band_truncation_budget(
             extended.omega, extended.damping[:, index, index]
         )
-        exponent, _ = local_tail_exponent(
+        # Robust multi-window tail exponent (m22756 recommendation)
+        robust = robust_tail_exponent(
+            extended.omega, extended.damping[:, index, index]
+        )
+        # Keep single-window for backward compatibility in the row
+        exponent_single, _ = local_tail_exponent(
             extended.omega, extended.damping[:, index, index]
         )
         scale = max(float(new["residual_scale"]), 1e-300)
         budget_relative = budget.relative(scale)
         finite = budget_relative[np.isfinite(budget_relative)]
         old_admissible = bool(old["truncation_budget_admissible"])
-        new_admissible = bool(budget.admissible)
+        # Use robust consensus for admissibility decision
+        new_admissible = bool(budget.admissible) and robust.consensus
         if new_admissible and not old_admissible:
             newly.append(name)
         if old_admissible and not new_admissible:
@@ -2299,7 +2305,11 @@ def truncation_decidability_gate(
                 "dof": int(index),
                 "dof_name": name,
                 "exponent_at_12": float(old["measured_tail_exponent"]),
-                "exponent_at_20": float(exponent),
+                "exponent_at_20": float(exponent_single),
+                "exponent_robust_median": float(robust.exponent),
+                "exponent_robust_consensus": bool(robust.consensus),
+                "exponent_robust_spread": float(robust.spread),
+                "exponent_per_window": {str(k): v[0] for k, v in robust.per_window.items()},
                 "budget_admissible_at_12": old_admissible,
                 "budget_admissible_at_20": new_admissible,
                 "budget_max_relative_at_20": (
