@@ -1,0 +1,207 @@
+{
+ "anchor": "XVAL-BEM-R2-OSS-CROSSVAL-CAPYTAINE",
+ "cases": {
+  "hemisphere_r1": {
+   "capytaine_faces": 784,
+   "compare_verdict": "FAIL",
+   "counts": {
+    "invariant_consistent": 158,
+    "invariant_violated": 4,
+    "physics_active": 18,
+    "physics_null": 36
+   },
+   "invariant_verdict": "FAIL",
+   "n_active": 52,
+   "n_invariant_failures": 4,
+   "n_null": 156,
+   "n_physics_failures": 5,
+   "null_dofs": [
+    "roll",
+    "pitch",
+    "yaw"
+   ],
+   "physics_verdict": "FAIL",
+   "raw_failures": 47,
+   "rotation_center": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rotational_block_scored": false,
+   "tensorbem_faces": 256,
+   "worst_active_relative": 98.59642592976166,
+   "worst_invariant_ratio": 1.6185890976747455,
+   "worst_physics_relative": 0.09379376854990637
+  },
+  "hemisphere_r1_cz-0.5": {
+   "capytaine_faces": 784,
+   "compare_verdict": "FAIL",
+   "counts": {
+    "invariant_consistent": 66,
+    "invariant_violated": 0,
+    "physics_active": 54,
+    "physics_null": 96
+   },
+   "invariant_verdict": "PASS",
+   "n_active": 54,
+   "n_invariant_failures": 0,
+   "n_null": 156,
+   "n_physics_failures": 7,
+   "null_dofs": [
+    "yaw"
+   ],
+   "physics_verdict": "FAIL",
+   "raw_failures": 13,
+   "rotation_center": [
+    0.0,
+    0.0,
+    -0.5
+   ],
+   "rotational_block_scored": true,
+   "tensorbem_faces": 256,
+   "worst_active_relative": 0.09379376854990637,
+   "worst_invariant_ratio": 0.007549606163343849,
+   "worst_physics_relative": 0.09379376854990637
+  },
+  "sphere_r1_z-0.5": {
+   "capytaine_faces": 1120,
+   "compare_verdict": "FAIL",
+   "counts": {
+    "invariant_consistent": 150,
+    "invariant_violated": 12,
+    "physics_active": 18,
+    "physics_null": 36
+   },
+   "invariant_verdict": "FAIL",
+   "n_active": 65,
+   "n_invariant_failures": 12,
+   "n_null": 149,
+   "n_physics_failures": 6,
+   "null_dofs": [
+    "roll",
+    "pitch",
+    "yaw"
+   ],
+   "physics_verdict": "FAIL",
+   "raw_failures": 55,
+   "rotation_center": [
+    0.0,
+    0.0,
+    -0.5
+   ],
+   "rotational_block_scored": false,
+   "tensorbem_faces": 270,
+   "worst_active_relative": 42.09833762516143,
+   "worst_invariant_ratio": 4.490933609991419,
+   "worst_physics_relative": 0.8793295990861436
+  },
+  "sphere_r1_z-0.5_c0": {
+   "capytaine_faces": 1120,
+   "compare_verdict": "FAIL",
+   "counts": {
+    "invariant_consistent": 66,
+    "invariant_violated": 0,
+    "physics_active": 54,
+    "physics_null": 96
+   },
+   "invariant_verdict": "PASS",
+   "n_active": 65,
+   "n_invariant_failures": 0,
+   "n_null": 150,
+   "n_physics_failures": 10,
+   "null_dofs": [
+    "yaw"
+   ],
+   "physics_verdict": "FAIL",
+   "raw_failures": 22,
+   "rotation_center": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "rotational_block_scored": true,
+   "tensorbem_faces": 270,
+   "worst_active_relative": 42.09833762516143,
+   "worst_invariant_ratio": 0.017301433306858217,
+   "worst_physics_relative": 0.8793295990861436
+  }
+ },
+ "centre_transfer": {
+  "n_faces": 64,
+  "shift": [
+   0.15,
+   0.1,
+   -0.4
+  ],
+  "tolerance": 1e-06,
+  "verdict": "PASS",
+  "worst_residual": 1.650602218198379e-16
+ },
+ "comparison": {
+  "n_failures": 137,
+  "tolerance_diagonal": 0.05,
+  "tolerance_offdiagonal": 0.1,
+  "verdict": "FAIL",
+  "worst_active_relative": 98.59642592976166
+ },
+ "degeneracy": {
+  "cases": [
+   {
+    "case": "hemisphere_r1",
+    "decay_ratios": [
+     3.4738271603120965,
+     3.840735222199253
+    ],
+    "finest_worst_ratio": 0.001098169367742014,
+    "monotone_decay": true,
+    "n_faces": [
+     64,
+     256,
+     1024
+    ],
+    "null_dofs": [
+     "roll",
+     "pitch",
+     "yaw"
+    ]
+   },
+   {
+    "case": "sphere_r1_z-0.5",
+    "decay_ratios": [
+     3.359439502104008
+    ],
+    "finest_worst_ratio": 0.002806156080522328,
+    "monotone_decay": true,
+    "n_faces": [
+     270,
+     1026
+    ],
+    "null_dofs": [
+     "roll",
+     "pitch",
+     "yaw"
+    ]
+   }
+  ],
+  "ratio_bound": 0.01,
+  "verdict": "PASS"
+ },
+ "figures": [
+  "docs/fig_capytaine_r2_matrix.png",
+  "docs/fig_capytaine_r2_convergence.png",
+  "docs/fig_capytaine_r2_deep.png"
+ ],
+ "provenance": {
+  "note": "superseded by the m22034 refinement (1024/1026 panels)",
+  "source_path": "benchmarks/verified/capytaine_crosscheck_r2/results.json",
+  "source_revision": "4123e585 (Merge #923 / m20476)"
+ },
+ "round": "m20476",
+ "scoring": {
+  "invariant_bound_kind": "",
+  "invariant_verdict": "FAIL",
+  "n_invariant_failures": 16,
+  "n_physics_failures": 28,
+  "physics_verdict": "FAIL"
+ }
+}
