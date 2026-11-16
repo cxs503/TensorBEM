@@ -1,0 +1,264 @@
+{
+ "case": "BEM-HULME-HEMISPHERE",
+ "cells": [
+  {
+   "A11_dimless": 0.19032097419978283,
+   "A33_dimless": 0.3988636256085757,
+   "B11_dimless": 0.26635924452661464,
+   "B33_dimless": 0.06450485357459369,
+   "Fx_dimless": 0.927742175663798,
+   "Fx_imag": -0.7239670961133459,
+   "Fx_real": -0.580152728383317,
+   "Fz_dimless": 0.3233916312305654,
+   "Fz_imag": -0.2924840341005773,
+   "Fz_real": -0.13796824615185316,
+   "chief": true,
+   "condition_number": 8.287032392418087,
+   "delta_phase_Fx_deg": 0.12067503276594493,
+   "delta_phase_Fz_deg": -0.4238467249335258,
+   "diffraction_relative_residual": 0.0018101293176312713,
+   "diffraction_solve_method": "lstsq",
+   "diffraction_stationarity": 5.64427437893259e-14,
+   "ka": 2.58,
+   "kind": "rung",
+   "mesh_volume": 2.0821017981243184,
+   "mesh_waterplane_area": 3.1365484905459393,
+   "nabla_exact": 2.0943951023931953,
+   "name": "rung4096_ka2.58_n1024",
+   "nu": 2.58,
+   "panels": 1024,
+   "phase_Fx_deg": -128.7070231450556,
+   "phase_Fz_deg": -115.25381703124624,
+   "radiation_relative_residual": 0.00129856983734276,
+   "radiation_solve_method": "lstsq",
+   "radiation_stationarity": 6.217365361019356e-14,
+   "reference": {
+    "A11_dimless": 0.18989100659569572,
+    "A33_dimless": 0.40073742945756485,
+    "B11_dimless": 0.26748007156194575,
+    "B33_dimless": 0.06308272847278135,
+    "Fx_dimless": 0.931955565968338,
+    "Fz_dimless": 0.32003818120129673,
+    "phase_Fx_deg": -128.82769817782153,
+    "phase_Fz_deg": -114.82997030631272
+   },
+   "rel_error_A11_dimless": 0.0022642862966258197,
+   "rel_error_A33_dimless": -0.0046758892762413795,
+   "rel_error_B11_dimless": -0.004190319782651716,
+   "rel_error_B33_dimless": 0.022543810901044944,
+   "rel_error_Fx_dimless": -0.0045210205919657305,
+   "rel_error_Fz_dimless": 0.010478281112213404,
+   "solve_warnings": [],
+   "subdivisions": 4,
+   "wall_seconds": 71.91676688194275
+  },
+  {
+   "A11_dimless": 0.1719095117957383,
+   "A33_dimless": 0.40980020358799013,
+   "B11_dimless": 0.22299168363340857,
+   "B33_dimless": 0.046200669130657214,
+   "Fx_dimless": 0.7857854321344623,
+   "Fx_imag": -0.40730040446842863,
+   "Fx_real": -0.6719859566051942,
+   "Fz_dimless": 0.25463512908264707,
+   "Fz_imag": -0.16939335890036913,
+   "Fz_real": -0.1901182235436337,
+   "chief": true,
+   "condition_number": 2.7263409220453974,
+   "delta_phase_Fx_deg": 0.2197714055940594,
+   "delta_phase_Fz_deg": -0.7821571777268161,
+   "diffraction_relative_residual": 0.0005544839780166023,
+   "diffraction_solve_method": "lstsq",
+   "diffraction_stationarity": 2.2233679783375987e-13,
+   "ka": 3.0,
+   "kind": "rung",
+   "mesh_volume": 2.0821017981243184,
+   "mesh_waterplane_area": 3.1365484905459393,
+   "nabla_exact": 2.0943951023931953,
+   "name": "rung4096_ka3_n1024",
+   "nu": 3.0,
+   "panels": 1024,
+   "phase_Fx_deg": -148.7793406388883,
+   "phase_Fz_deg": -138.2992942956432,
+   "radiation_relative_residual": 0.0005640442940932824,
+   "radiation_solve_method": "lstsq",
+   "radiation_stationarity": 2.0347443384813813e-13,
+   "reference": {
+    "A11_dimless": 0.17195372787765978,
+    "A33_dimless": 0.41108836197247084,
+    "B11_dimless": 0.22367007928257793,
+    "B33_dimless": 0.045159332703239116,
+    "Fx_dimless": 0.7903194728391987,
+    "Fz_dimless": 0.25111456696222356,
+    "phase_Fx_deg": -148.99911204448236,
+    "phase_Fz_deg": -137.51713711791638
+   },
+   "rel_error_A11_dimless": -0.0002571394203965248,
+   "rel_error_A33_dimless": -0.0031335316288204048,
+   "rel_error_B11_dimless": -0.003033019218955483,
+   "rel_error_B33_dimless": 0.02305916330210536,
+   "rel_error_Fx_dimless": -0.005736972022779591,
+   "rel_error_Fz_dimless": 0.01401974470462769,
+   "solve_warnings": [],
+   "subdivisions": 4,
+   "wall_seconds": 87.41145181655884
+  }
+ ],
+ "environment": {
+  "git_head": "c0f0b60daa92b4ed44dd28310d0f31fe92e3a8b1",
+  "numpy": "2.4.6",
+  "platform": "Linux loongarch64",
+  "python": "3.11.6"
+ },
+ "failed": [],
+ "gate_text": {
+  "P1_finest_rung_below_case_tolerance": "at subdivisions = 5 (4096 panels) every one of the six quantities at ka = 2.58 and ka = 3.0 is within 5 % of the Hulme series",
+  "P2_refinement_does_not_worsen": "band-max |rel err| at 4096 panels <= band-max |rel err| at 1024 panels, for each ka",
+  "P3_rung_is_admissible": "every cell records radiation and diffraction relative residuals below 1e-2 (a rung that cannot prove its own residual cannot be graded as physics; this closes audit gate A4 of the np246 contradiction audit)",
+  "P4_reference_self_converged_at_these_ka": "144 -> 192 term drift of the reference at each ka is at least 20x below the 5 % case gate",
+  "P5_conditioning_does_not_explode": "the free-surface operator condition number at 4096 panels stays below 50 at both ka (a refined rung polluted by an irregular frequency would fail here)",
+  "P6_geometry_precondition": "|nabla_mesh/nabla - 1| < 2 % and |A_wp/(pi a^2) - 1| < 2 % on the 4096-panel mesh"
+ },
+ "gates": {
+  "P1_finest_rung_below_case_tolerance": {
+   "measured": {
+    "reason": "the 4096-panel rung produced no payload"
+   },
+   "pass": null
+  },
+  "P2_refinement_does_not_worsen": {
+   "measured": [
+    {
+     "coarse": null,
+     "fine": null,
+     "ka": 2.58,
+     "pass": null
+    },
+    {
+     "coarse": null,
+     "fine": null,
+     "ka": 3.0,
+     "pass": null
+    }
+   ],
+   "pass": null
+  },
+  "P3_rung_is_admissible": {
+   "measured": {
+    "channel": "diffraction",
+    "ka": 2.58,
+    "subdivisions": 4,
+    "warnings": [],
+    "worst_residual": 0.0018101293176312713
+   },
+   "pass": true
+  },
+  "P4_reference_self_converged_at_these_ka": {
+   "measured": {
+    "ka": 3.0,
+    "tolerance": 0.0025,
+    "worst_drift": 0.00012736763841415696
+   },
+   "pass": true
+  },
+  "P5_conditioning_does_not_explode": {
+   "measured": {
+    "reason": "no 4096-panel rung"
+   },
+   "pass": null
+  },
+  "P6_geometry_precondition": {
+   "measured": [],
+   "pass": null
+  }
+ },
+ "generated_utc": "2026-11-16T09:53:58Z",
+ "ka_target": [
+  2.58,
+  3.0
+ ],
+ "not_run": [
+  "P1_finest_rung_below_case_tolerance",
+  "P2_refinement_does_not_worsen",
+  "P5_conditioning_does_not_explode",
+  "P6_geometry_precondition"
+ ],
+ "not_run_reason": "cj4699 (4096-panel rung at ka = 2.58 and 3.0) was submitted to the ecosystem cluster and was still QUEUED with no payload after 57 minutes (152 jobs in flight); no number of that rung is stated anywhere in this page. The 1024-panel rung of the same two ka was produced in-session and is reported in full. Re-run 'rung4096_ladder.py cell --ka KA --subdivisions 5 --out cells4096' then 'merge' to upgrade this page; every gate flips automatically.",
+ "reference_ladders": {
+  "2.58": {
+   "ka": 2.58,
+   "max_rel_drift": 9.837575163404452e-05,
+   "terms": [
+    96,
+    144,
+    192
+   ],
+   "values": {
+    "144": {
+     "A11_dimless": 0.18989100659569572,
+     "A33_dimless": 0.40073742945756485,
+     "B11_dimless": 0.26748007156194575,
+     "B33_dimless": 0.06308272847278135,
+     "Fx_dimless": 0.931955565968338,
+     "Fz_dimless": 0.32003818120129673
+    },
+    "192": {
+     "A11_dimless": 0.18989098435638196,
+     "A33_dimless": 0.40073742969087267,
+     "B11_dimless": 0.26748004838678274,
+     "B33_dimless": 0.0630805448187365,
+     "Fx_dimless": 0.9319554742558638,
+     "Fz_dimless": 0.3200287506480821
+    },
+    "96": {
+     "A11_dimless": 0.1898910966034702,
+     "A33_dimless": 0.40073742737614015,
+     "B11_dimless": 0.26748016582750783,
+     "B33_dimless": 0.06308893406879137,
+     "Fx_dimless": 0.9319559383133363,
+     "Fz_dimless": 0.3200649819122062
+    }
+   }
+  },
+  "3.0": {
+   "ka": 3.0,
+   "max_rel_drift": 0.00012736763841415696,
+   "terms": [
+    96,
+    144,
+    192
+   ],
+   "values": {
+    "144": {
+     "A11_dimless": 0.17195372787765978,
+     "A33_dimless": 0.41108836197247084,
+     "B11_dimless": 0.22367007928257793,
+     "B33_dimless": 0.045159332703239116,
+     "Fx_dimless": 0.7903194728391987,
+     "Fz_dimless": 0.25111456696222356
+    },
+    "192": {
+     "A11_dimless": 0.17195370486974898,
+     "A33_dimless": 0.4110885971337398,
+     "B11_dimless": 0.22367004613204924,
+     "B33_dimless": 0.045157309575777536,
+     "Fx_dimless": 0.7903193495860127,
+     "Fz_dimless": 0.25110529170472695
+    },
+    "96": {
+     "A11_dimless": 0.17195382088052008,
+     "A33_dimless": 0.4110876918534361,
+     "B11_dimless": 0.2236702140933711,
+     "B33_dimless": 0.04516508428311692,
+     "Fx_dimless": 0.7903199732504845,
+     "Fz_dimless": 0.2511409369266052
+    }
+   }
+  }
+ },
+ "rungs": [
+  4,
+  5
+ ],
+ "verdict": "INCOMPLETE"
+}
