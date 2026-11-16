@@ -25,7 +25,11 @@ from .kernels import (
     validate_clearance_factor,
     integrate_double_layer_panel,
     integrate_double_layer_panel_gradient,
+    integrate_double_layer_panel_gradient_many,
+    integrate_double_layer_panel_many,
     integrate_single_layer_panel,
+    integrate_single_layer_panel_gradient_many,
+    integrate_single_layer_panel_many,
     integrate_double_layer_panel_first_moment,
     integrate_double_layer_panel_first_moment_gradient,
     integrate_single_layer_panel_first_moment,
@@ -442,23 +446,27 @@ def evaluate_interior_field(
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
     reference = result.reference_length
+    # One numpy pass per panel over every target, instead of one python-level
+    # kernel call per (target, panel) pair: the per-target sum still runs over
+    # the panels in increasing order, and the vectorised kernels are the same
+    # closed forms (tests/test_kernels_batch.py pins them against the scalar
+    # ones to round-off).
     values = np.zeros(len(targets), dtype=float)
-    for i, target in enumerate(targets):
-        for j in range(mesh.panel_count):
-            single = integrate_single_layer_panel(
-                target, mesh.vertices[j], tangents[j], float(lengths[j]), reference
-            )
-            double = integrate_double_layer_panel(
-                target,
-                mesh.vertices[j],
-                tangents[j],
-                normals[j],
-                float(lengths[j]),
-            )
-            values[i] += (
-                single * result.normal_derivative[j]
-                - double * result.boundary_values[j]
-            )
+    for j in range(mesh.panel_count):
+        single = integrate_single_layer_panel_many(
+            targets, mesh.vertices[j], tangents[j], float(lengths[j]), reference
+        )
+        double = integrate_double_layer_panel_many(
+            targets,
+            mesh.vertices[j],
+            tangents[j],
+            normals[j],
+            float(lengths[j]),
+        )
+        values += (
+            single * result.normal_derivative[j]
+            - double * result.boundary_values[j]
+        )
     return values
 
 
@@ -629,6 +637,35 @@ def evaluate_exterior_field(
         value_slope = tangential_slope(mesh, result.boundary_values)
     potential = np.zeros(len(targets), dtype=float)
     gradient = np.zeros((len(targets), 2), dtype=float)
+    if not linear_density:
+        # Constant-density basis: batch the targets, keep the panel order.
+        for j in range(n):
+            start = mesh.vertices[j]
+            tangent = tangents[j]
+            length = float(lengths[j])
+            flux = result.normal_derivative[j]
+            value = result.boundary_values[j]
+            potential += (
+                integrate_single_layer_panel_many(
+                    targets, start, tangent, length, reference
+                )
+                * flux
+                + integrate_double_layer_panel_many(
+                    targets, start, tangent, normals[j], length
+                )
+                * value
+            )
+            gradient += (
+                integrate_single_layer_panel_gradient_many(
+                    targets, start, tangent, length, reference
+                )
+                * flux
+                + integrate_double_layer_panel_gradient_many(
+                    targets, start, tangent, normals[j], length
+                )
+                * value
+            )
+        return ExteriorField(potential=potential, gradient=gradient)
     for i, target in enumerate(targets):
         for j in range(n):
             start = mesh.vertices[j]
