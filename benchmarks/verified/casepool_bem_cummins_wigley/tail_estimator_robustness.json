@@ -1,0 +1,291 @@
+{
+ "question": "Is the round-9 assertion p(20) ~ 3.0 (=> surge/sway/yaw decidable on the widened band) reproducible from the extended-band artifacts?",
+ "answer": "No. The three-sample log-log slope at the band top is not a stable estimator on these artifacts: it moves by O(1)-O(10) between meshes and between adjacent windows, and the admissibility verdict flips with the mesh for heave/pitch/yaw. p ~ 3.0 is one sample of that spread, not a property of the physics.",
+ "exponent_bar": 2.05,
+ "windows": [
+  3,
+  4,
+  5
+ ],
+ "artifacts": [
+  {
+   "artifact": "sweep_extended_probe_coarse.npz",
+   "mesh": {
+    "n_sections": 12,
+    "n_levels": 4,
+    "panel_count": 192,
+    "max_panel_scale": 0.1004034358093167
+   },
+   "band": [
+    12.0,
+    20.0
+   ],
+   "n_omega": 10,
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "band_top_B": 1.1480269162179744,
+     "p_window3": 6.528241009620139,
+     "p_window4": -Infinity,
+     "p_window5": -Infinity,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": false
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "band_top_B": 110.55738584715962,
+     "p_window3": 4.785531150011922,
+     "p_window4": -0.13289799851922082,
+     "p_window5": -1.2971237101640571,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": false
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "band_top_B": 5.312291644913446,
+     "p_window3": 4.871002560104445,
+     "p_window4": 5.830315540086847,
+     "p_window5": 5.760663834314442,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "band_top_B": 0.05604195326913818,
+     "p_window3": 5.4927393572343535,
+     "p_window4": 3.04049884489389,
+     "p_window5": 3.3541190867835144,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "band_top_B": 4.967751144226723,
+     "p_window3": -2.0325927572486098,
+     "p_window4": 1.7173800140274806,
+     "p_window5": 2.0426852200366143,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "band_top_B": 106.07910099822368,
+     "p_window3": 1.9679964138158448,
+     "p_window4": 0.5633306627619099,
+     "p_window5": 1.6997979818767837,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": true
+    }
+   ]
+  },
+  {
+   "artifact": "sweep_extended_probe_medium.npz",
+   "mesh": {
+    "n_sections": 20,
+    "n_levels": 6,
+    "panel_count": 480,
+    "max_panel_scale": 0.06450176101204128
+   },
+   "band": [
+    12.0,
+    20.0
+   ],
+   "n_omega": 10,
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "band_top_B": 1.5135616199299595,
+     "p_window3": 4.5404015368270985,
+     "p_window4": 3.2378018432397133,
+     "p_window5": 3.1647300553988598,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "band_top_B": 168.32811205435962,
+     "p_window3": 2.5465506982793493,
+     "p_window4": 2.395993570430093,
+     "p_window5": 2.3027075148854257,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "band_top_B": 10.799279056602447,
+     "p_window3": 1.9876348918154334,
+     "p_window4": 3.5312319873351994,
+     "p_window5": 4.087123878712303,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": false
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "band_top_B": 0.0390327701447547,
+     "p_window3": 7.5247526264550375,
+     "p_window4": 6.542291847771367,
+     "p_window5": 6.059056731231814,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "band_top_B": 2.0915315894482847,
+     "p_window3": 5.9317600131786365,
+     "p_window4": 5.621117208412653,
+     "p_window5": 5.442712886995362,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "band_top_B": 90.047609946337,
+     "p_window3": 5.580444042960265,
+     "p_window4": 4.27360235367369,
+     "p_window5": 3.731130363886075,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    }
+   ]
+  },
+  {
+   "artifact": "sweep_medium.npz",
+   "mesh": {
+    "n_sections": 20,
+    "n_levels": 6,
+    "panel_count": 480,
+    "max_panel_scale": 0.06450176101204128
+   },
+   "band": [
+    0.2,
+    12.0
+   ],
+   "n_omega": 41,
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "band_top_B": 5.647439901312194,
+     "p_window3": 1.0949350652579886,
+     "p_window4": 0.9782997268721857,
+     "p_window5": 0.8698502671100712,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "band_top_B": 530.6116443299004,
+     "p_window3": 1.5291641901106952,
+     "p_window4": 1.3965665601937205,
+     "p_window5": 1.2285237433488465,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "band_top_B": 77.07541366697149,
+     "p_window3": 2.8704666923445337,
+     "p_window4": 2.607348363575926,
+     "p_window5": 2.3815887052571654,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "band_top_B": 0.5864324646523047,
+     "p_window3": 3.1966336069814294,
+     "p_window4": 2.893015633773214,
+     "p_window5": 2.533397113486809,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "band_top_B": 23.50457655946195,
+     "p_window3": 3.0700887094254705,
+     "p_window4": 2.829347668410361,
+     "p_window5": 2.6033760877775687,
+     "budget_admissible": true,
+     "verdict_stable_over_windows": true
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "band_top_B": 427.8316496627218,
+     "p_window3": 1.6156127312870796,
+     "p_window4": 1.4787667229299437,
+     "p_window5": 1.304595762832078,
+     "budget_admissible": false,
+     "verdict_stable_over_windows": true
+    }
+   ]
+  }
+ ],
+ "cross_artifact_spread": {
+  "surge": {
+   "p_window3_range": [
+    1.0949350652579886,
+    6.528241009620139
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": false
+  },
+  "sway": {
+   "p_window3_range": [
+    1.5291641901106952,
+    4.785531150011922
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": false
+  },
+  "heave": {
+   "p_window3_range": [
+    1.9876348918154334,
+    4.871002560104445
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": false
+  },
+  "roll": {
+   "p_window3_range": [
+    3.1966336069814294,
+    7.5247526264550375
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": true
+  },
+  "pitch": {
+   "p_window3_range": [
+    -2.0325927572486098,
+    5.9317600131786365
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": false
+  },
+  "yaw": {
+   "p_window3_range": [
+    1.6156127312870796,
+    5.580444042960265
+   ],
+   "n_artifacts": 3,
+   "verdict_stable_across_meshes": false
+  }
+ },
+ "c2_caveat": "both probe meshes violate k*sqrt(A_panel) <= 1 above ~10 (coarse) resp. ~12 (medium) rad/s, so none of them can certify C9; the certification needs the 3840-panel sweep_extended.npz."
+}
