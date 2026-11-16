@@ -1,0 +1,1033 @@
+{
+ "question": "gate C9 reads p at the band top; does p depend on the fit span, i.e. is the C9 verdict identifiable from the committed data?",
+ "artifacts": [
+  {
+   "artifact": "sweep_extended_probe_coarse.npz",
+   "label": "coarse_extended",
+   "mesh": [
+    12,
+    4
+   ],
+   "panel_count": 192,
+   "band": [
+    12.0,
+    20.0
+   ],
+   "n_omega": 10,
+   "slope_bar": 2.05,
+   "spans_samples": [
+    3,
+    4,
+    5,
+    7,
+    10
+   ],
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 6.528241009620139,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.7776736005359255,
+       "max_relative_residual": 0.2570485657643674,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": NaN,
+       "decades": 0.07394958320545203,
+       "r_squared": NaN,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": NaN,
+       "decades": 0.09859944427393603,
+       "r_squared": NaN,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": NaN,
+       "decades": 0.14789916641090406,
+       "r_squared": NaN,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": NaN,
+       "decades": 0.22184874961635626,
+       "r_squared": NaN,
+       "n": 10
+      }
+     },
+     "spread": NaN,
+     "verdict_by_span": {
+      "3": true,
+      "4": false,
+      "5": false,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 4.785531150011922,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.6685478578952954,
+       "max_relative_residual": 0.24712140542922434,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": -0.13289799851922082,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.0008537853305261578,
+       "max_relative_residual": 0.36874201478524116,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": -1.2971237101640571,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.12582110262570045,
+       "max_relative_residual": 0.38801799174737545,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 2.8944642596076653,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.36905131512081635,
+       "max_relative_residual": 0.526496169792846,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 3.1892981084822,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.671805943818309,
+       "max_relative_residual": 0.5426767943157709,
+       "n": 10
+      }
+     },
+     "spread": 6.082654860175979,
+     "verdict_by_span": {
+      "3": true,
+      "4": false,
+      "5": false,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 4.871002560104445,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.12245962946529343,
+       "max_relative_residual": 1.3503974075552847,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 5.830315540086847,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.33126066950494415,
+       "max_relative_residual": 1.3081232136039664,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 5.760663834314442,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.49162084243873616,
+       "max_relative_residual": 1.3081232136039664,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 5.410460741301605,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.7030803372296226,
+       "max_relative_residual": 1.2824659380483239,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 4.585988165443733,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.8203965476119033,
+       "max_relative_residual": 1.1447164097537361,
+       "n": 10
+      }
+     },
+     "spread": 1.244327374643114,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 5.4927393572343535,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.502172071262498,
+       "max_relative_residual": 0.4310779272648274,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 3.04049884489389,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.3665988641332649,
+       "max_relative_residual": 0.4990372075467789,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 3.3541190867835144,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.581858186630002,
+       "max_relative_residual": 0.4990372075467789,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 4.50808257910869,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.8458299885344922,
+       "max_relative_residual": 0.5381971815975714,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 4.511416453088147,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9413984952428175,
+       "max_relative_residual": 0.5354541509613281,
+       "n": 10
+      }
+     },
+     "spread": 2.4522405123404636,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": -2.0325927572486098,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.5066041514406637,
+       "max_relative_residual": 0.12319086891398673,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 1.7173800140274806,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.21167274910328338,
+       "max_relative_residual": 0.23718973451766628,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 2.0426852200366143,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.427054552037167,
+       "max_relative_residual": 0.2536906917999931,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 3.2566193519836792,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.7867307611361813,
+       "max_relative_residual": 0.3809313758178693,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 3.778300103368624,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9264461136432438,
+       "max_relative_residual": 0.47210061538274406,
+       "n": 10
+      }
+     },
+     "spread": 5.810892860617233,
+     "verdict_by_span": {
+      "3": false,
+      "4": false,
+      "5": false,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 1.9679964138158448,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.37688053715123226,
+       "max_relative_residual": 0.18039249627951562,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 0.5633306627619099,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.07566332456952518,
+       "max_relative_residual": 0.21218259862104827,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 1.6997979818767837,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.47216686554132603,
+       "max_relative_residual": 0.21218259862105257,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 2.9920999596632702,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.8028642390497986,
+       "max_relative_residual": 0.27886150663858006,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 2.8871855959218875,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9159602339492732,
+       "max_relative_residual": 0.2772370556511183,
+       "n": 10
+      }
+     },
+     "spread": 2.4287692969013603,
+     "verdict_by_span": {
+      "3": false,
+      "4": false,
+      "5": false,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": true
+    }
+   ]
+  },
+  {
+   "artifact": "sweep_extended_probe_medium.npz",
+   "label": "medium_extended",
+   "mesh": [
+    20,
+    6
+   ],
+   "panel_count": 480,
+   "band": [
+    12.0,
+    20.0
+   ],
+   "n_omega": 10,
+   "slope_bar": 2.05,
+   "spans_samples": [
+    3,
+    4,
+    5,
+    7,
+    10
+   ],
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 4.5404015368270985,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.8630463904016495,
+       "max_relative_residual": 0.12585145962929914,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 3.2378018432397133,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.8112122064068032,
+       "max_relative_residual": 0.15394221712958353,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 3.1647300553988598,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.8910034329331056,
+       "max_relative_residual": 0.15394221712957945,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 2.658324330703637,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.9240859142331275,
+       "max_relative_residual": 0.14314662308678838,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 2.3141048242066455,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9535665969682665,
+       "max_relative_residual": 0.18051733662072061,
+       "n": 10
+      }
+     },
+     "spread": 2.226296712620453,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 2.5465506982793493,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.9994867216325479,
+       "max_relative_residual": 0.003789320767606022,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 2.395993570430093,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.9971438092551472,
+       "max_relative_residual": 0.00954805770273395,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 2.3027075148854257,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.9968183997234829,
+       "max_relative_residual": 0.014907556077706163,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 2.3857650793239085,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.9982401532354155,
+       "max_relative_residual": 0.022235808364475678,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 2.273740787960456,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9973712307996335,
+       "max_relative_residual": 0.03412391531433648,
+       "n": 10
+      }
+     },
+     "spread": 0.27280991031889323,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 1.9876348918154334,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.9587371502032328,
+       "max_relative_residual": 0.02666310877100751,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 3.5312319873351994,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.8827363853868713,
+       "max_relative_residual": 0.09814689965038996,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 4.087123878712303,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.9362591876452322,
+       "max_relative_residual": 0.12615753703835042,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 4.334960466377773,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.9770995564636461,
+       "max_relative_residual": 0.133083865203057,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 4.161131693321731,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9899606161563121,
+       "max_relative_residual": 0.13672190823295552,
+       "n": 10
+      }
+     },
+     "spread": 2.34732557456234,
+     "verdict_by_span": {
+      "3": false,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 7.5247526264550375,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.9565030756836949,
+       "max_relative_residual": 0.11089567434191279,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 6.542291847771367,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.9623735465829054,
+       "max_relative_residual": 0.13173769935939209,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 6.059056731231814,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.9716737232982211,
+       "max_relative_residual": 0.13173769935938806,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 5.611527211619352,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.9844219234860064,
+       "max_relative_residual": 0.14333340726418548,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 5.090737503902289,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9874837853022141,
+       "max_relative_residual": 0.20027595463755316,
+       "n": 10
+      }
+     },
+     "spread": 2.434015122552749,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 5.9317600131786365,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.9918324649980328,
+       "max_relative_residual": 0.03590811318567625,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 5.621117208412653,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.9943282691807245,
+       "max_relative_residual": 0.04201427466397379,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 5.442712886995362,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.9959003644293791,
+       "max_relative_residual": 0.04201427466397379,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 5.0528213080938675,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.9946475672317627,
+       "max_relative_residual": 0.07006789236408428,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 4.6072082405285135,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9930371734508181,
+       "max_relative_residual": 0.12127722912954156,
+       "n": 10
+      }
+     },
+     "spread": 1.324551772650123,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 5.580444042960265,
+       "decades": 0.04929972213696782,
+       "r_squared": 0.9247839484112591,
+       "max_relative_residual": 0.10993847814725463,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 4.27360235367369,
+       "decades": 0.07394958320545203,
+       "r_squared": 0.8946042697349438,
+       "max_relative_residual": 0.13772350178159848,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 3.731130363886075,
+       "decades": 0.09859944427393603,
+       "r_squared": 0.9103994895176695,
+       "max_relative_residual": 0.1377235017816005,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 3.198515186422284,
+       "decades": 0.14789916641090406,
+       "r_squared": 0.940085676296353,
+       "max_relative_residual": 0.16214600927972572,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 2.7549670612513997,
+       "decades": 0.22184874961635626,
+       "r_squared": 0.9585057865771114,
+       "max_relative_residual": 0.2091468751345337,
+       "n": 10
+      }
+     },
+     "spread": 2.825476981708865,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": true
+     },
+     "verdict_flips": false
+    }
+   ]
+  },
+  {
+   "artifact": "sweep_medium.npz",
+   "label": "medium",
+   "mesh": [
+    20,
+    6
+   ],
+   "panel_count": 480,
+   "band": [
+    0.2,
+    12.0
+   ],
+   "n_omega": 41,
+   "slope_bar": 2.05,
+   "spans_samples": [
+    3,
+    4,
+    5,
+    7,
+    10
+   ],
+   "per_dof": [
+    {
+     "dof": 0,
+     "dof_name": "surge",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 1.0949350652579886,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.9963961424090276,
+       "max_relative_residual": 0.007813418485326256,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 0.9782997268721857,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.9888377072815229,
+       "max_relative_residual": 0.012099260492448879,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 0.8698502671100712,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9778197545200678,
+       "max_relative_residual": 0.023396897622289293,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 0.617582845781314,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.899179604310253,
+       "max_relative_residual": 0.05919717201574541,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 0.2757684686779643,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.4993414016576797,
+       "max_relative_residual": 0.13108969854101865,
+       "n": 10
+      }
+     },
+     "spread": 0.8191665965800243,
+     "verdict_by_span": {
+      "3": false,
+      "4": false,
+      "5": false,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 1,
+     "dof_name": "sway",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 1.5291641901106952,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.9981875910522533,
+       "max_relative_residual": 0.0077311359753531985,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 1.3965665601937205,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.993166518760618,
+       "max_relative_residual": 0.01434793508136752,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 1.2285237433488465,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9773683341756327,
+       "max_relative_residual": 0.03381626372087929,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 0.7691585784664434,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.787605734590394,
+       "max_relative_residual": 0.12564402906174216,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": -0.3170429886500167,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.11040759086725838,
+       "max_relative_residual": 0.3841231831519911,
+       "n": 10
+      }
+     },
+     "spread": 1.8462071787607117,
+     "verdict_by_span": {
+      "3": false,
+      "4": false,
+      "5": false,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": false
+    },
+    {
+     "dof": 2,
+     "dof_name": "heave",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 2.8704666923445337,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.9935821783843891,
+       "max_relative_residual": 0.027642200992218233,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 2.607348363575926,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.9901768538771721,
+       "max_relative_residual": 0.036909369655791724,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 2.3815887052571654,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9852885274707116,
+       "max_relative_residual": 0.053227951495908726,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 1.9822866396058023,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.9686241053582098,
+       "max_relative_residual": 0.10927447827592594,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 1.4901110815922427,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.9249162435808312,
+       "max_relative_residual": 0.20718310082278033,
+       "n": 10
+      }
+     },
+     "spread": 1.380355610752291,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 3,
+     "dof_name": "roll",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 3.1966336069814294,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.9980065827105807,
+       "max_relative_residual": 0.01702906785421946,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 2.893015633773214,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.9917503565086698,
+       "max_relative_residual": 0.03354472099913087,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 2.533397113486809,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9750638692145959,
+       "max_relative_residual": 0.07229844483560943,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 1.6512218456567673,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.8213378406629424,
+       "max_relative_residual": 0.22425767139555774,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": -0.1681971670592691,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.012413185075783706,
+       "max_relative_residual": 0.7019874442334368,
+       "n": 10
+      }
+     },
+     "spread": 3.3648307740406986,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 4,
+     "dof_name": "pitch",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 3.0700887094254705,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.997370422247955,
+       "max_relative_residual": 0.018806657903026172,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 2.829347668410361,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.9939683504960163,
+       "max_relative_residual": 0.027209571796176616,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 2.6033760877775687,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9890043991817592,
+       "max_relative_residual": 0.04777621798725609,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 2.1956354810515357,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.9735434895081649,
+       "max_relative_residual": 0.1055055759448718,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": 1.6230216735140717,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.9109195354235733,
+       "max_relative_residual": 0.23684207695419437,
+       "n": 10
+      }
+     },
+     "spread": 1.4470670359113988,
+     "verdict_by_span": {
+      "3": true,
+      "4": true,
+      "5": true,
+      "7": true,
+      "10": false
+     },
+     "verdict_flips": true
+    },
+    {
+     "dof": 5,
+     "dof_name": "yaw",
+     "slope_by_span": {
+      "3": {
+       "decay_exponent": 1.6156127312870796,
+       "decades": 0.08890756251918222,
+       "r_squared": 0.9980914701107888,
+       "max_relative_residual": 0.008385130404016247,
+       "n": 3
+      },
+      "4": {
+       "decay_exponent": 1.4787667229299437,
+       "decades": 0.13336134377877323,
+       "r_squared": 0.9934214000704945,
+       "max_relative_residual": 0.014607060568439953,
+       "n": 4
+      },
+      "5": {
+       "decay_exponent": 1.304595762832078,
+       "decades": 0.17781512503836425,
+       "r_squared": 0.9783989427109102,
+       "max_relative_residual": 0.03502761648196078,
+       "n": 5
+      },
+      "7": {
+       "decay_exponent": 0.6303503242997459,
+       "decades": 0.26672268755754647,
+       "r_squared": 0.5550065473360373,
+       "max_relative_residual": 0.1724304241461677,
+       "n": 7
+      },
+      "10": {
+       "decay_exponent": -0.8892916155011558,
+       "decades": 0.4000840313363198,
+       "r_squared": 0.33497526373647835,
+       "max_relative_residual": 0.5437839962441505,
+       "n": 10
+      }
+     },
+     "spread": 2.5049043467882353,
+     "verdict_by_span": {
+      "3": false,
+      "4": false,
+      "5": false,
+      "7": false,
+      "10": false
+     },
+     "verdict_flips": false
+    }
+   ]
+  }
+ ],
+ "findings": {
+  "verdict_flips_within_one_artifact": {
+   "sweep_extended_probe_coarse.npz": [
+    "surge",
+    "sway",
+    "pitch",
+    "yaw"
+   ],
+   "sweep_extended_probe_medium.npz": [
+    "heave"
+   ],
+   "sweep_medium.npz": [
+    "heave",
+    "roll",
+    "pitch"
+   ]
+  },
+  "spread_exceeds_bar": {
+   "sweep_extended_probe_coarse.npz": [
+    "sway",
+    "roll",
+    "pitch",
+    "yaw"
+   ],
+   "sweep_extended_probe_medium.npz": [
+    "surge",
+    "heave",
+    "roll",
+    "yaw"
+   ],
+   "sweep_medium.npz": [
+    "roll",
+    "yaw"
+   ]
+  },
+  "spans_in_decades_by_artifact": {
+   "sweep_extended_probe_coarse.npz": {
+    "3": 0.04929972213696782,
+    "4": 0.07394958320545203,
+    "5": 0.09859944427393603,
+    "7": 0.14789916641090406,
+    "10": 0.22184874961635626
+   },
+   "sweep_extended_probe_medium.npz": {
+    "3": 0.04929972213696782,
+    "4": 0.07394958320545203,
+    "5": 0.09859944427393603,
+    "7": 0.14789916641090406,
+    "10": 0.22184874961635626
+   },
+   "sweep_medium.npz": {
+    "3": 0.08890756251918222,
+    "4": 0.13336134377877323,
+    "5": 0.17781512503836425,
+    "7": 0.26672268755754647,
+    "10": 0.4000840313363198
+   }
+  },
+  "reading": "p at the band top changes verdict with the fit span inside a single artifact, so the C9 per-DOF decision is a property of the estimator, not of the data; a band-top slope can only be quoted with its span"
+ }
+}
