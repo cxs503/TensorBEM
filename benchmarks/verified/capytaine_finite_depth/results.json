@@ -118,7 +118,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.05109297674886794,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.241 (p below the pre-registered floor 0.3: outside the asymptotic range, hence not credited as small); x1.25 safety factor (rule 6)",
+        "model_bound": 0.04087438139909435,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.01623176811666894,
+         "order": 0.24122460741737867,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.04619867802230279,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.784; x1.25 safety factor (rule 6)",
+        "model_bound": 0.036958942417842235,
+        "measured_band": null,
+        "asymptotic": true,
+        "inputs": {
+         "last_rung_change": 0.0725809617031483,
+         "order": 0.7837305715227962,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.008232804454550395,
+       "deviation_abs": 0.008232804454550395,
+       "tolerance": 0.03,
+       "budget": 0.009999999999999998,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.05109297674886794,
+        "solver": 0.04619867802230279,
+        "total": 0.09729165477117073,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 9.73% exceeds the budget 1.00% (0.33 x 3.00%)",
+       "decidable_from_tolerance": 0.29187496431351223,
+       "headroom": -0.08729165477117073,
+       "binding_side": "reference",
+       "remedy": "resolve at this tolerance needs reference uncertainty <= 0.50% (half the budget); the reference side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.008232804454550395,
+       "deviation_abs": 0.008232804454550395,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.05109297674886794,
+        "solver": 0.04619867802230279,
+        "total": 0.09729165477117073,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 9.73% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.29187496431351223,
+       "headroom": -0.047291654771170734,
+       "binding_side": "reference",
+       "remedy": "resolve at this tolerance needs reference uncertainty <= 2.50% (half the budget); the reference side is the binding one"
+      }
      },
      "surge.damping": {
       "tensorbem": 814.3842760968557,
@@ -145,7 +217,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.02260403773295271,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.018083230186362168,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.1391160318016414,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.641; x1.25 safety factor (rule 6)",
+        "model_bound": 0.11129282544131312,
+        "measured_band": null,
+        "asymptotic": true,
+        "inputs": {
+         "last_rung_change": 0.15936866010990847,
+         "order": 0.6410645094020684,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": 0.02129223775071046,
+       "deviation_abs": 0.02129223775071046,
+       "tolerance": 0.05,
+       "budget": 0.016666666666666666,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.02260403773295271,
+        "solver": 0.1391160318016414,
+        "total": 0.1617200695345941,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 16.17% exceeds the budget 1.67% (0.33 x 5.00%)",
+       "decidable_from_tolerance": 0.48516020860378234,
+       "headroom": -0.14505340286792745,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.83% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": 0.02129223775071046,
+       "deviation_abs": 0.02129223775071046,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.02260403773295271,
+        "solver": 0.1391160318016414,
+        "total": 0.1617200695345941,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 16.17% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.48516020860378234,
+       "headroom": -0.11172006953459412,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      },
      "heave.added_mass": {
       "tensorbem": 2998.964447855273,
@@ -172,7 +316,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.014480340578559278,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.011584272462847423,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.05942220911850398,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.744; x1.25 safety factor (rule 6)",
+        "model_bound": 0.047537767294803183,
+        "measured_band": null,
+        "asymptotic": true,
+        "inputs": {
+         "last_rung_change": 0.08576898761823123,
+         "order": 0.7438019177439685,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.0003167095447769201,
+       "deviation_abs": 0.0003167095447769201,
+       "tolerance": 0.03,
+       "budget": 0.009999999999999998,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.014480340578559278,
+        "solver": 0.05942220911850398,
+        "total": 0.07390254969706325,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 7.39% exceeds the budget 1.00% (0.33 x 3.00%)",
+       "decidable_from_tolerance": 0.22170764909118976,
+       "headroom": -0.06390254969706326,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.50% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.0003167095447769201,
+       "deviation_abs": 0.0003167095447769201,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.014480340578559278,
+        "solver": 0.05942220911850398,
+        "total": 0.07390254969706325,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 7.39% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.22170764909118976,
+       "headroom": -0.023902549697063256,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      },
      "heave.damping": {
       "tensorbem": 765.9767181745303,
@@ -199,7 +415,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.01754069143741342,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.014032553149930736,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.15833953225256295,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.614; x1.25 safety factor (rule 6)",
+        "model_bound": 0.12667162580205035,
+        "measured_band": null,
+        "asymptotic": true,
+        "inputs": {
+         "last_rung_change": 0.1701050659835367,
+         "order": 0.6141421952024668,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": 0.033848505257794974,
+       "deviation_abs": 0.033848505257794974,
+       "tolerance": 0.05,
+       "budget": 0.016666666666666666,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.01754069143741342,
+        "solver": 0.15833953225256295,
+        "total": 0.17588022368997636,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 17.59% exceeds the budget 1.67% (0.33 x 5.00%)",
+       "decidable_from_tolerance": 0.5276406710699291,
+       "headroom": -0.1592135570233097,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.83% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": 0.033848505257794974,
+       "deviation_abs": 0.033848505257794974,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.01754069143741342,
+        "solver": 0.15833953225256295,
+        "total": 0.17588022368997636,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 17.59% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.5276406710699291,
+       "headroom": -0.12588022368997637,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      }
     },
     "negative_control_gap_added_mass": 0.17049526118574654
@@ -234,7 +522,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.03561520589979928,
+        "basis": "last rung change / (r^p - 1), r=4, p=0.318; x1.25 safety factor (rule 6)",
+        "model_bound": 0.028492164719839425,
+        "measured_band": null,
+        "asymptotic": true,
+        "inputs": {
+         "last_rung_change": 0.015777817218083547,
+         "order": 0.3178817744192163,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.23916763155923004,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.19133410524738403,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.06167546941133026,
+       "deviation_abs": 0.06167546941133026,
+       "tolerance": 0.03,
+       "budget": 0.009999999999999998,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.03561520589979928,
+        "solver": 0.23916763155923004,
+        "total": 0.2747828374590293,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 27.48% exceeds the budget 1.00% (0.33 x 3.00%)",
+       "decidable_from_tolerance": 0.824348512377088,
+       "headroom": -0.2647828374590293,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.50% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.06167546941133026,
+       "deviation_abs": 0.06167546941133026,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.03561520589979928,
+        "solver": 0.23916763155923004,
+        "total": 0.2747828374590293,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 27.48% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.824348512377088,
+       "headroom": -0.22478283745902933,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      },
      "surge.damping": {
       "tensorbem": 1370.1531243255642,
@@ -260,7 +620,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.02006394845835742,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.016051158766685936,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.5583543166399227,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.4466834533119382,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.21704108751203618,
+       "deviation_abs": 0.21704108751203618,
+       "tolerance": 0.05,
+       "budget": 0.016666666666666666,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.02006394845835742,
+        "solver": 0.5583543166399227,
+        "total": 0.5784182650982802,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 57.84% exceeds the budget 1.67% (0.33 x 5.00%)",
+       "decidable_from_tolerance": 1.7352547952948407,
+       "headroom": -0.5617515984316135,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.83% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.21704108751203618,
+       "deviation_abs": 0.21704108751203618,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.02006394845835742,
+        "solver": 0.5583543166399227,
+        "total": 0.5784182650982802,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 57.84% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 1.7352547952948407,
+       "headroom": -0.5284182650982802,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      },
      "heave.added_mass": {
       "tensorbem": 2129.337931912156,
@@ -286,7 +718,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.01295110503689397,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.010360884029515176,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.2577598393031505,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.2062078714425204,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.09008279518341299,
+       "deviation_abs": 0.09008279518341299,
+       "tolerance": 0.03,
+       "budget": 0.009999999999999998,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.01295110503689397,
+        "solver": 0.2577598393031505,
+        "total": 0.27071094434004445,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 27.07% exceeds the budget 1.00% (0.33 x 3.00%)",
+       "decidable_from_tolerance": 0.8121328330201334,
+       "headroom": -0.26071094434004444,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.50% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.09008279518341299,
+       "deviation_abs": 0.09008279518341299,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.01295110503689397,
+        "solver": 0.2577598393031505,
+        "total": 0.27071094434004445,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 27.07% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 0.8121328330201334,
+       "headroom": -0.22071094434004446,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      },
      "heave.damping": {
       "tensorbem": 2447.0447334988735,
@@ -312,7 +816,79 @@
       "tensorbem_extrapolation_band": null,
       "tensorbem_extrapolation_band_basis": null,
       "tensorbem_value_without_finest_rung": null,
-      "tensorbem_order_without_finest_rung": null
+      "tensorbem_order_without_finest_rung": null,
+      "uncertainty": {
+       "reference": {
+        "value": 0.014430628015626949,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.011544502412501559,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       },
+       "solver": {
+        "value": 0.5716305971557873,
+        "basis": "last rung change (no usable measured order or rung ratio); x1.25 safety factor (rule 6)",
+        "model_bound": null,
+        "measured_band": null,
+        "asymptotic": false,
+        "inputs": {
+         "last_rung_change": 0.45730447772462984,
+         "order": null,
+         "refinement": 4.0,
+         "min_order": 0.3
+        }
+       }
+      },
+      "decidability": {
+       "deviation": -0.2205022561226346,
+       "deviation_abs": 0.2205022561226346,
+       "tolerance": 0.05,
+       "budget": 0.016666666666666666,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.014430628015626949,
+        "solver": 0.5716305971557873,
+        "total": 0.5860612251714143,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 58.61% exceeds the budget 1.67% (0.33 x 5.00%)",
+       "decidable_from_tolerance": 1.758183675514243,
+       "headroom": -0.5693945585047476,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 0.83% (half the budget); the solver side is the binding one"
+      },
+      "decidability_owner_limit": {
+       "deviation": -0.2205022561226346,
+       "deviation_abs": 0.2205022561226346,
+       "tolerance": 0.15,
+       "budget": 0.049999999999999996,
+       "budget_share": 0.3333333333333333,
+       "uncertainty": {
+        "reference": 0.014430628015626949,
+        "solver": 0.5716305971557873,
+        "total": 0.5860612251714143,
+        "known": true,
+        "combination": "linear (conservative) sum, rule 4"
+       },
+       "budget_exceeded": true,
+       "decidable": false,
+       "verdict": "UNDECIDABLE",
+       "reason": "uncertainty 58.61% exceeds the budget 5.00% (0.33 x 15.00%)",
+       "decidable_from_tolerance": 1.758183675514243,
+       "headroom": -0.5360612251714143,
+       "binding_side": "solver",
+       "remedy": "resolve at this tolerance needs solver uncertainty <= 2.50% (half the budget); the solver side is the binding one"
+      }
      }
     }
    }
@@ -347,6 +923,94 @@
    "added_mass": 0.03,
    "damping": 0.05,
    "owner_limit": 0.15
+  },
+  "decidability": {
+   "added_mass": {
+    "tolerance": 0.03,
+    "counts": {
+     "PASS": 0,
+     "FAIL": 0,
+     "UNDECIDABLE": 4
+    },
+    "decisions": 4,
+    "decidable": false,
+    "all_pass": false,
+    "any_fail": false,
+    "note": "no quantity is decidable at this tolerance"
+   },
+   "damping": {
+    "tolerance": 0.05,
+    "counts": {
+     "PASS": 0,
+     "FAIL": 0,
+     "UNDECIDABLE": 4
+    },
+    "decisions": 4,
+    "decidable": false,
+    "all_pass": false,
+    "any_fail": false,
+    "note": "no quantity is decidable at this tolerance"
+   },
+   "owner_limit": {
+    "tolerance": 0.15,
+    "counts": {
+     "PASS": 0,
+     "FAIL": 0,
+     "UNDECIDABLE": 8
+    },
+    "decisions": 8,
+    "decidable": false,
+    "all_pass": false,
+    "any_fail": false,
+    "note": "no quantity is decidable at this tolerance"
+   },
+   "criteria": {
+    "budget_share": 0.3333333333333333,
+    "safety_factor": 1.25,
+    "module": "tensorbem.benchmarks.crossval_decidability"
+   },
+   "measured_reference": {
+    "cells": [],
+    "added_mass": {
+     "tolerance": 0.03,
+     "counts": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNDECIDABLE": 0
+     },
+     "decisions": 0,
+     "decidable": false,
+     "all_pass": false,
+     "any_fail": false,
+     "note": "a study is only decidable at this tolerance when no judged quantity is UNDECIDABLE"
+    },
+    "damping": {
+     "tolerance": 0.05,
+     "counts": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNDECIDABLE": 0
+     },
+     "decisions": 0,
+     "decidable": false,
+     "all_pass": false,
+     "any_fail": false,
+     "note": "a study is only decidable at this tolerance when no judged quantity is UNDECIDABLE"
+    },
+    "owner_limit": {
+     "tolerance": 0.15,
+     "counts": {
+      "PASS": 0,
+      "FAIL": 0,
+      "UNDECIDABLE": 0
+     },
+     "decisions": 0,
+     "decidable": false,
+     "all_pass": false,
+     "any_fail": false,
+     "note": "a study is only decidable at this tolerance when no judged quantity is UNDECIDABLE"
+    }
+   }
   }
  },
  "gates": [

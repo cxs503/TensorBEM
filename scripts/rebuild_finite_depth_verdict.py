@@ -44,7 +44,9 @@ def rebuild(root: Path, *, write: bool = True,
             )
     reference = json.loads(ref_path.read_text())
     ladder = json.loads(ladder_path.read_text())
-    comparison = study.compare(ladder, reference)
+    comparison = study.compare(
+        ladder, reference, reference_truth=study.load_reference_truth(root)
+    )
     gate_rows = study.gates(comparison, ladder, reference)
     result = {
         "case": {
