@@ -1348,6 +1348,94 @@ def test_casepool_readme_is_the_render_of_the_artifacts() -> None:
     assert renderer.render() == CASE_NOTE.read_text()
 
 
+def _diagonal_minima(path: pathlib.Path) -> dict[str, float]:
+    """Per-DOF minimum of the radiation damping diagonal, keyed by DOF name.
+
+    ``damping[:, i, i]`` is the slice; ``np.diag`` of it would be a *matrix*
+    whose off-diagonal zeros floor every healthy DOF at exactly 0.
+    """
+    damping = np.load(path)["damping"]
+    return {
+        name: float(damping[:, index, index].min())
+        for index, name in enumerate(case.DOF_NAMES)
+    }
+
+
+@pytest.mark.skipif(not CASE_NOTE.exists(), reason="casepool note not committed")
+def test_casepool_readme_labels_every_damping_extreme_with_its_dof() -> None:
+    """A quoted damping minimum must carry the DOF that actually attains it.
+
+    The renderer used to reach into the diagonal with a hand-typed column: it
+    read column 5 for "pitch", but column 5 is yaw. The note therefore published
+    ``-0.000681`` as the pitch minimum (a yaw value) and printed the real pitch
+    minimum ``-1.463`` -- the worst damping violation in the whole n315 sweep --
+    as a bare number with no DOF on it. Naming the DOF from the data, and pinning
+    the label here, is what keeps the note from being wrong in a plausible way.
+    """
+    renderer = _readme_tool()
+    n315 = pathlib.Path(renderer.N315_PATH)
+    minima = _diagonal_minima(n315)
+    worst_dof = min(minima, key=minima.get)
+
+    facts = renderer._sweep_facts(n315)
+    assert facts["per_dof_min"] == pytest.approx(minima)
+    assert facts["min_damping_dof"] == worst_dof
+    assert facts["min_damping"] == pytest.approx(minima[worst_dof])
+
+    # a run that passes C0 must not be reported as "exactly zero" damping: the
+    # band-bottom value is small but positive, and np.diag() on the 1-D slice
+    # used to floor it (and with it the whole column) at 0
+    healthy = renderer._sweep_facts(pathlib.Path(renderer.ARTIFACT_DIR) / "sweep_coarse.npz")
+    for name, value in healthy["per_dof_min"].items():
+        assert value > 0.0, (name, value)
+
+    text = CASE_NOTE.read_text()
+    rows = {line.split("|")[1].strip(): line for line in text.splitlines() if line.startswith("|")}
+
+    # section 4: the row names two DOFs, so each number must be that DOF's own min
+    node_row = rows["min B（surge / pitch）"]
+    quoted = f"{renderer._num(minima['surge'])} / {renderer._num(minima['pitch'])}"
+    assert quoted in node_row, node_row
+    # the yaw minimum must not be dressed up as the pitch one
+    if minima["yaw"] != pytest.approx(minima["pitch"]):
+        assert renderer._num(minima["yaw"]) not in node_row.split("|")[2], node_row
+
+    # section 2.1: a single global minimum is only useful if its DOF is named
+    n315_row = rows["`docs/casepool_bem_cummins_wigley/evidence_cluster_n315_sweep_coarse.npz`"]
+    assert facts["min_damping_dof"] in n315_row.split("|")[4], n315_row
+    assert renderer._num(facts["min_damping"]) in n315_row.split("|")[4]
+
+
+@pytest.mark.skipif(not CASE_NOTE.exists(), reason="casepool note not committed")
+def test_casepool_readme_bites_on_a_mislabelled_dof(monkeypatch, tmp_path) -> None:
+    """Negative control: hand the renderer a yaw value under the name "pitch".
+
+    Without this, the test above could pass because the two DOFs happen to
+    coincide. Here the pitch row is fed a value that belongs to yaw, and the
+    render has to change -- proving the label is read from the data.
+    """
+    renderer = _readme_tool()
+    real = renderer._sweep_facts
+    target = pathlib.Path(renderer.N315_PATH).resolve()
+    swapped = False
+
+    def shifted(path, *args, **kwargs):
+        nonlocal swapped
+        facts = real(path, *args, **kwargs)
+        if pathlib.Path(path).resolve() == target and not swapped:
+            swapped = True
+            facts["per_dof_min"] = dict(facts["per_dof_min"])
+            facts["per_dof_min"]["pitch"] = facts["per_dof_min"]["yaw"]
+        return facts
+
+    monkeypatch.setattr(renderer, "_sweep_facts", shifted)
+    staged = renderer.render()
+    assert swapped
+    reference = pathlib.Path(renderer.N315_PATH).resolve()
+    assert renderer._num(real(reference)["per_dof_min"]["yaw"]) in staged
+    assert renderer._num(real(reference)["per_dof_min"]["pitch"]) not in staged.split("min B（surge / pitch）")[1].splitlines()[0]
+
+
 @pytest.mark.skipif(not CASE_NOTE.exists(), reason="casepool note not committed")
 def test_casepool_readme_does_not_restate_the_pre_fix_state() -> None:
     """The note must record the pre-fix state as history, not as the current one."""
@@ -1370,7 +1458,12 @@ def test_casepool_readme_does_not_restate_the_pre_fix_state() -> None:
     assert (ARTIFACT_DIR / "sweep_medium.npz").exists()
     assert "已入库" in text
     # a document that ships figures must name files that are actually present
-    for figure in ("fig_node_vs_local.png", "fig_matrix_round_trip.png", "fig_matrix_zero_pattern.png"):
+    for figure in (
+        "fig_node_vs_local.png",
+        "fig_c0_negative_controls.png",
+        "fig_matrix_round_trip.png",
+        "fig_matrix_zero_pattern.png",
+    ):
         assert f"`{figure}`" in text
         assert (CASE_NOTE.parent / figure).exists(), figure
 

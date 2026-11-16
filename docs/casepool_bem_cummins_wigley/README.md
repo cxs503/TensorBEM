@@ -33,8 +33,8 @@
 
 | 工件 | 网格 | max solver residual | min diag B | C0 判定 | C3 回放（重算，最坏 DOF） |
 | --- | --- | --- | --- | --- | --- |
-| `docs/casepool_bem_cummins_wigley/evidence_cluster_n315_sweep_coarse.npz` | 12x4（192 面板，41 节点） | 1.253 | -1.463（surge -0.947） | FAIL | 39.43 %（roll） |
-| `docs/m20021/sweep_medium.npz` | 20x6（480 面板，41 节点） | 1.245 | -129.9 | FAIL | 42.54 %（pitch） |
+| `docs/casepool_bem_cummins_wigley/evidence_cluster_n315_sweep_coarse.npz` | 12x4（192 面板，41 节点） | 1.253 | -1.463（pitch；surge -0.947） | FAIL | 39.43 %（roll） |
+| `docs/m20021/sweep_medium.npz` | 20x6（480 面板，41 节点） | 1.245 | -129.9（heave） | FAIL | 42.54 %（pitch） |
 
 ![C0 negative controls](fig_c0_negative_controls.png)
 
@@ -51,8 +51,10 @@
 | 量（coarse 12x4，band 0.2–12，41 节点） | 节点 n315（cj2690 / cj2704） | 本机与现提交件 |
 | --- | --- | --- |
 | max solver relative residual | 1.253 | 0.00639 |
-| min B（surge / pitch） | -0.947 / -0.000681（负阻尼＝造能） | 0（下界） / 0（下界） |
+| min B（surge / pitch） | -0.947 / -1.463（负阻尼＝造能） | 1.99e-08 / 2.43e-07 |
 | C3 逐 DOF 最坏闭合残差 | 39.43 %（roll，由 .npz 重算） | 3.598 %（yaw） |
+
+两条 `min diag B` 的最小值位置不同，这正是判据：n315 一侧落在带中 ω = 5.861 rad/s 且为负（pitch -1.463；全带 6 DOF×41 节点里共 39 个为负＝造能）；提交件一侧落在带底 ω = 0.2 rad/s，是小正数（辐射阻尼随 ω→0 趋于 0，不是被截到 0），因此 `min B ≥ 0` 一路成立。
 
 ![node vs local](fig_node_vs_local.png)
 
