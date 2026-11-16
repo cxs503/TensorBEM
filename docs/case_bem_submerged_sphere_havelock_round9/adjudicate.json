@@ -1,0 +1,1886 @@
+{
+ "case_code": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+ "round": "round9",
+ "kind": "recovery_and_independent_adjudication_of_an_unmerged_measurement",
+ "gate": 0.05,
+ "recovered_from": {
+  "branch": "agent/m20156",
+  "commit": "6d3725781e4122e374c706dc8bc988a117895014",
+  "runtime_seconds_total": 2890.45,
+  "tier_runtime_seconds": {
+   "T1:economy_s2_band": 430.2,
+   "T2:coarsest_s1_band": 15.4,
+   "T3:case_s3_band": 2281.1,
+   "T4:economy_s2_fa1.5": 11.0,
+   "T4:economy_s2_fa3.0": 121.0,
+   "T5:economy_s2_low_ka": 31.8
+  }
+ },
+ "checks": {
+  "provenance": {
+   "status": "PASS",
+   "source_branch": "agent/m20156",
+   "source_commit": "6d3725781e4122e374c706dc8bc988a117895014",
+   "runtime_seconds_total": 2890.45,
+   "files": {
+    "recovered/numbers_study_full.json": {
+     "expected": "a0b4ecf6e00cd4101dee1399579eff995cf9971ddd58797bbda37af31fe51b49",
+     "actual": "a0b4ecf6e00cd4101dee1399579eff995cf9971ddd58797bbda37af31fe51b49",
+     "match": true
+    },
+    "recovered/verdict_study.json": {
+     "expected": "36a9edb3078bcd6acc43806aa7fb7f4de0060cdbfe96dd180961b175ecb4b5d6",
+     "actual": "36a9edb3078bcd6acc43806aa7fb7f4de0060cdbfe96dd180961b175ecb4b5d6",
+     "match": true
+    },
+    "recovered/table_T3_case_s3_band.csv": {
+     "expected": "ba8e051d80805e692e9f9b6067a8bb2f3d163e892893a0d2f9494fe98683c79d",
+     "actual": "ba8e051d80805e692e9f9b6067a8bb2f3d163e892893a0d2f9494fe98683c79d",
+     "match": true
+    }
+   }
+  },
+  "arithmetic": {
+   "T1:economy_s2_band": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 84
+   },
+   "T2:coarsest_s1_band": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 60
+   },
+   "T3:case_s3_band": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 36
+   },
+   "T4:economy_s2_fa1.5": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 12
+   },
+   "T4:economy_s2_fa3.0": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 12
+   },
+   "T5:economy_s2_low_ka": {
+    "status": "PASS",
+    "tolerance": 1e-12,
+    "worst_abs_diff": 0.0,
+    "worst_at": {},
+    "n_compared": 60
+   }
+  },
+  "verdict_vs_branch": {
+   "T1:economy_s2_band": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       7,
+       7
+      ],
+      "band_max": [
+       0.055911298695572965,
+       0.055911298695572965
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.022528036459893645,
+       0.022528036459893645
+      ],
+      "band_max_at": [
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.019060152089501993,
+       0.019060152089501993
+      ],
+      "band_max_at": [
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T2:coarsest_s1_band": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       20,
+       20
+      ],
+      "band_max": [
+       0.20244581771165276,
+       0.20244581771165276
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       9,
+       9
+      ],
+      "band_max": [
+       0.055915740581782204,
+       0.055915740581782204
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       9,
+       9
+      ],
+      "band_max": [
+       0.05589308845841285,
+       0.05589308845841285
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T3:case_s3_band": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.014201539386874271,
+       0.014201539386874271
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.1,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.1,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.004868604159703718,
+       0.004868604159703718
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.0048693787109256375,
+       0.0048693787109256375
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T4:economy_s2_fa1.5": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       2,
+       2
+      ],
+      "band_max": [
+       0.05518017698187114,
+       0.05518017698187114
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.01982329405511347,
+       0.01982329405511347
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.019826597438698367,
+       0.019826597438698367
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T4:economy_s2_fa3.0": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       2,
+       2
+      ],
+      "band_max": [
+       0.053712760065252094,
+       0.053712760065252094
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.015589675809153051,
+       0.015589675809153051
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.015593846172692216,
+       0.015593846172692216
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T5:economy_s2_low_ka": {
+    "status": "PASS",
+    "label": "branch verdict.json",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       10,
+       10
+      ],
+      "band_max": [
+       0.05604715460809902,
+       0.05604715460809902
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.2,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.2,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.013709704516609399,
+       0.013709704516609399
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       },
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.013713706447594322,
+       0.013713706447594322
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       },
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   }
+  },
+  "verdict_vs_merged_code": {
+   "T1:economy_s2_band": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       7,
+       7
+      ],
+      "band_max": [
+       0.055911298695572965,
+       0.055911298695572965
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.022528036459893645,
+       0.022528036459893645
+      ],
+      "band_max_at": [
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       28,
+       28
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.019060152089501993,
+       0.019060152089501993
+      ],
+      "band_max_at": [
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 5.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T2:coarsest_s1_band": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       20,
+       20
+      ],
+      "band_max": [
+       0.20244581771165276,
+       0.20244581771165276
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       9,
+       9
+      ],
+      "band_max": [
+       0.055915740581782204,
+       0.055915740581782204
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       9,
+       9
+      ],
+      "band_max": [
+       0.05589308845841285,
+       0.05589308845841285
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.5,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T3:case_s3_band": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.014201539386874271,
+       0.014201539386874271
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.1,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.1,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.004868604159703718,
+       0.004868604159703718
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       12,
+       12
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.0048693787109256375,
+       0.0048693787109256375
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T4:economy_s2_fa1.5": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       2,
+       2
+      ],
+      "band_max": [
+       0.05518017698187114,
+       0.05518017698187114
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.01982329405511347,
+       0.01982329405511347
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.019826597438698367,
+       0.019826597438698367
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T4:economy_s2_fa3.0": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       2,
+       2
+      ],
+      "band_max": [
+       0.053712760065252094,
+       0.053712760065252094
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "b11"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.015589675809153051,
+       0.015589675809153051
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       4,
+       4
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.015593846172692216,
+       0.015593846172692216
+      ],
+      "band_max_at": [
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       },
+       {
+        "ka": 1.0,
+        "quantity": "a33"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   },
+   "T5:economy_s2_low_ka": {
+    "status": "PASS",
+    "label": "merged study _verdict()",
+    "per_measure": [
+     {
+      "measure": "flat",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       10,
+       10
+      ],
+      "band_max": [
+       0.05604715460809902,
+       0.05604715460809902
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.2,
+        "quantity": "b33"
+       },
+       {
+        "ka": 0.2,
+        "quantity": "b33"
+       }
+      ],
+      "verdict": [
+       "FAIL",
+       "FAIL"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "patch",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.013709704516609399,
+       0.013709704516609399
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       },
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     },
+     {
+      "measure": "uniform",
+      "n_items": [
+       20,
+       20
+      ],
+      "n_over_gate": [
+       0,
+       0
+      ],
+      "band_max": [
+       0.013713706447594322,
+       0.013713706447594322
+      ],
+      "band_max_at": [
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       },
+       {
+        "ka": 0.01,
+        "quantity": "a11"
+       }
+      ],
+      "verdict": [
+       "PASS",
+       "PASS"
+      ],
+      "agree": true
+     }
+    ]
+   }
+  },
+  "routing_identity_R1": {
+   "status": "PASS",
+   "tolerance": 1e-12,
+   "worst_rel_diff": 1.137628174277368e-15,
+   "n_ka_compared": 3,
+   "per_ka": [
+    {
+     "ka": 0.1,
+     "max_rel_diff": 2.1528276289795687e-16
+    },
+    {
+     "ka": 1.0,
+     "max_rel_diff": 1.0566122232582653e-15
+    },
+    {
+     "ka": 3.0,
+     "max_rel_diff": 1.137628174277368e-15
+    }
+   ],
+   "note": "same mesh (subdivision 3, f/a = 2.0) and same code path as the gated table"
+  },
+  "csv_row_count_matches_json": {
+   "status": "PASS",
+   "csv_rows": 9,
+   "json_rows": 9
+  }
+ },
+ "checks_failed": [],
+ "case_mesh_verdicts": {
+  "flat": {
+   "tier": "T3:case_s3_band",
+   "n_items": 12,
+   "n_items_over_gate": 0,
+   "band_max_rel_error": 0.014201539386874271,
+   "band_max_at": {
+    "ka": 0.1,
+    "quantity": "b33"
+   },
+   "verdict": "PASS",
+   "items": [
+    {
+     "ka": 0.1,
+     "quantity": "a33",
+     "rel_error": 0.005699947670581979
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b33",
+     "rel_error": 0.014201539386874271
+    },
+    {
+     "ka": 0.1,
+     "quantity": "a11",
+     "rel_error": 0.005389532189489318
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b11",
+     "rel_error": 0.014033627245371634
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a33",
+     "rel_error": 0.003967677722668509
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b33",
+     "rel_error": 0.0133837730547718
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a11",
+     "rel_error": 0.0045826256977817585
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b11",
+     "rel_error": 0.01363907775120883
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a33",
+     "rel_error": 0.004309698419325597
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b33",
+     "rel_error": 0.011985150972426566
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a11",
+     "rel_error": 0.004695472455933054
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b11",
+     "rel_error": 0.0122776953611391
+    }
+   ]
+  },
+  "patch": {
+   "tier": "T3:case_s3_band",
+   "n_items": 12,
+   "n_items_over_gate": 0,
+   "band_max_rel_error": 0.004868604159703718,
+   "band_max_at": {
+    "ka": 1.0,
+    "quantity": "a33"
+   },
+   "verdict": "PASS",
+   "items": [
+    {
+     "ka": 0.1,
+     "quantity": "a33",
+     "rel_error": 0.003511066572282064
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b33",
+     "rel_error": 0.003141681095814775
+    },
+    {
+     "ka": 0.1,
+     "quantity": "a11",
+     "rel_error": 0.0037937725992930214
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b11",
+     "rel_error": 0.003040464544940922
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a33",
+     "rel_error": 0.004868604159703718
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b33",
+     "rel_error": 0.0029195457105144866
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a11",
+     "rel_error": 0.004430549217388994
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b11",
+     "rel_error": 0.002940757716343606
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a33",
+     "rel_error": 0.004632087748456986
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b33",
+     "rel_error": 0.0018605281385587178
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a11",
+     "rel_error": 0.00435086279005192
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b11",
+     "rel_error": 0.001790822260741571
+    }
+   ]
+  },
+  "uniform": {
+   "tier": "T3:case_s3_band",
+   "n_items": 12,
+   "n_items_over_gate": 0,
+   "band_max_rel_error": 0.0048693787109256375,
+   "band_max_at": {
+    "ka": 1.0,
+    "quantity": "a33"
+   },
+   "verdict": "PASS",
+   "items": [
+    {
+     "ka": 0.1,
+     "quantity": "a33",
+     "rel_error": 0.0035118130120722043
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b33",
+     "rel_error": 0.003141360703579928
+    },
+    {
+     "ka": 0.1,
+     "quantity": "a11",
+     "rel_error": 0.003794539961311913
+    },
+    {
+     "ka": 0.1,
+     "quantity": "b11",
+     "rel_error": 0.0030401289586131385
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a33",
+     "rel_error": 0.0048693787109256375
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b33",
+     "rel_error": 0.0029202662510128393
+    },
+    {
+     "ka": 1.0,
+     "quantity": "a11",
+     "rel_error": 0.004431280188084967
+    },
+    {
+     "ka": 1.0,
+     "quantity": "b11",
+     "rel_error": 0.0029421256554808053
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a33",
+     "rel_error": 0.00463317834468787
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b33",
+     "rel_error": 0.001929189060081201
+    },
+    {
+     "ka": 3.0,
+     "quantity": "a11",
+     "rel_error": 0.0043518946801609565
+    },
+    {
+     "ka": 3.0,
+     "quantity": "b11",
+     "rel_error": 0.0018937395272962166
+    }
+   ]
+  }
+ },
+ "all_tier_verdicts": {
+  "T1:economy_s2_band": {
+   "flat": {
+    "n_items": 28,
+    "n_items_over_gate": 7,
+    "band_max_rel_error": 0.055911298695572965,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 0.5,
+     "quantity": "b33"
+    }
+   },
+   "patch": {
+    "n_items": 28,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.022528036459893645,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 5.0,
+     "quantity": "b11"
+    }
+   },
+   "uniform": {
+    "n_items": 28,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.019060152089501993,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 5.0,
+     "quantity": "b11"
+    }
+   }
+  },
+  "T2:coarsest_s1_band": {
+   "flat": {
+    "n_items": 20,
+    "n_items_over_gate": 20,
+    "band_max_rel_error": 0.20244581771165276,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 0.5,
+     "quantity": "b33"
+    }
+   },
+   "patch": {
+    "n_items": 20,
+    "n_items_over_gate": 9,
+    "band_max_rel_error": 0.055915740581782204,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 0.5,
+     "quantity": "b33"
+    }
+   },
+   "uniform": {
+    "n_items": 20,
+    "n_items_over_gate": 9,
+    "band_max_rel_error": 0.05589308845841285,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 0.5,
+     "quantity": "b33"
+    }
+   }
+  },
+  "T3:case_s3_band": {
+   "flat": {
+    "n_items": 12,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.014201539386874271,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 0.1,
+     "quantity": "b33"
+    }
+   },
+   "patch": {
+    "n_items": 12,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.004868604159703718,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   },
+   "uniform": {
+    "n_items": 12,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.0048693787109256375,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   }
+  },
+  "T4:economy_s2_fa1.5": {
+   "flat": {
+    "n_items": 4,
+    "n_items_over_gate": 2,
+    "band_max_rel_error": 0.05518017698187114,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "b11"
+    }
+   },
+   "patch": {
+    "n_items": 4,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.01982329405511347,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   },
+   "uniform": {
+    "n_items": 4,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.019826597438698367,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   }
+  },
+  "T4:economy_s2_fa3.0": {
+   "flat": {
+    "n_items": 4,
+    "n_items_over_gate": 2,
+    "band_max_rel_error": 0.053712760065252094,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "b11"
+    }
+   },
+   "patch": {
+    "n_items": 4,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.015589675809153051,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   },
+   "uniform": {
+    "n_items": 4,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.015593846172692216,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 1.0,
+     "quantity": "a33"
+    }
+   }
+  },
+  "T5:economy_s2_low_ka": {
+   "flat": {
+    "n_items": 20,
+    "n_items_over_gate": 10,
+    "band_max_rel_error": 0.05604715460809902,
+    "verdict": "FAIL",
+    "band_max_at": {
+     "ka": 0.2,
+     "quantity": "b33"
+    }
+   },
+   "patch": {
+    "n_items": 20,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.013709704516609399,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 0.01,
+     "quantity": "a11"
+    }
+   },
+   "uniform": {
+    "n_items": 20,
+    "n_items_over_gate": 0,
+    "band_max_rel_error": 0.013713706447594322,
+    "verdict": "PASS",
+    "band_max_at": {
+     "ka": 0.01,
+     "quantity": "a11"
+    }
+   }
+  }
+ },
+ "registered_prediction_RA4": {
+  "rule": "measured/predicted inside [0.5, 2] (declared in round 8, before any T3 measurement)",
+  "predicted_patch_band_max": 0.001932404033251102,
+  "measured_patch_band_max": 0.004868604159703718,
+  "measured_over_predicted": 2.5194545632947754,
+  "committed_flat_band_max": 0.014311353989157588,
+  "realised_reduction_factor": 2.939518909261359,
+  "holds": false,
+  "verdict": "FALSIFIED",
+  "per_coefficient_prediction": {
+   "a33": {
+    "flat_band_max": 0.005699947670582186,
+    "predicted_patch_band_max": 0.0012628306428669094,
+    "expected_reduction_factor": 4.51362793798068
+   },
+   "b33": {
+    "flat_band_max": 0.014311353989157588,
+    "predicted_patch_band_max": 0.001932404033251102,
+    "expected_reduction_factor": 7.4059843298298125
+   },
+   "a11": {
+    "flat_band_max": 0.00538953218948932,
+    "predicted_patch_band_max": 0.0006314455241080577,
+    "expected_reduction_factor": 8.535229063666659
+   },
+   "b11": {
+    "flat_band_max": 0.014120619915519392,
+    "predicted_patch_band_max": 0.0012452422347400283,
+    "expected_reduction_factor": 11.33965707360334
+   }
+  }
+ },
+ "predeclared_P1_P2_P3": {
+  "P1": {
+   "claim": "band-max rel error drops by at least a factor 2 under the patch measure",
+   "max_flat": 0.014201539386874271,
+   "max_patch": 0.004868604159703718,
+   "factor": 2.916963244705135,
+   "holds": true
+  },
+  "P2": {
+   "claim": "coefficient-wise reduction under the patch measure exceeds half the area deficit (damping items)",
+   "deficit": 0.004764930322906702,
+   "n_items": 6,
+   "n_holding": 6,
+   "min_frac_of_deficit": 2.124820752403285,
+   "median_frac_of_deficit": 2.223032835697308,
+   "holds": true
+  },
+  "P3": {
+   "claim": "(flat - patch) removal is not reproduced by the uniform control on damping items",
+   "n_damping_cells": 6,
+   "n_patch_beats_uniform": 4,
+   "flat_minus_patch_min": 0.010124622833867848,
+   "flat_minus_uniform_min": 0.010055961912345365,
+   "holds": true
+  },
+  "area_deficit_s3": 0.004764930322906702
+ },
+ "patch_vs_uniform_control": {
+  "max_abs_rel_gap_any_cell": 0.054346051857292965,
+  "max_abs_rel_gap_damping": 0.054346051857292965,
+  "n_patch_better_damping": 4,
+  "n_damping_cells": 6,
+  "cells": [
+   {
+    "ka": 0.1,
+    "quantity": "a33",
+    "err_patch": 0.003511066572282064,
+    "err_uniform": 0.0035118130120722043,
+    "patch_minus_uniform": -7.464397901403227e-07,
+    "rel_gap": -0.000212551120339939
+   },
+   {
+    "ka": 0.1,
+    "quantity": "b33",
+    "err_patch": 0.003141681095814775,
+    "err_uniform": 0.003141360703579928,
+    "patch_minus_uniform": 3.2039223484686685e-07,
+    "rel_gap": 0.0001019915460461909
+   },
+   {
+    "ka": 0.1,
+    "quantity": "a11",
+    "err_patch": 0.0037937725992930214,
+    "err_uniform": 0.003794539961311913,
+    "patch_minus_uniform": -7.673620188914689e-07,
+    "rel_gap": -0.00020222794507773834
+   },
+   {
+    "ka": 0.1,
+    "quantity": "b11",
+    "err_patch": 0.003040464544940922,
+    "err_uniform": 0.0030401289586131385,
+    "patch_minus_uniform": 3.3558632778337913e-07,
+    "rel_gap": 0.00011038555678127174
+   },
+   {
+    "ka": 1.0,
+    "quantity": "a33",
+    "err_patch": 0.004868604159703718,
+    "err_uniform": 0.0048693787109256375,
+    "patch_minus_uniform": -7.745512219199321e-07,
+    "rel_gap": -0.0001590657182161736
+   },
+   {
+    "ka": 1.0,
+    "quantity": "b33",
+    "err_patch": 0.0029195457105144866,
+    "err_uniform": 0.0029202662510128393,
+    "patch_minus_uniform": -7.205404983527328e-07,
+    "rel_gap": -0.0002467379466179931
+   },
+   {
+    "ka": 1.0,
+    "quantity": "a11",
+    "err_patch": 0.004430549217388994,
+    "err_uniform": 0.004431280188084967,
+    "patch_minus_uniform": -7.309706959732556e-07,
+    "rel_gap": -0.00016495700225382357
+   },
+   {
+    "ka": 1.0,
+    "quantity": "b11",
+    "err_patch": 0.002940757716343606,
+    "err_uniform": 0.0029421256554808053,
+    "patch_minus_uniform": -1.367939137199379e-06,
+    "rel_gap": -0.0004649492568922345
+   },
+   {
+    "ka": 3.0,
+    "quantity": "a33",
+    "err_patch": 0.004632087748456986,
+    "err_uniform": 0.00463317834468787,
+    "patch_minus_uniform": -1.0905962308845746e-06,
+    "rel_gap": -0.00023538835541156926
+   },
+   {
+    "ka": 3.0,
+    "quantity": "b33",
+    "err_patch": 0.0018605281385587178,
+    "err_uniform": 0.001929189060081201,
+    "patch_minus_uniform": -6.866092152248322e-05,
+    "rel_gap": -0.03559056131056084
+   },
+   {
+    "ka": 3.0,
+    "quantity": "a11",
+    "err_patch": 0.00435086279005192,
+    "err_uniform": 0.0043518946801609565,
+    "patch_minus_uniform": -1.0318901090362528e-06,
+    "rel_gap": -0.00023711284046931208
+   },
+   {
+    "ka": 3.0,
+    "quantity": "b11",
+    "err_patch": 0.001790822260741571,
+    "err_uniform": 0.0018937395272962166,
+    "patch_minus_uniform": -0.00010291726655464566,
+    "rel_gap": -0.054346051857292965
+   }
+  ]
+ },
+ "bands": {
+  "declared_case_band": [
+   0.1,
+   1.0,
+   3.0
+  ],
+  "full_band_reference": [
+   0.1,
+   0.5,
+   1.0,
+   2.0,
+   3.0,
+   4.0,
+   5.0
+  ],
+  "full_band_not_measured": [
+   0.5,
+   2.0,
+   4.0,
+   5.0
+  ]
+ },
+ "not_run": [
+  "case mesh (1280 panels) under patch / uniform on the widened 7-wavenumber band ka in [0.5, 2.0, 4.0, 5.0]: only the declared band [0.1, 1.0, 3.0] was measured",
+  "no new solves were started in this round (the recovered run is the measurement)"
+ ],
+ "environment": {
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "machine": "loongarch64"
+ },
+ "declared_band_from_merged_study": [
+  0.1,
+  1.0,
+  3.0
+ ]
+}

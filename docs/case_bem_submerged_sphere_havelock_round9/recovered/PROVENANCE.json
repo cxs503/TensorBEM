@@ -1,0 +1,33 @@
+{
+  "case_code": "CASE-BEM-SUBMERGED-SPHERE-HAVELOCK",
+  "note": "Verbatim recovery of the finished surface-measure study (tiers T1..T5) that was computed and committed on the unmerged agent branch agent/m20156 and therefore never reached main; the verification-debt rounds 5-8 of this anchor had been chasing this measurement as 'never run'. Files below are byte-identical to the branch versions (no edits, no re-serialisation).",
+  "source_branch": "agent/m20156",
+  "source_commit": "6d3725781e4122e374c706dc8bc988a117895014",
+  "source_artifacts": {
+    "recovered/numbers_study_full.json": "docs/case_bem_submerged_sphere_havelock/measure_correction/numbers.json",
+    "recovered/verdict_study.json": "docs/case_bem_submerged_sphere_havelock/measure_correction/verdict.json",
+    "recovered/table_T3_case_s3_band.csv": "docs/case_bem_submerged_sphere_havelock/measure_correction/table_T3_case_s3_band.csv"
+  },
+  "sha256": {
+    "recovered/numbers_study_full.json": "a0b4ecf6e00cd4101dee1399579eff995cf9971ddd58797bbda37af31fe51b49",
+    "recovered/verdict_study.json": "36a9edb3078bcd6acc43806aa7fb7f4de0060cdbfe96dd180961b175ecb4b5d6",
+    "recovered/table_T3_case_s3_band.csv": "ba8e051d80805e692e9f9b6067a8bb2f3d163e892893a0d2f9494fe98683c79d"
+  },
+  "environment_reported_by_artifact": {
+    "python": "3.11.6",
+    "numpy": "2.0.1",
+    "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+    "machine": "loongarch64"
+  },
+  "runtime_seconds_total": 2890.45,
+  "runtime_by_tier": {
+    "T1:economy_s2_band": 430.2,
+    "T2:coarsest_s1_band": 15.4,
+    "T3:case_s3_band": 2281.1,
+    "T4:economy_s2_fa1.5": 11.0,
+    "T4:economy_s2_fa3.0": 121.0,
+    "T5:economy_s2_low_ka": 31.8
+  },
+  "driver": "benchmarks/verified/casepool_bem_submerged_sphere_havelock/measure_correction_study.py (merged in main; the recovered rows were produced by that same code path)",
+  "recovery_round": "round 9, scripts/havelock_round9_recover_case_mesh.py"
+}

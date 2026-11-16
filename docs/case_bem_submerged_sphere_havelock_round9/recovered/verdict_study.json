@@ -1,0 +1,212 @@
+{
+  "T1:economy_s2_band": {
+    "flat": {
+      "tier": "T1:economy_s2_band",
+      "n_items": 28,
+      "n_items_over_gate": 7,
+      "band_max_rel_error": 0.055911298695572965,
+      "band_max_at": {
+        "ka": 0.5,
+        "quantity": "b33"
+      },
+      "verdict": "FAIL"
+    },
+    "patch": {
+      "tier": "T1:economy_s2_band",
+      "n_items": 28,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.022528036459893645,
+      "band_max_at": {
+        "ka": 5.0,
+        "quantity": "b11"
+      },
+      "verdict": "PASS"
+    },
+    "uniform": {
+      "tier": "T1:economy_s2_band",
+      "n_items": 28,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.019060152089501993,
+      "band_max_at": {
+        "ka": 5.0,
+        "quantity": "b11"
+      },
+      "verdict": "PASS"
+    }
+  },
+  "T2:coarsest_s1_band": {
+    "flat": {
+      "tier": "T2:coarsest_s1_band",
+      "n_items": 20,
+      "n_items_over_gate": 20,
+      "band_max_rel_error": 0.20244581771165276,
+      "band_max_at": {
+        "ka": 0.5,
+        "quantity": "b33"
+      },
+      "verdict": "FAIL"
+    },
+    "patch": {
+      "tier": "T2:coarsest_s1_band",
+      "n_items": 20,
+      "n_items_over_gate": 9,
+      "band_max_rel_error": 0.055915740581782204,
+      "band_max_at": {
+        "ka": 0.5,
+        "quantity": "b33"
+      },
+      "verdict": "FAIL"
+    },
+    "uniform": {
+      "tier": "T2:coarsest_s1_band",
+      "n_items": 20,
+      "n_items_over_gate": 9,
+      "band_max_rel_error": 0.05589308845841285,
+      "band_max_at": {
+        "ka": 0.5,
+        "quantity": "b33"
+      },
+      "verdict": "FAIL"
+    }
+  },
+  "T3:case_s3_band": {
+    "flat": {
+      "tier": "T3:case_s3_band",
+      "n_items": 12,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.014201539386874271,
+      "band_max_at": {
+        "ka": 0.1,
+        "quantity": "b33"
+      },
+      "verdict": "PASS"
+    },
+    "patch": {
+      "tier": "T3:case_s3_band",
+      "n_items": 12,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.004868604159703718,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    },
+    "uniform": {
+      "tier": "T3:case_s3_band",
+      "n_items": 12,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.0048693787109256375,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    }
+  },
+  "T4:economy_s2_fa1.5": {
+    "flat": {
+      "tier": "T4:economy_s2_fa1.5",
+      "n_items": 4,
+      "n_items_over_gate": 2,
+      "band_max_rel_error": 0.05518017698187114,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "b11"
+      },
+      "verdict": "FAIL"
+    },
+    "patch": {
+      "tier": "T4:economy_s2_fa1.5",
+      "n_items": 4,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.01982329405511347,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    },
+    "uniform": {
+      "tier": "T4:economy_s2_fa1.5",
+      "n_items": 4,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.019826597438698367,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    }
+  },
+  "T4:economy_s2_fa3.0": {
+    "flat": {
+      "tier": "T4:economy_s2_fa3.0",
+      "n_items": 4,
+      "n_items_over_gate": 2,
+      "band_max_rel_error": 0.053712760065252094,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "b11"
+      },
+      "verdict": "FAIL"
+    },
+    "patch": {
+      "tier": "T4:economy_s2_fa3.0",
+      "n_items": 4,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.015589675809153051,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    },
+    "uniform": {
+      "tier": "T4:economy_s2_fa3.0",
+      "n_items": 4,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.015593846172692216,
+      "band_max_at": {
+        "ka": 1.0,
+        "quantity": "a33"
+      },
+      "verdict": "PASS"
+    }
+  },
+  "T5:economy_s2_low_ka": {
+    "flat": {
+      "tier": "T5:economy_s2_low_ka",
+      "n_items": 20,
+      "n_items_over_gate": 10,
+      "band_max_rel_error": 0.05604715460809902,
+      "band_max_at": {
+        "ka": 0.2,
+        "quantity": "b33"
+      },
+      "verdict": "FAIL"
+    },
+    "patch": {
+      "tier": "T5:economy_s2_low_ka",
+      "n_items": 20,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.013709704516609399,
+      "band_max_at": {
+        "ka": 0.01,
+        "quantity": "a11"
+      },
+      "verdict": "PASS"
+    },
+    "uniform": {
+      "tier": "T5:economy_s2_low_ka",
+      "n_items": 20,
+      "n_items_over_gate": 0,
+      "band_max_rel_error": 0.013713706447594322,
+      "band_max_at": {
+        "ka": 0.01,
+        "quantity": "a11"
+      },
+      "verdict": "PASS"
+    }
+  }
+}
