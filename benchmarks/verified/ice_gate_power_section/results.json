@@ -1,0 +1,367 @@
+{
+  "module": "tensorbem.benchmarks.case_ice_gate_power_section",
+  "configuration": {
+    "ladder_panels_per_side": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "informativeness_reference_panels": 64,
+    "informativeness_samples": 6,
+    "note": "reduced local configuration; full ladder up to 128 panels/side"
+  },
+  "section": {
+    "beam": 20.0,
+    "draft": 6.0,
+    "half_beam": 10.0,
+    "density": 1025.0,
+    "beam_over_draft": 3.3333333333333335
+  },
+  "limits": {
+    "half_beam": 10.0,
+    "draft": 6.0,
+    "density": 1025.0,
+    "beam_over_draft": 3.3333333333333335,
+    "levels_panels_per_side": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "limiting_conditions": {
+      "infinite_frequency": {
+        "added_mass_per_metre": [
+          231152.658045133,
+          227812.78435710858,
+          226382.1146350937,
+          225782.11443689466
+        ],
+        "added_mass_per_metre_tonnes": [
+          231.152658045133,
+          227.81278435710857,
+          226.3821146350937,
+          225.78211443689466
+        ],
+        "observed_order_finest_three": 1.2536557740044918,
+        "observed_orders_all_triples": [
+          1.2231028854828037,
+          1.2536557740044918
+        ],
+        "richardson_limit": 225348.72880335758,
+        "richardson_limit_tonnes": 225.34872880335757,
+        "relative_change_finest_pair": 0.0026574301498391425,
+        "mirror_diagnostics_finest": {
+          "limit": "infinite_frequency",
+          "net_flux": 0.0,
+          "mirror_line_max_abs_potential": 3.801646497603173e-15,
+          "mirror_line_max_abs_normal_derivative": 0.6049570064295068,
+          "flux_scale": 1.0,
+          "mirror_line_potential_ratio": 3.801646497603173e-16,
+          "mirror_line_normal_derivative_ratio": 0.6049570064295068
+        }
+      },
+      "zero_frequency": {
+        "added_mass_per_metre": [
+          -140470.49066387033,
+          -142496.2826676092,
+          -143357.94695537954,
+          -143717.987600171
+        ],
+        "added_mass_per_metre_tonnes": [
+          -140.47049066387032,
+          -142.4962826676092,
+          -143.35794695537953,
+          -143.717987600171
+        ],
+        "observed_order_finest_three": 1.2589661108941206,
+        "observed_orders_all_triples": [
+          1.2332882575967503,
+          1.2589661108941206
+        ],
+        "richardson_limit": -143976.40697038264,
+        "richardson_limit_tonnes": -143.97640697038264,
+        "relative_change_finest_pair": 0.0025051884652957917,
+        "mirror_diagnostics_finest": {
+          "limit": "zero_frequency",
+          "net_flux": 40.0,
+          "mirror_line_max_abs_potential": 19.230229636274096,
+          "mirror_line_max_abs_normal_derivative": 4.810605039318183e-16,
+          "flux_scale": 1.0,
+          "mirror_line_potential_ratio": 1.9230229636274097,
+          "mirror_line_normal_derivative_ratio": 4.810605039318183e-16
+        }
+      }
+    }
+  },
+  "analytic_baselines": {
+    "full_circle_exact_pi_rho_a2": [
+      {
+        "panels": 32,
+        "added_mass": 3220.016031316842,
+        "exact": 3220.132469929538,
+        "relative_error": 3.6159572248349805e-05
+      },
+      {
+        "panels": 64,
+        "added_mass": 3220.1164680758516,
+        "exact": 3220.132469929538,
+        "relative_error": 4.969315342048092e-06
+      }
+    ],
+    "full_ellipse_exact_pi_rho_a2": [
+      {
+        "panels": 32,
+        "added_mass": 12898.738993574283,
+        "exact": 12880.529879718151,
+        "relative_error": 0.0014136929168421955
+      },
+      {
+        "panels": 64,
+        "added_mass": 12885.363974961474,
+        "exact": 12880.529879718151,
+        "relative_error": 0.00037530251383016195
+      }
+    ],
+    "half_immersed_circle_A_inf_exact_half": [
+      {
+        "panels": 32,
+        "added_mass": 1610.0080156584206,
+        "exact": 1610.066234964769,
+        "relative_error": 3.6159572248632246e-05
+      },
+      {
+        "panels": 64,
+        "added_mass": 1610.0582340379256,
+        "exact": 1610.066234964769,
+        "relative_error": 4.969315342189312e-06
+      }
+    ]
+  },
+  "negative_controls": [
+    {
+      "name": "doubled_body_not_halved",
+      "description": "half-domain mass reported as the full doubled-body mass",
+      "value": 450697.45760671515,
+      "reference": 225348.72880335758,
+      "relative_deviation": 1.0,
+      "tolerance": 0.03,
+      "rejected": true
+    },
+    {
+      "name": "coarse_mesh_lock",
+      "description": "coarsest ladder level (8 panels/side)",
+      "value": 231152.658045133,
+      "reference": 225348.72880335758,
+      "relative_deviation": 0.025755322750633344,
+      "tolerance": 0.03,
+      "rejected": false
+    },
+    {
+      "name": "wrong_spectral_limit",
+      "description": "rigid-wall (omega -> 0) branch used as the A_inf baseline",
+      "value": -143976.40697038264,
+      "reference": 225348.72880335758,
+      "relative_deviation": -1.6389048996855824,
+      "tolerance": 0.03,
+      "rejected": true
+    },
+    {
+      "name": "mode_normal_mixing",
+      "description": "heave load integrated against the surge normal component",
+      "value": 2.731148640577885e-12,
+      "reference": 225348.72880335758,
+      "relative_deviation": -1.0,
+      "tolerance": 0.03,
+      "rejected": true
+    },
+    {
+      "name": "waterplane_lid_no_image",
+      "description": "wetted section closed by a lid on z = 0 instead of mirrored",
+      "value": 412612.39330031414,
+      "reference": 225348.72880335758,
+      "relative_deviation": 0.8309949893720743,
+      "tolerance": 0.03,
+      "rejected": true
+    }
+  ],
+  "informativeness": {
+    "tol_3pct": {
+      "tolerance": 0.03,
+      "criterion_mesh_panels_per_side": 32,
+      "reference_richardson_limit": 225468.9281775946,
+      "defect_curve": [
+        {
+          "defect": 0.0,
+          "value": 226382.1146350937,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.0040501654258089945,
+          "tolerance": 0.03,
+          "rejected": false
+        },
+        {
+          "defect": 0.005,
+          "value": 228651.5953343104,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.014115768334202286,
+          "tolerance": 0.03,
+          "rejected": false
+        },
+        {
+          "defect": 0.01,
+          "value": 230932.39513925914,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.02423157375086805,
+          "tolerance": 0.03,
+          "rejected": false
+        },
+        {
+          "defect": 0.02,
+          "value": 235527.95206635148,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.04461379210901172,
+          "tolerance": 0.03,
+          "rejected": true
+        },
+        {
+          "defect": 0.03,
+          "value": 240168.78541637104,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.06519682050024142,
+          "tolerance": 0.03,
+          "rejected": true
+        },
+        {
+          "defect": 0.05,
+          "value": 249586.2813851908,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.1069653073819545,
+          "tolerance": 0.03,
+          "rejected": true
+        },
+        {
+          "defect": 0.08,
+          "value": 264052.0985103734,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.17112411295266408,
+          "tolerance": 0.03,
+          "rejected": true
+        }
+      ],
+      "minimum_detectable_defect": 0.02,
+      "monte_carlo_detection_probability": 0.16666666666666666,
+      "samples": 6,
+      "seed": 20261116
+    },
+    "tol_15pct": {
+      "tolerance": 0.15,
+      "criterion_mesh_panels_per_side": 32,
+      "reference_richardson_limit": 225468.9281775946,
+      "defect_curve": [
+        {
+          "defect": 0.0,
+          "value": 226382.1146350937,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.0040501654258089945,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.005,
+          "value": 228651.5953343104,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.014115768334202286,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.01,
+          "value": 230932.39513925914,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.02423157375086805,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.02,
+          "value": 235527.95206635148,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.04461379210901172,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.03,
+          "value": 240168.78541637104,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.06519682050024142,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.05,
+          "value": 249586.2813851908,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.1069653073819545,
+          "tolerance": 0.15,
+          "rejected": false
+        },
+        {
+          "defect": 0.08,
+          "value": 264052.0985103734,
+          "reference": 225468.9281775946,
+          "relative_deviation": 0.17112411295266408,
+          "tolerance": 0.15,
+          "rejected": true
+        }
+      ],
+      "minimum_detectable_defect": 0.08,
+      "monte_carlo_detection_probability": 0.0,
+      "samples": 6,
+      "seed": 20261116
+    }
+  },
+  "adjudication": {
+    "computed_A_inf_per_metre": 225348.72880335758,
+    "computed_A_inf_tonnes_per_metre": 225.34872880335757,
+    "rigid_wall_branch_per_metre": -143976.40697038264,
+    "rigid_wall_branch_tonnes_per_metre": -143.97640697038264,
+    "rows": [
+      {
+        "reference_label": "audit_19234_independent_potential_flow",
+        "quoted_per_metre": 228600.0,
+        "deviation_vs_A_inf": 0.014427732580996848,
+        "deviation_vs_rigid_wall_branch": 2.5877601393888465
+      },
+      {
+        "reference_label": "chain_declared_A_inf_over_L",
+        "quoted_per_metre": 86100.0,
+        "deviation_vs_A_inf": -0.6179255127942964,
+        "deviation_vs_rigid_wall_branch": 1.5980146456753266
+      }
+    ]
+  },
+  "beam_over_draft_sweep": [
+    {
+      "beam_over_draft": 2.0,
+      "half_beam": 6.0,
+      "A_inf_per_metre": 88119.90764692702,
+      "A_inf_per_metre_tonnes": 88.11990764692702,
+      "A_inf_over_rho_beam_half_squared": 2.388073377965502
+    },
+    {
+      "beam_over_draft": 4.0,
+      "half_beam": 12.0,
+      "A_inf_per_metre": 317616.6755205,
+      "A_inf_per_metre_tonnes": 317.6166755205,
+      "A_inf_over_rho_beam_half_squared": 2.1518744953963416
+    },
+    {
+      "beam_over_draft": 10.0,
+      "half_beam": 30.0,
+      "A_inf_per_metre": 1773048.986492705,
+      "A_inf_per_metre_tonnes": 1773.0489864927051,
+      "A_inf_over_rho_beam_half_squared": 1.9220043214013063
+    }
+  ]
+}
