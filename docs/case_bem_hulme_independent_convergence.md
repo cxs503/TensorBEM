@@ -103,6 +103,7 @@
 | `E7_inhouse_model_credible` | the same convergence model reproduces *every* in-house rung at ka=2 to within 0.3% per quantity, on at least 4 rungs -- with exactly three rungs a three-parameter model is determined and the residual is zero by construction, which is not evidence | 0.000% | FAIL |
 | `E9_inhouse_order_and_limit_stable` | the in-house fit is stable under dropping its coarsest rung (needs >= 4 rungs) | nan% | FAIL |
 | `E8_inhouse_extrapolated_error` | |BEM v_inf / reference - 1| < 1% for every quantity at ka=2 -- the graded 1.15 % is discretisation, not bias | 0.120%（A11） | PASS |
+| `E10_ladder_environment_homogeneous` | the in-house ladder is numerically homogeneous (one numpy build, one code revision), or -- if it is mixed -- at least one panel count was recomputed in both environments and agrees to within 1e-06 relative, so the mixing is controlled | 0.000% | FAIL |
 
 **总判定：FAIL**
 
