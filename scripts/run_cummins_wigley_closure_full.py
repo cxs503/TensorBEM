@@ -15,9 +15,18 @@ resumed and every number is traceable to one job):
 3. ``cluster``    build :func:`closure_grid(omega_n)` (extended band + local
                   cluster at ``RESONANCE_STEP`` = 0.0125 rad/s, 6 samples per
                   half-power width) and solve the nodes not already cached.
-4. ``gates``      evaluate G1-G5 on the full closure grid and write
-                  ``results.json`` (with the narrow-band A/B control and the
-                  supplementary KK statistics).
+4. ``gates``      evaluate G0 (solver admissibility) then G1-G5 on the full
+                  closure grid and write ``results.json`` (with the narrow-band
+                  A/B control and the supplementary KK statistics).
+
+Admissibility (gate ``G0``) is enforced in *both* solving and gating: a node
+whose relative residual exceeds ``--residual-tol`` (default
+``case.SOLVER_RESIDUAL_TOL`` = 1 %, the case pool's ``C0`` limit) is recorded
+under ``rejected/`` and never cached, and the gates stage refuses a cache that
+already contains one.  The five consistency gates cannot see a diverged solve --
+``docs/m20021/sweep_medium.npz`` passes the numbers around a heave damping of
+``B33 = -129.9`` at ``w = 5.2912`` rad/s at 34-125 % residual -- so without G0 a
+band verdict is not evidence.
 
 Nothing here changes the predeclared gates: G1-G5 keep the definitions in
 :mod:`tensorbem.benchmarks.cummins_wigley_kk_causality`.  G3b / rms / interior
@@ -64,13 +73,57 @@ def _point_path(outdir: pathlib.Path, level: str, omega: float) -> pathlib.Path:
     return outdir / "points" / f"{level}_omega_{omega:07.3f}.json"
 
 
-def _solve_one(outdir: pathlib.Path, level: str, omega: float) -> dict:
-    """Solve one (level, omega) and cache it; returns the payload."""
+def _rejected_path(outdir: pathlib.Path, level: str, omega: float) -> pathlib.Path:
+    return outdir / "rejected" / f"{level}_omega_{omega:07.3f}.json"
+
+
+def _admissible(payload: dict, residual_tol: float) -> bool:
+    residual = payload.get("relative_residual", float("nan"))
+    try:
+        residual = float(residual)
+    except (TypeError, ValueError):
+        return False
+    return residual == residual and abs(residual) <= residual_tol
+
+
+def _solve_one(
+    outdir: pathlib.Path,
+    level: str,
+    omega: float,
+    residual_tol: float = case.SOLVER_RESIDUAL_TOL,
+) -> dict:
+    """Solve one (level, omega) and cache it *only if it converged*.
+
+    A diverged solve is written under ``rejected/`` (so the failure is on
+    record) and then raised: caching it would hand a bad node to the gates as
+    if it were data, which is exactly how a negative damping entered this
+    anchor's evidence before (``docs/m20021/sweep_medium.npz``, 41/41 nodes
+    above 1 % residual, ``B33 = -129.9`` at ``w = 5.2912`` rad/s).
+    """
     path = _point_path(outdir, level, float(omega))
     if path.exists():
-        return json.loads(path.read_text())
+        cached = json.loads(path.read_text())
+        if not _admissible(cached, residual_tol):
+            raise SystemExit(
+                f"cached node {level} omega={omega:.3f} rad/s is solver-"
+                f"inadmissible (residual "
+                f"{cached.get('relative_residual')} > {residual_tol}); delete "
+                f"{path} and re-solve at a finer level -- the coefficients of a "
+                "diverged node are not data."
+            )
+        return cached
     started = time.perf_counter()
     payload = case.solve_point(level, float(omega))
+    if not _admissible(payload, residual_tol):
+        rejected = _rejected_path(outdir, level, float(omega))
+        rejected.parent.mkdir(parents=True, exist_ok=True)
+        rejected.write_text(json.dumps(payload, indent=1))
+        raise SystemExit(
+            f"solver did not converge at {level} omega={omega:.3f} rad/s: "
+            f"relative residual {payload.get('relative_residual')} > "
+            f"{residual_tol} (record: {rejected}). Not cached; re-solve this "
+            "node at a finer level or drop it from the declared band."
+        )
     path.write_text(json.dumps(payload, indent=1))
     print(f"[point] {level} omega={omega:.3f} wall={payload['wall_seconds']:.1f}s "
           f"residual={payload['relative_residual']:.3e} -> {path} "
@@ -83,7 +136,7 @@ def _load_points(outdir: pathlib.Path, level: str) -> dict[float, dict]:
 
 
 def _gates_block(sweep: dict, reference: dict, label: str) -> dict:
-    """G1-G5 on one band, with the supplementary KK statistics kept."""
+    """G0-G5 on one band, with the supplementary KK statistics kept."""
     analysis = case.gates_from_sweep(sweep, reference=reference)
     gates = {}
     for key, value in analysis["gates"].items():
@@ -94,6 +147,9 @@ def _gates_block(sweep: dict, reference: dict, label: str) -> dict:
         "points": len(analysis["omega"]),
         "verdict": analysis["verdict"],
         "failed": analysis["failed"],
+        "admissible": analysis["admissible"],
+        "interpretable": analysis["interpretable"],
+        "solver_admissibility": analysis["solver_admissibility"],
         "gates": gates,
         "free_decay": {k: v for k, v in analysis["free_decay"].items()
                        if k != "half_power"},
@@ -158,8 +214,9 @@ def run_solve_stage(args) -> dict:
           f"cached={len(slice_) - len(todo)} to_solve={len(todo)}", flush=True)
     if resonance:
         print(f"[solve] resonance={json.dumps(resonance, default=float)}", flush=True)
+    residual_tol = float(getattr(args, "residual_tol", case.SOLVER_RESIDUAL_TOL))
     for w in todo:
-        _solve_one(outdir, args.level, w)
+        _solve_one(outdir, args.level, w, residual_tol)
     after = _load_points(outdir, args.level)
     report = {
         "stage": "solve",
@@ -171,6 +228,7 @@ def run_solve_stage(args) -> dict:
         "slice_nodes": len(slice_),
         "solved_now": len(todo),
         "cached_total": len(after),
+        "residual_tol": residual_tol,
         "resonance": resonance,
     }
     (outdir / f"solve_shard_{args.grid}_{args.shard}of{args.shards}.json").write_text(
@@ -193,7 +251,23 @@ def run_gate_stage(args) -> dict:
     reference = case.load_capytaine_reference()
     geometry = case.geometry_gate()
     closure_sweep = case.sweep_from_points(points, closure)
-    analysis = case.gates_from_sweep(closure_sweep, reference=reference)
+    residual_tol = float(getattr(args, "residual_tol", case.SOLVER_RESIDUAL_TOL))
+    admissibility = case.residual_admissibility(closure_sweep, tol=residual_tol)
+    if admissibility["passed"] is False:
+        offenders = ", ".join(
+            f"omega={o['omega']:.3f} (residual {o['residual']:.3e})"
+            for o in admissibility["offenders"][:8]
+        )
+        raise SystemExit(
+            f"{admissibility['n_offenders']}/"
+            f"{admissibility['nodes']} closure nodes are solver-inadmissible "
+            f"(residual > {residual_tol}): {offenders}"
+            + (" ..." if admissibility["n_offenders"] > 8 else "")
+            + ". A band built from diverged nodes is not evidence; delete those "
+            "points and re-solve them at a finer level (--stage solve)."
+        )
+    analysis = case.gates_from_sweep(closure_sweep, reference=reference,
+                                    residual_tol=residual_tol)
     narrow = [w for w in case.OMEGA_GRID if round(float(w), 9) in points]
     narrow_block = None
     if len(narrow) == len(case.OMEGA_GRID):
@@ -213,6 +287,7 @@ def run_gate_stage(args) -> dict:
             "path": str(case.CAPYTAINE_REF_PATH),
             "metadata": reference["metadata"],
         },
+        "residual_tol": residual_tol,
         "closure_band": _gates_block(closure_sweep, reference, "closure"),
         "narrow_round2_control": narrow_block,
         "verdict": analysis["verdict"],
@@ -257,6 +332,10 @@ def main(argv=None) -> int:
     parser.add_argument("--resonance", type=float, default=None,
                         help="heave resonance for --grid closure (default: "
                              "located from the cached extended sweep)")
+    parser.add_argument("--residual-tol", type=float,
+                        default=case.SOLVER_RESIDUAL_TOL,
+                        help="G0 solver-admissibility limit on the relative "
+                             "residual of a node (default %(default)s)")
     parser.add_argument("--skip-extended", action="store_true",
                         help="reuse cached extended points (no re-solve)")
     args = parser.parse_args(argv)
@@ -278,7 +357,7 @@ def main(argv=None) -> int:
         print(f"[stage1] solving {len(ext_grid)} extended-band nodes on {args.level}",
               flush=True)
         for w in ext_grid:
-            _solve_one(outdir, args.level, w)
+            _solve_one(outdir, args.level, w, args.residual_tol)
     points = _load_points(outdir, args.level)
     print(f"[stage1] cached {len(sorted(points))} frequencies", flush=True)
     ext_sweep = case.sweep_from_points(points, ext_grid)
@@ -294,7 +373,7 @@ def main(argv=None) -> int:
     missing = [w for w in closure if round(float(w), 9) not in points]
     print(f"[stage3] {len(missing)} cluster nodes to solve: {missing}", flush=True)
     for w in missing:
-        _solve_one(outdir, args.level, w)
+        _solve_one(outdir, args.level, w, args.residual_tol)
     run_gate_stage(args)
     return 0
 
