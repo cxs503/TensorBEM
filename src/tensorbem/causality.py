@@ -126,6 +126,8 @@ __all__ = [
     "HighBandBudget",
     "high_band_truncation_budget",
     "local_tail_exponent",
+    "RobustTailResult",
+    "robust_tail_exponent",
 ]
 
 _MINIMUM_POINTS = 8
@@ -628,6 +630,114 @@ def local_tail_exponent(
         return (-math.inf, 0.0)
     slope, intercept = np.polyfit(np.log(tail_grid), np.log(tail_data), 1)
     return (float(-slope), float(math.exp(intercept)))
+
+
+@dataclass(frozen=True)
+class RobustTailResult:
+    """Multi-window consensus result for the tail exponent.
+
+    The single-window ``local_tail_exponent`` was shown (m22756) to be fragile:
+    on the same data, changing the window from 3 to 5 can flip the admissibility
+    verdict.  This function requires *consensus* across a set of windows before
+    declaring the tail exponent reliable.
+
+    Attributes
+    ----------
+    exponent : float
+        The median exponent across all windows that produced a finite fit.
+        ``-inf`` if no window succeeded.
+    coefficient : float
+        The median coefficient across successful windows.
+    per_window : dict[int, tuple[float, float]]
+        Mapping from window size to ``(exponent, coefficient)`` for each window
+        that was attempted.  Windows that failed (non-positive damping, too few
+        samples) are absent from this dict.
+    consensus : bool
+        ``True`` iff all attempted windows agree on admissibility (all above or
+        all below ``min_exponent``) *and* the spread of exponents among
+        successful windows is within ``max_spread``.
+    spread : float
+        ``max(exponents) - min(exponents)`` across successful windows, or
+        ``inf`` if fewer than two windows succeeded.
+    """
+
+    exponent: float
+    coefficient: float
+    per_window: dict[int, tuple[float, float]]
+    consensus: bool
+    spread: float
+
+
+def robust_tail_exponent(
+    omegas: Sequence[float] | FloatArray,
+    damping: Sequence[float] | FloatArray,
+    *,
+    windows: Sequence[int] | None = None,
+    min_exponent: float = 2.05,
+    max_spread: float = 1.0,
+) -> RobustTailResult:
+    """Tail exponent with multi-window consensus guard.
+
+    Parameters
+    ----------
+    windows : sequence of int, optional
+        Window sizes to try.  Default is ``(3, 4, 5)`` as recommended in
+        m22756 §9.  Each window must be >= 3 and <= the number of samples.
+    min_exponent : float
+        The bar above which the tail is considered algebraically decaying
+        (same convention as :func:`high_band_truncation_budget`).
+    max_spread : float
+        Maximum allowed spread (max - min) among successful window exponents
+        for consensus to be declared.
+
+    Returns
+    -------
+    RobustTailResult
+        The median exponent/coefficient, per-window results, and a consensus
+        flag.  ``consensus=False`` means the single-window estimate is not
+        reliable enough to base a C9 verdict on.
+    """
+    grid, data = _as_sweep(omegas, damping, "damping")
+    if windows is None:
+        windows = (3, 4, 5)
+
+    per_window: dict[int, tuple[float, float]] = {}
+    for w in windows:
+        w = int(w)
+        if w < 3 or w > grid.size:
+            continue
+        exp, coef = local_tail_exponent(grid, data, window=w)
+        if math.isfinite(exp):
+            per_window[w] = (exp, coef)
+
+    if not per_window:
+        return RobustTailResult(
+            exponent=-math.inf,
+            coefficient=0.0,
+            per_window={},
+            consensus=False,
+            spread=math.inf,
+        )
+
+    exponents = [v[0] for v in per_window.values()]
+    coefficients = [v[1] for v in per_window.values()]
+    median_exp = float(np.median(exponents))
+    median_coef = float(np.median(coefficients))
+    spread = float(max(exponents) - min(exponents)) if len(exponents) >= 2 else 0.0
+
+    # Consensus: all windows agree on admissibility AND spread is bounded
+    all_above = all(e > min_exponent for e in exponents)
+    all_below = all(e <= min_exponent for e in exponents)
+    agreed = all_above or all_below
+    consensus = agreed and spread <= max_spread
+
+    return RobustTailResult(
+        exponent=median_exp,
+        coefficient=median_coef,
+        per_window=per_window,
+        consensus=consensus,
+        spread=spread,
+    )
 
 
 @dataclass(frozen=True)
