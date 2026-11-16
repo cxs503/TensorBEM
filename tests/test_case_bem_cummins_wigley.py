@@ -1204,3 +1204,108 @@ def test_replay_can_attach_the_time_domain_budget() -> None:
     assert "C13" in replay["gates"]
     assert replay["gates"]["C13"]["passed"] is True
     assert replay["gates"]["C13"]["values"]["dof_name"] == "heave"
+
+
+# --------------------------------------------------------------------------
+# extended-band assembler and the render of the extended-band gates
+# --------------------------------------------------------------------------
+
+
+def _load_assemble_module():
+    """The assembler lives in ``scripts/``; import it by path, not by name."""
+    import importlib.util
+
+    path = pathlib.Path(__file__).resolve().parents[1] / "scripts" / "assemble_cummins_extended.py"
+    spec = importlib.util.spec_from_file_location("assemble_cummins_extended", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _write_point(directory, index, omega, *, residual=1e-3, mesh=(60, 16), panels=3840):
+    np.savez(
+        directory / f"point_{int(index):03d}.npz",
+        index=np.array(int(index)),
+        omega=np.array(float(omega)),
+        added_mass=np.full((6, 6), float(omega)),
+        damping=np.full((6, 6), float(omega) ** -3),
+        solver_relative_residual=np.array(float(residual)),
+        panel_count=np.array(int(panels)),
+        max_panel_scale=np.array(0.0232),
+        n_sections=np.array(int(mesh[0])),
+        n_levels=np.array(int(mesh[1])),
+    )
+
+
+def test_assembler_reads_the_solver_residual_under_its_own_name(tmp_path) -> None:
+    """A missing ``solver_relative_residual`` used to default to 0.0.
+
+    That default was not cosmetic: gate ``C0`` scores ``max residual <= 1 %``, so a
+    mis-named key certified a sweep that had not converged.  The regression is that
+    the residual travels into ``Sweep`` and C0 *rejects* a 125 % solve.
+    """
+    assembler = _load_assemble_module()
+    for index, omega in enumerate((12.0, 15.0, 20.0)):
+        _write_point(tmp_path, index, omega, residual=1.25)
+    sweep = assembler.assemble_extended_sweep(tmp_path, tmp_path / "sweep_extended.npz")
+    assert np.allclose(sweep.solver_relative_residual, 1.25)
+    assert case.solver_validity_gate(sweep)["passed"] is False
+
+    # and the honest residual passes
+    for index, omega in enumerate((12.0, 15.0, 20.0)):
+        _write_point(tmp_path, index, omega, residual=2.4e-3)
+    good = assembler.assemble_extended_sweep(tmp_path, tmp_path / "sweep_extended.npz")
+    assert case.solver_validity_gate(good)["passed"] is True
+
+
+def test_assembler_orders_nodes_by_frequency_not_by_file_name(tmp_path) -> None:
+    """Shards write the node index they were given; the sweep must still be sorted."""
+    assembler = _load_assemble_module()
+    for index, omega in ((2, 20.0), (0, 12.0), (1, 15.0)):
+        _write_point(tmp_path, index, omega)
+    sweep = assembler.assemble_extended_sweep(tmp_path, tmp_path / "sweep_extended.npz")
+    assert list(sweep.omega) == [12.0, 15.0, 20.0]
+
+
+def test_assembler_refuses_nodes_from_two_meshes(tmp_path) -> None:
+    """A sweep mixing meshes has no single mesh identity (and no anchor rung)."""
+    assembler = _load_assemble_module()
+    _write_point(tmp_path, 0, 12.0, mesh=(60, 16), panels=3840)
+    _write_point(tmp_path, 1, 15.0, mesh=(44, 14), panels=2064)
+    with pytest.raises(SystemExit):
+        assembler.assemble_extended_sweep(tmp_path, tmp_path / "sweep_extended.npz")
+
+
+@pytest.mark.skipif(
+    not (ARTIFACT_DIR / "case_result.json").exists(),
+    reason="production case_result.json not committed",
+)
+def test_render_markdown_carries_the_extended_band_numbers(tmp_path) -> None:
+    """CASE.md must show the extended-band per-DOF numbers, not only the verdict.
+
+    ``## 2 Gates`` holds one row per gate, which answers "did C9 pass" but not
+    "which DOF moved and by how much" -- the question the extension exists for.
+    """
+    committed = _decaying_sweep((0.2, 12.0), panels=480, label="medium")
+    extended = _decaying_sweep((0.2, 20.0), n=55, exponent=3.0, panels=3840)
+    case.save_sweep(extended, tmp_path / case.EXTENDED_SWEEP_NAME)
+    gates: dict = {}
+    assert case.attach_extended_band_gates(gates, committed, tmp_path) is not None
+
+    published = json.loads((ARTIFACT_DIR / "case_result.json").read_text())
+    published = json.loads(json.dumps(published))  # deep copy
+    published["gates"].update({k: gates[k] for k in ("C8", "C9")})
+    published["gates"]["C3a_extended"] = gates["C3a_extended"]
+    rendered = case.render_markdown(published)
+
+    assert "## 4b. Extended band" in rendered
+    assert "| DOF | p at 12 rad/s | p at 20 rad/s |" in rendered
+    # one table row per DOF, each carrying the slope at both band tops
+    for row in gates["C9"]["values"]["per_dof"]:
+        assert f"| {row['dof_name']} | {row['exponent_at_12']:.2f} |" in rendered
+    assert "C3a_extended" in rendered
+    # and the section is absent when the gates were not run -- the committed
+    # artifact predates them, so its render must not grow a phantom section
+    assert "## 4b." not in case.render_markdown(
+        json.loads((ARTIFACT_DIR / "case_result.json").read_text())
+    )
