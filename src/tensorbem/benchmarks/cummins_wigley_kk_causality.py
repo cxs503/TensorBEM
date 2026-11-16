@@ -616,11 +616,21 @@ def analysis_gates(
     *,
     dt: float = 0.02,
     tau_max: float = 40.0,
+    added_mass_inf: float | None = None,
 ) -> dict:
-    """G2, G3, G5 for one DOF of one sweep (the frequency-domain half of the case)."""
+    """G2, G3, G5 for one DOF of one sweep (the frequency-domain half of the case).
+
+    ``added_mass_inf`` overrides the in-band tail fit :func:`fit_added_mass_asymptote`
+    with an externally computed value (the independent image solve of
+    :func:`tensorbem.added_mass_limit.added_mass_limit`, re-expressed about the
+    sweep's rotation centre).  The gate definitions do not change -- only where
+    the ``A_inf`` constant comes from -- so the two evaluations are directly
+    comparable; the source is recorded in ``added_mass_inf_source``.
+    """
     omega, added, damping = _as_diag(sweep, dof)
     fit = fit_added_mass_asymptote(omega, added)
-    a_inf = float(fit.added_mass_inf)
+    a_inf = float(fit.added_mass_inf) if added_mass_inf is None else float(added_mass_inf)
+    a_inf_source = "tail_fit" if added_mass_inf is None else "external"
 
     tau = np.arange(0.0, tau_max + 0.5 * dt, dt)
     kernel = td.radiation_memory_kernel(omega, damping, tau)
@@ -693,6 +703,8 @@ def analysis_gates(
         "added_mass": added.tolist(),
         "damping": damping.tolist(),
         "added_mass_inf": a_inf,
+        "added_mass_inf_source": a_inf_source,
+        "added_mass_inf_tail_fit": float(fit.added_mass_inf),
         "added_mass_inf_tail_fraction": getattr(fit, "tail_fraction", None),
         "kernel": {
             "dt": dt,
