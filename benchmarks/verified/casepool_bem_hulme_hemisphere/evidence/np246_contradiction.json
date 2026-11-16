@@ -38,10 +38,11 @@
       "pass": true
     },
     "A2_numpy_version_attribution_supported": {
-      "criterion": "the artifact carrying the failing ka=3.5 values must record a numpy version different from the healthy one",
-      "measured_numpy_band": "2.4.6",
+      "criterion": "the artifact carrying the failing ka=3.5 values must record a numpy version, and it must differ from the healthy one; a missing version never supports the attribution",
+      "measured_numpy_band": null,
       "measured_numpy_reverify": "2.4.6",
-      "pass": false
+      "pass": false,
+      "reason": "no environment is recorded by the failing artifact, so the version attribution has no artifact behind it"
     },
     "A3_healthy_artifact_is_machine_provenanced": {
       "criterion": "the healthy artifact records host + BLAS thread env and distinct per-solve residuals",
@@ -59,14 +60,8 @@
   "ka": 3.5,
   "panels": 1024,
   "provenance": {
-    "band_extension": {
-      "generated_utc": "2026-11-14T08:53:21Z",
-      "git_commit": "56f0649d9b29db3da8c8f4170efa05593c1dc85f",
-      "host": "ec6ae0b42a0c",
-      "machine": "loongarch64",
-      "numpy": "2.4.6",
-      "python": "3.11.6"
-    },
+    "band_extension": null,
+    "band_extension_generated_at": null,
     "band_extension_records_solve_residual": false,
     "numpy2_reverification": {
       "arch": "loongarch64",
