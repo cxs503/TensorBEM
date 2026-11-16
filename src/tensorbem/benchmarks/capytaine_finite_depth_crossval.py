@@ -369,13 +369,26 @@ def _order_from_three(panels: Sequence[float], values: Sequence[float]) -> float
 
 
 def richardson(
-    panels: Sequence[float], values: Sequence[float]
+    panels: Sequence[float],
+    values: Sequence[float],
+    *,
+    min_order: float = plan.MIN_OBSERVED_ORDER,
 ) -> dict[str, Any]:
     """Extrapolate a panel ladder to ``N -> infinity``.
 
     Uses the three finest levels; the order is *measured* from the same three
     levels unless the ladder is non-monotone, in which case the finest value is
     returned and ``extrapolated`` is set to ``False``.
+
+    The pre-registered rule of :data:`...finite_depth_crossval_plan.MIN_OBSERVED_ORDER`
+    is enforced here: a ladder whose *measured* order is below ``min_order`` is
+    **not** extrapolated, because the Richardson step is then a fit outside the
+    asymptotic range rather than a measurement of the limit.  Such a ladder
+    keeps its finest rung as the reported value, records the measured order, and
+    additionally reports ``blocked_value``/``blocked_shift`` -- what the
+    forbidden fit *would* have done -- so the size of the rejected correction
+    stays visible (a shift several times the last measured rung change is the
+    signature of a fit blowing up, see ``docs/xval_bem_finite_depth_crossval_plan.md``).
     """
     panels = [float(p) for p in panels]
     values = [float(v) for v in values]
@@ -391,7 +404,16 @@ def richardson(
         "extrapolated": False,
         "value": finest,
         "extrapolation_shift": 0.0,
+        "blocked_by_order": False,
+        "blocked_value": None,
+        "blocked_shift": None,
+        "last_rung_change": None,
     }
+    if len(values) >= 2:
+        v_prev, v_last = values[-2], values[-1]
+        out["last_rung_change"] = (
+            float(abs(v_last - v_prev) / abs(v_last)) if v_last else float("inf")
+        )
     if len(values) >= 3:
         p = _order_from_three(panels[-3:], values[-3:])
         if p is not None:
@@ -399,16 +421,29 @@ def richardson(
             v2, v3 = values[-2], values[-1]
             c = (v3 - v2) / (n3 ** (-p) - n2 ** (-p))
             extrap = v3 - c * n3 ** (-p)
-            out.update(
-                {
-                    "order": p,
-                    "extrapolated": True,
-                    "value": float(extrap),
-                    "extrapolation_shift": float(
-                        (v3 - extrap) / extrap if extrap else float("inf")
-                    ),
-                }
-            )
+            shift = float((v3 - extrap) / extrap if extrap else float("inf"))
+            out["order"] = p
+            if p >= min_order:
+                out.update(
+                    {
+                        "extrapolated": True,
+                        "value": float(extrap),
+                        "extrapolation_shift": shift,
+                    }
+                )
+            else:
+                # measured order is below the pre-registered floor: the fit is
+                # outside its asymptotic range, so it is reported, not applied
+                out.update(
+                    {
+                        "extrapolated": False,
+                        "value": finest,
+                        "extrapolation_shift": 0.0,
+                        "blocked_by_order": True,
+                        "blocked_value": float(extrap),
+                        "blocked_shift": shift,
+                    }
+                )
     return out
 
 
@@ -481,9 +516,17 @@ def compare(
     rows: list[dict[str, Any]] = []
     failures: list[str] = []
     worst: dict[str, float] = {}
+    without_ladder: list[str] = []
     for key, entry in sorted(ladder["cells"].items()):
         ref = ref_cells.get(key)
         if ref is None:
+            continue
+        if not entry.get("levels"):
+            # A sharded ladder starts life as one entry per planned cell with no
+            # rungs: judging those cells raised IndexError, which made a PARTIAL
+            # study impossible to re-judge from its own frozen artifacts.
+            # Missing is not zero -- the cell is recorded, not compared.
+            without_ladder.append(key)
             continue
         row: dict[str, Any] = {
             "cell": key,
@@ -497,6 +540,14 @@ def compare(
             for quantity in ("added_mass", "damping"):
                 tb = _extrapolated_entry(entry["levels"], dof, quantity)
                 cp = _reference_entry(ref, dof, quantity)
+                # Admissible values under the pre-registered rule: a ladder whose
+                # measured order is below MIN_OBSERVED_ORDER contributes its
+                # finest rung (``richardson`` already reports ``value == finest``
+                # in that case, and keeps the forbidden fit in ``blocked_value``).
+                both_extrapolated = bool(
+                    tb["extrapolated"] and cp["extrapolated"]
+                )
+                basis = "extrapolated" if both_extrapolated else "finest_level"
                 base = cp["value"]
                 rel = (tb["value"] - base) / abs(base) if base else float("inf")
                 raw_rel = (
@@ -504,16 +555,35 @@ def compare(
                     if cp["finest"]
                     else float("inf")
                 )
+
+                def _attempt(entry: dict[str, Any]) -> float:
+                    """Value the ungated fit would have produced (provenance only)."""
+                    blocked = entry.get("blocked_value")
+                    return float(blocked) if blocked is not None else float(entry["value"])
+
+                attempt_base = _attempt(cp)
+                rel_attempt = (
+                    (_attempt(tb) - attempt_base) / abs(attempt_base)
+                    if attempt_base
+                    else float("inf")
+                )
                 row["quantities"][f"{dof}.{quantity}"] = {
                     "tensorbem": tb["value"],
                     "capytaine": base,
+                    "relative_basis": basis,
                     "tensorbem_panels": tb["panels"],
                     "tensorbem_order": tb["order"],
                     "tensorbem_extrapolated": tb["extrapolated"],
                     "tensorbem_shift": tb["extrapolation_shift"],
+                    "tensorbem_blocked_by_order": tb["blocked_by_order"],
                     "capytaine_order": cp["order"],
                     "capytaine_shift": cp["extrapolation_shift"],
+                    "capytaine_extrapolated": cp["extrapolated"],
+                    "capytaine_blocked_by_order": cp["blocked_by_order"],
+                    "capytaine_blocked_shift": cp["blocked_shift"],
+                    "capytaine_truncation_bound": cp["last_rung_change"],
                     "relative": float(rel),
+                    "relative_if_extrapolated": float(rel_attempt),
                     "relative_finest_levels": float(raw_rel),
                     "tensorbem_extrapolation_band": tb["band"],
                     "tensorbem_extrapolation_band_basis": tb["band_basis"],
@@ -543,6 +613,7 @@ def compare(
         "rows": rows,
         "worst_relative": worst,
         "failures": failures,
+        "cells_without_ladder": without_ladder,
         "tolerances": {"added_mass": tol_added_mass, "damping": tol_damping,
                        "owner_limit": plan.OWNER_LIMIT},
     }
@@ -559,24 +630,33 @@ def gates(comparison: dict[str, Any], ladder: dict[str, Any],
     """Named accept/reject gates for the published study."""
     out: list[dict[str, Any]] = []
     worst = comparison["worst_relative"]
+
+    def _agreement(slots: tuple[str, ...], limit: float) -> dict[str, Any]:
+        """Worst deviation over ``slots``; unknown (no judged cell) is not zero.
+
+        A comparison with no judged cell used to read as
+        ``max(0.0, 0.0) = 0.0 <= limit`` -> PASS, i.e. an empty study published
+        as an agreement.  Missing stays missing here.
+        """
+        seen = [worst[slot] for slot in slots if slot in worst]
+        measured = max(seen) if seen else None
+        return {
+            "worst": measured,
+            "limit": limit,
+            "passed": measured is not None and measured <= limit,
+        }
+
     out.append(
         {
             "gate": "added_mass_agreement",
-            "worst": max(worst.get("heave.added_mass", 0.0),
-                         worst.get("surge.added_mass", 0.0)),
-            "limit": plan.TOL_ADDED_MASS,
-            "passed": max(worst.get("heave.added_mass", 0.0),
-                          worst.get("surge.added_mass", 0.0)) <= plan.TOL_ADDED_MASS,
+            **_agreement(("heave.added_mass", "surge.added_mass"),
+                         plan.TOL_ADDED_MASS),
         }
     )
     out.append(
         {
             "gate": "damping_agreement",
-            "worst": max(worst.get("heave.damping", 0.0),
-                         worst.get("surge.damping", 0.0)),
-            "limit": plan.TOL_DAMPING,
-            "passed": max(worst.get("heave.damping", 0.0),
-                          worst.get("surge.damping", 0.0)) <= plan.TOL_DAMPING,
+            **_agreement(("heave.damping", "surge.damping"), plan.TOL_DAMPING),
         }
     )
     control = [
@@ -604,6 +684,35 @@ def gates(comparison: dict[str, Any], ladder: dict[str, Any],
             "min_order": min(orders) if orders else None,
             "limit": plan.MIN_OBSERVED_ORDER,
             "passed": bool(orders) and min(orders) >= plan.MIN_OBSERVED_ORDER,
+        }
+    )
+    truncation: dict[str, float] = {}
+    for row in comparison["rows"]:
+        for slot, q in row["quantities"].items():
+            bound = q.get("capytaine_truncation_bound")
+            if bound is None:
+                continue
+            quantity = slot.split(".")[-1]
+            truncation[quantity] = max(truncation.get(quantity, 0.0), float(bound))
+    trunc_limits = {
+        quantity: plan.extrapolation_limit(quantity) for quantity in truncation
+    }
+    out.append(
+        {
+            "gate": "reference_truncation_within_share",
+            "worst": max(truncation.values()) if truncation else None,
+            "worst_quantity": (
+                max(truncation, key=lambda k: truncation[k]) if truncation else None
+            ),
+            "limit": max(trunc_limits.values()) if trunc_limits else None,
+            "per_quantity": truncation,
+            "note": "last-rung change of the reference ladder, a conservative "
+                    "bound on the reference's own remaining discretisation "
+                    "error; limit is 1/3 of the quantity's tolerance "
+                    "(plan.EXTRAPOLATION_BAND_FRACTION)",
+            "passed": bool(truncation) and all(
+                truncation[q] <= trunc_limits[q] for q in truncation
+            ),
         }
     )
     tb_orders = [
@@ -729,7 +838,8 @@ def render_document(result: dict[str, Any]) -> str:
     worst = comparison["worst_relative"]
     lines.append("## 1. Headline\n")
     lines.append(
-        "| quantity | worst extrapolated deviation | pre-registered limit | owner limit |\n"
+        "| quantity | worst deviation on the pre-registered basis | "
+        "pre-registered limit | owner limit |\n"
         "|---|---:|---:|---:|\n"
         f"| heave added mass | {_pct(worst.get('heave.added_mass'))} | "
         f"{_pct(plan.TOL_ADDED_MASS).lstrip('+')} | 15 % |\n"
@@ -758,7 +868,10 @@ def render_document(result: dict[str, Any]) -> str:
             f"| `{gate['gate']}` | {shown} "
             f"| {gate['limit']} | {'PASS' if gate['passed'] else 'FAIL'} |\n"
         )
-    lines.append("\n## 3. Per-cell comparison (Richardson-extrapolated)\n")
+    lines.append(
+        "\n## 3. Per-cell comparison (Richardson-extrapolated, gated by the "
+        "pre-registered order floor)\n"
+    )
     lines.append(
         "| `h/a` | `k0 a` | `k0 h` | A33 TB | A33 capytaine | delta | "
         "B33 TB | B33 capytaine | delta | A11 TB | A11 capytaine | delta | "
@@ -944,7 +1057,17 @@ def write_figures(result: dict[str, Any], out_dir: Path) -> list[dict[str, str]]
                                 "the pre-registered bands are 3 % (added mass) and 5 % (damping)."})
 
     ladder_cells = result["ladder"]["cells"]
-    key = sorted(ladder_cells)[0]
+    judged = {row["cell"] for row in rows}
+    ready = sorted(
+        key for key, cell in ladder_cells.items()
+        if cell.get("levels") and key in judged
+    )
+    if not ready:
+        # A ladder with no rung anywhere cannot show a convergence trace; the
+        # study is then judged on its (empty) comparison alone, not on a figure
+        # built from an empty list.
+        return produced
+    key = ready[0]
     entry = ladder_cells[key]
     levels = sorted(entry["levels"].values(), key=lambda rec: rec["panels"])
     reference = {c["cell"]: c for c in result["reference"]["cells"]}[key]

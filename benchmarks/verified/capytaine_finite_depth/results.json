@@ -18,9 +18,11 @@
   "gravity": 9.80665,
   "levels": [
    0,
-   1
+   1,
+   2
   ],
-  "execution_status": "PARTIAL: 1 of 12 planned cells"
+  "execution_status": "PARTIAL: 11 covered cells missing rungs ['0', '1', '2']; 4 confirmation cells missing the 3-subdivision rung",
+  "verdict_rebuilt_from_frozen_artifacts": true
  },
  "reference_provenance": {
   "tool": "capytaine",
@@ -75,28 +77,13 @@
   "gravity": 9.80665,
   "levels": [
    0,
-   1
+   1,
+   2
   ],
   "extra_level": null,
-  "extra_cells": [
-   [
-    3.0,
-    0.5
-   ],
-   [
-    3.0,
-    2.0
-   ],
-   [
-    20.0,
-    0.5
-   ],
-   [
-    20.0,
-    2.0
-   ]
-  ],
-  "control_level": 1
+  "extra_cells": [],
+  "control_level": 1,
+  "note": "Level 2 values from m21322 verified computation; levels 0,1 and control from live run"
  },
  "comparison": {
   "rows": [
@@ -107,53 +94,126 @@
     "k0h": 1.5,
     "quantities": {
      "surge.added_mass": {
-      "tensorbem": 2276.483577841137,
-      "capytaine": 2461.590618763296,
+      "tensorbem": 2545.365046252302,
+      "capytaine": 2566.494493551391,
+      "relative_basis": "finest_level",
       "tensorbem_panels": [
        20.0,
-       80.0
+       80.0,
+       320.0
       ],
-      "tensorbem_order": null,
-      "tensorbem_extrapolated": false,
-      "tensorbem_shift": 0.0,
+      "tensorbem_order": 0.7837305715227962,
+      "tensorbem_extrapolated": true,
+      "tensorbem_shift": -0.035641664202891575,
+      "tensorbem_blocked_by_order": false,
       "capytaine_order": 0.24122460741737867,
-      "capytaine_shift": 0.042616296141394436,
-      "relative": -0.07519814201077703,
-      "relative_finest_levels": -0.1129988458728196
+      "capytaine_shift": 0.0,
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": true,
+      "capytaine_blocked_shift": 0.042616296141394436,
+      "capytaine_truncation_bound": 0.01623176811666894,
+      "relative": -0.008232804454550395,
+      "relative_if_extrapolated": 0.03403264005413473,
+      "relative_finest_levels": -0.04358103780562482,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
      },
      "surge.damping": {
-      "tensorbem": 616.0365022862962,
+      "tensorbem": 814.3842760968557,
       "capytaine": 797.4057238410546,
+      "relative_basis": "finest_level",
       "tensorbem_panels": [
        20.0,
-       80.0
+       80.0,
+       320.0
       ],
-      "tensorbem_order": null,
-      "tensorbem_extrapolated": false,
-      "tensorbem_shift": 0.0,
+      "tensorbem_order": 0.6410645094020684,
+      "tensorbem_extrapolated": true,
+      "tensorbem_shift": -0.10014716453974841,
+      "tensorbem_blocked_by_order": false,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.22744910919514588,
-      "relative_finest_levels": -0.22744910919514588
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.018083230186362168,
+      "relative": 0.02129223775071046,
+      "relative_if_extrapolated": 0.02129223775071046,
+      "relative_finest_levels": -0.08098728402647778,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
      },
      "heave.added_mass": {
-      "tensorbem": 2617.3245384173943,
+      "tensorbem": 2998.964447855273,
       "capytaine": 2999.9145494265917,
+      "relative_basis": "finest_level",
       "tensorbem_panels": [
        20.0,
-       80.0
+       80.0,
+       320.0
       ],
-      "tensorbem_order": null,
-      "tensorbem_extrapolated": false,
-      "tensorbem_shift": 0.0,
+      "tensorbem_order": 0.7438019177439685,
+      "tensorbem_extrapolated": true,
+      "tensorbem_shift": -0.04538048056975202,
+      "tensorbem_blocked_by_order": false,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.12753363627718206,
-      "relative_finest_levels": -0.12753363627718206
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.011584272462847423,
+      "relative": -0.0003167095447769201,
+      "relative_if_extrapolated": -0.0003167095447769201,
+      "relative_finest_levels": -0.04568281768318593,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
      },
      "heave.damping": {
-      "tensorbem": 564.2107100505647,
+      "tensorbem": 765.9767181745303,
       "capytaine": 740.8984143025195,
+      "relative_basis": "finest_level",
+      "tensorbem_panels": [
+       20.0,
+       80.0,
+       320.0
+      ],
+      "tensorbem_order": 0.6141421952024668,
+      "tensorbem_extrapolated": true,
+      "tensorbem_shift": -0.11242994223083938,
+      "tensorbem_blocked_by_order": false,
+      "capytaine_order": null,
+      "capytaine_shift": 0.0,
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.014032553149930736,
+      "relative": 0.033848505257794974,
+      "relative_if_extrapolated": 0.033848505257794974,
+      "relative_finest_levels": -0.08238702246377856,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
+     }
+    },
+    "negative_control_gap_added_mass": 0.17049526118574654
+   },
+   {
+    "cell": "h_over_a=3.0|ka=1.00",
+    "h_over_a": 3.0,
+    "ka": 1.0,
+    "k0h": 3.0,
+    "quantities": {
+     "surge.added_mass": {
+      "tensorbem": 1945.0879441105455,
+      "capytaine": 2072.937326801283,
+      "relative_basis": "finest_level",
       "tensorbem_panels": [
        20.0,
        80.0
@@ -161,28 +221,127 @@
       "tensorbem_order": null,
       "tensorbem_extrapolated": false,
       "tensorbem_shift": 0.0,
+      "tensorbem_blocked_by_order": false,
+      "capytaine_order": 0.3178817744192163,
+      "capytaine_shift": 0.0293277765604668,
+      "capytaine_extrapolated": true,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.015777817218083547,
+      "relative": -0.06167546941133026,
+      "relative_if_extrapolated": -0.06167546941133026,
+      "relative_finest_levels": -0.08841036649752856,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
+     },
+     "surge.damping": {
+      "tensorbem": 1370.1531243255642,
+      "capytaine": 1749.9681049312114,
+      "relative_basis": "finest_level",
+      "tensorbem_panels": [
+       20.0,
+       80.0
+      ],
+      "tensorbem_order": null,
+      "tensorbem_extrapolated": false,
+      "tensorbem_shift": 0.0,
+      "tensorbem_blocked_by_order": false,
       "capytaine_order": null,
       "capytaine_shift": 0.0,
-      "relative": -0.23847763855492707,
-      "relative_finest_levels": -0.23847763855492707
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.016051158766685936,
+      "relative": -0.21704108751203618,
+      "relative_if_extrapolated": -0.21704108751203618,
+      "relative_finest_levels": -0.21704108751203618,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
+     },
+     "heave.added_mass": {
+      "tensorbem": 2129.337931912156,
+      "capytaine": 2340.1447083763724,
+      "relative_basis": "finest_level",
+      "tensorbem_panels": [
+       20.0,
+       80.0
+      ],
+      "tensorbem_order": null,
+      "tensorbem_extrapolated": false,
+      "tensorbem_shift": 0.0,
+      "tensorbem_blocked_by_order": false,
+      "capytaine_order": null,
+      "capytaine_shift": 0.0,
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.010360884029515176,
+      "relative": -0.09008279518341299,
+      "relative_if_extrapolated": -0.09008279518341299,
+      "relative_finest_levels": -0.09008279518341299,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
+     },
+     "heave.damping": {
+      "tensorbem": 2447.0447334988735,
+      "capytaine": 3139.2582630538764,
+      "relative_basis": "finest_level",
+      "tensorbem_panels": [
+       20.0,
+       80.0
+      ],
+      "tensorbem_order": null,
+      "tensorbem_extrapolated": false,
+      "tensorbem_shift": 0.0,
+      "tensorbem_blocked_by_order": false,
+      "capytaine_order": null,
+      "capytaine_shift": 0.0,
+      "capytaine_extrapolated": false,
+      "capytaine_blocked_by_order": false,
+      "capytaine_blocked_shift": null,
+      "capytaine_truncation_bound": 0.011544502412501559,
+      "relative": -0.2205022561226346,
+      "relative_if_extrapolated": -0.2205022561226346,
+      "relative_finest_levels": -0.2205022561226346,
+      "tensorbem_extrapolation_band": null,
+      "tensorbem_extrapolation_band_basis": null,
+      "tensorbem_value_without_finest_rung": null,
+      "tensorbem_order_without_finest_rung": null
      }
-    },
-    "negative_control_gap_added_mass": 0.07010306762190792
+    }
    }
   ],
   "worst_relative": {
-   "surge.added_mass": 0.07519814201077703,
-   "surge.damping": 0.22744910919514588,
-   "heave.added_mass": 0.12753363627718206,
-   "heave.damping": 0.23847763855492707
+   "surge.added_mass": 0.06167546941133026,
+   "surge.damping": 0.21704108751203618,
+   "heave.added_mass": 0.09008279518341299,
+   "heave.damping": 0.2205022561226346
   },
   "failures": [
-   "h_over_a=3.0|ka=0.50 surge.added_mass: -7.52% > 3%",
-   "h_over_a=3.0|ka=0.50 surge.damping: -22.74% > 5%",
-   "h_over_a=3.0|ka=0.50 surge.damping: -22.74% exceeds the owner 15% limit",
-   "h_over_a=3.0|ka=0.50 heave.added_mass: -12.75% > 3%",
-   "h_over_a=3.0|ka=0.50 heave.damping: -23.85% > 5%",
-   "h_over_a=3.0|ka=0.50 heave.damping: -23.85% exceeds the owner 15% limit"
+   "h_over_a=3.0|ka=1.00 surge.added_mass: -6.17% > 3%",
+   "h_over_a=3.0|ka=1.00 surge.damping: -21.70% > 5%",
+   "h_over_a=3.0|ka=1.00 surge.damping: -21.70% exceeds the owner 15% limit",
+   "h_over_a=3.0|ka=1.00 heave.added_mass: -9.01% > 3%",
+   "h_over_a=3.0|ka=1.00 heave.damping: -22.05% > 5%",
+   "h_over_a=3.0|ka=1.00 heave.damping: -22.05% exceeds the owner 15% limit"
+  ],
+  "cells_without_ladder": [
+   "h_over_a=10.0|ka=0.50",
+   "h_over_a=10.0|ka=1.00",
+   "h_over_a=10.0|ka=2.00",
+   "h_over_a=20.0|ka=0.50",
+   "h_over_a=20.0|ka=1.00",
+   "h_over_a=20.0|ka=2.00",
+   "h_over_a=3.0|ka=2.00",
+   "h_over_a=5.0|ka=0.50",
+   "h_over_a=5.0|ka=1.00",
+   "h_over_a=5.0|ka=2.00"
   ],
   "tolerances": {
    "added_mass": 0.03,
@@ -193,19 +352,19 @@
  "gates": [
   {
    "gate": "added_mass_agreement",
-   "worst": 0.12753363627718206,
+   "worst": 0.09008279518341299,
    "limit": 0.03,
    "passed": false
   },
   {
    "gate": "damping_agreement",
-   "worst": 0.23847763855492707,
+   "worst": 0.2205022561226346,
    "limit": 0.05,
    "passed": false
   },
   {
    "gate": "negative_control_separates_depth",
-   "min_gap": 0.07010306762190792,
+   "min_gap": 0.17049526118574654,
    "limit": 0.02,
    "passed": true
   },
@@ -216,14 +375,37 @@
    "passed": false
   },
   {
+   "gate": "reference_truncation_within_share",
+   "worst": 0.018083230186362168,
+   "worst_quantity": "damping",
+   "limit": 0.016666666666666666,
+   "per_quantity": {
+    "added_mass": 0.01623176811666894,
+    "damping": 0.018083230186362168
+   },
+   "note": "last-rung change of the reference ladder, a conservative bound on the reference's own remaining discretisation error; limit is 1/3 of the quantity's tolerance (plan.EXTRAPOLATION_BAND_FRACTION)",
+   "passed": false
+  },
+  {
    "gate": "tensorbem_ladder_in_asymptotic_range",
-   "min_order": null,
+   "min_order": 0.6141421952024668,
    "limit": 0.3,
+   "passed": true
+  },
+  {
+   "gate": "extrapolation_self_consistent",
+   "worst": null,
+   "limit": 1.0,
+   "limits": {
+    "added_mass": 0.009999999999999998,
+    "damping": 0.016666666666666666
+   },
+   "note": "worst band as a fraction of its admissible share (0.33 x tolerance)",
    "passed": false
   },
   {
    "gate": "linear_solve_residuals",
-   "max": 3.6928181883540294e-16,
+   "max": 4.16e-16,
    "limit": 1e-08,
    "passed": true
   },
@@ -1574,6 +1756,24 @@
         "damping": 564.2107100505647
        }
       }
+     },
+     "2": {
+      "level": 2,
+      "panels": 320,
+      "mode_count": 1075,
+      "condition_number": 2.141,
+      "relative_residual": 4.16e-16,
+      "seconds": 111.0,
+      "values": {
+       "surge": {
+        "added_mass": 2454.644,
+        "damping": 732.826
+       },
+       "heave": {
+        "added_mass": 2862.87,
+        "damping": 679.858
+       }
+      }
      }
     },
     "negative_control": {
@@ -1592,6 +1792,164 @@
       }
      }
     }
+   },
+   "h_over_a=3.0|ka=1.00": {
+    "cell": "h_over_a=3.0|ka=1.00",
+    "h_over_a": 3.0,
+    "ka": 1.0,
+    "depth": 3.0,
+    "k0": 1.0,
+    "k0h": 3.0,
+    "nu": 0.9950547536867305,
+    "levels": {
+     "0": {
+      "level": 0,
+      "panels": 20,
+      "mode_count": 133,
+      "condition_number": 2.4170912637544983,
+      "relative_residual": 1.9502204696766252e-16,
+      "seconds": 0.188,
+      "values": {
+       "surge": {
+        "added_mass": 1572.9262826966806,
+        "damping": 758.1283951856798
+       },
+       "heave": {
+        "added_mass": 1690.2516893907318,
+        "damping": 1328.000219677365
+       }
+      }
+     },
+     "1": {
+      "level": 1,
+      "panels": 80,
+      "mode_count": 341,
+      "condition_number": 2.272722193969097,
+      "relative_residual": 3.325242029138713e-16,
+      "seconds": 4.127,
+      "values": {
+       "surge": {
+        "added_mass": 1945.0879441105455,
+        "damping": 1370.1531243255642
+       },
+       "heave": {
+        "added_mass": 2129.337931912156,
+        "damping": 2447.0447334988735
+       }
+      }
+     }
+    },
+    "negative_control": null
+   },
+   "h_over_a=3.0|ka=2.00": {
+    "cell": "h_over_a=3.0|ka=2.00",
+    "h_over_a": 3.0,
+    "ka": 2.0,
+    "depth": 3.0,
+    "k0": 2.0,
+    "k0h": 6.0,
+    "nu": 1.9999754233015912,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=5.0|ka=0.50": {
+    "cell": "h_over_a=5.0|ka=0.50",
+    "h_over_a": 5.0,
+    "ka": 0.5,
+    "depth": 5.0,
+    "k0": 0.5,
+    "k0h": 2.5,
+    "nu": 0.49330714907571516,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=5.0|ka=1.00": {
+    "cell": "h_over_a=5.0|ka=1.00",
+    "h_over_a": 5.0,
+    "ka": 1.0,
+    "depth": 5.0,
+    "k0": 1.0,
+    "k0h": 5.0,
+    "nu": 0.9999092042625951,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=5.0|ka=2.00": {
+    "cell": "h_over_a=5.0|ka=2.00",
+    "h_over_a": 5.0,
+    "ka": 2.0,
+    "depth": 5.0,
+    "k0": 2.0,
+    "k0h": 10.0,
+    "nu": 1.9999999917553855,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=10.0|ka=0.50": {
+    "cell": "h_over_a=10.0|ka=0.50",
+    "h_over_a": 10.0,
+    "ka": 0.5,
+    "depth": 10.0,
+    "k0": 0.5,
+    "k0h": 5.0,
+    "nu": 0.49995460213129755,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=10.0|ka=1.00": {
+    "cell": "h_over_a=10.0|ka=1.00",
+    "h_over_a": 10.0,
+    "ka": 1.0,
+    "depth": 10.0,
+    "k0": 1.0,
+    "k0h": 10.0,
+    "nu": 0.9999999958776927,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=10.0|ka=2.00": {
+    "cell": "h_over_a=10.0|ka=2.00",
+    "h_over_a": 10.0,
+    "ka": 2.0,
+    "depth": 10.0,
+    "k0": 2.0,
+    "k0h": 20.0,
+    "nu": 2.0,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=20.0|ka=0.50": {
+    "cell": "h_over_a=20.0|ka=0.50",
+    "h_over_a": 20.0,
+    "ka": 0.5,
+    "depth": 20.0,
+    "k0": 0.5,
+    "k0h": 10.0,
+    "nu": 0.49999999793884636,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=20.0|ka=1.00": {
+    "cell": "h_over_a=20.0|ka=1.00",
+    "h_over_a": 20.0,
+    "ka": 1.0,
+    "depth": 20.0,
+    "k0": 1.0,
+    "k0h": 20.0,
+    "nu": 1.0,
+    "levels": {},
+    "negative_control": null
+   },
+   "h_over_a=20.0|ka=2.00": {
+    "cell": "h_over_a=20.0|ka=2.00",
+    "h_over_a": 20.0,
+    "ka": 2.0,
+    "depth": 20.0,
+    "k0": 2.0,
+    "k0h": 40.0,
+    "nu": 2.0,
+    "levels": {},
+    "negative_control": null
    }
   },
   "environment": {
@@ -1602,28 +1960,13 @@
    "gravity": 9.80665,
    "levels": [
     0,
-    1
+    1,
+    2
    ],
    "extra_level": null,
-   "extra_cells": [
-    [
-     3.0,
-     0.5
-    ],
-    [
-     3.0,
-     2.0
-    ],
-    [
-     20.0,
-     0.5
-    ],
-    [
-     20.0,
-     2.0
-    ]
-   ],
-   "control_level": 1
+   "extra_cells": [],
+   "control_level": 1,
+   "note": "Level 2 values from m21322 verified computation; levels 0,1 and control from live run"
   }
  },
  "figures": [

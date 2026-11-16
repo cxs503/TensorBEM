@@ -604,3 +604,149 @@ def test_deep_water_negative_control_matches_analytic_at_same_wavenumber():
         assert abs(res.damping[slot, slot] - ref) / ref < 0.03, (
             f"{name} damping deviates {abs(res.damping[slot,slot]-ref)/ref:.2%}"
         )
+
+
+# --------------------------------------------------------------------------- #
+# 8. the pre-registered order floor: a fit outside the asymptotic range is
+#    reported, never applied
+# --------------------------------------------------------------------------- #
+def _slow_ladder(panels):
+    """Values whose measured order is 0.2 -- below ``MIN_OBSERVED_ORDER``.
+
+    ``100 + 5 N^-0.2``: the ladder is monotone, so the order is *measurable*
+    (0.2), which is exactly the case the floor exists for -- readable, but not
+    asymptotic, so the Richardson step would move the value much further than
+    the last rung did.
+    """
+    return [100.0 + 5.0 * n ** -0.2 for n in panels]
+
+
+def test_ladder_below_the_order_floor_is_not_extrapolated():
+    panels = [20.0, 80.0, 320.0]
+    values = _slow_ladder(panels)
+    out = study.richardson(panels, values)
+    assert out["order"] == pytest.approx(0.2, abs=5e-3)
+    assert out["order"] < plan.MIN_OBSERVED_ORDER
+    assert out["extrapolated"] is False
+    assert out["value"] == pytest.approx(values[-1])
+    assert out["extrapolation_shift"] == 0.0
+    assert out["blocked_by_order"] is True
+    # the rejected fit is kept as provenance, and its size is the alarm: it
+    # moves the value by several times the last measured rung change
+    assert out["blocked_shift"] > 3.0 * out["last_rung_change"]
+    assert out["blocked_value"] == pytest.approx(100.0, rel=2e-3)
+
+
+def test_the_order_floor_is_the_switch_not_a_footnote():
+    """Same ladder, only ``min_order`` moves: the gate must be what decides."""
+    panels = [20.0, 80.0, 320.0]
+    values = _slow_ladder(panels)
+    gated = study.richardson(panels, values)
+    ungated = study.richardson(panels, values, min_order=0.1)
+    assert ungated["extrapolated"] is True
+    assert ungated["blocked_by_order"] is False
+    assert ungated["value"] == pytest.approx(100.0, rel=2e-3)
+    assert ungated["value"] != pytest.approx(gated["value"])
+
+
+def test_comparison_uses_the_finest_reference_rung_when_the_floor_blocks_it():
+    panels = [20.0, 80.0, 320.0]
+    ladder, reference = _synthetic_study(panels, (3.0,))
+    # replace the reference ladder by a slowly converging (p = 0.2) one
+    cell = reference["cells"][0]
+    for level in cell["levels"]:
+        for dof, scale in (("heave", 1.0), ("surge", 0.8)):
+            for quantity, factor in (("added_mass", 1.0), ("damping", 2.0)):
+                level["values"][dof][quantity] = _power_law(
+                    [level["panels"]], 1000.0 * scale, (60.0 * factor,), 0.2
+                )[0]
+    comparison = study.compare(ladder, reference)
+    quantities = comparison["rows"][0]["quantities"]
+    reference_finest = max(
+        (level for level in cell["levels"]), key=lambda level: level["panels"]
+    )
+    for slot, entry in quantities.items():
+        dof, quantity = slot.split(".")
+        assert entry["relative_basis"] == "finest_level"
+        assert entry["capytaine_blocked_by_order"] is True
+        assert entry["capytaine"] == pytest.approx(
+            reference_finest["values"][dof][quantity]
+        )
+        assert entry["relative"] == pytest.approx(
+            (entry["tensorbem"] - entry["capytaine"]) / abs(entry["capytaine"])
+        )
+        # the ungated fit is still reported, so the rejected number is auditable
+        assert entry["relative_if_extrapolated"] != pytest.approx(entry["relative"])
+
+
+def test_frozen_reference_quantities_below_the_floor_are_not_extrapolated(results):
+    """Regression pin on the frozen bundle: no forbidden fit may be applied."""
+    offenders = []
+    blocked = 0
+    for row in results["comparison"]["rows"]:
+        for slot, entry in row["quantities"].items():
+            order = entry["capytaine_order"]
+            if order is not None and order < plan.MIN_OBSERVED_ORDER:
+                if entry["capytaine_extrapolated"]:
+                    offenders.append((row["cell"], slot))
+            if entry.get("capytaine_blocked_by_order"):
+                blocked += 1
+    assert offenders == []
+    assert blocked > 0, "the pin is vacuous: no reference ladder hits the floor"
+
+
+def test_partial_ladder_cells_are_reported_not_a_crash(reference):
+    """A sharded ladder starts with one entry per planned cell and no rungs."""
+    ladder = {
+        "cells": {
+            plan.cell_id(cell["h_over_a"], cell["ka"]): {
+                "cell": plan.cell_id(cell["h_over_a"], cell["ka"]),
+                "h_over_a": cell["h_over_a"],
+                "ka": cell["ka"],
+                "k0h": cell["k0h"],
+                "levels": {},
+            }
+            for cell in plan.cells()
+        },
+        "environment": {},
+    }
+    comparison = study.compare(ladder, reference)
+    assert comparison["rows"] == []
+    assert comparison["worst_relative"] == {}
+    assert len(comparison["cells_without_ladder"]) == len(plan.DEPTH_RATIOS) * len(
+        plan.KA_GRID
+    )
+    # the gates stay computable, and an unjudged study may not read as a pass
+    gate_rows = study.gates(comparison, ladder, reference)
+    assert all(not gate["passed"] for gate in gate_rows
+               if gate["gate"] in ("added_mass_agreement", "damping_agreement"))
+
+
+def test_reference_truncation_gate_is_a_measured_bound(results, reference):
+    gate = next(
+        entry for entry in results["gates"]
+        if entry["gate"] == "reference_truncation_within_share"
+    )
+    # the gate qualifies the *comparison*: only cells that were actually judged
+    judged = {row["cell"] for row in results["comparison"]["rows"]}
+    measured: dict[str, float] = {}
+    for cell in reference["cells"]:
+        if cell["cell"] not in judged:
+            continue
+        for dof in ("heave", "surge"):
+            for quantity in ("added_mass", "damping"):
+                record = study._reference_entry(cell, dof, quantity)
+                bound = abs(record["values"][-1] - record["values"][-2]) / abs(
+                    record["values"][-1]
+                )
+                measured[quantity] = max(measured.get(quantity, 0.0), bound)
+    assert gate["per_quantity"]["added_mass"] == pytest.approx(
+        measured["added_mass"]
+    )
+    assert gate["per_quantity"]["damping"] == pytest.approx(measured["damping"])
+    assert gate["worst"] == pytest.approx(max(measured.values()))
+    limits = {q: plan.extrapolation_limit(q) for q in measured}
+    assert gate["limit"] == pytest.approx(max(limits.values()))
+    assert gate["passed"] == all(
+        measured[q] <= limits[q] for q in measured
+    )
