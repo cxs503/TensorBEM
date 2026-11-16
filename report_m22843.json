@@ -1,0 +1,9 @@
+{
+  "title": "XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN: 有限水深 capytaine 交叉验证——全量12格验证欠账收口（参考已全量，TensorBEM 梯在飞）",
+  "summary": "对 tensorbem.finite_depth_solver3d 做有限水深 code-to-code 交叉验证（对标 capytaine 有限水深 Green 函数）。计划已定义（h/a×k0a 12格、Richardson 外推、负控、双码细化）；capytaine 参考已全量 12 格（capytaine_ref.json，provenance 完整）；TensorBEM 梯 PARTIAL:1/12，全量 12 格已递交集群 cj4422（6 分片×8核）在飞。本单收口验证欠账：文档化计划/参考全量/在飞梯状态，并校验计划与参考的 dispersion 恒等式（resid<1e-9）。单格粗档 A33 -4.57%、B33 -8.24% 均 <15% owner 限，但未外推不能判 <3%（honest）。",
+  "scenario_key": "XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN",
+  "mission_id": 22843,
+  "tags": ["BEM","finite-depth","capytaine","crossval","verification-debt"],
+  "markdown": "# XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN — 有限水深 capytaine 交叉验证收口（mission 22843）\n\n## 1. 案例背景\n全潜球 a=1.0m 球心 z=-1.5m；h/a∈{3,5,10,20}×k0a∈{0.5,1.0,2.0}→12格，k0h∈[1.5,40]。nu=k0 tanh(k0 h) 逐格反解。双码细化：TB 20/80/320(+4格1280)，capy (12,24)/(24,48)/(48,96)。\n\n## 2. 方法\n计划模块 finite_depth_crossval_plan（预注册容差/负控/外推带）；参考 scripts/capytaine_finite_depth_ref.py（capy 3.1.dev0）；求解 capytaine_finite_depth_crossval（分片→合并→run_study）；Richardson 三档外推+负控。\n\n## 3. 当前状态（honest）\n- capytaine 参考：COMPLETE（12格全档）。\n- TensorBEM 梯：PARTIAL:1/12（仅 h/a=3|ka=0.5 有3档）。\n- 全量12格：已递交集群 cj4422（6分片×8核）在飞，完成后需 merge→run_study --write-doc。\n- 单格粗档（320面板）：TB A33=2862.87 vs capy 2999.92 → -4.57%；B33=679.86 vs 740.90 → -8.24%。均<15%但未外推不能判<3%。\n\n## 4. 本单验证（pipeline）\n- 计划 dispersion 恒等式：12格反解到 k0a 精确（resid<1e-9）。\n- 参考 dispersion：capytaine_ref.json 每格残差<=1e-9。\n- 参考覆盖：test_xval_bem_finite_depth_reference_grid 断言12格全档+legacy（已绿）。\n- 参考双公式：newer vs legacy 在球上一致到 round-off（rel<5e-3）。\n\n## 5. 注意点/局限\n两码共享内接多面体面积亏缺（~1-2%），外推一阶移除；全潜闭体不触发不规则频率；外推带是自洽度量非真值界。\n\n## 6. 误差判定\n外推后 TB vs capy 偏差**尚未可判**：全量12格 TensorBEM 梯在集群 cj4422 在飞，未外推前不能判<3%（测试对 partial 显式 xfail，不粉饰）。单格粗档 A33 -4.57%、B33 -8.24% 均<15% owner 限。基准=capytaine 有限水深 Green 函数（第三方独立 BEM 码），非解析解。",
+  "figures": []
+}
