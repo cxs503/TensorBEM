@@ -1,0 +1,35 @@
+{
+  "kind": "sweep_probe",
+  "hostname": "ec6ae0b42a0c",
+  "platform": "Linux-6.6.52-1.7.lns23.loongarch64-loongarch64-with-glibc2.38",
+  "machine": "loongarch64",
+  "python": "3.11.6",
+  "numpy": "2.4.6",
+  "label": "coarse",
+  "mesh": [
+    12,
+    4
+  ],
+  "panel_count": 192,
+  "max_panel_scale": 0.1004034358093167,
+  "band_rad_s": [
+    0.2,
+    12.0
+  ],
+  "n_omega": 41,
+  "grid_matches_case_default": true,
+  "solver_relative_residual_max": 0.006392332932499873,
+  "diagonal_damping_min": 2.7008333262541133e-13,
+  "diagonal_damping_min_per_dof": [
+    1.9860565347185575e-08,
+    1.6343116311282184e-07,
+    0.148017077845496,
+    3.0627778996896737e-10,
+    2.432109962055209e-07,
+    2.7008333262541133e-13
+  ],
+  "elapsed_s": 36.8,
+  "wall_s": 34.1,
+  "artifact": "docs/casepool_bem_cummins_wigley/probe_sweep_coarse.npz",
+  "note": "solved in three frequency chunks on the worktree host (OMP/BLAS threads = 1), same 41-node grid as the committed case"
+}

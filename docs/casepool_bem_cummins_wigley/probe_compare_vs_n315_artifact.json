@@ -1,0 +1,73 @@
+{
+  "decision": "DIVERGE",
+  "reasons": [
+    "max relative amplitude difference 1.739e+00"
+  ],
+  "thresholds": {
+    "match": 1e-06,
+    "near": 0.001,
+    "solver_residual_max": 0.01,
+    "diag_damping_min": -1e-10,
+    "grid_tol": 1e-12
+  },
+  "amplitude": {
+    "added_mass_rel": 0.7459516038147327,
+    "damping_rel": 1.7392658790834643,
+    "per_dof_added_mass_rel": [
+      {
+        "dof": "surge",
+        "value": 4.017358336030191
+      },
+      {
+        "dof": "sway",
+        "value": 0.8963059024853701
+      },
+      {
+        "dof": "heave",
+        "value": 0.20632552188066466
+      },
+      {
+        "dof": "roll",
+        "value": 15.405074079721532
+      },
+      {
+        "dof": "pitch",
+        "value": 0.9756266704054763
+      },
+      {
+        "dof": "yaw",
+        "value": 1.0730560744412947
+      }
+    ],
+    "per_dof_damping_rel": [
+      {
+        "dof": "surge",
+        "value": 5.631625884235205
+      },
+      {
+        "dof": "sway",
+        "value": 1.7392658790834643
+      },
+      {
+        "dof": "heave",
+        "value": 0.7766335820701024
+      },
+      {
+        "dof": "roll",
+        "value": 37.66604997122412
+      },
+      {
+        "dof": "pitch",
+        "value": 1.1608215023704829
+      },
+      {
+        "dof": "yaw",
+        "value": 1.1019050611600574
+      }
+    ]
+  },
+  "validity": {
+    "solver_residual_max": 0.006392332932499873,
+    "diagonal_damping_min": 2.7008333262541133e-13
+  }
+}
