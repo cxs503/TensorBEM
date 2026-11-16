@@ -378,6 +378,27 @@ def test_near_wall_half_panel_rows_carry_the_panel_size() -> None:
     assert math.isfinite(linear["observed_order_in_h"])
 
 
+def test_near_wall_half_panel_rows_carry_the_panel_size() -> None:
+    """The half-panel comparison must publish h_max, not only the error.
+
+    ``near_wall_study`` regressed on ``main``: the linear/constant half-panel
+    rows were built without ``h_max_over_radius``, so fitting the observed order
+    in ``h`` raised ``KeyError: 'h_max_over_radius'`` and the whole case could
+    not be regenerated (the committed record went stale).  Pin the row contract
+    the order fit depends on, and the fit itself.
+    """
+    import math
+
+    study = case.near_wall_study(ladder=(16, 32), factors=(1.0, 0.5))
+    linear = study["linear"]
+    rows = linear["levels"] + linear["constant_mode_levels"]
+    assert len(rows) == 4
+    for row in rows:
+        assert row["h_max_over_radius"] > 0.0
+        assert row["max_relative_velocity_error"] >= 0.0
+    assert math.isfinite(linear["observed_order_in_h"])
+
+
 def test_near_wall_azimuth_sweep_is_measured_not_midpoint_only() -> None:
     """The validity window must hold across the panel, not only above its midpoint.
 
