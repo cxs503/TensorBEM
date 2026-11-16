@@ -1,0 +1,98 @@
+{
+ "anchor": "XVAL-BEM-FINITE-DEPTH-CROSSVAL-PLAN",
+ "purpose": "separate mesh discretisation from the finite-depth kernel",
+ "reference": "capytaine cached cases/cpt-24x48-hinf-ka*.json",
+ "study": "TensorBEM infinite-depth mesh spine vs capytaine",
+ "table": [
+  {
+   "am": 2174.3425448969183,
+   "am_rel_error": 0.11444004176309208,
+   "b": 243.63737806439792,
+   "b_rel_error": 0.22862997090338955,
+   "cpt_level": "24x48",
+   "ka": 0.3,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 2334.3455241913684,
+   "am_rel_error": 0.04927448999926387,
+   "b": 288.77944264217575,
+   "b_rel_error": 0.08570758377427812,
+   "cpt_level": "24x48",
+   "ka": 0.3,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 2377.018960312166,
+   "am_rel_error": 0.03189457605808188,
+   "b": 301.60976036815725,
+   "b_rel_error": 0.045086055845204975,
+   "cpt_level": "24x48",
+   "ka": 0.3,
+   "n_panels": 1280,
+   "subdivisions": 3
+  },
+  {
+   "am": 1801.5239824699586,
+   "am_rel_error": 0.09442525028923654,
+   "b": 876.3320856275973,
+   "b_rel_error": 0.21545699814262576,
+   "cpt_level": "16x32",
+   "ka": 1.0,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1892.9655744262288,
+   "am_rel_error": 0.048460168750093624,
+   "b": 1026.6906455167648,
+   "b_rel_error": 0.08084734745761324,
+   "cpt_level": "16x32",
+   "ka": 1.0,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 1916.174128046435,
+   "am_rel_error": 0.03679389045445203,
+   "b": 1068.9588068457176,
+   "b_rel_error": 0.04300645276041681,
+   "cpt_level": "16x32",
+   "ka": 1.0,
+   "n_panels": 1280,
+   "subdivisions": 3
+  },
+  {
+   "am": 1774.5216911913026,
+   "am_rel_error": 0.09462562258593721,
+   "b": 169.97171866080723,
+   "b_rel_error": 0.19793321908152883,
+   "cpt_level": "16x32",
+   "ka": 2.0,
+   "n_panels": 80,
+   "subdivisions": 1
+  },
+  {
+   "am": 1863.8977691332973,
+   "am_rel_error": 0.04902527217933239,
+   "b": 196.92521160936184,
+   "b_rel_error": 0.0707444050006556,
+   "cpt_level": "16x32",
+   "ka": 2.0,
+   "n_panels": 320,
+   "subdivisions": 2
+  },
+  {
+   "am": 1886.631694380303,
+   "am_rel_error": 0.03742625171153091,
+   "b": 204.41739380640885,
+   "b_rel_error": 0.03539010897902095,
+   "cpt_level": "16x32",
+   "ka": 2.0,
+   "n_panels": 1280,
+   "subdivisions": 3
+  }
+ ]
+}

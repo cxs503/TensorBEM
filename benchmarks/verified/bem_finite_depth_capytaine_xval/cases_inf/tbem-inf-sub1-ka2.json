@@ -1,0 +1,12 @@
+{
+ "added_mass_heave": 1774.5216911913026,
+ "case_id": "tbem-inf-sub1-ka2",
+ "damping_heave": 169.97171866080723,
+ "ka": 2.0,
+ "n_panels": 80,
+ "seconds": 1.8,
+ "solver": "free_surface_solver3d.solve_radiation_3d (infinite depth)",
+ "status": "ok",
+ "subdivisions": 1,
+ "tool": "TensorBEM"
+}
