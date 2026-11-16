@@ -135,3 +135,73 @@ def test_sweep_validation() -> None:
         kkr_damping(good, np.ones(20), 3.0, added_mass_inf=0.0)
     with pytest.raises(ValueError, match="outside the tabulated sweep"):
         kkr_damping(good, np.ones(21), 0.5, added_mass_inf=0.0)
+
+
+def test_robust_tail_exponent_clean_decay():
+    """A clean power-law tail should give consensus across all windows."""
+    from tensorbem.causality import robust_tail_exponent
+    import numpy as np
+
+    omega = np.linspace(1.0, 20.0, 55)
+    damping = 100.0 * omega ** (-3.5)  # exact p=3.5 decay
+    r = robust_tail_exponent(omega, damping)
+    assert r.consensus is True
+    assert abs(r.exponent - 3.5) < 0.01
+    assert r.spread < 0.01
+    assert len(r.per_window) == 3  # windows 3, 4, 5 all succeed
+
+
+def test_robust_tail_exponent_noisy_no_consensus():
+    """Noisy tail data should fail consensus."""
+    from tensorbem.causality import robust_tail_exponent
+    import numpy as np
+
+    omega = np.linspace(10.0, 20.0, 10)
+    # Oscillating damping: not a clean power law
+    damping = np.array([10, 8, 12, 5, 15, 3, 20, 2, 25, 1], dtype=float)
+    r = robust_tail_exponent(omega, damping)
+    assert r.consensus is False
+    assert r.spread > 1.0  # large spread
+
+
+def test_robust_tail_exponent_below_bar_consensus():
+    """All windows below the bar should still give consensus (all agree = below)."""
+    from tensorbem.causality import robust_tail_exponent
+    import numpy as np
+
+    omega = np.linspace(0.2, 12.0, 41)
+    # Shallow decay: p ~ 1.0, well below 2.05 bar
+    damping = 50.0 * omega ** (-1.0)
+    r = robust_tail_exponent(omega, damping)
+    assert r.consensus is True  # all windows agree: below bar
+    assert r.exponent < 2.05
+
+
+def test_robust_tail_exponent_custom_windows():
+    """Custom window set should be respected."""
+    from tensorbem.causality import robust_tail_exponent
+    import numpy as np
+
+    omega = np.linspace(1.0, 20.0, 55)
+    damping = 100.0 * omega ** (-3.0)
+    r = robust_tail_exponent(omega, damping, windows=(3, 5))
+    assert len(r.per_window) == 2
+    assert 3 in r.per_window
+    assert 5 in r.per_window
+    assert 4 not in r.per_window
+
+
+def test_robust_tail_exponent_non_positive_damping():
+    """Windows with non-positive damping should be excluded."""
+    from tensorbem.causality import robust_tail_exponent
+    import numpy as np
+
+    omega = np.linspace(10.0, 20.0, 10)
+    # Last 3 samples all non-positive -> window=3 fails
+    # Last 4 samples include a negative -> window=4 fails
+    # Last 5 samples include a negative -> window=5 fails
+    damping = np.array([10, 8, 6, 4, 2, 0.5, -0.1, -0.3, -0.2, -0.1], dtype=float)
+    r = robust_tail_exponent(omega, damping)
+    assert len(r.per_window) == 0
+    assert r.consensus is False
+    assert r.exponent == -float('inf')
