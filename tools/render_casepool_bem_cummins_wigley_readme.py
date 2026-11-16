@@ -52,17 +52,29 @@ def _num(value: float) -> str:
     return f"{value:.4g}"
 
 
-def _floor(value: float) -> str:
-    """A damping floor of exactly zero is the physical lower bound, not a number."""
-    return "0（下界）" if abs(value) <= 1e-9 else _num(value)
-
-
 def _sweep_facts(path: Path) -> dict[str, object]:
     import numpy as np
 
+    from tensorbem.benchmarks.case_bem_cummins_wigley import DOF_NAMES
+
     data = np.load(path, allow_pickle=True)
     damping = data["damping"]
-    diagonal_min = min(float(np.diag(damping[i]).min()) for i in range(damping.shape[0]))
+    # Index the diagonal by DOF *name*, never by a hand-typed column: this file
+    # once read column 5 for "pitch", which is yaw, so the note quoted a yaw
+    # minimum (-0.000681) as the pitch one and hid the real pitch minimum
+    # (-1.463, the worst in the sweep) behind an unlabelled number.
+    # damping[:, i, i] is already one DOF's diagonal over the band; wrapping it
+    # in np.diag would return a *matrix* whose off-diagonal zeros floor the
+    # minimum at 0, which reported every healthy DOF as "exactly zero".
+    per_dof_min = {
+        name: float(damping[:, index, index].min())
+        for index, name in enumerate(DOF_NAMES)
+    }
+    min_damping_dof = min(per_dof_min, key=per_dof_min.get)
+    # where in the band that minimum sits: a healthy sweep bottoms out at the
+    # band edge (B -> 0 as omega -> 0), a broken one bottoms out mid-band.
+    diagonal = damping.diagonal(axis1=1, axis2=2)
+    omega_index, dof_index = divmod(int(diagonal.argmin()), len(DOF_NAMES))
     return {
         "label": str(data["label"]),
         "n_sections": int(data["n_sections"]),
@@ -71,10 +83,11 @@ def _sweep_facts(path: Path) -> dict[str, object]:
         "n_omega": int(data["omega"].size),
         "band": (float(data["omega"][0]), float(data["omega"][-1])),
         "residual_max": float(data["solver_relative_residual"].max()),
-        "min_damping": diagonal_min,
-        "surge_min": float(np.diag(damping[:, 0, 0]).min()),
-        "heave_min": float(np.diag(damping[:, 2, 2]).min()),
-        "pitch_min": float(np.diag(damping[:, 5, 5]).min()),
+        "min_damping": per_dof_min[min_damping_dof],
+        "min_damping_dof": min_damping_dof,
+        "min_damping_omega": float(data["omega"][omega_index]),
+        "negative_damping_nodes": int((diagonal < 0.0).sum()),
+        "per_dof_min": per_dof_min,
     }
 
 
@@ -183,11 +196,12 @@ def render() -> str:
     add("| --- | --- | --- | --- | --- | --- |")
     add(f"| `docs/casepool_bem_cummins_wigley/evidence_cluster_n315_sweep_coarse.npz` | "
         f"{n315['n_sections']}x{n315['n_levels']}（{n315['panel_count']} 面板，{n315['n_omega']} 节点） | "
-        f"{_num(n315['residual_max'])} | {_num(n315['min_damping'])}（surge {_num(n315['surge_min'])}） | FAIL | "
+        f"{_num(n315['residual_max'])} | {_num(n315['min_damping'])}（{n315['min_damping_dof']}；"
+        f"surge {_num(n315['per_dof_min']['surge'])}） | FAIL | "
         f"{_num(100 * n315_c3['worst_relative_residual'])} %（{n315_c3['worst_dof']}） |")
     add(f"| `docs/m20021/sweep_medium.npz` | "
         f"{control['n_sections']}x{control['n_levels']}（{control['panel_count']} 面板，{control['n_omega']} 节点） | "
-        f"{_num(control['residual_max'])} | {_num(control['min_damping'])} | FAIL | "
+        f"{_num(control['residual_max'])} | {_num(control['min_damping'])}（{control['min_damping_dof']}） | FAIL | "
         f"{_num(100 * control_c3['worst_relative_residual'])} %（{control_c3['worst_dof']}） |")
     add("")
     add("![C0 negative controls](fig_c0_negative_controls.png)")
@@ -211,10 +225,18 @@ def render() -> str:
     add("| 量（coarse 12x4，band 0.2–12，41 节点） | 节点 n315（cj2690 / cj2704） | 本机与现提交件 |")
     add("| --- | --- | --- |")
     add(f"| max solver relative residual | {_num(n315['residual_max'])} | {_num(published['coarse']['residual_max'])} |")
-    add(f"| min B（surge / pitch） | {_num(n315['surge_min'])} / {_num(n315['pitch_min'])}（负阻尼＝造能） | "
-        f"{_floor(published['coarse']['surge_min'])} / {_floor(published['coarse']['pitch_min'])} |")
+    n315_coarse = n315["per_dof_min"]
+    committed_coarse = published["coarse"]["per_dof_min"]
+    add(f"| min B（surge / pitch） | {_num(n315_coarse['surge'])} / {_num(n315_coarse['pitch'])}（负阻尼＝造能） | "
+        f"{_num(committed_coarse['surge'])} / {_num(committed_coarse['pitch'])} |")
     add(f"| C3 逐 DOF 最坏闭合残差 | {_num(100 * n315_c3['worst_relative_residual'])} %（{n315_c3['worst_dof']}，由 .npz 重算） | "
         f"{_num(100 * (c3['worst_relative_residual'] or 0.0))} %（{c3['worst_dof']}） |")
+    add("")
+    add(f"两条 `min diag B` 的最小值位置不同，这正是判据：n315 一侧落在带中 "
+        f"ω = {_num(n315['min_damping_omega'])} rad/s 且为负（{n315['min_damping_dof']}"
+        f" {_num(n315['min_damping'])}；全带 6 DOF×{n315['n_omega']} 节点里共 {n315['negative_damping_nodes']} 个为负＝造能）；"
+        f"提交件一侧落在带底 ω = {_num(published['coarse']['min_damping_omega'])} rad/s，"
+        f"是小正数（辐射阻尼随 ω→0 趋于 0，不是被截到 0），因此 `min B ≥ 0` 一路成立。")
     add("")
     add("![node vs local](fig_node_vs_local.png)")
     add("")
