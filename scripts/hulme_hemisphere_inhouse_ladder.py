@@ -54,6 +54,7 @@ import json
 import os
 import platform
 import resource
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -61,6 +62,9 @@ from typing import Any
 
 import numpy as np
 
+from tensorbem.benchmarks.hemisphere_independent_convergence import (
+    environment_consistency,
+)
 from tensorbem.benchmarks.hulme_hemisphere_case import run_cell
 
 DEFAULT_OUT = Path(
@@ -87,6 +91,34 @@ def _peak_rss_mb() -> float:
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024.0
 
 
+def _code_revision() -> dict[str, Any]:
+    """Commit this ladder was computed from, so "same code" is checkable.
+
+    The m21674 environment comparison had to *assert* that two runs shared a
+    commit; no artifact recorded one, so the claim could not be audited after
+    the fact.  Every row now carries the revision it was produced by, and
+    ``dirty`` says whether the tree had uncommitted edits at the time.
+    """
+    try:
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=False,
+        ).stdout.strip() or None
+        dirty = bool(
+            subprocess.run(
+                ["git", "status", "--porcelain"],
+                capture_output=True,
+                text=True,
+                check=False,
+            ).stdout.strip()
+        )
+    except OSError:  # pragma: no cover - git not installed
+        return {"commit": None, "dirty": None}
+    return {"commit": commit, "dirty": dirty}
+
+
 def _skeleton(ka: float) -> dict[str, Any]:
     return {
         "case_code": "BEM-HULME-HEMISPHERE",
@@ -104,6 +136,7 @@ def _skeleton(ka: float) -> dict[str, Any]:
             "platform": platform.platform(),
             "machine": platform.machine(),
             "host": platform.node(),
+            "revision": _code_revision(),
             "thread_env": {v: os.environ.get(v) for v in THREAD_VARS},
             "generated_utc": _dt.datetime.now(_dt.timezone.utc).isoformat(
                 timespec="seconds"
@@ -169,6 +202,7 @@ def build(
         # trusting the file-level ``environment`` block.
         cell["host"] = platform.node()
         cell["numpy"] = np.__version__
+        cell["revision"] = _code_revision()["commit"]
         payload["rows"] = sorted(
             [r for r in payload["rows"] if int(r["subdivisions"]) != sub] + [cell],
             key=lambda r: r["panels"],
@@ -183,19 +217,64 @@ def build(
     return payload
 
 
-def merge_ladders(*paths: Path) -> dict[str, Any]:
+def _numeric_environment(row: dict[str, Any]) -> tuple[str | None, str | None]:
+    """The part of a rung's provenance that can change its arithmetic."""
+    numpy_version = row.get("numpy")
+    revision = row.get("revision")
+    return (
+        None if numpy_version is None else str(numpy_version),
+        None if revision is None else str(revision),
+    )
+
+
+def _replicate_entry(
+    row: dict[str, Any], canonical: dict[str, Any], quantities: Sequence[str]
+) -> dict[str, Any]:
+    """A same-panel rung computed in a different numeric environment.
+
+    Kept as a *replicate* of the ladder rung instead of a second rung: two
+    measurements of the same discretisation are not two refinement steps.  What
+    they measure is whether the environments agree, which is exactly the control
+    the mixed ladder needs before its refinement shape may be read.
+    """
+    values = {q: float(row[q]) for q in quantities if q in row}
+    return {
+        "host": row.get("host"),
+        "numpy": row.get("numpy"),
+        "revision": row.get("revision"),
+        "values": values,
+        "delta_vs_rung": {
+            q: abs(values[q] / float(canonical[q]) - 1.0) for q in values
+        },
+        "radiation_relative_residual": row.get("radiation_relative_residual"),
+        "solve_warnings": list(row.get("solve_warnings") or []),
+    }
+
+
+def merge_ladders(
+    *paths: Path, quantities: Sequence[str] = QUANTITIES, allow_replicates: bool = True
+) -> dict[str, Any]:
     """Combine single-rung artifacts from separate processes into one ladder.
 
     A crash at the top rung must not force the cheap rungs to be recomputed on
     a different host, but the rungs then come from different processes; the
-    per-row provenance (host, thread env, RSS) travels with each row, and every
-    contributing file is named in ``provenance`` so the mixture stays auditable.
+    per-row provenance (host, numpy, code revision, thread env, RSS) travels
+    with each row, and every contributing file is named in ``provenance`` so the
+    mixture stays auditable.
+
+    Two rows for the *same* panel count are only accepted when
+    ``allow_replicates`` is set and their numeric environments (numpy version,
+    code revision) differ: they are then stored as ``replicates`` of the ladder
+    rung -- a cross-environment control, not a refinement step.  A genuine
+    duplicate (same panel count, same environment) is still an error, because
+    nothing can justify it.
     """
     merged = _skeleton(0.0)
     merged["rows"] = []
     merged["failures"] = []
     merged["provenance"] = []
     ka: float | None = None
+    raw: list[dict[str, Any]] = []
     for path in paths:
         payload = json.loads(Path(path).read_text())
         this_ka = float(payload["ka"])
@@ -213,22 +292,62 @@ def merge_ladders(*paths: Path) -> dict[str, Any]:
                 row["host_source"] = "file_environment"
             if not row.get("numpy"):
                 row["numpy"] = file_env.get("numpy")
-            merged["rows"].append(row)
+            if not row.get("revision"):
+                revision = file_env.get("revision")
+                row["revision"] = (
+                    revision.get("commit") if isinstance(revision, dict) else revision
+                )
+                if row["revision"]:
+                    row["revision_source"] = "file_environment"
+            raw.append(row)
         merged["failures"].extend(payload.get("failures", []))
         merged["provenance"].append(
             {
                 "file": str(path),
                 "rows": [int(r["subdivisions"]) for r in payload.get("rows", [])],
                 "host": payload.get("environment", {}).get("host"),
+                "numpy": payload.get("environment", {}).get("numpy"),
+                "revision": (
+                    payload.get("environment", {}).get("revision", {}) or {}
+                ).get("commit")
+                if isinstance(payload.get("environment", {}).get("revision"), dict)
+                else payload.get("environment", {}).get("revision"),
             }
         )
+
+    groups: dict[int, list[dict[str, Any]]] = {}
+    for row in raw:
+        groups.setdefault(int(row["subdivisions"]), []).append(row)
+    for sub, rows in groups.items():
+        environments = {_numeric_environment(r) for r in rows}
+        if len(rows) > 1 and len(environments) == 1:
+            raise ValueError(
+                f"duplicate rung subdivisions={sub}: {len(rows)} copies from the "
+                "same numeric environment cannot both be the ladder rung"
+            )
+        if len(environments) > 1 and not allow_replicates:
+            raise ValueError(
+                f"duplicate rung subdivisions={sub} from different numeric "
+                f"environments {sorted(map(str, environments))}"
+            )
+        # the canonical rung is the one that can testify to its own health: a
+        # recorded residual beats an unrecorded one, otherwise file order wins
+        canonical = max(
+            rows,
+            key=lambda r: (r.get("radiation_relative_residual") is not None, -rows.index(r)),
+        )
+        canonical = dict(canonical)
+        replicates = [
+            _replicate_entry(r, canonical, quantities)
+            for r in rows
+            if r is not canonical and _numeric_environment(r) != _numeric_environment(canonical)
+        ]
+        if replicates:
+            existing = list(canonical.get("replicates") or [])
+            canonical["replicates"] = existing + replicates
+        merged["rows"].append(canonical)
     merged["rows"] = sorted(merged["rows"], key=lambda r: r["panels"])
-    seen: set[int] = set()
-    for row in merged["rows"]:
-        sub = int(row["subdivisions"])
-        if sub in seen:
-            raise ValueError(f"duplicate rung subdivisions={sub} in merged ladder")
-        seen.add(sub)
+    merged["environment_consistency"] = environment_consistency(merged["rows"])
     return merged
 
 
@@ -259,6 +378,7 @@ def main(argv: list[str] | None = None) -> int:
                     "out": str(args.out),
                     "panels": [r["panels"] for r in payload["rows"]],
                     "failures": [f["subdivisions"] for f in payload["failures"]],
+                    "environment_consistency": payload["environment_consistency"],
                 }
             )
         )
