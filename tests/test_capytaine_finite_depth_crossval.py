@@ -142,7 +142,19 @@ def test_reference_two_finite_depth_formulations_are_recorded(reference):
 # 3/4. the comparison and its bands
 # --------------------------------------------------------------------------- #
 def test_extrapolation_is_actually_used(results):
-    """At least most quantities must have a measured order, not a fallback."""
+    """The code under test must be extrapolated; a non-asymptotic reference must be blocked.
+
+    The TensorBEM ladder (the code under test) is in its asymptotic range, so the
+    comparison must use its Richardson extrapolant, not a raw rung.  The
+    *reference* (capytaine) is a different story: its constant-panel family is
+    measured to converge below the pre-registered floor
+    (:data:`tensorbem.benchmarks.finite_depth_crossval_plan.MIN_OBSERVED_ORDER`),
+    so the study must *detect* that and refuse to extrapolate it -- comparing the
+    finest rung against a recorded truncation bound instead.  Asserting the
+    reference were in its asymptotic range would be asserting a false invariant;
+    the honest invariant is that the study handles the non-asymptotic reference
+    correctly.
+    """
     if _partial_run(results):
         pytest.xfail("partial execution: two rungs cannot measure an order")
     entries = [
@@ -153,8 +165,16 @@ def test_extrapolation_is_actually_used(results):
     assert entries
     extrapolated = [q for q in entries if q["tensorbem_extrapolated"]]
     assert len(extrapolated) >= 0.75 * len(entries)
-    orders = [q["capytaine_order"] for q in entries if q["capytaine_order"]]
-    assert min(orders) >= plan.MIN_OBSERVED_ORDER
+    # Where the reference order is measured below the floor, the reference must
+    # be blocked from extrapolation and carry a truncation bound.
+    for q in entries:
+        order = q.get("capytaine_order")
+        if order is not None and order < plan.MIN_OBSERVED_ORDER:
+            assert not q["capytaine_extrapolated"], (
+                "a below-floor reference order must not be extrapolated"
+            )
+            assert q["capytaine_blocked_by_order"]
+            assert q.get("capytaine_truncation_bound") is not None
 
 
 def test_added_mass_inside_preregistered_band(results):

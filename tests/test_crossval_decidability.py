@@ -153,9 +153,17 @@ def test_truth_audit_artifact_reproduces_from_the_frozen_reference():
     if not audit_path.exists():
         pytest.skip("truth audit artifact not frozen")
     frozen = json.loads(audit_path.read_text())
-    recomputed = __import__(
-        "finite_depth_reference_truth_audit"
-    ).audit(json.loads((REF_ROOT / study.REFERENCE_FILE).read_text()))
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "finite_depth_reference_truth_audit",
+        ROOT / "scripts" / "finite_depth_reference_truth_audit.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    recomputed = module.audit(
+        json.loads((REF_ROOT / study.REFERENCE_FILE).read_text())
+    )
     assert recomputed["summary"]["admitted_cells"] == frozen["summary"][
         "admitted_cells"
     ]

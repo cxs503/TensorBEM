@@ -61,6 +61,9 @@ def rebuild(root: Path, *, write: bool = True,
             "execution_status": study.execution_status(
                 ladder, plan.TENSORBEM_LEVELS, plan.EXTRA_TENSORBEM_LEVEL
             ),
+            "confirmation_status": study.confirmation_status(
+                ladder, plan.EXTRA_TENSORBEM_LEVEL
+            ),
             "verdict_rebuilt_from_frozen_artifacts": True,
         },
         "reference_provenance": reference.get("provenance", {}),
