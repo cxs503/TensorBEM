@@ -988,8 +988,10 @@ def render_document(result: dict[str, Any]) -> str:
         f"`finite_depth_method={provenance.get('finite_depth_method', 'n/a')}`, "
         f"ladder {[list(r) for r in provenance.get('resolutions', [])]} panels, "
         f"generated {provenance.get('generated_utc', 'n/a')}).\n"
-        f"**Execution status**: `{status}`; every number below is written by the "
-        "study driver from the frozen artifacts, none is transcribed.\n"
+        f"**Execution status**: `{status}`; "
+        f"**confirmation rung**: `{result.get('case', {}).get('confirmation_status', 'n/a')}`; "
+        "every number below is written by the study driver from the frozen "
+        "artifacts, none is transcribed.\n"
     )
     worst = comparison["worst_relative"]
     lines.append("## 1. Headline\n")
@@ -1267,13 +1269,19 @@ def execution_status(
     extra_level: int | None = None,
     extra_cells: Sequence[tuple[float, float]] = plan.EXTRA_LEVEL_CELLS,
 ) -> str:
-    """Derive how much of the pre-registered study the ladder actually covers.
+    """Coverage of the *main* cross-code comparison (all planned cells x main levels).
 
     The status used to be prose written by hand into ``results.json``, so a study
     that had only laddered one cell of twelve could be published with a status
     string that no longer matched the artifact.  It is computed here from the
     ladder itself, and ``tests/test_capytaine_finite_depth_crossval.py`` reads it
     to decide whether a gate may be judged at all.
+
+    The confirmation rung (``extra_level``, the 1280-panel level on the four
+    ``EXTRA_LEVEL_CELLS``) is a *stricter* check of the Richardson extrapolation
+    band, not a requirement for the cross-code comparison: the comparison is
+    decidable from the three pre-registered levels.  Its coverage is therefore
+    reported by :func:`confirmation_status` and never downgrades the main verdict.
     """
     planned = [plan.cell_id(c["h_over_a"], c["ka"]) for c in plan.cells()]
     done = [key for key in planned if key in ladder.get("cells", {})]
@@ -1282,28 +1290,43 @@ def execution_status(
         key for key in done
         if not wanted <= set(ladder["cells"][key].get("levels", {}))
     ]
-    extra_missing = []
-    if extra_level is not None:
-        wanted_extra = {str(int(extra_level))}
-        extra_keys = {
-            plan.cell_id(float(ratio), float(ka)) for ratio, ka in extra_cells
-        }
-        for key in done:
-            if key in extra_keys and not wanted_extra <= set(
-                ladder["cells"][key].get("levels", {})
-            ):
-                extra_missing.append(key)
     parts = []
     if len(done) < len(planned):
         parts.append(f"{len(done)} of {len(planned)} planned cells")
     if thin:
         parts.append(f"{len(thin)} covered cells missing rungs {sorted(wanted)}")
-    if extra_missing:
-        parts.append(
-            f"{len(extra_missing)} confirmation cells missing the "
-            f"{int(extra_level)}-subdivision rung"
-        )
     return "COMPLETE" if not parts else "PARTIAL: " + "; ".join(parts)
+
+
+def confirmation_status(
+    ladder: dict[str, Any],
+    extra_level: int | None = None,
+    extra_cells: Sequence[tuple[float, float]] = plan.EXTRA_LEVEL_CELLS,
+) -> str:
+    """Coverage of the confirmation rung (the 4th, 1280-panel level).
+
+    The confirmation rung exists to measure the Richardson extrapolation band
+    (the ``extrapolation_self_consistent`` gate) by re-extrapolating after
+    dropping the coarsest rung.  Where it is missing the band is *unknown*, not
+    zero, so the gate reports ``worst: null`` and does not pass -- but the
+    cross-code comparison itself is unaffected and is not marked PARTIAL for it.
+    """
+    if extra_level is None:
+        return "n/a (no confirmation rung planned)"
+    wanted_extra = {str(int(extra_level))}
+    extra_keys = {
+        plan.cell_id(float(ratio), float(ka)) for ratio, ka in extra_cells
+    }
+    missing = [
+        key for key in sorted(extra_keys)
+        if key in ladder.get("cells", {})
+        and not wanted_extra <= set(ladder["cells"][key].get("levels", {}))
+    ]
+    return (
+        "COMPLETE" if not missing
+        else f"PARTIAL: {len(missing)} confirmation cells missing the "
+             f"{int(extra_level)}-subdivision rung"
+    )
 
 
 def run_study(
@@ -1366,6 +1389,7 @@ def run_study(
             "gravity": plan.GRAVITY,
             "levels": [int(level) for level in levels],
             "execution_status": execution_status(ladder, levels, extra_level),
+            "confirmation_status": confirmation_status(ladder, extra_level),
         },
         "reference_provenance": reference.get("provenance", {}),
         "tensor_environment": ladder.get("environment", {}),
