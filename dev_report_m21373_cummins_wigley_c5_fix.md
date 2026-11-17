@@ -1,5 +1,11 @@
 # CASE-BEM-CUMMINS-WIGLEY: C5 自由衰减闸门修复（DT 细化）
 
+> **m24179 重开说明（2026-11-17）**：原 PR#1170 已裁定关闭（owner 2026-11-05）。
+> 本单从当前 main 切枝，核实 m21373 交付物已完整入库，并将本开发报告更新至
+> 算例当前状态（16 闸门 / 78 测试），使"matured mission deliverables"与 main
+> 保持一致。C5 修复本身（`DT = 0.01 → 0.002`）已在 main（#979），此处仅做
+> 文档对齐与复现路径修正。
+
 ## 1 问题陈述
 
 CASE-BEM-CUMMINS-WIGLEY 算例（Wigley 船 6DOF Cummins 记忆核闭合）的 C5 闸门
@@ -45,7 +51,7 @@ C5 闸门比较两条路线：
 
 ## 4 验证结果
 
-### 闸门状态（修复后）
+### 闸门状态（m21373 修复后，10 闸门）
 
 | 闸门 | 描述 | 状态 |
 |------|------|------|
@@ -62,21 +68,56 @@ C5 闸门比较两条路线：
 
 **判据：10/10 闸门通过，算例闭合。**
 
-### 测试
+### 测试（m21373 时点）
 ```
 26 passed in 9.63s
 ```
 
+### 当前 main 状态（m24179 核实，2026-11-17）
+
+算例在 m21373 之后继续演化（m21859 / m21960 / m22005 / m22091 / m22587 /
+m22881 / m23122），闸门从 10 个扩展到 16 个，测试从 26 个扩展到 78 个。
+C5 修复值（3.96%）在后续所有版本中保持不变。当前 main 的
+`case_result.json`（mission=m21960，generated 2026-11-15）记录 16/16 闸门通过：
+
+| 闸门 | 描述 | 状态 |
+|------|------|------|
+| C0 | 求解器有效性（收敛残差 + 非负阻尼） | ✅ PASS |
+| C0_coarse | 粗网格求解器有效性 | ✅ PASS |
+| C1 | 几何验证（Cb/L/B/B/T/排水体积） | ✅ PASS |
+| C2 | 面板分辨率（k·√A_panel ≤ 1） | ✅ PASS |
+| C3 | KK 因果闭合（6DOF，<10%） | ✅ PASS |
+| C3_coarse | 粗网格 KK 闭合 | ✅ PASS |
+| C3a | KK 闭合（A_inf 由独立锚点给定） | ✅ PASS |
+| C3a_coarse | 粗网格 KK 闭合（独立 A_inf） | ✅ PASS |
+| C4 | 往返变换 B→K→B（<2%） | ✅ PASS |
+| **C5** | **自由衰减 vs 频域阻尼比（heave，<5%）** | **✅ PASS（3.96%）** |
+| C5b | 自由衰减 vs 频域阻尼比（全部可判模态） | ✅ PASS |
+| C5c | 多窗口共识自由衰减阻尼比（roll） | ✅ PASS |
+| C6a | 负控：B=0 → 零记忆核 | ✅ PASS |
+| C6b | 负控：破坏 B 高频 → C3 FAIL | ✅ PASS |
+| C7 | A_inf 锚点（带闭合偏移 vs 镜像法） | ✅ PASS |
+| C10 | 外部代码锚点（capytaine，同面板） | ✅ PASS |
+
+**判据：16/16 闸门通过，算例闭合。**
+
+### 测试（当前 main）
+```
+78 passed in 105.90s   # tests/test_case_bem_cummins_wigley.py
+```
+
 ## 5 局限性
 
-- 参考值为另一条数值路线（BEM 直接解），非实验/解析表（L5 外部锚点 WITHHELD）
+- 参考值为另一条数值路线（BEM 直接解），非实验/解析表（L5 外部锚点 WITHHELD；
+  m21960 起 C10 以 capytaine 同面板解作外部锚点，残差与 capytaine 自身网格噪声
+  并列报告）
 - C5 的 3.96% 残余差异包含物理偏差（宽带衰减 vs 单频估计），非纯数值误差
-- 6DOF 中仅 heave（dof=2）执行了 C5 自由衰减验证；横摇/纵摇等模态的衰减验证
-  需要额外的恢复力系数建模（横摇涉及 GM 值，纵摇涉及纵稳心）
+- m21373 时点仅 heave（dof=2）执行 C5 自由衰减验证；后续 C5b/C5c 已把衰减
+  验证扩展到全部可判恢复模态（含 roll 多窗口共识）
 
 ## 6 复现
 
 ```bash
-cd /srv/tensor/agent/work/m21373
+# 在任意 TensorBEM 工作树（含 src/ 与 tests/）内：
 PYTHONPATH=src python3 -m pytest tests/test_case_bem_cummins_wigley.py -v
 ```
