@@ -5,21 +5,36 @@
   "repo": "TensorBEM",
   "domain": "ship-total-performance/resistance-potential-flow",
   "capability": "2-D exterior Laplace operator: potential AND velocity field outside a body, plus the prescribed-circulation (rotating cylinder) exterior Neumann problem, verified against the cylinder complex potential",
-  "generated_at_utc": "2026-11-14T19:08:10Z",
+  "generated_at_utc": "2026-11-18T19:39:31Z",
   "environment": {
     "python": "3.11.6",
-    "numpy": "2.4.6",
+    "numpy": "2.0.1",
     "machine": "loongarch64"
+  },
+  "provenance": {
+    "generator": {
+      "files": {
+        "benchmarks/case_cylinder_stream.py": "58ab956f678b85dca465dcb954418a6839b63cec45c484f891f8a0d087566705",
+        "solver.py": "a4dbb5bcc333ae92c240a4a64ae53cff7a716dd559e773199f4a1bfa6dfbab02",
+        "kernels.py": "73d8eba79388c9594a3290fa1c2e5f72149f4362d57ba04af55285e6a6b83cd3",
+        "near_singular.py": "5b1b91d197f91d4ead7e899cff0062a851ad9b722ea28c0fc3b99beda8b26e23",
+        "geometry.py": "fcb890818a6f77b5bf178d3b3f2d771b03ff26b3981ccddd15bb99c8e9daf463",
+        "multipole2d.py": "44e4ee6b9e9de899daaefae08fa210d408a974025a1480d9b868ec05e5309b7c",
+        "lifting_cylinder.py": "e7a55df017a3858e802002dd4f99db936ed0a33235b886183dace27418a50f08",
+        "lifting.py": "3fc5c057af3272111933c0cd6dc5b779348a9370186f532be8d29847ff294203"
+      },
+      "combined_sha256": "5107951726ae7a58aa0eb57e52d1dce284cabc6a0a69092ee6e084cccd30a92c",
+      "guarded_file": "benchmarks/case_cylinder_stream.py"
+    }
   },
   "parameters": {
     "radius": 1.0,
     "speed": 1.0,
     "panel_ladder": [
       32,
-      64,
-      128
+      64
     ],
-    "budget_panels": 128,
+    "budget_panels": 64,
     "probe_rings": [
       1.25,
       1.5,
@@ -34,7 +49,13 @@
       1.0,
       2.0,
       3.0
-    ]
+    ],
+    "oblique_headings_deg": [
+      0.0,
+      2.8125,
+      30.0
+    ],
+    "lattice_heading_deg": 90.0
   },
   "reference": {
     "complex_potential": "W(z) = U (z + a**2/z)",
@@ -51,15 +72,15 @@
       {
         "x_over_a": 1.225981600504038,
         "y_over_a": 0.2438629025201603,
-        "u_over_U": 0.40871709919277643,
-        "v_over_U": -0.2449173967136574,
+        "u_over_U": 0.4087170991927763,
+        "v_over_U": -0.2449173967136575,
         "perturbation_potential_over_Ua": 0.7846282243225844
       },
       {
         "x_over_a": 1.0393370153781816,
         "y_over_a": 0.6944627912745027,
         "u_over_U": 0.7550826032863425,
-        "v_over_U": -0.5912829008072236,
+        "v_over_U": -0.5912829008072235,
         "perturbation_potential_over_Ua": 0.6651756898420362
       },
       {
@@ -94,14 +115,14 @@
         "x_over_a": -1.0393370153781816,
         "y_over_a": 0.6944627912745027,
         "u_over_U": 0.7550826032863425,
-        "v_over_U": 0.5912829008072236,
+        "v_over_U": 0.5912829008072235,
         "perturbation_potential_over_Ua": -0.6651756898420362
       },
       {
         "x_over_a": -1.225981600504038,
         "y_over_a": 0.24386290252016077,
-        "u_over_U": 0.40871709919277677,
-        "v_over_U": 0.2449173967136578,
+        "u_over_U": 0.40871709919277666,
+        "v_over_U": 0.2449173967136579,
         "perturbation_potential_over_Ua": -0.7846282243225844
       },
       {
@@ -122,7 +143,7 @@
         "x_over_a": -0.6944627912745027,
         "y_over_a": -1.0393370153781816,
         "u_over_U": 1.2449173967136575,
-        "v_over_U": -0.5912829008072236,
+        "v_over_U": -0.5912829008072235,
         "perturbation_potential_over_Ua": -0.44445618641568174
       },
       {
@@ -150,7 +171,7 @@
         "x_over_a": 1.0393370153781816,
         "y_over_a": -0.6944627912745027,
         "u_over_U": 0.7550826032863425,
-        "v_over_U": 0.5912829008072236,
+        "v_over_U": 0.5912829008072235,
         "perturbation_potential_over_Ua": 0.6651756898420362
       },
       {
@@ -164,7 +185,7 @@
         "x_over_a": 1.4711779206048456,
         "y_over_a": 0.2926354830241924,
         "u_over_U": 0.5893868744394282,
-        "v_over_U": -0.17008152549559546,
+        "v_over_U": -0.1700815254955954,
         "perturbation_potential_over_Ua": 0.6538568536021536
       },
       {
@@ -220,7 +241,7 @@
         "x_over_a": -1.4711779206048456,
         "y_over_a": -0.2926354830241925,
         "u_over_U": 0.5893868744394282,
-        "v_over_U": -0.17008152549559552,
+        "v_over_U": -0.17008152549559546,
         "perturbation_potential_over_Ua": -0.6538568536021536
       },
       {
@@ -282,7 +303,7 @@
       {
         "x_over_a": 1.6629392246050905,
         "y_over_a": 1.1111404660392044,
-        "u_over_U": 0.9043291419087276,
+        "u_over_U": 0.9043291419087275,
         "v_over_U": -0.2309698831278217,
         "perturbation_potential_over_Ua": 0.4157348061512726
       },
@@ -373,7 +394,7 @@
       {
         "x_over_a": 1.6629392246050905,
         "y_over_a": -1.1111404660392044,
-        "u_over_U": 0.9043291419087276,
+        "u_over_U": 0.9043291419087275,
         "v_over_U": 0.2309698831278217,
         "perturbation_potential_over_Ua": 0.4157348061512726
       },
@@ -388,7 +409,7 @@
         "x_over_a": 2.9423558412096913,
         "y_over_a": 0.5852709660483848,
         "u_over_U": 0.897346718609857,
-        "v_over_U": -0.042520381373898866,
+        "v_over_U": -0.04252038137389885,
         "perturbation_potential_over_Ua": 0.3269284268010768
       },
       {
@@ -444,7 +465,7 @@
         "x_over_a": -2.9423558412096913,
         "y_over_a": -0.585270966048385,
         "u_over_U": 0.897346718609857,
-        "v_over_U": -0.04252038137389888,
+        "v_over_U": -0.042520381373898866,
         "perturbation_potential_over_Ua": -0.3269284268010768
       },
       {
@@ -505,21 +526,21 @@
     "page_or_article_number": "WITHHELD: neither book is reachable from this container, so the exact page/article number was not verified here; the formulas are elementary and are instead re-derived numerically by the harmonicity gate (Laplacian and curl of the reference)."
   },
   "geometry_gate": {
-    "panels": 128,
+    "panels": 64,
     "radius": 1.0,
     "vertex_radius_max_deviation": 1.1102230246251565e-16,
-    "area": 3.140331156954754,
-    "inscribed_area_closed_form": 3.140331156954753,
-    "area_relative_deviation": 2.8282954099701096e-16,
+    "area": 3.136548490545939,
+    "inscribed_area_closed_form": 3.1365484905459393,
+    "area_relative_deviation": 1.4158531621258808e-16,
     "circle_area": 3.141592653589793,
-    "area_ratio_to_circle": 0.9995984531496794,
-    "perimeter": 6.282554501865546,
-    "inscribed_perimeter_closed_form": 6.282554501865546,
+    "area_ratio_to_circle": 0.9983943930356183,
+    "perimeter": 6.280662313909506,
+    "inscribed_perimeter_closed_form": 6.280662313909506,
     "perimeter_relative_deviation": 0.0,
     "circle_perimeter": 6.283185307179586,
-    "perimeter_ratio_to_circle": 0.9998996042161418,
-    "h_mean": 0.049082457045824576,
-    "h_max": 0.04908245704582536
+    "perimeter_ratio_to_circle": 0.9995984531496791,
+    "h_mean": 0.09813534865483603,
+    "h_max": 0.0981353486548366
   },
   "harmonicity": {
     "points": 64,
@@ -533,9 +554,9 @@
     "panels": 32,
     "step": 2.5e-06,
     "points": 16,
-    "max_abs_difference": 9.382686294578946e-11,
+    "max_abs_difference": 8.827577557823929e-11,
     "gradient_scale": 0.6405675573581155,
-    "relative_crosscheck": 1.4647457847031526e-10
+    "relative_crosscheck": 1.378086894414602e-10
   },
   "routes": {
     "dirichlet": {
@@ -545,59 +566,45 @@
         {
           "route": "dirichlet",
           "panels": 32,
-          "condition_number": 19.169224213940645,
-          "relative_residual_l2": 1.7032179029615049e-16,
-          "potential_relative_l2": 2.3342307209819606e-05,
+          "condition_number": 19.16922421394064,
+          "relative_residual_l2": 1.6102174975615097e-16,
+          "potential_relative_l2": 2.3342307209834938e-05,
           "potential_max_abs_error": 1.7167428369102566e-05,
-          "velocity_relative_l2": 0.0002265665438862169,
-          "velocity_max_abs_error": 0.0006711988619391255,
-          "normal_derivative_net_flux_over_speed_radius": -4.787836793695988e-16,
+          "velocity_relative_l2": 0.00022656654388620938,
+          "velocity_max_abs_error": 0.0006711988619390801,
+          "normal_derivative_net_flux_over_speed_radius": -1.734723475976807e-16,
           "h_mean": 0.1960342806591212
         },
         {
           "route": "dirichlet",
           "panels": 64,
-          "condition_number": 38.11334353855527,
-          "relative_residual_l2": 2.272289621318698e-16,
-          "potential_relative_l2": 2.997878055220035e-06,
-          "potential_max_abs_error": 2.350990074950765e-06,
-          "velocity_relative_l2": 1.2289117975938238e-06,
+          "condition_number": 38.11334353855526,
+          "relative_residual_l2": 2.8648952805408607e-16,
+          "potential_relative_l2": 2.9978780551490624e-06,
+          "potential_max_abs_error": 2.3509900748397428e-06,
+          "velocity_relative_l2": 1.2289117975903457e-06,
           "velocity_max_abs_error": 2.419734456914844e-06,
-          "normal_derivative_net_flux_over_speed_radius": -8.326672684688674e-17,
+          "normal_derivative_net_flux_over_speed_radius": -2.7755575615628914e-16,
           "h_mean": 0.09813534865483603
-        },
-        {
-          "route": "dirichlet",
-          "panels": 128,
-          "condition_number": 76.11357941479734,
-          "relative_residual_l2": 3.8807484285919976e-16,
-          "potential_relative_l2": 3.578165252983032e-07,
-          "potential_max_abs_error": 2.8075294467022616e-07,
-          "velocity_relative_l2": 1.3656224320923946e-07,
-          "velocity_max_abs_error": 2.2900288661295448e-07,
-          "normal_derivative_net_flux_over_speed_radius": 1.8735013540549517e-16,
-          "h_mean": 0.049082457045824576
         }
       ],
       "observed_order_velocity": [
-        7.53951965123384,
-        3.1711289098675235
+        7.539519651237882
       ],
       "observed_order_potential": [
-        2.966091110944456,
-        3.06798305547801
+        2.9660911109796197
       ],
       "finest": {
         "route": "dirichlet",
-        "panels": 128,
-        "condition_number": 76.11357941479734,
-        "relative_residual_l2": 3.8807484285919976e-16,
-        "potential_relative_l2": 3.578165252983032e-07,
-        "potential_max_abs_error": 2.8075294467022616e-07,
-        "velocity_relative_l2": 1.3656224320923946e-07,
-        "velocity_max_abs_error": 2.2900288661295448e-07,
-        "normal_derivative_net_flux_over_speed_radius": 1.8735013540549517e-16,
-        "h_mean": 0.049082457045824576
+        "panels": 64,
+        "condition_number": 38.11334353855526,
+        "relative_residual_l2": 2.8648952805408607e-16,
+        "potential_relative_l2": 2.9978780551490624e-06,
+        "potential_max_abs_error": 2.3509900748397428e-06,
+        "velocity_relative_l2": 1.2289117975903457e-06,
+        "velocity_max_abs_error": 2.419734456914844e-06,
+        "normal_derivative_net_flux_over_speed_radius": -2.7755575615628914e-16,
+        "h_mean": 0.09813534865483603
       }
     },
     "neumann": {
@@ -607,83 +614,63 @@
         {
           "route": "neumann",
           "panels": 32,
-          "condition_number": 2.103309600312263,
-          "relative_residual_l2": 3.089741280896852e-16,
-          "surface_velocity_relative_l2": 0.0016332624547677696,
+          "condition_number": 2.1033096003122633,
+          "relative_residual_l2": 3.008674531036679e-16,
+          "surface_velocity_relative_l2": 0.0016332624547678132,
           "surface_speed_max_error_over_speed": 0.006387471070254724,
           "normal_velocity_residual_over_speed": 0.00965384570411433,
-          "cp_relative_l2": 0.004601027161379183,
+          "cp_relative_l2": 0.004601027161379302,
           "cp_min": -2.987038215197846,
           "cp_min_exact": -3.000094100797094,
-          "velocity_relative_l2": 0.002564771661913654,
-          "velocity_max_abs_error": 0.004767986260479642,
-          "potential_offset": 8.890457814381136e-18,
-          "potential_relative_l2_up_to_constant": 0.006441360851112292,
+          "velocity_relative_l2": 0.002564771661913637,
+          "velocity_max_abs_error": 0.004767986260479564,
+          "potential_offset": 8.023096076392733e-18,
+          "potential_relative_l2_up_to_constant": 0.006441360851112199,
           "normal_derivative_net_flux_over_speed_radius": 1.5959455978986625e-16,
           "h_mean": 0.1960342806591212
         },
         {
           "route": "neumann",
           "panels": 64,
-          "condition_number": 2.050330425510918,
-          "relative_residual_l2": 4.985616875763608e-16,
-          "surface_velocity_relative_l2": 0.0004046292256971318,
-          "surface_speed_max_error_over_speed": 0.0016012841456127802,
-          "normal_velocity_residual_over_speed": 0.0024105402652203024,
-          "cp_relative_l2": 0.0011433147127329635,
-          "cp_min": -2.9967694387702344,
+          "condition_number": 2.0503304255109183,
+          "relative_residual_l2": 5.424161626984499e-16,
+          "surface_velocity_relative_l2": 0.0004046292256971537,
+          "surface_speed_max_error_over_speed": 0.0016012841456125582,
+          "normal_velocity_residual_over_speed": 0.0024105402652202183,
+          "cp_relative_l2": 0.0011433147127329758,
+          "cp_min": -2.9967694387702335,
           "cp_min_exact": -3.0000058247282,
-          "velocity_relative_l2": 0.0006130933686988105,
-          "velocity_max_abs_error": 0.0010284761658714235,
-          "potential_offset": 4.4885969940899884e-17,
-          "potential_relative_l2_up_to_constant": 0.0016062144609975194,
+          "velocity_relative_l2": 0.0006130933686988046,
+          "velocity_max_abs_error": 0.001028476165871466,
+          "potential_offset": 3.903127820947816e-17,
+          "potential_relative_l2_up_to_constant": 0.0016062144609975276,
           "normal_derivative_net_flux_over_speed_radius": 1.1102230246251565e-16,
           "h_mean": 0.09813534865483603
-        },
-        {
-          "route": "neumann",
-          "panels": 128,
-          "condition_number": 2.0248495990182516,
-          "relative_residual_l2": 5.495278959395815e-16,
-          "surface_velocity_relative_l2": 0.00010075873250396247,
-          "surface_speed_max_error_over_speed": 0.0004009359164942605,
-          "normal_velocity_residual_over_speed": 0.0006024533450978006,
-          "cp_relative_l2": 0.00028491716813754445,
-          "cp_min": -2.999194333808323,
-          "cp_min_exact": -3.000000363168759,
-          "velocity_relative_l2": 0.0001532015925717173,
-          "velocity_max_abs_error": 0.00025690535237449187,
-          "potential_offset": 4.4885969940899884e-17,
-          "potential_relative_l2_up_to_constant": 0.0004014146126000333,
-          "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
-          "h_mean": 0.049082457045824576
         }
       ],
       "observed_order_velocity": [
-        2.068248030773628,
-        2.0015453338106735
+        2.0682480307736326
       ],
       "observed_order_surface_velocity": [
-        2.0165907313184706,
-        2.0065676588343466
+        2.016590731318431
       ],
       "finest": {
         "route": "neumann",
-        "panels": 128,
-        "condition_number": 2.0248495990182516,
-        "relative_residual_l2": 5.495278959395815e-16,
-        "surface_velocity_relative_l2": 0.00010075873250396247,
-        "surface_speed_max_error_over_speed": 0.0004009359164942605,
-        "normal_velocity_residual_over_speed": 0.0006024533450978006,
-        "cp_relative_l2": 0.00028491716813754445,
-        "cp_min": -2.999194333808323,
-        "cp_min_exact": -3.000000363168759,
-        "velocity_relative_l2": 0.0001532015925717173,
-        "velocity_max_abs_error": 0.00025690535237449187,
-        "potential_offset": 4.4885969940899884e-17,
-        "potential_relative_l2_up_to_constant": 0.0004014146126000333,
-        "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
-        "h_mean": 0.049082457045824576
+        "panels": 64,
+        "condition_number": 2.0503304255109183,
+        "relative_residual_l2": 5.424161626984499e-16,
+        "surface_velocity_relative_l2": 0.0004046292256971537,
+        "surface_speed_max_error_over_speed": 0.0016012841456125582,
+        "normal_velocity_residual_over_speed": 0.0024105402652202183,
+        "cp_relative_l2": 0.0011433147127329758,
+        "cp_min": -2.9967694387702335,
+        "cp_min_exact": -3.0000058247282,
+        "velocity_relative_l2": 0.0006130933686988046,
+        "velocity_max_abs_error": 0.001028476165871466,
+        "potential_offset": 3.903127820947816e-17,
+        "potential_relative_l2_up_to_constant": 0.0016062144609975276,
+        "normal_derivative_net_flux_over_speed_radius": 1.1102230246251565e-16,
+        "h_mean": 0.09813534865483603
       }
     },
     "circulation": {
@@ -702,31 +689,31 @@
           "route": "circulation",
           "panels": 32,
           "circulation": 3.0,
-          "circulation_measured": 3.009675589699274,
-          "circulation_relative_error": 0.003225196566424652,
-          "surface_velocity_relative_l2": 0.003421054387116494,
-          "surface_speed_max_error_over_speed": 0.008697675347149936,
-          "cp_relative_l2": 0.008971057439621954,
-          "cp_min": -5.133210538833,
+          "circulation_measured": 3.0096755896992744,
+          "circulation_relative_error": 0.0032251965664248003,
+          "surface_velocity_relative_l2": 0.0034210543871164988,
+          "surface_speed_max_error_over_speed": 0.008697675347150824,
+          "cp_relative_l2": 0.008971057439622145,
+          "cp_min": -5.133210538833003,
           "cp_min_exact": -5.090206046474965,
-          "velocity_relative_l2": 0.0024790108601320617,
-          "velocity_max_abs_error": 0.004767986260479642,
-          "lift": -3.019333864142198,
+          "velocity_relative_l2": 0.0024790108601320544,
+          "velocity_max_abs_error": 0.004767986260479662,
+          "lift": -3.0193338641421983,
           "lift_exact": -3.0,
-          "lift_relative_error": 0.006444621380732614,
-          "drag": 1.9255430583342559e-16,
-          "drag_coefficient": 1.9255430583342559e-16,
+          "lift_relative_error": 0.006444621380732762,
+          "drag": 2.7582103268031233e-16,
+          "drag_coefficient": 2.7582103268031233e-16,
           "stagnation_angles_found_deg": [
-            13.881252033116745,
+            13.881252033116768,
             166.11874796688323
           ],
           "stagnation_angles_exact_deg": [
             13.811738527766154,
             166.18826147223385
           ],
-          "stagnation_angle_max_error_deg": 0.06951350535059092,
-          "condition_number": 2.103309600312263,
-          "relative_residual_l2": 3.4212065954389596e-16,
+          "stagnation_angle_max_error_deg": 0.06951350535061318,
+          "condition_number": 2.1033096003122633,
+          "relative_residual_l2": 3.1881773193064076e-16,
           "h_mean": 0.1960342806591212
         },
         {
@@ -735,20 +722,20 @@
           "circulation": 3.0,
           "circulation_measured": 3.0024118960679624,
           "circulation_relative_error": 0.0008039653559874793,
-          "surface_velocity_relative_l2": 0.000852339863995476,
+          "surface_velocity_relative_l2": 0.0008523398639954868,
           "surface_speed_max_error_over_speed": 0.00217710436762264,
-          "cp_relative_l2": 0.0022351625767720812,
+          "cp_relative_l2": 0.002235162576772094,
           "cp_min": -5.136682573567086,
           "cp_min_exact": -5.125900924452989,
-          "velocity_relative_l2": 0.0005925927605365195,
-          "velocity_max_abs_error": 0.0010284761658712076,
-          "lift": -3.004818647123605,
+          "velocity_relative_l2": 0.0005925927605365021,
+          "velocity_max_abs_error": 0.0010284761658712503,
+          "lift": -3.0048186471236047,
           "lift_exact": -3.0,
-          "lift_relative_error": 0.0016062157078683785,
-          "drag": -3.5648567431323386e-16,
-          "drag_coefficient": -3.5648567431323386e-16,
+          "lift_relative_error": 0.0016062157078682304,
+          "drag": 3.8337388819087437e-16,
+          "drag_coefficient": 3.8337388819087437e-16,
           "stagnation_angles_found_deg": [
-            13.819890731171707,
+            13.819890731171663,
             166.18010926882803
           ],
           "stagnation_angles_exact_deg": [
@@ -756,80 +743,47 @@
             166.18826147223385
           ],
           "stagnation_angle_max_error_deg": 0.008152203405804921,
-          "condition_number": 2.050330425510918,
-          "relative_residual_l2": 5.501634611617543e-16,
+          "condition_number": 2.0503304255109183,
+          "relative_residual_l2": 5.66296326608213e-16,
           "h_mean": 0.09813534865483603
-        },
-        {
-          "route": "circulation",
-          "panels": 128,
-          "circulation": 3.0,
-          "circulation_measured": 3.000602538033003,
-          "circulation_relative_error": 0.00020084601100093616,
-          "surface_velocity_relative_l2": 0.00021307971529883443,
-          "surface_speed_max_error_over_speed": 0.0005447827097166957,
-          "cp_relative_l2": 0.0005586728931165331,
-          "cp_min": -5.1375466792697315,
-          "cp_min_exact": -5.134847678789158,
-          "velocity_relative_l2": 0.00014807883969341002,
-          "velocity_max_abs_error": 0.00025690535237444937,
-          "lift": -3.0012042438378006,
-          "lift_exact": -3.0,
-          "lift_relative_error": 0.0004014146126002001,
-          "drag": 7.979727989493313e-17,
-          "drag_coefficient": 7.979727989493313e-17,
-          "stagnation_angles_found_deg": [
-            13.817320065142402,
-            166.18267993485796
-          ],
-          "stagnation_angles_exact_deg": [
-            13.811738527766154,
-            166.18826147223385
-          ],
-          "stagnation_angle_max_error_deg": 0.005581537376247983,
-          "condition_number": 2.0248495990182516,
-          "relative_residual_l2": 5.783267971103129e-16,
-          "h_mean": 0.049082457045824576
         }
       ],
       "observed_order_surface_velocity": [
-        2.0084326626949522,
-        2.0009051001603915
+        2.008432662694936
       ],
       "observed_order_lift": [
-        2.007921397294378,
-        2.0013703647305294
+        2.0079213972945444
       ],
       "finest": {
         "route": "circulation",
-        "panels": 128,
+        "panels": 64,
         "circulation": 3.0,
-        "circulation_measured": 3.000602538033003,
-        "circulation_relative_error": 0.00020084601100093616,
-        "surface_velocity_relative_l2": 0.00021307971529883443,
-        "surface_speed_max_error_over_speed": 0.0005447827097166957,
-        "cp_relative_l2": 0.0005586728931165331,
-        "cp_min": -5.1375466792697315,
-        "cp_min_exact": -5.134847678789158,
-        "velocity_relative_l2": 0.00014807883969341002,
-        "velocity_max_abs_error": 0.00025690535237444937,
-        "lift": -3.0012042438378006,
+        "circulation_measured": 3.0024118960679624,
+        "circulation_relative_error": 0.0008039653559874793,
+        "surface_velocity_relative_l2": 0.0008523398639954868,
+        "surface_speed_max_error_over_speed": 0.00217710436762264,
+        "cp_relative_l2": 0.002235162576772094,
+        "cp_min": -5.136682573567086,
+        "cp_min_exact": -5.125900924452989,
+        "velocity_relative_l2": 0.0005925927605365021,
+        "velocity_max_abs_error": 0.0010284761658712503,
+        "lift": -3.0048186471236047,
         "lift_exact": -3.0,
-        "lift_relative_error": 0.0004014146126002001,
-        "drag": 7.979727989493313e-17,
-        "drag_coefficient": 7.979727989493313e-17,
+        "lift_relative_error": 0.0016062157078682304,
+        "drag": 3.8337388819087437e-16,
+        "drag_coefficient": 3.8337388819087437e-16,
         "stagnation_angles_found_deg": [
-          13.817320065142402,
-          166.18267993485796
+          13.819890731171663,
+          166.18010926882803
         ],
         "stagnation_angles_exact_deg": [
           13.811738527766154,
           166.18826147223385
         ],
-        "stagnation_angle_max_error_deg": 0.005581537376247983,
-        "condition_number": 2.0248495990182516,
-        "relative_residual_l2": 5.783267971103129e-16,
-        "h_mean": 0.049082457045824576
+        "stagnation_angle_max_error_deg": 0.008152203405804921,
+        "condition_number": 2.0503304255109183,
+        "relative_residual_l2": 5.66296326608213e-16,
+        "h_mean": 0.09813534865483603
       }
     }
   },
@@ -840,47 +794,1099 @@
   },
   "repro_cmd": "PYTHONPATH=src python3 -m tensorbem.benchmarks.case_cylinder_stream --outdir benchmarks/verified/case_bem_laplace_cylinder --doc docs/CASE-BEM-LAPLACE-CYLINDER.md",
   "circulation_sweep": {
-    "panels": 128,
+    "panels": 64,
     "note": "rho = 1 (dimensionless); lift per unit span",
     "rows": [
       {
         "circulation": 1.0,
-        "lift": -1.0004014146126001,
+        "lift": -1.0016062157078682,
         "lift_exact": -1.0,
-        "lift_over_joukowski": 1.0004014146126001,
-        "lift_relative_error": 0.0004014146126001261,
-        "circulation_relative_error": 0.00020084601100078814,
-        "cp_min": -3.661287327302932,
-        "cp_min_exact": -3.6593492427154475,
-        "stagnation_angle_max_error_deg": 0.0011482681902330477
+        "lift_over_joukowski": 1.0016062157078682,
+        "lift_relative_error": 0.0016062157078682304,
+        "circulation_relative_error": 0.0008039653559872573,
+        "cp_min": -3.6592909585426705,
+        "cp_min_exact": -3.65155268522609,
+        "stagnation_angle_max_error_deg": 0.007319228396251367
       },
       {
         "circulation": 2.0,
-        "lift": -2.0008028292252007,
+        "lift": -2.0032124314157365,
         "lift_exact": -2.0,
-        "lift_over_joukowski": 1.0004014146126003,
-        "lift_relative_error": 0.00040141461260034816,
-        "circulation_relative_error": 0.00020084601100101018,
-        "cp_min": -4.374071442456735,
-        "cp_min_exact": -4.371768164841718,
-        "stagnation_angle_max_error_deg": 0.002870218203521706
+        "lift_over_joukowski": 1.0016062157078682,
+        "lift_relative_error": 0.0016062157078682304,
+        "circulation_relative_error": 0.0008039653559874793,
+        "cp_min": -4.372595336808291,
+        "cp_min_exact": -4.363396508928954,
+        "stagnation_angle_max_error_deg": 0.009516362023729925
       },
       {
         "circulation": 3.0,
-        "lift": -3.0012042438378006,
+        "lift": -3.0048186471236047,
         "lift_exact": -3.0,
-        "lift_over_joukowski": 1.0004014146126001,
-        "lift_relative_error": 0.0004014146126002001,
-        "circulation_relative_error": 0.00020084601100093616,
-        "cp_min": -5.1375466792697315,
-        "cp_min_exact": -5.134847678789158,
-        "stagnation_angle_max_error_deg": 0.005581537376247983
+        "lift_over_joukowski": 1.0016062157078682,
+        "lift_relative_error": 0.0016062157078682304,
+        "circulation_relative_error": 0.0008039653559874793,
+        "cp_min": -5.136682573567086,
+        "cp_min_exact": -5.125900924452989,
+        "stagnation_angle_max_error_deg": 0.008152203405804921
       }
     ],
-    "max_lift_deviation_from_joukowski": 0.00040141461260034816,
-    "max_stagnation_error_deg": 0.005581537376247983
+    "max_lift_deviation_from_joukowski": 0.0016062157078682304,
+    "max_stagnation_error_deg": 0.009516362023729925
   },
   "near_wall": {
+    "floor": {
+      "tolerance": 0.03,
+      "levels": [
+        {
+          "panels": 32,
+          "h_max_over_radius": 0.19603428065912168,
+          "clearance_over_h_max": 0.576840566873877,
+          "bracket": [
+            0.45,
+            0.6
+          ]
+        },
+        {
+          "panels": 64,
+          "h_max_over_radius": 0.0981353486548366,
+          "clearance_over_h_max": 0.472666163332436,
+          "bracket": [
+            0.45,
+            0.6
+          ]
+        },
+        {
+          "panels": 128,
+          "h_max_over_radius": 0.04908245704582536,
+          "clearance_over_h_max": 0.4420200878986957,
+          "bracket": [
+            0.35,
+            0.45
+          ]
+        }
+      ],
+      "all_levels_located": true,
+      "refinement_shifts": [
+        1.2203974213152486,
+        1.0693318613174974
+      ],
+      "monotone_tolerance": 0.05,
+      "boundary_moves_inward_with_refinement": true,
+      "finest_level_clearance_over_h_max": 0.4420200878986957,
+      "window_factor_over_finest_floor": 4.524681241315824,
+      "window_margin_required": 2.0,
+      "note": "the case acceptance is < 3 % on the exterior velocity field; this block measures *where* that holds. Above the reported clearance the worst-direction relative error is inside the tolerance, below it the field is outside the acceptance however many criteria pass -- the probe rings of routes D/N stop at r/a = 1.25, i.e. delta = 0.25 a, which is many panels out on every level, so the routes themselves are unaffected"
+    },
+    "azimuth": {
+      "ladder": [
+        32,
+        64,
+        128
+      ],
+      "factors": [
+        2.0,
+        1.0,
+        0.5,
+        0.25,
+        0.1
+      ],
+      "offsets_over_h_max": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5
+      ],
+      "levels": [
+        {
+          "panels": 32,
+          "h_max_over_radius": 0.19603428065912168,
+          "sampled_panels": 7,
+          "panel_stride": 5,
+          "sweep": [
+            {
+              "clearance_over_h_max": 2.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.008248056641844973,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.008352694326155855,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.008428638613806083,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.008473008610644761,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.008478850702701605,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": NaN,
+              "midpoint_error_linear": 0.008248056641844973,
+              "worst_error": NaN,
+              "worst_error_linear": 0.008478850702701605,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": Infinity,
+              "azimuth_penalty_linear": 1.0279816289919423,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.016073686778582917,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.0169424618816565,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.017840429539616322,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.01856751967098095,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.018961808622426336,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": NaN,
+              "midpoint_error_linear": 0.016073686778582917,
+              "worst_error": NaN,
+              "worst_error_linear": 0.018961808622426336,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": Infinity,
+              "azimuth_penalty_linear": 1.179680112199999,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.5,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.015298859728407008,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.02269840169602675,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.03580699837778041,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.04823366601629376,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.05443649711033929,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": NaN,
+              "midpoint_error_linear": 0.015298859728407008,
+              "worst_error": NaN,
+              "worst_error_linear": 0.05443649711033929,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": Infinity,
+              "azimuth_penalty_linear": 3.558206172010408,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.02606661115115918,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.052481797623928864,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.10893637901430048,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.18569435383204871,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.22962577255461666,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": NaN,
+              "midpoint_error_linear": 0.02606661115115918,
+              "worst_error": NaN,
+              "worst_error_linear": 0.22962577255461666,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": Infinity,
+              "azimuth_penalty_linear": 8.809191621535554,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.1072656582646469,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.16114913188060115,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.30858491651926717,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 0.7180137383593895,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": NaN,
+                  "max_relative_velocity_error_linear": 1.39905143026864,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": NaN,
+              "midpoint_error_linear": 0.1072656582646469,
+              "worst_error": NaN,
+              "worst_error_linear": 1.39905143026864,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": Infinity,
+              "azimuth_penalty_linear": 13.042864351019844,
+              "min_clearance_over_h_max": NaN
+            }
+          ]
+        },
+        {
+          "panels": 64,
+          "h_max_over_radius": 0.0981353486548366,
+          "sampled_panels": 7,
+          "panel_stride": 10,
+          "sweep": [
+            {
+              "clearance_over_h_max": 2.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.0036228983540391464,
+                  "max_relative_velocity_error_linear": 0.004492836836939492,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.0035650224190418925,
+                  "max_relative_velocity_error_linear": 0.004420943980020698,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.0034960045631133624,
+                  "max_relative_velocity_error_linear": 0.0043376360909078175,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.0034181625877386618,
+                  "max_relative_velocity_error_linear": 0.004244883491849479,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.003269168725293981,
+                  "max_relative_velocity_error_linear": 0.004066097578246733,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.0036228983540391464,
+              "midpoint_error_linear": 0.004492836836939492,
+              "worst_error": 0.0036228983540391464,
+              "worst_error_linear": 0.004492836836939492,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.0,
+              "azimuth_penalty": 1.0,
+              "azimuth_penalty_linear": 1.0,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.007987637275513916,
+                  "max_relative_velocity_error_linear": 0.008300001263797131,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.007828387363469445,
+                  "max_relative_velocity_error_linear": 0.007954330398055447,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.007271818614352878,
+                  "max_relative_velocity_error_linear": 0.007708901850079343,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.006364646299451465,
+                  "max_relative_velocity_error_linear": 0.007459248912604405,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.004851314547931259,
+                  "max_relative_velocity_error_linear": 0.006965988179307863,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.007987637275513916,
+              "midpoint_error_linear": 0.008300001263797131,
+              "worst_error": 0.007987637275513916,
+              "worst_error_linear": 0.008300001263797131,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.0,
+              "azimuth_penalty": 1.0,
+              "azimuth_penalty_linear": 1.0,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.5,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.02829550794206433,
+                  "max_relative_velocity_error_linear": 0.003229028034413858,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.03129531587911981,
+                  "max_relative_velocity_error_linear": 0.008041572471585002,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.03170920268044724,
+                  "max_relative_velocity_error_linear": 0.013029838229496847,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.029186015367649004,
+                  "max_relative_velocity_error_linear": 0.015540810906992003,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.02561568807680165,
+                  "max_relative_velocity_error_linear": 0.015250865112704022,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.02829550794206433,
+              "midpoint_error_linear": 0.003229028034413858,
+              "worst_error": 0.03170920268044724,
+              "worst_error_linear": 0.015540810906992003,
+              "worst_offset_over_h_max": 0.25,
+              "worst_offset_over_h_max_linear": 0.375,
+              "azimuth_penalty": 1.12064440565522,
+              "azimuth_penalty_linear": 4.812844837939913,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.09398267966677346,
+                  "max_relative_velocity_error_linear": 0.03965746639961461,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.1024427966396283,
+                  "max_relative_velocity_error_linear": 0.03824486991288801,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.1182654265189609,
+                  "max_relative_velocity_error_linear": 0.04339428143199267,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.13377229028661972,
+                  "max_relative_velocity_error_linear": 0.04763026385923505,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.1373798979232475,
+                  "max_relative_velocity_error_linear": 0.04539005950811369,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.09398267966677346,
+              "midpoint_error_linear": 0.03965746639961461,
+              "worst_error": 0.1373798979232475,
+              "worst_error_linear": 0.04763026385923505,
+              "worst_offset_over_h_max": 0.5,
+              "worst_offset_over_h_max_linear": 0.375,
+              "azimuth_penalty": 1.461757617577451,
+              "azimuth_penalty_linear": 1.201041523411539,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.1861522116746719,
+                  "max_relative_velocity_error_linear": 0.1200986854969715,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.21163183939453728,
+                  "max_relative_velocity_error_linear": 0.10435015677846168,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.27025219143360873,
+                  "max_relative_velocity_error_linear": 0.10702635315751075,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.40592565387220625,
+                  "max_relative_velocity_error_linear": 0.1218173668957575,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.5838320643071929,
+                  "max_relative_velocity_error_linear": 0.1291048503465671,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.1861522116746719,
+              "midpoint_error_linear": 0.1200986854969715,
+              "worst_error": 0.5838320643071929,
+              "worst_error_linear": 0.1291048503465671,
+              "worst_offset_over_h_max": 0.5,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 3.136315486423145,
+              "azimuth_penalty_linear": 1.0749897037784206,
+              "min_clearance_over_h_max": NaN
+            }
+          ]
+        },
+        {
+          "panels": 128,
+          "h_max_over_radius": 0.04908245704582536,
+          "sampled_panels": 7,
+          "panel_stride": 21,
+          "sweep": [
+            {
+              "clearance_over_h_max": 2.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.001894024959031002,
+                  "max_relative_velocity_error_linear": 0.0023560481572672486,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.0019176349773307882,
+                  "max_relative_velocity_error_linear": 0.0023869976791760657,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.0019340611533410215,
+                  "max_relative_velocity_error_linear": 0.002410037558788953,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.0019434607115339474,
+                  "max_relative_velocity_error_linear": 0.0024242682916191557,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.0019460500078796077,
+                  "max_relative_velocity_error_linear": 0.002429028020905929,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.001894024959031002,
+              "midpoint_error_linear": 0.0023560481572672486,
+              "worst_error": 0.0019460500078796077,
+              "worst_error_linear": 0.002429028020905929,
+              "worst_offset_over_h_max": 0.5,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 1.0274679848333266,
+              "azimuth_penalty_linear": 1.0309755398732294,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.004435303663637025,
+                  "max_relative_velocity_error_linear": 0.004132150064917625,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.004388588990205418,
+                  "max_relative_velocity_error_linear": 0.004422581836193115,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.00401084163709057,
+                  "max_relative_velocity_error_linear": 0.004814419979805571,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.00333860799030776,
+                  "max_relative_velocity_error_linear": 0.0051592541409519735,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.003069602814070816,
+                  "max_relative_velocity_error_linear": 0.0053160916855381326,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.004435303663637025,
+              "midpoint_error_linear": 0.004132150064917625,
+              "worst_error": 0.004435303663637025,
+              "worst_error_linear": 0.0053160916855381326,
+              "worst_offset_over_h_max": 0.0,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 1.0,
+              "azimuth_penalty_linear": 1.2865195121233113,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.5,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.02278448280157322,
+                  "max_relative_velocity_error_linear": 0.003051656521010523,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.025018895831154048,
+                  "max_relative_velocity_error_linear": 0.007963422622560888,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.0256649365881056,
+                  "max_relative_velocity_error_linear": 0.015428000504696497,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.02454282562869699,
+                  "max_relative_velocity_error_linear": 0.021884255428005064,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.023885260653944765,
+                  "max_relative_velocity_error_linear": 0.02457164254640231,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.02278448280157322,
+              "midpoint_error_linear": 0.003051656521010523,
+              "worst_error": 0.0256649365881056,
+              "worst_error_linear": 0.02457164254640231,
+              "worst_offset_over_h_max": 0.25,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 1.126421732352577,
+              "azimuth_penalty_linear": 8.05190308189261,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.09011430915483219,
+                  "max_relative_velocity_error_linear": 0.04663518163174692,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.09411083783931488,
+                  "max_relative_velocity_error_linear": 0.06253548832225524,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.108761073125331,
+                  "max_relative_velocity_error_linear": 0.09473353037463501,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.1255323970755653,
+                  "max_relative_velocity_error_linear": 0.14159668378340362,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.1340104106771554,
+                  "max_relative_velocity_error_linear": 0.16914063053733125,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.09011430915483219,
+              "midpoint_error_linear": 0.04663518163174692,
+              "worst_error": 0.1340104106771554,
+              "worst_error_linear": 0.16914063053733125,
+              "worst_offset_over_h_max": 0.5,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 1.487115774775591,
+              "azimuth_penalty_linear": 3.6268890699932146,
+              "min_clearance_over_h_max": NaN
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "offsets": [
+                {
+                  "offset_over_h_max": 0.0,
+                  "max_relative_velocity_error": 0.18010235179688538,
+                  "max_relative_velocity_error_linear": 0.12669863254498337,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.125,
+                  "max_relative_velocity_error": 0.20245059056196985,
+                  "max_relative_velocity_error_linear": 0.17649137222493033,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.25,
+                  "max_relative_velocity_error": 0.25849454562849644,
+                  "max_relative_velocity_error_linear": 0.30009554175499165,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.375,
+                  "max_relative_velocity_error": 0.3928200473512946,
+                  "max_relative_velocity_error_linear": 0.6489660393358573,
+                  "min_clearance_over_h_max": NaN
+                },
+                {
+                  "offset_over_h_max": 0.5,
+                  "max_relative_velocity_error": 0.5772269999725337,
+                  "max_relative_velocity_error_linear": 1.2596521382850328,
+                  "min_clearance_over_h_max": NaN
+                }
+              ],
+              "midpoint_error": 0.18010235179688538,
+              "midpoint_error_linear": 0.12669863254498337,
+              "worst_error": 0.5772269999725337,
+              "worst_error_linear": 1.2596521382850328,
+              "worst_offset_over_h_max": 0.5,
+              "worst_offset_over_h_max_linear": 0.5,
+              "azimuth_penalty": 3.2049942391841437,
+              "azimuth_penalty_linear": 9.942113130840642,
+              "min_clearance_over_h_max": NaN
+            }
+          ]
+        }
+      ],
+      "window": {
+        "clearance_over_h_max": 2.0,
+        "relative_error_tolerance": 0.01,
+        "levels": [
+          {
+            "panels": 32,
+            "h_max_over_radius": 0.19603428065912168,
+            "midpoint_error": NaN,
+            "worst_error": NaN,
+            "worst_error_linear": 0.008478850702701605,
+            "azimuth_penalty": Infinity
+          },
+          {
+            "panels": 64,
+            "h_max_over_radius": 0.0981353486548366,
+            "midpoint_error": 0.0036228983540391464,
+            "worst_error": 0.0036228983540391464,
+            "worst_error_linear": 0.004492836836939492,
+            "azimuth_penalty": 1.0
+          },
+          {
+            "panels": 128,
+            "h_max_over_radius": 0.04908245704582536,
+            "midpoint_error": 0.001894024959031002,
+            "worst_error": 0.0019460500078796077,
+            "worst_error_linear": 0.002429028020905929,
+            "azimuth_penalty": 1.0274679848333266
+          }
+        ],
+        "worst_over_levels": NaN,
+        "worst_over_levels_linear": 0.008478850702701605
+      },
+      "exclusion": {
+        "clearance_over_h_max": 0.1,
+        "levels": [
+          {
+            "panels": 32,
+            "midpoint_error": NaN,
+            "worst_error": NaN,
+            "worst_error_linear": 1.39905143026864,
+            "worst_offset_over_h_max": 0.0,
+            "azimuth_penalty": Infinity,
+            "azimuth_penalty_linear": 13.042864351019844
+          },
+          {
+            "panels": 64,
+            "midpoint_error": 0.1861522116746719,
+            "worst_error": 0.5838320643071929,
+            "worst_error_linear": 0.1291048503465671,
+            "worst_offset_over_h_max": 0.5,
+            "azimuth_penalty": 3.136315486423145,
+            "azimuth_penalty_linear": 1.0749897037784206
+          },
+          {
+            "panels": 128,
+            "midpoint_error": 0.18010235179688538,
+            "worst_error": 0.5772269999725337,
+            "worst_error_linear": 1.2596521382850328,
+            "worst_offset_over_h_max": 0.5,
+            "azimuth_penalty": 3.2049942391841437,
+            "azimuth_penalty_linear": 9.942113130840642
+          }
+        ],
+        "min_azimuth_penalty": 3.136315486423145,
+        "worst_over_levels": NaN
+      },
+      "linear_at_window": {
+        "clearance_over_h_max": 2.0,
+        "levels": [
+          {
+            "panels": 32,
+            "constant_worst": NaN,
+            "linear_worst": 0.008478850702701605,
+            "ratio_linear_over_constant": NaN
+          },
+          {
+            "panels": 64,
+            "constant_worst": 0.0036228983540391464,
+            "linear_worst": 0.004492836836939492,
+            "ratio_linear_over_constant": 1.2401222440951059
+          },
+          {
+            "panels": 128,
+            "constant_worst": 0.0019460500078796077,
+            "linear_worst": 0.002429028020905929,
+            "ratio_linear_over_constant": 1.2481837625296013
+          }
+        ],
+        "min_ratio": NaN,
+        "max_ratio": NaN
+      },
+      "windows_including_azimuth": {
+        "relative_error_tolerance": 0.01,
+        "constant_density": null,
+        "linear_density": 2.0
+      },
+      "probe_directions": "along one panel from the midpoint to the vertex (bisector normal at the vertex), pushed out along the local outward normal",
+      "note": "zones are reported per azimuth: the midpoint column reproduces the radial ladder (from the circle, so it agrees to a few percent) while the worst column is the honest bound for an arbitrary target",
+      "midpoint_cross_check": {
+        "levels": [
+          {
+            "panels": 32,
+            "midpoint_error_from_chord": NaN,
+            "midpoint_error_from_circle": 0.006609026346236971,
+            "relative_difference": NaN
+          },
+          {
+            "panels": 64,
+            "midpoint_error_from_chord": 0.0036228983540391464,
+            "midpoint_error_from_circle": 0.0035998411389111524,
+            "relative_difference": 0.006405064623203916
+          },
+          {
+            "panels": 128,
+            "midpoint_error_from_chord": 0.001894024959031002,
+            "midpoint_error_from_circle": 0.0018882109089313531,
+            "relative_difference": 0.0030791317178330267
+          }
+        ],
+        "max_relative_difference": NaN,
+        "tolerance": 0.1,
+        "note": "the radial ladder probes at radius a + delta (measured from the circle) and the azimuthal sweep at chord midpoint + delta (measured from the polygon), so the same midpoint direction differs by the faceting offset; agreement within NEAR_WALL_AZIMUTH_FRAME_TOL confirms both studies measure the same regime"
+      }
+    },
+    "faceting": {
+      "clearance_over_h_max": 0.1,
+      "levels": [
+        {
+          "panels": 32,
+          "midpoint_radius_over_radius": 0.9951847266721969,
+          "faceting_offset_over_h_max": 0.02456342488473335,
+          "circle_referenced_constant": 0.1799104173518017,
+          "circle_referenced_linear": 0.104507347272496,
+          "surface_referenced_constant": 0.1983729583485914,
+          "surface_referenced_linear": 0.1223177591055631,
+          "offset_over_delta": 0.24563424884733348,
+          "amplification_constant": 1.1026207446380805,
+          "amplification_per_offset_constant": 0.41777864902650963,
+          "amplification_linear": 1.1704225807839868,
+          "amplification_per_offset_linear": 0.6938062651430491
+        },
+        {
+          "panels": 64,
+          "midpoint_radius_over_radius": 0.9987954562051724,
+          "faceting_offset_over_h_max": 0.012274311054462526,
+          "circle_referenced_constant": 0.17727163495954606,
+          "circle_referenced_linear": 0.11889183614648915,
+          "surface_referenced_constant": 0.1862563680538638,
+          "surface_referenced_linear": 0.12784514295979132,
+          "offset_over_delta": 0.12274311054462525,
+          "amplification_constant": 1.0506834220622385,
+          "amplification_per_offset_constant": 0.4129227443996683,
+          "amplification_linear": 1.0753063213042704,
+          "amplification_per_offset_linear": 0.6135278873912158
+        },
+        {
+          "panels": 128,
+          "midpoint_radius_over_radius": 0.9996988186962042,
+          "faceting_offset_over_h_max": 0.006136231189782432,
+          "circle_referenced_constant": 0.17569847993347582,
+          "circle_referenced_linear": 0.12614820457455073,
+          "surface_referenced_constant": 0.18013073810248925,
+          "surface_referenced_linear": 0.13063732547576687,
+          "offset_over_delta": 0.06136231189782432,
+          "amplification_constant": 1.025226502646418,
+          "amplification_per_offset_constant": 0.4111074349418776,
+          "amplification_linear": 1.0355860863526059,
+          "amplification_per_offset_linear": 0.5799339244561221
+        }
+      ],
+      "amplification": {
+        "linear": [
+          1.1704225807839868,
+          1.0753063213042704,
+          1.0355860863526059
+        ],
+        "constant": [
+          1.1026207446380805,
+          1.0506834220622385,
+          1.025226502646418
+        ],
+        "per_offset_linear": [
+          0.6938062651430491,
+          0.6135278873912158,
+          0.5799339244561221
+        ],
+        "per_offset_band": [
+          0.3,
+          1.2
+        ],
+        "offset_over_delta": [
+          0.24563424884733348,
+          0.12274311054462525,
+          0.06136231189782432
+        ],
+        "grows_on_every_level": true,
+        "decays_with_refinement": true
+      },
+      "note": "probes measured from the inscribed polygon surface rather than from the circle: the residual difference is the faceting offset a(1-cos(pi/N)) ~ h^2/8, which is O(h) relative to delta = 0.1 h_max and is the reason the exclusion-zone error saturates at first order instead of improving like h^2"
+    },
+    "linear": {
+      "clearance_over_h_max": 0.5,
+      "levels": [
+        {
+          "panels": 32,
+          "h_max_over_radius": 0.19603428065912168,
+          "max_relative_velocity_error": 0.016386854746339732
+        },
+        {
+          "panels": 64,
+          "h_max_over_radius": 0.0981353486548366,
+          "max_relative_velocity_error": 0.003920316073970867
+        },
+        {
+          "panels": 128,
+          "h_max_over_radius": 0.04908245704582536,
+          "max_relative_velocity_error": 0.002668889855295049
+        }
+      ],
+      "constant_mode_levels": [
+        {
+          "panels": 32,
+          "h_max_over_radius": 0.19603428065912168,
+          "max_relative_velocity_error": 0.03688914689039287
+        },
+        {
+          "panels": 64,
+          "h_max_over_radius": 0.0981353486548366,
+          "max_relative_velocity_error": 0.026961448599088205
+        },
+        {
+          "panels": 128,
+          "h_max_over_radius": 0.04908245704582536,
+          "max_relative_velocity_error": 0.02212310172534744
+        }
+      ],
+      "observed_order_in_h": 1.3103732937640484,
+      "error_tolerance": 0.01,
+      "usable_clearance_over_h_max": 2.0,
+      "usable_clearance_over_h_max_constant": 2.0,
+      "finest_level_usable_clearance_over_h_max": 0.5,
+      "finest_level_usable_clearance_over_h_max_constant": 1.0,
+      "improvement_at_half_h_finest": 8.28925243260056,
+      "improvement_at_window_finest": 0.8038554283183991,
+      "improvement_at_exclusion_finest": 1.4373279217842543,
+      "note": "linear_density=True expands both panel densities as sigma(s) = sigma_i + sigma'_i (s - L_i/2) with closed-form first-moment integrals.  On the finest level its 1%-accurate window moves in from delta = 2 h_max to delta = 0.5 h_max, but the coarse levels do not follow: the worst-over-levels window is 2 h_max, the same as constant panels.  The gain is therefore a finest-mesh statement, not a widened envelope"
+    },
+    "attribution": {
+      "factors": [
+        2.0,
+        1.0,
+        0.5,
+        0.25,
+        0.1
+      ],
+      "representation_constant": {
+        "32": {
+          "2": 0.0033128981764493034,
+          "1": 0.007776040117120224,
+          "0.5": 0.028037204428345584,
+          "0.25": 0.09041293927798619,
+          "0.1": 0.1799104173518017
+        },
+        "64": {
+          "2": 0.0018041404652091885,
+          "1": 0.004416977993099933,
+          "0.5": 0.02281830515692606,
+          "0.25": 0.0885537797601814,
+          "0.1": 0.17727163495954606
+        },
+        "128": {
+          "2": 0.0009461407033051035,
+          "1": 0.0026323383235781527,
+          "0.5": 0.021555776127873204,
+          "0.25": 0.08738758613360828,
+          "0.1": 0.17569847993347582
+        }
+      },
+      "representation_linear": {
+        "32": {
+          "2": 0.004944777376420875,
+          "1": 0.00942640534718103,
+          "0.5": 0.005948911239677825,
+          "0.25": 0.0315434839967414,
+          "0.1": 0.104507347272496
+        },
+        "64": {
+          "2": 0.0026976467702206934,
+          "1": 0.004842738516457328,
+          "0.5": 0.0015801408412281395,
+          "0.25": 0.042503953541521616,
+          "0.1": 0.11889183614648915
+        },
+        "128": {
+          "2": 0.0014144694500567284,
+          "1": 0.002361935294436391,
+          "0.5": 0.005480074665435834,
+          "0.25": 0.048095665866378014,
+          "0.1": 0.12614820457455073
+        }
+      },
+      "note": "the two representation rows use the exact traces at the panel midpoints, so they isolate the panel basis from the solve; the difference between them and the sweep rows above measures how much of the near-wall error is boundary-trace error amplified as 1/delta"
+    },
     "window": {
       "clearance_over_h_max": 2.0,
       "relative_error_tolerance": 0.01,
@@ -888,27 +1894,27 @@
         {
           "panels": 32,
           "h_max_over_radius": 0.19603428065912168,
-          "max_relative_velocity_error": 0.006609026346237187
+          "max_relative_velocity_error": 0.006609026346236971
         },
         {
           "panels": 64,
           "h_max_over_radius": 0.0981353486548366,
-          "max_relative_velocity_error": 0.0035998411389108285
+          "max_relative_velocity_error": 0.0035998411389111524
         },
         {
           "panels": 128,
           "h_max_over_radius": 0.04908245704582536,
-          "max_relative_velocity_error": 0.0018882109089338656
+          "max_relative_velocity_error": 0.0018882109089313531
         }
       ],
-      "observed_order_in_h": 0.9046978473113044
+      "observed_order_in_h": 0.9046978473122427
     },
     "exclusion": {
       "clearance_over_h_max": 0.1,
       "levels": [
         {
           "panels": 32,
-          "max_relative_velocity_error": 0.1794571055935658
+          "max_relative_velocity_error": 0.17945710559356584
         },
         {
           "panels": 64,
@@ -916,10 +1922,10 @@
         },
         {
           "panels": 128,
-          "max_relative_velocity_error": 0.17566853543452338
+          "max_relative_velocity_error": 0.17566853543452335
         }
       ],
-      "saturation_ratio_coarsest_over_finest": 1.0215665836210865,
+      "saturation_ratio_coarsest_over_finest": 1.0215665836210868,
       "saturation_band": [
         0.5,
         2.0
@@ -928,10 +1934,10 @@
     "guard": {
       "factor": 4.0,
       "sampled_clearance_factor": 1.0,
-      "all_levels_rejected": true,
+      "all_levels_rejected": false,
       "messages": [
-        "evaluation point is on or too close to the boundary",
-        "evaluation point is on or too close to the boundary",
+        "guard did not fire",
+        "guard did not fire",
         "evaluation point is on or too close to the boundary"
       ]
     },
@@ -952,121 +1958,439 @@
         "panels": 32,
         "h_max_over_radius": 0.19603428065912168,
         "h_mean_over_radius": 0.1960342806591212,
-        "condition_number": 2.103309600312263,
+        "three_percent_floor": {
+          "tolerance": 0.03,
+          "grid": [
+            {
+              "clearance_over_h_max": 0.05,
+              "clearance_over_radius": 0.009801714032956085,
+              "max_relative_velocity_error": 0.21872486461221238
+            },
+            {
+              "clearance_over_h_max": 0.07,
+              "clearance_over_radius": 0.01372239964613852,
+              "max_relative_velocity_error": 0.2022496400204347
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "clearance_over_radius": 0.01960342806591217,
+              "max_relative_velocity_error": 0.17945710559356584
+            },
+            {
+              "clearance_over_h_max": 0.15,
+              "clearance_over_radius": 0.02940514209886825,
+              "max_relative_velocity_error": 0.14471710663895937
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "clearance_over_radius": 0.04900857016478042,
+              "max_relative_velocity_error": 0.0908577920593619
+            },
+            {
+              "clearance_over_h_max": 0.35,
+              "clearance_over_radius": 0.06861199823069258,
+              "max_relative_velocity_error": 0.06074783252705507
+            },
+            {
+              "clearance_over_h_max": 0.45,
+              "clearance_over_radius": 0.08821542629660475,
+              "max_relative_velocity_error": 0.04293349091650592
+            },
+            {
+              "clearance_over_h_max": 0.6,
+              "clearance_over_radius": 0.117620568395473,
+              "max_relative_velocity_error": 0.02834284633000875
+            },
+            {
+              "clearance_over_h_max": 0.75,
+              "clearance_over_radius": 0.14702571049434127,
+              "max_relative_velocity_error": 0.020734131019300574
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "clearance_over_radius": 0.19603428065912168,
+              "max_relative_velocity_error": 0.01432713825404116
+            },
+            {
+              "clearance_over_h_max": 1.5,
+              "clearance_over_radius": 0.29405142098868253,
+              "max_relative_velocity_error": 0.009049427848950239
+            },
+            {
+              "clearance_over_h_max": 2.0,
+              "clearance_over_radius": 0.39206856131824336,
+              "max_relative_velocity_error": 0.006609026346236971
+            },
+            {
+              "clearance_over_h_max": 3.0,
+              "clearance_over_radius": 0.5881028419773651,
+              "max_relative_velocity_error": 0.004148402180888271
+            },
+            {
+              "clearance_over_h_max": 4.0,
+              "clearance_over_radius": 0.7841371226364867,
+              "max_relative_velocity_error": 0.002914824835521135
+            }
+          ],
+          "clearance_over_h_max": 0.576840566873877,
+          "bracket": [
+            0.45,
+            0.6
+          ],
+          "errors_at_bracket": [
+            0.04293349091650592,
+            0.02834284633000875
+          ],
+          "observed_order_in_clearance": 1.4435294058403478,
+          "note": "the clearance delta/h_max at which the worst-direction relative velocity error crosses the case tolerance, log-log interpolated between the two grid samples that straddle it"
+        },
+        "condition_number": 2.1033096003122633,
         "sweep": [
           {
             "clearance_over_h_max": 2.0,
             "clearance_over_radius": 0.39206856131824336,
-            "max_relative_velocity_error": 0.006609026346237187,
-            "mean_relative_velocity_error": 0.0035840924493795202
+            "max_relative_velocity_error": 0.006609026346236971,
+            "mean_relative_velocity_error": 0.0035840924493794734,
+            "max_relative_velocity_error_linear": 0.008137561554910732,
+            "mean_relative_velocity_error_linear": 0.004425295176522495,
+            "representation_error_constant": 0.0033128981764493034,
+            "representation_error_linear": 0.004944777376420875
           },
           {
             "clearance_over_h_max": 1.0,
             "clearance_over_radius": 0.19603428065912168,
-            "max_relative_velocity_error": 0.014327138254042263,
-            "mean_relative_velocity_error": 0.004769138864633798
+            "max_relative_velocity_error": 0.01432713825404116,
+            "mean_relative_velocity_error": 0.004769138864633723,
+            "max_relative_velocity_error_linear": 0.01578700742620582,
+            "mean_relative_velocity_error_linear": 0.006369978045615069,
+            "representation_error_constant": 0.007776040117120224,
+            "representation_error_linear": 0.00942640534718103
           },
           {
             "clearance_over_h_max": 0.5,
             "clearance_over_radius": 0.09801714032956084,
-            "max_relative_velocity_error": 0.03688914689039491,
-            "mean_relative_velocity_error": 0.024430376485768478
+            "max_relative_velocity_error": 0.03688914689039287,
+            "mean_relative_velocity_error": 0.02443037648576846,
+            "max_relative_velocity_error_linear": 0.016386854746339732,
+            "mean_relative_velocity_error_linear": 0.00555812704187357,
+            "representation_error_constant": 0.028037204428345584,
+            "representation_error_linear": 0.005948911239677825
           },
           {
             "clearance_over_h_max": 0.25,
             "clearance_over_radius": 0.04900857016478042,
-            "max_relative_velocity_error": 0.09085779205936403,
-            "mean_relative_velocity_error": 0.08966401277363908
+            "max_relative_velocity_error": 0.0908577920593619,
+            "mean_relative_velocity_error": 0.0896640127736391,
+            "max_relative_velocity_error_linear": 0.0181155205892674,
+            "mean_relative_velocity_error_linear": 0.0042964370917311645,
+            "representation_error_constant": 0.09041293927798619,
+            "representation_error_linear": 0.0315434839967414
           },
           {
             "clearance_over_h_max": 0.1,
             "clearance_over_radius": 0.01960342806591217,
-            "max_relative_velocity_error": 0.1794571055935658,
-            "mean_relative_velocity_error": 0.17896951112709558
+            "max_relative_velocity_error": 0.17945710559356584,
+            "mean_relative_velocity_error": 0.17896951112709558,
+            "max_relative_velocity_error_linear": 0.08960000288452065,
+            "mean_relative_velocity_error_linear": 0.02152421547048341,
+            "representation_error_constant": 0.1799104173518017,
+            "representation_error_linear": 0.104507347272496
           }
         ],
         "guard_factor": 4.0,
         "guard_sampled_clearance_factor": 1.0,
-        "guard_rejected": true,
-        "guard_message": "evaluation point is on or too close to the boundary"
+        "guard_rejected": false,
+        "guard_message": "guard did not fire"
       },
       {
         "panels": 64,
         "h_max_over_radius": 0.0981353486548366,
         "h_mean_over_radius": 0.09813534865483603,
-        "condition_number": 2.050330425510918,
+        "three_percent_floor": {
+          "tolerance": 0.03,
+          "grid": [
+            {
+              "clearance_over_h_max": 0.05,
+              "clearance_over_radius": 0.0049067674327418305,
+              "max_relative_velocity_error": 0.2188856570620475
+            },
+            {
+              "clearance_over_h_max": 0.07,
+              "clearance_over_radius": 0.006869474405838563,
+              "max_relative_velocity_error": 0.2001764771115805
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "clearance_over_radius": 0.009813534865483661,
+              "max_relative_velocity_error": 0.17715412187692683
+            },
+            {
+              "clearance_over_h_max": 0.15,
+              "clearance_over_radius": 0.014720302298225489,
+              "max_relative_velocity_error": 0.14294730950314186
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "clearance_over_radius": 0.02453383716370915,
+              "max_relative_velocity_error": 0.08830271161661377
+            },
+            {
+              "clearance_over_h_max": 0.35,
+              "clearance_over_radius": 0.03434737202919281,
+              "max_relative_velocity_error": 0.0517852240776456
+            },
+            {
+              "clearance_over_h_max": 0.45,
+              "clearance_over_radius": 0.04416090689467647,
+              "max_relative_velocity_error": 0.033012234683140934
+            },
+            {
+              "clearance_over_h_max": 0.6,
+              "clearance_over_radius": 0.058881209192901955,
+              "max_relative_velocity_error": 0.018854479494441075
+            },
+            {
+              "clearance_over_h_max": 0.75,
+              "clearance_over_radius": 0.07360151149112745,
+              "max_relative_velocity_error": 0.012395682187259827
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "clearance_over_radius": 0.0981353486548366,
+              "max_relative_velocity_error": 0.007850690043500242
+            },
+            {
+              "clearance_over_h_max": 1.5,
+              "clearance_over_radius": 0.1472030229822549,
+              "max_relative_velocity_error": 0.004850864573557064
+            },
+            {
+              "clearance_over_h_max": 2.0,
+              "clearance_over_radius": 0.1962706973096732,
+              "max_relative_velocity_error": 0.0035998411389111524
+            },
+            {
+              "clearance_over_h_max": 3.0,
+              "clearance_over_radius": 0.2944060459645098,
+              "max_relative_velocity_error": 0.002336932656549726
+            },
+            {
+              "clearance_over_h_max": 4.0,
+              "clearance_over_radius": 0.3925413946193464,
+              "max_relative_velocity_error": 0.0016924249311241408
+            }
+          ],
+          "clearance_over_h_max": 0.472666163332436,
+          "bracket": [
+            0.45,
+            0.6
+          ],
+          "errors_at_bracket": [
+            0.033012234683140934,
+            0.018854479494441075
+          ],
+          "observed_order_in_clearance": 1.9470372669799896,
+          "note": "the clearance delta/h_max at which the worst-direction relative velocity error crosses the case tolerance, log-log interpolated between the two grid samples that straddle it"
+        },
+        "condition_number": 2.0503304255109183,
         "sweep": [
           {
             "clearance_over_h_max": 2.0,
             "clearance_over_radius": 0.1962706973096732,
-            "max_relative_velocity_error": 0.0035998411389108285,
-            "mean_relative_velocity_error": 0.0013157132248928904
+            "max_relative_velocity_error": 0.0035998411389111524,
+            "mean_relative_velocity_error": 0.0013157132248928635,
+            "max_relative_velocity_error_linear": 0.004464631716617877,
+            "mean_relative_velocity_error_linear": 0.0016365306713967444,
+            "representation_error_constant": 0.0018041404652091885,
+            "representation_error_linear": 0.0026976467702206934
           },
           {
             "clearance_over_h_max": 1.0,
             "clearance_over_radius": 0.0981353486548366,
-            "max_relative_velocity_error": 0.007850690043503103,
-            "mean_relative_velocity_error": 0.0018121853918897169
+            "max_relative_velocity_error": 0.007850690043500242,
+            "mean_relative_velocity_error": 0.0018121853918896193,
+            "max_relative_velocity_error_linear": 0.00823934977216875,
+            "mean_relative_velocity_error_linear": 0.0020896513017978624,
+            "representation_error_constant": 0.004416977993099933,
+            "representation_error_linear": 0.004842738516457328
           },
           {
             "clearance_over_h_max": 0.5,
             "clearance_over_radius": 0.0490676743274183,
-            "max_relative_velocity_error": 0.02696144859909341,
-            "mean_relative_velocity_error": 0.022332139690882255
+            "max_relative_velocity_error": 0.026961448599088205,
+            "mean_relative_velocity_error": 0.02233213969088233,
+            "max_relative_velocity_error_linear": 0.003920316073970867,
+            "mean_relative_velocity_error_linear": 0.0009669268775949288,
+            "representation_error_constant": 0.02281830515692606,
+            "representation_error_linear": 0.0015801408412281395
           },
           {
             "clearance_over_h_max": 0.25,
             "clearance_over_radius": 0.02453383716370915,
-            "max_relative_velocity_error": 0.08830271161661365,
-            "mean_relative_velocity_error": 0.08794901096389575
+            "max_relative_velocity_error": 0.08830271161661377,
+            "mean_relative_velocity_error": 0.08794901096389571,
+            "max_relative_velocity_error_linear": 0.03550832986727045,
+            "mean_relative_velocity_error_linear": 0.00519470474303515,
+            "representation_error_constant": 0.0885537797601814,
+            "representation_error_linear": 0.042503953541521616
           },
           {
             "clearance_over_h_max": 0.1,
             "clearance_over_radius": 0.009813534865483661,
             "max_relative_velocity_error": 0.17715412187692683,
-            "mean_relative_velocity_error": 0.17694146894661844
+            "mean_relative_velocity_error": 0.17694146894661844,
+            "max_relative_velocity_error_linear": 0.11118215215084312,
+            "mean_relative_velocity_error_linear": 0.01585685060632378,
+            "representation_error_constant": 0.17727163495954606,
+            "representation_error_linear": 0.11889183614648915
           }
         ],
         "guard_factor": 4.0,
         "guard_sampled_clearance_factor": 1.0,
-        "guard_rejected": true,
-        "guard_message": "evaluation point is on or too close to the boundary"
+        "guard_rejected": false,
+        "guard_message": "guard did not fire"
       },
       {
         "panels": 128,
         "h_max_over_radius": 0.04908245704582536,
         "h_mean_over_radius": 0.049082457045824576,
-        "condition_number": 2.0248495990182516,
+        "three_percent_floor": {
+          "tolerance": 0.03,
+          "grid": [
+            {
+              "clearance_over_h_max": 0.05,
+              "clearance_over_radius": 0.0024541228522912684,
+              "max_relative_velocity_error": 0.2193498887546688
+            },
+            {
+              "clearance_over_h_max": 0.07,
+              "clearance_over_radius": 0.0034357719932077754,
+              "max_relative_velocity_error": 0.20027148031457473
+            },
+            {
+              "clearance_over_h_max": 0.1,
+              "clearance_over_radius": 0.004908245704582537,
+              "max_relative_velocity_error": 0.17566853543452335
+            },
+            {
+              "clearance_over_h_max": 0.15,
+              "clearance_over_radius": 0.007362368556873803,
+              "max_relative_velocity_error": 0.1417022533717443
+            },
+            {
+              "clearance_over_h_max": 0.25,
+              "clearance_over_radius": 0.01227061426145634,
+              "max_relative_velocity_error": 0.08732332215117425
+            },
+            {
+              "clearance_over_h_max": 0.35,
+              "clearance_over_radius": 0.017178859966038875,
+              "max_relative_velocity_error": 0.05100840261930178
+            },
+            {
+              "clearance_over_h_max": 0.45,
+              "clearance_over_radius": 0.022087105670621412,
+              "max_relative_velocity_error": 0.028803908456755466
+            },
+            {
+              "clearance_over_h_max": 0.6,
+              "clearance_over_radius": 0.029449474227495213,
+              "max_relative_velocity_error": 0.01408008684833191
+            },
+            {
+              "clearance_over_h_max": 0.75,
+              "clearance_over_radius": 0.03681184278436902,
+              "max_relative_velocity_error": 0.00805418299019374
+            },
+            {
+              "clearance_over_h_max": 1.0,
+              "clearance_over_radius": 0.04908245704582536,
+              "max_relative_velocity_error": 0.004387124560812771
+            },
+            {
+              "clearance_over_h_max": 1.5,
+              "clearance_over_radius": 0.07362368556873804,
+              "max_relative_velocity_error": 0.0025328473793653243
+            },
+            {
+              "clearance_over_h_max": 2.0,
+              "clearance_over_radius": 0.09816491409165072,
+              "max_relative_velocity_error": 0.0018882109089313531
+            },
+            {
+              "clearance_over_h_max": 3.0,
+              "clearance_over_radius": 0.14724737113747607,
+              "max_relative_velocity_error": 0.0012499330811594198
+            },
+            {
+              "clearance_over_h_max": 4.0,
+              "clearance_over_radius": 0.19632982818330144,
+              "max_relative_velocity_error": 0.0009224006710906973
+            }
+          ],
+          "clearance_over_h_max": 0.4420200878986957,
+          "bracket": [
+            0.35,
+            0.45
+          ],
+          "errors_at_bracket": [
+            0.05100840261930178,
+            0.028803908456755466
+          ],
+          "observed_order_in_clearance": 2.273961316370123,
+          "note": "the clearance delta/h_max at which the worst-direction relative velocity error crosses the case tolerance, log-log interpolated between the two grid samples that straddle it"
+        },
+        "condition_number": 2.024849599018252,
         "sweep": [
           {
             "clearance_over_h_max": 2.0,
             "clearance_over_radius": 0.09816491409165072,
-            "max_relative_velocity_error": 0.0018882109089338656,
-            "mean_relative_velocity_error": 0.0004344876710895189
+            "max_relative_velocity_error": 0.0018882109089313531,
+            "mean_relative_velocity_error": 0.0004344876710894309,
+            "max_relative_velocity_error_linear": 0.0023489434074997024,
+            "mean_relative_velocity_error_linear": 0.0005431781900357032,
+            "representation_error_constant": 0.0009461407033051035,
+            "representation_error_linear": 0.0014144694500567284
           },
           {
             "clearance_over_h_max": 1.0,
             "clearance_over_radius": 0.04908245704582536,
-            "max_relative_velocity_error": 0.004387124560813369,
-            "mean_relative_velocity_error": 0.0011808487925063283
+            "max_relative_velocity_error": 0.004387124560812771,
+            "mean_relative_velocity_error": 0.0011808487925062333,
+            "max_relative_velocity_error_linear": 0.004122680786952593,
+            "mean_relative_velocity_error_linear": 0.0006298939747687631,
+            "representation_error_constant": 0.0026323383235781527,
+            "representation_error_linear": 0.002361935294436391
           },
           {
             "clearance_over_h_max": 0.5,
             "clearance_over_radius": 0.02454122852291268,
-            "max_relative_velocity_error": 0.022123101725346452,
-            "mean_relative_velocity_error": 0.021495354730818907
+            "max_relative_velocity_error": 0.02212310172534744,
+            "mean_relative_velocity_error": 0.021495354730818803,
+            "max_relative_velocity_error_linear": 0.002668889855295049,
+            "mean_relative_velocity_error_linear": 0.0002818317466168281,
+            "representation_error_constant": 0.021555776127873204,
+            "representation_error_linear": 0.005480074665435834
           },
           {
             "clearance_over_h_max": 0.25,
             "clearance_over_radius": 0.01227061426145634,
-            "max_relative_velocity_error": 0.08732332215117415,
-            "mean_relative_velocity_error": 0.08705934907586117
+            "max_relative_velocity_error": 0.08732332215117425,
+            "mean_relative_velocity_error": 0.08705934907586135,
+            "max_relative_velocity_error_linear": 0.044520603971076204,
+            "mean_relative_velocity_error_linear": 0.003846532158305198,
+            "representation_error_constant": 0.08738758613360828,
+            "representation_error_linear": 0.048095665866378014
           },
           {
             "clearance_over_h_max": 0.1,
             "clearance_over_radius": 0.004908245704582537,
-            "max_relative_velocity_error": 0.17566853543452338,
-            "mean_relative_velocity_error": 0.17559885341771164
+            "max_relative_velocity_error": 0.17566853543452335,
+            "mean_relative_velocity_error": 0.17559885341771173,
+            "max_relative_velocity_error_linear": 0.12221882896176808,
+            "mean_relative_velocity_error_linear": 0.010078544563020606,
+            "representation_error_constant": 0.17569847993347582,
+            "representation_error_linear": 0.12614820457455073
           }
         ],
         "guard_factor": 4.0,
@@ -1098,8 +2422,8 @@
             "family": "uniform_flow",
             "panels": 32,
             "h_mean": 0.1960342806591212,
-            "condition_number": 19.169224213940645,
-            "relative_residual": 1.7032179029615049e-16,
+            "condition_number": 19.16922421394064,
+            "relative_residual": 1.6102174975615097e-16,
             "samples_per_ring": 64,
             "rings_over_a": [
               1.5,
@@ -1108,23 +2432,23 @@
             ],
             "harmonic": 1,
             "scale": 1.0,
-            "target_moment_over_scale": 1.000026302732066,
-            "target_cosine_over_scale": 1.000026302732066,
-            "target_moment_relative_error": 2.630273206594147e-05,
-            "target_moment_ring_spread_relative": 5.351134229243374e-14,
+            "target_moment_over_scale": 0.5266925550432524,
+            "target_cosine_over_scale": 0.4910389867056227,
+            "target_moment_relative_error": 0.4733074449567476,
+            "target_moment_ring_spread_relative": 5.375182705139357e-14,
             "contaminant_over_scale": {
-              "2": 1.6644300725223491e-15,
-              "3": 4.6507071092247634e-15,
-              "4": 1.8315215777134454e-14
+              "2": 0.35144633955423293,
+              "3": 2.7442562111952213,
+              "4": 8.829397746551672
             },
-            "largest_contaminant_over_scale": 1.8315215777134454e-14,
-            "source_over_scale": 5.445057208759574e-17,
-            "source_trend_residual_over_scale": 3.2797060217090044e-17,
-            "fit_relative_residual_max": 8.613992400037111e-08,
-            "ring_fit_condition_number_max": 1.4142135623730958,
+            "largest_contaminant_over_scale": 8.829397746551672,
+            "source_over_scale": 1.821558417471826e-17,
+            "source_trend_residual_over_scale": 1.2473439998042034e-17,
+            "fit_relative_residual_max": 0.5141655741824956,
+            "ring_fit_condition_number_max": 1.4142135623730956,
             "ring_constants_over_scale": [
-              1.3877787807814454e-17,
-              -6.245004513516504e-17,
+              -5.5511151231257815e-17,
+              -2.7755575615628907e-17,
               -3.816391647148975e-17
             ]
           },
@@ -1132,8 +2456,8 @@
             "family": "uniform_flow",
             "panels": 64,
             "h_mean": 0.09813534865483603,
-            "condition_number": 38.11334353855527,
-            "relative_residual": 2.272289621318698e-16,
+            "condition_number": 38.11334353855526,
+            "relative_residual": 2.8648952805408607e-16,
             "samples_per_ring": 128,
             "rings_over_a": [
               1.5,
@@ -1142,72 +2466,37 @@
             ],
             "harmonic": 1,
             "scale": 1.0,
-            "target_moment_over_scale": 1.0000029991226047,
-            "target_cosine_over_scale": 1.0000029991226047,
-            "target_moment_relative_error": 2.9991226047076935e-06,
-            "target_moment_ring_spread_relative": 2.2204393898803465e-16,
+            "target_moment_over_scale": 0.9214116493610743,
+            "target_cosine_over_scale": 0.9188699564344559,
+            "target_moment_relative_error": 0.07858835063892566,
+            "target_moment_ring_spread_relative": 1.5663899333305698e-15,
             "contaminant_over_scale": {
-              "2": 2.1255324108285887e-15,
-              "3": 1.5822978318409701e-15,
-              "4": 7.688853238091247e-15
+              "2": 1.0010196324166463,
+              "3": 1.6167314207931998,
+              "4": 4.785436477248403
             },
-            "largest_contaminant_over_scale": 7.688853238091247e-15,
-            "source_over_scale": 1.0957399715717932e-16,
-            "source_trend_residual_over_scale": 1.1304087570611258e-17,
-            "fit_relative_residual_max": 9.807923342169209e-14,
-            "ring_fit_condition_number_max": 1.4142135623730958,
-            "ring_constants_over_scale": [
-              1.9626155733547187e-17,
-              -1.9626155733547187e-17,
-              -8.831770080096235e-17
-            ]
-          },
-          {
-            "family": "uniform_flow",
-            "panels": 128,
-            "h_mean": 0.049082457045824576,
-            "condition_number": 76.11357941479734,
-            "relative_residual": 3.8807484285919976e-16,
-            "samples_per_ring": 256,
-            "rings_over_a": [
-              1.5,
-              2.5,
-              4.0
-            ],
-            "harmonic": 1,
-            "scale": 1.0,
-            "target_moment_over_scale": 1.000000357816526,
-            "target_cosine_over_scale": 1.000000357816526,
-            "target_moment_relative_error": 3.5781652596433844e-07,
-            "target_moment_ring_spread_relative": 6.661335764214917e-16,
-            "contaminant_over_scale": {
-              "2": 2.9397483453286304e-15,
-              "3": 2.2729864219635294e-15,
-              "4": 1.498025383388895e-14
-            },
-            "largest_contaminant_over_scale": 1.498025383388895e-14,
-            "source_over_scale": 4.532170213531691e-16,
-            "source_trend_residual_over_scale": 5.223528277049715e-17,
-            "fit_relative_residual_max": 2.638121750434247e-15,
+            "largest_contaminant_over_scale": 4.785436477248403,
+            "source_over_scale": 2.0414372225310353e-17,
+            "source_trend_residual_over_scale": 9.535292736401565e-18,
+            "fit_relative_residual_max": 0.3327256416420297,
             "ring_fit_condition_number_max": 1.4142135623730951,
             "ring_constants_over_scale": [
-              -9.020562075079397e-17,
-              2.185751579730777e-16,
-              3.5214886562329184e-16
+              -2.943923360032078e-17,
+              -5.397192826725476e-17,
+              -4.9065389333867966e-17
             ]
           }
         ],
         "observed_order_target_moment": [
-          3.138056822676945,
-          3.068582114265124
+          2.5949023481780373
         ],
         "finest": {
           "family": "uniform_flow",
-          "panels": 128,
-          "h_mean": 0.049082457045824576,
-          "condition_number": 76.11357941479734,
-          "relative_residual": 3.8807484285919976e-16,
-          "samples_per_ring": 256,
+          "panels": 64,
+          "h_mean": 0.09813534865483603,
+          "condition_number": 38.11334353855526,
+          "relative_residual": 2.8648952805408607e-16,
+          "samples_per_ring": 128,
           "rings_over_a": [
             1.5,
             2.5,
@@ -1215,31 +2504,31 @@
           ],
           "harmonic": 1,
           "scale": 1.0,
-          "target_moment_over_scale": 1.000000357816526,
-          "target_cosine_over_scale": 1.000000357816526,
-          "target_moment_relative_error": 3.5781652596433844e-07,
-          "target_moment_ring_spread_relative": 6.661335764214917e-16,
+          "target_moment_over_scale": 0.9214116493610743,
+          "target_cosine_over_scale": 0.9188699564344559,
+          "target_moment_relative_error": 0.07858835063892566,
+          "target_moment_ring_spread_relative": 1.5663899333305698e-15,
           "contaminant_over_scale": {
-            "2": 2.9397483453286304e-15,
-            "3": 2.2729864219635294e-15,
-            "4": 1.498025383388895e-14
+            "2": 1.0010196324166463,
+            "3": 1.6167314207931998,
+            "4": 4.785436477248403
           },
-          "largest_contaminant_over_scale": 1.498025383388895e-14,
-          "source_over_scale": 4.532170213531691e-16,
-          "source_trend_residual_over_scale": 5.223528277049715e-17,
-          "fit_relative_residual_max": 2.638121750434247e-15,
+          "largest_contaminant_over_scale": 4.785436477248403,
+          "source_over_scale": 2.0414372225310353e-17,
+          "source_trend_residual_over_scale": 9.535292736401565e-18,
+          "fit_relative_residual_max": 0.3327256416420297,
           "ring_fit_condition_number_max": 1.4142135623730951,
           "ring_constants_over_scale": [
-            -9.020562075079397e-17,
-            2.185751579730777e-16,
-            3.5214886562329184e-16
+            -2.943923360032078e-17,
+            -5.397192826725476e-17,
+            -4.9065389333867966e-17
           ]
         },
         "worst": {
-          "largest_contaminant_over_scale": 1.8315215777134454e-14,
-          "source_over_scale": 4.532170213531691e-16,
-          "target_moment_ring_spread_relative": 5.351134229243374e-14,
-          "fit_relative_residual_max": 8.613992400037111e-08
+          "largest_contaminant_over_scale": 8.829397746551672,
+          "source_over_scale": 2.0414372225310353e-17,
+          "target_moment_ring_spread_relative": 5.375182705139357e-14,
+          "fit_relative_residual_max": 0.5141655741824956
         }
       },
       "pure_strain": {
@@ -1254,8 +2543,8 @@
             "family": "pure_strain",
             "panels": 32,
             "h_mean": 0.1960342806591212,
-            "condition_number": 19.169224213940645,
-            "relative_residual": 2.841508890396571e-16,
+            "condition_number": 19.16922421394064,
+            "relative_residual": 2.545687076558556e-16,
             "samples_per_ring": 64,
             "rings_over_a": [
               1.5,
@@ -1264,32 +2553,32 @@
             ],
             "harmonic": 2,
             "scale": 0.5,
-            "target_moment_over_scale": 0.9981186175155141,
-            "target_cosine_over_scale": 0.9981186175155141,
-            "target_moment_relative_error": 0.0018813824844858829,
-            "target_moment_ring_spread_relative": 3.6250369182169334e-13,
+            "target_moment_over_scale": 0.7760434126631339,
+            "target_cosine_over_scale": 0.7717077211053205,
+            "target_moment_relative_error": 0.22395658733686608,
+            "target_moment_ring_spread_relative": 3.6251904191104195e-13,
             "contaminant_over_scale": {
-              "1": 1.9444419426005386e-16,
-              "3": 5.650901277187759e-15,
-              "4": 9.544227585516514e-15
+              "1": 0.1800314255084909,
+              "3": 0.4075637232946762,
+              "4": 2.03972165133532
             },
-            "largest_contaminant_over_scale": 9.544227585516514e-15,
-            "source_over_scale": 1.3897898602264154e-16,
-            "source_trend_residual_over_scale": 1.7503644419073626e-17,
-            "fit_relative_residual_max": 3.41182882041492e-07,
-            "ring_fit_condition_number_max": 1.4142135623730958,
+            "largest_contaminant_over_scale": 2.03972165133532,
+            "source_over_scale": 1.350136312886392e-16,
+            "source_trend_residual_over_scale": 6.752225087475897e-18,
+            "fit_relative_residual_max": 0.39761158444816164,
+            "ring_fit_condition_number_max": 1.4142135623730956,
             "ring_constants_over_scale": [
-              6.938893903907227e-18,
+              2.081668171172168e-17,
               -3.816391647148975e-17,
-              -1.301042606982605e-16
+              -1.1188966420050403e-16
             ]
           },
           {
             "family": "pure_strain",
             "panels": 64,
             "h_mean": 0.09813534865483603,
-            "condition_number": 38.11334353855527,
-            "relative_residual": 3.835579056749488e-16,
+            "condition_number": 38.11334353855526,
+            "relative_residual": 3.9803452343565244e-16,
             "samples_per_ring": 128,
             "rings_over_a": [
               1.5,
@@ -1298,72 +2587,37 @@
             ],
             "harmonic": 2,
             "scale": 0.5,
-            "target_moment_over_scale": 0.9995633081754635,
-            "target_cosine_over_scale": 0.9995633081754635,
-            "target_moment_relative_error": 0.0004366918245365392,
-            "target_moment_ring_spread_relative": 4.220690634669653e-15,
+            "target_moment_over_scale": 0.5327077852541507,
+            "target_cosine_over_scale": 0.5319808253586341,
+            "target_moment_relative_error": 0.46729221474584925,
+            "target_moment_ring_spread_relative": 3.3345802118374608e-15,
             "contaminant_over_scale": {
-              "1": 4.458088926056925e-16,
-              "3": 5.499257620083672e-15,
-              "4": 3.0497049211255674e-15
+              "1": 0.09644828431455733,
+              "3": 1.054670192169339,
+              "4": 1.0791488974238073
             },
-            "largest_contaminant_over_scale": 5.499257620083672e-15,
-            "source_over_scale": 3.2243646699268874e-16,
-            "source_trend_residual_over_scale": 5.205256385133284e-18,
-            "fit_relative_residual_max": 3.761758274253077e-13,
-            "ring_fit_condition_number_max": 1.4142135623730958,
-            "ring_constants_over_scale": [
-              4.906538933386797e-18,
-              -1.521027069349907e-16,
-              -3.1156522227006157e-16
-            ]
-          },
-          {
-            "family": "pure_strain",
-            "panels": 128,
-            "h_mean": 0.049082457045824576,
-            "condition_number": 76.11357941479734,
-            "relative_residual": 4.587621814003073e-16,
-            "samples_per_ring": 256,
-            "rings_over_a": [
-              1.5,
-              2.5,
-              4.0
-            ],
-            "harmonic": 2,
-            "scale": 0.5,
-            "target_moment_over_scale": 0.9998951696278672,
-            "target_cosine_over_scale": 0.9998951696278672,
-            "target_moment_relative_error": 0.00010483037213282476,
-            "target_moment_ring_spread_relative": 2.7314349779230774e-14,
-            "contaminant_over_scale": {
-              "1": 3.1625627683888966e-16,
-              "3": 1.048222211935468e-14,
-              "4": 1.645936576354471e-14
-            },
-            "largest_contaminant_over_scale": 1.645936576354471e-14,
-            "source_over_scale": 5.522239870099921e-16,
-            "source_trend_residual_over_scale": 7.199612429829313e-19,
-            "fit_relative_residual_max": 2.0432892813505823e-14,
+            "largest_contaminant_over_scale": 1.0791488974238073,
+            "source_over_scale": 3.894875546132406e-16,
+            "source_trend_residual_over_scale": 1.8244211955609217e-18,
+            "fit_relative_residual_max": 0.47065641778214934,
             "ring_fit_condition_number_max": 1.4142135623730951,
             "ring_constants_over_scale": [
-              -6.591949208711867e-17,
-              -3.469446951953614e-16,
-              -6.075868974608767e-16
+              5.397192826725476e-17,
+              -1.422896290682171e-16,
+              -3.2812479117024204e-16
             ]
           }
         ],
         "observed_order_target_moment": [
-          2.1107760459785254,
-          2.059453751540193
+          -1.0629542040393827
         ],
         "finest": {
           "family": "pure_strain",
-          "panels": 128,
-          "h_mean": 0.049082457045824576,
-          "condition_number": 76.11357941479734,
-          "relative_residual": 4.587621814003073e-16,
-          "samples_per_ring": 256,
+          "panels": 64,
+          "h_mean": 0.09813534865483603,
+          "condition_number": 38.11334353855526,
+          "relative_residual": 3.9803452343565244e-16,
+          "samples_per_ring": 128,
           "rings_over_a": [
             1.5,
             2.5,
@@ -1371,54 +2625,122 @@
           ],
           "harmonic": 2,
           "scale": 0.5,
-          "target_moment_over_scale": 0.9998951696278672,
-          "target_cosine_over_scale": 0.9998951696278672,
-          "target_moment_relative_error": 0.00010483037213282476,
-          "target_moment_ring_spread_relative": 2.7314349779230774e-14,
+          "target_moment_over_scale": 0.5327077852541507,
+          "target_cosine_over_scale": 0.5319808253586341,
+          "target_moment_relative_error": 0.46729221474584925,
+          "target_moment_ring_spread_relative": 3.3345802118374608e-15,
           "contaminant_over_scale": {
-            "1": 3.1625627683888966e-16,
-            "3": 1.048222211935468e-14,
-            "4": 1.645936576354471e-14
+            "1": 0.09644828431455733,
+            "3": 1.054670192169339,
+            "4": 1.0791488974238073
           },
-          "largest_contaminant_over_scale": 1.645936576354471e-14,
-          "source_over_scale": 5.522239870099921e-16,
-          "source_trend_residual_over_scale": 7.199612429829313e-19,
-          "fit_relative_residual_max": 2.0432892813505823e-14,
+          "largest_contaminant_over_scale": 1.0791488974238073,
+          "source_over_scale": 3.894875546132406e-16,
+          "source_trend_residual_over_scale": 1.8244211955609217e-18,
+          "fit_relative_residual_max": 0.47065641778214934,
           "ring_fit_condition_number_max": 1.4142135623730951,
           "ring_constants_over_scale": [
-            -6.591949208711867e-17,
-            -3.469446951953614e-16,
-            -6.075868974608767e-16
+            5.397192826725476e-17,
+            -1.422896290682171e-16,
+            -3.2812479117024204e-16
           ]
         },
         "worst": {
-          "largest_contaminant_over_scale": 1.645936576354471e-14,
-          "source_over_scale": 5.522239870099921e-16,
-          "target_moment_ring_spread_relative": 3.6250369182169334e-13,
-          "fit_relative_residual_max": 3.41182882041492e-07
+          "largest_contaminant_over_scale": 2.03972165133532,
+          "source_over_scale": 3.894875546132406e-16,
+          "target_moment_ring_spread_relative": 3.6251904191104195e-13,
+          "fit_relative_residual_max": 0.47065641778214934
         }
       }
     },
     "mirror_control": {
-      "dipole_over_scale": 1.000000357816526,
-      "target_cosine_over_scale": -1.000000357816526,
-      "signed_error_of_the_mirror": 3.5781652596433844e-07,
-      "discrimination_ratio": 5589456.760304382
+      "dipole_over_scale": 0.9214116493610743,
+      "target_cosine_over_scale": -0.9188699564344559,
+      "signed_error_of_the_mirror": 0.0811300435655441,
+      "discrimination_ratio": 25.449064444538404
     }
   },
-  "controls": {
-    "wrong_reference": {
-      "panels": 128,
-      "relative_l2_vs_correct_reference": 1.3656224320923946e-07,
-      "relative_l2_vs_mirror_reference": 0.5397407116943231,
-      "discrimination_ratio": 3952342.1628871253
+  "heading_sweep": {
+    "panels": 64,
+    "probe_count": 64,
+    "headings_deg": [
+      0.0,
+      2.8125,
+      30.0
+    ],
+    "panel_step_deg": 5.625,
+    "levels": [
+      {
+        "panels": 64,
+        "heading_deg": 0.0,
+        "panel_steps": 0.0,
+        "h_mean": 0.09813534865483603,
+        "dirichlet_condition_number": 38.11334353855526,
+        "dirichlet_velocity_relative_l2": 1.2289117976043683e-06,
+        "dirichlet_velocity_max_abs_error_over_speed": 2.4197344571052848e-06,
+        "neumann_condition_number": 2.0503304255109183,
+        "neumann_surface_velocity_relative_l2": 0.0004046292256971537,
+        "neumann_surface_velocity_max_abs_error_over_speed": 0.000809259626983378,
+        "normal_velocity_residual_over_speed": 0.0024105402652202183
+      },
+      {
+        "panels": 64,
+        "heading_deg": 2.8125,
+        "panel_steps": 0.5,
+        "h_mean": 0.09813534865483603,
+        "dirichlet_condition_number": 38.113343538555256,
+        "dirichlet_velocity_relative_l2": 1.0819387582708415e-06,
+        "dirichlet_velocity_max_abs_error_over_speed": 2.014973770767337e-06,
+        "neumann_condition_number": 2.0503304255109183,
+        "neumann_surface_velocity_relative_l2": 0.0004046292256971931,
+        "neumann_surface_velocity_max_abs_error_over_speed": 0.0008092596269845646,
+        "normal_velocity_residual_over_speed": 0.0024105402652205695
+      },
+      {
+        "panels": 64,
+        "heading_deg": 30.0,
+        "panel_steps": 5.333333333333333,
+        "h_mean": 0.09813534865483603,
+        "dirichlet_condition_number": 38.113343538555235,
+        "dirichlet_velocity_relative_l2": 1.120490741376803e-06,
+        "dirichlet_velocity_max_abs_error_over_speed": 2.13179810946957e-06,
+        "neumann_condition_number": 2.050330425510918,
+        "neumann_surface_velocity_relative_l2": 0.00040462922569707425,
+        "neumann_surface_velocity_max_abs_error_over_speed": 0.0008092596269870523,
+        "normal_velocity_residual_over_speed": 0.0024105402652203275
+      }
+    ],
+    "axis_level": {
+      "heading_deg": 0.0,
+      "dirichlet_velocity_relative_l2": 1.2289117976043683e-06,
+      "neumann_surface_velocity_relative_l2": 0.0004046292256971537
     },
-    "far_field": {
-      "radius_over_a": 8.0,
-      "max_velocity_error_vs_exact_over_speed": 5.590883391489002e-09,
-      "max_perturbation_over_speed": 0.015625000000000097,
-      "max_perturbation_potential_over_speed_radius": 0.1225982039180524
-    }
+    "max_dirichlet_velocity_relative_l2": 1.2289117976043683e-06,
+    "worst_dirichlet_heading_deg": 0.0,
+    "max_dirichlet_velocity_max_abs_error_over_speed": 2.4197344571052848e-06,
+    "dirichlet_penalty_max": 1.0,
+    "max_neumann_surface_velocity_relative_l2": 0.0004046292256971931,
+    "worst_neumann_heading_deg": 2.8125,
+    "neumann_penalty_max": 1.0000000000000973,
+    "lattice": {
+      "heading_deg": 90.0,
+      "panel_steps": 16.0,
+      "dirichlet_velocity_relative_l2": 1.2289117976019206e-06,
+      "neumann_surface_velocity_relative_l2": 0.00040462922569716646,
+      "velocity_field_max_difference_over_speed": 5.978733960281817e-16,
+      "dirichlet_error_relative_difference": 1.991773098850275e-12
+    },
+    "mirror_split": {
+      "probe_pairs": 64,
+      "error_max_over_speed": 2.4197344571052848e-06,
+      "even_part_max_over_speed": 2.419734456972726e-06,
+      "odd_part_max_over_speed": 3.554447978966673e-16,
+      "odd_fraction": 1.4689413413625398e-10,
+      "tolerance": 1e-09,
+      "note": "the axis-aligned body/data/probe set are mirror-symmetric about y = 0, so a mirror-symmetric implementation leaves only the even part; the oblique headings are the ones that would expose a y-odd defect"
+    },
+    "note": "the lattice level rotates body and probes together by 90 deg (a whole number of panel steps with an exact rotation matrix), so it must reproduce the axis-aligned solve to roundoff; the half-panel and 30 deg headings break the mirror symmetry of the axis-aligned configuration while leaving the body in place",
+    "lattice_probe_rotation_deg": 90.0
   },
   "criteria": [
     {
@@ -1430,7 +2752,7 @@
     },
     {
       "name": "geometry_area_matches_inscribed_closed_form",
-      "value": 2.8282954099701096e-16,
+      "value": 1.4158531621258808e-16,
       "threshold": "<= 1e-12",
       "ok": true,
       "note": "polygon area vs N/2 a^2 sin(2 pi/N)"
@@ -1458,49 +2780,49 @@
     },
     {
       "name": "field_gradient_matches_finite_difference",
-      "value": 1.4647457847031526e-10,
+      "value": 1.378086894414602e-10,
       "threshold": "<= 1e-05",
       "ok": true,
       "note": "closed-form panel-integral gradients vs central differences of the potential"
     },
     {
       "name": "dirichlet_velocity_relative_l2",
-      "value": 1.3656224320923946e-07,
+      "value": 1.2289117975903457e-06,
       "threshold": "< 0.03",
       "ok": true,
       "note": "BEM grad(phi) + U x_hat vs dW/dz at the exterior probes (budget panels)"
     },
     {
       "name": "dirichlet_potential_relative_l2",
-      "value": 3.578165252983032e-07,
+      "value": 2.9978780551490624e-06,
       "threshold": "< 0.03",
       "ok": true,
       "note": "recovered perturbation potential vs closed form (same probes)"
     },
     {
       "name": "neumann_surface_velocity_relative_l2",
-      "value": 0.00010075873250396247,
+      "value": 0.0004046292256971537,
       "threshold": "< 0.03",
       "ok": true,
       "note": "fluid-side surface velocity vs 2 U sin(theta) at the panel midpoints"
     },
     {
       "name": "neumann_velocity_relative_l2",
-      "value": 0.0001532015925717173,
+      "value": 0.0006130933686988046,
       "threshold": "< 0.03",
       "ok": true,
       "note": "BEM grad(phi) + U x_hat vs dW/dz at the exterior probes"
     },
     {
       "name": "neumann_normal_velocity_residual",
-      "value": 0.0006024533450978006,
+      "value": 0.0024105402652202183,
       "threshold": "<= 0.01 U",
       "ok": true,
       "note": "the body must be a streamline (max |v.n|/U)"
     },
     {
       "name": "neumann_cp_relative_l2",
-      "value": 0.00028491716813754445,
+      "value": 0.0011433147127329758,
       "threshold": "< 0.03",
       "ok": true,
       "note": "Cp = 1 - (|v|/U)^2 vs 1 - 4 sin^2(theta) at the panel midpoints"
@@ -1508,8 +2830,7 @@
     {
       "name": "neumann_surface_velocity_observed_order",
       "value": [
-        2.0165907313184706,
-        2.0065676588343466
+        2.016590731318431
       ],
       "threshold": ">= 1.5",
       "ok": true,
@@ -1517,7 +2838,7 @@
     },
     {
       "name": "near_wall_window_error",
-      "value": 0.006609026346237187,
+      "value": 0.006609026346236971,
       "threshold": "<= 0.01",
       "ok": true,
       "note": "at the documented clearance window delta = 2 h_max the exterior velocity error stays inside one third of the case tolerance, on every ladder level"
@@ -1525,7 +2846,7 @@
     {
       "name": "near_wall_window_error_scales_with_h",
       "value": {
-        "observed_order_in_h": 0.9046978473113044,
+        "observed_order_in_h": 0.9046978473122427,
         "monotone_decreasing": true
       },
       "threshold": "decreasing with order >= 0.5",
@@ -1534,37 +2855,252 @@
     },
     {
       "name": "near_wall_exclusion_zone_is_real",
-      "value": 0.17566853543452338,
+      "value": 0.17566853543452335,
       "threshold": ">= 0.03",
       "ok": true,
       "note": "inside delta = 0.1 h_max the constant-panel field is *not* usable; documenting the window only means something if this holds"
     },
     {
       "name": "near_wall_error_is_panel_relative",
-      "value": 1.0215665836210865,
+      "value": 1.0215665836210868,
       "threshold": "in [0.5, 2.0]",
       "ok": true,
       "note": "at fixed delta/h_max mesh refinement must not buy near-wall accuracy (ratio of the error at the coarsest and the finest level)"
     },
     {
       "name": "near_wall_guard_rejects_inside_window",
-      "value": true,
+      "value": false,
       "threshold": "True on every level",
-      "ok": true,
+      "ok": false,
       "note": "minimum_clearance_factor must refuse targets closer than the requested clearance instead of returning a plausible wrong velocity"
     },
     {
-      "name": "multipole_uniform_flow_moment_relative_error",
-      "value": 3.5781652596433844e-07,
-      "threshold": "< 0.03",
+      "name": "near_wall_tolerance_boundary_is_located",
+      "value": 0.4420200878986957,
+      "threshold": "bracketed on every level",
       "ok": true,
+      "note": "the acceptance is < 3 % on the exterior velocity field, so the record must say *where* that holds: on every level the worst-direction error has to cross the tolerance inside the probed clearance grid, otherwise the usable region is unbounded (an assumed bound) or empty"
+    },
+    {
+      "name": "near_wall_tolerance_boundary_moves_inward_with_refinement",
+      "value": [
+        1.220397,
+        1.069332
+      ],
+      "threshold": "each coarse/fine <= 1.05",
+      "ok": true,
+      "note": "refining the mesh may not shrink the usable envelope: if the boundary moved outward the reported window would be a property of one mesh only"
+    },
+    {
+      "name": "near_wall_window_clears_measured_tolerance_boundary",
+      "value": 4.524681241315824,
+      "threshold": ">= 2",
+      "ok": true,
+      "note": "the gated 1 % window delta = 2 h_max must sit at least 2x outside the *measured* 3 % boundary, so the acceptance is not true merely because the window was placed next to the edge of the region where it fails"
+    },
+    {
+      "name": "near_wall_linear_window_extends_the_finest_window",
+      "value": {
+        "finest_level_usable_clearance_over_h_max": 0.5,
+        "finest_level_usable_clearance_over_h_max_constant": 1.0
+      },
+      "threshold": "<= 0.5 at <= 0.01 error",
+      "ok": true,
+      "note": "on the finest level the first-moment (linear density) basis must hold the 1 % bound at delta = 0.5 h_max, against 2 h_max for constant panels.  This is the measurement the original single criterion quoted -- and it only holds there; see the worst-case criterion below"
+    },
+    {
+      "name": "near_wall_linear_window_does_not_widen_the_worst_case_window",
+      "value": {
+        "usable_clearance_over_h_max": 2.0,
+        "usable_clearance_over_h_max_constant": 2.0,
+        "levels": [
+          {
+            "panels": 32,
+            "max_relative_velocity_error": 0.016386854746339732
+          },
+          {
+            "panels": 64,
+            "max_relative_velocity_error": 0.003920316073970867
+          },
+          {
+            "panels": 128,
+            "max_relative_velocity_error": 0.002668889855295049
+          }
+        ]
+      },
+      "threshold": "<= the constant-panel window (2 h_max)",
+      "ok": true,
+      "note": "the 1 % window of the first-moment basis over *all* levels may not be advertised as wider than the constant-panel window.  A previous revision asserted delta = 0.5 h_max here; measurement falsified it (on N = 32 the linear error is 1.579e-02 at delta = 1 h_max and 1.639e-02 at 0.5 h_max, i.e. outside 1 %), so the level-independent part of that claim is retired while the finest-level part is kept in near_wall_linear_window_extends_the_finest_window.  Recorded in docs/CASE-BEM-LAPLACE-CYLINDER-NEAR-WALL-CRITERIA-AUDIT.md"
+    },
+    {
+      "name": "near_wall_linear_beats_constant_basis",
+      "value": 8.28925243260056,
+      "threshold": ">= 3",
+      "ok": true,
+      "note": "at delta = 0.5 h_max the linear-density error must be at least three times smaller than the constant-density error on the finest level"
+    },
+    {
+      "name": "near_wall_exclusion_floor_is_faceting",
+      "value": {
+        "amplification_linear": [
+          1.1704225807839868,
+          1.0753063213042704,
+          1.0355860863526059
+        ],
+        "amplification_per_offset_linear": [
+          0.6938062651430491,
+          0.6135278873912158,
+          0.5799339244561221
+        ],
+        "offset_over_delta": [
+          0.24563424884733348,
+          0.12274311054462525,
+          0.06136231189782432
+        ],
+        "per_offset_band": [
+          0.3,
+          1.2
+        ],
+        "grows_on_every_level": true,
+        "decays_with_refinement": true
+      },
+      "threshold": "surface_referenced > circle_referenced on every level and (amplification - 1)/(offset/delta) in [0.3, 1.2], decaying with h",
+      "ok": true,
+      "note": "the exclusion-zone floor is geometric faceting: the inscribed polygon's panel midpoints sit at a(1-cos(pi/N)) ~ h^2/8 below the circle, an O(h) offset relative to delta = 0.1 h_max, so a probe re-referenced to the polygon surface is the same offset *closer* to the density it integrates and its error must *grow* -- the earlier 'must collapse by 3x' phrasing had the sign of the geometry inverted (measured 1.04x the other way, cj3969).  What faceting explains is the growth *rate*: the amplification per unit offset is level independent (0.69 / 0.61 / 0.59 from coarse to fine) and the amplification itself decays with h, which is the O(h) claim this criterion now measures"
+    },
+    {
+      "name": "near_wall_window_is_azimuth_independent",
+      "value": {
+        "worst_over_levels": NaN,
+        "levels": [
+          {
+            "panels": 32,
+            "h_max_over_radius": 0.19603428065912168,
+            "midpoint_error": NaN,
+            "worst_error": NaN,
+            "worst_error_linear": 0.008478850702701605,
+            "azimuth_penalty": Infinity
+          },
+          {
+            "panels": 64,
+            "h_max_over_radius": 0.0981353486548366,
+            "midpoint_error": 0.0036228983540391464,
+            "worst_error": 0.0036228983540391464,
+            "worst_error_linear": 0.004492836836939492,
+            "azimuth_penalty": 1.0
+          },
+          {
+            "panels": 128,
+            "h_max_over_radius": 0.04908245704582536,
+            "midpoint_error": 0.001894024959031002,
+            "worst_error": 0.0019460500078796077,
+            "worst_error_linear": 0.002429028020905929,
+            "azimuth_penalty": 1.0274679848333266
+          }
+        ]
+      },
+      "threshold": "<= 0.01 on every level",
+      "ok": false,
+      "note": "the documented window was measured above the panel midpoints only; walking the probe across the panel (midpoint -> vertex) must not break the same 1% tolerance, otherwise the window is an azimuth-specific statement rather than a validity claim"
+    },
+    {
+      "name": "near_wall_exclusion_is_worse_at_vertices",
+      "value": {
+        "clearance_over_h_max": 0.1,
+        "min_azimuth_penalty": 3.136315486423145,
+        "worst_over_levels": NaN,
+        "levels": [
+          {
+            "panels": 32,
+            "midpoint_error": NaN,
+            "worst_error": NaN,
+            "worst_error_linear": 1.39905143026864,
+            "worst_offset_over_h_max": 0.0,
+            "azimuth_penalty": Infinity,
+            "azimuth_penalty_linear": 13.042864351019844
+          },
+          {
+            "panels": 64,
+            "midpoint_error": 0.1861522116746719,
+            "worst_error": 0.5838320643071929,
+            "worst_error_linear": 0.1291048503465671,
+            "worst_offset_over_h_max": 0.5,
+            "azimuth_penalty": 3.136315486423145,
+            "azimuth_penalty_linear": 1.0749897037784206
+          },
+          {
+            "panels": 128,
+            "midpoint_error": 0.18010235179688538,
+            "worst_error": 0.5772269999725337,
+            "worst_error_linear": 1.2596521382850328,
+            "worst_offset_over_h_max": 0.5,
+            "azimuth_penalty": 3.2049942391841437,
+            "azimuth_penalty_linear": 9.942113130840642
+          }
+        ]
+      },
+      "threshold": ">= 2 on every level",
+      "ok": true,
+      "note": "inside the exclusion zone the midpoint column is the *best* azimuth: at the vertex the piecewise-constant density is discontinuous across the kink, so the quoted midpoint number understates the worst case"
+    },
+    {
+      "name": "near_wall_azimuth_window_is_not_extended_by_linear_density",
+      "value": {
+        "relative_error_tolerance": 0.01,
+        "constant_density": null,
+        "linear_density": 2.0
+      },
+      "threshold": "constant and linear both 2 h_max",
+      "ok": false,
+      "note": "the midpoint-only study moves the 1% window of the first-moment basis in to 0.5 h_max; once the azimuth is free that gain disappears, so the linear basis must not be advertised as widening the usable window"
+    },
+    {
+      "name": "near_wall_linear_density_is_worse_in_the_window",
+      "value": {
+        "min_ratio": NaN,
+        "levels": [
+          {
+            "panels": 32,
+            "constant_worst": NaN,
+            "linear_worst": 0.008478850702701605,
+            "ratio_linear_over_constant": NaN
+          },
+          {
+            "panels": 64,
+            "constant_worst": 0.0036228983540391464,
+            "linear_worst": 0.004492836836939492,
+            "ratio_linear_over_constant": 1.2401222440951059
+          },
+          {
+            "panels": 128,
+            "constant_worst": 0.0019460500078796077,
+            "linear_worst": 0.002429028020905929,
+            "ratio_linear_over_constant": 1.2481837625296013
+          }
+        ]
+      },
+      "threshold": ">= 1.1 on every level",
+      "ok": false,
+      "note": "inside the documented window the first-moment basis is measurably worse than constant panels (its arc-length slope extrapolates the density across the vertex), which is the qualification the library docstring needs"
+    },
+    {
+      "name": "near_wall_azimuth_midpoint_cross_check",
+      "value": NaN,
+      "threshold": "<= 0.1",
+      "ok": false,
+      "note": "the azimuthal sweep and the radial ladder probe the same midpoint direction from different reference surfaces (chord vs circle); their agreement is what makes the two windows comparable"
+    },
+    {
+      "name": "multipole_uniform_flow_moment_relative_error",
+      "value": 0.07858835063892566,
+      "threshold": "< 0.03",
+      "ok": false,
       "note": "far-field harmonic A_1 recovered from the ring fits vs A_1 = U a**2 (budget panels)"
     },
     {
       "name": "multipole_uniform_flow_moment_observed_order",
       "value": [
-        3.138056822676945,
-        3.068582114265124
+        2.5949023481780373
       ],
       "threshold": ">= 1.5",
       "ok": true,
@@ -1572,101 +3108,100 @@
     },
     {
       "name": "multipole_pure_strain_moment_relative_error",
-      "value": 0.00010483037213282476,
+      "value": 0.46729221474584925,
       "threshold": "< 0.03",
-      "ok": true,
+      "ok": false,
       "note": "far-field harmonic A_2 recovered from the ring fits vs A_2 = (gamma/2) a**4 (budget panels)"
     },
     {
       "name": "multipole_pure_strain_moment_observed_order",
       "value": [
-        2.1107760459785254,
-        2.059453751540193
+        -1.0629542040393827
       ],
       "threshold": ">= 1.5",
-      "ok": true,
+      "ok": false,
       "note": "the faceting error of the multipole moment must converge with h"
     },
     {
       "name": "multipole_purity",
-      "value": 1.8315215777134454e-14,
+      "value": 8.829397746551672,
       "threshold": "< 1e-09",
-      "ok": true,
+      "ok": false,
       "note": "harmonics the boundary data does not excite must stay at roundoff (largest spurious A_n over the moment scale, every level)"
     },
     {
       "name": "multipole_no_source_leak",
-      "value": 5.522239870099921e-16,
+      "value": 3.894875546132406e-16,
       "threshold": "< 1e-09",
       "ok": true,
       "note": "the exterior field must be solenoidal: no 2-D log source, measured as the slope of the ring mean against log(r)"
     },
     {
       "name": "multipole_radius_independence",
-      "value": 3.6250369182169334e-13,
+      "value": 3.6251904191104195e-13,
       "threshold": "< 1e-09",
       "ok": true,
       "note": "the moment measured on r/a = 1.5, 2.5, 4 must not depend on the ring"
     },
     {
       "name": "multipole_fit_residual",
-      "value": 3.41182882041492e-07,
+      "value": 0.5141655741824956,
       "threshold": "< 1e-05",
-      "ok": true,
+      "ok": false,
       "note": "the truncated harmonic fit must explain the sampled field (relative rms residual of the order-4 fit)"
     },
     {
       "name": "multipole_mirror_control_is_rejected",
-      "value": 5589456.760304382,
+      "value": 25.449064444538404,
       "threshold": ">= 10",
       "ok": true,
       "note": "the image-sign data must be read as a negative dipole, i.e. the moment carries its sign"
     },
     {
       "name": "circulation_surface_velocity_relative_l2",
-      "value": 0.00021307971529883443,
+      "value": 0.0008523398639954868,
       "threshold": "< 0.03",
       "ok": true,
       "note": "surface speed vs v_theta = Gamma/(2 pi a) - 2 U sin(theta) at the budget mesh"
     },
     {
       "name": "circulation_cp_relative_l2",
-      "value": 0.0005586728931165331,
+      "value": 0.002235162576772094,
       "threshold": "< 0.03",
       "ok": true,
       "note": "Cp built from the same surface velocity that is integrated for the lift"
     },
     {
       "name": "circulation_velocity_relative_l2",
-      "value": 0.00014807883969341002,
+      "value": 0.0005925927605365021,
       "threshold": "< 0.03",
       "ok": true,
       "note": "external velocity field vs dW/dz of the lifting complex potential"
     },
     {
       "name": "circulation_measured_matches_prescribed",
-      "value": 0.00020084601100093616,
+      "value": 0.0008039653559874793,
       "threshold": "<= 0.01",
       "ok": true,
       "note": "the counter-clockwise contour integral of the solved surface velocity must reproduce the prescribed Gamma, otherwise the lift agreement is a coincidence"
     },
     {
       "name": "circulation_lift_matches_joukowski",
-      "value": 0.0004014146126002001,
+      "value": 0.0016062157078682304,
       "threshold": "< 0.03",
       "ok": true,
       "note": "pressure-integrated lift vs L' = -rho U Gamma"
     },
     {
       "name": "circulation_drag_vanishes",
-      "value": 7.979727989493313e-17,
+      "value": 3.8337388819087437e-16,
       "threshold": "<= 0.01",
       "ok": true,
       "note": "d'Alembert: no drag in a steady inviscid flow, for any Gamma"
     },
     {
       "name": "circulation_stagnation_angle_matches_closed_form",
-      "value": 0.005581537376247983,
+      "value": 0.008152203405804921,
       "threshold": "<= 1 deg",
       "ok": true,
       "note": "interpolated zeros of the surface tangential velocity vs sin(theta_s) = Gamma/(4 pi U a)"
@@ -1674,8 +3209,7 @@
     {
       "name": "circulation_observed_order",
       "value": [
-        2.0084326626949522,
-        2.0009051001603915
+        2.008432662694936
       ],
       "threshold": ">= 1.5",
       "ok": true,
@@ -1683,33 +3217,65 @@
     },
     {
       "name": "circulation_sweep_lift_is_linear",
-      "value": 0.00040141461260034816,
+      "value": 0.0016062157078682304,
       "threshold": "< 0.03",
       "ok": true,
       "note": "lift/(rho U Gamma) must stay at 1 across Gamma in (1.0, 2.0, 3.0)"
     },
     {
-      "name": "wrong_reference_is_rejected",
-      "value": 3952342.1628871253,
-      "threshold": ">= 10",
+      "name": "oblique_heading_dirichlet_velocity",
+      "value": 1.2289117976043683e-06,
+      "threshold": "< 0.03",
       "ok": true,
-      "note": "the mirrored image-sign flow must not be accepted by the reference"
+      "note": "rotating the body against the inflow breaks the mirror symmetry about the flow axis; worst heading 0 deg"
     },
     {
-      "name": "far_field_matches_closed_form",
-      "value": 5.590883391489002e-09,
-      "threshold": "<= 0.01 U",
+      "name": "oblique_heading_neumann_surface_velocity",
+      "value": 0.0004046292256971931,
+      "threshold": "< 0.03",
       "ok": true,
-      "note": "at r = 8a (disturbance still ~3% of U) the BEM velocity matches dW/dz to 1% of U"
+      "note": "route N surface velocity with the stagnation streamline over a chord midpoint instead of a vertex; worst heading 2.8125 deg"
+    },
+    {
+      "name": "oblique_heading_within_penalty_of_axis",
+      "value": 1.0000000000000973,
+      "threshold": "<= 3",
+      "ok": true,
+      "note": "an oblique heading must not be materially worse than the axis-aligned one"
+    },
+    {
+      "name": "mirror_antisymmetric_error_is_roundoff",
+      "value": 3.554447978966673e-16,
+      "threshold": "<= 1e-09 U",
+      "ok": true,
+      "note": "the axis-aligned body, data and probe set are mirror-symmetric about y = 0; an antisymmetric residual would mean the implementation, not the configuration, introduced the asymmetry (and could have cancelled)"
+    },
+    {
+      "name": "lattice_heading_is_covariant",
+      "value": 5.978733960281817e-16,
+      "threshold": "<= 1e-09 U",
+      "ok": true,
+      "note": "16 panel steps rotate the body onto itself, so the recovered velocity field must not move"
     }
   ],
   "acceptance": {
-    "passed": true,
-    "failed_checks": [],
+    "passed": false,
+    "failed_checks": [
+      "near_wall_guard_rejects_inside_window",
+      "near_wall_window_is_azimuth_independent",
+      "near_wall_azimuth_window_is_not_extended_by_linear_density",
+      "near_wall_linear_density_is_worse_in_the_window",
+      "near_wall_azimuth_midpoint_cross_check",
+      "multipole_uniform_flow_moment_relative_error",
+      "multipole_pure_strain_moment_relative_error",
+      "multipole_pure_strain_moment_observed_order",
+      "multipole_purity",
+      "multipole_fit_residual"
+    ],
     "tolerance": 0.03,
     "order_min": 1.5,
-    "n_checks": 38
+    "n_checks": 53
   },
-  "overall": "PASS",
-  "wall_seconds": 144.6406683921814
+  "overall": "FAIL",
+  "wall_seconds": 152.199077129364
 }
