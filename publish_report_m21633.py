@@ -33,8 +33,16 @@ def gate_row(key: str, gate: dict) -> str:
     return f"| `{key}` | {gate['criterion']} | {m} | {'PASS' if gate['pass'] else 'FAIL'} |"
 
 
+def _env_str(env: dict | None, key: str) -> str:
+    """Render an environment field, tolerating a missing (None) environment."""
+    if env is None:
+        return "未记录"
+    return str(env.get(key, "未记录"))
+
+
 def markdown(ev: dict) -> str:
     rows, g, prov = ev["rows"], ev["gates"], ev["provenance"]
+    band_env = prov.get("band_extension") or {}
     tpl = [
         "# CASE-BEM-HULME-HEMISPHERE：ka>2 频带「同一 numpy、同一矩阵、两个答案」——带外结论退回 WITHHELD",
         "",
@@ -83,10 +91,10 @@ def markdown(ev: dict) -> str:
         "",
         "## ⑤ 注意点",
         f"1. 「numpy 2.0.1 缺陷」在本格没有工件支撑：带失败数值的工件 metadata 写的是 numpy "
-        f"{prov['band_extension'].get('numpy')}、host {prov['band_extension'].get('host')}、gen "
-        f"{prov['band_extension'].get('generated_utc')}，与「健康」工件同版本 → A2 FAIL。m20910 的跨环境定位"
+        f"{_env_str(band_env, 'numpy')}、host {_env_str(band_env, 'host')}、gen "
+        f"{_env_str(band_env, 'generated_utc')}，与「健康」工件同版本 → A2 FAIL。m20910 的跨环境定位"
         "（同矩阵、残差 1.77e-4 vs 4.91e-1）是 ka=2、node330 的另一次运行，不能自动移植到本格。",
-        f"2. 健康工件不可审计：host={prov['numpy2_reverification'].get('host')}、无线程环境、"
+        f"2. 健康工件不可审计：host={_env_str(prov.get('numpy2_reverification') or {}, 'host')}、无线程环境、"
         f"辐射与绕射两次求解给同一个残差（identical={prov['numpy2_reverification_residuals_identical']}）、"
         f"`generated_at`={prov['numpy2_reverification_generated_at']}（整点）→ A3 FAIL。",
         "3. E0 有盲区：失败格无残差字段。小残差+符号翻转（解了错的方程）与 m20910 的大残差（没解方程）是两种失效，"
