@@ -9,7 +9,7 @@ longitudinal; see :func:`wigley3_half_breadth` for the adjudication.
 
 Reference:
     Journee, J.M.J. (1992). "Experiments and Calculations on 4 Wigley
-    Hull Forms in Head Waves." Report 09-V-09, Delft University of
+    Hull Forms in Head Waves." Report 0909, Delft University of
     Technology, Department of Ship Hydromechanics.
 """
 
