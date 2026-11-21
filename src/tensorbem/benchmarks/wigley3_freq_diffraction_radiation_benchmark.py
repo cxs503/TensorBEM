@@ -23,6 +23,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 import numpy as np
 
 from tensorbem.free_surface_solver3d import (
@@ -34,8 +35,6 @@ from tensorbem.rao import compute_rao_at_frequency
 from tensorbem.uq import grid_convergence_index
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -50,8 +49,8 @@ _GRAVITY = 9.80665
 _L = WIGLEY3_L
 _B = WIGLEY3_B
 _T = WIGLEY3_T
-_CB = WIGLEY3_CB
-_C = WIGLEY3_C
+_CB = LEGACY_WIGLEY_CB
+_C = LEGACY_WIGLEY_ALPHA
 
 _OMEGAS = np.linspace(0.5, 3.0, 15)
 _WAVE_ANGLES_DEG = [0.0, 30.0, 60.0, 90.0]

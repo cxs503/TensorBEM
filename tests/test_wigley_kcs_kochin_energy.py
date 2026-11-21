@@ -9,7 +9,7 @@ production-resolution numbers of the artifact are reproduced.
 Three decisions are worth documenting:
 
 * the panel-Kochin wave resistance is compared with the closed-form
-  :func:`tensorbem.wigley.michell_wave_resistance` on the *same* quadrature, so
+  :func:`tensorbem.wigley.michell_wave_resistance_legacy` on the *same* quadrature, so
   the residual is a mesh-discretisation error and nothing else;
 * the reciprocity gate is scored only on "significant" DOFs (exciting force
   above 1 % of the largest component of that case) because a head sea makes the
@@ -43,7 +43,7 @@ from tensorbem.symmetry3d import (
     solve_radiation_3d_symmetric,
     split_patch,
 )
-from tensorbem.wigley import michell_kochin_function, michell_wave_resistance, wigley_hull_properties
+from tensorbem.wigley import michell_kochin_function, michell_wave_resistance_legacy, wigley_hull_properties
 from tensorbem.wigley_hydrostatics import wigley_wetted_hull_mesh
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -146,7 +146,7 @@ def test_wigley_cw_panel_vs_michell_within_five_percent():
     panel = study.wigley_wave_resistance_panel(
         mesh, *WIGLEY, U, gravity=GRAVITY, density=DENSITY
     )
-    michell = michell_wave_resistance(*WIGLEY, U, rho=DENSITY, g=GRAVITY)
+    michell = michell_wave_resistance_legacy(*WIGLEY, U, rho=DENSITY, g=GRAVITY)
     deviation = abs(panel - michell) / michell
     assert deviation < 0.05, f"panel Cw deviates {deviation:.3%} from Michell"
 
@@ -158,7 +158,7 @@ def test_wigley_cw_convergence_order_at_least_one():
     for n_sections, n_levels in ((18, 7), (36, 14)):
         mesh = wigley_wetted_hull_mesh(*WIGLEY, n_sections=n_sections, n_levels=n_levels)
         panel = study.wigley_wave_resistance_panel(mesh, *WIGLEY, U)
-        michell = michell_wave_resistance(*WIGLEY, U)
+        michell = michell_wave_resistance_legacy(*WIGLEY, U)
         errors.append(abs(panel - michell) / michell)
         panels.append(mesh.panel_count)
     order = study.fit_order([study.panel_size(n) for n in panels], errors)

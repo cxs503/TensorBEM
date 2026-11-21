@@ -3,7 +3,7 @@
 Why this module exists
 ----------------------
 ``docs/m3125/wigley_normalization_audit.md`` established, as a one-off study,
-that :func:`tensorbem.wigley.michell_wave_resistance` does not return a force:
+that :func:`tensorbem.wigley.michell_wave_resistance_legacy` does not return a force:
 under a change of base units its output scales with exponents
 ``(mass, length, time) = (1, +1, -2)`` where a force requires ``(1, -1, +2)``.
 That study concluded the only possible repair is a missing factor ``g**2 / C``
@@ -132,8 +132,8 @@ def _speed(case: dict[str, float]) -> float:
 # The three shipped paths
 # --------------------------------------------------------------------------- #
 def legacy_wigley_resistance(case: dict[str, float]) -> float:
-    """``tensorbem.wigley.michell_wave_resistance`` (closed-form Kochin)."""
-    return wigley.michell_wave_resistance(
+    """``tensorbem.wigley.michell_wave_resistance_legacy`` (closed-form Kochin)."""
+    return wigley.michell_wave_resistance_legacy(
         case["L"], case["B"], case["T"], _speed(case), case["rho"], case["g"]
     )
 

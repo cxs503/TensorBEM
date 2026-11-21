@@ -27,6 +27,7 @@ import math
 from pathlib import Path
 from typing import Any, Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 import numpy as np
 from numpy.typing import NDArray
 
@@ -42,8 +43,6 @@ from tensorbem.rao import compute_rao_spectrum
 from tensorbem.uq import grid_convergence_index
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -113,7 +112,7 @@ def _make_meshes(
     L: float = WIGLEY3_L,
     B: float = WIGLEY3_B,
     T: float = WIGLEY3_T,
-    c: float = WIGLEY3_C,
+    c: float = LEGACY_WIGLEY_ALPHA,
 ) -> dict[str, WettedHullMesh]:
     """Generate three mesh densities for convergence study."""
     return {
@@ -136,7 +135,7 @@ def run_radiation_study(
 
     meshes = _make_meshes()
     mesh = meshes[mesh_key]
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     volume = ref["volume"]
 
     results = []
@@ -237,7 +236,7 @@ def run_diffraction_study(
         if abs(r["omega"] - 1.0) < 0.01 and r["wave_angle_deg"] == 0.0
     )
     forces = np.array([f["abs"] for f in results[idx]["excitation_force"]])
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     scale = density * gravity * amplitude * WIGLEY3_L * WIGLEY3_B
 
     nondim_forces = {i: float(forces[i] / scale) for i in range(6)}
@@ -270,7 +269,7 @@ def run_rao_study(
 
     meshes = _make_meshes()
     mesh = meshes[mesh_key]
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     volume = ref["volume"]
     mass = density * volume
     cg = np.array([0.0, 0.0, -0.5 * WIGLEY3_T])
@@ -445,7 +444,7 @@ def run_full_verification(
             "L": WIGLEY3_L,
             "B": WIGLEY3_B,
             "T": WIGLEY3_T,
-            "Cb": WIGLEY3_CB,
+            "Cb": LEGACY_WIGLEY_CB,
         },
         "radiation": radiation,
         "diffraction": diffraction,

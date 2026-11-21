@@ -63,9 +63,17 @@ def find_page(caption: str) -> tuple[int, str]:
     raise SystemExit("caption not found in the source PDF: %s" % caption)
 
 
+def verified_transcript(path: Path, extracted: str) -> str:
+    """Verify PDF text while tolerating extractor-specific whitespace layout."""
+    frozen = path.read_text(encoding="utf-8")
+    if re.sub(r"\s+", "", extracted) != re.sub(r"\s+", "", frozen):
+        raise ValueError(f"Source PDF differs from the archived transcript {path.name}")
+    return frozen
+
+
 def transcribe_table() -> dict:
     page_no, page_text = find_page(TABLE_CAPTION)
-    TRANSCRIPT.write_text(page_text, encoding="utf-8")
+    page_text = verified_transcript(TRANSCRIPT, page_text)
 
     # rows look like:  0.1 0.479 0.644 0.494 0.683 3.06% 5.73%
     rows = []
@@ -278,7 +286,7 @@ def build() -> dict:
     )
 
     geom_page_no, geom_page_text = find_page("Table 1. Propeller Characteristics")
-    GEOM_TRANSCRIPT.write_text(geom_page_text, encoding="utf-8")
+    geom_page_text = verified_transcript(GEOM_TRANSCRIPT, geom_page_text)
     m_blades = re.search(r"No\. of Blades\s+(\d+)", geom_page_text)
     m_diam = re.search(r"Diameter \(m\)\s+([\d.]+)", geom_page_text)
     if not (m_blades and m_diam):

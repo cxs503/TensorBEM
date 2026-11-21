@@ -24,6 +24,7 @@ import math
 import pathlib
 import time
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 
 from tensorbem.added_mass_limit import AddedMassLimitResult, added_mass_limit
@@ -191,7 +192,7 @@ def main() -> int:
     # ---- Wigley ladder ----
     for level in arguments.levels:
         nx, nz = MESH_LEVELS[level]
-        mesh = wigley3_wetted_hull_mesh(nx=nx, nz=nz)
+        mesh = wigley3_wetted_hull_mesh(nx=nx, nz=nz, alpha=LEGACY_WIGLEY_ALPHA)
         entry: dict = {"n_sections": nx, "n_levels": nz,
                        "panels": mesh.panel_count,
                        "hull_volume": float(mesh.volume)}

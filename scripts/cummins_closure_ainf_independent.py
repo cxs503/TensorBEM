@@ -53,6 +53,7 @@ import pathlib
 import sys
 import time
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 
 from tensorbem.added_mass_limit import added_mass_limit, shift_added_mass
@@ -190,7 +191,8 @@ def image_added_mass(n_sections: int, n_levels: int, center, *, use_cache: bool 
                 "cached": True,
             }
     mesh = wigley3_wetted_hull_mesh(
-        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, n_sections=n_sections, n_levels=n_levels
+        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA,
+        n_sections=n_sections, n_levels=n_levels,
     )
     started = time.perf_counter()
     result = added_mass_limit(mesh, "infinite_frequency", center=center,

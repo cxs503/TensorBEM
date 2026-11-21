@@ -518,13 +518,13 @@ CAPABILITIES: tuple[Capability, ...] = (
     Capability(
         key='forward-speed-wave-resistance',
         title='Forward-speed wave resistance (Wigley, Michell/Kochin)',
-        claim='Michell-Kochin integral and pressure-integral forms agree; Wigley Cb = 4/9 verified.',
+        claim='Far-field Michell resistance has force units and matches independent theta quadrature for the classic Wigley, Cb = 4/9.',
         level=REAL,
         modules=('tensorbem.wigley', 'tensorbem.benchmarks.wigley_verification'),
         symbols=('michell_wave_resistance', 'compute_wigley_wave_resistance'),
         tests=(
-            'tests/test_wigley_verification.py::test_volume_is_four_ninths_LBT',
-            'tests/test_wigley_wave_resistance.py::test_kochin_function_symmetry',
+            'tests/test_wigley_canonical_resistance.py::test_canonical_resistance_is_a_force',
+            'tests/test_wigley_canonical_resistance.py::test_canonical_reproduces_the_independent_theta_form',
         ),
         docs=(('docs/wigley_wave_resistance.md', 'Michell'),),
         published_2026_10_29=NOT_SUPPORTED,
@@ -580,7 +580,7 @@ CAPABILITIES: tuple[Capability, ...] = (
             '(closed-form Wigley terms vs panel quadrature), not against experiment; absolute '
             'magnitudes remain WITHHELD. The legacy single-wavenumber exports '
             '(michell_resistance, wave_resistance_from_panels, tandem_interference_factor, '
-            'wigley.michell_wave_resistance) are untouched and still carry the defect: they '
+            'wigley.michell_wave_resistance_legacy) are untouched and still carry the defect: they '
             'under-predict by ~12-24x and the tandem sigma they return is spectrum-biased by up '
             'to 36 %. Re-pinning them is a cross-repository pin migration, not done here.'
         ),

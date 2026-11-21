@@ -9,7 +9,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from ..wigley import michell_wave_resistance, wigley_hull_properties
+from ..wigley import michell_wave_resistance_legacy, wigley_hull_properties
 from .wigley_verification import converged_wave_resistance
 
 

@@ -672,7 +672,7 @@ def modal_rao(
 
     Equation of motion in the dry-mode basis,
 
-        [-omega^2 (M + A) + i omega C + K + K_h] eta = F_exc(omega),
+        [-omega^2 (M + A) - i omega C + K + K_h] eta = F_exc(omega),
 
     with ``C_ii = 2 zeta omega_wet,i (M_ii + A_ii)`` (structural damping only;
     the hydrodynamic model supplies neither radiation damping nor diffraction).
@@ -706,7 +706,7 @@ def modal_rao(
         force = froude_krylov_forces(
             panel, modes_list, float(omega), heading=heading, submergence=submergence
         )
-        impedance = -omega ** 2 * mass + 1j * omega * np.diag(damping) + stiffness
+        impedance = -omega ** 2 * mass - 1j * omega * np.diag(damping) + stiffness
         eta = np.linalg.solve(impedance, force)
         amplitudes[idx] = eta
         vertical[idx] = abs(np.sum(eta * shape_centre))

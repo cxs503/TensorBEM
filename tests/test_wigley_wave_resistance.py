@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pytest
 
-from tensorbem.benchmarks.wigley_verification import converged_wave_resistance
+from tensorbem import thin_ship_michell
 from tensorbem.wigley import (
     WigleyHullMesh,
     WigleyWaveResistanceResult,
@@ -200,7 +200,14 @@ class TestBenchmarkComparison:
         U = froude * math.sqrt(g * L)
 
         result = compute_wigley_wave_resistance(L, B, T, U, nx=16, nz=8)
-        reference = converged_wave_resistance(L, B, T, U)
+        hull = thin_ship_michell.WigleyHull(L=L, B=B, T=T)
+        # Match the finite integration band when isolating implementation error.
+        # The wide-band comparison is covered by test_wigley_canonical_resistance.
+        cutoff = max(5.0, 10.0 * U**2 / (g * T))
+        reference = thin_ship_michell.michell_wave_resistance(
+            thin_ship_michell.wigley_amplitude_function(hull), U,
+            rho=result.rho, g=result.g, lam_max=cutoff, n_lam=512, extrapolate_tail=False,
+        )["Rw"]
 
         assert result.wave_resistance_kochin == pytest.approx(reference, rel=1e-4)
         assert result.froude_number == pytest.approx(froude, rel=1e-12)

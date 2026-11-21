@@ -10,7 +10,7 @@ Operator) spectrum and validates:
 
 The RAO equation of motion in frequency domain is:
 
-    [-ω²(M + A(ω)) + iω B(ω) + C] ξ(ω) = F_exc(ω)
+    [-ω²(M + A(ω)) - iω B(ω) + C] ξ(ω) = F_exc(ω)
 
 where M = mass matrix, A = added mass, B = damping, C = hydrostatic restoring,
 F_exc = excitation force, ξ = RAO vector.
@@ -27,6 +27,8 @@ import math
 from typing import Any, Sequence
 
 import numpy as np
+
+from tensorbem.rao import dynamic_stiffness
 from numpy.typing import NDArray
 
 from tensorbem.free_surface_solver3d import (
@@ -196,8 +198,8 @@ def compute_wigley_rao_spectrum(
         m33 = M_rigid[2, 2]
         c33 = C[2, 2]
 
-        impedance = -omega ** 2 * (m33 + a33) + 1j * omega * b33 + c33
-        rao = f_exc / impedance
+        impedance = dynamic_stiffness(omega, m33, a33, b33, c33)
+        rao = f_exc / (amplitude * impedance)
 
         heave_rao_amp[idx] = abs(rao)
         heave_rao_phase[idx] = math.degrees(math.atan2(rao.imag, rao.real))

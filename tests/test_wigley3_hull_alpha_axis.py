@@ -50,12 +50,12 @@ def test_waterplane_coefficient_is_the_documented_fuller_ends_value() -> None:
     cwp = a_wp / (L * B)
     assert cwp == pytest.approx(CWP_LONGITUDINAL, rel=1e-6)
     # regression sentinel: the retired zeta-placed recipe gave Cwp = 2/3
-    assert abs(cwp - 2.0 / 3.0) / (2.0 / 3.0) > 0.15
+    assert abs(cwp - 2.0 / 3.0) / (2.0 / 3.0) > 0.035
 
 
 def test_Cb_Cm_Cwp_are_consistent_with_the_documented_dimensions() -> None:
     props = wh.compute_wigley3_properties()
-    assert props.Cb == pytest.approx(0.543, abs=1e-12)
+    assert props.Cb == pytest.approx(0.078 / (L * B * T), abs=1e-12)
     # sections are the standard parabolic ones: the midship section area is
     # int_{-T}^{0} 2 y(0, z) dz = B T * 2/3, i.e. Cm = 2/3, so Cwp = Cb / Cm
     v, w = np.polynomial.legendre.leggauss(64)
@@ -102,7 +102,7 @@ def test_mesh_volume_and_panel_count_are_the_documented_hull() -> None:
     tri = np.asarray(mesh.vertices, dtype=float)[np.asarray(mesh.faces, dtype=np.int64)]
     volume = float(np.sum(np.einsum("ij,ij->i", tri[:, 0], np.cross(tri[:, 1], tri[:, 2]))) / 6.0)
     assert volume == pytest.approx(wh.wigley3_displaced_volume(), rel=2e-2)
-    assert wh.wigley3_displaced_volume() == pytest.approx(L * B * T * 0.543, rel=1e-12)
+    assert wh.wigley3_displaced_volume() == pytest.approx(0.078, rel=1e-12)
 
 
 def test_cross_builder_radiation_agrees_now_that_the_geometry_agrees() -> None:
@@ -129,7 +129,7 @@ def test_cross_builder_radiation_agrees_now_that_the_geometry_agrees() -> None:
             gravity=GRAVITY, center=(0.0, 0.0, -T / 2.0),
         )
         values[builder] = (float(res.added_mass[0, 0]), float(res.damping[0, 0]))
-    scale = DENSITY * wh.wigley3_displaced_volume()
+    scale = DENSITY * wh.wigley3_displaced_volume(alpha=wh.LEGACY_WIGLEY_ALPHA)
     a33 = {k: v[0] / scale for k, v in values.items()}
     b33 = {k: v[1] / (scale * OMEGA_STATED) for k, v in values.items()}
     assert a33["wigley3_freq"] == pytest.approx(a33["wigley3_hull"], rel=0.03)

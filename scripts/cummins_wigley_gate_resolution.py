@@ -45,6 +45,7 @@ import pathlib
 import sys
 import time
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 
 from tensorbem import time_domain as td
@@ -78,7 +79,7 @@ def heave_model(omega: np.ndarray) -> tuple[float, float, np.ndarray, np.ndarray
         else None
     if ref is None:  # pragma: no cover - import path differs only in tests
         from tensorbem.wigley3_freq import wigley3_hydrostatic_reference
-        ref = wigley3_hydrostatic_reference()
+        ref = wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA)
     mass = float(ref["volume"]) * case.DENSITY
     restoring = float(ref["C33"])
     deficit, damping = exact_pair(omega)

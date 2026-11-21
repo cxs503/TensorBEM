@@ -60,6 +60,7 @@ import math
 import pathlib
 from typing import Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 import numpy as np
 from numpy.typing import NDArray
 
@@ -68,13 +69,14 @@ from tensorbem.causality import fit_added_mass_asymptote, kkr_added_mass
 from tensorbem.free_surface_solver3d import solve_radiation_3d
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
     wigley3_wetted_hull_mesh,
 )
+
+# Historical public constant for the archived 0.543 benchmark.
+WIGLEY3_CB = LEGACY_WIGLEY_CB
 
 FloatArray = NDArray[np.float64]
 
@@ -160,7 +162,7 @@ def radiation_sweep(
     if n_sections is None or n_levels is None:
         n_sections, n_levels = MESH_LEVELS[level]
     mesh = wigley3_wetted_hull_mesh(
-        L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=WIGLEY3_C,
+        L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA,
         n_sections=n_sections, n_levels=n_levels,
     )
     omega = np.asarray(omegas, dtype=float)
@@ -318,7 +320,7 @@ def heave_free_decay(
         omega = np.asarray(study["omega"], dtype=float)
         A = np.asarray(study["added_mass"], dtype=float)
         B = np.asarray(study["damping"], dtype=float)
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     mass = float(ref["volume"] * density)
     restoring = float(ref["C33"])
     a_inf = float(study["added_mass_inf"])
@@ -513,9 +515,9 @@ def run_case(
         "case": "CASE-BEM-CUMMINS-WIGLEY (6 DOF memory kernel)",
         "geometry": {
             "hull": "Wigley III (parabolic waterline + section, c-parameterised)",
-            "L": WIGLEY3_L, "B": WIGLEY3_B, "T": WIGLEY3_T, "c": WIGLEY3_C,
-            "Cb": WIGLEY3_CB,
-            "volume": float(wigley3_hydrostatic_reference()["volume"]),
+            "L": WIGLEY3_L, "B": WIGLEY3_B, "T": WIGLEY3_T, "c": LEGACY_WIGLEY_ALPHA,
+            "Cb": LEGACY_WIGLEY_CB,
+            "volume": float(wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA)["volume"]),
             "L_B": WIGLEY3_L / WIGLEY3_B, "B_T": WIGLEY3_B / WIGLEY3_T,
             "density": 1025.0, "gravity": 9.80665,
             "rotation_center_z": -WIGLEY3_T / 2.0,

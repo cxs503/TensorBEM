@@ -23,10 +23,9 @@ from tensorbem.free_surface_solver3d import (
 from tensorbem.hydrostatic import compute_hydrostatic_restoring_matrix
 from tensorbem.rao import compute_rao_at_frequency, compute_rao_spectrum
 from tensorbem.uq import grid_convergence_index
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -46,7 +45,7 @@ _GRAVITY = 9.80665
 def coarse_mesh():
     """Coarse Wigley III mesh (~200 panels)."""
     return wigley3_wetted_hull_mesh(
-        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C,
+        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA,
         n_sections=10, n_levels=5,
     )
 
@@ -55,7 +54,7 @@ def coarse_mesh():
 def medium_mesh():
     """Medium Wigley III mesh (~800 panels)."""
     return wigley3_wetted_hull_mesh(
-        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C,
+        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA,
         n_sections=20, n_levels=10,
     )
 
@@ -64,7 +63,7 @@ def medium_mesh():
 def hydro_ref():
     """Closed-form hydrostatic reference."""
     return wigley3_hydrostatic_reference(
-        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C,
+        WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA,
         density=_DENSITY, gravity=_GRAVITY,
     )
 
@@ -97,13 +96,13 @@ class TestWigley3Geometry:
 
     def test_block_coefficient(self):
         """Cb must be 0.543 within 0.1%."""
-        ref = wigley3_hydrostatic_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C)
+        ref = wigley3_hydrostatic_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA)
         assert abs(ref["Cb"] - 0.543) < 0.001
 
     def test_volume_closed_form(self):
         """Volume must match closed-form integral."""
-        ref = wigley3_hydrostatic_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C)
-        expected = WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * WIGLEY3_CB
+        ref = wigley3_hydrostatic_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA)
+        expected = WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * LEGACY_WIGLEY_CB
         assert abs(ref["volume"] - expected) / expected < 1e-10
 
     def test_coarse_mesh_volume(self, coarse_mesh, hydro_ref):
@@ -118,15 +117,15 @@ class TestWigley3Geometry:
 
     def test_wetted_area_reference(self):
         """Wetted area reference is finite and positive."""
-        area = wigley3_wetted_area_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C)
+        area = wigley3_wetted_area_reference(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA)
         assert area > 0
         assert math.isfinite(area)
 
     def test_mesh_panel_counts(self):
         """Mesh densities produce expected panel counts."""
-        coarse = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C, n_sections=10, n_levels=5)
-        medium = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C, n_sections=20, n_levels=10)
-        fine = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, WIGLEY3_C, n_sections=40, n_levels=20)
+        coarse = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA, n_sections=10, n_levels=5)
+        medium = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA, n_sections=20, n_levels=10)
+        fine = wigley3_wetted_hull_mesh(WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, LEGACY_WIGLEY_ALPHA, n_sections=40, n_levels=20)
         assert coarse.panel_count == 200
         assert medium.panel_count == 800
         assert fine.panel_count == 3200
@@ -175,7 +174,7 @@ class TestRadiation:
 
     def test_added_mass_order_of_magnitude(self, radiation_coarse):
         """Added mass entries must be physically reasonable."""
-        mass = _DENSITY * WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * WIGLEY3_CB
+        mass = _DENSITY * WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * LEGACY_WIGLEY_CB
         for i in range(6):
             am = radiation_coarse.added_mass[i, i]
             # Should be O(mass) for translations, O(mass*L^2) for rotations
@@ -295,7 +294,7 @@ class TestConvergence:
         nu = 1.0**2 / g
         rad = solve_radiation_3d(coarse_mesh, nu, density=_DENSITY, gravity=g, chief_points="auto")
         am_heave = float(rad.added_mass[2, 2])
-        mass = _DENSITY * WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * WIGLEY3_CB
+        mass = _DENSITY * WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * LEGACY_WIGLEY_CB
         # Heave added mass should be O(mass)
         assert 0.1 * mass < am_heave < 10.0 * mass
 
@@ -311,8 +310,13 @@ class TestEnergyConservation:
         """Damping matrix must be positive semi-definite."""
         B = radiation_coarse.damping
         B_sym = 0.5 * (B + B.T)
-        eigenvalues = np.linalg.eigvalsh(B_sym)
-        # Allow small negative eigenvalues due to numerical error
+        # Radiation damping mixes forces and moments. Scale velocities to a
+        # common unit before checking dissipated power, with the same physical
+        # scales used in the nondimensional radiation tables.
+        length = np.array([1, 1, 1, WIGLEY3_B, WIGLEY3_L, WIGLEY3_L])
+        mass = _DENSITY * WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * LEGACY_WIGLEY_CB
+        dimensionless = B_sym / (mass * radiation_coarse.omega * np.outer(length, length))
+        eigenvalues = np.linalg.eigvalsh(dimensionless)
         assert np.min(eigenvalues) > -1e-8
 
     def test_damping_diagonal_nonnegative(self, radiation_coarse):

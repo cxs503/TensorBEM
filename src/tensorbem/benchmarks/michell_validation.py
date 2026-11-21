@@ -70,7 +70,7 @@ from ..michell import (
 )
 from ..uq import grid_convergence_index
 from ..wigley import (
-    michell_wave_resistance,
+    michell_wave_resistance_legacy,
     wigley_hull_mesh,
     wigley_hull_properties,
 )
@@ -470,7 +470,7 @@ def wigley_resistance_crosscheck(
 ) -> dict[str, Any]:
     """Single-hull routes: panel quadrature vs closed form vs repository reference.
 
-    ``tensorbem.wigley.michell_wave_resistance`` is the pre-existing verified
+    ``tensorbem.wigley.michell_wave_resistance_legacy`` is the pre-existing verified
     implementation; the panel route here is independent of it (the closed form
     of the ``x`` and ``z`` integrals is replaced by a Gauss sum over the
     centreplane).  Agreement to round-off is the implementation check that
@@ -483,7 +483,7 @@ def wigley_resistance_crosscheck(
         U = speed_for_froude(froude, L)
         r_panel = wave_resistance_from_panels(panels, U, T)
         r_closed = michell_resistance(kochin, U, T)
-        r_repo = michell_wave_resistance(L, B, T, U)
+        r_repo = michell_wave_resistance_legacy(L, B, T, U)
         rows.append({
             "froude_number": float(froude),
             "speed": float(U),
@@ -506,7 +506,7 @@ def wigley_resistance_crosscheck(
             ),
             _criteria_row(
                 "W2", "Resistance integral reproduces the repo reference (< 1e-5)",
-                worst_repo, 1e-5, "segmented Gauss vs michell_wave_resistance",
+                worst_repo, 1e-5, "segmented Gauss vs michell_wave_resistance_legacy",
             ),
         ],
     }
@@ -532,7 +532,7 @@ def truncation_check(
             kochin, U, T, lambda_max=2.0 * default_lambda_max(k0, T),
             n_seg=64, n_quad=64,
         )
-        ref = michell_wave_resistance(L, B, T, U)
+        ref = michell_wave_resistance_legacy(L, B, T, U)
         rows.append({
             "froude_number": float(froude),
             "base": float(base),
@@ -552,7 +552,7 @@ def truncation_check(
             ),
             _criteria_row(
                 "Q2", "R_w matches the repository reference < 1e-5", worst_repo, 1e-5,
-                "tensorbem.wigley.michell_wave_resistance",
+                "tensorbem.wigley.michell_wave_resistance_legacy",
             ),
         ],
     }

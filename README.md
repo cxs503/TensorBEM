@@ -1,5 +1,7 @@
 # TensorBEM
 
+**Ship hydrodynamics.** [Journée Wigley III zero-speed head-sea benchmark](benchmarks/journee_wigley3_zero_speed/README.md) includes the tank data, two solvers on identical meshes, heave and pitch amplitude and phase, and the unresolved short-wave pitch discrepancy.
+
 **Tensor ecosystem vision:** [AI-era ecosystem vision](https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md).
 
 **Project charter:** [docs/PROJECT_CHARTER.md](docs/PROJECT_CHARTER.md) — mission, ownership, non-goals, integration, quality gates, and agent rules.

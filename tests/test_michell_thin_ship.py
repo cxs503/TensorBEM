@@ -45,7 +45,7 @@ from tensorbem.michell import (
     wigley_kochin_closed_form,
     wigley_panels,
 )
-from tensorbem.wigley import michell_kochin_function, michell_wave_resistance
+from tensorbem.wigley import michell_kochin_function, michell_wave_resistance_legacy
 
 L, B, T = bench.HULL
 
@@ -127,7 +127,7 @@ class TestResistanceIntegral:
         U = speed_for_froude(froude, L)
         panels = wigley_panels(L, B, T, 96, 48, rule="gauss")
         r_panel = wave_resistance_from_panels(panels, U, T)
-        r_repo = michell_wave_resistance(L, B, T, U)
+        r_repo = michell_wave_resistance_legacy(L, B, T, U)
         assert abs(r_panel - r_repo) / r_repo < 1e-8
 
     def test_resistance_nodes_are_the_classic_substitution(self):

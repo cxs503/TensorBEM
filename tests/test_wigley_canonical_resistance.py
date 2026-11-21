@@ -1,22 +1,7 @@
 """Gates for the canonical-spectrum Wigley wave resistance (m16274).
 
-The shipped default ``michell_wave_resistance`` is the pre-repair formula
-(``docs/m3125``, ``docs/michell_unit_arbitration.md``): single-wavenumber
-sampling plus ``4 rho/U^2``, which returns ``kg s^2 m^-1`` -- *not* a force --
-and is low by a factor 10-25 depending on Froude number.
-``michell_wave_resistance_canonical`` is the same theory on the canonical
-dispersion pair ``(k, alpha) = (k0 lam^2, k0 lam)`` with the ``lam^2`` weight and
-the textbook ``4 rho g^2/(pi U^2)`` prefactor on the one-side amplitude.
-
-The gates below refuse to let the repair rot:
-
-* unit exponents must be those of a force (the probe that sees a missing
-  dimensional factor, since Froude-scaled studies are blind to it);
-* the value must reproduce the *independent* theta form of
-  :mod:`tensorbem.thin_ship_michell` (different quadrature, different amplitude
-  evaluation) far inside the 3% acceptance band;
-* the legacy default must stay bit-for-bit where the pinned numbers expect it,
-  so that the follow-up re-pinning mission is the only thing that moves them.
+Public routes use the force-valued integral. The explicitly named legacy
+route records the dimensional error for archived benchmark reproduction.
 """
 
 from __future__ import annotations
@@ -67,28 +52,28 @@ def _exponents(func, fr: float = 0.30, l: float = L, b: float = B, t: float = T)
 
 
 def test_canonical_resistance_is_a_force() -> None:
-    exps = _exponents(wigley.michell_wave_resistance_canonical)
+    exps = _exponents(wigley.michell_wave_resistance)
     assert np.allclose(exps, FORCE_EXPONENTS, atol=1e-6, rtol=0.0), exps
 
 
-def test_legacy_default_is_still_not_a_force() -> None:
-    """RATCHET (record of the defect): the shipped default stays pre-repair."""
-    exps = _exponents(wigley.michell_wave_resistance)
+def test_legacy_is_still_not_a_force() -> None:
+    """RATCHET (record of the defect): the explicit legacy route stays reproducible."""
+    exps = _exponents(wigley.michell_wave_resistance_legacy)
     assert np.allclose(np.asarray(exps) - np.asarray(FORCE_EXPONENTS), (0.0, 2.0, -4.0),
                        atol=1e-6, rtol=0.0), exps
 
 
 @pytest.mark.parametrize("fr", FR)
 def test_canonical_reproduces_the_independent_theta_form(fr: float) -> None:
-    canon = wigley.michell_wave_resistance_canonical(L, B, T, _speed(fr))
+    canon = wigley.michell_wave_resistance(L, B, T, _speed(fr))
     theta = _theta(fr)
     assert abs(canon - theta) / theta < 3e-3, (canon, theta)
 
 
 @pytest.mark.parametrize("fr", FR)
-def test_legacy_default_is_badly_low(fr: float) -> None:
-    legacy = wigley.michell_wave_resistance(L, B, T, _speed(fr))
-    canon = wigley.michell_wave_resistance_canonical(L, B, T, _speed(fr))
+def test_legacy_is_badly_low(fr: float) -> None:
+    legacy = wigley.michell_wave_resistance_legacy(L, B, T, _speed(fr))
+    canon = wigley.michell_wave_resistance(L, B, T, _speed(fr))
     assert 5.0 < canon / legacy < 40.0, canon / legacy
 
 

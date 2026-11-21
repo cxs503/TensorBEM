@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tensorbem import wigley3_freq as wf  # noqa: E402
 from tensorbem.wigley3_hull import (  # noqa: E402
+    LEGACY_WIGLEY_ALPHA,
     wigley3_displaced_volume,
     wigley3_wetted_hull_mesh,
 )
@@ -39,14 +40,14 @@ CENTER = (0.0, 0.0, -0.09375)
 
 BUILDERS = {
     "wigley3_hull": [
-        ("nx=10,nz=5", lambda: wigley3_wetted_hull_mesh(nx=10, nz=5)),
-        ("nx=20,nz=10", lambda: wigley3_wetted_hull_mesh(nx=20, nz=10)),
-        ("nx=40,nz=20", lambda: wigley3_wetted_hull_mesh(nx=40, nz=20)),
+        ("nx=10,nz=5", lambda: wigley3_wetted_hull_mesh(nx=10, nz=5, alpha=LEGACY_WIGLEY_ALPHA)),
+        ("nx=20,nz=10", lambda: wigley3_wetted_hull_mesh(nx=20, nz=10, alpha=LEGACY_WIGLEY_ALPHA)),
+        ("nx=40,nz=20", lambda: wigley3_wetted_hull_mesh(nx=40, nz=20, alpha=LEGACY_WIGLEY_ALPHA)),
     ],
     "wigley3_freq": [
-        ("n_sections=10,n_levels=5", lambda: wf.wigley3_wetted_hull_mesh(n_sections=10, n_levels=5)),
-        ("n_sections=20,n_levels=10", lambda: wf.wigley3_wetted_hull_mesh(n_sections=20, n_levels=10)),
-        ("n_sections=40,n_levels=20", lambda: wf.wigley3_wetted_hull_mesh(n_sections=40, n_levels=20)),
+        ("n_sections=10,n_levels=5", lambda: wf.wigley3_wetted_hull_mesh(n_sections=10, n_levels=5, c=LEGACY_WIGLEY_ALPHA)),
+        ("n_sections=20,n_levels=10", lambda: wf.wigley3_wetted_hull_mesh(n_sections=20, n_levels=10, c=LEGACY_WIGLEY_ALPHA)),
+        ("n_sections=40,n_levels=20", lambda: wf.wigley3_wetted_hull_mesh(n_sections=40, n_levels=20, c=LEGACY_WIGLEY_ALPHA)),
     ],
 }
 
@@ -61,7 +62,7 @@ def signature(vertices: np.ndarray, faces: np.ndarray) -> str:
 def build() -> dict:
     import capytaine as cpt
 
-    volume = wigley3_displaced_volume()
+    volume = wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)
     solver = cpt.BEMSolver()
     payload: dict = {
         "metadata": {

@@ -31,8 +31,12 @@ IntArray = NDArray[np.int64]
 WIGLEY3_L = 3.0       # Length (m)
 WIGLEY3_B = 0.3       # Beam (m)
 WIGLEY3_T = 0.1875    # Draft (m)
-WIGLEY3_CB = 0.543    # Block coefficient
-WIGLEY3_ALPHA = (WIGLEY3_CB - 4.0 / 9.0) * 45.0 / 4.0  # ~1.109
+# The names are geometry identifiers. Journée calls the longitudinal term a2.
+CLASSIC_WIGLEY_ALPHA = 0.0
+WIGLEY3_ALPHA = 0.2
+WIGLEY3_CB = 4.0 / 9.0 + 4.0 * WIGLEY3_ALPHA / 45.0
+LEGACY_WIGLEY_CB = 0.543
+LEGACY_WIGLEY_ALPHA = (LEGACY_WIGLEY_CB - 4.0 / 9.0) * 45.0 / 4.0
 
 
 def wigley3_half_breadth(
@@ -47,7 +51,7 @@ def wigley3_half_breadth(
     ``y = (B/2) (1 - xi^2) (1 - zeta^2) (1 + alpha xi^2)`` with
     ``xi = 2x/L`` and ``zeta = z/T``: the fullness parameter acts on the
     **longitudinal** coordinate, which is what "fuller ends than the standard
-    parabolic Wigley (Wigley I)" in
+    parabolic Wigley" in
     :mod:`tensorbem.wigley3_freq` / ``docs/wigley3_freq_verification_report.md``
     means.  Applying it to ``zeta`` instead (the pre-m16935 code) keeps
     ``Cwp = 2/3`` while making the sections full -- a hull that carries the
@@ -112,8 +116,8 @@ def wigley3_wetted_hull_mesh(
     L, B, T : float
         Length, beam and draft (m).
     alpha : float
-        Modification parameter (``1.109`` reproduces Journee's Wigley III,
-        ``Cb = 0.543``; ``alpha = 0`` is the parabolic Wigley hull with
+        Modification parameter (``0.2`` reproduces Journée's Wigley III,
+        ``Cb = 0.46222…``; ``alpha = 0`` is the parabolic Wigley hull with
         ``Cb = 4/9``).
 
     Returns
