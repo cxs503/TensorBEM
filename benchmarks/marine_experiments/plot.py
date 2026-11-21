@@ -70,6 +70,53 @@ def render_wigley():
     plt.close(fig)
 
 
+def render_zero_speed():
+    case = "journee_added_resistance"
+    rows = [r for r in read(case) if r["panels"] == "480" and float(r["Fn"]) == 0.0]
+    fig, axes = plt.subplots(
+        1, 2, figsize=(8.8, 3.8), layout="constrained", sharey=True
+    )
+    for ax, hull in zip(axes, ("III", "IV")):
+        measured = [r for r in rows if r["hull"] == hull]
+        ax.scatter(
+            values(measured, "lambda_L"),
+            values(measured, "observed"),
+            marker="o",
+            label="Experiment",
+            s=27,
+            edgecolor="#182f3a",
+            facecolor="white",
+            zorder=5,
+        )
+        prediction(ax, measured, "predicted", "Sectional radiation", "#939797", ":")
+        for solver, color, style in (
+            ("tensorbem", BLUE, "-"),
+            ("capytaine", ORANGE, "--"),
+        ):
+            group = [
+                r
+                for r in read(case, "drift_" + solver)
+                if r["panels"] == "760" and r["hull"] == hull
+            ]
+            prediction(
+                ax,
+                group,
+                "free",
+                "TensorBEM 3-D" if solver == "tensorbem" else "Capytaine 3-D",
+                color,
+                style,
+            )
+        ax.set(xlabel="Wavelength / ship length", title=f"Wigley {hull}")
+        ax.axhline(0, color="#8c9393", lw=0.55)
+    axes[0].set_ylabel("Added resistance coefficient")
+    axes[1].legend(frameon=False, fontsize=8)
+    fig.suptitle(
+        "Zero-speed head waves   |   Freely heaving and pitching hulls", fontsize=14
+    )
+    fig.savefig(ROOT / case / "zero_speed_drift.png", dpi=134)
+    plt.close(fig)
+
+
 def render_kvlcc2():
     case = "kvlcc2_head_seas"
     rows = [r for r in read(case) if r["panels"] == "1118"]
@@ -173,5 +220,6 @@ if __name__ == "__main__":
         }
     )
     render_wigley()
+    render_zero_speed()
     render_kvlcc2()
     render_floe()

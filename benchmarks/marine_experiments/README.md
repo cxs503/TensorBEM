@@ -28,6 +28,19 @@ On model III at Fn 0.40 and λ/L 1.384, the tank coefficient is 14.50. The geome
 
 ![Wigley raw trials and the two predictions over all 11 series](../journee_added_resistance/comparison.png)
 
+### Independent three-dimensional drift calculation at zero speed
+
+For the 20 Table 10 runs we also solved 3-D diffraction and heave/pitch radiation at 264, 480 and 760 panels. TensorBEM superposes the outgoing potentials and normal velocities with the complex rigid-body velocities −iωξ. The publicly callable `far_field_mean_drift_3d` evaluates the directional momentum integral over 144 azimuths. This energy-conserving reduction assumes zero speed and passive motion without external damping. The fixed-body limit is retained. Capytaine 3.0.0 solves the same panel geometries using its indirect BEM, evaluates its source-strength Kochin functions, and independently computes the interference and outward momentum flux using its public drift-force function. Each code solves for its own motions. On a unit incident wave, added resistance is minus the drift force along the bow-positive x axis. [Capytaine drift theory](https://capytaine.org/v3.0.0/theory_manual/theory.html) · [TensorBEM results](../journee_added_resistance/drift_tensorbem.csv) · [Capytaine results](../journee_added_resistance/drift_capytaine.csv)
+
+| Hull | Runs | Sectional RMS / max, 480 panels | TensorBEM 3-D RMS / max, 760 | Capytaine 3-D RMS / max, 760 | Largest absolute difference between 3-D coefficients |
+|---|---:|---:|---:|---:|---:|
+| III | 13 | 0.462 / 0.916 | 0.500 / 0.741 | 0.496 / 0.741 | 0.0532 |
+| IV | 7 | 0.288 / 0.589 | 0.424 / 0.863 | 0.423 / 0.861 | 0.0160 |
+
+The scores use the same experimental normalization and peak gate as the sectional predictions. On the finest mesh all model/hull combinations fail. TensorBEM's largest coefficient changes between 480 and 760 panels are 0.0089 (III) and 0.0073 (IV). For model IV at λ/L = 0.50 the measured coefficient is 5.73, while TensorBEM gives 0.783 and Capytaine gives 0.799. Computing the reduced formula from Capytaine's own outgoing modes changes the coefficient by at most 0.0190 (III) and 0.0069 (IV) relative to its interference formulation. This isolates the large tank discrepancy from the choice of solver and from using a sectional energy approximation alone. Wave-amplitude dependence, force measurement uncertainty and physical effects outside the ideal linear-wave model still need independent evidence. [TensorBEM grid scores](../journee_added_resistance/drift_tensorbem_scores.csv) · [Capytaine grid scores](../journee_added_resistance/drift_capytaine_scores.csv)
+
+![Table 10 experimental runs, sectional and two 3-D drift predictions](../journee_added_resistance/zero_speed_drift.png)
+
 ## KVLCC2
 
 The 1:80 model retains the published draft of 0.260 m, length 4 m, displacement 0.6106 m³, and longitudinal centre of gravity 3.48% of length forward of amidships. The 3-D mesh comes from NMRI's joined bow and stern patches, including the submerged bulb. The sectional solver uses the waterline-connected component of the published body plan, closing the last sectional intervals at the transom extension and FP. Coarse and fine meshes underestimate displacement by 2.39% and 0.85%. The model uses free heave and pitch and kyy/L = 0.25. The result table includes 0.24 and 0.26 sensitivity columns. The precise pitch inertia and experimental surge restraint in Lee's runs are unconfirmed. [Workshop surface grid](https://www.nmri.go.jp/study/research_organization/fluid_performance/cfd/cfdws05/gothenburg2000/data/KVLCC2_data/kvlcc2_surfacemesh.ZIP) · [Body-plan offsets](https://www.nmri.go.jp/study/research_organization/fluid_performance/cfd/cfdws05/gothenburg2000/data/KVLCC2_data/kvlcc2_offsets.ZIP)
@@ -71,11 +84,14 @@ export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
 python -m benchmarks.journee_added_resistance.run --workers 4
 python -m benchmarks.kvlcc2_head_seas.run --workers 2
 python -m benchmarks.floe_transmission.run
+python -m benchmarks.journee_added_resistance.zero_speed_drift tensorbem --workers 3
 python -m benchmarks.marine_experiments.plot
 python -m pytest -q tests/test_marine_experiments.py
 ```
 
-Pass `--require-pass` to any of the three case runners to return exit code 1 while its finest-grid acceptance fails. Wigley's required route is the uncorrected geometry-only model. Rows for each diagnostic and for the separate bow-reflection prediction remain in its score file.
+Use `python -m pip install capytaine==3.0.0` and `python -m benchmarks.journee_added_resistance.zero_speed_drift capytaine --workers 2` to repeat the independent Table 10 comparison.
+
+Pass `--require-pass` to any of the case runners to return exit code 1 while its finest-grid acceptance fails. Wigley's required route is the uncorrected geometry-only model. Rows for each diagnostic and for the separate bow-reflection prediction remain in its score file.
 
 ```sh
 python -m benchmarks.journee_added_resistance.run --archive 0909-DUT-92.zip --workers 4
@@ -89,4 +105,4 @@ python -m benchmarks.marine_experiments.import_figures floe Nelli_2017.pdf
 
 The extended run includes the six new tests, the Journée tests, the sectional radiation and double-body tests, flexural-gravity tests, ship-motion conventions, hydrostatic RAOs and ice RAOs. It produced 295 passes and 48 failures. All 48 failing pytest node IDs also fail on the unmodified parent commit `7898931c`, in the legacy shore-fast ice test `tests/test_flexural_gravity_fox_squire.py`. The test's original JFM citation conflicts with the authors' publication record. Its numeric arrays have no traceable source extraction here. They remain unresolved, independent of the finite-length polymer flume benchmark. [Fox and Squire, JGR 95 (1990), 11629–11639](https://doi.org/10.1029/JC095iC07p11629) · [Author's publication list](https://www.physics.otago.ac.nz/data/fox/publications/publications.html)
 
-The next discriminating ship comparison is a three-dimensional second-order pressure or far-field force evaluated on the same cases, especially zero-speed Wigley and the KVLCC2 short-wave points. For plates, the paired energy deficit provides a measurable target for dissipation and overwash. S-175/DTC oblique seas, OC6 platform loads, full-ship bending loads and continuous level-ice resistance each require their own experimental conditions and scoring.
+At forward speed, the next ship comparison is a three-dimensional second-order force with a consistent advancing-ship radiation condition, including the KVLCC2 short-wave points. For plates, the paired energy deficit provides a measurable target for dissipation and overwash. S-175/DTC oblique seas, OC6 platform loads, full-ship bending loads and continuous level-ice resistance each require their own experimental conditions and scoring.
