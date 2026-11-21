@@ -192,29 +192,25 @@ def _eval_wave_block(
     if np.any(cone):
         xc = x_flat[cone]
         yc = y_flat[cone]
-        inv_y = 1.0 / yc
-        ik = -np.exp(-yc) * np.array(
+        # Carry Y^(2n) times the integral moment. Terms in 1/Y^(2n)
+        # overflow near wave synchronism even when the physical result is finite.
+        moment = -np.exp(-yc) * np.array(
             [exponential_integral(float(val)) for val in yc], dtype=float
         )
-        sum_f = ik.copy()
+        sum_f = moment.copy()
         sum_fx = np.zeros_like(xc)
-        x_half2 = 0.25 * xc * xc
-        pow_x = np.ones_like(xc)
-        inv_y_pow = np.ones_like(yc)
+        ratio_sq = -0.25 * (xc / yc) ** 2
+        weight = np.ones_like(xc)
         fact = 1.0
-        nz_x = xc > 0.0
-        safe_x = np.where(nz_x, xc, 1.0)
+        safe_x = np.where(xc > 0, xc, 1.0)
         for n in range(1, 24):
             if n > 1:
                 fact *= (2 * n - 3) * (2 * n - 2)
-            inv_y_pow = inv_y_pow * inv_y
-            ik = ik + fact * inv_y_pow
-            fact_odd = fact * (2 * n - 1)
-            inv_y_pow = inv_y_pow * inv_y
-            ik = ik + fact_odd * inv_y_pow
-            pow_x = pow_x * (-x_half2 / (n * n))
-            sum_f = sum_f + pow_x * ik
-            sum_fx = sum_fx + np.where(nz_x, (2.0 * n) * (pow_x / safe_x) * ik, 0.0)
+            moment = yc**2 * moment + fact * (yc + 2 * n - 1)
+            weight *= ratio_sq / (n * n)
+            term = weight * moment
+            sum_f += term
+            sum_fx += (2 * n) * term / safe_x
         f_out[cone] = sum_f
         fx_out[cone] = sum_fx
 
