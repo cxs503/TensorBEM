@@ -2,6 +2,8 @@
 
 A hull-specific model calibrated on the speed endpoints Fn = 0.20 and 0.40 passes both motion criteria at the withheld Fn = 0.30. A geometry-only double-body calculation improves all six motion amplitude RMS values relative to the original uniform-flow 3-D solver. Its phase and amplitude errors still prevent experimental acceptance. These two results use different inputs.
 
+The [restoring-convention and cross-hull study](impedance_and_transfer.md) identifies the Wigley III high-speed pitch error and tests the same endpoint procedure on 28 original Wigley I and IV wave runs.
+
 ![Held-speed motion predictions and direct forced-oscillation comparisons at Fn 0.30](double_body_comparison.png)
 
 ## Held-speed prediction with reversal symmetry

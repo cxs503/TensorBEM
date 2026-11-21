@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .assess import ROOT, compare, measured_matrices, table, write
+from .assess import MASS, ROOT, compare, measured_matrices, table, write
 from .import_tables import SHA256
 from .radiation_study import endpoint_load, matrices, solve_motion
 from .strip import COEFFICIENTS
@@ -33,11 +33,18 @@ def speed_weights(fn, lower, upper, cross, *, parity):
     return 1 - right, right
 
 
-def endpoint_matrices(training, fn, we):
+def endpoint_matrices(training, fn, we, *, mass=MASS, upper_levels=(1, 2)):
     a, b = 0.2, 0.4
+
+    def at(speed):
+        levels = upper_levels if speed == b else (1, 2)
+        return measured_matrices(
+            training[training["Fn"] == speed], we, mass=mass, levels=levels
+        )
+
     if fn in (a, b):
-        return measured_matrices(training[training["Fn"] == fn], we)
-    endpoints = [measured_matrices(training[training["Fn"] == s], we) for s in (a, b)]
+        return at(fn)
+    endpoints = [at(s) for s in (a, b)]
     if any(x is None for x in endpoints):
         return None
     result = np.empty((2, 2, 2))
@@ -50,7 +57,7 @@ def endpoint_matrices(training, fn, we):
     return result
 
 
-def parity_motions(root=ROOT):
+def parity_motions(root=ROOT, *, measured_restoring=None):
     native = table(root, "tensorbem")
     rows = native[native["panels"] == max(native["panels"])].copy()
     radiation = table(root, "radiation")
@@ -65,6 +72,9 @@ def parity_motions(root=ROOT):
         use_rad, use_load = rad is not None, force is not None
         if not use_rad:
             rad = matrices(r)
+        elif measured_restoring is not None:
+            for i, j in np.ndindex(2, 2):
+                r["C" + "35"[i] + "35"[j]] = measured_restoring[i, j]
         if not use_load:
             force = [complex(r["F" + d + "_re"], r["F" + d + "_im"]) for d in "35"]
         solve_motion(r, rad, force)

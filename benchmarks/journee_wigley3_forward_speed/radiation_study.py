@@ -41,18 +41,38 @@ def endpoint_radiation(training, fn, we):
     return result
 
 
-def endpoint_load(training, fn, ratio, k):
+def load_components(rows, ratio, k, restoring):
+    """Return heave force and pitch moment, with NaN outside each component's observed band."""
+    force = np.full(2, np.nan, dtype=complex)
+    for i, (d, scale) in enumerate(
+        zip(("force3", "moment5"), (restoring[0], restoring[1] * k))
+    ):
+        usable = rows[np.isfinite(rows[d]) & np.isfinite(rows[d + "_deg"])]
+        x = np.unique(usable["lambda_L"])
+        if x.size and x[0] <= ratio <= x[-1]:
+            z = usable[d] * np.exp(-1j * np.deg2rad(usable[d + "_deg"]))
+            mean = [z[usable["lambda_L"] == r].mean() for r in x]
+            force[i] = scale * np.interp(ratio, x, mean)
+    return force
+
+
+def measured_load(rows, ratio, k):
+    force = load_components(rows, ratio, k, (C33_REF, C55_REF))
+    return force if np.all(np.isfinite(force)) else None
+
+
+def endpoint_components(training, fn, ratio, k, restoring):
     force = np.zeros(2, dtype=complex)
     for anchor, weight in endpoint_weights(fn):
-        rows = training[training["Fn"] == anchor]
-        x = np.unique(rows["lambda_L"])
-        if x.size == 0 or not x[0] <= ratio <= x[-1]:
-            return None
-        for i, (d, scale) in enumerate((("force3", C33_REF), ("moment5", C55_REF * k))):
-            z = rows[d] * np.exp(-1j * np.deg2rad(rows[d + "_deg"]))
-            mean = np.array([z[rows["lambda_L"] == r].mean() for r in x])
-            force[i] += weight * scale * np.interp(ratio, x, mean)
+        force += weight * load_components(
+            training[training["Fn"] == anchor], ratio, k, restoring
+        )
     return force
+
+
+def endpoint_load(training, fn, ratio, k):
+    force = endpoint_components(training, fn, ratio, k, (C33_REF, C55_REF))
+    return force if np.all(np.isfinite(force)) else None
 
 
 def matrices(row):

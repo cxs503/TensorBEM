@@ -67,10 +67,9 @@ def capytaine_coefficients(mesh):
     return coefficients
 
 
-def model_matrices(mesh):
+def model_matrices(mesh, *, mass=RHO * 0.078, cg_z=0.170 - 0.1875):
     """Return the two constrained model matrices about the waterplane origin."""
-    cg = np.array([0.0, 0.0, 0.170 - 0.1875])
-    mass = RHO * 0.078
+    cg = np.array([0.0, 0.0, cg_z])
     # Only the pitch entry is retained after projecting the rigid-body matrix.
     inertia = np.diag([0.0, mass * 0.75**2, 0.0])
     block = np.ix_(MODES, MODES)
