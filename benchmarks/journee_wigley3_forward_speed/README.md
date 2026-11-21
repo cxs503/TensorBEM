@@ -2,6 +2,8 @@
 
 TensorBEM misses the towing-tank motion acceptance criteria at all three tested speeds. On 19 cases with matched measurements, replacing the predicted radiation matrices with measured ones lowers heave and pitch amplitude RMS errors from 0.335 and 0.322 to 0.089 and 0.168. Replacing excitation alone gives 0.335 and 0.351. These substitutions diagnose which inputs matter to the response. They use tank measurements at the evaluated conditions and provide no out-of-sample prediction.
 
+The [sectional radiation and withheld-speed study](radiation_models.md) tests a corrected strip-theory formulation at all 104 forced-motion records. Using only the two endpoint speeds for tank calibration, held-speed pitch passes the experimental criteria while heave misses its maximum-amplitude limit.
+
 ![Measured heave and pitch amplitude and phase at three Froude numbers, with both 760-panel predictions](comparison.png)
 
 ## Experiment and calculation
