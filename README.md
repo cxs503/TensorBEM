@@ -2,6 +2,8 @@
 
 **Ship hydrodynamics.** [Journée Wigley III zero-speed head-sea benchmark](benchmarks/journee_wigley3_zero_speed/README.md) includes the tank data, two solvers on identical meshes, heave and pitch amplitude and phase, and the unresolved short-wave pitch discrepancy.
 
+The [forward-speed Wigley III benchmark](benchmarks/journee_wigley3_forward_speed/README.md) compares both solvers with 64 tank runs at Fn = 0.20, 0.30 and 0.40. All six motion/speed combinations miss the experimental criteria. Matched forced-oscillation and restrained-wave tests isolate the contribution of radiation and excitation.
+
 **Tensor ecosystem vision:** [AI-era ecosystem vision](https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md).
 
 **Project charter:** [docs/PROJECT_CHARTER.md](docs/PROJECT_CHARTER.md) — mission, ownership, non-goals, integration, quality gates, and agent rules.
