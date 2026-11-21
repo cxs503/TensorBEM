@@ -4,6 +4,8 @@ TensorBEM misses the towing-tank motion acceptance criteria at all three tested 
 
 The [sectional radiation and withheld-speed study](radiation_models.md) tests a corrected strip-theory formulation at all 104 forced-motion records. Using only the two endpoint speeds for tank calibration, held-speed pitch passes the experimental criteria while heave misses its maximum-amplitude limit.
 
+The [double-body flow and speed-reversal study](double_body_results.md) improves geometry-only motion amplitude RMS at all three speeds. The tank-assisted parity model passes both heave and pitch at the withheld middle speed.
+
 ![Measured heave and pitch amplitude and phase at three Froude numbers, with both 760-panel predictions](comparison.png)
 
 ## Experiment and calculation
