@@ -61,6 +61,7 @@ import numpy as np
 
 from .free_surface_solver3d import (
     Diffraction3DResult,
+    Radiation3DResult,
     kochin_function_3d,
     solve_diffraction_3d,
 )
@@ -390,12 +391,20 @@ def far_field_mean_drift_3d(
     *,
     density: float = _DEFAULT_DENSITY,
     n_azimuth: int = 360,
+    radiation: Radiation3DResult | None = None,
+    motion: np.ndarray | None = None,
     weight: Literal["maruo", "cos_projection"] = "maruo",
 ) -> dict:
     """Maruo far-field mean drift force from the scattered Kochin function.
 
-    Deep water, fixed body.  With ``K(theta)`` the Kochin function of the
-    *scattered* potential (tangent-circle radiation condition already built into
+    Zero forward speed, deep water. Supply both radiation and motion to
+    superpose wave-induced rigid-body motions. Displacements are complex m/rad
+    in radiation.modes order, on the same mesh, about the same origin and
+    at the same incident
+    amplitude. The reduced momentum formula requires a passive conservative
+    body, with no power take-off or external damping. Omitting both arguments
+    uses the fixed-body solution. With ``K(theta)`` the Kochin function of the
+    outgoing diffraction and radiation potential (tangent-circle radiation condition already built into
     :func:`~tensorbem.free_surface_solver3d.kochin_function_3d`) the momentum flux
     through a large control cylinder gives
 
@@ -423,15 +432,26 @@ def far_field_mean_drift_3d(
     n_az = int(n_azimuth)
     theta = (2.0 * math.pi / n_az) * np.arange(n_az, dtype=float)
     dtheta = 2.0 * math.pi / n_az
-    # Scattered potential; its own normal derivative is dphi_s/dn = -dphi_I/dn
-    # because the total normal velocity vanishes on a fixed body.
-    kochin = kochin_function_3d(
-        mesh,
-        diffraction.scattered_potential,
-        -np.asarray(diffraction.incident_normal_velocity, dtype=np.complex128),
-        k,
-        theta,
-    )
+    phi = diffraction.scattered_potential
+    velocity = -diffraction.incident_normal_velocity
+    if (radiation is None) != (motion is None):
+        raise ValueError("supply radiation and motion together")
+    if radiation is not None:
+        if not isinstance(radiation, Radiation3DResult):
+            raise TypeError("radiation must be a Radiation3DResult")
+        if not (
+            np.isclose(radiation.wavenumber, k, rtol=1e-12, atol=0)
+            and np.isclose(radiation.omega, diffraction.omega, rtol=1e-12, atol=0)
+        ):
+            raise ValueError("radiation and diffraction frequencies differ")
+        displacement = np.asarray(motion, dtype=complex)
+        if displacement.shape != radiation.modes.shape or not np.all(np.isfinite(displacement)):
+            raise ValueError("one finite complex displacement per radiation mode required")
+        # Native radiation potentials correspond to unit *velocity*.
+        rate = -1j * diffraction.omega * displacement
+        phi = phi + radiation.potentials @ rate
+        velocity = velocity + radiation.normal_velocities @ rate
+    kochin = kochin_function_3d(mesh, phi, velocity, k, theta)
     pattern = np.abs(kochin) ** 2
     beta = float(diffraction.wave_angle)
     e_beta = np.array([math.cos(beta), math.sin(beta)])
