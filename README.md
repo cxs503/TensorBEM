@@ -4,6 +4,8 @@
 
 The [forward-speed Wigley III benchmark](benchmarks/journee_wigley3_forward_speed/README.md) covers 64 tank runs at three speeds. The [sectional radiation study](benchmarks/journee_wigley3_forward_speed/radiation_models.md) compares the individual forced-motion coefficients. The [double-body and speed-reversal study](benchmarks/journee_wigley3_forward_speed/double_body_results.md) reports the geometry-only model's remaining errors and the tank-assisted model's passing heave and pitch at the withheld middle speed.
 
+The [restoring-convention and cross-hull study](benchmarks/journee_wigley3_forward_speed/impedance_and_transfer.md) identifies the Wigley III high-speed pitch error and tests the same endpoint procedure on 28 original Wigley I and IV wave runs.
+
 **Tensor ecosystem vision:** [AI-era ecosystem vision](https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md).
 
 **Project charter:** [docs/PROJECT_CHARTER.md](docs/PROJECT_CHARTER.md) — mission, ownership, non-goals, integration, quality gates, and agent rules.

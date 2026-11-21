@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 from pathlib import Path
+from typing import NamedTuple
 
 import numpy as np
 
@@ -26,6 +27,57 @@ def component(curve, name):
     force = curve["F" + mode + "_re"] + 1j * curve["F" + mode + "_im"]
     scale = C33_REF if mode == "3" else C55_REF * curve["k"]
     return abs(force) / scale, -np.angle(force, deg=True) % 360
+
+
+class SeriesStatistics(NamedTuple):
+    trial_indices: np.ndarray
+    error: np.ndarray
+    angle: np.ndarray
+    phase_scored: np.ndarray
+    observed_peak: int
+    predicted_peak: int
+    rms: float
+    maximum: float
+    phase_rms: float
+    phase_max: float
+    passed: bool
+
+
+def series_statistics(grid, measured, name, amp, phase, limits):
+    """Score every original trial, with peak position on the distinct wavelength grid."""
+    indices = np.searchsorted(grid, measured["lambda_L"])
+    err = amp[indices] - measured[name]
+    angle = (phase[indices] - measured[name + "_deg"] + 180) % 360 - 180
+    mask = (
+        np.minimum(amp[indices], measured[name]) >= limits["phase_min_amplitude_both"]
+    )
+    observed_peak = np.argmax(
+        [np.mean(measured[name][measured["lambda_L"] == r]) for r in grid]
+    )
+    predicted_peak = np.argmax(amp)
+    arms, amax = np.sqrt(np.mean(err**2)), np.max(abs(err))
+    prms = np.sqrt(np.mean(angle[mask] ** 2)) if mask.any() else np.nan
+    pmax = np.max(abs(angle[mask])) if mask.any() else np.nan
+    passed = (
+        arms <= limits["amplitude_rms"]
+        and amax <= limits["amplitude_max"]
+        and prms <= limits["phase_rms_deg"]
+        and pmax <= limits["phase_max_deg"]
+        and abs(predicted_peak - observed_peak) <= limits["peak_max_grid_steps"]
+    )
+    return SeriesStatistics(
+        indices,
+        err,
+        angle,
+        mask,
+        observed_peak,
+        predicted_peak,
+        arms,
+        amax,
+        prms,
+        pmax,
+        passed,
+    )
 
 
 def compare(root=ROOT, *, predictions_by_solver=None):
@@ -56,14 +108,8 @@ def compare(root=ROOT, *, predictions_by_solver=None):
                         raise ValueError(
                             f"Missing or repeated prediction at Fn={fn}, {panels} panels"
                         )
-                    indices = np.searchsorted(grid, measured["lambda_L"])
                     amp, phase = component(selected, name)
-                    err = amp[indices] - measured[name]
-                    angle = (phase[indices] - measured[name + "_deg"] + 180) % 360 - 180
-                    mask = (
-                        np.minimum(amp[indices], measured[name])
-                        >= limits["phase_min_amplitude_both"]
-                    )
+                    stats = series_statistics(grid, measured, name, amp, phase, limits)
                     for i, row in enumerate(measured):
                         errors.append(
                             [
@@ -76,32 +122,14 @@ def compare(root=ROOT, *, predictions_by_solver=None):
                                 int(row["source_group"]),
                                 row["wave_cm"],
                                 row[name],
-                                amp[indices[i]],
-                                err[i],
+                                amp[stats.trial_indices[i]],
+                                stats.error[i],
                                 row[name + "_deg"],
-                                phase[indices[i]],
-                                angle[i],
-                                int(mask[i]),
+                                phase[stats.trial_indices[i]],
+                                stats.angle[i],
+                                int(stats.phase_scored[i]),
                             ]
                         )
-                    observed_peak = np.argmax(
-                        [
-                            np.mean(measured[name][measured["lambda_L"] == r])
-                            for r in grid
-                        ]
-                    )
-                    predicted_peak = np.argmax(amp)
-                    arms, amax = np.sqrt(np.mean(err**2)), np.max(abs(err))
-                    prms = np.sqrt(np.mean(angle[mask] ** 2)) if mask.any() else np.nan
-                    pmax = np.max(abs(angle[mask])) if mask.any() else np.nan
-                    passed = (
-                        arms <= limits["amplitude_rms"]
-                        and amax <= limits["amplitude_max"]
-                        and prms <= limits["phase_rms_deg"]
-                        and pmax <= limits["phase_max_deg"]
-                        and abs(predicted_peak - observed_peak)
-                        <= limits["peak_max_grid_steps"]
-                    )
                     scores.append(
                         [
                             solver,
@@ -109,17 +137,17 @@ def compare(root=ROOT, *, predictions_by_solver=None):
                             fn,
                             name,
                             len(measured),
-                            sum(mask),
-                            arms,
-                            amax,
-                            prms,
-                            pmax,
-                            grid[observed_peak],
-                            grid[predicted_peak],
-                            selected["omega_e"][observed_peak],
-                            selected["omega_e"][predicted_peak],
+                            sum(stats.phase_scored),
+                            stats.rms,
+                            stats.maximum,
+                            stats.phase_rms,
+                            stats.phase_max,
+                            grid[stats.observed_peak],
+                            grid[stats.predicted_peak],
+                            selected["omega_e"][stats.observed_peak],
+                            selected["omega_e"][stats.predicted_peak],
                             (
-                                ("PASS" if passed else "FAIL")
+                                ("PASS" if stats.passed else "FAIL")
                                 if is_motion
                                 else "diagnostic"
                             ),
@@ -128,8 +156,8 @@ def compare(root=ROOT, *, predictions_by_solver=None):
     return scores, errors
 
 
-def measured_matrices(rows, we):
-    """Linear interpolation within each test range, averaging the two forced amplitudes."""
+def measured_matrices(rows, we, *, mass=MASS, levels=(1, 2)):
+    """Linear interpolation within each test range, averaging the specified forced amplitudes."""
     nd = we / np.sqrt(GRAVITY / LENGTH)
     a, b = np.empty((2, 2)), np.empty((2, 2))
     for col, mode in enumerate([3, 5]):
@@ -138,13 +166,13 @@ def measured_matrices(rows, we):
                 rows[(rows["driven"] == mode) & (rows["source_group"] == i)],
                 order="w_nd",
             )
-            for i in (1, 2)
+            for i in levels
         ]
         if not all(len(q) and q["w_nd"][0] <= nd <= q["w_nd"][-1] for q in groups):
             return None
         for row in (0, 1):
             term = "_self" if row == col else "_cross"
-            scale = MASS * LENGTH ** (row + col)
+            scale = mass * LENGTH ** (row + col)
             for matrix, name, unit in [
                 (a, "A", scale),
                 (b, "B", scale * np.sqrt(GRAVITY / LENGTH)),
