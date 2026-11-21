@@ -43,12 +43,19 @@ def capytaine_coefficients(mesh):
     body.add_all_rigid_body_dofs(rotation_center=(0.0, 0.0, 0.0))
     solver = cpt.BEMSolver()
 
-    def coefficients(_, omega):
-        common = dict(body=body, omega=omega, g=G, rho=RHO)
+    def coefficients(_, omega, forward_speed=0.0):
+        common = dict(
+            body=body,
+            omega=omega,
+            g=G,
+            rho=RHO,
+            forward_speed=forward_speed,
+            wave_direction=np.pi,
+        )
         rs = [
             solver.solve(cpt.RadiationProblem(**common, radiating_dof=d)) for d in NAMES
         ]
-        problem = cpt.DiffractionProblem(**common, wave_direction=np.pi)
+        problem = cpt.DiffractionProblem(**common)
         diff = solver.solve(problem)
         fk = froude_krylov_force(problem)
         return (
@@ -60,16 +67,24 @@ def capytaine_coefficients(mesh):
     return coefficients
 
 
-def calculate(solver, output, short_wave=False):
-    measurements = np.genfromtxt(HERE / "table10.csv", delimiter=",", names=True)
-    ratios = [0.5] if short_wave else np.unique(measurements["lambda_L"])
-    grids = [(24, 12), (28, 14)] if short_wave else GRIDS
+def model_matrices(mesh):
+    """Return the two constrained model matrices about the waterplane origin."""
     cg = np.array([0.0, 0.0, 0.170 - 0.1875])
     mass = RHO * 0.078
     # Only the pitch entry is retained after projecting the rigid-body matrix.
     inertia = np.diag([0.0, mass * 0.75**2, 0.0])
     block = np.ix_(MODES, MODES)
     m = compute_mass_matrix(mass, cg, inertia)[block]
+    c = compute_hydrostatic_restoring_matrix(mesh, mass, cg, RHO, G).restoring_matrix[
+        block
+    ]
+    return m, c
+
+
+def calculate(solver, output, short_wave=False):
+    measurements = np.genfromtxt(HERE / "table10.csv", delimiter=",", names=True)
+    ratios = [0.5] if short_wave else np.unique(measurements["lambda_L"])
+    grids = [(24, 12), (28, 14)] if short_wave else GRIDS
     with output.open("w") as file:
         writer = csv.writer(file, lineterminator="\n")
         writer.writerow(
@@ -77,9 +92,7 @@ def calculate(solver, output, short_wave=False):
         )
         for nx, nz in grids:
             mesh = wigley3_wetted_hull_mesh(nx=nx, nz=nz, alpha=0.2)
-            c = compute_hydrostatic_restoring_matrix(
-                mesh, mass, cg, RHO, G
-            ).restoring_matrix[block]
+            m, c = model_matrices(mesh)
             coeffs = (
                 tensorbem_coefficients
                 if solver == "tensorbem"
