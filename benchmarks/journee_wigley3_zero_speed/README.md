@@ -42,7 +42,7 @@ At 760 panels both solvers reproduce the measured sampled pitch peak location, 4
 | 1104 | 0.15477 | 0.15625 | 0.51 |
 | 1512 | 0.15493 | 0.15628 | 0.51 |
 
-Source Table 10-III independently prints 0.51 at this wavelength. Agreement between codes and stability under refinement narrow the investigation to shared model assumptions, input definitions and experimental conditions. They do not establish the cause. The next comparison is the measured pitch exciting moment and forced-pitch radiation coefficients at overlapping zero-speed frequencies. Forward-speed RAOs require separate excitation, radiation and encounter-frequency treatment.
+Source Table 10-III independently prints 0.51 at this wavelength. Agreement between codes and stability under refinement narrow the investigation to shared model assumptions, input definitions and experimental conditions. They do not establish the cause. The archive contains forced-pitch coefficients (Table 3-III) and restrained wave moments (Table 6-III) at Fn = 0.20, 0.30 and 0.40. Its only zero-speed model III file is Table 10-III. Isolating excitation from radiation at this zero-speed discrepancy requires another source of measured coefficients or an independent test at the same speed. Forward-speed RAOs require separate excitation, radiation and encounter-frequency treatment.
 
 ## Reproduce
 
