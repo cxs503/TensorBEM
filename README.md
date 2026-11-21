@@ -6,7 +6,7 @@ The [forward-speed Wigley III benchmark](benchmarks/journee_wigley3_forward_spee
 
 The [restoring-convention and cross-hull study](benchmarks/journee_wigley3_forward_speed/impedance_and_transfer.md) identifies the Wigley III high-speed pitch error and tests the same endpoint procedure on 28 original Wigley I and IV wave runs.
 
-The [ship added-resistance and floating-plate benchmarks](benchmarks/marine_experiments/README.md) compare 172 Wigley tank runs, 25 KVLCC2 measurements and 90 paired plate reflection/transmission conditions. The curves and scores record which predictions pass, where they fail and the sensitivity to mesh resolution.
+The [ship added-resistance and floating-plate benchmarks](benchmarks/marine_experiments/README.md) compare 172 Wigley tank runs, 25 KVLCC2 measurements and 90 paired plate reflection/transmission conditions. The curves and scores record which predictions pass, where they fail and the sensitivity to mesh resolution. The [S-175 oblique-wave benchmark](benchmarks/s175_oblique/README.md) adds 87 tank markers at five headings and compares native six-mode results with Capytaine.
 
 **Tensor ecosystem vision:** [AI-era ecosystem vision](https://github.com/cxs503/TensorPlatform/blob/main/docs/architecture/TENSOR_ECOSYSTEM_AI_ERA_VISION.md).
 
