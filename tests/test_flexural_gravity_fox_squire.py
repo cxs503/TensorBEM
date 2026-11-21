@@ -1,7 +1,8 @@
 """Verification of flexural-gravity dispersion against Fox & Squire (1990).
 
-Fox, C. & Squire, V.A. (1990). "Reflection and transmission characteristics of
-a floating ice sheet." *Journal of Fluid Mechanics* 210: 1-24.
+Fox, C. & Squire, V.A. (1990). "Reflection and transmission characteristics at
+the edge of shore fast sea ice." Journal of Geophysical Research 95(C7),
+11629–11639. https://doi.org/10.1029/JC095iC07p11629
 
 This module verifies the TensorBEM flexural-gravity implementation against
 the classical Fox & Squire (1990) reference data for:
@@ -10,8 +11,9 @@ the classical Fox & Squire (1990) reference data for:
 2. Ice edge reflection/transmission coefficients at the open-water/ice boundary
 3. Energy conservation: |R|^2 + |T|^2 = 1
 
-Reference values are extracted from Fox & Squire (1990) Table 1 and Figure 2,
-digitised and stored as machine-readable anchors.
+These legacy arrays were attributed to Table 1 and Figure 2. Their provenance
+has not been reproduced. See benchmarks/marine_experiments/README.md for the
+parent-commit failures. The numeric assertions still exercise the original data.
 
 Acceptance criteria:
 - Dispersion relative error < 0.5% across the full k range
@@ -57,11 +59,11 @@ FS_PLATE = IcePlate(
 
 # ---------------------------------------------------------------------------
 # Fox & Squire (1990) reference data
-# Extracted from Table 1 and Figure 2 of the paper.
+# Legacy table and figure attribution, still awaiting a reproducible extraction.
 # k values and corresponding omega values for h=1m, E=5GPa, H=200m.
 # ---------------------------------------------------------------------------
 FS_REFERENCE = [
-    # (k [1/m], omega [rad/s]) — digitised from Fox & Squire (1990) Fig. 2
+    # (k [1/m], omega [rad/s]) — legacy attribution to Fig. 2
     (0.01, 0.0990),
     (0.02, 0.1400),
     (0.05, 0.2215),
@@ -79,7 +81,7 @@ FS_REFERENCE = [
     (10.0, 4.3500),
 ]
 
-# Ice edge reflection coefficients from Fox & Squire (1990) Table 1
+# Ice edge reflection coefficients (legacy attribution to Table 1)
 # (omega [rad/s], |R| amplitude)
 FS_REFLECTION_REF = [
     (0.5, 0.185),

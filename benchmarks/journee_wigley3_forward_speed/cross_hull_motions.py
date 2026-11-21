@@ -11,10 +11,9 @@ import numpy as np
 
 from benchmarks.journee_wigley3_zero_speed.run import model_matrices
 from tensorbem.forward_speed import solve_forward_speed_heave_pitch
-from tensorbem.geometry3d import WettedHullMesh
+from benchmarks.marine_experiments.wigley import mesh_for
 from tensorbem.rao import dynamic_stiffness
 from tensorbem.stf_fullspeed import encounter_frequency
-from tensorbem.wigley3_hull import wigley3_wetted_hull_mesh
 
 from .assess import (
     C33_REF,
@@ -49,17 +48,7 @@ FN = 0.30
 
 
 def hull_mesh(hull, nx=20, nz=10):
-    beam = HULLS[hull].beam
-    mesh = wigley3_wetted_hull_mesh(nx=nx, nz=nz, B=beam)
-    if hull == "IV":
-        return mesh
-    # Report 0909 p.3. The extra submerged breadth vanishes on the shared
-    # waterline, stem, stern and keel, preserving the panel connectivity.
-    vertices = mesh.vertices.copy()
-    x, y, z = vertices.T
-    xi, zeta = 2 * x / LENGTH, z / 0.1875
-    y += np.sign(y) * (beam / 2) * zeta**2 * (1 - zeta**8) * (1 - xi**2) ** 4
-    return WettedHullMesh(vertices, mesh.faces)
+    return mesh_for(hull, nx, nz)
 
 
 def extract(archive, root):
