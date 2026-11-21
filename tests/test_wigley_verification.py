@@ -33,7 +33,7 @@ from tensorbem.benchmarks.wigley_verification import (
 )
 from tensorbem.wigley import (
     michell_kochin_function,
-    michell_wave_resistance,
+    michell_wave_resistance_legacy,
     wigley_hull_mesh,
     wigley_hull_properties,
 )
@@ -96,7 +96,7 @@ class TestMichellQuadrature:
     def test_production_matches_converged_reference(self, froude):
         U = froude * math.sqrt(G * L)
         ref = converged_wave_resistance(L, B, T, U)
-        prod = michell_wave_resistance(L, B, T, U)
+        prod = michell_wave_resistance_legacy(L, B, T, U)
         assert abs(prod - ref) / ref < 1e-4
 
     @pytest.mark.parametrize("froude", [0.20, 0.30, 0.40])
@@ -104,18 +104,18 @@ class TestMichellQuadrature:
         U = froude * math.sqrt(G * L)
         ref = converged_wave_resistance(L, B, T, U)
         legacy_err = abs(legacy_wave_resistance(L, B, T, U) - ref) / ref
-        prod_err = abs(michell_wave_resistance(L, B, T, U) - ref) / ref
+        prod_err = abs(michell_wave_resistance_legacy(L, B, T, U) - ref) / ref
         assert legacy_err > 1e-3
         assert prod_err * 100.0 < legacy_err
 
     def test_node_count_insensitivity(self):
         U = 0.3 * math.sqrt(G * L)
-        a = michell_wave_resistance(L, B, T, U, n_quad=128)
-        b = michell_wave_resistance(L, B, T, U, n_quad=256)
+        a = michell_wave_resistance_legacy(L, B, T, U, n_quad=128)
+        b = michell_wave_resistance_legacy(L, B, T, U, n_quad=256)
         assert abs(a - b) / b < 1e-5
 
     def test_wave_resistance_vanishes_at_zero_speed(self):
-        assert michell_wave_resistance(L, B, T, 0.0) == 0.0
+        assert michell_wave_resistance_legacy(L, B, T, 0.0) == 0.0
 
 
 class TestKochinReduction:

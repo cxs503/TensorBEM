@@ -1,7 +1,7 @@
 """Wigley III hullform for frequency-domain radiation/diffraction/RAO verification.
 
 The Wigley III hullform is a mathematical ship hull with fuller ends than the
-standard parabolic Wigley (Wigley I).  It is defined by
+standard parabolic Wigley.  It is defined by
 
     y(x, z) = (B/2) * (1 - u^2) * (1 - v^2) * (1 + c * u^2)
 
@@ -10,17 +10,9 @@ The block coefficient is
 
     Cb = 4/9 + 4c/45.
 
-For the canonical Wigley III used in Journee (1992) and WAMIT verification,
-``Cb = 0.543`` which corresponds to ``c = (Cb - 4/9) * 45/4 ≈ 1.1088``.
-
-Principal dimensions (Journee 1992):
-    L = 3.0 m,  B = 0.3 m,  T = 0.1875 m,  Cb = 0.543.
-
-References
-----------
-- Journee, J.M.J. (1992). "Hydrodynamic coefficients of the Wigley III hull."
-  Delft University of Technology, Report 922.
-- WAMIT User Manual (v6.x), Wigley III verification case.
+Journée (1992), report 0909, gives a2 = 0.2, a4 = 0 and no sectional
+correction for model III. At L = 3 m, B = 0.3 m, T = 0.1875 m the
+displacement is 0.078 m³. Older repository artifacts used Cb = 0.543.
 """
 
 from __future__ import annotations
@@ -32,6 +24,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from .geometry3d import WettedHullMesh
+from .wigley3_hull import WIGLEY3_ALPHA as WIGLEY3_C, WIGLEY3_CB, WIGLEY3_L, WIGLEY3_B, WIGLEY3_T
 
 __all__ = [
     "WIGLEY3_L",
@@ -47,16 +40,6 @@ __all__ = [
 
 FloatArray = NDArray[np.float64]
 
-#: Principal dimensions of the canonical Wigley III (Journee 1992).
-WIGLEY3_L = 3.0
-WIGLEY3_B = 0.3
-WIGLEY3_T = 0.1875
-#: Block coefficient Cb = 0.543.
-WIGLEY3_CB = 0.543
-#: Fullness coefficient: c = (Cb - 4/9) * 45/4.
-WIGLEY3_C = (WIGLEY3_CB - 4.0 / 9.0) * 45.0 / 4.0
-
-
 def wigley3_halfbreadth(
     x: FloatArray, z: FloatArray, L: float, B: float, T: float, c: float = WIGLEY3_C
 ) -> FloatArray:
@@ -69,7 +52,7 @@ def wigley3_halfbreadth(
     L, B, T :
         Length, beam, draft (m).
     c :
-        Fullness coefficient (default gives Cb = 0.543).
+        Fullness coefficient (Journée model III uses c = 0.2).
     """
     u = 2.0 * np.asarray(x, dtype=float) / L
     v = np.asarray(z, dtype=float) / T

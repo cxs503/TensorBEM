@@ -128,8 +128,8 @@ def test_geometry_gate_records_the_retired_defect_and_the_fix(payload: dict) -> 
 
     x = np.linspace(-0.5 * wh.WIGLEY3_L, 0.5 * wh.WIGLEY3_L, 401)
     z = np.zeros_like(x)
-    live = np.asarray(wh.wigley3_half_breadth(x, z), dtype=float)
-    other = wf.wigley3_halfbreadth(x, z, wh.WIGLEY3_L, wh.WIGLEY3_B, wh.WIGLEY3_T)
+    live = np.asarray(wh.wigley3_half_breadth(x, z, alpha=wh.LEGACY_WIGLEY_ALPHA), dtype=float)
+    other = wf.wigley3_halfbreadth(x, z, wh.WIGLEY3_L, wh.WIGLEY3_B, wh.WIGLEY3_T, c=wh.LEGACY_WIGLEY_ALPHA)
     assert np.max(np.abs(live - other)) < 1e-15 * wh.WIGLEY3_B
     assert 2.0 * np.trapezoid(live, x) / (wh.WIGLEY3_L * wh.WIGLEY3_B) == pytest.approx(0.8145, abs=1e-4)
 

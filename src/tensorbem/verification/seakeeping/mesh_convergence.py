@@ -14,6 +14,8 @@ import math
 from typing import Any, Sequence
 
 import numpy as np
+
+from tensorbem.rao import dynamic_stiffness
 from numpy.typing import NDArray
 
 from tensorbem.free_surface_solver3d import (
@@ -171,8 +173,8 @@ def run_wigley_mesh_convergence(
         # RAO
         m33 = M_rigid[2, 2]
         c33 = C[2, 2]
-        impedance = -omega ** 2 * (m33 + a33) + 1j * omega * b33 + c33
-        rao = f_exc / impedance
+        impedance = dynamic_stiffness(omega, m33, a33, b33, c33)
+        rao = f_exc / (amplitude * impedance)
         rao_amps.append(abs(rao))
 
     # Compute relative changes

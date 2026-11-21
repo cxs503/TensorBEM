@@ -1,0 +1,270 @@
+{
+  "tensorbem": {
+    "264": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.045810583211996894,
+          "amplitude_max": 0.110065632513,
+          "phase_rms_deg": 6.403873169537916,
+          "phase_max_deg": 16.323929232000012,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.1112362199939426,
+          "amplitude_max": 0.35608840942,
+          "phase_rms_deg": 7.679130406876816,
+          "phase_max_deg": 17.8138035817,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    },
+    "480": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.043947863723860586,
+          "amplitude_max": 0.109568798976,
+          "phase_rms_deg": 6.909925943123731,
+          "phase_max_deg": 17.632107227000006,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.1108476564761859,
+          "amplitude_max": 0.355724440046,
+          "phase_rms_deg": 7.272363879403519,
+          "phase_max_deg": 15.989587660899986,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    },
+    "760": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.043207721375272214,
+          "amplitude_max": 0.109285668091,
+          "phase_rms_deg": 7.136663612982641,
+          "phase_max_deg": 18.173267530999993,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.11067226025649615,
+          "amplitude_max": 0.355438835805,
+          "phase_rms_deg": 7.154484647309487,
+          "phase_max_deg": 15.270791325999994,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    }
+  },
+  "capytaine": {
+    "264": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.0458530977470992,
+          "amplitude_max": 0.108963988067,
+          "phase_rms_deg": 6.466525663869264,
+          "phase_max_deg": 16.505446285999994,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.11078509217341774,
+          "amplitude_max": 0.355453020046,
+          "phase_rms_deg": 7.80034910854485,
+          "phase_max_deg": 18.2606457025,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    },
+    "480": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.043917885970798945,
+          "amplitude_max": 0.10826044210500001,
+          "phase_rms_deg": 6.908417683320207,
+          "phase_max_deg": 17.563769283,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.11028474188826141,
+          "amplitude_max": 0.354219721205,
+          "phase_rms_deg": 7.410146753053755,
+          "phase_max_deg": 16.717238658599996,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    },
+    "760": {
+      "heave": {
+        "metrics": {
+          "amplitude_rms": 0.043164192158923524,
+          "amplitude_max": 0.10808478384,
+          "phase_rms_deg": 7.124880459895952,
+          "phase_max_deg": 18.06358134499999,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": true,
+          "amplitude_max": true,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 10,
+        "peak_observed_omega": 3.20515334691,
+        "peak_predicted_omega": 3.20515334691,
+        "peak_observed_at_band_edge": true,
+        "peak_predicted_at_band_edge": true
+      },
+      "pitch": {
+        "metrics": {
+          "amplitude_rms": 0.11015097410553674,
+          "amplitude_max": 0.353869583926,
+          "phase_rms_deg": 7.278937335423984,
+          "phase_max_deg": 15.978047226099989,
+          "peak_max_grid_steps": 0
+        },
+        "passed": {
+          "amplitude_rms": false,
+          "amplitude_max": false,
+          "phase_rms_deg": true,
+          "phase_max_deg": true,
+          "peak_max_grid_steps": true
+        },
+        "phase_rows": 13,
+        "peak_observed_omega": 4.05423393054,
+        "peak_predicted_omega": 4.05423393054,
+        "peak_observed_at_band_edge": false,
+        "peak_predicted_at_band_edge": false
+      }
+    }
+  }
+}

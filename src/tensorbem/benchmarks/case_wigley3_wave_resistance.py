@@ -97,7 +97,7 @@ from ..thin_ship_michell import (
     wigley_amplitude_function,
     wigley_panels,
 )
-from ..wigley import michell_wave_resistance, michell_wave_resistance_canonical
+from ..wigley import michell_wave_resistance_legacy, michell_wave_resistance_canonical
 from ..wigley_hydrostatics import wigley_wetted_area_reference
 
 __all__ = [
@@ -142,7 +142,7 @@ TOLERANCE = {
 }
 
 _ZERO_SUBSTITUTION_NOTE = (
-    "The legacy default wigley.michell_wave_resistance samples k=alpha=k0*lam "
+    "The archived integral wigley.michell_wave_resistance_legacy samples k=alpha=k0*lam "
     "(violates the steady free-surface condition by lam-1) and returns "
     "kg s^2 m^-1, not a force; it is recorded here as a defect probe only."
 )
@@ -410,13 +410,13 @@ def panel_route(
 
 
 def legacy_defect_probe(froude_numbers: Sequence[float] = FR_GRID) -> dict[str, Any]:
-    """Ratio of the canonical path to the shipped legacy default (defect record)."""
+    """Ratio of the canonical path to the explicit legacy integral (defect record)."""
     L, B, T = HULL["L"], HULL["B"], HULL["T"]
     rows = []
     for fr in froude_numbers:
         speed = _speed(fr)
         canonical = michell_wave_resistance_canonical(L, B, T, speed, rho=RHO, g=G)
-        legacy = michell_wave_resistance(L, B, T, speed, rho=RHO, g=G)
+        legacy = michell_wave_resistance_legacy(L, B, T, speed, rho=RHO, g=G)
         rows.append(
             {
                 "froude_number": float(fr),
@@ -813,7 +813,7 @@ def _render_report(artifact: dict[str, Any]) -> str:
     lines.append("## 6. Failure modes, limits, friction")
     lines.append("")
     lines.append(
-        "* **Legacy default is a defect, still shipped.** `wigley.michell_wave_resistance` "
+        "* **Archived integral has incorrect units.** `wigley.michell_wave_resistance_legacy` "
         "(`docs/michell_unit_arbitration.md`) samples `k = alpha = k0*lam` and returns "
         "`kg s^2 m^-1`, low by a factor "
         f"{min(row['canonical_over_legacy'] for row in legacy['rows']):.1f}-"

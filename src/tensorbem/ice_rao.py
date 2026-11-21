@@ -72,6 +72,7 @@ from .hydrostatic import (
     mass_matrix_from_hull,
     mass_matrix_from_hull_geometry,
 )
+from .rao import dynamic_stiffness
 from .ice import (
     IceCover,
     energy_flux_amplitude_ratio,
@@ -362,11 +363,7 @@ def _rao_from_impedance(
     restoring: FloatArray,
     force: ComplexArray,
 ) -> ComplexArray:
-    impedance = (
-        -(omega * omega) * (mass_matrix + added_mass)
-        + 1j * omega * damping
-        + restoring
-    )
+    impedance = dynamic_stiffness(omega, mass_matrix, added_mass, damping, restoring)
     return np.linalg.solve(impedance, force)
 
 
@@ -390,7 +387,7 @@ def compute_ice_rao_spectrum(
 
     The equation of motion is the standard frequency-domain form
 
-        [-omega**2 (M + A) + i omega B + C] xi = F_exc
+        [-omega**2 (M + A) - i omega B + C] xi = F_exc
 
     with ``A``, ``B`` from :func:`solve_radiation_3d_ice` and ``F_exc`` from
     :func:`solve_diffraction_3d_ice`.  The hydrostatic restoring matrix ``C`` is
@@ -464,7 +461,7 @@ def compute_ice_rao_spectrum(
             hull,
             omega,
             ice,
-            center=cg,
+            center=(0.0, 0.0, 0.0),
             density=density,
             chief_points=chief_points,
             rankine_order=rankine_order,
@@ -476,7 +473,7 @@ def compute_ice_rao_spectrum(
             ice,
             amplitude=amp,
             wave_angle=angle,
-            center=cg,
+            center=(0.0, 0.0, 0.0),
             density=density,
             chief_points=chief_points,
             rankine_order=rankine_order,
@@ -488,7 +485,7 @@ def compute_ice_rao_spectrum(
         b_ice[i] = radiation.damping if damping_extra is None else radiation.damping + damping_extra
         f_ice[i] = diffraction.excitation_force
         xi_ice[i] = _rao_from_impedance(
-            omega, mass_matrix, a_ice[i], b_ice[i], restoring, f_ice[i]
+            omega, mass_matrix, a_ice[i], b_ice[i], restoring, f_ice[i] / amp
         )
         # --- open water baseline ----------------------------------------
         nu = omega * omega / ice.gravity
@@ -498,7 +495,7 @@ def compute_ice_rao_spectrum(
         rad_o = solve_radiation_3d(
             hull,
             nu,
-            center=cg,
+            center=(0.0, 0.0, 0.0),
             density=density,
             gravity=ice.gravity,
             operators=ops_open,
@@ -508,7 +505,7 @@ def compute_ice_rao_spectrum(
             nu,
             amplitude=amp,
             wave_angle=angle,
-            center=cg,
+            center=(0.0, 0.0, 0.0),
             density=density,
             gravity=ice.gravity,
             operators=ops_open,
@@ -519,7 +516,7 @@ def compute_ice_rao_spectrum(
         )
         f_open[i] = diff_o.excitation_force
         xi_open[i] = _rao_from_impedance(
-            omega, mass_matrix, a_open[i], b_open[i], restoring, f_open[i]
+            omega, mass_matrix, a_open[i], b_open[i], restoring, f_open[i] / amp
         )
 
     notes = (

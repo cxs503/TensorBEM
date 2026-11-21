@@ -18,6 +18,7 @@ import pathlib
 import sys
 import time
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 
 from tensorbem.benchmarks import cummins_wigley_kernel_6dof as case
@@ -36,10 +37,10 @@ def _one(args):
     """One (level, omega) radiation solve -- module level so it can be pickled."""
     import numpy as np
     from tensorbem.free_surface_solver3d import solve_radiation_3d
-    from tensorbem.wigley3_freq import (WIGLEY3_B, WIGLEY3_C, WIGLEY3_L, WIGLEY3_T,
+    from tensorbem.wigley3_freq import (WIGLEY3_B, WIGLEY3_L, WIGLEY3_T,
                                         wigley3_wetted_hull_mesh)
     level, om, n_sections, n_levels = args
-    mesh = wigley3_wetted_hull_mesh(L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=WIGLEY3_C,
+    mesh = wigley3_wetted_hull_mesh(L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA,
                                     n_sections=n_sections, n_levels=n_levels)
     rad = solve_radiation_3d(mesh, om * om / 9.80665, density=1025.0, gravity=9.80665,
                              chief_points="auto")

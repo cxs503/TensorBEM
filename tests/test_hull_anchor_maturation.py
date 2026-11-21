@@ -38,7 +38,7 @@ from tensorbem.ellipsoid_kochin import (
     wetted_surface_area,
     wetted_volume_quadrature,
 )
-from tensorbem.wigley import michell_kochin_function, michell_wave_resistance
+from tensorbem.wigley import michell_kochin_function, michell_wave_resistance_legacy
 
 G = 9.80665
 
@@ -169,7 +169,7 @@ class TestEllipsoidWaveResistance:
             k0=k0,
             lambda_max=max(5.0, 10.0 / (k0 * T)),
         )
-        reference = michell_wave_resistance(L, B, T, u)
+        reference = michell_wave_resistance_legacy(L, B, T, u)
         assert mine == pytest.approx(reference, rel=1e-12)
 
     def test_lambda_and_theta_forms_agree(self, hull: EllipsoidHull) -> None:
@@ -285,7 +285,7 @@ class TestWigleyPanelKochin:
     def test_constant_strength_panels_converge(self) -> None:
         froude = 0.30
         u = froude * math.sqrt(G * self.L)
-        reference = michell_wave_resistance(self.L, self.B, self.T, u)
+        reference = michell_wave_resistance_legacy(self.L, self.B, self.T, u)
         coarse = wigley_panel_wave_resistance(
             self.L, self.B, self.T, froude, n_x=10, n_z=5, scheme="mean_source"
         )

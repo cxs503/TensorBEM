@@ -116,7 +116,7 @@ class UnitRescaling:
 
 
 def _rw_kochin(L, B, T, U, rho, g):
-    return wigley.michell_wave_resistance(L, B, T, U, rho=rho, g=g)
+    return wigley.michell_wave_resistance_legacy(L, B, T, U, rho=rho, g=g)
 
 
 def _rw_pressure(L, B, T, U, rho, g, nx=16, nz=8):

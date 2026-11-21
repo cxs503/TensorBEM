@@ -362,7 +362,7 @@ def run_hull_stage(
         mass=mass_props["mass"],
         center_of_gravity=mass_props["center_of_gravity"],
         ice=ice,
-        inertia=mass_props["inertia_about_origin"],
+        inertia=mass_props["inertia_about_cg"],
         chief_points=chief_points,
     )
 
@@ -379,7 +379,7 @@ def run_hull_stage(
             mass=props["mass"],
             center_of_gravity=props["center_of_gravity"],
             ice=ice,
-            inertia=props["inertia_about_origin"],
+            inertia=props["inertia_about_cg"],
             chief_points=chief_points,
         )
         convergence.append(

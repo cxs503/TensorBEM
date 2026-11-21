@@ -41,6 +41,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 from numpy.typing import NDArray
 
@@ -78,9 +79,9 @@ FIG_PATH = Path("docs/fig_wigley3_recalled_ref.png")
 
 def build_mesh(builder: str, level: int):
     if builder == "wigley3_hull":
-        return wigley3_wetted_hull_mesh(nx=level, nz=level // 2)
+        return wigley3_wetted_hull_mesh(nx=level, nz=level // 2, alpha=LEGACY_WIGLEY_ALPHA)
     if builder == "wigley3_freq":
-        return wf.wigley3_wetted_hull_mesh(n_sections=level, n_levels=level // 2)
+        return wf.wigley3_wetted_hull_mesh(n_sections=level, n_levels=level // 2, c=LEGACY_WIGLEY_ALPHA)
     raise ValueError(f"unknown builder {builder!r}")
 
 
@@ -128,19 +129,19 @@ def geometry_audit() -> dict:
     xs = 0.5 * WIGLEY3_L * rng
     zs = np.linspace(-WIGLEY3_T, 0.0, 41)
     grid_x, grid_z = np.meshgrid(xs, zs, indexing="ij")
-    y_hull = np.asarray(wigley3_half_breadth(grid_x, grid_z), dtype=float)
+    y_hull = np.asarray(wigley3_half_breadth(grid_x, grid_z, alpha=LEGACY_WIGLEY_ALPHA), dtype=float)
     y_freq = np.asarray(
-        [wf.wigley3_halfbreadth(x, z, WIGLEY3_L, WIGLEY3_B, WIGLEY3_T)
+        [wf.wigley3_halfbreadth(x, z, WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA)
          for x, z in zip(grid_x.ravel(), grid_z.ravel())],
         dtype=float,
     ).reshape(grid_x.shape)
     return {
         "max_abs_y_difference": float(np.max(np.abs(y_hull - y_freq))),
         "max_rel_y_difference": float(np.max(np.abs(y_hull - y_freq) / np.maximum(np.abs(y_hull), 1e-12))),
-        "analytical_volume": float(wigley3_displaced_volume()),
-        "cwp_wigley3_hull": _waterplane_coefficient(wigley3_half_breadth),
+        "analytical_volume": float(wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)),
+        "cwp_wigley3_hull": _waterplane_coefficient(lambda x, z: wigley3_half_breadth(x, z, alpha=LEGACY_WIGLEY_ALPHA)),
         "cwp_wigley3_freq": _waterplane_coefficient(
-            lambda x, z: wf.wigley3_halfbreadth(x, z, WIGLEY3_L, WIGLEY3_B, WIGLEY3_T)
+            lambda x, z: wf.wigley3_halfbreadth(x, z, WIGLEY3_L, WIGLEY3_B, WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA)
         ),
     }
 
@@ -197,14 +198,14 @@ def tensorbem_cells(omega: float) -> list[dict]:
                     "level": level_label(builder, level),
                     "panels": int(len(faces)),
                     "mesh_volume": mesh_volume(mesh),
-                    "mesh_volume_rel_error": mesh_volume(mesh) / wigley3_displaced_volume() - 1.0,
+                    "mesh_volume_rel_error": mesh_volume(mesh) / wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA) - 1.0,
                     "boundary": boundary_audit(verts, faces),
                     "added_mass": added,
                     "damping": damping,
                 }
             )
             print(f"  tensorbem {builder} {level_label(builder, level)} ({len(faces)} panels) "
-                  f"A33/rhoV={added['Heave'] / (DENSITY * wigley3_displaced_volume()):.4f}", flush=True)
+                  f"A33/rhoV={added['Heave'] / (DENSITY * wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)):.4f}", flush=True)
     return out
 
 
@@ -236,7 +237,7 @@ def recalled() -> list[dict]:
     from .wigley3_freq_verification import _WAMIT_ADDED_MASS_DIAGONAL, _WAMIT_DAMPING_DIAGONAL
     from .wigley_diffraction_radiation import WAMIT_A33_REF, WAMIT_B33_REF
 
-    volume = wigley3_displaced_volume()
+    volume = wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)
     entries: list[dict] = []
     for index, dof in enumerate(DOFS):
         entries.append(
@@ -299,7 +300,7 @@ def _normalisation(index: int) -> str:
 
 
 def _dimensionless(value: float, dof: str, kind: str, omega: float) -> float:
-    volume = wigley3_displaced_volume()
+    volume = wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)
     if kind == "damping":
         scale = DENSITY * volume * omega
     else:
@@ -342,7 +343,7 @@ def run_study(reference: dict | None = None) -> dict:
             "omega_band": list(OMEGA_BAND),
             "band": BAND,
             "rotation_center": list(CENTER),
-            "analytic_volume": wigley3_displaced_volume(),
+            "analytic_volume": wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA),
             "capytaine": reference["metadata"],
         },
         "geometry": geometry,

@@ -339,7 +339,15 @@ def _assert_close(fresh, committed, path: str = "") -> None:
 
 def test_committed_results_reproduce(report: dict) -> None:
     committed = _read_json(ARTIFACTS / "results.json")
-    _assert_close(report, committed)
+    # Runtime provenance identifies the machine that produced each record.
+    # Reproduce every scientific result across Python, NumPy and CPU versions.
+    for key in ("python", "numpy", "platform"):
+        assert all(isinstance(r["provenance"][key], str) and r["provenance"][key]
+                   for r in (report, committed))
+    assert set(report["provenance"]) == set(committed["provenance"])
+    assert report["provenance"]["tensorbem_version"] == committed["provenance"]["tensorbem_version"]
+    _assert_close({k: v for k, v in report.items() if k != "provenance"},
+                  {k: v for k, v in committed.items() if k != "provenance"})
     assert committed["all_criteria_passed"] is True
 
 

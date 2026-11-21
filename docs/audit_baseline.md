@@ -129,7 +129,7 @@ correction log inside the generated block records what changed.
 | 6-DOF heave RAO coupling | **REAL** | `tensorbem.rao` | 5 node(s) in 2 file(s) | `dev_report_tensorbem-hydrostatic-rao.md`, `docs/rao_input_validation.md` |
 | Finite-depth kernels + solver (2-D) | **REAL** | `tensorbem.finite_depth`, `tensorbem.finite_depth_solver` (+1) | 2 node(s) in 2 file(s) | `docs/finite_depth_2d.md` |
 | Finite-depth kernels + solver (3-D) | **REAL** | `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature` (+1) | 2 node(s) in 1 file(s) | `docs/finite_depth3d.md` |
-| Forward-speed wave resistance (Wigley, Michell/Kochin) | **REAL** | `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification` | 2 node(s) in 2 file(s) | `docs/wigley_wave_resistance.md` |
+| Forward-speed wave resistance (Wigley, Michell/Kochin) | **REAL** | `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification` | 2 node(s) in 1 file(s) | `docs/wigley_wave_resistance.md` |
 | Michell thin-ship wave resistance for general hulls + tandem interference | **REAL** | `tensorbem.michell`, `tensorbem.benchmarks.michell_validation` | 2 node(s) in 1 file(s) | `docs/michell_validation.md` |
 | Michell wave resistance on the canonical spectrum for general hulls | **REAL** | `tensorbem.michell`, `tensorbem.wigley` | 3 node(s) in 1 file(s) | `docs/michell_canonical_panel_route/README.md` |
 | Kutta condition / lifting foil | **REAL** | `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil` | 2 node(s) in 2 file(s) | `docs/lifting_foil.md` |
@@ -200,7 +200,7 @@ Counts: **81** REAL — 81 capabilities. The level is derived from code/test/doc
 - **3-D unbaffled exterior Helmholtz acoustic BEM (radiation + scattering + ICES 209)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.acoustic3d`; 3 test node(s) in `tests/test_acoustic3d.py`.
 - **Finite-depth kernels + solver (2-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth`, `tensorbem.finite_depth_solver`, `tensorbem.finite_depth_diffraction`; 2 test node(s) in `tests/test_finite_depth.py`, `tests/test_finite_depth_solver.py`.
 - **Finite-depth kernels + solver (3-D)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.finite_depth3d`, `tensorbem.finite_depth3d_quadrature`, `tensorbem.benchmarks.finite_depth_radiation`; 2 test node(s) in `tests/test_finite_depth3d.py`.
-- **Forward-speed wave resistance (Wigley, Michell/Kochin)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification`; 2 test node(s) in `tests/test_wigley_verification.py`, `tests/test_wigley_wave_resistance.py`.
+- **Forward-speed wave resistance (Wigley, Michell/Kochin)** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.wigley`, `tensorbem.benchmarks.wigley_verification`; 2 test node(s) in `tests/test_wigley_canonical_resistance.py`.
 - **Kutta condition / lifting foil** — was `NOT_SUPPORTED`, now `REAL`: `tensorbem.lifting`, `tensorbem.benchmarks.lifting_foil`; 2 test node(s) in `tests/test_lifting_foil.py`, `tests/test_lifting_flow.py`.
 
 ### Capability coverage

@@ -1,0 +1,8 @@
+{
+  "amplitude_rms": 0.10,
+  "amplitude_max": 0.20,
+  "phase_rms_deg": 15,
+  "phase_max_deg": 30,
+  "phase_min_amplitude_both": 0.10,
+  "peak_max_grid_steps": 1
+}

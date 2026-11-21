@@ -24,10 +24,9 @@ from tensorbem.free_surface_solver3d import (
 )
 from tensorbem.hydrostatic import compute_hydrostatic_restoring_matrix
 from tensorbem.rao import compute_rao_at_frequency
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -45,13 +44,13 @@ _GRAVITY = 9.80665
 @pytest.fixture(scope="session")
 def coarse_mesh():
     """Coarse Wigley III mesh (~200 panels)."""
-    return wigley3_wetted_hull_mesh(n_sections=10, n_levels=5)
+    return wigley3_wetted_hull_mesh(c=LEGACY_WIGLEY_ALPHA, n_sections=10, n_levels=5)
 
 
 @pytest.fixture(scope="session")
 def hydro_ref():
     """Closed-form hydrostatic reference."""
-    return wigley3_hydrostatic_reference(density=_DENSITY, gravity=_GRAVITY)
+    return wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA, density=_DENSITY, gravity=_GRAVITY)
 
 
 @pytest.fixture(scope="session")
@@ -82,13 +81,13 @@ class TestGeometry:
 
     def test_block_coefficient(self):
         """Cb must be 0.543 within 0.1%."""
-        ref = wigley3_hydrostatic_reference()
+        ref = wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA)
         assert abs(ref["Cb"] - 0.543) < 0.001
 
     def test_volume_closed_form(self):
         """Volume must match closed-form integral."""
-        ref = wigley3_hydrostatic_reference()
-        expected = WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * WIGLEY3_CB
+        ref = wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA)
+        expected = WIGLEY3_L * WIGLEY3_B * WIGLEY3_T * LEGACY_WIGLEY_CB
         assert abs(ref["volume"] - expected) / expected < 1e-10
 
     def test_coarse_mesh_volume(self, coarse_mesh, hydro_ref):
@@ -103,9 +102,9 @@ class TestGeometry:
 
     def test_mesh_panel_counts(self):
         """Mesh densities produce expected panel counts."""
-        coarse = wigley3_wetted_hull_mesh(n_sections=10, n_levels=5)
-        medium = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10)
-        fine = wigley3_wetted_hull_mesh(n_sections=40, n_levels=20)
+        coarse = wigley3_wetted_hull_mesh(c=LEGACY_WIGLEY_ALPHA, n_sections=10, n_levels=5)
+        medium = wigley3_wetted_hull_mesh(c=LEGACY_WIGLEY_ALPHA, n_sections=20, n_levels=10)
+        fine = wigley3_wetted_hull_mesh(c=LEGACY_WIGLEY_ALPHA, n_sections=40, n_levels=20)
         assert coarse.panel_count == 200
         assert medium.panel_count == 800
         assert fine.panel_count == 3200

@@ -429,6 +429,7 @@ def hull_mass_properties(
     return {
         "mass": mass,
         "center_of_gravity": cg,
+        "inertia_about_cg": inertia_cg,
         "inertia_about_origin": inertia_origin,
         "radii_of_gyration": {"roll": kg_roll * hull.breadth,
                               "pitch": kg_pitch * hull.length,

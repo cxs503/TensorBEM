@@ -70,7 +70,7 @@ from tensorbem.thin_ship_michell import (
     wigley_amplitude_function,
     wigley_panels,
 )
-from tensorbem.wigley import michell_wave_resistance as legacy_wave_resistance
+from tensorbem.wigley import michell_wave_resistance_legacy as legacy_wave_resistance
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
 ARTIFACTS = REPO_ROOT / "artifacts" / "bem_wigley_calm_water_resistance"

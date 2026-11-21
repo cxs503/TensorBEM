@@ -36,10 +36,9 @@ from tensorbem.free_surface_solver3d import (
 from tensorbem.hydrostatic import compute_hydrostatic_restoring_matrix
 from tensorbem.rao import compute_rao_at_frequency, compute_rao_spectrum
 from tensorbem.uq import grid_convergence_index
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -54,8 +53,8 @@ _GRAVITY = 9.80665
 _L = WIGLEY3_L
 _B = WIGLEY3_B
 _T = WIGLEY3_T
-_CB = WIGLEY3_CB
-_C = WIGLEY3_C
+_CB = LEGACY_WIGLEY_CB
+_C = LEGACY_WIGLEY_ALPHA
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -365,7 +364,7 @@ class TestGridConvergence:
             fine=A33_vals[2], medium=A33_vals[1], coarse=A33_vals[0],
             refinement_ratio=2.0, safety_factor=1.25, quantity="A33",
         )
-        assert gci_result.GCI_fine < 0.08, f"A33 GCI = {gci_result.GCI_fine:.2%}"
+        assert gci_result.gci_fine < 0.08, f"A33 GCI = {gci_result.gci_fine:.2%}"
 
     def test_heave_damping_gci(self, coarse_mesh, medium_mesh, fine_mesh):
         omega = 1.5
@@ -381,7 +380,7 @@ class TestGridConvergence:
             fine=B33_vals[2], medium=B33_vals[1], coarse=B33_vals[0],
             refinement_ratio=2.0, safety_factor=1.25, quantity="B33",
         )
-        assert gci_result.GCI_fine < 0.08, f"B33 GCI = {gci_result.GCI_fine:.2%}"
+        assert gci_result.gci_fine < 0.08, f"B33 GCI = {gci_result.gci_fine:.2%}"
 
 
 # ---------------------------------------------------------------------------

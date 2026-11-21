@@ -1,17 +1,10 @@
 """Forward-speed Rankine wave resistance for Wigley-type hulls.
 
 This module implements the steady wave-resistance problem for mathematical
-Wigley hullforms using two independent paths:
-
-1. **Kochin far-field path** -- Michell's thin-ship theory gives the wave
-   amplitude spectrum ``H(k)`` analytically for the Wigley hullform; the
-   wave resistance is obtained by integrating ``|H(k)|^2`` over the
-   Kelvin wake (Kochin, 1928; Michell, 1898).
-
-2. **Pressure-integration path** -- The wave perturbation potential from
-   Michell's theory is evaluated on the hull surface, and the wave
-   resistance is obtained by integrating the linearised pressure over
-   the hull surface.
+Wigley hullforms. The far-field Michell integral returns wave-making
+resistance in newtons. The linear pressure integral is a signed quadrature
+diagnostic for this symmetric hull; its residual measures neither drag nor
+agreement between two force estimates.
 
 The Wigley hullform is the mathematical surface
 
@@ -370,10 +363,7 @@ def michell_wave_resistance_canonical(
 ) -> float:
     """Wave resistance of the Wigley hull, Michell theory, canonical spectrum.
 
-    Canonical form (added in m16274).  The shipped default
-    :func:`michell_wave_resistance` still carries the pre-repair formula, so new
-    work must call this routine; re-pinning that default's dependants is the
-    dispatched follow-up mission.  The integral::
+    The integral::
 
         Rw = (rho g^2 / (pi U^2)) * int_1^inf lam^2 |H(k0 lam^2, k0 lam)|^2
                                             / sqrt(lam^2 - 1) dlam
@@ -425,7 +415,10 @@ def michell_wave_resistance_canonical(
     return max(Rw, 0.0)
 
 
-def michell_wave_resistance(
+michell_wave_resistance = michell_wave_resistance_canonical
+
+
+def michell_wave_resistance_legacy(
     L: float,
     B: float,
     T: float,
@@ -434,7 +427,7 @@ def michell_wave_resistance(
     g: float = _DEFAULT_GRAVITY,
     n_quad: int = 256,
 ) -> float:
-    """Legacy (DEFECTIVE) Wigley wave resistance -- the shipped default.
+    """Historical defective integral, retained for archived results only.
 
     Bit-for-bit preserved so the numbers pinned across ``benchmarks/verified``,
     ``docs/`` and ~8 test modules do not move.  Do **not** use it for new work:
@@ -579,7 +572,12 @@ def wave_resistance_kochin(
 
 @dataclass(frozen=True)
 class WigleyWaveResistanceResult:
-    """Result of a Wigley hull wave resistance computation."""
+    """Far-field resistance and pressure-integration diagnostics.
+
+    The physical thin-ship resistance is ``wave_resistance_kochin`` (N).
+    The signed pressure residual and its derived coefficient and relative
+    difference are retained for tracking quadrature behavior.
+    """
 
     froude_number: float
     speed: float

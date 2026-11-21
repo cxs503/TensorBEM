@@ -60,6 +60,8 @@ import math
 from typing import Sequence
 
 import numpy as np
+
+from tensorbem.rao import dynamic_stiffness
 from numpy.typing import NDArray
 
 from .free_surface_solver import (
@@ -356,7 +358,7 @@ def assemble_stf_coefficients(
 ) -> STFCoefficients:
     """Assemble the full STF heave-pitch equation of motion.
 
-    The equation is: [−ω²(M + A) + iω B + C] ξ = F_exc
+    The equation is: [−ω²(M + A) - iω B + C] ξ = F_exc
     """
     A_bare, B_bare = integrate_strip_coefficients(section_coeffs, stations)
 
@@ -386,7 +388,7 @@ def compute_stf_rao(
 ) -> tuple[complex, complex]:
     """Compute heave and pitch RAO from assembled STF coefficients.
 
-    Solves: [−ω²(M + A) + iω B + C] ξ = F_exc
+    Solves: [−ω²(M + A) - iω B + C] ξ = F_exc
     """
     M = np.zeros((2, 2)) if mass_matrix is None else np.asarray(mass_matrix)
     A = stf_coeffs.A
@@ -394,7 +396,7 @@ def compute_stf_rao(
     C = stf_coeffs.C
     F = stf_coeffs.F_exc
 
-    Z = -(omega**2) * (M + A) + 1j * omega * B + C
+    Z = dynamic_stiffness(omega, M, A, B, C)
 
     try:
         xi = np.linalg.solve(Z, F)

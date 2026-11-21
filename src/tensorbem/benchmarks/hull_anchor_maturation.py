@@ -57,7 +57,7 @@ from ..ellipsoid_kochin import (
     wetted_volume_quadrature,
 )
 from ..hydrostatic import compute_displaced_volume_and_buoyancy
-from ..wigley import michell_wave_resistance, wigley_hull_properties
+from ..wigley import michell_wave_resistance_legacy, wigley_hull_properties
 from ..wigley_hydrostatics import (
     wigley_hydrostatic_reference,
     wigley_wetted_area_reference,
@@ -522,7 +522,7 @@ def wigley_froude_sweep(
     rows = []
     for fr in froudes:
         u = fr * math.sqrt(g * L)
-        rw_ref = michell_wave_resistance(L, B, T, u, rho=rho, g=g)
+        rw_ref = michell_wave_resistance_legacy(L, B, T, u, rho=rho, g=g)
         entry: dict[str, Any] = {
             "Fr": float(fr),
             "speed": u,

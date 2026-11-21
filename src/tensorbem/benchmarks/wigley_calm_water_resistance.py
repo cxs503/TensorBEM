@@ -79,7 +79,7 @@ from tensorbem.thin_ship_michell import (
     wigley_amplitude_function,
     wigley_panels,
 )
-from tensorbem.wigley import michell_wave_resistance as legacy_michell_wave_resistance
+from tensorbem.wigley import michell_wave_resistance_legacy as legacy_michell_wave_resistance
 from tensorbem.wigley_hydrostatics import (
     wigley_hydrostatic_reference,
     wigley_wetted_area_reference,

@@ -138,7 +138,7 @@ def test_rao_spectrum_evanescent_frequency_is_flagged_not_fabricated():
         mass=props["mass"],
         center_of_gravity=props["center_of_gravity"],
         ice=ICE,
-        inertia=props["inertia_about_origin"],
+        inertia=props["inertia_about_cg"],
     )
     assert spectrum.propagating.tolist() == [False]
     assert np.all(spectrum.rao_ice == 0.0)
@@ -161,22 +161,23 @@ def test_rao_spectrum_satisfies_the_full_impedance_balance():
     spectrum = compute_ice_rao_spectrum(
         mesh,
         [omega],
+        amplitude=0.4,
         wave_angle=math.pi,
         mass=props["mass"],
         center_of_gravity=props["center_of_gravity"],
         ice=ICE,
-        inertia=props["inertia_about_origin"],
+        inertia=props["inertia_about_cg"],
     )
     assert spectrum.propagating.tolist() == [True]
     mass_matrix = compute_mass_matrix(
-        props["mass"], props["center_of_gravity"], props["inertia_about_origin"]
+        props["mass"], props["center_of_gravity"], props["inertia_about_cg"]
     )
     impedance = (
         -(omega ** 2) * (mass_matrix + spectrum.added_mass_ice[0])
-        + 1j * omega * spectrum.damping_ice[0]
+        - 1j * omega * spectrum.damping_ice[0]
         + spectrum.restoring_matrix
     )
-    residual = impedance @ spectrum.rao_ice[0] - spectrum.excitation_ice[0]
+    residual = impedance @ (0.4 * spectrum.rao_ice[0]) - spectrum.excitation_ice[0]
     reference = np.linalg.norm(spectrum.excitation_ice[0])
     assert np.linalg.norm(residual) <= 1e-9 * reference
     assert spectrum.restoring_matrix[2, 2] > 0.0

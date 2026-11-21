@@ -12,8 +12,8 @@ the *panel mesh* (panel-normal slope and ``(x, z)``-projected area) and fed into
 the Michell resistance integral
 ``Rw = (4 rho / U^2) int_1^inf |H(k0 lam)|^2 / (lam^2 sqrt(lam^2-1)) d lam``
 with the ``lam = 1 + s^2`` endpoint removal of
-:func:`tensorbem.wigley.michell_wave_resistance`.  The panel value is scored
-against the closed-form ``michell_wave_resistance`` at ``Fn = 0.25`` and
+:func:`tensorbem.wigley.michell_wave_resistance_legacy`.  The panel value is scored
+against the closed-form ``michell_wave_resistance_legacy`` at ``Fn = 0.25`` and
 ``0.316`` for three meshes.
 
 **B. Wigley radiation: Kochin far field vs near-field pressure integral.**
@@ -79,7 +79,7 @@ from ..symmetry3d import (
     split_patch,
 )
 from ..wigley import (
-    michell_wave_resistance,
+    michell_wave_resistance_legacy,
     wigley_hull_properties,
 )
 from ..wigley_hydrostatics import wigley_wetted_hull_mesh
@@ -198,7 +198,7 @@ def wigley_wave_resistance_panel(
 ) -> float:
     """Wave resistance of the panelised Wigley hull through the Kochin integral.
 
-    Identical quadrature to :func:`tensorbem.wigley.michell_wave_resistance`
+    Identical quadrature to :func:`tensorbem.wigley.michell_wave_resistance_legacy`
     (``lambda = 1 + s^2`` endpoint removal, Gauss-Legendre), but ``H`` comes from
     :func:`wigley_panel_kochin` instead of the closed form, so the result is a
     pure panel-discretisation reading of the same physical quantity.
@@ -250,7 +250,7 @@ def wigley_wave_resistance_study(
     rows: list[dict[str, Any]] = []
     for fn in froude:
         U = fn * math.sqrt(gravity * WIGLEY_L)
-        analytic = michell_wave_resistance(
+        analytic = michell_wave_resistance_legacy(
             WIGLEY_L, WIGLEY_B, WIGLEY_T, U, rho=density, g=gravity
         )
         cw_analytic = analytic / (0.5 * density * U**2 * WIGLEY_B * WIGLEY_T)

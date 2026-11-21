@@ -161,6 +161,10 @@
   "source": "located from the cached extended sweep"
  },
  "gates_definition": {
+  "G0_solver_validity": {
+   "tol": 0.01,
+   "quantity": "max relative residual over the band's nodes"
+  },
   "G1_cross_solver": {
    "tol": 0.1,
    "quantity": "diag A_ii, B_ii at omega=1.0"
@@ -286,6 +290,16 @@
    "G5_round_trip"
   ],
   "gates": {
+   "G0_solver_validity": {
+    "id": "G0_solver_validity",
+    "value": 0.0021445964036082405,
+    "tol": 0.01,
+    "passed": true,
+    "worst_omega": 20.0,
+    "offenders": [],
+    "nodes": 69,
+    "reported": 69
+   },
    "G1_cross_solver": {
     "id": "G1_cross_solver",
     "value": 0.03255772348206789,

@@ -6,6 +6,7 @@ import json
 import math
 from pathlib import Path
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -19,8 +20,6 @@ from tensorbem.hydrostatic import compute_hydrostatic_restoring_matrix
 from tensorbem.rao import compute_rao_spectrum
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -35,7 +34,7 @@ def generate_radiation_plots(output_dir: Path):
     """Generate radiation coefficient plots."""
     print("Generating radiation plots...")
     
-    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10)
+    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10, c=LEGACY_WIGLEY_ALPHA)
     omegas = np.linspace(0.5, 3.0, 11)
     
     A33 = []
@@ -43,7 +42,7 @@ def generate_radiation_plots(output_dir: Path):
     A33_nondim = []
     B33_nondim = []
     
-    ref = wigley3_hydrostatic_reference(density=_DENSITY, gravity=_GRAVITY)
+    ref = wigley3_hydrostatic_reference(density=_DENSITY, gravity=_GRAVITY, c=LEGACY_WIGLEY_ALPHA)
     mass = _DENSITY * ref["volume"]
     
     for omega in omegas:
@@ -96,7 +95,7 @@ def generate_diffraction_plots(output_dir: Path):
     """Generate diffraction force plots."""
     print("Generating diffraction plots...")
     
-    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10)
+    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10, c=LEGACY_WIGLEY_ALPHA)
     omegas = np.linspace(0.5, 3.0, 11)
     wave_angles = [0.0, 30.0, 60.0, 90.0]
     
@@ -136,8 +135,8 @@ def generate_rao_plots(output_dir: Path):
     """Generate RAO plots."""
     print("Generating RAO plots...")
     
-    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10)
-    ref = wigley3_hydrostatic_reference(density=_DENSITY, gravity=_GRAVITY)
+    mesh = wigley3_wetted_hull_mesh(n_sections=20, n_levels=10, c=LEGACY_WIGLEY_ALPHA)
+    ref = wigley3_hydrostatic_reference(density=_DENSITY, gravity=_GRAVITY, c=LEGACY_WIGLEY_ALPHA)
     mass = _DENSITY * ref["volume"]
     cg = np.array([0.0, 0.0, -0.5 * WIGLEY3_T])
     

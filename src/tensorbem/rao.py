@@ -3,7 +3,7 @@
 The RAO describes the linear response of a floating body to regular waves.
 The equation of motion in frequency domain is:
 
-    [-ω²(M + A(ω)) + iω B(ω) + C] ξ(ω) = F_exc(ω)
+    [-ω²(M + A(ω)) - iω B(ω) + C] a ξ(ω) = F_exc(ω)
 
 where:
     M     = rigid-body mass matrix (6×6)
@@ -14,10 +14,10 @@ where:
     ξ(ω)  = complex RAO vector (6×1)
 
 The transfer function H(ω) is:
-    H(ω) = [-ω²(M + A(ω)) + iω B(ω) + C]^(-1)
+    H(ω) = [-ω²(M + A(ω)) - iω B(ω) + C]^(-1)
 
 And the RAO is:
-    ξ(ω) = H(ω) F_exc(ω)
+    ξ(ω) = H(ω) F_exc(ω) / a
 
 For each degree of freedom, |ξ_i(ω)| gives the amplitude of motion per unit
 wave amplitude at frequency ω.
@@ -224,6 +224,12 @@ class RAOResult:
     added_mass: FloatArray
     damping: FloatArray
     impedance_residual: float
+    wave_amplitude: float = 1.0
+
+    @property
+    def motion(self) -> ComplexArray:
+        """Physical response in metres and radians at the incident amplitude."""
+        return self.wave_amplitude * self.rao
 
 
 @dataclass(frozen=True)
@@ -252,6 +258,12 @@ class RAOSpectrum:
     excitation_forces: ComplexArray
     added_masses: FloatArray
     dampings: FloatArray
+    complex_raos: ComplexArray | None = None
+
+
+def dynamic_stiffness(omega, mass, added_mass, damping, restoring):
+    """Dynamic stiffness for potentials and excitation using exp(-i omega t)."""
+    return restoring - omega**2 * (mass + added_mass) - 1j * omega * damping
 
 
 def _omega_to_nu(omega: float, gravity: float) -> float:
@@ -285,7 +297,7 @@ def compute_rao_at_frequency(
         only ``omega**2`` enters the dispersion relation, so a negative value
         would silently be solved as ``|omega|``.
     wave_angle :
-        Wave direction (radians). 0 = head seas (propagating in +x direction).
+        Wave direction (radians). 0 propagates in +x, π in −x.
     mass :
         Body mass (kg). Must be strictly positive and finite.
     center_of_gravity :
@@ -362,6 +374,7 @@ def compute_rao_at_frequency(
         inertia_value,
         extra,
         chief_points,
+        interior_panels,
     )
 
 
@@ -389,7 +402,7 @@ def _assemble_rao_at_frequency(
     omega :
         Wave circular frequency (rad/s).
     wave_angle :
-        Wave direction (radians). 0 = head seas (propagating in +x direction).
+        Wave direction (radians). 0 propagates in +x, π in −x.
     mass :
         Body mass (kg).
     center_of_gravity :
@@ -480,20 +493,11 @@ def _assemble_rao_at_frequency(
     if extra_damping is not None:
         damping = damping + np.asarray(extra_damping)
 
-    # Build impedance matrix
-    # Z(ω) = -ω²(M + A(ω)) + iω B(ω) + C
-    omega_sq = omega * omega
-    z = -omega_sq * (m + added_mass) + 1j * omega * damping + c
-
-    # Excitation force
+    z = dynamic_stiffness(omega, m, added_mass, damping, c)
     f_exc = diff_result.excitation_force
-
-    # Solve for RAO
-    # Z ξ = F_exc  =>  ξ = Z^(-1) F_exc
-    rao = np.linalg.solve(z, f_exc)
-
-    # Compute residual
-    residual_vec = z @ rao - f_exc
+    motion = np.linalg.solve(z, f_exc)
+    rao = motion / amplitude
+    residual_vec = z @ motion - f_exc
     impedance_residual = float(np.linalg.norm(residual_vec))
 
     return RAOResult(
@@ -505,6 +509,7 @@ def _assemble_rao_at_frequency(
         added_mass=added_mass,
         damping=damping,
         impedance_residual=impedance_residual,
+        wave_amplitude=amplitude,
     )
 
 
@@ -546,7 +551,7 @@ def compute_rao_spectrum(
     gravity :
         Gravitational acceleration (m/s²).
     inertia :
-        Inertia tensor about the origin (3×3).
+        Inertia tensor about the centre of gravity (3×3).
     extra_damping :
         Additional damping matrix (6×6).
     chief_points :
@@ -586,7 +591,7 @@ def compute_rao_spectrum(
     n_freq = len(omegas)
     nus = np.array([_omega_to_nu(w, gravity) for w in omegas])
 
-    rao_amplitudes = np.zeros((n_freq, 6), dtype=float)
+    complex_raos = np.zeros((n_freq, 6), dtype=complex)
     excitation_forces = np.zeros((n_freq, 6), dtype=complex)
     added_masses = np.zeros((n_freq, 6, 6), dtype=float)
     dampings = np.zeros((n_freq, 6, 6), dtype=float)
@@ -614,7 +619,7 @@ def compute_rao_spectrum(
             interior_panels=interior_panels,
         )
 
-        rao_amplitudes[i] = rao_result.rao_amplitude
+        complex_raos[i] = rao_result.rao
         excitation_forces[i] = rao_result.excitation_force
         added_masses[i] = rao_result.added_mass
         dampings[i] = rao_result.damping
@@ -622,7 +627,8 @@ def compute_rao_spectrum(
     return RAOSpectrum(
         omegas=omegas,
         nus=nus,
-        rao_amplitudes=rao_amplitudes,
+        rao_amplitudes=np.abs(complex_raos),
+        complex_raos=complex_raos,
         excitation_forces=excitation_forces,
         added_masses=added_masses,
         dampings=dampings,

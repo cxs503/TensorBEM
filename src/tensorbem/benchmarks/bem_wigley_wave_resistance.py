@@ -1,16 +1,7 @@
-"""Verified benchmark: Wigley hull wave resistance vs Michell theory.
+"""Archived quadrature study of the pre-repair Wigley integral.
 
-This module establishes a verification case for the Wigley hull wave resistance
-at three Froude numbers (Fr=0.2, 0.3, 0.4) against the converged Michell
-thin-ship theory reference.
-
-Verification strategy:
-1. Geometry: Wigley III parabolic hullform with closed-form properties
-2. Wave resistance: Kochin far-field path (Michell theory) vs converged reference
-3. Quadrature convergence: GCI analysis for the Michell quadrature
-4. Criteria: Rw error < 5%, GCI < 3%
-
-The Kochin path is the verification path (analytical, converged quadrature).
+The output preserves the old numerical baseline and its discretization study.
+Use tensorbem.wigley.michell_wave_resistance for a force in newtons.
 """
 
 from __future__ import annotations
@@ -23,7 +14,7 @@ from typing import Any
 import numpy as np
 
 from ..wigley import (
-    michell_wave_resistance,
+    michell_wave_resistance_legacy,
     wigley_hull_properties,
 )
 from .wigley_verification import converged_wave_resistance
@@ -117,7 +108,7 @@ def run_wigley_wave_resistance_verification(
         Rw_quad_list = []
         
         for n_quad in quad_levels:
-            Rw = michell_wave_resistance(L, B, T, U, rho=rho, g=g, n_quad=n_quad)
+            Rw = michell_wave_resistance_legacy(L, B, T, U, rho=rho, g=g, n_quad=n_quad)
             quad_results.append({
                 "n_quad": n_quad,
                 "Rw": Rw,
@@ -125,7 +116,7 @@ def run_wigley_wave_resistance_verification(
             Rw_quad_list.append(Rw)
         
         # Production value (256 quadrature points)
-        Rw_prod = michell_wave_resistance(L, B, T, U, rho=rho, g=g, n_quad=256)
+        Rw_prod = michell_wave_resistance_legacy(L, B, T, U, rho=rho, g=g, n_quad=256)
         
         # GCI for quadrature convergence
         gci = compute_gci(Rw_quad_list)

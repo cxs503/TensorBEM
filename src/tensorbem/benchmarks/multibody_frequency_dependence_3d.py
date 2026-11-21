@@ -71,6 +71,7 @@ import math
 import sys
 from typing import Any, Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 
 from ..geometry3d import WettedHullMesh
@@ -95,7 +96,6 @@ from ..multibody3d import (
     wigley_hull_mesh,
 )
 from ..wigley3_hull import (
-    WIGLEY3_ALPHA,
     WIGLEY3_B,
     WIGLEY3_L,
     WIGLEY3_T,
@@ -157,7 +157,7 @@ def mesh_spec(nx: int = _NX_MIN, nz: int = _NZ_DEFAULT) -> dict[str, Any]:
         "L": WIGLEY3_L,
         "B": WIGLEY3_B,
         "T": WIGLEY3_T,
-        "alpha": WIGLEY3_ALPHA,
+        "alpha": LEGACY_WIGLEY_ALPHA,
     }
 
 
@@ -362,9 +362,9 @@ def geometry_validation() -> dict[str, Any]:
     """Validate the discretised hull before any hydrodynamics is believed."""
     rows = []
     for nx, nz in ((12, 6), (16, 8), (24, 8), (40, 12)):
-        mesh = wigley_hull_mesh(nx=nx, nz=nz)
+        mesh = wigley_hull_mesh(nx=nx, nz=nz, alpha=LEGACY_WIGLEY_ALPHA)
         volume = mesh_displacement(mesh)
-        analytic = wigley3_displaced_volume()
+        analytic = wigley3_displaced_volume(alpha=LEGACY_WIGLEY_ALPHA)
         waterplane = waterplane_area(mesh)
         analytic_waterplane = WIGLEY3_B * WIGLEY3_L * 2.0 / 3.0
         rows.append(
@@ -388,8 +388,8 @@ def geometry_validation() -> dict[str, Any]:
         "L": WIGLEY3_L,
         "B": WIGLEY3_B,
         "T": WIGLEY3_T,
-        "alpha": WIGLEY3_ALPHA,
-        "block_coefficient_analytic": wigley3_block_coefficient(),
+        "alpha": LEGACY_WIGLEY_ALPHA,
+        "block_coefficient_analytic": wigley3_block_coefficient(alpha=LEGACY_WIGLEY_ALPHA),
         "L_over_B": WIGLEY3_L / WIGLEY3_B,
         "B_over_T": WIGLEY3_B / WIGLEY3_T,
         "rows": rows,
@@ -1952,7 +1952,7 @@ def run_full_study(
 
     if "geometry" in selected:
         study["geometry"] = geometry_validation()
-        single_mesh = wigley_hull_mesh(nx=16, nz=8)
+        single_mesh = wigley_hull_mesh(nx=16, nz=8, alpha=LEGACY_WIGLEY_ALPHA)
         study["hydrostatics"] = heave_natural_frequency(single_mesh)
         _stamp("geometry_hydrostatics")
     omega_n = float(study["hydrostatics"]["omega_n"])

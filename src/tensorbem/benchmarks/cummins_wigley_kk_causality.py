@@ -89,6 +89,7 @@ import pathlib
 import time
 from typing import Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA, LEGACY_WIGLEY_CB
 import numpy as np
 from numpy.typing import NDArray
 
@@ -97,13 +98,14 @@ from tensorbem.causality import fit_added_mass_asymptote, kkr_added_mass, kkr_da
 from tensorbem.free_surface_solver3d import solve_radiation_3d
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
     wigley3_wetted_hull_mesh,
 )
+
+# Historical public constant for the archived 0.543 benchmark.
+WIGLEY3_CB = LEGACY_WIGLEY_CB
 
 FloatArray = NDArray[np.float64]
 
@@ -223,15 +225,15 @@ CAPYTAINE_REF_PATH = (
 
 def geometry_gate(density: float = DENSITY, gravity: float = GRAVITY) -> dict:
     """Validate the hull before any number is quoted (Cb / L/B / B/T / volume)."""
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     volume = float(ref["volume"])
-    cb_analytic = WIGLEY3_CB
+    cb_analytic = LEGACY_WIGLEY_CB
     cb_geometry = volume / (WIGLEY3_L * WIGLEY3_B * WIGLEY3_T)
     return {
         "L": WIGLEY3_L,
         "B": WIGLEY3_B,
         "T": WIGLEY3_T,
-        "c": WIGLEY3_C,
+        "c": LEGACY_WIGLEY_ALPHA,
         "L_over_B": WIGLEY3_L / WIGLEY3_B,
         "B_over_T": WIGLEY3_B / WIGLEY3_T,
         "volume": volume,
@@ -254,7 +256,7 @@ def wetted_mesh(level: str = "medium"):
     """Wetted-surface mesh for the Wigley III hull at the requested level."""
     n_sections, n_levels = MESH_LEVELS[level]
     return wigley3_wetted_hull_mesh(
-        L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=WIGLEY3_C,
+        L=WIGLEY3_L, B=WIGLEY3_B, T=WIGLEY3_T, c=LEGACY_WIGLEY_ALPHA,
         n_sections=n_sections, n_levels=n_levels,
     )
 
@@ -277,7 +279,7 @@ def sweep_signature(level: str = "medium") -> dict:
         "triangles": int(len(faces)),
         "mesh_volume": volume,
         "mesh_volume_rel_error": volume / float(
-            wigley3_hydrostatic_reference()["volume"]
+            wigley3_hydrostatic_reference(c=LEGACY_WIGLEY_ALPHA)["volume"]
         ) - 1.0,
     }
 
@@ -766,7 +768,7 @@ def heave_resonance_band(
 ) -> dict:
     """Locate the heave resonance of the tabulated sweep (used to choose the band)."""
     omega, added, damping = _as_diag(sweep, DOF_INDEX["heave"])
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     mass = float(ref["volume"] * density)
     restoring = float(ref["C33"])
     try:
@@ -807,7 +809,7 @@ def heave_decay_gate(
     half-power scan of ``1/|kappa|``.
     """
     omega, added, damping = _as_diag(sweep, DOF_INDEX["heave"])
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     mass = float(ref["volume"] * density)
     restoring = float(ref["C33"])
     a_inf = float(study["added_mass_inf"])

@@ -21,6 +21,7 @@ import math
 from pathlib import Path
 from typing import Any, Sequence
 
+from tensorbem.wigley3_hull import LEGACY_WIGLEY_ALPHA
 import numpy as np
 from numpy.typing import NDArray
 
@@ -34,8 +35,6 @@ from tensorbem.rao import compute_rao_spectrum
 from tensorbem.uq import grid_convergence_index
 from tensorbem.wigley3_freq import (
     WIGLEY3_B,
-    WIGLEY3_C,
-    WIGLEY3_CB,
     WIGLEY3_L,
     WIGLEY3_T,
     wigley3_hydrostatic_reference,
@@ -66,9 +65,9 @@ _JOURNEE_HEAVE_RAO_PEAK_OMEGA = 1.8
 def _make_meshes():
     """Generate three mesh densities for convergence study."""
     return {
-        "coarse": wigley3_wetted_hull_mesh(n_sections=10, n_levels=5),
-        "medium": wigley3_wetted_hull_mesh(n_sections=20, n_levels=10),
-        "fine": wigley3_wetted_hull_mesh(n_sections=40, n_levels=20),
+        "coarse": wigley3_wetted_hull_mesh(n_sections=10, n_levels=5, c=LEGACY_WIGLEY_ALPHA),
+        "medium": wigley3_wetted_hull_mesh(n_sections=20, n_levels=10, c=LEGACY_WIGLEY_ALPHA),
+        "fine": wigley3_wetted_hull_mesh(n_sections=40, n_levels=20, c=LEGACY_WIGLEY_ALPHA),
     }
 
 
@@ -166,7 +165,7 @@ def run_rao_sweep(
     
     meshes = _make_meshes()
     mesh = meshes[mesh_key]
-    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity)
+    ref = wigley3_hydrostatic_reference(density=density, gravity=gravity, c=LEGACY_WIGLEY_ALPHA)
     volume = ref["volume"]
     mass = density * volume
     cg = np.array([0.0, 0.0, -0.5 * WIGLEY3_T])

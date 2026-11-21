@@ -57,8 +57,7 @@ from numpy.polynomial.legendre import leggauss
 
 from ..wigley import (
     michell_kochin_function,
-    michell_wave_resistance,
-    wave_resistance_kochin,
+    michell_wave_resistance_legacy,
     wave_resistance_pressure,
     wigley_hull_mesh,
     wigley_hull_properties,
@@ -264,8 +263,8 @@ def quadrature_audit(L: float, B: float, T: float) -> dict:
     for Fr in FR_GRID:
         U = Fr * math.sqrt(G * L)
         ref = converged_wave_resistance(L, B, T, U)
-        prod = michell_wave_resistance(L, B, T, U)
-        prod_384 = michell_wave_resistance(L, B, T, U, n_quad=384)
+        prod = michell_wave_resistance_legacy(L, B, T, U)
+        prod_384 = michell_wave_resistance_legacy(L, B, T, U, n_quad=384)
         legacy = legacy_wave_resistance(L, B, T, U)
         legacy_384 = legacy_wave_resistance(L, B, T, U, n_quad=384)
         sweep.append(
@@ -304,7 +303,7 @@ def pressure_path_audit(L: float, B: float, T: float, froude=(0.25, 0.30, 0.35))
     rows = []
     for Fr in froude:
         U = Fr * math.sqrt(G * L)
-        rk = wave_resistance_kochin(L, B, T, U)
+        rk = michell_wave_resistance_legacy(L, B, T, U)
         for nx, nz in ((4, 2), (8, 4), (16, 8), (24, 12)):
             mesh = wigley_hull_mesh(L, B, T, nx, nz)
             rp = wave_resistance_pressure(mesh, L, B, T, U)
@@ -350,7 +349,7 @@ def reference_area_audit(L: float, B: float, T: float) -> dict:
     rows = []
     for Fr in FR_GRID:
         U = Fr * math.sqrt(G * L)
-        Rw = michell_wave_resistance(L, B, T, U)
+        Rw = michell_wave_resistance_legacy(L, B, T, U)
         q = 0.5 * RHO * U**2
         rows.append(
             {
