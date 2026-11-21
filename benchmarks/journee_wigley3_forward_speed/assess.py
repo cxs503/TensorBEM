@@ -28,12 +28,15 @@ def component(curve, name):
     return abs(force) / scale, -np.angle(force, deg=True) % 360
 
 
-def compare(root=ROOT):
+def compare(root=ROOT, *, predictions_by_solver=None):
     limits = json.loads(LIMITS.read_text())
     trials = {name: table(root, name) for name in ("motions", "loads")}
     scores, errors = [], []
-    for solver in ("tensorbem", "capytaine"):
-        predictions = table(root, solver)
+    if predictions_by_solver is None:
+        predictions_by_solver = {
+            name: table(root, name) for name in ("tensorbem", "capytaine")
+        }
+    for solver, predictions in predictions_by_solver.items():
         for panels in np.unique(predictions["panels"]):
             for fn in np.unique(trials["motions"]["Fn"]):
                 curve = predictions[

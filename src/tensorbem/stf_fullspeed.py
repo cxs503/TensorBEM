@@ -253,6 +253,21 @@ def compute_section_coefficients_circle(
 # STF speed corrections
 # ---------------------------------------------------------------------------
 
+def _double_ended_speed_terms(a33: float, b33: float, omega_e: float, speed: float):
+    """Journée report 0909, p. 4, with x forward and positive pitch bow-down.
+
+    a33 and b33 are integrated heave coefficients at the encounter frequency.
+    The row is the responding force, the column the imposed displacement.
+    """
+    cross_mass = -speed * b33 / omega_e**2
+    cross_damping = speed * a33
+    pitch_factor = (speed / omega_e)**2
+    return (
+        np.array([[0.0, cross_mass], [-cross_mass, pitch_factor * a33]]),
+        np.array([[0.0, cross_damping], [-cross_damping, pitch_factor * b33]]),
+    )
+
+
 def stf_speed_correction_terms(
     section_coeffs: Sequence[SectionCoefficients],
     stations: FloatArray,
@@ -266,7 +281,8 @@ def stf_speed_correction_terms(
     the m-terms in the body boundary condition.  For heave-pitch in head seas:
 
     Correction to A_33:  ΔA_33 = (U/ω_e) · [a_33(bow) − a_33(stern)]
-    Correction to A_35:  ΔA_35 = (U/ω_e) · ∫ a_33(x) dx
+    For sections vanishing at both ends, the forward-speed increments are
+    ΔA_35 = −U B_33 / ω_e² = −ΔA_53 and ΔB_35 = U A_33 = −ΔB_53.
     Correction to A_55:  ΔA_55 = (U/ω_e)² · ∫ a_33(x) dx
 
     The end terms come from integration by parts of the d/dx operators.
@@ -286,8 +302,6 @@ def stf_speed_correction_terms(
     a33 = np.array([c.a33 for c in section_coeffs])
     b33 = np.array([c.b33 for c in section_coeffs])
 
-    delta_A = np.zeros((2, 2))
-    delta_B = np.zeros((2, 2))
     end_A = np.zeros((2, 2))
     end_B = np.zeros((2, 2))
 
@@ -295,22 +309,16 @@ def stf_speed_correction_terms(
     end_A[0, 0] = speed_ratio * (a33[-1] - a33[0])
     end_B[0, 0] = speed_ratio * (b33[-1] - b33[0])
 
-    # --- A35 cross-coupling from speed: (U/ω_e) · ∫a33 dx ---
+    # Interior terms use the integrated heave mass and damping.
     dx = np.diff(stations)
     a33_mid = 0.5 * (a33[:-1] + a33[1:])
     b33_mid = 0.5 * (b33[:-1] + b33[1:])
     integral_a33 = float(np.sum(a33_mid * dx))
     integral_b33 = float(np.sum(b33_mid * dx))
 
-    delta_A[0, 1] = speed_ratio * integral_a33
-    delta_A[1, 0] = delta_A[0, 1]
-    delta_B[0, 1] = speed_ratio * integral_b33
-    delta_B[1, 0] = delta_B[0, 1]
-
-    # --- A55 correction: (U/ω_e)² · ∫ a33(x) dx ---
-    delta_A[1, 1] = speed_ratio**2 * integral_a33
-    delta_B[1, 1] = speed_ratio**2 * integral_b33
-
+    delta_A, delta_B = _double_ended_speed_terms(
+        integral_a33, integral_b33, omega_e, forward_speed
+    )
     return delta_A, delta_B, end_A, end_B
 
 
