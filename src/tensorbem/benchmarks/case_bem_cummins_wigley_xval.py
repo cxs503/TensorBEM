@@ -105,7 +105,14 @@ def load_reference(path: str | Path | None = None) -> dict[str, Any]:
                     raise ValueError(
                         f"reference {label}/{variant}/{key} has shape {mat.shape}"
                     )
-    payload["_path"] = str(target)
+    # Record the reference location as a *repo-relative* path so the study
+    # artifact is portable: an absolute path would leak the producer's worktree
+    # and make the committed study non-reproducible on any other machine.
+    resolved = Path(target).resolve()
+    try:
+        payload["_path"] = resolved.relative_to(ROOT).as_posix()
+    except ValueError:
+        payload["_path"] = str(resolved)
     return payload
 
 

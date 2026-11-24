@@ -9,7 +9,7 @@
   "status": "passed",
   "passed": true,
   "values": {
-   "reference": "/srv/tensor/agent/work/m21839/benchmarks/verified/casepool_bem_cummins_wigley/capytaine_ref.json",
+   "reference": "benchmarks/verified/casepool_bem_cummins_wigley/capytaine_ref.json",
    "foreign_code": "capytaine",
    "foreign_code_version": "3.1.dev0",
    "level": "medium",

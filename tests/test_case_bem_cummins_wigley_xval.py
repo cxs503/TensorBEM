@@ -155,3 +155,24 @@ def test_load_reference_rejects_a_foreign_producer(tmp_path) -> None:
     target.write_text(json.dumps(payload))
     with pytest.raises(ValueError):
         xval.load_reference(target)
+
+def test_reference_path_is_repo_relative_and_portable(reference, sweep) -> None:
+    """The study artifact must not leak the producer's worktree.
+
+    The committed ``xval_study.json`` is read on many machines; an absolute
+    ``reference`` path would make it machine-specific and non-reproducible.
+    The gate must therefore record the reference location repo-relative.
+    """
+    from pathlib import PurePosixPath
+
+    recorded = reference["_path"]
+    assert not PurePosixPath(recorded).is_absolute(), recorded
+    assert not recorded.startswith(("/",)), recorded
+    # and it must point at the frozen capytaine reference inside the repo
+    assert recorded.endswith("capytaine_ref.json"), recorded
+    gate = xval.external_anchor_gate(sweep, reference)
+    assert gate["values"]["reference"] == recorded
+    # the recorded location must actually resolve to the frozen artifact
+    from tensorbem.benchmarks.case_bem_cummins_wigley_xval import ROOT
+
+    assert (ROOT / recorded).is_file()
