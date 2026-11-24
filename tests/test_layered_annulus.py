@@ -112,3 +112,29 @@ def test_angular_resolution_separates_sampling_and_solved_trace_error():
         assert aliased[layer]["circular_solve"] > .8
         assert resolved[layer]["exact_trace_control"] < 1e-12
         assert resolved[layer]["circular_solve"] < 1e-12
+
+
+@pytest.mark.parametrize("formulation", ["polygonal", "circular"])
+def test_convection_radial_rate_and_variable_angular_films(formulation):
+    from tensorbem.benchmarks.annulus_convection import angular, radial
+
+    for hot, cold in ((310., 290.), (290., 310.)):
+        run = radial(32, formulation, hot, cold)
+        assert run["max_rate_relative_error"] < .002
+        assert run["max_wall_temperature_error_K"] < .012
+    assert angular(32, formulation)["interface_flux_max_error_W_m2"] < .009
+
+
+@pytest.mark.parametrize("films", [(0., None), (None, 0.), (0., 2.), (2., 0.)])
+def test_insulated_wall_has_constant_steady_temperature(films):
+    result = solve_annulus_contact((.25,.6,1.), (4.,1.), (5.,12.), .2, 16, film_coefficients=films)
+    expected = 12. if films[0] == 0. else 5.
+    np.testing.assert_allclose(result.inner_trace, expected, atol=1e-11)
+    np.testing.assert_allclose(result.outer_trace, expected, atol=1e-11)
+    np.testing.assert_allclose(result.heat_rates, 0., atol=1e-11)
+
+
+@pytest.mark.parametrize("films", [(0., 0.), (np.inf, None), (-1., 3.)])
+def test_unanchored_temperature_or_invalid_film_rejected(films):
+    with pytest.raises(ValueError):
+        solve_annulus_contact((.25,.6,1.), (4.,1.), (5.,12.), panels=16, film_coefficients=films)

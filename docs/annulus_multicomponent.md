@@ -333,3 +333,24 @@ error was 3.50e-14 and the polygonal solution's worst error was 11.89%.
 Across all 11 cases strictly below Nyquist, circular-solve error remained
 below 4.8e-14. These single-mode results apply to constant conductivities,
 circular geometry and the specified angular spectra.
+
+### Newton cooling at either circular wall
+
+Pass `film_coefficients=(h_bore, h_exterior)` to `solve_annulus_contact`.
+A finite positive h in W/(m² K) uses the corresponding supplied temperature
+as the ambient fluid temperature; the wall trace is solved. A panel vector
+allows angular variation, a zero coefficient insulates, and None prescribes
+the surface temperature. At least one wall must anchor the solution. The
+condition number reported by the solver is for the reduced interface system.
+
+For radii (0.25,0.6,1) m, conductivities (4,1) W/(m K), a 0.2 m² K/W
+contact, films (12,3) W/(m² K), and ambient temperatures (310,290) K,
+the analytic rate is 72.650881 W/m of cylinder length. Each film adds
+1/(2πrh) to the series resistance per unit length. With 16 and 128 panels
+per circle, the worst polygonal rate errors across the bore, contact and
+exterior were 0.6044% and 0.00997%. At 128 panels the circular formulation
+gave a relative rate error below 2.4e-12. A separate first-harmonic field
+with angularly varying films and ambients gave polygonal maximum local
+interface flux errors of 0.03159 and 0.0004870 W/m² on the same meshes.
+Reproduce from the repository root with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.annulus_convection`.
