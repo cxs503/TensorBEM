@@ -35,9 +35,14 @@ def measure(n, formulation, driven):
     wall_data = [bore, ext]
     inward = [-ki*slope_bore, ko*slope_ext]
     fluxes = [None, None]
-    wall_data[driven], fluxes[driven] = None, inward[driven]
+    mean_bore = None
+    if driven == 2:
+        wall_data, fluxes = (None,None), inward
+        mean_bore = np.log(a/b)
+    else:
+        wall_data[driven], fluxes[driven] = None, inward[driven]
     sol = solve_annulus_contact((a,b,c), (ki,ko), wall_data, resistance, n,
-                                formulation=formulation, wall_fluxes=fluxes)
+                                formulation=formulation, wall_fluxes=fluxes, mean_bore_temperature=mean_bore)
     targets = np.linspace(.13, 2*np.pi+.13, 31, endpoint=False)
     temp_err, vector_err = [], []
     unit = np.column_stack((np.cos(targets), np.sin(targets)))
@@ -49,7 +54,7 @@ def measure(n, formulation, driven):
         vector_err.append(np.max(np.linalg.norm(region.heat_flux(rad*unit)-vector, axis=1)))
     _, slope, _ = field(b, theta, True)
     measured = (ki*sol.inner_field.normal_derivative[n:], ko*sol.outer_field.normal_derivative[:n])
-    return dict(panels=n, formulation=formulation, flux_wall=("bore","exterior")[driven],
+    return dict(panels=n, formulation=formulation, flux_wall=("bore","exterior","both")[driven],
                 temperature_error_K=float(max(temp_err)), interior_flux_error_W_m2=float(max(vector_err)),
                 wall_flux_error_W_m2=float(max(np.max(abs(m-q)) for m,q in zip(measured,inward))),
                 contact_flux_error_W_m2=float(np.max(abs(sol.interface_flux+ki*slope))),
@@ -60,7 +65,7 @@ def measure(n, formulation, driven):
 def main():
     rows = []
     for form in ("polygonal","circular"):
-        for driven in (0,1):
+        for driven in ((0,1,2) if form == "circular" else (0,1)):
             previous = None
             for n in (16,32,64,128):
                 row = measure(n, form, driven)

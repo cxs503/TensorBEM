@@ -167,3 +167,23 @@ def test_prescribed_flux_cannot_share_a_dirichlet_wall_or_leave_network_unanchor
         solve_annulus_contact((.25,.6,1.), (2.,1.), (1.,0.), wall_fluxes=(1.,None))
     with pytest.raises(ValueError, match="anchor"):
         solve_annulus_contact((.25,.6,1.), (2.,1.), (None,None), wall_fluxes=(1.,-1.))
+
+
+def test_circular_pure_flux_selects_only_temperature_offset():
+    n = 32
+    a, b, c = .25, .6, 1.
+    theta = 2*np.pi*(np.arange(n)+.5)/n
+    flux = (3.+np.cos(2*theta), -3.*a/c+.5*np.sin(theta))
+    def solve(mean, boundary_flux=flux):
+        return solve_annulus_contact((a,b,c), (2.,1.), (None,None), .2, n,
+                                     formulation="circular", wall_fluxes=boundary_flux,
+                                     mean_bore_temperature=mean)
+    base, shifted = solve(2.), solve(19.)
+    np.testing.assert_allclose(base.inner_field.boundary_values[n:].mean(), 2., atol=1e-12)
+    np.testing.assert_allclose(shifted.outer_trace-base.outer_trace, 17., atol=1e-11, rtol=0.)
+    np.testing.assert_allclose(shifted.interface_flux, base.interface_flux, atol=1e-11, rtol=0.)
+    np.testing.assert_allclose(base.heat_rates, 2*np.pi*a*3., atol=1e-11, rtol=0.)
+    with pytest.raises(ValueError, match="incompatible"):
+        solve(2., (flux[0], flux[1]+.001))
+    zero = solve(12., (0., 0.))
+    np.testing.assert_allclose(zero.outer_field.boundary_values, 12., atol=1e-11, rtol=0.)

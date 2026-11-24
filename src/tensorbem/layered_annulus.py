@@ -127,7 +127,8 @@ def _wall_response(normal_map, interface, wall, ambient, film, inward_flux):
 
 
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *,
-                          formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None)):
+                          formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None),
+                          mean_bore_temperature=None):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -137,7 +138,9 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     wall's temperature data as the ambient fluid temperature. Zero h insulates.
     A wall_fluxes entry prescribes inward W/m² (scalar or azimuthal samples);
     set the corresponding wall temperature and film to None. At least one
-    wall must have a prescribed temperature or a nonzero film anchor.
+    wall must have a prescribed temperature or a nonzero film anchor unless
+    both circular walls have prescribed fluxes. For that case supply
+    mean_bore_temperature in K and compatible integrated wall inputs.
     The areal resistance is in m² K/W and may vary by interface panel.
     The default polygonal formulation uses straight constant panels. The
     circular formulation collocates the contact law at the same angles and
@@ -172,7 +175,12 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     # Inner trace = outer trace + R*q; Fourier flux reverses sign on the hole.
     first, second = slice(0, n), slice(n, 2*n)
     bore_film, exterior_film = film_coefficients
-    if all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
+    if mean_bore_temperature is not None:
+        if not circular or bore_flux is None or exterior_flux is None:
+            raise ValueError("mean_bore_temperature requires two prescribed fluxes on circular walls")
+        if np.ndim(mean_bore_temperature) != 0 or not np.isfinite(mean_bore_temperature):
+            raise ValueError("mean_bore_temperature must be a finite scalar")
+    elif all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
            for q, h in zip(wall_fluxes, film_coefficients)):
         raise ValueError("at least one wall must anchor the temperature")
     bore_base, bore_response = _wall_response(di, first, second, hot, bore_film, bore_flux)
@@ -187,10 +195,26 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     system = np.block([[inner_map, inner_map * r + eye],
                        [outer_map, -eye]])
     rhs = -np.concatenate((di[first, second] @ bore_base, do[second, first] @ ext_base))
+    if mean_bore_temperature is not None:
+        # Uniform angular panels have equal arc lengths on each nominal circle.
+        inputs = [radius*np.broadcast_to(np.asarray(value, dtype=float), (n,))
+                  for radius,value in ((bore,bore_flux),(exterior,exterior_flux))]
+        imbalance = sum(np.sum(q) for q in inputs)
+        throughput = sum(np.abs(q).sum() for q in inputs)
+        if abs(imbalance) > 1e-12*throughput:
+            raise ValueError("prescribed fluxes have incompatible integrated wall inputs")
+        # T_bore = bore_base + bore_response @ (outer_trace + R*flux).
+        mean_response = bore_response.mean(axis=0)
+        system = np.vstack((system, np.r_[mean_response, mean_response*r]))
+        rhs = np.r_[rhs, mean_bore_temperature-bore_base.mean()]
     condition = float(np.linalg.cond(system))
     if not np.isfinite(condition) or condition > _MAX_CONDITION:
         raise ValueError(f"ill-conditioned interface system ({condition:.3e})")
-    outer_trace, flux = np.split(np.linalg.solve(system, rhs), 2)
+    if mean_bore_temperature is None:
+        state = np.linalg.solve(system, rhs)
+    else:
+        state = np.linalg.lstsq(system, rhs, rcond=None)[0]
+    outer_trace, flux = np.split(state, 2)
     inner_trace = outer_trace + r * flux
     bore_temp = bore_base if bore_response is None else bore_base + bore_response @ inner_trace
     ext_temp = ext_base if ext_response is None else ext_base + ext_response @ outer_trace

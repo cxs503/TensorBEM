@@ -369,3 +369,11 @@ flux vectors, temperatures and the net heat rate. On 128 straight panels
 per ring the largest interior flux error for the two choices of driven wall
 was 0.00246 W/m². The circular Fourier method resolves this finite harmonic
 to roundoff.
+
+For the circular Fourier formulation both walls may instead prescribe inward
+flux. Supply `wall_temperatures=(None,None)`, `wall_fluxes=(q_bore,q_exterior)`
+and `mean_bore_temperature`. The arc integrals must sum to zero. The solver
+adds the mean bore temperature as an equation to fix the otherwise arbitrary
+temperature offset. Changing this datum shifts both layer temperatures by
+the same constant and preserves contact flux. The prescribed-flux benchmark
+also checks this two-wall case at four angular resolutions.
