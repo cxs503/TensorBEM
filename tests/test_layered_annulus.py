@@ -29,3 +29,12 @@ def test_variable_panel_resistance_and_derivative_of_wall_offset():
     np.testing.assert_allclose(shifted.inner_trace, first.inner_trace + 10, atol=1e-12)
     np.testing.assert_allclose(shifted.interface_flux, first.interface_flux, atol=1e-12)
     np.testing.assert_allclose(first.inner_trace-first.outer_trace, r*first.interface_flux)
+
+
+def test_varying_resistance_matches_independent_harmonic_trace_and_flux():
+    from tensorbem.benchmarks.layered_annulus import varying_contact
+
+    coarse, fine = varying_contact(16), varying_contact(32)
+    for key in ("max_flux_error_W_m2", "max_inner_trace_error_K", "max_outer_trace_error_K"):
+        assert fine[key] < coarse[key] / 4
+    assert fine["max_flux_error_W_m2"] < .001

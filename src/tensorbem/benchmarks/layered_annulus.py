@@ -42,7 +42,24 @@ def angular_mode(n):
             "max_abs_integrated_rate_W_m": max(abs(q) for q in result.heat_rates)}
 
 
+def varying_contact(n):
+    """Uniform radial flux at the interface with a cosine-varying jump."""
+    a, b, c = .25, .6, 1.
+    ki, ko = 4., 1.
+    cosine = np.cos(2 * math.pi * (np.arange(n) + .5) / n)
+    # (r/b+b/r)*cos(theta) is harmonic and has zero radial slope at r=b.
+    # Adding it only to the exterior layer leaves interface flux at 1 W/m².
+    walls = (2 - b/ki * math.log(a/b),
+             1 - b/ko * math.log(c/b) + .1 * (c/b+b/c) * cosine)
+    resistance = 1 - .2 * cosine
+    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels=n)
+    return {"panels_per_circle": n, "max_flux_error_W_m2": float(np.max(abs(result.interface_flux-1))),
+            "max_inner_trace_error_K": float(np.max(abs(result.inner_trace-2))),
+            "max_outer_trace_error_K": float(np.max(abs(result.outer_trace-(1+.2*cosine))))}
+
+
 if __name__ == "__main__":
     print(json.dumps({"radial": [measure(n,r,rev) for r in (0., .2) for rev in (False, True)
                       for n in (16, 32, 64, 128)],
-                      "angular": [angular_mode(n) for n in (16, 32, 64, 128)]}, indent=2))
+                      "angular": [angular_mode(n) for n in (16, 32, 64, 128)],
+                      "varying_contact": [varying_contact(n) for n in (16, 32, 64, 128)]}, indent=2))

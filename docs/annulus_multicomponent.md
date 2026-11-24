@@ -253,3 +253,10 @@ flux amplitude fell from 1.282% to 0.01957% over the same refinements.
 Reproduce from the repository root with
 `OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.layered_annulus`.
 The JSON also includes perfect contact and reverse heat flow.
+
+A spatially variable contact test uses R(θ)=1−0.2 cos(θ), with uniform exact
+interface flux 1 W/m². A harmonic term proportional to (r/b+b/r)cos(θ)
+in the outer layer changes its trace while leaving the radial derivative at
+contact radius b unchanged. Maximum local flux errors were 0.003293,
+0.0007472, 0.0001773 and 0.00004313 W/m²; at 128 panels per circle the two
+maximum trace errors were 0.00001550 and 0.00003808 K.
