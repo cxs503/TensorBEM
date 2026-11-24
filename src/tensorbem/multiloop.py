@@ -365,9 +365,11 @@ def domain_membership(mesh: "MultiLoopMesh", points: FloatArray) -> tuple[FloatA
 
 
 def evaluate_multiloop_field(
-    mesh: MultiLoopMesh, result: LaplaceDirichletResult, points: FloatArray
+    mesh: MultiLoopMesh, result: LaplaceDirichletResult, points: FloatArray, *, gradient: bool = False
 ) -> FloatArray:
     """Evaluate the potential at points of the multiply connected domain.
+
+    With gradient=True, return the interior gradient (M, 2) in global coordinates.
 
     Green's representation is summed over every panel of every loop.  A target
     inside the outer loop and outside the hole contributes with ``c = 1``, which
@@ -407,6 +409,18 @@ def evaluate_multiloop_field(
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
     reference = result.reference_length
+    if gradient:
+        from .kernels import integrate_double_layer_panel_gradient_many, integrate_single_layer_panel_gradient_many
+
+        gradients = np.zeros((len(targets), 2))
+        for j, length in enumerate(lengths):
+            single = integrate_single_layer_panel_gradient_many(
+                targets, vertices[j], tangents[j], length, reference)
+            double = integrate_double_layer_panel_gradient_many(
+                targets, vertices[j], tangents[j], normals[j], length)
+            gradients += single * result.normal_derivative[j] - double * result.boundary_values[j]
+        return gradients
+
     values = np.zeros(len(targets), dtype=float)
     for i, target in enumerate(targets):
         total = 0.0

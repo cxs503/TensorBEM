@@ -210,3 +210,27 @@ def test_convergence_figure_renders_from_artifact(tmp_path):
     payload = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     path = annulus_figures.plot_convergence(payload, tmp_path)
     assert path.exists() and path.stat().st_size > 10_000
+
+
+def test_interior_gradient_of_annular_logarithm():
+    mesh = annulus_mesh(64, 32)
+    result = solve_laplace_multiloop(mesh, np.log(np.linalg.norm(mesh.centers, axis=1)))
+    points = _ring_points(radii=(0.7, 0.8))
+    gradient = evaluate_multiloop_field(mesh, result, points, gradient=True)
+    exact = points / np.sum(points**2, axis=1)[:, None]
+    np.testing.assert_allclose(gradient, exact, atol=0.012)
+
+
+@pytest.mark.parametrize("case", study.CASES, ids=lambda case: case.name)
+def test_near_hole_gradient_resolution_improves_under_refinement(case):
+    from tensorbem.benchmarks.annulus_gradient_resolution import measure, TOLERANCE
+
+    coarse, fine = (measure(case, n) for n in (16, 32))
+    assert 0 < fine["smallest_resolved_clearance"] < coarse["smallest_resolved_clearance"]
+    # Both resolved and unresolved probes must be represented. An average
+    # over the ring could hide the large errors on vertex directions.
+    for level in (coarse, fine):
+        assert level["rings"][0]["relative_linf"] > TOLERANCE
+        assert level["rings"][-1]["relative_linf"] < TOLERANCE
+    assert all(f["relative_linf"] < c["relative_linf"]
+               for c, f in zip(coarse["rings"], fine["rings"]))
