@@ -310,3 +310,26 @@ Direct differentiation of constant-panel potentials at 128 panels gave
 shrinks under refinement in this test. The reconstruction assumes a circular
 boundary and smooth, angularly resolved traces. The benchmark does not
 establish these errors for discontinuous temperature data.
+
+### Angular resolution and the circular interface solver
+
+Pass `formulation="circular"` to `solve_annulus_contact` to use the Fourier
+Dirichlet-to-Neumann maps of the two nominal annuli. At each interface angle
+the solve enforces the local temperature jump and flux continuity. Its
+integrated rates use arc lengths, and the layer field methods use circular
+harmonic extension. The logarithmic radial solution supplies the mean mode.
+The highest mode on an even sample grid has only one independent real
+coefficient; a general phase at two samples per wavelength is unresolved.
+
+Reproduce the independent phase-shifted mode study with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.annulus_angular_resolution`.
+For modes 2, 4 and 8 and meshes of 16, 32, 64 and 128 angular samples, it
+checks the local Fourier flux one eighth of a chord from the contact, on
+both sides. It compares reconstructed polygonal solutions, circular
+solutions and a control with the exact temperature traces supplied directly.
+For mode 8 at 16 samples, the worst circular-solve relative error was
+80.99%; the exact-trace control also gave 80.99%. At 32 samples the circular
+error was 3.50e-14 and the polygonal solution's worst error was 11.89%.
+Across all 11 cases strictly below Nyquist, circular-solve error remained
+below 4.8e-14. These single-mode results apply to constant conductivities,
+circular geometry and the specified angular spectra.

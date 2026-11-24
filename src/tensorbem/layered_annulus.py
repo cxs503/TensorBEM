@@ -15,13 +15,18 @@ class AnnulusLayerField:
     normal_derivative: np.ndarray
     conductivity: float
     reference_length: float
+    circular_geometry: bool = False
 
     def temperature(self, points):
+        if self.circular_geometry:
+            return self.circular_field(points)[0]
         return _evaluate_traces(self.mesh, self.boundary_values, self.normal_derivative,
                                 self.reference_length, points, gradient=False)
 
     def heat_flux(self, points):
         """Cartesian Fourier heat flux in W/m², shape (number of targets, 2)."""
+        if self.circular_geometry:
+            return self.circular_field(points)[1]
         return -self.conductivity * _evaluate_traces(
             self.mesh, self.boundary_values, self.normal_derivative,
             self.reference_length, points, gradient=True)
@@ -81,13 +86,33 @@ class AnnulusContactResult:
     outer_field: AnnulusLayerField | None = None
 
 
-def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32):
-    """Constant straight-panel collocation with coincident interface panels.
+def _circular_normal_map(outer, inner, n):
+    """Map temperature samples to outward normal derivatives on exact circles."""
+    span = np.log(outer/inner)
+    modes = np.arange(1, n//2 + 1)
+    z = modes*span
+    # Harmonic radial basis in log(r). Zero mode is linear in log(r).
+    diagonal = np.r_[1/span, modes / np.tanh(z)]
+    coupling = np.r_[1/span, 2*modes*np.exp(-z) / -np.expm1(-2*z)]
+    shifts = (np.arange(n)[:, None] - np.arange(n)) % n
+    own = np.fft.irfft(diagonal, n=n)[shifts]
+    other = np.fft.irfft(coupling, n=n)[shifts]
+    return np.block([[own/outer, -other/outer], [-other/inner, own/inner]])
+
+
+def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *, formulation="polygonal"):
+    """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
     inner/outer Dirichlet data (scalars or panel vectors in azimuthal order).
     The areal resistance is in m² K/W and may vary by interface panel.
+    The default polygonal formulation uses straight constant panels. The
+    circular formulation collocates the contact law at the same angles and
+    uses the Fourier Dirichlet-to-Neumann map of each nominal annulus.
     """
+    if formulation not in ("polygonal", "circular"):
+        raise ValueError("formulation must be polygonal or circular")
+    circular = formulation == "circular"
     bore, contact, exterior = radii
     ki, ko = conductivities
     if not np.isfinite([ki, ko]).all() or min(ki, ko) <= 0:
@@ -101,6 +126,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         raise ValueError("wall temperatures must be finite and resistance finite and nonnegative")
 
     def normal_map(mesh):
+        if circular:
+            return _circular_normal_map(*(np.linalg.norm(loop.vertices[0]) for loop in mesh.loops), n)
         single, double = assemble_matrices(mesh, reference_length=2 * exterior)
         return np.linalg.solve(single, double + .5 * np.eye(mesh.panel_count))
 
@@ -124,6 +151,10 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     dno = (do @ to) / ko
     rates = (float(ki * dni[n:] @ inner.loops[1].lengths), float(flux @ inner.loops[0].lengths),
              float(-ko * dno[:n] @ outer.loops[0].lengths))
+    if circular:
+        # Equal angular panels on the nominal circles use arc length.
+        arc_to_chord = (np.pi/n) / np.sin(np.pi/n)
+        rates = tuple(float(q * arc_to_chord) for q in rates)
     return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
-                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior),
-                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior))
+                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular),
+                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular))

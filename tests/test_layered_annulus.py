@@ -86,3 +86,29 @@ def test_near_contact_circular_flux_refines_on_both_sides():
         if a["clearance_over_panel_length"] == .125:
             assert b["circular_relative_linf"] < a["circular_relative_linf"]/3.8
             assert b["circular_relative_linf"] < .005
+
+
+@pytest.mark.parametrize("n", [15, 16])
+def test_circular_contact_map_handles_mean_flux_and_variable_resistance(n):
+    from tensorbem.benchmarks.layered_annulus import varying_contact
+
+    radial = measure(n, reverse=True, formulation="circular")
+    assert radial["max_rate_relative_error"] < 2e-12
+    assert radial["max_trace_error_K"] < 2e-11
+    for rate in radial["interior_ring_rates_W_m"]:
+        assert abs(rate/radial["exact_rate_W_m"] - 1) < 2e-12
+    varying = varying_contact(n, formulation="circular")
+    assert varying["max_flux_error_W_m2"] < 1e-12
+    assert varying["max_outer_trace_error_K"] < 1e-12
+
+
+def test_angular_resolution_separates_sampling_and_solved_trace_error():
+    from tensorbem.benchmarks.annulus_angular_resolution import measure as angular_resolution
+
+    aliased = angular_resolution(16, 8)["flux_relative_linf"]
+    resolved = angular_resolution(32, 8)["flux_relative_linf"]
+    for layer in ("inner", "outer"):
+        assert aliased[layer]["exact_trace_control"] > .8
+        assert aliased[layer]["circular_solve"] > .8
+        assert resolved[layer]["exact_trace_control"] < 1e-12
+        assert resolved[layer]["circular_solve"] < 1e-12

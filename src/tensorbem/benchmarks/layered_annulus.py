@@ -7,14 +7,14 @@ import numpy as np
 from ..layered_annulus import solve_annulus_contact
 
 
-def measure(n, resistance=.2, reverse=False):
+def measure(n, resistance=.2, reverse=False, *, formulation="polygonal"):
     a, b, c = .25, .6, 1.
     ki, ko = 4., 1.
     hot, cold = (290., 310.) if reverse else (310., 290.)
     rate = 2 * math.pi * (hot-cold) / (math.log(b/a)/ki + resistance/b + math.log(c/b)/ko)
     trace_i = hot - rate * math.log(b/a) / (2*math.pi*ki)
     trace_o = cold + rate * math.log(c/b) / (2*math.pi*ko)
-    result = solve_annulus_contact((a,b,c), (ki,ko), (hot,cold), resistance, panels=n)
+    result = solve_annulus_contact((a,b,c), (ki,ko), (hot,cold), resistance, panels=n, formulation=formulation)
     angles = 2 * math.pi * (np.arange(4*n) + .25)/(4*n)
     directions = np.column_stack((np.cos(angles), np.sin(angles)))
     ring_rates = []
@@ -71,7 +71,7 @@ def angular_mode(n):
             "max_abs_integrated_rate_W_m": max(abs(q) for q in result.heat_rates)}
 
 
-def varying_contact(n):
+def varying_contact(n, *, formulation="polygonal"):
     """Uniform radial flux at the interface with a cosine-varying jump."""
     a, b, c = .25, .6, 1.
     ki, ko = 4., 1.
@@ -81,7 +81,7 @@ def varying_contact(n):
     walls = (2 - b/ki * math.log(a/b),
              1 - b/ko * math.log(c/b) + .1 * (c/b+b/c) * cosine)
     resistance = 1 - .2 * cosine
-    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels=n)
+    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels=n, formulation=formulation)
     return {"panels_per_circle": n, "max_flux_error_W_m2": float(np.max(abs(result.interface_flux-1))),
             "max_inner_trace_error_K": float(np.max(abs(result.inner_trace-2))),
             "max_outer_trace_error_K": float(np.max(abs(result.outer_trace-(1+.2*cosine))))}
