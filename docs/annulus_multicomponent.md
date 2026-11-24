@@ -354,3 +354,18 @@ with angularly varying films and ambients gave polygonal maximum local
 interface flux errors of 0.03159 and 0.0004870 W/m² on the same meshes.
 Reproduce from the repository root with
 `OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.annulus_convection`.
+
+### Prescribed wall heat flux
+
+For a concentric two-layer annulus, `solve_annulus_contact(...,
+wall_fluxes=(q_bore, None))` prescribes flux into the material in W/m².
+Pass None for the bore temperature and bore film; the exterior may prescribe
+temperature or use a film. The reverse arrangement is supported with the
+same inward sign convention. Run
+`OPENBLAS_NUM_THREADS=1 python -m tensorbem.benchmarks.annulus_prescribed_flux`.
+The reference combines log(r) with a phase-shifted angular harmonic of
+order two. It tests wall and interface normal fluxes, interior Cartesian
+flux vectors, temperatures and the net heat rate. On 128 straight panels
+per ring the largest interior flux error for the two choices of driven wall
+was 0.00246 W/m². The circular Fourier method resolves this finite harmonic
+to roundoff.

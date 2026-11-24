@@ -100,22 +100,34 @@ def _circular_normal_map(outer, inner, n):
     return np.block([[own/outer, -other/outer], [-other/inner, own/inner]])
 
 
-def _wall_response(normal_map, interface, wall, ambient, film):
+def _wall_response(normal_map, interface, wall, ambient, film, inward_flux):
     """Eliminate the wall temperature; return its constant and linear parts."""
-    n = len(ambient)
-    if film is None:
-        return ambient, None
-    h = np.broadcast_to(np.asarray(film, dtype=float), (n,))
-    if not np.isfinite(h).all() or np.any(h < 0):
-        raise ValueError("film coefficients must be finite and nonnegative")
+    n = normal_map.shape[0]//2
+    if inward_flux is not None:
+        if ambient is not None or film is not None:
+            raise ValueError("a prescribed flux requires None for wall temperature and film")
+        h = np.zeros(n)
+        load = np.broadcast_to(np.asarray(inward_flux, dtype=float), (n,))
+        if not np.isfinite(load).all():
+            raise ValueError("prescribed wall flux must be finite")
+    else:
+        ambient = np.broadcast_to(np.asarray(ambient, dtype=float), (n,))
+        if not np.isfinite(ambient).all():
+            raise ValueError("wall temperatures must be finite")
+        if film is None:
+            return ambient, None
+        h = np.broadcast_to(np.asarray(film, dtype=float), (n,))
+        if not np.isfinite(h).all() or np.any(h < 0):
+            raise ValueError("film coefficients must be finite and nonnegative")
+        load = h * ambient
     # k*dT/dn + h*Twall = h*Tambient, with the material-outward normal.
-    loads = np.column_stack((h * ambient, -normal_map[wall, interface]))
+    loads = np.column_stack((load, -normal_map[wall, interface]))
     response = np.linalg.solve(normal_map[wall, wall] + np.diag(h), loads)
     return response[:, 0], response[:, 1:]
 
 
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *,
-                          formulation="polygonal", film_coefficients=(None, None)):
+                          formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None)):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -123,6 +135,9 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     film_coefficients is a (bore, exterior) pair. None prescribes the wall
     temperature. A scalar or panel vector h in W/(m² K) instead uses that
     wall's temperature data as the ambient fluid temperature. Zero h insulates.
+    A wall_fluxes entry prescribes inward W/m² (scalar or azimuthal samples);
+    set the corresponding wall temperature and film to None. At least one
+    wall must have a prescribed temperature or a nonzero film anchor.
     The areal resistance is in m² K/W and may vary by interface panel.
     The default polygonal formulation uses straight constant panels. The
     circular formulation collocates the contact law at the same angles and
@@ -138,10 +153,11 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     inner = annulus_mesh(panels, panels, contact, bore)
     outer = annulus_mesh(panels, panels, exterior, contact)
     n = inner.loops[0].panel_count
-    hot, cold, r = (np.broadcast_to(np.asarray(v, dtype=float), (n,))
-                    for v in (*wall_temperatures, resistance))
-    if not all(np.isfinite(v).all() for v in (hot, cold, r)) or np.any(r < 0):
-        raise ValueError("wall temperatures must be finite and resistance finite and nonnegative")
+    hot, cold = wall_temperatures
+    bore_flux, exterior_flux = wall_fluxes
+    r = np.broadcast_to(np.asarray(resistance, dtype=float), (n,))
+    if not np.isfinite(r).all() or np.any(r < 0):
+        raise ValueError("resistance must be finite and nonnegative")
 
     def normal_map(mesh):
         if circular:
@@ -156,10 +172,11 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     # Inner trace = outer trace + R*q; Fourier flux reverses sign on the hole.
     first, second = slice(0, n), slice(n, 2*n)
     bore_film, exterior_film = film_coefficients
-    if all(h is not None and np.all(np.asarray(h) == 0) for h in film_coefficients):
+    if all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
+           for q, h in zip(wall_fluxes, film_coefficients)):
         raise ValueError("at least one wall must anchor the temperature")
-    bore_base, bore_response = _wall_response(di, first, second, hot, bore_film)
-    ext_base, ext_response = _wall_response(do, second, first, cold, exterior_film)
+    bore_base, bore_response = _wall_response(di, first, second, hot, bore_film, bore_flux)
+    ext_base, ext_response = _wall_response(do, second, first, cold, exterior_film, exterior_flux)
     inner_map = di[first, first]
     outer_map = do[second, second]
     if bore_response is not None:

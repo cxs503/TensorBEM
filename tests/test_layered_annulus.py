@@ -138,3 +138,32 @@ def test_insulated_wall_has_constant_steady_temperature(films):
 def test_unanchored_temperature_or_invalid_film_rejected(films):
     with pytest.raises(ValueError):
         solve_annulus_contact((.25,.6,1.), (4.,1.), (5.,12.), panels=16, film_coefficients=films)
+
+
+@pytest.mark.parametrize("driven", [0, 1])
+def test_radial_flux_drives_film_anchored_wall(driven):
+    radii = (.25, .6, 1.)
+    k = (4., 1.5)
+    resistance = .2
+    rate = 3.5
+    sign = 1 if driven == 0 else -1
+    fluxes = [None,None]
+    fluxes[driven] = sign*rate/(2*np.pi*radii[2*driven])
+    ambient, films = [None,None], [None,None]
+    ambient[1-driven], films[1-driven] = 10., 3.
+    result = solve_annulus_contact(radii, k, ambient, resistance, panels=24,
+                                   formulation="circular", film_coefficients=films, wall_fluxes=fluxes)
+    np.testing.assert_allclose(result.heat_rates, rate, atol=1e-11, rtol=0.)
+    np.testing.assert_allclose(result.inner_trace-result.outer_trace,
+                               resistance*rate/(2*np.pi*radii[1]), atol=1e-12, rtol=0.)
+    wall = (result.outer_field.boundary_values[:24] if driven == 0
+            else result.inner_field.boundary_values[24:])
+    expected = 10.+sign*rate/(2*np.pi*radii[2*(1-driven)]*3.)
+    np.testing.assert_allclose(wall, expected, atol=1e-12, rtol=0.)
+
+
+def test_prescribed_flux_cannot_share_a_dirichlet_wall_or_leave_network_unanchored():
+    with pytest.raises(ValueError, match="prescribed flux"):
+        solve_annulus_contact((.25,.6,1.), (2.,1.), (1.,0.), wall_fluxes=(1.,None))
+    with pytest.raises(ValueError, match="anchor"):
+        solve_annulus_contact((.25,.6,1.), (2.,1.), (None,None), wall_fluxes=(1.,-1.))
