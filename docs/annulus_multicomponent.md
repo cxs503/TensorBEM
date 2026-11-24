@@ -230,3 +230,26 @@ PYTHONPATH=src python -m pytest tests/test_multicomponent.py -q
 Wall time of the study is about 45 s single core (the longest run is the
 $N=128$ assembly, $256^2$ analytic panel integrals); `--quick` gives a
 smoke-size ladder.
+
+## Two conducting annuli and finite contact resistance
+
+`tensorbem.layered_annulus.solve_annulus_contact` solves steady 2-D
+Laplace conduction in each concentric layer with constant straight panels,
+midpoint collocation and Dirichlet data on the bore and exterior. The
+coincident interface panels share radial Fourier flux q and obey
+T_inner − T_outer = R q. Each layer has constant conductivity. The function
+returns the two interface temperature traces, the local flux and separate
+integrated rates per unit axial length at the bore, interface and exterior.
+
+For radii 0.25, 0.6 and 1 m, conductivities 4 and 1 W/(m K), a 20 K drop
+and R=0.2 m² K/W, cylindrical series resistance gives 118.213185 W/m.
+With 16, 32, 64 and 128 panels per circle, the largest relative integrated
+rate errors were 0.5543%, 0.1093%, 0.02422% and 0.00626%. The interface
+system condition number rose from 28.5 to 208.6 in this parameterization.
+The first azimuthal harmonic independently tests sign-changing *local* flux
+using radial factors r and C r + D/r. Its maximum error relative to the
+flux amplitude fell from 1.282% to 0.01957% over the same refinements.
+
+Reproduce from the repository root with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.layered_annulus`.
+The JSON also includes perfect contact and reverse heat flow.
