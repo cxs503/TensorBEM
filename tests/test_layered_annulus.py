@@ -38,3 +38,21 @@ def test_varying_resistance_matches_independent_harmonic_trace_and_flux():
     for key in ("max_flux_error_W_m2", "max_inner_trace_error_K", "max_outer_trace_error_K"):
         assert fine[key] < coarse[key] / 4
     assert fine["max_flux_error_W_m2"] < .001
+
+
+def test_both_material_fields_refine_against_cartesian_harmonic_solution():
+    coarse, fine = (angular_mode(n)["interior_fields"] for n in (16, 32))
+    for layer in ("inner", "outer"):
+        for key in ("temperature_max_error_K", "flux_vector_max_error_W_m2"):
+            assert fine[layer][key] < coarse[layer][key] / 3.5
+
+
+def test_layer_fields_require_interior_points_of_the_selected_material():
+    result = solve_annulus_contact((.25, .6, 1.), (4., 1.), (310., 290.), .2, panels=24)
+    for field, invalid in ((result.inner_field, [.8, 0.]), (result.outer_field, [.4, 0.])):
+        for point in (invalid, field.mesh.centers[0], field.mesh.centers[-1]):
+            with pytest.raises(ValueError):
+                field.heat_flux(np.asarray([point]))
+    row = measure(32)
+    for rate in row["interior_ring_rates_W_m"]:
+        assert abs(rate/row["exact_rate_W_m"] - 1) < .002

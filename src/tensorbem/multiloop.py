@@ -380,12 +380,17 @@ def evaluate_multiloop_field(
         raise TypeError("mesh must be a MultiLoopMesh")
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
+    return _evaluate_traces(mesh, result.boundary_values, result.normal_derivative,
+                            result.reference_length, points, gradient=gradient)
+
+
+def _evaluate_traces(mesh, boundary_values, normal_derivative, reference, points, *, gradient):
     targets = np.asarray(points, dtype=float)
     if targets.ndim != 2 or targets.shape[1] != 2:
         raise ValueError("points must have shape (M, 2)")
     if not np.isfinite(targets).all():
         raise ValueError("points must all be finite")
-    if result.normal_derivative.shape != (mesh.panel_count,):
+    if normal_derivative.shape != (mesh.panel_count,):
         raise ValueError("result boundary traces must match the mesh panel count")
 
     in_hole, outside = domain_membership(mesh, targets)
@@ -402,46 +407,26 @@ def evaluate_multiloop_field(
             f"{int(np.sum(outside))} target(s) fall outside the outer loop"
         )
 
-    from .kernels import integrate_double_layer_panel, integrate_single_layer_panel
+    from .kernels import (
+        integrate_double_layer_panel_many, integrate_double_layer_panel_gradient_many,
+        integrate_single_layer_panel_many, integrate_single_layer_panel_gradient_many,
+    )
 
-    lengths = mesh.lengths
-    vertices = mesh.vertices
+    single = integrate_single_layer_panel_gradient_many if gradient else integrate_single_layer_panel_many
+    double = integrate_double_layer_panel_gradient_many if gradient else integrate_double_layer_panel_many
+    lengths, vertices, normals = mesh.lengths, mesh.vertices, mesh.normals
     tangents = mesh.vectors / lengths[:, None]
-    normals = mesh.normals
-    reference = result.reference_length
-    if gradient:
-        from .kernels import integrate_double_layer_panel_gradient_many, integrate_single_layer_panel_gradient_many
-
-        gradients = np.zeros((len(targets), 2))
-        for j, length in enumerate(lengths):
-            single = integrate_single_layer_panel_gradient_many(
-                targets, vertices[j], tangents[j], length, reference)
-            double = integrate_double_layer_panel_gradient_many(
-                targets, vertices[j], tangents[j], normals[j], length)
-            gradients += single * result.normal_derivative[j] - double * result.boundary_values[j]
-        return gradients
-
-    values = np.zeros(len(targets), dtype=float)
-    for i, target in enumerate(targets):
-        total = 0.0
-        for j in range(mesh.panel_count):
-            total += (
-                integrate_single_layer_panel(
-                    target, vertices[j], tangents[j], float(lengths[j]), reference
-                )
-                * result.normal_derivative[j]
-            )
-            total -= (
-                integrate_double_layer_panel(
-                    target,
-                    vertices[j],
-                    tangents[j],
-                    normals[j],
-                    float(lengths[j]),
-                )
-                * result.boundary_values[j]
-            )
-        values[i] = total
+    values = np.zeros((len(targets), 2) if gradient else len(targets))
+    tolerance = 16 * np.finfo(float).eps * max(np.ptp(vertices, axis=0))
+    for j, length in enumerate(lengths):
+        delta = targets - vertices[j]
+        along = delta @ tangents[j]
+        on_segment = ((np.abs(delta @ normals[j]) <= tolerance)
+                      & (along >= -tolerance) & (along <= length + tolerance))
+        if on_segment.any():
+            raise ValueError("field targets must be strictly inside the material, away from its panels")
+        values += single(targets, vertices[j], tangents[j], length, reference) * normal_derivative[j]
+        values -= double(targets, vertices[j], tangents[j], normals[j], length) * boundary_values[j]
     return values
 
 

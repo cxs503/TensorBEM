@@ -15,8 +15,14 @@ def measure(n, resistance=.2, reverse=False):
     trace_i = hot - rate * math.log(b/a) / (2*math.pi*ki)
     trace_o = cold + rate * math.log(c/b) / (2*math.pi*ko)
     result = solve_annulus_contact((a,b,c), (ki,ko), (hot,cold), resistance, panels=n)
+    angles = 2 * math.pi * (np.arange(4*n) + .25)/(4*n)
+    directions = np.column_stack((np.cos(angles), np.sin(angles)))
+    ring_rates = []
+    for radius, field in ((.42, result.inner_field), (.79, result.outer_field)):
+        local_flux = field.heat_flux(radius * directions)
+        ring_rates.append(float(2*math.pi*radius*np.sum(local_flux*directions, axis=1).mean()))
     return {"panels_per_circle": n, "resistance": resistance, "reversed": reverse,
-            "exact_rate_W_m": rate, "rates_W_m": result.heat_rates,
+            "interior_ring_rates_W_m": ring_rates, "exact_rate_W_m": rate, "rates_W_m": result.heat_rates,
             "max_rate_relative_error": max(abs(q/rate - 1) for q in result.heat_rates),
             "max_trace_error_K": float(max(np.max(abs(result.inner_trace-trace_i)),
                                            np.max(abs(result.outer_trace-trace_o)))),
@@ -35,7 +41,25 @@ def angular_mode(n):
     inverse = b * (value - linear*b)
     walls = (a*cosine, (linear*c + inverse/c)*cosine)
     result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels=n)
-    return {"panels_per_circle": n,
+    # Probe both layers over full circles. The Cartesian analytic field is
+    # T=x in the inner material and T=C*x+D*x/(x²+y²) in the outer one.
+    theta = 2 * math.pi * (np.arange(73) + .37)/73
+    directions = np.column_stack((np.cos(theta), np.sin(theta)))
+    field_errors = {}
+    for name, field, radius, k, C, D in (
+        ("inner", result.inner_field, .42, ki, 1., 0.),
+        ("outer", result.outer_field, .79, ko, linear, inverse),
+    ):
+        points = radius * directions
+        x, y = points.T
+        exact = C*x + D*x/radius**2
+        grad = np.column_stack((C + D*(y*y-x*x)/radius**4, -2*D*x*y/radius**4))
+        flux_error = field.heat_flux(points) + k*grad
+        field_errors[name] = {
+            "temperature_max_error_K": float(np.max(np.abs(field.temperature(points)-exact))),
+            "flux_vector_max_error_W_m2": float(np.linalg.norm(flux_error, axis=1).max()),
+        }
+    return {"panels_per_circle": n, "interior_fields": field_errors,
             "flux_max_error_over_amplitude": float(np.max(abs(result.interface_flux + ki*cosine))/ki),
             "max_trace_error_K": float(max(np.max(abs(result.inner_trace - b*cosine)),
                                            np.max(abs(result.outer_trace - value*cosine)))),

@@ -260,3 +260,23 @@ in the outer layer changes its trace while leaving the radial derivative at
 contact radius b unchanged. Maximum local flux errors were 0.003293,
 0.0007472, 0.0001773 and 0.00004313 W/m²; at 128 panels per circle the two
 maximum trace errors were 0.00001550 and 0.00003808 K.
+
+### Fields within the two materials
+
+The contact solve returns `inner_field` and `outer_field`. Each accepts
+Cartesian targets of shape (M,2) through `temperature(points)` (K) and
+`heat_flux(points)` (Cartesian W/m²). Evaluate strictly inside that material's
+polygonal annulus. On the contact itself use the two temperature traces and
+normal flux from the solve. The field representation uses the solved
+temperature and normal derivative on both bounding loops and differentiates
+the analytic layer kernels to obtain Fourier flux.
+
+For the first angular harmonic, 73 probes on each of the circles r=0.42 m
+and r=0.79 m check the independent Cartesian fields T=x and T=Cx+Dx/r²
+and their gradients. At 128 panels per circle the inner/outer maximum
+temperature errors were 1.343e-5 and 6.290e-4 K. Maximum vector heat-flux
+errors were 6.114e-4 and 7.962e-4 W/m². The radial cases additionally
+integrate flux around both probe circles (four probes per panel) for
+comparison with the cylindrical series-resistance rate. These probes have
+fixed clearance from the interface. Near-panel accuracy is a separate
+resolution question.

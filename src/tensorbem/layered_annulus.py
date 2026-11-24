@@ -3,8 +3,28 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .multiloop import annulus_mesh
+from .multiloop import MultiLoopMesh, _evaluate_traces, annulus_mesh
 from .solver import assemble_matrices, _MAX_CONDITION
+
+
+@dataclass(frozen=True)
+class AnnulusLayerField:
+    """Solved traces for one polygonal material region; targets must be interior."""
+    mesh: MultiLoopMesh
+    boundary_values: np.ndarray
+    normal_derivative: np.ndarray
+    conductivity: float
+    reference_length: float
+
+    def temperature(self, points):
+        return _evaluate_traces(self.mesh, self.boundary_values, self.normal_derivative,
+                                self.reference_length, points, gradient=False)
+
+    def heat_flux(self, points):
+        """Cartesian Fourier heat flux in W/m², shape (number of targets, 2)."""
+        return -self.conductivity * _evaluate_traces(
+            self.mesh, self.boundary_values, self.normal_derivative,
+            self.reference_length, points, gradient=True)
 
 
 @dataclass(frozen=True)
@@ -14,6 +34,8 @@ class AnnulusContactResult:
     interface_flux: np.ndarray  # W/m², positive toward increasing radius
     heat_rates: tuple[float, float, float]  # bore, contact, exterior, W/m of axis
     condition_number: float  # coupled interface system
+    inner_field: AnnulusLayerField | None = None
+    outer_field: AnnulusLayerField | None = None
 
 
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32):
@@ -53,8 +75,12 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         raise ValueError(f"ill-conditioned interface system ({condition:.3e})")
     outer_trace, flux = np.split(np.linalg.solve(system, rhs), 2)
     inner_trace = outer_trace + r * flux
-    bore_flux = di[n:, :] @ np.concatenate((inner_trace, hot))
-    exterior_flux = -do[:n, :] @ np.concatenate((cold, outer_trace))
-    rates = (float(bore_flux @ inner.loops[1].lengths), float(flux @ inner.loops[0].lengths),
-             float(exterior_flux @ outer.loops[0].lengths))
-    return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition)
+    ti = np.concatenate((inner_trace, hot))
+    to = np.concatenate((cold, outer_trace))
+    dni = (di @ ti) / ki
+    dno = (do @ to) / ko
+    rates = (float(ki * dni[n:] @ inner.loops[1].lengths), float(flux @ inner.loops[0].lengths),
+             float(-ko * dno[:n] @ outer.loops[0].lengths))
+    return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
+                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior),
+                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior))
