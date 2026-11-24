@@ -29,7 +29,7 @@ def measure(n, resistance=.2, reverse=False):
             "condition_number": result.condition_number}
 
 
-def angular_mode(n):
+def _angular_solution(n):
     """First azimuthal harmonic with sign-changing local heat transfer."""
     a, b, c = .25, .6, 1.
     ki, ko, resistance = 4., 1., .2
@@ -41,6 +41,11 @@ def angular_mode(n):
     inverse = b * (value - linear*b)
     walls = (a*cosine, (linear*c + inverse/c)*cosine)
     result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels=n)
+    return result, b, ki, ko, linear, inverse, cosine, value
+
+
+def angular_mode(n):
+    result, b, ki, ko, linear, inverse, cosine, value = _angular_solution(n)
     # Probe both layers over full circles. The Cartesian analytic field is
     # T=x in the inner material and T=C*x+D*x/(x²+y²) in the outer one.
     theta = 2 * math.pi * (np.arange(73) + .37)/73
@@ -82,8 +87,36 @@ def varying_contact(n):
             "max_outer_trace_error_K": float(np.max(abs(result.outer_trace-(1+.2*cosine))))}
 
 
+def near_contact(n):
+    """Compare on rings at prescribed radial distances from the true circle."""
+    result, b, ki, ko, linear, inverse, _, _ = _angular_solution(n)
+    h = 2 * b * math.sin(math.pi/n)
+    theta = 2 * math.pi * np.arange(8*n) / (8*n)
+    directions = np.column_stack((np.cos(theta), np.sin(theta)))
+    rings = []
+    for name, field, sign, k, C, D in (
+        ("inner", result.inner_field, -1, ki, 1., 0.),
+        ("outer", result.outer_field, 1, ko, linear, inverse),
+    ):
+        for fraction in (.125, .25, .5, 1.):
+            radius = b + sign * fraction * h
+            points = radius * directions
+            x, y = points.T
+            exact = -k * np.column_stack((C + D*(y*y-x*x)/radius**4, -2*D*x*y/radius**4))
+            scale = np.linalg.norm(exact, axis=1).max()
+            row = {"layer": name, "clearance_m": fraction*h, "clearance_over_panel_length": fraction}
+            direct = field.heat_flux(points)
+            row["panel_relative_linf"] = float(np.linalg.norm(direct-exact, axis=1).max()/scale)
+            temperature, reconstructed = field.circular_field(points)
+            row["circular_relative_linf"] = float(np.linalg.norm(reconstructed-exact, axis=1).max()/scale)
+            row["circular_temperature_max_error_K"] = float(np.abs(temperature-(C*x+D*x/radius**2)).max())
+            rings.append(row)
+    return {"panels_per_circle": n, "rings": rings}
+
+
 if __name__ == "__main__":
     print(json.dumps({"radial": [measure(n,r,rev) for r in (0., .2) for rev in (False, True)
                       for n in (16, 32, 64, 128)],
+                      "near_contact": [near_contact(n) for n in (16, 32, 64, 128)],
                       "angular": [angular_mode(n) for n in (16, 32, 64, 128)],
                       "varying_contact": [varying_contact(n) for n in (16, 32, 64, 128)]}, indent=2))

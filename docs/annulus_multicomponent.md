@@ -280,3 +280,33 @@ integrate flux around both probe circles (four probes per panel) for
 comparison with the cylindrical series-resistance rate. These probes have
 fixed clearance from the interface. Near-panel accuracy is a separate
 resolution question.
+
+### Heat flux close to a circular contact
+
+For concentric circular geometry, `field.circular_field(points)` returns
+temperature and Cartesian heat flux by harmonic extension of the two computed
+temperature traces. The sampled temperatures are placed on the nominal
+circles at panel midpoint angles. The mean interpolates in log radius;
+higher Fourier modes solve the radial Laplace equation. Evaluate strictly
+inside one circular material. The original panel field and integrated
+contact rates retain their own geometric interpretation.
+
+The `near_contact` section of the layered-annulus benchmark probes both
+materials at radial distances of 1/8, 1/4, 1/2 and 1 contact-panel chord,
+with eight angular samples per panel (including vertex-aligned rays).
+Error is the maximum sampled vector error divided by the maximum sampled
+analytic flux magnitude on the same ring. At 1/8 chord the circular
+reconstruction yielded the following relative errors for the first harmonic.
+
+| Panels per circle | Inner material | Outer material |
+|---:|---:|---:|
+| 16 | 1.969% | 0.1909% |
+| 32 | 0.4932% | 0.04163% |
+| 64 | 0.1232% | 0.009755% |
+| 128 | 0.03077% | 0.002362% |
+
+Direct differentiation of constant-panel potentials at 128 panels gave
+84.42% and 48.49% at this same relative clearance. Physical clearance
+shrinks under refinement in this test. The reconstruction assumes a circular
+boundary and smooth, angularly resolved traces. The benchmark does not
+establish these errors for discontinuous temperature data.

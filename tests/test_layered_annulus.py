@@ -56,3 +56,33 @@ def test_layer_fields_require_interior_points_of_the_selected_material():
     row = measure(32)
     for rate in row["interior_ring_rates_W_m"]:
         assert abs(rate/row["exact_rate_W_m"] - 1) < .002
+
+
+@pytest.mark.parametrize("panels", [15, 16])
+def test_circular_extension_of_log_and_sine_modes(panels):
+    from dataclasses import replace
+
+    field = solve_annulus_contact((.25, .6, 1.), (4., 1.), (1., 0.), panels=panels).outer_field
+    # On each nominal circle prescribe log(r) + Im(z³). Sample at panel angles.
+    traces = []
+    for loop in field.mesh.loops:
+        radii = np.linalg.norm(loop.vertices[0])
+        phase = np.arctan2(loop.centers[:, 1], loop.centers[:, 0])
+        traces.append(np.log(radii) + radii**3 * np.sin(3*phase))
+    field = replace(field, boundary_values=np.concatenate(traces))
+    xy = np.array([[.62, .04], [-.31, .70], [.12, -.92]])
+    z = xy[:, 0] + 1j*xy[:, 1]
+    temperature, flux = field.circular_field(xy)
+    exact_grad = xy / abs(z[:, None])**2 + 3*np.column_stack(((z*z).imag, (z*z).real))
+    np.testing.assert_allclose(temperature, np.log(abs(z)) + (z**3).imag, atol=1e-13)
+    np.testing.assert_allclose(flux, -exact_grad, atol=1e-12)
+
+
+def test_near_contact_circular_flux_refines_on_both_sides():
+    from tensorbem.benchmarks.layered_annulus import near_contact
+
+    coarse, fine = (near_contact(n)["rings"] for n in (16, 32))
+    for a, b in zip(coarse, fine):
+        if a["clearance_over_panel_length"] == .125:
+            assert b["circular_relative_linf"] < a["circular_relative_linf"]/3.8
+            assert b["circular_relative_linf"] < .005
