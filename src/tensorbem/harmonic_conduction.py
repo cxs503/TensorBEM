@@ -132,6 +132,35 @@ class HarmonicConduction:
         """External heat input including local wall storage, in W/m²."""
         return self.inward_flux + self.surface_admittance*self.wall_temperature
 
+    def panel_inward_power(self, panels, start=0., end=1.):
+        """Integrate bulk inward heat flux over straight panel intervals (W/m depth).
+
+        Supply zero-based panel indices and broadcastable fractions measured from
+        each panel's starting vertex, with 0 <= start <= end <= 1. The result
+        contains one complex heat rate per selected interval.
+        """
+        indices = np.asarray(panels)
+        if indices.dtype.kind not in "iu" or np.any(indices < 0) or np.any(indices >= self.mesh.panel_count):
+            raise ValueError("supply valid integer panel indices")
+        if np.iscomplexobj(start) or np.iscomplexobj(end):
+            raise ValueError("panel fractions must be real")
+        indices, start, end = np.broadcast_arrays(indices, np.asarray(start, dtype=float),
+                                                  np.asarray(end, dtype=float))
+        if not np.all((0 <= start) & (start <= end) & (end <= 1)):
+            raise ValueError("require 0 <= start <= end <= 1")
+        width = end-start
+        if self.quadratic:
+            left, center, right = np.moveaxis(self.inward_flux.reshape(-1, 3)[indices], -1, 0)
+            # In xi=2*s-1 the samples lie at -root, 0, +root. Average
+            # xi and xi² analytically over the interval, including zero width.
+            midpoint = start+end-1
+            linear = (right-left)/(2*_GAUSS_ROOT)
+            curvature = ((left-center)+(right-center))/(2*_GAUSS_ROOT**2)
+            mean = center+linear*midpoint+curvature*(midpoint**2+width**2/3)
+        else:
+            mean = self.inward_flux[indices]
+        return self.mesh.lengths[indices]*width*mean
+
     def _interior_targets(self, points):
         targets = np.asarray(points, dtype=float)
         if targets.ndim != 2 or targets.shape[1] != 2 or not np.isfinite(targets).all():

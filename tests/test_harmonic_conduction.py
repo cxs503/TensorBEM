@@ -220,3 +220,23 @@ def test_affine_reservoir_and_source_match_oblique_temperature(quadratic):
         bulk_ambient_temperature=ambient, bulk_ambient_gradient=reservoir_grad, quadratic=quadratic)
     np.testing.assert_allclose(field.inward_flux, k*np.repeat(mesh.normals @ grad, len(xy)//16), atol=2e-13)
     np.testing.assert_allclose(field.heat_flux([[.1, .2]])[0], -k*grad, atol=2e-13)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_partial_panel_heat_integrates_prescribed_flux(quadratic):
+    mesh = regular_polygon(8)
+    nodes = np.polynomial.legendre.leggauss(3 if quadratic else 1)[0]
+    fractions = (1+nodes)/2
+    coeff = 2-3j if quadratic else 0.
+    offset = np.arange(8)+.25j
+    data = offset[:, None]+coeff*fractions**2
+    field = solve_mixed_harmonic_conduction(mesh, "flux", data.ravel(), 2.,
+        conductivity=1., volumetric_heat_capacity=1., quadratic=quadratic)
+    panels = np.array([[1], [5]])
+    start, end = np.array([0., .23, .81]), np.array([1., .74, .81])
+    expected = mesh.lengths[panels]*(offset[panels]*(end-start)+coeff*(end**3-start**3)/3)
+    np.testing.assert_allclose(field.panel_inward_power(panels, start, end), expected, atol=1e-13)
+    assert field.panel_inward_power(1, .5, .5) == 0
+    for args in ((8,), (-1,), (1.5,), (1, .8, .3), (1, 0., np.nan)):
+        with pytest.raises(ValueError):
+            field.panel_inward_power(*args)
