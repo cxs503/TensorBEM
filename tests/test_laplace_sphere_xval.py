@@ -151,3 +151,35 @@ def test_sigma_scaling_is_exact():
         ratios.append(current / exact)
     assert max(ratios) - min(ratios) < 1e-12
     assert math.isclose(ratios[0], 0.987, rel_tol=0.02)
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_property):
+    from tensorbem.solver3d import evaluate_surface_field
+
+    radius = 1.4
+    eigenvalue = (2 if domain == "interior" else 3) / radius
+    # u(a)=n_x*n_y and integral over the unit sphere of n_x²*n_y² is 4π/15.
+    exact_energy = eigenvalue * radius**2 * 4*np.pi/15
+    directions = np.array([[1., 2., 1.], [-2., 3., 1.], [1., -1., 2.]])
+    directions /= np.linalg.norm(directions, axis=1)[:, None]
+    radii = np.array([.35, .55, .75] if domain == "interior" else [1.35, 1.7, 2.2])
+    probes = radii[:, None] * radius * directions
+    exact = directions[:, 0]*directions[:, 1]*radii**(2 if domain == "interior" else -3)
+    errors = []
+    for level in (1, 2, 3):
+        mesh = icosphere(level, radius)
+        normal = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
+        trace = normal[:, 0]*normal[:, 1]
+        result = solve_laplace_surface(mesh, trace, domain=domain, quadrature_order=8)
+        sampled = evaluate_surface_field(mesh, result, probes)
+        energy = np.dot(mesh.areas*trace, result.normal_derivative)
+        field_error = np.linalg.norm(sampled-exact)/np.linalg.norm(exact)
+        energy_error = abs(energy/exact_energy-1)
+        net_flux = abs(mesh.areas @ result.normal_derivative)
+        for name, value in (("relative_field_error", field_error), ("relative_energy_error", energy_error),
+                            ("net_flux_m", net_flux), ("condition_number", result.condition_number)):
+            record_property(f"{name}_{mesh.panel_count}", float(value))
+        assert net_flux < 1e-11
+        errors.append((field_error, energy_error))
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(a/b > 2.5 for a, b in zip(coarse, fine))
