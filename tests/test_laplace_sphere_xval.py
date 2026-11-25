@@ -154,7 +154,7 @@ def test_sigma_scaling_is_exact():
 
 @pytest.mark.parametrize("domain", ["interior", "exterior"])
 def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_property):
-    from tensorbem.solver3d import evaluate_surface_field
+    from tensorbem.solver3d import evaluate_surface_field, evaluate_surface_velocity
 
     radius = 1.4
     eigenvalue = (2 if domain == "interior" else 3) / radius
@@ -165,6 +165,13 @@ def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_prope
     radii = np.array([.35, .55, .75] if domain == "interior" else [1.35, 1.7, 2.2])
     probes = radii[:, None] * radius * directions
     exact = directions[:, 0]*directions[:, 1]*radii**(2 if domain == "interior" else -3)
+    # Surface gradient of n_x*n_y is its Cartesian gradient projected
+    # onto the tangent plane. The radial derivative carries the signed degree.
+    degree = 2 if domain == "interior" else -3
+    angular_gradient = np.column_stack((directions[:, 1], directions[:, 0], np.zeros(len(probes))))
+    angular_gradient -= 2*(directions[:, 0]*directions[:, 1])[:, None]*directions
+    exact_radial = degree*exact/(radius*radii)
+    exact_tangent = (radii**(degree-1)/radius)[:, None]*angular_gradient
     errors = []
     for level in (1, 2, 3):
         mesh = icosphere(level, radius)
@@ -172,14 +179,21 @@ def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_prope
         trace = normal[:, 0]*normal[:, 1]
         result = solve_laplace_surface(mesh, trace, domain=domain, quadrature_order=8)
         sampled = evaluate_surface_field(mesh, result, probes)
+        velocity = evaluate_surface_velocity(mesh, result, probes)
+        radial = np.sum(velocity*directions, axis=1)
+        tangent = velocity-radial[:, None]*directions
+        radial_error = np.linalg.norm(radial-exact_radial)/np.linalg.norm(exact_radial)
+        tangent_error = np.linalg.norm(tangent-exact_tangent)/np.linalg.norm(exact_tangent)
         energy = np.dot(mesh.areas*trace, result.normal_derivative)
         field_error = np.linalg.norm(sampled-exact)/np.linalg.norm(exact)
         energy_error = abs(energy/exact_energy-1)
         net_flux = abs(mesh.areas @ result.normal_derivative)
         for name, value in (("relative_field_error", field_error), ("relative_energy_error", energy_error),
+                            ("relative_radial_gradient_error", radial_error),
+                            ("relative_tangential_gradient_error", tangent_error),
                             ("net_flux_m", net_flux), ("condition_number", result.condition_number)):
             record_property(f"{name}_{mesh.panel_count}", float(value))
         assert net_flux < 1e-11
-        errors.append((field_error, energy_error))
+        errors.append((field_error, energy_error, radial_error, tangent_error))
     for coarse, fine in zip(errors, errors[1:]):
         assert all(a/b > 2.5 for a, b in zip(coarse, fine))
