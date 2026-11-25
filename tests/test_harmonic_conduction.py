@@ -78,3 +78,26 @@ def test_uniform_heat_generation_insulated_and_isothermal_disk(quadratic):
     weights = np.array([5., 8., 5.])/18 if quadratic else np.array([1.])
     mean_flux = (cold.inward_flux.reshape(mesh.panel_count, -1) @ weights).mean()
     np.testing.assert_allclose(mean_flux, -k*particular*wave*iv(1, wave)/iv(0, wave), atol=.002)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadratic):
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    mesh = regular_polygon(12)
+    points = harmonic_boundary_points(mesh, quadratic=quadratic)
+    grad = np.array([.2+.4j, -.6+.3j])
+    base = .7-.3j
+    k, capacity, omega = 1.8, 2.1, 4.
+    temperature = base+points @ grad
+    q = k*np.repeat(mesh.normals @ grad, len(points)//12)
+    kinds = np.resize(["temperature", "flux", "film"], 12)
+    sampled = np.repeat(kinds, len(points)//12)
+    data = np.select([sampled=="flux", sampled=="film"], [q, temperature+q/2], default=temperature)
+    result = solve_mixed_harmonic_conduction(mesh, kinds, data, omega, conductivity=k,
+        volumetric_heat_capacity=capacity, film_coefficients=2., volumetric_source=1j*omega*capacity*base,
+        source_gradient=1j*omega*capacity*grad, quadratic=quadratic)
+    np.testing.assert_allclose(result.wall_temperature, temperature, atol=2e-13, rtol=0)
+    np.testing.assert_allclose(result.inward_flux, q, atol=2e-13, rtol=0)
+    probes = np.array([[.1, -.4], [.2, .5]])
+    np.testing.assert_allclose(result.temperature(probes), base+probes @ grad, atol=2e-13, rtol=0)
