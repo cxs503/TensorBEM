@@ -132,12 +132,15 @@ class HarmonicConduction:
         """External heat input including local wall storage, in W/m²."""
         return self.inward_flux + self.surface_admittance*self.wall_temperature
 
-    def panel_inward_power(self, panels, start=0., end=1.):
-        """Integrate bulk inward heat flux over straight panel intervals (W/m depth).
+    def panel_inward_power(self, panels, start=0., end=1., *, component="bulk"):
+        """Integrate an inward heat flux over straight panel intervals (W/m depth).
 
         Supply zero-based panel indices and broadcastable fractions measured from
         each panel's starting vertex, with 0 <= start <= end <= 1. The result
-        contains one complex heat rate per selected interval.
+        contains one complex heat rate per selected interval. Select "bulk" for
+        conduction into the material, "storage" for the surface storage rate,
+        or "external" for their sum. Interpolate the selected collocation trace;
+        for storage its samples are i*omega*C_wall*T_wall at the panel nodes.
         """
         indices = np.asarray(panels)
         if indices.dtype.kind not in "iu" or np.any(indices < 0) or np.any(indices >= self.mesh.panel_count):
@@ -148,9 +151,17 @@ class HarmonicConduction:
                                                   np.asarray(end, dtype=float))
         if not np.all((0 <= start) & (start <= end) & (end <= 1)):
             raise ValueError("require 0 <= start <= end <= 1")
+        if component == "bulk":
+            trace = self.inward_flux
+        elif component == "external":
+            trace = self.external_inward_flux
+        elif component == "storage":
+            trace = self.surface_admittance*self.wall_temperature
+        else:
+            raise ValueError("component must be bulk, storage or external")
         width = end-start
         if self.quadratic:
-            left, center, right = np.moveaxis(self.inward_flux.reshape(-1, 3)[indices], -1, 0)
+            left, center, right = np.moveaxis(trace.reshape(-1, 3)[indices], -1, 0)
             # In xi=2*s-1 the samples lie at -root, 0, +root. Average
             # xi and xi² analytically over the interval, including zero width.
             midpoint = start+end-1
@@ -158,7 +169,7 @@ class HarmonicConduction:
             curvature = ((left-center)+(right-center))/(2*_GAUSS_ROOT**2)
             mean = center+linear*midpoint+curvature*(midpoint**2+width**2/3)
         else:
-            mean = self.inward_flux[indices]
+            mean = trace[indices]
         return self.mesh.lengths[indices]*width*mean
 
     def _interior_targets(self, points):

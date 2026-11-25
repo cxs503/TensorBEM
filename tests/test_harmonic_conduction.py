@@ -240,3 +240,26 @@ def test_partial_panel_heat_integrates_prescribed_flux(quadratic):
     for args in ((8,), (-1,), (1.5,), (1, .8, .3), (1, 0., np.nan)):
         with pytest.raises(ValueError):
             field.panel_inward_power(*args)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_partial_wall_storage_resolves_sampled_capacity(quadratic):
+    mesh = regular_polygon(8)
+    nodes = np.polynomial.legendre.leggauss(3 if quadratic else 1)[0]
+    t, omega = .7-.3j, 1.3
+    fractions = (1+nodes)/2
+    panel = np.arange(8)
+    base = .2+.1*panel
+    slope = .8 if quadratic else 0.
+    capacity = (base[:, None]+slope*fractions**2).ravel()
+    field = solve_mixed_harmonic_conduction(mesh, "temperature", t, omega, conductivity=1.,
+        volumetric_heat_capacity=1., volumetric_source=1j*omega*t,
+        wall_areal_heat_capacity=capacity, quadratic=quadratic)
+    start, end = .17, .82
+    exact = 1j*omega*t*mesh.lengths*(base*(end-start)+slope*(end**3-start**3)/3)
+    for component in ("storage", "external"):
+        np.testing.assert_allclose(field.panel_inward_power(panel, start, end, component=component),
+                                   exact, atol=1e-13, rtol=0)
+    np.testing.assert_allclose(field.panel_inward_power(panel), 0., atol=1e-13)
+    with pytest.raises(ValueError, match="component"):
+        field.panel_inward_power(panel, component="unknown")
