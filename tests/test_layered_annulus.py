@@ -269,3 +269,36 @@ def test_affine_source_cartesian_cubic_reference():
 def test_affine_source_requires_cartesian_pairs(gradient):
     with pytest.raises(ValueError, match="source_gradient"):
         solve_annulus_contact((.3,.6,1.), (2.,1.), (0.,0.), panels=8, source_gradient=gradient)
+
+
+def test_radial_quadratic_heating_with_flux_walls_and_contact_jump():
+    radii = (.3, .6, 1.)
+    a, b, c = radii
+    k = (1.4, 2.2)
+    beta = (4., -1.5)
+    resistance = .2
+    # Integrate (r*q)' = beta*r³ independently from the specified bore flux.
+    def radial_flux(radius, start, incoming, coefficient):
+        return (start*incoming + coefficient*(radius**4-start**4)/4)/radius
+
+    def temperature(radius, start, initial, incoming, coefficient, conductivity):
+        return initial - ((start*incoming-coefficient*start**4/4)*np.log(radius/start)
+                          + coefficient*(radius**4-start**4)/16)/conductivity
+
+    bore_flux = .8
+    contact_flux = radial_flux(b, a, bore_flux, beta[0])
+    wall_flux = radial_flux(c, b, contact_flux, beta[1])
+    contact_temp = temperature(b, a, 5., bore_flux, beta[0], k[0])
+    result = solve_annulus_contact(radii, k, (None, None), resistance, 16, formulation="circular",
+                                   radial_source_coefficient=beta, wall_fluxes=(bore_flux, -wall_flux),
+                                   mean_bore_temperature=5.)
+    np.testing.assert_allclose(result.heat_rates, 2*np.pi*np.array([a*bore_flux,b*contact_flux,c*wall_flux]),
+                               atol=1e-12, rtol=0.)
+    for field, radius, start, initial, flux, conductivity, coefficient in (
+            (result.inner_field, .44, a, 5., bore_flux, k[0], beta[0]),
+            (result.outer_field, .83, b, contact_temp-resistance*contact_flux, contact_flux, k[1], beta[1])):
+        direction = np.array([[.6,.8], [-.8,.6]])
+        np.testing.assert_allclose(field.temperature(radius*direction),
+                                   temperature(radius,start,initial,flux,coefficient,conductivity), atol=1e-12, rtol=0.)
+        np.testing.assert_allclose(field.heat_flux(radius*direction),
+                                   direction*radial_flux(radius,start,flux,coefficient), atol=1e-12, rtol=0.)
