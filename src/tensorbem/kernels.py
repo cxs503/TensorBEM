@@ -148,6 +148,12 @@ def integrate_single_layer_panel(
     return -length * (mean_log + _log_length_ratio(length, reference)) / _TWO_PI
 
 
+def _far_double_layer_angle(radius, eta, length):
+    """Signed angle from endpoint cross and dot products divided by radius²."""
+    ratio = length / radius
+    return np.arctan2(ratio * (eta / radius), 1.0 - (0.5 * ratio)**2)
+
+
 def integrate_double_layer_panel(
     target: FloatArray,
     start: FloatArray,
@@ -176,6 +182,9 @@ def integrate_double_layer_panel(
     h = abs(eta)
     if h <= 1.0e-14 * length:
         return 0.0
+    radius = math.hypot(xi - 0.5 * length, eta)
+    if radius >= 4.0 * length:
+        return float(_far_double_layer_angle(radius, eta, length) / _TWO_PI)
     z0, z1 = -xi, length - xi
     return math.copysign(1.0, eta) * (
         math.atan2(z1, h) - math.atan2(z0, h)
@@ -368,6 +377,19 @@ def integrate_double_layer_panel_first_moment(
     h = abs(eta)
     if h <= 1.0e-14 * length:
         return 0.0
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        # With u = 2s/L - 1, s/L = (1+u)/2. The constant part is half
+        # the panel angle. Integrate the remaining u/(1-z*u) in powers
+        # of z = (L/2)/(centered_x + i*eta), where |z| <= 1/8.
+        z = (0.5 * length / radius) * complex(centered_x / radius, -eta / radius)
+        square = z * z
+        odd_moment = 0.0
+        for denominator in range(19, 2, -2):
+            odd_moment = (odd_moment + 1.0 / denominator) * square
+        angle = _far_double_layer_angle(radius, eta, length)
+        return float(length * ((0.5 * angle - odd_moment.imag) / _TWO_PI))
     z0, z1 = -xi, length - xi
     angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
     logarithm = _log_length_ratio(math.hypot(z1, h), math.hypot(z0, h))
@@ -556,6 +578,11 @@ def integrate_double_layer_panel_many(
     z0, z1 = -xi, length - xi
     values = np.zeros(x.shape[0], dtype=float)
     regular = h > 1.0e-14 * length
+    radius = np.hypot(xi - 0.5 * length, eta)
+    far = regular & (radius >= 4.0 * length)
+    if np.any(far):
+        values[far] = _far_double_layer_angle(radius[far], eta[far], length) / _TWO_PI
+    regular &= ~far
     if np.any(regular):
         h_r = h[regular]
         values[regular] = (

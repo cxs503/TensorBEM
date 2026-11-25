@@ -286,3 +286,25 @@ def test_double_layer_near_field_scales_with_panel(length, record_property):
         error = float(np.max(np.abs(values - reference)))
         record_property(name + "_absolute_error", error)
         assert error < 5e-16
+
+
+@pytest.mark.parametrize("radius", [3.99, 4.0, 4.01, 1e4, 1e10, 1e16])
+def test_double_layer_distance_range_against_gaussian_quadrature(radius, record_property):
+    start = np.array([-0.5, 0.0])
+    tangent = np.array([1.0, 0.0])
+    normal = np.array([0.0, 1.0])
+    targets = radius * np.array([[0.0, 1.0], [0.8, 0.6], [-0.8, -0.6]])
+    nodes, weights = np.polynomial.legendre.leggauss(32)
+    distances = np.hypot(targets[:, 0, None] - 0.5 * nodes, targets[:, 1, None])
+    integrand = targets[:, 1, None] / distances**2 / (2 * np.pi)
+    expected = integrand @ (0.5 * weights)
+    expected_moment = integrand @ (0.25 * weights * (1 + nodes))
+    args = (start, tangent, normal, 1.0)
+    scalar = [integrate_double_layer_panel(x, *args) for x in targets]
+    batch = integrate_double_layer_panel_many(targets, *args)
+    moments = [integrate_double_layer_panel_first_moment(x, *args) for x in targets]
+    for name, values, reference in (("scalar", scalar, expected), ("batch", batch, expected),
+                                    ("first_moment", moments, expected_moment)):
+        error = float(np.max(np.abs(values / reference - 1.0)))
+        record_property(name + "_relative_error", error)
+        assert error < 1e-14
