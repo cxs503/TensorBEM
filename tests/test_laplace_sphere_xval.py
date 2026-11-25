@@ -278,3 +278,46 @@ def test_near_surface_quadrupole_at_fixed_and_panel_scaled_clearance(domain, rec
     assert max(fixed_errors[-1]) < 0.015
     assert recovered_errors[-1] < 0.05
     assert all(a > b for a, b in zip(recovered_errors, recovered_errors[1:]))
+
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_recovered_gradient_at_local_offsets_on_triaxial_ellipsoid(domain, record_property):
+    from tensorbem import recover_surface_velocity_at_offsets
+    from tensorbem.geometry3d import ellipsoid_mesh
+    from tensorbem.solver3d import evaluate_surface_velocity_at_panels
+
+    def exact(points):
+        x, y, z = points.T
+        if domain == "interior":
+            # Harmonic cubic with a spatially varying Hessian.
+            return x*y*z, np.column_stack((y*z, x*z, x*y))
+        # The source lies inside the excluded body, so the exterior field
+        # is harmonic everywhere in the solved domain and decays at infinity.
+        delta = points-np.array([.2, -.1, .07])
+        r = np.linalg.norm(delta, axis=1)
+        return 1/r, -delta/r[:, None]**3
+
+    errors = []
+    for level in (1, 2, 3):
+        mesh = ellipsoid_mesh(level, (1.4, 1., .7))
+        trace, _ = exact(mesh.centroids)
+        result = solve_laplace_surface(mesh, trace, domain=domain)
+        distances = .1*np.sqrt(mesh.areas)
+        distances[::11] = 0.
+        sign = -1 if domain == "interior" else 1
+        _, gradient = exact(mesh.centroids+sign*distances[:, None]*mesh.normals)
+        recovered = recover_surface_velocity_at_offsets(mesh, result, distances)
+        at_wall = evaluate_surface_velocity_at_panels(mesh, result)
+        np.testing.assert_array_equal(recovered[::11], at_wall[::11])
+        weighted = np.sqrt(mesh.areas)[:, None]
+        error = np.linalg.norm(weighted*(recovered-gradient))/np.linalg.norm(weighted*gradient)
+        record_property(f"area_weighted_gradient_relative_error_{mesh.panel_count}", float(error))
+        errors.append(error)
+        if level == 1:
+            panel = 1
+            scalar = recover_surface_velocity_at_offsets(mesh, result, distances[panel])
+            np.testing.assert_allclose(recovered[panel], scalar[panel], atol=1e-14, rtol=0)
+            for invalid in (distances[:-1], -distances, distances[:, None], np.nan):
+                with pytest.raises(ValueError, match="distance"):
+                    recover_surface_velocity_at_offsets(mesh, result, invalid)
+    assert all(a/b > 1.4 for a, b in zip(errors, errors[1:]))

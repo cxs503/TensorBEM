@@ -640,21 +640,27 @@ def evaluate_surface_velocity_at_panels(
 def recover_surface_velocity_at_offsets(
     mesh: TriangleMesh,
     result: LaplaceSurfaceResult,
-    distance: float,
+    distance: float | FloatArray,
 ) -> FloatArray:
     """Approximate gradients a short distance into the solved domain.
 
     Return one Cartesian gradient per panel, at its centroid displaced by
     distance along the inward normal for an interior solve, outward for an
-    exterior solve. The distance is in mesh length units. A first-order
+    exterior solve. Supply one common distance or one per panel in mesh
+    length units, with zero selecting the centroid. A first-order
     normal Taylor expansion assumes a smooth closed boundary and smooth
     traces across each reconstruction patch. Use for distances small
     compared with local curvature and field-variation scales.
     """
-    if np.ndim(distance) != 0 or not np.isrealobj(distance) or not np.isfinite(distance) or distance < 0:
-        raise ValueError("distance must be a finite nonnegative scalar")
+    if not isinstance(mesh, TriangleMesh):
+        raise TypeError("mesh must be a TriangleMesh")
+    offsets = np.asarray(distance)
+    if (offsets.shape not in ((), (mesh.panel_count,)) or offsets.dtype.kind not in "fiu"
+            or not np.isfinite(offsets).all() or (offsets < 0).any()):
+        raise ValueError("supply a finite nonnegative distance or one distance per panel")
+    offsets = offsets.astype(float, copy=False)
     velocity = evaluate_surface_velocity_at_panels(mesh, result)
-    if distance == 0:
+    if not offsets.any():
         return velocity
     normal = mesh.normals
     tangent_derivatives = np.stack(
@@ -665,8 +671,8 @@ def recover_surface_velocity_at_offsets(
     # gives P H n = (H P)^T n; Laplace's equation gives n^T H n = -tr(H P).
     tangential = np.einsum("fij,fi->fj", tangent_derivatives, normal)
     tangent_divergence = np.trace(tangent_derivatives, axis1=1, axis2=2)
-    signed_distance = -distance if result.domain == "interior" else distance
-    return velocity + signed_distance*(tangential - tangent_divergence[:, None]*normal)
+    signed_distance = -offsets if result.domain == "interior" else offsets
+    return velocity + signed_distance[..., None]*(tangential - tangent_divergence[:, None]*normal)
 
 
 def evaluate_representation_surface_velocity_at_panels(
