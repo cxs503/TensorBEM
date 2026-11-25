@@ -26,6 +26,7 @@ from ..cp_galvanic import (
     BoxHull,
     box_hull_mesh,
     partition_surface,
+    refine_partitioned_surface,
     solve_galvanic_protection,
     dnv_envelope,
     grid_convergence_index,
@@ -132,17 +133,29 @@ def run_mesh_convergence(
     hull: BoxHull,
     design_beta: float = 0.05,
     design_anodes: int = 4,
+    *,
+    fixed_partition: bool = False,
 ) -> dict[str, Any]:
-    """Run mesh convergence study and compute GCI."""
+    """Compute GCI; fixed_partition inherits the coarse electrode patches on every mesh."""
     results = {}
-    meshes = {}
-
-    for name, spec in MESH_LEVELS.items():
-        mesh, groups = box_hull_mesh(hull, *spec)
-        meshes[name] = mesh
+    if fixed_partition:
+        mesh, groups = box_hull_mesh(hull, 6, 2, 2)
         partition = partition_surface(mesh, groups, design_beta, n_anodes=design_anodes)
+        levels = ("initial", "coarse", "medium", "fine")
+    else:
+        levels = tuple(MESH_LEVELS)
+
+    for name in levels:
+        if fixed_partition:
+            if name != "initial":
+                mesh, partition = refine_partitioned_surface(mesh, partition)
+        else:
+            mesh, groups = box_hull_mesh(hull, *MESH_LEVELS[name])
+            partition = partition_surface(mesh, groups, design_beta, n_anodes=design_anodes)
         result = solve_galvanic_protection(mesh, partition)
         results[name] = {
+            "anode_area_m2": float(mesh.areas[partition.anodes].sum()),
+            "bare_area_m2": float(mesh.areas[partition.bare].sum()),
             "n_panels": mesh.panel_count,
             "cell_size_m": float(np.sqrt(np.mean(mesh.areas))),
             "anode_current_A": result.anode_current_total,
@@ -428,4 +441,13 @@ def run_full_verification(output_dir: str | Path = "artifacts/cp_verification") 
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--fixed-partition", action="store_true",
+                        help="run only the mesh study with inherited electrode patches")
+    if parser.parse_args().fixed_partition:
+        study = run_mesh_convergence(BoxHull(length=100., breadth=20., draft=10.), fixed_partition=True)
+        print(json.dumps(study, indent=2, allow_nan=False))
+        raise SystemExit(0 if study["gci_current_pass"] else 1)
     run_full_verification()
