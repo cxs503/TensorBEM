@@ -63,14 +63,15 @@ class RingResponse:
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
                            mode=0, formulation="circular", join_radius=None,
-                           inner_resistance_fractions=(.5, .5)):
+                           inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.)):
     """Assemble one cosine mode for a quasi-steady bulk and two resistive contacts.
 
     Supply four increasing radii (bore, two sheets, exterior), one conductivity per
     material and one area-specific resistance per sheet. inner_resistance_fractions
     sets the share of each resistance on the smaller-radius side. The optional join radius
     splits the middle material for subdomain matching. Each circle has 'panels'
-    midpoint collocation points. Both circular and polygonal formulations are supported.
+    midpoint collocation points. sheet_conductivities gives the two uniform
+    circumferential conductivities times thickness (W/K). Both circular and polygonal formulations are supported.
     """
     n = _validate_panel_count(panels)
     if isinstance(mode, (bool, np.bool_)) or not isinstance(mode, (int, np.integer)) or not 0 <= mode < n/2:
@@ -87,6 +88,9 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     fractions = np.asarray(inner_resistance_fractions, dtype=float)
     if fractions.shape != (2,) or not np.all((fractions >= 0) & (fractions <= 1)):
         raise ValueError("two inner resistance fractions in [0, 1] required")
+    sheet_k = np.asarray(sheet_conductivities, dtype=float)
+    if sheet_k.shape != (2,) or not np.isfinite(sheet_k).all() or np.any(sheet_k < 0):
+        raise ValueError("two finite nonnegative sheet conductivities required")
     domains = ((radii[0], radii[1], join_radius), (join_radius, radii[2], radii[3]))
     pattern = np.cos(mode * 2*np.pi * (np.arange(n) + .5) / n)
     projection = pattern / (pattern @ pattern)
@@ -98,7 +102,7 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             result = solve_annulus_contact(
                 domain, conductivities[i:i+2], (left*pattern, right*pattern),
                 contact_resistances[i], n, formulation=formulation, interface_source=source*pattern,
-                inner_resistance_fraction=fractions[i])
+                inner_resistance_fraction=fractions[i], sheet_conductivity=sheet_k[i])
             bore = conductivities[i] * result.inner_field.normal_derivative[n:]
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
