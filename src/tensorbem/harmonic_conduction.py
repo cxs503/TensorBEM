@@ -107,10 +107,10 @@ def _particular_field(points, constant, gradient, quadratic):
     return constant + points @ gradient + xx*x*x + xy*x*y + yy*y*y
 
 
-def _particular_normal_derivative(points, normals, gradient, quadratic):
+def _particular_gradient(points, gradient, quadratic):
     x, y = points.T
     xx, xy, yy = quadratic
-    return normals @ gradient + normals[:, 0]*(2*xx*x+xy*y) + normals[:, 1]*(xy*x+2*yy*y)
+    return gradient + np.column_stack((2*xx*x+xy*y, xy*x+2*yy*y))
 
 
 @dataclass(frozen=True)
@@ -125,23 +125,79 @@ class HarmonicConduction:
     particular_gradient: tuple[complex, complex] = (0j, 0j)
     particular_quadratic: tuple[complex, complex, complex] = (0j, 0j, 0j)
 
-    def temperature(self, points):
-        """Evaluate temperature phasors at interior targets of shape (N, 2)."""
+    def _interior_targets(self, points):
         targets = np.asarray(points, dtype=float)
         if targets.ndim != 2 or targets.shape[1] != 2 or not np.isfinite(targets).all():
             raise ValueError("supply finite interior coordinates shaped (N, 2)")
         if not self.mesh.contains_point(targets).all() or np.any(self.mesh.boundary_clearance(targets) == 0):
             raise ValueError("temperature targets must be strictly inside the mesh")
-        operators = _quadratic_operators if self.quadratic else _operators
-        single, double = operators(self.mesh, targets, self.wave)
+        return targets
+
+    def _homogeneous_traces(self):
         points = harmonic_boundary_points(self.mesh, quadratic=self.quadratic)
         normals = np.repeat(self.mesh.normals, len(points)//self.mesh.panel_count, axis=0)
         coefficients = (self.particular_temperature, self.particular_gradient, self.particular_quadratic)
-        boundary = _particular_field(points, *coefficients)
-        derivative = _particular_normal_derivative(points, normals, self.particular_gradient, self.particular_quadratic)
-        return (_particular_field(targets, *coefficients)
-                + single @ (self.inward_flux/self.conductivity - derivative)
-                - double @ (self.wall_temperature-boundary))
+        boundary = self.wall_temperature-_particular_field(points, *coefficients)
+        gradient = _particular_gradient(points, self.particular_gradient, self.particular_quadratic)
+        derivative = self.inward_flux/self.conductivity-np.sum(normals*gradient, axis=1)
+        return boundary, derivative
+
+    def temperature(self, points):
+        """Evaluate temperature phasors at interior targets of shape (N, 2)."""
+        targets = self._interior_targets(points)
+        operators = _quadratic_operators if self.quadratic else _operators
+        single, double = operators(self.mesh, targets, self.wave)
+        boundary, derivative = self._homogeneous_traces()
+        particular = _particular_field(targets, self.particular_temperature, self.particular_gradient, self.particular_quadratic)
+        return particular + single @ derivative - double @ boundary
+
+    def heat_flux(self, points):
+        """Evaluate Cartesian Fourier heat-flux phasors -k grad(T) in W/m².
+
+        Return shape (N, 2) for strictly interior targets. Integrate the
+        differentiated Green kernels on straight panels, bisecting near a
+        target until the subpanel length resolves the target distance.
+        """
+        targets = self._interior_targets(points)
+        gradient = _particular_gradient(targets, self.particular_gradient, self.particular_quadratic)
+        gradient = gradient.astype(complex)
+        boundary, derivative = self._homogeneous_traces()
+        width = 3 if self.quadratic else 1
+        boundary, derivative = boundary.reshape(-1, width), derivative.reshape(-1, width)
+        nodes, weights = np.polynomial.legendre.leggauss(16)
+        for j, (start, edge, normal, length) in enumerate(zip(
+                self.mesh.vertices, self.mesh.vectors, self.mesh.normals, self.mesh.lengths)):
+            pending = [(0., 1., np.arange(len(targets)))]
+            while pending:
+                lo, hi, ids = pending.pop()
+                mid = (lo+hi)/2
+                # Targets within one subpanel length of its midpoint need
+                # finer quadrature; distant targets use this interval once.
+                close = np.linalg.norm(targets[ids]-(start+mid*edge), axis=1) < (hi-lo)*length
+                if np.any(close) and lo < mid < hi:
+                    pending.extend(((lo, mid, ids[close]), (mid, hi, ids[close])))
+                    ids = ids[~close]
+                if not len(ids):
+                    continue
+                s = mid+(hi-lo)*nodes/2
+                delta = targets[ids, None, :]-(start+s[:, None]*edge)
+                radius = np.linalg.norm(delta, axis=2)
+                direction = delta/radius[:, :, None]
+                z = self.wave*radius
+                radial = self.wave*kv(1, z)
+                single_grad = -radial[:, :, None]*direction
+                double_grad = ((radial/radius)[:, :, None]*normal
+                    - ((self.wave**2*kv(0, z)+2*radial/radius)*(direction @ normal))[:, :, None]*direction)
+                if self.quadratic:
+                    v = (2*s-1)/_GAUSS_ROOT
+                    basis = np.column_stack((v*(v-1)/2, 1-v*v, v*(v+1)/2))
+                    temp, grad_n = basis @ boundary[j], basis @ derivative[j]
+                else:
+                    temp, grad_n = boundary[j, 0], derivative[j, 0]
+                factor = weights*(hi-lo)*length/(4*np.pi)
+                gradient[ids] += np.einsum("iqc,q->ic", single_grad, factor*grad_n)
+                gradient[ids] -= np.einsum("iqc,q->ic", double_grad, factor*temp)
+        return -self.conductivity*gradient
 
 
 def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, conductivity, volumetric_heat_capacity, quadratic=False,
@@ -220,7 +276,7 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     # Subtract the polynomial particular field from both thermal traces.
     boundary = _particular_field(points, particular, gradient, curvature)
     normals = np.repeat(mesh.normals, n//mesh.panel_count, axis=0)
-    normal_flux = conductivity*_particular_normal_derivative(points, normals, gradient, curvature)
+    normal_flux = conductivity*np.sum(normals*_particular_gradient(points, gradient, curvature), axis=1)
     shifted = values-boundary
     wall = np.where(fixed, shifted, 0.)
     flux = np.where(fixed, 0., np.where(kinds == "flux", values, film*shifted)-normal_flux)

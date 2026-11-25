@@ -59,6 +59,12 @@ def test_quadratic_mixed_panel_samples_recover_oblique_wave():
     assert np.max(abs(result.wall_temperature-exact)) < 1e-5
     probes = np.vstack(([0., 0.], mesh.centers[0]-.025*mesh.normals[0]))
     np.testing.assert_allclose(result.temperature(probes), np.exp(wave*(probes @ direction-1)), atol=2e-5)
+    # Include a probe within a tenth of a panel length. The quadrature for
+    # the gradient subdivides here, unlike at the central probe.
+    step = 1e-5
+    numerical = np.column_stack([(result.temperature(probes+step*axis)-result.temperature(probes-step*axis))/(2*step)
+                                 for axis in np.eye(2)])
+    np.testing.assert_allclose(result.heat_flux(probes), -numerical, atol=2e-8, rtol=0)
 
 
 @pytest.mark.parametrize("quadratic", [False, True])
@@ -73,6 +79,11 @@ def test_uniform_heat_generation_insulated_and_isothermal_disk(quadratic):
     np.testing.assert_allclose(insulated.wall_temperature, particular, atol=1e-13)
     cold = solve_harmonic_conduction(mesh, 0., omega, **opts)
     wave = np.sqrt(1j*omega*capacity/k)
+    probes = np.array([[.3, .4], [-.4, .3], [0., 0.]])
+    radii = np.linalg.norm(probes, axis=1)
+    unit = np.divide(probes, radii[:, None], out=np.zeros_like(probes), where=radii[:, None]>0)
+    exact_flux = k*particular*wave*iv(1, wave*radii)/iv(0, wave)
+    np.testing.assert_allclose(cold.heat_flux(probes), exact_flux[:, None]*unit, atol=.001)
     expected = particular*(1-1/iv(0, wave))
     np.testing.assert_allclose(cold.temperature([[0., 0.]]), expected, atol=.001)
     weights = np.array([5., 8., 5.])/18 if quadratic else np.array([1.])
@@ -125,3 +136,6 @@ def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic):
     np.testing.assert_allclose(solution.inward_flux, expected, rtol=0, atol=2e-13)
     probes = np.array([[0., 0.], [.23, -.46], [.6, .1]])
     np.testing.assert_allclose(solution.temperature(probes), field(probes), rtol=0, atol=2e-13)
+    x, y = probes.T
+    expected_flux = -k*np.column_stack((2*xx*x+xy*y, xy*x+2*yy*y))
+    np.testing.assert_allclose(solution.heat_flux(probes), expected_flux, rtol=0, atol=2e-13)
