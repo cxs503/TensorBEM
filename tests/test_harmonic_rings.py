@@ -82,3 +82,16 @@ def test_localized_axisymmetric_volume_source_heats_correct_annulus(layer):
     interface_rates = 2*np.pi*edges[1:-1]*result.incoming_flux
     rates = np.r_[result.wall_heat_rates[0], interface_rates, result.wall_heat_rates[1]]
     np.testing.assert_allclose(np.diff(rates), np.pi*np.diff(edges**2)*density, rtol=1e-11, atol=1e-12)
+
+
+def test_uniform_sheet_temperature_under_balanced_reservoir_loading():
+    rings = assemble_ring_response([.4, .55, .9, 1.1], [1., 2.5, .8], [.5, .9], 16)
+    t = .7-.2j
+    h = np.array([1.3, 4.2])
+    ambient = np.array([-.2j, .5+.1j])
+    capacity = np.array([.25, .8])
+    generation = 8j*capacity*t + h*(t-ambient)
+    result = rings.solve(8., [t, t], capacity, sheet_generation=generation,
+                         sheet_film_coefficients=h, sheet_ambient_temperatures=ambient)
+    np.testing.assert_allclose(result.sheet_temperature, t, atol=1e-12)
+    np.testing.assert_allclose(result.wall_heat_rates, 0., atol=1e-12)

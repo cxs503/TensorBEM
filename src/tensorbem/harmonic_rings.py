@@ -36,17 +36,27 @@ class RingResponse:
     mode_leakage: float
     _volume_maps: np.ndarray | None = None
 
-    def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None):
+    def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None,
+              sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.)):
         """Apply two wall or ambient temperature phasors under exp(i omega t), with capacities in J/(m² K).
 
         sheet_generation gives the two imposed heat generation phasors in W/m²,
         positive for heat added to a sheet in the assembled cosine mode.
+        Each sheet also receives h*(ambient - sheet temperature) in W/m² from
+        its own reservoir; zero sheet film coefficient disables that exchange.
         volume_generation supplies three complex coefficients (W/m³) multiplying
         (r/exterior_radius)^m cos(mθ), when assembled with include_volume_sources.
         """
         walls = np.asarray(wall_temperatures, dtype=complex)
         capacities = np.asarray(sheet_capacities, dtype=float)
         generation = np.asarray(sheet_generation, dtype=complex)
+        sheet_h = np.asarray(sheet_film_coefficients)
+        if (sheet_h.shape != (2,) or not np.isrealobj(sheet_h) or
+                not np.isfinite(sheet_h).all() or np.any(sheet_h < 0)):
+            raise ValueError("two finite nonnegative sheet film coefficients required")
+        ambient = np.asarray(sheet_ambient_temperatures, dtype=complex)
+        if ambient.shape != (2,) or not np.isfinite(ambient).all():
+            raise ValueError("two finite sheet ambient phasors required")
         if generation.shape != (2,) or not np.isfinite(generation).all():
             raise ValueError("two finite sheet generation phasors required")
         if walls.shape != (2,) or not np.isfinite(walls).all():
@@ -57,13 +67,14 @@ class RingResponse:
             raise ValueError("omega must be a finite nonnegative angular frequency")
 
         left, right = self._maps
-        storage = 1j * omega * capacities
+        admittance = sheet_h + 1j * omega * capacities
+        applied = generation + sheet_h*ambient
         # Unknowns are the common join temperature and the two sheet sources.
-        # Current matches at the join. Each net sheet source equals generation minus i omega C T.
+        # Current matches at the join. The net sheet source includes applied heat, reservoir exchange and storage.
         matrix = [
             [left[1, 1] - right[0, 0], left[1, 2], -right[0, 2]],
-            [storage[0] * left[2, 1], 1 + storage[0] * left[2, 2], 0],
-            [storage[1] * right[2, 0], 0, 1 + storage[1] * right[2, 2]],
+            [admittance[0] * left[2, 1], 1 + admittance[0] * left[2, 2], 0],
+            [admittance[1] * right[2, 0], 0, 1 + admittance[1] * right[2, 2]],
         ]
         base_left = left[:, 0] * walls[0]
         base_right = right[:, 1] * walls[1]
@@ -73,8 +84,8 @@ class RingResponse:
                 raise ValueError("volume_generation requires volume source maps and three finite phasors")
             base_left += self._volume_maps[0] @ density[:2]
             base_right += self._volume_maps[1] @ density[1:]
-        forcing = [base_right[0] - base_left[1], generation[0] - storage[0]*base_left[2],
-                   generation[1] - storage[1]*base_right[2]]
+        forcing = [base_right[0] - base_left[1], applied[0] - admittance[0]*base_left[2],
+                   applied[1] - admittance[1]*base_right[2]]
         join, source1, source2 = np.linalg.solve(matrix, forcing)
         a = base_left + left[:, 1]*join + left[:, 2]*source1
         b = base_right + right[:, 0]*join + right[:, 2]*source2
