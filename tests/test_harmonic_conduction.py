@@ -191,8 +191,27 @@ def test_distributed_exchange_disk_against_radial_solution(quadratic):
 @pytest.mark.parametrize("options", [
     {"heat_loss_coefficient": -1.}, {"heat_loss_coefficient": 1j},
     {"heat_loss_coefficient": np.inf}, {"bulk_ambient_temperature": np.nan},
-    {"bulk_ambient_temperature": [.2, .3]}])
+    {"bulk_ambient_temperature": [.2, .3]}, {"bulk_ambient_gradient": [1.]},
+    {"bulk_ambient_gradient": [np.inf, 0.]}])
 def test_invalid_distributed_exchange_parameters(options):
-    with pytest.raises(ValueError, match="heat_loss_coefficient|bulk_ambient_temperature"):
+    with pytest.raises(ValueError, match="heat_loss_coefficient|bulk_ambient"):
         solve_harmonic_conduction(regular_polygon(8), 0., 1., conductivity=1.,
                                   volumetric_heat_capacity=1., **options)
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_affine_reservoir_and_source_match_oblique_temperature(quadratic):
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    mesh = regular_polygon(16)
+    xy = harmonic_boundary_points(mesh, quadratic=quadratic)
+    grad = np.array([.2+.3j, -.4+.25j])
+    reservoir_grad = np.array([-.3j, .5+.1j])
+    k, c, omega, loss = 1.4, 2.1, 3., 2.5
+    alpha = loss+1j*omega*c
+    base, ambient = .3-.2j, .45j
+    field = solve_harmonic_conduction(mesh, base+xy @ grad, omega, conductivity=k,
+        volumetric_heat_capacity=c, volumetric_source=alpha*base-loss*ambient,
+        source_gradient=alpha*grad-loss*reservoir_grad, heat_loss_coefficient=loss,
+        bulk_ambient_temperature=ambient, bulk_ambient_gradient=reservoir_grad, quadratic=quadratic)
+    np.testing.assert_allclose(field.inward_flux, k*np.repeat(mesh.normals @ grad, len(xy)//16), atol=2e-13)
+    np.testing.assert_allclose(field.heat_flux([[.1, .2]])[0], -k*grad, atol=2e-13)
