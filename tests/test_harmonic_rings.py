@@ -111,3 +111,26 @@ def test_mixed_flux_reproduces_dc_wall_temperature(side):
         0., wall, (.25, .8), wall_inward_flux=imposed)
     np.testing.assert_allclose(solution.wall_heat_rates, rate, rtol=1e-11)
     np.testing.assert_allclose(-np.diff(solution.wall_surface_temperatures), rate*resistance, rtol=1e-11)
+
+
+def test_double_flux_frequency_balance_and_missing_temperature_anchor():
+    radii = np.array([.4, .55, .9, 1.1])
+    response = assemble_ring_response(radii, [1., 2.5, .8], [.5, .9], 16, flux_wall="both")
+    flux = np.array([.45-.25j, -.17+.31j])
+    capacity = np.array([.25, .8])
+    with pytest.raises(ValueError, match="active sheet storage"):
+        response.solve(0., (None, None), capacity, wall_inward_flux=flux)
+    result = response.solve(8., (None, None), capacity, wall_inward_flux=flux)
+    power = 2*np.pi*radii[[0,-1]]*flux
+    np.testing.assert_allclose(result.wall_heat_rates, power*[1,-1], atol=1e-12)
+    np.testing.assert_allclose(8j*(2*np.pi*radii[1:-1]*capacity) @ result.sheet_temperature,
+                               sum(power), atol=1e-12)
+
+
+def test_double_flux_steady_cosine_mode_without_storage_or_reservoir():
+    radii = np.array([.4, .55, .9, 1.1])
+    # T=r*cos(theta) has constant radial flux amplitude -k.
+    response = assemble_ring_response(radii, [2.]*3, [0., 0.], 16, mode=1, flux_wall="both")
+    result = response.solve(0., (None, None), [0., 0.], wall_inward_flux=(-2., 2.))
+    np.testing.assert_allclose(result.wall_surface_temperatures, radii[[0,-1]], atol=1e-12)
+    np.testing.assert_allclose(result.sheet_temperature, radii[1:-1], atol=1e-12)

@@ -35,7 +35,8 @@ class RingResponse:
     _maps: np.ndarray
     mode_leakage: float
     _volume_maps: np.ndarray | None = None
-    _flux_index: int | None = None
+    _flux_sides: tuple[int, ...] = ()
+    _mode: int = 0
 
     def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None,
               sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.), wall_inward_flux=None):
@@ -43,6 +44,9 @@ class RingResponse:
 
         For a prescribed flux wall, set its temperature entry to None and supply
         wall_inward_flux in W/m², positive into the annulus at either wall.
+        With two flux walls, supply wall_inward_flux=(bore, exterior) and
+        wall_temperatures=(None, None). Axisymmetric double-flux solutions need
+        a sheet with active storage or a positive reservoir film coefficient.
         sheet_generation gives the two imposed heat generation phasors in W/m²,
         positive for heat added to a sheet in the assembled cosine mode.
         Each sheet also receives h*(ambient - sheet temperature) in W/m² from
@@ -50,16 +54,19 @@ class RingResponse:
         volume_generation supplies three complex coefficients (W/m³) multiplying
         (r/exterior_radius)^m cos(mθ), when assembled with include_volume_sources.
         """
-        if self._flux_index is None:
+        if not self._flux_sides:
             if wall_inward_flux is not None:
                 raise ValueError("select flux_wall when assembling a prescribed wall flux")
             walls = np.asarray(wall_temperatures, dtype=complex)
         else:
-            if (np.shape(wall_temperatures) != (2,) or wall_temperatures[self._flux_index] is not None
-                    or wall_inward_flux is None or np.ndim(wall_inward_flux) != 0):
-                raise ValueError("use None at the flux wall and supply a scalar wall_inward_flux")
+            sides = self._flux_sides
+            expected_shape = () if len(sides) == 1 else (2,)
+            if (np.shape(wall_temperatures) != (2,) or any(wall_temperatures[i] is not None for i in sides)
+                    or wall_inward_flux is None or np.shape(wall_inward_flux) != expected_shape):
+                raise ValueError("set each flux wall temperature to None and supply one inward phasor per flux wall")
             data = list(wall_temperatures)
-            data[self._flux_index] = wall_inward_flux
+            for i, flux in zip(sides, np.atleast_1d(wall_inward_flux)):
+                data[i] = flux
             walls = np.asarray(data, dtype=complex)
         capacities = np.asarray(sheet_capacities, dtype=float)
         generation = np.asarray(sheet_generation, dtype=complex)
@@ -81,6 +88,8 @@ class RingResponse:
 
         left, right = self._maps
         admittance = sheet_h + 1j * omega * capacities
+        if len(self._flux_sides) == 2 and self._mode == 0 and not admittance.any():
+            raise ValueError("axisymmetric double-flux walls need active sheet storage or a reservoir film")
         applied = generation + sheet_h*ambient
         # Unknowns are the common join temperature and the two sheet sources.
         # Current matches at the join. The net sheet source includes applied heat, reservoir exchange and storage.
@@ -121,7 +130,7 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     circumferential conductivities times thickness (W/K). At each physical wall,
     a positive film coefficient (W/m²/K) uses its supplied temperature as the ambient
     phasor, while None prescribes the surface temperature.
-    flux_wall may be "bore" or "exterior" to prescribe an inward flux there.
+    flux_wall may be "bore", "exterior" or "both" to prescribe an inward flux there.
     include_volume_sources assembles polynomial volume loads for modes 0, 1 and 2. Both circular and polygonal formulations are supported.
     """
     n = _validate_panel_count(panels)
@@ -146,10 +155,10 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             h is not None and (not np.isrealobj(h) or not np.isfinite(h) or h <= 0)
             for h in film_coefficients):
         raise ValueError("supply a positive finite film coefficient or None for each physical wall")
-    if flux_wall not in (None, "bore", "exterior"):
-        raise ValueError("flux_wall must be None, bore or exterior")
-    flux_index = None if flux_wall is None else ("bore", "exterior").index(flux_wall)
-    if flux_index is not None and film_coefficients[flux_index] is not None:
+    if flux_wall not in (None, "bore", "exterior", "both"):
+        raise ValueError("flux_wall must be None, bore, exterior or both")
+    flux_sides = {None: (), "bore": (0,), "exterior": (1,), "both": (0, 1)}[flux_wall]
+    if any(film_coefficients[i] is not None for i in flux_sides):
         raise ValueError("a prescribed flux wall cannot also have a film")
     domain_films = ((film_coefficients[0], None), (None, film_coefficients[1]))
     domains = ((radii[0], radii[1], join_radius), (join_radius, radii[2], radii[3]))
@@ -175,7 +184,7 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
                     volume["source_quadratic"] = np.outer(amplitudes, (1., 0., -1.))
             temperatures = [left*pattern, right*pattern]
             inward_fluxes = [None, None]
-            if i == flux_index:
+            if i in flux_sides:
                 inward_fluxes[i], temperatures[i] = temperatures[i], None
             result = solve_annulus_contact(
                 domain, conductivities[i:i+2], temperatures,
@@ -196,4 +205,4 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
         maps.append(np.column_stack(columns[:3]))
         if include_volume_sources:
             volume_maps.append(np.column_stack(columns[3:]))
-    return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None, flux_index)
+    return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None, flux_sides, mode)
