@@ -68,20 +68,24 @@ def _validate_domain(domain: str) -> str:
     return domain
 
 
-def _difference_operator(mesh: PanelMesh) -> FloatArray:
-    """Arc-length central-difference operator on a closed panel loop.
-
-    ``D[i, :]`` differentiates the panel-midpoint trace at panel ``i`` in arc
-    length: ``(sigma_{i+1} - sigma_{i-1}) / spacing_i``. It is the discrete
-    tangential slope that the first-moment (linear-density) panel basis uses.
-    """
-    n = mesh.panel_count
+def _slope_weights(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
+    """Coefficients of backward and forward increments of the local quadratic."""
     lengths = mesh.lengths
-    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
+    left = 0.5 * (lengths + np.roll(lengths, 1))
+    right = 0.5 * (lengths + np.roll(lengths, -1))
+    span = left + right
+    return (right / span) / left, (left / span) / right
+
+
+def _difference_operator(mesh: PanelMesh) -> FloatArray:
+    """Periodic derivative at the midpoints of possibly unequal panels."""
+    n = mesh.panel_count
+    backward, forward = _slope_weights(mesh)
     operator = np.zeros((n, n), dtype=float)
     rows = np.arange(n)
-    operator[rows, (rows + 1) % n] = 1.0 / spacing
-    operator[rows, (rows - 1) % n] = -1.0 / spacing
+    operator[rows, (rows + 1) % n] = forward
+    operator[rows, rows] = backward - forward
+    operator[rows, (rows - 1) % n] = -backward
     return operator
 
 
@@ -521,13 +525,9 @@ def _screen_exterior_targets(
 def tangential_slope(mesh: PanelMesh, values: FloatArray) -> FloatArray:
     r"""Estimate the arc-length derivative of a panel-midpoint trace.
 
-    The trace of a smooth boundary function at the midpoints of a closed
-    boundary is differentiated with a periodic central difference that is
-    centred in *arc length* (``spacing_i`` is the distance between the two
-    neighbouring midpoints through panel ``i``). For a smooth periodic trace
-    that difference is second-order accurate, so it is a legitimate estimate of
-    the tangential slope used by the first-moment (linearly varying density)
-    panel integrals; it is not a one-sided first-order stencil.
+    Interpolate the trace at each midpoint and its two periodic neighbours
+    by a quadratic in arc length, then differentiate at the central point.
+    This retains second-order accuracy with unequal neighbouring spacings.
     """
     if not isinstance(mesh, PanelMesh):
         raise TypeError("mesh must be a PanelMesh")
@@ -537,9 +537,8 @@ def tangential_slope(mesh: PanelMesh, values: FloatArray) -> FloatArray:
         raise ValueError(f"values must have shape ({n},)")
     if not np.isfinite(trace).all():
         raise ValueError("values must all be finite")
-    lengths = mesh.lengths
-    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
-    return (np.roll(trace, -1) - np.roll(trace, 1)) / spacing
+    backward, forward = _slope_weights(mesh)
+    return backward * (trace - np.roll(trace, 1)) + forward * (np.roll(trace, -1) - trace)
 
 
 def evaluate_exterior_field(
@@ -740,7 +739,7 @@ def evaluate_exterior_surface_velocity(
     The normal component is the solved ``q_e``. The tangential component is the
     arc-length derivative ``d(u)/ds`` of the panel-midpoint trace, taken with a
     periodic central difference on the closed boundary. For a smooth periodic
-    trace that difference is spectrally accurate, so the surface velocity is not
+    trace that difference is second-order accurate, so the surface velocity is not
     limited by a first-order one-sided stencil.
 
     The polygon's counter-clockwise tangent is ``t`` and the panel spacing

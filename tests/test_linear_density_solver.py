@@ -24,7 +24,7 @@ from tensorbem.benchmarks.case_cylinder_stream import (
     exact_perturbation_potential,
     exact_velocity,
 )
-from tensorbem.geometry import regular_polygon
+from tensorbem.geometry import PanelMesh, regular_polygon
 from tensorbem.solver import (
     LaplaceDirichletResult,
     assemble_matrices,
@@ -192,3 +192,19 @@ def test_exterior_far_field_gradient_against_direct_panel_quadrature(linear, lay
     for distance, error in zip(distances, errors):
         record_property(f"gradient_relative_error_at_{distance:g}", float(error))
     assert max(errors) < 5e-15
+
+def test_graded_periodic_panel_slope_converges_at_second_order(record_property):
+    errors = []
+    for count in (48, 96, 192, 384):
+        steps = np.resize([1., 2., 4., 1.], count)
+        theta = 2 * np.pi * (np.cumsum(steps) - steps) / sum(steps)
+        mesh = PanelMesh(np.column_stack((np.cos(theta), np.sin(theta))))
+        k = 2 * np.pi / mesh.perimeter
+        s = np.cumsum(mesh.lengths) - 0.5 * mesh.lengths
+        trace = np.sin(k * s)
+        exact = k * np.cos(k * s)
+        approximate = tangential_slope(mesh, trace)
+        error = float(np.max(np.abs(approximate - exact)))
+        record_property(f"max_error_{count}", error)
+        errors.append(error)
+    assert min(np.log2(np.array(errors[:-1]) / errors[1:])) > 1.95
