@@ -44,8 +44,8 @@ def test_geometry_gate_accepts_wigley_hull() -> None:
         block_coefficient=geometry["block_coefficient"],
     )
     assert gate["passed"], gate
-    # Wigley Cb = 4/(9*pi) ≈ 0.4444
-    assert gate["block_coefficient"] == pytest.approx(4.0 / (9.0 * math.pi), rel=1e-12)
+    # Wigley Cb = 4/9 ≈ 0.4444
+    assert gate["block_coefficient"] == pytest.approx(4.0 / 9.0, rel=1e-12)
     assert gate["displacement_consistency_pct"] == pytest.approx(0.0, abs=1e-9)
 
 
@@ -120,10 +120,10 @@ def test_kernel_is_causal() -> None:
     from tensorbem import time_domain as td
     
     B_omega = sweep.damping[:, 2, 2]  # heave
-    kernel = td.radiation_memory_kernel(sweep.omega, B_omega, dt=0.02, tau_max=20.0)
+    kernel = td.radiation_memory_kernel(sweep.omega, B_omega, np.linspace(0., 20., 1001))
     
     # Kernel is defined for t >= 0 only
-    assert kernel.tau[0] >= 0.0
+    assert np.all(kernel(-kernel.tau[1:]) == 0.)
     # All values should be finite
     assert np.all(np.isfinite(kernel.values))
 
@@ -217,3 +217,52 @@ if __name__ == "__main__":
     test_negative_control_wigley_heave()
     test_full_campaign_wigley_heave()
     print("\nAll tests passed!")
+
+
+def test_negative_control_period_matches_undamped_oscillator():
+    geometry = campaign.wigley_hull_geometry()
+    mass = geometry["displaced_mass"]
+    omega = np.geomspace(.1, 20., 32)
+    added = np.zeros((len(omega), 6, 6))
+    added[:, 2, 2] = mass / 2
+    sweep = campaign.WigleyRadiationSweep(omega, added, added.copy(), added[-1], mass, geometry)
+    restoring = geometry["density"] * campaign.WIGLEY_GRAVITY * (2/3) * geometry["length"] * geometry["beam"]
+    reference = 2 * math.pi * math.sqrt(1.5 * mass / restoring)
+    errors = []
+    for dt in (.02, .01):
+        gate = campaign.criterion_negative_control_wigley(sweep, dt=dt, duration=20.)
+        assert gate["passed"] and gate["values"]["kernel_norm_zero"] == 0.
+        errors.append(abs(gate["values"]["period_measured"] / reference - 1.))
+    assert errors[1] < errors[0] / 3.5
+
+
+def test_heave_decay_against_single_pole_reference(record_property):
+    geometry = campaign.wigley_hull_geometry()
+    mass = geometry["displaced_mass"]
+    mass_inf = mass / 2
+    restoring = geometry["density"] * campaign.WIGLEY_GRAVITY * (2/3) * geometry["length"] * geometry["beam"]
+    pole, residue = 12., 70.
+    # K(t) = residue exp(-pole*t) gives a rational radiation impedance.
+    omega = np.geomspace(.001, 100., 401)
+    added = np.zeros((len(omega), 6, 6))
+    damping = np.zeros_like(added)
+    added[:, 2, 2] = mass_inf - residue/(pole**2 + omega**2)
+    damping[:, 2, 2] = residue*pole/(pole**2 + omega**2)
+    asymptote = np.zeros((6, 6))
+    asymptote[2, 2] = mass_inf
+    sweep = campaign.WigleyRadiationSweep(omega, added, damping, asymptote, mass, geometry)
+
+    # Eliminate the memory force from the ODE to get the exact oscillatory pole.
+    inertia = mass + mass_inf
+    roots = np.roots([inertia, pole*inertia, restoring+residue, pole*restoring])
+    mode, = roots[roots.imag > 0]
+    exact_zeta = -mode.real / abs(mode)
+    exact_period = 2*math.pi / mode.imag
+    result = campaign.criterion_free_decay_wigley(sweep, dt=.01, tau_max=16., duration=20.)
+    assert result["passed"]
+    values = result["values"]
+    for key, exact in (("zeta_free_decay", exact_zeta), ("period_measured", exact_period)):
+        error = abs(values[key]/exact - 1)
+        record_property(key + "_reference", exact)
+        record_property(key + "_relative_error", error)
+        assert error < .001

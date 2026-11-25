@@ -85,9 +85,8 @@ from tensorbem import time_domain as td
 from tensorbem.causality import (
     fit_added_mass_asymptote,
     kk_added_mass_closure,
-    kkr_added_mass,
 )
-from tensorbem.wigley_hydrostatics import wigley_wetted_hull_mesh
+from tensorbem.wigley_hydrostatics import wigley_wetted_area_reference, wigley_wetted_hull_mesh
 from tensorbem.free_surface_solver3d import solve_radiation_3d
 
 FloatArray = NDArray[np.float64]
@@ -154,18 +153,13 @@ def wigley_hull_geometry(
     # Block coefficient (exact for Wigley)
     Cb = volume / (L * B * T)
     
-    # Wetted surface (approximate: integrate hull surface)
-    # For Wigley: S ≈ 2 * integral_{-L/2}^{L/2} integral_{-T}^{0} sqrt(1 + (dy/dx)^2 + (dy/dz)^2) dz dx
-    # Simplified approximation: S ≈ L * B * (1 + (T/B)^2)^(1/2) + 2 * L * T
-    S_approx = L * B * math.sqrt(1.0 + (T / B) ** 2) + 2.0 * L * T
-    
     return {
         "shape": "wigley_hull",
         "length": L,
         "beam": B,
         "draft": T,
         "displacement": volume,
-        "wetted_surface": S_approx,
+        "wetted_surface": wigley_wetted_area_reference(L, B, T),
         "block_coefficient": Cb,
         "displaced_mass": volume * float(density),
         "density": float(density),
@@ -346,16 +340,10 @@ def wigley_radiation_sweep(
     
     for i, om in enumerate(omega):
         nu = om**2 / g  # wavenumber
-        try:
-            rad = solve_radiation_3d(mesh, nu, modes=modes, density=rho, gravity=g)
-            added_mass[i] = rad.added_mass
-            damping[i] = rad.damping
-        except Exception as e:
-            # If solve fails at this frequency, use zeros (will be flagged)
-            print(f"Warning: radiation solve failed at omega={om:.3f}: {e}")
-            added_mass[i] = 0.0
-            damping[i] = 0.0
-    
+        rad = solve_radiation_3d(mesh, nu, modes=modes, density=rho, gravity=g)
+        added_mass[i] = rad.added_mass
+        damping[i] = rad.damping
+
     # Infinite-frequency added mass (extrapolate from highest frequency)
     # For a floating body, A(inf) is the added mass in an infinite fluid
     # Approximate as the value at the highest frequency
@@ -442,26 +430,20 @@ def criterion_round_trip_wigley(
             {"validation_error": str(e)},
         )
     
-    # Compute memory kernel
-    tau = np.arange(0.0, float(tau_max) + 0.5 * dt, dt)
-    kernel = td.radiation_memory_kernel(omega_valid, B_valid, tau)
-    
-    # Round-trip: K(t) -> B(omega)
     round_trip = td.fourier_round_trip(
-        omega_valid, A_valid, B_valid, kernel=kernel
+        omega_valid, A_valid, B_valid, sweep.added_mass_inf[dof, dof], dt=dt, tau_max=tau_max
     )
-    
-    # Extract errors
-    damping_errors = np.abs(round_trip.damping_relative_error)
-    added_mass_errors = np.abs(round_trip.added_mass_relative_error)
-    
-    # Filter out NaN/inf
-    damping_errors = damping_errors[np.isfinite(damping_errors)]
-    added_mass_errors = added_mass_errors[np.isfinite(added_mass_errors)]
-    
-    max_damping_error = float(np.max(damping_errors)) if len(damping_errors) > 0 else 0.0
-    max_added_mass_error = float(np.max(added_mass_errors)) if len(added_mass_errors) > 0 else 0.0
-    
+
+    def relative_errors(reconstructed, reference):
+        error = np.abs(reconstructed - reference)
+        # Exact zeros agree only if the reconstructed value also vanishes.
+        return np.divide(error, np.abs(reference), where=reference != 0,
+                         out=np.where(error == 0, 0., np.inf))
+
+    damping_errors = relative_errors(round_trip.damping_round_trip, round_trip.damping_exact)
+    added_mass_errors = relative_errors(round_trip.added_mass_round_trip, round_trip.added_mass_exact)
+    max_damping_error = float(np.max(damping_errors))
+    max_added_mass_error = float(np.max(added_mass_errors))
     passed = max_damping_error <= 0.02 and max_added_mass_error <= 0.02
     
     return _verdict(
@@ -474,12 +456,12 @@ def criterion_round_trip_wigley(
             "dof_label": DOF_LABELS[dof],
             "damping_relative_error_max": max_damping_error,
             "added_mass_relative_error_max": max_added_mass_error,
-            "kernel_tau_max": kernel.tau_max,
-            "kernel_dt": kernel.dt,
+            "kernel_tau_max": round_trip.tau_max,
+            "kernel_dt": round_trip.dt,
             "round_trip": {
-                "damping_errors": round_trip.damping_relative_error.tolist(),
-                "added_mass_errors": round_trip.added_mass_relative_error.tolist(),
-                "omega": round_trip.omega.tolist(),
+                "damping_errors": damping_errors.tolist(),
+                "added_mass_errors": added_mass_errors.tolist(),
+                "omega": round_trip.omega_query.tolist(),
             },
         },
     )
@@ -542,30 +524,21 @@ def criterion_causality_wigley(
     kernel = td.radiation_memory_kernel(sweep.omega, B_omega, tau)
     
     # Kernel diagnostics (parity, decay, slope)
-    diag = td.kernel_diagnostics(kernel)
+    diag = td.kernel_diagnostics(kernel, sweep.omega, B_omega)
+    causal = bool(np.all(kernel(-tau[1:]) == 0.0))
     
     # Kramers-Kronig check
     A_inf_fit = fit_added_mass_asymptote(sweep.omega, A_omega)
-    kkr = kkr_added_mass(
-        sweep.omega, B_omega, A_omega, added_mass_inf=A_inf_fit.added_mass_inf
-    )
-    
-    # Residual
     closure = kk_added_mass_closure(sweep.omega, A_omega, B_omega)
-    residual = np.abs(kkr.residual)
-    residual = residual[np.isfinite(residual)]
-    max_residual = float(np.max(residual)) if len(residual) > 0 else 0.0
-    
-    # Normalize by added mass scale
-    A_scale = float(np.max(np.abs(A_omega)))
-    if A_scale > 0:
-        relative_residual = max_residual / A_scale
-    else:
-        relative_residual = 0.0
-    
+    anchored = kk_added_mass_closure(sweep.omega, A_omega, B_omega,
+                                     added_mass_inf=A_inf_fit.added_mass_inf)
+    max_residual = float(np.max(np.abs(anchored.residual)))
+    scale = float(np.max(np.abs(A_omega)))
+    relative_residual = max_residual / scale if scale else math.inf
+
     passed = (
-        diag["causal"]
-        and diag["even_parity_relative_error"] <= 1e-9
+        causal
+        and diag["even_residual"] <= 1e-9
         and relative_residual <= 0.03
     )
     
@@ -577,8 +550,8 @@ def criterion_causality_wigley(
         {
             "dof": dof,
             "dof_label": DOF_LABELS[dof],
-            "causal": diag["causal"],
-            "even_parity_relative_error": diag["even_parity_relative_error"],
+            "causal": causal,
+            "even_parity_relative_error": diag["even_residual"],
             "kkr_relative_residual": relative_residual,
             "kkr_absolute_residual_max": max_residual,
             "kk_closure_relative_residual": closure.max_relative_residual,
@@ -587,7 +560,7 @@ def criterion_causality_wigley(
             "kernel_diagnostics": {
                 "K0": float(kernel.values[0]),
                 "slope_at_zero": float(diag.get("relative_slope_at_zero", 0.0)),
-                "decay_ratio": float(diag.get("tail_to_peak_ratio", 0.0)),
+                "decay_ratio": float(diag["tail_relative"]),
             },
         },
     )
@@ -682,32 +655,29 @@ def criterion_free_decay_wigley(
     decay = td.cummins_free_decay(
         kernel,
         mass=mass,
-        stiffness=stiffness,
+        restoring=stiffness,
+        added_mass_inf=sweep.added_mass_inf[dof, dof],
         dt=dt,
         duration=duration,
         initial_displacement=1.0,
-        initial_velocity=0.0,
     )
     
-    # Frequency-domain damping estimate
-    # Natural frequency
-    A_inf = sweep.added_mass_inf[dof, dof]
-    omega_n = math.sqrt(stiffness / (mass + A_inf))
-    
-    # Damping ratio from energy identity
-    # Find B at omega_n by interpolation
-    B_at_omega_n = np.interp(omega_n, sweep.omega, B_omega)
-    A_at_omega_n = np.interp(omega_n, sweep.omega, A_omega)
-    zeta_fd = B_at_omega_n / (2.0 * omega_n * (mass + A_at_omega_n))
-    
-    # Damping ratio from free decay
-    zeta_decay = decay.logarithmic_decrement / (2.0 * math.pi)
-    
+    try:
+        resonance = td.resonance_properties(sweep.omega, A_omega, B_omega,
+                                            mass=mass, restoring=stiffness)
+    except ValueError as exc:
+        return _verdict("W4", f"free decay ({DOF_LABELS[dof]})", "in-band resonance",
+                        False, {"reference_error": str(exc)})
+    omega_n, zeta_fd = resonance["omega_n"], resonance["zeta"]
+    metrics = td.decay_metrics(decay.time, decay.displacement)
+    rate = metrics["decay_rate"]
+    zeta_decay = rate / math.hypot(rate, metrics["frequency"])
+
     # Relative error
     if zeta_fd > 0:
         relative_error = abs(zeta_decay - zeta_fd) / zeta_fd
     else:
-        relative_error = 0.0
+        relative_error = math.inf
     
     passed = relative_error <= 0.05
     
@@ -725,8 +695,8 @@ def criterion_free_decay_wigley(
             "zeta_frequency_domain": zeta_fd,
             "zeta_free_decay": zeta_decay,
             "relative_error": relative_error,
-            "decay_rate_extrapolated": decay.decay_rate,
-            "period_measured": decay.period,
+            "decay_rate_extrapolated": rate,
+            "period_measured": metrics["period"],
         },
     )
 
@@ -768,7 +738,7 @@ def criterion_negative_control_wigley(
             "W5",
             f"negative control ({DOF_LABELS[dof]})",
             "heave only",
-            True,
+            False,
             {"note": f"Negative control skipped for {DOF_LABELS[dof]}"},
         )
     
@@ -780,29 +750,36 @@ def criterion_negative_control_wigley(
     decay_zero = td.cummins_free_decay(
         kernel_zero,
         mass=mass,
-        stiffness=stiffness,
+        restoring=stiffness,
+        added_mass_inf=sweep.added_mass_inf[dof, dof],
         dt=dt,
         duration=duration,
         initial_displacement=1.0,
-        initial_velocity=0.0,
     )
     
     # Damping ratio should be zero
-    zeta_zero = decay_zero.logarithmic_decrement / (2.0 * math.pi)
+    metrics = td.decay_metrics(decay_zero.time, decay_zero.displacement)
+    rate = metrics["decay_rate"]
+    zeta_zero = rate / math.hypot(rate, metrics["frequency"])
     
+    period_exact = 2.0 * math.pi * math.sqrt((mass + sweep.added_mass_inf[dof, dof]) / stiffness)
+
     # Reference damping ratio (from W4)
-    A_inf = sweep.added_mass_inf[dof, dof]
-    omega_n = math.sqrt(stiffness / (mass + A_inf))
-    B_omega = sweep.damping[:, dof, dof]
-    B_at_omega_n = np.interp(omega_n, sweep.omega, B_omega)
-    A_at_omega_n = np.interp(omega_n, sweep.omega, A_omega)
-    zeta_reference = B_at_omega_n / (2.0 * omega_n * (mass + A_at_omega_n))
-    
+    try:
+        resonance = td.resonance_properties(sweep.omega, A_omega, sweep.damping[:, dof, dof],
+                                            mass=mass, restoring=stiffness)
+    except ValueError as exc:
+        return _verdict("W5", f"negative control ({DOF_LABELS[dof]})", "in-band damping reference",
+                        False, {"reference_error": str(exc), "period_exact": period_exact,
+                                "period_measured": metrics["period"], "zeta_zero_damping": zeta_zero,
+                                "kernel_norm_zero": float(np.max(np.abs(kernel_zero.values)))})
+    zeta_reference = resonance["zeta"]
+
     # Relative error
     if zeta_reference > 0:
         relative_error = abs(zeta_zero) / zeta_reference
     else:
-        relative_error = 0.0
+        relative_error = math.inf
     
     passed = relative_error <= 0.005
     
@@ -815,6 +792,8 @@ def criterion_negative_control_wigley(
             "dof": dof,
             "dof_label": DOF_LABELS[dof],
             "zeta_zero_damping": zeta_zero,
+            "period_measured": metrics["period"],
+            "period_exact": period_exact,
             "zeta_reference": zeta_reference,
             "relative_error": relative_error,
             "kernel_norm_zero": float(np.max(np.abs(kernel_zero.values))),
