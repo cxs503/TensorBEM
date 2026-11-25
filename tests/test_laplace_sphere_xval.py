@@ -23,7 +23,7 @@ import pytest
 from tensorbem.benchmarks import laplace_sphere_xval as xval
 from tensorbem.cathodic_protection import evaluate_exterior_potential
 from tensorbem.geometry3d import icosphere
-from tensorbem.solver3d import solve_laplace_surface
+from tensorbem.solver3d import assemble_surface_matrices, solve_laplace_surface
 
 HAVE_CAPYTAINE = xval._capytaine_module() is not None
 HAVE_SKFEM = xval._skfem_modules() is not None
@@ -37,15 +37,18 @@ def bem_levels():
 def test_exact_series_reproduces_boundary_data():
     mesh = icosphere(2, 1.0)
     mu = xval.panel_mu(mesh)
-    pts = mesh.centroids
+    pts = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
     phi = xval.exact_potential(pts)
     assert np.allclose(phi, -1.0 * (1.0 + mu), rtol=0.0, atol=1e-12)
     # the exact density is the one the BEM solves for: q = -dphi/dn_body
-    radial = -(-1.0) / 1.0 - 2.0 * (-1.0) * mu / 1.0
-    assert np.allclose(xval.exact_density(mu), radial, rtol=0.0, atol=1e-12)
+    assert np.allclose(xval.exact_density(mu), -(1 + 2 * pts[:, 2]), rtol=0.0, atol=1e-12)
+    delta = 1e-5
+    radial = -(xval.exact_potential((1 + delta) * pts)
+               - xval.exact_potential((1 - delta) * pts)) / (2 * delta)
+    assert np.allclose(xval.exact_density(mu), radial, rtol=0.0, atol=1e-9)
 
 
-def test_exterior_potential_dipole_sign():
+def test_exterior_potential_dipole_sign(record_property):
     """The double-layer term of the representation formula must be ADDED.
 
     Pure ``l = 1`` mode: ``phi = mu`` on the sphere, exact exterior solution
@@ -62,8 +65,9 @@ def test_exterior_potential_dipole_sign():
     density = 2.0 * mu
     probes = xval.probe_points()
     phi = xval.representation_potential(mesh, density, values, probes)
-    ref = xval.exact_potential(probes, phi_a=1.0) - 1.0  # strip the monopole term
+    ref = probes[:, 2] / np.linalg.norm(probes, axis=1)**3
     err = np.max(np.abs(phi - ref)) / np.max(np.abs(ref))
+    record_property("dipole_relative_error", float(err))
     assert err < 0.05, f"dipole representation error {err:.3%}"
 
     # the production post-processor must agree with the module-level formula
@@ -79,13 +83,16 @@ def test_current_anchor_within_ledger_band(bem_levels):
     assert finest["dimensionless_current"] == pytest.approx(1.0, abs=0.005)
 
 
-def test_density_and_potential_converge(bem_levels):
+def test_density_and_potential_converge(bem_levels, record_property):
     levels = bem_levels["levels"]
     for key in ("density_linf_rel_error", "probe_potential_l2_rel_error"):
         errors = [lvl[key] for lvl in levels]
+        for level, error in zip(levels, errors):
+            record_property(f"{key}_{level['panels']}_panels", error)
         assert errors[-1] < errors[0]
         assert errors[-1] < 0.01
     orders = xval._observed_order(levels, "probe_potential_l2_rel_error")
+    record_property("final_probe_order_in_h", orders[-1])
     assert orders[-1] > 1.2  # second-order collocation on plane triangles
 
 
@@ -99,10 +106,14 @@ def test_capytaine_assembly_agreement():
     """Element-wise: TensorBEM assembly == capytaine Rankine influence matrices."""
     mesh = icosphere(2, 1.0)
     single, double, info = xval.capytaine_matrices(mesh)
-    a_ref, d_ref = xval.solver3d.assemble_surface_matrices(mesh)
+    a_ref, d_ref = assemble_surface_matrices(mesh)
+    # Capytaine includes the boundary jump in the double-layer diagonal.
+    assert np.allclose(np.diag(double), 0.5, rtol=0.0, atol=1e-12)
+    principal_value = -double.copy()
+    np.fill_diagonal(principal_value, 0.0)
     assert single.shape == a_ref.shape
     assert np.linalg.norm(-single - a_ref) / np.linalg.norm(a_ref) < 1e-2
-    assert np.linalg.norm(-double - d_ref) / np.linalg.norm(d_ref) < 1e-2
+    assert np.linalg.norm(principal_value - d_ref) / np.linalg.norm(d_ref) < 1e-2
     assert info["mesh_panels"] == mesh.panel_count
 
 
