@@ -139,3 +139,20 @@ def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic):
     x, y = probes.T
     expected_flux = -k*np.column_stack((2*xx*x+xy*y, xy*x+2*yy*y))
     np.testing.assert_allclose(solution.heat_flux(probes), expected_flux, rtol=0, atol=2e-13)
+
+
+def test_quadratic_midpoint_single_layer_self_integral():
+    from scipy.integrate import quad_vec
+    from scipy.special import kv
+    from tensorbem.harmonic_conduction import _quadratic_operators
+
+    mesh = regular_polygon(8)
+    wave = np.sqrt(1.3j)
+    length = mesh.lengths[0]
+    single, _ = _quadratic_operators(mesh, mesh.centers[:1], wave)
+    # Even kernel and middle Gauss-node basis allow integration of one half.
+    def integrand(s):
+        return length/(2*np.pi)*kv(0, wave*s*length/2)*(1-5*s**2/3)
+
+    exact, _ = quad_vec(integrand, 0., 1., epsabs=1e-14, epsrel=1e-13)
+    np.testing.assert_allclose(single[0, 1], exact, atol=3e-11, rtol=0)

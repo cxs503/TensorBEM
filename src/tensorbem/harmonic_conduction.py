@@ -69,12 +69,12 @@ def _quadratic_operators(mesh, targets, wave, collocation=False):
                 continue
             u, h = xi[mask, None], height[mask, None]
             if close:
-                # Split at the projected target. A cubic change of variable
+                # Split at the projected target. A quartic change of variable
                 # resolves the weak logarithmic singularity on self panels.
                 foot = u.clip(-1, 1)
                 spans = np.concatenate((-1-foot, 1-foot), axis=1)
-                x = (foot[:, :, None]+spans[:, :, None]*t**3).reshape(len(u), -1)
-                w = (abs(spans[:, :, None])*1.5*t**2*weights).reshape(len(u), -1)
+                x = (foot[:, :, None]+spans[:, :, None]*t**4).reshape(len(u), -1)
+                w = (abs(spans[:, :, None])*2*t**3*weights).reshape(len(u), -1)
             else:
                 x, w = nodes[None, :], weights
             r = np.hypot((u-x)*length/2, h)
