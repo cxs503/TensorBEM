@@ -58,10 +58,10 @@ def study_results():
     return study.run_study()
 
 
-def test_recovers_an_exact_three_rate_curve(representable):
+def test_recovers_an_exact_three_rate_curve(representable, record_property):
     """The SK iteration must invert a representable curve, not approximate it."""
     omega, damping, truth = representable
-    fit, report = sk_fit_damping_report(omega, damping, n_poles=3, max_iter=200, tol=1e-12)
+    fit, report = sk_fit_damping_report(omega, damping, n_poles=3, max_iter=200, tol=1e-12, refine_maxfev=0)
 
     assert report.sk_converged
     assert report.sk_iterations <= 200
@@ -75,6 +75,17 @@ def test_recovers_an_exact_three_rate_curve(representable):
     )
     assert fit.constant == pytest.approx(truth["asymptote"], abs=1e-10)
     assert fit.relative_error_max < 1e-12
+    # Independently evaluate the closed form between samples and outside the fit band.
+    holdout = np.geomspace(0.002, 500.0, 701)
+    def response(poles, residues, constant):
+        return constant + sum(c * a / (a*a + holdout**2) for a, c in zip(poles, residues))
+    expected = response(truth["decay_rates"], truth["residues"], truth["asymptote"])
+    fitted = response(fit.poles, fit.residues, fit.constant)
+    error = np.max(np.abs(fitted - expected)) / np.max(np.abs(expected))
+    record_property("holdout_relative_error", float(error))
+    record_property("sample_relative_error", fit.relative_error_max)
+    record_property("decay_rate_relative_error", float(np.max(abs(fit.poles / truth["decay_rates"] - 1))))
+    assert error < 1e-12
     # passivity of the fitted model: a non-negative asymptote
     assert fit.constant >= 0.0
 
@@ -230,6 +241,53 @@ def test_refinement_convergence_is_measured_not_asserted(hulme):
     assert report.refine_probe_gain >= 0.0
     assert report.refine_converged == (report.refine_probe_gain <= 1e-3)
     assert fit.converged == report.refine_converged
+
+
+@pytest.mark.parametrize("amplitude", [1.0, 1e9])
+def test_convergence_probe_scores_returned_poles(hulme, amplitude, record_property):
+    from scipy.optimize import lsq_linear
+
+    omega, damping = hulme
+    damping = damping * amplitude
+    fit, report = sk_fit_damping_report(omega, damping, n_poles=6, max_iter=200, tol=1e-12, refine_maxfev=40)
+    weights = 1 / np.maximum(damping, 1e-3 * np.max(damping))
+
+    def objective(poles):
+        basis = np.column_stack([np.ones_like(omega), poles / (poles**2 + omega[:, None]**2)])
+        lower = np.full(basis.shape[1], -np.inf)
+        lower[0] = 0.0
+        # Express amplitudes in units of peak damping before solving the bounded system.
+        design = basis * (weights * np.max(damping))[:, None]
+        result = lsq_linear(design, weights * damping, bounds=(lower, np.inf), method="bvls")
+        return 2 * result.cost
+
+    base = objective(fit.poles)
+    best = base
+    for index in range(len(fit.poles)):
+        for multiplier in (0.95, 0.98, 1.02, 1.05):
+            trial = fit.poles.copy()
+            trial[index] *= multiplier
+            best = min(best, objective(trial))
+    gain = (base - best) / base
+    record_property("reference_probe_gain", gain)
+    record_property("reported_probe_gain", report.refine_probe_gain)
+    assert report.refine_probe_gain == pytest.approx(gain, abs=1e-7)
+    assert report.refine_converged == (gain <= 1e-3)
+
+
+def test_rational_error_describes_the_actual_single_iteration(hulme, record_property):
+    omega, damping = hulme
+    # First-order SK starts from a unit denominator, so its first update is
+    # exactly the weighted linear solve for a0 + a1*u - B*d1*u = B.
+    u = omega**2 / np.median(omega**2)
+    weights = 1 / np.maximum(damping, 1e-3 * damping.max())
+    design = np.column_stack((np.ones_like(u), u, -damping * u))
+    a0, a1, d1 = np.linalg.lstsq(weights[:, None] * design, weights * damping, rcond=None)[0]
+    relative_error = np.max(abs((a0 + a1*u) / (1 + d1*u) - damping)) / damping.max()
+    _, report = sk_fit_damping_report(omega, damping, n_poles=1, max_iter=1, refine_maxfev=0)
+    record_property("reference_rational_error", float(relative_error))
+    record_property("reported_rational_error", report.rational_rel_error)
+    assert report.rational_rel_error == pytest.approx(relative_error, rel=1e-10)
 
 
 def test_validation_rejects_impossible_inputs():
