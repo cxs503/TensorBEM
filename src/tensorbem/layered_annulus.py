@@ -7,6 +7,17 @@ from .multiloop import MultiLoopMesh, _evaluate_traces, annulus_mesh
 from .solver import assemble_matrices, _MAX_CONDITION
 
 
+def _source_traces(mesh, conductivity, source, circular):
+    """Trace and normal derivative of the particular solution -source*r²/(4*k)."""
+    xy = mesh.centers
+    if circular:
+        radii = np.concatenate([np.full(loop.panel_count,np.linalg.norm(loop.vertices[0]))
+                                for loop in mesh.loops])
+        xy = xy*(radii/np.linalg.norm(xy,axis=1))[:,None]
+    scale = -source/(4*conductivity)
+    return scale*np.sum(xy*xy,axis=1),2*scale*np.sum(xy*mesh.normals,axis=1)
+
+
 @dataclass(frozen=True)
 class AnnulusLayerField:
     """Solved traces for one polygonal material region; targets must be interior."""
@@ -16,20 +27,30 @@ class AnnulusLayerField:
     conductivity: float
     reference_length: float
     circular_geometry: bool = False
+    volumetric_source: float = 0.
+
+    def _polygonal_extension(self, points, gradient):
+        values,derivative = self.boundary_values,self.normal_derivative
+        if self.volumetric_source:
+            p,dn = _source_traces(self.mesh,self.conductivity,self.volumetric_source,False)
+            values,derivative = values-p,derivative-dn
+        field = _evaluate_traces(self.mesh,values,derivative,self.reference_length,points,gradient=gradient)
+        if self.volumetric_source:
+            xy = np.asarray(points)
+            scale = -self.volumetric_source/(4*self.conductivity)
+            field += 2*scale*xy if gradient else scale*np.sum(xy*xy,axis=1)
+        return field
 
     def temperature(self, points):
         if self.circular_geometry:
             return self.circular_field(points)[0]
-        return _evaluate_traces(self.mesh, self.boundary_values, self.normal_derivative,
-                                self.reference_length, points, gradient=False)
+        return self._polygonal_extension(points,False)
 
     def heat_flux(self, points):
         """Cartesian Fourier heat flux in W/m², shape (number of targets, 2)."""
         if self.circular_geometry:
             return self.circular_field(points)[1]
-        return -self.conductivity * _evaluate_traces(
-            self.mesh, self.boundary_values, self.normal_derivative,
-            self.reference_length, points, gradient=True)
+        return -self.conductivity*self._polygonal_extension(points,True)
 
 
     def circular_field(self, points):
@@ -49,13 +70,15 @@ class AnnulusLayerField:
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)
         angle = np.arctan2(xy[:, 1], xy[:, 0])
-        temperature = np.zeros_like(radius)
-        radial = np.zeros_like(radius)  # derivative with respect to log(r)
+        scale = -self.volumetric_source/(4*self.conductivity)
+        temperature = scale*radius**2
+        radial = 2*scale*radius**2  # derivative with respect to log(r)
         angular = np.zeros_like(radius)
         for loop, sl, distance, sign in zip(self.mesh.loops, self.mesh.loop_slices,
                                             (log_r, span-log_r), (1, -1)):
             n = loop.panel_count
-            coeff = np.fft.rfft(self.boundary_values[sl]) / n
+            wall_radius = outer if sign==1 else inner
+            coeff = np.fft.rfft(self.boundary_values[sl]-scale*wall_radius**2) / n
             temperature += coeff[0].real * distance/span
             radial += sign * coeff[0].real/span
             phase = angle - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
@@ -102,7 +125,7 @@ def _circular_normal_map(outer, inner, n):
     return np.block([[own/outer, -other/outer], [-other/inner, own/inner]])
 
 
-def _wall_response(normal_map, interface, wall, ambient, film, inward_flux):
+def _wall_response(normal_map, interface, wall, ambient, film, inward_flux, offset):
     """Eliminate the wall temperature; return its constant and linear parts."""
     n = normal_map.shape[0]//2
     if inward_flux is not None:
@@ -123,14 +146,14 @@ def _wall_response(normal_map, interface, wall, ambient, film, inward_flux):
             raise ValueError("film coefficients must be finite and nonnegative")
         load = h * ambient
     # k*dT/dn + h*Twall = h*Tambient, with the material-outward normal.
-    loads = np.column_stack((load, -normal_map[wall, interface]))
+    loads = np.column_stack((load-offset[wall], -normal_map[wall, interface]))
     response = np.linalg.solve(normal_map[wall, wall] + np.diag(h), loads)
     return response[:, 0], response[:, 1:]
 
 
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *,
                           formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None),
-                          mean_bore_temperature=None, interface_source=0., inner_resistance_fraction=.5):
+                          mean_bore_temperature=None, interface_source=0., inner_resistance_fraction=.5, volumetric_source=0.):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -150,6 +173,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     increasing-radius flux arriving from the inner material, and
     outer_interface_flux leaves into the outer material. heat_rates reports
     increasing-radius rates at the bore, inner contact trace and exterior.
+    volumetric_source is a constant volumetric heating rate (W/m³), scalar
+    or one per material layer; negative values describe heat removal.
     The default polygonal formulation uses straight constant panels. The
     circular formulation collocates the contact law at the same angles and
     uses the Fourier Dirichlet-to-Neumann map of each nominal annulus.
@@ -186,6 +211,14 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     # Each map takes [outer trace, inner trace] to domain-outward derivatives.
     di = ki * normal_map(inner)
     do = ko * normal_map(outer)
+    generation = np.broadcast_to(np.asarray(volumetric_source,dtype=float),(2,))
+    if not np.isfinite(generation).all():
+        raise ValueError("volumetric sources must be finite")
+    def source_offset(mesh,k,q,matrix):
+        p,dn = _source_traces(mesh,k,q,circular)
+        return k*dn-matrix@p
+    oi = source_offset(inner,ki,generation[0],di)
+    oo = source_offset(outer,ko,generation[1],do)
     # Unknowns: outer material's contact trace and outward radial heat flux.
     # Inner trace = outer trace + R*q; Fourier flux reverses sign on the hole.
     first, second = slice(0, n), slice(n, 2*n)
@@ -198,8 +231,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     elif all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
            for q, h in zip(wall_fluxes, film_coefficients)):
         raise ValueError("at least one wall must anchor the temperature")
-    bore_base, bore_response = _wall_response(di, first, second, hot, bore_film, bore_flux)
-    ext_base, ext_response = _wall_response(do, second, first, cold, exterior_film, exterior_flux)
+    bore_base, bore_response = _wall_response(di, first, second, hot, bore_film, bore_flux,oi)
+    ext_base, ext_response = _wall_response(do, second, first, cold, exterior_film, exterior_flux,oo)
     inner_map = di[first, first]
     outer_map = do[second, second]
     if bore_response is not None:
@@ -210,13 +243,14 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     system = np.block([[inner_map, inner_map * r + eye],
                        [outer_map, -eye]])
     rhs = -np.concatenate((di[first, second] @ bore_base, do[second, first] @ ext_base))
-    rhs[:n] -= inner_map @ jump_offset
-    rhs[n:] += source
+    rhs[:n] -= inner_map @ jump_offset + oi[first]
+    rhs[n:] += source-oo[second]
     if mean_bore_temperature is not None:
         # Uniform angular panels have equal arc lengths on each nominal circle.
         inputs = [radius*np.broadcast_to(np.asarray(value, dtype=float), (n,))
                   for radius,value in ((bore,bore_flux),(exterior,exterior_flux))]
         inputs.append(contact*source)
+        inputs.append(.5*np.diff(np.square(radii))*generation*n)
         imbalance = sum(np.sum(q) for q in inputs)
         throughput = sum(np.abs(q).sum() for q in inputs)
         if abs(imbalance) > 1e-12*throughput:
@@ -240,8 +274,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     ext_temp = ext_base if ext_response is None else ext_base + ext_response @ outer_trace
     ti = np.concatenate((inner_trace, bore_temp))
     to = np.concatenate((ext_temp, outer_trace))
-    dni = (di @ ti) / ki
-    dno = (do @ to) / ko
+    dni = (di @ ti + oi) / ki
+    dno = (do @ to + oo) / ko
     rates = (float(ki * dni[n:] @ inner.loops[1].lengths), float(flux @ inner.loops[0].lengths),
              float(-ko * dno[:n] @ outer.loops[0].lengths))
     if circular:
@@ -249,6 +283,6 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         arc_to_chord = (np.pi/n) / np.sin(np.pi/n)
         rates = tuple(float(q * arc_to_chord) for q in rates)
     return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
-                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular),
-                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular),
+                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0]),
+                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1]),
                                 outer_flux,sheet_temperature)

@@ -207,3 +207,36 @@ def test_powered_contact_with_two_flux_walls_preserves_bore_gauge(fraction):
     with pytest.raises(ValueError,match="incompatible"):
         solve_annulus_contact((a,b,c),(2.,4.),(None,None),r,16,formulation="circular",
                     wall_fluxes=(0.,0.),mean_bore_temperature=5.,interface_source=source)
+
+
+def test_bulk_heating_pure_flux_and_sheet_source():
+    a,b,c = .25,.55,1.
+    si,so,ki,ko,sheet = 3.,-.4,1.7,2.2,.6
+    bore_q = .9
+    qi = (a*bore_q+.5*si*(b*b-a*a))/b
+    qo = qi+sheet
+    ext_q = (b*qo+.5*so*(c*c-b*b))/c
+    options = dict(formulation="circular",volumetric_source=(si,so),interface_source=sheet,
+                   mean_bore_temperature=4.)
+    result = solve_annulus_contact((a,b,c),(ki,ko),(None,None),.12,24,wall_fluxes=(bore_q,-ext_q),**options)
+    np.testing.assert_allclose(result.heat_rates,2*np.pi*np.array([a*bore_q,b*qi,c*ext_q]),atol=1e-11)
+    ti = 4.-(si*(b*b-a*a)/4+(a*bore_q-si*a*a/2)*np.log(b/a))/ki
+    np.testing.assert_allclose(result.inner_trace,ti,atol=1e-12)
+    np.testing.assert_allclose(result.outer_trace,ti-.12*(qi+qo)/2,atol=1e-12)
+    with pytest.raises(ValueError,match="incompatible"):
+        solve_annulus_contact((a,b,c),(ki,ko),(None,None),.12,24,wall_fluxes=(bore_q,0.),**options)
+
+
+def test_uniform_generation_matches_robin_walls_and_cartesian_gradient():
+    # T=C-S*r²/(4k) creates exactly uniform heating and no log component.
+    a,b,c = .3,.6,1.
+    k,s = 2.,4.
+    t = lambda r:5-s*r*r/(4*k)
+    films = (2.,3.)
+    air = (t(a)+s*a/(2*films[0]),t(c)-s*c/(2*films[1]))
+    result = solve_annulus_contact((a,b,c),(k,k),air,panels=16,formulation="circular",
+                                   volumetric_source=s,film_coefficients=films)
+    for radius,layer in ((.45,result.inner_field),(.8,result.outer_field)):
+        xy = radius*np.array([[.6,.8],[-.8,.6]])
+        np.testing.assert_allclose(layer.temperature(xy),t(radius),atol=1e-12)
+        np.testing.assert_allclose(layer.heat_flux(xy),s*xy/2,atol=1e-12)

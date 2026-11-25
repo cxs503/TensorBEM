@@ -28,7 +28,7 @@ def radial(n, formulation):
                 condition=result.condition_number)
 
 
-def angular(n,formulation):
+def angular(n,formulation,bulk=(0.,0.)):
     a,b,c = .3,.6,1.
     ki,ko = 2.,.8
     angle = 2*np.pi*(np.arange(n)+.5)/n
@@ -41,6 +41,10 @@ def angular(n,formulation):
         axial = amp*np.cosh(m*z)-(b*q1/(k*m))*np.sinh(m*z)
         value = temp-b*q0*z/k+axial*wave
         flux = (b*q0+(b*q1*np.cosh(m*z)-k*m*amp*np.sinh(m*z))*wave)/radius
+        # A radial Poisson solution with zero value and slope at the contact.
+        generation = bulk[0 if inner else 1]
+        value += generation*(b*b*z/2-(radius*radius-b*b)/4)/k
+        flux += generation*(radius-b*b/radius)/2
         return value,flux
 
     ti,qi = field(b,angle,True)
@@ -50,24 +54,30 @@ def angular(n,formulation):
     tb,_ = field(a,angle,True)
     te,_ = field(c,angle,False)
     result = solve_annulus_contact((a,b,c),(ki,ko),(tb,te),r,n,formulation=formulation,
-                       interface_source=qo-qi,inner_resistance_fraction=fraction)
+                       interface_source=qo-qi,inner_resistance_fraction=fraction,volumetric_source=bulk)
     sheet = ti-fraction*r*qi
     targets = angle+.07
     xy = np.column_stack((np.cos(targets),np.sin(targets)))
-    interior = []
+    interior,grad_errors = [],[]
     for rad,layer,is_inner in ((.42,result.inner_field,True),(.81,result.outer_field,False)):
-        expected,_ = field(rad,targets,is_inner)
+        expected,radial_flux = field(rad,targets,is_inner)
+        grad_errors.append(abs(np.sum(layer.heat_flux(rad*xy)*xy,axis=1)-radial_flux).max())
         interior.append(np.max(abs(layer.temperature(rad*xy)-expected)))
     return dict(sheet_error_K=float(abs(result.sheet_temperature-sheet).max()),
                 inner_flux_error_W_m2=float(abs(result.interface_flux-qi).max()),
                 outer_flux_error_W_m2=float(abs(result.outer_interface_flux-qo).max()),
-                interior_error_K=float(max(interior)),condition=result.condition_number)
+                interior_error_K=float(max(interior)),interior_flux_error_W_m2=float(max(grad_errors)),
+                condition=result.condition_number)
+
+
+def angular_bulk(n,formulation):
+    return angular(n,formulation,bulk=(6.,-2.))
 
 
 if __name__=="__main__":
     rows = []
     for formulation in ("polygonal","circular"):
-        for case in (radial,angular):
+        for case in (radial,angular,angular_bulk):
             previous = None
             for n in (16,32,64,128):
                 row = case(n,formulation)
