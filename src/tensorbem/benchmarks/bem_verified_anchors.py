@@ -1072,6 +1072,9 @@ def _render_document_body(results: dict[str, Any]) -> str:
     all_pass = all(result["verdict"] == "PASS" for result in results.values())
     sigma_at_zero = multi["sigma_at_zero_spacing"]
     identity_rel_max = max(multi["superposition_identity"]["relative"].values())
+    # The last few ulps vary across BLAS builds. Report an upper bound in
+    # the narrative and retain each measured residual in the JSON artifact.
+    identity_bound = 10.0 ** np.ceil(np.log10(identity_rel_max)) if identity_rel_max else 0.0
     figure_paths = {
         case: result.get("figure") for case, result in results.items()
     }
@@ -1114,7 +1117,7 @@ any error is quoted.  The meshed Wigley hull reproduces L = {hydro['levels'][-1]
 B = {hydro['levels'][-1]['beam']:.6f} m, T = {hydro['levels'][-1]['draft']:.6f} m and
 Cb = {hydro['levels'][-1]['block_coefficient']:.6f} (closed form {hydro['closed_form']['block_coefficient']:.6f}); the
 ellipsoid quadrature reproduces ∇ = 2πabc/3 to
-{_percent(wave['geometry']['volume_relative_error'], 6)} with Cb = π/6 = {wave['geometry']['block_coefficient']:.6f}.
+{100 * abs(wave['geometry']['volume_relative_error']):.6f} % relative error with Cb = π/6 = {wave['geometry']['block_coefficient']:.6f}.
 
 *Brief audit.*  {hydro['brief_audit']['note']}
 
@@ -1151,8 +1154,8 @@ H_pair(k) = H(k)(1 + e^{{ikd}}) for two identical hulls separated by d, hence
 slowly decaying envelope as d grows.  The panel route replaces H by the panel
 sum; the superposition itself is verified *without* using the factorisation, by
 concatenating the panels of both hulls (`explicit_pair_kochin`), which must agree
-with H(1 + e^{{ikd}}) to round-off (measured worst relative deviation below
-{identity_rel_max:.2e}).
+with H(1 + e^{{ikd}}) to round-off (measured worst relative deviation at most
+{identity_bound:.0e}).
 
 **Tool chain.** NumPy/SciPy + matplotlib only (`python -m
 tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified/bem_verified_anchors --write-doc
