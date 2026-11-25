@@ -381,27 +381,7 @@ def compute_added_mass_matrix_2d(
     )
 
 
-def evaluate_interior_field(
-    mesh: PanelMesh,
-    result: LaplaceDirichletResult,
-    points: FloatArray,
-    minimum_clearance_factor: float = 0.0,
-) -> FloatArray:
-    """Evaluate the harmonic potential at interior points using exact panel integrals.
-
-    Points must be strictly inside the domain and not on the boundary. The
-    representation integrates each constant-panel kernel analytically rather
-    than sampling the kernel at the panel midpoint.
-
-    Only the interior Green representation is valid, so targets are screened
-    before the representation is evaluated: a target outside the polygon, or
-    closer to the boundary than ``minimum_clearance_factor * h_max`` (``h_max``
-    the longest panel), is refused with ``ValueError``. Outside the domain the
-    Green representation converges to a finite but meaningless number, so an
-    unscreened call returns a plausible-looking wrong value -- the failure the
-    guard exists to convert into an exception. The factor is validated like the
-    3-D field evaluators (finite and non-negative).
-    """
+def _interior_targets(mesh, result, points, minimum_clearance_factor):
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
     if result.domain != "interior":
@@ -446,6 +426,31 @@ def evaluate_interior_field(
             "and it returns a finite but meaningless value there."
         )
 
+    return targets
+
+
+def evaluate_interior_field(
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
+) -> FloatArray:
+    """Evaluate the harmonic potential at interior points using exact panel integrals.
+
+    Points must be strictly inside the domain and not on the boundary. The
+    representation integrates each constant-panel kernel analytically rather
+    than sampling the kernel at the panel midpoint.
+
+    Only the interior Green representation is valid, so targets are screened
+    before the representation is evaluated: a target outside the polygon, or
+    closer to the boundary than ``minimum_clearance_factor * h_max`` (``h_max``
+    the longest panel), is refused with ``ValueError``. Outside the domain the
+    Green representation converges to a finite but meaningless number, so an
+    unscreened call returns a plausible-looking wrong value -- the failure the
+    guard exists to convert into an exception. The factor is validated like the
+    3-D field evaluators (finite and non-negative).
+    """
+    targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
@@ -626,14 +631,37 @@ def evaluate_exterior_field(
         raise ValueError("linear_density must be a boolean")
     targets = _screen_exterior_targets(mesh, points, minimum_clearance_factor)
 
+    potential, gradient = _panel_field_and_gradient(
+        mesh, targets, result.normal_derivative, result.boundary_values,
+        result.reference_length, linear_density)
+    return ExteriorField(potential=potential, gradient=gradient)
+
+
+def evaluate_interior_field_and_gradient(
+    mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
+) -> tuple[FloatArray, FloatArray]:
+    """Return interior potential (M,) and Cartesian gradient (M,2).
+
+    Differentiate the interior Green representation S*q - D*u using the
+    density basis used in the solve. Targets must lie strictly inside the
+    polygon and satisfy the same clearance rule as evaluate_interior_field.
+    """
+    targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
+    return _panel_field_and_gradient(
+        mesh, targets, result.normal_derivative, -result.boundary_values,
+        result.reference_length, result.linear_density)
+
+
+def _panel_field_and_gradient(mesh, targets, flux, values, reference, linear_density):
+    n = mesh.panel_count
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
-    reference = result.reference_length
     if linear_density:
         half = 0.5 * lengths
-        flux_slope = tangential_slope(mesh, result.normal_derivative)
-        value_slope = tangential_slope(mesh, result.boundary_values)
+        flux_slope = tangential_slope(mesh, flux)
+        value_slope = tangential_slope(mesh, values)
     potential = np.zeros(len(targets), dtype=float)
     gradient = np.zeros((len(targets), 2), dtype=float)
     if not linear_density:
@@ -642,13 +670,13 @@ def evaluate_exterior_field(
             start = mesh.vertices[j]
             tangent = tangents[j]
             length = float(lengths[j])
-            flux = result.normal_derivative[j]
-            value = result.boundary_values[j]
+            panel_flux = flux[j]
+            value = values[j]
             potential += (
                 integrate_single_layer_panel_many(
                     targets, start, tangent, length, reference
                 )
-                * flux
+                * panel_flux
                 + integrate_double_layer_panel_many(
                     targets, start, tangent, normals[j], length
                 )
@@ -658,13 +686,13 @@ def evaluate_exterior_field(
                 integrate_single_layer_panel_gradient_many(
                     targets, start, tangent, length, reference
                 )
-                * flux
+                * panel_flux
                 + integrate_double_layer_panel_gradient_many(
                     targets, start, tangent, normals[j], length
                 )
                 * value
             )
-        return ExteriorField(potential=potential, gradient=gradient)
+        return potential, gradient
     for i, target in enumerate(targets):
         for j in range(n):
             start = mesh.vertices[j]
@@ -676,16 +704,16 @@ def evaluate_exterior_field(
             double = integrate_double_layer_panel(
                 target, start, tangent, normals[j], length
             )
-            potential[i] += single * result.normal_derivative[j] + double * result.boundary_values[j]
+            potential[i] += single * flux[j] + double * values[j]
             gradient[i] += (
                 integrate_single_layer_panel_gradient(
                     target, start, tangent, length, reference
                 )
-                * result.normal_derivative[j]
+                * flux[j]
                 + integrate_double_layer_panel_gradient(
                     target, start, tangent, normals[j], length
                 )
-                * result.boundary_values[j]
+                * values[j]
             )
             if linear_density:
                 # First moment of the density about the panel midpoint:
@@ -728,7 +756,7 @@ def evaluate_exterior_field(
                     )
                     * value_slope[j]
                 )
-    return ExteriorField(potential=potential, gradient=gradient)
+    return potential, gradient
 
 
 def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):

@@ -128,3 +128,30 @@ def test_rectangle_harmonic_field_in_scaled_coordinates(size, origin, record_pro
     error = float(np.max(abs(computed - probes[:, 0])))
     record_property("max_absolute_potential_error", error)
     assert error < 6e-6
+
+
+@pytest.mark.parametrize("linear", [False, True])
+def test_interior_field_gradient_cubic_harmonic_on_ellipse(linear, record_property):
+    from tensorbem import evaluate_interior_field_and_gradient
+    from tensorbem.geometry import ellipse_mesh
+
+    points = np.array([[.1,.12], [-.42,.13], [.34,-.22], [-.18,-.28]])
+    z = points[:,0] + 1j*points[:,1]
+    exact = (z**3).real
+    gradient = np.column_stack(((3*z*z).real, -(3*z*z).imag))
+    errors = []
+    for count in (24,48,96):
+        mesh = ellipse_mesh(count)
+        centers = mesh.centers[:,0] + 1j*mesh.centers[:,1]
+        result = solve_laplace_dirichlet(mesh, (centers**3).real, linear_density=linear)
+        values, computed = evaluate_interior_field_and_gradient(mesh, result, points)
+        row = (np.max(np.abs(values-exact)), np.max(np.linalg.norm(computed-gradient, axis=1)))
+        errors.append(row)
+        record_property(f"max_potential_error_{count}", row[0])
+        record_property(f"max_gradient_error_{count}", row[1])
+        if not linear:
+            np.testing.assert_allclose(values, evaluate_interior_field(mesh,result,points), atol=2e-15)
+    for coarse, fine in zip(errors,errors[1:]):
+        assert all(a/b > 3 for a,b in zip(coarse,fine))
+    with pytest.raises(ValueError, match="outside"):
+        evaluate_interior_field_and_gradient(mesh, result, np.array([[5.,5.]]))
