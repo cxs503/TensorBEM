@@ -65,3 +65,15 @@ def test_axisymmetric_ring_films_against_dc_resistance(films):
     film_resistance = sum(1/(h*r) for h, r in zip(films, radii[[0, -1]]) if h is not None)
     resistance = sum(np.diff(np.log(radii))/k) + sum(contacts/radii[1:-1]) + film_resistance
     np.testing.assert_allclose(result.wall_heat_rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-11)
+
+
+@pytest.mark.parametrize("layer", [0, 1, 2])
+def test_localized_axisymmetric_volume_source_heats_correct_annulus(layer):
+    edges = np.array([.4, .55, .9, 1.1])
+    response = assemble_ring_response(edges, (1., 2.5, .8), (.5, .9), 16, include_volume_sources=True)
+    density = np.zeros(3, dtype=complex)
+    density[layer] = 1.+.3j
+    result = response.solve(0., [0., 0.], [.25, .8], volume_generation=density)
+    interface_rates = 2*np.pi*edges[1:-1]*result.incoming_flux
+    rates = np.r_[result.wall_heat_rates[0], interface_rates, result.wall_heat_rates[1]]
+    np.testing.assert_allclose(np.diff(rates), np.pi*np.diff(edges**2)*density, rtol=1e-11, atol=1e-12)

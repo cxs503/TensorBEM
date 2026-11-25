@@ -29,12 +29,15 @@ class RingResponse:
 
     _maps: np.ndarray
     mode_leakage: float
+    _volume_maps: np.ndarray | None = None
 
-    def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.)):
+    def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None):
         """Apply two wall or ambient temperature phasors under exp(i omega t), with capacities in J/(m² K).
 
         sheet_generation gives the two imposed heat generation phasors in W/m²,
         positive for heat added to a sheet in the assembled cosine mode.
+        volume_generation supplies three complex coefficients (W/m³) multiplying
+        (r/exterior_radius)^m cos(mθ), when assembled with include_volume_sources.
         """
         walls = np.asarray(wall_temperatures, dtype=complex)
         capacities = np.asarray(sheet_capacities, dtype=float)
@@ -57,12 +60,19 @@ class RingResponse:
             [storage[0] * left[2, 1], 1 + storage[0] * left[2, 2], 0],
             [storage[1] * right[2, 0], 0, 1 + storage[1] * right[2, 2]],
         ]
-        forcing = [right[0, 1] * walls[1] - left[1, 0] * walls[0],
-                   generation[0] - storage[0] * left[2, 0] * walls[0],
-                   generation[1] - storage[1] * right[2, 1] * walls[1]]
+        base_left = left[:, 0] * walls[0]
+        base_right = right[:, 1] * walls[1]
+        if volume_generation is not None:
+            density = np.asarray(volume_generation, dtype=complex)
+            if self._volume_maps is None or density.shape != (3,) or not np.isfinite(density).all():
+                raise ValueError("volume_generation requires volume source maps and three finite phasors")
+            base_left += self._volume_maps[0] @ density[:2]
+            base_right += self._volume_maps[1] @ density[1:]
+        forcing = [base_right[0] - base_left[1], generation[0] - storage[0]*base_left[2],
+                   generation[1] - storage[1]*base_right[2]]
         join, source1, source2 = np.linalg.solve(matrix, forcing)
-        a = left @ [walls[0], join, source1]
-        b = right @ [join, walls[1], source2]
+        a = base_left + left[:, 1]*join + left[:, 2]*source1
+        b = base_right + right[:, 0]*join + right[:, 2]*source2
         temperatures, incoming, outgoing = np.stack((a[2:], b[2:])).T
         return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]))
 
@@ -70,7 +80,7 @@ class RingResponse:
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
                            mode=0, formulation="circular", join_radius=None,
                            inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
-                           film_coefficients=(None, None)):
+                           film_coefficients=(None, None), include_volume_sources=False):
     """Assemble one cosine mode for a quasi-steady bulk and two resistive contacts.
 
     Supply four increasing radii (bore, two sheets, exterior), one conductivity per
@@ -80,7 +90,8 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     midpoint collocation points. sheet_conductivities gives the two uniform
     circumferential conductivities times thickness (W/K). At each physical wall,
     a positive film coefficient (W/m²/K) uses its supplied temperature as the ambient
-    phasor, while None prescribes the surface temperature. Both circular and polygonal formulations are supported.
+    phasor, while None prescribes the surface temperature. include_volume_sources
+    assembles polynomial volume loads for modes 0, 1 and 2. Both circular and polygonal formulations are supported.
     """
     n = _validate_panel_count(panels)
     if isinstance(mode, (bool, np.bool_)) or not isinstance(mode, (int, np.integer)) or not 0 <= mode < n/2:
@@ -108,16 +119,29 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     domains = ((radii[0], radii[1], join_radius), (join_radius, radii[2], radii[3]))
     pattern = np.cos(mode * 2*np.pi * (np.arange(n) + .5) / n)
     projection = pattern / (pattern @ pattern)
+    if include_volume_sources and mode > 2:
+        raise ValueError("polynomial volume sources support modes 0, 1 and 2")
     maps = []
+    volume_maps = []
     leakage = 0.
     for i, domain in enumerate(domains):
         columns = []
-        for left, right, source in np.eye(3):
+        for unit in np.eye(5 if include_volume_sources else 3):
+            left, right, source = unit[:3]
+            volume = {}
+            if include_volume_sources:
+                amplitudes = unit[3:] / radii[-1]**mode
+                if mode == 0:
+                    volume["volumetric_source"] = amplitudes
+                elif mode == 1:
+                    volume["source_gradient"] = np.outer(amplitudes, (1., 0.))
+                else:
+                    volume["source_quadratic"] = np.outer(amplitudes, (1., 0., -1.))
             result = solve_annulus_contact(
                 domain, conductivities[i:i+2], (left*pattern, right*pattern),
                 contact_resistances[i], n, formulation=formulation, interface_source=source*pattern,
                 inner_resistance_fraction=fractions[i], sheet_conductivity=sheet_k[i],
-                film_coefficients=domain_films[i])
+                film_coefficients=domain_films[i], **volume)
             bore = conductivities[i] * result.inner_field.normal_derivative[n:]
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
@@ -127,5 +151,7 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             if mode == 0:
                 amplitudes[:2] = result.heat_rates[0], result.heat_rates[2]
             columns.append(amplitudes)
-        maps.append(np.column_stack(columns))
-    return RingResponse(np.stack(maps), leakage)
+        maps.append(np.column_stack(columns[:3]))
+        if include_volume_sources:
+            volume_maps.append(np.column_stack(columns[3:]))
+    return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None)
