@@ -65,6 +65,9 @@ def test_axisymmetric_ring_films_against_dc_resistance(films):
     film_resistance = sum(1/(h*r) for h, r in zip(films, radii[[0, -1]]) if h is not None)
     resistance = sum(np.diff(np.log(radii))/k) + sum(contacts/radii[1:-1]) + film_resistance
     np.testing.assert_allclose(result.wall_heat_rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-11)
+    film_drops = np.array([0. if h is None else 1/(r*h) for h, r in zip(films, radii[[0, -1]])])
+    expected_surface = ambient + np.array([-1., 1.])*film_drops*(ambient[0]-ambient[1])/resistance
+    np.testing.assert_allclose(result.wall_surface_temperatures, expected_surface, rtol=1e-11)
 
 
 @pytest.mark.parametrize("layer", [0, 1, 2])

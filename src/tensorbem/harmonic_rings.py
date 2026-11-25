@@ -13,7 +13,8 @@ class RingFields:
 
     wall_heat_rates contains the bore and exterior radial rates (W/m axial length),
     both positive toward increasing radius. Mode zero uses the integrated BEM wall
-    rates. Higher modes report 2πr times the cosine amplitude of radial flux.
+    rates. wall_surface_temperatures contains the two physical Dirichlet or Robin
+    temperature traces (K), ordered bore then exterior. Higher modes report 2πr times the cosine amplitude of radial flux.
     """
 
     sheet_temperature: np.ndarray
@@ -21,6 +22,7 @@ class RingFields:
     outgoing_flux: np.ndarray
     join_power_residual: float
     wall_heat_rates: np.ndarray | None = None
+    wall_surface_temperatures: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -73,8 +75,9 @@ class RingResponse:
         join, source1, source2 = np.linalg.solve(matrix, forcing)
         a = base_left + left[:, 1]*join + left[:, 2]*source1
         b = base_right + right[:, 0]*join + right[:, 2]*source2
-        temperatures, incoming, outgoing = np.stack((a[2:], b[2:])).T
-        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]))
+        temperatures, incoming, outgoing = np.stack((a[2:5], b[2:5])).T
+        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]),
+                          np.array([a[5], b[6]]))
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
@@ -145,7 +148,8 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             bore = conductivities[i] * result.inner_field.normal_derivative[n:]
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
-                               result.sheet_temperature, result.interface_flux, result.outer_interface_flux))
+                               result.sheet_temperature, result.interface_flux, result.outer_interface_flux,
+                               result.inner_field.boundary_values[n:], result.outer_field.boundary_values[:n]))
             amplitudes = traces @ projection
             leakage = max(leakage, float(abs(traces - amplitudes[:, None]*pattern).max()))
             if mode == 0:
