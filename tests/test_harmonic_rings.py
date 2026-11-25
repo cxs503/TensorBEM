@@ -34,3 +34,17 @@ def test_localized_heater_balances_each_sheet(generation, omega):
     np.testing.assert_allclose(
         fields.outgoing_flux - fields.incoming_flux + 1j * omega * capacities * fields.sheet_temperature,
         generation, atol=1e-12)
+
+
+@pytest.mark.parametrize("fractions", [(0., 1.), (1., 0.), (.2, .7)])
+def test_asymmetric_dc_sheet_temperature(fractions):
+    radii = np.array([.4, .5, .8, 1.2])
+    k = [1., 3., 2.]
+    contact = np.array([.2, .5])
+    response = assemble_ring_response(radii, k, contact, 16, inner_resistance_fractions=fractions)
+    result = response.solve(0., [1., 0.], [.4, .8])
+    bulk = np.log(radii[1:]/radii[:-1])/k
+    jumps = contact/radii[1:-1]
+    rate = 1/(sum(bulk) + sum(jumps))
+    expected = 1-rate*(np.cumsum(bulk[:2]) + [0., jumps[0]] + fractions*jumps)
+    np.testing.assert_allclose(result.sheet_temperature, expected, atol=1e-12, rtol=0)

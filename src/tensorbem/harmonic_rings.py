@@ -62,11 +62,13 @@ class RingResponse:
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
-                           mode=0, formulation="circular", join_radius=None):
-    """Assemble one cosine mode for a quasi-steady bulk and two symmetric resistive contacts.
+                           mode=0, formulation="circular", join_radius=None,
+                           inner_resistance_fractions=(.5, .5)):
+    """Assemble one cosine mode for a quasi-steady bulk and two resistive contacts.
 
     Supply four increasing radii (bore, two sheets, exterior), one conductivity per
-    material and one area-specific resistance per sheet. The optional join radius
+    material and one area-specific resistance per sheet. inner_resistance_fractions
+    sets the share of each resistance on the smaller-radius side. The optional join radius
     splits the middle material for subdomain matching. Each circle has 'panels'
     midpoint collocation points. Both circular and polygonal formulations are supported.
     """
@@ -82,6 +84,9 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
         raise ValueError("join radius must lie between the sheets")
     if np.shape(conductivities) != (3,) or np.shape(contact_resistances) != (2,):
         raise ValueError("three conductivities and two contact resistances required")
+    fractions = np.asarray(inner_resistance_fractions, dtype=float)
+    if fractions.shape != (2,) or not np.all((fractions >= 0) & (fractions <= 1)):
+        raise ValueError("two inner resistance fractions in [0, 1] required")
     domains = ((radii[0], radii[1], join_radius), (join_radius, radii[2], radii[3]))
     pattern = np.cos(mode * 2*np.pi * (np.arange(n) + .5) / n)
     projection = pattern / (pattern @ pattern)
@@ -92,7 +97,8 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
         for left, right, source in np.eye(3):
             result = solve_annulus_contact(
                 domain, conductivities[i:i+2], (left*pattern, right*pattern),
-                contact_resistances[i], n, formulation=formulation, interface_source=source*pattern)
+                contact_resistances[i], n, formulation=formulation, interface_source=source*pattern,
+                inner_resistance_fraction=fractions[i])
             bore = conductivities[i] * result.inner_field.normal_derivative[n:]
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
