@@ -130,6 +130,7 @@ class AnnulusContactResult:
     outer_interface_flux: np.ndarray | None = None
     sheet_temperature: np.ndarray | None = None
     sheet_tangential_heat_rate: np.ndarray | None = None
+    sheet_reservoir_flux: np.ndarray | None = None
 
 
 def _circular_normal_map(outer, inner, n):
@@ -176,7 +177,7 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
                           formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None),
                           mean_bore_temperature=None, interface_source=0., inner_resistance_fraction=.5, volumetric_source=0.,
                           source_gradient=(0., 0.), radial_source_coefficient=0., source_quadratic=(0., 0., 0.),
-                          sheet_conductivity=0.):
+                          sheet_conductivity=0., sheet_film=None):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -204,6 +205,10 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     with the panel length as the distance between sheet samples. For a conducting
     sheet, sheet_tangential_heat_rate[j] gives heat per unit axial length
     (W/m) toward increasing angle at the cut after sample j.
+    sheet_film=(h,T_ambient) exchanges heat with an external reservoir. Both
+    entries may be scalar or sampled at sheet panel centres. The returned
+    sheet_reservoir_flux is positive from sheet to reservoir in W/m². A
+    positive h anchors the absolute temperature for prescribed-flux walls.
     volumetric_source is a constant volumetric heating rate (W/m³), scalar
     or one per material layer; negative values describe heat removal.
     source_gradient adds gx*x + gy*y to the heating rate, using one Cartesian
@@ -230,6 +235,12 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     if not np.isfinite(ks).all() or np.any(ks<0):
         raise ValueError("sheet_conductivity must be finite and nonnegative")
     conducting = np.any(ks>0)
+    film,ambient = (0.,0.) if sheet_film is None else sheet_film
+    film,ambient = (np.broadcast_to(np.asarray(v,dtype=float),(n,)) for v in (film,ambient))
+    if not np.isfinite(film).all() or np.any(film<0) or not np.isfinite(ambient).all():
+        raise ValueError("sheet film needs finite nonnegative coefficients and finite ambient temperatures")
+    reservoir_anchored = np.any(film>0)
+    coupled_sheet = conducting or reservoir_anchored
     hot, cold = wall_temperatures
     bore_flux, exterior_flux = wall_fluxes
     r = np.broadcast_to(np.asarray(resistance, dtype=float), (n,))
@@ -278,11 +289,13 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     first, second = slice(0, n), slice(n, 2*n)
     bore_film, exterior_film = film_coefficients
     if mean_bore_temperature is not None:
+        if reservoir_anchored:
+            raise ValueError("a positive sheet film fixes the temperature; omit mean_bore_temperature")
         if not circular or bore_flux is None or exterior_flux is None:
             raise ValueError("mean_bore_temperature requires two prescribed fluxes on circular walls")
         if np.ndim(mean_bore_temperature) != 0 or not np.isfinite(mean_bore_temperature):
             raise ValueError("mean_bore_temperature must be a finite scalar")
-    elif all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
+    elif not reservoir_anchored and all(q is not None or (h is not None and np.all(np.asarray(h) == 0))
            for q, h in zip(wall_fluxes, film_coefficients)):
         raise ValueError("at least one wall must anchor the temperature")
     bore_base, bore_response = _wall_response(di, first, second, hot, bore_film, bore_flux,oi)
@@ -297,27 +310,29 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     rhs = -np.concatenate((di[first, second] @ bore_base, do[second, first] @ ext_base))
     rhs[:n] -= oi[first]
     rhs[n:] -= oo[second]
-    if conducting:
+    if coupled_sheet:
         # Keep both radial fluxes as unknowns so the bulk normal maps
         # never multiply the surface second derivative.
-        if circular:
-            modes = np.arange(n//2+1)
-            # Differentiate the periodic interpolant at the staggered cuts.
-            symbol = 1j*modes*np.exp(1j*modes*np.pi/n)/contact
-            kernel = np.fft.irfft(symbol,n=n)
-            gradient_at_cut = kernel[(np.arange(n)[:,None]-np.arange(n))%n]
-        else:
-            spacing = inner.loops[0].lengths[0]
-            gradient_at_cut = (np.roll(eye,-1,axis=0)-eye)/spacing
-        # The negative adjoint gives the conservative divergence on equally
-        # spaced samples; the conductive operator is negative semidefinite.
-        surface_laplacian = -gradient_at_cut.T@(ks[:,None]*gradient_at_cut)
+        sheet_operator = np.diag(film)
+        if conducting:
+            if circular:
+                modes = np.arange(n//2+1)
+                # Differentiate the periodic interpolant at the staggered cuts.
+                symbol = 1j*modes*np.exp(1j*modes*np.pi/n)/contact
+                kernel = np.fft.irfft(symbol,n=n)
+                gradient_at_cut = kernel[(np.arange(n)[:,None]-np.arange(n))%n]
+            else:
+                spacing = inner.loops[0].lengths[0]
+                gradient_at_cut = (np.roll(eye,-1,axis=0)-eye)/spacing
+            # The negative adjoint gives the conservative divergence on equally
+            # spaced samples; the conductive operator is negative semidefinite.
+            sheet_operator += gradient_at_cut.T@(ks[:,None]*gradient_at_cut)
         ri,ro = fraction*r,(1-fraction)*r
         zero = np.zeros_like(eye)
         system = np.block([[inner_map,inner_map*ri+eye,zero],
                            [outer_map,zero,-outer_map*ro-eye],
-                           [-surface_laplacian,-eye,eye]])
-        rhs = np.r_[rhs,source]
+                           [sheet_operator,-eye,eye]])
+        rhs = np.r_[rhs,source+film*ambient]
     else:
         system = np.block([[inner_map, inner_map * r + eye],
                            [outer_map, -eye]])
@@ -352,11 +367,12 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     else:
         state = np.linalg.lstsq(system, rhs, rcond=None)[0]
     tangential_rate = None
-    if conducting:
+    if coupled_sheet:
         sheet_temperature,flux,outer_flux = np.split(state,3)
         inner_trace = sheet_temperature+ri*flux
         outer_trace = sheet_temperature-ro*outer_flux
-        tangential_rate = -ks*(gradient_at_cut@sheet_temperature)
+        if conducting:
+            tangential_rate = -ks*(gradient_at_cut@sheet_temperature)
     else:
         outer_trace, flux = np.split(state, 2)
         inner_trace = outer_trace + r * flux + jump_offset
@@ -377,4 +393,5 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
                                 AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0],tuple(gradients[0]),radial[0],tuple(quadratic[0])),
                                 AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1],tuple(quadratic[1])),
-                                outer_flux,sheet_temperature,tangential_rate)
+                                outer_flux,sheet_temperature,tangential_rate,
+                                None if sheet_film is None else film*(sheet_temperature-ambient))

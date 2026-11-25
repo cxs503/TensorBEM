@@ -1,4 +1,5 @@
 """Third azimuthal conduction mode with two contact jumps and a conducting sheet."""
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -8,7 +9,7 @@ import numpy as np
 from ..layered_annulus import solve_annulus_contact
 
 
-def measure(panels,formulation="circular",prescribe_flux=False,variable=False):
+def measure(panels,formulation="circular",prescribe_flux=False,variable=False,reservoir=False):
     bore,contact,exterior = .4,.7,1.1
     ki,ko,resistance,fraction,conductance = 1.5,2.3,.4,.3,.18
     order = 3
@@ -36,6 +37,13 @@ def measure(panels,formulation="circular",prescribe_flux=False,variable=False):
     tw,qw,_ = material(bore,ki,hot,incoming,theta)
     te,qe,_ = material(exterior,ko,cold,outgoing,theta)
     options = dict(wall_fluxes=(qw,-qe),mean_bore_temperature=1.2) if prescribe_flux else {}
+    if reservoir:
+        film = 1.1+.35*np.cos(theta)
+        ambient = .8+.9*np.sin(2*theta)
+        absorbed = film*(1.2+sample(sheet,theta)-ambient)
+        source += absorbed
+        options.pop("mean_bore_temperature",None)
+        options["sheet_film"] = film,ambient
     result = solve_annulus_contact((bore,contact,exterior),(ki,ko),(None,None) if prescribe_flux else (tw,te),
               resistance,panels,formulation=formulation,sheet_conductivity=conductivity(cuts),
               interface_source=source,inner_resistance_fraction=fraction,**options)
@@ -44,6 +52,8 @@ def measure(panels,formulation="circular",prescribe_flux=False,variable=False):
                   ("incoming_W_m2",result.interface_flux,sample(incoming,theta)),
                   ("outgoing_W_m2",result.outer_interface_flux,sample(outgoing,theta))):
         errors[name] = np.max(abs(value-target))
+    if reservoir:
+        errors["reservoir_flux_W_m2"] = np.max(abs(result.sheet_reservoir_flux-absorbed))
     expected_rate = conductivity(cuts)*sample(-1j*order*sheet/contact,cuts)
     errors["tangential_heat_rate_W_m"] = np.max(abs(result.sheet_tangential_heat_rate-expected_rate))
     theta = 2*np.pi*(np.arange(37)+.29)/37
@@ -59,13 +69,16 @@ def measure(panels,formulation="circular",prescribe_flux=False,variable=False):
 
 
 if __name__=="__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reservoir",action="store_true",help="include azimuthally varying heat exchange with a reservoir")
+    args = parser.parse_args()
     rows = []
     for formulation,flux,variable in (("circular",False,False),("circular",True,False),("polygonal",False,False),
                                       ("circular",True,True),("polygonal",False,True)):
         previous = None
         grids = (16,32,64,128,256) if formulation=="polygonal" else (16,32,64,128)
         for n in grids:
-            row = measure(n,formulation,flux,variable)
+            row = measure(n,formulation,flux,variable,args.reservoir)
             errors = row["errors"]
             orders = {k:float(np.log2(previous[k]/v)) for k,v in errors.items()} if previous and formulation=="polygonal" else {}
             passes = max(errors.values())<2e-10 if formulation=="circular" else (n<128 or min(orders.values())>1.8)
@@ -74,5 +87,5 @@ if __name__=="__main__":
             rows.append(row)
             previous = errors
     revision = subprocess.check_output(["git","rev-parse","HEAD"],cwd=Path(__file__).parent,text=True).strip()
-    print(json.dumps(dict(commit=revision,runs=rows),indent=2,allow_nan=False))
+    print(json.dumps(dict(commit=revision,reservoir=args.reservoir,runs=rows),indent=2,allow_nan=False))
     raise SystemExit(0 if all(r["passed"] for r in rows) else 1)

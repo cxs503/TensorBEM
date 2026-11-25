@@ -426,3 +426,26 @@ def test_insulating_cut_blocks_tangential_heat():
     result = solve_annulus_contact((.4,.7,1.),(2.,1.),(np.sin(angle),0.),.2,n,sheet_conductivity=ks)
     np.testing.assert_array_equal(result.sheet_tangential_heat_rate[::3],0.)
     assert np.max(abs(result.sheet_tangential_heat_rate))>.01
+
+
+@pytest.mark.parametrize("formulation",["polygonal","circular"])
+@pytest.mark.parametrize("conductance",[0.,.4])
+def test_sheet_reservoir_anchors_insulated_bulk(formulation,conductance):
+    n = 31
+    angle = 2*np.pi*(np.arange(n)+.5)/n
+    film = np.where(np.cos(angle)>0,1.5,0.)
+    ambient = 2.+np.sin(angle)
+    source = film*(3.-ambient)
+    result = solve_annulus_contact((.4,.7,1.1),(1.2,2.3),(None,None),.3,n,formulation=formulation,
+             wall_fluxes=(0.,0.),interface_source=source,sheet_conductivity=conductance,sheet_film=(film,ambient))
+    np.testing.assert_allclose(result.sheet_temperature,3.,atol=2e-12,rtol=0.)
+    np.testing.assert_allclose(result.sheet_reservoir_flux,source,atol=2e-12,rtol=0.)
+    np.testing.assert_allclose(result.heat_rates,0.,atol=2e-12)
+
+
+def test_sheet_reservoir_gauge_and_film_validation():
+    kw = dict(wall_fluxes=(0.,0.),formulation="circular")
+    with pytest.raises(ValueError,match="omit mean"):
+        solve_annulus_contact((.4,.7,1.),(1.,1.),(None,None),sheet_film=(1.,2.),mean_bore_temperature=2.,**kw)
+    with pytest.raises(ValueError,match="sheet film"):
+        solve_annulus_contact((.4,.7,1.),(1.,1.),(None,None),sheet_film=(-1.,2.),**kw)
