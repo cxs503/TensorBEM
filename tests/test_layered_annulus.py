@@ -302,3 +302,32 @@ def test_radial_quadratic_heating_with_flux_walls_and_contact_jump():
                                    temperature(radius,start,initial,flux,coefficient,conductivity), atol=1e-12, rtol=0.)
         np.testing.assert_allclose(field.heat_flux(radius*direction),
                                    direction*radial_flux(radius,start,flux,coefficient), atol=1e-12, rtol=0.)
+
+
+@pytest.mark.parametrize("formulation", ["polygonal", "circular"])
+def test_quadratic_source_resolves_independent_cartesian_quartic(formulation):
+    from tensorbem.multiloop import annulus_mesh
+
+    k = 1.7
+
+    def temperature(xy):
+        return 1 - (xy**4).sum(axis=1)/(12*k)
+
+    previous = None
+    for n in (16, 32, 64):
+        mesh = annulus_mesh(n, n, 1., .3)
+        walls = [loop.centers for loop in reversed(mesh.loops)]
+        if formulation == "circular":
+            walls = [xy/np.cos(np.pi/n) for xy in walls]
+        result = solve_annulus_contact((.3,.6,1.), (k,k), [temperature(xy) for xy in walls],
+                                       panels=n, formulation=formulation, radial_source_coefficient=1.)
+        errors = np.zeros(2)
+        for radius, field in ((.45, result.inner_field), (.8, result.outer_field)):
+            xy = radius*np.array([[.6,.8], [-.8,.6], [1.,0.]])
+            errors = np.maximum(errors, [np.max(abs(field.temperature(xy)-temperature(xy))),
+                                         np.max(abs(field.heat_flux(xy)-xy**3/3))])
+        if formulation == "circular":
+            assert np.max(errors) < 1e-12
+        elif previous is not None:
+            assert np.all(errors < previous/3.5)
+        previous = errors
