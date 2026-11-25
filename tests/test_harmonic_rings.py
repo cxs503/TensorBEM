@@ -134,3 +134,18 @@ def test_double_flux_steady_cosine_mode_without_storage_or_reservoir():
     result = response.solve(0., (None, None), [0., 0.], wall_inward_flux=(-2., 2.))
     np.testing.assert_allclose(result.wall_surface_temperatures, radii[[0,-1]], atol=1e-12)
     np.testing.assert_allclose(result.sheet_temperature, radii[1:-1], atol=1e-12)
+
+
+def test_floating_flux_compatibility_and_temperature_shift():
+    edges = np.array([.4, .55, .9, 1.1])
+    response = assemble_ring_response(edges, [1., 2.5, .8], [.5, .9], 16, flux_wall="both",
+                                      include_volume_sources=True)
+    flux = (1.+.2j, -edges[0]/edges[-1]*(1.+.2j))
+    options = dict(omega=0., wall_temperatures=(None, None), sheet_capacities=(.25, .8), wall_inward_flux=flux)
+    with pytest.raises(ValueError, match="incompatible"):
+        response.solve(**options, bore_temperature_reference=0., volume_generation=(0., 1., 0.))
+    base = response.solve(**options, bore_temperature_reference=0.)
+    shifted = response.solve(**options, bore_temperature_reference=1e9)
+    np.testing.assert_array_equal(shifted.wall_heat_rates, base.wall_heat_rates)
+    np.testing.assert_array_equal(shifted.incoming_flux, base.incoming_flux)
+    np.testing.assert_array_equal(shifted.contact_temperatures, base.contact_temperatures+1e9)

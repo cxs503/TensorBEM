@@ -37,9 +37,11 @@ class RingResponse:
     _volume_maps: np.ndarray | None = None
     _flux_sides: tuple[int, ...] = ()
     _mode: int = 0
+    _circular_radii: tuple[float, ...] | None = None
 
     def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None,
-              sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.), wall_inward_flux=None):
+              sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.), wall_inward_flux=None,
+              bore_temperature_reference=None):
         """Apply two wall or ambient temperature phasors under exp(i omega t), with capacities in J/(m² K).
 
         For a prescribed flux wall, set its temperature entry to None and supply
@@ -47,6 +49,8 @@ class RingResponse:
         With two flux walls, supply wall_inward_flux=(bore, exterior) and
         wall_temperatures=(None, None). Axisymmetric double-flux solutions need
         a sheet with active storage or a positive reservoir film coefficient.
+        For a circular unanchored zero mode, supply bore_temperature_reference (K)
+        and compatible wall, sheet and bulk loads whose integrated sum is zero.
         sheet_generation gives the two imposed heat generation phasors in W/m²,
         positive for heat added to a sheet in the assembled cosine mode.
         Each sheet also receives h*(ambient - sheet temperature) in W/m² from
@@ -88,8 +92,15 @@ class RingResponse:
 
         left, right = self._maps
         admittance = sheet_h + 1j * omega * capacities
-        if len(self._flux_sides) == 2 and self._mode == 0 and not admittance.any():
-            raise ValueError("axisymmetric double-flux walls need active sheet storage or a reservoir film")
+        floating = len(self._flux_sides) == 2 and self._mode == 0 and not admittance.any()
+        if floating:
+            if self._circular_radii is None:
+                raise ValueError("unanchored double-flux temperature references require the circular formulation")
+            if (bore_temperature_reference is None or np.ndim(bore_temperature_reference) != 0
+                    or not np.isfinite(bore_temperature_reference)):
+                raise ValueError("without active sheet storage or a reservoir film, supply a finite bore temperature reference")
+        elif bore_temperature_reference is not None:
+            raise ValueError("a bore temperature reference applies only to an unanchored double-flux mode")
         applied = generation + sheet_h*ambient
         # Unknowns are the common join temperature and the two sheet sources.
         # Current matches at the join. The net sheet source includes applied heat, reservoir exchange and storage.
@@ -108,12 +119,30 @@ class RingResponse:
             base_right += self._volume_maps[1] @ density[1:]
         forcing = [base_right[0] - base_left[1], applied[0] - admittance[0]*base_left[2],
                    applied[1] - admittance[1]*base_right[2]]
-        join, source1, source2 = np.linalg.solve(matrix, forcing)
+        if floating:
+            radii = np.asarray(self._circular_radii)
+            inputs = np.r_[2*np.pi*radii[[0,-1]]*walls, 2*np.pi*radii[1:-1]*generation]
+            if volume_generation is not None:
+                inputs = np.r_[inputs, np.pi*np.diff(radii)*(radii[1:]+radii[:-1])*density]
+            if abs(inputs.sum()) > 1e-12*np.abs(inputs).sum():
+                raise ValueError("incompatible wall fluxes, sheet and volume generation")
+            # Compatibility enforces current continuity. The join is a free
+            # temperature datum, so solve relative to zero and shift all traces.
+            join = 0.
+            source1, source2 = generation
+        else:
+            join, source1, source2 = np.linalg.solve(matrix, forcing)
         a = base_left + left[:, 1]*join + left[:, 2]*source1
         b = base_right + right[:, 0]*join + right[:, 2]*source2
         temperatures, incoming, outgoing = np.stack((a[2:5], b[2:5])).T
-        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]),
-                          np.array([a[5], b[6]]), np.stack((a[7:9], b[7:9])))
+        surfaces = np.array([a[5], b[6]])
+        contacts = np.stack((a[7:9], b[7:9]))
+        if floating:
+            temperatures = (temperatures-a[5]) + bore_temperature_reference
+            surfaces = (surfaces-a[5]) + bore_temperature_reference
+            contacts = (contacts-a[5]) + bore_temperature_reference
+        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])),
+                          np.array([a[0], b[1]]), surfaces, contacts)
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
@@ -205,4 +234,5 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
         maps.append(np.column_stack(columns[:3]))
         if include_volume_sources:
             volume_maps.append(np.column_stack(columns[3:]))
-    return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None, flux_sides, mode)
+    return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None, flux_sides, mode,
+                        tuple(radii) if formulation == "circular" else None)
