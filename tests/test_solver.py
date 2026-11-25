@@ -300,3 +300,47 @@ def test_corner_delimited_density_recovers_rectangle_normal_flux(quadratic, reco
         assert errors[0] > errors[1] > errors[2]
     else:
         assert max(errors) < 2e-12
+
+
+@pytest.mark.parametrize("grading", [1, 2])
+def test_reentrant_corner_flux_against_singular_wedge_mode(grading, record_property):
+    from tensorbem.geometry import PanelMesh
+
+    # The removed quadrant is x>0, y<0. The two rays from the origin are
+    # Dirichlet walls of the 3π/2 wedge. The first harmonic mode has finite
+    # flux integral -R^(2/3) on either ray despite its singular derivative.
+    corners = np.array([[0.,0.], [1.,0.], [1.,1.], [-1.,1.], [-1.,-1.], [0.,-1.]])
+    edges = np.roll(corners, -1, axis=0) - corners
+    errors = []
+    for n in (4, 8, 16, 32):
+        fractions = np.tile(np.arange(n)/n, (6,1))
+        fractions[0] **= grading
+        fractions[-1] = 1-(1-fractions[-1])**grading
+        vertices = corners[:,None,:] + fractions[:,:,None]*edges[:,None,:]
+        mesh = PanelMesh(vertices.reshape(-1,2))
+        x, y = mesh.centers.T
+        radius = np.hypot(x,y)
+        theta = np.mod(np.arctan2(y,x), 2*np.pi)
+        values = radius**(2/3)*np.sin(2*theta/3)
+        result = solve_laplace_dirichlet(mesh, values, reference_length=4.,
+                                         linear_density=True, corner_vertices=n*np.arange(6))
+        q = result.normal_derivative.reshape(6,n)
+        lengths = mesh.lengths.reshape(6,n)
+        cumulative_errors, tip_errors = [], []
+        for side, step in ((0,1),(-1,-1)):
+            widths = lengths[side,::step]
+            densities = q[side,::step]
+            # The midpoint density integrates exactly for a linear panel.
+            integrated = np.cumsum(widths*densities)
+            cumulative_errors.append(np.max(np.abs(integrated+np.cumsum(widths)**(2/3))))
+            tip_exact = -(2/3)*(widths[0]/2)**(-1/3)
+            tip_errors.append(abs(densities[0]/tip_exact-1))
+        errors.append(float(max(cumulative_errors)))
+        balance = abs(np.sum(q*lengths))
+        record_property(f"max_prefix_flux_error_{n}", errors[-1])
+        record_property(f"max_tip_midpoint_relative_error_{n}", max(tip_errors))
+        record_property(f"net_flux_residual_{n}", balance)
+        record_property(f"condition_number_{n}", result.condition_number)
+        assert balance < .025/n
+    assert all(a/b > (1.5 if grading==1 else 2.4) for a,b in zip(errors, errors[1:]))
+    assert errors[-1] < (.002 if grading==1 else .0005)
