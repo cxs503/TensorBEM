@@ -378,3 +378,48 @@ def test_quadratic_source_neumann_compatibility_per_layer():
     np.testing.assert_allclose(np.diff(solve(outer_flux).heat_rates), generated, rtol=0., atol=1e-12)
     with pytest.raises(ValueError, match="incompatible"):
         solve(outer_flux+.01)
+
+
+@pytest.mark.parametrize("prescribe_flux",[False,True])
+@pytest.mark.parametrize("panels",[17,32])
+def test_circumferential_sheet_balance(panels,prescribe_flux,record_property):
+    bore,contact,exterior = .4,.7,1.1
+    ki,ko,resistance,fraction,conductance = 1.5,2.3,.4,.3,.18
+    order = 3
+    theta = 2*np.pi*(np.arange(panels)+.5)/panels
+    sheet, incoming, outgoing = .7+.2j, .4-.5j, -.2+.6j
+    source = outgoing-incoming+conductance*(order/contact)**2*sheet
+
+    def sample(amplitude,angle):
+        return (amplitude*np.exp(1j*order*angle)).real
+
+    def material(radius,k,trace,flux,angle):
+        z = order*np.log(radius/contact)
+        potential = trace*np.cosh(z)-contact/(order*k)*flux*np.sinh(z)
+        power = (contact*flux*np.cosh(z)-order*k*trace*np.sinh(z))/radius
+        return 1.2+sample(potential,angle),sample(power,angle),sample(-1j*order*k*potential/radius,angle)
+
+    hot = sheet+fraction*resistance*incoming
+    cold = sheet-(1-fraction)*resistance*outgoing
+    tw,qw,_ = material(bore,ki,hot,incoming,theta)
+    te,qe,_ = material(exterior,ko,cold,outgoing,theta)
+    options = dict(wall_fluxes=(qw,-qe),mean_bore_temperature=1.2) if prescribe_flux else {}
+    result = solve_annulus_contact((bore,contact,exterior),(ki,ko),(None,None) if prescribe_flux else (tw,te),
+              resistance,panels,formulation="circular",sheet_conductivity=conductance,
+              interface_source=sample(source,theta),inner_resistance_fraction=fraction,**options)
+    errors = {}
+    for name,value,target in (("sheet_K",result.sheet_temperature,1.2+sample(sheet,theta)),
+                  ("incoming_W_m2",result.interface_flux,sample(incoming,theta)),
+                  ("outgoing_W_m2",result.outer_interface_flux,sample(outgoing,theta))):
+        errors[name] = np.max(abs(value-target))
+    direction = np.column_stack((np.cos(theta),np.sin(theta)))
+    tangent = np.column_stack((-np.sin(theta),np.cos(theta)))
+    for field,k,r,trace,flux in ((result.inner_field,ki,.54,hot,incoming),(result.outer_field,ko,.87,cold,outgoing)):
+        u,radial,angular = material(r,k,trace,flux,theta)
+        value,vector = field.circular_field(r*direction)
+        errors[f"field_{r}_K"] = np.max(abs(value-u))
+        errors[f"flux_{r}_W_m2"] = np.max(abs(vector-radial[:,None]*direction-angular[:,None]*tangent))
+    for name,error in errors.items():
+        record_property(name,float(error))
+        assert error<2e-10
+    record_property("condition_number",result.condition_number)

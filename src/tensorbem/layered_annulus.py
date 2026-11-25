@@ -174,7 +174,8 @@ def _wall_response(normal_map, interface, wall, ambient, film, inward_flux, offs
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *,
                           formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None),
                           mean_bore_temperature=None, interface_source=0., inner_resistance_fraction=.5, volumetric_source=0.,
-                          source_gradient=(0., 0.), radial_source_coefficient=0., source_quadratic=(0., 0., 0.)):
+                          source_gradient=(0., 0.), radial_source_coefficient=0., source_quadratic=(0., 0., 0.),
+                          sheet_conductivity=0.):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -194,6 +195,9 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     increasing-radius flux arriving from the inner material, and
     outer_interface_flux leaves into the outer material. heat_rates reports
     increasing-radius rates at the bore, inner contact trace and exterior.
+    sheet_conductivity (W/K) is the circumferential conductivity times
+    thickness of the interface. On nominal circles the local outward flux
+    increase equals interface_source + sheet_conductivity*T_sheet,θθ/contact².
     volumetric_source is a constant volumetric heating rate (W/m³), scalar
     or one per material layer; negative values describe heat removal.
     source_gradient adds gx*x + gy*y to the heating rate, using one Cartesian
@@ -209,6 +213,10 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     if formulation not in ("polygonal", "circular"):
         raise ValueError("formulation must be polygonal or circular")
     circular = formulation == "circular"
+    if np.ndim(sheet_conductivity) or not np.isfinite(sheet_conductivity) or sheet_conductivity<0:
+        raise ValueError("sheet_conductivity must be finite and nonnegative")
+    if sheet_conductivity and not circular:
+        raise ValueError("circumferential sheet conduction requires the circular formulation")
     bore, contact, exterior = radii
     ki, ko = conductivities
     if not np.isfinite([ki, ko]).all() or min(ki, ko) <= 0:
@@ -280,11 +288,24 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     if ext_response is not None:
         outer_map = outer_map + do[second, first] @ ext_response
     eye = np.eye(n)
-    system = np.block([[inner_map, inner_map * r + eye],
-                       [outer_map, -eye]])
     rhs = -np.concatenate((di[first, second] @ bore_base, do[second, first] @ ext_base))
-    rhs[:n] -= inner_map @ jump_offset + oi[first]
+    rhs[:n] -= oi[first]
     rhs[n:] += source-oo[second]
+    if sheet_conductivity:
+        # Unknowns are sheet temperature and incoming radial flux. Eliminate
+        # the outer trace using q_out=q_in+source+surface_laplacian*T_sheet.
+        modes = np.arange(n//2+1)
+        kernel = np.fft.irfft(-sheet_conductivity*(modes/contact)**2,n=n)
+        surface_laplacian = kernel[(np.arange(n)[:,None]-np.arange(n))%n]
+        ri,ro = fraction*r,(1-fraction)*r
+        system = np.block([[inner_map,inner_map*ri+eye],
+                           [outer_map@(eye-ro[:,None]*surface_laplacian)-surface_laplacian,
+                            -outer_map*ro-eye]])
+        rhs[n:] += outer_map@jump_offset
+    else:
+        system = np.block([[inner_map, inner_map * r + eye],
+                           [outer_map, -eye]])
+        rhs[:n] -= inner_map @ jump_offset
     if mean_bore_temperature is not None:
         # Uniform angular panels have equal arc lengths on each nominal circle.
         inputs = [radius*np.broadcast_to(np.asarray(value, dtype=float), (n,))
@@ -299,8 +320,10 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
             raise ValueError("prescribed fluxes have incompatible integrated wall inputs")
         # T_bore = bore_base + bore_response @ (outer_trace + R*flux).
         mean_response = bore_response.mean(axis=0)
-        system = np.vstack((system, np.r_[mean_response, mean_response*r]))
-        rhs = np.r_[rhs, mean_bore_temperature-bore_base.mean()-mean_response@jump_offset]
+        resistance_to_inner = ri if sheet_conductivity else r
+        offset = 0. if sheet_conductivity else mean_response@jump_offset
+        system = np.vstack((system, np.r_[mean_response, mean_response*resistance_to_inner]))
+        rhs = np.r_[rhs, mean_bore_temperature-bore_base.mean()-offset]
     condition = float(np.linalg.cond(system))
     if not np.isfinite(condition) or condition > _MAX_CONDITION:
         raise ValueError(f"ill-conditioned interface system ({condition:.3e})")
@@ -308,10 +331,16 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         state = np.linalg.solve(system, rhs)
     else:
         state = np.linalg.lstsq(system, rhs, rcond=None)[0]
-    outer_trace, flux = np.split(state, 2)
-    inner_trace = outer_trace + r * flux + jump_offset
-    outer_flux = flux+source
-    sheet_temperature = outer_trace+(1-fraction)*r*outer_flux
+    if sheet_conductivity:
+        sheet_temperature,flux = np.split(state,2)
+        outer_flux = flux+source+surface_laplacian@sheet_temperature
+        inner_trace = sheet_temperature+ri*flux
+        outer_trace = sheet_temperature-ro*outer_flux
+    else:
+        outer_trace, flux = np.split(state, 2)
+        inner_trace = outer_trace + r * flux + jump_offset
+        outer_flux = flux+source
+        sheet_temperature = outer_trace+(1-fraction)*r*outer_flux
     bore_temp = bore_base if bore_response is None else bore_base + bore_response @ inner_trace
     ext_temp = ext_base if ext_response is None else ext_base + ext_response @ outer_trace
     ti = np.concatenate((inner_trace, bore_temp))
