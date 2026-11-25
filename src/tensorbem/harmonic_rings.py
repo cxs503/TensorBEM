@@ -15,6 +15,8 @@ class RingFields:
     both positive toward increasing radius. Mode zero uses the integrated BEM wall
     rates. wall_surface_temperatures contains the two physical Dirichlet or Robin
     temperature traces (K), ordered bore then exterior. Higher modes report 2πr times the cosine amplitude of radial flux.
+    contact_temperatures has one row per ring, with the smaller- and larger-radius
+    material temperature traces (K) in its two columns.
     """
 
     sheet_temperature: np.ndarray
@@ -23,6 +25,7 @@ class RingFields:
     join_power_residual: float
     wall_heat_rates: np.ndarray | None = None
     wall_surface_temperatures: np.ndarray | None = None
+    contact_temperatures: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -77,7 +80,7 @@ class RingResponse:
         b = base_right + right[:, 0]*join + right[:, 2]*source2
         temperatures, incoming, outgoing = np.stack((a[2:5], b[2:5])).T
         return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]),
-                          np.array([a[5], b[6]]))
+                          np.array([a[5], b[6]]), np.stack((a[7:9], b[7:9])))
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
@@ -149,7 +152,8 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
                                result.sheet_temperature, result.interface_flux, result.outer_interface_flux,
-                               result.inner_field.boundary_values[n:], result.outer_field.boundary_values[:n]))
+                               result.inner_field.boundary_values[n:], result.outer_field.boundary_values[:n],
+                               result.inner_trace, result.outer_trace))
             amplitudes = traces @ projection
             leakage = max(leakage, float(abs(traces - amplitudes[:, None]*pattern).max()))
             if mode == 0:

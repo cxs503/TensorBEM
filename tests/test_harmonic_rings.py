@@ -52,6 +52,8 @@ def test_asymmetric_dc_sheet_temperature(fractions):
     rate = 1/(sum(bulk) + sum(jumps))
     expected = 1-rate*(np.cumsum(bulk[:2]) + [0., jumps[0]] + fractions*jumps)
     np.testing.assert_allclose(result.sheet_temperature, expected, atol=1e-12, rtol=0)
+    left = 1-rate*(np.cumsum(bulk[:2]) + [0., jumps[0]])
+    np.testing.assert_allclose(result.contact_temperatures, np.column_stack((left, left-rate*jumps)), atol=1e-12)
 
 
 @pytest.mark.parametrize("films", [(7., None), (None, 3.), (7., 3.)])
