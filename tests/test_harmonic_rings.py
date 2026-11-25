@@ -95,3 +95,19 @@ def test_uniform_sheet_temperature_under_balanced_reservoir_loading():
                          sheet_film_coefficients=h, sheet_ambient_temperatures=ambient)
     np.testing.assert_allclose(result.sheet_temperature, t, atol=1e-12)
     np.testing.assert_allclose(result.wall_heat_rates, 0., atol=1e-12)
+
+
+@pytest.mark.parametrize("side", ["bore", "exterior"])
+def test_mixed_flux_reproduces_dc_wall_temperature(side):
+    radii = np.array([.4, .55, .9, 1.1])
+    k = (1., 2.5, .8)
+    contact = np.array([.5, .9])
+    i = ("bore", "exterior").index(side)
+    imposed = .4+.7j
+    rate = (1 if i == 0 else -1)*2*np.pi*radii[[0, -1]][i]*imposed
+    resistance = (sum(np.diff(np.log(radii))/k) + sum(contact/radii[1:-1]))/(2*np.pi)
+    wall = [None, 0.] if i == 0 else [0., None]
+    solution = assemble_ring_response(radii, k, contact, 16, flux_wall=side).solve(
+        0., wall, (.25, .8), wall_inward_flux=imposed)
+    np.testing.assert_allclose(solution.wall_heat_rates, rate, rtol=1e-11)
+    np.testing.assert_allclose(-np.diff(solution.wall_surface_temperatures), rate*resistance, rtol=1e-11)
