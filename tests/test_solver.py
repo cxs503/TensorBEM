@@ -344,3 +344,44 @@ def test_reentrant_corner_flux_against_singular_wedge_mode(grading, record_prope
         assert balance < .025/n
     assert all(a/b > (1.5 if grading==1 else 2.4) for a,b in zip(errors, errors[1:]))
     assert errors[-1] < (.002 if grading==1 else .0005)
+
+
+def test_subtracted_wedge_mode_with_smooth_remainder(record_property):
+    from tensorbem import dirichlet_wedge_mode
+    from tensorbem.geometry import PanelMesh
+
+    # Rotate and translate the L. Form independent Dirichlet data and exact
+    # derivatives by complex powers with the branch cut in the removed quadrant.
+    corners = np.array([0j, 1, 1+1j, -1+1j, -1-1j, -1j])
+    angle, vertex, amplitude = .37, .2-.3j, 1.7
+    rotation = np.exp(1j*angle)
+    cut = np.exp(-.75j*np.pi)
+    exponent = 2/3
+    multiplier = np.exp(.75j*np.pi*exponent)
+    errors = []
+    for n in (4, 8, 16):
+        z = corners[:,None]+(np.roll(corners,-1)-corners)[:,None]*np.arange(n)/n
+        vertices = vertex+rotation*z.ravel()
+        mesh = PanelMesh(np.column_stack((vertices.real,vertices.imag)))
+        z = (mesh.centers @ np.array([1.,1j])-vertex)/rotation
+        potential = amplitude*(multiplier*(cut*z)**exponent).imag + (z*z).real
+        derivative = amplitude*(-1j)*multiplier*exponent*cut*(cut*z)**(exponent-1)+2*z
+        normal = mesh.normals @ np.array([1.,1j])
+        exact = (derivative/rotation*normal).real
+        mode, grad = dirichlet_wedge_mode(mesh.centers, vertex=(vertex.real,vertex.imag),
+                                          start_angle=angle, opening_angle=1.5*np.pi)
+        options = dict(reference_length=4.,linear_density=True,corner_vertices=n*np.arange(6))
+        raw = solve_laplace_dirichlet(mesh,potential,**options).normal_derivative
+        smooth = solve_laplace_dirichlet(mesh,potential-amplitude*mode,**options)
+        recovered = smooth.normal_derivative + amplitude*np.sum(grad*mesh.normals,axis=1)
+        tips = [0,-1]
+        baseline = np.max(np.abs(raw[tips]-exact[tips]))
+        errors.append(np.max(np.abs(recovered[tips]-exact[tips])))
+        record_property(f"raw_tip_flux_error_{n}",baseline)
+        record_property(f"subtracted_tip_flux_error_{n}",errors[-1])
+        assert errors[-1] < baseline
+    assert errors[-1] < errors[0]
+    with pytest.raises(ValueError, match="vertex"):
+        dirichlet_wedge_mode([[0.,0.]], vertex=(0,0), start_angle=0.,opening_angle=1.5*np.pi)
+    with pytest.raises(ValueError, match="outside"):
+        dirichlet_wedge_mode([[1.,-1.]], vertex=(0,0), start_angle=0.,opening_angle=1.5*np.pi)

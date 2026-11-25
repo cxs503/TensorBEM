@@ -1,6 +1,7 @@
 """TensorBEM: transparent boundary-element methods for scientific computing."""
 
 from .analytic import (
+    dirichlet_wedge_mode,
     BESSEL_J0_FIRST_ZERO,
     BESSEL_J1_FIRST_ZERO,
     SOLID_HARMONICS,
@@ -254,6 +255,7 @@ from .ice_mass_loading_dispersion import (
 )
 
 __all__ = [
+    "dirichlet_wedge_mode",
     # Ice-cover mass-loading dispersion (periodic-strip BEM)
     "StripMesh",
     "StripSolve",
