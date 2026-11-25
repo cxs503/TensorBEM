@@ -9,12 +9,18 @@ from .layered_annulus import solve_annulus_contact
 
 @dataclass(frozen=True)
 class RingFields:
-    """Complex cosine amplitudes in order of increasing radius. Flux is positive outward."""
+    """Complex cosine amplitudes in order of increasing radius. Flux is positive outward.
+
+    wall_heat_rates contains the bore and exterior radial rates (W/m axial length),
+    both positive toward increasing radius. Mode zero uses the integrated BEM wall
+    rates. Higher modes report 2πr times the cosine amplitude of radial flux.
+    """
 
     sheet_temperature: np.ndarray
     incoming_flux: np.ndarray
     outgoing_flux: np.ndarray
     join_power_residual: float
+    wall_heat_rates: np.ndarray | None = None
 
 
 @dataclass(frozen=True)
@@ -58,7 +64,7 @@ class RingResponse:
         a = left @ [walls[0], join, source1]
         b = right @ [join, walls[1], source2]
         temperatures, incoming, outgoing = np.stack((a[2:], b[2:])).T
-        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])))
+        return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])), np.array([a[0], b[1]]))
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,

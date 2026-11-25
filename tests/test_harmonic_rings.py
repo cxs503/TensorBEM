@@ -15,6 +15,7 @@ def test_massless_contacts_recover_exact_dc_with_complex_walls():
     expected = (walls[0] - walls[1]) / (resistance * radii[1:3])
     np.testing.assert_allclose(result.incoming_flux, expected, rtol=1e-11)
     np.testing.assert_allclose(result.outgoing_flux, expected, rtol=1e-11)
+    np.testing.assert_allclose(result.wall_heat_rates, 2*np.pi*(walls[0]-walls[1])/resistance, rtol=1e-11)
     dc = response.solve(0., walls, [1., 2.])
     np.testing.assert_allclose(dc.sheet_temperature, result.sheet_temperature)
     assert dc.join_power_residual < 1e-11
@@ -34,6 +35,9 @@ def test_localized_heater_balances_each_sheet(generation, omega):
     np.testing.assert_allclose(
         fields.outgoing_flux - fields.incoming_flux + 1j * omega * capacities * fields.sheet_temperature,
         generation, atol=1e-12)
+    sheet_net_input = np.asarray(generation) - 1j*omega*capacities*fields.sheet_temperature
+    expected_gain = (2*np.pi*np.array([.5, .8])) @ sheet_net_input
+    np.testing.assert_allclose(np.diff(fields.wall_heat_rates), expected_gain, atol=1e-12)
 
 
 @pytest.mark.parametrize("fractions", [(0., 1.), (1., 0.), (.2, .7)])
