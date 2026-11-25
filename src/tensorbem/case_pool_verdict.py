@@ -110,6 +110,32 @@ def _aggregate(value: Any) -> dict[str, float] | None:
     return None
 
 
+# Cylinder near-wall criteria retain the per-mesh evidence alongside the
+# summary. Recompute the scalar compared by each gate from its mesh ladder.
+_NEAR_WALL_LADDERS = {
+    "near_wall_window_is_azimuth_independent": ("worst_error", max),
+    "near_wall_exclusion_is_worse_at_vertices": ("azimuth_penalty", min),
+    "near_wall_linear_density_is_worse_in_the_window": ("ratio_linear_over_constant", min),
+}
+
+
+def _criterion_readings(name: str, value: Any) -> dict[str, float] | None:
+    if not isinstance(value, dict):
+        return _aggregate(value)
+    if name == "near_wall_linear_window_extends_the_finest_window":
+        return _aggregate(value.get("finest_level_usable_clearance_over_h_max"))
+    if name not in _NEAR_WALL_LADDERS:
+        return None
+    key, reduce_levels = _NEAR_WALL_LADDERS[name]
+    levels = value.get("levels")
+    if not isinstance(levels, list) or not levels:
+        return None
+    samples = [row.get(key) if isinstance(row, dict) else None for row in levels]
+    if any(type(x) not in (int, float) or not math.isfinite(x) for x in samples):
+        return None
+    return {"value": reduce_levels(samples)}
+
+
 def audit_criteria(criteria: Sequence[dict[str, Any]]) -> dict[str, Any]:
     """Re-evaluate every criterion's recorded verdict against its own numbers."""
     rows: list[dict[str, Any]] = []
@@ -131,7 +157,7 @@ def audit_criteria(criteria: Sequence[dict[str, Any]]) -> dict[str, Any]:
             continue
         operator, limit = parsed
         value = criterion.get("value")
-        aggregations = _aggregate(value)
+        aggregations = _criterion_readings(name, value)
         if aggregations is None:
             rows.append(
                 {

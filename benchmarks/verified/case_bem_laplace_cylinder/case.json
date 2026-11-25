@@ -41,7 +41,13 @@
       1.0,
       2.0,
       3.0
-    ]
+    ],
+    "oblique_headings_deg": [
+      0.0,
+      1.40625,
+      30.0
+    ],
+    "lattice_heading_deg": 90.0
   },
   "capability_reused": [
     "tensorbem.solver.solve_laplace_exterior_dirichlet",
