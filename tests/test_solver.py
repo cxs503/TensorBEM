@@ -155,3 +155,32 @@ def test_interior_field_gradient_cubic_harmonic_on_ellipse(linear, record_proper
         assert all(a/b > 3 for a,b in zip(coarse,fine))
     with pytest.raises(ValueError, match="outside"):
         evaluate_interior_field_and_gradient(mesh, result, np.array([[5.,5.]]))
+
+
+@pytest.mark.parametrize("linear", [False, True])
+def test_interior_gradient_at_fixed_and_panel_scaled_clearance(linear, record_property):
+    from tensorbem import evaluate_interior_field_and_gradient
+
+    # u=x²-y². Sample eight azimuths, including oblique panels where the
+    # tangential derivative is large, and two locations along each panel.
+    previous = {}
+    for count in (24, 48, 96):
+        mesh = regular_polygon(count, 1.)
+        ids = np.arange(8)*count//8
+        x, y = mesh.centers.T
+        result = solve_laplace_dirichlet(mesh, x*x-y*y, reference_length=2., linear_density=linear)
+        for shift in (0., .4):
+            feet = mesh.centers[ids] + shift*mesh.vectors[ids]
+            for label, depth in (("fixed", .15), ("scaled", .2*mesh.lengths[0])):
+                points = feet-depth*mesh.normals[ids]
+                _, grad = evaluate_interior_field_and_gradient(mesh, result, points)
+                exact = 2*points*np.array([1., -1.])
+                error = float(np.max(np.linalg.norm(grad-exact, axis=1)))
+                record_property(f"gradient_error_{label}_shift_{shift}_{count}", error)
+                key = (label, shift)
+                if count > 24 and label == "fixed":
+                    assert error < previous[key]/3.
+                if count > 24 and label == "scaled" and linear:
+                    assert error < previous[key]/1.45
+                previous[key] = error
+    assert max(previous["scaled", s] for s in (0., .4)) < (.008 if linear else .75)

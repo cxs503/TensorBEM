@@ -646,6 +646,12 @@ def evaluate_interior_field_and_gradient(
     Differentiate the interior Green representation S*q - D*u using the
     density basis used in the solve. Targets must lie strictly inside the
     polygon and satisfy the same clearance rule as evaluate_interior_field.
+
+    For gradients sampled at a distance proportional to panel length, a
+    constant-density trace can retain a large error under refinement. In
+    the unit-circle quadratic-harmonic benchmark at 0.2 panel lengths from
+    the wall, linear density reduced the worst sampled gradient error from
+    0.72 to 0.0074 on 96 panels. These values depend on the target location.
     """
     targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
     return _panel_field_and_gradient(
