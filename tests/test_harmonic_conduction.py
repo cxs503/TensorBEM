@@ -101,3 +101,27 @@ def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadrat
     np.testing.assert_allclose(result.inward_flux, q, atol=2e-13, rtol=0)
     probes = np.array([[.1, -.4], [.2, .5]])
     np.testing.assert_allclose(result.temperature(probes), base+probes @ grad, atol=2e-13, rtol=0)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic):
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    mesh = regular_polygon(16)
+    points = harmonic_boundary_points(mesh, quadratic=quadratic)
+    k, capacity, omega = 1.5, 2., 3.
+    xx, xy, yy = .3+.2j, -.4+.1j, .2-.3j
+
+    def field(points):
+        x, y = points.T
+        return .7j+xx*x**2+xy*x*y+yy*y**2
+
+    solution = solve_harmonic_conduction(mesh, field(points), omega, conductivity=k,
+        volumetric_heat_capacity=capacity, volumetric_source=1j*omega*capacity*.7j-2*k*(xx+yy),
+        source_quadratic=1j*omega*capacity*np.array([xx, xy, yy]), quadratic=quadratic)
+    x, y = points.T
+    normals = np.repeat(mesh.normals, len(points)//mesh.panel_count, axis=0)
+    expected = k*(normals[:, 0]*(2*xx*x+xy*y)+normals[:, 1]*(xy*x+2*yy*y))
+    np.testing.assert_allclose(solution.inward_flux, expected, rtol=0, atol=2e-13)
+    probes = np.array([[0., 0.], [.23, -.46], [.6, .1]])
+    np.testing.assert_allclose(solution.temperature(probes), field(probes), rtol=0, atol=2e-13)
