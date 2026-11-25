@@ -184,3 +184,31 @@ def test_wigley3_inertia_radii_of_gyration_are_ship_like():
     assert 0.15 < k_yy / WIGLEY3_L < 0.35
     assert 0.15 < k_xx / WIGLEY3_B < 0.45
     assert inertia["Izz"] > inertia["Iyy"]
+
+
+
+@pytest.mark.parametrize("alpha", [0.0, WIGLEY3_ALPHA, 2.0])
+def test_wigley3_principal_inertias_against_integrated_polynomials(alpha, record_property):
+    from numpy.polynomial import Polynomial
+
+    # On the half-domain x=L*u/2, z=-T*v, half-breadth is B*f(u)*h(v)/2.
+    u = Polynomial([0, 1])
+    h = 1 - u**2
+    f = h * (1 + alpha * u**2)
+    def integral(poly):
+        return poly.integ()(1.0)
+    L, B, T = WIGLEY3_L, WIGLEY3_B, WIGLEY3_T
+    mass = 1025 * L * B * T * integral(f) * integral(h)
+    var_x = (L / 2)**2 * integral(u**2 * f) / integral(f)
+    var_y = B**2 / 12 * integral(f**3) * integral(h**3) / (integral(f) * integral(h))
+    var_z = T**2 * (integral(u**2 * h) / integral(h) - (integral(u * h) / integral(h))**2)
+    exact = mass * np.array([var_y + var_z, var_x + var_z, var_x + var_y])
+    errors = []
+    for nx, nz in [(101, 51), (201, 101), (401, 201)]:
+        result = wigley3_body_inertia(L, B, T, alpha, 1025, nx, nz)
+        moments = np.array([result[key] for key in ("Ixx", "Iyy", "Izz")])
+        error = np.max(abs(moments / exact - 1))
+        errors.append(error)
+        record_property(f"max_inertia_relative_error_{nx}x{nz}", float(error))
+    assert errors[-1] < 7e-5
+    assert min(np.log2(np.array(errors[:-1]) / errors[1:])) > 1.9
