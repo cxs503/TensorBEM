@@ -5,7 +5,8 @@ import numpy as np
 
 from .geometry import _validate_panel_count
 from .multiloop import MultiLoopMesh, _evaluate_traces, annulus_mesh
-from .solver import assemble_matrices, _MAX_CONDITION
+from .kernels import integrate_single_layer_panel_many, integrate_double_layer_panel_many
+from .solver import _MAX_CONDITION
 
 
 def _particular(xy, conductivity, source, source_gradient, radial_coefficient, quadratic):
@@ -132,6 +133,27 @@ class AnnulusContactResult:
     sheet_temperature: np.ndarray | None = None
     sheet_tangential_heat_rate: np.ndarray | None = None
     sheet_reservoir_flux: np.ndarray | None = None
+
+
+def _polygonal_ring_matrices(mesh,reference):
+    """Constant-panel collocation for two equally divided, concentric regular rings."""
+    n = mesh.loops[0].panel_count
+    # Simultaneously rotating source and target by one panel preserves both
+    # kernels. The first column determines each block, including its diagonal.
+    shifts = (np.arange(n)[:,None]-np.arange(n)) % n
+    single = np.empty((2*n,2*n))
+    double = np.empty_like(single)
+    normals = mesh.normals
+    for source,cols in zip(mesh.loops,mesh.loop_slices):
+        start = source.vertices[0]
+        length = source.lengths[0]
+        tangent = source.vectors[0]/length
+        normal = normals[cols.start]
+        for target,rows in zip(mesh.loops,mesh.loop_slices):
+            centers = target.centers
+            single[rows,cols] = integrate_single_layer_panel_many(centers,start,tangent,length,reference)[shifts]
+            double[rows,cols] = integrate_double_layer_panel_many(centers,start,tangent,normal,length)[shifts]
+    return single,double
 
 
 def _circular_normal_map(outer, inner, n):
@@ -263,7 +285,7 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     def normal_map(mesh):
         if circular:
             return _circular_normal_map(*(np.linalg.norm(loop.vertices[0]) for loop in mesh.loops), n)
-        single, double = assemble_matrices(mesh, reference_length=2 * exterior)
+        single, double = _polygonal_ring_matrices(mesh,2*exterior)
         return np.linalg.solve(single, double + .5 * np.eye(mesh.panel_count))
 
     # Each map takes [outer trace, inner trace] to domain-outward derivatives.

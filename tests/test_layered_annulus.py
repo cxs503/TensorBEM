@@ -467,3 +467,14 @@ def test_equal_area_rings_share_contact_and_integrate_on_actual_panels():
     np.testing.assert_array_equal(inside.vertices,outside.vertices)
     assert result.heat_rates[1] == pytest.approx(inside.lengths@result.interface_flux)
     np.testing.assert_allclose(result.inner_trace-result.outer_trace,.3*result.interface_flux,atol=1e-13)
+
+
+@pytest.mark.parametrize("n",[15,32])
+def test_regular_ring_blocks_match_direct_straight_panel_integrals(n):
+    from tensorbem.layered_annulus import _polygonal_ring_matrices
+    from tensorbem.multiloop import annulus_mesh
+    from tensorbem.solver import assemble_matrices
+
+    mesh = annulus_mesh(n,n,1.17,.63)
+    for result,expected in zip(_polygonal_ring_matrices(mesh,2.7),assemble_matrices(mesh,2.7)):
+        np.testing.assert_allclose(result,expected,rtol=1e-12,atol=2e-15)
