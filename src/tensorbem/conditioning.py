@@ -10,9 +10,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Literal
+import warnings
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.linalg import LinAlgWarning, lu_factor, lu_solve, norm
 
 from .geometry3d import TriangleMesh
 from .solver3d import solve_laplace_surface
@@ -58,63 +60,18 @@ class ConditioningReport:
         }
 
 
-def _power_iteration_largest(matrix: FloatArray, iterations: int = 50) -> float:
-    """Estimate the largest singular value using power iteration on A^T A."""
-    n = matrix.shape[1]
-    # Random initial vector
-    rng = np.random.default_rng(seed=42)
-    v = rng.standard_normal(n)
-    v = v / np.linalg.norm(v)
-
-    ata = matrix.T @ matrix
+def _largest_singular_value(apply, adjoint, size, iterations):
+    """Alternate normalized left and right singular-vector iterations."""
+    v = np.random.default_rng(42).standard_normal(size)
+    v /= norm(v)
     for _ in range(iterations):
-        w = ata @ v
-        sigma = np.linalg.norm(w)
-        if sigma < 1e-14:
-            return 0.0
-        v = w / sigma
-
-    # sigma_max^2 is the Rayleigh quotient
-    return float(np.sqrt(sigma))
-
-
-def _power_iteration_smallest(
-    matrix: FloatArray, iterations: int = 50, tol: float = 1e-10
-) -> float:
-    """Estimate the smallest singular value using inverse power iteration.
-
-    Uses LU decomposition for efficiency. Falls back to direct solve if
-    matrix is singular.
-    """
-    n = matrix.shape[1]
-    rng = np.random.default_rng(seed=42)
-    v = rng.standard_normal(n)
-    v = v / np.linalg.norm(v)
-
-    try:
-        # Use LU decomposition for repeated solves
-        from scipy.linalg import lu_factor, lu_solve
-
-        lu, piv = lu_factor(matrix)
-        for _ in range(iterations):
-            w = lu_solve((lu, piv), v)
-            sigma = np.linalg.norm(w)
-            if not np.isfinite(sigma) or sigma < tol:
-                return 0.0
-            v = w / sigma
-        return float(1.0 / sigma)
-    except Exception:
-        # Fall back to direct solve
-        for _ in range(iterations):
-            try:
-                w = np.linalg.solve(matrix, v)
-            except np.linalg.LinAlgError:
-                return 0.0
-            sigma = np.linalg.norm(w)
-            if not np.isfinite(sigma) or sigma < tol:
-                return 0.0
-            v = w / sigma
-        return float(1.0 / sigma)
+        u = apply(v)
+        sigma = norm(u)
+        if sigma == 0:
+            return 0.
+        v = adjoint(u / sigma)
+        v /= norm(v)
+    return float(sigma)
 
 
 def estimate_condition_number(
@@ -156,13 +113,30 @@ def estimate_condition_number(
         cond = float(np.linalg.cond(matrix))
         return cond, "direct", 0
     else:
-        sigma_max = _power_iteration_largest(matrix, power_iterations)
-        sigma_min = _power_iteration_smallest(matrix, power_iterations)
-        if sigma_min < 1e-14:
-            cond = float("inf")
-        else:
-            cond = sigma_max / sigma_min
-        return cond, "power_iteration", power_iterations
+        if power_iterations < 1:
+            raise ValueError("power_iterations must be positive")
+        matrix = np.asarray(matrix)
+        if matrix.shape != (n, n) or not np.isfinite(matrix).all():
+            raise ValueError("power iteration requires a finite square matrix")
+        scale = np.max(np.abs(matrix))
+        if scale == 0:
+            return float("inf"), "power_iteration", power_iterations
+        matrix = matrix / scale
+        # cond_2(A) = ||A||_2 ||A^-1||_2. Both norms require the adjoint
+        # action, even when every eigenvalue of A happens to be identical.
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", LinAlgWarning)
+                factors = lu_factor(matrix)
+        except LinAlgWarning:
+            return float("inf"), "power_iteration", power_iterations
+        adjoint = matrix.conj().T
+        sigma_max = _largest_singular_value(lambda v: matrix @ v, lambda v: adjoint @ v,
+                                            n, power_iterations)
+        inverse_norm = _largest_singular_value(lambda v: lu_solve(factors, v),
+                                               lambda v: lu_solve(factors, v, trans=2),
+                                               n, power_iterations)
+        return sigma_max * inverse_norm, "power_iteration", power_iterations
 
 
 def condition_number_with_fallback(matrix: FloatArray) -> tuple[float, str]:
@@ -191,18 +165,15 @@ def condition_number_with_fallback(matrix: FloatArray) -> tuple[float, str]:
     condition = float(np.linalg.cond(matrix))
     if np.isfinite(condition):
         return condition, "svd"
-    # ``estimate_condition_number`` works on square matrices only, so a
-    # least-squares system is estimated through its Gram matrix, using
-    # ``cond(A) = sqrt(cond(A^T A))`` in the 2-norm.
-    square = np.asarray(matrix, dtype=float)
-    gram = square.shape[0] != square.shape[1]
-    if gram:
-        square = square.T @ square
+    # Thin QR preserves the singular values without squaring the condition
+    # number. For a wide matrix, factor its adjoint.
+    square = np.asarray(matrix)
+    rectangular = square.shape[0] != square.shape[1]
+    if rectangular:
+        columns = square if square.shape[0] > square.shape[1] else square.conj().T
+        square = np.linalg.qr(columns, mode="r")
     estimate, method, _ = estimate_condition_number(square, method="power_iteration")
-    if gram:
-        method = f"{method}_gram"
-        estimate = float(np.sqrt(estimate)) if np.isfinite(estimate) else float(estimate)
-    return float(estimate), method
+    return float(estimate), f"{method}_qr" if rectangular else method
 
 
 def estimate_operator_conditions(
