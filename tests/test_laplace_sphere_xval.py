@@ -197,3 +197,61 @@ def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_prope
         errors.append((field_error, energy_error, radial_error, tangent_error))
     for coarse, fine in zip(errors, errors[1:]):
         assert all(a/b > 2.5 for a, b in zip(coarse, fine))
+
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_near_surface_quadrupole_at_fixed_and_panel_scaled_clearance(domain, record_property):
+    from tensorbem.solver3d import evaluate_surface_field_near_surface, evaluate_surface_velocity_near_surface
+
+    radius = 1.4
+    sign = -1 if domain == "interior" else 1
+    directions = np.array([[1., 2., 1.], [-2., 3., 1.], [1., -1., 2.]])
+    directions /= np.linalg.norm(directions, axis=1)[:, None]
+    fixed_errors = []
+    panel_field_errors = []
+    for level in (1, 2, 3):
+        mesh = icosphere(level, radius)
+        normal = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
+        field = solve_laplace_surface(mesh, normal[:, 0]*normal[:, 1], domain=domain)
+        panels = np.argmax(directions @ normal.T, axis=1)
+        for label, probes in (
+            ("fixed", (1+sign*.10)*radius*directions),
+            ("panel", mesh.centroids[panels]+sign*.01*mesh.h_max*mesh.normals[panels]),
+        ):
+            # The sphere harmonics extend smoothly to points just off the
+            # faceted surface, including where it lies inside the exact sphere.
+            x, y, _ = probes.T
+            exact = x*y/radius**2
+            gradient = np.column_stack((y, x, np.zeros_like(x)))/radius**2
+            if domain == "exterior":
+                r = np.linalg.norm(probes, axis=1)
+                factor = (radius/r)**5
+                gradient = factor[:, None]*(gradient-5*exact[:, None]*probes/r[:, None]**2)
+                exact *= factor
+            sampled = evaluate_surface_field_near_surface(mesh, field, probes)
+            velocity = evaluate_surface_velocity_near_surface(mesh, field, probes)
+            errors = [np.linalg.norm(sampled-exact)/np.linalg.norm(exact),
+                      np.linalg.norm(velocity-gradient)/np.linalg.norm(gradient)]
+            for name, error in zip(("field", "gradient"), errors):
+                record_property(f"{label}_{name}_relative_error_{mesh.panel_count}", float(error))
+            if label == "fixed":
+                fixed_errors.append(errors)
+            else:
+                panel_field_errors.append(errors[0])
+                # At shrinking clearance the continuum gradient includes panel
+                # discretization error. Check differentiation of the *same*
+                # discrete potential separately using centered differences.
+                delta = mesh.h_max*1e-4
+                offsets = delta*np.eye(3)
+                plus = (probes[:, None, :]+offsets).reshape(-1, 3)
+                minus = (probes[:, None, :]-offsets).reshape(-1, 3)
+                values = evaluate_surface_field_near_surface(mesh, field, np.vstack((plus, minus)))
+                hi, lo = np.split(values, 2)
+                derivative = ((hi-lo)/(2*delta)).reshape(-1, 3)
+                error = np.linalg.norm(velocity-derivative)/np.linalg.norm(derivative)
+                record_property(f"panel_gradient_fd_relative_error_{mesh.panel_count}", float(error))
+                assert error < 1e-5
+    for coarse, fine in zip(fixed_errors, fixed_errors[1:]):
+        assert all(a > b for a, b in zip(coarse, fine))
+    assert all(a/b > 3 for a, b in zip(panel_field_errors, panel_field_errors[1:]))
+    assert max(fixed_errors[-1]) < 0.015
