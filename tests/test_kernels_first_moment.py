@@ -172,3 +172,49 @@ def test_rejects_bad_panel_length() -> None:
             integrate_single_layer_panel_first_moment(
                 target, START, TANGENT, bad
             )
+
+@pytest.mark.parametrize("distance", [3.99, 4.0, 4.01, 1e4, 1e10, 1e16])
+def test_weighted_panel_potential_and_gradients_over_distance(distance, record_property):
+    """Integrate the point kernels and their spatial derivatives independently."""
+    nodes, weights = np.polynomial.legendre.leggauss(40)
+    panel_weights = 0.25 * weights * (1 + nodes)
+    tangent, normal = np.eye(2)
+    start = -0.5 * tangent
+    errors = np.zeros(3)
+    for direction in ([1, 0], [0, 1], [0.8, -0.6]):
+        target = distance * np.array(direction)
+        vectors = target - nodes[:, None] * tangent / 2
+        radii = np.linalg.norm(vectors, axis=1)
+        unit = vectors / radii[:, None]
+        expected_potential = panel_weights @ (-np.log(radii / 2) / (2 * np.pi))
+        expected_grad_single = panel_weights @ (-unit / radii[:, None]) / (2 * np.pi)
+        point_grad_double = (normal - 2 * unit[:, 1, None] * unit) / radii[:, None]**2
+        expected_grad_double = panel_weights @ point_grad_double / (2 * np.pi)
+        args = (target, start, tangent)
+        actual = (integrate_single_layer_panel_first_moment(*args, 1.0),
+                  integrate_single_layer_panel_first_moment_gradient(*args, 1.0),
+                  integrate_double_layer_panel_first_moment_gradient(*args, normal, 1.0))
+        expected = (expected_potential, expected_grad_single, expected_grad_double)
+        for i, (value, reference) in enumerate(zip(actual, expected)):
+            errors[i] = max(errors[i], np.linalg.norm(value - reference) / np.linalg.norm(reference))
+    for name, error in zip(("potential", "single_gradient", "double_gradient"), errors):
+        record_property(name + "_relative_error", float(error))
+        assert error < 5e-14
+
+
+@pytest.mark.parametrize("length", [1e-120, 1.0, 1e120])
+def test_weighted_panel_endpoint_and_normal_gradients_under_scaling(length, record_property):
+    tangent, normal = np.eye(2)
+    start = np.zeros(2)
+    # Integral of -u log(u) from 0 to 1 is 1/4.
+    potential = integrate_single_layer_panel_first_moment(start, start, tangent, length, length)
+    error = abs(potential / length / length * (8 * np.pi) - 1)
+    record_property("endpoint_potential_relative_error", float(error))
+    assert error < 3e-15
+    # At x=(0.5,0.5)L, symmetry reduces the transverse derivatives to
+    # half the constant-density answers. Differentiate atan(L/(2h)).
+    target = length * np.array([0.5, 0.5])
+    gs = integrate_single_layer_panel_first_moment_gradient(target, start, tangent, length)
+    gd = integrate_double_layer_panel_first_moment_gradient(target, start, tangent, normal, length)
+    assert gs[1] / length == pytest.approx(-1 / 8, abs=2e-15)
+    assert gd[1] == pytest.approx(-1 / (2 * np.pi), abs=2e-15)

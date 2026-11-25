@@ -308,6 +308,26 @@ def integrate_double_layer_panel_gradient(
 # ---------------------------------------------------------------------------
 
 
+# With u = 2s/L - 1, these are the exact moments of (1+u)/2 on
+# [-1,1] with measure du/2. In the far field |z| = L/(2r) <= 1/8.
+# Expanding log(1-zu), 1/(1-zu) and 1/(1-zu)^2 through degree 20
+# gives the potential and its first two derivatives without endpoint differences.
+_LINEAR_MOMENTS = tuple(0.5 / (n + 1 + n % 2) for n in range(21))
+_LOG_COEFFICIENTS = (0.0,) + tuple(-a / n for n, a in enumerate(_LINEAR_MOMENTS) if n)
+_INVERSE_SQUARE_COEFFICIENTS = tuple((n + 1) * a for n, a in enumerate(_LINEAR_MOMENTS))
+
+
+def _far_panel_coordinate(centered_x, eta, radius, length):
+    return (0.5 * length / radius) * complex(centered_x / radius, -eta / radius)
+
+
+def _panel_series(z, coefficients):
+    value = coefficients[-1]
+    for coefficient in reversed(coefficients[:-1]):
+        value = coefficient + z * value
+    return value
+
+
 def _log_sqrt_first_moment_primitive(z: float, normal_distance: float) -> float:
     r"""Primitive of ``z*log(rho)`` with ``rho = sqrt(z*z + h*h)``, ``h=|eta|``.
 
@@ -344,13 +364,18 @@ def integrate_single_layer_panel_first_moment(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z0, z1 = -xi, length - xi
-    integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
-    first_moment = xi * integral_log_r + (
-        _log_sqrt_first_moment_primitive(z1, eta)
-        - _log_sqrt_first_moment_primitive(z0, eta)
-    )
-    return -(first_moment - 0.5 * length * length * math.log(reference)) / _TWO_PI
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        mean = 0.5 * _log_length_ratio(radius, reference) + _panel_series(z, _LOG_COEFFICIENTS).real
+    else:
+        u, v = xi / length, eta / length
+        z0, z1 = -u, 1.0 - u
+        integral_log = _log_distance_primitive(z1, v) - _log_distance_primitive(z0, v)
+        mean = (u * integral_log + _log_sqrt_first_moment_primitive(z1, v)
+                - _log_sqrt_first_moment_primitive(z0, v) + 0.5 * _log_length_ratio(length, reference))
+    return length * (length * (-mean / _TWO_PI))
 
 
 def integrate_double_layer_panel_first_moment(
@@ -380,16 +405,9 @@ def integrate_double_layer_panel_first_moment(
     centered_x = xi - 0.5 * length
     radius = math.hypot(centered_x, eta)
     if radius >= 4.0 * length:
-        # With u = 2s/L - 1, s/L = (1+u)/2. The constant part is half
-        # the panel angle. Integrate the remaining u/(1-z*u) in powers
-        # of z = (L/2)/(centered_x + i*eta), where |z| <= 1/8.
-        z = (0.5 * length / radius) * complex(centered_x / radius, -eta / radius)
-        square = z * z
-        odd_moment = 0.0
-        for denominator in range(19, 2, -2):
-            odd_moment = (odd_moment + 1.0 / denominator) * square
-        angle = _far_double_layer_angle(radius, eta, length)
-        return float(length * ((0.5 * angle - odd_moment.imag) / _TWO_PI))
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        weighted_inverse = 2 * z * _panel_series(z, _LINEAR_MOMENTS)
+        return length * (-weighted_inverse.imag / _TWO_PI)
     z0, z1 = -xi, length - xi
     angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
     logarithm = _log_length_ratio(math.hypot(z1, h), math.hypot(z0, h))
@@ -420,8 +438,15 @@ def integrate_single_layer_panel_first_moment_gradient(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        weighted_inverse = 2 * z * _panel_series(z, _LINEAR_MOMENTS)
+        return -length * (t * weighted_inverse.real - n * weighted_inverse.imag) / _TWO_PI
+    xi, eta = xi / length, eta / length
     h = abs(eta)
-    z0, z1 = -xi, length - xi
+    z0, z1 = -xi, 1.0 - xi
     r2_0 = z0 * z0 + h * h
     r2_1 = z1 * z1 + h * h
     if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
@@ -432,10 +457,10 @@ def integrate_single_layer_panel_first_moment_gradient(
     log_rho0 = 0.5 * math.log(r2_0)
     log_rho1 = 0.5 * math.log(r2_1)
     integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
-    along = integral_log_r + xi * (log_rho0 - log_rho1) + z0 * log_rho0 - z1 * log_rho1
+    along = integral_log_r - log_rho1
     angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
     across = xi * angle + eta * (log_rho1 - log_rho0)
-    return -(t * along + n * across) / _TWO_PI
+    return -length * (t * along + n * across) / _TWO_PI
 
 
 def integrate_double_layer_panel_first_moment_gradient(
@@ -460,8 +485,15 @@ def integrate_double_layer_panel_first_moment_gradient(
     n = np.asarray(normal, dtype=float)
     t = np.asarray(tangent, dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        second = (2 * z)**2 * _panel_series(z, _INVERSE_SQUARE_COEFFICIENTS)
+        return (t * second.imag + n * second.real) / _TWO_PI
+    xi, eta = xi / length, eta / length
     h = abs(eta)
-    z0, z1 = -xi, length - xi
+    z0, z1 = -xi, 1.0 - xi
     r2_0 = z0 * z0 + h * h
     r2_1 = z1 * z1 + h * h
     if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
