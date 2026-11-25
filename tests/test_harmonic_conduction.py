@@ -38,3 +38,24 @@ def test_boundary_exchange_recovers_dirichlet_solution(condition):
     result = solve_mixed_harmonic_conduction(mesh, kinds, values, 1.7, film_coefficients=h, **props)
     np.testing.assert_allclose(result.wall_temperature, wall, atol=3e-14)
     np.testing.assert_allclose(result.inward_flux, direct.inward_flux, atol=3e-14)
+
+
+def test_quadratic_mixed_panel_samples_recover_oblique_wave():
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    mesh = regular_polygon(24)
+    xy = harmonic_boundary_points(mesh, quadratic=True)
+    direction = np.array([.6, .8])
+    wave = np.sqrt(2j)
+    exact = np.exp(wave*(xy @ direction-1))
+    flux = wave*exact*np.repeat(mesh.normals @ direction, 3)
+    kinds = np.repeat(["temperature", "flux", "film"], 8)
+    h = np.linspace(1., 2., 24)
+    sampled = np.repeat(kinds, 3)
+    data = np.select([sampled=="flux", sampled=="film"], [flux, exact+flux/np.repeat(h, 3)], default=exact)
+    result = solve_mixed_harmonic_conduction(mesh, kinds, data, 2., conductivity=1.,
+                                             volumetric_heat_capacity=1., film_coefficients=h, quadratic=True)
+    assert np.max(abs(result.inward_flux-flux)) < 4e-4
+    assert np.max(abs(result.wall_temperature-exact)) < 1e-5
+    probes = np.vstack(([0., 0.], mesh.centers[0]-.025*mesh.normals[0]))
+    np.testing.assert_allclose(result.temperature(probes), np.exp(wave*(probes @ direction-1)), atol=2e-5)
