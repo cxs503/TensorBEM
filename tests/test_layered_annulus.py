@@ -449,3 +449,21 @@ def test_sheet_reservoir_gauge_and_film_validation():
         solve_annulus_contact((.4,.7,1.),(1.,1.),(None,None),sheet_film=(1.,2.),mean_bore_temperature=2.,**kw)
     with pytest.raises(ValueError,match="sheet film"):
         solve_annulus_contact((.4,.7,1.),(1.,1.),(None,None),sheet_film=(-1.,2.),**kw)
+
+
+def test_equal_area_rings_share_contact_and_integrate_on_actual_panels():
+    radii = (.4,.7,1.1)
+    n = 24
+    result = solve_annulus_contact(radii,(1.5,2.3),(2.,0.),.3,n,
+                                   formulation="polygonal_equal_area")
+    for field,bounds in zip((result.inner_field,result.outer_field),
+                            ((radii[1],radii[0]),(radii[2],radii[1]))):
+        for loop,r in zip(field.mesh.loops,bounds):
+            x,y = loop.vertices.T
+            area = .5*np.sum(x*np.roll(y,-1)-y*np.roll(x,-1))
+            assert area == pytest.approx(np.pi*r*r,rel=1e-14)
+    inside = result.inner_field.mesh.loops[0]
+    outside = result.outer_field.mesh.loops[1]
+    np.testing.assert_array_equal(inside.vertices,outside.vertices)
+    assert result.heat_rates[1] == pytest.approx(inside.lengths@result.interface_flux)
+    np.testing.assert_allclose(result.inner_trace-result.outer_trace,.3*result.interface_flux,atol=1e-13)

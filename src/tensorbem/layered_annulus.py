@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from .geometry import _validate_panel_count
 from .multiloop import MultiLoopMesh, _evaluate_traces, annulus_mesh
 from .solver import assemble_matrices, _MAX_CONDITION
 
@@ -217,20 +218,25 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     supplied in W/m⁵ as a scalar or one coefficient per layer.
     source_quadratic adds A*x² + B*x*y + C*y² in W/m³, with a shared
     (A, B, C) triple in W/m⁵ or one triple per material.
-    The default polygonal formulation uses straight constant panels. The
+    The default polygonal formulation inscribes straight constant panels.
+    polygonal_equal_area scales each regular polygon so its enclosed area
+    equals that of the nominal circle. Boundary data are still ordered by
+    azimuth; integrated rates use the actual chord lengths. The
     circular formulation collocates the contact law at the same angles and
     uses the Fourier Dirichlet-to-Neumann map of each nominal annulus.
     """
-    if formulation not in ("polygonal", "circular"):
-        raise ValueError("formulation must be polygonal or circular")
+    if formulation not in ("polygonal", "polygonal_equal_area", "circular"):
+        raise ValueError("formulation must be polygonal, polygonal_equal_area or circular")
     circular = formulation == "circular"
     bore, contact, exterior = radii
     ki, ko = conductivities
     if not np.isfinite([ki, ko]).all() or min(ki, ko) <= 0:
         raise ValueError("conductivities must be finite and positive")
-    inner = annulus_mesh(panels, panels, contact, bore)
-    outer = annulus_mesh(panels, panels, exterior, contact)
-    n = inner.loops[0].panel_count
+    n = _validate_panel_count(panels)
+    # Area of a regular polygon of circumradius R: n R² sin(2π/n)/2.
+    scale = 1/np.sqrt(np.sinc(2/n)) if formulation == "polygonal_equal_area" else 1.
+    inner = annulus_mesh(n,n,contact*scale,bore*scale)
+    outer = annulus_mesh(n,n,exterior*scale,contact*scale)
     ks = np.broadcast_to(np.asarray(sheet_conductivity,dtype=float),(n,))
     if not np.isfinite(ks).all() or np.any(ks<0):
         raise ValueError("sheet_conductivity must be finite and nonnegative")
