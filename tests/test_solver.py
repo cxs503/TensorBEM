@@ -385,3 +385,40 @@ def test_subtracted_wedge_mode_with_smooth_remainder(record_property):
         dirichlet_wedge_mode([[0.,0.]], vertex=(0,0), start_angle=0.,opening_angle=1.5*np.pi)
     with pytest.raises(ValueError, match="outside"):
         dirichlet_wedge_mode([[1.,-1.]], vertex=(0,0), start_angle=0.,opening_angle=1.5*np.pi)
+
+
+def test_estimated_corner_mode_predicts_held_out_flux(record_property):
+    from tensorbem import dirichlet_wedge_mode, estimate_dirichlet_wedge_amplitude
+    from tensorbem.geometry import PanelMesh
+
+    corners = np.array([0j, 1, 1+1j, -1+1j, -1-1j, -1j])
+    amplitude = -1.35
+    errors = []
+    for n in (4,8,16):
+        z = corners[:,None]+(np.roll(corners,-1)-corners)[:,None]*np.arange(n)/n
+        mesh = PanelMesh(np.column_stack((z.real.ravel(), z.imag.ravel())))
+        x,y = mesh.centers.T
+        theta = np.mod(np.arctan2(y,x), 2*np.pi)
+        values = amplitude*np.hypot(x,y)**(2/3)*np.sin(2*theta/3) + 2*x*y
+        opts = dict(linear_density=True, corner_vertices=n*np.arange(6), reference_length=4.)
+        direct = solve_laplace_dirichlet(mesh,values,**opts)
+        estimates = [estimate_dirichlet_wedge_amplitude(mesh,direct,vertex_index=0,radius=r)
+                     for r in (.35,.65)]
+        errors.append(max(abs(a-amplitude) for a in estimates))
+        for radius, estimate in zip((.35,.65), estimates):
+            record_property(f"amplitude_error_{radius}_{n}", abs(estimate-amplitude))
+        mode, grad = dirichlet_wedge_mode(mesh.centers,vertex=(0.,0.),start_angle=0.,
+                                          opening_angle=1.5*np.pi)
+        fitted = estimates[-1]
+        remainder = solve_laplace_dirichlet(mesh,values-fitted*mode,**opts)
+        restored = remainder.normal_derivative + fitted*np.sum(grad*mesh.normals,axis=1)
+        # On both rays q_singular=-(2/3)r^(-1/3); add n·grad(2xy).
+        tips = [0,-1]
+        exact = (-amplitude*(2/3)*np.hypot(x[tips],y[tips])**(-1/3)
+                 + np.sum(2*np.column_stack((y[tips],x[tips]))*mesh.normals[tips],axis=1))
+        baseline = max(abs(direct.normal_derivative[tips]-exact))
+        corrected = max(abs(restored[tips]-exact))
+        record_property(f"raw_tip_error_{n}", baseline)
+        record_property(f"corrected_tip_error_{n}", corrected)
+        assert corrected < .1*baseline
+    assert errors[-1] < errors[1] < errors[0]

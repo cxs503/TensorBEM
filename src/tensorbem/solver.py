@@ -20,6 +20,7 @@ from numpy.typing import NDArray
 
 from .conditioning import condition_number_with_fallback
 from .geometry import PanelMesh
+from .quadrature import gauss_legendre
 from .kernels import (
     REFERENCE_LENGTH,
     validate_clearance_factor,
@@ -675,6 +676,38 @@ def evaluate_exterior_field(
         mesh, targets, result.normal_derivative, result.boundary_values,
         result.reference_length, linear_density)
     return ExteriorField(potential=potential, gradient=gradient)
+
+
+def estimate_dirichlet_wedge_amplitude(
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, vertex_index: int,
+    radius: float, quadrature_order: int = 24,
+) -> float:
+    """Project an interior solution onto the leading homogeneous Dirichlet mode.
+
+    Both incident straight sides must have zero potential up to the chosen
+    radius, and the circular sector must lie inside the polygon. For a
+    bounded harmonic field the angular sine modes are orthogonal on the arc:
+    twice the angular mean of u*sin(pi*theta/opening), divided by
+    radius**(pi/opening), estimates the leading coefficient.
+    """
+    if (isinstance(vertex_index, (bool, np.bool_)) or not isinstance(vertex_index, (int, np.integer))
+            or not 0 <= vertex_index < mesh.panel_count):
+        raise ValueError("vertex_index must identify a mesh vertex")
+    if not math.isfinite(radius) or radius <= 0:
+        raise ValueError("radius must be finite and positive")
+    edges = mesh.vectors
+    outgoing = edges[vertex_index]
+    incoming = -edges[(int(vertex_index)-1) % mesh.panel_count]
+    start = math.atan2(outgoing[1], outgoing[0])
+    opening = (math.atan2(incoming[1], incoming[0])-start) % (2*math.pi)
+    if opening == 0:
+        raise ValueError("the corner must have a positive opening angle")
+    nodes, weights = gauss_legendre(quadrature_order)
+    fractions = .5*(nodes+1)
+    angles = start + opening*fractions
+    points = mesh.vertices[vertex_index] + radius*np.column_stack((np.cos(angles), np.sin(angles)))
+    potential, _ = evaluate_interior_field_and_gradient(mesh, result, points)
+    return float(weights @ (potential*np.sin(np.pi*fractions)) / radius**(np.pi/opening))
 
 
 def evaluate_interior_field_and_gradient(
