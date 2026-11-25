@@ -156,3 +156,39 @@ def test_evaluator_defaults_to_the_basis_of_the_result() -> None:
     assert linear_result.linear_density is True
     with pytest.raises(ValueError):
         evaluate_exterior_field(mesh, result, points, linear_density="yes")
+
+
+@pytest.mark.parametrize("linear", [False, True])
+@pytest.mark.parametrize("layer", ["single", "double"])
+def test_exterior_far_field_gradient_against_direct_panel_quadrature(linear, layer, record_property):
+    """Isolate each kernel with a prescribed trace on one panel of an octagon."""
+    from dataclasses import replace
+
+    mesh = regular_polygon(8, 1.0)
+    trace = np.zeros(mesh.panel_count)
+    trace[0] = 1
+    zero = np.zeros_like(trace)
+    data = replace(_exact_result(mesh), normal_derivative=trace if layer == "single" else zero,
+                   boundary_values=trace if layer == "double" else zero)
+    distances = np.array([5.0, 1e4, 1e10, 1e16])
+    points = distances[:, None] * np.array([0.8, 0.6])
+    computed = evaluate_exterior_field(mesh, data, points, linear_density=linear).gradient
+    nodes, weights = np.polynomial.legendre.leggauss(40)
+    reference = np.zeros_like(computed)
+    slope = (np.roll(trace, -1) - np.roll(trace, 1)) / (2 * mesh.lengths[0])
+    for i, length in enumerate(mesh.lengths):
+        sources = mesh.centers[i] + 0.5 * nodes[:, None] * mesh.vectors[i]
+        delta = points[:, None, :] - sources
+        radius = np.linalg.norm(delta, axis=2)
+        unit = delta / radius[:, :, None]
+        if layer == "single":
+            kernel = -unit / radius[:, :, None]
+        else:
+            normal = mesh.normals[i]
+            kernel = (normal - 2 * (unit @ normal)[:, :, None] * unit) / radius[:, :, None]**2
+        density = trace[i] + (0.5 * length * nodes * slope[i] if linear else 0.0)
+        reference += np.einsum("pqc,q->pc", kernel, weights * density) * (length / (4 * np.pi))
+    errors = np.linalg.norm(computed - reference, axis=1) / np.linalg.norm(reference, axis=1)
+    for distance, error in zip(distances, errors):
+        record_property(f"gradient_relative_error_at_{distance:g}", float(error))
+    assert max(errors) < 5e-15

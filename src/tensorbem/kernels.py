@@ -219,6 +219,42 @@ def _validate_panel_length(length: float) -> float:
     return value
 
 
+def _scaled_panel_endpoints(xi, eta, length):
+    """Local coordinates at the two endpoints, in units safe for products."""
+    scale = np.maximum(length, np.maximum(np.abs(xi), np.abs(eta)))
+    return xi / scale, (xi - length) / scale, eta / scale, length / scale, scale
+
+
+def _single_gradient_components(xi, eta, length):
+    x0, x1, y, span, _ = _scaled_panel_endpoints(xi, eta, length)
+    r0, r1 = np.hypot(x0, y), np.hypot(x1, y)
+    smaller, larger = np.minimum(r0, r1), np.maximum(r0, r1)
+    if np.any(smaller == 0.0):
+        raise ValueError("single-layer gradient is singular at a panel endpoint")
+    # Rationalise r0-r1 when the two distances are comparable. Otherwise
+    # subtract logarithms to avoid forming an extreme distance ratio.
+    comparable = smaller >= 0.5 * larger
+    difference = span * (x0 + x1) / (r0 + r1)
+    along = np.where(comparable,
+                     np.log1p(np.where(comparable, difference, 0.0) / r1),
+                     np.log(r0) - np.log(r1))
+    across = np.where(y == 0.0, 0.0, np.arctan2(y * span, x0 * x1 + y * y))
+    return along, across
+
+
+def _double_gradient_components(xi, eta, length):
+    x0, x1, y, span, scale = _scaled_panel_endpoints(xi, eta, length)
+    r0, r1 = np.hypot(x0, y), np.hypot(x1, y)
+    if np.any(np.minimum(r0, r1) <= 1.0e-14 * span):
+        raise ValueError("double-layer gradient is singular at a panel endpoint")
+    # Integral of 1/(w-s)^2 is L/[w(w-L)] with w=xi+i*eta.
+    # Keep each endpoint direction normalized before restoring the units.
+    ux0, uy0 = x0 / r0, y / r0
+    ux1, uy1 = x1 / r1, y / r1
+    magnitude = (span / r0 / r1) / scale
+    return -magnitude * (ux0 * uy1 + ux1 * uy0), magnitude * (ux0 * ux1 - uy0 * uy1)
+
+
 def integrate_single_layer_panel_gradient(
     target: FloatArray,
     start: FloatArray,
@@ -243,14 +279,7 @@ def integrate_single_layer_panel_gradient(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z0, z1 = -xi, length - xi
-    along = 0.5 * math.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
-    if eta == 0.0:
-        # Target on the panel's line: the integral of eta/rho^2 vanishes off
-        # the panel and is undefined on it, so the caller must stay clear.
-        across = 0.0
-    else:
-        across = math.atan(z1 / eta) - math.atan(z0 / eta)
+    along, across = _single_gradient_components(xi, eta, length)
     return -(t * along + n * across) / _TWO_PI
 
 
@@ -280,17 +309,8 @@ def integrate_double_layer_panel_gradient(
     n = np.asarray(normal, dtype=float)
     t = np.asarray(tangent, dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z1 = length - xi
-    r0 = xi * xi + eta * eta
-    r1 = z1 * z1 + eta * eta
-    if r0 <= 1.0e-28 or r1 <= 1.0e-28:
-        raise ValueError(
-            "double-layer gradient is singular at a panel endpoint; "
-            "keep the target a finite distance from the boundary"
-        )
-    a_term = -xi / r0 - z1 / r1
-    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
-    return (a_term * n - 2.0 * eta * b_term * t) / _TWO_PI
+    along, across = _double_gradient_components(xi, eta, length)
+    return (along * t + across * n) / _TWO_PI
 
 
 # ---------------------------------------------------------------------------
@@ -645,14 +665,7 @@ def integrate_single_layer_panel_gradient_many(
     delta = x - np.asarray(start, dtype=float)
     xi = delta @ t
     eta = delta @ n
-    z0, z1 = -xi, length - xi
-    along = 0.5 * np.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
-    across = np.zeros_like(eta)
-    regular = eta != 0.0
-    if np.any(regular):
-        across[regular] = np.arctan(z1[regular] / eta[regular]) - np.arctan(
-            z0[regular] / eta[regular]
-        )
+    along, across = _single_gradient_components(xi, eta, length)
     return -(
         along[:, None] * t[None, :] + across[:, None] * n[None, :]
     ) / _TWO_PI
@@ -677,16 +690,5 @@ def integrate_double_layer_panel_gradient_many(
     delta = x - np.asarray(start, dtype=float)
     xi = delta @ t
     eta = delta @ n
-    z1 = length - xi
-    r0 = xi * xi + eta * eta
-    r1 = z1 * z1 + eta * eta
-    if np.any(r0 <= 1.0e-28) or np.any(r1 <= 1.0e-28):
-        raise ValueError(
-            "double-layer gradient is singular at a panel endpoint; "
-            "keep the target a finite distance from the boundary"
-        )
-    a_term = -xi / r0 - z1 / r1
-    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
-    return (
-        a_term[:, None] * n[None, :] - 2.0 * eta[:, None] * b_term[:, None] * t[None, :]
-    ) / _TWO_PI
+    along, across = _double_gradient_components(xi, eta, length)
+    return (along[:, None] * t + across[:, None] * n) / _TWO_PI
