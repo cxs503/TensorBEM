@@ -24,10 +24,17 @@ class RingResponse:
     _maps: np.ndarray
     mode_leakage: float
 
-    def solve(self, omega, wall_temperatures, sheet_capacities):
-        """Apply two Dirichlet phasors under exp(i omega t), with capacities in J/(m² K)."""
+    def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.)):
+        """Apply two Dirichlet phasors under exp(i omega t), with capacities in J/(m² K).
+
+        sheet_generation gives the two imposed heat generation phasors in W/m²,
+        positive for heat added to a sheet in the assembled cosine mode.
+        """
         walls = np.asarray(wall_temperatures, dtype=complex)
         capacities = np.asarray(sheet_capacities, dtype=float)
+        generation = np.asarray(sheet_generation, dtype=complex)
+        if generation.shape != (2,) or not np.isfinite(generation).all():
+            raise ValueError("two finite sheet generation phasors required")
         if walls.shape != (2,) or not np.isfinite(walls).all():
             raise ValueError("two finite wall temperatures required")
         if capacities.shape != (2,) or not np.isfinite(capacities).all() or np.any(capacities < 0):
@@ -38,14 +45,15 @@ class RingResponse:
         left, right = self._maps
         storage = 1j * omega * capacities
         # Unknowns are the common join temperature and the two sheet sources.
-        # Current matches at the join. Each sheet source equals -i omega C T.
+        # Current matches at the join. Each net sheet source equals generation minus i omega C T.
         matrix = [
             [left[1, 1] - right[0, 0], left[1, 2], -right[0, 2]],
             [storage[0] * left[2, 1], 1 + storage[0] * left[2, 2], 0],
             [storage[1] * right[2, 0], 0, 1 + storage[1] * right[2, 2]],
         ]
         forcing = [right[0, 1] * walls[1] - left[1, 0] * walls[0],
-                   -storage[0] * left[2, 0] * walls[0], -storage[1] * right[2, 1] * walls[1]]
+                   generation[0] - storage[0] * left[2, 0] * walls[0],
+                   generation[1] - storage[1] * right[2, 1] * walls[1]]
         join, source1, source2 = np.linalg.solve(matrix, forcing)
         a = left @ [walls[0], join, source1]
         b = right @ [join, walls[1], source2]
