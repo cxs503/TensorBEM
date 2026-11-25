@@ -198,6 +198,7 @@ from .solver3d import (
     evaluate_surface_field,
     evaluate_surface_velocity,
     evaluate_surface_velocity_at_panels,
+    recover_surface_velocity_at_offsets,
     solve_laplace_surface,
     solve_laplace_surface_neumann,
 )
@@ -321,6 +322,7 @@ __all__ = [
     "evaluate_surface_field",
     "evaluate_surface_velocity",
     "evaluate_surface_velocity_at_panels",
+    "recover_surface_velocity_at_offsets",
     "evaluate_representation_surface_velocity_at_panels",
     "recover_tangent_gradient",
     "compute_waterplane_properties",

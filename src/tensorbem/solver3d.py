@@ -610,7 +610,7 @@ def evaluate_surface_velocity_at_panels(
     where ``u`` is the prescribed potential on the boundary, ``grad_tan(u)``
     is its tangential derivative and ``dphi/dn`` the normal derivative.  The
     tangential derivative is recovered from the cell-centred boundary values
-    by a superconvergent least-squares patch fit
+    by a least-squares patch fit
     (:func:`tensorbem.recovery.recover_tangent_gradient`), and the normal
     derivative is the solved flux.  For the exterior problem the stored flux
     is the derivative along the fluid-domain normal, so the sign is flipped
@@ -620,8 +620,8 @@ def evaluate_surface_velocity_at_panels(
     Unlike
     :func:`evaluate_representation_surface_velocity_at_panels`, this
     reconstruction does not amplify the ``O(h)`` error of the constant-panel
-    trace into an ``O(1)`` error of the gradient, and it converges at second
-    order in the panel size.
+    trace into an ``O(1)`` error of the gradient. Accuracy depends on the
+    surface geometry and patch quality.
 
     Returns an array of shape ``(F, 3)``.
     """
@@ -635,6 +635,38 @@ def evaluate_surface_velocity_at_panels(
     tangent = recover_tangent_gradient(mesh, result.boundary_values)
     normal_component = sign * result.normal_derivative
     return tangent + normal_component[:, None] * mesh.normals
+
+
+def recover_surface_velocity_at_offsets(
+    mesh: TriangleMesh,
+    result: LaplaceSurfaceResult,
+    distance: float,
+) -> FloatArray:
+    """Approximate gradients a short distance into the solved domain.
+
+    Return one Cartesian gradient per panel, at its centroid displaced by
+    distance along the inward normal for an interior solve, outward for an
+    exterior solve. The distance is in mesh length units. A first-order
+    normal Taylor expansion assumes a smooth closed boundary and smooth
+    traces across each reconstruction patch. Use for distances small
+    compared with local curvature and field-variation scales.
+    """
+    if np.ndim(distance) != 0 or not np.isrealobj(distance) or not np.isfinite(distance) or distance < 0:
+        raise ValueError("distance must be a finite nonnegative scalar")
+    velocity = evaluate_surface_velocity_at_panels(mesh, result)
+    if distance == 0:
+        return velocity
+    normal = mesh.normals
+    tangent_derivatives = np.stack(
+        [recover_tangent_gradient(mesh, component) for component in velocity.T], axis=1
+    )
+    # Rows of this matrix are tangential derivatives of Cartesian velocity
+    # components, i.e. H P for Hessian H and tangent projector P. Symmetry
+    # gives P H n = (H P)^T n; Laplace's equation gives n^T H n = -tr(H P).
+    tangential = np.einsum("fij,fi->fj", tangent_derivatives, normal)
+    tangent_divergence = np.trace(tangent_derivatives, axis1=1, axis2=2)
+    signed_distance = -distance if result.domain == "interior" else distance
+    return velocity + signed_distance*(tangential - tangent_divergence[:, None]*normal)
 
 
 def evaluate_representation_surface_velocity_at_panels(
