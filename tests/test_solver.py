@@ -184,3 +184,35 @@ def test_interior_gradient_at_fixed_and_panel_scaled_clearance(linear, record_pr
                     assert error < previous[key]/1.45
                 previous[key] = error
     assert max(previous["scaled", s] for s in (0., .4)) < (.008 if linear else .75)
+
+
+@pytest.mark.parametrize("linear", [False, True])
+def test_interior_surface_gradient_tracks_harmonic_quadratic(linear, record_property):
+    from dataclasses import replace
+    from tensorbem import evaluate_interior_surface_gradient
+    from tensorbem.geometry import ellipse_mesh
+
+    errors = []
+    for n in (24, 48, 96):
+        mesh = ellipse_mesh(n)
+        x, y = mesh.centers.T
+        # Re((1-i/2) z²) gives both normal and tangential variation.
+        result = solve_laplace_dirichlet(mesh, x*x-y*y+x*y, linear_density=linear)
+        recovered = evaluate_interior_surface_gradient(mesh, result)
+        exact = np.column_stack((2*x+y, x-2*y))
+        normal = np.sum(recovered*mesh.normals, axis=1)
+        np.testing.assert_allclose(normal, result.normal_derivative, atol=1e-14, rtol=0.)
+        difference = recovered-exact
+        tangents = mesh.vectors/mesh.lengths[:,None]
+        normal_error = np.max(np.abs(np.sum(difference*mesh.normals, axis=1)))
+        tangent_error = np.max(np.abs(np.sum(difference*tangents, axis=1)))
+        record_property(f"max_normal_error_{n}", normal_error)
+        record_property(f"max_tangential_error_{n}", tangent_error)
+        errors.append(float(np.max(np.linalg.norm(difference,axis=1))))
+        record_property(f"max_gradient_error_{n}", errors[-1])
+    assert all(a/b > 3.0 for a,b in zip(errors,errors[1:]))
+    shifted = replace(result, boundary_values=result.boundary_values+8.)
+    np.testing.assert_allclose(evaluate_interior_surface_gradient(mesh,shifted), recovered,
+                               atol=1e-13, rtol=0.)
+    with pytest.raises(ValueError, match="interior solve"):
+        evaluate_interior_surface_gradient(mesh, replace(result, domain="exterior"))

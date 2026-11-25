@@ -804,6 +804,28 @@ def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):
     return np.linalg.solve(system, rhs)
 
 
+def evaluate_interior_surface_gradient(
+    mesh: PanelMesh, result: LaplaceDirichletResult,
+) -> FloatArray:
+    """Recover the interior gradient at each panel midpoint, shape (N, 2).
+
+    Use the solved outward normal derivative and the arc-length derivative
+    of the prescribed midpoint potential. The latter is reconstructed from
+    three neighboring panels, so accuracy near sharp corners depends on the
+    smoothness of the boundary trace. No vertex value is assigned.
+    """
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    if result.domain != "interior":
+        raise ValueError("evaluate_interior_surface_gradient requires an interior solve")
+    flux = np.asarray(result.normal_derivative, dtype=float)
+    if flux.shape != (mesh.panel_count,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    derivative = tangential_slope(mesh, result.boundary_values)
+    tangents = mesh.vectors / mesh.lengths[:, None]
+    return flux[:, None] * mesh.normals + derivative[:, None] * tangents
+
+
 def evaluate_exterior_surface_velocity(
     mesh: PanelMesh, result: LaplaceDirichletResult, *, method: str = "trace_difference"
 ) -> FloatArray:
