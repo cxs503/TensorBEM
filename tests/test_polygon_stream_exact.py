@@ -72,6 +72,8 @@ def test_budget_level_meets_the_anchor_tolerance() -> None:
     assert level["neumann"]["velocity_relative_l2"] < study.TOLERANCE
     assert level["neumann"]["normal_velocity_residual_over_speed"] <= 0.01
     assert level["dirichlet"]["velocity_relative_l2"] < study.TOLERANCE
+    assert level["neumann"]["potential_relative_l2_up_to_constant"] < study.TOLERANCE
+    assert level["dirichlet"]["potential_relative_l2"] < study.TOLERANCE
 
 
 def test_faceting_is_larger_than_the_panel_error() -> None:

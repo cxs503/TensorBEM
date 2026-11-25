@@ -208,3 +208,29 @@ def test_graded_periodic_panel_slope_converges_at_second_order(record_property):
         record_property(f"max_error_{count}", error)
         errors.append(error)
     assert min(np.log2(np.array(errors[:-1]) / errors[1:])) > 1.95
+
+
+@pytest.mark.parametrize("linear", [False, True])
+def test_integral_wall_velocity_on_ellipse_with_dipole_data(linear, record_property):
+    from dataclasses import replace
+    from tensorbem.geometry import ellipse_mesh
+    from tensorbem.solver import evaluate_exterior_surface_velocity
+
+    errors = []
+    for count in (16, 32, 64):
+        mesh = ellipse_mesh(count)
+        x = mesh.centers
+        r2 = np.sum(x*x, axis=1)
+        # Gradient of Re(1/z), harmonic throughout the exterior.
+        exact = np.array([1., 0.]) / r2[:, None] - 2 * x * x[:, :1] / r2[:, None]**2
+        flux = -np.sum(exact * mesh.normals, axis=1)
+        result = solve_laplace_exterior_neumann(mesh, flux, linear_density=linear)
+        velocity = evaluate_exterior_surface_velocity(mesh, result, method="boundary_integral")
+        shifted = replace(result, boundary_values=result.boundary_values + 17.0)
+        shifted_velocity = evaluate_exterior_surface_velocity(mesh, shifted, method="boundary_integral")
+        np.testing.assert_allclose(velocity, shifted_velocity, atol=1e-12)
+        np.testing.assert_allclose(np.sum(velocity * mesh.normals, axis=1), -flux, atol=1e-12)
+        errors.append(float(np.linalg.norm(velocity - exact) / np.linalg.norm(exact)))
+        record_property(f"relative_velocity_error_{count}", errors[-1])
+    assert errors[-1] < errors[1] < errors[0]
+    assert errors[-1] < (0.01 if linear else 0.06)

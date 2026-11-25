@@ -731,8 +731,47 @@ def evaluate_exterior_field(
     return ExteriorField(potential=potential, gradient=gradient)
 
 
+def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):
+    """Differentiate the exterior trace equation along each straight panel.
+
+    In (I/2 - H)u = S q, represent the potential on panel j by its
+    supplied midpoint value plus an unknown slope times (s-L_j/2).
+    Collocating the differentiated equation at all midpoints determines
+    those slopes. The on-panel H principal value is zero along the face,
+    and its exterior jump is already included in the half-identity.
+    """
+    centers, lengths, normals = mesh.centers, mesh.lengths, mesh.normals
+    system = 0.5 * np.eye(mesh.panel_count)
+    rhs = np.zeros(mesh.panel_count)
+    flux_slopes = tangential_slope(mesh, flux) if linear_density else None
+    for j, (start, tangent, normal, length) in enumerate(zip(mesh.vertices, tangents, normals, lengths)):
+        single = integrate_single_layer_panel_gradient_many(centers, start, tangent, length)
+        double = integrate_double_layer_panel_gradient_many(centers, start, tangent, normal, length)
+        ds = np.sum(single * tangents, axis=1)
+        dh = np.sum(double * tangents, axis=1)
+        ds[j] = dh[j] = 0.0
+        # A constant double-layer density contributes zero tangential derivative.
+        rhs += ds * flux[j] + dh * (values[j] - values)
+        for i, target in enumerate(centers):
+            if i != j:
+                moment = integrate_double_layer_panel_first_moment_gradient(
+                    target, start, tangent, normal, length
+                )
+                system[i, j] -= moment @ tangents[i] - 0.5 * length * dh[i]
+            if flux_slopes is not None:
+                if i == j:
+                    weight = length / (2.0 * np.pi)
+                else:
+                    moment = integrate_single_layer_panel_first_moment_gradient(
+                        target, start, tangent, length
+                    )
+                    weight = moment @ tangents[i] - 0.5 * length * ds[i]
+                rhs[i] += weight * flux_slopes[j]
+    return np.linalg.solve(system, rhs)
+
+
 def evaluate_exterior_surface_velocity(
-    mesh: PanelMesh, result: LaplaceDirichletResult
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, method: str = "trace_difference"
 ) -> FloatArray:
     r"""Fluid-side velocity ``grad(u)`` at panel midpoints of an exterior solve.
 
@@ -745,6 +784,10 @@ def evaluate_exterior_surface_velocity(
     The polygon's counter-clockwise tangent is ``t`` and the panel spacing
     ``ds`` varies, so the difference is centred in arc length rather than in
     panel index.
+    With ``method="boundary_integral"``, recover the tangential derivative
+    from the differentiated exterior boundary integral instead. This solves
+    an additional dense system for the wall slopes and accommodates jumps
+    in the prescribed normal derivative at polygon corners.
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
@@ -762,5 +805,10 @@ def evaluate_exterior_surface_velocity(
     tangents = mesh.vectors / lengths[:, None]
     # Arc-length difference of the panel midpoints (equally spaced in arc
     # length for an inscribed polygon of a circle, but not in general).
-    derivative = tangential_slope(mesh, values)
+    if method == "trace_difference":
+        derivative = tangential_slope(mesh, values)
+    elif method == "boundary_integral":
+        derivative = _boundary_integral_wall_slope(mesh, values, flux, tangents, result.linear_density)
+    else:
+        raise ValueError("method must be trace_difference or boundary_integral")
     return flux[:, None] * (-mesh.normals) + derivative[:, None] * tangents
