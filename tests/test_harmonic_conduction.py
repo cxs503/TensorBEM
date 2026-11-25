@@ -3,7 +3,7 @@ import pytest
 from scipy.special import iv
 
 from tensorbem.geometry import regular_polygon
-from tensorbem.harmonic_conduction import solve_harmonic_conduction
+from tensorbem.harmonic_conduction import solve_harmonic_conduction, solve_mixed_harmonic_conduction
 
 
 def test_circular_uniform_wall_converges_to_radial_diffusion_mode():
@@ -25,3 +25,16 @@ def test_circular_uniform_wall_converges_to_radial_diffusion_mode():
         field.temperature([[1.5, 0.]])
     with pytest.raises(ValueError, match="positive"):
         solve_harmonic_conduction(mesh, wall, 0., conductivity=k, volumetric_heat_capacity=capacity)
+
+@pytest.mark.parametrize("condition", ["flux", "film", "mixed"])
+def test_boundary_exchange_recovers_dirichlet_solution(condition):
+    mesh = regular_polygon(24)
+    props = dict(conductivity=1.8, volumetric_heat_capacity=2.1)
+    wall = (.3+.6j)*mesh.centers[:, 0] + .4j
+    direct = solve_harmonic_conduction(mesh, wall, 1.7, **props)
+    kinds = np.resize(["temperature", "flux", "film"], 24) if condition == "mixed" else np.full(24, condition)
+    h = 2.+mesh.centers[:, 1]
+    values = np.select([kinds=="flux", kinds=="film"], [direct.inward_flux, wall+direct.inward_flux/h], default=wall)
+    result = solve_mixed_harmonic_conduction(mesh, kinds, values, 1.7, film_coefficients=h, **props)
+    np.testing.assert_allclose(result.wall_temperature, wall, atol=3e-14)
+    np.testing.assert_allclose(result.inward_flux, direct.inward_flux, atol=3e-14)

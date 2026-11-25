@@ -1,4 +1,4 @@
-"""Interior two-dimensional harmonic conduction with prescribed wall temperatures."""
+"""Interior two-dimensional harmonic conduction with mixed thermal boundary conditions."""
 from dataclasses import dataclass
 
 import numpy as np
@@ -64,14 +64,50 @@ def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, cond
     returned wall flux is positive into the material, in W/m². This constant
     panel scheme needs spatial resolution of the thermal penetration depth.
     """
+    return solve_mixed_harmonic_conduction(
+        mesh, "temperature", wall_temperature, angular_frequency, conductivity=conductivity,
+        volumetric_heat_capacity=volumetric_heat_capacity)
+
+
+def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angular_frequency, *,
+                                    conductivity, volumetric_heat_capacity, film_coefficients=0.):
+    """Solve harmonic diffusion with one condition per panel, in exp(+i omega t).
+
+    Use "temperature" for prescribed K, "flux" for prescribed inward W/m²,
+    and "film" for ambient K with q_in = h*(ambient - wall). Types, values
+    and film coefficients may each be scalar or panel-sized. A zero film
+    coefficient insulates. Frequency must be positive, including for pure
+    flux data. The mesh describes a single bounded homogeneous material.
+    """
     for value in (angular_frequency, conductivity, volumetric_heat_capacity):
         if np.ndim(value) or not np.isrealobj(value) or not np.isfinite(value) or value <= 0:
             raise ValueError("frequency, conductivity and volumetric capacity must be finite and positive")
-    wall = np.asarray(wall_temperature, dtype=complex)
-    if wall.shape not in ((), (mesh.panel_count,)) or not np.isfinite(wall).all():
-        raise ValueError("supply a finite temperature phasor per panel or one scalar")
-    wall = np.broadcast_to(wall, (mesh.panel_count,)).copy()
+    n = mesh.panel_count
+    kinds = np.asarray(boundary_types)
+    if kinds.shape not in ((), (n,)) or not np.isin(kinds, ["temperature", "flux", "film"]).all():
+        raise ValueError("use temperature, flux or film per panel")
+    kinds = np.broadcast_to(kinds, (n,))
+    values = np.asarray(boundary_values, dtype=complex)
+    if values.shape not in ((), (n,)) or not np.isfinite(values).all():
+        raise ValueError("supply finite scalar or panel boundary values")
+    values = np.broadcast_to(values, (n,))
+    film = np.asarray(film_coefficients)
+    if (film.shape not in ((), (n,)) or not np.isrealobj(film)
+            or not np.isfinite(film).all() or np.any(film < 0)):
+        raise ValueError("supply finite nonnegative real film coefficients")
+    film = np.where(kinds == "film", film, 0.)
+    fixed = kinds == "temperature"
+    wall = np.where(fixed, values, 0.)
+    flux = np.where(kinds == "flux", values, film*values)
     wave = np.sqrt(1j*angular_frequency*volumetric_heat_capacity/conductivity)
     single, double = _operators(mesh, mesh.centers, wave, collocation=True)
-    gradient = np.linalg.solve(single, .5*wall+double @ wall)
-    return HarmonicConduction(mesh, wave, conductivity, wall, conductivity*gradient)
+    single /= conductivity
+    double.flat[::n+1] += .5
+    # H*T = S*q. Unknowns are inward flux on fixed-temperature panels and
+    # temperature elsewhere. On film panels the latter also changes the flux.
+    matrix = np.where(fixed, single, -double-single*film)
+    unknown = np.linalg.solve(matrix, double @ wall-single @ flux)
+    wall[~fixed] = unknown[~fixed]
+    flux[fixed] = unknown[fixed]
+    flux -= film*wall
+    return HarmonicConduction(mesh, wave, conductivity, wall, flux)
