@@ -52,3 +52,16 @@ def test_asymmetric_dc_sheet_temperature(fractions):
     rate = 1/(sum(bulk) + sum(jumps))
     expected = 1-rate*(np.cumsum(bulk[:2]) + [0., jumps[0]] + fractions*jumps)
     np.testing.assert_allclose(result.sheet_temperature, expected, atol=1e-12, rtol=0)
+
+
+@pytest.mark.parametrize("films", [(7., None), (None, 3.), (7., 3.)])
+def test_axisymmetric_ring_films_against_dc_resistance(films):
+    radii = np.array([.4, .55, .9, 1.1])
+    contacts = np.array([.5, .9])
+    k = (1., 2.5, .8)
+    ambient = np.array([1.+.2j, -.3j])
+    response = assemble_ring_response(radii, k, contacts, 16, film_coefficients=films)
+    result = response.solve(0., ambient, (.25, .8))
+    film_resistance = sum(1/(h*r) for h, r in zip(films, radii[[0, -1]]) if h is not None)
+    resistance = sum(np.diff(np.log(radii))/k) + sum(contacts/radii[1:-1]) + film_resistance
+    np.testing.assert_allclose(result.wall_heat_rates, 2*np.pi*(ambient[0]-ambient[1])/resistance, rtol=1e-11)

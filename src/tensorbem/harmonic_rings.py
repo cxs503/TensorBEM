@@ -31,7 +31,7 @@ class RingResponse:
     mode_leakage: float
 
     def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.)):
-        """Apply two Dirichlet phasors under exp(i omega t), with capacities in J/(m² K).
+        """Apply two wall or ambient temperature phasors under exp(i omega t), with capacities in J/(m² K).
 
         sheet_generation gives the two imposed heat generation phasors in W/m²,
         positive for heat added to a sheet in the assembled cosine mode.
@@ -69,7 +69,8 @@ class RingResponse:
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
                            mode=0, formulation="circular", join_radius=None,
-                           inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.)):
+                           inner_resistance_fractions=(.5, .5), sheet_conductivities=(0., 0.),
+                           film_coefficients=(None, None)):
     """Assemble one cosine mode for a quasi-steady bulk and two resistive contacts.
 
     Supply four increasing radii (bore, two sheets, exterior), one conductivity per
@@ -77,7 +78,9 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     sets the share of each resistance on the smaller-radius side. The optional join radius
     splits the middle material for subdomain matching. Each circle has 'panels'
     midpoint collocation points. sheet_conductivities gives the two uniform
-    circumferential conductivities times thickness (W/K). Both circular and polygonal formulations are supported.
+    circumferential conductivities times thickness (W/K). At each physical wall,
+    a positive film coefficient (W/m²/K) uses its supplied temperature as the ambient
+    phasor, while None prescribes the surface temperature. Both circular and polygonal formulations are supported.
     """
     n = _validate_panel_count(panels)
     if isinstance(mode, (bool, np.bool_)) or not isinstance(mode, (int, np.integer)) or not 0 <= mode < n/2:
@@ -97,6 +100,11 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
     sheet_k = np.asarray(sheet_conductivities, dtype=float)
     if sheet_k.shape != (2,) or not np.isfinite(sheet_k).all() or np.any(sheet_k < 0):
         raise ValueError("two finite nonnegative sheet conductivities required")
+    if np.shape(film_coefficients) != (2,) or any(
+            h is not None and (not np.isrealobj(h) or not np.isfinite(h) or h <= 0)
+            for h in film_coefficients):
+        raise ValueError("supply a positive finite film coefficient or None for each physical wall")
+    domain_films = ((film_coefficients[0], None), (None, film_coefficients[1]))
     domains = ((radii[0], radii[1], join_radius), (join_radius, radii[2], radii[3]))
     pattern = np.cos(mode * 2*np.pi * (np.arange(n) + .5) / n)
     projection = pattern / (pattern @ pattern)
@@ -108,7 +116,8 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
             result = solve_annulus_contact(
                 domain, conductivities[i:i+2], (left*pattern, right*pattern),
                 contact_resistances[i], n, formulation=formulation, interface_source=source*pattern,
-                inner_resistance_fraction=fractions[i], sheet_conductivity=sheet_k[i])
+                inner_resistance_fraction=fractions[i], sheet_conductivity=sheet_k[i],
+                film_coefficients=domain_films[i])
             bore = conductivities[i] * result.inner_field.normal_derivative[n:]
             exterior = -conductivities[i+1] * result.outer_field.normal_derivative[:n]
             traces = np.stack((2*np.pi*domain[0]*bore, 2*np.pi*domain[2]*exterior,
