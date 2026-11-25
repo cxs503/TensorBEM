@@ -198,6 +198,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     sheet_conductivity (W/K) is the circumferential conductivity times
     thickness of the interface. On nominal circles the local outward flux
     increase equals interface_source + sheet_conductivity*T_sheet,θθ/contact².
+    Straight panels use a conservative difference of tangential heat currents
+    with the panel length as the distance between sheet samples.
     volumetric_source is a constant volumetric heating rate (W/m³), scalar
     or one per material layer; negative values describe heat removal.
     source_gradient adds gx*x + gy*y to the heating rate, using one Cartesian
@@ -215,8 +217,6 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     circular = formulation == "circular"
     if np.ndim(sheet_conductivity) or not np.isfinite(sheet_conductivity) or sheet_conductivity<0:
         raise ValueError("sheet_conductivity must be finite and nonnegative")
-    if sheet_conductivity and not circular:
-        raise ValueError("circumferential sheet conduction requires the circular formulation")
     bore, contact, exterior = radii
     ki, ko = conductivities
     if not np.isfinite([ki, ko]).all() or min(ki, ko) <= 0:
@@ -290,22 +290,29 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     eye = np.eye(n)
     rhs = -np.concatenate((di[first, second] @ bore_base, do[second, first] @ ext_base))
     rhs[:n] -= oi[first]
-    rhs[n:] += source-oo[second]
+    rhs[n:] -= oo[second]
     if sheet_conductivity:
-        # Unknowns are sheet temperature and incoming radial flux. Eliminate
-        # the outer trace using q_out=q_in+source+surface_laplacian*T_sheet.
-        modes = np.arange(n//2+1)
-        kernel = np.fft.irfft(-sheet_conductivity*(modes/contact)**2,n=n)
-        surface_laplacian = kernel[(np.arange(n)[:,None]-np.arange(n))%n]
+        # Keep both radial fluxes as unknowns so the bulk normal maps
+        # never multiply the surface second derivative.
+        if circular:
+            modes = np.arange(n//2+1)
+            kernel = np.fft.irfft(-sheet_conductivity*(modes/contact)**2,n=n)
+            surface_laplacian = kernel[(np.arange(n)[:,None]-np.arange(n))%n]
+        else:
+            spacing = inner.loops[0].lengths[0]
+            surface_laplacian = (sheet_conductivity/spacing**2)*(
+                    np.roll(eye,1,axis=1)+np.roll(eye,-1,axis=1)-2*eye)
         ri,ro = fraction*r,(1-fraction)*r
-        system = np.block([[inner_map,inner_map*ri+eye],
-                           [outer_map@(eye-ro[:,None]*surface_laplacian)-surface_laplacian,
-                            -outer_map*ro-eye]])
-        rhs[n:] += outer_map@jump_offset
+        zero = np.zeros_like(eye)
+        system = np.block([[inner_map,inner_map*ri+eye,zero],
+                           [outer_map,zero,-outer_map*ro-eye],
+                           [-surface_laplacian,-eye,eye]])
+        rhs = np.r_[rhs,source]
     else:
         system = np.block([[inner_map, inner_map * r + eye],
                            [outer_map, -eye]])
         rhs[:n] -= inner_map @ jump_offset
+        rhs[n:] += source
     if mean_bore_temperature is not None:
         # Uniform angular panels have equal arc lengths on each nominal circle.
         inputs = [radius*np.broadcast_to(np.asarray(value, dtype=float), (n,))
@@ -322,7 +329,10 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         mean_response = bore_response.mean(axis=0)
         resistance_to_inner = ri if sheet_conductivity else r
         offset = 0. if sheet_conductivity else mean_response@jump_offset
-        system = np.vstack((system, np.r_[mean_response, mean_response*resistance_to_inner]))
+        gauge_row = np.r_[mean_response,mean_response*resistance_to_inner]
+        if sheet_conductivity:
+            gauge_row = np.r_[gauge_row,np.zeros(n)]
+        system = np.vstack((system,gauge_row))
         rhs = np.r_[rhs, mean_bore_temperature-bore_base.mean()-offset]
     condition = float(np.linalg.cond(system))
     if not np.isfinite(condition) or condition > _MAX_CONDITION:
@@ -332,8 +342,7 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     else:
         state = np.linalg.lstsq(system, rhs, rcond=None)[0]
     if sheet_conductivity:
-        sheet_temperature,flux = np.split(state,2)
-        outer_flux = flux+source+surface_laplacian@sheet_temperature
+        sheet_temperature,flux,outer_flux = np.split(state,3)
         inner_trace = sheet_temperature+ri*flux
         outer_trace = sheet_temperature-ro*outer_flux
     else:
