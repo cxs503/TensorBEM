@@ -64,8 +64,14 @@ def measure(panels,formulation="circular",prescribe_flux=False,variable=False,re
         value,vector = field.temperature(r*direction),field.heat_flux(r*direction)
         errors[f"field_{r}_K"] = np.max(abs(value-u))
         errors[f"flux_{r}_W_m2"] = np.max(abs(vector-radial[:,None]*direction-angular[:,None]*tangent))
-    return dict(errors=errors,condition_number=result.condition_number,
+    # Radial wall rates need not vanish discretely when the reservoir
+    # exchanges heat. Test the sheet balance with its own panel measure.
+    length = (2*np.pi*contact/panels if formulation=="circular" else 2*contact*np.sin(np.pi/panels))
+    external = result.sheet_reservoir_flux if reservoir else 0.
+    balance = length*np.sum(result.outer_interface_flux-result.interface_flux-source+external)
+    return dict(errors=errors,condition_number=result.condition_number,sheet_balance_W_m=float(abs(balance)),
                 net_heat_rate_W_m=max(abs(v) for v in result.heat_rates))
+
 
 
 if __name__=="__main__":
@@ -83,7 +89,8 @@ if __name__=="__main__":
             orders = {k:float(np.log2(previous[k]/v)) for k,v in errors.items()} if previous and formulation=="polygonal" else {}
             passes = max(errors.values())<2e-10 if formulation=="circular" else (n<128 or min(orders.values())>1.8)
             row.update(variable=variable,panels=n,formulation=formulation,prescribed_flux=flux,orders=orders,
-                       passed=bool(passes and row["net_heat_rate_W_m"]<1e-10))
+                       passed=bool(passes and row["sheet_balance_W_m"]<1e-10 and
+                                   (args.reservoir or row["net_heat_rate_W_m"]<1e-10)))
             rows.append(row)
             previous = errors
     revision = subprocess.check_output(["git","rev-parse","HEAD"],cwd=Path(__file__).parent,text=True).strip()
