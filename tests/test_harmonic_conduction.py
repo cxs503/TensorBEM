@@ -167,3 +167,32 @@ def test_invalid_wall_areal_heat_capacity(capacity):
     with pytest.raises(ValueError, match="wall areal heat capacities"):
         solve_mixed_harmonic_conduction(regular_polygon(8), "flux", 0., 1.,
             conductivity=1., volumetric_heat_capacity=1., wall_areal_heat_capacity=capacity)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_distributed_exchange_disk_against_radial_solution(quadratic):
+    mesh = regular_polygon(64)
+    omega, k, c, exchange = 1.7, 1.2, 2., 3.5
+    ambient, source, wall = .3-.4j, .7j, .6+.1j
+    admittance = exchange+1j*omega*c
+    particular = (source+exchange*ambient)/admittance
+    wave = np.sqrt(admittance/k)
+    field = solve_harmonic_conduction(mesh, wall, omega, conductivity=k,
+        volumetric_heat_capacity=c, heat_loss_coefficient=exchange, bulk_ambient_temperature=ambient,
+        volumetric_source=source, quadratic=quadratic)
+    r = np.array([0., .3, .6])
+    target = particular+(wall-particular)*iv(0, wave*r)/iv(0, wave)
+    np.testing.assert_allclose(field.temperature(np.column_stack([r, 0*r])), target, atol=.001)
+    weights = np.array([5., 8., 5.])/18 if quadratic else np.ones(1)
+    mean_flux = (field.inward_flux.reshape(mesh.panel_count, -1) @ weights).mean()
+    np.testing.assert_allclose(mean_flux, k*(wall-particular)*wave*iv(1, wave)/iv(0, wave), atol=.002)
+
+
+@pytest.mark.parametrize("options", [
+    {"heat_loss_coefficient": -1.}, {"heat_loss_coefficient": 1j},
+    {"heat_loss_coefficient": np.inf}, {"bulk_ambient_temperature": np.nan},
+    {"bulk_ambient_temperature": [.2, .3]}])
+def test_invalid_distributed_exchange_parameters(options):
+    with pytest.raises(ValueError, match="heat_loss_coefficient|bulk_ambient_temperature"):
+        solve_harmonic_conduction(regular_polygon(8), 0., 1., conductivity=1.,
+                                  volumetric_heat_capacity=1., **options)

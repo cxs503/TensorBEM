@@ -208,8 +208,9 @@ class HarmonicConduction:
 
 
 def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, conductivity, volumetric_heat_capacity, quadratic=False,
-                              volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.)):
-    """Solve k Laplacian(T) + Q = i omega C T on a closed CCW polygon.
+                              volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.),
+                              heat_loss_coefficient=0., bulk_ambient_temperature=0.):
+    """Solve k Laplacian(T) + Q + H*(Tamb - T) = i omega C T on a closed CCW polygon.
 
     Inputs use SI units and the exp(+i omega t) phasor convention. Supply a
     uniform wall temperature or values at harmonic_boundary_points for the
@@ -217,17 +218,21 @@ def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, cond
     returned wall flux is positive into the material, in W/m². The
     source in W/m³ is volumetric_source + (x,y) dot source_gradient plus
     (x², xy, y²) dot source_quadratic. The
+    distributed exchange uses a uniform heat_loss_coefficient H in W/(m³ K)
+    and a uniform bulk_ambient_temperature phasor Tamb in K. The
     mesh needs spatial resolution of the thermal penetration depth.
     """
     return solve_mixed_harmonic_conduction(
         mesh, "temperature", wall_temperature, angular_frequency, conductivity=conductivity,
         volumetric_heat_capacity=volumetric_heat_capacity, quadratic=quadratic, volumetric_source=volumetric_source,
-        source_gradient=source_gradient, source_quadratic=source_quadratic)
+        source_gradient=source_gradient, source_quadratic=source_quadratic,
+        heat_loss_coefficient=heat_loss_coefficient, bulk_ambient_temperature=bulk_ambient_temperature)
 
 
 def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angular_frequency, *,
                                     conductivity, volumetric_heat_capacity, film_coefficients=0., wall_areal_heat_capacity=0.,
-                                    quadratic=False, volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.)):
+                                    quadratic=False, volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.),
+                                    heat_loss_coefficient=0., bulk_ambient_temperature=0.):
     """Solve harmonic diffusion with one condition per panel, in exp(+i omega t).
 
     Use "temperature" for prescribed K, "flux" for prescribed external inward W/m²,
@@ -239,6 +244,8 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     flux data. volumetric_source is the generation phasor at the coordinate origin
     in W/m³. source_gradient gives its two Cartesian derivatives at the origin in W/m⁴.
     source_quadratic gives coefficients of x², xy and y² in W/m⁵.
+    A uniform heat_loss_coefficient H in W/(m³ K) adds H*(Tamb-T) to
+    the volumetric heating, with uniform bulk_ambient_temperature Tamb in K.
     With quadratic=True, each panel has three independent Gauss
     samples, returned in harmonic_boundary_points order. Inputs may be scalar,
     per panel, or flat arrays in this sample order. The mesh describes a single bounded homogeneous material.
@@ -252,14 +259,20 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     source_gradient = np.asarray(source_gradient, dtype=complex)
     if source_gradient.shape != (2,) or not np.isfinite(source_gradient).all():
         raise ValueError("source_gradient must have two finite Cartesian components")
-    storage = 1j*angular_frequency*volumetric_heat_capacity
+    if (np.ndim(heat_loss_coefficient) or not np.isrealobj(heat_loss_coefficient)
+            or not np.isfinite(heat_loss_coefficient) or heat_loss_coefficient < 0):
+        raise ValueError("heat_loss_coefficient must be finite, real and nonnegative")
+    ambient = np.asarray(bulk_ambient_temperature, dtype=complex)
+    if ambient.ndim or not np.isfinite(ambient):
+        raise ValueError("bulk_ambient_temperature must be a finite uniform phasor")
+    admittance = heat_loss_coefficient+1j*angular_frequency*volumetric_heat_capacity
     source_quadratic = np.asarray(source_quadratic, dtype=complex)
     if source_quadratic.shape != (3,) or not np.isfinite(source_quadratic).all():
         raise ValueError("source_quadratic must have three finite coefficients for x², xy and y²")
-    curvature = source_quadratic/storage
+    curvature = source_quadratic/admittance
     # The Laplacian of the quadratic particular field is spatially constant.
-    particular = (complex(source)+2*conductivity*(curvature[0]+curvature[2]))/storage
-    gradient = source_gradient/storage
+    particular = (complex(source)+heat_loss_coefficient*ambient+2*conductivity*(curvature[0]+curvature[2]))/admittance
+    gradient = source_gradient/admittance
     points = harmonic_boundary_points(mesh, quadratic=quadratic)
     n = len(points)
 
@@ -297,7 +310,7 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     exchange = np.where(fixed, 0., film+surface_admittance)
     external = np.where(kinds == "flux", values, film*shifted)
     flux = np.where(fixed, 0., external-surface_admittance*boundary-normal_flux)
-    wave = np.sqrt(1j*angular_frequency*volumetric_heat_capacity/conductivity)
+    wave = np.sqrt(admittance/conductivity)
     operators = _quadratic_operators if quadratic else _operators
     single, double = operators(mesh, points, wave, collocation=True)
     single /= conductivity
