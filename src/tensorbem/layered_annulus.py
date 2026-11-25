@@ -129,6 +129,7 @@ class AnnulusContactResult:
     outer_field: AnnulusLayerField | None = None
     outer_interface_flux: np.ndarray | None = None
     sheet_temperature: np.ndarray | None = None
+    sheet_tangential_heat_rate: np.ndarray | None = None
 
 
 def _circular_normal_map(outer, inner, n):
@@ -199,7 +200,9 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     thickness of the interface. On nominal circles the local outward flux
     increase equals interface_source + sheet_conductivity*T_sheet,θθ/contact².
     Straight panels use a conservative difference of tangential heat currents
-    with the panel length as the distance between sheet samples.
+    with the panel length as the distance between sheet samples. For a conducting
+    sheet, sheet_tangential_heat_rate[j] gives heat per unit axial length
+    (W/m) toward increasing angle at the cut after sample j.
     volumetric_source is a constant volumetric heating rate (W/m³), scalar
     or one per material layer; negative values describe heat removal.
     source_gradient adds gx*x + gy*y to the heating rate, using one Cartesian
@@ -341,10 +344,17 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         state = np.linalg.solve(system, rhs)
     else:
         state = np.linalg.lstsq(system, rhs, rcond=None)[0]
+    tangential_rate = None
     if sheet_conductivity:
         sheet_temperature,flux,outer_flux = np.split(state,3)
         inner_trace = sheet_temperature+ri*flux
         outer_trace = sheet_temperature-ro*outer_flux
+        if circular:
+            derivative_at_cut = 1j*modes*np.exp(1j*modes*np.pi/n)
+            tangential_rate = -(sheet_conductivity/contact)*np.fft.irfft(
+                    derivative_at_cut*np.fft.rfft(sheet_temperature),n=n)
+        else:
+            tangential_rate = -sheet_conductivity*(np.roll(sheet_temperature,-1)-sheet_temperature)/spacing
     else:
         outer_trace, flux = np.split(state, 2)
         inner_trace = outer_trace + r * flux + jump_offset
@@ -365,4 +375,4 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
                                 AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0],tuple(gradients[0]),radial[0],tuple(quadratic[0])),
                                 AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1],tuple(quadratic[1])),
-                                outer_flux,sheet_temperature)
+                                outer_flux,sheet_temperature,tangential_rate)

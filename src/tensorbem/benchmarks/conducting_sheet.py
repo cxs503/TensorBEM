@@ -38,6 +38,8 @@ def measure(panels,formulation="circular",prescribe_flux=False):
                   ("incoming_W_m2",result.interface_flux,sample(incoming,theta)),
                   ("outgoing_W_m2",result.outer_interface_flux,sample(outgoing,theta))):
         errors[name] = np.max(abs(value-target))
+    expected_rate = sample(-1j*order*conductance*sheet/contact,theta+np.pi/panels)
+    errors["tangential_heat_rate_W_m"] = np.max(abs(result.sheet_tangential_heat_rate-expected_rate))
     theta = 2*np.pi*(np.arange(37)+.29)/37
     direction = np.column_stack((np.cos(theta),np.sin(theta)))
     tangent = np.column_stack((-np.sin(theta),np.cos(theta)))

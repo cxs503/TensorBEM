@@ -396,3 +396,16 @@ def test_polygonal_conducting_sheet_refinement():
     coarse,fine = (measure(n,"polygonal") for n in (32,64))
     for key,error in fine["errors"].items():
         assert error<coarse["errors"][key]/3.2
+
+
+def test_polygonal_sheet_currents_balance_each_panel_with_variable_contact():
+    n = 29
+    theta = 2*np.pi*(np.arange(n)+.5)/n
+    source = .25+.3*np.cos(4*theta)
+    result = solve_annulus_contact((.38,.72,1.04),(1.3,3.2),
+              (2+.4*np.sin(theta),.35*np.cos(2*theta)),.4+.1*np.sin(3*theta),n,
+              inner_resistance_fraction=.4+.2*np.cos(theta),interface_source=source,sheet_conductivity=.36)
+    width = 2*.72*np.sin(np.pi/n)
+    rate = result.sheet_tangential_heat_rate
+    balance = width*(result.outer_interface_flux-result.interface_flux-source)+rate-np.roll(rate,1)
+    np.testing.assert_allclose(balance,0.,atol=1e-12,rtol=0.)
