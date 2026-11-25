@@ -266,3 +266,23 @@ def test_heave_decay_against_single_pole_reference(record_property):
         record_property(key + "_reference", exact)
         record_property(key + "_relative_error", error)
         assert error < .001
+
+
+def test_round_trip_reports_feasible_asymptote_offset_without_applying_it():
+    geometry = campaign.wigley_hull_geometry()
+    omega = np.geomspace(.05, 20., 200)
+    added = np.zeros((len(omega), 6, 6))
+    damping = np.zeros_like(added)
+    added[:, 2, 2] = 10. - 1/(1+omega**2)
+    damping[:, 2, 2] = 1/(1+omega**2)
+    asymptote = np.zeros((6, 6))
+    asymptote[2, 2] = 7.
+    sweep = campaign.WigleyRadiationSweep(omega, added, damping, asymptote,
+                                          geometry["displaced_mass"], geometry)
+    values = campaign.criterion_round_trip_wigley(sweep)["values"]
+    assert values["added_mass_relative_error_max"] > .02
+    assert values["added_mass_inf_offset_lower"] < 3. < values["added_mass_inf_offset_upper"]
+    sweep.added_mass_inf[2, 2] += 3.
+    assert campaign.criterion_round_trip_wigley(sweep)["values"]["added_mass_relative_error_max"] < .02
+    sweep.added_mass[:, 2, 2] += 2*np.sin(omega)
+    assert not campaign.criterion_round_trip_wigley(sweep)["values"]["added_mass_gate_reachable_by_constant_offset"]

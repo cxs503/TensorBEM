@@ -444,6 +444,13 @@ def criterion_round_trip_wigley(
     added_mass_errors = relative_errors(round_trip.added_mass_round_trip, round_trip.added_mass_exact)
     max_damping_error = float(np.max(damping_errors))
     max_added_mass_error = float(np.max(added_mass_errors))
+    # Changing A_inf translates the reconstructed A curve by one constant.
+    # Intersect the allowed offsets at all query frequencies to test whether
+    # recalibrating that constant alone could meet the original 2% gate.
+    mass_offset = round_trip.added_mass_exact - round_trip.added_mass_round_trip
+    allowance = 0.02 * np.abs(round_trip.added_mass_exact)
+    offset_low = float(np.max(mass_offset - allowance))
+    offset_high = float(np.min(mass_offset + allowance))
     passed = max_damping_error <= 0.02 and max_added_mass_error <= 0.02
     
     return _verdict(
@@ -456,6 +463,9 @@ def criterion_round_trip_wigley(
             "dof_label": DOF_LABELS[dof],
             "damping_relative_error_max": max_damping_error,
             "added_mass_relative_error_max": max_added_mass_error,
+            "added_mass_inf_offset_lower": offset_low,
+            "added_mass_inf_offset_upper": offset_high,
+            "added_mass_gate_reachable_by_constant_offset": offset_low <= offset_high,
             "kernel_tau_max": round_trip.tau_max,
             "kernel_dt": round_trip.dt,
             "round_trip": {
