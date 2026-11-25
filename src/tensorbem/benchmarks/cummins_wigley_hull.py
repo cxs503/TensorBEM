@@ -82,6 +82,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from tensorbem import time_domain as td
+from tensorbem.added_mass_limit import added_mass_limit
 from tensorbem.causality import (
     fit_added_mass_asymptote,
     kk_added_mass_closure,
@@ -266,6 +267,7 @@ class WigleyRadiationSweep:
     added_mass_inf: NDArray  # (6, 6)
     displaced_mass: float
     geometry: dict
+    added_mass_inf_source: str = "supplied"
     
     def summary(self) -> dict:
         """Compact summary for the campaign record."""
@@ -276,6 +278,8 @@ class WigleyRadiationSweep:
             "T": self.geometry["draft"],
             "Cb": self.geometry["block_coefficient"],
             "n_frequencies": len(self.omega),
+            "added_mass_inf_source": self.added_mass_inf_source,
+            "added_mass_inf_diagonal": np.diag(self.added_mass_inf).tolist(),
             "omega_range": [float(self.omega[0]), float(self.omega[-1])],
             "dof_labels": DOF_LABELS,
         }
@@ -293,6 +297,7 @@ def wigley_radiation_sweep(
     n_omega: int = 25,
     n_sections: int = 30,
     n_levels: int = 8,
+    added_mass_inf_source: str = "band_endpoint",
 ) -> WigleyRadiationSweep:
     """Compute frequency-domain radiation coefficients for the Wigley hull.
     
@@ -317,6 +322,8 @@ def wigley_radiation_sweep(
     WigleyRadiationSweep
         Frequency-domain radiation coefficients.
     """
+    if added_mass_inf_source not in ("band_endpoint", "image_limit"):
+        raise ValueError("added_mass_inf_source must be band_endpoint or image_limit")
     L, B, T = float(length), float(beam), float(draft)
     rho = float(density)
     g = float(gravity)
@@ -344,11 +351,11 @@ def wigley_radiation_sweep(
         added_mass[i] = rad.added_mass
         damping[i] = rad.damping
 
-    # Infinite-frequency added mass (extrapolate from highest frequency)
-    # For a floating body, A(inf) is the added mass in an infinite fluid
-    # Approximate as the value at the highest frequency
-    added_mass_inf = added_mass[-1].copy()
-    
+    # The odd-image potential satisfies the pressure-release condition on the
+    # entire waterplane. This limit is independent of the swept frequencies.
+    added_mass_inf = (added_mass_limit(mesh, density=rho).added_mass_matrix
+                      if added_mass_inf_source == "image_limit" else added_mass[-1].copy())
+
     return WigleyRadiationSweep(
         omega=omega,
         added_mass=added_mass,
@@ -356,6 +363,7 @@ def wigley_radiation_sweep(
         added_mass_inf=added_mass_inf,
         displaced_mass=displaced_mass,
         geometry=geom,
+        added_mass_inf_source=added_mass_inf_source,
     )
 
 
@@ -540,8 +548,9 @@ def criterion_causality_wigley(
     # Kramers-Kronig check
     A_inf_fit = fit_added_mass_asymptote(sweep.omega, A_omega)
     closure = kk_added_mass_closure(sweep.omega, A_omega, B_omega)
-    anchored = kk_added_mass_closure(sweep.omega, A_omega, B_omega,
-                                     added_mass_inf=A_inf_fit.added_mass_inf)
+    anchor = (float(sweep.added_mass_inf[dof, dof]) if sweep.added_mass_inf_source == "image_limit"
+              else A_inf_fit.added_mass_inf)
+    anchored = kk_added_mass_closure(sweep.omega, A_omega, B_omega, added_mass_inf=anchor)
     max_residual = float(np.max(np.abs(anchored.residual)))
     scale = float(np.max(np.abs(A_omega)))
     relative_residual = max_residual / scale if scale else math.inf
@@ -567,6 +576,7 @@ def criterion_causality_wigley(
             "kk_closure_relative_residual": closure.max_relative_residual,
             "kk_closure_added_mass_inf": closure.added_mass_inf,
             "added_mass_inf_fit": A_inf_fit.added_mass_inf,
+            "added_mass_inf_used": anchor,
             "kernel_diagnostics": {
                 "K0": float(kernel.values[0]),
                 "slope_at_zero": float(diag.get("relative_slope_at_zero", 0.0)),
@@ -826,6 +836,7 @@ def run_campaign_wigley(
     tau_max: float = 20.0,
     duration: float = 50.0,
     mass_fraction: float = 1.0,
+    added_mass_inf_source: str = "band_endpoint",
 ) -> dict:
     """Run the full Cummins closure campaign for the Wigley hull.
     
@@ -854,6 +865,7 @@ def run_campaign_wigley(
         n_omega=n_omega,
         n_sections=n_sections,
         n_levels=n_levels,
+        added_mass_inf_source=added_mass_inf_source,
     )
     
     # Run all gates

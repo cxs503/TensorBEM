@@ -157,3 +157,21 @@ def test_infinite_frequency_differs_from_the_free_float_added_mass() -> None:
     mesh = wigley3_wetted_hull_mesh(nx=8, nz=4)
     inf = added_mass_limit(mesh, "infinite_frequency", center=CENTER, density=DENSITY)
     assert inf.diagonal()[2] < low
+
+@pytest.mark.parametrize("limit,modes", [("zero_frequency", (0, 1)), ("infinite_frequency", (2,))])
+def test_half_sphere_translational_mass_under_matching_image_parity(limit, modes, record_property):
+    from tensorbem.added_mass_limit import half_immersed_sphere_mesh
+
+    # A horizontal dipole is even in z; a vertical dipole is odd. In their
+    # respective limits the doubled potential is exactly that of a full sphere.
+    radius, density = .7, 1025.
+    reference = np.eye(len(modes)) * (density * math.pi * radius**3 / 3)
+    errors = []
+    for rings, longitude in ((4, 12), (6, 18), (8, 24)):
+        mesh = half_immersed_sphere_mesh(rings, longitude, radius)
+        matrix = added_mass_limit(mesh, limit, density=density, modes=modes).added_mass_matrix
+        error = np.linalg.norm(matrix-reference, ord=2) / reference[0, 0]
+        errors.append(error)
+        record_property(f"panels_{mesh.panel_count}_relative_error", error)
+    assert errors[0] > errors[1] > errors[2]
+    assert errors[-1] < .03

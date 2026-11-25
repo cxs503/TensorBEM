@@ -286,3 +286,14 @@ def test_round_trip_reports_feasible_asymptote_offset_without_applying_it():
     assert campaign.criterion_round_trip_wigley(sweep)["values"]["added_mass_relative_error_max"] < .02
     sweep.added_mass[:, 2, 2] += 2*np.sin(omega)
     assert not campaign.criterion_round_trip_wigley(sweep)["values"]["added_mass_gate_reachable_by_constant_offset"]
+
+
+def test_image_limit_is_independent_of_wigley_sweep_endpoint():
+    options = dict(n_sections=8, n_levels=3, n_omega=10, added_mass_inf_source="image_limit")
+    narrow = campaign.wigley_radiation_sweep(omega_max=6., **options)
+    wide = campaign.wigley_radiation_sweep(omega_max=12., **options)
+    np.testing.assert_allclose(narrow.added_mass_inf, wide.added_mass_inf, rtol=1e-13)
+    assert narrow.added_mass_inf[2, 2] > 0
+    assert not np.isclose(narrow.added_mass[-1, 2, 2], wide.added_mass[-1, 2, 2])
+    gate = campaign.criterion_causality_wigley(wide)
+    assert gate["values"]["added_mass_inf_used"] == wide.added_mass_inf[2, 2]
