@@ -38,6 +38,8 @@ from typing import Iterable, Sequence
 import numpy as np
 from numpy.typing import NDArray
 
+from ..wigley3_hull import wigley3_half_breadth
+
 FloatArray = NDArray[np.float64]
 
 GRAVITY = 9.80665
@@ -285,11 +287,11 @@ def wigley3_body_inertia(
 
     The hull is fore-aft symmetric, so the centroid sits at ``(0, 0, z_B)`` and
     the products of inertia vanish.  With the analytic half breadth
-    ``b(x, z) = (B/2)(1 - xi^2)(1 - zeta^2)(1 + alpha zeta^2)``,
+    ``b(x, z) = (B/2)(1 - xi^2)(1 - zeta^2)(1 + alpha xi^2)``,
     ``xi = 2x/L``, ``zeta = z/T`` the volume integrals
 
         V = 2 * int b dx dz,   z_B = (2/V) * int z b dx dz,
-        I_xx = rho * int 2 (y^2 + (z - z_B)^2) b dx dz,
+        I_xx = rho * int (2 b^3/3 + 2 b (z - z_B)^2) dx dz,
         I_yy = rho * int 2 (x^2 + (z - z_B)^2) b dx dz,
 
     are evaluated by trapezoidal quadrature on a uniform ``n_x x n_z`` grid; the
@@ -303,9 +305,7 @@ def wigley3_body_inertia(
     x = np.linspace(-0.5 * L, 0.5 * L, int(n_x))
     z = np.linspace(-T, 0.0, int(n_z))
     X, Z = np.meshgrid(x, z, indexing="ij")
-    xi = 2.0 * X / L
-    zeta = Z / T
-    b = 0.5 * B * (1.0 - xi**2) * (1.0 - zeta**2) * (1.0 + alpha * zeta**2)
+    b = wigley3_half_breadth(X, Z, L, B, T, alpha)
 
     def integrate(field: FloatArray) -> float:
         return float(np.trapezoid(np.trapezoid(field, z, axis=1), x, axis=0))

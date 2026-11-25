@@ -46,6 +46,16 @@ def _as_point_array(points: FloatArray) -> FloatArray:
     return targets
 
 
+def _local_area(points: FloatArray) -> tuple[float, float, float]:
+    """Compute signed area in dimensionless coordinates relative to one vertex."""
+    local = points - points[0]
+    sx, sy = np.max(np.abs(local), axis=0)
+    if sx == 0.0 or sy == 0.0:
+        return 0.0, sx, sy
+    x, y = local[:, 0] / sx, local[:, 1] / sy
+    return 0.5 * math.fsum(x * np.roll(y, -1) - y * np.roll(x, -1)), sx, sy
+
+
 @dataclass(frozen=True)
 class PanelMesh:
     """A closed, counter-clockwise polygon discretized into straight panels.
@@ -66,12 +76,11 @@ class PanelMesh:
         if not np.isfinite(points).all():
             raise ValueError("vertices must all be finite")
         edges = np.roll(points, -1, axis=0) - points
-        lengths = np.linalg.norm(edges, axis=1)
-        if np.any(lengths <= 1.0e-14):
-            raise ValueError("zero-length boundary panels are not allowed")
-        area2 = np.sum(points[:, 0] * np.roll(points[:, 1], -1)
-                       - points[:, 1] * np.roll(points[:, 0], -1))
-        if area2 <= 1.0e-14:
+        lengths = np.hypot(edges[:, 0], edges[:, 1])
+        if not np.isfinite(lengths).all() or np.any(lengths == 0.0):
+            raise ValueError("boundary panels must have finite, nonzero lengths")
+        area, _, _ = _local_area(points)
+        if area <= 0.0:
             raise ValueError("vertices must describe a non-degenerate CCW polygon")
 
     @property
@@ -88,11 +97,12 @@ class PanelMesh:
 
     @property
     def lengths(self) -> FloatArray:
-        return np.linalg.norm(self.vectors, axis=1)
+        vectors = self.vectors
+        return np.hypot(vectors[:, 0], vectors[:, 1])
 
     @property
     def centers(self) -> FloatArray:
-        return 0.5 * (self.vertices + self.ends)
+        return self.vertices + 0.5 * self.vectors
 
     @property
     def normals(self) -> FloatArray:
@@ -106,16 +116,8 @@ class PanelMesh:
     @property
     def area(self) -> float:
         """Enclosed area of the polygon."""
-        points = self.vertices
-        return float(
-            0.5
-            * np.sum(
-                points[:, 0] * np.roll(points[:, 1], -1)
-                - points[:, 1] * np.roll(points[:, 0], -1)
-            )
-        )
-
-
+        area, sx, sy = _local_area(self.vertices)
+        return float((area * sx) * sy)
 
     def contains_point(self, points: FloatArray) -> NDArray[np.bool_]:
         """Return ``True`` for points strictly inside the closed polygon.
@@ -130,30 +132,23 @@ class PanelMesh:
         inside = np.zeros(len(targets), dtype=bool)
         x_coords = targets[:, 0]
         y_coords = targets[:, 1]
-        with np.errstate(divide="ignore", invalid="ignore"):
-            for start, end in zip(self.vertices, self.ends):
-                straddles = (start[1] > y_coords) != (end[1] > y_coords)
-                crossing_x = start[0] + (end[0] - start[0]) * (
-                    y_coords - start[1]
-                ) / (end[1] - start[1])
-                inside ^= straddles & (x_coords < crossing_x)
+        for start, end in zip(self.vertices, self.ends):
+            straddles = (start[1] > y_coords) != (end[1] > y_coords)
+            if np.any(straddles):
+                fraction = (y_coords[straddles] - start[1]) / (end[1] - start[1])
+                inside[straddles] ^= (x_coords[straddles] - start[0]) < (end[0] - start[0]) * fraction
         return inside
 
     def boundary_clearance(self, points: FloatArray) -> FloatArray:
         """Minimum Euclidean distance from each point to the polygon boundary."""
         targets = _as_point_array(points)
         clearance = np.full(len(targets), np.inf, dtype=float)
-        lengths_squared = np.sum(self.vectors**2, axis=1)
-        for start, segment, length_squared in zip(
-            self.vertices, self.vectors, lengths_squared
-        ):
-            projection = np.clip(
-                (targets - start) @ segment / length_squared, 0.0, 1.0
-            )
-            closest = start + projection[:, None] * segment
-            clearance = np.minimum(
-                clearance, np.linalg.norm(targets - closest, axis=1)
-            )
+        for start, segment, length in zip(self.vertices, self.vectors, self.lengths):
+            local = targets - start
+            tangent = segment / length
+            projection = np.clip(local @ tangent, 0.0, length)
+            distance = local - projection[:, None] * tangent
+            clearance = np.minimum(clearance, np.hypot(distance[:, 0], distance[:, 1]))
         return clearance
 
 

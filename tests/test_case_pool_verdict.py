@@ -212,3 +212,12 @@ def test_committed_cylinder_record_re_derives_cleanly():
     # the audit must be doing more than echoing the verdict
     assert report["criteria"]["n_agree"] >= 20
     assert math.isfinite(float(report["acceptance"]["declared_tolerance"]))
+
+def test_structured_near_wall_gate_rechecks_each_mesh():
+    criterion = {"name": "near_wall_window_is_azimuth_independent",
+                 "value": {"worst_over_levels": .006, "levels": [{"worst_error": .006}, {"worst_error": .018}]},
+                 "threshold": "<= 0.01 on every level", "ok": True}
+    report = audit.audit_criteria([criterion])
+    assert report["disagreements"][0]["name"] == criterion["name"]
+    del criterion["value"]["levels"][1]["worst_error"]
+    assert audit.audit_criteria([criterion])["non_numeric"]

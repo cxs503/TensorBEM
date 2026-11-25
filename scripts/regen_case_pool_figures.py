@@ -60,8 +60,22 @@ def _render_ellipse(entry, artifact: dict) -> list[str]:
     return [Path(p).name for p in driver._render_figures(artifact, entry.path(entry.figures[0]).parent)]
 
 
+def _render_cummins(entry, artifact: dict) -> list[str]:
+    from tensorbem.benchmarks import case_bem_cummins_wigley as driver
+
+    out = entry.path(entry.figures[0]).parent
+    label = list(artifact["settings"]["meshes"])[-1]
+    metadata = artifact["sweeps"][label]
+    mesh_keys = ("label", "n_sections", "n_levels", "panel_count", "max_panel_scale")
+    sweep = driver.load_sweep(out / f"sweep_{label}.npz",
+                              **{key: metadata[key] for key in mesh_keys})
+    name = driver._make_figure({label: sweep}, artifact, out)
+    return [name] if name else []
+
+
 RENDERERS = {
     "CASE-BEM-LAPLACE-CYLINDER": _render_cylinder,
+    "CASE-BEM-CUMMINS-WIGLEY": _render_cummins,
     "CASE-BEM-ANNULUS-LAPLACE": _render_annulus,
     "CASE-BEM-ELLIPSE-2D-ADDED-MASS": _render_ellipse,
 }
@@ -74,7 +88,13 @@ def regenerate(code: str) -> dict:
     renderer = RENDERERS.get(entry.case_code)
     if renderer is None:
         return {"case_code": entry.case_code, "status": "skipped", "reason": "no renderer"}
-    artifact = entry.artifact_payload()
+    # The annulus registry entry covers two studies. Its figures accompany
+    # the eccentric study, whose record sits alongside the figures directory.
+    if entry.case_code == "CASE-BEM-ANNULUS-LAPLACE":
+        record = Path(entry.figures[0]).parents[1] / "results.json"
+        artifact = entry.artifact_payload(str(record))
+    else:
+        artifact = entry.artifact_payload()
     entry.path(entry.figures[0]).parent.mkdir(parents=True, exist_ok=True)
     names = renderer(entry, artifact)
     missing = [rel for rel in entry.figures if not entry.path(rel).is_file()]

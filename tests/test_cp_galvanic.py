@@ -261,3 +261,29 @@ def test_grid_convergence_index_recovers_second_order():
     gci = cp.grid_convergence_index(values[0], values[1], values[2], 0.25, 0.5, 1.0)
     assert gci["observed_order"] == pytest.approx(2.0, abs=0.05)
     assert gci["gci_fine_percent"] < 0.5
+
+def test_nested_refinement_preserves_electrode_geometry_and_linear_loads():
+    mesh, groups = cp.box_hull_mesh(cp.BoxHull(), 6, 2, 2)
+    partition = cp.partition_surface(mesh, groups, .05, n_anodes=4)
+    fine, inherited = cp.refine_partitioned_surface(mesh, partition)
+    assert fine.panel_count == 4 * mesh.panel_count
+    np.testing.assert_allclose(fine.normals, mesh.normals.repeat(4, axis=0), atol=1e-14)
+    np.testing.assert_allclose(fine.areas, mesh.areas.repeat(4)/4)
+    np.testing.assert_allclose(inherited.anode_centers, fine.centroids[inherited.anodes])
+    for name in ("anodes", "bare", "coated", "waterline"):
+        parent = getattr(partition, name)
+        children = getattr(inherited, name)
+        np.testing.assert_array_equal(children // 4, parent.repeat(4))
+        # Centroid quadrature integrates any affine current density exactly.
+        def integrated_load(surface, panels):
+            density = 2. + surface.centroids[panels] @ np.array([.03, -.07, .12])
+            return surface.areas[panels] @ density
+        assert integrated_load(fine, children) == pytest.approx(integrated_load(mesh, parent))
+
+
+def test_gci_coarse_plateau_keeps_fine_grid_change():
+    gci = cp.grid_convergence_index(12., 10., 10., .25, .5, 1.)
+    assert gci["observed_order"] is None
+    assert gci["gci_fine_percent"] == pytest.approx(100 * 1.25 * 2 / (3 * 12))
+    scaled = cp.grid_convergence_index(12e-22, 10e-22, 10e-22, .25, .5, 1.)
+    assert scaled["gci_fine_percent"] == pytest.approx(gci["gci_fine_percent"])

@@ -175,3 +175,43 @@ def test_condition_number_with_fallback_still_reports_a_singular_matrix(monkeypa
     condition, source = condition_number_with_fallback(matrix)
     assert source == "power_iteration"
     assert not np.isfinite(condition) or condition > 1.0e12
+
+
+@pytest.mark.parametrize("scale", [1e-150, 1., 1e150])
+def test_scaled_nonnormal_shear_condition(scale, record_property):
+    shear = 10.
+    matrix = scale * np.array([[1., shear], [0., 1.]])
+    expected = ((np.hypot(shear, 2.)+shear)/2)**2
+    measured, _, _ = estimate_condition_number(matrix, method="power_iteration")
+    record_property("relative_error", abs(measured/expected - 1.))
+    assert measured == pytest.approx(expected, rel=1e-13)
+
+
+@pytest.mark.parametrize("wide", [False, True])
+def test_rectangular_complex_fallback_preserves_singular_values(wide, monkeypatch):
+    from tensorbem.conditioning import condition_number_with_fallback
+
+    matrix = np.array([[1., 2.j], [2.j, -4.], [0., 1e-5]])
+    if wide:
+        matrix = matrix.conj().T
+    expected = np.linalg.cond(matrix)
+    monkeypatch.setattr(np.linalg, "cond", lambda a: np.inf)
+    value, method = condition_number_with_fallback(matrix)
+    assert method == "power_iteration_qr"
+    assert value == pytest.approx(expected, rel=1e-9)
+
+
+@pytest.mark.parametrize("refinement", [1, 2])
+def test_ellipsoid_condition_estimates_against_svd(refinement, record_property):
+    from tensorbem.geometry3d import ellipsoid_mesh
+    from tensorbem.solver3d import assemble_surface_matrices
+
+    mesh = ellipsoid_mesh(refinement, (1.5, 1., .75))
+    single, double = assemble_surface_matrices(mesh)
+    for name, matrix in (("single", single), ("exterior_double", .5*np.eye(mesh.panel_count)-double)):
+        reference = np.linalg.cond(matrix)
+        value, _, _ = estimate_condition_number(matrix, method="power_iteration")
+        error = abs(value/reference-1)
+        record_property(name+"_svd", reference)
+        record_property(name+"_relative_error", error)
+        assert error < .01

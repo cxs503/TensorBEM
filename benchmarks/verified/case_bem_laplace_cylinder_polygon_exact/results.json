@@ -3,11 +3,11 @@
   "schema": "tensorbem/case_cylinder_polygon_exact/1",
   "repo": "TensorBEM",
   "anchor_case": "CASE-BEM-LAPLACE-CYLINDER",
-  "generated_at_utc": "2026-11-14T20:28:37Z",
+  "generated_at_utc": "2026-11-25T10:22:32Z",
   "environment": {
-    "python": "3.11.6",
-    "numpy": "2.4.6",
-    "machine": "loongarch64"
+    "python": "3.12.14",
+    "numpy": "2.5.5",
+    "machine": "x86_64"
   },
   "parameters": {
     "radius": 1.0,
@@ -16,7 +16,8 @@
       8,
       16,
       32,
-      64
+      64,
+      128
     ],
     "budget_panels": 128,
     "probe_rings": [
@@ -41,8 +42,8 @@
       "panels": 8,
       "radius": 1.0,
       "speed": 1.0,
-      "h_mean": 0.7653668647301795,
-      "h_over_radius": 0.7653668647301795,
+      "h_mean": 0.7653668647301796,
+      "h_over_radius": 0.7653668647301796,
       "apothem": 0.9238795325112867,
       "geometry_gate": {
         "panel_count": 8,
@@ -50,71 +51,74 @@
         "alpha": 0.25,
         "scale_factor": 0.9535055293740722,
         "half_edge_moment_gamma": 1.3499538976518983,
-        "edge_length_quadrature": 0.7653669351078096,
+        "edge_length_quadrature": 0.76536693510781,
         "edge_length_closed_form": 0.7653668647301796,
-        "edge_length_relative_error": 9.195280498826882e-08,
+        "edge_length_relative_error": 9.19528054234417e-08,
         "midpoint_quadrature": [
           0.8535533905932737,
-          0.3535533905932738
+          0.35355339059327373
         ],
         "midpoint_closed_form": [
           0.8535533905932737,
           0.3535533905932738
         ],
-        "midpoint_relative_error": 0.0,
-        "vertex_radius": 1.0000000867196357,
-        "vertex_radius_relative_error": 8.671963569462093e-08,
+        "midpoint_relative_error": 6.0084837121965e-17,
+        "vertex_radius": 1.0000000867196355,
+        "vertex_radius_relative_error": 8.671963547257633e-08,
         "rotation_symmetry_residual": 2.1845121273448238e-16,
         "inverse_map_roundtrip": 0.0
       },
       "neumann": {
-        "surface_velocity_relative_l2": 0.15759802177852456,
-        "surface_velocity_max_error_over_speed": 0.24487170459809088,
-        "surface_speed_relative_l2": 0.1575980217785245,
-        "cp_relative_l2": 0.5441232336156664,
-        "cp_min": -2.2351262772476392,
+        "surface_velocity_relative_l2": 0.02347684626207237,
+        "surface_velocity_max_error_over_speed": 0.03647771271431261,
+        "surface_speed_relative_l2": 0.023476846262072398,
+        "cp_relative_l2": 0.07425362073767891,
+        "surface_velocity_method": "boundary_integral",
+        "cp_min": -1.302187944602677,
         "cp_min_exact": -1.4142135623730958,
-        "normal_velocity_residual_over_speed": 5.551115123125783e-16,
-        "velocity_relative_l2": 0.03495177798541623,
-        "velocity_max_error_over_speed": 0.09808371498327714,
-        "potential_relative_l2_up_to_constant": 0.8076624049188006,
-        "potential_offset": 8.847089727481716e-17,
-        "condition_number": 2.49477922951992,
-        "relative_residual_l2": 1.2443323954404956e-16,
+        "normal_velocity_residual_over_speed": 4.440892098500626e-16,
+        "velocity_relative_l2": 0.03495177798541622,
+        "velocity_max_error_over_speed": 0.09808371498327724,
+        "potential_relative_l2_up_to_constant": 0.046927814370052244,
+        "potential_offset": 2.6020852139652106e-18,
+        "condition_number": 2.494779229519918,
+        "relative_residual_l2": 1.3440325995797605e-16,
         "case_metric_velocity_relative_l2": 0.05388256793375424
       },
       "dirichlet": {
-        "potential_relative_l2": 0.8151424065843623,
-        "potential_max_error": 2.941808181866967,
-        "velocity_relative_l2": 0.03057639337377977,
-        "velocity_max_error_over_speed": 0.08806631243397701,
-        "condition_number": 5.362220870536564,
-        "relative_residual_l2": 1.2971376358984943e-16,
-        "normal_derivative_net_flux_over_speed_radius": -2.220446049250313e-16,
-        "case_metric_velocity_relative_l2": 0.0599428639995339
+        "potential_relative_l2": 0.013857755632054504,
+        "potential_max_error": 0.01457243746998707,
+        "velocity_relative_l2": 0.03057639337377978,
+        "velocity_max_error_over_speed": 0.08806631243397704,
+        "condition_number": 5.362220870536563,
+        "relative_residual_l2": 1.3326822344184593e-16,
+        "normal_derivative_net_flux_over_speed_radius": -4.440892098500626e-16,
+        "case_metric_velocity_relative_l2": 0.05994286399953393
       },
       "faceting": {
-        "surface_velocity_relative_l2": 0.23823743451734553,
-        "probe_velocity_relative_l2": 0.039204678578583264,
-        "probe_potential_relative_l2": 3.337107271120872
+        "surface_velocity_relative_l2": 0.23823743451734558,
+        "probe_velocity_relative_l2": 0.03920467857858328,
+        "probe_potential_relative_l2": 0.09103524370354238
       },
       "case_route_neumann": {
-        "surface_velocity_relative_l2": 0.028590920444521082,
+        "surface_velocity_relative_l2": 0.028590920444520995,
         "velocity_relative_l2": 0.06908523193282233,
-        "cp_relative_l2": 0.07588402819725766,
-        "potential_relative_l2_up_to_constant": 0.11518920640003484,
-        "normal_velocity_residual_over_speed": 0.15851266778110729
+        "cp_relative_l2": 0.0758840281972575,
+        "potential_relative_l2_up_to_constant": 0.1151892064000349,
+        "normal_velocity_residual_over_speed": 0.15851266778110726
       },
       "case_route_dirichlet": {
-        "velocity_relative_l2": 0.051624912895354244,
-        "potential_relative_l2": 0.021551215300831927,
-        "normal_derivative_net_flux_over_speed_radius": 0.0
+        "velocity_relative_l2": 0.05162491289535424,
+        "potential_relative_l2": 0.02155121530083189,
+        "normal_derivative_net_flux_over_speed_radius": 2.220446049250313e-16
       },
       "decomposition": {
-        "case_error": 0.03495177798541623,
-        "panel_error": 0.15759802177852456,
-        "faceting_surface": 0.23823743451734553,
-        "faceting_share_of_case_surface_error": 8.332625561308198
+        "case_error": 0.03495177798541622,
+        "panel_error": 0.02347684626207237,
+        "recovered_surface_vs_circle": 0.255413875385045,
+        "polygon_to_circle_velocity_norm_ratio": 0.7720524253104033,
+        "faceting_surface": 0.23823743451734558,
+        "faceting_share_of_case_surface_error": 8.332625561308225
       }
     },
     {
@@ -142,59 +146,62 @@
           0.19134171618254486
         ],
         "midpoint_relative_error": 2.829933948867764e-17,
-        "vertex_radius": 1.0000000493468209,
-        "vertex_radius_relative_error": 4.9346820851781104e-08,
+        "vertex_radius": 1.0000000493468206,
+        "vertex_radius_relative_error": 4.93468206297365e-08,
         "rotation_symmetry_residual": 1.4049881838328732e-16,
         "inverse_map_roundtrip": 0.0
       },
       "neumann": {
-        "surface_velocity_relative_l2": 0.08335397739240508,
-        "surface_velocity_max_error_over_speed": 0.14993447848320604,
-        "surface_speed_relative_l2": 0.08335397739240505,
-        "cp_relative_l2": 0.26093826544552273,
-        "cp_min": -2.797441876929561,
+        "surface_velocity_relative_l2": 0.00489768629701413,
+        "surface_velocity_max_error_over_speed": 0.0088098020477198,
+        "surface_speed_relative_l2": 0.004897686297014113,
+        "cp_relative_l2": 0.014682652288826247,
+        "surface_velocity_method": "boundary_integral",
+        "cp_min": -2.2039508347462724,
         "cp_min_exact": -2.235566804537467,
-        "normal_velocity_residual_over_speed": 4.440892098500626e-16,
-        "velocity_relative_l2": 0.005703563068855308,
-        "velocity_max_error_over_speed": 0.01117664113313196,
-        "potential_relative_l2_up_to_constant": 0.8020093561781663,
-        "potential_offset": 8.153200337090993e-17,
-        "condition_number": 2.218322356081391,
-        "relative_residual_l2": 1.5469216477052555e-16,
-        "case_metric_velocity_relative_l2": 0.010935522726439542
+        "normal_velocity_residual_over_speed": 3.3306690738754696e-16,
+        "velocity_relative_l2": 0.005703563068855316,
+        "velocity_max_error_over_speed": 0.011176641133131958,
+        "potential_relative_l2_up_to_constant": 0.011975076162012962,
+        "potential_offset": -4.119968255444917e-18,
+        "condition_number": 2.2183223560813903,
+        "relative_residual_l2": 1.4375858092751403e-16,
+        "case_metric_velocity_relative_l2": 0.01093552272643951
       },
       "dirichlet": {
-        "potential_relative_l2": 0.8041662746008248,
-        "potential_max_error": 2.9422914652973953,
-        "velocity_relative_l2": 0.006059127338282557,
-        "velocity_max_error_over_speed": 0.01781702301433927,
-        "condition_number": 9.808948675692799,
-        "relative_residual_l2": 1.5936341266469132e-16,
-        "normal_derivative_net_flux_over_speed_radius": -1.8041124150158794e-16,
-        "case_metric_velocity_relative_l2": 0.014459149062201476
+        "potential_relative_l2": 0.0004567852867183009,
+        "potential_max_error": 0.00048627566513215204,
+        "velocity_relative_l2": 0.006059127338282572,
+        "velocity_max_error_over_speed": 0.017817023014339708,
+        "condition_number": 9.8089486756928,
+        "relative_residual_l2": 1.4010467452055992e-16,
+        "normal_derivative_net_flux_over_speed_radius": -2.914335439641036e-16,
+        "case_metric_velocity_relative_l2": 0.01445914906220148
       },
       "faceting": {
         "surface_velocity_relative_l2": 0.10261589774428534,
         "probe_velocity_relative_l2": 0.010134541590572274,
-        "probe_potential_relative_l2": 3.39064776135495
+        "probe_potential_relative_l2": 0.02429456830590098
       },
       "case_route_neumann": {
-        "surface_velocity_relative_l2": 0.0066860243071989066,
-        "velocity_relative_l2": 0.009528911787987565,
-        "cp_relative_l2": 0.018609711612980296,
-        "potential_relative_l2_up_to_constant": 0.026456344045943683,
-        "normal_velocity_residual_over_speed": 0.03880587780508787
+        "surface_velocity_relative_l2": 0.006686024307198796,
+        "velocity_relative_l2": 0.00952891178798761,
+        "cp_relative_l2": 0.018609711612980043,
+        "potential_relative_l2_up_to_constant": 0.026456344045943884,
+        "normal_velocity_residual_over_speed": 0.03880587780508795
       },
       "case_route_dirichlet": {
-        "velocity_relative_l2": 0.00782688401831634,
-        "potential_relative_l2": 0.000574592091993327,
-        "normal_derivative_net_flux_over_speed_radius": -1.1102230246251565e-16
+        "velocity_relative_l2": 0.007826884018316332,
+        "potential_relative_l2": 0.000574592091993387,
+        "normal_derivative_net_flux_over_speed_radius": -3.3306690738754696e-16
       },
       "decomposition": {
-        "case_error": 0.005703563068855308,
-        "panel_error": 0.08335397739240508,
+        "case_error": 0.005703563068855316,
+        "panel_error": 0.00489768629701413,
+        "recovered_surface_vs_circle": 0.10694301044285746,
+        "polygon_to_circle_velocity_norm_ratio": 0.8990456639819843,
         "faceting_surface": 0.10261589774428534,
-        "faceting_share_of_case_surface_error": 15.347820024195517
+        "faceting_share_of_case_surface_error": 15.34782002419577
       }
     },
     {
@@ -228,53 +235,56 @@
         "inverse_map_roundtrip": 0.0
       },
       "neumann": {
-        "surface_velocity_relative_l2": 0.04257638252037821,
-        "surface_velocity_max_error_over_speed": 0.08114991741484047,
-        "surface_speed_relative_l2": 0.04257638252037823,
-        "cp_relative_l2": 0.1266911427300363,
-        "cp_min": -2.948702470848638,
+        "surface_velocity_relative_l2": 0.0010299561210185646,
+        "surface_velocity_max_error_over_speed": 0.0019630802152243785,
+        "surface_speed_relative_l2": 0.0010299561210185505,
+        "cp_relative_l2": 0.0029993296252715956,
+        "surface_velocity_method": "boundary_integral",
+        "cp_min": -2.6252968751723915,
         "cp_min_exact": -2.6327762217001225,
         "normal_velocity_residual_over_speed": 6.938893903907228e-16,
-        "velocity_relative_l2": 0.001260149553099823,
-        "velocity_max_error_over_speed": 0.0025137813050698406,
-        "potential_relative_l2_up_to_constant": 0.8006364523509543,
-        "potential_offset": 8.326672684688674e-17,
-        "condition_number": 2.103309600312263,
-        "relative_residual_l2": 2.8463708893515764e-16,
-        "case_metric_velocity_relative_l2": 0.0011517472554826334
+        "velocity_relative_l2": 0.001260149553099817,
+        "velocity_max_error_over_speed": 0.00251378130506964,
+        "potential_relative_l2_up_to_constant": 0.0030586263100973714,
+        "potential_offset": 2.0166160408230382e-17,
+        "condition_number": 2.1033096003122633,
+        "relative_residual_l2": 3.0766970821920836e-16,
+        "case_metric_velocity_relative_l2": 0.001151747255482636
       },
       "dirichlet": {
-        "potential_relative_l2": 0.8012118350084313,
-        "potential_max_error": 2.942348215291823,
-        "velocity_relative_l2": 0.00019983784752310767,
-        "velocity_max_error_over_speed": 0.0005915014462787052,
-        "condition_number": 19.169224213940645,
-        "relative_residual_l2": 1.9023844893798459e-16,
-        "normal_derivative_net_flux_over_speed_radius": -3.157196726277789e-16,
-        "case_metric_velocity_relative_l2": 0.002295497767133801
+        "potential_relative_l2": 2.084674472594087e-05,
+        "potential_max_error": 1.522470674719667e-05,
+        "velocity_relative_l2": 0.0001998378475231271,
+        "velocity_max_error_over_speed": 0.0005915014462789334,
+        "condition_number": 19.169224213940648,
+        "relative_residual_l2": 1.7928677799242824e-16,
+        "normal_derivative_net_flux_over_speed_radius": -1.1102230246251565e-16,
+        "case_metric_velocity_relative_l2": 0.002295497767133742
       },
       "faceting": {
-        "surface_velocity_relative_l2": 0.047265500696260364,
+        "surface_velocity_relative_l2": 0.04726550069626036,
         "probe_velocity_relative_l2": 0.002381045699043402,
-        "probe_potential_relative_l2": 3.4052653311270076
+        "probe_potential_relative_l2": 0.00626733963274551
       },
       "case_route_neumann": {
-        "surface_velocity_relative_l2": 0.0016332624547677696,
-        "velocity_relative_l2": 0.002564771661913654,
-        "cp_relative_l2": 0.004601027161379183,
-        "potential_relative_l2_up_to_constant": 0.006441360851112292,
-        "normal_velocity_residual_over_speed": 0.00965384570411433
+        "surface_velocity_relative_l2": 0.0016332624547678426,
+        "velocity_relative_l2": 0.002564771661913699,
+        "cp_relative_l2": 0.004601027161379337,
+        "potential_relative_l2_up_to_constant": 0.00644136085111224,
+        "normal_velocity_residual_over_speed": 0.009653845704114372
       },
       "case_route_dirichlet": {
-        "velocity_relative_l2": 0.0002265665438862169,
-        "potential_relative_l2": 2.3342307209819606e-05,
-        "normal_derivative_net_flux_over_speed_radius": -4.787836793695988e-16
+        "velocity_relative_l2": 0.00022656654388625004,
+        "potential_relative_l2": 2.334230720988488e-05,
+        "normal_derivative_net_flux_over_speed_radius": 1.8735013540549517e-16
       },
       "decomposition": {
-        "case_error": 0.001260149553099823,
-        "panel_error": 0.04257638252037821,
-        "faceting_surface": 0.047265500696260364,
-        "faceting_share_of_case_surface_error": 28.939317473615073
+        "case_error": 0.001260149553099817,
+        "panel_error": 0.0010299561210185646,
+        "recovered_surface_vs_circle": 0.048241990655945165,
+        "polygon_to_circle_velocity_norm_ratio": 0.9529699559985033,
+        "faceting_surface": 0.04726550069626036,
+        "faceting_share_of_case_surface_error": 28.939317473613777
       }
     },
     {
@@ -304,81 +314,167 @@
         "midpoint_relative_error": 0.0,
         "vertex_radius": 1.0000000023013909,
         "vertex_radius_relative_error": 2.3013908556634988e-09,
-        "rotation_symmetry_residual": 6.944407461705052e-17,
+        "rotation_symmetry_residual": 6.944407461705054e-17,
         "inverse_map_roundtrip": 0.0
       },
       "neumann": {
-        "surface_velocity_relative_l2": 0.021484156668325947,
-        "surface_velocity_max_error_over_speed": 0.041996942821470234,
-        "surface_speed_relative_l2": 0.021484156668325923,
-        "cp_relative_l2": 0.06232514255365869,
-        "cp_min": -2.9871447499673747,
+        "surface_velocity_relative_l2": 0.00022933940308291086,
+        "surface_velocity_max_error_over_speed": 0.00044830960538520695,
+        "surface_speed_relative_l2": 0.00022933940308292281,
+        "cp_relative_l2": 0.000658163051856995,
+        "surface_velocity_method": "boundary_integral",
+        "cp_min": -2.819438381432629,
         "cp_min_exact": -2.8211908797219665,
-        "normal_velocity_residual_over_speed": 8.326672684688674e-16,
-        "velocity_relative_l2": 0.00029859030077694794,
-        "velocity_max_error_over_speed": 0.0005009439445096236,
-        "potential_relative_l2_up_to_constant": 0.8002893565747918,
-        "potential_offset": 1.4051260155412137e-16,
+        "normal_velocity_residual_over_speed": 8.881784197001252e-16,
+        "velocity_relative_l2": 0.0002985903007769086,
+        "velocity_max_error_over_speed": 0.0005009439445094291,
+        "potential_relative_l2_up_to_constant": 0.0007832366434598558,
+        "potential_offset": 9.107298248878237e-18,
         "condition_number": 2.050330425510918,
-        "relative_residual_l2": 4.667922584793022e-16,
-        "case_metric_velocity_relative_l2": 0.00030726756066378304
+        "relative_residual_l2": 4.529179413029139e-16,
+        "case_metric_velocity_relative_l2": 0.0003072675606638223
       },
       "dirichlet": {
-        "potential_relative_l2": 0.8004377333935047,
-        "potential_max_error": 2.94235491738196,
-        "velocity_relative_l2": 1.1578569898126996e-06,
-        "velocity_max_error_over_speed": 2.2783002943696196e-06,
-        "condition_number": 38.11334353855527,
-        "relative_residual_l2": 2.6431722032490393e-16,
-        "normal_derivative_net_flux_over_speed_radius": 1.6653345369377348e-16,
-        "case_metric_velocity_relative_l2": 0.0006046406878629284
+        "potential_relative_l2": 2.829101656619364e-06,
+        "potential_max_error": 2.2151148666438303e-06,
+        "velocity_relative_l2": 1.1578569897951178e-06,
+        "velocity_max_error_over_speed": 2.278300294550706e-06,
+        "condition_number": 38.11334353855523,
+        "relative_residual_l2": 2.0796505932017758e-16,
+        "normal_derivative_net_flux_over_speed_radius": 5.551115123125783e-17,
+        "case_metric_velocity_relative_l2": 0.0006046406878629481
       },
       "faceting": {
         "surface_velocity_relative_l2": 0.022639469806133655,
-        "probe_velocity_relative_l2": 0.0006057887981147891,
-        "probe_potential_relative_l2": 3.409060681264153
+        "probe_velocity_relative_l2": 0.000605788798114789,
+        "probe_potential_relative_l2": 0.0015872828091301446
       },
       "case_route_neumann": {
-        "surface_velocity_relative_l2": 0.0004046292256971318,
-        "velocity_relative_l2": 0.0006130933686988105,
-        "cp_relative_l2": 0.0011433147127329635,
-        "potential_relative_l2_up_to_constant": 0.0016062144609975194,
-        "normal_velocity_residual_over_speed": 0.0024105402652203024
+        "surface_velocity_relative_l2": 0.0004046292256971646,
+        "velocity_relative_l2": 0.0006130933686987638,
+        "cp_relative_l2": 0.0011433147127330734,
+        "potential_relative_l2_up_to_constant": 0.0016062144609974612,
+        "normal_velocity_residual_over_speed": 0.0024105402652204963
       },
       "case_route_dirichlet": {
-        "velocity_relative_l2": 1.2289117975938238e-06,
-        "potential_relative_l2": 2.997878055220035e-06,
-        "normal_derivative_net_flux_over_speed_radius": -8.326672684688674e-17
+        "velocity_relative_l2": 1.2289117975631466e-06,
+        "potential_relative_l2": 2.9978780551752653e-06,
+        "normal_derivative_net_flux_over_speed_radius": 2.914335439641036e-16
       },
       "decomposition": {
-        "case_error": 0.00029859030077694794,
-        "panel_error": 0.021484156668325947,
+        "case_error": 0.0002985903007769086,
+        "panel_error": 0.00022933940308291086,
+        "recovered_surface_vs_circle": 0.02286330951948714,
+        "polygon_to_circle_velocity_norm_ratio": 0.9773919093496922,
         "faceting_surface": 0.022639469806133655,
-        "faceting_share_of_case_surface_error": 55.951148281808685
+        "faceting_share_of_case_surface_error": 55.95114828180415
+      }
+    },
+    {
+      "panels": 128,
+      "radius": 1.0,
+      "speed": 1.0,
+      "h_mean": 0.049082457045824576,
+      "h_over_radius": 0.049082457045824576,
+      "apothem": 0.9996988186962042,
+      "geometry_gate": {
+        "panel_count": 128,
+        "radius": 1.0,
+        "alpha": 0.015625,
+        "scale_factor": 0.9998003527381439,
+        "half_edge_moment_gamma": 1.554029984747127,
+        "edge_length_quadrature": 0.04908246204512089,
+        "edge_length_closed_form": 0.049082457045824576,
+        "edge_length_relative_error": 1.0185505408849168e-07,
+        "midpoint_quadrature": [
+          0.9993977281025862,
+          0.02453383716370901
+        ],
+        "midpoint_closed_form": [
+          0.9993977281025862,
+          0.024533837163709007
+        ],
+        "midpoint_relative_error": 3.470492199319018e-18,
+        "vertex_radius": 1.0000000003440097,
+        "vertex_radius_relative_error": 3.4400970960746236e-10,
+        "rotation_symmetry_residual": 1.3880559023416514e-16,
+        "inverse_map_roundtrip": 0.0
+      },
+      "neumann": {
+        "surface_velocity_relative_l2": 5.3598824904202316e-05,
+        "surface_velocity_max_error_over_speed": 0.00010601097999508672,
+        "surface_speed_relative_l2": 5.3598824904212216e-05,
+        "cp_relative_l2": 0.00015270269696065496,
+        "surface_velocity_method": "boundary_integral",
+        "cp_min": -2.91151144399267,
+        "cp_min_exact": -2.9119307825404417,
+        "normal_velocity_residual_over_speed": 1.8318679906315083e-15,
+        "velocity_relative_l2": 7.563133167818373e-05,
+        "velocity_max_error_over_speed": 0.0001268195965439232,
+        "potential_relative_l2_up_to_constant": 0.00019823476528369065,
+        "potential_offset": 2.3201926491189795e-17,
+        "condition_number": 2.0248495990182516,
+        "relative_residual_l2": 5.187902854667006e-16,
+        "case_metric_velocity_relative_l2": 7.675030516762173e-05
+      },
+      "dirichlet": {
+        "potential_relative_l2": 3.475032423480778e-07,
+        "potential_max_error": 2.725519909763108e-07,
+        "velocity_relative_l2": 1.3258089102791685e-07,
+        "velocity_max_error_over_speed": 2.223135810520257e-07,
+        "condition_number": 76.11357941479721,
+        "relative_residual_l2": 2.164071025462343e-16,
+        "normal_derivative_net_flux_over_speed_radius": 3.3306690738754696e-16,
+        "case_metric_velocity_relative_l2": 0.00015224466604202449
+      },
+      "faceting": {
+        "surface_velocity_relative_l2": 0.011074065757526676,
+        "probe_velocity_relative_l2": 0.00015237723922406992,
+        "probe_potential_relative_l2": 0.0003992546646829789
+      },
+      "case_route_neumann": {
+        "surface_velocity_relative_l2": 0.00010075873250394578,
+        "velocity_relative_l2": 0.00015320159257178404,
+        "cp_relative_l2": 0.00028491716813760777,
+        "potential_relative_l2_up_to_constant": 0.00040141461260013983,
+        "normal_velocity_residual_over_speed": 0.0006024533450977975
+      },
+      "case_route_dirichlet": {
+        "velocity_relative_l2": 1.3656224323678916e-07,
+        "potential_relative_l2": 3.578165254114787e-07,
+        "normal_derivative_net_flux_over_speed_radius": 2.0816681711721685e-17
+      },
+      "decomposition": {
+        "case_error": 7.563133167818373e-05,
+        "panel_error": 5.3598824904202316e-05,
+        "recovered_surface_vs_circle": 0.011127051723139382,
+        "polygon_to_circle_velocity_norm_ratio": 0.9889299864781717,
+        "faceting_surface": 0.011074065757526676,
+        "faceting_share_of_case_surface_error": 109.90675926866199
       }
     }
   ],
   "exact_solution_gates": {
-    "panels": 64,
-    "no_flux_residual_over_speed": 1.7208456881689926e-15,
+    "panels": 128,
+    "no_flux_residual_over_speed": 3.7192471324942744e-15,
     "mirror_symmetry_residual_over_speed": 0.0,
-    "far_field_velocity_error_over_speed": 1.276276300374989e-06,
+    "far_field_velocity_error_over_speed": 1.2777949629925528e-06,
     "far_field_radius_over_radius": 1000.0,
-    "neumann_data_consistency_error_over_speed": 8.604228440844963e-16
+    "neumann_data_consistency_error_over_speed": 1.8735013540549517e-15
   },
   "panels_budget": 128,
   "repro_cmd": "python -m tensorbem.benchmarks.case_cylinder_polygon_exact --output benchmarks/verified/case_bem_laplace_cylinder_polygon_exact",
   "criteria": [
     {
       "name": "geometry_gate_all_levels",
-      "value": 2.6478584116773463e-07,
+      "value": 2.6478584094569e-07,
       "threshold": "<= 1e-6",
       "ok": true,
       "note": "the Schwarz-Christoffel map must reproduce the mesh geometry"
     },
     {
       "name": "exact_solution_no_flux",
-      "value": 1.7208456881689926e-15,
+      "value": 3.7192471324942744e-15,
       "threshold": "<= 1e-12 U",
       "ok": true,
       "note": "closed-form wall velocity has zero normal component on every edge"
@@ -392,63 +488,63 @@
     },
     {
       "name": "exact_solution_far_field",
-      "value": 1.276276300374989e-06,
+      "value": 1.2777949629925528e-06,
       "threshold": "<= 1e-5 U",
       "ok": true,
       "note": "uniform stream recovered at 1e3 radii"
     },
     {
       "name": "exact_neumann_data_matches_closed_form_velocity",
-      "value": 8.604228440844963e-16,
+      "value": 1.8735013540549517e-15,
       "threshold": "<= 1e-5 U",
       "ok": true,
       "note": "U cos(theta) re-derived from the closed-form complex velocity"
     },
     {
       "name": "neumann_surface_velocity_relative_l2_budget",
-      "value": 0.021484156668325947,
+      "value": 5.3598824904202316e-05,
       "threshold": "< 0.03",
       "ok": true,
       "note": "route N vs polygon-exact wall velocity at 128 panels"
     },
     {
       "name": "neumann_cp_relative_l2_budget",
-      "value": 0.06232514255365869,
+      "value": 0.00015270269696065496,
       "threshold": "< 0.03",
-      "ok": false,
+      "ok": true,
       "note": "route N vs polygon-exact Cp at 128 panels"
     },
     {
       "name": "neumann_velocity_relative_l2_budget",
-      "value": 0.00029859030077694794,
+      "value": 7.563133167818373e-05,
       "threshold": "< 0.03",
       "ok": true,
       "note": "route N vs polygon-exact exterior velocity at 128 panels"
     },
     {
       "name": "neumann_potential_relative_l2_up_to_constant_budget",
-      "value": 0.8002893565747918,
+      "value": 0.00019823476528369065,
       "threshold": "< 0.03",
-      "ok": false,
+      "ok": true,
       "note": "route N vs polygon-exact perturbation potential at 128 panels"
     },
     {
       "name": "dirichlet_velocity_relative_l2_budget",
-      "value": 1.1578569898126996e-06,
+      "value": 1.3258089102791685e-07,
       "threshold": "< 0.03",
       "ok": true,
       "note": "route D vs polygon-exact exterior velocity at the budget mesh"
     },
     {
       "name": "dirichlet_potential_relative_l2_budget",
-      "value": 0.8004377333935047,
+      "value": 3.475032423480778e-07,
       "threshold": "< 0.03",
-      "ok": false,
+      "ok": true,
       "note": "route D vs polygon-exact perturbation potential at the budget mesh"
     },
     {
       "name": "neumann_no_flux_at_budget",
-      "value": 8.326672684688674e-16,
+      "value": 1.8318679906315083e-15,
       "threshold": "<= 0.01 U",
       "ok": true,
       "note": "the polygon must be a streamline for the panel solution"
@@ -456,20 +552,22 @@
     {
       "name": "neumann_surface_velocity_observed_order",
       "value": [
-        0.9453886323676782,
-        0.9759942451184551,
-        0.9884990685923164
+        2.3261778465247613,
+        2.2652924260441596,
+        2.170801392787399,
+        2.098122769243469
       ],
       "threshold": ">= 1.5",
-      "ok": false,
+      "ok": true,
       "note": "order of the panel solution against the exact polygon field"
     },
     {
       "name": "dirichlet_velocity_observed_order",
       "value": [
-        2.402483675910428,
-        4.956725679186195,
-        7.444173161893415
+        2.4024836759104247,
+        4.956725679186057,
+        7.444173161915501,
+        3.127871618900014
       ],
       "threshold": ">= 1.5",
       "ok": true,
@@ -477,26 +575,26 @@
     },
     {
       "name": "faceting_dominates_anchor_surface_metric",
-      "value": 8.332625561308198,
+      "value": 8.332625561308225,
       "threshold": "> 1 on every ladder level",
       "ok": true,
       "note": "the anchor's wall-velocity error is larger than the panel error because the circle is the wrong reference for a polygon body"
     },
     {
       "name": "triangle_inequality_consistent",
-      "value": 0.367244535851349,
+      "value": 1.951957505179347e-08,
       "threshold": ">= 0",
       "ok": true,
-      "note": "case error <= faceting + panel error must hold"
+      "note": "recovered wall field, polygon and cylinder obey the triangle inequality"
     },
     {
       "name": "wrong_reference_control",
-      "value": 0.03652269259276537,
+      "value": 0.0347056494756932,
       "threshold": ">= 0.03",
       "ok": true,
       "note": "the same numbers against the polygon rotated by pi/n must fail the case tolerance, so the reference is not interchangeable with its symmetric twin"
     }
   ],
-  "overall": "FAIL",
-  "wall_seconds": 9.425501741468906
+  "overall": "PASS",
+  "wall_seconds": 2.533959624997806
 }

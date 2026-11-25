@@ -30,7 +30,7 @@ any error is quoted.  The meshed Wigley hull reproduces L = 3.800000 m,
 B = 0.500000 m, T = 0.225000 m and
 Cb = 0.444097 (closed form 0.444444); the
 ellipsoid quadrature reproduces ∇ = 2πabc/3 to
--0.000000 % with Cb = π/6 = 0.523599.
+0.000000 % relative error with Cb = π/6 = 0.523599.
 
 *Brief audit.*  The mission brief quotes Cb = 0.667 for this hullform. 0.667 is its prismatic coefficient Cp = Cb/Cm (Cm = 2/3); the displaced-volume coefficient of the parabolic Wigley hull is Cb = 4/9 = 0.4444. Using 0.667 in V = Cb L B T over-predicts displacement by 50 %.
 
@@ -67,8 +67,8 @@ H_pair(k) = H(k)(1 + e^{ikd}) for two identical hulls separated by d, hence
 slowly decaying envelope as d grows.  The panel route replaces H by the panel
 sum; the superposition itself is verified *without* using the factorisation, by
 concatenating the panels of both hulls (`explicit_pair_kochin`), which must agree
-with H(1 + e^{ikd}) to round-off (measured worst relative deviation below
-2.06e-15).
+with H(1 + e^{ikd}) to round-off (measured worst relative deviation at most
+1e-14).
 
 **Tool chain.** NumPy/SciPy + matplotlib only (`python -m
 tensorbem.benchmarks.bem_verified_anchors --out-root benchmarks/verified/bem_verified_anchors --write-doc

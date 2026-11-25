@@ -80,7 +80,7 @@ $$\omega^2=\frac{(g k + D k^5/\rho_w)\tanh(kH)}{1+\mu k\tanh(kH)},\qquad \mu=\fr
 | `phase_speed_ratio_mass_loading` / `wavelength_ratio_mass_loading` | c_ice/c_open 与 λ_ice/λ_open（同一数值：λ=2π/k 且 c=ω/k） |
 | `ice_edge_coefficients(..., include_plate_inertia=True)` | 冰缘匹配改用 eq. 3 的 k 与 c_g（默认 `False`＝旧行为，逐位相同） |
 
-根求解器 `_smallest_positive_root`：eq. 3 的残差在 (ω, plate) 全域**不保证单调**（分子升、分母也升），故先几何扩展定上界，再在 [k_lo, k_hi] 上扫描**首个变号区间**后二分，返回最小正根——这与 `ice.py` 只取传播支的口径一致（D>0 时高 freq 无截止，见 §5.2）。
+对 k > 0，eq. 3 可写为 ω² = (g + D k⁴/ρ_w) / (μ + 1/[k tanh(kH)])。分子递增、分母严格递减，故传播支只有一个正根。反演从浅水估计 ω/√(gH) 开始扩展区间，再按波数相对容差二分。
 
 ### 2.2 判据（V1–V10，机器可判）
 

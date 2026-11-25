@@ -82,11 +82,32 @@ def double_layer_kernel(
 def _log_distance_primitive(z: float, normal_distance: float) -> float:
     """Primitive of log(sqrt(z*z + normal_distance**2)); stable at z=0."""
     h = abs(normal_distance)
-    if h <= 1.0e-14:
-        if abs(z) <= 1.0e-14:
-            return 0.0
-        return z * math.log(abs(z)) - z
-    return 0.5 * z * math.log(z * z + h * h) - z + h * math.atan(z / h)
+    radius = math.hypot(z, h)
+    if radius == 0.0:
+        return 0.0
+    return z * (math.log(radius) - 1.0) + h * math.atan2(z, h)
+
+
+def _log_length_ratio(length: float, reference: float) -> float:
+    ratio = length / reference
+    if 0.0 < ratio < math.inf:
+        return math.log(ratio)
+    return math.log(length) - math.log(reference)
+
+
+def _far_panel_log_correction(centered_x, height, radius, length):
+    """Mean log-distance minus log(radius), from the midpoint expansion.
+
+    For |z| = length / (2 radius) <= 1/8, integrating log(1-z t)
+    over -1 <= t <= 1 leaves only even powers. After degree 16 the
+    omitted terms sum to less than 2e-19 in absolute value.
+    """
+    z = (0.5 * length / radius) * (centered_x / radius + 1j * (height / radius))
+    square = z * z
+    series = 0.0
+    for degree in range(16, 0, -2):
+        series = (series + 1.0 / (degree * (degree + 1))) * square
+    return -series.real
 
 
 def integrate_single_layer_panel(
@@ -114,11 +135,23 @@ def integrate_single_layer_panel(
     reference = validate_reference_length(reference_length)
     xi = float(np.dot(x - a, t))
     normal_distance = float(np.dot(x - a, np.array([-t[1], t[0]])))
-    integral_log_r = (
-        _log_distance_primitive(length - xi, normal_distance)
-        - _log_distance_primitive(-xi, normal_distance)
-    )
-    return -(integral_log_r - length * math.log(reference)) / _TWO_PI
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, normal_distance)
+    if radius >= 4.0 * length:
+        correction = _far_panel_log_correction(centered_x, normal_distance, radius, length)
+        return -length * ((math.log(radius) - math.log(reference)) + correction) / _TWO_PI
+    # Integrate in units of panel length so the endpoint singularity has
+    # the same continuous limit at every physical length scale.
+    u = xi / length
+    v = normal_distance / length
+    mean_log = _log_distance_primitive(1.0 - u, v) - _log_distance_primitive(-u, v)
+    return -length * (mean_log + _log_length_ratio(length, reference)) / _TWO_PI
+
+
+def _far_double_layer_angle(radius, eta, length):
+    """Signed angle from endpoint cross and dot products divided by radius²."""
+    ratio = length / radius
+    return np.arctan2(ratio * (eta / radius), 1.0 - (0.5 * ratio)**2)
 
 
 def integrate_double_layer_panel(
@@ -147,11 +180,14 @@ def integrate_double_layer_panel(
     xi = float(np.dot(delta, t))
     eta = float(np.dot(delta, n))
     h = abs(eta)
-    if h <= 1.0e-14:
+    if h <= 1.0e-14 * length:
         return 0.0
+    radius = math.hypot(xi - 0.5 * length, eta)
+    if radius >= 4.0 * length:
+        return float(_far_double_layer_angle(radius, eta, length) / _TWO_PI)
     z0, z1 = -xi, length - xi
     return math.copysign(1.0, eta) * (
-        math.atan(z1 / h) - math.atan(z0 / h)
+        math.atan2(z1, h) - math.atan2(z0, h)
     ) / _TWO_PI
 
 
@@ -183,6 +219,42 @@ def _validate_panel_length(length: float) -> float:
     return value
 
 
+def _scaled_panel_endpoints(xi, eta, length):
+    """Local coordinates at the two endpoints, in units safe for products."""
+    scale = np.maximum(length, np.maximum(np.abs(xi), np.abs(eta)))
+    return xi / scale, (xi - length) / scale, eta / scale, length / scale, scale
+
+
+def _single_gradient_components(xi, eta, length):
+    x0, x1, y, span, _ = _scaled_panel_endpoints(xi, eta, length)
+    r0, r1 = np.hypot(x0, y), np.hypot(x1, y)
+    smaller, larger = np.minimum(r0, r1), np.maximum(r0, r1)
+    if np.any(smaller == 0.0):
+        raise ValueError("single-layer gradient is singular at a panel endpoint")
+    # Rationalise r0-r1 when the two distances are comparable. Otherwise
+    # subtract logarithms to avoid forming an extreme distance ratio.
+    comparable = smaller >= 0.5 * larger
+    difference = span * (x0 + x1) / (r0 + r1)
+    along = np.where(comparable,
+                     np.log1p(np.where(comparable, difference, 0.0) / r1),
+                     np.log(r0) - np.log(r1))
+    across = np.where(y == 0.0, 0.0, np.arctan2(y * span, x0 * x1 + y * y))
+    return along, across
+
+
+def _double_gradient_components(xi, eta, length):
+    x0, x1, y, span, scale = _scaled_panel_endpoints(xi, eta, length)
+    r0, r1 = np.hypot(x0, y), np.hypot(x1, y)
+    if np.any(np.minimum(r0, r1) <= 1.0e-14 * span):
+        raise ValueError("double-layer gradient is singular at a panel endpoint")
+    # Integral of 1/(w-s)^2 is L/[w(w-L)] with w=xi+i*eta.
+    # Keep each endpoint direction normalized before restoring the units.
+    ux0, uy0 = x0 / r0, y / r0
+    ux1, uy1 = x1 / r1, y / r1
+    magnitude = (span / r0 / r1) / scale
+    return -magnitude * (ux0 * uy1 + ux1 * uy0), magnitude * (ux0 * ux1 - uy0 * uy1)
+
+
 def integrate_single_layer_panel_gradient(
     target: FloatArray,
     start: FloatArray,
@@ -207,14 +279,7 @@ def integrate_single_layer_panel_gradient(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z0, z1 = -xi, length - xi
-    along = 0.5 * math.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
-    if eta == 0.0:
-        # Target on the panel's line: the integral of eta/rho^2 vanishes off
-        # the panel and is undefined on it, so the caller must stay clear.
-        across = 0.0
-    else:
-        across = math.atan(z1 / eta) - math.atan(z0 / eta)
+    along, across = _single_gradient_components(xi, eta, length)
     return -(t * along + n * across) / _TWO_PI
 
 
@@ -244,17 +309,8 @@ def integrate_double_layer_panel_gradient(
     n = np.asarray(normal, dtype=float)
     t = np.asarray(tangent, dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z1 = length - xi
-    r0 = xi * xi + eta * eta
-    r1 = z1 * z1 + eta * eta
-    if r0 <= 1.0e-28 or r1 <= 1.0e-28:
-        raise ValueError(
-            "double-layer gradient is singular at a panel endpoint; "
-            "keep the target a finite distance from the boundary"
-        )
-    a_term = -xi / r0 - z1 / r1
-    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
-    return (a_term * n - 2.0 * eta * b_term * t) / _TWO_PI
+    along, across = _double_gradient_components(xi, eta, length)
+    return (along * t + across * n) / _TWO_PI
 
 
 # ---------------------------------------------------------------------------
@@ -270,6 +326,26 @@ def integrate_double_layer_panel_gradient(
 # The abscissa ``s`` is measured from the panel start (0 <= s <= L), the same
 # convention as the density traces in :mod:`tensorbem.solver`.
 # ---------------------------------------------------------------------------
+
+
+# With u = 2s/L - 1, these are the exact moments of (1+u)/2 on
+# [-1,1] with measure du/2. In the far field |z| = L/(2r) <= 1/8.
+# Expanding log(1-zu), 1/(1-zu) and 1/(1-zu)^2 through degree 20
+# gives the potential and its first two derivatives without endpoint differences.
+_LINEAR_MOMENTS = tuple(0.5 / (n + 1 + n % 2) for n in range(21))
+_LOG_COEFFICIENTS = (0.0,) + tuple(-a / n for n, a in enumerate(_LINEAR_MOMENTS) if n)
+_INVERSE_SQUARE_COEFFICIENTS = tuple((n + 1) * a for n, a in enumerate(_LINEAR_MOMENTS))
+
+
+def _far_panel_coordinate(centered_x, eta, radius, length):
+    return (0.5 * length / radius) * complex(centered_x / radius, -eta / radius)
+
+
+def _panel_series(z, coefficients):
+    value = coefficients[-1]
+    for coefficient in reversed(coefficients[:-1]):
+        value = coefficient + z * value
+    return value
 
 
 def _log_sqrt_first_moment_primitive(z: float, normal_distance: float) -> float:
@@ -308,13 +384,18 @@ def integrate_single_layer_panel_first_moment(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
-    z0, z1 = -xi, length - xi
-    integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
-    first_moment = xi * integral_log_r + (
-        _log_sqrt_first_moment_primitive(z1, eta)
-        - _log_sqrt_first_moment_primitive(z0, eta)
-    )
-    return -(first_moment - 0.5 * length * length * math.log(reference)) / _TWO_PI
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        mean = 0.5 * _log_length_ratio(radius, reference) + _panel_series(z, _LOG_COEFFICIENTS).real
+    else:
+        u, v = xi / length, eta / length
+        z0, z1 = -u, 1.0 - u
+        integral_log = _log_distance_primitive(z1, v) - _log_distance_primitive(z0, v)
+        mean = (u * integral_log + _log_sqrt_first_moment_primitive(z1, v)
+                - _log_sqrt_first_moment_primitive(z0, v) + 0.5 * _log_length_ratio(length, reference))
+    return length * (length * (-mean / _TWO_PI))
 
 
 def integrate_double_layer_panel_first_moment(
@@ -339,13 +420,17 @@ def integrate_double_layer_panel_first_moment(
     t = np.asarray(tangent, dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
     h = abs(eta)
-    if h <= 1.0e-14:
+    if h <= 1.0e-14 * length:
         return 0.0
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        weighted_inverse = 2 * z * _panel_series(z, _LINEAR_MOMENTS)
+        return length * (-weighted_inverse.imag / _TWO_PI)
     z0, z1 = -xi, length - xi
-    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
-    r2_0 = z0 * z0 + h * h
-    r2_1 = z1 * z1 + h * h
-    logarithm = 0.5 * math.log(r2_1 / r2_0)
+    angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
+    logarithm = _log_length_ratio(math.hypot(z1, h), math.hypot(z0, h))
     return (xi * angle + eta * logarithm) / _TWO_PI
 
 
@@ -373,8 +458,15 @@ def integrate_single_layer_panel_first_moment_gradient(
     t = np.asarray(tangent, dtype=float)
     n = np.array([-t[1], t[0]], dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        weighted_inverse = 2 * z * _panel_series(z, _LINEAR_MOMENTS)
+        return -length * (t * weighted_inverse.real - n * weighted_inverse.imag) / _TWO_PI
+    xi, eta = xi / length, eta / length
     h = abs(eta)
-    z0, z1 = -xi, length - xi
+    z0, z1 = -xi, 1.0 - xi
     r2_0 = z0 * z0 + h * h
     r2_1 = z1 * z1 + h * h
     if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
@@ -385,10 +477,10 @@ def integrate_single_layer_panel_first_moment_gradient(
     log_rho0 = 0.5 * math.log(r2_0)
     log_rho1 = 0.5 * math.log(r2_1)
     integral_log_r = _log_distance_primitive(z1, eta) - _log_distance_primitive(z0, eta)
-    along = integral_log_r + xi * (log_rho0 - log_rho1) + z0 * log_rho0 - z1 * log_rho1
-    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
+    along = integral_log_r - log_rho1
+    angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
     across = xi * angle + eta * (log_rho1 - log_rho0)
-    return -(t * along + n * across) / _TWO_PI
+    return -length * (t * along + n * across) / _TWO_PI
 
 
 def integrate_double_layer_panel_first_moment_gradient(
@@ -413,8 +505,15 @@ def integrate_double_layer_panel_first_moment_gradient(
     n = np.asarray(normal, dtype=float)
     t = np.asarray(tangent, dtype=float)
     xi, eta = _panel_local_coordinates(target, start, t, n)
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, eta)
+    if radius >= 4.0 * length:
+        z = _far_panel_coordinate(centered_x, eta, radius, length)
+        second = (2 * z)**2 * _panel_series(z, _INVERSE_SQUARE_COEFFICIENTS)
+        return (t * second.imag + n * second.real) / _TWO_PI
+    xi, eta = xi / length, eta / length
     h = abs(eta)
-    z0, z1 = -xi, length - xi
+    z0, z1 = -xi, 1.0 - xi
     r2_0 = z0 * z0 + h * h
     r2_1 = z1 * z1 + h * h
     if r2_0 <= 1.0e-28 or r2_1 <= 1.0e-28:
@@ -422,7 +521,7 @@ def integrate_double_layer_panel_first_moment_gradient(
             "first-moment gradient is singular at a panel endpoint; "
             "keep the target a finite distance from the boundary"
         )
-    angle = math.copysign(1.0, eta) * (math.atan(z1 / h) - math.atan(z0 / h))
+    angle = math.copysign(1.0, eta) * (math.atan2(z1, h) - math.atan2(z0, h))
     logarithm = 0.5 * math.log(r2_1 / r2_0)
     along = (
         angle
@@ -461,26 +560,10 @@ def _validate_target_batch(targets: FloatArray, name: str = "targets") -> NDArra
 def _log_distance_primitive_many(z: NDArray, normal_distance: NDArray) -> NDArray:
     """Vectorised :func:`_log_distance_primitive` (same stable branch)."""
     h = np.abs(normal_distance)
-    tiny = h <= 1.0e-14
-    result = np.empty_like(z)
-    if np.any(tiny):
-        z_tiny = z[tiny]
-        branch = np.empty_like(z_tiny)
-        at_origin = np.abs(z_tiny) <= 1.0e-14
-        branch[at_origin] = 0.0
-        off = ~at_origin
-        branch[off] = z_tiny[off] * np.log(np.abs(z_tiny[off])) - z_tiny[off]
-        result[tiny] = branch
-    regular = ~tiny
-    if np.any(regular):
-        z_r = z[regular]
-        h_r = h[regular]
-        result[regular] = (
-            0.5 * z_r * np.log(z_r * z_r + h_r * h_r)
-            - z_r
-            + h_r * np.arctan(z_r / h_r)
-        )
-    return result
+    radius = np.hypot(z, h)
+    log_radius = np.zeros_like(radius)
+    np.log(radius, where=radius > 0.0, out=log_radius)
+    return z * (log_radius - 1.0) + h * np.arctan2(z, h)
 
 
 def integrate_single_layer_panel_many(
@@ -504,10 +587,22 @@ def integrate_single_layer_panel_many(
     delta = x - a
     xi = delta @ t
     normal_distance = delta @ np.array([-t[1], t[0]])
-    integral_log_r = _log_distance_primitive_many(
-        length - xi, normal_distance
-    ) - _log_distance_primitive_many(-xi, normal_distance)
-    return -(integral_log_r - length * math.log(reference)) / _TWO_PI
+    centered_x = xi - 0.5 * length
+    radius = np.hypot(centered_x, normal_distance)
+    far = radius >= 4.0 * length
+    values = np.empty_like(radius)
+    if np.any(far):
+        correction = _far_panel_log_correction(
+            centered_x[far], normal_distance[far], radius[far], length
+        )
+        values[far] = -length * ((np.log(radius[far]) - math.log(reference)) + correction) / _TWO_PI
+    near = ~far
+    if np.any(near):
+        u = xi[near] / length
+        v = normal_distance[near] / length
+        mean_log = _log_distance_primitive_many(1.0 - u, v) - _log_distance_primitive_many(-u, v)
+        values[near] = -length * (mean_log + _log_length_ratio(length, reference)) / _TWO_PI
+    return values
 
 
 def integrate_double_layer_panel_many(
@@ -534,12 +629,17 @@ def integrate_double_layer_panel_many(
     h = np.abs(eta)
     z0, z1 = -xi, length - xi
     values = np.zeros(x.shape[0], dtype=float)
-    regular = h > 1.0e-14
+    regular = h > 1.0e-14 * length
+    radius = np.hypot(xi - 0.5 * length, eta)
+    far = regular & (radius >= 4.0 * length)
+    if np.any(far):
+        values[far] = _far_double_layer_angle(radius[far], eta[far], length) / _TWO_PI
+    regular &= ~far
     if np.any(regular):
         h_r = h[regular]
         values[regular] = (
             np.sign(eta[regular])
-            * (np.arctan(z1[regular] / h_r) - np.arctan(z0[regular] / h_r))
+            * (np.arctan2(z1[regular], h_r) - np.arctan2(z0[regular], h_r))
             / _TWO_PI
         )
     return values
@@ -565,14 +665,7 @@ def integrate_single_layer_panel_gradient_many(
     delta = x - np.asarray(start, dtype=float)
     xi = delta @ t
     eta = delta @ n
-    z0, z1 = -xi, length - xi
-    along = 0.5 * np.log((xi * xi + eta * eta) / (z1 * z1 + eta * eta))
-    across = np.zeros_like(eta)
-    regular = eta != 0.0
-    if np.any(regular):
-        across[regular] = np.arctan(z1[regular] / eta[regular]) - np.arctan(
-            z0[regular] / eta[regular]
-        )
+    along, across = _single_gradient_components(xi, eta, length)
     return -(
         along[:, None] * t[None, :] + across[:, None] * n[None, :]
     ) / _TWO_PI
@@ -597,16 +690,5 @@ def integrate_double_layer_panel_gradient_many(
     delta = x - np.asarray(start, dtype=float)
     xi = delta @ t
     eta = delta @ n
-    z1 = length - xi
-    r0 = xi * xi + eta * eta
-    r1 = z1 * z1 + eta * eta
-    if np.any(r0 <= 1.0e-28) or np.any(r1 <= 1.0e-28):
-        raise ValueError(
-            "double-layer gradient is singular at a panel endpoint; "
-            "keep the target a finite distance from the boundary"
-        )
-    a_term = -xi / r0 - z1 / r1
-    b_term = 0.5 * (1.0 / r1 - 1.0 / r0)
-    return (
-        a_term[:, None] * n[None, :] - 2.0 * eta[:, None] * b_term[:, None] * t[None, :]
-    ) / _TWO_PI
+    along, across = _double_gradient_components(xi, eta, length)
+    return (along[:, None] * t + across[:, None] * n) / _TWO_PI

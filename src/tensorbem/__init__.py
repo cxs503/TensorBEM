@@ -1,6 +1,7 @@
 """TensorBEM: transparent boundary-element methods for scientific computing."""
 
 from .analytic import (
+    dirichlet_wedge_mode,
     BESSEL_J0_FIRST_ZERO,
     BESSEL_J1_FIRST_ZERO,
     SOLID_HARMONICS,
@@ -180,7 +181,10 @@ from .solver import (
     compute_added_mass_matrix_2d,
     evaluate_exterior_field,
     evaluate_exterior_surface_velocity,
+    evaluate_interior_surface_gradient,
     evaluate_interior_field,
+    evaluate_interior_field_and_gradient,
+    estimate_dirichlet_wedge_amplitude,
     solve_laplace_dirichlet,
     solve_laplace_exterior_dirichlet,
     solve_laplace_exterior_neumann,
@@ -194,6 +198,7 @@ from .solver3d import (
     evaluate_surface_field,
     evaluate_surface_velocity,
     evaluate_surface_velocity_at_panels,
+    recover_surface_velocity_at_offsets,
     solve_laplace_surface,
     solve_laplace_surface_neumann,
 )
@@ -252,6 +257,7 @@ from .ice_mass_loading_dispersion import (
 )
 
 __all__ = [
+    "dirichlet_wedge_mode",
     # Ice-cover mass-loading dispersion (periodic-strip BEM)
     "StripMesh",
     "StripSolve",
@@ -282,9 +288,12 @@ __all__ = [
     "compute_added_mass_matrix_2d",
     "assemble_matrices",
     "evaluate_interior_field",
+    "evaluate_interior_field_and_gradient",
+    "estimate_dirichlet_wedge_amplitude",
     "ExteriorField",
     "evaluate_exterior_field",
     "evaluate_exterior_surface_velocity",
+    "evaluate_interior_surface_gradient",
     "TriangleMesh",
     "WettedHullMesh",
     "SurfaceMesh3D",
@@ -313,6 +322,7 @@ __all__ = [
     "evaluate_surface_field",
     "evaluate_surface_velocity",
     "evaluate_surface_velocity_at_panels",
+    "recover_surface_velocity_at_offsets",
     "evaluate_representation_surface_velocity_at_panels",
     "recover_tangent_gradient",
     "compute_waterplane_properties",

@@ -149,8 +149,8 @@ def inertia_about_point(
     m = float(mass)
     if not math.isfinite(m) or m <= 0.0:
         raise ValueError("mass must be finite and positive")
-    r = np.asarray(offset, dtype=float).reshape(3)
-    return i_cg + m * (float(r @ r) * np.eye(3) - np.outer(r, r))
+    s = skew_matrix(offset)
+    return i_cg + m * (s.T @ s)
 
 
 def inertia_about_centroid(
@@ -163,8 +163,8 @@ def inertia_about_centroid(
     m = float(mass)
     if not math.isfinite(m) or m <= 0.0:
         raise ValueError("mass must be finite and positive")
-    r = np.asarray(offset, dtype=float).reshape(3)
-    return i_o - m * (float(r @ r) * np.eye(3) - np.outer(r, r))
+    s = skew_matrix(offset)
+    return i_o - m * (s.T @ s)
 
 
 def rigid_body_mass_matrix(
@@ -523,10 +523,10 @@ def mesh_mass_properties(
     # significant digit for |p0|/L >~ 1e5 (I_cg relative error 1.6e+0 at
     # |p0|/L = 1.7e5), this route stays at the panelisation error for any |p0|
     # (see docs/case_bem_rigid_body_mass/INVARIANT_BATTERY.md).
-    apex = np.unique(verts, axis=0).mean(axis=0) - p0
-    rel_a = a - p0 - apex
-    rel_b = b - p0 - apex
-    rel_c = c - p0 - apex
+    apex = np.unique(verts, axis=0).mean(axis=0)
+    rel_a = a - apex
+    rel_b = b - apex
+    rel_c = c - apex
     # 6 * signed tetra volume = det[a - apex, b - apex, c - apex]
     six_vol = np.einsum("ij,ij->i", rel_a, np.cross(rel_b, rel_c))
     tet_vol = six_vol / 6.0
@@ -560,7 +560,7 @@ def mesh_mass_properties(
     else:
         corners = np.empty((tet_vol.shape[0], 4, 3), dtype=float)
         corners[:, 1:] = np.stack((a, b, c), axis=1)
-        corners[:, 0] = p0 + apex  # relative coordinates of the apex are zero
+        corners[:, 0] = apex  # relative coordinates of the apex are zero
         probe = np.asarray(density_field(corners.reshape(-1, 3)), dtype=float)
         if probe.size != corners.shape[0] * 4:
             raise ValueError(
@@ -575,7 +575,7 @@ def mesh_mass_properties(
                 "density_field must be positive on the body "
                 f"(min {rho * float(probe.min()):.3g} kg/m^3)"
             )
-        rel = corners - p0 - apex
+        rel = corners - apex
         # Degree-3 exact quadrature inside every tetrahedron: the integrands are
         # rho (affine), rho * x and rho * x x, i.e. of degree <= 3 for an affine
         # field, so those are integrated exactly whatever the element shape.
@@ -583,7 +583,7 @@ def mesh_mass_properties(
         # ``rel`` is measured from the apex in the reference frame, so the field
         # (defined in the caller's frame) must be sampled at the absolute points.
         sample_density = rho * np.asarray(
-            density_field((samples + (p0 + apex)).reshape(-1, 3)), dtype=float
+            density_field((samples + apex).reshape(-1, 3)), dtype=float
         ).reshape(samples.shape[0], samples.shape[1])
         if not np.all(np.isfinite(sample_density)):
             raise ValueError("density_field returned non-finite values")
@@ -607,9 +607,12 @@ def mesh_mass_properties(
     centroid_apex = first_moment / mass
 
     second = 0.5 * (second + second.T)
-    inertia_apex = np.trace(second) * np.eye(3) - second
+    # Sum only the two transverse moments for each axial inertia.
+    xx, yy, zz = np.diag(second)
+    inertia_apex = -second
+    np.fill_diagonal(inertia_apex, [yy + zz, xx + zz, xx + yy])
 
-    centroid = p0 + apex + centroid_apex
+    centroid = apex + centroid_apex
     inertia_cg = inertia_about_centroid(inertia_apex, mass, centroid_apex)
     inertia_reference = inertia_about_point(inertia_cg, mass, centroid - p0)
 

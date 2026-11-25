@@ -230,3 +230,150 @@ PYTHONPATH=src python -m pytest tests/test_multicomponent.py -q
 Wall time of the study is about 45 s single core (the longest run is the
 $N=128$ assembly, $256^2$ analytic panel integrals); `--quick` gives a
 smoke-size ladder.
+
+## Two conducting annuli and finite contact resistance
+
+`tensorbem.layered_annulus.solve_annulus_contact` solves steady 2-D
+Laplace conduction in each concentric layer with constant straight panels,
+midpoint collocation and Dirichlet data on the bore and exterior. The
+coincident interface panels share radial Fourier flux q and obey
+T_inner − T_outer = R q. Each layer has constant conductivity. The function
+returns the two interface temperature traces, the local flux and separate
+integrated rates per unit axial length at the bore, interface and exterior.
+
+For radii 0.25, 0.6 and 1 m, conductivities 4 and 1 W/(m K), a 20 K drop
+and R=0.2 m² K/W, cylindrical series resistance gives 118.213185 W/m.
+With 16, 32, 64 and 128 panels per circle, the largest relative integrated
+rate errors were 0.5543%, 0.1093%, 0.02422% and 0.00626%. The interface
+system condition number rose from 28.5 to 208.6 in this parameterization.
+The first azimuthal harmonic independently tests sign-changing *local* flux
+using radial factors r and C r + D/r. Its maximum error relative to the
+flux amplitude fell from 1.282% to 0.01957% over the same refinements.
+
+Reproduce from the repository root with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.layered_annulus`.
+The JSON also includes perfect contact and reverse heat flow.
+
+A spatially variable contact test uses R(θ)=1−0.2 cos(θ), with uniform exact
+interface flux 1 W/m². A harmonic term proportional to (r/b+b/r)cos(θ)
+in the outer layer changes its trace while leaving the radial derivative at
+contact radius b unchanged. Maximum local flux errors were 0.003293,
+0.0007472, 0.0001773 and 0.00004313 W/m²; at 128 panels per circle the two
+maximum trace errors were 0.00001550 and 0.00003808 K.
+
+### Fields within the two materials
+
+The contact solve returns `inner_field` and `outer_field`. Each accepts
+Cartesian targets of shape (M,2) through `temperature(points)` (K) and
+`heat_flux(points)` (Cartesian W/m²). Evaluate strictly inside that material's
+polygonal annulus. On the contact itself use the two temperature traces and
+normal flux from the solve. The field representation uses the solved
+temperature and normal derivative on both bounding loops and differentiates
+the analytic layer kernels to obtain Fourier flux.
+
+For the first angular harmonic, 73 probes on each of the circles r=0.42 m
+and r=0.79 m check the independent Cartesian fields T=x and T=Cx+Dx/r²
+and their gradients. At 128 panels per circle the inner/outer maximum
+temperature errors were 1.343e-5 and 6.290e-4 K. Maximum vector heat-flux
+errors were 6.114e-4 and 7.962e-4 W/m². The radial cases additionally
+integrate flux around both probe circles (four probes per panel) for
+comparison with the cylindrical series-resistance rate. These probes have
+fixed clearance from the interface. Near-panel accuracy is a separate
+resolution question.
+
+### Heat flux close to a circular contact
+
+For concentric circular geometry, `field.circular_field(points)` returns
+temperature and Cartesian heat flux by harmonic extension of the two computed
+temperature traces. The sampled temperatures are placed on the nominal
+circles at panel midpoint angles. The mean interpolates in log radius;
+higher Fourier modes solve the radial Laplace equation. Evaluate strictly
+inside one circular material. The original panel field and integrated
+contact rates retain their own geometric interpretation.
+
+The `near_contact` section of the layered-annulus benchmark probes both
+materials at radial distances of 1/8, 1/4, 1/2 and 1 contact-panel chord,
+with eight angular samples per panel (including vertex-aligned rays).
+Error is the maximum sampled vector error divided by the maximum sampled
+analytic flux magnitude on the same ring. At 1/8 chord the circular
+reconstruction yielded the following relative errors for the first harmonic.
+
+| Panels per circle | Inner material | Outer material |
+|---:|---:|---:|
+| 16 | 1.969% | 0.1909% |
+| 32 | 0.4932% | 0.04163% |
+| 64 | 0.1232% | 0.009755% |
+| 128 | 0.03077% | 0.002362% |
+
+Direct differentiation of constant-panel potentials at 128 panels gave
+84.42% and 48.49% at this same relative clearance. Physical clearance
+shrinks under refinement in this test. The reconstruction assumes a circular
+boundary and smooth, angularly resolved traces. The benchmark does not
+establish these errors for discontinuous temperature data.
+
+### Angular resolution and the circular interface solver
+
+Pass `formulation="circular"` to `solve_annulus_contact` to use the Fourier
+Dirichlet-to-Neumann maps of the two nominal annuli. At each interface angle
+the solve enforces the local temperature jump and flux continuity. Its
+integrated rates use arc lengths, and the layer field methods use circular
+harmonic extension. The logarithmic radial solution supplies the mean mode.
+The highest mode on an even sample grid has only one independent real
+coefficient; a general phase at two samples per wavelength is unresolved.
+
+Reproduce the independent phase-shifted mode study with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.annulus_angular_resolution`.
+For modes 2, 4 and 8 and meshes of 16, 32, 64 and 128 angular samples, it
+checks the local Fourier flux one eighth of a chord from the contact, on
+both sides. It compares reconstructed polygonal solutions, circular
+solutions and a control with the exact temperature traces supplied directly.
+For mode 8 at 16 samples, the worst circular-solve relative error was
+80.99%; the exact-trace control also gave 80.99%. At 32 samples the circular
+error was 3.50e-14 and the polygonal solution's worst error was 11.89%.
+Across all 11 cases strictly below Nyquist, circular-solve error remained
+below 4.8e-14. These single-mode results apply to constant conductivities,
+circular geometry and the specified angular spectra.
+
+### Newton cooling at either circular wall
+
+Pass `film_coefficients=(h_bore, h_exterior)` to `solve_annulus_contact`.
+A finite positive h in W/(m² K) uses the corresponding supplied temperature
+as the ambient fluid temperature; the wall trace is solved. A panel vector
+allows angular variation, a zero coefficient insulates, and None prescribes
+the surface temperature. At least one wall must anchor the solution. The
+condition number reported by the solver is for the reduced interface system.
+
+For radii (0.25,0.6,1) m, conductivities (4,1) W/(m K), a 0.2 m² K/W
+contact, films (12,3) W/(m² K), and ambient temperatures (310,290) K,
+the analytic rate is 72.650881 W/m of cylinder length. Each film adds
+1/(2πrh) to the series resistance per unit length. With 16 and 128 panels
+per circle, the worst polygonal rate errors across the bore, contact and
+exterior were 0.6044% and 0.00997%. At 128 panels the circular formulation
+gave a relative rate error below 2.4e-12. A separate first-harmonic field
+with angularly varying films and ambients gave polygonal maximum local
+interface flux errors of 0.03159 and 0.0004870 W/m² on the same meshes.
+Reproduce from the repository root with
+`OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m tensorbem.benchmarks.annulus_convection`.
+
+### Prescribed wall heat flux
+
+For a concentric two-layer annulus, `solve_annulus_contact(...,
+wall_fluxes=(q_bore, None))` prescribes flux into the material in W/m².
+Pass None for the bore temperature and bore film; the exterior may prescribe
+temperature or use a film. The reverse arrangement is supported with the
+same inward sign convention. Run
+`OPENBLAS_NUM_THREADS=1 python -m tensorbem.benchmarks.annulus_prescribed_flux`.
+The reference combines log(r) with a phase-shifted angular harmonic of
+order two. It tests wall and interface normal fluxes, interior Cartesian
+flux vectors, temperatures and the net heat rate. On 128 straight panels
+per ring the largest interior flux error for the two choices of driven wall
+was 0.00246 W/m². The circular Fourier method resolves this finite harmonic
+to roundoff.
+
+For the circular Fourier formulation both walls may instead prescribe inward
+flux. Supply `wall_temperatures=(None,None)`, `wall_fluxes=(q_bore,q_exterior)`
+and `mean_bore_temperature`. The arc integrals must sum to zero. The solver
+adds the mean bore temperature as an equation to fix the otherwise arbitrary
+temperature offset. Changing this datum shifts both layer temperatures by
+the same constant and preserves contact flux. The prescribed-flux benchmark
+also checks this two-wall case at four angular resolutions.

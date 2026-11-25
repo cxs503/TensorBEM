@@ -210,6 +210,38 @@ def flexural_wave_omega2(k: float, plate: IcePlate) -> float:
 # ---------------------------------------------------------------------------
 # Wavenumber solver: given omega, find k
 # ---------------------------------------------------------------------------
+def _invert_dispersion(omega, depth, gravity, rigidity_over_rho, mass_over_rho, tol, max_iter):
+    """Bisect the unique propagating root using a relative wavenumber tolerance."""
+    tol = _positive("tol", tol)
+
+    def frequency(k):
+        depth_factor = math.tanh(k * depth)
+        stiffness = gravity + rigidity_over_rho * k**4 if rigidity_over_rho else gravity
+        inertia = 1.0 + mass_over_rho * k * depth_factor
+        # Factoring k out of omega avoids squaring very small target frequencies.
+        return k * math.sqrt(stiffness * (depth_factor / k) / inertia)
+
+    lo = 0.0
+    hi = omega / math.sqrt(gravity * depth)
+    if hi == 0.0:
+        raise ValueError("wavenumber is below floating-point range")
+    while frequency(hi) < omega:
+        lo = hi
+        hi *= 2.0
+    for _ in range(max_iter):
+        mid = lo + (hi - lo) * 0.5
+        if mid == hi or mid == lo or hi - lo <= tol * hi:
+            return mid
+        value = frequency(mid)
+        if value == omega:
+            return mid
+        if value < omega:
+            lo = mid
+        else:
+            hi = mid
+    raise RuntimeError("wavenumber bisection did not converge")
+
+
 def flexural_gravity_wavenumber(
     omega: float,
     plate: IcePlate,
@@ -226,39 +258,9 @@ def flexural_gravity_wavenumber(
     root is unique and bisection converges reliably.
     """
     omega = _positive("omega", omega)
-    target = omega * omega
-    g = plate.gravity
-    H = plate.water_depth
-    D_rho = plate.D_over_rho
-
-    def residual(k: float) -> float:
-        return (g * k + D_rho * k ** 5) * math.tanh(k * H) - target
-
-    # Bracket the root
-    lo = 0.0
-    # Initial guess from open-water dispersion
-    hi = max(target / g, 1.0e-8)
-    guard = 0
-    while residual(hi) <= 0.0:
-        hi *= 2.0
-        guard += 1
-        if guard > 300:
-            raise RuntimeError("failed to bracket the flexural-gravity wavenumber")
-
-    # Bisection
-    for _ in range(max_iter):
-        mid = 0.5 * (lo + hi)
-        if mid <= 0.0:
-            lo = mid
-            continue
-        if residual(mid) > 0.0:
-            hi = mid
-        else:
-            lo = mid
-        if hi - lo <= tol * max(1.0, hi):
-            break
-
-    return 0.5 * (lo + hi)
+    return _invert_dispersion(
+        omega, plate.water_depth, plate.gravity, plate.D_over_rho, 0.0, tol, max_iter
+    )
 
 
 def open_water_wavenumber(
@@ -272,31 +274,8 @@ def open_water_wavenumber(
     """Solve omega^2 = g k tanh(k H) for k."""
     omega = _positive("omega", omega)
     depth = _positive("depth", depth)
-    target = omega * omega
-    g = gravity
-
-    def residual(k: float) -> float:
-        return g * k * math.tanh(k * depth) - target
-
-    lo = 0.0
-    hi = max(target / g, 1.0e-8)
-    guard = 0
-    while residual(hi) <= 0.0:
-        hi *= 2.0
-        guard += 1
-        if guard > 300:
-            raise RuntimeError("failed to bracket the open-water wavenumber")
-
-    for _ in range(max_iter):
-        mid = 0.5 * (lo + hi)
-        if residual(mid) > 0.0:
-            hi = mid
-        else:
-            lo = mid
-        if hi - lo <= tol * max(1.0, hi):
-            break
-
-    return 0.5 * (lo + hi)
+    gravity = _positive("gravity", gravity)
+    return _invert_dispersion(omega, depth, gravity, 0.0, 0.0, tol, max_iter)
 
 
 # ---------------------------------------------------------------------------
@@ -670,58 +649,6 @@ def plate_fluid_omega(
     )
 
 
-def _smallest_positive_root(
-    residual,
-    *,
-    tol: float = 1.0e-14,
-    max_iter: int = 400,
-    scan_points: int = 2000,
-) -> float:
-    """Smallest k > 0 with ``residual(k) = 0`` for a residual that is
-    negative at k -> 0+ and eventually positive.
-
-    The eq. (3) residual is not guaranteed to be monotone for every
-    (omega, plate) pair, so the bracket is located by a geometric scan and
-    bisection is run on the **first** sign change only (the smallest positive
-    root is returned).
-    """
-    k_lo = 1.0e-12
-    if residual(k_lo) >= 0.0:              # pragma: no cover - defensive
-        return k_lo
-    # Upper bound: geometric expansion until the residual turns positive.
-    k_hi = 1.0e-9
-    for _ in range(4000):
-        if residual(k_hi) > 0.0:
-            break
-        k_hi *= 1.5
-    else:                                  # pragma: no cover - defensive
-        raise RuntimeError("failed to bracket the dispersed wavenumber")
-    # Scan for the first sign change, then bisect inside that bracket.
-    lo = k_lo
-    ratio = (k_hi / k_lo) ** (1.0 / scan_points)
-    hi = lo
-    for _ in range(scan_points):
-        hi = lo * ratio
-        if residual(hi) > 0.0:
-            break
-        lo = hi
-    else:                                  # pragma: no cover - defensive
-        hi = k_hi
-        lo = hi / ratio
-    for _ in range(max_iter):
-        mid = 0.5 * (lo + hi)
-        if mid <= 0.0:                     # pragma: no cover - defensive
-            lo = mid
-            continue
-        if residual(mid) > 0.0:
-            hi = mid
-        else:
-            lo = mid
-        if hi - lo <= tol * max(1.0, hi):
-            break
-    return 0.5 * (lo + hi)
-
-
 def flexural_gravity_wavenumber_mass_loading(
     omega: float,
     plate: IcePlate,
@@ -731,17 +658,10 @@ def flexural_gravity_wavenumber_mass_loading(
 ) -> float:
     """Solve eq. (3) for the (smallest positive) wavenumber ``k``."""
     omega = _positive("omega", omega)
-    target = omega * omega
-    g = plate.gravity
-    H = plate.water_depth
-    mu = mass_loading_parameter(plate)
-    a = plate.D_over_rho
-
-    def residual(k: float) -> float:
-        tanh = math.tanh(k * H)
-        return (g * k + a * k ** 5) * tanh - target * (1.0 + mu * k * tanh)
-
-    return _smallest_positive_root(residual, tol=tol, max_iter=max_iter)
+    return _invert_dispersion(
+        omega, plate.water_depth, plate.gravity, plate.D_over_rho,
+        mass_loading_parameter(plate), tol, max_iter,
+    )
 
 
 def flexural_gravity_group_velocity_mass_loading(

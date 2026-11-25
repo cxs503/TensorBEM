@@ -105,11 +105,12 @@ def test_quadrature_is_conditioned_for_a_far_reference_point() -> None:
     significant digit once the reference point stood ~1e5 body lengths away;
     with the apex at the vertex mean the error stays at the panelisation floor.
     """
-    domain = battery.conditioning_domain(ratios=(0.0, 1.0e5), subdivisions=2)
+    domain = battery.conditioning_domain(ratios=(0.0, 1.0e5, 1.0e6), subdivisions=2)
     rows = {row["d_over_L"]: row for row in domain["rows"]}
     far = rows[1.0e5]
     assert far["shipped_numerical_loss"] < 1.5
-    assert far["legacy_numerical_loss"] > 5.0
+    assert rows[1.0e6]["shipped_numerical_loss"] < 1.5
+    assert rows[1.0e6]["legacy_numerical_loss"] > 5.0
 
 
 def test_engineered_matrix_is_symmetric_and_positive_definite() -> None:

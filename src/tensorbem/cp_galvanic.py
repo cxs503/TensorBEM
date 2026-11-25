@@ -76,7 +76,7 @@ Reference values: DNV-RP-B401 (2016) protection window ``-1.05 V <= phi <=
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 import math
 from pathlib import Path
@@ -821,6 +821,35 @@ class SurfacePartition:
         return np.where(mask)[0]
 
 
+def refine_partitioned_surface(
+    mesh: TriangleMesh, partition: SurfacePartition
+) -> tuple[TriangleMesh, SurfacePartition]:
+    """Quarter each triangle while preserving the electrode and coating footprint.
+
+    Children inherit their parent's boundary condition. Straight edge bisection
+    preserves each patch's total area, target area and coating breakdown ratio.
+    """
+    faces = mesh.faces
+    edges = np.stack((faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]), axis=1)
+    unique_edges, inverse = np.unique(np.sort(edges.reshape(-1, 2), axis=1),
+                                      axis=0, return_inverse=True)
+    midpoints = mesh.vertices[unique_edges].mean(axis=1)
+    ab, bc, ca = (len(mesh.vertices) + inverse.reshape(-1, 3)).T
+    a, b, c = faces.T
+    children = np.stack([np.column_stack(triangle) for triangle in
+                         ((a, ab, ca), (ab, b, bc), (ca, bc, c), (ab, bc, ca))], axis=1)
+    children = children.reshape(-1, 3)
+    refined = TriangleMesh(np.vstack((mesh.vertices, midpoints)), children)
+
+    def child_indices(indices):
+        return (4 * indices[:, None] + np.arange(4)).ravel()
+
+    anodes = child_indices(partition.anodes)
+    return refined, replace(partition, anodes=anodes, bare=child_indices(partition.bare),
+                            coated=child_indices(partition.coated), waterline=child_indices(partition.waterline),
+                            anode_centers=refined.centroids[anodes])
+
+
 def partition_surface(
     mesh: TriangleMesh,
     groups: dict[str, IntArray],
@@ -1405,17 +1434,21 @@ def grid_convergence_index(
     """
     values = [float(fine), float(medium), float(coarse)]
     h = [float(h_fine), float(h_medium), float(h_coarse)]
+    if not all(math.isfinite(v) for v in values + h) or not 0.0 < h[0] < h[1] < h[2]:
+        raise ValueError("GCI requires finite values and positive, increasing fine-to-coarse cell sizes")
     e21 = values[1] - values[0]
     e32 = values[2] - values[1]
     r21 = h[1] / h[0]
     r31 = h[2] / h[0]
-    if abs(e21) < 1.0e-18 or abs(e32) < 1.0e-18:
+    # Only a stationary finest pair has zero estimated fine-grid change.
+    # Identical coarse and medium readings can precede a large fine-grid shift.
+    if e21 == 0.0:
         return {
             "values": values,
             "cell_sizes": h,
             "observed_order": None,
             "gci_fine_percent": 0.0,
-            "note": "differences below round-off; convergence indistinguishable from zero",
+            "note": "fine and medium readings coincide; observed order is undetermined",
         }
     target = e32 / e21
 

@@ -23,7 +23,7 @@ import pytest
 from tensorbem.benchmarks import laplace_sphere_xval as xval
 from tensorbem.cathodic_protection import evaluate_exterior_potential
 from tensorbem.geometry3d import icosphere
-from tensorbem.solver3d import solve_laplace_surface
+from tensorbem.solver3d import assemble_surface_matrices, solve_laplace_surface
 
 HAVE_CAPYTAINE = xval._capytaine_module() is not None
 HAVE_SKFEM = xval._skfem_modules() is not None
@@ -37,15 +37,18 @@ def bem_levels():
 def test_exact_series_reproduces_boundary_data():
     mesh = icosphere(2, 1.0)
     mu = xval.panel_mu(mesh)
-    pts = mesh.centroids
+    pts = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
     phi = xval.exact_potential(pts)
     assert np.allclose(phi, -1.0 * (1.0 + mu), rtol=0.0, atol=1e-12)
     # the exact density is the one the BEM solves for: q = -dphi/dn_body
-    radial = -(-1.0) / 1.0 - 2.0 * (-1.0) * mu / 1.0
-    assert np.allclose(xval.exact_density(mu), radial, rtol=0.0, atol=1e-12)
+    assert np.allclose(xval.exact_density(mu), -(1 + 2 * pts[:, 2]), rtol=0.0, atol=1e-12)
+    delta = 1e-5
+    radial = -(xval.exact_potential((1 + delta) * pts)
+               - xval.exact_potential((1 - delta) * pts)) / (2 * delta)
+    assert np.allclose(xval.exact_density(mu), radial, rtol=0.0, atol=1e-9)
 
 
-def test_exterior_potential_dipole_sign():
+def test_exterior_potential_dipole_sign(record_property):
     """The double-layer term of the representation formula must be ADDED.
 
     Pure ``l = 1`` mode: ``phi = mu`` on the sphere, exact exterior solution
@@ -62,8 +65,9 @@ def test_exterior_potential_dipole_sign():
     density = 2.0 * mu
     probes = xval.probe_points()
     phi = xval.representation_potential(mesh, density, values, probes)
-    ref = xval.exact_potential(probes, phi_a=1.0) - 1.0  # strip the monopole term
+    ref = probes[:, 2] / np.linalg.norm(probes, axis=1)**3
     err = np.max(np.abs(phi - ref)) / np.max(np.abs(ref))
+    record_property("dipole_relative_error", float(err))
     assert err < 0.05, f"dipole representation error {err:.3%}"
 
     # the production post-processor must agree with the module-level formula
@@ -79,13 +83,16 @@ def test_current_anchor_within_ledger_band(bem_levels):
     assert finest["dimensionless_current"] == pytest.approx(1.0, abs=0.005)
 
 
-def test_density_and_potential_converge(bem_levels):
+def test_density_and_potential_converge(bem_levels, record_property):
     levels = bem_levels["levels"]
     for key in ("density_linf_rel_error", "probe_potential_l2_rel_error"):
         errors = [lvl[key] for lvl in levels]
+        for level, error in zip(levels, errors):
+            record_property(f"{key}_{level['panels']}_panels", error)
         assert errors[-1] < errors[0]
         assert errors[-1] < 0.01
     orders = xval._observed_order(levels, "probe_potential_l2_rel_error")
+    record_property("final_probe_order_in_h", orders[-1])
     assert orders[-1] > 1.2  # second-order collocation on plane triangles
 
 
@@ -99,10 +106,14 @@ def test_capytaine_assembly_agreement():
     """Element-wise: TensorBEM assembly == capytaine Rankine influence matrices."""
     mesh = icosphere(2, 1.0)
     single, double, info = xval.capytaine_matrices(mesh)
-    a_ref, d_ref = xval.solver3d.assemble_surface_matrices(mesh)
+    a_ref, d_ref = assemble_surface_matrices(mesh)
+    # Capytaine includes the boundary jump in the double-layer diagonal.
+    assert np.allclose(np.diag(double), 0.5, rtol=0.0, atol=1e-12)
+    principal_value = -double.copy()
+    np.fill_diagonal(principal_value, 0.0)
     assert single.shape == a_ref.shape
     assert np.linalg.norm(-single - a_ref) / np.linalg.norm(a_ref) < 1e-2
-    assert np.linalg.norm(-double - d_ref) / np.linalg.norm(d_ref) < 1e-2
+    assert np.linalg.norm(principal_value - d_ref) / np.linalg.norm(d_ref) < 1e-2
     assert info["mesh_panels"] == mesh.panel_count
 
 
@@ -140,3 +151,173 @@ def test_sigma_scaling_is_exact():
         ratios.append(current / exact)
     assert max(ratios) - min(ratios) < 1e-12
     assert math.isclose(ratios[0], 0.987, rel_tol=0.02)
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_nonaxisymmetric_sphere_quadrupole_field_and_energy(domain, record_property):
+    from tensorbem.solver3d import evaluate_surface_field, evaluate_surface_velocity
+
+    radius = 1.4
+    eigenvalue = (2 if domain == "interior" else 3) / radius
+    # u(a)=n_x*n_y and integral over the unit sphere of n_x²*n_y² is 4π/15.
+    exact_energy = eigenvalue * radius**2 * 4*np.pi/15
+    directions = np.array([[1., 2., 1.], [-2., 3., 1.], [1., -1., 2.]])
+    directions /= np.linalg.norm(directions, axis=1)[:, None]
+    radii = np.array([.35, .55, .75] if domain == "interior" else [1.35, 1.7, 2.2])
+    probes = radii[:, None] * radius * directions
+    exact = directions[:, 0]*directions[:, 1]*radii**(2 if domain == "interior" else -3)
+    # Surface gradient of n_x*n_y is its Cartesian gradient projected
+    # onto the tangent plane. The radial derivative carries the signed degree.
+    degree = 2 if domain == "interior" else -3
+    angular_gradient = np.column_stack((directions[:, 1], directions[:, 0], np.zeros(len(probes))))
+    angular_gradient -= 2*(directions[:, 0]*directions[:, 1])[:, None]*directions
+    exact_radial = degree*exact/(radius*radii)
+    exact_tangent = (radii**(degree-1)/radius)[:, None]*angular_gradient
+    errors = []
+    for level in (1, 2, 3):
+        mesh = icosphere(level, radius)
+        normal = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
+        trace = normal[:, 0]*normal[:, 1]
+        result = solve_laplace_surface(mesh, trace, domain=domain, quadrature_order=8)
+        sampled = evaluate_surface_field(mesh, result, probes)
+        velocity = evaluate_surface_velocity(mesh, result, probes)
+        radial = np.sum(velocity*directions, axis=1)
+        tangent = velocity-radial[:, None]*directions
+        radial_error = np.linalg.norm(radial-exact_radial)/np.linalg.norm(exact_radial)
+        tangent_error = np.linalg.norm(tangent-exact_tangent)/np.linalg.norm(exact_tangent)
+        energy = np.dot(mesh.areas*trace, result.normal_derivative)
+        field_error = np.linalg.norm(sampled-exact)/np.linalg.norm(exact)
+        energy_error = abs(energy/exact_energy-1)
+        net_flux = abs(mesh.areas @ result.normal_derivative)
+        for name, value in (("relative_field_error", field_error), ("relative_energy_error", energy_error),
+                            ("relative_radial_gradient_error", radial_error),
+                            ("relative_tangential_gradient_error", tangent_error),
+                            ("net_flux_m", net_flux), ("condition_number", result.condition_number)):
+            record_property(f"{name}_{mesh.panel_count}", float(value))
+        assert net_flux < 1e-11
+        errors.append((field_error, energy_error, radial_error, tangent_error))
+    for coarse, fine in zip(errors, errors[1:]):
+        assert all(a/b > 2.5 for a, b in zip(coarse, fine))
+
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_near_surface_quadrupole_at_fixed_and_panel_scaled_clearance(domain, record_property):
+    from tensorbem.solver3d import evaluate_surface_field_near_surface, evaluate_surface_velocity_near_surface
+
+    from tensorbem import recover_surface_velocity_at_offsets
+
+    radius = 1.4
+    sign = -1 if domain == "interior" else 1
+    directions = np.array([[1., 2., 1.], [-2., 3., 1.], [1., -1., 2.]])
+    directions /= np.linalg.norm(directions, axis=1)[:, None]
+    fixed_errors = []
+    panel_field_errors = []
+    recovered_errors = []
+
+    def exact_field(points):
+        x, y, _ = points.T
+        exact = x*y/radius**2
+        gradient = np.column_stack((y, x, np.zeros_like(x)))/radius**2
+        if domain == "exterior":
+            r = np.linalg.norm(points, axis=1)
+            factor = (radius/r)**5
+            gradient = factor[:, None]*(gradient-5*exact[:, None]*points/r[:, None]**2)
+            exact *= factor
+        return exact, gradient
+
+    for level in (1, 2, 3):
+        mesh = icosphere(level, radius)
+        normal = mesh.centroids / np.linalg.norm(mesh.centroids, axis=1)[:, None]
+        field = solve_laplace_surface(mesh, normal[:, 0]*normal[:, 1], domain=domain)
+        panels = np.argmax(directions @ normal.T, axis=1)
+        for label, probes in (
+            ("fixed", (1+sign*.10)*radius*directions),
+            ("panel", mesh.centroids[panels]+sign*.01*mesh.h_max*mesh.normals[panels]),
+        ):
+            # The sphere harmonics extend smoothly to points just off the
+            # faceted surface, including where it lies inside the exact sphere.
+            exact, gradient = exact_field(probes)
+            sampled = evaluate_surface_field_near_surface(mesh, field, probes)
+            velocity = evaluate_surface_velocity_near_surface(mesh, field, probes)
+            errors = [np.linalg.norm(sampled-exact)/np.linalg.norm(exact),
+                      np.linalg.norm(velocity-gradient)/np.linalg.norm(gradient)]
+            for name, error in zip(("field", "gradient"), errors):
+                record_property(f"{label}_{name}_relative_error_{mesh.panel_count}", float(error))
+            if label == "fixed":
+                fixed_errors.append(errors)
+            else:
+                panel_field_errors.append(errors[0])
+                recovered = recover_surface_velocity_at_offsets(mesh, field, .01*mesh.h_max)
+                recovered_error = np.linalg.norm(recovered[panels]-gradient)/np.linalg.norm(gradient)
+                recovered_errors.append(recovered_error)
+                record_property(f"panel_recovered_gradient_relative_error_{mesh.panel_count}",
+                                float(recovered_error))
+                # Isolate the normal Taylor correction from the baseline trace error.
+                wall = recover_surface_velocity_at_offsets(mesh, field, 0.)[panels]
+                _, exact_wall = exact_field(mesh.centroids[panels])
+                change = gradient-exact_wall
+                correction_error = np.linalg.norm(recovered[panels]-wall-change)/np.linalg.norm(change)
+                record_property(f"normal_increment_relative_error_{mesh.panel_count}", float(correction_error))
+                if level == 3:
+                    assert correction_error < 0.5
+                # At shrinking clearance the continuum gradient includes panel
+                # discretization error. Check differentiation of the *same*
+                # discrete potential separately using centered differences.
+                delta = mesh.h_max*1e-4
+                offsets = delta*np.eye(3)
+                plus = (probes[:, None, :]+offsets).reshape(-1, 3)
+                minus = (probes[:, None, :]-offsets).reshape(-1, 3)
+                values = evaluate_surface_field_near_surface(mesh, field, np.vstack((plus, minus)))
+                hi, lo = np.split(values, 2)
+                derivative = ((hi-lo)/(2*delta)).reshape(-1, 3)
+                error = np.linalg.norm(velocity-derivative)/np.linalg.norm(derivative)
+                record_property(f"panel_gradient_fd_relative_error_{mesh.panel_count}", float(error))
+                assert error < 1e-5
+    for coarse, fine in zip(fixed_errors, fixed_errors[1:]):
+        assert all(a > b for a, b in zip(coarse, fine))
+    assert all(a/b > 3 for a, b in zip(panel_field_errors, panel_field_errors[1:]))
+    assert max(fixed_errors[-1]) < 0.015
+    assert recovered_errors[-1] < 0.05
+    assert all(a > b for a, b in zip(recovered_errors, recovered_errors[1:]))
+
+
+@pytest.mark.parametrize("domain", ["interior", "exterior"])
+def test_recovered_gradient_at_local_offsets_on_triaxial_ellipsoid(domain, record_property):
+    from tensorbem import recover_surface_velocity_at_offsets
+    from tensorbem.geometry3d import ellipsoid_mesh
+    from tensorbem.solver3d import evaluate_surface_velocity_at_panels
+
+    def exact(points):
+        x, y, z = points.T
+        if domain == "interior":
+            # Harmonic cubic with a spatially varying Hessian.
+            return x*y*z, np.column_stack((y*z, x*z, x*y))
+        # The source lies inside the excluded body, so the exterior field
+        # is harmonic everywhere in the solved domain and decays at infinity.
+        delta = points-np.array([.2, -.1, .07])
+        r = np.linalg.norm(delta, axis=1)
+        return 1/r, -delta/r[:, None]**3
+
+    errors = []
+    for level in (1, 2, 3):
+        mesh = ellipsoid_mesh(level, (1.4, 1., .7))
+        trace, _ = exact(mesh.centroids)
+        result = solve_laplace_surface(mesh, trace, domain=domain)
+        distances = .1*np.sqrt(mesh.areas)
+        distances[::11] = 0.
+        sign = -1 if domain == "interior" else 1
+        _, gradient = exact(mesh.centroids+sign*distances[:, None]*mesh.normals)
+        recovered = recover_surface_velocity_at_offsets(mesh, result, distances)
+        at_wall = evaluate_surface_velocity_at_panels(mesh, result)
+        np.testing.assert_array_equal(recovered[::11], at_wall[::11])
+        weighted = np.sqrt(mesh.areas)[:, None]
+        error = np.linalg.norm(weighted*(recovered-gradient))/np.linalg.norm(weighted*gradient)
+        record_property(f"area_weighted_gradient_relative_error_{mesh.panel_count}", float(error))
+        errors.append(error)
+        if level == 1:
+            panel = 1
+            scalar = recover_surface_velocity_at_offsets(mesh, result, distances[panel])
+            np.testing.assert_allclose(recovered[panel], scalar[panel], atol=1e-14, rtol=0)
+            for invalid in (distances[:-1], -distances, distances[:, None], np.nan):
+                with pytest.raises(ValueError, match="distance"):
+                    recover_surface_velocity_at_offsets(mesh, result, invalid)
+    assert all(a/b > 1.4 for a, b in zip(errors, errors[1:]))

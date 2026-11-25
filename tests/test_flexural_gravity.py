@@ -28,6 +28,7 @@ from tensorbem.flexural_gravity import (
     flexural_gravity_omega,
     flexural_gravity_omega2,
     flexural_gravity_wavenumber,
+    flexural_gravity_wavenumber_mass_loading,
     flexural_wave_omega2,
     ice_edge_coefficients,
     open_water_dispersion_curve,
@@ -58,6 +59,22 @@ def thin_plate():
 def thick_plate():
     """Thick ice: h_ice = 2.0 m."""
     return IcePlate(thickness=2.0, water_depth=200.0)
+
+
+@pytest.mark.parametrize("k", [1e-180, 1e-18, 1e-14, 1e-10])
+def test_inverse_shallow_water_limit(k, standard_plate, record_property):
+    plate = standard_plate
+    omega = k * math.sqrt(plate.gravity * plate.water_depth)
+    # At these depths and wavelengths the first finite-depth correction
+    # (kH)^2/6 is below machine precision, as are inertia and bending.
+    for model, recovered in (
+        ("open", open_water_wavenumber(omega, plate.water_depth, plate.gravity)),
+        ("elastic", flexural_gravity_wavenumber(omega, plate)),
+        ("inertial", flexural_gravity_wavenumber_mass_loading(omega, plate)),
+    ):
+        error = abs(recovered / k - 1.0)
+        record_property(model + "_relative_error", error)
+        assert error < 1e-14
 
 
 # ===================================================================

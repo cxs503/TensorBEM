@@ -74,6 +74,39 @@ from numpy.typing import NDArray
 FloatArray = NDArray[np.float64]
 ComplexArray = NDArray[np.complex128]
 
+def dirichlet_wedge_mode(points, *, vertex, start_angle, opening_angle):
+    """Return potential and Cartesian gradient of the unit leading wedge mode.
+
+    Angles are in radians, counterclockwise from the positive x axis. Within
+    the wedge the mode is r**p * sin(p*theta), with p=pi/opening_angle and
+    theta measured from the starting ray. For a known mode amplitude, subtract
+    its scaled potential from the Dirichlet trace before solving and add its
+    scaled gradient back to the recovered field. Exclude the vertex itself.
+    """
+    points = np.asarray(points, dtype=float)
+    vertex = np.asarray(vertex, dtype=float)
+    if points.ndim != 2 or points.shape[1] != 2 or vertex.shape != (2,):
+        raise ValueError("provide points shaped (N, 2) and a two-coordinate vertex")
+    if not (np.isfinite(points).all() and np.isfinite(vertex).all()
+            and math.isfinite(start_angle) and 0 < opening_angle < 2*math.pi):
+        raise ValueError("require finite coordinates and angles with opening in (0, 2*pi)")
+    x, y = (points-vertex).T
+    radius = np.hypot(x,y)
+    if np.any(radius == 0):
+        raise ValueError("the wedge mode gradient excludes the vertex")
+    angle = math.remainder(start_angle, 2*math.pi)
+    theta = np.remainder(np.arctan2(y,x)-angle, 2*math.pi)
+    tolerance = 32*np.finfo(float).eps
+    theta = np.where(theta >= 2*math.pi-tolerance, 0., theta)
+    if np.any(theta > opening_angle+tolerance):
+        raise ValueError("evaluation point lies outside the wedge")
+    theta = np.minimum(theta, opening_angle)
+    p = math.pi/opening_angle
+    phase = (p-1)*theta-angle
+    gradient = (p*radius**(p-1))[:,None]*np.column_stack((np.sin(phase),np.cos(phase)))
+    return radius**p*np.sin(p*theta), gradient
+
+
 # Sum of Lamb's shape factors; a constant of the ellipsoid theory.
 _SHAPE_FACTOR_SUM = 2.0
 _SHAPE_FACTOR_SUM_TOLERANCE = 1.0e-8

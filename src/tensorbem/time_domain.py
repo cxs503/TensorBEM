@@ -930,7 +930,8 @@ def _integrate_cummins(
                 total += float(values[1:index] @ velocity[1:index])
             total += 0.5 * values[index] * velocity[index]
             total *= dt
-        partial = 0.5 * stage * dt * (values[index] * velocity[index] + h0 * stage_velocity)
+        stage_width = 0.5 * stage * dt
+        partial = 0.5 * stage_width * (values[index] * velocity[index] + h0 * stage_velocity)
         return total + partial
 
     for index in range(steps):

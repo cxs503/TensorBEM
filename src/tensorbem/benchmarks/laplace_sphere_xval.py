@@ -112,7 +112,8 @@ def exact_current(radius: float = DEFAULT_RADIUS, phi_a: float = DEFAULT_PHI_A,
 
 def panel_mu(mesh: TriangleMesh, radius: float = DEFAULT_RADIUS) -> np.ndarray:
     """``cos(theta)`` of every panel centroid (panel data is constant per panel)."""
-    return mesh.centroids[:, 2] / radius
+    centroids = mesh.centroids
+    return centroids[:, 2] / np.linalg.norm(centroids, axis=1)
 
 
 def probe_points(radius: float = DEFAULT_RADIUS, radii_ratio=(1.5, 2.0, 4.0),
@@ -211,15 +212,15 @@ def _level_metrics(
 
 
 def _observed_order(levels: list[dict[str, Any]], key: str) -> list[float]:
-    """Observed order ``p = log(e_i / e_{i+1}) / log(N_{i+1} / N_i)`` per level pair."""
+    """Observed order ``p = log(e_i / e_{i+1}) / log(h_i / h_{i+1})`` per level pair."""
     orders = []
     for lower, upper in zip(levels[:-1], levels[1:]):
         e0, e1 = lower[key], upper[key]
-        n0, n1 = lower["panels"], upper["panels"]
-        if e0 <= 0.0 or e1 <= 0.0 or n1 <= n0:
+        h0, h1 = lower["h_over_a"], upper["h_over_a"]
+        if e0 <= 0.0 or e1 <= 0.0 or not 0.0 < h1 < h0:
             orders.append(float("nan"))
             continue
-        orders.append(float(math.log(e0 / e1) / math.log(n1 / n0)))
+        orders.append(float(math.log(e0 / e1) / math.log(h0 / h1)))
     return orders
 
 

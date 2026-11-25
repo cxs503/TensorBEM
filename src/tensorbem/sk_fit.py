@@ -128,8 +128,8 @@ class SKFitReport:
     residual_history : tuple[float, ...]
         Weighted residual norm of the rational model at each SK iteration.
     rational_rel_error : float
-        Scale-normalised max error of the *unconstrained* rational model
-        ``A/D``; this is the ceiling the real-pole basis cannot exceed.
+        Scale-normalised max error of the recorded SK iterate with the lowest
+        weighted residual, before projecting its poles onto real decay rates.
     sk_pole_rel_error, grid_pole_rel_error : float
         Scale-normalised max error of the two candidate real-pole fits.
     real_root_count, complex_pair_count : int
@@ -209,8 +209,8 @@ def _sk_iterate(
 ) -> tuple[FloatArray, float, int, bool, FloatArray]:
     """Run the Sanathanan-Koerner iteration on the rational model ``A(u)/D(u)``.
 
-    Returns ``(denominator_coefficients, u_reference, iterations, converged,
-    residual_history)`` where the denominator is ``[1, d_1 ... d_order]``.
+    Returns ``(best_rational_coefficients, u_reference, iterations, converged,
+    residual_history)``. The fitted denominator has a unit constant term.
     """
     u_reference = float(np.median(omega**2))
     u = omega**2 / u_reference
@@ -222,7 +222,9 @@ def _sk_iterate(
 
     denominator = np.zeros(order + 1)
     denominator[0] = 1.0
-    best_denominator = denominator.copy()
+    if max_iter < 1:
+        raise ValueError("max_iter must be at least one")
+    best_coef = None
     best_residual = np.inf
     history: list[float] = []
     converged = False
@@ -244,7 +246,7 @@ def _sk_iterate(
         history.append(residual)
         if np.isfinite(residual) and residual < best_residual:
             best_residual = residual
-            best_denominator = new_denominator.copy()
+            best_coef = coef.copy()
 
         shift = float(np.max(np.abs(new_denominator - denominator))) / max(
             1.0, float(np.max(np.abs(new_denominator)))
@@ -260,7 +262,9 @@ def _sk_iterate(
             converged = True
             break
 
-    return best_denominator, u_reference, iterations, converged, np.asarray(history)
+    if best_coef is None:
+        raise ValueError("SK iteration produced no finite rational model")
+    return best_coef, u_reference, iterations, converged, np.asarray(history)
 
 
 def _real_pole_projection(denominator: FloatArray, u_reference: float) -> tuple[FloatArray, int]:
@@ -373,8 +377,8 @@ def _probe_local_optimality(
     base = _solve_linear(omega, damping, weights, poles)[1]
     # Round-off guard: on a curve the basis represents exactly the residual is
     # ~1e-32 and a *relative* gain on it is noise, not headroom.
-    scale = float(np.max(np.abs(damping))) if damping.size else 0.0
-    floor = (1e-10 * max(scale, 1e-300)) ** 2 * max(omega.size, 1)
+    weighted_data = damping * weights
+    floor = 1e-20 * float(weighted_data @ weighted_data)
     if not np.isfinite(base) or base <= floor:
         return 0.0
     gain = 0.0
@@ -468,9 +472,10 @@ def sk_fit_damping_report(
     damping = np.asarray(damping, dtype=float)
     _validate(omega, damping, n_poles)
 
-    denominator, u_reference, iterations, converged, history = _sk_iterate(
+    coef, u_reference, iterations, converged, history = _sk_iterate(
         omega, damping, n_poles, max_iter, tol, weight_floor
     )
+    denominator = np.concatenate([[1.0], coef[n_poles + 1:]])
     sk_poles, complex_pairs = _real_pole_projection(denominator, u_reference)
     sk_result = _result(omega, damping, sk_poles, weight_floor, iterations, converged)
     grid_result = _result(
@@ -478,19 +483,7 @@ def sk_fit_damping_report(
     )
 
     u = omega**2 / u_reference
-    weights = _weights(omega, damping, weight_floor)
-    sk_weights = weights / np.maximum(np.abs(np.polyval(denominator[::-1], u)), 1e-12)
-    powers = [u**k for k in range(n_poles + 1)]
-    design = np.column_stack(
-        powers + [-(damping * u**k) for k in range(1, n_poles + 1)]
-    )
-    scaled = design * sk_weights[:, None]
-    norms = np.linalg.norm(scaled, axis=0)
-    norms[norms == 0.0] = 1.0
-    numerator_coef = np.linalg.lstsq(
-        scaled / norms, damping * sk_weights, rcond=None
-    )[0] / norms
-    rational = _rational_model(numerator_coef, u, n_poles)
+    rational = _rational_model(coef, u, n_poles)
     scale = float(np.max(np.abs(damping))) if damping.size else 0.0
     rational_error = (
         float(np.max(np.abs(rational - damping)) / scale) if scale > 0 else np.inf
@@ -509,7 +502,6 @@ def sk_fit_damping_report(
     probe_gain = float("nan")
     refine_converged = False
     if int(refine_maxfev) > 0:
-        probe_gain = 0.0
         for start_name, start_poles in (
             ("sk", sk_poles),
             ("grid", _initial_poles(omega, n_poles)),
@@ -529,12 +521,13 @@ def sk_fit_damping_report(
             if not np.isfinite(refined_error) or refined.relative_error_max < refined_error:
                 refined_error = float(refined.relative_error_max)
             candidates.append(("refined", start_name, refined))
-        probe_gain = _probe_local_optimality(omega, damping, refined_poles, weight_floor)
-        refine_converged = bool(probe_gain <= _PROBE_TOL)
 
     source, refine_start, result = min(
         candidates, key=lambda item: item[2].relative_error_max
     )
+    if refine_evaluations:
+        probe_gain = _probe_local_optimality(omega, damping, result.poles, weight_floor)
+        refine_converged = bool(probe_gain <= _PROBE_TOL)
     if source == "refined":
         # The refinement is the stage that produced the returned poles, so the
         # returned ``converged`` reports the *measured* probe, not the simplex's

@@ -15,11 +15,10 @@ itself.  This study re-runs the same solver on the same meshes with the exact
   together with the data actually imposed there (the cylinder's own boundary
   data sampled at the polygon midpoints).
 
-The triangle inequality ``case_error <= faceting + panel_error`` bounds how
-much of the anchor metric can be blamed on the solver: if ``faceting`` is the
-larger term, the anchor's convergence order is a property of the polygon
-geometry, not of the boundary element discretisation.  Nothing here replaces
-the anchor case; it is a second, independent reference for it.
+Wall velocity is recovered by differentiating the boundary integral along
+each face. The triangle inequality is checked for this recovered wall field
+and the two exact references using one common norm. The original cylinder
+anchor's metrics are also reported for comparison.
 
 Usage::
 
@@ -92,12 +91,12 @@ def run_level(panels: int, radius: float = RADIUS, speed: float = SPEED) -> dict
     data = polygon_data(panels, radius, speed)
     probes = anchor.probe_points()
     exact_probe_velocity = pe.exact_velocity(probes, panels, radius, speed)
-    exact_probe_potential = pe.exact_potential(probes, panels, radius, speed)
+    exact_probe_potential = pe.exact_potential(probes, panels, radius, speed) - speed * probes[:, 0]
     cylinder_probe_velocity = anchor.exact_velocity(probes, radius, speed)
 
     # --- Neumann route with the polygon's own no-flux data ------------------
     neumann = solve_laplace_exterior_neumann(mesh, data["neumann_fluid_normal"])
-    surface_velocity = evaluate_exterior_surface_velocity(mesh, neumann) + np.array(
+    surface_velocity = evaluate_exterior_surface_velocity(mesh, neumann, method="boundary_integral") + np.array(
         [speed, 0.0]
     )
     field = evaluate_exterior_field(mesh, neumann, probes)
@@ -117,6 +116,7 @@ def run_level(panels: int, radius: float = RADIUS, speed: float = SPEED) -> dict
             np.hypot(*surface_velocity.T), data["surface_speed"]
         ),
         "cp_relative_l2": _relative_l2(cp_numerical, cp_exact),
+        "surface_velocity_method": "boundary_integral",
         "cp_min": float(np.min(cp_numerical)),
         "cp_min_exact": float(np.min(cp_exact)),
         "normal_velocity_residual_over_speed": float(
@@ -215,6 +215,13 @@ def run_level(panels: int, radius: float = RADIUS, speed: float = SPEED) -> dict
             "case_error": neumann_metrics["velocity_relative_l2"]
             + 0.0,
             "panel_error": neumann_metrics["surface_velocity_relative_l2"],
+            "recovered_surface_vs_circle": _relative_l2(
+                surface_velocity, anchor.exact_velocity(mesh.centers, radius, speed)
+            ),
+            "polygon_to_circle_velocity_norm_ratio": float(
+                np.linalg.norm(data["surface_velocity"])
+                / np.linalg.norm(anchor.exact_velocity(mesh.centers, radius, speed))
+            ),
             "faceting_surface": faceting["surface_velocity_relative_l2"],
             "faceting_share_of_case_surface_error": faceting["surface_velocity_relative_l2"]
             / max(
@@ -406,22 +413,19 @@ def criteria(artifact: dict[str, Any]) -> list[dict[str, Any]]:
         "the anchor's wall-velocity error is larger than the panel error because the "
         "circle is the wrong reference for a polygon body",
     )
+    # Compare the same reconstructed wall field to both reference fields
+    # and express all three distances in units of the circle-reference norm.
+    margins = [
+        row["faceting"]["surface_velocity_relative_l2"]
+        + row["neumann"]["surface_velocity_relative_l2"]
+        * row["decomposition"]["polygon_to_circle_velocity_norm_ratio"]
+        - row["decomposition"]["recovered_surface_vs_circle"]
+        for row in levels
+    ]
     add(
-        "triangle_inequality_consistent",
-        max(
-            level["faceting"]["surface_velocity_relative_l2"]
-            + level["neumann"]["surface_velocity_relative_l2"]
-            - level["case_route_neumann"]["surface_velocity_relative_l2"]
-            for level in levels
-        ),
-        ">= 0",
-        all(
-            level["faceting"]["surface_velocity_relative_l2"]
-            + level["neumann"]["surface_velocity_relative_l2"]
-            >= level["case_route_neumann"]["surface_velocity_relative_l2"] - 1e-12
-            for level in levels
-        ),
-        "case error <= faceting + panel error must hold",
+        "triangle_inequality_consistent", min(margins), ">= 0",
+        min(margins) >= -1e-12,
+        "recovered wall field, polygon and cylinder obey the triangle inequality",
     )
     # wrong-reference control: a polygon rotated by pi/n is a different body
     rotated_error = rotated_reference_control(artifact["panels_budget"])
@@ -441,7 +445,7 @@ def rotated_reference_control(panels: int, radius: float = RADIUS, speed: float 
     mesh = regular_polygon(panels, radius)
     data = polygon_data(panels, radius, speed)
     result = solve_laplace_exterior_neumann(mesh, data["neumann_fluid_normal"])
-    surface_velocity = evaluate_exterior_surface_velocity(mesh, result) + np.array(
+    surface_velocity = evaluate_exterior_surface_velocity(mesh, result, method="boundary_integral") + np.array(
         [speed, 0.0]
     )
     theta = data["theta"] + math.pi / panels
@@ -633,10 +637,12 @@ def render_markdown(artifact: dict[str, Any]) -> str:
         "$|v|=2U|\\sin\\theta_w|/2^{2/n}$，无需数值积分。"
     )
     lines.append("")
+    lines.append("对边界积分方程沿直面元求切向导数，联立求解各面元中点的壁面势斜率。法向速度使用原 Neumann 数据。外场扰动势对照解析总势减去均匀来流势 Ux。")
+    lines.append("")
     lines.append("## 2. 结果")
     header = (
         "| $n$ | $h_{mean}/a$ | 面板误差(壁面速度) | 面板误差(Cp) | 面板误差(外场速度) "
-        "| 锚点指标(BEM vs 圆) | 多面体几何误差 | 多面体/面板 |"
+        "| 锚点指标(BEM vs 圆) | 多面体几何误差 | 几何误差/锚点指标 |"
     )
     lines.append(header)
     lines.append("| --- | --- | --- | --- | --- | --- | --- | --- |")

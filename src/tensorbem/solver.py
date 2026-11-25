@@ -20,6 +20,7 @@ from numpy.typing import NDArray
 
 from .conditioning import condition_number_with_fallback
 from .geometry import PanelMesh
+from .quadrature import gauss_legendre
 from .kernels import (
     REFERENCE_LENGTH,
     validate_clearance_factor,
@@ -60,6 +61,7 @@ class LaplaceDirichletResult:
     reference_length: float = REFERENCE_LENGTH
     linear_density: bool = False
     condition_number_source: str = "svd"
+    corner_vertices: tuple[int, ...] = ()
 
 
 def _validate_domain(domain: str) -> str:
@@ -68,20 +70,51 @@ def _validate_domain(domain: str) -> str:
     return domain
 
 
-def _difference_operator(mesh: PanelMesh) -> FloatArray:
-    """Arc-length central-difference operator on a closed panel loop.
-
-    ``D[i, :]`` differentiates the panel-midpoint trace at panel ``i`` in arc
-    length: ``(sigma_{i+1} - sigma_{i-1}) / spacing_i``. It is the discrete
-    tangential slope that the first-moment (linear-density) panel basis uses.
-    """
-    n = mesh.panel_count
+def _slope_weights(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
+    """Coefficients of backward and forward increments of the local quadratic."""
     lengths = mesh.lengths
-    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
+    left = 0.5 * (lengths + np.roll(lengths, 1))
+    right = 0.5 * (lengths + np.roll(lengths, -1))
+    span = left + right
+    return (right / span) / left, (left / span) / right
+
+
+def _corner_indices(mesh, vertices):
+    corners = np.asarray(vertices)
+    if corners.ndim != 1:
+        raise ValueError("corner_vertices must be a sequence of vertex indices")
+    if not corners.size:
+        return ()
+    if (corners.dtype.kind not in "iu" or np.any(corners < 0)
+            or np.any(corners >= mesh.panel_count)):
+        raise ValueError("corner_vertices must contain valid integer indices")
+    corners = np.sort(corners.astype(int))
+    if np.min(np.diff(corners, append=corners[0]+mesh.panel_count)) < 2:
+        raise ValueError("each corner-delimited segment needs at least two panels")
+    return tuple(map(int, corners))
+
+
+def _segmented_slopes(mesh, values, corners):
+    """Differentiate vector or matrix columns separately along each marked side."""
+    slopes = np.empty_like(values, dtype=float)
+    lengths = mesh.lengths
+    for start, end in zip(corners, (*corners[1:], corners[0]+mesh.panel_count)):
+        panels = np.arange(start, end) % mesh.panel_count
+        centers = np.cumsum(lengths[panels]) - .5*lengths[panels]
+        local = values[panels] - values[panels[0]]
+        slopes[panels] = np.gradient(local, centers, axis=0, edge_order=min(2, len(panels)-1))
+    return slopes
+
+
+def _difference_operator(mesh: PanelMesh) -> FloatArray:
+    """Periodic derivative at the midpoints of possibly unequal panels."""
+    n = mesh.panel_count
+    backward, forward = _slope_weights(mesh)
     operator = np.zeros((n, n), dtype=float)
     rows = np.arange(n)
-    operator[rows, (rows + 1) % n] = 1.0 / spacing
-    operator[rows, (rows - 1) % n] = -1.0 / spacing
+    operator[rows, (rows + 1) % n] = forward
+    operator[rows, rows] = backward - forward
+    operator[rows, (rows - 1) % n] = -backward
     return operator
 
 
@@ -89,6 +122,7 @@ def assemble_matrices(
     mesh: PanelMesh,
     reference_length: float = REFERENCE_LENGTH,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> tuple[FloatArray, FloatArray]:
     """Assemble analytically integrated single- and double-layer matrices.
 
@@ -101,9 +135,13 @@ def assemble_matrices(
     resulting solve is second-order accurate on a smooth boundary instead of
     first-order. The jump coefficient ``1/2 I`` is unchanged: the double-layer
     kernel on the collocation panel is a delta at the midpoint, where the
-    linear basis equals the midpoint value.
+    linear basis equals the midpoint value. Supplying corner_vertices uses
+    a separate derivative stencil on each marked side for both layers.
     """
     reference = validate_reference_length(reference_length)
+    corners = _corner_indices(mesh, corner_vertices)
+    if corners and not linear_density:
+        raise ValueError("corner-delimited density slopes require linear_density=True")
     centers = mesh.centers
     starts = mesh.vertices
     tangents = mesh.vectors / mesh.lengths[:, None]
@@ -133,7 +171,7 @@ def assemble_matrices(
                 ) - 0.5 * float(lengths[j]) * double[i, j]
     if not linear_density:
         return single, double
-    difference = _difference_operator(mesh)
+    difference = _segmented_slopes(mesh, np.eye(n), corners) if corners else _difference_operator(mesh)
     return single + single_moment @ difference, double + double_moment @ difference
 
 
@@ -143,6 +181,7 @@ def _solve(
     domain: str,
     reference_length: float,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> LaplaceDirichletResult:
     values = np.asarray(boundary_values, dtype=float)
     n = mesh.panel_count
@@ -153,7 +192,7 @@ def _solve(
     reference = validate_reference_length(reference_length)
 
     single, double = assemble_matrices(
-        mesh, reference_length=reference, linear_density=linear_density
+        mesh, reference_length=reference, linear_density=linear_density, corner_vertices=corner_vertices
     )
     sign = 1.0 if domain == "interior" else -1.0
     rhs = 0.5 * values + sign * (double @ values)
@@ -180,6 +219,7 @@ def _solve(
         reference_length=reference,
         linear_density=bool(linear_density),
         condition_number_source=condition_source,
+        corner_vertices=tuple(sorted(corner_vertices)),
     )
 
 
@@ -188,6 +228,7 @@ def solve_laplace_dirichlet(
     boundary_values: FloatArray,
     reference_length: float = REFERENCE_LENGTH,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> LaplaceDirichletResult:
     """Solve for the unknown outward normal derivative given boundary values.
 
@@ -196,13 +237,15 @@ def solve_laplace_dirichlet(
     ``normal_derivative`` is the derivative along the polygon's outward normal.
     ``linear_density=True`` uses the first-moment (linearly varying density)
     panel basis, which is second-order accurate on a smooth boundary.
+    With that basis, corner_vertices restricts density slopes to each marked
+    side, including at its two ends. Each side needs at least two panels.
     """
     return _solve(
         mesh,
         boundary_values,
         "interior",
         reference_length,
-        linear_density=linear_density,
+        linear_density=linear_density, corner_vertices=corner_vertices,
     )
 
 
@@ -377,27 +420,7 @@ def compute_added_mass_matrix_2d(
     )
 
 
-def evaluate_interior_field(
-    mesh: PanelMesh,
-    result: LaplaceDirichletResult,
-    points: FloatArray,
-    minimum_clearance_factor: float = 0.0,
-) -> FloatArray:
-    """Evaluate the harmonic potential at interior points using exact panel integrals.
-
-    Points must be strictly inside the domain and not on the boundary. The
-    representation integrates each constant-panel kernel analytically rather
-    than sampling the kernel at the panel midpoint.
-
-    Only the interior Green representation is valid, so targets are screened
-    before the representation is evaluated: a target outside the polygon, or
-    closer to the boundary than ``minimum_clearance_factor * h_max`` (``h_max``
-    the longest panel), is refused with ``ValueError``. Outside the domain the
-    Green representation converges to a finite but meaningless number, so an
-    unscreened call returns a plausible-looking wrong value -- the failure the
-    guard exists to convert into an exception. The factor is validated like the
-    3-D field evaluators (finite and non-negative).
-    """
+def _interior_targets(mesh, result, points, minimum_clearance_factor):
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
     if result.domain != "interior":
@@ -442,6 +465,33 @@ def evaluate_interior_field(
             "and it returns a finite but meaningless value there."
         )
 
+    return targets
+
+
+def evaluate_interior_field(
+    mesh: PanelMesh,
+    result: LaplaceDirichletResult,
+    points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
+) -> FloatArray:
+    """Evaluate the harmonic potential at interior points using exact panel integrals.
+
+    Points must be strictly inside the domain and not on the boundary.
+    The default field evaluator integrates each constant-panel kernel
+    analytically. A corner-delimited solve uses its piecewise linear basis.
+
+    Only the interior Green representation is valid, so targets are screened
+    before the representation is evaluated: a target outside the polygon, or
+    closer to the boundary than ``minimum_clearance_factor * h_max`` (``h_max``
+    the longest panel), is refused with ``ValueError``. Outside the domain the
+    Green representation converges to a finite but meaningless number, so an
+    unscreened call returns a plausible-looking wrong value -- the failure the
+    guard exists to convert into an exception. The factor is validated like the
+    3-D field evaluators (finite and non-negative).
+    """
+    if isinstance(result, LaplaceDirichletResult) and result.corner_vertices:
+        return evaluate_interior_field_and_gradient(mesh, result, points, minimum_clearance_factor)[0]
+    targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
@@ -521,13 +571,9 @@ def _screen_exterior_targets(
 def tangential_slope(mesh: PanelMesh, values: FloatArray) -> FloatArray:
     r"""Estimate the arc-length derivative of a panel-midpoint trace.
 
-    The trace of a smooth boundary function at the midpoints of a closed
-    boundary is differentiated with a periodic central difference that is
-    centred in *arc length* (``spacing_i`` is the distance between the two
-    neighbouring midpoints through panel ``i``). For a smooth periodic trace
-    that difference is second-order accurate, so it is a legitimate estimate of
-    the tangential slope used by the first-moment (linearly varying density)
-    panel integrals; it is not a one-sided first-order stencil.
+    Interpolate the trace at each midpoint and its two periodic neighbours
+    by a quadratic in arc length, then differentiate at the central point.
+    This retains second-order accuracy with unequal neighbouring spacings.
     """
     if not isinstance(mesh, PanelMesh):
         raise TypeError("mesh must be a PanelMesh")
@@ -537,9 +583,8 @@ def tangential_slope(mesh: PanelMesh, values: FloatArray) -> FloatArray:
         raise ValueError(f"values must have shape ({n},)")
     if not np.isfinite(trace).all():
         raise ValueError("values must all be finite")
-    lengths = mesh.lengths
-    spacing = 0.5 * (np.roll(lengths, 1) + 2.0 * lengths + np.roll(lengths, -1))
-    return (np.roll(trace, -1) - np.roll(trace, 1)) / spacing
+    backward, forward = _slope_weights(mesh)
+    return backward * (trace - np.roll(trace, 1)) + forward * (np.roll(trace, -1) - trace)
 
 
 def evaluate_exterior_field(
@@ -627,14 +672,87 @@ def evaluate_exterior_field(
         raise ValueError("linear_density must be a boolean")
     targets = _screen_exterior_targets(mesh, points, minimum_clearance_factor)
 
+    potential, gradient = _panel_field_and_gradient(
+        mesh, targets, result.normal_derivative, result.boundary_values,
+        result.reference_length, linear_density)
+    return ExteriorField(potential=potential, gradient=gradient)
+
+
+def estimate_dirichlet_wedge_amplitude(
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, vertex_index: int,
+    radius: float, quadrature_order: int = 24, harmonic_lift=None,
+) -> float:
+    """Project an interior solution onto the leading homogeneous Dirichlet mode.
+
+    The circular sector must lie inside the polygon. Its straight sides must
+    have zero potential after subtracting the optional harmonic_lift. This
+    callback accepts (N, 2) Cartesian points and returns (N,) real potentials.
+    Supply a smooth harmonic function matching the prescribed trace along
+    both sides up to radius, e.g. an affine potential. For a
+    bounded harmonic field the angular sine modes are orthogonal on the arc:
+    twice the angular mean of u*sin(pi*theta/opening), divided by
+    radius**(pi/opening), estimates the leading coefficient.
+    """
+    if (isinstance(vertex_index, (bool, np.bool_)) or not isinstance(vertex_index, (int, np.integer))
+            or not 0 <= vertex_index < mesh.panel_count):
+        raise ValueError("vertex_index must identify a mesh vertex")
+    if not math.isfinite(radius) or radius <= 0:
+        raise ValueError("radius must be finite and positive")
+    edges = mesh.vectors
+    outgoing = edges[vertex_index]
+    incoming = -edges[(int(vertex_index)-1) % mesh.panel_count]
+    start = math.atan2(outgoing[1], outgoing[0])
+    opening = (math.atan2(incoming[1], incoming[0])-start) % (2*math.pi)
+    if opening == 0:
+        raise ValueError("the corner must have a positive opening angle")
+    nodes, weights = gauss_legendre(quadrature_order)
+    fractions = .5*(nodes+1)
+    angles = start + opening*fractions
+    points = mesh.vertices[vertex_index] + radius*np.column_stack((np.cos(angles), np.sin(angles)))
+    potential, _ = evaluate_interior_field_and_gradient(mesh, result, points)
+    if harmonic_lift is not None:
+        lift = np.asarray(harmonic_lift(points))
+        if lift.shape != potential.shape or np.iscomplexobj(lift) or not np.isfinite(lift).all():
+            raise ValueError("harmonic_lift must return one finite real potential per point")
+        potential = potential-lift
+    return float(weights @ (potential*np.sin(np.pi*fractions)) / radius**(np.pi/opening))
+
+
+def evaluate_interior_field_and_gradient(
+    mesh: PanelMesh, result: LaplaceDirichletResult, points: FloatArray,
+    minimum_clearance_factor: float = 0.0,
+) -> tuple[FloatArray, FloatArray]:
+    """Return interior potential (M,) and Cartesian gradient (M,2).
+
+    Differentiate the interior Green representation S*q - D*u using the
+    density basis used in the solve. Targets must lie strictly inside the
+    polygon and satisfy the same clearance rule as evaluate_interior_field.
+
+    For gradients sampled at a distance proportional to panel length, a
+    constant-density trace can retain a large error under refinement. In
+    the unit-circle quadratic-harmonic benchmark at 0.2 panel lengths from
+    the wall, linear density reduced the worst sampled gradient error from
+    0.72 to 0.0074 on 96 panels. These values depend on the target location.
+    """
+    targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
+    return _panel_field_and_gradient(
+        mesh, targets, result.normal_derivative, -result.boundary_values,
+        result.reference_length, result.linear_density, result.corner_vertices)
+
+
+def _panel_field_and_gradient(mesh, targets, flux, values, reference, linear_density, corners=()):
+    n = mesh.panel_count
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
-    reference = result.reference_length
     if linear_density:
         half = 0.5 * lengths
-        flux_slope = tangential_slope(mesh, result.normal_derivative)
-        value_slope = tangential_slope(mesh, result.boundary_values)
+        if corners:
+            flux_slope = _segmented_slopes(mesh, flux, corners)
+            value_slope = _segmented_slopes(mesh, values, corners)
+        else:
+            flux_slope = tangential_slope(mesh, flux)
+            value_slope = tangential_slope(mesh, values)
     potential = np.zeros(len(targets), dtype=float)
     gradient = np.zeros((len(targets), 2), dtype=float)
     if not linear_density:
@@ -643,13 +761,13 @@ def evaluate_exterior_field(
             start = mesh.vertices[j]
             tangent = tangents[j]
             length = float(lengths[j])
-            flux = result.normal_derivative[j]
-            value = result.boundary_values[j]
+            panel_flux = flux[j]
+            value = values[j]
             potential += (
                 integrate_single_layer_panel_many(
                     targets, start, tangent, length, reference
                 )
-                * flux
+                * panel_flux
                 + integrate_double_layer_panel_many(
                     targets, start, tangent, normals[j], length
                 )
@@ -659,13 +777,13 @@ def evaluate_exterior_field(
                 integrate_single_layer_panel_gradient_many(
                     targets, start, tangent, length, reference
                 )
-                * flux
+                * panel_flux
                 + integrate_double_layer_panel_gradient_many(
                     targets, start, tangent, normals[j], length
                 )
                 * value
             )
-        return ExteriorField(potential=potential, gradient=gradient)
+        return potential, gradient
     for i, target in enumerate(targets):
         for j in range(n):
             start = mesh.vertices[j]
@@ -677,16 +795,16 @@ def evaluate_exterior_field(
             double = integrate_double_layer_panel(
                 target, start, tangent, normals[j], length
             )
-            potential[i] += single * result.normal_derivative[j] + double * result.boundary_values[j]
+            potential[i] += single * flux[j] + double * values[j]
             gradient[i] += (
                 integrate_single_layer_panel_gradient(
                     target, start, tangent, length, reference
                 )
-                * result.normal_derivative[j]
+                * flux[j]
                 + integrate_double_layer_panel_gradient(
                     target, start, tangent, normals[j], length
                 )
-                * result.boundary_values[j]
+                * values[j]
             )
             if linear_density:
                 # First moment of the density about the panel midpoint:
@@ -729,23 +847,96 @@ def evaluate_exterior_field(
                     )
                     * value_slope[j]
                 )
-    return ExteriorField(potential=potential, gradient=gradient)
+    return potential, gradient
+
+
+def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):
+    """Differentiate the exterior trace equation along each straight panel.
+
+    In (I/2 - H)u = S q, represent the potential on panel j by its
+    supplied midpoint value plus an unknown slope times (s-L_j/2).
+    Collocating the differentiated equation at all midpoints determines
+    those slopes. The on-panel H principal value is zero along the face,
+    and its exterior jump is already included in the half-identity.
+    """
+    centers, lengths, normals = mesh.centers, mesh.lengths, mesh.normals
+    system = 0.5 * np.eye(mesh.panel_count)
+    rhs = np.zeros(mesh.panel_count)
+    flux_slopes = tangential_slope(mesh, flux) if linear_density else None
+    for j, (start, tangent, normal, length) in enumerate(zip(mesh.vertices, tangents, normals, lengths)):
+        single = integrate_single_layer_panel_gradient_many(centers, start, tangent, length)
+        double = integrate_double_layer_panel_gradient_many(centers, start, tangent, normal, length)
+        ds = np.sum(single * tangents, axis=1)
+        dh = np.sum(double * tangents, axis=1)
+        ds[j] = dh[j] = 0.0
+        # A constant double-layer density contributes zero tangential derivative.
+        rhs += ds * flux[j] + dh * (values[j] - values)
+        for i, target in enumerate(centers):
+            if i != j:
+                moment = integrate_double_layer_panel_first_moment_gradient(
+                    target, start, tangent, normal, length
+                )
+                system[i, j] -= moment @ tangents[i] - 0.5 * length * dh[i]
+            if flux_slopes is not None:
+                if i == j:
+                    weight = length / (2.0 * np.pi)
+                else:
+                    moment = integrate_single_layer_panel_first_moment_gradient(
+                        target, start, tangent, length
+                    )
+                    weight = moment @ tangents[i] - 0.5 * length * ds[i]
+                rhs[i] += weight * flux_slopes[j]
+    return np.linalg.solve(system, rhs)
+
+
+def evaluate_interior_surface_gradient(
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, corner_vertices=None,
+) -> FloatArray:
+    """Recover the interior gradient at each panel midpoint, shape (N, 2).
+
+    Use the solved outward normal derivative and the arc-length derivative
+    of the prescribed midpoint potential. The latter is reconstructed from
+    three neighboring panels. To avoid differencing across a sharp corner,
+    pass its vertex index in corner_vertices, or use the corners stored by
+    the solve (the default). Each resulting boundary segment
+    uses one-sided derivatives at its ends. Two-panel segments use the secant
+    at both midpoints; each segment needs at least two panels.
+    """
+    if not isinstance(result, LaplaceDirichletResult):
+        raise TypeError("result must be a LaplaceDirichletResult")
+    if result.domain != "interior":
+        raise ValueError("evaluate_interior_surface_gradient requires an interior solve")
+    flux = np.asarray(result.normal_derivative, dtype=float)
+    if flux.shape != (mesh.panel_count,):
+        raise ValueError("result boundary traces must match the mesh panel count")
+    derivative = tangential_slope(mesh, result.boundary_values)
+    panel_lengths = mesh.lengths
+    corners = result.corner_vertices if corner_vertices is None else corner_vertices
+    corners = _corner_indices(mesh, corners)
+    if corners:
+        derivative = _segmented_slopes(mesh, result.boundary_values, corners)
+    tangents = mesh.vectors / panel_lengths[:, None]
+    return flux[:, None] * mesh.normals + derivative[:, None] * tangents
 
 
 def evaluate_exterior_surface_velocity(
-    mesh: PanelMesh, result: LaplaceDirichletResult
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, method: str = "trace_difference"
 ) -> FloatArray:
     r"""Fluid-side velocity ``grad(u)`` at panel midpoints of an exterior solve.
 
     The normal component is the solved ``q_e``. The tangential component is the
     arc-length derivative ``d(u)/ds`` of the panel-midpoint trace, taken with a
     periodic central difference on the closed boundary. For a smooth periodic
-    trace that difference is spectrally accurate, so the surface velocity is not
+    trace that difference is second-order accurate, so the surface velocity is not
     limited by a first-order one-sided stencil.
 
     The polygon's counter-clockwise tangent is ``t`` and the panel spacing
     ``ds`` varies, so the difference is centred in arc length rather than in
     panel index.
+    With ``method="boundary_integral"``, recover the tangential derivative
+    from the differentiated exterior boundary integral instead. This solves
+    an additional dense system for the wall slopes and accommodates jumps
+    in the prescribed normal derivative at polygon corners.
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
@@ -763,5 +954,10 @@ def evaluate_exterior_surface_velocity(
     tangents = mesh.vectors / lengths[:, None]
     # Arc-length difference of the panel midpoints (equally spaced in arc
     # length for an inscribed polygon of a circle, but not in general).
-    derivative = tangential_slope(mesh, values)
+    if method == "trace_difference":
+        derivative = tangential_slope(mesh, values)
+    elif method == "boundary_integral":
+        derivative = _boundary_integral_wall_slope(mesh, values, flux, tangents, result.linear_density)
+    else:
+        raise ValueError("method must be trace_difference or boundary_integral")
     return flux[:, None] * (-mesh.normals) + derivative[:, None] * tangents

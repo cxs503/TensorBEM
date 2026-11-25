@@ -7,8 +7,7 @@ targets -- the single most expensive stage of ``CASE-BEM-LAPLACE-CYLINDER``
 numpy; they are a performance change, not a modelling change, so the *only*
 thing that has to be true is that they agree with the scalar reference to
 round-off.  These tests pin that, including the special branches the scalar
-code switches on (``|eta| <= 1e-14`` for the logarithmic primitive and the
-double-layer potential, ``eta == 0`` for the single-layer gradient, and the
+code switches on (``|eta| <= 1e-14 * length`` for the double-layer potential, ``eta == 0`` for the single-layer gradient, and the
 endpoint singularity both gradient routines refuse).
 """
 
@@ -231,3 +230,81 @@ def test_first_moment_scalar_path_is_still_the_recorded_one() -> None:
             double_gradient[axis], rel=1e-5, abs=1e-8
         )
     assert np.isfinite(value) and np.isfinite(double)
+
+
+@pytest.mark.parametrize("radius", [3.99, 4.0, 4.01, 1e4, 1e10, 1e16])
+def test_single_layer_distance_range_against_gaussian_quadrature(radius, record_property):
+    """Integrate the point kernel directly over the unit panel in physical space."""
+    start = np.array([-0.5, 0.0])
+    tangent = np.array([1.0, 0.0])
+    directions = np.array([[1.0, 0.0], [0.0, -1.0], [-0.6, 0.8]])
+    targets = radius * directions
+    nodes, weights = np.polynomial.legendre.leggauss(32)
+    distances = np.hypot(targets[:, 0, None] - 0.5 * nodes, targets[:, 1, None])
+    expected = -np.log(distances / 2.0) @ weights / (4.0 * np.pi)
+    for name, values in (
+        ("batch", integrate_single_layer_panel_many(targets, start, tangent, 1.0)),
+        ("scalar", [integrate_single_layer_panel(x, start, tangent, 1.0) for x in targets]),
+    ):
+        error = float(np.max(np.abs(values / expected - 1.0)))
+        record_property(name + "_max_relative_error", error)
+        assert error < 3e-15
+
+@pytest.mark.parametrize("length", [1e-220, 1e-16, 1.0, 1e16, 1e220])
+def test_single_layer_near_field_scales_with_panel(length, record_property):
+    # In units of L, the reference length is 1. The endpoint and self
+    # integrals are elementary, and quadrature is regular for the third point.
+    start = np.zeros(2)
+    tangent = np.array([1.0, 0.0])
+    targets = length * np.array([[0.0, 0.0], [0.5, 0.0], [0.25, 0.15]])
+    nodes, weights = np.polynomial.legendre.leggauss(100)
+    radii = np.hypot(0.25 - (nodes + 1.0) / 2, 0.15)
+    expected = np.array([1.0, 1.0 + np.log(2.0), -0.5 * (weights @ np.log(radii))]) / (2 * np.pi)
+    scalar = [integrate_single_layer_panel(x, start, tangent, length, length) for x in targets]
+    batch = integrate_single_layer_panel_many(targets, start, tangent, length, length)
+    for name, values in (("scalar", scalar), ("batch", batch)):
+        error = float(np.max(np.abs(np.asarray(values) / length / expected - 1)))
+        record_property(name + "_relative_error", error)
+        assert error < 5e-15
+
+@pytest.mark.parametrize("length", [1e-220, 1e-16, 1.0, 1e16, 1e220])
+def test_double_layer_near_field_scales_with_panel(length, record_property):
+    start = np.zeros(2)
+    tangent = np.array([1.0, 0.0])
+    normal = np.array([0.0, 1.0])
+    offsets = np.array([0.0, 0.25, -0.25, 1e-10, -1e-10])
+    targets = length * np.column_stack((np.full_like(offsets, 0.5), offsets))
+    # At the midpoint the panel subtends twice the half-angle. For a linear
+    # density s, symmetry multiplies the constant-density answer by L/2.
+    expected = np.sign(offsets) * np.arctan2(0.5, np.abs(offsets)) / np.pi
+    args = (start, tangent, normal, length)
+    scalar = [integrate_double_layer_panel(x, *args) for x in targets]
+    batch = integrate_double_layer_panel_many(targets, *args)
+    moments = [integrate_double_layer_panel_first_moment(x, *args) / length for x in targets]
+    for name, values, reference in (("scalar", scalar, expected), ("batch", batch, expected),
+                                    ("first_moment_over_length", moments, expected / 2)):
+        error = float(np.max(np.abs(values - reference)))
+        record_property(name + "_absolute_error", error)
+        assert error < 5e-16
+
+
+@pytest.mark.parametrize("radius", [3.99, 4.0, 4.01, 1e4, 1e10, 1e16])
+def test_double_layer_distance_range_against_gaussian_quadrature(radius, record_property):
+    start = np.array([-0.5, 0.0])
+    tangent = np.array([1.0, 0.0])
+    normal = np.array([0.0, 1.0])
+    targets = radius * np.array([[0.0, 1.0], [0.8, 0.6], [-0.8, -0.6]])
+    nodes, weights = np.polynomial.legendre.leggauss(32)
+    distances = np.hypot(targets[:, 0, None] - 0.5 * nodes, targets[:, 1, None])
+    integrand = targets[:, 1, None] / distances**2 / (2 * np.pi)
+    expected = integrand @ (0.5 * weights)
+    expected_moment = integrand @ (0.25 * weights * (1 + nodes))
+    args = (start, tangent, normal, 1.0)
+    scalar = [integrate_double_layer_panel(x, *args) for x in targets]
+    batch = integrate_double_layer_panel_many(targets, *args)
+    moments = [integrate_double_layer_panel_first_moment(x, *args) for x in targets]
+    for name, values, reference in (("scalar", scalar, expected), ("batch", batch, expected),
+                                    ("first_moment", moments, expected_moment)):
+        error = float(np.max(np.abs(values / reference - 1.0)))
+        record_property(name + "_relative_error", error)
+        assert error < 1e-14
