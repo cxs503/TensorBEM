@@ -105,14 +105,12 @@ def _legendre_gauss_golub_welsch(n: int) -> tuple[FloatArray, FloatArray]:
 
 def _laguerre_gauss_golub_welsch(n: int) -> tuple[FloatArray, FloatArray]:
     """Laguerre-Gauss rule built from an explicit Jacobi matrix (see above)."""
+    from scipy.linalg import eigh_tridiagonal
+
+    # The implicit QR driver resolves the tiny first components that carry
+    # the far-tail weights. Absolute accuracy alone loses high-order moments.
     k = np.arange(n, dtype=np.float64)
-    off_diagonal = np.arange(1, n, dtype=np.float64)
-    jacobi = (
-        np.diag(2.0 * k + 1.0)
-        + np.diag(off_diagonal, 1)
-        + np.diag(off_diagonal, -1)
-    )
-    nodes, vectors = np.linalg.eigh(jacobi)
+    nodes, vectors = eigh_tridiagonal(2*k + 1, k[1:], lapack_driver="stev")
     weights = vectors[0, :] ** 2  # mu0 = int_0^inf exp(-x) dx = 1
     return np.ascontiguousarray(nodes), np.ascontiguousarray(weights)
 

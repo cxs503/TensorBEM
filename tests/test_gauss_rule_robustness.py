@@ -38,21 +38,23 @@ def test_legendre_fallback_reproduces_numpys_rule() -> None:
         assert abs(float(np.dot(weights, nodes**degree)) - exact) < 1e-12
 
 
-def test_laguerre_fallback_is_an_exact_laguerre_rule() -> None:
+@pytest.mark.parametrize("order", [20, 40, 64])
+def test_laguerre_fallback_is_an_exact_laguerre_rule(order, record_property) -> None:
     """The rule the import path needs: exact for every polynomial of degree < 2n."""
-    nodes, weights = fs._laguerre_gauss_golub_welsch(40)
+    nodes, weights = fs._laguerre_gauss_golub_welsch(order)
     assert np.all(np.diff(nodes) > 0.0)  # ascending, like the Legendre rule
     assert abs(weights.sum() - 1.0) < 1e-12  # int_0^inf exp(-x) dx = Gamma(1)
-    for degree in range(0, 80):
+    errors = []
+    for degree in range(2*order):
         exact = float(math.factorial(degree))
         got = float(np.dot(weights, nodes**degree))
+        errors.append(abs(got/exact - 1.))
         assert abs(got - exact) <= 1e-10 * max(1.0, exact), degree
-    # numpy's ``laggauss`` returns the nodes in descending order; the fallback
-    # returns them ascending like the Legendre rule, so compare the sorted sets.
-    ref_nodes, ref_weights = laggauss(40)
-    order = np.argsort(ref_nodes)
-    assert np.allclose(nodes, ref_nodes[order], rtol=0.0, atol=1e-9)
-    assert np.allclose(weights, ref_weights[order], rtol=0.0, atol=1e-12)
+    record_property("max_relative_moment_error", max(errors))
+    ref_nodes, ref_weights = laggauss(order)
+    indices = np.argsort(ref_nodes)
+    assert np.allclose(nodes, ref_nodes[indices], rtol=0.0, atol=1e-9)
+    assert np.allclose(weights, ref_weights[indices], rtol=0.0, atol=1e-12)
 
 
 def test_module_import_survives_a_broken_eigvalsh(monkeypatch: pytest.MonkeyPatch) -> None:

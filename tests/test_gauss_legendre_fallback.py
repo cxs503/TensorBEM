@@ -67,7 +67,7 @@ def test_quadrature_quantities_are_unchanged_by_the_fallback(monkeypatch) -> Non
     reference = {
         "duffy": kernels3d.duffy_quadrature(triangle, order=8),
         "duffy_batch": kernels3d.duffy_quadrature_batch(
-            batch[:, :1, :], batch[:, 1:2, :], batch[:, 2:, :], order=8
+            batch[:, 0, :], batch[:, 1, :], batch[:, 2, :], order=8
         ),
         "self": kernels3d.integrate_single_layer_triangle_self(triangle, order=16),
         "polar": kernels3d._polar_sectors(triangle, order=16)[:2],
@@ -82,7 +82,7 @@ def test_quadrature_quantities_are_unchanged_by_the_fallback(monkeypatch) -> Non
     fallback = {
         "duffy": kernels3d.duffy_quadrature(triangle, order=8),
         "duffy_batch": kernels3d.duffy_quadrature_batch(
-            batch[:, :1, :], batch[:, 1:2, :], batch[:, 2:, :], order=8
+            batch[:, 0, :], batch[:, 1, :], batch[:, 2, :], order=8
         ),
         "self": kernels3d.integrate_single_layer_triangle_self(triangle, order=16),
         "polar": kernels3d._polar_sectors(triangle, order=16)[:2],
