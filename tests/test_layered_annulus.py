@@ -187,3 +187,23 @@ def test_circular_pure_flux_selects_only_temperature_offset():
         solve(2., (flux[0], flux[1]+.001))
     zero = solve(12., (0., 0.))
     np.testing.assert_allclose(zero.outer_field.boundary_values, 12., atol=1e-11, rtol=0.)
+
+
+@pytest.mark.parametrize("fraction",[0.,.35,1.])
+def test_powered_contact_with_two_flux_walls_preserves_bore_gauge(fraction):
+    # For uniform radial rates the temperatures are affine in log(r).
+    a,b,c = 1.,1.4,2.
+    source,r = 3.,.2
+    qi = .8
+    qo = qi+source
+    result = solve_annulus_contact((a,b,c),(2.,4.),(None,None),r,16,formulation="circular",
+                wall_fluxes=(b*qi/a,-b*qo/c),mean_bore_temperature=5.,
+                interface_source=source,inner_resistance_fraction=fraction)
+    inner = 5.-b*qi*np.log(b/a)/2
+    sheet = inner-fraction*r*qi
+    np.testing.assert_allclose(result.sheet_temperature,sheet,atol=1e-12)
+    np.testing.assert_allclose(result.outer_trace,sheet-(1-fraction)*r*qo,atol=1e-12)
+    np.testing.assert_allclose(result.heat_rates,2*np.pi*b*np.array([qi,qi,qo]),atol=1e-12)
+    with pytest.raises(ValueError,match="incompatible"):
+        solve_annulus_contact((a,b,c),(2.,4.),(None,None),r,16,formulation="circular",
+                    wall_fluxes=(0.,0.),mean_bore_temperature=5.,interface_source=source)
