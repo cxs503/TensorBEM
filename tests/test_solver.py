@@ -110,3 +110,21 @@ def test_dirichlet_gate_still_rejects_a_singular_system(monkeypatch):
     )
     with pytest.raises(ValueError, match="numerically singular"):
         solve_laplace_dirichlet(mesh, mesh.centers[:, 0])
+
+
+@pytest.mark.parametrize(("size", "origin"), [(1.0, 0.0), (1.0, 2.0**45), (1e-60, 0.0), (1e60, 0.0)])
+def test_rectangle_harmonic_field_in_scaled_coordinates(size, origin, record_property):
+    from tensorbem.geometry import PanelMesh
+
+    corners = np.array([[0, 0], [4, 0], [4, 2], [0, 2]])
+    edges = np.roll(corners, -1, axis=0) - corners
+    fractions = np.arange(16) / 16
+    vertices = corners[:, None, :] + fractions[None, :, None] * edges[:, None, :]
+    mesh = PanelMesh(origin + size * vertices.reshape(-1, 2))
+    values = (mesh.centers[:, 0] - origin) / size
+    solution = solve_laplace_dirichlet(mesh, values, reference_length=8 * size)
+    probes = np.array([[1.0, 0.75], [2.5, 1.25]])
+    computed = evaluate_interior_field(mesh, solution, origin + size * probes)
+    error = float(np.max(abs(computed - probes[:, 0])))
+    record_property("max_absolute_potential_error", error)
+    assert error < 6e-6
