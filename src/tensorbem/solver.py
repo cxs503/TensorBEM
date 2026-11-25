@@ -680,12 +680,15 @@ def evaluate_exterior_field(
 
 def estimate_dirichlet_wedge_amplitude(
     mesh: PanelMesh, result: LaplaceDirichletResult, *, vertex_index: int,
-    radius: float, quadrature_order: int = 24,
+    radius: float, quadrature_order: int = 24, harmonic_lift=None,
 ) -> float:
     """Project an interior solution onto the leading homogeneous Dirichlet mode.
 
-    Both incident straight sides must have zero potential up to the chosen
-    radius, and the circular sector must lie inside the polygon. For a
+    The circular sector must lie inside the polygon. Its straight sides must
+    have zero potential after subtracting the optional harmonic_lift. This
+    callback accepts (N, 2) Cartesian points and returns (N,) real potentials.
+    Supply a smooth harmonic function matching the prescribed trace along
+    both sides up to radius, e.g. an affine potential. For a
     bounded harmonic field the angular sine modes are orthogonal on the arc:
     twice the angular mean of u*sin(pi*theta/opening), divided by
     radius**(pi/opening), estimates the leading coefficient.
@@ -707,6 +710,11 @@ def estimate_dirichlet_wedge_amplitude(
     angles = start + opening*fractions
     points = mesh.vertices[vertex_index] + radius*np.column_stack((np.cos(angles), np.sin(angles)))
     potential, _ = evaluate_interior_field_and_gradient(mesh, result, points)
+    if harmonic_lift is not None:
+        lift = np.asarray(harmonic_lift(points))
+        if lift.shape != potential.shape or np.iscomplexobj(lift) or not np.isfinite(lift).all():
+            raise ValueError("harmonic_lift must return one finite real potential per point")
+        potential = potential-lift
     return float(weights @ (potential*np.sin(np.pi*fractions)) / radius**(np.pi/opening))
 
 
