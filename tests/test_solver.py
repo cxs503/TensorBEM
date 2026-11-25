@@ -216,3 +216,50 @@ def test_interior_surface_gradient_tracks_harmonic_quadratic(linear, record_prop
                                atol=1e-13, rtol=0.)
     with pytest.raises(ValueError, match="interior solve"):
         evaluate_interior_surface_gradient(mesh, replace(result, domain="exterior"))
+
+
+def test_interior_gradient_at_rectangle_corners(record_property):
+    from tensorbem import evaluate_interior_surface_gradient
+    from tensorbem.geometry import PanelMesh
+
+    corners = np.array([[0.,0.], [2.,0.], [2.,1.], [0.,1.]])
+    edges = np.roll(corners,-1,axis=0)-corners
+    for n in (4, 8, 16):
+        fraction = (np.arange(n)/n)**1.25
+        vertices = corners[:,None,:] + fraction[None,:,None]*edges[:,None,:]
+        mesh = PanelMesh(np.roll(vertices.reshape(-1,2),1,axis=0))
+        indices = 1 + n*np.arange(4)
+        x,y = mesh.centers.T
+        result = solve_laplace_dirichlet(mesh, x*x-y*y+x*y, reference_length=4.)
+        exact = np.column_stack((2*x+y, x-2*y))
+        tangent = mesh.vectors / mesh.lengths[:,None]
+        recovered = evaluate_interior_surface_gradient(mesh,result,corner_vertices=indices[::-1])
+        difference = recovered-exact
+        adjacent = np.r_[indices, indices-1]
+        tangent_error = float(np.max(np.abs(np.sum(difference*tangent,axis=1)[adjacent])))
+        normal_error = float(np.max(np.abs(np.sum(difference*mesh.normals,axis=1)[adjacent])))
+        default = evaluate_interior_surface_gradient(mesh,result)
+        centered_error = float(np.max(np.abs(np.sum((default-exact)*tangent,axis=1)[adjacent])))
+        record_property(f"one_sided_tangent_error_{n}",tangent_error)
+        record_property(f"periodic_tangent_error_{n}",centered_error)
+        record_property(f"normal_error_{n}",normal_error)
+        assert tangent_error < 2e-13
+        np.testing.assert_allclose(np.sum(recovered*mesh.normals,axis=1),result.normal_derivative,
+                                   atol=1e-14,rtol=0.)
+    for invalid in ([0, 1], [0, 0], [-1], [1.5], [mesh.panel_count]):
+        with pytest.raises(ValueError):
+            evaluate_interior_surface_gradient(mesh,result,corner_vertices=invalid)
+
+
+def test_interior_corner_segments_with_two_panels_use_secants():
+    from tensorbem import evaluate_interior_surface_gradient
+    from tensorbem.geometry import PanelMesh
+
+    corners = np.array([[0.,0.], [2.,0.], [0.,1.]])
+    vertices = np.stack((corners,.5*(corners+np.roll(corners,-1,axis=0))),axis=1)
+    mesh = PanelMesh(vertices.reshape(-1,2))
+    x,y = mesh.centers.T
+    result = solve_laplace_dirichlet(mesh, 2*x-3*y, reference_length=4.)
+    grad = evaluate_interior_surface_gradient(mesh,result,corner_vertices=[0,2,4])
+    tangent = mesh.vectors/mesh.lengths[:,None]
+    np.testing.assert_allclose(np.sum(grad*tangent,axis=1), tangent @ [2.,-3.], atol=1e-14)

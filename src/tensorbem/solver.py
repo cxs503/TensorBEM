@@ -805,14 +805,16 @@ def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):
 
 
 def evaluate_interior_surface_gradient(
-    mesh: PanelMesh, result: LaplaceDirichletResult,
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, corner_vertices=(),
 ) -> FloatArray:
     """Recover the interior gradient at each panel midpoint, shape (N, 2).
 
     Use the solved outward normal derivative and the arc-length derivative
     of the prescribed midpoint potential. The latter is reconstructed from
-    three neighboring panels, so accuracy near sharp corners depends on the
-    smoothness of the boundary trace. No vertex value is assigned.
+    three neighboring panels. To avoid differencing across a sharp corner,
+    pass its vertex index in corner_vertices. Each resulting boundary segment
+    uses one-sided derivatives at its ends. Two-panel segments use the secant
+    at both midpoints; each segment needs at least two panels.
     """
     if not isinstance(result, LaplaceDirichletResult):
         raise TypeError("result must be a LaplaceDirichletResult")
@@ -822,7 +824,26 @@ def evaluate_interior_surface_gradient(
     if flux.shape != (mesh.panel_count,):
         raise ValueError("result boundary traces must match the mesh panel count")
     derivative = tangential_slope(mesh, result.boundary_values)
-    tangents = mesh.vectors / mesh.lengths[:, None]
+    panel_lengths = mesh.lengths
+    corners = np.asarray(corner_vertices)
+    if corners.ndim != 1:
+        raise ValueError("corner_vertices must be a sequence of vertex indices")
+    if corners.size:
+        if (corners.dtype.kind not in "iu" or np.any(corners < 0)
+                or np.any(corners >= mesh.panel_count)):
+            raise ValueError("corner_vertices must contain valid integer indices")
+        corners = np.sort(corners.astype(int))
+        ends = np.r_[corners[1:], corners[0]+mesh.panel_count]
+        if np.any(ends-corners < 2):
+            raise ValueError("each corner-delimited segment needs at least two panels")
+        for start, end in zip(corners, ends):
+            panels = np.arange(start, end) % mesh.panel_count
+            lengths = panel_lengths[panels]
+            centers = np.cumsum(lengths) - .5*lengths
+            values = result.boundary_values[panels]
+            derivative[panels] = np.gradient(values-values[0], centers,
+                                              edge_order=min(2, len(panels)-1))
+    tangents = mesh.vectors / panel_lengths[:, None]
     return flux[:, None] * mesh.normals + derivative[:, None] * tangents
 
 
