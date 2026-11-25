@@ -125,6 +125,13 @@ class HarmonicConduction:
     particular_gradient: tuple[complex, complex] = (0j, 0j)
     particular_quadratic: tuple[complex, complex, complex] = (0j, 0j, 0j)
 
+    surface_admittance: complex | np.ndarray = 0j
+
+    @property
+    def external_inward_flux(self):
+        """External heat input including local wall storage, in W/m²."""
+        return self.inward_flux + self.surface_admittance*self.wall_temperature
+
     def _interior_targets(self, points):
         targets = np.asarray(points, dtype=float)
         if targets.ndim != 2 or targets.shape[1] != 2 or not np.isfinite(targets).all():
@@ -219,13 +226,16 @@ def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, cond
 
 
 def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angular_frequency, *,
-                                    conductivity, volumetric_heat_capacity, film_coefficients=0., quadratic=False, volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.)):
+                                    conductivity, volumetric_heat_capacity, film_coefficients=0., wall_areal_heat_capacity=0.,
+                                    quadratic=False, volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.)):
     """Solve harmonic diffusion with one condition per panel, in exp(+i omega t).
 
-    Use "temperature" for prescribed K, "flux" for prescribed inward W/m²,
-    and "film" for ambient K with q_in = h*(ambient - wall). Types, values
+    Use "temperature" for prescribed K, "flux" for prescribed external inward W/m²,
+    and "film" for ambient K with external inward flux h*(ambient - wall). Types, values
     and film coefficients may each be scalar or panel-sized. A zero film
-    coefficient insulates. Frequency must be positive, including for pure
+    coefficient gives zero external input. A local wall_areal_heat_capacity
+    in J/(m² K) stores i omega C_wall T_wall per area, so inward_flux into
+    the bulk equals external_inward_flux minus this storage rate. Frequency must be positive, including for pure
     flux data. volumetric_source is the generation phasor at the coordinate origin
     in W/m³. source_gradient gives its two Cartesian derivatives at the origin in W/m⁴.
     source_quadratic gives coefficients of x², xy and y² in W/m⁵.
@@ -272,6 +282,11 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
             or not np.isfinite(film).all() or np.any(film < 0)):
         raise ValueError("supply finite nonnegative real film coefficients")
     film = np.where(kinds == "film", film, 0.)
+    capacity = samples(wall_areal_heat_capacity)
+    if (capacity.shape not in ((), (n,)) or not np.isrealobj(capacity)
+            or not np.isfinite(capacity).all() or np.any(capacity < 0)):
+        raise ValueError("supply finite nonnegative real wall areal heat capacities")
+    surface_admittance = 1j*angular_frequency*capacity
     fixed = kinds == "temperature"
     # Subtract the polynomial particular field from both thermal traces.
     boundary = _particular_field(points, particular, gradient, curvature)
@@ -279,17 +294,19 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     normal_flux = conductivity*np.sum(normals*_particular_gradient(points, gradient, curvature), axis=1)
     shifted = values-boundary
     wall = np.where(fixed, shifted, 0.)
-    flux = np.where(fixed, 0., np.where(kinds == "flux", values, film*shifted)-normal_flux)
+    exchange = np.where(fixed, 0., film+surface_admittance)
+    external = np.where(kinds == "flux", values, film*shifted)
+    flux = np.where(fixed, 0., external-surface_admittance*boundary-normal_flux)
     wave = np.sqrt(1j*angular_frequency*volumetric_heat_capacity/conductivity)
     operators = _quadratic_operators if quadratic else _operators
     single, double = operators(mesh, points, wave, collocation=True)
     single /= conductivity
     double.flat[::n+1] += .5
     # H*T = S*q. Unknowns are inward flux on fixed-temperature panels and
-    # temperature elsewhere. On film panels the latter also changes the flux.
-    matrix = np.where(fixed, single, -double-single*film)
+    # temperature elsewhere. Film exchange and wall storage both depend on temperature.
+    matrix = np.where(fixed, single, -double-single*exchange)
     unknown = np.linalg.solve(matrix, double @ wall-single @ flux)
     wall[~fixed] = unknown[~fixed]
     flux[fixed] = unknown[fixed]
-    flux -= film*wall
-    return HarmonicConduction(mesh, wave, conductivity, wall+boundary, flux+normal_flux, quadratic, particular, tuple(gradient), tuple(curvature))
+    flux -= exchange*wall
+    return HarmonicConduction(mesh, wave, conductivity, wall+boundary, flux+normal_flux, quadratic, particular, tuple(gradient), tuple(curvature), surface_admittance)

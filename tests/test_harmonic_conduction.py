@@ -92,7 +92,8 @@ def test_uniform_heat_generation_insulated_and_isothermal_disk(quadratic):
 
 
 @pytest.mark.parametrize("quadratic", [False, True])
-def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadratic):
+@pytest.mark.parametrize("wall_capacity", [0., .8])
+def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadratic, wall_capacity):
     from tensorbem.harmonic_conduction import harmonic_boundary_points
 
     mesh = regular_polygon(12)
@@ -104,11 +105,14 @@ def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadrat
     q = k*np.repeat(mesh.normals @ grad, len(points)//12)
     kinds = np.resize(["temperature", "flux", "film"], 12)
     sampled = np.repeat(kinds, len(points)//12)
-    data = np.select([sampled=="flux", sampled=="film"], [q, temperature+q/2], default=temperature)
+    surface_capacity = wall_capacity*(1.2+points[:, 0])
+    external = q+1j*omega*surface_capacity*temperature
+    data = np.select([sampled=="flux", sampled=="film"], [external, temperature+external/2], default=temperature)
     result = solve_mixed_harmonic_conduction(mesh, kinds, data, omega, conductivity=k,
         volumetric_heat_capacity=capacity, film_coefficients=2., volumetric_source=1j*omega*capacity*base,
-        source_gradient=1j*omega*capacity*grad, quadratic=quadratic)
+        source_gradient=1j*omega*capacity*grad, quadratic=quadratic, wall_areal_heat_capacity=surface_capacity)
     np.testing.assert_allclose(result.wall_temperature, temperature, atol=2e-13, rtol=0)
+    np.testing.assert_allclose(result.external_inward_flux, external, atol=2e-13, rtol=0)
     np.testing.assert_allclose(result.inward_flux, q, atol=2e-13, rtol=0)
     probes = np.array([[.1, -.4], [.2, .5]])
     np.testing.assert_allclose(result.temperature(probes), base+probes @ grad, atol=2e-13, rtol=0)
@@ -156,3 +160,10 @@ def test_quadratic_midpoint_single_layer_self_integral():
 
     exact, _ = quad_vec(integrand, 0., 1., epsabs=1e-14, epsrel=1e-13)
     np.testing.assert_allclose(single[0, 1], exact, atol=3e-11, rtol=0)
+
+
+@pytest.mark.parametrize("capacity", [-1., np.nan, np.inf, 1j, [1., 2.]])
+def test_invalid_wall_areal_heat_capacity(capacity):
+    with pytest.raises(ValueError, match="wall areal heat capacities"):
+        solve_mixed_harmonic_conduction(regular_polygon(8), "flux", 0., 1.,
+            conductivity=1., volumetric_heat_capacity=1., wall_areal_heat_capacity=capacity)
