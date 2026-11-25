@@ -168,3 +168,37 @@ def test_case_battery_passes_and_is_under_the_tolerance():
     assert verdict["ellipsoid_convergence_order"] > 1.5
     assert results["homogeneous_compatibility"]["passed"]
     assert results["negative_controls"]["passed"]
+
+@pytest.mark.parametrize("use_field", [False, True])
+def test_box_mass_properties_at_remote_reference(use_field, record_property):
+    center = np.array([2.0, -1.0, 0.5])
+    vertices, faces = case.box_mesh(LENGTH, BEAM, DEPTH, centre=center)
+    ref = np.array([1e18, 1.0, -2.0])
+    # An affine gradient of density along x moves the CG by 0.1 L.
+    def density(points):
+        return 1 + 1.2 * (points[:, 0] - center[0]) / LENGTH
+    props = mesh_mass_properties(vertices, faces, DENSITY, reference_point=ref,
+                                 density_field=density if use_field else None)
+    shift = LENGTH / 10 if use_field else 0
+    expected_cg = center + [shift, 0, 0]
+    mass = DENSITY * LENGTH * BEAM * DEPTH
+    variances = np.array([LENGTH**2 / 12 - shift**2, BEAM**2 / 12, DEPTH**2 / 12])
+    intrinsic = mass * (np.roll(variances, 1) + np.roll(variances, -1))
+    offset = expected_cg - ref
+    transferred = intrinsic + mass * (np.roll(offset, 1)**2 + np.roll(offset, -1)**2)
+    assert props["volume"] == pytest.approx(LENGTH * BEAM * DEPTH, rel=1e-14)
+    assert props["mass"] == pytest.approx(mass, rel=1e-14)
+    np.testing.assert_allclose(props["centroid"], expected_cg, rtol=0, atol=1e-13)
+    for key, expected in (("inertia_cg", intrinsic), ("inertia_reference", transferred)):
+        error = float(np.max(np.abs(np.diag(props[key]) / expected - 1)))
+        record_property(key + "_max_diagonal_relative_error", error)
+        assert error < 1e-14
+
+
+def test_slender_box_axial_inertia(record_property):
+    length, beam, depth = 1e10, 2.0, 3.0
+    props = mesh_mass_properties(*case.box_mesh(length, beam, depth), 1.0)
+    expected = length * beam * depth * (beam**2 + depth**2) / 12
+    error = abs(props["inertia_cg"][0, 0] / expected - 1)
+    record_property("axial_inertia_relative_error", float(error))
+    assert error < 1e-14
