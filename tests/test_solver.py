@@ -263,3 +263,40 @@ def test_interior_corner_segments_with_two_panels_use_secants():
     grad = evaluate_interior_surface_gradient(mesh,result,corner_vertices=[0,2,4])
     tangent = mesh.vectors/mesh.lengths[:,None]
     np.testing.assert_allclose(np.sum(grad*tangent,axis=1), tangent @ [2.,-3.], atol=1e-14)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_corner_delimited_density_recovers_rectangle_normal_flux(quadratic, record_property):
+    from tensorbem import evaluate_interior_field_and_gradient, evaluate_interior_surface_gradient
+    from tensorbem.geometry import PanelMesh
+
+    corners = np.array([[0.,0.], [2.,0.], [2.,1.], [0.,1.]])
+    edges = np.roll(corners,-1,axis=0)-corners
+    errors = []
+    for n in (4,8,16):
+        fraction = (np.arange(n)/n)**1.25
+        vertices = corners[:,None,:] + fraction[None,:,None]*edges[:,None,:]
+        mesh = PanelMesh(np.roll(vertices.reshape(-1,2),1,axis=0))
+        ids = 1+n*np.arange(4)
+        x,y = mesh.centers.T
+        values = x*x-y*y+x*y if quadratic else 2*x-3*y
+        exact = np.column_stack((2*x+y,x-2*y)) if quadratic else np.array([2.,-3.])
+        result = solve_laplace_dirichlet(mesh,values,reference_length=4.,linear_density=True,
+                                         corner_vertices=ids[::-1])
+        normal_error = np.abs(result.normal_derivative - np.sum(exact*mesh.normals,axis=1))
+        error = float(np.max(normal_error[np.r_[ids,ids-1]]))
+        errors.append(error)
+        record_property(f"corner_adjacent_normal_error_{n}",error)
+        probes = np.array([[.4,.25],[1.2,.6]])
+        xp,yp = probes.T
+        potential, gradient = evaluate_interior_field_and_gradient(mesh,result,probes)
+        np.testing.assert_allclose(evaluate_interior_field(mesh,result,probes),potential)
+        if not quadratic:
+            np.testing.assert_allclose(potential,2*xp-3*yp,atol=2e-12,rtol=0.)
+            np.testing.assert_allclose(gradient, np.tile(exact,(2,1)),atol=2e-12,rtol=0.)
+            surface = evaluate_interior_surface_gradient(mesh,result)
+            np.testing.assert_allclose(surface,np.tile(exact,(4*n,1)),atol=2e-12,rtol=0.)
+    if quadratic:
+        assert errors[0] > errors[1] > errors[2]
+    else:
+        assert max(errors) < 2e-12

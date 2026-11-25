@@ -60,6 +60,7 @@ class LaplaceDirichletResult:
     reference_length: float = REFERENCE_LENGTH
     linear_density: bool = False
     condition_number_source: str = "svd"
+    corner_vertices: tuple[int, ...] = ()
 
 
 def _validate_domain(domain: str) -> str:
@@ -75,6 +76,33 @@ def _slope_weights(mesh: PanelMesh) -> tuple[FloatArray, FloatArray]:
     right = 0.5 * (lengths + np.roll(lengths, -1))
     span = left + right
     return (right / span) / left, (left / span) / right
+
+
+def _corner_indices(mesh, vertices):
+    corners = np.asarray(vertices)
+    if corners.ndim != 1:
+        raise ValueError("corner_vertices must be a sequence of vertex indices")
+    if not corners.size:
+        return ()
+    if (corners.dtype.kind not in "iu" or np.any(corners < 0)
+            or np.any(corners >= mesh.panel_count)):
+        raise ValueError("corner_vertices must contain valid integer indices")
+    corners = np.sort(corners.astype(int))
+    if np.min(np.diff(corners, append=corners[0]+mesh.panel_count)) < 2:
+        raise ValueError("each corner-delimited segment needs at least two panels")
+    return tuple(map(int, corners))
+
+
+def _segmented_slopes(mesh, values, corners):
+    """Differentiate vector or matrix columns separately along each marked side."""
+    slopes = np.empty_like(values, dtype=float)
+    lengths = mesh.lengths
+    for start, end in zip(corners, (*corners[1:], corners[0]+mesh.panel_count)):
+        panels = np.arange(start, end) % mesh.panel_count
+        centers = np.cumsum(lengths[panels]) - .5*lengths[panels]
+        local = values[panels] - values[panels[0]]
+        slopes[panels] = np.gradient(local, centers, axis=0, edge_order=min(2, len(panels)-1))
+    return slopes
 
 
 def _difference_operator(mesh: PanelMesh) -> FloatArray:
@@ -93,6 +121,7 @@ def assemble_matrices(
     mesh: PanelMesh,
     reference_length: float = REFERENCE_LENGTH,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> tuple[FloatArray, FloatArray]:
     """Assemble analytically integrated single- and double-layer matrices.
 
@@ -105,9 +134,13 @@ def assemble_matrices(
     resulting solve is second-order accurate on a smooth boundary instead of
     first-order. The jump coefficient ``1/2 I`` is unchanged: the double-layer
     kernel on the collocation panel is a delta at the midpoint, where the
-    linear basis equals the midpoint value.
+    linear basis equals the midpoint value. Supplying corner_vertices uses
+    a separate derivative stencil on each marked side for both layers.
     """
     reference = validate_reference_length(reference_length)
+    corners = _corner_indices(mesh, corner_vertices)
+    if corners and not linear_density:
+        raise ValueError("corner-delimited density slopes require linear_density=True")
     centers = mesh.centers
     starts = mesh.vertices
     tangents = mesh.vectors / mesh.lengths[:, None]
@@ -137,7 +170,7 @@ def assemble_matrices(
                 ) - 0.5 * float(lengths[j]) * double[i, j]
     if not linear_density:
         return single, double
-    difference = _difference_operator(mesh)
+    difference = _segmented_slopes(mesh, np.eye(n), corners) if corners else _difference_operator(mesh)
     return single + single_moment @ difference, double + double_moment @ difference
 
 
@@ -147,6 +180,7 @@ def _solve(
     domain: str,
     reference_length: float,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> LaplaceDirichletResult:
     values = np.asarray(boundary_values, dtype=float)
     n = mesh.panel_count
@@ -157,7 +191,7 @@ def _solve(
     reference = validate_reference_length(reference_length)
 
     single, double = assemble_matrices(
-        mesh, reference_length=reference, linear_density=linear_density
+        mesh, reference_length=reference, linear_density=linear_density, corner_vertices=corner_vertices
     )
     sign = 1.0 if domain == "interior" else -1.0
     rhs = 0.5 * values + sign * (double @ values)
@@ -184,6 +218,7 @@ def _solve(
         reference_length=reference,
         linear_density=bool(linear_density),
         condition_number_source=condition_source,
+        corner_vertices=tuple(sorted(corner_vertices)),
     )
 
 
@@ -192,6 +227,7 @@ def solve_laplace_dirichlet(
     boundary_values: FloatArray,
     reference_length: float = REFERENCE_LENGTH,
     linear_density: bool = False,
+    *, corner_vertices=(),
 ) -> LaplaceDirichletResult:
     """Solve for the unknown outward normal derivative given boundary values.
 
@@ -200,13 +236,15 @@ def solve_laplace_dirichlet(
     ``normal_derivative`` is the derivative along the polygon's outward normal.
     ``linear_density=True`` uses the first-moment (linearly varying density)
     panel basis, which is second-order accurate on a smooth boundary.
+    With that basis, corner_vertices restricts density slopes to each marked
+    side, including at its two ends. Each side needs at least two panels.
     """
     return _solve(
         mesh,
         boundary_values,
         "interior",
         reference_length,
-        linear_density=linear_density,
+        linear_density=linear_density, corner_vertices=corner_vertices,
     )
 
 
@@ -437,9 +475,9 @@ def evaluate_interior_field(
 ) -> FloatArray:
     """Evaluate the harmonic potential at interior points using exact panel integrals.
 
-    Points must be strictly inside the domain and not on the boundary. The
-    representation integrates each constant-panel kernel analytically rather
-    than sampling the kernel at the panel midpoint.
+    Points must be strictly inside the domain and not on the boundary.
+    The default field evaluator integrates each constant-panel kernel
+    analytically. A corner-delimited solve uses its piecewise linear basis.
 
     Only the interior Green representation is valid, so targets are screened
     before the representation is evaluated: a target outside the polygon, or
@@ -450,6 +488,8 @@ def evaluate_interior_field(
     guard exists to convert into an exception. The factor is validated like the
     3-D field evaluators (finite and non-negative).
     """
+    if isinstance(result, LaplaceDirichletResult) and result.corner_vertices:
+        return evaluate_interior_field_and_gradient(mesh, result, points, minimum_clearance_factor)[0]
     targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
@@ -656,18 +696,22 @@ def evaluate_interior_field_and_gradient(
     targets = _interior_targets(mesh, result, points, minimum_clearance_factor)
     return _panel_field_and_gradient(
         mesh, targets, result.normal_derivative, -result.boundary_values,
-        result.reference_length, result.linear_density)
+        result.reference_length, result.linear_density, result.corner_vertices)
 
 
-def _panel_field_and_gradient(mesh, targets, flux, values, reference, linear_density):
+def _panel_field_and_gradient(mesh, targets, flux, values, reference, linear_density, corners=()):
     n = mesh.panel_count
     lengths = mesh.lengths
     tangents = mesh.vectors / lengths[:, None]
     normals = mesh.normals
     if linear_density:
         half = 0.5 * lengths
-        flux_slope = tangential_slope(mesh, flux)
-        value_slope = tangential_slope(mesh, values)
+        if corners:
+            flux_slope = _segmented_slopes(mesh, flux, corners)
+            value_slope = _segmented_slopes(mesh, values, corners)
+        else:
+            flux_slope = tangential_slope(mesh, flux)
+            value_slope = tangential_slope(mesh, values)
     potential = np.zeros(len(targets), dtype=float)
     gradient = np.zeros((len(targets), 2), dtype=float)
     if not linear_density:
@@ -805,14 +849,15 @@ def _boundary_integral_wall_slope(mesh, values, flux, tangents, linear_density):
 
 
 def evaluate_interior_surface_gradient(
-    mesh: PanelMesh, result: LaplaceDirichletResult, *, corner_vertices=(),
+    mesh: PanelMesh, result: LaplaceDirichletResult, *, corner_vertices=None,
 ) -> FloatArray:
     """Recover the interior gradient at each panel midpoint, shape (N, 2).
 
     Use the solved outward normal derivative and the arc-length derivative
     of the prescribed midpoint potential. The latter is reconstructed from
     three neighboring panels. To avoid differencing across a sharp corner,
-    pass its vertex index in corner_vertices. Each resulting boundary segment
+    pass its vertex index in corner_vertices, or use the corners stored by
+    the solve (the default). Each resulting boundary segment
     uses one-sided derivatives at its ends. Two-panel segments use the secant
     at both midpoints; each segment needs at least two panels.
     """
@@ -825,24 +870,10 @@ def evaluate_interior_surface_gradient(
         raise ValueError("result boundary traces must match the mesh panel count")
     derivative = tangential_slope(mesh, result.boundary_values)
     panel_lengths = mesh.lengths
-    corners = np.asarray(corner_vertices)
-    if corners.ndim != 1:
-        raise ValueError("corner_vertices must be a sequence of vertex indices")
-    if corners.size:
-        if (corners.dtype.kind not in "iu" or np.any(corners < 0)
-                or np.any(corners >= mesh.panel_count)):
-            raise ValueError("corner_vertices must contain valid integer indices")
-        corners = np.sort(corners.astype(int))
-        ends = np.r_[corners[1:], corners[0]+mesh.panel_count]
-        if np.any(ends-corners < 2):
-            raise ValueError("each corner-delimited segment needs at least two panels")
-        for start, end in zip(corners, ends):
-            panels = np.arange(start, end) % mesh.panel_count
-            lengths = panel_lengths[panels]
-            centers = np.cumsum(lengths) - .5*lengths
-            values = result.boundary_values[panels]
-            derivative[panels] = np.gradient(values-values[0], centers,
-                                              edge_order=min(2, len(panels)-1))
+    corners = result.corner_vertices if corner_vertices is None else corner_vertices
+    corners = _corner_indices(mesh, corners)
+    if corners:
+        derivative = _segmented_slopes(mesh, result.boundary_values, corners)
     tangents = mesh.vectors / panel_lengths[:, None]
     return flux[:, None] * mesh.normals + derivative[:, None] * tangents
 
