@@ -231,3 +231,22 @@ def test_first_moment_scalar_path_is_still_the_recorded_one() -> None:
             double_gradient[axis], rel=1e-5, abs=1e-8
         )
     assert np.isfinite(value) and np.isfinite(double)
+
+
+@pytest.mark.parametrize("radius", [3.99, 4.0, 4.01, 1e4, 1e10, 1e16])
+def test_single_layer_distance_range_against_gaussian_quadrature(radius, record_property):
+    """Integrate the point kernel directly over the unit panel in physical space."""
+    start = np.array([-0.5, 0.0])
+    tangent = np.array([1.0, 0.0])
+    directions = np.array([[1.0, 0.0], [0.0, -1.0], [-0.6, 0.8]])
+    targets = radius * directions
+    nodes, weights = np.polynomial.legendre.leggauss(32)
+    distances = np.hypot(targets[:, 0, None] - 0.5 * nodes, targets[:, 1, None])
+    expected = -np.log(distances / 2.0) @ weights / (4.0 * np.pi)
+    for name, values in (
+        ("batch", integrate_single_layer_panel_many(targets, start, tangent, 1.0)),
+        ("scalar", [integrate_single_layer_panel(x, start, tangent, 1.0) for x in targets]),
+    ):
+        error = float(np.max(np.abs(values / expected - 1.0)))
+        record_property(name + "_max_relative_error", error)
+        assert error < 3e-15

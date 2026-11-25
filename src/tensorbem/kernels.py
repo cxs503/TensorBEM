@@ -89,6 +89,21 @@ def _log_distance_primitive(z: float, normal_distance: float) -> float:
     return 0.5 * z * math.log(z * z + h * h) - z + h * math.atan(z / h)
 
 
+def _far_panel_log_correction(centered_x, height, radius, length):
+    """Mean log-distance minus log(radius), from the midpoint expansion.
+
+    For |z| = length / (2 radius) <= 1/8, integrating log(1-z t)
+    over -1 <= t <= 1 leaves only even powers. After degree 16 the
+    omitted terms sum to less than 2e-19 in absolute value.
+    """
+    z = (0.5 * length / radius) * (centered_x / radius + 1j * (height / radius))
+    square = z * z
+    series = 0.0
+    for degree in range(16, 0, -2):
+        series = (series + 1.0 / (degree * (degree + 1))) * square
+    return -series.real
+
+
 def integrate_single_layer_panel(
     target: FloatArray,
     start: FloatArray,
@@ -114,6 +129,11 @@ def integrate_single_layer_panel(
     reference = validate_reference_length(reference_length)
     xi = float(np.dot(x - a, t))
     normal_distance = float(np.dot(x - a, np.array([-t[1], t[0]])))
+    centered_x = xi - 0.5 * length
+    radius = math.hypot(centered_x, normal_distance)
+    if radius >= 4.0 * length:
+        correction = _far_panel_log_correction(centered_x, normal_distance, radius, length)
+        return -length * ((math.log(radius) - math.log(reference)) + correction) / _TWO_PI
     integral_log_r = (
         _log_distance_primitive(length - xi, normal_distance)
         - _log_distance_primitive(-xi, normal_distance)
@@ -504,10 +524,22 @@ def integrate_single_layer_panel_many(
     delta = x - a
     xi = delta @ t
     normal_distance = delta @ np.array([-t[1], t[0]])
-    integral_log_r = _log_distance_primitive_many(
-        length - xi, normal_distance
-    ) - _log_distance_primitive_many(-xi, normal_distance)
-    return -(integral_log_r - length * math.log(reference)) / _TWO_PI
+    centered_x = xi - 0.5 * length
+    radius = np.hypot(centered_x, normal_distance)
+    far = radius >= 4.0 * length
+    values = np.empty_like(radius)
+    if np.any(far):
+        correction = _far_panel_log_correction(
+            centered_x[far], normal_distance[far], radius[far], length
+        )
+        values[far] = -length * ((np.log(radius[far]) - math.log(reference)) + correction) / _TWO_PI
+    near = ~far
+    if np.any(near):
+        integral_log_r = _log_distance_primitive_many(
+            length - xi[near], normal_distance[near]
+        ) - _log_distance_primitive_many(-xi[near], normal_distance[near])
+        values[near] = -(integral_log_r - length * math.log(reference)) / _TWO_PI
+    return values
 
 
 def integrate_double_layer_panel_many(
