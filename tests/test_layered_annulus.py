@@ -409,3 +409,20 @@ def test_polygonal_sheet_currents_balance_each_panel_with_variable_contact():
     rate = result.sheet_tangential_heat_rate
     balance = width*(result.outer_interface_flux-result.interface_flux-source)+rate-np.roll(rate,1)
     np.testing.assert_allclose(balance,0.,atol=1e-12,rtol=0.)
+
+
+def test_variable_circumferential_conductivity_product_rule():
+    from tensorbem.benchmarks.conducting_sheet import measure
+    for n in (17,32):
+        result = measure(n,"circular",prescribe_flux=True,variable=True)
+        assert max(result["errors"].values())<2e-10
+
+
+def test_insulating_cut_blocks_tangential_heat():
+    n = 24
+    ks = np.full(n,.3)
+    ks[::3] = 0.
+    angle = 2*np.pi*(np.arange(n)+.5)/n
+    result = solve_annulus_contact((.4,.7,1.),(2.,1.),(np.sin(angle),0.),.2,n,sheet_conductivity=ks)
+    np.testing.assert_array_equal(result.sheet_tangential_heat_rate[::3],0.)
+    assert np.max(abs(result.sheet_tangential_heat_rate))>.01

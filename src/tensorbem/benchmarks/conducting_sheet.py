@@ -8,13 +8,15 @@ import numpy as np
 from ..layered_annulus import solve_annulus_contact
 
 
-def measure(panels,formulation="circular",prescribe_flux=False):
+def measure(panels,formulation="circular",prescribe_flux=False,variable=False):
     bore,contact,exterior = .4,.7,1.1
     ki,ko,resistance,fraction,conductance = 1.5,2.3,.4,.3,.18
     order = 3
     theta = 2*np.pi*(np.arange(panels)+.5)/panels
     sheet, incoming, outgoing = .7+.2j, .4-.5j, -.2+.6j
-    source = outgoing-incoming+conductance*(order/contact)**2*sheet
+    cuts = theta+np.pi/panels
+    def conductivity(angle):
+        return conductance*(1+.35*np.cos(2*angle)) if variable else conductance
 
     def sample(amplitude,angle):
         return (amplitude*np.exp(1j*order*angle)).real
@@ -25,20 +27,24 @@ def measure(panels,formulation="circular",prescribe_flux=False):
         power = (contact*flux*np.cosh(z)-order*k*trace*np.sinh(z))/radius
         return 1.2+sample(potential,angle),sample(power,angle),sample(-1j*order*k*potential/radius,angle)
 
+    # q_out-q_in = generation + (K*T_theta)_theta / radius².
+    ks_prime = -.7*conductance*np.sin(2*theta) if variable else 0.
+    source = (sample(outgoing-incoming,theta) + (conductivity(theta)*order**2*sample(sheet,theta)
+              - ks_prime*sample(1j*order*sheet,theta))/contact**2)
     hot = sheet+fraction*resistance*incoming
     cold = sheet-(1-fraction)*resistance*outgoing
     tw,qw,_ = material(bore,ki,hot,incoming,theta)
     te,qe,_ = material(exterior,ko,cold,outgoing,theta)
     options = dict(wall_fluxes=(qw,-qe),mean_bore_temperature=1.2) if prescribe_flux else {}
     result = solve_annulus_contact((bore,contact,exterior),(ki,ko),(None,None) if prescribe_flux else (tw,te),
-              resistance,panels,formulation=formulation,sheet_conductivity=conductance,
-              interface_source=sample(source,theta),inner_resistance_fraction=fraction,**options)
+              resistance,panels,formulation=formulation,sheet_conductivity=conductivity(cuts),
+              interface_source=source,inner_resistance_fraction=fraction,**options)
     errors = {}
     for name,value,target in (("sheet_K",result.sheet_temperature,1.2+sample(sheet,theta)),
                   ("incoming_W_m2",result.interface_flux,sample(incoming,theta)),
                   ("outgoing_W_m2",result.outer_interface_flux,sample(outgoing,theta))):
         errors[name] = np.max(abs(value-target))
-    expected_rate = sample(-1j*order*conductance*sheet/contact,theta+np.pi/panels)
+    expected_rate = conductivity(cuts)*sample(-1j*order*sheet/contact,cuts)
     errors["tangential_heat_rate_W_m"] = np.max(abs(result.sheet_tangential_heat_rate-expected_rate))
     theta = 2*np.pi*(np.arange(37)+.29)/37
     direction = np.column_stack((np.cos(theta),np.sin(theta)))
@@ -54,15 +60,16 @@ def measure(panels,formulation="circular",prescribe_flux=False):
 
 if __name__=="__main__":
     rows = []
-    for formulation,flux in (("circular",False),("circular",True),("polygonal",False)):
+    for formulation,flux,variable in (("circular",False,False),("circular",True,False),("polygonal",False,False),
+                                      ("circular",True,True),("polygonal",False,True)):
         previous = None
         grids = (16,32,64,128,256) if formulation=="polygonal" else (16,32,64,128)
         for n in grids:
-            row = measure(n,formulation,flux)
+            row = measure(n,formulation,flux,variable)
             errors = row["errors"]
             orders = {k:float(np.log2(previous[k]/v)) for k,v in errors.items()} if previous and formulation=="polygonal" else {}
             passes = max(errors.values())<2e-10 if formulation=="circular" else (n<128 or min(orders.values())>1.8)
-            row.update(panels=n,formulation=formulation,prescribed_flux=flux,orders=orders,
+            row.update(variable=variable,panels=n,formulation=formulation,prescribed_flux=flux,orders=orders,
                        passed=bool(passes and row["net_heat_rate_W_m"]<1e-10))
             rows.append(row)
             previous = errors
