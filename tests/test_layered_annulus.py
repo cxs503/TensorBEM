@@ -478,3 +478,23 @@ def test_regular_ring_blocks_match_direct_straight_panel_integrals(n):
     mesh = annulus_mesh(n,n,1.17,.63)
     for result,expected in zip(_polygonal_ring_matrices(mesh,2.7),assemble_matrices(mesh,2.7)):
         np.testing.assert_allclose(result,expected,rtol=1e-12,atol=2e-15)
+
+
+@pytest.mark.parametrize("wall", [0, 1])
+def test_equal_area_mixed_wall_flux_convergence(wall):
+    from tensorbem.benchmarks.annulus_prescribed_flux import measure
+
+    coarse, fine = (measure(n, "polygonal_equal_area", wall) for n in (64, 128))
+    for key in ("temperature_error_K", "interior_flux_error_W_m2", "wall_flux_error_W_m2",
+                "contact_flux_error_W_m2", "rate_error_W_m"):
+        assert fine[key] < coarse[key]/3.5
+
+
+def test_equal_area_sheet_generation_with_bulk_sources():
+    from tensorbem.benchmarks.annulus_sheet_source import angular_bulk, radial
+
+    for reference in (radial, angular_bulk):
+        coarse, fine = (reference(n, "polygonal_equal_area") for n in (64, 128))
+        for key in fine:
+            if "_error_" in key:
+                assert fine[key] < coarse[key]/3.5

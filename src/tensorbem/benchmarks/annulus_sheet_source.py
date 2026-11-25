@@ -1,4 +1,5 @@
 """Generated interface heat in concentric annuli: cylindrical resistances and angular harmonics."""
+import argparse
 import json
 import math
 from pathlib import Path
@@ -75,8 +76,12 @@ def angular_bulk(n,formulation):
 
 
 if __name__=="__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--equal-area", action="store_true", help="use equal-area polygonal rings")
+    args = parser.parse_args()
+    polygon = "polygonal_equal_area" if args.equal_area else "polygonal"
     rows = []
-    for formulation in ("polygonal","circular"):
+    for formulation in (polygon,"circular"):
         for case in (radial,angular,angular_bulk):
             previous = None
             for n in (16,32,64,128):

@@ -1,4 +1,5 @@
 """Verify annular Neumann/Dirichlet contact with a log term and a second angular mode."""
+import argparse
 import json
 
 import numpy as np
@@ -63,8 +64,12 @@ def measure(n, formulation, driven):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--equal-area", action="store_true", help="use equal-area polygonal rings")
+    args = parser.parse_args()
+    polygon = "polygonal_equal_area" if args.equal_area else "polygonal"
     rows = []
-    for form in ("polygonal","circular"):
+    for form in (polygon,"circular"):
         for driven in ((0,1,2) if form == "circular" else (0,1)):
             previous = None
             for n in (16,32,64,128):
