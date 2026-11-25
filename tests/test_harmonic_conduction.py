@@ -59,3 +59,22 @@ def test_quadratic_mixed_panel_samples_recover_oblique_wave():
     assert np.max(abs(result.wall_temperature-exact)) < 1e-5
     probes = np.vstack(([0., 0.], mesh.centers[0]-.025*mesh.normals[0]))
     np.testing.assert_allclose(result.temperature(probes), np.exp(wave*(probes @ direction-1)), atol=2e-5)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_uniform_heat_generation_insulated_and_isothermal_disk(quadratic):
+    mesh = regular_polygon(64)
+    k, capacity, omega = 1.3, 2., 3.
+    source = 1.2-.7j
+    particular = source/(1j*omega*capacity)
+    opts = dict(conductivity=k, volumetric_heat_capacity=capacity, volumetric_source=source, quadratic=quadratic)
+    insulated = solve_mixed_harmonic_conduction(mesh, "flux", 0., omega, **opts)
+    np.testing.assert_allclose(insulated.temperature([[0., 0.]]), particular, atol=1e-13)
+    np.testing.assert_allclose(insulated.wall_temperature, particular, atol=1e-13)
+    cold = solve_harmonic_conduction(mesh, 0., omega, **opts)
+    wave = np.sqrt(1j*omega*capacity/k)
+    expected = particular*(1-1/iv(0, wave))
+    np.testing.assert_allclose(cold.temperature([[0., 0.]]), expected, atol=.001)
+    weights = np.array([5., 8., 5.])/18 if quadratic else np.array([1.])
+    mean_flux = (cold.inward_flux.reshape(mesh.panel_count, -1) @ weights).mean()
+    np.testing.assert_allclose(mean_flux, -k*particular*wave*iv(1, wave)/iv(0, wave), atol=.002)

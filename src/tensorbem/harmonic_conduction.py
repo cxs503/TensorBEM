@@ -109,6 +109,7 @@ class HarmonicConduction:
     wall_temperature: np.ndarray
     inward_flux: np.ndarray
     quadratic: bool = False
+    particular_temperature: complex = 0j
 
     def temperature(self, points):
         """Evaluate temperature phasors at interior targets of shape (N, 2)."""
@@ -119,38 +120,46 @@ class HarmonicConduction:
             raise ValueError("temperature targets must be strictly inside the mesh")
         operators = _quadratic_operators if self.quadratic else _operators
         single, double = operators(self.mesh, targets, self.wave)
-        return single @ (self.inward_flux/self.conductivity)-double @ self.wall_temperature
+        return (self.particular_temperature + single @ (self.inward_flux/self.conductivity)
+                - double @ (self.wall_temperature-self.particular_temperature))
 
 
-def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, conductivity, volumetric_heat_capacity, quadratic=False):
-    """Solve k Laplacian(T) = i omega C T on a closed CCW polygon.
+def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, conductivity, volumetric_heat_capacity, quadratic=False,
+                              volumetric_source=0.):
+    """Solve k Laplacian(T) + Q = i omega C T on a closed CCW polygon.
 
     Inputs use SI units and the exp(+i omega t) phasor convention. Supply a
     uniform wall temperature or values at harmonic_boundary_points for the
     chosen interpolation (midpoint by default, three nodes for quadratic). The
     returned wall flux is positive into the material, in W/m². The
+    uniform volumetric_source Q is a complex generation phasor in W/m³. The
     mesh needs spatial resolution of the thermal penetration depth.
     """
     return solve_mixed_harmonic_conduction(
         mesh, "temperature", wall_temperature, angular_frequency, conductivity=conductivity,
-        volumetric_heat_capacity=volumetric_heat_capacity, quadratic=quadratic)
+        volumetric_heat_capacity=volumetric_heat_capacity, quadratic=quadratic, volumetric_source=volumetric_source)
 
 
 def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angular_frequency, *,
-                                    conductivity, volumetric_heat_capacity, film_coefficients=0., quadratic=False):
+                                    conductivity, volumetric_heat_capacity, film_coefficients=0., quadratic=False, volumetric_source=0.):
     """Solve harmonic diffusion with one condition per panel, in exp(+i omega t).
 
     Use "temperature" for prescribed K, "flux" for prescribed inward W/m²,
     and "film" for ambient K with q_in = h*(ambient - wall). Types, values
     and film coefficients may each be scalar or panel-sized. A zero film
     coefficient insulates. Frequency must be positive, including for pure
-    flux data. With quadratic=True, each panel has three independent Gauss
+    flux data. volumetric_source is a uniform generation phasor in W/m³.
+    With quadratic=True, each panel has three independent Gauss
     samples, returned in harmonic_boundary_points order. Inputs may be scalar,
     per panel, or flat arrays in this sample order. The mesh describes a single bounded homogeneous material.
     """
     for value in (angular_frequency, conductivity, volumetric_heat_capacity):
         if np.ndim(value) or not np.isrealobj(value) or not np.isfinite(value) or value <= 0:
             raise ValueError("frequency, conductivity and volumetric capacity must be finite and positive")
+    source = np.asarray(volumetric_source, dtype=complex)
+    if source.ndim or not np.isfinite(source):
+        raise ValueError("volumetric_source must be a finite uniform phasor")
+    particular = complex(source)/(1j*angular_frequency*volumetric_heat_capacity)
     points = harmonic_boundary_points(mesh, quadratic=quadratic)
     n = len(points)
 
@@ -174,8 +183,11 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
         raise ValueError("supply finite nonnegative real film coefficients")
     film = np.where(kinds == "film", film, 0.)
     fixed = kinds == "temperature"
-    wall = np.where(fixed, values, 0.)
-    flux = np.where(kinds == "flux", values, film*values)
+    # Removing the constant particular solution shifts prescribed and ambient
+    # temperatures equally. It contributes no gradient at a prescribed-flux wall.
+    shifted = values-particular
+    wall = np.where(fixed, shifted, 0.)
+    flux = np.where(kinds == "flux", values, film*shifted)
     wave = np.sqrt(1j*angular_frequency*volumetric_heat_capacity/conductivity)
     operators = _quadratic_operators if quadratic else _operators
     single, double = operators(mesh, points, wave, collocation=True)
@@ -188,4 +200,4 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     wall[~fixed] = unknown[~fixed]
     flux[fixed] = unknown[fixed]
     flux -= film*wall
-    return HarmonicConduction(mesh, wave, conductivity, wall, flux, quadratic)
+    return HarmonicConduction(mesh, wave, conductivity, wall+particular, flux, quadratic, particular)
