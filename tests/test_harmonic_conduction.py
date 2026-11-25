@@ -119,7 +119,8 @@ def test_affine_generation_has_exact_temperature_and_nonzero_normal_flux(quadrat
 
 
 @pytest.mark.parametrize("quadratic", [False, True])
-def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic):
+@pytest.mark.parametrize("loss", [0., 2.5])
+def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic, loss):
     from tensorbem.harmonic_conduction import harmonic_boundary_points
 
     mesh = regular_polygon(16)
@@ -131,9 +132,12 @@ def test_quadratic_temperature_with_nonzero_laplacian_and_cross_term(quadratic):
         x, y = points.T
         return .7j+xx*x**2+xy*x*y+yy*y**2
 
+    reservoir = np.array([.25j, .4-.3j, -.3+.1j])
+    admittance = loss+1j*omega*capacity
     solution = solve_harmonic_conduction(mesh, field(points), omega, conductivity=k,
-        volumetric_heat_capacity=capacity, volumetric_source=1j*omega*capacity*.7j-2*k*(xx+yy),
-        source_quadratic=1j*omega*capacity*np.array([xx, xy, yy]), quadratic=quadratic)
+        volumetric_heat_capacity=capacity, volumetric_source=admittance*.7j-2*k*(xx+yy),
+        source_quadratic=admittance*np.array([xx, xy, yy])-loss*reservoir, quadratic=quadratic,
+        heat_loss_coefficient=loss, bulk_ambient_quadratic=reservoir)
     x, y = points.T
     normals = np.repeat(mesh.normals, len(points)//mesh.panel_count, axis=0)
     expected = k*(normals[:, 0]*(2*xx*x+xy*y)+normals[:, 1]*(xy*x+2*yy*y))
@@ -192,7 +196,8 @@ def test_distributed_exchange_disk_against_radial_solution(quadratic):
     {"heat_loss_coefficient": -1.}, {"heat_loss_coefficient": 1j},
     {"heat_loss_coefficient": np.inf}, {"bulk_ambient_temperature": np.nan},
     {"bulk_ambient_temperature": [.2, .3]}, {"bulk_ambient_gradient": [1.]},
-    {"bulk_ambient_gradient": [np.inf, 0.]}])
+    {"bulk_ambient_gradient": [np.inf, 0.]}, {"bulk_ambient_quadratic": [1., 0.]},
+    {"bulk_ambient_quadratic": [0., np.nan, 0.]}])
 def test_invalid_distributed_exchange_parameters(options):
     with pytest.raises(ValueError, match="heat_loss_coefficient|bulk_ambient"):
         solve_harmonic_conduction(regular_polygon(8), 0., 1., conductivity=1.,
