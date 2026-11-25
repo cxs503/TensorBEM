@@ -7,23 +7,29 @@ from .multiloop import MultiLoopMesh, _evaluate_traces, annulus_mesh
 from .solver import assemble_matrices, _MAX_CONDITION
 
 
-def _particular(xy, conductivity, source, source_gradient, radial_coefficient):
-    """Polynomial particular solution for -k ΔT = source + g·x + radial_coefficient*r² in 2D."""
+def _particular(xy, conductivity, source, source_gradient, radial_coefficient, quadratic):
+    """Particular temperature and gradient for a Cartesian quadratic heat source."""
     g = np.asarray(source_gradient)
     r2 = np.sum(xy*xy, axis=1)
     linear = xy @ g
     value = -r2*(source/4 + linear/8 + radial_coefficient*r2/16)/conductivity
     gradient = -(xy*(source/2 + linear/4 + radial_coefficient*r2/4)[:, None] + r2[:, None]*g/8)/conductivity
+    if np.any(quadratic):
+        xx, cross, yy = quadratic
+        x, y = xy.T
+        value -= (xx*x**4 + yy*y**4 + 2*cross*x**3*y)/(12*conductivity)
+        gradient[:, 0] -= (xx*x**3/3 + cross*x**2*y/2)/conductivity
+        gradient[:, 1] -= (yy*y**3/3 + cross*x**3/6)/conductivity
     return value, gradient
 
 
-def _source_traces(mesh, conductivity, source, circular, source_gradient, radial_coefficient):
+def _source_traces(mesh, conductivity, source, circular, source_gradient, radial_coefficient, quadratic):
     xy = mesh.centers
     if circular:
         radii = np.concatenate([np.full(loop.panel_count,np.linalg.norm(loop.vertices[0]))
                                 for loop in mesh.loops])
         xy = xy*(radii/np.linalg.norm(xy,axis=1))[:,None]
-    value, gradient = _particular(xy, conductivity, source, source_gradient, radial_coefficient)
+    value, gradient = _particular(xy, conductivity, source, source_gradient, radial_coefficient, quadratic)
     return value, np.sum(gradient*mesh.normals, axis=1)
 
 
@@ -40,16 +46,19 @@ class AnnulusLayerField:
     source_gradient: tuple = (0., 0.)
 
     radial_source_coefficient: float = 0.
+    source_quadratic: tuple = (0., 0., 0.)
 
     def _polygonal_extension(self, points, gradient):
+        has_source = (self.volumetric_source or np.any(self.source_gradient)
+                      or self.radial_source_coefficient or np.any(self.source_quadratic))
         values,derivative = self.boundary_values,self.normal_derivative
-        if self.volumetric_source or np.any(self.source_gradient) or self.radial_source_coefficient:
-            p,dn = _source_traces(self.mesh,self.conductivity,self.volumetric_source,False,self.source_gradient, self.radial_source_coefficient)
+        if has_source:
+            p,dn = _source_traces(self.mesh,self.conductivity,self.volumetric_source,False,self.source_gradient, self.radial_source_coefficient, self.source_quadratic)
             values,derivative = values-p,derivative-dn
         field = _evaluate_traces(self.mesh,values,derivative,self.reference_length,points,gradient=gradient)
-        if self.volumetric_source or np.any(self.source_gradient) or self.radial_source_coefficient:
+        if has_source:
             xy = np.asarray(points)
-            value, slope = _particular(xy, self.conductivity, self.volumetric_source, self.source_gradient, self.radial_source_coefficient)
+            value, slope = _particular(xy, self.conductivity, self.volumetric_source, self.source_gradient, self.radial_source_coefficient, self.source_quadratic)
             field += slope if gradient else value
         return field
 
@@ -82,8 +91,8 @@ class AnnulusLayerField:
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)
         angle = np.arctan2(xy[:, 1], xy[:, 0])
-        temperature, slope_xy = _particular(xy, self.conductivity, self.volumetric_source, self.source_gradient, self.radial_source_coefficient)
-        wall_value, _ = _source_traces(self.mesh, self.conductivity, self.volumetric_source, True, self.source_gradient, self.radial_source_coefficient)
+        temperature, slope_xy = _particular(xy, self.conductivity, self.volumetric_source, self.source_gradient, self.radial_source_coefficient, self.source_quadratic)
+        wall_value, _ = _source_traces(self.mesh, self.conductivity, self.volumetric_source, True, self.source_gradient, self.radial_source_coefficient, self.source_quadratic)
         radial = np.zeros_like(radius)  # derivative with respect to log(r)
         angular = np.zeros_like(radius)
         for loop, sl, distance, sign in zip(self.mesh.loops, self.mesh.loop_slices,
@@ -165,7 +174,7 @@ def _wall_response(normal_map, interface, wall, ambient, film, inward_flux, offs
 def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0., panels=32, *,
                           formulation="polygonal", film_coefficients=(None, None), wall_fluxes=(None, None),
                           mean_bore_temperature=None, interface_source=0., inner_resistance_fraction=.5, volumetric_source=0.,
-                          source_gradient=(0., 0.), radial_source_coefficient=0.):
+                          source_gradient=(0., 0.), radial_source_coefficient=0., source_quadratic=(0., 0., 0.)):
     """Coupled two-material conduction on concentric annuli.
 
     Supply radii (bore, contact, exterior), two positive conductivities, and
@@ -191,6 +200,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     pair in W/m⁴ for both layers or a separate pair per layer.
     radial_source_coefficient adds a multiple of x²+y² to the heating rate,
     supplied in W/m⁵ as a scalar or one coefficient per layer.
+    source_quadratic adds A*x² + B*x*y + C*y² in W/m³, with a shared
+    (A, B, C) triple in W/m⁵ or one triple per material.
     The default polygonal formulation uses straight constant panels. The
     circular formulation collocates the contact law at the same angles and
     uses the Fourier Dirichlet-to-Neumann map of each nominal annulus.
@@ -238,11 +249,16 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     if not np.isfinite(radial).all():
         raise ValueError("radial_source_coefficient must be finite")
 
-    def source_offset(mesh,k,q,matrix,g,beta):
-        p,dn = _source_traces(mesh,k,q,circular,g,beta)
+    quadratic = np.asarray(source_quadratic, dtype=float)
+    if quadratic.shape not in ((3,), (2, 3)) or not np.isfinite(quadratic).all():
+        raise ValueError("source_quadratic requires one finite triple or one triple per layer")
+    quadratic = np.broadcast_to(quadratic, (2, 3))
+
+    def source_offset(mesh,k,q,matrix,g,beta,coefficients):
+        p,dn = _source_traces(mesh,k,q,circular,g,beta,coefficients)
         return k*dn-matrix@p
-    oi = source_offset(inner,ki,generation[0],di,gradients[0],radial[0])
-    oo = source_offset(outer,ko,generation[1],do,gradients[1],radial[1])
+    oi = source_offset(inner,ki,generation[0],di,gradients[0],radial[0],quadratic[0])
+    oo = source_offset(outer,ko,generation[1],do,gradients[1],radial[1],quadratic[1])
     # Unknowns: outer material's contact trace and outward radial heat flux.
     # Inner trace = outer trace + R*q; Fourier flux reverses sign on the hole.
     first, second = slice(0, n), slice(n, 2*n)
@@ -275,7 +291,8 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
                   for radius,value in ((bore,bore_flux),(exterior,exterior_flux))]
         inputs.append(contact*source)
         inputs.append(.5*np.diff(np.square(radii))*generation*n)
-        inputs.append(.25*np.diff(np.asarray(radii, dtype=float)**4)*radial*n)
+        mean_quadratic = radial + .5*(quadratic[:, 0] + quadratic[:, 2])
+        inputs.append(.25*np.diff(np.asarray(radii, dtype=float)**4)*mean_quadratic*n)
         imbalance = sum(np.sum(q) for q in inputs)
         throughput = sum(np.abs(q).sum() for q in inputs)
         if abs(imbalance) > 1e-12*throughput:
@@ -308,6 +325,6 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
         arc_to_chord = (np.pi/n) / np.sin(np.pi/n)
         rates = tuple(float(q * arc_to_chord) for q in rates)
     return AnnulusContactResult(inner_trace, outer_trace, flux, rates, condition,
-                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0],tuple(gradients[0]),radial[0]),
-                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1]),
+                                AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0],tuple(gradients[0]),radial[0],tuple(quadratic[0])),
+                                AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1],tuple(quadratic[1])),
                                 outer_flux,sheet_temperature)

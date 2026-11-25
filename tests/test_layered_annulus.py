@@ -331,3 +331,50 @@ def test_quadratic_source_resolves_independent_cartesian_quartic(formulation):
         elif previous is not None:
             assert np.all(errors < previous/3.5)
         previous = errors
+
+
+@pytest.mark.parametrize("formulation", ["circular", "polygonal"])
+def test_rotated_quartic_cartesian_source(formulation, record_property):
+    from tensorbem.multiloop import annulus_mesh
+
+    k = 1.7
+    axis = np.array([1., 2.])
+    # Δ[(x+2y)^4] = 60*(x+2y)^2. This quartic differs from the solver's particular field.
+    previous = None
+    for n in (16, 32, 64):
+        mesh = annulus_mesh(n, n, 1., .3)
+        walls = [loop.centers for loop in reversed(mesh.loops)]
+        if formulation == "circular":
+            walls = [xy/np.cos(np.pi/n) for xy in walls]
+        wall_t = [1-(xy@axis)**4/(60*k) for xy in walls]
+        result = solve_annulus_contact((.3,.6,1.), (k,k), wall_t, panels=n,
+                                       formulation=formulation, source_quadratic=(1.,4.,4.))
+        errors = np.zeros(2)
+        for r, field in ((.45, result.inner_field), (.8, result.outer_field)):
+            xy = r*np.array([[.6,.8], [-.8,.6], [1.,0.]])
+            projection = xy@axis
+            flux = projection[:, None]**3*axis/15
+            errors = np.maximum(errors, [np.max(abs(field.temperature(xy)-(1-projection**4/(60*k)))),
+                                         np.max(abs(field.heat_flux(xy)-flux))])
+        record_property(f"temperature_error_K_{n}", errors[0])
+        record_property(f"flux_error_W_m2_{n}", errors[1])
+        if formulation == "circular":
+            assert max(errors) < 1e-12
+        elif previous is not None:
+            assert np.all(errors < previous/3.)
+        previous = errors
+
+
+def test_quadratic_source_neumann_compatibility_per_layer():
+    radii = np.array([.3, .6, 1.])
+    # The x*y part integrates to zero while x² and y² have equal integrals.
+    coefficients = ((1., 2., 3.), (-3., 1., 2.))
+    generated = np.pi*np.diff(radii**4)*np.array([4., -1.])/4
+    outer_flux = -sum(generated)/(2*np.pi*radii[-1])
+    def solve(flux):
+        return solve_annulus_contact(radii, (1.,2.), (None,None), panels=16, formulation="circular",
+                                     wall_fluxes=(0.,flux), mean_bore_temperature=3.,
+                                     source_quadratic=coefficients)
+    np.testing.assert_allclose(np.diff(solve(outer_flux).heat_rates), generated, rtol=0., atol=1e-12)
+    with pytest.raises(ValueError, match="incompatible"):
+        solve(outer_flux+.01)
