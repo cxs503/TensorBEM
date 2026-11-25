@@ -240,3 +240,32 @@ def test_uniform_generation_matches_robin_walls_and_cartesian_gradient():
         xy = radius*np.array([[.6,.8],[-.8,.6]])
         np.testing.assert_allclose(layer.temperature(xy),t(radius),atol=1e-12)
         np.testing.assert_allclose(layer.heat_flux(xy),s*xy/2,atol=1e-12)
+
+
+def test_affine_source_cartesian_cubic_reference():
+    # An independent particular solution contains no mixed cubic monomials.
+    a, b, c = .3, .6, 1.
+    k = 1.8
+    g = np.array([3., -2.])
+    n = 24
+    angle = 2*np.pi*(np.arange(n)+.5)/n
+    direction = np.column_stack((np.cos(angle), np.sin(angle)))
+
+    def temperature(xy):
+        return 1.2 + xy[:, 0]*xy[:, 1] - (xy**3 @ g)/(6*k)
+
+    result = solve_annulus_contact((a,b,c), (k,k),
+                                   (temperature(a*direction), temperature(c*direction)),
+                                   panels=n, formulation="circular", source_gradient=g)
+    for r, field in ((.44, result.inner_field), (.83, result.outer_field)):
+        xy = r*np.array([[.8,.6], [-.6,.8], [-1.,0.]])
+        np.testing.assert_allclose(field.temperature(xy), temperature(xy), atol=2e-13, rtol=0.)
+        flux = -k*xy[:, ::-1] + .5*g*xy**2
+        np.testing.assert_allclose(field.heat_flux(xy), flux, atol=2e-13, rtol=0.)
+    np.testing.assert_allclose(result.heat_rates, 0., atol=2e-13)
+
+
+@pytest.mark.parametrize("gradient", [1., (1.,), (1., np.nan), ((0.,0.,0.),(0.,0.,0.))])
+def test_affine_source_requires_cartesian_pairs(gradient):
+    with pytest.raises(ValueError, match="source_gradient"):
+        solve_annulus_contact((.3,.6,1.), (2.,1.), (0.,0.), panels=8, source_gradient=gradient)
