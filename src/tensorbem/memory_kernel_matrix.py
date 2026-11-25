@@ -1002,7 +1002,8 @@ def coupled_free_decay(
                 "ij,j->i", history[index], velocity[index]
             )
             total = dt * contribution
-        partial = 0.5 * stage * dt * (
+        stage_width = 0.5 * stage * dt
+        partial = 0.5 * stage_width * (
             np.einsum("ij,j->i", history[index], velocity[index])
             + np.einsum("ij,j->i", h0, stage_velocity)
         )

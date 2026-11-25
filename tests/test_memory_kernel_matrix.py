@@ -316,3 +316,33 @@ def test_geometry_gate_accepts_the_case_and_rejects_corrupt_input():
     corrupt = dict(geometry)
     corrupt["displacement"] = geometry["displacement"] * 1.25
     assert not geometry_gate(corrupt)["accepted"]
+
+def test_coupled_exponential_kernel_matches_matrix_exponential(record_property):
+    from scipy.linalg import expm
+
+    inertia = np.array([[2., .15], [.15, 1.]])
+    stiffness = np.diag([9., 3.])
+    kernel_at_zero = np.array([[4., .6], [.6, 2.]])
+    zero = np.zeros((2, 2))
+    eye = np.eye(2)
+    # The memory force satisfies u' = K(0) v - 1.5u.
+    generator = np.block([[zero, eye, zero],
+                          [-np.linalg.solve(inertia, stiffness), zero, -np.linalg.inv(inertia)],
+                          [zero, kernel_at_zero, -1.5*eye]])
+    initial = np.array([1., .2, -.1, .3, 0., 0.])
+    times = np.linspace(0., 4., 41)
+    reference = np.array([expm(generator*t) @ initial for t in times])
+    errors = []
+    for dt in (.05, .025, .0125):
+        tau = np.linspace(0., 4., round(4/dt)+1)
+        kernel = mkm.CoupledKernelMatrix(tau, np.exp(-1.5*tau[:, None, None])*kernel_at_zero,
+                                         4., kernel_at_zero, zero, zero)
+        decay = mkm.coupled_free_decay(kernel, zero, mass=inertia, stiffness=stiffness,
+                                       initial_displacement=initial[:2], initial_velocity=initial[2:4],
+                                       duration=4.)
+        indices = np.rint(times/dt).astype(int)
+        errors.append([abs(decay["displacement"][indices]-reference[:, :2]).max(),
+                       abs(decay["velocity"][indices]-reference[:, 2:4]).max()])
+        record_property(f"dt_{dt}_max_displacement_error", errors[-1][0])
+        record_property(f"dt_{dt}_max_velocity_error", errors[-1][1])
+    assert np.all(np.array(errors[:-1])/errors[1:] > 3.8)

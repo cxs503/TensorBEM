@@ -430,3 +430,27 @@ def test_growing_signal_is_reported_as_negative_decay() -> None:
     signal = 0.1 * np.exp(0.05 * time) * np.cos(3.0 * time)
     metrics = decay_metrics(time, signal, amplitude_fraction=1e-3)
     assert metrics["decay_rate"] < 0.0
+
+def test_exponential_memory_free_decay_converges_to_augmented_ode(record_property):
+    from scipy.linalg import expm
+    from tensorbem.time_domain import MemoryKernel, cummins_free_decay
+
+    # m z'' + k z + u = 0, with u' = c z' - alpha u and u(0) = 0.
+    mass, restoring, c, alpha = 2., 9., 4., 1.5
+    generator = np.array([[0., 1., 0.], [-restoring/mass, 0., -1./mass],
+                          [0., c, -alpha]])
+    initial = np.array([1., 0., 0.])
+    times = np.linspace(0., 4., 41)
+    exact = np.array([expm(generator*t) @ initial for t in times])
+    errors = []
+    for dt in (.05, .025, .0125):
+        tau = np.linspace(0., 4., round(8/dt)+1)
+        kernel = MemoryKernel(tau, c*np.exp(-alpha*tau), omega_max=4.)
+        result = cummins_free_decay(kernel, mass=mass, restoring=restoring, added_mass_inf=0.,
+                                    dt=dt, duration=4.)
+        indices = np.rint(times/dt).astype(int)
+        computed = np.column_stack((result.displacement[indices], result.velocity[indices]))
+        errors.append(abs(computed-exact[:, :2]).max(axis=0))
+        record_property(f"dt_{dt}_max_displacement_error", errors[-1][0])
+        record_property(f"dt_{dt}_max_velocity_error", errors[-1][1])
+    assert np.all(np.array(errors[:-1])/errors[1:] > 3.8)
