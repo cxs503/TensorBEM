@@ -525,3 +525,39 @@ def test_circle_mean_and_heat_rate_against_rotated_quartic(record_property):
     polygon = solve_annulus_contact((.3, .6, 1.), (k, k), (1., 2.), panels=8)
     with pytest.raises(ValueError, match="circular"):
         polygon.inner_field.circular_mean_and_heat_rate(.45)
+
+
+@pytest.mark.parametrize("panels", [15, 32, 64])
+def test_one_sided_circle_means_at_generating_contact(panels, record_property):
+    bore, contact, exterior = .3, .6, 1.
+    conductivity = (1.4, 2.2)
+    generation = (.8, -.3)
+    resistance, inner_fraction = .25, .3
+    # At the contact, sheet heating drives heat away into both materials.
+    q_inner, q_outer = -.4, .8
+    jump = resistance * (inner_fraction*q_inner + (1-inner_fraction)*q_outer)
+    interface_temperatures = (2. + jump, 2.)
+
+    # Integrate d(r*q)/dr = r*generation, then dT/dr = -q/k from contact.
+    def wall(radius, flux, source, k, initial):
+        log_term = contact*flux - source*contact**2/2
+        return initial - (log_term*np.log(radius/contact) + source*(radius**2-contact**2)/4)/k
+
+    theta = (np.arange(panels)+.5)*(2*np.pi/panels)
+    walls = (wall(bore, q_inner, generation[0], conductivity[0], interface_temperatures[0]) + .2*np.cos(2*theta),
+             wall(exterior, q_outer, generation[1], conductivity[1], interface_temperatures[1]) + .3*np.sin(3*theta))
+    result = solve_annulus_contact(
+        (bore, contact, exterior), conductivity, walls, resistance, panels, formulation="circular",
+        volumetric_source=generation, interface_source=q_outer-q_inner,
+        inner_resistance_fraction=inner_fraction)
+    ti, qi = result.inner_field.circular_mean_and_heat_rate(contact)
+    to, qo = result.outer_field.circular_mean_and_heat_rate(contact)
+    circumference = 2*np.pi*contact
+    for label, measured, reference in (
+            ("temperature_K", [ti, to], interface_temperatures),
+            ("rate_W_m", [qi, qo], circumference*np.array([q_inner, q_outer])),
+            ("jump_K", ti-to, jump),
+            ("generation_W_m", qo-qi, circumference*(q_outer-q_inner))):
+        error = np.max(np.abs(np.subtract(measured, reference)))
+        record_property(label, error)
+        assert error < 1e-11

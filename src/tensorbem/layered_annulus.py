@@ -79,15 +79,16 @@ class AnnulusLayerField:
     def circular_mean_and_heat_rate(self, radii):
         """Circumferential mean T (K) and outward radial heat rate (W/m of axis).
 
-        Accept scalar or array radii inside a material solved on exact circles.
+        Accept scalar or array radii on the closed interval of this circular
+        material. At a shared boundary, each layer gives its one-sided limit.
         Both outputs have the input shape. Positive heat flows toward larger r.
         """
         if not self.circular_geometry:
             raise ValueError("circle averages require the circular formulation")
         r = np.asarray(radii, dtype=float)
         outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
-        if not np.isfinite(r).all() or np.any((r <= inner) | (r >= outer)):
-            raise ValueError("radii must be finite and strictly inside the selected material")
+        if not np.isfinite(r).all() or np.any((r < inner) | (r > outer)):
+            raise ValueError("radii must be finite and inside the closed material interval")
 
         # Only the logarithmic zero mode of the harmonic remainder survives.
         wall_particular, _ = _source_traces(
