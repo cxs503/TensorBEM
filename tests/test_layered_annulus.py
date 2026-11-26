@@ -738,7 +738,15 @@ def _sheet_sector_case(n, flux_side, formulation):
     theta = np.array([-.31, .53, 2.14, 4.39])
     direction = np.column_stack((np.cos(theta), np.sin(theta)))
     tangent = np.column_stack((-np.sin(theta), np.cos(theta)))
-    errors = {}
+    # Compare panel traces and outward radial fluxes to the nominal circle at
+    # the panel-center angles. This includes the straight-panel geometry error.
+    errors = {"sheet_temperature_error_K": np.max(abs(result.sheet_temperature-(1+wave)))}
+    for side, material, trace, flux in (
+            ("inner", materials[0], result.inner_trace, result.interface_flux),
+            ("outer", materials[1], result.outer_trace, result.outer_interface_flux)):
+        _, trace_amplitude, flux_amplitude = material
+        errors[f"{side}_contact_temperature_error_K"] = np.max(abs(trace-(1+trace_amplitude*wave)))
+        errors[f"{side}_contact_flux_error_W_m2"] = np.max(abs(flux-flux_amplitude*wave))
     for field, material, lo, hi, side in ((result.inner_field, materials[0], a, b, "inner"),
                                           (result.outer_field, materials[1], b, c, "outer")):
         r = lo+(hi-lo)*np.array([.17, .39, .63, .87])
