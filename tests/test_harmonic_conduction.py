@@ -316,6 +316,12 @@ def test_area_mean_polynomial_on_concave_polygon(quadratic, record_property):
     for x, y, width, height in [(2., 1., 2., 1.), (2., 2., 1., 2.)]:
         values = exact(x+width*(1+nodes[:, None])/2, y+height*(1+nodes)/2)
         integral += width*height*(weights @ values @ weights)/4
+    # The two equal-area rectangles have centroids (3,1.5) and (2.5,3).
+    x, y = 2.75, 2.25
+    expected_flux = -k*np.array([.4+.2j*x-.3*y, -.2j-.3*x+.24*y])
+    flux_error = np.max(abs(field.area_mean_heat_flux()-expected_flux))
+    record_property("mean_flux_error_W_m2", flux_error)
+    assert flux_error < 1e-13
     error = abs(field.area_mean_temperature()-integral/4)
     record_property("mean_temperature_error_K", error)
     assert error < 1e-13
@@ -341,3 +347,31 @@ def test_area_mean_screened_disk_converges(omega, record_property):
             assert previous > 3*error
         previous = error
     assert error < .001
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_area_mean_flux_from_oblique_wave_on_rectangle(quadratic, record_property):
+    from tensorbem.geometry import PanelMesh
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    k, capacity, omega = 1.3, 1.8, 2.1
+    size = np.array([1.4, .9])
+    direction = np.array([.6, -.8])
+    rate = np.sqrt(1j*omega*capacity/k)*direction
+    # Separable integral of exp(rate dot x) on the rectangle.
+    expected = -k*rate*np.prod(np.expm1(rate*size)/(rate*size))
+    corners = np.array([[0., 0.], [1., 0.], [1., 1.], [0., 1.]])*size
+    previous = None
+    for n in ((4, 8, 16) if quadratic else (4, 8, 16, 32, 64)):
+        edges = np.roll(corners, -1, axis=0)-corners
+        mesh = PanelMesh((corners[:, None]+edges[:, None]*np.arange(n)[None, :, None]/n).reshape(-1, 2))
+        points = harmonic_boundary_points(mesh, quadratic=quadratic)
+        inward = k*np.exp(points @ rate)*np.repeat(mesh.normals @ rate, 3 if quadratic else 1)
+        field = solve_mixed_harmonic_conduction(mesh, "flux", inward, omega, conductivity=k,
+                                                volumetric_heat_capacity=capacity, quadratic=quadratic)
+        error = np.max(abs(field.area_mean_heat_flux()-expected))
+        record_property(f"max_component_error_{4*n}_W_m2", error)
+        if previous is not None:
+            assert previous > 3*error
+        previous = error
+    assert error < .002

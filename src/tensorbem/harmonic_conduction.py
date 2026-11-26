@@ -190,6 +190,11 @@ class HarmonicConduction:
         derivative = self.inward_flux/self.conductivity-np.sum(normals*gradient, axis=1)
         return boundary, derivative
 
+    def _panel_means(self, samples):
+        if self.quadratic:
+            return samples.reshape(-1, 3) @ (np.array([5., 8., 5.])/18)
+        return samples
+
     def area_mean_temperature(self):
         """Area-averaged bulk temperature phasor in K on the panel polygon.
 
@@ -206,9 +211,25 @@ class HarmonicConduction:
                                  self.particular_gradient, self.particular_quadratic)[0]
         mean += (xx*moments.i_yy + xy*moments.i_xy + yy*moments.i_xx)/moments.area
         _, derivative = self._homogeneous_traces()
-        if self.quadratic:
-            derivative = derivative.reshape(-1, 3) @ (np.array([5., 8., 5.])/18)
-        return mean + (self.mesh.lengths @ derivative)/(moments.area*self.wave**2)
+        return mean + (self.mesh.lengths @ self._panel_means(derivative))/(moments.area*self.wave**2)
+
+    def area_mean_heat_flux(self):
+        """Cartesian area-mean Fourier heat-flux phasor (W/m²) on the polygon.
+
+        The boundary integral of temperature times outward normal gives the
+        integral of its gradient. Integrate the polynomial particular field's
+        linear gradient at the centroid to avoid panel interpolation error.
+        """
+        origin = self.mesh.vertices[0]
+        moments = polygon_moments(self.mesh.vertices-origin)
+        center = (origin+moments.centroid)[None, :]
+        gradient = _particular_gradient(center, self.particular_gradient, self.particular_quadratic)[0]
+        boundary, _ = self._homogeneous_traces()
+        # A constant offset integrates to zero on a closed contour.
+        trace = self._panel_means(boundary-boundary[0])
+        edges = self.mesh.vectors
+        integrated_normals = np.column_stack((edges[:, 1], -edges[:, 0]))
+        return -self.conductivity*(gradient + trace @ integrated_normals/moments.area)
 
     def temperature(self, points):
         """Evaluate temperature phasors at interior targets of shape (N, 2)."""
