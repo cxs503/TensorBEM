@@ -27,6 +27,41 @@ class RingFields:
     wall_surface_temperatures: np.ndarray | None = None
     contact_temperatures: np.ndarray | None = None
 
+    sample_temperature: np.ndarray | None = None
+    sample_radial_flux: np.ndarray | None = None
+
+
+def _sample_circular_layers(points, edges, conductivity, mode, density, surfaces, contacts):
+    r = np.asarray(points)
+    if (r.ndim != 1 or r.dtype.kind not in "iuf" or not np.isfinite(r).all()
+            or np.any((r <= edges[0]) | (r >= edges[-1])) or np.isin(r, edges[1:-1]).any()):
+        raise ValueError("sample radii must be real finite points strictly inside material layers")
+    idx = np.searchsorted(edges, r)-1
+    lo, hi = edges[idx], edges[idx+1]
+    k = conductivity[idx]
+    # Particular solution for generation proportional to (r/R)^m.
+    coefficient = -density[idx]/(4*(mode+1)*k)
+    def particular(x):
+        return coefficient*x**2*(x/edges[-1])**mode
+
+    left = np.r_[surfaces[0], contacts[:, 1]][idx] - particular(lo)
+    right = np.r_[contacts[:, 0], surfaces[1]][idx] - particular(hi)
+    span = np.log1p((hi-lo)/lo)
+    lower = np.log1p((r-lo)/lo)
+    upper = np.log1p((hi-r)/r)
+    if mode == 0:
+        slope = (right-left)/span
+        temperature = left + slope*lower
+    else:
+        # Bounded exponentials implement the two sinh interpolation weights.
+        denominator = -np.expm1(-2*mode*span)
+        wl = np.exp(-mode*lower)/denominator
+        wr = np.exp(-mode*upper)/denominator
+        temperature = left*wl*(-np.expm1(-2*mode*upper)) + right*wr*(-np.expm1(-2*mode*lower))
+        slope = mode*(right*wr*(1+np.exp(-2*mode*lower)) - left*wl*(1+np.exp(-2*mode*upper)))
+    source_term = particular(r)
+    return temperature+source_term, -k*(slope+(mode+2)*source_term)/r
+
 
 @dataclass(frozen=True)
 class RingResponse:
@@ -39,9 +74,11 @@ class RingResponse:
     _mode: int = 0
     _circular_radii: tuple[float, ...] | None = None
 
+    _conductivities: tuple[float, ...] | None = None
+
     def solve(self, omega, wall_temperatures, sheet_capacities, *, sheet_generation=(0., 0.), volume_generation=None,
               sheet_film_coefficients=(0., 0.), sheet_ambient_temperatures=(0., 0.), wall_inward_flux=None,
-              bore_temperature_reference=None):
+              bore_temperature_reference=None, sample_radii=None):
         """Apply two wall or ambient temperature phasors under exp(i omega t), with capacities in J/(m² K).
 
         For a prescribed flux wall, set its temperature entry to None and supply
@@ -57,6 +94,9 @@ class RingResponse:
         its own reservoir; zero sheet film coefficient disables that exchange.
         volume_generation supplies three complex coefficients (W/m³) multiplying
         (r/exterior_radius)^m cos(mθ), when assembled with include_volume_sources.
+        For the circular formulation, sample_radii specifies a vector strictly inside
+        the materials. sample_temperature (K) and sample_radial_flux (W/m², outward)
+        contain complex cosine amplitudes in input order.
         """
         if not self._flux_sides:
             if wall_inward_flux is not None:
@@ -137,12 +177,21 @@ class RingResponse:
         temperatures, incoming, outgoing = np.stack((a[2:5], b[2:5])).T
         surfaces = np.array([a[5], b[6]])
         contacts = np.stack((a[7:9], b[7:9]))
+        sample_t = sample_q = None
+        if sample_radii is not None:
+            if self._circular_radii is None:
+                raise ValueError("interior radial sampling requires the circular formulation")
+            sample_t, sample_q = _sample_circular_layers(
+                sample_radii, np.asarray(self._circular_radii), np.asarray(self._conductivities),
+                self._mode, density if volume_generation is not None else np.zeros(3), surfaces, contacts)
+            if floating:
+                sample_t = (sample_t-a[5]) + bore_temperature_reference
         if floating:
             temperatures = (temperatures-a[5]) + bore_temperature_reference
             surfaces = (surfaces-a[5]) + bore_temperature_reference
             contacts = (contacts-a[5]) + bore_temperature_reference
         return RingFields(temperatures, incoming, outgoing, float(abs(a[1] - b[0])),
-                          np.array([a[0], b[1]]), surfaces, contacts)
+                          np.array([a[0], b[1]]), surfaces, contacts, sample_t, sample_q)
 
 
 def assemble_ring_response(radii, conductivities, contact_resistances, panels=32, *,
@@ -235,4 +284,4 @@ def assemble_ring_response(radii, conductivities, contact_resistances, panels=32
         if include_volume_sources:
             volume_maps.append(np.column_stack(columns[3:]))
     return RingResponse(np.stack(maps), leakage, np.stack(volume_maps) if volume_maps else None, flux_sides, mode,
-                        tuple(radii) if formulation == "circular" else None)
+                        tuple(radii) if formulation == "circular" else None, tuple(conductivities))

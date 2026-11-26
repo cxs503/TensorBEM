@@ -144,8 +144,19 @@ def test_floating_flux_compatibility_and_temperature_shift():
     options = dict(omega=0., wall_temperatures=(None, None), sheet_capacities=(.25, .8), wall_inward_flux=flux)
     with pytest.raises(ValueError, match="incompatible"):
         response.solve(**options, bore_temperature_reference=0., volume_generation=(0., 1., 0.))
+    options["sample_radii"] = [.97, .42, .7]
     base = response.solve(**options, bore_temperature_reference=0.)
     shifted = response.solve(**options, bore_temperature_reference=1e9)
+    np.testing.assert_allclose(base.sample_radial_flux, edges[0]*flux[0]/np.array(options["sample_radii"]), atol=1e-12)
+    np.testing.assert_array_equal(shifted.sample_radial_flux, base.sample_radial_flux)
+    np.testing.assert_array_equal(shifted.sample_temperature, base.sample_temperature+1e9)
     np.testing.assert_array_equal(shifted.wall_heat_rates, base.wall_heat_rates)
     np.testing.assert_array_equal(shifted.incoming_flux, base.incoming_flux)
     np.testing.assert_array_equal(shifted.contact_temperatures, base.contact_temperatures+1e9)
+
+
+@pytest.mark.parametrize("samples", [[.4], [.55], [.9], [1.1], [np.nan], [.6+1j], [[.6]]])
+def test_circular_samples_must_be_inside_one_material(samples):
+    response = assemble_ring_response((.4, .55, .9, 1.1), (1., 2., 3.), (.2, .3), 8)
+    with pytest.raises(ValueError, match="sample radii"):
+        response.solve(1., (0., 1.), (.2, .3), sample_radii=samples)
