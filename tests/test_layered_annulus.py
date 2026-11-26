@@ -801,7 +801,23 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
 def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_property):
     previous = None
     for n in (32, 64, 128):
-        _, errors, *_ = _sheet_sector_case(n, flux_side, "polygonal")
+        result, errors, b, mode, ks, film, _ = _sheet_sector_case(n, flux_side, "polygonal")
+        # The cut at angle zero is the downstream end of the last panel.
+        # Both cuts of the quarter-ring lie on actual vertices on all meshes.
+        end = np.pi/2
+        current = result.sheet_tangential_heat_rate
+        cut_difference = current[n//4-1]-current[-1]
+        sine_change = np.sin(mode*end+.2)-np.sin(.2)
+        exact_difference = ks*mode*sine_change/b
+        chord = 2*b*np.sin(np.pi/n)
+        exchanged = chord*np.sum(result.sheet_reservoir_flux[:n//4])
+        exact_exchange = b*film*(.4*end+sine_change/mode)
+        errors["sector_cut_rate_error_W_m"] = abs(cut_difference-exact_difference)
+        errors["sector_reservoir_rate_error_W_m"] = abs(exchanged-exact_exchange)
+        record_property(f"n{n}_sector_cut_rate_W_m", cut_difference)
+        record_property(f"n{n}_sector_reservoir_rate_W_m", exchanged)
+        record_property(f"n{n}_sector_reference_cut_W_m", exact_difference)
+        record_property(f"n{n}_sector_reference_reservoir_W_m", exact_exchange)
         for label, error in errors.items():
             record_property(f"n{n}_{label}", error)
             if previous is not None:
