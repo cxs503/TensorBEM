@@ -1,0 +1,19 @@
+{
+  "source_commit": "c6ab3cfe1bb0a36b6e9f1b2125d4a8aaf384c0c6",
+  "baseline_commit": "68106bab4dad7f7652ae454fba418d41838f4902",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_tank_free_surface.py tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem-centroid-after.xml",
+  "passed": 71,
+  "reference": "Closed-form centroidal tensor of a 4 by 2 rectangle and an L section (4 by 4 square minus a 2 by 2 corner), in both winding orders, translated by (2^36,-2^35) m. Maximum absolute error across Ixx, Iyy, Ixy in m^4.",
+  "before": {
+    "test_far_origin_centroidal_moments[rectangle-False]": 10.666666666666666,
+    "test_far_origin_centroidal_moments[rectangle-True]": 10.666666666666666,
+    "test_far_origin_centroidal_moments[concave_L-False]": 8388622.666666666,
+    "test_far_origin_centroidal_moments[concave_L-True]": 8388622.666666666
+  },
+  "after": {
+    "test_far_origin_centroidal_moments[rectangle-False]": 1.7763568394002505e-15,
+    "test_far_origin_centroidal_moments[rectangle-True]": 1.7763568394002505e-15,
+    "test_far_origin_centroidal_moments[concave_L-False]": 8.881784197001252e-15,
+    "test_far_origin_centroidal_moments[concave_L-True]": 8.881784197001252e-15
+  }
+}
