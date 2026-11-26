@@ -818,6 +818,18 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
         chord_error = np.max(abs(recovered-(.77*np.roll(current, 1)+.23*current)))
         record_property(f"n{n}_chord_interpolation_error_W_m", chord_error)
         assert chord_error < 1e-12
+        starts = np.array([-.17, .71, 4.1, .19])
+        ends = np.array([.71, 4.1, .71, .19+4*np.pi])
+        exchange = result.polygonal_reservoir_heat_rate(starts, ends)
+        reference = b*film*(.4*(ends-starts)+(np.sin(mode*ends+.2)-np.sin(mode*starts+.2))/mode)
+        errors["off_grid_reservoir_error_W_m"] = np.max(abs(exchange-reference))
+        np.testing.assert_allclose(exchange[1], -exchange[2], rtol=0., atol=1e-13)
+        # From each panel start to its constructed 23% point.
+        partial = result.polygonal_reservoir_heat_rate(np.arange(n)*2*np.pi/n,
+                                                      np.mod(np.arctan2(targets[:, 1], targets[:, 0]), 2*np.pi))
+        partial_error = np.max(abs(partial-.23*(2*b*np.sin(np.pi/n))*result.sheet_reservoir_flux))
+        record_property(f"n{n}_partial_reservoir_error_W_m", partial_error)
+        assert partial_error < 1e-12
         sine_change = np.sin(mode*end+.2)-np.sin(.2)
         exact_difference = ks*mode*sine_change/b
         chord = 2*b*np.sin(np.pi/n)

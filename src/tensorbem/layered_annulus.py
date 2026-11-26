@@ -35,6 +35,20 @@ def _source_traces(mesh, conductivity, source, circular, source_gradient, radial
     return value, np.sum(gradient*mesh.normals, axis=1)
 
 
+def _polygonal_sheet_cut(loop, angles):
+    """Resolve ray angles into full turns, panel indices and chord fractions."""
+    angles = np.asarray(angles, dtype=float)
+    if not np.isfinite(angles).all():
+        raise ValueError("sheet current angles must be finite")
+    first = loop.vertices[0]
+    turns, phase = np.divmod(angles-np.arctan2(first[1], first[0]), 2*np.pi)
+    width = 2*np.pi/loop.panel_count
+    position = phase/width
+    panel = np.minimum(position.astype(int), loop.panel_count-1)
+    fraction = .5*(1+np.tan((position-panel-.5)*width)/np.tan(.5*width))
+    return turns, panel, fraction
+
+
 def _integrate_circular_arc(loop, samples, start_angle, end_angle):
     """Integrate a real periodic interpolant against nominal arc length."""
     start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
@@ -309,19 +323,30 @@ class AnnulusContactResult:
         """
         if self.inner_field is None or self.inner_field.circular_geometry:
             raise ValueError("polygonal sheet current requires the straight-panel formulation")
-        angles = np.asarray(angles, dtype=float)
-        if not np.isfinite(angles).all():
-            raise ValueError("sheet current angles must be finite")
+        _, panel, fraction = _polygonal_sheet_cut(self.inner_field.mesh.loops[0], angles)
         current = self.sheet_tangential_heat_rate
         if current is None:
-            return np.zeros_like(angles)
-        first = self.inner_field.mesh.loops[0].vertices[0]
-        width = 2*np.pi/len(current)
-        position = np.remainder(angles-np.arctan2(first[1], first[0]), 2*np.pi)/width
-        panel = np.floor(position).astype(int)
-        offset = (position-panel-.5)*width
-        fraction = .5*(1+np.tan(offset)/np.tan(.5*width))
-        return (1-fraction)*current[(panel-1) % len(current)] + fraction*current[panel % len(current)]
+            return np.zeros_like(fraction)
+        return (1-fraction)*current[panel-1] + fraction*current[panel]
+
+    def polygonal_reservoir_heat_rate(self, start_angle, end_angle):
+        """Heat lost to the reservoir over an oriented polygonal sheet sector (W/m).
+
+        Angles in radians broadcast. Reversed limits negate the exchange and
+        extra full turns count repeatedly. Panel flux is constant per unit
+        chord length, including on the two partially intersected panels.
+        """
+        if self.inner_field is None or self.inner_field.circular_geometry:
+            raise ValueError("polygonal reservoir heat rates require the straight-panel formulation")
+        loop = self.inner_field.mesh.loops[0]
+        start, end = np.broadcast_arrays(start_angle, end_angle)
+        turns, panels, fractions = _polygonal_sheet_cut(loop, np.stack((start, end)))
+        if self.sheet_reservoir_flux is None:
+            return np.zeros_like(fractions[0])
+        heat = self.sheet_reservoir_flux*loop.lengths
+        prefix = np.concatenate(([0.], np.cumsum(heat)))
+        return ((turns[1]-turns[0])*prefix[-1] + (prefix[panels[1]]-prefix[panels[0]])
+                + (fractions[1]*heat[panels[1]]-fractions[0]*heat[panels[0]]))
 
     def circular_sheet_current(self, angles):
         """Sheet heat rate toward increasing azimuth (W/m of axis) at angles in radians.
