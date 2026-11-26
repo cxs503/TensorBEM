@@ -1,0 +1,81 @@
+{
+  "source_commit": "109cf3f5f05464f5073e4e4e6a85a64aa610b849",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_weak_generation.xml",
+  "suite": {
+    "tests": 101,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "reference": "Sector heat input is the bore heat rate times the angular fraction. Generated heat is the uniform sheet source times the contact arc length. Sector heat output equals their sum.",
+  "cases": {
+    "test_weak_sheet_generation_under_radial_throughflow[circular--3.5]": {
+      "n32_radial_error_W_m": 2.76667577736589e-13,
+      "n32_inferred_generation_W_m": 9.180000052344539e-07,
+      "n32_generation_relative_error": 5.702019523212698e-09,
+      "n32_balance_W_m": 5.234453973377131e-15,
+      "n64_radial_error_W_m": 6.384892614619275e-13,
+      "n64_inferred_generation_W_m": 9.180002028541523e-07,
+      "n64_generation_relative_error": 2.209740221914558e-07,
+      "n64_balance_W_m": 2.02854152356655e-13,
+      "n128_radial_error_W_m": 9.067191442113653e-13,
+      "n128_inferred_generation_W_m": 9.179989088892171e-07,
+      "n128_generation_relative_error": 1.1885738375738697e-06,
+      "n128_balance_W_m": 1.091110782843965e-12,
+      "reference_inner_W_m": -0.8522747202570996,
+      "reference_outer_W_m": -0.8522738022570996,
+      "reference_generation_W_m": 9.179999999999999e-07
+    },
+    "test_weak_sheet_generation_under_radial_throughflow[circular-3.5]": {
+      "n32_radial_error_W_m": 3.806954751439662e-13,
+      "n32_inferred_generation_W_m": 9.180000639652519e-07,
+      "n32_generation_relative_error": 6.967892374198925e-08,
+      "n32_balance_W_m": 6.396525197604791e-14,
+      "n64_radial_error_W_m": 1.9292345498911345e-12,
+      "n64_inferred_generation_W_m": 9.179988781360393e-07,
+      "n64_generation_relative_error": 1.22207403119301e-06,
+      "n64_balance_W_m": 1.1218639606260818e-12,
+      "n128_radial_error_W_m": 2.8184121703134224e-12,
+      "n128_inferred_generation_W_m": 9.180014775012069e-07,
+      "n128_generation_relative_error": 1.6094784389686367e-06,
+      "n128_balance_W_m": 1.4775012069287972e-12,
+      "reference_inner_W_m": 0.8522747202570996,
+      "reference_outer_W_m": 0.8522756382570996,
+      "reference_generation_W_m": 9.179999999999999e-07
+    },
+    "test_weak_sheet_generation_under_radial_throughflow[polygonal--3.5]": {
+      "n32_radial_error_W_m": 0.0008330589906057062,
+      "n32_inferred_generation_W_m": 9.164326668642531e-07,
+      "n32_generation_relative_error": 0.0017073345705304055,
+      "n32_balance_W_m": 4.691022007791829e-14,
+      "n64_radial_error_W_m": 0.00020393544361008153,
+      "n64_inferred_generation_W_m": 9.176200387317479e-07,
+      "n64_generation_relative_error": 0.00041390116367323593,
+      "n64_balance_W_m": 7.170789618475857e-14,
+      "n128_radial_error_W_m": 4.917180945540611e-05,
+      "n128_inferred_generation_W_m": 9.179078098719984e-07,
+      "n128_generation_relative_error": 0.00010042497603657274,
+      "n128_balance_W_m": 3.812120599979476e-14,
+      "reference_inner_W_m": -0.8522747202570996,
+      "reference_outer_W_m": -0.8522738022570996,
+      "reference_generation_W_m": 9.179999999999999e-07
+    },
+    "test_weak_sheet_generation_under_radial_throughflow[polygonal-3.5]": {
+      "n32_radial_error_W_m": 0.0008330605578698025,
+      "n32_inferred_generation_W_m": 9.164326291166702e-07,
+      "n32_generation_relative_error": 0.0017073756899016468,
+      "n32_balance_W_m": 8.465780291517361e-14,
+      "n64_radial_error_W_m": 0.0002039358237072575,
+      "n64_inferred_generation_W_m": 9.176201407612439e-07,
+      "n64_generation_relative_error": 0.0004137900204314038,
+      "n64_balance_W_m": 1.7373739214781046e-13,
+      "n128_radial_error_W_m": 4.9171901661648754e-05,
+      "n128_inferred_generation_W_m": 9.179076692067412e-07,
+      "n128_generation_relative_error": 0.00010057820616427016,
+      "n128_balance_W_m": 1.787864632198021e-13,
+      "reference_inner_W_m": 0.8522747202570996,
+      "reference_outer_W_m": 0.8522756382570996,
+      "reference_generation_W_m": 9.179999999999999e-07
+    }
+  }
+}
