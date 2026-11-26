@@ -76,6 +76,36 @@ class AnnulusLayerField:
         return -self.conductivity*self._polygonal_extension(points,True)
 
 
+    def circular_mean_and_heat_rate(self, radii):
+        """Circumferential mean T (K) and outward radial heat rate (W/m of axis).
+
+        Accept scalar or array radii inside a material solved on exact circles.
+        Both outputs have the input shape. Positive heat flows toward larger r.
+        """
+        if not self.circular_geometry:
+            raise ValueError("circle averages require the circular formulation")
+        r = np.asarray(radii, dtype=float)
+        outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
+        if not np.isfinite(r).all() or np.any((r <= inner) | (r >= outer)):
+            raise ValueError("radii must be finite and strictly inside the selected material")
+
+        # Only the logarithmic zero mode of the harmonic remainder survives.
+        wall_particular, _ = _source_traces(
+            self.mesh, self.conductivity, self.volumetric_source, True, self.source_gradient,
+            self.radial_source_coefficient, self.source_quadratic)
+        harmonic = self.boundary_values - wall_particular
+        outer_mean, inner_mean = (harmonic[sl].mean() for sl in self.mesh.loop_slices)
+        log_slope = (outer_mean - inner_mean) / np.log(outer / inner)
+
+        # Azimuthal mean of the volume source is source + beta*r².
+        xx, _, yy = self.source_quadratic
+        beta = self.radial_source_coefficient + (xx + yy) / 2
+        temperature = (inner_mean + log_slope * np.log(r / inner)
+                       - (self.volumetric_source * r**2 / 4 + beta * r**4 / 16) / self.conductivity)
+        heat_rate = 2 * np.pi * (-self.conductivity * log_slope
+                                  + self.volumetric_source * r**2 / 2 + beta * r**4 / 4)
+        return temperature, heat_rate
+
     def circular_field(self, points):
         """Temperature and Cartesian flux from harmonic extension of both traces.
 

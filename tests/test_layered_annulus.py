@@ -498,3 +498,30 @@ def test_equal_area_sheet_generation_with_bulk_sources():
         for key in fine:
             if "_error_" in key:
                 assert fine[key] < coarse[key]/3.5
+
+
+def test_circle_mean_and_heat_rate_against_rotated_quartic(record_property):
+    # T = 3 + log(r) - r²/(4k) - (x+2y)^4/(60k).
+    # Its angular fourth moment uses <cos^4> = 3/8.
+    k = 1.7
+    for n in (16, 32, 64):
+        theta = (np.arange(n) + .5) * (2*np.pi/n)
+        projection = np.cos(theta) + 2*np.sin(theta)
+        walls = [3 + np.log(r) - r**2/(4*k) - (r*projection)**4/(60*k) for r in (.3, 1.)]
+        result = solve_annulus_contact((.3, .6, 1.), (k, k), walls, panels=n,
+                                       formulation="circular", volumetric_source=1.,
+                                       source_quadratic=(1., 4., 4.))
+        for layer, field, r in (("inner", result.inner_field, np.array([.32, .45, .57])),
+                                ("outer", result.outer_field, np.array([.63, .77, .94]))):
+            mean, rate = field.circular_mean_and_heat_rate(r)
+            exact_mean = 3 + np.log(r) - r**2/(4*k) - 5*r**4/(32*k)
+            exact_rate = 2*np.pi*(-k + r**2/2 + 5*r**4/8)
+            for label, actual, exact in (("mean_K", mean, exact_mean), ("rate_W_m", rate, exact_rate)):
+                error = np.max(abs(actual-exact))
+                record_property(f"{layer}_{label}_{n}", error)
+                assert error < 1e-11
+        with pytest.raises(ValueError, match="inside"):
+            result.inner_field.circular_mean_and_heat_rate([.45, .7])
+    polygon = solve_annulus_contact((.3, .6, 1.), (k, k), (1., 2.), panels=8)
+    with pytest.raises(ValueError, match="circular"):
+        polygon.inner_field.circular_mean_and_heat_rate(.45)
