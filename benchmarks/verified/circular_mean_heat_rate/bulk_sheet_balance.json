@@ -1,0 +1,30 @@
+{
+  "source_commit": "d4ec4de3f6b066a11c62bb2c1be3865ee93374b9",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 126,
+  "failures": 0,
+  "reference": "Independent double quadrature of the Cartesian volume source over each annular sector, plus the exact integral of the sinusoidal sheet source for the composite perimeter.",
+  "maximum_absolute_errors": {
+    "test_sector_generation_with_bulk_and_sheet_heating[15]": {
+      "layer_0_source_integral_W_m": 1.1102230246251565e-16,
+      "layer_0_outflow_W_m": 1.3322676295501878e-15,
+      "layer_1_source_integral_W_m": 5.551115123125783e-17,
+      "layer_1_outflow_W_m": 1.176836406102666e-14,
+      "external_perimeter_balance_W_m": 1.6653345369377348e-14
+    },
+    "test_sector_generation_with_bulk_and_sheet_heating[32]": {
+      "layer_0_source_integral_W_m": 1.1102230246251565e-16,
+      "layer_0_outflow_W_m": 2.353672812205332e-14,
+      "layer_1_source_integral_W_m": 5.551115123125783e-17,
+      "layer_1_outflow_W_m": 6.461498003318411e-14,
+      "external_perimeter_balance_W_m": 8.548717289613705e-14
+    },
+    "test_sector_generation_with_bulk_and_sheet_heating[64]": {
+      "layer_0_source_integral_W_m": 1.1102230246251565e-16,
+      "layer_0_outflow_W_m": 2.1760371282653068e-14,
+      "layer_1_source_integral_W_m": 5.551115123125783e-17,
+      "layer_1_outflow_W_m": 1.2856382625159313e-13,
+      "external_perimeter_balance_W_m": 1.3433698597964394e-13
+    }
+  }
+}
