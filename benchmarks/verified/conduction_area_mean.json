@@ -1,0 +1,24 @@
+{
+  "source_commit": "2d8957625b20683709bee0436af70b6b1ca4d66b",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem_area_mean.xml",
+  "reference": "Independent two-rectangle Gauss integral for a complex quadratic temperature on a concave L-shaped polygon. Disk reference: base+(wall-base)*2*I1(wave)/(wave*I0(wave)), at steady and nonzero frequency with volumetric exchange and applied wall storage.",
+  "cases": {
+    "test_area_mean_polynomial_on_concave_polygon[False]": {
+      "mean_temperature_error_K": 1.5700924586837752e-16
+    },
+    "test_area_mean_polynomial_on_concave_polygon[True]": {
+      "mean_temperature_error_K": 2.482534153247273e-16
+    },
+    "test_area_mean_screened_disk_converges[0.0]": {
+      "mean_temperature_error_16_K": 0.0007878003022588898,
+      "mean_temperature_error_32_K": 0.0001896323952154111,
+      "mean_temperature_error_64_K": 4.634978031736736e-05
+    },
+    "test_area_mean_screened_disk_converges[2.0]": {
+      "mean_temperature_error_16_K": 0.004797289065994505,
+      "mean_temperature_error_32_K": 0.0011544606679966048,
+      "mean_temperature_error_64_K": 0.0002823017126560624
+    }
+  },
+  "passed": 46
+}
