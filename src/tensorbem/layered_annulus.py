@@ -141,6 +141,38 @@ class AnnulusLayerField:
         xy = radius[:, None] * np.column_stack((np.cos(angles), np.sin(angles)))
         return self._circular_extension(xy, radius, inner, outer)
 
+    def circular_arc_heat_rate(self, boundary, start_angle, end_angle):
+        """Integrate the sampled radial boundary flux over oriented arcs (W/m).
+
+        Select this layer's "inner" or "outer" nominal circle. Angles in
+        radians broadcast together. For increasing angles the sign is positive
+        toward larger radius. Use an unwrapped end angle to cross 2π.
+        The integral uses the real trigonometric interpolant of the solved
+        normal derivatives, including the cosine Nyquist mode for even grids.
+        """
+        if not self.circular_geometry:
+            raise ValueError("arc heat rates require the circular formulation")
+        if boundary not in ("inner", "outer"):
+            raise ValueError("boundary must be 'inner' or 'outer'")
+        start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
+                                         np.asarray(end_angle, dtype=float))
+        if not np.isfinite(start).all() or not np.isfinite(end).all():
+            raise ValueError("arc angles must be finite")
+        index = 1 if boundary == "inner" else 0
+        loop = self.mesh.loops[index]
+        normal = self.normal_derivative[self.mesh.loop_slices[index]]
+        radial_flux = self.conductivity * normal * (1 if index == 1 else -1)
+        n = loop.panel_count
+        coeff = np.fft.rfft(radial_flux) / n
+        width = end - start
+        phase = start + width/2 - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
+        integral = coeff[0].real * width
+        for mode in range(1, len(coeff)):
+            copies = 1 if 2*mode == n else 2
+            average = np.sinc(mode*width/(2*np.pi))
+            integral += copies * width * average * (coeff[mode]*np.exp(1j*mode*phase)).real
+        return np.linalg.norm(loop.vertices[0]) * integral
+
     def _circular_extension(self, xy, radius, inner, outer):
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)

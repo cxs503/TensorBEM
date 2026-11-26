@@ -595,3 +595,33 @@ def test_circular_boundary_field_at_off_grid_contact_angles(panels, record_prope
         for label, error in zip(("temperature_K", "vector_flux_W_m2"), errors):
             record_property(f"{side}_{label}", error)
             assert error < 1e-11
+        starts = np.array([.11, 5.9, 1.7, .2, .9])
+        ends = np.array([1.3, 6.8, -.1, .2+2*np.pi, .9])
+        # Integrate the manufactured radial flux directly at arbitrary cuts.
+        primitive_difference = (np.cos(mode*starts+.23)-np.cos(mode*ends+.23))/mode
+        arc_rate = field.circular_arc_heat_rate(boundary, starts, ends)
+        arc_error = np.max(abs(arc_rate - b*flux*primitive_difference))
+        record_property(f"{side}_arc_W_m", arc_error)
+        assert arc_error < 1e-11
+        if side == "inner":
+            incoming = arc_rate
+        else:
+            sheet_error = np.max(abs(arc_rate - incoming - 2*b*primitive_difference))
+            record_property("arc_generation_balance_W_m", sheet_error)
+            assert sheet_error < 1e-11
+
+
+def test_arc_integral_retains_mean_and_even_grid_nyquist_mode(record_property):
+    n, radius = 16, .4
+    # At the bore the sampled cosine alternates sign about the nonzero mean.
+    bore_flux = 2. + .7*(-1.)**np.arange(n)
+    result = solve_annulus_contact((radius, .7, 1.), (1.2, 2.), (None, 0.),
+                                   panels=n, formulation="circular", wall_fluxes=(bore_flux, None))
+    start = .17
+    ends = np.array([.171, 1.3, start+2*np.pi, start-2*np.pi])
+    m, offset = n//2, np.pi/n
+    reference = radius*(2*(ends-start) + .7/m*(np.sin(m*(ends-offset))-np.sin(m*(start-offset))))
+    measured = result.inner_field.circular_arc_heat_rate("inner", start, ends)
+    error = np.max(abs(measured-reference))
+    record_property("nyquist_arc_W_m", error)
+    assert error < 1e-11
