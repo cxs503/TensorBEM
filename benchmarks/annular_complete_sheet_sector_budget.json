@@ -1,0 +1,164 @@
+{
+  "source_commit": "b808c1f9783253cabd75f8811f44518952a3e441",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_sector_budget.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Compare every signed sector budget component to the integrated third angular harmonic for circular rings. On straight panels check closure and sign reversal for signed off-grid sectors including two complete turns, with either mixed-wall orientation.",
+  "measurements": {
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-15]": {
+      "budget_radial_in_error_W_m": 2.1736085153989393e-15,
+      "budget_radial_out_error_W_m": 6.744604874597826e-15,
+      "budget_tangential_out_error_W_m": 1.0824674490095276e-15,
+      "budget_reservoir_out_error_W_m": 3.885780586188048e-16,
+      "budget_generation_error_W_m": 1.887379141862766e-15,
+      "budget_residual_error_W_m": 1.1102230246251565e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-32]": {
+      "budget_radial_in_error_W_m": 6.765421556309548e-15,
+      "budget_radial_out_error_W_m": 8.930356454328603e-15,
+      "budget_tangential_out_error_W_m": 5.10702591327572e-15,
+      "budget_reservoir_out_error_W_m": 1.7763568394002505e-15,
+      "budget_generation_error_W_m": 1.2628786905111156e-15,
+      "budget_residual_error_W_m": 2.015054789694659e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-64]": {
+      "budget_radial_in_error_W_m": 1.4918621893400541e-15,
+      "budget_radial_out_error_W_m": 8.503614479238308e-15,
+      "budget_tangential_out_error_W_m": 8.43769498715119e-15,
+      "budget_reservoir_out_error_W_m": 3.6637359812630166e-15,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 1.3627987627273797e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-15]": {
+      "budget_radial_in_error_W_m": 2.264193606910103e-15,
+      "budget_radial_out_error_W_m": 6.415007414162233e-15,
+      "budget_tangential_out_error_W_m": 1.1102230246251565e-15,
+      "budget_reservoir_out_error_W_m": 7.771561172376096e-16,
+      "budget_generation_error_W_m": 2.886579864025407e-15,
+      "budget_residual_error_W_m": 1.0436096431476471e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-32]": {
+      "budget_radial_in_error_W_m": 9.780370957557238e-15,
+      "budget_radial_out_error_W_m": 1.2011225347663412e-14,
+      "budget_tangential_out_error_W_m": 4.3298697960381105e-15,
+      "budget_reservoir_out_error_W_m": 2.1649348980190553e-15,
+      "budget_generation_error_W_m": 1.1102230246251565e-15,
+      "budget_residual_error_W_m": 2.8199664825478976e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-64]": {
+      "budget_radial_in_error_W_m": 4.5449755070592346e-15,
+      "budget_radial_out_error_W_m": 9.367506770274758e-15,
+      "budget_tangential_out_error_W_m": 2.55351295663786e-15,
+      "budget_reservoir_out_error_W_m": 4.440892098500626e-15,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 1.7319479184152442e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-15]": {
+      "budget_radial_in_error_W_m": 5.218048215738236e-15,
+      "budget_radial_out_error_W_m": 9.46465128492946e-15,
+      "budget_tangential_out_error_W_m": 1.9984014443252818e-15,
+      "budget_reservoir_out_error_W_m": 1.4988010832439613e-15,
+      "budget_generation_error_W_m": 1.887379141862766e-15,
+      "budget_residual_error_W_m": 5.551115123125783e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-32]": {
+      "budget_radial_in_error_W_m": 5.915407053080912e-15,
+      "budget_radial_out_error_W_m": 1.1879386363489175e-14,
+      "budget_tangential_out_error_W_m": 3.1086244689504383e-15,
+      "budget_reservoir_out_error_W_m": 3.3306690738754696e-15,
+      "budget_generation_error_W_m": 1.2628786905111156e-15,
+      "budget_residual_error_W_m": 1.7041923427996153e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-64]": {
+      "budget_radial_in_error_W_m": 3.535366444040733e-15,
+      "budget_radial_out_error_W_m": 6.0298988024953815e-15,
+      "budget_tangential_out_error_W_m": 8.881784197001252e-15,
+      "budget_reservoir_out_error_W_m": 1.3766765505351941e-14,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 9.992007221626409e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-15]": {
+      "budget_radial_in_error_W_m": 7.420821769577035e-15,
+      "budget_radial_out_error_W_m": 8.302169715590502e-15,
+      "budget_tangential_out_error_W_m": 1.9984014443252818e-15,
+      "budget_reservoir_out_error_W_m": 2.55351295663786e-15,
+      "budget_generation_error_W_m": 2.886579864025407e-15,
+      "budget_residual_error_W_m": 4.6629367034256575e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-32]": {
+      "budget_radial_in_error_W_m": 7.44369843541648e-15,
+      "budget_radial_out_error_W_m": 1.4568099331035977e-14,
+      "budget_tangential_out_error_W_m": 3.1086244689504383e-15,
+      "budget_reservoir_out_error_W_m": 3.774758283725532e-15,
+      "budget_generation_error_W_m": 1.1102230246251565e-15,
+      "budget_residual_error_W_m": 2.142730437526552e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-64]": {
+      "budget_radial_in_error_W_m": 7.355227538141662e-15,
+      "budget_radial_out_error_W_m": 1.0674620909423282e-14,
+      "budget_tangential_out_error_W_m": 3.219646771412954e-15,
+      "budget_reservoir_out_error_W_m": 1.554312234475219e-14,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 1.3655743202889425e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-15]": {
+      "budget_radial_in_error_W_m": 1.2004286453759505e-14,
+      "budget_radial_out_error_W_m": 1.3156142841808105e-14,
+      "budget_tangential_out_error_W_m": 1.1102230246251565e-15,
+      "budget_reservoir_out_error_W_m": 5.551115123125783e-15,
+      "budget_generation_error_W_m": 1.887379141862766e-15,
+      "budget_residual_error_W_m": 7.771561172376096e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-32]": {
+      "budget_radial_in_error_W_m": 8.201772594418344e-15,
+      "budget_radial_out_error_W_m": 3.8441472227646045e-15,
+      "budget_tangential_out_error_W_m": 3.774758283725532e-15,
+      "budget_reservoir_out_error_W_m": 3.608224830031759e-15,
+      "budget_generation_error_W_m": 1.2628786905111156e-15,
+      "budget_residual_error_W_m": 1.8707257964933888e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-64]": {
+      "budget_radial_in_error_W_m": 2.875824578474351e-14,
+      "budget_radial_out_error_W_m": 4.4554637756988313e-14,
+      "budget_tangential_out_error_W_m": 6.5503158452884236e-15,
+      "budget_reservoir_out_error_W_m": 3.164135620181696e-14,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 1.5265566588595902e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-15]": {
+      "budget_radial_in_error_W_m": 1.7043116050385887e-14,
+      "budget_radial_out_error_W_m": 1.531777092320108e-14,
+      "budget_tangential_out_error_W_m": 8.881784197001252e-16,
+      "budget_reservoir_out_error_W_m": 7.66053886991358e-15,
+      "budget_generation_error_W_m": 2.886579864025407e-15,
+      "budget_residual_error_W_m": 8.659739592076221e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-32]": {
+      "budget_radial_in_error_W_m": 1.0666814653781387e-14,
+      "budget_radial_out_error_W_m": 6.192962809237201e-15,
+      "budget_tangential_out_error_W_m": 3.6637359812630166e-15,
+      "budget_reservoir_out_error_W_m": 4.052314039881821e-15,
+      "budget_generation_error_W_m": 1.1102230246251565e-15,
+      "budget_residual_error_W_m": 2.531308496145357e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-64]": {
+      "budget_radial_in_error_W_m": 3.2794676262798417e-14,
+      "budget_radial_out_error_W_m": 6.081441773775342e-14,
+      "budget_tangential_out_error_W_m": 1.3322676295501878e-15,
+      "budget_reservoir_out_error_W_m": 3.397282455352979e-14,
+      "budget_generation_error_W_m": 1.5543122344752192e-15,
+      "budget_residual_error_W_m": 1.0547118733938987e-14
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_sector_budget_max_residual_W_m": 8.881784197001252e-15,
+      "n64_sector_budget_max_residual_W_m": 4.574118861455645e-14,
+      "n128_sector_budget_max_residual_W_m": 1.616484723854228e-13
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_sector_budget_max_residual_W_m": 6.439293542825908e-15,
+      "n64_sector_budget_max_residual_W_m": 2.398081733190338e-14,
+      "n128_sector_budget_max_residual_W_m": 1.1013412404281553e-13
+    }
+  }
+}
