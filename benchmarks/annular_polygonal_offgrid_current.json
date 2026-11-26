@@ -1,0 +1,26 @@
+{
+  "source_commit": "872ba2923c5eeba8d83a2258b11b6b4853529f3c",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_offgrid_polygon.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Compare chord-linear sheet heat current at five fixed off-grid angles against the analytic third angular mode. Check periodicity and an independent geometric construction at 23% of every chord. Both mixed wall orientations; 32,64,128 straight panels per circle.",
+  "measurements": {
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_chord_interpolation_error_W_m": 1.6653345369377348e-15,
+      "n32_off_grid_current_error_W_m": 0.05087848627720026,
+      "n64_chord_interpolation_error_W_m": 2.2343238370581275e-15,
+      "n64_off_grid_current_error_W_m": 0.013628252876338287,
+      "n128_chord_interpolation_error_W_m": 2.886579864025407e-15,
+      "n128_off_grid_current_error_W_m": 0.00340294024790766
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_chord_interpolation_error_W_m": 1.6930901125533637e-15,
+      "n32_off_grid_current_error_W_m": 0.053459013011893486,
+      "n64_chord_interpolation_error_W_m": 2.220446049250313e-15,
+      "n64_off_grid_current_error_W_m": 0.014331962758042716,
+      "n128_chord_interpolation_error_W_m": 2.886579864025407e-15,
+      "n128_off_grid_current_error_W_m": 0.003582176772399581
+    }
+  }
+}
