@@ -1,0 +1,51 @@
+{
+  "source_commit": "f37173d94e1e522c401e834b0bf83be452040010",
+  "baseline_commit": "b7d568eb7ed352f38f85ad6e0686eeabb21ab591",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_geometry.py tests/test_multicomponent.py tests/test_multiloop_annulus.py tests/test_interior_field_domain_guard.py tests/test_solver.py -o junit_family=legacy --junitxml=/tmp/bem-hole-after.xml",
+  "passed": 103,
+  "reference": "Triangular hole inside a square. For a vertical perturbation dy of the midpoint of a CCW edge e, the hole is entered when e_x*dy>0 and the exact clearance is abs(e_x*dy)/norm(e). Two adjacent representable points for each of four edge orientations.",
+  "before": {
+    "test_oblique_hole_domain_and_clearance[edge0]": {
+      "fluid_classification_errors": 1.0,
+      "hole_classification_errors": 1.0,
+      "max_relative_distance_error": 1.5385910352879697
+    },
+    "test_oblique_hole_domain_and_clearance[edge1]": {
+      "fluid_classification_errors": 1.0,
+      "hole_classification_errors": 1.0,
+      "max_relative_distance_error": 1.5385910352879697
+    },
+    "test_oblique_hole_domain_and_clearance[edge2]": {
+      "fluid_classification_errors": 1.0,
+      "hole_classification_errors": 1.0,
+      "max_relative_distance_error": 1.5385910352879697
+    },
+    "test_oblique_hole_domain_and_clearance[edge3]": {
+      "fluid_classification_errors": 1.0,
+      "hole_classification_errors": 1.0,
+      "max_relative_distance_error": 1.5385910352879697
+    }
+  },
+  "after": {
+    "test_oblique_hole_domain_and_clearance[edge0]": {
+      "fluid_classification_errors": 0.0,
+      "hole_classification_errors": 0.0,
+      "max_relative_distance_error": 0.0
+    },
+    "test_oblique_hole_domain_and_clearance[edge1]": {
+      "fluid_classification_errors": 0.0,
+      "hole_classification_errors": 0.0,
+      "max_relative_distance_error": 0.0
+    },
+    "test_oblique_hole_domain_and_clearance[edge2]": {
+      "fluid_classification_errors": 0.0,
+      "hole_classification_errors": 0.0,
+      "max_relative_distance_error": 0.0
+    },
+    "test_oblique_hole_domain_and_clearance[edge3]": {
+      "fluid_classification_errors": 0.0,
+      "hole_classification_errors": 0.0,
+      "max_relative_distance_error": 0.0
+    }
+  }
+}
