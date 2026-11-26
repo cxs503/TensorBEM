@@ -132,9 +132,7 @@ def _polygon_raw_moments(vertices: FloatArray) -> tuple[float, float, float, flo
     triangle areas are *signed*, so the fan is exact for non-convex polygons as
     well: the parts that leave the polygon cancel pairwise.
     """
-    v = np.asarray(vertices, dtype=float)
-    if v.ndim != 2 or v.shape[1] != 2 or v.shape[0] < 3:
-        raise ValueError("polygon vertices must be an (n>=3, 2) array")
+    v = vertices
     area = s_x = s_y = i_xx = i_yy = i_xy = 0.0
     for k in range(1, v.shape[0] - 1):
         t = _triangle_raw_moments(v[0], v[k], v[k + 1])
@@ -155,16 +153,22 @@ def polygon_moments(vertices: FloatArray) -> PolygonMoments:
     the axes through the centroid, i.e. the quantities the free-surface
     correction consumes. Exact up to floating-point rounding -- no quadrature.
     """
-    area, s_x, s_y, i_xx_o, i_yy_o, i_xy_o = _polygon_raw_moments(vertices)
+    v = np.asarray(vertices, dtype=float)
+    if v.ndim != 2 or v.shape[1] != 2 or v.shape[0] < 3:
+        raise ValueError("polygon vertices must be an (n>=3, 2) array")
+    # Translate before integrating so the parallel-axis correction only
+    # involves distances within the polygon.
+    origin = v[0]
+    area, s_x, s_y, i_xx_o, i_yy_o, i_xy_o = _polygon_raw_moments(v - origin)
     if area < 0.0:  # clockwise input: flip the orientation and recompute
-        return polygon_moments(np.asarray(vertices, dtype=float)[::-1])
+        return polygon_moments(v[::-1])
     if area == 0.0:
         raise ValueError("polygon must enclose a positive area")
     x_c = s_x / area
     y_c = s_y / area
     return PolygonMoments(
         area=area,
-        centroid=np.array([x_c, y_c]),
+        centroid=origin + np.array([x_c, y_c]),
         i_xx=i_xx_o - area * y_c * y_c,
         i_yy=i_yy_o - area * x_c * x_c,
         i_xy=i_xy_o - area * x_c * y_c,

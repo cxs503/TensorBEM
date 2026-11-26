@@ -257,3 +257,18 @@ def test_energy_hessian_grid_independence() -> None:
     fine = tfsv._energy_hessian(tfsv.RECT, 400, DEPTH, 1.0e-3, RHO, G)
     coarse = tfsv._energy_hessian(tfsv.RECT, 100, DEPTH, 1.0e-3, RHO, G)
     assert abs(fine["roll"] - coarse["roll"]) / abs(fine["roll"]) < 1.0e-4
+
+
+@pytest.mark.parametrize("reverse", [False, True])
+@pytest.mark.parametrize("shape,centroid,moments", [
+    (RECT, [2., 1.], [8./3, 32./3, 0.]),
+    (L_SHAPE, [5./3, 5./3], [44./3, 44./3, -16./3]),
+], ids=["rectangle", "concave_L"])
+def test_far_origin_centroidal_moments(shape, centroid, moments, reverse, record_property):
+    offset = np.array([2.**36, -2.**35])
+    vertices = (shape[::-1] if reverse else shape) + offset
+    result = polygon_moments(vertices)
+    error = np.max(np.abs(np.array([result.i_xx, result.i_yy, result.i_xy])-moments))
+    record_property("maximum_second_moment_error_m4", float(error))
+    np.testing.assert_array_equal(result.centroid, offset+centroid)
+    assert error < 2e-14
