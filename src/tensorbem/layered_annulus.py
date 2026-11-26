@@ -173,6 +173,46 @@ class AnnulusLayerField:
             integral += copies * width * average * (coeff[mode]*np.exp(1j*mode*phase)).real
         return np.linalg.norm(loop.vertices[0]) * integral
 
+    def circular_cut_heat_rate(self, angles):
+        """Heat crossing each full radial cut toward increasing angle, W/m of axis.
+
+        Angles are in radians. Each cut extends from this material's inner
+        circle to its outer circle. The result has the input shape.
+        """
+        if not self.circular_geometry:
+            raise ValueError("cut heat rates require the circular formulation")
+        angles = np.asarray(angles, dtype=float)
+        if not np.isfinite(angles).all():
+            raise ValueError("cut angles must be finite")
+        theta = angles.ravel()
+        outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
+        span = np.log(outer/inner)
+        wall_particular, _ = _source_traces(
+            self.mesh, self.conductivity, self.volumetric_source, True, self.source_gradient,
+            self.radial_source_coefficient, self.source_quadratic)
+        harmonic = self.boundary_values - wall_particular
+        rate = np.zeros_like(theta)
+        for loop, sl in zip(self.mesh.loops, self.mesh.loop_slices):
+            n = loop.panel_count
+            coeff = np.fft.rfft(harmonic[sl]) / n
+            phase = theta - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
+            for m in range(1, len(coeff)):
+                # Integrating either radial basis against dr/r yields tanh(m*span/2)/m.
+                wave = coeff[m] * np.exp(1j*m*phase)
+                copies = 1 if 2*m == n else 2
+                rate += self.conductivity * copies * np.tanh(m*span/2) * wave.imag
+
+        # The particular heat flux is at most cubic along a straight radial cut.
+        direction = np.column_stack((np.cos(theta), np.sin(theta)))
+        tangent = np.column_stack((-direction[:, 1], direction[:, 0]))
+        half_width = (outer-inner)/2
+        for sign in (-1, 1):
+            radius = (outer+inner)/2 + sign*half_width/np.sqrt(3)
+            _, gradient = _particular(radius*direction, self.conductivity, self.volumetric_source,
+                                      self.source_gradient, self.radial_source_coefficient, self.source_quadratic)
+            rate -= self.conductivity * half_width * np.sum(gradient*tangent, axis=1)
+        return rate.reshape(angles.shape)
+
     def _circular_extension(self, xy, radius, inner, outer):
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)

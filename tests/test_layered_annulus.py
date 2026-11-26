@@ -625,3 +625,24 @@ def test_arc_integral_retains_mean_and_even_grid_nyquist_mode(record_property):
     error = np.max(abs(measured-reference))
     record_property("nyquist_arc_W_m", error)
     assert error < 1e-11
+
+
+@pytest.mark.parametrize("panels", [15, 32, 64])
+def test_sourced_sector_heat_balance(panels, record_property):
+    # T=x-x^4/(12k) gives q=(-k+x³/3,0) and generation x².
+    a, b, c, k = .31, .64, .95, 1.7
+    nodes = (np.arange(panels)+.5)*2*np.pi/panels
+    walls = [r*np.cos(nodes) - (r*np.cos(nodes))**4/(12*k) for r in (a,c)]
+    result = solve_annulus_contact((a,b,c), (k,k), walls, panels=panels,
+                                   formulation="circular", source_quadratic=(1.,0.,0.))
+    cuts = np.array([-.21, .76, 2.5, 5.7, 6.48])
+    for name, field, lo, hi in (("inner", result.inner_field, a, b), ("outer", result.outer_field, b, c)):
+        rate = field.circular_cut_heat_rate(cuts)
+        expected = np.sin(cuts)*(k*(hi-lo) - np.cos(cuts)**3*(hi**4-lo**4)/12)
+        net = (field.circular_arc_heat_rate("outer", cuts[:-1], cuts[1:])
+               - field.circular_arc_heat_rate("inner", cuts[:-1], cuts[1:]) + np.diff(rate))
+        generated = (hi**4-lo**4)/4 * np.diff(cuts/2 + np.sin(2*cuts)/4)
+        for label, residual in (("cut_W_m", rate-expected), ("sector_balance_W_m", net-generated)):
+            error = np.abs(residual).max()
+            record_property(f"{name}_{label}", error)
+            assert error < 1e-11
