@@ -1,0 +1,44 @@
+{
+  "source_commit": "0d8f2ae671525b090925c4083492b6d0418ddbd7",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_contact_traces.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Nominal-circle third angular mode for a heated conducting sheet coupled to a reservoir. Compare sheet temperature, both material temperatures and both signed increasing-radius contact fluxes at all panel midpoint angles. Mixed flux/film walls in either orientation, 32, 64 and 128 straight panels per circle. Errors include geometry approximation.",
+  "measurements": {
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_sheet_temperature_error_K": 0.00231809988404974,
+      "n32_inner_contact_temperature_error_K": 0.00936132024918912,
+      "n32_inner_contact_flux_error_W_m2": 0.058693503042829,
+      "n32_outer_contact_temperature_error_K": 0.012162571480396789,
+      "n32_outer_contact_flux_error_W_m2": 0.05469150886859453,
+      "n64_sheet_temperature_error_K": 0.0006355503646794571,
+      "n64_inner_contact_temperature_error_K": 0.002449272386580832,
+      "n64_inner_contact_flux_error_W_m2": 0.01511435018251181,
+      "n64_outer_contact_temperature_error_K": 0.0031233140566743686,
+      "n64_outer_contact_flux_error_W_m2": 0.013820909399976988,
+      "n128_sheet_temperature_error_K": 0.00016592537307080768,
+      "n128_inner_contact_temperature_error_K": 0.0006248956632695091,
+      "n128_inner_contact_flux_error_W_m2": 0.0038247524183211146,
+      "n128_outer_contact_temperature_error_K": 0.0007892925200421175,
+      "n128_outer_contact_flux_error_W_m2": 0.0034631508165507974
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_sheet_temperature_error_K": 0.005241241500429261,
+      "n32_inner_contact_temperature_error_K": 0.011112435600347581,
+      "n32_inner_contact_flux_error_W_m2": 0.0489266174993194,
+      "n32_outer_contact_temperature_error_K": 0.019336701011056334,
+      "n32_outer_contact_flux_error_W_m2": 0.07830810839237107,
+      "n64_sheet_temperature_error_K": 0.0013998453979142678,
+      "n64_inner_contact_temperature_error_K": 0.002884440658329268,
+      "n64_inner_contact_flux_error_W_m2": 0.012371627170125576,
+      "n64_outer_contact_temperature_error_K": 0.005043701968723724,
+      "n64_outer_contact_flux_error_W_m2": 0.02024364761561137,
+      "n128_sheet_temperature_error_K": 0.0003597709236096147,
+      "n128_inner_contact_temperature_error_K": 0.000732223313475,
+      "n128_inner_contact_flux_error_W_m2": 0.0031037699155646303,
+      "n128_outer_contact_temperature_error_K": 0.001281595296116933,
+      "n128_outer_contact_flux_error_W_m2": 0.005121246513946076
+    }
+  }
+}
