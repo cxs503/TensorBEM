@@ -1,0 +1,21 @@
+{
+  "source_commit": "0751f5599ec527a12f341b3981f329c88e9ba3fa",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 113,
+  "failures": 0,
+  "reference": "Manufactured T = 3 + log(r) - r^2/(4k) - (x+2y)^4/(60k), k=1.7. Analytic azimuthal mean and integrated radial Fourier flux at six interior radii.",
+  "maximum_absolute_errors": {
+    "inner_mean_K_16": 8.881784197001252e-16,
+    "inner_rate_W_m_16": 8.881784197001252e-15,
+    "outer_mean_K_16": 4.440892098500626e-16,
+    "outer_rate_W_m_16": 1.4210854715202004e-14,
+    "inner_mean_K_32": 1.7763568394002505e-15,
+    "inner_rate_W_m_32": 3.375077994860476e-14,
+    "outer_mean_K_32": 1.7763568394002505e-15,
+    "outer_rate_W_m_32": 4.263256414560601e-14,
+    "inner_mean_K_64": 2.220446049250313e-15,
+    "inner_rate_W_m_64": 4.440892098500626e-14,
+    "outer_mean_K_64": 2.6645352591003757e-15,
+    "outer_rate_W_m_64": 6.128431095930864e-14
+  }
+}
