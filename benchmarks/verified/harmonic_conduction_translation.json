@@ -1,0 +1,43 @@
+{
+  "source_commit": "4cb682d9bc3b6d5490a181c8b38e2bcbb60aee18",
+  "baseline_commit": "7a8aae9655536f4b421a3271ae910041f681a8c6",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem-coordinate-after.xml",
+  "reference": "Oblique complex exponential solution on a 1.5 m by 1 m rectangle, prescribed normal flux from exact panel-local samples, no volumetric source. Translation by (+2^43,-2^43) m preserves all supplied vertices and interior targets. Constant panels use 32 segments per side and quadratic panels use 16.",
+  "before": {
+    "test_translated_flux_driven_wave[False]": {
+      "mean_flux_translation_error": 9.380346913999387e-05,
+      "mean_flux_wave_error": 0.002011886425468875,
+      "temperature_translation_error": 2.0975248235447295e-05,
+      "temperature_wave_error": 0.0006851132756310408,
+      "interior_flux_translation_error": 7.117521392583761e-05,
+      "interior_flux_wave_error": 0.0014276988888559017
+    },
+    "test_translated_flux_driven_wave[True]": {
+      "mean_flux_translation_error": 0.0001548537541983754,
+      "mean_flux_wave_error": 0.00015485224897807427,
+      "temperature_translation_error": 5.929834709486689e-05,
+      "temperature_wave_error": 5.9297971204699384e-05,
+      "interior_flux_translation_error": 0.00011297836645338431,
+      "interior_flux_wave_error": 0.00011299832451759217
+    }
+  },
+  "after": {
+    "test_translated_flux_driven_wave[False]": {
+      "mean_flux_translation_error": 0.0,
+      "mean_flux_wave_error": 0.0020272756724728524,
+      "temperature_translation_error": 0.0,
+      "temperature_wave_error": 0.0006932639716638754,
+      "interior_flux_translation_error": 0.0,
+      "interior_flux_wave_error": 0.0014273135558726378
+    },
+    "test_translated_flux_driven_wave[True]": {
+      "mean_flux_translation_error": 0.0,
+      "mean_flux_wave_error": 1.3550672280954827e-07,
+      "temperature_translation_error": 0.0,
+      "temperature_wave_error": 4.725229995462837e-08,
+      "interior_flux_translation_error": 0.0,
+      "interior_flux_wave_error": 8.013810455693255e-08
+    }
+  },
+  "passed": 50
+}
