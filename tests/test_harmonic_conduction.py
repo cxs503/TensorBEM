@@ -411,3 +411,42 @@ def test_translated_flux_driven_wave(quadratic, record_property):
         record_property(name+"_wave_error", wave_error)
     np.testing.assert_allclose(results[1], results[0], rtol=0., atol=1e-12)
     np.testing.assert_allclose(results[1], reference, rtol=0., atol=2e-5 if quadratic else .005)
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_quadratic_heat_source_in_translated_frame(quadratic, record_property):
+    from tensorbem.geometry import PanelMesh
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    # The polynomial origin differs from the first mesh vertex. All input
+    # vertices and interior targets remain representable after translation.
+    vertices = np.array([[.25, .5], [2., .25], [.5, 1.75]])
+    origin = np.array([2.**43, -2.**43])
+    mesh = PanelMesh(vertices+origin)
+    def temp(x, y):
+        return 1+.3j*x-.2*y+.125*x*x-.3j*x*y+.25*y*y
+    def grad(x, y):
+        return np.column_stack((.3j+.25*x-.3j*y, -.2-.3j*x+.5*y))
+    k, loss, omega, cv = 1.25, .75, 2., 1.5
+    storage = 1j*omega*cv
+    # Choose ambient = T so the exchange term vanishes in the exact field.
+    linear = np.array([.3j, -.2])
+    curvature = np.array([.125, -.3j, .25])
+    x, y = harmonic_boundary_points(PanelMesh(vertices), quadratic=quadratic).T
+    field = solve_harmonic_conduction(mesh, temp(x,y), omega, conductivity=k,
+        volumetric_heat_capacity=cv, heat_loss_coefficient=loss, quadratic=quadratic,
+        polynomial_origin=origin, volumetric_source=storage-2*k*(.125+.25),
+        source_gradient=storage*linear, source_quadratic=storage*curvature,
+        bulk_ambient_temperature=1., bulk_ambient_gradient=linear, bulk_ambient_quadratic=curvature)
+    exact_inward = k*(grad(x,y)*np.repeat(mesh.normals, len(x)//3, axis=0)).sum(axis=1)
+    targets = np.array([[.75,.75], [1.,.625]])
+    # The symmetric three-point triangle rule integrates quadratics exactly.
+    quadrature = .5*(vertices+np.roll(vertices, -1, axis=0))
+    errors = dict(wall_flux=np.max(abs(field.inward_flux-exact_inward)),
+                  interior_temperature=np.max(abs(field.temperature(targets+origin)-temp(*targets.T))),
+                  interior_flux=np.max(abs(field.heat_flux(targets+origin)+k*grad(*targets.T))),
+                  mean_temperature=abs(field.area_mean_temperature()-temp(*quadrature.T).mean()),
+                  mean_flux=np.max(abs(field.area_mean_heat_flux()+k*grad(*quadrature.T).mean(axis=0))))
+    for name, value in errors.items():
+        record_property(name, float(value))
+    assert max(errors.values()) < 1e-13

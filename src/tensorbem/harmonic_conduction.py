@@ -41,12 +41,19 @@ def _operators(mesh, targets, wave, collocation=False):
 _GAUSS_ROOT = np.sqrt(3/5)
 
 
-def harmonic_boundary_points(mesh, *, quadratic=False):
-    """Return panel sample locations in panel-major order, shape (N, 2)."""
+def harmonic_boundary_points(mesh, *, quadratic=False, origin=None):
+    """Return panel sample locations relative to an optional origin, in panel-major order."""
+    starts = mesh.vertices
+    if origin is not None:
+        origin = np.asarray(origin)
+        if origin.shape != (2,) or not np.isrealobj(origin) or not np.isfinite(origin).all():
+            raise ValueError("origin must contain two finite real coordinates")
+        starts = starts-origin
+    centers = starts + .5*mesh.vectors
     if not quadratic:
-        return mesh.centers
+        return centers
     offsets = np.array([-_GAUSS_ROOT, 0., _GAUSS_ROOT])/2
-    return (mesh.centers[:, None, :]+mesh.vectors[:, None, :]*offsets[None, :, None]).reshape(-1, 2)
+    return (centers[:, None, :]+mesh.vectors[:, None, :]*offsets[None, :, None]).reshape(-1, 2)
 
 
 def _quadratic_operators(mesh, targets, wave, collocation=False):
@@ -139,6 +146,7 @@ class HarmonicConduction:
     particular_quadratic: tuple[complex, complex, complex] = (0j, 0j, 0j)
 
     surface_admittance: complex | np.ndarray = 0j
+    polynomial_origin: tuple[float, float] = (0., 0.)
 
     @property
     def external_inward_flux(self):
@@ -194,7 +202,7 @@ class HarmonicConduction:
         return targets
 
     def _homogeneous_traces(self):
-        points = harmonic_boundary_points(self.mesh, quadratic=self.quadratic)
+        points = harmonic_boundary_points(self.mesh, quadratic=self.quadratic, origin=self.polynomial_origin)
         normals = np.repeat(self.mesh.normals, len(points)//self.mesh.panel_count, axis=0)
         coefficients = (self.particular_temperature, self.particular_gradient, self.particular_quadratic)
         boundary = self.wall_temperature-_particular_field(points, *coefficients)
@@ -217,7 +225,7 @@ class HarmonicConduction:
         """
         origin = self.mesh.vertices[0]
         moments = polygon_moments(self.mesh.vertices-origin)
-        center = (origin+moments.centroid)[None, :]
+        center = ((origin-self.polynomial_origin)+moments.centroid)[None, :]
         xx, xy, yy = self.particular_quadratic
         mean = _particular_field(center, self.particular_temperature,
                                  self.particular_gradient, self.particular_quadratic)[0]
@@ -234,7 +242,7 @@ class HarmonicConduction:
         """
         origin = self.mesh.vertices[0]
         moments = polygon_moments(self.mesh.vertices-origin)
-        center = (origin+moments.centroid)[None, :]
+        center = ((origin-self.polynomial_origin)+moments.centroid)[None, :]
         gradient = _particular_gradient(center, self.particular_gradient, self.particular_quadratic)[0]
         boundary, _ = self._homogeneous_traces()
         # A constant offset integrates to zero on a closed contour.
@@ -248,7 +256,7 @@ class HarmonicConduction:
         targets = self._interior_targets(points)
         single, double = _kernel_operators(self.mesh, self.wave, self.quadratic, targets)
         boundary, derivative = self._homogeneous_traces()
-        particular = _particular_field(targets, self.particular_temperature, self.particular_gradient, self.particular_quadratic)
+        particular = _particular_field(targets-self.polynomial_origin, self.particular_temperature, self.particular_gradient, self.particular_quadratic)
         return particular + single @ derivative - double @ boundary
 
     def heat_flux(self, points):
@@ -259,7 +267,7 @@ class HarmonicConduction:
         target until the subpanel length resolves the target distance.
         """
         targets = self._interior_targets(points)
-        gradient = _particular_gradient(targets, self.particular_gradient, self.particular_quadratic)
+        gradient = _particular_gradient(targets-self.polynomial_origin, self.particular_gradient, self.particular_quadratic)
         gradient = gradient.astype(complex)
         boundary, derivative = self._homogeneous_traces()
         width = 3 if self.quadratic else 1
@@ -304,13 +312,14 @@ class HarmonicConduction:
 def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, conductivity, volumetric_heat_capacity, quadratic=False,
                               volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.),
                               heat_loss_coefficient=0., bulk_ambient_temperature=0., bulk_ambient_gradient=(0., 0.),
-                              bulk_ambient_quadratic=(0., 0., 0.)):
+                              bulk_ambient_quadratic=(0., 0., 0.), polynomial_origin=(0., 0.)):
     """Solve k Laplacian(T) + Q + H*(Tamb - T) = i omega C T on a closed CCW polygon.
 
     Inputs use SI units and the exp(+i omega t) phasor convention. Supply a
     uniform wall temperature or values at harmonic_boundary_points for the
     chosen interpolation (midpoint by default, three nodes for quadratic). The
-    returned wall flux is positive into the material, in W/m². The
+    returned wall flux is positive into the material, in W/m². Coordinates
+    (x,y) below are relative to polynomial_origin in metres. The
     source in W/m³ is volumetric_source + (x,y) dot source_gradient plus
     (x², xy, y²) dot source_quadratic. The
     distributed exchange uses a uniform heat_loss_coefficient H in W/(m³ K)
@@ -323,14 +332,14 @@ def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, cond
         volumetric_heat_capacity=volumetric_heat_capacity, quadratic=quadratic, volumetric_source=volumetric_source,
         source_gradient=source_gradient, source_quadratic=source_quadratic,
         heat_loss_coefficient=heat_loss_coefficient, bulk_ambient_temperature=bulk_ambient_temperature,
-        bulk_ambient_gradient=bulk_ambient_gradient, bulk_ambient_quadratic=bulk_ambient_quadratic)
+        bulk_ambient_gradient=bulk_ambient_gradient, bulk_ambient_quadratic=bulk_ambient_quadratic, polynomial_origin=polynomial_origin)
 
 
 def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angular_frequency, *,
                                     conductivity, volumetric_heat_capacity, film_coefficients=0., wall_areal_heat_capacity=0.,
                                     quadratic=False, volumetric_source=0., source_gradient=(0., 0.), source_quadratic=(0., 0., 0.),
                                     heat_loss_coefficient=0., bulk_ambient_temperature=0., bulk_ambient_gradient=(0., 0.),
-                                    bulk_ambient_quadratic=(0., 0., 0.)):
+                                    bulk_ambient_quadratic=(0., 0., 0.), polynomial_origin=(0., 0.)):
     """Solve harmonic diffusion with one condition per panel, in exp(+i omega t).
 
     Use "temperature" for prescribed K, "flux" for prescribed external inward W/m²,
@@ -339,7 +348,9 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     coefficient gives zero external input. A local wall_areal_heat_capacity
     in J/(m² K) stores i omega C_wall T_wall per area, so inward_flux into
     the bulk equals external_inward_flux minus this storage rate. Zero frequency
-    requires positive distributed exchange H, including for pure flux data. volumetric_source is the generation phasor at the coordinate origin
+    requires positive distributed exchange H, including for pure flux data. Both
+    source and ambient polynomials use coordinates relative to polynomial_origin
+    in metres (default (0,0)). volumetric_source is the generation phasor at this origin
     in W/m³. source_gradient gives its two Cartesian derivatives at the origin in W/m⁴.
     source_quadratic gives coefficients of x², xy and y² in W/m⁵.
     A uniform heat_loss_coefficient H in W/(m³ K) adds H*(Tamb-T) to
@@ -384,7 +395,8 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     # The Laplacian of the quadratic particular field is spatially constant.
     particular = (complex(source)+heat_loss_coefficient*ambient+2*conductivity*(curvature[0]+curvature[2]))/admittance
     gradient = (source_gradient+heat_loss_coefficient*ambient_gradient)/admittance
-    points = harmonic_boundary_points(mesh, quadratic=quadratic)
+    polynomial_origin = np.asarray(polynomial_origin)
+    points = harmonic_boundary_points(mesh, quadratic=quadratic, origin=polynomial_origin)
     n = len(points)
 
     def samples(value):
@@ -432,4 +444,4 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     wall[~fixed] = unknown[~fixed]
     flux[fixed] = unknown[fixed]
     flux -= exchange*wall
-    return HarmonicConduction(mesh, wave, conductivity, wall+boundary, flux+normal_flux, quadratic, particular, tuple(gradient), tuple(curvature), surface_admittance)
+    return HarmonicConduction(mesh, wave, conductivity, wall+boundary, flux+normal_flux, quadratic, particular, tuple(gradient), tuple(curvature), surface_admittance, tuple(polynomial_origin))
