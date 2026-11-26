@@ -1,0 +1,38 @@
+{
+  "source_commit": "e946049c3a32636ebbcb1d72486ce350419397cb",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_polygonal_sheet.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Same smooth mode-3 concentric two-material conducting-sheet solution as the circular benchmark. Prescribe flux on one wall and a film on the other, swapping their roles. Compare the polygonal BEM interior potential and Cartesian heat flux with the continuous circular field at four fixed points per material; n straight panels per circle. Report point-set maxima.",
+  "measurements": {
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_inner_interior_temperature_error_K": 0.02656577634633317,
+      "n32_inner_interior_flux_error_W_m2": 0.6776443864724582,
+      "n32_outer_interior_temperature_error_K": 0.03780080721819079,
+      "n32_outer_interior_flux_error_W_m2": 2.287205793091062,
+      "n64_inner_interior_temperature_error_K": 0.007950675459499124,
+      "n64_inner_interior_flux_error_W_m2": 0.12290325713037863,
+      "n64_outer_interior_temperature_error_K": 0.005686702896520401,
+      "n64_outer_interior_flux_error_W_m2": 0.6613014028992429,
+      "n128_inner_interior_temperature_error_K": 0.0020052462153929973,
+      "n128_inner_interior_flux_error_W_m2": 0.022205677739527,
+      "n128_outer_interior_temperature_error_K": 0.0014370466500426282,
+      "n128_outer_interior_flux_error_W_m2": 0.06285286551830241
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_inner_interior_temperature_error_K": 0.026977826258236526,
+      "n32_inner_interior_flux_error_W_m2": 0.6848539378168398,
+      "n32_outer_interior_temperature_error_K": 0.04708704847955136,
+      "n32_outer_interior_flux_error_W_m2": 2.3519002328300136,
+      "n64_inner_interior_temperature_error_K": 0.007968297754708864,
+      "n64_inner_interior_flux_error_W_m2": 0.12153526792212473,
+      "n64_outer_interior_temperature_error_K": 0.008513229126883015,
+      "n64_outer_interior_flux_error_W_m2": 0.6495759531083992,
+      "n128_inner_interior_temperature_error_K": 0.001998396506046607,
+      "n128_inner_interior_flux_error_W_m2": 0.021836519872970417,
+      "n128_outer_interior_temperature_error_K": 0.0021621023285707253,
+      "n128_outer_interior_flux_error_W_m2": 0.0682691798805705
+    }
+  }
+}
