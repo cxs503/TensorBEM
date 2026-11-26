@@ -1,0 +1,36 @@
+{
+  "source_commit": "18c6d41a6415b865293d917f95f66d285c962748",
+  "baseline_commit": "44d156c2bdb685ce64228b04ef980fefe0b6dbc8",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_geometry.py tests/test_solver.py tests/test_near_singular.py tests/test_panel_quadratic_near_singular.py tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem-ray-final.xml",
+  "passed": 156,
+  "reference": "For a CCW triangle and an oblique edge with horizontal component dx, perturbing y alone at the exact edge midpoint moves the point inside when dx*delta_y is positive. Check adjacent representable points in both directions at three scales and four edge orientations.",
+  "test_points": 24,
+  "baseline_classification_errors": {
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction0]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction1]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction2]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction3]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction0]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction1]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction2]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction3]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction0]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction1]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction2]": 1,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction3]": 1
+  },
+  "verified_classification_errors": {
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction0]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction1]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction2]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[1.0-direction3]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction0]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction1]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction2]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[2.9073548971824276e+135-direction3]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction0]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction1]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction2]": 0,
+    "test_ray_cast_resolves_adjacent_points_at_oblique_midpoint[3.4395525670743494e-136-direction3]": 0
+  }
+}
