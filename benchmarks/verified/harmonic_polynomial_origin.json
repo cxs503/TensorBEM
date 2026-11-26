@@ -1,0 +1,22 @@
+{
+  "source_commit": "f4595fad2726358e076a87d85c5278a8c4232a01",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem-poly-origin.xml",
+  "reference": "Complex quadratic temperature prescribed on a triangular boundary, with volumetric forcing and distributed ambient coefficients referenced to (+2^43,-2^43) m. Analytic gradients and an exact degree-two triangle quadrature verify boundary and interior fluxes (W/m\u00b2), temperatures (K) and area means.",
+  "errors": {
+    "test_quadratic_heat_source_in_translated_frame[False]": {
+      "wall_flux": 0.0,
+      "interior_temperature": 0.0,
+      "interior_flux": 0.0,
+      "mean_temperature": 2.2247786310271853e-16,
+      "mean_flux": 2.7755575615628914e-17
+    },
+    "test_quadratic_heat_source_in_translated_frame[True]": {
+      "wall_flux": 0.0,
+      "interior_temperature": 0.0,
+      "interior_flux": 0.0,
+      "mean_temperature": 2.2247786310271853e-16,
+      "mean_flux": 2.7755575615628914e-17
+    }
+  },
+  "passed": 52
+}
