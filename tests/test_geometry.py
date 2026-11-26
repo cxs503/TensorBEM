@@ -55,3 +55,19 @@ def test_oblique_panel_clearance_on_and_next_to_edge(offset, scale, record_prope
     record_property("max_neighbour_relative_error", float(max(abs(actual[1:]/expected-1))))
     assert actual[0] == 0.
     np.testing.assert_allclose(actual[1:], expected, atol=0., rtol=2e-15)
+
+
+@pytest.mark.parametrize("direction", [(3,7), (3,-7), (-3,7), (-3,-7)])
+@pytest.mark.parametrize("scale", [1., 2.**450, 2.**-450])
+def test_ray_cast_resolves_adjacent_points_at_oblique_midpoint(direction, scale, record_property):
+    edge = np.asarray(direction, dtype=float)*scale
+    midpoint = np.array([.25, .125])*scale
+    # Counterclockwise triangle: increasing y enters the triangle for dx>0.
+    normal = np.array([-edge[1], edge[0]])
+    mesh = PanelMesh(np.array([midpoint-edge, midpoint+edge, midpoint+normal]))
+    points = np.tile(midpoint, (2, 1))
+    points[:, 1] = np.nextafter(midpoint[1], [-np.inf, np.inf])
+    expected = np.array([direction[0] < 0, direction[0] > 0])
+    measured = mesh.contains_point(points)
+    record_property("classification_errors", int(np.count_nonzero(expected != measured)))
+    np.testing.assert_array_equal(measured, expected)

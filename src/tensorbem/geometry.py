@@ -47,6 +47,15 @@ def _as_point_array(points: FloatArray) -> FloatArray:
     return targets
 
 
+def _exact_panel_crosses(start, end, targets):
+    """Yield signed edge/target determinants of the original binary coordinates."""
+    sx, sy = map(Fraction, start)
+    ex, ey = map(Fraction, end)
+    for target in targets:
+        x, y = map(Fraction, target)
+        yield (ex-sx)*(y-sy) - (ey-sy)*(x-sx)
+
+
 def _local_area(points: FloatArray) -> tuple[float, float, float]:
     """Compute signed area in dimensionless coordinates relative to one vertex."""
     local = points - points[0]
@@ -136,8 +145,23 @@ class PanelMesh:
         for start, end in zip(self.vertices, self.ends):
             straddles = (start[1] > y_coords) != (end[1] > y_coords)
             if np.any(straddles):
-                fraction = (y_coords[straddles] - start[1]) / (end[1] - start[1])
-                inside[straddles] ^= (x_coords[straddles] - start[0]) < (end[0] - start[0]) * fraction
+                dy = end[1] - start[1]
+                delta_y = y_coords[straddles] - start[1]
+                fraction = delta_y / dy
+                crossing = (end[0] - start[0]) * fraction
+                offset = x_coords[straddles] - start[0]
+                crosses = offset < crossing
+                # The intersection and target can round to the same offset.
+                # Resolve ambiguous comparisons using the original coordinates.
+                magnitude = np.maximum(abs(offset), abs(crossing))
+                tolerance = 8*np.finfo(float).eps*np.maximum(magnitude, np.finfo(float).tiny)
+                ambiguous = ((abs(crossing-offset) <= tolerance)
+                             | ((abs(fraction) < np.finfo(float).tiny) & (delta_y != 0)))
+                if np.any(ambiguous):
+                    near = targets[np.flatnonzero(straddles)[ambiguous]]
+                    orientation = _exact_panel_crosses(start, end, near)
+                    crosses[ambiguous] = [area > 0 if dy > 0 else area < 0 for area in orientation]
+                inside[straddles] ^= crosses
         return inside
 
     def boundary_clearance(self, points: FloatArray) -> FloatArray:
@@ -164,12 +188,8 @@ class PanelMesh:
             uncertain = (~before & ~after
                          & (abs(cross) <= 8*np.finfo(float).eps*(abs(first)+abs(second))))
             if np.any(uncertain):
-                sx, sy = map(Fraction, start)
-                ex, ey = map(Fraction, end)
-                for index in np.flatnonzero(uncertain):
-                    x, y = map(Fraction, targets[index])
-                    area = (ex-sx)*(y-sy) - (ey-sy)*(x-sx)
-                    distance[index] = float(abs(area) / Fraction(length))
+                areas = _exact_panel_crosses(start, end, targets[uncertain])
+                distance[uncertain] = [float(abs(area) / Fraction(length)) for area in areas]
             clearance = np.minimum(clearance, distance)
         return clearance
 
