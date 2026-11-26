@@ -1,0 +1,27 @@
+{
+  "source_commit": "1449cc4b2cb6b30607bd0482bfcdf08a5d319715",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 123,
+  "failures": 0,
+  "reference": "T=x-x^4/(12k), generation x\u00b2. Integrate tangential flux on five off-grid radial cuts and compare net outward heat on four sectors per layer with exact integrated generation.",
+  "maximum_absolute_errors": {
+    "test_sourced_sector_heat_balance[15]": {
+      "inner_cut_W_m": 1.6653345369377348e-16,
+      "inner_sector_balance_W_m": 3.677613769070831e-16,
+      "outer_cut_W_m": 3.3306690738754696e-16,
+      "outer_sector_balance_W_m": 2.7200464103316335e-15
+    },
+    "test_sourced_sector_heat_balance[32]": {
+      "inner_cut_W_m": 2.7755575615628914e-16,
+      "inner_sector_balance_W_m": 1.186550857568136e-15,
+      "outer_cut_W_m": 1.6653345369377348e-16,
+      "outer_sector_balance_W_m": 6.050715484207103e-15
+    },
+    "test_sourced_sector_heat_balance[64]": {
+      "inner_cut_W_m": 5.551115123125783e-16,
+      "inner_sector_balance_W_m": 3.1363800445660672e-15,
+      "outer_cut_W_m": 4.440892098500626e-16,
+      "outer_sector_balance_W_m": 2.6922908347160046e-14
+    }
+  }
+}
