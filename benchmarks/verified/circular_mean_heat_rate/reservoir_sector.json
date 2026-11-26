@@ -1,0 +1,24 @@
+{
+  "source_commit": "a783570ea6050b9cc58e1c4956369b2becc1c47f",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 129,
+  "failures": 0,
+  "reference": "Third azimuthal harmonic with sheet conduction, contact resistance and reservoir cooling. Integrate the sheet source and reservoir loss independently and compare the current at each arc endpoint.",
+  "maximum_absolute_errors": {
+    "test_sheet_sector_with_conduction_and_reservoir[15]": {
+      "reservoir_W_m": 3.885780586188048e-16,
+      "cut_current_W_m": 8.881784197001252e-16,
+      "sheet_balance_W_m": 8.992806499463768e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[32]": {
+      "reservoir_W_m": 1.7763568394002505e-15,
+      "cut_current_W_m": 2.0539125955565396e-15,
+      "sheet_balance_W_m": 1.9040324872321435e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[64]": {
+      "reservoir_W_m": 3.6637359812630166e-15,
+      "cut_current_W_m": 5.773159728050814e-15,
+      "sheet_balance_W_m": 1.572353358625378e-14
+    }
+  }
+}
