@@ -704,10 +704,7 @@ def test_sector_generation_with_bulk_and_sheet_heating(panels, record_property):
     assert error < 1e-11
 
 
-@pytest.mark.parametrize("n", [15, 32, 64])
-@pytest.mark.parametrize("off_grid", [False, True])
-@pytest.mark.parametrize("flux_side", [None, 0, 1], ids=["fixed", "inner-flux", "outer-flux"])
-def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, record_property):
+def _sheet_sector_case(n, flux_side, formulation):
     a, b, c = .4, .7, 1.
     ki, ko, ks, film = 1.3, 2.1, .22, .8
     resistance, fraction, mode = .3, .4, 3
@@ -734,26 +731,41 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
             walls[side] += inward/films[side]
     source_amplitude = qo-qi + ks*mode**2/b**2 + film
     source = film*.4 + source_amplitude*wave
-    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, n, formulation="circular",
+    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, n, formulation=formulation,
                                    wall_fluxes=fluxes, film_coefficients=films, interface_source=source, sheet_conductivity=ks, sheet_film=(film,.6),
                                    inner_resistance_fraction=fraction)
     # Probe between angular collocation points at several radii in each material.
     theta = np.array([-.31, .53, 2.14, 4.39])
     direction = np.column_stack((np.cos(theta), np.sin(theta)))
     tangent = np.column_stack((-np.sin(theta), np.cos(theta)))
+    errors = {}
     for field, material, lo, hi, side in ((result.inner_field, materials[0], a, b, "inner"),
                                           (result.outer_field, materials[1], b, c, "outer")):
         r = lo+(hi-lo)*np.array([.17, .39, .63, .87])
         value, qr = radial_profile(r, *material)
         phase = mode*theta+.2
-        temperature, flux = field.circular_field(r[:, None]*direction)
+        points = r[:, None]*direction
+        if formulation == "circular":
+            temperature, flux = field.circular_field(points)
+        else:
+            temperature, flux = field.temperature(points), field.heat_flux(points)
         qt = material[0]*mode*value*np.sin(phase)/r
         target = (qr*np.cos(phase))[:, None]*direction + qt[:, None]*tangent
         t_error = np.max(abs(temperature-(1+value*np.cos(phase))))
         q_error = np.max(np.linalg.norm(flux-target, axis=1))
-        record_property(f"{side}_interior_temperature_error_K", t_error)
-        record_property(f"{side}_interior_flux_error_W_m2", q_error)
-        assert t_error < 1e-11 and q_error < 1e-11
+        errors[f"{side}_interior_temperature_error_K"] = t_error
+        errors[f"{side}_interior_flux_error_W_m2"] = q_error
+    return result, errors, b, mode, ks, film, source_amplitude
+
+
+@pytest.mark.parametrize("n", [15, 32, 64])
+@pytest.mark.parametrize("off_grid", [False, True])
+@pytest.mark.parametrize("flux_side", [None, 0, 1], ids=["fixed", "inner-flux", "outer-flux"])
+def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, record_property):
+    result, errors, b, mode, ks, film, source_amplitude = _sheet_sector_case(n, flux_side, "circular")
+    for label, error in errors.items():
+        record_property(label, error)
+        assert error < 1e-11
     # Current sample j is at the end of panel j. Include an arc crossing 2π.
     cuts = np.array([1, n//3, n-2, n+2])
     angles = (cuts+1)*2*np.pi/n
@@ -775,3 +787,15 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
         error = np.max(abs(residual))
         record_property(label, error)
         assert error < 1e-11
+
+
+@pytest.mark.parametrize("flux_side", [0, 1], ids=["inner-flux", "outer-flux"])
+def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_property):
+    previous = None
+    for n in (32, 64, 128):
+        _, errors, *_ = _sheet_sector_case(n, flux_side, "polygonal")
+        for label, error in errors.items():
+            record_property(f"n{n}_{label}", error)
+            if previous is not None:
+                assert error < previous[label]
+        previous = errors
