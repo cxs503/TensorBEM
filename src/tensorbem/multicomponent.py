@@ -41,7 +41,7 @@ from typing import Callable, Sequence
 import numpy as np
 from numpy.typing import NDArray
 
-from .geometry import PanelMesh, _validate_length, _validate_panel_count
+from .geometry import PanelMesh, _panel_clearance, _point_in_polygon, _validate_length, _validate_panel_count
 from .kernels import REFERENCE_LENGTH
 from .solver import (
     LaplaceDirichletResult,
@@ -71,24 +71,6 @@ def _loop_arrays(vertices: FloatArray) -> dict[str, FloatArray]:
         "normals": np.column_stack((tangents[:, 1], -tangents[:, 0])),
         "signed_area": np.array(signed_area),
     }
-
-
-def _point_in_polygon(points: FloatArray, polygon: FloatArray) -> NDArray[np.bool_]:
-    """Even-odd ray casting (vectorised over ``points``, loop over edges)."""
-    inside = np.zeros(len(points), dtype=bool)
-    x = points[:, 0]
-    y = points[:, 1]
-    n = len(polygon)
-    for i in range(n):
-        x1, y1 = polygon[i]
-        x2, y2 = polygon[(i + 1) % n]
-        # Count crossings of the +x ray; the (y1 > y) != (y2 > y) test keeps
-        # vertices from being counted twice.
-        crosses = (y1 > y) != (y2 > y)
-        with np.errstate(divide="ignore", invalid="ignore"):
-            x_at = x1 + (y - y1) * (x2 - x1) / (y2 - y1)
-        inside ^= crosses & (x < x_at)
-    return inside
 
 
 @dataclass(frozen=True)
@@ -249,22 +231,7 @@ class MultiComponentMesh:
         panels measures the distance to the whole fluid boundary (outer loop
         *and* holes) and no spurious inter-loop segment is ever built.
         """
-        targets = np.asarray(points, dtype=float)
-        if targets.ndim != 2 or targets.shape[1] != 2:
-            raise ValueError("points must have shape (M, 2)")
-        clearance = np.full(len(targets), np.inf, dtype=float)
-        lengths_squared = np.sum(self.vectors**2, axis=1)
-        for start, segment, length_squared in zip(
-            self.vertices, self.vectors, lengths_squared
-        ):
-            projection = np.clip(
-                (targets - start) @ segment / length_squared, 0.0, 1.0
-            )
-            closest = start + projection[:, None] * segment
-            clearance = np.minimum(
-                clearance, np.linalg.norm(targets - closest, axis=1)
-            )
-        return clearance
+        return _panel_clearance(points, self.vertices, self.ends, self.vectors, self.lengths)
 
 
 def build_multicomponent_mesh(

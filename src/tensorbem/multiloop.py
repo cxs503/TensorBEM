@@ -271,7 +271,7 @@ def eccentric_annulus_mesh(
     # strictly inside the outer polygon" is exactly "the hole polygon is contained and
     # the loops do not cross"; without this guard a thin annulus silently assembles a
     # self-intersecting boundary and returns plausible-looking nonsense.
-    inside = _point_in_polygon(inner.vertices, outer.vertices)
+    inside = outer.contains_point(inner.vertices)
     if not bool(np.all(inside)):
         raise ValueError(
             "the inscribed polygons of the eccentric annulus overlap: "
@@ -330,23 +330,6 @@ def solve_laplace_multiloop(
     )
 
 
-def _point_in_polygon(points: FloatArray, polygon: FloatArray) -> NDArray[np.bool_]:
-    """Even-odd ray casting: True where a point lies inside the closed polygon."""
-    x = points[:, 0]
-    y = points[:, 1]
-    inside = np.zeros(len(points), dtype=bool)
-    count = len(polygon)
-    for i in range(count):
-        x1, y1 = polygon[i]
-        x2, y2 = polygon[(i + 1) % count]
-        crosses = (y1 > y) != (y2 > y)
-        if not bool(crosses.any()):
-            continue
-        x_at = (x2 - x1) * (y - y1) / (y2 - y1) + x1
-        inside ^= crosses & (x < x_at)
-    return inside
-
-
 def domain_membership(mesh: "MultiLoopMesh", points: FloatArray) -> tuple[FloatArray, FloatArray]:
     """Where targets lie in a hole loop and where they lie outside the outer loop.
 
@@ -359,8 +342,8 @@ def domain_membership(mesh: "MultiLoopMesh", points: FloatArray) -> tuple[FloatA
     targets = np.asarray(points, dtype=float)
     in_hole = np.zeros(len(targets), dtype=bool)
     for index in mesh.hole_loops:
-        in_hole |= _point_in_polygon(targets, mesh.loops[index].vertices)
-    outside = ~_point_in_polygon(targets, mesh.loops[0].vertices)
+        in_hole |= mesh.loops[index].contains_point(targets)
+    outside = ~mesh.loops[0].contains_point(targets)
     return in_hole, outside
 
 

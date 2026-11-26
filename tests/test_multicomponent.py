@@ -277,3 +277,28 @@ def test_verification_ledger_cell_is_closed() -> None:
     row = next(line for line in document.splitlines() if "圆环径向导热" in line)
     assert "tensorbem.multicomponent" in row
     assert "后续：需多边界组件" not in row
+
+@pytest.mark.parametrize("edge", [(3,7), (-3,7), (3,-7), (-3,-7)])
+def test_oblique_hole_domain_and_clearance(edge, record_property):
+    from tensorbem.multiloop import MultiLoopMesh, domain_membership
+
+    outer = PanelMesh(np.array([[-16.,-16.],[16.,-16.],[16.,16.],[-16.,16.]]))
+    edge = np.array(edge)
+    mid = np.array([.25, .125])
+    hole = PanelMesh(np.array([mid-edge, mid+edge, mid+[-edge[1],edge[0]]]))
+    mesh = build_multicomponent_mesh(outer, [hole])
+    points = np.tile(mid, (2, 1))
+    points[:,1] = np.nextafter(mid[1], [-np.inf, np.inf])
+    dy = points[:,1]-mid[1]
+    expected_hole = edge[0]*dy > 0
+    expected_distance = abs(edge[0]*dy)/np.hypot(*edge)
+    inside = mesh.contains_point(points)
+    in_hole, outside = domain_membership(MultiLoopMesh((outer,hole), (1,)), points)
+    distance = mesh.boundary_clearance(points)
+    record_property("fluid_classification_errors", int(np.sum(inside == expected_hole)))
+    record_property("hole_classification_errors", int(np.sum(in_hole != expected_hole)))
+    record_property("max_relative_distance_error", float(max(abs(distance/expected_distance-1))))
+    np.testing.assert_array_equal(inside, ~expected_hole)
+    np.testing.assert_array_equal(in_hole, expected_hole)
+    assert not outside.any()
+    np.testing.assert_allclose(distance, expected_distance, atol=0., rtol=2e-15)

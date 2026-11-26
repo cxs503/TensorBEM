@@ -66,6 +66,65 @@ def _local_area(points: FloatArray) -> tuple[float, float, float]:
     return 0.5 * math.fsum(x * np.roll(y, -1) - y * np.roll(x, -1)), sx, sy
 
 
+def _point_in_polygon(points, polygon):
+    """Half-open ray cast for either winding of a single closed loop."""
+    targets = _as_point_array(points)
+    inside = np.zeros(len(targets), dtype=bool)
+    x_coords = targets[:, 0]
+    y_coords = targets[:, 1]
+    for start, end in zip(polygon, np.roll(polygon, -1, axis=0)):
+        straddles = (start[1] > y_coords) != (end[1] > y_coords)
+        if np.any(straddles):
+            dy = end[1] - start[1]
+            delta_y = y_coords[straddles] - start[1]
+            fraction = delta_y / dy
+            crossing = (end[0] - start[0]) * fraction
+            offset = x_coords[straddles] - start[0]
+            crosses = offset < crossing
+            # The intersection and target can round to the same offset.
+            # Resolve ambiguous comparisons using the original coordinates.
+            magnitude = np.maximum(abs(offset), abs(crossing))
+            tolerance = 8*np.finfo(float).eps*np.maximum(magnitude, np.finfo(float).tiny)
+            ambiguous = ((abs(crossing-offset) <= tolerance)
+                         | ((abs(fraction) < np.finfo(float).tiny) & (delta_y != 0)))
+            if np.any(ambiguous):
+                near = targets[np.flatnonzero(straddles)[ambiguous]]
+                orientation = _exact_panel_crosses(start, end, near)
+                crosses[ambiguous] = [area > 0 if dy > 0 else area < 0 for area in orientation]
+            inside[straddles] ^= crosses
+    return inside
+
+
+def _panel_clearance(points, vertices, ends, vectors, lengths):
+    """Minimum segment distance using the supplied per-loop panel endpoints."""
+    targets = _as_point_array(points)
+    clearance = np.full(len(targets), np.inf, dtype=float)
+    for start, end, segment, length in zip(vertices, ends, vectors, lengths):
+        local = targets - start
+        tangent = segment / length
+        # Scale the direction by a power of two before taking the cross
+        # product. This keeps both products in units of length.
+        exponent = math.frexp(length)[1]
+        dx, dy = np.ldexp(segment, -exponent)
+        first, second = dx*local[:, 1], dy*local[:, 0]
+        cross = first - second
+        distance = np.abs(cross) / math.ldexp(length, -exponent)
+        from_end = targets - end
+        before = local @ tangent <= 0
+        after = from_end @ tangent >= 0
+        distance[before] = np.hypot(*local[before].T)
+        distance[after] = np.hypot(*from_end[after].T)
+        # Resolve cancellation for near-collinear interior projections
+        # using the exact binary coordinates, without snapping nearby points.
+        uncertain = (~before & ~after
+                     & (abs(cross) <= 8*np.finfo(float).eps*(abs(first)+abs(second))))
+        if np.any(uncertain):
+            areas = _exact_panel_crosses(start, end, targets[uncertain])
+            distance[uncertain] = [float(abs(area) / Fraction(length)) for area in areas]
+        clearance = np.minimum(clearance, distance)
+    return clearance
+
+
 @dataclass(frozen=True)
 class PanelMesh:
     """A closed, counter-clockwise polygon discretized into straight panels.
@@ -138,60 +197,11 @@ class PanelMesh:
         *on* the boundary are not classified here; :meth:`boundary_clearance`
         returns ``0`` for them.
         """
-        targets = _as_point_array(points)
-        inside = np.zeros(len(targets), dtype=bool)
-        x_coords = targets[:, 0]
-        y_coords = targets[:, 1]
-        for start, end in zip(self.vertices, self.ends):
-            straddles = (start[1] > y_coords) != (end[1] > y_coords)
-            if np.any(straddles):
-                dy = end[1] - start[1]
-                delta_y = y_coords[straddles] - start[1]
-                fraction = delta_y / dy
-                crossing = (end[0] - start[0]) * fraction
-                offset = x_coords[straddles] - start[0]
-                crosses = offset < crossing
-                # The intersection and target can round to the same offset.
-                # Resolve ambiguous comparisons using the original coordinates.
-                magnitude = np.maximum(abs(offset), abs(crossing))
-                tolerance = 8*np.finfo(float).eps*np.maximum(magnitude, np.finfo(float).tiny)
-                ambiguous = ((abs(crossing-offset) <= tolerance)
-                             | ((abs(fraction) < np.finfo(float).tiny) & (delta_y != 0)))
-                if np.any(ambiguous):
-                    near = targets[np.flatnonzero(straddles)[ambiguous]]
-                    orientation = _exact_panel_crosses(start, end, near)
-                    crosses[ambiguous] = [area > 0 if dy > 0 else area < 0 for area in orientation]
-                inside[straddles] ^= crosses
-        return inside
+        return _point_in_polygon(points, self.vertices)
 
     def boundary_clearance(self, points: FloatArray) -> FloatArray:
         """Minimum Euclidean distance from each point to the polygon boundary."""
-        targets = _as_point_array(points)
-        clearance = np.full(len(targets), np.inf, dtype=float)
-        for start, end, segment, length in zip(self.vertices, self.ends, self.vectors, self.lengths):
-            local = targets - start
-            tangent = segment / length
-            # Scale the direction by a power of two before taking the cross
-            # product. This keeps both products in units of length.
-            exponent = math.frexp(length)[1]
-            dx, dy = np.ldexp(segment, -exponent)
-            first, second = dx*local[:, 1], dy*local[:, 0]
-            cross = first - second
-            distance = np.abs(cross) / math.ldexp(length, -exponent)
-            from_end = targets - end
-            before = local @ tangent <= 0
-            after = from_end @ tangent >= 0
-            distance[before] = np.hypot(*local[before].T)
-            distance[after] = np.hypot(*from_end[after].T)
-            # Resolve cancellation for near-collinear interior projections
-            # using the exact binary coordinates, without snapping nearby points.
-            uncertain = (~before & ~after
-                         & (abs(cross) <= 8*np.finfo(float).eps*(abs(first)+abs(second))))
-            if np.any(uncertain):
-                areas = _exact_panel_crosses(start, end, targets[uncertain])
-                distance[uncertain] = [float(abs(area) / Fraction(length)) for area in areas]
-            clearance = np.minimum(clearance, distance)
-        return clearance
+        return _panel_clearance(points, self.vertices, self.ends, self.vectors, self.lengths)
 
 
 def regular_polygon(panel_count: int, radius: float = 1.0) -> PanelMesh:
