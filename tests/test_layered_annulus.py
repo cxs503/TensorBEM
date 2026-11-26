@@ -706,7 +706,8 @@ def test_sector_generation_with_bulk_and_sheet_heating(panels, record_property):
 
 @pytest.mark.parametrize("n", [15, 32, 64])
 @pytest.mark.parametrize("off_grid", [False, True])
-def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, record_property):
+@pytest.mark.parametrize("flux_side", [None, 0, 1], ids=["fixed", "inner-flux", "outer-flux"])
+def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, record_property):
     a, b, c = .4, .7, 1.
     ki, ko, ks, film = 1.3, 2.1, .22, .8
     resistance, fraction, mode = .3, .4, 3
@@ -714,16 +715,45 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, record_property
     nodes = (np.arange(n)+.5)*2*np.pi/n
     wave = np.cos(mode*nodes+.2)
     # T_sheet = 1 + cos(mθ+.2). Both materials have harmonic radial fields.
-    walls = []
-    for r, k, trace, flux in ((a, ki, 1+resistance*fraction*qi, qi),
-                              (c, ko, 1-resistance*(1-fraction)*qo, qo)):
+    def radial_profile(r, k, trace, flux):
         z = mode*np.log(r/b)
-        walls.append(1 + (trace*np.cosh(z)-b*flux*np.sinh(z)/(k*mode))*wave)
+        value = trace*np.cosh(z)-b*flux*np.sinh(z)/(k*mode)
+        radial_flux = (-k*mode*trace*np.sinh(z)+b*flux*np.cosh(z))/r
+        return value, radial_flux
+
+    materials = ((ki, 1+resistance*fraction*qi, qi), (ko, 1-resistance*(1-fraction)*qo, qo))
+    walls, films, fluxes = [], [None, None], [None, None]
+    for side, (r, material) in enumerate(zip((a, c), materials)):
+        value, radial_flux = radial_profile(r, *material)
+        inward = (1-2*side)*radial_flux*wave
+        walls.append(1+value*wave)
+        if side == flux_side:
+            walls[side], fluxes[side] = None, inward
+        elif flux_side is not None:
+            films[side] = 2.7
+            walls[side] += inward/films[side]
     source_amplitude = qo-qi + ks*mode**2/b**2 + film
     source = film*.4 + source_amplitude*wave
     result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, n, formulation="circular",
-                                   interface_source=source, sheet_conductivity=ks, sheet_film=(film,.6),
+                                   wall_fluxes=fluxes, film_coefficients=films, interface_source=source, sheet_conductivity=ks, sheet_film=(film,.6),
                                    inner_resistance_fraction=fraction)
+    # Probe between angular collocation points at several radii in each material.
+    theta = np.array([-.31, .53, 2.14, 4.39])
+    direction = np.column_stack((np.cos(theta), np.sin(theta)))
+    tangent = np.column_stack((-np.sin(theta), np.cos(theta)))
+    for field, material, lo, hi, side in ((result.inner_field, materials[0], a, b, "inner"),
+                                          (result.outer_field, materials[1], b, c, "outer")):
+        r = lo+(hi-lo)*np.array([.17, .39, .63, .87])
+        value, qr = radial_profile(r, *material)
+        phase = mode*theta+.2
+        temperature, flux = field.circular_field(r[:, None]*direction)
+        qt = material[0]*mode*value*np.sin(phase)/r
+        target = (qr*np.cos(phase))[:, None]*direction + qt[:, None]*tangent
+        t_error = np.max(abs(temperature-(1+value*np.cos(phase))))
+        q_error = np.max(np.linalg.norm(flux-target, axis=1))
+        record_property(f"{side}_interior_temperature_error_K", t_error)
+        record_property(f"{side}_interior_flux_error_W_m2", q_error)
+        assert t_error < 1e-11 and q_error < 1e-11
     # Current sample j is at the end of panel j. Include an arc crossing 2π.
     cuts = np.array([1, n//3, n-2, n+2])
     angles = (cuts+1)*2*np.pi/n
