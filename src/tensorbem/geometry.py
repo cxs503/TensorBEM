@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from fractions import Fraction
 import math
 import numpy as np
 from numpy.typing import NDArray
@@ -143,12 +144,33 @@ class PanelMesh:
         """Minimum Euclidean distance from each point to the polygon boundary."""
         targets = _as_point_array(points)
         clearance = np.full(len(targets), np.inf, dtype=float)
-        for start, segment, length in zip(self.vertices, self.vectors, self.lengths):
+        for start, end, segment, length in zip(self.vertices, self.ends, self.vectors, self.lengths):
             local = targets - start
             tangent = segment / length
-            projection = np.clip(local @ tangent, 0.0, length)
-            distance = local - projection[:, None] * tangent
-            clearance = np.minimum(clearance, np.hypot(distance[:, 0], distance[:, 1]))
+            # Scale the direction by a power of two before taking the cross
+            # product. This keeps both products in units of length.
+            exponent = math.frexp(length)[1]
+            dx, dy = np.ldexp(segment, -exponent)
+            first, second = dx*local[:, 1], dy*local[:, 0]
+            cross = first - second
+            distance = np.abs(cross) / math.ldexp(length, -exponent)
+            from_end = targets - end
+            before = local @ tangent <= 0
+            after = from_end @ tangent >= 0
+            distance[before] = np.hypot(*local[before].T)
+            distance[after] = np.hypot(*from_end[after].T)
+            # Resolve cancellation for near-collinear interior projections
+            # using the exact binary coordinates, without snapping nearby points.
+            uncertain = (~before & ~after
+                         & (abs(cross) <= 8*np.finfo(float).eps*(abs(first)+abs(second))))
+            if np.any(uncertain):
+                sx, sy = map(Fraction, start)
+                ex, ey = map(Fraction, end)
+                for index in np.flatnonzero(uncertain):
+                    x, y = map(Fraction, targets[index])
+                    area = (ex-sx)*(y-sy) - (ey-sy)*(x-sx)
+                    distance[index] = float(abs(area) / Fraction(length))
+            clearance = np.minimum(clearance, distance)
         return clearance
 
 

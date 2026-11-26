@@ -38,3 +38,20 @@ def test_rectangle_geometry_under_translation_and_scaling(size, origin, record_p
     np.testing.assert_allclose(mesh.lengths / size, [4, 2, 4, 2], rtol=1e-15)
     with pytest.raises(ValueError, match="CCW"):
         PanelMesh(vertices[::-1])
+
+
+@pytest.mark.parametrize("offset,scale", [(0., 1.), (2.**36, 1.), (0., 2.**450), (0., 2.**-450)])
+def test_oblique_panel_clearance_on_and_next_to_edge(offset, scale, record_property):
+    # First edge has direction (3,7). Perturb only y at its exact midpoint,
+    # so the perpendicular distance is 3*|delta_y|/sqrt(58).
+    vertices = offset + scale*np.array([[0.,0.], [3.,7.], [-6.,4.]])
+    mesh = PanelMesh(vertices)
+    mid = offset + scale*np.array([1.5,3.5])
+    targets = np.tile(mid, (3,1))
+    targets[1:,1] = np.nextafter(mid[1], [-np.inf, np.inf])
+    expected = abs(targets[1:,1]-mid[1])*(3/np.sqrt(58.))
+    actual = mesh.boundary_clearance(targets)
+    record_property("on_edge_distance_per_scale", float(actual[0]/scale))
+    record_property("max_neighbour_relative_error", float(max(abs(actual[1:]/expected-1))))
+    assert actual[0] == 0.
+    np.testing.assert_allclose(actual[1:], expected, atol=0., rtol=2e-15)
