@@ -801,7 +801,7 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
 def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_property):
     previous = None
     for n in (32, 64, 128):
-        result, errors, b, mode, ks, film, _ = _sheet_sector_case(n, flux_side, "polygonal")
+        result, errors, b, mode, ks, film, source_amplitude = _sheet_sector_case(n, flux_side, "polygonal")
         # The cut at angle zero is the downstream end of the last panel.
         # Both cuts of the quarter-ring lie on actual vertices on all meshes.
         end = np.pi/2
@@ -812,6 +812,23 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
         chord = 2*b*np.sin(np.pi/n)
         exchanged = chord*np.sum(result.sheet_reservoir_flux[:n//4])
         exact_exchange = b*film*(.4*end+sine_change/mode)
+        # The radial rates both use increasing radius. Their difference is
+        # net radial outflow from the sheet, independently of the wall drives.
+        radial_inner = chord*np.sum(result.interface_flux[:n//4])
+        radial_outer = chord*np.sum(result.outer_interface_flux[:n//4])
+        angles = (np.arange(n//4)+.5)*2*np.pi/n
+        generated = chord*np.sum(.4*film+source_amplitude*np.cos(mode*angles+.2))
+        exact_generated = b*(.4*film*end+source_amplitude*sine_change/mode)
+        for name, observed, target in (
+                ("radial_inner", radial_inner, b*.2*sine_change/mode),
+                ("radial_outer", radial_outer, -b*.35*sine_change/mode),
+                ("generation", generated, exact_generated)):
+            record_property(f"n{n}_sector_{name}_W_m", observed)
+            record_property(f"n{n}_sector_reference_{name}_W_m", target)
+            errors[f"sector_{name}_error_W_m"] = abs(observed-target)
+        imbalance = radial_outer-radial_inner+cut_difference+exchanged-generated
+        record_property(f"n{n}_sector_balance_residual_W_m", imbalance)
+        assert abs(imbalance) < 1e-11
         errors["sector_cut_rate_error_W_m"] = abs(cut_difference-exact_difference)
         errors["sector_reservoir_rate_error_W_m"] = abs(exchanged-exact_exchange)
         record_property(f"n{n}_sector_cut_rate_W_m", cut_difference)
