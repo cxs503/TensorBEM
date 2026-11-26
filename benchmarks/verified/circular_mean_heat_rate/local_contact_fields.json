@@ -1,0 +1,27 @@
+{
+  "source_commit": "d47975aba467c9d290cb015fefe5fabf97b54611",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 119,
+  "failures": 0,
+  "reference": "Separated third angular harmonic with resistive, generating sheet. Evaluate both one-sided traces and full Cartesian Fourier flux at 73 shifted azimuths.",
+  "maximum_absolute_errors": {
+    "test_circular_boundary_field_at_off_grid_contact_angles[15]": {
+      "inner_temperature_K": 2.886579864025407e-15,
+      "inner_vector_flux_W_m2": 2.4741787777998282e-14,
+      "outer_temperature_K": 4.440892098500626e-15,
+      "outer_vector_flux_W_m2": 5.0886992400480155e-14
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[32]": {
+      "inner_temperature_K": 2.55351295663786e-15,
+      "inner_vector_flux_W_m2": 2.318213734067276e-14,
+      "outer_temperature_K": 3.9968028886505635e-15,
+      "outer_vector_flux_W_m2": 3.6189864850441e-14
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[64]": {
+      "inner_temperature_K": 2.9976021664879227e-15,
+      "inner_vector_flux_W_m2": 5.307853088900761e-14,
+      "outer_temperature_K": 4.5102810375396984e-15,
+      "outer_vector_flux_W_m2": 5.5846314941971295e-14
+    }
+  }
+}
