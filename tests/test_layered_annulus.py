@@ -902,3 +902,43 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
             if previous is not None:
                 assert error < previous[label]
         previous = errors
+
+
+@pytest.mark.parametrize("rate", [-3.5, 3.5])
+@pytest.mark.parametrize("formulation", ["circular", "polygonal"])
+def test_weak_sheet_generation_under_radial_throughflow(rate, formulation, record_property):
+    bore, contact, exterior = .25, .6, 1.
+    source = 1e-6
+    start, end = -.19, 1.34
+    width = end-start
+    # Axisymmetry fixes the heat per radian. The outer material receives
+    # the bore input plus the heat produced on the intervening contact arc.
+    inner_ref = rate*width/(2*np.pi)
+    generation_ref = contact*source*width
+    outer_ref = inner_ref+generation_ref
+    previous = None
+    for n in (32, 64, 128):
+        result = solve_annulus_contact(
+            (bore, contact, exterior), (4., 1.5), (None, 10.), .2, panels=n,
+            formulation=formulation, wall_fluxes=(rate/(2*np.pi*bore), None),
+            film_coefficients=(None, 3.), interface_source=source)
+        budget = result.sheet_sector_heat_balance(start, end)
+        radial_error = max(abs(budget["radial_in"]-inner_ref), abs(budget["radial_out"]-outer_ref))
+        inferred = budget["radial_out"]-budget["radial_in"]
+        relative_error = abs(inferred/generation_ref-1)
+        record_property(f"n{n}_radial_error_W_m", radial_error)
+        record_property(f"n{n}_inferred_generation_W_m", inferred)
+        record_property(f"n{n}_generation_relative_error", relative_error)
+        record_property(f"n{n}_balance_W_m", abs(budget["residual"]))
+        assert budget["reservoir_out"] == 0. and budget["tangential_out"] == 0.
+        assert abs(budget["residual"]) < 1e-11
+        if formulation == "circular":
+            assert radial_error < 1e-11 and relative_error < 1e-5
+        elif previous is not None:
+            assert radial_error < previous[0] and relative_error < previous[1]
+        previous = radial_error, relative_error
+    if formulation == "polygonal":
+        assert radial_error < 6e-5 and relative_error < 1.2e-4
+    record_property("reference_inner_W_m", inner_ref)
+    record_property("reference_outer_W_m", outer_ref)
+    record_property("reference_generation_W_m", generation_ref)
