@@ -1,0 +1,43 @@
+{
+  "source_commit": "8ba7d9a4f128cbc9e762a23326b0ef3a7bc6a153",
+  "baseline_commit": "edf4bb51e588b7ad89c38775e125af0d613c74fa",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_geometry.py tests/test_solver.py tests/test_near_singular.py tests/test_panel_quadratic_near_singular.py tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem-dist-after.xml",
+  "passed": 144,
+  "reference": "Distance to a panel in the (3,7) direction is zero at its midpoint and 3*abs(dy)/sqrt(58) one representable y spacing to either side. Verify at unit scale, a 2^36 coordinate offset, and two power-of-two scales.",
+  "before": {
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-1.0]": {
+      "on_edge_distance_per_scale": 4.965068306494546e-16,
+      "max_neighbour_relative_error": 2.590109871423003
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[68719476736.0-1.0]": {
+      "on_edge_distance_per_scale": 4.965068306494546e-16,
+      "max_neighbour_relative_error": 9.701350833779543e-12
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-2.9073548971824276e+135]": {
+      "on_edge_distance_per_scale": 4.965068306494546e-16,
+      "max_neighbour_relative_error": 2.590109871423003
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-3.4395525670743494e-136]": {
+      "on_edge_distance_per_scale": 4.965068306494546e-16,
+      "max_neighbour_relative_error": 2.590109871423003
+    }
+  },
+  "after": {
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-1.0]": {
+      "on_edge_distance_per_scale": 0.0,
+      "max_neighbour_relative_error": 0.0
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[68719476736.0-1.0]": {
+      "on_edge_distance_per_scale": 0.0,
+      "max_neighbour_relative_error": 0.0
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-2.9073548971824276e+135]": {
+      "on_edge_distance_per_scale": 0.0,
+      "max_neighbour_relative_error": 0.0
+    },
+    "test_oblique_panel_clearance_on_and_next_to_edge[0.0-3.4395525670743494e-136]": {
+      "on_edge_distance_per_scale": 0.0,
+      "max_neighbour_relative_error": 0.0
+    }
+  }
+}
