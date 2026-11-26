@@ -702,3 +702,41 @@ def test_sector_generation_with_bulk_and_sheet_heating(panels, record_property):
     error = np.max(abs(exterior-total))
     record_property("external_perimeter_balance_W_m", error)
     assert error < 1e-11
+
+
+@pytest.mark.parametrize("n", [15, 32, 64])
+def test_sheet_sector_with_conduction_and_reservoir(n, record_property):
+    a, b, c = .4, .7, 1.
+    ki, ko, ks, film = 1.3, 2.1, .22, .8
+    resistance, fraction, mode = .3, .4, 3
+    qi, qo = .2, -.35
+    nodes = (np.arange(n)+.5)*2*np.pi/n
+    wave = np.cos(mode*nodes+.2)
+    # T_sheet = 1 + cos(mθ+.2). Both materials have harmonic radial fields.
+    walls = []
+    for r, k, trace, flux in ((a, ki, 1+resistance*fraction*qi, qi),
+                              (c, ko, 1-resistance*(1-fraction)*qo, qo)):
+        z = mode*np.log(r/b)
+        walls.append(1 + (trace*np.cosh(z)-b*flux*np.sinh(z)/(k*mode))*wave)
+    source_amplitude = qo-qi + ks*mode**2/b**2 + film
+    source = film*.4 + source_amplitude*wave
+    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, n, formulation="circular",
+                                   interface_source=source, sheet_conductivity=ks, sheet_film=(film,.6),
+                                   inner_resistance_fraction=fraction)
+    # Current sample j is at the end of panel j. Include an arc crossing 2π.
+    cuts = np.array([1, n//3, n-2, n+2])
+    angles = (cuts+1)*2*np.pi/n
+    start, end = angles[:-1], angles[1:]
+    harmonic_integral = np.diff(np.sin(mode*angles+.2))/mode
+    loss = result.circular_reservoir_heat_rate(start, end)
+    radial = (result.outer_field.circular_arc_heat_rate("inner", start, end)
+              - result.inner_field.circular_arc_heat_rate("outer", start, end))
+    currents = result.sheet_tangential_heat_rate[cuts % n]
+    generated = b*(film*.4*np.diff(angles) + source_amplitude*harmonic_integral)
+    for label, residual in (
+            ("reservoir_W_m", loss - b*film*(.4*np.diff(angles)+harmonic_integral)),
+            ("cut_current_W_m", currents - ks*mode/b*np.sin(mode*angles+.2)),
+            ("sheet_balance_W_m", radial + loss + np.diff(currents) - generated)):
+        error = np.max(abs(residual))
+        record_property(label, error)
+        assert error < 1e-11

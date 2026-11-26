@@ -35,6 +35,24 @@ def _source_traces(mesh, conductivity, source, circular, source_gradient, radial
     return value, np.sum(gradient*mesh.normals, axis=1)
 
 
+def _integrate_circular_arc(loop, samples, start_angle, end_angle):
+    """Integrate a real periodic interpolant against nominal arc length."""
+    start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
+                                     np.asarray(end_angle, dtype=float))
+    if not np.isfinite(start).all() or not np.isfinite(end).all():
+        raise ValueError("arc angles must be finite")
+    n = loop.panel_count
+    coeff = np.fft.rfft(samples) / n
+    width = end - start
+    phase = start + width/2 - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
+    integral = coeff[0].real * width
+    for mode in range(1, len(coeff)):
+        copies = 1 if 2*mode == n else 2
+        average = np.sinc(mode*width/(2*np.pi))
+        integral += copies * width * average * (coeff[mode]*np.exp(1j*mode*phase)).real
+    return np.linalg.norm(loop.vertices[0]) * integral
+
+
 @dataclass(frozen=True)
 class AnnulusLayerField:
     """Solved traces for one polygonal material region; targets must be interior."""
@@ -154,24 +172,11 @@ class AnnulusLayerField:
             raise ValueError("arc heat rates require the circular formulation")
         if boundary not in ("inner", "outer"):
             raise ValueError("boundary must be 'inner' or 'outer'")
-        start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
-                                         np.asarray(end_angle, dtype=float))
-        if not np.isfinite(start).all() or not np.isfinite(end).all():
-            raise ValueError("arc angles must be finite")
         index = 1 if boundary == "inner" else 0
         loop = self.mesh.loops[index]
         normal = self.normal_derivative[self.mesh.loop_slices[index]]
         radial_flux = self.conductivity * normal * (1 if index == 1 else -1)
-        n = loop.panel_count
-        coeff = np.fft.rfft(radial_flux) / n
-        width = end - start
-        phase = start + width/2 - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
-        integral = coeff[0].real * width
-        for mode in range(1, len(coeff)):
-            copies = 1 if 2*mode == n else 2
-            average = np.sinc(mode*width/(2*np.pi))
-            integral += copies * width * average * (coeff[mode]*np.exp(1j*mode*phase)).real
-        return np.linalg.norm(loop.vertices[0]) * integral
+        return _integrate_circular_arc(loop, radial_flux, start_angle, end_angle)
 
     def circular_cut_heat_rate(self, angles):
         """Heat crossing each full radial cut toward increasing angle, W/m of axis.
@@ -294,6 +299,20 @@ class AnnulusContactResult:
     sheet_temperature: np.ndarray | None = None
     sheet_tangential_heat_rate: np.ndarray | None = None
     sheet_reservoir_flux: np.ndarray | None = None
+
+    def circular_reservoir_heat_rate(self, start_angle, end_angle):
+        """Integrated heat from the sheet to its reservoir (W/m of axis).
+
+        Angles follow the oriented arc convention of circular_arc_heat_rate.
+        With no reservoir the exchanged heat is zero.
+        """
+        if self.inner_field is None or not self.inner_field.circular_geometry:
+            raise ValueError("reservoir arc heat rates require the circular formulation")
+        loop = self.inner_field.mesh.loops[0]
+        samples = self.sheet_reservoir_flux
+        if samples is None:
+            samples = np.zeros(loop.panel_count)
+        return _integrate_circular_arc(loop, samples, start_angle, end_angle)
 
 
 def _polygonal_ring_matrices(mesh,reference):
