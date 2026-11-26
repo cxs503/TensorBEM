@@ -1,0 +1,24 @@
+{
+  "source_commit": "d71e7de81db118092af22396316c051882d34307",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 123,
+  "failures": 0,
+  "reference": "Two source-free bulk sectors separated by a resistive sheet generating 2 sin(3 theta + 0.23) W/m\u00b2 at r=0.65 m. The composite external perimeter outflow equals the analytic arc integral of sheet generation.",
+  "maximum_absolute_errors": {
+    "test_circular_boundary_field_at_off_grid_contact_angles[15]": {
+      "inner_bulk_W_m": 3.552713678800501e-15,
+      "outer_bulk_W_m": 1.8437594567048396e-14,
+      "composite_sector_W_m": 2.2541228143306095e-14
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[32]": {
+      "inner_bulk_W_m": 3.1086244689504383e-15,
+      "outer_bulk_W_m": 1.8207657603852567e-14,
+      "composite_sector_W_m": 1.84297022087776e-14
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[64]": {
+      "inner_bulk_W_m": 4.884981308350689e-15,
+      "outer_bulk_W_m": 1.3322676295501878e-14,
+      "composite_sector_W_m": 1.3100631690576847e-14
+    }
+  }
+}
