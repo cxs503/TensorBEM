@@ -343,6 +343,36 @@ class AnnulusContactResult:
 
     sheet_source_flux: np.ndarray | None = None
 
+    def sheet_sector_heat_balance(self, start_angle, end_angle):
+        """Return the steady heat budget of oriented sheet sectors, in W/m of axis.
+
+        Angles in radians broadcast. For increasing angles, radial_in is heat
+        from the inner material into the sheet and radial_out is heat from the
+        sheet into the outer material. Tangential_out is the end current minus
+        the start current. Reservoir_out is loss to the reservoir and generation
+        is heat produced in the sheet. Residual is net outflow minus generation.
+        """
+        if self.inner_field is None or self.outer_field is None:
+            raise ValueError("sheet sector balance requires both material fields")
+        if self.inner_field.circular_geometry:
+            inner_arc = self.inner_field.circular_arc_heat_rate
+            outer_arc = self.outer_field.circular_arc_heat_rate
+            current = self.circular_sheet_current
+            reservoir = self.circular_reservoir_heat_rate
+        else:
+            inner_arc = self.inner_field.polygonal_arc_heat_rate
+            outer_arc = self.outer_field.polygonal_arc_heat_rate
+            current = self.polygonal_sheet_current
+            reservoir = self.polygonal_reservoir_heat_rate
+        radial_in = inner_arc("outer", start_angle, end_angle)
+        radial_out = outer_arc("inner", start_angle, end_angle)
+        tangential_out = current(end_angle)-current(start_angle)
+        reservoir_out = reservoir(start_angle, end_angle)
+        generation = self.sheet_generation_heat_rate(start_angle, end_angle)
+        residual = radial_out-radial_in+tangential_out+reservoir_out-generation
+        return dict(radial_in=radial_in, radial_out=radial_out, tangential_out=tangential_out,
+                    reservoir_out=reservoir_out, generation=generation, residual=residual)
+
     def sheet_generation_heat_rate(self, start_angle, end_angle):
         """Signed sheet generation on an oriented angular sector (W/m of axis).
 

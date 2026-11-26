@@ -788,6 +788,15 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
     if not off_grid:
         np.testing.assert_allclose(currents, result.sheet_tangential_heat_rate[cuts % n], atol=1e-12, rtol=0.)
     generated = b*(film*.4*np.diff(angles) + source_amplitude*harmonic_integral)
+    budget = result.sheet_sector_heat_balance(start, end)
+    reference = dict(radial_in=b*.2*harmonic_integral, radial_out=-b*.35*harmonic_integral,
+                     tangential_out=ks*mode/b*np.diff(np.sin(mode*angles+.2)),
+                     reservoir_out=b*film*(.4*np.diff(angles)+harmonic_integral), generation=generated,
+                     residual=np.zeros_like(generated))
+    for label, target in reference.items():
+        error = np.max(abs(budget[label]-target))
+        record_property(f"budget_{label}_error_W_m", error)
+        assert error < 1e-11
     for label, residual in (
             ("reservoir_W_m", loss - b*film*(.4*np.diff(angles)+harmonic_integral)),
             ("cut_current_W_m", currents - ks*mode/b*np.sin(mode*angles+.2)),
@@ -847,6 +856,13 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
                    + result.polygonal_reservoir_heat_rate(*rays)-generation)
         record_property(f"n{n}_off_grid_balance_residual_W_m", balance)
         assert abs(balance) < 1e-11
+        budget = result.sheet_sector_heat_balance(starts, ends)
+        reversed_budget = result.sheet_sector_heat_balance(ends, starts)
+        for key, values in budget.items():
+            np.testing.assert_allclose(values, -reversed_budget[key], atol=1e-12, rtol=0.)
+        residual = np.max(abs(budget["residual"]))
+        record_property(f"n{n}_sector_budget_max_residual_W_m", residual)
+        assert residual < 1e-11
         # From each panel start to its constructed 23% point.
         partial = result.polygonal_reservoir_heat_rate(np.arange(n)*2*np.pi/n,
                                                       np.mod(np.arctan2(targets[:, 1], targets[:, 0]), 2*np.pi))
