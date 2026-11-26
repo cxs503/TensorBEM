@@ -1,0 +1,27 @@
+{
+  "source_commit": "9590c54f5c0c014eec07ac31f592aeff1e3ce134",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 120,
+  "failures": 0,
+  "reference": "Integrate the radial third angular harmonic on both sides of a conducting contact with a prescribed sheet source. A separate prescribed-flux bore tests the constant and Nyquist modes.",
+  "maximum_absolute_errors": {
+    "test_circular_boundary_field_at_off_grid_contact_angles[15]": {
+      "inner_arc_W_m": 4.6629367034256575e-15,
+      "outer_arc_W_m": 8.337165598042364e-15,
+      "arc_generation_balance_W_m": 4.622308975644916e-15
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[32]": {
+      "inner_arc_W_m": 3.9968028886505635e-15,
+      "outer_arc_W_m": 2.1649348980190553e-15,
+      "arc_generation_balance_W_m": 3.885780586188048e-15
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[64]": {
+      "inner_arc_W_m": 4.440892098500626e-15,
+      "outer_arc_W_m": 3.542514506175035e-15,
+      "arc_generation_balance_W_m": 7.216449660063518e-15
+    },
+    "test_arc_integral_retains_mean_and_even_grid_nyquist_mode": {
+      "nyquist_arc_W_m": 2.220446049250313e-16
+    }
+  }
+}
