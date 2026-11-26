@@ -375,3 +375,39 @@ def test_area_mean_flux_from_oblique_wave_on_rectangle(quadratic, record_propert
             assert previous > 3*error
         previous = error
     assert error < .002
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_translated_flux_driven_wave(quadratic, record_property):
+    from tensorbem.geometry import PanelMesh
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    k, cv, omega = 1.25, 1.5, 2.
+    size = np.array([1.5, 1.])
+    rate = np.sqrt(1j*omega*cv/k)*np.array([.6, -.8])
+    corners = np.array([[0., 0.], [1., 0.], [1., 1.], [0., 1.]])*size
+    edges = np.roll(corners, -1, axis=0)-corners
+    n = 16 if quadratic else 32
+    vertices = (corners[:,None]+edges[:,None]*np.arange(n)[None,:,None]/n).reshape(-1,2)
+    mesh = PanelMesh(vertices)
+    samples = harmonic_boundary_points(mesh, quadratic=quadratic)
+    # Specify the same Neumann trace at the ideal panel-local abscissas in both frames.
+    inward = k*np.exp(samples @ rate)*np.repeat(mesh.normals @ rate, 3 if quadratic else 1)
+    points = np.array([[.375, .25], [1., .625]])
+    exact_t = np.exp(points @ rate)
+    exact_mean = -k*rate*np.prod(np.expm1(rate*size)/(rate*size))
+    reference = np.r_[exact_mean, exact_t, (-k*exact_t[:,None]*rate).ravel()]
+    results = []
+    for offset in (np.zeros(2), np.array([2.**43, -2.**43])):
+        np.testing.assert_array_equal(vertices+offset-offset, vertices)
+        field = solve_mixed_harmonic_conduction(PanelMesh(vertices+offset), "flux", inward, omega,
+                    conductivity=k, volumetric_heat_capacity=cv, quadratic=quadratic)
+        results.append(np.r_[field.area_mean_heat_flux(), field.temperature(points+offset),
+                             field.heat_flux(points+offset).ravel()])
+    for name, group in (("mean_flux", slice(0,2)), ("temperature", slice(2,4)), ("interior_flux", slice(4,None))):
+        shift_error = float(np.max(abs(results[1][group]-results[0][group])))
+        wave_error = float(np.max(abs(results[1][group]-reference[group])))
+        record_property(name+"_translation_error", shift_error)
+        record_property(name+"_wave_error", wave_error)
+    np.testing.assert_allclose(results[1], results[0], rtol=0., atol=1e-12)
+    np.testing.assert_allclose(results[1], reference, rtol=0., atol=2e-5 if quadratic else .005)

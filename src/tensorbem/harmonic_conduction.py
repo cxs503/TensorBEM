@@ -102,6 +102,18 @@ def _quadratic_operators(mesh, targets, wave, collocation=False):
     return single, double
 
 
+def _kernel_operators(mesh, wave, quadratic, targets=None):
+    # Form off-node quadrature and collocation coordinates after translation:
+    # their fractional panel offsets may be smaller than one global-coordinate ulp.
+    origin = mesh.vertices[0]
+    local_mesh = PanelMesh(mesh.vertices-origin)
+    collocation = targets is None
+    local_targets = (harmonic_boundary_points(local_mesh, quadratic=quadratic)
+                     if collocation else targets-origin)
+    operators = _quadratic_operators if quadratic else _operators
+    return operators(local_mesh, local_targets, wave, collocation=collocation)
+
+
 def _particular_field(points, constant, gradient, quadratic):
     x, y = points.T
     xx, xy, yy = quadratic
@@ -234,8 +246,7 @@ class HarmonicConduction:
     def temperature(self, points):
         """Evaluate temperature phasors at interior targets of shape (N, 2)."""
         targets = self._interior_targets(points)
-        operators = _quadratic_operators if self.quadratic else _operators
-        single, double = operators(self.mesh, targets, self.wave)
+        single, double = _kernel_operators(self.mesh, self.wave, self.quadratic, targets)
         boundary, derivative = self._homogeneous_traces()
         particular = _particular_field(targets, self.particular_temperature, self.particular_gradient, self.particular_quadratic)
         return particular + single @ derivative - double @ boundary
@@ -256,20 +267,21 @@ class HarmonicConduction:
         nodes, weights = np.polynomial.legendre.leggauss(16)
         for j, (start, edge, normal, length) in enumerate(zip(
                 self.mesh.vertices, self.mesh.vectors, self.mesh.normals, self.mesh.lengths)):
+            relative = targets-start
             pending = [(0., 1., np.arange(len(targets)))]
             while pending:
                 lo, hi, ids = pending.pop()
                 mid = (lo+hi)/2
                 # Targets within one subpanel length of its midpoint need
                 # finer quadrature; distant targets use this interval once.
-                close = np.linalg.norm(targets[ids]-(start+mid*edge), axis=1) < (hi-lo)*length
+                close = np.linalg.norm(relative[ids]-mid*edge, axis=1) < (hi-lo)*length
                 if np.any(close) and lo < mid < hi:
                     pending.extend(((lo, mid, ids[close]), (mid, hi, ids[close])))
                     ids = ids[~close]
                 if not len(ids):
                     continue
                 s = mid+(hi-lo)*nodes/2
-                delta = targets[ids, None, :]-(start+s[:, None]*edge)
+                delta = relative[ids, None, :]-s[:, None]*edge
                 radius = np.linalg.norm(delta, axis=2)
                 direction = delta/radius[:, :, None]
                 z = self.wave*radius
@@ -410,8 +422,7 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     external = np.where(kinds == "flux", values, film*shifted)
     flux = np.where(fixed, 0., external-surface_admittance*boundary-normal_flux)
     wave = np.sqrt(admittance/conductivity)
-    operators = _quadratic_operators if quadratic else _operators
-    single, double = operators(mesh, points, wave, collocation=True)
+    single, double = _kernel_operators(mesh, wave, quadratic)
     single /= conductivity
     double.flat[::n+1] += .5
     # H*T = S*q. Unknowns are inward flux on fixed-temperature panels and
