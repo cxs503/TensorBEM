@@ -824,6 +824,22 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
         reference = b*film*(.4*(ends-starts)+(np.sin(mode*ends+.2)-np.sin(mode*starts+.2))/mode)
         errors["off_grid_reservoir_error_W_m"] = np.max(abs(exchange-reference))
         np.testing.assert_allclose(exchange[1], -exchange[2], rtol=0., atol=1e-13)
+        inner_arc = result.inner_field.polygonal_arc_heat_rate
+        outer_arc = result.outer_field.polygonal_arc_heat_rate
+        angular_integral = b*(np.sin(mode*ends+.2)-np.sin(mode*starts+.2))/mode
+        errors["off_grid_inner_radial_error_W_m"] = np.max(abs(inner_arc("outer", starts, ends)-.2*angular_integral))
+        errors["off_grid_outer_radial_error_W_m"] = np.max(abs(outer_arc("inner", starts, ends)+.35*angular_integral))
+        # Span a quarter ring from 23% along panel zero to 23% along panel n/4.
+        # Independently integrate the prescribed source with those chord weights.
+        rays = np.arctan2(targets[[0, n//4], 1], targets[[0, n//4], 0])
+        midpoints = (np.arange(n//4+1)+.5)*2*np.pi/n
+        supply = .4*film+source_amplitude*np.cos(mode*midpoints+.2)
+        generation = 2*b*np.sin(np.pi/n)*(.77*supply[0]+supply[1:-1].sum()+.23*supply[-1])
+        balance = (outer_arc("inner", *rays)-inner_arc("outer", *rays)
+                   + np.diff(result.polygonal_sheet_current(rays)).item()
+                   + result.polygonal_reservoir_heat_rate(*rays)-generation)
+        record_property(f"n{n}_off_grid_balance_residual_W_m", balance)
+        assert abs(balance) < 1e-11
         # From each panel start to its constructed 23% point.
         partial = result.polygonal_reservoir_heat_rate(np.arange(n)*2*np.pi/n,
                                                       np.mod(np.arctan2(targets[:, 1], targets[:, 0]), 2*np.pi))

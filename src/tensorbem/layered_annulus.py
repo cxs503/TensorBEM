@@ -49,6 +49,17 @@ def _polygonal_sheet_cut(loop, angles):
     return turns, panel, fraction
 
 
+def _integrate_polygonal_arc(loop, flux, start_angle, end_angle):
+    start, end = np.broadcast_arrays(start_angle, end_angle)
+    turns, panels, fractions = _polygonal_sheet_cut(loop, np.stack((start, end)))
+    if flux is None:
+        return np.zeros_like(fractions[0])
+    heat = flux*loop.lengths
+    prefix = np.concatenate(([0.], np.cumsum(heat)))
+    return ((turns[1]-turns[0])*prefix[-1] + (prefix[panels[1]]-prefix[panels[0]])
+            + (fractions[1]*heat[panels[1]]-fractions[0]*heat[panels[0]]))
+
+
 def _integrate_circular_arc(loop, samples, start_angle, end_angle):
     """Integrate a real periodic interpolant against nominal arc length."""
     start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
@@ -172,6 +183,22 @@ class AnnulusLayerField:
         radius = np.full(angles.shape, inner if boundary == "inner" else outer)
         xy = radius[:, None] * np.column_stack((np.cos(angles), np.sin(angles)))
         return self._circular_extension(xy, radius, inner, outer)
+
+    def polygonal_arc_heat_rate(self, boundary, start_angle, end_angle):
+        """Integrate straight-panel normal heat flux over oriented ray cuts (W/m).
+
+        Select the layer's inner or outer polygon. Positive flux points out
+        of the enclosed polygon on either boundary. Unwrapped angles in radians
+        broadcast, with reversed limits changing the sign of the integral.
+        """
+        if self.circular_geometry:
+            raise ValueError("polygonal arc heat rates require the straight-panel formulation")
+        if boundary not in ("inner", "outer"):
+            raise ValueError("boundary must be 'inner' or 'outer'")
+        index = 1 if boundary == "inner" else 0
+        normal = self.normal_derivative[self.mesh.loop_slices[index]]
+        flux = self.conductivity * normal * (1 if index == 1 else -1)
+        return _integrate_polygonal_arc(self.mesh.loops[index], flux, start_angle, end_angle)
 
     def circular_arc_heat_rate(self, boundary, start_angle, end_angle):
         """Integrate the sampled radial boundary flux over oriented arcs (W/m).
@@ -339,14 +366,7 @@ class AnnulusContactResult:
         if self.inner_field is None or self.inner_field.circular_geometry:
             raise ValueError("polygonal reservoir heat rates require the straight-panel formulation")
         loop = self.inner_field.mesh.loops[0]
-        start, end = np.broadcast_arrays(start_angle, end_angle)
-        turns, panels, fractions = _polygonal_sheet_cut(loop, np.stack((start, end)))
-        if self.sheet_reservoir_flux is None:
-            return np.zeros_like(fractions[0])
-        heat = self.sheet_reservoir_flux*loop.lengths
-        prefix = np.concatenate(([0.], np.cumsum(heat)))
-        return ((turns[1]-turns[0])*prefix[-1] + (prefix[panels[1]]-prefix[panels[0]])
-                + (fractions[1]*heat[panels[1]]-fractions[0]*heat[panels[0]]))
+        return _integrate_polygonal_arc(loop, self.sheet_reservoir_flux, start_angle, end_angle)
 
     def circular_sheet_current(self, angles):
         """Sheet heat rate toward increasing azimuth (W/m of axis) at angles in radians.
