@@ -1,0 +1,118 @@
+{
+  "source_commit": "4f3c260f41c5f6e5bb147d0090abc497a0427c13",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_sheet_mixed.xml",
+  "tests": 95,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Steady two-material circular annulus with a heated conducting contact sheet coupled to an external reservoir. Analytic harmonic mode m=3 uses cosh and sinh of m log(r/b). Impose inward flux on one wall and a convection film on the other; reverse wall roles. Check temperature and Cartesian flux at four off-grid points per material and the sheet sector energy budget. 15, 32, 64 panels per circle.",
+  "measurements": {
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-15]": {
+      "inner_interior_temperature_error_K": 8.881784197001252e-16,
+      "inner_interior_flux_error_W_m2": 2.67782479420499e-14,
+      "outer_interior_temperature_error_K": 2.6645352591003757e-15,
+      "outer_interior_flux_error_W_m2": 1.4238583238573986e-14,
+      "reservoir_W_m": 1.4988010832439613e-15,
+      "cut_current_W_m": 1.2212453270876722e-15,
+      "sheet_balance_W_m": 5.995204332975845e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-32]": {
+      "inner_interior_temperature_error_K": 2.220446049250313e-15,
+      "inner_interior_flux_error_W_m2": 1.4238583238573986e-14,
+      "outer_interior_temperature_error_K": 4.440892098500626e-16,
+      "outer_interior_flux_error_W_m2": 2.3503188057814913e-14,
+      "reservoir_W_m": 3.3306690738754696e-15,
+      "cut_current_W_m": 2.7755575615628914e-15,
+      "sheet_balance_W_m": 1.659783421814609e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-64]": {
+      "inner_interior_temperature_error_K": 7.66053886991358e-15,
+      "inner_interior_flux_error_W_m2": 3.908994210040608e-14,
+      "outer_interior_temperature_error_K": 1.1102230246251565e-14,
+      "outer_interior_flux_error_W_m2": 1.9214237003936263e-14,
+      "reservoir_W_m": 1.3766765505351941e-14,
+      "cut_current_W_m": 6.106226635438361e-15,
+      "sheet_balance_W_m": 1.1546319456101628e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-15]": {
+      "inner_interior_temperature_error_K": 8.881784197001252e-16,
+      "inner_interior_flux_error_W_m2": 2.67782479420499e-14,
+      "outer_interior_temperature_error_K": 2.6645352591003757e-15,
+      "outer_interior_flux_error_W_m2": 1.4238583238573986e-14,
+      "reservoir_W_m": 2.55351295663786e-15,
+      "cut_current_W_m": 1.2212453270876722e-15,
+      "sheet_balance_W_m": 6.439293542825908e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-32]": {
+      "inner_interior_temperature_error_K": 2.220446049250313e-15,
+      "inner_interior_flux_error_W_m2": 1.4238583238573986e-14,
+      "outer_interior_temperature_error_K": 4.440892098500626e-16,
+      "outer_interior_flux_error_W_m2": 2.3503188057814913e-14,
+      "reservoir_W_m": 3.774758283725532e-15,
+      "cut_current_W_m": 2.55351295663786e-15,
+      "sheet_balance_W_m": 2.0761170560490427e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-64]": {
+      "inner_interior_temperature_error_K": 7.66053886991358e-15,
+      "inner_interior_flux_error_W_m2": 3.908994210040608e-14,
+      "outer_interior_temperature_error_K": 1.1102230246251565e-14,
+      "outer_interior_flux_error_W_m2": 1.9214237003936263e-14,
+      "reservoir_W_m": 1.554312234475219e-14,
+      "cut_current_W_m": 4.884981308350689e-15,
+      "sheet_balance_W_m": 1.3322676295501878e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-15]": {
+      "inner_interior_temperature_error_K": 3.552713678800501e-15,
+      "inner_interior_flux_error_W_m2": 2.612211099846594e-14,
+      "outer_interior_temperature_error_K": 5.773159728050814e-15,
+      "outer_interior_flux_error_W_m2": 9.057678187205881e-15,
+      "reservoir_W_m": 5.551115123125783e-15,
+      "cut_current_W_m": 7.771561172376096e-16,
+      "sheet_balance_W_m": 8.43769498715119e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-32]": {
+      "inner_interior_temperature_error_K": 2.6645352591003757e-15,
+      "inner_interior_flux_error_W_m2": 9.589139651961702e-15,
+      "outer_interior_temperature_error_K": 3.1086244689504383e-15,
+      "outer_interior_flux_error_W_m2": 1.9959327572255808e-14,
+      "reservoir_W_m": 3.608224830031759e-15,
+      "cut_current_W_m": 3.608224830031759e-15,
+      "sheet_balance_W_m": 1.8263168755083825e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-64]": {
+      "inner_interior_temperature_error_K": 1.1879386363489175e-14,
+      "inner_interior_flux_error_W_m2": 3.747228857827343e-14,
+      "outer_interior_temperature_error_K": 2.1538326677728037e-14,
+      "outer_interior_flux_error_W_m2": 1.6669620687469208e-14,
+      "reservoir_W_m": 3.164135620181696e-14,
+      "cut_current_W_m": 3.774758283725532e-15,
+      "sheet_balance_W_m": 1.6209256159527285e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-15]": {
+      "inner_interior_temperature_error_K": 3.552713678800501e-15,
+      "inner_interior_flux_error_W_m2": 2.612211099846594e-14,
+      "outer_interior_temperature_error_K": 5.773159728050814e-15,
+      "outer_interior_flux_error_W_m2": 9.057678187205881e-15,
+      "reservoir_W_m": 7.66053886991358e-15,
+      "cut_current_W_m": 8.881784197001252e-16,
+      "sheet_balance_W_m": 8.770761894538737e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-32]": {
+      "inner_interior_temperature_error_K": 2.6645352591003757e-15,
+      "inner_interior_flux_error_W_m2": 9.589139651961702e-15,
+      "outer_interior_temperature_error_K": 3.1086244689504383e-15,
+      "outer_interior_flux_error_W_m2": 1.9959327572255808e-14,
+      "reservoir_W_m": 4.052314039881821e-15,
+      "cut_current_W_m": 2.886579864025407e-15,
+      "sheet_balance_W_m": 2.4646951146678475e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-64]": {
+      "inner_interior_temperature_error_K": 1.1879386363489175e-14,
+      "inner_interior_flux_error_W_m2": 3.747228857827343e-14,
+      "outer_interior_temperature_error_K": 2.1538326677728037e-14,
+      "outer_interior_flux_error_W_m2": 1.6669620687469208e-14,
+      "reservoir_W_m": 3.397282455352979e-14,
+      "cut_current_W_m": 4.524158825347513e-15,
+      "sheet_balance_W_m": 9.769962616701378e-15
+    }
+  }
+}
