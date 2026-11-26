@@ -302,3 +302,21 @@ def test_oblique_hole_domain_and_clearance(edge, record_property):
     np.testing.assert_array_equal(in_hole, expected_hole)
     assert not outside.any()
     np.testing.assert_allclose(distance, expected_distance, atol=0., rtol=2e-15)
+
+
+@pytest.mark.parametrize("scale,shift", [(1., 2.**36), (2.**-450, 0.), (2.**450, 0.)])
+def test_rectangular_hole_geometry_at_offset_and_scale(scale, shift, record_property):
+    def rectangle(x0, y0, x1, y1):
+        vertices = np.array([[x0,y0], [x1,y0], [x1,y1], [x0,y1]])
+        return PanelMesh(shift + scale*vertices)
+    outer = rectangle(0, 0, 8, 4)
+    hole = rectangle(1, 1, 3, 2)
+    mesh = build_multicomponent_mesh(outer, [hole])
+    error = abs(mesh.fluid_area/(30*scale**2)-1)
+    record_property("area_relative_error", float(error))
+    record_property("perimeter_relative_error", float(abs(mesh.perimeter/(30*scale)-1)))
+    assert error < 2e-15
+    assert mesh.perimeter == pytest.approx(30*scale, rel=2e-15, abs=0.)
+    np.testing.assert_array_equal(mesh.normals[mesh.loop_slices[1]], [[0,-1],[-1,0],[0,1],[1,0]])
+    with pytest.raises(ValueError, match="clockwise"):
+        MultiComponentMesh((outer.vertices, hole.vertices))

@@ -41,7 +41,8 @@ from typing import Callable, Sequence
 import numpy as np
 from numpy.typing import NDArray
 
-from .geometry import PanelMesh, _panel_clearance, _point_in_polygon, _validate_length, _validate_panel_count
+from .geometry import (PanelMesh, _local_area, _panel_clearance, _point_in_polygon,
+                       _validate_length, _validate_panel_count)
 from .kernels import REFERENCE_LENGTH
 from .solver import (
     LaplaceDirichletResult,
@@ -52,22 +53,27 @@ from .solver import (
 FloatArray = NDArray[np.float64]
 
 
-def _loop_arrays(vertices: FloatArray) -> dict[str, FloatArray]:
+def _loop_arrays(vertices: FloatArray, label: str) -> dict[str, FloatArray]:
     """Panel arrays of one closed loop, closure kept inside the loop."""
     points = np.asarray(vertices, dtype=float)
     ends = np.roll(points, -1, axis=0)
     vectors = ends - points
-    lengths = np.linalg.norm(vectors, axis=1)
+    lengths = np.hypot(vectors[:, 0], vectors[:, 1])
+    if not np.isfinite(lengths).all() or np.any(lengths == 0.):
+        raise ValueError(f"loop {label!r} has a nonfinite or zero-length panel")
     tangents = vectors / lengths[:, None]
-    signed_area = 0.5 * float(
-        np.sum(points[:, 0] * ends[:, 1] - points[:, 1] * ends[:, 0])
-    )
+    area, sx, sy = _local_area(points)
+    signed_area = (area * sx) * sy
+    if area == 0.:
+        raise ValueError(f"loop {label!r} is degenerate (zero signed area)")
+    if not np.isfinite(signed_area) or signed_area == 0.:
+        raise ValueError(f"loop {label!r} signed area is outside the representable range")
     return {
         "vertices": points,
         "ends": ends,
         "vectors": vectors,
         "lengths": lengths,
-        "centers": 0.5 * (points + ends),
+        "centers": points + 0.5 * vectors,
         "normals": np.column_stack((tangents[:, 1], -tangents[:, 0])),
         "signed_area": np.array(signed_area),
     }
@@ -112,11 +118,7 @@ class MultiComponentMesh:
             _validate_panel_count(len(loop))
             if not np.isfinite(loop).all():
                 raise ValueError(f"loop {label!r} must be finite")
-            arrays = _loop_arrays(loop)
-            if np.any(arrays["lengths"] <= 1.0e-14):
-                raise ValueError(f"loop {label!r} has a zero-length panel")
-            if abs(float(arrays["signed_area"])) <= 1.0e-12:
-                raise ValueError(f"loop {label!r} is degenerate (zero signed area)")
+            arrays = _loop_arrays(loop, label)
             for key in collected:
                 collected[key].append(arrays[key])
             slices.append(slice(offset, offset + len(loop)))
