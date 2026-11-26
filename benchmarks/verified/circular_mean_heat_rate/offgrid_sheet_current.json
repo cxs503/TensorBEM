@@ -1,0 +1,24 @@
+{
+  "source_commit": "887986ea09901c1544db622d50b23d399873928b",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 132,
+  "failures": 0,
+  "reference": "Off-grid cut currents from the derivative of the manufactured third azimuthal temperature harmonic. Compare radial flux difference, tangential current difference and reservoir exchange against integrated sheet generation on four signed arcs.",
+  "maximum_absolute_errors": {
+    "test_sheet_sector_with_conduction_and_reservoir[True-15]": {
+      "reservoir_W_m": 7.771561172376096e-16,
+      "cut_current_W_m": 9.992007221626409e-16,
+      "sheet_balance_W_m": 9.103828801926284e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[True-32]": {
+      "reservoir_W_m": 2.1649348980190553e-15,
+      "cut_current_W_m": 3.9968028886505635e-15,
+      "sheet_balance_W_m": 2.7533531010703882e-14
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[True-64]": {
+      "reservoir_W_m": 4.440892098500626e-15,
+      "cut_current_W_m": 2.9976021664879227e-15,
+      "sheet_balance_W_m": 1.84297022087776e-14
+    }
+  }
+}
