@@ -341,6 +341,21 @@ class AnnulusContactResult:
     sheet_tangential_heat_rate: np.ndarray | None = None
     sheet_reservoir_flux: np.ndarray | None = None
 
+    sheet_source_flux: np.ndarray | None = None
+
+    def sheet_generation_heat_rate(self, start_angle, end_angle):
+        """Signed sheet generation on an oriented angular sector (W/m of axis).
+
+        Polygonal solutions integrate the applied constant source on each chord.
+        Circular solutions integrate its periodic interpolant on the nominal circle.
+        Angles in radians broadcast; a positive source adds heat to the sheet.
+        """
+        if self.inner_field is None or self.sheet_source_flux is None:
+            raise ValueError("sheet generation requires stored geometry and interface source")
+        loop = self.inner_field.mesh.loops[0]
+        integrate = _integrate_circular_arc if self.inner_field.circular_geometry else _integrate_polygonal_arc
+        return integrate(loop, self.sheet_source_flux, start_angle, end_angle)
+
     def polygonal_sheet_current(self, angles):
         """Tangential heat rate (W/m of axis) at ray cuts of the straight-panel sheet.
 
@@ -695,4 +710,5 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
                                 AnnulusLayerField(inner, ti, dni, ki, 2 * exterior, circular,generation[0],tuple(gradients[0]),radial[0],tuple(quadratic[0])),
                                 AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1],tuple(quadratic[1])),
                                 outer_flux,sheet_temperature,tangential_rate,
-                                None if sheet_film is None else film*(sheet_temperature-ambient))
+                                None if sheet_film is None else film*(sheet_temperature-ambient),
+                                sheet_source_flux=source.copy())

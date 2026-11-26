@@ -791,6 +791,7 @@ def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, flux_side, reco
     for label, residual in (
             ("reservoir_W_m", loss - b*film*(.4*np.diff(angles)+harmonic_integral)),
             ("cut_current_W_m", currents - ks*mode/b*np.sin(mode*angles+.2)),
+            ("sheet_generation_W_m", result.sheet_generation_heat_rate(start, end)-generated),
             ("sheet_balance_W_m", radial + loss + np.diff(currents) - generated)):
         error = np.max(abs(residual))
         record_property(label, error)
@@ -834,7 +835,13 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
         rays = np.arctan2(targets[[0, n//4], 1], targets[[0, n//4], 0])
         midpoints = (np.arange(n//4+1)+.5)*2*np.pi/n
         supply = .4*film+source_amplitude*np.cos(mode*midpoints+.2)
-        generation = 2*b*np.sin(np.pi/n)*(.77*supply[0]+supply[1:-1].sum()+.23*supply[-1])
+        expected_generation = 2*b*np.sin(np.pi/n)*(.77*supply[0]+supply[1:-1].sum()+.23*supply[-1])
+        generation = result.sheet_generation_heat_rate(*rays)
+        geometry_error = abs(generation-expected_generation)
+        record_property(f"n{n}_partial_source_geometry_error_W_m", geometry_error)
+        assert geometry_error < 1e-12
+        exact_source = b*film*.4*(ends-starts)+source_amplitude*angular_integral
+        errors["off_grid_sheet_generation_error_W_m"] = np.max(abs(result.sheet_generation_heat_rate(starts, ends)-exact_source))
         balance = (outer_arc("inner", *rays)-inner_arc("outer", *rays)
                    + np.diff(result.polygonal_sheet_current(rays)).item()
                    + result.polygonal_reservoir_heat_rate(*rays)-generation)
