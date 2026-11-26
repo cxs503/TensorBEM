@@ -1,0 +1,48 @@
+{
+  "source_commit": "964a4c44fa79507277720ca03a19536314e90dc9",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_harmonic_conduction.py -o junit_family=legacy --junitxml=/tmp/bem_dc_loss.xml",
+  "reference": "Uniform source Q and positive volumetric exchange H in a unit disk. Exact T=Tamb+Q/H+A*I0(sqrt(H/k)*r); Cartesian heat flux follows its radial derivative. Straight panels approximate the circle. Test both flux and film data with constant and discontinuous quadratic traces; report maximum errors at four interior probes.",
+  "cases": {
+    "test_steady_screened_disk_radial_refinement[False-flux]": {
+      "temperature_error_16_K": 0.024651842808659508,
+      "flux_error_16_W_m2": 0.023649425336065066,
+      "temperature_error_32_K": 0.006058883460487108,
+      "flux_error_32_W_m2": 0.0053313124210172536,
+      "temperature_error_64_K": 0.0015094809325673086,
+      "flux_error_64_W_m2": 0.0013292646458242796,
+      "temperature_error_128_K": 0.0003771133135630489,
+      "flux_error_128_W_m2": 0.00033208981178045605
+    },
+    "test_steady_screened_disk_radial_refinement[False-film]": {
+      "temperature_error_16_K": 0.022027103336649034,
+      "flux_error_16_W_m2": 0.021333765224515133,
+      "temperature_error_32_K": 0.005457142562376616,
+      "flux_error_32_W_m2": 0.004801415440373935,
+      "temperature_error_64_K": 0.0013619830270144018,
+      "flux_error_64_W_m2": 0.0011993764929765227,
+      "temperature_error_128_K": 0.0003403532215284777,
+      "flux_error_128_W_m2": 0.0002997185016031523
+    },
+    "test_steady_screened_disk_radial_refinement[True-flux]": {
+      "temperature_error_16_K": 0.03268174193625395,
+      "flux_error_16_W_m2": 0.028940774582209006,
+      "temperature_error_32_K": 0.008079869293075914,
+      "flux_error_32_W_m2": 0.007115036521459617,
+      "temperature_error_64_K": 0.0020145120530192795,
+      "flux_error_64_W_m2": 0.0017739997709040889,
+      "temperature_error_128_K": 0.0005032929953958654,
+      "flux_error_128_W_m2": 0.0004432049203790811
+    },
+    "test_steady_screened_disk_radial_refinement[True-film]": {
+      "temperature_error_16_K": 0.022047541751867294,
+      "flux_error_16_W_m2": 0.019998893254856043,
+      "temperature_error_32_K": 0.005478699405160992,
+      "flux_error_32_W_m2": 0.004823905317224986,
+      "temperature_error_64_K": 0.0013678839963733314,
+      "flux_error_64_W_m2": 0.00120457256758022,
+      "temperature_error_128_K": 0.00034186074227604557,
+      "flux_error_128_W_m2": 0.00030104603967662236
+    }
+  },
+  "passed": 42
+}
