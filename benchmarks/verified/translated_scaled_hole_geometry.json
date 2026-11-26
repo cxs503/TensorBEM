@@ -1,0 +1,29 @@
+{
+  "source_commit": "f4508d6660b68f5662ab736722297d536a04a6bd",
+  "baseline_commit": "e6a10b671ed8952a1404912277a5ea93df26d791",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_multicomponent.py tests/test_multiloop_annulus.py tests/test_geometry.py tests/test_interior_field_domain_guard.py tests/test_solver.py -o junit_family=legacy --junitxml=/tmp/bem-loop-final.xml",
+  "passed": 106,
+  "reference": "An 8 by 4 outer rectangle with a 2 by 1 rectangular hole has area 30 and total perimeter 30. For scale s the reference values are 30*s^2 and 30*s. Check hole normals and rejection of incorrect winding.",
+  "before": {
+    "test_rectangular_hole_geometry_at_offset_and_scale[1.0-68719476736.0]": "ValueError: loop 'outer' is degenerate (zero signed area)",
+    "test_rectangular_hole_geometry_at_offset_and_scale[3.4395525670743494e-136-0.0]": "ValueError: loop 'outer' has a zero-length panel",
+    "test_rectangular_hole_geometry_at_offset_and_scale[2.9073548971824276e+135-0.0]": {
+      "area_relative_error": 0.0,
+      "perimeter_relative_error": 0.0
+    }
+  },
+  "after": {
+    "test_rectangular_hole_geometry_at_offset_and_scale[1.0-68719476736.0]": {
+      "area_relative_error": 0.0,
+      "perimeter_relative_error": 0.0
+    },
+    "test_rectangular_hole_geometry_at_offset_and_scale[3.4395525670743494e-136-0.0]": {
+      "area_relative_error": 0.0,
+      "perimeter_relative_error": 0.0
+    },
+    "test_rectangular_hole_geometry_at_offset_and_scale[2.9073548971824276e+135-0.0]": {
+      "area_relative_error": 0.0,
+      "perimeter_relative_error": 0.0
+    }
+  }
+}
