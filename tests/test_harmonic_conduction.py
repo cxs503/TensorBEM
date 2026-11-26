@@ -295,3 +295,49 @@ def test_steady_screened_disk_radial_refinement(condition, quadratic, record_pro
             assert np.all(previous > 3*errors)
         previous = errors
     assert errors[0] < .002 and errors[1] < .003
+
+
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_area_mean_polynomial_on_concave_polygon(quadratic, record_property):
+    from tensorbem.geometry import PanelMesh
+    from tensorbem.harmonic_conduction import harmonic_boundary_points
+
+    mesh = PanelMesh(np.array([[2., 1.], [4., 1.], [4., 2.], [3., 2.], [3., 4.], [2., 4.]]))
+    def exact(x, y):
+        return 1.+.4*x-.2j*y+.1j*x**2-.3*x*y+.12*y**2
+    k, storage = 1.3, 2.4j
+    data = exact(*harmonic_boundary_points(mesh, quadratic=quadratic).T)
+    field = solve_harmonic_conduction(mesh, data, 2., conductivity=k, volumetric_heat_capacity=1.2,
+        quadratic=quadratic, volumetric_source=storage-2*k*(.1j+.12),
+        source_gradient=storage*np.array([.4, -.2j]), source_quadratic=storage*np.array([.1j, -.3, .12]))
+    # Partition the L into two rectangles, with independent tensor Gauss integration.
+    nodes, weights = np.polynomial.legendre.leggauss(2)
+    integral = 0j
+    for x, y, width, height in [(2., 1., 2., 1.), (2., 2., 1., 2.)]:
+        values = exact(x+width*(1+nodes[:, None])/2, y+height*(1+nodes)/2)
+        integral += width*height*(weights @ values @ weights)/4
+    error = abs(field.area_mean_temperature()-integral/4)
+    record_property("mean_temperature_error_K", error)
+    assert error < 1e-13
+
+
+@pytest.mark.parametrize("omega", [0., 2.])
+def test_area_mean_screened_disk_converges(omega, record_property):
+    k, loss, capacity = 1.3, 2., 1.5
+    ambient, source, wall = .7, .15, 1.
+    admittance = loss+1j*omega*capacity
+    base = (loss*ambient+source)/admittance
+    wave = np.sqrt(admittance/k)
+    expected = base+(wall-base)*2*iv(1, wave)/(wave*iv(0, wave))
+    previous = None
+    for n in (16, 32, 64):
+        field = solve_mixed_harmonic_conduction(regular_polygon(n), "temperature", wall, omega, conductivity=k,
+            volumetric_heat_capacity=capacity, heat_loss_coefficient=loss,
+            bulk_ambient_temperature=ambient, volumetric_source=source, quadratic=True,
+            wall_areal_heat_capacity=2.)
+        error = abs(field.area_mean_temperature()-expected)
+        record_property(f"mean_temperature_error_{n}_K", error)
+        if previous is not None:
+            assert previous > 3*error
+        previous = error
+    assert error < .001

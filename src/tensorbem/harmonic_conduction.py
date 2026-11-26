@@ -5,6 +5,7 @@ import numpy as np
 from scipy.special import kv
 
 from .geometry import PanelMesh
+from .tank_free_surface import polygon_moments
 from .kernels import integrate_double_layer_panel_many, integrate_single_layer_panel_many
 
 
@@ -188,6 +189,26 @@ class HarmonicConduction:
         gradient = _particular_gradient(points, self.particular_gradient, self.particular_quadratic)
         derivative = self.inward_flux/self.conductivity-np.sum(normals*gradient, axis=1)
         return boundary, derivative
+
+    def area_mean_temperature(self):
+        """Area-averaged bulk temperature phasor in K on the panel polygon.
+
+        Integrate the polynomial particular solution using polygon moments.
+        For the homogeneous remainder, the divergence theorem gives its area
+        integral as the integrated outward normal derivative divided by wave².
+        Surface storage contributes only through its effect on the bulk traces.
+        """
+        origin = self.mesh.vertices[0]
+        moments = polygon_moments(self.mesh.vertices-origin)
+        center = (origin+moments.centroid)[None, :]
+        xx, xy, yy = self.particular_quadratic
+        mean = _particular_field(center, self.particular_temperature,
+                                 self.particular_gradient, self.particular_quadratic)[0]
+        mean += (xx*moments.i_yy + xy*moments.i_xy + yy*moments.i_xx)/moments.area
+        _, derivative = self._homogeneous_traces()
+        if self.quadratic:
+            derivative = derivative.reshape(-1, 3) @ (np.array([5., 8., 5.])/18)
+        return mean + (self.mesh.lengths @ derivative)/(moments.area*self.wave**2)
 
     def temperature(self, points):
         """Evaluate temperature phasors at interior targets of shape (N, 2)."""
