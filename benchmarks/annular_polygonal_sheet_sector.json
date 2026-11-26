@@ -1,0 +1,50 @@
+{
+  "source_commit": "a742956a623a1b4ba23148785321db996f95d054",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_polygon_sector.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Sector [0,pi/2] of the circular conducting interface. Compare outgoing minus incoming sheet current at the two cuts and integrated heat lost to the reservoir. Both cuts are vertices on every polygonal mesh; integrate numerical reservoir flux over physical chord lengths. Compare with the continuous third-mode field for both assignments of the wall flux and film.",
+  "measurements": {
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_sector_cut_rate_W_m": -1.0945883149841618,
+      "n32_sector_reservoir_rate_W_m": 0.1289265906233937,
+      "n32_sector_reference_cut_W_m": -1.1113795709999428,
+      "n32_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n32_sector_cut_rate_error_W_m": 0.01679125601578102,
+      "n32_sector_reservoir_rate_error_W_m": 0.0029010836332199474,
+      "n64_sector_cut_rate_W_m": -1.1071070424369136,
+      "n64_sector_reservoir_rate_W_m": 0.1311182090991693,
+      "n64_sector_reference_cut_W_m": -1.1113795709999428,
+      "n64_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n64_sector_cut_rate_error_W_m": 0.0042725285630291765,
+      "n64_sector_reservoir_rate_error_W_m": 0.0007094651574443556,
+      "n128_sector_cut_rate_W_m": -1.1103028025453796,
+      "n128_sector_reservoir_rate_W_m": 0.13165206207222424,
+      "n128_sector_reference_cut_W_m": -1.1113795709999428,
+      "n128_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n128_sector_cut_rate_error_W_m": 0.0010767684545631706,
+      "n128_sector_reservoir_rate_error_W_m": 0.00017561218438941206
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_sector_cut_rate_W_m": -1.0913668295782881,
+      "n32_sector_reservoir_rate_W_m": 0.1295810389863329,
+      "n32_sector_reference_cut_W_m": -1.1113795709999428,
+      "n32_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n32_sector_cut_rate_error_W_m": 0.020012741421654656,
+      "n32_sector_reservoir_rate_error_W_m": 0.002246635270280739,
+      "n64_sector_cut_rate_W_m": -1.1062594725902937,
+      "n64_sector_reservoir_rate_W_m": 0.1312870933643068,
+      "n64_sector_reference_cut_W_m": -1.1113795709999428,
+      "n64_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n64_sector_cut_rate_error_W_m": 0.00512009840964911,
+      "n64_sector_reservoir_rate_error_W_m": 0.0005405808923068522,
+      "n128_sector_cut_rate_W_m": -1.1100874925693511,
+      "n128_sector_reservoir_rate_W_m": 0.1316947576418253,
+      "n128_sector_reference_cut_W_m": -1.1113795709999428,
+      "n128_sector_reference_reservoir_W_m": 0.13182767425661365,
+      "n128_sector_cut_rate_error_W_m": 0.0012920784305916477,
+      "n128_sector_reservoir_rate_error_W_m": 0.00013291661478834205
+    }
+  }
+}
