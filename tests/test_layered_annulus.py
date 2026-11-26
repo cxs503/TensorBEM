@@ -705,7 +705,8 @@ def test_sector_generation_with_bulk_and_sheet_heating(panels, record_property):
 
 
 @pytest.mark.parametrize("n", [15, 32, 64])
-def test_sheet_sector_with_conduction_and_reservoir(n, record_property):
+@pytest.mark.parametrize("off_grid", [False, True])
+def test_sheet_sector_with_conduction_and_reservoir(n, off_grid, record_property):
     a, b, c = .4, .7, 1.
     ki, ko, ks, film = 1.3, 2.1, .22, .8
     resistance, fraction, mode = .3, .4, 3
@@ -726,12 +727,16 @@ def test_sheet_sector_with_conduction_and_reservoir(n, record_property):
     # Current sample j is at the end of panel j. Include an arc crossing 2π.
     cuts = np.array([1, n//3, n-2, n+2])
     angles = (cuts+1)*2*np.pi/n
+    if off_grid:
+        angles = np.array([-.17, .71, 2.6, 6.8, 4.1])
     start, end = angles[:-1], angles[1:]
     harmonic_integral = np.diff(np.sin(mode*angles+.2))/mode
     loss = result.circular_reservoir_heat_rate(start, end)
     radial = (result.outer_field.circular_arc_heat_rate("inner", start, end)
               - result.inner_field.circular_arc_heat_rate("outer", start, end))
-    currents = result.sheet_tangential_heat_rate[cuts % n]
+    currents = result.circular_sheet_current(angles)
+    if not off_grid:
+        np.testing.assert_allclose(currents, result.sheet_tangential_heat_rate[cuts % n], atol=1e-12, rtol=0.)
     generated = b*(film*.4*np.diff(angles) + source_amplitude*harmonic_integral)
     for label, residual in (
             ("reservoir_W_m", loss - b*film*(.4*np.diff(angles)+harmonic_integral)),

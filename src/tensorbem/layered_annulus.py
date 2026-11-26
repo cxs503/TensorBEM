@@ -300,6 +300,31 @@ class AnnulusContactResult:
     sheet_tangential_heat_rate: np.ndarray | None = None
     sheet_reservoir_flux: np.ndarray | None = None
 
+    def circular_sheet_current(self, angles):
+        """Sheet heat rate toward increasing azimuth (W/m of axis) at angles in radians.
+
+        Reconstruct the periodic trigonometric interpolant of the solved currents
+        at panel ends. A sheet without tangential conduction carries zero current.
+        """
+        if self.inner_field is None or not self.inner_field.circular_geometry:
+            raise ValueError("sheet current interpolation requires the circular formulation")
+        angles = np.asarray(angles, dtype=float)
+        if not np.isfinite(angles).all():
+            raise ValueError("sheet current angles must be finite")
+        samples = self.sheet_tangential_heat_rate
+        if samples is None:
+            return np.zeros_like(angles)
+        n = len(samples)
+        # Current sample zero lies at the downstream vertex of panel zero.
+        vertex = self.inner_field.mesh.loops[0].vertices[1]
+        phase = angles - np.arctan2(vertex[1], vertex[0])
+        coeff = np.fft.rfft(samples) / n
+        current = np.full_like(angles, coeff[0].real)
+        for mode in range(1, len(coeff)):
+            copies = 1 if 2*mode == n else 2
+            current += copies * (coeff[mode]*np.exp(1j*mode*phase)).real
+        return current
+
     def circular_reservoir_heat_rate(self, start_angle, end_angle):
         """Integrated heat from the sheet to its reservoir (W/m of axis).
 
