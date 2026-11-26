@@ -661,3 +661,44 @@ def test_sourced_sector_heat_balance(panels, record_property):
             error = np.abs(residual).max()
             record_property(f"{name}_{label}", error)
             assert error < 1e-11
+
+
+@pytest.mark.parametrize("panels", [15, 32, 64])
+def test_sector_generation_with_bulk_and_sheet_heating(panels, record_property):
+    from scipy.integrate import dblquad
+
+    radii = (.31, .62, .97)
+    constant = (.35, -.22)
+    gradients = ((.16, -.32), (-.53, .24))
+    radial = (.27, -.45)
+    quadratic = ((.44, -.18, .73), (-.62, .29, .91))
+    nodes = 2*np.pi*(np.arange(panels)+.5)/panels
+    result = solve_annulus_contact(
+        radii, (1.4, 2.1), (.3, 1.2), .15, panels, formulation="circular",
+        volumetric_source=constant, source_gradient=gradients, radial_source_coefficient=radial,
+        source_quadratic=quadratic, interface_source=.4 + .6*np.sin(nodes))
+    starts = np.array([.17, 5.92, 1.3, .7])
+    ends = np.array([1.61, 6.71, -.39, .7+2*np.pi])
+    total = radii[1]*(.4*(ends-starts) + .6*(np.cos(starts)-np.cos(ends)))
+    cut_flow = np.zeros_like(total)
+    for j, field in enumerate((result.inner_field, result.outer_field)):
+        def integrand(r, angle):
+            x, y = r*np.cos(angle), r*np.sin(angle)
+            xx, xy, yy = quadratic[j]
+            return r*(constant[j] + gradients[j][0]*x + gradients[j][1]*y + radial[j]*r*r
+                      + xx*x*x + xy*x*y + yy*y*y)
+        exact = np.array([dblquad(integrand, start, end, radii[j], radii[j+1])[0]
+                          for start, end in zip(starts, ends)])
+        total += exact
+        generation = field.circular_sector_generation(starts, ends)
+        outflow = field.circular_sector_outflow(starts, ends)
+        for key, values in (("source_integral", generation), ("outflow", outflow)):
+            error = np.max(abs(values-exact))
+            record_property(f"layer_{j}_{key}_W_m", error)
+            assert error < 1e-11
+        cut_flow += field.circular_cut_heat_rate(ends) - field.circular_cut_heat_rate(starts)
+    exterior = (cut_flow + result.outer_field.circular_arc_heat_rate("outer", starts, ends)
+                - result.inner_field.circular_arc_heat_rate("inner", starts, ends))
+    error = np.max(abs(exterior-total))
+    record_property("external_perimeter_balance_W_m", error)
+    assert error < 1e-11

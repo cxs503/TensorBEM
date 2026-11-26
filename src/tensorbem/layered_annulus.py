@@ -213,6 +213,30 @@ class AnnulusLayerField:
             rate -= self.conductivity * half_width * np.sum(gradient*tangent, axis=1)
         return rate.reshape(angles.shape)
 
+    def circular_sector_generation(self, start_angle, end_angle):
+        """Integrated volumetric heating (W/m of axis) in a full-thickness sector.
+
+        Use unwrapped, counterclockwise angles in radians as for sector outflow.
+        This integral uses the material source coefficients only.
+        """
+        if not self.circular_geometry:
+            raise ValueError("sector heat generation requires the circular formulation")
+        start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
+                                         np.asarray(end_angle, dtype=float))
+        if not np.isfinite(start).all() or not np.isfinite(end).all():
+            raise ValueError("sector angles must be finite")
+        outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
+        width = end - start
+        mid = start + width/2
+        # Angular averages of the linear and quadratic Cartesian source terms.
+        gx, gy = self.source_gradient
+        xx, xy, yy = self.source_quadratic
+        linear = np.sinc(width/(2*np.pi)) * (gx*np.cos(mid) + gy*np.sin(mid))
+        quadratic = (self.radial_source_coefficient + (xx+yy)/2
+                     + np.sinc(width/np.pi) * ((xx-yy)*np.cos(2*mid) + xy*np.sin(2*mid))/2)
+        return width * (self.volumetric_source*(outer**2-inner**2)/2
+                        + linear*(outer**3-inner**3)/3 + quadratic*(outer**4-inner**4)/4)
+
     def circular_sector_outflow(self, start_angle, end_angle):
         """Net outward heat rate (W/m of axis) for a full-thickness sector.
 
