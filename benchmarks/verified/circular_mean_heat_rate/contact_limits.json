@@ -1,0 +1,27 @@
+{
+  "source_commit": "d7f74fdf9c5c65cc46752c0f2ae5eb122df3b7ee",
+  "command": "OPENBLAS_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q -o junit_family=legacy tests/*annulus*.py --junitxml=annulus.xml",
+  "tests": 116,
+  "failures": 0,
+  "reference": "Constant resistance and asymmetric resistance split. Integrate radial energy balance and Fourier law from a contact emitting 1.2 W/m², with nonzero azimuthal modes at both walls. Exact inward-side and outward-side radial fluxes are -0.4 and +0.8 W/m² and the mean temperature jump is 0.11 K.",
+  "absolute_errors": {
+    "test_one_sided_circle_means_at_generating_contact[15]": {
+      "temperature_K": 0.0,
+      "rate_W_m": 8.43769498715119e-15,
+      "jump_K": 1.1102230246251565e-16,
+      "generation_W_m": 1.5987211554602254e-14
+    },
+    "test_one_sided_circle_means_at_generating_contact[32]": {
+      "temperature_K": 2.220446049250313e-15,
+      "rate_W_m": 6.261657858885883e-14,
+      "jump_K": 1.887379141862766e-15,
+      "generation_W_m": 7.283063041541027e-14
+    },
+    "test_one_sided_circle_means_at_generating_contact[64]": {
+      "temperature_K": 1.3322676295501878e-15,
+      "rate_W_m": 3.2862601528904634e-14,
+      "jump_K": 9.992007221626409e-16,
+      "generation_W_m": 3.730349362740526e-14
+    }
+  }
+}
