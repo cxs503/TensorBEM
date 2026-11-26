@@ -260,6 +260,7 @@ def solve_harmonic_conduction(mesh, wall_temperature, angular_frequency, *, cond
     source in W/m³ is volumetric_source + (x,y) dot source_gradient plus
     (x², xy, y²) dot source_quadratic. The
     distributed exchange uses a uniform heat_loss_coefficient H in W/(m³ K)
+    (positive H permits a steady solve at zero frequency)
     and Tamb = bulk_ambient_temperature + (x,y) dot bulk_ambient_gradient
     + (x², xy, y²) dot bulk_ambient_quadratic in K. The mesh needs spatial resolution of the thermal penetration depth.
     """
@@ -283,8 +284,8 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     and film coefficients may each be scalar or panel-sized. A zero film
     coefficient gives zero external input. A local wall_areal_heat_capacity
     in J/(m² K) stores i omega C_wall T_wall per area, so inward_flux into
-    the bulk equals external_inward_flux minus this storage rate. Frequency must be positive, including for pure
-    flux data. volumetric_source is the generation phasor at the coordinate origin
+    the bulk equals external_inward_flux minus this storage rate. Zero frequency
+    requires positive distributed exchange H, including for pure flux data. volumetric_source is the generation phasor at the coordinate origin
     in W/m³. source_gradient gives its two Cartesian derivatives at the origin in W/m⁴.
     source_quadratic gives coefficients of x², xy and y² in W/m⁵.
     A uniform heat_loss_coefficient H in W/(m³ K) adds H*(Tamb-T) to
@@ -295,9 +296,12 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     samples, returned in harmonic_boundary_points order. Inputs may be scalar,
     per panel, or flat arrays in this sample order. The mesh describes a single bounded homogeneous material.
     """
-    for value in (angular_frequency, conductivity, volumetric_heat_capacity):
+    if (np.ndim(angular_frequency) or not np.isrealobj(angular_frequency)
+            or not np.isfinite(angular_frequency) or angular_frequency < 0):
+        raise ValueError("frequency must be finite and nonnegative")
+    for value in (conductivity, volumetric_heat_capacity):
         if np.ndim(value) or not np.isrealobj(value) or not np.isfinite(value) or value <= 0:
-            raise ValueError("frequency, conductivity and volumetric capacity must be finite and positive")
+            raise ValueError("conductivity and volumetric capacity must be finite and positive")
     source = np.asarray(volumetric_source, dtype=complex)
     if source.ndim or not np.isfinite(source):
         raise ValueError("volumetric_source must be a finite uniform phasor")
@@ -307,6 +311,8 @@ def solve_mixed_harmonic_conduction(mesh, boundary_types, boundary_values, angul
     if (np.ndim(heat_loss_coefficient) or not np.isrealobj(heat_loss_coefficient)
             or not np.isfinite(heat_loss_coefficient) or heat_loss_coefficient < 0):
         raise ValueError("heat_loss_coefficient must be finite, real and nonnegative")
+    if angular_frequency == 0 and heat_loss_coefficient == 0:
+        raise ValueError("zero frequency requires positive heat_loss_coefficient")
     ambient = np.asarray(bulk_ambient_temperature, dtype=complex)
     if ambient.ndim or not np.isfinite(ambient):
         raise ValueError("bulk_ambient_temperature must be a finite phasor at the origin")

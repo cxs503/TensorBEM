@@ -263,3 +263,35 @@ def test_partial_wall_storage_resolves_sampled_capacity(quadratic):
     np.testing.assert_allclose(field.panel_inward_power(panel), 0., atol=1e-13)
     with pytest.raises(ValueError, match="component"):
         field.panel_inward_power(panel, component="unknown")
+
+
+@pytest.mark.parametrize("condition", ["flux", "film"])
+@pytest.mark.parametrize("quadratic", [False, True])
+def test_steady_screened_disk_radial_refinement(condition, quadratic, record_property):
+    # On the unit disk T=base+A*I0(lambda*r), lambda²=H/k. Distributed
+    # exchange fixes the constant even when every boundary flux is prescribed.
+    k, loss, ambient, source = 1.2, 3.5, 2., .7
+    wave = np.sqrt(loss/k)
+    base, amplitude = ambient+source/loss, -.8
+    wall = base+amplitude*iv(0, wave)
+    inward = k*amplitude*wave*iv(1, wave)
+    film = 2.5
+    data = inward if condition == "flux" else wall+inward/film
+    r = np.array([0., .2, .55, .75])
+    points = np.column_stack((.6*r, .8*r))
+    exact = base+amplitude*iv(0, wave*r)
+    flux = (-k*amplitude*wave*iv(1, wave*r))[:, None]*[.6, .8]
+    previous = None
+    for panels in (16, 32, 64, 128):
+        field = solve_mixed_harmonic_conduction(regular_polygon(panels), condition, data, 0.,
+            conductivity=k, volumetric_heat_capacity=2., heat_loss_coefficient=loss,
+            bulk_ambient_temperature=ambient, volumetric_source=source, film_coefficients=film,
+            wall_areal_heat_capacity=3., quadratic=quadratic)
+        errors = np.array([max(abs(field.temperature(points)-exact)), np.max(abs(field.heat_flux(points)-flux))])
+        record_property(f"temperature_error_{panels}_K", errors[0])
+        record_property(f"flux_error_{panels}_W_m2", errors[1])
+        np.testing.assert_array_equal(field.external_inward_flux, field.inward_flux)
+        if previous is not None:
+            assert np.all(previous > 3*errors)
+        previous = errors
+    assert errors[0] < .002 and errors[1] < .003
