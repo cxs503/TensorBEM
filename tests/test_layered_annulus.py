@@ -561,3 +561,37 @@ def test_one_sided_circle_means_at_generating_contact(panels, record_property):
         error = np.max(np.abs(np.subtract(measured, reference)))
         record_property(label, error)
         assert error < 1e-11
+
+
+@pytest.mark.parametrize("panels", [15, 32, 64])
+def test_circular_boundary_field_at_off_grid_contact_angles(panels, record_property):
+    a, b, c = .45, .65, .9
+    ki, ko, resistance, fraction = 1.4, 2.1, .12, .35
+    mode = 3
+    # Exact inner radial factor (r/b)^m. Prescribe the sheet generation
+    # amplitude, then determine the two outer harmonic coefficients at b.
+    qi = -ki*mode/b
+    qo = qi + 2.
+    outer_value = 1 - resistance*(fraction*qi + (1-fraction)*qo)
+    difference = -qo*b/(ko*mode)
+    growing, decaying = (outer_value+difference)/2, (outer_value-difference)/2
+    nodes = (np.arange(panels)+.5)*2*np.pi/panels
+    wall_mode = np.sin(mode*nodes+.23)
+    walls = ((a/b)**mode*wall_mode, (growing*(c/b)**mode+decaying*(b/c)**mode)*wall_mode)
+    result = solve_annulus_contact((a,b,c), (ki,ko), walls, resistance, panels,
+                                   formulation="circular", interface_source=2*wall_mode,
+                                   inner_resistance_fraction=fraction)
+    angles = 2*np.pi*(np.arange(73)+.37)/73
+    radial = np.column_stack((np.cos(angles), np.sin(angles)))
+    tangent = np.column_stack((-radial[:, 1], radial[:, 0]))
+    for side, field, boundary, value, flux, k in (
+            ("inner", result.inner_field, "outer", 1., qi, ki),
+            ("outer", result.outer_field, "inner", outer_value, qo, ko)):
+        temperature, vector = field.circular_boundary_field(boundary, angles)
+        harmonic = np.sin(mode*angles+.23)
+        exact_flux = (flux*harmonic)[:, None]*radial - (
+            k*value*mode/b*np.cos(mode*angles+.23))[:, None]*tangent
+        errors = (np.max(abs(temperature-value*harmonic)), np.linalg.norm(vector-exact_flux, axis=1).max())
+        for label, error in zip(("temperature_K", "vector_flux_W_m2"), errors):
+            record_property(f"{side}_{label}", error)
+            assert error < 1e-11

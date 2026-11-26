@@ -121,6 +121,27 @@ class AnnulusLayerField:
         outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
         if np.any((radius <= inner) | (radius >= outer)):
             raise ValueError("targets must be inside the selected circular material")
+        return self._circular_extension(xy, radius, inner, outer)
+
+    def circular_boundary_field(self, boundary, angles):
+        """One-sided temperature (K) and Cartesian heat flux (W/m²) on a circle.
+
+        Select "inner" or "outer" relative to this material layer. Supply a
+        vector of azimuths in radians measured counterclockwise from +x.
+        """
+        if not self.circular_geometry:
+            raise ValueError("boundary fields require the circular formulation")
+        if boundary not in ("inner", "outer"):
+            raise ValueError("boundary must be 'inner' or 'outer'")
+        angles = np.asarray(angles, dtype=float)
+        if angles.ndim != 1 or not np.isfinite(angles).all():
+            raise ValueError("angles must be a finite vector in radians")
+        outer, inner = (np.linalg.norm(loop.vertices[0]) for loop in self.mesh.loops)
+        radius = np.full(angles.shape, inner if boundary == "inner" else outer)
+        xy = radius[:, None] * np.column_stack((np.cos(angles), np.sin(angles)))
+        return self._circular_extension(xy, radius, inner, outer)
+
+    def _circular_extension(self, xy, radius, inner, outer):
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)
         angle = np.arctan2(xy[:, 1], xy[:, 0])
