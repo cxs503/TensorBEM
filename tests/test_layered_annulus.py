@@ -610,6 +610,22 @@ def test_circular_boundary_field_at_off_grid_contact_angles(panels, record_prope
             record_property("arc_generation_balance_W_m", sheet_error)
             assert sheet_error < 1e-11
 
+    # Enclose both materials and the emitting contact in one control volume.
+    # Its physical perimeter excludes the interface. The source integral is
+    # known without using either of the numerical interface flux traces.
+    inner, outer = result.inner_field, result.outer_field
+    cuts = np.stack((starts, ends))
+    cut_in, cut_out = inner.circular_cut_heat_rate(cuts) + outer.circular_cut_heat_rate(cuts)
+    exterior_outflow = (outer.circular_arc_heat_rate("outer", starts, ends)
+                        - inner.circular_arc_heat_rate("inner", starts, ends) + cut_out - cut_in)
+    for label, residual in (
+            ("inner_bulk_W_m", inner.circular_sector_outflow(starts, ends)),
+            ("outer_bulk_W_m", outer.circular_sector_outflow(starts, ends)),
+            ("composite_sector_W_m", exterior_outflow - 2*b*primitive_difference)):
+        error = np.max(abs(residual))
+        record_property(label, error)
+        assert error < 1e-11
+
 
 def test_arc_integral_retains_mean_and_even_grid_nyquist_mode(record_property):
     n, radius = 16, .4
@@ -639,8 +655,7 @@ def test_sourced_sector_heat_balance(panels, record_property):
     for name, field, lo, hi in (("inner", result.inner_field, a, b), ("outer", result.outer_field, b, c)):
         rate = field.circular_cut_heat_rate(cuts)
         expected = np.sin(cuts)*(k*(hi-lo) - np.cos(cuts)**3*(hi**4-lo**4)/12)
-        net = (field.circular_arc_heat_rate("outer", cuts[:-1], cuts[1:])
-               - field.circular_arc_heat_rate("inner", cuts[:-1], cuts[1:]) + np.diff(rate))
+        net = field.circular_sector_outflow(cuts[:-1], cuts[1:])
         generated = (hi**4-lo**4)/4 * np.diff(cuts/2 + np.sin(2*cuts)/4)
         for label, residual in (("cut_W_m", rate-expected), ("sector_balance_W_m", net-generated)):
             error = np.abs(residual).max()

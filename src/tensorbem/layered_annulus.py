@@ -213,6 +213,19 @@ class AnnulusLayerField:
             rate -= self.conductivity * half_width * np.sum(gradient*tangent, axis=1)
         return rate.reshape(angles.shape)
 
+    def circular_sector_outflow(self, start_angle, end_angle):
+        """Net outward heat rate (W/m of axis) for a full-thickness sector.
+
+        The sector runs counterclockwise from start to end in unwrapped
+        radians. Exchanging the angles reverses the sign. Arrays broadcast.
+        All four boundary contributions are evaluated from the solved field.
+        """
+        inner = self.circular_arc_heat_rate("inner", start_angle, end_angle)
+        outer = self.circular_arc_heat_rate("outer", start_angle, end_angle)
+        cuts = np.stack(np.broadcast_arrays(start_angle, end_angle))
+        start_cut, end_cut = self.circular_cut_heat_rate(cuts)
+        return outer - inner + (end_cut - start_cut)
+
     def _circular_extension(self, xy, radius, inner, outer):
         span = np.log(outer/inner)
         log_r = np.log(radius/inner)
