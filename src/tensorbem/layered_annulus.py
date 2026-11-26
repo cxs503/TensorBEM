@@ -300,6 +300,29 @@ class AnnulusContactResult:
     sheet_tangential_heat_rate: np.ndarray | None = None
     sheet_reservoir_flux: np.ndarray | None = None
 
+    def polygonal_sheet_current(self, angles):
+        """Tangential heat rate (W/m of axis) at ray cuts of the straight-panel sheet.
+
+        Angles are in radians, positive in the direction of increasing azimuth.
+        Interpolate the vertex currents linearly in distance along the chord,
+        consistent with a constant net distributed load on each panel.
+        """
+        if self.inner_field is None or self.inner_field.circular_geometry:
+            raise ValueError("polygonal sheet current requires the straight-panel formulation")
+        angles = np.asarray(angles, dtype=float)
+        if not np.isfinite(angles).all():
+            raise ValueError("sheet current angles must be finite")
+        current = self.sheet_tangential_heat_rate
+        if current is None:
+            return np.zeros_like(angles)
+        first = self.inner_field.mesh.loops[0].vertices[0]
+        width = 2*np.pi/len(current)
+        position = np.remainder(angles-np.arctan2(first[1], first[0]), 2*np.pi)/width
+        panel = np.floor(position).astype(int)
+        offset = (position-panel-.5)*width
+        fraction = .5*(1+np.tan(offset)/np.tan(.5*width))
+        return (1-fraction)*current[(panel-1) % len(current)] + fraction*current[panel % len(current)]
+
     def circular_sheet_current(self, angles):
         """Sheet heat rate toward increasing azimuth (W/m of axis) at angles in radians.
 

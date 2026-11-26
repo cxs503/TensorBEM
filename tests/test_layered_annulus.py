@@ -807,6 +807,17 @@ def test_polygonal_mixed_wall_sheet_interior_refinement(flux_side, record_proper
         end = np.pi/2
         current = result.sheet_tangential_heat_rate
         cut_difference = current[n//4-1]-current[-1]
+        cuts = np.array([-.17, .71, 2.6, 6.8, 4.1])
+        off_grid = result.polygonal_sheet_current(cuts)
+        errors["off_grid_current_error_W_m"] = np.max(abs(off_grid-ks*mode/b*np.sin(mode*cuts+.2)))
+        np.testing.assert_allclose(result.polygonal_sheet_current(cuts+2*np.pi), off_grid, atol=1e-13, rtol=0.)
+        # Construct a ray through a known point 23% along each physical chord.
+        vertices = result.inner_field.mesh.loops[0].vertices[:n]
+        targets = .77*vertices+.23*np.roll(vertices, -1, axis=0)
+        recovered = result.polygonal_sheet_current(np.arctan2(targets[:, 1], targets[:, 0]))
+        chord_error = np.max(abs(recovered-(.77*np.roll(current, 1)+.23*current)))
+        record_property(f"n{n}_chord_interpolation_error_W_m", chord_error)
+        assert chord_error < 1e-12
         sine_change = np.sin(mode*end+.2)-np.sin(.2)
         exact_difference = ks*mode*sine_change/b
         chord = 2*b*np.sin(np.pi/n)
