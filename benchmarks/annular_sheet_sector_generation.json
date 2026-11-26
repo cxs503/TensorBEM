@@ -1,0 +1,80 @@
+{
+  "source_commit": "4107f3b4ce0bf178cfcb338026207e24667af266",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_sheet_generation.xml",
+  "tests": 97,
+  "failures": 0,
+  "errors": 0,
+  "reference": "Sector integral of a constant plus a third-mode sheet source. Compare Fourier circle integration with the analytic primitive and polygonal integration with both nominal-circle generation and an independent 23%-chord weighted sum. Reversed intervals and multi-turn polygon sectors are included.",
+  "measurements": {
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-15]": {
+      "sheet_generation_W_m": 1.887379141862766e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-32]": {
+      "sheet_generation_W_m": 1.2628786905111156e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-False-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-15]": {
+      "sheet_generation_W_m": 2.886579864025407e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-32]": {
+      "sheet_generation_W_m": 1.1102230246251565e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[fixed-True-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-15]": {
+      "sheet_generation_W_m": 1.887379141862766e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-32]": {
+      "sheet_generation_W_m": 1.2628786905111156e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-False-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-15]": {
+      "sheet_generation_W_m": 2.886579864025407e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-32]": {
+      "sheet_generation_W_m": 1.1102230246251565e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[inner-flux-True-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-15]": {
+      "sheet_generation_W_m": 1.887379141862766e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-32]": {
+      "sheet_generation_W_m": 1.2628786905111156e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-False-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-15]": {
+      "sheet_generation_W_m": 2.886579864025407e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-32]": {
+      "sheet_generation_W_m": 1.1102230246251565e-15
+    },
+    "test_sheet_sector_with_conduction_and_reservoir[outer-flux-True-64]": {
+      "sheet_generation_W_m": 1.5543122344752192e-15
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[inner-flux]": {
+      "n32_partial_source_geometry_error_W_m": 2.220446049250313e-16,
+      "n32_off_grid_sheet_generation_error_W_m": 0.02320954334237868,
+      "n64_partial_source_geometry_error_W_m": 2.220446049250313e-16,
+      "n64_off_grid_sheet_generation_error_W_m": 0.00439539408299594,
+      "n128_partial_source_geometry_error_W_m": 0.0,
+      "n128_off_grid_sheet_generation_error_W_m": 0.001975812826647161
+    },
+    "test_polygonal_mixed_wall_sheet_interior_refinement[outer-flux]": {
+      "n32_partial_source_geometry_error_W_m": 2.220446049250313e-16,
+      "n32_off_grid_sheet_generation_error_W_m": 0.02320954334237868,
+      "n64_partial_source_geometry_error_W_m": 2.220446049250313e-16,
+      "n64_off_grid_sheet_generation_error_W_m": 0.00439539408299594,
+      "n128_partial_source_geometry_error_W_m": 0.0,
+      "n128_off_grid_sheet_generation_error_W_m": 0.001975812826647161
+    }
+  }
+}
