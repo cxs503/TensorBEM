@@ -1,0 +1,141 @@
+{
+  "mission_id": "m27906",
+  "task_key": "paper-exp-propeller-openwater-bem",
+  "generated_utc": "2026-11-27T06:30:42.116657+00:00",
+  "artefacts_read": {
+    "anchor": "benchmarks/anchors/kp505_openwater.json",
+    "bem_verdict": "benchmarks/kp505_openwater_bem/verdict.json"
+  },
+  "note": "read-only machine check; no solver re-run, no artefact overwrite",
+  "anchor_checks": {
+    "C1": {
+      "id": "C1-quote-and-table-number",
+      "statement": "every data point carries a verbatim quotation and a table number",
+      "threshold": "1 quote + table id per point",
+      "n_points": 10,
+      "table_id": "Table 2. Comparison of CFD and Experimental Results (columns 'Experimental')",
+      "page": 10,
+      "quote": "Table 2. Comparison of CFD and Experimental Results",
+      "rows_with_source_line": 10,
+      "all_rows_have_source_line": true,
+      "table_id_starts_with_Table2": true,
+      "pass": true
+    },
+    "C2": {
+      "id": "C2-points-and-design-J",
+      "statement": ">= 8 advance-ratio points, design advance ratio included",
+      "threshold": "n_J >= 8 and J_design in J",
+      "n_J": 10,
+      "J": [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "design_J": 0.7,
+      "design_J_present": true,
+      "J_sorted": true,
+      "pass": true
+    },
+    "C3": {
+      "id": "C3-conversion-reproducible",
+      "statement": "same-calibre conversion script on disk and reproducible; residual < 1e-9",
+      "threshold": "|eta0 - recomputed| < 1e-9",
+      "builder_script": "tools/build_kp505_openwater_anchor.py",
+      "builder_exists": true,
+      "eta0_definition": "eta0 = J*KT/(2*pi*KQ), KQ = 10KQ/10",
+      "max_residual": 0.0,
+      "max_residual_lt_1e9": true,
+      "all_rows_float_exact": true,
+      "pass": true
+    },
+    "C4": {
+      "id": "C4-dimensional-homogeneity",
+      "statement": "dimensionless open-water coefficients; internal consistency machine-checked",
+      "threshold": "eta0 = J*KT/(2*pi*KQ) holds for all rows; KQ = 10KQ/10",
+      "all_eta0_in_unit_interval": true,
+      "all_KT_nonnegative": true,
+      "all_10KQ_nonnegative": true,
+      "peak_is_table_max": true,
+      "design_point_matches_row": true,
+      "source_error_columns_reproduce": true,
+      "pass": true
+    },
+    "C5": {
+      "id": "C5-cases-reported",
+      "statement": ">= 3 cases reported (no cherry-picking of passing points)",
+      "threshold": "n_cases >= 3",
+      "n_anchor_points": 10,
+      "n_bem_points": 10,
+      "pass": true,
+      "n_total_cases": 20
+    },
+    "C6": {
+      "id": "C6-honest-fail",
+      "statement": "honest FAIL recorded in the artefact with the gap stated",
+      "threshold": "verdict.status == FAIL and gap_statement non-empty",
+      "anchor_verdict_all_criteria_pass": true,
+      "anchor_geometry_complete": false,
+      "anchor_honest_notes": [
+        "PROVENANCE GAP (honest): the primary KRISO/KCS-workshop EFD handout and the Hino (2005) Tokyo-2015 proceedings were not reachable from this sandbox (egress allowlist). The transcribed curve is a SECONDARY reproduction: the 'Experimental' columns of Table 2 of Iftikhar & Takinaci, MARINE 2023.",
+        "That paper does not cite the source of its experimental column, so the anchor is labelled SECONDARY_REPRODUCTION and must be re-verified against the KRISO table before it is used for an accuracy claim in the parent study.",
+        "Geometry: D and blade count are taken from/measured on the official KRISO geometry archive; P/D and AE/A0 are WITHHELD (no reachable official textual source)."
+      ],
+      "anchor_has_honest_notes": true,
+      "pass": true
+    },
+    "C7": {
+      "id": "C7-significant-digits",
+      "statement": "all numbers carry >= 6 significant digits in the stored representation",
+      "threshold": "sig_digits >= 6",
+      "min_sig_digits_eta0": 16,
+      "min_sig_digits_eta0_recomputed": 16,
+      "source_values_stored_verbatim": true,
+      "pass": true
+    }
+  },
+  "bem_checks": {
+    "BEM-all-points": {
+      "id": "BEM-all-points-reported",
+      "statement": "all anchor points reported in the BEM study (no selection)",
+      "threshold": "points_reported == points_in_anchor",
+      "points_reported": 10,
+      "points_in_anchor": 10,
+      "all_reported": true,
+      "pass": true
+    },
+    "BEM-honest-fail": {
+      "id": "BEM-honest-fail",
+      "statement": "BEM verdict is an honest FAIL with the gap stated",
+      "threshold": "status == FAIL and gap_statement non-empty",
+      "status": "FAIL",
+      "failed_criteria": [
+        "C1",
+        "C2"
+      ],
+      "gap_statement": "C1 asks |dK_T| <= 3.0% at J = 0.8 and measured -29.13%; C2 asks |d eta_0| <= 5.0% at all 10 points and the worst is 786.67% at J = 1.0 (the |d eta_0| <= 5.0% band is met at 1 of 10 points). The Richardson-extrapolated lattice values (K_T = {'0.4': 0.3141321821632644, '0.7': 0.1492704506833062, '0.9': 0.027500459224397884}) do not close the gap either, and the radial-ladder GCI on K_T is 7.1-8.1% at J = (0.4, 0.7, 0.9), i.e. the *discretisation* of this lattice is itself larger than the 3% design-point band. What is left is a geometry/model gap: the published particulars fix only six scalars, so the chord and radial pitch distributions and the NACA66 camber are reconstructed or absent and the sections are flat. The lattice breaks down near zero loading: K_T < 0 at J = [1.0] and the momentum gate fails there, so those points are reported as unphysical rather than dropped.",
+      "has_gap_statement": true,
+      "pass": true
+    },
+    "BEM-design-point": {
+      "id": "BEM-design-point-deviation",
+      "statement": "design-J deviation reported (C1: |dKT| <= 3%)",
+      "threshold": "reported, not necessarily passed",
+      "design_advance_ratio": 0.8,
+      "measured_pct": -29.125671222801053,
+      "passed": false,
+      "pass": true
+    }
+  },
+  "verdict": {
+    "all_checks_pass": true,
+    "honest_fail_recorded": true,
+    "summary": "transcription criteria C1-C4, C7 pass; >= 3 cases reported (C5); honest FAIL recorded for the geometry fields (P/D, AE/A0 WITHHELD) and for the BEM study (C1/C2 not met); the gap is stated in the artefacts"
+  }
+}
