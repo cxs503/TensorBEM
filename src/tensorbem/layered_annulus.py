@@ -60,8 +60,8 @@ def _integrate_polygonal_arc(loop, flux, start_angle, end_angle):
             + (fractions[1]*heat[panels[1]]-fractions[0]*heat[panels[0]]))
 
 
-def _integrate_circular_arc(loop, samples, start_angle, end_angle):
-    """Integrate a real periodic interpolant against nominal arc length."""
+def _circular_arc_mean(loop, samples, start_angle, end_angle):
+    """Mean of the real periodic interpolant, including the pointwise limit."""
     start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
                                      np.asarray(end_angle, dtype=float))
     if not np.isfinite(start).all() or not np.isfinite(end).all():
@@ -70,12 +70,18 @@ def _integrate_circular_arc(loop, samples, start_angle, end_angle):
     coeff = np.fft.rfft(samples) / n
     width = end - start
     phase = start + width/2 - np.arctan2(loop.centers[0, 1], loop.centers[0, 0])
-    integral = coeff[0].real * width
+    mean = np.full_like(width, coeff[0].real)
     for mode in range(1, len(coeff)):
         copies = 1 if 2*mode == n else 2
         average = np.sinc(mode*width/(2*np.pi))
-        integral += copies * width * average * (coeff[mode]*np.exp(1j*mode*phase)).real
-    return np.linalg.norm(loop.vertices[0]) * integral
+        mean += copies * average * (coeff[mode]*np.exp(1j*mode*phase)).real
+    return mean
+
+
+def _integrate_circular_arc(loop, samples, start_angle, end_angle):
+    mean = _circular_arc_mean(loop, samples, start_angle, end_angle)
+    width = np.subtract(end_angle, start_angle, dtype=float)
+    return np.linalg.norm(loop.vertices[0]) * width * mean
 
 
 @dataclass(frozen=True)
@@ -199,6 +205,20 @@ class AnnulusLayerField:
         normal = self.normal_derivative[self.mesh.loop_slices[index]]
         flux = self.conductivity * normal * (1 if index == 1 else -1)
         return _integrate_polygonal_arc(self.mesh.loops[index], flux, start_angle, end_angle)
+
+    def circular_arc_mean_temperature(self, boundary, start_angle, end_angle):
+        """One-sided mean boundary temperature (K) on a nominal circle.
+
+        The unwrapped angles in radians broadcast together. Reversing the
+        endpoints preserves the mean. Equal endpoints give the local trace.
+        """
+        if not self.circular_geometry:
+            raise ValueError("circular arc temperatures require the circular formulation")
+        if boundary not in ("inner", "outer"):
+            raise ValueError("boundary must be 'inner' or 'outer'")
+        index = 1 if boundary == "inner" else 0
+        samples = self.boundary_values[self.mesh.loop_slices[index]]
+        return _circular_arc_mean(self.mesh.loops[index], samples, start_angle, end_angle)
 
     def circular_arc_heat_rate(self, boundary, start_angle, end_angle):
         """Integrate the sampled radial boundary flux over oriented arcs (W/m).

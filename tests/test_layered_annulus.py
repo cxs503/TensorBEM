@@ -603,9 +603,25 @@ def test_circular_boundary_field_at_off_grid_contact_angles(panels, record_prope
         arc_error = np.max(abs(arc_rate - b*flux*primitive_difference))
         record_property(f"{side}_arc_W_m", arc_error)
         assert arc_error < 1e-11
+        # Independent cosine primitive on finite arcs and the pointwise
+        # sine limit for the coincident endpoints and one-ULP arc.
+        left = np.append(starts, .7)
+        right = np.append(ends, np.nextafter(.7, 1.))
+        expected = np.sin(mode*left+.23)
+        finite_arc = np.abs(right-left) > 1e-12
+        expected[finite_arc] = (np.cos(mode*left[finite_arc]+.23) - np.cos(mode*right[finite_arc]+.23)) / (mode*(right[finite_arc]-left[finite_arc]))
+        mean = field.circular_arc_mean_temperature(boundary, left, right)
+        reverse = field.circular_arc_mean_temperature(boundary, right, left)
+        mean_error = max(np.max(abs(mean-value*expected)), np.max(abs(reverse-value*expected)))
+        record_property(f"{side}_arc_mean_temperature_K", mean_error)
+        assert mean_error < 1e-11
         if side == "inner":
+            inner_mean = mean
             incoming = arc_rate
         else:
+            jump_error = np.max(abs(inner_mean - mean - resistance*(fraction*qi + (1-fraction)*qo)*expected))
+            record_property("arc_mean_contact_jump_K", jump_error)
+            assert jump_error < 1e-11
             sheet_error = np.max(abs(arc_rate - incoming - 2*b*primitive_difference))
             record_property("arc_generation_balance_W_m", sheet_error)
             assert sheet_error < 1e-11
