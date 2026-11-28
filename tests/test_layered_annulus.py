@@ -958,3 +958,33 @@ def test_weak_sheet_generation_under_radial_throughflow(rate, formulation, recor
     record_property("reference_inner_W_m", inner_ref)
     record_property("reference_outer_W_m", outer_ref)
     record_property("reference_generation_W_m", generation_ref)
+
+
+@pytest.mark.parametrize("n", [32, 64, 128])
+def test_polygonal_contact_arc_mean(n, record_property):
+    result, _, _, mode, _, _, _ = _sheet_sector_case(n, 0, "polygonal")
+    quarter = n//4
+    for name, field, boundary, trace, amplitude in (
+            ("inner", result.inner_field, "outer", result.inner_trace, 1+.3*.4*.2),
+            ("outer", result.outer_field, "inner", result.outer_trace, 1+.3*.6*.35)):
+        loop = field.mesh.loops[0 if boundary == "outer" else 1]
+        # Construct the end rays from Cartesian points on physical chords.
+        points = (.77*loop.vertices[[0, quarter]] + .23*loop.vertices[[1, quarter+1]])
+        lo, hi = np.arctan2(points[:, 1], points[:, 0])
+        weighted = (.77*trace[0] + trace[1:quarter].sum() + .23*trace[quarter])
+        starts = [lo, hi, lo, lo, lo]
+        ends = [hi, lo, hi+4*np.pi, lo, np.nextafter(lo, hi)]
+        targets = [weighted/quarter, weighted/quarter, (weighted+2*trace.sum())/(quarter+2*n),
+                   trace[0], trace[0]]
+        # Symmetric rays straddling the seam intercept equal chord lengths.
+        starts.extend([-1e-12, 0.])
+        ends.extend([1e-12, 0.])
+        targets.extend([.5*(trace[-1]+trace[0]), trace[0]])
+        means = field.polygonal_arc_mean_temperature(boundary, starts, ends)
+        error = np.max(np.abs(means-targets))
+        record_property(name+"_chord_weight_error_K", error)
+        assert error < 1e-12
+        exact = 1 + amplitude*(np.sin(mode*hi+.2)-np.sin(mode*lo+.2))/(mode*(hi-lo))
+        error = abs(means[0]-exact)
+        record_property(name+"_continuum_error_K", error)
+        assert error < 12/n**2

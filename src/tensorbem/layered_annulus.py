@@ -206,6 +206,51 @@ class AnnulusLayerField:
         flux = self.conductivity * normal * (1 if index == 1 else -1)
         return _integrate_polygonal_arc(self.mesh.loops[index], flux, start_angle, end_angle)
 
+    def polygonal_arc_mean_temperature(self, boundary, start_angle, end_angle):
+        """One-sided temperature (K) averaged by physical chord length.
+
+        Unwrapped ray angles in radians broadcast. Reversed limits yield the
+        same average. A point selects its panel, using the counterclockwise
+        panel at a vertex.
+        """
+        if self.circular_geometry:
+            raise ValueError("polygonal arc temperatures require the straight-panel formulation")
+        if boundary not in ("inner", "outer"):
+            raise ValueError("boundary must be 'inner' or 'outer'")
+        index = 1 if boundary == "inner" else 0
+        loop = self.mesh.loops[index]
+        trace = self.boundary_values[self.mesh.loop_slices[index]]
+        start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
+                                         np.asarray(end_angle, dtype=float))
+        lo, hi = np.minimum(start, end), np.maximum(start, end)
+        turns, panels, _ = _polygonal_sheet_cut(loop, np.stack((lo, hi)))
+        first, last = panels
+        n = loop.panel_count
+        step = 2*np.pi/n
+        origin = np.arctan2(loop.vertices[0, 1], loop.vertices[0, 0])
+        # Compute end pieces from their angular spans directly. Subtracting
+        # perimeter primitives loses precision when rays straddle a vertex.
+        first_end = origin + turns[0]*(2*np.pi) + (first+1)*step
+        last_start = origin + turns[1]*(2*np.pi) + last*step
+        def chord_fraction(span):
+            span = np.clip(span, 0., step)
+            return np.sin(span)/(2*np.sin(step/2)*np.cos(step/2-span))
+
+        left = chord_fraction(first_end-lo)*loop.lengths[first]
+        right = chord_fraction(hi-last_start)*loop.lengths[last]
+        # Whole panels between the two cuts, including any complete turns.
+        def middle(weights):
+            sums = np.concatenate(([0.], np.cumsum(weights)))
+            direct = sums[last]-sums[first+1]
+            wrapped = (sums[-1]-sums[first+1])+sums[last]
+            count = turns[1]-turns[0]
+            return np.where(count == 0, direct, (count-1)*sums[-1]+wrapped)
+
+        length = left+right+middle(loop.lengths)
+        total = left*trace[first]+right*trace[last]+middle(loop.lengths*trace)
+        same_panel = (turns[0] == turns[1]) & (first == last)
+        return np.divide(total, length, out=np.array(trace[first]), where=~same_panel)
+
     def circular_arc_mean_temperature(self, boundary, start_angle, end_angle):
         """One-sided mean boundary temperature (K) on a nominal circle.
 
