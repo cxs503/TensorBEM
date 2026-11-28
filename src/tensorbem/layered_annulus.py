@@ -60,6 +60,40 @@ def _integrate_polygonal_arc(loop, flux, start_angle, end_angle):
             + (fractions[1]*heat[panels[1]]-fractions[0]*heat[panels[0]]))
 
 
+def _polygonal_arc_mean(loop, trace, start_angle, end_angle):
+    """Chord-length mean of a constant-panel trace."""
+    start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
+                                     np.asarray(end_angle, dtype=float))
+    lo, hi = np.minimum(start, end), np.maximum(start, end)
+    turns, panels, _ = _polygonal_sheet_cut(loop, np.stack((lo, hi)))
+    first, last = panels
+    n = loop.panel_count
+    step = 2*np.pi/n
+    origin = np.arctan2(loop.vertices[0, 1], loop.vertices[0, 0])
+    # Compute end pieces from their angular spans directly. Subtracting
+    # perimeter primitives loses precision when rays straddle a vertex.
+    first_end = origin + turns[0]*(2*np.pi) + (first+1)*step
+    last_start = origin + turns[1]*(2*np.pi) + last*step
+    def chord_fraction(span):
+        span = np.clip(span, 0., step)
+        return np.sin(span)/(2*np.sin(step/2)*np.cos(step/2-span))
+
+    left = chord_fraction(first_end-lo)*loop.lengths[first]
+    right = chord_fraction(hi-last_start)*loop.lengths[last]
+    # Whole panels between the two cuts, including any complete turns.
+    def middle(weights):
+        sums = np.concatenate(([0.], np.cumsum(weights)))
+        direct = sums[last]-sums[first+1]
+        wrapped = (sums[-1]-sums[first+1])+sums[last]
+        count = turns[1]-turns[0]
+        return np.where(count == 0, direct, (count-1)*sums[-1]+wrapped)
+
+    length = left+right+middle(loop.lengths)
+    total = left*trace[first]+right*trace[last]+middle(loop.lengths*trace)
+    same_panel = (turns[0] == turns[1]) & (first == last)
+    return np.divide(total, length, out=np.array(trace[first]), where=~same_panel)
+
+
 def _circular_arc_mean(loop, samples, start_angle, end_angle):
     """Mean of the real periodic interpolant, including the pointwise limit."""
     start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
@@ -220,36 +254,7 @@ class AnnulusLayerField:
         index = 1 if boundary == "inner" else 0
         loop = self.mesh.loops[index]
         trace = self.boundary_values[self.mesh.loop_slices[index]]
-        start, end = np.broadcast_arrays(np.asarray(start_angle, dtype=float),
-                                         np.asarray(end_angle, dtype=float))
-        lo, hi = np.minimum(start, end), np.maximum(start, end)
-        turns, panels, _ = _polygonal_sheet_cut(loop, np.stack((lo, hi)))
-        first, last = panels
-        n = loop.panel_count
-        step = 2*np.pi/n
-        origin = np.arctan2(loop.vertices[0, 1], loop.vertices[0, 0])
-        # Compute end pieces from their angular spans directly. Subtracting
-        # perimeter primitives loses precision when rays straddle a vertex.
-        first_end = origin + turns[0]*(2*np.pi) + (first+1)*step
-        last_start = origin + turns[1]*(2*np.pi) + last*step
-        def chord_fraction(span):
-            span = np.clip(span, 0., step)
-            return np.sin(span)/(2*np.sin(step/2)*np.cos(step/2-span))
-
-        left = chord_fraction(first_end-lo)*loop.lengths[first]
-        right = chord_fraction(hi-last_start)*loop.lengths[last]
-        # Whole panels between the two cuts, including any complete turns.
-        def middle(weights):
-            sums = np.concatenate(([0.], np.cumsum(weights)))
-            direct = sums[last]-sums[first+1]
-            wrapped = (sums[-1]-sums[first+1])+sums[last]
-            count = turns[1]-turns[0]
-            return np.where(count == 0, direct, (count-1)*sums[-1]+wrapped)
-
-        length = left+right+middle(loop.lengths)
-        total = left*trace[first]+right*trace[last]+middle(loop.lengths*trace)
-        same_panel = (turns[0] == turns[1]) & (first == last)
-        return np.divide(total, length, out=np.array(trace[first]), where=~same_panel)
+        return _polygonal_arc_mean(loop, trace, start_angle, end_angle)
 
     def circular_arc_mean_temperature(self, boundary, start_angle, end_angle):
         """One-sided mean boundary temperature (K) on a nominal circle.
@@ -407,6 +412,26 @@ class AnnulusContactResult:
     sheet_reservoir_flux: np.ndarray | None = None
 
     sheet_source_flux: np.ndarray | None = None
+
+    contact_temperature_jump: np.ndarray | None = None
+
+    def contact_arc_mean_temperature_jump(self, start_angle, end_angle):
+        """Inner minus outer temperature in K, averaged along a contact arc.
+
+        Unwrapped ray angles in radians broadcast. Either orientation gives
+        the same mean. Equal endpoints return the local jump. Circular
+        solutions use the periodic interpolant and polygonal solutions use
+        physical chord lengths. The solver retains the resistive drops before
+        adding them to the absolute temperatures.
+        """
+        if self.inner_field is None:
+            raise ValueError("contact arc means require the solved interface geometry")
+        loop = self.inner_field.mesh.loops[0]
+        jump = self.contact_temperature_jump
+        if jump is None:
+            jump = self.inner_trace-self.outer_trace
+        mean = _circular_arc_mean if self.inner_field.circular_geometry else _polygonal_arc_mean
+        return mean(loop, jump, start_angle, end_angle)
 
     def sheet_sector_heat_balance(self, start_angle, end_angle):
         """Return the steady heat budget of oriented sheet sectors, in W/m of axis.
@@ -780,13 +805,15 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
     tangential_rate = None
     if coupled_sheet:
         sheet_temperature,flux,outer_flux = np.split(state,3)
+        temperature_jump = ri*flux + ro*outer_flux
         inner_trace = sheet_temperature+ri*flux
         outer_trace = sheet_temperature-ro*outer_flux
         if conducting:
             tangential_rate = -ks*(gradient_at_cut@sheet_temperature)
     else:
         outer_trace, flux = np.split(state, 2)
-        inner_trace = outer_trace + r * flux + jump_offset
+        temperature_jump = r*flux + jump_offset
+        inner_trace = outer_trace + temperature_jump
         outer_flux = flux+source
         sheet_temperature = outer_trace+(1-fraction)*r*outer_flux
     bore_temp = bore_base if bore_response is None else bore_base + bore_response @ inner_trace
@@ -806,4 +833,4 @@ def solve_annulus_contact(radii, conductivities, wall_temperatures, resistance=0
                                 AnnulusLayerField(outer, to, dno, ko, 2 * exterior, circular,generation[1],tuple(gradients[1]),radial[1],tuple(quadratic[1])),
                                 outer_flux,sheet_temperature,tangential_rate,
                                 None if sheet_film is None else film*(sheet_temperature-ambient),
-                                sheet_source_flux=source.copy())
+                                sheet_source_flux=source.copy(), contact_temperature_jump=temperature_jump)

@@ -619,7 +619,12 @@ def test_circular_boundary_field_at_off_grid_contact_angles(panels, record_prope
             inner_mean = mean
             incoming = arc_rate
         else:
-            jump_error = np.max(abs(inner_mean - mean - resistance*(fraction*qi + (1-fraction)*qo)*expected))
+            exact_jump = resistance*(fraction*qi + (1-fraction)*qo)*expected
+            direct_jump = result.contact_arc_mean_temperature_jump(left, right)
+            direct_error = np.max(abs(direct_jump-exact_jump))
+            record_property("direct_arc_jump_error_K", direct_error)
+            assert direct_error < 1e-11
+            jump_error = np.max(abs(inner_mean-mean-exact_jump))
             record_property("arc_mean_contact_jump_K", jump_error)
             assert jump_error < 1e-11
             sheet_error = np.max(abs(arc_rate - incoming - 2*b*primitive_difference))
@@ -980,6 +985,14 @@ def test_polygonal_contact_arc_mean(n, record_property):
         starts.extend([-1e-12, 0.])
         ends.extend([1e-12, 0.])
         targets.extend([.5*(trace[-1]+trace[0]), trace[0]])
+        if name == "inner":
+            # The sheet law uses different normal fluxes on its two sides.
+            panel_jump = .3*(.4*result.interface_flux+.6*result.outer_interface_flux)
+            weighted_jump = (.77*panel_jump[0]+panel_jump[1:quarter].sum()+.23*panel_jump[quarter])/quarter
+            measured = result.contact_arc_mean_temperature_jump([lo, hi], [hi, lo])
+            residual = np.max(abs(measured-weighted_jump))
+            record_property("arc_jump_contact_law_error_K", residual)
+            assert residual < 1e-12
         means = field.polygonal_arc_mean_temperature(boundary, starts, ends)
         error = np.max(np.abs(means-targets))
         record_property(name+"_chord_weight_error_K", error)
@@ -988,3 +1001,21 @@ def test_polygonal_contact_arc_mean(n, record_property):
         error = abs(means[0]-exact)
         record_property(name+"_continuum_error_K", error)
         assert error < 12/n**2
+
+
+@pytest.mark.parametrize("panels", [15, 32, 64])
+def test_contact_arc_jump_below_temperature_spacing(panels, record_property):
+    # Uniform log-radial solution with a powered interface. Each face drop
+    # is smaller than one floating-point spacing at the 300 K exterior.
+    a, b, c = .4, .7, 1.
+    resistance, fraction = 1e-15, .35
+    qi, generation = 2., 3.
+    result = solve_annulus_contact((a,b,c), (1.3,2.1), (None,300.), resistance, panels,
+                                   formulation="circular", wall_fluxes=(b*qi/a,None),
+                                   interface_source=generation, inner_resistance_fraction=fraction)
+    expected = resistance*(qi+(1-fraction)*generation)
+    observed = result.contact_arc_mean_temperature_jump([0., 5.9, .7, 1.], [2*np.pi, 7., .7, -.2])
+    relative = np.max(abs(observed/expected-1))
+    record_property("relative_jump_error", relative)
+    assert relative < 1e-10
+    np.testing.assert_array_equal(result.inner_trace, result.outer_trace)
