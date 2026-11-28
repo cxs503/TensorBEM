@@ -1,0 +1,40 @@
+{
+  "source_commit": "68ad60abd81414e28d9300046140bbf2f76b0be7",
+  "command": "PYTHONPATH=src OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_arc_drop.xml",
+  "reference": "Uniform log-radial powered contact with a 3.95e-15 K jump at a 300 K exterior; a third angular harmonic with analytically integrated resistive drop; a polygonal conducting sheet with independent partial chord weights and two one-sided fluxes.",
+  "regression": {
+    "tests": 107,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0
+  },
+  "measurements": {
+    "test_circular_boundary_field_at_off_grid_contact_angles[15]": {
+      "direct_arc_jump_error_K": 7.216449660063518e-16
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[32]": {
+      "direct_arc_jump_error_K": 2.220446049250313e-16
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[64]": {
+      "direct_arc_jump_error_K": 6.106226635438361e-16
+    },
+    "test_polygonal_contact_arc_mean[32]": {
+      "arc_jump_contact_law_error_K": 3.469446951953614e-18
+    },
+    "test_polygonal_contact_arc_mean[64]": {
+      "arc_jump_contact_law_error_K": 0.0
+    },
+    "test_polygonal_contact_arc_mean[128]": {
+      "arc_jump_contact_law_error_K": 1.734723475976807e-18
+    },
+    "test_contact_arc_jump_below_temperature_spacing[15]": {
+      "relative_jump_error": 2.37698749572246e-13
+    },
+    "test_contact_arc_jump_below_temperature_spacing[32]": {
+      "relative_jump_error": 2.440270208126094e-13
+    },
+    "test_contact_arc_jump_below_temperature_spacing[64]": {
+      "relative_jump_error": 2.928768338961163e-13
+    }
+  }
+}
