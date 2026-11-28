@@ -1,0 +1,25 @@
+{
+  "source_commit": "70c1fdb203e7d88fc9c527077b008ceffbef7dc6",
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=src python -m pytest -q tests/test_layered_annulus.py -o junit_family=legacy --junitxml=/tmp/bem_arc_mean.xml",
+  "reference": "Two harmonic radial solutions with a prescribed third azimuthal mode, sheet generation and contact resistance. Integrate the sinusoidal trace analytically using its cosine primitive. Use the local temperature limit for coincident endpoints and the one-ULP arc.",
+  "measurements": {
+    "test_circular_boundary_field_at_off_grid_contact_angles[15]": {
+      "inner_arc_mean_temperature_K": 9.43689570931383e-16,
+      "outer_arc_mean_temperature_K": 1.4988010832439613e-15,
+      "arc_mean_contact_jump_K": 6.38378239159465e-16
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[32]": {
+      "inner_arc_mean_temperature_K": 6.661338147750939e-16,
+      "outer_arc_mean_temperature_K": 1.0547118733938987e-15,
+      "arc_mean_contact_jump_K": 3.608224830031759e-16
+    },
+    "test_circular_boundary_field_at_off_grid_contact_angles[64]": {
+      "inner_arc_mean_temperature_K": 1.4988010832439613e-15,
+      "outer_arc_mean_temperature_K": 1.9984014443252818e-15,
+      "arc_mean_contact_jump_K": 9.992007221626409e-16
+    }
+  },
+  "tests": 101,
+  "failures": 0,
+  "errors": 0
+}
