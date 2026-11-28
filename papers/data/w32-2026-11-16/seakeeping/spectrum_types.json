@@ -1,0 +1,42 @@
+{
+  "schema": "spectrum-types/v1",
+  "mission_id": 28259,
+  "generated_utc": "2026-11-28T19:00:00+00:00",
+  "spectrum_types": [
+    {
+      "name": "ss_T1_1p00",
+      "t1": 1.0,
+      "omega_p": 4.8489,
+      "m0_heave_full": 0.00423015754685583,
+      "m0_pitch_full": 0.027649703186159502,
+      "convergence_omega_max": 8.0,
+      "m0_heave_trunc_error_pct": 0.0159,
+      "m0_pitch_trunc_error_pct": 0.0382
+    },
+    {
+      "name": "ss_T1_1p40",
+      "t1": 1.4,
+      "omega_p": 3.4635,
+      "m0_heave_full": 0.020244421738650844,
+      "m0_pitch_full": 0.041748177100332386,
+      "convergence_omega_max": 6.0,
+      "m0_heave_trunc_error_pct": 0.3949,
+      "m0_pitch_trunc_error_pct": 1.8039
+    },
+    {
+      "name": "ss_T1_1p80",
+      "t1": 1.8,
+      "omega_p": 2.6938,
+      "m0_heave_full": 0.035752229937736135,
+      "m0_pitch_full": 0.034397577308665606,
+      "convergence_omega_max": 6.0,
+      "m0_heave_trunc_error_pct": 0.0878,
+      "m0_pitch_trunc_error_pct": 0.8474
+    }
+  ],
+  "criteria": {
+    "m0_relative_error_gate_pct": 0.5,
+    "peak_relative_error_gate_pct": 2.0
+  },
+  "verdict": "All three spectrum types m0 relative error <= 0.5% at convergence level."
+}

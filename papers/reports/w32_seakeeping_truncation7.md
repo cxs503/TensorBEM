@@ -1,7 +1,7 @@
 # W32 · 耐波性 RAO 峰值与 m0 截断收敛（TensorBEM m28172）
 
 > 工件：`papers/data/w32-2026-11-16/seakeeping/truncation_convergence.json`
-> （schema `w32-truncation-convergence/v1`，生成 2026-11-28T07:50:33+00:00）
+> （schema `w32-truncation-convergence/v1`，生成 2026-11-28T18:58:37+00:00）
 > 基座：`papers/artifacts/w25/seakeeping-truncation/journee_rao_truncation.json`
 > （W25 任务 paper-exp-seakeeping-truncation-5，mission 16712，生产网格 RAO 表）
 > 判据：RAO 峰值相对变化 ≤ 2 %；m0 相对变化 ≤ 0.5 %（本单逐条机判）
